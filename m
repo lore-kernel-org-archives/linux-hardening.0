@@ -2,123 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FED2C3DA7A
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 21:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB845C54EBD
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 22:02:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235562AbjAEV5W (ORCPT
+        id S235739AbjAEWCB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 16:57:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41836 "EHLO
+        Thu, 5 Jan 2023 17:02:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236110AbjAEV5P (ORCPT
+        with ESMTP id S235689AbjAEWB5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 16:57:15 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38FD67BEF
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 13:57:13 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id c2so13193320plc.5
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 13:57:13 -0800 (PST)
+        Thu, 5 Jan 2023 17:01:57 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C80A69509
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 14:01:56 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id h7-20020a17090aa88700b00225f3e4c992so3397112pjq.1
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 14:01:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1UYEX8MsU4bEwMmiObVLxS4IPZo14Y0LIp/cyznldk=;
-        b=HeOcmUiOtWV1+8PfRES0oRY+JONWF763kwgst44lTtXBPkP94fxrZ/VZYs1Kc/dGHr
-         ikhnYe/UZqdVoOyCKb1taN3k4XST0BroOrYGU8yLnocvufrCNNLpQTbYCBoEgN37hKxW
-         iBVkl02D5ywyFnBpZBmIPNf9xAzVMYo6varak=
+        bh=GU4F0A6CghntlAPFlpuG7hCmUocPla4d2Q4HBiVaB3k=;
+        b=mTH+Pi3ROqEsjK25XUv/HIFl/ZZBPEhOQWIk/soZxwErT2IfckDSCYXjlhJWs9ypug
+         hfyPaZoxRTq5zBvRSgv3VMmw3jJyytXAts59+xEQbtr3bpXqq23Zv+V/RK2WBLXPqYCt
+         fRDRg4gQgtlwgBJ3z3ia4doa5sW8Sr8N8M5GM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=d1UYEX8MsU4bEwMmiObVLxS4IPZo14Y0LIp/cyznldk=;
-        b=PzLiSBjuxS19OCMnsyr4jd8Ru++CdCOVO52xB/qtM8tt//NxVmtBh6W5KT2Fy91WGY
-         hZexdSDoIwedIwXFqgZvlZnH4CG1t5v2uht+9EpaLS01ASGr6YqUuZHshU+XVzQHCvm6
-         MdwZOfgqZnaLE/TkXGU/TfjV8LSPh6vEnjXJXjc9rcyinWm9T+gH/dzqW8/80iYpJKYU
-         P7G0wBnjvsHR47dK5NAWoBZvSXbLNvoGa76JqBu5iXcmWqsqzUwVFlSk+vCx4vKf+sf5
-         pAkEYYTGiE2ymh6ILhLAUVqCUwM22GKXJPU9gU1yNmjENfbOmrJsTIirbCFgzwqUi7o6
-         ivSw==
-X-Gm-Message-State: AFqh2krIPU75VI82avDu/X04PWEbVYZAPkC9MRn6fzDnWktB8NHZH9fe
-        NLUsLuHCPFAJCvmOQW7jVs9/Gw==
-X-Google-Smtp-Source: AMrXdXueJ1DVqXdVd9VL++Pz2qLYn1lYHEjbYN+F/piHplyn9OgKa+typNH8nRU+fQOu7q7m7eM5YQ==
-X-Received: by 2002:a17:902:c10d:b0:186:8568:be7e with SMTP id 13-20020a170902c10d00b001868568be7emr58800196pli.15.1672955833062;
-        Thu, 05 Jan 2023 13:57:13 -0800 (PST)
+        bh=GU4F0A6CghntlAPFlpuG7hCmUocPla4d2Q4HBiVaB3k=;
+        b=RBoQMTqqtoou3IAQwhii1EoH21UPR3EsHUS4mI/T4RAhaba2A253LEAouaLBAWbgFX
+         vfCrD71o29qqIkgKQjcNaGGZBNEGSYTJcT7ttDBBM1MHgcg6uFKXEdsObunyyVq8QW67
+         B4thnar9wJfTGDn5yBt8ICtN0LCOiMA+omgKFKfnHVK8DreLBcsTeJ2ctBrkROj/L5xQ
+         J7QaxvqgMsfY/rLomhkIF7Ky/+G+IJF0N0rlaPaPgcy3dLC06Y5ifSKMtVAW8tu2XtES
+         52Vzldw6cegoiqzrZ4it/88VsJItg4JETU2XAdzUUtlmj+jmR1+biZYmqm8ZtTcXOo20
+         YPpQ==
+X-Gm-Message-State: AFqh2krw+hbX5X9fSUp/q1d1rfxR+W/Ijf9XaCJcEywOZi5tMObO0iKl
+        UqpSy4FixndpAQ0JcXkCfpinrOUqObkKhhdV
+X-Google-Smtp-Source: AMrXdXvKdh7czZvM4eVFJAWSkqYwNmvkFxmvgsEkW2lV2vNnboIARMc1tuPcgig4piCwbTioPww16w==
+X-Received: by 2002:a05:6a20:1e5a:b0:9d:efbf:48d7 with SMTP id cy26-20020a056a201e5a00b0009defbf48d7mr56663117pzb.27.1672956116121;
+        Thu, 05 Jan 2023 14:01:56 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b15-20020a170903228f00b00182a9c27acfsm26530709plh.227.2023.01.05.13.57.12
+        by smtp.gmail.com with ESMTPSA id h9-20020a628309000000b00574db8ca00fsm7924258pfe.185.2023.01.05.14.01.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 13:57:12 -0800 (PST)
+        Thu, 05 Jan 2023 14:01:55 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Krzysztof Halasa <khalasa@piap.pl>
+To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alex Sierra <alex.sierra@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Shiyang Ruan <ruansy.fnst@fujitsu.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-mm@kvack.org,
+        Alistair Popple <apopple@nvidia.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] ARM: ixp4xx: Replace 0-length arrays with flexible arrays
-Date:   Thu,  5 Jan 2023 13:57:10 -0800
-Message-Id: <20230105215706.never.027-kees@kernel.org>
+Subject: [PATCH] memremap: Replace 0-length array with flexible array
+Date:   Thu,  5 Jan 2023 14:01:53 -0800
+Message-Id: <20230105220151.never.343-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2175; h=from:subject:message-id; bh=SvmvBLYwxKSOzLUuSIXZGbFL0TR/DpojohZSWMIMbSc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt0e2mOhkRvq1+sLpEol9eP3fGihD+cgpRMXX3kfQ mo/fQ/CJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7dHtgAKCRCJcvTf3G3AJmNKEA CoyZFzSYOZhQ5WleBkgUiHN1VwMNfMDvAmZvHcBNNPrnJYotSJw/QQscXFATgy5YPR9siAsQmysnZF HgoeHixgu4YBzaWQFZqk6+WQ3AzzY/8ynXTLwYv5uT0bSVtbJZIGl0xA2PJB407F1hfKb9h2BVtYlN 08nrxwdoEroAyxJC+S/PUA+F+DJ3v6x3u5ZgljnOWKmsg7s5MtzqRY8Ohd5r2dr/qbznZEfruhpcis mNwAq5oeoI0GwY3SoLHsF+O86GxNJA4T2DwHVzuMWU4C5Mor/uFA+RBzx8E5704CxeTAjtJMaZl7Ua Lj8VMJNKCHJo+gByL2l8wCZ1F5eGGuYFGDXHwCJO6V1edVAEpIqu9aOjqTc3WgLRtvfJlN0ISpwwDi bURxiAyLk0K09+01tJ1G0G2SmHvdZ2fDX1k89aI1J/Yi6wDAicfVEpDl6sCblrWQBpQLwJIeVGho4O v10LrSl5ZOcTLttRbKsyXXpVeqYymYq0kd1WiuM3QG3AYh6oZ5/kOA2BCICN2fSAWjCqX6W9GMlTkg XSjO4kRcAVimU4UMA+d+J7hidWAAtzPz1UyoHXBRbpKSa5MKGPoINK+CU14ahy3X5n/8BzbfJAnXmU W4UJFUYV6h2qUPgjFxg9h3e/1VrLS+cPWCCoJ0gd07CzarY77tjsCnBf0L1A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2644; h=from:subject:message-id; bh=wqATlM0Wy6ZUz1F3TRvkHL3pT03iLnEph/fbgS+sn5g=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt0jQGs4GvKcEISh+DUGAS/MBAXty4zobHGXMnncR wkthQ0WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7dI0AAKCRCJcvTf3G3AJpIqD/ 0YTMOnoLIq2BdwO/Kzukw8r0GthNIuwD/Zs4fYENGzt1pw16sh9gFyie7bQ9uuvzOzUImgfcoqMT6l GYcn9cU9VCKcv45dtSw5NWxTt30I4Naok6sZ2KEQJyyNxiYs0mXfv/j6ame8zdFCaeSuJjzF1NsC/s JlIyl2OcHHXOHr9AQk+YHlzhwhQ4PLxfPqHVgsSQaU6ygOsUbUqdG5cy8lNg+EmMLuDSzudI/7hBZb CYzdqdsFHDDTjBfivfpo5wG9vwf/+puOdddLEoAK/eL75zvcxVDDkqw5knpCpAU+MQTeJpJkBQqdsz by3KrnXaoaA5xdjveU+mqp+mOdadd/a4SgOwTYdHOvAfuvPe9P1VEkSVDUkp+7nRZQwZwc8PVeBGBX wMOs7ZlUgJvIBCx1DqAsRQUz9Hi7xxnRZPoioyVrPyV4GNPed5bYNnXk/wN/N/7Tw7A1z/dVR3N+DN 7uZmQK7Op1FR7MCa6dP5jCo3FtQ+lgMLWEr7F2xl54WLuDuXt5yhfyCScdHYArvJ95XcXODACD4xN2 W6mQXNFy2+m9yPbmzWZDs+cjL3Jp0l+NAC5l5cjnyXh1nGTm/aF9aeQYblYDl5yYyqDRGHBM+8hPi0 4h8drdjiWhgZEfmJEaq5pk+27Tr4r71W3y7BwztdD3quCAjO90oqnlHHx7RA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated[1]. Replace npe_load_firmware's
-union of 0-length arrays with flexible arrays. Detected with GCC 13,
+Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
+"rule_locs" 0-length array with a flexible array. Detected with GCC 13,
 using -fstrict-flex-arrays=3:
 
-drivers/soc/ixp4xx/ixp4xx-npe.c: In function 'npe_load_firmware':
-drivers/soc/ixp4xx/ixp4xx-npe.c:570:60: warning: array subscript i is outside array bounds of 'u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
-  570 |                         image->data[i] = swab32(image->data[i]);
-include/uapi/linux/swab.h:115:54: note: in definition of macro '__swab32'
-  115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-      |                                                      ^
-drivers/soc/ixp4xx/ixp4xx-npe.c:570:42: note: in expansion of macro 'swab32'
-  570 |                         image->data[i] = swab32(image->data[i]);
-      |                                          ^~~~~~
-drivers/soc/ixp4xx/ixp4xx-npe.c:522:29: note: while referencing 'data'
-  522 |                         u32 data[0];
-      |                             ^~~~
+In file included from include/asm-generic/memory_model.h:5,
+                 from arch/x86/include/asm/page.h:86,
+                 from arch/x86/include/asm/thread_info.h:12,
+                 from include/linux/thread_info.h:60,
+                 from arch/x86/include/asm/preempt.h:9,
+                 from include/linux/preempt.h:78,
+                 from include/linux/spinlock.h:56,
+                 from include/linux/mmzone.h:8,
+                 from include/linux/gfp.h:7,
+                 from include/linux/mm.h:7,
+                 from mm/sparse-vmemmap.c:21:
+In function 'reuse_compound_section',
+    inlined from 'vmemmap_populate_compound_pages' at mm/sparse-vmemmap.c:407:6,
+    inlined from '__populate_section_memmap' at mm/sparse-vmemmap.c:463:7:
+mm/sparse-vmemmap.c:376:39: warning: array subscript <unknown> is outside array bounds of 'struct range[0]' [-Warray-bounds=]
+  376 |                 PHYS_PFN(pgmap->ranges[pgmap->nr_range].start);
+      |                          ~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~
+include/linux/pfn.h:22:43: note: in definition of macro 'PHYS_PFN'
+   22 | #define PHYS_PFN(x)     ((unsigned long)((x) >> PAGE_SHIFT))
+      |                                           ^
+In file included from include/linux/mm.h:31:
+include/linux/memremap.h: In function '__populate_section_memmap':
+include/linux/memremap.h:138:30: note: while referencing 'ranges'
+  138 |                 struct range ranges[0];
+      |                              ^~~~~~
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 
-Cc: Krzysztof Halasa <khalasa@piap.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Alex Sierra <alex.sierra@amd.com>
+Cc: Felix Kuehling <Felix.Kuehling@amd.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Shiyang Ruan <ruansy.fnst@fujitsu.com>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mm@kvack.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/soc/ixp4xx/ixp4xx-npe.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/memremap.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/soc/ixp4xx/ixp4xx-npe.c b/drivers/soc/ixp4xx/ixp4xx-npe.c
-index 58240e320c13..5be9988f30ce 100644
---- a/drivers/soc/ixp4xx/ixp4xx-npe.c
-+++ b/drivers/soc/ixp4xx/ixp4xx-npe.c
-@@ -519,15 +519,15 @@ int npe_load_firmware(struct npe *npe, const char *name, struct device *dev)
- 		u32 id;
- 		u32 size;
- 		union {
--			u32 data[0];
--			struct dl_block blocks[0];
-+			DECLARE_FLEX_ARRAY(u32, data);
-+			DECLARE_FLEX_ARRAY(struct dl_block, blocks);
- 		};
- 	} *image;
+diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+index 7fcaf3180a5b..1314d9c5f05b 100644
+--- a/include/linux/memremap.h
++++ b/include/linux/memremap.h
+@@ -135,7 +135,7 @@ struct dev_pagemap {
+ 	int nr_range;
+ 	union {
+ 		struct range range;
+-		struct range ranges[0];
++		DECLARE_FLEX_ARRAY(struct range, ranges);
+ 	};
+ };
  
- 	struct dl_codeblock {
- 		u32 npe_addr;
- 		u32 size;
--		u32 data[0];
-+		u32 data[];
- 	} *cb;
- 
- 	int i, j, err, data_size, instr_size, blocks, table_end;
 -- 
 2.34.1
 
