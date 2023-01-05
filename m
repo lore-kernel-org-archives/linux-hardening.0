@@ -2,114 +2,187 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A57C3DA7A
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 22:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC825C4708E
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 22:32:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235725AbjAEWVV (ORCPT
+        id S236069AbjAEWcy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 17:21:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53064 "EHLO
+        Thu, 5 Jan 2023 17:32:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235812AbjAEWVU (ORCPT
+        with ESMTP id S236205AbjAEWch (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 17:21:20 -0500
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0BD6B180
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 14:21:20 -0800 (PST)
-Received: by mail-pg1-x530.google.com with SMTP id f3so35211pgc.2
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 14:21:20 -0800 (PST)
+        Thu, 5 Jan 2023 17:32:37 -0500
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB2DA140CB
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 14:32:34 -0800 (PST)
+Received: by mail-pf1-x433.google.com with SMTP id a30so10800326pfr.6
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 14:32:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+/rwlFIn0hzbcNETA4wyU6wemvJ1Z4GiTdDdXZcLwaY=;
-        b=dkTzAk+1ntj0auXOIzhxwO3g6qxTLW5rcQufexl+8slQLretMtDK9f5HKR4Aliyo39
-         TBXDLPSZZ+cPoJEh5357XW2coZYeq+1e9MNXq7GSKaeRBrIVMhLdSL2gmSWInW2aRur7
-         qX5tn4dbTdyy53FZ/I69t664nI2sKKOffks2Y=
+        bh=RMspBu+uWa9sfLmLyUJ/wSTZmKLpqqXkwp6DWYRYmTM=;
+        b=ZzyGzoeKKvZaoMdQYk9/JEb/R0fTMTl8jdxKSg3s6JKyfR79CnB4sS8bEQ0ONL6UQB
+         YBcEnGw41a+iNz23j6xzSeW7vrD1JAOeqwfntUXzII3h4d96KHoVSc/4Kb16WiQKOAvq
+         HUM40kmHERgBRNXvQuc2zDBkmB/8ypXu6eaE8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+/rwlFIn0hzbcNETA4wyU6wemvJ1Z4GiTdDdXZcLwaY=;
-        b=TWb9IBOfX85Zgd/VmX0dletplSVZg2ZOgpD+NCDMOD9ZItAwtDDNDyk9wiuy/0PUV2
-         59Whtv+2EcUMtPVkNeywKJy6BEZtOMtR4AFfxkXirywKgf9Y+2dgJRsBkEcbbDwAYiYZ
-         KP4jpmd/KkdfaEF9xjqL+R3CZrYvfmDP8LvzcrTUFLiIqXPJ2c//0n1rco6WZlwhJPM9
-         96xWJL1sOi6IETsEPW6MGCUkKBjPflwQq9q8I7NvmTKHNfneKeCf2/W3izVcolB/WqdD
-         0PZNPGQzDPr2uYzVdYBW1gjqaAVeyz3AbZFiVGjbJFXtygS2Qz9NiHJtKS6TZ0BcCMBu
-         Gj7w==
-X-Gm-Message-State: AFqh2kqtyDuLVBjfp+FsB3FtwQCjcEV68UZIH+7X2CsntZb6LLVBt5rI
-        IdCisuGnQtiTR7WAAFwuLoQEPNAd1k6NX6es
-X-Google-Smtp-Source: AMrXdXvsbcCqthlgFG/jU8xpWagS4JweS/XnATbEg9XOc38bDAosUQDy6Y5JAAFYoWTkfmAnN6dDwA==
-X-Received: by 2002:a62:6d82:0:b0:580:da4d:d42a with SMTP id i124-20020a626d82000000b00580da4dd42amr41325570pfc.14.1672957279547;
-        Thu, 05 Jan 2023 14:21:19 -0800 (PST)
+        bh=RMspBu+uWa9sfLmLyUJ/wSTZmKLpqqXkwp6DWYRYmTM=;
+        b=0Czt6OyHb2r7a8SDwi0B3kNPZJANFbN5mbuXITFgGVBj1012yYr7B3ah20myHsvtmY
+         Q59XzIcZdE50hCxYx841UY3l1uwI0Bil+U88UkrcN8yFa/F0qNZt/AgxWfNawQ6GiOU4
+         XYhSNBWAYYFWOBw3xNaE8eBmH+lYt2uFz6bbYXIzeuh0kQQdOgdyIfGvQEbH5SDRQHOv
+         36VGntPOQJIAIV/rlGmylySt0ieqC6PvNNj439R3xGbqPLPUWoeA0X/sKv16ZCZ3xKOf
+         jADynC1icXYbFSDSFpxcBTUKhU8xVkdAV6I4AkG11PLyA9vq8fyAC/6TOAxGD60/H3Y7
+         IkqA==
+X-Gm-Message-State: AFqh2kqlDWpb5wWAdE5h9I9PRYKEY49UkGbytYMBrpCpfus/KIzMaC8c
+        P3/j6AUdDDYI2ds5YlqFHJovTk+R3xnwgWnQ
+X-Google-Smtp-Source: AMrXdXsqq4Mi747oUWhsFhMpsCCbXt0HvHTAJ74J9uJiiSUwowl84oG/P6DbQxUEysWYLcBj9mSczg==
+X-Received: by 2002:a62:1a51:0:b0:581:d46a:343a with SMTP id a78-20020a621a51000000b00581d46a343amr25696694pfa.18.1672957954467;
+        Thu, 05 Jan 2023 14:32:34 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 68-20020a621947000000b00580e679dcf2sm21861943pfz.157.2023.01.05.14.21.18
+        by smtp.gmail.com with ESMTPSA id x74-20020a62864d000000b0058217bbc6f5sm11470796pfd.215.2023.01.05.14.32.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 14:21:19 -0800 (PST)
+        Thu, 05 Jan 2023 14:32:34 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Justin Iurman <justin.iurman@uliege.be>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
+To:     Potnuri Bharat Teja <bharat@chelsio.com>
+Cc:     Kees Cook <keescook@chromium.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] ipv6: ioam: Replace 0-length array with flexible array
-Date:   Thu,  5 Jan 2023 14:21:16 -0800
-Message-Id: <20230105222115.never.661-kees@kernel.org>
+Subject: [PATCH] RDMA/cxgb4: Replace 0-length arrays with flexible arrays
+Date:   Thu,  5 Jan 2023 14:32:32 -0800
+Message-Id: <20230105223225.never.252-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1685; h=from:subject:message-id; bh=8PkLlA/lLOXSW+eJB32T+aG9Kn60zUa4hKXC+rzMGLs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt01cz7/LecK3nXxfm63JdHDplN1K4Q+y5tGGGSPM pUHKzwGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7dNXAAKCRCJcvTf3G3AJvCJD/ 9dtKcuau0YnqLh8x7WrForeOZfMnYtRszMXUYKVft4FOrOsQ1BAzfridH4lEFedSI0AKz34hSCQxNI 9pU9cHvUjhC/gCo/ssOAQl9wJJ4HZhUqFWjzKpAHuaHE3e1VRoOJYt6L/RoF0EjE0XlVCLMZ9x1Vqs r+Le39VVbucfueuZyrYi9EzDHAw3zF46MNjMcq+m/FWvq4/n+g79tmQRJqEmUeLr2eHVdXqu+AI39R /t6xkHYShlreOKfsg4+qeySTppv/Go0fNAkVuU6ExrA/f6uWBZUQxb8NhSgRcR7U9RF1O3YydmqOFN cqzv7/8m6aUw9mxIojwCPpM+cn1jvTR13BLgwVYe5m+RW4LxUceL04xi/L1YZEhALEWzDXj+gWxotQ GVhwpNAPpztHLjX8fY0Jdzu3Pk8iAPFfqQkl1YNz89kk2bPNyuCDKjBPyGHzeK4x6GNgbKkQZ68Ilm TroxxrefIN30wEIhaLki1WABr+rZs0neuiRFkMMtfZAkA9PbdO1iIb260Ei+FbNutOcTYx1AZR6v7b Mcm1Dx0wF27u+OS0E6bME4TPp/JN3R6YpcsFNUa37xsXm/z7wfsjF10gPcUaMWTHbKaGIXG4X4Z+dc nPIUp2LUnE7439+DrZRdr9Nc/UhV8/G+2Hu+dkW97XuczBseF8nZVsKhlUvQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3478; h=from:subject:message-id; bh=dxMDzsMc6oaxPr4Do5C0Wr2AT/H+H0SzXI+dU/p0IOo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt1AA6TRACNi/UTQWnJlFJAmhMJxt1Q/q61h8WXc3 5MfFzMqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7dQAAAKCRCJcvTf3G3AJjVaD/ 9JTizo/XmwroMPtX6agewL84FuMweJSgXJ/ngjmZqAvjA4oSofA1pqyp6qjaTkS7Ffi97TBUNKh731 qz9L0CmgSdP0hBnpfosBkNgfM5pO2u+ag48S3IfVZeg7VsLTTVZp04S2OamHaMqESexB39eRz0uIh8 dcGypx0LM5c6nxKDc5xRL6BnMUiCCiJeHtd/IVQuOZb3yNZoxeIUsHHQoreTaxorIm52+u5eG0bAEJ PRqXLoHf2rbQR3MuRnvASk9NxmIXnL1X+uNshx/DDixHa47N5acBqgPOzz68JBvXVP9SBUCjpjgQce lIuze1Nl9AJB8B4D8ldabt89DnJM7+SHgdm1MWvoi6CRqdzNtvdez7GI4P0pduHVryotdSUjkXjGfQ uwBdIPmBsiE06weLdk1sZD6/sDbB2Ly/8MZBG0ZQqMicHPkJAbuKPgLcOjUxNrpMFemTcWatisk3hH O9d2LDnrcdn3ruLoUyvN5XhiuxK9qdoY0JKyLNfcxBgnHtvN3IZOyAADW13W1hQOZ9E3MtrGwVG867 8sGHv9T6Ph6OtZJWHdcwvI762jAWfFy55Cg2OUCBlko0lKcrVCANTNU94drHuN7dBbFHV3PF16DS2U TikaXuZ026+s1VSX3/FrNaVB4vyaK2bjIONqe8znqyMKfK0n+l3YFgm+IKtg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated[1]. Replace struct ioam6_trace_hdr's
-"data" 0-length array with a flexible array. Detected with GCC 13,
-using -fstrict-flex-arrays=3:
+Zero-length arrays are deprecated[1]. Replace all remaining
+0-length arrays with flexible arrays. Detected with GCC 13, using
+-fstrict-flex-arrays=3:
 
-net/ipv6/ioam6_iptunnel.c: In function 'ioam6_build_state':
-net/ipv6/ioam6_iptunnel.c:194:37: warning: array subscript <unknown> is outside array bounds of '__u8[0]' {aka 'unsigned char[]'} [-Warray-bounds=]
-  194 |                 tuninfo->traceh.data[trace->remlen * 4] = IPV6_TLV_PADN;
-      |                 ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
-In file included from include/linux/ioam6.h:11,
-                 from net/ipv6/ioam6_iptunnel.c:13:
-include/uapi/linux/ioam6.h:130:17: note: while referencing 'data'
-  130 |         __u8    data[0];
-      |                 ^~~~
+In function 'build_rdma_write',
+    inlined from 'c4iw_post_send' at ../drivers/infiniband/hw/cxgb4/qp.c:1173:10:
+../drivers/infiniband/hw/cxgb4/qp.c:597:38: warning: array subscript 0 is outside array bounds of 'struct fw_ri_immd[0]' [-Warray-bounds=]
+  597 |                 wqe->write.u.immd_src[0].r2 = 0;
+      |                 ~~~~~~~~~~~~~~~~~~~~~^~~
+../drivers/infiniband/hw/cxgb4/t4fw_ri_api.h: In function 'c4iw_post_send':
+../drivers/infiniband/hw/cxgb4/t4fw_ri_api.h:567:35: note: while referencing 'immd_src'
+  567 |                 struct fw_ri_immd immd_src[0];
+      |                                   ^~~~~~~~
+
+Additionally drop the unused C99_NOT_SUPPORTED ifndef lines.
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Justin Iurman <justin.iurman@uliege.be>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Potnuri Bharat Teja <bharat@chelsio.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/uapi/linux/ioam6.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/hw/cxgb4/t4fw_ri_api.h | 26 ++++++-----------------
+ 1 file changed, 6 insertions(+), 20 deletions(-)
 
-diff --git a/include/uapi/linux/ioam6.h b/include/uapi/linux/ioam6.h
-index ac4de376f0ce..8f72b24fefb3 100644
---- a/include/uapi/linux/ioam6.h
-+++ b/include/uapi/linux/ioam6.h
-@@ -127,7 +127,7 @@ struct ioam6_trace_hdr {
- #endif
+diff --git a/drivers/infiniband/hw/cxgb4/t4fw_ri_api.h b/drivers/infiniband/hw/cxgb4/t4fw_ri_api.h
+index a2f5e29ef226..1f79537fc8d1 100644
+--- a/drivers/infiniband/hw/cxgb4/t4fw_ri_api.h
++++ b/drivers/infiniband/hw/cxgb4/t4fw_ri_api.h
+@@ -122,9 +122,7 @@ struct fw_ri_dsgl {
+ 	__be16	nsge;
+ 	__be32	len0;
+ 	__be64	addr0;
+-#ifndef C99_NOT_SUPPORTED
+ 	struct fw_ri_dsge_pair sge[];
+-#endif
+ };
  
- #define IOAM6_TRACE_DATA_SIZE_MAX 244
--	__u8	data[0];
-+	__u8	data[];
- } __attribute__((packed));
+ struct fw_ri_sge {
+@@ -138,9 +136,7 @@ struct fw_ri_isgl {
+ 	__u8	r1;
+ 	__be16	nsge;
+ 	__be32	r2;
+-#ifndef C99_NOT_SUPPORTED
+ 	struct fw_ri_sge sge[];
+-#endif
+ };
  
- #endif /* _UAPI_LINUX_IOAM6_H */
+ struct fw_ri_immd {
+@@ -148,9 +144,7 @@ struct fw_ri_immd {
+ 	__u8	r1;
+ 	__be16	r2;
+ 	__be32	immdlen;
+-#ifndef C99_NOT_SUPPORTED
+ 	__u8	data[];
+-#endif
+ };
+ 
+ struct fw_ri_tpte {
+@@ -320,9 +314,7 @@ struct fw_ri_res_wr {
+ 	__be32 op_nres;
+ 	__be32 len16_pkd;
+ 	__u64  cookie;
+-#ifndef C99_NOT_SUPPORTED
+ 	struct fw_ri_res res[];
+-#endif
+ };
+ 
+ #define FW_RI_RES_WR_NRES_S	0
+@@ -562,12 +554,10 @@ struct fw_ri_rdma_write_wr {
+ 	__be32 plen;
+ 	__be32 stag_sink;
+ 	__be64 to_sink;
+-#ifndef C99_NOT_SUPPORTED
+ 	union {
+-		struct fw_ri_immd immd_src[0];
+-		struct fw_ri_isgl isgl_src[0];
++		DECLARE_FLEX_ARRAY(struct fw_ri_immd, immd_src);
++		DECLARE_FLEX_ARRAY(struct fw_ri_isgl, isgl_src);
+ 	} u;
+-#endif
+ };
+ 
+ struct fw_ri_send_wr {
+@@ -581,12 +571,10 @@ struct fw_ri_send_wr {
+ 	__be32 plen;
+ 	__be32 r3;
+ 	__be64 r4;
+-#ifndef C99_NOT_SUPPORTED
+ 	union {
+-		struct fw_ri_immd immd_src[0];
+-		struct fw_ri_isgl isgl_src[0];
++		DECLARE_FLEX_ARRAY(struct fw_ri_immd, immd_src);
++		DECLARE_FLEX_ARRAY(struct fw_ri_isgl, isgl_src);
+ 	} u;
+-#endif
+ };
+ 
+ #define FW_RI_SEND_WR_SENDOP_S		0
+@@ -618,12 +606,10 @@ struct fw_ri_rdma_write_cmpl_wr {
+ 		struct fw_ri_isgl isgl_src;
+ 	} u_cmpl;
+ 	__be64 r3;
+-#ifndef C99_NOT_SUPPORTED
+ 	union fw_ri_write {
+-		struct fw_ri_immd immd_src[0];
+-		struct fw_ri_isgl isgl_src[0];
++		DECLARE_FLEX_ARRAY(struct fw_ri_immd, immd_src);
++		DECLARE_FLEX_ARRAY(struct fw_ri_isgl, isgl_src);
+ 	} u;
+-#endif
+ };
+ 
+ struct fw_ri_rdma_read_wr {
 -- 
 2.34.1
 
