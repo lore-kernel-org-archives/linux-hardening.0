@@ -2,106 +2,128 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 449F4C5479D
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 19:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8EDC4708E
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 19:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235685AbjAET0a (ORCPT
+        id S235843AbjAETcP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 14:26:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
+        Thu, 5 Jan 2023 14:32:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235882AbjAETZx (ORCPT
+        with ESMTP id S234824AbjAETbs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 14:25:53 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C86A465
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 11:21:37 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id w203so9438565pfc.12
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 11:21:37 -0800 (PST)
+        Thu, 5 Jan 2023 14:31:48 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521CF8FFA
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 11:26:51 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id a30so10466999pfr.6
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 11:26:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=97sxfhjaB8PxBR7URrYCExoGnpeZKnrOyMFs+deDqoA=;
-        b=IFFFns4mTLHYiYPOdpH3k/Z6BfSYt1T8o7KcJMEOb7uldcq+iWk0U8tofOlIyAkpKx
-         Zm2YjpnCHTIqDwutAyZ/t+YGUhFLuddGsBcIAIPJyosjV4qRzQJLBfboku0pRLxE3rwg
-         E92VlWkAp8E1qj7r+WM0hJV4a+/SrUMEFxVSk=
+        bh=2M/SEDI3ZFLLpa6t8CMCD85tOj1o/kREvGLd7NUi0i0=;
+        b=bYiDK6coyyNfhwS9yGGXA4g3BMzQ6EtUBqat3QdKBC+jcD4l7q4QlmZhqOwOHhADeq
+         dgCWJrtIF1YSaHqo0PjnD+lhyqppr73VpPDLIYY+ucZnsBicoMpc2hDuVHmBHJWa1H0E
+         IBv3xU8jja7IXJ1CZaK2VrzBiCxVdmzHkJlQM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=97sxfhjaB8PxBR7URrYCExoGnpeZKnrOyMFs+deDqoA=;
-        b=ikMUppYtEH/wBOds7nADpHdn6Z6cI4q7bmTJDv4ck88kWGdX2Ksc4OiOhHQzlwwnhC
-         A1QbYBa1vkQmmLsxGEIBzet0EC+IUc/49dwr1PDOy7BkN9Q0O5+vPs5L1UIg9BIPwD4Z
-         z/E5VmrIQ6IMPq8BTl5bKkuCL7l9b7oNRP6mYOd25ctPoZSOi+QDaZjqfEG/No8jQA1a
-         VTsNrG398QATFchUufSF/RleQjoCFA8Qj84H99r1Y4bAzGDi8Xii/r4UV1NEmWfNT+JC
-         ASB27TXGTf4RTKZweG6Zn4+NzohhIkqMP9RpB8nC+Agf8hXHOXQmKy8XiY7LWv/MZhi1
-         9n1A==
-X-Gm-Message-State: AFqh2kpEjfOR1C69cXYsip7QrAltNL1vOI6o6jX2OmPphEbFLutZozxK
-        Z2pwEJLs2cVARl1WCIF8C5zLSw==
-X-Google-Smtp-Source: AMrXdXtusMz0bppoL5uIlyajN4gT+TrhL1MIdwcwHem6NamVhADBBImbslU9eAUU89LaXsDyEkiXYA==
-X-Received: by 2002:a62:4e8e:0:b0:583:3d70:3661 with SMTP id c136-20020a624e8e000000b005833d703661mr473651pfb.9.1672946440663;
-        Thu, 05 Jan 2023 11:20:40 -0800 (PST)
+        bh=2M/SEDI3ZFLLpa6t8CMCD85tOj1o/kREvGLd7NUi0i0=;
+        b=mOs6LJdvfPUsrOjpEtkha6akXtv042U7Q6NzFKZDZcSAiLYH4pbkK2nm91gnU/6cjA
+         cDbiuGCktRCoksSHmEbMtsjHFIys+vzPITixW5CCoImCP+thsxaBYO4UTRhwZTAB7ihn
+         jCL20PY07PHSrIexQtVq72UG/V9Yy/3KYiYYyzO5Ny0I1+mCD8ZVB/epjCB8gC1mTLtD
+         bPktgo69lf5TzTBO0LiqADa81uaa1Zw/kFx+lF3cR9S+vtG9oUxscRlxGU+ertmoYz7L
+         inVZHUMcaaJYUDLVjvbTT78/toIPgZbBGWapiyFvt8cLBg5djy7srrHv0/iEGKIdG+kO
+         hQ0Q==
+X-Gm-Message-State: AFqh2krOdkVbKHY18ZEOG1cZXz3cGIZZSxAl/MTGWc0LnS+qRUWxothZ
+        jZgbEiMvInWYAZi/Eq+zSUGR4A==
+X-Google-Smtp-Source: AMrXdXvzT1/nMWdJ84tldXI9Vmxm1E1kI6mLQa2i8Nq+0jr9Opq3PWNUANqe3ITb9AJZ9gTGQY4GYA==
+X-Received: by 2002:a05:6a00:24cd:b0:581:4260:a650 with SMTP id d13-20020a056a0024cd00b005814260a650mr58589947pfv.33.1672946810834;
+        Thu, 05 Jan 2023 11:26:50 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h11-20020aa79f4b000000b00582bdaab584sm5868470pfr.81.2023.01.05.11.20.39
+        by smtp.gmail.com with ESMTPSA id x3-20020aa79563000000b005818d4284aasm16046250pfq.160.2023.01.05.11.26.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 11:20:40 -0800 (PST)
+        Thu, 05 Jan 2023 11:26:50 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Helge Deller <deller@gmx.de>
+To:     Alexei Starovoitov <ast@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] fbdev: Replace 0-length array with flexible array
-Date:   Thu,  5 Jan 2023 11:20:38 -0800
-Message-Id: <20230105192034.never.249-kees@kernel.org>
+Subject: [PATCH] bpf: Replace 0-length arrays with flexible arrays
+Date:   Thu,  5 Jan 2023 11:26:47 -0800
+Message-Id: <20230105192646.never.154-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1496; h=from:subject:message-id; bh=eBudshCogBtu2xin7cq/2EcDLuR1Ha1dnf+jDA9WM7A=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjtyMFUMFrIl5nzBw/rrohurWWx677rm+9jnFO2OEH EHsCmCCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7cjBQAKCRCJcvTf3G3AJh39D/ 9JXSePQkOSG9y/c/7C77a7sNLOH6tRaBYFyxy0DqaiEqTL/wMEaWTJIe/TCr3eh5BcFRGkvE9aIydJ k0rjqKkxDAuT1SXy1IBz60cx2VutSvE62Wg6uN3jeM3wPgOHq+ccnA71nY8P8nAsDE0iC/5YR4s0tO e1YWFmLBF8TiWofavtjiQzRN5JArRGAdoSseCu9rM4Agl2OI1Z99fhdxq3LrYJXFVDdZLIlMW8n1DO egCycrggYzOaG114EndKmY7TBCBUfZkAxDU0O/t/YRLEBYqVlpZTGugD+LL0Odn8sgVNk5qwzCabkA A6v2Azd+H1iC5u5tFAoJD01fRv6ehdA4UZP+Alp0cSfooDCbJ8gHvwkVaktKC6pwKotnrI9de/3zpO 46+EcziPobYfUE/n+MG406Cr5/DbX8EH9RPVHvhxCN4tY5nHwpnIrHnelwe0RJOypvREb+N9DWq3hk QV+e8YP2rpKcIn25nevZZYExlnnxRWg+81Eo2n4xhAAtGY0ixR7hSYBOTp3jD1BuSfucmRBNiCuXRL qAMcw3Ygfp9kKDBDxcXrVBF21hRPN0cv45Odmb5Ee2GoQKhWYwpTAqHsctn4r3fhnQU7DNTWYzTjXp EU6fBQVzpe+v4o+gD7iVUj1EdwkxfMj9MlKVTgdtSKn+PDYo58UfpL2zyUyw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2101; h=from:subject:message-id; bh=V+hDTvfLNktsOza7//a0ww3JjY/DO434Oi3YuneAQho=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjtyR3frN3HKMkFYai/Tm7ow/5jyykqQkgn4p54zvI 3udqhk6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7ckdwAKCRCJcvTf3G3AJiVXD/ oDGiZsOyCTBvLW5TFiKe3edkbxbWHr734/G3YbQEr15ayjIYmPo4HRfPl5f4ILDNVy24KjBoUFo9pB coVD7DTnVaFqeQ+kIbE59nyjzZZuUstSyyrFAFaps2VjYlcxhQclBM8ri1GFaIyeeAeR5Qs/IPdlMn dfxzky3v1L3HQQLLG0h26sTRl+pgOhaN4hiihyxZZV8rYS1nM++DZyMjbUQh+7lO525XIOd1p5Mk0j YHEwojOP1BDNZ+/5RgCCPCyPzKhQyOB4glMRpff7BPpi/gX1moSO9xjQOxp0U/nrB/zR267fq8DCVm zeRSUBCdQdpM05UACFsqZJHwiiZerLz5/rgFgiehgoulnCiidE19JcAYOMqBI9mJqx/yTPCWjxpHGr 89uZ9V8XbgjBTViH2Xvt/GHKdKXjfMYgolk3dblHqteV/PQ287MVj0V3uO+WumVw1TY+Fx4TsJfdyS DoNCgswbqTMlBlxy3IySs5RDgp/viDh0jA9TDeolIk/9rYQACGi6HbaoVnmuEF1UWMAaKgZFbLv4gw z4Y0hX5Dp7dw34matjSvTPGwhiVP0io9YetucAqYbuVziv6heiXkyobM4g2alSdqn6rlsKkV0h4SBx H8qunve472K7XsC1zmNiU1mTDwRwXYbu2D3KNs2eAAicfhq9o18tJj/R5Hxg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated[1]. Replace struct aperture's "ranges"
-0-length array with a flexible array. (How is the size of this array
-verified?) Detected with GCC 13, using -fstrict-flex-arrays=3:
+Zero-length arrays are deprecated[1]. Replace struct bpf_array's
+union of 0-length arrays with flexible arrays. (How are the
+sizes of these arrays verified?) Detected with GCC 13, using
+-fstrict-flex-arrays=3:
 
-samples/vfio-mdev/mdpy-fb.c: In function 'mdpy_fb_probe':
-samples/vfio-mdev/mdpy-fb.c:169:32: warning: array subscript 0 is outside array bounds of 'struct aperture[0]' [-Warray-bounds=]
-  169 |         info->apertures->ranges[0].base = info->fix.smem_start;
-      |         ~~~~~~~~~~~~~~~~~~~~~~~^~~
-In file included from samples/vfio-mdev/mdpy-fb.c:21:
-include/linux/fb.h:510:19: note: while referencing 'ranges'
-  510 |                 } ranges[0];
-      |                   ^~~~~~
+arch/x86/net/bpf_jit_comp.c: In function 'bpf_tail_call_direct_fixup':
+arch/x86/net/bpf_jit_comp.c:606:37: warning: array subscript <unknown> is outside array bounds of 'void *[0]' [-Warray-bounds=]
+  606 |                 target = array->ptrs[poke->tail_call.key];
+      |                          ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+In file included from include/linux/filter.h:9,
+                 from arch/x86/net/bpf_jit_comp.c:9:
+include/linux/bpf.h:1527:23: note: while referencing 'ptrs'
+ 1527 |                 void *ptrs[0] __aligned(8);
+      |                       ^~~~
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 
-Cc: Helge Deller <deller@gmx.de>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Song Liu <song@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-fbdev@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
+Cc: bpf@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/fb.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/bpf.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 96b96323e9cb..bf59d6a3590f 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -507,7 +507,7 @@ struct fb_info {
- 		struct aperture {
- 			resource_size_t base;
- 			resource_size_t size;
--		} ranges[0];
-+		} ranges[];
- 	} *apertures;
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 3de24cfb7a3d..2131000f711e 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1523,9 +1523,9 @@ struct bpf_array {
+ 	u32 index_mask;
+ 	struct bpf_array_aux *aux;
+ 	union {
+-		char value[0] __aligned(8);
+-		void *ptrs[0] __aligned(8);
+-		void __percpu *pptrs[0] __aligned(8);
++		DECLARE_FLEX_ARRAY(char, value) __aligned(8);
++		DECLARE_FLEX_ARRAY(void *, ptrs) __aligned(8);
++		DECLARE_FLEX_ARRAY(void __percpu *, pptrs) __aligned(8);
+ 	};
+ };
  
- 	bool skip_vt_switch; /* no VT switch on suspend/resume required */
 -- 
 2.34.1
 
