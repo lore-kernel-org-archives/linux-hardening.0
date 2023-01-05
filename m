@@ -2,152 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E68EC3DA7D
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 18:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711AEC3DA7A
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 19:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbjAESNF (ORCPT
+        id S235277AbjAETFU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 13:13:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        Thu, 5 Jan 2023 14:05:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235353AbjAESMi (ORCPT
+        with ESMTP id S235281AbjAETFS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 13:12:38 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D625D656C;
-        Thu,  5 Jan 2023 10:12:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8A6F0B81B3E;
-        Thu,  5 Jan 2023 18:12:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93DF1C433EF;
-        Thu,  5 Jan 2023 18:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672942353;
-        bh=t2Ard4AIZn0bA5uFWm/ttV/iCirtM24HVwYbrcC4K3A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lrOfgsZMDbPRtl8slDBwDJZFOdlkc17CWZXXZsO3gihzjMvNtpEpTZUNPQgXSmnRW
-         AMo8wYCj5ZIOd/OMwz+6UDTA/VirogVeVdk2y0iJL5r2c1ButggZqcPWHCBpIEdtEf
-         Qz+yRG9lYKPgDDgwZfLEcqyhIYANjimi8InflhhxSNeLZNoSjei3T8z8biPItnc6hi
-         QTfRlbmqwYnLucUyFjNAHCM9LMcfiN2R98F7XwJ9SU/gMt+umplcZXPK8+KsN4s7b4
-         BPT0YhrJ85XoMPIWDJWcInppc5xnQ48DszfH5DSe4BCnWTe22EFYKw7deBEFCxtrIJ
-         Q0T5415rskytA==
-Date:   Thu, 5 Jan 2023 12:12:37 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thu, 5 Jan 2023 14:05:18 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9F85F93E
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 11:05:17 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id 141so6809051pgc.0
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 11:05:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i2SehKkCBcqja+K3E3ORe72aONi2D9OxK5bIcUd12dM=;
+        b=awXTcU/LbB+ePHWF7idkRiNofo7lYdnPNZubDcIq8IyKIbBx4SHToTwvZ4OV6bt62I
+         0xkDJgInKm6CcvC0xZdUxeT8ck4FAr2l8s6IPAmGvBk4YxUO5+6wHmOL9R0/V/STgtZi
+         oD53HoCVjmTchna2qMebJgQvJHDgTo/GMr8q0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i2SehKkCBcqja+K3E3ORe72aONi2D9OxK5bIcUd12dM=;
+        b=NY3zl0P+48YW34dxR8d16DByd0MWJh8vTJbgYuLflpvyRiDyjKO5W6jbzQ5SUw/7sP
+         YE7XBWd/6nBVcWryg1oH89PB7A3fgBzXKeIjAsMYaNGj/azO+moaxAm5HRb8hX7vlCdE
+         iAEZZ2e+n6Rm2gblOprDCc9qhfKgjEUTsxlQ2knZ2+bNIUArGESa9/M3xBSEPBs69B1c
+         LIZXLR8LUKdcVpDd3ezrU8Hyqj1Bad62fmKBTh8josEfPaewd8IWeEcAcr7PB2ka+76c
+         2oF6ZL5kWukEKTyqvwATnbDxa7z1EGa1FfaWG3QuXYCaKiMMtzhKvb7ZgBQvZltBkJ/z
+         6sVg==
+X-Gm-Message-State: AFqh2kpWiMpi0qiRwLzeqW/gYlnqLwyWHk8RMxgnzFbm7lHpjEeXzZeK
+        tSdO+FVQlSHQ2UYHApWqh7detQ==
+X-Google-Smtp-Source: AMrXdXtK4AY6OU0q3gvuV8uf6l3+SAQOjqiJHSlFSiROGKNvtDKWd9vlFkDVudKh7pEgLT1px+78TA==
+X-Received: by 2002:a05:6a00:1747:b0:582:7d41:c8a4 with SMTP id j7-20020a056a00174700b005827d41c8a4mr21331148pfc.15.1672945517261;
+        Thu, 05 Jan 2023 11:05:17 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f193-20020a6238ca000000b0058269b74da9sm9007525pfa.95.2023.01.05.11.05.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jan 2023 11:05:16 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        stable@vger.kernel.org, io-uring@vger.kernel.org,
+        Dylan Yudaken <dylany@fb.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: mvumi: Replace 1-element arrays with flexible
- array members
-Message-ID: <Y7cTFfWzLeHKuGWC@work>
-References: <20230105011143.never.569-kees@kernel.org>
+Subject: [PATCH v2] io_uring: Replace 0-length array with flexible array
+Date:   Thu,  5 Jan 2023 11:05:11 -0800
+Message-Id: <20230105190507.gonna.131-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1952; h=from:subject:message-id; bh=SWcBV/lk0yg6EOGEoIKozkewCZaGNeQRZtq6oIzzPPY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjtx9n4cZXq94FvnrGkXShFgmcog+jiuB2B/m25yUW xThqRSiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7cfZwAKCRCJcvTf3G3AJokvEA Ck4FZY8ra48dMW1t/xvAdzEHf3VLqCDOmJEJTLTkHW3PQYAo0qlzsytzi/4ZKIEcY2AkyW2nn4I/e+ nKckG2kSBcnfT6zXjVbpfr8rLmpV2zndLux7yq9fqqcZBr+EtIzmTNnprZ0RfkuvrSgyu/9hiTx4oy 6qItkMQHCUUxK/QQOyIiKVJHANzZr/FCvfG7EWVjNpCM/BjtdyBDwLfFAGgJqk7meXdJXkW4t55SUN ROHlaYDGSEhCCBzOws2QGDshmXpPuBeVcZqAyu/8wy/44SNlAA401xOQGVrWnFzW5a1pVppnwZZXkT RT2kw0uGFISD7lI5arKAVyYfa2go2+nLLyMnYSoQsljJ1BUnlLstXPKk5Q8wnDG7ffE9prj5mbpEXu o4XL+eUnU92nZKLl5HF2DIhFOlU4sGo7LhHfExEzSCDEgLM/FiLEZHUpkZX5egJb/EAlmz5IjxvyQ4 3AuQKG5wnvfs0VAN55jsv+xd2VifaCOQZpwteZdimwEYRdeUl2fQEuhEunkIEEfqcAVUJFCZjOIlLt SzXtMQPiEgRrcxuBvEhKuG2XzQa2+pYmDN7IoqEU3fJLcRYtE0SM375keiRvqL1OOhrMdad1uinIbY qRUpSu/yGoZPGi6saEr4fpsFHuMLhrSYz5hia2CmbnnRX5py3pXE6IvZYvGg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230105011143.never.569-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 04, 2023 at 05:11:50PM -0800, Kees Cook wrote:
-> One-element arrays (and multi-element arrays being treated as
-> dynamically sized) are deprecated[1] and are being replaced with
-> flexible array members in support of the ongoing efforts to tighten the
-> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
-> 
-> Replace one-element arrays with flexible-array member in struct
-> mvumi_msg_frame, struct mvumi_rsp_frame, and struct mvumi_hs_header,
-> adjusting the explicit sizing calculations at the same time.
-> 
-> This results in no functional differences in binary output. An explicit
-> add is now folded into the size calculation:
-> 
-> │       mov    0x1070(%r14),%eax
-> │ -     add    $0x4,%eax
-> │ -     movabs $0xfffffffdc,%rbx
-> │ +     movabs $0xfffffffe0,%rbx
-> │       add    %rax,%rbx
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-scsi@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Zero-length arrays are deprecated[1]. Replace struct io_uring_buf_ring's
+"bufs" with a flexible array member. (How is the size of this array
+verified?) Detected with GCC 13, using -fstrict-flex-arrays=3:
 
-Wow, those "magical" 4s seem quite elusive. It's more common to see people
-using sizeof applied to the element type, like sizeof(u32).
+In function 'io_ring_buffer_select',
+    inlined from 'io_buffer_select' at io_uring/kbuf.c:183:10:
+io_uring/kbuf.c:141:23: warning: array subscript 255 is outside the bounds of an interior zero-length array 'struct io_uring_buf[0]' [-Wzero-length-bounds]
+  141 |                 buf = &br->bufs[head];
+      |                       ^~~~~~~~~~~~~~~
+In file included from include/linux/io_uring.h:7,
+                 from io_uring/kbuf.c:10:
+include/uapi/linux/io_uring.h: In function 'io_buffer_select':
+include/uapi/linux/io_uring.h:628:41: note: while referencing 'bufs'
+  628 |                 struct io_uring_buf     bufs[0];
+      |                                         ^~~~
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 
-Thanks!
---
-Gustavo
+Fixes: c7fb19428d67 ("io_uring: add support for ring mapped supplied buffers")
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Pavel Begunkov <asml.silence@gmail.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: stable@vger.kernel.org
+Cc: io-uring@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: use helper since these flex arrays are in a union.
+v1: https://lore.kernel.org/lkml/20230105033743.never.628-kees@kernel.org
+---
+ include/uapi/linux/io_uring.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  drivers/scsi/mvumi.c | 4 ++--
->  drivers/scsi/mvumi.h | 6 +++---
->  2 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/scsi/mvumi.c b/drivers/scsi/mvumi.c
-> index b3dcb8918618..60c65586f30e 100644
-> --- a/drivers/scsi/mvumi.c
-> +++ b/drivers/scsi/mvumi.c
-> @@ -1841,7 +1841,7 @@ static enum mvumi_qc_result mvumi_send_command(struct mvumi_hba *mhba,
->  	cmd->frame->request_id = mhba->io_seq++;
->  	cmd->request_id = cmd->frame->request_id;
->  	mhba->tag_cmd[cmd->frame->tag] = cmd;
-> -	frame_len = sizeof(*ib_frame) - 4 +
-> +	frame_len = sizeof(*ib_frame) +
->  				ib_frame->sg_counts * sizeof(struct mvumi_sgl);
->  	if (mhba->hba_capability & HS_CAPABILITY_SUPPORT_DYN_SRC) {
->  		struct mvumi_dyn_list_entry *dle;
-> @@ -2387,7 +2387,7 @@ static int mvumi_io_attach(struct mvumi_hba *mhba)
->  	struct Scsi_Host *host = mhba->shost;
->  	struct scsi_device *sdev = NULL;
->  	int ret;
-> -	unsigned int max_sg = (mhba->ib_max_size + 4 -
-> +	unsigned int max_sg = (mhba->ib_max_size -
->  		sizeof(struct mvumi_msg_frame)) / sizeof(struct mvumi_sgl);
->  
->  	host->irq = mhba->pdev->irq;
-> diff --git a/drivers/scsi/mvumi.h b/drivers/scsi/mvumi.h
-> index a88c58787b68..1306a4abf19a 100644
-> --- a/drivers/scsi/mvumi.h
-> +++ b/drivers/scsi/mvumi.h
-> @@ -279,7 +279,7 @@ struct mvumi_msg_frame {
->  	u16 request_id;
->  	u16 reserved1;
->  	u8 cdb[MAX_COMMAND_SIZE];
-> -	u32 payload[1];
-> +	u32 payload[];
->  };
->  
->  /*
-> @@ -294,7 +294,7 @@ struct mvumi_rsp_frame {
->  	u8 req_status;
->  	u8 rsp_flag;	/* Indicates the type of Data_Payload.*/
->  	u16 request_id;
-> -	u32 payload[1];
-> +	u32 payload[];
->  };
->  
->  struct mvumi_ob_data {
-> @@ -380,7 +380,7 @@ struct mvumi_hs_header {
->  	u8	page_code;
->  	u8	checksum;
->  	u16	frame_length;
-> -	u32	frame_content[1];
-> +	u32	frame_content[];
->  };
->  
->  /*
-> -- 
-> 2.34.1
-> 
+diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+index 2780bce62faf..434f62e0fb72 100644
+--- a/include/uapi/linux/io_uring.h
++++ b/include/uapi/linux/io_uring.h
+@@ -625,7 +625,7 @@ struct io_uring_buf_ring {
+ 			__u16	resv3;
+ 			__u16	tail;
+ 		};
+-		struct io_uring_buf	bufs[0];
++		__DECLARE_FLEX_ARRAY(struct io_uring_buf, bufs);
+ 	};
+ };
+ 
+-- 
+2.34.1
+
