@@ -2,118 +2,172 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB61C53210
-	for <linux-hardening@archiver.kernel.org>; Wed,  4 Jan 2023 21:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4F1C46467
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 00:52:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240376AbjADV1v (ORCPT
+        id S229496AbjAEAww (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 4 Jan 2023 16:27:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
+        Wed, 4 Jan 2023 19:52:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240220AbjADV1Z (ORCPT
+        with ESMTP id S229885AbjAEAwX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 4 Jan 2023 16:27:25 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283ED601E0
-        for <linux-hardening@vger.kernel.org>; Wed,  4 Jan 2023 13:21:03 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id g16so27562998plq.12
-        for <linux-hardening@vger.kernel.org>; Wed, 04 Jan 2023 13:21:03 -0800 (PST)
+        Wed, 4 Jan 2023 19:52:23 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DCF92009
+        for <linux-hardening@vger.kernel.org>; Wed,  4 Jan 2023 16:48:05 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso462533pjo.3
+        for <linux-hardening@vger.kernel.org>; Wed, 04 Jan 2023 16:48:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6hfBhSBEeVR/Fn0HrEuQ880MYtC3rq93jEqLDWrIRMw=;
-        b=d/ljK1xNjvnmNQPClypMY7NthrX0dJ4f1EmgRBS4ehLUulZzgPMuUxNL14jLhPbdRk
-         VB0imrhMZluktlgYVbD+MPXO1MHEQ7Z0Vsr+LkXuTeneVml+HlS01FkJlcAIMVN4T7uy
-         7kgwDCHGZcv9kxNJ+gORs6nIPJ7Nf2suk5LMc=
+        bh=qmx16UuQhO5rZu2O4slHfWVCdmlFd6cA9JuWyhm5rnA=;
+        b=QWJVknkQ4DnD/ayIlD5UFOKldJWRzve9KTy5wyE6+Mp3ZKKSktyLlD2gDetG4fPgCT
+         NC7DFI4iiSawaeo7pOJu3NUieI7dM0IUa4XP8KeJsYU0JqtqRW3VewKL4SklusEMI0nI
+         YuAWzITODQhqY03mM90/8RPSh8kWFxIgj8z/4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6hfBhSBEeVR/Fn0HrEuQ880MYtC3rq93jEqLDWrIRMw=;
-        b=oKc01cmx3oxKttV5UnLcZSxr7vR7ksuujr6SZXP5r2sLvO9ngU087QpU2B8P9F85ka
-         YeiGdHEyezUVEprFlExLqIYsUwUwdAse8cQPUWieUZBn57aPZHO1H9U99nW6tDvR2vwv
-         3JtGA94yhuR6mdgOONyc40l1AKsSGnv4dEdWy+8SU6Qoi2hAqosf0Nepw8dMbznHVdUh
-         gaEkRcBGZk+VsS3dxScKRugJZ9eaWnuiaVpg7jEO+8nBJz6Vkusr1Ylfpn/V/Edovr7c
-         P1LhH8ln1rW/o3iqpbKfje6lNGPVeWJXLoTwIdAayHr9kZyvrA96gE3tsWp9oHbim39D
-         HH9g==
-X-Gm-Message-State: AFqh2kqRMoEqmvGlVKUC7xSZQ3DGsxgBl/q/WjWSQcvCrL75lquWG32X
-        gTMQb9DdRs8nR6RERtTU651fEg==
-X-Google-Smtp-Source: AMrXdXsKeXGtpr519xCOW080RFZiOWAh2y3jl+hgdaKT4z5qNzxQ6kZou5BSE/2l/r0y2R+hR0AEPg==
-X-Received: by 2002:a17:902:ca89:b0:189:76ef:a1b0 with SMTP id v9-20020a170902ca8900b0018976efa1b0mr46271243pld.57.1672867254539;
-        Wed, 04 Jan 2023 13:20:54 -0800 (PST)
+        bh=qmx16UuQhO5rZu2O4slHfWVCdmlFd6cA9JuWyhm5rnA=;
+        b=Rgs+WthOuAw/q2m9HZQkyPvl23l2KHJxHnFCSBJxymFqIkflL8BbHFtxaNzjalzkkP
+         G/O6CtewIIluIuXIOLeVeR8HXR7m+4G7n7ejU8rYycbq2DECY7n3uQU/woeYwE/ukJVz
+         wvkJCoyYVF0QVCIAbjUG8H7rQPUNWCnY0dUiBuZmkMrI6yo2hAyQt2gFABq90tZvxM37
+         ErJ7UjioLLH8GCUtsSz9Qpp3q5pWJEDelsqWp0H1azZQkSdMoFWLrC6C/Miy7d+7bw+q
+         mL1NPKrUMWLYIhc/O5irzy2T5T5LSz0vQK0jkpKoE4f+9s1w57+AXP96oFkh4yu9F5mJ
+         uVZg==
+X-Gm-Message-State: AFqh2krwEvyIc1hUIdHF3J2/ik/k7sdnmSOJBAMrOqc4OWv/VFb0rLTQ
+        7srPjC6yq7VcDtF3b59Ff/JQdQ==
+X-Google-Smtp-Source: AMrXdXupL+sr3HUkoy2bfjrW7IqsfGOud1IYdPVIlbzhbmE04NN1d5x29xV3kREuH7iPBzwDP4yOBw==
+X-Received: by 2002:a17:903:3311:b0:189:6522:7cc0 with SMTP id jk17-20020a170903331100b0018965227cc0mr52406794plb.50.1672879685109;
+        Wed, 04 Jan 2023 16:48:05 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d3-20020a170902cec300b00186a2274382sm24766893plg.76.2023.01.04.13.20.53
+        by smtp.gmail.com with ESMTPSA id a2-20020a170902ecc200b0017f64ab80e5sm24706484plh.179.2023.01.04.16.48.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Jan 2023 13:20:54 -0800 (PST)
+        Wed, 04 Jan 2023 16:48:04 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Nick Terrell <terrelln@fb.com>
+To:     Adam Radford <aradford@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] lib: zstd: Fix -Wstringop-overflow warning
-Date:   Wed,  4 Jan 2023 13:20:52 -0800
-Message-Id: <20230104212048.gonna.331-kees@kernel.org>
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] scsi: 3w-sas: Replace 1-element arrays with flexible array members
+Date:   Wed,  4 Jan 2023 16:48:01 -0800
+Message-Id: <20230105004757.never.017-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2611; h=from:subject:message-id; bh=HrYRlSpiw8NjSGyFfOnlBNqAWT9ChuUQa2gPPnHJcLg=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjte2zv2TP+E05u9eD5sdJ7UCLi1M9EXgRuP8lLkxo Uy3r3xCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7XtswAKCRCJcvTf3G3AJhB8EA CCGVmAc8Aoj7WuJx6zozmcccDcX1XIx12OZxp1wjb4/PJViRqYgqenc8t3l9FEuDDrVp096BX0ZuPx iALCAAWaHIviy+r0qB9gB1VTYUQs0+LM91DKWWpVZ3+l3okrT6+kZBUr7HAZQF1eH0u2qgBwb/E8JY LuwQH/MtMe+Eto/i6E93Zgh7kKo3CJDEEi/T1H/mYpyd/pGlzYi2LZdUaZEOuaaOprsHIAzqAt4jAw a3KGj7mFh0bbsyzNMz+CEFrawOMXHTYu+YU6baQG6nOn8Fxvr8Jb4i1YH9MnnE2mFUGSR9a55xzuaf Jl4JMzphl9PvhmubtsC09JR3oUrkQRkcOeSeTiVXdLuSb/qM8D4PLafSwboZGvCD2TvcVAhkvl2ysM 4Atj8B6HNB8DEBZViLvD1qzvnwFgnIr42X1QYt1N3w9qZ5SKXEvbfChWXqkks65KYzx67SLPovV01k PrQOTqTJg77vwAXVgNHN/I7xtJEerRGkeULDmdhz/63xnnZJdd3dHwimOgi1aJR8EarsinDXdPdFe0 jbnViZrRumskAa0LkT7+GrA2k0Sm1ptN8+y+5S71fkI/vlp2KsjNkqmda6ui27VSqphwKlof2b8hyz qAsr5PaYGjYFZO0r8CL+wCipiDiXQTTrcDvMN92oFQjyDkz/Cp2Xw7zbnvaA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4853; h=from:subject:message-id; bh=fngDH2oJss4+sESGmI2fY1x2FAgrFeUQkGfTN9+iocQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjth5Bain+6puH3Sb3/JrYRy2oc/pRGmxm11AX/0Xw s2+izlqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7YeQQAKCRCJcvTf3G3AJlLPD/ 9l+/uUbl6Loft70IysZLVyMfYPnC8y2klp3eiLSnUsKn91TtjHZeowcGK4tk7km3fjHMLs1X2jdlMU HuKWnuIDSv9ElQq/uXaZTex55zFG7tc4PcKrylYLH0k+dhFto2PMsqrn3NeVGymysBHeo8J3rAZxbB qVS0Bg/8023frYnGayhasJYv5JKSQZoFi5Q2PErnInysyP8Ry4vZTqF8hm33zegRD16Qkc7ubi9AEE 8nbrxrtSagUm9iJmVnUkdmrKlGZzQp9TuNfWgYAKZEp64WrjWOaYWOgAQzE7QzotkwT+DzkdoJ4UND 6dG9H+hjXstjjA3MpP51T1Gds8f1cG3oAw6Q+kwLxDM4dYees+GPWQs71TxfscAtqKrNqke/6vDNDz /elJwgBuu+JWhf8XzW7sUsuh3iSKP2SA5TzCZbh21lONJpHHzMbVHmgauTMS3U2KMbAdkSJlxfRUGu l+ZywrFDWli5lWVbE+/iCW5zoPMVBvxBeuuoFRoX6Kb2yvGW+D390mZcSASCkvT8qcij4VYo2FhlKi s36wFv3yhnt9/Rhfp6Bp25WguyKISinr2gNIaJTjgCIU43m7u+NW5c10FjwLT1zHXrh1/2tKfIFmVI FNCu8BAP+AkVReKvwKXfnx0fbGsFmYF+5xwniFOjFP/9328k2m4m69VKhBuw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the following -Wstringop-overflow warning when building with GCC 11+:
+One-element arrays (and multi-element arrays being treated as
+dynamically sized) are deprecated[1] and are being replaced with
+flexible array members in support of the ongoing efforts to tighten the
+FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
 
-lib/zstd/decompress/huf_decompress.c: In function ‘HUF_readDTableX2_wksp’:
-lib/zstd/decompress/huf_decompress.c:700:5: warning: ‘HUF_fillDTableX2.constprop’ accessing 624 bytes in a region of size 52 [-Wstringop-overflow=]
-  700 |     HUF_fillDTableX2(dt, maxTableLog,
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  701 |                    wksp->sortedSymbol, sizeOfSort,
-      |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  702 |                    wksp->rankStart0, wksp->rankVal, maxW,
-      |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  703 |                    tableLog+1,
-      |                    ~~~~~~~~~~~
-  704 |                    wksp->calleeWksp, sizeof(wksp->calleeWksp) / sizeof(U32));
-      |
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-lib/zstd/decompress/huf_decompress.c:700:5: note: referencing argument 6 of type ‘U32 (*)[13]’ {aka ‘unsigned int (*)[13]’}
-lib/zstd/decompress/huf_decompress.c:571:13: note: in a call to function ‘HUF_fillDTableX2.constprop’
-  571 | static void HUF_fillDTableX2(HUF_DEltX2* DTable, const U32 targetLog,
-      |             ^~~~~~~~~~~~~~~~
+Replace one-element arrays with flexible-array member in TW_Ioctl_Buf_Apache
+and TW_Param_Apache, adjusting the explicit sizing calculations at the
+same time.
 
-by using pointer notation instead of array notation.
+This results in no differences in binary output.
 
-This is one of the last remaining warnings to be fixed before globally
-enabling -Wstringop-overflow.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 
-Co-developed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: Nick Terrell <terrelln@fb.com>
+Cc: Adam Radford <aradford@gmail.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-scsi@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-v2: use "rankValCol_t *" instead of U32
-v1: https://lore.kernel.org/lkml/20220330193352.GA119296@embeddedor/
----
- lib/zstd/decompress/huf_decompress.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/3w-sas.c | 12 ++++++------
+ drivers/scsi/3w-sas.h |  4 ++--
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/lib/zstd/decompress/huf_decompress.c b/lib/zstd/decompress/huf_decompress.c
-index 89b269a641c7..60958afebc41 100644
---- a/lib/zstd/decompress/huf_decompress.c
-+++ b/lib/zstd/decompress/huf_decompress.c
-@@ -985,7 +985,7 @@ static void HUF_fillDTableX2Level2(HUF_DEltX2* DTable, U32 targetLog, const U32
+diff --git a/drivers/scsi/3w-sas.c b/drivers/scsi/3w-sas.c
+index 3ebe66151dcb..f41c93454f0c 100644
+--- a/drivers/scsi/3w-sas.c
++++ b/drivers/scsi/3w-sas.c
+@@ -690,7 +690,7 @@ static void twl_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
+ 		newcommand->request_id__lunl =
+ 			cpu_to_le16(TW_REQ_LUN_IN(TW_LUN_OUT(newcommand->request_id__lunl), request_id));
+ 		if (length) {
+-			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
++			newcommand->sg_list[0].address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache));
+ 			newcommand->sg_list[0].length = TW_CPU_TO_SGL(length);
+ 		}
+ 		newcommand->sgl_entries__lunh =
+@@ -702,7 +702,7 @@ static void twl_load_sgl(TW_Device_Extension *tw_dev, TW_Command_Full *full_comm
+ 		if (TW_SGL_OUT(oldcommand->opcode__sgloffset)) {
+ 			/* Load the sg list */
+ 			sgl = (TW_SG_Entry_ISO *)((u32 *)oldcommand+oldcommand->size - (sizeof(TW_SG_Entry_ISO)/4) + pae + (sizeof(dma_addr_t) > 4 ? 1 : 0));
+-			sgl->address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache) - 1);
++			sgl->address = TW_CPU_TO_SGL(dma_handle + sizeof(TW_Ioctl_Buf_Apache));
+ 			sgl->length = TW_CPU_TO_SGL(length);
+ 			oldcommand->size += pae;
+ 			oldcommand->size += sizeof(dma_addr_t) > 4 ? 1 : 0;
+@@ -748,7 +748,7 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
+ 	data_buffer_length_adjusted = (driver_command.buffer_length + 511) & ~511;
  
- static void HUF_fillDTableX2(HUF_DEltX2* DTable, const U32 targetLog,
-                            const sortedSymbol_t* sortedList,
--                           const U32* rankStart, rankVal_t rankValOrigin, const U32 maxWeight,
-+                           const U32* rankStart, rankValCol_t *rankValOrigin, const U32 maxWeight,
-                            const U32 nbBitsBaseline)
- {
-     U32* const rankVal = rankValOrigin[0];
+ 	/* Now allocate ioctl buf memory */
+-	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, &dma_handle, GFP_KERNEL);
++	cpu_addr = dma_alloc_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_Ioctl_Buf_Apache), &dma_handle, GFP_KERNEL);
+ 	if (!cpu_addr) {
+ 		retval = -ENOMEM;
+ 		goto out2;
+@@ -757,7 +757,7 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
+ 	tw_ioctl = (TW_Ioctl_Buf_Apache *)cpu_addr;
+ 
+ 	/* Now copy down the entire ioctl */
+-	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache) - 1))
++	if (copy_from_user(tw_ioctl, argp, driver_command.buffer_length + sizeof(TW_Ioctl_Buf_Apache)))
+ 		goto out3;
+ 
+ 	/* See which ioctl we are doing */
+@@ -815,11 +815,11 @@ static long twl_chrdev_ioctl(struct file *file, unsigned int cmd, unsigned long
+ 	}
+ 
+ 	/* Now copy the entire response to userspace */
+-	if (copy_to_user(argp, tw_ioctl, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length - 1) == 0)
++	if (copy_to_user(argp, tw_ioctl, sizeof(TW_Ioctl_Buf_Apache) + driver_command.buffer_length) == 0)
+ 		retval = 0;
+ out3:
+ 	/* Now free ioctl buf memory */
+-	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted+sizeof(TW_Ioctl_Buf_Apache) - 1, cpu_addr, dma_handle);
++	dma_free_coherent(&tw_dev->tw_pci_dev->dev, data_buffer_length_adjusted + sizeof(TW_Ioctl_Buf_Apache), cpu_addr, dma_handle);
+ out2:
+ 	mutex_unlock(&tw_dev->ioctl_lock);
+ out:
+diff --git a/drivers/scsi/3w-sas.h b/drivers/scsi/3w-sas.h
+index b0508039a280..096dec29e2ac 100644
+--- a/drivers/scsi/3w-sas.h
++++ b/drivers/scsi/3w-sas.h
+@@ -335,7 +335,7 @@ typedef struct TAG_TW_Ioctl_Apache {
+ 	TW_Ioctl_Driver_Command driver_command;
+ 	char padding[488];
+ 	TW_Command_Full firmware_command;
+-	char data_buffer[1];
++	char data_buffer[];
+ } TW_Ioctl_Buf_Apache;
+ 
+ /* GetParam descriptor */
+@@ -344,7 +344,7 @@ typedef struct {
+ 	unsigned short	parameter_id;
+ 	unsigned short	parameter_size_bytes;
+ 	unsigned short  actual_parameter_size_bytes;
+-	unsigned char	data[1];
++	unsigned char	data[];
+ } TW_Param_Apache;
+ 
+ /* Compatibility information structure */
 -- 
 2.34.1
 
