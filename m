@@ -2,128 +2,91 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F8EDC4708E
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 19:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F59C4708E
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 19:40:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235843AbjAETcP (ORCPT
+        id S235657AbjAETkr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 14:32:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60218 "EHLO
+        Thu, 5 Jan 2023 14:40:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234824AbjAETbs (ORCPT
+        with ESMTP id S236067AbjAETkV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 14:31:48 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521CF8FFA
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 11:26:51 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id a30so10466999pfr.6
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 11:26:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2M/SEDI3ZFLLpa6t8CMCD85tOj1o/kREvGLd7NUi0i0=;
-        b=bYiDK6coyyNfhwS9yGGXA4g3BMzQ6EtUBqat3QdKBC+jcD4l7q4QlmZhqOwOHhADeq
-         dgCWJrtIF1YSaHqo0PjnD+lhyqppr73VpPDLIYY+ucZnsBicoMpc2hDuVHmBHJWa1H0E
-         IBv3xU8jja7IXJ1CZaK2VrzBiCxVdmzHkJlQM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2M/SEDI3ZFLLpa6t8CMCD85tOj1o/kREvGLd7NUi0i0=;
-        b=mOs6LJdvfPUsrOjpEtkha6akXtv042U7Q6NzFKZDZcSAiLYH4pbkK2nm91gnU/6cjA
-         cDbiuGCktRCoksSHmEbMtsjHFIys+vzPITixW5CCoImCP+thsxaBYO4UTRhwZTAB7ihn
-         jCL20PY07PHSrIexQtVq72UG/V9Yy/3KYiYYyzO5Ny0I1+mCD8ZVB/epjCB8gC1mTLtD
-         bPktgo69lf5TzTBO0LiqADa81uaa1Zw/kFx+lF3cR9S+vtG9oUxscRlxGU+ertmoYz7L
-         inVZHUMcaaJYUDLVjvbTT78/toIPgZbBGWapiyFvt8cLBg5djy7srrHv0/iEGKIdG+kO
-         hQ0Q==
-X-Gm-Message-State: AFqh2krOdkVbKHY18ZEOG1cZXz3cGIZZSxAl/MTGWc0LnS+qRUWxothZ
-        jZgbEiMvInWYAZi/Eq+zSUGR4A==
-X-Google-Smtp-Source: AMrXdXvzT1/nMWdJ84tldXI9Vmxm1E1kI6mLQa2i8Nq+0jr9Opq3PWNUANqe3ITb9AJZ9gTGQY4GYA==
-X-Received: by 2002:a05:6a00:24cd:b0:581:4260:a650 with SMTP id d13-20020a056a0024cd00b005814260a650mr58589947pfv.33.1672946810834;
-        Thu, 05 Jan 2023 11:26:50 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x3-20020aa79563000000b005818d4284aasm16046250pfq.160.2023.01.05.11.26.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 11:26:50 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] bpf: Replace 0-length arrays with flexible arrays
-Date:   Thu,  5 Jan 2023 11:26:47 -0800
-Message-Id: <20230105192646.never.154-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Thu, 5 Jan 2023 14:40:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E66A81DF0D;
+        Thu,  5 Jan 2023 11:38:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A01FEB8111F;
+        Thu,  5 Jan 2023 19:38:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8BCFC433EF;
+        Thu,  5 Jan 2023 19:38:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1672947484;
+        bh=KBdBzlc3g1iDGQnK6row4ab6NJe99uJpRoP/gxBZW28=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YAKtTrpWtz7GX/i3gnravZDqno40s8qwhlWs/sCoVkRvfYMNu4YmgKOzVOlBbialJ
+         GsicuuYOltbMgIhasLVbHL48gfQSkA0QxoWLNPlIKN6Fc7xog1pnO05IJjZ/3ANpd/
+         zF1QwdDtk9ZqLxfj9a9cyXI4/sibc3/vle5KvFHE=
+Date:   Thu, 5 Jan 2023 20:38:01 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        stable@vger.kernel.org, io-uring@vger.kernel.org,
+        Dylan Yudaken <dylany@fb.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] io_uring: Replace 0-length array with flexible array
+Message-ID: <Y7cnGT0dK86BA4b7@kroah.com>
+References: <20230105033743.never.628-kees@kernel.org>
+ <Y7Z+xN+BDy5yoK5f@kroah.com>
+ <202301051003.27CF3DC@keescook>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2101; h=from:subject:message-id; bh=V+hDTvfLNktsOza7//a0ww3JjY/DO434Oi3YuneAQho=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjtyR3frN3HKMkFYai/Tm7ow/5jyykqQkgn4p54zvI 3udqhk6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7ckdwAKCRCJcvTf3G3AJiVXD/ oDGiZsOyCTBvLW5TFiKe3edkbxbWHr734/G3YbQEr15ayjIYmPo4HRfPl5f4ILDNVy24KjBoUFo9pB coVD7DTnVaFqeQ+kIbE59nyjzZZuUstSyyrFAFaps2VjYlcxhQclBM8ri1GFaIyeeAeR5Qs/IPdlMn dfxzky3v1L3HQQLLG0h26sTRl+pgOhaN4hiihyxZZV8rYS1nM++DZyMjbUQh+7lO525XIOd1p5Mk0j YHEwojOP1BDNZ+/5RgCCPCyPzKhQyOB4glMRpff7BPpi/gX1moSO9xjQOxp0U/nrB/zR267fq8DCVm zeRSUBCdQdpM05UACFsqZJHwiiZerLz5/rgFgiehgoulnCiidE19JcAYOMqBI9mJqx/yTPCWjxpHGr 89uZ9V8XbgjBTViH2Xvt/GHKdKXjfMYgolk3dblHqteV/PQ287MVj0V3uO+WumVw1TY+Fx4TsJfdyS DoNCgswbqTMlBlxy3IySs5RDgp/viDh0jA9TDeolIk/9rYQACGi6HbaoVnmuEF1UWMAaKgZFbLv4gw z4Y0hX5Dp7dw34matjSvTPGwhiVP0io9YetucAqYbuVziv6heiXkyobM4g2alSdqn6rlsKkV0h4SBx H8qunve472K7XsC1zmNiU1mTDwRwXYbu2D3KNs2eAAicfhq9o18tJj/R5Hxg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202301051003.27CF3DC@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated[1]. Replace struct bpf_array's
-union of 0-length arrays with flexible arrays. (How are the
-sizes of these arrays verified?) Detected with GCC 13, using
--fstrict-flex-arrays=3:
+On Thu, Jan 05, 2023 at 10:04:19AM -0800, Kees Cook wrote:
+> On Thu, Jan 05, 2023 at 08:39:48AM +0100, Greg KH wrote:
+> > On Wed, Jan 04, 2023 at 07:37:48PM -0800, Kees Cook wrote:
+> > > Zero-length arrays are deprecated[1]. Replace struct io_uring_buf_ring's
+> > > "bufs" with a flexible array member. (How is the size of this array
+> > > verified?) Detected with GCC 13, using -fstrict-flex-arrays=3:
+> > > 
+> > > In function 'io_ring_buffer_select',
+> > >     inlined from 'io_buffer_select' at io_uring/kbuf.c:183:10:
+> > > io_uring/kbuf.c:141:23: warning: array subscript 255 is outside the bounds of an interior zero-length array 'struct io_uring_buf[0]' [-Wzero-length-bounds]
+> > >   141 |                 buf = &br->bufs[head];
+> > >       |                       ^~~~~~~~~~~~~~~
+> > > In file included from include/linux/io_uring.h:7,
+> > >                  from io_uring/kbuf.c:10:
+> > > include/uapi/linux/io_uring.h: In function 'io_buffer_select':
+> > > include/uapi/linux/io_uring.h:628:41: note: while referencing 'bufs'
+> > >   628 |                 struct io_uring_buf     bufs[0];
+> > >       |                                         ^~~~
+> > > 
+> > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> > > 
+> > > Fixes: c7fb19428d67 ("io_uring: add support for ring mapped supplied buffers")
+> > > Cc: Jens Axboe <axboe@kernel.dk>
+> > > Cc: Pavel Begunkov <asml.silence@gmail.com>
+> > > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > > Cc: stable@vger.kernel.org
+> > 
+> > Build problem aside, why is this a stable kernel issue?
+> 
+> My thinking was that since this is technically a UAPI change, it'd be
+> best to get it changed as widely as possible.
 
-arch/x86/net/bpf_jit_comp.c: In function 'bpf_tail_call_direct_fixup':
-arch/x86/net/bpf_jit_comp.c:606:37: warning: array subscript <unknown> is outside array bounds of 'void *[0]' [-Warray-bounds=]
-  606 |                 target = array->ptrs[poke->tail_call.key];
-      |                          ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
-In file included from include/linux/filter.h:9,
-                 from arch/x86/net/bpf_jit_comp.c:9:
-include/linux/bpf.h:1527:23: note: while referencing 'ptrs'
- 1527 |                 void *ptrs[0] __aligned(8);
-      |                       ^~~~
+You can't break the uapi, so it should be the same with or without your
+change right?
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+confused,
 
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Song Liu <song@kernel.org>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Hao Luo <haoluo@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: bpf@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/bpf.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 3de24cfb7a3d..2131000f711e 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -1523,9 +1523,9 @@ struct bpf_array {
- 	u32 index_mask;
- 	struct bpf_array_aux *aux;
- 	union {
--		char value[0] __aligned(8);
--		void *ptrs[0] __aligned(8);
--		void __percpu *pptrs[0] __aligned(8);
-+		DECLARE_FLEX_ARRAY(char, value) __aligned(8);
-+		DECLARE_FLEX_ARRAY(void *, ptrs) __aligned(8);
-+		DECLARE_FLEX_ARRAY(void __percpu *, pptrs) __aligned(8);
- 	};
- };
- 
--- 
-2.34.1
-
+greg k-h
