@@ -2,118 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5264AC4708E
-	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 22:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC62C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Thu,  5 Jan 2023 22:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235681AbjAEWgs (ORCPT
+        id S236216AbjAEWjt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 17:36:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36702 "EHLO
+        Thu, 5 Jan 2023 17:39:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236154AbjAEWgr (ORCPT
+        with ESMTP id S236214AbjAEWjs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 17:36:47 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BD81B1D2
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 14:36:45 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id p24so18349378plw.11
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 14:36:45 -0800 (PST)
+        Thu, 5 Jan 2023 17:39:48 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADA11C41E
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 14:39:47 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id 7so62421pga.1
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 14:39:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vTnS8YGkz+TFlaH5VylWTT81FwP8SacJ4LHArMeisg0=;
-        b=Od3RSE6LiX0RDr6NqBn7rCVN/9DDDXs0q+tdT8jFQncP6Urx8T2WMJHv89zDyEDp7O
-         4gyuEjWhxh3h7/iqTPH5ceEQX64JBhrM5b5kHvdfaEVQ9hRdLJRNOppjlomjTaI3BIGf
-         w+3D8bNOlw2KFUDHvYyOVXVe4LphI3IDQbgjc=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hdgAvYTBrYnbaUNEv8BIMTzu3Oe5iPdX/uTy6lOBdp8=;
+        b=gJQpryXWL+Io+7TfOdR/L7h/MnG9VV9Jz4HEcSeFaLzheIGBhT9XVgQEh2hUgBSpNa
+         Akn8+/KMom7qedcO0/agBltAVVd9K44Ma+Ijw97Rs+h7VkcrpJGeESfcc/2L/As8HuWD
+         g3BOFMWbO9TtxJ4bWD1f8ZtH2kyVn1Tk+Lyxs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vTnS8YGkz+TFlaH5VylWTT81FwP8SacJ4LHArMeisg0=;
-        b=HlRzsUAGXlM68NA6USY/otkQuYMguomI97w23jnllBjw9Bc7qckCphCAOkRKCfkb4J
-         kFyNmw0uPeQHMx/GLrFXTNnPyPRb27Fc8wQlwSUMupsiugLJJ2qQzm4R4jN+82FMrDvE
-         EqzcKHx4S7sOmhs8nkyxs9/eQaYuWAXBwMTeI9c/WBg/7FO1CAlFNPmAbPrUGCFFHnWr
-         zpUJ6P5um1F8eUN3DMJC/wxu23eMu1j2I/eKespwznGgA1rgTZgjMVVoDOdxkAYcxIlH
-         HUD04LO3rUW3uWby4vF4jc+MpeVBUWOkP8qFAY4dXg0ZkpwAg52rz/oiePPnHFZxJ6UG
-         Tr5A==
-X-Gm-Message-State: AFqh2kog4HWHi/32Tah/9b/bmEgYeGqpIyBI+lwoxAJlfL+E/9NvudKK
-        g27+K7xYjnTHjkxpC99UvkXvFg==
-X-Google-Smtp-Source: AMrXdXux9e5NuZPpnskqtYB+XoAQpaU8Ilr5HfAMj1CxdM9IDVskpvaO076O8SqFOoZhA8EsUBypdw==
-X-Received: by 2002:a17:902:f08a:b0:189:efe8:1e with SMTP id p10-20020a170902f08a00b00189efe8001emr51337863pla.68.1672958205276;
-        Thu, 05 Jan 2023 14:36:45 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hdgAvYTBrYnbaUNEv8BIMTzu3Oe5iPdX/uTy6lOBdp8=;
+        b=GQf3xpp1a6wScNrMugrLRIZ+DYQUVvHx6E5MGb7WYQ/dAfgybO4Y+uc995im24Q+Ff
+         FSJHYljb3I/MEblRhelwaujNgvss+xM5rRfFqplP+61G53uQ9CiLQq6a7RQGBUPFboP+
+         xND5odIhW1oP75Ee3obG+82gkj/r/ZDxgvv+5CpVWjZ/34YHQKpuWc1iVIG0CgkmegLq
+         9DmdXwpfPfUsSNelPSotGvQLFhtGUwqf6Ps9BKyK3vu1btWZ7IPv+yeGgSr/pYXciP2T
+         Bb/Bk2waq45hujtoNUKoIMfNnQhL32EVdxzKzmzaDwMtGRwmhgDJlP9ck/qs0BKNopbo
+         N2gA==
+X-Gm-Message-State: AFqh2kq8htTLRFAXXMnBEr6E8N2oEC8L2xATZ0hGQtvfRiUtXjfK6JFZ
+        WKJdCF5a4Vw6unZzvNMt7KJR8w==
+X-Google-Smtp-Source: AMrXdXuRg8ap1gfmlr1QRcGiFifKwVjGE0OZvbRtHILaqVmV92+uxnMIKqYkNiGkvtxG9Rd772hvxg==
+X-Received: by 2002:a05:6a00:1816:b0:583:2a52:6ae3 with SMTP id y22-20020a056a00181600b005832a526ae3mr4621197pfa.6.1672958386670;
+        Thu, 05 Jan 2023 14:39:46 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a11-20020a63e40b000000b00478ca052819sm22392159pgi.47.2023.01.05.14.36.44
+        by smtp.gmail.com with ESMTPSA id x7-20020aa78f07000000b00580f630a05csm21128326pfr.180.2023.01.05.14.39.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 14:36:44 -0800 (PST)
+        Thu, 05 Jan 2023 14:39:46 -0800 (PST)
+Date:   Thu, 5 Jan 2023 14:39:45 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Saeed Mahameed <saeedm@nvidia.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] net/mlx5e: Replace 0-length array with flexible array
-Date:   Thu,  5 Jan 2023 14:36:43 -0800
-Message-Id: <20230105223642.never.980-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alex Sierra <alex.sierra@amd.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Shiyang Ruan <ruansy.fnst@fujitsu.com>, linux-mm@kvack.org,
+        Alistair Popple <apopple@nvidia.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] memremap: Replace 0-length array with flexible array
+Message-ID: <202301051438.4FCD7E8AF@keescook>
+References: <20230105220151.never.343-kees@kernel.org>
+ <Y7dLrdOETjg/+XKq@work>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2058; h=from:subject:message-id; bh=z9zLbe924cMlc9bCRVzAk3TMTpuiLHM3ITNjTKxLEL0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt1D68KpUigmLbVjgVr7qwolklCRIkWm8FyY1lEal zrIwQ0OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7dQ+gAKCRCJcvTf3G3AJszwD/ 40sd9lxHmJk2Jotmcy0c7sImQsz4M/iSxCz1Jpo1Acu/9tBXHYG1WSg/JM6HXMs25zbP83WqwZz0ta ScdPosftzA9wgmMXb8/vXf5cULI/T6DCXW0ZjMmLqmCK/rwtV3r7z6oheW3142vbpRV16KcUPEG3cd I4F56O0hNGAOds3VxCtoqEVp7piVlUf8dB0bVyBEmFpdaXdPqRdyAOwEq3YODbu6OA/FoiGnHHpg3I ydu80/WoZOPdRL6PkOS3k+bHThq6R5S3STEcXo1ZzL3p9pg5gO2oD73XIWp+O+5oEdQ44XJ5IeQlRB C83oU0jwWetg8xUaErm2gxRVENDxW7kkm3f9H5ua/0O0HqjXbIWmIGe/IW/U7zAS7n0LJihh/aarM5 eBN190UCobxYYRfBwBgDKNaOhyVpdGloA2ctVsKl73uBOYVh22Uiyxdf1kTHlq8jdZXHY4F7c3lcnx V3hmmqzjd9J5X1mX2UixvWWgYi2tElBFI6QWnp826wGAbGWWmo2k/Az3EuzS6KU9Zigo49zT2DPfV2 pCcEPuUsbIXEii75tbJ+5iL0Drqc9BeOHZengIsBO37yKw0hkbNI8ICcqNhFpUR2Y7lvFAOQ2eJy9+ TWP/koLD8R1zAvnL6ic+lKbJeF13un/q+KpvgSiiUvs1+7ynM31ceE79ROkg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y7dLrdOETjg/+XKq@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated[1]. Replace struct mlx5e_rx_wqe_cyc's
-"data" 0-length array with a flexible array. Detected with GCC 13,
-using -fstrict-flex-arrays=3:
+On Thu, Jan 05, 2023 at 04:14:05PM -0600, Gustavo A. R. Silva wrote:
+> I think this is the same patch:
+> 
+> https://lore.kernel.org/linux-hardening/YxKO%2FjY1x0xTpl4r@work/
+> 
+> It's actually in linux-next.
 
-drivers/net/ethernet/mellanox/mlx5/core/en_main.c: In function 'mlx5e_alloc_rq':
-drivers/net/ethernet/mellanox/mlx5/core/en_main.c:827:42: warning: array subscript f is outside array bounds of 'struct mlx5_wqe_data_seg[0]' [-Warray-bounds=]
-  827 |                                 wqe->data[f].byte_count = 0;
-      |                                 ~~~~~~~~~^~~
-In file included from drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.h:11,
-                 from drivers/net/ethernet/mellanox/mlx5/core/eswitch.h:48,
-                 from drivers/net/ethernet/mellanox/mlx5/core/en_main.c:42:
-drivers/net/ethernet/mellanox/mlx5/core/en.h:250:39: note: while referencing 'data'
-  250 |         struct mlx5_wqe_data_seg      data[0];
-      |                                       ^~~~
+Ah-ha! Thank you! I'll move to linux-next for build testing.
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-
-Cc: Saeed Mahameed <saeedm@nvidia.com>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-rdma@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 2d77fb8a8a01..37cf3b1bb144 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -247,7 +247,7 @@ struct mlx5e_rx_wqe_ll {
- };
- 
- struct mlx5e_rx_wqe_cyc {
--	struct mlx5_wqe_data_seg      data[0];
-+	DECLARE_FLEX_ARRAY(struct mlx5_wqe_data_seg, data);
- };
- 
- struct mlx5e_umr_wqe {
 -- 
-2.34.1
-
+Kees Cook
