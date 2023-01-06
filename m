@@ -2,46 +2,46 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F94C3DA7A
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 05:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16317C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 05:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbjAFFif (ORCPT
+        id S231330AbjAFFru (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 00:38:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40602 "EHLO
+        Fri, 6 Jan 2023 00:47:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbjAFFie (ORCPT
+        with ESMTP id S229509AbjAFFrt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 00:38:34 -0500
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9D34D714;
-        Thu,  5 Jan 2023 21:38:30 -0800 (PST)
-Received: by mail-pl1-f170.google.com with SMTP id c4so679752plc.5;
-        Thu, 05 Jan 2023 21:38:30 -0800 (PST)
+        Fri, 6 Jan 2023 00:47:49 -0500
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBD9948CD4;
+        Thu,  5 Jan 2023 21:47:46 -0800 (PST)
+Received: by mail-pj1-f50.google.com with SMTP id o8-20020a17090a9f8800b00223de0364beso4223678pjp.4;
+        Thu, 05 Jan 2023 21:47:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aUTX3hQ31eJpmnwwb1UwPf65sW8fJfvo/kP6nw0krfk=;
-        b=Au8MT65ShOqUOwsDx16LrkDeCk5efrIoen7LvirJXU6fMqO1Zvq2n5nwsrwWlTFNVm
-         wfvy/bl/b7bvsJ0iIe64y9Df4aTEsG4iGopokx/Sd3CNUmam23iM+Tz+UrqbdxikcrFx
-         T94HD3Uf/gYqIaZWgXMsgEjHIFLRQSDiF+v6DNnMjZymFb7TQDwytF4u69/oZgg4R0V0
-         oqaB9vfmqDhRogRLC+rdGT2oyYWB/Ua4v8o6RJbrjD/XGjEIe9+MvOxPTst4gTS05D/C
-         6PMeIp0UkoWpeRu0ifIHq13QKEhrCLPMCRG7Fig6dh4LwPwrNHDhDvCQeLD0VOLkJAnZ
-         mM0g==
-X-Gm-Message-State: AFqh2kpGTzKePPEgj5bRqTZdJl1gzClX/n8wv40lGlBMdOBvgSMv1C3k
-        HtRYbs8r5q7jUM6V/ZfAH3pqkMOi63ULv+PYGC9o5bx4nBxNkA==
-X-Google-Smtp-Source: AMrXdXvNcd1XCRKiDs4wrb/kT3sZVAPRhrj+XsEx75wOAoiyXJLo18ALcvUzv4IcoSSBZ0xxms6K2S0SDMBD9Aqcf5E=
-X-Received: by 2002:a17:90b:2483:b0:226:412e:2ddf with SMTP id
- nt3-20020a17090b248300b00226412e2ddfmr1633082pjb.19.1672983509489; Thu, 05
- Jan 2023 21:38:29 -0800 (PST)
+        bh=3YubsmjlT8gvaUNIbLlS2Rx5IGQKnpyKadMDjv71G7c=;
+        b=LLZwZOxnXI8avDE5Jt5cMfQKBijAwnEfmOvuGAezu362nWzKMSDE6mQZg7lYISvZGL
+         XqQprTfizgiPktFO192lrlMiTVwAwCG9ifwUr87xO0/hZRPaBv85kDOfRbK5OeR760JD
+         Ju5MAZ9RVMGVlhC7vy8tpLoUbJliTh0CPpezrF6T7aRipBR2Dp1ArK5BDqloL2ugzoWn
+         YEiehB45nLVb6beRTny2BGz71J6pcwXoGofHySWUqpewTk5g0KRZ5q8+Z5nnmzrfMpuA
+         oUAIxJOA6OWkbbh7Phdptjt0vJZ3kjOxIVyf57+vfB+hoB8f9bS/6k3D207fe+bnrzHG
+         /TTw==
+X-Gm-Message-State: AFqh2krlbnvXcdWKIZoyVfkNWu4rFaTM2yosDpSDBLpdL5SCBeQJWn8Y
+        aD64WFsAJDfoaH8FBGsnLBQPwxyqcUT26+QP9fk=
+X-Google-Smtp-Source: AMrXdXuDUVBnGhwZoxjcV0kodG3U5wRj+DXUQMWLdzEIhmGty+QTS7CeirNo2kTS3VxHb9HveTW1MqzR8K9BNMEtcGk=
+X-Received: by 2002:a17:902:ef87:b0:192:5cb3:b01a with SMTP id
+ iz7-20020a170902ef8700b001925cb3b01amr2832255plb.95.1672984066101; Thu, 05
+ Jan 2023 21:47:46 -0800 (PST)
 MIME-Version: 1.0
 References: <20230106042844.give.885-kees@kernel.org>
 In-Reply-To: <20230106042844.give.885-kees@kernel.org>
 From:   Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
-Date:   Fri, 6 Jan 2023 14:38:18 +0900
-Message-ID: <CAMZ6RqKyvGwh7iOVvtONGYA21==Lj6p9JECstCBFSWRRCPAVZQ@mail.gmail.com>
+Date:   Fri, 6 Jan 2023 14:47:35 +0900
+Message-ID: <CAMZ6RqKghb-YqQuWGiEn8D-CQgvecBxsxUz_2XYE0m3hs752gQ@mail.gmail.com>
 Subject: Re: [PATCH v3] ethtool: Replace 0-length array with flexible array
 To:     Kees Cook <keescook@chromium.org>
 Cc:     "David S. Miller" <davem@davemloft.net>,
@@ -78,11 +78,7 @@ On Fri. 6 Jan 2023 at 13:28, Kees Cook <keescook@chromium.org> wrote:
 >       |                                         ^~~~~~~~~
 >
 > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-
-Side comment, this link does not mention the __DECLARE_FLEX_ARRAY().
-It could be good to add a reference to the helper here. But of course,
-this is not a criticism of this patch.
-
+>
 > Cc: "David S. Miller" <davem@davemloft.net>
 > Cc: Jakub Kicinski <kuba@kernel.org>
 > Cc: Andrew Lunn <andrew@lunn.ch>
@@ -95,16 +91,17 @@ this is not a criticism of this patch.
 > Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 > Cc: netdev@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-
 > ---
 > v3: don't use helper (vincent)
 
-You may want to double check your other patches as well. At least this
-one is also using the helper when not needed:
+v1: https://lore.kernel.org/all/20230105214126.never.757-kees@kernel.org
+                                               ^^^^^
+> v2: https://lore.kernel.org/lkml/20230105233420.gonna.036-kees@kernel.org
+                                                  ^^^^^
+v3: https://lore.kernel.org/netdev/20230106042844.give.885-kees@kernel.org
+                                                  ^^^^
 
-  https://lore.kernel.org/netdev/20230105223642.never.980-kees@kernel.org/T/#u
+Seriously... :)
 
 > v2: https://lore.kernel.org/lkml/20230105233420.gonna.036-kees@kernel.org
 > ---
@@ -122,8 +119,3 @@ one is also using the helper when not needed:
 > -       __u32                           rule_locs[0];
 > +       __u32                           rule_locs[];
 >  };
->
->
-> --
-> 2.34.1
->
