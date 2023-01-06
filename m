@@ -2,165 +2,148 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE095C4708D
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 13:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88309C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 14:25:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231511AbjAFNjq (ORCPT
+        id S234829AbjAFOZc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 08:39:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40134 "EHLO
+        Fri, 6 Jan 2023 09:25:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbjAFNjd (ORCPT
+        with ESMTP id S234693AbjAFOZ2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 08:39:33 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0F96169;
-        Fri,  6 Jan 2023 05:39:32 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id DA6023F541;
-        Fri,  6 Jan 2023 13:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1673012370; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a3xS9J4Ev7cI3vqp+nZg9a5psmAQ7Jxm1E4l2JxtFMk=;
-        b=XzuAEf49pLMJ03gIabASS5tus7Ya1yP5EgX8CqH0oX4iQr/e/FCXok+fh3B32S36SrZdsu
-        o00yApTqHpak62hZa391Ylx0gtGz9bhEKQE+q8xb8gAi17QCCTBxKU1WdeK1wyi9KUqjjK
-        NSmnMCOf+8+uFy+VwwtyobgORi4awAk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1673012370;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a3xS9J4Ev7cI3vqp+nZg9a5psmAQ7Jxm1E4l2JxtFMk=;
-        b=HOgZ557iqj0LmRSn5O93Zcy+M08NS+xwPrFKw1RF/BOiFbXk+N1CudPs37INCtlX3uFpY5
-        /y/IUtkj5cSy1wAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 670E713596;
-        Fri,  6 Jan 2023 13:39:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id rDcuDZEkuGOQYgAAMHmgww
-        (envelope-from <colyli@suse.de>); Fri, 06 Jan 2023 13:39:29 +0000
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
-Subject: Re: [PATCH] bcache: Silence memcpy() run-time false positive warnings
-From:   Coly Li <colyli@suse.de>
-In-Reply-To: <20230106060229.never.047-kees@kernel.org>
-Date:   Fri, 6 Jan 2023 21:39:16 +0800
-Cc:     Thorsten Leemhuis <linux@leemhuis.info>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <CBD781CA-342F-482A-A5B0-C4EE2D7FE11B@suse.de>
-References: <20230106060229.never.047-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-X-Mailer: Apple Mail (2.3731.300.101.1.3)
+        Fri, 6 Jan 2023 09:25:28 -0500
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36C857BDCA;
+        Fri,  6 Jan 2023 06:25:27 -0800 (PST)
+Received: by mail-pf1-f181.google.com with SMTP id z7so1131153pfq.13;
+        Fri, 06 Jan 2023 06:25:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZnhpvIy2ZsoQIvjxqkh6LV97wMF7pwAzJclzOI/EkUA=;
+        b=gJpZEqK8J9iUXg6/NaMcM7g+hrm6Idxwqlmg2b1oNBbzs6/lK/Loxi/Aw5Qxq0QDSL
+         Wzp5ZdvcMC4ujm8MnXlIKhlnF8ZUjqHI9TH5AiZQCCNsNoap4tu6GunKKk2qjR9HqW4u
+         J8ghWWq4JwmMmYkbOBsS0ok57pIMsqzoE1eL+gu9TQ/GvYMfgTCZ3WS8K0VTnen/BsOz
+         IOFqTOn25Q3HJoK9P6IJtl2knqLE86CIWndu/O6NDO83G/uhQPltF5L8o531fSzkeM2g
+         9oT9VV09XCANxxPLCJrBuhnGbPQxclXN1S079dOK5hzQ5PI8+k39fAOhRvDnuH1PoWTf
+         dWsw==
+X-Gm-Message-State: AFqh2koRrzxuFn0EPfhR9C0HyGBKOJMf9T2VMmVWRQZn8W0lbSysSCzL
+        x34QhEVBo7gsiSewxncoEuIKxMqnO4m9/mggJlY=
+X-Google-Smtp-Source: AMrXdXupE8sC+Y3fGN3ty9aij7GdI5lL4SimVP4vcqOWquE7YENA7c1nv0MwPYafQUD94503z2yComXmE17v1S9TlPc=
+X-Received: by 2002:a63:2106:0:b0:483:f80c:cdf3 with SMTP id
+ h6-20020a632106000000b00483f80ccdf3mr2608100pgh.70.1673015126142; Fri, 06 Jan
+ 2023 06:25:26 -0800 (PST)
+MIME-Version: 1.0
+References: <20230106042844.give.885-kees@kernel.org> <CAG48ez0Jg9Eeh=RWpYh=sKhzukE3Sza2RKMmNs8o0FrHU0dj9w@mail.gmail.com>
+In-Reply-To: <CAG48ez0Jg9Eeh=RWpYh=sKhzukE3Sza2RKMmNs8o0FrHU0dj9w@mail.gmail.com>
+From:   Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
+Date:   Fri, 6 Jan 2023 23:25:14 +0900
+Message-ID: <CAMZ6RqJXnUBxqyCFRaLxELjnvGzn9NoiePV2RVwBzAZRGH_Qmg@mail.gmail.com>
+Subject: Re: [PATCH v3] ethtool: Replace 0-length array with flexible array
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        kernel test robot <lkp@intel.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Amit Cohen <amcohen@nvidia.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri. 6 Jan 2023 at 22:19, Jann Horn <jannh@google.com> wrote:
+> On Fri, Jan 6, 2023 at 5:28 AM Kees Cook <keescook@chromium.org> wrote:
+> > Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
+> > "rule_locs" 0-length array with a flexible array. Detected with GCC 13,
+> > using -fstrict-flex-arrays=3:
+> >
+> > net/ethtool/common.c: In function 'ethtool_get_max_rxnfc_channel':
+> > net/ethtool/common.c:558:55: warning: array subscript i is outside array bounds of '__u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
+> >   558 |                         .fs.location = info->rule_locs[i],
+> >       |                                        ~~~~~~~~~~~~~~~^~~
+> > In file included from include/linux/ethtool.h:19,
+> >                  from include/uapi/linux/ethtool_netlink.h:12,
+> >                  from include/linux/ethtool_netlink.h:6,
+> >                  from net/ethtool/common.c:3:
+> > include/uapi/linux/ethtool.h:1186:41: note: while referencing
+> > 'rule_locs'
+> >  1186 |         __u32                           rule_locs[0];
+> >       |                                         ^~~~~~~~~
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> >
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: kernel test robot <lkp@intel.com>
+> > Cc: Oleksij Rempel <linux@rempel-privat.de>
+> > Cc: Sean Anderson <sean.anderson@seco.com>
+> > Cc: Alexandru Tachici <alexandru.tachici@analog.com>
+> > Cc: Amit Cohen <amcohen@nvidia.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > v3: don't use helper (vincent)
+> > v2: https://lore.kernel.org/lkml/20230105233420.gonna.036-kees@kernel.org
+> > ---
+> >  include/uapi/linux/ethtool.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+> > index 58e587ba0450..3135fa0ba9a4 100644
+> > --- a/include/uapi/linux/ethtool.h
+> > +++ b/include/uapi/linux/ethtool.h
+> > @@ -1183,7 +1183,7 @@ struct ethtool_rxnfc {
+> >                 __u32                   rule_cnt;
+> >                 __u32                   rss_context;
+> >         };
+> > -       __u32                           rule_locs[0];
+> > +       __u32                           rule_locs[];
+>
+> Stupid question: Is this syntax allowed in UAPI headers despite not
+> being part of standard C90 or C++? Are we relying on all C/C++
+> compilers for pre-C99 having gcc/clang extensions?
+
+The [0] isn't part of the C90 standard either. So having to choose
+between [0] and [], the latter is the most portable nowadays.
+
+If I do a bit of speleology, I can see that C99 flexible array members
+were used as early as v2.6.19 (released in November 2006):
+
+  https://elixir.bootlin.com/linux/v2.6.19/source/include/linux/usb/audio.h#L36
+
+This is prior to the include/linux and include/uapi/linux split, but
+believe me, this usb/audio.h file is indeed part of the uapi.
+So, yes, using C99 flexible array members in the UAPI is de facto
+allowed because it was used for the last 16 years.
+
+An interesting sub question would be:
+
+  What are the minimum compiler requirements to build a program using
+the Linux UAPI?
+
+And, after research, I could not find the answer. The requirements to
+build the kernel are well documented:
+
+  https://docs.kernel.org/process/changes.html#changes
+
+But no clue for the uapi. I guess that at one point in 2006, people
+decided that it was time to set the minimum requirement to C99. Maybe
+this matches the end of life of the latest pre-C99 GCC version? The
+detailed answer must be hidden somewhere on lkml.
 
 
-> 2023=E5=B9=B41=E6=9C=886=E6=97=A5 14:02=EF=BC=8CKees Cook =
-<keescook@chromium.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> struct bkey has internal padding in a union, but it isn't always named
-> the same (e.g. key ## _pad, key_p, etc). This makes it extremely hard
-> for the compiler to reason about the available size of copies done
-> against such keys. Use unsafe_memcpy() for now, to silence the many
-> run-time false positive warnings:
->=20
-
-The keys is embedded in multiple data structures as a generalized model =
-with some helpers, bkey_bytes() is one of them.
-
-It is not surprised for such feeling when people read the code at first =
-glance. And thank you for improving it :-)
-
-
->  memcpy: detected field-spanning write (size 264) of single field =
-"&i->j" at drivers/md/bcache/journal.c:152 (size 240)
->  memcpy: detected field-spanning write (size 24) of single field =
-"&b->key" at drivers/md/bcache/btree.c:939 (size 16)
->  emcpy: detected field-spanning write (size 24) of single field =
-"&temp.key" at drivers/md/bcache/extents.c:428 (size 16)
->=20
-
-How does the above information can be founded? Should I use llvm and =
-enable FORTIFY_SOURCE?
-
-I don=E2=80=99t say the bkey and bkey_bytes() stuffs are elegant, but =
-why the compiler cannot find such situation? IMHO it is quite similar to =
-something like =E2=80=9Cstruct foo *bar[0]=E2=80=9D at the end of a data =
-structure.
-
-
-> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-> Link: =
-https://lore.kernel.org/all/19200730-a3ba-6f4f-bb81-71339bdbbf73@leemhuis.=
-info/
-> Cc: Coly Li <colyli@suse.de>
-> Cc: Kent Overstreet <kent.overstreet@gmail.com>
-> Cc: linux-bcache@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-The code comments as justification is informative. Thanks for this.
-
-Acked-by: Coly Li <colyli@suse.de>
-
-
-Coly Li
-
-
-> ---
-> drivers/md/bcache/bcache_ondisk.h | 3 ++-
-> drivers/md/bcache/journal.c       | 3 ++-
-> 2 files changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/md/bcache/bcache_ondisk.h =
-b/drivers/md/bcache/bcache_ondisk.h
-> index d086a0ce4bc2..6620a7f8fffc 100644
-> --- a/drivers/md/bcache/bcache_ondisk.h
-> +++ b/drivers/md/bcache/bcache_ondisk.h
-> @@ -106,7 +106,8 @@ static inline unsigned long bkey_bytes(const =
-struct bkey *k)
-> return bkey_u64s(k) * sizeof(__u64);
-> }
->=20
-> -#define bkey_copy(_dest, _src) memcpy(_dest, _src, bkey_bytes(_src))
-> +#define bkey_copy(_dest, _src) unsafe_memcpy(_dest, _src, =
-bkey_bytes(_src), \
-> + /* bkey is always padded */)
->=20
-> static inline void bkey_copy_key(struct bkey *dest, const struct bkey =
-*src)
-> {
-> diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
-> index e5da469a4235..c182c21de2e8 100644
-> --- a/drivers/md/bcache/journal.c
-> +++ b/drivers/md/bcache/journal.c
-> @@ -149,7 +149,8 @@ reread: left =3D ca->sb.bucket_size - offset;
->    bytes, GFP_KERNEL);
-> if (!i)
-> return -ENOMEM;
-> - memcpy(&i->j, j, bytes);
-> + unsafe_memcpy(&i->j, j, bytes,
-> + /* "bytes" was calculated by set_bytes() above */);
-> /* Add to the location after 'where' points to */
-> list_add(&i->list, where);
-> ret =3D 1;
-> --=20
-> 2.34.1
->=20
-
+Yours sincerely,
+Vincent Mailhol
