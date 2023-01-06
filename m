@@ -2,117 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFFDC3DA7A
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 06:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8147C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 06:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231719AbjAFGSu (ORCPT
+        id S231916AbjAFGZg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 01:18:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55044 "EHLO
+        Fri, 6 Jan 2023 01:25:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231933AbjAFGSX (ORCPT
+        with ESMTP id S231791AbjAFGZe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 01:18:23 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBDB6E425
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 22:17:33 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id jl4so736344plb.8
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 22:17:33 -0800 (PST)
+        Fri, 6 Jan 2023 01:25:34 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 356646CFD3
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 22:25:33 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id fz16-20020a17090b025000b002269d6c2d83so5213631pjb.0
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 22:25:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IVoLYcfDVSSj5Hj2x3GSCmfRlg0nzKREwK4vCCiBijM=;
-        b=AyQ3QZW4y+sUR958e4HRcaZdsf/qgBkw1mlhowceF0XUEUWrY2e1ma6nmNllYeoV/Q
-         Yy5UQs03pzNlRQAeKfjmpys5zi0J3ZFYI3CFleutVn2UmhUlRUTnNoHoZg9gZQxdi1sK
-         ITivwS+vfEb+n4eN81dcLcd4zY2NXxnBYIXWE=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YayHG7lExe8amFBKiiDo3qeuO6fzGOFyXNJRlTndIyE=;
+        b=Y29z1GWtlyZLdfJyfGvzO3zxWqYuBWudOWfkzJiIV7d/AhpRS27ZH6IAN+aoHBCvaz
+         B6ah7v1oIewCmGcQ0IZjDKZk8Hwrn7x17NB+36FoWZOCeHVbzd/PqDl85MrFEi3WL1eu
+         EiylNkCc5tCsaYipJ5iRd0nx59HJqmV02fhHg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IVoLYcfDVSSj5Hj2x3GSCmfRlg0nzKREwK4vCCiBijM=;
-        b=i+yAywck/nY4FdyEJJ1xATBa7GncsrVyMU+YCUKM16FyiJpSZ7uNDIFlETDXQccW13
-         9xDd7RN4RTOtHwQeqn/ZQ7K1LIA1CgoIo3tOPT5SoRTsjRhUSw12LDAJXFnCBjFn8XPj
-         1K4MGoDMrM2pKZR++CAr46jyW/A4LHywZk+iv3ryTDO+y7gkaJPy8I8wWdhMvcXVmADJ
-         RLFXxVZ97TepRGsQIwNzLLvn2ukRjGKk7TXZOydyU5KGL7/JBQyt2QXDeeUlXzT3WosC
-         xSA3ft6igfPy9mgdkqN2P+GDkm6sz11Dzuvv/scG5+Gbk1mSNFZZGnfBoVjvSHVsKFL6
-         793g==
-X-Gm-Message-State: AFqh2krrhhzv162T8ZSQAMYfDb4fisWy5Q6b8JF7NAHFdp2iCQkJ7T31
-        6vkd042OHYmUat1BrqaphNY+fQ==
-X-Google-Smtp-Source: AMrXdXu8EjH6zCt0hDwlIRVjDHugPnQhQK8vggGjZUTQDFpzSe1hy51vVrwqJVMV27Nnp3GrKotxqg==
-X-Received: by 2002:a17:90a:b011:b0:226:8fc5:b55 with SMTP id x17-20020a17090ab01100b002268fc50b55mr13282906pjq.33.1672985826224;
-        Thu, 05 Jan 2023 22:17:06 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YayHG7lExe8amFBKiiDo3qeuO6fzGOFyXNJRlTndIyE=;
+        b=U1jOk3Ntrpq2Jj42FU2vSIEK1RPRO+Q9trGOBru0Xa6XGgdHdB9H5SLdhpkYKqDGOy
+         Vyf0BNpKo35DhiO1is5XDEakfSp2ICuaYDyV3CHunsKPr85qNphDpFtX9eEcQO3OUxAP
+         3atzK7uaE21zb66UVw0quMXogckO3pwwcSmJL2wjkBGbRDB3c67F4gEIS0vCSnffjskE
+         dVRuiqam0m46GAJ743aXLgvdX7XO0YG/W0yjBquj4ztn5VyXqJGUMZEtNr/8KuRFdO9q
+         LoZ/VzOw16iBONGLVMD5G4UGAFauBFMvY1A+YuSXEs5aSNTfMMyrDuedUw7kx0krdI0M
+         0mjA==
+X-Gm-Message-State: AFqh2ko9IPfFTQi/xuilBKez3i9lQUONqYjhG+VPgdHdJj+N54YXcQ5t
+        0xtZ4mq1hPrxkw0PMI4QIRaq3Q==
+X-Google-Smtp-Source: AMrXdXsJR0Jp0gvO8YvY12mJU7b2mREhu4mq2+p7jeRBSbkqkTeWPoVzJ58HtbpMMkv6mkmDI2j1LQ==
+X-Received: by 2002:a05:6a20:939a:b0:af:9539:a29e with SMTP id x26-20020a056a20939a00b000af9539a29emr65774366pzh.16.1672986332761;
+        Thu, 05 Jan 2023 22:25:32 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t23-20020a17090ae51700b00226d4009505sm278581pjy.3.2023.01.05.22.17.05
+        by smtp.gmail.com with ESMTPSA id h3-20020aa796c3000000b005609d3d3008sm309232pfq.171.2023.01.05.22.25.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 22:17:05 -0800 (PST)
+        Thu, 05 Jan 2023 22:25:32 -0800 (PST)
+Date:   Thu, 5 Jan 2023 22:25:31 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Kees Cook <keescook@chromium.org>, ionut_n2001@yahoo.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        kernel test robot <lkp@intel.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Amit Cohen <amcohen@nvidia.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] media: uvcvideo: Silence memcpy() run-time false positive warnings
-Date:   Thu,  5 Jan 2023 22:17:04 -0800
-Message-Id: <20230106061659.never.817-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH v3] ethtool: Replace 0-length array with flexible array
+Message-ID: <202301052224.D2569E38@keescook>
+References: <20230106042844.give.885-kees@kernel.org>
+ <CAMZ6RqKghb-YqQuWGiEn8D-CQgvecBxsxUz_2XYE0m3hs752gQ@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2208; h=from:subject:message-id; bh=HRw9p7KL+4QYDBK7zvJtazO5keiEwenv1mXQer7Jbt4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt7zf29HyDZw/F4MlHzU+Bl4G8jxpLHfoOnTvU5u5 FlEqB3GJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7e83wAKCRCJcvTf3G3AJm9kD/ 47yg+LzAvpwtJYOb3OyV+MyCV2HpjQshWvE4+pgbpPOInmvvsqXeKW0Wm8McFGBzx2yl6blx5Pwpca /47EBMRpOiaT3GJNNxENwSAQHww/dF0ks2rY0PhvtPJbR+ZGd0MsSL03PBC85Kic9R1sf0fibXcTse 1/1izkyXUaxNymvLqFlfEIzecRP8k/7OXqvn9QcyXT/SOtVQb40dPRMPuxukLzjWqFxL0dA+kTz2uc RNSPIVy75p4LrE/mJBnwHLx/1tB3SJqNOxdimbYNR7+YP/fpUq6Bh7o1mhZJID8BxJJNDvbRqTPsn9 uURfsmbYsTr7rdQtiXrc2MLqikfo69Xdwm5Ufx/hpJ16yjjaU1d4ft7iT1kjKRc0hIsLsZVJgOXKhW hKw0Mrd5QMh7dm0xeoH49RHCtw3HUPdFfH+OdzuwPnVoPBSUDZuvKvdZ+Z/vpKbtOVIl/n0gzG/97j 8o76yXgd56XlarYhCNPv1gMoPKB1G8/7NUdoBNRR2QbCYZpCWjKuzxzfQ+sdKw4VZ3qTCLa1zS3TLV A49o0bouLm+QU+00+amCZ0rjTUw4yIyFfOm31Sg3Shec09zsbbMGjf9ShNfNpzy0zxZEswGJzvcZTh w4R++sq98XmsmnzSX/87MTHp2cWhQxB276FXEZS0Unn1URmr+UqjmtV/wfkg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMZ6RqKghb-YqQuWGiEn8D-CQgvecBxsxUz_2XYE0m3hs752gQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The memcpy() in uvc_video_decode_meta() intentionally copies across the
-length and flags members and into the trailing buf flexible array.
-Split the copy so that the compiler can better reason about (the lack
-of) buffer overflows here. Avoid the run-time false positive warning:
+On Fri, Jan 06, 2023 at 02:47:35PM +0900, Vincent MAILHOL wrote:
+> On Fri. 6 Jan 2023 at 13:28, Kees Cook <keescook@chromium.org> wrote:
+> > Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
+> > "rule_locs" 0-length array with a flexible array. Detected with GCC 13,
+> > using -fstrict-flex-arrays=3:
+> >
+> > net/ethtool/common.c: In function 'ethtool_get_max_rxnfc_channel':
+> > net/ethtool/common.c:558:55: warning: array subscript i is outside array bounds of '__u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
+> >   558 |                         .fs.location = info->rule_locs[i],
+> >       |                                        ~~~~~~~~~~~~~~~^~~
+> > In file included from include/linux/ethtool.h:19,
+> >                  from include/uapi/linux/ethtool_netlink.h:12,
+> >                  from include/linux/ethtool_netlink.h:6,
+> >                  from net/ethtool/common.c:3:
+> > include/uapi/linux/ethtool.h:1186:41: note: while referencing
+> > 'rule_locs'
+> >  1186 |         __u32                           rule_locs[0];
+> >       |                                         ^~~~~~~~~
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> >
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: kernel test robot <lkp@intel.com>
+> > Cc: Oleksij Rempel <linux@rempel-privat.de>
+> > Cc: Sean Anderson <sean.anderson@seco.com>
+> > Cc: Alexandru Tachici <alexandru.tachici@analog.com>
+> > Cc: Amit Cohen <amcohen@nvidia.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > v3: don't use helper (vincent)
+> 
+> v1: https://lore.kernel.org/all/20230105214126.never.757-kees@kernel.org
+>                                                ^^^^^
+> > v2: https://lore.kernel.org/lkml/20230105233420.gonna.036-kees@kernel.org
+>                                                   ^^^^^
+> v3: https://lore.kernel.org/netdev/20230106042844.give.885-kees@kernel.org
+>                                                   ^^^^
+> 
+> Seriously... :)
 
-  memcpy: detected field-spanning write (size 12) of single field "&meta->length" at drivers/media/usb/uvc/uvc_video.c:1355 (size 1)
+Hurray! Someone noticed and it's not even April yet. :) *celebrate*
 
-Additionally fix a typo in the documentation for struct uvc_meta_buf.
+-Kees
 
-Reported-by: ionut_n2001@yahoo.com
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216810
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/media/usb/uvc/uvc_video.c | 4 +++-
- include/uapi/linux/uvcvideo.h     | 2 +-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-index d2eb9066e4dc..b67347ab4181 100644
---- a/drivers/media/usb/uvc/uvc_video.c
-+++ b/drivers/media/usb/uvc/uvc_video.c
-@@ -1352,7 +1352,9 @@ static void uvc_video_decode_meta(struct uvc_streaming *stream,
- 	if (has_scr)
- 		memcpy(stream->clock.last_scr, scr, 6);
- 
--	memcpy(&meta->length, mem, length);
-+	meta->length = mem[0];
-+	meta->flags  = mem[1];
-+	memcpy(meta->buf, &mem[2], length - 2);
- 	meta_buf->bytesused += length + sizeof(meta->ns) + sizeof(meta->sof);
- 
- 	uvc_dbg(stream->dev, FRAME,
-diff --git a/include/uapi/linux/uvcvideo.h b/include/uapi/linux/uvcvideo.h
-index 8288137387c0..a9d0a64007ba 100644
---- a/include/uapi/linux/uvcvideo.h
-+++ b/include/uapi/linux/uvcvideo.h
-@@ -86,7 +86,7 @@ struct uvc_xu_control_query {
-  * struct. The first two fields are added by the driver, they can be used for
-  * clock synchronisation. The rest is an exact copy of a UVC payload header.
-  * Only complete objects with complete buffers are included. Therefore it's
-- * always sizeof(meta->ts) + sizeof(meta->sof) + meta->length bytes large.
-+ * always sizeof(meta->ns) + sizeof(meta->sof) + meta->length bytes large.
-  */
- struct uvc_meta_buf {
- 	__u64 ns;
 -- 
-2.34.1
-
+Kees Cook
