@@ -2,127 +2,109 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3927BC3DA7A
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 15:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B48C3C5479D
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 15:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230047AbjAFPtu (ORCPT
+        id S232412AbjAFPx3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 10:49:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55528 "EHLO
+        Fri, 6 Jan 2023 10:53:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbjAFPtt (ORCPT
+        with ESMTP id S233287AbjAFPxX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 10:49:49 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4FBA7A908;
-        Fri,  6 Jan 2023 07:49:48 -0800 (PST)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id EAA3A26FE7;
-        Fri,  6 Jan 2023 15:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1673020186; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nlLNBsJ016dLRLV9zMcCXmH5Ooqp6V91N5ceMdEy2yY=;
-        b=KslERRkULJDTNmddR6w++KIFNpGBwef2TfP4NMyEiLHnAwyjYVkYPTnRiCX3+uHxszP8eV
-        FF8pWElqACAJigbvmQRBcNQwPdoyUzYlUKINXB5J+pVURDYgE66jpqizr+kmtQ+Y66qjYU
-        OUwCPa6x52VpRFIUILLVYetUFAE5pTE=
-Received: from suse.cz (unknown [10.100.201.202])
+        Fri, 6 Jan 2023 10:53:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238E5809A4;
+        Fri,  6 Jan 2023 07:53:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A362F2C141;
-        Fri,  6 Jan 2023 15:49:46 +0000 (UTC)
-Date:   Fri, 6 Jan 2023 16:49:46 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vsprintf: fix possible NULL pointer deref in vsnprintf()
-Message-ID: <Y7hDGoCbWG2ZYdlV@alley>
-References: <1f4d159e-5382-3c75-bd5e-42337ecd8c28@omp.ru>
+        by ams.source.kernel.org (Postfix) with ESMTPS id C9683B81DA7;
+        Fri,  6 Jan 2023 15:53:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F198C433D2;
+        Fri,  6 Jan 2023 15:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673020400;
+        bh=ozokV6pT8SVbzlyCUBZ1GdL2Q6oCef7CdvW7wB8pYIE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hqnYqccDRPe4zfjFlZlGq9bMi1QK1K/ENv4FdpwXxTFpOni3HtRWSJbgGb2Y8pzB7
+         yXA630rU76YOWSRSXCN4o6T+ZbnSn7QtzfV3S28bz19GlBWQuPzbUxKo8dkSt4vE+C
+         5jVMF5S/TsAezCXVjg9o74v/H6ZKIYtLF0KKsiYWhUiyHgDUS61mqKlLPYKGwThD3k
+         kdJLlvgA2c6DNe6DTPTSZEiWVpMr/ePm8XBVVkt1FVtJUOh+AeioKGe0oxf4TO02Nv
+         SLOE0zta+l4LUtsqgIITFqD+OCEfPF04GI79Ur80y0moYs2CtCGxhbAaiEZIJwzs4+
+         77/N4m6dMlQ7w==
+Date:   Fri, 6 Jan 2023 09:53:25 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        stable@vger.kernel.org, io-uring@vger.kernel.org,
+        Dylan Yudaken <dylany@fb.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] io_uring: Replace 0-length array with flexible array
+Message-ID: <Y7hD9XNAsNZ1zIcS@work>
+References: <20230105190507.gonna.131-kees@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1f4d159e-5382-3c75-bd5e-42337ecd8c28@omp.ru>
+In-Reply-To: <20230105190507.gonna.131-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
-
-Adding Kees, Linus, and linux-hardening into Cc. It seems that
-__vsnprintf_internal() does not do this in glibc. I wonder if
-there is a good reason for it.
-
-My guess is that glibc does not do this either because they do not
-want to quietly hide bugs or just nobody had this idea.
-
-
-On Fri 2023-01-06 00:16:31, Sergey Shtylyov wrote:
-> In vsnprintf() etc, C99 allows the 'buf' argument to be NULL when the
-> 'size' argument equals 0.  Let us treat NULL passed as if the 'buf'
-> argument pointed to a 0-sized buffer, so that we can avoid a NULL pointer
-> dereference and still return the # of characters that would be written if
-> 'buf' pointed to a valid buffer...
-
-This is misleading. The message says how vsprintf() should behave
-by the standard. But it does not describe what this patch does.
-
-The function already behaves by the standard. The change is that
-the vsprintf() will catch an obvious mistake and prevent failure.
-
-> Found by Linux Verification Center (linuxtesting.org) with the SVACE static
-> analysis tool.
+On Thu, Jan 05, 2023 at 11:05:11AM -0800, Kees Cook wrote:
+> Zero-length arrays are deprecated[1]. Replace struct io_uring_buf_ring's
+> "bufs" with a flexible array member. (How is the size of this array
+> verified?) Detected with GCC 13, using -fstrict-flex-arrays=3:
 > 
-> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+> In function 'io_ring_buffer_select',
+>     inlined from 'io_buffer_select' at io_uring/kbuf.c:183:10:
+> io_uring/kbuf.c:141:23: warning: array subscript 255 is outside the bounds of an interior zero-length array 'struct io_uring_buf[0]' [-Wzero-length-bounds]
+>   141 |                 buf = &br->bufs[head];
+>       |                       ^~~~~~~~~~~~~~~
+> In file included from include/linux/io_uring.h:7,
+>                  from io_uring/kbuf.c:10:
+> include/uapi/linux/io_uring.h: In function 'io_buffer_select':
+> include/uapi/linux/io_uring.h:628:41: note: while referencing 'bufs'
+>   628 |                 struct io_uring_buf     bufs[0];
+>       |                                         ^~~~
 > 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Fixes: c7fb19428d67 ("io_uring: add support for ring mapped supplied buffers")
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Pavel Begunkov <asml.silence@gmail.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: stable@vger.kernel.org
+> Cc: io-uring@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+--
+Gustavo
+
 > ---
-> This patch is against the 'master' branch of the PRINTK Group's repo...
+> v2: use helper since these flex arrays are in a union.
+> v1: https://lore.kernel.org/lkml/20230105033743.never.628-kees@kernel.org
+> ---
+>  include/uapi/linux/io_uring.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  lib/vsprintf.c |    9 +++++++++
->  1 file changed, 9 insertions(+)
+> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> index 2780bce62faf..434f62e0fb72 100644
+> --- a/include/uapi/linux/io_uring.h
+> +++ b/include/uapi/linux/io_uring.h
+> @@ -625,7 +625,7 @@ struct io_uring_buf_ring {
+>  			__u16	resv3;
+>  			__u16	tail;
+>  		};
+> -		struct io_uring_buf	bufs[0];
+> +		__DECLARE_FLEX_ARRAY(struct io_uring_buf, bufs);
+>  	};
+>  };
+>  
+> -- 
+> 2.34.1
 > 
-> Index: linux/lib/vsprintf.c
-> ===================================================================
-> --- linux.orig/lib/vsprintf.c
-> +++ linux/lib/vsprintf.c
-> @@ -2738,6 +2738,15 @@ int vsnprintf(char *buf, size_t size, co
->  	if (WARN_ON_ONCE(size > INT_MAX))
->  		return 0;
->  
-> +	/*
-> +	 * C99 allows @buf to be NULL when @size is 0. We treat such NULL as if
-> +	 * @buf pointed to 0-sized buffer, so we can both avoid a NULL pointer
-> +	 * dereference and still return # of characters that would be written
-> +	 * if @buf pointed to a valid buffer...
-> +	 */
-> +	if (!buf)
-> +		size = 0;
-
-It makes sense except that it would hide bugs. It should print a
-warning, for example:
-
-	char *err_msg;
-
-	err_msg = check_pointer_msg(buf);
-	if (err_msg) {
-		WARN_ONCE(1, "Invalid buffer passed to vsnprintf(). Trying to continue with 0 length limit\n");
-		size = 0;
-	}
-
-check_pointer_msg() allows to catch even more buggy pointers. WARN()
-helps to locate the caller. WARN_ONCE() variant is used to prevent
-a potential infinite loop.
-
-> +
->  	str = buf;
->  	end = buf + size;
->  
-
-Best Regards,
-Petr
