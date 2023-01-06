@@ -2,150 +2,138 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343E2C5479D
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 10:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A6EC3DA7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 11:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229586AbjAFKuP (ORCPT
+        id S231838AbjAFLoA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 05:50:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
+        Fri, 6 Jan 2023 06:44:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231297AbjAFKuM (ORCPT
+        with ESMTP id S229993AbjAFLn7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 05:50:12 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2082.outbound.protection.outlook.com [40.107.243.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62F26DB90;
-        Fri,  6 Jan 2023 02:50:10 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NCsXCaTezccF6IQVVbfOXclXEwrZiBPNhkIjG/uWYcapLsHQhTpBZ15vurLU7PPb9Ara/baPJ67Fjqzr4IY1phq6kkPzE/9QhtzJfioW05AB5BFnTX4VsR3kzDm7Uq7zfxxS7kHjeKV9x7oTmvb0zDPs/6G66V4VC+2dZpdiIO57tfwst2nt8ss5SvyaVmnAYKTNJq06tvdTSeWyA3X1QJIOY2wMHJAjlLDiqp79wC1ZVTQISvmHgXL0pibjpwz+YVM1a1F6yz2Cfwk9Iybhdfz0Uxj4Y6i3WvP1nnMY4yxpTEPNP3W5NhhrmGJGf+KIyxiQS65K0Ea2G54GuInCdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kmEr51dntcW86NOg88qhP6Bj9oQPDw5kgjs3j5g2VHE=;
- b=GYdnAbmK5s2lKZRtBNblOY0zjJGE2CWvxqZK0m1QUfr2vNS6qBe2ts69a4dKqouT/naWlqVQIwzQ2v11V749W46GuxMGUS0TRBT91PGOZdLg/EG+Yro4xZIHx6JdDa1XoEkUMkKHa/16tosN9KGlati33dykN/GXdiQS89GCEh+yXmJbmkUSZQmanG4PXaqjNjja+ozGXYAPNAr//5wb8+IqY5yWePQtxCCANO3+nWZdF8csfunQS3H+fJMwtA/8mm+gX5w3XniD5kgCIYnbMGOB3MywbpXiA4DFBY7j3KZrM9XKNFFemcY/vZkZ0sS8YVl+p1BzLXi+INtLIreM3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kmEr51dntcW86NOg88qhP6Bj9oQPDw5kgjs3j5g2VHE=;
- b=M0Qw8U1B5aH+Cy1ljjuepvhWiQUmdPjxDELByriigH8R7nsPpnKdlZz6LkBC/LeFIwSmIQsXVSaTSEByuI7kjGqUkdEuOqJxhpfkf/ehHS5CIm1O8CTR9qR5AsFgIYfvXaQ8ZWfMCU83HOKrnYCgp6jEzS4C3JEyUHMvn0vEwHxgvciboKlNengJ9QB0oRJ0c3pTEKYTN1CKfezKYv7hHjQahSFuNZDNtOxbyieEvGG9/mWlTjT0JjubgNfZYWV28lvri+Da09WJbx8fuUCeJ+E4pAnS7MoNOBStYd9tXQPzvDfb+eXSj3MBXeFgcC/hveKJr6Nx7Np4BQYomC745A==
-Received: from DS7PR03CA0197.namprd03.prod.outlook.com (2603:10b6:5:3b6::22)
- by CY5PR12MB6371.namprd12.prod.outlook.com (2603:10b6:930:f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Fri, 6 Jan
- 2023 10:50:08 +0000
-Received: from DM6NAM11FT051.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:3b6:cafe::ac) by DS7PR03CA0197.outlook.office365.com
- (2603:10b6:5:3b6::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.15 via Frontend
- Transport; Fri, 6 Jan 2023 10:50:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- DM6NAM11FT051.mail.protection.outlook.com (10.13.172.243) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5966.17 via Frontend Transport; Fri, 6 Jan 2023 10:50:08 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 6 Jan 2023
- 02:49:58 -0800
-Received: from yaviefel (10.126.230.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 6 Jan 2023
- 02:49:55 -0800
-References: <20230105232224.never.150-kees@kernel.org>
-User-agent: mu4e 1.6.6; emacs 28.1
-From:   Petr Machata <petrm@nvidia.com>
-To:     Kees Cook <keescook@chromium.org>
-CC:     Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] mlxsw: spectrum_router: Replace 0-length array with
- flexible array
-Date:   Fri, 6 Jan 2023 11:02:11 +0100
-In-Reply-To: <20230105232224.never.150-kees@kernel.org>
-Message-ID: <87v8lk7x9r.fsf@nvidia.com>
+        Fri, 6 Jan 2023 06:43:59 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CCF06A0D6
+        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 03:43:59 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id b2so1418156pld.7
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 03:43:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=04eEBcfPF9rPWJ6oe8vSrIbuReCNM+F3t+uhS5IgjAI=;
+        b=eTbHhoFLjQJuPbwPLx+3u4gPgft2Pc5mtQeE0YFtzDmI1Ffve96+xCYRtzTIcYRbie
+         z08AL6l6eADTEDx42za6p3tIDuC+kO6hzPIxxF2h/FlDkJrbrrYxyHb6Akm2bw4S5zUL
+         zRyxdg74QrapIdR150Zp6h2SRd1jot0uGWzrU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=04eEBcfPF9rPWJ6oe8vSrIbuReCNM+F3t+uhS5IgjAI=;
+        b=Pi0ng335HV6w9qrW8XT9uDC6t2tFo0hJ2lgaamIqlE+ieZFGJ80BjCkd/BTDxhhgZL
+         oORmMnFRhBaxidzUI2gW2PukBEsp7FQf71KwR7vmJH4avUd5fkSUzu3XsLuSf75+pGBX
+         T8QraKy83Zz6nRFNES7arOuNMcXNi4beskCWDhH0h6DhkDn7d/BFZnY6ZFnRamr2ZUwr
+         3y+f59fnJT7cWOhpwP1N1+yqx2Bz95FB81uLh43Q6tnVYB8WIcjH2wzurebO6XHU+EG8
+         qpADHm/vxzyIjpTjkRpEKoot4dUzYIGKWvJuHAIJKZhWb5MToYJXk7eb4fKyHmkY9qA/
+         rRZw==
+X-Gm-Message-State: AFqh2kphclLlOO2nzXOw2p+As1dkyQKANPVHFsXLMsyW3Q4Tif280Gg7
+        O3HBB2g6vsb1wqo72aArRD+o5mWdbtmviH3Li1o=
+X-Google-Smtp-Source: AMrXdXsxSLR7hN32nwj5H2QWcPg/ukVSMaIgK8f2exWwzHrSmX1LeiaX4NM8I/Cf7dApXJwBpuI9HA==
+X-Received: by 2002:a05:6a20:2d22:b0:b0:30d8:d48 with SMTP id g34-20020a056a202d2200b000b030d80d48mr71464071pzl.42.1673005438381;
+        Fri, 06 Jan 2023 03:43:58 -0800 (PST)
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com. [209.85.214.170])
+        by smtp.gmail.com with ESMTPSA id i7-20020a655b87000000b0049f476e9906sm765701pgr.53.2023.01.06.03.43.56
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jan 2023 03:43:57 -0800 (PST)
+Received: by mail-pl1-f170.google.com with SMTP id w3so1432956ply.3
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 03:43:56 -0800 (PST)
+X-Received: by 2002:a17:902:934b:b0:191:2a9b:ec94 with SMTP id
+ g11-20020a170902934b00b001912a9bec94mr3686097plp.8.1673005436272; Fri, 06 Jan
+ 2023 03:43:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.126.230.37]
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT051:EE_|CY5PR12MB6371:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7aada06d-ff46-45a4-6feb-08daefd3c702
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GS4f+jiwEy9S8m8cITNUiq9G1ZE7s7eS5/2dw8r8t9y+9D1n/R6XNbT8IvOhsc04Y3H/y1RJecGinq22Kn1IA3aBBnh8cY9fuRU7bW/j25HXllETlZesj+xFgW6eJyaLn68w4N65nc405ZsTO6tMUMbQO1Dt/gAYezSiqyWsrvwlmKI1Ehi2hQ/Fv6b+/DslEUwoqcfjzLTYUqnBb9P4+1Gge7NorUM81kscjyUPGqdEIfQ5IPFaDlmqNH/mpn1zFPajnxjBTK2TUJBjVo6Dv5zg6gqf9Ckd81KEF6of7eAo3n6dvtb0m3WkO5EEaCPcNaqEo2D49KtsZR939KVEKjq7miiJovpTOJEBwpO3Kb2TcqF1erbh/nUt8v/B6RpnHTh4Tm49uIX8DyilM0zisYBu6Zze0Efq4G+iiKQ2XfJmku/DaDJEX2mMEURC9/FoVB8PIXXopFbdSwRyaFafKdTcCFfzwFLDQRqJxwY0dziWkWhwEAxLaVv2+1I7Ow9vkEP5ic6N/ctEI2rTzdAOSUCGEwIE9yVffbtmSz0HwMbdyqy0E50gUlcenR0eLK6zr3HigPTRhy7EJilKBnDP7Uj5uHR9PSyo1kf4ft5BWmJ54GP6mEyehO7nBuB76SFBla+45gazuQeH8X/EgTn/Hyh1JJQWGgVYg3R1Okpg7NMwwINL0U5RIvtrXw7qY7B9J2zSj92dJ9pS58v0VifykL0XmOGjVmcdmITUxuhRw+zW/yM9ZuHyOLgnVGqY0mB/k9Mq9fNc9DwX5x6XFrY0j/0lMlVDvuq4GKzGXHRBA9o=
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(136003)(39860400002)(396003)(451199015)(36840700001)(40470700004)(46966006)(47076005)(66574015)(2616005)(82310400005)(26005)(16526019)(186003)(83380400001)(6666004)(426003)(336012)(40480700001)(40460700003)(86362001)(36756003)(36860700001)(82740400003)(356005)(7636003)(41300700001)(4326008)(8676002)(8936002)(2906002)(5660300002)(966005)(316002)(478600001)(70206006)(54906003)(70586007)(6916009);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2023 10:50:08.0903
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7aada06d-ff46-45a4-6feb-08daefd3c702
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT051.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6371
+References: <20230106061659.never.817-kees@kernel.org>
+In-Reply-To: <20230106061659.never.817-kees@kernel.org>
+From:   Ricardo Ribalda <ribalda@chromium.org>
+Date:   Fri, 6 Jan 2023 12:43:44 +0100
+X-Gmail-Original-Message-ID: <CANiDSCtTz4mpTz4RHBzNXL=yBvXNXHBZQ-HYMFegLytoScW4eA@mail.gmail.com>
+Message-ID: <CANiDSCtTz4mpTz4RHBzNXL=yBvXNXHBZQ-HYMFegLytoScW4eA@mail.gmail.com>
+Subject: Re: [PATCH] media: uvcvideo: Silence memcpy() run-time false positive warnings
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        ionut_n2001@yahoo.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hi Kees
 
-Kees Cook <keescook@chromium.org> writes:
+Thanks for the patch
 
-> Zero-length arrays are deprecated[1]. Replace struct
-> mlxsw_sp_nexthop_group_info's "nexthops" 0-length array with a flexible
-> array. Detected with GCC 13, using -fstrict-flex-arrays=3:
+Would it make more sense to replace *mem with a structure/union. Something like:
+https://patchwork.linuxtv.org/project/linux-media/patch/20221214-uvc-status-alloc-v4-0-f8e3e2994ebd@chromium.org/
+
+Regards!
+
+On Fri, 6 Jan 2023 at 07:19, Kees Cook <keescook@chromium.org> wrote:
 >
-> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c: In function 'mlxsw_sp_nexthop_group_hash_obj':
-> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:3278:38: warning: array subscript i is outside array bounds of 'struct mlxsw_sp_nexthop[0]' [-Warray-bounds=]
->  3278 |                         val ^= jhash(&nh->ifindex, sizeof(nh->ifindex), seed);
->       |                                      ^~~~~~~~~~~~
-> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:2954:33: note: while referencing 'nexthops'
->  2954 |         struct mlxsw_sp_nexthop nexthops[0];
->       |                                 ^~~~~~~~
+> The memcpy() in uvc_video_decode_meta() intentionally copies across the
+> length and flags members and into the trailing buf flexible array.
+> Split the copy so that the compiler can better reason about (the lack
+> of) buffer overflows here. Avoid the run-time false positive warning:
 >
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+>   memcpy: detected field-spanning write (size 12) of single field "&meta->length" at drivers/media/usb/uvc/uvc_video.c:1355 (size 1)
 >
-> Cc: Ido Schimmel <idosch@nvidia.com>
-> Cc: Petr Machata <petrm@nvidia.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: netdev@vger.kernel.org
+> Additionally fix a typo in the documentation for struct uvc_meta_buf.
+>
+> Reported-by: ionut_n2001@yahoo.com
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216810
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: linux-media@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/media/usb/uvc/uvc_video.c | 4 +++-
+>  include/uapi/linux/uvcvideo.h     | 2 +-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-> index c22c3ac4e2a1..09e32778b012 100644
-> --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-> +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
-> @@ -2951,7 +2951,7 @@ struct mlxsw_sp_nexthop_group_info {
->  	   gateway:1, /* routes using the group use a gateway */
->  	   is_resilient:1;
->  	struct list_head list; /* member in nh_res_grp_list */
-> -	struct mlxsw_sp_nexthop nexthops[0];
-> +	struct mlxsw_sp_nexthop nexthops[];
->  #define nh_rif	nexthops[0].rif
->  };
+> diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> index d2eb9066e4dc..b67347ab4181 100644
+> --- a/drivers/media/usb/uvc/uvc_video.c
+> +++ b/drivers/media/usb/uvc/uvc_video.c
+> @@ -1352,7 +1352,9 @@ static void uvc_video_decode_meta(struct uvc_streaming *stream,
+>         if (has_scr)
+>                 memcpy(stream->clock.last_scr, scr, 6);
+>
+> -       memcpy(&meta->length, mem, length);
+> +       meta->length = mem[0];
+> +       meta->flags  = mem[1];
+> +       memcpy(meta->buf, &mem[2], length - 2);
+>         meta_buf->bytesused += length + sizeof(meta->ns) + sizeof(meta->sof);
+>
+>         uvc_dbg(stream->dev, FRAME,
+> diff --git a/include/uapi/linux/uvcvideo.h b/include/uapi/linux/uvcvideo.h
+> index 8288137387c0..a9d0a64007ba 100644
+> --- a/include/uapi/linux/uvcvideo.h
+> +++ b/include/uapi/linux/uvcvideo.h
+> @@ -86,7 +86,7 @@ struct uvc_xu_control_query {
+>   * struct. The first two fields are added by the driver, they can be used for
+>   * clock synchronisation. The rest is an exact copy of a UVC payload header.
+>   * Only complete objects with complete buffers are included. Therefore it's
+> - * always sizeof(meta->ts) + sizeof(meta->sof) + meta->length bytes large.
+> + * always sizeof(meta->ns) + sizeof(meta->sof) + meta->length bytes large.
+>   */
+>  struct uvc_meta_buf {
+>         __u64 ns;
+> --
+> 2.34.1
+>
 
-Thanks. I'll pass this through our nightly and report back.
+
+-- 
+Ricardo Ribalda
