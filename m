@@ -2,115 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BE4C3DA7A
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 02:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA09C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 04:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229441AbjAFCVT (ORCPT
+        id S231472AbjAFEUe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 21:21:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
+        Thu, 5 Jan 2023 23:20:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjAFCUv (ORCPT
+        with ESMTP id S231474AbjAFETx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 21:20:51 -0500
-X-Greylist: delayed 91 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 05 Jan 2023 18:20:50 PST
-Received: from omta35.uswest2.a.cloudfilter.net (omta35.uswest2.a.cloudfilter.net [35.89.44.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FFD6339B
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 18:20:50 -0800 (PST)
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-        by cmsmtp with ESMTP
-        id DZpWp5b9WE9lPDcKEp4ea6; Fri, 06 Jan 2023 02:19:19 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id DcKDpsr7yvWZODcKDpGuMq; Fri, 06 Jan 2023 02:19:17 +0000
-X-Authority-Analysis: v=2.4 cv=do/Itns4 c=1 sm=1 tr=0 ts=63b78525
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=RvmDmJFTN0MA:10
- a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8 a=qnK4T_n2zri7Hv_-8ooA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ubigo0rFpxz+YO1pYfYHRyoyOxP8HRuormf/DAHkGT8=; b=GVtyvDDUg6g9jkbBm1QasH/D18
-        i7eXkYLcu7fFmi6x5NIbx+Qb43VSxrAlz7idcajozc96I4aqoVzAo07XBntb07TcWrYgY03IQpSzt
-        YUsFpyHJGJk7cuij2zADS+IouHY29MI5NrKCSq6ZOKiKop2WAtg8BWvQkLbP1TAvZkwpP3f+fvs1V
-        3/tAElOHnWApql6RWG54jiShQwO91OzljlWub17zb3o9Jkj2nXL8mE+VASkx4zZwzBCy+4Z9GGox1
-        P006I/34FaqyNx+KUG9Vo/EmBD7LQXwWblrsD6AkfxkvsYStdJSpKMcxnF5w7lRH0qm5FYHmjSh9X
-        EXm2FtDg==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:43898 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1pDZRB-002yOM-6y;
-        Thu, 05 Jan 2023 17:14:17 -0600
-Message-ID: <ec387c6d-acc7-6696-ba17-bb8792090136@embeddedor.com>
-Date:   Thu, 5 Jan 2023 17:14:23 -0600
+        Thu, 5 Jan 2023 23:19:53 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD813193D7
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 20:19:52 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso544967pjo.3
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 20:19:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hu8NtloN+PgTYyanRIE7pi7y6G8HPaI/k/WMITVvahU=;
+        b=OdblQNQsWkunarJky6ssowGDbfTut1JiehmR0XIbfzlvP9zGzN3UF6YHZ2YckEX8Lw
+         Z2zNGXRwzroQNXlC6nccWRULvSTwJzUn0Ya9imOGqk6l2p0gUu4Iuyhry0Xs8gDJnnyi
+         wYy6GF2eJ+E5R47SGTl55Tg4M2Nh0aoqF3Bbk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hu8NtloN+PgTYyanRIE7pi7y6G8HPaI/k/WMITVvahU=;
+        b=ToBQKlevX0iYPKi0TyohJkgarXTPeq3B9OrIhkVUKnHJ3MlW33Fnh1ernmmTVlPlS6
+         S69MEjUKsf45AsL5PWv6jtQSN3k4UvdZY/lzGdvCobip5bTbAkHzxwiyntTojkArSoSO
+         Jwl2F5kZnw5/WuRcJcZCL9HkUW9XsLftZ9hDaTnG3zCwoXKcHo7rKz+i9qSniQ9KdEOa
+         fli3NQx7AeQZvsrJhUOFrquq1qAfNy8JgbQG31vOszFk0exVMfICK1+P7Da6aQ46auwu
+         I+yOSnS6gez1ZkSNl0VDYPyVfOCJLJUea+Z/4BB2KefPsuampD7BMG7M6M4zMiUM0kKo
+         NZEw==
+X-Gm-Message-State: AFqh2kpiX46/qd7aPIvPjKvAZgGS92F7GHwr8UL+VzEAyuGm2xvh8uIt
+        63AWQpkE1sE0QsMskaeU2YBbiw==
+X-Google-Smtp-Source: AMrXdXv6veZlRCNlcFwIt6dCNcvq4fdJDguLdT7MM4nYKqXE81W9GfTvqrwpgwLqmn//fxJdOb56rw==
+X-Received: by 2002:a05:6a20:3d84:b0:b0:1abd:8604 with SMTP id s4-20020a056a203d8400b000b01abd8604mr87791661pzi.41.1672978792438;
+        Thu, 05 Jan 2023 20:19:52 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z4-20020aa79f84000000b00573a9d13e9esm99431pfr.36.2023.01.05.20.19.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Jan 2023 20:19:51 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Weili Qian <qianweili@huawei.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: [PATCH] crypto: hisilicon: Wipe entire pool on error
+Date:   Thu,  5 Jan 2023 20:19:48 -0800
+Message-Id: <20230106041945.never.831-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] memremap: Replace 0-length array with flexible array
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alex Sierra <alex.sierra@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Shiyang Ruan <ruansy.fnst@fujitsu.com>, linux-mm@kvack.org,
-        Alistair Popple <apopple@nvidia.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20230105220151.never.343-kees@kernel.org> <Y7dLrdOETjg/+XKq@work>
- <202301051441.C1D7291921@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202301051441.C1D7291921@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1pDZRB-002yOM-6y
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:43898
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOPfjiie66Up4DjaD7btZ6tNr6f3mYX8NwQEl/f+ejB/X2f5PdKbqAmUEaQKA2sJX8qNFTWYNPhT1K6cbpnjnWEiWJRTBeS2KjR+D0Z5F7JOLZe4kqzz
- 0mLJyeBhKFQjtdAQT5dI37D+/Yhv2Mrv6NqvPX/7nHTvImOEdZnul9P53LGZGbaaKSSgIUxvWbJ7o9my+/jJvCRMiYl4OEscAeiNRv9EPggPHRoiQ8x8lvIR
- KROd0l286qWF5xERDU3cdEYo7ENAoLA8/foojMLN23I=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1263; h=from:subject:message-id; bh=X6glahKc2K5AhGi573gEkEl/ZAg/qb6wVfjT5NagaeU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt6FkGMo4DAMJrJ88UNYYHlYbEA3oaRLMDi+LMFt7 MlcyWbCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7ehZAAKCRCJcvTf3G3AJrdlD/ 9klXK0kVfveHuPruho8dg/ZvBbP1H/ZKgZMeuq9octPINgkBgqGgnphKdHv6I3FBz0h9lUC94M3vZ1 SN9snSK1U9rraulaAplsebe/ma5zOumYBITv4UDqmYIbgp5UraM8+Fu0Ws0r/z9spYVLFJvAx6onMk d8L66wpibWnBQ0Al7c6kam9MKYP6QXYpPqWtpj8TrCJT/N3ABy5qf87KeMHsbWR3sPjcTPPljQXu+y jfgmhbInslE/j5J01pGLMGhFcx1/9zwoT9Xg6l4pOsi3655bOXnBxyyIemp1YaM2yPmwmt66s0RfaL lw/8Y9iTp3B+ACjjjzDY5sJYepHtQPDeGCZdXwC/w7twxdWsvqLvfVjCS6fUdKnQj1aSN0IRZ+awki A9Cl1roFZ4iV2A77XiIXlZY5D4OBBQC5vNIVFBD7Qb3FyX8Nw7jWLyadPJmMzAj5mHYKpnyyH93I3N xKnyzi8+ouYZpohIVB1wLhHDoEEi4nqDBUDi9QV0KiDop2q3TMwT+23QF5eCCP2Ay8jKcVMk32QTO5 4A48zBSX3lRNTi56aeOlHCewiRgEIhj0SmO0+VUGLq2s4V/IWIA4H19honqvtwQH2I3+ojP+C5WZp9 HLp98EGjFlXr6HFpI4yUKG9sZzFAo02W03prZ+xnc2e9kwkcKyzE/9H6qE2A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+To work around a Clang __builtin_object_size bug that shows up under
+CONFIG_FORTIFY_SOURCE and UBSAN_BOUNDS, move the per-loop-iteration
+mem_block wipe into a single wipe of the entire pool structure after
+the loop.
 
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/1780
+Cc: Weili Qian <qianweili@huawei.com>
+Cc: Zhou Wang <wangzhou1@hisilicon.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: linux-crypto@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/crypto/hisilicon/sgl.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-On 1/5/23 16:41, Kees Cook wrote:
-> On Thu, Jan 05, 2023 at 04:14:05PM -0600, Gustavo A. R. Silva wrote:
->> I think this is the same patch:
->>
->> https://lore.kernel.org/linux-hardening/YxKO%2FjY1x0xTpl4r@work/
->>
->> It's actually in linux-next.
-> 
-> Hm, it's been in -next since September? Is this in a tree of yours that
-> didn't get pulled for v6.2?
+diff --git a/drivers/crypto/hisilicon/sgl.c b/drivers/crypto/hisilicon/sgl.c
+index 2b6f2281cfd6..0974b0041405 100644
+--- a/drivers/crypto/hisilicon/sgl.c
++++ b/drivers/crypto/hisilicon/sgl.c
+@@ -124,9 +124,8 @@ struct hisi_acc_sgl_pool *hisi_acc_create_sgl_pool(struct device *dev,
+ 	for (j = 0; j < i; j++) {
+ 		dma_free_coherent(dev, block_size, block[j].sgl,
+ 				  block[j].sgl_dma);
+-		memset(block + j, 0, sizeof(*block));
+ 	}
+-	kfree(pool);
++	kfree_sensitive(pool);
+ 	return ERR_PTR(-ENOMEM);
+ }
+ EXPORT_SYMBOL_GPL(hisi_acc_create_sgl_pool);
+-- 
+2.34.1
 
-No. I didn't send it. It's just one of the two patches I have in my -next
-tree. They didn't look like high priority at the time.
-
---
-Gustavo
