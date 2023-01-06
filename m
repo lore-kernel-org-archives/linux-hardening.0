@@ -2,105 +2,67 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78CA0C54E76
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 08:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FFFC5479D
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 10:01:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229694AbjAFIBj (ORCPT
+        id S231436AbjAFKBJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 03:01:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36536 "EHLO
+        Fri, 6 Jan 2023 05:01:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbjAFIBi (ORCPT
+        with ESMTP id S232212AbjAFKBI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 03:01:38 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F3278172;
-        Fri,  6 Jan 2023 00:01:36 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id B9D22CE1C69;
-        Fri,  6 Jan 2023 08:01:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609F8C433EF;
-        Fri,  6 Jan 2023 08:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672992092;
-        bh=H1MNmUv9zi49BtgN8dDqufBCCL3CbJ/8Jtkvf9ANGP4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=slxW8ef7lFjKWgTR8kDTCueRhrGR68WKZzLuW6eBtl3HEUDslbRzXGilR8Jy38uMI
-         EbmywjeC13A6cMdB8SHG7/KSyoan0+nVcq/igJD2uR9QT69gFZkQ4E7iomVoHbxoRb
-         NaWp/EJokvn1HgK1VTcxF8Xmy6P8G59WpLOgrjfZ+SHIN3m38csTGg4EcFcoH3s+X8
-         OGi7mupqVtCeZNCP+h66/ZMaHhZA4aBPZF9p5TZEBgk3J2faOWEfql98IA9R665GHr
-         QX8SiTI8UjqDNYvuyzAwP6hziHz51CaXex/Bv6fv8AghxPwRADnOiGHBRb3G1YPcFN
-         aEllcslQs8Crg==
-Date:   Fri, 6 Jan 2023 00:01:30 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Theodore Ts'o <tytso@mit.edu>, stable@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Riccardo Schirone <sirmy15@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] ext4: Fix function prototype mismatch for
- ext4_feat_ktype
-Message-ID: <Y7fVWulL0/yq7KaO@sol.localdomain>
-References: <20230104210908.gonna.388-kees@kernel.org>
+        Fri, 6 Jan 2023 05:01:08 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F091C4164C;
+        Fri,  6 Jan 2023 02:01:06 -0800 (PST)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pDjX7-0000wO-Gx; Fri, 06 Jan 2023 11:01:05 +0100
+Message-ID: <132043f4-d19a-911d-04c4-a24fdf89153f@leemhuis.info>
+Date:   Fri, 6 Jan 2023 11:01:05 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230104210908.gonna.388-kees@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] bcache: Silence memcpy() run-time false positive warnings
+Content-Language: en-US, de-DE
+To:     Kees Cook <keescook@chromium.org>, Coly Li <colyli@suse.de>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20230106060229.never.047-kees@kernel.org>
+From:   Thorsten Leemhuis <linux@leemhuis.info>
+In-Reply-To: <20230106060229.never.047-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1672999267;823a9b22;
+X-HE-SMSGID: 1pDjX7-0000wO-Gx
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 04, 2023 at 01:09:12PM -0800, Kees Cook wrote:
-> With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
-> indirect call targets are validated against the expected function
-> pointer prototype to make sure the call target is valid to help mitigate
-> ROP attacks. If they are not identical, there is a failure at run time,
-> which manifests as either a kernel panic or thread getting killed.
+On 06.01.23 07:02, Kees Cook wrote:
+> struct bkey has internal padding in a union, but it isn't always named
+> the same (e.g. key ## _pad, key_p, etc). This makes it extremely hard
+> for the compiler to reason about the available size of copies done
+> against such keys. Use unsafe_memcpy() for now, to silence the many
+> run-time false positive warnings:
 > 
-> ext4_feat_ktype was setting the "release" handler to "kfree", which
-> doesn't have a matching function prototype. Add a simple wrapper
-> with the correct prototype.
-> 
-> This was found as a result of Clang's new -Wcast-function-type-strict
-> flag, which is more sensitive than the simpler -Wcast-function-type,
-> which only checks for type width mismatches.
-> 
-> Note that this code is only reached when ext4 is a loadable module and
-> it is being unloaded:
-> 
->  CFI failure at kobject_put+0xbb/0x1b0 (target: kfree+0x0/0x180; expected type: 0x7c4aa698)
->  ...
->  RIP: 0010:kobject_put+0xbb/0x1b0
->  ...
->  Call Trace:
->   <TASK>
->   ext4_exit_sysfs+0x14/0x60 [ext4]
->   cleanup_module+0x67/0xedb [ext4]
-> 
-> Fixes: b99fee58a20a ("ext4: create ext4_feat kobject dynamically")
-> Cc: Theodore Ts'o <tytso@mit.edu>
-> Cc: Eric Biggers <ebiggers@kernel.org>
-> Cc: stable@vger.kernel.org
-> Build-tested-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> Link: https://lore.kernel.org/r/20230103234616.never.915-kees@kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: rename callback, improve commit log (ebiggers)
-> v1: https://lore.kernel.org/lkml/20230103234616.never.915-kees@kernel.org
-> ---
->  fs/ext4/sysfs.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
+>   memcpy: detected field-spanning write (size 264) of single field "&i->j" at drivers/md/bcache/journal.c:152 (size 240)
+>   memcpy: detected field-spanning write (size 24) of single field "&b->key" at drivers/md/bcache/btree.c:939 (size 16)
+>   emcpy: detected field-spanning write (size 24) of single field "&temp.key" at drivers/md/bcache/extents.c:428 (size 16)
 
-Reviewed-by: Eric Biggers <ebiggers@google.com>
+Thx for looking into this.
 
-- Eric
+> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+> Link: https://lore.kernel.org/all/19200730-a3ba-6f4f-bb81-71339bdbbf73@leemhuis.info/
+
+Credit where credit is due, this should be:
+
+Reported-by: Alexandre Pereira <alexpereira@disroot.org>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216785
+
+> Cc: Coly Li <colyli@suse.de>
+> […]
+
+Ciao, Thorsten
