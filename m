@@ -2,98 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BABC4708E
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 00:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4088C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 00:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232449AbjAFACb (ORCPT
+        id S232516AbjAFAzo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 19:02:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39168 "EHLO
+        Thu, 5 Jan 2023 19:55:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235906AbjAFACa (ORCPT
+        with ESMTP id S232474AbjAFAzn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 19:02:30 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B2C3C0CB;
-        Thu,  5 Jan 2023 16:02:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2DF5A6192F;
-        Fri,  6 Jan 2023 00:02:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0307BC433EF;
-        Fri,  6 Jan 2023 00:02:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672963348;
-        bh=1KDmSWt4RhMhsaM1ixd2OuCs+ZKDeSjvTmD2Jst6BVM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UrdOR0JKHNNSm4I+mY7ODOwCttwAmhNuxViGChPKvwved9FGgOdIbPojo88iBEwOr
-         qDxVTEoy59Ut2y4dnkBRlsc6GlSqLUsq0x5AAzSZwgiCwiUUSi4yZibuNIwQIl2ug3
-         GgFU4ApcjQyL0yiGeSs7hURUVb23Z+uvikllWrNLtQo0eGpKKiDlEFfan2+xMyhoL/
-         iizpiq+OpdkP6enAALvEwKkdsLsSldBTIVUms4Qif1Upcyp/YAnN+5GHATqY9K4QvP
-         g9lqqH47Lo0Hd+cETK0lXuzi4KaJmsN/Nc7PcXfXE+BpOKUQHm1JdLgsBtB6FlU6G6
-         DNkmkF03LcLPg==
-Date:   Thu, 5 Jan 2023 18:02:32 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alex Sierra <alex.sierra@amd.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Shiyang Ruan <ruansy.fnst@fujitsu.com>, linux-mm@kvack.org,
-        Alistair Popple <apopple@nvidia.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] memremap: Replace 0-length array with flexible array
-Message-ID: <Y7dlGEm3lWBjpFkG@work>
-References: <20230105220151.never.343-kees@kernel.org>
- <Y7dLrdOETjg/+XKq@work>
- <202301051441.C1D7291921@keescook>
- <ec387c6d-acc7-6696-ba17-bb8792090136@embeddedor.com>
- <202301051536.1D1F92678@keescook>
+        Thu, 5 Jan 2023 19:55:43 -0500
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B1A6B1B4;
+        Thu,  5 Jan 2023 16:55:42 -0800 (PST)
+Received: by mail-pg1-f174.google.com with SMTP id e10so217815pgc.9;
+        Thu, 05 Jan 2023 16:55:42 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hSKndwKHKCX2Dk6a0qymAPMnu8BVPSR8eEIr2DcHqro=;
+        b=6kauEsbMOggJ2IDJaxGCJTpPFf+hU3Snlk/xQmi87Y7N0RgKCi9IoHq2LW5K8FYPHZ
+         dd+oz7Zrn8c20uFrh2kQfiWyI2d7JOR/Y/c71im0+UvJOicObOyReE0xw8sBp48LCD6e
+         QCI6rjBF4VMW6QwUszRGzc7tYcOTledvbwlYKhTpRf/SgLekAG5vaKqjDLw7Q1uh8IWd
+         DQdnua58bzVU16wvTLrp5wAYAg0+A8NZuf5af7k971cu7REml4+CwxJLN5Z+pGOhyICS
+         NJsi7fYS7cti3nZD/O7+LJIrRtnANiN74oqx4T68gQ8MvNZ/7HcyUVGBEGdWUckTg/Gy
+         FLiA==
+X-Gm-Message-State: AFqh2kqAyiIVQ6qkQnqXFSxVPbgPYIwWmdkQLsgExSggOrvwrqM7IKh9
+        CBNbIFOGLNbTTAkTtIm1yi3ACCovZOKqRtaPQXQ=
+X-Google-Smtp-Source: AMrXdXurFs3p3EVKN1WkB6tznGT+7ANFx2hhdMESlo1tNjJZ7rKkBcf48TJJ8m3yRBaDtJW4/DI3q+WYmRwIFTTlwGw=
+X-Received: by 2002:a63:5301:0:b0:4a4:6964:557 with SMTP id
+ h1-20020a635301000000b004a469640557mr738446pgb.535.1672966541782; Thu, 05 Jan
+ 2023 16:55:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202301051536.1D1F92678@keescook>
+References: <20230105233420.gonna.036-kees@kernel.org>
+In-Reply-To: <20230105233420.gonna.036-kees@kernel.org>
+From:   Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
+Date:   Fri, 6 Jan 2023 09:55:30 +0900
+Message-ID: <CAMZ6RqK96DNAPO5A32i3EaDErU0C2RDtL4-JN2O8A5RBBUo3ew@mail.gmail.com>
+Subject: Re: [PATCH v2] ethtool: Replace 0-length array with flexible array
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        kernel test robot <lkp@intel.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Amit Cohen <amcohen@nvidia.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 05, 2023 at 03:37:03PM -0800, Kees Cook wrote:
-> On Thu, Jan 05, 2023 at 05:14:23PM -0600, Gustavo A. R. Silva wrote:
-> > 
-> > 
-> > On 1/5/23 16:41, Kees Cook wrote:
-> > > On Thu, Jan 05, 2023 at 04:14:05PM -0600, Gustavo A. R. Silva wrote:
-> > > > I think this is the same patch:
-> > > > 
-> > > > https://lore.kernel.org/linux-hardening/YxKO%2FjY1x0xTpl4r@work/
-> > > > 
-> > > > It's actually in linux-next.
-> > > 
-> > > Hm, it's been in -next since September? Is this in a tree of yours that
-> > > didn't get pulled for v6.2?
-> > 
-> > No. I didn't send it. It's just one of the two patches I have in my -next
-> > tree. They didn't look like high priority at the time.
-> 
-> Cool. I'd like to get -fstrict-flex-arrays=3 finished this devel cycle,
-> if possible. Can you add this one too?
-> 
-> https://lore.kernel.org/lkml/YzIc8z+QaHvqPjLX@work
+On Fri. 6 Jan 2023 at 08:34, Kees Cook <keescook@chromium.org> wrote:
+> Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
+> "rule_locs" 0-length array with a flexible array. Detected with GCC 13,
+> using -fstrict-flex-arrays=3:
+>
+> net/ethtool/common.c: In function 'ethtool_get_max_rxnfc_channel':
+> net/ethtool/common.c:558:55: warning: array subscript i is outside array bounds of '__u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
+>   558 |                         .fs.location = info->rule_locs[i],
+>       |                                        ~~~~~~~~~~~~~~~^~~
+> In file included from include/linux/ethtool.h:19,
+>                  from include/uapi/linux/ethtool_netlink.h:12,
+>                  from include/linux/ethtool_netlink.h:6,
+>                  from net/ethtool/common.c:3:
+> include/uapi/linux/ethtool.h:1186:41: note: while referencing
+> 'rule_locs'
+>  1186 |         __u32                           rule_locs[0];
+>       |                                         ^~~~~~~~~
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: kernel test robot <lkp@intel.com>
+> Cc: Oleksij Rempel <linux@rempel-privat.de>
+> Cc: Sean Anderson <sean.anderson@seco.com>
+> Cc: Alexandru Tachici <alexandru.tachici@analog.com>
+> Cc: Amit Cohen <amcohen@nvidia.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v2: resend, this time without missing netdev CC. :)
+> ---
+>  include/uapi/linux/ethtool.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+> index 58e587ba0450..9b97b3e0ec1f 100644
+> --- a/include/uapi/linux/ethtool.h
+> +++ b/include/uapi/linux/ethtool.h
+> @@ -1183,7 +1183,7 @@ struct ethtool_rxnfc {
+>                 __u32                   rule_cnt;
+>                 __u32                   rss_context;
+>         };
+> -       __u32                           rule_locs[0];
+> +       __DECLARE_FLEX_ARRAY(__u32,     rule_locs);
 
-Done!
+Can't this simply be a C99 flexible array member?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
+        __u32                           rule_locs[];
 
-> 
-> I don't see it in patchwork which I find confusing too. :P
+As far as I understand, __DECLARE_FLEX_ARRAY() is a hack to allow the
+declaration of a flexible array within unions (which otherwise do not
+accept flexible array members). However, ethtool_rxnfc being a struct,
+I do not see the need for __DECLARE_FLEX_ARRAY() here.
 
-mmh... and I don't remember updating it in patchwork before.
-(thinkingface)
-
---
-Gustavo
+Yours sincerely,
+Vincent Mailhol
