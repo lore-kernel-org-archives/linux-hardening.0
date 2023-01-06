@@ -2,106 +2,137 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA09C3DA7A
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 04:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577F4C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 04:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231472AbjAFEUe (ORCPT
+        id S230340AbjAFEW0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 5 Jan 2023 23:20:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55488 "EHLO
+        Thu, 5 Jan 2023 23:22:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231474AbjAFETx (ORCPT
+        with ESMTP id S229737AbjAFEWU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 5 Jan 2023 23:19:53 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD813193D7
-        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 20:19:52 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso544967pjo.3
-        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 20:19:52 -0800 (PST)
+        Thu, 5 Jan 2023 23:22:20 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DFE632277
+        for <linux-hardening@vger.kernel.org>; Thu,  5 Jan 2023 20:22:19 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso548719pjo.3
+        for <linux-hardening@vger.kernel.org>; Thu, 05 Jan 2023 20:22:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hu8NtloN+PgTYyanRIE7pi7y6G8HPaI/k/WMITVvahU=;
-        b=OdblQNQsWkunarJky6ssowGDbfTut1JiehmR0XIbfzlvP9zGzN3UF6YHZ2YckEX8Lw
-         Z2zNGXRwzroQNXlC6nccWRULvSTwJzUn0Ya9imOGqk6l2p0gUu4Iuyhry0Xs8gDJnnyi
-         wYy6GF2eJ+E5R47SGTl55Tg4M2Nh0aoqF3Bbk=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CGWD+jfRiKeIQRhUlYhv18AOK19GA0uVfO6DJ6wW9xo=;
+        b=Qx/Sc6eBGD1WS+NYhJg3ZkIWz+KNeDpe7i6MTHZyT8u+OIs3wWnMY1FXUutDo1Hrr0
+         eEEIgS0CugsgWmq2tsY1L5OXMgikwU4dvu3B9xWf9FW17vulbRljYIEu1aHtcfzyCBJ7
+         f/RAc7UJhNuY8syPOjs9JGQ3d2ynAdgWY89Jw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hu8NtloN+PgTYyanRIE7pi7y6G8HPaI/k/WMITVvahU=;
-        b=ToBQKlevX0iYPKi0TyohJkgarXTPeq3B9OrIhkVUKnHJ3MlW33Fnh1ernmmTVlPlS6
-         S69MEjUKsf45AsL5PWv6jtQSN3k4UvdZY/lzGdvCobip5bTbAkHzxwiyntTojkArSoSO
-         Jwl2F5kZnw5/WuRcJcZCL9HkUW9XsLftZ9hDaTnG3zCwoXKcHo7rKz+i9qSniQ9KdEOa
-         fli3NQx7AeQZvsrJhUOFrquq1qAfNy8JgbQG31vOszFk0exVMfICK1+P7Da6aQ46auwu
-         I+yOSnS6gez1ZkSNl0VDYPyVfOCJLJUea+Z/4BB2KefPsuampD7BMG7M6M4zMiUM0kKo
-         NZEw==
-X-Gm-Message-State: AFqh2kpiX46/qd7aPIvPjKvAZgGS92F7GHwr8UL+VzEAyuGm2xvh8uIt
-        63AWQpkE1sE0QsMskaeU2YBbiw==
-X-Google-Smtp-Source: AMrXdXv6veZlRCNlcFwIt6dCNcvq4fdJDguLdT7MM4nYKqXE81W9GfTvqrwpgwLqmn//fxJdOb56rw==
-X-Received: by 2002:a05:6a20:3d84:b0:b0:1abd:8604 with SMTP id s4-20020a056a203d8400b000b01abd8604mr87791661pzi.41.1672978792438;
-        Thu, 05 Jan 2023 20:19:52 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CGWD+jfRiKeIQRhUlYhv18AOK19GA0uVfO6DJ6wW9xo=;
+        b=if3l3Ma+8AsjUcJyizrX9fHkIBPgTZWe/QFk8TFOLmA+UJ8Kdy2ZpVg4uCAQUO2y8p
+         k58YxExkOatIEYOBNyZemD417tbA+ZETJlv4gLAHjgAvemosTIXIrJJhJ+1a6GHs41ik
+         o92t0SU3qw8ixp4CyhPGXtK7owBudFBeIHNGZXd3X6WUxcT900h9XGVC4/Drxcm8WXMt
+         bDYJS8BpIAUtAiOA4WlO21Dq9cdPnmtXItVUGHm0/qiN13BndXA4fbUPHfUSMHDLhuBk
+         D/jOiPu2nIkJRnxkbsAAvsyTvph6n5K20TmZH9kmjX2EQI7s0X/9wiYQuPsyP03lfOFk
+         i5AQ==
+X-Gm-Message-State: AFqh2kpslBqFAMJnV42mG6TPAX+5CS0my4ntMwFsy8IZBIeytwzFJGDm
+        NNcxXCqrYX/EtnOMxTZ5zfGhgQ==
+X-Google-Smtp-Source: AMrXdXuaPp8teht4jYnNx8xph4n3y4KgWAziqnyhVLFUe0joH+LWYntfx/GZhFy1gnunTYAAGzDgXA==
+X-Received: by 2002:a17:902:ebca:b0:191:117a:414f with SMTP id p10-20020a170902ebca00b00191117a414fmr64827715plg.27.1672978938888;
+        Thu, 05 Jan 2023 20:22:18 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z4-20020aa79f84000000b00573a9d13e9esm99431pfr.36.2023.01.05.20.19.50
+        by smtp.gmail.com with ESMTPSA id o13-20020a63e34d000000b004a3510effa5sm78223pgj.65.2023.01.05.20.22.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 20:19:51 -0800 (PST)
+        Thu, 05 Jan 2023 20:22:18 -0800 (PST)
+Date:   Thu, 5 Jan 2023 20:22:17 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Weili Qian <qianweili@huawei.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: [PATCH] crypto: hisilicon: Wipe entire pool on error
-Date:   Thu,  5 Jan 2023 20:19:48 -0800
-Message-Id: <20230106041945.never.831-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        kernel test robot <lkp@intel.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Amit Cohen <amcohen@nvidia.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ethtool: Replace 0-length array with flexible array
+Message-ID: <202301052021.5AEF89CB@keescook>
+References: <20230105233420.gonna.036-kees@kernel.org>
+ <CAMZ6RqK96DNAPO5A32i3EaDErU0C2RDtL4-JN2O8A5RBBUo3ew@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1263; h=from:subject:message-id; bh=X6glahKc2K5AhGi573gEkEl/ZAg/qb6wVfjT5NagaeU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjt6FkGMo4DAMJrJ88UNYYHlYbEA3oaRLMDi+LMFt7 MlcyWbCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7ehZAAKCRCJcvTf3G3AJrdlD/ 9klXK0kVfveHuPruho8dg/ZvBbP1H/ZKgZMeuq9octPINgkBgqGgnphKdHv6I3FBz0h9lUC94M3vZ1 SN9snSK1U9rraulaAplsebe/ma5zOumYBITv4UDqmYIbgp5UraM8+Fu0Ws0r/z9spYVLFJvAx6onMk d8L66wpibWnBQ0Al7c6kam9MKYP6QXYpPqWtpj8TrCJT/N3ABy5qf87KeMHsbWR3sPjcTPPljQXu+y jfgmhbInslE/j5J01pGLMGhFcx1/9zwoT9Xg6l4pOsi3655bOXnBxyyIemp1YaM2yPmwmt66s0RfaL lw/8Y9iTp3B+ACjjjzDY5sJYepHtQPDeGCZdXwC/w7twxdWsvqLvfVjCS6fUdKnQj1aSN0IRZ+awki A9Cl1roFZ4iV2A77XiIXlZY5D4OBBQC5vNIVFBD7Qb3FyX8Nw7jWLyadPJmMzAj5mHYKpnyyH93I3N xKnyzi8+ouYZpohIVB1wLhHDoEEi4nqDBUDi9QV0KiDop2q3TMwT+23QF5eCCP2Ay8jKcVMk32QTO5 4A48zBSX3lRNTi56aeOlHCewiRgEIhj0SmO0+VUGLq2s4V/IWIA4H19honqvtwQH2I3+ojP+C5WZp9 HLp98EGjFlXr6HFpI4yUKG9sZzFAo02W03prZ+xnc2e9kwkcKyzE/9H6qE2A==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMZ6RqK96DNAPO5A32i3EaDErU0C2RDtL4-JN2O8A5RBBUo3ew@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-To work around a Clang __builtin_object_size bug that shows up under
-CONFIG_FORTIFY_SOURCE and UBSAN_BOUNDS, move the per-loop-iteration
-mem_block wipe into a single wipe of the entire pool structure after
-the loop.
+On Fri, Jan 06, 2023 at 09:55:30AM +0900, Vincent MAILHOL wrote:
+> On Fri. 6 Jan 2023 at 08:34, Kees Cook <keescook@chromium.org> wrote:
+> > Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
+> > "rule_locs" 0-length array with a flexible array. Detected with GCC 13,
+> > using -fstrict-flex-arrays=3:
+> >
+> > net/ethtool/common.c: In function 'ethtool_get_max_rxnfc_channel':
+> > net/ethtool/common.c:558:55: warning: array subscript i is outside array bounds of '__u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
+> >   558 |                         .fs.location = info->rule_locs[i],
+> >       |                                        ~~~~~~~~~~~~~~~^~~
+> > In file included from include/linux/ethtool.h:19,
+> >                  from include/uapi/linux/ethtool_netlink.h:12,
+> >                  from include/linux/ethtool_netlink.h:6,
+> >                  from net/ethtool/common.c:3:
+> > include/uapi/linux/ethtool.h:1186:41: note: while referencing
+> > 'rule_locs'
+> >  1186 |         __u32                           rule_locs[0];
+> >       |                                         ^~~~~~~~~
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> >
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: kernel test robot <lkp@intel.com>
+> > Cc: Oleksij Rempel <linux@rempel-privat.de>
+> > Cc: Sean Anderson <sean.anderson@seco.com>
+> > Cc: Alexandru Tachici <alexandru.tachici@analog.com>
+> > Cc: Amit Cohen <amcohen@nvidia.com>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > v2: resend, this time without missing netdev CC. :)
+> > ---
+> >  include/uapi/linux/ethtool.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+> > index 58e587ba0450..9b97b3e0ec1f 100644
+> > --- a/include/uapi/linux/ethtool.h
+> > +++ b/include/uapi/linux/ethtool.h
+> > @@ -1183,7 +1183,7 @@ struct ethtool_rxnfc {
+> >                 __u32                   rule_cnt;
+> >                 __u32                   rss_context;
+> >         };
+> > -       __u32                           rule_locs[0];
+> > +       __DECLARE_FLEX_ARRAY(__u32,     rule_locs);
+> 
+> Can't this simply be a C99 flexible array member?
+> 
+>         __u32                           rule_locs[];
+> 
+> As far as I understand, __DECLARE_FLEX_ARRAY() is a hack to allow the
+> declaration of a flexible array within unions (which otherwise do not
+> accept flexible array members). However, ethtool_rxnfc being a struct,
+> I do not see the need for __DECLARE_FLEX_ARRAY() here.
 
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Link: https://github.com/ClangBuiltLinux/linux/issues/1780
-Cc: Weili Qian <qianweili@huawei.com>
-Cc: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-crypto@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/crypto/hisilicon/sgl.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Good point -- I think my eyes scanned through the "union" above and I
+just jumped at using __DECLARE_FLEX_ARRAY. I'll send a v2. Thanks!
 
-diff --git a/drivers/crypto/hisilicon/sgl.c b/drivers/crypto/hisilicon/sgl.c
-index 2b6f2281cfd6..0974b0041405 100644
---- a/drivers/crypto/hisilicon/sgl.c
-+++ b/drivers/crypto/hisilicon/sgl.c
-@@ -124,9 +124,8 @@ struct hisi_acc_sgl_pool *hisi_acc_create_sgl_pool(struct device *dev,
- 	for (j = 0; j < i; j++) {
- 		dma_free_coherent(dev, block_size, block[j].sgl,
- 				  block[j].sgl_dma);
--		memset(block + j, 0, sizeof(*block));
- 	}
--	kfree(pool);
-+	kfree_sensitive(pool);
- 	return ERR_PTR(-ENOMEM);
- }
- EXPORT_SYMBOL_GPL(hisi_acc_create_sgl_pool);
 -- 
-2.34.1
-
+Kees Cook
