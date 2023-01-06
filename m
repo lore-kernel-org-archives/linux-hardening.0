@@ -2,126 +2,165 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49B3C5479D
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 13:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE095C4708D
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 13:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233689AbjAFNUO (ORCPT
+        id S231511AbjAFNjq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 08:20:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57354 "EHLO
+        Fri, 6 Jan 2023 08:39:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230514AbjAFNUM (ORCPT
+        with ESMTP id S229601AbjAFNjd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 08:20:12 -0500
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59CA071490
-        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 05:20:11 -0800 (PST)
-Received: by mail-io1-xd30.google.com with SMTP id h6so661721iof.9
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 05:20:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ODfjaAogRSQDrpJDcdV44wIkQB0J6eo+/VX7vu6a+RQ=;
-        b=Of+LoJJZTMhlqKM6TD5QYSucSHpAUYBiRy3U98w/e0fNGihygPwthZWgaLH4oA4Wq6
-         cifSKnlPGyedbK0LjPRlvJtAoYnPfCKYEbCJtyFTolECd0Ahj1tHGWZeYi1yBZ/nhJnv
-         vMjfoyEnNAx3ZAaXrhoagiDWk2yUWXs+/XqQkfSlhRdt/pTGCEhx2/Q5b8XyN+mi4JzW
-         iWv3EJUwkbNcgM4/1j/nrbtbinRHV4IBjlcRgGgLz57kKHjT409Gf0dw1NHK6UUXpFWE
-         7r/3Zih4I1LH+Q5HIl7LLFfWyp3xtcxYBvGRldefpOPT7PvgVjaKHGmDIs5l4RmJ2Meo
-         mOkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ODfjaAogRSQDrpJDcdV44wIkQB0J6eo+/VX7vu6a+RQ=;
-        b=R4PbHIo+KAqbJ3yIkCB+TNKZpbug1tIi9mxZDpXe1b5x/ss8f2ZnfHW2V7n/9cPIsB
-         GPvEUccN8d2rW0nwdkVh/s4J8gxbZfTZhkZlqivqWZcSpDmqmWk6d7jOl1kkimy5p1Ym
-         c8/Lk4gFxO0W+ZAgWvw3IFof4MB7ZbJ1KGHVur5ZJaDw1spdUh/QF1m/ibptmiTO+5TI
-         ygbff+LmTiAYK3B3dU/4IEHvfinfOdGS+AJI7sqSFKFxEhAloKgiO8D+YMbVByvnlAaW
-         cDF0ftJJ04WfpZCSPnkX0uni2lTaaosQvaeBXgkijl+rB/YU8Cu1osqiTUh8c1nVo9FN
-         i2SA==
-X-Gm-Message-State: AFqh2ko+rKEsHRG2Hrpc1m1UKaeb3l5JwMpNJk+eZzZvbC3b4yXI4X9z
-        Zivnp/1pgrRsm0bGp9zGw70q9XKlTzrk5GG2IMAEhQ==
-X-Google-Smtp-Source: AMrXdXsnXZg9dF2+tKS5u/QJJJHJkhTwEs6e8ljUhXQUpLjJQSjoB54WuvJKWMat9a70++y5/p/txVkNz8MnjHjZTj4=
-X-Received: by 2002:a05:6602:184d:b0:6ed:9ed6:6bab with SMTP id
- d13-20020a056602184d00b006ed9ed66babmr3437742ioi.54.1673011210612; Fri, 06
- Jan 2023 05:20:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20230106042844.give.885-kees@kernel.org>
-In-Reply-To: <20230106042844.give.885-kees@kernel.org>
-From:   Jann Horn <jannh@google.com>
-Date:   Fri, 6 Jan 2023 14:19:34 +0100
-Message-ID: <CAG48ez0Jg9Eeh=RWpYh=sKhzukE3Sza2RKMmNs8o0FrHU0dj9w@mail.gmail.com>
-Subject: Re: [PATCH v3] ethtool: Replace 0-length array with flexible array
+        Fri, 6 Jan 2023 08:39:33 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0F96169;
+        Fri,  6 Jan 2023 05:39:32 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id DA6023F541;
+        Fri,  6 Jan 2023 13:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1673012370; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a3xS9J4Ev7cI3vqp+nZg9a5psmAQ7Jxm1E4l2JxtFMk=;
+        b=XzuAEf49pLMJ03gIabASS5tus7Ya1yP5EgX8CqH0oX4iQr/e/FCXok+fh3B32S36SrZdsu
+        o00yApTqHpak62hZa391Ylx0gtGz9bhEKQE+q8xb8gAi17QCCTBxKU1WdeK1wyi9KUqjjK
+        NSmnMCOf+8+uFy+VwwtyobgORi4awAk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1673012370;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a3xS9J4Ev7cI3vqp+nZg9a5psmAQ7Jxm1E4l2JxtFMk=;
+        b=HOgZ557iqj0LmRSn5O93Zcy+M08NS+xwPrFKw1RF/BOiFbXk+N1CudPs37INCtlX3uFpY5
+        /y/IUtkj5cSy1wAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 670E713596;
+        Fri,  6 Jan 2023 13:39:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id rDcuDZEkuGOQYgAAMHmgww
+        (envelope-from <colyli@suse.de>); Fri, 06 Jan 2023 13:39:29 +0000
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
+Subject: Re: [PATCH] bcache: Silence memcpy() run-time false positive warnings
+From:   Coly Li <colyli@suse.de>
+In-Reply-To: <20230106060229.never.047-kees@kernel.org>
+Date:   Fri, 6 Jan 2023 21:39:16 +0800
+Cc:     Thorsten Leemhuis <linux@leemhuis.info>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <CBD781CA-342F-482A-A5B0-C4EE2D7FE11B@suse.de>
+References: <20230106060229.never.047-kees@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        kernel test robot <lkp@intel.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Amit Cohen <amcohen@nvidia.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Apple Mail (2.3731.300.101.1.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 6, 2023 at 5:28 AM Kees Cook <keescook@chromium.org> wrote:
-> Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
-> "rule_locs" 0-length array with a flexible array. Detected with GCC 13,
-> using -fstrict-flex-arrays=3:
->
-> net/ethtool/common.c: In function 'ethtool_get_max_rxnfc_channel':
-> net/ethtool/common.c:558:55: warning: array subscript i is outside array bounds of '__u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
->   558 |                         .fs.location = info->rule_locs[i],
->       |                                        ~~~~~~~~~~~~~~~^~~
-> In file included from include/linux/ethtool.h:19,
->                  from include/uapi/linux/ethtool_netlink.h:12,
->                  from include/linux/ethtool_netlink.h:6,
->                  from net/ethtool/common.c:3:
-> include/uapi/linux/ethtool.h:1186:41: note: while referencing
-> 'rule_locs'
->  1186 |         __u32                           rule_locs[0];
->       |                                         ^~~~~~~~~
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
->
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: kernel test robot <lkp@intel.com>
-> Cc: Oleksij Rempel <linux@rempel-privat.de>
-> Cc: Sean Anderson <sean.anderson@seco.com>
-> Cc: Alexandru Tachici <alexandru.tachici@analog.com>
-> Cc: Amit Cohen <amcohen@nvidia.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v3: don't use helper (vincent)
-> v2: https://lore.kernel.org/lkml/20230105233420.gonna.036-kees@kernel.org
-> ---
->  include/uapi/linux/ethtool.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> index 58e587ba0450..3135fa0ba9a4 100644
-> --- a/include/uapi/linux/ethtool.h
-> +++ b/include/uapi/linux/ethtool.h
-> @@ -1183,7 +1183,7 @@ struct ethtool_rxnfc {
->                 __u32                   rule_cnt;
->                 __u32                   rss_context;
->         };
-> -       __u32                           rule_locs[0];
-> +       __u32                           rule_locs[];
 
-Stupid question: Is this syntax allowed in UAPI headers despite not
-being part of standard C90 or C++? Are we relying on all C/C++
-compilers for pre-C99 having gcc/clang extensions?
+
+> 2023=E5=B9=B41=E6=9C=886=E6=97=A5 14:02=EF=BC=8CKees Cook =
+<keescook@chromium.org> =E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> struct bkey has internal padding in a union, but it isn't always named
+> the same (e.g. key ## _pad, key_p, etc). This makes it extremely hard
+> for the compiler to reason about the available size of copies done
+> against such keys. Use unsafe_memcpy() for now, to silence the many
+> run-time false positive warnings:
+>=20
+
+The keys is embedded in multiple data structures as a generalized model =
+with some helpers, bkey_bytes() is one of them.
+
+It is not surprised for such feeling when people read the code at first =
+glance. And thank you for improving it :-)
+
+
+>  memcpy: detected field-spanning write (size 264) of single field =
+"&i->j" at drivers/md/bcache/journal.c:152 (size 240)
+>  memcpy: detected field-spanning write (size 24) of single field =
+"&b->key" at drivers/md/bcache/btree.c:939 (size 16)
+>  emcpy: detected field-spanning write (size 24) of single field =
+"&temp.key" at drivers/md/bcache/extents.c:428 (size 16)
+>=20
+
+How does the above information can be founded? Should I use llvm and =
+enable FORTIFY_SOURCE?
+
+I don=E2=80=99t say the bkey and bkey_bytes() stuffs are elegant, but =
+why the compiler cannot find such situation? IMHO it is quite similar to =
+something like =E2=80=9Cstruct foo *bar[0]=E2=80=9D at the end of a data =
+structure.
+
+
+> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+> Link: =
+https://lore.kernel.org/all/19200730-a3ba-6f4f-bb81-71339bdbbf73@leemhuis.=
+info/
+> Cc: Coly Li <colyli@suse.de>
+> Cc: Kent Overstreet <kent.overstreet@gmail.com>
+> Cc: linux-bcache@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+The code comments as justification is informative. Thanks for this.
+
+Acked-by: Coly Li <colyli@suse.de>
+
+
+Coly Li
+
+
+> ---
+> drivers/md/bcache/bcache_ondisk.h | 3 ++-
+> drivers/md/bcache/journal.c       | 3 ++-
+> 2 files changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/md/bcache/bcache_ondisk.h =
+b/drivers/md/bcache/bcache_ondisk.h
+> index d086a0ce4bc2..6620a7f8fffc 100644
+> --- a/drivers/md/bcache/bcache_ondisk.h
+> +++ b/drivers/md/bcache/bcache_ondisk.h
+> @@ -106,7 +106,8 @@ static inline unsigned long bkey_bytes(const =
+struct bkey *k)
+> return bkey_u64s(k) * sizeof(__u64);
+> }
+>=20
+> -#define bkey_copy(_dest, _src) memcpy(_dest, _src, bkey_bytes(_src))
+> +#define bkey_copy(_dest, _src) unsafe_memcpy(_dest, _src, =
+bkey_bytes(_src), \
+> + /* bkey is always padded */)
+>=20
+> static inline void bkey_copy_key(struct bkey *dest, const struct bkey =
+*src)
+> {
+> diff --git a/drivers/md/bcache/journal.c b/drivers/md/bcache/journal.c
+> index e5da469a4235..c182c21de2e8 100644
+> --- a/drivers/md/bcache/journal.c
+> +++ b/drivers/md/bcache/journal.c
+> @@ -149,7 +149,8 @@ reread: left =3D ca->sb.bucket_size - offset;
+>    bytes, GFP_KERNEL);
+> if (!i)
+> return -ENOMEM;
+> - memcpy(&i->j, j, bytes);
+> + unsafe_memcpy(&i->j, j, bytes,
+> + /* "bytes" was calculated by set_bytes() above */);
+> /* Add to the location after 'where' points to */
+> list_add(&i->list, where);
+> ret =3D 1;
+> --=20
+> 2.34.1
+>=20
+
