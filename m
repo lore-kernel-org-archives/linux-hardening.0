@@ -2,195 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2D5C61DB3
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 19:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9957C54EBD
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 20:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236007AbjAFTyI (ORCPT
+        id S236097AbjAFUGK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 14:54:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41492 "EHLO
+        Fri, 6 Jan 2023 15:06:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236019AbjAFTxi (ORCPT
+        with ESMTP id S236067AbjAFUGI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 14:53:38 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A710840B6
-        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 11:53:25 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id g16so2705970plq.12
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 11:53:25 -0800 (PST)
+        Fri, 6 Jan 2023 15:06:08 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9E941678
+        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 12:06:07 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id z4-20020a17090a170400b00226d331390cso2864458pjd.5
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 12:06:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4I/xxvLvEdw5CdlPW8yO+tvB+gpNxNcsXl58L2+adEY=;
-        b=OsYKUXbDBbZwtNF4SSg/XY8bwXtGBtu/AJt9KGQsitP9N/G2EIDrH++J8Tx44dUnr5
-         HthfVayk6ve2BD06ngqztkeCLTVZfcyo4LzimjyCD2B/K/GEshBO5h03gpVPOn7DiMPV
-         sPn7hExpTh04ZTlsoS29JoH3kNUw6QS61qMws=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tRynXyqPSXTn4rCoxoHLyvDBt750D/GgS94gTx+vdEA=;
+        b=cLduJRhC6MWyAlSPlrHt/96BIN6acHNahHOAfVFD/3gWpZGuHPRievwrVmS/p8g+7t
+         aVYrwNV3lYRBghHO5MmNDkouFdQhAqSkzXUy0Hz7Dijs+yqmSfbET21PQgNMUY6kQS39
+         Znkc6oXs+18uWOSthQsqyU5KHw7GX61bAzNtA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4I/xxvLvEdw5CdlPW8yO+tvB+gpNxNcsXl58L2+adEY=;
-        b=WvzUFu+NBSmcAwHcYKmSVwZ5ZLgUpiPQJt8teKKMAP7buq1uTtaraN6YAZW/d2mVU5
-         ubg0ZyDQ5/8k8Kam/fzBrfOP6/ihhtDnPMQ0BE8G3Fbvj+HWndg/poeSKooYUWaEPpAm
-         5QYrb/MoGe12uYwEhfpc3o0aHubFQq4O2ce/9+hL/oWDdfNGWQDiXbDumPxxFkqdOA2+
-         LyUGQl445fTYfU8Cl43AiDsHhIfE6v/V1GB5TwhjfDcOPm52A7Do3jI/FTAnXDNQTXQf
-         nYmPIAsJIMR6lwnYiztwX/C4kUY3oOplZ7Q0okmSAWIW/AU+5cJ/jw8b6s5Du9bvWRT0
-         nalQ==
-X-Gm-Message-State: AFqh2kqKNhh78lMK4kTo+t1PUtAWvnZnZqxrd3Gm54LafPFF1cCXTUI3
-        6yF95/FgJozGoZjI/O/vKhpINQ==
-X-Google-Smtp-Source: AMrXdXuZg1vPaJ8420PkIjzFTxJknNuhUw+LNTWoSgPRBAEzvpaKWbRhOq9b6OLF4eMxrSPTtAXgtg==
-X-Received: by 2002:a17:90b:246:b0:225:fb71:e64d with SMTP id fz6-20020a17090b024600b00225fb71e64dmr43555231pjb.7.1673034805128;
-        Fri, 06 Jan 2023 11:53:25 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tRynXyqPSXTn4rCoxoHLyvDBt750D/GgS94gTx+vdEA=;
+        b=s8CXSg0imkdGnyMJJbfFP9G0MmVnBCzNLDj5CQ2Ry8gdGFnXQzx1hqdYe97LZbwGk7
+         yGeGHZ6v6Dza34zSb7FxtxT/LGkArIpq95M7YrCC0i2FH0v3ywOeB1AuIy/ENlMUfrrc
+         PRkVvezmLmIZ/ADKYA4OHlt2v2vXbTTD30qLRsGLkgi6EfcLNdeK75GtMarXBqagQ4fj
+         51w574NE+frC8janLp1sf9dnuU80IKz9PXWClBrNx8wt5r6l1LZXtnUGIevuJVsE0MaY
+         iClzm7dhjplhczEmE1VmKUScIYKqnzRfb/Chkay4CZqmCG0IntR5gzx8AzIhpbx7jdks
+         BSJQ==
+X-Gm-Message-State: AFqh2kqeoBRpQzyCQvYJyUnH7powpzAMArZzqtXh70MvFvnzCGIr8FY0
+        ClTVUCSczLOFqrgdUSQ7kvfMKilPiCEwDEhs
+X-Google-Smtp-Source: AMrXdXvG96Irf8pAn872krsUZ3eJehgkT0Bu9WsLRxGE92OxjgK3MlzCl0E7H4TVgFBUfEC4pHi9XQ==
+X-Received: by 2002:a05:6a21:1518:b0:ac:f68:33c9 with SMTP id nq24-20020a056a21151800b000ac0f6833c9mr68838378pzb.33.1673035567367;
+        Fri, 06 Jan 2023 12:06:07 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u3-20020a17090a890300b00218cd71781csm1247818pjn.51.2023.01.06.11.53.24
+        by smtp.gmail.com with ESMTPSA id y7-20020a17090a474700b00219463262desm1260669pjg.39.2023.01.06.12.06.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 11:53:24 -0800 (PST)
-Date:   Fri, 6 Jan 2023 11:53:23 -0800
+        Fri, 06 Jan 2023 12:06:06 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Coly Li <colyli@suse.de>
-Cc:     Thorsten Leemhuis <linux@leemhuis.info>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] bcache: Silence memcpy() run-time false positive warnings
-Message-ID: <202301061125.2041FE82D@keescook>
-References: <20230106060229.never.047-kees@kernel.org>
- <CBD781CA-342F-482A-A5B0-C4EE2D7FE11B@suse.de>
+Subject: [PATCH] docs: deprecated.rst: Add note about DECLARE_FLEX_ARRAY() usage
+Date:   Fri,  6 Jan 2023 12:06:04 -0800
+Message-Id: <20230106200600.never.735-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1698; h=from:subject:message-id; bh=W2pNqJKTD43JaSpEWHJSnavL8GLLOvSWonV1g4X9lIc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjuH8srP2S6yInxOMPLcWkTR0LZU9mSxxMjjQUblOq ktFNXW6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7h/LAAKCRCJcvTf3G3AJj4YD/ 9sUyfRQkLEqbQ9W3a9TRqEZpxbRuFpmJ/sUtAqaWxuUfiE9Et2MFXoOUvuly1JvN10Pt8eMO0Vj0LX RWriz62or9mGNZlpABetKNJRy21+GxioJ6xbY4T1yxoCJ5Yx2iwSCfINzYIqTRrqQWjgl36L8onyRi NLOokGHLnSe+IZE44utQZaEIIdXSpyt7NkOj357oXJzGtCDp9BQ8PcR6cU7wQxpPY4FDNkvCanVgc+ n50lU4TF30meeXv7VqbNctWXr4Aw90Vptd+e86Yy7tZNi1/m/2Iohe56S0cCeom+5u0KDkGhGRoDxb y2CsAJM3Odff6dd8d6+HvFGaOIwH9txtBRzaIzRAbz+N39AMvwnTI7R4inKEOdXKMK8LgCbx72uY4z mDgu0qK53IRZw/krLy0WOiE3nyub/mXyx4Rm0sjjq5CxV2+BQgeEjPNAXF9kMA1G48ORd8mo+bJdKE w06pTRg1MOnmifwPdx3jnMfENgzR6lYMrXfPK7ZoMDkasBNl/dJICc5ha2nDWbctsf7qKMR9LSuxA8 o2dOf97FvLReAhyuY2XymowXJ0xumC9//y8EpsfYEuAhKBEf2CMP8j8MZPPY+9CUVvZ0vZkt9ATcQ7 f4q7iDXw3xB8M4c52tWcOIlp5nB9nbVEz4kPhTwWDmIkk5U6oM4oo951CpzA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CBD781CA-342F-482A-A5B0-C4EE2D7FE11B@suse.de>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 06, 2023 at 09:39:16PM +0800, Coly Li wrote:
-> 
-> 
-> > 2023年1月6日 14:02，Kees Cook <keescook@chromium.org> 写道：
-> > 
-> > struct bkey has internal padding in a union, but it isn't always named
-> > the same (e.g. key ## _pad, key_p, etc). This makes it extremely hard
-> > for the compiler to reason about the available size of copies done
-> > against such keys. Use unsafe_memcpy() for now, to silence the many
-> > run-time false positive warnings:
-> > 
-> 
-> The keys is embedded in multiple data structures as a generalized model with some helpers, bkey_bytes() is one of them.
+There wasn't any mention of when/where DECLARE_FLEX_ARRAY() should be
+used, so add the rationale and an example to the deprecation docs.
 
-Yeah, if the helpers were able to operate on the padding variable (rather than
-the key), then the compiler would be in a better position to figure out
-bounds checking. Right now it sees the destination as the key and then
-the size as larger than the key (but equal to the union's padding
-variable -- but it doesn't "know" about that).
+Suggested-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-doc@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Documentation/process/deprecated.rst | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-> >  memcpy: detected field-spanning write (size 264) of single field "&i->j" at drivers/md/bcache/journal.c:152 (size 240)
-> >  memcpy: detected field-spanning write (size 24) of single field "&b->key" at drivers/md/bcache/btree.c:939 (size 16)
-> >  memcpy: detected field-spanning write (size 24) of single field "&temp.key" at drivers/md/bcache/extents.c:428 (size 16)
-> > 
-> 
-> How does the above information can be founded? Should I use llvm and enable FORTIFY_SOURCE?
-
-It was reported at run-time under a kernel built with
-CONFIG_FORTIFY_SOURCE=y (See https://bugzilla.kernel.org/show_bug.cgi?id=216785)
-
-> I don’t say the bkey and bkey_bytes() stuffs are elegant, but why the compiler cannot find such situation? IMHO it is quite similar to something like “struct foo *bar[0]” at the end of a data structure.
-
-Nit: "bar[0]" is deprecated in favor of "bar[]" or
-DECLARE_FLEX_ARRAY(...) where needed, see:
-https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-and here is the patch that fixes this:
-https://lore.kernel.org/all/YzIc8z+QaHvqPjLX@work/
-
-But to answer the question, what's happening is mostly due to a
-(specification?) bug in GCC and Clang (where it can't tell an outer
-struct contains an inner struct that ends in a flexible array), so this:
-
-struct jset {
-	...
-        union {
-                struct bkey     start[0];
-                __u64           d[0];
-        };
-};
-
-looks like it has a fixed size, when in fact it doesn't.
-https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
-There is disagreement within GCC about whether or not this behavior is
-"by design", so for the meantime, we have to work around it in the
-kernel.
-
-So the first warning comes from:
-
-	memcpy(&i->j, j, bytes);
-
-where the compiler thinks the object pointed at by "&i->j" is fixed size,
-as it doesn't "see" the trailing flexible arrays within j.
-
-The other 2 warnings come from the same problem, but they're from
-struct bkey and the union created by BKEY_PADDED(). Here's everything
-I could see:
-
-struct bkey {
-        __u64   high;
-        __u64   low;
-        __u64   ptr[];
-};
-
-#define BKEY_PADDED(key)                                        \
-        union { struct bkey key; __u64 key ## _pad[BKEY_PAD]; }
-
-#define BITMASK(name, type, field, offset, size)                \
-static inline __u64 name(const type *k)                         \
-{ return (k->field >> offset) & ~(~0ULL << size); }             \
-
-#define KEY_FIELD(name, field, offset, size) \
-        BITMASK(name, struct bkey, field, offset, size)
-
-KEY_FIELD(KEY_PTRS,     high, 60, 3)
-
-
-static inline unsigned long bkey_u64s(const struct bkey *k)
-{
-        return (sizeof(struct bkey) / sizeof(__u64)) + KEY_PTRS(k);
-}
-
-static inline unsigned long bkey_bytes(const struct bkey *k)
-{
-        return bkey_u64s(k) * sizeof(__u64);
-}
-
-#define bkey_copy(_dest, _src)  memcpy(_dest, _src, bkey_bytes(_src))
-
-
-	BKEY_PADDED(key) temp;
-	bkey_copy(&temp.key, k);
-
-So, again, the memcpy() in bkey_copy() can't see into &temp.key to
-notice the trailing flexible array, and thinks it is copying "too much".
-
-However, in both cases, the bounds checking is being performed (first by
-set_bytes(), and in the latter two, by bkey_bytes()), so the direct fix
-is to just disable the FORTIFY checking on these memcpy() uses.
-
-> > Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-> > Link: https://lore.kernel.org/all/19200730-a3ba-6f4f-bb81-71339bdbbf73@leemhuis.info/
-> > Cc: Coly Li <colyli@suse.de>
-> > Cc: Kent Overstreet <kent.overstreet@gmail.com>
-> > Cc: linux-bcache@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> The code comments as justification is informative. Thanks for this.
-> 
-> Acked-by: Coly Li <colyli@suse.de>
-
-Thanks!
-
--Kees
-
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index c8fd53a11a20..fcac0a929efa 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -346,3 +346,29 @@ struct_size() and flex_array_size() helpers::
+         instance->count = count;
+ 
+         memcpy(instance->items, source, flex_array_size(instance, items, instance->count));
++
++There are two special cases of replacement where the DECLARE_FLEX_ARRAY()
++helper needs to be used. (Note that it is named __DECLARE_FLEX_ARRAY() for
++use in UAPI headers.) When the flexible array is either alone in a struct,
++or is part of a union. These are disallowed by the C99 specification,
++but for no technical reason (as can be seen by both the existing use of
++such arrays in those places and the work-around that DECLARE_FLEX_ARRAY()
++uses). For example, to convert this::
++
++	struct something {
++		...
++		union {
++			struct type1 one[0];
++			struct type2 two[0];
++		};
++	};
++
++The helper must be used::
++
++	struct something {
++		...
++		union {
++			DECLARE_FLEX_ARRAY(struct type1, one);
++			DECLARE_FLEX_ARRAY(struct type2, two);
++		};
++	};
 -- 
-Kees Cook
+2.34.1
+
