@@ -2,135 +2,132 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D3BC3DA7A
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 20:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B085C3DA7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 20:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236421AbjAFUQT (ORCPT
+        id S236421AbjAFUUO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 15:16:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49708 "EHLO
+        Fri, 6 Jan 2023 15:20:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230294AbjAFUPy (ORCPT
+        with ESMTP id S236551AbjAFUTJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 15:15:54 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B1582F52
-        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 12:14:27 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id g16so2765062plq.12
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 12:14:27 -0800 (PST)
+        Fri, 6 Jan 2023 15:19:09 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20353C73B
+        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 12:19:03 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id z4-20020a17090a170400b00226d331390cso2906726pjd.5
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 12:19:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=euU3G/ya0gtqqY9FQvfGrmCYDfDSO1DRx03jpA8QOoU=;
-        b=DxpJV32juCIC7h57KYTRrjCuSAEKETG43oBjZgf71yvmAQHb0L6DqYb1TF0bUPTUta
-         zq/0lgACacdY+WTeXku5JZ3Y1TAbuKWHPO8sa/cyKEk48X+V8Ut3URpj3vxBHM867N28
-         dEqxrQbhpBIzPD95jnlH21RK+ftUvSSFMAtOc=
+        bh=AGLGQcWh7fxTpjGo3tS7tRpH8cdVI9NZGacuJMxc3aM=;
+        b=J9xFPANkCtLv9kwtnvnZCou4HRBDEo4c9C3yNzimS63v01YOjey8j/jy+W+9spWOfP
+         Hb32XPyzMkYx0h6JUNMnQ/6b8C/Uza4b+Vh6XP+suOFMvmj1xOQKuXkOEJNQcEEL0EM/
+         jxcndy3ffaHbTh+Gu0foYs47OsMEs6VWN0Bqc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=euU3G/ya0gtqqY9FQvfGrmCYDfDSO1DRx03jpA8QOoU=;
-        b=ju7nh8dar4Xv+0wcZjzVkh5v5f/nclJdhOh32aip3f0ooPgW83/i9NpCfuHtlyHtRe
-         i7V/KTEoZ3FUysK7RvBgQtouePtZ/uXE/phW7nJUlk28y0x56moCHoFMpKA3b2Vj9lqE
-         3wGIV0l1C1B0uvLWQouy7DIAprh3DdbaA3ZccN5tTK50gSJS+38H93ulhMHZ7/K5UH9i
-         S8EgV8z1ZVVzYPnn5A/G8x3Iuf5kX3vZ5lJAWtA9lO+AVvEP8BYk62HctgdvE/e6XsiI
-         UPKrVdWiuVs3LzDNyBV81bT2dE5bd/OCsIHB9MQr2Z4LnDxAOxCqZu93f2boGEmxxnOC
-         5gIg==
-X-Gm-Message-State: AFqh2kqz0uILL+uwQWbxwXxPDS1Jkycofq5i4+nUgCb/CbA1Wk8kjRS9
-        8W02x709xOFreMz4/vbK8jdLxg==
-X-Google-Smtp-Source: AMrXdXtkvQ+XpEzmJFaUJ0JVX00yVP9flnzGcmoU0MwhgVx2K6M1UpjXmeQnvV8L4me6P8O7LDJT/A==
-X-Received: by 2002:a05:6a20:3d26:b0:a7:8c43:d669 with SMTP id y38-20020a056a203d2600b000a78c43d669mr74101910pzi.51.1673036019131;
-        Fri, 06 Jan 2023 12:13:39 -0800 (PST)
+        bh=AGLGQcWh7fxTpjGo3tS7tRpH8cdVI9NZGacuJMxc3aM=;
+        b=WLDfgxe2D+FiOM3XwxKChpNayFo2dGYQvjNS5hBcOQd1hEEn33/d0qloa6Os0iNFUB
+         oA5AmGGe6/YfEpHQGEgYLjYYqq6PyVTtB91xGIAus2qARI0Xh+XWl3J65Bvqaru2g2ka
+         bIBWS5CboMdNcCDxvzPIdl7tfKJRRwcbkHiGYOUXf6kpzxMS8RI3HjtNpXaXyQOlCsSx
+         qHdZ0zaWewCP5HzET+Urrv5Zkz1hxQOvL4DgXckbAx9BTmaBm2P0jkYMK491iRaWJStt
+         /3ydJguIeuL43bemWGl3ovP4y63YhIkCfXWHOVXN2O6DRmELt/W98QcBMsvf2J7XkuYW
+         kGrg==
+X-Gm-Message-State: AFqh2koqMahfSQUeogxqZDc4C0RxvsgkV9D9OaFrLd/u0pPwzFk9ZAbA
+        U60GzH9lYaZcUlOAcVM1RAOUBg==
+X-Google-Smtp-Source: AMrXdXudlVKAU4UX6Qzu0Go3bkXbaS/ERmoDwzPoi9msar5Xeo82q3RaDfeX+3INk0Ve1FfNZ7uYCA==
+X-Received: by 2002:a17:902:ec01:b0:192:b0a0:789b with SMTP id l1-20020a170902ec0100b00192b0a0789bmr27137344pld.2.1673036343274;
+        Fri, 06 Jan 2023 12:19:03 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e2-20020a170902784200b0019309be03e7sm1347726pln.66.2023.01.06.12.13.38
+        by smtp.gmail.com with ESMTPSA id b14-20020a1709027e0e00b00193132018ecsm970899plm.170.2023.01.06.12.19.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 12:13:38 -0800 (PST)
-Date:   Fri, 6 Jan 2023 12:13:37 -0800
+        Fri, 06 Jan 2023 12:19:02 -0800 (PST)
+Date:   Fri, 6 Jan 2023 12:19:01 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Vincent MAILHOL <mailhol.vincent@wanadoo.fr>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        kernel test robot <lkp@intel.com>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Amit Cohen <amcohen@nvidia.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: minimum compiler for Linux UAPI (was Re: [PATCH v3] ethtool:
- Replace 0-length array with flexible array)
-Message-ID: <202301061209.4EA0C177@keescook>
-References: <20230106042844.give.885-kees@kernel.org>
- <CAG48ez0Jg9Eeh=RWpYh=sKhzukE3Sza2RKMmNs8o0FrHU0dj9w@mail.gmail.com>
- <CAMZ6RqJXnUBxqyCFRaLxELjnvGzn9NoiePV2RVwBzAZRGH_Qmg@mail.gmail.com>
+To:     Ricardo Ribalda <ribalda@chromium.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        ionut_n2001@yahoo.com, Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] media: uvcvideo: Silence memcpy() run-time false
+ positive warnings
+Message-ID: <202301061217.816FC0313D@keescook>
+References: <20230106061659.never.817-kees@kernel.org>
+ <CANiDSCtTz4mpTz4RHBzNXL=yBvXNXHBZQ-HYMFegLytoScW4eA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMZ6RqJXnUBxqyCFRaLxELjnvGzn9NoiePV2RVwBzAZRGH_Qmg@mail.gmail.com>
+In-Reply-To: <CANiDSCtTz4mpTz4RHBzNXL=yBvXNXHBZQ-HYMFegLytoScW4eA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 06, 2023 at 11:25:14PM +0900, Vincent MAILHOL wrote:
-> On Fri. 6 Jan 2023 at 22:19, Jann Horn <jannh@google.com> wrote:
-> > On Fri, Jan 6, 2023 at 5:28 AM Kees Cook <keescook@chromium.org> wrote:
-> > > Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
-> > > "rule_locs" 0-length array with a flexible array. Detected with GCC 13,
-> > > using -fstrict-flex-arrays=3:
-> [...]
-> > > diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
-> > > index 58e587ba0450..3135fa0ba9a4 100644
-> > > --- a/include/uapi/linux/ethtool.h
-> > > +++ b/include/uapi/linux/ethtool.h
-> > > @@ -1183,7 +1183,7 @@ struct ethtool_rxnfc {
-> > >                 __u32                   rule_cnt;
-> > >                 __u32                   rss_context;
-> > >         };
-> > > -       __u32                           rule_locs[0];
-> > > +       __u32                           rule_locs[];
+On Fri, Jan 06, 2023 at 12:43:44PM +0100, Ricardo Ribalda wrote:
+> On Fri, 6 Jan 2023 at 07:19, Kees Cook <keescook@chromium.org> wrote:
 > >
-> > Stupid question: Is this syntax allowed in UAPI headers despite not
-> > being part of standard C90 or C++? Are we relying on all C/C++
-> > compilers for pre-C99 having gcc/clang extensions?
-> 
-> The [0] isn't part of the C90 standard either. So having to choose
-> between [0] and [], the latter is the most portable nowadays.
-> 
-> If I do a bit of speleology, I can see that C99 flexible array members
-> were used as early as v2.6.19 (released in November 2006):
-> 
->   https://elixir.bootlin.com/linux/v2.6.19/source/include/linux/usb/audio.h#L36
-> 
-> This is prior to the include/linux and include/uapi/linux split, but
-> believe me, this usb/audio.h file is indeed part of the uapi.
-> So, yes, using C99 flexible array members in the UAPI is de facto
-> allowed because it was used for the last 16 years.
-> 
-> An interesting sub question would be:
-> 
->   What are the minimum compiler requirements to build a program using
-> the Linux UAPI?
+> > The memcpy() in uvc_video_decode_meta() intentionally copies across the
+> > length and flags members and into the trailing buf flexible array.
+> > Split the copy so that the compiler can better reason about (the lack
+> > of) buffer overflows here. Avoid the run-time false positive warning:
+> >
+> >   memcpy: detected field-spanning write (size 12) of single field "&meta->length" at drivers/media/usb/uvc/uvc_video.c:1355 (size 1)
+> >
+> > Additionally fix a typo in the documentation for struct uvc_meta_buf.
+> >
+> > Reported-by: ionut_n2001@yahoo.com
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216810
+> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> > Cc: linux-media@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/media/usb/uvc/uvc_video.c | 4 +++-
+> >  include/uapi/linux/uvcvideo.h     | 2 +-
+> >  2 files changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
+> > index d2eb9066e4dc..b67347ab4181 100644
+> > --- a/drivers/media/usb/uvc/uvc_video.c
+> > +++ b/drivers/media/usb/uvc/uvc_video.c
+> > @@ -1352,7 +1352,9 @@ static void uvc_video_decode_meta(struct uvc_streaming *stream,
+> >         if (has_scr)
+> >                 memcpy(stream->clock.last_scr, scr, 6);
+> >
+> > -       memcpy(&meta->length, mem, length);
+> > +       meta->length = mem[0];
+> > +       meta->flags  = mem[1];
+> > +       memcpy(meta->buf, &mem[2], length - 2);
+> >         meta_buf->bytesused += length + sizeof(meta->ns) + sizeof(meta->sof);
+> >
+> >         uvc_dbg(stream->dev, FRAME,
+> > diff --git a/include/uapi/linux/uvcvideo.h b/include/uapi/linux/uvcvideo.h
+> > index 8288137387c0..a9d0a64007ba 100644
+> > --- a/include/uapi/linux/uvcvideo.h
+> > +++ b/include/uapi/linux/uvcvideo.h
+> > @@ -86,7 +86,7 @@ struct uvc_xu_control_query {
+> >   * struct. The first two fields are added by the driver, they can be used for
+> >   * clock synchronisation. The rest is an exact copy of a UVC payload header.
+> >   * Only complete objects with complete buffers are included. Therefore it's
+> > - * always sizeof(meta->ts) + sizeof(meta->sof) + meta->length bytes large.
+> > + * always sizeof(meta->ns) + sizeof(meta->sof) + meta->length bytes large.
+> >   */
+> >  struct uvc_meta_buf {
+> >         __u64 ns;
+> [...]
+>
+> Would it make more sense to replace *mem with a structure/union. Something like:
+> https://patchwork.linuxtv.org/project/linux-media/patch/20221214-uvc-status-alloc-v4-0-f8e3e2994ebd@chromium.org/
 
-You're right -- we haven't explicitly documented this. C99 seems like
-the defacto minimum, though.
+I wasn't sure -- it seemed like this routine was doing the serializing
+into a struct already and an additional struct overlay wasn't going to
+improve readability. But I can certainly do that if it's preferred!
 
-> And, after research, I could not find the answer. The requirements to
-> build the kernel are well documented:
-> 
->   https://docs.kernel.org/process/changes.html#changes
-> 
-> But no clue for the uapi. I guess that at one point in 2006, people
-> decided that it was time to set the minimum requirement to C99. Maybe
-> this matches the end of life of the latest pre-C99 GCC version? The
-> detailed answer must be hidden somewhere on lkml.
-
-I would make the argument that the requirements for building Linux UAPI
-should match that of building the kernel...
+-Kees
 
 -- 
 Kees Cook
