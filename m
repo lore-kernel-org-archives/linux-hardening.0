@@ -2,118 +2,77 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFCAC54EBD
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 19:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B36C54EBD
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 19:25:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbjAFTLV (ORCPT
+        id S235773AbjAFTZE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 14:11:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51508 "EHLO
+        Fri, 6 Jan 2023 14:25:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230308AbjAFTLU (ORCPT
+        with ESMTP id S235657AbjAFTY6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 14:11:20 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A2B68799
-        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 11:11:19 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id dw9so969675pjb.5
-        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 11:11:19 -0800 (PST)
+        Fri, 6 Jan 2023 14:24:58 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F8476813
+        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 11:24:57 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id jn22so2620276plb.13
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 11:24:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8D3UMgiXLWkn97zxdcVsZ26wy/4Qk/KB4lcp4wb6CBg=;
-        b=A4AqfUS5XUfLmvuEwP4oYqK2ebk4628oLq8T74ED9gI/jsApNxIUxodGWGQb0A3cXM
-         eRO1DyGJJK2WjsworIDKJ7ufOGIEkbe6lybdBjsrvWkehXq870VUkEVa00BSjANutHiW
-         oTJs0pI9PQf+0H6roXuPbQzeUkKXk4cteN3qg=
+        bh=fiUE7qV3TeV37sE/MZLGbTWtsmtid5YxK7EKlhT6SGg=;
+        b=MXH8ZdJjYceMJd78W18JC6QxLzARKE3ZtdTSLjQwai1d3HdQPJ4fOdw2sEpu8yOMN3
+         I51Kadx9i3axJMZ0Kvw3GWIn2uq9Va+t0zMmXjj50Taw3qrHOG+4OEO1DGh0Jb7O9raH
+         nEqmB/bNEPCTQPOLc0APx/JhQ6E4JMVU4MKHA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8D3UMgiXLWkn97zxdcVsZ26wy/4Qk/KB4lcp4wb6CBg=;
-        b=C6NA6INpsMRgqI/GGequr+IFXEa8k1++vYx7yKh6WOawKjTACxZK4E80DeZILNVglJ
-         biaDSIlJXFeukTG0vHPVL675iUfzGzikW/XGvXhYzjtjZJ1cnBbNSuTpMevWjzQ35zdD
-         RJGWQjSraQUdoMxezcwueQ1VJF2voUa9SIUmw6o+XQKQHeBvWzBkEY2+f+Iw69aJixFh
-         IJRO7zCDqj7FYHnbNFqgRC6kMB3y0kSB0e5f3rCUSOowf6svS4f//lqJtfdo1+tdlvQU
-         Y41yEPjwDwVYpAQkGpbs03S9TBEfM6ORn3IbzAFoE05WDJw1RQJoDNHAeorEH0nEcpQv
-         hD6A==
-X-Gm-Message-State: AFqh2kr8jmavub7mQc3q4SQiJ1lwwQTtjii0NllIupMXux2ZDn8MNtcc
-        s2CY+z7bJKPKE1kKsGf97Fc6Hg==
-X-Google-Smtp-Source: AMrXdXvYyR1F/thrOSPadqoE90Q0LDkthAlS9+yTY4mnVKRYpyTjuE3IUhd/bTftBN8cldUyhmW4Dw==
-X-Received: by 2002:a05:6a21:7893:b0:af:1a39:553d with SMTP id bf19-20020a056a21789300b000af1a39553dmr86781422pzc.14.1673032279194;
-        Fri, 06 Jan 2023 11:11:19 -0800 (PST)
+        bh=fiUE7qV3TeV37sE/MZLGbTWtsmtid5YxK7EKlhT6SGg=;
+        b=TBHDZFa3YC2dqsuhk6SG09yOOPHwqEaMOd8cv8hMonAdM6PpsB3n7PUS0PfHODsv0E
+         TkrqXB4V9n9kaWZU3/giMRpR3z+liW0lQmzXBWdpAFWVnIvJMHfTOkfhl/51wywwdzdS
+         HDx3lQAIDVUcvMzMjp99/soOBwDV1T8cQ/QhQoNHg60E0BLiIPgirzWY7u9xfLQLipwF
+         T2FfR9RE2nF+S6zxapOg/CojZr7eH94WOZX9gbTJaUSnM7LVA9cXehOOW734Nd3s/52q
+         iHE5t0iesRnCH7hN+hcQqqBiTOkweM/h/I45enILAsIONq5KNJTjOcD+76UPqz2hMjPY
+         ZfUQ==
+X-Gm-Message-State: AFqh2kpM6SkAaaaJ1R3+88LJQ9+e+bwTYnikq7EfjPdbkN46CtGVWzzg
+        9mJOPsRJs/3v50mJm8h5jNnWTQ==
+X-Google-Smtp-Source: AMrXdXtYF5piKCXiUZQXel2DI8vWqRDQ2w9OM/03QCu8R/HdiOeb5HUA7z5UHy5QM+F6NCGh5/i7qw==
+X-Received: by 2002:a17:90b:238d:b0:225:cc25:8037 with SMTP id mr13-20020a17090b238d00b00225cc258037mr52191457pjb.31.1673033097054;
+        Fri, 06 Jan 2023 11:24:57 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z188-20020a6265c5000000b0055f209690c0sm688639pfb.50.2023.01.06.11.11.18
+        by smtp.gmail.com with ESMTPSA id u6-20020a17090a410600b00225dfb6e8b3sm3164308pjf.11.2023.01.06.11.24.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 11:11:18 -0800 (PST)
-Date:   Fri, 6 Jan 2023 11:11:17 -0800
+        Fri, 06 Jan 2023 11:24:56 -0800 (PST)
+Date:   Fri, 6 Jan 2023 11:24:55 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vsprintf: fix possible NULL pointer deref in vsnprintf()
-Message-ID: <202301061107.C56365E@keescook>
-References: <1f4d159e-5382-3c75-bd5e-42337ecd8c28@omp.ru>
- <Y7hDGoCbWG2ZYdlV@alley>
- <20230106121457.05edbbdf@gandalf.local.home>
+To:     Thorsten Leemhuis <linux@leemhuis.info>
+Cc:     Coly Li <colyli@suse.de>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bcache: Silence memcpy() run-time false positive warnings
+Message-ID: <202301061124.E4F9C502@keescook>
+References: <20230106060229.never.047-kees@kernel.org>
+ <132043f4-d19a-911d-04c4-a24fdf89153f@leemhuis.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230106121457.05edbbdf@gandalf.local.home>
+In-Reply-To: <132043f4-d19a-911d-04c4-a24fdf89153f@leemhuis.info>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 06, 2023 at 12:14:57PM -0500, Steven Rostedt wrote:
-> On Fri, 6 Jan 2023 16:49:46 +0100
-> Petr Mladek <pmladek@suse.com> wrote:
+On Fri, Jan 06, 2023 at 11:01:05AM +0100, Thorsten Leemhuis wrote:
+> Credit where credit is due, this should be:
 > 
-> > > Index: linux/lib/vsprintf.c
-> > > ===================================================================
-> > > --- linux.orig/lib/vsprintf.c
-> > > +++ linux/lib/vsprintf.c
-> > > @@ -2738,6 +2738,15 @@ int vsnprintf(char *buf, size_t size, co
-> > >  	if (WARN_ON_ONCE(size > INT_MAX))
-> > >  		return 0;
-> > >  
-> > > +	/*
-> > > +	 * C99 allows @buf to be NULL when @size is 0. We treat such NULL as if
-> > > +	 * @buf pointed to 0-sized buffer, so we can both avoid a NULL pointer
-> > > +	 * dereference and still return # of characters that would be written
-> > > +	 * if @buf pointed to a valid buffer...
-> > > +	 */
-> > > +	if (!buf)
-> > > +		size = 0;  
-> > 
-> > It makes sense except that it would hide bugs. It should print a
-> > warning, for example:
-> 
-> I agree. This is a bug, and should not be quietly ignored.
+> Reported-by: Alexandre Pereira <alexpereira@disroot.org>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216785
 
-Yup.
-
-> 
-> > 
-> > 	char *err_msg;
-> > 
-> > 	err_msg = check_pointer_msg(buf);
-> > 	if (err_msg) {
-> > 		WARN_ONCE(1, "Invalid buffer passed to vsnprintf(). Trying to continue with 0 length limit\n");
-> > 		size = 0;
-> > 	}
-> 
-> 	if (WARN_ONCE(err_msg, "Invalid buffer passed to vsnprintf(). Trying to continue with 0 length limit\n"))
-> 		size = 0;
-
-Also good. Please CC me for an Ack when this is a full patch. :)
-
--Kees
+Ah-ha, thank you! I've updated this.
 
 -- 
 Kees Cook
