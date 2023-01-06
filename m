@@ -2,122 +2,126 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2886C4708D
-	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 11:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49B3C5479D
+	for <linux-hardening@archiver.kernel.org>; Fri,  6 Jan 2023 13:20:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbjAFL5c (ORCPT
+        id S233689AbjAFNUO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 06:57:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44270 "EHLO
+        Fri, 6 Jan 2023 08:20:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233076AbjAFL5L (ORCPT
+        with ESMTP id S230514AbjAFNUM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 06:57:11 -0500
-X-Greylist: delayed 477 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 06 Jan 2023 03:57:10 PST
-Received: from ofcsgdbm.dwd.de (ofcsgdbm.dwd.de [141.38.3.245])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA862718B7
-        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 03:57:10 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by ofcsg2dn3.dwd.de (Postfix) with ESMTP id 4NpM7W63Zpz2xMJ
-        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 11:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dwd.de; h=
-        content-type:content-type:mime-version:references:message-id
-        :in-reply-to:subject:subject:from:from:date:date:received
-        :received:received:received:received:received:received:received;
-         s=dwd-csg20210107; t=1673005751; x=1674215352; bh=u7IIxirkt76f0
-        g/Rwq/qlgaw6SWFuad1KaMroHH8eUE=; b=IWHODVKeMg9tkyListxkPzMQCjTPb
-        llQJnJoHy0QfhbAYpkQGOJ7FclAuIsOIOPA8xHUXaPnlT6ult7g1R+c0tFfPRdF2
-        IvodZ8a3TjFxIw3Ey5BrIKjmTJ+VGbm9F27lBZIz2kBm2kODrDGP2ItlYSOwaYGl
-        QAnRsWwqrn2pQE9mKHCGbXSfOPjZh3S+uiAr819qQBva1PKrU3jOIUo3nKna6CS6
-        UxZlHS7XD3AFD5QBoAwZWahDmN+HLWiHpQUYb4/m9FXmJNuCHAVM/FB3+qBXy/Ag
-        0pOujIdoX5ysB/57zbVhaUKAlx9g9cPAkAqOoYBofIwcpVpUchDX+JJuQ==
-X-Virus-Scanned: by amavisd-new at csg.dwd.de
-Received: from ofcsg2cteh1.dwd.de ([172.30.232.65])
- by localhost (ofcsg2dn3.dwd.de [172.30.232.26]) (amavisd-new, port 10024)
- with ESMTP id XZvWrrhMf0VS for <linux-hardening@vger.kernel.org>;
- Fri,  6 Jan 2023 11:49:11 +0000 (UTC)
-Received: from ofcsg2cteh1.dwd.de (unknown [127.0.0.1])
-        by DDEI (Postfix) with ESMTP id A1494C902C86
-        for <root@ofcsg2dn3.dwd.de>; Fri,  6 Jan 2023 11:49:11 +0000 (UTC)
-Received: from ofcsg2cteh1.dwd.de (unknown [127.0.0.1])
-        by DDEI (Postfix) with ESMTP id 95DC8C90252F
-        for <root@ofcsg2dn3.dwd.de>; Fri,  6 Jan 2023 11:49:11 +0000 (UTC)
-X-DDEI-TLS-USAGE: Unused
-Received: from ofcsgdbm.dwd.de (unknown [172.30.232.26])
-        by ofcsg2cteh1.dwd.de (Postfix) with ESMTP
-        for <root@ofcsg2dn3.dwd.de>; Fri,  6 Jan 2023 11:49:11 +0000 (UTC)
-Received: from ofcsgdbm.dwd.de by localhost (Postfix XFORWARD proxy);
- Fri, 06 Jan 2023 11:49:11 -0000
-Received: from ofcsg2dvf2.dwd.de (ofcsg2dvf2.dwd.de [172.30.232.11])
-        by ofcsg2dn3.dwd.de (Postfix) with ESMTPS id 4NpM7W3wZjz2xMJ;
-        Fri,  6 Jan 2023 11:49:11 +0000 (UTC)
-Received: from ofmailhub.dwd.de (ofldap.dwd.de [141.38.39.208])
-        by ofcsg2dvf2.dwd.de  with ESMTP id 306BnB0j022256-306BnB0k022256;
-        Fri, 6 Jan 2023 11:49:11 GMT
-Received: from diagnostix.dwd.de (diagnostix.dwd.de [141.38.44.45])
-        by ofmailhub.dwd.de (Postfix) with ESMTP id 451534529B;
-        Fri,  6 Jan 2023 11:49:11 +0000 (UTC)
-Date:   Fri, 6 Jan 2023 11:49:11 +0000 (GMT)
-From:   Holger Kiehl <Holger.Kiehl@dwd.de>
-To:     Kees Cook <keescook@chromium.org>
-cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: megaraid_sas: Add flexible array member for SGLs
-In-Reply-To: <20230106053153.never.999-kees@kernel.org>
-Message-ID: <7cc1efed-1241-112d-2a12-6abeea323284@diagnostix.dwd.de>
-References: <20230106053153.never.999-kees@kernel.org>
+        Fri, 6 Jan 2023 08:20:12 -0500
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59CA071490
+        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 05:20:11 -0800 (PST)
+Received: by mail-io1-xd30.google.com with SMTP id h6so661721iof.9
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 05:20:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ODfjaAogRSQDrpJDcdV44wIkQB0J6eo+/VX7vu6a+RQ=;
+        b=Of+LoJJZTMhlqKM6TD5QYSucSHpAUYBiRy3U98w/e0fNGihygPwthZWgaLH4oA4Wq6
+         cifSKnlPGyedbK0LjPRlvJtAoYnPfCKYEbCJtyFTolECd0Ahj1tHGWZeYi1yBZ/nhJnv
+         vMjfoyEnNAx3ZAaXrhoagiDWk2yUWXs+/XqQkfSlhRdt/pTGCEhx2/Q5b8XyN+mi4JzW
+         iWv3EJUwkbNcgM4/1j/nrbtbinRHV4IBjlcRgGgLz57kKHjT409Gf0dw1NHK6UUXpFWE
+         7r/3Zih4I1LH+Q5HIl7LLFfWyp3xtcxYBvGRldefpOPT7PvgVjaKHGmDIs5l4RmJ2Meo
+         mOkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ODfjaAogRSQDrpJDcdV44wIkQB0J6eo+/VX7vu6a+RQ=;
+        b=R4PbHIo+KAqbJ3yIkCB+TNKZpbug1tIi9mxZDpXe1b5x/ss8f2ZnfHW2V7n/9cPIsB
+         GPvEUccN8d2rW0nwdkVh/s4J8gxbZfTZhkZlqivqWZcSpDmqmWk6d7jOl1kkimy5p1Ym
+         c8/Lk4gFxO0W+ZAgWvw3IFof4MB7ZbJ1KGHVur5ZJaDw1spdUh/QF1m/ibptmiTO+5TI
+         ygbff+LmTiAYK3B3dU/4IEHvfinfOdGS+AJI7sqSFKFxEhAloKgiO8D+YMbVByvnlAaW
+         cDF0ftJJ04WfpZCSPnkX0uni2lTaaosQvaeBXgkijl+rB/YU8Cu1osqiTUh8c1nVo9FN
+         i2SA==
+X-Gm-Message-State: AFqh2ko+rKEsHRG2Hrpc1m1UKaeb3l5JwMpNJk+eZzZvbC3b4yXI4X9z
+        Zivnp/1pgrRsm0bGp9zGw70q9XKlTzrk5GG2IMAEhQ==
+X-Google-Smtp-Source: AMrXdXsnXZg9dF2+tKS5u/QJJJHJkhTwEs6e8ljUhXQUpLjJQSjoB54WuvJKWMat9a70++y5/p/txVkNz8MnjHjZTj4=
+X-Received: by 2002:a05:6602:184d:b0:6ed:9ed6:6bab with SMTP id
+ d13-20020a056602184d00b006ed9ed66babmr3437742ioi.54.1673011210612; Fri, 06
+ Jan 2023 05:20:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-X-FEAS-Client-IP: 141.38.39.208
-X-FE-Last-Public-Client-IP: 141.38.39.208
-X-FE-Policy-ID: 2:2:1:SYSTEM
-X-TMASE-Version: DDEI-5.1-9.0.1002-27368.007
-X-TMASE-Result: 10--11.765800-10.000000
-X-TMASE-MatchedRID: scwq2vQP8OH/9O/B1c/Qy65i3jK3KDOoC/ExpXrHizxnyL8x0tKlOwpz
-        5A3IIcOFQMOJEqjTDADg9GpkpL2zRfvwmMFLImuh72Rb2bEJC+14/L/eKkYod2vlGb+24NaZwis
-        nIbO8h0PqNXg27YCW5IyCITJXo1Pu38rWKQkiws4y0WOtNS62pHLhUU/qa4OGXfUB/fqAxpO4kR
-        SZ1g8ZJSurxuGphsNqV5Y/cGuAJ/uR9GF2J2xqM/7E6GNqs6ce3x1YNh2+qanUZxEAlFPo846HM
-        5rqDwqtp9yvkxek7WN9ypEcdRqjcrWm5vJecezqWXZQfz2GkfqotqABjxieXQ==
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
-X-TMASE-INERTIA: 0-0;;;;
-X-DDEI-PROCESSED-RESULT: Safe
+References: <20230106042844.give.885-kees@kernel.org>
+In-Reply-To: <20230106042844.give.885-kees@kernel.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 6 Jan 2023 14:19:34 +0100
+Message-ID: <CAG48ez0Jg9Eeh=RWpYh=sKhzukE3Sza2RKMmNs8o0FrHU0dj9w@mail.gmail.com>
+Subject: Re: [PATCH v3] ethtool: Replace 0-length array with flexible array
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        kernel test robot <lkp@intel.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Amit Cohen <amcohen@nvidia.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 5 Jan 2023, Kees Cook wrote:
-
-> struct MPI2_RAID_SCSI_IO_REQUEST ends with a single SGL, but expects to
-> copy multiple. Add a flexible array member so the compiler can reason
-> about the size of the memcpy(). This will avoid the run-time false
-> positive warning:
+On Fri, Jan 6, 2023 at 5:28 AM Kees Cook <keescook@chromium.org> wrote:
+> Zero-length arrays are deprecated[1]. Replace struct ethtool_rxnfc's
+> "rule_locs" 0-length array with a flexible array. Detected with GCC 13,
+> using -fstrict-flex-arrays=3:
 >
->  memcpy: detected field-spanning write (size 128) of single field "&r1_cmd->io_request->SGL" at drivers/scsi/megaraid/megaraid_sas_fusion.c:3326 (size 16)
+> net/ethtool/common.c: In function 'ethtool_get_max_rxnfc_channel':
+> net/ethtool/common.c:558:55: warning: array subscript i is outside array bounds of '__u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
+>   558 |                         .fs.location = info->rule_locs[i],
+>       |                                        ~~~~~~~~~~~~~~~^~~
+> In file included from include/linux/ethtool.h:19,
+>                  from include/uapi/linux/ethtool_netlink.h:12,
+>                  from include/linux/ethtool_netlink.h:6,
+>                  from net/ethtool/common.c:3:
+> include/uapi/linux/ethtool.h:1186:41: note: while referencing
+> 'rule_locs'
+>  1186 |         __u32                           rule_locs[0];
+>       |                                         ^~~~~~~~~
 >
-> This change results in no binary output differences.
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
 >
-> Reported-by: Holger Kiehl <Holger.Kiehl@dwd.de>
-> Link: https://lore.kernel.org/all/88de8faa-56c4-693d-2d3-67152ee72057@diagnostix.dwd.de/
-> Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-> Cc: Sumit Saxena <sumit.saxena@broadcom.com>
-> Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-> Cc: megaraidlinux.pdl@broadcom.com
-> Cc: linux-scsi@vger.kernel.org
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: kernel test robot <lkp@intel.com>
+> Cc: Oleksij Rempel <linux@rempel-privat.de>
+> Cc: Sean Anderson <sean.anderson@seco.com>
+> Cc: Alexandru Tachici <alexandru.tachici@analog.com>
+> Cc: Amit Cohen <amcohen@nvidia.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> Cc: netdev@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> Holger, are you able to test this change? I expect it should do the
-> trick, but I don't have the hardware.
+> v3: don't use helper (vincent)
+> v2: https://lore.kernel.org/lkml/20230105233420.gonna.036-kees@kernel.org
+> ---
+>  include/uapi/linux/ethtool.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-Yes, that does work. I no longer see 'memcpy: detected field-spanning
-write (size 128)'. Tested this on 6.1.4-rc1. Did not see any other
-regression.
+> diff --git a/include/uapi/linux/ethtool.h b/include/uapi/linux/ethtool.h
+> index 58e587ba0450..3135fa0ba9a4 100644
+> --- a/include/uapi/linux/ethtool.h
+> +++ b/include/uapi/linux/ethtool.h
+> @@ -1183,7 +1183,7 @@ struct ethtool_rxnfc {
+>                 __u32                   rule_cnt;
+>                 __u32                   rss_context;
+>         };
+> -       __u32                           rule_locs[0];
+> +       __u32                           rule_locs[];
 
-Regards,
-Holger
+Stupid question: Is this syntax allowed in UAPI headers despite not
+being part of standard C90 or C++? Are we relying on all C/C++
+compilers for pre-C99 having gcc/clang extensions?
