@@ -2,143 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD40C46467
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 10:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B93C46467
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 22:46:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbjAGKzq (ORCPT
+        id S232124AbjAGWqN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 7 Jan 2023 05:55:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49934 "EHLO
+        Sat, 7 Jan 2023 17:46:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbjAGKzq (ORCPT
+        with ESMTP id S229627AbjAGWqM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 7 Jan 2023 05:55:46 -0500
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46131A230;
-        Sat,  7 Jan 2023 02:55:44 -0800 (PST)
-Received: by mail-qt1-f175.google.com with SMTP id v14so4227389qtq.3;
-        Sat, 07 Jan 2023 02:55:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wr4uS2V33mv2mSI2SJ9um1YZoYCEkmng9DTBKggir08=;
-        b=ytxrhFajmf5N5TZepGqFoddXdKsyCgiwYNZcjOX6aBajl7VNDLSRJYGhAIaN7hhKD1
-         PzYmqQtbzedyZz299TvgO88jj+10ByP6o3aXHzpwm5vpGmd5u81CYeqoqF0F4yVt3yy9
-         YMOKgduQjbbV4hOzwJY/KuRa1rG1bnlG0b0bT/+E6e1qsVy7A3797hetr61mvWvcrqg2
-         7indwqUh6I5K3+KxRibWoHERXHBYSKFPJh18Ngj4ThgV+p9e6kPzYk0eiO9TtoerTwhZ
-         hMBfe8ksxvE9ZL+POeJdQRk41aXT1hBZmHwtGZG9DO2f7h8YrS6siDfeD6UBOPOBQ975
-         jP0g==
-X-Gm-Message-State: AFqh2kqERaGMn2bS3AagRS05FRC55OkqRVH3wUkeV7/bm3Lt4xBADEWS
-        uToDidx5gnHd0e9r5AYiHAHTDYiM46410A==
-X-Google-Smtp-Source: AMrXdXtJpcS4NIBmGgsDaZpo9OaNIXQ1UlU/ErM9ZHM94eINVNBChY6vU6UAE7G1rDj1TPpd8jynWg==
-X-Received: by 2002:ac8:4689:0:b0:3a9:9c6a:afdf with SMTP id g9-20020ac84689000000b003a99c6aafdfmr87850210qto.50.1673088943506;
-        Sat, 07 Jan 2023 02:55:43 -0800 (PST)
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id x14-20020a05620a258e00b006e07228ed53sm1993735qko.18.2023.01.07.02.55.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 07 Jan 2023 02:55:42 -0800 (PST)
-Received: by mail-yb1-f174.google.com with SMTP id j206so4363246ybj.1;
-        Sat, 07 Jan 2023 02:55:41 -0800 (PST)
-X-Received: by 2002:a25:d103:0:b0:75d:3ecb:1967 with SMTP id
- i3-20020a25d103000000b0075d3ecb1967mr4975308ybg.604.1673088941335; Sat, 07
- Jan 2023 02:55:41 -0800 (PST)
+        Sat, 7 Jan 2023 17:46:12 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2069.outbound.protection.outlook.com [40.107.223.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A80B1BC9F;
+        Sat,  7 Jan 2023 14:46:08 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kjsLY2CJM0UH0OtHt1fM8GbfTU2jRRvFCGh77JHKYFF+0pmsEjUHxWPGYsHohO//n63HVfvx86VAc2hw3AcJcrWptbhQESB7y7Gom8tTk2KuE1DG2UK8J/v030rWLKpvdUqlr/oBdvVtq0RKIJf7TALrEwpvSNiuZTQ2NgGthJpnhI3CztiilXPVOCPZharFDZwwXpnKHS0jtwta7qWymRbXTeHZuEndOJ3DOPnVvriRLiPK1qitjX54U05X/euvrQgaXGqoenTkLsaUtzcieOgKPZt3V0MfP81wvtTblOFYWmAzZeW9TUKNZI3ePrmJV3xTNOutc4BkhdpIt7h75A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jPZqDCFp/4OriRWD0Qw9BaBsAvX4JgHWhsp4XzuqFbw=;
+ b=VO2qfy1cDHq7dOV5PVQF3iovjxYZ8J11I8ZzZUyK/TFnGZNAdtb6tFV6gGlom5C/AdliDm6Kr56617Uf7w/heBS97I865/PMySge2M+fvVqG7UhwdZIm88q56tTxUbRRscyDfNokoXhhGvpQ5Au0vtfCF+JEbmaTBkl7xKFWXdSJmQHBb69AUup8hRJwiFQEemXu8/VDoEbEysRrTJcdUp17nuPiL0d4vWsjohhHdL8IL5bCtTytbBHTcyArWRWfZFY8oxe+hFelmJtgw0lMqIMKVf4AW5Vt/fQSAKoNT31/Y71VtJZwAXFb0ZKPJ2PlDJ51C0ZQccrSq6xbwrXUmQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jPZqDCFp/4OriRWD0Qw9BaBsAvX4JgHWhsp4XzuqFbw=;
+ b=kTgP7M/ALZ0aXOaV0FHH1tXuMpybh7ko1XjXO9HkZiel0aStTHFfg4dsYy8SujgZFbtbgBtUU3jeS3Pm3b1C/ugD/8P9vQ4snUp7WWlBiv4qzWv/GOflOZcTfIdRmf1yRY+7WFEpGfWYEE6k8PWWsGQMTOyAzAdEC4uvsZn10FyyE/LxJwDRUfjCFMP494xPSnyk0k/ZX3JqEd/hSaKECudtGTKT+AdCnmHt9Tn6fj12vWglQ/ck0JD6pNj6FziGjd+pTtukbZ3ouYe42XO/rsUIRgQnTr+1QTuaiRVFuQUYwe8LV5ghOtB7NxgLOXJoyy1xC+V8R/B8PGGna8C+pg==
+Received: from MW4P222CA0017.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::22)
+ by DS0PR12MB6605.namprd12.prod.outlook.com (2603:10b6:8:d3::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Sat, 7 Jan
+ 2023 22:46:06 +0000
+Received: from CO1NAM11FT114.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:114:cafe::49) by MW4P222CA0017.outlook.office365.com
+ (2603:10b6:303:114::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.18 via Frontend
+ Transport; Sat, 7 Jan 2023 22:46:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1NAM11FT114.mail.protection.outlook.com (10.13.174.103) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5986.14 via Frontend Transport; Sat, 7 Jan 2023 22:46:05 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Sat, 7 Jan 2023
+ 14:45:54 -0800
+Received: from yaviefel (10.126.231.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Sat, 7 Jan 2023
+ 14:45:51 -0800
+References: <20230105232224.never.150-kees@kernel.org>
+ <87v8lk7x9r.fsf@nvidia.com>
+User-agent: mu4e 1.6.6; emacs 28.1
+From:   Petr Machata <petrm@nvidia.com>
+To:     Petr Machata <petrm@nvidia.com>
+CC:     Kees Cook <keescook@chromium.org>,
+        Ido Schimmel <idosch@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] mlxsw: spectrum_router: Replace 0-length array with
+ flexible array
+Date:   Sat, 7 Jan 2023 23:44:52 +0100
+In-Reply-To: <87v8lk7x9r.fsf@nvidia.com>
+Message-ID: <87eds67ylf.fsf@nvidia.com>
 MIME-Version: 1.0
-References: <20230107040203.never.112-kees@kernel.org>
-In-Reply-To: <20230107040203.never.112-kees@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Sat, 7 Jan 2023 11:55:29 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdURtDNzzaoBM4DpEHKiDsgnA-7Yc9QO=5gsmwz9PHWK5w@mail.gmail.com>
-Message-ID: <CAMuHMdURtDNzzaoBM4DpEHKiDsgnA-7Yc9QO=5gsmwz9PHWK5w@mail.gmail.com>
-Subject: Re: [PATCH] kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        linux-hardening@vger.kernel.org, David Gow <davidgow@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Isabella Basso <isabbasso@riseup.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.126.231.37]
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT114:EE_|DS0PR12MB6605:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04193b49-a12f-4840-bbb8-08daf100f62e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yiCQb1DYqOlvLrLA9gT8cokGmzchoLIi3JY8Ap8KBCV7444FO29pTMy/DeVG8RqHwYZqERFT2Xdx59nf1zzfa5yLwRKTaWwQEIoDrlOZ4tB455fTI5xsQgXBc4kUuN3a8hs3+nZvIgyua6hlruE87gMb18SR8r1C8TIfcY3nJXF36hDz4SehbqU1ZQgi40Rz5/+1J5SI6RMXYK7ofZnpkbPY7N/So2z822b94ifBHrd2tOidttXfoGfqDVA1XgU7PLpZemqV1Vxw/azpS9XRF7A3s2B/euQL4Q3cmCUk/v/BJcgAJ6cxvlpbHEBCgPtLp/PfchzWArmXTx9YC8F1XfSiK9mJ/HwN/eV/OVnumKYuh3LbWW4ZrK8R1X9rSc9VNdUEWhQzh/RDZTTckpI6+U7r+xrEc9KAEcnVTKmWVxDOuSNx3Z/9YdJSqIaTJx2eZvONoS5OcuEC4OKSbJArrGTOeatsxXL7SQfFyi3bXnY4zGi6PaocDokgUDVa+/tB74yhyr8JGLPF9s54lzLTsVXUm1ZdfinjqUEhHS0XE3NyAa7gi0M/kHbXwWHRo4uv9sian2qz8txRKxKklKLyOJx3nnC3OYD8IV6VIxBoxhP782X5uooWsCPPbUsdn9S8qIpJq9x6RlunIyv6r1DjjVNlPNIxGujHc1dTx2YhI848ZbaR0babcbqV0EeEZ9+uaPw8sreuE48ZJTa3e+ex7Q==
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(376002)(39860400002)(346002)(451199015)(40470700004)(46966006)(36840700001)(4326008)(70206006)(8676002)(40460700003)(70586007)(86362001)(7636003)(356005)(478600001)(36756003)(316002)(82310400005)(37006003)(82740400003)(54906003)(2616005)(6200100001)(426003)(4744005)(6862004)(5660300002)(41300700001)(336012)(186003)(36860700001)(8936002)(2906002)(26005)(16526019)(40480700001)(47076005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2023 22:46:05.7960
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04193b49-a12f-4840-bbb8-08daf100f62e
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT114.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6605
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
 
-On Sat, Jan 7, 2023 at 5:02 AM Kees Cook <keescook@chromium.org> wrote:
-> Since the long memcpy tests may stall a system for tens of seconds
-> in virtualized architecture environments, split those tests off under
-> CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
+Petr Machata <petrm@nvidia.com> writes:
+
+> Kees Cook <keescook@chromium.org> writes:
 >
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> Zero-length arrays are deprecated[1]. Replace struct
+>> mlxsw_sp_nexthop_group_info's "nexthops" 0-length array with a flexible
+>> array.
 
-Thanks for your patch!
+[...]
 
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2621,6 +2621,15 @@ config MEMCPY_KUNIT_TEST
->
->           If unsure, say N.
->
-> +config MEMCPY_SLOW_KUNIT_TEST
-> +       tristate "Include exhaustive memcpy tests" if !KUNIT_ALL_TESTS
+> Thanks. I'll pass this through our nightly and report back.
 
-Why the tristate?
+Looking good.
 
-> +       depends on MEMCPY_KUNIT_TEST
-> +       default KUNIT_ALL_TESTS
-> +       help
-> +         Some memcpy tests are quite exhaustive in checking for overlaps
-> +         and bit ranges. These can be very slow, so they are split out
-> +         as a separate config.
-> +
->  config IS_SIGNED_TYPE_KUNIT_TEST
->         tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
->         depends on KUNIT
-> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-> index 89128551448d..cc1f36335a9b 100644
-> --- a/lib/memcpy_kunit.c
-> +++ b/lib/memcpy_kunit.c
-> @@ -307,8 +307,12 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
->         }
->  }
->
-> -static void init_large(struct kunit *test)
-> +static int init_large(struct kunit *test)
->  {
-> +       if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
-> +               kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
-
-So I can't make the slower tests available for when I need them,
-but not run them by default?
-I guess that's why you made MEMCPY_SLOW_KUNIT_TEST tristate originally,
-to have a separate module with the slow tests?
-
-> +               return -EBUSY;
-> +       }
->
->         /* Get many bit patterns. */
->         get_random_bytes(large_src, ARRAY_SIZE(large_src));
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Tested-by: Petr Machata <petrm@nvidia.com>
