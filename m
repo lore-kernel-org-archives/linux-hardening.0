@@ -2,124 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B93C46467
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 22:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD45C54EBC
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 23:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232124AbjAGWqN (ORCPT
+        id S232902AbjAGX64 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 7 Jan 2023 17:46:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54296 "EHLO
+        Sat, 7 Jan 2023 18:58:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbjAGWqM (ORCPT
+        with ESMTP id S231252AbjAGX6u (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 7 Jan 2023 17:46:12 -0500
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2069.outbound.protection.outlook.com [40.107.223.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A80B1BC9F;
-        Sat,  7 Jan 2023 14:46:08 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kjsLY2CJM0UH0OtHt1fM8GbfTU2jRRvFCGh77JHKYFF+0pmsEjUHxWPGYsHohO//n63HVfvx86VAc2hw3AcJcrWptbhQESB7y7Gom8tTk2KuE1DG2UK8J/v030rWLKpvdUqlr/oBdvVtq0RKIJf7TALrEwpvSNiuZTQ2NgGthJpnhI3CztiilXPVOCPZharFDZwwXpnKHS0jtwta7qWymRbXTeHZuEndOJ3DOPnVvriRLiPK1qitjX54U05X/euvrQgaXGqoenTkLsaUtzcieOgKPZt3V0MfP81wvtTblOFYWmAzZeW9TUKNZI3ePrmJV3xTNOutc4BkhdpIt7h75A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jPZqDCFp/4OriRWD0Qw9BaBsAvX4JgHWhsp4XzuqFbw=;
- b=VO2qfy1cDHq7dOV5PVQF3iovjxYZ8J11I8ZzZUyK/TFnGZNAdtb6tFV6gGlom5C/AdliDm6Kr56617Uf7w/heBS97I865/PMySge2M+fvVqG7UhwdZIm88q56tTxUbRRscyDfNokoXhhGvpQ5Au0vtfCF+JEbmaTBkl7xKFWXdSJmQHBb69AUup8hRJwiFQEemXu8/VDoEbEysRrTJcdUp17nuPiL0d4vWsjohhHdL8IL5bCtTytbBHTcyArWRWfZFY8oxe+hFelmJtgw0lMqIMKVf4AW5Vt/fQSAKoNT31/Y71VtJZwAXFb0ZKPJ2PlDJ51C0ZQccrSq6xbwrXUmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jPZqDCFp/4OriRWD0Qw9BaBsAvX4JgHWhsp4XzuqFbw=;
- b=kTgP7M/ALZ0aXOaV0FHH1tXuMpybh7ko1XjXO9HkZiel0aStTHFfg4dsYy8SujgZFbtbgBtUU3jeS3Pm3b1C/ugD/8P9vQ4snUp7WWlBiv4qzWv/GOflOZcTfIdRmf1yRY+7WFEpGfWYEE6k8PWWsGQMTOyAzAdEC4uvsZn10FyyE/LxJwDRUfjCFMP494xPSnyk0k/ZX3JqEd/hSaKECudtGTKT+AdCnmHt9Tn6fj12vWglQ/ck0JD6pNj6FziGjd+pTtukbZ3ouYe42XO/rsUIRgQnTr+1QTuaiRVFuQUYwe8LV5ghOtB7NxgLOXJoyy1xC+V8R/B8PGGna8C+pg==
-Received: from MW4P222CA0017.NAMP222.PROD.OUTLOOK.COM (2603:10b6:303:114::22)
- by DS0PR12MB6605.namprd12.prod.outlook.com (2603:10b6:8:d3::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Sat, 7 Jan
- 2023 22:46:06 +0000
-Received: from CO1NAM11FT114.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:114:cafe::49) by MW4P222CA0017.outlook.office365.com
- (2603:10b6:303:114::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.18 via Frontend
- Transport; Sat, 7 Jan 2023 22:46:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1NAM11FT114.mail.protection.outlook.com (10.13.174.103) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5986.14 via Frontend Transport; Sat, 7 Jan 2023 22:46:05 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Sat, 7 Jan 2023
- 14:45:54 -0800
-Received: from yaviefel (10.126.231.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Sat, 7 Jan 2023
- 14:45:51 -0800
-References: <20230105232224.never.150-kees@kernel.org>
- <87v8lk7x9r.fsf@nvidia.com>
-User-agent: mu4e 1.6.6; emacs 28.1
-From:   Petr Machata <petrm@nvidia.com>
-To:     Petr Machata <petrm@nvidia.com>
-CC:     Kees Cook <keescook@chromium.org>,
-        Ido Schimmel <idosch@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] mlxsw: spectrum_router: Replace 0-length array with
- flexible array
-Date:   Sat, 7 Jan 2023 23:44:52 +0100
-In-Reply-To: <87v8lk7x9r.fsf@nvidia.com>
-Message-ID: <87eds67ylf.fsf@nvidia.com>
+        Sat, 7 Jan 2023 18:58:50 -0500
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900F51A228
+        for <linux-hardening@vger.kernel.org>; Sat,  7 Jan 2023 15:58:49 -0800 (PST)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-482363a1232so69237597b3.3
+        for <linux-hardening@vger.kernel.org>; Sat, 07 Jan 2023 15:58:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=LASr4G5hxiyIVkS42J/7KQN5U5E2hhaLbz6J/xvH/2E=;
+        b=ZZUxnGGyIdZf514X/wSMh4xFDXIon/TWXIlgZ0R2hqbJKUrJNjY4wLSu1ReOSF3IGn
+         Yw4q+Iek2uNeSwXjZKsih/ll0arQX3vHmae87pYmhfmlIr+C+ITIXZ3Ptm3rV+5ZUhci
+         na7If2Dzv4Y3XujFR5fJxHa+zr7rCx5lgRfzqjfwy0UhLLGhe766pk1w23ReOY58OvC2
+         HqGdjsllVvxa2SNknaF0tGY/TPcviQcFTKjAT83M4IquFAkpX4XCCg0bXEOjej3SQxgY
+         F2ZEIDogADGv1tJnym8a7DsBtV5UHdABzHZvaCjI/wml8mW1hBYa+K3+ywUQJJpuTLlz
+         HOOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LASr4G5hxiyIVkS42J/7KQN5U5E2hhaLbz6J/xvH/2E=;
+        b=oBBBh9R2ocYIcBtIPiYLfyZ55pQkWIbSsZJ4m4XDrBUMjVYFg+mzXrGrPZIfVjI6wm
+         SgFLyjDJ4VxLO/hUMXrz3glDCHWhW088K1r2w63z/vROuSOHS2nrBuhSR9HYp7trtLj1
+         FlJKFHeaczan2HdZvv2142rq4qSeLp8dz9HdAzPt7wkQ/sm0VdVRue1ruqx2K8lCU7LQ
+         aFPr2oEm7FoRqabUsB6MFUWpJV7xUWDvsD/XRuh0oj0ioA0LFwzBof0t3HJoeg6uncTN
+         ruv1hGIIs3KaFnlpLnzeSGljsnI567RkSAUCq8DNDKfi7AXqVGawmCW4H1QRB6cEbzAG
+         X+vA==
+X-Gm-Message-State: AFqh2kqQkQbF8eeX4kwt7WCzpa3DzYabV/2sj5NHAszOxZ5oZJZ33/ww
+        ThGXHEEHZDbu17JjYIewx9INEJfHUUV4F/OY5GAlQA==
+X-Google-Smtp-Source: AMrXdXsVVgiXpJxiyg4qpmZSmee3Udce/r+t9JdGI5jOiQNEqKcQT77BaK0FyjA0gDy/zd7fX2yRvnvMyct9Xp9Iq6g=
+X-Received: by 2002:a81:484c:0:b0:36a:de9d:825e with SMTP id
+ v73-20020a81484c000000b0036ade9d825emr898057ywa.477.1673135928778; Sat, 07
+ Jan 2023 15:58:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.126.231.37]
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT114:EE_|DS0PR12MB6605:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04193b49-a12f-4840-bbb8-08daf100f62e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yiCQb1DYqOlvLrLA9gT8cokGmzchoLIi3JY8Ap8KBCV7444FO29pTMy/DeVG8RqHwYZqERFT2Xdx59nf1zzfa5yLwRKTaWwQEIoDrlOZ4tB455fTI5xsQgXBc4kUuN3a8hs3+nZvIgyua6hlruE87gMb18SR8r1C8TIfcY3nJXF36hDz4SehbqU1ZQgi40Rz5/+1J5SI6RMXYK7ofZnpkbPY7N/So2z822b94ifBHrd2tOidttXfoGfqDVA1XgU7PLpZemqV1Vxw/azpS9XRF7A3s2B/euQL4Q3cmCUk/v/BJcgAJ6cxvlpbHEBCgPtLp/PfchzWArmXTx9YC8F1XfSiK9mJ/HwN/eV/OVnumKYuh3LbWW4ZrK8R1X9rSc9VNdUEWhQzh/RDZTTckpI6+U7r+xrEc9KAEcnVTKmWVxDOuSNx3Z/9YdJSqIaTJx2eZvONoS5OcuEC4OKSbJArrGTOeatsxXL7SQfFyi3bXnY4zGi6PaocDokgUDVa+/tB74yhyr8JGLPF9s54lzLTsVXUm1ZdfinjqUEhHS0XE3NyAa7gi0M/kHbXwWHRo4uv9sian2qz8txRKxKklKLyOJx3nnC3OYD8IV6VIxBoxhP782X5uooWsCPPbUsdn9S8qIpJq9x6RlunIyv6r1DjjVNlPNIxGujHc1dTx2YhI848ZbaR0babcbqV0EeEZ9+uaPw8sreuE48ZJTa3e+ex7Q==
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(376002)(39860400002)(346002)(451199015)(40470700004)(46966006)(36840700001)(4326008)(70206006)(8676002)(40460700003)(70586007)(86362001)(7636003)(356005)(478600001)(36756003)(316002)(82310400005)(37006003)(82740400003)(54906003)(2616005)(6200100001)(426003)(4744005)(6862004)(5660300002)(41300700001)(336012)(186003)(36860700001)(8936002)(2906002)(26005)(16526019)(40480700001)(47076005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2023 22:46:05.7960
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04193b49-a12f-4840-bbb8-08daf100f62e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT114.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6605
+References: <20230105215706.never.027-kees@kernel.org>
+In-Reply-To: <20230105215706.never.027-kees@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 8 Jan 2023 00:58:37 +0100
+Message-ID: <CACRpkdYfsY7K8GksccDunCfKHbq_Df8ddrYGRg2gmeu6CVCF5w@mail.gmail.com>
+Subject: Re: [PATCH] ARM: ixp4xx: Replace 0-length arrays with flexible arrays
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Krzysztof Halasa <khalasa@piap.pl>, Arnd Bergmann <arnd@arndb.de>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Thu, Jan 5, 2023 at 10:57 PM Kees Cook <keescook@chromium.org> wrote:
 
-Petr Machata <petrm@nvidia.com> writes:
-
-> Kees Cook <keescook@chromium.org> writes:
+> Zero-length arrays are deprecated[1]. Replace npe_load_firmware's
+> union of 0-length arrays with flexible arrays. Detected with GCC 13,
+> using -fstrict-flex-arrays=3:
 >
->> Zero-length arrays are deprecated[1]. Replace struct
->> mlxsw_sp_nexthop_group_info's "nexthops" 0-length array with a flexible
->> array.
+> drivers/soc/ixp4xx/ixp4xx-npe.c: In function 'npe_load_firmware':
+> drivers/soc/ixp4xx/ixp4xx-npe.c:570:60: warning: array subscript i is outside array bounds of 'u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
+>   570 |                         image->data[i] = swab32(image->data[i]);
+> include/uapi/linux/swab.h:115:54: note: in definition of macro '__swab32'
+>   115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+>       |                                                      ^
+> drivers/soc/ixp4xx/ixp4xx-npe.c:570:42: note: in expansion of macro 'swab32'
+>   570 |                         image->data[i] = swab32(image->data[i]);
+>       |                                          ^~~~~~
+> drivers/soc/ixp4xx/ixp4xx-npe.c:522:29: note: while referencing 'data'
+>   522 |                         u32 data[0];
+>       |                             ^~~~
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+>
+> Cc: Krzysztof Halasa <khalasa@piap.pl>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-[...]
+Looks good to me:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-> Thanks. I'll pass this through our nightly and report back.
+Do you need me to funnel this to the SoC tree or do you have
+some quickpath for fixes like this?
 
-Looking good.
-
-Tested-by: Petr Machata <petrm@nvidia.com>
+Yours,
+Linus Walleij
