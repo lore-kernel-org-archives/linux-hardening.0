@@ -2,123 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03ACC5479D
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 01:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EF8C5479D
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 01:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjAGBmt (ORCPT
+        id S236482AbjAGBz3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 20:42:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44966 "EHLO
+        Fri, 6 Jan 2023 20:55:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjAGBmr (ORCPT
+        with ESMTP id S236224AbjAGBzX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 20:42:47 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449EE84603;
-        Fri,  6 Jan 2023 17:42:46 -0800 (PST)
-Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2F4724AE;
-        Sat,  7 Jan 2023 02:42:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1673055764;
-        bh=e4/eoP/GXgSVuVnU4PKwIE/nMkRK+kad77/FzccPTkQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tgqO+dmE6Mgrn8RCGwguBtHCyRix9GZXsH6cxzwainhR9pgBG1Is3cMHCfrJHr0lW
-         YG+O5OQ9eyfGmqiWJcr+i4XjUQbQ1zdady0nBKkxMgMUq7/KhUaTXfUten+7mJ/c48
-         Qv4gexVVe8dR2bBSYO6t29c1si1f3WI3wPg2V+GQ=
-Date:   Sat, 7 Jan 2023 03:42:38 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        Fri, 6 Jan 2023 20:55:23 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E826F87932;
+        Fri,  6 Jan 2023 17:55:21 -0800 (PST)
+Received: from kwepemm600009.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Npjsz4cX9zRqsF;
+        Sat,  7 Jan 2023 09:53:43 +0800 (CST)
+Received: from [10.67.101.184] (10.67.101.184) by
+ kwepemm600009.china.huawei.com (7.193.23.164) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Sat, 7 Jan 2023 09:55:18 +0800
+Subject: Re: [PATCH] crypto: hisilicon: Wipe entire pool on error
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Ricardo Ribalda <ribalda@chromium.org>, ionut_n2001@yahoo.com,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] media: uvcvideo: Silence memcpy() run-time false
- positive warnings
-Message-ID: <Y7jODnbUqCwfwwHI@pendragon.ideasonboard.com>
-References: <20230106061659.never.817-kees@kernel.org>
- <CANiDSCtTz4mpTz4RHBzNXL=yBvXNXHBZQ-HYMFegLytoScW4eA@mail.gmail.com>
- <202301061217.816FC0313D@keescook>
+References: <20230106041945.never.831-kees@kernel.org>
+CC:     Nathan Chancellor <nathan@kernel.org>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        <linux-crypto@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <llvm@lists.linux.dev>, <linux-hardening@vger.kernel.org>
+From:   Weili Qian <qianweili@huawei.com>
+Message-ID: <7c9e9870-2456-01af-177f-1af62a0055e3@huawei.com>
+Date:   Sat, 7 Jan 2023 09:55:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202301061217.816FC0313D@keescook>
+In-Reply-To: <20230106041945.never.831-kees@kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.101.184]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello,
 
-On Fri, Jan 06, 2023 at 12:19:01PM -0800, Kees Cook wrote:
-> On Fri, Jan 06, 2023 at 12:43:44PM +0100, Ricardo Ribalda wrote:
-> > On Fri, 6 Jan 2023 at 07:19, Kees Cook wrote:
-> > >
-> > > The memcpy() in uvc_video_decode_meta() intentionally copies across the
-> > > length and flags members and into the trailing buf flexible array.
-> > > Split the copy so that the compiler can better reason about (the lack
-> > > of) buffer overflows here. Avoid the run-time false positive warning:
-> > >
-> > >   memcpy: detected field-spanning write (size 12) of single field "&meta->length" at drivers/media/usb/uvc/uvc_video.c:1355 (size 1)
-> > >
-> > > Additionally fix a typo in the documentation for struct uvc_meta_buf.
-> > >
-> > > Reported-by: ionut_n2001@yahoo.com
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216810
-> > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> > > Cc: linux-media@vger.kernel.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  drivers/media/usb/uvc/uvc_video.c | 4 +++-
-> > >  include/uapi/linux/uvcvideo.h     | 2 +-
-> > >  2 files changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/media/usb/uvc/uvc_video.c b/drivers/media/usb/uvc/uvc_video.c
-> > > index d2eb9066e4dc..b67347ab4181 100644
-> > > --- a/drivers/media/usb/uvc/uvc_video.c
-> > > +++ b/drivers/media/usb/uvc/uvc_video.c
-> > > @@ -1352,7 +1352,9 @@ static void uvc_video_decode_meta(struct uvc_streaming *stream,
-> > >         if (has_scr)
-> > >                 memcpy(stream->clock.last_scr, scr, 6);
-> > >
-> > > -       memcpy(&meta->length, mem, length);
-> > > +       meta->length = mem[0];
-> > > +       meta->flags  = mem[1];
-> > > +       memcpy(meta->buf, &mem[2], length - 2);
-> > >         meta_buf->bytesused += length + sizeof(meta->ns) + sizeof(meta->sof);
-> > >
-> > >         uvc_dbg(stream->dev, FRAME,
-> > > diff --git a/include/uapi/linux/uvcvideo.h b/include/uapi/linux/uvcvideo.h
-> > > index 8288137387c0..a9d0a64007ba 100644
-> > > --- a/include/uapi/linux/uvcvideo.h
-> > > +++ b/include/uapi/linux/uvcvideo.h
-> > > @@ -86,7 +86,7 @@ struct uvc_xu_control_query {
-> > >   * struct. The first two fields are added by the driver, they can be used for
-> > >   * clock synchronisation. The rest is an exact copy of a UVC payload header.
-> > >   * Only complete objects with complete buffers are included. Therefore it's
-> > > - * always sizeof(meta->ts) + sizeof(meta->sof) + meta->length bytes large.
-> > > + * always sizeof(meta->ns) + sizeof(meta->sof) + meta->length bytes large.
-> > >   */
-> > >  struct uvc_meta_buf {
-> > >         __u64 ns;
-> > [...]
-> >
-> > Would it make more sense to replace *mem with a structure/union. Something like:
-> > https://patchwork.linuxtv.org/project/linux-media/patch/20221214-uvc-status-alloc-v4-0-f8e3e2994ebd@chromium.org/
+On 2023/1/6 12:19, Kees Cook wrote:
+> To work around a Clang __builtin_object_size bug that shows up under
+> CONFIG_FORTIFY_SOURCE and UBSAN_BOUNDS, move the per-loop-iteration
+> mem_block wipe into a single wipe of the entire pool structure after
+> the loop.
 > 
-> I wasn't sure -- it seemed like this routine was doing the serializing
-> into a struct already and an additional struct overlay wasn't going to
-> improve readability. But I can certainly do that if it's preferred!
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1780
+> Cc: Weili Qian <qianweili@huawei.com>
+> Cc: Zhou Wang <wangzhou1@hisilicon.com>
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: linux-crypto@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/crypto/hisilicon/sgl.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/crypto/hisilicon/sgl.c b/drivers/crypto/hisilicon/sgl.c
+> index 2b6f2281cfd6..0974b0041405 100644
+> --- a/drivers/crypto/hisilicon/sgl.c
+> +++ b/drivers/crypto/hisilicon/sgl.c
+> @@ -124,9 +124,8 @@ struct hisi_acc_sgl_pool *hisi_acc_create_sgl_pool(struct device *dev,
+>  	for (j = 0; j < i; j++) {
+>  		dma_free_coherent(dev, block_size, block[j].sgl,
+>  				  block[j].sgl_dma);
+> -		memset(block + j, 0, sizeof(*block));
+>  	}
+> -	kfree(pool);
+> +	kfree_sensitive(pool);
+>  	return ERR_PTR(-ENOMEM);
+>  }
+>  EXPORT_SYMBOL_GPL(hisi_acc_create_sgl_pool);
+> 
+Thanks for your patch.
 
-I'm not sure to see how using an additional struct or union would help.
-We can't use struct assignment as the data may be unaligned, so memcpy()
-is required. The issue isn't with the source operand of the memcpy() but
-with the destination operand. Ricardo, if I'm missing something, please
-submit an alternative patch to explain what you meant.
+There is no sensitive data in the pool, so memset zero can be deleted directly.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+Weili
