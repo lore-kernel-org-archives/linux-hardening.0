@@ -2,90 +2,174 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE1BC54EBD
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 03:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFBEC54EBD
+	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 04:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236683AbjAGDkV (ORCPT
+        id S236776AbjAGECO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 6 Jan 2023 22:40:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40944 "EHLO
+        Fri, 6 Jan 2023 23:02:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236595AbjAGDkU (ORCPT
+        with ESMTP id S236444AbjAGECM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 6 Jan 2023 22:40:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456D6392FA;
-        Fri,  6 Jan 2023 19:40:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F2574B81F69;
-        Sat,  7 Jan 2023 03:40:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A130AC43398;
-        Sat,  7 Jan 2023 03:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673062816;
-        bh=UpPvmBZ/3uKf6H9B1YivTCuwPZPhCdDuPzTR9p3eAh0=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=DT7+qx0hVXR2+wbBiTIeGD4lF0LROCBh/jtgLJ2u3MfC7ExL3diexmaWMLiD6pM9+
-         mJ1sHsgiZdqBy5ypq/V4zhsf4u0w6UzNmO9X+uNgNv2sbRIVLLLSJ4LNJy+VLRTsDR
-         aMOtAEL1GFqkUdwYVCrogyycJAuShdJ7qy7zyP7FfAbDTUgtAO7Iro8MOGPEnXd4Oo
-         q9ig6D4QwhtM0hDaElfZI9+32ScU7KSv7wu8Rn7bGVMQ35LLmQ3MyohGLoUAf3FHRh
-         CtcrfH/OWwfymOHDkJhjkE78XNdeVH5grCyPDq8zapU+6fPEnq6XNBSpgfPZ8UDv1h
-         WujaBK6uEtVTg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 878AEE270ED;
-        Sat,  7 Jan 2023 03:40:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Fri, 6 Jan 2023 23:02:12 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2890F6338C
+        for <linux-hardening@vger.kernel.org>; Fri,  6 Jan 2023 20:02:11 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id gq18so3233438pjb.2
+        for <linux-hardening@vger.kernel.org>; Fri, 06 Jan 2023 20:02:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EWXbynFoW/2e/uZz9M4AEeGGJkY04HNDA5rxUAIqcKE=;
+        b=TwZFAwNJybUz0yonjGsE9z7kl9WbSslHemaDeV4wAmKEyvxKyNPZnKiYcA1kPZilAh
+         +9x+3FmJkmrUtoE9n3M7ThHaNit+NMws+70Z+m4mbJAXDt+qtzeg5Laa87yMWP89zVJb
+         AUnGtbbWNK5dyEI8uyKt4jmLaYIw6PZHfANG0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EWXbynFoW/2e/uZz9M4AEeGGJkY04HNDA5rxUAIqcKE=;
+        b=FulTGUCSap/V3oeUT8tEIKBwgGUGyDDhZCypklUSCByShatB7ixjB3V8LOr5EmhBm8
+         f8kBqhDOHZO5uKp91u8Iv0IzJ/pepJgsTzeTCVcZ5w6tIV4u65ORw9GoqAfYykd8lCbw
+         IP6qNsF2bJp5Nnb28BqqPCK7I/Aoufx9x5sz2UT385sZBKfez3ovtW9zTSvoa7WTopI0
+         8vBWQ1/sYd7thMt8w2p7iQPxmYUGz2u3M5bjgkqBXu6uQTPiWqTQaDkvsPgVe2ngz4wG
+         vxlQgXGOqXtJWV/gntubsvnw/5Cfd09NO2i7B7SoYhjJkYL2wZ8UFLysTCU5LxbisS4Z
+         SwIw==
+X-Gm-Message-State: AFqh2koBVRr49jFm+LjmMVI88KHB+XYjBm34sCxyBBaUY+AT+Q1mobEY
+        Y175jtZBz6nFUwSwtGWnuU2qnU50hbC3WiH+
+X-Google-Smtp-Source: AMrXdXtDojsY9Zt9FTUptiq+P+dqInEiGH9QmyhbxiBSVPsShD5y6EFMHhZMQBnBHimmW+lVk+gHaw==
+X-Received: by 2002:a17:90a:7607:b0:226:c72b:5dc with SMTP id s7-20020a17090a760700b00226c72b05dcmr8955271pjk.2.1673064130735;
+        Fri, 06 Jan 2023 20:02:10 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d5-20020a17090a2a4500b0021e1c8ef788sm3461813pjg.51.2023.01.06.20.02.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Jan 2023 20:02:10 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org, David Gow <davidgow@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST
+Date:   Fri,  6 Jan 2023 20:02:07 -0800
+Message-Id: <20230107040203.never.112-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3285; h=from:subject:message-id; bh=V/i0uXy5BP8TRGxR82kJZeDEVMC9HYARmsaavbYd0Ks=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjuO6/MQqpabc6XOqu8BvbSrSXd/OVVfg0mqDmIQpV i6WHskWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY7juvwAKCRCJcvTf3G3AJqkCD/ 9MP7gCFdhzhO5HM8a7dcjygkv3Ilst8zdtCxDAYXyJY5zXRFmw33rLgAHwO/+aV9x1VvHBExT6nnGh h0V4IaKXvLXJkIoeSiyopzfIjcoQqEY6W86yYyTIWtMsX13u+FU6Pr6TX/NjOo4kcnrCFjVAdDF9y4 L4aDjNymqFEJFXJklLDAgDL7ElJTznVdUC1HD39XTl+E2dFBMdbr8d5rRAFhcKvz215mo+Ra9MNJvf h8Q0i4gBIGOlS2DfZB8bIVpzZrtbrrbixdiBLG/h5D7/TekRIcG1ObVsvT8xOYbiy9/eYL/5oNvBSz 6l6tQYOTGB6kAk7JMIyJJYWFmr1bUOZIib1VSmZdHUZyPpdCDaYlXX5haWRqZ6CaLpRROSXHn95WoV iljizBHb/6+8S/BZmaKfVgCEqj+14XsGS6RA4aClBK2MLWGE7nyMZQvJhm7i8mpu7yzo6T0vsmMEc+ IYkwlE7i3BvE4IhC2QWlI99DGUeyVy7lhVAOSE/kRmopEtAR5Q26ej6MLaT1he5Zac6sX7n0GWojmu Kd/fyBpOjUZ0nwkfl41yrCSLl4JSC7EBwZ2NXkdMGEPReptAhMZPeCveY5Roi4gijxChig7P6RHzYQ zn5dLzKRrjOppOBPL2M7VWroKG6QYwaJk/Bt8omyY43mjID2NjSUJXoE64pw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: ipv6: rpl_iptunnel: Replace 0-length arrays with
- flexible arrays
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167306281655.4583.686951198014366097.git-patchwork-notify@kernel.org>
-Date:   Sat, 07 Jan 2023 03:40:16 +0000
-References: <20230105221533.never.711-kees@kernel.org>
-In-Reply-To: <20230105221533.never.711-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     davem@davemloft.net, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        gustavoars@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+Since the long memcpy tests may stall a system for tens of seconds
+in virtualized architecture environments, split those tests off under
+CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
 
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+Guenter, does this give you the needed flexibility to turn on the memcpy
+kunit tests again in your slower environments?
+---
+ lib/Kconfig.debug  |  9 +++++++++
+ lib/memcpy_kunit.c | 17 +++++++++++++----
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-On Thu,  5 Jan 2023 14:15:37 -0800 you wrote:
-> Zero-length arrays are deprecated[1]. Replace struct ipv6_rpl_sr_hdr's
-> "segments" union of 0-length arrays with flexible arrays. Detected with
-> GCC 13, using -fstrict-flex-arrays=3:
-> 
-> In function 'rpl_validate_srh',
->     inlined from 'rpl_build_state' at ../net/ipv6/rpl_iptunnel.c:96:7:
-> ../net/ipv6/rpl_iptunnel.c:60:28: warning: array subscript <unknown> is outside array bounds of 'struct in6_addr[0]' [-Warray-bounds=]
->    60 |         if (ipv6_addr_type(&srh->rpl_segaddr[srh->segments_left - 1]) &
->       |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from ../include/net/rpl.h:12,
->                  from ../net/ipv6/rpl_iptunnel.c:13:
-> ../include/uapi/linux/rpl.h: In function 'rpl_build_state':
-> ../include/uapi/linux/rpl.h:40:33: note: while referencing 'addr'
->    40 |                 struct in6_addr addr[0];
->       |                                 ^~~~
-> 
-> [...]
-
-Here is the summary with links:
-  - net: ipv6: rpl_iptunnel: Replace 0-length arrays with flexible arrays
-    https://git.kernel.org/netdev/net-next/c/e8d283b6cf0e
-
-You are awesome, thank you!
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index c2c78d0e761c..b5e94807f41c 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2621,6 +2621,15 @@ config MEMCPY_KUNIT_TEST
+ 
+ 	  If unsure, say N.
+ 
++config MEMCPY_SLOW_KUNIT_TEST
++	tristate "Include exhaustive memcpy tests" if !KUNIT_ALL_TESTS
++	depends on MEMCPY_KUNIT_TEST
++	default KUNIT_ALL_TESTS
++	help
++	  Some memcpy tests are quite exhaustive in checking for overlaps
++	  and bit ranges. These can be very slow, so they are split out
++	  as a separate config.
++
+ config IS_SIGNED_TYPE_KUNIT_TEST
+ 	tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
+ 	depends on KUNIT
+diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+index 89128551448d..cc1f36335a9b 100644
+--- a/lib/memcpy_kunit.c
++++ b/lib/memcpy_kunit.c
+@@ -307,8 +307,12 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
+ 	}
+ }
+ 
+-static void init_large(struct kunit *test)
++static int init_large(struct kunit *test)
+ {
++	if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
++		kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
++		return -EBUSY;
++	}
+ 
+ 	/* Get many bit patterns. */
+ 	get_random_bytes(large_src, ARRAY_SIZE(large_src));
+@@ -319,6 +323,8 @@ static void init_large(struct kunit *test)
+ 
+ 	/* Explicitly zero the entire destination. */
+ 	memset(large_dst, 0, ARRAY_SIZE(large_dst));
++
++	return 0;
+ }
+ 
+ /*
+@@ -327,7 +333,9 @@ static void init_large(struct kunit *test)
+  */
+ static void copy_large_test(struct kunit *test, bool use_memmove)
+ {
+-	init_large(test);
++
++	if (init_large(test))
++		return;
+ 
+ 	/* Copy a growing number of non-overlapping bytes ... */
+ 	for (int bytes = 1; bytes <= ARRAY_SIZE(large_src); bytes++) {
+@@ -472,7 +480,8 @@ static void memmove_overlap_test(struct kunit *test)
+ 	static const int bytes_start = 1;
+ 	static const int bytes_end = ARRAY_SIZE(large_src) + 1;
+ 
+-	init_large(test);
++	if (init_large(test))
++		return;
+ 
+ 	/* Copy a growing number of overlapping bytes ... */
+ 	for (int bytes = bytes_start; bytes < bytes_end;
+@@ -549,8 +558,8 @@ static void strtomem_test(struct kunit *test)
+ static struct kunit_case memcpy_test_cases[] = {
+ 	KUNIT_CASE(memset_test),
+ 	KUNIT_CASE(memcpy_test),
+-	KUNIT_CASE(memcpy_large_test),
+ 	KUNIT_CASE(memmove_test),
++	KUNIT_CASE(memcpy_large_test),
+ 	KUNIT_CASE(memmove_large_test),
+ 	KUNIT_CASE(memmove_overlap_test),
+ 	KUNIT_CASE(strtomem_test),
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
