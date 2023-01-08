@@ -2,101 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD45C54EBC
-	for <linux-hardening@archiver.kernel.org>; Sat,  7 Jan 2023 23:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BC6C53210
+	for <linux-hardening@archiver.kernel.org>; Sun,  8 Jan 2023 12:09:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232902AbjAGX64 (ORCPT
+        id S232640AbjAHMI7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 7 Jan 2023 18:58:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38134 "EHLO
+        Sun, 8 Jan 2023 07:08:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231252AbjAGX6u (ORCPT
+        with ESMTP id S229822AbjAHMI6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 7 Jan 2023 18:58:50 -0500
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900F51A228
-        for <linux-hardening@vger.kernel.org>; Sat,  7 Jan 2023 15:58:49 -0800 (PST)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-482363a1232so69237597b3.3
-        for <linux-hardening@vger.kernel.org>; Sat, 07 Jan 2023 15:58:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LASr4G5hxiyIVkS42J/7KQN5U5E2hhaLbz6J/xvH/2E=;
-        b=ZZUxnGGyIdZf514X/wSMh4xFDXIon/TWXIlgZ0R2hqbJKUrJNjY4wLSu1ReOSF3IGn
-         Yw4q+Iek2uNeSwXjZKsih/ll0arQX3vHmae87pYmhfmlIr+C+ITIXZ3Ptm3rV+5ZUhci
-         na7If2Dzv4Y3XujFR5fJxHa+zr7rCx5lgRfzqjfwy0UhLLGhe766pk1w23ReOY58OvC2
-         HqGdjsllVvxa2SNknaF0tGY/TPcviQcFTKjAT83M4IquFAkpX4XCCg0bXEOjej3SQxgY
-         F2ZEIDogADGv1tJnym8a7DsBtV5UHdABzHZvaCjI/wml8mW1hBYa+K3+ywUQJJpuTLlz
-         HOOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LASr4G5hxiyIVkS42J/7KQN5U5E2hhaLbz6J/xvH/2E=;
-        b=oBBBh9R2ocYIcBtIPiYLfyZ55pQkWIbSsZJ4m4XDrBUMjVYFg+mzXrGrPZIfVjI6wm
-         SgFLyjDJ4VxLO/hUMXrz3glDCHWhW088K1r2w63z/vROuSOHS2nrBuhSR9HYp7trtLj1
-         FlJKFHeaczan2HdZvv2142rq4qSeLp8dz9HdAzPt7wkQ/sm0VdVRue1ruqx2K8lCU7LQ
-         aFPr2oEm7FoRqabUsB6MFUWpJV7xUWDvsD/XRuh0oj0ioA0LFwzBof0t3HJoeg6uncTN
-         ruv1hGIIs3KaFnlpLnzeSGljsnI567RkSAUCq8DNDKfi7AXqVGawmCW4H1QRB6cEbzAG
-         X+vA==
-X-Gm-Message-State: AFqh2kqQkQbF8eeX4kwt7WCzpa3DzYabV/2sj5NHAszOxZ5oZJZ33/ww
-        ThGXHEEHZDbu17JjYIewx9INEJfHUUV4F/OY5GAlQA==
-X-Google-Smtp-Source: AMrXdXsVVgiXpJxiyg4qpmZSmee3Udce/r+t9JdGI5jOiQNEqKcQT77BaK0FyjA0gDy/zd7fX2yRvnvMyct9Xp9Iq6g=
-X-Received: by 2002:a81:484c:0:b0:36a:de9d:825e with SMTP id
- v73-20020a81484c000000b0036ade9d825emr898057ywa.477.1673135928778; Sat, 07
- Jan 2023 15:58:48 -0800 (PST)
-MIME-Version: 1.0
-References: <20230105215706.never.027-kees@kernel.org>
-In-Reply-To: <20230105215706.never.027-kees@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 8 Jan 2023 00:58:37 +0100
-Message-ID: <CACRpkdYfsY7K8GksccDunCfKHbq_Df8ddrYGRg2gmeu6CVCF5w@mail.gmail.com>
-Subject: Re: [PATCH] ARM: ixp4xx: Replace 0-length arrays with flexible arrays
+        Sun, 8 Jan 2023 07:08:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033B410075;
+        Sun,  8 Jan 2023 04:08:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8710260C4C;
+        Sun,  8 Jan 2023 12:08:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A38C433D2;
+        Sun,  8 Jan 2023 12:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673179736;
+        bh=Ax1j9O9mEQL53XYkMPEizE6+XiCM7vjlJy2j1m9CZAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S39uT1bK99n2VZ3TLxgWoezGcP6IxsCG6rjj5aYHK4nmWeMR18nKZurW4Zn7emPJO
+         Xlq7m2QwpSTkMkftYgazFw+ercjMssKPsj3WbTPqytEhVCfDZi0K7BkmYVltkohhPl
+         X9DnP28tkL3UNsK7pkQcpauUDf9RcUH7r2i0DvGkFRuk9Ubyn9sOW7qwLN9WTiMFhP
+         5y6gvL0Gi7AEiOkmQ+z9C1P8z/VNhyRJ2d7MW9+qDK4F01IvgGOb5if6ZGRh4zqZo9
+         qnIkr3YNkzlKICTJiFrzLCfshDQyODisI16qB5drS15A5yRJJ1fY0WPi/PT7s5gym4
+         iFN872MT4zt1w==
+Date:   Sun, 8 Jan 2023 14:08:52 +0200
+From:   Leon Romanovsky <leon@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Krzysztof Halasa <khalasa@piap.pl>, Arnd Bergmann <arnd@arndb.de>,
+Cc:     Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] RDMA/cxgb4: Replace 0-length arrays with flexible arrays
+Message-ID: <Y7qyVPlNBQaGbInf@unreal>
+References: <20230105223225.never.252-kees@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230105223225.never.252-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 5, 2023 at 10:57 PM Kees Cook <keescook@chromium.org> wrote:
-
-> Zero-length arrays are deprecated[1]. Replace npe_load_firmware's
-> union of 0-length arrays with flexible arrays. Detected with GCC 13,
-> using -fstrict-flex-arrays=3:
->
-> drivers/soc/ixp4xx/ixp4xx-npe.c: In function 'npe_load_firmware':
-> drivers/soc/ixp4xx/ixp4xx-npe.c:570:60: warning: array subscript i is outside array bounds of 'u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
->   570 |                         image->data[i] = swab32(image->data[i]);
-> include/uapi/linux/swab.h:115:54: note: in definition of macro '__swab32'
->   115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
->       |                                                      ^
-> drivers/soc/ixp4xx/ixp4xx-npe.c:570:42: note: in expansion of macro 'swab32'
->   570 |                         image->data[i] = swab32(image->data[i]);
->       |                                          ^~~~~~
-> drivers/soc/ixp4xx/ixp4xx-npe.c:522:29: note: while referencing 'data'
->   522 |                         u32 data[0];
->       |                             ^~~~
->
+On Thu, Jan 05, 2023 at 02:32:32PM -0800, Kees Cook wrote:
+> Zero-length arrays are deprecated[1]. Replace all remaining
+> 0-length arrays with flexible arrays. Detected with GCC 13, using
+> -fstrict-flex-arrays=3:
+> 
+> In function 'build_rdma_write',
+>     inlined from 'c4iw_post_send' at ../drivers/infiniband/hw/cxgb4/qp.c:1173:10:
+> ../drivers/infiniband/hw/cxgb4/qp.c:597:38: warning: array subscript 0 is outside array bounds of 'struct fw_ri_immd[0]' [-Warray-bounds=]
+>   597 |                 wqe->write.u.immd_src[0].r2 = 0;
+>       |                 ~~~~~~~~~~~~~~~~~~~~~^~~
+> ../drivers/infiniband/hw/cxgb4/t4fw_ri_api.h: In function 'c4iw_post_send':
+> ../drivers/infiniband/hw/cxgb4/t4fw_ri_api.h:567:35: note: while referencing 'immd_src'
+>   567 |                 struct fw_ri_immd immd_src[0];
+>       |                                   ^~~~~~~~
+> 
+> Additionally drop the unused C99_NOT_SUPPORTED ifndef lines.
+> 
 > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
->
-> Cc: Krzysztof Halasa <khalasa@piap.pl>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
+> 
+> Cc: Potnuri Bharat Teja <bharat@chelsio.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Leon Romanovsky <leon@kernel.org>
 > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-rdma@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/infiniband/hw/cxgb4/t4fw_ri_api.h | 26 ++++++-----------------
+>  1 file changed, 6 insertions(+), 20 deletions(-)
 
-Looks good to me:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+<...>
 
-Do you need me to funnel this to the SoC tree or do you have
-some quickpath for fixes like this?
+>  #define FW_RI_SEND_WR_SENDOP_S		0
+> @@ -618,12 +606,10 @@ struct fw_ri_rdma_write_cmpl_wr {
+>  		struct fw_ri_isgl isgl_src;
+>  	} u_cmpl;
+>  	__be64 r3;
+> -#ifndef C99_NOT_SUPPORTED
+>  	union fw_ri_write {
+> -		struct fw_ri_immd immd_src[0];
+> -		struct fw_ri_isgl isgl_src[0];
+> +		DECLARE_FLEX_ARRAY(struct fw_ri_immd, immd_src);
+> +		DECLARE_FLEX_ARRAY(struct fw_ri_isgl, isgl_src);
 
-Yours,
-Linus Walleij
+smatch built from commit 40351132df3b ("strlen: add __builtin and
+__fortify functions") produces the following warning:
+drivers/infiniband/hw/cxgb4/t4fw_ri_api.h:575:17: warning: array of flexible structures
+
+Is it expected? What will prevent from getting this warning from 0-day
+build bots?
+
+Thanks
+
+
+>  	} u;
+> -#endif
+>  };
+>  
+>  struct fw_ri_rdma_read_wr {
+> -- 
+> 2.34.1
+> 
