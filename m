@@ -2,145 +2,183 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6499AC5479D
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 17:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14866C54EBD
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 23:49:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229801AbjAIRbQ (ORCPT
+        id S237865AbjAIXtw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Jan 2023 12:31:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
+        Mon, 9 Jan 2023 18:49:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231126AbjAIRbP (ORCPT
+        with ESMTP id S235189AbjAIXtt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Jan 2023 12:31:15 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A2E3B70
-        for <linux-hardening@vger.kernel.org>; Mon,  9 Jan 2023 09:30:53 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso10403317pjo.3
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Jan 2023 09:30:53 -0800 (PST)
+        Mon, 9 Jan 2023 18:49:49 -0500
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36E8DF10
+        for <linux-hardening@vger.kernel.org>; Mon,  9 Jan 2023 15:49:46 -0800 (PST)
+Received: by mail-pf1-x42c.google.com with SMTP id c26so3024769pfp.10
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Jan 2023 15:49:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+OGOp3YNacclAjUZKf14QWTstVsfju4aFmxM8mh9QcM=;
-        b=gYOrIqsNh3TIejCdFBJ8rGXy+FmVDIDu1JwTZNjDnelEq9lfitDxSZ4Xjip9F4f7vu
-         zX+Q3muznmCnkeLqUhmQ4GTRAbO/Jvqzimt4QlZhDoj4UmUP0CUhWDf6FW1VcYfRXfZu
-         RaWieW/AGjdo+zclmMg87Bw+DS5RfoCqU0m8qdZ3pyuTp7qLqNY1CEa4VScd+oKf64W8
-         jTJyM0i9LsiLbDAmJstSU84r6v8ybwkfqQh/eutltrHWScHni3fahVOoOqRv3DryM/Qr
-         p70qbfv4kjyGMAJ+XTKN2CPKMCN4fv6eePmWQd3KxIrjZ4LtXZ03SrVFKOOc1i3m6OGX
-         Lvrw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DO2gFEgiDABoY96vqldhsa5IX5CM91xrCTzOJpPuUrY=;
+        b=Ewp9ZXvbs6+dHYVP3ZML0r0pXXjliiXz9pzqXOxpkflZPAdA1F36UAnakc7TLXYcEU
+         z5RESDS0Zx++emMFDXE0lGz1w4OcXFoOmbSTnRP059kd2zR5bZNHvFz2ZPHGvJAgRQd5
+         cJ11vE8MadnikmDvVI82Vx0pbJ9qriGuxB1HcIMFiyBz8vP5SQG1ZduqInjmuR+Uv+Zs
+         NTEbyg5YWRDa+QldmR6QWzwMYPyQxemwEAX4B9YSbmTBGZCtr+rWOcHwzhuw8WHXt3H1
+         3fnxYs9wq5XDshTVKIREKRhyiK3Kh1ypXfc9Zw4rDKJrewgLC9rA2VxD1Ey4zmBXxduS
+         Cfgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+OGOp3YNacclAjUZKf14QWTstVsfju4aFmxM8mh9QcM=;
-        b=2YiL4Wyqs32RI8Q5848bzS+VIoopzaSPh2rJHATyUsnG/hk7QbxnBBaIG4/N23eXLz
-         5y2BcnBcgIfFXhOXXmxTK9GvHFifhGedEQH9pxG3WxZJmNCvQ4us/7fFgKqIZgHxah1O
-         xSdf4iQMIETEhUdiusZC5fErFhWtUEsBieWqf+6KgiP2+bgVQh6RDFntZLM6sbgrbQWp
-         OsCOnvq5VwugVQyKPC6AuPBB4ss9LJ2+S0F05iCXWBcqkPBcoHYpPyEmcJ51n3yIxPHt
-         56Vb2Ityh5/qqlEDdLLBe6j0/NaJqPXu/0V6Q5/Wx1+6+fIPLQ0l0afNaImQqov23Zo4
-         72rA==
-X-Gm-Message-State: AFqh2kr3ICc/LIj157dNUMGFtNl2IQDo4TEdxIePGe830M5Ma3FY52pU
-        HJ6YHX31/xZa8Tu6kj5v6DFc/g==
-X-Google-Smtp-Source: AMrXdXtHZopbZey2NOOo6ZqccqC+p7nDLSU+eThEGan2FzYSSo+0ly4TezYet/q+4AK+Ibw+sTPxXg==
-X-Received: by 2002:a05:6a20:8e1e:b0:a3:49d2:9504 with SMTP id y30-20020a056a208e1e00b000a349d29504mr752012pzj.3.1673285452810;
-        Mon, 09 Jan 2023 09:30:52 -0800 (PST)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id x19-20020aa78f13000000b005833bd59fabsm6309795pfr.203.2023.01.09.09.30.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 09:30:52 -0800 (PST)
-Date:   Mon, 9 Jan 2023 17:30:48 +0000
-From:   Sean Christopherson <seanjc@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] KVM: x86: Replace 0-length arrays with flexible arrays
-Message-ID: <Y7xPSEMOWqz+3kgD@google.com>
-References: <20230105190548.never.323-kees@kernel.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DO2gFEgiDABoY96vqldhsa5IX5CM91xrCTzOJpPuUrY=;
+        b=iWrZxYrM+otve91wM4lw2Zo8Zt4oKiCtYdCc7eoNjmw2aY6zvzia9AwEujbZ96UDdp
+         lW9mnNpJBZ+2KaJJtaJ/+y2X6XlFX/J7tgUMQfwJgmjkQDq7rJRWSqypIEaHiOZCHN5q
+         gqlK8e2FfWzR0ZDLUAgO5MOEpyR7FDQNvxDxLwmlBO7XsPi7DwAvZx5eJOJdfAW844gL
+         5TmmlWur73H5ZTmE3+92VTdoQWtSIBazl01uoYImxHoIcGbAcIsZUFZZe6frVDakn41u
+         ZOl0h8x3J0sw5EUe9WHBzl7buj6P9R6OR0ZXJNIwvjp6/oEXg5Clulnwb/xIda4hLJxh
+         qW2A==
+X-Gm-Message-State: AFqh2kqwCgXtJbWd/JcmxpJ53N+NPx8pvfS0oNp6PvReW7aPGQtRqGcI
+        YtFYgJ3s4a5+fzXddw+KgrTuVVyzkQK2lFhB6hMV3w==
+X-Google-Smtp-Source: AMrXdXt45coC7HUnNiBQa21drck9GXBYNbKYLbddRP7gLYKgaQgvhq245lRGXDS8uniGFu2aS5/0guohSlNeIQ3GRfA=
+X-Received: by 2002:aa7:914e:0:b0:578:202d:a33a with SMTP id
+ 14-20020aa7914e000000b00578202da33amr3376736pfi.23.1673308185711; Mon, 09 Jan
+ 2023 15:49:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230105190548.never.323-kees@kernel.org>
+References: <20230107040203.never.112-kees@kernel.org>
+In-Reply-To: <20230107040203.never.112-kees@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 9 Jan 2023 15:49:34 -0800
+Message-ID: <CAKwvOdm12OVhGLQJcNJ-c3ixDEvrFibwDJwpayyfg7Jc+M7ZXA@mail.gmail.com>
+Subject: Re: [PATCH] kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org, David Gow <davidgow@google.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 05, 2023, Kees Cook wrote:
-> Zero-length arrays are deprecated[1]. Replace struct kvm_nested_state's
-> "data" union 0-length arrays with flexible arrays. (How are the
-> sizes of these arrays verified?)
-
-It's not really interpreted as an array, it's a mandatory single-entry "array".
-
-	if (copy_from_user(vmcs12, user_vmx_nested_state->vmcs12, sizeof(*vmcs12)))
-		return -EFAULT;
-
-> Detected with GCC 13, using -fstrict-flex-arrays=3:
-> 
-> arch/x86/kvm/svm/nested.c: In function 'svm_get_nested_state':
-> arch/x86/kvm/svm/nested.c:1536:17: error: array subscript 0 is outside array bounds of 'struct kvm_svm_nested_state_data[0]' [-Werror=array-bounds=]
->  1536 |                 &user_kvm_nested_state->data.svm[0];
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> In file included from include/uapi/linux/kvm.h:15,
->                  from include/linux/kvm_host.h:40,
->                  from arch/x86/kvm/svm/nested.c:18:
-> arch/x86/include/uapi/asm/kvm.h:511:50: note: while referencing 'svm'
->   511 |                 struct kvm_svm_nested_state_data svm[0];
->       |                                                  ^~~
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Cc: Sean Christopherson <seanjc@google.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: kvm@vger.kernel.org
+On Fri, Jan 6, 2023 at 8:02 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Since the long memcpy tests may stall a system for tens of seconds
+> in virtualized architecture environments, split those tests off under
+> CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
+>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
 > ---
-
-Nit on the comment aside,
-
-Reviewed-by: Sean Christopherson <seanjc@google.com>
-
->  arch/x86/include/uapi/asm/kvm.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-> index e48deab8901d..8ec3dfd641b0 100644
-> --- a/arch/x86/include/uapi/asm/kvm.h
-> +++ b/arch/x86/include/uapi/asm/kvm.h
-> @@ -502,13 +502,13 @@ struct kvm_nested_state {
->  	} hdr;
->  
->  	/*
-> -	 * Define data region as 0 bytes to preserve backwards-compatability
-> +	 * Define union of flexible arrays to preserve backwards-compatability
-
-I think I'd actually prefer the "as 0 bytes" comment.  The important part is that
-the size of "data" be zero, how that happens is immaterial.
-
->  	 * to old definition of kvm_nested_state in order to avoid changing
->  	 * KVM_{GET,PUT}_NESTED_STATE ioctl values.
->  	 */
->  	union {
-> -		struct kvm_vmx_nested_state_data vmx[0];
-> -		struct kvm_svm_nested_state_data svm[0];
-> +		__DECLARE_FLEX_ARRAY(struct kvm_vmx_nested_state_data, vmx);
-> +		__DECLARE_FLEX_ARRAY(struct kvm_svm_nested_state_data, svm);
->  	} data;
->  };
->  
-> -- 
+> Guenter, does this give you the needed flexibility to turn on the memcpy
+> kunit tests again in your slower environments?
+> ---
+>  lib/Kconfig.debug  |  9 +++++++++
+>  lib/memcpy_kunit.c | 17 +++++++++++++----
+>  2 files changed, 22 insertions(+), 4 deletions(-)
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index c2c78d0e761c..b5e94807f41c 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2621,6 +2621,15 @@ config MEMCPY_KUNIT_TEST
+>
+>           If unsure, say N.
+>
+> +config MEMCPY_SLOW_KUNIT_TEST
+> +       tristate "Include exhaustive memcpy tests" if !KUNIT_ALL_TESTS
+> +       depends on MEMCPY_KUNIT_TEST
+> +       default KUNIT_ALL_TESTS
+> +       help
+> +         Some memcpy tests are quite exhaustive in checking for overlaps
+> +         and bit ranges. These can be very slow, so they are split out
+> +         as a separate config.
+> +
+>  config IS_SIGNED_TYPE_KUNIT_TEST
+>         tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
+>         depends on KUNIT
+> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+> index 89128551448d..cc1f36335a9b 100644
+> --- a/lib/memcpy_kunit.c
+> +++ b/lib/memcpy_kunit.c
+> @@ -307,8 +307,12 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
+>         }
+>  }
+>
+> -static void init_large(struct kunit *test)
+> +static int init_large(struct kunit *test)
+>  {
+> +       if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
+> +               kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
+> +               return -EBUSY;
+> +       }
+>
+>         /* Get many bit patterns. */
+>         get_random_bytes(large_src, ARRAY_SIZE(large_src));
+> @@ -319,6 +323,8 @@ static void init_large(struct kunit *test)
+>
+>         /* Explicitly zero the entire destination. */
+>         memset(large_dst, 0, ARRAY_SIZE(large_dst));
+> +
+> +       return 0;
+>  }
+>
+>  /*
+> @@ -327,7 +333,9 @@ static void init_large(struct kunit *test)
+>   */
+>  static void copy_large_test(struct kunit *test, bool use_memmove)
+>  {
+> -       init_large(test);
+> +
+> +       if (init_large(test))
+> +               return;
+>
+>         /* Copy a growing number of non-overlapping bytes ... */
+>         for (int bytes = 1; bytes <= ARRAY_SIZE(large_src); bytes++) {
+> @@ -472,7 +480,8 @@ static void memmove_overlap_test(struct kunit *test)
+>         static const int bytes_start = 1;
+>         static const int bytes_end = ARRAY_SIZE(large_src) + 1;
+>
+> -       init_large(test);
+> +       if (init_large(test))
+> +               return;
+>
+>         /* Copy a growing number of overlapping bytes ... */
+>         for (int bytes = bytes_start; bytes < bytes_end;
+> @@ -549,8 +558,8 @@ static void strtomem_test(struct kunit *test)
+>  static struct kunit_case memcpy_test_cases[] = {
+>         KUNIT_CASE(memset_test),
+>         KUNIT_CASE(memcpy_test),
+> -       KUNIT_CASE(memcpy_large_test),
+>         KUNIT_CASE(memmove_test),
+> +       KUNIT_CASE(memcpy_large_test),
+>         KUNIT_CASE(memmove_large_test),
+>         KUNIT_CASE(memmove_overlap_test),
+>         KUNIT_CASE(strtomem_test),
+> --
 > 2.34.1
-> 
+>
+
+
+-- 
+Thanks,
+~Nick Desaulniers
