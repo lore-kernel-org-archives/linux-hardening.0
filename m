@@ -2,532 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E1CC61DB3
-	for <linux-hardening@archiver.kernel.org>; Sun,  8 Jan 2023 19:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A2EC5479D
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 07:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233319AbjAHTzq (ORCPT
+        id S233305AbjAIHkZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 8 Jan 2023 14:55:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53832 "EHLO
+        Mon, 9 Jan 2023 02:40:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234021AbjAHTy5 (ORCPT
+        with ESMTP id S233238AbjAIHkU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 8 Jan 2023 14:54:57 -0500
-Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDD1EE2C
-        for <linux-hardening@vger.kernel.org>; Sun,  8 Jan 2023 11:54:45 -0800 (PST)
-Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
-        by amity.mint.lgbt (Postfix) with ESMTP id 4Nqnpr0Q8fz1S5FV
-        for <linux-hardening@vger.kernel.org>; Sun,  8 Jan 2023 14:54:44 -0500 (EST)
-Authentication-Results: amity.mint.lgbt (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mint.lgbt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
-        content-transfer-encoding:mime-version:references:in-reply-to
-        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1673207682;
-         x=1674071683; bh=sU2u9cs6PS4FsMv7kqYjm82nJCjoq+yIFb6UKwZNabo=; b=
-        fRBnASVtgBdRTxtPouvxo6N811AU6q7dz15Bk5oRg2ZanhDWHPvqxWti4PghkiKp
-        NTlfmm17cfOw3VsKtY4KzPWvm1W0qjWxMMwXDMCGGeUhfEhN+x6OXLUiunKWqnBn
-        oUES9zFfjT4+6JfzKyUmICpQi1UWVAgABjHarlr7dP0mV/Zu7ehL1zZ+ddhsU2id
-        eKT43QYqKfN2w53OnRnWFqPB7bEGUil7BHYxYyTap+IObuRio2LMXNJUlDaBQsgz
-        jzFaZoTpmz7PDR2fYc66SH1ksEuOtIVLkTxiBJ1bHWSqJCecLS5vUAyl1/Up1czu
-        6vZAJMjB6pY3vKft3VQZdw==
-X-Virus-Scanned: amavisd-new at amity.mint.lgbt
-Received: from amity.mint.lgbt ([127.0.0.1])
-        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id lx7nt8_U3tAM for <linux-hardening@vger.kernel.org>;
-        Sun,  8 Jan 2023 14:54:42 -0500 (EST)
-Received: from dorothy.. (unknown [186.105.5.197])
-        by amity.mint.lgbt (Postfix) with ESMTPSA id 4Nqnpd63WLz1S5FP;
-        Sun,  8 Jan 2023 14:54:33 -0500 (EST)
-From:   Lux Aliaga <they@mint.lgbt>
-To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, bvanassche@acm.org, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org,
-        marijn.suijten@somainline.org, Lux Aliaga <they@mint.lgbt>
-Subject: [PATCH v6 6/6] arm64: dts: qcom: sm6125: Initial support for xiaomi-laurel-sprout
-Date:   Sun,  8 Jan 2023 16:53:36 -0300
-Message-Id: <20230108195336.388349-7-they@mint.lgbt>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230108195336.388349-1-they@mint.lgbt>
-References: <20230108195336.388349-1-they@mint.lgbt>
+        Mon, 9 Jan 2023 02:40:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D7612AE5;
+        Sun,  8 Jan 2023 23:40:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AD304B80D1A;
+        Mon,  9 Jan 2023 07:40:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4BA77C433F1;
+        Mon,  9 Jan 2023 07:40:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673250016;
+        bh=TN07+vD/SnTIBZSHGqRC3RoFx+3nZk0Ja9sAyNZBimU=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=sCjHjg72NoNCkg67Awqex1+Il9Q0GkgKy5kLHFgoLa6qWqpQ2Yp8H0YrwK52xwxbf
+         knMk6S5K0+f3Q4r/ZSPvN+y7f3nRAloQPX47yHb86KcquKtuEZD+BRS7Xx9GMotCqk
+         zznVtKn2/4mQ5KdkApMcW/eyJXp7u4pOLFF7t2SpGLNg4kX09d+15+6Ags+XKDvdzc
+         edukG8cMMg24uFO3L/G1JRfUplhse+hhfIQBRX6K7hqbhkiiIRk8U/8xkf9rUxp9jg
+         htGLI+7gQZXIV64wlsDUUywglBomsFVWqfcVAqz/vZiUFrtedThL6/O3gcN1cmis6R
+         U+i4v90locjsA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B73EE21EEA;
+        Mon,  9 Jan 2023 07:40:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] mlxsw: spectrum_router: Replace 0-length array with flexible
+ array
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167325001617.30057.7118452714297454499.git-patchwork-notify@kernel.org>
+Date:   Mon, 09 Jan 2023 07:40:16 +0000
+References: <20230105232224.never.150-kees@kernel.org>
+In-Reply-To: <20230105232224.never.150-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     idosch@nvidia.com, petrm@nvidia.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        gustavoars@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add support for the Xiaomi Mi A3 (xiaomi-laurel-sprout). Here's a
-summary on what's defined.
+Hello:
 
-- dmesg output to bootloader preconfigured display
-- USB
-- UFS
-- SD card
-- SMD RPM regulators
-- Volume Up, Down and Power buttons
-- Thermistors
+This patch was applied to netdev/net.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-Signed-off-by: Lux Aliaga <they@mint.lgbt>
----
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../dts/qcom/sm6125-xiaomi-laurel-sprout.dts  | 424 ++++++++++++++++++
- 2 files changed, 425 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.=
-dts
+On Thu,  5 Jan 2023 15:22:29 -0800 you wrote:
+> Zero-length arrays are deprecated[1]. Replace struct
+> mlxsw_sp_nexthop_group_info's "nexthops" 0-length array with a flexible
+> array. Detected with GCC 13, using -fstrict-flex-arrays=3:
+> 
+> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c: In function 'mlxsw_sp_nexthop_group_hash_obj':
+> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:3278:38: warning: array subscript i is outside array bounds of 'struct mlxsw_sp_nexthop[0]' [-Warray-bounds=]
+>  3278 |                         val ^= jhash(&nh->ifindex, sizeof(nh->ifindex), seed);
+>       |                                      ^~~~~~~~~~~~
+> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:2954:33: note: while referencing 'nexthops'
+>  2954 |         struct mlxsw_sp_nexthop nexthops[0];
+>       |                                 ^~~~~~~~
+> 
+> [...]
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom=
-/Makefile
-index 3e79496292e7..2b2a0170db14 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -157,6 +157,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+=3D sdm850-lenovo-yoga-c630.=
-dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sdm850-samsung-w737.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm4250-oneplus-billie2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6125-sony-xperia-seine-pdx201.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6125-xiaomi-laurel-sprout.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6350-sony-xperia-lena-pdx213.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm6375-sony-xperia-murray-pdx225.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+=3D sm7225-fairphone-fp4.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts b/a=
-rch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
-new file mode 100644
-index 000000000000..7ff18f481060
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm6125-xiaomi-laurel-sprout.dts
-@@ -0,0 +1,424 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+/*
-+ * Copyright (c) 2022, Lux Aliaga <they@mint.lgbt>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/input/gpio-keys.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include "sm6125.dtsi"
-+#include "pm6125.dtsi"
-+
-+/ {
-+	model =3D "Xiaomi Mi A3";
-+	compatible =3D "xiaomi,laurel-sprout", "qcom,sm6125";
-+	chassis-type =3D "handset";
-+
-+	/* required for bootloader to select correct board */
-+	qcom,msm-id =3D <394 0>; /* sm6125 v1 */
-+	qcom,board-id =3D <11 0>;
-+
-+	chosen {
-+		#address-cells =3D <2>;
-+		#size-cells =3D <2>;
-+		ranges;
-+
-+		framebuffer0: framebuffer@5c000000 {
-+			compatible =3D "simple-framebuffer";
-+			reg =3D <0 0x5c000000 0 (1560 * 720 * 4)>;
-+			width =3D <720>;
-+			height =3D <1560>;
-+			stride =3D <(720 * 4)>;
-+			format =3D "a8r8g8b8";
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells =3D <2>;
-+		#size-cells =3D <2>;
-+
-+		debug_mem: debug@ffb00000 {
-+			reg =3D <0x0 0xffb00000 0x0 0xc0000>;
-+			no-map;
-+		};
-+
-+		last_log_mem: lastlog@ffbc0000 {
-+			reg =3D <0x0 0xffbc0000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		pstore_mem: ramoops@ffc00000 {
-+			compatible =3D "ramoops";
-+			reg =3D <0x0 0xffc40000 0x0 0xc0000>;
-+			record-size =3D <0x1000>;
-+			console-size =3D <0x40000>;
-+			msg-size =3D <0x20000 0x20000>;
-+		};
-+
-+		cmdline_mem: memory@ffd00000 {
-+			reg =3D <0x0 0xffd40000 0x0 0x1000>;
-+			no-map;
-+		};
-+	};
-+
-+	extcon_usb: usb-id {
-+		compatible =3D "linux,extcon-usb-gpio";
-+		id-gpio =3D <&tlmm 102 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+
-+		pinctrl-0 =3D <&vol_up_n>;
-+		pinctrl-names =3D "default";
-+
-+		key-volume-up {
-+			label =3D "Volume Up";
-+			gpios =3D <&pm6125_gpio 5 GPIO_ACTIVE_LOW>;
-+			linux,code =3D <KEY_VOLUMEUP>;
-+			debounce-interval =3D <15>;
-+			linux,can-disable;
-+			wakeup-source;
-+		};
-+	};
-+
-+	thermal-zones {
-+		rf-pa0-thermal {
-+			polling-delay-passive =3D <0>;
-+			polling-delay =3D <0>;
-+			thermal-sensors =3D <&pm6125_adc_tm 0>;
-+
-+			trips {
-+				active-config0 {
-+					temperature =3D <125000>;
-+					hysteresis =3D <1000>;
-+					type =3D "critical";
-+				};
-+			};
-+		};
-+
-+		quiet-thermal {
-+			polling-delay-passive =3D <0>;
-+			polling-delay =3D <5000>;
-+			thermal-sensors =3D <&pm6125_adc_tm 1>;
-+
-+			trips {
-+				active-config0 {
-+					temperature =3D <125000>;
-+					hysteresis =3D <1000>;
-+					type =3D "critical";
-+				};
-+			};
-+		};
-+
-+		xo-thermal {
-+			polling-delay-passive =3D <0>;
-+			polling-delay =3D <0>;
-+			thermal-sensors =3D <&pm6125_adc_tm 2>;
-+
-+			trips {
-+				active-config0 {
-+					temperature =3D <125000>;
-+					hysteresis =3D <1000>;
-+					type =3D "critical";
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&hsusb_phy1 {
-+	vdd-supply =3D <&vreg_l7a>;
-+	vdda-pll-supply =3D <&vreg_l10a>;
-+	vdda-phy-dpdm-supply =3D <&vreg_l15a>;
-+	status =3D "okay";
-+};
-+
-+&pm6125_adc {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&camera_flash_therm &emmc_ufs_therm>;
-+
-+	adc-chan@4d {
-+		reg =3D <ADC5_AMUX_THM1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time =3D <200>;
-+		qcom,pre-scaling =3D <1 1>;
-+		label =3D "rf_pa0_therm";
-+	};
-+
-+	adc-chan@4e {
-+		reg =3D <ADC5_AMUX_THM2_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time =3D <200>;
-+		qcom,pre-scaling =3D <1 1>;
-+		label =3D "quiet_therm";
-+	};
-+
-+	adc-chan@52 {
-+		reg =3D <ADC5_GPIO1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time =3D <200>;
-+		qcom,pre-scaling =3D <1 1>;
-+		label =3D "camera_flash_therm";
-+	};
-+
-+	adc-chan@54 {
-+		reg =3D <ADC5_GPIO3_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time =3D <200>;
-+		qcom,pre-scaling =3D <1 1>;
-+		label =3D "emmc_ufs_therm";
-+	};
-+};
-+
-+&pm6125_adc_tm {
-+	status =3D "okay";
-+
-+	rf-pa0-therm@0 {
-+		reg =3D <0>;
-+		io-channels =3D <&pm6125_adc ADC5_AMUX_THM1_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us =3D <200>;
-+	};
-+
-+	quiet-therm@1 {
-+		reg =3D <1>;
-+		io-channels =3D <&pm6125_adc ADC5_AMUX_THM2_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us =3D <200>;
-+	};
-+
-+	xo-therm@2 {
-+		reg =3D <2>;
-+		io-channels =3D <&pm6125_adc ADC5_XO_THERM_100K_PU>;
-+		qcom,ratiometric;
-+		qcom,hw-settle-time-us =3D <200>;
-+	};
-+};
-+
-+&pm6125_gpio {
-+	camera_flash_therm: camera-flash-therm-state {
-+		pins =3D "gpio3";
-+		function =3D PMIC_GPIO_FUNC_NORMAL;
-+		bias-high-impedance;
-+	};
-+
-+	emmc_ufs_therm: emmc-ufs-therm-state {
-+		pins =3D "gpio6";
-+		function =3D PMIC_GPIO_FUNC_NORMAL;
-+		bias-high-impedance;
-+	};
-+
-+	vol_up_n: vol-up-n-state {
-+		pins =3D "gpio5";
-+		function =3D PMIC_GPIO_FUNC_NORMAL;
-+		input-enable;
-+		bias-pull-up;
-+	};
-+};
-+
-+&pon_pwrkey {
-+	status =3D "okay";
-+};
-+
-+&pon_resin {
-+	status =3D "okay";
-+	linux,code =3D <KEY_VOLUMEDOWN>;
-+};
-+
-+&rpm_requests {
-+	regulators-0 {
-+		compatible =3D "qcom,rpm-pm6125-regulators";
-+
-+		vreg_s6a: s6 {
-+			regulator-min-microvolt =3D <936000>;
-+			regulator-max-microvolt =3D <1422000>;
-+		};
-+
-+		vreg_l1a: l1 {
-+			regulator-min-microvolt =3D <1200000>;
-+			regulator-max-microvolt =3D <1256000>;
-+		};
-+
-+		vreg_l2a: l2 {
-+			regulator-min-microvolt =3D <1000000>;
-+			regulator-max-microvolt =3D <1056000>;
-+		};
-+
-+		vreg_l3a: l3 {
-+			regulator-min-microvolt =3D <1000000>;
-+			regulator-max-microvolt =3D <1064000>;
-+		};
-+
-+		vreg_l4a: l4 {
-+			regulator-min-microvolt =3D <872000>;
-+			regulator-max-microvolt =3D <976000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l5a: l5 {
-+			regulator-min-microvolt =3D <1648000>;
-+			regulator-max-microvolt =3D <2950000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l6a: l6 {
-+			regulator-min-microvolt =3D <576000>;
-+			regulator-max-microvolt =3D <656000>;
-+		};
-+
-+		vreg_l7a: l7 {
-+			regulator-min-microvolt =3D <872000>;
-+			regulator-max-microvolt =3D <976000>;
-+		};
-+
-+		vreg_l8a: l8 {
-+			regulator-min-microvolt =3D <400000>;
-+			regulator-max-microvolt =3D <728000>;
-+		};
-+
-+		vreg_l9a: l9 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1896000>;
-+		};
-+
-+		vreg_l10a: l10 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1896000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l11a: l11 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1952000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l12a: l12 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1996000>;
-+		};
-+
-+		vreg_l13a: l13 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1832000>;
-+		};
-+
-+		vreg_l14a: l14 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1904000>;
-+		};
-+
-+		vreg_l15a: l15 {
-+			regulator-min-microvolt =3D <3104000>;
-+			regulator-max-microvolt =3D <3232000>;
-+		};
-+
-+		vreg_l16a: l16 {
-+			regulator-min-microvolt =3D <1800000>;
-+			regulator-max-microvolt =3D <1904000>;
-+		};
-+
-+		vreg_l17a: l17 {
-+			regulator-min-microvolt =3D <1248000>;
-+			regulator-max-microvolt =3D <1304000>;
-+		};
-+
-+		vreg_l18a: l18 {
-+			regulator-min-microvolt =3D <1200000>;
-+			regulator-max-microvolt =3D <1264000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l19a: l19 {
-+			regulator-min-microvolt =3D <1648000>;
-+			regulator-max-microvolt =3D <2952000>;
-+		};
-+
-+		vreg_l20a: l20 {
-+			regulator-min-microvolt =3D <1648000>;
-+			regulator-max-microvolt =3D <2952000>;
-+		};
-+
-+		vreg_l21a: l21 {
-+			regulator-min-microvolt =3D <2600000>;
-+			regulator-max-microvolt =3D <2856000>;
-+		};
-+
-+		vreg_l22a: l22 {
-+			regulator-min-microvolt =3D <2944000>;
-+			regulator-max-microvolt =3D <2950000>;
-+			regulator-allow-set-load;
-+		};
-+
-+		vreg_l23a: l23 {
-+			regulator-min-microvolt =3D <3000000>;
-+			regulator-max-microvolt =3D <3400000>;
-+		};
-+
-+		vreg_l24a: l24 {
-+			regulator-min-microvolt =3D <2944000>;
-+			regulator-max-microvolt =3D <2950000>;
-+			regulator-allow-set-load;
-+		};
-+	};
-+};
-+
-+&sdc2_off_state {
-+	sd-cd-pins {
-+		pins =3D "gpio98";
-+		function =3D "gpio";
-+		drive-strength =3D <2>;
-+		bias-disable;
-+	};
-+};
-+
-+&sdc2_on_state {
-+	sd-cd-pins {
-+		pins =3D "gpio98";
-+		function =3D "gpio";
-+		drive-strength =3D <2>;
-+		bias-pull-up;
-+	};
-+};
-+
-+&sdhc_2 {
-+	cd-gpios =3D <&tlmm 98 GPIO_ACTIVE_HIGH>;
-+	vmmc-supply =3D <&vreg_l22a>;
-+	vqmmc-supply =3D <&vreg_l5a>;
-+	no-sdio;
-+	no-mmc;
-+	status =3D "okay";
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges =3D <22 2>, <28 6>;
-+};
-+
-+&ufs_mem_hc {
-+	vcc-supply =3D <&vreg_l24a>;
-+	vccq2-supply =3D <&vreg_l11a>;
-+	vcc-max-microamp =3D <600000>;
-+	vccq2-max-microamp =3D <600000>;
-+	status =3D "okay";
-+};
-+
-+&ufs_mem_phy {
-+	vdda-phy-supply =3D <&vreg_l4a>;
-+	vdda-pll-supply =3D <&vreg_l10a>;
-+	vdda-phy-max-microamp =3D <51400>;
-+	vdda-pll-max-microamp =3D <14200>;
-+	vddp-ref-clk-supply =3D <&vreg_l18a>;
-+	status =3D "okay";
-+};
-+
-+&usb3 {
-+	status =3D "okay";
-+};
-+
-+&usb3_dwc3 {
-+	extcon =3D <&extcon_usb>;
-+};
---=20
-2.39.0
+Here is the summary with links:
+  - mlxsw: spectrum_router: Replace 0-length array with flexible array
+    https://git.kernel.org/netdev/net/c/2ab6478d1266
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
