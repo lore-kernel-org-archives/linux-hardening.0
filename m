@@ -2,76 +2,145 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CA9C54EBD
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 15:02:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6499AC5479D
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 17:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbjAIPCv (ORCPT
+        id S229801AbjAIRbQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Jan 2023 10:02:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48734 "EHLO
+        Mon, 9 Jan 2023 12:31:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234120AbjAIPCk (ORCPT
+        with ESMTP id S231126AbjAIRbP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Jan 2023 10:02:40 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 965061E3C0
-        for <linux-hardening@vger.kernel.org>; Mon,  9 Jan 2023 07:02:39 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id j7so3452102wrn.9
-        for <linux-hardening@vger.kernel.org>; Mon, 09 Jan 2023 07:02:39 -0800 (PST)
+        Mon, 9 Jan 2023 12:31:15 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A2E3B70
+        for <linux-hardening@vger.kernel.org>; Mon,  9 Jan 2023 09:30:53 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso10403317pjo.3
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Jan 2023 09:30:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=scl7HLexrpFzAYNM3X4Ky/syw+DSRPKvSDyrAeIj/Xg=;
-        b=CHAw0gyVrDNWcveZsiRpEav4fi5ABoJLK1XGYiKBa66qrmavgFuFlULji9Ksy5Rhes
-         7u8MbCeerP408xQzp74L4b+SCx0M7vz3LW3KHOX+3/J6lxiF+hVo74e/V8EnBYUaLYBE
-         6OJmIx0bOpVa6/cUALHUWhx2XJuqIXHZIUDvs=
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+OGOp3YNacclAjUZKf14QWTstVsfju4aFmxM8mh9QcM=;
+        b=gYOrIqsNh3TIejCdFBJ8rGXy+FmVDIDu1JwTZNjDnelEq9lfitDxSZ4Xjip9F4f7vu
+         zX+Q3muznmCnkeLqUhmQ4GTRAbO/Jvqzimt4QlZhDoj4UmUP0CUhWDf6FW1VcYfRXfZu
+         RaWieW/AGjdo+zclmMg87Bw+DS5RfoCqU0m8qdZ3pyuTp7qLqNY1CEa4VScd+oKf64W8
+         jTJyM0i9LsiLbDAmJstSU84r6v8ybwkfqQh/eutltrHWScHni3fahVOoOqRv3DryM/Qr
+         p70qbfv4kjyGMAJ+XTKN2CPKMCN4fv6eePmWQd3KxIrjZ4LtXZ03SrVFKOOc1i3m6OGX
+         Lvrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=scl7HLexrpFzAYNM3X4Ky/syw+DSRPKvSDyrAeIj/Xg=;
-        b=goishdtJaWN+BaOQU2M2Y8ZpaP04WqDK5SE+FN5WUlXsRXwEnPAWNbxzTz/+oR9Tp+
-         6b5TnLYqDt0NQmEcB6UBbCadHeX0OlE8Sx7ffuj7ZSbf8Zw1qIi/UeKEIDO4pdxhec2N
-         pE/LlpUA4Xk+P70paupPEWSXXAU6I/VU25s/c5k+x04VbkoeMY42XE4HeQkxUgMQCzIC
-         jmOywub740LbLoaCZ4ogEU75P37Y3tvyqBjzSco/sxNlyzhfas6WxYP4fgMVljBcbe8V
-         zdOQCYBD1XKmdws6gLSBxNjG2JtSURtJQlaPLBWJsTBGbtJerIkOh7Zn7mdeIzP2DpoF
-         0HCg==
-X-Gm-Message-State: AFqh2krb4gS41D9kkCw1dPgUwVRHFgevYaLHGQgzGZkvCOfOW1cw/5DZ
-        Tt6KabAZCR7hUJfJFx2F2D0+R+8U5nscnu7iZPZDqg==
-X-Google-Smtp-Source: AMrXdXtLHNDyjnAL6zJ2auak1fOjOH8s3wFDYd+GVe/s63gydlggFzt/GvG8ozXZivPLVgmRLHLdDbUmdMJBWoGbY10=
-X-Received: by 2002:a05:6000:1001:b0:2bb:3290:2540 with SMTP id
- a1-20020a056000100100b002bb32902540mr467948wrx.18.1673276558005; Mon, 09 Jan
- 2023 07:02:38 -0800 (PST)
-MIME-Version: 1.0
-References: <20230107031406.gonna.761-kees@kernel.org>
-In-Reply-To: <20230107031406.gonna.761-kees@kernel.org>
-From:   Julius Werner <jwerner@chromium.org>
-Date:   Mon, 9 Jan 2023 16:02:26 +0100
-Message-ID: <CAODwPW9SaomZjWQvR1mmV7OzvQkq-_XoDgSmK04fO5rVMGHmpw@mail.gmail.com>
-Subject: Re: [PATCH v2] firmware: coreboot: Check size of table entry and
- split memcpy
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+OGOp3YNacclAjUZKf14QWTstVsfju4aFmxM8mh9QcM=;
+        b=2YiL4Wyqs32RI8Q5848bzS+VIoopzaSPh2rJHATyUsnG/hk7QbxnBBaIG4/N23eXLz
+         5y2BcnBcgIfFXhOXXmxTK9GvHFifhGedEQH9pxG3WxZJmNCvQ4us/7fFgKqIZgHxah1O
+         xSdf4iQMIETEhUdiusZC5fErFhWtUEsBieWqf+6KgiP2+bgVQh6RDFntZLM6sbgrbQWp
+         OsCOnvq5VwugVQyKPC6AuPBB4ss9LJ2+S0F05iCXWBcqkPBcoHYpPyEmcJ51n3yIxPHt
+         56Vb2Ityh5/qqlEDdLLBe6j0/NaJqPXu/0V6Q5/Wx1+6+fIPLQ0l0afNaImQqov23Zo4
+         72rA==
+X-Gm-Message-State: AFqh2kr3ICc/LIj157dNUMGFtNl2IQDo4TEdxIePGe830M5Ma3FY52pU
+        HJ6YHX31/xZa8Tu6kj5v6DFc/g==
+X-Google-Smtp-Source: AMrXdXtHZopbZey2NOOo6ZqccqC+p7nDLSU+eThEGan2FzYSSo+0ly4TezYet/q+4AK+Ibw+sTPxXg==
+X-Received: by 2002:a05:6a20:8e1e:b0:a3:49d2:9504 with SMTP id y30-20020a056a208e1e00b000a349d29504mr752012pzj.3.1673285452810;
+        Mon, 09 Jan 2023 09:30:52 -0800 (PST)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id x19-20020aa78f13000000b005833bd59fabsm6309795pfr.203.2023.01.09.09.30.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jan 2023 09:30:52 -0800 (PST)
+Date:   Mon, 9 Jan 2023 17:30:48 +0000
+From:   Sean Christopherson <seanjc@google.com>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Jack Rosenthal <jrosenth@chromium.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Guenter Roeck <groeck@chromium.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] KVM: x86: Replace 0-length arrays with flexible arrays
+Message-ID: <Y7xPSEMOWqz+3kgD@google.com>
+References: <20230105190548.never.323-kees@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230105190548.never.323-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Reviewed-by: Julius Werner <jwerner@chromium.org>
+On Thu, Jan 05, 2023, Kees Cook wrote:
+> Zero-length arrays are deprecated[1]. Replace struct kvm_nested_state's
+> "data" union 0-length arrays with flexible arrays. (How are the
+> sizes of these arrays verified?)
 
-> -               memcpy(&device->entry, ptr_entry, entry->size);
-> +               memcpy(device->raw, entry, entry->size);
+It's not really interpreted as an array, it's a mandatory single-entry "array".
 
-nit: It's a bit odd to change the source pointer from ptr_entry to
-entry here. Technically the static analyzer would be within its rights
-to give you a warning for that as well, because you're now
-"overrunning" the source struct instead of the destination one.
+	if (copy_from_user(vmcs12, user_vmx_nested_state->vmcs12, sizeof(*vmcs12)))
+		return -EFAULT;
+
+> Detected with GCC 13, using -fstrict-flex-arrays=3:
+> 
+> arch/x86/kvm/svm/nested.c: In function 'svm_get_nested_state':
+> arch/x86/kvm/svm/nested.c:1536:17: error: array subscript 0 is outside array bounds of 'struct kvm_svm_nested_state_data[0]' [-Werror=array-bounds=]
+>  1536 |                 &user_kvm_nested_state->data.svm[0];
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> In file included from include/uapi/linux/kvm.h:15,
+>                  from include/linux/kvm_host.h:40,
+>                  from arch/x86/kvm/svm/nested.c:18:
+> arch/x86/include/uapi/asm/kvm.h:511:50: note: while referencing 'svm'
+>   511 |                 struct kvm_svm_nested_state_data svm[0];
+>       |                                                  ^~~
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> 
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: x86@kernel.org
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: kvm@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+
+Nit on the comment aside,
+
+Reviewed-by: Sean Christopherson <seanjc@google.com>
+
+>  arch/x86/include/uapi/asm/kvm.h | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
+> index e48deab8901d..8ec3dfd641b0 100644
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -502,13 +502,13 @@ struct kvm_nested_state {
+>  	} hdr;
+>  
+>  	/*
+> -	 * Define data region as 0 bytes to preserve backwards-compatability
+> +	 * Define union of flexible arrays to preserve backwards-compatability
+
+I think I'd actually prefer the "as 0 bytes" comment.  The important part is that
+the size of "data" be zero, how that happens is immaterial.
+
+>  	 * to old definition of kvm_nested_state in order to avoid changing
+>  	 * KVM_{GET,PUT}_NESTED_STATE ioctl values.
+>  	 */
+>  	union {
+> -		struct kvm_vmx_nested_state_data vmx[0];
+> -		struct kvm_svm_nested_state_data svm[0];
+> +		__DECLARE_FLEX_ARRAY(struct kvm_vmx_nested_state_data, vmx);
+> +		__DECLARE_FLEX_ARRAY(struct kvm_svm_nested_state_data, svm);
+>  	} data;
+>  };
+>  
+> -- 
+> 2.34.1
+> 
