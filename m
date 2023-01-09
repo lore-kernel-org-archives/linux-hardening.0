@@ -2,86 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A2EC5479D
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 07:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3F1C5479D
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 08:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233305AbjAIHkZ (ORCPT
+        id S230491AbjAIIDN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Jan 2023 02:40:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48328 "EHLO
+        Mon, 9 Jan 2023 03:03:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233238AbjAIHkU (ORCPT
+        with ESMTP id S233106AbjAIIDN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Jan 2023 02:40:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D7612AE5;
-        Sun,  8 Jan 2023 23:40:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AD304B80D1A;
-        Mon,  9 Jan 2023 07:40:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4BA77C433F1;
-        Mon,  9 Jan 2023 07:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673250016;
-        bh=TN07+vD/SnTIBZSHGqRC3RoFx+3nZk0Ja9sAyNZBimU=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=sCjHjg72NoNCkg67Awqex1+Il9Q0GkgKy5kLHFgoLa6qWqpQ2Yp8H0YrwK52xwxbf
-         knMk6S5K0+f3Q4r/ZSPvN+y7f3nRAloQPX47yHb86KcquKtuEZD+BRS7Xx9GMotCqk
-         zznVtKn2/4mQ5KdkApMcW/eyJXp7u4pOLFF7t2SpGLNg4kX09d+15+6Ags+XKDvdzc
-         edukG8cMMg24uFO3L/G1JRfUplhse+hhfIQBRX6K7hqbhkiiIRk8U/8xkf9rUxp9jg
-         htGLI+7gQZXIV64wlsDUUywglBomsFVWqfcVAqz/vZiUFrtedThL6/O3gcN1cmis6R
-         U+i4v90locjsA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B73EE21EEA;
-        Mon,  9 Jan 2023 07:40:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Mon, 9 Jan 2023 03:03:13 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D850DFCDA;
+        Mon,  9 Jan 2023 00:03:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1673251383; bh=qozjcx4hTpr3jaYdT2eKjDnLhPkqHFw+E4wFsV+KjBo=;
+        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=smzHY8PNV3Owc520Tr9p8IXQNBB9KKe4GYCYgmoeCwe6bz71EZc4DA6nOyUvP8bVf
+         1nT6FchfvuH/idf4w/pYs8IYRPsRNvPTCdbsk9RdPZr164FKH5gvVOJPredv5RruCz
+         1uYcoj1ypJRVK3w3dvdktbAe6C+XMQmY87PTaG2jIvQZGpDB8R7v/3mqwsdPJLEtZU
+         B9YI4MPAm0O1F8NJYMp+FwU9rrftW/l1QQIMiUnnfykkiniFWe8dLCN2xFlKAOkdYT
+         IcPvik70XX9eKiXjk1dF0+VAJ30kRtHcZbaPXO2K1rRgRBBxXsjD13WvxRV9Evn2BE
+         4fwlcf4j0NiDQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.60] ([92.116.168.5]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MwfWU-1opqNY4Aig-00y8zI; Mon, 09
+ Jan 2023 09:03:03 +0100
+Message-ID: <b1ba214d-f3e1-4f6e-5226-2ab7761c4366@gmx.de>
+Date:   Mon, 9 Jan 2023 09:03:01 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] mlxsw: spectrum_router: Replace 0-length array with flexible
- array
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167325001617.30057.7118452714297454499.git-patchwork-notify@kernel.org>
-Date:   Mon, 09 Jan 2023 07:40:16 +0000
-References: <20230105232224.never.150-kees@kernel.org>
-In-Reply-To: <20230105232224.never.150-kees@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] fbdev: Replace 0-length array with flexible array
+Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>
-Cc:     idosch@nvidia.com, petrm@nvidia.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        gustavoars@kernel.org, netdev@vger.kernel.org,
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230105192034.never.249-kees@kernel.org>
+From:   Helge Deller <deller@gmx.de>
+In-Reply-To: <20230105192034.never.249-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:9YTJmsZjsjckd6I9le8J645mr0N28l3SdIAvOuyOXzXTuxHoKTG
+ qoIQNW6zyu1FP5X6N850VSLQj1Yw9UebNucTTQJta3AtHaS+teEAiFne08YoJwisaVxSDKz
+ N0oYml7bDnzZQ1yhL5GdZ+k+Rw41aEnT0J2GsXeJAIU8XqYi2nstRW8BFge+4dsNu52nJl+
+ EE9Lx6dmVlu166rTDsPCA==
+UI-OutboundReport: notjunk:1;M01:P0:UMFGxlVWvYY=;5AI8Fz86dVux/6X6Zo26d4ofLkC
+ Mn+YuXFtnpca4uzGQr10jGyFUg4BvKVTFjgjCPtpHp+9t+TvPxS1H2Odj2prQlE/FQ3V9eEwH
+ xxb+uWK5yADaZddzuMIVkgqJWW7A2oWr7pF28RTRhGpqJoRmsh6ygXWO+RcoI29/M6QLaptlv
+ 8pcFmo6+6CqJZ0zD+1hf+KY/w0KMqnEMSPNq1X1ASYHssCDwwjtRtDHzfkeLkj3DFPt5LQCq3
+ 0eO+7duchHK0eZVEYULvCHQIv80zsVW518lnz0nsKBKSTg8nCTINjNjV3SPsJM9qariCEB0gJ
+ yDLg0G9L88CTjZqj018fr5yj5xb0UfRa/9qJ/IoeALU04WRyKVcLeggi2jPGzfkMSq38MauOs
+ trLH8xBQP1+fNv8n2BBGHzpqaHPwDcmUYQmmnZyvw2mWz3RtiyzNXv41Ni7/obCPxnjrvNuSF
+ OpjiBhrKaV5tWj1FmXWLhGAb7SOn+K1bioeZA7uZpDwNnL97VNxz1CujfD6OlnYbHmEYtLOIe
+ j/Mm223Cvc4wFGQsQca3aV3X0ZGP5WnC/YU+euHqNvO0XVFM0YNIt+noJKjFRgET/MOB7oJdY
+ D9rrUCL31P4PRPMax3YRU9pNEg8tqVj6Zijn1frN2hZ59Gwx+9FIvmoZ/XPXc+c0gQyJ2rB+F
+ C90+bAPSObZ8ctryBCfK+CBe8R2lStLhnvwpPQrOjsLaus/5vRp/vHj8Y3s3A6ynDvzFgQbgQ
+ Tu56CTwE4PHumDWLoIuhhJV0irXMDCtmXGuoDbb0ZWRD10A+5hldW9orqblk/fN7eeoXNm+rM
+ HijCdlGagKbAYRZeAgSga65k0N470YFnFz3shIyUXLsXI185uPoTKSwu05UkMoURZCGc9xm2n
+ fTuwX9wN5JthviOzrR6vHxUnFHofAx/v5LHDLzaKCOlX7SLbaJLH1KJI5FzdZfI1biLpG8jS8
+ 5zHJ/A==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+On 1/5/23 20:20, Kees Cook wrote:
+> Zero-length arrays are deprecated[1]. Replace struct aperture's "ranges"
+> 0-length array with a flexible array. (How is the size of this array
+> verified?) Detected with GCC 13, using -fstrict-flex-arrays=3D3:
+>
+> samples/vfio-mdev/mdpy-fb.c: In function 'mdpy_fb_probe':
+> samples/vfio-mdev/mdpy-fb.c:169:32: warning: array subscript 0 is outsid=
+e array bounds of 'struct aperture[0]' [-Warray-bounds=3D]
+>    169 |         info->apertures->ranges[0].base =3D info->fix.smem_star=
+t;
+>        |         ~~~~~~~~~~~~~~~~~~~~~~~^~~
+> In file included from samples/vfio-mdev/mdpy-fb.c:21:
+> include/linux/fb.h:510:19: note: while referencing 'ranges'
+>    510 |                 } ranges[0];
+>        |                   ^~~~~~
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-=
+length-and-one-element-arrays
+>
+> Cc: Helge Deller <deller@gmx.de>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This patch was applied to netdev/net.git (master)
-by David S. Miller <davem@davemloft.net>:
+applied to the fbdev git tree.
 
-On Thu,  5 Jan 2023 15:22:29 -0800 you wrote:
-> Zero-length arrays are deprecated[1]. Replace struct
-> mlxsw_sp_nexthop_group_info's "nexthops" 0-length array with a flexible
-> array. Detected with GCC 13, using -fstrict-flex-arrays=3:
-> 
-> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c: In function 'mlxsw_sp_nexthop_group_hash_obj':
-> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:3278:38: warning: array subscript i is outside array bounds of 'struct mlxsw_sp_nexthop[0]' [-Warray-bounds=]
->  3278 |                         val ^= jhash(&nh->ifindex, sizeof(nh->ifindex), seed);
->       |                                      ^~~~~~~~~~~~
-> drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c:2954:33: note: while referencing 'nexthops'
->  2954 |         struct mlxsw_sp_nexthop nexthops[0];
->       |                                 ^~~~~~~~
-> 
-> [...]
+Thanks!
+Helge
 
-Here is the summary with links:
-  - mlxsw: spectrum_router: Replace 0-length array with flexible array
-    https://git.kernel.org/netdev/net/c/2ab6478d1266
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+> ---
+>   include/linux/fb.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> index 96b96323e9cb..bf59d6a3590f 100644
+> --- a/include/linux/fb.h
+> +++ b/include/linux/fb.h
+> @@ -507,7 +507,7 @@ struct fb_info {
+>   		struct aperture {
+>   			resource_size_t base;
+>   			resource_size_t size;
+> -		} ranges[0];
+> +		} ranges[];
+>   	} *apertures;
+>
+>   	bool skip_vt_switch; /* no VT switch on suspend/resume required */
 
