@@ -2,117 +2,201 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2CDC5479D
-	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 12:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A464C5479D
+	for <linux-hardening@archiver.kernel.org>; Mon,  9 Jan 2023 12:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234302AbjAIMDt (ORCPT
+        id S233849AbjAIMSf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Jan 2023 07:03:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
+        Mon, 9 Jan 2023 07:18:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237036AbjAIMDs (ORCPT
+        with ESMTP id S237066AbjAIMS0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Jan 2023 07:03:48 -0500
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222D61A05D;
-        Mon,  9 Jan 2023 04:03:47 -0800 (PST)
-Received: by mail-wm1-f53.google.com with SMTP id g10so6092632wmo.1;
-        Mon, 09 Jan 2023 04:03:47 -0800 (PST)
+        Mon, 9 Jan 2023 07:18:26 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64F41ADB9
+        for <linux-hardening@vger.kernel.org>; Mon,  9 Jan 2023 04:18:22 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id m6so12620001lfj.11
+        for <linux-hardening@vger.kernel.org>; Mon, 09 Jan 2023 04:18:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DifmN6L/adKoCUxtqAMK0Lt+Rvw7dAd2CGTYKxx25Ks=;
+        b=c4c29HwIOCrN5rNFt4Nhyw69bHd78n8mskBOpdz4YTWuE4oXGYmuSieq2+TKbC5Wdy
+         HS3U95DF5wBoDXrCdQkr+Jn/v5dQyYWutTE8dmcO5FEtaeSDAkfqtfGOFNWp1Z2LwjSb
+         S9u3QVsnxmK9eu2Q5Yz0Rezw1YSikqUh9Kf7v2isCNJy8eMGWNhk0V5HjAwxH2yLlkPC
+         Rq7pHtxDZJMLOY8iM8tHyepfNqaAVXEWnrXW7tO2g4+HoG+6Ldk4PafT1xQgqhU6OaxM
+         jMz6BGwkbt/98GMKZv5PJ7Nv+18K/7gzJTwTncxuJnTxOO8aXWH7rM2N1eP/D08m4zK1
+         dsCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ue8ZryD4OifG+765s/NA7Xed1V4rDSbbS8QMK3/tzlg=;
-        b=rwP15RZ0/1+7LfVx7XBYnG+G6kD11N2IpUvoEHprCauge55D02wPrdW5tAVeXQLuwA
-         Gh+GKYkU5kEbJTGo0dOQfhJzA4/qRsIIeGfMwavJchfcFaCJAx8lLw+NaNNsTlMcF+za
-         fE5ba6+9pjze3rxssw6Yq1nzsdoKwx+PUtsFr7btAIw9O6mwzYTHbg3ozvjf69R5hlJw
-         yGMWqA8ou9EvwSRJh54ol8xbrCOz9Qm4F/tya/egct/bms2r3x3BHf53wfBfGLd7UwCf
-         vRXxeCqW6H3yVOmBDMxbSeAJovXaL0s/KTAz8bMkxDDg8TGHpHLco+Oq90ldtUeDYWUS
-         egiQ==
-X-Gm-Message-State: AFqh2kqtQCyzJ1FZzkJyFeZXUwyOYP0ehCoyiSoOWqGgPXeNfYiVYQjq
-        lCqSDefGkzbRV4L/bdpBIPg=
-X-Google-Smtp-Source: AMrXdXtLv5zMRtlHf28izagU9USocWvJAY0fOaTudBh4u/kLkBBlRTf+qGPE8Y+UfFC+J+OgiTYPeA==
-X-Received: by 2002:a05:600c:4fce:b0:3d9:ee01:60a4 with SMTP id o14-20020a05600c4fce00b003d9ee0160a4mr3264887wmq.1.1673265825676;
-        Mon, 09 Jan 2023 04:03:45 -0800 (PST)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:49? ([2a0b:e7c0:0:107::aaaa:49])
-        by smtp.gmail.com with ESMTPSA id z9-20020a7bc7c9000000b003d9ef37ec1bsm4563989wmk.5.2023.01.09.04.03.44
+        bh=DifmN6L/adKoCUxtqAMK0Lt+Rvw7dAd2CGTYKxx25Ks=;
+        b=BsUiMhY+UDBPZDpdzgV7oppMrX0KulhP5fK6T88HZze69i/xnhUV6x+PaiY+18wiJw
+         1xBTRzT2zVCsqwlYeR4tFbuSGNbxi0zgzooq16fsxFqTz9ycPAV4nsxbym5sUlK/YWz2
+         MTEguy9txwlNBRW5rvcIQukQt8zRjFGnhxgMAXlRMqnX1qsLAplZ+nVxUA5t9WQ9Sbmi
+         i9YqXaKbadYwMrfSJAmOrg0bLE4newPHGA4yTa+Y775Ry/vE+j/rc1W6QpCMLKnCHd3k
+         xjX3H+7pZjZIvIioGdzkMX8I3HKkvUeXPqx4jq3tgwhtbITS7ZHh+HyfGLQDQ8K3fuqf
+         MM2A==
+X-Gm-Message-State: AFqh2koUAXRFs7I+LYV1rQQk9vIXnI00kXycs0ySg+o8QG5hQ6cEH+9q
+        NRAyfpyx8OKpxREaPLZQyX0I2g==
+X-Google-Smtp-Source: AMrXdXuH0t6wTXKr/wNZTaA+WuTI+fWxIR9xpAoOUVy3L1mqqK4X3ba9f5GIZ+jNGa0HdYUWL4rqIg==
+X-Received: by 2002:a19:9116:0:b0:4cc:5e97:d357 with SMTP id t22-20020a199116000000b004cc5e97d357mr3699274lfd.33.1673266701267;
+        Mon, 09 Jan 2023 04:18:21 -0800 (PST)
+Received: from [192.168.1.101] (abxi45.neoplus.adsl.tpnet.pl. [83.9.2.45])
+        by smtp.gmail.com with ESMTPSA id w4-20020a19c504000000b004b5812207dbsm1597098lfe.201.2023.01.09.04.18.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jan 2023 04:03:45 -0800 (PST)
-Message-ID: <6e18fcfc-2d65-716f-a0bd-81611af39b9d@kernel.org>
-Date:   Mon, 9 Jan 2023 13:03:44 +0100
+        Mon, 09 Jan 2023 04:18:20 -0800 (PST)
+Message-ID: <475d3f2f-114f-d6d2-89db-465ba7acd0d6@linaro.org>
+Date:   Mon, 9 Jan 2023 13:18:18 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
+Subject: Re: [PATCH v6 4/6] arm64: dts: qcom: sm6125: Add UFS nodes
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        Helge Deller <deller@gmx.de>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Yangxi Xiang <xyangxi5@gmail.com>,
-        Xuezhi Zhang <zhangxuezhi1@coolpad.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230105220549.never.529-kees@kernel.org>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Subject: Re: [PATCH] vt: Replace 0-length array with flexible array
-In-Reply-To: <20230105220549.never.529-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To:     Lux Aliaga <they@mint.lgbt>, agross@kernel.org,
+        andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
+        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
+        phone-devel@vger.kernel.org, martin.botka@somainline.org,
+        marijn.suijten@somainline.org
+References: <20230108195336.388349-1-they@mint.lgbt>
+ <20230108195336.388349-5-they@mint.lgbt>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20230108195336.388349-5-they@mint.lgbt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 05. 01. 23, 23:05, Kees Cook wrote:
-> Zero-length arrays are deprecated[1]. Replace struct uni_screen's
-> "lines" 0-length array with a flexible array. Detected with GCC 13,
-> using -fstrict-flex-arrays=3:
+
+
+On 8.01.2023 20:53, Lux Aliaga wrote:
+> Adds a UFS host controller node and its corresponding PHY to
+> the sm6125 platform.
 > 
-> ../drivers/tty/vt/vt.c: In function 'vc_uniscr_copy_area':
-> ../drivers/tty/vt/vt.c:488:48: warning: array subscript dst_row is outside array bounds of 'char32_t *[0]' {aka 'unsigned int *[]'} [-Warray-bounds=]
->    488 |                 char32_t *dst_line = dst->lines[dst_row];
->        |                                      ~~~~~~~~~~^~~~~~~~~
-> ../drivers/tty/vt/vt.c:335:19: note: while referencing 'lines'
->    335 |         char32_t *lines[0];
->        |                   ^~~~~
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jirislaby@kernel.org>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: "Ilpo Järvinen" <ilpo.jarvinen@linux.intel.com>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Lux Aliaga <they@mint.lgbt>
 > ---
->   drivers/tty/vt/vt.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/sm6125.dtsi | 57 ++++++++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
 > 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index 981d2bfcf9a5..b1445f00f616 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -332,7 +332,7 @@ typedef uint32_t char32_t;
->    * scrolling only implies some pointer shuffling.
->    */
->   struct uni_screen {
-> -	char32_t *lines[0];
-> +	DECLARE_FLEX_ARRAY(char32_t *, lines);
->   };
+> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> index df5453fcf2b9..cec7071d5279 100644
+> --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> @@ -511,6 +511,63 @@ sdhc_2: mmc@4784000 {
+>  			status = "disabled";
+>  		};
+>  
+> +		ufs_mem_hc: ufs@4804000 {
+> +			compatible = "qcom,sm6125-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
+> +			reg = <0x04804000 0x3000>, <0x04810000 0x8000>;
+You need reg-names for ICE to probe, otherwise the second reg sits unused.
 
-Perhaps I am missing something, but why don't we simply have:
-   char32_t **uni_screen_lines;
-? And even if we don't, we should likely convert to array_size() on the 
-alloc site.
+> +			interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
+> +			phys = <&ufs_mem_phy>;
+> +			phy-names = "ufsphy";
+> +			lanes-per-direction = <1>;
+> +			#reset-cells = <1>;
+> +			resets = <&gcc GCC_UFS_PHY_BCR>;
+> +			reset-names = "rst";
+> +			iommus = <&apps_smmu 0x200 0x0>;
+> +
+> +			clock-names = "core_clk",
+> +				      "bus_aggr_clk",
+> +				      "iface_clk",
+> +				      "core_clk_unipro",
+> +				      "ref_clk",
+> +				      "tx_lane0_sync_clk",
+> +				      "rx_lane0_sync_clk",
+> +				      "ice_core_clk";
+> +			clocks = <&gcc GCC_UFS_PHY_AXI_CLK>,
+> +				 <&gcc GCC_SYS_NOC_UFS_PHY_AXI_CLK>,
+> +				 <&gcc GCC_UFS_PHY_AHB_CLK>,
+> +				 <&gcc GCC_UFS_PHY_UNIPRO_CORE_CLK>,
+> +				 <&rpmcc RPM_SMD_XO_CLK_SRC>,
+> +				 <&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
+> +				 <&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
+> +				 <&gcc GCC_UFS_PHY_ICE_CORE_CLK>;
+> +			freq-table-hz = <50000000 240000000>,
+> +					<0 0>,
+> +					<0 0>,
+> +					<37500000 150000000>,
+> +					<0 0>,
+> +					<0 0>,
+> +					<0 0>,
+> +					<75000000 300000000>;
+> +
+> +			status = "disabled";
+> +		};
+> +
+> +		ufs_mem_phy: phy@4807000 {
+> +			compatible = "qcom,sm6125-qmp-ufs-phy";
+> +			reg = <0x04807000 0x1c4>;
+Isn't this too small? Downstream says 0xdb8, but it's probably even bigger..
+> +
+> +			clock-names = "ref", "ref_aux";
+We recently started an endless quest, trying to unify property
+order [1], please adjust this to:
 
-And a side note: what's actually the purpose of all that 
-NO_VC_UNI_SCREEN and closely connected get_vc_uniscr()?
+compat
+reg
+clocks
+clock-names
+[freq-table-hz seems fitting here tbf]
+resets
+reset-names
+power-domains
+#phy-cells
+status
 
-thanks,
--- 
-js
-suse labs
+so in your case, put power-domains after reset-names and flip
+clocks/clock-names
 
+similarly for the node above this order would look good:
+
+compat
+reg
+reg-names
+interrupts
+clocks
+clock-names
+resets
+reset-names
+reset-cells
+phys
+phy-names
+lines-per-direction
+iommus
+status
+
+
+Konrad 
+
+[1] https://github.com/konradybcio-work/dt_review
+> +			clocks = <&gcc GCC_UFS_MEM_CLKREF_CLK>, <&gcc GCC_UFS_PHY_PHY_AUX_CLK>;
+> +
+> +			power-domains = <&gcc UFS_PHY_GDSC>;
+> +
+> +			resets = <&ufs_mem_hc 0>;
+> +			reset-names = "ufsphy";
+> +
+> +			#phy-cells = <0>;
+> +
+> +			status = "disabled";
+> +		};
+> +
+>  		gpi_dma0: dma-controller@4a00000 {
+>  			compatible = "qcom,sm6125-gpi-dma", "qcom,sdm845-gpi-dma";
+>  			reg = <0x04a00000 0x60000>;
