@@ -2,81 +2,105 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552F3C54EBE
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 13:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3573BC46467
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 16:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238372AbjAJNfK (ORCPT
+        id S234762AbjAJQaS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Jan 2023 08:35:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59342 "EHLO
+        Tue, 10 Jan 2023 11:30:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238748AbjAJNez (ORCPT
+        with ESMTP id S234290AbjAJQaP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Jan 2023 08:34:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC19E7A39C;
-        Tue, 10 Jan 2023 05:34:46 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6CA5D6171A;
-        Tue, 10 Jan 2023 13:34:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C67F9C433EF;
-        Tue, 10 Jan 2023 13:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673357685;
-        bh=428Utdh+e6F2/hWYnKzDhqLh/AHuuQMV5oFWLJ3BKqg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PifxqQiVsu2yVxl+rvItZRxvJQ4ShpBz+CyugsIA5h6Xy6eogwCrR6tFdn76H51+9
-         qwBoKfhNOJNlRtFcQ/bMGGgJu4QKQ1zCSwlKDl9DFdRWeQ/7OuSK4Hzt0+nyn6MwOP
-         LqUQ7e9EXMAJOHgoyZ7zYMsA2pTYuw+LnTwCQLOXx3ZeEZ5mMZ1ziIMRcfu+vRCPDy
-         4+1UlQ99l+q3b/OU3Uvclc+Se2K9gawsEzPhhFNB0o+HDCaGQ1eS6X9FFeFWslUut1
-         vEK5uBOSLo4urIQZBEhY5KYGic/0vEo1sVWuCPPhuuKCyWc32c58/++vHWcWbO8jWn
-         5/8lVcEXr2T9w==
-Received: by mail-yb1-f169.google.com with SMTP id c124so11737562ybb.13;
-        Tue, 10 Jan 2023 05:34:45 -0800 (PST)
-X-Gm-Message-State: AFqh2krp9A9p2LbrRsjXT4gB8vCKRU3XGqg8aUEuspH98x3bM9+LK/TQ
-        770zCGLSrEzw66xrVbDt8bLsvsCWuHP6fZbzPfo=
-X-Google-Smtp-Source: AMrXdXsS1IMMV97uhXnmSnvUUs5QH5SQPpbwkG6NWvv7XZpwjDjgZlqLaV0/nOrzgqw5QouMJjwR1058Lhg2O2R76U8=
-X-Received: by 2002:a25:bbd1:0:b0:70b:87c6:4fe with SMTP id
- c17-20020a25bbd1000000b0070b87c604femr7421709ybk.550.1673357684837; Tue, 10
- Jan 2023 05:34:44 -0800 (PST)
+        Tue, 10 Jan 2023 11:30:15 -0500
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE1B73E2F
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 08:30:13 -0800 (PST)
+Received: by mail-pj1-x1043.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso17142425pjt.0
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 08:30:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20210112.gappssmtp.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4g3X2Drb8iDIejSiH0zFfNh5MOmbpVh8uX0CGV33Ygw=;
+        b=jie1h2bF6T0loL1kylf5SLvyS0ttCfxL/U79701D7Jc+1IkfwixBN4MpGFNc441I8n
+         rl0JBa3hUIvLS36GCdBIOkhpDcy/IDVIRWp/yuSg7PBI5ZSeQGLc7GZdZZgOKi+pYn0C
+         HTRafMDZ1/gTGXGHjLx51tT+oXyMQxAoExxDwWKMu+++bGjk/5umgA8bQERjXhqxXTRy
+         Q9uLnPmQ95UgBpIOzxuMsD6nfq/g9vJjvXaGHSOn42vQFuUVv2v8Y65qSxqIntgEXMLY
+         0eahvmjKtp0NDUvPgAIpo38znxs8UvEjKhKVEiFgKQ6tmpjKA3pplJfAAcTpVJ3Ija0e
+         kXNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4g3X2Drb8iDIejSiH0zFfNh5MOmbpVh8uX0CGV33Ygw=;
+        b=psYad1CzCS8VBjvKrdrh8j8etBuONYHKsH4xWnrtBy9tA/uI7BLZgiBjpN6pzRZNxp
+         7cb4OZW6XkP4jSQiUHcwsNzHqyDzdyexrOEuTpd8L+UjHXT/k+KLNmDrjJYM/H39yTAx
+         SMUk5I2UZunK8Bm5+N3JcdCuewT2VQbEnn7MEiE41yHOqDlDumN3qRdNstQLtssI0uI3
+         Qf9srzE1MYhRAup8SiGRuWh073iO08YZW3TeBHNgGP6e/ANVUoTVhYZehji3/jVAWbN5
+         k9AddTC9i23g2lQabUoP1FHWdtmeSU0KeL4A6zoi9cKk4QkrVZizKgzb16Vb3XyJlnL5
+         tUvw==
+X-Gm-Message-State: AFqh2kqT88zvFmO4dPu6/6TslTHfYHYKRrcvug7PIEKDKkjaxUK5hbpr
+        MaCFG1uUZW+atMFG+jFEjenJlA==
+X-Google-Smtp-Source: AMrXdXsXyTXOJDg2HvTe03JJzllkrApnnxWjeSXx+w/qB5rYUlhFrZp6dWVQvcOJHGx4CRPsdXmaHQ==
+X-Received: by 2002:a17:90b:3557:b0:219:bd64:8e60 with SMTP id lt23-20020a17090b355700b00219bd648e60mr73264459pjb.34.1673368213082;
+        Tue, 10 Jan 2023 08:30:13 -0800 (PST)
+Received: from localhost (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id y7-20020a17090a154700b002265ddfc13esm3213456pja.29.2023.01.10.08.30.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jan 2023 08:30:12 -0800 (PST)
+Date:   Tue, 10 Jan 2023 17:30:09 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] net/mlx5e: Replace 0-length array with flexible array
+Message-ID: <Y72SkdnBkwxQYXoT@nanopsycho>
+References: <20230105223642.never.980-kees@kernel.org>
 MIME-Version: 1.0
-References: <Y7zB4z5cxpFkPXKV@work> <20230110104609.GA1602079@linux.intel.com>
-In-Reply-To: <20230110104609.GA1602079@linux.intel.com>
-From:   Oded Gabbay <ogabbay@kernel.org>
-Date:   Tue, 10 Jan 2023 15:34:18 +0200
-X-Gmail-Original-Message-ID: <CAFCwf13yp0Sj9i9Nmq_WOU0gcwfjjWz1vgzMeD5_1YWj0aWO_g@mail.gmail.com>
-Message-ID: <CAFCwf13yp0Sj9i9Nmq_WOU0gcwfjjWz1vgzMeD5_1YWj0aWO_g@mail.gmail.com>
-Subject: Re: [PATCH][next] habanalabs: Replace zero-length arrays with
- flexible-array members
-To:     Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230105223642.never.980-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 12:46 PM Stanislaw Gruszka
-<stanislaw.gruszka@linux.intel.com> wrote:
+Thu, Jan 05, 2023 at 11:36:43PM CET, keescook@chromium.org wrote:
+>Zero-length arrays are deprecated[1]. Replace struct mlx5e_rx_wqe_cyc's
+>"data" 0-length array with a flexible array. Detected with GCC 13,
+>using -fstrict-flex-arrays=3:
 >
-> On Mon, Jan 09, 2023 at 07:39:47PM -0600, Gustavo A. R. Silva wrote:
-> > Zero-length arrays are deprecated[1] and we are moving towards
-> > adopting C99 flexible-array members instead. So, replace zero-length
-> > arrays in a couple of structures with flex-array members.
-> >
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [2].
-> >
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
-> > Link: https://github.com/KSPP/linux/issues/78
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>drivers/net/ethernet/mellanox/mlx5/core/en_main.c: In function 'mlx5e_alloc_rq':
+>drivers/net/ethernet/mellanox/mlx5/core/en_main.c:827:42: warning: array subscript f is outside array bounds of 'struct mlx5_wqe_data_seg[0]' [-Warray-bounds=]
+>  827 |                                 wqe->data[f].byte_count = 0;
+>      |                                 ~~~~~~~~~^~~
+>In file included from drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.h:11,
+>                 from drivers/net/ethernet/mellanox/mlx5/core/eswitch.h:48,
+>                 from drivers/net/ethernet/mellanox/mlx5/core/en_main.c:42:
+>drivers/net/ethernet/mellanox/mlx5/core/en.h:250:39: note: while referencing 'data'
+>  250 |         struct mlx5_wqe_data_seg      data[0];
+>      |                                       ^~~~
 >
-> Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Thanks,
-applied to -next.
-Oded
+>[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+>
+>Cc: Saeed Mahameed <saeedm@nvidia.com>
+>Cc: Leon Romanovsky <leon@kernel.org>
+>Cc: "David S. Miller" <davem@davemloft.net>
+>Cc: Eric Dumazet <edumazet@google.com>
+>Cc: Jakub Kicinski <kuba@kernel.org>
+>Cc: Paolo Abeni <pabeni@redhat.com>
+>Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+>Cc: netdev@vger.kernel.org
+>Cc: linux-rdma@vger.kernel.org
+>Signed-off-by: Kees Cook <keescook@chromium.org>
+
+
+Reviewed-by: Jiri Pirko <jiri@nvidia.com>
