@@ -2,95 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D81C54EBC
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 12:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552F3C54EBE
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 13:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232391AbjAJMDk (ORCPT
+        id S238372AbjAJNfK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Jan 2023 07:03:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49404 "EHLO
+        Tue, 10 Jan 2023 08:35:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238296AbjAJMD2 (ORCPT
+        with ESMTP id S238748AbjAJNez (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Jan 2023 07:03:28 -0500
-X-Greylist: delayed 382 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 10 Jan 2023 04:03:27 PST
-Received: from relay07.th.seeweb.it (relay07.th.seeweb.it [5.144.164.168])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1BD58D15
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 04:03:26 -0800 (PST)
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        Tue, 10 Jan 2023 08:34:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC19E7A39C;
+        Tue, 10 Jan 2023 05:34:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id D44123F272;
-        Tue, 10 Jan 2023 13:03:16 +0100 (CET)
-Date:   Tue, 10 Jan 2023 13:03:15 +0100
-From:   Marijn Suijten <marijn.suijten@somainline.org>
-To:     Lux Aliaga <they@mint.lgbt>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, bvanassche@acm.org, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org
-Subject: Re: [PATCH v6 0/6] arm64: dts: qcom: sm6125: UFS and
- xiaomi-laurel-sprout support
-Message-ID: <20230110120315.53edpr334vlpaxc4@SoMainline.org>
-Mail-Followup-To: Marijn Suijten <marijn.suijten@somainline.org>,
-        Lux Aliaga <they@mint.lgbt>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
-        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
-        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org
-References: <20230108195336.388349-1-they@mint.lgbt>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6CA5D6171A;
+        Tue, 10 Jan 2023 13:34:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C67F9C433EF;
+        Tue, 10 Jan 2023 13:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673357685;
+        bh=428Utdh+e6F2/hWYnKzDhqLh/AHuuQMV5oFWLJ3BKqg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PifxqQiVsu2yVxl+rvItZRxvJQ4ShpBz+CyugsIA5h6Xy6eogwCrR6tFdn76H51+9
+         qwBoKfhNOJNlRtFcQ/bMGGgJu4QKQ1zCSwlKDl9DFdRWeQ/7OuSK4Hzt0+nyn6MwOP
+         LqUQ7e9EXMAJOHgoyZ7zYMsA2pTYuw+LnTwCQLOXx3ZeEZ5mMZ1ziIMRcfu+vRCPDy
+         4+1UlQ99l+q3b/OU3Uvclc+Se2K9gawsEzPhhFNB0o+HDCaGQ1eS6X9FFeFWslUut1
+         vEK5uBOSLo4urIQZBEhY5KYGic/0vEo1sVWuCPPhuuKCyWc32c58/++vHWcWbO8jWn
+         5/8lVcEXr2T9w==
+Received: by mail-yb1-f169.google.com with SMTP id c124so11737562ybb.13;
+        Tue, 10 Jan 2023 05:34:45 -0800 (PST)
+X-Gm-Message-State: AFqh2krp9A9p2LbrRsjXT4gB8vCKRU3XGqg8aUEuspH98x3bM9+LK/TQ
+        770zCGLSrEzw66xrVbDt8bLsvsCWuHP6fZbzPfo=
+X-Google-Smtp-Source: AMrXdXsS1IMMV97uhXnmSnvUUs5QH5SQPpbwkG6NWvv7XZpwjDjgZlqLaV0/nOrzgqw5QouMJjwR1058Lhg2O2R76U8=
+X-Received: by 2002:a25:bbd1:0:b0:70b:87c6:4fe with SMTP id
+ c17-20020a25bbd1000000b0070b87c604femr7421709ybk.550.1673357684837; Tue, 10
+ Jan 2023 05:34:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230108195336.388349-1-they@mint.lgbt>
+References: <Y7zB4z5cxpFkPXKV@work> <20230110104609.GA1602079@linux.intel.com>
+In-Reply-To: <20230110104609.GA1602079@linux.intel.com>
+From:   Oded Gabbay <ogabbay@kernel.org>
+Date:   Tue, 10 Jan 2023 15:34:18 +0200
+X-Gmail-Original-Message-ID: <CAFCwf13yp0Sj9i9Nmq_WOU0gcwfjjWz1vgzMeD5_1YWj0aWO_g@mail.gmail.com>
+Message-ID: <CAFCwf13yp0Sj9i9Nmq_WOU0gcwfjjWz1vgzMeD5_1YWj0aWO_g@mail.gmail.com>
+Subject: Re: [PATCH][next] habanalabs: Replace zero-length arrays with
+ flexible-array members
+To:     Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-01-08 16:53:30, Lux Aliaga wrote:
-> Introduce Universal Flash Storage support on SM6125 and add support for the Xiaomi Mi A3 based on the former platform. Uses the name xiaomi-laurel-sprout instead of the official codename (laurel_sprout)
-
-Don't forget to wrap these lines properly, same for the changelog below.
-
-> due to naming limitations in the kernel.
-
-I doubt it's a limitation, more like a convention.
-
-> Changes since v5:
-> - Drop "non-removable" property from ufs_mem_hc for sm6125 platform
-> - Drop "status" and "autorepeat" properties from gpio-keys node for xiaomi-laurel-sprout
-> - Rename "key-vol-up" node to "key-volume-up" for xiaomi-laurel-sprout
-> - Drop "gpio-key,wakeup" property from key-volume-up node for xiaomi-laurel-sprout
-
-No, you /replaced/ this deprecated property with wakeup-source, which
-has the same meaning.
-
-> - Set "linux,input-type" and "wakeup-source" properties on key-volume-up node for xiaomi-laurel-sprout
-
-No, you /removed/ linux,input-type because its value 1 for EV_KEY is
-already the default.
-
-> - Change "key_vol_up" node name to "vol-up-n-state" and its label to "vol_up_n" in PM6125 GPIO node for xiaomi-laurel-sprout
-> - Use labels instead of node names for PM6125 ADC channels in xiaomi laurel-sprout
-> - Set "regulator-allow-set-load" properties on l4, l5, l10, l11, l18 and l24 regulators on xiaomi-laurel-sprout
-> 
-> v5: https://lore.kernel.org/linux-devicetree/20221231222420.75233-2-they@mint.lgbt/
-> 
-> 
-> 
-
-No need for excessive newlines here.
-
-- Marijn
+On Tue, Jan 10, 2023 at 12:46 PM Stanislaw Gruszka
+<stanislaw.gruszka@linux.intel.com> wrote:
+>
+> On Mon, Jan 09, 2023 at 07:39:47PM -0600, Gustavo A. R. Silva wrote:
+> > Zero-length arrays are deprecated[1] and we are moving towards
+> > adopting C99 flexible-array members instead. So, replace zero-length
+> > arrays in a couple of structures with flex-array members.
+> >
+> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> > routines on memcpy() and help us make progress towards globally
+> > enabling -fstrict-flex-arrays=3 [2].
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
+> > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
+> > Link: https://github.com/KSPP/linux/issues/78
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>
+> Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Thanks,
+applied to -next.
+Oded
