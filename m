@@ -2,120 +2,140 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D575BC54EBE
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 19:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B19C54EBE
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 20:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbjAJTm4 (ORCPT
+        id S232145AbjAJUi1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Jan 2023 14:42:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46794 "EHLO
+        Tue, 10 Jan 2023 15:38:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231144AbjAJTmz (ORCPT
+        with ESMTP id S231727AbjAJUiZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Jan 2023 14:42:55 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9AD2DEB3;
-        Tue, 10 Jan 2023 11:42:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 5D939CE1915;
-        Tue, 10 Jan 2023 19:42:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67763C433D2;
-        Tue, 10 Jan 2023 19:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673379770;
-        bh=hGtaGIPAXue2SWqrVUKOJb5N9f2BU0xBHFp1IOuqWE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ab5EgdBuKEEuwRCfz7B1iDNjIcdEu4Zn4ZrEGqSl41+Eo3pbVP6SDtNc8JptefZs/
-         RzMh9K9kshc+8Y7J5yoeBtrOltCq+gumFXAqwYuGsAwflbJ1N8ki/Scd9byMpNNDLI
-         ivuEhIGaCKP3W8AqqUXCdgvMysPb+PGqw/FrZg9gIxvlZMTlmHzJMIad3p+hLbUM8I
-         6lBAnRcGbzNOwauCoWHRX73YxMz1n8KuprKgmDRnD6d99p60pPCz1G1U2gDm8sCzyL
-         ILAi6zjfn7pllsLnCBLdAWoEQ9ukdXXAWLjUxJ2UmZxdRB7VzQez9HxvkiOzFYMQd6
-         X6BCYTT3qcULA==
-Date:   Tue, 10 Jan 2023 13:42:57 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH][next] drm/i915/guc: Replace zero-length arrays with
- flexible-array members
-Message-ID: <Y72/wTm7eIIylTqf@work>
-References: <Y72WBTUmh9r1lvKN@work>
- <Y728SwYZeThQzohb@intel.com>
+        Tue, 10 Jan 2023 15:38:25 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9AF248808
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 12:38:23 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id b9-20020a17090a7ac900b00226ef160dcaso13058373pjl.2
+        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 12:38:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=adAxM/tdxethfCc9kWsVP4uZeaLxTRj54+QnNFBkUNY=;
+        b=q6L5OgUTT+UTRnL01un1afM9agRNUadY7z3gcTMkTail3+Qhky05OYeoYhqXQYg/2V
+         oNM0bJF76X8c1a11DiRZwcxUUHYL3WCdBjquE+qsCek2XUUM0gXKs5jgYWAsvJKFOq3s
+         2lnuRusHfIRnNbb9jdGjYhKOTOw50LK1/BLu87Zi/Mpo+hASVtgSMMzyjjmxYUTFskob
+         p27WyREJ+flNoKcGO2HMB4eNUNOHlrLrKCJ+wJHvQBcRyydwzjIxEbXRXn1ARZZEyQGa
+         CjT+HPcFde0Kq8RXE0OBr1Oysi/okt8jgq4il6jxujPqUwEvyhWt1lPGGK2sbFlYhhn8
+         ZxZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=adAxM/tdxethfCc9kWsVP4uZeaLxTRj54+QnNFBkUNY=;
+        b=7KRx/+5eDssfXzbu0wMoo5biArC2morEee3LVdRg8eVaPeAfIQhEjfg0H6nySuwLvP
+         Fj7lGgTaQiEVspdpDcgp2mb6lsgPJiWKLVbW3HyNMyrG5WYV2gAzhj7yh9WIBUyYDcrY
+         HnTDvpGInLYRD10jQuEd7qiqyCLf6FXZf7T5smmoZNQ0yHev3E7oLww1odTLT55WXdKh
+         4esW219+XDNGj10e2GaXI51G7uWLs6wko5+wdXV1K7CyrKZI1IdL/QHceV3EXEIigyZt
+         E27IV8j4xxotbA+b+LvxQQ8/MoM5h/yjXr4zyHGRBPTmtWujAQptxGKD+GUc1MvWPeqj
+         FFMQ==
+X-Gm-Message-State: AFqh2kpvhPIB3oriw1IqWdQzDlgw8GfM+v8J/ovt0c7tub4vwDh9AvfK
+        a9JTZ8sN2QQOo2/3SVOnmu9aoX42kY8j/yR93Ta9SA==
+X-Google-Smtp-Source: AMrXdXsEsCNJ48Atas4Y6eD6ioPdCdz81nx9K6hMDwJwBy/FjZKLO3qICbX1P4jlmpWAughD783FHgYsDQpRu2d1nFw=
+X-Received: by 2002:a17:90b:4b4c:b0:219:6be1:7ff2 with SMTP id
+ mi12-20020a17090b4b4c00b002196be17ff2mr6404270pjb.79.1673383103232; Tue, 10
+ Jan 2023 12:38:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y728SwYZeThQzohb@intel.com>
+References: <20230107040203.never.112-kees@kernel.org> <CAMuHMdURtDNzzaoBM4DpEHKiDsgnA-7Yc9QO=5gsmwz9PHWK5w@mail.gmail.com>
+ <ae952aa5-f113-8786-6fe4-60e5fa0ced2b@suse.cz>
+In-Reply-To: <ae952aa5-f113-8786-6fe4-60e5fa0ced2b@suse.cz>
+From:   Daniel Latypov <dlatypov@google.com>
+Date:   Tue, 10 Jan 2023 12:38:11 -0800
+Message-ID: <CAGS_qxrOVhXQaxqKknS2CJpHeCWHaMshvdJNdzeN6+KxQmY_uA@mail.gmail.com>
+Subject: Re: [PATCH] kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org, David Gow <davidgow@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 02:28:11PM -0500, Rodrigo Vivi wrote:
-> 
-> On Tue, Jan 10, 2023 at 10:44:53AM -0600, Gustavo A. R. Silva wrote:
-> > Zero-length arrays are deprecated[1] and we are moving towards
-> > adopting C99 flexible-array members, instead. So, replace zero-length
-> > arrays in a couple of structures (three, actually) with flex-array
-> > members.
-> > 
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [2].
-> > 
-> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
-> > Link: https://github.com/KSPP/linux/issues/78
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> > ---
-> >  drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h b/drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h
-> > index 3624abfd22d1..9d589c28f40f 100644
-> > --- a/drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h
-> > +++ b/drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h
-> > @@ -73,7 +73,7 @@ struct guc_debug_capture_list_header {
-> >  
-> >  struct guc_debug_capture_list {
-> >  	struct guc_debug_capture_list_header header;
-> > -	struct guc_mmio_reg regs[0];
-> > +	struct guc_mmio_reg regs[];
-> >  } __packed;
-> >  
-> >  /**
-> > @@ -125,7 +125,7 @@ struct guc_state_capture_header_t {
-> >  
-> >  struct guc_state_capture_t {
-> >  	struct guc_state_capture_header_t header;
-> > -	struct guc_mmio_reg mmio_entries[0];
-> > +	struct guc_mmio_reg mmio_entries[];
-> >  } __packed;
-> >  
-> >  enum guc_capture_group_types {
-> > @@ -145,7 +145,7 @@ struct guc_state_capture_group_header_t {
-> >  /* this is the top level structure where an error-capture dump starts */
-> >  struct guc_state_capture_group_t {
-> >  	struct guc_state_capture_group_header_t grp_header;
-> > -	struct guc_state_capture_t capture_entries[0];
-> > +	struct guc_state_capture_t capture_entries[];
-> 
-> Please notice we are currently using sizeof(struct ...).
+On Mon, Jan 9, 2023 at 11:51 PM Vlastimil Babka <vbabka@suse.cz> wrote:
+>
+> +Cc rest of kunit from MAINTAINERS
+>
+> On 1/7/23 11:55, Geert Uytterhoeven wrote:
+> > Hi Kees,
+> >
+> > On Sat, Jan 7, 2023 at 5:02 AM Kees Cook <keescook@chromium.org> wrote:
+> >> Since the long memcpy tests may stall a system for tens of seconds
+> >> in virtualized architecture environments, split those tests off under
+> >> CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
 
-Yep; I noticed that. :)
+<snip>
 
-> Along with your proposed changes, shouldn't we also start using
-> the struct_size() which already take the flexible array into account?
+> >>
+> >> -static void init_large(struct kunit *test)
+> >> +static int init_large(struct kunit *test)
+> >>  {
+> >> +       if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
+> >> +               kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
+> >
+> > So I can't make the slower tests available for when I need them,
+> > but not run them by default?
+>
+> Indeed it seems weird to tie this to a config option without runtime override.
+>
+> > I guess that's why you made MEMCPY_SLOW_KUNIT_TEST tristate originally,
+> > to have a separate module with the slow tests?
+>
+> On the other hand I can imagine requiring a separate module for slow tests
+> would lead to more churn - IIUC there would need to be two files instead of
+> memcpy_kunit.c, possibly a duplicated boilerplate code (or another shared .c
+> file).
+>
+> So the idea is to have a generic way to mark some tests as slow and a way to
+> opt-in/opt-out for those when running the tests. Maybe KUnit folks already
+> have such mechanism or have an idea how to implement that.
 
-Not necessarily. In recent times, we don't include the struct_size
-changes in the same patch as the flex-array transformation. That's
-usually a follow-up patch.
+There is no mechanism atm, and we'd still need to figure it out so
+it'll be a while.
+So I think a patch like this makes sense in the short-term.
 
---
-Gustavo
+This is definitely something we've always thought would be useful eventually.
+See this TODO which has been there since day 1 ;)
+https://elixir.bootlin.com/linux/latest/source/lib/kunit/try-catch.c#L36
+
+It just felt like it would be premature to come up with something when
+basically all the tests up until now ran ~instantly.
+
+Throwing out some rough implementation ideas:
+I was thinking the granularity for these timeout annotations would be
+at the suite-level.
+If we go with that, then I guess the intended flow is to group slow
+tests into their own suite and mark them as such.
+
+Then maybe we'd have some runtime way of disabling/enabling "long"
+tests, like a cmdline opt.
+E.g. you'd pass `kunit.max_test_size=30` to exclude tests longer than
+30 seconds.
+
+Daniel
