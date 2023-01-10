@@ -2,160 +2,92 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779C0C54EBC
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 10:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B3DC46467
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 11:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238161AbjAJKqW (ORCPT
+        id S232301AbjAJLQJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Jan 2023 05:46:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35654 "EHLO
+        Tue, 10 Jan 2023 06:16:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237924AbjAJKqO (ORCPT
+        with ESMTP id S238357AbjAJLPd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Jan 2023 05:46:14 -0500
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2134.outbound.protection.outlook.com [40.107.117.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422D215714;
-        Tue, 10 Jan 2023 02:46:05 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=csxk6BA4lcJM0nTEGoO4eeMGHDOiD56SmI4ePEJnspoZVCUOty0+IPs83GZ4tQxvU5x5Aq6CqLMv+Pi3lcR75/TLh25RbZdEWt+nBE1KvCgnN5Vu3W7alkQRs6JpNaVOn7UnCr6pkUudwoNAmdNQ/0sWqELLRFliAA99Kf1yj/523+EyGzbQe8nqJj/ZfkcO7K4ERKDBbmjCsXy7nM0KfhJVtC1NELp+8hlc798sUdzbMackQDG5nx7NIt8Sw6d6sPx8IQZKO/5pCEZtO4w24R6kOnosZxar1+Q91PnxJbrMI+cLijT74zqemdBKV2fFtDG7SPNnKbiGCXtKqxCQmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WemXPSDzP1uvfDalct+Neudc+HETSHmEb/HMgu7kVN0=;
- b=dCGZTIXwyQ/TnxPG5S4PQT/Wkn8Zzavjyi7LxWUTZ+1W3Z4RT0de4SijC6soMI6kMbOHcU4K8+yanUlEEhVpVzT4OiGIeOJhChZaI5KvK+6LqOUAwS3R6kSvi/iPe24OiOW/5BynLKFpD/o02HIZjswv/zY0iyrBPQ0hPsUFWx7pVtA0DfoGkXcM5McqyM2dMHryj2WlJgIuOA/1deMZNZtfD1+jUhaCjFAvF/e/+j2rdt7AekT2ZXFC8tAxzHddHrL/DyRRBkG14/8OyUGWfxo9zH9+1H+QqF2AHPXKd3vuqxw8LZgr6Yd3DCYW4VMfK79eiHkifHR/64wPiyWcIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
- header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WemXPSDzP1uvfDalct+Neudc+HETSHmEb/HMgu7kVN0=;
- b=Bttu2uRkLwrwB0vHdCNjIuFY34z45VKIHcLOmAuNROAXRwrQqpFnemjL0dG3mwq5V8PLqmzYf7oS2WxMe4prTFmTjFy1xcZwd6QRqlG6LCqf+t/r7Gn2arQmHL3o80xIeKt2Br72EJXS7jai0TjjFdrgl8gwT0Kvsd51QSc2WPoDbH8ouivgW8Ea2LE1rXYI/YqdTx/sQqma+4mBRkGFomaM9cuscNtsEcLfGw1HA2GLuc9tuyiX1o+XBeW98zBQTF/mDkVuZ+5dYOiWg/R+sGDNPF+7e7+MTXtdoOUkECnOPm6twLlD7a+QgWdoHuG4fsFrhxAtBE3dBx0QlbZ4NA==
-Received: from TY2PR06MB3213.apcprd06.prod.outlook.com (2603:1096:404:97::16)
- by SI2PR06MB4122.apcprd06.prod.outlook.com (2603:1096:4:fc::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6002.11; Tue, 10 Jan 2023 10:46:03 +0000
-Received: from TY2PR06MB3213.apcprd06.prod.outlook.com
- ([fe80::abee:6367:ef03:e60b]) by TY2PR06MB3213.apcprd06.prod.outlook.com
- ([fe80::abee:6367:ef03:e60b%7]) with mapi id 15.20.6002.011; Tue, 10 Jan 2023
- 10:46:03 +0000
-From:   Neal Liu <neal_liu@aspeedtech.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-CC:     "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH][next] crypto: aspeed - Replace zero-length array with
- flexible-array member
-Thread-Topic: [PATCH][next] crypto: aspeed - Replace zero-length array with
- flexible-array member
-Thread-Index: AQHZJJRaDVnvok26Y0eyz/Y/HvnX1K6XeAsw
-Date:   Tue, 10 Jan 2023 10:46:03 +0000
-Message-ID: <TY2PR06MB321351BBEA501A7BACC9802C80FF9@TY2PR06MB3213.apcprd06.prod.outlook.com>
-References: <Y7zBxbEAvcEEJRie@work>
-In-Reply-To: <Y7zBxbEAvcEEJRie@work>
-Accept-Language: en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aspeedtech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY2PR06MB3213:EE_|SI2PR06MB4122:EE_
-x-ms-office365-filtering-correlation-id: e24a1b5d-f759-4404-208f-08daf2f7de97
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Je0QQb1UPdWaXJkFeTBHEYOV3F4QAJyDPZrxpqx/W90cSs8QjgXQKxYf+uGbjsxnNpTxpIwLCDA7pHYD9JQQUI63a8r/tBh5nfz3efC6OWXkSVle35Rf6bVGzSZHmR4BpYnAYV2bL4QYxh7nut+NsVkq51Wb904T7mpOGj5SIqf298dUgxajaRUp7qcLwL6MguZEw6DeuzEsIv3Yy46gsPyiaBxrAVzGlfoEtBqMPMfqVmeHIf/wfVmlLRbzhoSGXfCmUmB9q30gCZJ14UQpd/M4cibj4PFYCBRQurRKvMqtpOyfVV30YAcyWHUquC/jWkSw7uxKTP4CXFbIu17Fl3zt97o0YWE7BGTmYK8OA/m10c7AwZV7JCfJZNaJAZ904eSbe65Spz3bBVuHCIxoJJtq6X15AOYIPRnODyE4ODg/87nHQQMkmSUIViLyk8J4VJzbCkdfnPWGtC05mw6sDXM8mfPvH2/H36RE5LvBUSbv53w9Pe8mPGdcnYgtPZaxSqLfaJWM8oYwdspCdFtj+CKgeXxI7l68LjrONAkkVZsfh14aKTAQQwmG0ub0n0NasHNT9r81EgY2WPj9hguS2taHOBBchQ6Rta1bU4OtTwlF2Hk2viAGypA+VU6I6h8aF5hFhhP4a82CPGpP39NEEtZr1JwPryRGBoPpGczSNeLzyCZKItv2f/iUOfHjXaOW4TZ3f66OU/9v39/CQT6bMSityFAJhHAny9Syeju8uIM=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR06MB3213.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(136003)(396003)(366004)(39850400004)(346002)(451199015)(38100700002)(122000001)(33656002)(83380400001)(38070700005)(86362001)(66946007)(41300700001)(8676002)(76116006)(66446008)(66476007)(64756008)(4326008)(66556008)(110136005)(54906003)(55016003)(8936002)(2906002)(5660300002)(316002)(7416002)(52536014)(9686003)(966005)(26005)(186003)(6506007)(71200400001)(7696005)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?1JLTJ4oOpSgfGSc5cyDqGENUk5UvTYXB3V3aBrojkX0h8fqujF8SWfUcRG10?=
- =?us-ascii?Q?75zZhjoOpKsTEYd9Fy+aNPTASKeXlJVIirEGtOcJ038UAde7xe5zP1h3niUQ?=
- =?us-ascii?Q?hwnpj+KV/iyvaoanhIH18VcPZclbdSg6YtKIvM+yqLNYPoBpx6f+lS8pfkeh?=
- =?us-ascii?Q?gU7l0jVMWNk1l97VS8E0uxuINab7AieFk1C4Ks7T4YTRvz1WYvtDZ+kMqQ+s?=
- =?us-ascii?Q?zfMG5m4e/pvc0SwED9aKxXegnjIWydzfVNmagZOZ+iXhmOk/0lGreHVQuB3A?=
- =?us-ascii?Q?gfL4AZv7A37+nPGZ6d9uoUrecyufjbUhzXjZqGCEq4wBRlSX402DrPIwaMCw?=
- =?us-ascii?Q?961zhCHCFUfXhS6icZJl8KfCMgSH+n6DWQr48Dtqk+sGPi9Y0VyrZW2gRS1W?=
- =?us-ascii?Q?jfkVjUxl5Aq8zK/59eFW53geQlPJzRL0dWXBfAmegghoJ+c5SWH8lFPYwuAf?=
- =?us-ascii?Q?U/8FYucu2LKRgMc7iaBadE1CB582lrBPuli2wELBQWACK290BXMm3ZUZPaTH?=
- =?us-ascii?Q?VtEiWarfEg/fsEFWwc0ySNbYM7cSuEJodR07csY79TV7AOr1ZS/ORsxLUJWB?=
- =?us-ascii?Q?Hb1638HhxhOpBwPXV74mHcPkmz0T2X0EKAPWa5czu0wk5Xc16ZGOEYdtfIKS?=
- =?us-ascii?Q?vAlH/Y2Uuu6yAzc3pBfCfW4qV8ZEnVo/rUy1sHGmGuv/HIRMBNe6qvcua34m?=
- =?us-ascii?Q?GJNb0Rx50PljY8JCdMJP1QZTaYfnr9uaGlRn/uEkp6RUxm3P7859KRo8hi6z?=
- =?us-ascii?Q?UrBAJbJ95afOn2SDtfjtw/22Y/wxd+iVxdCffI+cseN/CV2T35ejZoys+8bz?=
- =?us-ascii?Q?wrzyt2ucZqyINli0lpY7vhc1j+A/N89SjgHSmPwIfk6XJcumsUE/5zNjuEQL?=
- =?us-ascii?Q?7EjPO3Lnu+Io+LV4xnoP9RcHifBlyZBlm5j8D1obYafc/JZxjEr20vSQu95z?=
- =?us-ascii?Q?9gYXPerdWsv0ZurNPGzWsJkwI5wfha2PH1WYOPmoOUW/IAL4wh7GyhrNNYHw?=
- =?us-ascii?Q?5ELy5mYcwFjWgJPj6DwHctK3MA17Iln7VHIykxz+YCW47H3dCrSfFMn3tFgU?=
- =?us-ascii?Q?6NZB3ooV98xbaOQySjfl9ZgZ4ogqywooD0yhWOCOZNmD5m1SwAdPmUNPsCxV?=
- =?us-ascii?Q?jjFXTmtQJ4Af15b6vsPgLZRe7RknA1jCRJ9zLoNIodLeqjvNjNXBEEaVQUAX?=
- =?us-ascii?Q?BILDE1nHFz/rNUynKsLBU90osbXqteRnlE6wp0wYpU+tVrQQxL6SWq7YQrNJ?=
- =?us-ascii?Q?6Zh2q3j7oB63udJYW16WRefnjI3fpUiKv9AoxbYJyBrFWVZaZbQw2LClyck3?=
- =?us-ascii?Q?Gx2MZulxSpM2hSDWBnnFf/TiJbUKoWawsIH7h3cH+XJ/8F/uOrHns8mwixvz?=
- =?us-ascii?Q?3wYoxNkSxUEQr37R+o2AWdJQdEIFkRSG+889iDLIs0TbI/IVv740lG6kG8cg?=
- =?us-ascii?Q?ChLHxMgP2nIEag1META7GLsmwzt9xNcvqev7Hm71nPvPHj7oI6YaanhYJnDJ?=
- =?us-ascii?Q?/iHb5WTedgYAOt0TYqP4k0cgJieQ0jTTPToivGS9Hp81+DGn5Nw7xT17rXDv?=
- =?us-ascii?Q?tTrw6QULaqcQ09+ZGHb468dlXDAZS6epvy9QlTJR?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 10 Jan 2023 06:15:33 -0500
+Received: from out30-1.freemail.mail.aliyun.com (out30-1.freemail.mail.aliyun.com [115.124.30.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 773AF3F47F;
+        Tue, 10 Jan 2023 03:15:20 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=chengyou@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0VZJ71lT_1673349316;
+Received: from 30.221.98.170(mailfrom:chengyou@linux.alibaba.com fp:SMTPD_---0VZJ71lT_1673349316)
+          by smtp.aliyun-inc.com;
+          Tue, 10 Jan 2023 19:15:17 +0800
+Message-ID: <98478125-cdd7-69f2-69b6-74a7f1dd7783@linux.alibaba.com>
+Date:   Tue, 10 Jan 2023 19:15:15 +0800
 MIME-Version: 1.0
-X-OriginatorOrg: aspeedtech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR06MB3213.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e24a1b5d-f759-4404-208f-08daf2f7de97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2023 10:46:03.1480
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 74LZMJPJgUCN36thYG4OMSfD5wFD/dA2VqxZUzOFkxI4Jl70jmFXSoVFpPK+xLmQlN31HissRwCjugFcKn1O2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB4122
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+From:   Cheng Xu <chengyou@linux.alibaba.com>
+Subject: Re: [PATCH][next] RDMA/erdma: Replace zero-length arrays with
+ flexible-array members
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kai Shen <kaishen@linux.alibaba.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <Y7zCBqwC1LtabRJ9@work>
+Content-Language: en-US
+In-Reply-To: <Y7zCBqwC1LtabRJ9@work>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> Zero-length arrays are deprecated[1] and we are moving towards adopting
-> C99 flexible-array members instead. So, replace zero-length array declara=
-tion
-> in struct aspeed_sham_ctx with flex-array member.
->=20
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routine=
-s
-> on memcpy() and help us make progress towards globally enabling
-> -fstrict-flex-arrays=3D3 [2].
->=20
-> Link:
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-lengt
-> h-and-one-element-arrays [1]
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html
-> [2]
+
+
+On 1/10/23 9:40 AM, Gustavo A. R. Silva wrote:
+> Zero-length arrays are deprecated[1] and we are moving towards
+> adopting C99 flexible-array members instead. So, replace zero-length
+> arrays, in a couple of structures, with flex-array members.
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [2].
+> 
+> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
 > Link: https://github.com/KSPP/linux/issues/78
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  drivers/crypto/aspeed/aspeed-hace.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/crypto/aspeed/aspeed-hace.h
-> b/drivers/crypto/aspeed/aspeed-hace.h
-> index f2cde23b56ae..05d0a15d546d 100644
-> --- a/drivers/crypto/aspeed/aspeed-hace.h
-> +++ b/drivers/crypto/aspeed/aspeed-hace.h
-> @@ -183,7 +183,7 @@ struct aspeed_sham_ctx {
->  	struct aspeed_hace_dev		*hace_dev;
->  	unsigned long			flags;	/* hmac flag */
->=20
-> -	struct aspeed_sha_hmac_ctx	base[0];
-> +	struct aspeed_sha_hmac_ctx	base[];
+>  drivers/infiniband/hw/erdma/erdma_hw.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+
+Acked-by: Cheng Xu <chengyou@linux.alibaba.com>
+
+Thanks very much,
+Cheng Xu
+
+
+> diff --git a/drivers/infiniband/hw/erdma/erdma_hw.h b/drivers/infiniband/hw/erdma/erdma_hw.h
+> index ab371fec610c..4c38d99c73f1 100644
+> --- a/drivers/infiniband/hw/erdma/erdma_hw.h
+> +++ b/drivers/infiniband/hw/erdma/erdma_hw.h
+> @@ -397,7 +397,7 @@ struct erdma_write_sqe {
+>  
+>  	__le32 rsvd;
+>  
+> -	struct erdma_sge sgl[0];
+> +	struct erdma_sge sgl[];
 >  };
->=20
->  struct aspeed_sham_reqctx {
-> --
-> 2.34.1
-
-Reviewed-by: Neal Liu <neal_liu@aspeedtech.com>
-
+>  
+>  struct erdma_send_sqe {
+> @@ -408,7 +408,7 @@ struct erdma_send_sqe {
+>  	};
+>  
+>  	__le32 length;
+> -	struct erdma_sge sgl[0];
+> +	struct erdma_sge sgl[];
+>  };
+>  
+>  struct erdma_readreq_sqe {
