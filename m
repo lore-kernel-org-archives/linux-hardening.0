@@ -2,103 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA239C46467
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 16:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CC0C54EBE
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 16:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234367AbjAJQcU (ORCPT
+        id S233733AbjAJQo5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Jan 2023 11:32:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49144 "EHLO
+        Tue, 10 Jan 2023 11:44:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238890AbjAJQcK (ORCPT
+        with ESMTP id S234356AbjAJQos (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Jan 2023 11:32:10 -0500
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A99714B8
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 08:32:09 -0800 (PST)
-Received: by mail-pl1-x643.google.com with SMTP id y1so13759621plb.2
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 08:32:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RZf8KE2jGADdnneGpH5rMIEd+76rQYqRcfU6WstpDcg=;
-        b=6NAHB2GW7EvN93wl5qF4QCuvm+yzT2rAkU6qb4Imc0cJPZvPMO+630AKFbiemUm/Lg
-         O0mPXC7DLCHS2JPswsGg1B9Nu21/LQsNa1J9PV5oYp5BDiui6g9J5lk9Ye+8kvMn0Llu
-         Ul4/SD2BjRVgTyJOFTegVtqnj+vUmOidxDfManycD5hPV15K3xXExyoZwqgxfvbmRlDJ
-         NZIDkUY9qHe2Yz+7V6OnoXnMnj7TDi+a1BAzwVpiy9QNvBkHYVguN0w0Fxr2d2PGvPUa
-         ISJwlDsbWtL6yeF2TnAAYsY0Goy00knhGChqXoIDthjrMBp65ec/DSXDa1PkU7mNogRP
-         n5EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RZf8KE2jGADdnneGpH5rMIEd+76rQYqRcfU6WstpDcg=;
-        b=xYaT0qgWQl2EpaQ7JgF330UKuGpqFaWBZrxV2kChnK+saXExO9FHQy57//PQEfL8Ti
-         2LKKc3p27Df3SVkPlGULVLz/bYD/oHi1g1JrUG+qBjYZgLLT0VmUlvoByGQeEaUYLmRx
-         h4fM1726bMGjLCu69LU/D3oqWudTV5AhtVuG7e53t6X8XqwgqJOGfIBqX5AO8hMu3+ax
-         dzpwRpY3BaBjMj7UDQHXus/6Tb4Mlj9gFEZkYGzIBo2Q5M3MIq5RAz9MBrcl1I8bVZZB
-         uW9iL5Lp8FfAjb+L4B1DM/AMGSCDHTV3B/Z04KLy99bNGQWffUUZnT/TbwU2ohtbMPMy
-         EDtA==
-X-Gm-Message-State: AFqh2kryJjnd8a/bwdmiNrVeHSGbvwAixPOrqZgN3CQlzxaWmVSAZJer
-        8q9u4vuujnUwYVEFu6CY5XRSZA==
-X-Google-Smtp-Source: AMrXdXt2CQ1h4vArV4X6bU2e/QV8Xwnv1ErGXRGt/sziNANSyWOFaFG3tzEDkhE5PE35+Dv+i5rn1w==
-X-Received: by 2002:a17:903:234b:b0:192:9f2d:d6b9 with SMTP id c11-20020a170903234b00b001929f2dd6b9mr59190932plh.9.1673368328762;
-        Tue, 10 Jan 2023 08:32:08 -0800 (PST)
-Received: from localhost (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id u6-20020a170902e80600b0019251e959b1sm8272787plg.262.2023.01.10.08.32.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jan 2023 08:32:08 -0800 (PST)
-Date:   Tue, 10 Jan 2023 17:32:05 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Tue, 10 Jan 2023 11:44:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E575A8BA;
+        Tue, 10 Jan 2023 08:44:47 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0BC15617E5;
+        Tue, 10 Jan 2023 16:44:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B925C433D2;
+        Tue, 10 Jan 2023 16:44:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673369086;
+        bh=5pn8lNPzgrol7P8MBSuD7FbH2Rhpic8YeqNAugxASls=;
+        h=Date:From:To:Cc:Subject:From;
+        b=HI7JpEwkuf+RJ2R7d+YsfTHRQBGCakNFWm+7b1d30HrcAcAh1p9QQmP4YXO1RXiml
+         jR/gZjcdi/S9lCp1mHKWz9UF2qvAVC4MSw7eNLX+BkvbyA1wcr1atcLXBzCwcIoORY
+         6h9q2+C44XQ3YaGjgfU4qo9TQZCDFd4dXTELHiQ6v/cGxAJsqpdaidEv5Cn8CyHjiJ
+         I9WGQy4F4ioTx1C+EhjYsc706rSMm4+I94FDxs0q/DNlBDhJSKef9pmowT1f/jCRSb
+         pqCoJAx0aXoNfcXkf0XuF7ax9lsSySCsjp9NXhzt1zMB6KyuLS05r49mUYB5IL/PXu
+         wcTeCnt2+yo/A==
+Date:   Tue, 10 Jan 2023 10:44:53 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net/i40e: Replace 0-length array with flexible array
-Message-ID: <Y72TBSH/QnJhnYIx@nanopsycho>
-References: <20230105234557.never.799-kees@kernel.org>
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] drm/i915/guc: Replace zero-length arrays with
+ flexible-array members
+Message-ID: <Y72WBTUmh9r1lvKN@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230105234557.never.799-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fri, Jan 06, 2023 at 12:46:01AM CET, keescook@chromium.org wrote:
->Zero-length arrays are deprecated[1]. Replace struct i40e_lump_tracking's
->"list" 0-length array with a flexible array. Detected with GCC 13,
->using -fstrict-flex-arrays=3:
->
->In function 'i40e_put_lump',
->    inlined from 'i40e_clear_interrupt_scheme' at drivers/net/ethernet/intel/i40e/i40e_main.c:5145:2:
->drivers/net/ethernet/intel/i40e/i40e_main.c:278:27: warning: array subscript <unknown> is outside array bounds of 'u16[0]' {aka 'short unsigned int[]'} [-Warray-bounds=]
->  278 |                 pile->list[i] = 0;
->      |                 ~~~~~~~~~~^~~
->drivers/net/ethernet/intel/i40e/i40e.h: In function 'i40e_clear_interrupt_scheme':
->drivers/net/ethernet/intel/i40e/i40e.h:179:13: note: while referencing 'list'
->  179 |         u16 list[0];
->      |             ^~~~
->
->[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
->
->Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
->Cc: Tony Nguyen <anthony.l.nguyen@intel.com>
->Cc: "David S. Miller" <davem@davemloft.net>
->Cc: Eric Dumazet <edumazet@google.com>
->Cc: Jakub Kicinski <kuba@kernel.org>
->Cc: Paolo Abeni <pabeni@redhat.com>
->Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
->Cc: intel-wired-lan@lists.osuosl.org
->Cc: netdev@vger.kernel.org
->Signed-off-by: Kees Cook <keescook@chromium.org>
+Zero-length arrays are deprecated[1] and we are moving towards
+adopting C99 flexible-array members, instead. So, replace zero-length
+arrays in a couple of structures (three, actually) with flex-array
+members.
 
-Reviewed-by: Jiri Pirko <jiri@nvidia.com>
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [2].
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
+Link: https://github.com/KSPP/linux/issues/78
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h b/drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h
+index 3624abfd22d1..9d589c28f40f 100644
+--- a/drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h
++++ b/drivers/gpu/drm/i915/gt/uc/guc_capture_fwif.h
+@@ -73,7 +73,7 @@ struct guc_debug_capture_list_header {
+ 
+ struct guc_debug_capture_list {
+ 	struct guc_debug_capture_list_header header;
+-	struct guc_mmio_reg regs[0];
++	struct guc_mmio_reg regs[];
+ } __packed;
+ 
+ /**
+@@ -125,7 +125,7 @@ struct guc_state_capture_header_t {
+ 
+ struct guc_state_capture_t {
+ 	struct guc_state_capture_header_t header;
+-	struct guc_mmio_reg mmio_entries[0];
++	struct guc_mmio_reg mmio_entries[];
+ } __packed;
+ 
+ enum guc_capture_group_types {
+@@ -145,7 +145,7 @@ struct guc_state_capture_group_header_t {
+ /* this is the top level structure where an error-capture dump starts */
+ struct guc_state_capture_group_t {
+ 	struct guc_state_capture_group_header_t grp_header;
+-	struct guc_state_capture_t capture_entries[0];
++	struct guc_state_capture_t capture_entries[];
+ } __packed;
+ 
+ /**
+-- 
+2.34.1
+
