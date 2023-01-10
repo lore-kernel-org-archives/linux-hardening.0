@@ -2,85 +2,174 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF54BC54EBD
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 01:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2351EC46467
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 07:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233656AbjAJBko (ORCPT
+        id S237285AbjAJHvL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Jan 2023 20:40:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
+        Tue, 10 Jan 2023 02:51:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233142AbjAJBke (ORCPT
+        with ESMTP id S237209AbjAJHvJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Jan 2023 20:40:34 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C62200E;
-        Mon,  9 Jan 2023 17:40:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 10 Jan 2023 02:51:09 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FB7CFD08;
+        Mon,  9 Jan 2023 23:51:06 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8EA02B810C3;
-        Tue, 10 Jan 2023 01:40:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38BFAC433D2;
-        Tue, 10 Jan 2023 01:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673314831;
-        bh=ABYz4ZvvBdMvRbwp1IznTPG8KGEBT7V9tcgJKTQXuro=;
-        h=Date:From:To:Cc:Subject:From;
-        b=W3mYbBp9vkdjbVHF2zITSzwHSTgb2Sl9K6C43HXVbbn33c8I19QHvpySmLuybdyQC
-         PNYA4wIpQ3paQHUK5SVTtZTcPRiN7mPxo8QRHVLHftxmpjeEF3XHbCGmtn9tjK1uMe
-         v9kKOf+H1cuM6SUVkQFaffdHBut/81KhMo4Z2vuoxgXi7qrCwBQ9NkBDE1wbkszM3I
-         AND/wO7BTJ7/7LnehbHLx6kZy3gbJHdIc2+u28Qs1Ka8q0oqiHOFUg82JFBdeOOJwG
-         hSwz7Wu6vgUB4CCeMIQnUJwWqXkTr9XJPJs3dxbInq330EaCMRCfqd48gK/5OkcLqI
-         kMcMY3rXesqPA==
-Date:   Mon, 9 Jan 2023 19:40:38 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] x86/fpu: Replace zero-length array with flexible-array
- member
-Message-ID: <Y7zCFpa2XNs/o9YQ@work>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 226B94E025;
+        Tue, 10 Jan 2023 07:51:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1673337062; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/cbvjj95MLi+ox83pnz3idNl14zzkT1olk9CfjRT+DY=;
+        b=XZhwQMFPmTqgjRcddpgf6wH9FL2iLJk3EQddEFO0hxzi7/cNyZBAC71jFZBZ4j5WnNjJz9
+        mFBWwjTqkta1VTwFtx8AeQ76SwZ2CrX0ORDULJMX1x5neEU12e5dyn4m7LwMR975bE+qGW
+        ini1e1HcTFf7OnWoY/r3BDMNJwhswvs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1673337062;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/cbvjj95MLi+ox83pnz3idNl14zzkT1olk9CfjRT+DY=;
+        b=3BS8mRyES+f2UwYlXmmxOoiuLcIfxpOpHW/kjQQjqzpD1HYTDP2Rn11q7xX/AqmM5dfZ6j
+        BkHp7QXcOnFEoADw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CDC711358A;
+        Tue, 10 Jan 2023 07:51:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id kat+MeUYvWM0fAAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Tue, 10 Jan 2023 07:51:01 +0000
+Message-ID: <ae952aa5-f113-8786-6fe4-60e5fa0ced2b@suse.cz>
+Date:   Tue, 10 Jan 2023 08:51:01 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] kunit: memcpy: Split slow memcpy tests into
+ MEMCPY_SLOW_KUNIT_TEST
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org, David Gow <davidgow@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org,
+        Brendan Higgins <brendanhiggins@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
+References: <20230107040203.never.112-kees@kernel.org>
+ <CAMuHMdURtDNzzaoBM4DpEHKiDsgnA-7Yc9QO=5gsmwz9PHWK5w@mail.gmail.com>
+Content-Language: en-US
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAMuHMdURtDNzzaoBM4DpEHKiDsgnA-7Yc9QO=5gsmwz9PHWK5w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated[1] and we are moving towards
-adopting C99 flexible-array members instead. So, replace zero-length
-array declaration in struct xregs_state with flex-array member.
++Cc rest of kunit from MAINTAINERS
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [2].
+On 1/7/23 11:55, Geert Uytterhoeven wrote:
+> Hi Kees,
+> 
+> On Sat, Jan 7, 2023 at 5:02 AM Kees Cook <keescook@chromium.org> wrote:
+>> Since the long memcpy tests may stall a system for tens of seconds
+>> in virtualized architecture environments, split those tests off under
+>> CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
+>>
+>> Reported-by: Guenter Roeck <linux@roeck-us.net>
+>> Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Nathan Chancellor <nathan@kernel.org>
+>> Cc: linux-hardening@vger.kernel.org
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Thanks for your patch!
+> 
+>> --- a/lib/Kconfig.debug
+>> +++ b/lib/Kconfig.debug
+>> @@ -2621,6 +2621,15 @@ config MEMCPY_KUNIT_TEST
+>>
+>>           If unsure, say N.
+>>
+>> +config MEMCPY_SLOW_KUNIT_TEST
+>> +       tristate "Include exhaustive memcpy tests" if !KUNIT_ALL_TESTS
+> 
+> Why the tristate?
+> 
+>> +       depends on MEMCPY_KUNIT_TEST
+>> +       default KUNIT_ALL_TESTS
+>> +       help
+>> +         Some memcpy tests are quite exhaustive in checking for overlaps
+>> +         and bit ranges. These can be very slow, so they are split out
+>> +         as a separate config.
+>> +
+>>  config IS_SIGNED_TYPE_KUNIT_TEST
+>>         tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
+>>         depends on KUNIT
+>> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+>> index 89128551448d..cc1f36335a9b 100644
+>> --- a/lib/memcpy_kunit.c
+>> +++ b/lib/memcpy_kunit.c
+>> @@ -307,8 +307,12 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
+>>         }
+>>  }
+>>
+>> -static void init_large(struct kunit *test)
+>> +static int init_large(struct kunit *test)
+>>  {
+>> +       if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
+>> +               kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
+> 
+> So I can't make the slower tests available for when I need them,
+> but not run them by default?
 
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
-Link: https://github.com/KSPP/linux/issues/78
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- arch/x86/include/asm/fpu/types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Indeed it seems weird to tie this to a config option without runtime override.
 
-diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
-index eb7cd1139d97..7f6d858ff47a 100644
---- a/arch/x86/include/asm/fpu/types.h
-+++ b/arch/x86/include/asm/fpu/types.h
-@@ -321,7 +321,7 @@ struct xstate_header {
- struct xregs_state {
- 	struct fxregs_state		i387;
- 	struct xstate_header		header;
--	u8				extended_state_area[0];
-+	u8				extended_state_area[];
- } __attribute__ ((packed, aligned (64)));
- 
- /*
--- 
-2.34.1
+> I guess that's why you made MEMCPY_SLOW_KUNIT_TEST tristate originally,
+> to have a separate module with the slow tests?
+
+On the other hand I can imagine requiring a separate module for slow tests
+would lead to more churn - IIUC there would need to be two files instead of
+memcpy_kunit.c, possibly a duplicated boilerplate code (or another shared .c
+file).
+
+So the idea is to have a generic way to mark some tests as slow and a way to
+opt-in/opt-out for those when running the tests. Maybe KUnit folks already
+have such mechanism or have an idea how to implement that.
+
+>> +               return -EBUSY;
+>> +       }
+>>
+>>         /* Get many bit patterns. */
+>>         get_random_bytes(large_src, ARRAY_SIZE(large_src));
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
