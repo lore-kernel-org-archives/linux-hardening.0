@@ -2,88 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B709DC46467
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 21:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B719C54EBC
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 22:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231481AbjAJV67 (ORCPT
+        id S235720AbjAJWw1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Jan 2023 16:58:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55994 "EHLO
+        Tue, 10 Jan 2023 17:52:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233314AbjAJV61 (ORCPT
+        with ESMTP id S236083AbjAJWwB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Jan 2023 16:58:27 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D3EE5E66E;
-        Tue, 10 Jan 2023 13:58:25 -0800 (PST)
+        Tue, 10 Jan 2023 17:52:01 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F08671A2;
+        Tue, 10 Jan 2023 14:50:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CD8C9B819B4;
-        Tue, 10 Jan 2023 21:58:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D61AC433D2;
-        Tue, 10 Jan 2023 21:58:22 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 84108B81A00;
+        Tue, 10 Jan 2023 22:50:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1B247C433F0;
+        Tue, 10 Jan 2023 22:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673387902;
-        bh=M6PirtylDWfnwWQmbjPEjODf22EUW9BcFhvH7EqNPYI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sU9s4by+WCKy6xxqQ+Aiitpj7ZvPzszpLBJf5jHuPpEujM1ElylI5DbW1fiKfERil
-         GfvNgssm59seDKEOBa8gZAWyyGSTddXmEH82vECUpHhwldJDu5Y6DR9FpOXUQeGpkg
-         3FcUsj8hpSArzsGYOO2orIGYWamVRoNzFetbDo5yYwP/KWz3RzZ9YCmsQxFWdjt09c
-         sbJtTXXTZQmDyViTKMTQ/39WBz5IHPYJvaWmnj4cIYavt9jVUABfHMPI8naobJRc68
-         39SMg5DjPcgoA3PQVY8buOuktbE8bH2QMDpG9w6nkQkKcXNZe5UwpQJVHipAPWhV/O
-         aite6/RGqReWA==
-Date:   Tue, 10 Jan 2023 13:58:21 -0800
-From:   Saeed Mahameed <saeed@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net/mlx5e: Replace 0-length array with flexible array
-Message-ID: <Y73ffWiXFar9xNQM@x130>
-References: <20230105223642.never.980-kees@kernel.org>
+        s=k20201202; t=1673391016;
+        bh=DmMuyWhMTg0J1NdZwCFfQoKhQYQFxAiKWqSxSoll1x0=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=uRZ3G+h1AaNdw4ODj6yv86kUWrOC2ujxKksv3KEByAwCzpy6GpXW3znPp07VTUDXi
+         iSnG53XmoTe2XiDdw7WxbfGcpMxrrLZVFRDaIlGL6fjnf72Ek+e/IaIJaGqAZAsWKW
+         0HAvc+jf/MwK9gLd+lb2ehPiV6E3/FRNB0M1g8wefCnq7WoRJ+sXMklD8EiZLef8zx
+         8KslucT4696OXef7lrC2DIA81MWpPq5nzBGQMJfg4P+I2RofPr/M2xhiBa664GXpCo
+         HbXdjhsHdZpZmBx6v2Qsh+6WubYVga2Q/wQNzQbLIEHEiKaOhyt/pX9AlKcQ4uVSvt
+         fldXHbtt/zsVQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 00533E21EE8;
+        Tue, 10 Jan 2023 22:50:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230105223642.never.980-kees@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] bpf: Replace 0-length arrays with flexible arrays
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167339101599.28902.5327791124067545987.git-patchwork-notify@kernel.org>
+Date:   Tue, 10 Jan 2023 22:50:15 +0000
+References: <20230105192646.never.154-kees@kernel.org>
+In-Reply-To: <20230105192646.never.154-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, gustavoars@kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 05 Jan 14:36, Kees Cook wrote:
->Zero-length arrays are deprecated[1]. Replace struct mlx5e_rx_wqe_cyc's
->"data" 0-length array with a flexible array. Detected with GCC 13,
->using -fstrict-flex-arrays=3:
->
->drivers/net/ethernet/mellanox/mlx5/core/en_main.c: In function 'mlx5e_alloc_rq':
->drivers/net/ethernet/mellanox/mlx5/core/en_main.c:827:42: warning: array subscript f is outside array bounds of 'struct mlx5_wqe_data_seg[0]' [-Warray-bounds=]
->  827 |                                 wqe->data[f].byte_count = 0;
->      |                                 ~~~~~~~~~^~~
->In file included from drivers/net/ethernet/mellanox/mlx5/core/en/tc_ct.h:11,
->                 from drivers/net/ethernet/mellanox/mlx5/core/eswitch.h:48,
->                 from drivers/net/ethernet/mellanox/mlx5/core/en_main.c:42:
->drivers/net/ethernet/mellanox/mlx5/core/en.h:250:39: note: while referencing 'data'
->  250 |         struct mlx5_wqe_data_seg      data[0];
->      |                                       ^~~~
->
->[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
->
->Cc: Saeed Mahameed <saeedm@nvidia.com>
->Cc: Leon Romanovsky <leon@kernel.org>
->Cc: "David S. Miller" <davem@davemloft.net>
->Cc: Eric Dumazet <edumazet@google.com>
->Cc: Jakub Kicinski <kuba@kernel.org>
->Cc: Paolo Abeni <pabeni@redhat.com>
->Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
->Cc: netdev@vger.kernel.org
->Cc: linux-rdma@vger.kernel.org
->Signed-off-by: Kees Cook <keescook@chromium.org>
+Hello:
 
-Applied to net-next-mlx5, Thanks!
+This patch was applied to bpf/bpf-next.git (master)
+by Daniel Borkmann <daniel@iogearbox.net>:
+
+On Thu,  5 Jan 2023 11:26:47 -0800 you wrote:
+> Zero-length arrays are deprecated[1]. Replace struct bpf_array's
+> union of 0-length arrays with flexible arrays. (How are the
+> sizes of these arrays verified?) Detected with GCC 13, using
+> -fstrict-flex-arrays=3:
+> 
+> arch/x86/net/bpf_jit_comp.c: In function 'bpf_tail_call_direct_fixup':
+> arch/x86/net/bpf_jit_comp.c:606:37: warning: array subscript <unknown> is outside array bounds of 'void *[0]' [-Warray-bounds=]
+>   606 |                 target = array->ptrs[poke->tail_call.key];
+>       |                          ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
+> In file included from include/linux/filter.h:9,
+>                  from arch/x86/net/bpf_jit_comp.c:9:
+> include/linux/bpf.h:1527:23: note: while referencing 'ptrs'
+>  1527 |                 void *ptrs[0] __aligned(8);
+>       |                       ^~~~
+> 
+> [...]
+
+Here is the summary with links:
+  - bpf: Replace 0-length arrays with flexible arrays
+    https://git.kernel.org/bpf/bpf-next/c/129d868ede1e
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
