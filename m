@@ -2,50 +2,46 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1A4C5479D
-	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 01:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC97C5479D
+	for <linux-hardening@archiver.kernel.org>; Tue, 10 Jan 2023 01:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229771AbjAJBj2 (ORCPT
+        id S230235AbjAJBjo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 9 Jan 2023 20:39:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56324 "EHLO
+        Mon, 9 Jan 2023 20:39:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230295AbjAJBj0 (ORCPT
+        with ESMTP id S229940AbjAJBjn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 9 Jan 2023 20:39:26 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EFCA1B3;
-        Mon,  9 Jan 2023 17:39:24 -0800 (PST)
+        Mon, 9 Jan 2023 20:39:43 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 779AAA1B3;
+        Mon,  9 Jan 2023 17:39:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D785614B1;
-        Tue, 10 Jan 2023 01:39:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57021C433D2;
-        Tue, 10 Jan 2023 01:39:22 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 31E45B80F4B;
+        Tue, 10 Jan 2023 01:39:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 154A1C433D2;
+        Tue, 10 Jan 2023 01:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673314763;
-        bh=PT1aoEfMxbkfDZP2tvZEeoskJ4gixNERZPq/fY0PYE8=;
+        s=k20201202; t=1673314779;
+        bh=vrLfad/dEaF4ahcbuNSigjh7IBnihHnE+uf7TW186+Y=;
         h=Date:From:To:Cc:Subject:From;
-        b=cznwhUoeV85DmTiZJkhZlq982DirYK7miUs1fVFvDe296SCK/1/QbIWcUqRlN4haE
-         xe8Xt5VDPaCrrE8xJ+/w0Dtmjo4FVkxDflfpqdo1ymVWCAQ+FeOCjXJgCdAA9nPEnw
-         PmOihzrKt41Z8jgDiHNpOyjUdB8v7exhIT34OMkY1LxlGtSz+o3tZjLMJnFMECOAiZ
-         oXhWHISfdobmhjrJnRjSRWh1I3A0RtXrQ1j5wsYOQ+rr+9BMFXbrU9CbcbXXdkJlWZ
-         e/WZptwcfdrCkWjn6zNWN3mpeaxqmDltXWcdfnKwavQ+JAr4qMJ/miVRkfczn6uj2U
-         /ZcFVZB8BCyyw==
-Date:   Mon, 9 Jan 2023 19:39:30 -0600
+        b=stbxdH54iAbI7V6ELAgCiLxBF7prOUSb0gNS9VBXx72Bh+BH0p2ddWfgCS0ibUQpN
+         kZH0y2ZrtoQaPDDTc0pvnvYmfTXzBQISAg3mOG+Q3L12HRD0/qAnkeJ2g6SKKzyERl
+         MQ8i1kqjyHjezyhf3L7hPLfD3Wl8CHkLicKLOA6N03goN9oPzLcfUUu+sRsBbjWMVW
+         yHslk5gzxvtPpyi22fOiTQR4EBf9kpsMOwEUL9iFYwkbvs5bwr9jJ6rRXJs7YKO+Br
+         4kHoP2n/akDIUnQIE3AkNobhE9TPnuJpEiSufhu4ZaAi+ajLyVhKyvwZmH3vfkJMTR
+         YZy61XPD13GBw==
+Date:   Mon, 9 Jan 2023 19:39:47 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
-        Lyude Paul <lyude@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
+To:     Oded Gabbay <ogabbay@kernel.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/nouveau/nvkm: Replace zero-length array with
- flexible-array member
-Message-ID: <Y7zB0q2pr7lEpHGs@work>
+Subject: [PATCH][next] habanalabs: Replace zero-length arrays with
+ flexible-array members
+Message-ID: <Y7zB4z5cxpFkPXKV@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -55,8 +51,7 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 Zero-length arrays are deprecated[1] and we are moving towards
 adopting C99 flexible-array members instead. So, replace zero-length
-array declaration in struct nvfw_hs_load_header_v2 with flex-array
-member.
+arrays in a couple of structures with flex-array members.
 
 This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
 routines on memcpy() and help us make progress towards globally
@@ -67,22 +62,31 @@ Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
 Link: https://github.com/KSPP/linux/issues/78
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/gpu/drm/nouveau/include/nvfw/hs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/accel/habanalabs/include/gaudi2/gaudi2_packets.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/include/nvfw/hs.h b/drivers/gpu/drm/nouveau/include/nvfw/hs.h
-index 8c4cd08a7b5f..8b58b668fc0c 100644
---- a/drivers/gpu/drm/nouveau/include/nvfw/hs.h
-+++ b/drivers/gpu/drm/nouveau/include/nvfw/hs.h
-@@ -52,7 +52,7 @@ struct nvfw_hs_load_header_v2 {
- 	struct {
- 		u32 offset;
- 		u32 size;
--	} app[0];
-+	} app[];
+diff --git a/drivers/accel/habanalabs/include/gaudi2/gaudi2_packets.h b/drivers/accel/habanalabs/include/gaudi2/gaudi2_packets.h
+index 8bf90fc18bf5..a812f8503f90 100644
+--- a/drivers/accel/habanalabs/include/gaudi2/gaudi2_packets.h
++++ b/drivers/accel/habanalabs/include/gaudi2/gaudi2_packets.h
+@@ -59,7 +59,7 @@ struct gaudi2_packet {
+ 	/* The rest of the packet data follows. Use the corresponding
+ 	 * packet_XXX struct to deference the data, based on packet type
+ 	 */
+-	u8 contents[0];
++	u8 contents[];
  };
  
- const struct nvfw_hs_load_header_v2 *nvfw_hs_load_header_v2(struct nvkm_subdev *, const void *);
+ struct packet_nop {
+@@ -80,7 +80,7 @@ struct packet_wreg32 {
+ struct packet_wreg_bulk {
+ 	__le32 size64;
+ 	__le32 ctl;
+-	__le64 values[0]; /* data starts here */
++	__le64 values[]; /* data starts here */
+ };
+ 
+ struct packet_msg_long {
 -- 
 2.34.1
 
