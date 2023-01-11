@@ -2,80 +2,78 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253C5C5479D
-	for <linux-hardening@archiver.kernel.org>; Wed, 11 Jan 2023 13:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C68ECC46467
+	for <linux-hardening@archiver.kernel.org>; Wed, 11 Jan 2023 16:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232655AbjAKNB1 (ORCPT
+        id S230375AbjAKQ1U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 11 Jan 2023 08:01:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34018 "EHLO
+        Wed, 11 Jan 2023 11:27:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234102AbjAKNBX (ORCPT
+        with ESMTP id S239562AbjAKQ0b (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 11 Jan 2023 08:01:23 -0500
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76523B5;
-        Wed, 11 Jan 2023 05:01:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=iSdHfRVpGODWmSg9nfkf0TsMG1QEJMe2zb6sGOncxrI=; b=YcIW7x4gHAzydcf6BzN/HY31zZ
-        GPZkrTBDFoJ+ool7tuMRb3vRzaXyn329CqMe/ngU25Xcc8YBKNizWwYfWqSGSWHNQBpBThvESYvBv
-        Oof47Te8j+JCPaXE5eoncGAUw4yJWTTTOb97ADI82vqoEgkMDKskNJWkvPRogS4oueIlePYHvBPCK
-        fgCtxhqKuCwepDdy39iMen1UzB0aPRyzz0h+14nJFK3BeFR73zlcyFHCTTM9XaIRkVSyq/CKNU6OA
-        WdJSoSeJYH0ap0d+pEVjO/MBnRrgCkMBBwYsXtq1OXwNQbbMjR4Y9C6iDLvbg4AirlGDl3zJkXisY
-        kVZl2u0w==;
-Received: from [191.13.20.171] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1pFaj6-005Igl-5B; Wed, 11 Jan 2023 14:01:08 +0100
-Message-ID: <217ebecf-3630-b423-ea0b-037e0943e17b@igalia.com>
-Date:   Wed, 11 Jan 2023 10:01:03 -0300
+        Wed, 11 Jan 2023 11:26:31 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61E75FAC
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Jan 2023 08:23:41 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id p24so17275860plw.11
+        for <linux-hardening@vger.kernel.org>; Wed, 11 Jan 2023 08:23:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Hf+d7wkWFUyItAMFkXKbXLc5dSp9uQ0/QqLUUKb17sM=;
+        b=ZIQ3VG2uBVfFV4Kbi0rz2FtOF6tbJEjuK5zyIrlJOS6BIsU+Rdo6SzE8cB+grgEHJO
+         ZMmOfr/i29bP0Q9KiBfC+cQpvLIfTPQTSmjFfvWD6+lCxIlnRLi56abXwq5VnwJMGlXn
+         XcNg1Dh3hSMKrqohc2wCk/iVzyIHO5IFhahW8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Hf+d7wkWFUyItAMFkXKbXLc5dSp9uQ0/QqLUUKb17sM=;
+        b=ep5haVNTNGsJiT+FzTNfrXbV0xr8uUJPXF8en/MatKWZpb8+isg+mubVhL+Ol/3lR+
+         xnNVpMB/QM4PRO2CLhHSch+OBJqCyX4DEpVuvPAK0iAi+lOeBVEuqGN6VAHRuOXk1YYV
+         XQrjBlBmLK5MortjWz2rfhDKjYwDXKvPNsSlkETVCRNH10NK9Toap/qQuGp5dBJNllgU
+         IghxgLiS8ZxEdExRMufiMbQO/1LOP80rxhd9pNxfhtwf5zkJ9J+Tva44kgMemoPjhvXE
+         PWry9XkOWD8Wbc2FgtctsZrkiIghpJLcunG3SWdYqiQJIh5r8RqZs90viHWUlofMxCVp
+         OsNA==
+X-Gm-Message-State: AFqh2kqmVSSo3e9dr0A2mYKjCJiWxGmuSJp1NxmIw5p4N1O4zTGc7Bnr
+        s4GMZVDfJh8aTzsmyMSQYFAYXvYkSSTY92Fn
+X-Google-Smtp-Source: AMrXdXsG0cC6qSbESyfDU2q3M51WpAApqA6GVPRpecyM0RlRuAjsHI2KkAzTKOB7yTRsLkHctiloZg==
+X-Received: by 2002:a17:902:e8c5:b0:192:b6ae:ecc7 with SMTP id v5-20020a170902e8c500b00192b6aeecc7mr39218802plg.34.1673454220960;
+        Wed, 11 Jan 2023 08:23:40 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b18-20020a170902d51200b00194584647fasm80920plg.158.2023.01.11.08.23.40
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jan 2023 08:23:40 -0800 (PST)
+Date:   Wed, 11 Jan 2023 08:23:39 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-hardening@vger.kernel.org
+Subject: Kernel Self-Protection Project meeting
+Message-ID: <202301110820.C6020B71EA@keescook>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] pstore/ram: Rework logic for detecting ramoops
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, keescook@chromium.org,
-        tony.luck@intel.com
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1673428065-22356-1-git-send-email-quic_mojha@quicinc.com>
-Content-Language: en-US
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <1673428065-22356-1-git-send-email-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Thanks for the patch Mukesh! I don't have a DT hardware at hand right
-now, so cannot test this one myself. I'll just provide a (really) minor
-feedback, something to address in a potential V2 or even in merge time,
-see below.
+Hi!
 
+This is rather short notice; I'll send out a reminder further in advance
+next time, but if anyone would like to join our every-2-weeks project
+video conference, please drop in:
 
-On 11/01/2023 06:07, Mukesh Ojha wrote:
-> The reserved memory region for ramoops is assumed to be at a fixed
-> and known location when read from the devicetree. This is not desirable
-> in environments where it is preferred the region to be dynamically
-> allocated at runtime, as opposed to being fixed at compile time.
-> 
-> Also, Some of the platforms might be still expecting dedicated
+	https://meet.google.com/cuu-hqcm-ggg
 
-I'd write "Also, some" instead of upper "Some".
+We'll be going over status updates and a little bit of planning for
+2023. If you're working on any security things, come tell us about it.
+:)
 
-> memory region for ramoops node where the region is known
-> beforehand and platform_get_resource() is used in that case.
-> 
-> So, Add logic to detect the start and size of the ramoops memory
+See you there!
 
-Same here, maybe "So, add".
+-Kees
 
-Really minor nits, though!
-Cheers,
-
-
-Guilherme
+-- 
+Kees Cook
