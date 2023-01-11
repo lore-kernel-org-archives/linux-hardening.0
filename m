@@ -2,157 +2,80 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34E9C46467
-	for <linux-hardening@archiver.kernel.org>; Wed, 11 Jan 2023 12:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 253C5C5479D
+	for <linux-hardening@archiver.kernel.org>; Wed, 11 Jan 2023 13:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239174AbjAKMFp (ORCPT
+        id S232655AbjAKNB1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 11 Jan 2023 07:05:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56042 "EHLO
+        Wed, 11 Jan 2023 08:01:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239286AbjAKMEc (ORCPT
+        with ESMTP id S234102AbjAKNBX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 11 Jan 2023 07:04:32 -0500
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E950A2632
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Jan 2023 04:04:13 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id v25so23131716lfe.12
-        for <linux-hardening@vger.kernel.org>; Wed, 11 Jan 2023 04:04:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2oib4YU24Hg68PTgy4DxuaT37C/z9vNFEJMvu+koqaY=;
-        b=Yy/wIOuY/mFgyZnqWknq7oufXkKfIJpeAPs84I4+i270V8tAVh5OYNivurb3d88WHK
-         uae4/ORSHaMCUQ3RCcyBZdM04wm6rZsmDtV/ya95RwGk1c5jgtG+x+IHRAGg1b6Wj6pb
-         K2NiOMA/FxKlMAWVqwLyiZWeGJGZS13iBR9GbWx86XYBFXbnAEcRn7Cl+d2QBZ9YWSo+
-         0Aw7qV86J1dEpWMr+gDeDfj+SiQG1irUeiDiTBi36ywjeW+2XPUX+In9OHhmmzJaHpkW
-         iDK0elnAnK5UQ/04iRbCjndgeJGzppkb/zvFmsbfELoNPvM44+gC7y53cSR0bgZi9eAv
-         ZhuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2oib4YU24Hg68PTgy4DxuaT37C/z9vNFEJMvu+koqaY=;
-        b=aR/T7wYZVrFOSAh7T69msyVQSyqq/rinChpA2j4cRXgsQ2+xJ1woW6Jj7q+N46/OkU
-         GkSS/U0BmJnc+7+UDnjRcssLPwBqm06Iyo0k0kmhHY7XQ/97jbY3YNgWtFnDqyTTSJvI
-         vzJ1OTlTYZ9HPCMfC5L4awQWu/XkTduq7mSIRJlQE+hOkCWF1LNE43mUlqZ+vml45wWT
-         imwl//eZHHmpkQlDxb4HuYdOG0vyUdyaYNYUUaD+tuyL/sh2HRZO1PQZFjXu3aGJwDzq
-         xiV2/bZ2F6zZGZV72hdTKntK3NCan0KYTh5wCrRlP/xqG3pBQqCFBiUsoAqxbNMCTO2h
-         w28w==
-X-Gm-Message-State: AFqh2kpDul/ARGJ9y3B8x3W2NfyqgAZSnRrh1oDrt0JmNoEFQneZu2m9
-        iZ19+Rk8NFaBeenrcGKqSGMn1w==
-X-Google-Smtp-Source: AMrXdXuQdQMK1AzkjuSB62xM9jMBO+9t20jvTxLZnjpxuujgsDdeHG1DQzho+opaRd7jkzomUYB4aQ==
-X-Received: by 2002:a05:6512:3b99:b0:4a4:68b9:608c with SMTP id g25-20020a0565123b9900b004a468b9608cmr24899693lfv.23.1673438652184;
-        Wed, 11 Jan 2023 04:04:12 -0800 (PST)
-Received: from [192.168.1.101] (abxi45.neoplus.adsl.tpnet.pl. [83.9.2.45])
-        by smtp.gmail.com with ESMTPSA id d19-20020a196b13000000b004b550c26949sm2688197lfa.290.2023.01.11.04.04.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 04:04:10 -0800 (PST)
-Message-ID: <51a8bb85-8fda-2d79-f753-9461316bae9e@linaro.org>
-Date:   Wed, 11 Jan 2023 13:04:08 +0100
+        Wed, 11 Jan 2023 08:01:23 -0500
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76523B5;
+        Wed, 11 Jan 2023 05:01:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=iSdHfRVpGODWmSg9nfkf0TsMG1QEJMe2zb6sGOncxrI=; b=YcIW7x4gHAzydcf6BzN/HY31zZ
+        GPZkrTBDFoJ+ool7tuMRb3vRzaXyn329CqMe/ngU25Xcc8YBKNizWwYfWqSGSWHNQBpBThvESYvBv
+        Oof47Te8j+JCPaXE5eoncGAUw4yJWTTTOb97ADI82vqoEgkMDKskNJWkvPRogS4oueIlePYHvBPCK
+        fgCtxhqKuCwepDdy39iMen1UzB0aPRyzz0h+14nJFK3BeFR73zlcyFHCTTM9XaIRkVSyq/CKNU6OA
+        WdJSoSeJYH0ap0d+pEVjO/MBnRrgCkMBBwYsXtq1OXwNQbbMjR4Y9C6iDLvbg4AirlGDl3zJkXisY
+        kVZl2u0w==;
+Received: from [191.13.20.171] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1pFaj6-005Igl-5B; Wed, 11 Jan 2023 14:01:08 +0100
+Message-ID: <217ebecf-3630-b423-ea0b-037e0943e17b@igalia.com>
+Date:   Wed, 11 Jan 2023 10:01:03 -0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH v6 4/6] arm64: dts: qcom: sm6125: Add UFS nodes
+Subject: Re: [PATCH] pstore/ram: Rework logic for detecting ramoops
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, keescook@chromium.org,
+        tony.luck@intel.com
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1673428065-22356-1-git-send-email-quic_mojha@quicinc.com>
 Content-Language: en-US
-To:     Lux Aliaga <they@mint.lgbt>, agross@kernel.org,
-        andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
-        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
-        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org,
-        marijn.suijten@somainline.org
-References: <20230108195336.388349-1-they@mint.lgbt>
- <20230108195336.388349-5-they@mint.lgbt>
- <475d3f2f-114f-d6d2-89db-465ba7acd0d6@linaro.org>
- <f1f1337a-30cc-df3c-81d5-2daac61e874c@mint.lgbt>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <f1f1337a-30cc-df3c-81d5-2daac61e874c@mint.lgbt>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <1673428065-22356-1-git-send-email-quic_mojha@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Thanks for the patch Mukesh! I don't have a DT hardware at hand right
+now, so cannot test this one myself. I'll just provide a (really) minor
+feedback, something to address in a potential V2 or even in merge time,
+see below.
 
 
-On 11.01.2023 03:53, Lux Aliaga wrote:
+On 11/01/2023 06:07, Mukesh Ojha wrote:
+> The reserved memory region for ramoops is assumed to be at a fixed
+> and known location when read from the devicetree. This is not desirable
+> in environments where it is preferred the region to be dynamically
+> allocated at runtime, as opposed to being fixed at compile time.
 > 
-> On 09/01/2023 09:18, Konrad Dybcio wrote:
->>
->> On 8.01.2023 20:53, Lux Aliaga wrote:
->>> Adds a UFS host controller node and its corresponding PHY to
->>> the sm6125 platform.
->>>
->>> Signed-off-by: Lux Aliaga <they@mint.lgbt>
->>> ---
->>>   arch/arm64/boot/dts/qcom/sm6125.dtsi | 57 ++++++++++++++++++++++++++++
->>>   1 file changed, 57 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
->>> index df5453fcf2b9..cec7071d5279 100644
->>> --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
->>> @@ -511,6 +511,63 @@ sdhc_2: mmc@4784000 {
->>>               status = "disabled";
->>>           };
->>>   +        ufs_mem_hc: ufs@4804000 {
->>> +            compatible = "qcom,sm6125-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
->>> +            reg = <0x04804000 0x3000>, <0x04810000 0x8000>;
->> You need reg-names for ICE to probe, otherwise the second reg sits unused.
->>
->>> +            interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
->>> +            phys = <&ufs_mem_phy>;
->>> +            phy-names = "ufsphy";
->>> +            lanes-per-direction = <1>;
->>> +            #reset-cells = <1>;
->>> +            resets = <&gcc GCC_UFS_PHY_BCR>;
->>> +            reset-names = "rst";
->>> +            iommus = <&apps_smmu 0x200 0x0>;
->>> +
->>> +            clock-names = "core_clk",
->>> +                      "bus_aggr_clk",
->>> +                      "iface_clk",
->>> +                      "core_clk_unipro",
->>> +                      "ref_clk",
->>> +                      "tx_lane0_sync_clk",
->>> +                      "rx_lane0_sync_clk",
->>> +                      "ice_core_clk";
->>> +            clocks = <&gcc GCC_UFS_PHY_AXI_CLK>,
->>> +                 <&gcc GCC_SYS_NOC_UFS_PHY_AXI_CLK>,
->>> +                 <&gcc GCC_UFS_PHY_AHB_CLK>,
->>> +                 <&gcc GCC_UFS_PHY_UNIPRO_CORE_CLK>,
->>> +                 <&rpmcc RPM_SMD_XO_CLK_SRC>,
->>> +                 <&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
->>> +                 <&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
->>> +                 <&gcc GCC_UFS_PHY_ICE_CORE_CLK>;
->>> +            freq-table-hz = <50000000 240000000>,
->>> +                    <0 0>,
->>> +                    <0 0>,
->>> +                    <37500000 150000000>,
->>> +                    <0 0>,
->>> +                    <0 0>,
->>> +                    <0 0>,
->>> +                    <75000000 300000000>;
->>> +
->>> +            status = "disabled";
->>> +        };
->>> +
->>> +        ufs_mem_phy: phy@4807000 {
->>> +            compatible = "qcom,sm6125-qmp-ufs-phy";
->>> +            reg = <0x04807000 0x1c4>;
->> Isn't this too small? Downstream says 0xdb8, but it's probably even bigger..
-> What do you think could help me find the new length of the registers? I tried 0x1000 and it probed just fine, but I'm not really sure until what extent I could push it.
-The "true" values are probably only in documentation, which
-I don't have.
+> Also, Some of the platforms might be still expecting dedicated
 
-Konrad
+I'd write "Also, some" instead of upper "Some".
+
+> memory region for ramoops node where the region is known
+> beforehand and platform_get_resource() is used in that case.
 > 
+> So, Add logic to detect the start and size of the ramoops memory
+
+Same here, maybe "So, add".
+
+Really minor nits, though!
+Cheers,
+
+
+Guilherme
