@@ -2,146 +2,68 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A5AC46467
-	for <linux-hardening@archiver.kernel.org>; Wed, 11 Jan 2023 02:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A9CC63797
+	for <linux-hardening@archiver.kernel.org>; Wed, 11 Jan 2023 05:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232658AbjAKCxy (ORCPT
+        id S236023AbjAKFT2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 10 Jan 2023 21:53:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52402 "EHLO
+        Wed, 11 Jan 2023 00:19:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229569AbjAKCxx (ORCPT
+        with ESMTP id S231899AbjAKFSR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 10 Jan 2023 21:53:53 -0500
-Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA4C11401B
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 18:53:50 -0800 (PST)
-Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
-        by amity.mint.lgbt (Postfix) with ESMTP id 4NsC1T1g5pz1S5FY
-        for <linux-hardening@vger.kernel.org>; Tue, 10 Jan 2023 21:53:49 -0500 (EST)
-Authentication-Results: amity.mint.lgbt (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mint.lgbt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
-        content-transfer-encoding:content-type:in-reply-to:from
-        :references:to:content-language:subject:user-agent:mime-version
-        :date:message-id; s=dkim; t=1673405628; x=1674269629; bh=8i4jmOu
-        APCAp11p4DZJjHBlsAcEc2Uu0uW9fgZ3zFUU=; b=l2rt7HZQe1rwy8LwQ+mvR9s
-        ghIi4RanvHXb5D/8oOnFQXPnDLRd5Eni5PfUYb2Yo0Ri2cmtTDD6WZ0b5jhqBSAJ
-        5XzksWHGpEQrFkqNYAM/6XDHiQ/TypWOJZ2g5MxKLZQelFOPHKKdjvlsw8rH0r0a
-        R+XSjrRYCBDSMeKihasqs0QTs5XmOlU+KKtSThmmwyZwJU8i3ZCplxt7AmQt7++5
-        RV5Qn/AYGO2SpmPoniBX2GI5sjHsLeaFW13aZsxWggn6dSnICqgEgjrdO77I7N1U
-        8D1Sg7XrfmSIVm3g74a/niYgEW1NlGtTwsZ5J5rtk017cJ70UN7qM8JQFZ7FoAA=
-        =
-X-Virus-Scanned: amavisd-new at amity.mint.lgbt
-Received: from amity.mint.lgbt ([127.0.0.1])
-        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id hbZPaLs0Q2hO for <linux-hardening@vger.kernel.org>;
-        Tue, 10 Jan 2023 21:53:48 -0500 (EST)
-Received: from [192.168.4.25] (unknown [190.196.92.66])
-        by amity.mint.lgbt (Postfix) with ESMTPSA id 4NsC1B5blwz1S4tq;
-        Tue, 10 Jan 2023 21:53:34 -0500 (EST)
-Message-ID: <f1f1337a-30cc-df3c-81d5-2daac61e874c@mint.lgbt>
-Date:   Tue, 10 Jan 2023 23:53:31 -0300
+        Wed, 11 Jan 2023 00:18:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F46A13F16;
+        Tue, 10 Jan 2023 21:10:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DEC4461A36;
+        Wed, 11 Jan 2023 05:10:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC24C433D2;
+        Wed, 11 Jan 2023 05:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673413807;
+        bh=zn4sMWKd4ppOBnkwcQB+YD8fGX/U6+5IIXElTQ1tRrk=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=aXHOFZAfMR2xgLvKs3dBMFcIfSGS/+IpQO9KMIwaR2e7Y1K5tgKxdojdmk5x/YZ3p
+         AM0alXpv80SejF/u11CdQdkQ4xa3PXlyjPxKYaz4f4ajIWpJTrUacJTiCFQvepkUVN
+         XWsSGTD//nTnZSrmrwf6GMOdNIa0AekLCsEdKVZcrBngu8xXLpXapgsZ6feQPZRCZQ
+         G1uQOF085lf2vz2xV4BUOqwMkXezfssqcxr2kpK91g+a7qoAlF2b2rMclDg8/lCf71
+         yyl9GxXC5/YqvP7mUGQAqSD2t3fvBZOwvW92NCAqr8N7zZZ0UOxFmoKGwotGWh1c+J
+         Uj9FPUN0m8Kfg==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-arm-msm@vger.kernel.org, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        konrad.dybcio@linaro.org, devicetree@vger.kernel.org,
+        agross@kernel.org, keescook@chromium.org,
+        linux-kernel@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        robh+dt@kernel.org
+Subject: Re: (subset) [PATCH v2 1/2] ARM: dts: qcom: add missing space before {
+Date:   Tue, 10 Jan 2023 23:09:32 -0600
+Message-Id: <167341377733.2246479.14435445788072934578.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20221230140133.57885-1-krzysztof.kozlowski@linaro.org>
+References: <20221230140133.57885-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v6 4/6] arm64: dts: qcom: sm6125: Add UFS nodes
-Content-Language: en-US
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>, agross@kernel.org,
-        andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
-        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
-        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org,
-        marijn.suijten@somainline.org
-References: <20230108195336.388349-1-they@mint.lgbt>
- <20230108195336.388349-5-they@mint.lgbt>
- <475d3f2f-114f-d6d2-89db-465ba7acd0d6@linaro.org>
-From:   Lux Aliaga <they@mint.lgbt>
-In-Reply-To: <475d3f2f-114f-d6d2-89db-465ba7acd0d6@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, 30 Dec 2022 15:01:32 +0100, Krzysztof Kozlowski wrote:
+> Add missing whitespace between node name/label and opening {.
+> 
+> 
 
-On 09/01/2023 09:18, Konrad Dybcio wrote:
->
-> On 8.01.2023 20:53, Lux Aliaga wrote:
->> Adds a UFS host controller node and its corresponding PHY to
->> the sm6125 platform.
->>
->> Signed-off-by: Lux Aliaga <they@mint.lgbt>
->> ---
->>   arch/arm64/boot/dts/qcom/sm6125.dtsi | 57 ++++++++++++++++++++++++++++
->>   1 file changed, 57 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
->> index df5453fcf2b9..cec7071d5279 100644
->> --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
->> @@ -511,6 +511,63 @@ sdhc_2: mmc@4784000 {
->>   			status = "disabled";
->>   		};
->>   
->> +		ufs_mem_hc: ufs@4804000 {
->> +			compatible = "qcom,sm6125-ufshc", "qcom,ufshc", "jedec,ufs-2.0";
->> +			reg = <0x04804000 0x3000>, <0x04810000 0x8000>;
-> You need reg-names for ICE to probe, otherwise the second reg sits unused.
->
->> +			interrupts = <GIC_SPI 356 IRQ_TYPE_LEVEL_HIGH>;
->> +			phys = <&ufs_mem_phy>;
->> +			phy-names = "ufsphy";
->> +			lanes-per-direction = <1>;
->> +			#reset-cells = <1>;
->> +			resets = <&gcc GCC_UFS_PHY_BCR>;
->> +			reset-names = "rst";
->> +			iommus = <&apps_smmu 0x200 0x0>;
->> +
->> +			clock-names = "core_clk",
->> +				      "bus_aggr_clk",
->> +				      "iface_clk",
->> +				      "core_clk_unipro",
->> +				      "ref_clk",
->> +				      "tx_lane0_sync_clk",
->> +				      "rx_lane0_sync_clk",
->> +				      "ice_core_clk";
->> +			clocks = <&gcc GCC_UFS_PHY_AXI_CLK>,
->> +				 <&gcc GCC_SYS_NOC_UFS_PHY_AXI_CLK>,
->> +				 <&gcc GCC_UFS_PHY_AHB_CLK>,
->> +				 <&gcc GCC_UFS_PHY_UNIPRO_CORE_CLK>,
->> +				 <&rpmcc RPM_SMD_XO_CLK_SRC>,
->> +				 <&gcc GCC_UFS_PHY_TX_SYMBOL_0_CLK>,
->> +				 <&gcc GCC_UFS_PHY_RX_SYMBOL_0_CLK>,
->> +				 <&gcc GCC_UFS_PHY_ICE_CORE_CLK>;
->> +			freq-table-hz = <50000000 240000000>,
->> +					<0 0>,
->> +					<0 0>,
->> +					<37500000 150000000>,
->> +					<0 0>,
->> +					<0 0>,
->> +					<0 0>,
->> +					<75000000 300000000>;
->> +
->> +			status = "disabled";
->> +		};
->> +
->> +		ufs_mem_phy: phy@4807000 {
->> +			compatible = "qcom,sm6125-qmp-ufs-phy";
->> +			reg = <0x04807000 0x1c4>;
-> Isn't this too small? Downstream says 0xdb8, but it's probably even bigger..
-What do you think could help me find the new length of the registers? I 
-tried 0x1000 and it probed just fine, but I'm not really sure until what 
-extent I could push it.
+Applied, thanks!
 
+[2/2] arm64: dts: qcom: add missing space before {
+      commit: 66b14154e278807811d67de9fb0d5cc76638d07b
+
+Best regards,
 -- 
-Lux Aliaga
-https://nixgoat.me/
-
+Bjorn Andersson <andersson@kernel.org>
