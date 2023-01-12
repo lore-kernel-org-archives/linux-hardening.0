@@ -2,110 +2,87 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181F3C54EBE
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 22:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D91C61DB3
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 23:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240594AbjALWyG (ORCPT
+        id S239903AbjALXAp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 Jan 2023 17:54:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60364 "EHLO
+        Thu, 12 Jan 2023 18:00:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240676AbjALWyD (ORCPT
+        with ESMTP id S240585AbjALXAn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 Jan 2023 17:54:03 -0500
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6699F59539
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 14:54:02 -0800 (PST)
-Received: by mail-pl1-x62c.google.com with SMTP id p24so21658233plw.11
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 14:54:02 -0800 (PST)
+        Thu, 12 Jan 2023 18:00:43 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2634E5E661
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 15:00:42 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id bj3so17436594pjb.0
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 15:00:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yQ92ABzCp6Jl5QDky7FURKc+0/452Lig7If4O1MqQzg=;
-        b=PKyEQ52i3ol00UrT1vGbws7m4PqbNRc0gRSeV1duTeoKgk+58OhABGjiPstS9MzTvh
-         AzhHO3nCZh0tYXjxyeJLi5AsO4vlwlaZwEk+Ab4QFUy+6NKVwSv+Yqgt5MTxn8qcKcxl
-         5We2FDl8IN23vtUDhG/H2rkax3wh2N4VWUf84=
+        bh=t81IaJAeVAS+TxjZCUSPdXxwgmlKOytFkJBR8yD/ovY=;
+        b=bjOBCWWVWv7gYLHe2gpKpRRM70XQEz6CjFHyDUrnqFAFgxL3uvE4YjVesiTqwbb6Bq
+         yo6FbDpGqvcTs4zNj9r29IQTUHI8pC1JPCd5nYT8oqvaHvlWXt9go3dWSQppzDsYtwPL
+         awgQTlz7jXUwxPZLjyd4bsV7gBW8xFAjHB5ys=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yQ92ABzCp6Jl5QDky7FURKc+0/452Lig7If4O1MqQzg=;
-        b=KtjHzbHr9PRII4YhjBwLxQc1zrn0Tew2rs4ZXn0wObnJvFsqGlyHlOl+Bwv4FSHSDC
-         ez8zEJhxjGUPsCRLe1xDxtv7yPdPt3mMJQ2CFRSzZ1jlPsx8lQMIJWa60rUVDmYmLEyb
-         VIiDpU6NXkbyXjtsJEvi6ujecJgKNEFJ1dCmG/CgCVBWqALW9nCB9otPEhhLN50TRusf
-         dX2Rd4NmGNj4Y54x2KBveSHrA5IinhkjMS4j9Rp/wQiYYFotin9MaimFJSpcX77hcScT
-         JvlixlyMs3JVzm5BVPe7E9EbBF5m5bkla8T3umMOLktPZO7NIp2UA6s7ceSs6mZHZAoE
-         PEUA==
-X-Gm-Message-State: AFqh2kpwQpQJUlyWPFbvZO22DGP3uLS6IvbAQTD/K6OCOUzJWSD4tACd
-        I73NAuRvKXWZlHD/ltgDw+lljw==
-X-Google-Smtp-Source: AMrXdXvMv8yN47H6GSFCZr5psKK8TzKaYe0YkAruHqVF2SbvjKlRhxKmgs+QSymp13hXwlB3hjshxA==
-X-Received: by 2002:a17:902:bc81:b0:192:bb38:c412 with SMTP id bb1-20020a170902bc8100b00192bb38c412mr43457240plb.44.1673564041886;
-        Thu, 12 Jan 2023 14:54:01 -0800 (PST)
+        bh=t81IaJAeVAS+TxjZCUSPdXxwgmlKOytFkJBR8yD/ovY=;
+        b=r3125Vocksfz1ac9m43STQ6WAuYhbn2adzjapHX5EelkpjVXQ2cGY0pS4Fxt2C3ZF5
+         15jUlwJeW9gBGU/dbnCTUw9N2LQ7a4QlVAWlg/nPPmZswS9shLy2ZysDEyIalkkw7Khl
+         yur4lfPXanYbMxODRjGeX/IEfLxfAIzlf7K5eiPZR0VbDMIxH2ch6auwyFN9mDcbj2qe
+         wd/0mIPiX4iI1+lCE5sa+6OnkFkxkQgY5o2bOMIbrUkDPgO7Wggs7wiTb1PT6XAD/e9H
+         5cN4572Yg1Pumj43FWL80sMVIbATE9KvgFr/T35XjA4BQf3t8SmHbrmC9Jyj5bY9H3Es
+         ilUw==
+X-Gm-Message-State: AFqh2krdUYrOSG7/r5vbdcMg2KXcUuRodPwKE6TmPlFcCYDPUcPigOMe
+        6xb4z6Zwv9G5k7KNUY7jsEHYzwppqzWtk/xV
+X-Google-Smtp-Source: AMrXdXv3NLjURBhWZIZRXmTT0Pq5NcaZEvbNnqwyvnrEX1v9Z9hIV8Sq2um6UN04kVyC4yTC2NRYjw==
+X-Received: by 2002:a17:902:b10e:b0:194:6265:ba5f with SMTP id q14-20020a170902b10e00b001946265ba5fmr2869914plr.8.1673564440235;
+        Thu, 12 Jan 2023 15:00:40 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ik4-20020a170902ab0400b001925d6fdfebsm3976552plb.299.2023.01.12.14.54.01
+        by smtp.gmail.com with ESMTPSA id u15-20020a1709026e0f00b00186c3af9644sm11878082plk.273.2023.01.12.15.00.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 14:54:01 -0800 (PST)
-Date:   Thu, 12 Jan 2023 14:54:00 -0800
+        Thu, 12 Jan 2023 15:00:39 -0800 (PST)
+Date:   Thu, 12 Jan 2023 15:00:38 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Halasa <khalasa@piap.pl>, Arnd Bergmann <arnd@arndb.de>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ARM: ixp4xx: Replace 0-length arrays with flexible arrays
-Message-ID: <202301121452.14D1A95CA@keescook>
-References: <20230105215706.never.027-kees@kernel.org>
- <CACRpkdYfsY7K8GksccDunCfKHbq_Df8ddrYGRg2gmeu6CVCF5w@mail.gmail.com>
+To:     Julius Werner <jwerner@chromium.org>
+Cc:     Jack Rosenthal <jrosenth@chromium.org>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Guenter Roeck <groeck@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] firmware: coreboot: Check size of table entry and
+ split memcpy
+Message-ID: <202301121458.865E4834C@keescook>
+References: <20230107031406.gonna.761-kees@kernel.org>
+ <CAODwPW9SaomZjWQvR1mmV7OzvQkq-_XoDgSmK04fO5rVMGHmpw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYfsY7K8GksccDunCfKHbq_Df8ddrYGRg2gmeu6CVCF5w@mail.gmail.com>
+In-Reply-To: <CAODwPW9SaomZjWQvR1mmV7OzvQkq-_XoDgSmK04fO5rVMGHmpw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Jan 08, 2023 at 12:58:37AM +0100, Linus Walleij wrote:
-> On Thu, Jan 5, 2023 at 10:57 PM Kees Cook <keescook@chromium.org> wrote:
+On Mon, Jan 09, 2023 at 04:02:26PM +0100, Julius Werner wrote:
+> Reviewed-by: Julius Werner <jwerner@chromium.org>
 > 
-> > Zero-length arrays are deprecated[1]. Replace npe_load_firmware's
-> > union of 0-length arrays with flexible arrays. Detected with GCC 13,
-> > using -fstrict-flex-arrays=3:
-> >
-> > drivers/soc/ixp4xx/ixp4xx-npe.c: In function 'npe_load_firmware':
-> > drivers/soc/ixp4xx/ixp4xx-npe.c:570:60: warning: array subscript i is outside array bounds of 'u32[0]' {aka 'unsigned int[]'} [-Warray-bounds=]
-> >   570 |                         image->data[i] = swab32(image->data[i]);
-> > include/uapi/linux/swab.h:115:54: note: in definition of macro '__swab32'
-> >   115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-> >       |                                                      ^
-> > drivers/soc/ixp4xx/ixp4xx-npe.c:570:42: note: in expansion of macro 'swab32'
-> >   570 |                         image->data[i] = swab32(image->data[i]);
-> >       |                                          ^~~~~~
-> > drivers/soc/ixp4xx/ixp4xx-npe.c:522:29: note: while referencing 'data'
-> >   522 |                         u32 data[0];
-> >       |                             ^~~~
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
-> >
-> > Cc: Krzysztof Halasa <khalasa@piap.pl>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > -               memcpy(&device->entry, ptr_entry, entry->size);
+> > +               memcpy(device->raw, entry, entry->size);
 > 
-> Looks good to me:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> nit: It's a bit odd to change the source pointer from ptr_entry to
+> entry here. Technically the static analyzer would be within its rights
+> to give you a warning for that as well, because you're now
+> "overrunning" the source struct instead of the destination one.
 
-Thanks!
-
-> Do you need me to funnel this to the SoC tree or do you have
-> some quickpath for fixes like this?
-
-I'll take it via my tree if unless you'd rather it go through yours.
-Most maintainers take these directly, but some don't want to. I'm
-flexible! :)
+True. We've been focused on write overflows, but yeah, since the
+location of the flex array changed, I'll switch this back to ptr_entry.
 
 -- 
 Kees Cook
