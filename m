@@ -2,224 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D26DC61DB3
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 19:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FEEEC63797
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 19:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239916AbjALTEi (ORCPT
+        id S232842AbjALTpn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 Jan 2023 14:04:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59744 "EHLO
+        Thu, 12 Jan 2023 14:45:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240396AbjALTDz (ORCPT
+        with ESMTP id S238942AbjALToz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 Jan 2023 14:03:55 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B410FAE6B;
-        Thu, 12 Jan 2023 10:45:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QAzSLI/6LHH9CQpLa9FURf4dHQ/1/6b6zFCg9vC993M=; b=wtor9ASerabdoMG62kjMOgrKW/
-        WjRq7l+rFmwBT0qWGaWqbkjzdZa6MIw/Vw5JLkP7Da1JeDiNnWJvwZtRE65Z/hJLGlNsuRFWadnuz
-        cmvONDkqZ6uLrlDWsSndiscQbzdP2DEMqBtIMRvuVgj11++gB8aVDRnhAtibCG5ESFdG20BIsuvre
-        nUFD6LdmR+xrUbDK3v+5aPQHI5py1JR1078fyJwLxfjokVn+0lRSKlibzaxz4/Ysc3GRG1h6iKy1N
-        FxUO67pKIJHrhS6wN4/0lGz0VNWw7XBqMxZHz68V2sRaorrH3jiUGaaAtaHVVaSKTOe37h2igH0UA
-        Q3mF/EHg==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pG2Za-00GKda-BY; Thu, 12 Jan 2023 18:45:10 +0000
-Date:   Thu, 12 Jan 2023 10:45:10 -0800
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Vegard Nossum <vegard.nossum@oracle.com>,
-        Petr Pavlu <petr.pavlu@suse.com>,
-        Petr Mladek <pmladek@suse.com>, prarit@redhat.com,
-        david@redhat.com, mwilck@suse.com
-Cc:     linux-kernel@vger.kernel.org,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-modules@vger.kernel.org,
-        John Haxby <john.haxby@oracle.com>,
-        Jann Horn <jannh@google.com>, mcgrof@kernel.org
-Subject: Re: [PATCH v3] kmod: harden user namespaces with new
- kernel.ns_modules_allowed sysctl
-Message-ID: <Y8BVNihCrKOeY/FO@bombadil.infradead.org>
-References: <20230112131911.7684-1-vegard.nossum@oracle.com>
+        Thu, 12 Jan 2023 14:44:55 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D69A3125
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 11:38:27 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id o7-20020a17090a0a0700b00226c9b82c3aso22070544pjo.3
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 11:38:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WRyhT8+281FkbtvlzWcd8x6Mt5Qf+uTY04klZrSDBgA=;
+        b=VgKSHn+89hEPMavJwYES359VnVFzbolKedyoSBQJzw+A0qwTjNIaPF5+UEMzQzWZir
+         jCZqnHqIk81byMCdBALS8X/9xmdi/R2Amsw2bRMytV29XYgyHhI3sK4By7Tnci6q2/fW
+         tC3XgXVAN+kaHdJL1mLDbP/si0CPos72fWWTE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WRyhT8+281FkbtvlzWcd8x6Mt5Qf+uTY04klZrSDBgA=;
+        b=Oaiju4Fqi3ePlg39jJg2x/CUVtJKbCbBqTjvDifii1BNjNfsaU6+K0dyX4vI7NM2L3
+         g+OR4y+1bSzllyq31i7P852yJF1T4xDgLyJihi9+AEjbpTmP3puJllt+PtNqZYYZYPrs
+         /v7G+fHjpq7rAT69egiNxC4zbOkmsgr2XCx2N6h5B/njH6CR0NZoY0EYTGKhs2BBOtK9
+         d3TiPAuPuz393MkOX+sfpiSDjpKpyPRQS6D+LWhSwnd0nYHU2CdU8N9Jlj7VX98ez+nR
+         B2Or/3MZmF4pIVN1O1RJI6iKCrlzETTY2AI3hmUaToku5SGS2DZojdWgINeoGial9VWR
+         Vv4A==
+X-Gm-Message-State: AFqh2kpzZue3e8CRle2W98JdKa23Ptg0DCGVL7QrWfuqNo5wYWc/2Evo
+        XfEnme33/B8ONUfXoY8hxX6pAw==
+X-Google-Smtp-Source: AMrXdXs4z1HduTAnC+3Vr6wZn3Ynas8Lg0tNaMNRSSML8W4X/xmDWe9qEYPR4PBpbZcYfmkcK2lC0Q==
+X-Received: by 2002:a05:6a20:1455:b0:af:e13e:cd67 with SMTP id a21-20020a056a20145500b000afe13ecd67mr116274174pzi.6.1673552307354;
+        Thu, 12 Jan 2023 11:38:27 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p3-20020a63c143000000b004a03cdc82bbsm10422383pgi.55.2023.01.12.11.38.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jan 2023 11:38:26 -0800 (PST)
+Date:   Thu, 12 Jan 2023 11:38:25 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] docs: deprecated.rst: Add note about
+ DECLARE_FLEX_ARRAY() usage
+Message-ID: <202301121138.0A591928@keescook>
+References: <20230106200600.never.735-kees@kernel.org>
+ <87r0w0vf82.fsf@meer.lwn.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230112131911.7684-1-vegard.nossum@oracle.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+In-Reply-To: <87r0w0vf82.fsf@meer.lwn.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 12, 2023 at 02:19:11PM +0100, Vegard Nossum wrote:
-> Creating a new user namespace grants you the ability to reach a lot of code
-> (including loading certain kernel modules) that would otherwise be out of
-> reach of an attacker. We can reduce the attack surface and block exploits
-> by ensuring that user namespaces cannot trigger module (auto-)loading.
+On Wed, Jan 11, 2023 at 04:11:41PM -0700, Jonathan Corbet wrote:
+> Kees Cook <keescook@chromium.org> writes:
 > 
-> A cursory search of exploits found online yields the following
-> non-exhaustive list of vulnerabilities, and shows that the technique is
-> both old and still in use:
+> > There wasn't any mention of when/where DECLARE_FLEX_ARRAY() should be
+> > used, so add the rationale and an example to the deprecation docs.
+> >
+> > Suggested-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: linux-doc@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  Documentation/process/deprecated.rst | 26 ++++++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
 > 
-> - CVE-2016-8655
-> - CVE-2017-1000112
-> - CVE-2021-32606
-> - CVE-2022-2588
-> - CVE-2022-27666
-> - CVE-2022-34918
-> - CVE-2023-0179
+> I've applied this, but couldn't resist making one tweak...
 > 
-> A quick survey of common distros shows that Ubuntu, Fedora, RHEL, CentOS
-> Stream, and Oracle Linux allow unprivileged user namespaces by default,
-> probably to support sandboxing in browsers and containers. Major
-> exceptions would be Debian and Arch Linux which carry an out-of-tree patch
-> to disable user namespaces by default.
+> > diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+> > index c8fd53a11a20..fcac0a929efa 100644
+> > --- a/Documentation/process/deprecated.rst
+> > +++ b/Documentation/process/deprecated.rst
+> > @@ -346,3 +346,29 @@ struct_size() and flex_array_size() helpers::
+> >          instance->count = count;
+> >  
+> >          memcpy(instance->items, source, flex_array_size(instance, items, instance->count));
+> > +
+> > +There are two special cases of replacement where the DECLARE_FLEX_ARRAY()
+> > +helper needs to be used. (Note that it is named __DECLARE_FLEX_ARRAY() for
+> > +use in UAPI headers.) When the flexible array is either alone in a struct,
+> > +or is part of a union. 
 > 
-> This patch adds a new sysctl, kernel.ns_modules_allowed, which when set to
-> 0 will block requests to load modules when the request originates in a
-> process running in a user namespace.
-> 
-> For backwards compatibility, the default value of the sysctl is set to
-> CONFIG_NS_MODULES_ALLOWED_DEFAULT_ON, which in turn defaults to 1, meaning
-> there should be absolutely no change in behaviour unless you opt in either
-> at compile time or at runtime.
-> 
-> This mitigation obviously offers no protection if the vulnerable module is
-> already loaded, but for many of these exploits the vast majority of users
-> will never actually load or use these modules on purpose; in other words,
-> for the vast majority of users, this would block exploits for the above
-> list of vulnerabilities.
-> 
-> Testing: Running the reproducer for CVE-2022-2588 fails and results in the
-> following message in the kernel log:
-> 
->     [  130.208030] request_module: pid 4107 (a.out) requested kernel module rtnl-link-dummy; denied due to kernel.ns_modules_allowed sysctl
-> 
-> v2:
-> - fix build failure due to missing CONFIG_SYSCTL guard around register_sysctl_init()
-> - use .maxlen = sizeof(int) for proc_dobool()
-> - don't warn when sysctl_ns_modules_allowed == 1
-> 
-> v3:
-> - drop capable(CAP_SYS_MODULE) check
-> - add a new CVE to changelog :-)
-> - add survey of distros that enable unpriv userns to changelog
-> 
-> Link: https://lore.kernel.org/lkml/20220809185229.28417-1-vegard.nossum@oracle.com/ # v1
-> Link: https://lore.kernel.org/lkml/20220815082753.6088-1-vegard.nossum@oracle.com/ # v2
-> Cc: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-> Cc: Serge Hallyn <serge@hallyn.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: linux-hardening@vger.kernel.org
-> Cc: linux-modules@vger.kernel.org
-> Cc: John Haxby <john.haxby@oracle.com>
-> Cc: Jann Horn <jannh@google.com>
-> Signed-off-by: Vegard Nossum <vegard.nossum@oracle.com>
-> ---
->  Documentation/admin-guide/sysctl/kernel.rst | 11 ++++++
->  init/Kconfig                                | 17 ++++++++++
->  kernel/kmod.c                               | 37 +++++++++++++++++++++
->  3 files changed, 65 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-> index 46e3d62c0eea..bd9b4e911a6a 100644
-> --- a/Documentation/admin-guide/sysctl/kernel.rst
-> +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> @@ -612,6 +612,17 @@ A value of 0 means no change. The default value is 200 meaning the NMI
->  watchdog is set to 30s (based on ``watchdog_thresh`` equal to 10).
->  
->  
-> +ns_modules_allowed
-> +==================
-> +
-> +Control whether processes may trigger module loading inside a user namespace.
+> The pedant in me couldn't stand leaving that sentence fragment, so I
+> made a complete sentence out of it.
 
-This is false documentation. The place it is trying to protect simply
-prevents trying to call modprobe for auto-loading within the kernel.
+Thank you; I appreciate the help! :)
 
-> diff --git a/kernel/kmod.c b/kernel/kmod.c
-> index b717134ebe17..938c0a39381a 100644
-> --- a/kernel/kmod.c
-> +++ b/kernel/kmod.c
-> @@ -25,6 +25,7 @@
->  #include <linux/ptrace.h>
->  #include <linux/async.h>
->  #include <linux/uaccess.h>
-> +#include <linux/sysctl.h>
->  
->  #include <trace/events/module.h>
->  
-> @@ -105,6 +106,12 @@ static int call_modprobe(char *module_name, int wait)
->  	return -ENOMEM;
->  }
->  
-> +/*
-> + * Allow processes running inside namespaces to trigger module loading?
-> + */
-> +static bool sysctl_ns_modules_allowed __read_mostly =
-> +	IS_BUILTIN(CONFIG_NS_MODULES_ALLOWED_DEFAULT_ON);
-> +
->  /**
->   * __request_module - try to load a kernel module
->   * @wait: wait (or not) for the operation to complete
-> @@ -148,6 +155,16 @@ int __request_module(bool wait, const char *fmt, ...)
->  	if (ret)
->  		return ret;
->  
-> +	/*
-> +	 * Disallow module loading if we're in a user namespace.
-> +	 */
-> +	if (current_user_ns() != &init_user_ns &&
-> +	    !sysctl_ns_modules_allowed) {
-> +		pr_warn_ratelimited("request_module: pid %d (%s) in user namespace requested kernel module %s; denied due to kernel.ns_modules_allowed sysctl\n",
-> +			task_pid_nr(current), current->comm, module_name);
-> +		return -EPERM;
-> +	}
-> +
->  	if (atomic_dec_if_positive(&kmod_concurrent_max) < 0) {
->  		pr_warn_ratelimited("request_module: kmod_concurrent_max (%u) close to 0 (max_modprobes: %u), for module %s, throttling...",
->  				    atomic_read(&kmod_concurrent_max),
-
-Have you seen what call_modprobe() does?
-
-This is just a limitting the auto-loading through calling modprobe.
-If the concern is to load modules wouldn't you be better off just
-putting a stop gap at finit_module() which actually receives the
-load attempt from modprobe? Ie, an evil namespace, if it has access
-to /sbin/modprobe could simply just try calling /sbin/modprobe on its
-own.
-
-Beating the royal shit out of kmod is already stress tested via
-tools/testing/selftests/kmod/kmod.sh in particular:
-
-tools/testing/selftests/kmod/kmod.sh -t 0008
-tools/testing/selftests/kmod/kmod.sh -t 0009
-
-What this *could* do is race to force a failure on some other *real*
-modprobe request we do wish to honor when the above kmod kmod_concurrent_max
-is triggered.
-
-So in terms of justification, this commit log needs a bit more work as I
-just can't see how this alone is fixing any CVE.
-
-Note: actually *racing* tons of requests at the same time could end
-up then *in kernel requests* being processed, and there lies another
-shit show which we've recently been nose diving into through the work
-and report by Petr Pavlu [0]. Although I have that patch in modules-next,
-it was too soon to send to Linus for v6.2-rc1 due to lack of testing on
-linux-next. You may want to test that too, as its an old regression.
-Even though the commit log describe honest requests for modules, surely
-an exploit bad namespace could in theory try to race other requests too
-to prefer its own frequency module, etc.
-
-So let's take a step back and think this through. What exaclty and why
-would this commit fix *any* security issue? Itemizing CVEs won't cut it.
-
-[0] https://lkml.kernel.org/r/20221205103557.18363-1-petr.pavlu@suse.com
-
-  Luis
+-- 
+Kees Cook
