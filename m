@@ -2,162 +2,144 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D7AC54EBE
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 21:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF985C61DB3
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 21:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240774AbjALVrl (ORCPT
+        id S231445AbjALV7Y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 Jan 2023 16:47:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
+        Thu, 12 Jan 2023 16:59:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240163AbjALVrM (ORCPT
+        with ESMTP id S241042AbjALV7G (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 Jan 2023 16:47:12 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF4D120A5
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 13:39:56 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id s8so13205509plk.5
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 13:39:56 -0800 (PST)
+        Thu, 12 Jan 2023 16:59:06 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E386ADB3
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 13:50:13 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id n12so20502588pjp.1
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 13:50:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p1iROqIkYhjnh8TCzOffzpktAibiBtkkjcmbNup9a5A=;
-        b=O0sdmW5qaH75hEhrzOIUsjf/5Xh6JHONnwGfgbZfg0WWDk07nxvsOsUFxOXelLN7pP
-         1XLJOHpnkX3VE64m14qNKWkQ3RCS4Wp7B7pZ85FVfDMXXpGsdzHBjcRuRU0vLbWcdhl7
-         SYM58sc0T9jGu7q8VJI0FL5TmkBSIa/YJruu0=
+        bh=fSEpo+jlekBh8KoeQPTXamCuNc4nm4WgyzF/0RduAN4=;
+        b=oAYqpDU0KenT0dKKe0fbBtEaPM3gsSBp3Zcleqq0y5F9oKvZhqcY+wceaimEg08vyu
+         e/YFil7Rd2Y6esh3/IfXxgarq1mSalXdWRZuleyV+tIkb1Oh/hjCZIC3OUlkfxjryh9U
+         ly9P9iFyVtTG6GuZz8OUJgXkpc76j4kDFSSSI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p1iROqIkYhjnh8TCzOffzpktAibiBtkkjcmbNup9a5A=;
-        b=Zi0scegoFiwrrC8AAmM0e/hmgH/+pgKeBFQfoJI5EiYJvfzoyGMdjvVicE7SzLq4Yj
-         d93+88ARBCcRobwclKpor8ZjLjJ98dppUXzNPvKZ3sV8vdgUCoYzU3V/HaRF5SDTTXfj
-         NTJ2tYQ5FWqlPCaVMH+f+XUi2NRXJGWhc862wcHwqgecd8+jG4IO07PQZjQV5Z2Hy/01
-         Z1Y7TQZFjElzZyxJzmjO8uYKXXf1T9TzPs5s1fFQsLUuHc80wSd3ZJIdNPixbphx2xl+
-         rS+tE7OTMaXXs0/XmA51RGLg0zir/kxTgyZ69vAz4ewbQTkOhmwB8WGPjxspO8QFWgeU
-         Wb1g==
-X-Gm-Message-State: AFqh2krIpkU1UUs6OfqEYlk0xgQMAsCEIDsUsS2Hd0FaWx+UNQIj+Tyg
-        XzIx/mexT1oNTCvODSt1RGkpzGJZ81pKkw2r
-X-Google-Smtp-Source: AMrXdXtnU8DSemdsMHGm4Li6ynIxcbtngqZhvSOKD9uqzQUwCm/QNhgo+9C3rCBq4HA+9Lkdw9RrkA==
-X-Received: by 2002:a17:903:22c5:b0:193:2ed4:5615 with SMTP id y5-20020a17090322c500b001932ed45615mr22618472plg.29.1673559596172;
-        Thu, 12 Jan 2023 13:39:56 -0800 (PST)
+        bh=fSEpo+jlekBh8KoeQPTXamCuNc4nm4WgyzF/0RduAN4=;
+        b=NGubMywiwSN4tM45JXYh0bnlCRDlD/ooxuC3F8DUv6H665kOrCQ3s2j+1lXf81EdQ2
+         auyRcvHynty/hp+asPU5F8ooFoanhQ9U3seTGOQFLYlNT6ajpl6UT+9vAlkoNileBIbk
+         WneDsa8MVfxArqDmLQTo0CN9L64vLUNU7/vYdwC6tBjXDygKohnd7kkvhsY3OxqToSQb
+         3DjkWAlpCtfJohpVYy9PF75GMdFxPCIjveSvQ0TMl9onUCiCifLEz2KivUatEsrK5LMc
+         2W03z1AO1242Zup8fMd2tV225pSkMZxiTHRTZtxmgpSFVTG43sE2gFyyD9a3dCsMQVbs
+         H4cA==
+X-Gm-Message-State: AFqh2kpe20hkOADG7mlo1x+vpPbZ/l5HthTUL1zGJGVDOftVcoYfjj9O
+        haqOXI1SvL7z7QyiH7vgwRdmhZCReEjCPKro
+X-Google-Smtp-Source: AMrXdXtTIBHXsXYk1L2qORNUprlUTSak3SAIoiDdzoYO+OstaVienG17XfCXs3hEla1888A6dg2Qsw==
+X-Received: by 2002:a17:90a:3c8c:b0:226:8206:91d9 with SMTP id g12-20020a17090a3c8c00b00226820691d9mr40131211pjc.20.1673560213259;
+        Thu, 12 Jan 2023 13:50:13 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b00192d9b86318sm12589777plp.137.2023.01.12.13.39.55
+        by smtp.gmail.com with ESMTPSA id qa15-20020a17090b4fcf00b00228e56d375asm3520280pjb.33.2023.01.12.13.50.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 13:39:55 -0800 (PST)
-Date:   Thu, 12 Jan 2023 13:39:55 -0800
+        Thu, 12 Jan 2023 13:50:12 -0800 (PST)
+Date:   Thu, 12 Jan 2023 13:50:12 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     tony.luck@intel.com, gpiccoli@igalia.com,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pstore/ram: Rework logic for detecting ramoops
-Message-ID: <202301121337.B8CCCB6@keescook>
-References: <1673428065-22356-1-git-send-email-quic_mojha@quicinc.com>
+To:     gregkh@linuxfoundation.org, torvalds@linux-foundation.org
+Cc:     kees@kernel.org, linux@roeck-us.net, vbabka@suse.cz,
+        stable-commits@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Patch "gcc: disable -Warray-bounds for gcc-11 too" has been
+ added to the 6.1-stable tree
+Message-ID: <202301121346.D33FD799E7@keescook>
+References: <167352819915167@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1673428065-22356-1-git-send-email-quic_mojha@quicinc.com>
+In-Reply-To: <167352819915167@kroah.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 02:37:45PM +0530, Mukesh Ojha wrote:
-> The reserved memory region for ramoops is assumed to be at a fixed
-> and known location when read from the devicetree. This is not desirable
-> in environments where it is preferred the region to be dynamically
-> allocated at runtime, as opposed to being fixed at compile time.
+On Thu, Jan 12, 2023 at 01:56:39PM +0100, gregkh@linuxfoundation.org wrote:
 > 
-> Also, Some of the platforms might be still expecting dedicated
-> memory region for ramoops node where the region is known
-> beforehand and platform_get_resource() is used in that case.
+> This is a note to let you know that I've just added the patch titled
 > 
-> So, Add logic to detect the start and size of the ramoops memory
-> region by looking up reserved memory region with
-> of_reserved_mem_lookup() when platform_get_resource() failed.
+>     gcc: disable -Warray-bounds for gcc-11 too
 > 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> to the 6.1-stable tree which can be found at:
+>     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> 
+> The filename of the patch is:
+>      gcc-disable-warray-bounds-for-gcc-11-too.patch
+> and it can be found in the queue-6.1 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
 
-Thanks for the patch! Notes below...
+Ugh, please don't include this in -stable. Prior kernel versions don't
+show this warning, so why remove coverage there?
 
+> 
+> 
+> From 5a41237ad1d4b62008f93163af1d9b1da90729d8 Mon Sep 17 00:00:00 2001
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+> Date: Mon, 9 Jan 2023 17:04:49 -0600
+> Subject: gcc: disable -Warray-bounds for gcc-11 too
+> 
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+> 
+> commit 5a41237ad1d4b62008f93163af1d9b1da90729d8 upstream.
+> 
+> We had already disabled this warning for gcc-12 due to bugs in the value
+> range analysis, but it turns out we end up having some similar problems
+> with gcc-11.3 too, so let's disable it there too.
+> 
+> Older gcc versions end up being increasingly less relevant, and
+> hopefully clang and newer version of gcc (ie gcc-13) end up working
+> reliably enough that we still get the build coverage even when we
+> disable this for some versions.
+> 
+> Link: https://lore.kernel.org/all/20221227002941.GA2691687@roeck-us.net/
+> Link: https://lore.kernel.org/all/D8BDBF66-E44C-45D4-9758-BAAA4F0C1998@kernel.org/
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > ---
->  fs/pstore/ram.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
+>  init/Kconfig |    6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index ade66db..e4bbba1 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -20,6 +20,7 @@
->  #include <linux/compiler.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_reserved_mem.h>
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -892,13 +892,17 @@ config CC_IMPLICIT_FALLTHROUGH
+>  	default "-Wimplicit-fallthrough=5" if CC_IS_GCC && $(cc-option,-Wimplicit-fallthrough=5)
+>  	default "-Wimplicit-fallthrough" if CC_IS_CLANG && $(cc-option,-Wunreachable-code-fallthrough)
 >  
->  #include "internal.h"
->  #include "ram_internal.h"
-> @@ -643,6 +644,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
->  {
->  	struct device_node *of_node = pdev->dev.of_node;
->  	struct device_node *parent_node;
-> +	struct reserved_mem *rmem;
->  	struct resource *res;
->  	u32 value;
->  	int ret;
-> @@ -651,13 +653,20 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+> -# Currently, disable gcc-12 array-bounds globally.
+> +# Currently, disable gcc-11,12 array-bounds globally.
+>  # We may want to target only particular configurations some day.
+> +config GCC11_NO_ARRAY_BOUNDS
+> +	def_bool y
+> +
+>  config GCC12_NO_ARRAY_BOUNDS
+>  	def_bool y
 >  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	if (!res) {
-> -		dev_err(&pdev->dev,
-> -			"failed to locate DT /reserved-memory resource\n");
-> -		return -EINVAL;
-> +		rmem = of_reserved_mem_lookup(of_node);
-> +		if (rmem) {
-> +			pdata->mem_size = rmem->size;
-> +			pdata->mem_address = rmem->base;
-> +		} else {
-> +			dev_err(&pdev->dev,
-> +				"failed to locate DT /reserved-memory resource\n");
-> +			return -EINVAL;
-> +		}
+>  config CC_NO_ARRAY_BOUNDS
+>  	bool
+> +	default y if CC_IS_GCC && GCC_VERSION >= 110000 && GCC_VERSION < 120000 && GCC11_NO_ARRAY_BOUNDS
+>  	default y if CC_IS_GCC && GCC_VERSION >= 120000 && GCC_VERSION < 130000 && GCC12_NO_ARRAY_BOUNDS
 
-Since the "else" case returns, the traditional code pattern is to leave
-the other case "inline" (an indented), like so:
-
-		if (!rmem) {
-			dev_err(&pdev->dev,
-				"failed to locate DT /reserved-memory resource\n");
-			return -EINVAL;
-		}
-		pdata->mem_size = rmem->size;
-		pdata->mem_address = rmem->base;
-
-
-> +	} else {
-> +		pdata->mem_size = resource_size(res);
-> +		pdata->mem_address = res->start;
->  	}
-
-Since this change the potential interface with DT, can you also update
-the documentation in:
-
-Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
-
-Or maybe my understanding of DT parsing is lacking and this change is
-doing something slightly different?
+Linus, this seems like a really giant hammer for a single warning on a
+single architecture for an option that gives us real bug coverage. I'm
+not sure GCC 11 will be going away any time soon, either. Can we please
+limit this to either just the affected file, or at least just powerpc?
 
 -Kees
-
->  
-> -	pdata->mem_size = resource_size(res);
-> -	pdata->mem_address = res->start;
->  	/*
->  	 * Setting "unbuffered" is deprecated and will be ignored if
->  	 * "mem_type" is also specified.
-> -- 
-> 2.7.4
-> 
 
 -- 
 Kees Cook
