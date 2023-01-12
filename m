@@ -2,42 +2,55 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74041C54EBE
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 18:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D26DC61DB3
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 19:04:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232226AbjALS0k (ORCPT
+        id S239916AbjALTEi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 Jan 2023 13:26:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37254 "EHLO
+        Thu, 12 Jan 2023 14:04:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240569AbjALS0T (ORCPT
+        with ESMTP id S240396AbjALTDz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 Jan 2023 13:26:19 -0500
-Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E38B55DE72;
-        Thu, 12 Jan 2023 10:00:47 -0800 (PST)
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id E5D921157; Thu, 12 Jan 2023 12:00:45 -0600 (CST)
-Date:   Thu, 12 Jan 2023 12:00:45 -0600
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     Vegard Nossum <vegard.nossum@oracle.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
+        Thu, 12 Jan 2023 14:03:55 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B410FAE6B;
+        Thu, 12 Jan 2023 10:45:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=QAzSLI/6LHH9CQpLa9FURf4dHQ/1/6b6zFCg9vC993M=; b=wtor9ASerabdoMG62kjMOgrKW/
+        WjRq7l+rFmwBT0qWGaWqbkjzdZa6MIw/Vw5JLkP7Da1JeDiNnWJvwZtRE65Z/hJLGlNsuRFWadnuz
+        cmvONDkqZ6uLrlDWsSndiscQbzdP2DEMqBtIMRvuVgj11++gB8aVDRnhAtibCG5ESFdG20BIsuvre
+        nUFD6LdmR+xrUbDK3v+5aPQHI5py1JR1078fyJwLxfjokVn+0lRSKlibzaxz4/Ysc3GRG1h6iKy1N
+        FxUO67pKIJHrhS6wN4/0lGz0VNWw7XBqMxZHz68V2sRaorrH3jiUGaaAtaHVVaSKTOe37h2igH0UA
+        Q3mF/EHg==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pG2Za-00GKda-BY; Thu, 12 Jan 2023 18:45:10 +0000
+Date:   Thu, 12 Jan 2023 10:45:10 -0800
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Vegard Nossum <vegard.nossum@oracle.com>,
+        Petr Pavlu <petr.pavlu@suse.com>,
+        Petr Mladek <pmladek@suse.com>, prarit@redhat.com,
+        david@redhat.com, mwilck@suse.com
+Cc:     linux-kernel@vger.kernel.org,
         Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
         Serge Hallyn <serge@hallyn.com>,
         Eric Biederman <ebiederm@xmission.com>,
         Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org, linux-modules@vger.kernel.org,
         John Haxby <john.haxby@oracle.com>,
-        Jann Horn <jannh@google.com>
+        Jann Horn <jannh@google.com>, mcgrof@kernel.org
 Subject: Re: [PATCH v3] kmod: harden user namespaces with new
  kernel.ns_modules_allowed sysctl
-Message-ID: <20230112180045.GA18314@mail.hallyn.com>
+Message-ID: <Y8BVNihCrKOeY/FO@bombadil.infradead.org>
 References: <20230112131911.7684-1-vegard.nossum@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20230112131911.7684-1-vegard.nossum@oracle.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -59,12 +72,7 @@ On Thu, Jan 12, 2023 at 02:19:11PM +0100, Vegard Nossum wrote:
 > - CVE-2022-27666
 > - CVE-2022-34918
 > - CVE-2023-0179
-
-I think it would be worth pointing out how many of the above would
-actually be aided by this patch.  The first two would not, but certainly
-at least the can module one counts.  So I support this at least in
-principle.  I'll take a closer look at the code hopefully tonight.
-
+> 
 > A quick survey of common distros shows that Ubuntu, Fedora, RHEL, CentOS
 > Stream, and Oracle Linux allow unprivileged user namespaces by default,
 > probably to support sandboxing in browsers and containers. Major
@@ -130,44 +138,10 @@ principle.  I'll take a closer look at the code hopefully tonight.
 > +==================
 > +
 > +Control whether processes may trigger module loading inside a user namespace.
-> +
-> += =================================
-> +0 Deny module loading requests.
-> +1 Accept module loading requests.
-> += =================================
-> +
-> +
->  numa_balancing
->  ==============
->  
-> diff --git a/init/Kconfig b/init/Kconfig
-> index 7e5c3ddc341d..5d9ab43a24b9 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -1249,6 +1249,23 @@ config USER_NS
->  
->  	  If unsure, say N.
->  
-> +config NS_MODULES_ALLOWED_DEFAULT_ON
-> +	bool "Allow user namespaces to auto-load kernel modules by default"
-> +	depends on MODULES
-> +	depends on USER_NS
-> +	default y
-> +	help
-> +	  This option makes it so that processes running inside user
-> +	  namespaces may auto-load kernel modules.
-> +
-> +	  Say N to mitigate some exploits that rely on being able to
-> +	  auto-load kernel modules; however, this may also cause some
-> +	  legitimate programs to fail unless kernel modules are loaded by
-> +	  hand.
-> +
-> +	  You can write 0 or 1 to /proc/sys/kernel/ns_modules_allowed to
-> +	  change behaviour at run-time.
-> +
->  config PID_NS
->  	bool "PID Namespaces"
->  	default y
+
+This is false documentation. The place it is trying to protect simply
+prevents trying to call modprobe for auto-loading within the kernel.
+
 > diff --git a/kernel/kmod.c b/kernel/kmod.c
 > index b717134ebe17..938c0a39381a 100644
 > --- a/kernel/kmod.c
@@ -210,29 +184,42 @@ principle.  I'll take a closer look at the code hopefully tonight.
 >  	if (atomic_dec_if_positive(&kmod_concurrent_max) < 0) {
 >  		pr_warn_ratelimited("request_module: kmod_concurrent_max (%u) close to 0 (max_modprobes: %u), for module %s, throttling...",
 >  				    atomic_read(&kmod_concurrent_max),
-> @@ -175,3 +192,23 @@ int __request_module(bool wait, const char *fmt, ...)
->  	return ret;
->  }
->  EXPORT_SYMBOL(__request_module);
-> +
-> +#ifdef CONFIG_SYSCTL
-> +static struct ctl_table kmod_sysctl_table[] = {
-> +	{
-> +		.procname       = "ns_modules_allowed",
-> +		.data           = &sysctl_ns_modules_allowed,
-> +		.maxlen         = sizeof(int),
-> +		.mode           = 0644,
-> +		.proc_handler   = proc_dobool,
-> +	},
-> +	{ }
-> +};
-> +
-> +static int __init kmod_sysctl_init(void)
-> +{
-> +	register_sysctl_init("kernel", kmod_sysctl_table);
-> +	return 0;
-> +}
-> +late_initcall(kmod_sysctl_init);
-> +#endif
-> -- 
-> 2.35.1.46.g38062e73e0
+
+Have you seen what call_modprobe() does?
+
+This is just a limitting the auto-loading through calling modprobe.
+If the concern is to load modules wouldn't you be better off just
+putting a stop gap at finit_module() which actually receives the
+load attempt from modprobe? Ie, an evil namespace, if it has access
+to /sbin/modprobe could simply just try calling /sbin/modprobe on its
+own.
+
+Beating the royal shit out of kmod is already stress tested via
+tools/testing/selftests/kmod/kmod.sh in particular:
+
+tools/testing/selftests/kmod/kmod.sh -t 0008
+tools/testing/selftests/kmod/kmod.sh -t 0009
+
+What this *could* do is race to force a failure on some other *real*
+modprobe request we do wish to honor when the above kmod kmod_concurrent_max
+is triggered.
+
+So in terms of justification, this commit log needs a bit more work as I
+just can't see how this alone is fixing any CVE.
+
+Note: actually *racing* tons of requests at the same time could end
+up then *in kernel requests* being processed, and there lies another
+shit show which we've recently been nose diving into through the work
+and report by Petr Pavlu [0]. Although I have that patch in modules-next,
+it was too soon to send to Linus for v6.2-rc1 due to lack of testing on
+linux-next. You may want to test that too, as its an old regression.
+Even though the commit log describe honest requests for modules, surely
+an exploit bad namespace could in theory try to race other requests too
+to prefer its own frequency module, etc.
+
+So let's take a step back and think this through. What exaclty and why
+would this commit fix *any* security issue? Itemizing CVEs won't cut it.
+
+[0] https://lkml.kernel.org/r/20221205103557.18363-1-petr.pavlu@suse.com
+
+  Luis
