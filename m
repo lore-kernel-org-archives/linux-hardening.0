@@ -2,109 +2,162 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65878C63797
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 21:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D7AC54EBE
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 21:47:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232817AbjALVnz (ORCPT
+        id S240774AbjALVrl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 Jan 2023 16:43:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
+        Thu, 12 Jan 2023 16:47:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232481AbjALVnd (ORCPT
+        with ESMTP id S240163AbjALVrM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 Jan 2023 16:43:33 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0416635927
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 13:36:09 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso25050617pjt.0
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 13:36:08 -0800 (PST)
+        Thu, 12 Jan 2023 16:47:12 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF4D120A5
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 13:39:56 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id s8so13205509plk.5
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 13:39:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YYu+aCdiKwj9iNU36bpnOoIdRebqjw4OvN+SDw/4uEo=;
-        b=VPEXk5zKBAwAuw1kxsoTOFlemc5Gi1jRC/6WdMvgtZH5YqUQ6aPCduJ+KKy2DCaXIu
-         1i/Nk0ggOrXJ0kPeSNycF/gQqdPVK03YGxcfT4mUJ/5+x3NfLDhlCHqKX95QWew7PopY
-         WCJNm5xDWOVAiT7UX/1W/in0AXoM4VCrTJR0Y=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=p1iROqIkYhjnh8TCzOffzpktAibiBtkkjcmbNup9a5A=;
+        b=O0sdmW5qaH75hEhrzOIUsjf/5Xh6JHONnwGfgbZfg0WWDk07nxvsOsUFxOXelLN7pP
+         1XLJOHpnkX3VE64m14qNKWkQ3RCS4Wp7B7pZ85FVfDMXXpGsdzHBjcRuRU0vLbWcdhl7
+         SYM58sc0T9jGu7q8VJI0FL5TmkBSIa/YJruu0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YYu+aCdiKwj9iNU36bpnOoIdRebqjw4OvN+SDw/4uEo=;
-        b=MZ47kCF41ZGqqUdYJNxpMXkADRt+cR7JDL0QvyOaot+MVODwri5Sftp9CZk3D/xsNW
-         qiCpHfSmAr/T39WjL6QLvlZbGJZ2MMEBErjWjPxWBAtNcBo5OGWoMbTbT9yCS7jkkc/h
-         6PK1+CjlYMPgJnE/ZIsFy350q5ODozgdM0bQKYUQlvZyyG0NDSnIssT2mfd4LWZxVO+l
-         roMS1ewOQWdUzVjAqKDRJXkOUd/ezjs/Gf4cZay+hTsaAJZLo65i7AlRjJo6Svg28u62
-         eejs8pNGLC+wgWcW59dQgderLUB0obqD0t9aa2Sg8+3A3Utvj8XBWo7a6Xn+sxLRUYo0
-         4dMw==
-X-Gm-Message-State: AFqh2kpIZSrjpVr/qpQWCQ4nnE8jnL8L9jhRYg/QkzIYUp0bpJ3WtuW9
-        HDHup/Hqnvfac+YQ0YJO9DcLt/+pau4+i9Uq
-X-Google-Smtp-Source: AMrXdXsRAsEdog7NaavOYefh0QcHHB2Wm9pducYrAdYL9mGRt+weUVR1SQoPleZylrdYO3Jz5ySy/w==
-X-Received: by 2002:a17:902:a3c1:b0:193:2a8c:28cb with SMTP id q1-20020a170902a3c100b001932a8c28cbmr15649658plb.21.1673559368478;
-        Thu, 12 Jan 2023 13:36:08 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p1iROqIkYhjnh8TCzOffzpktAibiBtkkjcmbNup9a5A=;
+        b=Zi0scegoFiwrrC8AAmM0e/hmgH/+pgKeBFQfoJI5EiYJvfzoyGMdjvVicE7SzLq4Yj
+         d93+88ARBCcRobwclKpor8ZjLjJ98dppUXzNPvKZ3sV8vdgUCoYzU3V/HaRF5SDTTXfj
+         NTJ2tYQ5FWqlPCaVMH+f+XUi2NRXJGWhc862wcHwqgecd8+jG4IO07PQZjQV5Z2Hy/01
+         Z1Y7TQZFjElzZyxJzmjO8uYKXXf1T9TzPs5s1fFQsLUuHc80wSd3ZJIdNPixbphx2xl+
+         rS+tE7OTMaXXs0/XmA51RGLg0zir/kxTgyZ69vAz4ewbQTkOhmwB8WGPjxspO8QFWgeU
+         Wb1g==
+X-Gm-Message-State: AFqh2krIpkU1UUs6OfqEYlk0xgQMAsCEIDsUsS2Hd0FaWx+UNQIj+Tyg
+        XzIx/mexT1oNTCvODSt1RGkpzGJZ81pKkw2r
+X-Google-Smtp-Source: AMrXdXtnU8DSemdsMHGm4Li6ynIxcbtngqZhvSOKD9uqzQUwCm/QNhgo+9C3rCBq4HA+9Lkdw9RrkA==
+X-Received: by 2002:a17:903:22c5:b0:193:2ed4:5615 with SMTP id y5-20020a17090322c500b001932ed45615mr22618472plg.29.1673559596172;
+        Thu, 12 Jan 2023 13:39:56 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u2-20020a170902714200b00178143a728esm12605918plm.275.2023.01.12.13.36.07
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b00192d9b86318sm12589777plp.137.2023.01.12.13.39.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 13:36:07 -0800 (PST)
-Date:   Thu, 12 Jan 2023 13:36:07 -0800
+        Thu, 12 Jan 2023 13:39:55 -0800 (PST)
+Date:   Thu, 12 Jan 2023 13:39:55 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Donnellan <ajd@linux.ibm.com>
-Cc:     linux-hardening@vger.kernel.org
-Subject: Re: Kernel Self-Protection Project meeting
-Message-ID: <202301121333.D4395FE3@keescook>
-References: <202301110820.C6020B71EA@keescook>
- <202301110826.20083483E@keescook>
- <5af2c54b767e2d314041dc77378c492ed44eaacf.camel@linux.ibm.com>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     tony.luck@intel.com, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pstore/ram: Rework logic for detecting ramoops
+Message-ID: <202301121337.B8CCCB6@keescook>
+References: <1673428065-22356-1-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5af2c54b767e2d314041dc77378c492ed44eaacf.camel@linux.ibm.com>
+In-Reply-To: <1673428065-22356-1-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 12, 2023 at 04:44:26PM +1100, Andrew Donnellan wrote:
-> Hi Kees,
+On Wed, Jan 11, 2023 at 02:37:45PM +0530, Mukesh Ojha wrote:
+> The reserved memory region for ramoops is assumed to be at a fixed
+> and known location when read from the devicetree. This is not desirable
+> in environments where it is preferred the region to be dynamically
+> allocated at runtime, as opposed to being fixed at compile time.
 > 
-> On Wed, 2023-01-11 at 08:27 -0800, Kees Cook wrote:
-> > On Wed, Jan 11, 2023 at 08:23:39AM -0800, Kees Cook wrote:
-> > > Hi!
-> > > 
-> > > This is rather short notice; I'll send out a reminder further in
-> > > advance
-> > > next time, but if anyone would like to join our every-2-weeks
-> > > project
-> > > video conference, please drop in:
-> > > 
-> > >         https://meet.google.com/cuu-hqcm-ggg
+> Also, Some of the platforms might be still expecting dedicated
+> memory region for ramoops node where the region is known
+> beforehand and platform_get_resource() is used in that case.
 > 
-> This is a great idea!
+> So, Add logic to detect the start and size of the ramoops memory
+> region by looking up reserved memory region with
+> of_reserved_mem_lookup() when platform_get_resource() failed.
 > 
-> Were there any notes taken from today's call?
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
-Yes, I kept some limited notes, but tried to include URLs for stuff that
-got talked about. I'm building a place to keep them that is more
-change-control friendly besides a google doc. :) I'll finish getting
-that built and get it published soon.
+Thanks for the patch! Notes below...
 
-> > *cough* at 10am US Pacific today...
+> ---
+>  fs/pstore/ram.c | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
 > 
-> Is it anticipated that the meetings will consistently be at 10am
-> PST/PDT or will that move around a bit?
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index ade66db..e4bbba1 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/compiler.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_reserved_mem.h>
+>  
+>  #include "internal.h"
+>  #include "ram_internal.h"
+> @@ -643,6 +644,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>  {
+>  	struct device_node *of_node = pdev->dev.of_node;
+>  	struct device_node *parent_node;
+> +	struct reserved_mem *rmem;
+>  	struct resource *res;
+>  	u32 value;
+>  	int ret;
+> @@ -651,13 +653,20 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	if (!res) {
+> -		dev_err(&pdev->dev,
+> -			"failed to locate DT /reserved-memory resource\n");
+> -		return -EINVAL;
+> +		rmem = of_reserved_mem_lookup(of_node);
+> +		if (rmem) {
+> +			pdata->mem_size = rmem->size;
+> +			pdata->mem_address = rmem->base;
+> +		} else {
+> +			dev_err(&pdev->dev,
+> +				"failed to locate DT /reserved-memory resource\n");
+> +			return -EINVAL;
+> +		}
 
-That's the current plan for now (but see below), every 2 weeks at 10am
-US Pacific. If there's a good reason to move it around, we can certainly
-do that.
+Since the "else" case returns, the traditional code pattern is to leave
+the other case "inline" (an indented), like so:
 
-> (I realise I'm a very quiet lurker on this list, but I am interested in
-> occasionally dropping in when I can; 10am PST is a bit tricky here in
-> +1100 territory but I'll still try.)
+		if (!rmem) {
+			dev_err(&pdev->dev,
+				"failed to locate DT /reserved-memory resource\n");
+			return -EINVAL;
+		}
+		pdata->mem_size = rmem->size;
+		pdata->mem_address = rmem->base;
 
-Yeah, once we've gotten the hang of it, I'd like to maybe shift it
-around so it's more AU friendly with some regularlity.
+
+> +	} else {
+> +		pdata->mem_size = resource_size(res);
+> +		pdata->mem_address = res->start;
+>  	}
+
+Since this change the potential interface with DT, can you also update
+the documentation in:
+
+Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+
+Or maybe my understanding of DT parsing is lacking and this change is
+doing something slightly different?
+
+-Kees
+
+>  
+> -	pdata->mem_size = resource_size(res);
+> -	pdata->mem_address = res->start;
+>  	/*
+>  	 * Setting "unbuffered" is deprecated and will be ignored if
+>  	 * "mem_type" is also specified.
+> -- 
+> 2.7.4
+> 
 
 -- 
 Kees Cook
