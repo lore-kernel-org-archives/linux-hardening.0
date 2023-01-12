@@ -2,86 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FCA3C677F1
-	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 22:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA169C54EBE
+	for <linux-hardening@archiver.kernel.org>; Thu, 12 Jan 2023 22:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236905AbjALWXl (ORCPT
+        id S240194AbjALW1w (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 12 Jan 2023 17:23:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39410 "EHLO
+        Thu, 12 Jan 2023 17:27:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240642AbjALWXA (ORCPT
+        with ESMTP id S240159AbjALW1I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 12 Jan 2023 17:23:00 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA5632240
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 14:18:05 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id w3so21619351ply.3
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 14:18:05 -0800 (PST)
+        Thu, 12 Jan 2023 17:27:08 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66C53BEAB
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 14:24:36 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id 78so13762368pgb.8
+        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 14:24:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pQuiKZTcysP+X0OflIm+diuT8xEgILcbwkQoyyI8+0o=;
-        b=icewnOc84IIjF3zzON1xLWkC6RiMkayacySIOkPIsqmi6cQtvdd2hQxI3+R1O8RQDu
-         6xssG6vq9iZNtd/vhg2VOo1//h0T38JpbGQGwQn3IyhXa/NsPMuhgLBnr/6c55KwHGD+
-         kcXWnufqryq/ioVn+ogLnxmHf5hhSQx+6+rC8=
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MIHU3yvE0AEyf97Few65TN6W0VeSVha7m422Ft94+7A=;
+        b=CbA4pTm2SHhAMNA1b6IXOEtNp1xFz0u0mzMKo9bqUTONN3HQbnPTKBKrLsogLpNjSa
+         0ZNtxD3nvVpAux+j70KuFPBNjUf8wylSfZANYsIlgMlRAIbmw5JG17Tr947Su/sT89cO
+         hWADWSOoopeu4L7R3sXZpD7hVv4uFgRkcQ0m8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pQuiKZTcysP+X0OflIm+diuT8xEgILcbwkQoyyI8+0o=;
-        b=BBGI3Tmm/OleqWTRiU8jnLxBlM6XNMBQglWbQUsK7fVNlOAOnSAcJBPuHDD9uIJVxd
-         ZMooPGB4nddcGE53hIx8FMS1vPaWvGNtfllcX+S6GdM7elNsceLT8788j9VY4OBRUIPa
-         m615SUdt7VzSKfKWZZkhfQdIgFMrnsp/kyoWLx6JJAtoGSNWOuAipM3KmqsDUL2vigi2
-         Y0gjO3MeJ9YeXOjYD9rvLA7m3++gXJTAuazjSu0GC/ukprgjyy49f7hiYlTq51WEnYTj
-         bOazsVkFl9IsQbTQGWG0KEnFDasDL5fjdJzFs3VWIL5GswthY5y5ZvmyiZx8K3Deucpr
-         1iEQ==
-X-Gm-Message-State: AFqh2kqh/Tk3jTNClSpJv04urT8tkKgR/EvWqmgN9qfuoKsYa78PURIr
-        c+Q4enY0QCEUEdOfO1/iTHZ0Hks+PyS0v/x3
-X-Google-Smtp-Source: AMrXdXtXS1FFgjUUavPIWXAX+IH21ePUxx9ZCBLWfdePFzprzmAAeyLXPPq+TeOmmw8PlG9ERGp1IQ==
-X-Received: by 2002:a17:902:db08:b0:194:5d2d:3c31 with SMTP id m8-20020a170902db0800b001945d2d3c31mr5929835plx.11.1673561885371;
-        Thu, 12 Jan 2023 14:18:05 -0800 (PST)
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MIHU3yvE0AEyf97Few65TN6W0VeSVha7m422Ft94+7A=;
+        b=UDLnWx7KYqA/UHIZ45mXq+P6AW+h+PRgoYWKkfwt3X5cgbDwhWPyVGAuyInPLyEkUW
+         GcDSccDWzUnt8/a6GsXrYSBq0b7ub8Ny8Fva3yd4HZCg7RU5/vNYXzXgrRTfgHZF1H+r
+         z1Ra++34+y+/P4u2Ck+R/v+SwScniB15uqo2D/orFc6UCD6Phei7rMcFuCAcssYAE6eX
+         x7lO8wYCBKsuoFVYIQtx7DQ7r82U9TEpdY7xDqMOLCKRC1hRtkBjVC/1e0he+bxVkAwI
+         HdO3ulmwR43nr1g9B8tiuvby+q7X30snFIBktVYilEYDXmbFXnTxXZD8jXJ0oz2v6uYk
+         VDXQ==
+X-Gm-Message-State: AFqh2kqoi4iwem0c7rMvLKtDnTf4UbWRfznPro8hwtmZJKE8cd9Xb+UK
+        38ePGFnb5ETWYL2Wat3qKAgyTw==
+X-Google-Smtp-Source: AMrXdXuKAy66qRsaguoO7dg6xnQ3vgZ5z1AK7rX4p+jat7ZwYy/A+VHwQzvqc14DEcs75u/ulmALZA==
+X-Received: by 2002:a05:6a00:3311:b0:582:6732:ee03 with SMTP id cq17-20020a056a00331100b005826732ee03mr8164704pfb.9.1673562275935;
+        Thu, 12 Jan 2023 14:24:35 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ij18-20020a170902ab5200b00176e6f553efsm12621992plb.84.2023.01.12.14.18.04
+        by smtp.gmail.com with ESMTPSA id q20-20020aa79834000000b0058134d2df41sm11375879pfl.146.2023.01.12.14.24.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 14:18:04 -0800 (PST)
-Date:   Thu, 12 Jan 2023 14:18:04 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Cheng Xu <chengyou@linux.alibaba.com>,
-        Kai Shen <kaishen@linux.alibaba.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] RDMA/erdma: Replace zero-length arrays with
- flexible-array members
-Message-ID: <202301121418.4CCEA8115@keescook>
-References: <Y7zCBqwC1LtabRJ9@work>
+        Thu, 12 Jan 2023 14:24:35 -0800 (PST)
+From:   coverity-bot <keescook@chromium.org>
+X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
+Date:   Thu, 12 Jan 2023 14:24:34 -0800
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Lijo Lazar <lijo.lazar@amd.com>, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, "Jiadong.Zhu" <Jiadong.Zhu@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@gmail.com>,
+        Likun Gao <Likun.Gao@amd.com>, dri-devel@lists.freedesktop.org,
+        Tao Zhou <tao.zhou1@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>, yipechai <YiPeng.Chai@amd.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Coverity: gfx_v9_0_init_cp_compute_microcode(): Control flow issues
+Message-ID: <202301121424.5FA0483AB@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y7zCBqwC1LtabRJ9@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 09, 2023 at 07:40:22PM -0600, Gustavo A. R. Silva wrote:
-> Zero-length arrays are deprecated[1] and we are moving towards
-> adopting C99 flexible-array members instead. So, replace zero-length
-> arrays, in a couple of structures, with flex-array members.
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [2].
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Hello!
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+This is an experimental semi-automated report about issues detected by
+Coverity from a scan of next-20230111 as part of the linux-next scan project:
+https://scan.coverity.com/projects/linux-next-weekly-scan
+
+You're getting this email because you were associated with the identified
+lines of code (noted below) that were touched by commits:
+
+  Mon Jan 9 17:02:18 2023 -0500
+    ec787deb2ddf ("drm/amd: Use `amdgpu_ucode_*` helpers for GFX9")
+
+Coverity reported the following:
+
+*** CID 1530548:  Control flow issues  (DEADCODE)
+drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c:1374 in gfx_v9_0_init_cp_compute_microcode()
+1368     		adev->gfx.mec2_feature_version = adev->gfx.mec_feature_version;
+1369     	}
+1370
+1371     	gfx_v9_0_check_if_need_gfxoff(adev);
+1372     	gfx_v9_0_check_fw_write_wait(adev);
+1373     	if (err) {
+vvv     CID 1530548:  Control flow issues  (DEADCODE)
+vvv     Execution cannot reach this statement: "amdgpu_ucode_release(&adev-...".
+1374     		amdgpu_ucode_release(&adev->gfx.mec_fw);
+1375     		amdgpu_ucode_release(&adev->gfx.mec2_fw);
+1376     	}
+1377     	return err;
+1378     }
+1379
+
+If this is a false positive, please let us know so we can mark it as
+such, or teach the Coverity rules to be smarter. If not, please make
+sure fixes get into linux-next. :) For patches fixing this, please
+include these lines (but double-check the "Fixes" first):
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1530548 ("Control flow issues")
+Fixes: ec787deb2ddf ("drm/amd: Use `amdgpu_ucode_*` helpers for GFX9")
+
+Thanks for your attention!
 
 -- 
-Kees Cook
+Coverity-bot
