@@ -2,67 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DA0C54EBE
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 Jan 2023 07:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7BC54EBD
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 Jan 2023 12:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241108AbjAMHJm (ORCPT
+        id S241010AbjAMMIW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 Jan 2023 02:09:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47646 "EHLO
+        Fri, 13 Jan 2023 07:08:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241159AbjAMHJT (ORCPT
+        with ESMTP id S233993AbjAMMHb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 Jan 2023 02:09:19 -0500
-X-Greylist: delayed 975 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 12 Jan 2023 22:57:19 PST
-Received: from 4.mo575.mail-out.ovh.net (4.mo575.mail-out.ovh.net [46.105.59.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001F67D1C7
-        for <linux-hardening@vger.kernel.org>; Thu, 12 Jan 2023 22:57:19 -0800 (PST)
-Received: from director7.ghost.mail-out.ovh.net (unknown [10.108.16.164])
-        by mo575.mail-out.ovh.net (Postfix) with ESMTP id 5314D22F8A
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 06:41:03 +0000 (UTC)
-Received: from ghost-submission-6684bf9d7b-xdp7s (unknown [10.108.1.53])
-        by director7.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 0CA6C1FF12;
-        Fri, 13 Jan 2023 06:41:03 +0000 (UTC)
-Received: from RCM-web7.webmail.mail.ovh.net ([151.80.29.19])
-        by ghost-submission-6684bf9d7b-xdp7s with ESMTPSA
-        id 4OIWAf/8wGPowRkAd8AKww
-        (envelope-from <rafal@milecki.pl>); Fri, 13 Jan 2023 06:41:02 +0000
+        Fri, 13 Jan 2023 07:07:31 -0500
+Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98C0A3AB13;
+        Fri, 13 Jan 2023 03:59:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1673611149; x=1705147149;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=B/FJ28V5OM9qQHwIsioJH73Z9oXDZRZjd2zV9nWXUuI=;
+  b=ucKD6SB+OpCcVChs6yWgzlnfkj2r47Gfs0GyrKdfYT2rzDyhxaBfqJVh
+   /RKH8ZzRyOOPqM2lFttem9jueqjrTQczlygm6qbvp8Z2+WpZ4jMuLgPWW
+   9Q3J+gpvndTUBXBH87Mev6hp1UBMPEQFKAO0xDch/6MCIJWHlQvJbt6HV
+   4=;
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 13 Jan 2023 03:59:09 -0800
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.45.79.139])
+  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 03:59:09 -0800
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Fri, 13 Jan 2023 03:59:05 -0800
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <keescook@chromium.org>, <gpiccoli@igalia.com>, <corbet@lwn.net>,
+        <tony.luck@intel.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>
+CC:     <linux-hardening@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Mukesh Ojha <quic_mojha@quicinc.com>
+Subject: [PATCH v2 2/3] Documentation: admin-guide: ramoops.rst: Update the ramoops document
+Date:   Fri, 13 Jan 2023 17:28:45 +0530
+Message-ID: <1673611126-13803-2-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1673611126-13803-1-git-send-email-quic_mojha@quicinc.com>
+References: <1673611126-13803-1-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
-Date:   Fri, 13 Jan 2023 07:41:02 +0100
-From:   =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] nvmem: u-boot-env: replace zero-length array with
- flexible-array member
-In-Reply-To: <Y7zB+s2AC6O+CRR+@work>
-References: <Y7zB+s2AC6O+CRR+@work>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <494915c85c52e66aa83fce49556ccf3e@milecki.pl>
-X-Sender: rafal@milecki.pl
-X-Originating-IP: 194.187.74.233
-X-Webmail-UserID: rafal@milecki.pl
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 18230289816807779163
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvhedrleejgddutddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvvefujghffgfkgihitgfgsehtjehjtddtredvnecuhfhrohhmpeftrghfrghlucfoihhlvggtkhhiuceorhgrfhgrlhesmhhilhgvtghkihdrphhlqeenucggtffrrghtthgvrhhnpefgueelueetteefueehhffhgfetvdegjeefleffuedvhfeuffdvheegueevuefhleenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeduvdejrddtrddtrddupdduleegrddukeejrdejgedrvdeffedpudehuddrkedtrddvledrudelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpeeorhgrfhgrlhesmhhilhgvtghkihdrphhlqedpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehjeehpdhmohguvgepshhmthhpohhuth
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-01-10 02:40, Gustavo A. R. Silva wrote:
-> Zero-length arrays are deprecated[1] and we are moving towards
-> adopting C99 flexible-array members instead. So, replace zero-length
-> array declaration in struct u_boot_env_image_broadcom with flex-array
-> member.
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [2].
+The reserved memory region for ramoops is assumed to be at a fixed
+and known location when read from the devicetree. This is not desirable
+in environments where it is preferred the region to be dynamically
+allocated at runtime. So, update the document while adding the
+support in the driver.
 
-I also handled this issue in my
-[PATCH V2 4/6] nvmem: u-boot-env: convert to layout driver
-https://lore.kernel.org/linux-arm-kernel/20230111073102.8147-4-zajec5@gmail.com/
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+---
+Change in v2:
+  - Added this patch as per changes going to be done in patch 3/3
+
+ Documentation/admin-guide/ramoops.rst | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+index e9f8514..88884b2 100644
+--- a/Documentation/admin-guide/ramoops.rst
++++ b/Documentation/admin-guide/ramoops.rst
+@@ -16,8 +16,9 @@ survive after a restart.
+ Ramoops concepts
+ ----------------
+ 
+-Ramoops uses a predefined memory area to store the dump. The start and size
+-and type of the memory area are set using three variables:
++Ramoops uses both predefined and dynamically memory area to store the dump.
++The start and size and type of the memory area are set using three
++variables:
+ 
+   * ``mem_address`` for the start
+   * ``mem_size`` for the size. The memory size will be rounded down to a
+@@ -70,7 +71,8 @@ Setting the ramoops parameters can be done in several different manners:
+ 
+  B. Use Device Tree bindings, as described in
+  ``Documentation/devicetree/bindings/reserved-memory/ramoops.yaml``.
+- For example::
++
++ Example of statically reserved ramoops region::
+ 
+ 	reserved-memory {
+ 		#address-cells = <2>;
+@@ -85,6 +87,23 @@ Setting the ramoops parameters can be done in several different manners:
+ 		};
+ 	};
+ 
++ Example of dynamically reserved ramoops region::
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		ramoops@8f000000 {
++			compatible = "ramoops";
++			alloc-ranges = <0x0 0x00000000 0xffffffff 0xffffffff>;
++			size = <0 0x100000>;
++			record-size = <0x4000>;
++			console-size = <0x4000>;
++		};
++	};
++
++
+  C. Use a platform device and set the platform data. The parameters can then
+  be set through that platform data. An example of doing that is:
+ 
+-- 
+2.7.4
+
