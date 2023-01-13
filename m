@@ -2,271 +2,158 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC125C6379F
-	for <linux-hardening@archiver.kernel.org>; Fri, 13 Jan 2023 22:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD2FC677F1
+	for <linux-hardening@archiver.kernel.org>; Fri, 13 Jan 2023 23:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231224AbjAMWoi (ORCPT
+        id S229980AbjAMXHC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 Jan 2023 17:44:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42720 "EHLO
+        Fri, 13 Jan 2023 18:07:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230482AbjAMWog (ORCPT
+        with ESMTP id S231221AbjAMXHB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 Jan 2023 17:44:36 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B558576AE9
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 14:44:34 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id b9-20020a17090a7ac900b00226ef160dcaso24065027pjl.2
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 14:44:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wsXcrt0dsEzR/+pYFsFusq6CHpnVWbUri9q3pTXoUpc=;
-        b=kzBLf0zyrJ0S9DnoDxxCJzIxLFuBn5Nc11m7pIilbQRGBA4EGG4xyxmW903T9u5d4B
-         vieknMz1rKNfYRRjaSi6uO5ew+H7oKkwMMYmjeBJ5DO59KaMe1OUjGDEhQ5XxvjkTTS6
-         8ZpgeR/74LyDm3zUnsdbnAymdoG1pRBviLXDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wsXcrt0dsEzR/+pYFsFusq6CHpnVWbUri9q3pTXoUpc=;
-        b=vH5SXT2CcUayMOtOuhkeW/1TxQCWkX1XXQ2aCiZLsSuWmcZTEJE7vr1SwZvXxNW2js
-         GbA0c4flvH4CqSxviYw2Jj22kMsjGOZfjoEAEztY6AhiP4ipjspxg1a2LSwejVUxb+Rd
-         OPYKJUpeCgIFFWdTTnVgsTa9LsbtfrwRU+uX87f8WtXAZLoFAO9RFn71gTXI/eDjZ2Wv
-         E/xKcw7mHNVD8rIvJ4KUggb7id12bNVcOY7zEygqJnUlI9rTC1DLjs1G2+KPK7nmKea7
-         8dZRMB/6z/o/vi+EBUWFNqBiq7d4rSUbMRcDFW50lHc2IBaWty+Gi7ofFJ6P3hvS9vUa
-         oP7g==
-X-Gm-Message-State: AFqh2koXKdSBRhXIB3AZOoL1VUiFB+6Fe/y9/XUez8RX1mMHT3A0s3KS
-        T9FEMdBd0wrs2jsP3S67kMq+lA==
-X-Google-Smtp-Source: AMrXdXv62Ov1kdHtrFHfvRTxiZut/kkJH/iEliksst2Md32FuzN3Om+eA5OI0DoqKT4oF5UulmKYgQ==
-X-Received: by 2002:a05:6a20:8e10:b0:a4:a73e:d1e2 with SMTP id y16-20020a056a208e1000b000a4a73ed1e2mr118115871pzj.57.1673649874224;
-        Fri, 13 Jan 2023 14:44:34 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h4-20020aa79f44000000b0056d7cc80ea4sm303214pfr.110.2023.01.13.14.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 14:44:33 -0800 (PST)
-Date:   Fri, 13 Jan 2023 14:44:32 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Siddhesh Poyarekar <siddhesh@gotplt.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Michael Chan <michael.chan@broadcom.com>
-Subject: Re: linux-next - bnxt buffer overflow in strnlen
-Message-ID: <202301131415.6E0C3BF328@keescook>
-References: <20220920192202.190793-1-keescook@chromium.org>
- <20220920192202.190793-5-keescook@chromium.org>
- <Y8F/1w1AZTvLglFX@x1-carbon>
- <Y8GB9DMtcSP/8e/i@x1-carbon>
+        Fri, 13 Jan 2023 18:07:01 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35FB02AE6;
+        Fri, 13 Jan 2023 15:06:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=iwz7mFj6BnnAFkpB1WWVGVKEvGEgqsYMT8OTDqMBOOc=; b=S5supkgbtZvpM5usiJROXh2SMd
+        Y1hgUhSckjLRWnEj5HAZ28xKY2/jO40aad8NX8SKFWSCGAGe9KDs1BwfBsuo5kkXW+s94bGtLGHLI
+        tCwn3nTKTH6Y54z00u1h2FEamqJJ9FozrXUhLCT+bbmOAPmvO4MpU3yC4BZZPuqCJuQpnxv4XE4ri
+        i/ADfdDAjavLauay0iZr1J1GtFopf3WPbsKebPod2u5+ZdkCp2KfKD1UgttFwmQjf6xHk24kVgjeO
+        ydAAQcarw67L37NRtPQlurvEl5LBfoxJmbuhhgEvzjMnppCsrL1pAdipAe6/gxO2dsi8h/TCCtzjr
+        jxA615hw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pGT8N-004mqa-Md; Fri, 13 Jan 2023 23:06:51 +0000
+Date:   Fri, 13 Jan 2023 15:06:51 -0800
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Vegard Nossum <vegard.nossum@oracle.com>
+Cc:     Petr Pavlu <petr.pavlu@suse.com>, Petr Mladek <pmladek@suse.com>,
+        prarit@redhat.com, david@redhat.com, mwilck@suse.com,
+        linux-kernel@vger.kernel.org,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, linux-modules@vger.kernel.org,
+        John Haxby <john.haxby@oracle.com>,
+        Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v3] kmod: harden user namespaces with new
+ kernel.ns_modules_allowed sysctl
+Message-ID: <Y8HkC1re3Fo46Ne3@bombadil.infradead.org>
+References: <20230112131911.7684-1-vegard.nossum@oracle.com>
+ <Y8BVNihCrKOeY/FO@bombadil.infradead.org>
+ <e88d9189-317c-6431-7fe0-08b82f13a81c@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y8GB9DMtcSP/8e/i@x1-carbon>
+In-Reply-To: <e88d9189-317c-6431-7fe0-08b82f13a81c@oracle.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 04:08:21PM +0000, Niklas Cassel wrote:
-> On Fri, Jan 13, 2023 at 04:59:19PM +0100, Niklas Cassel wrote:
-> > On Tue, Sep 20, 2022 at 12:22:02PM -0700, Kees Cook wrote:
-> > > Since the commits starting with c37495d6254c ("slab: add __alloc_size
-> > > attributes for better bounds checking"), the compilers have runtime
-> > > allocation size hints available in some places. This was immediately
-> > > available to CONFIG_UBSAN_BOUNDS, but CONFIG_FORTIFY_SOURCE needed
-> > > updating to explicitly make use the hints via the associated
-> > > __builtin_dynamic_object_size() helper. Detect and use the builtin when
-> > > it is available, increasing the accuracy of the mitigation. When runtime
-> > > sizes are not available, __builtin_dynamic_object_size() falls back to
-> > > __builtin_object_size(), leaving the existing bounds checking unchanged.
-> > > [...]
-> > Hello Kees,
+On Thu, Jan 12, 2023 at 10:53:07PM +0100, Vegard Nossum wrote:
+> On 1/12/23 19:45, Luis Chamberlain wrote:
+> > On Thu, Jan 12, 2023 at 02:19:11PM +0100, Vegard Nossum wrote:
+> > > +ns_modules_allowed
+> > > +==================
+> > > +
+> > > +Control whether processes may trigger module loading inside a user namespace.
 > > 
-> > Unfortunately, this commit introduces a crash in the bnxt
-> > ethernet driver when booting linux-next.
+> > This is false documentation. The place it is trying to protect simply
+> > prevents trying to call modprobe for auto-loading within the kernel.
+> 
+> I don't think this is false -- but yes, this only protects module
+> auto-loading in user namespaces; all auto-loading calls within the
+> kernel should be going through this __request_module() -> modprobe path.
+> 
+> init_module()/finit_module(), the mechanism used by modprobe, are
+> themselves already restricted inside user namespaces, see below.
 
-Hi! Thanks for the report. Notes below...
+The documentation should be clear about the exact nature of what
+mechanism is prevented to load.
 
-> > I haven't looked at the code in the bnxt ethernet driver,
-> > I simply know that machine boots fine on v6.2.0-rc3,
-> > but fails to boot with linux-next.
+> > > +	/*
+> > > +	 * Disallow module loading if we're in a user namespace.
+> > > +	 */
+> > > +	if (current_user_ns() != &init_user_ns &&
+> > > +	    !sysctl_ns_modules_allowed) {
+> > > +		pr_warn_ratelimited("request_module: pid %d (%s) in user namespace requested kernel module %s; denied due to kernel.ns_modules_allowed sysctl\n",
+> > > +			task_pid_nr(current), current->comm, module_name);
+> > > +		return -EPERM;
+> > > +	}
+> > > +
+> > >   	if (atomic_dec_if_positive(&kmod_concurrent_max) < 0) {
+> > >   		pr_warn_ratelimited("request_module: kmod_concurrent_max (%u) close to 0 (max_modprobes: %u), for module %s, throttling...",
+> > >   				    atomic_read(&kmod_concurrent_max),
 > > 
-> > So I started an automatic git bisect, which returned:
-> > 439a1bcac648 ("fortify: Use __builtin_dynamic_object_size() when available")
-> > 
-> > $ grep CC_VERSION .config
-> > CONFIG_CC_VERSION_TEXT="gcc (GCC) 12.2.1 20221121 (Red Hat 12.2.1-4)"
-> > CONFIG_GCC_VERSION=120201
-> > 
-> > $ grep FORTIFY .config
-> > CONFIG_ARCH_HAS_FORTIFY_SOURCE=y
-> > CONFIG_FORTIFY_SOURCE=y
-> > 
-> > 
-> > dmesg output:
-> > 
-> > <0>[   10.805253] detected buffer overflow in strnlen
+> > Have you seen what call_modprobe() does?
+> 
+> Yes.
+> 
+> > This is just a limitting the auto-loading through calling modprobe.
+> > If the concern is to load modules wouldn't you be better off just
+> > putting a stop gap at finit_module() which actually receives the
+> > load attempt from modprobe? Ie, an evil namespace, if it has access
+> > to /sbin/modprobe could simply just try calling /sbin/modprobe on its
+> > own.
+> 
+> No.
+> 
+> Root inside a user namespace can't call finit_module() as it won't have
+> the necessary capabilities in the init namespace, see may_init_module().
+
+I think the documentation to this knob you are adding should explain
+this as well to give a bette context as to why it is useful.
+
+And if may_init_module() suffices, why not just add a may_init_module()
+instead of your check? Why would we allow a successful call to modprobe
+with your sysctl but end up having it ignored in the end by
+finit_module()? If what is being allowed here is to overcome may_init_module()
+CAP_SYS_MODULE check by using call_modprobe() on the user namespace
+the commit log should just mention this, and mention that by design
+user namespaces have never been intended to allow loading modules, even if
+they somehow end up triggering auto-loading of modules via request_module().
+
+If this is true then currently we are enabling auto-loading as a
+mistake, and the sysctl is only valuable to prevent regressions with
+existing behaviour which should have been disabled from the start.
+
+Is there an example successful exploit which takes avantage of having
+a user namespace auto-load a kernel module and that triggers a security
+flaw? What's an example of one?
+
+> > What this *could* do is race to force a failure on some other *real*
+> > modprobe request we do wish to honor when the above kmod kmod_concurrent_max
+> > is triggered.
+> 
+> How? My new check is done before the kmod_concurrent_max check/critical
+> section... the check doesn't cause any more modprobe requests to happen
+> in the first place, the only thing it can do is make them exit early.
+> There is no way my patch can make this worse.
+
+You are missing my point. My point is that abuse in general over having
+a user namespace calling modprobe could cause harm that it can possibly
+Denial-of-Service valid requests.
+
+If user namespaces should never have been allowed to even auto-load the
+commit log should mention that.
+
+> > So in terms of justification, this commit log needs a bit more work as I
+> > just can't see how this alone is fixing any CVE.
+> 
 > [...]
-> > <4>[   10.931470] Call Trace:
-> > <6>[   10.936317] ata9: SATA link down (SStatus 0 SControl 300)
-> > <4>[   10.936745]  <TASK>
-> > <4>[   10.936745]  bnxt_ethtool_init.cold+0x18/0x18
+> 
+> > So let's take a step back and think this through. What exaclty and why
+> > would this commit fix *any* security issue? Itemizing CVEs won't cut it.
+> 
+> I can include my explanations above in the changelog if you think that
+> will help.
 
-Are you able to run:
+Answering the above questions would help.
 
-$ ./scripts/faddr2line vmlinux bnxt_ethtool_init.cold+0x18/0x18
-
-to find the exact line it's failing on, just to be sure we're looking in
-the right place?
-
-There are a bunch of string functions being used in a loop
-bnxt_ethtool_init(). Here's the code:
-
-        if (bp->num_tests > BNXT_MAX_TEST)
-                bp->num_tests = BNXT_MAX_TEST;
-	...
-        for (i = 0; i < bp->num_tests; i++) {
-                char *str = test_info->string[i];
-                char *fw_str = resp->test0_name + i * 32;
-
-                if (i == BNXT_MACLPBK_TEST_IDX) {
-                        strcpy(str, "Mac loopback test (offline)");
-                } else if (i == BNXT_PHYLPBK_TEST_IDX) {
-                        strcpy(str, "Phy loopback test (offline)");
-                } else if (i == BNXT_EXTLPBK_TEST_IDX) {
-                        strcpy(str, "Ext loopback test (offline)");
-                } else if (i == BNXT_IRQ_TEST_IDX) {
-                        strcpy(str, "Interrupt_test (offline)");
-                } else {
-                        strscpy(str, fw_str, ETH_GSTRING_LEN);
-                        strncat(str, " test", ETH_GSTRING_LEN - strlen(str));
-                        if (test_info->offline_mask & (1 << i))
-                                strncat(str, " (offline)",
-                                        ETH_GSTRING_LEN - strlen(str));
-                        else
-                                strncat(str, " (online)",
-                                        ETH_GSTRING_LEN - strlen(str));
-                }
-        }
-
-The hardened strnlen() is used internally to the hardened strcpy() and
-strscpy()'s source argument, and strncat()'s dest and source arguments.
-The only non-literal source argument is fw_str.
-
-The destination in this loop is always "str", which is test_info->string[i].
-I'd expect "str" to always be processed as fixed size:
-
-struct bnxt_test_info {
-        u8 offline_mask;
-        u16 timeout;
-        char string[BNXT_MAX_TEST][ETH_GSTRING_LEN];
-};
-
-#define ETH_GSTRING_LEN         32
-#define BNXT_MAX_TEST   8
-
-And the allocation matches that size:
-
-test_info = kzalloc(sizeof(*bp->test_info), GFP_KERNEL);
-
-(bp->test_info is, indeed struct bnxt_test_info too.)
-
-The loop cannot reach BNXT_MAX_TEST. It looks like fw_str's size isn't
-known dynamically, so that shouldn't be a change. (It's assigned from
-a void * return.) So I suspect "str" ran off the end of the allocation,
-which implies that "fw_str" must be >= ETH_GSTRING_LEN. This line looks
-very suspicious:
-
-                char *fw_str = resp->test0_name + i * 32;
-
-I also note that the return value of strscpy() is not checked...
-
-Let's see...
-
-struct hwrm_selftest_qlist_output {
-	...
-        char    test0_name[32];
-        char    test1_name[32];
-        char    test2_name[32];
-        char    test3_name[32];
-        char    test4_name[32];
-        char    test5_name[32];
-        char    test6_name[32];
-        char    test7_name[32];
-	...
-};
-
-Ew. So, yes, it's specifically reach past the end of the test0_name[]
-array, *and* is may overflow the heap. Does this patch solve it for you?
-
-
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index cbf17fcfb7ab..ec573127b707 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -3969,7 +3969,7 @@ void bnxt_ethtool_init(struct bnxt *bp)
- 		test_info->timeout = HWRM_CMD_TIMEOUT;
- 	for (i = 0; i < bp->num_tests; i++) {
- 		char *str = test_info->string[i];
--		char *fw_str = resp->test0_name + i * 32;
-+		char *fw_str = resp->test_name[i];
- 
- 		if (i == BNXT_MACLPBK_TEST_IDX) {
- 			strcpy(str, "Mac loopback test (offline)");
-@@ -3980,14 +3980,9 @@ void bnxt_ethtool_init(struct bnxt *bp)
- 		} else if (i == BNXT_IRQ_TEST_IDX) {
- 			strcpy(str, "Interrupt_test (offline)");
- 		} else {
--			strscpy(str, fw_str, ETH_GSTRING_LEN);
--			strncat(str, " test", ETH_GSTRING_LEN - strlen(str));
--			if (test_info->offline_mask & (1 << i))
--				strncat(str, " (offline)",
--					ETH_GSTRING_LEN - strlen(str));
--			else
--				strncat(str, " (online)",
--					ETH_GSTRING_LEN - strlen(str));
-+			snprintf(str, ETH_GSTRING_LEN, "%s test (%s)",
-+				 fw_str, test_info->offline_mask & (1 << i) ?
-+					"offline" : "online");
- 		}
- 	}
- 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
-index 2686a714a59f..a5408879e077 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
-@@ -10249,14 +10249,7 @@ struct hwrm_selftest_qlist_output {
- 	u8	unused_0;
- 	__le16	test_timeout;
- 	u8	unused_1[2];
--	char	test0_name[32];
--	char	test1_name[32];
--	char	test2_name[32];
--	char	test3_name[32];
--	char	test4_name[32];
--	char	test5_name[32];
--	char	test6_name[32];
--	char	test7_name[32];
-+	char	test_name[8][32];
- 	u8	eyescope_target_BER_support;
- 	#define SELFTEST_QLIST_RESP_EYESCOPE_TARGET_BER_SUPPORT_BER_1E8_SUPPORTED  0x0UL
- 	#define SELFTEST_QLIST_RESP_EYESCOPE_TARGET_BER_SUPPORT_BER_1E9_SUPPORTED  0x1UL
-
-
-
-
-
--- 
-Kees Cook
+  Luis
