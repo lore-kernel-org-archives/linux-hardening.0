@@ -2,157 +2,104 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A02CC54EBE
-	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 01:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FC5C54EBE
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 01:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229883AbjANB0i (ORCPT
+        id S230410AbjANBic (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 Jan 2023 20:26:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57772 "EHLO
+        Fri, 13 Jan 2023 20:38:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230119AbjANB0h (ORCPT
+        with ESMTP id S230252AbjANBia (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 Jan 2023 20:26:37 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34649FF5;
-        Fri, 13 Jan 2023 17:26:35 -0800 (PST)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30DNdxq4007591;
-        Sat, 14 Jan 2023 01:26:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2022-7-12;
- bh=WuEyVEzKPY1dz///J0HkhbPrC46V8MUbVfgSoSmK5oM=;
- b=kJOp4rWFXdfjw2opCLulAHK4OrATRWhny8qxMSSfg7hB5Wtr/EZq+R+qpn/bR0ov0Ymg
- BWwh8Mg2h7DPITnoCF7ijLRmdzWV7hz9UV2dwsWDaYRLI1fgxDVC8DQl35UlkcHbNvIg
- ggH0nXWJWsuMTrMjHt5pBH4W4yfkhQssnEKc4DRSuXplokAWgQ+GGydYmN67YLUbEvdA
- 3Hdrp3uCsL9eS4fFgfYqF7XaGhlWlbRwxlafVB/5EJei+cySeuY87fI+7mUZ047FRhI8
- KZeVyWXDDMdCIJJU3Qlkw6D6P32HSbz67UOTBpbjm3oLP6WfBqpe0kWEezC+Ztvvwkqn bQ== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3my0scp1tc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 14 Jan 2023 01:26:30 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30E1J3ff002679;
-        Sat, 14 Jan 2023 01:26:29 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3n3jm983nu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 14 Jan 2023 01:26:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OOe/YyJtVrMxMznICVjv+d5Pa9MqDPpAo5cvJ15AFUUw3HRkeY4Hk/bh2z3/xdbALKTCRVXAPYx1FnGdo69WRwtifFTTknpJ8ucLWCmWG5C92JSuMtQaKvue/sWMeCsbj5bnSWMgtY8m3ti0BpuQnZV+TFLX1x5aE6ZamnwdAPf8Livkps/ftfnWg5a9uSeSLsHK21K2I863rBlxmc7i5t9sazVtWqC2WgAp1GvU4YmdjZLwXpzrtdzyzAZaZ7Qb3KtiAEdMnproLlUYz5DAOZ5bAi2hiw115l+0eo/s9kXhyskNk+L3atCDUvIRcMBKCmf5o0ybK/Od2driiGcAsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WuEyVEzKPY1dz///J0HkhbPrC46V8MUbVfgSoSmK5oM=;
- b=aWwrCypQCSK0l4zpfpkNvk3J6C+pQIcj339lrceuKwGdjTrllLLFdmtnDP7F7sYGdNeBA/u03eGmuznnxwqgMT2yu0X1Ud/BtxmkH/01Okg1qlQyXb9zABtH/tHYC4NcaRXnV2aFfNYwbiFg9BnyOZ1zB1f7M1xp/SoGCT1MJBtToYYL+7BdZaQFyHrVNZmSD0pthygkr8hBaCBBPgESheEuWg5XC2h6k5kVDqZQpzWatB6r96HD1DahTTEgZsuyhAewUVL+LH+ABDUhUl2fQxNZ49KRta/3UtmKyHDDDwn4oRCpuWTlrKc/dJmQj2VetM4ScUEpM8xH0ppo7KEHqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Fri, 13 Jan 2023 20:38:30 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1924D89BE8
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 17:38:29 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id bj3so20863846pjb.0
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 17:38:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WuEyVEzKPY1dz///J0HkhbPrC46V8MUbVfgSoSmK5oM=;
- b=HOCq37H2xul37wsnyqP1P0OO3aVQdxR4hclFs5diAzIQTIi1EDraFGmtPgjP0BVQfT7b/3ZP72jGV95vW+5UjTlhwQmrKDFfoS/cFpEP7Fn+0eFaTuuiFpEoZVwH+8rocI7evG6/BRRiOh2aHj4fvaBhduFDNP79zTUTYhV8Ptc=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by DS7PR10MB4862.namprd10.prod.outlook.com (2603:10b6:5:38c::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.12; Sat, 14 Jan
- 2023 01:26:27 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::c7e9:609f:7151:f4a6]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::c7e9:609f:7151:f4a6%8]) with mapi id 15.20.6002.013; Sat, 14 Jan 2023
- 01:26:27 +0000
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: uapi: Replace 0-length array with flexible array
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1tu0tucsm.fsf@ca-mkp.ca.oracle.com>
-References: <20230105233042.never.913-kees@kernel.org>
-Date:   Fri, 13 Jan 2023 20:26:24 -0500
-In-Reply-To: <20230105233042.never.913-kees@kernel.org> (Kees Cook's message
-        of "Thu, 5 Jan 2023 15:30:46 -0800")
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0154.namprd03.prod.outlook.com
- (2603:10b6:a03:338::9) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FufgUw2fqlY7QEwBJBytXvOldn4bZyfyqwhzJKALwe4=;
+        b=LGjFLFVeQhyilSeBgpCX9oTZDmyJqsHWZniAk5sh+ZIa9/79Tp5cwxJc77KX6rkd6p
+         Mf26WNrxRFxQOt8fr5AChIfbhCglt2LnkzNZE7ZwvnArzQT6oIf3Ui9Hju8CcnNCpuAA
+         +MPTgpVlmQGpE758bzgDjBlISrvuaDZXpo32k+KuTk/LsDz852zLdtlFRuPbc2dDQToY
+         pg7GTuZKGQt0ht9HVPH/lB5yBHnpJdUzCARLYxkEycHH8tNQsAwW8q8ydrVFdUy5adfY
+         hetKp2YWriDyhM861MHEG9OZYOPB3mCUjFuDjADJVZ2wjTcvwpn0J56nCJV/rzka6A2I
+         qdVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FufgUw2fqlY7QEwBJBytXvOldn4bZyfyqwhzJKALwe4=;
+        b=2JxDKADEWEI6eejZdppRjamkPZDQ21KxuXC13D/j3siMQqKLsxrIV8qoJ96dnzBQ56
+         8NpSv+xUzuBM3/NRFm+ro87vsrn46iodyFid78mxEvwx5Mt2RmdqcenullzL+xaBQBiC
+         cTyg1hjhyER8n3HQx1FaQpc/ehylQq2+NQW5sPtD2B1MTvJe+3YNnqyccDJCvHo3/Uh9
+         kHapWBCxQG6VmTTJAtSkLj9ZtJiNiW1DbYmUrR9pcJ4YGF0XL+GCQxct7xaWdH+g5Enl
+         v9gjkkWP5LnDphOF61cE6yTt5J3wK8p194YhH73eygOWnMIIsZaUw+l56Nwa7RwgeV6W
+         DudA==
+X-Gm-Message-State: AFqh2krBRkKGYEks4YvjlU6i/dd0Aza9pPr34yPiqPBN/giRbnteGfjK
+        NEIPHW2e9sbLQQzuaekJ6BEhTjTRcB62t2r7+LzeTA==
+X-Google-Smtp-Source: AMrXdXvgVMPaadk3FjzCg9dQFfBrULyf1BBRFZGq3lUy7NI9a2lpX1LWoLxvWNTcTSPuEhjIW7mrcQOny0palWCm1qI=
+X-Received: by 2002:a17:903:292:b0:189:9973:fb58 with SMTP id
+ j18-20020a170903029200b001899973fb58mr156924plr.59.1673660308451; Fri, 13 Jan
+ 2023 17:38:28 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|DS7PR10MB4862:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3ed5f5bf-fc35-4ce6-7354-08daf5ce5b71
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BGqFq9MPq3jnkuEtKO3Qjtk7bx2PBf+Tl0e/zanz4sUPuKnYL83dF1ljfnQPA4eUp+pABgMR3dOaipBZvBrzPK1bc10Iu+giIJJLSa6hELev7cJmFK7rkpuJPgc30kdFL5Q8ez71lL7YLESYYcFjvcBAHojdvtjNlDTDw8gaDBKtKGl8MJzsJTHKOOExCfCvwOuDy4n3saIAImxBm6m+waJtcdXCUHWVC4KTTvZW12GdtmrIbA4H5D64glrMySS35WUz+OjgY7Ra34VWM/bTFqM7I7SOOUMVRPtR9L4TReVnjUVKanbiNN195kljrswaqyaAXusYwoOXUcpKzF21Rk75gsbAvoLNQAbia05+tPXGazj8cb7OV+HqqdFOm0BQN3qAFx/Mjco8d7+OwaYFCc2/5BIiuBT4BycU2xl1vPlwiBjfzWi4iCSaN+64kHHfE2qVz2mJLVDFTD1O4cm0whjE9M2RKiEIu0NXO1qyDFTl3M26IeTc20/o9ruUsSYU0v+UGf53hHxrS1qlAIzsy1IQ9rKkpzDTlVpbiQQI/V/zFrBNF5RPmcOZ94k8/PuG9ku/AGeadnPQfJ0TP2rvtaMFWQmCZc387FYw+bTuw2I8tsuRYie8mw9ybGPrgN9Dr5pvD3+Z85T9rceDvDC9EQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(366004)(136003)(376002)(39860400002)(346002)(451199015)(8936002)(86362001)(6486002)(558084003)(5660300002)(4326008)(36916002)(83380400001)(6506007)(26005)(478600001)(186003)(6512007)(6666004)(38100700002)(6916009)(66556008)(8676002)(66476007)(66946007)(41300700001)(316002)(2906002)(54906003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nqK2wpEjUqcfxYLyEqN70AetwopZkYudjjs4EDEl77VyHkcOoBlZkhKgL3bD?=
- =?us-ascii?Q?cdhT1Brr9ZGxFRPhm2fj8iZ+7A9X3HQ4DwQQevZribsSFQNeWzhHtmkr82fm?=
- =?us-ascii?Q?QsAvyt33vDDORD+1r06IrnWK7vDKa08Je4h53wQPwQ+QHpgQ4H5t3u9M8CQA?=
- =?us-ascii?Q?43DVT8pfg+m3xF5hH/N6HZePeL0210opCD637tykdV2gzqTVAEjOcvz9sq88?=
- =?us-ascii?Q?lpiuFElI5mbWB8nlMB9VoOdndx9T9vXcC46GGwv67FHG0uFztweUTSMhX1So?=
- =?us-ascii?Q?nVj0+4H9fuH69JyInU3PgTUnHtQo3n1AQeDJYm/wUbiF+sI3LqmWSA9lzzDw?=
- =?us-ascii?Q?KN/g7swpl7trJnh9q9LJb6Nq6Fmh6RXK749j6+LyHsWM1DJqc4zxhhssoXGk?=
- =?us-ascii?Q?Q7MKQ1YJSPQWLoYHYqU93HLy35QbGahOqNOJezS+5rjXeF11BK3O1RLg9lgq?=
- =?us-ascii?Q?xyTdNLQCaT1nsfZDNTgw+RA+fsa1lzRJjMdmoDfyPHal3RTNfNJE+rxl4khX?=
- =?us-ascii?Q?s9W2u46zTixIBcnn7t0bG1nTMhtbOLnhSzx1a98/UHpVUeM6CZHr3EuI4CuK?=
- =?us-ascii?Q?wQG5aCscmVSAmfC9KNTeReIks0eMb+owy8XMbJEMHx7aexsAMNdK2gtlIRHG?=
- =?us-ascii?Q?Z2ejmT6NhFcA+xQjZ9XMK2g4u+jbIjCT/XdVVWvxa7J4jvU7zrcdds7YEDib?=
- =?us-ascii?Q?p1hLpHxiN75epG9Yls0LuuX2xWebMCu/ktSJrvYOEv2Nb17f1qUy7wlLljT3?=
- =?us-ascii?Q?G/Q5ksTLLyxJ8pzgFGoUH13ginn3NLjdpi04zL/zL/tzqosuTlizh1qG1ZsM?=
- =?us-ascii?Q?P+nkv9aXgdHmLmmihHxcTnItLPxYnfZljka5+m/hDSVCsBhnIwo58zdxg0mY?=
- =?us-ascii?Q?gWzeDdym13Gta+1xnqbHKPqYOgRXJ+pVxzbvj9iF+lKv+4LgEbszA4+7Gl45?=
- =?us-ascii?Q?NrPZbihk4020O/1RQKPYIsem+81QwJ07IRgCzKMMY3GLX3KUPASei3WWTj9P?=
- =?us-ascii?Q?iRwcM00OZLe5E+NpR6Nfu6OTgtJ+tt21r9MTYDuEDZoFhBB0P55g8PAaKF2q?=
- =?us-ascii?Q?Kbz10SEvJYqdg3xjsoZfZVYvCUnnfCbqsjFsgJu/A6SMP5UZyZAsXWFjPdCk?=
- =?us-ascii?Q?2uNyM5A97pxiVbATJXWCDvrfN4HD+5VBJAfCavgiqoEvK6jDyPGmyOrl9fsz?=
- =?us-ascii?Q?WJI6fXV9kDodj2VPClELgZUSmylZ3R/lf4OIQo+K8cmE4X9i6SP4HvIljl9t?=
- =?us-ascii?Q?TLMkLlb2QzLoaoUw+vdv0Kegiilwk0uWnVfv4dA0KvupVCqPyOHqmADTjEDR?=
- =?us-ascii?Q?ZuAI5uqU47mJXOn5GEjXRqNkxLfz0q84s/n/71yHIbtaScQXMia4tr15zSIC?=
- =?us-ascii?Q?rMR/3rQmD1HV4MULOr+pyQlRmibpM+l94yaGD702kk2SumqeEE9MYQ6SWK83?=
- =?us-ascii?Q?xnJTFYJQNI3vYlmTIpkcKAOr9sta/eAoU+zD8Yu2KupFxWoAX4peWoHVlPOv?=
- =?us-ascii?Q?Sxrr1RFaLEWqEXRR7LjuKX4if4zS1ENjL+K0JyjjN4w0ygB911nMUQlIzkpx?=
- =?us-ascii?Q?EW8I3RzTWVAuHQbnhABQqX3IyfYYfejvGlLngN31OgHH3P7EmhIC7HV4MORW?=
- =?us-ascii?Q?3A=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: cXodfAbslrKeKyY7+Fl6z9UnB4ZU5gkwhUeeHon+i7k79Ib51vGVeRMH1R1I5cNRCMfiYqpKXhw9GkWK1P93XdAjJuVUVLRNR1OqAaRjsCd2xaGybSjrJ7buvRx8qaPr3ntmCPCp1JaDBndv0PQE2PKfuTd/N4NU4duFfCVDpFlfr9FukIGgFrZbAFg27MNshuJtrTEi7TfV+RtCNA/RMPUKdbTb0vZqd0QS6IClhoOUt/WHbmoT+K/eLZgsxsKPdl0+T23mlPOoOO5ynAgLRclrWYINvrMv+hMZXXn+g6zeuBPWA0jqcbycctifRHwjLm7Y3ZGmCSZcBNz+k4XhNnNIS9m0IraUXief8jwx6jwhTjFX+bOy+7WJX4mCAGV8cj8Ipbrb1TQ+sDI3Toj7zOzsyF4k63oYUzM6Ck8mUoo2DDJBLMC+cuELjUmsbNX46eWY9VNSsklHafMqoKiY0R59kwEIfIVr37TlKlm10r9BUjaE/EbuAB3Ffp9F6TzaRnABix9EtaqJSmn7/tmPAeLUXUufA9cmIMUGAC08JJqAPvlC7M+rt9WwSSXYSxSNw53ETDr9b8DhFFWy1E2S3O/1TFGNTg9Q9GYwCeECYaf/IZj6wpNArqGkab/YcN/OYh7qO76b1o3JywJyY0fAXDHddjo9rtzjnNarxpHFx+AG7Jx8YKOccae7F5fNNU7zudSlRxw14VBvrygAarImn7lN+VJlrFJK/TjhCT1/VWDp9zuRZ7XD1+MHydmxNvQLnRNvdmMM7+m3zeDYdH1gh1KWvihZujsXE0xSZgYqqA0h2y/8gmQcv/u9Et5fEbDAT6ysKZhTXspC/EIf1yLE2HzOeg9cZeO+N0Px2A5G0x4=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ed5f5bf-fc35-4ce6-7354-08daf5ce5b71
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jan 2023 01:26:27.5089
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MEcnfKCsDBZN2J3wdGtTGhL0g/dZ+z5GKB1I+AnKcJ35rBTi7bPzc1e77eX12MiEdxhJE3i2jFCsb3KtTDxqzmX2pNQdDaT7yESodpapwkQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4862
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-13_12,2023-01-13_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0
- mlxlogscore=755 phishscore=0 mlxscore=0 adultscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301140007
-X-Proofpoint-GUID: XowjRDbQDoMxcIziej7MfC9iL_CLqCy3
-X-Proofpoint-ORIG-GUID: XowjRDbQDoMxcIziej7MfC9iL_CLqCy3
+References: <20230114005408.never.756-kees@kernel.org>
+In-Reply-To: <20230114005408.never.756-kees@kernel.org>
+From:   Daniel Latypov <dlatypov@google.com>
+Date:   Fri, 13 Jan 2023 17:38:17 -0800
+Message-ID: <CAGS_qxoeKishaVvHk-HCvstWJrZ8gXRrQipGd-sz=ONrPjteZw@mail.gmail.com>
+Subject: Re: [PATCH] kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Gow <davidgow@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, Jan 13, 2023 at 4:54 PM Kees Cook <keescook@chromium.org> wrote:
+> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+> index 89128551448d..5a545e1b5dbb 100644
+> --- a/lib/memcpy_kunit.c
+> +++ b/lib/memcpy_kunit.c
+> @@ -307,8 +307,12 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
+>         }
+>  }
+>
+> -static void init_large(struct kunit *test)
+> +static int init_large(struct kunit *test)
+>  {
+> +       if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
+> +               kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
+> +               return -EBUSY;
 
-Kees,
+Note: kunit_skip() here means you don't need explicit returns in the test cases.
+kunit_skip() is basically
+  kunit_mark_skipped(test, "reason");
+  kthread_complete_and_exit(...);
 
-> Zero-length arrays are deprecated[1]. Replace struct
-> fc_bsg_host_vendor_reply's "vendor_rsp" 0-length array with a flexible
-> array. Detected with GCC 13, using -fstrict-flex-arrays=3:
+So the diff in this file could be reduced down to just these 2 lines
+  if (!IS_ENABLED(...))
+      kunit_skip(test, "...")
 
-Applied to 6.3/scsi-staging, thanks!
+But I can see the appeal of being more explicit about the control flow.
+In that case, you could switch kunit_mark_skipped(), which just sets
+the status and doesn't affect control flow at all.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Daniel
