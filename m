@@ -2,94 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 450BAC3DA78
-	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 10:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38445C46467
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 18:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbjANKOi (ORCPT
+        id S229936AbjANSMb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 14 Jan 2023 05:14:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45344 "EHLO
+        Sat, 14 Jan 2023 13:12:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229944AbjANKOh (ORCPT
+        with ESMTP id S230367AbjANSMa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 14 Jan 2023 05:14:37 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3635F76B4
-        for <linux-hardening@vger.kernel.org>; Sat, 14 Jan 2023 02:14:36 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id y1so25829869plb.2
-        for <linux-hardening@vger.kernel.org>; Sat, 14 Jan 2023 02:14:36 -0800 (PST)
+        Sat, 14 Jan 2023 13:12:30 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73150B77B;
+        Sat, 14 Jan 2023 10:12:29 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id x40so3324989lfu.12;
+        Sat, 14 Jan 2023 10:12:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=z7++H4V6hNi27Aju7rRR2cyddaE4xHSSiZpHf+T0Adk=;
-        b=mV7xtcEZZKXbUW9dgq8/GV7se/rEBkykyqaKRNHFY4Fmq7YnxLKKgkT3XlWlkOkSEi
-         DdPH/RI2Co1aDZiw/v8Q1E7d0wNYORp4D4T3ZgOBbbh6EmIeh2M2H5W3hD0VbFY0KXMj
-         NS+QI/p/J33e46oq+trhdZYGCLOtLmR+elU50=
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tJ4I2+kGQp0jFq18r3oaQbBG/6QGMIIEVSgmjg/A278=;
+        b=oIJsRpbpWfMnyX/de9Bi+AJ54jTQbu01aSmy8M0BinUy4WyTKc3JWn540INVhymiei
+         mQwuSMIPg6Ulqz+wkw3AidX+ddfn6+GL78EdyW9WwHHmgukIkaHLdjxpaQwhspEZVVK/
+         En3rjKfzhyZx1geu1ku1Dz9FTPV8OmTlcK4QJmi06DuhQ7WnLtJwRNKLxoTj1KvELDvu
+         osrNncObjMw6e8PyT48aJQKJKcZ3ugT3Lm5TVyg4vJz6+R+iWjW+TJD2tkpSVyVxq2po
+         LEiDlI/ui+bvFCpwuFZoJJq1+E3AyQzO7QAqR71u6OwN9wlg3ePgoExTqTSjKMP74k8s
+         4WfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z7++H4V6hNi27Aju7rRR2cyddaE4xHSSiZpHf+T0Adk=;
-        b=XwFI0SDFw0EiJBSiGe9gdnWsjupg299IcIrLFNPifkpQyDKFIcRnO4v4ARy/XWNxEO
-         qqlKDb8USdiFFsEA/8ISX3KVVimi6WBVhXCkibeNj++Ae9bd2g+DU8u+l9cDxNO93UYg
-         VzEJJkYUQ5g48trL8EOa7s5oXG01bu+BxOYcOhM8T5fdBSDkAihv4fck+s2T1OYBVG8h
-         Oc4fCak12eT5a5RG9psA0aeT6/NVsdc502LFX1dy2toFHYCfZDKbV71TKZaGOAg3QbEZ
-         RU003qa0TCVnQZI8B4Y6HYbHaYPWiucxvZH4xhsRh86XedXXERvR+zVfXQ7qbXAWOCmv
-         LOfQ==
-X-Gm-Message-State: AFqh2koHrVZZY4f2VhCojOJPlPXydn9A2iBm7eEYDZq/D15wwTeb7Y0y
-        mtGAVK+Ecki7NZRvbqNCfI3b9g==
-X-Google-Smtp-Source: AMrXdXtXwPkUnAblauTv78rZKUdr5wdyNH1Crp8gEXe/df4QYLpoj9xzenEXGfjU4C4oV+m6JdfFnQ==
-X-Received: by 2002:a17:902:a5c1:b0:191:1729:d7e7 with SMTP id t1-20020a170902a5c100b001911729d7e7mr87541846plq.67.1673691275745;
-        Sat, 14 Jan 2023 02:14:35 -0800 (PST)
-Received: from google.com (KD124209188001.ppp-bb.dion.ne.jp. [124.209.188.1])
-        by smtp.gmail.com with ESMTPSA id n13-20020a170903110d00b001925ec4664esm15604019plh.172.2023.01.14.02.14.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Jan 2023 02:14:35 -0800 (PST)
-Date:   Sat, 14 Jan 2023 19:14:29 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     coverity-bot <keescook@chromium.org>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: console_prepend_dropped(): Memory - corruptions
-Message-ID: <Y8KAhaiZQOWTcfyF@google.com>
-References: <202301131544.D9E804CCD@keescook>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tJ4I2+kGQp0jFq18r3oaQbBG/6QGMIIEVSgmjg/A278=;
+        b=5MaZqlBPVIPDTKLrsKqFimzU5Eev5Zc71RmtoCimyRDhpZJlqXnlqCNQBb0AQlcazu
+         o7quUtVYdXgCAbyvTeg+339c+dPhl2GCXCuz13PuypbDW5mkjqqZUAgncJEpLFFyqfnZ
+         e5uCes7XsXOMe+8v7N/PbcMaOiDC68Naf3DN4hqlZ6/F9ZeujHJnZIXVEdBUJe2D4dL0
+         MMgKFnosZcmV7Y/kLd2Re3EUI0f4VyNW4cN4009E1c0m3+r1GEijO18nQoQlq2iCnvwJ
+         4U9SkDOP99LDFjwm2LVU+VrU2rk7ygM8ehd4eRJ1xIhi1TFIMCY1vFPza848pBz8vRVr
+         O7Nw==
+X-Gm-Message-State: AFqh2krfY7uI7a423mDHnMFILS6ePmBucocMYI42IB8VPFH7Frp8zzhj
+        KO22wH0me4FLNmVgmt+iGDhBlLBgODxQNEy64cQIpeBd
+X-Google-Smtp-Source: AMrXdXvyH2VlCP28geTu0pnQSHpRJp5HLHtbdEpNMOm7rUlMmDhlBsdso4n9j/SemhctQimd8Rfcd8ey04XyrzykRjw=
+X-Received: by 2002:a05:6512:14d:b0:4cb:3a2f:26d1 with SMTP id
+ m13-20020a056512014d00b004cb3a2f26d1mr2121991lfo.303.1673719947706; Sat, 14
+ Jan 2023 10:12:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202301131544.D9E804CCD@keescook>
+References: <Y7zBtCZ/eRJCpjBf@work> <202301121449.1C2AEFC2E7@keescook>
+In-Reply-To: <202301121449.1C2AEFC2E7@keescook>
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 14 Jan 2023 12:12:16 -0600
+Message-ID: <CAH2r5mt=DLrN2F0wwhPpMicHZsGJF5nQXQk0ptYTJy2a9xWcwA@mail.gmail.com>
+Subject: Re: [PATCH][next] cifs: Replace zero-length arrays with
+ flexible-array members
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On (23/01/13 15:46), coverity-bot wrote:
-> *** CID 1530570:  Memory - corruptions  (OVERRUN)
-> kernel/printk/printk.c:2738 in console_prepend_dropped()
-> 2732     		/* Truncate the message, but keep it terminated. */
-> 2733     		pmsg->outbuf_len = outbuf_sz - (len + 1);
-> 2734     		outbuf[pmsg->outbuf_len] = 0;
-> 2735     	}
-> 2736
-> 2737     	memmove(outbuf + len, outbuf, pmsg->outbuf_len + 1);
-> vvv     CID 1530570:  Memory - corruptions  (OVERRUN)
-> vvv     Overrunning buffer pointed to by "scratchbuf" of 1024 bytes by passing it to a function which accesses it at byte offset 1998 using argument "len" (which evaluates to 1999). [Note: The source code implementation of the function has been overridden by a builtin model.]
-> 2738     	memcpy(outbuf, scratchbuf, len);
-> 2739     	pmsg->outbuf_len += len;
-> 2740     }
-> 2741     #else
-> 2742     #define console_prepend_dropped(pmsg, dropped)
-> 2743     #endif /* CONFIG_PRINTK */
-[..]
-> Human notes from Kees:
-> 
-> I'm not sure how it got 1998, but I do see that snprintf() should
-> probably be scnprintf(), otherwise "len" might be a lie (i.e. it'll hold
-> what it WANTED to write, rather than what it actually wrote).
+merged into cifs-2.6.git for-next
 
-Cannot imagine how "** %lu printk messages dropped **\n" can expand into
-1998 bytes. Does coverity have a "verbose" mode?
+On Thu, Jan 12, 2023 at 4:52 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Mon, Jan 09, 2023 at 07:39:00PM -0600, Gustavo A. R. Silva wrote:
+> > Zero-length arrays are deprecated[1] and we are moving towards
+> > adopting C99 flexible-array members instead. So, replace zero-length
+> > arrays in a couple of structures with flex-array members.
+> >
+> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> > routines on memcpy() and help us make progress towards globally
+> > enabling -fstrict-flex-arrays=3 [2].
+> >
+> > Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
+> > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
+> > Link: https://github.com/KSPP/linux/issues/78
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> --
+> Kees Cook
+
+
+
+-- 
+Thanks,
+
+Steve
