@@ -2,104 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FC5C54EBE
-	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 01:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5CBC3DA78
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 03:07:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230410AbjANBic (ORCPT
+        id S231455AbjANDHO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 Jan 2023 20:38:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
+        Fri, 13 Jan 2023 22:07:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230252AbjANBia (ORCPT
+        with ESMTP id S231438AbjANDHN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 Jan 2023 20:38:30 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1924D89BE8
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 17:38:29 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id bj3so20863846pjb.0
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 17:38:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FufgUw2fqlY7QEwBJBytXvOldn4bZyfyqwhzJKALwe4=;
-        b=LGjFLFVeQhyilSeBgpCX9oTZDmyJqsHWZniAk5sh+ZIa9/79Tp5cwxJc77KX6rkd6p
-         Mf26WNrxRFxQOt8fr5AChIfbhCglt2LnkzNZE7ZwvnArzQT6oIf3Ui9Hju8CcnNCpuAA
-         +MPTgpVlmQGpE758bzgDjBlISrvuaDZXpo32k+KuTk/LsDz852zLdtlFRuPbc2dDQToY
-         pg7GTuZKGQt0ht9HVPH/lB5yBHnpJdUzCARLYxkEycHH8tNQsAwW8q8ydrVFdUy5adfY
-         hetKp2YWriDyhM861MHEG9OZYOPB3mCUjFuDjADJVZ2wjTcvwpn0J56nCJV/rzka6A2I
-         qdVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FufgUw2fqlY7QEwBJBytXvOldn4bZyfyqwhzJKALwe4=;
-        b=2JxDKADEWEI6eejZdppRjamkPZDQ21KxuXC13D/j3siMQqKLsxrIV8qoJ96dnzBQ56
-         8NpSv+xUzuBM3/NRFm+ro87vsrn46iodyFid78mxEvwx5Mt2RmdqcenullzL+xaBQBiC
-         cTyg1hjhyER8n3HQx1FaQpc/ehylQq2+NQW5sPtD2B1MTvJe+3YNnqyccDJCvHo3/Uh9
-         kHapWBCxQG6VmTTJAtSkLj9ZtJiNiW1DbYmUrR9pcJ4YGF0XL+GCQxct7xaWdH+g5Enl
-         v9gjkkWP5LnDphOF61cE6yTt5J3wK8p194YhH73eygOWnMIIsZaUw+l56Nwa7RwgeV6W
-         DudA==
-X-Gm-Message-State: AFqh2krBRkKGYEks4YvjlU6i/dd0Aza9pPr34yPiqPBN/giRbnteGfjK
-        NEIPHW2e9sbLQQzuaekJ6BEhTjTRcB62t2r7+LzeTA==
-X-Google-Smtp-Source: AMrXdXvgVMPaadk3FjzCg9dQFfBrULyf1BBRFZGq3lUy7NI9a2lpX1LWoLxvWNTcTSPuEhjIW7mrcQOny0palWCm1qI=
-X-Received: by 2002:a17:903:292:b0:189:9973:fb58 with SMTP id
- j18-20020a170903029200b001899973fb58mr156924plr.59.1673660308451; Fri, 13 Jan
- 2023 17:38:28 -0800 (PST)
+        Fri, 13 Jan 2023 22:07:13 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E7088A3E;
+        Fri, 13 Jan 2023 19:07:12 -0800 (PST)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30E1hiNe031197;
+        Sat, 14 Jan 2023 03:07:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2022-7-12;
+ bh=DRWz60+jXLiy5CLT9C9dWNjDnDMYuYjwjLSulxV02SA=;
+ b=Tjl9g9yB+wDYUDRtjQCo4MZv2Glndi8jU5XLy1weGyZhyO3ppJ8OXcoJBnD5eviZ56hX
+ RBxMEiE0g7rw1+gVEQLorcgold7oc9SvVsz/3u7V44HeBVHKToKVtSQ1ZVwluTTrF4Q6
+ 2xXzz6vDiomp1iKA3OO/itm+ObtTxMoYTGjy2GK4Mh522xV2/L6Rhdf5dWzSTOfAzv8W
+ bgGHjRNGGzWeC3QmQR3+E9xIUF++XM0wJ2ECinITvQXVlcJUTPeqi0D6URgd9vQ+Zqpc
+ vQ+otS/vTZwqyGfypiWqfwRVrBZ2MjLtGzR+ASFRzixHzPxjKF24nkPtXlU+WGL5OITi 1A== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n3k00r1u8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 14 Jan 2023 03:07:07 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30E2xOL8018859;
+        Sat, 14 Jan 2023 03:07:06 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3n3m3d85t0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 14 Jan 2023 03:07:06 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30E375hD035466;
+        Sat, 14 Jan 2023 03:07:06 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3n3m3d85sp-2;
+        Sat, 14 Jan 2023 03:07:06 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Adam Radford <aradford@gmail.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: 3w-sas: Replace 1-element arrays with flexible array members
+Date:   Fri, 13 Jan 2023 22:06:40 -0500
+Message-Id: <167366469093.3069139.1897721173635562878.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20230105004757.never.017-kees@kernel.org>
+References: <20230105004757.never.017-kees@kernel.org>
 MIME-Version: 1.0
-References: <20230114005408.never.756-kees@kernel.org>
-In-Reply-To: <20230114005408.never.756-kees@kernel.org>
-From:   Daniel Latypov <dlatypov@google.com>
-Date:   Fri, 13 Jan 2023 17:38:17 -0800
-Message-ID: <CAGS_qxoeKishaVvHk-HCvstWJrZ8gXRrQipGd-sz=ONrPjteZw@mail.gmail.com>
-Subject: Re: [PATCH] kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Gow <davidgow@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        linux-hardening@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Isabella Basso <isabbasso@riseup.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-13_12,2023-01-13_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ mlxscore=0 mlxlogscore=996 bulkscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2301140019
+X-Proofpoint-GUID: Th2nMqJH9zDeqxRz1fk09OvIf8ZmNzEk
+X-Proofpoint-ORIG-GUID: Th2nMqJH9zDeqxRz1fk09OvIf8ZmNzEk
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 4:54 PM Kees Cook <keescook@chromium.org> wrote:
-> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-> index 89128551448d..5a545e1b5dbb 100644
-> --- a/lib/memcpy_kunit.c
-> +++ b/lib/memcpy_kunit.c
-> @@ -307,8 +307,12 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
->         }
->  }
->
-> -static void init_large(struct kunit *test)
-> +static int init_large(struct kunit *test)
->  {
-> +       if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
-> +               kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
-> +               return -EBUSY;
+On Wed, 04 Jan 2023 16:48:01 -0800, Kees Cook wrote:
 
-Note: kunit_skip() here means you don't need explicit returns in the test cases.
-kunit_skip() is basically
-  kunit_mark_skipped(test, "reason");
-  kthread_complete_and_exit(...);
+> One-element arrays (and multi-element arrays being treated as
+> dynamically sized) are deprecated[1] and are being replaced with
+> flexible array members in support of the ongoing efforts to tighten the
+> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+> 
+> Replace one-element arrays with flexible-array member in TW_Ioctl_Buf_Apache
+> and TW_Param_Apache, adjusting the explicit sizing calculations at the
+> same time.
+> 
+> [...]
 
-So the diff in this file could be reduced down to just these 2 lines
-  if (!IS_ENABLED(...))
-      kunit_skip(test, "...")
+Applied to 6.3/scsi-queue, thanks!
 
-But I can see the appeal of being more explicit about the control flow.
-In that case, you could switch kunit_mark_skipped(), which just sets
-the status and doesn't affect control flow at all.
+[1/1] scsi: 3w-sas: Replace 1-element arrays with flexible array members
+      https://git.kernel.org/mkp/scsi/c/45b379f20bc0
 
-Daniel
+-- 
+Martin K. Petersen	Oracle Linux Engineering
