@@ -2,174 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F24C54EBE
-	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 00:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E950EC3DA78
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 01:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230182AbjANA6D (ORCPT
+        id S231184AbjANBDx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 Jan 2023 19:58:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47846 "EHLO
+        Fri, 13 Jan 2023 20:03:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbjANA6B (ORCPT
+        with ESMTP id S231131AbjANBDv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 Jan 2023 19:58:01 -0500
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D9C8B512
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 16:58:01 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id k18so1038431pll.5
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 16:58:01 -0800 (PST)
+        Fri, 13 Jan 2023 20:03:51 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAAB7F9C3
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 17:03:50 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id b9-20020a17090a7ac900b00226ef160dcaso24287029pjl.2
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 17:03:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VPFbP44ux+TqG8PMsp6CRRulsUlYZh39NEbSaw7nJ5c=;
-        b=hm+r1mS6+fqccO2GQAeVS4l0gIFcR0H3jfO5ihyKL2etM3WuuJ2DDzUg7B3WBu+P8t
-         NxbV1YHotNDA/loMYN0jhFKTXfoQqMD8bguZjP0xYtiAo+pst+7Zmcrf9yH9t3i5p5nm
-         sZBKV4vTqdxBZhyAc5/L6QT98rnAAB6wOlcWE=
+        bh=IGRtEnP8tCYPsc7mH3xQrT0Rqmj2jXGGXr5AGL9dWMM=;
+        b=GxOk4Aiam9pT06oQtTdFqY0rxHZiNQ/naEpmnmM1Y1hZQoj+8cEB1YKzkuxCTiCW2v
+         B8HTSohUMsqDgCAoO2QuesIX2ZrrdxuC/TbX5rFVLswsBxkxoz1zCTQsRLraoi4+wJPh
+         IoTShqqVw+Jq/Knx97925a8ZKmWIgQw/OjLZI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VPFbP44ux+TqG8PMsp6CRRulsUlYZh39NEbSaw7nJ5c=;
-        b=b86Da60SPyc57E7XSSqz2m5+LKHHnhz5Z/JDuuIwX4b++8l6qglkElDarGs3YlPFZp
-         h4BzlzBPFoOV/wdibmR5W++rcpMC/5Km+iWuHNON2BxOyp299N95Mw1QMRW6nix/oMOs
-         GA6GeJw2QrEa6Bcxi/lR2lQPTyDwQSc1ztsjY36zyZjZHryF/1M9u5o7p5WrzMCKjpgS
-         HY8Jn2tNVat5jL8wW8Vl2opoSmbRuW9U7l4Bag/youigzNxJXVWTLPuzlnniKdT3NZ4d
-         4P7y5yqy14VtBEMIy21TxysHUX4t7MgGgJd9C95sf+TP+xclPvXY87zBcFv2iiyXQWRb
-         WG9Q==
-X-Gm-Message-State: AFqh2kox5yyoOE/KlVWE0apMm41Lf9PgGV0kA3EswSb6oyldHqQftiUD
-        XWF1sAl1IFtCzaY+29g7Vq/lWQ==
-X-Google-Smtp-Source: AMrXdXvcJyeiseIZjdDSYqOnTl8gsdgnikVxMhIW2m1z0x2X1Cy1B8xQ/7WsSxob7IGFomU88LIZcw==
-X-Received: by 2002:a17:90b:110a:b0:223:b920:28df with SMTP id gi10-20020a17090b110a00b00223b92028dfmr84499976pjb.29.1673657880624;
-        Fri, 13 Jan 2023 16:58:00 -0800 (PST)
+        bh=IGRtEnP8tCYPsc7mH3xQrT0Rqmj2jXGGXr5AGL9dWMM=;
+        b=L50v67N/kh5YugrhcmRv69KC+sb+Ese5prtCDqGenL5DOKcqoibzlwIR6o7DOgw38e
+         cdrKxaNJ1PIJbhCXWKfrDvQ0B4/Oe9j7OBn6cKW3Fs/lb3bpYeP7bi588l7sRbefkrz1
+         9KggvUbPH8MFQxbyvhhWkHwfkF2P7CVNISEonipD/rAhrWJPxYG5ddinqsPEAGw9zpAj
+         J4oDXmjoolwhtFX6svwUOViUXfELxAEBKQlzKKEkVP2dPInaETMQPQnPfytDMXfdp5I8
+         KpXlAhQN4DoHsOIY4UNglrgpb+n5vHKWlz+kaSGVm5iMVrW9wWpTipdjIgvF7j1hIwF0
+         mdhw==
+X-Gm-Message-State: AFqh2kqNdALOoLbIxz5rqvNluM+/gRJ7+Qdl1+PTF+7e0DZu1rNA+Uhj
+        1Hi6OR8hRw45M4kyOPDnHiUILJ3mqb0ZzP2J
+X-Google-Smtp-Source: AMrXdXsQ15weg+BBNoYTK6oAg/z4nml3AmlK0p8s/PWTWUa7VhmDn/CgRSMUeuLCGABxFNqJXIdyhA==
+X-Received: by 2002:a17:903:550:b0:194:7a42:2d33 with SMTP id jo16-20020a170903055000b001947a422d33mr1440160plb.28.1673658229632;
+        Fri, 13 Jan 2023 17:03:49 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id nh21-20020a17090b365500b0022932d12de1sm1310863pjb.46.2023.01.13.16.58.00
+        by smtp.gmail.com with ESMTPSA id y22-20020a17090264d600b001708c4ebbaesm1659469pli.309.2023.01.13.17.03.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 16:58:00 -0800 (PST)
-Date:   Fri, 13 Jan 2023 16:57:59 -0800
+        Fri, 13 Jan 2023 17:03:49 -0800 (PST)
+Date:   Fri, 13 Jan 2023 17:03:48 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Gow <davidgow@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        linux-hardening@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Daniel Latypov <dlatypov@google.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Isabella Basso <isabbasso@riseup.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kunit: memcpy: Split slow memcpy tests into
- MEMCPY_SLOW_KUNIT_TEST
-Message-ID: <202301131657.8E076628@keescook>
-References: <20230114005408.never.756-kees@kernel.org>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Potnuri Bharat Teja <bharat@chelsio.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] RDMA/cxgb4: Replace 0-length arrays with flexible arrays
+Message-ID: <202301131703.D2D667E3@keescook>
+References: <20230105223225.never.252-kees@kernel.org>
+ <Y7qyVPlNBQaGbInf@unreal>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230114005408.never.756-kees@kernel.org>
+In-Reply-To: <Y7qyVPlNBQaGbInf@unreal>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-gah. this is actually v2. :(
+On Sun, Jan 08, 2023 at 02:08:52PM +0200, Leon Romanovsky wrote:
+> On Thu, Jan 05, 2023 at 02:32:32PM -0800, Kees Cook wrote:
+> > Zero-length arrays are deprecated[1]. Replace all remaining
+> > 0-length arrays with flexible arrays. Detected with GCC 13, using
+> > -fstrict-flex-arrays=3:
+> > 
+> > In function 'build_rdma_write',
+> >     inlined from 'c4iw_post_send' at ../drivers/infiniband/hw/cxgb4/qp.c:1173:10:
+> > ../drivers/infiniband/hw/cxgb4/qp.c:597:38: warning: array subscript 0 is outside array bounds of 'struct fw_ri_immd[0]' [-Warray-bounds=]
+> >   597 |                 wqe->write.u.immd_src[0].r2 = 0;
+> >       |                 ~~~~~~~~~~~~~~~~~~~~~^~~
+> > ../drivers/infiniband/hw/cxgb4/t4fw_ri_api.h: In function 'c4iw_post_send':
+> > ../drivers/infiniband/hw/cxgb4/t4fw_ri_api.h:567:35: note: while referencing 'immd_src'
+> >   567 |                 struct fw_ri_immd immd_src[0];
+> >       |                                   ^~~~~~~~
+> > 
+> > Additionally drop the unused C99_NOT_SUPPORTED ifndef lines.
+> > 
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+> > 
+> > Cc: Potnuri Bharat Teja <bharat@chelsio.com>
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: Leon Romanovsky <leon@kernel.org>
+> > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > Cc: linux-rdma@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  drivers/infiniband/hw/cxgb4/t4fw_ri_api.h | 26 ++++++-----------------
+> >  1 file changed, 6 insertions(+), 20 deletions(-)
+> 
+> <...>
+> 
+> >  #define FW_RI_SEND_WR_SENDOP_S		0
+> > @@ -618,12 +606,10 @@ struct fw_ri_rdma_write_cmpl_wr {
+> >  		struct fw_ri_isgl isgl_src;
+> >  	} u_cmpl;
+> >  	__be64 r3;
+> > -#ifndef C99_NOT_SUPPORTED
+> >  	union fw_ri_write {
+> > -		struct fw_ri_immd immd_src[0];
+> > -		struct fw_ri_isgl isgl_src[0];
+> > +		DECLARE_FLEX_ARRAY(struct fw_ri_immd, immd_src);
+> > +		DECLARE_FLEX_ARRAY(struct fw_ri_isgl, isgl_src);
+> 
+> smatch built from commit 40351132df3b ("strlen: add __builtin and
+> __fortify functions") produces the following warning:
+> drivers/infiniband/hw/cxgb4/t4fw_ri_api.h:575:17: warning: array of flexible structures
+> 
+> Is it expected? What will prevent from getting this warning from 0-day
+> build bots?
 
-On Fri, Jan 13, 2023 at 04:54:12PM -0800, Kees Cook wrote:
-> Since the long memcpy tests may stall a system for tens of seconds
-> in virtualized architecture environments, split those tests off under
-> CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
-> 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
-> Reviewed-by: David Gow <davidgow@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: fix tristate to bool
-> v1: https://lore.kernel.org/lkml/20230107040203.never.112-kees@kernel.org
-> ---
->  lib/Kconfig.debug  |  9 +++++++++
->  lib/memcpy_kunit.c | 15 ++++++++++++---
->  2 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index c2c78d0e761c..f90637171453 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -2621,6 +2621,15 @@ config MEMCPY_KUNIT_TEST
->  
->  	  If unsure, say N.
->  
-> +config MEMCPY_SLOW_KUNIT_TEST
-> +	bool "Include exhaustive memcpy tests" if !KUNIT_ALL_TESTS
-> +	depends on MEMCPY_KUNIT_TEST
-> +	default KUNIT_ALL_TESTS
-> +	help
-> +	  Some memcpy tests are quite exhaustive in checking for overlaps
-> +	  and bit ranges. These can be very slow, so they are split out
-> +	  as a separate config.
-> +
->  config IS_SIGNED_TYPE_KUNIT_TEST
->  	tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
->  	depends on KUNIT
-> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-> index 89128551448d..5a545e1b5dbb 100644
-> --- a/lib/memcpy_kunit.c
-> +++ b/lib/memcpy_kunit.c
-> @@ -307,8 +307,12 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
->  	}
->  }
->  
-> -static void init_large(struct kunit *test)
-> +static int init_large(struct kunit *test)
->  {
-> +	if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
-> +		kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
-> +		return -EBUSY;
-> +	}
->  
->  	/* Get many bit patterns. */
->  	get_random_bytes(large_src, ARRAY_SIZE(large_src));
-> @@ -319,6 +323,8 @@ static void init_large(struct kunit *test)
->  
->  	/* Explicitly zero the entire destination. */
->  	memset(large_dst, 0, ARRAY_SIZE(large_dst));
-> +
-> +	return 0;
->  }
->  
->  /*
-> @@ -327,7 +333,9 @@ static void init_large(struct kunit *test)
->   */
->  static void copy_large_test(struct kunit *test, bool use_memmove)
->  {
-> -	init_large(test);
-> +
-> +	if (init_large(test))
-> +		return;
->  
->  	/* Copy a growing number of non-overlapping bytes ... */
->  	for (int bytes = 1; bytes <= ARRAY_SIZE(large_src); bytes++) {
-> @@ -472,7 +480,8 @@ static void memmove_overlap_test(struct kunit *test)
->  	static const int bytes_start = 1;
->  	static const int bytes_end = ARRAY_SIZE(large_src) + 1;
->  
-> -	init_large(test);
-> +	if (init_large(test))
-> +		return;
->  
->  	/* Copy a growing number of overlapping bytes ... */
->  	for (int bytes = bytes_start; bytes < bytes_end;
-> -- 
-> 2.34.1
-> 
+Err, I'm not sure I understand? Does smatch define "C99_NOT_SUPPORTED"?
 
 -- 
 Kees Cook
