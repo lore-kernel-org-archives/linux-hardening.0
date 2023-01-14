@@ -2,173 +2,283 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89617C3DA78
-	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 03:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F374C3DA78
+	for <linux-hardening@archiver.kernel.org>; Sat, 14 Jan 2023 04:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbjANDPQ (ORCPT
+        id S230463AbjANEcI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 13 Jan 2023 22:15:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58598 "EHLO
+        Fri, 13 Jan 2023 23:32:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229854AbjANDPP (ORCPT
+        with ESMTP id S230038AbjANEcF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 13 Jan 2023 22:15:15 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745F0892E3
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 19:15:14 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id a184so17469375pfa.9
-        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 19:15:14 -0800 (PST)
+        Fri, 13 Jan 2023 23:32:05 -0500
+Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C85039B
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 20:32:03 -0800 (PST)
+Received: by mail-vs1-xe33.google.com with SMTP id v127so19756418vsb.12
+        for <linux-hardening@vger.kernel.org>; Fri, 13 Jan 2023 20:32:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Ip/pS4hOwEDNTZTnRliPkXIQuo63sSsYiUxW40edaTA=;
-        b=nOe+DyEBVoMASlZf8kH2SaLRZneqHW0TxwZoctB9Pd1wjO9ILxXYcwNyXwgHG6BcqM
-         FJyc5ybiUaxetb9fZNDYHxo31GQQFmH2fhAKWbNofU4hImgatXSd8wrqyo9inOG8Z9eP
-         VqP/DNkBc4CxL3bE5qtVv1FTG+rFnzXoSCezg=
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=t+k8za9989qXr8ldYbdMGm0J5EBuQG7sMgiBs49PMF4=;
+        b=QekojeEC7YT3h2KaDLCoNNZYg5O39UJmOzsIxB3q7gsnmDzd8SUYXr0401DtlzbRwi
+         dizwm9wDSwAa10i9dZDW+hu6ORoi80WWEofOuFw2/ShS2jxx+zF/LX1MdOH+pV6Tp1ST
+         vWbnKrbqOfK7GBbrQpALUadRRP2+quNsgOYrqsxuf5dttLBeDMFmz2UUU1SB3wfIC0H1
+         PhyjcRKYVYpSITjbOtf7cmZK3xbv23LroHpq0jy0txnQ/QcXvpZ+g+RoNcFUd2xFK/KB
+         dstETIpSqVPh6ums4pol7u749BVDiS0i35FBde/MTesYEp1QDnm9M6SHu599qomKaa1T
+         b76w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ip/pS4hOwEDNTZTnRliPkXIQuo63sSsYiUxW40edaTA=;
-        b=eY9cOFLAg0ghpeb/hJgArW+P4Soy98O9YdbtpO76NiBFrhTDUZyoIL+vGwSIBL7j76
-         AqRoCCD1EnbFeLeF8iD38Xn1rK4kNi5VCpHxd7+zazQ3BZ1U9ujqdVa7B1U1P62DSMxW
-         dY4pYlgGo5gCCRfxe7Ss/IN3skU41RLw0DOSu67zJtNZ11lyZjApEx1tNpKfqCMaqAsx
-         5FMpqVja8pwmSWLkdbka2H25GzwXT+0wPTBBtxmb4+PAtU+KrmIeDo7vlIMwKGbsOFqO
-         bjF8JrjrO1SaETKVU14k62/EPUMqP9DA6DcBGCpcaZzLrk3o9k/eV7h9o6S6ReQCs3Wa
-         mExw==
-X-Gm-Message-State: AFqh2kosfM+x5qD7H9XJBduzLCQOijqdijLkzY0y9MM4imQYIg93c0sP
-        Bib2w0G8OPF/DQQO8+dv+31IHw==
-X-Google-Smtp-Source: AMrXdXtdqRyfD4/WRdTAd6aI/nEcBBLmsKStZRep6cBm0c/tqlvTgkC9X73jW9+wMzXfPtBCrAuLJQ==
-X-Received: by 2002:a62:506:0:b0:56c:7216:fbc6 with SMTP id 6-20020a620506000000b0056c7216fbc6mr81187195pff.30.1673666113826;
-        Fri, 13 Jan 2023 19:15:13 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 128-20020a620586000000b0058b9dc62071sm4301178pff.6.2023.01.13.19.15.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 19:15:13 -0800 (PST)
-Date:   Fri, 13 Jan 2023 19:15:12 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Terrell <terrelln@meta.com>
-Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v2] lib: zstd: Fix -Wstringop-overflow warning
-Message-ID: <202301131911.B3C664392@keescook>
-References: <20230104212048.gonna.331-kees@kernel.org>
- <93130521-AF03-4941-8FF1-C97C76027A02@fb.com>
- <202301131643.6D23A4AEA1@keescook>
- <C3D7D026-AA51-45E3-B871-74D411D3F275@fb.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t+k8za9989qXr8ldYbdMGm0J5EBuQG7sMgiBs49PMF4=;
+        b=IWrq9IUqASNjffJCGAGc6Y3/DsmGZT0inedspfwLOjmITQUn1X2BuyGukVhfFsZa03
+         ByxIYnDar682bZJD/zubeP7IdzS0pWfvWZJbhF83b6Iia+D3xMC9bxrqIbxbiGbhRZo4
+         jPy3EJgmX7Wu9LBdohpIN7+ovM31BA+w3Ca9dmCKH73AJQSMnH9220WMi0Jgkw0Bdmvv
+         Pzkitu9U86P9u3V2Xz15hWcACzZqtyxiIzG4YTurkt4cTqRxklen3X7yS5GZ5l8nARbk
+         cs+fM6oxUO0FNNmEy/n8dqIABVvGf6MyxtBk4PFkN1jwPj7CwKCOLkXC/JfW1VmQhd5+
+         Xnqw==
+X-Gm-Message-State: AFqh2kqdVhJupYKrDxJVKo1yY9y2Zypo+mPN1OIs3C8/scooXqQAuT3b
+        k/5zyrvvfsQut79PQ1m5fD68lb4EP5pXVsKrESjazA==
+X-Google-Smtp-Source: AMrXdXs8VGyuFeHyg+2k0NFHwQ6Mq5GSgXrH9LAtQRSYBeOulj1FCtu+zwxThlyrHNvSEyGBo52TkLH4K85RlNZ+69E=
+X-Received: by 2002:a05:6102:3017:b0:3d2:30a3:70d1 with SMTP id
+ s23-20020a056102301700b003d230a370d1mr393506vsa.38.1673670722868; Fri, 13 Jan
+ 2023 20:32:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C3D7D026-AA51-45E3-B871-74D411D3F275@fb.com>
+References: <20230114005408.never.756-kees@kernel.org>
+In-Reply-To: <20230114005408.never.756-kees@kernel.org>
+From:   David Gow <davidgow@google.com>
+Date:   Sat, 14 Jan 2023 12:31:51 +0800
+Message-ID: <CABVgOSkeCHF3Nrcd6eWQ=kFaaTo19+hStYdZg1ngQm7dGyBxHA@mail.gmail.com>
+Subject: Re: [PATCH] kunit: memcpy: Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Daniel Latypov <dlatypov@google.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000ec932505f231d4ca"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Jan 14, 2023 at 01:06:07AM +0000, Nick Terrell wrote:
-> 
-> 
-> > On Jan 13, 2023, at 4:48 PM, Kees Cook <keescook@chromium.org> wrote:
-> > 
-> > !-------------------------------------------------------------------|
-> >  This Message Is From an External Sender
-> > 
-> > |-------------------------------------------------------------------!
-> > 
-> > On Tue, Jan 10, 2023 at 11:10:08PM +0000, Nick Terrell wrote:
-> >> 
-> >> 
-> >>> On Jan 4, 2023, at 1:20 PM, Kees Cook <keescook@chromium.org> wrote:
-> >>> 
-> >>> !-------------------------------------------------------------------|
-> >>> This Message Is From an External Sender
-> >>> 
-> >>> |-------------------------------------------------------------------!
-> >>> 
-> >>> Fix the following -Wstringop-overflow warning when building with GCC 11+:
-> >>> 
-> >>> lib/zstd/decompress/huf_decompress.c: In function ‘HUF_readDTableX2_wksp’:
-> >>> lib/zstd/decompress/huf_decompress.c:700:5: warning: ‘HUF_fillDTableX2.constprop’ accessing 624 bytes in a region of size 52 [-Wstringop-overflow=]
-> >>> 700 |     HUF_fillDTableX2(dt, maxTableLog,
-> >>>     |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>> 701 |                    wksp->sortedSymbol, sizeOfSort,
-> >>>     |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>> 702 |                    wksp->rankStart0, wksp->rankVal, maxW,
-> >>>     |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>> 703 |                    tableLog+1,
-> >>>     |                    ~~~~~~~~~~~
-> >>> 704 |                    wksp->calleeWksp, sizeof(wksp->calleeWksp) / sizeof(U32));
-> >>>     |
-> >>> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>> lib/zstd/decompress/huf_decompress.c:700:5: note: referencing argument 6 of type ‘U32 (*)[13]’ {aka ‘unsigned int (*)[13]’}
-> >>> lib/zstd/decompress/huf_decompress.c:571:13: note: in a call to function ‘HUF_fillDTableX2.constprop’
-> >>> 571 | static void HUF_fillDTableX2(HUF_DEltX2* DTable, const U32 targetLog,
-> >>>     |             ^~~~~~~~~~~~~~~~
-> >>> 
-> >>> by using pointer notation instead of array notation.
-> >>> 
-> >>> This is one of the last remaining warnings to be fixed before globally
-> >>> enabling -Wstringop-overflow.
-> >> 
-> >> The patch looks correct to me, thanks for reviving it. But, I was attempting to reproduce the issue,
-> >> so I could better understand what's going on, and I wasn't able to reproduce it myself.
-> >> 
-> >> To attempt to reproduce, I applied this patch
-> >> 
-> >> ---
-> >> diff --git a/lib/zstd/Makefile b/lib/zstd/Makefile
-> >> index 20f08c644b71..190d3d5ab4be 100644
-> >> --- a/lib/zstd/Makefile
-> >> +++ b/lib/zstd/Makefile
-> >> @@ -12,6 +12,8 @@ obj-$(CONFIG_ZSTD_COMPRESS) += zstd_compress.o
-> >> obj-$(CONFIG_ZSTD_DECOMPRESS) += zstd_decompress.o
-> >> obj-$(CONFIG_ZSTD_COMMON) += zstd_common.o
-> >> 
-> >> +ccflags-y := -Wstringop-overflow=4 -Werror
-> >> +
-> >> zstd_compress-y := \
-> >>                zstd_compress_module.o \
-> >>                compress/fse_compress.o \
-> >> ---
-> >> 
-> >> Then compiled on x86-64 with gcc 12.2.0 on tag v6.2-rc3. I saw no errors.
-> >> I also tried with just `-Wstringop-overflow`, and on upstream zstd. I tried to
-> >> make a minimal reproducer on godbolt, so I could see if it was the gcc version,
-> >> but wasn't able to make it fail with any of them https://gcc.godbolt.org/z/Exzq9arMr .
-> >> 
-> >> Could you please tell me how to reproduce this warning?
-> > 
-> > I saw it like so with next-20230113 on x86_64:
-> > 
-> > $ gcc --version
-> > gcc (Ubuntu 12.2.0-3ubuntu1) 12.2.0
-> > ...
-> > $ make KCFLAGS=-Wstringop-overflow allmodconfig lib/zstd/decompress/huf_decompress.o
-> 
-> Thanks, I was able to repro it! I will merge this patch into my tree.
+--000000000000ec932505f231d4ca
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks!
+On Sat, 14 Jan 2023 at 08:54, Kees Cook <keescook@chromium.org> wrote:
+>
+> Since the long memcpy tests may stall a system for tens of seconds
+> in virtualized architecture environments, split those tests off under
+> CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
+>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+> Reviewed-by: David Gow <davidgow@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-> If you would like to submit the same patch upstream yourself, I will accept the PR, otherwise I can submit an upstream PR.
+Thanks: this is okay as-is, but I left a few suggestions below, having
+tried it out a bit more.
 
-I don't know the process there, so if you could do it, I'd appreciate
-it.
+Daniel's comment about kunit_skip() aborting the test is the only real
+fix, but depending on how easy you'd want to make turning these tests
+off, there are a couple of possible tweaks to the Kconfig option.
 
-> Just to be certain, this patch is to work around a shortcoming in
-> -Wstringop-overflow, but the code was otherwise correct?
+Cheers,
+-- David
 
-It's the same result for the binary output. The types indicated in the
-function prototype meant there was cross-struct-member overflow (i.e.
-writing to the second array dimension when only 1 was specified), but
-the way to clear up intention isn't as clean here, so I'd kind of say
-half a code correctness issue, and half a work-around. *makes wavey
-hands gesture*
+> v2: fix tristate to bool
+> v1: https://lore.kernel.org/lkml/20230107040203.never.112-kees@kernel.org
+> ---
+>  lib/Kconfig.debug  |  9 +++++++++
+>  lib/memcpy_kunit.c | 15 ++++++++++++---
+>  2 files changed, 21 insertions(+), 3 deletions(-)
+>
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index c2c78d0e761c..f90637171453 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2621,6 +2621,15 @@ config MEMCPY_KUNIT_TEST
+>
+>           If unsure, say N.
+>
+> +config MEMCPY_SLOW_KUNIT_TEST
+> +       bool "Include exhaustive memcpy tests" if !KUNIT_ALL_TESTS
 
--Kees
+I think it'd be better to not include the "if !KUNIT_ALL_TESTS" here,
+because it's very convenient to be able to use:
+./tools/testing/kunit/kunit.py run memcpy --kconfig_add
+CONFIG_MEMCPY_SLOW_KUNIT_TEST=n
+to override it.
 
--- 
-Kees Cook
+That does undermine the way KUNIT_ALL_TESTS works a bit, though it
+depends if you want to consider this a new set of tests, or just an
+option for the existing ones.
+
+> +       depends on MEMCPY_KUNIT_TEST
+> +       default KUNIT_ALL_TESTS
+
+Does this default work for everyone? Personally, I think these tests
+aren't slow enough that we'd want them disabled from an "all tests"
+build by default. So I'd keep it as-is.
+
+> +       help
+> +         Some memcpy tests are quite exhaustive in checking for overlaps
+> +         and bit ranges. These can be very slow, so they are split out
+> +         as a separate config.
+> +
+>  config IS_SIGNED_TYPE_KUNIT_TEST
+>         tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
+>         depends on KUNIT
+> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+> index 89128551448d..5a545e1b5dbb 100644
+> --- a/lib/memcpy_kunit.c
+> +++ b/lib/memcpy_kunit.c
+> @@ -307,8 +307,12 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
+>         }
+>  }
+>
+> -static void init_large(struct kunit *test)
+> +static int init_large(struct kunit *test)
+>  {
+> +       if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST)) {
+> +               kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
+> +               return -EBUSY;
+
+As Daniel notes, it shouldn't be necessary to return here, as
+kunit_skip() will abort the test. (It's a macro, so isn't marked
+__noreturn itself, but kunit_try_catch_throw(), which it uses, is.)
+
+> +       }
+>
+>         /* Get many bit patterns. */
+>         get_random_bytes(large_src, ARRAY_SIZE(large_src));
+> @@ -319,6 +323,8 @@ static void init_large(struct kunit *test)
+>
+>         /* Explicitly zero the entire destination. */
+>         memset(large_dst, 0, ARRAY_SIZE(large_dst));
+> +
+> +       return 0;
+>  }
+>
+>  /*
+> @@ -327,7 +333,9 @@ static void init_large(struct kunit *test)
+>   */
+>  static void copy_large_test(struct kunit *test, bool use_memmove)
+>  {
+> -       init_large(test);
+> +
+> +       if (init_large(test))
+> +               return;
+>
+>         /* Copy a growing number of non-overlapping bytes ... */
+>         for (int bytes = 1; bytes <= ARRAY_SIZE(large_src); bytes++) {
+> @@ -472,7 +480,8 @@ static void memmove_overlap_test(struct kunit *test)
+>         static const int bytes_start = 1;
+>         static const int bytes_end = ARRAY_SIZE(large_src) + 1;
+>
+> -       init_large(test);
+> +       if (init_large(test))
+> +               return;
+>
+>         /* Copy a growing number of overlapping bytes ... */
+>         for (int bytes = bytes_start; bytes < bytes_end;
+> --
+> 2.34.1
+>
+
+--000000000000ec932505f231d4ca
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+N0A3bgltvER3q1cGraQJMEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
+dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
+AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
+c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
+LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
+LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
+Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQAxS21FdvRtCQVc
+jgEj+xxSnUr0N9reJlI5J9zRiBCWGxm5yhz965IDka3XVFEbj+beJj/gyHoxbaTGf2AjOufpcMqy
+p4mtqc2l4Csudl8QeiBaOUDx4VKADbgxqpjvwD5zRpSKVj4S9y3BJi9xrRdPOm1Z2ZZYxRUxUz7d
+2MXoxQsFucGJO5a4CwDBaGgJAqvwCXU5Q64rKVIUBk6mtcd3cDwX+PXqx4QrhHFGq6b6oi37YQ8B
++bhlXqlkLrbPlPFk+4Rh4EaW92iD5g8kvtXCOwvIIvs+15Io0dbpIe2W5UKo2OcyDDFvrOACmUOE
+/GuEkhENcyDVyEs/4/N2u9WYMYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
+R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
+MDIwAhABj4peqtakTCOMXLZ2mEqRMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCA9
+ihEeqqotVVu40PO9t2NN3L17bfyC8zL4LqQWPQaMEzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMzAxMTQwNDMyMDNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAjje3qwbCtMMbW9f8vCj5
+iKdyRLImUmjwZlueemApTHHxNOBfeFHmODKJKkWm5oLEjaUA/XlfYJg1owt26kQvIku+PylUtuLc
+prpADKbwLeLDE5DeTbIWz3aUj1lo+Ol5s59eHaE7PazyHoxmXv/fqWpBmLvT6R/eD8pDkkrzRuEf
+yrSyce/5IikcrtE1JApwcOso8mWQY9C3MGEwbvrw0zp6GROQ7Eaz90Od5iKx+p9C1CYMvpOavZpq
+uipmJOyYFdjqlYimc2KdygB19I/ezZYF0VvGvIO4oilpEEgBrEOKO5AQ/Cq5PaCCUHdXjFcfoC/4
+O857bIrhrkKWtNnplA==
+--000000000000ec932505f231d4ca--
