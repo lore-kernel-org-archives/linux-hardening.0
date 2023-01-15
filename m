@@ -2,75 +2,136 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75FC6C46467
-	for <linux-hardening@archiver.kernel.org>; Sun, 15 Jan 2023 11:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64581C3DA78
+	for <linux-hardening@archiver.kernel.org>; Sun, 15 Jan 2023 18:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231196AbjAOLgc (ORCPT
+        id S231542AbjAOSix (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 15 Jan 2023 06:36:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37164 "EHLO
+        Sun, 15 Jan 2023 13:38:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231175AbjAOLga (ORCPT
+        with ESMTP id S231448AbjAOSiv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 15 Jan 2023 06:36:30 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02928A50;
-        Sun, 15 Jan 2023 03:36:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7AF7160C91;
-        Sun, 15 Jan 2023 11:36:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 126B2C433D2;
-        Sun, 15 Jan 2023 11:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673782588;
-        bh=pOckkEQYG5TtPGNWhz6DJdFf29q23zF0lPbvKh712jg=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=pyvF68SkuPs0PKw817jRJ8I0vpeD77qfWIOetcLGcqJyxyKnYUoAqi3eI+IMgdkuq
-         crnlaWcykE71lG+AHSvXqfx+G+Jsrbczbz4pTtsa5CgaWj+tKBnhDma72OAzTB8THE
-         RHGBDYOqpUVlB8CEz48BXRd1Hte5uClFHyGeEMo2TDGbr0ubNg4EjjjIQdBd3Kb4W/
-         Wg/KsOgDzc5jnkq8Ncv4hgHflpjL3vnqnSbmu6IORYOrG/VypDp/BbHLGbe6/bBo5I
-         nRGbMiMxtgfJpzru0UdFxO3yMmYabyPvheYuBuf/rHEdQoeokuRk8QHpokH663JPVb
-         j86pJo7P72u2Q==
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Cheng Xu <chengyou@linux.alibaba.com>,
-        Kai Shen <kaishen@linux.alibaba.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-In-Reply-To: <Y7zCBqwC1LtabRJ9@work>
-References: <Y7zCBqwC1LtabRJ9@work>
-Subject: Re: [PATCH][next] RDMA/erdma: Replace zero-length arrays with
- flexible-array members
-Message-Id: <167378258448.161439.10223371948659974585.b4-ty@kernel.org>
-Date:   Sun, 15 Jan 2023 13:36:24 +0200
+        Sun, 15 Jan 2023 13:38:51 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA24112854
+        for <linux-hardening@vger.kernel.org>; Sun, 15 Jan 2023 10:38:50 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id z13so423716plg.6
+        for <linux-hardening@vger.kernel.org>; Sun, 15 Jan 2023 10:38:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wgDu1UZCFEKonHoSuKGNi3twt6bIZItIIeZhKOBbBGs=;
+        b=gkJDbq/ocZLiukS/yFhQc7DFgrsi/wU7+B60LLQ0yVk2fGvngqJ0I8n0saVhRbpLAO
+         nyMcnviK+58KEzFnzPrAi+4FHmTgZiPNflvg9AiSW8O48md9PYAWQBjasWA99CTzOSE6
+         j0IrMNu+3GgK0giZqW7lR+R6+rcITGuSNFVFw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wgDu1UZCFEKonHoSuKGNi3twt6bIZItIIeZhKOBbBGs=;
+        b=ANbA60TNkBzqJnkZQ89n7gP6iFQ8UbBTRiImxbCPtmgKDjf6HmEIUtPHJFLC+RiKo5
+         4daPw6uRNpm+IFqLjSbqc5Okm2oCFW71pBGH+jT94F9bgdBqkB6U0LGVxi3pHsOJjvXl
+         dZNiJnrTBgINiABPLH0+me/HuB9FOB5npHtfZlFkIJiXG6mmYlzImRv0KxFs4VlQxiqO
+         0KdFWBxNb3sAkFiy+y0p7ZLUf2a0IOBlJooFwOXFwXIzAcfWyz8VLKXFedFkQ6mpTH1k
+         ONedCxiML7Mr1WSEanHrRewERrfTfI4yxTJenygCJwDiGN6IadGT0Uj+SVWgFuesS9en
+         F7nQ==
+X-Gm-Message-State: AFqh2koqp+152gA8Y5Qx8pSJK1kEW+a9JIU7OwsHIddKJzMIQg/2GgIc
+        niOu09ruXe1XX9bGNSCtmTUSq21Nr8144auX
+X-Google-Smtp-Source: AMrXdXtwKryXCthfydUDvdFpoMDIWaa6UrOSYCiX1dvWpYv/ubTXTOmRJMZx563hFxmifVBujT/O1A==
+X-Received: by 2002:a17:902:aa8e:b0:191:4575:48aa with SMTP id d14-20020a170902aa8e00b00191457548aamr82447502plr.11.1673807930314;
+        Sun, 15 Jan 2023 10:38:50 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h13-20020a170902680d00b001947ba0ac8fsm3160052plk.236.2023.01.15.10.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Jan 2023 10:38:49 -0800 (PST)
+Date:   Sun, 15 Jan 2023 10:38:48 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Len Brown <lenb@kernel.org>, Robert Moore <robert.moore@intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] ACPICA: Replace fake flexible arrays with flexible array
+ members
+Message-ID: <202301151037.20CC3F0@keescook>
+References: <20221118181538.never.225-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12-dev-a055d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221118181538.never.225-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, Nov 18, 2022 at 10:15:51AM -0800, Kees Cook wrote:
+> Functionally identical to ACPICA upstream pull request 813:
+> https://github.com/acpica/acpica/pull/813
 
-On Mon, 09 Jan 2023 19:40:22 -0600, Gustavo A. R. Silva wrote:
-> Zero-length arrays are deprecated[1] and we are moving towards
-> adopting C99 flexible-array members instead. So, replace zero-length
-> arrays, in a couple of structures, with flex-array members.
+Any update on this? Upstream is currently unbuildable since October.
+
+> One-element arrays (and multi-element arrays being treated as
+> dynamically sized) are deprecated[1] and are being replaced with
+> flexible array members in support of the ongoing efforts to tighten the
+> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
 > 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [2].
+> Replace one-element array with flexible-array member in struct
+> acpi_resource_extended_irq. Replace 4-byte fixed-size array with 4-byte
+> padding in a union with a flexible-array member in struct
+> acpi_pci_routing_table.
 > 
-> [...]
+> This results in no differences in binary output.
 
-Applied, thanks!
+In the meantime, can you take this patch for Linux, and we can wait for
+ACPICA to catch up?
 
-[1/1] RDMA/erdma: Replace zero-length arrays with flexible-array members
-      https://git.kernel.org/rdma/rdma/c/ed73a505480d54
+Thanks!
 
-Best regards,
+-Kees
+
+> 
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: Robert Moore <robert.moore@intel.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+> Cc: devel@acpica.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  include/acpi/acrestyp.h | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/acpi/acrestyp.h b/include/acpi/acrestyp.h
+> index a7fb8ddb3dc6..ee945084d46e 100644
+> --- a/include/acpi/acrestyp.h
+> +++ b/include/acpi/acrestyp.h
+> @@ -332,7 +332,7 @@ struct acpi_resource_extended_irq {
+>  	u8 wake_capable;
+>  	u8 interrupt_count;
+>  	struct acpi_resource_source resource_source;
+> -	u32 interrupts[1];
+> +	u32 interrupts[];
+>  };
+>  
+>  struct acpi_resource_generic_register {
+> @@ -679,7 +679,10 @@ struct acpi_pci_routing_table {
+>  	u32 pin;
+>  	u64 address;		/* here for 64-bit alignment */
+>  	u32 source_index;
+> -	char source[4];		/* pad to 64 bits so sizeof() works in all cases */
+> +	union {
+> +		char pad[4];	/* pad to 64 bits so sizeof() works in all cases */
+> +		DECLARE_FLEX_ARRAY(char, source);
+> +	};
+>  };
+>  
+>  #endif				/* __ACRESTYP_H__ */
+> -- 
+> 2.34.1
+> 
+
 -- 
-Leon Romanovsky <leon@kernel.org>
+Kees Cook
