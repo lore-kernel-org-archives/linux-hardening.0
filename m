@@ -2,143 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0237CC46467
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 Jan 2023 16:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BCBC54EBE
+	for <linux-hardening@archiver.kernel.org>; Mon, 16 Jan 2023 16:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233637AbjAPQi6 (ORCPT
+        id S233877AbjAPQrw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 Jan 2023 11:38:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53690 "EHLO
+        Mon, 16 Jan 2023 11:47:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233693AbjAPQik (ORCPT
+        with ESMTP id S233799AbjAPQrV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 Jan 2023 11:38:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8ED2686A
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Jan 2023 08:26:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673886411;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Mon, 16 Jan 2023 11:47:21 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACD940BEF;
+        Mon, 16 Jan 2023 08:35:09 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id CC830671D6;
+        Mon, 16 Jan 2023 16:35:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1673886907; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=r2boqvfD+RJ61HpS/wHyE329kUvwll2CIPBJV6eZl4c=;
-        b=IDjmgHopGyiIonvakEi5RH1XTKJynlefCM8gCCgv3IkRDnrFsn8eHM3cdtLzevA610m6AY
-        BoBdPpdTfnU6t+Kqz/fkCTVmcw/Ij/HM9LH0ubwdZEGXra5om8fly76wPFnJmZU3LbLIjC
-        sLJhK09JlB3X6D/6uBQb92BgmQRr17o=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-3-5Kg9o8j-OTmEK1oRdFIQQg-1; Mon, 16 Jan 2023 11:26:50 -0500
-X-MC-Unique: 5Kg9o8j-OTmEK1oRdFIQQg-1
-Received: by mail-lj1-f198.google.com with SMTP id r20-20020a2e8e34000000b002838fc9f1feso6631082ljk.9
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Jan 2023 08:26:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r2boqvfD+RJ61HpS/wHyE329kUvwll2CIPBJV6eZl4c=;
-        b=qXoPsrp7ZFIH8yDvd4bWyNrarZm/bsXVbRZ1mmtZWZW23HyH0FkbRkm2y7Pom+ZpqG
-         OQ+936CA/0BAyXnbWjApYVRantvmJ0Qu58v+wiFIb2Q0ceMSoEf98+VUqyB/Hdr0pxz2
-         84+QN6pWBxl3uiyPXqzueVnuup0A7zeIZwz+iNulBoDRRKxsvD4ZHZvXVtsn7iV2uKI3
-         sPYRHH7MRInpWGZWDNKvtin4mAMD4FqnoUEfboFyQRrOQZzU7pXUWynuUV2vaPMVn0Rw
-         qlXU/eX659YNycGrEkUKUtMv5s4z9xndD5VnGxTGE/ObfDth4p+pIqLpYjZCBqj+Z02v
-         6SKQ==
-X-Gm-Message-State: AFqh2krGX9Enk2bx1EQCRzkt5+vEiEGt55IR3s0UzQsgdZsBStwWSGGI
-        SPJ62mZa1d3fHmjEit1QSqHHjyB/pbzggdmc9h9Fzrvbbhrwch2WAUrWLmXcwOcpK833E3XuGqs
-        q3ZEW1iOMTWHZ0sZTx5m4H5a00/nctfCnmd/PFPCtYUZz
-X-Received: by 2002:a05:6512:7c:b0:4d5:7b89:7b67 with SMTP id i28-20020a056512007c00b004d57b897b67mr110388lfo.17.1673886408806;
-        Mon, 16 Jan 2023 08:26:48 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXsl3G5delLpsUSEikj3rrvMcC9LUAx6uCt/IgZvb4ulTe/2Bhgjm8AC830LNMSyFXE01XKOE/f4hSEa4jTVlHk=
-X-Received: by 2002:a05:6512:7c:b0:4d5:7b89:7b67 with SMTP id
- i28-20020a056512007c00b004d57b897b67mr110384lfo.17.1673886408656; Mon, 16 Jan
- 2023 08:26:48 -0800 (PST)
+        bh=x7t0YOJRqJkyR/v4+Wf24lPdcrODSmxqSGim8YzYnhs=;
+        b=Io1NDW4DvizFFd/BfM+ziDxHHjtF5sOBp4nwfT08niOp80XKhwhwF/jZKscKxuc6k06VEx
+        d0hQgX1MwimvRavIgcAbe6zgrgsCOiJ3Gm5gZ1adL09GDww4Pqd2NMkjqHGKUCOnmCt2Tn
+        pMu7OCH1bCzfJx7+hPkUTJ5vVf+sYyk=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 3CF3F2C1AC;
+        Mon, 16 Jan 2023 16:35:05 +0000 (UTC)
+Date:   Mon, 16 Jan 2023 17:35:02 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc:     coverity-bot <keescook@chromium.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: console_prepend_dropped(): Memory - corruptions
+Message-ID: <Y8V8tqMJeB7t+rcJ@alley>
+References: <202301131544.D9E804CCD@keescook>
+ <Y8KAhaiZQOWTcfyF@google.com>
 MIME-Version: 1.0
-References: <20230103234835.never.378-kees@kernel.org> <Y7TNtQqunHIW8her@work> <CACO55tsyCtf-_mCPVEo-4Dj_mAu-tnNTTjP75wx=9n+TS1XVvw@mail.gmail.com>
-In-Reply-To: <CACO55tsyCtf-_mCPVEo-4Dj_mAu-tnNTTjP75wx=9n+TS1XVvw@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Mon, 16 Jan 2023 17:26:37 +0100
-Message-ID: <CACO55tvuhLzbtg-wzy24Y7Y4k4CN_3JZM5VZ-9VPFNZK3skKCg@mail.gmail.com>
-Subject: Re: [RESEND][PATCH] drm/nouveau/fb/ga102: Replace zero-length array
- of trailing structs with flex-array
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-hardening@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        Gourav Samaiya <gsamaiya@nvidia.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y8KAhaiZQOWTcfyF@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 5:24 PM Karol Herbst <kherbst@redhat.com> wrote:
->
-> On Wed, Jan 4, 2023 at 1:52 AM Gustavo A. R. Silva
-> <gustavoars@kernel.org> wrote:
-> >
-> > On Tue, Jan 03, 2023 at 03:48:36PM -0800, Kees Cook wrote:
-> > > Zero-length arrays are deprecated[1] and are being replaced with
-> > > flexible array members in support of the ongoing efforts to tighten the
-> > > FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-> > > with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
-> > >
-> > > Replace zero-length array with flexible-array member.
-> > >
-> > > This results in no differences in binary output.
-> > >
-> > > [1] https://github.com/KSPP/linux/issues/78
-> > >
-> > > Cc: Ben Skeggs <bskeggs@redhat.com>
-> > > Cc: Karol Herbst <kherbst@redhat.com>
-> > > Cc: Lyude Paul <lyude@redhat.com>
-> > > Cc: David Airlie <airlied@gmail.com>
-> > > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > > Cc: Gourav Samaiya <gsamaiya@nvidia.com>
-> > > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> > > Cc: dri-devel@lists.freedesktop.org
-> > > Cc: nouveau@lists.freedesktop.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> >
-> > Here is my RB again:
-> >
-> > Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> >
->
-> Reviewed-by: Karol Herbst <kherbst@redhat.com>
->
-> will push in a moment
->
+On Sat 2023-01-14 19:14:29, Sergey Senozhatsky wrote:
+> On (23/01/13 15:46), coverity-bot wrote:
+> > *** CID 1530570:  Memory - corruptions  (OVERRUN)
+> > kernel/printk/printk.c:2738 in console_prepend_dropped()
+> > 2732     		/* Truncate the message, but keep it terminated. */
+> > 2733     		pmsg->outbuf_len = outbuf_sz - (len + 1);
+> > 2734     		outbuf[pmsg->outbuf_len] = 0;
+> > 2735     	}
+> > 2736
+> > 2737     	memmove(outbuf + len, outbuf, pmsg->outbuf_len + 1);
+> > vvv     CID 1530570:  Memory - corruptions  (OVERRUN)
+> > vvv     Overrunning buffer pointed to by "scratchbuf" of 1024 bytes by passing it to a function which accesses it at byte offset 1998 using argument "len" (which evaluates to 1999). [Note: The source code implementation of the function has been overridden by a builtin model.]
+> > 2738     	memcpy(outbuf, scratchbuf, len);
+> > 2739     	pmsg->outbuf_len += len;
+> > 2740     }
+> > 2741     #else
+> > 2742     #define console_prepend_dropped(pmsg, dropped)
+> > 2743     #endif /* CONFIG_PRINTK */
+> [..]
+> > Human notes from Kees:
+> > 
+> > I'm not sure how it got 1998, but I do see that snprintf() should
+> > probably be scnprintf(), otherwise "len" might be a lie (i.e. it'll hold
+> > what it WANTED to write, rather than what it actually wrote).
+> 
+> Cannot imagine how "** %lu printk messages dropped **\n" can expand into
+> 1998 bytes. Does coverity have a "verbose" mode?
 
-just noticed it's the same change than the other one... anyway, will
-push the oldest one
+I guess that coverity tries to pass some random string that is longer
+than the provided buffer.
 
-> > Thanks!
-> > --
-> > Gustavo
-> >
-> > > ---
-> > > Sent before as: https://lore.kernel.org/all/20221118211207.never.039-kees@kernel.org/
-> > > ---
-> > >  drivers/gpu/drm/nouveau/include/nvfw/hs.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/nouveau/include/nvfw/hs.h b/drivers/gpu/drm/nouveau/include/nvfw/hs.h
-> > > index 8c4cd08a7b5f..8b58b668fc0c 100644
-> > > --- a/drivers/gpu/drm/nouveau/include/nvfw/hs.h
-> > > +++ b/drivers/gpu/drm/nouveau/include/nvfw/hs.h
-> > > @@ -52,7 +52,7 @@ struct nvfw_hs_load_header_v2 {
-> > >       struct {
-> > >               u32 offset;
-> > >               u32 size;
-> > > -     } app[0];
-> > > +     } app[];
-> > >  };
-> > >
-> > >  const struct nvfw_hs_load_header_v2 *nvfw_hs_load_header_v2(struct nvkm_subdev *, const void *);
-> > > --
-> > > 2.34.1
-> > >
-> >
+The code might be safe with the current size of the buffer and
+the string. But it is true that the following is wrong:
 
+	len = snprintf(scratchbuf, scratchbuf_sz,
+		       "** %lu printk messages dropped **\n", dropped);
+
+
+As Kees pointed out in the human comment, we should use scnprintf()
+that will return the really written length of the string that fits
+into the buffer.
+
+I am going to send a patch.
+
+Best Regards,
+Petr
