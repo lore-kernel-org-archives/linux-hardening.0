@@ -2,151 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981DAC46467
-	for <linux-hardening@archiver.kernel.org>; Mon, 16 Jan 2023 19:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EF7C46467
+	for <linux-hardening@archiver.kernel.org>; Tue, 17 Jan 2023 03:08:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232527AbjAPTOn (ORCPT
+        id S235657AbjAQDID (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 16 Jan 2023 14:14:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38192 "EHLO
+        Mon, 16 Jan 2023 22:08:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232332AbjAPTOl (ORCPT
+        with ESMTP id S235690AbjAQDH5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 16 Jan 2023 14:14:41 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12A820070
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Jan 2023 11:14:39 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id b5so7264487wrn.0
-        for <linux-hardening@vger.kernel.org>; Mon, 16 Jan 2023 11:14:39 -0800 (PST)
+        Mon, 16 Jan 2023 22:07:57 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C822C233D7
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Jan 2023 19:07:55 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id jl4so32159181plb.8
+        for <linux-hardening@vger.kernel.org>; Mon, 16 Jan 2023 19:07:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3I9TKz0QCRwStrORKwRYbo4zYDMGw/8qyv/2PPzcTIw=;
-        b=JhpTDkNcmd/K/PpIamox+UvMbgveXuheag7i9hm8ma5NnX7ZfIOvhDb1HEwnrhqXgV
-         DMPZY4t81B1oRlC1xwXXjkqUDt3e/oxumkm8f58ziGzt6ueDgTdxVpSbxmWLa5Y/LqIP
-         b3h5/Wepronyk03vMqkjLgLzU2Nh6Zcq+b8Ard3BfdYwkBmsxc9039CJba7v7FTcQ6ef
-         3swlGUN78iSzOIxCdqSboYpAB4+ZEFVbKXJU/A2J4I1H+gpE/GmWLAd7i2MSNVcGX1Jj
-         Dp+HqtxFWRKw2OFt6pSgbCTWBBfOfZmdFLGKnK7jqQS3hYgr3ggvMSbka3FiLg4x9//h
-         b8zg==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pnJ9Zmocxu4Xq5ufmgMvMkKxKjqhgHcC/CXVZl3M6Kg=;
+        b=VT/EEiv5boIzMV75DdA9/aJwFxF8Is84Rhw3/LYBmRMMYQpCUAgfOvntIelHvMClTW
+         yMMYT/gArron1p5NI3ZWwNx7VwexbGk5nFEciNhajeDchErJns5L+5ncMt8OcUPsVqtQ
+         jQb27l54t7AeQHJvNQXLmE7rhaplUy52bbmBU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3I9TKz0QCRwStrORKwRYbo4zYDMGw/8qyv/2PPzcTIw=;
-        b=2To6quSFk49GLHbnY3kOOAEM9P451m8tVOpP3N2R7q+8MK8WwLFm79oBODJlm+ijFw
-         K8Zjh7DODepAqMOk6epqDLWVHUQko8bnfyZd8F7f/5ibVZy0w7P0Q/in7cdbW3hrxAr9
-         hTjB8G2e5p0HXAnqKwlwonGzZDaiG89NSlhzJ1K8rCf7qmk5i6HsH4l86WjJ6a7F1IUi
-         HNnx2W3gWlD1f9jVX5PwLnuPRGiWUx2J+ORfDOwjkzuNhr6w/BRSI9SGGh34wXArjHX7
-         yqalFhlQdZ8b3pwXDuUGptf3IwvZ0KA2S/SVUWOVRe6/AbXF6aTYVbYWvCNuU5qtWEbV
-         k+rA==
-X-Gm-Message-State: AFqh2kogLDgSndpcTrR9pDe34QpiwgE0eP/QS1yzipDtkDY2LgV+eWss
-        hJ9cZbFSGfM8dYjRs3ymuWodxA==
-X-Google-Smtp-Source: AMrXdXtWSSV63Ld25GuO0BsX3I2Wu43PREgvm5mdCHutcYHBaybO5RRT8NbVv9KhGzTM4D2Fl8Waig==
-X-Received: by 2002:a05:6000:1d87:b0:2a1:602d:ff3 with SMTP id bk7-20020a0560001d8700b002a1602d0ff3mr1103593wrb.3.1673896478372;
-        Mon, 16 Jan 2023 11:14:38 -0800 (PST)
-Received: from localhost ([2a00:79e0:9d:4:e2d9:b90f:9307:af59])
-        by smtp.gmail.com with ESMTPSA id u13-20020a05600c19cd00b003c6f1732f65sm42619579wmq.38.2023.01.16.11.14.37
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pnJ9Zmocxu4Xq5ufmgMvMkKxKjqhgHcC/CXVZl3M6Kg=;
+        b=V2Sj9arvMzXa7G72xaEYtybDa6lRi4TRacmLAkg6XhhLAj9CVSxBdMykR3/8+nV1NF
+         Go2TFgb6Y+hQtOHDeApdypAvRhFnIhPEsjtFb+r1FE/S0tUJxhkwjWUItnn/1HjrTWDk
+         Ac2+boHwU9ugR+Lu0zfQwAdK4GJGCeXzR+DjFjxmYFYodSIWME9IL27tN8LuV0nHtL6s
+         6AaewoaUKJGvR36or1YZeq6oUXlpK7yTouCXZooORF9rNr4bLfJ7XoQuTg1S1BIH2c2D
+         mCsjSTgBumxQE87tCs1FkX/BaUXZ+If1SH8kv6dAEOqeI3NBDOPpPWIWoDD8o691waj9
+         g0NA==
+X-Gm-Message-State: AFqh2kpVEPzEVxyhp8xM39CIHZWsde9fea35xRU2ND5bxDUpoyl/kO0l
+        ufG+dKU2Zj3y7VcZWr1XP7qADw==
+X-Google-Smtp-Source: AMrXdXtQj78NfF9qx+TabtfHmEG+hyBEpYjSaH0gM6kYOQE/gPWnG4sWnLISWWRe0lGgYM28aT9AHQ==
+X-Received: by 2002:a17:903:54d:b0:193:a5b:ccf6 with SMTP id jo13-20020a170903054d00b001930a5bccf6mr808312plb.0.1673924875310;
+        Mon, 16 Jan 2023 19:07:55 -0800 (PST)
+Received: from google.com (KD124209188001.ppp-bb.dion.ne.jp. [124.209.188.1])
+        by smtp.gmail.com with ESMTPSA id s21-20020a170902b19500b00189e1522982sm19987634plr.168.2023.01.16.19.07.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jan 2023 11:14:37 -0800 (PST)
-From:   Jann Horn <jannh@google.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: [PATCH] fs: Use CHECK_DATA_CORRUPTION() when kernel bugs are detected
-Date:   Mon, 16 Jan 2023 20:14:25 +0100
-Message-Id: <20230116191425.458864-1-jannh@google.com>
-X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
+        Mon, 16 Jan 2023 19:07:54 -0800 (PST)
+Date:   Tue, 17 Jan 2023 12:07:50 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        coverity-bot <keescook@chromium.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: Coverity: console_prepend_dropped(): Memory - corruptions
+Message-ID: <Y8YRBo7ZmtzWT4J1@google.com>
+References: <202301131544.D9E804CCD@keescook>
+ <Y8KAhaiZQOWTcfyF@google.com>
+ <Y8V8tqMJeB7t+rcJ@alley>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y8V8tqMJeB7t+rcJ@alley>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Currently, filp_close() and generic_shutdown_super() use printk() to log
-messages when bugs are detected. This is problematic because infrastructure
-like syzkaller has no idea that this message indicates a bug.
-In addition, some people explicitly want their kernels to BUG() when kernel
-data corruption has been detected (CONFIG_BUG_ON_DATA_CORRUPTION).
-And finally, when generic_shutdown_super() detects remaining inodes on a
-system without CONFIG_BUG_ON_DATA_CORRUPTION, it would be nice if later
-accesses to a busy inode would at least crash somewhat cleanly rather than
-walking through freed memory.
+On (23/01/16 17:35), Petr Mladek wrote:
+> 
+> I am going to send a patch.
 
-To address all three, use CHECK_DATA_CORRUPTION() when kernel bugs are
-detected.
+Sure, sounds good.
 
-Signed-off-by: Jann Horn <jannh@google.com>
----
- fs/open.c              |  5 +++--
- fs/super.c             | 21 +++++++++++++++++----
- include/linux/poison.h |  3 +++
- 3 files changed, 23 insertions(+), 6 deletions(-)
+> The code might be safe with the current size of the buffer and
+> the string. But it is true that the following is wrong:
+> 
+> 	len = snprintf(scratchbuf, scratchbuf_sz,
+> 		       "** %lu printk messages dropped **\n", dropped);
 
-diff --git a/fs/open.c b/fs/open.c
-index 82c1a28b3308..ceb88ac0ca3b 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1411,8 +1411,9 @@ int filp_close(struct file *filp, fl_owner_t id)
- {
- 	int retval = 0;
- 
--	if (!file_count(filp)) {
--		printk(KERN_ERR "VFS: Close: file count is 0\n");
-+	if (CHECK_DATA_CORRUPTION(file_count(filp) == 0,
-+			"VFS: Close: file count is 0 (f_op=%ps)",
-+			filp->f_op)) {
- 		return 0;
- 	}
- 
-diff --git a/fs/super.c b/fs/super.c
-index 12c08cb20405..cf737ec2bd05 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -491,10 +491,23 @@ void generic_shutdown_super(struct super_block *sb)
- 		if (sop->put_super)
- 			sop->put_super(sb);
- 
--		if (!list_empty(&sb->s_inodes)) {
--			printk("VFS: Busy inodes after unmount of %s. "
--			   "Self-destruct in 5 seconds.  Have a nice day...\n",
--			   sb->s_id);
-+		if (CHECK_DATA_CORRUPTION(!list_empty(&sb->s_inodes),
-+				"VFS: Busy inodes after unmount of %s (%s)",
-+				sb->s_id, sb->s_type->name)) {
-+			/*
-+			 * Adding a proper bailout path here would be hard, but
-+			 * we can at least make it more likely that a later
-+			 * iput_final() or such crashes cleanly.
-+			 */
-+			struct inode *inode;
-+
-+			spin_lock(&sb->s_inode_list_lock);
-+			list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
-+				inode->i_op = VFS_PTR_POISON;
-+				inode->i_sb = VFS_PTR_POISON;
-+				inode->i_mapping = VFS_PTR_POISON;
-+			}
-+			spin_unlock(&sb->s_inode_list_lock);
- 		}
- 	}
- 	spin_lock(&sb_lock);
-diff --git a/include/linux/poison.h b/include/linux/poison.h
-index 2d3249eb0e62..0e8a1f2ceb2f 100644
---- a/include/linux/poison.h
-+++ b/include/linux/poison.h
-@@ -84,4 +84,7 @@
- /********** kernel/bpf/ **********/
- #define BPF_PTR_POISON ((void *)(0xeB9FUL + POISON_POINTER_DELTA))
- 
-+/********** VFS **********/
-+#define VFS_PTR_POISON ((void *)(0xF5 + POISON_POINTER_DELTA))
-+
- #endif
+Wouldn't
 
-base-commit: 5dc4c995db9eb45f6373a956eb1f69460e69e6d4
--- 
-2.39.0.314.g84b9a713c41-goog
+	if (WARN_ON_ONCE(len + PRINTK_PREFIX_MAX >= outbuf_sz))
+		return;
 
+prevent us from doing something harmful?
