@@ -2,114 +2,76 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21654C00A5A
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 02:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 823E1C32793
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 10:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbjARCik (ORCPT
+        id S230050AbjARK01 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 Jan 2023 21:38:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
+        Wed, 18 Jan 2023 05:26:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjARCij (ORCPT
+        with ESMTP id S229563AbjARK0F (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 Jan 2023 21:38:39 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4194D4FC0B;
-        Tue, 17 Jan 2023 18:38:38 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id x10so44908565edd.10;
-        Tue, 17 Jan 2023 18:38:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddle79ToA5Bpr6HlzIXW7XP/tPvJO0M1hIh+6wWxTyo=;
-        b=IlmvO7TKNh2nK2vJHhzcr7t37yCVF9dZp0Y+0f9GGWT917TX87O1eLNNRHFgAtF4WC
-         ryH4AMVhOJR9TPF+7W8m3S4FpSwOSLs1UyyZKXQw712/dVDJxreUZZvElKha9EP5uSR9
-         6AQXiVZHDZEOwG8rg90hNkwplfvr/E0L4OUbY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ddle79ToA5Bpr6HlzIXW7XP/tPvJO0M1hIh+6wWxTyo=;
-        b=xWFdWB4UUvm+JkBTkRCvX1I2vfq/wgjK7xaVZEnxQwenbgOA3C4l3G7yv5dGzS2A+G
-         idXq6A74THPOLgRNcNbCal0NQjRyOlGpMRNcv3O9eFrVUG01rI1nfwlJADDywI3RpRKJ
-         ngmTYfXXIHu6431OfuajdrxNdZl0yzODKQJjTp/L9fKhOpXOE4XodhXYkdeUfx61u1/W
-         xImlFJrnATJfFPBbVwQ7VxrUc66UOAORIGepMHVSirElIRw6PSnmiDUbrAKV4KvLPaZF
-         1aglhzxMiAl78JFV4lC0F4HBiM0nD6fLlfcgypboq34xTONwx1Ivxe4DJvOmzYVPO25l
-         6jog==
-X-Gm-Message-State: AFqh2kreP2gcaXJnS9qygI3oWMp5JJ70l8Daw2AoY5lbAi7Qtzt6iJOU
-        Y2rPnmpkGstz4+CD6VKb8twkXUgN40hx5Bh5ZZ8=
-X-Google-Smtp-Source: AMrXdXu4mQ/ljXNqUeyIfURUtsQWcFG38FnD62YdKNkxKIrsEy2bCfDuK9365sT/beFFy5Hb334q77gAdC/PXrwjnJk=
-X-Received: by 2002:aa7:dd59:0:b0:49c:8b1f:b9d with SMTP id
- o25-20020aa7dd59000000b0049c8b1f0b9dmr620012edw.289.1674009516784; Tue, 17
- Jan 2023 18:38:36 -0800 (PST)
+        Wed, 18 Jan 2023 05:26:05 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF0EE5DC28;
+        Wed, 18 Jan 2023 01:31:20 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 6C73E20C5D;
+        Wed, 18 Jan 2023 09:31:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1674034279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bVp7KTcQDbxHoHXUlHU1XAYm2vJ+8Qy42f6yOSykfsw=;
+        b=n495Qf5SXOkdloH73gDVq4FvILM4H5GRWv25FvN0hgfoJWOj7Dk8oP1z3pHYZRuGI6zitG
+        eilW4gukzty5h+F7kdWDBvvJ0x0YlpSaeLJTljal56TtFfA6SxNOQtIHGe6sz+JnhpxVmq
+        3HcQXJPVCUYlRi1LTHHAxSGiN2FnCZY=
+Received: from suse.cz (unknown [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id D346C2C141;
+        Wed, 18 Jan 2023 09:31:18 +0000 (UTC)
+Date:   Wed, 18 Jan 2023 10:31:16 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        coverity-bot <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        coverity-bot <keescook+coverity-bot@chromium.org>
+Subject: Re: [PATCH] printk: Use scnprintf() to print the message about the
+ dropped messages on a console
+Message-ID: <Y8e8ZCTdEWU0iUqJ@alley>
+References: <20230117161031.15499-1-pmladek@suse.com>
 MIME-Version: 1.0
-References: <20221202212418.never.837-kees@kernel.org>
-In-Reply-To: <20221202212418.never.837-kees@kernel.org>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Wed, 18 Jan 2023 02:38:24 +0000
-Message-ID: <CACPK8Xde2zgr5c-Oy30+3HM6PoGf+=1YdEJuYpsHL2CVVDvOoA@mail.gmail.com>
-Subject: Re: [PATCH] net/ncsi: Silence runtime memcpy() false positive warning
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230117161031.15499-1-pmladek@suse.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2 Dec 2022 at 21:24, Kees Cook <keescook@chromium.org> wrote:
->
-> The memcpy() in ncsi_cmd_handler_oem deserializes nca->data into a
-> flexible array structure that overlapping with non-flex-array members
-> (mfr_id) intentionally. Since the mem_to_flex() API is not finished,
-> temporarily silence this warning, since it is a false positive, using
-> unsafe_memcpy().
+On Tue 2023-01-17 17:10:31, Petr Mladek wrote:
+> Use scnprintf() for printing the message about dropped messages on
+> a console. It returns the really written length of the message.
+> It prevents potential buffer overflow when the returned length is
+> later used to copy the buffer content.
+> 
+> Note that the previous code was safe because the scratch buffer was
+> big enough and the message always fit in. But scnprintf() makes
+> it more safe, definitely.
+> 
+> Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> Addresses-Coverity-ID: 1530570 ("Memory - corruptions")
+> Fixes: c4fcc617e148 ("printk: introduce console_prepend_dropped() for dropped messages")
+> Link: https://lore.kernel.org/r/202301131544.D9E804CCD@keescook
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
 
-Thanks for sending the fix Kees. I got a bit busy towards the end of the year.
+JFYI, the patch has been comitted into printk/linux.git,
+branch rework/buffers-cleanup.
 
-I spent some time looking at how the netlink api was used, and tried
-to convince myself that a user couldn't send an OEM command that
-triggered the overflow. It all got a bit tangled up so I didn't come
-to a conclusion.
-
-Cheers,
-
-Joel
-
->
-> Reported-by: Joel Stanley <joel@jms.id.au>
-> Link: https://lore.kernel.org/netdev/CACPK8Xdfi=OJKP0x0D1w87fQeFZ4A2DP2qzGCRcuVbpU-9=4sQ@mail.gmail.com/
-> Cc: Samuel Mendoza-Jonas <sam@mendozajonas.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  net/ncsi/ncsi-cmd.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
-> index dda8b76b7798..fd2236ee9a79 100644
-> --- a/net/ncsi/ncsi-cmd.c
-> +++ b/net/ncsi/ncsi-cmd.c
-> @@ -228,7 +228,8 @@ static int ncsi_cmd_handler_oem(struct sk_buff *skb,
->         len += max(payload, padding_bytes);
->
->         cmd = skb_put_zero(skb, len);
-> -       memcpy(&cmd->mfr_id, nca->data, nca->payload);
-> +       unsafe_memcpy(&cmd->mfr_id, nca->data, nca->payload,
-> +                     /* skb allocated with enough to load the payload */);
->         ncsi_cmd_build_header(&cmd->cmd.common, nca);
->
->         return 0;
-> --
-> 2.34.1
->
+Best Regards,
+Petr
