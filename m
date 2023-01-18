@@ -2,146 +2,207 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7FBC32793
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 20:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DB7C38159
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 21:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjARUny (ORCPT
+        id S230119AbjARVA0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Jan 2023 15:43:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49592 "EHLO
+        Wed, 18 Jan 2023 16:00:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbjARUnx (ORCPT
+        with ESMTP id S230347AbjARVAF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Jan 2023 15:43:53 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175A35F3B1
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 12:43:47 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id b12so25442576pgj.6
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 12:43:47 -0800 (PST)
+        Wed, 18 Jan 2023 16:00:05 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53695F381
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 13:00:00 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id qx13so315297ejb.13
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 13:00:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KStM3HmfW6zjszqSuM2wQKSCCuEFuFkt3tPZnP+tR7I=;
-        b=L3qce/23w/O2c6J0Sgvm8TGIFHR7tKd5Beqd1seyYV/7EV6novDaC5eXSiWU/f2FS5
-         zSaPnuKyAYIsn+fAqZCqa1zAtjqrkRU6JUhLJSSO/aayxOkqt4XedkfO4QfCQWo7R1zM
-         3jfnJDXMc4ataF6oRRyoiuCLTocCsVrHqDJns=
+        d=broadcom.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5LSVGjJDulve/zRQVdWszD7+OL7Jw9VJKO8By10Neig=;
+        b=gDOqNCrajISqclAXKfbKbaS0YkZfZStNX/148nPkNk1/MTXTRv0wGilP+7AUVjvsuY
+         j8JnUnYw5Mf8fW9g8+kq69Pu6wJ7lVeYqzNDmekz230t20/D7uvyr/1j7eDq5cyc8ZTl
+         kK3jYpMPkLhZI24x1BpI4xM+hPh3WJinx0CQc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KStM3HmfW6zjszqSuM2wQKSCCuEFuFkt3tPZnP+tR7I=;
-        b=XCb7IbJ41ZCWSkGBZvYsjTjfotJeoHNd1GNlGNy8IPERc1zH+sA160NSmQGl2b6lS0
-         PxPe9J55iOv7rm63a6JBAl+w1FdHTcY2jvGTaDGSvTGWUb4Bm4Nrw2rcWKxwWkbdCG2C
-         raVB8gwVT6H9a00hxlpw+rj9hAcu5qEAg7kFRBr2pUrFlGB7d+/OGwIKiaMDVq+8b1HG
-         /JBY55TJ7Z7b2qb+J1li7IZyNNWBlsavQ78e2bBBBkTU7N82PwNOexpmC4jUpB6XmXKA
-         8LAUX0ARFIg+9IQWlvBoP0l8G/lAu77lU7vdYqzWEqlWDmbl+VT8DEjDdynfx7ARF0tl
-         pNBg==
-X-Gm-Message-State: AFqh2kqW6TmusXDG2Y2qPgLhwTPtbaN1zxlgvXuQLqMYSMJAQCDmM3X7
-        8kNfRkMIAzwT/FB7R5OWWN/klw==
-X-Google-Smtp-Source: AMrXdXtQTleYSShMrqb3uuqdACEmAmgcS2GNXTtWlwQaiiEsj75gzw65XygJAnb8zA+2WFBUq52IWg==
-X-Received: by 2002:a05:6a00:2a04:b0:582:26bc:a75b with SMTP id ce4-20020a056a002a0400b0058226bca75bmr9405109pfb.9.1674074626585;
-        Wed, 18 Jan 2023 12:43:46 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z13-20020aa7990d000000b0058a313f4e4esm16911700pff.149.2023.01.18.12.43.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jan 2023 12:43:44 -0800 (PST)
-Date:   Wed, 18 Jan 2023 12:43:43 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        David Gow <davidgow@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Isabella Basso <isabbasso@riseup.net>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] kunit: memcpy: Split slow memcpy tests into
- MEMCPY_SLOW_KUNIT_TEST
-Message-ID: <202301181243.2DBDD432E@keescook>
-References: <20230118200653.give.574-kees@kernel.org>
- <20230118203216.GA987351@roeck-us.net>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5LSVGjJDulve/zRQVdWszD7+OL7Jw9VJKO8By10Neig=;
+        b=spRShJY8iO70zmH60ZFHKl1xiycp9T3aOFnzaxuWTc5qH0sNSaQzYubuPcBGSEoYUg
+         nU6Kg4z3yz38J+/DCcilINmvEFcyEuTp6/O/PG3L3hGvN7Sfltk7+9efXc6KMwo4w4aE
+         KIi8SK1n95/Mr67ZtlF1nN23rvmFcq0RDcBIRBjA5hO1iRZ2ZEXDJR93pyYAQJa3ZNOA
+         bJ5cmyjO3c8kIJJu1WOKSDJrVyWJcnPnTHFAEWKaRO/F0k4nKLJW42r1FTXMOhzOBu7i
+         6esBsaQ3bpnDdE1SuTtqlOLKH/dyJh2bYOsBjFsoIRBlL3iR3YDpkTGpQNLhODb7GLak
+         o3RQ==
+X-Gm-Message-State: AFqh2ko6n/EDLgrrVUccKnUUAqS8Jt+ysBcCHzxTen12Ye8x5sBhcgZP
+        ZUcc6robbZdyRzmIU888Hg9ei61P51w74/c98r5TOQ==
+X-Google-Smtp-Source: AMrXdXsE1DbRex0OlQJomrOsg36FznkMet18w+RvYUajjYeDJTxgnINu/ijbycB5WrA3C8WtOuewInWrbWMbnM/qaYY=
+X-Received: by 2002:a17:906:9394:b0:7c4:efcf:3bc8 with SMTP id
+ l20-20020a170906939400b007c4efcf3bc8mr1084302ejx.702.1674075598966; Wed, 18
+ Jan 2023 12:59:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230118203216.GA987351@roeck-us.net>
+References: <20230118203457.never.612-kees@kernel.org>
+In-Reply-To: <20230118203457.never.612-kees@kernel.org>
+From:   Michael Chan <michael.chan@broadcom.com>
+Date:   Wed, 18 Jan 2023 12:59:47 -0800
+Message-ID: <CACKFLinj6Kn=hsbEWfcPtYjLOZjyMbj1vZG_68r7LrMa7Jf6Rg@mail.gmail.com>
+Subject: Re: [PATCH] bnxt: Do not read past the end of test names
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Niklas Cassel <Niklas.Cassel@wdc.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="0000000000006e448005f2901902"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 18, 2023 at 12:32:16PM -0800, Guenter Roeck wrote:
-> On Wed, Jan 18, 2023 at 12:06:54PM -0800, Kees Cook wrote:
-> > Since the long memcpy tests may stall a system for tens of seconds
-> > in virtualized architecture environments, split those tests off under
-> > CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
-> > 
-> > Reported-by: Guenter Roeck <linux@roeck-us.net>
-> > Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
-> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
-> > Reviewed-by: David Gow <davidgow@google.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> > v3: fix defaults, avoid redundant returns.
-> > v2: https://lore.kernel.org/all/20230114005408.never.756-kees@kernel.org/
-> > v1: https://lore.kernel.org/lkml/20230107040203.never.112-kees@kernel.org
-> > ---
-> >  lib/Kconfig.debug  | 9 +++++++++
-> >  lib/memcpy_kunit.c | 3 +++
-> >  2 files changed, 12 insertions(+)
-> > 
-> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> > index 881c3f84e88a..149d6403b8a9 100644
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2566,6 +2566,15 @@ config MEMCPY_KUNIT_TEST
-> >  
-> >  	  If unsure, say N.
-> >  
-> > +config MEMCPY_SLOW_KUNIT_TEST
-> > +	bool "Include exhaustive memcpy tests"
-> > +	depends on MEMCPY_KUNIT_TEST
-> > +	default y
-> > +	help
-> > +	  Some memcpy tests are quite exhaustive in checking for overlaps
-> > +	  and bit ranges. These can be very slow, so they are split out
-> > +	  as a separate config, in case they need to be disabled.
-> > +
-> >  config IS_SIGNED_TYPE_KUNIT_TEST
-> >  	tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
-> >  	depends on KUNIT
-> > diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
-> > index 89128551448d..90f3aa9e909f 100644
-> > --- a/lib/memcpy_kunit.c
-> > +++ b/lib/memcpy_kunit.c
-> > @@ -309,6 +309,8 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
-> >  
-> >  static void init_large(struct kunit *test)
-> >  {
-> > +	if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST))
-> > +		kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
-> >  
-> >  	/* Get many bit patterns. */
-> >  	get_random_bytes(large_src, ARRAY_SIZE(large_src));
-> > @@ -327,6 +329,7 @@ static void init_large(struct kunit *test)
-> >   */
-> >  static void copy_large_test(struct kunit *test, bool use_memmove)
-> >  {
-> > +
-> 
-> Some whitespace noise slipped in here.
+--0000000000006e448005f2901902
+Content-Type: text/plain; charset="UTF-8"
 
-Ah-ha; thanks! I'll fix this in my tree.
+On Wed, Jan 18, 2023 at 12:35 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Test names were being concatenated based on a offset beyond the end of
+> the first name, which tripped the buffer overflow detection logic:
+>
+>  detected buffer overflow in strnlen
+>  [...]
+>  Call Trace:
+>  bnxt_ethtool_init.cold+0x18/0x18
+>
+> Refactor struct hwrm_selftest_qlist_output to use an actual array,
+> and adjust the concatenation to use snprintf() rather than a series of
+> strncat() calls.
+>
+> Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
+> Link: https://lore.kernel.org/lkml/Y8F%2F1w1AZTvLglFX@x1-carbon/
+> Tested-by: Niklas Cassel <Niklas.Cassel@wdc.com>
+> Fixes: eb51365846bc ("bnxt_en: Add basic ethtool -t selftest support.")
+> Cc: Michael Chan <michael.chan@broadcom.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
--- 
-Kees Cook
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+
+> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
+> index 2686a714a59f..a5408879e077 100644
+> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
+> @@ -10249,14 +10249,7 @@ struct hwrm_selftest_qlist_output {
+>         u8      unused_0;
+>         __le16  test_timeout;
+>         u8      unused_1[2];
+> -       char    test0_name[32];
+> -       char    test1_name[32];
+> -       char    test2_name[32];
+> -       char    test3_name[32];
+> -       char    test4_name[32];
+> -       char    test5_name[32];
+> -       char    test6_name[32];
+> -       char    test7_name[32];
+> +       char    test_name[8][32];
+
+bnxt_hsi.h is a generated file.  I will need to make a request so that
+future versions will be generated like this.
+
+Thanks.
+
+>         u8      eyescope_target_BER_support;
+>         #define SELFTEST_QLIST_RESP_EYESCOPE_TARGET_BER_SUPPORT_BER_1E8_SUPPORTED  0x0UL
+>         #define SELFTEST_QLIST_RESP_EYESCOPE_TARGET_BER_SUPPORT_BER_1E9_SUPPORTED  0x1UL
+> --
+> 2.34.1
+>
+
+--0000000000006e448005f2901902
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+OnaLEot1MoQO7BIe5S9H4AcCEXXcrJJiAtMCl47ARpyHmvQFQFFTrHgUYEd9V+9bOzY7MBIGSV1N
+/JfsT1sZw6HT0lJkSQefhPGpBniAob62DJP3qr11tu8CAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
+BB0wG4EZbWljaGFlbC5jaGFuQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
+HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQU31rAyTdZweIF0tJTFYwfOv2w
+L4QwDQYJKoZIhvcNAQELBQADggEBACcuyaGmk0NSZ7Kio7O7WSZ0j0f9xXcBnLbJvQXFYM7JI5uS
+kw5ozATEN5gfmNIe0AHzqwoYjAf3x8Dv2w7HgyrxWdpjTKQFv5jojxa3A5LVuM8mhPGZfR/L5jSk
+5xc3llsKqrWI4ov4JyW79p0E99gfPA6Waixoavxvv1CZBQ4Stu7N660kTu9sJrACf20E+hdKLoiU
+hd5wiQXo9B2ncm5P3jFLYLBmPltIn/uzdiYpFj+E9kS9XYDd+boBZhN1Vh0296zLQZobLfKFzClo
+E6IFyTTANonrXvCRgodKS+QJEH8Syu2jSKe023aVemkuZjzvPK7o9iU7BKkPG2pzLPgxggJtMIIC
+aQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
+EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgxeQGjDntHGb2iaQkIw
+DQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIDziaZeXSzDnk/cYFUBn3KxHU71tJsyz
+6cYzc4CfnvbRMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDEx
+ODIwNTk1OVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQC
+ATANBgkqhkiG9w0BAQEFAASCAQAB0NlWJXMG4jf7I05ig8lAQavdqgjsyC6jU4ZVBdwpFWMaYw46
+n3Nr/JreqW9WsyIumpisMT3/r4JieBFpbkqoB++QOiN5N9LpDUEhWnxCKx6dNm1EKmtnq/CKXbte
+7maX+p+b1fMZvq1yX7qDgdVz3ozCqMjPYd45ZryJl/Rhh7ey+z8GNhaIrwCUBrgZ87SPwC0gi1wK
+cElz9AzxQIVbTHILjtqOL6XFA0z+LNr77KO19fl4NyqHAr3KsdInAmMWMAGQqzMLRR27unMzHpsR
+ZRLBvNUfueZheAL1qsUeFDWL78rI1b6fn3XJOMjKcTJS62h1SkQRl3Ui/xvDtCuk
+--0000000000006e448005f2901902--
