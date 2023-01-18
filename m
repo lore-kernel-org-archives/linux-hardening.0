@@ -2,111 +2,153 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01194C32793
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 20:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDEEC32793
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 20:33:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229940AbjARUZS (ORCPT
+        id S229989AbjARUdY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Jan 2023 15:25:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34832 "EHLO
+        Wed, 18 Jan 2023 15:33:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbjARUZR (ORCPT
+        with ESMTP id S230206AbjARUcW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Jan 2023 15:25:17 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5527B5356B
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 12:25:17 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id k13so283614plg.0
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 12:25:17 -0800 (PST)
+        Wed, 18 Jan 2023 15:32:22 -0500
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FF75F3A5;
+        Wed, 18 Jan 2023 12:32:19 -0800 (PST)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-1442977d77dso260743fac.6;
+        Wed, 18 Jan 2023 12:32:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=46uvpXl2kyYV0aM1iCgQPff7hpPKEZ+B8VHs2uJkR+w=;
-        b=dVrLXEcaBgvYU97sVNjHhooNFluRwtCPIzI//8G66FkmP1s40nUOucz3RYYRCmKPEx
-         fgAuo93zirmhoRnivzsrrpUlIi7sQ0gBclnpogdyRCed3aYi5zJIfP2UUAlSRaGHu3FY
-         EJ/SCqvd85Pez6eZdqkI7PJHIqi08dl2llj6SGz+7m9awA47Z8PY5ht2YfomVwqW/N4c
-         o+mLDbKw/NnG/cjzG+m1KedoySUjoabCM0SJm+w3pf8PXQQlL/D4EpRJyOBeZXJZwxKA
-         EaO/qCyf3Abk921jr1UjDFVflLUTdJsuOxZSfxhi8yIYOerNOpUxe4hmrjpb0+VxEYJz
-         VQPg==
+        bh=V5afsl4HoXzkYc7n5OJf2Nf55ZwHbUkKJOhGaeA31CE=;
+        b=XuCuphEn7vFAiIWMWcu9wpU1F4dt5pvxpSOX4tyHZkdtFxAj1euR95IHhPJN+QSXuf
+         lHPwKMqBf3jTsDvaIzmUk4qsGojr2ozVW0G9iwM17F/dSx3FmMV5duSS8AZGPlcj8bQG
+         5pE8ds32biAlArhdO853TV+HzP5njFuYWBCUhCksjihkIw4jjNepZEX76YWAv9vMjEFG
+         GoVzpaNYiRCRFwx0JtcqbWGebRuTv6AfGuNlgCANBsxm25svnnW1MF9BckHpWj0tf6Dl
+         1TWptxyAOez8ts/6WH3jkj15HGJLYL+ZofU4XtzrPEaaaLdD5etFjFR3sDYa284nTSom
+         YaaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=46uvpXl2kyYV0aM1iCgQPff7hpPKEZ+B8VHs2uJkR+w=;
-        b=mAdWr8PwRfoESIoDnQb0IFmy+XdseK4bobyUxqhtaGc4mTxFZiykQYV6Yqw90fpVCP
-         pYGqw+FMnCL5Zgf2ShvjY01fhE4yjb2XHmLBJusXmAd8uprreBg3oscyFh4xnuMhElsS
-         PyxaWS0UQ43DxT12xNpR3SMxdk2ZFBpen9aRUezN5X95Vvus9XWXyGXOVTAMitP/yKuU
-         d2bXSqJo4SWrqtwJCtniVUdKAQcutffhK4c3lp0TLlp6vqxCEmFJ+J4kyC7U0sKTxAYK
-         snDTWjk74KhFXojzKNVAL1H/QaDXsijeT5jXjfMUbpDfmu6UVTvLVFR5yVBYLhu1oTl4
-         7sUQ==
-X-Gm-Message-State: AFqh2kpWKGXCjU8FBCzn6mLcHlqbhXECIU+FdpgZM52Lu6IsIFrSEon9
-        MVgJg1F/+wwXPZp4gcwMe97Pix6a44j83N4s
-X-Google-Smtp-Source: AMrXdXv+7A9LkJCz8hBYplxN02lr9pWgA7TXhelJH2oX4KHqIaP0jqrpEgKUj060wIvjCUHFTudk5w==
-X-Received: by 2002:a17:902:ea02:b0:194:8f3c:6fc6 with SMTP id s2-20020a170902ea0200b001948f3c6fc6mr11573013plg.58.1674073516510;
-        Wed, 18 Jan 2023 12:25:16 -0800 (PST)
-Received: from localhost ([50.221.140.188])
-        by smtp.gmail.com with ESMTPSA id l6-20020a170903244600b0019467381dd6sm11523541pls.33.2023.01.18.12.25.15
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V5afsl4HoXzkYc7n5OJf2Nf55ZwHbUkKJOhGaeA31CE=;
+        b=nqsyxN6VIINxDLIuHESBcFcCwGFd4BguMqm474zBIPpnvEQU8eSOWUtrYM1toJw2Mu
+         fgl2AV8AdBh+oZevt/aJXjztdoyt5DCN2u4ukdYiRZxPhIm1f13QtCeSwZ5ajQfpz+/C
+         rnqZYeYtVddz5ySNxYf7605JuvRF893p0DNw4uobRAyPGtJ5GzlKV2zrwGSPrs+70mJE
+         eDd372CjkHIbhnfYOrWBTz7e6owP1oo/+/rWfpHFZBoSykdwB1/qSfyy/jqTvc1iPyKl
+         Jlphj5UFc85xcpVDkNy3SAi9qUguxeFH/LUgYVzRWx1RPrF+SR5B/ONaPe0VRYBSDNgw
+         k30A==
+X-Gm-Message-State: AFqh2kqrR0eL9OHFi1g93vF4UnvPRE4ny/Vjqele7jrTgWBSPoqftlop
+        IAFZEYvoDJOted99Kv2CvS4=
+X-Google-Smtp-Source: AMrXdXvt+1GIPyEwKgECbtF7dcEmoIOyuNWdQSfnYEUhAf+veKcW+sCfnGtJYmoWZi9Btv7HXPX6kw==
+X-Received: by 2002:a05:6870:e0ce:b0:15f:3bb9:7b3d with SMTP id a14-20020a056870e0ce00b0015f3bb97b3dmr5169475oab.28.1674073939147;
+        Wed, 18 Jan 2023 12:32:19 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id i8-20020a056870344800b0013b92b3ac64sm18772149oah.3.2023.01.18.12.32.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jan 2023 12:25:16 -0800 (PST)
-Date:   Wed, 18 Jan 2023 12:25:16 -0800 (PST)
-X-Google-Original-Date: Wed, 18 Jan 2023 12:24:47 PST (-0800)
-Subject:     Re: [PATCH] gcc-plugins: Reorganize gimple includes for GCC 13
-In-Reply-To: <20230118202355.never.520-kees@kernel.org>
-CC:     linux-hardening@vger.kernel.org, keescook@chromium.org,
+        Wed, 18 Jan 2023 12:32:18 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 18 Jan 2023 12:32:16 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Gow <davidgow@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@rivosinc.com>
-To:     keescook@chromium.org
-Message-ID: <mhng-8bc81919-3023-4d72-bd44-2443606b4fd7@palmer-ri-x1c9a>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3] kunit: memcpy: Split slow memcpy tests into
+ MEMCPY_SLOW_KUNIT_TEST
+Message-ID: <20230118203216.GA987351@roeck-us.net>
+References: <20230118200653.give.574-kees@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230118200653.give.574-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 18 Jan 2023 12:24:02 PST (-0800), keescook@chromium.org wrote:
-> The gimple-iterator.h header must be included before gimple-fold.h
-> starting with GCC 13. Reorganize gimple headers to work for all GCC
-> versions.
->
-> Reported-by: Palmer Dabbelt <palmer@rivosinc.com>
-> Link: https://lore.kernel.org/all/20230113173033.4380-1-palmer@rivosinc.com/
+On Wed, Jan 18, 2023 at 12:06:54PM -0800, Kees Cook wrote:
+> Since the long memcpy tests may stall a system for tens of seconds
+> in virtualized architecture environments, split those tests off under
+> CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
+> 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+> Reviewed-by: David Gow <davidgow@google.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  scripts/gcc-plugins/gcc-common.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
-> index 9a1895747b15..84c730da36dd 100644
-> --- a/scripts/gcc-plugins/gcc-common.h
-> +++ b/scripts/gcc-plugins/gcc-common.h
-> @@ -71,7 +71,9 @@
->  #include "varasm.h"
->  #include "stor-layout.h"
->  #include "internal-fn.h"
-> +#include "gimple.h"
->  #include "gimple-expr.h"
-> +#include "gimple-iterator.h"
->  #include "gimple-fold.h"
->  #include "context.h"
->  #include "tree-ssa-alias.h"
-> @@ -85,10 +87,8 @@
->  #include "tree-eh.h"
->  #include "stmt.h"
->  #include "gimplify.h"
-> -#include "gimple.h"
->  #include "tree-phinodes.h"
->  #include "tree-cfg.h"
-> -#include "gimple-iterator.h"
->  #include "gimple-ssa.h"
->  #include "ssa-iterators.h"
+> v3: fix defaults, avoid redundant returns.
+> v2: https://lore.kernel.org/all/20230114005408.never.756-kees@kernel.org/
+> v1: https://lore.kernel.org/lkml/20230107040203.never.112-kees@kernel.org
+> ---
+>  lib/Kconfig.debug  | 9 +++++++++
+>  lib/memcpy_kunit.c | 3 +++
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 881c3f84e88a..149d6403b8a9 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2566,6 +2566,15 @@ config MEMCPY_KUNIT_TEST
+>  
+>  	  If unsure, say N.
+>  
+> +config MEMCPY_SLOW_KUNIT_TEST
+> +	bool "Include exhaustive memcpy tests"
+> +	depends on MEMCPY_KUNIT_TEST
+> +	default y
+> +	help
+> +	  Some memcpy tests are quite exhaustive in checking for overlaps
+> +	  and bit ranges. These can be very slow, so they are split out
+> +	  as a separate config, in case they need to be disabled.
+> +
+>  config IS_SIGNED_TYPE_KUNIT_TEST
+>  	tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
+>  	depends on KUNIT
+> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+> index 89128551448d..90f3aa9e909f 100644
+> --- a/lib/memcpy_kunit.c
+> +++ b/lib/memcpy_kunit.c
+> @@ -309,6 +309,8 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
+>  
+>  static void init_large(struct kunit *test)
+>  {
+> +	if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST))
+> +		kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
+>  
+>  	/* Get many bit patterns. */
+>  	get_random_bytes(large_src, ARRAY_SIZE(large_src));
+> @@ -327,6 +329,7 @@ static void init_large(struct kunit *test)
+>   */
+>  static void copy_large_test(struct kunit *test, bool use_memmove)
+>  {
+> +
 
-Thanks, not sure how I missed it the first round.  My testing box is 
-tied up, but I'v egot the same diff lying around somewhere so
+Some whitespace noise slipped in here.
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-Reviewed-by: Palmer Dabbelt <palmer@rivosinc.com>
+Guenter
+
+>  	init_large(test);
+>  
+>  	/* Copy a growing number of non-overlapping bytes ... */
+> -- 
+> 2.34.1
+> 
