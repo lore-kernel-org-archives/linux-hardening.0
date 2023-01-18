@@ -2,87 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35469C38142
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 00:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21654C00A5A
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 02:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229483AbjARAsy (ORCPT
+        id S229484AbjARCik (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 17 Jan 2023 19:48:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44898 "EHLO
+        Tue, 17 Jan 2023 21:38:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjARAsO (ORCPT
+        with ESMTP id S229446AbjARCij (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 17 Jan 2023 19:48:14 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A06138B53
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Jan 2023 16:35:07 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id x2-20020a17090a46c200b002295ca9855aso653137pjg.2
-        for <linux-hardening@vger.kernel.org>; Tue, 17 Jan 2023 16:35:07 -0800 (PST)
+        Tue, 17 Jan 2023 21:38:39 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4194D4FC0B;
+        Tue, 17 Jan 2023 18:38:38 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id x10so44908565edd.10;
+        Tue, 17 Jan 2023 18:38:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=akL1ISgHERBfu19IDfIMY0yAhbjaA5tAW8Vf2gv80TI=;
-        b=fhpdzYPo7tJdOOLdA0KIYT5MME0zX9pMm17HvNzNDuNFagrQwhyhKFB0t9Awfns1XE
-         IOoCHgtCwx90fTxTV7qw7VDlpMG37iJMSKQRZQ+pOiqWFZ6FV1UmBGMnxBra388ZdbMD
-         o5TsYRTRrawWTSUD3QGUojwNZA6117upjOcvU=
+        d=jms.id.au; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ddle79ToA5Bpr6HlzIXW7XP/tPvJO0M1hIh+6wWxTyo=;
+        b=IlmvO7TKNh2nK2vJHhzcr7t37yCVF9dZp0Y+0f9GGWT917TX87O1eLNNRHFgAtF4WC
+         ryH4AMVhOJR9TPF+7W8m3S4FpSwOSLs1UyyZKXQw712/dVDJxreUZZvElKha9EP5uSR9
+         6AQXiVZHDZEOwG8rg90hNkwplfvr/E0L4OUbY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=akL1ISgHERBfu19IDfIMY0yAhbjaA5tAW8Vf2gv80TI=;
-        b=yA6sAvz5Fw9xn2s/rqUeogf6jI2hORxQb97AEto4PFSNWOzzuxrmC8scJ4ZWhZwCyq
-         PmtjT98GXLVc0M2thVbk6ddyadw38QC1TuNrXMaJhCkNtFQJyC0UwVBfx77nduPEwdJv
-         KgXyZpL7GNPJzubgyrkTCGCd1Sc9uWIEG1XKoQtSk7ziAGuoBx0tNuAq6+ug2IJm/m/8
-         dYWVG2b8EMaukNfDABo/DlDV0jteBWVtFv5UnCqa4dCeFbZ8EG+cDfHknZoqFALmPZ9G
-         Nsx2WA+w6D6XF+vGu2iCICIFi25oiQCFseZmE9tTabXO8Fd/jxkYuCb4gd3oRjDlCbLZ
-         py6Q==
-X-Gm-Message-State: AFqh2kr4jWnZBMKCbDrHaYjnKqUhzaRR3QfjiXi2JGccyLKIE+d9LKoL
-        lrDN+SOVDyM81YdOi90N/7XeHQ==
-X-Google-Smtp-Source: AMrXdXsXpUFrV/O+3ioiidXbSLAauvdYK8JI6ZwWp74sGu8F22srdl8XQ08WwG+RUJaayOO1ZE1QtA==
-X-Received: by 2002:a05:6a20:a00d:b0:9d:efbf:6623 with SMTP id p13-20020a056a20a00d00b0009defbf6623mr5985554pzj.49.1674002106618;
-        Tue, 17 Jan 2023 16:35:06 -0800 (PST)
-Received: from google.com (KD124209188001.ppp-bb.dion.ne.jp. [124.209.188.1])
-        by smtp.gmail.com with ESMTPSA id 35-20020a631563000000b0044ed37dbca8sm17756818pgv.2.2023.01.17.16.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jan 2023 16:35:06 -0800 (PST)
-Date:   Wed, 18 Jan 2023 09:35:00 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        coverity-bot <keescook@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: Coverity: console_prepend_dropped(): Memory - corruptions
-Message-ID: <Y8c+tFWFeH272Z1/@google.com>
-References: <202301131544.D9E804CCD@keescook>
- <Y8KAhaiZQOWTcfyF@google.com>
- <Y8V8tqMJeB7t+rcJ@alley>
- <Y8YRBo7ZmtzWT4J1@google.com>
- <877cxl3abr.fsf@jogness.linutronix.de>
- <Y8ZTlVX3HQUVkU13@google.com>
- <Y8aEdDxQrQICQtem@alley>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ddle79ToA5Bpr6HlzIXW7XP/tPvJO0M1hIh+6wWxTyo=;
+        b=xWFdWB4UUvm+JkBTkRCvX1I2vfq/wgjK7xaVZEnxQwenbgOA3C4l3G7yv5dGzS2A+G
+         idXq6A74THPOLgRNcNbCal0NQjRyOlGpMRNcv3O9eFrVUG01rI1nfwlJADDywI3RpRKJ
+         ngmTYfXXIHu6431OfuajdrxNdZl0yzODKQJjTp/L9fKhOpXOE4XodhXYkdeUfx61u1/W
+         xImlFJrnATJfFPBbVwQ7VxrUc66UOAORIGepMHVSirElIRw6PSnmiDUbrAKV4KvLPaZF
+         1aglhzxMiAl78JFV4lC0F4HBiM0nD6fLlfcgypboq34xTONwx1Ivxe4DJvOmzYVPO25l
+         6jog==
+X-Gm-Message-State: AFqh2kreP2gcaXJnS9qygI3oWMp5JJ70l8Daw2AoY5lbAi7Qtzt6iJOU
+        Y2rPnmpkGstz4+CD6VKb8twkXUgN40hx5Bh5ZZ8=
+X-Google-Smtp-Source: AMrXdXu4mQ/ljXNqUeyIfURUtsQWcFG38FnD62YdKNkxKIrsEy2bCfDuK9365sT/beFFy5Hb334q77gAdC/PXrwjnJk=
+X-Received: by 2002:aa7:dd59:0:b0:49c:8b1f:b9d with SMTP id
+ o25-20020aa7dd59000000b0049c8b1f0b9dmr620012edw.289.1674009516784; Tue, 17
+ Jan 2023 18:38:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8aEdDxQrQICQtem@alley>
+References: <20221202212418.never.837-kees@kernel.org>
+In-Reply-To: <20221202212418.never.837-kees@kernel.org>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Wed, 18 Jan 2023 02:38:24 +0000
+Message-ID: <CACPK8Xde2zgr5c-Oy30+3HM6PoGf+=1YdEJuYpsHL2CVVDvOoA@mail.gmail.com>
+Subject: Re: [PATCH] net/ncsi: Silence runtime memcpy() false positive warning
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On (23/01/17 12:20), Petr Mladek wrote:
-> > Oh, yes, I agree that snprintf() should be replaced. Maybe we can go
-> > even a bit furhter and replace all snprintf()-s in kernel/printk/*
-> > (well, in a similar fashion, just in case). I'm just trying to understand
-> > what type of assumptions does coverity make here and so far everything
-> > looks rather peculiar.
-> 
-> Note that we sometimes need snprintf() to compute the needed size
-> of the buffer. For example, vsnprintf() in vprintk_store() is
-> correct.
+On Fri, 2 Dec 2022 at 21:24, Kees Cook <keescook@chromium.org> wrote:
+>
+> The memcpy() in ncsi_cmd_handler_oem deserializes nca->data into a
+> flexible array structure that overlapping with non-flex-array members
+> (mfr_id) intentionally. Since the mem_to_flex() API is not finished,
+> temporarily silence this warning, since it is a false positive, using
+> unsafe_memcpy().
 
-Oh, right, that's an excellebt point.
+Thanks for sending the fix Kees. I got a bit busy towards the end of the year.
+
+I spent some time looking at how the netlink api was used, and tried
+to convince myself that a user couldn't send an OEM command that
+triggered the overflow. It all got a bit tangled up so I didn't come
+to a conclusion.
+
+Cheers,
+
+Joel
+
+>
+> Reported-by: Joel Stanley <joel@jms.id.au>
+> Link: https://lore.kernel.org/netdev/CACPK8Xdfi=OJKP0x0D1w87fQeFZ4A2DP2qzGCRcuVbpU-9=4sQ@mail.gmail.com/
+> Cc: Samuel Mendoza-Jonas <sam@mendozajonas.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  net/ncsi/ncsi-cmd.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/ncsi/ncsi-cmd.c b/net/ncsi/ncsi-cmd.c
+> index dda8b76b7798..fd2236ee9a79 100644
+> --- a/net/ncsi/ncsi-cmd.c
+> +++ b/net/ncsi/ncsi-cmd.c
+> @@ -228,7 +228,8 @@ static int ncsi_cmd_handler_oem(struct sk_buff *skb,
+>         len += max(payload, padding_bytes);
+>
+>         cmd = skb_put_zero(skb, len);
+> -       memcpy(&cmd->mfr_id, nca->data, nca->payload);
+> +       unsafe_memcpy(&cmd->mfr_id, nca->data, nca->payload,
+> +                     /* skb allocated with enough to load the payload */);
+>         ncsi_cmd_build_header(&cmd->cmd.common, nca);
+>
+>         return 0;
+> --
+> 2.34.1
+>
