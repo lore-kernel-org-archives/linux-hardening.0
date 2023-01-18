@@ -2,151 +2,146 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E532C46467
-	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 20:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7FBC32793
+	for <linux-hardening@archiver.kernel.org>; Wed, 18 Jan 2023 20:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230136AbjARUgB (ORCPT
+        id S229523AbjARUny (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 18 Jan 2023 15:36:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39824 "EHLO
+        Wed, 18 Jan 2023 15:43:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbjARUfl (ORCPT
+        with ESMTP id S229907AbjARUnx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 18 Jan 2023 15:35:41 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F22E5EF9F
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 12:35:03 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id q64so244487pjq.4
-        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 12:35:03 -0800 (PST)
+        Wed, 18 Jan 2023 15:43:53 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175A35F3B1
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 12:43:47 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id b12so25442576pgj.6
+        for <linux-hardening@vger.kernel.org>; Wed, 18 Jan 2023 12:43:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GlL87WtXYWnFJQ82sP+jz4ggPtw5DmAgZ3Db5gKK8ZQ=;
-        b=il1JhA1q5vUc1knM/UMIMPfx+vofRef7GCBMpvS6rXoUDeL/dRjy2yVdleC8GlWeGW
-         Y+ZhKWCQknCzc81YNavYwUgFBYJIN03JZoiyLHO3fqcvqvBA/QliZfpeytI0SrxGJ3He
-         308Zzo8NJoxbPUJbbPyiwU3dY4a3qKvEqPKQE=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KStM3HmfW6zjszqSuM2wQKSCCuEFuFkt3tPZnP+tR7I=;
+        b=L3qce/23w/O2c6J0Sgvm8TGIFHR7tKd5Beqd1seyYV/7EV6novDaC5eXSiWU/f2FS5
+         zSaPnuKyAYIsn+fAqZCqa1zAtjqrkRU6JUhLJSSO/aayxOkqt4XedkfO4QfCQWo7R1zM
+         3jfnJDXMc4ataF6oRRyoiuCLTocCsVrHqDJns=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GlL87WtXYWnFJQ82sP+jz4ggPtw5DmAgZ3Db5gKK8ZQ=;
-        b=GGGZQ1Uobvp8k/1oOhTxYR+8eLk6eN/PqOlMARj2SWK5E+U76P3oke0CicXx7K6tp3
-         63xdrJQQHiuEXpLj3rAob9df+nMOka9yT8U0qcCkC9MfTAqXU6GSCj9wbIrhdi95R7bC
-         iImV5TXXtbB52d3OLKzcFhQFoPvZU2RxFtRKlyLMXh5InREiNMrgBFF8M2P/99EGAniN
-         pfcqjjSCUcqARQWXf9LxZzxtDaD2Jw9G1KmsVkey12ymahPiZbmiwHWpWCyw6Y6Y9cRW
-         FO1EANY51vIIDkZQajlpsJ0wHLZGPXg+E/gpxTghIrbD0sYRS6LcegHa2kqAA1TBri35
-         sLXQ==
-X-Gm-Message-State: AFqh2kpYTpLUQUSLxRrv3PWH/eKZOT0xjq1JjrbeX/d4iM+BEh7O/9tF
-        ouoO1qgy+JLCRaSViImPfVtiOQ==
-X-Google-Smtp-Source: AMrXdXu9WhoZzCPIiQOj9shw/cxiZ4ZpEMcBtMO4PMbDGQ4H7FcViutbdRywGGFecx6Uavr02u50oA==
-X-Received: by 2002:a17:90b:4d8d:b0:229:6b20:2424 with SMTP id oj13-20020a17090b4d8d00b002296b202424mr14337188pjb.11.1674074102970;
-        Wed, 18 Jan 2023 12:35:02 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KStM3HmfW6zjszqSuM2wQKSCCuEFuFkt3tPZnP+tR7I=;
+        b=XCb7IbJ41ZCWSkGBZvYsjTjfotJeoHNd1GNlGNy8IPERc1zH+sA160NSmQGl2b6lS0
+         PxPe9J55iOv7rm63a6JBAl+w1FdHTcY2jvGTaDGSvTGWUb4Bm4Nrw2rcWKxwWkbdCG2C
+         raVB8gwVT6H9a00hxlpw+rj9hAcu5qEAg7kFRBr2pUrFlGB7d+/OGwIKiaMDVq+8b1HG
+         /JBY55TJ7Z7b2qb+J1li7IZyNNWBlsavQ78e2bBBBkTU7N82PwNOexpmC4jUpB6XmXKA
+         8LAUX0ARFIg+9IQWlvBoP0l8G/lAu77lU7vdYqzWEqlWDmbl+VT8DEjDdynfx7ARF0tl
+         pNBg==
+X-Gm-Message-State: AFqh2kqW6TmusXDG2Y2qPgLhwTPtbaN1zxlgvXuQLqMYSMJAQCDmM3X7
+        8kNfRkMIAzwT/FB7R5OWWN/klw==
+X-Google-Smtp-Source: AMrXdXtQTleYSShMrqb3uuqdACEmAmgcS2GNXTtWlwQaiiEsj75gzw65XygJAnb8zA+2WFBUq52IWg==
+X-Received: by 2002:a05:6a00:2a04:b0:582:26bc:a75b with SMTP id ce4-20020a056a002a0400b0058226bca75bmr9405109pfb.9.1674074626585;
+        Wed, 18 Jan 2023 12:43:46 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 10-20020a17090a098a00b002192db1f8e8sm1731691pjo.23.2023.01.18.12.35.02
+        by smtp.gmail.com with ESMTPSA id z13-20020aa7990d000000b0058a313f4e4esm16911700pff.149.2023.01.18.12.43.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jan 2023 12:35:02 -0800 (PST)
+        Wed, 18 Jan 2023 12:43:44 -0800 (PST)
+Date:   Wed, 18 Jan 2023 12:43:43 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Michael Chan <michael.chan@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Niklas Cassel <Niklas.Cassel@wdc.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] bnxt: Do not read past the end of test names
-Date:   Wed, 18 Jan 2023 12:35:01 -0800
-Message-Id: <20230118203457.never.612-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        David Gow <davidgow@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Isabella Basso <isabbasso@riseup.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] kunit: memcpy: Split slow memcpy tests into
+ MEMCPY_SLOW_KUNIT_TEST
+Message-ID: <202301181243.2DBDD432E@keescook>
+References: <20230118200653.give.574-kees@kernel.org>
+ <20230118203216.GA987351@roeck-us.net>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3175; h=from:subject:message-id; bh=IkmNRS1zkCvBM7XN/FXavkfZ6bNyrS/zqS25w8Li07Q=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjyFf0kq0GA2aFV5NYCC3EK0yZjk6LWynNzeC3CrF5 fcBYaeCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY8hX9AAKCRCJcvTf3G3AJpWMEA CXM2ReEF/7ofukRqiz4IlPcLfa+oDa70G9tS+v0Fgp2EspSNzb1mGUP8qFNZMlrvzQW65P5RZVE45G IrRE0GIex7Q2uZvzyNlnSmXw31fdLv3Oiprw55rTUdfIgTWgeVysuesyL+D1ssHir3FjLUQ7b9oppA zfIooJQ8I00GMl4gNzjWEOlkaIZ/N1EL+9bs1WZTlCKV8nTimXU1PDesVUa6I4tpFFJ6+xZ7N1Lv+X zSfz7+xhsTRngfwkeGHrGQBKKmwv3hZhYa6C3NCx4s8pXI8l0jWzn3F3a4ZqecFwCQkRyg4xOoPF62 ++Vs/eIWaA6e6qVLLb9Twv0pFIQGIkRVyMpYBaojZJn/Y+UNXaGnYr/2hc2p+5hZDcsgx9BbV2LJGt iscSm0yEpfCaLfQNZCv1tM3T/DtcmFJuiK7xNGzZ9VybDaW1afNOk30A8b+QqCh+aduOZQQvsmiavc +2M0m/wU3kG6VG6ZpS0hM/fNdmyLzquF3ehEiIhRGZP7/BY/f6Y5RFwKbFkfs5bt1PECJZ6s6d7p/Q lsESHHaKo1tf5Bdj/ZFnO679VnLhkh0EcrcEezmGkf71GxWFWxl62DHQvG6UwqljRXM5HOzK5/HrFL 69Wn2oMZVFicU9r38BiN86KLir3RMs2NbVIkEF+CZL1YVkMcwwl3C7r1jNWg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230118203216.GA987351@roeck-us.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Test names were being concatenated based on a offset beyond the end of
-the first name, which tripped the buffer overflow detection logic:
+On Wed, Jan 18, 2023 at 12:32:16PM -0800, Guenter Roeck wrote:
+> On Wed, Jan 18, 2023 at 12:06:54PM -0800, Kees Cook wrote:
+> > Since the long memcpy tests may stall a system for tens of seconds
+> > in virtualized architecture environments, split those tests off under
+> > CONFIG_MEMCPY_SLOW_KUNIT_TEST so they can be separately disabled.
+> > 
+> > Reported-by: Guenter Roeck <linux@roeck-us.net>
+> > Link: https://lore.kernel.org/lkml/20221226195206.GA2626419@roeck-us.net
+> > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Reviewed-and-tested-by: Guenter Roeck <linux@roeck-us.net>
+> > Reviewed-by: David Gow <davidgow@google.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Nathan Chancellor <nathan@kernel.org>
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> > v3: fix defaults, avoid redundant returns.
+> > v2: https://lore.kernel.org/all/20230114005408.never.756-kees@kernel.org/
+> > v1: https://lore.kernel.org/lkml/20230107040203.never.112-kees@kernel.org
+> > ---
+> >  lib/Kconfig.debug  | 9 +++++++++
+> >  lib/memcpy_kunit.c | 3 +++
+> >  2 files changed, 12 insertions(+)
+> > 
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index 881c3f84e88a..149d6403b8a9 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -2566,6 +2566,15 @@ config MEMCPY_KUNIT_TEST
+> >  
+> >  	  If unsure, say N.
+> >  
+> > +config MEMCPY_SLOW_KUNIT_TEST
+> > +	bool "Include exhaustive memcpy tests"
+> > +	depends on MEMCPY_KUNIT_TEST
+> > +	default y
+> > +	help
+> > +	  Some memcpy tests are quite exhaustive in checking for overlaps
+> > +	  and bit ranges. These can be very slow, so they are split out
+> > +	  as a separate config, in case they need to be disabled.
+> > +
+> >  config IS_SIGNED_TYPE_KUNIT_TEST
+> >  	tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
+> >  	depends on KUNIT
+> > diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+> > index 89128551448d..90f3aa9e909f 100644
+> > --- a/lib/memcpy_kunit.c
+> > +++ b/lib/memcpy_kunit.c
+> > @@ -309,6 +309,8 @@ static void set_random_nonzero(struct kunit *test, u8 *byte)
+> >  
+> >  static void init_large(struct kunit *test)
+> >  {
+> > +	if (!IS_ENABLED(CONFIG_MEMCPY_SLOW_KUNIT_TEST))
+> > +		kunit_skip(test, "Slow test skipped. Enable with CONFIG_MEMCPY_SLOW_KUNIT_TEST=y");
+> >  
+> >  	/* Get many bit patterns. */
+> >  	get_random_bytes(large_src, ARRAY_SIZE(large_src));
+> > @@ -327,6 +329,7 @@ static void init_large(struct kunit *test)
+> >   */
+> >  static void copy_large_test(struct kunit *test, bool use_memmove)
+> >  {
+> > +
+> 
+> Some whitespace noise slipped in here.
 
- detected buffer overflow in strnlen
- [...]
- Call Trace:
- bnxt_ethtool_init.cold+0x18/0x18
+Ah-ha; thanks! I'll fix this in my tree.
 
-Refactor struct hwrm_selftest_qlist_output to use an actual array,
-and adjust the concatenation to use snprintf() rather than a series of
-strncat() calls.
-
-Reported-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-Link: https://lore.kernel.org/lkml/Y8F%2F1w1AZTvLglFX@x1-carbon/
-Tested-by: Niklas Cassel <Niklas.Cassel@wdc.com>
-Fixes: eb51365846bc ("bnxt_en: Add basic ethtool -t selftest support.")
-Cc: Michael Chan <michael.chan@broadcom.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 13 ++++---------
- drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h     |  9 +--------
- 2 files changed, 5 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index cbf17fcfb7ab..ec573127b707 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -3969,7 +3969,7 @@ void bnxt_ethtool_init(struct bnxt *bp)
- 		test_info->timeout = HWRM_CMD_TIMEOUT;
- 	for (i = 0; i < bp->num_tests; i++) {
- 		char *str = test_info->string[i];
--		char *fw_str = resp->test0_name + i * 32;
-+		char *fw_str = resp->test_name[i];
- 
- 		if (i == BNXT_MACLPBK_TEST_IDX) {
- 			strcpy(str, "Mac loopback test (offline)");
-@@ -3980,14 +3980,9 @@ void bnxt_ethtool_init(struct bnxt *bp)
- 		} else if (i == BNXT_IRQ_TEST_IDX) {
- 			strcpy(str, "Interrupt_test (offline)");
- 		} else {
--			strscpy(str, fw_str, ETH_GSTRING_LEN);
--			strncat(str, " test", ETH_GSTRING_LEN - strlen(str));
--			if (test_info->offline_mask & (1 << i))
--				strncat(str, " (offline)",
--					ETH_GSTRING_LEN - strlen(str));
--			else
--				strncat(str, " (online)",
--					ETH_GSTRING_LEN - strlen(str));
-+			snprintf(str, ETH_GSTRING_LEN, "%s test (%s)",
-+				 fw_str, test_info->offline_mask & (1 << i) ?
-+					"offline" : "online");
- 		}
- 	}
- 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h b/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
-index 2686a714a59f..a5408879e077 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_hsi.h
-@@ -10249,14 +10249,7 @@ struct hwrm_selftest_qlist_output {
- 	u8	unused_0;
- 	__le16	test_timeout;
- 	u8	unused_1[2];
--	char	test0_name[32];
--	char	test1_name[32];
--	char	test2_name[32];
--	char	test3_name[32];
--	char	test4_name[32];
--	char	test5_name[32];
--	char	test6_name[32];
--	char	test7_name[32];
-+	char	test_name[8][32];
- 	u8	eyescope_target_BER_support;
- 	#define SELFTEST_QLIST_RESP_EYESCOPE_TARGET_BER_SUPPORT_BER_1E8_SUPPORTED  0x0UL
- 	#define SELFTEST_QLIST_RESP_EYESCOPE_TARGET_BER_SUPPORT_BER_1E9_SUPPORTED  0x1UL
 -- 
-2.34.1
-
+Kees Cook
