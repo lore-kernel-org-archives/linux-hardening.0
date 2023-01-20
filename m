@@ -2,66 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE97C25B4E
-	for <linux-hardening@archiver.kernel.org>; Fri, 20 Jan 2023 10:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E41DC05027
+	for <linux-hardening@archiver.kernel.org>; Fri, 20 Jan 2023 13:00:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbjATKdJ (ORCPT
+        id S230450AbjATNA1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 20 Jan 2023 05:33:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44966 "EHLO
+        Fri, 20 Jan 2023 08:00:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjATKdI (ORCPT
+        with ESMTP id S229524AbjATNA0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 20 Jan 2023 05:33:08 -0500
-Received: from formenos.hmeau.com (helcar.hmeau.com [216.24.177.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83FC894333;
-        Fri, 20 Jan 2023 02:33:05 -0800 (PST)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-        id 1pIohR-002BWR-Pd; Fri, 20 Jan 2023 18:32:46 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 20 Jan 2023 18:32:45 +0800
-Date:   Fri, 20 Jan 2023 18:32:45 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Neal Liu <neal_liu@aspeedtech.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        linux-aspeed@lists.ozlabs.org, linux-crypto@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] crypto: aspeed - Replace zero-length array with
- flexible-array member
-Message-ID: <Y8ptzSkPqz/YDnvr@gondor.apana.org.au>
-References: <Y7zBxbEAvcEEJRie@work>
+        Fri, 20 Jan 2023 08:00:26 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59C3ABD14E;
+        Fri, 20 Jan 2023 05:00:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EDF1661F5E;
+        Fri, 20 Jan 2023 13:00:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 50706C433EF;
+        Fri, 20 Jan 2023 13:00:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674219616;
+        bh=UjqzhzJnuZIASVLLfX3u8vog0XhHHfK3vpedFw4EEas=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=fRQrq4e0BgLZP3dW2YcTcLR+Oau9TPNo+5caD/tQubalA+Nt83K/wE3Ged5VJqfrT
+         mf6RU/2+ekkhK5Obnm5Z/mEyhv2URISUZPxQDjABg0Ff0cJSiW3MPjRyESplPCh4hb
+         5PR8izxXku/euNiurNsr25ngBuvWUOOelacx04kRAYKcOiDcSvJGc7u2aTF/XTn/jE
+         sAZgeCXWDy7OJkMQTP+5+QKc0i8PiRyhgRfsj7DfrJ6zEqTNaC16Au9J72RIe9sd3p
+         A9ZhJ2m0/hiamVEsKfwdI2Pt1/3BrieedWCth8iiyHEvSzY+VqNeCorNXp76EQeeCP
+         LekK+dmU8W0ow==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 34C47C395DC;
+        Fri, 20 Jan 2023 13:00:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y7zBxbEAvcEEJRie@work>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] bnxt: Do not read past the end of test names
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167421961621.3650.4752984358502459675.git-patchwork-notify@kernel.org>
+Date:   Fri, 20 Jan 2023 13:00:16 +0000
+References: <20230118203457.never.612-kees@kernel.org>
+In-Reply-To: <20230118203457.never.612-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     michael.chan@broadcom.com, Niklas.Cassel@wdc.com,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 09, 2023 at 07:39:17PM -0600, Gustavo A. R. Silva wrote:
-> Zero-length arrays are deprecated[1] and we are moving towards
-> adopting C99 flexible-array members instead. So, replace zero-length
-> array declaration in struct aspeed_sham_ctx with flex-array
-> member.
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [2].
-> 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
-> Link: https://github.com/KSPP/linux/issues/78
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/crypto/aspeed/aspeed-hace.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hello:
 
-Patch applied.  Thanks.
+This patch was applied to netdev/net.git (master)
+by David S. Miller <davem@davemloft.net>:
+
+On Wed, 18 Jan 2023 12:35:01 -0800 you wrote:
+> Test names were being concatenated based on a offset beyond the end of
+> the first name, which tripped the buffer overflow detection logic:
+> 
+>  detected buffer overflow in strnlen
+>  [...]
+>  Call Trace:
+>  bnxt_ethtool_init.cold+0x18/0x18
+> 
+> [...]
+
+Here is the summary with links:
+  - bnxt: Do not read past the end of test names
+    https://git.kernel.org/netdev/net/c/d3e599c090fc
+
+You are awesome, thank you!
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
