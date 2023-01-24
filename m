@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FB4C54EB4
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 18:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAA1C61DA7
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 18:52:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234202AbjAXSwL (ORCPT
+        id S233180AbjAXSwJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Jan 2023 13:52:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55338 "EHLO
+        Tue, 24 Jan 2023 13:52:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234180AbjAXSwH (ORCPT
+        with ESMTP id S234158AbjAXSwG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Jan 2023 13:52:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B83F460B1;
-        Tue, 24 Jan 2023 10:52:07 -0800 (PST)
+        Tue, 24 Jan 2023 13:52:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9B18305FD;
+        Tue, 24 Jan 2023 10:52:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A9F4661326;
-        Tue, 24 Jan 2023 18:52:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C158FC4339B;
-        Tue, 24 Jan 2023 18:52:05 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9DBC6B816A4;
+        Tue, 24 Jan 2023 18:52:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA4DEC433D2;
+        Tue, 24 Jan 2023 18:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674586326;
-        bh=KXWYAV5gggvFf9MFGmbJ26fy4m1XP/EJdO/BLbEx1cA=;
+        s=k20201202; t=1674586323;
+        bh=ddhv5ZxDDV8fG0tIULVcl+ZErzPf+c/2H6zK1ntF56M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UQ6bxJRFIYdY0M8uCKCGrIrguAdNOZNW9jfBhOJPPuE/dbmbgv7P5d7rgPLxeVEcS
-         Yh0MwM6/3bkVe4v0CL+1rZiXEX/J6Yj9TdXE8tUssx3k27P0ZRklFApxBXHJttAn66
-         JPvZch3kPeA+18i/duStN8SVwPUDv+8fgfUbmDmxZrSTjtigJfdzAleHNt9LviYIfL
-         sA7MjRgS3m6wiCq1xqpHBkwh15sEnz+kCHgMt3XOW+YjSH0H6WMYci9RFU5ZFaxhNE
-         dintyN4QOxHdpXzl9vLGPPGTxTsqdNkZ6YJ4tkQlWFp+ZhzHR1BCRC8bmSve/LT1Yg
-         3/wEEoqpaLCqg==
+        b=FUF0b4HLD8/J08B1DhAe6wF+jGyV1GTa4S3Np4VZl3fBWcGhcOaiaLXAj2GJK8djO
+         sulhGapTFWWRF1j3Rl2i/8YEmibrsz6UspWyWPSDTkue+fV3YEZjhu9JFzpaGPKY52
+         WcJjeNTF6uvfn4gpBSsEN1+dXBiTc2OKuaaNvm2eV+FFFzMZob5tliVYSxlPVPxoRw
+         UNQhji7iSHB2ofY/COuzE9BcPLnaiNzk0ipjMBhS9/qWDepCz+PfPv/BgWKhnXy0ao
+         atre0vCb/6vCEt4dx20Ote8BCWc24EQg2VAWRiQthwCk6dc1QJjKo+kSAer/3bY526
+         rovSOp/TCmZ3Q==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -41,10 +41,16 @@ Cc:     Kees Cook <keescook@chromium.org>, SeongJae Park <sj@kernel.org>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH 5.15 08/20] hexagon: Fix function name in die()
-Date:   Tue, 24 Jan 2023 10:50:58 -0800
-Message-Id: <20230124185110.143857-9-ebiggers@kernel.org>
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.15 03/20] panic: unset panic_on_warn inside panic()
+Date:   Tue, 24 Jan 2023 10:50:53 -0800
+Message-Id: <20230124185110.143857-4-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230124185110.143857-1-ebiggers@kernel.org>
 References: <20230124185110.143857-1-ebiggers@kernel.org>
@@ -54,42 +60,74 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Nathan Chancellor <nathan@kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-commit 4f0712ccec09c071e221242a2db9a6779a55a949 upstream.
+commit 1a2383e8b84c0451fd9b1eec3b9aab16f30b597c upstream.
 
-When building ARCH=hexagon defconfig:
+In the current code, the following three places need to unset
+panic_on_warn before calling panic() to avoid recursive panics:
 
-arch/hexagon/kernel/traps.c:217:2: error: implicit declaration of
-function 'make_dead_task' [-Werror,-Wimplicit-function-declaration]
-        make_dead_task(err);
-        ^
+kernel/kcsan/report.c: print_report()
+kernel/sched/core.c: __schedule_bug()
+mm/kfence/report.c: kfence_report_error()
 
-The function's name is make_task_dead(), change it so there is no more
-build error.
+In order to avoid copy-pasting "panic_on_warn = 0" all over the places,
+it is better to move it inside panic() and then remove it from the other
+places.
 
-Fixes: 0e25498f8cd4 ("exit: Add and use make_task_dead.")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-Link: https://lkml.kernel.org/r/20211227184851.2297759-2-nathan@kernel.org
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+Link: https://lkml.kernel.org/r/1644324666-15947-4-git-send-email-yangtiezhu@loongson.cn
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Marco Elver <elver@google.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Xuefeng Li <lixuefeng@loongson.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/hexagon/kernel/traps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/panic.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/hexagon/kernel/traps.c b/arch/hexagon/kernel/traps.c
-index 6dd6cf0ab711f..1240f038cce02 100644
---- a/arch/hexagon/kernel/traps.c
-+++ b/arch/hexagon/kernel/traps.c
-@@ -214,7 +214,7 @@ int die(const char *str, struct pt_regs *regs, long err)
- 		panic("Fatal exception");
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 5ee281b996f9e..5ed1ad06f9a34 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -208,6 +208,16 @@ void panic(const char *fmt, ...)
+ 	int old_cpu, this_cpu;
+ 	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
  
- 	oops_exit();
--	make_dead_task(err);
-+	make_task_dead(err);
- 	return 0;
- }
++	if (panic_on_warn) {
++		/*
++		 * This thread may hit another WARN() in the panic path.
++		 * Resetting this prevents additional WARN() from panicking the
++		 * system on this thread.  Other threads are blocked by the
++		 * panic_mutex in panic().
++		 */
++		panic_on_warn = 0;
++	}
++
+ 	/*
+ 	 * Disable local interrupts. This will prevent panic_smp_self_stop
+ 	 * from deadlocking the first cpu that invokes the panic, since
+@@ -616,16 +626,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ 	if (regs)
+ 		show_regs(regs);
  
+-	if (panic_on_warn) {
+-		/*
+-		 * This thread may hit another WARN() in the panic path.
+-		 * Resetting this prevents additional WARN() from panicking the
+-		 * system on this thread.  Other threads are blocked by the
+-		 * panic_mutex in panic().
+-		 */
+-		panic_on_warn = 0;
++	if (panic_on_warn)
+ 		panic("panic_on_warn set ...\n");
+-	}
+ 
+ 	if (!regs)
+ 		dump_stack();
 -- 
 2.39.1
 
