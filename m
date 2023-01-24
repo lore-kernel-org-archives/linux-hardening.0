@@ -2,109 +2,77 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BA5C54E94
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 18:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A32C25B50
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 19:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233998AbjAXS4D (ORCPT
+        id S231142AbjAXTNv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Jan 2023 13:56:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33236 "EHLO
+        Tue, 24 Jan 2023 14:13:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233196AbjAXS4C (ORCPT
+        with ESMTP id S229933AbjAXTNu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Jan 2023 13:56:02 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0214AA6A;
-        Tue, 24 Jan 2023 10:55:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6B7C0B816A3;
-        Tue, 24 Jan 2023 18:54:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5028C433D2;
-        Tue, 24 Jan 2023 18:54:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674586495;
-        bh=MEzZz9+HOHVNR7Bkq5XrQ/SBBmaakkmss3qzTf2TNZw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gmPyaiPnt/H87eU/VBtDq/6qVd1mbRv3pxiHPKmahI3Cqnnb5pLlUG/WC7MrJ+Ff2
-         CiyHASE5tK56vbjHJgjK5V8Y2dkHuNfAg0ga8XpaFUzQf9YlqDshIkPE0Km9oHDFzd
-         nTVERbE6q7QBWozxyhpTOvLxfNYZACWzR9CDa8kPXpCQdfOMobZICOGUsUHCN85abf
-         qekPI3dQGHmC+07SfCoqjg3whkMzh9BRQqfLvQSx1n/mopAiRardm7QNgfAy365usi
-         d4BdCubH60QwPs2yPUBf7Xbia2zgnU1P9FU6PEBH3fhgSWpyAaKcyrDznhIwNKV3Y/
-         8aRzs9234ATYA==
-Date:   Tue, 24 Jan 2023 10:54:44 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Seth Jenkins <sethjenkins@google.com>,
-        SeongJae Park <sj@kernel.org>, Jann Horn <jannh@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        tangmeng <tangmeng@uniontech.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        David Gow <davidgow@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/6] exit: Put an upper limit on how often we can oops
-Message-ID: <Y9ApdF5LaUl9dNFm@sol.localdomain>
-References: <20221117234328.594699-2-keescook@chromium.org>
- <20230119201023.4003-1-sj@kernel.org>
- <CALxfFW76Ey=QNu--Vp59u2wukr6dzvOE25PkOHVw0b13YoCSiA@mail.gmail.com>
- <202301191627.FC1E24ED5@keescook>
+        Tue, 24 Jan 2023 14:13:50 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C6A4B4AD
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Jan 2023 11:13:49 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso3098419pjj.1
+        for <linux-hardening@vger.kernel.org>; Tue, 24 Jan 2023 11:13:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N8vZxWipWKD/y6gIGV8IcYkBWgrI0RpcVv2og9ppdhk=;
+        b=AUx42BzA/CGJONaVzcRrHfTT6euc4wQEdvIA3NN5xozyS/Uf+1DGVufE1t++NLz4r0
+         h9bCEljWaqZfuXMkRtL4kPoDA0yEDV668w3F0khTtSdEqiV+zXeLTZsg7FfY0ndsaDBU
+         C1T6LZS+sdaeDKdsXSlZYyiv7vY+yEliG8qpI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N8vZxWipWKD/y6gIGV8IcYkBWgrI0RpcVv2og9ppdhk=;
+        b=5V5R7Wt3CSBMb89w0HcT+jpP5g9tlNKE1pZlBlUmLv9MAw2+BnohBut+l1xjZk/Bix
+         oQImlC2HgcNXi0SudCSc9aFFxdVQHwszD7Uh+iwDNIEU47srPxhSmgW1JnIT4OFKap9P
+         8TudodrJC9S39kU32AyV1E99iO02RJWzR27+et83G6L0FjBfslJNFNJoGjPwTOB+PmY3
+         jX05m+dKp2oEIxIH7bL5yperYub34DA8m3YVqho0pxNxa113EhmTLS+qPEMSitmNYDo5
+         wvxYlq5G1RYb9LZJy8/0bbA3jwMK3KbhkIpNV7mUB1Y9OyI50lnhVTZd/bh4TvJmdy4D
+         qs8g==
+X-Gm-Message-State: AFqh2kq9SfnvZ0hI81/7tYXdti56A7VqD7+OmvpvNbvyAky/6LSirRZ+
+        d1dE1BRxG/AfN2EdxBTCe7T1C5U7kQXXmfeY
+X-Google-Smtp-Source: AMrXdXvXc5WNqKd6ppNcy4hEoJSrMOGTA7ElcOYyy/A7mIhQ7a2zLRJv2L0kT6m3lnZFKPII4uUTbA==
+X-Received: by 2002:a17:902:eccf:b0:195:17e5:e168 with SMTP id a15-20020a170902eccf00b0019517e5e168mr23273705plh.12.1674587628783;
+        Tue, 24 Jan 2023 11:13:48 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id bg12-20020a1709028e8c00b00194955b7898sm1993385plb.237.2023.01.24.11.13.48
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jan 2023 11:13:48 -0800 (PST)
+Date:   Tue, 24 Jan 2023 11:13:47 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     linux-hardening@vger.kernel.org
+Subject: KSPP status meeting
+Message-ID: <202301241110.DE9769A8@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202301191627.FC1E24ED5@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 19, 2023 at 04:28:42PM -0800, Kees Cook wrote:
-> On Thu, Jan 19, 2023 at 03:19:21PM -0500, Seth Jenkins wrote:
-> > > Do you have a plan to backport this into upstream LTS kernels?
-> > 
-> > As I understand, the answer is "hopefully yes" with the big
-> > presumption that all stakeholders are on board for the change. There
-> > is *definitely* a plan to *submit* backports to the stable trees, but
-> > ofc it will require some approvals.
-> 
-> I've asked for at least v6.1.x (it's a clean cherry-pick). Earlier
-> kernels will need some non-trivial backporting. Is there anyone that
-> would be interested in stepping up to do that?
-> 
-> https://lore.kernel.org/lkml/202301191532.AEEC765@keescook
-> 
+Hello!
 
-I've sent out a backport to 5.15:
-https://lore.kernel.org/stable/20230124185110.143857-1-ebiggers@kernel.org/T/#t
+Tomorrow will be the next KSPP status meeting, Wed Jan 25th 10am US
+Pacific. Everyone interested in Linux kernel security hardening is
+welcome to join. There is now an actual calendar for it:
+https://calendar.google.com/calendar/embed?src=47005f8f50f21da6133d7239f3cb93d1624d2e1949963ea75dd86d5f2d5721e0%40group.calendar.google.com
 
-- Eric
+Also note that the Meet URL has changed from last time, but should
+remain stable going forward:
+https://meet.google.com/grn-oshi-cpq
+
+See everyone there! :)
+
+-Kees
+
+-- 
+Kees Cook
