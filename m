@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16ECC54E94
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 19:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2ECC61DA2
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 19:35:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233877AbjAXTfW (ORCPT
+        id S234228AbjAXTfY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Jan 2023 14:35:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39066 "EHLO
+        Tue, 24 Jan 2023 14:35:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229933AbjAXTfU (ORCPT
+        with ESMTP id S233658AbjAXTfU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Tue, 24 Jan 2023 14:35:20 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB224211;
-        Tue, 24 Jan 2023 11:35:18 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14A2461BE;
+        Tue, 24 Jan 2023 11:35:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6D446B816BF;
-        Tue, 24 Jan 2023 19:35:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6D0CC433D2;
-        Tue, 24 Jan 2023 19:35:15 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B8119B811C1;
+        Tue, 24 Jan 2023 19:35:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF27C433A0;
+        Tue, 24 Jan 2023 19:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674588916;
-        bh=BM2SL/hK4n/mG2G/JWV0pug+lwME5e+5UISAuadPDQk=;
+        s=k20201202; t=1674588917;
+        bh=+7oL5czw8PyoM/EYPXeCaVwzsrxyOKl99cYF1jHLePM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMMMa7/FWueJaPbT6WueVzTxC/XZ8ZmRy6NVYSRHJH2o9jCWKCnDuTqLkI9Uq2oMs
-         26tX5Wne6sRQ49BrsLDXDyBSDnU7kpfdnmMGjAhbQFHFUzjbzZwdAXdf+oY3Uy91FA
-         y9MlbNxl0UAgaVq5hGo8jrPsJWS1dSAObfTRlXgMXHaQQHhE+t+hTuwYMcxP9523KN
-         Y8ew8fd4AqVdZexwqE0zwwOPm9PQVoyu/1oxSdXosdsxZZOwlX8ohDuwlYN4pnoSii
-         tlftKSUr4KuqWENMwRfI57tcR+fBcp0Pn+K+mb5FcQ3cCzx/he/b7oQpXqSWMQpXhw
-         HvvFg2GsoGtLg==
+        b=mXxyy+bvsYXnh/NwLuQHTGGeExdv/mPqr4lJAO6/bNF1qCK1ib9uPk0zsoNoQ/JQ3
+         SGgjuF6iFTFrMdsVIkGhOh9B6DuDfivxWE7R9zKB4/FL7HAogoHvEC0SOi+UMns2zy
+         kqRxXRhCbmzsFUCaBTyayElLAK2XhdkscSRi0BK8jwobojKkb/oIsgu8MWaVpRbRGN
+         4NeADRW2Qg+aO4A2LT7miYfaH49m9ZtRiNKjXPEkWyThYAy2sFUa6o28d/VD6Wc8Lv
+         ZuCjjFf+yKL63zK/ElXrncMoF1o/4pHKTRSiU7c+9WlUkCX7ZfuMt6NsPhxaxHFPW2
+         3aNWDEZ/nYfdw==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -41,11 +41,16 @@ Cc:     Kees Cook <keescook@chromium.org>, SeongJae Park <sj@kernel.org>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tangmeng <tangmeng@uniontech.com>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 5.10 02/20] kernel/panic: move panic sysctls to its own file
-Date:   Tue, 24 Jan 2023 11:29:46 -0800
-Message-Id: <20230124193004.206841-3-ebiggers@kernel.org>
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.10 04/20] ubsan: no need to unset panic_on_warn in ubsan_epilogue()
+Date:   Tue, 24 Jan 2023 11:29:48 -0800
+Message-Id: <20230124193004.206841-5-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230124193004.206841-1-ebiggers@kernel.org>
 References: <20230124193004.206841-1-ebiggers@kernel.org>
@@ -55,114 +60,49 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: tangmeng <tangmeng@uniontech.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-commit 9df918698408fd914493aba0b7858fef50eba63a upstream.
+commit d83ce027a54068fabb70d2c252e1ce2da86784a4 upstream.
 
-kernel/sysctl.c is a kitchen sink where everyone leaves their dirty
-dishes, this makes it very difficult to maintain.
+panic_on_warn is unset inside panic(), so no need to unset it before
+calling panic() in ubsan_epilogue().
 
-To help with this maintenance let's start by moving sysctls to places
-where they actually belong.  The proc sysctl maintainers do not want to
-know what sysctl knobs you wish to add for your own piece of code, we
-just care about the core logic.
-
-All filesystem syctls now get reviewed by fs folks. This commit
-follows the commit of fs, move the oops_all_cpu_backtrace sysctl to
-its own file, kernel/panic.c.
-
-Signed-off-by: tangmeng <tangmeng@uniontech.com>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Link: https://lkml.kernel.org/r/1644324666-15947-5-git-send-email-yangtiezhu@loongson.cn
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Marco Elver <elver@google.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Xuefeng Li <lixuefeng@loongson.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- include/linux/kernel.h |  6 ------
- kernel/panic.c         | 26 +++++++++++++++++++++++++-
- kernel/sysctl.c        | 11 -----------
- 3 files changed, 25 insertions(+), 18 deletions(-)
+ lib/ubsan.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index f5392d96d6886..084d97070ed99 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -520,12 +520,6 @@ static inline u32 int_sqrt64(u64 x)
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index adf8dcf3c84e6..d81d107f64f41 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -151,16 +151,8 @@ static void ubsan_epilogue(void)
+ 
+ 	current->in_ubsan--;
+ 
+-	if (panic_on_warn) {
+-		/*
+-		 * This thread may hit another WARN() in the panic path.
+-		 * Resetting this prevents additional WARN() from panicking the
+-		 * system on this thread.  Other threads are blocked by the
+-		 * panic_mutex in panic().
+-		 */
+-		panic_on_warn = 0;
++	if (panic_on_warn)
+ 		panic("panic_on_warn set ...\n");
+-	}
  }
- #endif
  
--#ifdef CONFIG_SMP
--extern unsigned int sysctl_oops_all_cpu_backtrace;
--#else
--#define sysctl_oops_all_cpu_backtrace 0
--#endif /* CONFIG_SMP */
--
- extern void bust_spinlocks(int yes);
- extern int panic_timeout;
- extern unsigned long panic_print;
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 332736a72a58e..f567195d45d9d 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -41,7 +41,9 @@
-  * Should we dump all CPUs backtraces in an oops event?
-  * Defaults to 0, can be changed via sysctl.
-  */
--unsigned int __read_mostly sysctl_oops_all_cpu_backtrace;
-+static unsigned int __read_mostly sysctl_oops_all_cpu_backtrace;
-+#else
-+#define sysctl_oops_all_cpu_backtrace 0
- #endif /* CONFIG_SMP */
- 
- int panic_on_oops = CONFIG_PANIC_ON_OOPS_VALUE;
-@@ -70,6 +72,28 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
- 
- EXPORT_SYMBOL(panic_notifier_list);
- 
-+#if defined(CONFIG_SMP) && defined(CONFIG_SYSCTL)
-+static struct ctl_table kern_panic_table[] = {
-+	{
-+		.procname       = "oops_all_cpu_backtrace",
-+		.data           = &sysctl_oops_all_cpu_backtrace,
-+		.maxlen         = sizeof(int),
-+		.mode           = 0644,
-+		.proc_handler   = proc_dointvec_minmax,
-+		.extra1         = SYSCTL_ZERO,
-+		.extra2         = SYSCTL_ONE,
-+	},
-+	{ }
-+};
-+
-+static __init int kernel_panic_sysctls_init(void)
-+{
-+	register_sysctl_init("kernel", kern_panic_table);
-+	return 0;
-+}
-+late_initcall(kernel_panic_sysctls_init);
-+#endif
-+
- static long no_blink(int state)
- {
- 	return 0;
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 3eb527f8a269c..d8b7b28463135 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2199,17 +2199,6 @@ static struct ctl_table kern_table[] = {
- 		.proc_handler	= proc_dointvec,
- 	},
- #endif
--#ifdef CONFIG_SMP
--	{
--		.procname	= "oops_all_cpu_backtrace",
--		.data		= &sysctl_oops_all_cpu_backtrace,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ZERO,
--		.extra2		= SYSCTL_ONE,
--	},
--#endif /* CONFIG_SMP */
- 	{
- 		.procname	= "pid_max",
- 		.data		= &pid_max,
+ static void handle_overflow(struct overflow_data *data, void *lhs,
 -- 
 2.39.1
 
