@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D73BAC25B4E
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 19:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD45AC54E94
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 19:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234696AbjAXTfg (ORCPT
+        id S233558AbjAXTfh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Jan 2023 14:35:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39114 "EHLO
+        Tue, 24 Jan 2023 14:35:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233798AbjAXTfY (ORCPT
+        with ESMTP id S234367AbjAXTfY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Tue, 24 Jan 2023 14:35:24 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71DECA18;
-        Tue, 24 Jan 2023 11:35:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54DADBF2;
+        Tue, 24 Jan 2023 11:35:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 406736134B;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C87F61347;
+        Tue, 24 Jan 2023 19:35:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42649C433D2;
         Tue, 24 Jan 2023 19:35:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D744C4339B;
-        Tue, 24 Jan 2023 19:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674588921;
-        bh=dM/d0ubHLSl2Cs4adfZyHmQBOJqZC9Il4OfnR6+zIyY=;
+        s=k20201202; t=1674588922;
+        bh=6t6f3jXEKls3E1tdtYCAnI7LHjKYAYFJlGQw+/uTZXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c1YfeeBGeTJDr4GlHYVDNWDIW8dokgKt0iy6zlPWj0sXR5pkwqam6OgvXA2VnlLN1
-         5CHXf5orzZy4Xdp2PTN3A2YLpnSHUpZtcHSnRag5SCLiuiQ+QkDhPov/OXp2DpR2JD
-         6yL0p9+iBHpcIr8S0P6wO3nWqRO9ENFmUvjyeWlsCPLmbbFl7fOy8UPmVKvnSX2BIn
-         pfcyAHvoV713cVcfumCFdTR9sAdM+PBcrnw+tny+U9TWeC9V85Tmo412JhglurJLpd
-         F3QAdJjlLcepAynMGKuJvKPAnaoz5DnHDdtiuYyDLOSA3dr93LYsMmPN+XzKyD0PEL
-         lwP2KATxZs+Xw==
+        b=lQGWnkLNPH5MqlpPsn+XsyN1wraqWuxJVY1GFDRsEhznR/cIM4UUCbmLcMbP13cQr
+         f1q6VQswLFOWq5CVsZ3m915ibihp8/ygmS6SrxPliPs0BUD6xAb38wGSUWNUkn5dUS
+         NEMgt8IuRNVOCCqr4AzXbEVh1T//9tZ0YxCRiffo/RvdJzP9zcs6OQpuvCVEN9YirM
+         HjlyMvj9pbk16fo0Xqa3CnJrZVnO/LA2hPa4U+uN8CBZzi1cxGQMYRJ5/GBXm5rQU5
+         peX8QDaw6mQxFjSLis4touFVGPp6wIgBwwvMfTKiSgoe47MZAijoqtE/31RnQWKSB1
+         KXdPlyVDgFlEg==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -41,16 +41,11 @@ Cc:     Kees Cook <keescook@chromium.org>, SeongJae Park <sj@kernel.org>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        tangmeng <tangmeng@uniontech.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 5.10 12/20] panic: Separate sysctl logic from CONFIG_SMP
-Date:   Tue, 24 Jan 2023 11:29:56 -0800
-Message-Id: <20230124193004.206841-13-ebiggers@kernel.org>
+Subject: [PATCH 5.10 14/20] exit: Expose "oops_count" to sysfs
+Date:   Tue, 24 Jan 2023 11:29:58 -0800
+Message-Id: <20230124193004.206841-15-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230124193004.206841-1-ebiggers@kernel.org>
 References: <20230124193004.206841-1-ebiggers@kernel.org>
@@ -62,48 +57,83 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-commit 9360d035a579d95d1e76c471061b9065b18a0eb1 upstream.
+commit 9db89b41117024f80b38b15954017fb293133364 upstream.
 
-In preparation for adding more sysctls directly in kernel/panic.c, split
-CONFIG_SMP from the logic that adds sysctls.
+Since Oops count is now tracked and is a fairly interesting signal, add
+the entry /sys/kernel/oops_count to expose it to userspace.
 
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: tangmeng <tangmeng@uniontech.com>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
 Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20221117234328.594699-1-keescook@chromium.org
+Link: https://lore.kernel.org/r/20221117234328.594699-3-keescook@chromium.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- kernel/panic.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../ABI/testing/sysfs-kernel-oops_count       |  6 +++++
+ kernel/exit.c                                 | 22 +++++++++++++++++--
+ 2 files changed, 26 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-oops_count
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 960c2be2759cb..09f0802212c38 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -72,8 +72,9 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+diff --git a/Documentation/ABI/testing/sysfs-kernel-oops_count b/Documentation/ABI/testing/sysfs-kernel-oops_count
+new file mode 100644
+index 0000000000000..156cca9dbc960
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-kernel-oops_count
+@@ -0,0 +1,6 @@
++What:		/sys/kernel/oops_count
++Date:		November 2022
++KernelVersion:	6.2.0
++Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
++Description:
++		Shows how many times the system has Oopsed since last boot.
+diff --git a/kernel/exit.c b/kernel/exit.c
+index db832cff6b7b2..b519abee2c541 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -64,6 +64,7 @@
+ #include <linux/rcuwait.h>
+ #include <linux/compat.h>
+ #include <linux/io_uring.h>
++#include <linux/sysfs.h>
  
- EXPORT_SYMBOL(panic_notifier_list);
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -96,6 +97,25 @@ static __init int kernel_exit_sysctls_init(void)
+ late_initcall(kernel_exit_sysctls_init);
+ #endif
  
--#if defined(CONFIG_SMP) && defined(CONFIG_SYSCTL)
-+#ifdef CONFIG_SYSCTL
- static struct ctl_table kern_panic_table[] = {
-+#ifdef CONFIG_SMP
- 	{
- 		.procname       = "oops_all_cpu_backtrace",
- 		.data           = &sysctl_oops_all_cpu_backtrace,
-@@ -83,6 +84,7 @@ static struct ctl_table kern_panic_table[] = {
- 		.extra1         = SYSCTL_ZERO,
- 		.extra2         = SYSCTL_ONE,
- 	},
++static atomic_t oops_count = ATOMIC_INIT(0);
++
++#ifdef CONFIG_SYSFS
++static ssize_t oops_count_show(struct kobject *kobj, struct kobj_attribute *attr,
++			       char *page)
++{
++	return sysfs_emit(page, "%d\n", atomic_read(&oops_count));
++}
++
++static struct kobj_attribute oops_count_attr = __ATTR_RO(oops_count);
++
++static __init int kernel_exit_sysfs_init(void)
++{
++	sysfs_add_file_to_group(kernel_kobj, &oops_count_attr.attr, NULL);
++	return 0;
++}
++late_initcall(kernel_exit_sysfs_init);
 +#endif
- 	{ }
- };
++
+ static void __unhash_process(struct task_struct *p, bool group_dead)
+ {
+ 	nr_threads--;
+@@ -892,8 +912,6 @@ EXPORT_SYMBOL_GPL(do_exit);
  
+ void __noreturn make_task_dead(int signr)
+ {
+-	static atomic_t oops_count = ATOMIC_INIT(0);
+-
+ 	/*
+ 	 * Take the task off the cpu after something catastrophic has
+ 	 * happened.
 -- 
 2.39.1
 
