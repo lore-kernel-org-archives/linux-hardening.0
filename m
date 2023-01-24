@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF50C54EB4
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 18:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A7FC61DA2
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 18:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234147AbjAXSwG (ORCPT
+        id S234177AbjAXSwH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Jan 2023 13:52:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55264 "EHLO
+        Tue, 24 Jan 2023 13:52:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230432AbjAXSwF (ORCPT
+        with ESMTP id S233815AbjAXSwF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Tue, 24 Jan 2023 13:52:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFB2305FD;
-        Tue, 24 Jan 2023 10:52:03 -0800 (PST)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1B6742DFD;
+        Tue, 24 Jan 2023 10:52:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 03F70B81628;
-        Tue, 24 Jan 2023 18:52:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A9EC433EF;
-        Tue, 24 Jan 2023 18:52:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8FE5861333;
+        Tue, 24 Jan 2023 18:52:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79868C433A1;
+        Tue, 24 Jan 2023 18:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674586320;
-        bh=NFhHC6KesBEE+iNcr4d7w80+UBTr2sNXL+XAImTeeLc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Z30KhHNvpQVHR1WlqK08wqOiidBscnWm7YlQJTxVssc3yea2yHMyh0iKEbNjqwnch
-         xVbuSYRQodXEkX8fX44fwoO//UxBdvQwvr7yqQBYbzIAf/JiA2xUC18NCUSCIR9zmI
-         bGEGnkeXIWp4og0RTvUVNRkDIcTy9rwCmVGIPP7xeHcAz+mg3gDeUoW6y+kFuOvNku
-         cYPlOAfhL0G7DurXP7kNZm6ec08+eCbylgS212vPvJetVQ+vpIfAPTqCEAkliTKIJv
-         Be10AwGTwfOXpc3TGOsGUYxWIxuD3hDSo2N1xp8hdnOO+fGMnecWh7g9kL3gPJXVlJ
-         KrNXZRLlQpflg==
+        s=k20201202; t=1674586324;
+        bh=yaiQwBn2rTDrZhwgXDYQi0ScGBCi5abPA1RpzOQ4srI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Vjt1XUXWDXluHlh8RrTj9/dFkQbxY9dm0cIDoLMWmF7SENFQrleiigF2tOKM09Jw/
+         VZEeFsculLU9id7WocJkcfOuljqO7AsgHEYzm+GZFVsiTMplsKetB4g7pZrALuCG+P
+         /SW6+QFS7vYl5gkb6bHUhVaMAzKaOKn/VnRZ7+IMYarn7xzAAnkohUlYXr/m5pu82a
+         RcsTb53KAFetr51txcHdD+Zpvw9tAafssN3OiAmOShqZwQaIMPTGFjQfiIItGnec3F
+         d2XMovkFJdqvIO0qUGV1C+LYCTIshLpy/X66caLpB1YoYi7GcWgitFsaoptL4bQHeE
+         /2HhArVFOOEOw==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -40,122 +40,69 @@ Cc:     Kees Cook <keescook@chromium.org>, SeongJae Park <sj@kernel.org>,
         Seth Jenkins <sethjenkins@google.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5.15 00/20] Backport oops_limit to 5.15
-Date:   Tue, 24 Jan 2023 10:50:50 -0800
-Message-Id: <20230124185110.143857-1-ebiggers@kernel.org>
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.15 04/20] ubsan: no need to unset panic_on_warn in ubsan_epilogue()
+Date:   Tue, 24 Jan 2023 10:50:54 -0800
+Message-Id: <20230124185110.143857-5-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230124185110.143857-1-ebiggers@kernel.org>
+References: <20230124185110.143857-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This series backports the patchset
-"exit: Put an upper limit on how often we can oops"
-(https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
-to 5.15, as recommended at
-https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-This required backporting various prerequisite patches.
+commit d83ce027a54068fabb70d2c252e1ce2da86784a4 upstream.
 
-I've tested that oops_limit and warn_limit work correctly on x86_64.
+panic_on_warn is unset inside panic(), so no need to unset it before
+calling panic() in ubsan_epilogue().
 
-Eric W. Biederman (2):
-  exit: Add and use make_task_dead.
-  objtool: Add a missing comma to avoid string concatenation
+Link: https://lkml.kernel.org/r/1644324666-15947-5-git-send-email-yangtiezhu@loongson.cn
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Marco Elver <elver@google.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Xuefeng Li <lixuefeng@loongson.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ lib/ubsan.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-Jann Horn (1):
-  exit: Put an upper limit on how often we can oops
-
-Kees Cook (8):
-  panic: Separate sysctl logic from CONFIG_SMP
-  exit: Expose "oops_count" to sysfs
-  exit: Allow oops_limit to be disabled
-  panic: Consolidate open-coded panic_on_warn checks
-  panic: Introduce warn_limit
-  panic: Expose "warn_count" to sysfs
-  docs: Fix path paste-o for /sys/kernel/warn_count
-  exit: Use READ_ONCE() for all oops/warn limit reads
-
-Nathan Chancellor (3):
-  hexagon: Fix function name in die()
-  h8300: Fix build errors from do_exit() to make_task_dead() transition
-  csky: Fix function name in csky_alignment() and die()
-
-Randy Dunlap (1):
-  ia64: make IA64_MCA_RECOVERY bool instead of tristate
-
-Tiezhu Yang (3):
-  panic: unset panic_on_warn inside panic()
-  ubsan: no need to unset panic_on_warn in ubsan_epilogue()
-  kasan: no need to unset panic_on_warn in end_report()
-
-Xiaoming Ni (1):
-  sysctl: add a new register_sysctl_init() interface
-
-tangmeng (1):
-  kernel/panic: move panic sysctls to its own file
-
- .../ABI/testing/sysfs-kernel-oops_count       |  6 ++
- .../ABI/testing/sysfs-kernel-warn_count       |  6 ++
- Documentation/admin-guide/sysctl/kernel.rst   | 19 ++++
- arch/alpha/kernel/traps.c                     |  6 +-
- arch/alpha/mm/fault.c                         |  2 +-
- arch/arm/kernel/traps.c                       |  2 +-
- arch/arm/mm/fault.c                           |  2 +-
- arch/arm64/kernel/traps.c                     |  2 +-
- arch/arm64/mm/fault.c                         |  2 +-
- arch/csky/abiv1/alignment.c                   |  2 +-
- arch/csky/kernel/traps.c                      |  2 +-
- arch/csky/mm/fault.c                          |  2 +-
- arch/h8300/kernel/traps.c                     |  3 +-
- arch/h8300/mm/fault.c                         |  2 +-
- arch/hexagon/kernel/traps.c                   |  2 +-
- arch/ia64/Kconfig                             |  2 +-
- arch/ia64/kernel/mca_drv.c                    |  2 +-
- arch/ia64/kernel/traps.c                      |  2 +-
- arch/ia64/mm/fault.c                          |  2 +-
- arch/m68k/kernel/traps.c                      |  2 +-
- arch/m68k/mm/fault.c                          |  2 +-
- arch/microblaze/kernel/exceptions.c           |  4 +-
- arch/mips/kernel/traps.c                      |  2 +-
- arch/nds32/kernel/fpu.c                       |  2 +-
- arch/nds32/kernel/traps.c                     |  8 +-
- arch/nios2/kernel/traps.c                     |  4 +-
- arch/openrisc/kernel/traps.c                  |  2 +-
- arch/parisc/kernel/traps.c                    |  2 +-
- arch/powerpc/kernel/traps.c                   |  8 +-
- arch/riscv/kernel/traps.c                     |  2 +-
- arch/riscv/mm/fault.c                         |  2 +-
- arch/s390/kernel/dumpstack.c                  |  2 +-
- arch/s390/kernel/nmi.c                        |  2 +-
- arch/sh/kernel/traps.c                        |  2 +-
- arch/sparc/kernel/traps_32.c                  |  4 +-
- arch/sparc/kernel/traps_64.c                  |  4 +-
- arch/x86/entry/entry_32.S                     |  6 +-
- arch/x86/entry/entry_64.S                     |  6 +-
- arch/x86/kernel/dumpstack.c                   |  4 +-
- arch/xtensa/kernel/traps.c                    |  2 +-
- fs/proc/proc_sysctl.c                         | 33 +++++++
- include/linux/panic.h                         |  7 +-
- include/linux/sched/task.h                    |  1 +
- include/linux/sysctl.h                        |  3 +
- kernel/exit.c                                 | 72 +++++++++++++++
- kernel/kcsan/report.c                         |  3 +-
- kernel/panic.c                                | 90 ++++++++++++++++---
- kernel/sched/core.c                           |  3 +-
- kernel/sysctl.c                               | 11 ---
- lib/ubsan.c                                   | 11 +--
- mm/kasan/report.c                             | 12 +--
- mm/kfence/report.c                            |  3 +-
- tools/objtool/check.c                         |  3 +-
- 53 files changed, 281 insertions(+), 111 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-oops_count
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
-
-
-base-commit: aabd5ba7e9b03e9a211a4842ab4a93d46f684d2c
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index bdc380ff5d5c7..36bd75e334263 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -154,16 +154,8 @@ static void ubsan_epilogue(void)
+ 
+ 	current->in_ubsan--;
+ 
+-	if (panic_on_warn) {
+-		/*
+-		 * This thread may hit another WARN() in the panic path.
+-		 * Resetting this prevents additional WARN() from panicking the
+-		 * system on this thread.  Other threads are blocked by the
+-		 * panic_mutex in panic().
+-		 */
+-		panic_on_warn = 0;
++	if (panic_on_warn)
+ 		panic("panic_on_warn set ...\n");
+-	}
+ }
+ 
+ void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
 -- 
 2.39.1
 
