@@ -2,77 +2,160 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A32C25B50
-	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 19:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B69A8C25B50
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 19:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231142AbjAXTNv (ORCPT
+        id S230118AbjAXTfR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 24 Jan 2023 14:13:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50584 "EHLO
+        Tue, 24 Jan 2023 14:35:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229933AbjAXTNu (ORCPT
+        with ESMTP id S229933AbjAXTfQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 24 Jan 2023 14:13:50 -0500
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C6A4B4AD
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Jan 2023 11:13:49 -0800 (PST)
-Received: by mail-pj1-x1033.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso3098419pjj.1
-        for <linux-hardening@vger.kernel.org>; Tue, 24 Jan 2023 11:13:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N8vZxWipWKD/y6gIGV8IcYkBWgrI0RpcVv2og9ppdhk=;
-        b=AUx42BzA/CGJONaVzcRrHfTT6euc4wQEdvIA3NN5xozyS/Uf+1DGVufE1t++NLz4r0
-         h9bCEljWaqZfuXMkRtL4kPoDA0yEDV668w3F0khTtSdEqiV+zXeLTZsg7FfY0ndsaDBU
-         C1T6LZS+sdaeDKdsXSlZYyiv7vY+yEliG8qpI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N8vZxWipWKD/y6gIGV8IcYkBWgrI0RpcVv2og9ppdhk=;
-        b=5V5R7Wt3CSBMb89w0HcT+jpP5g9tlNKE1pZlBlUmLv9MAw2+BnohBut+l1xjZk/Bix
-         oQImlC2HgcNXi0SudCSc9aFFxdVQHwszD7Uh+iwDNIEU47srPxhSmgW1JnIT4OFKap9P
-         8TudodrJC9S39kU32AyV1E99iO02RJWzR27+et83G6L0FjBfslJNFNJoGjPwTOB+PmY3
-         jX05m+dKp2oEIxIH7bL5yperYub34DA8m3YVqho0pxNxa113EhmTLS+qPEMSitmNYDo5
-         wvxYlq5G1RYb9LZJy8/0bbA3jwMK3KbhkIpNV7mUB1Y9OyI50lnhVTZd/bh4TvJmdy4D
-         qs8g==
-X-Gm-Message-State: AFqh2kq9SfnvZ0hI81/7tYXdti56A7VqD7+OmvpvNbvyAky/6LSirRZ+
-        d1dE1BRxG/AfN2EdxBTCe7T1C5U7kQXXmfeY
-X-Google-Smtp-Source: AMrXdXvXc5WNqKd6ppNcy4hEoJSrMOGTA7ElcOYyy/A7mIhQ7a2zLRJv2L0kT6m3lnZFKPII4uUTbA==
-X-Received: by 2002:a17:902:eccf:b0:195:17e5:e168 with SMTP id a15-20020a170902eccf00b0019517e5e168mr23273705plh.12.1674587628783;
-        Tue, 24 Jan 2023 11:13:48 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id bg12-20020a1709028e8c00b00194955b7898sm1993385plb.237.2023.01.24.11.13.48
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jan 2023 11:13:48 -0800 (PST)
-Date:   Tue, 24 Jan 2023 11:13:47 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     linux-hardening@vger.kernel.org
-Subject: KSPP status meeting
-Message-ID: <202301241110.DE9769A8@keescook>
+        Tue, 24 Jan 2023 14:35:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3252D72;
+        Tue, 24 Jan 2023 11:35:15 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B216E61320;
+        Tue, 24 Jan 2023 19:35:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9965C433D2;
+        Tue, 24 Jan 2023 19:35:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674588914;
+        bh=pBf4JzqxGrCAc9TQ7YAZkrTygAUHBoECrmoN3gBZZrc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=glZJZEaS9TkHs8maCFpg58ZIcmsnuHnS+6zC0dY/CMXAGHvVFsls3dvNzn/badtBC
+         F6Mun1q/pPlQqaZCKxDDimjb1JaIcrGr1yo9LRUs466Z075FHKqCiwLSNz8LKy8yZd
+         w3a9NR+/6ITQ6iWmiBgqW9wICKhwlzzLIMBJ1AUsEtTWk0M+LKHrDz9CQ7QAmrHrNZ
+         aBChmaZNI4vBFhZ5YORkdouWw88C1Fspp7XTD8byICoRxe0xXvj+Jfx9awxxBuL/P9
+         I8iAch/LVxeqpD7MbkZtdqUt3gHldSvv/PKai47olScMAJmD94V9md8dx1jVTHcFD0
+         P6BBtoIaC1L9A==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, SeongJae Park <sj@kernel.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Jann Horn <jannh@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 5.10 00/20] Backport oops_limit to 5.10
+Date:   Tue, 24 Jan 2023 11:29:44 -0800
+Message-Id: <20230124193004.206841-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
+From: Eric Biggers <ebiggers@google.com>
 
-Tomorrow will be the next KSPP status meeting, Wed Jan 25th 10am US
-Pacific. Everyone interested in Linux kernel security hardening is
-welcome to join. There is now an actual calendar for it:
-https://calendar.google.com/calendar/embed?src=47005f8f50f21da6133d7239f3cb93d1624d2e1949963ea75dd86d5f2d5721e0%40group.calendar.google.com
+This series backports the patchset
+"exit: Put an upper limit on how often we can oops"
+(https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
+to 5.10, as recommended at
+https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
 
-Also note that the Meet URL has changed from last time, but should
-remain stable going forward:
-https://meet.google.com/grn-oshi-cpq
+This required backporting various prerequisite patches.
 
-See everyone there! :)
+I've tested that oops_limit and warn_limit work correctly on x86_64.
 
--Kees
+Eric W. Biederman (2):
+  exit: Add and use make_task_dead.
+  objtool: Add a missing comma to avoid string concatenation
 
+Jann Horn (1):
+  exit: Put an upper limit on how often we can oops
+
+Kees Cook (8):
+  panic: Separate sysctl logic from CONFIG_SMP
+  exit: Expose "oops_count" to sysfs
+  exit: Allow oops_limit to be disabled
+  panic: Consolidate open-coded panic_on_warn checks
+  panic: Introduce warn_limit
+  panic: Expose "warn_count" to sysfs
+  docs: Fix path paste-o for /sys/kernel/warn_count
+  exit: Use READ_ONCE() for all oops/warn limit reads
+
+Nathan Chancellor (3):
+  hexagon: Fix function name in die()
+  h8300: Fix build errors from do_exit() to make_task_dead() transition
+  csky: Fix function name in csky_alignment() and die()
+
+Randy Dunlap (1):
+  ia64: make IA64_MCA_RECOVERY bool instead of tristate
+
+Tiezhu Yang (3):
+  panic: unset panic_on_warn inside panic()
+  ubsan: no need to unset panic_on_warn in ubsan_epilogue()
+  kasan: no need to unset panic_on_warn in end_report()
+
+Xiaoming Ni (1):
+  sysctl: add a new register_sysctl_init() interface
+
+tangmeng (1):
+  kernel/panic: move panic sysctls to its own file
+
+ .../ABI/testing/sysfs-kernel-oops_count       |  6 ++
+ .../ABI/testing/sysfs-kernel-warn_count       |  6 ++
+ Documentation/admin-guide/sysctl/kernel.rst   | 19 ++++
+ arch/alpha/kernel/traps.c                     |  6 +-
+ arch/alpha/mm/fault.c                         |  2 +-
+ arch/arm/kernel/traps.c                       |  2 +-
+ arch/arm/mm/fault.c                           |  2 +-
+ arch/arm64/kernel/traps.c                     |  2 +-
+ arch/arm64/mm/fault.c                         |  2 +-
+ arch/csky/abiv1/alignment.c                   |  2 +-
+ arch/csky/kernel/traps.c                      |  2 +-
+ arch/h8300/kernel/traps.c                     |  3 +-
+ arch/h8300/mm/fault.c                         |  2 +-
+ arch/hexagon/kernel/traps.c                   |  2 +-
+ arch/ia64/Kconfig                             |  2 +-
+ arch/ia64/kernel/mca_drv.c                    |  2 +-
+ arch/ia64/kernel/traps.c                      |  2 +-
+ arch/ia64/mm/fault.c                          |  2 +-
+ arch/m68k/kernel/traps.c                      |  2 +-
+ arch/m68k/mm/fault.c                          |  2 +-
+ arch/microblaze/kernel/exceptions.c           |  4 +-
+ arch/mips/kernel/traps.c                      |  2 +-
+ arch/nds32/kernel/fpu.c                       |  2 +-
+ arch/nds32/kernel/traps.c                     |  8 +-
+ arch/nios2/kernel/traps.c                     |  4 +-
+ arch/openrisc/kernel/traps.c                  |  2 +-
+ arch/parisc/kernel/traps.c                    |  2 +-
+ arch/powerpc/kernel/traps.c                   |  2 +-
+ arch/riscv/kernel/traps.c                     |  2 +-
+ arch/riscv/mm/fault.c                         |  2 +-
+ arch/s390/kernel/dumpstack.c                  |  2 +-
+ arch/s390/kernel/nmi.c                        |  2 +-
+ arch/sh/kernel/traps.c                        |  2 +-
+ arch/sparc/kernel/traps_32.c                  |  4 +-
+ arch/sparc/kernel/traps_64.c                  |  4 +-
+ arch/x86/entry/entry_32.S                     |  6 +-
+ arch/x86/entry/entry_64.S                     |  6 +-
+ arch/x86/kernel/dumpstack.c                   |  4 +-
+ arch/xtensa/kernel/traps.c                    |  2 +-
+ fs/proc/proc_sysctl.c                         | 33 +++++++
+ include/linux/kernel.h                        |  7 +-
+ include/linux/sched/task.h                    |  1 +
+ include/linux/sysctl.h                        |  3 +
+ kernel/exit.c                                 | 72 +++++++++++++++
+ kernel/kcsan/report.c                         |  4 +-
+ kernel/panic.c                                | 90 ++++++++++++++++---
+ kernel/sched/core.c                           |  3 +-
+ kernel/sysctl.c                               | 11 ---
+ lib/ubsan.c                                   | 11 +--
+ mm/kasan/report.c                             | 12 +--
+ tools/objtool/check.c                         |  3 +-
+ 51 files changed, 277 insertions(+), 105 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-oops_count
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
+
+
+base-commit: 179624a57b78c02de833370b7bdf0b0f4a27ca31
 -- 
-Kees Cook
+2.39.1
+
