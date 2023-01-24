@@ -2,83 +2,72 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8992DC27C76
-	for <linux-hardening@archiver.kernel.org>; Sun, 22 Jan 2023 15:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EF5C38142
+	for <linux-hardening@archiver.kernel.org>; Tue, 24 Jan 2023 10:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231450AbjAVP1J (ORCPT
+        id S233721AbjAXKMT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 22 Jan 2023 10:27:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55208 "EHLO
+        Tue, 24 Jan 2023 05:12:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231445AbjAVP1J (ORCPT
+        with ESMTP id S229930AbjAXKMR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 22 Jan 2023 10:27:09 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 803842311D;
-        Sun, 22 Jan 2023 07:27:08 -0800 (PST)
+        Tue, 24 Jan 2023 05:12:17 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6ABE6EAF;
+        Tue, 24 Jan 2023 02:12:16 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BB2F60C6C;
-        Sun, 22 Jan 2023 15:27:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28767C433EF;
-        Sun, 22 Jan 2023 15:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1674401227;
-        bh=FIQV6KcGo55iSo1Y2cyFRHBj1zkF04Y/eXgXyMIcN4A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1WIbWZv1Pm7L6OQ1VEUoQKUhfbTcAnn0g1rQrhJ93F0XnGgj8b2niP98umceebqZ
-         Vk7umbI0Xn9Z+sd8jcusCxQkqEjarBxozQFv4y+Oy/VCTtVt1FVDLKMPSsE8h3GrsY
-         uirD6JHVDVXLvj3IKaJM0G48V7cTmzRxL2WFkyQk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        patches@lists.linux.dev, kernel test robot <lkp@intel.com>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH 6.1 157/193] docs: Fix path paste-o for /sys/kernel/warn_count
-Date:   Sun, 22 Jan 2023 16:04:46 +0100
-Message-Id: <20230122150253.573644442@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230122150246.321043584@linuxfoundation.org>
-References: <20230122150246.321043584@linuxfoundation.org>
-User-Agent: quilt/0.67
+        by sin.source.kernel.org (Postfix) with ESMTPS id B421ECE19CE;
+        Tue, 24 Jan 2023 10:12:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 393B9C433D2;
+        Tue, 24 Jan 2023 10:12:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674555132;
+        bh=Hikckpna3DVXXZPGZ4BuFVYPSnZbNR3v/om5urasXP8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jvS8tFYynVdhY+yLg/Uo8uGL7xBxvivN7Dj+2pb5uR00svQO750DkL7jkIcs8kxEz
+         /qr1QDFUHdIIuaYYn0MsgtVe/07se6catfUuNh7FLGIMb2tR/viH5ROJRNF6vLRI3Y
+         mftyt3O+8jzURwwcJ+k4EizDX6UfnTBrg57Ym+V6lbxWYZEvvMDbxtTXTKp6LQ9Kac
+         HMhWxO3evQAAYoHX73patO6mAOVKmp5Oi94nlj4NDZcL9LJPqPJCPSy4H/vanOOL1q
+         pmV19yMGDJjwF8HID2HvxUyd0qIMLC99Q4IylZm9gZvl8vRUIMlWayW55xN4G1A+Jd
+         +eX5NfNWoxZNw==
+Date:   Tue, 24 Jan 2023 11:12:07 +0100
+From:   Christian Brauner <brauner@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [PATCH] fs: Use CHECK_DATA_CORRUPTION() when kernel bugs are
+ detected
+Message-ID: <20230124101207.ofqr6qv2yla24jyd@wittgenstein>
+References: <20230116191425.458864-1-jannh@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230116191425.458864-1-jannh@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+On Mon, Jan 16, 2023 at 08:14:25PM +0100, Jann Horn wrote:
+> Currently, filp_close() and generic_shutdown_super() use printk() to log
+> messages when bugs are detected. This is problematic because infrastructure
+> like syzkaller has no idea that this message indicates a bug.
+> In addition, some people explicitly want their kernels to BUG() when kernel
+> data corruption has been detected (CONFIG_BUG_ON_DATA_CORRUPTION).
+> And finally, when generic_shutdown_super() detects remaining inodes on a
+> system without CONFIG_BUG_ON_DATA_CORRUPTION, it would be nice if later
+> accesses to a busy inode would at least crash somewhat cleanly rather than
+> walking through freed memory.
+> 
+> To address all three, use CHECK_DATA_CORRUPTION() when kernel bugs are
+> detected.
+> 
+> Signed-off-by: Jann Horn <jannh@google.com>
+> ---
 
-commit 00dd027f721e0458418f7750d8a5a664ed3e5994 upstream.
-
-Running "make htmldocs" shows that "/sys/kernel/oops_count" was
-duplicated. This should have been "warn_count":
-
-  Warning: /sys/kernel/oops_count is defined 2 times:
-  ./Documentation/ABI/testing/sysfs-kernel-warn_count:0
-  ./Documentation/ABI/testing/sysfs-kernel-oops_count:0
-
-Fix the typo.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/linux-doc/202212110529.A3Qav8aR-lkp@intel.com
-Fixes: 8b05aa263361 ("panic: Expose "warn_count" to sysfs")
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/ABI/testing/sysfs-kernel-warn_count |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/Documentation/ABI/testing/sysfs-kernel-warn_count
-+++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
-@@ -1,4 +1,4 @@
--What:		/sys/kernel/oops_count
-+What:		/sys/kernel/warn_count
- Date:		November 2022
- KernelVersion:	6.2.0
- Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
-
-
+Looks good,
+Reviewed-by: Christian Brauner (Microsoft) <brauner@kernel.org>
