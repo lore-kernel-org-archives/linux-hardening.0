@@ -2,123 +2,110 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D1BC27C76
-	for <linux-hardening@archiver.kernel.org>; Wed, 25 Jan 2023 16:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7F0C27C76
+	for <linux-hardening@archiver.kernel.org>; Wed, 25 Jan 2023 18:45:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234845AbjAYQqA (ORCPT
+        id S229517AbjAYSou (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 25 Jan 2023 11:46:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39578 "EHLO
+        Wed, 25 Jan 2023 13:44:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjAYQqA (ORCPT
+        with ESMTP id S235849AbjAYSo3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 25 Jan 2023 11:46:00 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A588A5618B;
-        Wed, 25 Jan 2023 08:45:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674665158; x=1706201158;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XdmD7UQAGzmd7MjF/AVg3Q2yN7Wg4zxBx49JM/0ghV4=;
-  b=J0tP8zkTbdhnjmn0BWCBr/E6DAXRrISl0R5nosb1iJbc8Nh5I6Xz6hEF
-   zD61jRppX7YD7vL5o81bSs+mhEjBOK0KffvniAUun2WC+cBiKAdCHcscN
-   SaQmkk20EnoyCAndEiFT3lBw2zfAcTeTnc0X/SVFvrcMPyjNo6ne3hpBS
-   n1ajmIHZ990rYYUd2m1Asj3yL+EvsXXOpXDkCaPxgGE9j2pXMX7Oj2ELT
-   5eVGwPgTc87gXwYbgWFHLrXt4ZGVEieMay2VVs7zUM+4vmzDAgS12DHlN
-   io6k2iHGGR7euWxyqmGyqc9LWk8jTFTj4hZuf8Z6REo+uaUysP/Y3KGYx
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="324305906"
-X-IronPort-AV: E=Sophos;i="5.97,245,1669104000"; 
-   d="scan'208";a="324305906"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2023 08:45:58 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="751266882"
-X-IronPort-AV: E=Sophos;i="5.97,245,1669104000"; 
-   d="scan'208";a="751266882"
-Received: from zguo4-mobl1.amr.corp.intel.com (HELO [10.209.50.216]) ([10.209.50.216])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2023 08:45:57 -0800
-Message-ID: <1000ec59-c8b7-e546-5baa-bdd0e878bf76@intel.com>
-Date:   Wed, 25 Jan 2023 08:45:56 -0800
+        Wed, 25 Jan 2023 13:44:29 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D2554219;
+        Wed, 25 Jan 2023 10:44:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C4CB7615B2;
+        Wed, 25 Jan 2023 18:44:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C55C433EF;
+        Wed, 25 Jan 2023 18:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674672265;
+        bh=3u6/lxS5IX3ovbSHqGpPThtcCTCs5Ru+lWTUelavCI0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cGEb8BIpcGeoG4Zi9MwvRUN+6VCTdNaT/rqz7/XbpCPWimYRZld4Gc6Zy43UP3ON3
+         kbk3DuPb+7D9JHHAkaOyPdUH3V4+gn03Gcp3tpzMQ+/kH4V9VjRgelf6qM4NQ2ARCa
+         zzevjCFzM7rgGgTzU2P72byK+nUzrJ07XDJZqlv6uKpljRCFfbOL1MEhCzpo9Z2fwu
+         sotiy6aN8z3w6aycCnIyxiiW2JJcTROMpiGlZJ44EGeo1xvdyTypf5NVO9WkwxlG9F
+         Y2HLJMQAay5jY4r99mrAGzUhOZ5bhlHgP9DfMqPCplJ6AJyhVfDMHD7AvRxujYds9s
+         0KjIBsfrFh+Hw==
+Date:   Wed, 25 Jan 2023 10:44:23 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Cc:     stable@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        SeongJae Park <sj@kernel.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Jann Horn <jannh@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Vegard Nossum <vegard.nossum@oracle.com>,
+        Darren Kenny <darren.kenny@oracle.com>
+Subject: Re: [PATCH 5.15 13/20] exit: Put an upper limit on how often we can
+ oops
+Message-ID: <Y9F4hxtZnE2GssUo@sol.localdomain>
+References: <20230124185110.143857-1-ebiggers@kernel.org>
+ <20230124185110.143857-14-ebiggers@kernel.org>
+ <033ca877-5091-cbfb-6e6c-e49c4adb9a10@oracle.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
-Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Roxana Bradescu <roxabee@chromium.org>,
-        Adam Langley <agl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>
-References: <20230125012801.362496-1-ebiggers@kernel.org>
- <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
- <CAMj1kXEZi1ewVdqXHTi7kWX9aT+j1=rFOVE55LdJYb9LkV9Dkw@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <CAMj1kXEZi1ewVdqXHTi7kWX9aT+j1=rFOVE55LdJYb9LkV9Dkw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <033ca877-5091-cbfb-6e6c-e49c4adb9a10@oracle.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 1/25/23 08:22, Ard Biesheuvel wrote:
-...
-> All the nospec stuff we added for Spectre v1 serves the same purpose,
-> essentially, although the timing variances due to cache misses are
-> likely easier to measure. IOW, some of the kernel is now written that
-> way in fact, although the author of that doc may have had something
-> else in mind.
+Hi Harshit,
+
+On Wed, Jan 25, 2023 at 07:39:10PM +0530, Harshit Mogalapalli wrote:
 > 
-> So IMHO, the scope is really not as narrow as you think.
-
-I've spoken with the folks who wrote that doc.  They've told me
-repeatedly that the scope is super narrow.  Seriously, look at just
-*one* thing in the other Intel doc about mitigating timing side-channels[1]:
-
-	be wary of code generated from high-level language source code
-	that appears to adhere to all of these recommendations.
-
-The kernel has a fair amount of code written in high-level languages.
-
-The authors of the DOIT doc truly intend the real-world benefits of
-DOITM to be exceedingly narrow.  I think it would be fair to say that
-they think:
-
-	DOITM is basically useless for most code written in C, including
-	basically the entire kernel.
-
-I'll go forward this on to them and make sure I'm not overstating this
-_too_ much.
-
->> That's _meant_ to be really scary and keep folks from turning this on by
->> default, aka. what this patch does.  Your new CPU will be really slow if
->> you turn this on!  Boo!
+> Thanks for the backports.
 > 
-> What is the penalty for switching it on and off? On arm64, it is now
-> on by default in the kernel, and off by default in user space, and
-> user space can opt into it using an unprivileged instruction.
+> I have tried backporting the oops_limit patches to LTS 5.15.y and had a
+> similar set of patches, just want to add a note here on an alternate way for
+> backporting this patch without resolving conflicts manually:
+> 
+> Here is the sequence:
+> 
+> * Patch 12:  [panic: Separate sysctl logic from CONFIG_SMP]
+> --> Cherry-pick Commit: 05ea0424f0e2 ("exit: Move oops specific logic from
+> do_exit into make_task_dead") upstream
+> --> Cherry-pick Commit: de77c3a5b95c ("exit: Move force_uaccess back into
+> do_exit") upstream
+> * Patch 13 which is Commit: d4ccd54d28d3 ("exit: Put an upper limit on how
+> often we can oops") upstream, will be a clean cherry-pick.
+> 
+> The benefit may be making future backports simpler in make_task_dead().
+> 
+> This was the only difference, so your backport looks good to me.
+> 
 
-Right now, DOITM is controlled by a bit in an MSR and it applies
-everywhere.  It is (thankfully) one of the cheap MSRs and is not
-architecturally serializing.
+It's certainly an option.  The reason why I didn't do it that way is to reduce
+the impact of any potential bugs where do_exit() is still called when the new
+make_task_dead() function should be used instead.  With my series, the effect is
+just that oops_limit won't take effect in such cases.  If we also backported
+commit 05ea0424f0e2 ("exit: Move oops specific logic from do_exit into
+make_task_dead"), then do_exit() will lose various other things, such as
+panicing when called from an interrupt handler.  That would increase the chance
+of regressions, unless we made absolutely sure that everywhere that should be
+using make_task_dead() is indeed using it instead of do_exit().
 
-That's still not ideal and there is a desire to expose the bit to
-userspace *somehow* to make it much, much cheaper to toggle.  But, it'll
-still be an extra bit that needs to get managed and context switched.
+Commit 0e25498f8cd4 ("exit: Add and use make_task_dead."), which I backported,
+did the vast majority of conversions to make_task_dead().
 
-When I looked, the arm64 bit seemed to be in some flags register that
-got naturally saved and restored already on user<->kernel transitions.
-Was I reading it right?  It seemed like a really nice, simple mechanism
-to me.
+Some architectures still have uses of do_exit() that got cleaned up later,
+though.  It seems it was mostly unreachable code, and some cases that should
+have been doing something else such as BUG() or sending a signal to userspace.
+So, generally not super important cases.
 
+Still, getting all that would bring in many more patches.  We could do that, but
+since this is already a 20-patch series, I wanted to limit the scope a bit.
+These extra patches could always be backported later on top of this if desired.
 
-1.
-https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/secure-coding/mitigate-timing-side-channel-crypto-implementation.html
+- Eric
