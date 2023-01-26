@@ -2,225 +2,104 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB83C05027
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Jan 2023 13:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C765CC54E94
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Jan 2023 14:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231915AbjAZNxo (ORCPT
+        id S232127AbjAZOZI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 26 Jan 2023 08:53:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
+        Thu, 26 Jan 2023 09:25:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231912AbjAZNxV (ORCPT
+        with ESMTP id S232070AbjAZOYb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 26 Jan 2023 08:53:21 -0500
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB4AFF0F
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Jan 2023 05:52:59 -0800 (PST)
-Received: by mail-il1-x129.google.com with SMTP id f8so778907ilj.5
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Jan 2023 05:52:59 -0800 (PST)
+        Thu, 26 Jan 2023 09:24:31 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BAE770D62;
+        Thu, 26 Jan 2023 06:23:47 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id m7-20020a17090a71c700b0022c0c070f2eso4703655pjs.4;
+        Thu, 26 Jan 2023 06:23:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GqTUVgcDFqgmuPJcaaLIwvX9dO9nsd2mP5P4UmvWTho=;
-        b=J0st/oZXubF7DyEMWEeTRbY+I1MUcRZ5PUjHbSVTAZirHwo25K/Mq2pdxzxrt9yzJQ
-         KNEO31wBqIngUh0Ly5yOS74Y1dY3FxDYCD3efdU+5U0hHzRZDxloipK6IayvU1abWy/6
-         JngkkpZaGzJy8Q2x0KcVraFdKpiH38+uHPrB0jTAlgmWOiatPyC2loSlW+zUZMMTA93A
-         p8IuCV62II8oseVXchM85xx07CfCxPlZIrqW6cSzZwnh0V0NtdqR0w2Jc9ZpbM8T1Gfw
-         qmh/O6Xmix7sTAwYbc3/jC+ZY15AwIPaOC7Txi0MnIaKKRRQmttMr1n4q8KZQT5k16Z0
-         8AMQ==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NwoVoQA2ou9ZRpL3U7Nv6BoSj96XgNeTjb66AejG9oo=;
+        b=C7mY4qLZs14JoAswZVkEF5r2W0VbCtBoT8WDTR4NsktGZ2KsL0JQTyyYDzhqGqeMXl
+         CTJFwX6+QXFzQnQNrGrfhEIuvurhS+zkieW2urHA0lEJA5OltK2SCBzcafKxohIhd20Z
+         pRbf5WJuq9Of03ouclf7XM/YdZyarwNVSD1Sy/xyXGD450I/WVDpPCyH9b4vE7vscLUV
+         aIHDbv1/qiyp0frl7XOgmG+2bSKPLlyJZDCdS3IXgkerJNziKNHd1E5+pUDLZDM+EV96
+         XLLBqGKxLd8kAJqcWOce2yCMmJF7Iqn9bmiNMFMtvlUNX1tC/401WHgPlgA+FOS81V8E
+         ujqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GqTUVgcDFqgmuPJcaaLIwvX9dO9nsd2mP5P4UmvWTho=;
-        b=cHiV5kVzu4UTUYemkq+MRTCwpgcYzRNqnl/pbKEj99Z/gu2jgfIeZUF655mvPLjC8e
-         FOmtybckJdPglJSAmRtB8SB4mowk1358iPzF0SXq04+Ewfjj/ZoJg+Cbz4EZ08uBGobb
-         ar/TpvWdOauEwMUVMbVjSCIiKb9WmOHSWwM+lEZbFkCZ0twrfZKmIp5BGyoV1PUam94y
-         uvenz2dLtRUvlJGUwGEZlIa4MzksWtk20dT1U7oLwLXy0uz7R80OjiJ2j59EDw9sDR86
-         19SYQ6dMf34qSWnXi/Mju1U68HwgBBl3urfWJqlpciTposbGPNNoe5XKyCYDiMXYXr/I
-         N2uw==
-X-Gm-Message-State: AO0yUKWN76c8K4JZvWXGwj0zbrHpa+x1wln0GyPsH+t7vfZb4ectxqzY
-        oUNxxbUq2G466f6FmVYV/EeXJp6Xc786WGmD52yhpw==
-X-Google-Smtp-Source: AK7set8RUMV3L+iyC5AX/q8lHI2SYXMKriTm/G+slHUUKKu1q61ZQnRMWRlifyq14Ug/kpcZ4bQHM5aWcDBHiOJ+4VA=
-X-Received: by 2002:a92:ca8d:0:b0:310:98bd:dbf0 with SMTP id
- t13-20020a92ca8d000000b0031098bddbf0mr1239903ilo.128.1674741177112; Thu, 26
- Jan 2023 05:52:57 -0800 (PST)
+        bh=NwoVoQA2ou9ZRpL3U7Nv6BoSj96XgNeTjb66AejG9oo=;
+        b=oRsz5tENoCfnQtDkJVjQPuHenVFPBwwOGmJNKV7RWwI7UVzlVuWYTtlIx8DJib/JGI
+         tfhiDnOKnTUhoCGfOcN051obygfBsPaJLIDXnjW43vNLPfzM4ghjXa2jOAZz0pLm57N0
+         N4Mq9ouLWszn3O/bl6NRfdeL2SV8uPX6nV5/hDMiNJJAuBQyi50pupJlLwaXPXfADCDm
+         tljvJRAvIfAh+GtP33JnivusNtkQHNslEsm/HcCeFVygCiRVFf0rsKaYxk8YddeKJtxO
+         JBJ8cDab4YJnMLy2IeHEHm+b8hofN1vAeqGguyly0NyaM06nRLQ3B8j/Jv9jmzDfW9gR
+         fKWQ==
+X-Gm-Message-State: AFqh2kr6bGbzGNp/4PJa27LTtpv7lYjbeHrnYju7r7ajHPoF2krIoLYr
+        gxXegvpXSzWId842NnRW1/g=
+X-Google-Smtp-Source: AMrXdXu1eJSJ4Kajr/piBp62I0tu+/NNq031brXbWC2VMZMEa2QlZId8ebXZgHyk3kNX83hMsvciyg==
+X-Received: by 2002:a17:902:eb44:b0:189:377c:9ab with SMTP id i4-20020a170902eb4400b00189377c09abmr36285630pli.51.1674743024748;
+        Thu, 26 Jan 2023 06:23:44 -0800 (PST)
+Received: from localhost.localdomain (n220246252084.netvigator.com. [220.246.252.84])
+        by smtp.gmail.com with ESMTPSA id c8-20020a170902d48800b001960706141fsm1047268plg.149.2023.01.26.06.23.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jan 2023 06:23:44 -0800 (PST)
+From:   Jianhua Lu <lujianhua000@gmail.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Jianhua Lu <lujianhua000@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: arm: qcom: Add Xiaomi Mi Pad 5 Pro (xiaomi-elish)
+Date:   Thu, 26 Jan 2023 22:23:33 +0800
+Message-Id: <20230126142334.8080-1-lujianhua000@gmail.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-References: <20230125012801.362496-1-ebiggers@kernel.org> <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
-In-Reply-To: <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 26 Jan 2023 14:52:20 +0100
-Message-ID: <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
-Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Roxana Bradescu <roxabee@chromium.org>,
-        Adam Langley <agl@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 4:30 PM Dave Hansen <dave.hansen@intel.com> wrote:
-> On 1/24/23 17:28, Eric Biggers wrote:
-> > To mitigate this CPU vulnerability, it's possible to enable "Data
-> > Operand Independent Timing Mode" (DOITM) by setting a bit in a MSR.
-> > While Intel's documentation suggests that this bit should only be set
-> > where "necessary", that is highly impractical, given the fact that
-> > cryptography can happen nearly anywhere in the kernel and userspace, and
-> > the fact that the entire kernel likely needs to be protected anyway.
->
-> I think this misses a key point from the documentation:
->
->         This functionality is intended for use by software which has
->         already applied other techniques to mitigate software timing
->         side channels, such as those documented in Intel's Guidelines
->         for Mitigating Timing Side Channels Against Cryptographic
->         Implementations.
->
-> Translating from Intel-speak: Intel thinks that DOITM purely a way to
-> make the CPU run slower if you haven't already written code specifically
-> to mitigate timing side channels.  All pain, no gain.
->
-> The kernel as a whole is not written that way.
+Add a compatible for Xiaomi Mi Pad 5 Pro.
 
-The kernel as a whole also doesn't really use the FPU registers for
-anything other than checksumming and cryptography and stuff like that
-(it's disabled in the compiler flags because the FPU registers
-normally contain userspace state that must not be clobbered). The
-instructions listed on that Intel help page are all weird PM* and VP*
-arithmetic instructions that can't be generated from C code in the
-kernel (except for weird subsystems in which every function is only
-callable in kernel-FPU-enabled mode and the compiler is set to enable
-FPU instruction generation, by which I mean amdgpu).
+Signed-off-by: Jianhua Lu <lujianhua000@gmail.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+Changes in v3:
+  - Pick up Krzysztof's A-b
 
-So with the current generations of CPUs, based on that Intel help
-page, "the kernel as a whole" should not be affected by this setting,
-it's mostly just cryptographic helpers written in assembly. From a
-quick-and-dirty grep:
+Changes in v2:
+  - Move compatible "xiaomi-elish" down.
 
-$ find arch/x86/ -name '*.S' | xargs egrep -li
-'(PMADDUBSW|PMULUDQ|VPMULHRSW|PMADDWD|VPLZCNTD|VPMULHUW|PMULDQ|VPLZCNTQ|VPMULHW|PMULHRSW|VPMADD52HUQ|VPMULLD|PMULHUW|VPMADD52LUQ|VPMULLQ|PMULHW|VPMADDUBSW|VPMULLW|PMULLD|VPMADDWD|VPMULUDQ|PMULLW|VPMULDQ)'
-arch/x86/crypto/nh-avx2-x86_64.S
-arch/x86/crypto/nh-sse2-x86_64.S
-arch/x86/crypto/poly1305-x86_64-cryptogams.S
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-That's NHPoly1305 and Poly1305, two crypto functions. Poly1305 is used
-for the authentication part of AEAD schemes (in particular WireGuard
-uses Poly1305 for all its authentication), NHPoly1305 is for Adiantum
-(weird Android disk encryption stuff AFAIK).
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 22553637c519..398ff26e6e0e 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -875,6 +875,7 @@ properties:
+               - qcom,sm8250-mtp
+               - sony,pdx203-generic
+               - sony,pdx206-generic
++              - xiaomi,elish
+           - const: qcom,sm8250
+ 
+       - items:
+-- 
+2.39.1
 
-> I'm sure the crypto
-> folks that are cc'd can tell us specifically if the kernel crypto code
-> is written following those recommendations.
-
-Note that all the memory-management and block layer code that copies
-page contents around and swaps them to disk and so on should (ideally)
-be cryptographically timing-safe (yes I know that's very much not true
-with zram swap), because it operates on basically all userspace
-memory, including userspace memory used by cryptographic code.
-
-On top of that, some cryptographic secrets (including SSH
-authentication keys) need to be persisted somewhere - some
-cryptographic key material is stored in filesystems. And of course
-there are also secrets that are not quite cryptographic, and can be
-similarly important and small as cryptographic keys, such as cookies
-and OAuth tokens stored in the various databases of something like a
-browser.
-
-I think part of the reason why KSM is nowadays disabled in most cloud
-environments is that it introduced timing differences in the MM
-subsystem (between taking a write fault on a private page and taking a
-write fault on a KSM-shared page), and those timing differences could
-be used to leak information between VMs. (See, for example,
-<https://gruss.cc/files/remote_dedup.pdf>.)
-
-So I think there is quite a bit more kernel code that *handles
-cryptographic intermediate states and cryptographic secrets* (and
-non-cryptographic secrets that have similar properties) than kernel
-code that *performs cryptography*.
-
-Do we have a guarantee that things like page copying (for example as
-part of migration or forking), usercopy (for example for filesystem
-access), and whatever checksumming and other things might reasonably
-be happening in the block layer (including for swap) and in
-filesystems are going to be data-timing-independent on future
-processors?
-
-> So, let's call this patch what it is: a potential global slowdown which
-> protects a very small amount of crypto code, probably just in userspace.
-
-And a bunch of data paths that this crypto code's secrets might go
-through, in particular in the kernel.
-
-Also note that the kernel can do a bunch of important cryptography on
-its own, like for disk encryption, filesystem encryption, SSL/TLS
-sockets (yes you can have the kernel do the easy parts of TLS for
-you), IPSec, WireGuard, and probably a bunch of other things.
-
->  That is probably the code that's generating your RSA keys, so it's
-> quite important, but it's also a _very_ small total amount of code.
-
-Yeah but all the code that handles storage of your RSA keys really
-also needs a similar level of protection when touching them.
-See https://arxiv.org/pdf/2108.04600.pdf for an example:
-"We analyze the exploitability of base64 decoding functions across
-several widely used cryptographic libraries. Base64 decoding is used
-when loading keys stored in PEM format. We show that these functions
-by themselves leak sufficient information even if libraries are
-executed in trusted execution environments. In fact, we show that
-recent countermeasures to transient execution attacks such as LVI ease
-the exploitability of the observed faint leakages, allowing us to
-robustly infer sufficient information about RSA private keys with a
-single trace. We present a complete attack, including a broad library
-analysis, a high-resolution last level cache attack on SGX enclaves,
-and a fully parallelized implementation of the extend-and-prune
-approach that allows a complete key recovery at medium costs."
-
-> There's another part here which I think was recently added to the
-> documentation:
->
->         Intel expects the performance impact of this mode may be
->         significantly higher on future processors.
->
-> That's _meant_ to be really scary and keep folks from turning this on by
-> default, aka. what this patch does.  Your new CPU will be really slow if
-> you turn this on!  Boo!
-
-It does sound really scary, because it sounds like that list of
-instructions Intel published might be useless for trying to reason
-about the security impact of turning this optimization on for future
-hardware?
-
-If the performance impact is going to be higher on newer CPUs then I
-would *definitely* want DOITM to be on by default, and then when Intel
-can say what instructions are actually affected on a new CPU, we can
-figure out whether it's safe to turn it off as a per-cpu-generation
-thing?
-
-> All that said, and given the information that Intel has released, I
-> think this patch is generally the right thing to do.  I don't think
-> people are wrong for looking at "DODT" as being a new vulnerability.
-> Intel obviously doesn't see it that way, which is why "DODT" has (as far
-> as I can tell) not been treated with the same security pomp and
-> circumstance as other stuff.
->
-> Last, if you're going to propose that this be turned on, I expect to see
-> at least _some_ performance data.  DOITM=1 isn't free, even on Ice Lake.
-
-So all in all, it sounds to me like this should only affect the
-performance of crypto code in current CPUs (where we really want
-data-independent timing), so it should definitely be enabled on
-current CPUs. And on future CPUs it's a surprise package of potential
-security problems, so for those we should be turning it on even more?
