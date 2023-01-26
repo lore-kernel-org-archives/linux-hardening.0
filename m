@@ -2,164 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D5DC05027
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Jan 2023 16:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A35EC05027
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Jan 2023 16:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231475AbjAZQfz (ORCPT
+        id S231979AbjAZQkc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 26 Jan 2023 11:35:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44406 "EHLO
+        Thu, 26 Jan 2023 11:40:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbjAZQfx (ORCPT
+        with ESMTP id S231710AbjAZQkc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 26 Jan 2023 11:35:53 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701F25C0F0
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Jan 2023 08:35:51 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso5799185pjj.1
-        for <linux-hardening@vger.kernel.org>; Thu, 26 Jan 2023 08:35:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=dCedkZSub4E7G02ozmeTWJLtnbDkNYV9uv5/ypFjcjs=;
-        b=eVNsUVSbY9fywISASdJ8vOfw38lV1OqgtvUQe/DYuTvRD66m+Qs3gitiyBx71/B0fx
-         biiKsQThZMp1LfHN5EGfeOINKoMSy9g2go3I16WtwwZQpmFQ2IV/8N1oy6n8YhD6UIky
-         WkwjrAgO7QyAPO+kq7hvc2L7BT76y6qkh24as=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dCedkZSub4E7G02ozmeTWJLtnbDkNYV9uv5/ypFjcjs=;
-        b=gAfOOUb540/9e2ss5v0bCaR9jJ+fYXbiKfEX6p9aCMq2epWDrC7sbS4J3f2otpQtcZ
-         v39pUX+h2oezfqTtUODzobz0wdspaR0cdLvU/vjwmckuTPLNRIafsd/ntvF6zi/X5BMY
-         ihRPTxDCluZpiuMgllIXAEztfZIzcYpM5vWcSH4JHgMePjb3Hl3Iq3Z9l+7pTg4uiAg0
-         76nZq1r4pKgdA0ryk/nZ/kjrH4FrF+kGe8tj+i7Yg5uahsMGK1APGytAy+Bay1wue9vT
-         DVwwnXZVpdUH55dooj5Gaje0rS9ZMj1jxUaBwIqaHbt6Y6/CQu6KwCsletK+Pfs48sxB
-         Q2Jw==
-X-Gm-Message-State: AO0yUKWDPUqcmm43bwF+LHjMNTz4tpIbGE62MxVGL5HKl/LSCnIf5819
-        407A/KvPb2aKvxPUgachf+3t8Q==
-X-Google-Smtp-Source: AK7set+Avp0tanijMNFBCT+FU9xteiB6gbr+IKCgWeSxaIOPWvlfFL0xvNVSPGxExS539i8F/Vvc1g==
-X-Received: by 2002:a17:902:9a85:b0:196:1d60:b1b1 with SMTP id w5-20020a1709029a8500b001961d60b1b1mr7396425plp.31.1674750950872;
-        Thu, 26 Jan 2023 08:35:50 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l16-20020a170903245000b00192fc9e8552sm1234544pls.0.2023.01.26.08.35.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 08:35:50 -0800 (PST)
-Date:   Thu, 26 Jan 2023 08:35:49 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH] fs: Use CHECK_DATA_CORRUPTION() when kernel bugs are
- detected
-Message-ID: <202301260835.61F1C2CA4D@keescook>
-References: <20230116191425.458864-1-jannh@google.com>
+        Thu, 26 Jan 2023 11:40:32 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD8BDA;
+        Thu, 26 Jan 2023 08:40:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674751231; x=1706287231;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jjE1KkJgMovuMdFd70jXi/i73o89qDzcwabqBZl3my8=;
+  b=YL6gcJGhZqvQYHMzM3OCXMcNagRQ1rFTBONC4cCpeH4nAyKH96eAIUMQ
+   8hIQRi2oAnEl2SnvPBteR1ENOXBtr09MRxtyNJPGjNo0jU1mfpYByZROr
+   vgGMbH37myJNoT4TI7IXE3jxI8pgYx845E7my7klAI5IpQx7qEya2y6CM
+   Ca6r9bUUFG445+qQrxkazkiJRK8LKv6Ix0K1zlzB/JlDhZJVwuY9qSPqf
+   +u32BOl7cq+N3rkNPXTixqosT2hEt4x428l3qi0rvwePpKRE92EFTLHhI
+   bbY5IDgOtyEEiZ5wC9MCvpbJqE4QZ9u87FWU+0pM/0qMUqHe8QzEPhhhm
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="328966559"
+X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
+   d="scan'208";a="328966559"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 08:40:30 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="693374746"
+X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
+   d="scan'208";a="693374746"
+Received: from ernestom-mobl.amr.corp.intel.com (HELO [10.212.255.13]) ([10.212.255.13])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 08:40:29 -0800
+Message-ID: <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
+Date:   Thu, 26 Jan 2023 08:40:29 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230116191425.458864-1-jannh@google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
+Content-Language: en-US
+To:     Jann Horn <jannh@google.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Roxana Bradescu <roxabee@chromium.org>,
+        Adam Langley <agl@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>
+References: <20230125012801.362496-1-ebiggers@kernel.org>
+ <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
+ <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 08:14:25PM +0100, Jann Horn wrote:
-> Currently, filp_close() and generic_shutdown_super() use printk() to log
-> messages when bugs are detected. This is problematic because infrastructure
-> like syzkaller has no idea that this message indicates a bug.
-> In addition, some people explicitly want their kernels to BUG() when kernel
-> data corruption has been detected (CONFIG_BUG_ON_DATA_CORRUPTION).
-> And finally, when generic_shutdown_super() detects remaining inodes on a
-> system without CONFIG_BUG_ON_DATA_CORRUPTION, it would be nice if later
-> accesses to a busy inode would at least crash somewhat cleanly rather than
-> walking through freed memory.
+On 1/26/23 05:52, Jann Horn wrote:
+> On Wed, Jan 25, 2023 at 4:30 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>> Translating from Intel-speak: Intel thinks that DOITM purely a way to
+>> make the CPU run slower if you haven't already written code specifically
+>> to mitigate timing side channels.  All pain, no gain.
+>>
+>> The kernel as a whole is not written that way.
 > 
-> To address all three, use CHECK_DATA_CORRUPTION() when kernel bugs are
-> detected.
+> The kernel as a whole also doesn't really use the FPU registers for
+> anything other than checksumming and cryptography and stuff like that
+> (it's disabled in the compiler flags because the FPU registers
+> normally contain userspace state that must not be clobbered). The
+> instructions listed on that Intel help page are all weird PM* and VP*
+> arithmetic instructions that can't be generated from C code in the
+> kernel (except for weird subsystems in which every function is only
+> callable in kernel-FPU-enabled mode and the compiler is set to enable
+> FPU instruction generation, by which I mean amdgpu).
 
-Seems reasonable to me. I'll carry this unless someone else speaks up.
-:)
+Maybe I'm totally missing something, but I thought the scope here was
+the "non-data operand independent timing behavior for the listed
+instructions" referenced here:
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/best-practices/data-operand-independent-timing-isa-guidance.html
 
--Kees
+where the "listed instructions" is this list:
 
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
->  fs/open.c              |  5 +++--
->  fs/super.c             | 21 +++++++++++++++++----
->  include/linux/poison.h |  3 +++
->  3 files changed, 23 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/open.c b/fs/open.c
-> index 82c1a28b3308..ceb88ac0ca3b 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -1411,8 +1411,9 @@ int filp_close(struct file *filp, fl_owner_t id)
->  {
->  	int retval = 0;
->  
-> -	if (!file_count(filp)) {
-> -		printk(KERN_ERR "VFS: Close: file count is 0\n");
-> +	if (CHECK_DATA_CORRUPTION(file_count(filp) == 0,
-> +			"VFS: Close: file count is 0 (f_op=%ps)",
-> +			filp->f_op)) {
->  		return 0;
->  	}
->  
-> diff --git a/fs/super.c b/fs/super.c
-> index 12c08cb20405..cf737ec2bd05 100644
-> --- a/fs/super.c
-> +++ b/fs/super.c
-> @@ -491,10 +491,23 @@ void generic_shutdown_super(struct super_block *sb)
->  		if (sop->put_super)
->  			sop->put_super(sb);
->  
-> -		if (!list_empty(&sb->s_inodes)) {
-> -			printk("VFS: Busy inodes after unmount of %s. "
-> -			   "Self-destruct in 5 seconds.  Have a nice day...\n",
-> -			   sb->s_id);
-> +		if (CHECK_DATA_CORRUPTION(!list_empty(&sb->s_inodes),
-> +				"VFS: Busy inodes after unmount of %s (%s)",
-> +				sb->s_id, sb->s_type->name)) {
-> +			/*
-> +			 * Adding a proper bailout path here would be hard, but
-> +			 * we can at least make it more likely that a later
-> +			 * iput_final() or such crashes cleanly.
-> +			 */
-> +			struct inode *inode;
-> +
-> +			spin_lock(&sb->s_inode_list_lock);
-> +			list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
-> +				inode->i_op = VFS_PTR_POISON;
-> +				inode->i_sb = VFS_PTR_POISON;
-> +				inode->i_mapping = VFS_PTR_POISON;
-> +			}
-> +			spin_unlock(&sb->s_inode_list_lock);
->  		}
->  	}
->  	spin_lock(&sb_lock);
-> diff --git a/include/linux/poison.h b/include/linux/poison.h
-> index 2d3249eb0e62..0e8a1f2ceb2f 100644
-> --- a/include/linux/poison.h
-> +++ b/include/linux/poison.h
-> @@ -84,4 +84,7 @@
->  /********** kernel/bpf/ **********/
->  #define BPF_PTR_POISON ((void *)(0xeB9FUL + POISON_POINTER_DELTA))
->  
-> +/********** VFS **********/
-> +#define VFS_PTR_POISON ((void *)(0xF5 + POISON_POINTER_DELTA))
-> +
->  #endif
-> 
-> base-commit: 5dc4c995db9eb45f6373a956eb1f69460e69e6d4
-> -- 
-> 2.39.0.314.g84b9a713c41-goog
-> 
+> https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/resources/data-operand-independent-timing-instructions.html
 
--- 
-Kees Cook
+For example, that includes XOR with the 0x31 and 0x81 opcodes which
+there are plenty of in the kernel.
+
+That's a bit wider scope than the crazy instructions like VPLZCNTD.  The
+crazy instructions list that I _think_ you were grepping for is the
+"Instructions That May Exhibit MCDT Behavior".  That's also a fun one,
+but it is more narrow than the DOITM list.
+
