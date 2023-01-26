@@ -2,53 +2,41 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ABB5C05027
-	for <linux-hardening@archiver.kernel.org>; Thu, 26 Jan 2023 19:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32909C54EAA
+	for <linux-hardening@archiver.kernel.org>; Thu, 26 Jan 2023 22:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232466AbjAZTMl (ORCPT
+        id S233184AbjAZWiR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 26 Jan 2023 14:12:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54958 "EHLO
+        Thu, 26 Jan 2023 17:38:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232315AbjAZTMk (ORCPT
+        with ESMTP id S230282AbjAZWiO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 26 Jan 2023 14:12:40 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAAF558C;
-        Thu, 26 Jan 2023 11:12:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674760359; x=1706296359;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Trd6VrHdwLqP3BKT7sgNfrHrXj7Zj8mqjVHKY0jO6r4=;
-  b=IrNEGle95rQdcDETi1c+1OPA4Cc0fH1cAGrASetx3BLZRQjP0WAjWUHD
-   /5llyqrlxj+FvztZgsTEdAw86L1GSv6B9+rmquoXocbYmnpCOHmjSZxKi
-   R6CKC3PC4DjhmiV6M/4XQDXZhtywfV4s5MmORm+mDxwTlhj5GEuIax4AG
-   jAdEwaRq/7hv3TphBhuGHIhUuTIYZPmdHkwFf5yj+no4xqdzqL3az8E8z
-   0Nk9SZqwwwcXroxvpJnP/x/0SUUAkbzz2MqdIlB8NWMWQhCh3q+1ZNVuA
-   hkyeRs+DgbZlgMk2+1n/B/pZaEzDY5vLwem7Sz05jP8kBO+ol7vkWfkgw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="389268106"
-X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="389268106"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 11:12:37 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="662976851"
-X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="662976851"
-Received: from ernestom-mobl.amr.corp.intel.com (HELO [10.212.255.13]) ([10.212.255.13])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 11:12:36 -0800
-Message-ID: <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com>
-Date:   Thu, 26 Jan 2023 11:12:36 -0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
-Content-Language: en-US
-To:     Jann Horn <jannh@google.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thu, 26 Jan 2023 17:38:14 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E359EC2;
+        Thu, 26 Jan 2023 14:37:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DDCED6198A;
+        Thu, 26 Jan 2023 22:37:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BFDCC433D2;
+        Thu, 26 Jan 2023 22:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674772672;
+        bh=7AYFhb4koS9pJTdWI4SB1Hdg+HY7ss67hczEY93WEp4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LqohPkmrzcf+GeWXrSxRwkqs0k3Xlkoj3CqzVFnli+3LGo2FeksZWSp8oiMS/0mpe
+         wyTWlXFSB8V3a+A9ccMGpCoh3t9TiDFMgSjz4z59Yi/nT81dkJjAyz88fixXoi8sr7
+         +9fFSF7B7qwRNBluZ5Pb+caWOmWqKCRtUUYxfN2R+LMeA7CQJJg7j2HRoRlyXz7OwW
+         9NG5dOkCIS/ocf4Wru/IR9jfED5dfasZHMKZXqRzaf+D+HMJtprrAxx7oHC/KpvICE
+         ueBsvTuibj18Vf5H+A0m2Zfz35wRxNRprgmPBCucrgg+yIU+dgzgyTi/uwe++hmtUt
+         mdNVbSKrG3s5g==
+Date:   Thu, 26 Jan 2023 22:37:50 +0000
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
@@ -59,51 +47,89 @@ Cc:     Eric Biggers <ebiggers@kernel.org>,
         Adam Langley <agl@google.com>,
         Ard Biesheuvel <ardb@kernel.org>,
         "Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
+Message-ID: <Y9MAvhQYlOe4l2BM@gmail.com>
 References: <20230125012801.362496-1-ebiggers@kernel.org>
  <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
  <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
  <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
  <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 1/26/23 09:52, Jann Horn wrote:
->> Maybe I'm totally missing something, but I thought the scope here was
->> the "non-data operand independent timing behavior for the listed
->> instructions" referenced here:
->>
->>> https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/best-practices/data-operand-independent-timing-isa-guidance.html
->> where the "listed instructions" is this list:
->>
->>> https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/resources/data-operand-independent-timing-instructions.html
->> For example, that includes XOR with the 0x31 and 0x81 opcodes which
->> there are plenty of in the kernel.
-> That list says at the top: "The table below lists instructions that
-> have data-independent timing."
+On Thu, Jan 26, 2023 at 11:12:36AM -0800, Dave Hansen wrote:
+> On 1/26/23 09:52, Jann Horn wrote:
+> >> Maybe I'm totally missing something, but I thought the scope here was
+> >> the "non-data operand independent timing behavior for the listed
+> >> instructions" referenced here:
+> >>
+> >>> https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/best-practices/data-operand-independent-timing-isa-guidance.html
+> >> where the "listed instructions" is this list:
+> >>
+> >>> https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/resources/data-operand-independent-timing-instructions.html
+> >> For example, that includes XOR with the 0x31 and 0x81 opcodes which
+> >> there are plenty of in the kernel.
+> > That list says at the top: "The table below lists instructions that
+> > have data-independent timing."
+> 
+> So, first of all, apologies for the documentation.  It needs some work,
+> and I see where the confusion is coming from.
+> 
+> But, I did just confirm with the folks that wrote it. The "listed
+> instructions" *ARE* within the scope of being affected by the DOITM=0/1
+> setting.
+> 
+> Instead of saying:
+> 
+> 	The table below lists instructions that have data-independent
+> 	timing.
+> 
+> I think it should probably say something like:
+> 
+> 	The table below lists instructions that have data-independent
+> 	timing when DOITM is enabled.
+> 
+> 	(Modulo the MXCSR interactions for now)
+> 
+> Somebody from Intel please thwack me over the head if I'm managing to
+> get this wrong (wouldn't be the first time).
 
-So, first of all, apologies for the documentation.  It needs some work,
-and I see where the confusion is coming from.
+That's my understanding too, based on the part of
+https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/best-practices/data-operand-independent-timing-isa-guidance.html
+that describes DOITM.  The page
+https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/resources/data-operand-independent-timing-instructions.html
+is actively misleading, so yes please get that fixed.
 
-But, I did just confirm with the folks that wrote it. The "listed
-instructions" *ARE* within the scope of being affected by the DOITM=0/1
-setting.
+I think the following is also extremely important:
 
-Instead of saying:
+	For Intel® Core™ family processors based on microarchitectures before
+	Ice Lake and Intel Atom® family processors based on microarchitectures
+	before Gracemont that do not enumerate IA32_UARCH_MISC_CTL, developers
+	may assume that the instructions listed here operate as if DOITM is
+	enabled.
 
-	The table below lists instructions that have data-independent
-	timing.
+The end result is that on older CPUs, Intel explicitly guarantees that the
+instructions in
+https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/resources/data-operand-independent-timing-instructions.html
+have data operand independent timing.  But on newer CPUs, Intel has explicitly
+removed that guarantee, and enabling DOITM is needed to get it back.
 
-I think it should probably say something like:
+By the way, surely the importance of using DOITM on a particular CPU correlates
+strongly with its performance overhead?  So I'm not sure that benchmarks of
+DOITM would even be very interesting, as we couldn't necessarily decide on
+something like "don't use DOITM if the overhead is more than X percent", since
+that would exclude exactly the CPUs where it's the most important to use...
 
-	The table below lists instructions that have data-independent
-	timing when DOITM is enabled.
+I think the real takeaway here is that the optimizations that Intel is
+apparently trying to introduce are a bad idea and not safe at all.  To the
+extent that they exist at all, they should be an opt-in thing, not out-opt.  The
+CPU gets that wrong, but Linux can flip that and do it right.
 
-	(Modulo the MXCSR interactions for now)
-
-Somebody from Intel please thwack me over the head if I'm managing to
-get this wrong (wouldn't be the first time).
+- Eric
