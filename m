@@ -2,100 +2,113 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B06C54EAA
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 22:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D99C54EAA
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 22:40:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231922AbjA0Wjc (ORCPT
+        id S231778AbjA0Wkm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 17:39:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35520 "EHLO
+        Fri, 27 Jan 2023 17:40:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231697AbjA0Wjb (ORCPT
+        with ESMTP id S229468AbjA0Wkl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 17:39:31 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B1967962C
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:39:24 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id z13so6408122plg.6
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:39:24 -0800 (PST)
+        Fri, 27 Jan 2023 17:40:41 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1771213D6C
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:40:40 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso10039613pjj.1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:40:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fdMxl821Ab5HzS26+AY0ir4jhJTH1FXobocBvED2wrI=;
-        b=UOv5vWR7TDdvS/ZtjH0Dc95BaNR9YxxISovL49ewINtqUnpu9u6hjafs9zG8RhNi/h
-         4XTY5McUc98dknWJOOXO2EfIA1UldDGoRzbz7HXH2hj/URuXBM4YPJUkCT9Akzj6o9VD
-         HVeIoDWG1guQrvAMgDMv5Dn/uCd4Z+/Odyseo=
+        bh=mi0d+CK+M9Cvpo6kBCt8Dw5Bmq3VTlMl6FYmGH90jCc=;
+        b=SWi4IP4iJzGDXBWt0eLnZKja4pxNbw1GBNz6X3Ff5JYUOz6sM8/8YMzzGuQ7mKbPoP
+         PjGze6exSSVRpuuWgjNhtiQB7Rw8FMdJNztT1g1ohE7W8jzXaPzoAP0kO13w+83rVnCb
+         vNt+mgwdbGbaLSRT9qjJSvWE2w3cqoWN1+d9w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fdMxl821Ab5HzS26+AY0ir4jhJTH1FXobocBvED2wrI=;
-        b=pFh3e8ElyBLrtP+w/t0EP73oNOh44dL2XskeMzJqRmVWEDqLDDDWpVkSVetOfCmB3J
-         I6bFJizH245vJnvV7ek8vhuDlZx8iA5ZYtHKoHgMBg6H6b9sxj8/Yz14FixeEGNi+Qo7
-         cgA5CReqxZV/gLUwjt740NoE2w/KYiWHp3Bmkn8nklk22pLxwpCpSndjItM87KB5ijoM
-         0GuWu++dp2XHSzPTyPsSVTxXS+E9Y0OBpDeTY881KUrQaa/4GBHnZXhsaBZXMDGAyThW
-         3VeVxuCyd7D8r2BZmJvQLs/ZORFQZtlnnNOFzjGTwTZ5cTcKD/kz0coMxtz65FtQFFs+
-         eoig==
-X-Gm-Message-State: AO0yUKVsmHfHOBHJNZHLCOtCtFHf18WE3f2RpcZvPMdlNVO2srN2tlve
-        ihnTEfbhKL8zA6q9Ff+HaeXbyw==
-X-Google-Smtp-Source: AK7set/8rbNVre6bexsF6NX/1/7XtoIuDybWTuLLFWf3OfkxMXUqt+QunqP5Wnx7edguVB8M7Dzziw==
-X-Received: by 2002:a17:902:f112:b0:196:5979:fb0b with SMTP id e18-20020a170902f11200b001965979fb0bmr2500222plb.50.1674859163738;
-        Fri, 27 Jan 2023 14:39:23 -0800 (PST)
+        bh=mi0d+CK+M9Cvpo6kBCt8Dw5Bmq3VTlMl6FYmGH90jCc=;
+        b=Y9Lc92tt+yNnySFl52NShJLWmwMvJtF9EJtXFFj39eHnmEC1PkBqUgyGm/apYng4Dz
+         M76+wE8d+8f/30s3txXJzBbZWYqFZOOyb4rzUhSZ7Y9lpaBxHLDUmWkXPWe9U/BPliFs
+         MCN/Z27kojYBYBYSWVRCI+LP041k4vPMFtF5kCvFs3WqUuUrgjhzGA6nLzjYqFJsyq0y
+         Kyy4d7Lnw6T4Gjoy635wBfyUaCpHYzZeI01qpnM8IFK1LpSsKc+PvtADaXjM9wUH22Pu
+         fSFaUKDrrKaFP+00PKxifsJ95hRQDbABlloljHxKKy2T4158UKDs67PNmULWKamNpUCD
+         VhCg==
+X-Gm-Message-State: AO0yUKUilsNO56mrPLci17DwsiEE27brQWU2ocqKAjzydGQQHrZD3DCp
+        ZNTuSpTHweq7gGzJ+kCrCjD6NL8jipNEdX7I
+X-Google-Smtp-Source: AK7set+q5CdJ/pPq/o3RZgrDnqZei+2XK5PIfAZ51Qfg/mMdW4DXRyQLmam7r2hfP7mQ+7Zfmua7vA==
+X-Received: by 2002:a17:90a:1e:b0:22b:fb91:5719 with SMTP id 30-20020a17090a001e00b0022bfb915719mr14252488pja.3.1674859239533;
+        Fri, 27 Jan 2023 14:40:39 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h13-20020a170902f54d00b0019312dd3f99sm3345054plf.176.2023.01.27.14.39.23
+        by smtp.gmail.com with ESMTPSA id l24-20020a17090ac59800b0022c25153cf0sm3207170pjt.44.2023.01.27.14.40.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 14:39:23 -0800 (PST)
+        Fri, 27 Jan 2023 14:40:39 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Jan Harkes <jaharkes@cs.cmu.edu>
-Cc:     Kees Cook <keescook@chromium.org>, coda@cs.cmu.edu,
-        codalist@coda.cs.cmu.edu, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] coda: Avoid partial allocation of sig_inputArgs
-Date:   Fri, 27 Jan 2023 14:39:21 -0800
-Message-Id: <20230127223921.never.882-kees@kernel.org>
+To:     Jamal Hadi Salim <jhs@mojatatu.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] net: sched: sch: Bounds check priority
+Date:   Fri, 27 Jan 2023 14:40:37 -0800
+Message-Id: <20230127224036.never.561-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1348; h=from:subject:message-id; bh=eP76JxMZ6S1xFG8BKiuqypsXRZ3qoemnjdFzrcjSaXo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj1FKZ/1CyCUzn0X/U43gaayBJEvPOCxJ5823GEjuY 0w2uGs2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY9RSmQAKCRCJcvTf3G3AJsGLD/ 9bVDEEakt+0cZgXE+v/xRPyJiikpIeJQK5S2nrmK7u7y0uhvmZM7gaPJTOZiSNdbYnk2fIvpzxVATL e5wy7WS177RKngqRhvFG8zKTx8nlwXrCkzvBOEaXZiu4CoaS+uVsltZu1WnJDitWCLkZANB0iYg5bg AAp3YEZnzM+mLJRjavowrhFGUnQU6LRRJFDMf4R3Xxvh2IDByTGpZA38lIMYc5Ly1QLWphIFwEsX2X CJD/3yUAtUMLBEiR5FVJHESJojiz5Tkkt8fVLaEK71lzdlPjT4/ImcAePr31LDqMYTeEIrr/zAqNDY aYTLv+/x3q+ChfptagI92MYVES/lGZ0JxbXKthr+WDHH8eEDipONs+h0B0CdN6eVRr4fggUtfLUCdB 5PiA28KcridQ4YTEJdCQA7ckzwV984TzZvDcsh4JuuZVpudOCrTo90IDp254q36dKfnDzw5ZhJMpDJ 8AEYWOmCiiYw4p0INLb4G73tiSmzq/fpAzAPnBUTo2mx4qqOWl4cGynVqOvt7asXRC6npzE55TjZ52 WeuwkESA2qFVn3o1Tjw5V1aOJr4ImMfOQo06CkaKJCG+wSSvXLob85DnjNQ2qs0RQlnkJLtiax7p6O zvy+Q5RpUEhlHYx0CugGpY9Q3h+I4hghKS8B8Z28ll7QcWUKaRiiSIXMU15w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1664; h=from:subject:message-id; bh=WznqTvrhU7T7Q9mp7lRgEZijP0sAnDxdFOd42SzPeos=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj1FLlF2NTJvQnZwGxxYtNjelPsiP82tCH++9g1CN1 mGXGd46JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY9RS5QAKCRCJcvTf3G3AJrMJEA CfNHygMLN8AV7Bx/StJG002yhinvS4PXc7hKsxEqGhQiMVumnsc+9dQc7quTYRD43El3kpsU37r0FF jMdibMOxxlg0IrgaC+OrvCMZj2Lgg31K0pRLjdYbDCVrSyzgdoMlVYOZXd5/IrilnZQ/r8VJHUGgjQ 2Dy0KXxSJlZGqub1Ce2WRglWV5oyBO2igbspm1/uHEF2LQBK+wkklhjL+CnTRh/CkX51qWW5GH0rOb WaBpy46IRnvVHBQO1lGyT/Cft6JNSMdVwgsUbcgsMo/BdKiFbZtjCQ4HCShR1tJRp9BvUY8nLvO/KT NTCU7r4GD9Ovvxxo+GlvXdeOnv2FVwRqB/d4gvBpfnubVY8y8wF70aG8rBA2Ms7EPQuzsp+f74ft25 tvEwGuPc5mXRpYYDodN6ylfnKQYglZZrh3mya//01067lgs5/u3Nfd/iksrEg+RjVhUh+trQEEiDkd JatLvYKbw98tHkyzO2TYqHBERJsx6lPkiJpVk8UnM4Or7FvD0v9FMQFtSBMwRA3yelpqPG1NbWG1G9 MBALYc+yZVrujekUErIpM3B08O3qlyNnejkCbohiUQNdmNixK60P8L6iWj1KB/0SNn8vX6QmhJCee1 RsiGCxaRcss4+ZdtDufmyrSSoaeGT+hhMBHA9A+B9RzUePU+pw8v7MtHB3cg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-GCC does not like having a partially allocation object, since it cannot
-reason about it for bounds checking when it is passed to other code.
-Instead, fully allocate sig_inputArgs. (Alternatively, sig_inputArgs
-should be defined as a struct coda_in_hdr, if it is actually not using
-any other part of the union.) Seen under GCC 13:
+Nothing was explicitly bounds checking the priority index used to access
+clpriop[]. WARN and bail out early if it's pathological. Seen with GCC 13:
 
-../fs/coda/upcall.c: In function 'coda_upcall':
-../fs/coda/upcall.c:801:22: warning: array subscript 'union inputArgs[0]' is partly outside array bounds of 'unsigned char[20]' [-Warray-bounds=]
-  801 |         sig_inputArgs->ih.opcode = CODA_SIGNAL;
-      |                      ^~
+../net/sched/sch_htb.c: In function 'htb_activate_prios':
+../net/sched/sch_htb.c:437:44: warning: array subscript [0, 31] is outside array bounds of 'struct htb_prio[8]' [-Warray-bounds=]
+  437 |                         if (p->inner.clprio[prio].feed.rb_node)
+      |                             ~~~~~~~~~~~~~~~^~~~~~
+../net/sched/sch_htb.c:131:41: note: while referencing 'clprio'
+  131 |                         struct htb_prio clprio[TC_HTB_NUMPRIO];
+      |                                         ^~~~~~
 
-Cc: Jan Harkes <jaharkes@cs.cmu.edu>
-Cc: coda@cs.cmu.edu
-Cc: codalist@coda.cs.cmu.edu
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- fs/coda/upcall.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_htb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/coda/upcall.c b/fs/coda/upcall.c
-index 59f6cfd06f96..cd6a3721f6f6 100644
---- a/fs/coda/upcall.c
-+++ b/fs/coda/upcall.c
-@@ -791,7 +791,7 @@ static int coda_upcall(struct venus_comm *vcp,
- 	sig_req = kmalloc(sizeof(struct upc_req), GFP_KERNEL);
- 	if (!sig_req) goto exit;
+diff --git a/net/sched/sch_htb.c b/net/sched/sch_htb.c
+index f46643850df8..cc28e41fb745 100644
+--- a/net/sched/sch_htb.c
++++ b/net/sched/sch_htb.c
+@@ -431,7 +431,10 @@ static void htb_activate_prios(struct htb_sched *q, struct htb_class *cl)
+ 	while (cl->cmode == HTB_MAY_BORROW && p && mask) {
+ 		m = mask;
+ 		while (m) {
+-			int prio = ffz(~m);
++			unsigned int prio = ffz(~m);
++
++			if (WARN_ON_ONCE(prio > ARRAY_SIZE(p->inner.clprio)))
++				break;
+ 			m &= ~(1 << prio);
  
--	sig_inputArgs = kvzalloc(sizeof(struct coda_in_hdr), GFP_KERNEL);
-+	sig_inputArgs = kvzalloc(sizeof(*sig_inputArgs), GFP_KERNEL);
- 	if (!sig_inputArgs) {
- 		kfree(sig_req);
- 		goto exit;
+ 			if (p->inner.clprio[prio].feed.rb_node)
 -- 
 2.34.1
 
