@@ -2,161 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149C4C636CB
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 16:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EB7C61D97
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 18:08:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232597AbjA0QC3 (ORCPT
+        id S233994AbjA0SIx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 11:02:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57306 "EHLO
+        Fri, 27 Jan 2023 13:08:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjA0QC3 (ORCPT
+        with ESMTP id S232597AbjA0SIw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 11:02:29 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325418B063;
-        Fri, 27 Jan 2023 08:02:01 -0800 (PST)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30RFavqC021454;
-        Fri, 27 Jan 2023 16:01:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=qcppdkim1;
- bh=/S22GBkuN8cVeMhaytVE3/ENZ87v5s8LO6nyMoxDA20=;
- b=bVWQfxJ9nVf+D7QwGRMEqInO3q9qTiWkFdTTcPEqzze5qG8Y3FA8PeVU6dzcHZnWpUFJ
- JmZ1jJXDvQu1BbEqYC67IS9Sb2Ssya8NuIZE1FDo8Z5ahckIb4nON41jzdjT7mQLmNIY
- zZg8HKgkEOzjH8hRsdw3nO1oH4dGuneaBAxQrimEjMYhOsb9WiGHEWjdqxGzp/RNefsF
- +WZmCeof63uqmQnP7ECfifR2TlOSH4GqwCmradvou6nCN199efaRTrKVxiutRNdmhGJW
- LJsQqH3DDJaoMsz4uXEcLFVMNWfaa69En59g0vr3tLUX4NwIQuhVwm8zvUQ16xP7t/PR VQ== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ncchxrggh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Jan 2023 16:01:16 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30RG19V1021597
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Jan 2023 16:01:09 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Fri, 27 Jan 2023 08:01:06 -0800
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <linux-hardening@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-CC:     Mukesh Ojha <quic_mojha@quicinc.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: [PATCH v4 1/2] dt-bindings: ramoops: Inherit reserve memory property
-Date:   Fri, 27 Jan 2023 21:30:51 +0530
-Message-ID: <1674835252-31954-1-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 27 Jan 2023 13:08:52 -0500
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC249193EE;
+        Fri, 27 Jan 2023 10:08:51 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id m12so5459895edq.5;
+        Fri, 27 Jan 2023 10:08:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=goKDA2J7B1QU2njDX5Y8T5sfNT6QXWU55+6YO1fdFco=;
+        b=nvWe6KzkHw5AXbQZZIfiUYhTHYc/4JeCldmSjmYUtpS9MeyAYz5u60lSD78dQORj8R
+         /VYpocdIhOzoYXuGb/KeBjeJPmgVLVOTZ8Sy+m+yue111LTLnBZe0Sn0nrp8UxGSksqS
+         3lvmzdpHQiWUXQh6slIKEJI5YEuAEqavbLxwRSsQ16SwCT1026OvgYkInsgHMwKdQyo6
+         kpSK9I2/Kr8X5qPDdywc5LmUYgSSFeWp649sVENUMFdcXg/KBqIq6ippKu+rsyaKXCgy
+         AnQ353bfre+CrZXYElR1DEtnN2zwwhewG86bKiMVAUkT0kGZitTGlvgqhYvOnmjpX0mS
+         s5MA==
+X-Gm-Message-State: AFqh2krWhN1z8x+eyGfyYFBaxaYRghZibRlUJGA5Q3a4x6PVIQ7cwgpf
+        U6tyfAIl8GEkyCUnWjg1xsPNzn/mNsGQuNdSIF4=
+X-Google-Smtp-Source: AMrXdXtSjmx3IO/nMTosU6o+RLNNgqeNtZ15DaXFdIUBZVecl7iGPqMLzUupCrS9qDjroXN0jvw0PCYzLAV2s8WuN0A=
+X-Received: by 2002:a05:6402:e03:b0:490:47c3:3d71 with SMTP id
+ h3-20020a0564020e0300b0049047c33d71mr6416494edh.31.1674842930450; Fri, 27 Jan
+ 2023 10:08:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VmMSqO6Cn7xkm1WzqPYAvWqmB6PsJMMJ
-X-Proofpoint-GUID: VmMSqO6Cn7xkm1WzqPYAvWqmB6PsJMMJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-27_09,2023-01-27_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 suspectscore=0 priorityscore=1501 impostorscore=0 phishscore=0
- spamscore=0 clxscore=1011 adultscore=0 mlxscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301270148
+References: <20221118181538.never.225-kees@kernel.org> <202301151037.20CC3F0@keescook>
+ <CAJZ5v0hvoAD1WLXzpMobTRSasBqy5dypHTysBU3=ionGgWR6nQ@mail.gmail.com> <202301201116.6ED85A70@keescook>
+In-Reply-To: <202301201116.6ED85A70@keescook>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 27 Jan 2023 19:08:39 +0100
+Message-ID: <CAJZ5v0hQypNonoqr1V1xqN5bX+pKBF3AR=F-mRynN5yvcS9kyA@mail.gmail.com>
+Subject: Re: [PATCH] ACPICA: Replace fake flexible arrays with flexible array members
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        acpica-devel@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The reserved memory region for ramoops is assumed to be at a
-fixed and known location when read from the devicetree. This
-is not desirable in an environment where it is preferred the
-region to be dynamically allocated at runtime, as opposed to
-being fixed at compile time.
+On Fri, Jan 20, 2023 at 8:16 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Jan 20, 2023 at 07:10:52PM +0100, Rafael J. Wysocki wrote:
+> > On Sun, Jan 15, 2023 at 7:38 PM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Fri, Nov 18, 2022 at 10:15:51AM -0800, Kees Cook wrote:
+> > > > Functionally identical to ACPICA upstream pull request 813:
+> > > > https://github.com/acpica/acpica/pull/813
+> > >
+> > > Any update on this? Upstream is currently unbuildable since October.
+> > >
+> > > > One-element arrays (and multi-element arrays being treated as
+> > > > dynamically sized) are deprecated[1] and are being replaced with
+> > > > flexible array members in support of the ongoing efforts to tighten the
+> > > > FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+> > > > with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+> > > >
+> > > > Replace one-element array with flexible-array member in struct
+> > > > acpi_resource_extended_irq. Replace 4-byte fixed-size array with 4-byte
+> > > > padding in a union with a flexible-array member in struct
+> > > > acpi_pci_routing_table.
+> > > >
+> > > > This results in no differences in binary output.
+> > >
+> > > In the meantime, can you take this patch for Linux, and we can wait for
+> > > ACPICA to catch up?
+> >
+> > Applied now (as 6.3 material), sorry for the delay.
+>
+> Thanks!
 
-So, update the ramoops binding by inheriting some reserve memory
-property to allocate the ramoops region dynamically.
+Unfortunately, this breaks compilation for the ACPI tools in tools/power/acpi/.
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
-Changes in v4:
- - Addressed comment made by Krzysztof on ramoops node name.
+Apparently, the problem is that DECLARE_FLEX_ARRAY() is not defined
+when the tools are built, because kernel headers are not used then.
 
-Changes in v3:
- - Fixed yaml error and updated commit text as per comment.
-
-Change in v2:
-  - Added this patch as per changes going to be done in patch 3/3
-
- .../bindings/reserved-memory/ramoops.yaml          | 34 ++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
-index 0391871..8741626 100644
---- a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
-+++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
-@@ -10,7 +10,8 @@ description: |
-   ramoops provides persistent RAM storage for oops and panics, so they can be
-   recovered after a reboot. This is a child-node of "/reserved-memory", and
-   is named "ramoops" after the backend, rather than "pstore" which is the
--  subsystem.
-+  subsystem. This region can be reserved both statically or dynamically by
-+  using appropriate property in device tree.
- 
-   Parts of this storage may be set aside for other persistent log buffers, such
-   as kernel log messages, or for optional ECC error-correction data.  The total
-@@ -112,7 +113,13 @@ unevaluatedProperties: false
- 
- required:
-   - compatible
--  - reg
-+
-+oneOf:
-+  - required:
-+      - reg
-+
-+  - required:
-+      - size
- 
- anyOf:
-   - required: [record-size]
-@@ -142,3 +149,26 @@ examples:
-             };
-         };
-     };
-+
-+  - |
-+    / {
-+        compatible = "foo";
-+        model = "foo";
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+
-+        reserved-memory {
-+            #address-cells = <1>;
-+            #size-cells = <1>;
-+            ranges;
-+
-+            ramoops_region: ramoops {
-+                compatible = "ramoops";
-+                alloc-ranges = <0x00000000 0xffffffff>;
-+                size = <0x0 0x10000>;       /* 64kB */
-+                console-size = <0x8000>;    /* 32kB */
-+                record-size = <0x400>;      /*  1kB */
-+                ecc-size = <16>;
-+            };
-+        };
-+    };
--- 
-2.7.4
-
+I guess the changes from your upstream PR need to be backported
+literally for this to work, so I'll drop this one for the time being.
+Or please let me know if you have a better idea.
