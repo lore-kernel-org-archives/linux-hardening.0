@@ -2,164 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046B5C61DA4
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 20:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B908C61DA7
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 22:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233650AbjA0UHh (ORCPT
+        id S231548AbjA0Wgd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 15:07:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50136 "EHLO
+        Fri, 27 Jan 2023 17:36:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232882AbjA0UHI (ORCPT
+        with ESMTP id S231576AbjA0Wgc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 15:07:08 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2AA88CCF;
-        Fri, 27 Jan 2023 12:05:58 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D6FB361D9D;
-        Fri, 27 Jan 2023 20:05:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 410AAC433A4;
-        Fri, 27 Jan 2023 20:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674849957;
-        bh=v29blagsokF4DUYAWbvcpTiop0WyodX0gl/oyRzswqA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=P3wMkOsmn/C6ifTpe0WSVeEB0ovdAXKs6HeHt68o0xMi0ysOsRvQKvkm4Aic9WQVV
-         QuQ58v1cCfguXjQcLRiS9rqBxqjocjfkAjWiDAnLdAlyIFWcDV0/NqvCsvBhjCtUkY
-         ajr7C/+lVYhOyi62hyy1gR61+yUyf2HBqFM45QczIo8fFapswJBDfH3D3FoKFP3mry
-         YWfVKzVK/aqiC/LfKjprLrvjoOiZMVgSgk2inE2+rOIjfRhwbkvD4cspG+Q0p7qhBK
-         P/wUIWrDXaR057BpjV1YmbPxjHS7rJ0Yk46AkycLntAg2vLNQuZSbMdIrew6dhE6FX
-         KWXjC/cr59s9Q==
-Received: by mail-vs1-f48.google.com with SMTP id h19so4685794vsv.13;
-        Fri, 27 Jan 2023 12:05:57 -0800 (PST)
-X-Gm-Message-State: AFqh2krchwUg//fwMF4FSzV5XvDNk/bRgVXl8y0gTtOveCLPwIOvYPtp
-        PhPiBA6h6KrwIsxk4UWsUCq2gk9++38C5I6lNA==
-X-Google-Smtp-Source: AMrXdXu9qsE8D6rWHgYZwwCPcVxgXD2SdLnghYhLaXPA9fqnGjkWOWvQtB2DHP+Tq8yStJ4VrPxvSNnkBQbACCj47Z0=
-X-Received: by 2002:a67:ef8a:0:b0:3d0:b955:e0af with SMTP id
- r10-20020a67ef8a000000b003d0b955e0afmr6106856vsp.26.1674849956011; Fri, 27
- Jan 2023 12:05:56 -0800 (PST)
+        Fri, 27 Jan 2023 17:36:32 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745FC79CA0
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:36:31 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id jm10so6368178plb.13
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:36:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XC/ZtupLdVIFnH4AYiQA4jmFziyUHbnRtJG+3+/tCsc=;
+        b=EZGajsagK5eienkyoS96UjeiRheeePkkC4C7hYG+ey9XSMt8/0jAKjnSZPtcWLW9YT
+         X6IsiPfAfwBJWzypwCCp0AzdhVKZ98t6tmNQcBOu70FSjf5qWIW66ECNKAGSPU1dyThQ
+         QqPIUQbGECw3JswGTM5fvQmSyssLeFqOWT2So=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XC/ZtupLdVIFnH4AYiQA4jmFziyUHbnRtJG+3+/tCsc=;
+        b=uwTvOCxHZs1ut3RLlSmK8plud3nKB8WaCL5wcmdNhZ/DKRW17S4HToUQ2WWmYLICxw
+         fziCAqe6WIyiWDRFhs0ch1CfmR5nu2UZtuTEYUakcOSY903M5cE8W95iTgZGnPx0lF4n
+         99nZGI/DG62dPzd38uLXMbffCSAxeu0KlXnUErIjmvQoSCcHQFcxNuaziMIMOIDvFNen
+         5gvLGK2RAPvu1Fq2NYZoB1eK3tf2hjPcJYqJHm3VbxQ2syUeGd948lT1nvPn3orMcVqM
+         fyG1zf+yu93yYlM9i9AMGP+CWoxtFQpJJ9O0ArPvaP60xUk/dkFtBA2WkZ+Nd4tG7m88
+         PULA==
+X-Gm-Message-State: AO0yUKVBkphSgk5hozHkDBNSUmBTXKeOWgRZJOLzAr2C7eZ/BTQQHMb0
+        6XfaLYt2RYB3ueXsVDJf7nYivg==
+X-Google-Smtp-Source: AK7set9atx6UuUzgfZ2X1Ud6LFbu6CCaARj0/duoDv4C/zvhMhgOSrXPcfoMg0atHiSD8YrmsgB6CA==
+X-Received: by 2002:a17:90a:199:b0:22c:59c3:8694 with SMTP id 25-20020a17090a019900b0022c59c38694mr2063430pjc.44.1674858990947;
+        Fri, 27 Jan 2023 14:36:30 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d14-20020a17090a498e00b00229ff1fd7e0sm5483285pjh.14.2023.01.27.14.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jan 2023 14:36:30 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc:     Kees Cook <keescook@chromium.org>, Vinod Koul <vkoul@kernel.org>,
+        dmaengine@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sia Jee Heng <jee.heng.sia@intel.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] dmaengine: dw-axi-dmac: Do not dereference NULL structure
+Date:   Fri, 27 Jan 2023 14:36:27 -0800
+Message-Id: <20230127223623.never.507-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <1674835252-31954-1-git-send-email-quic_mojha@quicinc.com>
-In-Reply-To: <1674835252-31954-1-git-send-email-quic_mojha@quicinc.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 27 Jan 2023 14:05:44 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK_wuOwJS=dSkSdYs10kE1S3gmtHVU31wkxkP5wT39qqg@mail.gmail.com>
-Message-ID: <CAL_JsqK_wuOwJS=dSkSdYs10kE1S3gmtHVU31wkxkP5wT39qqg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: ramoops: Inherit reserve memory property
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1469; h=from:subject:message-id; bh=KrlH9ZeOH9yS+IOvCO4GDgstUfRQh+z+WHGLR1SyBGc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj1FHr9Chm0fhuNsD6+VwC2IRTo0J1tq8/rBdG7b0b dgCyYFyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY9RR6wAKCRCJcvTf3G3AJitlEA CdckUnqQGuixVX0bMwrQLwKqhy9ZLNZDE+qU9WCjS6xribOcn6s/nkIbrmKGNKRNvHh0ksDj6n3X77 CmzaYG3S4gQtKejrLAwy2MKAGiYER1d12M4vG8lEl2VPuzqKm/95lO5XsEa70+M7Rrtp5Y0z1N3d4D H8KmbBjl8ykeU0UkjIdzbFsDrwH/vqqBFvpQZKLDPQNlrnLSTsrr3b7nPF+zLSRvaO11nMetQK1Ajh sElxIzu8TOuFw0EX6GQXufpolgGvqqAzGHucyD8p0nC1Qn3kU600L5RleEQglP1NPscjAtXQVGjwdp nzHFfVZQVv1jzfW9u8cxnoxqqcu32QPjRPGDhiFY3DuFQv12AKA9JN3tLsuf2mUE99cCSw84xqOouk QxgHZ8P8147+aPOexFI39IBFM+G5+20BB7/Kag4AL1jj0wh6oD6CYcR8DgcMkpKWsrLuAH8z7b62+j jKu1cCiTDJpiTjdkphquCgbPek+TPTfAYrIv7BHbvoGSM9SuWCyik0P9wCPJV45mbFvjSop6NBtyRY Rq8XhrMuCCsoOQHFZpebkxc7cztNt+hKj8DG5tzFtxeX4cCnDry1hv74joITlcEMfDEViaeTdPO/6G ouf8wHzo5paqmOJVcpQqPxONKH2M6CbnWHopOl2SK0mXVVDE9l7evJePig0w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 10:01 AM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
->
-> The reserved memory region for ramoops is assumed to be at a
-> fixed and known location when read from the devicetree. This
-> is not desirable in an environment where it is preferred the
-> region to be dynamically allocated at runtime, as opposed to
-> being fixed at compile time.
+If "vdesc" is NULL, it cannot be used with vd_to_axi_desc(). Leave
+"bytes" unchanged at 0. Seen under GCC 13 with -Warray-bounds:
 
-I don't see how this can work. How do you find the region after
-rebooting? Or this is only used for the current boot? If so, provide a
-userspace interface to configure it (or the existing module params).
+../drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'dma_chan_tx_status':
+../drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:329:46: warning: array subscript 0 is outside array bounds of 'struct
+virt_dma_desc[46116860184273879]' [-Warray-bounds=]
+  329 |                 bytes = vd_to_axi_desc(vdesc)->length;
+      |                                              ^~
 
-The addition of 'size' type regions was primarily for large carveouts
-that needed to be allocated before anything else. ramoops is not that.
-It's 10s or 100s of KB at most.
+Fixes: 8e55444da65c ("dmaengine: dw-axi-dmac: Support burst residue granularity")
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: dmaengine@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 2 --
+ 1 file changed, 2 deletions(-)
 
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index 08af483331fd..4169e1d7d5ca 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -325,8 +325,6 @@ dma_chan_tx_status(struct dma_chan *dchan, dma_cookie_t cookie,
+ 		len = vd_to_axi_desc(vdesc)->hw_desc[0].len;
+ 		completed_length = completed_blocks * len;
+ 		bytes = length - completed_length;
+-	} else {
+-		bytes = vd_to_axi_desc(vdesc)->length;
+ 	}
+ 
+ 	spin_unlock_irqrestore(&chan->vc.lock, flags);
+-- 
+2.34.1
 
-> So, update the ramoops binding by inheriting some reserve memory
-> property to allocate the ramoops region dynamically.
->
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
-> Changes in v4:
->  - Addressed comment made by Krzysztof on ramoops node name.
->
-> Changes in v3:
->  - Fixed yaml error and updated commit text as per comment.
->
-> Change in v2:
->   - Added this patch as per changes going to be done in patch 3/3
->
->  .../bindings/reserved-memory/ramoops.yaml          | 34 ++++++++++++++++++++--
->  1 file changed, 32 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
-> index 0391871..8741626 100644
-> --- a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
-> +++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
-> @@ -10,7 +10,8 @@ description: |
->    ramoops provides persistent RAM storage for oops and panics, so they can be
->    recovered after a reboot. This is a child-node of "/reserved-memory", and
->    is named "ramoops" after the backend, rather than "pstore" which is the
-> -  subsystem.
-> +  subsystem. This region can be reserved both statically or dynamically by
-> +  using appropriate property in device tree.
->
->    Parts of this storage may be set aside for other persistent log buffers, such
->    as kernel log messages, or for optional ECC error-correction data.  The total
-> @@ -112,7 +113,13 @@ unevaluatedProperties: false
->
->  required:
->    - compatible
-> -  - reg
-> +
-> +oneOf:
-> +  - required:
-> +      - reg
-> +
-> +  - required:
-> +      - size
->
->  anyOf:
->    - required: [record-size]
-> @@ -142,3 +149,26 @@ examples:
->              };
->          };
->      };
-> +
-> +  - |
-> +    / {
-
-You can't have multiple root node examples. Check the example dts, the
-examples will be merged together.
-
-> +        compatible = "foo";
-> +        model = "foo";
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        reserved-memory {
-> +            #address-cells = <1>;
-> +            #size-cells = <1>;
-> +            ranges;
-> +
-> +            ramoops_region: ramoops {
-> +                compatible = "ramoops";
-> +                alloc-ranges = <0x00000000 0xffffffff>;
-> +                size = <0x0 0x10000>;       /* 64kB */
-> +                console-size = <0x8000>;    /* 32kB */
-> +                record-size = <0x400>;      /*  1kB */
-> +                ecc-size = <16>;
-> +            };
-> +        };
-> +    };
-> --
-> 2.7.4
->
