@@ -2,100 +2,136 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31403C54EAA
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 12:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC2FC54EAA
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 13:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234424AbjA0Mw6 (ORCPT
+        id S233158AbjA0NyP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 07:52:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34490 "EHLO
+        Fri, 27 Jan 2023 08:54:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234030AbjA0Mw5 (ORCPT
+        with ESMTP id S229847AbjA0NyP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 07:52:57 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FD8C673
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 04:52:55 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id l41-20020a05600c1d2900b003daf986faaeso3383592wms.3
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 04:52:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=a9WkdjJUtSWAW7q9hMDY+3mWPKLqhqnxsndeOx1lm8g=;
-        b=au4sRJNKmGv4X4Errswe6Bvl7pPfWKzE7I33BGdwXhn5Yr637vGfLM2tNqhtWWaGzk
-         xxA7NDT90MPaBFyDELEAAjZikgA1LvNRlGV5mvogJ3iFMdLeUzPsn41fNKrJ8NlPT0e1
-         SXVdrzetE1rhDj33QkoSljHl6QnHcXHSHchT3z1PetkJAhSe1eJbvSPqHICI2zFO4yAj
-         0UVYVzaVPxIqETB3/zeSIkPKglZWXUgW6DGjPTy9o3KtPs1UheAsEVvxPa94m/trOihA
-         FYmr99PgosnStr2oyPu+Kg1z/sO0AX5KoUf3OMBiD6UFpVfxyXuwtrKZDnCJW7Kfb0Ek
-         vX0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=a9WkdjJUtSWAW7q9hMDY+3mWPKLqhqnxsndeOx1lm8g=;
-        b=GkxbaeSv1RHnwMm1r2zJdKRon/Al8sjywa1NugHnFAppoUTh2oMnBN6nWvbOt155cG
-         nzMKB1BovM++5aKDJbZ9iYREksTFdNitCWakbL1kulKIsabB+KjpGeICA7R/fK7tLPlr
-         H8Kj7p5rwfNE29RulGBBEROYxI/rjbSpSuSsOAsASJDFedSOdPE9w9+EOvGyHWYba57N
-         uA1pB4gO4myGGItgZkbSMKoRtQ4hdG1ZFgkHBEYC0bkyrw9aLXfOm+7lU4ZAuMbQ+3To
-         nKUHstJ7THDl1NgjLhv0bCE58t+AYgQ4627YcBMbLeFFph/xllGepXfckXKSL1IBA2BA
-         eHbg==
-X-Gm-Message-State: AFqh2kqgqFQrbwMD59pgU2DhsH1Rg7O4GFhI2WnXroYi0E3Zb8uPAL+w
-        +29KOaBXwXlmV8lK8XUZIlBFqA==
-X-Google-Smtp-Source: AMrXdXusHYAkFqVSWZOeCX2kB00qq6sKQRQnRIO95SWnimDBnCeHDdsnNIQtdrd11fwtvjRrfJ75vA==
-X-Received: by 2002:a05:600c:47cf:b0:3da:fa3d:cf5e with SMTP id l15-20020a05600c47cf00b003dafa3dcf5emr38621123wmo.28.1674823973760;
-        Fri, 27 Jan 2023 04:52:53 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id x10-20020a05600c420a00b003c6b70a4d69sm4081369wmh.42.2023.01.27.04.52.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Jan 2023 04:52:53 -0800 (PST)
-Message-ID: <2958ec74-cc28-0bf4-36f8-19089487dd48@linaro.org>
-Date:   Fri, 27 Jan 2023 13:52:51 +0100
+        Fri, 27 Jan 2023 08:54:15 -0500
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B12C155
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 05:54:12 -0800 (PST)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30RC1OrS010035;
+        Fri, 27 Jan 2023 13:10:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : in-reply-to : references : date : message-id : content-type :
+ mime-version; s=pp1; bh=mI8i9MTSsYzZV7suqERmHFNF665YMmu1efTHtlRfWHE=;
+ b=aivNL1MD05Rtv47yVCNmilQz/2wYvQjoXMeP3eEAW25CX/hQPDz4COct1JQYs3NM0Uqs
+ 8NTOJsdsUVuBBOGFE2uc2CM6icgaJRXZO8Aa/ncIRZCuLmyUJFjExbtQIDQ+0/3Luyyw
+ ygM/TUIwTjA3U/natamqiTkAUXfk8MjWH2JAD9SqG7w/NQd2iZKzocDoyLy+tB+5YoAg
+ wXpPix9ORiSCcTttdFqt8wMNVBPzosl5HeAqIXeFfd6N6R6P5xu447BHoZkJSSvZpSAL
+ 7WwWEAXWNGor41HMwEiHyu+qfISgCBvYE6QOhJ7bpS23g1rg45xfElV0XCb5JzTyQFhr ZQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nce8m9pcn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Jan 2023 13:10:31 +0000
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30RC3Tje020110;
+        Fri, 27 Jan 2023 13:10:30 GMT
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nce8m9pcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Jan 2023 13:10:30 +0000
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30RAoXBj004500;
+        Fri, 27 Jan 2023 13:10:30 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([9.208.129.120])
+        by ppma01dal.us.ibm.com (PPS) with ESMTPS id 3n87p8k4dk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Jan 2023 13:10:30 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+        by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30RDASUs3605134
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Jan 2023 13:10:28 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 94EAD5805C;
+        Fri, 27 Jan 2023 13:10:28 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 714FC58054;
+        Fri, 27 Jan 2023 13:10:28 +0000 (GMT)
+Received: from localhost (unknown [9.211.111.131])
+        by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Jan 2023 13:10:28 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     Leonardo Bras <leobras.c@gmail.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] powerpc/rtas: Replace one-element arrays with flexible
+ arrays
+In-Reply-To: <20230127085023.271674-1-ajd@linux.ibm.com>
+References: <20230127085023.271674-1-ajd@linux.ibm.com>
+Date:   Fri, 27 Jan 2023 07:10:28 -0600
+Message-ID: <87357wp1h7.fsf@linux.ibm.com>
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: KIbM4aQG0R9_EksZ-y0t-UPOiI6ZCa8Y
+X-Proofpoint-GUID: T1IUKyhZvGmcsYwWc3AR1jPPeD8FaAus
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 1/3] dt-bindings: reserved-memory: ramoops: Update the
- binding
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, keescook@chromium.org,
-        gpiccoli@igalia.com, corbet@lwn.net, tony.luck@intel.com,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
-Cc:     linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <1673611126-13803-1-git-send-email-quic_mojha@quicinc.com>
- <7cb96551-094c-1a68-cc3f-31e4e2e94518@linaro.org>
- <9610a38e-9f39-c514-f535-73434ae8f51a@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <9610a38e-9f39-c514-f535-73434ae8f51a@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-27_08,2023-01-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
+ mlxscore=0 spamscore=0 impostorscore=0 malwarescore=0 suspectscore=0
+ mlxlogscore=999 priorityscore=1501 adultscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301270123
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 27/01/2023 13:29, Mukesh Ojha wrote:
->>> +oneOf:
->>> +  - required:
->>> +      - reg
->>> +
->>> +  - required:
->>> +      - size
->>
->> There is no such property. You cannot require it.
-> 
-> I was thinking, since this size is part reserved-memory.yaml and
-> we have
-> 
-> allOf:
->    - $ref: "reserved-memory.yaml"
-> 
-> Is your comment still applies?
+Andrew Donnellan <ajd@linux.ibm.com> writes:
+> Using a one-element array as a fake flexible array is deprecated.
+>
+> Replace the one-element flexible arrays in rtas-types.h with C99 standard
+> flexible array members instead.
+>
+> This helps us move towards enabling -fstrict-flex-arrays=3 in future.
+>
+> Found using scripts/coccinelle/misc/flexible_array.cocci.
+>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Leonardo Bras <leobras.c@gmail.com>
+> Cc: linux-hardening@vger.kernel.org
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/rtas-types.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/rtas-types.h b/arch/powerpc/include/asm/rtas-types.h
+> index 8df6235d64d1..40ec03a05c0b 100644
+> --- a/arch/powerpc/include/asm/rtas-types.h
+> +++ b/arch/powerpc/include/asm/rtas-types.h
+> @@ -44,7 +44,7 @@ struct rtas_error_log {
+>  	 */
+>  	u8		byte3;			/* General event or error*/
+>  	__be32		extended_log_length;	/* length in bytes */
+> -	unsigned char	buffer[1];		/* Start of extended log */
+> +	unsigned char	buffer[];		/* Start of extended log */
+>  						/* Variable length.      */
+>  };
+>  
+> @@ -85,7 +85,7 @@ struct rtas_ext_event_log_v6 {
+>  					/* that defines the format for	*/
+>  					/* the vendor specific log type	*/
+>  	/* Byte 16-end of log */
+> -	u8 vendor_log[1];		/* Start of vendor specific log	*/
+> +	u8 vendor_log[];		/* Start of vendor specific log	*/
+>  					/* Variable length.		*/
+>  };
 
-Ah, you are right. It's ok.
+I see at least one place that consults the size of one of these structs,
+in get_pseries_errorlog():
 
+	/* Check that we understand the format */
+	if (ext_log_length < sizeof(struct rtas_ext_event_log_v6) || ...
 
-Best regards,
-Krzysztof
-
+Don't all such sites need to be audited/adjusted for changes like this?
