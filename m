@@ -2,135 +2,118 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D03C54EAA
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 08:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C81C54EAA
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 09:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231967AbjA0IvY (ORCPT
+        id S229606AbjA0JAC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 03:51:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48560 "EHLO
+        Fri, 27 Jan 2023 04:00:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231912AbjA0IvX (ORCPT
+        with ESMTP id S229560AbjA0JAB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 03:51:23 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C367F28D1F
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 00:51:18 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30R8a0sm001247;
-        Fri, 27 Jan 2023 08:51:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=Y9ihzWIW0KknL7nTFD8hTLznyRkhnaUIu79qOfASU48=;
- b=TEs26GrbqB1YMWD1wSAk+XMjlnJofyKML3kR2ZK+LlZ5PCaluXdCvv1hyDJK7l05znyQ
- sHqLDDTe3UBWQbR3gcYY0NtRSip5hLNnatnyQyBKycFrgkzzuD4u0fXJV8XcZa9cvMLq
- JVd4vB2JA4iZAr87S5NNf7rPF00K5T0U8OlITanVikBD7cP00tW83HaD9y5WkhHlZdsc
- yS5VVzduiozA4C2zP4U3LHSsVYYaJ34HUsC2D1FK9+36p7WA08KHzA8tOaYe/sUMD0F3
- xbz6jNcz7lrD5DQi5iWAradSsqLtYJdZUQy1QaArwDd6MTh3Jiq12nU1N8V/jI344c+b LQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nc7udcg3k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Jan 2023 08:51:14 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30R8iBaA022528;
-        Fri, 27 Jan 2023 08:51:14 GMT
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nc7udcg33-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Jan 2023 08:51:14 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30R6xQuH013377;
-        Fri, 27 Jan 2023 08:51:11 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3n87p6d7s1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Jan 2023 08:51:11 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30R8p9AE20775532
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Jan 2023 08:51:09 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E57D2004D;
-        Fri, 27 Jan 2023 08:51:09 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4C6E20043;
-        Fri, 27 Jan 2023 08:51:08 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Jan 2023 08:51:08 +0000 (GMT)
-Received: from jarvis-ozlabs-ibm-com.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id CCA6360570;
-        Fri, 27 Jan 2023 19:51:04 +1100 (AEDT)
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org
+        Fri, 27 Jan 2023 04:00:01 -0500
+Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A31227AD
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 01:00:00 -0800 (PST)
+Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-15085b8a2f7so5655481fac.2
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 01:00:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=v2hSS8RRNEiKdXNBkoxjOlqOIzTHsfUutd2F8KxRjVc=;
+        b=WVav3P/BvZwERU61cqc+7WHLADxXI6Tj/8iSeHsbhXgEBenzqZfMA2OUsIrJqHgBO3
+         tJX0kaY3lVVp69kxaCKuAStXjnE8aa3byUFIWDBAwHZLF502pb5/vjbCRsSgcr1l9lMO
+         NMwxf9XmbOJLjgKtXdgeQ5OTcuVfP+R6jBzvHR4x5P92BuF+0e76jDE+O7JLvg1WiVOo
+         9nIrRwlBiftTcCDT0J///SDIAoMeyHLDRIoCT4heiUt5NPg1w/OJb31ahWZqzCeynNTS
+         ryl2vqbWClwoW2t6RCdEIYJGY7eIyAHE3SIgC4znxi+F8efCPt3wQmzKXfF1xIuXhr70
+         61oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v2hSS8RRNEiKdXNBkoxjOlqOIzTHsfUutd2F8KxRjVc=;
+        b=iE4m0jSu2ezBKX8RhEjcCajO0gtU2UgqGdUmyl+OZ13kcrR4rnY5OEMGctHcvHsNEH
+         SLKS/iZSDNyUsFvFOOSySLL7HSLVC0X4bMO1X1doP5jyQVYkx5HsARui8EyE9ET/eUQo
+         61dqdwB4FVOX35Koa0qyiDPRyWWPtUk6gM+mSRaIKjyQo5UCbiATG4NfbiHsiVlcXstt
+         jiTEUd7G9vNUjHi2l1K5qrmlmGXJD8pZSmQpSdC+0fTOMcIpt4nrkQSRsADFSDeCktqN
+         3f9ZHtkBrz89pT6srWjCGQUj7hkFMne3yxz7wIDylJP1whr1p7q8SSk07YLvdRDyM11o
+         g4Sg==
+X-Gm-Message-State: AO0yUKWKZ2WOHcUaJHQ2V2tjWYweLSeWLbRs8TOLkcn8cZCPWQ5cdh0/
+        dmCYCSU2IEQUmzzY0gSY8HA=
+X-Google-Smtp-Source: AK7set/Oq/TjWQdc/27dKCTsZKI2wNCpnXcEMh20i3ydhU6PDEL1mXztICP70raZMnAJsFQIeTWfKg==
+X-Received: by 2002:a05:6870:c08f:b0:163:6d5d:5125 with SMTP id c15-20020a056870c08f00b001636d5d5125mr773029oad.19.1674810000160;
+        Fri, 27 Jan 2023 01:00:00 -0800 (PST)
+Received: from ?IPv6:2804:1b3:a800:6912:c477:c73a:cf7c:3a27? ([2804:1b3:a800:6912:c477:c73a:cf7c:3a27])
+        by smtp.gmail.com with ESMTPSA id w19-20020a9d77d3000000b00661b46cc26bsm1519319otl.9.2023.01.27.00.59.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jan 2023 00:59:59 -0800 (PST)
+Message-ID: <190942891d616be7fcc3f5c5ed41f035f29c4521.camel@gmail.com>
+Subject: Re: [PATCH] powerpc/rtas: Replace one-element arrays with flexible
+ arrays
+From:   Leonardo =?ISO-8859-1?Q?Br=E1s?= <leobras.c@gmail.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
 Cc:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Leonardo Bras <leobras.c@gmail.com>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] powerpc/rtas: Replace one-element arrays with flexible arrays
-Date:   Fri, 27 Jan 2023 19:50:23 +1100
-Message-Id: <20230127085023.271674-1-ajd@linux.ibm.com>
-X-Mailer: git-send-email 2.39.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: x3fhN0IBoVfUuKkGbKQsI8bDfgVtQYnH
-X-Proofpoint-ORIG-GUID: ixfV2kinjspmUBOUFE2rtqbeecYO84rq
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Date:   Fri, 27 Jan 2023 05:59:56 -0300
+In-Reply-To: <20230127085023.271674-1-ajd@linux.ibm.com>
+References: <20230127085023.271674-1-ajd@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.2 
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-27_04,2023-01-27_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- priorityscore=1501 impostorscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 phishscore=0 mlxlogscore=790 suspectscore=0
- adultscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301270079
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Using a one-element array as a fake flexible array is deprecated.
+On Fri, 2023-01-27 at 19:50 +1100, Andrew Donnellan wrote:
+> Using a one-element array as a fake flexible array is deprecated.
+>=20
+> Replace the one-element flexible arrays in rtas-types.h with C99 standard
+> flexible array members instead.
+>=20
+> This helps us move towards enabling -fstrict-flex-arrays=3D3 in future.
+>=20
+> Found using scripts/coccinelle/misc/flexible_array.cocci.
+>=20
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> Cc: Leonardo Bras <leobras.c@gmail.com>
+> Cc: linux-hardening@vger.kernel.org
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/rtas-types.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/arch/powerpc/include/asm/rtas-types.h b/arch/powerpc/include=
+/asm/rtas-types.h
+> index 8df6235d64d1..40ec03a05c0b 100644
+> --- a/arch/powerpc/include/asm/rtas-types.h
+> +++ b/arch/powerpc/include/asm/rtas-types.h
+> @@ -44,7 +44,7 @@ struct rtas_error_log {
+>  	 */
+>  	u8		byte3;			/* General event or error*/
+>  	__be32		extended_log_length;	/* length in bytes */
+> -	unsigned char	buffer[1];		/* Start of extended log */
+> +	unsigned char	buffer[];		/* Start of extended log */
+>  						/* Variable length.      */
+>  };
+> =20
+> @@ -85,7 +85,7 @@ struct rtas_ext_event_log_v6 {
+>  					/* that defines the format for	*/
+>  					/* the vendor specific log type	*/
+>  	/* Byte 16-end of log */
+> -	u8 vendor_log[1];		/* Start of vendor specific log	*/
+> +	u8 vendor_log[];		/* Start of vendor specific log	*/
+>  					/* Variable length.		*/
+>  };
+> =20
 
-Replace the one-element flexible arrays in rtas-types.h with C99 standard
-flexible array members instead.
+LGTM.
 
-This helps us move towards enabling -fstrict-flex-arrays=3 in future.
-
-Found using scripts/coccinelle/misc/flexible_array.cocci.
-
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Leonardo Bras <leobras.c@gmail.com>
-Cc: linux-hardening@vger.kernel.org
-Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/79
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
----
- arch/powerpc/include/asm/rtas-types.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/rtas-types.h b/arch/powerpc/include/asm/rtas-types.h
-index 8df6235d64d1..40ec03a05c0b 100644
---- a/arch/powerpc/include/asm/rtas-types.h
-+++ b/arch/powerpc/include/asm/rtas-types.h
-@@ -44,7 +44,7 @@ struct rtas_error_log {
- 	 */
- 	u8		byte3;			/* General event or error*/
- 	__be32		extended_log_length;	/* length in bytes */
--	unsigned char	buffer[1];		/* Start of extended log */
-+	unsigned char	buffer[];		/* Start of extended log */
- 						/* Variable length.      */
- };
- 
-@@ -85,7 +85,7 @@ struct rtas_ext_event_log_v6 {
- 					/* that defines the format for	*/
- 					/* the vendor specific log type	*/
- 	/* Byte 16-end of log */
--	u8 vendor_log[1];		/* Start of vendor specific log	*/
-+	u8 vendor_log[];		/* Start of vendor specific log	*/
- 					/* Variable length.		*/
- };
- 
--- 
-2.39.1
-
+FWIW:
+Reviewed-by: Leonardo Bras <leobras.c@gmail.com>
