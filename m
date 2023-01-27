@@ -2,136 +2,158 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC2FC54EAA
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 13:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20730C61DA4
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 15:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233158AbjA0NyP (ORCPT
+        id S234257AbjA0PLe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 08:54:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
+        Fri, 27 Jan 2023 10:11:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbjA0NyP (ORCPT
+        with ESMTP id S234253AbjA0PLe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 08:54:15 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B12C155
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 05:54:12 -0800 (PST)
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30RC1OrS010035;
-        Fri, 27 Jan 2023 13:10:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : in-reply-to : references : date : message-id : content-type :
- mime-version; s=pp1; bh=mI8i9MTSsYzZV7suqERmHFNF665YMmu1efTHtlRfWHE=;
- b=aivNL1MD05Rtv47yVCNmilQz/2wYvQjoXMeP3eEAW25CX/hQPDz4COct1JQYs3NM0Uqs
- 8NTOJsdsUVuBBOGFE2uc2CM6icgaJRXZO8Aa/ncIRZCuLmyUJFjExbtQIDQ+0/3Luyyw
- ygM/TUIwTjA3U/natamqiTkAUXfk8MjWH2JAD9SqG7w/NQd2iZKzocDoyLy+tB+5YoAg
- wXpPix9ORiSCcTttdFqt8wMNVBPzosl5HeAqIXeFfd6N6R6P5xu447BHoZkJSSvZpSAL
- 7WwWEAXWNGor41HMwEiHyu+qfISgCBvYE6QOhJ7bpS23g1rg45xfElV0XCb5JzTyQFhr ZQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nce8m9pcn-1
+        Fri, 27 Jan 2023 10:11:34 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3929080179;
+        Fri, 27 Jan 2023 07:11:23 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30RDlNHZ021451;
+        Fri, 27 Jan 2023 15:11:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=91idBUbdIfOr0IZ3DR2hHSVL5JCnzTMJNpoHN5YShWg=;
+ b=hS2IeEjNEoZ5VmW+mtHdbH/aEeFblPqGHt95S/rSTSeZTNhk4eFE+EI2NQcReFbm31SC
+ J2du9HnKeWtqszCFQbx3aY4znIP1OYYWpK/0WIcLN1dOAo0v6WyQWO6UrZqGQ/5cMnXe
+ i+Op+q6xnskzJgdwEaSFV/14mzaGxsr2b/4RU4EE6o2pHhSOBYntF5W56gO7pMcevUPq
+ VEOTuz4kWXpJZ4SeMECoO6pKDFfR/OU8NgB1jVS/zLBvevYBXNgZt0N3L1bZUqTWWx1x
+ q07bk0O1PYpGvhv1KcjWokwJUeysLrrGfttBdaKgICRQIFd+uF7Q4MJeabE5dAxcBlnP fQ== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nbyma1m4p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Jan 2023 13:10:31 +0000
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30RC3Tje020110;
-        Fri, 27 Jan 2023 13:10:30 GMT
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nce8m9pcb-1
+        Fri, 27 Jan 2023 15:11:09 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30RFB8Ch024156
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Jan 2023 13:10:30 +0000
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30RAoXBj004500;
-        Fri, 27 Jan 2023 13:10:30 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([9.208.129.120])
-        by ppma01dal.us.ibm.com (PPS) with ESMTPS id 3n87p8k4dk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 27 Jan 2023 13:10:30 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-        by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30RDASUs3605134
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Jan 2023 13:10:28 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94EAD5805C;
-        Fri, 27 Jan 2023 13:10:28 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 714FC58054;
-        Fri, 27 Jan 2023 13:10:28 +0000 (GMT)
-Received: from localhost (unknown [9.211.111.131])
-        by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 27 Jan 2023 13:10:28 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     Andrew Donnellan <ajd@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     Leonardo Bras <leobras.c@gmail.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] powerpc/rtas: Replace one-element arrays with flexible
- arrays
-In-Reply-To: <20230127085023.271674-1-ajd@linux.ibm.com>
-References: <20230127085023.271674-1-ajd@linux.ibm.com>
-Date:   Fri, 27 Jan 2023 07:10:28 -0600
-Message-ID: <87357wp1h7.fsf@linux.ibm.com>
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: KIbM4aQG0R9_EksZ-y0t-UPOiI6ZCa8Y
-X-Proofpoint-GUID: T1IUKyhZvGmcsYwWc3AR1jPPeD8FaAus
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Fri, 27 Jan 2023 15:11:08 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Fri, 27 Jan 2023 07:11:05 -0800
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <linux-hardening@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     Mukesh Ojha <quic_mojha@quicinc.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Subject: [PATCH v3 1/2] dt-bindings: ramoops: Inherit reserve memory property
+Date:   Fri, 27 Jan 2023 20:40:35 +0530
+Message-ID: <1674832236-6754-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: mBHyGmpBQl6jFonsw6XyjZMtziCOeB7h
+X-Proofpoint-GUID: mBHyGmpBQl6jFonsw6XyjZMtziCOeB7h
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-27_08,2023-01-27_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 bulkscore=0
- mlxscore=0 spamscore=0 impostorscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=999 priorityscore=1501 adultscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301270123
+ definitions=2023-01-27_09,2023-01-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2212070000 definitions=main-2301270143
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Andrew Donnellan <ajd@linux.ibm.com> writes:
-> Using a one-element array as a fake flexible array is deprecated.
->
-> Replace the one-element flexible arrays in rtas-types.h with C99 standard
-> flexible array members instead.
->
-> This helps us move towards enabling -fstrict-flex-arrays=3 in future.
->
-> Found using scripts/coccinelle/misc/flexible_array.cocci.
->
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Leonardo Bras <leobras.c@gmail.com>
-> Cc: linux-hardening@vger.kernel.org
-> Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/79
-> Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/rtas-types.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/rtas-types.h b/arch/powerpc/include/asm/rtas-types.h
-> index 8df6235d64d1..40ec03a05c0b 100644
-> --- a/arch/powerpc/include/asm/rtas-types.h
-> +++ b/arch/powerpc/include/asm/rtas-types.h
-> @@ -44,7 +44,7 @@ struct rtas_error_log {
->  	 */
->  	u8		byte3;			/* General event or error*/
->  	__be32		extended_log_length;	/* length in bytes */
-> -	unsigned char	buffer[1];		/* Start of extended log */
-> +	unsigned char	buffer[];		/* Start of extended log */
->  						/* Variable length.      */
->  };
->  
-> @@ -85,7 +85,7 @@ struct rtas_ext_event_log_v6 {
->  					/* that defines the format for	*/
->  					/* the vendor specific log type	*/
->  	/* Byte 16-end of log */
-> -	u8 vendor_log[1];		/* Start of vendor specific log	*/
-> +	u8 vendor_log[];		/* Start of vendor specific log	*/
->  					/* Variable length.		*/
->  };
+The reserved memory region for ramoops is assumed to be at a
+fixed and known location when read from the devicetree. This
+is not desirable in an environment where it is preferred the
+region to be dynamically allocated at runtime, as opposed to
+being fixed at compile time.
 
-I see at least one place that consults the size of one of these structs,
-in get_pseries_errorlog():
+So, update the ramoops binding by inheriting some reserve memory
+property to allocate the ramoops region dynamically.
 
-	/* Check that we understand the format */
-	if (ext_log_length < sizeof(struct rtas_ext_event_log_v6) || ...
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+---
+Changes in v3:
+ - Fixed yaml error and updated commit text as per comment.
 
-Don't all such sites need to be audited/adjusted for changes like this?
+Change in v2:
+  - Added this patch as per changes going to be done in patch 3/3
+
+ .../bindings/reserved-memory/ramoops.yaml          | 34 ++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+index 0391871..8741626 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+@@ -10,7 +10,8 @@ description: |
+   ramoops provides persistent RAM storage for oops and panics, so they can be
+   recovered after a reboot. This is a child-node of "/reserved-memory", and
+   is named "ramoops" after the backend, rather than "pstore" which is the
+-  subsystem.
++  subsystem. This region can be reserved both statically or dynamically by
++  using appropriate property in device tree.
+ 
+   Parts of this storage may be set aside for other persistent log buffers, such
+   as kernel log messages, or for optional ECC error-correction data.  The total
+@@ -112,7 +113,13 @@ unevaluatedProperties: false
+ 
+ required:
+   - compatible
+-  - reg
++
++oneOf:
++  - required:
++      - reg
++
++  - required:
++      - size
+ 
+ anyOf:
+   - required: [record-size]
+@@ -142,3 +149,26 @@ examples:
+             };
+         };
+     };
++
++  - |
++    / {
++        compatible = "foo";
++        model = "foo";
++        #address-cells = <1>;
++        #size-cells = <1>;
++
++        reserved-memory {
++            #address-cells = <1>;
++            #size-cells = <1>;
++            ranges;
++
++            ramoops: ramoops_region {
++                compatible = "ramoops";
++                alloc-ranges = <0x00000000 0xffffffff>;
++                size = <0x0 0x10000>;       /* 64kB */
++                console-size = <0x8000>;    /* 32kB */
++                record-size = <0x400>;      /*  1kB */
++                ecc-size = <16>;
++            };
++        };
++    };
+-- 
+2.7.4
+
