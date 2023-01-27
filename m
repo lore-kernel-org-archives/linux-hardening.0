@@ -2,177 +2,159 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA1BC38142
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 19:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D58C38142
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 19:58:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231740AbjA0TpX (ORCPT
+        id S233207AbjA0T63 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 14:45:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52046 "EHLO
+        Fri, 27 Jan 2023 14:58:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232501AbjA0Tok (ORCPT
+        with ESMTP id S232642AbjA0T6J (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 14:44:40 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365A384F91
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 11:43:22 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id 144so3983960pfv.11
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 11:43:22 -0800 (PST)
+        Fri, 27 Jan 2023 14:58:09 -0500
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987D81BAF1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 11:56:09 -0800 (PST)
+Received: by mail-qt1-x829.google.com with SMTP id s4so4998090qtx.6
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 11:56:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/oF44rT15tnjTMjQqM9aBjASabRej4gnAjmMBpVIsHQ=;
-        b=av1vpqTXDSdm9xZW/Pg/m0TrwGFvEz3WN0oSIPaCtlst7AUmhhMvzYihzOQ3jpxqEK
-         HrDRzoWFLwx63eVyZyD+Dmu4KB8bgEP7vuGqBPqTd0ggMBMz0OCaE7TPLICA+PlL0OaW
-         fuHtg+LAkdqb5FNHESN/k20N8PGx4fxm5NKkY=
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yCbWVDeCBmv0tLQetS3EwIRtSgUEsqrpXNIcWwZitCE=;
+        b=Oq2KyBNFkKCXFSiv7V8jYK5N7BWEm+bEaPdyaX7pikQru8J5TXsKu7vUcBAug4HHGl
+         wqfILDWXVPjBz2g10jTsfA7RHNmqeO8+n9fL6BvMP5T2d6yR1Fd0NeScYNFNExZmRiPp
+         FG7Qf0o52jSY4m401DXdfWpolnC9HTglszHWo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/oF44rT15tnjTMjQqM9aBjASabRej4gnAjmMBpVIsHQ=;
-        b=fQpHaP2mKryqx0pkpFiZxiLFl9wvr0SsPSPXYvVZDhDAicBU2zJXi+0xML81CNAaGK
-         O5Zug9huckAS0/EBXzqPH8Lfohu1B6Ky/1AswR2WcBpCtE66KVRpvYmX286uibKfM4DG
-         AX7BeycIu3zCbvNTXV7xtoNvW9hnN9oZy6S3UpG3U7WLifq04oW9plY+U2lL0M9JPhGo
-         VZtd9YQdYsXG/VvcWpqtUA2W51Tq5Sa3CpKkg8UJhTNYGu6br1vgXxbCubxpMsNZvLal
-         TCztyE2y0iURa0YCjPphdtQKZ6itkO4YkvcnhoGIEJDNaVPnTWG7+ns+swRo7mFLBDvW
-         pSWw==
-X-Gm-Message-State: AO0yUKUQyaW2KL9nUQiqjLCog55Vs8+g17yCDC7livftCJxcywamgyHi
-        8k6KtI92OsL6Zg1GMPepJnwn5QMqa5LKGy7+
-X-Google-Smtp-Source: AK7set+Z9W6Rrw9FWwFFm8G6j0bcNgI/h1gaBfNaPxU5jp1YhAt6lKHsciXU4RrC0pla1N+iDmml2A==
-X-Received: by 2002:a05:6a00:2484:b0:592:514f:636d with SMTP id c4-20020a056a00248400b00592514f636dmr7324690pfv.22.1674848544849;
-        Fri, 27 Jan 2023 11:42:24 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yCbWVDeCBmv0tLQetS3EwIRtSgUEsqrpXNIcWwZitCE=;
+        b=CYc0Nwxj79hSZnxYsSExB6bDbazL6DANSzGyCd4S4TV/5nD36QlQ62RiZf1Wqilza3
+         n/sOoDRr97aYEdGqVpiobGP4EY2TOOqr4V5UbSITW1NSgx1ll5J0Av0gbfZGEB6pEBoP
+         6aB85frph4VexyGagP96MBJbjhZV6xy9JbmCD9PqFPARl4IfS/6QQBRphOVMvB5f3bZe
+         95JMy3u01BRt+qEBcGq1H3qDolZ/R+Go/AEhItOOxvKIWJn47K+JBvRcEcvePfmuQOZC
+         Ju9hkuq23/Cs5C6ixifPYW14h/0P228w51CiRo43hE6DI7VI25GQeHpelaEf96o4pL/h
+         PVWg==
+X-Gm-Message-State: AFqh2kpx+PjR5fXiJz47E440/foySunBvKvBY4c07Tzebvq/Y0g3HdWA
+        4TGoSIC52/4Rdwzad6rnjHhPbhEPTenwrhU3
+X-Google-Smtp-Source: AK7set9701lFYJloTnasN/YHIzeLJ41Q0Ii7zI4q0jj6SS2KU0q1aZohz1YubDz5Xez2Pa2deR4L+g==
+X-Received: by 2002:a17:903:2345:b0:196:5d8d:2d6f with SMTP id c5-20020a170903234500b001965d8d2d6fmr2292522plh.13.1674848860829;
+        Fri, 27 Jan 2023 11:47:40 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id i19-20020aa796f3000000b0058dbd7a5e0esm3002526pfq.89.2023.01.27.11.42.24
+        by smtp.gmail.com with ESMTPSA id t1-20020aa79461000000b0058da7e58008sm3016917pfq.36.2023.01.27.11.47.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 11:42:24 -0800 (PST)
-Date:   Fri, 27 Jan 2023 11:42:23 -0800
+        Fri, 27 Jan 2023 11:47:40 -0800 (PST)
+Date:   Fri, 27 Jan 2023 11:47:39 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/nouveau/disp: Fix nvif_outp_acquire_dp() argument
- size
-Message-ID: <202301271141.6741F43@keescook>
-References: <20221127183036.never.139-kees@kernel.org>
- <202301251214.8E52414D0@keescook>
- <9c53c624604b7415ceeedf7222e78abc2c64430f.camel@redhat.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        devel@acpica.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ACPICA: Replace fake flexible arrays with flexible
+ array members
+Message-ID: <202301271146.7DC8CAE113@keescook>
+References: <20230127191621.gonna.262-kees@kernel.org>
+ <CAJZ5v0iV5wK4gsoadmWOyof_vzaAOx8oX0DJu+1-bCQNdNJtBQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9c53c624604b7415ceeedf7222e78abc2c64430f.camel@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0iV5wK4gsoadmWOyof_vzaAOx8oX0DJu+1-bCQNdNJtBQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 04:24:19PM -0500, Lyude Paul wrote:
-> Sorry! I've been pretty busy until now, this is:
+On Fri, Jan 27, 2023 at 08:43:05PM +0100, Rafael J. Wysocki wrote:
+> On Fri, Jan 27, 2023 at 8:16 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > One-element arrays (and multi-element arrays being treated as
+> > dynamically sized) are deprecated[1] and are being replaced with
+> > flexible array members in support of the ongoing efforts to tighten the
+> > FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
+> > with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
+> >
+> > Replace one-element array with flexible-array member in struct
+> > acpi_resource_extended_irq. Replace 4-byte fixed-size array with 4-byte
+> > padding in a union with a flexible-array member in struct
+> > acpi_pci_routing_table.
+> >
+> > This results in no differences in binary output.
+> >
+> > Link: https://github.com/acpica/acpica/pull/813
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> > v2: include stddef.h and switch to __DECLARE_FLEX_ARRAY()
+> > v1: https://lore.kernel.org/lkml/20221118181538.never.225-kees@kernel.org/
+> > ---
+> >  include/acpi/acrestyp.h | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/acpi/acrestyp.h b/include/acpi/acrestyp.h
+> > index a7fb8ddb3dc6..250046a7c870 100644
+> > --- a/include/acpi/acrestyp.h
+> > +++ b/include/acpi/acrestyp.h
+> > @@ -10,6 +10,8 @@
+> >  #ifndef __ACRESTYP_H__
+> >  #define __ACRESTYP_H__
+> >
+> > +#include <linux/stddef.h>
+> > +
+> >  /*
+> >   * Definitions for Resource Attributes
+> >   */
+> > @@ -332,7 +334,7 @@ struct acpi_resource_extended_irq {
+> >         u8 wake_capable;
+> >         u8 interrupt_count;
+> >         struct acpi_resource_source resource_source;
+> > -       u32 interrupts[1];
+> > +       u32 interrupts[];
+> >  };
+> >
+> >  struct acpi_resource_generic_register {
+> > @@ -679,7 +681,10 @@ struct acpi_pci_routing_table {
+> >         u32 pin;
+> >         u64 address;            /* here for 64-bit alignment */
+> >         u32 source_index;
+> > -       char source[4];         /* pad to 64 bits so sizeof() works in all cases */
+> > +       union {
+> > +               char pad[4];    /* pad to 64 bits so sizeof() works in all cases */
+> > +               __DECLARE_FLEX_ARRAY(char, source);
+> > +       };
+> >  };
+> >
+> >  #endif                         /* __ACRESTYP_H__ */
+> > --
 > 
-> Reviewed-by: Lyude Paul <lyude@redhat.com>
+> With this applied I get:
 > 
-> Let me know if you've pushed it already or if you want me to push it to drm-
-> misc
+> rafael@gratch:~/work/linux-pm/tools/power/acpi> make
+>  DESCEND tools/acpidbg
+>  MKDIR    include
+>  CP       include
+>  CC       tools/acpidbg/acpidbg.o
+> In file included from
+> /scratch/rafael/work/linux-pm/tools/power/acpi/include/acpi/acpi.h:27:0,
+>                 from acpidbg.c:9:
+> /scratch/rafael/work/linux-pm/tools/power/acpi/include/acpi/acrestyp.h:686:3:
+> error: expected specif
+> ier-qualifier-list before ‘__DECLARE_FLEX_ARRAY’
+>   __DECLARE_FLEX_ARRAY(char, source);
+>   ^~~~~~~~~~~~~~~~~~~~
+> make[1]: *** [../../Makefile.rules:25:
+> /scratch/rafael/work/linux-pm/tools/power/acpi/tools/acpidbg/
+> acpidbg.o] Error 1
+> make: *** [Makefile:18: acpidbg] Error 2
+> 
+> The tools build successfully without it.
 
-Either way is fine. I'm currently carrying it, but I can easily drop it
-if you prefer it go via drm-misc.
-
-Thanks!
-
--Kees
-
-> 
-> On Wed, 2023-01-25 at 12:15 -0800, Kees Cook wrote:
-> > Ping. I'll take this via my tree unless someone else wants to take it...
-> > 
-> > On Sun, Nov 27, 2022 at 10:30:41AM -0800, Kees Cook wrote:
-> > > Both Coverity and GCC with -Wstringop-overflow noticed that
-> > > nvif_outp_acquire_dp() accidentally defined its second argument with 1
-> > > additional element:
-> > > 
-> > > drivers/gpu/drm/nouveau/dispnv50/disp.c: In function 'nv50_pior_atomic_enable':
-> > > drivers/gpu/drm/nouveau/dispnv50/disp.c:1813:17: error: 'nvif_outp_acquire_dp' accessing 16 bytes in a region of size 15 [-Werror=stringop-overflow=]
-> > >  1813 |                 nvif_outp_acquire_dp(&nv_encoder->outp, nv_encoder->dp.dpcd, 0, 0, false, false);
-> > >       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > drivers/gpu/drm/nouveau/dispnv50/disp.c:1813:17: note: referencing argument 2 of type 'u8[16]' {aka 'unsigned char[16]'}
-> > > drivers/gpu/drm/nouveau/include/nvif/outp.h:24:5: note: in a call to function 'nvif_outp_acquire_dp'
-> > >    24 | int nvif_outp_acquire_dp(struct nvif_outp *, u8 dpcd[16],
-> > >       |     ^~~~~~~~~~~~~~~~~~~~
-> > > 
-> > > Avoid these warnings by defining the argument size using the matching
-> > > define (DP_RECEIVER_CAP_SIZE, 15) instead of having it be a literal
-> > > (and incorrect) value (16).
-> > > 
-> > > Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
-> > > Addresses-Coverity-ID: 1527269 ("Memory - corruptions")
-> > > Addresses-Coverity-ID: 1527268 ("Memory - corruptions")
-> > > Link: https://lore.kernel.org/lkml/202211100848.FFBA2432@keescook/
-> > > Link: https://lore.kernel.org/lkml/202211100848.F4C2819BB@keescook/
-> > > Fixes: 813443721331 ("drm/nouveau/disp: move DP link config into acquire")
-> > > Cc: Ben Skeggs <bskeggs@redhat.com>
-> > > Cc: Karol Herbst <kherbst@redhat.com>
-> > > Cc: Lyude Paul <lyude@redhat.com>
-> > > Cc: David Airlie <airlied@gmail.com>
-> > > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > > Cc: Dave Airlie <airlied@redhat.com>
-> > > Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-> > > Cc: dri-devel@lists.freedesktop.org
-> > > Cc: nouveau@lists.freedesktop.org
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  drivers/gpu/drm/nouveau/include/nvif/outp.h | 3 ++-
-> > >  drivers/gpu/drm/nouveau/nvif/outp.c         | 2 +-
-> > >  2 files changed, 3 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/nouveau/include/nvif/outp.h b/drivers/gpu/drm/nouveau/include/nvif/outp.h
-> > > index 45daadec3c0c..fa76a7b5e4b3 100644
-> > > --- a/drivers/gpu/drm/nouveau/include/nvif/outp.h
-> > > +++ b/drivers/gpu/drm/nouveau/include/nvif/outp.h
-> > > @@ -3,6 +3,7 @@
-> > >  #define __NVIF_OUTP_H__
-> > >  #include <nvif/object.h>
-> > >  #include <nvif/if0012.h>
-> > > +#include <drm/display/drm_dp.h>
-> > >  struct nvif_disp;
-> > >  
-> > >  struct nvif_outp {
-> > > @@ -21,7 +22,7 @@ int nvif_outp_acquire_rgb_crt(struct nvif_outp *);
-> > >  int nvif_outp_acquire_tmds(struct nvif_outp *, int head,
-> > >  			   bool hdmi, u8 max_ac_packet, u8 rekey, u8 scdc, bool hda);
-> > >  int nvif_outp_acquire_lvds(struct nvif_outp *, bool dual, bool bpc8);
-> > > -int nvif_outp_acquire_dp(struct nvif_outp *, u8 dpcd[16],
-> > > +int nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[DP_RECEIVER_CAP_SIZE],
-> > >  			 int link_nr, int link_bw, bool hda, bool mst);
-> > >  void nvif_outp_release(struct nvif_outp *);
-> > >  int nvif_outp_infoframe(struct nvif_outp *, u8 type, struct nvif_outp_infoframe_v0 *, u32 size);
-> > > diff --git a/drivers/gpu/drm/nouveau/nvif/outp.c b/drivers/gpu/drm/nouveau/nvif/outp.c
-> > > index 7da39f1eae9f..c24bc5eae3ec 100644
-> > > --- a/drivers/gpu/drm/nouveau/nvif/outp.c
-> > > +++ b/drivers/gpu/drm/nouveau/nvif/outp.c
-> > > @@ -127,7 +127,7 @@ nvif_outp_acquire(struct nvif_outp *outp, u8 proto, struct nvif_outp_acquire_v0
-> > >  }
-> > >  
-> > >  int
-> > > -nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[16],
-> > > +nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[DP_RECEIVER_CAP_SIZE],
-> > >  		     int link_nr, int link_bw, bool hda, bool mst)
-> > >  {
-> > >  	struct nvif_outp_acquire_v0 args;
-> > > -- 
-> > > 2.34.1
-> > > 
-> > 
-> 
-> -- 
-> Cheers,
->  Lyude Paul (she/her)
->  Software Engineer at Red Hat
-> 
+I think a "make clean" is needed first? It builds for me...
 
 -- 
 Kees Cook
