@@ -2,77 +2,185 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61A5C38142
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 10:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F2AC61DA7
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 12:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjA0K6g (ORCPT
+        id S232603AbjA0MaQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 05:58:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40398 "EHLO
+        Fri, 27 Jan 2023 07:30:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229696AbjA0K6f (ORCPT
+        with ESMTP id S232525AbjA0MaN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 05:58:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA964EE9;
-        Fri, 27 Jan 2023 02:58:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4B71961AC0;
-        Fri, 27 Jan 2023 10:58:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97870C433EF;
-        Fri, 27 Jan 2023 10:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674817100;
-        bh=5yeFRjegMFjzUwQix33riQSeMG0naSPmYrlj8IGsT6A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ty/mQCdkfAbrJ6BjTVRqNpIspHZ9G5ptMGC15r09BTJZ9wIuuxRml/R3NfH++3Mt+
-         jdwcYyiaG9l1SlDC1Y7rt9x7nogWsu0YX5MYyI7TwhNY3si/fnNkXk61B5ML41U/Wf
-         m4MzY4SslhuZQAskqNbugyiIkhClTGIY3Vg77v+l1+Z62pukhhk2t6hlXCvgFNzbvJ
-         F2jzWysIlgtV0eiqXeNNPP2ctE5vTwRTIPfuKbBNmBRCL63bnyx6zX1wrmgs3Cm809
-         tU67SVpZZwIkrkz3TPkCSzmCzigaJ54MiZAW2H5TtXuuElHyR2N9PqvafoJiC9zTBV
-         ZEnbHTsDnVxog==
-Date:   Fri, 27 Jan 2023 11:58:15 +0100
-From:   Christian Brauner <brauner@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jann Horn <jannh@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH] fs: Use CHECK_DATA_CORRUPTION() when kernel bugs are
- detected
-Message-ID: <20230127105815.adgqe2opfzruxk7e@wittgenstein>
-References: <20230116191425.458864-1-jannh@google.com>
- <202301260835.61F1C2CA4D@keescook>
+        Fri, 27 Jan 2023 07:30:13 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F7E30E4;
+        Fri, 27 Jan 2023 04:30:10 -0800 (PST)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30RBv4YZ024366;
+        Fri, 27 Jan 2023 12:29:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=6601227chkLYrNzE4yqvw/mKCTmKQwmwYAxGEzjr2CQ=;
+ b=Y9niUPaE3hZuVQWSxiobmtfNmBRfp+eLGAbpXsS15i4iTXY48dxoIQQLnDZnEVVilQcB
+ JNAajD6af9LzP6ZzlIucfcXZ1PTanPCE0++n+oJ1a/OX2E+UhUBQQy3X96U9WiRWEe4z
+ IE/ci/0l+V8LznIj6BrmAeCpqUWCfFy+eEVilUim73cPensHbkJlnzyhjt8ByUeKYsmo
+ DtUlMXB56m2XiknA4zlgCq4AEHLfuAsX6oZakH2KZ5Td5rUIEDlvs9XlEln/Ipd8PHar
+ 9LjoSsVVR0+QrXPRAykgvQ8XgSTLiMft2YtqQjK+9JsscWpAomq3TzQprR6WjzGh1rOf +g== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nbd7au6vb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Jan 2023 12:29:56 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30RCTu79024155
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Jan 2023 12:29:56 GMT
+Received: from [10.216.47.84] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 27 Jan
+ 2023 04:29:52 -0800
+Message-ID: <9610a38e-9f39-c514-f535-73434ae8f51a@quicinc.com>
+Date:   Fri, 27 Jan 2023 17:59:49 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202301260835.61F1C2CA4D@keescook>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v2 1/3] dt-bindings: reserved-memory: ramoops: Update the
+ binding
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <keescook@chromium.org>, <gpiccoli@igalia.com>, <corbet@lwn.net>,
+        <tony.luck@intel.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>
+CC:     <linux-hardening@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <1673611126-13803-1-git-send-email-quic_mojha@quicinc.com>
+ <7cb96551-094c-1a68-cc3f-31e4e2e94518@linaro.org>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <7cb96551-094c-1a68-cc3f-31e4e2e94518@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: tPkkxhmOhWHw67xDJR3jJqJHnWT6pnn7
+X-Proofpoint-GUID: tPkkxhmOhWHw67xDJR3jJqJHnWT6pnn7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-27_08,2023-01-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
+ clxscore=1015 priorityscore=1501 phishscore=0 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2301270117
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 08:35:49AM -0800, Kees Cook wrote:
-> On Mon, Jan 16, 2023 at 08:14:25PM +0100, Jann Horn wrote:
-> > Currently, filp_close() and generic_shutdown_super() use printk() to log
-> > messages when bugs are detected. This is problematic because infrastructure
-> > like syzkaller has no idea that this message indicates a bug.
-> > In addition, some people explicitly want their kernels to BUG() when kernel
-> > data corruption has been detected (CONFIG_BUG_ON_DATA_CORRUPTION).
-> > And finally, when generic_shutdown_super() detects remaining inodes on a
-> > system without CONFIG_BUG_ON_DATA_CORRUPTION, it would be nice if later
-> > accesses to a busy inode would at least crash somewhat cleanly rather than
-> > walking through freed memory.
-> > 
-> > To address all three, use CHECK_DATA_CORRUPTION() when kernel bugs are
-> > detected.
+Hi,
+
+On 1/13/2023 5:34 PM, Krzysztof Kozlowski wrote:
+> Subject: drop second/last, redundant "binding". The "dt-bindings" prefix
+> is already stating that these are bindings.
 > 
-> Seems reasonable to me. I'll carry this unless someone else speaks up.
+> Your subject says nothing. Everything is "update".
+> 
+> On 13/01/2023 12:58, Mukesh Ojha wrote:
+>> Update the ramoops region binding document with details
+>> like region can also be reserved dynamically apart from
+>> reserving it statically.
+> 
+> So what exactly can be here reserved dynamically? And what does it mean
+> 'dynamically'? By whom? How is this property of hardware (not OS)?
+> 
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>> Change in v2:
+>>    - Added this patch as per changes going to be done in patch 3/3
+>>
+>>   .../bindings/reserved-memory/ramoops.yaml          | 34 ++++++++++++++++++++--
+>>   1 file changed, 32 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+>> index 0391871..54e46e8 100644
+>> --- a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+>> +++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+>> @@ -10,7 +10,8 @@ description: |
+>>     ramoops provides persistent RAM storage for oops and panics, so they can be
+>>     recovered after a reboot. This is a child-node of "/reserved-memory", and
+>>     is named "ramoops" after the backend, rather than "pstore" which is the
+>> -  subsystem.
+>> +  subsystem. This region can be reserved both statically or dynamically by
+>> +  using appropriate property in device tree.
+>>   
+>>     Parts of this storage may be set aside for other persistent log buffers, such
+>>     as kernel log messages, or for optional ECC error-correction data.  The total
+>> @@ -112,7 +113,13 @@ unevaluatedProperties: false
+>>   
+>>   required:
+>>     - compatible
+>> -  - reg
+>> +
+>> +oneOf:
+>> +  - required:
+>> +      - reg
+>> +
+>> +  - required:
+>> +      - size
+> 
+> There is no such property. You cannot require it.
 
-I've already picked this into a branch with other fs changes for coming cycle.
+I was thinking, since this size is part reserved-memory.yaml and
+we have
 
-Al, please tell me in case you end up picking this up and I'll drop it ofc.
+allOf:
+   - $ref: "reserved-memory.yaml"
 
-Christian
+Is your comment still applies?
+
+-Mukesh
+> 
+>>   
+>>   anyOf:
+>>     - required: [record-size]
+>> @@ -142,3 +149,26 @@ examples:
+>>               };
+>>           };
+>>       };
+>> +
+>> +  - |
+>> +    / {
+>> +        compatible = "foo";
+>> +        model = "foo";
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        reserved-memory {
+>> +            #address-cells = <2>;
+>> +            #size-cells = <2>;
+>> +            ranges;
+>> +
+>> +            ramoops: ramoops_region {
+> 
+> Node names should be generic, no underscores in node names.
+> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+> 
+> Any reason in naming it differently then existing one? You have there
+> example.
+> 
+>> +                compatible = "ramoops";
+>> +                alloc-ranges = <0x0 0x00000000 0xffffffff 0xffffffff>;
+>> +                size = <0x0 0x10000>;       /* 64kB */
+>> +                console-size = <0x8000>;    /* 32kB */
+>> +                record-size = <0x400>;      /*  1kB */
+>> +                ecc-size = <16>;
+>> +            };
+>> +        };
+>> +    };
+> 
+> Best regards,
+> Krzysztof
+> 
