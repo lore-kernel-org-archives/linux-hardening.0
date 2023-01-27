@@ -2,132 +2,177 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5407CC54EAA
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 19:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA1BC38142
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 19:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230195AbjA0TYB (ORCPT
+        id S231740AbjA0TpX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 14:24:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
+        Fri, 27 Jan 2023 14:45:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229701AbjA0TYA (ORCPT
+        with ESMTP id S232501AbjA0Tok (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 14:24:00 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7087E6F5
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 11:23:58 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id jm10so5973602plb.13
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 11:23:58 -0800 (PST)
+        Fri, 27 Jan 2023 14:44:40 -0500
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365A384F91
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 11:43:22 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id 144so3983960pfv.11
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 11:43:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W2ttKujJthD1r1Z4ZbanCKPljAQjrJZL0v7kGBHOnxQ=;
-        b=LIT8FrflzvmNjKlokavj8t9qklGf2z+fC5ZXmVTg/V1WPzhjXoIxMLl3TGOd9P1czB
-         0P6t8CHdT3hPjs2p2eC2FRuQZZNuA72Uo5CW4xKyEWE3u69ZSA9phUlewzcVNiluTUFv
-         N1GZJ1p9tvn3GosvLI7w5vR5yA3G9r1uI5w7A=
+        bh=/oF44rT15tnjTMjQqM9aBjASabRej4gnAjmMBpVIsHQ=;
+        b=av1vpqTXDSdm9xZW/Pg/m0TrwGFvEz3WN0oSIPaCtlst7AUmhhMvzYihzOQ3jpxqEK
+         HrDRzoWFLwx63eVyZyD+Dmu4KB8bgEP7vuGqBPqTd0ggMBMz0OCaE7TPLICA+PlL0OaW
+         fuHtg+LAkdqb5FNHESN/k20N8PGx4fxm5NKkY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W2ttKujJthD1r1Z4ZbanCKPljAQjrJZL0v7kGBHOnxQ=;
-        b=O2OYj4Cn6IdbwfnpvrEhfj4PW/JwBtW6K9lb19JSOPE1zQ80/ZjG7nwRadPlMrJ/e3
-         40MY6GnzLVDp1TsR/CrgrSJghCxrz9dZm1g5gS0X1htcBt5if+vYCgVDOpiCrxitkkBt
-         sWsC9FJcTzfzDEQr14bmu+MQmnNARlTxzmiaHhmZQOZ8VAGP27dVevQISddcnEMHIqQx
-         XuZWsr+0NeeRmY8PHYqnOXewdH60Q/hH76zEmHtQhOE3tsOCL9oos13jYt9wc326F6dn
-         oipsi54YFGCPIO4bTzJ8ghKe31AyELIwTfGdsVG/aE39XhNxzFh5A8vs4eP7LqI7uVfc
-         wkPw==
-X-Gm-Message-State: AO0yUKVFlm8d6bU/2CdrBqi2yb5/Rxe7bOtMf3zhL42hqqfnIKNQQJO7
-        PHThNt5ck98WcQLJIr33mcLrzg==
-X-Google-Smtp-Source: AK7set9Y1R4fNYl5iiJNjPVCiIEga/WC7wAX+mM99tGpF1Yw6uDJ7Etw+186f9uQO1JeU43343EDGA==
-X-Received: by 2002:a17:90b:1c0d:b0:22c:10e2:9e3f with SMTP id oc13-20020a17090b1c0d00b0022c10e29e3fmr10343020pjb.0.1674847438428;
-        Fri, 27 Jan 2023 11:23:58 -0800 (PST)
+        bh=/oF44rT15tnjTMjQqM9aBjASabRej4gnAjmMBpVIsHQ=;
+        b=fQpHaP2mKryqx0pkpFiZxiLFl9wvr0SsPSPXYvVZDhDAicBU2zJXi+0xML81CNAaGK
+         O5Zug9huckAS0/EBXzqPH8Lfohu1B6Ky/1AswR2WcBpCtE66KVRpvYmX286uibKfM4DG
+         AX7BeycIu3zCbvNTXV7xtoNvW9hnN9oZy6S3UpG3U7WLifq04oW9plY+U2lL0M9JPhGo
+         VZtd9YQdYsXG/VvcWpqtUA2W51Tq5Sa3CpKkg8UJhTNYGu6br1vgXxbCubxpMsNZvLal
+         TCztyE2y0iURa0YCjPphdtQKZ6itkO4YkvcnhoGIEJDNaVPnTWG7+ns+swRo7mFLBDvW
+         pSWw==
+X-Gm-Message-State: AO0yUKUQyaW2KL9nUQiqjLCog55Vs8+g17yCDC7livftCJxcywamgyHi
+        8k6KtI92OsL6Zg1GMPepJnwn5QMqa5LKGy7+
+X-Google-Smtp-Source: AK7set+Z9W6Rrw9FWwFFm8G6j0bcNgI/h1gaBfNaPxU5jp1YhAt6lKHsciXU4RrC0pla1N+iDmml2A==
+X-Received: by 2002:a05:6a00:2484:b0:592:514f:636d with SMTP id c4-20020a056a00248400b00592514f636dmr7324690pfv.22.1674848544849;
+        Fri, 27 Jan 2023 11:42:24 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g8-20020a17090a708800b00213202d77d9sm3034456pjk.43.2023.01.27.11.23.57
+        by smtp.gmail.com with ESMTPSA id i19-20020aa796f3000000b0058dbd7a5e0esm3002526pfq.89.2023.01.27.11.42.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 11:23:58 -0800 (PST)
-Date:   Fri, 27 Jan 2023 11:23:57 -0800
+        Fri, 27 Jan 2023 11:42:24 -0800 (PST)
+Date:   Fri, 27 Jan 2023 11:42:23 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, Leonardo Bras <leobras.c@gmail.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] powerpc/rtas: Replace one-element arrays with flexible
- arrays
-Message-ID: <202301271120.B83DA0B3@keescook>
-References: <20230127085023.271674-1-ajd@linux.ibm.com>
- <87357wp1h7.fsf@linux.ibm.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Karol Herbst <kherbst@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] drm/nouveau/disp: Fix nvif_outp_acquire_dp() argument
+ size
+Message-ID: <202301271141.6741F43@keescook>
+References: <20221127183036.never.139-kees@kernel.org>
+ <202301251214.8E52414D0@keescook>
+ <9c53c624604b7415ceeedf7222e78abc2c64430f.camel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87357wp1h7.fsf@linux.ibm.com>
+In-Reply-To: <9c53c624604b7415ceeedf7222e78abc2c64430f.camel@redhat.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 07:10:28AM -0600, Nathan Lynch wrote:
-> Andrew Donnellan <ajd@linux.ibm.com> writes:
-> > Using a one-element array as a fake flexible array is deprecated.
-> >
-> > Replace the one-element flexible arrays in rtas-types.h with C99 standard
-> > flexible array members instead.
-> >
-> > This helps us move towards enabling -fstrict-flex-arrays=3 in future.
-> >
-> > Found using scripts/coccinelle/misc/flexible_array.cocci.
-> >
-> > Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> > Cc: Leonardo Bras <leobras.c@gmail.com>
-> > Cc: linux-hardening@vger.kernel.org
-> > Link: https://github.com/KSPP/linux/issues/21
-> > Link: https://github.com/KSPP/linux/issues/79
-> > Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
-> > ---
-> >  arch/powerpc/include/asm/rtas-types.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/powerpc/include/asm/rtas-types.h b/arch/powerpc/include/asm/rtas-types.h
-> > index 8df6235d64d1..40ec03a05c0b 100644
-> > --- a/arch/powerpc/include/asm/rtas-types.h
-> > +++ b/arch/powerpc/include/asm/rtas-types.h
-> > @@ -44,7 +44,7 @@ struct rtas_error_log {
-> >  	 */
-> >  	u8		byte3;			/* General event or error*/
-> >  	__be32		extended_log_length;	/* length in bytes */
-> > -	unsigned char	buffer[1];		/* Start of extended log */
-> > +	unsigned char	buffer[];		/* Start of extended log */
-> >  						/* Variable length.      */
-> >  };
-> >  
-> > @@ -85,7 +85,7 @@ struct rtas_ext_event_log_v6 {
-> >  					/* that defines the format for	*/
-> >  					/* the vendor specific log type	*/
-> >  	/* Byte 16-end of log */
-> > -	u8 vendor_log[1];		/* Start of vendor specific log	*/
-> > +	u8 vendor_log[];		/* Start of vendor specific log	*/
-> >  					/* Variable length.		*/
-> >  };
+On Wed, Jan 25, 2023 at 04:24:19PM -0500, Lyude Paul wrote:
+> Sorry! I've been pretty busy until now, this is:
 > 
-> I see at least one place that consults the size of one of these structs,
-> in get_pseries_errorlog():
+> Reviewed-by: Lyude Paul <lyude@redhat.com>
 > 
-> 	/* Check that we understand the format */
-> 	if (ext_log_length < sizeof(struct rtas_ext_event_log_v6) || ...
-> 
-> Don't all such sites need to be audited/adjusted for changes like this?
+> Let me know if you've pushed it already or if you want me to push it to drm-
+> misc
 
-Yeah, I'd expect a binary comparison[1] before/after to catch things like
-this. E.g. the following C files mention those structs:
+Either way is fine. I'm currently carrying it, but I can easily drop it
+if you prefer it go via drm-misc.
 
-arch/powerpc/platforms/pseries/io_event_irq.c
-arch/powerpc/platforms/pseries/ras.c
-arch/powerpc/kernel/rtasd.c
-arch/powerpc/kernel/rtas.c
+Thanks!
 
 -Kees
 
-[1] https://outflux.net/blog/archives/2022/06/24/finding-binary-differences/
+> 
+> On Wed, 2023-01-25 at 12:15 -0800, Kees Cook wrote:
+> > Ping. I'll take this via my tree unless someone else wants to take it...
+> > 
+> > On Sun, Nov 27, 2022 at 10:30:41AM -0800, Kees Cook wrote:
+> > > Both Coverity and GCC with -Wstringop-overflow noticed that
+> > > nvif_outp_acquire_dp() accidentally defined its second argument with 1
+> > > additional element:
+> > > 
+> > > drivers/gpu/drm/nouveau/dispnv50/disp.c: In function 'nv50_pior_atomic_enable':
+> > > drivers/gpu/drm/nouveau/dispnv50/disp.c:1813:17: error: 'nvif_outp_acquire_dp' accessing 16 bytes in a region of size 15 [-Werror=stringop-overflow=]
+> > >  1813 |                 nvif_outp_acquire_dp(&nv_encoder->outp, nv_encoder->dp.dpcd, 0, 0, false, false);
+> > >       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > drivers/gpu/drm/nouveau/dispnv50/disp.c:1813:17: note: referencing argument 2 of type 'u8[16]' {aka 'unsigned char[16]'}
+> > > drivers/gpu/drm/nouveau/include/nvif/outp.h:24:5: note: in a call to function 'nvif_outp_acquire_dp'
+> > >    24 | int nvif_outp_acquire_dp(struct nvif_outp *, u8 dpcd[16],
+> > >       |     ^~~~~~~~~~~~~~~~~~~~
+> > > 
+> > > Avoid these warnings by defining the argument size using the matching
+> > > define (DP_RECEIVER_CAP_SIZE, 15) instead of having it be a literal
+> > > (and incorrect) value (16).
+> > > 
+> > > Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+> > > Addresses-Coverity-ID: 1527269 ("Memory - corruptions")
+> > > Addresses-Coverity-ID: 1527268 ("Memory - corruptions")
+> > > Link: https://lore.kernel.org/lkml/202211100848.FFBA2432@keescook/
+> > > Link: https://lore.kernel.org/lkml/202211100848.F4C2819BB@keescook/
+> > > Fixes: 813443721331 ("drm/nouveau/disp: move DP link config into acquire")
+> > > Cc: Ben Skeggs <bskeggs@redhat.com>
+> > > Cc: Karol Herbst <kherbst@redhat.com>
+> > > Cc: Lyude Paul <lyude@redhat.com>
+> > > Cc: David Airlie <airlied@gmail.com>
+> > > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > > Cc: Dave Airlie <airlied@redhat.com>
+> > > Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+> > > Cc: dri-devel@lists.freedesktop.org
+> > > Cc: nouveau@lists.freedesktop.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  drivers/gpu/drm/nouveau/include/nvif/outp.h | 3 ++-
+> > >  drivers/gpu/drm/nouveau/nvif/outp.c         | 2 +-
+> > >  2 files changed, 3 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/nouveau/include/nvif/outp.h b/drivers/gpu/drm/nouveau/include/nvif/outp.h
+> > > index 45daadec3c0c..fa76a7b5e4b3 100644
+> > > --- a/drivers/gpu/drm/nouveau/include/nvif/outp.h
+> > > +++ b/drivers/gpu/drm/nouveau/include/nvif/outp.h
+> > > @@ -3,6 +3,7 @@
+> > >  #define __NVIF_OUTP_H__
+> > >  #include <nvif/object.h>
+> > >  #include <nvif/if0012.h>
+> > > +#include <drm/display/drm_dp.h>
+> > >  struct nvif_disp;
+> > >  
+> > >  struct nvif_outp {
+> > > @@ -21,7 +22,7 @@ int nvif_outp_acquire_rgb_crt(struct nvif_outp *);
+> > >  int nvif_outp_acquire_tmds(struct nvif_outp *, int head,
+> > >  			   bool hdmi, u8 max_ac_packet, u8 rekey, u8 scdc, bool hda);
+> > >  int nvif_outp_acquire_lvds(struct nvif_outp *, bool dual, bool bpc8);
+> > > -int nvif_outp_acquire_dp(struct nvif_outp *, u8 dpcd[16],
+> > > +int nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[DP_RECEIVER_CAP_SIZE],
+> > >  			 int link_nr, int link_bw, bool hda, bool mst);
+> > >  void nvif_outp_release(struct nvif_outp *);
+> > >  int nvif_outp_infoframe(struct nvif_outp *, u8 type, struct nvif_outp_infoframe_v0 *, u32 size);
+> > > diff --git a/drivers/gpu/drm/nouveau/nvif/outp.c b/drivers/gpu/drm/nouveau/nvif/outp.c
+> > > index 7da39f1eae9f..c24bc5eae3ec 100644
+> > > --- a/drivers/gpu/drm/nouveau/nvif/outp.c
+> > > +++ b/drivers/gpu/drm/nouveau/nvif/outp.c
+> > > @@ -127,7 +127,7 @@ nvif_outp_acquire(struct nvif_outp *outp, u8 proto, struct nvif_outp_acquire_v0
+> > >  }
+> > >  
+> > >  int
+> > > -nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[16],
+> > > +nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[DP_RECEIVER_CAP_SIZE],
+> > >  		     int link_nr, int link_bw, bool hda, bool mst)
+> > >  {
+> > >  	struct nvif_outp_acquire_v0 args;
+> > > -- 
+> > > 2.34.1
+> > > 
+> > 
+> 
+> -- 
+> Cheers,
+>  Lyude Paul (she/her)
+>  Software Engineer at Red Hat
+> 
 
 -- 
 Kees Cook
