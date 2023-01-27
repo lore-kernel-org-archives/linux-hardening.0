@@ -2,68 +2,96 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A0EC54EAA
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 02:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE63C61DA4
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 03:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233169AbjA0CJM (ORCPT
+        id S233310AbjA0DXb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 26 Jan 2023 21:09:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
+        Thu, 26 Jan 2023 22:23:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbjA0CJE (ORCPT
+        with ESMTP id S233160AbjA0DX3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 26 Jan 2023 21:09:04 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB0E20D00;
-        Thu, 26 Jan 2023 18:08:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9D94461A00;
-        Fri, 27 Jan 2023 02:08:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D758CC433EF;
-        Fri, 27 Jan 2023 02:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674785338;
-        bh=ho7KbqdMR4TEgp6i52yf2SbTP+5ULm3e4g5tvDSjJxE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o2a61l3s2jwJJtKoB4qZdva2n6CtnagYcmSnJjpjAZOnJdzjqttBimbK+Qoo10WRN
-         5TtdHj3c0Q6HrxyJXQZYeyis+w8Di71AalrG/eH6pDi5xeoZDvn/xgiRQpxmHhX+sa
-         Vw5Hf95gfL0KL4E+GiQiFk2FCPYNFGle66/0hCofbV7A41I3KFjmGjxfNyXvKcbJbA
-         byC6E80/T3l3LifeEFqME7dWZ8fCghAYZVhF1dskCZSbdW17AxlJvJgVvQYITjPr3V
-         vkQj95792wrOww/hiTgFy+rVj1iAqGxZjXWFZhrjHeHg/0KqjCwIq66pAXp12OuZxf
-         ciCiDBKVkr8oA==
-Date:   Thu, 26 Jan 2023 21:08:56 -0500
-From:   Sasha Levin <sashal@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     stable@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        SeongJae Park <sj@kernel.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        Jann Horn <jannh@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5.15 00/20] Backport oops_limit to 5.15
-Message-ID: <Y9MyOMfBASwPSsAs@sashalap>
-References: <20230124185110.143857-1-ebiggers@kernel.org>
+        Thu, 26 Jan 2023 22:23:29 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FE971647;
+        Thu, 26 Jan 2023 19:23:21 -0800 (PST)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30R0O1g3019401;
+        Fri, 27 Jan 2023 03:23:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2022-7-12;
+ bh=HL8WYkQvLO0YNFWNqYPepfhle6GAhKACxkNdCCuJbQ4=;
+ b=Uzb9XTdk6Kfd/xf928+x8oNYWxwjE7bGst6bk4uYky5h7dYXbTP7eljtj3iKdFcpG8+P
+ 8Q2M0j1b8QG5rU0ElQLyY7vqZSC/H4uxZq8bCl71K4cyKEY1MAWmBc5K8zVR3KE96o3j
+ p3eWsyoaJ5wSNr7xlWZXDpVeMI+e4vGV1cIlL3DZS7sVIxMK4/urz+1ji61pjmHAcTJf
+ pjKXzonbhxJzw7d24snxAxh5iCHdII4aVxjnI386uvWRiMVh5W5e54mAMeE5WkdRPPK3
+ yLm73CVU4vC85l370sXn3HeOQrcxWhtUdjqMHx4ZQ3ZMNpKiVPiiQ5H+44fI3cAAMmvf fQ== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n88ku3sy0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Jan 2023 03:23:14 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30QNrJhU006632;
+        Fri, 27 Jan 2023 03:23:13 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3n86g8nxrx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Jan 2023 03:23:13 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30R3N7eo036358;
+        Fri, 27 Jan 2023 03:23:13 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3n86g8nxpp-6;
+        Fri, 27 Jan 2023 03:23:13 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Holger Kiehl <Holger.Kiehl@dwd.de>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: megaraid_sas: Add flexible array member for SGLs
+Date:   Thu, 26 Jan 2023 22:22:59 -0500
+Message-Id: <167478863281.3972592.13981423399363284186.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230106053153.never.999-kees@kernel.org>
+References: <20230106053153.never.999-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20230124185110.143857-1-ebiggers@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-26_09,2023-01-26_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ bulkscore=0 mlxscore=0 mlxlogscore=760 adultscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301270029
+X-Proofpoint-GUID: 0p9jFL192k_IX8d-xQLOLEtRVYJDLy7D
+X-Proofpoint-ORIG-GUID: 0p9jFL192k_IX8d-xQLOLEtRVYJDLy7D
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 10:50:50AM -0800, Eric Biggers wrote:
->This series backports the patchset
->"exit: Put an upper limit on how often we can oops"
->(https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
->to 5.15, as recommended at
->https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
+On Thu, 05 Jan 2023 21:32:00 -0800, Kees Cook wrote:
 
-I've queued up this and the 5.10 backport, thanks!
+> struct MPI2_RAID_SCSI_IO_REQUEST ends with a single SGL, but expects to
+> copy multiple. Add a flexible array member so the compiler can reason
+> about the size of the memcpy(). This will avoid the run-time false
+> positive warning:
+> 
+>   memcpy: detected field-spanning write (size 128) of single field "&r1_cmd->io_request->SGL" at drivers/scsi/megaraid/megaraid_sas_fusion.c:3326 (size 16)
+> 
+> [...]
+
+Applied to 6.3/scsi-queue, thanks!
+
+[1/1] scsi: megaraid_sas: Add flexible array member for SGLs
+      https://git.kernel.org/mkp/scsi/c/a9a3629592ab
 
 -- 
-Thanks,
-Sasha
+Martin K. Petersen	Oracle Linux Engineering
