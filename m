@@ -2,103 +2,190 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A312FC38142
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 22:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5F0C54EAA
+	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 22:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232010AbjA0Wle (ORCPT
+        id S229804AbjA0WwW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 17:41:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37208 "EHLO
+        Fri, 27 Jan 2023 17:52:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232036AbjA0Wld (ORCPT
+        with ESMTP id S231487AbjA0WwS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 17:41:33 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D4217CDC
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:41:31 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id jl3so6401484plb.8
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:41:31 -0800 (PST)
+        Fri, 27 Jan 2023 17:52:18 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BAC8BBA8
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:52:12 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id m2so1426999plg.4
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 14:52:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hbdmC1vtTeNkMV/JDNk6jpfYAsIwfc685zUxtxSiBBw=;
-        b=NrN7vxLTGyvO6uVWeymoBbvSZChgu0wl3/4eS81NaeK5nKnOEwqh7tWUGSFzLTiYoY
-         ToqsDJVrkOe6tHI3NMHl4iHOPvIvOslTsEh5lE8QzPg9jf1PhGZ59AMg3TcN9XUPiekX
-         84RrrbFSIa/dEB66Ge+4IqrE1gXKvXbKCPJzI=
+        bh=K52wS5rF9aiQPb4ZzRNctCuQfwDm/ySIxaaXnFlTZ9k=;
+        b=CYj1UFyU383PUwT9s6xDnJb+MIjyIGvtxMHzsg6tL8bkXVG+35cI4qGSFG3FyDbyDa
+         AdNmZW5fvtxFlqK9CrnH07HtFS5kra5CMp943FsnS/VY2XG+/GvNedUyHWNmJigK3yr6
+         1W2pLZhn4+x17pJa/NaoOcX/nBxuXrJz1iNWU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hbdmC1vtTeNkMV/JDNk6jpfYAsIwfc685zUxtxSiBBw=;
-        b=oE1diCtZNKDCoBxyOzncp5hBMe6DaGM0HGF2gsR6xRgHA1vcmuuofccQbvL2PSv16o
-         hlwCSbYMy+Cr26ntJHkwHcI4CPi/XYROvdkBLC0PJzvl5uRkGnb82BOwRZznhjoOjLRB
-         kmGuQWoCZ5Y/1BBAlKRNg47rHzO+eZGQL8deW44qW4MYtmu33zwddQmnD0QwhAWoybK/
-         23V4oQKW4b/0aE1K8fdYejllQfGVC9gNqdMASCmLwZTRDdFApDgQ5jEdUggGPhvZJGzc
-         bl07apO+YY5doUEHS7lQfVeP0nXZXufFNAFnIMB0beYHTw/k+1m9JK2RWrlhYr74vgfx
-         a8Mw==
-X-Gm-Message-State: AO0yUKU/2JoZglkyGGhpWbEXO2pbNQftcUU2LDz20zW92LJwkDfzJblj
-        WfsVXkG0ihIyziKJN9m9s0OsbT8hzH6635ir
-X-Google-Smtp-Source: AK7set9LJOkOn4dsUKb0StuHaEgdZ/trComh6kyrxrN3czUiG6SjF/GeYmB55aksjq40ff0ywVthVg==
-X-Received: by 2002:a17:903:200a:b0:196:63c8:6aab with SMTP id s10-20020a170903200a00b0019663c86aabmr531198pla.40.1674859291321;
-        Fri, 27 Jan 2023 14:41:31 -0800 (PST)
+        bh=K52wS5rF9aiQPb4ZzRNctCuQfwDm/ySIxaaXnFlTZ9k=;
+        b=EteRqLWlUd0MVqvgRdLD2Ie4dVPFYlb4y87LwMJg6o3NresPuDkt+iZ85HLB5PRC8L
+         lcBsMrSsVXIbvr3kYQ40oplT90Ud52UEkEIaHo9Y1zuNuSgBcy8sUZclHgCVry7Ty2y7
+         ZWowU/Q+Toc5x+0D5FhhhN5u4eifzuklnqiFNdfQvXruekRHyfiRgEp2aLnQV3Fprv0K
+         OWIQnXekq88fjtpa1UvIvFjYCsVlwb3bkO76Zos10Jao+HwehAAqZqmBJmn/RhTAXCOA
+         CjixgRYeQvUwA5Cq0vd9cwX8sVmqC8kjPf9eXGwgMoQabVIaj9c0v9G/Jl6dWKrE73G2
+         ADGQ==
+X-Gm-Message-State: AO0yUKXWhlLl3/8ePVfedGC5+zAoBO7p7Jubv1FrVnHWa4JUkh0uxpgA
+        Q8H6lx7miLUuWQykcpuvdN6al/TkNxr4Vz8R
+X-Google-Smtp-Source: AK7set+3U6YSEw7269WmIkaRSvw4QfWyeYqXoZsE8cXauzg9Hm1rjWzDSNNrWWa2mJfwa63PqsVI3g==
+X-Received: by 2002:a17:903:ca:b0:196:3f55:f813 with SMTP id x10-20020a17090300ca00b001963f55f813mr6055372plc.41.1674859931452;
+        Fri, 27 Jan 2023 14:52:11 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g11-20020a170902740b00b0019608291564sm3347808pll.134.2023.01.27.14.41.30
+        by smtp.gmail.com with ESMTPSA id u5-20020a170902e80500b00194974a2b3asm3359721plg.151.2023.01.27.14.52.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 14:41:30 -0800 (PST)
+        Fri, 27 Jan 2023 14:52:11 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>, Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] ASoC: kirkwood: Iterate over array indexes instead of using pointer math
-Date:   Fri, 27 Jan 2023 14:41:29 -0800
-Message-Id: <20230127224128.never.410-kees@kernel.org>
+To:     Javier Martinez Canillas <javier@dowhile0.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] regulator: max77802: Bounds check regulator id against opmode
+Date:   Fri, 27 Jan 2023 14:52:07 -0800
+Message-Id: <20230127225203.never.864-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1602; h=from:subject:message-id; bh=Xu8o9SUYE0MOFc6AyoZrAkbURoocAqE9mPE+RS6SAFE=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj1FMZvw7JrK+Hre1S3J0c2nerchfvDVjsKmG/daEA pKJu5WWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY9RTGQAKCRCJcvTf3G3AJoe0EA CEZJVtR7O3OZgY1TGui2btSTO+vJSmKSXn0g5hN1UTnz3/qSCcE21HjE4yWkAUS6CQZEGm5gEc0d1E U4ztzIz9g5wm+u3WnhCWFLNv1/UIE/I/5XDFRgQWnqYrTG3liPv7GUokFPgmT04tdSfNiwMlYI0kMH J/PUp1J1sURLT+3mBROpqar0kzR0MN1qV94+RcwEUkLPMHxFzcQtza7WfbKXLvhRo62UdCbDU0YSfX n6ShZoREPOPRHLLPiqwcbkyii/Djxc6mrya8BiKRhTFLxExIjiDyUgu99OLnf5JDiSow0+WRCk+wp4 tA1HSiPXz5kvsYQTMHwawn4A92PehZYWu7k2krTl8Ushlq6ih2jRgBLtPxOjw26j2jsu914Kvro0ad fuL/z7hqSoLTExjTdomgGOEhdmcLO5RBA3ZSX5X8K+VJwZBKjk8CMe/9f0ndgwcgCIk0P4DMu7eIJx CPMJyQSu+bkQPGM4mPNx2DALfpHd6QJ9bMnJCcwtW30eAfcXvcN9VrIqbad/Lia3nMFslib2Tbt5O6 33PM0OMcUiGbvz6luZ/agAtGtOI2gN+Ud7DkQafxloBfI1eV3Q6gv7PNWYHcXdRqv1kgIu9X6qO7qz HBoOBABUc8IIi0D/LebAFBUx7zCIWndRPt3a7If+2K73mECdg9UQop6Gh7Xw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4827; h=from:subject:message-id; bh=62KkJ/CLu9oe8dj8hMENNitDv2SDENSHuT320hSmG/M=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj1FWXTez41R3sGZhrmEDTTfPYde+8a4cBIal8Qv07 Iz88bd6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY9RVlwAKCRCJcvTf3G3AJvsYD/ wNI0+n7VbpIZtqQj+NkJ7J2+OSA0TJHsxKMegTxWEnk9Ek/gXu29cAAJ3U0gxtSLiGiAtS9Kv0jC9q gj14I0/MJPVR1ghkd22fBmrwWooLxJBIGEKav+oBC10lh9JQtmRUq3Wrr1sC9b0741BT7CPnx1m7+2 JAUnwWEpphLRV/rNabBKdLv7wRwzldhujCUEVYl3wqZG5CRb3PGN7buiwlCd/naonNAfoMjnG2aHb0 x4/axHK5jcIbc90bg8WrqeJ36TeLX19W8tQvKZs135ipXS0JcJfRoHwu2c5xdBpJ6zrt/Bjd93YEmt 4+TZ8rZxcSGJvXWlF/QZASHbq82WW2u0fk5+TxnMqzeajdfcqaosFEpvy86sfx7cLrWptp/ScQ6cFy UiM9oXUZSkWWJvqcyip5Z2RKPPFbqrFVw9SfWZ6S4yuxjGtQqw2qWPwukXC2UA3dOYa0uZ4W2hFWZp aNfag2H/3RKHOS5uOOaYw0feLDz9DEG+ujGzw2J7QEfatrTjNdzG3MSLtixRbhhUxTRJt37kSXUYtl CYDEe1XZUl+NXkQeV2woQt5RJQZnw+GbuUFGMvJyn02Xfd3O+PhBEiwuv1rnPI0HWiG9Oe4R5O/+QG 6CWtIjBomd3c/dNmOfCx4au1A73HnHPKGxXM8BixM1eTSReFQ1+1kgKwLVIQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Walking the dram->cs array was seen as accesses beyond the first array
-item by the compiler. Instead, use the array index directly. This allows
-for run-time bounds checking under CONFIG_UBSAN_BOUNDS as well. Seen
-with GCC 13 with -fstrict-flex-arrays:
+Explicitly bounds-check the id before accessing the opmode array. Seen
+with GCC 13:
 
-../sound/soc/kirkwood/kirkwood-dma.c: In function
-'kirkwood_dma_conf_mbus_windows.constprop':
-../sound/soc/kirkwood/kirkwood-dma.c:90:24: warning: array subscript 0 is outside array bounds of 'const struct mbus_dram_window[0]' [-Warray-bounds=]
-   90 |                 if ((cs->base & 0xffff0000) < (dma & 0xffff0000)) {
-      |                      ~~^~~~~~
+../drivers/regulator/max77802-regulator.c: In function 'max77802_enable':
+../drivers/regulator/max77802-regulator.c:217:29: warning: array subscript [0, 41] is outside array bounds of 'unsigned int[42]' [-Warray-bounds=]
+  217 |         if (max77802->opmode[id] == MAX77802_OFF_PWRREQ)
+      |             ~~~~~~~~~~~~~~~~^~~~
+../drivers/regulator/max77802-regulator.c:62:22: note: while referencing 'opmode'
+   62 |         unsigned int opmode[MAX77802_REG_MAX];
+      |                      ^~~~~~
 
+Cc: Javier Martinez Canillas <javier@dowhile0.org>
 Cc: Liam Girdwood <lgirdwood@gmail.com>
 Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- sound/soc/kirkwood/kirkwood-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/max77802-regulator.c | 34 ++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
-diff --git a/sound/soc/kirkwood/kirkwood-dma.c b/sound/soc/kirkwood/kirkwood-dma.c
-index 700a18561a94..640cebd2983e 100644
---- a/sound/soc/kirkwood/kirkwood-dma.c
-+++ b/sound/soc/kirkwood/kirkwood-dma.c
-@@ -86,7 +86,7 @@ kirkwood_dma_conf_mbus_windows(void __iomem *base, int win,
+diff --git a/drivers/regulator/max77802-regulator.c b/drivers/regulator/max77802-regulator.c
+index 21e0eb0f43f9..befe5f319819 100644
+--- a/drivers/regulator/max77802-regulator.c
++++ b/drivers/regulator/max77802-regulator.c
+@@ -94,9 +94,11 @@ static int max77802_set_suspend_disable(struct regulator_dev *rdev)
+ {
+ 	unsigned int val = MAX77802_OFF_PWRREQ;
+ 	struct max77802_regulator_prv *max77802 = rdev_get_drvdata(rdev);
+-	int id = rdev_get_id(rdev);
++	unsigned int id = rdev_get_id(rdev);
+ 	int shift = max77802_get_opmode_shift(id);
  
- 	/* try to find matching cs for current dma address */
- 	for (i = 0; i < dram->num_cs; i++) {
--		const struct mbus_dram_window *cs = dram->cs + i;
-+		const struct mbus_dram_window *cs = &dram->cs[i];
- 		if ((cs->base & 0xffff0000) < (dma & 0xffff0000)) {
- 			writel(cs->base & 0xffff0000,
- 				base + KIRKWOOD_AUDIO_WIN_BASE_REG(win));
++	if (WARN_ON_ONCE(id >= ARRAY_SIZE(max77802->opmode)))
++		return -EINVAL;
+ 	max77802->opmode[id] = val;
+ 	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+ 				  rdev->desc->enable_mask, val << shift);
+@@ -110,7 +112,7 @@ static int max77802_set_suspend_disable(struct regulator_dev *rdev)
+ static int max77802_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ {
+ 	struct max77802_regulator_prv *max77802 = rdev_get_drvdata(rdev);
+-	int id = rdev_get_id(rdev);
++	unsigned int id = rdev_get_id(rdev);
+ 	unsigned int val;
+ 	int shift = max77802_get_opmode_shift(id);
+ 
+@@ -127,6 +129,9 @@ static int max77802_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ 		return -EINVAL;
+ 	}
+ 
++	if (WARN_ON_ONCE(id >= ARRAY_SIZE(max77802->opmode)))
++		return -EINVAL;
++
+ 	max77802->opmode[id] = val;
+ 	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+ 				  rdev->desc->enable_mask, val << shift);
+@@ -135,8 +140,10 @@ static int max77802_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ static unsigned max77802_get_mode(struct regulator_dev *rdev)
+ {
+ 	struct max77802_regulator_prv *max77802 = rdev_get_drvdata(rdev);
+-	int id = rdev_get_id(rdev);
++	unsigned int id = rdev_get_id(rdev);
+ 
++	if (WARN_ON_ONCE(id >= ARRAY_SIZE(max77802->opmode)))
++		return -EINVAL;
+ 	return max77802_map_mode(max77802->opmode[id]);
+ }
+ 
+@@ -160,10 +167,13 @@ static int max77802_set_suspend_mode(struct regulator_dev *rdev,
+ 				     unsigned int mode)
+ {
+ 	struct max77802_regulator_prv *max77802 = rdev_get_drvdata(rdev);
+-	int id = rdev_get_id(rdev);
++	unsigned int id = rdev_get_id(rdev);
+ 	unsigned int val;
+ 	int shift = max77802_get_opmode_shift(id);
+ 
++	if (WARN_ON_ONCE(id >= ARRAY_SIZE(max77802->opmode)))
++		return -EINVAL;
++
+ 	/*
+ 	 * If the regulator has been disabled for suspend
+ 	 * then is invalid to try setting a suspend mode.
+@@ -209,9 +219,11 @@ static int max77802_set_suspend_mode(struct regulator_dev *rdev,
+ static int max77802_enable(struct regulator_dev *rdev)
+ {
+ 	struct max77802_regulator_prv *max77802 = rdev_get_drvdata(rdev);
+-	int id = rdev_get_id(rdev);
++	unsigned int id = rdev_get_id(rdev);
+ 	int shift = max77802_get_opmode_shift(id);
+ 
++	if (WARN_ON_ONCE(id >= ARRAY_SIZE(max77802->opmode)))
++		return -EINVAL;
+ 	if (max77802->opmode[id] == MAX77802_OFF_PWRREQ)
+ 		max77802->opmode[id] = MAX77802_OPMODE_NORMAL;
+ 
+@@ -495,7 +507,7 @@ static int max77802_pmic_probe(struct platform_device *pdev)
+ 
+ 	for (i = 0; i < MAX77802_REG_MAX; i++) {
+ 		struct regulator_dev *rdev;
+-		int id = regulators[i].id;
++		unsigned int id = regulators[i].id;
+ 		int shift = max77802_get_opmode_shift(id);
+ 		int ret;
+ 
+@@ -513,10 +525,12 @@ static int max77802_pmic_probe(struct platform_device *pdev)
+ 		 * the hardware reports OFF as the regulator operating mode.
+ 		 * Default to operating mode NORMAL in that case.
+ 		 */
+-		if (val == MAX77802_STATUS_OFF)
+-			max77802->opmode[id] = MAX77802_OPMODE_NORMAL;
+-		else
+-			max77802->opmode[id] = val;
++		if (id < ARRAY_SIZE(max77802->opmode)) {
++			if (val == MAX77802_STATUS_OFF)
++				max77802->opmode[id] = MAX77802_OPMODE_NORMAL;
++			else
++				max77802->opmode[id] = val;
++		}
+ 
+ 		rdev = devm_regulator_register(&pdev->dev,
+ 					       &regulators[i], &config);
 -- 
 2.34.1
 
