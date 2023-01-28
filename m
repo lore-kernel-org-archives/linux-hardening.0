@@ -2,93 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DE6C38142
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 19:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEF0C38142
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 20:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232640AbjA1T3d (ORCPT
+        id S234327AbjA1Ur1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 28 Jan 2023 14:29:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39228 "EHLO
+        Sat, 28 Jan 2023 15:47:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230150AbjA1T3c (ORCPT
+        with ESMTP id S233616AbjA1UrZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 28 Jan 2023 14:29:32 -0500
-Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795717290;
-        Sat, 28 Jan 2023 11:29:31 -0800 (PST)
-Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1631b928691so10536399fac.11;
-        Sat, 28 Jan 2023 11:29:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mnmziyjvyqqt82Bs4pX8LS1YFr0jbsiIDT0Vdx6lh+0=;
-        b=gdgFGZ2KK3KcbxPluC6MKbXNLhEHMRNNu8SJnj6tDVQAHY0VoIvs2qr+1rz+0j753r
-         PeWxhu0WUzEf5URM66MsaT3YizsqYQ2fMtEYyxtDWPBNVRKwKI2UKV4yOmky2P+C+6+i
-         V1P/LTJcNhgS6X6lzBcg0bHog7OLt/PCVRMSHGZcVUN1T2YVsbu72tpv2za1Nmpf83BS
-         pmj844dvVxljULeEOJxllnZ+PelXbpw6wwhDUOHDMHesye9LUbWbiZ91AMublhN23wcZ
-         5GAAOx2lHUj0h8AlhY6i7zwotKpFmzjsDsroXoRqfujhjoK6eMjTOq8VbZYrSRE04PgE
-         bz5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mnmziyjvyqqt82Bs4pX8LS1YFr0jbsiIDT0Vdx6lh+0=;
-        b=vFMan7l4fHwHDSNE4YKWn1indK8OsA1CBvaFrteBNbUpFuQYmIqCF+Q5BvfnA2BEK6
-         i9BdSxhyDwR8QcMOkto+zSld33+eTSjzeyK6t4KwNQN9xNT/NcNhqPmSZUJjakcOyKy8
-         n/b0r3chtdnqjwuaFqttxDCOeEhZ+MCxv2xglq6PslZG/zs//oIYPlqSKQsUVaJrMO0o
-         bZ1nIZt8xKKkm3uFAeS9IM3+qnrKJeb4j2S4oypyS+pbbI8thdaKPMxDZn6yIGUy2JGq
-         DDQBBkxDdPDq+6F2WuRrUjf7UhkAdaEBn9o8Yxp8lmU8kaBSr58FjxSPGoE96aOvi9QU
-         MPGg==
-X-Gm-Message-State: AFqh2kqQ6KLwp513AP0Bap010AURlqomj8316C056am9fZzwviAeXgOj
-        4VQYE1kiiR/3aQilI3AmLbM=
-X-Google-Smtp-Source: AMrXdXtzHXQMh7yurMrTPNz61Fztvgj7t7rIyQ1L+DW4J2sKXPSWRd3af/w2nBR2H5SZBMZrS7JmTg==
-X-Received: by 2002:a05:6870:17a8:b0:15f:dbf0:20e8 with SMTP id r40-20020a05687017a800b0015fdbf020e8mr16521636oae.43.1674934169961;
-        Sat, 28 Jan 2023 11:29:29 -0800 (PST)
-Received: from localhost ([2600:1700:65a0:ab60:645d:3006:6c9:4ca1])
-        by smtp.gmail.com with ESMTPSA id x206-20020a4a41d7000000b005175b972e52sm499359ooa.31.2023.01.28.11.29.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 28 Jan 2023 11:29:29 -0800 (PST)
-Date:   Sat, 28 Jan 2023 11:29:28 -0800
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jamal Hadi Salim <jhs@mojatatu.com>, Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: sched: sch: Bounds check priority
-Message-ID: <Y9V3mBmLUcrEdrTV@pop-os.localdomain>
-References: <20230127224036.never.561-kees@kernel.org>
+        Sat, 28 Jan 2023 15:47:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 867622365D;
+        Sat, 28 Jan 2023 12:47:24 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C7AC60B50;
+        Sat, 28 Jan 2023 20:47:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC846C433EF;
+        Sat, 28 Jan 2023 20:47:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674938843;
+        bh=LP8XV5leUFloxRKoGf3LU+y6bB6y8P4RvPXOS2KTx+Y=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=UriQreCBRdvXQ0Y/aFqUAt1x5iB8tvqnb3zyi2mhG5WjXUZ8AzLzuAqzO3uKQVxPO
+         jqGUdAr/p/rFbrvHBm7CUyDNA2ysGmemMtQfJo6n/MOvOIZWgtCJANN6KhLiKl4dZW
+         U8bj2eF4Hd7JhCH8FkYy1pRBZSR9ivJzymWEiJPt/9VFnToRdfJ2uQW5gjDLZhg1Xg
+         FX7TDchEF5IDTdBKwzn90+ysyYwjQfvp/TjWS3X6drcfYBFHJq5eE998wT0Ii5m13x
+         qj10vd41scdkOg7hfthgTtDB+k9igJTk8mRyzQzNh/L9roHZuUZHEmAxx5VscTblf/
+         ZGc3TrLZaG/LA==
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+In-Reply-To: <20230128005358.never.313-kees@kernel.org>
+References: <20230128005358.never.313-kees@kernel.org>
+Subject: Re: [PATCH] regulator: s5m8767: Bounds check id indexing into
+ arrays
+Message-Id: <167493884134.2529563.8166230650067316693.b4-ty@kernel.org>
+Date:   Sat, 28 Jan 2023 20:47:21 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127224036.never.561-kees@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.0
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 02:40:37PM -0800, Kees Cook wrote:
-> Nothing was explicitly bounds checking the priority index used to access
-> clpriop[]. WARN and bail out early if it's pathological. Seen with GCC 13:
+On Fri, 27 Jan 2023 16:53:58 -0800, Kees Cook wrote:
+> The compiler has no way to know if "id" is within the array bounds of
+> the regulators array. Add a check for this and a build-time check that
+> the regulators and reg_voltage_map arrays are sized the same. Seen with
+> GCC 13:
 > 
-> ../net/sched/sch_htb.c: In function 'htb_activate_prios':
-> ../net/sched/sch_htb.c:437:44: warning: array subscript [0, 31] is outside array bounds of 'struct htb_prio[8]' [-Warray-bounds=]
->   437 |                         if (p->inner.clprio[prio].feed.rb_node)
->       |                             ~~~~~~~~~~~~~~~^~~~~~
-> ../net/sched/sch_htb.c:131:41: note: while referencing 'clprio'
->   131 |                         struct htb_prio clprio[TC_HTB_NUMPRIO];
->       |                                         ^~~~~~
+> ../drivers/regulator/s5m8767.c: In function 's5m8767_pmic_probe':
+> ../drivers/regulator/s5m8767.c:936:35: warning: array subscript [0, 36] is outside array bounds of 'struct regulator_desc[37]' [-Warray-bounds=]
+>   936 |                         regulators[id].vsel_reg =
+>       |                         ~~~~~~~~~~^~~~
+> 
+> [...]
 
-Reviewed-by: Cong Wang <cong.wang@bytedance.com>
+Applied to
 
-We already have a check in htb_change_class():
+   broonie/regulator.git for-next
 
-2056                 if ((cl->prio = hopt->prio) >= TC_HTB_NUMPRIO)
-2057                         cl->prio = TC_HTB_NUMPRIO - 1;
+Thanks!
 
-so this patch is just to make GCC 13 happy.
+[1/1] regulator: s5m8767: Bounds check id indexing into arrays
+      commit: e314e15a0b58f9d051c00b25951073bcdae61953
 
-Thanks.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
