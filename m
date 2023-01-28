@@ -2,92 +2,91 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3F8C27C76
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 07:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445F6C27C76
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 10:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232877AbjA1HWj (ORCPT
+        id S234193AbjA1Kjg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 28 Jan 2023 02:22:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56676 "EHLO
+        Sat, 28 Jan 2023 05:39:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232296AbjA1HWj (ORCPT
+        with ESMTP id S234177AbjA1Kjf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 28 Jan 2023 02:22:39 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533F67E6C4
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 23:22:38 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id b10so6702498pjo.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 23:22:38 -0800 (PST)
+        Sat, 28 Jan 2023 05:39:35 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6816277DD9
+        for <linux-hardening@vger.kernel.org>; Sat, 28 Jan 2023 02:39:33 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id d14so7063779wrr.9
+        for <linux-hardening@vger.kernel.org>; Sat, 28 Jan 2023 02:39:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dowhile0-org.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=czFnnNgiMNwVHtOu8IgfTLKpLnKZzktc8ilaRgu2SLg=;
-        b=rovDaWkwW8WlO27xY4VUiD/aZvHiRLwNMSkQgtqLrdciFxOgTcudSDnJsAHv8KkLxM
-         IAnDuY/G7Zk2eBOcEwZ4dSSR4S7SqRNPhOXVIeuR2KuGxz3GPH11K80oa3m3sB9julDh
-         0kVpWxN77OH8NZ+232r6NuT0rax30rlki9uthNbNhsPIXeXaPZwqdtm4M8Nzxf0NBo6q
-         JvM4BmrYy2mCnE1IDOTRRGJdt32xNJm8EJAv71R9ziUdwMVViRonZ/CwNnwgSNh56sSe
-         /b+abh0GK/ep1OZuWPvg+XpA3mn9UTYYA0Uy6+F2cwgMyZK5SaPHggOyfQQuAg40k0Sd
-         ZzoQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WBB/UrWepXBkkfPd45IwxI+2oUrHzDJVZIL0q4lKLdQ=;
+        b=JTKqHAytmPbQXk3+t7QAF91Sbvylmycvn9b9Xqpbu+tkUZ8DKWjQI5yFlHhhce9C7n
+         n0naK1rAnkUKdu9wo0RlUMs9F9TtL+OiKvAhYqDBCni92qZbHNrj2VDPCdRnyjyVdjLO
+         dmb4I7d3F/rX9gL9KqCHgzNtb/QLBdfMHAY+6p9gnGIm2+H08Z7wtdNZ4EVOMwA6kaFQ
+         0Io+IU8a4OTRVkgELi6/udFAj1gocAqP5GLK6MGloIn6mfa08eFB1lMcTTE/wMW9sr7f
+         QdJzc2fYd27TfNohiTNKlb2rs4iLDKxGBcur1sNJQcd//7z8zJx1M3MUSnPo/2rI2Oyu
+         dh1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=czFnnNgiMNwVHtOu8IgfTLKpLnKZzktc8ilaRgu2SLg=;
-        b=Hu2PRrap+JcDc/1NSj2/1Z59WqaYlKYhZsvZCJNKPf4K1OgqMv6spM9K6kE1iOFJYF
-         voTBcEd0yVCfotE9XzJcfRtM2NczZ4VApUiS7nkz7NZU/wX/JMsEThxzgJ77gwa45rqg
-         Bc97BubYq9p8NHqflSGnmId8b055CXfLBGSrqjewkCc/LaYilqGQvMGxhjnwzq19Ez3M
-         ryVQ1ia2xd/xp1hTI65t7f1GadGIj3v8NwulNjRbiJTuOYdCIEymJ3sDskwS0wDiXXyv
-         bROURJgkVbXIx767I3DCxHCpQuY0YdVQiV538RVvE48pNikrYJooyGilKtqX7EqmeCKO
-         8I4Q==
-X-Gm-Message-State: AO0yUKVU/wLABLDs/MM9V4DHHvcj/t2q4d1nuAX+jqrJsx+UldEM1416
-        51f12KMwkqaMb/DnjKAKNRmtu4KBcGyAZxblvygkbg==
-X-Google-Smtp-Source: AK7set+A9FRO1xMuryCPrO/4me6tixWO+0SFK14DctJNZ8/DouO/cwHk9Esb4rQBlA2SMC3R4VlaS3LaxZbOr1Eo4NM=
-X-Received: by 2002:a17:90a:414a:b0:22c:1be3:1985 with SMTP id
- m10-20020a17090a414a00b0022c1be31985mr1312197pjg.192.1674890557793; Fri, 27
- Jan 2023 23:22:37 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WBB/UrWepXBkkfPd45IwxI+2oUrHzDJVZIL0q4lKLdQ=;
+        b=P3ClKL2ay5QF+qtBBKCx2xndDsIdMQ31vdXHqX6rW5nqQkLohbEo2pioBUBvp4adhH
+         cKEP+5WjoYHCo1NrLYWfiUDu5lninwzBP9C58IGF3An/ntP8+yIS46VQK0UpAMAxCvSj
+         uevzqpKCFO6RVWoMju4WeoCWOkBlQPddnhxaxxb3govAJj/z0qxmAPTYYYvAzSypM91l
+         geJB4t+y+VzVHJnChwxNwFluvu9JfXRtz+djtoBsRTAdSAGoYfSDC3qlSJ1/DT/la3Bf
+         5s84d5p1clqH0g1qSTqo5g8Qkt1fgQT1RiytUTrnjt/Y5qhlBFc48C0vd1BIgiQiM1Qd
+         qF5Q==
+X-Gm-Message-State: AO0yUKUZ4vF2AaukBLdTI3+Ko5qaLAg7b1jdFd1hDVt/DwelhCd+JyEA
+        rE++Ivo3MiThG1J4+MRsuoUefBmIvpuVpgY4
+X-Google-Smtp-Source: AK7set+Zk9DiBCZq8AhGj9ng0r6KKDJ850gbX0mVQjmwnTlgxBxrDed1NWcHnxk7tB3Ixi0Dug+JVw==
+X-Received: by 2002:a5d:62d1:0:b0:2bf:d680:e37a with SMTP id o17-20020a5d62d1000000b002bfd680e37amr3988339wrv.67.1674902371978;
+        Sat, 28 Jan 2023 02:39:31 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id y8-20020adfdf08000000b002bfb31bda06sm6644422wrl.76.2023.01.28.02.39.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 28 Jan 2023 02:39:31 -0800 (PST)
+Message-ID: <eeed3984-3ad2-01c3-365e-443ab664bda2@linaro.org>
+Date:   Sat, 28 Jan 2023 11:39:30 +0100
 MIME-Version: 1.0
-References: <20230127225203.never.864-kees@kernel.org>
-In-Reply-To: <20230127225203.never.864-kees@kernel.org>
-From:   Javier Martinez Canillas <javier@dowhile0.org>
-Date:   Sat, 28 Jan 2023 08:22:26 +0100
-Message-ID: <CABxcv=kKS8DW0SWL9FxzP6g4AVAis1P21H8d9JE1bAF7p=BugA@mail.gmail.com>
-Subject: Re: [PATCH] regulator: max77802: Bounds check regulator id against opmode
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] regulator: s5m8767: Bounds check id indexing into arrays
+Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20230128005358.never.313-kees@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230128005358.never.313-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello Kees,
+On 28/01/2023 01:53, Kees Cook wrote:
+> The compiler has no way to know if "id" is within the array bounds of
 
-On Fri, Jan 27, 2023 at 11:52 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Explicitly bounds-check the id before accessing the opmode array. Seen
-> with GCC 13:
->
-> ../drivers/regulator/max77802-regulator.c: In function 'max77802_enable':
-> ../drivers/regulator/max77802-regulator.c:217:29: warning: array subscript [0, 41] is outside array bounds of 'unsigned int[42]' [-Warray-bounds=]
->   217 |         if (max77802->opmode[id] == MAX77802_OFF_PWRREQ)
->       |             ~~~~~~~~~~~~~~~~^~~~
-> ../drivers/regulator/max77802-regulator.c:62:22: note: while referencing 'opmode'
->    62 |         unsigned int opmode[MAX77802_REG_MAX];
->       |                      ^~~~~~
->
-> Cc: Javier Martinez Canillas <javier@dowhile0.org>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/regulator/max77802-regulator.c | 34 ++++++++++++++++++--------
+It has. For the CONFIG_OF (the only way parent device - sec-core.c - can
+match now), the id is assigned in s5m8767_pmic_dt_parse_pdata() and kept
+within limits <0,ARRAY_SIZE(regulators)-1>.
 
-The patch looks good to me.
+The device cannot match via old non-OF way, so there is no real bug to
+fix. You are silencing compiler warning, which is fine, but it's not a
+real case. The code is not easy to follow, so I am fine with such checks
+(WARN_ON_ONCE). The BUILD_BUG_ON is indeed meaningful.
 
-Acked-by: Javier Martinez Canillas <javierm@redhat.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 
 Best regards,
-Javier
+Krzysztof
+
