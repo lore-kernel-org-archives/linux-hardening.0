@@ -2,98 +2,141 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B79BBC38142
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 00:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0A3C38142
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 00:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229883AbjA1Arj (ORCPT
+        id S233468AbjA1AwA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 19:47:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
+        Fri, 27 Jan 2023 19:52:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231491AbjA1Ari (ORCPT
+        with ESMTP id S232483AbjA1Av6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 19:47:38 -0500
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201E27D2AC
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:47:37 -0800 (PST)
-Received: by mail-qt1-x830.google.com with SMTP id m26so5558500qtp.9
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:47:37 -0800 (PST)
+        Fri, 27 Jan 2023 19:51:58 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E75C80177
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:51:57 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id r18so4259506pgr.12
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:51:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hC8vO32YUuQQBDUUZtcngmVtbpaT0Jq1aBzvbrp9Yp4=;
-        b=NfU4J/gQoigubTQ+wI8tbZjlh1VQ6Sh8pVgcNDND8azysAP3ohXu76hvEuMeua8cPT
-         +5skO7lpbqKQoPaNgf/d/koiIk3yzRO/sIHL4Oux6vJw/LSpiPvA9+9Fmmo9bDF7gU/S
-         Z6nFB+d7YfMbDtSu1UiBnLFdNeF9eV74VK7luz8sM7s6kFR3bjucW2hwUwPNSrlKGcAY
-         GbnGO2rSp7JioimHkLZIry/2g8E+uNcAYE9iX3ZBpbpF+0ZxV2NVDtUC/LTMC2/3NtEX
-         06gi8pyEUdFS7xqGuqBovSwxQDdnHpZ/M2WPAktJdsE/b+7PUpI2JrMZvznL8SIgdwyM
-         vvXg==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MiU9G7/Ds/01bMEGuQC9LxFoYAJoQIyJyB7uaGN1BVg=;
+        b=OLznq80N8Oh4QKvXlMNb3ih7XmBuOr005NMxnz1LIqYtgjmVS4YuyblUnj4zWitmjZ
+         lJCBYiXm4J7ZPtv8qMBJLQ2QyrCPUVlMoHuTzG6nrKbe2t4bMMlp9FCurOKdogoN8i4l
+         hQWxAh2177dSgrm4CatTUBP0hAX9SrJm5fmoc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hC8vO32YUuQQBDUUZtcngmVtbpaT0Jq1aBzvbrp9Yp4=;
-        b=61wjRO59CZvshMkOIxybZkaE9WDxMTPVoVXC/sLznZKBDKv+MtCE9+kvDMKw0doyzH
-         /UI67bNvDxFZB2Ejjvqz+61LXrVIDXL909zHnpS2+VeuxVLitpHTX7mvswHyQu7i6laj
-         Ik0m9kuxbcDk3yV3YzUmLyw/g0+LtZjJ90pCsmuKaBy40hrqog1JsNvPlOjE8NvvcKEc
-         fXrrd1ZS4vZE/RroWJ3RwiQ/J5gG25k0ir5iKXr/00ifYLvhWAzQaDw1ns3RjsIVDAUP
-         INcHpn/clFtd8gj5CNRkJJczLGQLQbsbV1GVZNp5nBU2QZ7OGr/41/dkswZuECmEF5PI
-         Pqkg==
-X-Gm-Message-State: AFqh2koF+fcgasLRCOerZGglMvJDZOAIGSEwbxhdO1BSt4OB7eJ07l7P
-        ko+V+xAAN+xEZUyI9ep8TayCwg==
-X-Google-Smtp-Source: AMrXdXsUvUmJhsOS2hBs3r3WYshjPAj7VpqIhNt/slphm3NSivGdXET/Mduy+M/QnEHVnaDE6g/nsw==
-X-Received: by 2002:a05:622a:1e1b:b0:3b5:87db:f950 with SMTP id br27-20020a05622a1e1b00b003b587dbf950mr57889488qtb.27.1674866856248;
-        Fri, 27 Jan 2023 16:47:36 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-167-59-176.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.59.176])
-        by smtp.gmail.com with ESMTPSA id d10-20020ac800ca000000b003b0b903720esm3677194qtg.13.2023.01.27.16.47.35
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MiU9G7/Ds/01bMEGuQC9LxFoYAJoQIyJyB7uaGN1BVg=;
+        b=pcuiVjgun7+mHX8slC1eOm1jb8Rr5BjWb9p7XPIv90jrXORFDzMFldoBnAE3wVX+73
+         dISb3iIKyWOvbnWldCHDxdsInKJ638adXnGrzakUUt8+VOGOwv4Ggq2EiVgRpAsqnTo8
+         KzXJvaG2ZIgetrsUG2j7EKuqO/KClUyuMLLMN+g74uHK6SV1aSGEBP/pmsVM2RStK7GV
+         SiJxATO+2U7xYy0oHVpgZ7PhDXrstnZHg3ZfGDt7k7kBTC1FTSuxbebI0Tr9Q5rHKVHh
+         Fg4SWwV9qYdjhf865I4cEjJemafIJGiVKphITA1nJYWGyKsYeN/s106X609r/10vVOoc
+         EjRQ==
+X-Gm-Message-State: AO0yUKXE94SfLYkio7iqe5bDpK0eyiElJfDmTGyfV5wWS82rk8Homgon
+        wsZjviq+mxAQUaXdKvBbhx8zhA==
+X-Google-Smtp-Source: AK7set/63G02VXwkIsu1E4p409jYWDbrPfYLbnmPnCzvwiV1jwDFggi8v/o9Uk6HJHHBGWdI8SwqBg==
+X-Received: by 2002:a05:6a00:1916:b0:58d:aae3:bcc1 with SMTP id y22-20020a056a00191600b0058daae3bcc1mr590500pfi.5.1674867116995;
+        Fri, 27 Jan 2023 16:51:56 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id i2-20020a056a00004200b0059392f591b0sm202309pfk.53.2023.01.27.16.51.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 16:47:35 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1pLZNW-000SMV-II;
-        Fri, 27 Jan 2023 20:47:34 -0400
-Date:   Fri, 27 Jan 2023 20:47:34 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
+        Fri, 27 Jan 2023 16:51:56 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iommufd: Add top-level bounds check on kernel buffer size
-Message-ID: <Y9RwpuVyEi2SBmdQ@ziepe.ca>
-References: <20230127223816.never.413-kees@kernel.org>
+Subject: [PATCH] Bluetooth: hci_conn: Refactor hci_bind_bis() since it always succeeds
+Date:   Fri, 27 Jan 2023 16:51:54 -0800
+Message-Id: <20230128005150.never.909-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127223816.never.413-kees@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2549; h=from:subject:message-id; bh=mVnvB6NOyfWKqwGU5dfT8S9lHvRpK/kONHhCQ2CZubo=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj1HGqBJHOTl2sp2HPsmuw4TM++NQqA2fhgVBlGeK4 MQdzgL2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY9RxqgAKCRCJcvTf3G3AJjDqD/ 0V0RCFZ3es87Ut1Lhxbg2HbsAjs/19gb8HGiAWmEiBRCm82CiN1ITFJVmYFH0xvuismK6BY5FNj8lS CMX08uMHTIswyaN5ofAc9gyH8zLHzyyEnNe+hJrJlN4vqzi0QGNy5uAyt6QG/7kQvabiiQXS34cOsr VJI3asei8wsGFxCvYz/vBYL7zz6j1aQ1ZdnRrRt6yOk7XIfpp6M65oPkznc/2vtOsgb9BQ5eQsvvA5 hbDSzxnlzxviJ5nXIZSKQcn6F5raQ0Yy3rj6dLnGt2JkESmUwvuXBmU0alQK2uuW9f0MNYlDAboyvX VwuTTivoEkQbOM3AzdHp6JOQP7daw+nRfxiiqiffRME5JbQckkDi9wjaBZvBrcWRLDIoQPTgBOWGKD f1xNi2lOWu6AOrsv6ZGKTp72iZsieXDBwBc2TbeGZ4+9PhS4g8jQQ1QLHQCUKVBLk/GNpTcYWO8+Nw i0CrHq5WR2SmhGB/UYiZON2eOmeugzjRR8XWZFk+tgiGsjlwIFJn4MyIv4bT+GFcnm2w5J8NEfc85q fWVG3gz0ySWvP5ysxUpuv6GlMw8Tobx+52ascosL0U43MqZJ8/ZrSe/99wfCbdUcblc1BkWp3ggxRJ ezfgazR7DB1IvBC35Sm6nk2z2M7+PLYlE0jWeC8Amh3+ty78ipc69h9JwAYA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 02:38:17PM -0800, Kees Cook wrote:
-> While the op->size assignments are already bounds-checked at static
-> initializer time, these limits aren't aggregated and tracked when doing
-> later variable range checking under -Warray-bounds. Help the compiler
-> see that we know what we're talking about, and we'll never ask to
-> write more that sizeof(ucmd.cmd) bytes during the memset() inside
-> copy_struct_from_user(). Seen under GCC 13:
-> 
-> In function 'copy_struct_from_user',
->     inlined from 'iommufd_fops_ioctl' at ../drivers/iommu/iommufd/main.c:333:8:
-> ../include/linux/fortify-string.h:59:33: warning: '__builtin_memset' offset [57, 4294967294] is out of the bounds [0, 56] of object 'buf' with type 'union ucmd_buffer' [-Warray-bounds=]
->    59 | #define __underlying_memset     __builtin_memset
+The compiler thinks "conn" might be NULL after a call to hci_bind_bis(),
+which cannot happen. Avoid any confusion by just making it not return a
+value since it cannot fail. Fixes the warnings seen with GCC 13:
 
-This seems strange to me
+In function 'arch_atomic_dec_and_test',
+    inlined from 'atomic_dec_and_test' at ../include/linux/atomic/atomic-instrumented.h:576:9,
+    inlined from 'hci_conn_drop' at ../include/net/bluetooth/hci_core.h:1391:6,
+    inlined from 'hci_connect_bis' at ../net/bluetooth/hci_conn.c:2124:3:
+../arch/x86/include/asm/rmwcc.h:37:9: warning: array subscript 0 is outside array bounds of 'atomic_t[0]' [-Warray-bounds=]
+   37 |         asm volatile (fullop CC_SET(cc) \
+      |         ^~~
+...
+In function 'hci_connect_bis':
+cc1: note: source object is likely at address zero
 
-I thought the way gcc handled this was if it knew the value must be in
-a certain range then it would check it
+Fixes: eca0ae4aea66 ("Bluetooth: Add initial implementation of BIS connections")
+Cc: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>
+Cc: Johan Hedberg <johan.hedberg@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-bluetooth@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ net/bluetooth/hci_conn.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-If it couldn't figure out any ranges it would not make a warning.
+diff --git a/net/bluetooth/hci_conn.c b/net/bluetooth/hci_conn.c
+index acf563fbdfd9..61a34801e61e 100644
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1981,16 +1981,14 @@ static void hci_iso_qos_setup(struct hci_dev *hdev, struct hci_conn *conn,
+ 		qos->latency = conn->le_conn_latency;
+ }
+ 
+-static struct hci_conn *hci_bind_bis(struct hci_conn *conn,
+-				     struct bt_iso_qos *qos)
++static void hci_bind_bis(struct hci_conn *conn,
++			 struct bt_iso_qos *qos)
+ {
+ 	/* Update LINK PHYs according to QoS preference */
+ 	conn->le_tx_phy = qos->out.phy;
+ 	conn->le_tx_phy = qos->out.phy;
+ 	conn->iso_qos = *qos;
+ 	conn->state = BT_BOUND;
+-
+-	return conn;
+ }
+ 
+ static int create_big_sync(struct hci_dev *hdev, void *data)
+@@ -2119,11 +2117,7 @@ struct hci_conn *hci_connect_bis(struct hci_dev *hdev, bdaddr_t *dst,
+ 	if (IS_ERR(conn))
+ 		return conn;
+ 
+-	conn = hci_bind_bis(conn, qos);
+-	if (!conn) {
+-		hci_conn_drop(conn);
+-		return ERR_PTR(-ENOMEM);
+-	}
++	hci_bind_bis(conn, qos);
+ 
+ 	/* Add Basic Announcement into Peridic Adv Data if BASE is set */
+ 	if (base_len && base) {
+-- 
+2.34.1
 
-So why did it decide "rest" was in that really weird range?
-
-Is this just a compiler bug?
-
-Jason
