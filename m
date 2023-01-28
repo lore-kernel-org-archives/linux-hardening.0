@@ -2,49 +2,48 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73838C27C76
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 17:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85609C27C76
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 17:19:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234354AbjA1RTD (ORCPT
+        id S234569AbjA1RTN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 28 Jan 2023 12:19:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56510 "EHLO
+        Sat, 28 Jan 2023 12:19:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234401AbjA1RTB (ORCPT
+        with ESMTP id S234413AbjA1RTK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 28 Jan 2023 12:19:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D42F12A99C;
-        Sat, 28 Jan 2023 09:19:00 -0800 (PST)
+        Sat, 28 Jan 2023 12:19:10 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13E5E2C64E;
+        Sat, 28 Jan 2023 09:19:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 579C160C33;
-        Sat, 28 Jan 2023 17:19:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28DF1C4339C;
-        Sat, 28 Jan 2023 17:18:57 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B6CC5B803F3;
+        Sat, 28 Jan 2023 17:19:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DBECC433EF;
+        Sat, 28 Jan 2023 17:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674926339;
-        bh=Sf8e39xlrlBgctvAjNmyaVJ8lTKFI4W3ruclNnksOWQ=;
+        s=k20201202; t=1674926344;
+        bh=N0glHYJdj+5T+1YNL1gh0yWBCL6N2qAkW+ZtMHZgb9I=;
         h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=qlXG48eQCOe3z8Urz+wDffxl9GdN0pgqSbrDxcIex7q6Hqmy33aeIetLf/n5jEiJF
-         uans6w2v3EkhTjky0H+k3K2LM6E6k3q+j78XU1WgDlV9QSZzBhCpqg7wmYhjpZWRe0
-         tg9RIYRlPcCP5vmdjYuxaTlzUxsCRixOwBvPXAX382RNGXYjsvY6OkLm4MfXYFJbRw
-         RBl1/leHXfhzCzbYXtpns/ZQF7X8PaiidX1amryL0fV2afygTusdcpLbqpJVMT2Whc
-         0oZ5otwv8jNpNqz19KyoWx4cZLtHJKMbGOwUWdJ/cQyetJ7dwGllEZudVZlcE0EOq4
-         ERourzK8scoyg==
+        b=q1SVrzJ8HzYdGRpivt7Yh/fORbR7VNaeZqjKZ/AEEQXYkrLWBhJ47HCqSe5AXesZf
+         fvWNpy0b2fRjahz6OoOs0tWVQm98m5dREaiem7cdByPAmLeJW7CPctRfVvRblVBSOR
+         KHnbEZ1a82Gf4ntyZThx1METl2GC0EXv+XKsMYYiA4OOIySf+YYSkPql8xZ65bRHmW
+         jhzLpyHPBas7Xwg0WmyGKdJ0vjuZfBx4bfBQIIkH9SB7UWyYLGyPbUXAjnJaEyrNAm
+         qhYoYdNsfNliyqw8N+Y+h1t6HPVU6rdZMzTj+Wryi0r38qBoLivxLh/D5XgzdgCZtP
+         29cbVxXVuCRGA==
 From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
+To:     Javier Martinez Canillas <javier@dowhile0.org>,
         Kees Cook <keescook@chromium.org>
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-In-Reply-To: <20230127224128.never.410-kees@kernel.org>
-References: <20230127224128.never.410-kees@kernel.org>
-Subject: Re: [PATCH] ASoC: kirkwood: Iterate over array indexes instead of
- using pointer math
-Message-Id: <167492633694.2479102.1677977069431569775.b4-ty@kernel.org>
-Date:   Sat, 28 Jan 2023 17:18:56 +0000
+In-Reply-To: <20230127225203.never.864-kees@kernel.org>
+References: <20230127225203.never.864-kees@kernel.org>
+Subject: Re: [PATCH] regulator: max77802: Bounds check regulator id against
+ opmode
+Message-Id: <167492634199.2479258.14097870833222078553.b4-ty@kernel.org>
+Date:   Sat, 28 Jan 2023 17:19:01 +0000
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
@@ -53,28 +52,28 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 27 Jan 2023 14:41:29 -0800, Kees Cook wrote:
-> Walking the dram->cs array was seen as accesses beyond the first array
-> item by the compiler. Instead, use the array index directly. This allows
-> for run-time bounds checking under CONFIG_UBSAN_BOUNDS as well. Seen
-> with GCC 13 with -fstrict-flex-arrays:
+On Fri, 27 Jan 2023 14:52:07 -0800, Kees Cook wrote:
+> Explicitly bounds-check the id before accessing the opmode array. Seen
+> with GCC 13:
 > 
-> ../sound/soc/kirkwood/kirkwood-dma.c: In function
-> 'kirkwood_dma_conf_mbus_windows.constprop':
-> ../sound/soc/kirkwood/kirkwood-dma.c:90:24: warning: array subscript 0 is outside array bounds of 'const struct mbus_dram_window[0]' [-Warray-bounds=]
->    90 |                 if ((cs->base & 0xffff0000) < (dma & 0xffff0000)) {
->       |                      ~~^~~~~~
+> ../drivers/regulator/max77802-regulator.c: In function 'max77802_enable':
+> ../drivers/regulator/max77802-regulator.c:217:29: warning: array subscript [0, 41] is outside array bounds of 'unsigned int[42]' [-Warray-bounds=]
+>   217 |         if (max77802->opmode[id] == MAX77802_OFF_PWRREQ)
+>       |             ~~~~~~~~~~~~~~~~^~~~
+> ../drivers/regulator/max77802-regulator.c:62:22: note: while referencing 'opmode'
+>    62 |         unsigned int opmode[MAX77802_REG_MAX];
+>       |                      ^~~~~~
 > 
 > [...]
 
 Applied to
 
-   broonie/sound.git for-next
+   broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] ASoC: kirkwood: Iterate over array indexes instead of using pointer math
-      commit: b3bcedc0402fcdc5c8624c433562d9d1882749d8
+[1/1] regulator: max77802: Bounds check regulator id against opmode
+      commit: 4fd8bcec5fd7c0d586206fa2f42bd67b06cdaa7e
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
