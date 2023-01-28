@@ -2,109 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA56EC61DA7
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 00:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91853C38142
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 00:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232361AbjA1AyD (ORCPT
+        id S232151AbjA1A53 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 19:54:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60720 "EHLO
+        Fri, 27 Jan 2023 19:57:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbjA1AyC (ORCPT
+        with ESMTP id S230201AbjA1A53 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 19:54:02 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4527B7D287
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:54:01 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id v23so6644080plo.1
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:54:01 -0800 (PST)
+        Fri, 27 Jan 2023 19:57:29 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00D0C59E4C
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:57:27 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id x2-20020a17090a46c200b002295ca9855aso10285741pjg.2
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:57:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aGNQjbpF5iVZwBpwuIDtp51as1jRAvk6dpQFHMl4cAQ=;
-        b=WlSAgM5xsZcQ1tyz8q/WmXqA6zvbDEh0sM/ucn78Be6UwwKTfaboOjFXbzPw4dXEYn
-         HpKEilhklAMjOFyWVBdRUpO9gOAymZDBbUUsKZjgdMTI+/GYEjLefoY5PqXFum9+F2Ee
-         P6JJ7iRXQS1C1K9qqsj113/yDQo3KheUT1vHs=
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mt7riAo5IZBBNRUJXz8pkp6XLTWUB7DMintBQ4mnJ+w=;
+        b=Sq13TwL2JvleGsf86UiBkqxxqQvlrn+9JqKhbgZya6YonVrMlwpl9H7V+w46KzX9gU
+         XwtvFHc9MH103QXuWyqPeBIM+fap2Pn5mv1AVcStBkuR5SFqlWG7SO52BDCawpXKIqGC
+         DC9qIjbacFWuEMHWWUq9xpWei55rvNP66T/eo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aGNQjbpF5iVZwBpwuIDtp51as1jRAvk6dpQFHMl4cAQ=;
-        b=AepwgORMyyv71IDLEELmajc3B1Ijqc++q4B2gLVt3AI8jiynP1T6SM30kXHAOmdpBA
-         52I9KO29qLs6ZPzewtwBR6OY+xe6F1AGx6lsTRSBHbr/AS6Mq2winu18BpYA6N9U+dNe
-         jfcpYbgdCy7mPbhPNQ42LpJBW8o2PQYVa097ZvqRilSSKBd1u7JPZFSXvJBEunadNOS0
-         quLOI0Ica310pQY+zbvjQwArGmqngFJj3qh2E4hNf8afxfDyo8cSpgxSXpng98hCnrFy
-         3GRXomOve4QtsAU02ByZg5FtPR2y6B8zUKJ+kMzi3C5oD9gRl0CUs5UFRXYZGCSJjZUG
-         T/5A==
-X-Gm-Message-State: AFqh2krN77VKPzkATR4q8oSLsjxq41Rg/YCIYtRCHl2ZjKjztaNhQVnR
-        fLWfdkcEJeaYPEjdO0LUyyRMCQ==
-X-Google-Smtp-Source: AMrXdXvbIIADGSuS6oZFtxBvipPOM8DYtn4VKqkHM9KzfFrpV1Bs628tYwr+8p0JfOHRnzW+ApPqYw==
-X-Received: by 2002:a17:902:720a:b0:193:25b6:71bc with SMTP id ba10-20020a170902720a00b0019325b671bcmr45467594plb.25.1674867240807;
-        Fri, 27 Jan 2023 16:54:00 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mt7riAo5IZBBNRUJXz8pkp6XLTWUB7DMintBQ4mnJ+w=;
+        b=t69XJreGSPydJmDdlY5lezF+yE9oJAf1a+2p7S+9jvDPMN7pIL8GBQXubqj6PGH8PK
+         YneCClz7W/pC+YSJqzi00ODbEpBoTvr17stkPK0XC+uQWz+U7KR84i+wMY/bLHZPK4yY
+         Ywv79ErDooHDBo5ndQxkumzkIb+3CV9G5yuBeAP+4DmgmoMUpl0uuF9KJHc1FRH1lOht
+         +6oez+ScUPlyoJpwXWSWonc6dJZqlgDhyBmfCiM1yZsLoCZUa7Rj4KzHE/Mrn6NBaRHp
+         tEOS1VPG3W79g7wFEZcb/w0XNWX6W8yCa9KiMrTlUbaIJIG6nzSNlX0S7DM9SW2+DeBY
+         RSQg==
+X-Gm-Message-State: AFqh2krzmY5muJFGE3L6fPvpPnamabBe3izLt+y+VQuDtXoY4QVyGWIV
+        KVvE9SK4d/yDcGnxn1tP5OUQgg==
+X-Google-Smtp-Source: AMrXdXsGqzy4vwJ6nXgO7LJDjvy6Wk/X1EG3VvmKvq0e98qtLO69306EqidXqDBkwJxu6pgTQQeNrg==
+X-Received: by 2002:a17:90b:3b87:b0:22b:afe2:2bb4 with SMTP id pc7-20020a17090b3b8700b0022bafe22bb4mr30492573pjb.8.1674867447456;
+        Fri, 27 Jan 2023 16:57:27 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x10-20020a170902ec8a00b0019488090884sm621plg.273.2023.01.27.16.54.00
+        by smtp.gmail.com with ESMTPSA id x9-20020a17090a6b4900b00228c8aa7916sm5553751pjl.38.2023.01.27.16.57.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 16:54:00 -0800 (PST)
+        Fri, 27 Jan 2023 16:57:26 -0800 (PST)
+Date:   Fri, 27 Jan 2023 16:57:26 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] regulator: s5m8767: Bounds check id indexing into arrays
-Date:   Fri, 27 Jan 2023 16:53:58 -0800
-Message-Id: <20230128005358.never.313-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] iommufd: Add top-level bounds check on kernel buffer size
+Message-ID: <202301271655.A51DC1CF@keescook>
+References: <20230127223816.never.413-kees@kernel.org>
+ <Y9RwpuVyEi2SBmdQ@ziepe.ca>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1619; h=from:subject:message-id; bh=z69EuUx8ff+TuAWIFlth8OkbW4QJXglaM+pgN7cDLw0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj1HImuw1FGUELvtteAxEQidLJKG04IF5hSb5Qx4Ay LaU2d9OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY9RyJgAKCRCJcvTf3G3AJs2nD/ 4u4NMgmpO2HlCvIeDLNVJpWWfqUxY1WDcLogyO9762ngiPL/2ao/rW8nhJnk4Izl8fUaCoqb8Rkf2p OMtvKw9ZvA2MkOJ4MzBO6d+vUImZRxPoA3/9sAGvChoIRE6rBWy19t0vJuGCSCvLOwGHP8rVcGfTrK a9sr/i/XFf6nFnZ6q1sOI0K89pZdQRolhyEgj5yfe3CJeq0J+LdC4EMG1w2ZWwkh04yFhKskD6TeZC xry/ENgw+KUQ2pDBDZXvqnYs8SwSkWg98jXma+uEUPnrOnDHpQhwicM1+gCdGkjLjkATrfINyIR6SG zjy0vu/tpXQYYN81rckBk1vMAF5dvyGS1dBcF/M7DpxWthKAT0CKn+M+6woakLbUGo9LN8rpILmI1p fyxAC7cw7VJOHOp3qQop6seagaPgBqzxGxbddIYVE1tcXPD9GItInTHRfkODfkgVCuZ9EDS3c4l9gy CYkohJTCKdk5jxkl1X7E3zoLqhpUAU8Bt3tCxxABVIiCbF7z2K+/QmTFkKAa0hpJe+uzGFKBB6D4m5 maiLs9ta/6r7faKNStoa4hBESavTniRiektCBgnVIg8iitKOcwCJmTaft41xZtS5PgIs1gHO2/E4S0 RBvELB5+oxnqI87ypfrYzKjD/+kp2SuAXB1SjSl/vi35f8ftLDZnDXNyuOZg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y9RwpuVyEi2SBmdQ@ziepe.ca>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The compiler has no way to know if "id" is within the array bounds of
-the regulators array. Add a check for this and a build-time check that
-the regulators and reg_voltage_map arrays are sized the same. Seen with
-GCC 13:
+On Fri, Jan 27, 2023 at 08:47:34PM -0400, Jason Gunthorpe wrote:
+> On Fri, Jan 27, 2023 at 02:38:17PM -0800, Kees Cook wrote:
+> > While the op->size assignments are already bounds-checked at static
+> > initializer time, these limits aren't aggregated and tracked when doing
+> > later variable range checking under -Warray-bounds. Help the compiler
+> > see that we know what we're talking about, and we'll never ask to
+> > write more that sizeof(ucmd.cmd) bytes during the memset() inside
+> > copy_struct_from_user(). Seen under GCC 13:
+> > 
+> > In function 'copy_struct_from_user',
+> >     inlined from 'iommufd_fops_ioctl' at ../drivers/iommu/iommufd/main.c:333:8:
+> > ../include/linux/fortify-string.h:59:33: warning: '__builtin_memset' offset [57, 4294967294] is out of the bounds [0, 56] of object 'buf' with type 'union ucmd_buffer' [-Warray-bounds=]
+> >    59 | #define __underlying_memset     __builtin_memset
+> 
+> This seems strange to me
+> 
+> I thought the way gcc handled this was if it knew the value must be in
+> a certain range then it would check it
+> 
+> If it couldn't figure out any ranges it would not make a warning.
+> 
+> So why did it decide "rest" was in that really weird range?
 
-../drivers/regulator/s5m8767.c: In function 's5m8767_pmic_probe':
-../drivers/regulator/s5m8767.c:936:35: warning: array subscript [0, 36] is outside array bounds of 'struct regulator_desc[37]' [-Warray-bounds=]
-  936 |                         regulators[id].vsel_reg =
-      |                         ~~~~~~~~~~^~~~
+It's because it got bounds-checked at the lower end (for the minimum
+size test).
 
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/regulator/s5m8767.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> Is this just a compiler bug?
 
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index 35269f998210..754c6fcc6e64 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -923,10 +923,14 @@ static int s5m8767_pmic_probe(struct platform_device *pdev)
- 
- 	for (i = 0; i < pdata->num_regulators; i++) {
- 		const struct sec_voltage_desc *desc;
--		int id = pdata->regulators[i].id;
-+		unsigned int id = pdata->regulators[i].id;
- 		int enable_reg, enable_val;
- 		struct regulator_dev *rdev;
- 
-+		BUILD_BUG_ON(ARRAY_SIZE(regulators) != ARRAY_SIZE(reg_voltage_map));
-+		if (WARN_ON_ONCE(id >= ARRAY_SIZE(regulators)))
-+			continue;
-+
- 		desc = reg_voltage_map[id];
- 		if (desc) {
- 			regulators[id].n_voltages =
+I don't think so. This just keeps the bounds within the buffer size now.
+
 -- 
-2.34.1
-
+Kees Cook
