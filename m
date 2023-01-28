@@ -2,81 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0CFC38142
-	for <linux-hardening@archiver.kernel.org>; Fri, 27 Jan 2023 23:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87369C54EAA
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 00:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230414AbjA0Xo3 (ORCPT
+        id S232193AbjA1AEU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 18:44:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44002 "EHLO
+        Fri, 27 Jan 2023 19:04:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229619AbjA0Xo3 (ORCPT
+        with ESMTP id S231292AbjA1AES (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 18:44:29 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB2B5A806;
-        Fri, 27 Jan 2023 15:44:28 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A9EF0B82145;
-        Fri, 27 Jan 2023 23:44:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B33C433EF;
-        Fri, 27 Jan 2023 23:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674863065;
-        bh=xAjRM3OwrCzPKZqjeYMU/ZIJa1szvJnod3xJDEu9BKw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=i3ne9xBg3WgMnuRsia/MVaG1UqzDhirZwAl6VgjlsiYZhuEr85T9kf9SEsG3+J4oX
-         GrS9tFXI8l+8Y72Vy3YxGM5KxtdJyfZzpD0eyGwA14lZY4MCcZt/w41XTH5A25Xy1q
-         y/Je8cArvnNfd7Iwg+qMJp4Q6Km79Et34jr7n9CDL+CXw+YQeZ6tUAb60g99oIk2SA
-         kuynngwKGRkb50/OqC3LPtoY+WG0JtAEZfmap1OfTML6QXHv7Rt4VqR7YiAK0nCJO9
-         3nlXugIRSVbdd35gDRBCYuCKSiOkuKQuax0d9Q4KTRA9Xi2+pzQu3K5KP0xLIzr5IN
-         Jidk3axeE0KwA==
-Received: by mail-vs1-f47.google.com with SMTP id h19so5161007vsv.13;
-        Fri, 27 Jan 2023 15:44:25 -0800 (PST)
-X-Gm-Message-State: AFqh2kqkq47fPwLWa2fZmtY4fjJyq0wlKBhsvNIPNiZJR3yOe4kptHPu
-        9zLLBnGDXvdhHRMwAWzOkmwgEofvKVTgyqzb+Q==
-X-Google-Smtp-Source: AMrXdXtcnWsJO8ZKRcbJNSWxH+Y77FSptLg7E+6uJVLOHhlTS5zZrrwVhR1vakT89/lO4uK4qWIrKVfUcuxC6ix8PzQ=
-X-Received: by 2002:a67:f506:0:b0:3d3:c767:4570 with SMTP id
- u6-20020a67f506000000b003d3c7674570mr6365473vsn.85.1674863064282; Fri, 27 Jan
- 2023 15:44:24 -0800 (PST)
-MIME-Version: 1.0
-References: <20230127224101.never.746-kees@kernel.org>
-In-Reply-To: <20230127224101.never.746-kees@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 27 Jan 2023 17:44:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKVp57NtR11JV-eXktMU9_dQ+8sF8YSPe7KyazrvJB-eQ@mail.gmail.com>
-Message-ID: <CAL_JsqKVp57NtR11JV-eXktMU9_dQ+8sF8YSPe7KyazrvJB-eQ@mail.gmail.com>
-Subject: Re: [PATCH] scripts/dtc: Replace 0-length arrays with flexible arrays
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Fri, 27 Jan 2023 19:04:18 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33AC84FA3
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:04:16 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id 36so4219023pgp.10
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:04:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FDc1f6H36kSbMyhmdOu12h8TguEbHWVRiGzB2+CN2EQ=;
+        b=jqN19sWZ3nZ1ylcOToqEKpzql3r9UmN8+byIOuXDFEh2VxNe/47KCoXcmXX2cCO8t0
+         artbB2vnijdLeMOclOlwjOQ4oil+/MxPYfFhyebOQLChNRaruqY1qpqQ2eFTJSg5TdAu
+         i1uFKylpcNV6TRc0ZpzXNmOK0MT8gRs3RUt/A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FDc1f6H36kSbMyhmdOu12h8TguEbHWVRiGzB2+CN2EQ=;
+        b=Upqf4sT8N2EayMJkWn+daGWHOjuexwt0dj5qeUt3pB9UgoSH+FonkAfif05JXJ1NJu
+         6VB45wzez+hj0Bfx6h2vM0Jx1JFdjdbOYiBV8Lk0fXcNmsb0bE5WhDGvoZJ4/mOSKPsD
+         OGzjKe3jx7dCmy2Jz9IikgpQEqgFoS7J5OkEmNCY/LZ8QFlm3gdh9b+nJwrWNqaqDwi5
+         /GGIZxfv5Dgm0uD80vDEtfAiApLwMxfnmjDTYKiJ16mNPl9esYsbGgSFqBcYDXsXzaJO
+         f+iv2Ydz7oPpxkhZHBXUAesuDUCiUFLYfpIrG78RaqZYJoTfsvOmJgXujcZ1S73DteHw
+         mrVQ==
+X-Gm-Message-State: AO0yUKXl1qnjJVnklWkw9aNlwxjJlDqEQlPKDg1m5Ul+ly8o6yh71p6n
+        sf+Rqxvdb5z2Uf974l6G7ucBkA==
+X-Google-Smtp-Source: AK7set8nSePnnSfEVdKbfxF6scz0/Uj2c71pQ6W+5fNQ70sm53fXibm/RGvGyWY1TXB5PRKOwLAytQ==
+X-Received: by 2002:a62:b505:0:b0:593:9109:4627 with SMTP id y5-20020a62b505000000b0059391094627mr714429pfe.0.1674864256051;
+        Fri, 27 Jan 2023 16:04:16 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x28-20020aa7957c000000b0056bc5ad4862sm2527886pfq.28.2023.01.27.16.04.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jan 2023 16:04:15 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Kees Cook <keescook@chromium.org>, Hannes Reinecke <hare@suse.de>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH] scsi: aacraid: Allocate cmd_priv with scsicmd
+Date:   Fri, 27 Jan 2023 16:04:13 -0800
+Message-Id: <20230128000409.never.976-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2826; h=from:subject:message-id; bh=8KFZgqjwwJO+qq8QfdeM9HK9KDv6PDJJEB0n/EnuyKA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj1GZ9mcYxxmBFWjb9WJlVcSCr1yuma3vzlXTE6ry5 XFz/f5+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY9RmfQAKCRCJcvTf3G3AJnDqD/ 47sfkHG+/a3xdJClnia5fi++tP4YYoZynZ5fqtTBOFFNLI319Zlz2wlqHjfcc1sz2eweq62ksWB2TB YW6aC0dSd+5FoXkT4uVVml2nZDZxy0E9cMn2qJ5pFbZrfCZpmSrashWSunKUeB6Eb4TfkgLG61WIFP SNYnzVIz4DVO/INJgJobsjQyp4axpBZCRpmBiw14V4sIv3fDg+OWXVTqUNHFMm1DULBEPAVxaBx+FQ Vti5fflR3WJMRI7HCoNdsO+iRnZ+FyCybX4oNoYu2SVas+pzDJfwP+NUWc/j5M0ALVZTshiuQBol6U c+3T6d0A/LN3kWyICneQSULVNfMLPw8hcgAZHl9v3tWN5l2O40zGRqliaTZDJ31k+Tfc3vtTzp1aVy N1rAU9Q6dCDJgAPqm8cu6SCUFyQawV5xfY9S0qh4M0kGY0kPaAreBvLizpLSd6rWgB/5eIY+1Lluu2 tEKhMvRr0BQTUtBNKtPxtZYjJtBFAjetGQ8g3ez42Ty0CZ0nONtVCkcAi1PsysjehWBTlTrau8Zr2i /tSBvd730+TfBbfhB3sZcDKpuWL6mL59ZKPRX+8as6QZklDgblu72PXEY+nA4K6uArXk0P9m50S1wY 3qo8bUnPG18px6gVheiFE0q7XMDZ9RHj+yhfnrvE8zSygQh2akGwWKFqbieQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 4:41 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Replace the 0-length array with a C99 flexible array. Seen with GCC 13
-> under -fstrict-flex-arrays:
->
-> In file included from ../lib/fdt_ro.c:2:
-> ../lib/../scripts/dtc/libfdt/fdt_ro.c: In function 'fdt_get_name':
-> ../lib/../scripts/dtc/libfdt/fdt_ro.c:319:24: warning: 'strrchr' reading 1 or more bytes from a region of size 0 [-Wstringop-overread]
->   319 |                 leaf = strrchr(nameptr, '/');
->       |                        ^~~~~~~~~~~~~~~~~~~~~
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  scripts/dtc/libfdt/fdt.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+The aac_priv() helper assumes that the private cmd area immediately
+follows struct scsi_cmnd. Allocate this space as part of scsicmd,
+else there is a risk of heap overflow. Seen with GCC 13:
 
-Changes to dtc/libfdt go to upstream dtc first and then we sync them back.
+../drivers/scsi/aacraid/aachba.c: In function 'aac_probe_container':
+../drivers/scsi/aacraid/aachba.c:841:26: warning: array subscript 16 is outside array bounds of 'void[392]' [-Warray-bounds=]
+  841 |         status = cmd_priv->status;
+      |                          ^~
+In file included from ../include/linux/resource_ext.h:11,
+                 from ../include/linux/pci.h:40,
+                 from ../drivers/scsi/aacraid/aachba.c:22:
+In function 'kmalloc',
+    inlined from 'kzalloc' at ../include/linux/slab.h:720:9,
+    inlined from 'aac_probe_container' at ../drivers/scsi/aacraid/aachba.c:821:30:
+../include/linux/slab.h:580:24: note: at offset 392 into object of size 392 allocated by 'kmalloc_trace'
+  580 |                 return kmalloc_trace(
+      |                        ^~~~~~~~~~~~~~
+  581 |                                 kmalloc_caches[kmalloc_type(flags)][index],
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  582 |                                 flags, size);
+      |                                 ~~~~~~~~~~~~
 
-Rob
+Fixes: 76a3451b64c6 ("scsi: aacraid: Move the SCSI pointer to private command data")
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Hannes Reinecke <hare@suse.de>
+Cc: Himanshu Madhani <himanshu.madhani@oracle.com>
+Cc: Adaptec OEM Raid Solutions <aacraid@microsemi.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: linux-scsi@vger.kernel.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/scsi/aacraid/aachba.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+index 4d4cb47b3846..24c049eff157 100644
+--- a/drivers/scsi/aacraid/aachba.c
++++ b/drivers/scsi/aacraid/aachba.c
+@@ -818,8 +818,8 @@ static void aac_probe_container_scsi_done(struct scsi_cmnd *scsi_cmnd)
+ 
+ int aac_probe_container(struct aac_dev *dev, int cid)
+ {
+-	struct scsi_cmnd *scsicmd = kzalloc(sizeof(*scsicmd), GFP_KERNEL);
+-	struct aac_cmd_priv *cmd_priv = aac_priv(scsicmd);
++	struct aac_cmd_priv *cmd_priv;
++	struct scsi_cmnd *scsicmd = kzalloc(sizeof(*scsicmd) + sizeof(*cmd_priv), GFP_KERNEL);
+ 	struct scsi_device *scsidev = kzalloc(sizeof(*scsidev), GFP_KERNEL);
+ 	int status;
+ 
+@@ -838,6 +838,7 @@ int aac_probe_container(struct aac_dev *dev, int cid)
+ 		while (scsicmd->device == scsidev)
+ 			schedule();
+ 	kfree(scsidev);
++	cmd_priv = aac_priv(scsicmd);
+ 	status = cmd_priv->status;
+ 	kfree(scsicmd);
+ 	return status;
+-- 
+2.34.1
+
