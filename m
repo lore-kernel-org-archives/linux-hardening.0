@@ -2,94 +2,79 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DFAC54EAA
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 00:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C012DC54EAA
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 00:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232371AbjA1AMZ (ORCPT
+        id S232994AbjA1A0k (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 19:12:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60900 "EHLO
+        Fri, 27 Jan 2023 19:26:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232206AbjA1AMZ (ORCPT
+        with ESMTP id S232898AbjA1A0i (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 19:12:25 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7D95A5D9
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:12:23 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id jm10so6527849plb.13
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 16:12:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QfSzQb0mn3RsZbwmCdOsGY9lWarr0Do0dd+IyLOh3eQ=;
-        b=YsKia6MOuy//+Z37k2hY2xgGXTbLVtiw3/nid7Qq8fybenqEUubul9iFBJObRGElFg
-         azPE0ymJFwv0eb/aQ0s/Y0lA9ofMSuIZv3581HFUBRC0vwuo8tRKP5/3ElQkTcAD5rHh
-         5afwIZth902Z2uOukLw0m/2Vsjgi0g8aBB1j0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QfSzQb0mn3RsZbwmCdOsGY9lWarr0Do0dd+IyLOh3eQ=;
-        b=aIe0/LVjijDy596ELkAvLkQEVVHP4ERe5PZuBYN7wJq69Na2h0P5if46SgSDM7jIAb
-         1cklMfuYZqNxNpERlV9mJdtaNFNJUVauCFv/OdlGgIc44P3tOI98Jbn2g1gm/O/FzZyG
-         /BsEkYi+aMKaOkESMuDOAC9rFTLTs165ePApoDV5cx0jseBvNZvdSe+uTsGROA24n5U4
-         71K/1N08ZSumWq3bpyczuIQmJ2LzYDQUNKrrnpeVYJRFfV6LpnnyUJeKE6LfkUO3Ydm4
-         cT682xqTW1pOkgLzKuZTZR3lbGpJI/RODWN+z5Je8g4EaVdJf4WAYYClK6zypnI86Zh0
-         Y0Og==
-X-Gm-Message-State: AFqh2kp86gNxxfwtKZrgTfgkWIKtHDHiFEu2z6iqGIEpLPeRiUSEo3r1
-        TlQIM9bKI5hlMlerEBrnRgaxzQ==
-X-Google-Smtp-Source: AMrXdXutL9tt03XB19XKLEssq4U1X4SNds46C2Sf+vO2QepCIinzcIrLmOLgUqNF+kyyyUggQZ4+Gg==
-X-Received: by 2002:a17:902:a40f:b0:194:5ff8:a3b0 with SMTP id p15-20020a170902a40f00b001945ff8a3b0mr37807189plq.7.1674864743313;
-        Fri, 27 Jan 2023 16:12:23 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j14-20020a170902da8e00b001928c9d772bsm3386016plx.206.2023.01.27.16.12.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 16:12:22 -0800 (PST)
-Date:   Fri, 27 Jan 2023 16:12:21 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scripts/dtc: Replace 0-length arrays with flexible arrays
-Message-ID: <202301271609.15F0E5EB15@keescook>
-References: <20230127224101.never.746-kees@kernel.org>
- <CAL_JsqKVp57NtR11JV-eXktMU9_dQ+8sF8YSPe7KyazrvJB-eQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKVp57NtR11JV-eXktMU9_dQ+8sF8YSPe7KyazrvJB-eQ@mail.gmail.com>
+        Fri, 27 Jan 2023 19:26:38 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ADF3212BE;
+        Fri, 27 Jan 2023 16:26:03 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A39A461DFD;
+        Sat, 28 Jan 2023 00:20:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 095F6C433D2;
+        Sat, 28 Jan 2023 00:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674865241;
+        bh=xB1udaC+IlgxwFzrwEHvTb1Wxlzx+OgwDzgQozLjKO4=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=kmZD80cCYk9faxanv7ua95jcnj8Df6YvrFfOMYHZIS+nYkHXb1V2eNaPzhm9HlG/x
+         Tny+NY8khgkV4JRfKpFIaGqnIRQGcjrui2JzWadZBrhy6rYSy3jt+N5d0+3hsPwU6X
+         T7h71PvqbNZ1YyVyE8NTq0gUBavnBWfe+dbS5yQEomW+RzdzrfayLxYxTbNVAatcOT
+         gk8i5SRKEW/sfJLv3y1lkD5U+8JBLEowgL8X1jyWp73GvSvK3Vil+bTVJ8vvzDUs6r
+         LGkz99M8obcOZVyxA9M2pz6FQ/l5FScE0ZRH8CJ43j28KwUYzwrSZN6Ua0pFHRwaZn
+         TnAV2Epn/9l0g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EBDEEE451B6;
+        Sat, 28 Jan 2023 00:20:40 +0000 (UTC)
+Subject: Re: [GIT PULL] kernel hardening fixes for v6.2-rc6
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <202301271058.9A715143C@keescook>
+References: <202301271058.9A715143C@keescook>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <202301271058.9A715143C@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.2-rc6
+X-PR-Tracked-Commit-Id: be0d8f48ad97f5b775b0af3310343f676dbf318a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 28cca23da7240df597240a492a7a7d4ce990026b
+Message-Id: <167486524096.6770.12626188597583791081.pr-tracker-bot@kernel.org>
+Date:   Sat, 28 Jan 2023 00:20:40 +0000
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Alexandre Pereira <alexpereira@disroot.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Coly Li <colyli@suse.de>, David Gow <davidgow@google.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Kees Cook <keescook@chromium.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 05:44:13PM -0600, Rob Herring wrote:
-> On Fri, Jan 27, 2023 at 4:41 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Replace the 0-length array with a C99 flexible array. Seen with GCC 13
-> > under -fstrict-flex-arrays:
-> >
-> > In file included from ../lib/fdt_ro.c:2:
-> > ../lib/../scripts/dtc/libfdt/fdt_ro.c: In function 'fdt_get_name':
-> > ../lib/../scripts/dtc/libfdt/fdt_ro.c:319:24: warning: 'strrchr' reading 1 or more bytes from a region of size 0 [-Wstringop-overread]
-> >   319 |                 leaf = strrchr(nameptr, '/');
-> >       |                        ^~~~~~~~~~~~~~~~~~~~~
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  scripts/dtc/libfdt/fdt.h | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Changes to dtc/libfdt go to upstream dtc first and then we sync them back.
+The pull request you sent on Fri, 27 Jan 2023 10:59:38 -0800:
 
-Ah-ha, I've found it: https://github.com/dgibson/dtc
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.2-rc6
 
-Thanks!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/28cca23da7240df597240a492a7a7d4ce990026b
+
+Thank you!
 
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
