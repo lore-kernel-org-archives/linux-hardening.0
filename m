@@ -2,124 +2,92 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73453C54EAA
-	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 01:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3F8C27C76
+	for <linux-hardening@archiver.kernel.org>; Sat, 28 Jan 2023 07:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231496AbjA1BNt (ORCPT
+        id S232877AbjA1HWj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 27 Jan 2023 20:13:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44250 "EHLO
+        Sat, 28 Jan 2023 02:22:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232926AbjA1BNs (ORCPT
+        with ESMTP id S232296AbjA1HWj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 27 Jan 2023 20:13:48 -0500
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B232BEF6
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 17:13:34 -0800 (PST)
-Received: by mail-qt1-x835.google.com with SMTP id j9so5612065qtv.4
-        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 17:13:34 -0800 (PST)
+        Sat, 28 Jan 2023 02:22:39 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533F67E6C4
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 23:22:38 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id b10so6702498pjo.1
+        for <linux-hardening@vger.kernel.org>; Fri, 27 Jan 2023 23:22:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gfyPzg1htA6VzdjdZzG5GcKQRyF+45Usw+FSqBgLOmE=;
-        b=UwuBU7iViSp0Lw07MPAQZEV3PkDUIWEB26o7W1q1NmaCWdr4l99EkD+C+U9Qre/slM
-         IwrIXhWo7qGuDv7W9g+iMK7b/GkhQK9pdinlYROx+yauYx5bmNm2lKMDuX9ZWArzhBlv
-         lTGIYrkGaMpG+wzT3hsgelokPWPpK0iFkmBoCHgTtZpD7+MMQM/orENAG4usjYMp63LW
-         Vi6m0UpA7aL9T50Gy+PVF8AfZe9zSJMxbK/0NynMeY6mgTYZYksCcG5/DEqrhh90JX+2
-         B88UkJrbQwWSQV/qro2jHcrSh1lXulnJ1llYQViLmqGYyyDAVZY9yisg8I1kUe5NsIkp
-         OXBg==
+        d=dowhile0-org.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=czFnnNgiMNwVHtOu8IgfTLKpLnKZzktc8ilaRgu2SLg=;
+        b=rovDaWkwW8WlO27xY4VUiD/aZvHiRLwNMSkQgtqLrdciFxOgTcudSDnJsAHv8KkLxM
+         IAnDuY/G7Zk2eBOcEwZ4dSSR4S7SqRNPhOXVIeuR2KuGxz3GPH11K80oa3m3sB9julDh
+         0kVpWxN77OH8NZ+232r6NuT0rax30rlki9uthNbNhsPIXeXaPZwqdtm4M8Nzxf0NBo6q
+         JvM4BmrYy2mCnE1IDOTRRGJdt32xNJm8EJAv71R9ziUdwMVViRonZ/CwNnwgSNh56sSe
+         /b+abh0GK/ep1OZuWPvg+XpA3mn9UTYYA0Uy6+F2cwgMyZK5SaPHggOyfQQuAg40k0Sd
+         ZzoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gfyPzg1htA6VzdjdZzG5GcKQRyF+45Usw+FSqBgLOmE=;
-        b=LDx5xdlskndTwFtNcoX7qsynkwSPk2D3vpMRcJoRPGWAcCVl4j7Bla0lMXtP9W43I6
-         seYcQojXy47SfEpkX0dAjGMFrAcXSwmpzqBo3rmdusml+PicdJgxdqNY64oqLNblFeyx
-         5pndzfspailPQ+IZ8uhtA/Tmb1QqJuRezf+MZ4qN5BMr9IGLmqoFoj1jitGXnKn6Ssnn
-         OH1Ba0ZYW3gsWsBecQanILV6GMtZ1x/3sQIV+kPVr602Q8kPGJ19f8eeHvnrELGnpvn6
-         pfYeUY54buuTEzq8B8Lyf3isiidEWeblPYy2pbGfF4W+L/lgY6S9P1RML+PESi0O0+Qh
-         DU1A==
-X-Gm-Message-State: AFqh2kq6MmNcAtZQKOqltWVrI/LuPUlEbBmKM8a2mFCG2ybAZg516x1k
-        HfhEj+eJXfmHTkxJ7WVqwzlH6Q==
-X-Google-Smtp-Source: AMrXdXuS7m9o1iHKfe2vBNIfFZru2ML5MnHi9xXszZi8wvHkrGG1etOfVLCmytEtYxwiLdpo8Xzpbw==
-X-Received: by 2002:ac8:6b02:0:b0:3a9:2478:2d70 with SMTP id w2-20020ac86b02000000b003a924782d70mr57634285qts.24.1674868413254;
-        Fri, 27 Jan 2023 17:13:33 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-167-59-176.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.59.176])
-        by smtp.gmail.com with ESMTPSA id b13-20020ac801cd000000b003a6a19ee4f0sm3671183qtg.33.2023.01.27.17.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 17:13:32 -0800 (PST)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1pLZmd-000StO-Ui;
-        Fri, 27 Jan 2023 21:13:31 -0400
-Date:   Fri, 27 Jan 2023 21:13:31 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kevin Tian <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] iommufd: Add top-level bounds check on kernel buffer size
-Message-ID: <Y9R2u7VrJB7pkY26@ziepe.ca>
-References: <20230127223816.never.413-kees@kernel.org>
- <Y9RwpuVyEi2SBmdQ@ziepe.ca>
- <202301271655.A51DC1CF@keescook>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=czFnnNgiMNwVHtOu8IgfTLKpLnKZzktc8ilaRgu2SLg=;
+        b=Hu2PRrap+JcDc/1NSj2/1Z59WqaYlKYhZsvZCJNKPf4K1OgqMv6spM9K6kE1iOFJYF
+         voTBcEd0yVCfotE9XzJcfRtM2NczZ4VApUiS7nkz7NZU/wX/JMsEThxzgJ77gwa45rqg
+         Bc97BubYq9p8NHqflSGnmId8b055CXfLBGSrqjewkCc/LaYilqGQvMGxhjnwzq19Ez3M
+         ryVQ1ia2xd/xp1hTI65t7f1GadGIj3v8NwulNjRbiJTuOYdCIEymJ3sDskwS0wDiXXyv
+         bROURJgkVbXIx767I3DCxHCpQuY0YdVQiV538RVvE48pNikrYJooyGilKtqX7EqmeCKO
+         8I4Q==
+X-Gm-Message-State: AO0yUKVU/wLABLDs/MM9V4DHHvcj/t2q4d1nuAX+jqrJsx+UldEM1416
+        51f12KMwkqaMb/DnjKAKNRmtu4KBcGyAZxblvygkbg==
+X-Google-Smtp-Source: AK7set+A9FRO1xMuryCPrO/4me6tixWO+0SFK14DctJNZ8/DouO/cwHk9Esb4rQBlA2SMC3R4VlaS3LaxZbOr1Eo4NM=
+X-Received: by 2002:a17:90a:414a:b0:22c:1be3:1985 with SMTP id
+ m10-20020a17090a414a00b0022c1be31985mr1312197pjg.192.1674890557793; Fri, 27
+ Jan 2023 23:22:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202301271655.A51DC1CF@keescook>
+References: <20230127225203.never.864-kees@kernel.org>
+In-Reply-To: <20230127225203.never.864-kees@kernel.org>
+From:   Javier Martinez Canillas <javier@dowhile0.org>
+Date:   Sat, 28 Jan 2023 08:22:26 +0100
+Message-ID: <CABxcv=kKS8DW0SWL9FxzP6g4AVAis1P21H8d9JE1bAF7p=BugA@mail.gmail.com>
+Subject: Re: [PATCH] regulator: max77802: Bounds check regulator id against opmode
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 04:57:26PM -0800, Kees Cook wrote:
-> On Fri, Jan 27, 2023 at 08:47:34PM -0400, Jason Gunthorpe wrote:
-> > On Fri, Jan 27, 2023 at 02:38:17PM -0800, Kees Cook wrote:
-> > > While the op->size assignments are already bounds-checked at static
-> > > initializer time, these limits aren't aggregated and tracked when doing
-> > > later variable range checking under -Warray-bounds. Help the compiler
-> > > see that we know what we're talking about, and we'll never ask to
-> > > write more that sizeof(ucmd.cmd) bytes during the memset() inside
-> > > copy_struct_from_user(). Seen under GCC 13:
-> > > 
-> > > In function 'copy_struct_from_user',
-> > >     inlined from 'iommufd_fops_ioctl' at ../drivers/iommu/iommufd/main.c:333:8:
-> > > ../include/linux/fortify-string.h:59:33: warning: '__builtin_memset' offset [57, 4294967294] is out of the bounds [0, 56] of object 'buf' with type 'union ucmd_buffer' [-Warray-bounds=]
-> > >    59 | #define __underlying_memset     __builtin_memset
-> > 
-> > This seems strange to me
-> > 
-> > I thought the way gcc handled this was if it knew the value must be in
-> > a certain range then it would check it
-> > 
-> > If it couldn't figure out any ranges it would not make a warning.
-> > 
-> > So why did it decide "rest" was in that really weird range?
-> 
-> It's because it got bounds-checked at the lower end (for the minimum
-> size test).
+Hello Kees,
 
-Where? There is no sizeof(ucmd.ubuffer) in this code.
+On Fri, Jan 27, 2023 at 11:52 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Explicitly bounds-check the id before accessing the opmode array. Seen
+> with GCC 13:
+>
+> ../drivers/regulator/max77802-regulator.c: In function 'max77802_enable':
+> ../drivers/regulator/max77802-regulator.c:217:29: warning: array subscript [0, 41] is outside array bounds of 'unsigned int[42]' [-Warray-bounds=]
+>   217 |         if (max77802->opmode[id] == MAX77802_OFF_PWRREQ)
+>       |             ~~~~~~~~~~~~~~~~^~~~
+> ../drivers/regulator/max77802-regulator.c:62:22: note: while referencing 'opmode'
+>    62 |         unsigned int opmode[MAX77802_REG_MAX];
+>       |                      ^~~~~~
+>
+> Cc: Javier Martinez Canillas <javier@dowhile0.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  drivers/regulator/max77802-regulator.c | 34 ++++++++++++++++++--------
 
-There are no statically computable constants at all.
+The patch looks good to me.
 
-The minimum size test loads from a struct:
+Acked-by: Javier Martinez Canillas <javierm@redhat.com>
 
-	if (ucmd.user_size < op->min_size)
-		return -EINVAL;
-
-So, either gcc can't see through that and thus has no idea what the
-bound check is
-
-Or, gcc has figured out that struct iommufd_ioctl_op::min_size has a
-finite set of values
-
-If the latter, why doesn't it also know that iommufd_ioctl_op::size
-has finite set too?
-
-Combined with the weird report that the upper end of that range is -2
-(not UINT_MAX), something very strange is going on inside gcc.
-
-Jason
+Best regards,
+Javier
