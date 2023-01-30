@@ -2,71 +2,177 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE86C61D97
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Jan 2023 18:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36961C636CB
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Jan 2023 18:19:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237225AbjA3ST0 (ORCPT
+        id S237882AbjA3ST4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 30 Jan 2023 13:19:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
+        Mon, 30 Jan 2023 13:19:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237469AbjA3STY (ORCPT
+        with ESMTP id S237405AbjA3STn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 30 Jan 2023 13:19:24 -0500
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C576B75E;
-        Mon, 30 Jan 2023 10:19:16 -0800 (PST)
-Received: by mail-pf1-f180.google.com with SMTP id g9so8454815pfo.5;
-        Mon, 30 Jan 2023 10:19:16 -0800 (PST)
+        Mon, 30 Jan 2023 13:19:43 -0500
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A0E3C280
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Jan 2023 10:19:41 -0800 (PST)
+Received: by mail-il1-x12b.google.com with SMTP id g16so5499319ilr.1
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Jan 2023 10:19:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CAFjNasnKQN5LUWGdN7AtadW817QQm7F4FvMhjCHwb0=;
+        b=RfZdv5XTG+8uD8qkRBhdwNBF0cK8e8hji8B33Gj95Q6avMrpQVnYUAuUvQ6T7IR8+p
+         MYCxMzFUWeWWkyawSiU0lbQwLFknwHfAQy3hsCbXbZdWrjCG2Tc3YHS7D6WPN1oWkG0f
+         eFMyiUb05xok2QkhaK8jh7WLReqLeYSqv2qpU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MCTnt4UHkjh+KturpG+BgNEdB7rIfLkxoGG9uQQNS2M=;
-        b=0zIXcIFwr0W4hOtTB4q1yX1RJRqm/CVALduKqZj03HJGN8rzzcKf8BO0o9Te4y/hPI
-         tk2oc5MW0h79B1ur+O/bjKyspGAHr2icdOFVgTbfW8KJ4ZWDEFzY56tvTF4i7t5hJa5j
-         XVtN+ok+Bsgb26y8GMj4q93FEm3G8Ympp9AxYELoM6sZGTObQ9RN4U0iprM2ZxReXVcf
-         GL6f4pQDYBkclPdeXFi9D3oxA2b+/Sn3drCOJO0NJMvrS+4Y9RYNwJ0eMUmfyfr6AwGm
-         XtUJRNDtmka1+pcY2XYhaEgq24SauLeH45/cEhTxhTF/5VeGQjkvOCRuj2PYaczT1ppM
-         ZGjA==
-X-Gm-Message-State: AO0yUKUSkBCwY7o/7eqBA8oiISyT1PWACVoHvdCPdwniovYeVmoeFZa/
-        sr5ZGuoPFTiOJw76qMS4q/U=
-X-Google-Smtp-Source: AK7set9F7OxYYf5cUUJPaSciocvf9756iNTgzNVxnnMshrlLCyF6v4L+p7tO0TYs0+bJjYol+1Ztwg==
-X-Received: by 2002:a05:6a00:450e:b0:593:b2b2:9544 with SMTP id cw14-20020a056a00450e00b00593b2b29544mr6190700pfb.0.1675102755589;
-        Mon, 30 Jan 2023 10:19:15 -0800 (PST)
-Received: from ?IPV6:2620:0:1000:2514:4774:59fa:531b:5f22? ([2620:0:1000:2514:4774:59fa:531b:5f22])
-        by smtp.gmail.com with ESMTPSA id m14-20020a056a00164e00b0058bc1a13ffcsm7757697pfc.25.2023.01.30.10.19.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jan 2023 10:19:14 -0800 (PST)
-Message-ID: <4504517a-25f0-5626-7dc3-50e96f392c84@acm.org>
-Date:   Mon, 30 Jan 2023 10:19:16 -0800
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CAFjNasnKQN5LUWGdN7AtadW817QQm7F4FvMhjCHwb0=;
+        b=6PHa9GbthsuZ8VOSLXiJwTMAP+hCi6+OCueAKhQHPZ6DHCMhsltlyTB4CC5NARcVjJ
+         GTCoqAU0P7E5cQCAPUHd1UMHSPQfgnmtkJ56dF4Ww982sFLHy76mEt0xTVYDdOCiD2ck
+         ubeD9+dvHliuHwl1wRob061tiWg1JNmyB78sIp4kSkxch5uflV4XZ4uUgXxR1LKKTKsC
+         KK+cwPWM6SuFNEBjz+Wa/AW4KVoeLQD4wTgpYKhOLqegoTMFF/lEzeznt3ir+YbTKYBS
+         Q1khT4bJ4T1vm6dN6ocBdn6jpADF/BLfuxUQC9ngVqoj23oX6BwA6vE+GEc8LMWRp8IL
+         kA0Q==
+X-Gm-Message-State: AO0yUKVSGcyiC5MpAp7ZLuGOveexQNy8EAd0wtQiVhFDpQmpZTQT6ZpE
+        iHkUDbyBe9EPbCAjtj+YrRPVrQ==
+X-Google-Smtp-Source: AK7set+mwFjhaqPt63RqulQxBusxgMUOOgqwMk/p2L94uGQONgxdBYrhcYQqNFbg7qLSnkSytLx+CQ==
+X-Received: by 2002:a05:6e02:1541:b0:310:c510:780c with SMTP id j1-20020a056e02154100b00310c510780cmr12382570ilu.11.1675102780494;
+        Mon, 30 Jan 2023 10:19:40 -0800 (PST)
+Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
+        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Jan 2023 10:19:40 -0800 (PST)
+From:   Ross Zwisler <zwisler@chromium.org>
+X-Google-Original-From: Ross Zwisler <zwisler@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ross Zwisler <zwisler@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>, Huang Rui <ray.huang@amd.com>,
+        Ingo Molnar <mingo@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Jason Wang <jasowang@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Todd E Brandt <todd.e.brandt@linux.intel.com>,
+        Tycho Andersen <tycho@tycho.pizza>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/9] use canonical ftrace path whenever possible
+Date:   Mon, 30 Jan 2023 11:19:06 -0700
+Message-Id: <20230130181915.1113313-1-zwisler@google.com>
+X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH] scsi: aacraid: Allocate cmd_priv with scsicmd
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Hannes Reinecke <hare@suse.de>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230128000409.never.976-kees@kernel.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20230128000409.never.976-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 1/27/23 16:04, Kees Cook wrote:
-> The aac_priv() helper assumes that the private cmd area immediately
-> follows struct scsi_cmnd. Allocate this space as part of scsicmd,
-> else there is a risk of heap overflow. Seen with GCC 13: [ ... ]
+The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
 
-Bart Van Assche <bvanassche@acm.org>
+But, from Documentation/trace/ftrace.rst:
+
+  Before 4.1, all ftrace tracing control files were within the debugfs
+  file system, which is typically located at /sys/kernel/debug/tracing.
+  For backward compatibility, when mounting the debugfs file system,
+  the tracefs file system will be automatically mounted at:
+
+  /sys/kernel/debug/tracing
+
+There are many places where this older debugfs path is still used in
+code comments, selftests, examples and tools, so let's update them to
+avoid confusion.
+
+I've broken up the series as best I could by maintainer or directory,
+and I've only sent people the patches that I think they care about to
+avoid spamming everyone.
+
+Ross Zwisler (9):
+  tracing: always use canonical ftrace path
+  bpf: use canonical ftrace path
+  selftests/bpf: use canonical ftrace path
+  perf docs: use canonical ftrace path
+  tools/power: use canonical ftrace path
+  selftests: use canonical ftrace path
+  tools/virtio: use canonical ftrace path
+  leaking_addresses: also skip canonical ftrace path
+  tools/kvm_stat: use canonical ftrace path
+
+ include/linux/kernel.h                        |  2 +-
+ include/linux/tracepoint.h                    |  4 ++--
+ include/uapi/linux/bpf.h                      |  8 ++++----
+ kernel/trace/Kconfig                          | 20 +++++++++----------
+ kernel/trace/kprobe_event_gen_test.c          |  2 +-
+ kernel/trace/ring_buffer.c                    |  2 +-
+ kernel/trace/synth_event_gen_test.c           |  2 +-
+ kernel/trace/trace.c                          |  2 +-
+ samples/bpf/cpustat_kern.c                    |  4 ++--
+ samples/bpf/hbm.c                             |  4 ++--
+ samples/bpf/ibumad_kern.c                     |  4 ++--
+ samples/bpf/lwt_len_hist.sh                   |  2 +-
+ samples/bpf/offwaketime_kern.c                |  2 +-
+ samples/bpf/task_fd_query_user.c              |  4 ++--
+ samples/bpf/test_lwt_bpf.sh                   |  2 +-
+ samples/bpf/test_overhead_tp_kern.c           |  4 ++--
+ samples/user_events/example.c                 |  4 ++--
+ scripts/leaking_addresses.pl                  |  1 +
+ scripts/tracing/draw_functrace.py             |  6 +++---
+ scripts/tracing/ftrace-bisect.sh              |  4 ++--
+ tools/include/uapi/linux/bpf.h                |  8 ++++----
+ tools/kvm/kvm_stat/kvm_stat                   |  2 +-
+ tools/lib/api/fs/tracing_path.c               |  4 ++--
+ tools/lib/traceevent/event-parse.c            |  8 ++++----
+ tools/perf/Documentation/perf-list.txt        |  2 +-
+ tools/perf/Documentation/perf-script-perl.txt |  2 +-
+ .../perf/Documentation/perf-script-python.txt |  4 ++--
+ tools/power/pm-graph/sleepgraph.py            |  4 ++--
+ .../x86/amd_pstate_tracer/amd_pstate_trace.py |  4 ++--
+ .../intel_pstate_tracer.py                    | 10 +++++-----
+ .../selftests/bpf/get_cgroup_id_user.c        |  2 +-
+ .../bpf/prog_tests/kprobe_multi_test.c        |  2 +-
+ .../bpf/prog_tests/task_fd_query_tp.c         |  2 +-
+ .../bpf/prog_tests/tp_attach_query.c          |  2 +-
+ .../selftests/bpf/prog_tests/trace_printk.c   |  2 +-
+ .../selftests/bpf/prog_tests/trace_vprintk.c  |  2 +-
+ .../selftests/bpf/progs/test_stacktrace_map.c |  2 +-
+ .../selftests/bpf/progs/test_tracepoint.c     |  2 +-
+ tools/testing/selftests/bpf/test_ftrace.sh    |  2 +-
+ tools/testing/selftests/bpf/test_tunnel.sh    |  8 ++++----
+ tools/testing/selftests/bpf/trace_helpers.c   |  4 ++--
+ .../testing/selftests/user_events/dyn_test.c  |  2 +-
+ .../selftests/user_events/ftrace_test.c       | 10 +++++-----
+ .../testing/selftests/user_events/perf_test.c |  8 ++++----
+ tools/testing/selftests/vm/protection_keys.c  |  4 ++--
+ tools/tracing/latency/latency-collector.c     |  2 +-
+ tools/virtio/virtio-trace/README              |  2 +-
+ tools/virtio/virtio-trace/trace-agent.c       |  2 +-
+ 48 files changed, 96 insertions(+), 95 deletions(-)
+
+-- 
+2.39.1.456.gfc5497dd1b-goog
 
