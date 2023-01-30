@@ -2,91 +2,67 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36961C636CB
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Jan 2023 18:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B94C6379F
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237882AbjA3ST4 (ORCPT
+        id S237710AbjA3SUB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 30 Jan 2023 13:19:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51444 "EHLO
+        Mon, 30 Jan 2023 13:20:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237405AbjA3STn (ORCPT
+        with ESMTP id S237797AbjA3STu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 30 Jan 2023 13:19:43 -0500
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21A0E3C280
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Jan 2023 10:19:41 -0800 (PST)
-Received: by mail-il1-x12b.google.com with SMTP id g16so5499319ilr.1
-        for <linux-hardening@vger.kernel.org>; Mon, 30 Jan 2023 10:19:41 -0800 (PST)
+        Mon, 30 Jan 2023 13:19:50 -0500
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D104B3C280
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Jan 2023 10:19:46 -0800 (PST)
+Received: by mail-il1-x12c.google.com with SMTP id w13so1400113ilv.3
+        for <linux-hardening@vger.kernel.org>; Mon, 30 Jan 2023 10:19:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CAFjNasnKQN5LUWGdN7AtadW817QQm7F4FvMhjCHwb0=;
-        b=RfZdv5XTG+8uD8qkRBhdwNBF0cK8e8hji8B33Gj95Q6avMrpQVnYUAuUvQ6T7IR8+p
-         MYCxMzFUWeWWkyawSiU0lbQwLFknwHfAQy3hsCbXbZdWrjCG2Tc3YHS7D6WPN1oWkG0f
-         eFMyiUb05xok2QkhaK8jh7WLReqLeYSqv2qpU=
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MFIqgVTcMIkkVJ93WrMRe7xk5hOeBy6iHYq/c2dnAus=;
+        b=BOXkMcmV7Kg852E/lMV7VPR9bxQHwZJ1VHOqpllPBP1SPusf47QZzPxzqalItFJl+E
+         h6nY4dhdr/HYhYO0zqlz9dGhFYDJIhs8qJoibnsTiBOqLYIthHpGfkJc3OH6cH/UfAL+
+         CYsejaXnNlcgjAXUTVlZ9/Ibodd9dneGfTxTc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CAFjNasnKQN5LUWGdN7AtadW817QQm7F4FvMhjCHwb0=;
-        b=6PHa9GbthsuZ8VOSLXiJwTMAP+hCi6+OCueAKhQHPZ6DHCMhsltlyTB4CC5NARcVjJ
-         GTCoqAU0P7E5cQCAPUHd1UMHSPQfgnmtkJ56dF4Ww982sFLHy76mEt0xTVYDdOCiD2ck
-         ubeD9+dvHliuHwl1wRob061tiWg1JNmyB78sIp4kSkxch5uflV4XZ4uUgXxR1LKKTKsC
-         KK+cwPWM6SuFNEBjz+Wa/AW4KVoeLQD4wTgpYKhOLqegoTMFF/lEzeznt3ir+YbTKYBS
-         Q1khT4bJ4T1vm6dN6ocBdn6jpADF/BLfuxUQC9ngVqoj23oX6BwA6vE+GEc8LMWRp8IL
-         kA0Q==
-X-Gm-Message-State: AO0yUKVSGcyiC5MpAp7ZLuGOveexQNy8EAd0wtQiVhFDpQmpZTQT6ZpE
-        iHkUDbyBe9EPbCAjtj+YrRPVrQ==
-X-Google-Smtp-Source: AK7set+mwFjhaqPt63RqulQxBusxgMUOOgqwMk/p2L94uGQONgxdBYrhcYQqNFbg7qLSnkSytLx+CQ==
-X-Received: by 2002:a05:6e02:1541:b0:310:c510:780c with SMTP id j1-20020a056e02154100b00310c510780cmr12382570ilu.11.1675102780494;
-        Mon, 30 Jan 2023 10:19:40 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MFIqgVTcMIkkVJ93WrMRe7xk5hOeBy6iHYq/c2dnAus=;
+        b=kjU010PDTAvYHdI1i4RDDZnPwHeNjFBekOZ8kM1o7CO6N0drvxYU2M430/h1lLDtMB
+         rfuG29v/p9ZW5hk8aT1YHGuCQ7oRkb4HEbC4oTuzpYj0SxWoSBGVetwx2w6k/xYdiF3K
+         t0hGbeA/DX2kK4Zr5vQdxZANnT/Pf9NRWnYjtxCYYmLke9QcjxYe88HzDT+PjpYs/g2g
+         AtgV00EUpewv91mCZyM+SiYMUUiZvrRGTmf5pwn4svx536D/dktohK8HSHQt+kCwBHLB
+         mqmnwGq1USWL7bbA/wWFXdTYPsUyZ2YdFuQrgzw2Mwrco9x4bHddqTCMHSbD8bI4ycPU
+         3mPQ==
+X-Gm-Message-State: AO0yUKUo1+o23aPb1u4tBKqmzYe+MoTI3phEYNiXt3G8tcZ+ec2zO1OT
+        egNxa5LsJY0kgNTBrrZJ2W12xA==
+X-Google-Smtp-Source: AK7set8M9u01+a5gnWBWumGHfQfWw+OV0WvXprCsJSsUeNjRozqjV2EnxgHWdTQxe8fVrDNFccalzA==
+X-Received: by 2002:a92:b301:0:b0:310:be1e:78e6 with SMTP id p1-20020a92b301000000b00310be1e78e6mr7959753ilh.26.1675102786604;
+        Mon, 30 Jan 2023 10:19:46 -0800 (PST)
 Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
-        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.38
+        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 10:19:40 -0800 (PST)
+        Mon, 30 Jan 2023 10:19:46 -0800 (PST)
 From:   Ross Zwisler <zwisler@chromium.org>
 X-Google-Original-From: Ross Zwisler <zwisler@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ross Zwisler <zwisler@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
         "Tobin C. Harding" <me@tobin.cc>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>, Huang Rui <ray.huang@amd.com>,
-        Ingo Molnar <mingo@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Wang <jasowang@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Todd E Brandt <todd.e.brandt@linux.intel.com>,
-        Tycho Andersen <tycho@tycho.pizza>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 0/9] use canonical ftrace path whenever possible
-Date:   Mon, 30 Jan 2023 11:19:06 -0700
-Message-Id: <20230130181915.1113313-1-zwisler@google.com>
+        linux-trace-kernel@vger.kernel.org,
+        Tycho Andersen <tycho@tycho.pizza>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 8/9] leaking_addresses: also skip canonical ftrace path
+Date:   Mon, 30 Jan 2023 11:19:14 -0700
+Message-Id: <20230130181915.1113313-9-zwisler@google.com>
 X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
+In-Reply-To: <20230130181915.1113313-1-zwisler@google.com>
+References: <20230130181915.1113313-1-zwisler@google.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -104,75 +80,26 @@ But, from Documentation/trace/ftrace.rst:
 
   /sys/kernel/debug/tracing
 
-There are many places where this older debugfs path is still used in
-code comments, selftests, examples and tools, so let's update them to
-avoid confusion.
+scripts/leaking_addresses.pl only skipped this older debugfs path, so
+let's add the canonical path as well.
 
-I've broken up the series as best I could by maintainer or directory,
-and I've only sent people the patches that I think they care about to
-avoid spamming everyone.
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+---
+ scripts/leaking_addresses.pl | 1 +
+ 1 file changed, 1 insertion(+)
 
-Ross Zwisler (9):
-  tracing: always use canonical ftrace path
-  bpf: use canonical ftrace path
-  selftests/bpf: use canonical ftrace path
-  perf docs: use canonical ftrace path
-  tools/power: use canonical ftrace path
-  selftests: use canonical ftrace path
-  tools/virtio: use canonical ftrace path
-  leaking_addresses: also skip canonical ftrace path
-  tools/kvm_stat: use canonical ftrace path
-
- include/linux/kernel.h                        |  2 +-
- include/linux/tracepoint.h                    |  4 ++--
- include/uapi/linux/bpf.h                      |  8 ++++----
- kernel/trace/Kconfig                          | 20 +++++++++----------
- kernel/trace/kprobe_event_gen_test.c          |  2 +-
- kernel/trace/ring_buffer.c                    |  2 +-
- kernel/trace/synth_event_gen_test.c           |  2 +-
- kernel/trace/trace.c                          |  2 +-
- samples/bpf/cpustat_kern.c                    |  4 ++--
- samples/bpf/hbm.c                             |  4 ++--
- samples/bpf/ibumad_kern.c                     |  4 ++--
- samples/bpf/lwt_len_hist.sh                   |  2 +-
- samples/bpf/offwaketime_kern.c                |  2 +-
- samples/bpf/task_fd_query_user.c              |  4 ++--
- samples/bpf/test_lwt_bpf.sh                   |  2 +-
- samples/bpf/test_overhead_tp_kern.c           |  4 ++--
- samples/user_events/example.c                 |  4 ++--
- scripts/leaking_addresses.pl                  |  1 +
- scripts/tracing/draw_functrace.py             |  6 +++---
- scripts/tracing/ftrace-bisect.sh              |  4 ++--
- tools/include/uapi/linux/bpf.h                |  8 ++++----
- tools/kvm/kvm_stat/kvm_stat                   |  2 +-
- tools/lib/api/fs/tracing_path.c               |  4 ++--
- tools/lib/traceevent/event-parse.c            |  8 ++++----
- tools/perf/Documentation/perf-list.txt        |  2 +-
- tools/perf/Documentation/perf-script-perl.txt |  2 +-
- .../perf/Documentation/perf-script-python.txt |  4 ++--
- tools/power/pm-graph/sleepgraph.py            |  4 ++--
- .../x86/amd_pstate_tracer/amd_pstate_trace.py |  4 ++--
- .../intel_pstate_tracer.py                    | 10 +++++-----
- .../selftests/bpf/get_cgroup_id_user.c        |  2 +-
- .../bpf/prog_tests/kprobe_multi_test.c        |  2 +-
- .../bpf/prog_tests/task_fd_query_tp.c         |  2 +-
- .../bpf/prog_tests/tp_attach_query.c          |  2 +-
- .../selftests/bpf/prog_tests/trace_printk.c   |  2 +-
- .../selftests/bpf/prog_tests/trace_vprintk.c  |  2 +-
- .../selftests/bpf/progs/test_stacktrace_map.c |  2 +-
- .../selftests/bpf/progs/test_tracepoint.c     |  2 +-
- tools/testing/selftests/bpf/test_ftrace.sh    |  2 +-
- tools/testing/selftests/bpf/test_tunnel.sh    |  8 ++++----
- tools/testing/selftests/bpf/trace_helpers.c   |  4 ++--
- .../testing/selftests/user_events/dyn_test.c  |  2 +-
- .../selftests/user_events/ftrace_test.c       | 10 +++++-----
- .../testing/selftests/user_events/perf_test.c |  8 ++++----
- tools/testing/selftests/vm/protection_keys.c  |  4 ++--
- tools/tracing/latency/latency-collector.c     |  2 +-
- tools/virtio/virtio-trace/README              |  2 +-
- tools/virtio/virtio-trace/trace-agent.c       |  2 +-
- 48 files changed, 96 insertions(+), 95 deletions(-)
-
+diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
+index 8f636a23bc3f..e695634d153d 100755
+--- a/scripts/leaking_addresses.pl
++++ b/scripts/leaking_addresses.pl
+@@ -61,6 +61,7 @@ my @skip_abs = (
+ 	'/proc/device-tree',
+ 	'/proc/1/syscall',
+ 	'/sys/firmware/devicetree',
++	'/sys/kernel/tracing/trace_pipe',
+ 	'/sys/kernel/debug/tracing/trace_pipe',
+ 	'/sys/kernel/security/apparmor/revision');
+ 
 -- 
 2.39.1.456.gfc5497dd1b-goog
 
