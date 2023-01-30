@@ -2,34 +2,34 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE7AC61DA4
-	for <linux-hardening@archiver.kernel.org>; Mon, 30 Jan 2023 14:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BF0C54EED
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Jan 2023 14:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237632AbjA3OTU (ORCPT
+        id S237696AbjA3O0k (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 30 Jan 2023 09:19:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33112 "EHLO
+        Mon, 30 Jan 2023 09:26:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237634AbjA3OS4 (ORCPT
+        with ESMTP id S237717AbjA3O0R (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 30 Jan 2023 09:18:56 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74BC27681;
-        Mon, 30 Jan 2023 06:17:52 -0800 (PST)
+        Mon, 30 Jan 2023 09:26:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E9A3D92C;
+        Mon, 30 Jan 2023 06:25:03 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6A58FB811E1;
-        Mon, 30 Jan 2023 14:17:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEBD8C4339E;
-        Mon, 30 Jan 2023 14:17:47 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C8474B80C9B;
+        Mon, 30 Jan 2023 14:24:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20D87C433EF;
+        Mon, 30 Jan 2023 14:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1675088268;
+        s=korg; t=1675088671;
         bh=A3tC2FbFK0ui4EdTlSAS2z7JqfxGBW7AJ2cXa2P2ug8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2W6P0d1x6DC152GmSGuDCxeHAKKcm199g/bVolVYgyNxIghw0Sxt0+FisGHTsa0nW
-         cywHwRqr6Q8r99eTEDu9LtTV8BRFtMVGyfeHf0zZQcLCnd2VltS/DScPU4SZ3i4gc7
-         K9xofpndN4CeL9+OFWfWe9CN0NN1OHHEFAucSIkk=
+        b=Mw1tp/ywvxRbt4pE4c7ft7DyyTTkpWBzg2JSEKWcN2ZemRGPWm/9c0vmuIugiwljf
+         PpEPoA2rSqu661DMMVY1PmxxC9KB+3jwHAiMleQSzV/+eGjWxeT4WU46N7UpkfVX6y
+         pqgQlnnRSBtHuqs/IvGt0JziMN9zZs5bHAh65y14=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -37,12 +37,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Eric Biggers <ebiggers@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.15 141/204] docs: Fix path paste-o for /sys/kernel/warn_count
-Date:   Mon, 30 Jan 2023 14:51:46 +0100
-Message-Id: <20230130134322.737944287@linuxfoundation.org>
+Subject: [PATCH 5.10 097/143] docs: Fix path paste-o for /sys/kernel/warn_count
+Date:   Mon, 30 Jan 2023 14:52:34 +0100
+Message-Id: <20230130134310.862271417@linuxfoundation.org>
 X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230130134316.327556078@linuxfoundation.org>
-References: <20230130134316.327556078@linuxfoundation.org>
+In-Reply-To: <20230130134306.862721518@linuxfoundation.org>
+References: <20230130134306.862721518@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
