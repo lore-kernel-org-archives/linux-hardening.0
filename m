@@ -2,95 +2,121 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 212B9C05027
-	for <linux-hardening@archiver.kernel.org>; Sun, 29 Jan 2023 21:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99877C54EAA
+	for <linux-hardening@archiver.kernel.org>; Mon, 30 Jan 2023 05:15:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234868AbjA2VUn (ORCPT
+        id S235541AbjA3FO7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 29 Jan 2023 16:20:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48528 "EHLO
+        Mon, 30 Jan 2023 00:14:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjA2VUm (ORCPT
+        with ESMTP id S235529AbjA3FO7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 29 Jan 2023 16:20:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358522684;
-        Sun, 29 Jan 2023 13:20:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B893F60DCC;
-        Sun, 29 Jan 2023 21:20:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 269F1C433EF;
-        Sun, 29 Jan 2023 21:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675027241;
-        bh=kWLMQrFqShcluz07QO5vOBfP0AiHRWpr8FUknDuT51c=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Lm8rserOmXwPSHSxL4fL8MMBG+V5eoyPGufc4gf71ro9Az9HuC4pfK1+ibeT+jrjE
-         9Hqfd64WU2tlRHOGsdSB6Z3zqdOUqD9h7MrysAr/ILwMqg5d8VHX4ZO3d5xwaWnf2i
-         mVMf1aAy0QuaS9qbBOSczp2+Z7r1FMuc4X3nEIxGd6PuLfN7M6ImOMkrgwfHf/qkuY
-         5si2JeTV905zYfBlaMW6EL1xYY+dt+E/JeU7GAVnsQQN4gcyQvXhLE2IIrDSfznYOS
-         RluKNbC7OJvQgGtqzNLS8jImsygjunU4gHaJ3n5+AlSwNDQfne7PcFJXBP4c34gvdd
-         zV85Sc24DpbUg==
-Received: by mail-vs1-f51.google.com with SMTP id y8so10676539vsq.0;
-        Sun, 29 Jan 2023 13:20:41 -0800 (PST)
-X-Gm-Message-State: AFqh2kpj28W32Vxi9mVn3CoyrfPAL1vtG99Ox+W4g3TsP580ATKRyH3E
-        DVyORpf0OR/ClGlrnfcNPMLs5WlPvgP0k3+R1w==
-X-Google-Smtp-Source: AMrXdXsO0UKVf3d7SOMw8/7583PiRZiRlhNbFl++XIntdRN5ODCwGQ2dEyGP6VEOMUa6VrvVubh3sCXD7L+nkuUu38s=
-X-Received: by 2002:a05:6102:5490:b0:3b5:1fe4:f1c2 with SMTP id
- bk16-20020a056102549000b003b51fe4f1c2mr6411996vsb.0.1675027240073; Sun, 29
- Jan 2023 13:20:40 -0800 (PST)
+        Mon, 30 Jan 2023 00:14:59 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DAE23C71;
+        Sun, 29 Jan 2023 21:14:58 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30U4C3qs019432;
+        Mon, 30 Jan 2023 05:14:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=M9KtfpmFVdbIRd/2qYLXC/lqTjcA85o9Am5EbHuy21w=;
+ b=fTOk1h5wZ2M65sVyrHeda7+QCislWfOlIL5+JBKtmeeyfiDCUfcNLO6SRJCCVOyrUuyf
+ +EhSjbTfDdeeswVC5Qmg2DT7biZCUUPyCBprP+/3FpT0Hqt6PTfPajHJCDSydlqjlvt9
+ do0m7KPt6XepOoaHgBmH9T4dr+DQ/o6/XhQRyb2VW5AZfCNYGnzNbHnR1KGBzEBGAMIf
+ gmJUrQX0JtDeYDcEK/T/pRv/VaDyg384r/sTtlcp5W0+PHmRpuPu0rmUTUDgJ+YzZO0n
+ Vd3PnqjGGP/yyfzHHX/s2dAS6HOjaeL9QhDIJ4EfM1sVBGewDYQ9RMjK5AISvk6lHshZ oQ== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ncs2x35cw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Jan 2023 05:14:41 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30U5EeUs030359
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Jan 2023 05:14:40 GMT
+Received: from [10.216.24.235] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Sun, 29 Jan
+ 2023 21:14:37 -0800
+Message-ID: <343d8b2f-9b7e-85ba-6f68-13cef73e55d0@quicinc.com>
+Date:   Mon, 30 Jan 2023 10:44:32 +0530
 MIME-Version: 1.0
-References: <20230127224101.never.746-kees@kernel.org> <CAL_JsqKVp57NtR11JV-eXktMU9_dQ+8sF8YSPe7KyazrvJB-eQ@mail.gmail.com>
- <202301271609.15F0E5EB15@keescook> <202301271624.01B4A55D3C@keescook>
-In-Reply-To: <202301271624.01B4A55D3C@keescook>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Sun, 29 Jan 2023 15:20:28 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+fJk29-wGp02eFFru2Pn+m6eGKnVT6XJJyf-WtkxWw4g@mail.gmail.com>
-Message-ID: <CAL_Jsq+fJk29-wGp02eFFru2Pn+m6eGKnVT6XJJyf-WtkxWw4g@mail.gmail.com>
-Subject: Re: [PATCH] scripts/dtc: Replace 0-length arrays with flexible arrays
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v4 1/2] dt-bindings: ramoops: Inherit reserve memory
+ property
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <linux-hardening@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+References: <1674835252-31954-1-git-send-email-quic_mojha@quicinc.com>
+ <10097835-30fe-bbad-6c95-e5ec9dca3e2e@linaro.org>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <10097835-30fe-bbad-6c95-e5ec9dca3e2e@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: udmzns9DRiekGpBmEu07sWQoqDSenRk-
+X-Proofpoint-GUID: udmzns9DRiekGpBmEu07sWQoqDSenRk-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-30_03,2023-01-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 mlxscore=0 mlxlogscore=622 impostorscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2301300048
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 6:24 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Jan 27, 2023 at 04:12:21PM -0800, Kees Cook wrote:
-> > On Fri, Jan 27, 2023 at 05:44:13PM -0600, Rob Herring wrote:
-> > > On Fri, Jan 27, 2023 at 4:41 PM Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > Replace the 0-length array with a C99 flexible array. Seen with GCC 13
-> > > > under -fstrict-flex-arrays:
-> > > >
-> > > > In file included from ../lib/fdt_ro.c:2:
-> > > > ../lib/../scripts/dtc/libfdt/fdt_ro.c: In function 'fdt_get_name':
-> > > > ../lib/../scripts/dtc/libfdt/fdt_ro.c:319:24: warning: 'strrchr' reading 1 or more bytes from a region of size 0 [-Wstringop-overread]
-> > > >   319 |                 leaf = strrchr(nameptr, '/');
-> > > >       |                        ^~~~~~~~~~~~~~~~~~~~~
-> > > >
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > > ---
-> > > >  scripts/dtc/libfdt/fdt.h | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > Changes to dtc/libfdt go to upstream dtc first and then we sync them back.
-> >
-> > Ah-ha, I've found it: https://github.com/dgibson/dtc
->
-> Sent upstream: https://github.com/dgibson/dtc/pull/76
 
-Maybe David will take that PR, but upstream is here[1]. Patches go to
-devicetree-compiler@vger.kernel.org.
 
-Rob
+On 1/28/2023 1:34 AM, Krzysztof Kozlowski wrote:
+> On 27/01/2023 17:00, Mukesh Ojha wrote:
+>> The reserved memory region for ramoops is assumed to be at a
+>> fixed and known location when read from the devicetree. This
+>> is not desirable in an environment where it is preferred the
+>> region to be dynamically allocated at runtime, as opposed to
+>> being fixed at compile time.
+>>
+>> So, update the ramoops binding by inheriting some reserve memory
+>> property to allocate the ramoops region dynamically.
+>>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Cc: Tony Luck <tony.luck@intel.com>
+>> Cc: Guilherme G. Piccoli <gpiccoli@igalia.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> 
+> Drop. There is no single need to store automated output of
+> get_maintainers.pl in the git log forever. It can be easily re-created
+> at any given time.
+> 
+> If you need it for your own patch management purposes, keep it under ---.
+> 
 
-[1] https://git.kernel.org/pub/scm/utils/dtc/dtc.git
+Will drop, thanks.
+
+> Additionally:
+> where is patch number 2?
+
+It was merged with 2/2 as it was not making sense to keep it as separate 
+patch
+
+-Mukesh
+
+> 
+> Best regards,
+> Krzysztof
+> 
