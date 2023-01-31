@@ -2,96 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4458C636CD
-	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 18:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E1AC38142
+	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 20:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231781AbjAaS4d (ORCPT
+        id S229574AbjAaUPp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 31 Jan 2023 13:56:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45836 "EHLO
+        Tue, 31 Jan 2023 15:15:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231891AbjAaS4a (ORCPT
+        with ESMTP id S229851AbjAaUPo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 31 Jan 2023 13:56:30 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13871564A2;
-        Tue, 31 Jan 2023 10:56:28 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id h9so7446785plf.9;
-        Tue, 31 Jan 2023 10:56:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vo+PP5rZvWzLJ4tS2JVrm/BkjseLKTB/pXjSiJS1fiA=;
-        b=NjNUfeiwVedY7ijAaJxzQFpFTTobwOPiU41FJ5iXy/Wq+F5e9+LGe+pdUQEY6vlBEP
-         qEp3Qd9hK3vgULEWl28bIZWr7dpCCiCCIIhWKx5oYwh+6mqWsPgJtkvgDjaFsVMSmIBD
-         bi6XJqZCN0gZk22ObkHTTLAr4UWh4W6ovLJvc0WDQNyiDBlAhK9Jfezh5T+sb5b/QanF
-         b8Wl+Qd4LeMTml7+WbLs/erEBn53MSL04J8HRJBnKVCL1xeeGYhYj6XKN09HS8Vkcr4P
-         qE3ZxCjABT1vjVgmYvJr7UoFu5L7FdeQ+Uw9+qFjRUBtZyl+hWmqaoFuNEaORtoUdpvU
-         HXlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vo+PP5rZvWzLJ4tS2JVrm/BkjseLKTB/pXjSiJS1fiA=;
-        b=f2xS4KwCRHAqrsUm1JxGeacLX2fOJWA9uO+gEep0wc87HFO9Y4bfIQwwxk6OTPCOlC
-         r9I+z7KZfWHSi+jwwNUQSmfxAzn1pTWEO4Dj+Tp8Vdm3j1ZhGOY2K3LkoDq0m5I4cgw8
-         UcmrOQFS1udJOVas1DtEso+LwPSBm9M9thwAK80mpfGkGDV40XnDXxnn7rvbXJkjiL68
-         meF7Yit3Y7Txbiwd5MN+0L6UWIKh0wRG5WMvvXP4gMsQ7xIzYA4H/ydVvD19hZEQWp2H
-         KTY6vM3z+8XHyVaiQwp2HGF5kLYjPb703z4XkEFkQsoDsMEPn8Olbq3bq1WmlLtBvaC+
-         nT8w==
-X-Gm-Message-State: AO0yUKVD7NZ5qo9eKoRvUYK1Hicz9w92XQiEvo1hR6EXdlaZA+6sbE6a
-        dclX0gxhoBMBdvfNKCzVgcg=
-X-Google-Smtp-Source: AK7set8BWzzHDDq6BZxjX/SxLpe2V3z0ke8s/n1Zor+AIq9deBw2h//6/n/pGYXbJImCXxooRRwO1A==
-X-Received: by 2002:a17:902:e2d3:b0:196:780a:ada8 with SMTP id l19-20020a170902e2d300b00196780aada8mr23941plc.6.1675191387610;
-        Tue, 31 Jan 2023 10:56:27 -0800 (PST)
-Received: from Gentoo (n220246252084.netvigator.com. [220.246.252.84])
-        by smtp.gmail.com with ESMTPSA id l8-20020a170903244800b0019601f98550sm1412397pls.132.2023.01.31.10.56.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Jan 2023 10:56:26 -0800 (PST)
-Date:   Wed, 1 Feb 2023 02:56:20 +0800
-From:   Jianhua Lu <lujianhua000@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm: qcom: Add Xiaomi Mi Pad 5 Pro
- (xiaomi-elish)
-Message-ID: <Y9lkVAbvxMoOOrdp@Gentoo>
-References: <20230131123515.833-1-lujianhua000@gmail.com>
- <ecfd20e4-905a-3ce3-86af-c9d9ad0cfd94@linaro.org>
+        Tue, 31 Jan 2023 15:15:44 -0500
+X-Greylist: delayed 90 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 31 Jan 2023 12:15:43 PST
+Received: from omta039.useast.a.cloudfilter.net (omta039.useast.a.cloudfilter.net [44.202.169.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B65DF2B2A2
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Jan 2023 12:15:43 -0800 (PST)
+Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
+        by cmsmtp with ESMTP
+        id Mt3LpzRoWJlHBMx1ApaQvg; Tue, 31 Jan 2023 20:14:12 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id Mx19pG8YtVU6VMx19plW5d; Tue, 31 Jan 2023 20:14:11 +0000
+X-Authority-Analysis: v=2.4 cv=Z/j/oVdA c=1 sm=1 tr=0 ts=63d97693
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=RvmDmJFTN0MA:10
+ a=wYkD_t78qR0A:10 a=8pif782wAAAA:8 a=VwQbUJbxAAAA:8 a=NEAV23lmAAAA:8
+ a=mDV3o1hIAAAA:8 a=rQwXfPfrytjjklgZoK0A:9 a=QEXdDO2ut3YA:10 a=o-vr1ZrRZO8A:10
+ a=3SQbtOYribkA:10 a=AjGcO6oz07-iQ99wixmX:22 a=_FVE-zBwftR9WsbkzFJk:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=w7c0OSkAfjTz5fKechJKG0JstQNvIvF9iDgA1jWVlfI=; b=ln7Guya0Fn0+7ib+RlmLCQW/7Z
+        /we4xbNByB0hqPXLQfXAzLihIxfJBvw8qJ9upNCtmJ5lIh7/DIPmuL5sUQ1PaARHft1MQSXGGZPhJ
+        jjkHNlBsNNAF6JaWOCQ0GWAZC4mzIa299NtFJq0QnCGZeQesogBFbwvFJcfsMneP3QgbUSjQTVRIv
+        grdQ2mDsS2tkcQI66bcGpXirfrBYSb31o6my8S/62O/osQ0WWCGxhEA9EkmMygqewcNlcna/dMXve
+        OBLjGMJkY3rNCauW/Q79JjGSAYoBzI+Kkz3VodV5eZ08TxQ3DLSsHe1aBdvxig9CiKGL8oDtlEqA+
+        uXMwrNJw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:57042 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1pMx18-0033gy-FB;
+        Tue, 31 Jan 2023 14:14:10 -0600
+Message-ID: <ab1caeae-4bf2-ab03-36f7-40b04f34f007@embeddedor.com>
+Date:   Tue, 31 Jan 2023 14:14:15 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ecfd20e4-905a-3ce3-86af-c9d9ad0cfd94@linaro.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 0/3][next] scsi: smartpqi: Replace one-element arrays with
+ flexible-array members
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kevin Barnett <kevin.barnett@microsemi.com>,
+        Don Brace <don.brace@microchip.com>, storagedev@microchip.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <cover.1663816572.git.gustavoars@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <cover.1663816572.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1pMx18-0033gy-FB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:57042
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfCeTyu/yST6UUS1756tsZO9wTqHwvVkqU6tiJT0lSrIceD3ysDLvfJtJY4l7PqDU4OMrtr0BEwVDSrvlduEdRIyh6vGD10FVENk2Kl+payVx1uQuLRiH
+ 4xxLiRMAzDKDlklp1zMKSS87OLUlZHc7gTXK3oEoTdFLyLNkCGyIrgvfmxh6w6HszyU4k0btTB0jWdkCnwrCdQIwrWIvlL3TvKFtz615LP7j7nDqzi57U8TI
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 07:06:31PM +0100, Krzysztof Kozlowski wrote:
-> On 31/01/2023 13:35, Jianhua Lu wrote:
-> > Add a compatible for Xiaomi Mi Pad 5 Pro.
-> > 
-> > Signed-off-by: Jianhua Lu <lujianhua000@gmail.com>
-> > ---
-> > No changes in v4
-> > 
-> > Changes in v3:
-> >   - Pick up Krzysztof's A-b
+Hi all,
+
+Friendly ping: who can review/take this, please? :)
+
+Thanks
+--
+Gustavo
+
+On 9/21/22 23:26, Gustavo A. R. Silva wrote:
+> Hi!
 > 
-> Where is it?
-Sorry, I accidentally drop it when I copy paste changes log.
-I will readd it for v5, sorry.
+> This series aims to replace one-element arrays with flexible-array
+> members in drivers/scsi/smartpqi/smartpqi.h
 > 
-> Best regards,
-> Krzysztof
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://en.wikipedia.org/wiki/Flexible_array_member
+> Link: https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/109
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
+> 
+> Gustavo A. R. Silva (3):
+>    scsi: smartpqi: Replace one-element array with flexible-array member
+>    scsi: smartpqi: Replace one-element arrays with flexible-array members
+>    scsi: smartpqi: Use struct_size() helper in pqi_report_phys_luns()
+> 
+>   drivers/scsi/smartpqi/smartpqi.h      |  6 +++---
+>   drivers/scsi/smartpqi/smartpqi_init.c | 12 ++++--------
+>   2 files changed, 7 insertions(+), 11 deletions(-)
 > 
