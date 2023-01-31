@@ -2,92 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF55C38142
-	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 10:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456F0C636CC
+	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 10:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232029AbjAaKCO (ORCPT
+        id S229693AbjAaKKk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 31 Jan 2023 05:02:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60798 "EHLO
+        Tue, 31 Jan 2023 05:10:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232181AbjAaKCE (ORCPT
+        with ESMTP id S230168AbjAaKKT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 31 Jan 2023 05:02:04 -0500
+        Tue, 31 Jan 2023 05:10:19 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A8B4B1B0;
-        Tue, 31 Jan 2023 02:01:57 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA2955A0;
+        Tue, 31 Jan 2023 02:10:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1DE326148D;
-        Tue, 31 Jan 2023 10:01:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78610C433D2;
-        Tue, 31 Jan 2023 10:01:56 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4EB46614A6;
+        Tue, 31 Jan 2023 10:10:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AF0BBC4339C;
+        Tue, 31 Jan 2023 10:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675159316;
-        bh=zZNlLghw6V9wEXXq5DkKqOM2d+4MNtK2XkOLQMjr+wU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=q26pxu2aUlnFzusmXrTZHJj3CDAS/rkUDFuJ1JFwQwxWIyArIMb1a4Rbz/xqvrPfK
-         ryr60BW7Va5SGPHU5nerTHTkdO/jXzQP9Sx/Xl7BnZARDm8uot8ZVSMqjyRyeUMs74
-         OtFGPDETSTJS7Ry/RTdNQqB8WE+xPPqeuSyJWqrcw7X1rJnuBInkvXvT5MxVa8FXbb
-         PRaFO39kR6xevq1P5wqiy5fM/N/i/BQNvuR15EaTvXEv4sUQCGvthtEbduuPn3mrTb
-         DeZCO9kmUeH6Wr0KOBbbrtaaJcbBTr4ryhRiuqOscxOmBjfPkgsOegjxtMdCyrEp+b
-         GVQIkQzwS0o5Q==
-Received: by mail-lf1-f41.google.com with SMTP id v17so17506739lfd.7;
-        Tue, 31 Jan 2023 02:01:56 -0800 (PST)
-X-Gm-Message-State: AFqh2kpSN9dZrnc/3k7z+qC8wYXYU3CmeQYUHrDtaxnS6JIiSttg3g57
-        jCD+ZJ4U5sN3af99WdZaekeOgNkv13pt5Mx9zDw=
-X-Google-Smtp-Source: AMrXdXtLAtEr3IEY2nAOxnGMXcmekU+fLGyPY//2QVEGJ4Ts1ZyGHjsjSfQ5yah6bmFlwNm8gToLE2PQPgYB4ELyLbw=
-X-Received: by 2002:ac2:4bd3:0:b0:4cc:789a:dac8 with SMTP id
- o19-20020ac24bd3000000b004cc789adac8mr6619563lfq.198.1675159314541; Tue, 31
- Jan 2023 02:01:54 -0800 (PST)
+        s=k20201202; t=1675159816;
+        bh=DvKtYzzpjflO0vF6Cv4Kw+3GCPHynmxPJ8rU1/hauo4=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=Rv7AfahQedbQhwLUuO6led/h7alndRek9sv3hZU74MoVu4Urnt2b7W1NS2q3TsV/r
+         NdI7xeIRMfclV3u87lUfNtQ+2kcjUkjH1dzu/nm5xC7GKczGLOLxeIfeuTh/FjxC7f
+         p/akc579kjY2NJ5HNgYgt97wjQZarUUbHzO1nX8uzzfMD6ff7j5cHEYKUOg30AKjnI
+         Dm7Inkc2+pgGBD2mJDAKYJdtWmCVj00VLeUiDKmVz4xbW45Dqd1pPGQ3Wc1zA0pCM2
+         GVmjg7KhbSMZh2dyCYoloqF6Zzrg5nbtmZFoDT4Kflwmsy/uOoRz6KsvxpcByCaAcJ
+         JsPKkfEHZEtHA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 92F0AC072E7;
+        Tue, 31 Jan 2023 10:10:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <cover.1668958803.git.baskov@ispras.ru> <44539c8c6afdba66f791942deae95c7b13d1e13b.1668958803.git.baskov@ispras.ru>
- <CAMj1kXF5tE+vj_Kf_z=KTqoi12PBq5g5Ds+097w9ge+U4NQong@mail.gmail.com> <c3dcdf14c51adfa7558eeaec4378287e@ispras.ru>
-In-Reply-To: <c3dcdf14c51adfa7558eeaec4378287e@ispras.ru>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 31 Jan 2023 11:01:43 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXF3W6q0Xwb0BuBGAHGQ0keehz1eEeNyRiy9-_zajdnfBA@mail.gmail.com>
-Message-ID: <CAMj1kXF3W6q0Xwb0BuBGAHGQ0keehz1eEeNyRiy9-_zajdnfBA@mail.gmail.com>
-Subject: Re: [PATCH v3 22/24] efi/libstub: Add memory attribute protocol definitions
-To:     Evgeniy Baskov <baskov@ispras.ru>
-Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Peter Jones <pjones@redhat.com>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] net: sched: sch: Bounds check priority
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167515981659.18378.9901152826514000200.git-patchwork-notify@kernel.org>
+Date:   Tue, 31 Jan 2023 10:10:16 +0000
+References: <20230127224036.never.561-kees@kernel.org>
+In-Reply-To: <20230127224036.never.561-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 31 Jan 2023 at 11:00, Evgeniy Baskov <baskov@ispras.ru> wrote:
->
-> On 2023-01-31 11:37, Ard Biesheuvel wrote:
-> > On Tue, 22 Nov 2022 at 12:14, Evgeniy Baskov <baskov@ispras.ru> wrote:
-> >>
-> >> EFI_MEMORY_ATTRIBUTE_PROTOCOL servers as a better alternative to
-> >> DXE services for setting memory attributes in EFI Boot Services
-> >> environment. This protocol is better since it is a part of UEFI
-> >> specification itself and not UEFI PI specification like DXE
-> >> services.
-> >>
-> >> Add EFI_MEMORY_ATTRIBUTE_PROTOCOL definitions.
-> >> Support mixed mode properly for its calls.
-> >>
-> >> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
-> >> Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
-> >
-> > I have fixed up just this patch, as there is another user for the
-> > protocol in zboot.
-> >
->
-> One patch less in the patch set then, thanks!
+Hello:
 
-I meant queued up not fixed up, but you get my point :-)
+This patch was applied to netdev/net.git (master)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Fri, 27 Jan 2023 14:40:37 -0800 you wrote:
+> Nothing was explicitly bounds checking the priority index used to access
+> clpriop[]. WARN and bail out early if it's pathological. Seen with GCC 13:
+> 
+> ../net/sched/sch_htb.c: In function 'htb_activate_prios':
+> ../net/sched/sch_htb.c:437:44: warning: array subscript [0, 31] is outside array bounds of 'struct htb_prio[8]' [-Warray-bounds=]
+>   437 |                         if (p->inner.clprio[prio].feed.rb_node)
+>       |                             ~~~~~~~~~~~~~~~^~~~~~
+> ../net/sched/sch_htb.c:131:41: note: while referencing 'clprio'
+>   131 |                         struct htb_prio clprio[TC_HTB_NUMPRIO];
+>       |                                         ^~~~~~
+> 
+> [...]
+
+Here is the summary with links:
+  - net: sched: sch: Bounds check priority
+    https://git.kernel.org/netdev/net/c/de5ca4c3852f
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
