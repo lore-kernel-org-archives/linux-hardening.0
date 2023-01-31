@@ -2,125 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E1AC38142
-	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 20:15:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8CEC636CC
+	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 22:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbjAaUPp (ORCPT
+        id S231770AbjAaWsM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 31 Jan 2023 15:15:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36014 "EHLO
+        Tue, 31 Jan 2023 17:48:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbjAaUPo (ORCPT
+        with ESMTP id S232068AbjAaWsJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 31 Jan 2023 15:15:44 -0500
-X-Greylist: delayed 90 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 31 Jan 2023 12:15:43 PST
-Received: from omta039.useast.a.cloudfilter.net (omta039.useast.a.cloudfilter.net [44.202.169.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B65DF2B2A2
-        for <linux-hardening@vger.kernel.org>; Tue, 31 Jan 2023 12:15:43 -0800 (PST)
-Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
-        by cmsmtp with ESMTP
-        id Mt3LpzRoWJlHBMx1ApaQvg; Tue, 31 Jan 2023 20:14:12 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id Mx19pG8YtVU6VMx19plW5d; Tue, 31 Jan 2023 20:14:11 +0000
-X-Authority-Analysis: v=2.4 cv=Z/j/oVdA c=1 sm=1 tr=0 ts=63d97693
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=RvmDmJFTN0MA:10
- a=wYkD_t78qR0A:10 a=8pif782wAAAA:8 a=VwQbUJbxAAAA:8 a=NEAV23lmAAAA:8
- a=mDV3o1hIAAAA:8 a=rQwXfPfrytjjklgZoK0A:9 a=QEXdDO2ut3YA:10 a=o-vr1ZrRZO8A:10
- a=3SQbtOYribkA:10 a=AjGcO6oz07-iQ99wixmX:22 a=_FVE-zBwftR9WsbkzFJk:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=w7c0OSkAfjTz5fKechJKG0JstQNvIvF9iDgA1jWVlfI=; b=ln7Guya0Fn0+7ib+RlmLCQW/7Z
-        /we4xbNByB0hqPXLQfXAzLihIxfJBvw8qJ9upNCtmJ5lIh7/DIPmuL5sUQ1PaARHft1MQSXGGZPhJ
-        jjkHNlBsNNAF6JaWOCQ0GWAZC4mzIa299NtFJq0QnCGZeQesogBFbwvFJcfsMneP3QgbUSjQTVRIv
-        grdQ2mDsS2tkcQI66bcGpXirfrBYSb31o6my8S/62O/osQ0WWCGxhEA9EkmMygqewcNlcna/dMXve
-        OBLjGMJkY3rNCauW/Q79JjGSAYoBzI+Kkz3VodV5eZ08TxQ3DLSsHe1aBdvxig9CiKGL8oDtlEqA+
-        uXMwrNJw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:57042 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1pMx18-0033gy-FB;
-        Tue, 31 Jan 2023 14:14:10 -0600
-Message-ID: <ab1caeae-4bf2-ab03-36f7-40b04f34f007@embeddedor.com>
-Date:   Tue, 31 Jan 2023 14:14:15 -0600
+        Tue, 31 Jan 2023 17:48:09 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E262A274BC;
+        Tue, 31 Jan 2023 14:48:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675205287; x=1706741287;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s/SDjQxQzEEm/Q6iuxlrqRAomix1+H5xLpivUae6uhw=;
+  b=nCLLLK8h+PD8hLgJX/vLeDoJg3a3Gzums6w+f3K+n8O9o9GALorvkzS8
+   ZYQH3nAHghfu5zyymcEaJxFql/OqheII1mcrT8iG66KQWvchxSiwwD56w
+   TMmJcqP7EPjKRJe8stR0yyPLN2FgBHVzJ3F0PtNaR6SUjbTLe35jQEpui
+   xehbKCx2e3e83O7UcPLif3mMkiv6Uf5ADEoITV0GOzLhIaxs0e+3ooNSk
+   BqqvoKN38bwFzlTWpwXH5CLLfIlyy/DIoRRIpuEB8KwKtDrk8ZXlBOkMa
+   aCuhp+swpMAp331EiXlYy35NhFnQvaZulgRSoB1o8SjpsSh/ZuJH5pG9S
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="390349000"
+X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
+   d="scan'208";a="390349000"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 14:48:07 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="773175008"
+X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
+   d="scan'208";a="773175008"
+Received: from bdoolin-mobl1.amr.corp.intel.com (HELO [10.209.125.63]) ([10.209.125.63])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 14:48:06 -0800
+Message-ID: <16e3217b-1561-51ea-7514-014e27240402@intel.com>
+Date:   Tue, 31 Jan 2023 14:48:05 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 0/3][next] scsi: smartpqi: Replace one-element arrays with
- flexible-array members
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
 Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kevin Barnett <kevin.barnett@microsemi.com>,
-        Don Brace <don.brace@microchip.com>, storagedev@microchip.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <cover.1663816572.git.gustavoars@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <cover.1663816572.git.gustavoars@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Roxana Bradescu <roxabee@chromium.org>,
+        Adam Langley <agl@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>
+References: <20230125012801.362496-1-ebiggers@kernel.org>
+ <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
+ <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
+ <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
+ <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
+ <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com> <Y9MAvhQYlOe4l2BM@gmail.com>
+ <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1pMx18-0033gy-FB
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:57042
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCeTyu/yST6UUS1756tsZO9wTqHwvVkqU6tiJT0lSrIceD3ysDLvfJtJY4l7PqDU4OMrtr0BEwVDSrvlduEdRIyh6vGD10FVENk2Kl+payVx1uQuLRiH
- 4xxLiRMAzDKDlklp1zMKSS87OLUlZHc7gTXK3oEoTdFLyLNkCGyIrgvfmxh6w6HszyU4k0btTB0jWdkCnwrCdQIwrWIvlL3TvKFtz615LP7j7nDqzi57U8TI
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
+We've been talking about this inside Intel.  Suffice to say that DOITM
+was not designed to be turned on all the time.  If software turns it on
+all the time, it won't accomplish what it was designed to do.
 
-Friendly ping: who can review/take this, please? :)
+The _most_ likely thing that's going to happen is that DOITM gets
+redefined to be much more limited in scope.  The current DOITM
+architecture is very broad, but the implementations have much more
+limited effects.  This means that the architecture can probably be
+constrained and still match the hardware that's out there today.  That's
+pure speculation (ha!) on my part.
 
-Thanks
---
-Gustavo
+I think we should hold off on merging any DOITM patches until the dust
+settles.  As far as I know, there is no pressing practical reason to
+apply something urgently.
 
-On 9/21/22 23:26, Gustavo A. R. Silva wrote:
-> Hi!
-> 
-> This series aims to replace one-element arrays with flexible-array
-> members in drivers/scsi/smartpqi/smartpqi.h
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
-> 
-> Link: https://en.wikipedia.org/wiki/Flexible_array_member
-> Link: https://www.kernel.org/doc/html/v5.10/process/deprecated.html#zero-length-and-one-element-arrays
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/109
-> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101836 [1]
-> 
-> Gustavo A. R. Silva (3):
->    scsi: smartpqi: Replace one-element array with flexible-array member
->    scsi: smartpqi: Replace one-element arrays with flexible-array members
->    scsi: smartpqi: Use struct_size() helper in pqi_report_phys_luns()
-> 
->   drivers/scsi/smartpqi/smartpqi.h      |  6 +++---
->   drivers/scsi/smartpqi/smartpqi_init.c | 12 ++++--------
->   2 files changed, 7 insertions(+), 11 deletions(-)
-> 
+Any objections?
