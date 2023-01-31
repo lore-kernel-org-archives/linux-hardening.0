@@ -2,90 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8CEC636CC
-	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 22:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B28BC636D3
+	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 23:40:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231770AbjAaWsM (ORCPT
+        id S229907AbjAaXkO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 31 Jan 2023 17:48:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40958 "EHLO
+        Tue, 31 Jan 2023 18:40:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232068AbjAaWsJ (ORCPT
+        with ESMTP id S229719AbjAaXkN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 31 Jan 2023 17:48:09 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E262A274BC;
-        Tue, 31 Jan 2023 14:48:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675205287; x=1706741287;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=s/SDjQxQzEEm/Q6iuxlrqRAomix1+H5xLpivUae6uhw=;
-  b=nCLLLK8h+PD8hLgJX/vLeDoJg3a3Gzums6w+f3K+n8O9o9GALorvkzS8
-   ZYQH3nAHghfu5zyymcEaJxFql/OqheII1mcrT8iG66KQWvchxSiwwD56w
-   TMmJcqP7EPjKRJe8stR0yyPLN2FgBHVzJ3F0PtNaR6SUjbTLe35jQEpui
-   xehbKCx2e3e83O7UcPLif3mMkiv6Uf5ADEoITV0GOzLhIaxs0e+3ooNSk
-   BqqvoKN38bwFzlTWpwXH5CLLfIlyy/DIoRRIpuEB8KwKtDrk8ZXlBOkMa
-   aCuhp+swpMAp331EiXlYy35NhFnQvaZulgRSoB1o8SjpsSh/ZuJH5pG9S
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="390349000"
-X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
-   d="scan'208";a="390349000"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 14:48:07 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="773175008"
-X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
-   d="scan'208";a="773175008"
-Received: from bdoolin-mobl1.amr.corp.intel.com (HELO [10.209.125.63]) ([10.209.125.63])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 14:48:06 -0800
-Message-ID: <16e3217b-1561-51ea-7514-014e27240402@intel.com>
-Date:   Tue, 31 Jan 2023 14:48:05 -0800
+        Tue, 31 Jan 2023 18:40:13 -0500
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08131F77F
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Jan 2023 15:40:12 -0800 (PST)
+Received: by mail-vs1-xe2a.google.com with SMTP id i185so17840862vsc.6
+        for <linux-hardening@vger.kernel.org>; Tue, 31 Jan 2023 15:40:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yNWJjiHZ40BzwBFNd25x6TMl8GnedoNNCYGCd1mQAeg=;
+        b=Nhou7RN5fM5f5cI/iVGIMo21MZVVTKgkyIJL5ORf8vkscx4DIfYfx71Gf+Fu9zwbhI
+         jKvjlDNed0CaPq2PJhGvQzp7IjTBlAqw1vBWFiqixPH1NoHRTldioPZEGhWzJQyaUvOM
+         QT5DWZTE7nGsM0k6tTPQ0S8mB289q3k5fM4brPNxyCrIy+Usx+m/cH3bFdWUmlouuURb
+         USBnNE8XbO5WB5vrnN97xTXbfmeVijTWmnIxELq/aWzoqP6QZzimfRKRCMNzCw9OrGn4
+         vcvlAo/7Stbrg8A9eE6oB56vVwKhqzKfQb/NnSDK0PIwV0M/8hEHOKkxCBnSWmX5ge/t
+         7BTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yNWJjiHZ40BzwBFNd25x6TMl8GnedoNNCYGCd1mQAeg=;
+        b=z8C6/8GxuXlxML/LauG1OMwJXRaDANcMu9PIVB0fvkaGIfyEeMkBxcFJmprOvf3fI0
+         YUS77Ch4qmlN6/v5d3wecxzfQprFis6QRKfqIW8rOhN87PP+AJ1iuA8vQKufQqtEoOY5
+         yxbNYTIxV7EJr9zC8rrBoBwJVz4y6a3vEbJeH9J2pWPWGrwBDkTgRyET3UHRDkS4T6iM
+         fS0bHVyqIb5ktlwllc4NArxDNRXYzUb+ueacMTAJbCelgVT9k7iLFq8NzwD0n9JHWaMz
+         NSosn7EOV0v8IMJOYyP2M/Qy3UgV9O2ypBePWXKB2r4KWiM9YDD6T30f9VRgza6t5M3w
+         3xOw==
+X-Gm-Message-State: AO0yUKUG43J4+Sp8/7UJ7nZRCrBKLQyHCRZ0YEVg/hCaZM1rjaZq9ht3
+        mouu+8U/mDqJJ733JqZ8gquG4EbgIp08QfnANblOcXXO4ObC9sNT
+X-Google-Smtp-Source: AK7set+LGZpVBUq8jBYUp23fV64plVr7SG2DY47NRbmas+5wk9V9BIThjG1yn8uBo52H/ysiEC+SN+XZvlxAE8uICa8=
+X-Received: by 2002:a67:e19a:0:b0:3f7:528b:d25f with SMTP id
+ e26-20020a67e19a000000b003f7528bd25fmr138820vsl.9.1675208410993; Tue, 31 Jan
+ 2023 15:40:10 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
-Content-Language: en-US
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 1 Feb 2023 05:10:00 +0530
+Message-ID: <CA+G9fYsPSJiTXouaMUSeoU3JEwym0baq7OGOAMFNWgrgEWOHfA@mail.gmail.com>
+Subject: Re: ACPICA: Replace fake flexible arrays with flexible array members
+To:     Kees Cook <keescook@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>, devel@acpica.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
         linux-hardening@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Roxana Bradescu <roxabee@chromium.org>,
-        Adam Langley <agl@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>
-References: <20230125012801.362496-1-ebiggers@kernel.org>
- <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
- <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
- <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
- <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
- <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com> <Y9MAvhQYlOe4l2BM@gmail.com>
- <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        "Rafael J. Wysocki" <rafael@kernel.org>, robert.moore@intel.com,
+        lkft-triage@lists.linaro.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-We've been talking about this inside Intel.  Suffice to say that DOITM
-was not designed to be turned on all the time.  If software turns it on
-all the time, it won't accomplish what it was designed to do.
+The qemu-i386 boot failed on Linux next- 20230131 started from
+next-20230125. Please refer to boot logs [1], [2] & [3].
 
-The _most_ likely thing that's going to happen is that DOITM gets
-redefined to be much more limited in scope.  The current DOITM
-architecture is very broad, but the implementations have much more
-limited effects.  This means that the architecture can probably be
-constrained and still match the hardware that's out there today.  That's
-pure speculation (ha!) on my part.
+The bisection pointed to the following commit,
+# first bad commit:
+  [5f7e8394a70761036e416c7529c937f309e4680f]
+  ACPICA: Replace fake flexible arrays with flexible array members
 
-I think we should hold off on merging any DOITM patches until the dust
-settles.  As far as I know, there is no pressing practical reason to
-apply something urgently.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Any objections?
+Reverting the above patch fixes the qemu-i386 boot problem.
+
+[1] https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2L4mi3ZZDct0vwmV2tIVY5AtNr0/logs?format=html
+[2] https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2L4mi3ZZDct0vwmV2tIVY5AtNr0/logs?format=txt
+[3] https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2L4mi32cqUyZvCIhJlV5nR8CuQk
+
+Bisection log:
+http://ix.io/4mIP
+
+--
+Linaro LKFT
+https://lkft.linaro.org
