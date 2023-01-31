@@ -2,87 +2,104 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B836C636CD
-	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 10:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE5DC636D3
+	for <linux-hardening@archiver.kernel.org>; Tue, 31 Jan 2023 12:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231190AbjAaKKl (ORCPT
+        id S231707AbjAaMfe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 31 Jan 2023 05:10:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38576 "EHLO
+        Tue, 31 Jan 2023 07:35:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbjAaKKS (ORCPT
+        with ESMTP id S231303AbjAaMfd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 31 Jan 2023 05:10:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA0B34ED7;
-        Tue, 31 Jan 2023 02:10:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 529A5614AA;
-        Tue, 31 Jan 2023 10:10:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A9D01C433D2;
-        Tue, 31 Jan 2023 10:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675159816;
-        bh=aC8cWenY/vRb5MKewZpHU/4CYbTngFaS7WCF1/uPb70=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=ONkWKGOB+Szx+qvF/cRcCVySPNBqaZ1nrBETiv101yQkOGv7B0bxFqDGMFyBLdgWo
-         w0ILUfUzw990HV3StV2jly3EEkeD58d7O/DGEpVK59bO5J1cKnm/XVfIMLi8zrCr6V
-         OPk/Ap0FFOmRmA9ElqjvvGw/RiztF2Ww4fncxH04n1j3EerZQAZN5JHIAV+oJZFceP
-         4MMKF03XUz4YeuMDFo4a8FWt2fnqK4QQjElpcpV0czOTLdpgxroaVy01ceYzEta3Rt
-         pE4QbW1KqxEdxSYAbOx64fUJM0o0FnEV8iAV39nFco9Ee7YLe2W8SxF8awhJSlHHJL
-         hIAEgdvjky5eQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 88837C0C40E;
-        Tue, 31 Jan 2023 10:10:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 31 Jan 2023 07:35:33 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C49237F19;
+        Tue, 31 Jan 2023 04:35:26 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id z1so7366781plg.6;
+        Tue, 31 Jan 2023 04:35:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p3Bprh6qzi6N7O5JqZWzaWLkqDk7+Hs/nJb9oKk2rCs=;
+        b=Qxp+RbCuOAmMF9JjQ+UQypcN6aXfqx66Bou0GHmm2nWOGeeVzhoKKs7NpSVLLgVo/2
+         L45/OgdoBBBkwVbOVqlA9s8JMAFfy6FviT++JVIUSyZ8D+KuI/iMheytzplsjedXFQOr
+         qxlqx7DW6ZbISA1TCJyXt0YXAokehOGs53J3C6hMwEx+0TpNnk3oEXMhvoKLg9hwVZuV
+         ImHe0wYjUIVo3Zvq4X9X+TizGGi2BPi2IDrnAr82SvfwSbTRThjHhiZp6bruw8kodHMN
+         igDB8EwyTk1Gso7QIK49ltx8y3eFaJgjLcrXaiCDs2WNNgB/TL7n1b+8jeCU7t1XyRW+
+         kcgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p3Bprh6qzi6N7O5JqZWzaWLkqDk7+Hs/nJb9oKk2rCs=;
+        b=4pQzXbWi0iUvfD/UUJ/zySgvXyBw63QrPfh0A3BXVSyCjLd0/wC5/g32ZrMfN4pQZj
+         Scewrw5xrY1d0KQeo4RBkoPtOXBAWf4tJXdY1GHDTmM5sY5n4lisH4ViCq8fkth8yJX4
+         ASrDuqQRcUJ/nbJ35sm/cVie495rhN6RoQtrU3J1s/+ATcMHuqJuHolWOuXfzYUojk4M
+         7/P2uGJiQxAR6vTyd8tQ8uDyPggkV5l1blNsncSo4MDALvzqqchP5//K/dK1IPf5GRe4
+         KDTO5ujC3XQRvtINBvMzteW/1t/wBpHqn3znKBL3i51K61xLTRi71szY4xiWnUKRnwXX
+         o8sQ==
+X-Gm-Message-State: AO0yUKWI2bNcyDRstPwUWCq10m4XkL4osEDOLMSNIY3ueea1KWRNJIMG
+        338/shc3QNIJdXawyzuLvLQ=
+X-Google-Smtp-Source: AK7set9meLUleoPPOYf2CHYo3cG+8acjn9MkDPxNVatdfbc06w9tOYQyqkqlBg1GBLUllXq6+pmRXw==
+X-Received: by 2002:a05:6a20:1596:b0:b8:54a2:b8d1 with SMTP id h22-20020a056a20159600b000b854a2b8d1mr22995794pzj.57.1675168525734;
+        Tue, 31 Jan 2023 04:35:25 -0800 (PST)
+Received: from localhost.localdomain (n220246252084.netvigator.com. [220.246.252.84])
+        by smtp.gmail.com with ESMTPSA id r19-20020a170902c61300b0018544ad1e8esm9692527plr.238.2023.01.31.04.35.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Jan 2023 04:35:25 -0800 (PST)
+From:   Jianhua Lu <lujianhua000@gmail.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Jianhua Lu <lujianhua000@gmail.com>
+Subject: [PATCH v4 1/2] dt-bindings: arm: qcom: Add Xiaomi Mi Pad 5 Pro (xiaomi-elish)
+Date:   Tue, 31 Jan 2023 20:35:14 +0800
+Message-Id: <20230131123515.833-1-lujianhua000@gmail.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: ethernet: mtk_eth_soc: Avoid truncating allocation
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167515981654.18378.5828273248043471615.git-patchwork-notify@kernel.org>
-Date:   Tue, 31 Jan 2023 10:10:16 +0000
-References: <20230127223853.never.014-kees@kernel.org>
-In-Reply-To: <20230127223853.never.014-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     nbd@nbd.name, john@phrozen.org, sean.wang@mediatek.com,
-        Mark-MC.Lee@mediatek.com, lorenzo@kernel.org, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        matthias.bgg@gmail.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+Add a compatible for Xiaomi Mi Pad 5 Pro.
 
-This patch was applied to netdev/net.git (master)
-by Paolo Abeni <pabeni@redhat.com>:
+Signed-off-by: Jianhua Lu <lujianhua000@gmail.com>
+---
+No changes in v4
 
-On Fri, 27 Jan 2023 14:38:54 -0800 you wrote:
-> There doesn't appear to be a reason to truncate the allocation used for
-> flow_info, so do a full allocation and remove the unused empty struct.
-> GCC does not like having a reference to an object that has been
-> partially allocated, as bounds checking may become impossible when
-> such an object is passed to other code. Seen with GCC 13:
-> 
-> ../drivers/net/ethernet/mediatek/mtk_ppe.c: In function 'mtk_foe_entry_commit_subflow':
-> ../drivers/net/ethernet/mediatek/mtk_ppe.c:623:18: warning: array subscript 'struct mtk_flow_entry[0]' is partly outside array bounds of 'unsigned char[48]' [-Warray-bounds=]
->   623 |         flow_info->l2_data.base_flow = entry;
->       |                  ^~
-> 
-> [...]
+Changes in v3:
+  - Pick up Krzysztof's A-b
 
-Here is the summary with links:
-  - net: ethernet: mtk_eth_soc: Avoid truncating allocation
-    https://git.kernel.org/netdev/net/c/f3eceaed9edd
+Changes in v2:
+  - Move compatible "xiaomi-elish" down.
 
-You are awesome, thank you!
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 22553637c519..398ff26e6e0e 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -875,6 +875,7 @@ properties:
+               - qcom,sm8250-mtp
+               - sony,pdx203-generic
+               - sony,pdx206-generic
++              - xiaomi,elish
+           - const: qcom,sm8250
+ 
+       - items:
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.39.1
 
