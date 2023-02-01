@@ -2,139 +2,104 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DBD0C05027
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Feb 2023 18:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87003C05027
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Feb 2023 18:41:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbjBASJU (ORCPT
+        id S232059AbjBASll (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Feb 2023 13:09:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52492 "EHLO
+        Wed, 1 Feb 2023 13:41:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229771AbjBASJT (ORCPT
+        with ESMTP id S231661AbjBASlj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Feb 2023 13:09:19 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B73287B78E;
-        Wed,  1 Feb 2023 10:09:18 -0800 (PST)
+        Wed, 1 Feb 2023 13:41:39 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC4B06A69;
+        Wed,  1 Feb 2023 10:41:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675274958; x=1706810958;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DzB41kqRjG9qUWIA0y3gZ/k7RV+zOm/shnhJdtIANr0=;
-  b=GSPagN+Zy2w1l80TvnlovsGmqGorCtM7YlIatGsyMtTP6Vc9nczzAhHd
-   s+zjHR8JXodQCxpD2xbnFdAOC6TKurvn51cWF80ce4TMd27L+S4Awbj3k
-   WLRsoyQakCHYD9NIX9R+46s5hhcDt4NzUfLX/xRTDeKEHpymCnozv0tLk
-   8wvtwUOP+KfcrHeGEevD6uxKL8oyz+Yeg1hYBRK29/5APVIZOKVUEK3kY
-   uvDjZbhaODUdun5mVHw1wwVBeaigbNalYNVMlmfy20LN2KvI20vCl4fGO
-   asIHo37/E/98hsbDnyIMHYZ6fBP+3hw1TGFsUzShSyAAXaueIka+6Efli
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="414431226"
+  t=1675276887; x=1706812887;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Nk2UjAD3MyqHuQla+/DxMZglQldIVZk+vp5CLUYP/LQ=;
+  b=Kz/8ANOIGY5PdmMX8hmSZ4JjpjW5gfDUau6eeXRpf7eywjM0MQduoB6W
+   oWR+Lw/jY7xjnTsy0uuNTRleiwtoh/aO+Z5OEzET0+/e/K7s/bV58fPxA
+   FnrSpubbbCeYKyhD/nPeXIZw00l2N6pZnYB5yzbbEzc3FSsGzyQaCzAIP
+   03cBYfnIfRKzv6KZnJuKNRgbbGDP+L5MGgUoTEm/D9vA1Nn+WDFw0z+bq
+   zWRXmafeFFfFttvhutC4ZxIkBl5xIduw8v+yq4WzPe8YDxwLgKRQNpxTB
+   QHJyYpLXiE2Hl1g7q2eX19zxWPb5fLH8UqhPDqGNlGAKROoebQpwhAbvf
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="328249072"
 X-IronPort-AV: E=Sophos;i="5.97,265,1669104000"; 
-   d="scan'208";a="414431226"
+   d="scan'208";a="328249072"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 10:09:18 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="993782516"
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 10:41:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="993793228"
 X-IronPort-AV: E=Sophos;i="5.97,265,1669104000"; 
-   d="scan'208";a="993782516"
-Received: from sgkhacha-mobl1.amr.corp.intel.com (HELO [10.212.227.86]) ([10.212.227.86])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 10:09:17 -0800
-Message-ID: <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
-Date:   Wed, 1 Feb 2023 10:09:16 -0800
+   d="scan'208";a="993793228"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Feb 2023 10:41:20 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1pNI2m-000pi2-0y;
+        Wed, 01 Feb 2023 20:41:16 +0200
+Date:   Wed, 1 Feb 2023 20:41:16 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     John Stultz <jstultz@google.com>
+Cc:     Yongqin Liu <yongqin.liu@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>,
+        David Gow <davidgow@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        llvm@lists.linux.dev, Sumit Semwal <sumit.semwal@linaro.org>
+Subject: Re: [PATCH 5/6] driver core: Add __alloc_size hint to devm allocators
+Message-ID: <Y9qyTLmfdD2lR+YU@smile.fi.intel.com>
+References: <20221101222520.never.109-kees@kernel.org>
+ <20221101223321.1326815-5-keescook@chromium.org>
+ <CAMSo37W3gRkP02tSCxGX71ZDAt3WgPZrkTRTM6J1iQ4gvUS9vg@mail.gmail.com>
+ <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
-Content-Language: en-US
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Roxana Bradescu <roxabee@chromium.org>,
-        Adam Langley <agl@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>
-References: <20230125012801.362496-1-ebiggers@kernel.org>
- <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
- <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
- <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
- <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
- <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com> <Y9MAvhQYlOe4l2BM@gmail.com>
- <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
- <16e3217b-1561-51ea-7514-014e27240402@intel.com>
- <Y9oMmYWzy7mlk3D9@sol.localdomain>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <Y9oMmYWzy7mlk3D9@sol.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 1/31/23 22:54, Eric Biggers wrote:
-> On Tue, Jan 31, 2023 at 02:48:05PM -0800, Dave Hansen wrote:
->> We've been talking about this inside Intel.  Suffice to say that DOITM
->> was not designed to be turned on all the time.  If software turns it on
->> all the time, it won't accomplish what it was designed to do.
-> 
-> Why wouldn't it accomplish what it is designed to do?  Does it not actually
-> work?
+On Wed, Feb 01, 2023 at 12:11:41AM -0800, John Stultz wrote:
+> On Tue, Jan 31, 2023 at 11:36 PM Yongqin Liu <yongqin.liu@linaro.org> wrote:
 
-It was designed with the idea that timing-sensitive and *ONLY*
-timing-sensitive code would be wrapped with DOITM.  Wrapping that code
-would allow the rest of the system to safely operate with fancy new
-optimizations that exhibit data dependent timing.
+...
 
-But, first of all, that code isn't wrapped with DOITM-prodding APIs
-today.  That model falls apart with current software on current DOITM
-implementations.
+> data->nr_sensors = 1;
+> data->sensor = devm_kzalloc(dev, sizeof(*data->sensor) *
+>    data->nr_sensors, GFP_KERNEL);
 
-Second, we consider the kernel in general to be timing-sensitive enough
-that we want DOITM=1 behavior in the kernel.
+Side note: This should use devm_kcalloc().
 
-Those lead software folks to set DOITM=1 on all the time.  The fallout
-from that is that nobody will ever use those fancy new optimizations.
-If nobody can take advantage of them, silicon shouldn't be wasted on
-them in the first place.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Basically, DOITM was meant to open the door for adding fancy new
-optimizations.  It's a failure if it doesn't do that.
 
->> The _most_ likely thing that's going to happen is that DOITM gets
->> redefined to be much more limited in scope.  The current DOITM
->> architecture is very broad, but the implementations have much more
->> limited effects.  This means that the architecture can probably be
->> constrained and still match the hardware that's out there today.  That's
->> pure speculation (ha!) on my part.
->>
->> I think we should hold off on merging any DOITM patches until the dust
->> settles.  As far as I know, there is no pressing practical reason to
->> apply something urgently.
->>
->> Any objections?
-> 
-> Does this mean that Intel will be restoring the data operand independent timing
-> guarantee of some instructions that have had it removed?  If so, which
-> instructions will still be left?
-
-Speaking for myself and *not* the official Intel plan here.  Yes, I
-think the pre-DOITM behavior can and will be restored for basically the
-entire list[1] (ignoring MCDT of course).
-
-> Also, given that the DOITM flag can only be set and cleared by the
-> kernel, and assuming that Linux won't support DOITM in any way yet
-> (as you're recommending), what should the developers of userspace
-> cryptographic libraries do? Does Intel have a list of which
-> instructions *already* have started having data operand dependent
-> timing on released CPUs, so that the existing security impact can be
-> assessed and so that developers can avoid using those instructions?
-Good questions.  I want to make sure what I'm saying here is accurate,
-and I don't have good answers to those right now.  We're working on it,
-and should have something useful to say in the next couple of days.
-
-1.
-https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/resources/data-operand-independent-timing-instructions.html
