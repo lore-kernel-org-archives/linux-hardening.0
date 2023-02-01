@@ -2,104 +2,129 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87003C05027
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Feb 2023 18:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE981C05027
+	for <linux-hardening@archiver.kernel.org>; Wed,  1 Feb 2023 22:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232059AbjBASll (ORCPT
+        id S229932AbjBAWdl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Feb 2023 13:41:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47330 "EHLO
+        Wed, 1 Feb 2023 17:33:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231661AbjBASlj (ORCPT
+        with ESMTP id S229451AbjBAWdj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Feb 2023 13:41:39 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC4B06A69;
-        Wed,  1 Feb 2023 10:41:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675276887; x=1706812887;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Nk2UjAD3MyqHuQla+/DxMZglQldIVZk+vp5CLUYP/LQ=;
-  b=Kz/8ANOIGY5PdmMX8hmSZ4JjpjW5gfDUau6eeXRpf7eywjM0MQduoB6W
-   oWR+Lw/jY7xjnTsy0uuNTRleiwtoh/aO+Z5OEzET0+/e/K7s/bV58fPxA
-   FnrSpubbbCeYKyhD/nPeXIZw00l2N6pZnYB5yzbbEzc3FSsGzyQaCzAIP
-   03cBYfnIfRKzv6KZnJuKNRgbbGDP+L5MGgUoTEm/D9vA1Nn+WDFw0z+bq
-   zWRXmafeFFfFttvhutC4ZxIkBl5xIduw8v+yq4WzPe8YDxwLgKRQNpxTB
-   QHJyYpLXiE2Hl1g7q2eX19zxWPb5fLH8UqhPDqGNlGAKROoebQpwhAbvf
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="328249072"
-X-IronPort-AV: E=Sophos;i="5.97,265,1669104000"; 
-   d="scan'208";a="328249072"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 10:41:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="993793228"
-X-IronPort-AV: E=Sophos;i="5.97,265,1669104000"; 
-   d="scan'208";a="993793228"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 01 Feb 2023 10:41:20 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1pNI2m-000pi2-0y;
-        Wed, 01 Feb 2023 20:41:16 +0200
-Date:   Wed, 1 Feb 2023 20:41:16 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     John Stultz <jstultz@google.com>
-Cc:     Yongqin Liu <yongqin.liu@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Wed, 1 Feb 2023 17:33:39 -0500
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327B4E04D;
+        Wed,  1 Feb 2023 14:33:28 -0800 (PST)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.west.internal (Postfix) with ESMTP id 525263200945;
+        Wed,  1 Feb 2023 17:33:23 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Wed, 01 Feb 2023 17:33:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        joshtriplett.org; h=cc:cc:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1675290803; x=
+        1675377203; bh=P1Rzs19z2xPSWbyW8Jp19iWQVFCDwTMdSBlmLIj8BXw=; b=D
+        ERvao1/pTN8cUXZDx9SZdUk5w2Ejggx65+oxu2zMrfOoofqVL/hVC0vvFJhRAM0D
+        6r8EhJwzYQQNWi08k7F++DWszbsEAu6Ztsi/vc+PnVT2rbWvqDZp52FMIxxIVsm1
+        s0kCb2g7WVxpngVi7V1DlW609cXrokfNLi8ZDjOoj4MwGXeWe3sn46RyGBAV2oPB
+        KSZpfUbJ/gRV4Gz1iQ/zdCk4+icp1jVDEFlNVENdb1PhXt9gkfjaf14GaxBB1wkz
+        qLdPVtc1ybfaWAU/D0PKx2nqH3NIB0qlQejfCNU3X3k6tE8nvnRGn/kIuqZ7aZzU
+        DeEJ7U5ELBE7mKaHDvWNw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1675290803; x=1675377203; bh=P1Rzs19z2xPSWbyW8Jp19iWQVFCD
+        wTMdSBlmLIj8BXw=; b=FPQwU2dC3Y3pOIUy8DxxckbSVBQJaYNmYEDqSQbJTQgq
+        fwHAkbGhADOlP1j++ouUPRQhPcpqjJLCvUu+fXEYXEt5dZOjvYZe1bChGYcsOPd5
+        yxOQzjXn+5E85IW3YhUczFSNu1yykDJ2CrdqCdtioiATt/dpsJjMlWKoaiEbBp4d
+        +DgmRYL7//2UPL8woGNwgGl3dXMrOb/aERk7MYEEuilUnz8yGk1jm/NX3lL1wVCW
+        9QUPbqcMu59jnSNxe8FGpawQAaH6UcZXj5PmY3ncsFEmtzhmTbuAeL+Q0he/N/kB
+        ORBdLKZw3HOwMbvaRQ2PaFZElYW5Vouj+FWwl872zw==
+X-ME-Sender: <xms:sujaY1F0wor5ENGyiYO1DJsAEsFWiBN19IZR2HLp2gIoXJEL5xJLiw>
+    <xme:sujaY6Vo7olOFLHE-1o6o3hL7Zdy3GsiG4tYXLY1dK8NwEnZOKNaEtfhBuxyfEY5b
+    Ajs26USEZyFVdIcO44>
+X-ME-Received: <xmr:sujaY3IkA3IrawyjN8yJW5ciQVa92HLFYdhu2ApJXLBV5YRIgjOtx_8nQuE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudefiedgudeigecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeflohhs
+    hhcuvfhrihhplhgvthhtuceojhhoshhhsehjohhshhhtrhhiphhlvghtthdrohhrgheqne
+    cuggftrfgrthhtvghrnhepudeigeehieejuedvtedufeevtdejfeegueefgffhkefgleef
+    teetledvtdfftefgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhhoshhhsehjohhshhhtrhhiphhlvghtthdrohhrgh
+X-ME-Proxy: <xmx:sujaY7FcEBgsGBaJWFC1lfdobSRoqalMCLtdnNSgHrb910PhY__Q2w>
+    <xmx:sujaY7VBrh-d0Vrh47MjWWG-zzT-x-4_kx4bQSM6B2kBsnx4z433OQ>
+    <xmx:sujaY2M0_RUXMMRgUcJiNXtrb8bhQWupZBmNyCejxkr1xaaKCxcI1A>
+    <xmx:s-jaY0W1hXLOdvUxerttbgYsJt5hPlraI2I6xO7cSgPd7n6daMvb4Q>
+Feedback-ID: i83e94755:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 1 Feb 2023 17:33:21 -0500 (EST)
+Date:   Wed, 1 Feb 2023 14:33:20 -0800
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Eric Biggers <ebiggers@kernel.org>, Jann Horn <jannh@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Won Chung <wonchung@google.com>,
-        David Gow <davidgow@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        llvm@lists.linux.dev, Sumit Semwal <sumit.semwal@linaro.org>
-Subject: Re: [PATCH 5/6] driver core: Add __alloc_size hint to devm allocators
-Message-ID: <Y9qyTLmfdD2lR+YU@smile.fi.intel.com>
-References: <20221101222520.never.109-kees@kernel.org>
- <20221101223321.1326815-5-keescook@chromium.org>
- <CAMSo37W3gRkP02tSCxGX71ZDAt3WgPZrkTRTM6J1iQ4gvUS9vg@mail.gmail.com>
- <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Roxana Bradescu <roxabee@chromium.org>,
+        Adam Langley <agl@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
+Message-ID: <Y9rosOyM+BgMqOzO@localhost>
+References: <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
+ <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
+ <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
+ <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
+ <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com>
+ <Y9MAvhQYlOe4l2BM@gmail.com>
+ <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
+ <16e3217b-1561-51ea-7514-014e27240402@intel.com>
+ <Y9oMmYWzy7mlk3D9@sol.localdomain>
+ <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 01, 2023 at 12:11:41AM -0800, John Stultz wrote:
-> On Tue, Jan 31, 2023 at 11:36 PM Yongqin Liu <yongqin.liu@linaro.org> wrote:
+On Wed, Feb 01, 2023 at 10:09:16AM -0800, Dave Hansen wrote:
+> It was designed with the idea that timing-sensitive and *ONLY*
+> timing-sensitive code would be wrapped with DOITM.  Wrapping that code
+> would allow the rest of the system to safely operate with fancy new
+> optimizations that exhibit data dependent timing.
+> 
+> But, first of all, that code isn't wrapped with DOITM-prodding APIs
+> today.  That model falls apart with current software on current DOITM
+> implementations.
+> 
+> Second, we consider the kernel in general to be timing-sensitive enough
+> that we want DOITM=1 behavior in the kernel.
+> 
+> Those lead software folks to set DOITM=1 on all the time.  The fallout
+> from that is that nobody will ever use those fancy new optimizations.
+> If nobody can take advantage of them, silicon shouldn't be wasted on
+> them in the first place.
+> 
+> Basically, DOITM was meant to open the door for adding fancy new
+> optimizations.  It's a failure if it doesn't do that.
 
-...
+It seems like it still potentially accomplishes its intended purpose
+even if it's opt-in. A prctl to turn it on for a particular process, or
+a particular process and its children, could work if that process knows
+it wants all the performance it can get and won't be handling data for
+which privilege boundaries matter. If this actually has the potential
+for substantial optimizations that would be worth it.
 
-> data->nr_sensors = 1;
-> data->sensor = devm_kzalloc(dev, sizeof(*data->sensor) *
->    data->nr_sensors, GFP_KERNEL);
-
-Side note: This should use devm_kcalloc().
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+But yeah, opt-out seems like a non-starter, since it'd require fixing
+all the cryptographic code in the world to request DOITM=1.
