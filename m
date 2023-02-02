@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02188C636D7
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ED4C63797
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231653AbjBBF21 (ORCPT
+        id S231465AbjBBF22 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 00:28:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58136 "EHLO
+        Thu, 2 Feb 2023 00:28:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231872AbjBBF2N (ORCPT
+        with ESMTP id S231357AbjBBF2T (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 00:28:13 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D590D1632E;
-        Wed,  1 Feb 2023 21:28:07 -0800 (PST)
+        Thu, 2 Feb 2023 00:28:19 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D886818155;
+        Wed,  1 Feb 2023 21:28:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E933615EF;
-        Thu,  2 Feb 2023 05:28:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46826C4339E;
+        by ams.source.kernel.org (Postfix) with ESMTPS id EE551B824B6;
         Thu,  2 Feb 2023 05:28:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABCDC433D2;
+        Thu,  2 Feb 2023 05:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675315686;
-        bh=mLCdAaBunvOHoCrOt7GOusY5wCBMyBacAnEmb2lGEsw=;
+        s=k20201202; t=1675315685;
+        bh=XvMp8OxqN686wYYBuokqdDG9zEqwVzaClZ28PNpdlgw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KPtzLG7wxU9csHV6Ur1qYJ8uKhl4YWaozd9ri0rjNiNdl6oiEmYywKs5o7MqtW19/
-         vlPyIYTKkTJeYnA41oXKOuQOTDMFNvREctoXfue7j3Be5gDUvnjxq7mB8gMQre875y
-         0BzUTTvT9JwZXjXAsqehGeBpCNhbc5vEZ7FhnB8jICn4OQV1CWhQDSdk3O3UxpeeRu
-         buHudUiJl76Ll6hCAj6hDCuAjoRec0mVgJqNF4LkWrkQfrbNOPbn1Ty01Ql2vQEPbK
-         9SycmdIkeRdBADvJ5v5uuSqwem7+Xitk9oDej9Yvmx1lUCMy3CwWczjkp14ggSnYNM
-         O1eVmw3ZX2vhA==
+        b=WcdfRrlSbdKncAZuzC0qEsWO7IHkpVyImUDNOAEdGOchVIlLlmNKSE+oj6ZWrJefp
+         zvnOgiZ72xZ4gdgv8oU2lmpoXBl/U4kSTbqI8EtCri8Dqe7HTp8KJObPIXTCVnjm9U
+         UqaUbs7ToyHXGlaSX/vpVPvFd45djSpHA3WlSxlQZw9wH/VBZF6Hn0ubVGP4cWiGlG
+         ymWXSqUUN/Q4rPol4AuWicm3BibmjufLLIo5/7DiJ5ln4yJpzMS7KzJEg3fBKdI58o
+         J5YMdq+bLudQfPpWlL1MzDEcdF6j32njIzOdJRf73Y3FMhqsnmgl1ZHAU38aWi/q5d
+         dn+w/t7nSG/9w==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,11 +42,15 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 4.19 10/16] exit: Expose "oops_count" to sysfs
-Date:   Wed,  1 Feb 2023 21:25:58 -0800
-Message-Id: <20230202052604.179184-11-ebiggers@kernel.org>
+        Tony Luck <tony.luck@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 08/16] ia64: make IA64_MCA_RECOVERY bool instead of tristate
+Date:   Wed,  1 Feb 2023 21:25:56 -0800
+Message-Id: <20230202052604.179184-9-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202052604.179184-1-ebiggers@kernel.org>
 References: <20230202052604.179184-1-ebiggers@kernel.org>
@@ -56,85 +60,50 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-commit 9db89b41117024f80b38b15954017fb293133364 upstream.
+commit dbecf9b8b8ce580f4e11afed9d61e8aa294cddd2 upstream.
 
-Since Oops count is now tracked and is a fairly interesting signal, add
-the entry /sys/kernel/oops_count to expose it to userspace.
+In linux-next, IA64_MCA_RECOVERY uses the (new) function
+make_task_dead(), which is not exported for use by modules.  Instead of
+exporting it for one user, convert IA64_MCA_RECOVERY to be a bool
+Kconfig symbol.
 
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20221117234328.594699-3-keescook@chromium.org
+In a config file from "kernel test robot <lkp@intel.com>" for a
+different problem, this linker error was exposed when
+CONFIG_IA64_MCA_RECOVERY=m.
+
+Fixes this build error:
+
+  ERROR: modpost: "make_task_dead" [arch/ia64/kernel/mca_recovery.ko] undefined!
+
+Link: https://lkml.kernel.org/r/20220124213129.29306-1-rdunlap@infradead.org
+Fixes: 0e25498f8cd4 ("exit: Add and use make_task_dead.")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- .../ABI/testing/sysfs-kernel-oops_count       |  6 +++++
- kernel/exit.c                                 | 22 +++++++++++++++++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-oops_count
+ arch/ia64/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-oops_count b/Documentation/ABI/testing/sysfs-kernel-oops_count
-new file mode 100644
-index 0000000000000..156cca9dbc960
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-kernel-oops_count
-@@ -0,0 +1,6 @@
-+What:		/sys/kernel/oops_count
-+Date:		November 2022
-+KernelVersion:	6.2.0
-+Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
-+Description:
-+		Shows how many times the system has Oopsed since last boot.
-diff --git a/kernel/exit.c b/kernel/exit.c
-index fa3004ff33362..5cd8a34257650 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -62,6 +62,7 @@
- #include <linux/random.h>
- #include <linux/rcuwait.h>
- #include <linux/compat.h>
-+#include <linux/sysfs.h>
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 8b4a0c1748c03..0d56b19b7511a 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -445,7 +445,7 @@ config ARCH_PROC_KCORE_TEXT
+ 	depends on PROC_KCORE
  
- #include <linux/uaccess.h>
- #include <asm/unistd.h>
-@@ -95,6 +96,25 @@ static __init int kernel_exit_sysctls_init(void)
- late_initcall(kernel_exit_sysctls_init);
- #endif
+ config IA64_MCA_RECOVERY
+-	tristate "MCA recovery from errors other than TLB."
++	bool "MCA recovery from errors other than TLB."
  
-+static atomic_t oops_count = ATOMIC_INIT(0);
-+
-+#ifdef CONFIG_SYSFS
-+static ssize_t oops_count_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			       char *page)
-+{
-+	return sysfs_emit(page, "%d\n", atomic_read(&oops_count));
-+}
-+
-+static struct kobj_attribute oops_count_attr = __ATTR_RO(oops_count);
-+
-+static __init int kernel_exit_sysfs_init(void)
-+{
-+	sysfs_add_file_to_group(kernel_kobj, &oops_count_attr.attr, NULL);
-+	return 0;
-+}
-+late_initcall(kernel_exit_sysfs_init);
-+#endif
-+
- static void __unhash_process(struct task_struct *p, bool group_dead)
- {
- 	nr_threads--;
-@@ -951,8 +971,6 @@ EXPORT_SYMBOL_GPL(do_exit);
- 
- void __noreturn make_task_dead(int signr)
- {
--	static atomic_t oops_count = ATOMIC_INIT(0);
--
- 	/*
- 	 * Take the task off the cpu after something catastrophic has
- 	 * happened.
+ config PERFMON
+ 	bool "Performance monitor support"
 -- 
 2.39.1
 
