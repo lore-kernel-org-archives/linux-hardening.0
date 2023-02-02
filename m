@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C254C636D7
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 04:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C50DC61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 04:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231576AbjBBEo2 (ORCPT
+        id S231644AbjBBEod (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Feb 2023 23:44:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34562 "EHLO
+        Wed, 1 Feb 2023 23:44:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231302AbjBBEoN (ORCPT
+        with ESMTP id S231537AbjBBEoN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Wed, 1 Feb 2023 23:44:13 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F29647A488;
-        Wed,  1 Feb 2023 20:43:52 -0800 (PST)
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F56679F35;
+        Wed,  1 Feb 2023 20:43:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 44C26CE2774;
+        by ams.source.kernel.org (Postfix) with ESMTPS id C86C8B82419;
         Thu,  2 Feb 2023 04:43:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AF37C4339C;
-        Thu,  2 Feb 2023 04:43:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35618C433A8;
+        Thu,  2 Feb 2023 04:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675313029;
-        bh=RlJYO0lbBiRRVAS7XhsN7Zwl+KQ8V40jkMt3z+fFE5Y=;
+        s=k20201202; t=1675313030;
+        bh=w2+gKam0hgvqls1hiqaw8OhtqAs87LqFnf26zQZbz5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kz1lKWvLC+IAwkHWiuA7r63D1dz/g0mDOUSL8A2p64cyWM/eX76tWeM3KN58NNsb5
-         6qjlXEswftJqGG6glbdQ0ilFIQ//9e+6KwS4q4kLBaMNQ3ff4LSU69RVS6S92/X0kk
-         w0xdkhn16qvJd9/RJARoPscoFE1dwCNUAAzcPN7Dsr0Uv2iTwHL/UhdFPVfknI+df8
-         wHxz+fB0WL7gKJw7tXZ1O+vPMA6hf/86aTJEFL3pK+PCmaUiqsY/VIlXT57OL6vqa4
-         3rUzVtcl1LYC8+K/nULYpKDjgYKOpXjEmLOHsql1RdQIEYBNcNmN+FREKgBmTk3EPE
-         rWjxjTbtnbTUg==
+        b=GSlRYvtkuUFWe4vbS/HNXihmDyie8RQeqw+ns+JXTbzbI2stS5ZtZmI5tW88p7p9P
+         3zOUOHQhOab0uZA11IDkNDz4ni3/KlpN58Sj/bTx1yCxg/kwC2ciUBD745WJBkZ8d4
+         3K67pxTWaYRYojL5FJBo+7yP92zbVNlOnPwEVxy+fQPiNjEk8XfzfgDawCTWIUEzLh
+         nkr8sBUaa/gumUuJLGVa4+EQjjnTJYGkgTDK1r0+RsB3upNATXzjgUHwfocpcQ20zD
+         YVBH086RxKANA2ETy6Zv9M0EBamaTFOxMPdEL9jRbCzhw8Pg6mJ6S9YdF65mnwYPri
+         8Z9nNa359BmsA==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,10 +42,10 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH 5.4 05/17] objtool: Add a missing comma to avoid string concatenation
-Date:   Wed,  1 Feb 2023 20:42:43 -0800
-Message-Id: <20230202044255.128815-6-ebiggers@kernel.org>
+        Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 5.4 07/17] h8300: Fix build errors from do_exit() to make_task_dead() transition
+Date:   Wed,  1 Feb 2023 20:42:45 -0800
+Message-Id: <20230202044255.128815-8-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202044255.128815-1-ebiggers@kernel.org>
 References: <20230202044255.128815-1-ebiggers@kernel.org>
@@ -55,44 +55,75 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: "Eric W. Biederman" <ebiederm@xmission.com>
+From: Nathan Chancellor <nathan@kernel.org>
 
-commit 1fb466dff904e4a72282af336f2c355f011eec61 upstream.
+commit ab4ababdf77ccc56c7301c751dff49c79709c51c upstream.
 
-Recently the kbuild robot reported two new errors:
+When building ARCH=h8300 defconfig:
 
->> lib/kunit/kunit-example-test.o: warning: objtool: .text.unlikely: unexpected end of section
->> arch/x86/kernel/dumpstack.o: warning: objtool: oops_end() falls through to next function show_opcodes()
+arch/h8300/kernel/traps.c: In function 'die':
+arch/h8300/kernel/traps.c:109:2: error: implicit declaration of function
+'make_dead_task' [-Werror=implicit-function-declaration]
+  109 |  make_dead_task(SIGSEGV);
+      |  ^~~~~~~~~~~~~~
 
-I don't know why they did not occur in my test setup but after digging
-it I realized I had accidentally dropped a comma in
-tools/objtool/check.c when I renamed rewind_stack_do_exit to
-rewind_stack_and_make_dead.
+arch/h8300/mm/fault.c: In function 'do_page_fault':
+arch/h8300/mm/fault.c:54:2: error: implicit declaration of function
+'make_dead_task' [-Werror=implicit-function-declaration]
+   54 |  make_dead_task(SIGKILL);
+      |  ^~~~~~~~~~~~~~
 
-Add that comma back to fix objtool errors.
+The function's name is make_task_dead(), change it so there is no more
+build error.
 
-Link: https://lkml.kernel.org/r/202112140949.Uq5sFKR1-lkp@intel.com
+Additionally, include linux/sched/task.h in arch/h8300/kernel/traps.c
+to avoid the same error because do_exit()'s declaration is in kernel.h
+but make_task_dead()'s is in task.h, which is not included in traps.c.
+
 Fixes: 0e25498f8cd4 ("exit: Add and use make_task_dead.")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Link: https://lkml.kernel.org/r/20211227184851.2297759-3-nathan@kernel.org
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- tools/objtool/check.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/h8300/kernel/traps.c | 3 ++-
+ arch/h8300/mm/fault.c     | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 14be7d261ae7a..dfd67243faac0 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -144,7 +144,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
- 		"fortify_panic",
- 		"usercopy_abort",
- 		"machine_real_restart",
--		"rewind_stack_and_make_dead"
-+		"rewind_stack_and_make_dead",
- 		"cpu_bringup_and_idle",
- 	};
+diff --git a/arch/h8300/kernel/traps.c b/arch/h8300/kernel/traps.c
+index a284c126f07a6..090adaee4b84c 100644
+--- a/arch/h8300/kernel/traps.c
++++ b/arch/h8300/kernel/traps.c
+@@ -17,6 +17,7 @@
+ #include <linux/types.h>
+ #include <linux/sched.h>
+ #include <linux/sched/debug.h>
++#include <linux/sched/task.h>
+ #include <linux/mm_types.h>
+ #include <linux/kernel.h>
+ #include <linux/errno.h>
+@@ -110,7 +111,7 @@ void die(const char *str, struct pt_regs *fp, unsigned long err)
+ 	dump(fp);
  
+ 	spin_unlock_irq(&die_lock);
+-	make_dead_task(SIGSEGV);
++	make_task_dead(SIGSEGV);
+ }
+ 
+ static int kstack_depth_to_print = 24;
+diff --git a/arch/h8300/mm/fault.c b/arch/h8300/mm/fault.c
+index a8d8fc63780e4..573825c3cb708 100644
+--- a/arch/h8300/mm/fault.c
++++ b/arch/h8300/mm/fault.c
+@@ -52,7 +52,7 @@ asmlinkage int do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	printk(" at virtual address %08lx\n", address);
+ 	if (!user_mode(regs))
+ 		die("Oops", regs, error_code);
+-	make_dead_task(SIGKILL);
++	make_task_dead(SIGKILL);
+ 
+ 	return 1;
+ }
 -- 
 2.39.1
 
