@@ -2,187 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFE5C61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 19:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1980DC61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 19:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232209AbjBBTh1 (ORCPT
+        id S232526AbjBBTuY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 14:37:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59040 "EHLO
+        Thu, 2 Feb 2023 14:50:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229848AbjBBTh0 (ORCPT
+        with ESMTP id S229711AbjBBTuX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 14:37:26 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C04005C0E1;
-        Thu,  2 Feb 2023 11:37:24 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4D42F61CC6;
-        Thu,  2 Feb 2023 19:37:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 227E3C433D2;
-        Thu,  2 Feb 2023 19:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675366643;
-        bh=4e46JInjnjZKjRFMgQ2weMULqLe3vkPvhBUGL2iO9W4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=swT4RJMJgm1m3BZS2L3c0weByeIpHR112Xp37PERpjxlHh5ba4Xq8QQkakegPF5qz
-         nnOmKROiAvinBP5lnL49KMWMz0s37jlyO7xb1Auc36om0btfUxWjO77hTwW97KonRt
-         Tpe9Tjd9KUAJfkIFQiW6JuFjxY4gZb89IsMShk+ZuPxEHHjBq7epJjjyvpbPwXaWjN
-         6nDilk6B5bmjtQ+sDtMGhVMK7WmboHxFFYfceeV+K0tVPCfoe8XJ++fJJOg9Xy/301
-         6B/ckEu296OBwB2bBhKNyptDwUR+H0k5UvTHLkqW28xVHDH0Jfhqxw4o9uwS/6k/Bs
-         oUCh833BeT0Nw==
-From:   SeongJae Park <sj@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     stable@vger.kernel.org,
-        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        SeongJae Park <sj@kernel.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        Jann Horn <jannh@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Patricia Alfonso <trishalfonso@google.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 4.19 03/16] mm: kasan: do not panic if both panic_on_warn and kasan_multishot set
-Date:   Thu,  2 Feb 2023 19:37:20 +0000
-Message-Id: <20230202193720.168040-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230202052604.179184-4-ebiggers@kernel.org>
-References: 
+        Thu, 2 Feb 2023 14:50:23 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3A9712D8
+        for <linux-hardening@vger.kernel.org>; Thu,  2 Feb 2023 11:50:21 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id d26so2815313eds.12
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Feb 2023 11:50:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1fO/hIqmJopkgUvbt7bySSxbzKni1x3M08W8IjYrXvw=;
+        b=Nk/tlhkDi2nPmK20+FASBstHtUCa++2jP1YPu64tTbp3j3pqbJ0FhZNMd9W6O/a32w
+         2702aGUveoLKKYg4Wz9BBaBDf+NJvysDeNqSAGSWSJ07P4eTbzKo0Rwa3aMkhAQxY2+F
+         1MuOUCWx7KFKSAxwyJYJAmxNuTnreiHihc2IInKMdOcgOjXALj9XEv21FC1ge+kANhkp
+         YEEkEqeNhqvTe3dq5QierAgpSoUa51Hyi7bCyLj44tPdPbuo9VtEHsO2i1Ftg5i1QJVN
+         obIu5YHE2PQ51xkm6b0MUmS1UxP5e6gvzREiYWGXo1d+ToD6tUPwm1BGGZXzJhsQxr53
+         pGaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1fO/hIqmJopkgUvbt7bySSxbzKni1x3M08W8IjYrXvw=;
+        b=Z8IsEwqHReQW8jaIQrbH1xYMsNKMJ3mwy5mZ92uOuTrFuE5Bj5bNC5K9tDYDephXH0
+         gsKi1UW94swGW8+8A0+Uu2lj5GYAvOzWNux8l46oaWQQRzIJKWmBAARZHHmJY3UPwXHg
+         8CkxuzdHz5nHVCJgTTKR/UvWsaf7UC5t/N0zN/TVfUp7x8wdKFwwAZW7Ddq9XypRcT6g
+         faJZuq1R6G3CRf8bsfi+VBM0bvzIsuZ/69WUJOHDoiIj7slOf/bGdb53nk511u2CinRo
+         udCq9H3dbOjYzHdGKaQVDSH6te/l4Y1aTLW++L1ge9ygvbL8WYE6/nY24045hm4Kh6Bt
+         /B+w==
+X-Gm-Message-State: AO0yUKWlupfDzA/ipmXE/rvrrz6fCTVeKtgZpOFliFrU5jX0Tt/GOF77
+        BMrLbUO06/4VKBEAnlReoieQXrqWgioebncHnCCzlw==
+X-Google-Smtp-Source: AK7set/lkyA3ZhhrgMGS/eLjMhSHYMmy+wZ9RvJpPhhZSHTl/p53byYoaa18x/kaSuurcJlXmSo8kQp6GRUsvPNR/yQ=
+X-Received: by 2002:a05:6402:2489:b0:4a0:f071:3656 with SMTP id
+ q9-20020a056402248900b004a0f0713656mr2440374eda.81.1675367419383; Thu, 02 Feb
+ 2023 11:50:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20221101222520.never.109-kees@kernel.org> <20221101223321.1326815-5-keescook@chromium.org>
+ <CAMSo37W3gRkP02tSCxGX71ZDAt3WgPZrkTRTM6J1iQ4gvUS9vg@mail.gmail.com>
+ <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
+ <63dbf04a.630a0220.2608a.0149@mx.google.com> <CANDhNCoJJs_jSAdr6uved=cK=-6+nzSJq3e_E3HgtiXHZXkVww@mail.gmail.com>
+ <63dc0a89.170a0220.49507.0091@mx.google.com> <CAMj1kXHTwFH-OADZ5nZXfZyuH-x7XJL3DMyiz2Tr_nCuup+xFA@mail.gmail.com>
+ <CAKwvOd=cuDb2NNK4uoUTYTLryFig47hvDQ08ta5XhjHsEhAG4A@mail.gmail.com>
+In-Reply-To: <CAKwvOd=cuDb2NNK4uoUTYTLryFig47hvDQ08ta5XhjHsEhAG4A@mail.gmail.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Thu, 2 Feb 2023 11:49:42 -0800
+Message-ID: <CABCJKuc+GvTHXu-CVedZs6CvPKJ8ySrVztkP2V3dsWn70xf7hA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] driver core: Add __alloc_size hint to devm allocators
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        John Stultz <jstultz@google.com>,
+        Yongqin Liu <yongqin.liu@linaro.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Won Chung <wonchung@google.com>,
+        David Gow <davidgow@google.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
+        llvm@lists.linux.dev, Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 1 Feb 2023 21:25:51 -0800 Eric Biggers <ebiggers@kernel.org> wrote:
+On Thu, Feb 2, 2023 at 11:31 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Thu, Feb 2, 2023 at 11:20 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Thu, 2 Feb 2023 at 20:10, Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Thu, Feb 02, 2023 at 10:56:29AM -0800, John Stultz wrote:
+> > > > That said, making sense of the error message isn't completely trivial
+> > > > either. I've been seeing a few cases recently of some of the new
+> > > > compiler tooling (I pinged you earlier on a CFI one) causing errors
+> > > > that developers aren't really sure how to address.  I know sometimes
+> > > > it's not easy to surface the errors with context to what was wrong,
+> > > > but at the risk of intense bike shedding, is there some way to provide
+> > > > something like "Likely array bounds error" instead of just "BRK
+> > > > handler: Fatal exception"?
+> > >
+> > > Yeah, this is a result of the size trade-off that resulted in config
+> > > CONFIG_UBSAN_TRAP -- there ends up being no message about what went
+> > > wrong. I'd really like to have cleaner handling of this -- perhaps what
+> > > was done for KCFI could be applied to UBSAN as well, though this is an
+> > > area I don't know well myself. (i.e. encoding "this was a UBSAN trap"
+> > > in the trap itself.)
+> > >
+> > > Sami or Ard, is this something that could be improved for arm64?
+> > >
+> >
+> > -ENOCONTEXT, so I am going to assume this is about runtime
+> > instrumentation that needs some kind of 'panic' function which it will
+> > invoke if some condition is met that should never occur?
+> >
+> > We already use brk with different immediate values in the opcode, so
+> > the arch layer already has what we need. Is this a limitation in the
+> > compiler, perhaps, where it always emits the same brk opcode?
+>
+> Yeah, we'd need to update both the compiler to produce the encoding,
+> and the kernel to recognize the encoding and do something special.
 
-> From: David Gow <davidgow@google.com>
-> 
-> commit be4f1ae978ffe98cc95ec49ceb95386fb4474974 upstream.
-> 
-> KASAN errors will currently trigger a panic when panic_on_warn is set.
-> This renders kasan_multishot useless, as further KASAN errors won't be
-> reported if the kernel has already paniced.  By making kasan_multishot
-> disable this behaviour for KASAN errors, we can still have the benefits of
-> panic_on_warn for non-KASAN warnings, yet be able to use kasan_multishot.
-> 
-> This is particularly important when running KASAN tests, which need to
-> trigger multiple KASAN errors: previously these would panic the system if
-> panic_on_warn was set, now they can run (and will panic the system should
-> non-KASAN warnings show up).
-> 
-> Signed-off-by: David Gow <davidgow@google.com>
-> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-> Tested-by: Andrey Konovalov <andreyknvl@google.com>
-> Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-> Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Patricia Alfonso <trishalfonso@google.com>
-> Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Link: https://lkml.kernel.org/r/20200915035828.570483-6-davidgow@google.com
-> Link: https://lkml.kernel.org/r/20200910070331.3358048-6-davidgow@google.com
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  mm/kasan/report.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 5c169aa688fde..90fdb261a5e2d 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -176,7 +176,7 @@ static void kasan_end_report(unsigned long *flags)
->  	pr_err("==================================================================\n");
->  	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
->  	spin_unlock_irqrestore(&report_lock, *flags);
-> -	if (panic_on_warn)
-> +	if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
->  		panic("panic_on_warn set ...\n");
->  	kasan_enable_current();
+A quick look at Clang's source code suggests that Intrinsic::ubsantrap
+already accepts the handler ID (from the SanitizerHandler enum) as an
+argument and the arm64 LLVM back-end appears to encode the value as an
+immediate for the brk instruction. I didn't confirm that this actually
+works, but perhaps we just need to teach the kernel about the possible
+values?
 
-
-Seems this introduced a build failure when CONFIG_KASAN is enabled, as also
-reported by Sasha[1].
-
-    mm/kasan/report.c: In function ‘kasan_end_report’:
-    mm/kasan/report.c:179:16: error: ‘KASAN_BIT_MULTI_SHOT’ undeclared (first use in this function)
-      179 |  if (!test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
-          |                ^~~~~~~~~~~~~~~~~~~~
-    arch/x86/include/asm/bitops.h:342:25: note: in definition of macro ‘test_bit’
-      342 |  (__builtin_constant_p((nr))  \
-          |                         ^~
-    mm/kasan/report.c:179:16: note: each undeclared identifier is reported only once for each function it appears in
-      179 |  if (!test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
-          |                ^~~~~~~~~~~~~~~~~~~~
-    arch/x86/include/asm/bitops.h:342:25: note: in definition of macro ‘test_bit’
-      342 |  (__builtin_constant_p((nr))  \
-          |                         ^~
-    mm/kasan/report.c:179:39: error: ‘kasan_flags’ undeclared (first use in this function)
-      179 |  if (!test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
-          |                                       ^~~~~~~~~~~
-    arch/x86/include/asm/bitops.h:343:30: note: in definition of macro ‘test_bit’
-      343 |   ? constant_test_bit((nr), (addr)) \
-          |                              ^~~~
-
-I confirmed dropping this patch fixes the build failure.  It causes a conflict
-to a following patch[1], but seems it's not that difficult to resolve.  I
-updated kernel/panic.c part of the patch like attached below to resolve the
-conflict.
-
-[1] https://lore.kernel.org/stable/Y9v3G6UantaCo29G@sashalap/
-[2] https://lore.kernel.org/stable/20230202052604.179184-13-ebiggers@kernel.org/
-
-
-Thanks,
-SJ
-
-
-================================ >8 ===========================================
-
-diff --git a/kernel/panic.c b/kernel/panic.c
-index a078d413042f..08b8adc55b2b 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -125,6 +125,12 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
- }
- EXPORT_SYMBOL(nmi_panic);
-
-+void check_panic_on_warn(const char *origin)
-+{
-+       if (panic_on_warn)
-+               panic("%s: panic_on_warn set ...\n", origin);
-+}
-+
- /**
-  *     panic - halt the system
-  *     @fmt: The text string to print
-@@ -540,8 +546,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
-        if (args)
-                vprintk(args->fmt, args->args);
-
--       if (panic_on_warn)
--               panic("panic_on_warn set ...\n");
-+       check_panic_on_warn("kernel");
-
-        print_modules();
-
+Sami
