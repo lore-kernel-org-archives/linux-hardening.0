@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E642FC61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9142C64EC3
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231546AbjBBFpk (ORCPT
+        id S231635AbjBBFpm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 00:45:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41236 "EHLO
+        Thu, 2 Feb 2023 00:45:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230508AbjBBFpf (ORCPT
+        with ESMTP id S230375AbjBBFp1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 00:45:35 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F6A37B46;
-        Wed,  1 Feb 2023 21:45:27 -0800 (PST)
+        Thu, 2 Feb 2023 00:45:27 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EBAE474E6;
+        Wed,  1 Feb 2023 21:45:26 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AB5BD61783;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0AC7A6150C;
         Thu,  2 Feb 2023 05:45:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CC1C433D2;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F4BC4339B;
         Thu,  2 Feb 2023 05:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675316726;
-        bh=gTyWdbMQBkC6bj2L7uRC+LIn00TYkfea/W2V8Ev9Cfw=;
+        s=k20201202; t=1675316725;
+        bh=NvHqmOgG2aAfs54Rnjd2jLih4AMjzsSDG6iFMQBllZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SXBa8TdiOhzgbCB7WRvrT5ADcJIuaKB97mPE95Zc7EPVXvPq+wcLlbwa4s8opZRnP
-         BRL8M7CLTUpwAKPtU3NuqTMjplzmn9RGqxVEb7RrGv7JsMT6DFngJgKVscCwITjxBi
-         U2QbvmFVihP+Lh9okXkpQy4Zy675b+hLY85XKIuoBIsFHBrK/2rX0nAj+lbjTOWFHI
-         TrGby2TffvqjR/RF6FDnMLvOmpPYXWn/Z/bgxoYeh5UnAhMOTXP+CAoqq3m0122cit
-         28Id6Z4mnSOzjct6pk3h2G2vKvR+nidq/zs6DuzuSzFJ+PLPW/NIOCXRW5CwQLlwGF
-         /YCtWwuVD4TEQ==
+        b=nDzeGMFnqc25P7VvHZgMcUsQM0iTsM9f/ufUyPfc0uUMhtmfNZP3GwR3IvcfAvyjk
+         Imy4joa/KW4NWMuHkdgDnkJBzRVrd9493D900R9m2uMrX5OUUpya5uBaz9xNO0hS5a
+         o2xtffj+BOud4aduCWunbfIcDET0aGIWjm/rA40ZGYvDvXmnUHxJh2ZkjdnEUgb99P
+         2zOuu4KniRLJhaKKdQX0rKKv5h+TpBFyNnEQObcY/6nohmDXzNMsE3BF1mbf54siaQ
+         sGjLxGManBAZwfKvkHrn0ktr+dKz5KNc6VCJb67QNE1Bpa0Ka9MHIjSADLC2nZaI3C
+         S2GdP0BstqGrQ==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,16 +42,11 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org
-Subject: [PATCH 4.14 11/16] exit: Allow oops_limit to be disabled
-Date:   Wed,  1 Feb 2023 21:44:01 -0800
-Message-Id: <20230202054406.221721-12-ebiggers@kernel.org>
+        Arnd Bergmann <arnd@arndb.de>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH 4.14 10/16] exit: Expose "oops_count" to sysfs
+Date:   Wed,  1 Feb 2023 21:44:00 -0800
+Message-Id: <20230202054406.221721-11-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202054406.221721-1-ebiggers@kernel.org>
 References: <20230202054406.221721-1-ebiggers@kernel.org>
@@ -63,57 +58,83 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-commit de92f65719cd672f4b48397540b9f9eff67eca40 upstream.
+commit 9db89b41117024f80b38b15954017fb293133364 upstream.
 
-In preparation for keeping oops_limit logic in sync with warn_limit,
-have oops_limit == 0 disable checking the Oops counter.
+Since Oops count is now tracked and is a fairly interesting signal, add
+the entry /sys/kernel/oops_count to expose it to userspace.
 
-Cc: Jann Horn <jannh@google.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: Huang Ying <ying.huang@intel.com>
 Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Jann Horn <jannh@google.com>
 Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20221117234328.594699-3-keescook@chromium.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- Documentation/sysctl/kernel.txt | 5 +++--
- kernel/exit.c                   | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ .../ABI/testing/sysfs-kernel-oops_count       |  6 +++++
+ kernel/exit.c                                 | 22 +++++++++++++++++--
+ 2 files changed, 26 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-oops_count
 
-diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
-index 7b04c616c5901..b6124a4475fb7 100644
---- a/Documentation/sysctl/kernel.txt
-+++ b/Documentation/sysctl/kernel.txt
-@@ -519,8 +519,9 @@ scanned for a given scan.
- oops_limit:
- 
- Number of kernel oopses after which the kernel should panic when
--``panic_on_oops`` is not set. Setting this to 0 or 1 has the same effect
--as setting ``panic_on_oops=1``.
-+``panic_on_oops`` is not set. Setting this to 0 disables checking
-+the count. Setting this to  1 has the same effect as setting
-+``panic_on_oops=1``. The default value is 10000.
- 
- ==============================================================
- 
+diff --git a/Documentation/ABI/testing/sysfs-kernel-oops_count b/Documentation/ABI/testing/sysfs-kernel-oops_count
+new file mode 100644
+index 0000000000000..156cca9dbc960
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-kernel-oops_count
+@@ -0,0 +1,6 @@
++What:		/sys/kernel/oops_count
++Date:		November 2022
++KernelVersion:	6.2.0
++Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
++Description:
++		Shows how many times the system has Oopsed since last boot.
 diff --git a/kernel/exit.c b/kernel/exit.c
-index 138b110bf83a1..73103e008a627 100644
+index 482bcaf158127..138b110bf83a1 100644
 --- a/kernel/exit.c
 +++ b/kernel/exit.c
-@@ -984,7 +984,7 @@ void __noreturn make_task_dead(int signr)
- 	 * To make sure this can't happen, place an upper bound on how often the
- 	 * kernel may oops without panic().
- 	 */
--	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit))
-+	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit) && oops_limit)
- 		panic("Oopsed too often (kernel.oops_limit is %d)", oops_limit);
+@@ -62,6 +62,7 @@
+ #include <linux/random.h>
+ #include <linux/rcuwait.h>
+ #include <linux/compat.h>
++#include <linux/sysfs.h>
  
- 	do_exit(signr);
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -95,6 +96,25 @@ static __init int kernel_exit_sysctls_init(void)
+ late_initcall(kernel_exit_sysctls_init);
+ #endif
+ 
++static atomic_t oops_count = ATOMIC_INIT(0);
++
++#ifdef CONFIG_SYSFS
++static ssize_t oops_count_show(struct kobject *kobj, struct kobj_attribute *attr,
++			       char *page)
++{
++	return sysfs_emit(page, "%d\n", atomic_read(&oops_count));
++}
++
++static struct kobj_attribute oops_count_attr = __ATTR_RO(oops_count);
++
++static __init int kernel_exit_sysfs_init(void)
++{
++	sysfs_add_file_to_group(kernel_kobj, &oops_count_attr.attr, NULL);
++	return 0;
++}
++late_initcall(kernel_exit_sysfs_init);
++#endif
++
+ static void __unhash_process(struct task_struct *p, bool group_dead)
+ {
+ 	nr_threads--;
+@@ -949,8 +969,6 @@ EXPORT_SYMBOL_GPL(do_exit);
+ 
+ void __noreturn make_task_dead(int signr)
+ {
+-	static atomic_t oops_count = ATOMIC_INIT(0);
+-
+ 	/*
+ 	 * Take the task off the cpu after something catastrophic has
+ 	 * happened.
 -- 
 2.39.1
 
