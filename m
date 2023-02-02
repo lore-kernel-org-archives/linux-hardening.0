@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B091CC61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30187C61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229649AbjBBF2D (ORCPT
+        id S231775AbjBBF2H (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 00:28:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57860 "EHLO
+        Thu, 2 Feb 2023 00:28:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbjBBF2D (ORCPT
+        with ESMTP id S229881AbjBBF2G (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 00:28:03 -0500
+        Thu, 2 Feb 2023 00:28:06 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAC886B3;
-        Wed,  1 Feb 2023 21:28:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271E012853;
+        Wed,  1 Feb 2023 21:28:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C776B60ABE;
-        Thu,  2 Feb 2023 05:28:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD5D8C433EF;
-        Thu,  2 Feb 2023 05:27:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B6660615EB;
+        Thu,  2 Feb 2023 05:28:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5DDAC4339E;
+        Thu,  2 Feb 2023 05:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675315680;
-        bh=NhqgdfaLi4iMMTFGDQKY/H8WKJ0eXjK92fSiRVm2+qM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=r+4oJTpJCIYwur0074FiTYZTKUfcWG8k5EEUvYXL43RZdhLnftbKsrlGTAb8oLUGR
-         /1GqLnZ8Xq+Ju676LY+SSuyBTkwCOJRMG5S8oGPDUBOyb4EQbBOtPdgZtbmRPOagEz
-         KwQXDVEbrshNDlq5pBRwNH7kAWs/Gfs2DfRRa2xi61SsgY9h05sphkmQ2gy2RTC44/
-         dBUX5aiyx8Q0RKS8T8+PoxVrYRN+x9XB2bMOdVO0aokQrCX0T89FthLdk4akUqsZp7
-         FH/tSiTmGVAfpmiKWZo/Q4K+69uC4+Gom14jD9ZvavSpj5Jm8M1vpRbjghTz7SsWbX
-         nfXH3jCKsvELQ==
+        s=k20201202; t=1675315684;
+        bh=gMkaknhHOUOvbO7ZN04Mon7pIpUm85+6r8AS4b1iOcM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UQn4mn6AUuux27TwN86ZHCGRMsE4Avlp8emzHlKJfzi/PWA8QGO4QmcO4GJhVU6wq
+         SyeOXX1m455EyEVmPKWBHZ1IngGrNKvmFxxXNiJpx9nTJM9O8AcQlJKQbsR2MDphUI
+         OmPVAhSDbZeCuwAmi2iDHbyg/5EhL+a33IcvIalidpUxw7f3AbNfVH4yHZjeb9aISV
+         N2tt8Lg87gvK1PQdT74/I1qNFbfhFTDKK2w4YYC7ZAoE03sidSL02nXUngfTb2xRDq
+         csUhEbdoUIxgM6VYCYzDn+8STskKX7IMSGNP9eWLSB4Bf15X2UO/2k3kJ/SNrFljWK
+         z4julWHZYzllw==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -41,112 +41,58 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Seth Jenkins <sethjenkins@google.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4.19 00/16] Backport oops_limit to 4.19
-Date:   Wed,  1 Feb 2023 21:25:48 -0800
-Message-Id: <20230202052604.179184-1-ebiggers@kernel.org>
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH 4.19 05/16] objtool: Add a missing comma to avoid string concatenation
+Date:   Wed,  1 Feb 2023 21:25:53 -0800
+Message-Id: <20230202052604.179184-6-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230202052604.179184-1-ebiggers@kernel.org>
+References: <20230202052604.179184-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This series backports the patchset
-"exit: Put an upper limit on how often we can oops"
-(https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
-to 4.19, as recommended at
-https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
-This follows the backports to 5.10 and 5.15 which already released, and
-the backport to 5.4 that I just sent out too.
+From: "Eric W. Biederman" <ebiederm@xmission.com>
 
-This required backporting various prerequisite patches.
+commit 1fb466dff904e4a72282af336f2c355f011eec61 upstream.
 
-I've tested that oops_limit and warn_limit work correctly on x86_64.
+Recently the kbuild robot reported two new errors:
 
-David Gow (1):
-  mm: kasan: do not panic if both panic_on_warn and kasan_multishot set
+>> lib/kunit/kunit-example-test.o: warning: objtool: .text.unlikely: unexpected end of section
+>> arch/x86/kernel/dumpstack.o: warning: objtool: oops_end() falls through to next function show_opcodes()
 
-Eric W. Biederman (2):
-  exit: Add and use make_task_dead.
-  objtool: Add a missing comma to avoid string concatenation
+I don't know why they did not occur in my test setup but after digging
+it I realized I had accidentally dropped a comma in
+tools/objtool/check.c when I renamed rewind_stack_do_exit to
+rewind_stack_and_make_dead.
 
-Jann Horn (1):
-  exit: Put an upper limit on how often we can oops
+Add that comma back to fix objtool errors.
 
-Kees Cook (7):
-  exit: Expose "oops_count" to sysfs
-  exit: Allow oops_limit to be disabled
-  panic: Consolidate open-coded panic_on_warn checks
-  panic: Introduce warn_limit
-  panic: Expose "warn_count" to sysfs
-  docs: Fix path paste-o for /sys/kernel/warn_count
-  exit: Use READ_ONCE() for all oops/warn limit reads
+Link: https://lkml.kernel.org/r/202112140949.Uq5sFKR1-lkp@intel.com
+Fixes: 0e25498f8cd4 ("exit: Add and use make_task_dead.")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ tools/objtool/check.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Nathan Chancellor (2):
-  hexagon: Fix function name in die()
-  h8300: Fix build errors from do_exit() to make_task_dead() transition
-
-Randy Dunlap (1):
-  ia64: make IA64_MCA_RECOVERY bool instead of tristate
-
-Tiezhu Yang (1):
-  panic: unset panic_on_warn inside panic()
-
-Xiaoming Ni (1):
-  sysctl: add a new register_sysctl_init() interface
-
- .../ABI/testing/sysfs-kernel-oops_count       |  6 ++
- .../ABI/testing/sysfs-kernel-warn_count       |  6 ++
- Documentation/sysctl/kernel.txt               | 20 +++++
- arch/alpha/kernel/traps.c                     |  6 +-
- arch/alpha/mm/fault.c                         |  2 +-
- arch/arm/kernel/traps.c                       |  2 +-
- arch/arm/mm/fault.c                           |  2 +-
- arch/arm64/kernel/traps.c                     |  2 +-
- arch/arm64/mm/fault.c                         |  2 +-
- arch/h8300/kernel/traps.c                     |  3 +-
- arch/h8300/mm/fault.c                         |  2 +-
- arch/hexagon/kernel/traps.c                   |  2 +-
- arch/ia64/Kconfig                             |  2 +-
- arch/ia64/kernel/mca_drv.c                    |  2 +-
- arch/ia64/kernel/traps.c                      |  2 +-
- arch/ia64/mm/fault.c                          |  2 +-
- arch/m68k/kernel/traps.c                      |  2 +-
- arch/m68k/mm/fault.c                          |  2 +-
- arch/microblaze/kernel/exceptions.c           |  4 +-
- arch/mips/kernel/traps.c                      |  2 +-
- arch/nds32/kernel/traps.c                     |  8 +-
- arch/nios2/kernel/traps.c                     |  4 +-
- arch/openrisc/kernel/traps.c                  |  2 +-
- arch/parisc/kernel/traps.c                    |  2 +-
- arch/powerpc/kernel/traps.c                   |  2 +-
- arch/riscv/kernel/traps.c                     |  2 +-
- arch/riscv/mm/fault.c                         |  2 +-
- arch/s390/kernel/dumpstack.c                  |  2 +-
- arch/s390/kernel/nmi.c                        |  2 +-
- arch/sh/kernel/traps.c                        |  2 +-
- arch/sparc/kernel/traps_32.c                  |  4 +-
- arch/sparc/kernel/traps_64.c                  |  4 +-
- arch/x86/entry/entry_32.S                     |  6 +-
- arch/x86/entry/entry_64.S                     |  6 +-
- arch/x86/kernel/dumpstack.c                   |  4 +-
- arch/xtensa/kernel/traps.c                    |  2 +-
- fs/proc/proc_sysctl.c                         | 33 ++++++++
- include/linux/kernel.h                        |  1 +
- include/linux/sched/task.h                    |  1 +
- include/linux/sysctl.h                        |  3 +
- kernel/exit.c                                 | 72 ++++++++++++++++++
- kernel/panic.c                                | 75 ++++++++++++++++---
- kernel/sched/core.c                           |  3 +-
- mm/kasan/report.c                             |  4 +-
- tools/objtool/check.c                         |  3 +-
- 45 files changed, 258 insertions(+), 64 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-oops_count
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
-
-
-base-commit: b17faf2c4e88ac0deb894f068bda67ace57e9c0a
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 0477190557107..55f3e7fa1c5d0 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -168,7 +168,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"fortify_panic",
+ 		"usercopy_abort",
+ 		"machine_real_restart",
+-		"rewind_stack_and_make_dead"
++		"rewind_stack_and_make_dead",
+ 	};
+ 
+ 	if (func->bind == STB_WEAK)
 -- 
 2.39.1
 
