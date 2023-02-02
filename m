@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6689FC61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B73C05027
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229649AbjBBFpW (ORCPT
+        id S230116AbjBBFpZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 00:45:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
+        Thu, 2 Feb 2023 00:45:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbjBBFpV (ORCPT
+        with ESMTP id S229988AbjBBFpY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 00:45:21 -0500
+        Thu, 2 Feb 2023 00:45:24 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888BE301B2;
-        Wed,  1 Feb 2023 21:45:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A053644C;
+        Wed,  1 Feb 2023 21:45:23 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0209A615E9;
-        Thu,  2 Feb 2023 05:45:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25A67C433EF;
-        Thu,  2 Feb 2023 05:45:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 153C9615F2;
+        Thu,  2 Feb 2023 05:45:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E0CC433A4;
+        Thu,  2 Feb 2023 05:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675316719;
-        bh=B6lSrlLtFAZ1xIL4KTWAiJ+Y2P8ChLSaSxw1tFBI8Lo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=EYQ3cbsvsm/1Byhw2QM5heq7F1o8uSyITBLY+mW8R3Z6IHbOvwUomFD7BBg0a+/QV
-         esJ3kvtEX98LgxzIsMTa3mhbtY7ACzX20JvAH8RIuj39WHVAukIznd088+482v+j4j
-         KrbY9rZbyirm0crOkC1ZFxf50j8FeMMremyU8UkwDmAeGQk699w9KIIDbOxlcSMYLi
-         ENfESSKtvc5LI2EqlS7MrLM7vtH0tYRpINJH+jK2Cht+6YPh0O5rufro/pTku0mgRg
-         VaZD9Cu25AyAg3mMw5bwnDTsvxCOawt7DvDQpgKleW1w6g/Gcuun/7/M7uLw5j1rH/
-         TJnJSmXlGsQzw==
+        s=k20201202; t=1675316722;
+        bh=ZrJE/T7SLlHhvTiGljJycVNk4Ss4UF98+LFJwDCgDho=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Opw6F21NCn/0eyL0JLjPetpv06wMS1xqhkHxD7snPBkviI/mJsQKP/Q+P2wQBCpG0
+         dn0srPB0+54tGOBE/Z1tHcNkwTLL6T4jhaKZtKpD+GBrVjNyMuflIOy9uhPsug+uUH
+         5EnlWsaC4jLiXXyBfCbriwDPR0nOMoJzWMghS1ryuMt+6rdsj+dz2ifZOA8UBqzhR1
+         YB5A2ybGDH+1Y7DPZoYtq0AFY9XjFBPU7y4VFYxpOxOzl3tOTGnmXCoRzGyw6zV8iN
+         fcI4eosEEK80ZuEqgBwq6QZiVYJ0Lo2IuS5Ko6NLonxQypow2UbrfYw+Qg/zYCXXO2
+         mhnj3a9M2DG7g==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -41,111 +41,81 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Seth Jenkins <sethjenkins@google.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4.14 00/16] Backport oops_limit to 4.14
-Date:   Wed,  1 Feb 2023 21:43:50 -0800
-Message-Id: <20230202054406.221721-1-ebiggers@kernel.org>
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Patricia Alfonso <trishalfonso@google.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 03/16] mm: kasan: do not panic if both panic_on_warn and kasan_multishot set
+Date:   Wed,  1 Feb 2023 21:43:53 -0800
+Message-Id: <20230202054406.221721-4-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230202054406.221721-1-ebiggers@kernel.org>
+References: <20230202054406.221721-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: David Gow <davidgow@google.com>
 
-This series backports the patchset
-"exit: Put an upper limit on how often we can oops"
-(https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
-to 4.14, as recommended at
-https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
-This follows the backports to 5.10 and 5.15 which already released, and
-the backports to 5.4 and 4.19 that I just sent out too.
+commit be4f1ae978ffe98cc95ec49ceb95386fb4474974 upstream.
 
-This required backporting various prerequisite patches.
+KASAN errors will currently trigger a panic when panic_on_warn is set.
+This renders kasan_multishot useless, as further KASAN errors won't be
+reported if the kernel has already paniced.  By making kasan_multishot
+disable this behaviour for KASAN errors, we can still have the benefits of
+panic_on_warn for non-KASAN warnings, yet be able to use kasan_multishot.
 
-I've tested that oops_limit and warn_limit work correctly on x86_64.
+This is particularly important when running KASAN tests, which need to
+trigger multiple KASAN errors: previously these would panic the system if
+panic_on_warn was set, now they can run (and will panic the system should
+non-KASAN warnings show up).
 
-David Gow (1):
-  mm: kasan: do not panic if both panic_on_warn and kasan_multishot set
+Signed-off-by: David Gow <davidgow@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Andrey Konovalov <andreyknvl@google.com>
+Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Patricia Alfonso <trishalfonso@google.com>
+Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Link: https://lkml.kernel.org/r/20200915035828.570483-6-davidgow@google.com
+Link: https://lkml.kernel.org/r/20200910070331.3358048-6-davidgow@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ mm/kasan/report.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Eric W. Biederman (2):
-  exit: Add and use make_task_dead.
-  objtool: Add a missing comma to avoid string concatenation
-
-Jann Horn (1):
-  exit: Put an upper limit on how often we can oops
-
-Kees Cook (7):
-  exit: Expose "oops_count" to sysfs
-  exit: Allow oops_limit to be disabled
-  panic: Consolidate open-coded panic_on_warn checks
-  panic: Introduce warn_limit
-  panic: Expose "warn_count" to sysfs
-  docs: Fix path paste-o for /sys/kernel/warn_count
-  exit: Use READ_ONCE() for all oops/warn limit reads
-
-Nathan Chancellor (2):
-  hexagon: Fix function name in die()
-  h8300: Fix build errors from do_exit() to make_task_dead() transition
-
-Randy Dunlap (1):
-  ia64: make IA64_MCA_RECOVERY bool instead of tristate
-
-Tiezhu Yang (1):
-  panic: unset panic_on_warn inside panic()
-
-Xiaoming Ni (1):
-  sysctl: add a new register_sysctl_init() interface
-
- .../ABI/testing/sysfs-kernel-oops_count       |  6 ++
- .../ABI/testing/sysfs-kernel-warn_count       |  6 ++
- Documentation/sysctl/kernel.txt               | 20 +++++
- arch/alpha/kernel/traps.c                     |  6 +-
- arch/alpha/mm/fault.c                         |  2 +-
- arch/arm/kernel/traps.c                       |  2 +-
- arch/arm/mm/fault.c                           |  2 +-
- arch/arm64/kernel/traps.c                     |  2 +-
- arch/arm64/mm/fault.c                         |  2 +-
- arch/h8300/kernel/traps.c                     |  3 +-
- arch/h8300/mm/fault.c                         |  2 +-
- arch/hexagon/kernel/traps.c                   |  2 +-
- arch/ia64/Kconfig                             |  2 +-
- arch/ia64/kernel/mca_drv.c                    |  2 +-
- arch/ia64/kernel/traps.c                      |  2 +-
- arch/ia64/mm/fault.c                          |  2 +-
- arch/m68k/kernel/traps.c                      |  2 +-
- arch/m68k/mm/fault.c                          |  2 +-
- arch/microblaze/kernel/exceptions.c           |  4 +-
- arch/mips/kernel/traps.c                      |  2 +-
- arch/nios2/kernel/traps.c                     |  4 +-
- arch/openrisc/kernel/traps.c                  |  2 +-
- arch/parisc/kernel/traps.c                    |  2 +-
- arch/powerpc/kernel/traps.c                   |  2 +-
- arch/s390/kernel/dumpstack.c                  |  2 +-
- arch/s390/kernel/nmi.c                        |  2 +-
- arch/sh/kernel/traps.c                        |  2 +-
- arch/sparc/kernel/traps_32.c                  |  4 +-
- arch/sparc/kernel/traps_64.c                  |  4 +-
- arch/x86/entry/entry_32.S                     |  6 +-
- arch/x86/entry/entry_64.S                     |  6 +-
- arch/x86/kernel/dumpstack.c                   |  4 +-
- arch/xtensa/kernel/traps.c                    |  2 +-
- fs/proc/proc_sysctl.c                         | 33 ++++++++
- include/linux/kernel.h                        |  1 +
- include/linux/sched/task.h                    |  1 +
- include/linux/sysctl.h                        |  3 +
- kernel/exit.c                                 | 72 ++++++++++++++++++
- kernel/panic.c                                | 75 ++++++++++++++++---
- kernel/sched/core.c                           |  3 +-
- mm/kasan/report.c                             |  4 +-
- tools/objtool/check.c                         |  3 +-
- 42 files changed, 252 insertions(+), 58 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-oops_count
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
-
-
-base-commit: 3949d16100044eeb6723eca03b1038b469fb9ae8
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index 6bcfb01ba0386..5b421f8433488 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -172,7 +172,7 @@ static void kasan_end_report(unsigned long *flags)
+ 	pr_err("==================================================================\n");
+ 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+ 	spin_unlock_irqrestore(&report_lock, *flags);
+-	if (panic_on_warn)
++	if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
+ 		panic("panic_on_warn set ...\n");
+ 	kasan_enable_current();
+ }
 -- 
 2.39.1
 
