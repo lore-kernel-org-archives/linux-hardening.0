@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6773C63797
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 04:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A561AC05027
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 04:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbjBBEoz (ORCPT
+        id S231821AbjBBEpS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Feb 2023 23:44:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
+        Wed, 1 Feb 2023 23:45:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231546AbjBBEo0 (ORCPT
+        with ESMTP id S231676AbjBBEof (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Feb 2023 23:44:26 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E257AE6D;
-        Wed,  1 Feb 2023 20:43:53 -0800 (PST)
+        Wed, 1 Feb 2023 23:44:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54247D995;
+        Wed,  1 Feb 2023 20:44:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id F3931CE2778;
-        Thu,  2 Feb 2023 04:43:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2746EC433AE;
-        Thu,  2 Feb 2023 04:43:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B99ADB82422;
+        Thu,  2 Feb 2023 04:43:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59556C433A1;
+        Thu,  2 Feb 2023 04:43:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675313031;
-        bh=tQ95HDESaxTuqQzyi1nO4i6CEilM7c7Fe4WNSNWi4kU=;
+        s=k20201202; t=1675313034;
+        bh=jOyM8do6FoMsZTh5VR6sMe/vJTgtvIwc5MLZQPrW/p0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JdqskDXIomYSiwz3Z4U2sxQUvmzdaUm1/g9FqeL9OJsA7fRP94ps0hhnABrZ99FaJ
-         p2rFFyeP6TLBIDeB+6KGL8FE60QfgpCTOVXibiz2zwIv8p2eNRK/r7YS8qDOCQPHP1
-         iPMlor9cjWMoJHaK2wFMZxgf8wZVjV9CpaKjlP6yGIphQp1nh2gGXMw0NrfCPW5Ymo
-         prHIw4OO+uTw0ffAXFtgEMb/JNKiUvbe/F5NYYt8or8Knqhalkqnn7yest5JsHLpTY
-         Q8nZkWxcAUHORHMkpeAWQ0xx7F0FMBT6PBNMrnGWu4yJoli7JyhagYp+oJ+uv0U+i4
-         /lIZ9kRFMNf8Q==
+        b=Sf+IENLZWlu+ktyVwbHxv6G6WPgYHWFc6RRcQ5ZtM/XF/5bHcwbVbUwm3Lw0y2yj0
+         rKqANe5mqg3TcIzHncMizi+L1DYM1MhSxoagQ7c/APsqpMNAfLjvlXB2xhHNAYbZfy
+         XHljdWt63gJbeX5N6Sr3GWrjthRwyQm0yOcKomU7T48m3SbW/mc9SuATRYlgjn2vRn
+         NfAK7U52JCS/nPToqXAfxRozUYuXwSweJzAvq41fgNO2CHegyoVe8VTuCU8EEiUPcV
+         NixH7tz2mB7KHXUxFEb9CAl65jKt7wTGjWG2LrSsvkVqLPqbSFT5V531IOppOOKqnW
+         /dGporr7i8Y3Q==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,15 +42,35 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 09/17] ia64: make IA64_MCA_RECOVERY bool instead of tristate
-Date:   Wed,  1 Feb 2023 20:42:47 -0800
-Message-Id: <20230202044255.128815-10-ebiggers@kernel.org>
+        David Gow <davidgow@google.com>,
+        tangmeng <tangmeng@uniontech.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH 5.4 13/17] panic: Consolidate open-coded panic_on_warn checks
+Date:   Wed,  1 Feb 2023 20:42:51 -0800
+Message-Id: <20230202044255.128815-14-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202044255.128815-1-ebiggers@kernel.org>
 References: <20230202044255.128815-1-ebiggers@kernel.org>
@@ -60,50 +80,124 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Kees Cook <keescook@chromium.org>
 
-commit dbecf9b8b8ce580f4e11afed9d61e8aa294cddd2 upstream.
+commit 79cc1ba7badf9e7a12af99695a557e9ce27ee967 upstream.
 
-In linux-next, IA64_MCA_RECOVERY uses the (new) function
-make_task_dead(), which is not exported for use by modules.  Instead of
-exporting it for one user, convert IA64_MCA_RECOVERY to be a bool
-Kconfig symbol.
+Several run-time checkers (KASAN, UBSAN, KFENCE, KCSAN, sched) roll
+their own warnings, and each check "panic_on_warn". Consolidate this
+into a single function so that future instrumentation can be added in
+a single location.
 
-In a config file from "kernel test robot <lkp@intel.com>" for a
-different problem, this linker error was exposed when
-CONFIG_IA64_MCA_RECOVERY=m.
-
-Fixes this build error:
-
-  ERROR: modpost: "make_task_dead" [arch/ia64/kernel/mca_recovery.ko] undefined!
-
-Link: https://lkml.kernel.org/r/20220124213129.29306-1-rdunlap@infradead.org
-Fixes: 0e25498f8cd4 ("exit: Add and use make_task_dead.")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Gow <davidgow@google.com>
+Cc: tangmeng <tangmeng@uniontech.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: kasan-dev@googlegroups.com
+Cc: linux-mm@kvack.org
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Marco Elver <elver@google.com>
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+Link: https://lore.kernel.org/r/20221117234328.594699-4-keescook@chromium.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/ia64/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/kernel.h | 1 +
+ kernel/panic.c         | 9 +++++++--
+ kernel/sched/core.c    | 3 +--
+ mm/kasan/report.c      | 4 ++--
+ 4 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
-index 16714477eef42..6a6036f16abe6 100644
---- a/arch/ia64/Kconfig
-+++ b/arch/ia64/Kconfig
-@@ -360,7 +360,7 @@ config ARCH_PROC_KCORE_TEXT
- 	depends on PROC_KCORE
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 77c86a2236daf..1fdb251947ed4 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -321,6 +321,7 @@ extern long (*panic_blink)(int state);
+ __printf(1, 2)
+ void panic(const char *fmt, ...) __noreturn __cold;
+ void nmi_panic(struct pt_regs *regs, const char *msg);
++void check_panic_on_warn(const char *origin);
+ extern void oops_enter(void);
+ extern void oops_exit(void);
+ void print_oops_end_marker(void);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 5e2b764ff5d54..7e4900eb25ac1 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -156,6 +156,12 @@ static void panic_print_sys_info(void)
+ 		ftrace_dump(DUMP_ALL);
+ }
  
- config IA64_MCA_RECOVERY
--	tristate "MCA recovery from errors other than TLB."
-+	bool "MCA recovery from errors other than TLB."
++void check_panic_on_warn(const char *origin)
++{
++	if (panic_on_warn)
++		panic("%s: panic_on_warn set ...\n", origin);
++}
++
+ /**
+  *	panic - halt the system
+  *	@fmt: The text string to print
+@@ -581,8 +587,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ 	if (args)
+ 		vprintk(args->fmt, args->args);
  
- config PERFMON
- 	bool "Performance monitor support"
+-	if (panic_on_warn)
+-		panic("panic_on_warn set ...\n");
++	check_panic_on_warn("kernel");
+ 
+ 	print_modules();
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 06b686ef36e68..8ab239fd1c8d3 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3964,8 +3964,7 @@ static noinline void __schedule_bug(struct task_struct *prev)
+ 		print_ip_sym(preempt_disable_ip);
+ 		pr_cont("\n");
+ 	}
+-	if (panic_on_warn)
+-		panic("scheduling while atomic\n");
++	check_panic_on_warn("scheduling while atomic");
+ 
+ 	dump_stack();
+ 	add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index a05ff1922d499..4d87df96acc1e 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -92,8 +92,8 @@ static void end_report(unsigned long *flags)
+ 	pr_err("==================================================================\n");
+ 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+ 	spin_unlock_irqrestore(&report_lock, *flags);
+-	if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
+-		panic("panic_on_warn set ...\n");
++	if (!test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
++		check_panic_on_warn("KASAN");
+ 	kasan_enable_current();
+ }
+ 
 -- 
 2.39.1
 
