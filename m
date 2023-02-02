@@ -2,122 +2,180 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 330AFC05027
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 20:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6585BC636D3
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 20:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232500AbjBBUM2 (ORCPT
+        id S232835AbjBBU0F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 15:12:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54206 "EHLO
+        Thu, 2 Feb 2023 15:26:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231359AbjBBUM1 (ORCPT
+        with ESMTP id S232202AbjBBUZk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 15:12:27 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103797C711
-        for <linux-hardening@vger.kernel.org>; Thu,  2 Feb 2023 12:12:26 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id ud5so9350548ejc.4
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Feb 2023 12:12:25 -0800 (PST)
+        Thu, 2 Feb 2023 15:25:40 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE3C6EADB
+        for <linux-hardening@vger.kernel.org>; Thu,  2 Feb 2023 12:25:33 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id j5so2976831pjn.5
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Feb 2023 12:25:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IHla39CiSn/iJKWSdMLdZQxGn8KNa71czZ//HIF7jnM=;
-        b=b8S977PCJvYsm5/wWBBCuQu2MDqR3X3fUtF8X1r8mnXi8t+O+XjMQWNZFQCdwK3bQu
-         bb2h40Lx6JiJTPlREK6y28ArbDlrecfcNjSuHQnO41A9KR2NvWMo8fBku8bWXW2ZsmOT
-         3i1S7Ci7/Mz77ZbG9n+tgyGlxlIcHYfqwqElIshS4Q7ZnQdxZJwxp6hOfOB3IdRqQktA
-         ly/hhMbpiYCBguunqDfA9g9Bu3cgo3d8McgbLXFFfupAu9Hqi1jppqaC0Qwjb+NRZC+h
-         nOm8+qHMKnw3bcVXpH6k/6Y+ne2nkjuHiDVxYx23qm/zBpVknekHllYAtdJURLIsp0U2
-         2E7w==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=9J0utFsWgEaSXGaB/NZTOm15TJEdUPOpYGgYNlrsQN4=;
+        b=eDI5P5tugBKMrVegwsr2+7uvCpX4p9i3SavPHUAKx7lXKtETXaw17Kzuo33t7GMpGq
+         NhnT51qm255vuT3fdqx5JBuM60LOzgH/V+LEFakR4BbsmQn1kVWaDZgbthKV4NYKIIX3
+         yByan+osXsca5alhgjK9L6C7nhpx5V4z0fXIc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IHla39CiSn/iJKWSdMLdZQxGn8KNa71czZ//HIF7jnM=;
-        b=s+mr+58QkxXI223QCoFarq1pHJ2Kf7x0mvBQ+tdz3lCeJoYCadAREU9uWbn/r0F60D
-         OIkSN2+sIXr9V+M+bSBVSr0+NptAm2UIX+fvhiDynD05ta14NcAi8C8iCbiwcXvNRPDe
-         Vhmx9PDmLsh+tb4oqN7vmnMl05tkTmaPgI+HS8T+pzCN8kf5tahAJ05Ojkly0NLoIGqI
-         GGFx6pO4JgID5gVDJKWqsE1khePlgnzNakgAnHxncX+MvJYm3Od25QyhJ/ygG7sJVWP8
-         k4e1NKl4T0PEYLJVjjW3bC+01xjQ0c1A2Mh9lDeZJ2kDLSCBhNESxJUfIuFIIirUegaw
-         YP4g==
-X-Gm-Message-State: AO0yUKWzEQitX5QCmrCMINcbTlENzcFo+kyHpjBW25UgVMs2/yhYfpIM
-        o6Cdc5GKYX9oUgnD+iDIr8m6xl/l6cXWPWRmQd6UkQ==
-X-Google-Smtp-Source: AK7set9rIsutx+Ca2x+6Py7LpZCPwL53KUZH34ZDzhf5YBTLMNdyYbcMOhiSyZoKwKZW2sL2evQ4iBv7Bl6I/3PriEM=
-X-Received: by 2002:a17:906:2c42:b0:88a:b6ca:7d3a with SMTP id
- f2-20020a1709062c4200b0088ab6ca7d3amr1942408ejh.1.1675368744381; Thu, 02 Feb
- 2023 12:12:24 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9J0utFsWgEaSXGaB/NZTOm15TJEdUPOpYGgYNlrsQN4=;
+        b=Uj5xjeIrdKyRomZ9unAPHG9fMtmfAYGCIbWwU9fNjSqs/VL2ZYd+bcsyWnDWdM1Zyv
+         W4icerlFiw7+/qOAzSQaAPH2djxQzpFo+VwxTyGBOe3ejiVwvJKg4Mnqwg+B8vAW6TyG
+         JyZ8Z4gQQOoG274BVroW4KcLv6yzuzLQygyEOZ0kVO+5uGaiCQVkDd7OMHNaQRVfb9c8
+         w+o3t3bf9vAphi25e9HjVAfHfn4aSm0hK+z+24rGYoE6B35k/zng98BFCtIiOtwxkxTO
+         JMLmZTRe0cvOVDe30w+Kiwz/gGve2pGvVm44i7MbK6BqjE5xtWUPYfy4YLDNb/ETYKdl
+         Ux2w==
+X-Gm-Message-State: AO0yUKVLYpuEIlw4jP8DMNIGNHWrzZTchoZNjPxPBskusQmJlj5RbvVK
+        DuQ/LI1Mo5FOeCG1RF0F/QpxFg==
+X-Google-Smtp-Source: AK7set/Gj9diS4RbvFVs4BCq0lJ2WvfL0Ul+WLETpp9VqPI9Gp4edNqjocLLzOay2r1rGI0AADRnBg==
+X-Received: by 2002:a17:903:24f:b0:196:3db5:c08b with SMTP id j15-20020a170903024f00b001963db5c08bmr8867242plh.69.1675369532929;
+        Thu, 02 Feb 2023 12:25:32 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ix19-20020a170902f81300b00186c5e8a8d7sm74599plb.171.2023.02.02.12.25.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Feb 2023 12:25:32 -0800 (PST)
+Message-ID: <63dc1c3c.170a0220.9d837.03a1@mx.google.com>
+X-Google-Original-Message-ID: <202302022024.@keescook>
+Date:   Thu, 2 Feb 2023 20:25:31 +0000
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Kevin Barnett <kevin.barnett@microsemi.com>,
+        Don Brace <don.brace@microchip.com>, storagedev@microchip.com,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 1/3][next] scsi: smartpqi: Replace one-element array with
+ flexible-array member
+References: <cover.1663816572.git.gustavoars@kernel.org>
+ <c80c0979933e0c05e80d95792ef167a28640a14b.1663816572.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-References: <20221101222520.never.109-kees@kernel.org> <20221101223321.1326815-5-keescook@chromium.org>
- <CAMSo37W3gRkP02tSCxGX71ZDAt3WgPZrkTRTM6J1iQ4gvUS9vg@mail.gmail.com>
- <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
- <63dbf04a.630a0220.2608a.0149@mx.google.com> <CANDhNCoJJs_jSAdr6uved=cK=-6+nzSJq3e_E3HgtiXHZXkVww@mail.gmail.com>
- <63dc0a89.170a0220.49507.0091@mx.google.com> <CAMj1kXHTwFH-OADZ5nZXfZyuH-x7XJL3DMyiz2Tr_nCuup+xFA@mail.gmail.com>
- <CAKwvOd=cuDb2NNK4uoUTYTLryFig47hvDQ08ta5XhjHsEhAG4A@mail.gmail.com>
- <CABCJKuc+GvTHXu-CVedZs6CvPKJ8ySrVztkP2V3dsWn70xf7hA@mail.gmail.com> <63dc14a2.170a0220.beb2a.0275@mx.google.com>
-In-Reply-To: <63dc14a2.170a0220.beb2a.0275@mx.google.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Thu, 2 Feb 2023 12:11:47 -0800
-Message-ID: <CABCJKueSasiWQvO2jZ-8KUF+c-dNgf87pR45sfHHCQMyyTvL0Q@mail.gmail.com>
-Subject: Re: [PATCH 5/6] driver core: Add __alloc_size hint to devm allocators
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        John Stultz <jstultz@google.com>,
-        Yongqin Liu <yongqin.liu@linaro.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Won Chung <wonchung@google.com>,
-        David Gow <davidgow@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        llvm@lists.linux.dev, Sumit Semwal <sumit.semwal@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c80c0979933e0c05e80d95792ef167a28640a14b.1663816572.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 2, 2023 at 11:53 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Feb 02, 2023 at 11:49:42AM -0800, Sami Tolvanen wrote:
-> > A quick look at Clang's source code suggests that Intrinsic::ubsantrap
-> > already accepts the handler ID (from the SanitizerHandler enum) as an
-> > argument and the arm64 LLVM back-end appears to encode the value as an
-> > immediate for the brk instruction. I didn't confirm that this actually
-> > works, but perhaps we just need to teach the kernel about the possible
-> > values?
->
-> Oh excellent. Yeah, if that's all that's needed here that would be
-> great. What are the values?
+On Wed, Sep 21, 2022 at 11:28:35PM -0500, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element array with flexible-array
+> member in struct MR_DRV_RAID_MAP and refactor the the rest of the code
+> accordingly.
+> 
+> It seems that the addition of sizeof(struct report_log_lun) in all the
+> places that are modified by this patch is due to the fact that
+> the one-element array struct report_log_lun lun_entries[1]; always
+> contributes to the size of the containing structure struct
+> report_log_lun_list.
+> 
+> Notice that at line 1267 while allocating memory for an instance of
+> struct report_log_lun_list, some _extra_ space seems to be allocated
+> for one element of type struct report_log_lun, which is the type of
+> the elements in array lun_entries:
+> 
+>  1267         internal_logdev_list = kmalloc(logdev_data_length +
+>  1268                 sizeof(struct report_log_lun), GFP_KERNEL);
+> 
+> However, at line 1275 just logdev_data_length bytes are copied into
+> internal_logdev_list (remember that we allocated space for logdev_data_length +
+> sizeof(struct report_log_lun) bytes at line 1267), and then exactly
+> sizeof(struct report_log_lun) bytes are being zeroing out at line 1276.
+> 
+>  1275         memcpy(internal_logdev_list, logdev_data, logdev_data_length);
+>  1276         memset((u8 *)internal_logdev_list + logdev_data_length, 0,
+>  1277                 sizeof(struct report_log_lun));
+> 
+> All the above makes think that it's just fine if we transform array
+> lun_entries into a flexible-array member and just don't allocate
+> that extra sizeof(struct report_log_lun) bytes of space. With this
+> we can remove that memset() call and we also need to modify the code
+> that updates the total length (internal_logdev_list->header.list_length)
+> of array lun_entries at line 1278:
+> 
+>  1278         put_unaligned_be32(logdev_list_length +
+>  1279                 sizeof(struct report_log_lun),
+>  1280                 &internal_logdev_list->header.list_length);
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+> on memcpy().
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/204
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> And of course, it'd be great if maintainers can confirm what I described
+> in the changelog text. :)
+> 
+>  drivers/scsi/smartpqi/smartpqi.h      |  2 +-
+>  drivers/scsi/smartpqi/smartpqi_init.c | 10 +++-------
+>  2 files changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
+> index e550b12e525a..d1756c9d1112 100644
+> --- a/drivers/scsi/smartpqi/smartpqi.h
+> +++ b/drivers/scsi/smartpqi/smartpqi.h
+> @@ -954,7 +954,7 @@ struct report_log_lun {
+>  
+>  struct report_log_lun_list {
+>  	struct report_lun_header header;
+> -	struct report_log_lun lun_entries[1];
+> +	struct report_log_lun lun_entries[];
+>  };
+>  
+>  struct report_phys_lun_8byte_wwid {
+> diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+> index b971fbe3b3a1..544cd18a90d7 100644
+> --- a/drivers/scsi/smartpqi/smartpqi_init.c
+> +++ b/drivers/scsi/smartpqi/smartpqi_init.c
+> @@ -1264,8 +1264,7 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
+>  	logdev_data_length = sizeof(struct report_lun_header) +
+>  		logdev_list_length;
+>  
+> -	internal_logdev_list = kmalloc(logdev_data_length +
+> -		sizeof(struct report_log_lun), GFP_KERNEL);
+> +	internal_logdev_list = kmalloc(logdev_data_length, GFP_KERNEL);
+>  	if (!internal_logdev_list) {
+>  		kfree(*logdev_list);
+>  		*logdev_list = NULL;
+> @@ -1273,11 +1272,8 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
+>  	}
+>  
+>  	memcpy(internal_logdev_list, logdev_data, logdev_data_length);
+> -	memset((u8 *)internal_logdev_list + logdev_data_length, 0,
+> -		sizeof(struct report_log_lun));
+> -	put_unaligned_be32(logdev_list_length +
+> -		sizeof(struct report_log_lun),
+> -		&internal_logdev_list->header.list_length);
+> +	put_unaligned_be32(logdev_list_length,
+> +			   &internal_logdev_list->header.list_length);
 
-The arm64 brk immediate encoding seems to be "ubsantrap arg | 'U' << 8":
+This is a bit of a twisty maze to read through, but at the end, I agree
+with your assessment: it was needlessly added the extra member to the
+allocation. I don't see it used anywhere in later code -- it's always
+bounded by logdev_list_length.
 
-https://github.com/llvm/llvm-project/blob/main/llvm/lib/Target/AArch64/AArch64InstrInfo.td#L7571
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-The argument values come from the SanitizerHandler enum, which is
-populated from this list:
+>  
+>  	kfree(*logdev_list);
+>  	*logdev_list = internal_logdev_list;
+> -- 
+> 2.34.1
+> 
 
-https://github.com/llvm/llvm-project/blob/main/clang/lib/CodeGen/CodeGenFunction.h#L113
-
-Therefore, according to the tests, for ubsantrap(12) we'll get brk
-#0x550c, for example:
-
-https://github.com/llvm/llvm-project/blob/main/llvm/test/CodeGen/AArch64/ubsantrap.ll
-
-Sami
+-- 
+Kees Cook
