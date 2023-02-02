@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B73C05027
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D32C63797
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:45:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbjBBFpZ (ORCPT
+        id S230323AbjBBFp0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 00:45:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40904 "EHLO
+        Thu, 2 Feb 2023 00:45:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229988AbjBBFpY (ORCPT
+        with ESMTP id S230011AbjBBFpY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 2 Feb 2023 00:45:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A053644C;
-        Wed,  1 Feb 2023 21:45:23 -0800 (PST)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B63301B2;
+        Wed,  1 Feb 2023 21:45:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 153C9615F2;
-        Thu,  2 Feb 2023 05:45:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2E0CC433A4;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 97FD06150C;
         Thu,  2 Feb 2023 05:45:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955ECC4339B;
+        Thu,  2 Feb 2023 05:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675316722;
-        bh=ZrJE/T7SLlHhvTiGljJycVNk4Ss4UF98+LFJwDCgDho=;
+        s=k20201202; t=1675316721;
+        bh=ZnNBhw1eTbB7Y3fUOl5z/Qym4o7iK9J4ZXmSuZHiggA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Opw6F21NCn/0eyL0JLjPetpv06wMS1xqhkHxD7snPBkviI/mJsQKP/Q+P2wQBCpG0
-         dn0srPB0+54tGOBE/Z1tHcNkwTLL6T4jhaKZtKpD+GBrVjNyMuflIOy9uhPsug+uUH
-         5EnlWsaC4jLiXXyBfCbriwDPR0nOMoJzWMghS1ryuMt+6rdsj+dz2ifZOA8UBqzhR1
-         YB5A2ybGDH+1Y7DPZoYtq0AFY9XjFBPU7y4VFYxpOxOzl3tOTGnmXCoRzGyw6zV8iN
-         fcI4eosEEK80ZuEqgBwq6QZiVYJ0Lo2IuS5Ko6NLonxQypow2UbrfYw+Qg/zYCXXO2
-         mhnj3a9M2DG7g==
+        b=SYp/a5QDEpJi50N/toH4PxlZ+q/Wo3ZkkGTu704YRIZ5WYPZ64t992Gk892vP9pi0
+         7pWD8wLsMORaRIkGsR6ljIHe2NvUakqs3W3RMHa5Old4GblzC8MfhQ2wjpUeApK+Vq
+         ZMwDBMby9P0nd+M1xQdx5VDkou/COXs1MgpEwCqQrSCG3VERdhyHNhsOl35XBGovdb
+         JxnIhtS6NmuWIThf2URIdaogFtevZnN+1h0EyVGbfqv5z8EoOASzkWuGNckHy/pglx
+         EajgrZe6jVKNkjIntPexP3l90vIW1qIjOvFgQKc8hu/NvUk8O/sfhnhhRSKxCKu/Fn
+         SXZcZfz2SC5gA==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,22 +42,49 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Patricia Alfonso <trishalfonso@google.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        David Gow <davidgow@google.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Turner <pjt@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Qing Wang <wangqing@vivo.com>,
+        Benjamin LaHaise <bcrl@kvack.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Stephen Kitt <steve@sk2.org>, Antti Palosaari <crope@iki.fi>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Lukas Middendorf <kernel@tuxforce.de>,
+        Mark Fasheh <mark@fasheh.com>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Xiaoming Ni <nixiaoming@huawei.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 03/16] mm: kasan: do not panic if both panic_on_warn and kasan_multishot set
-Date:   Wed,  1 Feb 2023 21:43:53 -0800
-Message-Id: <20230202054406.221721-4-ebiggers@kernel.org>
+Subject: [PATCH 4.14 01/16] sysctl: add a new register_sysctl_init() interface
+Date:   Wed,  1 Feb 2023 21:43:51 -0800
+Message-Id: <20230202054406.221721-2-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202054406.221721-1-ebiggers@kernel.org>
 References: <20230202054406.221721-1-ebiggers@kernel.org>
@@ -67,55 +94,179 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: David Gow <davidgow@google.com>
+From: Xiaoming Ni <nixiaoming@huawei.com>
 
-commit be4f1ae978ffe98cc95ec49ceb95386fb4474974 upstream.
+commit 3ddd9a808cee7284931312f2f3e854c9617f44b2 upstream.
 
-KASAN errors will currently trigger a panic when panic_on_warn is set.
-This renders kasan_multishot useless, as further KASAN errors won't be
-reported if the kernel has already paniced.  By making kasan_multishot
-disable this behaviour for KASAN errors, we can still have the benefits of
-panic_on_warn for non-KASAN warnings, yet be able to use kasan_multishot.
+Patch series "sysctl: first set of kernel/sysctl cleanups", v2.
 
-This is particularly important when running KASAN tests, which need to
-trigger multiple KASAN errors: previously these would panic the system if
-panic_on_warn was set, now they can run (and will panic the system should
-non-KASAN warnings show up).
+Finally had time to respin the series of the work we had started last
+year on cleaning up the kernel/sysct.c kitchen sink.  People keeps
+stuffing their sysctls in that file and this creates a maintenance
+burden.  So this effort is aimed at placing sysctls where they actually
+belong.
 
-Signed-off-by: David Gow <davidgow@google.com>
+I'm going to split patches up into series as there is quite a bit of
+work.
+
+This first set adds register_sysctl_init() for uses of registerting a
+sysctl on the init path, adds const where missing to a few places,
+generalizes common values so to be more easy to share, and starts the
+move of a few kernel/sysctl.c out where they belong.
+
+The majority of rework on v2 in this first patch set is 0-day fixes.
+Eric Biederman's feedback is later addressed in subsequent patch sets.
+
+I'll only post the first two patch sets for now.  We can address the
+rest once the first two patch sets get completely reviewed / Acked.
+
+This patch (of 9):
+
+The kernel/sysctl.c is a kitchen sink where everyone leaves their dirty
+dishes, this makes it very difficult to maintain.
+
+To help with this maintenance let's start by moving sysctls to places
+where they actually belong.  The proc sysctl maintainers do not want to
+know what sysctl knobs you wish to add for your own piece of code, we
+just care about the core logic.
+
+Today though folks heavily rely on tables on kernel/sysctl.c so they can
+easily just extend this table with their needed sysctls.  In order to
+help users move their sysctls out we need to provide a helper which can
+be used during code initialization.
+
+We special-case the initialization use of register_sysctl() since it
+*is* safe to fail, given all that sysctls do is provide a dynamic
+interface to query or modify at runtime an existing variable.  So the
+use case of register_sysctl() on init should *not* stop if the sysctls
+don't end up getting registered.  It would be counter productive to stop
+boot if a simple sysctl registration failed.
+
+Provide a helper for init then, and document the recommended init levels
+to use for callers of this routine.  We will later use this in
+subsequent patches to start slimming down kernel/sysctl.c tables and
+moving sysctl registration to the code which actually needs these
+sysctls.
+
+[mcgrof@kernel.org: major commit log and documentation rephrasing also moved to fs/proc/proc_sysctl.c                  ]
+
+Link: https://lkml.kernel.org/r/20211123202347.818157-1-mcgrof@kernel.org
+Link: https://lkml.kernel.org/r/20211123202347.818157-2-mcgrof@kernel.org
+Signed-off-by: Xiaoming Ni <nixiaoming@huawei.com>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Iurii Zaikin <yzaikin@google.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paul Turner <pjt@google.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Qing Wang <wangqing@vivo.com>
+Cc: Benjamin LaHaise <bcrl@kvack.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Stephen Kitt <steve@sk2.org>
+Cc: Antti Palosaari <crope@iki.fi>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Julia Lawall <julia.lawall@inria.fr>
+Cc: Lukas Middendorf <kernel@tuxforce.de>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Phillip Potter <phil@philpotter.co.uk>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: "Theodore Ts'o" <tytso@mit.edu>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Andrey Konovalov <andreyknvl@google.com>
-Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Patricia Alfonso <trishalfonso@google.com>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Link: https://lkml.kernel.org/r/20200915035828.570483-6-davidgow@google.com
-Link: https://lkml.kernel.org/r/20200910070331.3358048-6-davidgow@google.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- mm/kasan/report.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/proc/proc_sysctl.c  | 33 +++++++++++++++++++++++++++++++++
+ include/linux/sysctl.h |  3 +++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 6bcfb01ba0386..5b421f8433488 100644
---- a/mm/kasan/report.c
-+++ b/mm/kasan/report.c
-@@ -172,7 +172,7 @@ static void kasan_end_report(unsigned long *flags)
- 	pr_err("==================================================================\n");
- 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
- 	spin_unlock_irqrestore(&report_lock, *flags);
--	if (panic_on_warn)
-+	if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
- 		panic("panic_on_warn set ...\n");
- 	kasan_enable_current();
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 12bac452738df..f4b46f796901c 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -13,6 +13,7 @@
+ #include <linux/namei.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
++#include <linux/kmemleak.h>
+ #include "internal.h"
+ 
+ static const struct dentry_operations proc_sys_dentry_operations;
+@@ -1370,6 +1371,38 @@ struct ctl_table_header *register_sysctl(const char *path, struct ctl_table *tab
  }
+ EXPORT_SYMBOL(register_sysctl);
+ 
++/**
++ * __register_sysctl_init() - register sysctl table to path
++ * @path: path name for sysctl base
++ * @table: This is the sysctl table that needs to be registered to the path
++ * @table_name: The name of sysctl table, only used for log printing when
++ *              registration fails
++ *
++ * The sysctl interface is used by userspace to query or modify at runtime
++ * a predefined value set on a variable. These variables however have default
++ * values pre-set. Code which depends on these variables will always work even
++ * if register_sysctl() fails. If register_sysctl() fails you'd just loose the
++ * ability to query or modify the sysctls dynamically at run time. Chances of
++ * register_sysctl() failing on init are extremely low, and so for both reasons
++ * this function does not return any error as it is used by initialization code.
++ *
++ * Context: Can only be called after your respective sysctl base path has been
++ * registered. So for instance, most base directories are registered early on
++ * init before init levels are processed through proc_sys_init() and
++ * sysctl_init().
++ */
++void __init __register_sysctl_init(const char *path, struct ctl_table *table,
++				 const char *table_name)
++{
++	struct ctl_table_header *hdr = register_sysctl(path, table);
++
++	if (unlikely(!hdr)) {
++		pr_err("failed when register_sysctl %s to %s\n", table_name, path);
++		return;
++	}
++	kmemleak_not_leak(hdr);
++}
++
+ static char *append_path(const char *path, char *pos, const char *name)
+ {
+ 	int namelen;
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index b769ecfcc3bd4..0a980aecc8f02 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -198,6 +198,9 @@ struct ctl_table_header *register_sysctl_paths(const struct ctl_path *path,
+ void unregister_sysctl_table(struct ctl_table_header * table);
+ 
+ extern int sysctl_init(void);
++extern void __register_sysctl_init(const char *path, struct ctl_table *table,
++				 const char *table_name);
++#define register_sysctl_init(path, table) __register_sysctl_init(path, table, #table)
+ 
+ extern struct ctl_table sysctl_mount_point[];
+ 
 -- 
 2.39.1
 
