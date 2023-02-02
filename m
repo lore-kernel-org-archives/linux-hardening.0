@@ -2,76 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A1BC61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 18:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3533C05027
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 18:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233015AbjBBSoO (ORCPT
+        id S233011AbjBBSuK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 13:44:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53710 "EHLO
+        Thu, 2 Feb 2023 13:50:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233019AbjBBSoD (ORCPT
+        with ESMTP id S232972AbjBBSuG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 13:44:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CDA6449F;
-        Thu,  2 Feb 2023 10:43:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9BC9461743;
-        Thu,  2 Feb 2023 18:43:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57999C433EF;
-        Thu,  2 Feb 2023 18:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675363421;
-        bh=7tBN3efqE0mc+ooc1QAXaZ3aYSIQ0nhfE6pP0qEvBOU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pEfFO8ohI8t4UTORuXvu8PC35Msdvbs8gmGzjzdbbs4MooF7NpyMIR1nvfiNn952E
-         cD0ktwcugbRM2kaalWxE/I5/iC/G0Jw4mz1ppmLJNhpgBRk/mplwJbKaMCxsOmdU3J
-         c+pjA8XYCyGVaemEZS/DwB32tYCPVl5p5dRRrThGVOJa8dF3IMI49EVEDwGsLR5Jtb
-         Q1S1Dm4VBq84q58XDA7BRIx9kyfSebFwNUOyfPiuN0sbPQqcoaU6dPL57A0WdSWeT9
-         y5STlL5OtK7z1pUUe3UxrYn56XffEkLcIWocc1xWW0czDZiOsuAwOudca1aDeaA8Ra
-         wyEy/3d4gk+vQ==
-From:   SeongJae Park <sj@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     stable@vger.kernel.org,
-        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        SeongJae Park <sj@kernel.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        Jann Horn <jannh@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5.4 00/17] Backport oops_limit to 5.4
-Date:   Thu,  2 Feb 2023 18:43:38 +0000
-Message-Id: <20230202184338.1332-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230202044255.128815-1-ebiggers@kernel.org>
-References: 
+        Thu, 2 Feb 2023 13:50:06 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECED47EFC
+        for <linux-hardening@vger.kernel.org>; Thu,  2 Feb 2023 10:50:04 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id b5so2821894plz.5
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Feb 2023 10:50:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MJ+goMNt1VSoS+nD/Kd4KUBoD5xxhSlaqH5M8U2pCAA=;
+        b=lSWfpXFjZHe81S2a8Pp4mPcgAcgFgLBiKn0nD8tsTr3ERJHZKk5QLWav7nFK9X1BLU
+         tbnAXkllYjR0+s/uAlMwm4ciQIBwr6bbwIZmIZ9gjmDarAI75+6SyLxf5MT//6dHiuiU
+         aGUMf5xVSmBnK2a8O3OI+FbHPOtqD/InVmuLI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MJ+goMNt1VSoS+nD/Kd4KUBoD5xxhSlaqH5M8U2pCAA=;
+        b=ROZHEO+1102TuYdFrRZiDDg9uylTE7mQTYSr/aTkkGDysutiQDRXMzdgG+hG0fMVx9
+         6qDq8B9DxjUCmrCqCxExtPICPjWv0uoaw8W13pquQXyMeYpAlATqfNkT+P0DkTlFQMXP
+         kdKmG7dqHo3FxjVnhobjcr1AN/Id4LkTTxUlAmGXMefj2PCYwBwq+ME5vLr4KDtZwSOZ
+         VS+Qo+Gufugsbit77wNKkkyw2sYVFCYVhsRxrI0cghgqWWjZJaXJgMu0J4AfrBQqJZYU
+         iqMpmKAfOreyRyUYAoN3lmK/ycPg7XQkYNuS2gsrxo/Opql7zIdKa9uVi0VXWCloL4E7
+         F5WQ==
+X-Gm-Message-State: AO0yUKXxwuSZYMIO29oN9ouKx6Gx7mlT4+K8u1jp2FdJPwuV1UzuEKXy
+        QecZfTw8qSA7PnGNKkub2EOp4g==
+X-Google-Smtp-Source: AK7set8akj0xtQRNOrWw4vSCYJtiCeL9b+ZzLAgwtWcsJAAKvWs2FbfrvEvZ+ne+Ae5O28eKpU/KGw==
+X-Received: by 2002:a17:903:244e:b0:196:2bf1:b690 with SMTP id l14-20020a170903244e00b001962bf1b690mr8949743pls.13.1675363804027;
+        Thu, 02 Feb 2023 10:50:04 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b4-20020a170902d30400b00196077ba463sm4199plc.123.2023.02.02.10.50.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Feb 2023 10:50:03 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     sam@gentoo.org, linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gcc-plugins: drop -std=gnu++11 to fix GCC 13 build
+Date:   Thu,  2 Feb 2023 18:49:55 +0000
+Message-Id: <167536379357.866892.4478489102901465255.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230201230009.2252783-1-sam@gentoo.org>
+References: <20230201230009.2252783-1-sam@gentoo.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 1 Feb 2023 20:42:38 -0800 Eric Biggers <ebiggers@kernel.org> wrote:
-
-> This series backports the patchset
-> "exit: Put an upper limit on how often we can oops"
-> (https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
-> to 5.4, as recommended at
-> https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
-> This follows the backports to 5.10 and 5.15 which already released.
+On Wed, 1 Feb 2023 23:00:09 +0000, Sam James wrote:
+> The latest GCC 13 snapshot (13.0.1 20230129) gives the following:
+> ```
+> cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so
+>  :./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: tree_code_type
+> ```
 > 
-> This required backporting various prerequisite patches.
+> This ends up being because of https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=b0241ce6e37031
+> upstream in GCC which changes the visibility of some types used by the kernel's
+> plugin infrastructure like tree_code_type.
 > 
-> I've tested that oops_limit and warn_limit work correctly on x86_64.
+> [...]
 
-Thanks for your great efforts on this.
+Applied to for-next/hardening, thanks!
 
-Tested-by: SeongJae Park <sj@kernel.org>
+[1/1] gcc-plugins: drop -std=gnu++11 to fix GCC 13 build
+      https://git.kernel.org/kees/c/5a6b64adc18d
 
+-- 
+Kees Cook
 
-Thanks,
-SJ
