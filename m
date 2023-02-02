@@ -2,92 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB6BC636D7
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC3CC636D4
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 09:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232005AbjBBFp7 (ORCPT
+        id S231434AbjBBJ2c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 00:45:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41236 "EHLO
+        Thu, 2 Feb 2023 04:28:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231382AbjBBFpg (ORCPT
+        with ESMTP id S231478AbjBBJ21 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 00:45:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A00C3FF35;
-        Wed,  1 Feb 2023 21:45:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 25CA2617D1;
-        Thu,  2 Feb 2023 05:45:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47770C433A0;
-        Thu,  2 Feb 2023 05:45:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675316729;
-        bh=jO10o07RAKyXXgWsy3XBxX0WTtST48LzT0RY2uOU2ZU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsoLp0vdb9wjgciaHX6Y6KE2Uj+lkFgMIid8x129U7wL3DM2HJSH6l0cHqIsXf3vn
-         Ysq2h+bCUb0qBbA373Yf/iW2G60crG7hZHmbj3mtzjqAcEXd9MaInbhrMdFKqK1njB
-         gGoLkO71Hl1GL5MYzAr9B8zuMdX7AxY7f3ttFi1eURTdh1XXAoTjwKEwgxWvcGRssX
-         eGHsVg3cqoQSiuFDa1IktPRUNpAx1Ng6eFpTDtjIqEmy/BRTjjtOXmv9DJ8UAT3Rgt
-         TZ81AK/ieHgr4yPT2SDo+j2nSoeNFQcAX1O/q9r3rfqOdNS8hcFHjha9ooRTD6Q1rC
-         s75E6Jn6/kksw==
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     stable@vger.kernel.org
-Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        SeongJae Park <sj@kernel.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        Jann Horn <jannh@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH 4.14 15/16] docs: Fix path paste-o for /sys/kernel/warn_count
-Date:   Wed,  1 Feb 2023 21:44:05 -0800
-Message-Id: <20230202054406.221721-16-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230202054406.221721-1-ebiggers@kernel.org>
-References: <20230202054406.221721-1-ebiggers@kernel.org>
+        Thu, 2 Feb 2023 04:28:27 -0500
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A2816309;
+        Thu,  2 Feb 2023 01:28:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1675330102; x=1706866102;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=La3wj2SGvz7TU9s+j9pQj9x3EPVU8m3Fuv9USC0qvtA=;
+  b=h1kAJDfNhz0qd6EBkWwKviGFF3z33EIQwfmpG8Oq2fAubzyBYQdKfkk3
+   KnfTYNvVmOufWe/goEV138FFsaRFWCSqQKGHt2CvL3mNrbbE8y/YGFCTl
+   8tKATc0q8zW+rzi0gj9CXk+heVtRdRw63i/hGgpWEqQNKnUYVyKrwMbwu
+   Y=;
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 02 Feb 2023 01:28:17 -0800
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.45.79.139])
+  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2023 01:28:17 -0800
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Thu, 2 Feb 2023 01:28:14 -0800
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <linux-hardening@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <corbet@lwn.net>,
+        Mukesh Ojha <quic_mojha@quicinc.com>
+Subject: [PATCH v5 1/2] dt-bindings: ramoops: Add support to get the region dynamically
+Date:   Thu, 2 Feb 2023 14:58:00 +0530
+Message-ID: <1675330081-15029-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+The reserved memory region for ramoops is assumed to be at a
+fixed and known location when read from the devicetree. This
+is not desirable in an environment where it is preferred the
+region to be dynamically allocated at runtime, as opposed to
+being fixed at compile time.
 
-commit 00dd027f721e0458418f7750d8a5a664ed3e5994 upstream.
+So, update the ramoops binding by using some reserve memory
+property to allocate the ramoops region dynamically.
 
-Running "make htmldocs" shows that "/sys/kernel/oops_count" was
-duplicated. This should have been "warn_count":
-
-  Warning: /sys/kernel/oops_count is defined 2 times:
-  ./Documentation/ABI/testing/sysfs-kernel-warn_count:0
-  ./Documentation/ABI/testing/sysfs-kernel-oops_count:0
-
-Fix the typo.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/linux-doc/202212110529.A3Qav8aR-lkp@intel.com
-Fixes: 8b05aa263361 ("panic: Expose "warn_count" to sysfs")
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- Documentation/ABI/testing/sysfs-kernel-warn_count | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v5:
+ - Updated the commit description.
+ - Removed example from yaml file.
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-warn_count b/Documentation/ABI/testing/sysfs-kernel-warn_count
-index 08f083d2fd51b..90a029813717d 100644
---- a/Documentation/ABI/testing/sysfs-kernel-warn_count
-+++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
-@@ -1,4 +1,4 @@
--What:		/sys/kernel/oops_count
-+What:		/sys/kernel/warn_count
- Date:		November 2022
- KernelVersion:	6.2.0
- Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
+Changes in v4:
+ - Addressed comment made by Krzysztof on ramoops node name.
+
+Changes in v3:
+ - Fixed yaml error and updated commit text as per comment.
+
+Change in v2:
+  - Added this patch as per changes going to be done in patch 3/3
+
+ .../devicetree/bindings/reserved-memory/ramoops.yaml          | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+index 0391871..51b6003 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+@@ -10,7 +10,8 @@ description: |
+   ramoops provides persistent RAM storage for oops and panics, so they can be
+   recovered after a reboot. This is a child-node of "/reserved-memory", and
+   is named "ramoops" after the backend, rather than "pstore" which is the
+-  subsystem.
++  subsystem. This region can be reserved both statically or dynamically by
++  using appropriate property in device tree.
+ 
+   Parts of this storage may be set aside for other persistent log buffers, such
+   as kernel log messages, or for optional ECC error-correction data.  The total
+@@ -112,7 +113,13 @@ unevaluatedProperties: false
+ 
+ required:
+   - compatible
+-  - reg
++
++oneOf:
++  - required:
++      - reg
++
++  - required:
++      - size
+ 
+ anyOf:
+   - required: [record-size]
 -- 
-2.39.1
+2.7.4
 
