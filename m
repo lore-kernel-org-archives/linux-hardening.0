@@ -2,59 +2,61 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4CEC61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 19:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFD8C61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 19:20:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229915AbjBBTKE (ORCPT
+        id S232024AbjBBTUk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 14:10:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45704 "EHLO
+        Thu, 2 Feb 2023 14:20:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231345AbjBBTKD (ORCPT
+        with ESMTP id S231712AbjBBTUj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 14:10:03 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04E5B3525F
-        for <linux-hardening@vger.kernel.org>; Thu,  2 Feb 2023 11:10:02 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id rm7-20020a17090b3ec700b0022c05558d22so2741436pjb.5
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Feb 2023 11:10:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ei84xjALj/qnZ251dtHcjT7fuwkFwrmIuOWdIaj3IB4=;
-        b=ifBa3W+FjfUT/jALuyk7vSXJgPyrderSzeCqeUprNB2WEcZ5Cgu0jv05ook+3UnGvo
-         RtCgWWWwBDb7dOQWyuCGRnin3PpUqmpGnFqv5jTK2qZ2wwaTL2B9DzAqWakctSuEbd68
-         sv1+oh3wKsRHifknwXnc2pr4q1kxywhLR6pyU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ei84xjALj/qnZ251dtHcjT7fuwkFwrmIuOWdIaj3IB4=;
-        b=oNHK+s5XkGj9NiWtwOy/sPIbLiebXlEq2h+6dexfpSHf8aPQChpk1FF3bU7+/4zojP
-         DdbK8sv/22rRCWp4tYrgmT439J8vGffjK7RqZ5cmk0rlRbBur/ahEgwo2OI8BG1zwc30
-         cO77bKuLqiR2DPf2JOHXMxp4nk6fwC8vfC2uiQ3A0nACu6TWhMR1tChE1wwglxic/itw
-         xbdkp/3YNCoQQz31lzm/tIShTYYvV4zTTWuUhPH6nUARTw3qiF7DpCbKx/MYjyPqHDf6
-         VzEO+4Q4ajP04vxXYBTjFTDt4pmOJM3YQpgqUGy1jtLlKxgq+chLY9c3YHow1/pR3kmu
-         23qw==
-X-Gm-Message-State: AO0yUKW8RYd444HyY43BjxIVKod9ZBFhyqaxBb61g5w/SevwtlmSwaq1
-        s0huRRYH/c/X5x40/HXYiMO7YA==
-X-Google-Smtp-Source: AK7set9p/VLscj8lYzuVH+QL97IgWbcWTtlAXemsvo5mM0a99DAyaG7vV23KHqvBlFv4YZ4XzS0krA==
-X-Received: by 2002:a17:902:ce8f:b0:196:2d55:5b96 with SMTP id f15-20020a170902ce8f00b001962d555b96mr8751901plg.24.1675365001490;
-        Thu, 02 Feb 2023 11:10:01 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s23-20020a170902b19700b00186b3c3e2dasm14950plr.155.2023.02.02.11.10.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Feb 2023 11:10:01 -0800 (PST)
-Message-ID: <63dc0a89.170a0220.49507.0091@mx.google.com>
-X-Google-Original-Message-ID: <202302021904.@keescook>
-Date:   Thu, 2 Feb 2023 19:10:00 +0000
-From:   Kees Cook <keescook@chromium.org>
-To:     John Stultz <jstultz@google.com>,
+        Thu, 2 Feb 2023 14:20:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9FD7B7AE;
+        Thu,  2 Feb 2023 11:20:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1586DB827CB;
+        Thu,  2 Feb 2023 19:20:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC752C433B4;
+        Thu,  2 Feb 2023 19:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675365618;
+        bh=GW+/PPknO/L/X81AhOAvMB1ckLEie9QjfLbxFOYKFMw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=dBeeShQkGJe7DDOf55DzcM2giWAc7gn+Rhuifqe6QxhE9Ez1nhQJi917uHb6aUjK2
+         ivw/SBC1O8Pnr44rx/0omgfG3N02C1IFXiTIiaDYFnDuO9r7WzQAPxzSWfMg1FFdxc
+         1XFkv06gbclznnpBRKUwZY6ZECXeGXNOy/jDLsiiYvTWLYTX0yCd/L0B/ZoXjgDoax
+         F2nzKOtYspRd2EoA6MyURYoeb5tfKDTddyQls3CWjnbl5vYetQsUEYzZaa12ph7/NU
+         ie6QfU94hLvQVsQ4LTL/GiC9Thm7GX9rDmaGpGDIeva6OSZv+dzBktHDwX/ovGGiJq
+         sBaWo1uesMctQ==
+Received: by mail-lf1-f49.google.com with SMTP id b3so4500341lfv.2;
+        Thu, 02 Feb 2023 11:20:18 -0800 (PST)
+X-Gm-Message-State: AO0yUKV6mWOSvHb4GoLC8kqvA8HChNUgCPBqR9y/QVPfeJYWJHqKD6JK
+        PdnMMMYqdQelbnsV8bGugvbAHLMVVlPBo+7Mftk=
+X-Google-Smtp-Source: AK7set8f/y1tDqDb8um8dkpVuXWlMd7cPiWojFc/RDUlBXn9F2x4UAKk0tGsfdESMBoK9BDxmjY865izBQ0xCKgQYCc=
+X-Received: by 2002:ac2:5b9c:0:b0:4d8:767b:8b6b with SMTP id
+ o28-20020ac25b9c000000b004d8767b8b6bmr1440315lfn.63.1675365616510; Thu, 02
+ Feb 2023 11:20:16 -0800 (PST)
+MIME-Version: 1.0
+References: <20221101222520.never.109-kees@kernel.org> <20221101223321.1326815-5-keescook@chromium.org>
+ <CAMSo37W3gRkP02tSCxGX71ZDAt3WgPZrkTRTM6J1iQ4gvUS9vg@mail.gmail.com>
+ <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
+ <63dbf04a.630a0220.2608a.0149@mx.google.com> <CANDhNCoJJs_jSAdr6uved=cK=-6+nzSJq3e_E3HgtiXHZXkVww@mail.gmail.com>
+ <63dc0a89.170a0220.49507.0091@mx.google.com>
+In-Reply-To: <63dc0a89.170a0220.49507.0091@mx.google.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 2 Feb 2023 20:20:04 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHTwFH-OADZ5nZXfZyuH-x7XJL3DMyiz2Tr_nCuup+xFA@mail.gmail.com>
+Message-ID: <CAMj1kXHTwFH-OADZ5nZXfZyuH-x7XJL3DMyiz2Tr_nCuup+xFA@mail.gmail.com>
+Subject: Re: [PATCH 5/6] driver core: Add __alloc_size hint to devm allocators
+To:     Kees Cook <keescook@chromium.org>
+Cc:     John Stultz <jstultz@google.com>,
         Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Cc:     Yongqin Liu <yongqin.liu@linaro.org>,
+        Yongqin Liu <yongqin.liu@linaro.org>,
         Vlastimil Babka <vbabka@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
@@ -79,39 +81,37 @@ Cc:     Yongqin Liu <yongqin.liu@linaro.org>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, linux-hardening@vger.kernel.org,
         llvm@lists.linux.dev, Sumit Semwal <sumit.semwal@linaro.org>
-Subject: Re: [PATCH 5/6] driver core: Add __alloc_size hint to devm allocators
-References: <20221101222520.never.109-kees@kernel.org>
- <20221101223321.1326815-5-keescook@chromium.org>
- <CAMSo37W3gRkP02tSCxGX71ZDAt3WgPZrkTRTM6J1iQ4gvUS9vg@mail.gmail.com>
- <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
- <63dbf04a.630a0220.2608a.0149@mx.google.com>
- <CANDhNCoJJs_jSAdr6uved=cK=-6+nzSJq3e_E3HgtiXHZXkVww@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANDhNCoJJs_jSAdr6uved=cK=-6+nzSJq3e_E3HgtiXHZXkVww@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 02, 2023 at 10:56:29AM -0800, John Stultz wrote:
-> That said, making sense of the error message isn't completely trivial
-> either. I've been seeing a few cases recently of some of the new
-> compiler tooling (I pinged you earlier on a CFI one) causing errors
-> that developers aren't really sure how to address.  I know sometimes
-> it's not easy to surface the errors with context to what was wrong,
-> but at the risk of intense bike shedding, is there some way to provide
-> something like "Likely array bounds error" instead of just "BRK
-> handler: Fatal exception"?
+On Thu, 2 Feb 2023 at 20:10, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Feb 02, 2023 at 10:56:29AM -0800, John Stultz wrote:
+> > That said, making sense of the error message isn't completely trivial
+> > either. I've been seeing a few cases recently of some of the new
+> > compiler tooling (I pinged you earlier on a CFI one) causing errors
+> > that developers aren't really sure how to address.  I know sometimes
+> > it's not easy to surface the errors with context to what was wrong,
+> > but at the risk of intense bike shedding, is there some way to provide
+> > something like "Likely array bounds error" instead of just "BRK
+> > handler: Fatal exception"?
+>
+> Yeah, this is a result of the size trade-off that resulted in config
+> CONFIG_UBSAN_TRAP -- there ends up being no message about what went
+> wrong. I'd really like to have cleaner handling of this -- perhaps what
+> was done for KCFI could be applied to UBSAN as well, though this is an
+> area I don't know well myself. (i.e. encoding "this was a UBSAN trap"
+> in the trap itself.)
+>
+> Sami or Ard, is this something that could be improved for arm64?
+>
 
-Yeah, this is a result of the size trade-off that resulted in config
-CONFIG_UBSAN_TRAP -- there ends up being no message about what went
-wrong. I'd really like to have cleaner handling of this -- perhaps what
-was done for KCFI could be applied to UBSAN as well, though this is an
-area I don't know well myself. (i.e. encoding "this was a UBSAN trap"
-in the trap itself.)
+-ENOCONTEXT, so I am going to assume this is about runtime
+instrumentation that needs some kind of 'panic' function which it will
+invoke if some condition is met that should never occur?
 
-Sami or Ard, is this something that could be improved for arm64?
-
--- 
-Kees Cook
+We already use brk with different immediate values in the opcode, so
+the arch layer already has what we need. Is this a limitation in the
+compiler, perhaps, where it always emits the same brk opcode?
