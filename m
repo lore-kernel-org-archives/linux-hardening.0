@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4213FC61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 04:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C206BC61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 04:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231862AbjBBEpV (ORCPT
+        id S231698AbjBBEpl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Feb 2023 23:45:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35006 "EHLO
+        Wed, 1 Feb 2023 23:45:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231679AbjBBEof (ORCPT
+        with ESMTP id S231454AbjBBEof (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Wed, 1 Feb 2023 23:44:35 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E51B47A491;
-        Wed,  1 Feb 2023 20:44:04 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46B67DBF0;
+        Wed,  1 Feb 2023 20:44:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 803B0B8241D;
-        Thu,  2 Feb 2023 04:43:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACEDBC4339B;
-        Thu,  2 Feb 2023 04:43:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 96CD2B82429;
+        Thu,  2 Feb 2023 04:43:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B04C433D2;
+        Thu,  2 Feb 2023 04:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675313033;
-        bh=H528wNNxm5Oo0hjUOWSVmZTKVIN9JjXoFt12rdqUAXA=;
+        s=k20201202; t=1675313036;
+        bh=jO10o07RAKyXXgWsy3XBxX0WTtST48LzT0RY2uOU2ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SRKetWvcTG8xZO55clQQVma8DAfR6WxTmSIO3yNoIAIHU4Wy4wmEiLoyXMI0Lh1C0
-         2k7E2v75DJ1pR19FhbL0kkFrqW5f3UBCtaveVYGOGJsAiXrZVCvqHzCOOz0DjjHwzG
-         YUKTLkRTSml4kJNPMzCU41quLTFUmQj0AGkQgpx/gM0El59PO3OUhnM9MQDeqqJeMo
-         33n0zw2n4rsdfz+sE/VHlNYNYCHWSmSNRcBqWuGTvb5GEqrB9Ef7ph6OFsXdAxpYvC
-         lkJBJ8WAebzlw5OW8oHiAOKcz+r8PcnoY/oOR9qGGjm3zdhVAslz+gieJzpymURMGq
-         dYzB1KR3qo/dw==
+        b=nAvPdyTF1CQ/3SMGkgxIcGQ8mnvreRb6Y9/2ukXmDh1WFemGwMyBC0c7AqBi1xqPH
+         JO2Uqg5rOhITiA5MiaREBArn7aI2aoKKKdUKADMfpRtU7LU1SlhAqcsvbqcPTht8wb
+         lgaLkk83LDYAvizdVvzcoSPiWz71PbzCYFr1iXl5WvMezDDoDhE+kstRJA/9Byd3h7
+         aYlB7koEzmGZnSsBzoXQTsSxPin2ATSvQvjAl9bWyWlxwW9CT6oScrGrklt/23JCE4
+         TrK4XQIZn6y8WIjSL9ew+o63Wk3i7jimCXRu0iwkooyfUC5dDjsoSiwElziaOtAg/2
+         5yLSWMvkSowVQ==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,16 +42,10 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org
-Subject: [PATCH 5.4 12/17] exit: Allow oops_limit to be disabled
-Date:   Wed,  1 Feb 2023 20:42:50 -0800
-Message-Id: <20230202044255.128815-13-ebiggers@kernel.org>
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH 5.4 16/17] docs: Fix path paste-o for /sys/kernel/warn_count
+Date:   Wed,  1 Feb 2023 20:42:54 -0800
+Message-Id: <20230202044255.128815-17-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202044255.128815-1-ebiggers@kernel.org>
 References: <20230202044255.128815-1-ebiggers@kernel.org>
@@ -63,57 +57,37 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-commit de92f65719cd672f4b48397540b9f9eff67eca40 upstream.
+commit 00dd027f721e0458418f7750d8a5a664ed3e5994 upstream.
 
-In preparation for keeping oops_limit logic in sync with warn_limit,
-have oops_limit == 0 disable checking the Oops counter.
+Running "make htmldocs" shows that "/sys/kernel/oops_count" was
+duplicated. This should have been "warn_count":
 
-Cc: Jann Horn <jannh@google.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org
+  Warning: /sys/kernel/oops_count is defined 2 times:
+  ./Documentation/ABI/testing/sysfs-kernel-warn_count:0
+  ./Documentation/ABI/testing/sysfs-kernel-oops_count:0
+
+Fix the typo.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/linux-doc/202212110529.A3Qav8aR-lkp@intel.com
+Fixes: 8b05aa263361 ("panic: Expose "warn_count" to sysfs")
+Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- Documentation/admin-guide/sysctl/kernel.rst | 5 +++--
- kernel/exit.c                               | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ Documentation/ABI/testing/sysfs-kernel-warn_count | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
-index 4bdf845c79aa3..bc31c4a88f20f 100644
---- a/Documentation/admin-guide/sysctl/kernel.rst
-+++ b/Documentation/admin-guide/sysctl/kernel.rst
-@@ -561,8 +561,9 @@ oops_limit
- ==========
- 
- Number of kernel oopses after which the kernel should panic when
--``panic_on_oops`` is not set. Setting this to 0 or 1 has the same effect
--as setting ``panic_on_oops=1``.
-+``panic_on_oops`` is not set. Setting this to 0 disables checking
-+the count. Setting this to  1 has the same effect as setting
-+``panic_on_oops=1``. The default value is 10000.
- 
- 
- osrelease, ostype & version:
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 48ac68ebab728..381282fb756c3 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -928,7 +928,7 @@ void __noreturn make_task_dead(int signr)
- 	 * To make sure this can't happen, place an upper bound on how often the
- 	 * kernel may oops without panic().
- 	 */
--	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit))
-+	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit) && oops_limit)
- 		panic("Oopsed too often (kernel.oops_limit is %d)", oops_limit);
- 
- 	do_exit(signr);
+diff --git a/Documentation/ABI/testing/sysfs-kernel-warn_count b/Documentation/ABI/testing/sysfs-kernel-warn_count
+index 08f083d2fd51b..90a029813717d 100644
+--- a/Documentation/ABI/testing/sysfs-kernel-warn_count
++++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
+@@ -1,4 +1,4 @@
+-What:		/sys/kernel/oops_count
++What:		/sys/kernel/warn_count
+ Date:		November 2022
+ KernelVersion:	6.2.0
+ Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
 -- 
 2.39.1
 
