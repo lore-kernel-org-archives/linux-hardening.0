@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C71FC61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 04:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6773C63797
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 04:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230000AbjBBEox (ORCPT
+        id S229563AbjBBEoz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Feb 2023 23:44:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34590 "EHLO
+        Wed, 1 Feb 2023 23:44:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231612AbjBBEoa (ORCPT
+        with ESMTP id S231546AbjBBEo0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Feb 2023 23:44:30 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B2887AE50;
-        Wed,  1 Feb 2023 20:43:56 -0800 (PST)
+        Wed, 1 Feb 2023 23:44:26 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49E257AE6D;
+        Wed,  1 Feb 2023 20:43:53 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 034E861A01;
-        Thu,  2 Feb 2023 04:43:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A00FC433A8;
-        Thu,  2 Feb 2023 04:43:55 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id F3931CE2778;
+        Thu,  2 Feb 2023 04:43:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2746EC433AE;
+        Thu,  2 Feb 2023 04:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675313035;
-        bh=F0/lM0ehn2dBgPa8cBm0sLlTTLRWC+SL/tZ/GpO45lI=;
+        s=k20201202; t=1675313031;
+        bh=tQ95HDESaxTuqQzyi1nO4i6CEilM7c7Fe4WNSNWi4kU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GQtBzWYu3FDPs3gks4gvD/ybtlukRJG4c4dOKW7kzFU1ctOO2lNJEQWeJbIJxWbAA
-         gGlcK/yq474y5U4bJ1NVNdZQsvnJW6C3cpeAim6F4VLimHMjAmBd33pfvXw7NrcBjC
-         mp7HVlBF/cubFD+1F4PZVc/FsKFwLa2aeQSLardlN1xUP44b/fcvoNmHZwCN3qPVmE
-         VwusoFBGesu2lBYOu6r6PpcUypI60Rl37TFFkXuZO2p5NzIb/fpqbWfjly51WAveAg
-         X8tkRZkF7GyEu/EjtE6fZsJ8FfOssaUWl0H6w5bO5nPVIPf6+gku8a3c3QAI6B4vAL
-         PM/hs1uYoPMRw==
+        b=JdqskDXIomYSiwz3Z4U2sxQUvmzdaUm1/g9FqeL9OJsA7fRP94ps0hhnABrZ99FaJ
+         p2rFFyeP6TLBIDeB+6KGL8FE60QfgpCTOVXibiz2zwIv8p2eNRK/r7YS8qDOCQPHP1
+         iPMlor9cjWMoJHaK2wFMZxgf8wZVjV9CpaKjlP6yGIphQp1nh2gGXMw0NrfCPW5Ymo
+         prHIw4OO+uTw0ffAXFtgEMb/JNKiUvbe/F5NYYt8or8Knqhalkqnn7yest5JsHLpTY
+         Q8nZkWxcAUHORHMkpeAWQ0xx7F0FMBT6PBNMrnGWu4yJoli7JyhagYp+oJ+uv0U+i4
+         /lIZ9kRFMNf8Q==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,16 +42,15 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christoph Hellwig <hch@lst.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        tangmeng <tangmeng@uniontech.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 5.4 15/17] panic: Expose "warn_count" to sysfs
-Date:   Wed,  1 Feb 2023 20:42:53 -0800
-Message-Id: <20230202044255.128815-16-ebiggers@kernel.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 09/17] ia64: make IA64_MCA_RECOVERY bool instead of tristate
+Date:   Wed,  1 Feb 2023 20:42:47 -0800
+Message-Id: <20230202044255.128815-10-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202044255.128815-1-ebiggers@kernel.org>
 References: <20230202044255.128815-1-ebiggers@kernel.org>
@@ -61,88 +60,50 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-commit 8b05aa26336113c4cea25f1c333ee8cd4fc212a6 upstream.
+commit dbecf9b8b8ce580f4e11afed9d61e8aa294cddd2 upstream.
 
-Since Warn count is now tracked and is a fairly interesting signal, add
-the entry /sys/kernel/warn_count to expose it to userspace.
+In linux-next, IA64_MCA_RECOVERY uses the (new) function
+make_task_dead(), which is not exported for use by modules.  Instead of
+exporting it for one user, convert IA64_MCA_RECOVERY to be a bool
+Kconfig symbol.
 
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: tangmeng <tangmeng@uniontech.com>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20221117234328.594699-6-keescook@chromium.org
+In a config file from "kernel test robot <lkp@intel.com>" for a
+different problem, this linker error was exposed when
+CONFIG_IA64_MCA_RECOVERY=m.
+
+Fixes this build error:
+
+  ERROR: modpost: "make_task_dead" [arch/ia64/kernel/mca_recovery.ko] undefined!
+
+Link: https://lkml.kernel.org/r/20220124213129.29306-1-rdunlap@infradead.org
+Fixes: 0e25498f8cd4 ("exit: Add and use make_task_dead.")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- .../ABI/testing/sysfs-kernel-warn_count       |  6 +++++
- kernel/panic.c                                | 22 +++++++++++++++++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
+ arch/ia64/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-warn_count b/Documentation/ABI/testing/sysfs-kernel-warn_count
-new file mode 100644
-index 0000000000000..08f083d2fd51b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
-@@ -0,0 +1,6 @@
-+What:		/sys/kernel/oops_count
-+Date:		November 2022
-+KernelVersion:	6.2.0
-+Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
-+Description:
-+		Shows how many times the system has Warned since last boot.
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 8f72305dd501d..2c118645e7408 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -31,6 +31,7 @@
- #include <linux/bug.h>
- #include <linux/ratelimit.h>
- #include <linux/debugfs.h>
-+#include <linux/sysfs.h>
- #include <asm/sections.h>
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 16714477eef42..6a6036f16abe6 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -360,7 +360,7 @@ config ARCH_PROC_KCORE_TEXT
+ 	depends on PROC_KCORE
  
- #define PANIC_TIMER_STEP 100
-@@ -81,6 +82,25 @@ static __init int kernel_panic_sysctls_init(void)
- late_initcall(kernel_panic_sysctls_init);
- #endif
+ config IA64_MCA_RECOVERY
+-	tristate "MCA recovery from errors other than TLB."
++	bool "MCA recovery from errors other than TLB."
  
-+static atomic_t warn_count = ATOMIC_INIT(0);
-+
-+#ifdef CONFIG_SYSFS
-+static ssize_t warn_count_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			       char *page)
-+{
-+	return sysfs_emit(page, "%d\n", atomic_read(&warn_count));
-+}
-+
-+static struct kobj_attribute warn_count_attr = __ATTR_RO(warn_count);
-+
-+static __init int kernel_panic_sysfs_init(void)
-+{
-+	sysfs_add_file_to_group(kernel_kobj, &warn_count_attr.attr, NULL);
-+	return 0;
-+}
-+late_initcall(kernel_panic_sysfs_init);
-+#endif
-+
- static long no_blink(int state)
- {
- 	return 0;
-@@ -179,8 +199,6 @@ static void panic_print_sys_info(void)
- 
- void check_panic_on_warn(const char *origin)
- {
--	static atomic_t warn_count = ATOMIC_INIT(0);
--
- 	if (panic_on_warn)
- 		panic("%s: panic_on_warn set ...\n", origin);
- 
+ config PERFMON
+ 	bool "Performance monitor support"
 -- 
 2.39.1
 
