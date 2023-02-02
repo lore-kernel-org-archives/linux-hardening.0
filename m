@@ -2,116 +2,85 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFD8C61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 19:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797B1C05027
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 19:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbjBBTUk (ORCPT
+        id S233190AbjBBTUw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 14:20:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51382 "EHLO
+        Thu, 2 Feb 2023 14:20:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231712AbjBBTUj (ORCPT
+        with ESMTP id S233166AbjBBTUs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 14:20:39 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9FD7B7AE;
-        Thu,  2 Feb 2023 11:20:21 -0800 (PST)
+        Thu, 2 Feb 2023 14:20:48 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EEDA7DBD7;
+        Thu,  2 Feb 2023 11:20:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1586DB827CB;
-        Thu,  2 Feb 2023 19:20:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC752C433B4;
-        Thu,  2 Feb 2023 19:20:18 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9DF0BB827C8;
+        Thu,  2 Feb 2023 19:20:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BD2CC4339C;
+        Thu,  2 Feb 2023 19:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675365618;
-        bh=GW+/PPknO/L/X81AhOAvMB1ckLEie9QjfLbxFOYKFMw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dBeeShQkGJe7DDOf55DzcM2giWAc7gn+Rhuifqe6QxhE9Ez1nhQJi917uHb6aUjK2
-         ivw/SBC1O8Pnr44rx/0omgfG3N02C1IFXiTIiaDYFnDuO9r7WzQAPxzSWfMg1FFdxc
-         1XFkv06gbclznnpBRKUwZY6ZECXeGXNOy/jDLsiiYvTWLYTX0yCd/L0B/ZoXjgDoax
-         F2nzKOtYspRd2EoA6MyURYoeb5tfKDTddyQls3CWjnbl5vYetQsUEYzZaa12ph7/NU
-         ie6QfU94hLvQVsQ4LTL/GiC9Thm7GX9rDmaGpGDIeva6OSZv+dzBktHDwX/ovGGiJq
-         sBaWo1uesMctQ==
-Received: by mail-lf1-f49.google.com with SMTP id b3so4500341lfv.2;
-        Thu, 02 Feb 2023 11:20:18 -0800 (PST)
-X-Gm-Message-State: AO0yUKV6mWOSvHb4GoLC8kqvA8HChNUgCPBqR9y/QVPfeJYWJHqKD6JK
-        PdnMMMYqdQelbnsV8bGugvbAHLMVVlPBo+7Mftk=
-X-Google-Smtp-Source: AK7set8f/y1tDqDb8um8dkpVuXWlMd7cPiWojFc/RDUlBXn9F2x4UAKk0tGsfdESMBoK9BDxmjY865izBQ0xCKgQYCc=
-X-Received: by 2002:ac2:5b9c:0:b0:4d8:767b:8b6b with SMTP id
- o28-20020ac25b9c000000b004d8767b8b6bmr1440315lfn.63.1675365616510; Thu, 02
- Feb 2023 11:20:16 -0800 (PST)
+        s=k20201202; t=1675365640;
+        bh=JMF3AP3CosyLA5m89zkgGX3JGOxiecE9dcZ7MdoTDOs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ub+f1ALxZ0mlr3pdVXVfuO4S01WUZ7wG9HvoOV6fjMc4cJgfCl2Q7xA+uPDvReDv3
+         BLpS2MQX5dkerbo70NDvIvPZipMAUsxXDQ4HgCJNK4jFeDK/mUKK9kuuwnoYjfls7/
+         rPV3aZBjQpJfWNKYPO3qTWoNAftknJCm+frFRM5wiJOyzL3gCOfo76enQV6z15TBnN
+         bcG3S82A0PphyE5feyKqtt0Hte0zYkYPp3YbndxPnrRONS+1aPkGGYIuvG2WcXmgyM
+         23AQCbRB4Bcbzy+o8jSF0dmpjwfZOkdid+GSS+G7vDFrD8rcIr+HglMm/f3N9UrRzo
+         cpS3stvMco2Eg==
+Date:   Thu, 2 Feb 2023 19:20:38 +0000
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     stable@vger.kernel.org,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        SeongJae Park <sj@kernel.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Jann Horn <jannh@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5.4 00/17] Backport oops_limit to 5.4
+Message-ID: <Y9wNBjIPg93EqCdI@gmail.com>
+References: <20230202044255.128815-1-ebiggers@kernel.org>
+ <Y9vwBL2+NWtwMnA4@sashalap>
+ <Y9v3G6UantaCo29G@sashalap>
 MIME-Version: 1.0
-References: <20221101222520.never.109-kees@kernel.org> <20221101223321.1326815-5-keescook@chromium.org>
- <CAMSo37W3gRkP02tSCxGX71ZDAt3WgPZrkTRTM6J1iQ4gvUS9vg@mail.gmail.com>
- <CANDhNCogJrvt=yEXFK-xVmGjkcRxSNGZUqUeNw2MV9bFRrwPdQ@mail.gmail.com>
- <63dbf04a.630a0220.2608a.0149@mx.google.com> <CANDhNCoJJs_jSAdr6uved=cK=-6+nzSJq3e_E3HgtiXHZXkVww@mail.gmail.com>
- <63dc0a89.170a0220.49507.0091@mx.google.com>
-In-Reply-To: <63dc0a89.170a0220.49507.0091@mx.google.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 2 Feb 2023 20:20:04 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXHTwFH-OADZ5nZXfZyuH-x7XJL3DMyiz2Tr_nCuup+xFA@mail.gmail.com>
-Message-ID: <CAMj1kXHTwFH-OADZ5nZXfZyuH-x7XJL3DMyiz2Tr_nCuup+xFA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] driver core: Add __alloc_size hint to devm allocators
-To:     Kees Cook <keescook@chromium.org>
-Cc:     John Stultz <jstultz@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Yongqin Liu <yongqin.liu@linaro.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Nishanth Menon <nm@ti.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Won Chung <wonchung@google.com>,
-        David Gow <davidgow@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        llvm@lists.linux.dev, Sumit Semwal <sumit.semwal@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y9v3G6UantaCo29G@sashalap>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2 Feb 2023 at 20:10, Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Feb 02, 2023 at 10:56:29AM -0800, John Stultz wrote:
-> > That said, making sense of the error message isn't completely trivial
-> > either. I've been seeing a few cases recently of some of the new
-> > compiler tooling (I pinged you earlier on a CFI one) causing errors
-> > that developers aren't really sure how to address.  I know sometimes
-> > it's not easy to surface the errors with context to what was wrong,
-> > but at the risk of intense bike shedding, is there some way to provide
-> > something like "Likely array bounds error" instead of just "BRK
-> > handler: Fatal exception"?
->
-> Yeah, this is a result of the size trade-off that resulted in config
-> CONFIG_UBSAN_TRAP -- there ends up being no message about what went
-> wrong. I'd really like to have cleaner handling of this -- perhaps what
-> was done for KCFI could be applied to UBSAN as well, though this is an
-> area I don't know well myself. (i.e. encoding "this was a UBSAN trap"
-> in the trap itself.)
->
-> Sami or Ard, is this something that could be improved for arm64?
->
+On Thu, Feb 02, 2023 at 12:47:07PM -0500, Sasha Levin wrote:
+> On Thu, Feb 02, 2023 at 12:16:52PM -0500, Sasha Levin wrote:
+> > On Wed, Feb 01, 2023 at 08:42:38PM -0800, Eric Biggers wrote:
+> > > This series backports the patchset
+> > > "exit: Put an upper limit on how often we can oops"
+> > > (https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
+> > > to 5.4, as recommended at
+> > > https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
+> > > This follows the backports to 5.10 and 5.15 which already released.
+> > > 
+> > > This required backporting various prerequisite patches.
+> > > 
+> > > I've tested that oops_limit and warn_limit work correctly on x86_64.
+> > 
+> > Queued up all 3 backports, thanks!
+> 
+> ... and proceeded to drop the 4.19 and 4.14 backports which fail to
+> build:
+> 
+> mm/kasan/report.c: In function 'kasan_end_report':
+> mm/kasan/report.c:175:16: error: 'KASAN_BIT_MULTI_SHOT' undeclared (first use in this function)
+>   175 |  if (!test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
 
--ENOCONTEXT, so I am going to assume this is about runtime
-instrumentation that needs some kind of 'panic' function which it will
-invoke if some condition is met that should never occur?
+Thanks, I'll fix that.  I had grepped for KASAN_BIT_MULTI_SHOT to make sure
+those branches had it, but I didn't notice it was defined later in the file :-(
 
-We already use brk with different immediate values in the opcode, so
-the arch layer already has what we need. Is this a limitation in the
-compiler, perhaps, where it always emits the same brk opcode?
+- Eric
