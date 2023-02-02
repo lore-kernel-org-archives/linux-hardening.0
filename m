@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645DCC636D7
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20984C64EC3
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 05:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231829AbjBBF2M (ORCPT
+        id S231841AbjBBF2N (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 00:28:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
+        Thu, 2 Feb 2023 00:28:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231679AbjBBF2H (ORCPT
+        with ESMTP id S229632AbjBBF2H (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 2 Feb 2023 00:28:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F291449C;
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8CA1205A;
         Wed,  1 Feb 2023 21:28:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3FAEF615E9;
-        Thu,  2 Feb 2023 05:28:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF024C4339C;
-        Thu,  2 Feb 2023 05:28:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BBBD9B8247A;
+        Thu,  2 Feb 2023 05:28:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE574C433A1;
+        Thu,  2 Feb 2023 05:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675315685;
-        bh=w2+gKam0hgvqls1hiqaw8OhtqAs87LqFnf26zQZbz5Y=;
+        s=k20201202; t=1675315682;
+        bh=DMz/MOCU306dak0OU7QypACmgBeBp7Zx+Xdx74bnwbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAr2FIfCLyzidKouTHr6RULNPnaA6klX1WwsIRPzSvd8r3RyE0PwXvCwH5qTRPOr2
-         h0gG/sCiynmjC6+JDp7Q8rXdffRovgf3vyPOxzO35TlaYz+o4GXc1fE9G/wVuusjEJ
-         /dmk4ELX0FjZ1v0jMO9iSMClmOmPE9LB6NHU1uaXZlqv1JLzPIb6gQ02xdKfAKEkbc
-         k/R4AZ3bZNokcV1voRi0mRlKK2iw3rstFbeDjvgWYiteqtfXWKdwBct4cannhNchRw
-         x1d+cJZlI/ybnC3EkGDeKWOtPZPVExZZDoXLolZNRQHU4iHR/31I3X9BwH9H4dwx5V
-         bF6759vbqO5dg==
+        b=plCbt4G0Ne1pvGa4coC/MeYJNMQOhsrWt60/rLLkXn4vSldpWk6Zjwsd3VhS8IjMy
+         aKnKZNrJG2XnqyrucHG4fb7wIyIbKT/R7qmDdgILcsBreT3jl0Mj195qbfQ4TTGtqm
+         GMXTC1Rz87bdA4bXo7ozclpJ1Nx+ViuUmexLQwwACh6mg9DuMUqoR0b5gGOyHCnOZ3
+         dK9KZsnhop+Bsqn5Tqh8yvXUcVsCPmjaaw5NIpvTzAJW9benVue/fcnOiGOMLLrIgI
+         iV+tk66k7Jfr2UgLW/z5ocS5Q5wC6+NOeJqO2XGIMWuWL2/dgtodxsW2BirAWW0ksC
+         LhRJT8u5iHuJQ==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,10 +42,16 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH 4.19 07/16] h8300: Fix build errors from do_exit() to make_task_dead() transition
-Date:   Wed,  1 Feb 2023 21:25:55 -0800
-Message-Id: <20230202052604.179184-8-ebiggers@kernel.org>
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 02/16] panic: unset panic_on_warn inside panic()
+Date:   Wed,  1 Feb 2023 21:25:50 -0800
+Message-Id: <20230202052604.179184-3-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202052604.179184-1-ebiggers@kernel.org>
 References: <20230202052604.179184-1-ebiggers@kernel.org>
@@ -55,75 +61,74 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Nathan Chancellor <nathan@kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-commit ab4ababdf77ccc56c7301c751dff49c79709c51c upstream.
+commit 1a2383e8b84c0451fd9b1eec3b9aab16f30b597c upstream.
 
-When building ARCH=h8300 defconfig:
+In the current code, the following three places need to unset
+panic_on_warn before calling panic() to avoid recursive panics:
 
-arch/h8300/kernel/traps.c: In function 'die':
-arch/h8300/kernel/traps.c:109:2: error: implicit declaration of function
-'make_dead_task' [-Werror=implicit-function-declaration]
-  109 |  make_dead_task(SIGSEGV);
-      |  ^~~~~~~~~~~~~~
+kernel/kcsan/report.c: print_report()
+kernel/sched/core.c: __schedule_bug()
+mm/kfence/report.c: kfence_report_error()
 
-arch/h8300/mm/fault.c: In function 'do_page_fault':
-arch/h8300/mm/fault.c:54:2: error: implicit declaration of function
-'make_dead_task' [-Werror=implicit-function-declaration]
-   54 |  make_dead_task(SIGKILL);
-      |  ^~~~~~~~~~~~~~
+In order to avoid copy-pasting "panic_on_warn = 0" all over the places,
+it is better to move it inside panic() and then remove it from the other
+places.
 
-The function's name is make_task_dead(), change it so there is no more
-build error.
-
-Additionally, include linux/sched/task.h in arch/h8300/kernel/traps.c
-to avoid the same error because do_exit()'s declaration is in kernel.h
-but make_task_dead()'s is in task.h, which is not included in traps.c.
-
-Fixes: 0e25498f8cd4 ("exit: Add and use make_task_dead.")
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
-Link: https://lkml.kernel.org/r/20211227184851.2297759-3-nathan@kernel.org
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+Link: https://lkml.kernel.org/r/1644324666-15947-4-git-send-email-yangtiezhu@loongson.cn
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Reviewed-by: Marco Elver <elver@google.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Xuefeng Li <lixuefeng@loongson.cn>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- arch/h8300/kernel/traps.c | 3 ++-
- arch/h8300/mm/fault.c     | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ kernel/panic.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/arch/h8300/kernel/traps.c b/arch/h8300/kernel/traps.c
-index a284c126f07a6..090adaee4b84c 100644
---- a/arch/h8300/kernel/traps.c
-+++ b/arch/h8300/kernel/traps.c
-@@ -17,6 +17,7 @@
- #include <linux/types.h>
- #include <linux/sched.h>
- #include <linux/sched/debug.h>
-+#include <linux/sched/task.h>
- #include <linux/mm_types.h>
- #include <linux/kernel.h>
- #include <linux/errno.h>
-@@ -110,7 +111,7 @@ void die(const char *str, struct pt_regs *fp, unsigned long err)
- 	dump(fp);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 8138a676fb7d1..a078d413042f2 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -142,6 +142,16 @@ void panic(const char *fmt, ...)
+ 	int old_cpu, this_cpu;
+ 	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
  
- 	spin_unlock_irq(&die_lock);
--	make_dead_task(SIGSEGV);
-+	make_task_dead(SIGSEGV);
- }
++	if (panic_on_warn) {
++		/*
++		 * This thread may hit another WARN() in the panic path.
++		 * Resetting this prevents additional WARN() from panicking the
++		 * system on this thread.  Other threads are blocked by the
++		 * panic_mutex in panic().
++		 */
++		panic_on_warn = 0;
++	}
++
+ 	/*
+ 	 * Disable local interrupts. This will prevent panic_smp_self_stop
+ 	 * from deadlocking the first cpu that invokes the panic, since
+@@ -530,16 +540,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ 	if (args)
+ 		vprintk(args->fmt, args->args);
  
- static int kstack_depth_to_print = 24;
-diff --git a/arch/h8300/mm/fault.c b/arch/h8300/mm/fault.c
-index a8d8fc63780e4..573825c3cb708 100644
---- a/arch/h8300/mm/fault.c
-+++ b/arch/h8300/mm/fault.c
-@@ -52,7 +52,7 @@ asmlinkage int do_page_fault(struct pt_regs *regs, unsigned long address,
- 	printk(" at virtual address %08lx\n", address);
- 	if (!user_mode(regs))
- 		die("Oops", regs, error_code);
--	make_dead_task(SIGKILL);
-+	make_task_dead(SIGKILL);
+-	if (panic_on_warn) {
+-		/*
+-		 * This thread may hit another WARN() in the panic path.
+-		 * Resetting this prevents additional WARN() from panicking the
+-		 * system on this thread.  Other threads are blocked by the
+-		 * panic_mutex in panic().
+-		 */
+-		panic_on_warn = 0;
++	if (panic_on_warn)
+ 		panic("panic_on_warn set ...\n");
+-	}
  
- 	return 1;
- }
+ 	print_modules();
+ 
 -- 
 2.39.1
 
