@@ -2,107 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739F1C05027
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 20:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AECC61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Feb 2023 20:34:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232474AbjBBU3Q (ORCPT
+        id S231345AbjBBUeD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 15:29:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
+        Thu, 2 Feb 2023 15:34:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232297AbjBBU3P (ORCPT
+        with ESMTP id S230144AbjBBUeC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 15:29:15 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09641CA03
-        for <linux-hardening@vger.kernel.org>; Thu,  2 Feb 2023 12:29:14 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id v23so3119720plo.1
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Feb 2023 12:29:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=n98EttFHW/ICYNI7MY6lJvEvw1N9VKBoPOxpFnAc55Y=;
-        b=S2Ov+6rM54xrDH7orxvNW4eqx9iStel27qTGmwTu/8Ps04aOqwnbMk5NoTSUzdjdDq
-         OhcVz5WVT+6piNm4iQGPpJdxnbq8ctyZ7N6ngCrQfPKzRXPupiupzIx4XD7aVj1iCDwV
-         Sv/eHNWV5sSBVsS7EkWgF6JM+Zohy2P6NrbAw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n98EttFHW/ICYNI7MY6lJvEvw1N9VKBoPOxpFnAc55Y=;
-        b=i+w0y8aEP21U4XtZpqCYAsFhA/6H/jYFndBoF3Ciz3rnrpK3Qn2eqMMmzLQAbE8Xx7
-         tGF7dEyLNEKlgs+1Z0LYEby7eqX9HvLSNKTEKAsOgxt6EyDfkXT3ZD94tTvHXWsksmbQ
-         D8rqJdynOJZG4WaRvbG7ZdS02hlMglB7pqP0EoSuVyJOPs0BOvcSqICKgEjCAo7jNy/q
-         br8XRotTV129DCXTE419zGcJJIIUCUvoNHYva0Mz0ibrOjzmc4+qvmqnv7C18HOR88b0
-         ydvxQBXfYj3fbdMhHe27+8/swTL+bEH3aUUfY9jhAuPPbffwXwrd2lVwyb+s1ivvV389
-         Ba5g==
-X-Gm-Message-State: AO0yUKU6Almab0OocY2hMDipjyo9k9fFmVyOgmBJm6e0sICZVlmxxGPV
-        O0mVa6BB9MzP2on5ydhRCCtYYQ==
-X-Google-Smtp-Source: AK7set9OU2OrVIrEXTtjm0QF80aNH2/8ujJBnSQ6knT7NhUSN/89E1xG5mDlL25ZefUwjnnHgG1YwQ==
-X-Received: by 2002:a17:90a:1997:b0:230:3af9:177 with SMTP id 23-20020a17090a199700b002303af90177mr2619933pji.8.1675369753525;
-        Thu, 02 Feb 2023 12:29:13 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m19-20020a17090a7f9300b00212e5068e17sm261011pjl.40.2023.02.02.12.29.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Feb 2023 12:29:13 -0800 (PST)
-Message-ID: <63dc1d19.170a0220.51d25.0de4@mx.google.com>
-X-Google-Original-Message-ID: <202302022029.@keescook>
-Date:   Thu, 2 Feb 2023 20:29:12 +0000
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kevin Barnett <kevin.barnett@microsemi.com>,
-        Don Brace <don.brace@microchip.com>, storagedev@microchip.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/3][next] scsi: smartpqi: Use struct_size() helper in
- pqi_report_phys_luns()
-References: <cover.1663816572.git.gustavoars@kernel.org>
- <b6a23dbc136710e98580ac01daa39ad971eecb5d.1663816572.git.gustavoars@kernel.org>
+        Thu, 2 Feb 2023 15:34:02 -0500
+Received: from omta035.useast.a.cloudfilter.net (omta035.useast.a.cloudfilter.net [44.202.169.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88B96D046
+        for <linux-hardening@vger.kernel.org>; Thu,  2 Feb 2023 12:34:01 -0800 (PST)
+Received: from eig-obgw-5020a.ext.cloudfilter.net ([10.0.29.203])
+        by cmsmtp with ESMTP
+        id NWPIpJbuVsq1sNgHQptwKG; Thu, 02 Feb 2023 20:34:00 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id NgHPpPeUpAkFWNgHPpR8yu; Thu, 02 Feb 2023 20:34:00 +0000
+X-Authority-Analysis: v=2.4 cv=EsbBEAQA c=1 sm=1 tr=0 ts=63dc1e38
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=m04uMKEZRckA:10
+ a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=mDV3o1hIAAAA:8 a=VwQbUJbxAAAA:8
+ a=gwZbGxDKoGpvoHXj0fsA:9 a=QEXdDO2ut3YA:10 a=t_mPKkL_zAAA:10
+ a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=havDD7BADH0COSYVLMyQg91Hn9SZSCTeeTvqOnemfFo=; b=sE6KXZogcskAgJDd4SwF9bxrs5
+        qbZ/IL1PnJ7ZSPn9AgsXl/qsvuTDTtqY/o0oUDV2Laju4nvIOkPs8EfzCIOAMtFFuvTTwvQs0NGbP
+        1b3I//jSpeZxL2mU3/v9XWzkywsGZ1WE0SehkfTcmMJtttJdZr40vTTUV5NWlWaJZ3N483NZJ3Gnf
+        RSSEqwNgXazUoTRP09bgS4Ah49YZB7i/3FsTEqjRcfkC74t9qzPKMJI6uHXRb0liNV5UMAK2OzdQ3
+        uoF+YMPPNhEJ2BT1yAl9B2cR+4ojKQcotZ2T1MyflqEZGxzILkuva43nt+RMuyGwLx/fkDGWZK5Vk
+        QVBR5NDQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48834 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1pNgHO-002ALM-V6;
+        Thu, 02 Feb 2023 14:33:59 -0600
+Message-ID: <fcd83e77-a3fb-9061-771a-8509ea6f5950@embeddedor.com>
+Date:   Thu, 2 Feb 2023 14:34:17 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b6a23dbc136710e98580ac01daa39ad971eecb5d.1663816572.git.gustavoars@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH][next] ASoC: uapi: Replace zero-length arrays with
+ __DECLARE_FLEX_ARRAY() helper
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <YzIzUjUuJKf0mkKg@work>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <YzIzUjUuJKf0mkKg@work>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1pNgHO-002ALM-V6
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:48834
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOriajqx6xuInt9w2Abc+zqsxkX6+DasiLGAPcMGBjMifw2cN9BusBwotFkq17srkMMjE7yzocDnfH0Y6F/a4QuaEzI1+pBDDpBNlosL4sl01qNJ8uay
+ jy7U9sla3ZJykoihRrrAjzjsII5sCCMdYN6ZgRjXXs2i06xBKbFq2+vd3a+H3bT++OpfbNFJ06FyfxKSFPkg3E3TmLG4Bug37+ZIVz4WU4eOSboNgt4b8hbH
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 11:30:47PM -0500, Gustavo A. R. Silva wrote:
-> Prefer struct_size() over open-coded versions of idiom:
+Hi Takashi,
+
+I wonder if this can go through your tree.
+
+It's already been reviewed by a couple of people. :)
+
+Thanks
+--
+Gustavo
+
+On 9/26/22 18:18, Gustavo A. R. Silva wrote:
+> Zero-length arrays are deprecated and we are moving towards adopting
+> C99 flexible-array members, instead. So, replace zero-length arrays
+> declarations in anonymous union with the new __DECLARE_FLEX_ARRAY()
+> helper macro.
 > 
-> sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
+> This helper allows for flexible-array members in unions.
 > 
-> where count is the max number of items the flexible array is supposed to
-> contain.
-> 
-> Link: https://github.com/KSPP/linux/issues/160
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://github.com/KSPP/linux/issues/227
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
 > ---
->  drivers/scsi/smartpqi/smartpqi_init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   include/uapi/sound/asoc.h | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-> index 544cd18a90d7..17bdc8b3f161 100644
-> --- a/drivers/scsi/smartpqi/smartpqi_init.c
-> +++ b/drivers/scsi/smartpqi/smartpqi_init.c
-> @@ -1192,7 +1192,7 @@ static inline int pqi_report_phys_luns(struct pqi_ctrl_info *ctrl_info, void **b
->  
->  	rpl_8byte_wwid_list = rpl_list;
->  	num_physicals = get_unaligned_be32(&rpl_8byte_wwid_list->header.list_length) / sizeof(rpl_8byte_wwid_list->lun_entries[0]);
-> -	rpl_16byte_wwid_list_length = sizeof(struct report_lun_header) + (num_physicals * sizeof(struct report_phys_lun_16byte_wwid));
-> +	rpl_16byte_wwid_list_length = struct_size(rpl_16byte_wwid_list, lun_entries, num_physicals);
->  
->  	rpl_16byte_wwid_list = kmalloc(rpl_16byte_wwid_list_length, GFP_KERNEL);
->  	if (!rpl_16byte_wwid_list)
-> -- 
-> 2.34.1
-> 
-
--- 
-Kees Cook
+> diff --git a/include/uapi/sound/asoc.h b/include/uapi/sound/asoc.h
+> index 053949287ce8..dd8ad790fc15 100644
+> --- a/include/uapi/sound/asoc.h
+> +++ b/include/uapi/sound/asoc.h
+> @@ -226,9 +226,9 @@ struct snd_soc_tplg_vendor_array {
+>   	__le32 type;	/* SND_SOC_TPLG_TUPLE_TYPE_ */
+>   	__le32 num_elems;	/* number of elements in array */
+>   	union {
+> -		struct snd_soc_tplg_vendor_uuid_elem uuid[0];
+> -		struct snd_soc_tplg_vendor_value_elem value[0];
+> -		struct snd_soc_tplg_vendor_string_elem string[0];
+> +		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_uuid_elem, uuid);
+> +		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_value_elem, value);
+> +		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_string_elem, string);
+>   	};
+>   } __attribute__((packed));
+>   
