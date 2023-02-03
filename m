@@ -2,56 +2,56 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F17C05027
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 19:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD5EC61DA4
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 21:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232180AbjBCT6r (ORCPT
+        id S233743AbjBCVTV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 14:58:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49412 "EHLO
+        Fri, 3 Feb 2023 16:19:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231261AbjBCT6q (ORCPT
+        with ESMTP id S231229AbjBCVTV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 14:58:46 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F303EA6C07;
-        Fri,  3 Feb 2023 11:58:45 -0800 (PST)
+        Fri, 3 Feb 2023 16:19:21 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4969E9D4;
+        Fri,  3 Feb 2023 13:19:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675454326; x=1706990326;
+  t=1675459160; x=1706995160;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=EW5HLUVaym+yW2nbWH1WVFDR2aB9Cns0EuLP35Yjpyw=;
-  b=mMOtBYltpPEINMEbNoGLDMuEFBVAnXEOC4s8KlDPaG3gYuhj5NXRKu4z
-   KVVf/ZWkO1G77gNBuGneswFO1KA4aUQdXUI57UAyp4Repd1HSth7wTMNU
-   CKMBjGEoI0/kI77p59IWrqPb1GvhQhsLe5iDIjrWp5K5J40LM+I1/8GEx
-   aBuCtqcsJMo998wl1ewZGJirxAyD/FZwEOTFGol3fvmsmtFN5QpM60GyU
-   9NaDatvBbI7eeGCSVsifVQIgjzrDO3Y441ExLQ7a69397Zv5fl7NEf8hy
-   xsyJWnkSawjN2JhJS1wLqM/2pdXyJR71pHqL93lW2d4k2iJDEJ4PWPWUx
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="326536884"
+  bh=UVUv3/mnRTJNvTbZvw+X59IaeR9LcLY7UWZ7TcVejDE=;
+  b=m6R0FBNngOb8qh0euQQOkR9nxgjlfirXgN33pPaZVNHIA3u/tD8JG8zR
+   bmzhQW7Mei5gTWNq8IQ8iLghbTrUHrrs4cVQemcPlwei8oREL7imFQrX5
+   +bilNgKOAtxODQmBcOwIUldcZAwP4k+NqFlOKOfReNnTTPQCuqvtNtUV5
+   30bPz6hEHz+xiafDpHEXrT1h3Q0ywZlQcRHkZ7k2bPjWNGxYqjYFtHrfK
+   1rZhOf4AQJ5K3lpZSeunB3k7/qt2iN1lXw8MDtBnu/XRkwbzh17Dgwqzv
+   ySWtLxSfrSVq5GF+AAm47Ab9p0Vdh6wbCfAEc9LvfJKVC53JBuV6UNMeE
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="327493829"
 X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
-   d="scan'208";a="326536884"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 11:58:16 -0800
+   d="scan'208";a="327493829"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 13:19:19 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="643361761"
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="698205082"
 X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
-   d="scan'208";a="643361761"
+   d="scan'208";a="698205082"
 Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 03 Feb 2023 11:58:14 -0800
+  by orsmga001.jf.intel.com with ESMTP; 03 Feb 2023 13:19:17 -0800
 Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pO2CL-0000jV-1n;
-        Fri, 03 Feb 2023 19:58:13 +0000
-Date:   Sat, 4 Feb 2023 03:57:52 +0800
+        id 1pO3Sm-0000lb-20;
+        Fri, 03 Feb 2023 21:19:16 +0000
+Date:   Sat, 4 Feb 2023 05:19:09 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Victor Hassan <victor@allwinnertech.com>, keescook@chromium.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        tony.luck@intel.com, gpiccoli@igalia.com,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, tony.luck@intel.com,
+        gpiccoli@igalia.com, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] pstore/blk: Export a method to implemente panic_write()
-Message-ID: <202302040337.IyKFZgIk-lkp@intel.com>
+Message-ID: <202302040515.tdCoWcUS-lkp@intel.com>
 References: <20230203113515.93540-1-victor@allwinnertech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -75,39 +75,55 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Victor-Hassan/pstore-blk-
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/pstore
 patch link:    https://lore.kernel.org/r/20230203113515.93540-1-victor%40allwinnertech.com
 patch subject: [PATCH] pstore/blk: Export a method to implemente panic_write()
-config: x86_64-randconfig-a012 (https://download.01.org/0day-ci/archive/20230204/202302040337.IyKFZgIk-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+config: x86_64-randconfig-a011 (https://download.01.org/0day-ci/archive/20230204/202302040515.tdCoWcUS-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
 reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
         # https://github.com/intel-lab-lkp/linux/commit/368e42ba015da6c7bdd201b8fdb669e936307cbb
         git remote add linux-review https://github.com/intel-lab-lkp/linux
         git fetch --no-tags linux-review Victor-Hassan/pstore-blk-Export-a-method-to-implemente-panic_write/20230203-193548
         git checkout 368e42ba015da6c7bdd201b8fdb669e936307cbb
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/pstore/
+        make W=1 O=build_dir ARCH=x86_64 olddefconfig
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/ fs/
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
+   In file included from drivers/mtd/mtdpstore.c:7:
+>> include/linux/pstore_blk.h:32:41: error: unknown type name 'pstore_blk_notifier_type'
+      32 | typedef int (*pstore_blk_notifier_fn_t)(pstore_blk_notifier_type type,
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/pstore_blk.h:37:9: error: unknown type name 'pstore_blk_notifier_fn_t'
+      37 |         pstore_blk_notifier_fn_t notifier_call;
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+--
    In file included from fs/pstore/blk.c:16:
->> include/linux/pstore_blk.h:32:41: error: must use 'enum' tag to refer to type 'pstore_blk_notifier_type'
-   typedef int (*pstore_blk_notifier_fn_t)(pstore_blk_notifier_type type,
-                                           ^
-                                           enum 
-   1 error generated.
+>> include/linux/pstore_blk.h:32:41: error: unknown type name 'pstore_blk_notifier_type'
+      32 | typedef int (*pstore_blk_notifier_fn_t)(pstore_blk_notifier_type type,
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/pstore_blk.h:37:9: error: unknown type name 'pstore_blk_notifier_fn_t'
+      37 |         pstore_blk_notifier_fn_t notifier_call;
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~
+   fs/pstore/blk.c: In function 'pstore_blk_panic_notifier_call':
+>> fs/pstore/blk.c:114:23: error: called object is not a function or function pointer
+     114 |                 ret = pbn->notifier_call(action, data);
+         |                       ^~~
 
 
-vim +32 include/linux/pstore_blk.h
+vim +/pstore_blk_notifier_type +32 include/linux/pstore_blk.h
 
     31	
   > 32	typedef	int (*pstore_blk_notifier_fn_t)(pstore_blk_notifier_type type,
     33			struct pstore_device_info *dev);
     34	
+    35	struct pstore_blk_notifier {
+    36		struct notifier_block nb;
+  > 37		pstore_blk_notifier_fn_t notifier_call;
+    38	};
+    39	
 
 -- 
 0-DAY CI Kernel Test Service
