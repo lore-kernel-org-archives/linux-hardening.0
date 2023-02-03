@@ -2,338 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0808CC05027
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 17:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3FFC61DA4
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 17:54:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233680AbjBCRj7 (ORCPT
+        id S232416AbjBCRyD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 12:39:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46028 "EHLO
+        Fri, 3 Feb 2023 12:54:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232935AbjBCRjx (ORCPT
+        with ESMTP id S231989AbjBCRyD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 12:39:53 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 363042135
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Feb 2023 09:39:52 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id 7so4112657pgh.7
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Feb 2023 09:39:52 -0800 (PST)
+        Fri, 3 Feb 2023 12:54:03 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0059C1F5EB
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Feb 2023 09:54:00 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id n20-20020a17090aab9400b00229ca6a4636so9542438pjq.0
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Feb 2023 09:54:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2WZL1uAcqK22yknIBHg1TH70wLiFVNlCVoM2e8IdO6s=;
-        b=Ecbp+KXuzyrUV2HboCAjpxOqKlc1ehRwThuleJqmK4Rg5gCJzoYDSyDd8zyWjYMJwb
-         4+ueeh+PKBj/UsDeJakhm2ghqJRq1TgaThyo7eb4WEMbBccGGucMWcNd7N0lgB8+Kn1e
-         IWlYmfb5lsV+BtI3pMMy0cReVsarkpuHwAX28=
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=9RKTKl/Bb3c4duHC9Bqed53UuuEJJvB8k+GUCNePruY=;
+        b=HQ0vQysX1kKI8O+PparDZ35dBYNpcFDWtsPkazH7LUJi2OaBa11iyQ9FQsErdO66dx
+         1UzzputCQRuAr/bCctGzAZwa0d+aDQ1lgiTzHsFutD6VgNmqAwFcIqJ3F8Tcxz5a8QLk
+         /pYo5xZE+h1m4VZPPnBgpQttdWfm3JlDR1S2M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2WZL1uAcqK22yknIBHg1TH70wLiFVNlCVoM2e8IdO6s=;
-        b=4Xuw/v58vWdgLDTgIIy2yW1Hi0a9RTB4TrlK3oj+fcaRr0pXba0eTfBP9mCV1nGrWC
-         t4w/8B+GIrYMqvi4P7Q5LPdEhxS7feT4UphDZhqCRQOY6h3q61ZkD+jdqr9p2u7mkZ7o
-         UQVB6ghMvuhqY4p97gsKt4JxVnjb1Dq7wx94OeiIY+QVAXPqw+AUF8X/yvjVQht8bwuS
-         Iqq8OMgF6vUZR1LYvle90a6uIP8agCWAllfFwBA3/2vR2Mtmdm1B75sFrVqj8wWkklMA
-         y+5YGh2JDNF4QRE3FytGy27y5d8K1Ux2OOW+Q6TrMsAZIsijAFX4lGFVDf+LOWlQ0DYk
-         5Aew==
-X-Gm-Message-State: AO0yUKXQuLEGDBv3JQWeZowhq7oD5HABu9tR/hx+w2N3OegMLjwA2URg
-        LVnk41R/L0rBGV8KuZfMBZp/wA==
-X-Google-Smtp-Source: AK7set/ILYK/AVwauQAeJLy4eUtsZ9YMt4HTPQCDXUBkX+mTutpn3SPG/Ck17MHzyktHS5kyHhyemA==
-X-Received: by 2002:a05:6a00:a22:b0:593:df5a:1592 with SMTP id p34-20020a056a000a2200b00593df5a1592mr11487947pfh.25.1675445991633;
-        Fri, 03 Feb 2023 09:39:51 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9RKTKl/Bb3c4duHC9Bqed53UuuEJJvB8k+GUCNePruY=;
+        b=1XdjlwH3jWjw57vIY0zzONkgIaFIhx/5AZzzYb376wFyU1Lnh+sMS7l1i7w0vvGPbz
+         gfSu40rzpPl8KmaI6LWorgAdx24cEebBy0a29Qm5qzGJOJ+SZC5yr65U7mXhbHSadfoD
+         cSu8jiwtkl0U8eoWqOG0Gy+xGKDuPhxymROqzcpLcR4h390BCJkkLSQ3VtgCo1oW57GP
+         TtasUyEQevSdP1sQB0+5HwZzao/DBspEMBfl2FUT+xzzU9faHofvnFM5nIbazNSfGAJC
+         CVzW/VHn7pCy28Gah09Vgad9vffBtvdtx9+fde1Wt+DAMyWSTRSr/c8aCHeH8ufQcjK9
+         FZnQ==
+X-Gm-Message-State: AO0yUKVBxH+fFe6gvKxhF3mx4IpyHQQSQU288bGQHq/+s/4va6Ax9oN7
+        la/9lL+5M0bwR5AFzyuQiKpmXA==
+X-Google-Smtp-Source: AK7set/EmLEgIMfPrEdynvHAK1GlETqG/9g9kQULpuLqRZcPGdmTTgRxZ2UAdRqjHzv/ZYrfp0Ow/w==
+X-Received: by 2002:a05:6a20:8420:b0:bc:246c:9be4 with SMTP id c32-20020a056a20842000b000bc246c9be4mr15305808pzd.45.1675446840510;
+        Fri, 03 Feb 2023 09:54:00 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id y66-20020a626445000000b005821db4fd84sm2080287pfb.131.2023.02.03.09.39.50
+        by smtp.gmail.com with ESMTPSA id t5-20020a637805000000b004c974bb9a4esm1737998pgc.83.2023.02.03.09.53.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 09:39:51 -0800 (PST)
+        Fri, 03 Feb 2023 09:53:59 -0800 (PST)
+Message-ID: <63dd4a37.630a0220.e4652.35de@mx.google.com>
+X-Google-Original-Message-ID: <202302031752.@keescook>
+Date:   Fri, 3 Feb 2023 17:53:59 +0000
 From:   Kees Cook <keescook@chromium.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Kees Cook <keescook@chromium.org>, Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Stultz <jstultz@google.com>,
-        Yongqin Liu <yongqin.liu@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Marco Elver <elver@google.com>,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Alexander Potapenko <glider@google.com>,
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] arm64: Support Clang UBSAN trap codes for better reporting
-Date:   Fri,  3 Feb 2023 17:39:49 +0000
-Message-Id: <20230203173946.gonna.972-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH][next] xfs: Replace one-element arrays with
+ flexible-array members
+References: <Y9xiYmVLRIKdpJcC@work>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7881; h=from:subject:message-id; bh=Wbj+ROZzkr0HqALXeqBsmNe3SBAa0wKtdW+jf0B3UHA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj3Ubl5gpTcIQItZiS4wh1SeVOPr79eIulbKMyIJdz HYVl9/qJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY91G5QAKCRCJcvTf3G3AJp6oEA CeSCrebA+oDU4bIvtCx7zDa/L8OePXLAmcx5SUtSpoP4VZoXLZ+EJS6L5MoqZ1k0Y+nclKxuMA2Lar a2DjeKGW36+OmnAk0k94ymtyYsYe2R9fnriEDGjVG1pT9sdM+ZsmYhv0hX2W+4tT0k/IVZDm0mryFj wCerAZ4anWU05BjH6yA/4X75tkzwc+F1d9UoiCpyYA65HcYM6tgGuTm3DCchpTKszGo6viQS/YShiw gtv0GzZfSJkOgIHoI9oErNKSe5L0yrTEmHgmR87+Xupy+nGsKmCGxUbGXRMrrX72xkdJx0TiUCWfzS YH+bCISOR6o+lRzInZSiUbwoegYOrSd6me4Qny+UBg3GJS9bAxP10oyaE6I3UzoOExXh2wtBDqUPqI urzpkZ98p/KlKBXfzNgJvs+mUCtkXg/xWhmM+aMNkiHq1l1BKoP1Wbd0WL19ilGNO8e8binOGhDo6/ 022oIO1EzBedMHyDKC6SB1ShPErNKCKLTc6SKNmg9+HLKa+V/U8T5P9YoN1LCtBRpHz13o5th7rTKS /DI8iceYK1O03avcRzp7Mr2TpnPagtzlzB6DE3qn/gV0f5S4sBMuClBX6f3Ep7KOzna1Jel1Xb8Y4b qSRq66YyDgIHxo3hdoxAjgFZFA/AafrAl6QUYK8EmlvMj3XIhPKpC0O97NHQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y9xiYmVLRIKdpJcC@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When building with CONFIG_UBSAN_TRAP=y on arm64, Clang encodes the UBSAN
-check (handler) type in the esr. Extract this and actually report these
-traps as coming from the specific UBSAN check that tripped.
+On Thu, Feb 02, 2023 at 07:24:50PM -0600, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element arrays with flexible-array
+> members in structures xfs_attr_leaf_name_local and
+> xfs_attr_leaf_name_remote.
+> 
+> The only binary differences reported after the changes are all like
+> these:
+> 
+> fs/xfs/libxfs/xfs_attr_leaf.o
+> _@@ -435,7 +435,7 @@
+>       3b8:      movzbl 0x2(%rbx),%eax
+>       3bc:      rol    $0x8,%bp
+>       3c0:      movzwl %bp,%ebp
+> -     3c3:      lea    0x2(%rax,%rbp,1),%ebx
+> +     3c3:      lea    0x3(%rax,%rbp,1),%ebx
+>       3c7:      call   3cc <xfs_attr_leaf_entsize+0x8c>
+>                         3c8: R_X86_64_PLT32     __tsan_func_exit-0x4
+>       3cc:      or     $0x3,%ebx
+> _@@ -454,7 +454,7 @@
+>       3ea:      movzbl 0x8(%rbx),%ebx
+>       3ee:      call   3f3 <xfs_attr_leaf_entsize+0xb3>
+>                         3ef: R_X86_64_PLT32     __tsan_func_exit-0x4
+> -     3f3:      add    $0xa,%ebx
+> +     3f3:      add    $0xb,%ebx
+>       3f6:      or     $0x3,%ebx
+>       3f9:      add    $0x1,%ebx
+>       3fc:      mov    %ebx,%eax
+> 
+> similar changes in fs/xfs/scrub/attr.o and fs/xfs/xfs.o object files.
 
-Before:
+I usually turn off the sanitizers for the A/B build comparisons to make
+it easier to read the results. It looks like it _grew_ in size here,
+though?
 
-  Internal error: BRK handler: 00000000f20003e8 [#1] PREEMPT SMP
+> And the reason for this is because of the round_up() macro called in
+> functions xfs_attr_leaf_entsize_remote() and xfs_attr_leaf_entsize_local(),
+> which is compensanting for the one-byte reduction in size (due to the
+> flex-array transformation) of structures xfs_attr_leaf_name_remote and
+> xfs_attr_leaf_name_local. So, sizes remain the same before and after
+> changes.
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/251
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-After:
+If xfstests pass, this seems good to me. Thanks!
 
-  Internal error: UBSAN: shift out of bounds: 00000000f2005514 [#1] PREEMPT SMP
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: John Stultz <jstultz@google.com>
-Cc: Yongqin Liu <yongqin.liu@linaro.org>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Yury Norov <yury.norov@gmail.com>
-Cc: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Marco Elver <elver@google.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: llvm@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2: improve commit log, limit report strings to actual configs, document mappings
-v1: https://lore.kernel.org/lkml/20230202223653.never.473-kees@kernel.org/
----
- arch/arm64/include/asm/brk-imm.h |  2 +
- arch/arm64/kernel/traps.c        | 21 ++++++++++
- include/linux/ubsan.h            |  9 +++++
- lib/Makefile                     |  2 -
- lib/ubsan.c                      | 67 ++++++++++++++++++++++++++++++++
- lib/ubsan.h                      | 32 +++++++++++++++
- 6 files changed, 131 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/ubsan.h
-
-diff --git a/arch/arm64/include/asm/brk-imm.h b/arch/arm64/include/asm/brk-imm.h
-index 6e000113e508..3f0f0d03268b 100644
---- a/arch/arm64/include/asm/brk-imm.h
-+++ b/arch/arm64/include/asm/brk-imm.h
-@@ -28,6 +28,8 @@
- #define BUG_BRK_IMM			0x800
- #define KASAN_BRK_IMM			0x900
- #define KASAN_BRK_MASK			0x0ff
-+#define UBSAN_BRK_IMM			0x5500
-+#define UBSAN_BRK_MASK			0x00ff
- 
- #define CFI_BRK_IMM_TARGET		GENMASK(4, 0)
- #define CFI_BRK_IMM_TYPE		GENMASK(9, 5)
-diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 4c0caa589e12..87f42eb1c950 100644
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -26,6 +26,7 @@
- #include <linux/syscalls.h>
- #include <linux/mm_types.h>
- #include <linux/kasan.h>
-+#include <linux/ubsan.h>
- #include <linux/cfi.h>
- 
- #include <asm/atomic.h>
-@@ -1074,6 +1075,19 @@ static struct break_hook kasan_break_hook = {
- };
- #endif
- 
-+#ifdef CONFIG_UBSAN_TRAP
-+static int ubsan_handler(struct pt_regs *regs, unsigned long esr)
-+{
-+	die(report_ubsan_failure(regs, esr & UBSAN_BRK_MASK), regs, esr);
-+	return DBG_HOOK_HANDLED;
-+}
-+
-+static struct break_hook ubsan_break_hook = {
-+	.fn	= ubsan_handler,
-+	.imm	= UBSAN_BRK_IMM,
-+	.mask	= UBSAN_BRK_MASK,
-+};
-+#endif
- 
- #define esr_comment(esr) ((esr) & ESR_ELx_BRK64_ISS_COMMENT_MASK)
- 
-@@ -1091,6 +1105,10 @@ int __init early_brk64(unsigned long addr, unsigned long esr,
- #ifdef CONFIG_KASAN_SW_TAGS
- 	if ((esr_comment(esr) & ~KASAN_BRK_MASK) == KASAN_BRK_IMM)
- 		return kasan_handler(regs, esr) != DBG_HOOK_HANDLED;
-+#endif
-+#ifdef CONFIG_UBSAN_TRAP
-+	if ((esr_comment(esr) & ~UBSAN_BRK_MASK) == UBSAN_BRK_IMM)
-+		return ubsan_handler(regs, esr) != DBG_HOOK_HANDLED;
- #endif
- 	return bug_handler(regs, esr) != DBG_HOOK_HANDLED;
- }
-@@ -1104,6 +1122,9 @@ void __init trap_init(void)
- 	register_kernel_break_hook(&fault_break_hook);
- #ifdef CONFIG_KASAN_SW_TAGS
- 	register_kernel_break_hook(&kasan_break_hook);
-+#endif
-+#ifdef CONFIG_UBSAN_TRAP
-+	register_kernel_break_hook(&ubsan_break_hook);
- #endif
- 	debug_traps_init();
- }
-diff --git a/include/linux/ubsan.h b/include/linux/ubsan.h
-new file mode 100644
-index 000000000000..bff7445498de
---- /dev/null
-+++ b/include/linux/ubsan.h
-@@ -0,0 +1,9 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_UBSAN_H
-+#define _LINUX_UBSAN_H
-+
-+#ifdef CONFIG_UBSAN_TRAP
-+const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type);
-+#endif
-+
-+#endif
-diff --git a/lib/Makefile b/lib/Makefile
-index 4d9461bfea42..81b988bf9448 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -340,9 +340,7 @@ quiet_cmd_build_OID_registry = GEN     $@
- clean-files	+= oid_registry_data.c
- 
- obj-$(CONFIG_UCS2_STRING) += ucs2_string.o
--ifneq ($(CONFIG_UBSAN_TRAP),y)
- obj-$(CONFIG_UBSAN) += ubsan.o
--endif
- 
- UBSAN_SANITIZE_ubsan.o := n
- KASAN_SANITIZE_ubsan.o := n
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index 60c7099857a0..f05ae85fc268 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -18,6 +18,71 @@
- 
- #include "ubsan.h"
- 
-+#ifdef CONFIG_UBSAN_TRAP
-+/*
-+ * Only include matches for UBSAN checks that are actually compiled in.
-+ * The mappings of struct SanitizerKind (the -fsanitize=xxx args) to
-+ * enum SanitizerHandler (the traps) in Clang is in clang/lib/CodeGen/.
-+ */
-+const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
-+{
-+	switch (check_type) {
-+#ifdef CONFIG_UBSAN_BOUNDS
-+	/*
-+	 * SanitizerKind::ArrayBounds and SanitizerKind::LocalBounds
-+	 * emit SanitizerHandler::OutOfBounds.
-+	 */
-+	case ubsan_out_of_bounds:
-+		return "UBSAN: array index out of bounds";
-+#endif
-+#ifdef CONFIG_UBSAN_SHIFT
-+	/*
-+	 * SanitizerKind::ShiftBase and SanitizerKind::ShiftExponent
-+	 * emit SanitizerHandler::ShiftOutOfBounds.
-+	 */
-+	case ubsan_shift_out_of_bounds:
-+		return "UBSAN: shift out of bounds";
-+#endif
-+#ifdef CONFIG_UBSAN_DIV_ZERO
-+	/*
-+	 * SanitizerKind::IntegerDivideByZero emits
-+	 * SanitizerHandler::DivremOverflow.
-+	 */
-+	case ubsan_divrem_overflow:
-+		return "UBSAN: divide/remainder overflow";
-+#endif
-+#ifdef CONFIG_UBSAN_UNREACHABLE
-+	/*
-+	 * SanitizerKind::Unreachable emits
-+	 * SanitizerHandler::BuiltinUnreachable.
-+	 */
-+	case ubsan_builtin_unreachable:
-+		return "UBSAN: unreachable code";
-+#endif
-+#if defined(CONFIG_UBSAN_BOOL) || defined(CONFIG_UBSAN_ENUM)
-+	/*
-+	 * SanitizerKind::Bool and SanitizerKind::Enum emit
-+	 * SanitizerHandler::LoadInvalidValue.
-+	 */
-+	case ubsan_load_invalid_value:
-+		return "UBSAN: loading invalid value";
-+#endif
-+#ifdef CONFIG_UBSAN_ALIGNMENT
-+	/*
-+	 * SanitizerKind::Alignment emits SanitizerHandler::TypeMismatch
-+	 * or SanitizerHandler::AlignmentAssumption.
-+	 */
-+	case ubsan_alignment_assumption:
-+		return "UBSAN: alignment assumption";
-+	case ubsan_type_mismatch:
-+		return "UBSAN: type mismatch";
-+#endif
-+	default:
-+		return "UBSAN: unrecognized failure code";
-+	}
-+}
-+
-+#else
- static const char * const type_check_kinds[] = {
- 	"load of",
- 	"store to",
-@@ -384,3 +449,5 @@ void __ubsan_handle_alignment_assumption(void *_data, unsigned long ptr,
- 	ubsan_epilogue();
- }
- EXPORT_SYMBOL(__ubsan_handle_alignment_assumption);
-+
-+#endif /* !CONFIG_UBSAN_TRAP */
-diff --git a/lib/ubsan.h b/lib/ubsan.h
-index 9a0b71c5ff9f..cc5cb94895a6 100644
---- a/lib/ubsan.h
-+++ b/lib/ubsan.h
-@@ -2,6 +2,38 @@
- #ifndef _LIB_UBSAN_H
- #define _LIB_UBSAN_H
- 
-+/*
-+ * ABI defined by Clang's UBSAN enum SanitizerHandler:
-+ * https://github.com/llvm/llvm-project/blob/release/16.x/clang/lib/CodeGen/CodeGenFunction.h#L113
-+ */
-+enum ubsan_checks {
-+	ubsan_add_overflow,
-+	ubsan_builtin_unreachable,
-+	ubsan_cfi_check_fail,
-+	ubsan_divrem_overflow,
-+	ubsan_dynamic_type_cache_miss,
-+	ubsan_float_cast_overflow,
-+	ubsan_function_type_mismatch,
-+	ubsan_implicit_conversion,
-+	ubsan_invalid_builtin,
-+	ubsan_invalid_objc_cast,
-+	ubsan_load_invalid_value,
-+	ubsan_missing_return,
-+	ubsan_mul_overflow,
-+	ubsan_negate_overflow,
-+	ubsan_nullability_arg,
-+	ubsan_nullability_return,
-+	ubsan_nonnull_arg,
-+	ubsan_nonnull_return,
-+	ubsan_out_of_bounds,
-+	ubsan_pointer_overflow,
-+	ubsan_shift_out_of_bounds,
-+	ubsan_sub_overflow,
-+	ubsan_type_mismatch,
-+	ubsan_alignment_assumption,
-+	ubsan_vla_bound_not_positive,
-+};
-+
- enum {
- 	type_kind_int = 0,
- 	type_kind_float = 1,
 -- 
-2.34.1
-
+Kees Cook
