@@ -2,84 +2,155 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA126C61DA4
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 14:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B05DC61DA4
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 16:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233199AbjBCO7y (ORCPT
+        id S233007AbjBCQZ4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 09:59:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
+        Fri, 3 Feb 2023 11:25:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233379AbjBCO7w (ORCPT
+        with ESMTP id S232387AbjBCQZs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 09:59:52 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66983C27;
-        Fri,  3 Feb 2023 06:59:51 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6145061F45;
-        Fri,  3 Feb 2023 14:59:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDCB4C433EF;
-        Fri,  3 Feb 2023 14:59:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675436390;
-        bh=rfmO/dREt9Imo+N73/l/mF1DQB8gO2iX+lEgI7Qhwyo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZcjUmtUwOTSG4F/C0O+uQLYB4EJnN9ro8TR/5Rcm9oRaMr6wF4uiCUz/ScZEYfkJK
-         JnohmNcu3PNRE5bRJv565qHzq7yof2HENanROH7aS8rnUkmpL9JxIA8oEaxrnPnFkT
-         E3EFCj9JkYDA1K3zDepa5K/cNtUqlwMcVzP58ac1QmNqxEBFnyQpUM2kcc30KVPszZ
-         ilpoFIbW+bAoauZodHLkjA1GR/W6nXBFG+pqNhaLvgHDAYLuSuV4UsaALtR58EAVfr
-         kzsCynugKx22V6oPgopxKZG7YgVNwutxKJQB8TlFnaXZdtfhuSPqjRsouMj1uBXRE8
-         1YMa0tP5Lxw0Q==
-Received: by mail-vk1-f176.google.com with SMTP id b81so2697431vkf.1;
-        Fri, 03 Feb 2023 06:59:50 -0800 (PST)
-X-Gm-Message-State: AO0yUKWZLJuR70OU47HCGxxjT+hXQ/Visfcv7n2xrXDlYye4ZapF15XQ
-        y69uO43koCR4KRiVjQqmTtk6uqW1TTMoJ7EyVA==
-X-Google-Smtp-Source: AK7set//vUFGhsUQAEZraWmVzMVWQepTrIloqT6Ulj0U8pBpwsSoKl6gUK9+4JS/5knyhdY6NSM0qaPT02hxE7VwGJY=
-X-Received: by 2002:ac5:cb05:0:b0:3e8:ab22:ae05 with SMTP id
- r5-20020ac5cb05000000b003e8ab22ae05mr1577053vkl.26.1675436389661; Fri, 03 Feb
- 2023 06:59:49 -0800 (PST)
+        Fri, 3 Feb 2023 11:25:48 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17D9EA6B9F;
+        Fri,  3 Feb 2023 08:25:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675441547; x=1706977547;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=vIRC4xnaApbPW8RCCJgEQXnu08a0bMVna8tyTv2MRHQ=;
+  b=Py+NP4thkZbXh0tNJQ//Ow9qleoK0j/YxWbpW8j2xGpVgbopq7rM2rAK
+   +FNSk9Skj6EoxB9McbT+zPr/QFKbZ7gU5Au8ILGM6CWILsyeMOjyo1VYx
+   DCl/A+N70aqmihKHc0x8FRglx23+6nxKGRE2LLUJQtE8ON8nd2e6G3hqy
+   UGRBj1OvITlNz9h9Xn2TCSS0PbM69V8kA3fx5Dudp/paQvCPJBq3MxMO9
+   qnJwhPF9udfnkhrbvESp532Eze/IDWcgf1JTDa251U+RFMC9hnJW83jdQ
+   a+RbOTsBirFH5kQOaOX1scYrQzCHehyEaWlRb7VGHep3T6lZIi/29Qiyy
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="316783306"
+X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
+   d="scan'208";a="316783306"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 08:25:46 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="911208619"
+X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
+   d="scan'208";a="911208619"
+Received: from hheck-mobl.amr.corp.intel.com (HELO [10.212.230.180]) ([10.212.230.180])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 08:25:45 -0800
+Message-ID: <851920c5-31c9-ddd9-3e2d-57d379aa0671@intel.com>
+Date:   Fri, 3 Feb 2023 08:25:44 -0800
 MIME-Version: 1.0
-References: <1675330081-15029-1-git-send-email-quic_mojha@quicinc.com>
- <20230202235916.GA2931100-robh@kernel.org> <d2af0b0c-718a-a625-3630-05631d0e310c@quicinc.com>
-In-Reply-To: <d2af0b0c-718a-a625-3630-05631d0e310c@quicinc.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 3 Feb 2023 08:59:38 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKV6EEpsDNdj1BTN6nODb=hsHkzsdkCzzWwnTrygn0K-A@mail.gmail.com>
-Message-ID: <CAL_JsqKV6EEpsDNdj1BTN6nODb=hsHkzsdkCzzWwnTrygn0K-A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: ramoops: Add support to get the
- region dynamically
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     linux-hardening@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        krzysztof.kozlowski+dt@linaro.org, corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
+Content-Language: en-US
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Roxana Bradescu <roxabee@chromium.org>,
+        Adam Langley <agl@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>
+References: <20230125012801.362496-1-ebiggers@kernel.org>
+ <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
+ <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
+ <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
+ <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
+ <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com> <Y9MAvhQYlOe4l2BM@gmail.com>
+ <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
+ <16e3217b-1561-51ea-7514-014e27240402@intel.com>
+ <Y9oMmYWzy7mlk3D9@sol.localdomain>
+ <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Feb 3, 2023 at 2:20 AM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
->
->
->
-> On 2/3/2023 5:29 AM, Rob Herring wrote:
-> > On Thu, Feb 02, 2023 at 02:58:00PM +0530, Mukesh Ojha wrote:
-> >> The reserved memory region for ramoops is assumed to be at a
-> >> fixed and known location when read from the devicetree. This
-> >> is not desirable in an environment where it is preferred the
-> >> region to be dynamically allocated at runtime, as opposed to
-> >> being fixed at compile time.
-> >>
-> >> So, update the ramoops binding by using some reserve memory
-> >> property to allocate the ramoops region dynamically.
-> >
-> > Sorry, but I still don't think this belongs in DT as I commented on v4
-> Do you mean, we should not even document this here ? or are you against
-> the size property mentioned in this patch.
+On 2/1/23 10:09, Dave Hansen wrote:
+> Good questions.  I want to make sure what I'm saying here is accurate,
+> and I don't have good answers to those right now.  We're working on it,
+> and should have something useful to say in the next couple of days.
 
-I don't think dynamic ramoops location should be defined in DT.
+This is an attempt to make sure that everyone that is concerned about
+DOITM behavior has all the same information as Intel folks before we
+make a decision about a kernel implementation.
 
-Rob
+Here we go...
+
+The execution latency of the DOIT instructions[1] does not depend on the
+value of data operands on all currently-supported Intel processors. This
+includes all processors that enumerate DOITM support.  There are no
+plans for any processors where this behavior would change, despite the
+DOITM architecture theoretically allowing it.
+
+So, what's the point of DOITM in the first place?  Fixed execution
+latency does not mean that programs as a whole will have constant
+overall latency.  DOITM currently affects features which do not affect
+execution latency but may, for instance, affect overall program latency
+due to side-effects of prefetching on the cache.  Even with fixed
+instruction execution latency, these side-effects can matter especially
+to the paranoid.
+
+Today, those affected features are:
+ * Data Dependent Prefetchers (DDP)[2]
+ * Some Fast Store Forwarding Predictors (FSFP)[3].
+
+There are existing controls for those features, including
+spec_store_bypass_disable=[4].  Some paranoid software may already have
+mitigations in place that are a superset of DOITM.  In addition, both
+DDP and FSFP were also designed to limit nastiness when crossing
+privilege boundaries.  Please see the linked docs for more details.
+
+That's basically the Intel side of things.  Everyone else should have
+all the background that I have.  Now back to maintainer mode...
+
+So, in short, I don't think everyone's crypto libraries are busted today
+when DOITM=0.  I don't think they're going to _become_ busted any time soon.
+
+Where do we go from here?  There are a few choices:
+
+1. Apply the patch in this thread, set DOITM=1 always.  Today, this
+   reduces exposure to DDP and FSFP, but probably only for userspace.
+   It reduces exposure to any future predictors under the DOITM umbrella
+   and also from Intel changing its mind.
+2. Ignore DOITM, leave it to the hardware default of DOITM=0.  Today,
+   this probably just steers folks to using relatively heavyweight
+   mitigations (like SSBD) if they want DDP/FSFP disabled.  It also
+   leaves Linux exposed to Intel changing its mind on its future plans.
+3. Apply the patch in this thread, but leave DOITM=0 as the default.
+   This lets folks enable DOITM on a moment's notice if the need arises.
+
+There are some other crazier choices like adding ABI to toggle DOITM for
+userspace, but I'm not sure they're even worth discussing.
+
+#1 is obviously the only way to go if the DOITM architecture remains
+as-is.  There is talk of making changes, like completely removing the
+idea of variable execution latency.  But that's a slow process and would
+be a non-starter if *anyone* (like other OSes) is depending on the
+existing DOITM definition.
+
+My inclination is to wait a couple of weeks to see which way DOITM is
+headed and if the definition is likely to get changed.  Does anyone feel
+any greater sense of urgency?
+
+
+1.
+https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/resources/data-operand-independent-timing-instructions.html
+2.
+https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/data-dependent-prefetcher.html
+3.
+https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/fast-store-forwarding-predictor.html
+4. https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
+
+
+
