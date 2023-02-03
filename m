@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5337C636D3
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 00:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99093C64ED6
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 00:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233225AbjBCAfp (ORCPT
+        id S232479AbjBCAfr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 19:35:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
+        Thu, 2 Feb 2023 19:35:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233007AbjBCAfe (ORCPT
+        with ESMTP id S233022AbjBCAfe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 2 Feb 2023 19:35:34 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAFD677A0;
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DEEF65ECE;
         Thu,  2 Feb 2023 16:35:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8573AB828E2;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A29E61D4A;
+        Fri,  3 Feb 2023 00:35:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F7BFC433A0;
         Fri,  3 Feb 2023 00:35:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC8F1C4339C;
-        Fri,  3 Feb 2023 00:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675384526;
-        bh=GM64I8LDi7cDnrLEl3psUaDr0dWAk6jElGhklKg21VU=;
+        s=k20201202; t=1675384528;
+        bh=5qk9VBUgOtMc5zgeGwRMJtJqYseJs6r6q9ybZnMLMDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LY3M5qJaY7UCu743hTXz14bO4ciCmBVEWmP8KRMFK20bt29TYqcDBUv9C/Q48bp5G
-         G9fLAI2glDaQ/rUQMZ+TYJo+7VV1WAfNsXhTMNU1+o81VdJcnPO7hQscc64hALucJq
-         yEVmgx7sJO7lfZJtvbTOmL9PpwgnjYxZZed/xM9/+RHz8i2cWzVEIBTAw3lvEzMsoZ
-         tE3fAEUJ5aR9s3C3SI+WyzX9G8pRHUy/2bcFd5r6Rg1D+LVAletGkMXMmOEoFU/n8s
-         iOWIzixQti6bUPgljg7FGZYJmdIZlaxBpjMpg5fhJs7Qdch34wxtP/x97Kqa8m2vJ4
-         VO6h31NxEbc5A==
+        b=KKN3O7Mrzj+qk2v763QF+gmzaZkZmbF6cSIko6XDBqxC8fWh7les+o7IBY48dfWMN
+         XYgiDC/qnhthlvf6sjD8DnmvRUcRuBMDdvoskPKzj6jQgC4XsjWyPr+3LqoUkMp1Or
+         AXg2/vACugQXShfCjgARl9raO804XVMJozlRS0BQd6ET5rNGa+GdB5V2mTiVPE8eIJ
+         Faq6Ps+fTK3lfuF21roQKWljmlSDLaUC68xr4k++/QiQczu1NjcMlF8HpwuYcFWqwR
+         r5L7kXRXxMvprspGShryVqLghUneGeHg/oyvB42QnF2nHTpXbBvrCWLVDPClxD/Vo5
+         8ZTHPedsffzcA==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,10 +42,35 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Gow <davidgow@google.com>,
+        tangmeng <tangmeng@uniontech.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 4.14 v2 08/15] exit: Put an upper limit on how often we can oops
-Date:   Thu,  2 Feb 2023 16:33:47 -0800
-Message-Id: <20230203003354.85691-9-ebiggers@kernel.org>
+Subject: [PATCH 4.14 v2 11/15] panic: Consolidate open-coded panic_on_warn checks
+Date:   Thu,  2 Feb 2023 16:33:50 -0800
+Message-Id: <20230203003354.85691-12-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230203003354.85691-1-ebiggers@kernel.org>
 References: <20230203003354.85691-1-ebiggers@kernel.org>
@@ -55,150 +80,121 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit d4ccd54d28d3c8598e2354acc13e28c060961dbb upstream.
+commit 79cc1ba7badf9e7a12af99695a557e9ce27ee967 upstream.
 
-Many Linux systems are configured to not panic on oops; but allowing an
-attacker to oops the system **really** often can make even bugs that look
-completely unexploitable exploitable (like NULL dereferences and such) if
-each crash elevates a refcount by one or a lock is taken in read mode, and
-this causes a counter to eventually overflow.
+Several run-time checkers (KASAN, UBSAN, KFENCE, KCSAN, sched) roll
+their own warnings, and each check "panic_on_warn". Consolidate this
+into a single function so that future instrumentation can be added in
+a single location.
 
-The most interesting counters for this are 32 bits wide (like open-coded
-refcounts that don't use refcount_t). (The ldsem reader count on 32-bit
-platforms is just 16 bits, but probably nobody cares about 32-bit platforms
-that much nowadays.)
-
-So let's panic the system if the kernel is constantly oopsing.
-
-The speed of oopsing 2^32 times probably depends on several factors, like
-how long the stack trace is and which unwinder you're using; an empirically
-important one is whether your console is showing a graphical environment or
-a text console that oopses will be printed to.
-In a quick single-threaded benchmark, it looks like oopsing in a vfork()
-child with a very short stack trace only takes ~510 microseconds per run
-when a graphical console is active; but switching to a text console that
-oopses are printed to slows it down around 87x, to ~45 milliseconds per
-run.
-(Adding more threads makes this faster, but the actual oops printing
-happens under &die_lock on x86, so you can maybe speed this up by a factor
-of around 2 and then any further improvement gets eaten up by lock
-contention.)
-
-It looks like it would take around 8-12 days to overflow a 32-bit counter
-with repeated oopsing on a multi-core X86 system running a graphical
-environment; both me (in an X86 VM) and Seth (with a distro kernel on
-normal hardware in a standard configuration) got numbers in that ballpark.
-
-12 days aren't *that* short on a desktop system, and you'd likely need much
-longer on a typical server system (assuming that people don't run graphical
-desktop environments on their servers), and this is a *very* noisy and
-violent approach to exploiting the kernel; and it also seems to take orders
-of magnitude longer on some machines, probably because stuff like EFI
-pstore will slow it down a ton if that's active.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Link: https://lore.kernel.org/r/20221107201317.324457-1-jannh@google.com
+Cc: Marco Elver <elver@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Gow <davidgow@google.com>
+Cc: tangmeng <tangmeng@uniontech.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: kasan-dev@googlegroups.com
+Cc: linux-mm@kvack.org
 Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20221117234328.594699-2-keescook@chromium.org
+Reviewed-by: Marco Elver <elver@google.com>
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+Link: https://lore.kernel.org/r/20221117234328.594699-4-keescook@chromium.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- Documentation/sysctl/kernel.txt |  9 +++++++
- kernel/exit.c                   | 43 +++++++++++++++++++++++++++++++++
- 2 files changed, 52 insertions(+)
+ include/linux/kernel.h | 1 +
+ kernel/panic.c         | 9 +++++++--
+ kernel/sched/core.c    | 3 +--
+ mm/kasan/report.c      | 3 +--
+ 4 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
-index 37b612a17c461..7b04c616c5901 100644
---- a/Documentation/sysctl/kernel.txt
-+++ b/Documentation/sysctl/kernel.txt
-@@ -48,6 +48,7 @@ show up in /proc/sys/kernel:
- - msgmnb
- - msgmni
- - nmi_watchdog
-+- oops_limit
- - osrelease
- - ostype
- - overflowgid
-@@ -515,6 +516,14 @@ scanned for a given scan.
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 22b9146655958..a4ac278d02d0a 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -293,6 +293,7 @@ extern long (*panic_blink)(int state);
+ __printf(1, 2)
+ void panic(const char *fmt, ...) __noreturn __cold;
+ void nmi_panic(struct pt_regs *regs, const char *msg);
++void check_panic_on_warn(const char *origin);
+ extern void oops_enter(void);
+ extern void oops_exit(void);
+ void print_oops_end_marker(void);
+diff --git a/kernel/panic.c b/kernel/panic.c
+index bd7c3ea3bf1e6..8e3460e985904 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -122,6 +122,12 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
+ }
+ EXPORT_SYMBOL(nmi_panic);
  
- ==============================================================
- 
-+oops_limit:
-+
-+Number of kernel oopses after which the kernel should panic when
-+``panic_on_oops`` is not set. Setting this to 0 or 1 has the same effect
-+as setting ``panic_on_oops=1``.
-+
-+==============================================================
-+
- osrelease, ostype & version:
- 
- # cat osrelease
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 1e778b88fa3fe..482bcaf158127 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -68,6 +68,33 @@
- #include <asm/pgtable.h>
- #include <asm/mmu_context.h>
- 
-+/*
-+ * The default value should be high enough to not crash a system that randomly
-+ * crashes its kernel from time to time, but low enough to at least not permit
-+ * overflowing 32-bit refcounts or the ldsem writer count.
-+ */
-+static unsigned int oops_limit = 10000;
-+
-+#ifdef CONFIG_SYSCTL
-+static struct ctl_table kern_exit_table[] = {
-+	{
-+		.procname       = "oops_limit",
-+		.data           = &oops_limit,
-+		.maxlen         = sizeof(oops_limit),
-+		.mode           = 0644,
-+		.proc_handler   = proc_douintvec,
-+	},
-+	{ }
-+};
-+
-+static __init int kernel_exit_sysctls_init(void)
++void check_panic_on_warn(const char *origin)
 +{
-+	register_sysctl_init("kernel", kern_exit_table);
-+	return 0;
++	if (panic_on_warn)
++		panic("%s: panic_on_warn set ...\n", origin);
 +}
-+late_initcall(kernel_exit_sysctls_init);
-+#endif
 +
- static void __unhash_process(struct task_struct *p, bool group_dead)
- {
- 	nr_threads--;
-@@ -922,10 +949,26 @@ EXPORT_SYMBOL_GPL(do_exit);
+ /**
+  *	panic - halt the system
+  *	@fmt: The text string to print
+@@ -546,8 +552,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ 	if (args)
+ 		vprintk(args->fmt, args->args);
  
- void __noreturn make_task_dead(int signr)
- {
-+	static atomic_t oops_count = ATOMIC_INIT(0);
-+
- 	/*
- 	 * Take the task off the cpu after something catastrophic has
- 	 * happened.
- 	 */
-+
-+	/*
-+	 * Every time the system oopses, if the oops happens while a reference
-+	 * to an object was held, the reference leaks.
-+	 * If the oops doesn't also leak memory, repeated oopsing can cause
-+	 * reference counters to wrap around (if they're not using refcount_t).
-+	 * This means that repeated oopsing can make unexploitable-looking bugs
-+	 * exploitable through repeated oopsing.
-+	 * To make sure this can't happen, place an upper bound on how often the
-+	 * kernel may oops without panic().
-+	 */
-+	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit))
-+		panic("Oopsed too often (kernel.oops_limit is %d)", oops_limit);
-+
- 	do_exit(signr);
+-	if (panic_on_warn)
+-		panic("panic_on_warn set ...\n");
++	check_panic_on_warn("kernel");
+ 
+ 	print_modules();
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 544a1cb66d90d..5dc66377864a9 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3185,8 +3185,7 @@ static noinline void __schedule_bug(struct task_struct *prev)
+ 		print_ip_sym(preempt_disable_ip);
+ 		pr_cont("\n");
+ 	}
+-	if (panic_on_warn)
+-		panic("scheduling while atomic\n");
++	check_panic_on_warn("scheduling while atomic");
+ 
+ 	dump_stack();
+ 	add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index 6bcfb01ba0386..1c96c83f97751 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -172,8 +172,7 @@ static void kasan_end_report(unsigned long *flags)
+ 	pr_err("==================================================================\n");
+ 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+ 	spin_unlock_irqrestore(&report_lock, *flags);
+-	if (panic_on_warn)
+-		panic("panic_on_warn set ...\n");
++	check_panic_on_warn("KASAN");
+ 	kasan_enable_current();
  }
  
 -- 
