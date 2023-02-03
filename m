@@ -2,145 +2,102 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D275AC636D4
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 01:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF3CC61DA4
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 07:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231819AbjBCBdw (ORCPT
+        id S230108AbjBCH7E (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 20:33:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56646 "EHLO
+        Fri, 3 Feb 2023 02:59:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjBCBdv (ORCPT
+        with ESMTP id S232564AbjBCH6g (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 20:33:51 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 568F4841A0;
-        Thu,  2 Feb 2023 17:33:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E965261D4B;
-        Fri,  3 Feb 2023 01:33:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6580C433D2;
-        Fri,  3 Feb 2023 01:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675388029;
-        bh=bjDwmYYIor+YSh/XeUJiaj8ABWRiVuYnCU4UAHUmbfY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=agtOjEulK8eS408HbFj/8bKSMzpQ4Rpa/cpGLvmeZCCI8WR83tO+WPeQeblDK65IP
-         gvFFTeVERlV00bWOyzltUr8n9Pzdfce1qaLgc5k0DYSfY+qjLXMLvL7W65kZd6S5Qd
-         gO3D+WwOtRVwUl/EZaK1RqBISr8jp0ERvWh3hZ3rt+Kp76uPXco3SwikAwNinJHib7
-         tJXiDGyq4kZDi+LFTHQOnzyC0EyAsgKWC5ptdJTr6WbnfsXGIli7Oxry/GYtKnQ3gE
-         E7hbKwDonueSDqNIPvyKibYfBxmJmXWdnBfGBsqafGxxrNeR8UdyUyD1MWEbeDAo9w
-         QRwhbuZ5MCTMg==
-Date:   Thu, 2 Feb 2023 19:34:05 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi017@gmail.com>,
-        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: mwifiex: Replace one-element array with
- flexible-array member
-Message-ID: <Y9xkjXeElSEQ0FPY@work>
+        Fri, 3 Feb 2023 02:58:36 -0500
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0029F32528;
+        Thu,  2 Feb 2023 23:58:34 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 5E0D03200917;
+        Fri,  3 Feb 2023 02:58:31 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 03 Feb 2023 02:58:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1675411110; x=1675497510; bh=LhbWN0bu2m
+        cFcY1A7Fmu3Enc1lagz2yeOOXyJiDDA6c=; b=l5pRfZunRw+kh9WhZZ35TBmgnJ
+        N9yrZdvHgmVKeGrjCKCcP6UDZUP6aZ6Y0X+l+Ji44t0pUUVo4NWj6AcCUkfQmIx+
+        eG+VrGzhGQnsrOWt0KVRw2/jhQ06FwBsxE7U+inFpL8FgTdbE4ZL8Tt12+cgOfhY
+        LH47Cm2+xq8j8WaXMXNa1020WrdIQkQEFETex+ZDQrUgBzSJLMBzNc42naQdLrW0
+        ryAprn8QQCaA41k5vknyMUArQX5ZayCCVwi/Mkx188oYpQ+U+xAByzzspHxOtgOM
+        rJTbWuhBqXH8RNBZDzTD6PuCnriyg584KXxPPEGgXe2sZebQw8f3tNfzAqHQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1675411110; x=1675497510; bh=LhbWN0bu2mcFcY1A7Fmu3Enc1lag
+        z2yeOOXyJiDDA6c=; b=NuknU8S4AZlE4O/FBMmo3oJtGTIe6aT5dDOzVIkU+6kt
+        46NQ3svLkaX2tcx75RhLWudNiXjWIbSSUVUKSMQwEu2OU7dpcu8DDFJqjzOJnlW6
+        eHkKCf0ArHK+Y1jEJL+LmYEDcMAzcYUMz1M2jOY2dPIaQ6sCLLSPF+HpUw8rEhGd
+        Bd6kq+g8X9tMPF4g9aI9Uy47MQXRpslkV4tmUTsroD4pHjjvFrV/0mV5xNJn/bRC
+        +TOu35ry3JdWEV0g45L8FRLvta8mb/pOTMMkWIyK32F4P1nSiXGLYugkkShE7Nor
+        iFRP4nYTI87TiqVoua2W443+C/+Qxh0ymbHAyiU0iA==
+X-ME-Sender: <xms:pr7cYxgiuGY_Exn4kAp8IvI7yjXGJ15O0wAdToixcGkQfgW-eypEhA>
+    <xme:pr7cY2AwHrGJH-LHBzL4kiQilBoeXZEdA90zLDz6U6Ht8EPlIvKILLg99Hv97PAAy
+    EI1bTkXLamSLw>
+X-ME-Received: <xmr:pr7cYxExMVnxxf11B97JzF_BdVzOhVrCrYkwwqyUAl88OHu9090RvxHsXczrOZO7bX77floiBFegs2Bqs1DmWN43rlUN-0PhdoM16g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudefledgudduvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenucfjughrpeffhffvvefukfhfgggt
+    uggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorg
+    hhrdgtohhmqeenucggtffrrghtthgvrhhnpeehvdevkefghedvveegffefgfefffekvdff
+    geeihefghfejhfdutdfhhfejleejieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpd
+    gslhhoghhsphhothdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:pr7cY2SWlmpYkmUq_zfUkjxLxDUh8QscxK3lOClVkiJPkz7-DXl_RA>
+    <xmx:pr7cY-ykr0WtWDUKah0MlChQ157MMxx57xk4hYrXPZh2XUqieu73kQ>
+    <xmx:pr7cY87ca6zPvjoKCxFXBi9oJWXXRp5fVAW_v3OGSOBPba5ixyLt1w>
+    <xmx:pr7cY_qIoxnaUiPd25ZiITXIVycAoGZD3ILXMxAwnm3ZarLPgY6okQ>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 3 Feb 2023 02:58:29 -0500 (EST)
+Date:   Fri, 3 Feb 2023 08:57:55 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     stable@vger.kernel.org,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        SeongJae Park <sj@kernel.org>,
+        Seth Jenkins <sethjenkins@google.com>,
+        Jann Horn <jannh@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4.14 v2 00/15] Backport oops_limit to 4.14
+Message-ID: <Y9y+g66x++h4kEXy@kroah.com>
+References: <20230203003354.85691-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20230203003354.85691-1-ebiggers@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with flexible
-array members instead. So, replace one-element array with flexible-array
-member in struct mwifiex_ie_types_rates_param_set.
+On Thu, Feb 02, 2023 at 04:33:39PM -0800, Eric Biggers wrote:
+> This series backports the patchset
+> "exit: Put an upper limit on how often we can oops"
+> (https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
+> to 4.14, as recommended at
+> https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
+> 
+> Changed in v2:
+>    - Fixed a build error in mm/kasan/report.c by dropping the patch "mm:
+>      kasan: do not panic if both panic_on_warn and kasan_multishot set".
 
-These are the only binary differences I see after the change:
+Both v2 series now queued up, let's see if they build...
 
-mwifiex.o
-_@@ -50154,7 +50154,7 @@
-                        23514: R_X86_64_32S     kmalloc_caches+0x50
-    23518:      call   2351d <mwifiex_scan_networks+0x11d>
-                        23519: R_X86_64_PLT32   __tsan_read8-0x4
--   2351d:      mov    $0x225,%edx
-+   2351d:      mov    $0x224,%edx
-    23522:      mov    $0xdc0,%esi
-    23527:      mov    0x0(%rip),%rdi        # 2352e <mwifiex_scan_networks+0x12e>
-                        2352a: R_X86_64_PC32    kmalloc_caches+0x4c
-scan.o
-_@@ -5582,7 +5582,7 @@
-                        4394: R_X86_64_32S      kmalloc_caches+0x50
-     4398:      call   439d <mwifiex_scan_networks+0x11d>
-                        4399: R_X86_64_PLT32    __tsan_read8-0x4
--    439d:      mov    $0x225,%edx
-+    439d:      mov    $0x224,%edx
-     43a2:      mov    $0xdc0,%esi
-     43a7:      mov    0x0(%rip),%rdi        # 43ae <mwifiex_scan_networks+0x12e>
-                        43aa: R_X86_64_PC32     kmalloc_caches+0x4c
+thanks,
 
-and the reason for that is the following line:
-
-drivers/net/wireless/marvell/mwifiex/scan.c:
-1517         scan_cfg_out = kzalloc(sizeof(union mwifiex_scan_cmd_config_tlv),
-1518                                GFP_KERNEL);
-
-sizeof(union mwifiex_scan_cmd_config_tlv) is now one-byte smaller due to the
-flex-array transformation:
-
-  46 union mwifiex_scan_cmd_config_tlv {
-  47         /* Scan configuration (variable length) */
-  48         struct mwifiex_scan_cmd_config config;
-  49         /* Max allocated block */
-  50         u8 config_alloc_buf[MAX_SCAN_CFG_ALLOC];
-  51 };
-
-Notice that MAX_SCAN_CFG_ALLOC is defined in terms of
-sizeof(struct mwifiex_ie_types_rates_param_set), see:
-
-  26 /* Memory needed to store supported rate */
-  27 #define RATE_TLV_MAX_SIZE   (sizeof(struct mwifiex_ie_types_rates_param_set) \
-  28                                 + HOSTCMD_SUPPORTED_RATES)
-
-  37 /* Maximum memory needed for a mwifiex_scan_cmd_config with all TLVs at max */
-  38 #define MAX_SCAN_CFG_ALLOC (sizeof(struct mwifiex_scan_cmd_config)        \
-  39                                 + sizeof(struct mwifiex_ie_types_num_probes)   \
-  40                                 + sizeof(struct mwifiex_ie_types_htcap)       \
-  41                                 + CHAN_TLV_MAX_SIZE                 \
-  42                                 + RATE_TLV_MAX_SIZE                 \
-  43                                 + WILDCARD_SSID_TLV_MAX_SIZE)
-
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
-
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/252
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/net/wireless/marvell/mwifiex/fw.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-index 9616bd8b49f1..8c7c744683bc 100644
---- a/drivers/net/wireless/marvell/mwifiex/fw.h
-+++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-@@ -794,7 +794,7 @@ struct mwifiex_ie_types_chan_band_list_param_set {
- 
- struct mwifiex_ie_types_rates_param_set {
- 	struct mwifiex_ie_types_header header;
--	u8 rates[1];
-+	u8 rates[];
- } __packed;
- 
- struct mwifiex_ie_types_ssid_param_set {
--- 
-2.34.1
-
+greg k-h
