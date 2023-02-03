@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B551BC6FA95
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 00:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188FDC64EC4
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 00:35:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233286AbjBCAfo (ORCPT
+        id S233309AbjBCAfo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Thu, 2 Feb 2023 19:35:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60830 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230456AbjBCAff (ORCPT
+        with ESMTP id S230432AbjBCAfe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 19:35:35 -0500
+        Thu, 2 Feb 2023 19:35:34 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80C4B63853;
-        Thu,  2 Feb 2023 16:35:34 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F016A65EEA;
+        Thu,  2 Feb 2023 16:35:31 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E45DB828DE;
-        Fri,  3 Feb 2023 00:35:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBC8C433A0;
+        by ams.source.kernel.org (Postfix) with ESMTPS id A668AB828BF;
         Fri,  3 Feb 2023 00:35:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7080C433D2;
+        Fri,  3 Feb 2023 00:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675384531;
-        bh=PezzPrlLFd7Q51QZ1OXqNb3IL9FpXtGge3PpuUfRJNk=;
+        s=k20201202; t=1675384529;
+        bh=yLIP0xVEX1f7nCjSlc4iuL265LW+GAg4/ELnRAuM/P4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AskTXGKNv4dDpus75Gb2sLGod2vudwgWs9UATxJTrwaz2NNXSiWF6tyhgQb2oUbNW
-         a7al28Dx54wm8VqkXNTQqJ2uiMyqkbGofocd2dYH6S73PswXqgWomTdalJjH6EoagJ
-         VeNUuF1FqHtjBAxad+Jotfz4jF/7YGcnNqIoPGZxxppEqFSJNHav7z+JoDQd+Z7QZx
-         d+bzSDGLQzonYZH9Tb/KWiykeDn+03clGC9V2PHis3XB9v9D6jKsLH655baH6opWRn
-         aySDUQIMJKhv+7xYh5pUIZqo471nBaNMfzV1b5/9HQH839iyb/t1t9uifJv0k0zaVi
-         eJdz0fIN9wU/Q==
+        b=E99aAofi/WnzrEV8cawRG9n1rrgzh54bF0bbM9JXj3Y/Z7o2ShwYy5wCr0lh6z4cG
+         rx0r5Ku/NcnivdSl4ECfQNFW3JezjjKcv3QQD14QeIVT56ggfsPq0a69U80ykiNC1q
+         cPe6NVJDNSCHckPsqOX8kI3fByFtW2ZKnof3SYXeQWuVwLidazIsaeNGvrH0TqkMdg
+         MpsqWOBHu3CRCxEvCxPMzvLVA8QXHNRxx55oagR4LRCKbJZzQuoaIeHHYwwdYHFqES
+         6LVxtY2m2MEiNh8LKPwUYIPgYZf249w+fu1GOLceGGzYPqzUzRgNBD/nm9qTdpAkea
+         ERpzYMNq3T5hA==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,17 +42,21 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Petr Mladek <pmladek@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Marco Elver <elver@google.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Eric Biggers <ebiggers@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
         tangmeng <tangmeng@uniontech.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 4.14 v2 15/15] exit: Use READ_ONCE() for all oops/warn limit reads
-Date:   Thu,  2 Feb 2023 16:33:54 -0800
-Message-Id: <20230203003354.85691-16-ebiggers@kernel.org>
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-doc@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
+Subject: [PATCH 4.14 v2 12/15] panic: Introduce warn_limit
+Date:   Thu,  2 Feb 2023 16:33:51 -0800
+Message-Id: <20230203003354.85691-13-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230203003354.85691-1-ebiggers@kernel.org>
 References: <20230203003354.85691-1-ebiggers@kernel.org>
@@ -64,76 +68,111 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-commit 7535b832c6399b5ebfc5b53af5c51dd915ee2538 upstream.
+commit 9fc9e278a5c0b708eeffaf47d6eb0c82aa74ed78 upstream.
 
-Use a temporary variable to take full advantage of READ_ONCE() behavior.
-Without this, the report (and even the test) might be out of sync with
-the initial test.
+Like oops_limit, add warn_limit for limiting the number of warnings when
+panic_on_warn is not set.
 
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/lkml/Y5x7GXeluFmZ8E0E@hirez.programming.kicks-ass.net
-Fixes: 9fc9e278a5c0 ("panic: Introduce warn_limit")
-Fixes: d4ccd54d28d3 ("exit: Put an upper limit on how often we can oops")
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Petr Mladek <pmladek@suse.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Marco Elver <elver@google.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Eric Biggers <ebiggers@google.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Petr Mladek <pmladek@suse.com>
 Cc: tangmeng <tangmeng@uniontech.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: linux-doc@vger.kernel.org
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20221117234328.594699-5-keescook@chromium.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- kernel/exit.c  | 6 ++++--
- kernel/panic.c | 7 +++++--
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ Documentation/sysctl/kernel.txt | 10 ++++++++++
+ kernel/panic.c                  | 27 +++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 73103e008a627..c0ff4461643d0 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -973,6 +973,7 @@ void __noreturn make_task_dead(int signr)
- 	 * Take the task off the cpu after something catastrophic has
- 	 * happened.
- 	 */
-+	unsigned int limit;
+diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
+index b6124a4475fb7..fefffc8e6ac5c 100644
+--- a/Documentation/sysctl/kernel.txt
++++ b/Documentation/sysctl/kernel.txt
+@@ -94,6 +94,7 @@ show up in /proc/sys/kernel:
+ - threads-max
+ - unprivileged_bpf_disabled
+ - unknown_nmi_panic
++- warn_limit
+ - watchdog
+ - watchdog_thresh
+ - version
+@@ -1072,6 +1073,15 @@ example.  If a system hangs up, try pressing the NMI switch.
  
- 	/*
- 	 * Every time the system oopses, if the oops happens while a reference
-@@ -984,8 +985,9 @@ void __noreturn make_task_dead(int signr)
- 	 * To make sure this can't happen, place an upper bound on how often the
- 	 * kernel may oops without panic().
- 	 */
--	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit) && oops_limit)
--		panic("Oopsed too often (kernel.oops_limit is %d)", oops_limit);
-+	limit = READ_ONCE(oops_limit);
-+	if (atomic_inc_return(&oops_count) >= limit && limit)
-+		panic("Oopsed too often (kernel.oops_limit is %d)", limit);
+ ==============================================================
  
- 	do_exit(signr);
- }
++warn_limit:
++
++Number of kernel warnings after which the kernel should panic when
++``panic_on_warn`` is not set. Setting this to 0 disables checking
++the warning count. Setting this to 1 has the same effect as setting
++``panic_on_warn=1``. The default value is 0.
++
++==============================================================
++
+ watchdog:
+ 
+ This parameter can be used to disable or enable the soft lockup detector
 diff --git a/kernel/panic.c b/kernel/panic.c
-index 8f7bf0a8cef1a..165fd747cebd0 100644
+index 8e3460e985904..bfe6e4c5cd0e7 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -165,12 +165,15 @@ EXPORT_SYMBOL(nmi_panic);
+@@ -39,6 +39,7 @@ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
+ bool crash_kexec_post_notifiers;
+ int panic_on_warn __read_mostly;
++static unsigned int warn_limit __read_mostly;
+ 
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
+ EXPORT_SYMBOL_GPL(panic_timeout);
+@@ -47,6 +48,26 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
+ 
+ EXPORT_SYMBOL(panic_notifier_list);
+ 
++#ifdef CONFIG_SYSCTL
++static struct ctl_table kern_panic_table[] = {
++	{
++		.procname       = "warn_limit",
++		.data           = &warn_limit,
++		.maxlen         = sizeof(warn_limit),
++		.mode           = 0644,
++		.proc_handler   = proc_douintvec,
++	},
++	{ }
++};
++
++static __init int kernel_panic_sysctls_init(void)
++{
++	register_sysctl_init("kernel", kern_panic_table);
++	return 0;
++}
++late_initcall(kernel_panic_sysctls_init);
++#endif
++
+ static long no_blink(int state)
+ {
+ 	return 0;
+@@ -124,8 +145,14 @@ EXPORT_SYMBOL(nmi_panic);
  
  void check_panic_on_warn(const char *origin)
  {
-+	unsigned int limit;
++	static atomic_t warn_count = ATOMIC_INIT(0);
 +
  	if (panic_on_warn)
  		panic("%s: panic_on_warn set ...\n", origin);
- 
--	if (atomic_inc_return(&warn_count) >= READ_ONCE(warn_limit) && warn_limit)
-+	limit = READ_ONCE(warn_limit);
-+	if (atomic_inc_return(&warn_count) >= limit && limit)
- 		panic("%s: system warned too often (kernel.warn_limit is %d)",
--		      origin, warn_limit);
-+		      origin, limit);
++
++	if (atomic_inc_return(&warn_count) >= READ_ONCE(warn_limit) && warn_limit)
++		panic("%s: system warned too often (kernel.warn_limit is %d)",
++		      origin, warn_limit);
  }
  
  /**
