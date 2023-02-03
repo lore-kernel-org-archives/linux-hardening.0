@@ -2,118 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB17C636D3
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 00:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C06DC636D3
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 01:24:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233289AbjBCAft (ORCPT
+        id S231391AbjBCBYo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 19:35:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
+        Thu, 2 Feb 2023 20:24:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233002AbjBCAfe (ORCPT
+        with ESMTP id S231598AbjBCBYm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 19:35:34 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2024A64D88;
-        Thu,  2 Feb 2023 16:35:28 -0800 (PST)
+        Thu, 2 Feb 2023 20:24:42 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED0B84B64;
+        Thu,  2 Feb 2023 17:24:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 82C9961D55;
-        Fri,  3 Feb 2023 00:35:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1702C433A4;
-        Fri,  3 Feb 2023 00:35:26 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6FBA3B810EE;
+        Fri,  3 Feb 2023 01:24:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D815C433EF;
+        Fri,  3 Feb 2023 01:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675384527;
-        bh=gTyWdbMQBkC6bj2L7uRC+LIn00TYkfea/W2V8Ev9Cfw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZX8khSoRGKi+/ZPCF8w02+6cs3G6RC4ngD6qBTJ8fyM4WOuJgB22AZDKypKA7QkT
-         1iuvMVBI6x7VoMwjiFALmOSrsmEJaf72pZWWkfc/JkNvs7daZTTGnn6tRMPhHE8y+1
-         pwzEw1/Bx7L9CAxkv2U3L3d9sr/Weot1KH6u0NwVMb60KjmFAyk/W6yHC6lFzOpxpM
-         vg1b1xwqxj8QXPwkXHOU4RHQMI/WDuM1KRj9jEdvrXwUuMiVX9NM8NFzg9sfFn3li0
-         sp+MbSbEuUhcVtL09J+yswmrZlUXm3vV7FHBz0Ds5Uvk9IAPnmvbarrgxe2FrBoOQn
-         tdZVYC24gfpow==
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     stable@vger.kernel.org
-Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        Kees Cook <keescook@chromium.org>,
-        SeongJae Park <sj@kernel.org>,
-        Seth Jenkins <sethjenkins@google.com>,
-        Jann Horn <jannh@google.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Eric Biggers <ebiggers@google.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org
-Subject: [PATCH 4.14 v2 10/15] exit: Allow oops_limit to be disabled
-Date:   Thu,  2 Feb 2023 16:33:49 -0800
-Message-Id: <20230203003354.85691-11-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230203003354.85691-1-ebiggers@kernel.org>
-References: <20230203003354.85691-1-ebiggers@kernel.org>
+        s=k20201202; t=1675387474;
+        bh=IscsXZpj+h2AU0j+vLsryYQTUgOMPPGd5Jv1285ZrJk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QHKJhVUiPYk/zx3KeJ5KOmbtERStOiApOlVI2w8X9mB474wJY93F25VmERJ1N2mjC
+         IzzAx4B80n6Joo+E9878meSE+QVA3miCcbWn9baxFmZQyXEOLwtB8MCmgKcm7JOHmT
+         ZkjIuQ2cuM9hMe+6ZNZu1zAUV/jdwHi8/2ZtzJkccYEc8LHpseYYo2BcwGQxGK6SHF
+         OBxC8TwD1aQgYpLmDx07lyS9jSZJFYnvW06gYJs8AJLh9PQMxbiEoibGRwgIxFJEtn
+         UIn8n2KUQiBfNqadGk62a9bWHOV9ZeydUEA2VYnEdCBr0PKCV0fhnKHyAURdnez9xy
+         mZ/TyOnl8yEYA==
+Date:   Thu, 2 Feb 2023 19:24:50 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] xfs: Replace one-element arrays with flexible-array
+ members
+Message-ID: <Y9xiYmVLRIKdpJcC@work>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+One-element arrays are deprecated, and we are replacing them with flexible
+array members instead. So, replace one-element arrays with flexible-array
+members in structures xfs_attr_leaf_name_local and
+xfs_attr_leaf_name_remote.
 
-commit de92f65719cd672f4b48397540b9f9eff67eca40 upstream.
+The only binary differences reported after the changes are all like
+these:
 
-In preparation for keeping oops_limit logic in sync with warn_limit,
-have oops_limit == 0 disable checking the Oops counter.
+fs/xfs/libxfs/xfs_attr_leaf.o
+_@@ -435,7 +435,7 @@
+      3b8:      movzbl 0x2(%rbx),%eax
+      3bc:      rol    $0x8,%bp
+      3c0:      movzwl %bp,%ebp
+-     3c3:      lea    0x2(%rax,%rbp,1),%ebx
++     3c3:      lea    0x3(%rax,%rbp,1),%ebx
+      3c7:      call   3cc <xfs_attr_leaf_entsize+0x8c>
+                        3c8: R_X86_64_PLT32     __tsan_func_exit-0x4
+      3cc:      or     $0x3,%ebx
+_@@ -454,7 +454,7 @@
+      3ea:      movzbl 0x8(%rbx),%ebx
+      3ee:      call   3f3 <xfs_attr_leaf_entsize+0xb3>
+                        3ef: R_X86_64_PLT32     __tsan_func_exit-0x4
+-     3f3:      add    $0xa,%ebx
++     3f3:      add    $0xb,%ebx
+      3f6:      or     $0x3,%ebx
+      3f9:      add    $0x1,%ebx
+      3fc:      mov    %ebx,%eax
 
-Cc: Jann Horn <jannh@google.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Eric Biggers <ebiggers@google.com>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+similar changes in fs/xfs/scrub/attr.o and fs/xfs/xfs.o object files.
+
+And the reason for this is because of the round_up() macro called in
+functions xfs_attr_leaf_entsize_remote() and xfs_attr_leaf_entsize_local(),
+which is compensanting for the one-byte reduction in size (due to the
+flex-array transformation) of structures xfs_attr_leaf_name_remote and
+xfs_attr_leaf_name_local. So, sizes remain the same before and after
+changes.
+
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
+
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/251
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- Documentation/sysctl/kernel.txt | 5 +++--
- kernel/exit.c                   | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ fs/xfs/libxfs/xfs_da_format.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
-index 7b04c616c5901..b6124a4475fb7 100644
---- a/Documentation/sysctl/kernel.txt
-+++ b/Documentation/sysctl/kernel.txt
-@@ -519,8 +519,9 @@ scanned for a given scan.
- oops_limit:
+diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
+index 25e2841084e1..e1e62ebb0c44 100644
+--- a/fs/xfs/libxfs/xfs_da_format.h
++++ b/fs/xfs/libxfs/xfs_da_format.h
+@@ -620,14 +620,14 @@ typedef struct xfs_attr_leaf_entry {	/* sorted on key, not name */
+ typedef struct xfs_attr_leaf_name_local {
+ 	__be16	valuelen;		/* number of bytes in value */
+ 	__u8	namelen;		/* length of name bytes */
+-	__u8	nameval[1];		/* name/value bytes */
++	__u8	nameval[];		/* name/value bytes */
+ } xfs_attr_leaf_name_local_t;
  
- Number of kernel oopses after which the kernel should panic when
--``panic_on_oops`` is not set. Setting this to 0 or 1 has the same effect
--as setting ``panic_on_oops=1``.
-+``panic_on_oops`` is not set. Setting this to 0 disables checking
-+the count. Setting this to  1 has the same effect as setting
-+``panic_on_oops=1``. The default value is 10000.
+ typedef struct xfs_attr_leaf_name_remote {
+ 	__be32	valueblk;		/* block number of value bytes */
+ 	__be32	valuelen;		/* number of bytes in value */
+ 	__u8	namelen;		/* length of name bytes */
+-	__u8	name[1];		/* name bytes */
++	__u8	name[];			/* name bytes */
+ } xfs_attr_leaf_name_remote_t;
  
- ==============================================================
+ typedef struct xfs_attr_leafblock {
+@@ -747,13 +747,13 @@ xfs_attr3_leaf_name_local(xfs_attr_leafblock_t *leafp, int idx)
+  */
+ static inline int xfs_attr_leaf_entsize_remote(int nlen)
+ {
+-	return round_up(sizeof(struct xfs_attr_leaf_name_remote) - 1 +
++	return round_up(sizeof(struct xfs_attr_leaf_name_remote) +
+ 			nlen, XFS_ATTR_LEAF_NAME_ALIGN);
+ }
  
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 138b110bf83a1..73103e008a627 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -984,7 +984,7 @@ void __noreturn make_task_dead(int signr)
- 	 * To make sure this can't happen, place an upper bound on how often the
- 	 * kernel may oops without panic().
- 	 */
--	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit))
-+	if (atomic_inc_return(&oops_count) >= READ_ONCE(oops_limit) && oops_limit)
- 		panic("Oopsed too often (kernel.oops_limit is %d)", oops_limit);
+ static inline int xfs_attr_leaf_entsize_local(int nlen, int vlen)
+ {
+-	return round_up(sizeof(struct xfs_attr_leaf_name_local) - 1 +
++	return round_up(sizeof(struct xfs_attr_leaf_name_local) +
+ 			nlen + vlen, XFS_ATTR_LEAF_NAME_ALIGN);
+ }
  
- 	do_exit(signr);
 -- 
-2.39.1
+2.34.1
 
