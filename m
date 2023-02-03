@@ -2,153 +2,147 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D4DC61DA4
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 21:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4618AC05027
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 21:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232113AbjBCVXi (ORCPT
+        id S232409AbjBCVcT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 16:23:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36680 "EHLO
+        Fri, 3 Feb 2023 16:32:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231701AbjBCVXh (ORCPT
+        with ESMTP id S231755AbjBCVcS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 16:23:37 -0500
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9D2CA4291;
-        Fri,  3 Feb 2023 13:23:35 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 519B03200A32;
-        Fri,  3 Feb 2023 16:23:33 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Fri, 03 Feb 2023 16:23:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1675459412; x=1675545812; bh=2tzzoGJ9eW
-        nbElxFwdnPJhJylsfRsTkZVGSNGIwIJxc=; b=Y8KAJ8O3KdHmu2unJQfeL9qwqH
-        brn7Ap2vcQjv4vAdHUobxFYeR2vy4R12zrIWv6hH5exJvGOsMr6Mpre5Uo0JQYeb
-        JkH60rVfeAZc7iL335VeLa0ffuC2CFw28kLla3XaR9jja8Du/x2tT7Ax8apBIc1K
-        U2RfnbED0QcZerICTIbwIPzNAWjiAm5obZqkydFPglVp1ePvG49adglZd3EjSR4j
-        cJZ6NjrEE3jXdUqyPJCvMID2shcsF4VXdM8HLz1Yhxz8aRuN188ZjQu07XoXxXSo
-        hfFirex3Oz9W5lEPi/AQTa686XGdNGq3b0V7EwG9ciPjjeQ5HMo+DFcwczvQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1675459412; x=1675545812; bh=2tzzoGJ9eWnbElxFwdnPJhJylsfR
-        sTkZVGSNGIwIJxc=; b=gH6knMbbgtgoFUQVAXwhm/0MoSywBc3fmlR5kjbw0ErV
-        ekZoBA6Zhzrcx6XDU+bYQkqxGeBkDKzfefGWRmApBjV7mEUjVHYyPo2DIGIS8tzD
-        F2GUddS4WZSSimoeeQf9q9uHrlG2efOGKN+BZFC/QJEuwR5o0gJshcBys1K1Oqn7
-        eLBEhhR/xM7orTSe9r0ZbsvEevW+4Q1LY9yNZ/Q1hT8bndVrGtibg1JE74Q20+QW
-        r34nbA0FWBLXnZVYGuk+1zLXP5IJSg0g9HX+M5s1LyM61xKrJ92F9Rwx+TXRthks
-        xvQ0GPhGQ8bOjkSOIdk4/FXHvTMGJzPGja46QbaP+g==
-X-ME-Sender: <xms:VHvdY38Ygqr-b_4Hji-X0y59i5vFcFrS0k5TAqO5w54iseJKuuQ7Bw>
-    <xme:VHvdYzukcHpcc_foZsUhHkMMJlGCK6j3ZcTuS5jRMCHKS2D-k413TtBBFoX4nYCq5
-    iitUwcWe12hEDzDgOk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudegtddgudeggecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:VHvdY1BHR92MQ3DEAHCpnn9C4ItohwkDZbbfqNrXlTpi3I04_EsbEQ>
-    <xmx:VHvdYzepDqS5tWgNdjhojwmjOaVXq-M7cuisVlUATdFvuvlT89BAeA>
-    <xmx:VHvdY8M6PfOz0oVaVTU6dwdNpRg6U8sUpFmemcTIEfg71uzsKpAmDQ>
-    <xmx:VHvdY4l1siqCiq1c8OtS3K54HrmLIiLfW89_I5AVnEx5uBgKwqlIaA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2815FB6044F; Fri,  3 Feb 2023 16:23:32 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-107-g82c3c54364-fm-20230131.002-g82c3c543
-Mime-Version: 1.0
-Message-Id: <6c728dfc-d777-4beb-b463-649704c81a5e@app.fastmail.com>
-In-Reply-To: <20230203193523.never.667-kees@kernel.org>
-References: <20230203193523.never.667-kees@kernel.org>
-Date:   Fri, 03 Feb 2023 22:23:13 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Kees Cook" <keescook@chromium.org>
-Cc:     "Aleksa Sarai" <cyphar@cyphar.com>,
-        "Christian Brauner" <christian.brauner@ubuntu.com>,
-        "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
-        "Dinh Nguyen" <dinguyen@kernel.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Alexander Potapenko" <glider@google.com>,
-        "Christian Brauner" <brauner@kernel.org>,
-        "Stafford Horne" <shorne@gmail.com>,
-        "Alexander Viro" <viro@zeniv.linux.org.uk>,
-        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] uaccess: Add minimum bounds check on kernel buffer size
-Content-Type: text/plain
+        Fri, 3 Feb 2023 16:32:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C89B9B704;
+        Fri,  3 Feb 2023 13:32:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BBB8F61FD7;
+        Fri,  3 Feb 2023 21:32:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F531C433EF;
+        Fri,  3 Feb 2023 21:32:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675459937;
+        bh=+3/BTONRD3iwOv0A33zqtDpDWdHnR/8jcN4XSfuZenA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qV8BftRDYCk7cTCDfLXp6InMJJKPCMK8tHHD94rbCikCNNs2OqN+mbT78HAqgbnvU
+         pM7TmxM4emEJvcU61hlgtOOsLNWMrX+Oe3uxWfBkdksTduvYMHnJy/Tfm5zls6K/75
+         OI8g5hnnt2MCLwj17/UYnQiw9HOgtZ6wdHqJ9+kBV0UK7FBktoShkZPiEZGlDRhF8u
+         IS40I25gQMoJeNuTZ4WgUAiiSfUH8zTPpVzc5Y0BZ44FHMFtvyczdOy8DxBZwv+Q6F
+         xc45jaoDchSMW72ga+QYhrKad/4C8S2f1Ai9DDNvxly4LDEmNaKE4r7aVlKQUNdvP5
+         JREffywxfG12Q==
+Date:   Fri, 3 Feb 2023 13:32:16 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] xfs: Replace one-element arrays with
+ flexible-array members
+Message-ID: <Y919YPKebVjQWwTM@magnolia>
+References: <Y9xiYmVLRIKdpJcC@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y9xiYmVLRIKdpJcC@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Feb 3, 2023, at 20:35, Kees Cook wrote:
-> While there is logic about the difference between ksize and usize,
-> copy_struct_from_user() didn't check the size of the destination buffer
-> (when it was known) against ksize. Add this check so there is an upper
-> bounds check on the possible memset() call, otherwise lower bounds
-> checks made by callers will trigger bounds warnings under -Warray-bounds.
-> Seen under GCC 13:
->
-> In function 'copy_struct_from_user',
->     inlined from 'iommufd_fops_ioctl' at
-> ../drivers/iommu/iommufd/main.c:333:8:
-> ../include/linux/fortify-string.h:59:33: warning: '__builtin_memset' 
-> offset [57, 4294967294] is out of the bounds [0, 56] of object 'buf' 
-> with type 'union ucmd_buffer' [-Warray-bounds=]
->    59 | #define __underlying_memset     __builtin_memset
->       |                                 ^
-> ../include/linux/fortify-string.h:453:9: note: in expansion of macro 
-> '__underlying_memset'
->   453 |         __underlying_memset(p, c, __fortify_size); \
->       |         ^~~~~~~~~~~~~~~~~~~
-> ../include/linux/fortify-string.h:461:25: note: in expansion of macro 
-> '__fortify_memset_chk'
->   461 | #define memset(p, c, s) __fortify_memset_chk(p, c, s, \
->       |                         ^~~~~~~~~~~~~~~~~~~~
-> ../include/linux/uaccess.h:334:17: note: in expansion of macro 'memset'
->   334 |                 memset(dst + size, 0, rest);
->       |                 ^~~~~~
-> ../drivers/iommu/iommufd/main.c: In function 'iommufd_fops_ioctl':
-> ../drivers/iommu/iommufd/main.c:311:27: note: 'buf' declared here
->   311 |         union ucmd_buffer buf;
->       |                           ^~~
->
-
-Hi Kees,
-
-I started building with gcc-13.0.1 myself but ran into a lot of
-other -Warray-bounds warnings in randconfig builds, so I ended up
-turning it off once more with CONFIG_CC_NO_ARRAY_BOUNDS in order
-to keep building without warnings.
-
-Is there anything else I need to do to get to the point of
-just addressing actual issues instead of false positives?
-Do you already have a patch series for fixing the others?
-
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index afb18f198843..ab9728138ad6 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -329,6 +329,10 @@ copy_struct_from_user(void *dst, size_t ksize, 
-> const void __user *src,
->  	size_t size = min(ksize, usize);
->  	size_t rest = max(ksize, usize) - size;
+On Thu, Feb 02, 2023 at 07:24:50PM -0600, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element arrays with flexible-array
+> members in structures xfs_attr_leaf_name_local and
+> xfs_attr_leaf_name_remote.
 > 
-> +	/* Double check if ksize is larger than a known object size. */
-> +	if (WARN_ON_ONCE(ksize > __builtin_object_size(dst, 1)))
-> +		return -E2BIG;
-> +
+> The only binary differences reported after the changes are all like
+> these:
+> 
+> fs/xfs/libxfs/xfs_attr_leaf.o
+> _@@ -435,7 +435,7 @@
+>       3b8:      movzbl 0x2(%rbx),%eax
+>       3bc:      rol    $0x8,%bp
+>       3c0:      movzwl %bp,%ebp
+> -     3c3:      lea    0x2(%rax,%rbp,1),%ebx
+> +     3c3:      lea    0x3(%rax,%rbp,1),%ebx
+>       3c7:      call   3cc <xfs_attr_leaf_entsize+0x8c>
+>                         3c8: R_X86_64_PLT32     __tsan_func_exit-0x4
+>       3cc:      or     $0x3,%ebx
+> _@@ -454,7 +454,7 @@
+>       3ea:      movzbl 0x8(%rbx),%ebx
+>       3ee:      call   3f3 <xfs_attr_leaf_entsize+0xb3>
+>                         3ef: R_X86_64_PLT32     __tsan_func_exit-0x4
+> -     3f3:      add    $0xa,%ebx
+> +     3f3:      add    $0xb,%ebx
+>       3f6:      or     $0x3,%ebx
+>       3f9:      add    $0x1,%ebx
+>       3fc:      mov    %ebx,%eax
+> 
+> similar changes in fs/xfs/scrub/attr.o and fs/xfs/xfs.o object files.
+> 
+> And the reason for this is because of the round_up() macro called in
+> functions xfs_attr_leaf_entsize_remote() and xfs_attr_leaf_entsize_local(),
+> which is compensanting for the one-byte reduction in size (due to the
+> flex-array transformation) of structures xfs_attr_leaf_name_remote and
+> xfs_attr_leaf_name_local. So, sizes remain the same before and after
+> changes.
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/251
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/xfs/libxfs/xfs_da_format.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_da_format.h b/fs/xfs/libxfs/xfs_da_format.h
+> index 25e2841084e1..e1e62ebb0c44 100644
+> --- a/fs/xfs/libxfs/xfs_da_format.h
+> +++ b/fs/xfs/libxfs/xfs_da_format.h
+> @@ -620,14 +620,14 @@ typedef struct xfs_attr_leaf_entry {	/* sorted on key, not name */
+>  typedef struct xfs_attr_leaf_name_local {
+>  	__be16	valuelen;		/* number of bytes in value */
+>  	__u8	namelen;		/* length of name bytes */
+> -	__u8	nameval[1];		/* name/value bytes */
+> +	__u8	nameval[];		/* name/value bytes */
+>  } xfs_attr_leaf_name_local_t;
+>  
+>  typedef struct xfs_attr_leaf_name_remote {
+>  	__be32	valueblk;		/* block number of value bytes */
+>  	__be32	valuelen;		/* number of bytes in value */
+>  	__u8	namelen;		/* length of name bytes */
+> -	__u8	name[1];		/* name bytes */
+> +	__u8	name[];			/* name bytes */
 
-WARN_ON_ONCE() may be a little expensive since that adds two
-comparisons and a static variable to each copy, but it's probably
-fine. 
+Does the large comment about m68k problems in xfs_ondisk.h need updating
+here?
 
-      Arnd
+--D
+
+>  } xfs_attr_leaf_name_remote_t;
+>  
+>  typedef struct xfs_attr_leafblock {
+> @@ -747,13 +747,13 @@ xfs_attr3_leaf_name_local(xfs_attr_leafblock_t *leafp, int idx)
+>   */
+>  static inline int xfs_attr_leaf_entsize_remote(int nlen)
+>  {
+> -	return round_up(sizeof(struct xfs_attr_leaf_name_remote) - 1 +
+> +	return round_up(sizeof(struct xfs_attr_leaf_name_remote) +
+>  			nlen, XFS_ATTR_LEAF_NAME_ALIGN);
+>  }
+>  
+>  static inline int xfs_attr_leaf_entsize_local(int nlen, int vlen)
+>  {
+> -	return round_up(sizeof(struct xfs_attr_leaf_name_local) - 1 +
+> +	return round_up(sizeof(struct xfs_attr_leaf_name_local) +
+>  			nlen + vlen, XFS_ATTR_LEAF_NAME_ALIGN);
+>  }
+>  
+> -- 
+> 2.34.1
+> 
