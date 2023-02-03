@@ -2,54 +2,54 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716DFC636D6
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 17:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8F6C61DA4
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 17:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233437AbjBCRzH (ORCPT
+        id S232591AbjBCR5S (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 12:55:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33636 "EHLO
+        Fri, 3 Feb 2023 12:57:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233221AbjBCRzE (ORCPT
+        with ESMTP id S229782AbjBCR5R (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 12:55:04 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA76AD32A
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Feb 2023 09:54:45 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id h9so5986214plf.9
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Feb 2023 09:54:45 -0800 (PST)
+        Fri, 3 Feb 2023 12:57:17 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F67734306
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Feb 2023 09:57:16 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id rm7-20020a17090b3ec700b0022c05558d22so5627659pjb.5
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Feb 2023 09:57:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:subject:cc
          :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=2zabOkk8raGucj5VBxNY2tARuoOEYzucUnuxzxeg5Ek=;
-        b=e2zuiUIvvKN3Gi+i2FXmXzqNNZNed6qIioC591AO051BLb5lFWdx5GvErKtXMfoArh
-         VIobYDCEk+RoXMVrGxIbfaRh3SGu5KdEXkVUL9IF1qgx942TVYCJAJ3hQSDwq4Im+YSn
-         Rfa3ZWZamyNDaMSGLuskNYBrisL1lTsVgJxTM=
+        bh=8WT95F+iS0qJ3SEQvMux6Ahdn4GMfowtUA6O/anLIZM=;
+        b=JD6SPQ9aZzihVAy5oLJLWN+5hgdKbIBF2rpSwem3ale/1ZPxtGrY7JT5LqyOlN8N9a
+         gQvpi4Ibc6CooqHBwRgwSulyLggbq2A9QwMp+NnDESjOVQBx/1iprLWtv+KW/MWFk3fR
+         eFi87mm+flJSCzzGchzGmKBjVXtatjyWYwkhs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:subject:cc
          :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2zabOkk8raGucj5VBxNY2tARuoOEYzucUnuxzxeg5Ek=;
-        b=SRbWYz975tz42hH3ZKAyzkNkfbpmivCnQhJq5LvnFKCQcicnXybbbfg5QwWWoQYTHy
-         7pj7IlFWw0p8aMvAHO8CnxuGxcAapFLjcRAN1nMKsZflQtUd7M1ROeeCKEsyki1rEcqM
-         c4pAf8wRIWMd/FnsB73M5OYDQTGo6Z7HkM4qyUWVCP5Pq5Gc+mIftyKxmczA8g5QSY1s
-         Tyg5YK/CKV5nCh85e7fCNckYkCHtKncKldy2jR8YinnrMgIdFgrrtMV4+i2kb73Z1ifx
-         5PX3Wsg6IgRIu0/XoPA99qtOxiwWhlNyn0GrQTi3NJgOgXLze6NznWP4krrw2WCYYTSg
-         WguQ==
-X-Gm-Message-State: AO0yUKWOjk8+iIb1WtTHBA6nh602NsH1kh6F6+4UPZfxk/LooLy5SUb0
-        BmkkNWyCCszT90iRy5iwuNM/gg==
-X-Google-Smtp-Source: AK7set9Viy6W3uH/z/gbYqjrgi1gVp1ihje8JI5TqGFl4yIwnNVl2yutLYH7E5beN1qh+gMX/raRpg==
-X-Received: by 2002:a05:6a20:bb0a:b0:9d:efc0:92 with SMTP id fc10-20020a056a20bb0a00b0009defc00092mr11439154pzb.58.1675446885466;
-        Fri, 03 Feb 2023 09:54:45 -0800 (PST)
+        bh=8WT95F+iS0qJ3SEQvMux6Ahdn4GMfowtUA6O/anLIZM=;
+        b=Bns5vCedfTqOBblSsvSjl7h9k521yIloQ5eGVTTi0tZXK70dqE1QYcohWv83WJTWMk
+         G6DpB4jvn4s15Ynngkc8m36E7WsduOvK621WmZFulfGP/PpBUr/QrLIb+W2fm7CH4jb1
+         nRYcQZJhzeRk7cgeLIQBaXXLpo+zU53Hlc6cFw6joJ6JLK3vcvc5S4pkd1MAzpWV4voc
+         GWjJUWdn5pG7O1R7+t5DOUgaKmBNb79hnr6S4VTeHeDSBTD0ZgqtJCBf8NPACarwBGHM
+         bkJeWTi2twPek8Aa4Ubpl0CZTjqtZ/A/lQWdk2vqu/xmhC7/PmSG8Tsz2Dqy3T7IvBM6
+         DkwQ==
+X-Gm-Message-State: AO0yUKWEHtQ3ZRV1KJNkRr+r3avdMWGcov+0L2GA8Z7cXyw717gGISxM
+        4TM2Fti+j5paqEQIO6oYYfM86g==
+X-Google-Smtp-Source: AK7set+iYFPlIHXpZDz4pifedq9Mx+/38gPmSWF0Ge7/VAK65kqXpKh8i2Cce6utIuqc++7/MnqoYg==
+X-Received: by 2002:a17:902:f14d:b0:198:dd32:f0e1 with SMTP id d13-20020a170902f14d00b00198dd32f0e1mr2737051plb.0.1675447036042;
+        Fri, 03 Feb 2023 09:57:16 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d9-20020a63a709000000b004b1b9e23790sm1682499pgf.92.2023.02.03.09.54.44
+        by smtp.gmail.com with ESMTPSA id a21-20020a170902b59500b00186748fe6ccsm1872269pls.214.2023.02.03.09.57.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 09:54:45 -0800 (PST)
-Message-ID: <63dd4a65.630a0220.e5739.3450@mx.google.com>
-X-Google-Original-Message-ID: <202302031754.@keescook>
-Date:   Fri, 3 Feb 2023 17:54:44 +0000
+        Fri, 03 Feb 2023 09:57:15 -0800 (PST)
+Message-ID: <63dd4afb.170a0220.27b4d.3935@mx.google.com>
+X-Google-Original-Message-ID: <202302031755.@keescook>
+Date:   Fri, 3 Feb 2023 17:57:15 +0000
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
@@ -60,33 +60,93 @@ Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Paolo Abeni <pabeni@redhat.com>, linux-kernel@vger.kernel.org,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] wifi: mwifiex: Replace one-element arrays with
- flexible-array members
-References: <Y9xkECG3uTZ6T1dN@work>
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: mwifiex: Replace one-element array with
+ flexible-array member
+References: <Y9xkjXeElSEQ0FPY@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y9xkECG3uTZ6T1dN@work>
+In-Reply-To: <Y9xkjXeElSEQ0FPY@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 02, 2023 at 07:32:00PM -0600, Gustavo A. R. Silva wrote:
+On Thu, Feb 02, 2023 at 07:34:05PM -0600, Gustavo A. R. Silva wrote:
 > One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element arrays with flexible-array
-> members in multiple structures.
+> array members instead. So, replace one-element array with flexible-array
+> member in struct mwifiex_ie_types_rates_param_set.
+> 
+> These are the only binary differences I see after the change:
+> 
+> mwifiex.o
+> _@@ -50154,7 +50154,7 @@
+>                         23514: R_X86_64_32S     kmalloc_caches+0x50
+>     23518:      call   2351d <mwifiex_scan_networks+0x11d>
+>                         23519: R_X86_64_PLT32   __tsan_read8-0x4
+> -   2351d:      mov    $0x225,%edx
+> +   2351d:      mov    $0x224,%edx
+>     23522:      mov    $0xdc0,%esi
+>     23527:      mov    0x0(%rip),%rdi        # 2352e <mwifiex_scan_networks+0x12e>
+>                         2352a: R_X86_64_PC32    kmalloc_caches+0x4c
+> scan.o
+> _@@ -5582,7 +5582,7 @@
+>                         4394: R_X86_64_32S      kmalloc_caches+0x50
+>      4398:      call   439d <mwifiex_scan_networks+0x11d>
+>                         4399: R_X86_64_PLT32    __tsan_read8-0x4
+> -    439d:      mov    $0x225,%edx
+> +    439d:      mov    $0x224,%edx
+>      43a2:      mov    $0xdc0,%esi
+>      43a7:      mov    0x0(%rip),%rdi        # 43ae <mwifiex_scan_networks+0x12e>
+>                         43aa: R_X86_64_PC32     kmalloc_caches+0x4c
+> 
+> and the reason for that is the following line:
+> 
+> drivers/net/wireless/marvell/mwifiex/scan.c:
+> 1517         scan_cfg_out = kzalloc(sizeof(union mwifiex_scan_cmd_config_tlv),
+> 1518                                GFP_KERNEL);
+> 
+> sizeof(union mwifiex_scan_cmd_config_tlv) is now one-byte smaller due to the
+> flex-array transformation:
+> 
+>   46 union mwifiex_scan_cmd_config_tlv {
+>   47         /* Scan configuration (variable length) */
+>   48         struct mwifiex_scan_cmd_config config;
+>   49         /* Max allocated block */
+>   50         u8 config_alloc_buf[MAX_SCAN_CFG_ALLOC];
+>   51 };
+
+Interesting! So this looks like it's fixing a minor bug in the original
+implementation which was allocation 1 byte too much.
+
+> 
+> Notice that MAX_SCAN_CFG_ALLOC is defined in terms of
+> sizeof(struct mwifiex_ie_types_rates_param_set), see:
+> 
+>   26 /* Memory needed to store supported rate */
+>   27 #define RATE_TLV_MAX_SIZE   (sizeof(struct mwifiex_ie_types_rates_param_set) \
+>   28                                 + HOSTCMD_SUPPORTED_RATES)
+> 
+>   37 /* Maximum memory needed for a mwifiex_scan_cmd_config with all TLVs at max */
+>   38 #define MAX_SCAN_CFG_ALLOC (sizeof(struct mwifiex_scan_cmd_config)        \
+>   39                                 + sizeof(struct mwifiex_ie_types_num_probes)   \
+>   40                                 + sizeof(struct mwifiex_ie_types_htcap)       \
+>   41                                 + CHAN_TLV_MAX_SIZE                 \
+>   42                                 + RATE_TLV_MAX_SIZE                 \
+>   43                                 + WILDCARD_SSID_TLV_MAX_SIZE)
+
+Yeah, the config_alloc_buf size appears to be very specifically
+calculated, so this seems sane to me.
+
 > 
 > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
 > routines on memcpy() and help us make progress towards globally
 > enabling -fstrict-flex-arrays=3 [1].
 > 
-> This results in no differences in binary output.
-> 
 > Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/256
+> Link: https://github.com/KSPP/linux/issues/252
 > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
