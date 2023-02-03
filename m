@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC4CC636D3
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 00:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C21C63797
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 00:35:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232424AbjBCAff (ORCPT
+        id S233129AbjBCAfg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 19:35:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60830 "EHLO
+        Thu, 2 Feb 2023 19:35:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232714AbjBCAf2 (ORCPT
+        with ESMTP id S232764AbjBCAfa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 19:35:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A2B64682;
+        Thu, 2 Feb 2023 19:35:30 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 572A366F89;
         Thu,  2 Feb 2023 16:35:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D431E61D11;
-        Fri,  3 Feb 2023 00:35:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C216BC433D2;
+        by sin.source.kernel.org (Postfix) with ESMTPS id 8B5B3CE2DB6;
         Fri,  3 Feb 2023 00:35:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6431C433EF;
+        Fri,  3 Feb 2023 00:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675384523;
-        bh=gNpeNx44gA3Dz1NMaDk9iVn8+H0TL/VgfW5SQ5YlGbY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qjkssc12B6Z7Jid7N0PlwYqWkcRej2GRbrk/JGUFYC4JYRa4PYiI9FJcmENCVu5zO
-         YNVBCkCFntvNb7VCkeDOUtbJadIRNuy0tV7H/xRIK4tbtRkDZs8BlqTDuDFnaFslt2
-         HucE4jB3y+JyPeEtHifi/VIy5dqEMI4zR4yplR9KiwZmIOif7hIiaORmM8GZCgB8++
-         IxmFsADCiEsHkXrAL6v5rorsLr3TLJhg/As0WKtGqNartHy9GbigQX/a1rWE0p0ao1
-         +Gz0/+22cjlqnNiLbjVrgdeFd7aDJhLdI6lgyVRMJCJYYepBEEMCnLwUZzJpfEP0Ki
-         8kn77abxnAi5g==
+        s=k20201202; t=1675384521;
+        bh=cppJMXW9ZL6PTCEMa3vqfRQLevKrfI0/qUWAsdqZOYg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=o0HR/GOi32olxSWXaTHdXWp+bL/xv+DgtnM/yk/cS/cGc8yCHPkO3QrwkQnL3+OWJ
+         dXGIhvpr4k5xPKvApg4JjyMIz/hyfSGMJ07IfYVasEv4zYz6B7sz2hKOMUtpeAfZfz
+         aXgWyzBYujZBaB/lGs86NwbdHDX2vlqdmTfGNjdFC1LYfyP38F58aFW3ulTkPJ7Cwc
+         vTQvGoLX3IYQ6EJg5utqi6KkSmB+8ncMYCjeweKkDUXoUitTLJ5fdHvVen77LPhEr4
+         WGV4MtyvGPOu0g/IFszTW2uWvDyVVR9cPQeTc1ByvBOboIYX0YXe1LnT9xXkeftcoI
+         z//qwgIxFaTig==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -41,94 +41,104 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Seth Jenkins <sethjenkins@google.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Marco Elver <elver@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 v2 02/15] panic: unset panic_on_warn inside panic()
-Date:   Thu,  2 Feb 2023 16:33:41 -0800
-Message-Id: <20230203003354.85691-3-ebiggers@kernel.org>
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 4.14 v2 00/15] Backport oops_limit to 4.14
+Date:   Thu,  2 Feb 2023 16:33:39 -0800
+Message-Id: <20230203003354.85691-1-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230203003354.85691-1-ebiggers@kernel.org>
-References: <20230203003354.85691-1-ebiggers@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+This series backports the patchset
+"exit: Put an upper limit on how often we can oops"
+(https://lore.kernel.org/linux-mm/20221117233838.give.484-kees@kernel.org/T/#u)
+to 4.14, as recommended at
+https://googleprojectzero.blogspot.com/2023/01/exploiting-null-dereferences-in-linux.html
 
-commit 1a2383e8b84c0451fd9b1eec3b9aab16f30b597c upstream.
+Changed in v2:
+   - Fixed a build error in mm/kasan/report.c by dropping the patch "mm:
+     kasan: do not panic if both panic_on_warn and kasan_multishot set".
 
-In the current code, the following three places need to unset
-panic_on_warn before calling panic() to avoid recursive panics:
+Eric W. Biederman (2):
+  exit: Add and use make_task_dead.
+  objtool: Add a missing comma to avoid string concatenation
 
-kernel/kcsan/report.c: print_report()
-kernel/sched/core.c: __schedule_bug()
-mm/kfence/report.c: kfence_report_error()
+Jann Horn (1):
+  exit: Put an upper limit on how often we can oops
 
-In order to avoid copy-pasting "panic_on_warn = 0" all over the places,
-it is better to move it inside panic() and then remove it from the other
-places.
+Kees Cook (7):
+  exit: Expose "oops_count" to sysfs
+  exit: Allow oops_limit to be disabled
+  panic: Consolidate open-coded panic_on_warn checks
+  panic: Introduce warn_limit
+  panic: Expose "warn_count" to sysfs
+  docs: Fix path paste-o for /sys/kernel/warn_count
+  exit: Use READ_ONCE() for all oops/warn limit reads
 
-Link: https://lkml.kernel.org/r/1644324666-15947-4-git-send-email-yangtiezhu@loongson.cn
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Marco Elver <elver@google.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Xuefeng Li <lixuefeng@loongson.cn>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
----
- kernel/panic.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+Nathan Chancellor (2):
+  hexagon: Fix function name in die()
+  h8300: Fix build errors from do_exit() to make_task_dead() transition
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 207ceac3a432e..bd7c3ea3bf1e6 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -139,6 +139,16 @@ void panic(const char *fmt, ...)
- 	int old_cpu, this_cpu;
- 	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
- 
-+	if (panic_on_warn) {
-+		/*
-+		 * This thread may hit another WARN() in the panic path.
-+		 * Resetting this prevents additional WARN() from panicking the
-+		 * system on this thread.  Other threads are blocked by the
-+		 * panic_mutex in panic().
-+		 */
-+		panic_on_warn = 0;
-+	}
-+
- 	/*
- 	 * Disable local interrupts. This will prevent panic_smp_self_stop
- 	 * from deadlocking the first cpu that invokes the panic, since
-@@ -536,16 +546,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
- 	if (args)
- 		vprintk(args->fmt, args->args);
- 
--	if (panic_on_warn) {
--		/*
--		 * This thread may hit another WARN() in the panic path.
--		 * Resetting this prevents additional WARN() from panicking the
--		 * system on this thread.  Other threads are blocked by the
--		 * panic_mutex in panic().
--		 */
--		panic_on_warn = 0;
-+	if (panic_on_warn)
- 		panic("panic_on_warn set ...\n");
--	}
- 
- 	print_modules();
- 
+Randy Dunlap (1):
+  ia64: make IA64_MCA_RECOVERY bool instead of tristate
+
+Tiezhu Yang (1):
+  panic: unset panic_on_warn inside panic()
+
+Xiaoming Ni (1):
+  sysctl: add a new register_sysctl_init() interface
+
+ .../ABI/testing/sysfs-kernel-oops_count       |  6 ++
+ .../ABI/testing/sysfs-kernel-warn_count       |  6 ++
+ Documentation/sysctl/kernel.txt               | 20 +++++
+ arch/alpha/kernel/traps.c                     |  6 +-
+ arch/alpha/mm/fault.c                         |  2 +-
+ arch/arm/kernel/traps.c                       |  2 +-
+ arch/arm/mm/fault.c                           |  2 +-
+ arch/arm64/kernel/traps.c                     |  2 +-
+ arch/arm64/mm/fault.c                         |  2 +-
+ arch/h8300/kernel/traps.c                     |  3 +-
+ arch/h8300/mm/fault.c                         |  2 +-
+ arch/hexagon/kernel/traps.c                   |  2 +-
+ arch/ia64/Kconfig                             |  2 +-
+ arch/ia64/kernel/mca_drv.c                    |  2 +-
+ arch/ia64/kernel/traps.c                      |  2 +-
+ arch/ia64/mm/fault.c                          |  2 +-
+ arch/m68k/kernel/traps.c                      |  2 +-
+ arch/m68k/mm/fault.c                          |  2 +-
+ arch/microblaze/kernel/exceptions.c           |  4 +-
+ arch/mips/kernel/traps.c                      |  2 +-
+ arch/nios2/kernel/traps.c                     |  4 +-
+ arch/openrisc/kernel/traps.c                  |  2 +-
+ arch/parisc/kernel/traps.c                    |  2 +-
+ arch/powerpc/kernel/traps.c                   |  2 +-
+ arch/s390/kernel/dumpstack.c                  |  2 +-
+ arch/s390/kernel/nmi.c                        |  2 +-
+ arch/sh/kernel/traps.c                        |  2 +-
+ arch/sparc/kernel/traps_32.c                  |  4 +-
+ arch/sparc/kernel/traps_64.c                  |  4 +-
+ arch/x86/entry/entry_32.S                     |  6 +-
+ arch/x86/entry/entry_64.S                     |  6 +-
+ arch/x86/kernel/dumpstack.c                   |  4 +-
+ arch/xtensa/kernel/traps.c                    |  2 +-
+ fs/proc/proc_sysctl.c                         | 33 ++++++++
+ include/linux/kernel.h                        |  1 +
+ include/linux/sched/task.h                    |  1 +
+ include/linux/sysctl.h                        |  3 +
+ kernel/exit.c                                 | 72 ++++++++++++++++++
+ kernel/panic.c                                | 75 ++++++++++++++++---
+ kernel/sched/core.c                           |  3 +-
+ mm/kasan/report.c                             |  3 +-
+ tools/objtool/check.c                         |  3 +-
+ 42 files changed, 251 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-oops_count
+ create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
+
+
+base-commit: 3949d16100044eeb6723eca03b1038b469fb9ae8
 -- 
 2.39.1
 
