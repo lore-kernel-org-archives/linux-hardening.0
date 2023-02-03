@@ -2,46 +2,47 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01F4C636D6
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 10:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F26C636D6
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 10:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233418AbjBCKXf (ORCPT
+        id S231922AbjBCKd3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 05:23:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46104 "EHLO
+        Fri, 3 Feb 2023 05:33:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233471AbjBCKX0 (ORCPT
+        with ESMTP id S233049AbjBCKdA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 05:23:26 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D21C19694;
-        Fri,  3 Feb 2023 02:23:05 -0800 (PST)
+        Fri, 3 Feb 2023 05:33:00 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95338A07D0;
+        Fri,  3 Feb 2023 02:31:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 82D59B82A68;
-        Fri,  3 Feb 2023 10:22:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8D2C433EF;
-        Fri,  3 Feb 2023 10:22:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C57E61ECF;
+        Fri,  3 Feb 2023 10:31:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0405BC433EF;
+        Fri,  3 Feb 2023 10:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1675419776;
-        bh=zQYHj2KM02S7NwV8wPHwHGe2qHKXTCHAN6ATf9utus8=;
+        s=korg; t=1675420283;
+        bh=A3tC2FbFK0ui4EdTlSAS2z7JqfxGBW7AJ2cXa2P2ug8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SNP3a22+Ohd1n0QVErt9ueJifs8fLtRNrxXJT1hRoAcBE7RFItIipXVo8HwRcraVg
-         yONpeSRn+a2uBqF3rIRdNmafKbm3MH+Q9ySrOfw5zXZlZz+X5IPjUwPyE1eiHcdbXL
-         VEKh3WKTEOOsqBJ25ja25lMH8ZXotjlVMMBroX4A=
+        b=u/UWUXvQBEeFPq3wCtF1p6dWuFix8Ay9/nFySh/jLRcKcJQw3fdBdtPXh2M0fadx4
+         MOtU/xCoLx2UhhtM5p+TBUiQzC6/+QqU0Bxol+AOyuzuGk/KuN7cUhR3BGimG+rreG
+         g98DI5BoPfchJoSzfwyD3/+AdoVMD3JdDLktzggY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         patches@lists.linux.dev, kernel test robot <lkp@intel.com>,
         linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 4.19 77/80] docs: Fix path paste-o for /sys/kernel/warn_count
-Date:   Fri,  3 Feb 2023 11:13:11 +0100
-Message-Id: <20230203101018.546022139@linuxfoundation.org>
+        Eric Biggers <ebiggers@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 129/134] docs: Fix path paste-o for /sys/kernel/warn_count
+Date:   Fri,  3 Feb 2023 11:13:54 +0100
+Message-Id: <20230203101029.620154017@linuxfoundation.org>
 X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230203101015.263854890@linuxfoundation.org>
-References: <20230203101015.263854890@linuxfoundation.org>
+In-Reply-To: <20230203101023.832083974@linuxfoundation.org>
+References: <20230203101023.832083974@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -69,11 +70,13 @@ Fixes: 8b05aa263361 ("panic: Expose "warn_count" to sysfs")
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-kernel-warn_count |    2 +-
+ Documentation/ABI/testing/sysfs-kernel-warn_count | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-kernel-warn_count b/Documentation/ABI/testing/sysfs-kernel-warn_count
+index 08f083d2fd51..90a029813717 100644
 --- a/Documentation/ABI/testing/sysfs-kernel-warn_count
 +++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
 @@ -1,4 +1,4 @@
@@ -82,5 +85,8 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  Date:		November 2022
  KernelVersion:	6.2.0
  Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
+-- 
+2.39.0
+
 
 
