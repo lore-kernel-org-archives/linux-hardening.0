@@ -2,155 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B05DC61DA4
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 16:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD1FC61DA4
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 16:29:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233007AbjBCQZ4 (ORCPT
+        id S232054AbjBCQ3p (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 11:25:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48888 "EHLO
+        Fri, 3 Feb 2023 11:29:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232387AbjBCQZs (ORCPT
+        with ESMTP id S231261AbjBCQ3o (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 11:25:48 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17D9EA6B9F;
-        Fri,  3 Feb 2023 08:25:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675441547; x=1706977547;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vIRC4xnaApbPW8RCCJgEQXnu08a0bMVna8tyTv2MRHQ=;
-  b=Py+NP4thkZbXh0tNJQ//Ow9qleoK0j/YxWbpW8j2xGpVgbopq7rM2rAK
-   +FNSk9Skj6EoxB9McbT+zPr/QFKbZ7gU5Au8ILGM6CWILsyeMOjyo1VYx
-   DCl/A+N70aqmihKHc0x8FRglx23+6nxKGRE2LLUJQtE8ON8nd2e6G3hqy
-   UGRBj1OvITlNz9h9Xn2TCSS0PbM69V8kA3fx5Dudp/paQvCPJBq3MxMO9
-   qnJwhPF9udfnkhrbvESp532Eze/IDWcgf1JTDa251U+RFMC9hnJW83jdQ
-   a+RbOTsBirFH5kQOaOX1scYrQzCHehyEaWlRb7VGHep3T6lZIi/29Qiyy
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="316783306"
-X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
-   d="scan'208";a="316783306"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 08:25:46 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="911208619"
-X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
-   d="scan'208";a="911208619"
-Received: from hheck-mobl.amr.corp.intel.com (HELO [10.212.230.180]) ([10.212.230.180])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 08:25:45 -0800
-Message-ID: <851920c5-31c9-ddd9-3e2d-57d379aa0671@intel.com>
-Date:   Fri, 3 Feb 2023 08:25:44 -0800
+        Fri, 3 Feb 2023 11:29:44 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FED8A7ED3
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Feb 2023 08:29:43 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id be8so5746452plb.7
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Feb 2023 08:29:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=EGj5KCWeluHnuZthHjKS/p0W/Q63My14ajFgn/N7qhE=;
+        b=VnPfY6G7WLkodXEsJkzaXZAEnTsENaxYzDFISjb6PNoaycBXUugUZezZK1sL6bZ2d5
+         CIABhclo6LVO8xyysXi6VjdhLtrl2TjHQqTKNhN/kNLaroMQ7b5CnnhZ6/XL+aqL2sN0
+         kgbGj04aiIaBJig1rV44FxUURpCdpvCBDE0EU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EGj5KCWeluHnuZthHjKS/p0W/Q63My14ajFgn/N7qhE=;
+        b=4pzU/4/0YdtoH2KudNdNm0YU4F7scxLoPys3D5ks79vSYDvsVlKr+ZvEfbZprhUx5O
+         foZljohnS7SKfSoZtJ5lyWYCH9jXwBeBxHz/VbpCMiz58uUZCgMAX3p1sUQnolY339DW
+         ML+DvGx1QHEKviON4+bdu2JejZ95LUI1Z47QBT8haDxFuv/i1ETGa5+C5HMRKDScbTb8
+         J+bTYIWia7ioQXiWZ62UBXwDocoViwPISw0n2jsH9FomB3kqYgTqSvVTPLf3zDy0YPN5
+         akhjPP+3L3xs89GaKgMAyJnXYbuHG97rFY0x1PTFJpDk/8IdsesPbDYv04hKBLYyOXjO
+         KZQQ==
+X-Gm-Message-State: AO0yUKVjLan9NNcHIldC2MEwu8olWH3J39hZOFTjPoVaFBkktRPFvpCF
+        cjFEy2n5PoM5AMDnCKfqXgFSrg==
+X-Google-Smtp-Source: AK7set+bY+B15yGzpYLybxs7pdiMEx2TrMbimOis4YoDfiySO3n8L/uGAam2EAZZNsS8vm3OkApl1g==
+X-Received: by 2002:a17:903:22cf:b0:192:4f85:b91d with SMTP id y15-20020a17090322cf00b001924f85b91dmr12771941plg.46.1675441782953;
+        Fri, 03 Feb 2023 08:29:42 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d7-20020a170902b70700b001869b988d93sm1800377pls.187.2023.02.03.08.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Feb 2023 08:29:42 -0800 (PST)
+Message-ID: <63dd3676.170a0220.1f1b2.3244@mx.google.com>
+X-Google-Original-Message-ID: <202302031629.@keescook>
+Date:   Fri, 3 Feb 2023 16:29:41 +0000
+From:   Kees Cook <keescook@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ASoC: uapi: Replace zero-length arrays with
+ __DECLARE_FLEX_ARRAY() helper
+References: <YzIzUjUuJKf0mkKg@work>
+ <fcd83e77-a3fb-9061-771a-8509ea6f5950@embeddedor.com>
+ <Y9wmnfTi/p4FuRmd@sirena.org.uk>
+ <bb43c410-bd8c-66fe-19a1-0f41442838eb@embeddedor.com>
+ <Y90ExljX2qCsowhu@sirena.org.uk>
+ <652684af-bd10-99da-1ed8-104407493428@embeddedor.com>
+ <Y90P3kik6ONZg3U4@sirena.org.uk>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
-Content-Language: en-US
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Roxana Bradescu <roxabee@chromium.org>,
-        Adam Langley <agl@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>
-References: <20230125012801.362496-1-ebiggers@kernel.org>
- <14506678-918f-81e1-2c26-2b347ff50701@intel.com>
- <CAG48ez1NaWarARJj5SBdKKTYFO2MbX7xO75Rk0Q2iK8LX4BwFA@mail.gmail.com>
- <394c92e2-a9aa-37e1-7a34-d7569ac844fd@intel.com>
- <CAG48ez0ZK3pMqkto4DTZPNyddYcv8jPHQDNhYoFEPvSRLf80fQ@mail.gmail.com>
- <e37a17c4-8611-6d1d-85ad-fcd04ff285e1@intel.com> <Y9MAvhQYlOe4l2BM@gmail.com>
- <8b2771ce-9cfa-54cc-de6b-e80ce7af0a93@intel.com>
- <16e3217b-1561-51ea-7514-014e27240402@intel.com>
- <Y9oMmYWzy7mlk3D9@sol.localdomain>
- <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <c5809098-9066-d90d-1bcc-108a11525cac@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y90P3kik6ONZg3U4@sirena.org.uk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/1/23 10:09, Dave Hansen wrote:
-> Good questions.  I want to make sure what I'm saying here is accurate,
-> and I don't have good answers to those right now.  We're working on it,
-> and should have something useful to say in the next couple of days.
+On Fri, Feb 03, 2023 at 01:45:02PM +0000, Mark Brown wrote:
+> On Fri, Feb 03, 2023 at 07:27:03AM -0600, Gustavo A. R. Silva wrote:
+> 
+> > I think we have run into this same issue (you not being listed in the
+> > MAINTAINERS file) at least once in the past, right? (thinkingface)
+> 
+> > IMHO, the sensible solution for this is to keep the MAINTAINERS file
+> > up-to-date. So, get_maintainer.pl can continue to be useful for people.
+> 
+> Sure, feel free to send an update...
 
-This is an attempt to make sure that everyone that is concerned about
-DOITM behavior has all the same information as Intel folks before we
-make a decision about a kernel implementation.
-
-Here we go...
-
-The execution latency of the DOIT instructions[1] does not depend on the
-value of data operands on all currently-supported Intel processors. This
-includes all processors that enumerate DOITM support.  There are no
-plans for any processors where this behavior would change, despite the
-DOITM architecture theoretically allowing it.
-
-So, what's the point of DOITM in the first place?  Fixed execution
-latency does not mean that programs as a whole will have constant
-overall latency.  DOITM currently affects features which do not affect
-execution latency but may, for instance, affect overall program latency
-due to side-effects of prefetching on the cache.  Even with fixed
-instruction execution latency, these side-effects can matter especially
-to the paranoid.
-
-Today, those affected features are:
- * Data Dependent Prefetchers (DDP)[2]
- * Some Fast Store Forwarding Predictors (FSFP)[3].
-
-There are existing controls for those features, including
-spec_store_bypass_disable=[4].  Some paranoid software may already have
-mitigations in place that are a superset of DOITM.  In addition, both
-DDP and FSFP were also designed to limit nastiness when crossing
-privilege boundaries.  Please see the linked docs for more details.
-
-That's basically the Intel side of things.  Everyone else should have
-all the background that I have.  Now back to maintainer mode...
-
-So, in short, I don't think everyone's crypto libraries are busted today
-when DOITM=0.  I don't think they're going to _become_ busted any time soon.
-
-Where do we go from here?  There are a few choices:
-
-1. Apply the patch in this thread, set DOITM=1 always.  Today, this
-   reduces exposure to DDP and FSFP, but probably only for userspace.
-   It reduces exposure to any future predictors under the DOITM umbrella
-   and also from Intel changing its mind.
-2. Ignore DOITM, leave it to the hardware default of DOITM=0.  Today,
-   this probably just steers folks to using relatively heavyweight
-   mitigations (like SSBD) if they want DDP/FSFP disabled.  It also
-   leaves Linux exposed to Intel changing its mind on its future plans.
-3. Apply the patch in this thread, but leave DOITM=0 as the default.
-   This lets folks enable DOITM on a moment's notice if the need arises.
-
-There are some other crazier choices like adding ABI to toggle DOITM for
-userspace, but I'm not sure they're even worth discussing.
-
-#1 is obviously the only way to go if the DOITM architecture remains
-as-is.  There is talk of making changes, like completely removing the
-idea of variable execution latency.  But that's a slow process and would
-be a non-starter if *anyone* (like other OSes) is depending on the
-existing DOITM definition.
-
-My inclination is to wait a couple of weeks to see which way DOITM is
-headed and if the definition is likely to get changed.  Does anyone feel
-any greater sense of urgency?
+Is this accurate?
 
 
-1.
-https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/resources/data-operand-independent-timing-instructions.html
-2.
-https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/data-dependent-prefetcher.html
-3.
-https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/fast-store-forwarding-predictor.html
-4. https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7f86d02cb427..e21a3412a546 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19564,6 +19564,8 @@ F:	Documentation/devicetree/bindings/sound/
+ F:	Documentation/sound/soc/
+ F:	include/dt-bindings/sound/
+ F:	include/sound/soc*
++F:	include/sound/sof/
++F:	include/uapi/sound/asoc.h
+ F:	sound/soc/
+ 
+ SOUND - SOUND OPEN FIRMWARE (SOF) DRIVERS
 
 
-
+-- 
+Kees Cook
