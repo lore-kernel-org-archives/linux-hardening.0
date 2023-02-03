@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A212C6379F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CAFC64EC4
 	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 00:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233264AbjBCA2W (ORCPT
+        id S233295AbjBCA2X (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Feb 2023 19:28:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54598 "EHLO
+        Thu, 2 Feb 2023 19:28:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233112AbjBCA2P (ORCPT
+        with ESMTP id S233129AbjBCA2Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Feb 2023 19:28:15 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32A9D470B5;
+        Thu, 2 Feb 2023 19:28:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671052CC76;
         Thu,  2 Feb 2023 16:28:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C20D261D53;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 08FF4B828DC;
         Fri,  3 Feb 2023 00:28:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B509AC4339E;
-        Fri,  3 Feb 2023 00:28:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B3DC433EF;
+        Fri,  3 Feb 2023 00:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675384091;
-        bh=WvfZsR/qctVDMMgvWrh4xPNS2c2uTlwTbpaBFr6WSq8=;
+        s=k20201202; t=1675384089;
+        bh=uR+rWazLwbtNzV99k2M2cRim465eq897QVUvq4Ip/WY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4gow5X3uDJ2gi1ESqCwb54pny7cHxWJU552R0JQPgoumFFvJiYCSa5Av32qHJvHy
-         4TFku71YxxrRWQT8WZx8yQ/ofQfo/9mAD+11BFgva32XL+u0J/EXzTuh7X7vQcP1iQ
-         kGM/YvkD5KOUUy1AFTx/PVjUnjH9UgS7gkBKqPHI6yrJ/dCaE4MrOcyS0GcazjSg+n
-         jFdlrIIfWmyCUV3f+lmrCZ0sP4YvJ0npw2s1I5Ph5oVUYGUy5gujMJXTFh1ORy5mIX
-         3m0W9o06ZYHTqWlov7EOGwuxWyNQRuvRcKXK7Op/sUxU0dz+8pAkrK6QgzhN/c/Dsc
-         mHpltrnfx9scQ==
+        b=GrN8c1zq+J+itxtunkdMTASPZg3ADtKBZAoYkr5TDGJnnVIXeFU58Tj7z0Tk0OQWl
+         cdPhkafoM3qHSPg/G4FqZwCFBOVREy+4vmcsZBuaE7BKER/x6bAHvCxLzNheJvIHO+
+         87K1PrwD/bskFQRy6EzWeoyigHHdWmmLgrN5lURl0B+IOWwnHXigvRbMZT+rPWuADu
+         AhyB7bUO4yTzLYhqHYPz8nFcIF+rxSRm+zaiRvGI2WqZoanyIgBEZ0bKoY9On1MAkS
+         sXv+I+bXzQlKd6L3stJdGVJTfb086t+szFLDUNsMemTi+8/47v5/j/+HMBOUyB8Erk
+         5sLGxv6kzY0oQ==
 From:   Eric Biggers <ebiggers@kernel.org>
 To:     stable@vger.kernel.org
 Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
@@ -42,16 +42,35 @@ Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
         Jann Horn <jannh@google.com>,
         "Eric W . Biederman" <ebiederm@xmission.com>,
         linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Petr Mladek <pmladek@suse.com>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        David Gow <davidgow@google.com>,
         tangmeng <tangmeng@uniontech.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Petr Mladek <pmladek@suse.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         Tiezhu Yang <yangtiezhu@loongson.cn>,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
         Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 4.19 v2 13/15] panic: Expose "warn_count" to sysfs
-Date:   Thu,  2 Feb 2023 16:27:15 -0800
-Message-Id: <20230203002717.49198-14-ebiggers@kernel.org>
+Subject: [PATCH 4.19 v2 11/15] panic: Consolidate open-coded panic_on_warn checks
+Date:   Thu,  2 Feb 2023 16:27:13 -0800
+Message-Id: <20230203002717.49198-12-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230203002717.49198-1-ebiggers@kernel.org>
 References: <20230203002717.49198-1-ebiggers@kernel.org>
@@ -63,85 +82,120 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Kees Cook <keescook@chromium.org>
 
-commit 8b05aa26336113c4cea25f1c333ee8cd4fc212a6 upstream.
+commit 79cc1ba7badf9e7a12af99695a557e9ce27ee967 upstream.
 
-Since Warn count is now tracked and is a fairly interesting signal, add
-the entry /sys/kernel/warn_count to expose it to userspace.
+Several run-time checkers (KASAN, UBSAN, KFENCE, KCSAN, sched) roll
+their own warnings, and each check "panic_on_warn". Consolidate this
+into a single function so that future instrumentation can be added in
+a single location.
 
-Cc: Petr Mladek <pmladek@suse.com>
+Cc: Marco Elver <elver@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Gow <davidgow@google.com>
 Cc: tangmeng <tangmeng@uniontech.com>
-Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
 Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: kasan-dev@googlegroups.com
+Cc: linux-mm@kvack.org
 Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20221117234328.594699-6-keescook@chromium.org
+Reviewed-by: Marco Elver <elver@google.com>
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+Link: https://lore.kernel.org/r/20221117234328.594699-4-keescook@chromium.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- .../ABI/testing/sysfs-kernel-warn_count       |  6 +++++
- kernel/panic.c                                | 22 +++++++++++++++++--
- 2 files changed, 26 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-warn_count
+ include/linux/kernel.h | 1 +
+ kernel/panic.c         | 9 +++++++--
+ kernel/sched/core.c    | 3 +--
+ mm/kasan/report.c      | 3 +--
+ 4 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-warn_count b/Documentation/ABI/testing/sysfs-kernel-warn_count
-new file mode 100644
-index 0000000000000..08f083d2fd51b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
-@@ -0,0 +1,6 @@
-+What:		/sys/kernel/oops_count
-+Date:		November 2022
-+KernelVersion:	6.2.0
-+Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
-+Description:
-+		Shows how many times the system has Warned since last boot.
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 50733abbe548e..a28ec4c2f3f5a 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -327,6 +327,7 @@ extern long (*panic_blink)(int state);
+ __printf(1, 2)
+ void panic(const char *fmt, ...) __noreturn __cold;
+ void nmi_panic(struct pt_regs *regs, const char *msg);
++void check_panic_on_warn(const char *origin);
+ extern void oops_enter(void);
+ extern void oops_exit(void);
+ void print_oops_end_marker(void);
 diff --git a/kernel/panic.c b/kernel/panic.c
-index d1a5360262f04..dbb6e27d33e10 100644
+index a078d413042f2..08b8adc55b2bf 100644
 --- a/kernel/panic.c
 +++ b/kernel/panic.c
-@@ -29,6 +29,7 @@
- #include <linux/bug.h>
- #include <linux/ratelimit.h>
- #include <linux/debugfs.h>
-+#include <linux/sysfs.h>
- #include <asm/sections.h>
+@@ -125,6 +125,12 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
+ }
+ EXPORT_SYMBOL(nmi_panic);
  
- #define PANIC_TIMER_STEP 100
-@@ -71,6 +72,25 @@ static __init int kernel_panic_sysctls_init(void)
- late_initcall(kernel_panic_sysctls_init);
- #endif
- 
-+static atomic_t warn_count = ATOMIC_INIT(0);
-+
-+#ifdef CONFIG_SYSFS
-+static ssize_t warn_count_show(struct kobject *kobj, struct kobj_attribute *attr,
-+			       char *page)
++void check_panic_on_warn(const char *origin)
 +{
-+	return sysfs_emit(page, "%d\n", atomic_read(&warn_count));
++	if (panic_on_warn)
++		panic("%s: panic_on_warn set ...\n", origin);
 +}
 +
-+static struct kobj_attribute warn_count_attr = __ATTR_RO(warn_count);
-+
-+static __init int kernel_panic_sysfs_init(void)
-+{
-+	sysfs_add_file_to_group(kernel_kobj, &warn_count_attr.attr, NULL);
-+	return 0;
-+}
-+late_initcall(kernel_panic_sysfs_init);
-+#endif
-+
- static long no_blink(int state)
- {
- 	return 0;
-@@ -148,8 +168,6 @@ EXPORT_SYMBOL(nmi_panic);
+ /**
+  *	panic - halt the system
+  *	@fmt: The text string to print
+@@ -540,8 +546,7 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
+ 	if (args)
+ 		vprintk(args->fmt, args->args);
  
- void check_panic_on_warn(const char *origin)
- {
--	static atomic_t warn_count = ATOMIC_INIT(0);
--
- 	if (panic_on_warn)
- 		panic("%s: panic_on_warn set ...\n", origin);
+-	if (panic_on_warn)
+-		panic("panic_on_warn set ...\n");
++	check_panic_on_warn("kernel");
+ 
+ 	print_modules();
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a034642497718..46227cc48124d 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3316,8 +3316,7 @@ static noinline void __schedule_bug(struct task_struct *prev)
+ 		print_ip_sym(preempt_disable_ip);
+ 		pr_cont("\n");
+ 	}
+-	if (panic_on_warn)
+-		panic("scheduling while atomic\n");
++	check_panic_on_warn("scheduling while atomic");
+ 
+ 	dump_stack();
+ 	add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index 5c169aa688fde..3ae996824a040 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -176,8 +176,7 @@ static void kasan_end_report(unsigned long *flags)
+ 	pr_err("==================================================================\n");
+ 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+ 	spin_unlock_irqrestore(&report_lock, *flags);
+-	if (panic_on_warn)
+-		panic("panic_on_warn set ...\n");
++	check_panic_on_warn("KASAN");
+ 	kasan_enable_current();
+ }
  
 -- 
 2.39.1
