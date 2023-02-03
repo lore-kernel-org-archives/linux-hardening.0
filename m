@@ -2,91 +2,266 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F26C636D6
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 10:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A22C636CC
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 11:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231922AbjBCKd3 (ORCPT
+        id S232335AbjBCLe7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 05:33:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
+        Fri, 3 Feb 2023 06:34:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233049AbjBCKdA (ORCPT
+        with ESMTP id S232198AbjBCLes (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 05:33:00 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95338A07D0;
-        Fri,  3 Feb 2023 02:31:24 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C57E61ECF;
-        Fri,  3 Feb 2023 10:31:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0405BC433EF;
-        Fri,  3 Feb 2023 10:31:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1675420283;
-        bh=A3tC2FbFK0ui4EdTlSAS2z7JqfxGBW7AJ2cXa2P2ug8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u/UWUXvQBEeFPq3wCtF1p6dWuFix8Ay9/nFySh/jLRcKcJQw3fdBdtPXh2M0fadx4
-         MOtU/xCoLx2UhhtM5p+TBUiQzC6/+QqU0Bxol+AOyuzuGk/KuN7cUhR3BGimG+rreG
-         g98DI5BoPfchJoSzfwyD3/+AdoVMD3JdDLktzggY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        patches@lists.linux.dev, kernel test robot <lkp@intel.com>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 129/134] docs: Fix path paste-o for /sys/kernel/warn_count
-Date:   Fri,  3 Feb 2023 11:13:54 +0100
-Message-Id: <20230203101029.620154017@linuxfoundation.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230203101023.832083974@linuxfoundation.org>
-References: <20230203101023.832083974@linuxfoundation.org>
-User-Agent: quilt/0.67
+        Fri, 3 Feb 2023 06:34:48 -0500
+Received: from out28-197.mail.aliyun.com (out28-197.mail.aliyun.com [115.124.28.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8B682915A;
+        Fri,  3 Feb 2023 03:34:43 -0800 (PST)
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436263|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_social|0.0714235-0.0146264-0.91395;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047208;MF=victor@allwinnertech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.R9hZOV8_1675424079;
+Received: from SunxiBot.allwinnertech.com(mailfrom:victor@allwinnertech.com fp:SMTPD_---.R9hZOV8_1675424079)
+          by smtp.aliyun-inc.com;
+          Fri, 03 Feb 2023 19:34:40 +0800
+From:   Victor Hassan <victor@allwinnertech.com>
+To:     keescook@chromium.org
+Cc:     tony.luck@intel.com, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pstore/blk: Export a method to implemente panic_write()
+Date:   Fri,  3 Feb 2023 19:35:15 +0800
+Message-Id: <20230203113515.93540-1-victor@allwinnertech.com>
+X-Mailer: git-send-email 2.29.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+The panic_write() is necessary to write the pstore frontend message
+to blk devices when panic. Here is a way to register panic_write when
+we use "best_effort" way to register the pstore blk-backend.
 
-commit 00dd027f721e0458418f7750d8a5a664ed3e5994 upstream.
+Usage:
 
-Running "make htmldocs" shows that "/sys/kernel/oops_count" was
-duplicated. This should have been "warn_count":
+    xx_register_pstore_panic_write(pstore_blk_notifier_type type,
+	    struct pstore_device_info *pdi)
+    {
+	switch (type) {
+	case PSTORE_BLK_BACKEND_REGISTER:
+	case PSTORE_BLK_BACKEND_PANIC_DRV_REGISTER:
+	    ...
 
-  Warning: /sys/kernel/oops_count is defined 2 times:
-  ./Documentation/ABI/testing/sysfs-kernel-warn_count:0
-  ./Documentation/ABI/testing/sysfs-kernel-oops_count:0
+	    pid->zone.panic_write = xxx;
 
-Fix the typo.
+	    ...
+	    break;
+	case PSTORE_BLK_BACKEND_UNREGISTER:
+	case PSTORE_BLK_BACKEND_PANIC_DRV_UNREGISTER:
+	    ...
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/linux-doc/202212110529.A3Qav8aR-lkp@intel.com
-Fixes: 8b05aa263361 ("panic: Expose "warn_count" to sysfs")
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+	    pdi->zone.panic_write = NULL;
+
+	    ...
+	    break;
+	default:
+	    break;
+	}
+
+    }
+
+    static struct pstore_blk_notifier pbn = {
+	.notitifer_call = xx_register_pstore_panic_write;
+    }
+
+    use {un,}register_pstore_blk_panic_notifier() to register/unregister
+    pstore_blk_notifier
+
+Signed-off-by: Victor Hassan <victor@allwinnertech.com>
 ---
- Documentation/ABI/testing/sysfs-kernel-warn_count | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/pstore/blk.c            | 101 +++++++++++++++++++++++++++++++++++--
+ include/linux/pstore_blk.h |  19 +++++++
+ 2 files changed, 116 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-warn_count b/Documentation/ABI/testing/sysfs-kernel-warn_count
-index 08f083d2fd51..90a029813717 100644
---- a/Documentation/ABI/testing/sysfs-kernel-warn_count
-+++ b/Documentation/ABI/testing/sysfs-kernel-warn_count
-@@ -1,4 +1,4 @@
--What:		/sys/kernel/oops_count
-+What:		/sys/kernel/warn_count
- Date:		November 2022
- KernelVersion:	6.2.0
- Contact:	Linux Kernel Hardening List <linux-hardening@vger.kernel.org>
+diff --git a/fs/pstore/blk.c b/fs/pstore/blk.c
+index 4ae0cfcd15f2..2c70a3bff1ae 100644
+--- a/fs/pstore/blk.c
++++ b/fs/pstore/blk.c
+@@ -18,6 +18,7 @@
+ #include <linux/file.h>
+ #include <linux/init_syscalls.h>
+ #include <linux/mount.h>
++#include <linux/notifier.h>
+ 
+ static long kmsg_size = CONFIG_PSTORE_BLK_KMSG_SIZE;
+ module_param(kmsg_size, long, 0400);
+@@ -72,6 +73,14 @@ static DEFINE_MUTEX(pstore_blk_lock);
+ static struct file *psblk_file;
+ static struct pstore_device_info *pstore_device_info;
+ 
++static struct {
++	struct raw_notifier_head chain;
++	struct pstore_blk_notifier *pbn;
++	bool notifier;
++} pstore_blk_panic_notifier = {
++	.chain = RAW_NOTIFIER_INIT(pstore_blk_panic_notifier.chain),
++};
++
+ #define check_size(name, alignsize) ({				\
+ 	long _##name_ = (name);					\
+ 	_##name_ = _##name_ <= 0 ? 0 : (_##name_ * 1024);	\
+@@ -94,6 +103,82 @@ static struct pstore_device_info *pstore_device_info;
+ 	dev->zone.name = _##name_;				\
+ }
+ 
++static int pstore_blk_panic_notifier_call(struct notifier_block *nb,
++			     unsigned long action, void *data)
++{
++	int ret = 0;
++	struct pstore_blk_notifier *pbn =
++				container_of(nb, struct pstore_blk_notifier, nb);
++
++	if (pbn)
++		ret = pbn->notifier_call(action, data);
++
++	return ret;
++}
++
++int register_pstore_blk_panic_notifier(struct pstore_blk_notifier *pbn)
++{
++	int err = 0;
++	struct notifier_block *nb;
++
++	mutex_lock(&pstore_blk_lock);
++
++	if (pstore_blk_panic_notifier.notifier) {
++		pr_info("had register panic\n");
++		goto unlock;
++	}
++
++	nb = &pbn->nb;
++	nb->notifier_call = pstore_blk_panic_notifier_call;
++
++	err = raw_notifier_chain_register(&pstore_blk_panic_notifier.chain, nb);
++	if (err)
++		goto unlock;
++
++	if (pstore_device_info)
++		err = nb->notifier_call(nb, PSTORE_BLK_BACKEND_PANIC_DRV_REGISTER,
++				pstore_device_info);
++
++	if (!err)
++		pstore_blk_panic_notifier.notifier = true;
++
++unlock:
++	mutex_unlock(&pstore_blk_lock);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(register_pstore_blk_panic_notifier);
++
++void unregister_pstore_blk_panic_notifier(struct pstore_blk_notifier *pbn)
++{
++	struct notifier_block *nb = &pbn->nb;
++
++	mutex_lock(&pstore_blk_lock);
++
++	raw_notifier_chain_unregister(&pstore_blk_panic_notifier.chain, nb);
++
++	if (pstore_device_info)
++		nb->notifier_call(nb, PSTORE_BLK_BACKEND_PANIC_DRV_UNREGISTER,
++				pstore_device_info);
++
++	pstore_blk_panic_notifier.notifier = false;
++
++	mutex_unlock(&pstore_blk_lock);
++}
++EXPORT_SYMBOL_GPL(unregister_pstore_blk_panic_notifier);
++
++static int pstore_blk_panic_notifier_init_call(struct pstore_device_info *pdi)
++{
++	return raw_notifier_call_chain(&pstore_blk_panic_notifier.chain,
++			PSTORE_BLK_BACKEND_REGISTER, pdi);
++}
++
++static int pstore_blk_panic_notifier_exit_call(struct pstore_device_info *pdi)
++{
++	return raw_notifier_call_chain(&pstore_blk_panic_notifier.chain,
++			PSTORE_BLK_BACKEND_UNREGISTER, pdi);
++}
++
+ static int __register_pstore_device(struct pstore_device_info *dev)
+ {
+ 	int ret;
+@@ -301,16 +386,22 @@ static int __init __best_effort_init(void)
+ 	if (!best_effort_dev)
+ 		return -ENOMEM;
+ 
++	strcpy(best_effort_dev->path, blkdev);
+ 	best_effort_dev->zone.read = psblk_generic_blk_read;
+ 	best_effort_dev->zone.write = psblk_generic_blk_write;
+ 
+ 	ret = __register_pstore_blk(best_effort_dev,
+ 				    early_boot_devpath(blkdev));
+-	if (ret)
++	if (ret) {
+ 		kfree(best_effort_dev);
+-	else
+-		pr_info("attached %s (%lu) (no dedicated panic_write!)\n",
+-			blkdev, best_effort_dev->zone.total_size);
++	} else {
++		if (pstore_blk_panic_notifier_init_call(best_effort_dev) == NOTIFY_OK)
++			pr_info("attached %s (%lu) (dedicated panic_write!)\n",
++				    blkdev, best_effort_dev->zone.total_size);
++		else
++			pr_info("attached %s (%lu) (no dedicated panic_write!)\n",
++				    blkdev, best_effort_dev->zone.total_size);
++	}
+ 
+ 	return ret;
+ }
+@@ -326,6 +417,8 @@ static void __exit __best_effort_exit(void)
+ 	if (psblk_file) {
+ 		struct pstore_device_info *dev = pstore_device_info;
+ 
++		pstore_blk_panic_notifier_exit_call(dev);
++
+ 		__unregister_pstore_device(dev);
+ 		kfree(dev);
+ 		fput(psblk_file);
+diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
+index 924ca07aafbd..4c1fc8debdc7 100644
+--- a/include/linux/pstore_blk.h
++++ b/include/linux/pstore_blk.h
+@@ -17,13 +17,32 @@
+  *
+  */
+ struct pstore_device_info {
++	char path[80];
+ 	unsigned int flags;
+ 	struct pstore_zone_info zone;
+ };
+ 
++enum pstore_blk_notifier_type {
++	PSTORE_BLK_BACKEND_REGISTER = 1,
++	PSTORE_BLK_BACKEND_PANIC_DRV_REGISTER,
++	PSTORE_BLK_BACKEND_UNREGISTER,
++	PSTORE_BLK_BACKEND_PANIC_DRV_UNREGISTER,
++};
++
++typedef	int (*pstore_blk_notifier_fn_t)(pstore_blk_notifier_type type,
++		struct pstore_device_info *dev);
++
++struct pstore_blk_notifier {
++	struct notifier_block nb;
++	pstore_blk_notifier_fn_t notifier_call;
++};
++
+ int  register_pstore_device(struct pstore_device_info *dev);
+ void unregister_pstore_device(struct pstore_device_info *dev);
+ 
++int register_pstore_blk_panic_notifier(struct pstore_blk_notifier *pbn);
++void unregister_pstore_blk_panic_notifier(struct pstore_blk_notifier *nb);
++
+ /**
+  * struct pstore_blk_config - the pstore_blk backend configuration
+  *
 -- 
-2.39.0
-
-
+2.29.0
 
