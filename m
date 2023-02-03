@@ -2,106 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD1FC61DA4
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 16:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84C2C05027
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Feb 2023 16:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232054AbjBCQ3p (ORCPT
+        id S232392AbjBCQc1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 11:29:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53152 "EHLO
+        Fri, 3 Feb 2023 11:32:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231261AbjBCQ3o (ORCPT
+        with ESMTP id S233034AbjBCQcX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 11:29:44 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FED8A7ED3
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Feb 2023 08:29:43 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id be8so5746452plb.7
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Feb 2023 08:29:43 -0800 (PST)
+        Fri, 3 Feb 2023 11:32:23 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F17A8409
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Feb 2023 08:32:18 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id nm12-20020a17090b19cc00b0022c2155cc0bso5426041pjb.4
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Feb 2023 08:32:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:subject:cc
          :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=EGj5KCWeluHnuZthHjKS/p0W/Q63My14ajFgn/N7qhE=;
-        b=VnPfY6G7WLkodXEsJkzaXZAEnTsENaxYzDFISjb6PNoaycBXUugUZezZK1sL6bZ2d5
-         CIABhclo6LVO8xyysXi6VjdhLtrl2TjHQqTKNhN/kNLaroMQ7b5CnnhZ6/XL+aqL2sN0
-         kgbGj04aiIaBJig1rV44FxUURpCdpvCBDE0EU=
+        bh=kpK6KgZXQ54pBMdUsHP+HUpnEsKdgQDEGB4BNBeZB9M=;
+        b=gEmQGizGKZQHCA1ytHRM6UDGT97glHo2J7W9naosZ1VMVQbEFAURGR1sGpP6uwVbvt
+         4FjCWBQ64s0+iMVMRk/Pdg87ZmByxjnhEqBvknvFlw31g48ojNq2Q0J04MnoArHb71ip
+         WlF5qPrqDiZDdq6oiyt694Dpp6cDfmOXnqHQw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:subject:cc
          :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EGj5KCWeluHnuZthHjKS/p0W/Q63My14ajFgn/N7qhE=;
-        b=4pzU/4/0YdtoH2KudNdNm0YU4F7scxLoPys3D5ks79vSYDvsVlKr+ZvEfbZprhUx5O
-         foZljohnS7SKfSoZtJ5lyWYCH9jXwBeBxHz/VbpCMiz58uUZCgMAX3p1sUQnolY339DW
-         ML+DvGx1QHEKviON4+bdu2JejZ95LUI1Z47QBT8haDxFuv/i1ETGa5+C5HMRKDScbTb8
-         J+bTYIWia7ioQXiWZ62UBXwDocoViwPISw0n2jsH9FomB3kqYgTqSvVTPLf3zDy0YPN5
-         akhjPP+3L3xs89GaKgMAyJnXYbuHG97rFY0x1PTFJpDk/8IdsesPbDYv04hKBLYyOXjO
-         KZQQ==
-X-Gm-Message-State: AO0yUKVjLan9NNcHIldC2MEwu8olWH3J39hZOFTjPoVaFBkktRPFvpCF
-        cjFEy2n5PoM5AMDnCKfqXgFSrg==
-X-Google-Smtp-Source: AK7set+bY+B15yGzpYLybxs7pdiMEx2TrMbimOis4YoDfiySO3n8L/uGAam2EAZZNsS8vm3OkApl1g==
-X-Received: by 2002:a17:903:22cf:b0:192:4f85:b91d with SMTP id y15-20020a17090322cf00b001924f85b91dmr12771941plg.46.1675441782953;
-        Fri, 03 Feb 2023 08:29:42 -0800 (PST)
+        bh=kpK6KgZXQ54pBMdUsHP+HUpnEsKdgQDEGB4BNBeZB9M=;
+        b=NPi7WDD6Yf20LjedQZzC71OQrODQQqbqASuEtZ9ENqZY7MFRbHY1ISLpoYAWVuoYfa
+         dfYKNeTg1fwyP63eCDF5NlxNM9ntJyAQUaBKXl/aXzAspXStEf1Lx935PuE4xcLaKq+J
+         UTo5QxMPmbnnGj/njEuMSww7RaEb/DpHaBACle8jNW+ddCQ9zk2ucZrniIObzwBveGKy
+         9o2/wvGBzYwHaSLbvcO6fCQaGjWn5pK092C8PC++eas+fVAQ9obpnDgHZU+0/u4DLAHW
+         F3Km2gCLSI97k4YOxPsOZ07I3+uKh1QtIlMDGkotU0NTbtJZQTxSc3+tiyx3jSuSM25J
+         /KfA==
+X-Gm-Message-State: AO0yUKVEKxsq6xudOCxpY6d2faq7wRAlV0eG4gVQ+hKOba1ry4AIoDX1
+        JeFyMyxPZVZMain6YRSBWeqaMg==
+X-Google-Smtp-Source: AK7set8qwbVjBH5W+V+grJP9ndtfdT04u2cUvUjM4C67XgmP2kzzkMLxlD4daBx8I9135CQ3ShRNSQ==
+X-Received: by 2002:a05:6a20:8bb0:b0:b8:5f00:bbdc with SMTP id m48-20020a056a208bb000b000b85f00bbdcmr10653610pzh.50.1675441937646;
+        Fri, 03 Feb 2023 08:32:17 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d7-20020a170902b70700b001869b988d93sm1800377pls.187.2023.02.03.08.29.42
+        by smtp.gmail.com with ESMTPSA id b9-20020a1709027e0900b00198ac2769aesm1803803plm.135.2023.02.03.08.32.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 08:29:42 -0800 (PST)
-Message-ID: <63dd3676.170a0220.1f1b2.3244@mx.google.com>
-X-Google-Original-Message-ID: <202302031629.@keescook>
-Date:   Fri, 3 Feb 2023 16:29:41 +0000
+        Fri, 03 Feb 2023 08:32:17 -0800 (PST)
+Message-ID: <63dd3711.170a0220.c22c8.349c@mx.google.com>
+X-Google-Original-Message-ID: <202302031631.@keescook>
+Date:   Fri, 3 Feb 2023 16:32:16 +0000
 From:   Kees Cook <keescook@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        John Stultz <jstultz@google.com>,
+        Yongqin Liu <yongqin.liu@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Marco Elver <elver@google.com>,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>,
+        Alexander Potapenko <glider@google.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] ASoC: uapi: Replace zero-length arrays with
- __DECLARE_FLEX_ARRAY() helper
-References: <YzIzUjUuJKf0mkKg@work>
- <fcd83e77-a3fb-9061-771a-8509ea6f5950@embeddedor.com>
- <Y9wmnfTi/p4FuRmd@sirena.org.uk>
- <bb43c410-bd8c-66fe-19a1-0f41442838eb@embeddedor.com>
- <Y90ExljX2qCsowhu@sirena.org.uk>
- <652684af-bd10-99da-1ed8-104407493428@embeddedor.com>
- <Y90P3kik6ONZg3U4@sirena.org.uk>
+Subject: Re: [PATCH] arm64: Support Clang UBSAN trap codes for better
+ reporting
+References: <20230202223653.never.473-kees@kernel.org>
+ <Y9zawkok2AWy/brZ@FVFF77S0Q05N>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y90P3kik6ONZg3U4@sirena.org.uk>
+In-Reply-To: <Y9zawkok2AWy/brZ@FVFF77S0Q05N>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Feb 03, 2023 at 01:45:02PM +0000, Mark Brown wrote:
-> On Fri, Feb 03, 2023 at 07:27:03AM -0600, Gustavo A. R. Silva wrote:
+On Fri, Feb 03, 2023 at 09:58:26AM +0000, Mark Rutland wrote:
+> On Thu, Feb 02, 2023 at 10:36:57PM +0000, Kees Cook wrote:
+> > On arm64, Clang encodes the UBSAN check type in the esr. Extract this
+> > and actually report UBSAN traps with some specificity when building with
+> > CONFIG_UBSAN_TRAP. Before:
 > 
-> > I think we have run into this same issue (you not being listed in the
-> > MAINTAINERS file) at least once in the past, right? (thinkingface)
+> Really minor nit, but could we mention CONFIG_UBSAN_TRAP at the start, e.g.
+> change that first sentence to:
 > 
-> > IMHO, the sensible solution for this is to keep the MAINTAINERS file
-> > up-to-date. So, get_maintainer.pl can continue to be useful for people.
+> | When CONFIG_UBSAN_TRAP=y on arm64, Clang encodes the UBSAN check type into a
+> | BRK immediate, which is reported in the ESR.
 > 
-> Sure, feel free to send an update...
+> I was initially confused since I was aware that there are usually direct
+> function calls for the reporting.
 
-Is this accurate?
+Sure, I can rearrange the commit log.
 
+> 
+> Other than that, this looks fine to me, and regardless of the above:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7f86d02cb427..e21a3412a546 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19564,6 +19564,8 @@ F:	Documentation/devicetree/bindings/sound/
- F:	Documentation/sound/soc/
- F:	include/dt-bindings/sound/
- F:	include/sound/soc*
-+F:	include/sound/sof/
-+F:	include/uapi/sound/asoc.h
- F:	sound/soc/
- 
- SOUND - SOUND OPEN FIRMWARE (SOF) DRIVERS
+Thanks!
 
+-Kees
 
 -- 
 Kees Cook
