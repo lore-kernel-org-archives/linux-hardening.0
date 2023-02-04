@@ -2,102 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEAFC61DA4
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Feb 2023 19:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC49C636CC
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Feb 2023 21:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232807AbjBDTnv (ORCPT
+        id S231176AbjBDVEl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Feb 2023 14:43:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43050 "EHLO
+        Sat, 4 Feb 2023 16:04:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232340AbjBDTnu (ORCPT
+        with ESMTP id S229877AbjBDVEl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Feb 2023 14:43:50 -0500
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id 9ACCD1DB86
-        for <linux-hardening@vger.kernel.org>; Sat,  4 Feb 2023 11:43:48 -0800 (PST)
-Received: (qmail 603745 invoked by uid 1000); 4 Feb 2023 14:43:47 -0500
-Date:   Sat, 4 Feb 2023 14:43:47 -0500
-From:   Alan Stern <stern@rowland.harvard.edu>
+        Sat, 4 Feb 2023 16:04:41 -0500
+X-Greylist: delayed 2317 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 04 Feb 2023 13:04:40 PST
+Received: from mx.treblig.org (mx.treblig.org [46.43.15.161])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C0C20D1B
+        for <linux-hardening@vger.kernel.org>; Sat,  4 Feb 2023 13:04:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+        ; s=bytemarkmx; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID
+        :Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=1oAfu/SOsAux7HPahvBnZKGF5xOl4eordA1YvytBOis=; b=EDjVFs1o/tyF4WjFmK6FY1touD
+        SFV1NgXcpkuah8uH3HIkqCSqBBSEZAb+cqYrpcHCiPFxh0/vCsSv5NiT45P44c4h0ZyEJxL0w2hyK
+        gnWi9TgVoBHgSPeyO/ux2VzXxiQUSMzezY7igUeqRG8aRlDLIk4LKycQAy9xuCdccOddlimc4Xyxo
+        qk8aGr5Y/Q+qCuBL4x5BUam2f3CFreLxyHN57uXZ6d5SlDsA8HapnQANzRtTmKh1wHW81M5TYoFXN
+        bUKDEkBwdXBFbe4GjN3nD/q0sx9va/h2qlipR9XqTsD9AuQ0NwBb43uU94VxXGp3W2cJxzrOMsS0/
+        K6NexaNQ==;
+Received: from dg by mx.treblig.org with local (Exim 4.94.2)
+        (envelope-from <dg@treblig.org>)
+        id 1pOP6X-003ROY-Tx; Sat, 04 Feb 2023 20:25:45 +0000
+Date:   Sat, 4 Feb 2023 20:25:45 +0000
+From:   "Dr. David Alan Gilbert" <linux@treblig.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] USB: ene_usb6250: Allocate enough memory for full object
-Message-ID: <Y961c1/JIkDUqMbC@rowland.harvard.edu>
-References: <20230204183546.never.849-kees@kernel.org>
+Cc:     Dave Kleikamp <shaggy@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] jfs: Use unsigned variable for length calculations
+Message-ID: <Y96/SUlPUl7xH1NO@gallifrey>
+References: <20230204183355.never.877-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230204183546.never.849-kees@kernel.org>
+In-Reply-To: <20230204183355.never.877-kees@kernel.org>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/5.10.0-12-amd64 (x86_64)
+X-Uptime: 20:25:10 up 330 days,  6:50,  1 user,  load average: 0.00, 0.00,
+ 0.00
+User-Agent: Mutt/2.0.5 (2021-01-21)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Feb 04, 2023 at 10:35:46AM -0800, Kees Cook wrote:
-> The allocation of PageBuffer is 512 bytes in size, but the dereferencing
-> of struct ms_bootblock_idi (also size 512) happens at a calculated offset
-> within the allocation, which means the object could potentially extend
-> beyond the end of the allocation. Avoid this case by just allocating
-> enough space to catch any accesses beyond the end. Seen with GCC 13:
-
-In principle, it would be better to add a runtime check for overflow.  
-Doing it this way means that the code could read an invalid value.
-
-In fact, I get the impression that this code tries to load a data 
-structure which might straddle a page boundary by reading in just the 
-first page.  Either that, or else EntryOffset is always a multiple of 
-512 so the error cannot arise.
-
-In any event, it's doubtful that there are very many devices of this 
-sort still in use, so it probably doesn't matter.
-
-Alan Stern
-
+* Kees Cook (keescook@chromium.org) wrote:
+> To avoid confusing the compiler about possible negative sizes, switch
+> "ssize" which can never be negative from int to u32.  Seen with GCC 13:
 > 
-> ../drivers/usb/storage/ene_ub6250.c: In function 'ms_lib_process_bootblock':
-> ../drivers/usb/storage/ene_ub6250.c:1050:44: warning: array subscript 'struct ms_bootblock_idi[0]' is partly outside array bounds of 'unsigned char[512]' [-Warray-bounds=]
->  1050 |                         if (le16_to_cpu(idi->wIDIgeneralConfiguration) != MS_IDI_GENERAL_CONF)
->       |                                            ^~
-> ../include/uapi/linux/byteorder/little_endian.h:37:51: note: in definition of macro '__le16_to_cpu'
->    37 | #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
->       |                                                   ^
-> ../drivers/usb/storage/ene_ub6250.c:1050:29: note: in expansion of macro 'le16_to_cpu'
->  1050 |                         if (le16_to_cpu(idi->wIDIgeneralConfiguration) != MS_IDI_GENERAL_CONF)
->       |                             ^~~~~~~~~~~
-> In file included from ../drivers/usb/storage/ene_ub6250.c:5:
-> In function 'kmalloc',
->     inlined from 'ms_lib_process_bootblock' at ../drivers/usb/storage/ene_ub6250.c:942:15:
-> ../include/linux/slab.h:580:24: note: at offset [256, 512] into object of size 512 allocated by 'kmalloc_trace'
->   580 |                 return kmalloc_trace(
->       |                        ^~~~~~~~~~~~~~
->   581 |                                 kmalloc_caches[kmalloc_type(flags)][index],
->       |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   582 |                                 flags, size);
->       |                                 ~~~~~~~~~~~~
+> ../fs/jfs/namei.c: In function 'jfs_symlink': ../include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' pointer overflow between offset 0 and size [-2147483648, -1]
+> [-Warray-bounds=]
+>    57 | #define __underlying_memcpy     __builtin_memcpy
+>       |                                 ^
+> ...
+> ../fs/jfs/namei.c:950:17: note: in expansion of macro 'memcpy'
+>   950 |                 memcpy(ip->i_link, name, ssize);
+>       |                 ^~~~~~
 > 
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-usb@vger.kernel.org
-> Cc: usb-storage@lists.one-eyed-alien.net
+> Cc: Dave Kleikamp <shaggy@kernel.org>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Dave Chinner <dchinner@redhat.com>
+> Cc: jfs-discussion@lists.sourceforge.net
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  drivers/usb/storage/ene_ub6250.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/jfs/namei.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/usb/storage/ene_ub6250.c b/drivers/usb/storage/ene_ub6250.c
-> index 6012603f3630..97c66c0d91f4 100644
-> --- a/drivers/usb/storage/ene_ub6250.c
-> +++ b/drivers/usb/storage/ene_ub6250.c
-> @@ -939,7 +939,7 @@ static int ms_lib_process_bootblock(struct us_data *us, u16 PhyBlock, u8 *PageDa
->  	struct ms_lib_type_extdat ExtraData;
->  	struct ene_ub6250_info *info = (struct ene_ub6250_info *) us->extra;
+> diff --git a/fs/jfs/namei.c b/fs/jfs/namei.c
+> index b29d68b5eec5..494b9f4043cf 100644
+> --- a/fs/jfs/namei.c
+> +++ b/fs/jfs/namei.c
+> @@ -876,7 +876,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
+>  	tid_t tid;
+>  	ino_t ino = 0;
+>  	struct component_name dname;
+> -	int ssize;		/* source pathname size */
+> +	u32 ssize;		/* source pathname size */
+
+Had you considered using size_t - this is set from a strlen and used by a memcpy
+that both talk size_t.
+
+Dave
+
+>  	struct btstack btstack;
+>  	struct inode *ip = d_inode(dentry);
+>  	s64 xlen = 0;
+> @@ -957,7 +957,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
+>  		if (ssize > sizeof (JFS_IP(ip)->i_inline))
+>  			JFS_IP(ip)->mode2 &= ~INLINEEA;
 >  
-> -	PageBuffer = kmalloc(MS_BYTES_PER_PAGE, GFP_KERNEL);
-> +	PageBuffer = kzalloc(MS_BYTES_PER_PAGE * 2, GFP_KERNEL);
->  	if (PageBuffer == NULL)
->  		return (u32)-1;
+> -		jfs_info("jfs_symlink: fast symlink added  ssize:%d name:%s ",
+> +		jfs_info("jfs_symlink: fast symlink added  ssize:%u name:%s ",
+>  			 ssize, name);
+>  	}
+>  	/*
+> @@ -987,7 +987,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
+>  		ip->i_size = ssize - 1;
+>  		while (ssize) {
+>  			/* This is kind of silly since PATH_MAX == 4K */
+> -			int copy_size = min(ssize, PSIZE);
+> +			u32 copy_size = min_t(u32, ssize, PSIZE);
+>  
+>  			mp = get_metapage(ip, xaddr, PSIZE, 1);
 >  
 > -- 
 > 2.34.1
 > 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
