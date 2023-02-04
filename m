@@ -2,114 +2,154 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECA8C636D4
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Feb 2023 01:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1F3C61DA4
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Feb 2023 18:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbjBDB5I (ORCPT
+        id S231705AbjBDScx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Feb 2023 20:57:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60632 "EHLO
+        Sat, 4 Feb 2023 13:32:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbjBDB5H (ORCPT
+        with ESMTP id S231521AbjBDScw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Feb 2023 20:57:07 -0500
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8175CFFF;
-        Fri,  3 Feb 2023 17:57:02 -0800 (PST)
-Received: by mail-ot1-x32c.google.com with SMTP id 70-20020a9d084c000000b0068bccf754f1so1900913oty.7;
-        Fri, 03 Feb 2023 17:57:02 -0800 (PST)
+        Sat, 4 Feb 2023 13:32:52 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D7130B01
+        for <linux-hardening@vger.kernel.org>; Sat,  4 Feb 2023 10:32:47 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id f16-20020a17090a9b1000b0023058bbd7b2so7162254pjp.0
+        for <linux-hardening@vger.kernel.org>; Sat, 04 Feb 2023 10:32:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TTTmY033OeRGN/EKD8JFUB8h9jNEfxU+2QET99S9mlI=;
-        b=bb5cjbuP/IY7c/Ps78H61Np25tv0ppeortD9RHwREmVHfmCEBoFO3hH6l5644CSc3J
-         kDAUhd/RJTaNjlwsaUN+K8Eht8VmTMs/e8yhHXppPqyCAsTBrog3TqjF31AZMzafVQmV
-         leCfF0OymiRUkhCqPL6rTF7bNQ0ePGuN/uQv6LX3p6rT+lgYENUeqTUn4rnxQYDn2c9L
-         xujiZo9HXkjxqEPrI+46OCJ7+VZAsTsapIpDiayit5mcrFD39Uh0LsV0c/hrOIM+5aNv
-         IjWQMarMT/G78SdIaKbmrQfA6SN49vfQ5fyF/3bs07ERb53Bz7JLHpBVcpwgVPLOjHj5
-         BBig==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hWXqY6vkS6h8Vyi+cCa2wgxLlkbcE67+3y3A1NRgkP0=;
+        b=LExrl+KFcVf2/FYhWCQdYF32QGdh5UXA4AmcX728sSl4odYnnjrrZq16jx3MvQzFcv
+         dQ1H3oGKuIHaSgHT0VSFNVp+YJPAZdUO3p+/taza+s0XIXj0/FP1/7id8OINHB/DuB7T
+         W7YTVEPmQomTURqo0D25gEVKpsdipmXEZZJqw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TTTmY033OeRGN/EKD8JFUB8h9jNEfxU+2QET99S9mlI=;
-        b=h1VsTvmIo2mNnZHcH54IREH7f0QRU0J9NsIkbEJuL9p+wDjs7F3MMU8RGJUj0PH8mz
-         wGZQc3p92UnlNFITpuMVRCLqGaPvtZ80hOCpE7qYS0jql6tMfqgxinVQ9TOMrrFzh5eo
-         k42FFHNHaJf4GeDgTXzy+MCg30WK6XTVYjR1OHAoRwVS8uTsTAhN4YMxcoTo6iQDLiIm
-         8BeYnK5eenunjGW5kjFtOiHEvcm9MWxDpIgBPUG2QV9/a0oD11EVrETOK8clBefOjFR0
-         li9MKG4+AhBv+azQ8vfId/2pwUb+8hgXQNyIps3Ql+TxaDvOp9GAoHfLZ40KaTtPswxH
-         KE8g==
-X-Gm-Message-State: AO0yUKVeS/8nIfDmzoVEPpXImNDs268P2mpg8ObJR0TUusMJIYcuMtyQ
-        7HufbQ8Ru8WxpyHPfrYqqaksUzY+MUM=
-X-Google-Smtp-Source: AK7set/kagwYDFeLn55TK/ylCxSECoRZOrtcUxrHcJODjUAVydjW7jtWfMkRwLeo5yK393/NqwEYyA==
-X-Received: by 2002:a9d:3e06:0:b0:68d:597d:84b1 with SMTP id a6-20020a9d3e06000000b0068d597d84b1mr3502229otd.28.1675475821608;
-        Fri, 03 Feb 2023 17:57:01 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o33-20020a0568301c6100b006864c8043e0sm1807575otg.61.2023.02.03.17.57.00
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hWXqY6vkS6h8Vyi+cCa2wgxLlkbcE67+3y3A1NRgkP0=;
+        b=r0G7jnj4NLO0G5BDa+j34+UKP68SGu2TcJgSgjSgsbbtVQfTc4UA3xEvPvxpF/Mc/x
+         onfPT2/nfAg8jWClVs+P57sEElujLYkkBU3JlaFghdEuz6Dk96ryfHGSMFp6K1NhoxcK
+         7Yj8Vds5c0aeSqGhL8v+e4kmrv5qTsRxx3v3Sh9stnN/+LzLcUsnrkqojkpDqPak0rhr
+         gLs103xnSwO3k7yj2HLT2Ourjfz1msq1k+OjWCcYxiR7SPccHlHam/wVzVnHYipoDPfB
+         vNg3nF/DscgYKpWJVqpgGOVlyspaRVWbNgpcj3D5RovzbJAwNkg/qlJrHyZhZyDtYwN9
+         GCZQ==
+X-Gm-Message-State: AO0yUKVxe5Bgo1I4gIqSOSRyQGHW9T//OF14KxyuPBL/3FJr8oo8rA4L
+        7mqIdIVWB8tuqe/bKOToEGodSA==
+X-Google-Smtp-Source: AK7set8ndlru/LQXkvkAKjSEdQnGbFpts6hOxMVbgJ2BfEljDsnEQJjCuV1dzvs6hCZvsRjEvrk7gQ==
+X-Received: by 2002:a17:902:e0cd:b0:194:457d:6dca with SMTP id e13-20020a170902e0cd00b00194457d6dcamr11858096pla.44.1675535567229;
+        Sat, 04 Feb 2023 10:32:47 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id g21-20020a170902869500b00194a297cb8esm2109672plo.191.2023.02.04.10.32.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 17:57:01 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Fri, 3 Feb 2023 17:57:00 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] lm85: Bounds check to_sensor_dev_attr()->index usage
-Message-ID: <20230204015700.GG3089769@roeck-us.net>
-References: <20230127223744.never.113-kees@kernel.org>
- <20230128131319.GA4173006@roeck-us.net>
- <63dd8c1a.170a0220.d3456.3451@mx.google.com>
+        Sat, 04 Feb 2023 10:32:46 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexei Starovoitov <ast@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] bpf: Replace bpf_lpm_trie_key 0-length array with flexible array
+Date:   Sat,  4 Feb 2023 10:32:44 -0800
+Message-Id: <20230204183241.never.481-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63dd8c1a.170a0220.d3456.3451@mx.google.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3245; h=from:subject:message-id; bh=8UjW+Zy+1y3cIspI89jzw8FmWvL6uos84uq4mMimB0Q=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj3qTM1ht5vMIp0wFAnwtKlrGMR52OBqU2d1wGvknh p4xzmaKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY96kzAAKCRCJcvTf3G3AJvgYD/ 4gbPMJvXXbsBmYsUpuJKym76FsMyPeVmqDsr9eazRsJPrXYT/Cjf+wXXotjT1IukgBmNxSVbq3FsyI jnPq041qMY/zMM3NYurX38M6lIf9VeD7IPwUlsQrDpMOf3RYYrOA/WOCuFbfqW8FvgyQCGRAtW95Jb lW1DpWFeXkiMxxqtJhD7QS04V8887YQ0DkXwbM/t8JVaKudE9LMgVvTxcimzGPC1eBClzkIlw+5L2/ 2Tz50uOg1PRSd6F9LP0m56P3WtX2+0OMRTFg03CMcNcpHYOSQRpkRac8CZG2qRwtiHxVnj0ekeMAj2 c5+8xwXst7vWDPbVucMDYmX5s2JdpD3Qq+M8OWMFzLuHwgLWYevblaB4pF/35yTCbEnT00bS7rEDtI 8fNBCG558+bobc540bAFf4N8wEPwO+GvG2OsBpZWEBQpGoNaAOJywnklLtZgbDyVWuHsGTabmFLqK9 7Osq6wT3O4Z6+vMUvmIJOJnrvi2hPumoSbm0ihHeKhi1HLCVFQs7xgtRVWOOiTtIZTFmVL+Fm79Q+4 tfEMfE6U827t/hEy7qdSFawVFyO8QibSjlvSTDM2/mTRtW5CEHE9plbSRbEcIPVYftHWqn9tBzLWBO aPMvVw8tolEP/BXWNuXMvFT7TAgaVWSiLkd7jpuUNQAdCP85KusshqzXrVsQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Feb 03, 2023 at 10:35:05PM +0000, Kees Cook wrote:
-> On Sat, Jan 28, 2023 at 05:13:19AM -0800, Guenter Roeck wrote:
-> > On Fri, Jan 27, 2023 at 02:37:45PM -0800, Kees Cook wrote:
-> > > The index into various register arrays was not bounds checked. Add
-> > > checking. Seen under GCC 13:
-> > > 
-> > > drivers/hwmon/lm85.c: In function 'pwm_auto_pwm_minctl_store':
-> > > drivers/hwmon/lm85.c:1110:26: warning: array subscript [0, 31] is outside array bounds of 'struct lm85_autofan[3]' [-Warray-bounds=]
-> > >  1110 |         if (data->autofan[nr].min_off)
-> > >       |             ~~~~~~~~~~~~~^~~~
-> > > drivers/hwmon/lm85.c:317:29: note: while referencing 'autofan'
-> > >   317 |         struct lm85_autofan autofan[3];
-> > >       |                             ^~~~~~~
-> > > 
-> > 
-> > This is a false positive. The value can never be >= 3.
-> > It is derived from the last value of the following
-> > SENSOR_DEVICE_ATTR_RW() entries.
-> > 
-> > I resist making changes like this to the code just because
-> > the compiler can not determine the range of a variable.
-> > It blows up code size amd makes it hard to read just to
-> > make the compiler happy.
-> 
-> I think it's worth it given the index is an "int" and it'd be very easy
-> for things to go wrong in the face of other memory corruption, etc. I've
-> sent a v2 that I think is much more readable and non-invasive but
-> provides similar robustness.
-> 
+Replace deprecated 0-length array in struct bpf_lpm_trie_key with
+flexible array. Found with GCC 13:
 
-That line of argument would suggest that we should perform parameter checks
-on each function entry all over the place, no matter if the range is known
-to be valid or not. Maybe that is the way things are going, but I don't
-like it at all. I have seen that kind of code before, in the telco space,
-where it typically at least doubled code size and resulted in mediocre
-performance, just because of a rule that mandated checking all parameters
-at the beginning of each function.
+../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
+  207 |                                        *(__be16 *)&key->data[i]);
+      |                                                   ^~~~~~~~~~~~~
+../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
+  102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+      |                                                      ^
+../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
+   97 | #define be16_to_cpu __be16_to_cpu
+      |                     ^~~~~~~~~~~~~
+../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
+  206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
+^
+      |                            ^~~~~~~~~~~
+In file included from ../include/linux/bpf.h:7:
+../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
+   82 |         __u8    data[0];        /* Arbitrary size */
+      |                 ^~~~
 
-I assume this is just one of many many patches you plan to send to add
-parameter checks to similar hwmon code ? I _really_ don't want to have
-the hwmon code cluttered with such unnecessary checks.
+This includes fixing the selftest which was incorrectly using a
+variable length struct as a header, identified earlier[1]. Avoid this
+by just explicitly including the prefixlen member instead of struct
+bpf_lpm_trie_key.
 
-Guenter
+[1] https://lore.kernel.org/all/202206281009.4332AA33@keescook/
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Song Liu <song@kernel.org>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@kernel.org>
+Cc: Stanislav Fomichev <sdf@google.com>
+Cc: Hao Luo <haoluo@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Mykola Lysenko <mykolal@fb.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Haowen Bai <baihaowen@meizu.com>
+Cc: bpf@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/uapi/linux/bpf.h                         | 2 +-
+ tools/testing/selftests/bpf/progs/map_ptr_kern.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index ba0f0cfb5e42..5930bc5c7e2c 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -79,7 +79,7 @@ struct bpf_insn {
+ /* Key of an a BPF_MAP_TYPE_LPM_TRIE entry */
+ struct bpf_lpm_trie_key {
+ 	__u32	prefixlen;	/* up to 32 for AF_INET, 128 for AF_INET6 */
+-	__u8	data[0];	/* Arbitrary size */
++	__u8	data[];		/* Arbitrary size */
+ };
+ 
+ struct bpf_cgroup_storage_key {
+diff --git a/tools/testing/selftests/bpf/progs/map_ptr_kern.c b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+index db388f593d0a..543012deb349 100644
+--- a/tools/testing/selftests/bpf/progs/map_ptr_kern.c
++++ b/tools/testing/selftests/bpf/progs/map_ptr_kern.c
+@@ -311,7 +311,7 @@ struct lpm_trie {
+ } __attribute__((preserve_access_index));
+ 
+ struct lpm_key {
+-	struct bpf_lpm_trie_key trie_key;
++	__u32 prefixlen;
+ 	__u32 data;
+ };
+ 
+-- 
+2.34.1
+
