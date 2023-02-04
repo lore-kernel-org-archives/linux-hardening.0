@@ -2,137 +2,162 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3F1C61DA4
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Feb 2023 18:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D458C636CC
+	for <linux-hardening@archiver.kernel.org>; Sat,  4 Feb 2023 18:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233373AbjBDSiR (ORCPT
+        id S232645AbjBDSnQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Feb 2023 13:38:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52710 "EHLO
+        Sat, 4 Feb 2023 13:43:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233338AbjBDSiQ (ORCPT
+        with ESMTP id S231814AbjBDSnP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Feb 2023 13:38:16 -0500
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A89FF34
-        for <linux-hardening@vger.kernel.org>; Sat,  4 Feb 2023 10:38:07 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id cr11so5857416pfb.1
-        for <linux-hardening@vger.kernel.org>; Sat, 04 Feb 2023 10:38:07 -0800 (PST)
+        Sat, 4 Feb 2023 13:43:15 -0500
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E21144BF
+        for <linux-hardening@vger.kernel.org>; Sat,  4 Feb 2023 10:43:13 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id m2so8377896plg.4
+        for <linux-hardening@vger.kernel.org>; Sat, 04 Feb 2023 10:43:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6fDEoGqTn4M8tHZIFak/NxShJ5D2bYMS4qSM2hAzrRQ=;
-        b=gPsX29u+6kriPnFNHXQ1e+Z+/I63bv2w6/ABgZH6PBBl6Ug178ObJsqjlZR+GHOxoV
-         kTylN00AhEPXcyIFFgtgfzTpNA4En+ozGHv9LMI1YOGpdhC5UM7pJ9zfvTpAL19p3byZ
-         ezE6KFvnOBLoSI7ey7Nup0YODsYocZpPomsLc=
+        bh=CT15Fe61vUwD/64ihUgrFOhkpaVZChv2mOqArgfnFSQ=;
+        b=eiUGuCZKLWFxuppxmcdErFuPw8kcrN/X8cjUk51Z648sroXdAKG70azp2RuDKpA0tr
+         owJdN7xND0edLW/hDmPSnuACRJaTbPVKLhDc0bkT/iyVqZ03ZoUx50x2aTDq2dq6TLeZ
+         hCD5QZPCwKgl7/02clYhGoK44AY7ETTyJEro4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6fDEoGqTn4M8tHZIFak/NxShJ5D2bYMS4qSM2hAzrRQ=;
-        b=z9noBiTZaEEdFwQOX8A5fZB6n/v201l4GhwaA5dvISjv5EG3Zwtj0rKAsdqxJwuLhX
-         nMg4uFG/X//X1dI0UMKwCpUY7Vs5HcTxX3aw+M2Zayaa7IAXHHyr0dNKYtY1e7+ai2gF
-         9etphq3rrhCb0eFqcqwoyiV6Mi3/sS4upH7qFKTSZu4QYDwu+eCdMfgNVmVLP6bD5xNU
-         Tqyz+pNwxdl9sJXkDKbmKSJRG2S2/e+QAvkhm2AsSaifqNx+nIQJwUi5J+iB3tRoPoHx
-         dX3ZOkU9M8eqCU1YnHJhWTMkNrSeebsaOg/OBCnq9egcWpicO/EOXbtEII74GTFiDspx
-         1eVg==
-X-Gm-Message-State: AO0yUKWAb84k6ThRCK09yQtuxYSc2c2j+0SnPRjfzL6iAerLZ2XbsAN5
-        x/4K1dV1etEW12jzk+mvjqa8iQ==
-X-Google-Smtp-Source: AK7set/YwlYdPW9UR6iirzqFGCC+oasO3yFZNKKqhLyFcV6lta+B7jP4xC0KNsA8c1d9As00zaQPKA==
-X-Received: by 2002:aa7:8701:0:b0:58b:9b4e:5292 with SMTP id b1-20020aa78701000000b0058b9b4e5292mr13025644pfo.1.1675535886797;
-        Sat, 04 Feb 2023 10:38:06 -0800 (PST)
+        bh=CT15Fe61vUwD/64ihUgrFOhkpaVZChv2mOqArgfnFSQ=;
+        b=6UIu2kOqolFcjXbpic5c5lFK2Sw2jVXLts6LwZXRyyygtlU0pbOPD5QMK6+pOyLWgo
+         DGeqf9ikjRr14MRoIXKfxyPyBoj7UPw2jiujBQhDa1E9EA6f10QS4vbtkzER1sc9wHGF
+         TRb457hdRyr4CS9/9C956exOn8f9nbU8DCpnDOukigLdaqg/beMyrPp3jJqLDChZkh0j
+         eE0INqkNUe3qLbvss98tehDsXw0rWCu5EUy9L/qfVmJ01vQfLcjb8KDvnACXTkyFxpQv
+         vYaphfhQbH80W4E9k9/DbvJxyCsXyefuujE1K0UY1g4NYv1NAuJX3hnFlQw7ZV/P1POH
+         3Ajw==
+X-Gm-Message-State: AO0yUKUF57Z2TBDRpDr/ITeNfVYrDUNEBNRvl/A65P6eD3NfgEkVvFAK
+        CmlK1KjGYcuBpqao/VsSwNRliqggprTHDpru
+X-Google-Smtp-Source: AK7set+OguHXnuMCx+I05bOons29AOR1gkKDUHi5+D3+iJkzGMl2esrw9ya8s/70OhzQEmx1OmRFBA==
+X-Received: by 2002:a17:902:db0a:b0:196:11b1:101d with SMTP id m10-20020a170902db0a00b0019611b1101dmr18542296plx.28.1675536192807;
+        Sat, 04 Feb 2023 10:43:12 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z15-20020aa791cf000000b00590163e1762sm3979816pfa.200.2023.02.04.10.38.06
+        by smtp.gmail.com with ESMTPSA id z186-20020a6265c3000000b005821c109cebsm3972516pfb.199.2023.02.04.10.43.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Feb 2023 10:38:06 -0800 (PST)
+        Sat, 04 Feb 2023 10:43:12 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     Ben Skeggs <bskeggs@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, Lyude Paul <lyude@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] media: imx-jpeg: Bounds check sizeimage access
-Date:   Sat,  4 Feb 2023 10:38:05 -0800
-Message-Id: <20230204183804.never.323-kees@kernel.org>
+Subject: [PATCH] drm/nouveau/disp: More DP_RECEIVER_CAP_SIZE array fixes
+Date:   Sat,  4 Feb 2023 10:43:10 -0800
+Message-Id: <20230204184307.never.825-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2943; h=from:subject:message-id; bh=cx0RiADq3LjGuiWTOC0bT+NjFFTCm0y7hhXMpuGSqv8=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj3qYNwcQ/e0FqMS6Rrx8FnRGnlvv6r+1Bz4HWM3lI nwqMzPmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY96mDQAKCRCJcvTf3G3AJv3AD/ 4k1pyNCwKZi7tUqcOkxzyqcYyWpX34w9TA4RgopSZJ5MlLymvNsUczPaSyadAoIvjQs2fCrV2x3UBV OyNOyFqXUPt581nnkWgYWDUDD6CefqdHe9PVz/Kw0h9lMKC4jCbekeZujCZl9jXTFXl+1MpogBMxX3 f/VuYZwmb/lF05db6XrfbCi/YruJ6XiobUx2inB/WRJrcyP+VbmY4aFw3r6sWSLZ9y713h+UyRh9CV R8uiUMaHMPtxNZwD4hJPXScLJu7iupyNYXJzUcHrGfq2gBy2mK0Nqd3jE6AvoeDy1LZDViE44tTlAb 2nM5LxJ2mLj9V21I8aN4b+t5LRo8dSBuq5DYQ/+ANwDzS7DP6ZZN9N+kxpU4rXdE9J6Ly4UcG8Jv1j pqjvuidV8hiRP4aQu+IxWNBZRLmSkMi/lq8LDOyFAvY8x0+Q+dmoizJ27uauafkNA3f2FvhUdS6BTf TvZRjHYhxUc8kGlDDsSiKiU6W8dM+lGGlNNHajUpvMTlCphTc9fLjv/95ALIr+nQQzN42OP6vnAR/L VtkKR+CrbAx9Eg94pEb2koT+KumkLQs5lpPxaF36DR6pkZFKbyx1MA+L2AByvzIxpSNzCx1nqh0haT CnyjBc0NiEV+ZZz//IxW12G4rjmiQetmJ2YLdThPzjozsa4PY6iAAZVEy9uQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3584; h=from:subject:message-id; bh=JnNn3dbIsEbROnm5CX1us0HBmuYFZMw4sf5w/ChnGaI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj3qc+LjfoVWdTNdXfxPThu4M6rYEGbuQ6QEbCEUC5 cD8hWZuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY96nPgAKCRCJcvTf3G3AJptOD/ 90/A8AiNwMUB9x4NzX2U0+FydJLuIGG723usu0NnXHFRPkvUvqF5kzdECqOBBZAB/3d1FLxadzMXa2 D4QhTC8FWY4x8rGPivaoZkpIN24evj2IQlYEVkhIbOEfAJWKtkc6y84qPl2807PgmOHwJLHJiebxBp 7kg6pjgm2und/RVLa/y60TPb3hpcGdYJegeSGoa4fO9wbm2UAmRMSblKhziMyvEnIOFi8YSWDTkZfu K5pTB4INVMHrX5On4ndNrOBJtWsmZ+r69oNskE8fsydngQ51aajg2zqUF+a7NTwluBbkQHUIJsiIsY NY6YYOaeLk+1LS2mmkBrQzP5HbrKnAknBDdkFSh58rWY0whhmj7beDY0S2R8Kg4aoH/HQxjz+VKLUd j3828GA0zej+YWDaQR2WAoBqGVSnxFhg/yzaNrEYqrDollOcStYLxkI0hmTu9AjFLAiEiz7hvOcqGE B1uQEjLG6tA+LirEtq0Vso9yCnagjkpWTi1QG7O0aUttKPOfMlolrQlclxplbvqptfhOG5oNO335wB xAivfrmu555iDwhbwD8aiGhSugwvJQsQKdy2s2bQCrm9Vv4KRHuuyZzuepBt72BgFrH6hArMWYW+cb xCZuBm3OR4TmswZWOerLBjGJkN37xcaASAC+VxrG1Z4SFmZssHzc2svFQ7dw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The call of mxc_jpeg_get_plane_size() from mxc_jpeg_dec_irq() sets
-plane_no argument to 1. The compiler sees that it's possible to end up
-with an access beyond the bounds of sizeimage, if mem_planes was too
-large:
+More arrays (and arguments) for dcpd were set to 16, when it looks like
+DP_RECEIVER_CAP_SIZE (15) should be used. Fix the remaining cases, seen
+with GCC 13:
 
-        if (plane_no >= fmt->mem_planes)        // mem_planes = 2+
-                return 0;
+../drivers/gpu/drm/nouveau/nvif/outp.c: In function 'nvif_outp_acquire_dp':
+../include/linux/fortify-string.h:57:33: warning: array subscript 'unsigned char[16][0]' is partly outside array bounds of 'u8[15]' {aka 'unsigned char[15]'} [-Warray-bounds=]
+   57 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+...
+../drivers/gpu/drm/nouveau/nvif/outp.c:140:9: note: in expansion of macro 'memcpy'
+  140 |         memcpy(args.dp.dpcd, dpcd, sizeof(args.dp.dpcd));
+      |         ^~~~~~
+../drivers/gpu/drm/nouveau/nvif/outp.c:130:49: note: object 'dpcd' of size [0, 15]
+  130 | nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[DP_RECEIVER_CAP_SIZE],
+      |                                              ~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        if (fmt->mem_planes == fmt->comp_planes) // comp_planes != mem_planes
-                return q_data->sizeimage[plane_no];
-
-        if (plane_no < fmt->mem_planes - 1)     // mem_planes = 2
-                return q_data->sizeimage[plane_no];
-
-comp_planes == 0 or 1 is safe. comp_planes > 2 would be out of bounds.
-
-(This isn't currently possible given the contents of mxc_formats, though.)
-
-Silence the warning by bounds checking comp_planes for future
-robustness. Seen with GCC 13:
-
-In function 'mxc_jpeg_get_plane_size',
-    inlined from 'mxc_jpeg_dec_irq' at ../drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c:729:14:
-../drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c:641:42: warning: array subscript 2 is above array bounds of 'u32[2]' {aka 'unsigned int[2]'} [-Warray-bounds=]
-  641 |                 size += q_data->sizeimage[i];
-      |                         ~~~~~~~~~~~~~~~~~^~~
-In file included from ../drivers/media/platform/nxp/imx-jpeg/mxc-jpeg-hw.h:112,
-                 from ../drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c:63:
-../drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.h: In function 'mxc_jpeg_dec_irq':
-../drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.h:84:41: note: while referencing 'sizeimage'
-   84 |         u32                             sizeimage[MXC_JPEG_MAX_PLANES];
-      |                                         ^~~~~~~~~
-
-Cc: Mirela Rabulea <mirela.rabulea@nxp.com>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: linux-media@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+Fixes: 813443721331 ("drm/nouveau/disp: move DP link config into acquire")
+Cc: Ben Skeggs <bskeggs@redhat.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Karol Herbst <kherbst@redhat.com>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Dave Airlie <airlied@redhat.com>
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/gpu/drm/nouveau/include/nvif/if0012.h    | 4 +++-
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/outp.h  | 3 ++-
+ drivers/gpu/drm/nouveau/nvkm/engine/disp/uoutp.c | 2 +-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-index 6cd015a35f7c..ac44bf23953a 100644
---- a/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-+++ b/drivers/media/platform/nxp/imx-jpeg/mxc-jpeg.c
-@@ -637,6 +637,11 @@ static u32 mxc_jpeg_get_plane_size(struct mxc_jpeg_q_data *q_data, u32 plane_no)
- 		return q_data->sizeimage[plane_no];
+diff --git a/drivers/gpu/drm/nouveau/include/nvif/if0012.h b/drivers/gpu/drm/nouveau/include/nvif/if0012.h
+index eb99d84eb844..16d4ad5023a3 100644
+--- a/drivers/gpu/drm/nouveau/include/nvif/if0012.h
++++ b/drivers/gpu/drm/nouveau/include/nvif/if0012.h
+@@ -2,6 +2,8 @@
+ #ifndef __NVIF_IF0012_H__
+ #define __NVIF_IF0012_H__
  
- 	size = q_data->sizeimage[fmt->mem_planes - 1];
++#include <drm/display/drm_dp.h>
 +
-+	/* Should be impossible given mxc_formats. */
-+	if (WARN_ON_ONCE(fmt->comp_planes > ARRAY_SIZE(q_data->sizeimage)))
-+		return size;
-+
- 	for (i = fmt->mem_planes; i < fmt->comp_planes; i++)
- 		size += q_data->sizeimage[i];
+ union nvif_outp_args {
+ 	struct nvif_outp_v0 {
+ 		__u8 version;
+@@ -63,7 +65,7 @@ union nvif_outp_acquire_args {
+ 				__u8 hda;
+ 				__u8 mst;
+ 				__u8 pad04[4];
+-				__u8 dpcd[16];
++				__u8 dpcd[DP_RECEIVER_CAP_SIZE];
+ 			} dp;
+ 		};
+ 	} v0;
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/outp.h b/drivers/gpu/drm/nouveau/nvkm/engine/disp/outp.h
+index b7631c1ab242..4e7f873f66e2 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/outp.h
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/outp.h
+@@ -3,6 +3,7 @@
+ #define __NVKM_DISP_OUTP_H__
+ #include "priv.h"
  
++#include <drm/display/drm_dp.h>
+ #include <subdev/bios.h>
+ #include <subdev/bios/dcb.h>
+ #include <subdev/bios/dp.h>
+@@ -42,7 +43,7 @@ struct nvkm_outp {
+ 			bool aux_pwr_pu;
+ 			u8 lttpr[6];
+ 			u8 lttprs;
+-			u8 dpcd[16];
++			u8 dpcd[DP_RECEIVER_CAP_SIZE];
+ 
+ 			struct {
+ 				int dpcd; /* -1, or index into SUPPORTED_LINK_RATES table */
+diff --git a/drivers/gpu/drm/nouveau/nvkm/engine/disp/uoutp.c b/drivers/gpu/drm/nouveau/nvkm/engine/disp/uoutp.c
+index 4f0ca709c85a..fc283a4a1522 100644
+--- a/drivers/gpu/drm/nouveau/nvkm/engine/disp/uoutp.c
++++ b/drivers/gpu/drm/nouveau/nvkm/engine/disp/uoutp.c
+@@ -146,7 +146,7 @@ nvkm_uoutp_mthd_release(struct nvkm_outp *outp, void *argv, u32 argc)
+ }
+ 
+ static int
+-nvkm_uoutp_mthd_acquire_dp(struct nvkm_outp *outp, u8 dpcd[16],
++nvkm_uoutp_mthd_acquire_dp(struct nvkm_outp *outp, u8 dpcd[DP_RECEIVER_CAP_SIZE],
+ 			   u8 link_nr, u8 link_bw, bool hda, bool mst)
+ {
+ 	int ret;
 -- 
 2.34.1
 
