@@ -2,124 +2,72 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC49C636CC
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Feb 2023 21:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0FFC636CD
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Feb 2023 07:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231176AbjBDVEl (ORCPT
+        id S229476AbjBEHNm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 4 Feb 2023 16:04:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33966 "EHLO
+        Sun, 5 Feb 2023 02:13:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229877AbjBDVEl (ORCPT
+        with ESMTP id S229447AbjBEHNm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 4 Feb 2023 16:04:41 -0500
-X-Greylist: delayed 2317 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 04 Feb 2023 13:04:40 PST
-Received: from mx.treblig.org (mx.treblig.org [46.43.15.161])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C0C20D1B
-        for <linux-hardening@vger.kernel.org>; Sat,  4 Feb 2023 13:04:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-        ; s=bytemarkmx; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID
-        :Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=1oAfu/SOsAux7HPahvBnZKGF5xOl4eordA1YvytBOis=; b=EDjVFs1o/tyF4WjFmK6FY1touD
-        SFV1NgXcpkuah8uH3HIkqCSqBBSEZAb+cqYrpcHCiPFxh0/vCsSv5NiT45P44c4h0ZyEJxL0w2hyK
-        gnWi9TgVoBHgSPeyO/ux2VzXxiQUSMzezY7igUeqRG8aRlDLIk4LKycQAy9xuCdccOddlimc4Xyxo
-        qk8aGr5Y/Q+qCuBL4x5BUam2f3CFreLxyHN57uXZ6d5SlDsA8HapnQANzRtTmKh1wHW81M5TYoFXN
-        bUKDEkBwdXBFbe4GjN3nD/q0sx9va/h2qlipR9XqTsD9AuQ0NwBb43uU94VxXGp3W2cJxzrOMsS0/
-        K6NexaNQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.94.2)
-        (envelope-from <dg@treblig.org>)
-        id 1pOP6X-003ROY-Tx; Sat, 04 Feb 2023 20:25:45 +0000
-Date:   Sat, 4 Feb 2023 20:25:45 +0000
-From:   "Dr. David Alan Gilbert" <linux@treblig.org>
+        Sun, 5 Feb 2023 02:13:42 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B811DB8E;
+        Sat,  4 Feb 2023 23:13:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 13036B80AB3;
+        Sun,  5 Feb 2023 07:13:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BCD3C433D2;
+        Sun,  5 Feb 2023 07:13:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1675581218;
+        bh=3dm7jZx2o2xV19vr+rbs1ATrGjrGK9Mp7lCwsGZvw7w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lyWeZIurWPiXoZwK7fZVC/M8dOfFuplz5eOhd4FTXgYrXRfpzFykDrHMbbtMciR2R
+         ZFrALA3yu4dih5w8n2/9xAIPcgRdyxFTFG6ZDqkAW9Fhj4D6UnunJBaodLfMrre5/y
+         hJ9WWkEmis7UOUD/T7yROJPjTcfDYgigIrzg7HhU=
+Date:   Sun, 5 Feb 2023 08:13:30 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Dave Kleikamp <shaggy@kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] jfs: Use unsigned variable for length calculations
-Message-ID: <Y96/SUlPUl7xH1NO@gallifrey>
-References: <20230204183355.never.877-kees@kernel.org>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] btrfs: sysfs: Handle NULL return values
+Message-ID: <Y99XGrFvXBL32cOO@kroah.com>
+References: <20230204183510.never.909-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230204183355.never.877-kees@kernel.org>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/5.10.0-12-amd64 (x86_64)
-X-Uptime: 20:25:10 up 330 days,  6:50,  1 user,  load average: 0.00, 0.00,
- 0.00
-User-Agent: Mutt/2.0.5 (2021-01-21)
+In-Reply-To: <20230204183510.never.909-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-* Kees Cook (keescook@chromium.org) wrote:
-> To avoid confusing the compiler about possible negative sizes, switch
-> "ssize" which can never be negative from int to u32.  Seen with GCC 13:
-> 
-> ../fs/jfs/namei.c: In function 'jfs_symlink': ../include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' pointer overflow between offset 0 and size [-2147483648, -1]
-> [-Warray-bounds=]
->    57 | #define __underlying_memcpy     __builtin_memcpy
->       |                                 ^
-> ...
-> ../fs/jfs/namei.c:950:17: note: in expansion of macro 'memcpy'
->   950 |                 memcpy(ip->i_link, name, ssize);
->       |                 ^~~~~~
-> 
-> Cc: Dave Kleikamp <shaggy@kernel.org>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Dave Chinner <dchinner@redhat.com>
-> Cc: jfs-discussion@lists.sourceforge.net
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  fs/jfs/namei.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/jfs/namei.c b/fs/jfs/namei.c
-> index b29d68b5eec5..494b9f4043cf 100644
-> --- a/fs/jfs/namei.c
-> +++ b/fs/jfs/namei.c
-> @@ -876,7 +876,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
->  	tid_t tid;
->  	ino_t ino = 0;
->  	struct component_name dname;
-> -	int ssize;		/* source pathname size */
-> +	u32 ssize;		/* source pathname size */
+On Sat, Feb 04, 2023 at 10:35:10AM -0800, Kees Cook wrote:
+> Each of to_fs_info(), discard_to_fs_info(), and to_space_info() can
+> return NULL values.
 
-Had you considered using size_t - this is set from a strlen and used by a memcpy
-that both talk size_t.
+The code says it could, but I really do not think that is possible at
+all, especially based on the fact that there have never been any crashes
+reported here.
 
-Dave
+So the NULL returns should just be removed instead, right?
 
->  	struct btstack btstack;
->  	struct inode *ip = d_inode(dentry);
->  	s64 xlen = 0;
-> @@ -957,7 +957,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
->  		if (ssize > sizeof (JFS_IP(ip)->i_inline))
->  			JFS_IP(ip)->mode2 &= ~INLINEEA;
->  
-> -		jfs_info("jfs_symlink: fast symlink added  ssize:%d name:%s ",
-> +		jfs_info("jfs_symlink: fast symlink added  ssize:%u name:%s ",
->  			 ssize, name);
->  	}
->  	/*
-> @@ -987,7 +987,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
->  		ip->i_size = ssize - 1;
->  		while (ssize) {
->  			/* This is kind of silly since PATH_MAX == 4K */
-> -			int copy_size = min(ssize, PSIZE);
-> +			u32 copy_size = min_t(u32, ssize, PSIZE);
->  
->  			mp = get_metapage(ip, xaddr, PSIZE, 1);
->  
-> -- 
-> 2.34.1
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+Also, to_space_info() is a macro of container_of() which can not return
+NULL.
+
+And get_btrfs_kobj() is just odd, that probably should be fixed up as
+well, that's an indication that something is wrong with the sysfs code
+if anyone has to attempt to walk the whole kobject parent path :(
+
+So while this patch might fix up the compiler warning, it's logically
+not going to change anything, let's fix this properly.  I can look at it
+next week if someone doesn't beat me to it.
+
+thanks,
+
+greg k-h
