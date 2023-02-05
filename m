@@ -2,72 +2,121 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0FFC636CD
-	for <linux-hardening@archiver.kernel.org>; Sun,  5 Feb 2023 07:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8376BC636CC
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Feb 2023 17:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229476AbjBEHNm (ORCPT
+        id S229437AbjBERh3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 5 Feb 2023 02:13:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53520 "EHLO
+        Sun, 5 Feb 2023 12:37:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjBEHNm (ORCPT
+        with ESMTP id S229379AbjBERh2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 5 Feb 2023 02:13:42 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B811DB8E;
-        Sat,  4 Feb 2023 23:13:41 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 13036B80AB3;
-        Sun,  5 Feb 2023 07:13:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BCD3C433D2;
-        Sun,  5 Feb 2023 07:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1675581218;
-        bh=3dm7jZx2o2xV19vr+rbs1ATrGjrGK9Mp7lCwsGZvw7w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lyWeZIurWPiXoZwK7fZVC/M8dOfFuplz5eOhd4FTXgYrXRfpzFykDrHMbbtMciR2R
-         ZFrALA3yu4dih5w8n2/9xAIPcgRdyxFTFG6ZDqkAW9Fhj4D6UnunJBaodLfMrre5/y
-         hJ9WWkEmis7UOUD/T7yROJPjTcfDYgigIrzg7HhU=
-Date:   Sun, 5 Feb 2023 08:13:30 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] btrfs: sysfs: Handle NULL return values
-Message-ID: <Y99XGrFvXBL32cOO@kroah.com>
-References: <20230204183510.never.909-kees@kernel.org>
+        Sun, 5 Feb 2023 12:37:28 -0500
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12E0193FE;
+        Sun,  5 Feb 2023 09:37:25 -0800 (PST)
+Received: by mail-ot1-x32e.google.com with SMTP id d21-20020a056830005500b0068bd2e0b25bso2681024otp.1;
+        Sun, 05 Feb 2023 09:37:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=KzQczVVwdRA/Z7vPglNFmtc/zQXF/DwmrsXVAsLwTdg=;
+        b=avJOayGlLjRxU+jq/ig5PQKFbwQcxqMRd8Ye4uah8mBDRxVB572NXSwgYYfW3VEh7l
+         9C758+cF3deGOsoKohyE5SVhVqdhu7Vjxdo8r404fOE9cxiw0940D5fKv13abqgkRLfW
+         CW64WH9mRF7D2MZClevv/S5FWWMQMQVodLnxflqiLY+5aJNk7vKAo70f0FljfRQz+Wt1
+         3ROw4ZSgOUdOTN9zIgR5N1B/yi6TVZYMQdTPW+Z37p6OeFqZONgQoqhvtLg6LNNagdLq
+         4dGdyRf2ZBEwP+u3qOFqspAfYxJF4BHT7kF1923vNkwXxi+LeaS4qNMZ8m25LBFWR6Nx
+         NB2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KzQczVVwdRA/Z7vPglNFmtc/zQXF/DwmrsXVAsLwTdg=;
+        b=gbPprRv90XNMHF9PRhHH4tQIM1yfdSgkUNykIBfJkFnmGP1/WNdEH6Mg1LzcwXw5JS
+         PKxMfQh01E9KxiUA0kovBQsz7bB/VifE19vqFvsbsmZYYx4aVY99evZQzgigKwtmn5m8
+         zaQqNCz0U3CDtQttxXqkqcEIGoDmti/620knpMceJdFsAOvVLaFKgXAMkjsy2OJ+Tkkm
+         y2fgozHoPS4c1nkJ8aUoCtzhnjJ9EBzH0aru7Q0jNkw/mFbSloq89F0NI2YTy+q4Bueq
+         5oIcGlfG5hbOQqAyoELQTD/l3ZomFWcMoFj6uRNsH1mvkVsLkcbd+/3XOdYGtRiTQduO
+         cKhg==
+X-Gm-Message-State: AO0yUKW6NIhVo3NLI8cxgQF4ieCib+3uEMqRdcRNu7nwo1+W9XIonqfG
+        LSY7mifNHKakzF6LuhTHo3w=
+X-Google-Smtp-Source: AK7set/PMbNUNqAeQfSvfNitlbsFwkiO1hktS3+JuSXne4TE0U++RBummdiQURisHcIWvvnesUV9zw==
+X-Received: by 2002:a9d:6243:0:b0:68b:c67c:5d0b with SMTP id i3-20020a9d6243000000b0068bc67c5d0bmr8130416otk.10.1675618645178;
+        Sun, 05 Feb 2023 09:37:25 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x39-20020a056830246700b0068bb7bd2668sm3722805otr.73.2023.02.05.09.37.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Feb 2023 09:37:24 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <b3829a0f-ff83-651e-f78d-794565b023ec@roeck-us.net>
+Date:   Sun, 5 Feb 2023 09:37:22 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230204183510.never.909-kees@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] lm85: Bounds check to_sensor_dev_attr()->index usage
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230127223744.never.113-kees@kernel.org>
+ <20230128131319.GA4173006@roeck-us.net>
+ <63dd8c1a.170a0220.d3456.3451@mx.google.com>
+ <20230204015700.GG3089769@roeck-us.net>
+ <63deaa0b.050a0220.bf1e1.6c26@mx.google.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <63deaa0b.050a0220.bf1e1.6c26@mx.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Feb 04, 2023 at 10:35:10AM -0800, Kees Cook wrote:
-> Each of to_fs_info(), discard_to_fs_info(), and to_space_info() can
-> return NULL values.
+On 2/4/23 10:55, Kees Cook wrote:
+> On Fri, Feb 03, 2023 at 05:57:00PM -0800, Guenter Roeck wrote:
+>> That line of argument would suggest that we should perform parameter checks
+>> on each function entry all over the place, no matter if the range is known
+>> to be valid or not. Maybe that is the way things are going, but I don't
+>> like it at all. I have seen that kind of code before, in the telco space,
+>> where it typically at least doubled code size and resulted in mediocre
+>> performance, just because of a rule that mandated checking all parameters
+>> at the beginning of each function.
+> 
+> Well, I doubt I'll be able to change your opinion of telco code, but I
+> do think robustness is not an unreasonable default state for software,
+> and that GCC and Clang do a pretty good job with optimization, etc.
+> 
+>> I assume this is just one of many many patches you plan to send to add
+>> parameter checks to similar hwmon code ? I _really_ don't want to have
+>> the hwmon code cluttered with such unnecessary checks.
+> 
+> I was trying to provide complete coverage inspired by the specific
+> complaint GCC had, but this would also silence the warning:
+> 
+> diff --git a/drivers/hwmon/lm85.c b/drivers/hwmon/lm85.c
+> index 8d33c2484755..87d2455e721f 100644
+> --- a/drivers/hwmon/lm85.c
+> +++ b/drivers/hwmon/lm85.c
+> @@ -1106,6 +1106,7 @@ static ssize_t pwm_auto_pwm_minctl_store(struct device *dev,
+>   	mutex_lock(&data->update_lock);
+>   	data->autofan[nr].min_off = val;
+>   	tmp = lm85_read_value(client, LM85_REG_AFAN_SPIKE1);
+> +	nr = clamp_t(int, nr, 0, ARRAY_SIZE(data->autofan) - 1);
+>   	tmp &= ~(0x20 << nr);
+>   	if (data->autofan[nr].min_off)
+>   		tmp |= 0x20 << nr;
+> 
+> What's happening is GCC see that "nr" is used as a shift argument, so it
+> believes (not unreasonably) that this otherwise unknown value could be
+> up to 32. Here we can give it the bounded range ahead of time, keeping
+> it happy.
+> 
+I'll accept that if you also add a note clarifying that this is to silence
+a gcc/clang warning.
 
-The code says it could, but I really do not think that is possible at
-all, especially based on the fact that there have never been any crashes
-reported here.
+Guenter
 
-So the NULL returns should just be removed instead, right?
-
-Also, to_space_info() is a macro of container_of() which can not return
-NULL.
-
-And get_btrfs_kobj() is just odd, that probably should be fixed up as
-well, that's an indication that something is wrong with the sysfs code
-if anyone has to attempt to walk the whole kobject parent path :(
-
-So while this patch might fix up the compiler warning, it's logically
-not going to change anything, let's fix this properly.  I can look at it
-next week if someone doesn't beat me to it.
-
-thanks,
-
-greg k-h
