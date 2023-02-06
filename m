@@ -2,210 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E82FC636D3
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 19:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBD7C636D3
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 19:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230298AbjBFTRj (ORCPT
+        id S229649AbjBFTvA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Feb 2023 14:17:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47148 "EHLO
+        Mon, 6 Feb 2023 14:51:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230283AbjBFTRc (ORCPT
+        with ESMTP id S229483AbjBFTu7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Feb 2023 14:17:32 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458FE2BEFA
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 11:17:19 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id d2so8917138pjd.5
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Feb 2023 11:17:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HFhCCF6KKc8jrwlIib3xYlcK52nQlU5i7JbQZG5xkXg=;
-        b=WIa7oPHbexPVvg4fvwaR9+kndrbroQz++TujaKD28jY2+pxf0hdMAI3dY/LgXNAy3r
-         Qf5FK0+I9qvhFLMOEo43LueGk5poqBnbYVUnXT0t+Ifb6XFaVyG+8AaZiyAEIC625pot
-         j5zoY+NWeNUrD6vp0+dFxCD4OHCRpwcVf1OmeWPxZ0zzz3Dg5GGORrCgUIr8PZ6IZ/o0
-         tYXlfjF+DeDK+Ae/lA0F56vFNv6gYkD75dK51ejHN3N6XhOMEpgwfYjHaSakMJ1mPjlV
-         e6Lun3AqirDzO4xjcq3dO84B13UX2cnUMP0NyznhT+WZgBIpwXLPOjTmfzCr+0vz16kW
-         iroA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HFhCCF6KKc8jrwlIib3xYlcK52nQlU5i7JbQZG5xkXg=;
-        b=wKV7bagzil1qvJdILngRwObI5K5YMU9L1+TlwTErb1djL4CnL6HSkSiyPydGpyiNjB
-         SYCPTV63ZBnM/nzjAqXgBCZpyQfns8CItGAoSpJhLMs8Jt/DUcpsGGYqvgrZoj0Bb6Z/
-         qPRAyS/HwB54bs6GrTVtKq58vVW3LoMy78dFHmuJDjeNng/Pjgp72f2H+Amx2uo5fm0h
-         kjSjCE0zOVHmwlMn1oMmXn4h8o3Psbjjb3a2ecyIAafupnZKYUOkLiTHA0ubm5U01T79
-         Sc7giMsK8bYx77fAvEWIdgHmw2GjYh0+I6WxI/EHpKEEQHKsT7CekPgDBpmSOWNCbKkJ
-         TuJg==
-X-Gm-Message-State: AO0yUKUul2GJFItUi/89IRmodmCf0X8h5A+d8ghN1/RAZ5amy8ibqo9D
-        9uGi19D4AJ4iHGlIDLxK6FJJt/5OP6lBQN4q8gizqg==
-X-Google-Smtp-Source: AK7set9Bd4y8RazRLw+FgG1fYKluMFeh9bpugxhLYn9uSsK9r462sJPsTzLTYkh/jbCi2pN9gIlAXA1PsRLtyiap9CM=
-X-Received: by 2002:a17:90a:3d01:b0:230:8961:22c1 with SMTP id
- h1-20020a17090a3d0100b00230896122c1mr167548pjc.95.1675711038558; Mon, 06 Feb
- 2023 11:17:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20230204183241.never.481-kees@kernel.org> <CAKH8qBvqLeR3Wsbpb-v=EUY=Bw0jCP2OAaBn4tOqGmA1AqBZbA@mail.gmail.com>
- <63e14abb.170a0220.ca425.b7bc@mx.google.com>
-In-Reply-To: <63e14abb.170a0220.ca425.b7bc@mx.google.com>
-From:   Stanislav Fomichev <sdf@google.com>
-Date:   Mon, 6 Feb 2023 11:17:06 -0800
-Message-ID: <CAKH8qBtX0HU4_YtnZ3hU4NhGHSQ9VU70niXFFoqf3k67a1+6aA@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Replace bpf_lpm_trie_key 0-length array with
- flexible array
+        Mon, 6 Feb 2023 14:50:59 -0500
+Received: from mx.treblig.org (mx.treblig.org [46.43.15.161])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5F125972;
+        Mon,  6 Feb 2023 11:50:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+        ; s=bytemarkmx; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID
+        :Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=jS8Lr/pwA5OrRN4brjkNs2jw0MJnveqWb1qydiq7450=; b=PzcVPmntEcaP6qZgyrdEZDCu1o
+        BesahfN7b/ewF+hA/2B1ezrn+0NTYW7pfNYbLpBxCW/0Er+37lr5bd+5+g/88KxDqsW9aMqls3eMp
+        1peItIsu5okHg3iFOQqp91YyZ7dZhUZm8jSoqMmW3yqFGEa1ikQ6CYnxl+0Prk0pjA+PUBQomT9xb
+        4SA2JMEoek3+9ajzTDbqxpWj37qvrxhOXqhkKDNjHNI4GKMau5mGLg1x83ckJcCBbwN7UVwaWG+Kp
+        KHlE3lBqjfexOCOhZp+w3CNB/K+h2JY0gxlq427EoOaH1KPqt1tsf5oVCnN5EV9r7SNfuGKnWBwWL
+        K3fEGq9A==;
+Received: from dg by mx.treblig.org with local (Exim 4.94.2)
+        (envelope-from <dg@treblig.org>)
+        id 1pP7Vi-00530d-MK; Mon, 06 Feb 2023 19:50:42 +0000
+Date:   Mon, 6 Feb 2023 19:50:42 +0000
+From:   "Dr. David Alan Gilbert" <linux@treblig.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
-        Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Dave Kleikamp <shaggy@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] jfs: Use unsigned variable for length calculations
+Message-ID: <Y+FaEp2blurmgVlH@gallifrey>
+References: <20230204183355.never.877-kees@kernel.org>
+ <Y96/SUlPUl7xH1NO@gallifrey>
+ <63e1486a.050a0220.7001.ca15@mx.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <63e1486a.050a0220.7001.ca15@mx.google.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/5.10.0-12-amd64 (x86_64)
+X-Uptime: 19:49:48 up 332 days,  6:15,  1 user,  load average: 0.05, 0.04,
+ 0.00
+User-Agent: Mutt/2.0.5 (2021-01-21)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 6, 2023 at 10:45 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Feb 06, 2023 at 09:52:17AM -0800, Stanislav Fomichev wrote:
-> > On Sat, Feb 4, 2023 at 10:32 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Replace deprecated 0-length array in struct bpf_lpm_trie_key with
-> > > flexible array. Found with GCC 13:
-> > >
-> > > ../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
-> > >   207 |                                        *(__be16 *)&key->data[i]);
-> > >       |                                                   ^~~~~~~~~~~~~
-> > > ../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
-> > >   102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-> > >       |                                                      ^
-> > > ../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
-> > >    97 | #define be16_to_cpu __be16_to_cpu
-> > >       |                     ^~~~~~~~~~~~~
-> > > ../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
-> > >   206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
-> > > ^
-> > >       |                            ^~~~~~~~~~~
-> > > In file included from ../include/linux/bpf.h:7:
-> > > ../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
-> > >    82 |         __u8    data[0];        /* Arbitrary size */
-> > >       |                 ^~~~
-> > >
-> > > This includes fixing the selftest which was incorrectly using a
-> > > variable length struct as a header, identified earlier[1]. Avoid this
-> > > by just explicitly including the prefixlen member instead of struct
-> > > bpf_lpm_trie_key.
-> > >
-> > > [1] https://lore.kernel.org/all/202206281009.4332AA33@keescook/
-> > >
-> > > Cc: Alexei Starovoitov <ast@kernel.org>
-> > > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > > Cc: Andrii Nakryiko <andrii@kernel.org>
-> > > Cc: Martin KaFai Lau <martin.lau@linux.dev>
-> > > Cc: Song Liu <song@kernel.org>
-> > > Cc: Yonghong Song <yhs@fb.com>
-> > > Cc: John Fastabend <john.fastabend@gmail.com>
-> > > Cc: KP Singh <kpsingh@kernel.org>
-> > > Cc: Stanislav Fomichev <sdf@google.com>
-> > > Cc: Hao Luo <haoluo@google.com>
-> > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > Cc: Mykola Lysenko <mykolal@fb.com>
-> > > Cc: Shuah Khan <shuah@kernel.org>
-> > > Cc: Haowen Bai <baihaowen@meizu.com>
-> > > Cc: bpf@vger.kernel.org
-> > > Cc: linux-kselftest@vger.kernel.org
+* Kees Cook (keescook@chromium.org) wrote:
+> On Sat, Feb 04, 2023 at 08:25:45PM +0000, Dr. David Alan Gilbert wrote:
+> > * Kees Cook (keescook@chromium.org) wrote:
+> > > To avoid confusing the compiler about possible negative sizes, switch
+> > > "ssize" which can never be negative from int to u32.  Seen with GCC 13:
+> > > 
+> > > ../fs/jfs/namei.c: In function 'jfs_symlink': ../include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' pointer overflow between offset 0 and size [-2147483648, -1]
+> > > [-Warray-bounds=]
+> > >    57 | #define __underlying_memcpy     __builtin_memcpy
+> > >       |                                 ^
+> > > ...
+> > > ../fs/jfs/namei.c:950:17: note: in expansion of macro 'memcpy'
+> > >   950 |                 memcpy(ip->i_link, name, ssize);
+> > >       |                 ^~~~~~
+> > > 
+> > > Cc: Dave Kleikamp <shaggy@kernel.org>
+> > > Cc: Christian Brauner <brauner@kernel.org>
+> > > Cc: Dave Chinner <dchinner@redhat.com>
+> > > Cc: jfs-discussion@lists.sourceforge.net
 > > > Signed-off-by: Kees Cook <keescook@chromium.org>
 > > > ---
-> > >  include/uapi/linux/bpf.h                         | 2 +-
-> > >  tools/testing/selftests/bpf/progs/map_ptr_kern.c | 2 +-
-> > >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > > index ba0f0cfb5e42..5930bc5c7e2c 100644
-> > > --- a/include/uapi/linux/bpf.h
-> > > +++ b/include/uapi/linux/bpf.h
-> > > @@ -79,7 +79,7 @@ struct bpf_insn {
-> > >  /* Key of an a BPF_MAP_TYPE_LPM_TRIE entry */
-> > >  struct bpf_lpm_trie_key {
-> > >         __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
-> > > -       __u8    data[0];        /* Arbitrary size */
-> > > +       __u8    data[];         /* Arbitrary size */
-> > >  };
-> >
-> > That's a UAPI change, can we do it? The safest option is probably just
-> > to remove this field if it's causing any problems (and not do the
-> > map_ptr_kern.c change below).
->
-> The problem was seen because "data" is used by the kernel (see the
-> compiler warning above). But if it can be removed, sure, that works too,
-> and it much nicer since the resulting structs would have fixed sizes.
+> > >  fs/jfs/namei.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/fs/jfs/namei.c b/fs/jfs/namei.c
+> > > index b29d68b5eec5..494b9f4043cf 100644
+> > > --- a/fs/jfs/namei.c
+> > > +++ b/fs/jfs/namei.c
+> > > @@ -876,7 +876,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
+> > >  	tid_t tid;
+> > >  	ino_t ino = 0;
+> > >  	struct component_name dname;
+> > > -	int ssize;		/* source pathname size */
+> > > +	u32 ssize;		/* source pathname size */
+> > 
+> > Had you considered using size_t - this is set from a strlen and used by a memcpy
+> > that both talk size_t.
+> 
+> I considered that, but I've had other maintainers upset about doubling
+> the variable size.
 
-I guess I still don't understand why we need the change in map_ptr_kern.c?
+I bet at least on some platforms it's cheaper as the 64 bit.
 
-Re-reading the description:
+> I opted to keep the variable 32-bit here, so the
+> machine code would only change to lose signed-ness.
 
-> > > This includes fixing the selftest which was incorrectly using a
-> > > variable length struct as a header, identified earlier[1].
+Fair enough.
 
-It's my understanding that it's the intended use-case. Users are
-expected to use this struct as a header; at least we've been using it
-that way :-)
+Dave
 
-For me, both return the same:
-sizeof(struct { __u32 prefix; __u8 data[0]; })
-sizeof(struct { __u32 prefix; __u8 data[]; })
-
-So let's do s/data[0]/data[]/ in the UAPI only? What's wrong with
-using this struct as a header?
-
-> > The usual use-case (at least that's what we do) is to define some new
-> > struct over it:
-> >
-> > struct my_key {
-> >   struct bpf_lpm_trie_key prefix;
-> >   int a, b, c;
-> > };
-> >
-> > So I really doubt that the 'data' is ever touched by any programs at all..
->
-> Horrible alternative:
->
-> struct my_key {
->     union {
->         struct bpf_lpm_trie_key trie;
->         struct {
->             u8 header[sizeof(struct bpf_lpm_trie_key)];
->             int a, b, c;
->         };
->     };
-> };
->
-> Perhaps better might be:
->
-> struct bpf_lpm_trie_key {
->     __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
-> };
->
-> struct bpf_lpm_trie_key_raw {
->     struct bpf_lpm_trie_key_prefix prefix;
->     u8 data[];
-> };
->
-> struct my_key {
->     struct bpf_lpm_trie_key_prefix prefix;
->     int a, b, c;
-> };
->
-> Thoughts?
->
-> --
+> -Kees
+> 
+> -- 
 > Kees Cook
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
