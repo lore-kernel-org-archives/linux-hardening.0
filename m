@@ -2,252 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65334C61DA4
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 22:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582A1C636D3
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 23:41:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229677AbjBFW2N (ORCPT
+        id S229741AbjBFXlV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Feb 2023 17:28:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
+        Mon, 6 Feb 2023 18:41:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbjBFW2M (ORCPT
+        with ESMTP id S229896AbjBFXlU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Feb 2023 17:28:12 -0500
-Received: from omta033.useast.a.cloudfilter.net (omta033.useast.a.cloudfilter.net [44.202.169.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C55B45F
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 14:28:11 -0800 (PST)
-Received: from eig-obgw-5013a.ext.cloudfilter.net ([10.0.29.184])
-        by cmsmtp with ESMTP
-        id P7dGpuXm1Y6q8P9y6pSNM2; Mon, 06 Feb 2023 22:28:10 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id P9y5pVN31cfz9P9y5ptIh2; Mon, 06 Feb 2023 22:28:09 +0000
-X-Authority-Analysis: v=2.4 cv=Nbf1akP4 c=1 sm=1 tr=0 ts=63e17ef9
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=m04uMKEZRckA:10
- a=wYkD_t78qR0A:10 a=XYAwZIGsAAAA:8 a=VwQbUJbxAAAA:8 a=uBuKx8GwAAAA:8
- a=VnNF1IyMAAAA:8 a=yPCof4ZbAAAA:8 a=_EeEMxcBAAAA:8 a=NEAV23lmAAAA:8
- a=P2NOn8ILFETLmG1s00YA:9 a=QEXdDO2ut3YA:10 a=0gt-Z038NCQA:10
- a=E8ToXWR_bxluHZ7gmE-Z:22 a=AjGcO6oz07-iQ99wixmX:22 a=wZgZ3yaTFkxMEWn-yT5t:22
- a=syqr5EOPB93U0NEwqYpB:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oBRdVV4OQ9+UkcuWmevW9ANGZ4beTCdlnFfFZ1evJM4=; b=MgGFqT0a1dhZ0a+L/MbZT1xpII
-        lBpBCElDN/5C18sVWItHWGQ3IQZQZd9q1nVtfUMOoW5C/BzYwjxQCSmUkw6ERkdGcWP8s8Gkf0Q+N
-        lxs1W9X/yBIDF/MQrNx5BHdXH5M/OjdN9GO9Lm6vuHDicK4IxiV5LHoHzFJZ1SyXquTWAmSvAG0ij
-        jRpA71i5ronROxe6mcF20N5qk5TvMyOxOof66iIKkDr9chk7IAkGoVwIYCjSx9rpHpAl5EidZOFkw
-        bkYYcZC+ZoOXWPVHAM3L1SvAOWYbECAGuBadiwkRpKqH6dF7R6PjC29FFzTkcdePAq9uTCRW2JKaQ
-        hwHNfe6A==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:41250 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1pP9y4-000JJQ-Ex;
-        Mon, 06 Feb 2023 16:28:08 -0600
-Message-ID: <16e6c434-44af-2efb-d4bc-a253e93e5590@embeddedor.com>
-Date:   Mon, 6 Feb 2023 16:28:27 -0600
+        Mon, 6 Feb 2023 18:41:20 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8152CFD0
+        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 15:41:17 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id h15so6535150plk.12
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Feb 2023 15:41:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cu0OFN8qZCYWAqVWMqFlj99/Zkr5M5+Eb6c07HRobgk=;
+        b=X6O8KDVvbqMZvTq/dBZU/owDSJ8rL1va66hKecrnPQWO7NbZM9JZH8Ff/Kgp+8XR0h
+         PYt06fY/twQ70b2B5OciSQ8Ux5zQk8addCp1zwAR7cPUZ6SWWHzhljSi58TNzatHnfol
+         Nw0cL+/FeO5Zk1/pmkV2h5fDPZdIjoE9S3+kx/dy5qduoM1n6rDy2H4yiCv5UYABLcXL
+         Qw1LbBH5z9Dv1M/TyXGJpC3wEbIASbTpvdDww3AN/Mp0Ls5TE0f+r5rWFT0hA8ZMtu38
+         61NC8HORindS8z+Ya0AVJtBOUm6nbeuWTrtKUzw3Ahn2yR6TUWreNfWA1cLUKG9Qs6nY
+         THCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cu0OFN8qZCYWAqVWMqFlj99/Zkr5M5+Eb6c07HRobgk=;
+        b=NcF6OLPEwed2+djYSiUTdBalh87Em8jy24g9E/0k+pDbrdFscLIdTaws2ATqPNxfRU
+         8+5qF3rHadoO9rg5+g7pDNTcPOk1WqwgZNDrigOOKFSzsRb8gq5+lEN7zpNRZnBQatFq
+         eFkMcQCHSfFp2Xed4LlMbkQ8UcFB2f+V8k3rERn+bkMAsdjHccR0Ansx9vjQ+QDj0ciI
+         QmkFGtVat9ku//cuev9/3eaRKw824cXeZFBy0hinKbvNXjJg4Unh4BwSvr2oxi5b8FJI
+         Hh7TMXNjcqrN3Y27pjtn5HWt0fjXzVLOAl8OTZBwz7apRtRbidbprc60Q406vQipj2TA
+         I9kw==
+X-Gm-Message-State: AO0yUKV7UEyqIk53cKQQJpmgMBcEeKF8AhY2cdLYCG7pOM81DZ2fOnzB
+        J4cgyrDfUTm9nN7Ktq1zVTDK7x2oKC8T72C7IZheZQ==
+X-Google-Smtp-Source: AK7set9uOOMShrxA48+C1j7fFNaTfn5dhIRadvFGX40qhOjytovXu9agQpf1EsZBGE57vO7ZYGhygwi7iKDB+HEsXBo=
+X-Received: by 2002:a17:902:b7c9:b0:196:7127:2240 with SMTP id
+ v9-20020a170902b7c900b0019671272240mr173745plz.11.1675726877236; Mon, 06 Feb
+ 2023 15:41:17 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 1/3][next] scsi: smartpqi: Replace one-element array with
- flexible-array member
-Content-Language: en-US
-To:     Don.Brace@microchip.com, gustavoars@kernel.org,
-        kevin.barnett@microsemi.com, storagedev@microchip.com,
-        jejb@linux.ibm.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <cover.1663816572.git.gustavoars@kernel.org>
- <c80c0979933e0c05e80d95792ef167a28640a14b.1663816572.git.gustavoars@kernel.org>
- <CY4PR11MB12387B9F495BC7B5D0F5FD84E1DA9@CY4PR11MB1238.namprd11.prod.outlook.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <CY4PR11MB12387B9F495BC7B5D0F5FD84E1DA9@CY4PR11MB1238.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1pP9y4-000JJQ-Ex
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:41250
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKNgc9ntOCXOS1Z9/Z3hLzPmjF5WZFhkXr6kmqkRkTtyfuiKCk9pw7ZiDBCGiynX3JrZ2ta0Vbcg/U3fLU28+ASMB19dKirNb69BXht/ZP5mswhe/Gg7
- 6F1UPmyOoecbG51K0wClNhT8PblzY61M4lX1OQ3ddC3HJIAyzxDv/nPaRIukvb0Z94s0MuFnG4uGL8zRXgmvemSmogNfGZP0C/0X9U3MmbMiibNOq6kkkPRP
+References: <20230203194201.92015-1-ebiggers@kernel.org> <63deacb1.170a0220.f078.6779@mx.google.com>
+In-Reply-To: <63deacb1.170a0220.f078.6779@mx.google.com>
+From:   Fangrui Song <maskray@google.com>
+Date:   Mon, 6 Feb 2023 15:41:05 -0800
+Message-ID: <CAFP8O3Kwa2V7GvJPEbr87o6hMi8i2JquWniFOaiFR3nv9pGc_g@mail.gmail.com>
+Subject: Re: [PATCH] randstruct: temporarily disable clang support
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 2/6/23 15:58, Don.Brace@microchip.com wrote:
-> 
-> ________________________________
-> From: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Sent: Wednesday, September 21, 2022 11:28 PM
-> To: Kevin Barnett <kevin.barnett@microsemi.com>; Don Brace - C33706 <Don.Brace@microchip.com>; storagedev <storagedev@microchip.com>; James E.J. Bottomley <jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: linux-scsi@vger.kernel.org <linux-scsi@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; Gustavo A. R. Silva <gustavoars@kernel.org>; linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>
-> Subject: [PATCH 1/3][next] scsi: smartpqi: Replace one-element array with flexible-array member
-> 
-> [Some people who received this message don't often get email from gustavoars@kernel.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element array with flexible-array
-> member in struct MR_DRV_RAID_MAP and refactor the the rest of the code
-> accordingly.
-> 
-> It seems that the addition of sizeof(struct report_log_lun) in all the
-> places that are modified by this patch is due to the fact that
-> the one-element array struct report_log_lun lun_entries[1]; always
-> contributes to the size of the containing structure struct
-> report_log_lun_list.
-> 
-> Notice that at line 1267 while allocating memory for an instance of
-> struct report_log_lun_list, some _extra_ space seems to be allocated
-> for one element of type struct report_log_lun, which is the type of
-> the elements in array lun_entries:
-> 
->   1267         internal_logdev_list = kmalloc(logdev_data_length +
->   1268                 sizeof(struct report_log_lun), GFP_KERNEL);
-> 
-> However, at line 1275 just logdev_data_length bytes are copied into
-> internal_logdev_list (remember that we allocated space for logdev_data_length +
-> sizeof(struct report_log_lun) bytes at line 1267), and then exactly
-> sizeof(struct report_log_lun) bytes are being zeroing out at line 1276.
-> 
->   1275         memcpy(internal_logdev_list, logdev_data, logdev_data_length);
->   1276         memset((u8 *)internal_logdev_list + logdev_data_length, 0,
->   1277                 sizeof(struct report_log_lun));
-> 
-> All the above makes think that it's just fine if we transform array
-> lun_entries into a flexible-array member and just don't allocate
-> that extra sizeof(struct report_log_lun) bytes of space. With this
-> we can remove that memset() call and we also need to modify the code
-> that updates the total length (internal_logdev_list->header.list_length)
-> of array lun_entries at line 1278:
-> 
->   1278         put_unaligned_be32(logdev_list_length +
->   1279                 sizeof(struct report_log_lun),
->   1280                 &internal_logdev_list->header.list_length);
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
-> on memcpy().
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/204
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> NAK: What is actually happening is that we were taking on an extra list entry that is all zeros for the controller itself. This is intentional. These changes will break the driver.
-
-Oh, great to know. :)
-
-So, in this case, what do you think about this, instead:
-
-diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
-index af27bb0f3133..228838eb3686 100644
---- a/drivers/scsi/smartpqi/smartpqi.h
-+++ b/drivers/scsi/smartpqi/smartpqi.h
-@@ -954,7 +954,7 @@ struct report_log_lun {
-
-  struct report_log_lun_list {
-         struct report_lun_header header;
--       struct report_log_lun lun_entries[1];
-+       struct report_log_lun lun_entries[];
-  };
-
-  struct report_phys_lun_8byte_wwid {
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index d0446d4d4465..af8f1a8e9f8f 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -1277,6 +1277,10 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
-         logdev_data_length = sizeof(struct report_lun_header) +
-                 logdev_list_length;
-
-+       /*
-+        * Notice that we take on an extra list entry (struct report_log_lun)
-+        * that is all zeros for the controller itself.
-+        */
-         internal_logdev_list = kmalloc(logdev_data_length +
-                 sizeof(struct report_log_lun), GFP_KERNEL);
-         if (!internal_logdev_list) {
-
-
-Thanks for the feedback!
---
-Gustavo
-
-> 
-> Thanks,
-> Don Brace <don.brace@microchip.com>
-> 
-> 
-> ---
-> And of course, it'd be great if maintainers can confirm what I described
-> in the changelog text. :)
-> 
->   drivers/scsi/smartpqi/smartpqi.h      |  2 +-
->   drivers/scsi/smartpqi/smartpqi_init.c | 10 +++-------
->   2 files changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
-> index e550b12e525a..d1756c9d1112 100644
-> --- a/drivers/scsi/smartpqi/smartpqi.h
-> +++ b/drivers/scsi/smartpqi/smartpqi.h
-> @@ -954,7 +954,7 @@ struct report_log_lun {
-> 
->   struct report_log_lun_list {
->          struct report_lun_header header;
-> -       struct report_log_lun lun_entries[1];
-> +       struct report_log_lun lun_entries[];
->   };
-> 
->   struct report_phys_lun_8byte_wwid {
-> diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-> index b971fbe3b3a1..544cd18a90d7 100644
-> --- a/drivers/scsi/smartpqi/smartpqi_init.c
-> +++ b/drivers/scsi/smartpqi/smartpqi_init.c
-> @@ -1264,8 +1264,7 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
->          logdev_data_length = sizeof(struct report_lun_header) +
->                  logdev_list_length;
-> 
-> -       internal_logdev_list = kmalloc(logdev_data_length +
-> -               sizeof(struct report_log_lun), GFP_KERNEL);
-> +       internal_logdev_list = kmalloc(logdev_data_length, GFP_KERNEL);
->          if (!internal_logdev_list) {
->                  kfree(*logdev_list);
->                  *logdev_list = NULL;
-> @@ -1273,11 +1272,8 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
->          }
-> 
->          memcpy(internal_logdev_list, logdev_data, logdev_data_length);
-> -       memset((u8 *)internal_logdev_list + logdev_data_length, 0,
-> -               sizeof(struct report_log_lun));
-> -       put_unaligned_be32(logdev_list_length +
-> -               sizeof(struct report_log_lun),
-> -               &internal_logdev_list->header.list_length);
-> +       put_unaligned_be32(logdev_list_length,
-> +                          &internal_logdev_list->header.list_length);
-> 
->          kfree(*logdev_list);
->          *logdev_list = internal_logdev_list;
+On Sat, Feb 4, 2023 at 11:06 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Fri, Feb 03, 2023 at 11:42:01AM -0800, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> >
+> > Randstruct with clang is currently unsafe to use in any clang release
+> > that supports it, due to a clang bug that is causing miscompilations:
+> > "-frandomize-layout-seed inconsistently randomizes all-function-pointer=
+s
+> > structs" (https://github.com/llvm/llvm-project/issues/60349).  Disable
+> > it temporarily until the bug is fixed and the fix is released in a clan=
+g
+> > version that can be checked for.
+> >
+> > Fixes: 035f7f87b729 ("randstruct: Enable Clang support")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > ---
+> >  security/Kconfig.hardening | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+> > index 53baa95cb644..aad16187148c 100644
+> > --- a/security/Kconfig.hardening
+> > +++ b/security/Kconfig.hardening
+> > @@ -280,7 +280,8 @@ config ZERO_CALL_USED_REGS
+> >  endmenu
+> >
+> >  config CC_HAS_RANDSTRUCT
+> > -     def_bool $(cc-option,-frandomize-layout-seed-file=3D/dev/null)
+> > +     # Temporarily disabled due to https://github.com/llvm/llvm-projec=
+t/issues/60349
+> > +     def_bool n
+> >
+> >  choice
+> >       prompt "Randomize layout of sensitive kernel structures"
+> >
+> > base-commit: 7b753a909f426f2789d9db6f357c3d59180a9354
+> > --
+> > 2.39.1
+>
+> This should be fixed with greater precision -- i.e. this is nearly fixed
+> in Clang now, and is likely to be backported. So I think we'll need
+> versioned checks here.
+>
 > --
-> 2.34.1
-> 
-> 
+> Kees Cook
+>
+
+Bill has requested cherry-pick the llvm-project fix into the
+release/16.x branch [1].
+https://github.com/llvm/llvm-project-release-prs/pull/276
+It may take one day to land.
+
+[1]: https://github.com/llvm/llvm-project/tree/release/16.x
+
+--=20
+=E5=AE=8B=E6=96=B9=E7=9D=BF
