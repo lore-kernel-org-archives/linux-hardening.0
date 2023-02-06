@@ -2,192 +2,64 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FA9C05027
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 18:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA81C636D3
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 19:00:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229841AbjBFSpS (ORCPT
+        id S230217AbjBFTA1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Feb 2023 13:45:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57142 "EHLO
+        Mon, 6 Feb 2023 14:00:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjBFSpR (ORCPT
+        with ESMTP id S229873AbjBFTA0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Feb 2023 13:45:17 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA74D273D
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 10:45:16 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id bx22so9595382pjb.3
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Feb 2023 10:45:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=DkhDQDKT3oVXHbvXapcI5zTOXdH8Icb/ANsh1giobys=;
-        b=R/gvzAjpkUwIW2Ypz2voQVYC/0MAAoapXn89Mk0mzs1r9FBsjEjUzP53KbAdiKtEv+
-         nCHbrT375Kte2H7weMvqen9+Na7Dr06oH7ZK83AZshB8v0eIGE5Zvi/cZ+H1/C6WTs6u
-         oXgNjd6akjn1A46hqWw6X7Uzgjv4jxq/Fn6h4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DkhDQDKT3oVXHbvXapcI5zTOXdH8Icb/ANsh1giobys=;
-        b=P8Ro3wYFLQeeyfqh4thcH6IWb1ijwc5rBHaaVkOMMrQheQli9/qO4vdeZMV0Wv8Vh9
-         AO2qyJzttRRRxOiuzuSFXO6KoyTLj+BvOKWCF77/ekaKbCzkcApZE1oEcL/7skboN4Lq
-         6xHk1+wolC7BbRLJqrha9kQ87fWywnMPy5RVeMqCOl8IPtWHkzYKS1FWjPQ8/I0WSJj1
-         Eoyn/Lzk8L8LsG7duc7qOQQ8nqqh5flYk+xFyOQUfEpoaIP5YZ5YQ6MQNkALlc+SW1w2
-         oMqbXOlxsJ0+7eQyPCXh7R1wvHxkwkBfN/RJ5vIAlCDev2j3Mq/An2SOkKspBHtbKR27
-         6TlA==
-X-Gm-Message-State: AO0yUKXOKxmbiA7FOVOYAcjQUZ5PFere7Dgjhlltrw+qys696BZuttcy
-        L94DXbNeIeJipHR6i1YVDT1beQ==
-X-Google-Smtp-Source: AK7set8KFBZcJoyADEvCdNhzMHm/y5MIdXeUfrR90b/geFbtcc/C2jtV6qhmaO/gjfdwti36unuj5w==
-X-Received: by 2002:a17:902:f113:b0:196:7a96:cd82 with SMTP id e19-20020a170902f11300b001967a96cd82mr16617424plb.42.1675709116186;
-        Mon, 06 Feb 2023 10:45:16 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e21-20020a170902d39500b0019601fbb963sm7225276pld.172.2023.02.06.10.45.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Feb 2023 10:45:15 -0800 (PST)
-Message-ID: <63e14abb.170a0220.ca425.b7bc@mx.google.com>
-X-Google-Original-Message-ID: <202302061040.@keescook>
-Date:   Mon, 6 Feb 2023 10:45:15 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Stanislav Fomichev <sdf@google.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
-        Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] bpf: Replace bpf_lpm_trie_key 0-length array with
- flexible array
-References: <20230204183241.never.481-kees@kernel.org>
- <CAKH8qBvqLeR3Wsbpb-v=EUY=Bw0jCP2OAaBn4tOqGmA1AqBZbA@mail.gmail.com>
+        Mon, 6 Feb 2023 14:00:26 -0500
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 20B39C652
+        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 11:00:25 -0800 (PST)
+Received: (qmail 666421 invoked by uid 1000); 6 Feb 2023 14:00:24 -0500
+Date:   Mon, 6 Feb 2023 14:00:24 -0500
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] USB: ene_usb6250: Allocate enough memory for full object
+Message-ID: <Y+FOSNyVKJdkwRy0@rowland.harvard.edu>
+References: <20230204183546.never.849-kees@kernel.org>
+ <Y961c1/JIkDUqMbC@rowland.harvard.edu>
+ <63e14809.170a0220.7fcb2.150b@mx.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKH8qBvqLeR3Wsbpb-v=EUY=Bw0jCP2OAaBn4tOqGmA1AqBZbA@mail.gmail.com>
+In-Reply-To: <63e14809.170a0220.7fcb2.150b@mx.google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 09:52:17AM -0800, Stanislav Fomichev wrote:
-> On Sat, Feb 4, 2023 at 10:32 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Replace deprecated 0-length array in struct bpf_lpm_trie_key with
-> > flexible array. Found with GCC 13:
-> >
-> > ../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
-> >   207 |                                        *(__be16 *)&key->data[i]);
-> >       |                                                   ^~~~~~~~~~~~~
-> > ../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
-> >   102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-> >       |                                                      ^
-> > ../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
-> >    97 | #define be16_to_cpu __be16_to_cpu
-> >       |                     ^~~~~~~~~~~~~
-> > ../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
-> >   206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
-> > ^
-> >       |                            ^~~~~~~~~~~
-> > In file included from ../include/linux/bpf.h:7:
-> > ../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
-> >    82 |         __u8    data[0];        /* Arbitrary size */
-> >       |                 ^~~~
-> >
-> > This includes fixing the selftest which was incorrectly using a
-> > variable length struct as a header, identified earlier[1]. Avoid this
-> > by just explicitly including the prefixlen member instead of struct
-> > bpf_lpm_trie_key.
-> >
-> > [1] https://lore.kernel.org/all/202206281009.4332AA33@keescook/
-> >
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Daniel Borkmann <daniel@iogearbox.net>
-> > Cc: Andrii Nakryiko <andrii@kernel.org>
-> > Cc: Martin KaFai Lau <martin.lau@linux.dev>
-> > Cc: Song Liu <song@kernel.org>
-> > Cc: Yonghong Song <yhs@fb.com>
-> > Cc: John Fastabend <john.fastabend@gmail.com>
-> > Cc: KP Singh <kpsingh@kernel.org>
-> > Cc: Stanislav Fomichev <sdf@google.com>
-> > Cc: Hao Luo <haoluo@google.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Mykola Lysenko <mykolal@fb.com>
-> > Cc: Shuah Khan <shuah@kernel.org>
-> > Cc: Haowen Bai <baihaowen@meizu.com>
-> > Cc: bpf@vger.kernel.org
-> > Cc: linux-kselftest@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/uapi/linux/bpf.h                         | 2 +-
-> >  tools/testing/selftests/bpf/progs/map_ptr_kern.c | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index ba0f0cfb5e42..5930bc5c7e2c 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -79,7 +79,7 @@ struct bpf_insn {
-> >  /* Key of an a BPF_MAP_TYPE_LPM_TRIE entry */
-> >  struct bpf_lpm_trie_key {
-> >         __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
-> > -       __u8    data[0];        /* Arbitrary size */
-> > +       __u8    data[];         /* Arbitrary size */
-> >  };
+On Mon, Feb 06, 2023 at 10:33:44AM -0800, Kees Cook wrote:
+> On Sat, Feb 04, 2023 at 02:43:47PM -0500, Alan Stern wrote:
+> > On Sat, Feb 04, 2023 at 10:35:46AM -0800, Kees Cook wrote:
+> > > The allocation of PageBuffer is 512 bytes in size, but the dereferencing
+> > > of struct ms_bootblock_idi (also size 512) happens at a calculated offset
+> > > within the allocation, which means the object could potentially extend
+> > > beyond the end of the allocation. Avoid this case by just allocating
+> > > enough space to catch any accesses beyond the end. Seen with GCC 13:
+> > 
+> > In principle, it would be better to add a runtime check for overflow.  
+> > Doing it this way means that the code could read an invalid value.
+> > 
+> > In fact, I get the impression that this code tries to load a data 
+> > structure which might straddle a page boundary by reading in just the 
+> > first page.  Either that, or else EntryOffset is always a multiple of 
+> > 512 so the error cannot arise.
 > 
-> That's a UAPI change, can we do it? The safest option is probably just
-> to remove this field if it's causing any problems (and not do the
-> map_ptr_kern.c change below).
+> Yeah, I couldn't figure it out. It seems like it might move in
+> non-512-byte steps too sometimes? Doubling the allocation (and zero-fill
+> it) seemed the safest way to cover it.
 
-The problem was seen because "data" is used by the kernel (see the
-compiler warning above). But if it can be removed, sure, that works too,
-and it much nicer since the resulting structs would have fixed sizes.
+It hardly seems to matter at this point.  I doubt that any significant 
+number of laptops still in operation use the ENE UB6250 reader.  The 
+driver was originally written in 2010, and official support for the 
+hardware under Windows apparently ended with Windows 7.
 
-> The usual use-case (at least that's what we do) is to define some new
-> struct over it:
-> 
-> struct my_key {
->   struct bpf_lpm_trie_key prefix;
->   int a, b, c;
-> };
-> 
-> So I really doubt that the 'data' is ever touched by any programs at all..
-
-Horrible alternative:
-
-struct my_key {
-    union {
-        struct bpf_lpm_trie_key trie;
-        struct {
-            u8 header[sizeof(struct bpf_lpm_trie_key)];
-            int a, b, c;
-        };
-    };
-};
-
-Perhaps better might be:
-
-struct bpf_lpm_trie_key {
-    __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
-};
-
-struct bpf_lpm_trie_key_raw {
-    struct bpf_lpm_trie_key_prefix prefix;
-    u8 data[];
-};
-
-struct my_key {
-    struct bpf_lpm_trie_key_prefix prefix;
-    int a, b, c;
-};
-
-Thoughts?
-
--- 
-Kees Cook
+Alan Stern
