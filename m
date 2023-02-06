@@ -2,105 +2,192 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BDEC636D3
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 18:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27FA9C05027
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 18:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbjBFSjV (ORCPT
+        id S229841AbjBFSpS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Feb 2023 13:39:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53524 "EHLO
+        Mon, 6 Feb 2023 13:45:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbjBFSjT (ORCPT
+        with ESMTP id S229577AbjBFSpR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Feb 2023 13:39:19 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D972CC63;
-        Mon,  6 Feb 2023 10:39:17 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 3F19460845;
-        Mon,  6 Feb 2023 18:39:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1675708756;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dAWkS57jklU6SXWg2r8ZiTAi7stYMaw/Kax88+A3hjI=;
-        b=I2ClgK91jcGt6qybmNupF0jPRY52XybxRlSGZGMnlKbV4gvIuChyuC4XoWgjImxp+iGiu1
-        HakHOfz4fLIdes2Ak3r4jfP+ltRencrHnjXx+V2hGfYRHtv9qlXgHLZwjw0o5WrtQlXRcY
-        nosvMP2fOZ450Dpdnyu+piOIFv5qBek=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1675708756;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dAWkS57jklU6SXWg2r8ZiTAi7stYMaw/Kax88+A3hjI=;
-        b=WQFErx/4ZMcsxdLXcA/SX8KnRTYVYchY+s5zqFxW5ie1s/AyY36DybY86fSyxOYBBJV5/v
-        BhDJ1wyMeoAmtSBw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0BE1B138E7;
-        Mon,  6 Feb 2023 18:39:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id v+D0AVRJ4WPTTAAAMHmgww
-        (envelope-from <dsterba@suse.cz>); Mon, 06 Feb 2023 18:39:16 +0000
-Date:   Mon, 6 Feb 2023 19:33:27 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] btrfs: sysfs: Handle NULL return values
-Message-ID: <20230206183327.GC28288@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20230204183510.never.909-kees@kernel.org>
- <Y99XGrFvXBL32cOO@kroah.com>
+        Mon, 6 Feb 2023 13:45:17 -0500
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA74D273D
+        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 10:45:16 -0800 (PST)
+Received: by mail-pj1-x1035.google.com with SMTP id bx22so9595382pjb.3
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Feb 2023 10:45:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=DkhDQDKT3oVXHbvXapcI5zTOXdH8Icb/ANsh1giobys=;
+        b=R/gvzAjpkUwIW2Ypz2voQVYC/0MAAoapXn89Mk0mzs1r9FBsjEjUzP53KbAdiKtEv+
+         nCHbrT375Kte2H7weMvqen9+Na7Dr06oH7ZK83AZshB8v0eIGE5Zvi/cZ+H1/C6WTs6u
+         oXgNjd6akjn1A46hqWw6X7Uzgjv4jxq/Fn6h4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DkhDQDKT3oVXHbvXapcI5zTOXdH8Icb/ANsh1giobys=;
+        b=P8Ro3wYFLQeeyfqh4thcH6IWb1ijwc5rBHaaVkOMMrQheQli9/qO4vdeZMV0Wv8Vh9
+         AO2qyJzttRRRxOiuzuSFXO6KoyTLj+BvOKWCF77/ekaKbCzkcApZE1oEcL/7skboN4Lq
+         6xHk1+wolC7BbRLJqrha9kQ87fWywnMPy5RVeMqCOl8IPtWHkzYKS1FWjPQ8/I0WSJj1
+         Eoyn/Lzk8L8LsG7duc7qOQQ8nqqh5flYk+xFyOQUfEpoaIP5YZ5YQ6MQNkALlc+SW1w2
+         oMqbXOlxsJ0+7eQyPCXh7R1wvHxkwkBfN/RJ5vIAlCDev2j3Mq/An2SOkKspBHtbKR27
+         6TlA==
+X-Gm-Message-State: AO0yUKXOKxmbiA7FOVOYAcjQUZ5PFere7Dgjhlltrw+qys696BZuttcy
+        L94DXbNeIeJipHR6i1YVDT1beQ==
+X-Google-Smtp-Source: AK7set8KFBZcJoyADEvCdNhzMHm/y5MIdXeUfrR90b/geFbtcc/C2jtV6qhmaO/gjfdwti36unuj5w==
+X-Received: by 2002:a17:902:f113:b0:196:7a96:cd82 with SMTP id e19-20020a170902f11300b001967a96cd82mr16617424plb.42.1675709116186;
+        Mon, 06 Feb 2023 10:45:16 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id e21-20020a170902d39500b0019601fbb963sm7225276pld.172.2023.02.06.10.45.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Feb 2023 10:45:15 -0800 (PST)
+Message-ID: <63e14abb.170a0220.ca425.b7bc@mx.google.com>
+X-Google-Original-Message-ID: <202302061040.@keescook>
+Date:   Mon, 6 Feb 2023 10:45:15 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Stanislav Fomichev <sdf@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bpf: Replace bpf_lpm_trie_key 0-length array with
+ flexible array
+References: <20230204183241.never.481-kees@kernel.org>
+ <CAKH8qBvqLeR3Wsbpb-v=EUY=Bw0jCP2OAaBn4tOqGmA1AqBZbA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y99XGrFvXBL32cOO@kroah.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <CAKH8qBvqLeR3Wsbpb-v=EUY=Bw0jCP2OAaBn4tOqGmA1AqBZbA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Feb 05, 2023 at 08:13:30AM +0100, Greg KH wrote:
-> On Sat, Feb 04, 2023 at 10:35:10AM -0800, Kees Cook wrote:
-> > Each of to_fs_info(), discard_to_fs_info(), and to_space_info() can
-> > return NULL values.
+On Mon, Feb 06, 2023 at 09:52:17AM -0800, Stanislav Fomichev wrote:
+> On Sat, Feb 4, 2023 at 10:32 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Replace deprecated 0-length array in struct bpf_lpm_trie_key with
+> > flexible array. Found with GCC 13:
+> >
+> > ../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
+> >   207 |                                        *(__be16 *)&key->data[i]);
+> >       |                                                   ^~~~~~~~~~~~~
+> > ../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
+> >   102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+> >       |                                                      ^
+> > ../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
+> >    97 | #define be16_to_cpu __be16_to_cpu
+> >       |                     ^~~~~~~~~~~~~
+> > ../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
+> >   206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
+> > ^
+> >       |                            ^~~~~~~~~~~
+> > In file included from ../include/linux/bpf.h:7:
+> > ../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
+> >    82 |         __u8    data[0];        /* Arbitrary size */
+> >       |                 ^~~~
+> >
+> > This includes fixing the selftest which was incorrectly using a
+> > variable length struct as a header, identified earlier[1]. Avoid this
+> > by just explicitly including the prefixlen member instead of struct
+> > bpf_lpm_trie_key.
+> >
+> > [1] https://lore.kernel.org/all/202206281009.4332AA33@keescook/
+> >
+> > Cc: Alexei Starovoitov <ast@kernel.org>
+> > Cc: Daniel Borkmann <daniel@iogearbox.net>
+> > Cc: Andrii Nakryiko <andrii@kernel.org>
+> > Cc: Martin KaFai Lau <martin.lau@linux.dev>
+> > Cc: Song Liu <song@kernel.org>
+> > Cc: Yonghong Song <yhs@fb.com>
+> > Cc: John Fastabend <john.fastabend@gmail.com>
+> > Cc: KP Singh <kpsingh@kernel.org>
+> > Cc: Stanislav Fomichev <sdf@google.com>
+> > Cc: Hao Luo <haoluo@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Mykola Lysenko <mykolal@fb.com>
+> > Cc: Shuah Khan <shuah@kernel.org>
+> > Cc: Haowen Bai <baihaowen@meizu.com>
+> > Cc: bpf@vger.kernel.org
+> > Cc: linux-kselftest@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  include/uapi/linux/bpf.h                         | 2 +-
+> >  tools/testing/selftests/bpf/progs/map_ptr_kern.c | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> > index ba0f0cfb5e42..5930bc5c7e2c 100644
+> > --- a/include/uapi/linux/bpf.h
+> > +++ b/include/uapi/linux/bpf.h
+> > @@ -79,7 +79,7 @@ struct bpf_insn {
+> >  /* Key of an a BPF_MAP_TYPE_LPM_TRIE entry */
+> >  struct bpf_lpm_trie_key {
+> >         __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
+> > -       __u8    data[0];        /* Arbitrary size */
+> > +       __u8    data[];         /* Arbitrary size */
+> >  };
 > 
-> The code says it could, but I really do not think that is possible at
-> all, especially based on the fact that there have never been any crashes
-> reported here.
+> That's a UAPI change, can we do it? The safest option is probably just
+> to remove this field if it's causing any problems (and not do the
+> map_ptr_kern.c change below).
+
+The problem was seen because "data" is used by the kernel (see the
+compiler warning above). But if it can be removed, sure, that works too,
+and it much nicer since the resulting structs would have fixed sizes.
+
+> The usual use-case (at least that's what we do) is to define some new
+> struct over it:
 > 
-> So the NULL returns should just be removed instead, right?
-
-Yes. The access to any sysfs callback always implies an existing
-fs_info, the sysfs files are destroyed before the instance of fs_info.
-If the callback is slow or stuck for some reason, the removal will block
-due to reference counts.
-
-> Also, to_space_info() is a macro of container_of() which can not return
-> NULL.
+> struct my_key {
+>   struct bpf_lpm_trie_key prefix;
+>   int a, b, c;
+> };
 > 
-> And get_btrfs_kobj() is just odd, that probably should be fixed up as
-> well, that's an indication that something is wrong with the sysfs code
-> if anyone has to attempt to walk the whole kobject parent path :(
+> So I really doubt that the 'data' is ever touched by any programs at all..
 
-The get_btrfs_kobj is relatively new and more generic than the other
-helpers that basically hardcoded the kobj path relative to the main
-sysfs object.
+Horrible alternative:
 
-> So while this patch might fix up the compiler warning, it's logically
-> not going to change anything, let's fix this properly.  I can look at it
-> next week if someone doesn't beat me to it.
+struct my_key {
+    union {
+        struct bpf_lpm_trie_key trie;
+        struct {
+            u8 header[sizeof(struct bpf_lpm_trie_key)];
+            int a, b, c;
+        };
+    };
+};
 
-Let me have a look, I was meaning to clean up the code to use only
-get_btrfs_kobj. So far there was no pressing reason for that but if gcc
-13 is going to warn about the checks it needs to be fixed.
+Perhaps better might be:
+
+struct bpf_lpm_trie_key {
+    __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
+};
+
+struct bpf_lpm_trie_key_raw {
+    struct bpf_lpm_trie_key_prefix prefix;
+    u8 data[];
+};
+
+struct my_key {
+    struct bpf_lpm_trie_key_prefix prefix;
+    int a, b, c;
+};
+
+Thoughts?
+
+-- 
+Kees Cook
