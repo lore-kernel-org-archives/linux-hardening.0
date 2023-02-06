@@ -2,117 +2,109 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBD7C636D3
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 19:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A37C05027
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 20:03:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229649AbjBFTvA (ORCPT
+        id S229447AbjBFUDl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Feb 2023 14:51:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38246 "EHLO
+        Mon, 6 Feb 2023 15:03:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbjBFTu7 (ORCPT
+        with ESMTP id S229500AbjBFUDh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Feb 2023 14:50:59 -0500
-Received: from mx.treblig.org (mx.treblig.org [46.43.15.161])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5F125972;
-        Mon,  6 Feb 2023 11:50:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-        ; s=bytemarkmx; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID
-        :Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID
-        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
-        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
-        :List-Post:List-Owner:List-Archive;
-        bh=jS8Lr/pwA5OrRN4brjkNs2jw0MJnveqWb1qydiq7450=; b=PzcVPmntEcaP6qZgyrdEZDCu1o
-        BesahfN7b/ewF+hA/2B1ezrn+0NTYW7pfNYbLpBxCW/0Er+37lr5bd+5+g/88KxDqsW9aMqls3eMp
-        1peItIsu5okHg3iFOQqp91YyZ7dZhUZm8jSoqMmW3yqFGEa1ikQ6CYnxl+0Prk0pjA+PUBQomT9xb
-        4SA2JMEoek3+9ajzTDbqxpWj37qvrxhOXqhkKDNjHNI4GKMau5mGLg1x83ckJcCBbwN7UVwaWG+Kp
-        KHlE3lBqjfexOCOhZp+w3CNB/K+h2JY0gxlq427EoOaH1KPqt1tsf5oVCnN5EV9r7SNfuGKnWBwWL
-        K3fEGq9A==;
-Received: from dg by mx.treblig.org with local (Exim 4.94.2)
-        (envelope-from <dg@treblig.org>)
-        id 1pP7Vi-00530d-MK; Mon, 06 Feb 2023 19:50:42 +0000
-Date:   Mon, 6 Feb 2023 19:50:42 +0000
-From:   "Dr. David Alan Gilbert" <linux@treblig.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Dave Kleikamp <shaggy@kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] jfs: Use unsigned variable for length calculations
-Message-ID: <Y+FaEp2blurmgVlH@gallifrey>
-References: <20230204183355.never.877-kees@kernel.org>
- <Y96/SUlPUl7xH1NO@gallifrey>
- <63e1486a.050a0220.7001.ca15@mx.google.com>
+        Mon, 6 Feb 2023 15:03:37 -0500
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16AFB1EFED;
+        Mon,  6 Feb 2023 12:03:35 -0800 (PST)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-4b718cab0e4so169892857b3.9;
+        Mon, 06 Feb 2023 12:03:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u9SWi5xYTHrRjVguNFjjUy6U7YmMLQk0y/iYmmBjvHE=;
+        b=IapmhMaiVS2Tnsg/VmAp3HiFJFQGBE0zkIAwmaWheGqbyUGZSQvisRaM9lfKTJMIX7
+         NR2zKlkFyH8WQCZlWMzI16rVOwiDA/4bT46LzLvO6FXXpHW2PkLXVh+0dXdkuVBcKMwM
+         3/9YuEwyRVroTFnhpFWSJnj/O/Bfmu/6bmyfXgXVlyHpR9p8C67IkwlrFwpZnx5Frxgp
+         fkORN/uQq+zxUIeeptdZprUfREwWc3DKu4zwj8xRb0Gklphu7l7+s3XosLFH7R5IGvbE
+         y9/UbWztLhDhO2EzHIUi/Tbj3pNML/z7NoUtLAsodjZ8F/9df+nRCAyaJIFQGMFg0ekk
+         CE1A==
+X-Gm-Message-State: AO0yUKV3fXwBQDQAXOme4OJgVGrldCRgWx/wcLSP7QSXWKEP0OhYmQGI
+        wsuogzxXNMskK1bhX/ONLUvk8gpelrVurQ==
+X-Google-Smtp-Source: AK7set9lhlmOh2oWsFNvI/1ZX2VopgHYoXoj88prztbjdObNM86GKe0Iyns304jbOcBSfjR4aNrfmQ==
+X-Received: by 2002:a81:9aca:0:b0:529:8dd1:8c51 with SMTP id r193-20020a819aca000000b005298dd18c51mr179709ywg.43.1675713813834;
+        Mon, 06 Feb 2023 12:03:33 -0800 (PST)
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
+        by smtp.gmail.com with ESMTPSA id de8-20020a05620a370800b0071d3e432c9bsm8271748qkb.28.2023.02.06.12.03.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Feb 2023 12:03:32 -0800 (PST)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-527979e8670so83253777b3.10;
+        Mon, 06 Feb 2023 12:03:32 -0800 (PST)
+X-Received: by 2002:a81:8285:0:b0:507:86ae:c733 with SMTP id
+ s127-20020a818285000000b0050786aec733mr45244ywf.358.1675713811751; Mon, 06
+ Feb 2023 12:03:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <63e1486a.050a0220.7001.ca15@mx.google.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/5.10.0-12-amd64 (x86_64)
-X-Uptime: 19:49:48 up 332 days,  6:15,  1 user,  load average: 0.05, 0.04,
- 0.00
-User-Agent: Mutt/2.0.5 (2021-01-21)
+References: <20230203193523.never.667-kees@kernel.org> <6c728dfc-d777-4beb-b463-649704c81a5e@app.fastmail.com>
+In-Reply-To: <6c728dfc-d777-4beb-b463-649704c81a5e@app.fastmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 6 Feb 2023 21:03:19 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXXSwYYoUMskhcgjF9SVjraZC-UsBT3sN+xkcUAYmJj4Q@mail.gmail.com>
+Message-ID: <CAMuHMdXXSwYYoUMskhcgjF9SVjraZC-UsBT3sN+xkcUAYmJj4Q@mail.gmail.com>
+Subject: Re: [PATCH] uaccess: Add minimum bounds check on kernel buffer size
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-* Kees Cook (keescook@chromium.org) wrote:
-> On Sat, Feb 04, 2023 at 08:25:45PM +0000, Dr. David Alan Gilbert wrote:
-> > * Kees Cook (keescook@chromium.org) wrote:
-> > > To avoid confusing the compiler about possible negative sizes, switch
-> > > "ssize" which can never be negative from int to u32.  Seen with GCC 13:
-> > > 
-> > > ../fs/jfs/namei.c: In function 'jfs_symlink': ../include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' pointer overflow between offset 0 and size [-2147483648, -1]
-> > > [-Warray-bounds=]
-> > >    57 | #define __underlying_memcpy     __builtin_memcpy
-> > >       |                                 ^
-> > > ...
-> > > ../fs/jfs/namei.c:950:17: note: in expansion of macro 'memcpy'
-> > >   950 |                 memcpy(ip->i_link, name, ssize);
-> > >       |                 ^~~~~~
-> > > 
-> > > Cc: Dave Kleikamp <shaggy@kernel.org>
-> > > Cc: Christian Brauner <brauner@kernel.org>
-> > > Cc: Dave Chinner <dchinner@redhat.com>
-> > > Cc: jfs-discussion@lists.sourceforge.net
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  fs/jfs/namei.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/fs/jfs/namei.c b/fs/jfs/namei.c
-> > > index b29d68b5eec5..494b9f4043cf 100644
-> > > --- a/fs/jfs/namei.c
-> > > +++ b/fs/jfs/namei.c
-> > > @@ -876,7 +876,7 @@ static int jfs_symlink(struct mnt_idmap *idmap, struct inode *dip,
-> > >  	tid_t tid;
-> > >  	ino_t ino = 0;
-> > >  	struct component_name dname;
-> > > -	int ssize;		/* source pathname size */
-> > > +	u32 ssize;		/* source pathname size */
-> > 
-> > Had you considered using size_t - this is set from a strlen and used by a memcpy
-> > that both talk size_t.
-> 
-> I considered that, but I've had other maintainers upset about doubling
-> the variable size.
+Hi Arnd,
 
-I bet at least on some platforms it's cheaper as the 64 bit.
+On Fri, Feb 3, 2023 at 10:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Fri, Feb 3, 2023, at 20:35, Kees Cook wrote:
+> > --- a/include/linux/uaccess.h
+> > +++ b/include/linux/uaccess.h
+> > @@ -329,6 +329,10 @@ copy_struct_from_user(void *dst, size_t ksize,
+> > const void __user *src,
+> >       size_t size = min(ksize, usize);
+> >       size_t rest = max(ksize, usize) - size;
+> >
+> > +     /* Double check if ksize is larger than a known object size. */
+> > +     if (WARN_ON_ONCE(ksize > __builtin_object_size(dst, 1)))
+> > +             return -E2BIG;
+> > +
+>
+> WARN_ON_ONCE() may be a little expensive since that adds two
+> comparisons and a static variable to each copy, but it's probably
+> fine.
 
-> I opted to keep the variable 32-bit here, so the
-> machine code would only change to lose signed-ness.
+When seeing this, I was a bit worried about the size increase.
+Hence I gave it a try on atari_defconfig and ran bloat-o-meter.
+Surprisingly, there was no size increase at all, as all checks
+were optimized away.
 
-Fair enough.
+Hence perhaps this can become a compile-time check?
 
-Dave
+Gr{oetje,eeting}s,
 
-> -Kees
-> 
-> -- 
-> Kees Cook
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
