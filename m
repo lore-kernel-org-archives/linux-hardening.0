@@ -2,64 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA81C636D3
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 19:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DEAC636D3
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 19:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbjBFTA1 (ORCPT
+        id S230299AbjBFTRT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Feb 2023 14:00:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35774 "EHLO
+        Mon, 6 Feb 2023 14:17:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjBFTA0 (ORCPT
+        with ESMTP id S230284AbjBFTRR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Feb 2023 14:00:26 -0500
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id 20B39C652
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 11:00:25 -0800 (PST)
-Received: (qmail 666421 invoked by uid 1000); 6 Feb 2023 14:00:24 -0500
-Date:   Mon, 6 Feb 2023 14:00:24 -0500
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, usb-storage@lists.one-eyed-alien.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] USB: ene_usb6250: Allocate enough memory for full object
-Message-ID: <Y+FOSNyVKJdkwRy0@rowland.harvard.edu>
-References: <20230204183546.never.849-kees@kernel.org>
- <Y961c1/JIkDUqMbC@rowland.harvard.edu>
- <63e14809.170a0220.7fcb2.150b@mx.google.com>
+        Mon, 6 Feb 2023 14:17:17 -0500
+Received: from omta033.useast.a.cloudfilter.net (omta033.useast.a.cloudfilter.net [44.202.169.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5AE227993
+        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 11:16:56 -0800 (PST)
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+        by cmsmtp with ESMTP
+        id OzSbptTtMY6q8P6z1pRjJy; Mon, 06 Feb 2023 19:16:55 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id P6z0ppavaurZ1P6z1pmBkH; Mon, 06 Feb 2023 19:16:55 +0000
+X-Authority-Analysis: v=2.4 cv=KefBDCUD c=1 sm=1 tr=0 ts=63e15227
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=m04uMKEZRckA:10
+ a=wYkD_t78qR0A:10 a=UlVX6gWz2MDTxooHeI4A:9 a=QEXdDO2ut3YA:10
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1ObxFuiXqXpyZXTg1dGdS/FIxrV/Q7eEElLE6od08UE=; b=udDrHuHpv7MF7SH93SgyDTv2xC
+        jBTuMCI22NGTAOGSsjc1k8SLVfZiYWEt6kinXuB8N4+MaPcqPVDN+WNtdCYRdDKCBcIny7wV2jT2Z
+        uzBKdTnKPz0ptRsEMRfRHrQM2o7b+9vUjDWDOSfoqFXj/TSamsA+mwGp2sJBdQllFao+vMfgPrten
+        oe/eQOKO2kaueD1bkH5xtPDEJQUSGuq8hkvDFiFO6ciQN+WHomDq7AShpPSNIzMRtm0PjCxBrujl3
+        IkikvflaRyjVUmndcV0ebPXvZmjnuNgGSTtu3HSeS/GjlgDHpRSBh6BBEAk2krgt8JBcBPnCuCs7k
+        nitx9XfA==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:58048 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1pP6z0-0015W0-Bv;
+        Mon, 06 Feb 2023 13:16:54 -0600
+Message-ID: <f6bec0de-3d6d-6d59-5ef3-2903f40451d3@embeddedor.com>
+Date:   Mon, 6 Feb 2023 13:17:14 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <63e14809.170a0220.7fcb2.150b@mx.google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH][next] xfs: Replace one-element arrays with flexible-array
+ members
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>
+References: <Y9xiYmVLRIKdpJcC@work>
+ <63dd4a37.630a0220.e4652.35de@mx.google.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <63dd4a37.630a0220.e4652.35de@mx.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1pP6z0-0015W0-Bv
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:58048
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfI9wpU5UNWs+Y6yM7LciTCyMd/maPTbYxFAur3NnB7yCuQ4QGzCcRcNiR7UC2ZVh6q1zOM3GvnXSjpzxjWgaLQbGmOV0MvNHapdumZBfsWEmdbiKQHmI
+ pblqgU7EfpoSYIgHLuMy6tAv4i6KfHmss+xW0EzIWZed8D7wFiqRNGNGJWvMigonUccR5dKAgSZnIKo/Uvc8Ew0XwB3rbTIvLNIAu4gUZp8lLFBrlwWN0UB6
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 10:33:44AM -0800, Kees Cook wrote:
-> On Sat, Feb 04, 2023 at 02:43:47PM -0500, Alan Stern wrote:
-> > On Sat, Feb 04, 2023 at 10:35:46AM -0800, Kees Cook wrote:
-> > > The allocation of PageBuffer is 512 bytes in size, but the dereferencing
-> > > of struct ms_bootblock_idi (also size 512) happens at a calculated offset
-> > > within the allocation, which means the object could potentially extend
-> > > beyond the end of the allocation. Avoid this case by just allocating
-> > > enough space to catch any accesses beyond the end. Seen with GCC 13:
-> > 
-> > In principle, it would be better to add a runtime check for overflow.  
-> > Doing it this way means that the code could read an invalid value.
-> > 
-> > In fact, I get the impression that this code tries to load a data 
-> > structure which might straddle a page boundary by reading in just the 
-> > first page.  Either that, or else EntryOffset is always a multiple of 
-> > 512 so the error cannot arise.
+
+
+On 2/3/23 11:53, Kees Cook wrote:
+> On Thu, Feb 02, 2023 at 07:24:50PM -0600, Gustavo A. R. Silva wrote:
+>> One-element arrays are deprecated, and we are replacing them with flexible
+>> array members instead. So, replace one-element arrays with flexible-array
+>> members in structures xfs_attr_leaf_name_local and
+>> xfs_attr_leaf_name_remote.
+>>
+>> The only binary differences reported after the changes are all like
+>> these:
+>>
+>> fs/xfs/libxfs/xfs_attr_leaf.o
+>> _@@ -435,7 +435,7 @@
+>>        3b8:      movzbl 0x2(%rbx),%eax
+>>        3bc:      rol    $0x8,%bp
+>>        3c0:      movzwl %bp,%ebp
+>> -     3c3:      lea    0x2(%rax,%rbp,1),%ebx
+>> +     3c3:      lea    0x3(%rax,%rbp,1),%ebx
+>>        3c7:      call   3cc <xfs_attr_leaf_entsize+0x8c>
+>>                          3c8: R_X86_64_PLT32     __tsan_func_exit-0x4
+>>        3cc:      or     $0x3,%ebx
+>> _@@ -454,7 +454,7 @@
+>>        3ea:      movzbl 0x8(%rbx),%ebx
+>>        3ee:      call   3f3 <xfs_attr_leaf_entsize+0xb3>
+>>                          3ef: R_X86_64_PLT32     __tsan_func_exit-0x4
+>> -     3f3:      add    $0xa,%ebx
+>> +     3f3:      add    $0xb,%ebx
+>>        3f6:      or     $0x3,%ebx
+>>        3f9:      add    $0x1,%ebx
+>>        3fc:      mov    %ebx,%eax
+>>
+>> similar changes in fs/xfs/scrub/attr.o and fs/xfs/xfs.o object files.
 > 
-> Yeah, I couldn't figure it out. It seems like it might move in
-> non-512-byte steps too sometimes? Doubling the allocation (and zero-fill
-> it) seemed the safest way to cover it.
+> I usually turn off the sanitizers for the A/B build comparisons to make
 
-It hardly seems to matter at this point.  I doubt that any significant 
-number of laptops still in operation use the ENE UB6250 reader.  The 
-driver was originally written in 2010, and official support for the 
-hardware under Windows apparently ended with Windows 7.
+Oh yes! that's a good point. I'll see that they are turned off next time. :)
 
-Alan Stern
+> it easier to read the results. It looks like it _grew_ in size here,
+> though?
+
+Yep; I'm sorry I got it wrong. :/ I had it right in the beginning, then after
+reading the code once again just before sending out a version of this patch
+with only the flex-array transformations, I noticed the entsize functions and
+the "sizeof(struct-with-one-element-array) - 1" and I forgot about the padding,
+removed the "- 1" and got a bit confused with my build-tests.
+
+I'll send v2 with my original changes... the flex-array transformations, only.
+
+--
+Gustavo
