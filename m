@@ -2,136 +2,168 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A2FC636D4
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 18:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B26C636D3
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 21:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230347AbjBGSBr (ORCPT
+        id S229517AbjBGVxv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Feb 2023 13:01:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59962 "EHLO
+        Tue, 7 Feb 2023 16:53:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231570AbjBGSBp (ORCPT
+        with ESMTP id S229590AbjBGVx0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Feb 2023 13:01:45 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C031637B72
-        for <linux-hardening@vger.kernel.org>; Tue,  7 Feb 2023 10:01:33 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id bg10-20020a17090b0d8a00b00230c7f312d4so6485339pjb.3
-        for <linux-hardening@vger.kernel.org>; Tue, 07 Feb 2023 10:01:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PZduzSQedcfK0VkSdKK8LkGwE1Lav/aAuVJtPsAz85U=;
-        b=OBxGFk75lDiGUlUvrFhIHJPcRAslCw/EEvSQNDBB5YCIzMHVA4EnksKV25d5GBa8T9
-         dFS19YdvdlPngB22IpK6355pvCbZS88YSXZJn0ypE20zzdLdc3hFS7GLG9O2Oi6SBDZr
-         iX8gB/ssqdae0nsogt7pu+1nXVASgEzoB3iba34bqufCITrZzBbSUG72BPS1U/xt4PMm
-         ZvdfoPHZ8gwvGgVZ8ryLTePkyRraoiOf8yX2ucJpoHts2vqjlVXcdjCZI1HRRTIdUqEJ
-         I07rC4JoFiNgx1KV8OsL+j5niabSt3T/7hR+ulfJikexep4XdQnX2OIPRZ7KcZnGiE4h
-         yBbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PZduzSQedcfK0VkSdKK8LkGwE1Lav/aAuVJtPsAz85U=;
-        b=cf79bYraPQwO0045AnP+VT3u73f/rWxIYZMoEUt5bmkIZeSpHKr+Z5r/221jz36hz9
-         +vwlp/z2m67P6ANtYhiM+aEpLMFS3cI33bcKXlIF27/bpdsbNSuDiTzPZc1KL+7prcDR
-         kQMFdXDbpNENsb5tcLRaRl5Pw5sL8wh9ncWPNKoo2hvXJutroAoDYsPjh+/jDBUYY5p/
-         EkqD6NYMBvyjoHbBTGdV+4Y0tQtXQC5/xvW+eEBccd/6bdJSSA1aKXd+lwWnyxCgFvgX
-         PsQqJUb2gR5iVsUPAwyOHWBs1bHLBNF0PnVNZOXxAzoFJA0hxE2jjbwrhvXGBZDnJTGl
-         XCBg==
-X-Gm-Message-State: AO0yUKVgJjLHBB4aD/YT7G0sSWnt7V42tO4JyceLdBYHt04BkSjXZhGB
-        dAULUaPpzIQ/Lp8TCrz23+MCHv9WZZseDxo2Pyt2Mc11K/VroZ4B
-X-Google-Smtp-Source: AK7set/5/7deqTUQyO/sBNCbUgkmz7QmmOIK18S7lNp32mxnhOYV8HOSgp8+KUAArWSXjr58XkSfzZwy3swzWUzfUDI=
-X-Received: by 2002:a17:903:555:b0:196:14ea:d3c6 with SMTP id
- jo21-20020a170903055500b0019614ead3c6mr923273plb.20.1675792892586; Tue, 07
- Feb 2023 10:01:32 -0800 (PST)
+        Tue, 7 Feb 2023 16:53:26 -0500
+Received: from omta33.uswest2.a.cloudfilter.net (omta33.uswest2.a.cloudfilter.net [35.89.44.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DD93A845
+        for <linux-hardening@vger.kernel.org>; Tue,  7 Feb 2023 13:53:24 -0800 (PST)
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+        by cmsmtp with ESMTP
+        id PPcQpGKRVII8dPVu0ppYCi; Tue, 07 Feb 2023 21:53:24 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id PVtzpSoagaJ3DPVtzp9Ypn; Tue, 07 Feb 2023 21:53:23 +0000
+X-Authority-Analysis: v=2.4 cv=RqfWkQqK c=1 sm=1 tr=0 ts=63e2c853
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=m04uMKEZRckA:10
+ a=wYkD_t78qR0A:10 a=XYAwZIGsAAAA:8 a=_Wotqz80AAAA:8 a=VwQbUJbxAAAA:8
+ a=uBuKx8GwAAAA:8 a=VnNF1IyMAAAA:8 a=yPCof4ZbAAAA:8 a=cm27Pg_UAAAA:8
+ a=VqYrzBdyEexCFwkAo-8A:9 a=QEXdDO2ut3YA:10 a=E8ToXWR_bxluHZ7gmE-Z:22
+ a=buJP51TR1BpY-zbLSsyS:22 a=AjGcO6oz07-iQ99wixmX:22 a=wZgZ3yaTFkxMEWn-yT5t:22
+ a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Kozxu+Lu9GQf4DeUSmoMjgg/e36UBdioWg3iwVR23ws=; b=DdjpuonaMIcdvTNCChZ2t6+FpV
+        rjMA7JRkaZCnof0nhbsBShBagbasqC4jzRuEWi2vHrftSk0+y+UGeDzj+eCgcTkprLcbhFeU31/mX
+        tJntxIWmpO682DpjU0sNlsGbDgF8xm/VOX/ot/nYy1z7po0mUU/iF/hvZhs6la0emzozXpqaZRgDD
+        BrspLBy1O3/DfEFBMe8opY+0ydaazosXj6jENZxw+diDEzzPoBe3sGN/gOefAt68xbLzhnCdcjKt2
+        jiocnJWQIHKXLCrUEelwk+UhgErVO8+IrD/Yg8UqD+dfGWOMfJDy+rBZqsP7GPahl70A8FlhPBaJq
+        g9Ugi7tw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:47838 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1pPVty-003LHy-PH;
+        Tue, 07 Feb 2023 15:53:22 -0600
+Message-ID: <d881ad98-a291-1c9b-53dc-199f23f1625e@embeddedor.com>
+Date:   Tue, 7 Feb 2023 15:53:42 -0600
 MIME-Version: 1.0
-References: <20230203194201.92015-1-ebiggers@kernel.org> <63deacb1.170a0220.f078.6779@mx.google.com>
- <CAFP8O3Kwa2V7GvJPEbr87o6hMi8i2JquWniFOaiFR3nv9pGc_g@mail.gmail.com>
-In-Reply-To: <CAFP8O3Kwa2V7GvJPEbr87o6hMi8i2JquWniFOaiFR3nv9pGc_g@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 7 Feb 2023 10:01:21 -0800
-Message-ID: <CAKwvOdm8F_VcdegPGw3vPu+-H1Gyh0rqQWpf=+Yh9YAowVuWSA@mail.gmail.com>
-Subject: Re: [PATCH] randstruct: temporarily disable clang support
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Bill Wendling <morbo@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 1/3][next] scsi: smartpqi: Replace one-element array with
+ flexible-array member
+Content-Language: en-US
+To:     Don.Brace@microchip.com, gustavoars@kernel.org,
+        kevin.barnett@microsemi.com, storagedev@microchip.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, keescook@chromium.org
+References: <cover.1663816572.git.gustavoars@kernel.org>
+ <c80c0979933e0c05e80d95792ef167a28640a14b.1663816572.git.gustavoars@kernel.org>
+ <CY4PR11MB12387B9F495BC7B5D0F5FD84E1DA9@CY4PR11MB1238.namprd11.prod.outlook.com>
+ <16e6c434-44af-2efb-d4bc-a253e93e5590@embeddedor.com>
+ <CY4PR11MB123855C0E92965CD5B46C9B6E1DB9@CY4PR11MB1238.namprd11.prod.outlook.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <CY4PR11MB123855C0E92965CD5B46C9B6E1DB9@CY4PR11MB1238.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1pPVty-003LHy-PH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:47838
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDcFkluCztmd1NmJbPggfsHe7x4x0Oj3VdCQ5N34GFRtsgNFnkt0J83o6la3Kq4plb1NBfoDiiSIVByFHv57OiQIZk7PetyQ/jJvQX1E9B+kSbJmXg3V
+ v3VziZpahzjLm9C1S1DNA4gnzjLCkolDCz33xqUbUUpiNbWifEbd2YLJL3Md2dxUI9TbsJAXZkrHRoGSsxGv+mfpPoJmuRsWeB1HRfhhUZIjCAwAKunSI64c
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 6, 2023 at 3:41 PM Fangrui Song <maskray@google.com> wrote:
->
-> On Sat, Feb 4, 2023 at 11:06 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Fri, Feb 03, 2023 at 11:42:01AM -0800, Eric Biggers wrote:
-> > > From: Eric Biggers <ebiggers@google.com>
-> > >
-> > > Randstruct with clang is currently unsafe to use in any clang release
-> > > that supports it, due to a clang bug that is causing miscompilations:
-> > > "-frandomize-layout-seed inconsistently randomizes all-function-point=
-ers
-> > > structs" (https://github.com/llvm/llvm-project/issues/60349).  Disabl=
-e
-> > > it temporarily until the bug is fixed and the fix is released in a cl=
-ang
-> > > version that can be checked for.
-> > >
-> > > Fixes: 035f7f87b729 ("randstruct: Enable Clang support")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > > ---
-> > >  security/Kconfig.hardening | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> > > index 53baa95cb644..aad16187148c 100644
-> > > --- a/security/Kconfig.hardening
-> > > +++ b/security/Kconfig.hardening
-> > > @@ -280,7 +280,8 @@ config ZERO_CALL_USED_REGS
-> > >  endmenu
-> > >
-> > >  config CC_HAS_RANDSTRUCT
-> > > -     def_bool $(cc-option,-frandomize-layout-seed-file=3D/dev/null)
-> > > +     # Temporarily disabled due to https://github.com/llvm/llvm-proj=
-ect/issues/60349
-> > > +     def_bool n
-> > >
-> > >  choice
-> > >       prompt "Randomize layout of sensitive kernel structures"
-> > >
-> > > base-commit: 7b753a909f426f2789d9db6f357c3d59180a9354
-> > > --
-> > > 2.39.1
-> >
-> > This should be fixed with greater precision -- i.e. this is nearly fixe=
-d
-> > in Clang now, and is likely to be backported. So I think we'll need
-> > versioned checks here.
-> >
-> > --
-> > Kees Cook
-> >
->
-> Bill has requested cherry-pick the llvm-project fix into the
-> release/16.x branch [1].
-> https://github.com/llvm/llvm-project-release-prs/pull/276
-> It may take one day to land.
->
-> [1]: https://github.com/llvm/llvm-project/tree/release/16.x
->
-> --
-> =E5=AE=8B=E6=96=B9=E7=9D=BF
->
 
-All landed; the version check should be for 16+. (And the link to the
-issue report would be nice to retain).
---=20
-Thanks,
-~Nick Desaulniers
+
+On 2/7/23 15:08, Don.Brace@microchip.com wrote:
+> 
+> ________________________________
+> From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Sent: Monday, February 6, 2023 4:28 PM
+> To: Don Brace - C33706 <Don.Brace@microchip.com>; gustavoars@kernel.org <gustavoars@kernel.org>; kevin.barnett@microsemi.com <kevin.barnett@microsemi.com>; storagedev <storagedev@microchip.com>; jejb@linux.ibm.com <jejb@linux.ibm.com>; martin.petersen@oracle.com <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org <linux-scsi@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; linux-hardening@vger.kernel.org <linux-hardening@vger.kernel.org>; Kees Cook <keescook@chromium.org>
+> Subject: Re: [PATCH 1/3][next] scsi: smartpqi: Replace one-element array with flexible-array member
+> 
+> 
+>> NAK: What is actually happening is that we were taking on an extra list entry that is all zeros for the controller itself. This is intentional. These changes will break the driver.
+> 
+> Oh, great to know. :)
+> 
+> So, in this case, what do you think about this, instead:
+> 
+> diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
+> index af27bb0f3133..228838eb3686 100644
+> --- a/drivers/scsi/smartpqi/smartpqi.h
+> +++ b/drivers/scsi/smartpqi/smartpqi.h
+> @@ -954,7 +954,7 @@ struct report_log_lun {
+> 
+>    struct report_log_lun_list {
+>           struct report_lun_header header;
+> -       struct report_log_lun lun_entries[1];
+> +       struct report_log_lun lun_entries[];
+>    };
+> 
+> This HUNK is OK.
+> Thanks for your patch.
+> 
+> Acked-by: Don Brace <don.brace@microchip.com>
+> Don
+> 
+>    struct report_phys_lun_8byte_wwid {
+> diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+> index d0446d4d4465..af8f1a8e9f8f 100644
+> --- a/drivers/scsi/smartpqi/smartpqi_init.c
+> +++ b/drivers/scsi/smartpqi/smartpqi_init.c
+> @@ -1277,6 +1277,10 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
+>           logdev_data_length = sizeof(struct report_lun_header) +
+>                   logdev_list_length;
+> 
+> +       /*
+> +        * Notice that we take on an extra list entry (struct report_log_lun)
+> +        * that is all zeros for the controller itself.
+> +        */
+>           internal_logdev_list = kmalloc(logdev_data_length +
+>                   sizeof(struct report_log_lun), GFP_KERNEL);
+>           if (!internal_logdev_list) {
+> 
+> The driver author has provided his input on the change to the above comment:
+> 
+> I think that'd I'd prefer that we just amplify the existing comment to something like this:
+> 
+>          /*
+>           * Tack the controller itself onto the end of the logical device list
+>                 * by adding a list entry that is all zeros.
+>           */
+
+OK. Great. :)
+
+Thanks
+--
+Gustavo
+
+> 
+> Thank-you for your patch
+> Don Brace <don.brace@microchip.com>
+> 
+> 
