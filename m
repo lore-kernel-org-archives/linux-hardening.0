@@ -2,142 +2,175 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C552C636D4
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 23:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA1EC636CD
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 23:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230080AbjBGXBX (ORCPT
+        id S229718AbjBGXJX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Feb 2023 18:01:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47100 "EHLO
+        Tue, 7 Feb 2023 18:09:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230034AbjBGXBW (ORCPT
+        with ESMTP id S229483AbjBGXJT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Feb 2023 18:01:22 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4242A20065
-        for <linux-hardening@vger.kernel.org>; Tue,  7 Feb 2023 15:01:21 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id on9-20020a17090b1d0900b002300a96b358so360980pjb.1
-        for <linux-hardening@vger.kernel.org>; Tue, 07 Feb 2023 15:01:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=yTf07qTobRvFNEOlYlJqV5SF3piK99zxyELcaKNScNs=;
-        b=izbdy8nkqes83emxWyH2/f6utXKy4skfO3eStORNppJy6CYGvLj/pDh/CoVGCJaGTP
-         M9ZPgGUA4vPVEusXc9xSs5bwYkLul4PwP9X1zlVYYddG/8Vs8lWNJEYLfOotZk5Bcw6m
-         82sqiPDITLEKVrOiLprXUFqcwkKbDp4dGRbSI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yTf07qTobRvFNEOlYlJqV5SF3piK99zxyELcaKNScNs=;
-        b=M5Nu+Tv301lFR7HOT+ibiTcjRx9pfRdHxsjyEi5vVrN0ExawUa+Y5LvqJSqWq0hSvk
-         TOJGnadSi6ZZHLaFBp2bTwCJATaicsjJP3jQRU58xbIJxI/lbNZcwoBBHm5poFbQzeYR
-         cAxXch498ZED42eq2eSHPlDcqimL9SSnkMdl3lpARLpqzmcLs3VvEzHPzlbiiZGbk00m
-         mHqpFqYQyHE79EjrJR2eF0CPu+AEgl7i0Z3CZ1/ahKfbxC2dBBLHKRlDj0ilnM+ppsYb
-         TD/bz56t6h2a6h8Nd2qgN7CthGRtFWLZ8Wx/A1lA043Xg9wFpasZixMWq3CZpalFZvyg
-         Gi6g==
-X-Gm-Message-State: AO0yUKV0f78lZ544fynGYH1z5UBO3vEvzsCRwqtxAEzID10GDltsiXbX
-        cIQYYB0ISUdWZ7GuF3XCkZIy/g==
-X-Google-Smtp-Source: AK7set+fDacQiRQcwTpDjwGKlzv2yYCCHtNdjZcTiWEgD+0zpQZ6cdterIjVrP204wVOR+2UF9VL8w==
-X-Received: by 2002:a17:902:e205:b0:196:77fd:abfd with SMTP id u5-20020a170902e20500b0019677fdabfdmr4121073plb.64.1675810880741;
-        Tue, 07 Feb 2023 15:01:20 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p11-20020a1709026b8b00b0017fe9b038fdsm9405296plk.14.2023.02.07.15.01.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Feb 2023 15:01:20 -0800 (PST)
-Message-ID: <63e2d840.170a0220.2b199.00a7@mx.google.com>
-X-Google-Original-Message-ID: <202302071500.@keescook>
-Date:   Tue, 7 Feb 2023 15:01:19 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+        Tue, 7 Feb 2023 18:09:19 -0500
+Received: from omta37.uswest2.a.cloudfilter.net (omta37.uswest2.a.cloudfilter.net [35.89.44.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AAF741B47
+        for <linux-hardening@vger.kernel.org>; Tue,  7 Feb 2023 15:08:53 -0800 (PST)
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+        by cmsmtp with ESMTP
+        id PIttp8qc3YHR1PX51pXQJ7; Tue, 07 Feb 2023 23:08:51 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id PX4zpFLQVSsl1PX50pVLXV; Tue, 07 Feb 2023 23:08:50 +0000
+X-Authority-Analysis: v=2.4 cv=RfaDtnhv c=1 sm=1 tr=0 ts=63e2da02
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=m04uMKEZRckA:10
+ a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=XYAwZIGsAAAA:8 a=VwQbUJbxAAAA:8
+ a=cm27Pg_UAAAA:8 a=_Wotqz80AAAA:8 a=lepexe-JEeTRwUq4UYcA:9 a=QEXdDO2ut3YA:10
+ a=E8ToXWR_bxluHZ7gmE-Z:22 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+ a=buJP51TR1BpY-zbLSsyS:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ED4y54RMLPXzNI1joWSXaV4TBbQzFSz900g2AHgM1Ro=; b=P0mahWdIRcjVu7mRciLzvxhWo2
+        zH53lbynCFt2QyDV/S0rRfXsJ0c592YM6fT91me/yHXehAttNjFSsOVRFNPjHIWbbUTy6i/SPMyvF
+        AYMSZoPJS1bXb5ATyIfwHF1oJE3gX9p4O0gpPEMwRvfGxKlByKnzdrnB37TppNxG2lBymgMhsAPE9
+        Dak3tZmi22bo1TCrSkUNcyfQWy/RImJ9qrEj85ATjjWCY3iquvF2lk/xdzwVhvyOWGUx9U3V5VZR7
+        1pfzSm09lRKSMec3QJrZB73mm/ByrPlszkxH7cuE+iofjzonKwhr89DFGcRR7XRqd0G1hcuzXVyBG
+        ziYj2jGA==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:56074 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1pPX4y-000Jun-Tl;
+        Tue, 07 Feb 2023 17:08:49 -0600
+Message-ID: <22599902-57bb-a137-047e-867f35b45b69@embeddedor.com>
+Date:   Tue, 7 Feb 2023 17:09:06 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v3][next] scsi: smartpqi: Replace one-element array with
+ flexible-array member
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     Don Brace <don.brace@microchip.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         storagedev@microchip.com, linux-scsi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3][next] scsi: smartpqi: Replace one-element array with
- flexible-array member
 References: <Y+LJz/r6+UeLqnV3@work>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y+LJz/r6+UeLqnV3@work>
+ <63e2d840.170a0220.2b199.00a7@mx.google.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <63e2d840.170a0220.2b199.00a7@mx.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1pPX4y-000Jun-Tl
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:56074
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfMdMW3VwanmrS7zaw0CHm+upssRGSlbvrc20igow6LHBWQFhdKgQMATp0LVi2DWdWmJqfQdZ+Z7ED2ybb+GpScKQF5bmZaOQm31fxPXWRGOLOx0cBuQV
+ ZsLtzVDMtDDyip3vWFyNHHj8N0lx9bpoMKFvInCgfPWd95PPNc3gs5M79jjrIlgaV6vRGs5OgtO0Gyd6zlPu/ixj4fkOTucNfJEA7NPCUuXXNPQmwILbyy+y
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 07, 2023 at 03:59:43PM -0600, Gustavo A. R. Silva wrote:
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element array with flexible-array
-> member in struct report_log_lun_list.
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
-> on memcpy().
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/204
-> Acked-by: Don Brace <don.brace@microchip.com>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Looks good to me -- both before and after, there is 1 extra all-zero
-entry at the end. But now the struct is using a flex array correctly.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+On 2/7/23 17:01, Kees Cook wrote:
+> On Tue, Feb 07, 2023 at 03:59:43PM -0600, Gustavo A. R. Silva wrote:
+>> One-element arrays are deprecated, and we are replacing them with flexible
+>> array members instead. So, replace one-element array with flexible-array
+>> member in struct report_log_lun_list.
+>>
+>> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+>> on memcpy().
+>>
+>> Link: https://github.com/KSPP/linux/issues/79
+>> Link: https://github.com/KSPP/linux/issues/204
+>> Acked-by: Don Brace <don.brace@microchip.com>
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> 
+> Looks good to me -- both before and after, there is 1 extra all-zero
+> entry at the end. But now the struct is using a flex array correctly.
 
--Kees
+Yep. :)
 
-> ---
-> Changes in v3:
->  - Amplify the existing comment instead of adding a new one. By Don
->    Brace[1].
->  - Add Don's Acked-by tag to the changelog.
->    Link: https://lore.kernel.org/linux-hardening/d881ad98-a291-1c9b-53dc-199f23f1625e@embeddedor.com/ [1]
 > 
-> Changes in v2:
->  - In v1 we thought that the original code was allocating one too-many
->    entries for the list. However, Don Brace commented that the allocation
->    was actually intentional[2]. So, I added a code comment with his feedback.
->    Link: https://lore.kernel.org/linux-hardening/16e6c434-44af-2efb-d4bc-a253e93e5590@embeddedor.com/  [2]
-> 
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/c80c0979933e0c05e80d95792ef167a28640a14b.1663816572.git.gustavoars@kernel.org/
-> 
->  drivers/scsi/smartpqi/smartpqi.h      | 2 +-
->  drivers/scsi/smartpqi/smartpqi_init.c | 3 ++-
->  2 files changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
-> index af27bb0f3133..228838eb3686 100644
-> --- a/drivers/scsi/smartpqi/smartpqi.h
-> +++ b/drivers/scsi/smartpqi/smartpqi.h
-> @@ -954,7 +954,7 @@ struct report_log_lun {
->  
->  struct report_log_lun_list {
->  	struct report_lun_header header;
-> -	struct report_log_lun lun_entries[1];
-> +	struct report_log_lun lun_entries[];
->  };
->  
->  struct report_phys_lun_8byte_wwid {
-> diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-> index d0446d4d4465..49a8f91810b6 100644
-> --- a/drivers/scsi/smartpqi/smartpqi_init.c
-> +++ b/drivers/scsi/smartpqi/smartpqi_init.c
-> @@ -1259,7 +1259,8 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
->  			"report logical LUNs failed\n");
->  
->  	/*
-> -	 * Tack the controller itself onto the end of the logical device list.
-> +	 * Tack the controller itself onto the end of the logical device list
-> +	 * by adding a list entry that is all zeros.
->  	 */
->  
->  	logdev_data = *logdev_list;
-> -- 
-> 2.34.1
-> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 
--- 
-Kees Cook
+Thanks!
+--
+Gustavo
+
+> 
+> -Kees
+> 
+>> ---
+>> Changes in v3:
+>>   - Amplify the existing comment instead of adding a new one. By Don
+>>     Brace[1].
+>>   - Add Don's Acked-by tag to the changelog.
+>>     Link: https://lore.kernel.org/linux-hardening/d881ad98-a291-1c9b-53dc-199f23f1625e@embeddedor.com/ [1]
+>>
+>> Changes in v2:
+>>   - In v1 we thought that the original code was allocating one too-many
+>>     entries for the list. However, Don Brace commented that the allocation
+>>     was actually intentional[2]. So, I added a code comment with his feedback.
+>>     Link: https://lore.kernel.org/linux-hardening/16e6c434-44af-2efb-d4bc-a253e93e5590@embeddedor.com/  [2]
+>>
+>> v1:
+>>   - Link: https://lore.kernel.org/linux-hardening/c80c0979933e0c05e80d95792ef167a28640a14b.1663816572.git.gustavoars@kernel.org/
+>>
+>>   drivers/scsi/smartpqi/smartpqi.h      | 2 +-
+>>   drivers/scsi/smartpqi/smartpqi_init.c | 3 ++-
+>>   2 files changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
+>> index af27bb0f3133..228838eb3686 100644
+>> --- a/drivers/scsi/smartpqi/smartpqi.h
+>> +++ b/drivers/scsi/smartpqi/smartpqi.h
+>> @@ -954,7 +954,7 @@ struct report_log_lun {
+>>   
+>>   struct report_log_lun_list {
+>>   	struct report_lun_header header;
+>> -	struct report_log_lun lun_entries[1];
+>> +	struct report_log_lun lun_entries[];
+>>   };
+>>   
+>>   struct report_phys_lun_8byte_wwid {
+>> diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+>> index d0446d4d4465..49a8f91810b6 100644
+>> --- a/drivers/scsi/smartpqi/smartpqi_init.c
+>> +++ b/drivers/scsi/smartpqi/smartpqi_init.c
+>> @@ -1259,7 +1259,8 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
+>>   			"report logical LUNs failed\n");
+>>   
+>>   	/*
+>> -	 * Tack the controller itself onto the end of the logical device list.
+>> +	 * Tack the controller itself onto the end of the logical device list
+>> +	 * by adding a list entry that is all zeros.
+>>   	 */
+>>   
+>>   	logdev_data = *logdev_list;
+>> -- 
+>> 2.34.1
+>>
+> 
