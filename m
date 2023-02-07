@@ -2,74 +2,126 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6BDC636CC
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 23:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CF9C636CD
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 23:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbjBGXJk (ORCPT
+        id S229537AbjBGX20 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Feb 2023 18:09:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54400 "EHLO
+        Tue, 7 Feb 2023 18:28:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230099AbjBGXJe (ORCPT
+        with ESMTP id S229483AbjBGX20 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Feb 2023 18:09:34 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3EB63BD82
-        for <linux-hardening@vger.kernel.org>; Tue,  7 Feb 2023 15:09:24 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id f15-20020a17090ac28f00b00230a32f0c9eso373778pjt.4
-        for <linux-hardening@vger.kernel.org>; Tue, 07 Feb 2023 15:09:24 -0800 (PST)
+        Tue, 7 Feb 2023 18:28:26 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30587E3A4
+        for <linux-hardening@vger.kernel.org>; Tue,  7 Feb 2023 15:28:25 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id o13so16634520pjg.2
+        for <linux-hardening@vger.kernel.org>; Tue, 07 Feb 2023 15:28:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-disposition:mime-version:subject:to:from:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Iu55/RCZIpaMA1fxaFRMx8cHdAiUQu0JOyRvT6OmX1I=;
-        b=fUI+bTXbFmQvTPvh0dpEalfNP+l+YFsjg4dlQztnO1CbBhKbPJprVPBN0Xk5dTh9D/
-         CbzA04J83m/ywG3eBZWrlhAtCv+FcY3vWfRwbjGhQh+JTp//kEHfT8/GSBz+u6hxeFyP
-         dWvyEePKKWiVHWli3fMqOJFMf4oOVJt+ATPBA=
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4+8WAA131sPVyHda3AYJx6Yaup4uoSfYs/I9EU6qRnM=;
+        b=C3UE+oMEeLowc9vopV7fBId2LhF4UNAmnkF2U9YKW5w3o+WjBrDt9BYy7EXMRoBI4S
+         Yb/fLAkDqXHvvwkB8ajSE9PkstANJNn6wCyK7bBdtRwJy6aujwxJXYk85VFZhtTZDO0S
+         0yStOd7tl4Cc2GCZvAQD0T1pD+Dnpf+rBBTgE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:subject:to:from:date:message-id
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Iu55/RCZIpaMA1fxaFRMx8cHdAiUQu0JOyRvT6OmX1I=;
-        b=4RcRmgWpvFUkf1aNC4kahmVXLOxA9MwpiBWsRi1TiDOhPzruLaN8svDC+Bea1qug/t
-         3OR3RL/ZKMYO2fdaFno0EfGQWYvdBBxn3kQmmzd3fRIZkZuwtC44AxsjeoGYKytn4OkO
-         212fxjy4SNk/g2EwkBo6XwAuQXBN0r528W8R3FI4NzAm5ZmzRGIOrSuCbXfW3TKXk+wu
-         Bwix7GhwzV3ho0w00UAL5pE4pA/DFxpH/HPAtJauZUh675/bh0WY8isMvroBbpQlQXsy
-         D0wXpdvayQjD9NR0mW7xd9WgOaF5lQ5k9ZhkFICknxUXdAbiH+vlghF4ldrMvLMKPaIg
-         qvvA==
-X-Gm-Message-State: AO0yUKUleV0+FSgyyrdN6qQFkUEsN6nBt9Qu0gxLIqiFbXg1UggnrA3e
-        Ch8CPwgwWbk1tgzxzHIIa7doN6zppXRxvbI1
-X-Google-Smtp-Source: AK7set8TSsYqfXO8q9VGWKUEdT3Ri83RbMUpXwJ3tTr72Y5r5V6yPvvpq+dLz6v4VSREsB0CE6yHsA==
-X-Received: by 2002:a17:902:e205:b0:196:77fd:abfd with SMTP id u5-20020a170902e20500b0019677fdabfdmr4143387plb.64.1675811364017;
-        Tue, 07 Feb 2023 15:09:24 -0800 (PST)
+        bh=4+8WAA131sPVyHda3AYJx6Yaup4uoSfYs/I9EU6qRnM=;
+        b=CUXQD303UpcXw/BNVZuuHIDrAVX6sWgBKruMRavPX6/6q3heeYnoLIefp/QXOs31Oh
+         /Q2r5LVl/YdDLPSmCwjfmjjxBCWo0DgdlaHgTXXvK69fqrXCli8jVT3RLjTS/SdQfEiD
+         yzO7Hz2nmUblxnaWAnr+50UWKcgT+rPeALPLahxCCXNxozG5Yo01Cw9QIwMsPR0hUaC3
+         fuiciM3BHuEE1bGYOvxlsRwSW3J8KVqXWc5hPwNJ2SlxQye3/GopJTxYUjBwCYoWWyMj
+         iNfhZiPl9OdVG5qlMcOrnL0BcRtW01qdM+uVsZuCfM/yxUxdKIbLsD2KZN0n6KtfNaYC
+         BjpA==
+X-Gm-Message-State: AO0yUKV1EanzCi6m2A4N4+Krt+InGFt5JqZ0+evSF9wQ5R+WtOt64DuB
+        BbFQTwhKZR0KSeDVmUapPtJs1Q==
+X-Google-Smtp-Source: AK7set9ftfCJ+EgyXvapWeDdPNZB0dv1AdhWExLmm3Sb3A3nQLQ2tJwETOb4s9O+kUWH5deIaD5UCg==
+X-Received: by 2002:a17:90b:3890:b0:22c:322a:12fc with SMTP id mu16-20020a17090b389000b0022c322a12fcmr5789854pjb.32.1675812504659;
+        Tue, 07 Feb 2023 15:28:24 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p12-20020a170902b08c00b0019337bf957dsm9419598plr.296.2023.02.07.15.09.23
-        for <linux-hardening@vger.kernel.org>
+        by smtp.gmail.com with ESMTPSA id e35-20020a17090a6fa600b002265ddfc13esm81854pjk.29.2023.02.07.15.28.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Feb 2023 15:09:23 -0800 (PST)
-Message-ID: <63e2da23.170a0220.e2c26.064b@mx.google.com>
-X-Google-Original-Message-ID: <202302071506.@keescook>
-Date:   Tue, 7 Feb 2023 15:09:23 -0800
+        Tue, 07 Feb 2023 15:28:24 -0800 (PST)
+Message-ID: <63e2de98.170a0220.81eb8.02cb@mx.google.com>
+X-Google-Original-Message-ID: <202302071525.@keescook>
+Date:   Tue, 7 Feb 2023 15:28:23 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     linux-hardening@vger.kernel.org
-Subject: KSPP Meeting: Wed 10am US Pacific
+To:     Yann Droneaud <ydroneaud@ouvaton.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] uaccess: Add minimum bounds check on kernel buffer size
+References: <20230203193523.never.667-kees@kernel.org>
+ <6c728dfc-d777-4beb-b463-649704c81a5e@app.fastmail.com>
+ <CAMuHMdXXSwYYoUMskhcgjF9SVjraZC-UsBT3sN+xkcUAYmJj4Q-2143@mail.gmail.com>
+ <9f549c7b-bc72-8037-abfc-fe2f146ff82c@ouvaton.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9f549c7b-bc72-8037-abfc-fe2f146ff82c@ouvaton.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello,
+On Tue, Feb 07, 2023 at 10:06:14AM +0100, Yann Droneaud wrote:
+> Hi,
+> 
+> Le 06/02/2023 à 21:03, Geert Uytterhoeven a écrit :
+> 
+> > Hi Arnd,
+> > 
+> > On Fri, Feb 3, 2023 at 10:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Fri, Feb 3, 2023, at 20:35, Kees Cook wrote:
+> > > > --- a/include/linux/uaccess.h
+> > > > +++ b/include/linux/uaccess.h
+> > > > @@ -329,6 +329,10 @@ copy_struct_from_user(void *dst, size_t ksize,
+> > > > const void __user *src,
+> > > >        size_t size = min(ksize, usize);
+> > > >        size_t rest = max(ksize, usize) - size;
+> > > > 
+> > > > +     /* Double check if ksize is larger than a known object size. */
+> > > > +     if (WARN_ON_ONCE(ksize > __builtin_object_size(dst, 1)))
+> > > > +             return -E2BIG;
+> > > > +
+> > > WARN_ON_ONCE() may be a little expensive since that adds two
+> > > comparisons and a static variable to each copy, but it's probably
+> > > fine.
+> > When seeing this, I was a bit worried about the size increase.
+> > Hence I gave it a try on atari_defconfig and ran bloat-o-meter.
+> > Surprisingly, there was no size increase at all, as all checks
+> > were optimized away.
+> > 
+> > Hence perhaps this can become a compile-time check?
+> 
+> It should be a compile-time check, because one would not want __builtin_object_size(dst, 1) to return -1 if dst' size is not known at compile-time.
 
-Here's the reminder for the KSPP meeting, held every 2 weeks.
+Note that it's size_t, so it's actually SIZE_MAX, which is why these
+tests will vanish most of the time. i.e. it cannot ever be possible for
+the SIZE_MAX case so the entire test is elided.
 
-VC link:  https://meet.google.com/grn-oshi-cpq
-Calendar: https://calendar.google.com/calendar/u/0/embed?src=47005f8f50f21da6133d7239f3cb93d1624d2e1949963ea75dd86d5f2d5721e0@group.calendar.google.com
+And when ksize is known at compile time and __bos is not SIZE_MAX, the
+result is also known to be either always true or always false, etc.
 
-See folks there!
-
--Kees
+What's nice here is that when ksize is only run-time known and the buffer
+size is compile-time known, we'll keep the test.
 
 -- 
 Kees Cook
