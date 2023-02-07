@@ -2,124 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582A1C636D3
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Feb 2023 23:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C07C636CD
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 09:13:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229741AbjBFXlV (ORCPT
+        id S229685AbjBGJNu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Feb 2023 18:41:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36270 "EHLO
+        Tue, 7 Feb 2023 04:13:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229896AbjBFXlU (ORCPT
+        with ESMTP id S230361AbjBGJNs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Feb 2023 18:41:20 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8152CFD0
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Feb 2023 15:41:17 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id h15so6535150plk.12
-        for <linux-hardening@vger.kernel.org>; Mon, 06 Feb 2023 15:41:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cu0OFN8qZCYWAqVWMqFlj99/Zkr5M5+Eb6c07HRobgk=;
-        b=X6O8KDVvbqMZvTq/dBZU/owDSJ8rL1va66hKecrnPQWO7NbZM9JZH8Ff/Kgp+8XR0h
-         PYt06fY/twQ70b2B5OciSQ8Ux5zQk8addCp1zwAR7cPUZ6SWWHzhljSi58TNzatHnfol
-         Nw0cL+/FeO5Zk1/pmkV2h5fDPZdIjoE9S3+kx/dy5qduoM1n6rDy2H4yiCv5UYABLcXL
-         Qw1LbBH5z9Dv1M/TyXGJpC3wEbIASbTpvdDww3AN/Mp0Ls5TE0f+r5rWFT0hA8ZMtu38
-         61NC8HORindS8z+Ya0AVJtBOUm6nbeuWTrtKUzw3Ahn2yR6TUWreNfWA1cLUKG9Qs6nY
-         THCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cu0OFN8qZCYWAqVWMqFlj99/Zkr5M5+Eb6c07HRobgk=;
-        b=NcF6OLPEwed2+djYSiUTdBalh87Em8jy24g9E/0k+pDbrdFscLIdTaws2ATqPNxfRU
-         8+5qF3rHadoO9rg5+g7pDNTcPOk1WqwgZNDrigOOKFSzsRb8gq5+lEN7zpNRZnBQatFq
-         eFkMcQCHSfFp2Xed4LlMbkQ8UcFB2f+V8k3rERn+bkMAsdjHccR0Ansx9vjQ+QDj0ciI
-         QmkFGtVat9ku//cuev9/3eaRKw824cXeZFBy0hinKbvNXjJg4Unh4BwSvr2oxi5b8FJI
-         Hh7TMXNjcqrN3Y27pjtn5HWt0fjXzVLOAl8OTZBwz7apRtRbidbprc60Q406vQipj2TA
-         I9kw==
-X-Gm-Message-State: AO0yUKV7UEyqIk53cKQQJpmgMBcEeKF8AhY2cdLYCG7pOM81DZ2fOnzB
-        J4cgyrDfUTm9nN7Ktq1zVTDK7x2oKC8T72C7IZheZQ==
-X-Google-Smtp-Source: AK7set9uOOMShrxA48+C1j7fFNaTfn5dhIRadvFGX40qhOjytovXu9agQpf1EsZBGE57vO7ZYGhygwi7iKDB+HEsXBo=
-X-Received: by 2002:a17:902:b7c9:b0:196:7127:2240 with SMTP id
- v9-20020a170902b7c900b0019671272240mr173745plz.11.1675726877236; Mon, 06 Feb
- 2023 15:41:17 -0800 (PST)
+        Tue, 7 Feb 2023 04:13:48 -0500
+X-Greylist: delayed 446 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Feb 2023 01:13:45 PST
+Received: from ouvsmtp1.octopuce.fr (ouvsmtp1.octopuce.fr [194.36.166.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED00F18B15;
+        Tue,  7 Feb 2023 01:13:45 -0800 (PST)
+Received: from panel.vitry.ouvaton.coop (unknown [194.36.166.20])
+        by ouvsmtp1.octopuce.fr (Postfix) with ESMTPS id 9366B1DC;
+        Tue,  7 Feb 2023 10:06:16 +0100 (CET)
+Received: from [192.168.1.18] (lfbn-idf2-1-1024-123.w86-238.abo.wanadoo.fr [86.238.255.123])
+        by panel.vitry.ouvaton.coop (Postfix) with ESMTPSA id B6FD15E204B;
+        Tue,  7 Feb 2023 10:06:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ouvaton.org;
+        s=default; t=1675760776;
+        bh=YX0gNKJmv7B0U2PNuC8epDN4OrK4OL3H/or53nn8tMo=; l=1246;
+        h=Subject:To:From;
+        b=Woy/6i0vuWfkj+rwRaV0Dy58emaOmJ6FHz7/scGmMSQmhen0COQMvdlBxHpGBpksH
+         D4slGo59errcnxtR6htO5A8Goc2MsxFLAUapuHll5BsqAR0jTwvcDQ4eHDRK0YDBKQ
+         7s0m28Pv8yjA6A0di69TWMAX6g9q9+IueVowqOc8=
+Message-ID: <9f549c7b-bc72-8037-abfc-fe2f146ff82c@ouvaton.org>
+Date:   Tue, 7 Feb 2023 10:06:14 +0100
 MIME-Version: 1.0
-References: <20230203194201.92015-1-ebiggers@kernel.org> <63deacb1.170a0220.f078.6779@mx.google.com>
-In-Reply-To: <63deacb1.170a0220.f078.6779@mx.google.com>
-From:   Fangrui Song <maskray@google.com>
-Date:   Mon, 6 Feb 2023 15:41:05 -0800
-Message-ID: <CAFP8O3Kwa2V7GvJPEbr87o6hMi8i2JquWniFOaiFR3nv9pGc_g@mail.gmail.com>
-Subject: Re: [PATCH] randstruct: temporarily disable clang support
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        linux-hardening@vger.kernel.org, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] uaccess: Add minimum bounds check on kernel buffer size
+Content-Language: fr-FR, en-US, en-GB
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230203193523.never.667-kees@kernel.org>
+ <6c728dfc-d777-4beb-b463-649704c81a5e@app.fastmail.com>
+ <CAMuHMdXXSwYYoUMskhcgjF9SVjraZC-UsBT3sN+xkcUAYmJj4Q-2143@mail.gmail.com>
+From:   Yann Droneaud <ydroneaud@ouvaton.org>
+In-Reply-To: <CAMuHMdXXSwYYoUMskhcgjF9SVjraZC-UsBT3sN+xkcUAYmJj4Q-2143@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Feb 4, 2023 at 11:06 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Fri, Feb 03, 2023 at 11:42:01AM -0800, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> >
-> > Randstruct with clang is currently unsafe to use in any clang release
-> > that supports it, due to a clang bug that is causing miscompilations:
-> > "-frandomize-layout-seed inconsistently randomizes all-function-pointer=
-s
-> > structs" (https://github.com/llvm/llvm-project/issues/60349).  Disable
-> > it temporarily until the bug is fixed and the fix is released in a clan=
-g
-> > version that can be checked for.
-> >
-> > Fixes: 035f7f87b729 ("randstruct: Enable Clang support")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > ---
-> >  security/Kconfig.hardening | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> > index 53baa95cb644..aad16187148c 100644
-> > --- a/security/Kconfig.hardening
-> > +++ b/security/Kconfig.hardening
-> > @@ -280,7 +280,8 @@ config ZERO_CALL_USED_REGS
-> >  endmenu
-> >
-> >  config CC_HAS_RANDSTRUCT
-> > -     def_bool $(cc-option,-frandomize-layout-seed-file=3D/dev/null)
-> > +     # Temporarily disabled due to https://github.com/llvm/llvm-projec=
-t/issues/60349
-> > +     def_bool n
-> >
-> >  choice
-> >       prompt "Randomize layout of sensitive kernel structures"
-> >
-> > base-commit: 7b753a909f426f2789d9db6f357c3d59180a9354
-> > --
-> > 2.39.1
->
-> This should be fixed with greater precision -- i.e. this is nearly fixed
-> in Clang now, and is likely to be backported. So I think we'll need
-> versioned checks here.
->
-> --
-> Kees Cook
->
+Hi,
 
-Bill has requested cherry-pick the llvm-project fix into the
-release/16.x branch [1].
-https://github.com/llvm/llvm-project-release-prs/pull/276
-It may take one day to land.
+Le 06/02/2023 à 21:03, Geert Uytterhoeven a écrit :
 
-[1]: https://github.com/llvm/llvm-project/tree/release/16.x
+> Hi Arnd,
+>
+> On Fri, Feb 3, 2023 at 10:23 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Fri, Feb 3, 2023, at 20:35, Kees Cook wrote:
+>>> --- a/include/linux/uaccess.h
+>>> +++ b/include/linux/uaccess.h
+>>> @@ -329,6 +329,10 @@ copy_struct_from_user(void *dst, size_t ksize,
+>>> const void __user *src,
+>>>        size_t size = min(ksize, usize);
+>>>        size_t rest = max(ksize, usize) - size;
+>>>
+>>> +     /* Double check if ksize is larger than a known object size. */
+>>> +     if (WARN_ON_ONCE(ksize > __builtin_object_size(dst, 1)))
+>>> +             return -E2BIG;
+>>> +
+>> WARN_ON_ONCE() may be a little expensive since that adds two
+>> comparisons and a static variable to each copy, but it's probably
+>> fine.
+> When seeing this, I was a bit worried about the size increase.
+> Hence I gave it a try on atari_defconfig and ran bloat-o-meter.
+> Surprisingly, there was no size increase at all, as all checks
+> were optimized away.
+>
+> Hence perhaps this can become a compile-time check?
 
---=20
-=E5=AE=8B=E6=96=B9=E7=9D=BF
+It should be a compile-time check, because one would not want __builtin_object_size(dst, 1) to return -1 if dst' size is not known at compile-time.
+
+Regards.
+
+-- 
+Yann Droneaud
+OPTEYA
+
