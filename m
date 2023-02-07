@@ -2,116 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F268C636CC
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 12:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5CAC636CC
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 16:57:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjBGMHt (ORCPT
+        id S231405AbjBGQ5U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Feb 2023 07:07:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44058 "EHLO
+        Tue, 7 Feb 2023 11:57:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229839AbjBGMHt (ORCPT
+        with ESMTP id S230344AbjBGQ5U (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Feb 2023 07:07:49 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5285128234;
-        Tue,  7 Feb 2023 04:07:48 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        Tue, 7 Feb 2023 11:57:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 034793A594;
+        Tue,  7 Feb 2023 08:57:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id DCFE45CBF5;
-        Tue,  7 Feb 2023 12:07:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1675771666; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CAfqXTufQznFjzhKxR7PAIm3C3B6UZDzbiw7yiAREMw=;
-        b=VZFiUfNNdjmPvjQvN9ZnRDc2vawwD0QLarQoib6R1AlHM3DLSqrW3BqzO+7Ud0EV1gLtlY
-        ZO6MalUoQ0/m22MdIReQBalw1DZyMFkyjgJgUwuLS3oh/YzuisYMyhlfxQCkgdIlbCjvn7
-        LkNafCxIg8oLsYLkm4K/vP7MqpufN5U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1675771666;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CAfqXTufQznFjzhKxR7PAIm3C3B6UZDzbiw7yiAREMw=;
-        b=w34l+R3o07EJwIRemq5DlfK2QqjTmEtdQaPS6+Adqey0Xl9FRXPmZFKfDrxG4Tzlyz9vn/
-        Y2x2V51zq7nVL7BA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BBC3A139ED;
-        Tue,  7 Feb 2023 12:07:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id z4tJLRI/4mOyTgAAMHmgww
-        (envelope-from <jack@suse.cz>); Tue, 07 Feb 2023 12:07:46 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id C8EB7A06D5; Tue,  7 Feb 2023 13:07:45 +0100 (CET)
-Date:   Tue, 7 Feb 2023 13:07:45 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] udf: Use unsigned variables for size calculations
-Message-ID: <20230207120745.56r6ok4llwr2sz7t@quack3>
-References: <20230204183427.never.856-kees@kernel.org>
+        by ams.source.kernel.org (Postfix) with ESMTPS id B44F7B81A01;
+        Tue,  7 Feb 2023 16:57:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03C78C433EF;
+        Tue,  7 Feb 2023 16:57:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675789036;
+        bh=MNtjrR3i9zJVMbXrA2OM0kVsyK6vBzmxrxtfk069rf4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Ffwz5mg+uOZwkbqk3CdPXkwZ9FrLo9uSsNsNsQw5kweSC29zByMBR7kj4y9ueasMc
+         jRK5le8mzpZz7Edq+RS1FjPxmELIf+LJrw6uQueXrTWqcChbuB3lwdBxirpX3xuPwt
+         8a6E8Ogxb1IIkG2nkAF3mLxbNg3cb0eM6HmSn32YmeUTnjyrY7OI4Xs77BXyfZYSGX
+         MX7uuhhUpgKNFStumGa+0gZQ95FRrhOGdj76UJxXEMw+XtLu+EjcWv4LJK2AcKXoJa
+         1X/eBUoosJnhIHkk5u7N4HRU4LRO618snZyFBz26qfYuBlTezr1rEoD07bspuuhlfJ
+         oXqEH0duQFRdw==
+Date:   Tue, 7 Feb 2023 10:57:29 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Don Brace <don.brace@microchip.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     storagedev@microchip.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2][next] scsi: smartpqi: Replace one-element array with
+ flexible-array member
+Message-ID: <Y+KC+VJ5xdmMaMUc@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230204183427.never.856-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat 04-02-23 10:34:27, Kees Cook wrote:
-> To avoid confusing the compiler about possible negative sizes, switch
-> various size variables that can never be negative from int to u32. Seen
-> with GCC 13:
-> 
-> ../fs/udf/directory.c: In function 'udf_copy_fi':
-> ../include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' pointer overflow between offset 80 and size [-2147483648, -1] [-Warray-bounds=]
->    57 | #define __underlying_memcpy     __builtin_memcpy
->       |                                 ^
-> ...
-> ../fs/udf/directory.c:102:9: note: in expansion of macro 'memcpy'
->   102 |         memcpy(&iter->fi, iter->bh[0]->b_data + off, len);
->       |         ^~~~~~
-> 
-> Cc: Jan Kara <jack@suse.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+One-element arrays are deprecated, and we are replacing them with flexible
+array members instead. So, replace one-element array with flexible-array
+member in struct report_log_lun_list.
 
-Sigh. OK, applied but I really wish gcc was more clever because the
-arithmetics making sure we cannot see negative values there is literaly in
-two lines above the memcpy...
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+on memcpy().
 
-								Honza
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/204
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ In v1 we thought that the original code was allocating one too-many
+ entries for the list. However, Don Brance commented that the allocation
+ was actually intentional[1]. So, I added a code comment with his feedback.
+ Link: https://lore.kernel.org/linux-hardening/16e6c434-44af-2efb-d4bc-a253e93e5590@embeddedor.com/  [1]
 
-> ---
->  fs/udf/directory.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/udf/directory.c b/fs/udf/directory.c
-> index 2e13c4b5fb81..e0bb73d414dd 100644
-> --- a/fs/udf/directory.c
-> +++ b/fs/udf/directory.c
-> @@ -71,8 +71,9 @@ static int udf_verify_fi(struct udf_fileident_iter *iter)
->  static int udf_copy_fi(struct udf_fileident_iter *iter)
->  {
->  	struct udf_inode_info *iinfo = UDF_I(iter->dir);
-> -	int blksize = 1 << iter->dir->i_blkbits;
-> -	int err, off, len, nameoff;
-> +	u32 blksize = 1 << iter->dir->i_blkbits;
-> +	u32 off, len, nameoff;
-> +	int err;
->  
->  	/* Skip copying when we are at EOF */
->  	if (iter->pos >= iter->dir->i_size) {
-> -- 
-> 2.34.1
-> 
+v1:
+ Link: https://lore.kernel.org/linux-hardening/c80c0979933e0c05e80d95792ef167a28640a14b.1663816572.git.gustavoars@kernel.org/
+
+ drivers/scsi/smartpqi/smartpqi.h      | 2 +-
+ drivers/scsi/smartpqi/smartpqi_init.c | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
+index af27bb0f3133..228838eb3686 100644
+--- a/drivers/scsi/smartpqi/smartpqi.h
++++ b/drivers/scsi/smartpqi/smartpqi.h
+@@ -954,7 +954,7 @@ struct report_log_lun {
+ 
+ struct report_log_lun_list {
+ 	struct report_lun_header header;
+-	struct report_log_lun lun_entries[1];
++	struct report_log_lun lun_entries[];
+ };
+ 
+ struct report_phys_lun_8byte_wwid {
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index d0446d4d4465..af8f1a8e9f8f 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -1277,6 +1277,10 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
+ 	logdev_data_length = sizeof(struct report_lun_header) +
+ 		logdev_list_length;
+ 
++	/*
++	 * Notice that we take on an extra list entry (struct report_log_lun)
++	 * that is all zeros for the controller itself.
++	 */
+ 	internal_logdev_list = kmalloc(logdev_data_length +
+ 		sizeof(struct report_log_lun), GFP_KERNEL);
+ 	if (!internal_logdev_list) {
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
