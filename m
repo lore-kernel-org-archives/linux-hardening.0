@@ -2,114 +2,122 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC122C636CC
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 21:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090B1C636CC
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Feb 2023 22:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjBGV7b (ORCPT
+        id S229564AbjBGWHS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Feb 2023 16:59:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50014 "EHLO
+        Tue, 7 Feb 2023 17:07:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjBGV7b (ORCPT
+        with ESMTP id S229732AbjBGWHQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Feb 2023 16:59:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A82B5E384;
-        Tue,  7 Feb 2023 13:59:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 438E961300;
-        Tue,  7 Feb 2023 21:59:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44DB0C433EF;
-        Tue,  7 Feb 2023 21:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675807169;
-        bh=2+uIJL7a04k5IP8kjsAfJlykmzdA/z7j0xIh6qAmfQQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mDv+mckUu4WGUseKZhRfbTuak+Y/9Xb3qWYXMwj6RibBZrw4xfkq/R5tCLGDw8ebB
-         kKF9rPQQA9Uy6wRpWCn8KW4kbqhnxe01Lg+cXPIs3tWn+zTpqjcz+N2U5XlM48Q91l
-         g2awmj3ww1qo8ZsnG3okQSYq35kNY5Go3ByokLcUg/gcwUUGeq1m6HjVhkScK9zlml
-         kxoKGR67rR4LC0RVPPoYambWbxBzimeeJNUttmWfKCdzblnTj4DM7RRZXlkQGTZCFH
-         QwO3a60J/Z91kpcX/cMKWa1KlVL2xVC7idrS0hyfrahQzQan23m150uyAEmgDtmF4I
-         U3BvIuyq/5xkQ==
-Date:   Tue, 7 Feb 2023 15:59:43 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Don Brace <don.brace@microchip.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     storagedev@microchip.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3][next] scsi: smartpqi: Replace one-element array with
- flexible-array member
-Message-ID: <Y+LJz/r6+UeLqnV3@work>
+        Tue, 7 Feb 2023 17:07:16 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C31E4226;
+        Tue,  7 Feb 2023 14:07:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675807630; x=1707343630;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZY6Ki7VN2EVVLpc44J2WKNXk7yMANdJzThAVNunvAuc=;
+  b=PuMGcqPM+UP7wVe3NHGH6xmvamGYvMRrftd9r89HnQZIYorGg2gN6EYa
+   21XZDYCoX0rZrMcbiNgmDWTXsPDdT7saUwj7gERojh0IhwUPiXT4ccbEr
+   drNBRh2d8TNhQ8Ipo1mXkeC+VaODqk14+zhcoOUO3eJ+ysmKjBiHO+6KZ
+   kS30LO8jmZpSY06CB8wIXs7TXtbCaqK5io/0/3IpiHJizFkwavjXurfwS
+   yWGkpDH5XaOG1RLl/lHHPYrW3Kvq+ynme5htWkyrBt5KDWkyR8s7qq+Wx
+   p/H24XbIUShlhO27rYYchd2qmiZdm6imwFl2QSHhXb647fW+b9Cn5DfYq
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="392037719"
+X-IronPort-AV: E=Sophos;i="5.97,279,1669104000"; 
+   d="scan'208";a="392037719"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 14:06:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="755785563"
+X-IronPort-AV: E=Sophos;i="5.97,279,1669104000"; 
+   d="scan'208";a="755785563"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 07 Feb 2023 14:06:51 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1pPW6z-003nyL-37;
+        Wed, 08 Feb 2023 00:06:49 +0200
+Date:   Wed, 8 Feb 2023 00:06:49 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Ricardo Ribalda <ribalda@chromium.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kees Cook <keescook@chromium.org>, ionut_n2001@yahoo.com,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] media: uvcvideo: Silence memcpy() run-time false
+ positive warnings
+Message-ID: <Y+LLeYF7CtLjeLbt@smile.fi.intel.com>
+References: <20230106061659.never.817-kees@kernel.org>
+ <CANiDSCtTz4mpTz4RHBzNXL=yBvXNXHBZQ-HYMFegLytoScW4eA@mail.gmail.com>
+ <202301061217.816FC0313D@keescook>
+ <Y7jODnbUqCwfwwHI@pendragon.ideasonboard.com>
+ <CANiDSCvB8vRp43A1J4BpNZveCvG66XbDmnkKZykbWSFCLX1XUQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CANiDSCvB8vRp43A1J4BpNZveCvG66XbDmnkKZykbWSFCLX1XUQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with flexible
-array members instead. So, replace one-element array with flexible-array
-member in struct report_log_lun_list.
+On Mon, Jan 09, 2023 at 11:46:00AM +0100, Ricardo Ribalda wrote:
+> Hi Laurent
+> 
+> I was thinking about something on the line of the attached patch,
+> 
+> uvc_frame_header->data could also be replaced with a union.
+> 
+> Warning, not tested ;)
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
-on memcpy().
+...
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/204
-Acked-by: Don Brace <don.brace@microchip.com>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v3:
- - Amplify the existing comment instead of adding a new one. By Don
-   Brace[1].
- - Add Don's Acked-by tag to the changelog.
-   Link: https://lore.kernel.org/linux-hardening/d881ad98-a291-1c9b-53dc-199f23f1625e@embeddedor.com/ [1]
+> +struct uvc_frame_header {
+> +	u8 length;
+> +	u8 flags;
+> +	u8 data[];
+> +} __packed;
 
-Changes in v2:
- - In v1 we thought that the original code was allocating one too-many
-   entries for the list. However, Don Brace commented that the allocation
-   was actually intentional[2]. So, I added a code comment with his feedback.
-   Link: https://lore.kernel.org/linux-hardening/16e6c434-44af-2efb-d4bc-a253e93e5590@embeddedor.com/  [2]
+__packed! (See below)
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/c80c0979933e0c05e80d95792ef167a28640a14b.1663816572.git.gustavoars@kernel.org/
+...
 
- drivers/scsi/smartpqi/smartpqi.h      | 2 +-
- drivers/scsi/smartpqi/smartpqi_init.c | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+> +		pts = (u32 *) header->data;
 
-diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
-index af27bb0f3133..228838eb3686 100644
---- a/drivers/scsi/smartpqi/smartpqi.h
-+++ b/drivers/scsi/smartpqi/smartpqi.h
-@@ -954,7 +954,7 @@ struct report_log_lun {
- 
- struct report_log_lun_list {
- 	struct report_lun_header header;
--	struct report_log_lun lun_entries[1];
-+	struct report_log_lun lun_entries[];
- };
- 
- struct report_phys_lun_8byte_wwid {
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index d0446d4d4465..49a8f91810b6 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -1259,7 +1259,8 @@ static int pqi_get_device_lists(struct pqi_ctrl_info *ctrl_info,
- 			"report logical LUNs failed\n");
- 
- 	/*
--	 * Tack the controller itself onto the end of the logical device list.
-+	 * Tack the controller itself onto the end of the logical device list
-+	 * by adding a list entry that is all zeros.
- 	 */
- 
- 	logdev_data = *logdev_list;
+Ai-ai-ai.
+Here is just a yellow flag...
+
+...
+
+>  	uvc_dbg(stream->dev, FRAME,
+>  		"%s(): t-sys %lluns, SOF %u, len %u, flags 0x%x, PTS %u, STC %u frame SOF %u\n",
+>  		__func__, ktime_to_ns(time), meta->sof, meta->length,
+>  		meta->flags,
+> +		has_pts ? *pts : 0,
+
+...and here is a red flag. What you need to have is
+
+	void *pts;
+	u32 pts_val;
+
+	pts_val = get_unaligned_be32(); // or le32
+
+	...use pts_val...
+
+> +		has_scr ? scr->scr : 0,
+> +		has_scr ? scr->frame_sof & 0x7ff : 0);
+
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
