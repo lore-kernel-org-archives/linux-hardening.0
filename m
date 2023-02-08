@@ -2,55 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99914C636D3
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 06:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5204C636CC
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 06:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230082AbjBHGeQ (ORCPT
+        id S229550AbjBHGw0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Feb 2023 01:34:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56374 "EHLO
+        Wed, 8 Feb 2023 01:52:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjBHGeP (ORCPT
+        with ESMTP id S229490AbjBHGwZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Feb 2023 01:34:15 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F33884393E;
-        Tue,  7 Feb 2023 22:34:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KfRMBg4CzYtj+benVK+2W+ZZGetxwWvKyYl10wPn8Yc=; b=AEPY5VXGgcifz++PHtrWkUAjxP
-        I0j5692Ve6F3OUI3qgJHP1lvyq47iwtCZa0VtoU1vz1TGIop0pnnOztIuGwv4Osetntxw+2nwJLdJ
-        HtFmVSS6rkFZwBkeex9uxkELb4fQekBfKPC1YMQvzedaVBYe3ogDj9j6GWl3EtmF9JVzw1InjUz3u
-        uxSlQA4NLatw9xxS598A8kkF2b144Iepok1ZDtI9a1CFeV4Fz3i8FNXM62CbBlmYSxXDiIj7yaenF
-        2D0nY//OOb/S5EaEonC6dOy+kRTkO5s9/Pp5CRPK3fa89MiL15ig+AaDwcO0EJmdAGDFFNUTq7x4j
-        kyscAOaA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pPe1v-00EJRl-79; Wed, 08 Feb 2023 06:34:07 +0000
-Date:   Tue, 7 Feb 2023 22:34:07 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Victor Hassan <victor@allwinnertech.com>
-Cc:     keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pstore/blk: Export a method to implemente
- panic_write()
-Message-ID: <Y+NCXyT8EM0G0xU3@infradead.org>
-References: <20230206061813.44506-1-victor@allwinnertech.com>
+        Wed, 8 Feb 2023 01:52:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3057442E5;
+        Tue,  7 Feb 2023 22:52:24 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 55085614A9;
+        Wed,  8 Feb 2023 06:52:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 802ECC433EF;
+        Wed,  8 Feb 2023 06:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675839143;
+        bh=1P71LfU0+7FJhlIeYP8dlsmXxGhh3Acgaywm3d013ZY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=RyDU3ix2lD9bR86sxLas/tTYmH28sDiYAj6aJu6q1z1coHn1ODc7pYp24nYo3EMex
+         XAuMLx/oCkn3UOiv+LgZCzSXDYTBSKPgSNYvtYbg4rFoeHi5lEMvrey8kBp12VBh3B
+         EOHEH+kYvp+Huh18W7A7c9XLb/Wzv/5TfoTMQTobJP1JXCZDKFyOP/F0Ib19L72Hpd
+         5R7KWA//vxQsXCiKuq1b3vPigUT1JRH3wY2D9K0QlekGSHM0YOfFukMByEi+w8bElH
+         hQH5RuQ6BPTSrzPm2Q/rtC+R7iaYhMYmrVzOWKC5R70Ht0E++MuEKCE8+n0Idt5aYE
+         RtebwbDa60i3w==
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Cc:     Bill Wendling <morbo@google.com>, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] randstruct: disable Clang 15 support
+Date:   Tue,  7 Feb 2023 22:51:33 -0800
+Message-Id: <20230208065133.220589-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230206061813.44506-1-victor@allwinnertech.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 02:18:13PM +0800, Victor Hassan wrote:
-> The panic_write() is necessary to write the pstore frontend message
-> to blk devices when panic. Here is a way to register panic_write when
-> we use "best_effort" way to register the pstore blk-backend.
+From: Eric Biggers <ebiggers@google.com>
 
-This looks like a really awkware interface.  And without also posting
-the users it not only has no chance to ever be merged, but also robs
-us of a good way to try to help you to find a better interface.
+The randstruct support released in Clang 15 is unsafe to use due to a
+bug that can cause miscompilations: "-frandomize-layout-seed
+inconsistently randomizes all-function-pointers structs"
+(https://github.com/llvm/llvm-project/issues/60349).  It has been fixed
+on the Clang 16 release branch, so add a Clang version check.
+
+Fixes: 035f7f87b729 ("randstruct: Enable Clang support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+---
+ security/Kconfig.hardening | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
+index 53baa95cb644f..0f295961e7736 100644
+--- a/security/Kconfig.hardening
++++ b/security/Kconfig.hardening
+@@ -281,6 +281,9 @@ endmenu
+ 
+ config CC_HAS_RANDSTRUCT
+ 	def_bool $(cc-option,-frandomize-layout-seed-file=/dev/null)
++	# Randstruct was first added in Clang 15, but it isn't safe to use until
++	# Clang 16 due to https://github.com/llvm/llvm-project/issues/60349
++	depends on !CC_IS_CLANG || CLANG_VERSION >= 160000
+ 
+ choice
+ 	prompt "Randomize layout of sensitive kernel structures"
+
+base-commit: 4ec5183ec48656cec489c49f989c508b68b518e3
+-- 
+2.39.1
+
