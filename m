@@ -2,143 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259F0C636D3
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 23:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9446DC636D3
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 23:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjBHXZ7 (ORCPT
+        id S230175AbjBHX7I (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Feb 2023 18:25:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49684 "EHLO
+        Wed, 8 Feb 2023 18:59:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229705AbjBHXZ5 (ORCPT
+        with ESMTP id S229540AbjBHX7H (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Feb 2023 18:25:57 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1070313517
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Feb 2023 15:25:56 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id w5so925102plg.8
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Feb 2023 15:25:56 -0800 (PST)
+        Wed, 8 Feb 2023 18:59:07 -0500
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C20DA14E8C;
+        Wed,  8 Feb 2023 15:59:06 -0800 (PST)
+Received: by mail-pg1-x52a.google.com with SMTP id n2so511217pgb.2;
+        Wed, 08 Feb 2023 15:59:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0M2E7/02dlvJiZTVnIWyTeiMgvIxEtCuzBBJQtnX/JM=;
-        b=Kd9X91L6aWl2C3IzFAJHT8vpU0II3tABmPdCDH04pU/uxfCFwSa5tkFhGGB5PhDCDp
-         +k/qHRN10g97J7gf+YNa+8elgTJi5pXXGs8Mu4qnhlM5t5IkP6iwW10whdguunezqGri
-         DevJn+KBLyJ4SSCRG+EOWDHZk57IPnjTS4lvQ=
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zOaD6/QasLalJlAxk3UhHGE71ipDW/Gd+AEfgT9qP3w=;
+        b=d2zSxyhc2mGLYfWsomKg99R8tb+7ADXPcZbvXDQvh+JYk2qF8tZB9GEaKglVNX2/6A
+         KNoKaVZYjuy3WtJMHWOG/HEClI8NeVHNmWUjnSu1kRXfQ8o6hmjda4PhXkIzBGIcI/uW
+         BjS4FwI0M5XnBGXBccshj/yfoF7YGfVT+1uNDGHdPgQEsfTC0U7CiWyzixaaPbiKcAeZ
+         5dsvUh1C5pyBXyFlELoNXa/uG8ASdkHcJtzL0cRbllbf/bB+I1dl7z9flbguVkBRhbGd
+         Hb7X9gi0H+dJBVw0reqgJPhtH41amssOgadycBSuuZgXsCfKlYux/L9a9NEmMXtkAjEK
+         UPTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0M2E7/02dlvJiZTVnIWyTeiMgvIxEtCuzBBJQtnX/JM=;
-        b=iTxguV5WAE+b/jR8JOoRgGHXmUC31VQfn0iIrsJNC6m4/1g8xWhd222bod/Qg0Q87k
-         7UBbMllZwKpZDzZc85A9aZwXzqjdu29U0dhVyo0JUsndJ+ITQmCnAJyKw/y0N+/rODSO
-         nBCiueIoV2EiuaynUGSAfF2R/oBGyURD9rNAvlRI3QN9g5Mbw+vdN/4hm3IizsHhKnG2
-         MPS8s9fYOFx30MBSFZuQj/kwzp/8pL6P+0II4cefsBMQuouhQaTz4sYHma6MGKv9yfJ2
-         B1LmuxFEHpAOREES/H6xTnpKenvoGsenYgj6RtfaMi3Pf3uak8F7oWy4E7mp5UYujqGT
-         ix8A==
-X-Gm-Message-State: AO0yUKXzZLUGITIc03DWHjOo3Dg+vkDuB4pnnQ80iUUlpVztN472P7TE
-        qvTjZJFnt4HWQLSuYq2bZaq+oahIx3hm4HjJ
-X-Google-Smtp-Source: AK7set8SetsuX6rbiBZxlHxYNn9FBxyZwIzOoKbjerCb50EmBWaeirDi/oDkDvepCt8g5slk5CyDfQ==
-X-Received: by 2002:a17:902:e807:b0:196:8d48:8760 with SMTP id u7-20020a170902e80700b001968d488760mr9818064plg.31.1675898755570;
-        Wed, 08 Feb 2023 15:25:55 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q7-20020a170902a3c700b0019937ea86c1sm3530plb.143.2023.02.08.15.25.54
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zOaD6/QasLalJlAxk3UhHGE71ipDW/Gd+AEfgT9qP3w=;
+        b=DhBeePGZUN7rAzriW5OzPfBkeRACR6VZZlPU4MicLh1nY8MjLfRVGDejeL/kFev4MA
+         aF13c9FqQ+/DoyKRcD3tQFEhs/XBtYTQFAG5N5iCT6ofM3jDx4V4l+WBV2BrhTpevkWu
+         YKPUE0jBFQ/GH1/7YzgQB9RSK7pbRDRo1TcM/rBzz9c1aVigAglxoq3hrRWc9Yw8POWK
+         IyWX2nT9XBnERvl4dD6kHDIQ4xfIpwWHcMaFXFSoNMtPwY8qG6sds+bbuP7BgPQzVqLo
+         1ViQOrY4k3KJ8WhtblWS6Vl2ksbw+GiZzANf042/7vZdl0+CZEPdtkSNvTCRjWkpdu+8
+         D9bw==
+X-Gm-Message-State: AO0yUKWf6pRaT4FciznoIjFdaDRzwN5v0FeQH7p30TTasGC/neRa6Qt4
+        XISzFxhciZeww2Rnak1cUYI=
+X-Google-Smtp-Source: AK7set8NvT04IiBj+w/L08d91b+sJqc3Tz8O9aGwoqNLkV7mLgm2wZH7T9TVtunYDHwue58Kmy8FBQ==
+X-Received: by 2002:aa7:991a:0:b0:5a8:4de2:e95e with SMTP id z26-20020aa7991a000000b005a84de2e95emr1519591pff.18.1675900745991;
+        Wed, 08 Feb 2023 15:59:05 -0800 (PST)
+Received: from localhost ([2400:8902::f03c:93ff:fe27:642a])
+        by smtp.gmail.com with ESMTPSA id d8-20020aa78148000000b00593906a8843sm12151064pfn.176.2023.02.08.15.59.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 15:25:54 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Mark Zhang <markzhang@nvidia.com>,
-        Patrisious Haddad <phaddad@nvidia.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-rdma@vger.kernel.org, llvm@lists.linux.dev,
-        Tom Rix <trix@redhat.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        =?UTF-8?q?H=C3=A5kon=20Bugge?= <haakon.bugge@oracle.com>,
+        Wed, 08 Feb 2023 15:59:05 -0800 (PST)
+Date:   Wed, 8 Feb 2023 23:58:54 +0000
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Stephen Boyd <swboyd@chromium.org>, concord@gentoo.org,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Petr Mladek <pmladek@suse.com>, linux-mm@kvack.org,
+        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Christoph Lameter <cl@linux.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] RDMA/cma: Distinguish between sockaddr_in and sockaddr_in6 by size
-Date:   Wed,  8 Feb 2023 15:25:53 -0800
-Message-Id: <20230208232549.never.139-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] Revert "slub: force on no_hash_pointers when slub_debug
+ is enabled"
+Message-ID: <Y+Q2xVKiN9UdZGwA@localhost>
+References: <20230208194712.never.999-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3113; h=from:subject:message-id; bh=S5Y2WqgnxK+dD2vZwFfFa98eG26CHb9Bq4BbhYiNp8M=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj5C+AQcHckxweuEWNyvark/PYjLKlD6QPhLzpFhW2 //P+xfOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY+QvgAAKCRCJcvTf3G3AJkaXD/ 0Q8vmWdNfRbhG7QjCOcU5RLk01tCzr6qK2z1IjOYKHSQah3XfBTRyJZZ6vdhRyO33/vPn+wg8g1ixe v8iVPQSpq9MtHlf16dKbjUBL8LAJT2JmJw4I9Mwzu8m0/Pt7PmmtqhydIHOrwNjXy099XMFTWVhNNl OcylAZWnoHIgfY7yGkCSlu59hc3DltyZIwJywxmAMV1CtrciasjEmk3yYduudNO6/m50OvgL439gF+ ckhKNrLD60fhgVLXIa20QbjsOPOIVoVDYirEbTR7Ju3j4gh2YfLfinNlDVKkN1Afshh0iRqBtQUP1k XI313gn/kog5bX+i8KYpn5GPPCy5psYt3CGa9HS0lrWemsFl1jAW64WCTFviA5jYPIjwqdvADQPigk ugy1yvXLa9EZfqFur8+9xZ2fOQXUNcvRaAiInxTOih5NJCVcS+d6qBP0kq01iGxbmytAYmRwM0Xr7i QQvv8UpTELf+EjmUo44tM7LmG6/otUaqBAw9xbLfM7zt11cDzcegecfShJmC9BQuzmjTnljOM1f814 hv6ldPRxbT4KWgwtFuhE8G/bzGWqTZvRXXUTKQG/EM0rJR3tq1HziF1hvD8FY0Q7huXzjGZgCGjoQq kthAUN+/dyo141RIa3xqY9ZyXr79CLSYcjl89NEWOwbnCBCC6wWnaz3hY1oA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230208194712.never.999-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Clang can do some aggressive inlining, which provides it with greater
-visibility into the sizes of various objects that are passed into
-helpers. Specifically, compare_netdev_and_ip() can see through the type
-given to the "sa" argument, which means it can generate code for "struct
-sockaddr_in" that would have been passed to ipv6_addr_cmp() (that expects
-to operate on the larger "struct sockaddr_in6"), which would result in a
-compile-time buffer overflow condition detected by memcmp(). Logically,
-this state isn't reachable due to the sa_family assignment two callers
-above and the check in compare_netdev_and_ip(). Instead, provide a
-compile-time check on sizes so the size-mismatched code will be elided
-when inlining. Avoids the following warning from Clang:
+On Wed, Feb 08, 2023 at 11:47:17AM -0800, Kees Cook wrote:
+> This reverts commit 792702911f581f7793962fbeb99d5c3a1b28f4c3.
+> 
+> Linking no_hash_pointers() to slub_debug has had a chilling effect
+> on using slub_debug features for security hardening, since system
+> builders are forced to choose between redzoning and heap address location
+> exposures. Instead, just require that the "no_hash_pointers" boot param
+> needs to be used to expose pointers during slub_debug reports.
+> 
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: concord@gentoo.org
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: linux-mm@kvack.org
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/lkml/202109200726.2EFEDC5@keescook/
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-../include/linux/fortify-string.h:652:4: error: call to '__read_overflow' declared with 'error' attribute: detected read beyond size of object (1st parameter)
-                        __read_overflow();
-                        ^
-note: In function 'cma_netevent_callback'
-note:   which inlined function 'node_from_ndev_ip'
-1 error generated.
+in the commit message:
 
-When the underlying object size is not known (e.g. with GCC and older
-Clang), the result of __builtin_object_size() is SIZE_MAX, which
-will also compile away, leaving the code as it was originally.
+> Obscuring the pointers that slub shows when debugging makes for some
+> confusing slub debug messages:
+>
+> Padding overwritten. 0x0000000079f0674a-0x000000000d4dce17
+>
+> Those addresses are hashed for kernel security reasons. If we're trying
+> to be secure with slub_debug on the commandline we have some big
+> problems given that we dump whole chunks of kernel memory to the kernel
+> logs.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/1687
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Leon Romanovsky <leon@kernel.org>
-Cc: Mark Zhang <markzhang@nvidia.com>
-Cc: Patrisious Haddad <phaddad@nvidia.com>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: linux-rdma@vger.kernel.org
-Cc: llvm@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/infiniband/core/cma.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+it dumps parts of kernel memory anyway and I'm not sure if slub_debug is
+supposed to be used for security hardening.
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 1d2bff91d78b..308155937713 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -479,13 +479,20 @@ static int compare_netdev_and_ip(int ifindex_a, struct sockaddr *sa,
- 	if (sa->sa_family != sb->sa_family)
- 		return sa->sa_family - sb->sa_family;
- 
--	if (sa->sa_family == AF_INET)
--		return memcmp((char *)&((struct sockaddr_in *)sa)->sin_addr,
--			      (char *)&((struct sockaddr_in *)sb)->sin_addr,
-+	if (sa->sa_family == AF_INET &&
-+	    __builtin_object_size(sa, 0) >= sizeof(struct sockaddr_in)) {
-+		return memcmp(&((struct sockaddr_in *)sa)->sin_addr,
-+			      &((struct sockaddr_in *)sb)->sin_addr,
- 			      sizeof(((struct sockaddr_in *)sa)->sin_addr));
-+	}
-+
-+	if (sa->sa_family == AF_INET6 &&
-+	    __builtin_object_size(sa, 0) >= sizeof(struct sockaddr_in6)) {
-+		return ipv6_addr_cmp(&((struct sockaddr_in6 *)sa)->sin6_addr,
-+				     &((struct sockaddr_in6 *)sb)->sin6_addr);
-+	}
- 
--	return ipv6_addr_cmp(&((struct sockaddr_in6 *)sa)->sin6_addr,
--			     &((struct sockaddr_in6 *)sb)->sin6_addr);
-+	return -1;
- }
- 
- static int cma_add_id_to_tree(struct rdma_id_private *node_id_priv)
--- 
-2.34.1
-
+what about introducing new boot parameter like, slub_hardening,
+which does not print anything?
