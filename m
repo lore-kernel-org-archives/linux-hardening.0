@@ -2,151 +2,160 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCA0C636D3
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 19:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851DAC636D3
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 23:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231954AbjBHTrX (ORCPT
+        id S229564AbjBHXQg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Feb 2023 14:47:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51666 "EHLO
+        Wed, 8 Feb 2023 18:16:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231950AbjBHTrW (ORCPT
+        with ESMTP id S229566AbjBHXQf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Feb 2023 14:47:22 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655DC1C7D7
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Feb 2023 11:47:20 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id m2so39431plg.4
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Feb 2023 11:47:20 -0800 (PST)
+        Wed, 8 Feb 2023 18:16:35 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9050710FB;
+        Wed,  8 Feb 2023 15:16:34 -0800 (PST)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 318KxOAo003997;
+        Wed, 8 Feb 2023 23:16:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2022-7-12;
+ bh=PvGlx4j+Z1mqR+VqDfiFKTl1b2RM+V7vMIvqjEdQUxc=;
+ b=OWDlVB0G3phS8C1aOb+uJqdWBEhtm+9kmZYM7kLVuEjdHRK0wPnFVKHVEsM6fCcQZDoy
+ bJVVsRfGhkjhM0h38YrrGqidHnJx9oBpf2BBZyktwkFNpe/8c12mDD6ThHIPfPRKe8c+
+ qLiqi8udOynnsbOgCS3t+b2r4YPZWXTFHmPhPRLvq1TZbIrLwGfZR+klOdnUuomdARcu
+ E37letQHCskFywtaCvSON+HzZ1JO7KtUtdMIkIRBwvIKGCe+CiQhbHCxb45NDB9aTqPL
+ QtazTmlOAkJStKEWBAJBXZExVnSiQDx17d7DhEeKu8t/aKooRxjVDYW3NoBgJRlGiR4j TQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3nhdy19mhv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Feb 2023 23:16:24 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 318N0PT2035894;
+        Wed, 8 Feb 2023 23:16:23 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2170.outbound.protection.outlook.com [104.47.56.170])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3nhdte7yq6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 08 Feb 2023 23:16:22 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fAEdGNNJ1MDF1CFQvYPHLYwp3x80XteOuqca8eS78RH0N+UhIoOCzhwo7y6v32GSLXMGTK0JwxxHF2bdEW+Hv7MwdoROIC8MQ4is5RYdmqhrdGJySuFAHWI/KXw+W6s8ewXqVKN1AFLIV3d/uUo5+UzhqdgXg/axw2PVLzFkPFCXWdKJWCjogBTbQbcq7ww32PMmwrMA59xezFvdLOEfwhm5Ecgmp82uBPyDlqA2F008jFgHLocVWOeTSSyHg33rGmLo/NfkzTkmRNoStXF19QryAruYrGtLQKXsSzk6f1w7NDQ5zeVVoq9nXy3fJ6j6BzLxX19iqUv4AWaAvO+Qkw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PvGlx4j+Z1mqR+VqDfiFKTl1b2RM+V7vMIvqjEdQUxc=;
+ b=P+lwmzXNRVmU9KQARA0ywnQA+qLvqsEdz0i368SlSeKsrDqClUSzugZzO+HdInYpwxAGBLqzztle4lcYOxJHy71cpUoh9+cQdR8NKiQQV/mqvQ7BlpPqLyIIkwGp6xMbCMHSapqJ6mpLzZhUgoBC1CmLuuXuay9PzVHv912koGj8LmgVLBpN3TMOhm7NEI60DojpG/xOS6NpN3wkQ67W7cx1muieYlFXGLozWM0dCaJVPcE1V8873/Fv9u9dDotL64tB/oEJKy6xG2orHF86ifJuqwaLckoFw8mKbwdBKfLZzQx20J9LCI/g+agG5bnALC7EvhzTeSEwBdgiTQA3+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=brC7ZYjyc3j8bB5PrUFBP0Q4YonnqNt9B3ugO0VDvOM=;
-        b=XyHQIco0IOY9dG4wWkirUBexpmIEGsaN0oZPdRAAdC6TjWBES3V0aDEQ0wXmmb0eTi
-         5h7e88D8Ub7LU7S6Hj6Af0YQgsgNYwEM0gnURhDjt4beSp1PWidWYvSQfBAeV9jxPgjn
-         tNJxmlZIVnPudiPkJdXIIX0Q7e4fHaQI+OOyY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=brC7ZYjyc3j8bB5PrUFBP0Q4YonnqNt9B3ugO0VDvOM=;
-        b=kiEEplI6Wrhy7ZcCCcCgwcxJLVK+g5ShEhAMsTNAoSUfAAB0Zg+d7EoJw2lBsdbmIk
-         kjylqC+ldwAD5QWmnAEslEDpOSY093WhnB9x38NWBqa+OJdwJ46TDaSagy+OOAkqB/0Z
-         Y/cW4TbY1jp6iuC+XxVyAzZHRPkfnOos8nSRAVg6kmOO1Kf0NQlyS64P1c0HX2ctEpYk
-         tDG35/sSe9tyIbw2ywGlBTXhbEhpKRMbk/xxz6dM9afy3PVrfnQFw36BAdgbBSVWJYKV
-         3PPiIm4JDK2pDIW8PALMSi95e5UsKtNL5WkZd44WJwl6oW60/mrzdRTQiSlQZ4hOlmhG
-         rn6Q==
-X-Gm-Message-State: AO0yUKUeDeP0YEbrIqIijdxoxdYiOp56NNh733x2Drd46rs08MBJZg9b
-        aa5k9ZRbyqYmdG38oCjisoZvBw==
-X-Google-Smtp-Source: AK7set/cQfxHzl5ZMC5P3I9HJYBt7B/d7dsyJhydqhY7pfA+m/nmRYDN+fINhs3jW+jfB1JGDxyefA==
-X-Received: by 2002:a17:902:eccf:b0:195:e834:31de with SMTP id a15-20020a170902eccf00b00195e83431demr9689202plh.27.1675885639902;
-        Wed, 08 Feb 2023 11:47:19 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o8-20020a170902778800b00194706d3f25sm11389978pll.144.2023.02.08.11.47.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 11:47:19 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, concord@gentoo.org,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Petr Mladek <pmladek@suse.com>, linux-mm@kvack.org,
-        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Christoph Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PvGlx4j+Z1mqR+VqDfiFKTl1b2RM+V7vMIvqjEdQUxc=;
+ b=G/58fiu+i82oQQWUszUd+/MFCBSlW4S+x+elvZ8pVE3x2wGcX6Dh0/hLdU+Sm02qrq/ibxIPWUGZDgcfuL64QLz22kUBmYKkS3l+qokxatwnq6wzRhLZmcM/dMZOcTvKEC62LJUaKDXfInxjOID+E1MmkC1C+MSPS3Eh+04EXvA=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by SJ0PR10MB4735.namprd10.prod.outlook.com (2603:10b6:a03:2d1::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.17; Wed, 8 Feb
+ 2023 23:16:20 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::c7e9:609f:7151:f4a6]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::c7e9:609f:7151:f4a6%4]) with mapi id 15.20.6086.018; Wed, 8 Feb 2023
+ 23:16:20 +0000
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.de>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, stable@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] Revert "slub: force on no_hash_pointers when slub_debug is enabled"
-Date:   Wed,  8 Feb 2023 11:47:17 -0800
-Message-Id: <20230208194712.never.999-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] scsi: aacraid: Allocate cmd_priv with scsicmd
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1mt5nzr2e.fsf@ca-mkp.ca.oracle.com>
+References: <20230128000409.never.976-kees@kernel.org>
+Date:   Wed, 08 Feb 2023 18:16:17 -0500
+In-Reply-To: <20230128000409.never.976-kees@kernel.org> (Kees Cook's message
+        of "Fri, 27 Jan 2023 16:04:13 -0800")
+Content-Type: text/plain
+X-ClientProxiedBy: SA9PR13CA0172.namprd13.prod.outlook.com
+ (2603:10b6:806:28::27) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2428; h=from:subject:message-id; bh=6D7ZqbugXds1gvfLc9iQr1w22R0H9eYp8Iez8DaC/qs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj4/xF3tfK5vpxA9509nOQT2yGg5T16Oo5l2e1JsUW iGsIFO+JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY+P8RQAKCRCJcvTf3G3AJk3pD/ 9pD5RZbkzjE0q5GtTBJ5pNbIAKm0Z1qM3Quhtx+IOQhfKbYyCD4Gn83VNS2W+0asUhgAKMq6J5pd+U e+tPGWlnR8pNYgG2PuGjvmlDroDWenmavyyi0a+Q1e/ulK0AUPPkTF+7Q90wykMwiJ/m7Onb3rY5l8 +j6bp1OVYg/wI+uoTSCLbhlb8wszsbWZoTH2G+GLSJ3BI0kOrm4N7yZg6j/uZph0PpzmDrDNsbHYb7 /RTI00+O9J2um4lezpgdes+LzTXUhRF8R9JyzKRbl4bUAHdeJI4fZp15y7qaZDEBrBFd5OS89+YelU 204ZGq+PF4U8Qvh+595ONipxPn+4GzXSxIlGGTncLqeDvyMK9GSOcZqtCNu8+sYqmkGN9Zqol1F9ub Y5kpNsAOiMnYEUaRoLPNpfTKJGZm+/fL/zoxc5vhIBuVc/BnmK6pohdg3qS42JwAj9kwoYNejFyAP1 tGTEm/1bml3vopP0C3nfN9oK/6P4anSO51hITjVTjx2db6NL9o7TFrN9XHaxIeiEXJ9D2rUfrOmeH7 440m6P1QFRL1StuZsoQB5WKyk2jsLma4GdXNylAFcMBi+zxDsjhi8NNembKT4rRhsp5hea9NKxZl0g XCyW205YraGQ6cq/nT3mX5hSqUGeWMyHy9tqmCJWlR6oEl/0sTZ30RFFMPuA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|SJ0PR10MB4735:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a2e17b5-5edf-436c-0fad-08db0a2a7cb8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: euT4hENR3DChKAMMTBUu0o42bkhxvedM0kjABSBPX0PbXNACdPGuUJrpxx3iYEDJbD5X7YNqPgLeo06uYi9ka4ODDx013y6ZVFYCskPzrNhbZiQY9qAuFPuYo99MJ79zk7aVR2hu5ioPqFDRbQWFd7lKTcUonOtPisGRGkFapefRX5F2GdG616vl0FGZSn2ogI6p1oSisDnkcKYRuz7EqPugm3b1B1SG0z4QOSAjIDOtdRi/YDMt7fqbhlw9s/JCHfuM2yROaL87FzwC3jDwNRUWHmSfi9lGpDIAxFm8MQsfTmcgLFMK/1qLlrtnTI2NHg7oS6myF1MOOze2CYjtWOX2AJd2/3p2ocvABHWdQzfiA/cP9MpewM6BKmM4UOZho56L+QgT5ASj7nQ5jiJ50/wuhr7UEC1Y4hpv8a/09xCZxrr6aTdcLIGmUmBb5GBaVOL4WvzaNvUl2DOkA7gOpdjwGPCl1H98m2fBk6NlWZSnGyp54dJ+jygLel2h9VegmWro+JRtM4YmkhNLgmMOjKZRPCT7OYC69muWxZqxlvlTAUnu3MInLgY/pWqqH/9boFNKiwHZAf+12fHzXUdy58bQepgnDaEJlEpKMCtyqXQlG7/EUxAA06rAcQHauoG681K0zyCZmROcJEBswqkLmw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(376002)(346002)(39860400002)(396003)(366004)(451199018)(6506007)(6666004)(6512007)(26005)(186003)(316002)(2906002)(8936002)(558084003)(83380400001)(36916002)(54906003)(5660300002)(478600001)(86362001)(6486002)(66476007)(66556008)(66946007)(41300700001)(6916009)(4326008)(8676002)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2cUKNmARrAzk4etnwkaQgWOTiNcDQ+ngIFVQl/th8Buc+dbzCjteZOi/SnWS?=
+ =?us-ascii?Q?/uWEo9Kx6jwfoaYK3+HGWzPXxhPvqUQ4KJtBauq4Mtkg1C7AGPQ1KQ9mP8zN?=
+ =?us-ascii?Q?6QhMUmiEWtmdgSN5jgJ0apOClq9pmhVAhUFMbp1Hq0Z/i2jR8gs/1VcA44GJ?=
+ =?us-ascii?Q?EIGxCvkpnm7pCsWa308Hs6xt21k/c5gRoOrn2D+cIjZgrRk60aYf6kmArvYo?=
+ =?us-ascii?Q?m7VvVNBKSIZK6ybrR4y2IoEyaBKATavN8cezclMUnaRNx8EvWmEERM1NRV0R?=
+ =?us-ascii?Q?5EPuIGmwD3Z1ehJYQQmTG/1ooMwPJMrup/lyMnkrS2I2hpaDLTCPAF99CdSb?=
+ =?us-ascii?Q?idUv8wo+O8eCcoR5MEokPJTXL5NF3eI+ll77bBMKMhD9opVDCTV9PsvZAihG?=
+ =?us-ascii?Q?TcU+O35FWT+ZLxAwsZyZuvKX0sWBLGRWahHI1PzuVxOvnEIhzP88L4gldkix?=
+ =?us-ascii?Q?KnB3vSXFaN47m3glrtVsLWnlx4HnZuggTASRuEFmhXlMJiH7mSIV57olEy6v?=
+ =?us-ascii?Q?fP9wtRu1z60tGcjPRoh7MQOUQl7YReNDj5qhPups2CZjPlpWPaPoXB6EzRCK?=
+ =?us-ascii?Q?+0/nPpjKZqnA02TAmfeIPXAnP8VhqONoAWlQonCeLVeh76UKGCX0afz98Mb+?=
+ =?us-ascii?Q?Uq+9LgWBE+QkpxppIbh9iq5KQQWJ38Pcu/yydV/lHhreMi3Prhw+9w3k5RjF?=
+ =?us-ascii?Q?pSZOhU0VD33+MmXExOH/72ntm1K5Gbn+p9hGzQj3I5c2Avi1yOp9c+FUk66d?=
+ =?us-ascii?Q?C5xYkUQ8JoVD6SEe5saLf25rKl+H+d+6z0DwfT16Uo8zHkWp1JPtJ3kBOX4F?=
+ =?us-ascii?Q?IfEChacLiUTCbALjy/3kDPbM//SmKh0e7BCIn3MdZ4uuTpXXXw/kokrjbH0L?=
+ =?us-ascii?Q?/YJKjZSrFNF5oIEAhrwo1w8tqog8JtlyxJti+6NkzHL4tM1nop+SG/xmeHsP?=
+ =?us-ascii?Q?6EkcPlCTwJU0Q5ay/VVWgVAcyRaO9QXNwnmang3EFtn+dmxNfbZ8pnKO3NYa?=
+ =?us-ascii?Q?hc7Sj/7AiwVS7toYe8xQTl6OrofBDEbfjMi84ek6qUA/QHdO0LI8oG3JdAKQ?=
+ =?us-ascii?Q?MLX41pMsEjmJGjle/wJS7mtmH98i2QE/YYMzyOQTFviJ+CbmPjNm/sKzC8SC?=
+ =?us-ascii?Q?72TRNml4Utm2FoNX/k5IDXbHSi1xonY2VTDxtt0foOhxXIFk8wbk5UPnXs/m?=
+ =?us-ascii?Q?uiZ3YpUKgpyifM/kLULoUe+dqiImWZZfHIWf7IKHDFCH4TcSBNmGpJYOlkFB?=
+ =?us-ascii?Q?JsuoKmHcgjQDIH0TY1pWKAUwtnA9wB7mg+SGhb0famgT/P9kZMm4wPYXMzGl?=
+ =?us-ascii?Q?mWh+cgCyzeUssgv2RDFpIEY7KG/1hGadpfyuAVNBIF14E4UfjfE8Qkq6vhH5?=
+ =?us-ascii?Q?JtjfA2XwDDPLLB/zl9FIm6sAfQBuhWU2zheJ0yRgjjGActvv8IA8rcx2V4Md?=
+ =?us-ascii?Q?7Vwb5LaCdmH90JlsNTO6lrZ3Et5tOGe5zl8AOTdasn7Fs/JDxmkBEVclACKO?=
+ =?us-ascii?Q?OlO4397kkhEq1ACSVshbCpGwx0W3qThZRhpbQ2eoNsWpEOv+Q5/7eFN9Sjgp?=
+ =?us-ascii?Q?wD+FhKzonOUqWv7HvxD1phKqjfhY2RxPf77rk8+DQtLNy9H6QQam1nAfMXXC?=
+ =?us-ascii?Q?Fw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: K+oDzd/8Lq1B6yBe+IX1WMtlDqjj3NyNAqGnIu03qbjv07YfxrtIcb1qdxGPXO2keFmPm1bhdtK6iylHPCCjsdGlcbR67bRv+1Vbw7ZhKPXAlr1Cmy5/ROavFbyOZjZ/eabXj6v8u5JNl3rl0pqXbLPZTjxq8DkVtA7RgMyvLEUS67SAHxnP/aOSOcSudVSPs1KFnA0V/zBVGt+ZOvNjs5fDra/m6/UeblcLJB/Tm7ZTSZpOUDrwNxtdU80TVFj9jrK+lnECs7VXoJg9YXw0/g3szapkgCKzc3UEQeqXA0oml8LcagHNvjFq+VN8CmkUiDuosD6P0TOI3SHstZ1MsOt3jemmkdhL/ZCEhZo5OGTHzFZQkWWCGqFGypSG6+rD6J/WOPl/4bB7IfqbrINw9kJfurN7SCFtfL135X2XQl4m2x9VzfAYTQ9KsZkWNJVGUqOzi/y3mW6GpcQ9K1vaq79TeRru3xH5w/1cq7uRmWNbKA4DI1AdjzcdVqqWRyO+KlNRyi8C1nU3kU6V/Ir1fcrsOOiET8H562tu0npnwPiMd8fgBUTi6BfZ9dPLyQ6BUg+TQgsHXOkjMrgLno3DXG5jMJMsKrJdkQ/Bht3FRZglG+5YlNUSRuZZWn/mzsvDfehxkXZ9mLq0c1FW6f/Hg1bkZtLcCUYRwzrGvwSxhwxPH8tCYBYXfgLeBwL3kyOtk6so/QWQwraL7mVAr05zo1AqWwiLUyyRSdHzWQmpJXWQBDgRt1k1fRyjD2PYwlhW8Yb27Nm/bnVHJ9F76yHdDtsQujioCtcveCV0ELRZwB/eQZopCCKgpDPrZhgSrZueB2GPaW40xGFrNxoLEvISg+nDGIQl9SiFxc8Y/MOFFvu199iUv1OLvXnXeyM4K5/ey/8Q/d5uP5aRFgsk1elS319O9jnB87IWBWBmCnEWkx4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a2e17b5-5edf-436c-0fad-08db0a2a7cb8
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 23:16:20.2273
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cEPcdUchI4aEJ0+s/inM2ZtgX/9wbGkzHTGVOfnFtFy5V80unVbYEmYwUwmgoUqHB5zFf1gx7/WGF418IKKT2TczIW4Ml3qwIC3WyDKxiv0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4735
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-02-08_09,2023-02-08_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 adultscore=0
+ malwarescore=0 mlxscore=0 phishscore=0 spamscore=0 mlxlogscore=646
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2302080197
+X-Proofpoint-GUID: WwyMOThfVaHuPXsmrSK_nd5T_oC13cTx
+X-Proofpoint-ORIG-GUID: WwyMOThfVaHuPXsmrSK_nd5T_oC13cTx
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This reverts commit 792702911f581f7793962fbeb99d5c3a1b28f4c3.
 
-Linking no_hash_pointers() to slub_debug has had a chilling effect
-on using slub_debug features for security hardening, since system
-builders are forced to choose between redzoning and heap address location
-exposures. Instead, just require that the "no_hash_pointers" boot param
-needs to be used to expose pointers during slub_debug reports.
+Kees,
 
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Stephen Boyd <swboyd@chromium.org>
-Cc: concord@gentoo.org
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: linux-mm@kvack.org
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/lkml/202109200726.2EFEDC5@keescook/
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/kernel.h | 2 --
- lib/vsprintf.c         | 2 +-
- mm/slub.c              | 4 ----
- 3 files changed, 1 insertion(+), 7 deletions(-)
+> The aac_priv() helper assumes that the private cmd area immediately
+> follows struct scsi_cmnd. Allocate this space as part of scsicmd, else
+> there is a risk of heap overflow. Seen with GCC 13:
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index fe6efb24d151..e3d9d3879495 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -229,8 +229,6 @@ int sscanf(const char *, const char *, ...);
- extern __scanf(2, 0)
- int vsscanf(const char *, const char *, va_list);
- 
--extern int no_hash_pointers_enable(char *str);
--
- extern int get_option(char **str, int *pint);
- extern char *get_options(const char *str, int nints, int *ints);
- extern unsigned long long memparse(const char *ptr, char **retptr);
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index be71a03c936a..410b4a80a58a 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -2222,7 +2222,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
- 	return widen_string(buf, buf - buf_start, end, spec);
- }
- 
--int __init no_hash_pointers_enable(char *str)
-+static int __init no_hash_pointers_enable(char *str)
- {
- 	if (no_hash_pointers)
- 		return 0;
-diff --git a/mm/slub.c b/mm/slub.c
-index 13459c69095a..63f7337dd433 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -5005,10 +5005,6 @@ void __init kmem_cache_init(void)
- 	if (debug_guardpage_minorder())
- 		slub_max_order = 0;
- 
--	/* Print slub debugging pointers without hashing */
--	if (__slub_debug_enabled())
--		no_hash_pointers_enable(NULL);
--
- 	kmem_cache_node = &boot_kmem_cache_node;
- 	kmem_cache = &boot_kmem_cache;
- 
+Applied to 6.3/scsi-staging, thanks!
+
 -- 
-2.34.1
-
+Martin K. Petersen	Oracle Linux Engineering
