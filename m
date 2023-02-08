@@ -2,122 +2,167 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0BDC05027
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 06:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8021C636CC
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 10:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230296AbjBHGzG (ORCPT
+        id S229718AbjBHKpS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Feb 2023 01:55:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34868 "EHLO
+        Wed, 8 Feb 2023 05:45:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbjBHGzF (ORCPT
+        with ESMTP id S229450AbjBHKpR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Feb 2023 01:55:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D9DA442E5;
-        Tue,  7 Feb 2023 22:55:04 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 8 Feb 2023 05:45:17 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B88F273F;
+        Wed,  8 Feb 2023 02:45:16 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3DF53B81AC8;
-        Wed,  8 Feb 2023 06:55:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6CE1C433EF;
-        Wed,  8 Feb 2023 06:55:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675839301;
-        bh=a4B+YQizzgDC8DXHAt6Dn68H073j/R65LXUWrw/mnN4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bCdbBqPNxyun/OrzZym2xp1aFRk04ycqTlzzYXtalpV1P3lBGfqzsLeWnON+m144Y
-         KQzUy6KGGWFGuV8ui+3zHAIb5T19uy8BEMOO9cAgFioWb6legHXLN5+SAxB1DYbOX9
-         NxUgBy8mxlIbLUgnuZw8Oh/in33wOVSD6c6lBDoF0QZVTYI4wMcUYPAcKqKIBWkpdf
-         YB7x9v1yKzS1SzoZ910vPHWlh9mAhXnctLSO5GKMSfhUfBKf3iD1/721Rvr9sE6/zz
-         hjpLK2MUuAfpR7OeLbeJTV1NyeVJv1o3LGtk9SqSV8stIE0tMUCCMwn59u0SKm/awA
-         LL4XlW1D18JdQ==
-Date:   Tue, 7 Feb 2023 22:55:00 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Bill Wendling <morbo@google.com>
-Subject: Re: [PATCH] randstruct: temporarily disable clang support
-Message-ID: <Y+NHRHsp9u4ooOdf@sol.localdomain>
-References: <20230203194201.92015-1-ebiggers@kernel.org>
- <63deacb1.170a0220.f078.6779@mx.google.com>
- <CAFP8O3Kwa2V7GvJPEbr87o6hMi8i2JquWniFOaiFR3nv9pGc_g@mail.gmail.com>
- <CAKwvOdm8F_VcdegPGw3vPu+-H1Gyh0rqQWpf=+Yh9YAowVuWSA@mail.gmail.com>
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 49EC720C1D;
+        Wed,  8 Feb 2023 10:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1675853115; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nY2NC0vBc03UHVDXrLuj/SNDuqT1hRa8Mkp6xgPWjjg=;
+        b=u4/DN30h7ruD/ETiyitg7LV71SFdcliUIk68nMfnl286aSNvXdTCyIRwaCkvQRqDNsTR0a
+        WGSs8RtIbPI3Qka3hVosQPl2Hjm1oo3yKXG/pvgK9TveWEVbXNaZUNFMhlAUAPP6kIeuBV
+        YU4pLaQ/m0ryBDgT4tbmWr6b+Z7QBpk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1675853115;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nY2NC0vBc03UHVDXrLuj/SNDuqT1hRa8Mkp6xgPWjjg=;
+        b=dzUqDznyX1qG/bX6LKuIgv8D+VVr1rsJBItBZvXbRsI+WCtomCN6Yx82/zJm3h+4EsIUYZ
+        M074XVQ2hQhovZCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 315E213425;
+        Wed,  8 Feb 2023 10:45:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id DMh7Czt942NJOwAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Wed, 08 Feb 2023 10:45:15 +0000
+Message-ID: <70fc9040-f976-0314-46e8-d9ddad82ccf5@suse.cz>
+Date:   Wed, 8 Feb 2023 11:45:14 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdm8F_VcdegPGw3vPu+-H1Gyh0rqQWpf=+Yh9YAowVuWSA@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] mm: reduce lock contention of pcp buffer refill
+Content-Language: en-US
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Halbuer <halbuer@sra.uni-hannover.de>,
+        Kees Cook <keescook@chromium.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>
+References: <20230201162549.68384-1-halbuer@sra.uni-hannover.de>
+ <20230202152501.297639031e96baad35cdab17@linux-foundation.org>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20230202152501.297639031e96baad35cdab17@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 07, 2023 at 10:01:21AM -0800, Nick Desaulniers wrote:
-> On Mon, Feb 6, 2023 at 3:41 PM Fangrui Song <maskray@google.com> wrote:
-> >
-> > On Sat, Feb 4, 2023 at 11:06 AM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Fri, Feb 03, 2023 at 11:42:01AM -0800, Eric Biggers wrote:
-> > > > From: Eric Biggers <ebiggers@google.com>
-> > > >
-> > > > Randstruct with clang is currently unsafe to use in any clang release
-> > > > that supports it, due to a clang bug that is causing miscompilations:
-> > > > "-frandomize-layout-seed inconsistently randomizes all-function-pointers
-> > > > structs" (https://github.com/llvm/llvm-project/issues/60349).  Disable
-> > > > it temporarily until the bug is fixed and the fix is released in a clang
-> > > > version that can be checked for.
-> > > >
-> > > > Fixes: 035f7f87b729 ("randstruct: Enable Clang support")
-> > > > Cc: stable@vger.kernel.org
-> > > > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > > > ---
-> > > >  security/Kconfig.hardening | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/security/Kconfig.hardening b/security/Kconfig.hardening
-> > > > index 53baa95cb644..aad16187148c 100644
-> > > > --- a/security/Kconfig.hardening
-> > > > +++ b/security/Kconfig.hardening
-> > > > @@ -280,7 +280,8 @@ config ZERO_CALL_USED_REGS
-> > > >  endmenu
-> > > >
-> > > >  config CC_HAS_RANDSTRUCT
-> > > > -     def_bool $(cc-option,-frandomize-layout-seed-file=/dev/null)
-> > > > +     # Temporarily disabled due to https://github.com/llvm/llvm-project/issues/60349
-> > > > +     def_bool n
-> > > >
-> > > >  choice
-> > > >       prompt "Randomize layout of sensitive kernel structures"
-> > > >
-> > > > base-commit: 7b753a909f426f2789d9db6f357c3d59180a9354
-> > > > --
-> > > > 2.39.1
-> > >
-> > > This should be fixed with greater precision -- i.e. this is nearly fixed
-> > > in Clang now, and is likely to be backported. So I think we'll need
-> > > versioned checks here.
-> > >
-> > > --
-> > > Kees Cook
-> > >
-> >
-> > Bill has requested cherry-pick the llvm-project fix into the
-> > release/16.x branch [1].
-> > https://github.com/llvm/llvm-project-release-prs/pull/276
-> > It may take one day to land.
-> >
-> > [1]: https://github.com/llvm/llvm-project/tree/release/16.x
-> >
-> > --
-> > 宋方睿
-> >
+On 2/3/23 00:25, Andrew Morton wrote:
+> On Wed,  1 Feb 2023 17:25:49 +0100 Alexander Halbuer <halbuer@sra.uni-hannover.de> wrote:
 > 
-> All landed; the version check should be for 16+. (And the link to the
-> issue report would be nice to retain).
+>> The `rmqueue_bulk` function batches the allocation of multiple elements to
+>> refill the per-CPU buffers into a single hold of the zone lock. Each
+>> element is allocated and checked using the `check_pcp_refill` function.
+>> The check touches every related struct page which is especially expensive
+>> for higher order allocations (huge pages). This patch reduces the time
+>> holding the lock by moving the check out of the critical section similar
+>> to the `rmqueue_buddy` function which allocates a single element.
+>> Measurements of parallel allocation-heavy workloads show a reduction of
+>> the average huge page allocation latency of 50 percent for two cores and
+>> nearly 90 percent for 24 cores.
+> 
+> Sounds nice.
+> 
+> Were you able to test how much benefit we get by simply removing the
+> check_new_pages() call from rmqueue_bulk()?
+> 
+> Vlastimil, I find this quite confusing:
+> 
+> #ifdef CONFIG_DEBUG_VM
+> /*
+>  * With DEBUG_VM enabled, order-0 pages are checked for expected state when
+>  * being allocated from pcp lists. With debug_pagealloc also enabled, they are
+>  * also checked when pcp lists are refilled from the free lists.
+>  */
+> static inline bool check_pcp_refill(struct page *page, unsigned int order)
+> {
+> 	if (debug_pagealloc_enabled_static())
+> 		return check_new_pages(page, order);
+> 	else
+> 		return false;
+> }
+> 
+> static inline bool check_new_pcp(struct page *page, unsigned int order)
+> {
+> 	return check_new_pages(page, order);
+> }
+> #else
+> /*
+>  * With DEBUG_VM disabled, free order-0 pages are checked for expected state
+>  * when pcp lists are being refilled from the free lists. With debug_pagealloc
+>  * enabled, they are also checked when being allocated from the pcp lists.
+>  */
+> static inline bool check_pcp_refill(struct page *page, unsigned int order)
+> {
+> 	return check_new_pages(page, order);
+> }
+> static inline bool check_new_pcp(struct page *page, unsigned int order)
+> {
+> 	if (debug_pagealloc_enabled_static())
+> 		return check_new_pages(page, order);
+> 	else
+> 		return false;
+> }
+> #endif /* CONFIG_DEBUG_VM */
+> 
+> and the 4462b32c9285b5 changelog is a struggle to follow.
+> 
+> Why are we performing *any* checks when CONFIG_DEBUG_VM=n and when
+> debug_pagealloc_enabled is false?
 
-Thanks!  Done in "[PATCH] randstruct: disable Clang 15 support"
-(https://lore.kernel.org/linux-hardening/20230208065133.220589-1-ebiggers@kernel.org).
+Well AFAIK the history was like this
 
-- Eric
+- at first we always did the checks when allocating or freeing a page, even
+when it was allocated/freed from the pcplist
+
+- then Mel in 479f854a207c and 4db7548ccbd9 changed it so the checks were
+done only when moving between pcplist and zone's freelists, so the
+pcplist-cached fast paths were now faster. But that means it may not catch
+some errors anymore, so with DEBUG_VM checks were still done on every alloc/free
+
+- my 4462b32c9285b5 changed it so that when debug_pagelloc is boot-time
+enabled, the checks happen both on pcplist and zone's freelist alloc/free.
+This was mainly to allow enabling the checks on production kernels without
+recompiling with DEBUG_VM. But it's a mode where catching the culprit is
+more desirable than peak performance
+
+> Anyway, these checks sounds quite costly so let's revisit their
+> desirability?
+
+So AFAIK never in the past we went with not doing the checks at all. But
+given that by default we don't do them on pcplists for years, and the
+majority of allocations are using pcplists, maybe indeed we won't lose much
+coverage by not doing the checks at all.
+
+But I wonder also what kernel hardening folks think here - are the hardened
+kernels usually built with DEBUG_VM or debug_pagealloc enabled, or would you
+like to hook some other kernel option for keeping the checks on page/alloc
+free active? And should those checks be done on every alloc/free, including
+pcplist cached allocations?
+
