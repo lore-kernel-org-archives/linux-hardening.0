@@ -2,86 +2,140 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70611C636D3
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 18:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD61EC64EC5
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Feb 2023 19:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231388AbjBHS6d (ORCPT
+        id S231849AbjBHTc2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Feb 2023 13:58:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52150 "EHLO
+        Wed, 8 Feb 2023 14:32:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231370AbjBHS6c (ORCPT
+        with ESMTP id S231842AbjBHTc0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Feb 2023 13:58:32 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C54C54541
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Feb 2023 10:58:31 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id d2so15645924pjd.5
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Feb 2023 10:58:31 -0800 (PST)
+        Wed, 8 Feb 2023 14:32:26 -0500
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F6C247EC4
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Feb 2023 11:32:25 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id 141so27965pgc.0
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Feb 2023 11:32:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3dkVne6QOQuiWRjarawnc2yDR1hi271zLDnK3/8Voi0=;
-        b=UVbJ9xsLJiIJd2F3wQr18Dc6vf1t1u0vmP2LeaC8EAJTD0YwmMSpbp2WHw1gHsoG/g
-         QYPN0EFStY/TgncavC3gzVnLZ0j3eANngoaJgpPhsPwgsUrShOB2ys3OL70zo3NnZmXZ
-         3X/VdPwZ/EQXItjYA62Vk5s5T/8eTlUE9hKnk=
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ulrUQLJUP9RxcM6ZD9CxmoB1+p/LmgjBqM64v5ROwNg=;
+        b=Y/wZleiJgYDPwrKFBcrlT6u/1xcORwHwg87WEGQkc0RtFFNVVqtz+yNTJEUllPEFc0
+         +bXL1ZBGllwAn5k5jAHnZzdVPjsI3nfCU7FOGg7doqM90u8cZwVlNEiKkD/oLtjyRAas
+         xcclPYcRcRNy0VMcz8uuQEFaJ9CREVxPaU9zg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3dkVne6QOQuiWRjarawnc2yDR1hi271zLDnK3/8Voi0=;
-        b=B+IU6pLZPTJunnMS4JutgVREvYR3+usMvDeICZN+C3ZPcu+JNN40UwVbqdHMEhe4K0
-         tbpOypqHGqQct7qYxwg6KLo6WcfNBQj9F04EOPhAwYN4M7GRu4bA2eCYuSbJJB+2onAB
-         wpwE28dH7iefVEEacSjiYn5REcoUxljMEtgn/F62oEZY4IvsATm1CwO5satq6mneZr/I
-         Y7WLeUM2P+sTuFaRVC3wPtaQJvBiw+1jXGoTuDzk24L+hXGR0ifTSG5eh9pPruXJPtA/
-         2xtcnP2qpeuiQnTw0PHwCXQu7TBouxyr16f++wOcShfe6YtyOS4OVh5c/DBe0Ty5c4rt
-         qqhA==
-X-Gm-Message-State: AO0yUKUIPtWGK1OslAGWrouDM2XZUvX0R1Qg5lzlCAKSHTggxw5MLfCg
-        g+dgRZ3X1hW2wL2l0682mTByGA==
-X-Google-Smtp-Source: AK7set+W13zod//i71uQI6lj/ZQHRIZUB6Bc0TJ8c+Ig+pIur65SH1HtUzuX+65B2W8SuYAFLnoWGQ==
-X-Received: by 2002:a17:90b:384c:b0:22c:2d76:2713 with SMTP id nl12-20020a17090b384c00b0022c2d762713mr9884383pjb.32.1675882710714;
-        Wed, 08 Feb 2023 10:58:30 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ulrUQLJUP9RxcM6ZD9CxmoB1+p/LmgjBqM64v5ROwNg=;
+        b=Vmus+wZ2/TbxS3sEoKULDgGiS5jlLDmF6xUGN2mjMozUJlbwt5BqY0/8+a0/qtqbe4
+         ZUdzH6t8+Exm8OJ5E4hXXBMPdwckRTco2YHd1mjN1+YvDtkckeSwK5U+PHrkXG6uMIBQ
+         FN1irmhZaI76SskyHg1ixTYf2f6P/rcOvN23rvvad58Kr1a8dgTwi1qNP1osFWi0aG6y
+         TrBsQicKN2Pi7WaRrzJz+EQOc2ZfxTa2W5LwBeyjAeUwkcNT6eiDp1M7MpmJ7xPtbfaG
+         j8ze0C5g00ad1QW+cxKaKmyR1aUNTqxPzxzcDCLK+22HWBIpba2d+bG6uLKxph6nqpi8
+         WzYA==
+X-Gm-Message-State: AO0yUKXoTEnRMvQMN7aHDe1wnAbyHYVbOkV9jgm+zZuP6tbhMiJCYd60
+        pPittDt1titB84WeRvHjuQgATg==
+X-Google-Smtp-Source: AK7set+P7rm+dGDTETrU2yzMMvUtrqjrfbTlBVXOCaBnQQFdsubS7A0XGoLGi5keRbMZOiZCbhxF5Q==
+X-Received: by 2002:a62:1b8a:0:b0:592:de72:4750 with SMTP id b132-20020a621b8a000000b00592de724750mr6518043pfb.23.1675884744778;
+        Wed, 08 Feb 2023 11:32:24 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x3-20020a17090a1f8300b00230e733599esm1850623pja.48.2023.02.08.10.58.30
+        by smtp.gmail.com with ESMTPSA id t2-20020a056a0021c200b0058173c4b3d1sm11604471pfj.80.2023.02.08.11.32.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 10:58:30 -0800 (PST)
+        Wed, 08 Feb 2023 11:32:24 -0800 (PST)
+Message-ID: <63e3f8c8.050a0220.c0b3f.434b@mx.google.com>
+X-Google-Original-Message-ID: <202302081129.@keescook>
+Date:   Wed, 8 Feb 2023 11:32:23 -0800
 From:   Kees Cook <keescook@chromium.org>
-To:     linux-hardening@vger.kernel.org, ebiggers@kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        morbo@google.com
-Subject: Re: [PATCH] randstruct: disable Clang 15 support
-Date:   Wed,  8 Feb 2023 10:58:21 -0800
-Message-Id: <167588270061.464935.14207013093507497315.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230208065133.220589-1-ebiggers@kernel.org>
-References: <20230208065133.220589-1-ebiggers@kernel.org>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     concord@gentoo.org, linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Heimes <christian@python.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Steve Dower <steve.dower@python.org>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+Subject: Re: [GIT PULL] Add trusted_for(2) (was O_MAYEXEC)
+References: <20220321161557.495388-1-mic@digikod.net>
+ <202204041130.F649632@keescook>
+ <CAHk-=wgoC76v-4s0xVr1Xvnx-8xZ8M+LWgyq5qGLA5UBimEXtQ@mail.gmail.com>
+ <816667d8-2a6c-6334-94a4-6127699d4144@digikod.net>
+ <CAHk-=wjPuRi5uYs9SuQ2Xn+8+RnhoKgjPEwNm42+AGKDrjTU5g@mail.gmail.com>
+ <202204041451.CC4F6BF@keescook>
+ <CAHk-=whb=XuU=LGKnJWaa7LOYQz9VwHs8SLfgLbT5sf2VAbX1A@mail.gmail.com>
+ <7e8d9f8a-f119-6d1a-7861-0493dc513aa7@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <7e8d9f8a-f119-6d1a-7861-0493dc513aa7@digikod.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 7 Feb 2023 22:51:33 -0800, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+*thread necromancy*
+
+On Tue, Apr 05, 2022 at 06:09:03PM +0200, Mickaël Salaün wrote:
 > 
-> The randstruct support released in Clang 15 is unsafe to use due to a
-> bug that can cause miscompilations: "-frandomize-layout-seed
-> inconsistently randomizes all-function-pointers structs"
-> (https://github.com/llvm/llvm-project/issues/60349).  It has been fixed
-> on the Clang 16 release branch, so add a Clang version check.
+> On 05/04/2022 01:26, Linus Torvalds wrote:
+> > On Mon, Apr 4, 2022 at 3:25 PM Kees Cook <keescook@chromium.org> wrote:
 > 
 > [...]
+> 
+> > 
+> > > I think this already exists as AT_EACCESS? It was added with
+> > > faccessat2() itself, if I'm reading the history correctly.
+> > 
+> > Yeah, I noticed myself, I just hadn't looked (and I don't do enough
+> > user-space programming to be aware of if that way).
+> 
+> I think AT_EACCESS should be usable with the new EXECVE_OK too.
+> 
+> 
+> > 
+> > > >      (a) "what about suid bits that user space cannot react to"
+> > > 
+> > > What do you mean here? Do you mean setid bits on the file itself?
+> > 
+> > Right.
+> > 
+> > Maybe we don't care.
+> 
+> I think we don't. I think the only corner case that could be different is
+> for files that are executable, SUID and non-readable. In this case it
+> wouldn't matter because userspace could not read the file, which is required
+> for interpretation/execution. Anyway, S[GU]ID bits in scripts are just
+> ignored by execve and we want to follow the same semantic.
 
-Applied to for-next/hardening, thanks!
+Hi Mickaël,
 
-[1/1] randstruct: disable Clang 15 support
-      https://git.kernel.org/kees/c/7ee3819f2ba9
+Is there a new version of this being worked on? It would be really nice
+to have the O_MAYEXEC/faccessat2() visibility for script execution control
+in userspace. It seems like it would be mainly a respin of an earlier
+version of this series before trusted_for() was proposed.
+
+-Kees
 
 -- 
 Kees Cook
-
