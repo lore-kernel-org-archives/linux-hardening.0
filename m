@@ -2,59 +2,56 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB9BC64EC4
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 19:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEBBC61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 20:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230208AbjBITw2 (ORCPT
+        id S229969AbjBIUGb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Feb 2023 14:52:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40276 "EHLO
+        Thu, 9 Feb 2023 15:06:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230210AbjBITw1 (ORCPT
+        with ESMTP id S229490AbjBIUGR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Feb 2023 14:52:27 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA7612F2C;
-        Thu,  9 Feb 2023 11:52:24 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id m2so9731630ejb.8;
-        Thu, 09 Feb 2023 11:52:24 -0800 (PST)
+        Thu, 9 Feb 2023 15:06:17 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DB16ADFF
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 12:05:49 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id on9-20020a17090b1d0900b002300a96b358so3438829pjb.1
+        for <linux-hardening@vger.kernel.org>; Thu, 09 Feb 2023 12:05:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EloPaQFnO4w90/UyCJV6KwoWQwdDOtOpIFoUpYCed/c=;
-        b=NEOnhm9l2PA9ZgjTe1XTMV92Tq+1y+ibYKkehqvB86tAG/feySkHZAsLgpQmIjDx4Q
-         xJ0E+ZOb74BFbGI3sEG8uojNbyLOS9AhwNAZcQQIOGdWekANjBtdH6pTxJ1j6y2iZVeD
-         3tn85/I8Q8H7c3k0EUz67hHqBHbo7kAPPSjkQvZs+8Zrey3JxejY8bTIWYX/pwpSYJij
-         +IadoEMe63a/TRcGOLlYYuUYe/ym4gPMoI9j/pQovZcODIGx0bvVErE4dRkUgpcVE3L/
-         YosMitUlKVuWsu01U16A4aIe8IHbM/ZoqWaxtF7c8NF9YCIKnghSxKvDRDjEtGU5STFn
-         QaZQ==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=CIfREX/YQWh4b/q/oQJmrJNs03C5pbZw938goHZ0As0=;
+        b=C3LGkKaZ/egq9pyVVyVUA/uUoyAfyHfgHZtTpDQ42GhMZ5h6GZ1iZ4R7W9FnEMNf+W
+         z273Vxq5Fu0FUidkreu9oK0Il3x8I5FgMMlY9mplRGsomy2jRPQb6DoZhFjQg4KbSjlH
+         TpGfM2kAFHBlSy0ig7CVp38EvJMZ6MCsrLsik=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EloPaQFnO4w90/UyCJV6KwoWQwdDOtOpIFoUpYCed/c=;
-        b=0dhxao7kZw4JrzodSUFAw50KZS4YjB7r8DOLRhMgaGqW/VKVjvSLRPQXycn8xN63l1
-         NKANOuFMwWsT7aj1Cuem8NvxO+wcT0NCThbnwNJ7QCKIwyUg9u2JM2IdPLCYFlnIUEdM
-         maoh7p2oV1uUOrzvmQcdEr/JRlHRW3pB3lb1jZg/8I164yZzWOqaAr1NtjiXQEU2WxYz
-         s6Zllp8P0xE0FAE9ZgsG/0Eydk/gRKp0GYCPh/Tl9KVlRg4byvpHz/PCqS7t+iKxhsBP
-         8RQSjpjSVviYMYBEkssIPrzLua5ITr/N3RI/O0JZc8+L602vOiz9aWHjJMWaeaeSaBqg
-         7kgg==
-X-Gm-Message-State: AO0yUKVKJEeR/3xYKzcCD4Jle/Enrpsq7IHvpLq6LAdIswHUvoaxBOmv
-        n9w0NXq2o1tAEnXBebKzanlW2o7UZX544A4V/iw=
-X-Google-Smtp-Source: AK7set93q4x6wCG804+tszb8kwkcrHCdhzsz4klOPlo5s3ZDF/jpWyHGjoysf7crWXJpeuayHJqhEBb1I3D8O2cW3LY=
-X-Received: by 2002:a17:906:5a60:b0:8aa:bdec:d9ae with SMTP id
- my32-20020a1709065a6000b008aabdecd9aemr1869264ejc.12.1675972343370; Thu, 09
- Feb 2023 11:52:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20230209192337.never.690-kees@kernel.org>
-In-Reply-To: <20230209192337.never.690-kees@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 9 Feb 2023 11:52:10 -0800
-Message-ID: <CAEf4BzZXrf48wsTP=2H2gkX6T+MM0B45o0WNswi50DQ_B-WG4Q@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Deprecate "data" member of bpf_lpm_trie_key
-To:     Kees Cook <keescook@chromium.org>
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CIfREX/YQWh4b/q/oQJmrJNs03C5pbZw938goHZ0As0=;
+        b=rpwCNYdHWuvcC28eL25WfkfsCo2maS6J1ylM/jK+tH3xZWHFIhAK1WilKUSHy20Wfx
+         /mlrYbcdyZOnkoH3ccXlbnj36FxylxyBizPg86p1eDNCS31FUKSKNezLL83zUZt/Lk5E
+         swPeM85fC12TMu/E3BwVA0qRQn3nEcdNZkL/xdXjFZyUPJmZpPnAjxTtQd0wVXunVHkl
+         szJyx2ZHmtk6khrt81giXk7Y7hj3P6AF9hUxgKEnPksERMDGYl80YN+AMd9kpEsUiYtf
+         R4UczatBv1oTJiS78lDpTzlwhWwHBTY9EFhbpHQWhXTPxrrYkkjIQB85Qf1YugS4IRPf
+         BXvw==
+X-Gm-Message-State: AO0yUKXwoFa3I2kciVypNEEq8B71s20PhhljRt+bllcjkdewCsB9wxvD
+        CfaMKBruBP10dCtTbmamKRAQOg==
+X-Google-Smtp-Source: AK7set/V2FOS5XFwG1dSzxjyTU/evZqkEa4kdYXJ7FE1Q2EBIaFEC8a8SbHRIQBi30Xmq4fgtz7Mzg==
+X-Received: by 2002:a17:902:e5ce:b0:197:19f7:52b4 with SMTP id u14-20020a170902e5ce00b0019719f752b4mr14816901plf.42.1675973146806;
+        Thu, 09 Feb 2023 12:05:46 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jm13-20020a17090304cd00b001948ff5cc32sm1883026plb.215.2023.02.09.12.05.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Feb 2023 12:05:46 -0800 (PST)
+Message-ID: <63e5521a.170a0220.297d7.3a80@mx.google.com>
+X-Google-Original-Message-ID: <202302091202.@keescook>
+Date:   Thu, 9 Feb 2023 12:05:45 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     Alexei Starovoitov <ast@kernel.org>,
         Stanislav Fomichev <sdf@google.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -75,164 +72,38 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] bpf: Deprecate "data" member of bpf_lpm_trie_key
+References: <20230209192337.never.690-kees@kernel.org>
+ <CAEf4BzZXrf48wsTP=2H2gkX6T+MM0B45o0WNswi50DQ_B-WG4Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZXrf48wsTP=2H2gkX6T+MM0B45o0WNswi50DQ_B-WG4Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 9, 2023 at 11:23 AM Kees Cook <keescook@chromium.org> wrote:
->
-> The kernel is globally removing the ambiguous 0-length and 1-element
-> arrays in favor of flexible arrays, so that we can gain both compile-time
-> and run-time array bounds checking[1]. Most cases of these changes are
-> trivial, but this case in BPF is not. It faces some difficulties:
->
-> 1) struct bpf_lpm_trie_key is part of UAPI so changes can be fragile in
->    the sense that projects external to Linux may be impacted.
->
-> 2) The struct is intended to be used as a header, which means it may
->    be within another structure, resulting in the "data" array member
->    overlapping with the surrounding structure's following members. When
->    converting from [0]-style to []-style, this overlap elicits warnings
->    under Clang, and GCC considers it a deprecated extension (and similarly
->    warns under -pedantic): https://godbolt.org/z/vWzqs41h6
->
-> 3) Both the kernel and userspace access the existing "data" member
->    for more than just static initializers and offsetof() calculations.
->    For example:
->
->       cilium:
->         struct egress_gw_policy_key in_key = {
->                 .lpm_key = { 32 + 24, {} },
->                 .saddr   = CLIENT_IP,
->                 .daddr   = EXTERNAL_SVC_IP & 0Xffffff,
->         };
->
->       systemd:
->         ipv6_map_fd = bpf_map_new(
->                         BPF_MAP_TYPE_LPM_TRIE,
->                         offsetof(struct bpf_lpm_trie_key, data) + sizeof(uint32_t)*4,
->                         sizeof(uint64_t), ...);
->         ...
->         struct bpf_lpm_trie_key *key_ipv4, *key_ipv6;
->         ...
->         memcpy(key_ipv4->data, &a->address, sizeof(uint32_t));
->
->    Searching for other uses in Debian Code Search seem to be just copies
->    of UAPI headers:
->    https://codesearch.debian.net/search?q=struct+bpf_lpm_trie_key&literal=1&perpkg=1
->
-> Introduce struct bpf_lpm_trie_key_u8 for the kernel (and future userspace)
-> to use for walking the individual bytes following the header, and leave
-> the "data" member of struct bpf_lpm_trie_key as-is (i.e. a [0]-style
-> array). This will allow existing userspace code to continue to use "data"
-> as a fake flexible array. The kernel (and future userspace code) building
-> with -fstrict-flex-arrays=3 will see struct bpf_lpm_trie_key::data has
-> having 0 bytes so there will be no overlap warnings, and can instead
-> use struct bpf_lpm_trie_key_u8::data for accessing the actual byte
-> array contents. The definition of struct bpf_lpm_trie_key_u8 uses a
-> union with struct bpf_lpm_trie_key so that things like container_of()
-> can be used instead of doing explicit casting, all while leaving the
-> member names un-namespaced (i.e. key->prefixlen == key_u8->prefixlen,
-> key->data == key_u8->data), allowing for trivial drop-in replacement
-> without collateral member renaming.
->
-> This will avoid structure overlap warnings and array bounds warnings
-> while enabling run-time array bounds checking under CONFIG_UBSAN_BOUNDS=y
-> and -fstrict-flex-arrays=3.
->
-> For reference, the current warning under GCC 13 with -fstrict-flex-arrays=3
-> and -Warray-bounds is:
->
-> ../kernel/bpf/lpm_trie.c:207:51: warning: array subscript i is outside array bounds of 'const __u8[0]' {aka 'const unsigned char[]'} [-Warray-bounds=]
->   207 |                                        *(__be16 *)&key->data[i]);
->       |                                                   ^~~~~~~~~~~~~
-> ../include/uapi/linux/swab.h:102:54: note: in definition of macro '__swab16'
->   102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
->       |                                                      ^
-> ../include/linux/byteorder/generic.h:97:21: note: in expansion of macro '__be16_to_cpu'
->    97 | #define be16_to_cpu __be16_to_cpu
->       |                     ^~~~~~~~~~~~~
-> ../kernel/bpf/lpm_trie.c:206:28: note: in expansion of macro 'be16_to_cpu'
->   206 |                 u16 diff = be16_to_cpu(*(__be16 *)&node->data[i]
-> ^
->       |                            ^~~~~~~~~~~
-> In file included from ../include/linux/bpf.h:7:
-> ../include/uapi/linux/bpf.h:82:17: note: while referencing 'data'
->    82 |         __u8    data[0];        /* Arbitrary size */
->       |                 ^~~~
->
-> Additionally update the samples and selftests to use the new structure,
-> for demonstrating best practices.
->
-> [1] For lots of details, see both:
->     https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
->     https://people.kernel.org/kees/bounded-flexible-arrays-in-c
->
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Stanislav Fomichev <sdf@google.com>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Andrii Nakryiko <andrii@kernel.org>
-> Cc: Martin KaFai Lau <martin.lau@linux.dev>
-> Cc: Song Liu <song@kernel.org>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: John Fastabend <john.fastabend@gmail.com>
-> Cc: KP Singh <kpsingh@kernel.org>
-> Cc: Hao Luo <haoluo@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Mykola Lysenko <mykolal@fb.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Haowen Bai <baihaowen@meizu.com>
-> Cc: bpf@vger.kernel.org
-> Cc: linux-kselftest@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/uapi/linux/bpf.h                   | 15 +++++++++++++--
->  kernel/bpf/lpm_trie.c                      | 16 +++++++++-------
->  samples/bpf/map_perf_test_user.c           |  2 +-
->  samples/bpf/xdp_router_ipv4_user.c         |  2 +-
->  tools/testing/selftests/bpf/test_lpm_map.c | 14 +++++++-------
->  5 files changed, 31 insertions(+), 18 deletions(-)
->
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index ba0f0cfb5e42..f843a7582456 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -76,10 +76,21 @@ struct bpf_insn {
->         __s32   imm;            /* signed immediate constant */
->  };
->
-> -/* Key of an a BPF_MAP_TYPE_LPM_TRIE entry */
-> +/* Header for a key of a BPF_MAP_TYPE_LPM_TRIE entry */
->  struct bpf_lpm_trie_key {
->         __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
-> -       __u8    data[0];        /* Arbitrary size */
-> +       __u8    data[0];        /* Deprecated field: use struct bpf_lpm_trie_key_u8 */
-> +};
-> +
-> +/* Raw (u8 byte array) key of a BPF_MAP_TYPE_LPM_TRIE entry */
-> +struct bpf_lpm_trie_key_u8 {
-> +       union {
-> +               struct bpf_lpm_trie_key hdr;
-> +               struct {
-> +                       __u32   prefixlen;
-> +                       __u8    data[];
-> +               };
-> +       };
->  };
+On Thu, Feb 09, 2023 at 11:52:10AM -0800, Andrii Nakryiko wrote:
+> Do we need to add a new type to UAPI at all here? We can make this new
+> struct internal to kernel code (e.g. struct bpf_lpm_trie_key_kern) and
+> point out that it should match the layout of struct bpf_lpm_trie_key.
+> User-space can decide whether to use bpf_lpm_trie_key as-is, or if
+> just to ensure their custom struct has the same layout (I see some
+> internal users at Meta do just this, just make sure that they have
+> __u32 prefixlen as first member).
 
-Do we need to add a new type to UAPI at all here? We can make this new
-struct internal to kernel code (e.g. struct bpf_lpm_trie_key_kern) and
-point out that it should match the layout of struct bpf_lpm_trie_key.
-User-space can decide whether to use bpf_lpm_trie_key as-is, or if
-just to ensure their custom struct has the same layout (I see some
-internal users at Meta do just this, just make sure that they have
-__u32 prefixlen as first member).
+The uses outside the kernel seemed numerous enough to justify a new UAPI
+struct (samples, selftests, etc). It also paves a single way forward
+when the userspace projects start using modern compiler options (e.g.
+systemd is usually pretty quick to adopt new features).
 
-This whole union work-around seems like just extra cruft that we don't
-really need in UAPI.
+> This whole union work-around seems like just extra cruft that we don't
+> really need in UAPI.
 
-Or did I miss anything?
+The union is really only there so that possible uses of container_of()
+would be happy. But I did add a BUILD_BUG_ON() test for member offset
+equality, so a hard cast would be safe too. I'm happy to drop it if
+that's preferred?
 
-
-[...]
+-- 
+Kees Cook
