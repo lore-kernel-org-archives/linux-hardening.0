@@ -2,125 +2,126 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD32C61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 14:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E04C61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 15:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231144AbjBIOfA (ORCPT
+        id S231165AbjBIPyf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Feb 2023 09:35:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
+        Thu, 9 Feb 2023 10:54:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231137AbjBIOew (ORCPT
+        with ESMTP id S230204AbjBIPye (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Feb 2023 09:34:52 -0500
-Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C29B1F5C1
-        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 06:34:51 -0800 (PST)
-Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
-        by amity.mint.lgbt (Postfix) with ESMTP id 4PCKBx20Ylz1S5HM
-        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 09:34:49 -0500 (EST)
-Authentication-Results: amity.mint.lgbt (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mint.lgbt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
-        content-transfer-encoding:content-type:in-reply-to:from
-        :references:to:content-language:subject:user-agent:mime-version
-        :date:message-id; s=dkim; t=1675953288; x=1676817289; bh=OtwHaQd
-        43ev0CTnwqIm/FUCsnnqbo5VRlxBW82fmyng=; b=H45rGLKnOkvzxImDk3fnZ7B
-        PaQmSau8WRULXMxDKa2GyRi0GarWzEdFJm6F234o6B1a1pSKi/NGa8vap4goDoQG
-        RoLr4F4qpmeWfor/YEdkU8RqEdgt/rh5I0FnuYt1af0u0bp4/WRXvdI3/qkF+bQT
-        RGIrEs/k5zE2wbVid1TkcQFJ0aPmuuWo+K0J03jhijsN5U0UC5AM79z3PC019cN0
-        FReRT4iwjQyZax9lEdnIZggVjpt42L1vum6bewMifqlXBdUgm9ByVRFuRIXiLVgd
-        QyI+LReM82T+ip68VXqcbtDFig+3Nk66rfLhHi3VSIcDOEwS3ZIQnjJ98UVyvAg=
-        =
-X-Virus-Scanned: amavisd-new at amity.mint.lgbt
-Received: from amity.mint.lgbt ([127.0.0.1])
-        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2SSgdy-EVWN2 for <linux-hardening@vger.kernel.org>;
-        Thu,  9 Feb 2023 09:34:48 -0500 (EST)
-Received: from [192.168.4.25] (unknown [190.196.95.28])
-        by amity.mint.lgbt (Postfix) with ESMTPSA id 4PCKBY4Xnbz1S5Gh;
-        Thu,  9 Feb 2023 09:34:21 -0500 (EST)
-Message-ID: <bb6f8a51-cec8-02cc-8ac1-3cd714a2e59a@mint.lgbt>
-Date:   Thu, 9 Feb 2023 11:34:17 -0300
+        Thu, 9 Feb 2023 10:54:34 -0500
+X-Greylist: delayed 635 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 09 Feb 2023 07:54:33 PST
+Received: from smtp-8fad.mail.infomaniak.ch (smtp-8fad.mail.infomaniak.ch [IPv6:2001:1600:3:17::8fad])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3511C7E4
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 07:54:33 -0800 (PST)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4PCLk53YH7zMrkNX;
+        Thu,  9 Feb 2023 16:43:25 +0100 (CET)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4PCLk258CPzlh7;
+        Thu,  9 Feb 2023 16:43:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1675957405;
+        bh=bNW1Wg5WZW0nIMURTxjwXxKKJeK4hLfabPIk0obS01U=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=yhrC9HODCmFSivOVE0IKp2ondNaaLvcg5W8tO3K+NLu2V/sCkaEy51YAikMxX/bO+
+         JxbV6GVXYwWp/EAnZjDieUo20IlNb8SiewRkBmtbJDATbN4UF9y7i7V377UMQNMKZD
+         zeNtRSi9skrTTd1wFJGc6zKnCNxdcpxM9Wxblc2U=
+Message-ID: <376258a7-b7fa-51f9-2137-c123b8ff304e@digikod.net>
+Date:   Thu, 9 Feb 2023 16:43:21 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v6 3/6] phy: qcom-qmp: Add SM6125 UFS PHY support
+User-Agent: 
+Subject: Re: [GIT PULL] Add trusted_for(2) (was O_MAYEXEC)
 Content-Language: en-US
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, bvanassche@acm.org, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org,
-        marijn.suijten@somainline.org
-References: <20230108195336.388349-1-they@mint.lgbt>
- <20230108195336.388349-4-they@mint.lgbt>
- <CAA8EJpp-RwPOv61MtoXYb3Tuy5LDWWBCvYSrGUOvg8vWhid_tw@mail.gmail.com>
-From:   Lux Aliaga <they@mint.lgbt>
-In-Reply-To: <CAA8EJpp-RwPOv61MtoXYb3Tuy5LDWWBCvYSrGUOvg8vWhid_tw@mail.gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     concord@gentoo.org, linux-hardening@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Heimes <christian@python.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        James Morris <jmorris@namei.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Muhammad Usama Anjum <usama.anjum@collabora.com>,
+        Paul Moore <paul@paul-moore.com>,
+        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
+        <philippe.trebuchet@ssi.gouv.fr>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Steve Dower <steve.dower@python.org>,
+        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
+        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>
+References: <20220321161557.495388-1-mic@digikod.net>
+ <202204041130.F649632@keescook>
+ <CAHk-=wgoC76v-4s0xVr1Xvnx-8xZ8M+LWgyq5qGLA5UBimEXtQ@mail.gmail.com>
+ <816667d8-2a6c-6334-94a4-6127699d4144@digikod.net>
+ <CAHk-=wjPuRi5uYs9SuQ2Xn+8+RnhoKgjPEwNm42+AGKDrjTU5g@mail.gmail.com>
+ <202204041451.CC4F6BF@keescook>
+ <CAHk-=whb=XuU=LGKnJWaa7LOYQz9VwHs8SLfgLbT5sf2VAbX1A@mail.gmail.com>
+ <7e8d9f8a-f119-6d1a-7861-0493dc513aa7@digikod.net>
+ <63e3f8c8.050a0220.c0b3f.434b@mx.google.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+In-Reply-To: <63e3f8c8.050a0220.c0b3f.434b@mx.google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 13/01/2023 16:31, Dmitry Baryshkov wrote:
 
-> On Sun, 8 Jan 2023 at 21:54, Lux Aliaga <they@mint.lgbt> wrote:
->> The SM6125 UFS PHY is compatible with the one from SM6115. Add a
->> compatible for it and modify the config from SM6115 to make them
->> compatible with the SC8280XP binding
+On 08/02/2023 20:32, Kees Cook wrote:
+> *thread necromancy*
+> 
+> On Tue, Apr 05, 2022 at 06:09:03PM +0200, Mickaël Salaün wrote:
 >>
->> Signed-off-by: Lux Aliaga <they@mint.lgbt>
->> Reviewed-by: Martin Botka <martin.botka@somainline.org>
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 5 +++++
->>   1 file changed, 5 insertions(+)
+>> On 05/04/2022 01:26, Linus Torvalds wrote:
+>>> On Mon, Apr 4, 2022 at 3:25 PM Kees Cook <keescook@chromium.org> wrote:
 >>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> index 318eea35b972..f33c84578940 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> @@ -693,6 +693,8 @@ static const struct qmp_phy_cfg sdm845_ufsphy_cfg = {
->>   static const struct qmp_phy_cfg sm6115_ufsphy_cfg = {
->>          .lanes                  = 1,
+>> [...]
 >>
->> +       .offsets                = &qmp_ufs_offsets_v5,
-> Please don't randomly reuse generation-specific structures. This
-> structure is clearly related to v5, while the PHY is from the v2
-> generation.
+>>>
+>>>> I think this already exists as AT_EACCESS? It was added with
+>>>> faccessat2() itself, if I'm reading the history correctly.
+>>>
+>>> Yeah, I noticed myself, I just hadn't looked (and I don't do enough
+>>> user-space programming to be aware of if that way).
+>>
+>> I think AT_EACCESS should be usable with the new EXECVE_OK too.
+>>
+>>
+>>>
+>>>>>       (a) "what about suid bits that user space cannot react to"
+>>>>
+>>>> What do you mean here? Do you mean setid bits on the file itself?
+>>>
+>>> Right.
+>>>
+>>> Maybe we don't care.
+>>
+>> I think we don't. I think the only corner case that could be different is
+>> for files that are executable, SUID and non-readable. In this case it
+>> wouldn't matter because userspace could not read the file, which is required
+>> for interpretation/execution. Anyway, S[GU]ID bits in scripts are just
+>> ignored by execve and we want to follow the same semantic.
+> 
+> Hi Mickaël,
+> 
+> Is there a new version of this being worked on? It would be really nice
+> to have the O_MAYEXEC/faccessat2() visibility for script execution control
+> in userspace. It seems like it would be mainly a respin of an earlier
+> version of this series before trusted_for() was proposed.
 
-I'm a bit confused here. When referencing back to downstream the driver 
-used has the suffix "v3-660". Should I use that suffix to name these 
-offsets? Because I'm not too sure if this is from the v2 generation due 
-to how it's named there.
+Yes, I plan to send a new version in a few weeks.
 
->> +
->>          .serdes_tbl             = sm6115_ufsphy_serdes_tbl,
->>          .serdes_tbl_num         = ARRAY_SIZE(sm6115_ufsphy_serdes_tbl),
->>          .tx_tbl                 = sm6115_ufsphy_tx_tbl,
->> @@ -1172,6 +1174,9 @@ static const struct of_device_id qmp_ufs_of_match_table[] = {
->>          }, {
->>                  .compatible = "qcom,sm6115-qmp-ufs-phy",
->>                  .data = &sm6115_ufsphy_cfg,
->> +       }, {
->> +               .compatible = "qcom,sm6125-qmp-ufs-phy",
->> +               .data = &sm6115_ufsphy_cfg,
->>          }, {
->>                  .compatible = "qcom,sm6350-qmp-ufs-phy",
->>                  .data = &sdm845_ufsphy_cfg,
->> --
->> 2.39.0
->>
->
--- 
-Lux Aliaga
-https://nixgoat.me/
-
+> 
+> -Kees
+> 
