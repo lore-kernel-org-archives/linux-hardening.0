@@ -2,110 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB9CC6379F
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 05:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD32C61DA4
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 14:35:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbjBIFcU (ORCPT
+        id S231144AbjBIOfA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Feb 2023 00:32:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37276 "EHLO
+        Thu, 9 Feb 2023 09:35:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229592AbjBIFcU (ORCPT
+        with ESMTP id S231137AbjBIOew (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Feb 2023 00:32:20 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E26930294
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Feb 2023 21:32:18 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id j25so628844wrc.4
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Feb 2023 21:32:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=w6z3lxwnln7Ypie34pRxdCgfXQDUlJU7iUw2s4xeNCQ=;
-        b=hbv+iUmy8sb7UTevXZXSzxz4aaIUDG/plNczLQrgAbId4wPVrQ+MkUcq3aY+CY5S+3
-         rjawt/atll9AOMzPTfCwmorE8mJ0IW4ExC+pOffnmttwon2NgCXsQXAHNH70+CqH4Yet
-         b6oLh+gnKxDrXWJ+sVkEhlEAuMsgo82g7kQbD0bRtom8ONxlwBf6CsHrI8kEQQPSr8cE
-         02FslNpxxsQJnKXlRV77g9pOv1nepBqVy0+lQY1q5jHCyV3MZ1/poYrNBSof/aw2ifvB
-         XBsmv3sQsOevFgU/eI4a8Lch+EluHrUqqffry2uORieqI42qXv+KNAZGRuXumHYaK8Mh
-         FeiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w6z3lxwnln7Ypie34pRxdCgfXQDUlJU7iUw2s4xeNCQ=;
-        b=EllX580isnh9vVJOtcX3LyC1guPcVLHo2INj5n6nFZYliZXMtpE49TeriniBrJtNDE
-         1FxBilV8nTBh+Qh76YG8dncyl/G9sOlSrleMSQBKqGGKnVjnUcOWXy/m2bIPlyUrHFIZ
-         zHDTnnZUrv+XtwSoHBL5AiFKUBmOwmYrrrfWEb3D/QIVgsi5+IZC+gHQG5xDV4PPian9
-         NEgfI5QH8W1w/z6ERi60JmykkgF7zCuqXm/4HCs/hu93XkvnpqgoH+z8phQBSiE5W96r
-         5jJEDCJ6rINMuCpziAYB+2u3hkeQUI9LP14QnRm8HfTHDr4XbiEm8EeiqJhu7DIvesWX
-         91Qw==
-X-Gm-Message-State: AO0yUKXHoEWQ5Mvt40o0UbBBV9zNUkJXrijRBgyB+7KyAFd7u7shYBzL
-        lBUVtZSE30gbNmm/ofDf/37gSWXI8fqKafiRdRcDWg==
-X-Google-Smtp-Source: AK7set9YGa7NCNq2wHzwRqe7rRW1StB4rmp4kgxLGJELsL8k4ez/VaGVQujKbNDfKlqQkG5awGCGVr1ELO1GQ8rpFMA=
-X-Received: by 2002:a5d:4247:0:b0:2bf:b264:6bf7 with SMTP id
- s7-20020a5d4247000000b002bfb2646bf7mr251486wrr.427.1675920736829; Wed, 08 Feb
- 2023 21:32:16 -0800 (PST)
+        Thu, 9 Feb 2023 09:34:52 -0500
+Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C29B1F5C1
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 06:34:51 -0800 (PST)
+Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
+        by amity.mint.lgbt (Postfix) with ESMTP id 4PCKBx20Ylz1S5HM
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 09:34:49 -0500 (EST)
+Authentication-Results: amity.mint.lgbt (amavisd-new);
+        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+        header.d=mint.lgbt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
+        content-transfer-encoding:content-type:in-reply-to:from
+        :references:to:content-language:subject:user-agent:mime-version
+        :date:message-id; s=dkim; t=1675953288; x=1676817289; bh=OtwHaQd
+        43ev0CTnwqIm/FUCsnnqbo5VRlxBW82fmyng=; b=H45rGLKnOkvzxImDk3fnZ7B
+        PaQmSau8WRULXMxDKa2GyRi0GarWzEdFJm6F234o6B1a1pSKi/NGa8vap4goDoQG
+        RoLr4F4qpmeWfor/YEdkU8RqEdgt/rh5I0FnuYt1af0u0bp4/WRXvdI3/qkF+bQT
+        RGIrEs/k5zE2wbVid1TkcQFJ0aPmuuWo+K0J03jhijsN5U0UC5AM79z3PC019cN0
+        FReRT4iwjQyZax9lEdnIZggVjpt42L1vum6bewMifqlXBdUgm9ByVRFuRIXiLVgd
+        QyI+LReM82T+ip68VXqcbtDFig+3Nk66rfLhHi3VSIcDOEwS3ZIQnjJ98UVyvAg=
+        =
+X-Virus-Scanned: amavisd-new at amity.mint.lgbt
+Received: from amity.mint.lgbt ([127.0.0.1])
+        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 2SSgdy-EVWN2 for <linux-hardening@vger.kernel.org>;
+        Thu,  9 Feb 2023 09:34:48 -0500 (EST)
+Received: from [192.168.4.25] (unknown [190.196.95.28])
+        by amity.mint.lgbt (Postfix) with ESMTPSA id 4PCKBY4Xnbz1S5Gh;
+        Thu,  9 Feb 2023 09:34:21 -0500 (EST)
+Message-ID: <bb6f8a51-cec8-02cc-8ac1-3cd714a2e59a@mint.lgbt>
+Date:   Thu, 9 Feb 2023 11:34:17 -0300
 MIME-Version: 1.0
-References: <20221219055431.22596-1-ashimida.1990@gmail.com>
-In-Reply-To: <20221219055431.22596-1-ashimida.1990@gmail.com>
-From:   Peter Collingbourne <pcc@google.com>
-Date:   Wed, 8 Feb 2023 21:32:03 -0800
-Message-ID: <CAMn1gO6hwaSDCqigwoH981ffVbU8OvgJhrGh997kGseCSbpAJA@mail.gmail.com>
-Subject: Re: [RFC/RFT 0/3] Add compiler support for Control Flow Integrity
-To:     Dan Li <ashimida.1990@gmail.com>
-Cc:     gcc-patches@gcc.gnu.org,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Tom Rix <trix@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Marco Elver <elver@google.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Song Liu <song@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uros Bizjak <ubizjak@gmail.com>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Borislav Petkov <bp@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        Yuntao Wang <ytcoode@gmail.com>,
-        Changbin Du <changbin.du@intel.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v6 3/6] phy: qcom-qmp: Add SM6125 UFS PHY support
+Content-Language: en-US
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
+        avri.altman@wdc.com, bvanassche@acm.org, keescook@chromium.org,
+        tony.luck@intel.com, gpiccoli@igalia.com,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
+        phone-devel@vger.kernel.org, martin.botka@somainline.org,
+        marijn.suijten@somainline.org
+References: <20230108195336.388349-1-they@mint.lgbt>
+ <20230108195336.388349-4-they@mint.lgbt>
+ <CAA8EJpp-RwPOv61MtoXYb3Tuy5LDWWBCvYSrGUOvg8vWhid_tw@mail.gmail.com>
+From:   Lux Aliaga <they@mint.lgbt>
+In-Reply-To: <CAA8EJpp-RwPOv61MtoXYb3Tuy5LDWWBCvYSrGUOvg8vWhid_tw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Dec 18, 2022 at 10:06 PM Dan Li <ashimida.1990@gmail.com> wrote:
->
-> This series of patches is mainly used to support the control flow
-> integrity protection of the linux kernel [1], which is similar to
-> -fsanitize=kcfi in clang 16.0 [2,3].
->
-> I hope that this feature will also support user-mode CFI in the
-> future (at least for developers who can recompile the runtime),
-> so I use -fsanitize=cfi as a compilation option here.
+On 13/01/2023 16:31, Dmitry Baryshkov wrote:
 
-Please don't. The various CFI-related build flags are confusing enough
-without also having this inconsistency between Clang and GCC.
+> On Sun, 8 Jan 2023 at 21:54, Lux Aliaga <they@mint.lgbt> wrote:
+>> The SM6125 UFS PHY is compatible with the one from SM6115. Add a
+>> compatible for it and modify the config from SM6115 to make them
+>> compatible with the SC8280XP binding
+>>
+>> Signed-off-by: Lux Aliaga <they@mint.lgbt>
+>> Reviewed-by: Martin Botka <martin.botka@somainline.org>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> index 318eea35b972..f33c84578940 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> @@ -693,6 +693,8 @@ static const struct qmp_phy_cfg sdm845_ufsphy_cfg = {
+>>   static const struct qmp_phy_cfg sm6115_ufsphy_cfg = {
+>>          .lanes                  = 1,
+>>
+>> +       .offsets                = &qmp_ufs_offsets_v5,
+> Please don't randomly reuse generation-specific structures. This
+> structure is clearly related to v5, while the PHY is from the v2
+> generation.
 
-Peter
+I'm a bit confused here. When referencing back to downstream the driver 
+used has the suffix "v3-660". Should I use that suffix to name these 
+offsets? Because I'm not too sure if this is from the v2 generation due 
+to how it's named there.
+
+>> +
+>>          .serdes_tbl             = sm6115_ufsphy_serdes_tbl,
+>>          .serdes_tbl_num         = ARRAY_SIZE(sm6115_ufsphy_serdes_tbl),
+>>          .tx_tbl                 = sm6115_ufsphy_tx_tbl,
+>> @@ -1172,6 +1174,9 @@ static const struct of_device_id qmp_ufs_of_match_table[] = {
+>>          }, {
+>>                  .compatible = "qcom,sm6115-qmp-ufs-phy",
+>>                  .data = &sm6115_ufsphy_cfg,
+>> +       }, {
+>> +               .compatible = "qcom,sm6125-qmp-ufs-phy",
+>> +               .data = &sm6115_ufsphy_cfg,
+>>          }, {
+>>                  .compatible = "qcom,sm6350-qmp-ufs-phy",
+>>                  .data = &sdm845_ufsphy_cfg,
+>> --
+>> 2.39.0
+>>
+>
+-- 
+Lux Aliaga
+https://nixgoat.me/
+
