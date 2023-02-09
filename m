@@ -2,126 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E04C61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 15:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A2DC636D7
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 16:36:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbjBIPyf (ORCPT
+        id S229580AbjBIQgl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Feb 2023 10:54:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42266 "EHLO
+        Thu, 9 Feb 2023 11:36:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230204AbjBIPye (ORCPT
+        with ESMTP id S229676AbjBIQgj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Feb 2023 10:54:34 -0500
-X-Greylist: delayed 635 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 09 Feb 2023 07:54:33 PST
-Received: from smtp-8fad.mail.infomaniak.ch (smtp-8fad.mail.infomaniak.ch [IPv6:2001:1600:3:17::8fad])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3511C7E4
-        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 07:54:33 -0800 (PST)
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4PCLk53YH7zMrkNX;
-        Thu,  9 Feb 2023 16:43:25 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4PCLk258CPzlh7;
-        Thu,  9 Feb 2023 16:43:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1675957405;
-        bh=bNW1Wg5WZW0nIMURTxjwXxKKJeK4hLfabPIk0obS01U=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=yhrC9HODCmFSivOVE0IKp2ondNaaLvcg5W8tO3K+NLu2V/sCkaEy51YAikMxX/bO+
-         JxbV6GVXYwWp/EAnZjDieUo20IlNb8SiewRkBmtbJDATbN4UF9y7i7V377UMQNMKZD
-         zeNtRSi9skrTTd1wFJGc6zKnCNxdcpxM9Wxblc2U=
-Message-ID: <376258a7-b7fa-51f9-2137-c123b8ff304e@digikod.net>
-Date:   Thu, 9 Feb 2023 16:43:21 +0100
+        Thu, 9 Feb 2023 11:36:39 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 943DC5FE63
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 08:36:28 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id b5so3424923plz.5
+        for <linux-hardening@vger.kernel.org>; Thu, 09 Feb 2023 08:36:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=iY3uRKwhFfCWuwUwhi+08QCo3PpICPwRsioQ65qL5sg=;
+        b=VI20u5uoBpf9UK7HeP3X9PWxRHyYcNmwbb70VwajQqkf4A/TbhP6zN+pvbSViyerKA
+         Yr9iXGCl7HIacfWhBmqh2+4DF8/Ynp80GNmeuI8c+OQLWyp7l8FJO1Wj/+yOEgHd8tvy
+         k6eMTzJRNmQ6iIt+i8IZUyQ2im7k/0F+EqUio=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iY3uRKwhFfCWuwUwhi+08QCo3PpICPwRsioQ65qL5sg=;
+        b=loutr6UDWvaZLEUMMH1B11NMWbuwe283YPNXhqjgvBp7dwgLwxX473ILlRxdLWv0Dc
+         dxJBmOBwhwNhIxSoMwhOLw30j3vPuMx6jxO1wUzQao1AcuokvyrrUbwtg/QuPQ+6Kkjk
+         ncO0KvsOJygofWWjJdAK6uL6WqUY5pjYWDJmZSob9NU7akFYmiv0I2ZYUOr9ahyF4HKs
+         sJkmDkM3zs4g6p/53FNVUKSYUcgfBLhn1KrVkYQV88bfWKBszMW62ohfe9RRIgfIJdNX
+         h9uNxqkxYIOI6AmHsBzG+4r25/m0aAQ/NDxlOZGTYSfyXQDOdRBVEfUl7SaLx2Kc71zn
+         fdww==
+X-Gm-Message-State: AO0yUKURWCAzLEPqdUhbegL9CIyyRMZwyzj2pZHwjls5XZXxGA9Aa9NI
+        aieTElhqLKZ8ufu7Y/AcjhuM8A==
+X-Google-Smtp-Source: AK7set8ois8OCnNC4k8umzsF3UAu3C8IbTzhjMPobTuOdqwAaSOkMwrUfCZEAH0rWkAprUP6HYjgIA==
+X-Received: by 2002:a17:90b:3ece:b0:22c:5241:b8e with SMTP id rm14-20020a17090b3ece00b0022c52410b8emr13839260pjb.25.1675960588110;
+        Thu, 09 Feb 2023 08:36:28 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i10-20020a63bf4a000000b004fadb547d0csm1498660pgo.61.2023.02.09.08.36.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Feb 2023 08:36:27 -0800 (PST)
+Message-ID: <63e5210b.630a0220.c17be.27ff@mx.google.com>
+X-Google-Original-Message-ID: <202302090821.@keescook>
+Date:   Thu, 9 Feb 2023 08:36:27 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Stanislav Fomichev <sdf@google.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] bpf: Replace bpf_lpm_trie_key 0-length array with
+ flexible array
+References: <20230204183241.never.481-kees@kernel.org>
+ <CAKH8qBvqLeR3Wsbpb-v=EUY=Bw0jCP2OAaBn4tOqGmA1AqBZbA@mail.gmail.com>
+ <63e14abb.170a0220.ca425.b7bc@mx.google.com>
+ <CAKH8qBtX0HU4_YtnZ3hU4NhGHSQ9VU70niXFFoqf3k67a1+6aA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [GIT PULL] Add trusted_for(2) (was O_MAYEXEC)
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     concord@gentoo.org, linux-hardening@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Heimes <christian@python.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        James Morris <jmorris@namei.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Paul Moore <paul@paul-moore.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Steve Dower <steve.dower@python.org>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>
-References: <20220321161557.495388-1-mic@digikod.net>
- <202204041130.F649632@keescook>
- <CAHk-=wgoC76v-4s0xVr1Xvnx-8xZ8M+LWgyq5qGLA5UBimEXtQ@mail.gmail.com>
- <816667d8-2a6c-6334-94a4-6127699d4144@digikod.net>
- <CAHk-=wjPuRi5uYs9SuQ2Xn+8+RnhoKgjPEwNm42+AGKDrjTU5g@mail.gmail.com>
- <202204041451.CC4F6BF@keescook>
- <CAHk-=whb=XuU=LGKnJWaa7LOYQz9VwHs8SLfgLbT5sf2VAbX1A@mail.gmail.com>
- <7e8d9f8a-f119-6d1a-7861-0493dc513aa7@digikod.net>
- <63e3f8c8.050a0220.c0b3f.434b@mx.google.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <63e3f8c8.050a0220.c0b3f.434b@mx.google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKH8qBtX0HU4_YtnZ3hU4NhGHSQ9VU70niXFFoqf3k67a1+6aA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Mon, Feb 06, 2023 at 11:17:06AM -0800, Stanislav Fomichev wrote:
+> It's my understanding that it's the intended use-case. Users are
+> expected to use this struct as a header; at least we've been using it
+> that way :-)
+> 
+> For me, both return the same:
+> sizeof(struct { __u32 prefix; __u8 data[0]; })
+> sizeof(struct { __u32 prefix; __u8 data[]; })
+> 
+> So let's do s/data[0]/data[]/ in the UAPI only? What's wrong with
+> using this struct as a header?
 
-On 08/02/2023 20:32, Kees Cook wrote:
-> *thread necromancy*
-> 
-> On Tue, Apr 05, 2022 at 06:09:03PM +0200, Mickaël Salaün wrote:
->>
->> On 05/04/2022 01:26, Linus Torvalds wrote:
->>> On Mon, Apr 4, 2022 at 3:25 PM Kees Cook <keescook@chromium.org> wrote:
->>
->> [...]
->>
->>>
->>>> I think this already exists as AT_EACCESS? It was added with
->>>> faccessat2() itself, if I'm reading the history correctly.
->>>
->>> Yeah, I noticed myself, I just hadn't looked (and I don't do enough
->>> user-space programming to be aware of if that way).
->>
->> I think AT_EACCESS should be usable with the new EXECVE_OK too.
->>
->>
->>>
->>>>>       (a) "what about suid bits that user space cannot react to"
->>>>
->>>> What do you mean here? Do you mean setid bits on the file itself?
->>>
->>> Right.
->>>
->>> Maybe we don't care.
->>
->> I think we don't. I think the only corner case that could be different is
->> for files that are executable, SUID and non-readable. In this case it
->> wouldn't matter because userspace could not read the file, which is required
->> for interpretation/execution. Anyway, S[GU]ID bits in scripts are just
->> ignored by execve and we want to follow the same semantic.
-> 
-> Hi Mickaël,
-> 
-> Is there a new version of this being worked on? It would be really nice
-> to have the O_MAYEXEC/faccessat2() visibility for script execution control
-> in userspace. It seems like it would be mainly a respin of an earlier
-> version of this series before trusted_for() was proposed.
+For the whole struct, yup, the above sizeof()s are correct. However:
 
-Yes, I plan to send a new version in a few weeks.
+sizeof(foo->data) == 0             // when data[0]
+sizeof(foo->data) == compile error // when data[]
 
-> 
-> -Kees
-> 
+The [0]-array GNU extension doesn't have consistent behavior, so it's
+being removed from the kernel in favor of the proper C99 [] flexible
+arrays, so we can enable -fstrict-flex-arrays=3 to remove all the
+ambiguities with array bounds:
+https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
+https://people.kernel.org/kees/bounded-flexible-arrays-in-c
+
+As a header, this kind of overlap isn't well supported. Clang already
+warns, and GCC is going to be removing support for overlapping composite
+structs with a flex array in the middle (and also warns under -pedantic):
+https://godbolt.org/z/vWzqs41h6
+
+I talk about dealing with these specific cases in my recent write-up
+on array bounds checking -- see "Overlapping composite structure members"
+in the people.kernel.org post above.
+
+> > Perhaps better might be:
+> >
+> > struct bpf_lpm_trie_key {
+> >     __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
+> > };
+> >
+> > struct bpf_lpm_trie_key_raw {
+> >     struct bpf_lpm_trie_key_prefix prefix;
+> >     u8 data[];
+> > };
+> >
+> > struct my_key {
+> >     struct bpf_lpm_trie_key_prefix prefix;
+> >     int a, b, c;
+> > };
+
+This approach is, perhaps, the best way to go? Besides the selftest,
+what things in userspace consumes struct bpf_lpm_trie_key?
+
+-- 
+Kees Cook
