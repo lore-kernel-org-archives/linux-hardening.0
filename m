@@ -2,62 +2,56 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C9EC636D7
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 16:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2142AC636D6
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 17:48:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229803AbjBIQzj (ORCPT
+        id S229817AbjBIRsW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Feb 2023 11:55:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59268 "EHLO
+        Thu, 9 Feb 2023 12:48:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjBIQzi (ORCPT
+        with ESMTP id S229640AbjBIRsV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Feb 2023 11:55:38 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2220643D1;
-        Thu,  9 Feb 2023 08:55:36 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id rp23so8234625ejb.7;
-        Thu, 09 Feb 2023 08:55:36 -0800 (PST)
+        Thu, 9 Feb 2023 12:48:21 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B7AE55BA
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 09:48:20 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id bx22so2799753pjb.3
+        for <linux-hardening@vger.kernel.org>; Thu, 09 Feb 2023 09:48:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6l9av8nyvwfd+ZGZCPAlJ7AddxXr455p4AhnsNGCvcw=;
-        b=NK6ht5AeLDqVY2CrdjEahAMWjJ6lCy6wb9emMfbDBaChLtmf8gp9iD92C9KQJGfVlD
-         wY22m0p4Tm+/AJ+H7ByoYFakSdzi60vnFUVJUF0PNgFB+zVFxmLl6cEDKmDeo5v+sg0c
-         Iney5rYxDEs6h8dSCWxMhEypm6F4MIXHsdTEbIk6weBpBW6YqAbzbM1gxYZB+yAMLkcT
-         BA+f4Y9Lqq1nWlFLsQEZ8PQQD8E3t6zbkD375wogCImI+QhO5nBr8HldEzS8US6pvrIy
-         CCGQKdPZiaYqMEfwm4lCXlJSQ14UnAu62oHi/Zz9WWqDCmuUlN3lehyeee0lVbluydro
-         nagQ==
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=A7Fh9muBzjV/jBPZf9ed/gD/2z8b4VTj2N9ywQ7oXIE=;
+        b=hwOPnENsSTD1u7F/uN5KoqfQltMbhwaSs+OkwQg79Dc4fjX99RGerO4UFthenfYkKs
+         6FpKKnxFxQUoRynTJwF/qeh7UHDDQkZ235XiNRPYxKqtPCTN1hpLh0ORFcc27KauEwpN
+         vt8kUG9LcoB5X2Vtuov+VvBiW6PaaTflH1wP4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6l9av8nyvwfd+ZGZCPAlJ7AddxXr455p4AhnsNGCvcw=;
-        b=P5QmLL1IDchHlMEHPZkm0UdHf+ph7+YrGh9ADOqBsX3oQR5x23gv24ztF9LDzUN4Oa
-         0Bn9h+1Nl487aPVs06Gi6OxICrb9vqmRJSy/WLyEuqWYaYG6zyMxzrLaDzgb6a2f2OA7
-         P0S41BGvWPaJS/cAl23HPnWGPVo4KCH3ioqUTzeK3VAqx9bZTsSLKJGwy+BxThrL2Hjr
-         8Q6UiUmGZgz2KLGAA0dc0UYHhBrwmGcAK6OaZChqTtpjQJlc/zDnCavYyOf3jsiClCZK
-         o5mWl/5UpKW2ZzGqSuyIfoHHsGxmO0spUEjxEE+lOGrNEPR/F89ku2wHW/hEQsUyxfg0
-         u8DQ==
-X-Gm-Message-State: AO0yUKXcxXA3J8Cjd+I+Fk4FZuaeUc2iFDPfwUbIHmgOfmQ6tja46by2
-        UKtmS9m7eyWobMecAXakgHcADciVkKENvinGfTA=
-X-Google-Smtp-Source: AK7set88flBG1oPZ+F0ymt+9FEmLxGig3e1Yib4mMs5R3zvW6Pd9XtM8vdWyXxN7/vcJ1Pb02MnQPZaeONxgiZE12yM=
-X-Received: by 2002:a17:906:eb8f:b0:878:786e:8c39 with SMTP id
- mh15-20020a170906eb8f00b00878786e8c39mr2756943ejb.105.1675961735319; Thu, 09
- Feb 2023 08:55:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20230204183241.never.481-kees@kernel.org> <CAKH8qBvqLeR3Wsbpb-v=EUY=Bw0jCP2OAaBn4tOqGmA1AqBZbA@mail.gmail.com>
- <63e14abb.170a0220.ca425.b7bc@mx.google.com> <CAKH8qBtX0HU4_YtnZ3hU4NhGHSQ9VU70niXFFoqf3k67a1+6aA@mail.gmail.com>
- <63e5210b.630a0220.c17be.27ff@mx.google.com>
-In-Reply-To: <63e5210b.630a0220.c17be.27ff@mx.google.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 9 Feb 2023 08:55:23 -0800
-Message-ID: <CAADnVQK-sW51SsC7FYDqLaO8c5xj=MAgcu_6p8L-JN9kAsrzeA@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Replace bpf_lpm_trie_key 0-length array with
- flexible array
-To:     Kees Cook <keescook@chromium.org>
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A7Fh9muBzjV/jBPZf9ed/gD/2z8b4VTj2N9ywQ7oXIE=;
+        b=GPfn/dyloRipsnIm9yKpg0YFgrLlbnyZGJvPZjm7EMLPtW6K8HqGuto7ueKD0X7xZH
+         CsnUxQ3drd+VrdyC7KnO9wO2kkFLhDkZQ1Lu32aJLFsOXn411vCms4xQCBgP45QVwtF2
+         a+SbY/wH2ncM3viL4nlJsRJd3RgVeqnBCguI0LPtsGmGCLpnL+xW4y27bc9IosnwwuXD
+         XSe7k9GeXjdoGsfxetQKMwE7ZsMHOMu5WlcVvwSzoJJ4t1+eiMzQk55Md4cj0E3DEuHc
+         pqzyHXjgeMPPiiYvyNN8rcCz+oxVFaaawosnyEwYN28FVKqz4/aOnBeEtx8uFrUVRsBD
+         5RLA==
+X-Gm-Message-State: AO0yUKXu2TkNWngiIG5fLjb9uAL7fQVmOFJ28By74GEsDJCLVyMusBST
+        gNo8MHYhd6lydM/pKt7iJKZJzw==
+X-Google-Smtp-Source: AK7set+vuTEpMUx524NdAoDq88GxFvcwbLo4pMMZw0NedqVHgpCM2khPDUn1V5m4Ngkb0Yhffnx97Q==
+X-Received: by 2002:a17:903:2344:b0:196:5d8d:2d6f with SMTP id c4-20020a170903234400b001965d8d2d6fmr13527570plh.13.1675964900125;
+        Thu, 09 Feb 2023 09:48:20 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id je5-20020a170903264500b00192fc9e8552sm1824914plb.0.2023.02.09.09.48.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Feb 2023 09:48:19 -0800 (PST)
+Message-ID: <63e531e3.170a0220.3a46a.3262@mx.google.com>
+X-Google-Original-Message-ID: <202302090900.@keescook>
+Date:   Thu, 9 Feb 2023 09:48:18 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
 Cc:     Stanislav Fomichev <sdf@google.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
@@ -73,64 +67,51 @@ Cc:     Stanislav Fomichev <sdf@google.com>,
         <linux-kselftest@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH] bpf: Replace bpf_lpm_trie_key 0-length array with
+ flexible array
+References: <20230204183241.never.481-kees@kernel.org>
+ <CAKH8qBvqLeR3Wsbpb-v=EUY=Bw0jCP2OAaBn4tOqGmA1AqBZbA@mail.gmail.com>
+ <63e14abb.170a0220.ca425.b7bc@mx.google.com>
+ <CAKH8qBtX0HU4_YtnZ3hU4NhGHSQ9VU70niXFFoqf3k67a1+6aA@mail.gmail.com>
+ <63e5210b.630a0220.c17be.27ff@mx.google.com>
+ <CAADnVQK-sW51SsC7FYDqLaO8c5xj=MAgcu_6p8L-JN9kAsrzeA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQK-sW51SsC7FYDqLaO8c5xj=MAgcu_6p8L-JN9kAsrzeA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 9, 2023 at 8:36 AM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Feb 06, 2023 at 11:17:06AM -0800, Stanislav Fomichev wrote:
-> > It's my understanding that it's the intended use-case. Users are
-> > expected to use this struct as a header; at least we've been using it
-> > that way :-)
-> >
-> > For me, both return the same:
-> > sizeof(struct { __u32 prefix; __u8 data[0]; })
-> > sizeof(struct { __u32 prefix; __u8 data[]; })
-> >
-> > So let's do s/data[0]/data[]/ in the UAPI only? What's wrong with
-> > using this struct as a header?
->
-> For the whole struct, yup, the above sizeof()s are correct. However:
->
-> sizeof(foo->data) == 0             // when data[0]
-> sizeof(foo->data) == compile error // when data[]
->
-> The [0]-array GNU extension doesn't have consistent behavior, so it's
-> being removed from the kernel in favor of the proper C99 [] flexible
-> arrays, so we can enable -fstrict-flex-arrays=3 to remove all the
-> ambiguities with array bounds:
-> https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
-> https://people.kernel.org/kees/bounded-flexible-arrays-in-c
->
-> As a header, this kind of overlap isn't well supported. Clang already
-> warns, and GCC is going to be removing support for overlapping composite
-> structs with a flex array in the middle (and also warns under -pedantic):
-> https://godbolt.org/z/vWzqs41h6
->
-> I talk about dealing with these specific cases in my recent write-up
-> on array bounds checking -- see "Overlapping composite structure members"
-> in the people.kernel.org post above.
->
-> > > Perhaps better might be:
-> > >
-> > > struct bpf_lpm_trie_key {
-> > >     __u32   prefixlen;      /* up to 32 for AF_INET, 128 for AF_INET6 */
-> > > };
-> > >
-> > > struct bpf_lpm_trie_key_raw {
-> > >     struct bpf_lpm_trie_key_prefix prefix;
-> > >     u8 data[];
-> > > };
-> > >
-> > > struct my_key {
-> > >     struct bpf_lpm_trie_key_prefix prefix;
-> > >     int a, b, c;
-> > > };
->
-> This approach is, perhaps, the best way to go? Besides the selftest,
-> what things in userspace consumes struct bpf_lpm_trie_key?
+On Thu, Feb 09, 2023 at 08:55:23AM -0800, Alexei Starovoitov wrote:
+> On Thu, Feb 9, 2023 at 8:36 AM Kees Cook <keescook@chromium.org> wrote:
+> > This approach is, perhaps, the best way to go? Besides the selftest,
+> > what things in userspace consumes struct bpf_lpm_trie_key?
+> 
+> Plenty of bpf progs use it:
+> https://github.com/cilium/cilium/blob/master/bpf/lib/common.h#L352
 
-Plenty of bpf progs use it:
-https://github.com/cilium/cilium/blob/master/bpf/lib/common.h#L352
+Thanks for the pointer! Yeah, it seems the "data" member is not
+directly used, but is expected to be there for static initializers and
+offsetof() use. For example:
+
+cilium:
+        struct egress_gw_policy_key in_key = {
+                .lpm_key = { 32 + 24, {} },
+                .saddr   = CLIENT_IP,
+                .daddr   = EXTERNAL_SVC_IP & 0Xffffff,
+        };
+
+systemd:
+	ipv6_map_fd = bpf_map_new(
+			BPF_MAP_TYPE_LPM_TRIE,
+			offsetof(struct bpf_lpm_trie_key, data) + sizeof(uint32_t)*4,
+			sizeof(uint64_t),
+			...
+
+All the others searches in Debian I could find were just copies of UAPI
+headers:
+https://codesearch.debian.net/search?q=struct+bpf_lpm_trie_key&literal=1&perpkg=1
+
+-- 
+Kees Cook
