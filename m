@@ -2,72 +2,110 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4FBC64EC7
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 04:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB9CC6379F
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 05:32:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbjBIEcB (ORCPT
+        id S229762AbjBIFcU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Feb 2023 23:32:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46300 "EHLO
+        Thu, 9 Feb 2023 00:32:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229964AbjBIEbb (ORCPT
+        with ESMTP id S229592AbjBIFcU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Feb 2023 23:31:31 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09993BDB2;
-        Wed,  8 Feb 2023 20:31:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E0484B82010;
-        Thu,  9 Feb 2023 04:22:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88446C4339B;
-        Thu,  9 Feb 2023 04:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675916522;
-        bh=p5VVj10S5orhNpUZIUZG0+Gb/fuq/M0x8vaoEkwoOT4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gnZxjr8jRJJn2tO7y2d2HfSi2SuLIO5DCyIiQeaWSRoIXvClXgvIZGIeO0YEVyauJ
-         VBzF2yepyOn7AXEI0ghrV0hVnjtsw1U6Lzhd/6yUH+AbNl1F0ubcOqHS0bWHVry/bS
-         rCMczBX7lq02x1vui0xtWaMcktBVltAeFUdAMESAjG9S1pEWmL6d8LzgWOk+PVx2lw
-         D8kvkACOj+VWuchbEbS0z8f8sNS3HpVwI+lCz5R2sXEJKf2ZOVNKYMTVTxaBgdCe8F
-         wG5oFl2057Epz0MzJEXpJhcgSblitkUaxhcb7hLVcSSaDzb3c62ED2M8kDrAOYH9yp
-         mRtU0PA4aIfog==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jianhua Lu <lujianhua000@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
-        phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: (subset) [PATCH v4 1/2] dt-bindings: arm: qcom: Add Xiaomi Mi Pad 5 Pro (xiaomi-elish)
-Date:   Wed,  8 Feb 2023 20:23:18 -0800
-Message-Id: <167591660369.1230100.756923498094436262.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230131123515.833-1-lujianhua000@gmail.com>
-References: <20230131123515.833-1-lujianhua000@gmail.com>
+        Thu, 9 Feb 2023 00:32:20 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E26930294
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Feb 2023 21:32:18 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id j25so628844wrc.4
+        for <linux-hardening@vger.kernel.org>; Wed, 08 Feb 2023 21:32:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=w6z3lxwnln7Ypie34pRxdCgfXQDUlJU7iUw2s4xeNCQ=;
+        b=hbv+iUmy8sb7UTevXZXSzxz4aaIUDG/plNczLQrgAbId4wPVrQ+MkUcq3aY+CY5S+3
+         rjawt/atll9AOMzPTfCwmorE8mJ0IW4ExC+pOffnmttwon2NgCXsQXAHNH70+CqH4Yet
+         b6oLh+gnKxDrXWJ+sVkEhlEAuMsgo82g7kQbD0bRtom8ONxlwBf6CsHrI8kEQQPSr8cE
+         02FslNpxxsQJnKXlRV77g9pOv1nepBqVy0+lQY1q5jHCyV3MZ1/poYrNBSof/aw2ifvB
+         XBsmv3sQsOevFgU/eI4a8Lch+EluHrUqqffry2uORieqI42qXv+KNAZGRuXumHYaK8Mh
+         FeiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w6z3lxwnln7Ypie34pRxdCgfXQDUlJU7iUw2s4xeNCQ=;
+        b=EllX580isnh9vVJOtcX3LyC1guPcVLHo2INj5n6nFZYliZXMtpE49TeriniBrJtNDE
+         1FxBilV8nTBh+Qh76YG8dncyl/G9sOlSrleMSQBKqGGKnVjnUcOWXy/m2bIPlyUrHFIZ
+         zHDTnnZUrv+XtwSoHBL5AiFKUBmOwmYrrrfWEb3D/QIVgsi5+IZC+gHQG5xDV4PPian9
+         NEgfI5QH8W1w/z6ERi60JmykkgF7zCuqXm/4HCs/hu93XkvnpqgoH+z8phQBSiE5W96r
+         5jJEDCJ6rINMuCpziAYB+2u3hkeQUI9LP14QnRm8HfTHDr4XbiEm8EeiqJhu7DIvesWX
+         91Qw==
+X-Gm-Message-State: AO0yUKXHoEWQ5Mvt40o0UbBBV9zNUkJXrijRBgyB+7KyAFd7u7shYBzL
+        lBUVtZSE30gbNmm/ofDf/37gSWXI8fqKafiRdRcDWg==
+X-Google-Smtp-Source: AK7set9YGa7NCNq2wHzwRqe7rRW1StB4rmp4kgxLGJELsL8k4ez/VaGVQujKbNDfKlqQkG5awGCGVr1ELO1GQ8rpFMA=
+X-Received: by 2002:a5d:4247:0:b0:2bf:b264:6bf7 with SMTP id
+ s7-20020a5d4247000000b002bfb2646bf7mr251486wrr.427.1675920736829; Wed, 08 Feb
+ 2023 21:32:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20221219055431.22596-1-ashimida.1990@gmail.com>
+In-Reply-To: <20221219055431.22596-1-ashimida.1990@gmail.com>
+From:   Peter Collingbourne <pcc@google.com>
+Date:   Wed, 8 Feb 2023 21:32:03 -0800
+Message-ID: <CAMn1gO6hwaSDCqigwoH981ffVbU8OvgJhrGh997kGseCSbpAJA@mail.gmail.com>
+Subject: Re: [RFC/RFT 0/3] Add compiler support for Control Flow Integrity
+To:     Dan Li <ashimida.1990@gmail.com>
+Cc:     gcc-patches@gcc.gnu.org,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Marco Elver <elver@google.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Song Liu <song@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uros Bizjak <ubizjak@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Yuntao Wang <ytcoode@gmail.com>,
+        Changbin Du <changbin.du@intel.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 31 Jan 2023 20:35:14 +0800, Jianhua Lu wrote:
-> Add a compatible for Xiaomi Mi Pad 5 Pro.
-> 
-> 
+On Sun, Dec 18, 2022 at 10:06 PM Dan Li <ashimida.1990@gmail.com> wrote:
+>
+> This series of patches is mainly used to support the control flow
+> integrity protection of the linux kernel [1], which is similar to
+> -fsanitize=kcfi in clang 16.0 [2,3].
+>
+> I hope that this feature will also support user-mode CFI in the
+> future (at least for developers who can recompile the runtime),
+> so I use -fsanitize=cfi as a compilation option here.
 
-Applied, thanks!
+Please don't. The various CFI-related build flags are confusing enough
+without also having this inconsistency between Clang and GCC.
 
-[2/2] arm64: dts: qcom: sm8250: Add device tree for Xiaomi Mi Pad 5 Pro
-      commit: a41b617530bf07e584b18b4ec390d0e39d95c796
-
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+Peter
