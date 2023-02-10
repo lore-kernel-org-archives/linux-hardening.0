@@ -2,136 +2,149 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB843C61DA4
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Feb 2023 22:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E9CC636CD
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 05:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230064AbjBIWBk (ORCPT
+        id S230467AbjBJFO4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 9 Feb 2023 17:01:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48310 "EHLO
+        Fri, 10 Feb 2023 00:14:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230039AbjBIWBg (ORCPT
+        with ESMTP id S230450AbjBJFO4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 9 Feb 2023 17:01:36 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E43C66EF6;
-        Thu,  9 Feb 2023 14:01:28 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id hx15so10686181ejc.11;
-        Thu, 09 Feb 2023 14:01:28 -0800 (PST)
+        Fri, 10 Feb 2023 00:14:56 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7327660E70
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 21:14:54 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id r8so5390693pls.2
+        for <linux-hardening@vger.kernel.org>; Thu, 09 Feb 2023 21:14:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=12EmLmXNPxVlBwqhOstyYyPyvkcnUa7HgYnHDTPPtNE=;
-        b=VlJ35ScMfjK5cUQAGBmGVcnTAuHtfwb/ke2H1l8NFfViNicrUGiQh7hbu/EqVgOJ/5
-         VLgvb9npmAszqdK3H8E4DdfhEQNHVxHGbCdUO+63RdFECF3TBh7o/6pOOvhxj8EjoQkC
-         6zZwCQgwSB9LMqPOgywPSKeefXjNV2A6bwgojpyZ/3k9gBRL870oaTNprn/WE0dwkxKv
-         539yOjP8uezXZe8sTutqBHz2ASYxJzRVQ70Ma53irQRAjyW9oS3U3u8orouGlgHFORSi
-         iZhfr5++lvrlYhacDuhkF/oVvFyZbilzrTFJGx/SeSvRJUvdh9sdEbv0msMn5/gUsOtP
-         IPyQ==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KdCo8CN1GLWxhUuzHsDXPi4+d7EjfRBcMOzTAX4VkYU=;
+        b=fksnpfnGmrRVNVbjdWrUxIfEgUkh3JDeG3fkjMQSmlbXngErhtX7yLht05cD/5PKnn
+         04Epg6Osl2gUxOAKOQdgYazydNTf5/GjUMfK7jlo/g3aCLQxlq/rSr00ih4y70P9Ilnd
+         ioHhguL7zpjKI2rdmOcZHX3i+hmCuch7DgeMA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=12EmLmXNPxVlBwqhOstyYyPyvkcnUa7HgYnHDTPPtNE=;
-        b=OkoCU7+ycY3jo/Cb2AuCOb+xvNjuS9Z6YK8CstegsLn59JXrDfHoFsd4zC6Trq8lrN
-         w0p1B1gDgILAZJVmdaiQ06Kvul+KYPeN08ZCka/q+6DfHPG1LVBy4o8TWhhS58CcWtaj
-         coR+K6v18RPhXe8XZmj9AKhj6Gl/eoEm/EJfgQOmizQ0TLJ3wrcMGmck7TEgDRoZwTf7
-         DlC7QT7N9xUn9UhYe75CMGdUVnrmcBuNvCV24zkafXphxc/ebSNPbtuYqxb3vxMrpQ+t
-         ZAtszslnMWvTDbQ23tnS8iedQwp06SnBC9HnmSLV5VpVrWg/WaJQmKLZDU35wiUkRT+S
-         A8Qg==
-X-Gm-Message-State: AO0yUKXWKxSsaQy6UB/BIaxXkQiJZ+aQghiJSlVF3k562Awp6FldFDUX
-        Admu8fo3R+81LhpkYzfcp2R+gb4J8tsf26MKff8=
-X-Google-Smtp-Source: AK7set+ng9pmkzKqIxaS7qA6X4EwNgcgxsLiahOVc2y/+PRfgUFnkEXjaeRFkczOkKCB8xLLHVP05GF+ZrJsP4YTQ1o=
-X-Received: by 2002:a17:906:eb8f:b0:878:786e:8c39 with SMTP id
- mh15-20020a170906eb8f00b00878786e8c39mr2945087ejb.105.1675980086713; Thu, 09
- Feb 2023 14:01:26 -0800 (PST)
+        bh=KdCo8CN1GLWxhUuzHsDXPi4+d7EjfRBcMOzTAX4VkYU=;
+        b=TR82lkeHFGRQGLf2ORcp8wZGCzlx3ht9GifPk2hs5CE3lnW0rXhpMvvxgUhngQ2v33
+         HgkIqA0anQv5jU5qy/RGLR7xx8q2nbTEvo6ILG/EPFoiLUhdxtQ+vG/9fMd5oPeNScJz
+         qphLEOX5pnwSljrhgOcjPvdvANMkscLYGR1SC/WIzzr9jGXYRi9noZTQv7nWHiYUQZyE
+         D7Rx+QK8vvq1yp817GIMfnSr/14j5xuNAFVd18G2vsJQWQtHW8pv5tGCpdvZlstzKk2i
+         IgDr8ztHfT1YkLI/zxeipx41LUAUCLowwzh3NF2kOxU2YVRzu1NXiSixTlZ1gwiGZC6J
+         N+ZA==
+X-Gm-Message-State: AO0yUKWegWRJAtUzvXJJE+vOos+08gew6GCwVzpjLwpKAtjPGKNjDUBB
+        bFouW37T8QLJ+e8zUevuKAoB2A==
+X-Google-Smtp-Source: AK7set9iPH45/De4KkZG32asSbtZRCU+B4g0PXZleHxvnSO0a4hAJXfkZX3tU2NNp9NBF6yLEK1etg==
+X-Received: by 2002:a17:903:1104:b0:196:6ec4:52db with SMTP id n4-20020a170903110400b001966ec452dbmr16471333plh.51.1676006093975;
+        Thu, 09 Feb 2023 21:14:53 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id iz11-20020a170902ef8b00b0019a6cce2060sm1137plb.57.2023.02.09.21.14.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Feb 2023 21:14:53 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sasa Ostrouska <casaxa@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] ASoC: Intel: Skylake: Replace 1-element array with flex-array
+Date:   Thu,  9 Feb 2023 21:14:51 -0800
+Message-Id: <20230210051447.never.204-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230209192337.never.690-kees@kernel.org> <CAEf4BzZXrf48wsTP=2H2gkX6T+MM0B45o0WNswi50DQ_B-WG4Q@mail.gmail.com>
- <63e5521a.170a0220.297d7.3a80@mx.google.com> <CAADnVQKsB2n0=hShYpYnTr5yFYRt5MX2QMWo3V9SB9JrM6GhTg@mail.gmail.com>
- <63e561d8.a70a0220.250aa.3eb9@mx.google.com>
-In-Reply-To: <63e561d8.a70a0220.250aa.3eb9@mx.google.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Thu, 9 Feb 2023 14:01:15 -0800
-Message-ID: <CAADnVQJed84rqugpNDY2u1r89QEOyAMMKZHLHefX=GRWZ3haoQ@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Deprecate "data" member of bpf_lpm_trie_key
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Hao Luo <haoluo@google.com>,
-        Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>, bpf <bpf@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        clang-built-linux <llvm@lists.linux.dev>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3107; h=from:subject:message-id; bh=ydFsPeA/C8MiMPLpOvjkEi/1qhpRw4CQdxWOj12NFhs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj5dLKO9mdp/U47exsYyDTqouHYKX3QCJ70TxjHDRg 6KZPj3OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY+XSygAKCRCJcvTf3G3AJoftD/ 45mIRK1WE97b95xQSOaADXRWSoS+EmGBiXvdWMXF3CwvSP7/4MO57t9EBQROuXWRf+wZMEn3AYglzs j/yQUgln33Ckg0IIgHlUWp543vnN/E3eiMCRXLQRM3MQ9VaPfyiq1j5WUnHdfB64n9pAMD7TfMlpRB XYIz0JreJoipxNK5H/VAVB3p+kbbqq88PFaM4pmVO/S8BURTCLPwUxiZMFFJrFRiN03D1WLkzaCjPd oWWQbuJVfu9Lneg0rnK3Qzq5tS0FCHPVIElP5AouwsPjlt9HZHgSHOkeH7UEO5WeQwcyLAkHOKPEWz 5twvakghXq1cYc7N9j3Ah+wy55Ts/eXvLA/jPWsfsbnCcB2t54hnAa6XUCL0FeMaD4o8kjOhVX0T3K Y3EtiIvTe2uJBS9TRa+Ikr49+tEJpJu4zQ3WW81q3T/ZZvL1t4InrCkM+2I5tHYHuYZgFqhv/OseYb XdHAYgMIgX/qewDg9C1CgHrcVED/wW7nYR7tauKKBTpCTx+GOlync9hN8UHwioG72MlAXFrRyAjU3n KlvCwNamQGqXDqQMYI0uBD9Cafge0qhWmwqp1OrvsTeknAMKG7zFwCf0JIILx9dTxJbQEFhiyy9Wkf ixFR0OR0Mka8EsOmA4PD5c1fbS+otZ3MurL0EM5OjKuGKIbcSQzMXtDGxwHQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 9, 2023 at 1:12 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Thu, Feb 09, 2023 at 12:50:28PM -0800, Alexei Starovoitov wrote:
-> > On Thu, Feb 9, 2023 at 12:05 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Thu, Feb 09, 2023 at 11:52:10AM -0800, Andrii Nakryiko wrote:
-> > > > Do we need to add a new type to UAPI at all here? We can make this new
-> > > > struct internal to kernel code (e.g. struct bpf_lpm_trie_key_kern) and
-> > > > point out that it should match the layout of struct bpf_lpm_trie_key.
-> > > > User-space can decide whether to use bpf_lpm_trie_key as-is, or if
-> > > > just to ensure their custom struct has the same layout (I see some
-> > > > internal users at Meta do just this, just make sure that they have
-> > > > __u32 prefixlen as first member).
-> > >
-> > > The uses outside the kernel seemed numerous enough to justify a new UAPI
-> > > struct (samples, selftests, etc). It also paves a single way forward
-> > > when the userspace projects start using modern compiler options (e.g.
-> > > systemd is usually pretty quick to adopt new features).
-> >
-> > I don't understand how the new uapi struct bpf_lpm_trie_key_u8 helps.
-> > cilium progs and progs/map_ptr_kern.c
-> > cannot do s/bpf_lpm_trie_key/bpf_lpm_trie_key_u8/.
-> > They will fail to build, so they're stuck with bpf_lpm_trie_key.
->
-> Right -- I'm proposing not changing bpf_lpm_trie_key. I'm proposing
-> _adding_ bpf_lpm_trie_key_u8 for new users who will be using modern
-> compiler options (i.e. where "data[0]" is nonsense).
->
-> > Can we do just
-> > struct bpf_lpm_trie_key_kern {
-> >   __u32   prefixlen;
-> >   __u8    data[];
-> > };
-> > and use it in the kernel?
->
-> Yeah, I can do that if that's preferred, but it leaves userspace hanging
-> when they eventually trip over this in their code when they enable
-> -fstrict-flex-arrays=3 too.
->
-> > What is the disadvantage?
->
-> It seemed better to give a working example of how to migrate this code.
+The kernel is globally removing the ambiguous 0-length and 1-element
+arrays in favor of flexible arrays, so that we can gain both compile-time
+and run-time array bounds checking[1]. In this instance, struct
+skl_cpr_cfg contains struct skl_cpr_gtw_cfg, which defined "config_data"
+as a 1-element array.
 
-I understand and agree with intent, but I'm still missing
-how you're going to achieve this migration.
-bpf_lpm_trie_key_u8 doesn't provide a migration path to cilium progs
-and pretty much all bpf progs that use LPM map.
-Sure, one can change the user space part, like you did in test_lpm_map.c,
-but it doesn't address the full scope.
-imo half way is worse than not doing it.
+Normally when switching from a 1-element array to a flex-array, any
+related size calculations must be adjusted too. However, it seems the
+original code was over-allocating space, since 1 extra u32 would be
+included by the sizeof():
+
+                param_size = sizeof(struct skl_cpr_cfg);
+                param_size += mconfig->formats_config[SKL_PARAM_INIT].caps_size;
+
+But the copy uses caps_size bytes, and cap_size / 4 (i.e. sizeof(u32))
+for the length tracking:
+
+        memcpy(cpr_mconfig->gtw_cfg.config_data,
+                        mconfig->formats_config[SKL_PARAM_INIT].caps,
+                        mconfig->formats_config[SKL_PARAM_INIT].caps_size);
+
+        cpr_mconfig->gtw_cfg.config_length =
+                        (mconfig->formats_config[SKL_PARAM_INIT].caps_size) / 4;
+
+Therefore, no size calculations need adjusting. Change the struct
+skl_cpr_gtw_cfg config_data member to be a true flexible array, which
+also fixes the over-allocation, and silences this memcpy run-time false
+positive:
+
+  memcpy: detected field-spanning write (size 100) of single field "cpr_mconfig->gtw_cfg.config_data" at sound/soc/intel/skylake/skl-messages.c:554 (size 4)
+
+[1] For lots of details, see both:
+    https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
+    https://people.kernel.org/kees/bounded-flexible-arrays-in-c
+
+Reported-by: Sasa Ostrouska <casaxa@gmail.com>
+Link: https://lore.kernel.org/all/CALFERdwvq5day_sbDfiUsMSZCQu9HG8-SBpOZDNPeMdZGog6XA@mail.gmail.com/
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "Amadeusz Sławiński" <amadeuszx.slawinski@linux.intel.com>
+Cc: alsa-devel@alsa-project.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ sound/soc/intel/skylake/skl-topology.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
+index 6db0fd7bad49..ad94f8020c27 100644
+--- a/sound/soc/intel/skylake/skl-topology.h
++++ b/sound/soc/intel/skylake/skl-topology.h
+@@ -115,7 +115,7 @@ struct skl_cpr_gtw_cfg {
+ 	u32 dma_buffer_size;
+ 	u32 config_length;
+ 	/* not mandatory; required only for DMIC/I2S */
+-	u32 config_data[1];
++	u32 config_data[];
+ } __packed;
+ 
+ struct skl_dma_control {
+-- 
+2.34.1
+
