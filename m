@@ -2,165 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649EFC636D3
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 13:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DA1C05027
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 16:14:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232144AbjBJNLe (ORCPT
+        id S232554AbjBJQOn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Feb 2023 08:11:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42902 "EHLO
+        Fri, 10 Feb 2023 11:14:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231833AbjBJNLd (ORCPT
+        with ESMTP id S232592AbjBJQOm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Feb 2023 08:11:33 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D260A49402;
-        Fri, 10 Feb 2023 05:11:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676034692; x=1707570692;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ors6grSxgwuBhPM/3ThJCElFazXKgPN4WnWqYGXUpkI=;
-  b=oDKxlhDtdn3snceHMwHrFmQhMjZV43wW8cQoTYgbMZPiPuhCJ7xiepDC
-   aVSBNeNnhK9QuqPecpcKAMG+4rSqn5r9rFYxcnHcKreiR/FCUAQKH3jWG
-   yGtSJhnPr6m/1daRra/czP/vJhI1RLR87SF+QrWFOMPv252WotKlnyGi0
-   wL7cyy0qIoxRkxDcEoT8XPYDEhfngR/tNn/QweF1PRAoFfsKtpR21n0kn
-   tW+RQvL4+rdjlD8ZqKgD3PCJwhteT0SfLd13yCBFAa1rjpkpQomYRppWQ
-   0lEsCOc2wJJQ9jnjW4eGCgGV4T3RiFQu3fYf/QZ/3uQualhGYvL+KoJuS
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="329047475"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="329047475"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 05:11:04 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="661409495"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="661409495"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.99.16.144]) ([10.99.16.144])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 05:10:59 -0800
-Message-ID: <54d4ffb1-1488-1a4f-58b2-8b3471389729@linux.intel.com>
-Date:   Fri, 10 Feb 2023 14:10:56 +0100
+        Fri, 10 Feb 2023 11:14:42 -0500
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAC9749B8;
+        Fri, 10 Feb 2023 08:14:29 -0800 (PST)
+Received: by mail-pl1-x636.google.com with SMTP id w5so6937292plg.8;
+        Fri, 10 Feb 2023 08:14:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XLSb4oI7+G/vrSC0uBHgAIzrNQ2OQDigOg7jJ9N0vsg=;
+        b=PCPKWUiaCusJdtCnECjumkp3J1QvA96YuTv4FJeFmqch8ud9Ii1ettciB81E6lmxzM
+         ojwbJHWAygEfNd6w0P6ZsUJAubVYEOs26iO6TxuOgvL32qs0t9jkmKfoMSza9drYHX8x
+         UFPZ7dTgd7iPZey2976DHnac0YGp0YxcroCQDglPkZ4yQh2SkjDr5AgfRs5mLjxHVhD8
+         uv/PbxLh9NRocXRsPcut3fJ1I3akWLndIeS392QoS5f7noQpMgleq/gOAgHuMLND/72J
+         M8bjq7qDCYjFiqx6zRhz7mJPr5lXINJVZ1N+uIvDonwqgR4TaXio8FAhxjmKH23KLHvu
+         LWPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XLSb4oI7+G/vrSC0uBHgAIzrNQ2OQDigOg7jJ9N0vsg=;
+        b=vbCwR5EUfs6y3oxiHor41umpFAyLGFR3R9WMNIRlwwB30G7URUdMs9Bfj5nDVOv0Zp
+         /TGnJTRvYRu1W6eWa04MzUzmoB5EW3XEa/1YfpnCcYsrMt4AwhjPzO8daEvSFyb1hFep
+         B0ZQlirlf0qQF0g9Tzk3PNeI273dl9ZljM3ugYbBmO5GjTxzxb3m7yRPtVxCwH8wq1dK
+         +u8BVFxa+GzWvpqPDENRfDqn/hTSayXOOTg6wNlwO9ixK1ut2NCH0xDKixdNbISI8VYu
+         0tTfYKeFW8IaL2+4tvXjutC2XvwzLd2+LfJs4D8lVGG54TT5qcIqrIImmj2ETvHhqFk9
+         tN2Q==
+X-Gm-Message-State: AO0yUKVjm7AEXl6e9fnIwUg5FNhSXIQZbvAnAsx7eVDgTprl0aCJqbY/
+        GpCXVlUiIBNH04F5bYicXVY=
+X-Google-Smtp-Source: AK7set9p9yRN0uGRPX49Nz2FWepxAbly3CMmVUioeLM705OspCHjKCSUUpUpjuwRsqWhbSyuJdCL8w==
+X-Received: by 2002:a17:902:d2d0:b0:198:a338:b9c5 with SMTP id n16-20020a170902d2d000b00198a338b9c5mr19125012plc.2.1676045668657;
+        Fri, 10 Feb 2023 08:14:28 -0800 (PST)
+Received: from localhost ([124.248.219.206])
+        by smtp.gmail.com with ESMTPSA id w14-20020a170902a70e00b0018997f6fc88sm3590399plq.34.2023.02.10.08.14.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 10 Feb 2023 08:14:28 -0800 (PST)
+Date:   Fri, 10 Feb 2023 08:14:15 -0800
+From:   Dan Li <ashimida.1990@gmail.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     concord@gentoo.org, linux-hardening@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Qing Zhao <qing.zhao@oracle.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Marco Elver <elver@google.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Song Liu <song@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uros Bizjak <ubizjak@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Yuntao Wang <ytcoode@gmail.com>,
+        Changbin Du <changbin.du@intel.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev
+Subject: Re: [RFC/RFT] CFI: Add support for gcc CFI in aarch64
+Message-ID: <20230210161415.mktok5dt5fiqmqss@ubuntu>
+References: <20221219061758.23321-1-ashimida.1990@gmail.com>
+ <Y6A/k7/KrCCDuux6@hirez.programming.kicks-ass.net>
+ <20221219132731.6ng4sz2nv6ujvu7i@ubuntu>
+ <202301061929.6881F6CD40@keescook>
+ <20230107154213.ocyghxd2k66gbvv6@ubuntu>
+ <63e3f989.170a0220.60c91.c5ce@mx.google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] ASoC: Intel: Skylake: Replace 1-element array with
- flex-array
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     Sasa Ostrouska <casaxa@gmail.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20230210051447.never.204-kees@kernel.org>
-From:   =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <20230210051447.never.204-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63e3f989.170a0220.60c91.c5ce@mx.google.com>
+User-Agent: NeoMutt/20171215
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/10/2023 6:14 AM, Kees Cook wrote:
-> The kernel is globally removing the ambiguous 0-length and 1-element
-> arrays in favor of flexible arrays, so that we can gain both compile-time
-> and run-time array bounds checking[1]. In this instance, struct
-> skl_cpr_cfg contains struct skl_cpr_gtw_cfg, which defined "config_data"
-> as a 1-element array.
+On 02/08, Kees Cook wrote:
+> On Sat, Jan 07, 2023 at 07:42:13AM -0800, Dan Li wrote:
+> > Hi Kees,
+> > 
+> > In the next version I'll make the gcc implementation consistent with clang.
 > 
-> Normally when switching from a 1-element array to a flex-array, any
-> related size calculations must be adjusted too. However, it seems the
-> original code was over-allocating space, since 1 extra u32 would be
-> included by the sizeof():
+> Hi!
 > 
->                  param_size = sizeof(struct skl_cpr_cfg);
->                  param_size += mconfig->formats_config[SKL_PARAM_INIT].caps_size;
+> Just checking in on this, since there are a lot of interested folks. :)
+> What's the status on the next version (and has anyone been found to
+> tackle the x86 backend part)? Is there anything we can help with?
 > 
-> But the copy uses caps_size bytes, and cap_size / 4 (i.e. sizeof(u32))
-> for the length tracking:
-> 
->          memcpy(cpr_mconfig->gtw_cfg.config_data,
->                          mconfig->formats_config[SKL_PARAM_INIT].caps,
->                          mconfig->formats_config[SKL_PARAM_INIT].caps_size);
-> 
->          cpr_mconfig->gtw_cfg.config_length =
->                          (mconfig->formats_config[SKL_PARAM_INIT].caps_size) / 4;
-> 
-> Therefore, no size calculations need adjusting. Change the struct
-> skl_cpr_gtw_cfg config_data member to be a true flexible array, which
-> also fixes the over-allocation, and silences this memcpy run-time false
-> positive:
-> 
->    memcpy: detected field-spanning write (size 100) of single field "cpr_mconfig->gtw_cfg.config_data" at sound/soc/intel/skylake/skl-messages.c:554 (size 4)
-> 
-> [1] For lots of details, see both:
->      https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
->      https://people.kernel.org/kees/bounded-flexible-arrays-in-c
-> 
-> Reported-by: Sasa Ostrouska <casaxa@gmail.com>
-> Link: https://lore.kernel.org/all/CALFERdwvq5day_sbDfiUsMSZCQu9HG8-SBpOZDNPeMdZGog6XA@mail.gmail.com/
-> Cc: Cezary Rojewski <cezary.rojewski@intel.com>
-> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
-> Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-> Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
-> Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-> Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Jaroslav Kysela <perex@perex.cz>
-> Cc: Takashi Iwai <tiwai@suse.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: "Amadeusz Sławiński" <amadeuszx.slawinski@linux.intel.com>
-> Cc: alsa-devel@alsa-project.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   sound/soc/intel/skylake/skl-topology.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
-> index 6db0fd7bad49..ad94f8020c27 100644
-> --- a/sound/soc/intel/skylake/skl-topology.h
-> +++ b/sound/soc/intel/skylake/skl-topology.h
-> @@ -115,7 +115,7 @@ struct skl_cpr_gtw_cfg {
->   	u32 dma_buffer_size;
->   	u32 config_length;
->   	/* not mandatory; required only for DMIC/I2S */
-> -	u32 config_data[1];
-> +	u32 config_data[];
->   } __packed;
->   
->   struct skl_dma_control {
 
-This fails in our validation. Maybe we can use the union workaround, to 
-leave the size as is?
+Hi Kees,
 
-Following seems to work in manual test:
-diff --git a/sound/soc/intel/skylake/skl-topology.h 
-b/sound/soc/intel/skylake/skl-topology.h
-index 6db0fd7bad49..ffbd2e60fede 100644
---- a/sound/soc/intel/skylake/skl-topology.h
-+++ b/sound/soc/intel/skylake/skl-topology.h
-@@ -115,7 +115,10 @@ struct skl_cpr_gtw_cfg {
-         u32 dma_buffer_size;
-         u32 config_length;
-         /* not mandatory; required only for DMIC/I2S */
--       u32 config_data[1];
-+       union {
-+               u32 x;
-+               u32 config_data[0];
-+       };
-  } __packed;
+Sorry for the long delay. It's been hard for me to find time to finish this
+until the end of February due to job changes (even weekends are busy :( ).
 
-  struct skl_dma_control {
+As much as I'd love to get it done as soon as possible, I'm sorry I probably
+won't be able to submit the next version until March (maybe mid).
 
-I can also run it through validation to make sure if it is acceptable.
+If anyone could help improve this, I'd be very grateful, otherwise I'll have
+the next version done by the end of March (as a promise), and also try it in
+x86 platform.
 
+Sincerely apologize!
+
+Dan.
+
+> Thanks!
+> 
+> -Kees
+> 
+> -- 
+> Kees Cook
