@@ -2,149 +2,130 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E9CC636CD
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 05:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE4FC05027
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 05:43:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230467AbjBJFO4 (ORCPT
+        id S230471AbjBJFnT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Feb 2023 00:14:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50554 "EHLO
+        Fri, 10 Feb 2023 00:43:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230450AbjBJFO4 (ORCPT
+        with ESMTP id S230443AbjBJFnS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Feb 2023 00:14:56 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7327660E70
-        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 21:14:54 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id r8so5390693pls.2
-        for <linux-hardening@vger.kernel.org>; Thu, 09 Feb 2023 21:14:54 -0800 (PST)
+        Fri, 10 Feb 2023 00:43:18 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82B3627AF
+        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 21:43:16 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id m2so5422238plg.4
+        for <linux-hardening@vger.kernel.org>; Thu, 09 Feb 2023 21:43:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KdCo8CN1GLWxhUuzHsDXPi4+d7EjfRBcMOzTAX4VkYU=;
-        b=fksnpfnGmrRVNVbjdWrUxIfEgUkh3JDeG3fkjMQSmlbXngErhtX7yLht05cD/5PKnn
-         04Epg6Osl2gUxOAKOQdgYazydNTf5/GjUMfK7jlo/g3aCLQxlq/rSr00ih4y70P9Ilnd
-         ioHhguL7zpjKI2rdmOcZHX3i+hmCuch7DgeMA=
+        bh=SOE16gpo14kJ2EwIrQmS9P4CD4KSR3yX19I9pXw0xUw=;
+        b=mnbG3Inx9g2cxrN6CsW3YFXBcbi6wMmtdtMcCb07RbVziOaeGdHHWQD+1nh1RgMmYO
+         0a3K9TQBovQAyK3QV6TuzwyAr5KH4HnQU0pqz2e4sCjK2dUV2jW3V6ZPclrIpxY6hXoL
+         A4YG6ij1lr9PhrpIJM+anjeg+z616nrJiLtFU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KdCo8CN1GLWxhUuzHsDXPi4+d7EjfRBcMOzTAX4VkYU=;
-        b=TR82lkeHFGRQGLf2ORcp8wZGCzlx3ht9GifPk2hs5CE3lnW0rXhpMvvxgUhngQ2v33
-         HgkIqA0anQv5jU5qy/RGLR7xx8q2nbTEvo6ILG/EPFoiLUhdxtQ+vG/9fMd5oPeNScJz
-         qphLEOX5pnwSljrhgOcjPvdvANMkscLYGR1SC/WIzzr9jGXYRi9noZTQv7nWHiYUQZyE
-         D7Rx+QK8vvq1yp817GIMfnSr/14j5xuNAFVd18G2vsJQWQtHW8pv5tGCpdvZlstzKk2i
-         IgDr8ztHfT1YkLI/zxeipx41LUAUCLowwzh3NF2kOxU2YVRzu1NXiSixTlZ1gwiGZC6J
-         N+ZA==
-X-Gm-Message-State: AO0yUKWegWRJAtUzvXJJE+vOos+08gew6GCwVzpjLwpKAtjPGKNjDUBB
-        bFouW37T8QLJ+e8zUevuKAoB2A==
-X-Google-Smtp-Source: AK7set9iPH45/De4KkZG32asSbtZRCU+B4g0PXZleHxvnSO0a4hAJXfkZX3tU2NNp9NBF6yLEK1etg==
-X-Received: by 2002:a17:903:1104:b0:196:6ec4:52db with SMTP id n4-20020a170903110400b001966ec452dbmr16471333plh.51.1676006093975;
-        Thu, 09 Feb 2023 21:14:53 -0800 (PST)
+        bh=SOE16gpo14kJ2EwIrQmS9P4CD4KSR3yX19I9pXw0xUw=;
+        b=m04JLgH6SUIwUKroBYKl7YZkFYq+x0GMp5Wu6PO4SAeXlBD6LXnFmF4zcsijBaB7jy
+         lHaVnYXA6sa4VJbaMhozqqHaQWL/mPY+BHljqHsuLAtCM2VuCOyQzWHJNpSD4Tu8FVKT
+         p52VOZs3rygv+FVPGh9e0jVhkymw83xLnraVnX06zN6HuixAtUxzYUtEfdG6v6jlMlN5
+         fsE6KPDxLd8DZeNxs2nHn3uFcRMfMxwCL7pcK7V86RnD+fvp/SL9OkXZJ1Ixslz7WPNt
+         UbLonTRbxNsm/tUekkuUPimdnoz4Fe45cjbNT10DyneIkO24XLoGinsHASheuEU3VhPY
+         TGLA==
+X-Gm-Message-State: AO0yUKWL407wnW50KjNl/E3Bfv3PMmysUpxY11Squln1cImxg95uwApE
+        vObYxNxs5LBnLHEhapt+dSXTEg==
+X-Google-Smtp-Source: AK7set+1n5AGJexcYbatfSHJZ2Nw0rtc/AT+n0aM3Z+adx6Q/lu2rO9E0f/rQJGPlffIl4QbJSX5wA==
+X-Received: by 2002:a17:902:f549:b0:199:3f82:ef49 with SMTP id h9-20020a170902f54900b001993f82ef49mr12206318plf.49.1676007796046;
+        Thu, 09 Feb 2023 21:43:16 -0800 (PST)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id iz11-20020a170902ef8b00b0019a6cce2060sm1137plb.57.2023.02.09.21.14.52
+        by smtp.gmail.com with ESMTPSA id v8-20020a17090331c800b00199023c688esm2481518ple.26.2023.02.09.21.43.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 21:14:53 -0800 (PST)
+        Thu, 09 Feb 2023 21:43:15 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
+To:     Kalle Valo <kvalo@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Sasa Ostrouska <casaxa@gmail.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>, alsa-devel@alsa-project.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] ASoC: Intel: Skylake: Replace 1-element array with flex-array
-Date:   Thu,  9 Feb 2023 21:14:51 -0800
-Message-Id: <20230210051447.never.204-kees@kernel.org>
+Subject: [PATCH] wifi: ath: Silence memcpy run-time false positive warning
+Date:   Thu,  9 Feb 2023 21:43:13 -0800
+Message-Id: <20230210054310.never.554-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3107; h=from:subject:message-id; bh=ydFsPeA/C8MiMPLpOvjkEi/1qhpRw4CQdxWOj12NFhs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj5dLKO9mdp/U47exsYyDTqouHYKX3QCJ70TxjHDRg 6KZPj3OJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY+XSygAKCRCJcvTf3G3AJoftD/ 45mIRK1WE97b95xQSOaADXRWSoS+EmGBiXvdWMXF3CwvSP7/4MO57t9EBQROuXWRf+wZMEn3AYglzs j/yQUgln33Ckg0IIgHlUWp543vnN/E3eiMCRXLQRM3MQ9VaPfyiq1j5WUnHdfB64n9pAMD7TfMlpRB XYIz0JreJoipxNK5H/VAVB3p+kbbqq88PFaM4pmVO/S8BURTCLPwUxiZMFFJrFRiN03D1WLkzaCjPd oWWQbuJVfu9Lneg0rnK3Qzq5tS0FCHPVIElP5AouwsPjlt9HZHgSHOkeH7UEO5WeQwcyLAkHOKPEWz 5twvakghXq1cYc7N9j3Ah+wy55Ts/eXvLA/jPWsfsbnCcB2t54hnAa6XUCL0FeMaD4o8kjOhVX0T3K Y3EtiIvTe2uJBS9TRa+Ikr49+tEJpJu4zQ3WW81q3T/ZZvL1t4InrCkM+2I5tHYHuYZgFqhv/OseYb XdHAYgMIgX/qewDg9C1CgHrcVED/wW7nYR7tauKKBTpCTx+GOlync9hN8UHwioG72MlAXFrRyAjU3n KlvCwNamQGqXDqQMYI0uBD9Cafge0qhWmwqp1OrvsTeknAMKG7zFwCf0JIILx9dTxJbQEFhiyy9Wkf ixFR0OR0Mka8EsOmA4PD5c1fbS+otZ3MurL0EM5OjKuGKIbcSQzMXtDGxwHQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2274; h=from:subject:message-id; bh=HpKo9sTr/HDvjHRUnQNbbmtTY7h1S1HI2SjgTQu+PF0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj5dlx5/oUi2b864PAZJA2tYIlXO8n8wbWjG+PlQly 9C7XAsyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY+XZcQAKCRCJcvTf3G3AJlZzD/ 9+QfS5oxR9/4Qs0yKAwtDcjvnug1MfW4BnEtT2afvu7iPZkrCDin60lTjPGTN4vglnrMWT6afqpXnB XHgLTZj2ahcVuOQLBAF9mPTqGZYFEWYMLcqakJ2hKGbtM2MpzjEYSfnGbfk08ATNfrrC9vmHuk1Hce xcVxtBS1ehTzBqZBnCBzV386ODKpzGPsVezLVFr0b0hB86eQNAC0pW7cC6stmrpk5U8cyCTv20dZuZ PJkFEBjLOQZuuzP0V8BCZ867TU/el8Bx3w1/F8Ce3bkO/Km4WQBLJ5+rBMPwsLYWsTdrhDqdu3euTe Bhp89FnehAlsKcXvPnLHys4JZWQ5s1/wupi0YapBpwtlTaGioAeuKXEJzZebafhBWdv7XtQN6PogwP lvSu5npSmpiQj8iytbaqxBptNCQCmZYnhv2z9UFLBkvj1L3dZ9feb5jEU+nVwbL3jJa/D1DaP8U3Kc 2ZzjO/UrTknTbD0H4ctE/3jt/Ya1qsDBg2/JLVYrRne8C65le2FKflS229RM8Yb/IaMUarTPoHX6Pq 8Go0XC4epyRU13nhw/0ZnydH+ugnE9KAroC++PaLXm7AYp1ste2SnMkQyKGQZJ3jgv33xMXlxEaveo PE1rh9N3Ycjh+pdBdVCzJrUR4MAtEoCFKpudfDhRQge812Fsl2prEPkk5bCA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The kernel is globally removing the ambiguous 0-length and 1-element
-arrays in favor of flexible arrays, so that we can gain both compile-time
-and run-time array bounds checking[1]. In this instance, struct
-skl_cpr_cfg contains struct skl_cpr_gtw_cfg, which defined "config_data"
-as a 1-element array.
+The memcpy() in ath_key_config() was attempting to write across
+neighboring struct members in struct ath_keyval. Introduce a wrapping
+struct_group, kv_values, to be the addressable target of the memcpy
+without overflowing an individual member. Silences the false positive
+run-time warning:
 
-Normally when switching from a 1-element array to a flex-array, any
-related size calculations must be adjusted too. However, it seems the
-original code was over-allocating space, since 1 extra u32 would be
-included by the sizeof():
+  memcpy: detected field-spanning write (size 32) of single field "hk.kv_val" at drivers/net/wireless/ath/key.c:506 (size 16)
 
-                param_size = sizeof(struct skl_cpr_cfg);
-                param_size += mconfig->formats_config[SKL_PARAM_INIT].caps_size;
-
-But the copy uses caps_size bytes, and cap_size / 4 (i.e. sizeof(u32))
-for the length tracking:
-
-        memcpy(cpr_mconfig->gtw_cfg.config_data,
-                        mconfig->formats_config[SKL_PARAM_INIT].caps,
-                        mconfig->formats_config[SKL_PARAM_INIT].caps_size);
-
-        cpr_mconfig->gtw_cfg.config_length =
-                        (mconfig->formats_config[SKL_PARAM_INIT].caps_size) / 4;
-
-Therefore, no size calculations need adjusting. Change the struct
-skl_cpr_gtw_cfg config_data member to be a true flexible array, which
-also fixes the over-allocation, and silences this memcpy run-time false
-positive:
-
-  memcpy: detected field-spanning write (size 100) of single field "cpr_mconfig->gtw_cfg.config_data" at sound/soc/intel/skylake/skl-messages.c:554 (size 4)
-
-[1] For lots of details, see both:
-    https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
-    https://people.kernel.org/kees/bounded-flexible-arrays-in-c
-
-Reported-by: Sasa Ostrouska <casaxa@gmail.com>
-Link: https://lore.kernel.org/all/CALFERdwvq5day_sbDfiUsMSZCQu9HG8-SBpOZDNPeMdZGog6XA@mail.gmail.com/
-Cc: Cezary Rojewski <cezary.rojewski@intel.com>
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: "Amadeusz Sławiński" <amadeuszx.slawinski@linux.intel.com>
-Cc: alsa-devel@alsa-project.org
+Link: https://bbs.archlinux.org/viewtopic.php?id=282254
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- sound/soc/intel/skylake/skl-topology.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath.h | 12 +++++++-----
+ drivers/net/wireless/ath/key.c |  2 +-
+ 2 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
-index 6db0fd7bad49..ad94f8020c27 100644
---- a/sound/soc/intel/skylake/skl-topology.h
-+++ b/sound/soc/intel/skylake/skl-topology.h
-@@ -115,7 +115,7 @@ struct skl_cpr_gtw_cfg {
- 	u32 dma_buffer_size;
- 	u32 config_length;
- 	/* not mandatory; required only for DMIC/I2S */
--	u32 config_data[1];
-+	u32 config_data[];
- } __packed;
+diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
+index f083fb9038c3..f02a308a9ffc 100644
+--- a/drivers/net/wireless/ath/ath.h
++++ b/drivers/net/wireless/ath/ath.h
+@@ -96,11 +96,13 @@ struct ath_keyval {
+ 	u8 kv_type;
+ 	u8 kv_pad;
+ 	u16 kv_len;
+-	u8 kv_val[16]; /* TK */
+-	u8 kv_mic[8]; /* Michael MIC key */
+-	u8 kv_txmic[8]; /* Michael MIC TX key (used only if the hardware
+-			 * supports both MIC keys in the same key cache entry;
+-			 * in that case, kv_mic is the RX key) */
++	struct_group(kv_values,
++		u8 kv_val[16]; /* TK */
++		u8 kv_mic[8]; /* Michael MIC key */
++		u8 kv_txmic[8]; /* Michael MIC TX key (used only if the hardware
++				 * supports both MIC keys in the same key cache entry;
++				 * in that case, kv_mic is the RX key) */
++	);
+ };
  
- struct skl_dma_control {
+ enum ath_cipher {
+diff --git a/drivers/net/wireless/ath/key.c b/drivers/net/wireless/ath/key.c
+index 61b59a804e30..b7b61d4f02ba 100644
+--- a/drivers/net/wireless/ath/key.c
++++ b/drivers/net/wireless/ath/key.c
+@@ -503,7 +503,7 @@ int ath_key_config(struct ath_common *common,
+ 
+ 	hk.kv_len = key->keylen;
+ 	if (key->keylen)
+-		memcpy(hk.kv_val, key->key, key->keylen);
++		memcpy(&hk.kv_values, key->key, key->keylen);
+ 
+ 	if (!(key->flags & IEEE80211_KEY_FLAG_PAIRWISE)) {
+ 		switch (vif->type) {
 -- 
 2.34.1
 
