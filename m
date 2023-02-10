@@ -2,130 +2,68 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE4FC05027
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 05:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DF5C636D4
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 06:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230471AbjBJFnT (ORCPT
+        id S230400AbjBJGKI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Feb 2023 00:43:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59362 "EHLO
+        Fri, 10 Feb 2023 01:10:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230443AbjBJFnS (ORCPT
+        with ESMTP id S229817AbjBJGKH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Feb 2023 00:43:18 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82B3627AF
-        for <linux-hardening@vger.kernel.org>; Thu,  9 Feb 2023 21:43:16 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id m2so5422238plg.4
-        for <linux-hardening@vger.kernel.org>; Thu, 09 Feb 2023 21:43:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SOE16gpo14kJ2EwIrQmS9P4CD4KSR3yX19I9pXw0xUw=;
-        b=mnbG3Inx9g2cxrN6CsW3YFXBcbi6wMmtdtMcCb07RbVziOaeGdHHWQD+1nh1RgMmYO
-         0a3K9TQBovQAyK3QV6TuzwyAr5KH4HnQU0pqz2e4sCjK2dUV2jW3V6ZPclrIpxY6hXoL
-         A4YG6ij1lr9PhrpIJM+anjeg+z616nrJiLtFU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SOE16gpo14kJ2EwIrQmS9P4CD4KSR3yX19I9pXw0xUw=;
-        b=m04JLgH6SUIwUKroBYKl7YZkFYq+x0GMp5Wu6PO4SAeXlBD6LXnFmF4zcsijBaB7jy
-         lHaVnYXA6sa4VJbaMhozqqHaQWL/mPY+BHljqHsuLAtCM2VuCOyQzWHJNpSD4Tu8FVKT
-         p52VOZs3rygv+FVPGh9e0jVhkymw83xLnraVnX06zN6HuixAtUxzYUtEfdG6v6jlMlN5
-         fsE6KPDxLd8DZeNxs2nHn3uFcRMfMxwCL7pcK7V86RnD+fvp/SL9OkXZJ1Ixslz7WPNt
-         UbLonTRbxNsm/tUekkuUPimdnoz4Fe45cjbNT10DyneIkO24XLoGinsHASheuEU3VhPY
-         TGLA==
-X-Gm-Message-State: AO0yUKWL407wnW50KjNl/E3Bfv3PMmysUpxY11Squln1cImxg95uwApE
-        vObYxNxs5LBnLHEhapt+dSXTEg==
-X-Google-Smtp-Source: AK7set+1n5AGJexcYbatfSHJZ2Nw0rtc/AT+n0aM3Z+adx6Q/lu2rO9E0f/rQJGPlffIl4QbJSX5wA==
-X-Received: by 2002:a17:902:f549:b0:199:3f82:ef49 with SMTP id h9-20020a170902f54900b001993f82ef49mr12206318plf.49.1676007796046;
-        Thu, 09 Feb 2023 21:43:16 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v8-20020a17090331c800b00199023c688esm2481518ple.26.2023.02.09.21.43.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Feb 2023 21:43:15 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Fri, 10 Feb 2023 01:10:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2EA538662;
+        Thu,  9 Feb 2023 22:10:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4757F61CBE;
+        Fri, 10 Feb 2023 06:10:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08284C433EF;
+        Fri, 10 Feb 2023 06:10:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676009405;
+        bh=jv4TbX6GFpuT5SBF7sQEqLkkaYY2p9ReJ7B17Deq/50=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eC3Tutfn6fZwjeZQLwzhFNTdDNgHmBWE17pEMrsIgueH6uJ+CvZbGb05nn66LBHAH
+         I91eHhk8rX5z+HTBrnmKNU807f47ekjhISA5t39h4FnbryMIq+mI0hj+BzYink2mRM
+         k/hmllC5y0rjWb4EI8PJhItDyN9ast37M2CEAa8i98AIXMOWWmToX6WA/bF7ZK4c6K
+         4Wp9VkgQ2LXdHJ+YdhCOkN8NcvfWH4Wp0+pi9VAd5UPPUm9gx1owCwm4SThcrAxDQI
+         Dd0k+AiR7IVYLHoTzk1HD98I/sKtqJovAC9wAU4nDSpOvhWSzsXpiKM8F1QuC8RRBS
+         vkicLzV/cZfcQ==
+Date:   Fri, 10 Feb 2023 11:40:00 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        dmaengine@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sia Jee Heng <jee.heng.sia@intel.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: ath: Silence memcpy run-time false positive warning
-Date:   Thu,  9 Feb 2023 21:43:13 -0800
-Message-Id: <20230210054310.never.554-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH] dmaengine: dw-axi-dmac: Do not dereference NULL structure
+Message-ID: <Y+XfuL8jZmSd4/fZ@matsya>
+References: <20230127223623.never.507-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2274; h=from:subject:message-id; bh=HpKo9sTr/HDvjHRUnQNbbmtTY7h1S1HI2SjgTQu+PF0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj5dlx5/oUi2b864PAZJA2tYIlXO8n8wbWjG+PlQly 9C7XAsyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY+XZcQAKCRCJcvTf3G3AJlZzD/ 9+QfS5oxR9/4Qs0yKAwtDcjvnug1MfW4BnEtT2afvu7iPZkrCDin60lTjPGTN4vglnrMWT6afqpXnB XHgLTZj2ahcVuOQLBAF9mPTqGZYFEWYMLcqakJ2hKGbtM2MpzjEYSfnGbfk08ATNfrrC9vmHuk1Hce xcVxtBS1ehTzBqZBnCBzV386ODKpzGPsVezLVFr0b0hB86eQNAC0pW7cC6stmrpk5U8cyCTv20dZuZ PJkFEBjLOQZuuzP0V8BCZ867TU/el8Bx3w1/F8Ce3bkO/Km4WQBLJ5+rBMPwsLYWsTdrhDqdu3euTe Bhp89FnehAlsKcXvPnLHys4JZWQ5s1/wupi0YapBpwtlTaGioAeuKXEJzZebafhBWdv7XtQN6PogwP lvSu5npSmpiQj8iytbaqxBptNCQCmZYnhv2z9UFLBkvj1L3dZ9feb5jEU+nVwbL3jJa/D1DaP8U3Kc 2ZzjO/UrTknTbD0H4ctE/3jt/Ya1qsDBg2/JLVYrRne8C65le2FKflS229RM8Yb/IaMUarTPoHX6Pq 8Go0XC4epyRU13nhw/0ZnydH+ugnE9KAroC++PaLXm7AYp1ste2SnMkQyKGQZJ3jgv33xMXlxEaveo PE1rh9N3Ycjh+pdBdVCzJrUR4MAtEoCFKpudfDhRQge812Fsl2prEPkk5bCA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230127223623.never.507-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The memcpy() in ath_key_config() was attempting to write across
-neighboring struct members in struct ath_keyval. Introduce a wrapping
-struct_group, kv_values, to be the addressable target of the memcpy
-without overflowing an individual member. Silences the false positive
-run-time warning:
+On 27-01-23, 14:36, Kees Cook wrote:
+> If "vdesc" is NULL, it cannot be used with vd_to_axi_desc(). Leave
+> "bytes" unchanged at 0. Seen under GCC 13 with -Warray-bounds:
+> 
+> ../drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c: In function 'dma_chan_tx_status':
+> ../drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c:329:46: warning: array subscript 0 is outside array bounds of 'struct
+> virt_dma_desc[46116860184273879]' [-Warray-bounds=]
+>   329 |                 bytes = vd_to_axi_desc(vdesc)->length;
+>       |                                              ^~
+> 
 
-  memcpy: detected field-spanning write (size 32) of single field "hk.kv_val" at drivers/net/wireless/ath/key.c:506 (size 16)
+Applied, thanks
 
-Link: https://bbs.archlinux.org/viewtopic.php?id=282254
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/ath/ath.h | 12 +++++++-----
- drivers/net/wireless/ath/key.c |  2 +-
- 2 files changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath.h b/drivers/net/wireless/ath/ath.h
-index f083fb9038c3..f02a308a9ffc 100644
---- a/drivers/net/wireless/ath/ath.h
-+++ b/drivers/net/wireless/ath/ath.h
-@@ -96,11 +96,13 @@ struct ath_keyval {
- 	u8 kv_type;
- 	u8 kv_pad;
- 	u16 kv_len;
--	u8 kv_val[16]; /* TK */
--	u8 kv_mic[8]; /* Michael MIC key */
--	u8 kv_txmic[8]; /* Michael MIC TX key (used only if the hardware
--			 * supports both MIC keys in the same key cache entry;
--			 * in that case, kv_mic is the RX key) */
-+	struct_group(kv_values,
-+		u8 kv_val[16]; /* TK */
-+		u8 kv_mic[8]; /* Michael MIC key */
-+		u8 kv_txmic[8]; /* Michael MIC TX key (used only if the hardware
-+				 * supports both MIC keys in the same key cache entry;
-+				 * in that case, kv_mic is the RX key) */
-+	);
- };
- 
- enum ath_cipher {
-diff --git a/drivers/net/wireless/ath/key.c b/drivers/net/wireless/ath/key.c
-index 61b59a804e30..b7b61d4f02ba 100644
---- a/drivers/net/wireless/ath/key.c
-+++ b/drivers/net/wireless/ath/key.c
-@@ -503,7 +503,7 @@ int ath_key_config(struct ath_common *common,
- 
- 	hk.kv_len = key->keylen;
- 	if (key->keylen)
--		memcpy(hk.kv_val, key->key, key->keylen);
-+		memcpy(&hk.kv_values, key->key, key->keylen);
- 
- 	if (!(key->flags & IEEE80211_KEY_FLAG_PAIRWISE)) {
- 		switch (vif->type) {
 -- 
-2.34.1
-
+~Vinod
