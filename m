@@ -2,170 +2,165 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF6AC636D3
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 08:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649EFC636D3
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Feb 2023 13:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231579AbjBJIoP (ORCPT
+        id S232144AbjBJNLe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Feb 2023 03:44:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
+        Fri, 10 Feb 2023 08:11:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231536AbjBJIoP (ORCPT
+        with ESMTP id S231833AbjBJNLd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Feb 2023 03:44:15 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F29E72B6;
-        Fri, 10 Feb 2023 00:44:13 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 2156167207;
-        Fri, 10 Feb 2023 08:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1676018652; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UVINLfWoByaCJXVftpzcYlbIo/nk7wbOQy/Pd2ADzc4=;
-        b=xni5+alhgoHFaCl1x313GvQBtvv3GPW+InczHZPd3O0X4AEl1e4wsuyhKTNm+1NUvHXNZF
-        r9KJiyDalgrx4EaZkij5oNTuRIzwk0yWfd5cRuibsTb6RuJR9+zOqn31Jg9oxkfV+vEP4V
-        F9Tz7D9CRy5WzrbfOKUYAUq7my/ZXqU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1676018652;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UVINLfWoByaCJXVftpzcYlbIo/nk7wbOQy/Pd2ADzc4=;
-        b=e5rcZXpyfz0QqEjd8c5zHyXM2ouAx2bUUTYUiu61xQ61hmcNND8ibgWMGHrrTr3uX5Qblh
-        4sVTKfmLDUoSGuAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B6A2E13588;
-        Fri, 10 Feb 2023 08:44:11 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id MfPbK9sD5mPCEgAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Fri, 10 Feb 2023 08:44:11 +0000
-Message-ID: <046f0c76-f2b1-5df7-7c3e-76c0187da069@suse.cz>
-Date:   Fri, 10 Feb 2023 09:44:11 +0100
+        Fri, 10 Feb 2023 08:11:33 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D260A49402;
+        Fri, 10 Feb 2023 05:11:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676034692; x=1707570692;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Ors6grSxgwuBhPM/3ThJCElFazXKgPN4WnWqYGXUpkI=;
+  b=oDKxlhDtdn3snceHMwHrFmQhMjZV43wW8cQoTYgbMZPiPuhCJ7xiepDC
+   aVSBNeNnhK9QuqPecpcKAMG+4rSqn5r9rFYxcnHcKreiR/FCUAQKH3jWG
+   yGtSJhnPr6m/1daRra/czP/vJhI1RLR87SF+QrWFOMPv252WotKlnyGi0
+   wL7cyy0qIoxRkxDcEoT8XPYDEhfngR/tNn/QweF1PRAoFfsKtpR21n0kn
+   tW+RQvL4+rdjlD8ZqKgD3PCJwhteT0SfLd13yCBFAa1rjpkpQomYRppWQ
+   0lEsCOc2wJJQ9jnjW4eGCgGV4T3RiFQu3fYf/QZ/3uQualhGYvL+KoJuS
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="329047475"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="329047475"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 05:11:04 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10616"; a="661409495"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="661409495"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.99.16.144]) ([10.99.16.144])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 05:10:59 -0800
+Message-ID: <54d4ffb1-1488-1a4f-58b2-8b3471389729@linux.intel.com>
+Date:   Fri, 10 Feb 2023 14:10:56 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] Revert "slub: force on no_hash_pointers when slub_debug
- is enabled"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] ASoC: Intel: Skylake: Replace 1-element array with
+ flex-array
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>, concord@gentoo.org,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Petr Mladek <pmladek@suse.com>, linux-mm@kvack.org,
-        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Christoph Lameter <cl@linux.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Peter Gerber <peter@arbitrary.ch>
-References: <20230208194712.never.999-kees@kernel.org>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <20230208194712.never.999-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Kees Cook <keescook@chromium.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>
+Cc:     Sasa Ostrouska <casaxa@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Peter Ujfalusi <peter.ujfalusi@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20230210051447.never.204-kees@kernel.org>
+From:   =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <20230210051447.never.204-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/8/23 20:47, Kees Cook wrote:
-> This reverts commit 792702911f581f7793962fbeb99d5c3a1b28f4c3.
+On 2/10/2023 6:14 AM, Kees Cook wrote:
+> The kernel is globally removing the ambiguous 0-length and 1-element
+> arrays in favor of flexible arrays, so that we can gain both compile-time
+> and run-time array bounds checking[1]. In this instance, struct
+> skl_cpr_cfg contains struct skl_cpr_gtw_cfg, which defined "config_data"
+> as a 1-element array.
 > 
-> Linking no_hash_pointers() to slub_debug has had a chilling effect
-> on using slub_debug features for security hardening, since system
-> builders are forced to choose between redzoning and heap address location
-> exposures. Instead, just require that the "no_hash_pointers" boot param
-> needs to be used to expose pointers during slub_debug reports.
-
-Searching lore made me find [1] and I like the more concrete changelog as
-well as updated documentation.
-
-While it's convenient, it's probably indeed not slub's decision to enable
-no_hash_pointers. But Stephen also has a point in reply to [1]. If the
-data/address leak is indeed a concern, slub_debug will still print raw dumps
-as part of the reports, so will e.g. dump_page(), so hashing %p is not a
-complete solution and something more generic could be created for
-controlling prints that distinguishes hardening vs debugging?
-
-[1]
-https://lore.kernel.org/all/8e472c9e-2076-bc25-5912-8433adf7b579@arbitrary.ch/
-
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> Cc: concord@gentoo.org
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: linux-mm@kvack.org
-> Cc: stable@vger.kernel.org
-> Link: https://lore.kernel.org/lkml/202109200726.2EFEDC5@keescook/
+> Normally when switching from a 1-element array to a flex-array, any
+> related size calculations must be adjusted too. However, it seems the
+> original code was over-allocating space, since 1 extra u32 would be
+> included by the sizeof():
+> 
+>                  param_size = sizeof(struct skl_cpr_cfg);
+>                  param_size += mconfig->formats_config[SKL_PARAM_INIT].caps_size;
+> 
+> But the copy uses caps_size bytes, and cap_size / 4 (i.e. sizeof(u32))
+> for the length tracking:
+> 
+>          memcpy(cpr_mconfig->gtw_cfg.config_data,
+>                          mconfig->formats_config[SKL_PARAM_INIT].caps,
+>                          mconfig->formats_config[SKL_PARAM_INIT].caps_size);
+> 
+>          cpr_mconfig->gtw_cfg.config_length =
+>                          (mconfig->formats_config[SKL_PARAM_INIT].caps_size) / 4;
+> 
+> Therefore, no size calculations need adjusting. Change the struct
+> skl_cpr_gtw_cfg config_data member to be a true flexible array, which
+> also fixes the over-allocation, and silences this memcpy run-time false
+> positive:
+> 
+>    memcpy: detected field-spanning write (size 100) of single field "cpr_mconfig->gtw_cfg.config_data" at sound/soc/intel/skylake/skl-messages.c:554 (size 4)
+> 
+> [1] For lots of details, see both:
+>      https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
+>      https://people.kernel.org/kees/bounded-flexible-arrays-in-c
+> 
+> Reported-by: Sasa Ostrouska <casaxa@gmail.com>
+> Link: https://lore.kernel.org/all/CALFERdwvq5day_sbDfiUsMSZCQu9HG8-SBpOZDNPeMdZGog6XA@mail.gmail.com/
+> Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+> Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> Cc: Liam Girdwood <liam.r.girdwood@linux.intel.com>
+> Cc: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+> Cc: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Cc: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> Cc: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Jaroslav Kysela <perex@perex.cz>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: "Amadeusz Sławiński" <amadeuszx.slawinski@linux.intel.com>
+> Cc: alsa-devel@alsa-project.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  include/linux/kernel.h | 2 --
->  lib/vsprintf.c         | 2 +-
->  mm/slub.c              | 4 ----
->  3 files changed, 1 insertion(+), 7 deletions(-)
+>   sound/soc/intel/skylake/skl-topology.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index fe6efb24d151..e3d9d3879495 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -229,8 +229,6 @@ int sscanf(const char *, const char *, ...);
->  extern __scanf(2, 0)
->  int vsscanf(const char *, const char *, va_list);
->  
-> -extern int no_hash_pointers_enable(char *str);
-> -
->  extern int get_option(char **str, int *pint);
->  extern char *get_options(const char *str, int nints, int *ints);
->  extern unsigned long long memparse(const char *ptr, char **retptr);
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index be71a03c936a..410b4a80a58a 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -2222,7 +2222,7 @@ char *fwnode_string(char *buf, char *end, struct fwnode_handle *fwnode,
->  	return widen_string(buf, buf - buf_start, end, spec);
->  }
->  
-> -int __init no_hash_pointers_enable(char *str)
-> +static int __init no_hash_pointers_enable(char *str)
->  {
->  	if (no_hash_pointers)
->  		return 0;
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 13459c69095a..63f7337dd433 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -5005,10 +5005,6 @@ void __init kmem_cache_init(void)
->  	if (debug_guardpage_minorder())
->  		slub_max_order = 0;
->  
-> -	/* Print slub debugging pointers without hashing */
-> -	if (__slub_debug_enabled())
-> -		no_hash_pointers_enable(NULL);
-> -
->  	kmem_cache_node = &boot_kmem_cache_node;
->  	kmem_cache = &boot_kmem_cache;
->  
+> diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
+> index 6db0fd7bad49..ad94f8020c27 100644
+> --- a/sound/soc/intel/skylake/skl-topology.h
+> +++ b/sound/soc/intel/skylake/skl-topology.h
+> @@ -115,7 +115,7 @@ struct skl_cpr_gtw_cfg {
+>   	u32 dma_buffer_size;
+>   	u32 config_length;
+>   	/* not mandatory; required only for DMIC/I2S */
+> -	u32 config_data[1];
+> +	u32 config_data[];
+>   } __packed;
+>   
+>   struct skl_dma_control {
+
+This fails in our validation. Maybe we can use the union workaround, to 
+leave the size as is?
+
+Following seems to work in manual test:
+diff --git a/sound/soc/intel/skylake/skl-topology.h 
+b/sound/soc/intel/skylake/skl-topology.h
+index 6db0fd7bad49..ffbd2e60fede 100644
+--- a/sound/soc/intel/skylake/skl-topology.h
++++ b/sound/soc/intel/skylake/skl-topology.h
+@@ -115,7 +115,10 @@ struct skl_cpr_gtw_cfg {
+         u32 dma_buffer_size;
+         u32 config_length;
+         /* not mandatory; required only for DMIC/I2S */
+-       u32 config_data[1];
++       union {
++               u32 x;
++               u32 config_data[0];
++       };
+  } __packed;
+
+  struct skl_dma_control {
+
+I can also run it through validation to make sure if it is acceptable.
 
