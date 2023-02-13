@@ -2,46 +2,46 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16B2C636D7
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Feb 2023 08:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B15DC636D4
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Feb 2023 08:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjBMIMo (ORCPT
+        id S229921AbjBMIUt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Feb 2023 03:12:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52866 "EHLO
+        Mon, 13 Feb 2023 03:20:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjBMIMn (ORCPT
+        with ESMTP id S229955AbjBMIUr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Feb 2023 03:12:43 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAF6EC54;
-        Mon, 13 Feb 2023 00:12:40 -0800 (PST)
+        Mon, 13 Feb 2023 03:20:47 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506CD126D8;
+        Mon, 13 Feb 2023 00:20:31 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 0684C67A96;
-        Mon, 13 Feb 2023 08:12:39 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 1A2BE37706;
+        Mon, 13 Feb 2023 08:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1676275959; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1676276423; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Goj0CVYbqJm9f9dvo9/K7xYI+JDbxMaoqo4CZZFkBBk=;
-        b=LQEMz/X/MWGXbrqTPHrYKwlbxa3iGttJOvMPqltHTvt6iWpcUhsSJsA8ivRxYAn505tiH1
-        YWPgsupEz7eQLntjATa0KJapT1vpEP+6wq1sPOSMfCu3z+COXwKAHqNZinKleJ6elF85tQ
-        hRSvtR6JjWXasMKTeKQgCCUEsrCRfTM=
+        bh=T67QN63umXnc0fRsL1qO+KXl0rONIm141v5QsXiqc7U=;
+        b=nIZERco8BTO8Q9GkwypnEoUodoHwrDRZ6gVAHupOktjw74RpgcU3SdsiVBy8zC1nCXIOpV
+        RNTMh5kE5zg8GlrELal5E9+o2kSFYYG9AJlort/DtAHv9MjyB3sfVyvWJ/jvt05uQa3Mw2
+        ygeiym/agAdWVhgk22j2m/6qu2gh3n8=
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B6406138E6;
-        Mon, 13 Feb 2023 08:12:38 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E345F138E6;
+        Mon, 13 Feb 2023 08:20:22 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id maG3Kvbw6WOJMgAAMHmgww
-        (envelope-from <jgross@suse.com>); Mon, 13 Feb 2023 08:12:38 +0000
-Message-ID: <f1715894-8bb5-fef9-3f92-77ae293ebfb4@suse.com>
-Date:   Mon, 13 Feb 2023 09:12:38 +0100
+        id x741Nsby6WPDNgAAMHmgww
+        (envelope-from <jgross@suse.com>); Mon, 13 Feb 2023 08:20:22 +0000
+Message-ID: <589edfa4-ae52-49dd-08b2-25ffb506084a@suse.com>
+Date:   Mon, 13 Feb 2023 09:20:22 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
@@ -58,14 +58,14 @@ From:   Juergen Gross <jgross@suse.com>
 In-Reply-To: <Y9xjN6Wa3VslgXeX@work>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="------------eNpq4uVnbNf970ybwQrjr0CB"
+ boundary="------------mUBn580fjrlxklzUomy0ToCm"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------eNpq4uVnbNf970ybwQrjr0CB
-Content-Type: multipart/mixed; boundary="------------BMX3LvNHt974ooZRj4nUmQiw";
+--------------mUBn580fjrlxklzUomy0ToCm
+Content-Type: multipart/mixed; boundary="------------MEG0JBht7zMjbG92DYZ0qhxr";
  protected-headers="v1"
 From: Juergen Gross <jgross@suse.com>
 To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
@@ -73,16 +73,16 @@ To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
  Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
 Cc: xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
  linux-hardening@vger.kernel.org
-Message-ID: <f1715894-8bb5-fef9-3f92-77ae293ebfb4@suse.com>
+Message-ID: <589edfa4-ae52-49dd-08b2-25ffb506084a@suse.com>
 Subject: Re: [PATCH][next] xen: Replace one-element array with flexible-array
  member
 References: <Y9xjN6Wa3VslgXeX@work>
 In-Reply-To: <Y9xjN6Wa3VslgXeX@work>
 
---------------BMX3LvNHt974ooZRj4nUmQiw
-Content-Type: multipart/mixed; boundary="------------0z5CCKY7k5kyMrtZRYWOKqVY"
+--------------MEG0JBht7zMjbG92DYZ0qhxr
+Content-Type: multipart/mixed; boundary="------------ZuHhLaWGSyu994BrV7gofsrQ"
 
---------------0z5CCKY7k5kyMrtZRYWOKqVY
+--------------ZuHhLaWGSyu994BrV7gofsrQ
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: base64
 
@@ -99,9 +99,9 @@ azogaHR0cHM6Ly9naXRodWIuY29tL0tTUFAvbGludXgvaXNzdWVzLzc5DQo+IExpbms6IGh0
 dHBzOi8vZ2l0aHViLmNvbS9LU1BQL2xpbnV4L2lzc3Vlcy8yNTUNCj4gTGluazogaHR0cHM6
 Ly9nY2MuZ251Lm9yZy9waXBlcm1haWwvZ2NjLXBhdGNoZXMvMjAyMi1PY3RvYmVyLzYwMjkw
 Mi5odG1sIFsxXQ0KPiBTaWduZWQtb2ZmLWJ5OiBHdXN0YXZvIEEuIFIuIFNpbHZhIDxndXN0
-YXZvYXJzQGtlcm5lbC5vcmc+DQoNClJldmlld2VkLWJ5OiBKdWVyZ2VuIEdyb3NzIDxqZ3Jv
-c3NAc3VzZS5jb20+DQoNCg0KSnVlcmdlbg0KDQo=
---------------0z5CCKY7k5kyMrtZRYWOKqVY
+YXZvYXJzQGtlcm5lbC5vcmc+DQoNClB1c2hlZC10bzogeGVuL3RpcC5naXQgZm9yLWxpbnVz
+LTYuMw0KDQoNCkp1ZXJnZW4NCg0K
+--------------ZuHhLaWGSyu994BrV7gofsrQ
 Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
 Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
 Content-Description: OpenPGP public key
@@ -159,24 +159,24 @@ jR/i1DG86lem3iBDXzXsZDn8R38=3D
 =3D2wuH
 -----END PGP PUBLIC KEY BLOCK-----
 
---------------0z5CCKY7k5kyMrtZRYWOKqVY--
+--------------ZuHhLaWGSyu994BrV7gofsrQ--
 
---------------BMX3LvNHt974ooZRj4nUmQiw--
+--------------MEG0JBht7zMjbG92DYZ0qhxr--
 
---------------eNpq4uVnbNf970ybwQrjr0CB
+--------------mUBn580fjrlxklzUomy0ToCm
 Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="OpenPGP_signature"
 
 -----BEGIN PGP SIGNATURE-----
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmPp8PYFAwAAAAAACgkQsN6d1ii/Ey+9
-uQf/eQfbMt2KRzkI4NOdIg9qgtM1yIbcE6jCTytb2TlPZD1woI72l+dOp7H/O9blL0vuRMZcd7wk
-icr1zJWysBJ9ZSJSZyPbHwbwX9A37t8L+DvK6gIbgm8tg6Si1jHY9KlvvxrzWJx0Qwtcl0dptfZY
-6gjk/PEgxzbh1+dwFBApHucTQLZoxr9WXQVpzItZobKArtLTLbnHjvz7Nnqoxh2ljkRvue0QqjhA
-xTZeBaoow5rzQOVCyt5v+u0xxuPm1h0k33q2ScNl5Eapli/Cez1mtmiQSIa4mg8QTr5kYTwZGk3f
-7wE/ZmlgP8nl5gXkM/cGCX1ANdOSlmdL3puiPcVNhg==
-=gH+G
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmPp8sYFAwAAAAAACgkQsN6d1ii/Ey+z
+iggAlU6pTFIxYTeG+qBwseJU8IrA0YQD3rA/JBTv+2jARNlwIGkEwuZL5sAy6zYiIbGT6hADym+u
+WfKfojYMs2mEmylJBPQCgDWpW9K2924G7btecf3T5DPdqAeR9VkMMg2Y1eLPZ23xZA0Hc9xIreP8
+5pRH3T966LJOXzn5J4nDCrU8fwSgUhIKmeSNw5kToVTkJKpdFmjd0zfO94ymQmMGEm0n8m184iUk
+4O1SjtrSWG07d8UOqIvHlZpfGnabh6jY5h01oUS/i8DVqI76YT4/HBl/ze7I2T+zaUE1n7yuj8go
+6JpL9C/kOGxzovfKVvw7WbdEUt2YOMSVNBEiJrVYkw==
+=6d2w
 -----END PGP SIGNATURE-----
 
---------------eNpq4uVnbNf970ybwQrjr0CB--
+--------------mUBn580fjrlxklzUomy0ToCm--
