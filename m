@@ -2,181 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B15DC636D4
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Feb 2023 08:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7141DC636D7
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Feb 2023 11:27:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjBMIUt (ORCPT
+        id S231233AbjBML1v (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Feb 2023 03:20:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33900 "EHLO
+        Mon, 13 Feb 2023 06:27:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229955AbjBMIUr (ORCPT
+        with ESMTP id S231133AbjBML1u (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Feb 2023 03:20:47 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 506CD126D8;
-        Mon, 13 Feb 2023 00:20:31 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 1A2BE37706;
-        Mon, 13 Feb 2023 08:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1676276423; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=T67QN63umXnc0fRsL1qO+KXl0rONIm141v5QsXiqc7U=;
-        b=nIZERco8BTO8Q9GkwypnEoUodoHwrDRZ6gVAHupOktjw74RpgcU3SdsiVBy8zC1nCXIOpV
-        RNTMh5kE5zg8GlrELal5E9+o2kSFYYG9AJlort/DtAHv9MjyB3sfVyvWJ/jvt05uQa3Mw2
-        ygeiym/agAdWVhgk22j2m/6qu2gh3n8=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E345F138E6;
-        Mon, 13 Feb 2023 08:20:22 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id x741Nsby6WPDNgAAMHmgww
-        (envelope-from <jgross@suse.com>); Mon, 13 Feb 2023 08:20:22 +0000
-Message-ID: <589edfa4-ae52-49dd-08b2-25ffb506084a@suse.com>
-Date:   Mon, 13 Feb 2023 09:20:22 +0100
+        Mon, 13 Feb 2023 06:27:50 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CFFC0
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Feb 2023 03:27:48 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id j17so18444696lfr.3
+        for <linux-hardening@vger.kernel.org>; Mon, 13 Feb 2023 03:27:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cl0w281rrFrfhiUIdTV/d0ugreNYcSHFpO/ECMy29TE=;
+        b=e7bciKYc6sFsjk66Q2HY2bAREKMTKUlPhq4a9cTOXcz1xyZcTqDqJymjO7IWB1Ylul
+         IlpvnU0C3ApkMvJ83gxB5SGPm6ITtDB437l8wLQolVA6ASC7B2Zorv70J4IXa3U9roSV
+         JkHZUH0H6nwWXDS8chRMrz0tJNU8lARg6vWJRxRa95lOzSb48KbOXUbv/nOp0xQNBdMY
+         F+plOIGaSRi0g1Vn89ibIzo6wkezIdJyNj8xa6298uzNvgs01+4mRdWW6bTqANcdHWj2
+         vYDLQ1svqIePbs+6IH7B8EmKzMsT6L7sE0iHj5ZQw9PTf+W3h+V2He4mBCMrKSxqygTq
+         z3ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cl0w281rrFrfhiUIdTV/d0ugreNYcSHFpO/ECMy29TE=;
+        b=4+NhnFWOHm6Kc0yGUrNgRNydTBAaP60RMvf3ikfcuZdkXpyGhAPeE7tMncQsiO2f3J
+         +l2kvWbo9gyHTFHdny9XJuemdPEtrO9ml9jPx0+tfhE7QluAFMMrYR5lDmnyz0at6C9N
+         mvb6G34PQJqMhFjliY4yH6jlT/0PV7L3h5zHpkI318aBZP+nIZCg1I1epanMPQG/R02R
+         RuRld+PXZYkn0QXrmkt7O5upgT3bzFxD0zNKfmYSZdQTxHOLI2iCShoONq+SghzbdlID
+         KNUhsEM+sUyuB3tOSXXLP7JyNnzDjJSEnw12qmwV9pXKWxhiymcs73sEs+Tk5BT7AB3c
+         oXrw==
+X-Gm-Message-State: AO0yUKWnf+PPh4p2s4vbKW1VTHlX6m/E2TiUFunbgD2JZ5astcH10lEm
+        0XmgKNXjFJDxt04M9Gc5stAL1ESobXHo39l0ZNSbbw==
+X-Google-Smtp-Source: AK7set9Nl/fvndCdrr+yNaVI5IGwWhni0J8QZf0QgFahmTSlmPC8iGZMyNCszJ0uH0PTSG7uUARRT9CfcMYfkF9H8vk=
+X-Received: by 2002:a05:6512:3771:b0:4db:19fb:6aa with SMTP id
+ z17-20020a056512377100b004db19fb06aamr2590302lft.185.1676287666179; Mon, 13
+ Feb 2023 03:27:46 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH][next] xen: Replace one-element array with flexible-array
- member
-Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <Y9xjN6Wa3VslgXeX@work>
-From:   Juergen Gross <jgross@suse.com>
-In-Reply-To: <Y9xjN6Wa3VslgXeX@work>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------mUBn580fjrlxklzUomy0ToCm"
+References: <00000000000088b3d905f46ed421@google.com> <B83C9F6F-569B-4DCB-9FFE-45D9B1E32B21@kernel.org>
+In-Reply-To: <B83C9F6F-569B-4DCB-9FFE-45D9B1E32B21@kernel.org>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 13 Feb 2023 12:27:33 +0100
+Message-ID: <CACT4Y+YVXqD_LPpD05B34VRWvnOE-REDsZSeomggT+uqJmgjyw@mail.gmail.com>
+Subject: Re: [syzbot] BUG: bad usercopy in io_openat2_prep
+To:     Kees Cook <kees@kernel.org>
+Cc:     syzbot <syzbot+cdd9922704fc75e03ffc@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com,
+        io-uring@vger.kernel.org, Aleksandr Nogikh <nogikh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------mUBn580fjrlxklzUomy0ToCm
-Content-Type: multipart/mixed; boundary="------------MEG0JBht7zMjbG92DYZ0qhxr";
- protected-headers="v1"
-From: Juergen Gross <jgross@suse.com>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Cc: xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Message-ID: <589edfa4-ae52-49dd-08b2-25ffb506084a@suse.com>
-Subject: Re: [PATCH][next] xen: Replace one-element array with flexible-array
- member
-References: <Y9xjN6Wa3VslgXeX@work>
-In-Reply-To: <Y9xjN6Wa3VslgXeX@work>
+On Mon, 13 Feb 2023 at 12:05, Kees Cook <kees@kernel.org> wrote:
+>
+> On February 11, 2023 8:08:52 AM PST, syzbot <syzbot+cdd9922704fc75e03ffc@syzkaller.appspotmail.com> wrote:
+> >Hello,
+> >
+> >syzbot found the following issue on:
+> >
+> >HEAD commit:    ca72d58361ee Merge branch 'for-next/core' into for-kernelci
+> >git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+> >console output: https://syzkaller.appspot.com/x/log.txt?x=14a882f3480000
+> >kernel config:  https://syzkaller.appspot.com/x/.config?x=f3e78232c1ed2b43
+> >dashboard link: https://syzkaller.appspot.com/bug?extid=cdd9922704fc75e03ffc
+> >compiler:       Debian clang version 15.0.7, GNU ld (GNU Binutils for Debian) 2.35.2
+> >userspace arch: arm64
+> >syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1203777b480000
+> >C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=124c1ea3480000
+> >
+> >Downloadable assets:
+> >disk image: https://storage.googleapis.com/syzbot-assets/e2c91688b4cd/disk-ca72d583.raw.xz
+> >vmlinux: https://storage.googleapis.com/syzbot-assets/af105438bee6/vmlinux-ca72d583.xz
+> >kernel image: https://storage.googleapis.com/syzbot-assets/4a28ec4f8f7e/Image-ca72d583.gz.xz
+> >
+> >IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> >Reported-by: syzbot+cdd9922704fc75e03ffc@syzkaller.appspotmail.com
+> >
+> >usercopy: Kernel memory overwrite attempt detected to SLUB object 'pid' (offset 24, size 24)!
+>
+> This looks like some serious memory corruption. The pid slab is 24 bytes in size, but struct io_open is larger... Possible UAF after the memory being reallocated to a new slab??
 
---------------MEG0JBht7zMjbG92DYZ0qhxr
-Content-Type: multipart/mixed; boundary="------------ZuHhLaWGSyu994BrV7gofsrQ"
+We've just noticed that some of syzbot arm64 configs did not enable
+KASAN, so it could produce false one-off reports caused by previous
+silent memory corruptions.
 
---------------ZuHhLaWGSyu994BrV7gofsrQ
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+So if you don't see anything obvious, don't spend too much time looking at it.
 
-T24gMDMuMDIuMjMgMDI6MjgsIEd1c3Rhdm8gQS4gUi4gU2lsdmEgd3JvdGU6DQo+IE9uZS1l
-bGVtZW50IGFycmF5cyBhcmUgZGVwcmVjYXRlZCwgYW5kIHdlIGFyZSByZXBsYWNpbmcgdGhl
-bSB3aXRoIGZsZXhpYmxlDQo+IGFycmF5IG1lbWJlcnMgaW5zdGVhZC4gU28sIHJlcGxhY2Ug
-b25lLWVsZW1lbnQgYXJyYXkgd2l0aCBmbGV4aWJsZS1hcnJheQ0KPiBtZW1iZXIgaW4gc3Ry
-dWN0IHhlbl9wYWdlX2RpcmVjdG9yeS4NCj4gDQo+IFRoaXMgaGVscHMgd2l0aCB0aGUgb25n
-b2luZyBlZmZvcnRzIHRvIHRpZ2h0ZW4gdGhlIEZPUlRJRllfU09VUkNFDQo+IHJvdXRpbmVz
-IG9uIG1lbWNweSgpIGFuZCBoZWxwIHVzIG1ha2UgcHJvZ3Jlc3MgdG93YXJkcyBnbG9iYWxs
-eQ0KPiBlbmFibGluZyAtZnN0cmljdC1mbGV4LWFycmF5cz0zIFsxXS4NCj4gDQo+IFRoaXMg
-cmVzdWx0cyBpbiBubyBkaWZmZXJlbmNlcyBpbiBiaW5hcnkgb3V0cHV0Lg0KPiANCj4gTGlu
-azogaHR0cHM6Ly9naXRodWIuY29tL0tTUFAvbGludXgvaXNzdWVzLzc5DQo+IExpbms6IGh0
-dHBzOi8vZ2l0aHViLmNvbS9LU1BQL2xpbnV4L2lzc3Vlcy8yNTUNCj4gTGluazogaHR0cHM6
-Ly9nY2MuZ251Lm9yZy9waXBlcm1haWwvZ2NjLXBhdGNoZXMvMjAyMi1PY3RvYmVyLzYwMjkw
-Mi5odG1sIFsxXQ0KPiBTaWduZWQtb2ZmLWJ5OiBHdXN0YXZvIEEuIFIuIFNpbHZhIDxndXN0
-YXZvYXJzQGtlcm5lbC5vcmc+DQoNClB1c2hlZC10bzogeGVuL3RpcC5naXQgZm9yLWxpbnVz
-LTYuMw0KDQoNCkp1ZXJnZW4NCg0K
---------------ZuHhLaWGSyu994BrV7gofsrQ
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+#syz invalid
 
------BEGIN PGP PUBLIC KEY BLOCK-----
 
-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
-jR/i1DG86lem3iBDXzXsZDn8R38=3D
-=3D2wuH
------END PGP PUBLIC KEY BLOCK-----
-
---------------ZuHhLaWGSyu994BrV7gofsrQ--
-
---------------MEG0JBht7zMjbG92DYZ0qhxr--
-
---------------mUBn580fjrlxklzUomy0ToCm
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmPp8sYFAwAAAAAACgkQsN6d1ii/Ey+z
-iggAlU6pTFIxYTeG+qBwseJU8IrA0YQD3rA/JBTv+2jARNlwIGkEwuZL5sAy6zYiIbGT6hADym+u
-WfKfojYMs2mEmylJBPQCgDWpW9K2924G7btecf3T5DPdqAeR9VkMMg2Y1eLPZ23xZA0Hc9xIreP8
-5pRH3T966LJOXzn5J4nDCrU8fwSgUhIKmeSNw5kToVTkJKpdFmjd0zfO94ymQmMGEm0n8m184iUk
-4O1SjtrSWG07d8UOqIvHlZpfGnabh6jY5h01oUS/i8DVqI76YT4/HBl/ze7I2T+zaUE1n7yuj8go
-6JpL9C/kOGxzovfKVvw7WbdEUt2YOMSVNBEiJrVYkw==
-=6d2w
------END PGP SIGNATURE-----
-
---------------mUBn580fjrlxklzUomy0ToCm--
+> -Kees
+>
+> > [...]
+> >Call trace:
+> > usercopy_abort+0x90/0x94
+> > __check_heap_object+0xa8/0x100
+> > __check_object_size+0x208/0x6b8
+> > io_openat2_prep+0xcc/0x2b8
+> > io_submit_sqes+0x338/0xbb8
+> > __arm64_sys_io_uring_enter+0x168/0x1308
+> > invoke_syscall+0x64/0x178
+> > el0_svc_common+0xbc/0x180
+> > do_el0_svc+0x48/0x110
+> > el0_svc+0x58/0x14c
+> > el0t_64_sync_handler+0x84/0xf0
+> > el0t_64_sync+0x190/0x194
+>
+>
+>
+> --
+> Kees Cook
