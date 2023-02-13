@@ -2,117 +2,132 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33449C05027
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Feb 2023 00:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2842C636D7
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Feb 2023 01:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229477AbjBMAfv (ORCPT
+        id S229683AbjBMBjZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 12 Feb 2023 19:35:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
+        Sun, 12 Feb 2023 20:39:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbjBMAfu (ORCPT
+        with ESMTP id S229468AbjBMBjY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 12 Feb 2023 19:35:50 -0500
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C3BEFBF;
-        Sun, 12 Feb 2023 16:35:49 -0800 (PST)
-Received: by mail-ot1-x330.google.com with SMTP id n25-20020a9d7119000000b0068bd8c1e836so3279417otj.3;
-        Sun, 12 Feb 2023 16:35:49 -0800 (PST)
+        Sun, 12 Feb 2023 20:39:24 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFD30BDCA;
+        Sun, 12 Feb 2023 17:39:23 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id s203so7613367ybc.11;
+        Sun, 12 Feb 2023 17:39:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xwk1XI4T0qnu1n1jfvnzGZ0v5aWuLGABipmobiXhSvg=;
-        b=ko+7ji5/CfLIBMNtmGWzudXwb2KQc8WHDKqDX6UsmbKxHtjGBm186rRMijEvnoC0Ui
-         zzaukjr0YTrfW23RBrhmoc0o2H8YIPo5jFXpUVN7Oq7UfdIHGLaxTBWmPPzGcFsHUlqg
-         idmb4ahWYcDJGitHWwgK5tG3gkethjw5IHo1YOIidmIKiGHiKNHAQIvdFIJoncCC1Gww
-         NeIoQjCWRsisIaIutyL20ogwpvugBZ1Eblwa8OD30BWx9JijWWzNO7EheeI3XvrXAUh7
-         So+wdqr23YVx0g1t/fmfJu35F936LCddjsGvWY15ooD8kXMiHud/0yiFgaeptb0lBuJ9
-         xqSg==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QPZk2zCrVPmYTZkYOvzJCIeVJJCKq6+j1pxvOWvVxbg=;
+        b=VPlOIKihz/PKsRVt1WTcr9X8Q80y/qgwwtjU8fp3nzIyPvCC5wF53UYHWMZ6abxjzK
+         q0THmi691IsWpFq1NmC/dKkRbWdRuq6iAO9DgiRVHw3ff1GsfQ/VrBpQIu4cz4TWuJ2V
+         H+/AydP0Iix0Z+juzKMkglbuQaO+WqqqVD35apHaLqxUDzQ+07Mi4EaRc3MMhILDsf7R
+         w8am13ZBpwzD2CQjl3kRTynt+Ou2KPXQK8SW8VT155UYIQCFmJC5u6A968St/fR3BIOW
+         0jmGGaYnwEb0zt7KTfrMaSYIgqbr6PbwQoygxi794V2XMmqkuoBQHSBPPpaw2pT2Lb+H
+         IfIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xwk1XI4T0qnu1n1jfvnzGZ0v5aWuLGABipmobiXhSvg=;
-        b=JsL46bbdyIoaRNDDRmFowC4j+PicbRHjXPdRsRiHXefZ61JkXoFhPLTsF4kI/EpEaS
-         IgcOxiapfvdLmoeinJCY5NBMaCN93KQu8poi5zZxFO/tE2c9Vh9rKGTukmirsBoI5hZz
-         NsenhRw+4dMICImBtAh0Wp4Qrs/dlmGkhKY7kirysXGFHLrn9nN2uTdBmgvHHbHm+0wa
-         w5Y5u8KqHcuaglCehroEB2b0YQnk//cgM89xHfMRzOnw/VB57erD2CbZB6q2Ndr4xsQk
-         D8NyfHQ/KAEMaCVPcKMTrGMRIdYqIVK0hlQ4wXZJSBrQ8r3/t5Lz4u9j+F0WeELX8GMo
-         6YGw==
-X-Gm-Message-State: AO0yUKUumrV32BVus66QrqeOXph68PksfhGN2qVgjWJaI2JtWbuVbh1N
-        pOQ9TRIScJtlr1n1XGAu6pQ=
-X-Google-Smtp-Source: AK7set9ePtxr+butsPUWLN6x1vNMrrqbFO6H5nZXoYU7jVLvrylRt44a7j9blEGfSdrMnisoyzx9rA==
-X-Received: by 2002:a05:6830:54:b0:684:c243:8584 with SMTP id d20-20020a056830005400b00684c2438584mr7001820otp.2.1676248548546;
-        Sun, 12 Feb 2023 16:35:48 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t15-20020a9d748f000000b0068d3ec1427bsm4649781otk.69.2023.02.12.16.35.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Feb 2023 16:35:47 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Sun, 12 Feb 2023 16:35:46 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] ACPICA: Replace fake flexible arrays with flexible
- array members
-Message-ID: <20230213003546.GA3280303@roeck-us.net>
-References: <20230127191621.gonna.262-kees@kernel.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QPZk2zCrVPmYTZkYOvzJCIeVJJCKq6+j1pxvOWvVxbg=;
+        b=sNOkJJQLSiy/7HYnHlTYFnj3tumiXP6E24JL+JCBFiSyCiahOvejHH5jFHfaYDBMna
+         T1lC7d+hxvyhZD7GJAhyXEPIQklqrqDTsTZ4PYTwACOUujBzWID4U7OQnKWbCGfDqmJH
+         xkzth3L812tInRdwrbt1NcdsilLeJW2DStCUoqc1mi1Ja/VkZDzY1qZY3JeCh63bf9BW
+         4JVi3Tk2HV3zAau+/PnAVA3GtmP194XnwvgNWdKRLZyl2+Y7IcC7I8b9abeSK8Ryg3j8
+         /z/wvbU5u1QhsgErGe+Nx/3KogSV1Wb9UrttvRkqjG0IjKkAabOo4hD1bVpFzGGBQSoq
+         f2KA==
+X-Gm-Message-State: AO0yUKWy0wKQ4DnKqfErpbztB1jNC7KXnxhJ42nMb0HS/IfFcQ0mQPNt
+        LF/UQLx54kXt60U7pSH59lhPKEcCKeuk9c1ZM2E=
+X-Google-Smtp-Source: AK7set/5Pze7wlBiSVJR3P/PqfM16NzhwqaLs1O2wEOMdzwBOeILv2xyKF5pvm8VZIHnHhlTj8Kd50/G2LSrnEny+J8=
+X-Received: by 2002:a25:9d0a:0:b0:8d7:814e:4e53 with SMTP id
+ i10-20020a259d0a000000b008d7814e4e53mr1077946ybp.564.1676252363158; Sun, 12
+ Feb 2023 17:39:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230127191621.gonna.262-kees@kernel.org>
+References: <20221219055431.22596-1-ashimida.1990@gmail.com>
+ <CAMZc-bzmACcpSePKxuuA=ug2+yik+Zo3-mfqr2OyZ-n_nT=OnQ@mail.gmail.com> <20230210161827.ze2dtrfugydlbw2p@ubuntu>
+In-Reply-To: <20230210161827.ze2dtrfugydlbw2p@ubuntu>
+From:   Hongtao Liu <crazylht@gmail.com>
+Date:   Mon, 13 Feb 2023 09:39:12 +0800
+Message-ID: <CAMZc-byL=O1cTPo7SKXJZ8K3nNskXwa3T+RXx-_6-dEQke-HQw@mail.gmail.com>
+Subject: Re: [RFC/RFT 0/3] Add compiler support for Control Flow Integrity
+To:     Dan Li <ashimida.1990@gmail.com>
+Cc:     gcc-patches@gcc.gnu.org,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Marco Elver <elver@google.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Song Liu <song@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uros Bizjak <ubizjak@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Yuntao Wang <ytcoode@gmail.com>,
+        Changbin Du <changbin.du@intel.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+On Sat, Feb 11, 2023 at 12:18 AM Dan Li <ashimida.1990@gmail.com> wrote:
+>
+> On 02/09, Hongtao Liu wrote:
+> > On Mon, Dec 19, 2022 at 3:59 PM Dan Li via Gcc-patches
+> > <gcc-patches@gcc.gnu.org> wrote:
+> > >
+> > > This series of patches is mainly used to support the control flow
+> > > integrity protection of the linux kernel [1], which is similar to
+> > > -fsanitize=kcfi in clang 16.0 [2,3].
+> > >
+> > > I hope that this feature will also support user-mode CFI in the
+> > > future (at least for developers who can recompile the runtime),
+> > > so I use -fsanitize=cfi as a compilation option here.
+> > >
+> > > Any suggestion please let me know :).
+> > Do you have this series as a branch somewhere that we could also try for x86?
+>
+> Hi Hongtao,
+>
+> I haven't tried this feature on the x86 platform, if possible, I will try it in
+> the next version.
+Thanks.
+>
+> Thanks,
+> Dan.
+>
+> > --
+> > BR,
+> > Hongtao
 
-On Fri, Jan 27, 2023 at 11:16:25AM -0800, Kees Cook wrote:
-> One-element arrays (and multi-element arrays being treated as
-> dynamically sized) are deprecated[1] and are being replaced with
-> flexible array members in support of the ongoing efforts to tighten the
-> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
-> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
-> 
-> Replace one-element array with flexible-array member in struct
-> acpi_resource_extended_irq. Replace 4-byte fixed-size array with 4-byte
-> padding in a union with a flexible-array member in struct
-> acpi_pci_routing_table.
-> 
-> This results in no differences in binary output.
-> 
-> Link: https://github.com/acpica/acpica/pull/813
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-This patch results in boot failures of 32-bit images.
-Reverting it fixes the problem.
 
-On the failing boot tests, I see messages such as
-
-ACPI: \_SB_.GSIA: Enabled at IRQ 117440528
-ERROR: Unable to locate IOAPIC for GSI 117440528
-ahci 0000:00:1f.2: PCI INT A: failed to register GSI
-
-ACPI: \_SB_.GSIG: Enabled at IRQ 117440534
-ERROR: Unable to locate IOAPIC for GSI 117440534
-8139cp 0000:00:02.0: PCI INT A: failed to register GSI
-
-Given that 117440534 == 0x7000016, that looks quite suspicious.
-Indeed, after reverting this patch, the messages are different.
-
-ACPI: \_SB_.GSIA: Enabled at IRQ 16
-ahci 0000:00:1f.2: AHCI 0001.0000 32 slots 6 ports 1.5 Gbps 0x3f impl SATA mode
-
-ACPI: \_SB_.GSIG: Enabled at IRQ 22
-8139cp 0000:00:02.0 eth0: RTL-8139C+ at 0xd0804000, 52:54:00:12:34:56, IRQ 22
-
-Guenter
+--
+BR,
+Hongtao
