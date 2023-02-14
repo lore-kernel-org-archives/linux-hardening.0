@@ -2,144 +2,225 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22642C636D4
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Feb 2023 20:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D10C05027
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Feb 2023 13:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjBMUGc (ORCPT
+        id S232981AbjBNNqu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Feb 2023 15:06:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42092 "EHLO
+        Tue, 14 Feb 2023 08:46:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbjBMUGb (ORCPT
+        with ESMTP id S233113AbjBNNqj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Feb 2023 15:06:31 -0500
-Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 957D91DBB2;
-        Mon, 13 Feb 2023 12:06:05 -0800 (PST)
-Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-15fe106c7c7so16484424fac.8;
-        Mon, 13 Feb 2023 12:06:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=qocm/KHxkvqzT8k/bpHmNW+PSj6cXLlUolt4tjyFl+E=;
-        b=JkXJi95vQcsUzo51+MeRB0MO/6Qnsyp3AuJzG2ty6VxKFBgQDgFKdF1o293R6YPlsZ
-         rnv4N/2w/+hqKbMZHbpWCdEvgL70QvGfuGTGp9v0rCJAibHY4c4iMc0u2otvYW/9P/UE
-         jQuvn7q93m78Dco7tkgtMwaM3X0x6TrqoAdriROQWGa7+BGueff+n5GcH0fNampXgjfa
-         zRYmJGMa+EE3sBt+5Od9fZp5HdQqQ6LFQ9KI0DfxdV/fRPdm3HD3vSropR6HWGCT5Te0
-         /aSrQM0k7iWmfrl2Ftqhan8ySkd1f5Bo8j63xDj4ZvStHaETCYLj/g3oGwbKuvDOc7ha
-         orSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qocm/KHxkvqzT8k/bpHmNW+PSj6cXLlUolt4tjyFl+E=;
-        b=PBEtf2LyTKIgvD/zj4WtOrl7iWwyLdaA0j2UBZIP05l7CC2+JNZu3P4dLpozx0bfv5
-         NEoVNmwjY7FZN1ssiD/gJGCDVKaxfEtSYCL8bc3S54kn3iCaUuQJkgcOqr5SyzGwlyFy
-         KJ6YLB27DN/V7ZOXfkt4B4xUrIjvQXYfkY45Dx7sH8AYvkcxx3vQuZXJzDcJJx1bA2u0
-         ZQotThK3hNoMNYnCbrd5lrBKeGoCk2F7CzwJ02sAsvImig/2DWh3wBkfxI0j/iFh6DDk
-         BiabMwKdP0mtS9tH7joe3WxLHjkbeqmLnYI01gA+XbnTimmtebaxPuEy44bUIseqLd4Y
-         msQw==
-X-Gm-Message-State: AO0yUKWytK1NyRFYR8AT16/ZrtYVdFOe0wXcTwAxCrh3GANMcj/f+W96
-        xGYGmhhu/i4+m/cfsTq8E1xy6w9pjMk=
-X-Google-Smtp-Source: AK7set9UILrrA7QwH0pt32603M6erZ5p3R4YEyLQJlSYXPCEaG47zmSnJIMsiNHBJf4F7aUriUCNvQ==
-X-Received: by 2002:a05:6870:d10d:b0:16a:b526:59a6 with SMTP id e13-20020a056870d10d00b0016ab52659a6mr13061134oac.43.1676318757902;
-        Mon, 13 Feb 2023 12:05:57 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h15-20020a4abb8f000000b004f21af81e0csm5176889oop.46.2023.02.13.12.05.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Feb 2023 12:05:57 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <e742a790-5322-666d-5f27-33a51445bd07@roeck-us.net>
-Date:   Mon, 13 Feb 2023 12:05:55 -0800
+        Tue, 14 Feb 2023 08:46:39 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5122C298CB;
+        Tue, 14 Feb 2023 05:45:48 -0800 (PST)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31E9TIcc018659;
+        Tue, 14 Feb 2023 13:44:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=Vp2fHwymSvhY5DxtYIGyE7DyxmKylLyMV1jfDjXcPmg=;
+ b=lOVHvWKes/MjMu7DRv/jMVoDWeugIlnKBQ0vI5IIKVSJ5Pjd61DDA2IwBWuJ8DEhjDM5
+ xEECB2K7O5mWv5w/gaXZysLwFLvksUhipEWR9iLIFpQK9SQN0Yf63BrHE+3ql5lYvEGk
+ e692FwSzOelH7BZNzpGwl5SYmqdA+QYg/4xSjgfEQaBpsGJAD10CDYru05/dR6F6YVwD
+ nFMVbr82rdKkSjgn0NwRnOVutLQP2yzOlDKGMvNPUgan3/FsrObtlWyAzOowoTNZNqAh
+ OruFFo9QHKL5QNIuijpxsdqhQUUqXkZEokK0xFgdL41lbpD6zo2BSNnUid8OVW636HIe nA== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nqtsut9w1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Feb 2023 13:44:14 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31EDiDvU023407
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Feb 2023 13:44:13 GMT
+Received: from [10.216.50.155] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 14 Feb
+ 2023 05:44:09 -0800
+Message-ID: <89cff864-2103-1dc1-b8c2-ad1ef1fbdf1e@quicinc.com>
+Date:   Tue, 14 Feb 2023 19:14:05 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2] ACPICA: Replace fake flexible arrays with flexible
- array members
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v5 2/2] pstore/ram: Rework logic for detecting ramoops
 Content-Language: en-US
-To:     Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org, linux-hardening@vger.kernel.org
-References: <20230127191621.gonna.262-kees@kernel.org>
- <20230213003546.GA3280303@roeck-us.net>
- <66C64DB0-94A2-47E8-932C-519544C5FE90@kernel.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <66C64DB0-94A2-47E8-932C-519544C5FE90@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     <linux-hardening@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+CC:     <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <corbet@lwn.net>
+References: <1675330081-15029-1-git-send-email-quic_mojha@quicinc.com>
+ <1675330081-15029-2-git-send-email-quic_mojha@quicinc.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <1675330081-15029-2-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: MBUL8prDP-pLNpOt_30UC69_FAQYiHuf
+X-Proofpoint-ORIG-GUID: MBUL8prDP-pLNpOt_30UC69_FAQYiHuf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-14_07,2023-02-14_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 phishscore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 adultscore=0 impostorscore=0
+ suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2212070000 definitions=main-2302140118
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/13/23 11:51, Kees Cook wrote:
-> On February 12, 2023 4:35:46 PM PST, Guenter Roeck <linux@roeck-us.net> wrote:
->> Hi,
->>
->> On Fri, Jan 27, 2023 at 11:16:25AM -0800, Kees Cook wrote:
->>> One-element arrays (and multi-element arrays being treated as
->>> dynamically sized) are deprecated[1] and are being replaced with
->>> flexible array members in support of the ongoing efforts to tighten the
->>> FORTIFY_SOURCE routines on memcpy(), correctly instrument array indexing
->>> with UBSAN_BOUNDS, and to globally enable -fstrict-flex-arrays=3.
->>>
->>> Replace one-element array with flexible-array member in struct
->>> acpi_resource_extended_irq. Replace 4-byte fixed-size array with 4-byte
->>> padding in a union with a flexible-array member in struct
->>> acpi_pci_routing_table.
->>>
->>> This results in no differences in binary output.
->>>
->>> Link: https://github.com/acpica/acpica/pull/813
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>
->> This patch results in boot failures of 32-bit images.
-> 
-> Weird -- I didn't see any binary differences. I'll investigate. What compiler and arch?
-> 
+Hi Kees/Rob,
 
-gcc 11.3, binutils 2.39, x86 (32-bit build). This is pretty much defconfig
-with ARCH=i386 and various debug options enabled.
+Since, we are not agreeing to put dynamics ramoops region support in 
+device tree.
 
-64-bit builds do not have the problem.
+In Qualcomm SoC, during reset the pstore static region did not get 
+preserved across boots and we have our own mechanism to collect regions
+if physical address and size is somehow passed to boot-firmware by 
+writing to some shared memory. So, we wanted to reuse the region
+supported by pstore(dmesg/console/ etc.) for that we wanted to this
+flexibility to put this region dynamically anywhere in the ram.
 
-Guenter
+This patch will help achieve the same . Can you suggest if this gets
+allowed.
 
-> -Kees
-> 
->> Reverting it fixes the problem.
->>
->> On the failing boot tests, I see messages such as
->>
->> ACPI: \_SB_.GSIA: Enabled at IRQ 117440528
->> ERROR: Unable to locate IOAPIC for GSI 117440528
->> ahci 0000:00:1f.2: PCI INT A: failed to register GSI
->>
->> ACPI: \_SB_.GSIG: Enabled at IRQ 117440534
->> ERROR: Unable to locate IOAPIC for GSI 117440534
->> 8139cp 0000:00:02.0: PCI INT A: failed to register GSI
->>
->> Given that 117440534 == 0x7000016, that looks quite suspicious.
->> Indeed, after reverting this patch, the messages are different.
-> 
-> Yeah, seems like a high byte not getting cleared. Hmm.
-> 
->>
->> ACPI: \_SB_.GSIA: Enabled at IRQ 16
->> ahci 0000:00:1f.2: AHCI 0001.0000 32 slots 6 ports 1.5 Gbps 0x3f impl SATA mode
->>
->> ACPI: \_SB_.GSIG: Enabled at IRQ 22
->> 8139cp 0000:00:02.0 eth0: RTL-8139C+ at 0xd0804000, 52:54:00:12:34:56, IRQ 22
->>
->> Guenter
-> 
-> 
+-Mukesh
 
+On 2/2/2023 2:58 PM, Mukesh Ojha wrote:
+> The reserved memory region for ramoops is assumed to be at a fixed
+> and known location when read from the devicetree. This is not desirable
+> in an environment where it is preferred the region to be dynamically
+> allocated at runtime, as opposed to being fixed at compile time.
+> 
+> Also, some of the platforms might be still expecting dedicated
+> memory region for ramoops node where the region is known beforehand
+> and platform_get_resource() is used in that case.
+> 
+> So, add logic to detect the start and size of the ramoops memory
+> region by looking up reserved memory region with of_reserved_mem_lookup()
+> api when platform_get_resource() fails also update the ramoops
+> documentation.
+> 
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com> > ---
+> Changes in v5:
+>   - Removed the CC list from the commit text.
+> 
+> Changes in v4:
+>   - Updated the minor change in documentation.
+> 
+> Changes in v3:
+>   - Merged 2/3 and 3/3 into one.
+>     https://lore.kernel.org/lkml/1673611126-13803-2-git-send-email-quic_mojha@quicinc.com/
+>     https://lore.kernel.org/lkml/1673611126-13803-3-git-send-email-quic_mojha@quicinc.com/
+> 
+> Changes in v2:
+>   - Addressed the comments made by kees and Guilherme in v1.
+> 
+> 
+>   Documentation/admin-guide/ramoops.rst | 25 ++++++++++++++++++++++---
+>   fs/pstore/ram.c                       | 18 +++++++++++++-----
+>   2 files changed, 35 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/ramoops.rst b/Documentation/admin-guide/ramoops.rst
+> index e9f8514..3586d15 100644
+> --- a/Documentation/admin-guide/ramoops.rst
+> +++ b/Documentation/admin-guide/ramoops.rst
+> @@ -16,8 +16,9 @@ survive after a restart.
+>   Ramoops concepts
+>   ----------------
+>   
+> -Ramoops uses a predefined memory area to store the dump. The start and size
+> -and type of the memory area are set using three variables:
+> +Ramoops uses both predefined and dynamically memory area to store the dump.
+> +The start and size and type of the memory area are set using three
+> +variables:
+>   
+>     * ``mem_address`` for the start
+>     * ``mem_size`` for the size. The memory size will be rounded down to a
+> @@ -70,7 +71,8 @@ Setting the ramoops parameters can be done in several different manners:
+>   
+>    B. Use Device Tree bindings, as described in
+>    ``Documentation/devicetree/bindings/reserved-memory/ramoops.yaml``.
+> - For example::
+> +
+> + Example of statically reserved ramoops region::
+>   
+>   	reserved-memory {
+>   		#address-cells = <2>;
+> @@ -85,6 +87,23 @@ Setting the ramoops parameters can be done in several different manners:
+>   		};
+>   	};
+>   
+> + Example of dynamically reserved ramoops region::
+> +
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		ramoops_region: ramoops {
+> +			compatible = "ramoops";
+> +			alloc-ranges = <0x00000000 0xffffffff>;
+> +			size = <0 0x100000>;
+> +			record-size = <0x4000>;
+> +			console-size = <0x4000>;
+> +		};
+> +	};
+> +
+> +
+>    C. Use a platform device and set the platform data. The parameters can then
+>    be set through that platform data. An example of doing that is:
+>   
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index ade66db..17c9f46 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/compiler.h>
+>   #include <linux/of.h>
+>   #include <linux/of_address.h>
+> +#include <linux/of_reserved_mem.h>
+>   
+>   #include "internal.h"
+>   #include "ram_internal.h"
+> @@ -643,6 +644,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>   {
+>   	struct device_node *of_node = pdev->dev.of_node;
+>   	struct device_node *parent_node;
+> +	struct reserved_mem *rmem;
+>   	struct resource *res;
+>   	u32 value;
+>   	int ret;
+> @@ -651,13 +653,19 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>   
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	if (!res) {
+> -		dev_err(&pdev->dev,
+> -			"failed to locate DT /reserved-memory resource\n");
+> -		return -EINVAL;
+> +		rmem = of_reserved_mem_lookup(of_node);
+> +		if (!rmem) {
+> +			dev_err(&pdev->dev,
+> +				"failed to locate DT /reserved-memory resource\n");
+> +			return -EINVAL;
+> +		}
+> +		pdata->mem_size = rmem->size;
+> +		pdata->mem_address = rmem->base;
+> +	} else {
+> +		pdata->mem_size = resource_size(res);
+> +		pdata->mem_address = res->start;
+>   	}
+>   
+> -	pdata->mem_size = resource_size(res);
+> -	pdata->mem_address = res->start;
+>   	/*
+>   	 * Setting "unbuffered" is deprecated and will be ignored if
+>   	 * "mem_type" is also specified.
