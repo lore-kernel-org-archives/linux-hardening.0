@@ -2,111 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99681C05027
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Feb 2023 16:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 479DFC61DA4
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Feb 2023 17:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232787AbjBNQ6T (ORCPT
+        id S233009AbjBNR17 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Feb 2023 11:58:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49248 "EHLO
+        Tue, 14 Feb 2023 12:27:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231689AbjBNQ54 (ORCPT
+        with ESMTP id S233007AbjBNR14 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Feb 2023 11:57:56 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F18455BC;
-        Tue, 14 Feb 2023 08:57:54 -0800 (PST)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31EGYEos020143;
-        Tue, 14 Feb 2023 16:57:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2022-7-12;
- bh=IqlobWYvmWPrvWZTU2e2fAXIdeYj2OGmeRqyvvCSQpE=;
- b=FzbT86fH5bE+/3SZuXlo86oPJYcLF6o3Tyowc9D+Y8WDb1Z+cIYtzHhkZWNEg+ae/SpH
- g0Q152QaR/C9+Y7lL1Yu9r5l7cmH8tNn6zbrRH+8yVp+KcYAb5d3jgSB0W9bLxmzlaGY
- iETi0a/tsye6Ox8rrMeRlrfYEblQ73zNlRdpomglu2SVAdEZfwTbBQxBMkVJihNNohIP
- 9l8iooelPLXmu7wFIVvnIm+SK3jPowdVH2IA3FZZFzsRUIlAXUg0aFi31oH5HpIaOrq5
- WFaDCzvyRzZfUcVtIEKck/3kMOZRc4l9TjkYGRIGTxw966vU9FDf0tG2hfv/F7hb9gNt nw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3np3jtwwx2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Feb 2023 16:57:45 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 31EGtBfA009766;
-        Tue, 14 Feb 2023 16:57:43 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3np1f5uuhs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Feb 2023 16:57:43 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31EGuHon039739;
-        Tue, 14 Feb 2023 16:57:43 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3np1f5uuff-7;
-        Tue, 14 Feb 2023 16:57:43 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org, stable@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: aacraid: Allocate cmd_priv with scsicmd
-Date:   Tue, 14 Feb 2023 11:57:33 -0500
-Message-Id: <167639371107.486235.10067171407828975609.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230128000409.never.976-kees@kernel.org>
-References: <20230128000409.never.976-kees@kernel.org>
+        Tue, 14 Feb 2023 12:27:56 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33EAB3C38
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Feb 2023 09:27:54 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id j184so5755166pfg.10
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Feb 2023 09:27:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=4z/tD1lWs3iqZhTLhoCdz9qidIMqh/iqk3ouPbYGchw=;
+        b=Ys1x9uEKNmx/xFXtuBky5R7Pot5G5/ZB5NHSiX9Bho0s9k5YLk4wx+ZpSMP+I5KiAr
+         8Dml4HdVk4F/JAibrLkif6ueAnnS6FBztP4o3wd2Wao5PfyIoNxZFPq+kreVvXNIyLO2
+         TbAgZU2P8n6BYV1hcN4UKYDA4kjEKE6mWT3lw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4z/tD1lWs3iqZhTLhoCdz9qidIMqh/iqk3ouPbYGchw=;
+        b=Jf4rX2UYbQw2d/MCkn/+xhQexYZmUHmkTIJVI3hG8cIpSvwpOMK1MApMY6E++uPNXm
+         ubysH05Cj9t0Hn9qSNl3LukF7RpyDUoNq672UWkQY77H7u/dpaP8ihALL9P/w2WYQNd0
+         vWMPBrmwjn1rlyRws5mltHvMqOY5YgoEzqHKLLd5MkU8pbDw1127R05rQnSNARhuR54U
+         0UNwsnt2GwnrL3oPmGTMSei63rrBPREROn5l8dmPlbfY40b1GlQk2kYh7hb/DO4tQ7Xd
+         bRn6ol37zNJmJDHSixpxUdEHoXp3IDgcVoJ8OZ8vSS6YCHUs1NqOg4nyA4HoxVQ0YSUY
+         8Ggw==
+X-Gm-Message-State: AO0yUKXeMbgn3rySCmL8AIroU9y0+lyaj8e9MT5jTewA/oz/j86MupiB
+        NsME2p+ZTkLRaJmQLfe15/jCVA==
+X-Google-Smtp-Source: AK7set+DsC+4BbHcXcFv0KKcntwhdI7NVFQqT87ovOltDjEphAAcDPL60hNtFjP0y7pHEStkb0s/Bg==
+X-Received: by 2002:aa7:9f12:0:b0:5a8:515a:eb9f with SMTP id g18-20020aa79f12000000b005a8515aeb9fmr2416399pfr.2.1676395673638;
+        Tue, 14 Feb 2023 09:27:53 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id f5-20020aa78b05000000b005a8512c9988sm10345490pfd.93.2023.02.14.09.27.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Feb 2023 09:27:53 -0800 (PST)
+Message-ID: <63ebc499.a70a0220.9ac51.29ea@mx.google.com>
+X-Google-Original-Message-ID: <202302140916.@keescook>
+Date:   Tue, 14 Feb 2023 09:27:52 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Halbuer <halbuer@sra.uni-hannover.de>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Mel Gorman <mgorman@techsingularity.net>
+Subject: Re: [PATCH] mm: reduce lock contention of pcp buffer refill
+References: <20230201162549.68384-1-halbuer@sra.uni-hannover.de>
+ <20230202152501.297639031e96baad35cdab17@linux-foundation.org>
+ <70fc9040-f976-0314-46e8-d9ddad82ccf5@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-14_11,2023-02-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
- suspectscore=0 mlxscore=0 spamscore=0 mlxlogscore=838 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302140144
-X-Proofpoint-ORIG-GUID: pGBas5kpAoXa69N5bKbXhYDo1PvarHjU
-X-Proofpoint-GUID: pGBas5kpAoXa69N5bKbXhYDo1PvarHjU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <70fc9040-f976-0314-46e8-d9ddad82ccf5@suse.cz>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 27 Jan 2023 16:04:13 -0800, Kees Cook wrote:
+On Wed, Feb 08, 2023 at 11:45:14AM +0100, Vlastimil Babka wrote:
+> But I wonder also what kernel hardening folks think here - are the hardened
+> kernels usually built with DEBUG_VM or debug_pagealloc enabled, or would you
+> like to hook some other kernel option for keeping the checks on page/alloc
+> free active? And should those checks be done on every alloc/free, including
+> pcplist cached allocations?
 
-> The aac_priv() helper assumes that the private cmd area immediately
-> follows struct scsi_cmnd. Allocate this space as part of scsicmd,
-> else there is a risk of heap overflow. Seen with GCC 13:
-> 
-> ../drivers/scsi/aacraid/aachba.c: In function 'aac_probe_container':
-> ../drivers/scsi/aacraid/aachba.c:841:26: warning: array subscript 16 is outside array bounds of 'void[392]' [-Warray-bounds=]
->   841 |         status = cmd_priv->status;
->       |                          ^~
-> In file included from ../include/linux/resource_ext.h:11,
->                  from ../include/linux/pci.h:40,
->                  from ../drivers/scsi/aacraid/aachba.c:22:
-> In function 'kmalloc',
->     inlined from 'kzalloc' at ../include/linux/slab.h:720:9,
->     inlined from 'aac_probe_container' at ../drivers/scsi/aacraid/aachba.c:821:30:
-> ../include/linux/slab.h:580:24: note: at offset 392 into object of size 392 allocated by 'kmalloc_trace'
->   580 |                 return kmalloc_trace(
->       |                        ^~~~~~~~~~~~~~
->   581 |                                 kmalloc_caches[kmalloc_type(flags)][index],
->       |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   582 |                                 flags, size);
->       |                                 ~~~~~~~~~~~~
-> 
-> [...]
+What we're depending on for heap-related (i.e. both page allocator and
+slab) hardening currently is:
 
-Applied to 6.3/scsi-queue, thanks!
+- CONFIG_SLAB_FREELIST_HARDENED
+	- pointer obfuscation (SLUB) -- freelist_ptr(), set_freepointer()
+	- pool membership verification (SLUB and SLAB) -- cache_from_obj()
+	- consecutive double free detection (SLUB and SLAB) -- __free_one()
+- allocation order randomization
+	- CONFIG_SLAB_FREELIST_RANDOM (SLUB and SLAB)
+	- CONFIG_SHUFFLE_PAGE_ALLOCATOR (page allocator)
+- memory wiping (both slab and page allocator)
+	- init_on_alloc / CONFIG_INIT_ON_ALLOC_DEFAULT_ON
+	- init_on_free / CONFIG_INIT_ON_FREE_DEFAULT_ON
 
-[1/1] scsi: aacraid: Allocate cmd_priv with scsicmd
-      https://git.kernel.org/mkp/scsi/c/7ab734fc7598
+I'd be nice to gain slab redzone verification, but that seems expensive
+enough that anyone interested in that level of hardening has likely
+turned on full KASAN.
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Kees Cook
