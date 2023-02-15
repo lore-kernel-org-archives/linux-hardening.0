@@ -2,105 +2,151 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B16C6FA99
-	for <linux-hardening@archiver.kernel.org>; Wed, 15 Feb 2023 22:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291CFC636D6
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Feb 2023 22:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbjBOWeE (ORCPT
+        id S229839AbjBOWlU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 15 Feb 2023 17:34:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36882 "EHLO
+        Wed, 15 Feb 2023 17:41:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbjBOWeB (ORCPT
+        with ESMTP id S229746AbjBOWlT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 15 Feb 2023 17:34:01 -0500
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5076337B6D
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Feb 2023 14:34:00 -0800 (PST)
-Received: by mail-il1-x129.google.com with SMTP id v13so172245iln.4
-        for <linux-hardening@vger.kernel.org>; Wed, 15 Feb 2023 14:34:00 -0800 (PST)
+        Wed, 15 Feb 2023 17:41:19 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 585C722004
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Feb 2023 14:41:17 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id m2so209603plg.4
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Feb 2023 14:41:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=glq2V86DV/XIT2xAdhHc3LZ7W3YqMn+eHqv8u2YnMs8=;
-        b=jafmjIUSQwdQGTkpdGWZZjLCzunKS2ryf5YEJI/DkWCeRLKgq8RyQv+/2tSq6zDttr
-         rNoW4TRxgKUpe54vqM9AmNg/j0o3A4bx6wyEwYY3ExHKfOb2x3hOjUSA1EotT0Ja27nr
-         XbLB7Oz5APUOQyujdvvGe/cLKSqUWM0d9BXho=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UZFupiFq/4KrFzWRVb2kBs6eN4fR4fQR35ZoSgg2YLo=;
+        b=H9IolviLahg+UekQXAEExIooMi5CIWRFTU2XQFZEiscWIdecTIS6q4rPm1IjGn2bHb
+         0eLwvzEwtXX+oPynpDpbmTbYTOTatZ2FYokF3EBBT84M2zZvIaqDMLgUMs9g84Ye8L6X
+         YFE5a1tUERoSv83IgwbRMrLHEzuh8ltuu2L6E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=glq2V86DV/XIT2xAdhHc3LZ7W3YqMn+eHqv8u2YnMs8=;
-        b=JLAGfC6PwEknJpSeupgM+Pwr6vBQmJnsm64aGv7ElgNHQTHxsYNNooO1XE5xym1aad
-         1ucYDcV6QnjMHZxHEvVqhfw1uFH8gtJp76jMy/dnsBIu9AHX3H0ulEMsEiq/iB3KAyDk
-         x3cUQAlTI/J5trn5RYyjfC11aritLdS2vu7qvkDzGxKTlUbQ80ljvC5LYwu6aAcb6LVM
-         ZKVVjdv3XwnUC3CdJ5MRFOCBgl3EJH2zIEFkbzSwr+LFzaGCt0d6O3E5dEd7HqCZeHAy
-         XJ/08+HV+gcTnYK44EtxEZcWkhSQjsOyORGBgT9MwcN2AjqaGIVQxbAWZntk8fZN3zKM
-         7Mpg==
-X-Gm-Message-State: AO0yUKVE1RwRn91O1UpFTZ5PpcZMuUh4dD/I3kVcEBcnPjgTwiC9v5P2
-        W6Zp3aCzIl7auYlPKctvBBgT7A==
-X-Google-Smtp-Source: AK7set9qLvATTMAF3X5InVYtcDXlTGsbfdkd029j3+Afaa3eJzjf8D8MQHpdxM9eNj5oz98WH5ot0A==
-X-Received: by 2002:a05:6e02:1b08:b0:314:1aec:c7a9 with SMTP id i8-20020a056e021b0800b003141aecc7a9mr3730923ilv.23.1676500440035;
-        Wed, 15 Feb 2023 14:34:00 -0800 (PST)
-Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:6299:179b:a6e4:be59])
-        by smtp.gmail.com with ESMTPSA id b15-20020a92c14f000000b003141eddd283sm1131489ilh.22.2023.02.15.14.33.59
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UZFupiFq/4KrFzWRVb2kBs6eN4fR4fQR35ZoSgg2YLo=;
+        b=GzbNoKHj6ImDaB7oBTIcoiUhCGJzKSZ+TkT6z8ETJUU8HeXjGrDgAAJBn7PdKugOCJ
+         v4PV5QbYvqnfwwjbYsrzbOPnqAS23eDrg/tnizA31fsBaYZWe+XQhjIpPyH3y1goo6nW
+         WJOsAo3T4kpC0JFoerxmm2dtBT2kglFV9Eq102Tg6BGDbgL+OVVXxQwy44lO2OePPabB
+         VooOE3SjuJPEvYUgOvmwDpgCpcgzmtx7UO3saqI3fvavjDeXdRXwoDJ/8uKGezMnDqcQ
+         HnrSScn0PduPcV8ABgz2eKVLLA2TADkI2ZgYjzZvIKLbkoDBTA/OftTk0dDYR0hMHeFW
+         LMFQ==
+X-Gm-Message-State: AO0yUKVTyiAZ5PaUfMx41qCpxjwaM2k6NZMajFFusKKQGUu0rLO87YH6
+        eJ5qQEZuOMivbLUDPNvdEkJNzA==
+X-Google-Smtp-Source: AK7set+ESHLvLprT78VX57LGMFVGWa5ezLj0nQ6OjMNOjQARTMpt90pjNQIEkK59KR3uXsgXZDzF5w==
+X-Received: by 2002:a17:903:11c6:b0:19a:7ef5:4c98 with SMTP id q6-20020a17090311c600b0019a7ef54c98mr4811187plh.2.1676500876782;
+        Wed, 15 Feb 2023 14:41:16 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p11-20020a170902a40b00b0019460ac7c6asm12547885plq.283.2023.02.15.14.41.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Feb 2023 14:33:59 -0800 (PST)
-From:   Ross Zwisler <zwisler@chromium.org>
-X-Google-Original-From: Ross Zwisler <zwisler@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Tycho Andersen <tycho@tycho.pizza>,
-        linux-hardening@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2 3/6] leaking_addresses: also skip canonical ftrace path
-Date:   Wed, 15 Feb 2023 15:33:47 -0700
-Message-Id: <20230215223350.2658616-4-zwisler@google.com>
-X-Mailer: git-send-email 2.39.1.637.g21b0678d19-goog
-In-Reply-To: <20230215223350.2658616-1-zwisler@google.com>
-References: <20230215223350.2658616-1-zwisler@google.com>
+        Wed, 15 Feb 2023 14:41:16 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Arend van Spriel <aspriel@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Colin Ian King <colin.i.king@gmail.com>,
+        Brian Henriquez <brian.henriquez@cypress.com>,
+        linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, netdev@vger.kernel.org,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] wifi: brcmfmac: p2p: Introduce generic flexible array frame member
+Date:   Wed, 15 Feb 2023 14:41:14 -0800
+Message-Id: <20230215224110.never.022-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2984; h=from:subject:message-id; bh=NH05WGlz+NfU8MmAO7fhDCoD/bk5xcg8PiXevXOGYSQ=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj7V+KSkepxl6m0w6HQmTbuhMT6gFMTrKHHEn1r560 zilCZCGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY+1figAKCRCJcvTf3G3AJlg6D/ 9qMIaHwoHnLx1HJ4KX7Nv5fk/N7aOg/N9My3M1Wz1uzob6c6m1wNf8ByQ233hu0dvdVGkcuou6PDGZ XqeqxOOKQJ+sJcE+md+OPHeYzuQl5dZ+DgPE623iyEDeCxSrxBWgN62zF2o1OPrxWYIpT+ggxyItoq h2Nve+50UFQV1kk5Lco1P5dkNmPNUnbxZj3OFO03dgb379EkMrRy5/e1I7PaPV5QqLKCfwFbQ0Ak56 +3XQvas7yA0vXG5FmXOg4LOliAB8mNpxbSt2BBKUt34yUw8KH4nAogrqtk+VqKfHR+NvXHN9Bppy8T EaMNN0FnfYujqSpVcvlnrrj8yzaINe+I019+ct+FO76MniG5GL51c9bwnGl7jkdl4HcfygL9ZQTKs2 U0GqvMxtzZNTxVTaxgVxG3HK5Ejk0mmsEZMsggjrLlv1nN8W6tylgLay3VCJi3OpwoJsHRKPNN8RzT Mxd85Tah3an4b7Y9SNsKN0kwivhsWHVbuSsZXoVkwkYeciFom7QfqXu5TkHPnOvXUE1bw1YMgHAnyc HgyzyE59M1BvyYRX9LFFr8EHhHyV4pzQKjKxmLWEmPzvZqn96itCaD5FGQYAoj3sO/9CeslfAEigth i8O+/02BUNLmAExMGZFGPTCc2m2cDuo/7EGQ3FapqrmMPbQoFpFsFpK97+jA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+Silence run-time memcpy() false positive warning when processing
+management frames:
 
-But, from Documentation/trace/ftrace.rst:
+  memcpy: detected field-spanning write (size 27) of single field "&mgmt_frame->u" at drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1469 (size 26)
 
-  Before 4.1, all ftrace tracing control files were within the debugfs
-  file system, which is typically located at /sys/kernel/debug/tracing.
-  For backward compatibility, when mounting the debugfs file system,
-  the tracefs file system will be automatically mounted at:
+Due to this (soon to be fixed) GCC bug[1], FORTIFY_SOURCE (via
+__builtin_dynamic_object_size) doesn't recognize that the union may end
+with a flexible array, and returns "26" (the fixed size of the union),
+rather than the remaining size of the allocation. Add an explicit
+flexible array member and set it as the destination here, so that we
+get the correct coverage for the memcpy().
 
-  /sys/kernel/debug/tracing
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=101832
 
-scripts/leaking_addresses.pl only skipped this older debugfs path, so
-let's add the canonical path as well.
-
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Acked-by: Tycho Andersen <tycho@tycho.pizza>
+Reported-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Arend van Spriel <aspriel@gmail.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Kalle Valo <kvalo@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Colin Ian King <colin.i.king@gmail.com>
+Cc: Brian Henriquez <brian.henriquez@cypress.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: SHA-cyfmac-dev-list@infineon.com
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- scripts/leaking_addresses.pl | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c | 4 ++--
+ include/linux/ieee80211.h                              | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
-index 8f636a23bc3f..e695634d153d 100755
---- a/scripts/leaking_addresses.pl
-+++ b/scripts/leaking_addresses.pl
-@@ -61,6 +61,7 @@ my @skip_abs = (
- 	'/proc/device-tree',
- 	'/proc/1/syscall',
- 	'/sys/firmware/devicetree',
-+	'/sys/kernel/tracing/trace_pipe',
- 	'/sys/kernel/debug/tracing/trace_pipe',
- 	'/sys/kernel/security/apparmor/revision');
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+index e975d10e6009..4d0db7107e65 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+@@ -1466,8 +1466,8 @@ int brcmf_p2p_notify_action_frame_rx(struct brcmf_if *ifp,
+ 			       ETH_ALEN);
+ 	memcpy(mgmt_frame->sa, e->addr, ETH_ALEN);
+ 	mgmt_frame->frame_control = cpu_to_le16(IEEE80211_STYPE_ACTION);
+-	memcpy(&mgmt_frame->u, frame, mgmt_frame_len);
+-	mgmt_frame_len += offsetof(struct ieee80211_mgmt, u);
++	memcpy(mgmt_frame->u.frame, frame, mgmt_frame_len);
++	mgmt_frame_len += offsetof(struct ieee80211_mgmt, u.frame);
+ 
+ 	freq = ieee80211_channel_to_frequency(ch.control_ch_num,
+ 					      ch.band == BRCMU_CHAN_BAND_2G ?
+diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
+index 80d6308dea06..990d204d918a 100644
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -1356,6 +1356,7 @@ struct ieee80211_mgmt {
+ 				} __packed wnm_timing_msr;
+ 			} u;
+ 		} __packed action;
++		DECLARE_FLEX_ARRAY(u8, frame); /* Generic frame contents. */
+ 	} u;
+ } __packed __aligned(2);
  
 -- 
-2.39.1.637.g21b0678d19-goog
+2.34.1
 
