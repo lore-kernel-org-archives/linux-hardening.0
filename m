@@ -2,134 +2,185 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD06C61DA4
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Feb 2023 15:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EC8C636CC
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Feb 2023 18:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbjBRPTl (ORCPT
+        id S229672AbjBRSi5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 18 Feb 2023 10:19:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
+        Sat, 18 Feb 2023 13:38:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjBRPTk (ORCPT
+        with ESMTP id S229605AbjBRSi4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 18 Feb 2023 10:19:40 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C3715546;
-        Sat, 18 Feb 2023 07:19:39 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id b22so1367224lfv.5;
-        Sat, 18 Feb 2023 07:19:39 -0800 (PST)
+        Sat, 18 Feb 2023 13:38:56 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C237712BED
+        for <linux-hardening@vger.kernel.org>; Sat, 18 Feb 2023 10:38:54 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id q25so607311pgk.0
+        for <linux-hardening@vger.kernel.org>; Sat, 18 Feb 2023 10:38:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7q2Wg8S1rsfm30D7lgChP+RGLUmdPuKtGfy28d6nd2c=;
-        b=Q+twZu/73PHUCZPn32nq0NgKH/rksz15uwZZFZqEIxVuq7cBUyB91DH9OFAkMhBZOZ
-         25h4g1NLayShc27rvbNVkiohaUxWtzE8Ggc//EMsxd0HqhYXAftPtFojX5+lMfYHVmZP
-         PXwIF10DE36X0lJNd/UsoMy2vlQlsUWT723LH09UTQtZIZ5aY8aqRnWSOc8UiAPiTTHL
-         6fIoa9Gu54FZZWDRIEkiZg9RjNn0g++x8pTqJQIWfc0noFCtrvbfU715AePLjKoxCX/E
-         If9AQx/7mZzIXoR9JgsZxE6WL3X9vbb3g5vMu2bVZDVCz12eYAHutrUL1o0GgMiFB4sZ
-         LJgQ==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iTKepua2kscIuNx6W8BDWIkKKvbZQVVeOdAhbCfO3SE=;
+        b=Qr1HSZdE5f37YaHkVPA3tyWNxnLYtwoHRGIrYCxG0ZpB9c/gk2gOp4/kWGR2xhedzD
+         o3h/1htLKKVe6YmdGl9eXPNgzXTr6WsV9jYr4L6koLUCC3TpOmTYQwYhfGrQB5dZmN+J
+         S/cmEbce17loFmkRuhZSKRwSV44Kee71UcC54=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7q2Wg8S1rsfm30D7lgChP+RGLUmdPuKtGfy28d6nd2c=;
-        b=MR5cPGrk3ycy9gZudMWBmZEpeiMS6ckbbna4uvnRwQrPqf36dMa4hC/ZvUEvpQPKwo
-         o65TuVGzs4vrk57pi8mHY77wsKkSLPW4gy6MA4TYXKQG9NP816JB3bL3c86gni0B5UNd
-         4BsF/jcpH/hwAH4uxNVtLUpVrhCayvGRayqon0/4r7H7FcHzeCKKY1+7TvCR7egxe37T
-         X+OWjOtp8zfQGS4OzJFiAST2/gGTfGS8JdGwxNMjL/hP/HggBGEg70Mq10oQVDw4XCRd
-         WjXb0kwoyjvxHtsA+u6XKOTHxLf4yWfzRkgqJzFWnas5wcNLK6mgyAhqF6L2MMhFKBY4
-         UxsA==
-X-Gm-Message-State: AO0yUKU6aT8dTP7DIfV/S44m6WoHAI09YJMXDFfzZLJmzvMlbI/VLdH/
-        1fG4NCscwiOKCaMGty8m+ohNDiXVbXzrLFm/LZhZRaON
-X-Google-Smtp-Source: AK7set9O89dNDCkMb+Ei/ZIH686OBETFP2ZLwTaSTkzyJBNq3dib4fxm87Hu9j1qs5CFBv5i1vz4rqvnBjNPBHRTCvQ=
-X-Received: by 2002:a05:6512:501:b0:4d5:ca32:7bc3 with SMTP id
- o1-20020a056512050100b004d5ca327bc3mr1349945lfb.10.1676733577507; Sat, 18 Feb
- 2023 07:19:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20230218002436.give.204-kees@kernel.org> <CAKYAXd9Y+wCbAy3a_W55fgb2Sy7M9UQUhR+XujaTKZ255YCjGg@mail.gmail.com>
-In-Reply-To: <CAKYAXd9Y+wCbAy3a_W55fgb2Sy7M9UQUhR+XujaTKZ255YCjGg@mail.gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Sat, 18 Feb 2023 09:19:26 -0600
-Message-ID: <CAH2r5msJ1ZogypaiiLQ=STiroEXULwJr71_ta_+ZamXSqzxgpA@mail.gmail.com>
-Subject: Re: [PATCH v3] smb3: Replace smb2pdu 1-element arrays with flex-arrays
-To:     Namjae Jeon <linkinjeon@kernel.org>
+        bh=iTKepua2kscIuNx6W8BDWIkKKvbZQVVeOdAhbCfO3SE=;
+        b=t9/FxgUnZhaa6f3YYuZ9PJeNI30SiAF6qVlzxLnPQadPMJIv/EXTpF5CfTFw244jPP
+         eeYdxrt7Yhoax2Ej1q0xYvKl4VYLN7Xt6DDjP/1IrFaMdZBLIsIqI6Lroc46rRQ9ofdU
+         y2MKDOIlLhEs3iMGnsCOcm+v5Mgv/fT3FvYlsTN0cfkI54Z1sw+0uEGd0CWnYIUP5gQS
+         IHJh4lxO/DbmotCeDD0YcjknDI+3TDBrJq14zCU1Fbhfci01HFA24uyOQjbk4cPlotN5
+         2KO1SIYcGEnWwO9A80fpNBUKBvGVewSrPjIhKYqKztmnTuoA7QFRNSI69V3OY2m3nIIa
+         O7Ug==
+X-Gm-Message-State: AO0yUKXAYuT4aFwUDPpCGze9y8UfiQ+BEjdY2gMGjT48IxDCIbIYlQ72
+        WobzJ4rZpFKmLtySkR1P31CtBg==
+X-Google-Smtp-Source: AK7set+Gcx6ssrL1CUCt4P4+IZA7KQVyN/WF/pbSuKZGBRUq406XL4EeLCrbyHjWeAeUhK45htmQXg==
+X-Received: by 2002:a62:1753:0:b0:5a8:d364:62ab with SMTP id 80-20020a621753000000b005a8d36462abmr4793539pfx.17.1676745534045;
+        Sat, 18 Feb 2023 10:38:54 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h5-20020a62b405000000b005ae8e94b0d5sm1402624pfn.107.2023.02.18.10.38.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 18 Feb 2023 10:38:53 -0800 (PST)
+From:   Kees Cook <keescook@chromium.org>
+To:     Tariq Toukan <tariqt@nvidia.com>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Josef Oskera <joskera@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] net/mlx4_en: Introduce flexible array to silence overflow warning
+Date:   Sat, 18 Feb 2023 10:38:50 -0800
+Message-Id: <20230218183842.never.954-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4923; h=from:subject:message-id; bh=L+7mU/t7sXYwZ0oG57R81et2rDvNWl61qF2TMIxSz1g=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj8Rs6xlqKlp/Ege1Wry6d43MG23RfmhUBBkucpD8j FHxqogeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY/EbOgAKCRCJcvTf3G3AJk/bD/ 4zEc1/cSH6OhQfMpSJnszACML9ZMpDTAHpqhLxshfcauGOHxH8Mbbny9Hfk1GbiSs3VNuiLLibJ9Ea MNQMf03saSs6SUHdtpKnjT9pBQe0Mn346nS1bH7/JCPjFDgmG/0sgf7eEN/v8Idpbj7bji81Jnguae jSUGZbNky0J43bqynylqQ4z/GOrYx/RWtyTRPQw7MKc+sHM+rYELvYs33Z8c/19OZpFzs5BfJXnPaB pHgNkYlYc1mYktPxe8SYFw4c3kadZ3cwx8WohmAffJ1gcTSipH2xA0Qcz11+ij1m2kbfQPw2NzJXt3 cOvOHe4CVgwLR4s0OxyRf6L9A+eDqsuzMJFPbxJcokgaJV580FBIQxz8Al8AGV4kvDVD5KbxgXmgui 8lMrCSq704uA4vzlZRc1rizoAb72tZlVSBnvkbLgYHp20p3Q/9oLuMEzu3rUKFf4koq23WKlSsdrQ+ XwTxMuY9mRzwKSn+ja0wgoNsiP7vBGEx7ZGmVLnfJqodpRJ8T8qlW4FtvWLPoGylzWu5OhbUgNWVIT ZZTgGovPPx19taMVvE/LNSlf/IhL45K5IpQT3nUvouQ97ikCHni/2VJ2zm60Fg7PPD6OxkdzLoJORP TqLU9ifrO+z7nnoT31HBKCmgw7hnlnETPzunGXGBsOZC120Z4xIudTk/A3mA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-merged into cifs-2.6.git for-next pending testing
+The call "skb_copy_from_linear_data(skb, inl + 1, spc)" triggers a FORTIFY
+memcpy() warning on ppc64 platform:
 
-On Fri, Feb 17, 2023 at 9:24 PM Namjae Jeon <linkinjeon@kernel.org> wrote:
->
-> 2023-02-18 9:24 GMT+09:00, Kees Cook <keescook@chromium.org>:
-> > The kernel is globally removing the ambiguous 0-length and 1-element
-> > arrays in favor of flexible arrays, so that we can gain both compile-time
-> > and run-time array bounds checking[1].
-> >
-> > Replace the trailing 1-element array with a flexible array in the
-> > following structures:
-> >
-> >       struct smb2_err_rsp
-> >       struct smb2_tree_connect_req
-> >       struct smb2_negotiate_rsp
-> >       struct smb2_sess_setup_req
-> >       struct smb2_sess_setup_rsp
-> >       struct smb2_read_req
-> >       struct smb2_read_rsp
-> >       struct smb2_write_req
-> >       struct smb2_write_rsp
-> >       struct smb2_query_directory_req
-> >       struct smb2_query_directory_rsp
-> >       struct smb2_set_info_req
-> >       struct smb2_change_notify_rsp
-> >       struct smb2_create_rsp
-> >       struct smb2_query_info_req
-> >       struct smb2_query_info_rsp
-> >
-> > Replace the trailing 1-element array with a flexible array, but leave
-> > the existing structure padding:
-> >
-> >       struct smb2_file_all_info
-> >       struct smb2_lock_req
-> >
-> > Adjust all related size calculations to match the changes to sizeof().
-> >
-> > No machine code output or .data section differences are produced after
-> > these changes.
-> >
-> > [1] For lots of details, see both:
-> >
-> > https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
-> >     https://people.kernel.org/kees/bounded-flexible-arrays-in-c
-> >
-> > Cc: Steve French <sfrench@samba.org>
-> > Cc: Paulo Alcantara <pc@cjr.nz>
-> > Cc: Ronnie Sahlberg <lsahlber@redhat.com>
-> > Cc: Shyam Prasad N <sprasad@microsoft.com>
-> > Cc: Tom Talpey <tom@talpey.com>
-> > Cc: Namjae Jeon <linkinjeon@kernel.org>
-> > Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> > Cc: linux-cifs@vger.kernel.org
-> > Cc: samba-technical@lists.samba.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Namjae Jeon <linkinjeon@kernel.org>
->
-> Thanks!
+In function ‘fortify_memcpy_chk’,
+    inlined from ‘skb_copy_from_linear_data’ at ./include/linux/skbuff.h:4029:2,
+    inlined from ‘build_inline_wqe’ at drivers/net/ethernet/mellanox/mlx4/en_tx.c:722:4,
+    inlined from ‘mlx4_en_xmit’ at drivers/net/ethernet/mellanox/mlx4/en_tx.c:1066:3:
+./include/linux/fortify-string.h:513:25: error: call to ‘__write_overflow_field’ declared with
+attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()?
+[-Werror=attribute-warning]
+  513 |                         __write_overflow_field(p_size_field, size);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Same behaviour on x86 you can get if you use "__always_inline" instead of
+"inline" for skb_copy_from_linear_data() in skbuff.h
 
+The call here copies data into inlined tx destricptor, which has 104
+bytes (MAX_INLINE) space for data payload. In this case "spc" is known
+in compile-time but the destination is used with hidden knowledge
+(real structure of destination is different from that the compiler
+can see). That cause the fortify warning because compiler can check
+bounds, but the real bounds are different.  "spc" can't be bigger than
+64 bytes (MLX4_INLINE_ALIGN), so the data can always fit into inlined
+tx descriptor. The fact that "inl" points into inlined tx descriptor is
+determined earlier in mlx4_en_xmit().
 
+Avoid confusing the compiler with "inl + 1" constructions to get to past
+the inl header by introducing a flexible array "data" to the struct so
+that the compiler can see that we are not dealing with an array of inl
+structs, but rather, arbitrary data following the structure. There are
+no changes to the structure layout reported by pahole, and the resulting
+machine code is actually smaller.
+
+Reported-by: Josef Oskera <joskera@redhat.com>
+Link: https://lore.kernel.org/lkml/20230217094541.2362873-1-joskera@redhat.com
+Fixes: f68f2ff91512 ("fortify: Detect struct member overflows in memcpy() at compile-time")
+Cc: Tariq Toukan <tariqt@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Yishai Hadas <yishaih@nvidia.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/mellanox/mlx4/en_tx.c | 22 +++++++++++-----------
+ include/linux/mlx4/qp.h                    |  1 +
+ 2 files changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx4/en_tx.c b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
+index c5758637b7be..2f79378fbf6e 100644
+--- a/drivers/net/ethernet/mellanox/mlx4/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
+@@ -699,32 +699,32 @@ static void build_inline_wqe(struct mlx4_en_tx_desc *tx_desc,
+ 			inl->byte_count = cpu_to_be32(1 << 31 | skb->len);
+ 		} else {
+ 			inl->byte_count = cpu_to_be32(1 << 31 | MIN_PKT_LEN);
+-			memset(((void *)(inl + 1)) + skb->len, 0,
++			memset(inl->data + skb->len, 0,
+ 			       MIN_PKT_LEN - skb->len);
+ 		}
+-		skb_copy_from_linear_data(skb, inl + 1, hlen);
++		skb_copy_from_linear_data(skb, inl->data, hlen);
+ 		if (shinfo->nr_frags)
+-			memcpy(((void *)(inl + 1)) + hlen, fragptr,
++			memcpy(inl->data + hlen, fragptr,
+ 			       skb_frag_size(&shinfo->frags[0]));
+ 
+ 	} else {
+ 		inl->byte_count = cpu_to_be32(1 << 31 | spc);
+ 		if (hlen <= spc) {
+-			skb_copy_from_linear_data(skb, inl + 1, hlen);
++			skb_copy_from_linear_data(skb, inl->data, hlen);
+ 			if (hlen < spc) {
+-				memcpy(((void *)(inl + 1)) + hlen,
++				memcpy(inl->data + hlen,
+ 				       fragptr, spc - hlen);
+ 				fragptr +=  spc - hlen;
+ 			}
+-			inl = (void *) (inl + 1) + spc;
+-			memcpy(((void *)(inl + 1)), fragptr, skb->len - spc);
++			inl = (void *)inl->data + spc;
++			memcpy(inl->data, fragptr, skb->len - spc);
+ 		} else {
+-			skb_copy_from_linear_data(skb, inl + 1, spc);
+-			inl = (void *) (inl + 1) + spc;
+-			skb_copy_from_linear_data_offset(skb, spc, inl + 1,
++			skb_copy_from_linear_data(skb, inl->data, spc);
++			inl = (void *)inl->data + spc;
++			skb_copy_from_linear_data_offset(skb, spc, inl->data,
+ 							 hlen - spc);
+ 			if (shinfo->nr_frags)
+-				memcpy(((void *)(inl + 1)) + hlen - spc,
++				memcpy(inl->data + hlen - spc,
+ 				       fragptr,
+ 				       skb_frag_size(&shinfo->frags[0]));
+ 		}
+diff --git a/include/linux/mlx4/qp.h b/include/linux/mlx4/qp.h
+index c78b90f2e9a1..b9a7b1319f5d 100644
+--- a/include/linux/mlx4/qp.h
++++ b/include/linux/mlx4/qp.h
+@@ -446,6 +446,7 @@ enum {
+ 
+ struct mlx4_wqe_inline_seg {
+ 	__be32			byte_count;
++	__u8			data[];
+ };
+ 
+ enum mlx4_update_qp_attr {
 -- 
-Thanks,
+2.34.1
 
-Steve
