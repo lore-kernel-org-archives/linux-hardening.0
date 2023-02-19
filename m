@@ -2,143 +2,80 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 222EBC61DA4
-	for <linux-hardening@archiver.kernel.org>; Sat, 18 Feb 2023 19:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C3AC05027
+	for <linux-hardening@archiver.kernel.org>; Sun, 19 Feb 2023 05:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbjBRTLH (ORCPT
+        id S229798AbjBSFmP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 18 Feb 2023 14:11:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51498 "EHLO
+        Sun, 19 Feb 2023 00:42:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjBRTLG (ORCPT
+        with ESMTP id S229821AbjBSFly (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 18 Feb 2023 14:11:06 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B643715552
-        for <linux-hardening@vger.kernel.org>; Sat, 18 Feb 2023 11:11:02 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id b6so591665pff.2
-        for <linux-hardening@vger.kernel.org>; Sat, 18 Feb 2023 11:11:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zf7rG+fsrika4LatxPpr29R818vMyi25upFsjiFQJTc=;
-        b=ctH6tO0PO9+X0z8t2xtsfOvZcQXeTlzJ7NRXDmELZRHe+Ec46ycsz+chjFuq2v13kG
-         7Cm8TeygFCjPFMXhvPZ7IxPBDuhdFuD6OFb7Yzmn9lTKNPT3j0hm/ima2fpt7euvm1MY
-         lSQM+5DnQ9g4jgXCllSbpa7usFJ0vlwGRTHDU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zf7rG+fsrika4LatxPpr29R818vMyi25upFsjiFQJTc=;
-        b=FYQ+Ag1CNM6hA2vyaPEcbVjwpznLg7kUA6ckNuVKZhUxkzN0XfsgCm8hw7X/pllAgU
-         ZC9EwV2HAU5dht4Xl+Jz9FnwmZNiIT4TplC3Unq1C0L4Qfogtlj8LD1R1YaTtoR53NI+
-         L6x5ZIoc1zs1byh3p3WpUZwIXzSaonW9V2mgxCaH+RpvI9/zxYIJzamaDdiFSSVJ0Lvt
-         V47SuXQDNF+n9P0nkKXO13VOlWhyYm7YH8rLiIuSycI7KbIKrgmfVVinSCsA2IOFLuEo
-         GAxs3MzwVz48BPfmtdz3YqTB27F098ofKkoNBqF5XwLIHMGW9QEhWjKsIMZS11edsT5q
-         WqDg==
-X-Gm-Message-State: AO0yUKVToUn95sUn39kM2Z5EuEOBvIGUFFYeLSTu47BDTCOmVc7dssl4
-        IeCwmrYK9k6hj0QpH2VAlxGESw==
-X-Google-Smtp-Source: AK7set8K28w3uKPotk+c9h8F2CTsRMf6Mt14uP3+vjktHG27okpeTcXywcuKRUrZToP+0eRq9oHiNg==
-X-Received: by 2002:aa7:9506:0:b0:5a8:aa77:1835 with SMTP id b6-20020aa79506000000b005a8aa771835mr4963220pfp.33.1676747462224;
-        Sat, 18 Feb 2023 11:11:02 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k18-20020aa792d2000000b005a8b28c644esm4925819pfa.4.2023.02.18.11.11.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Feb 2023 11:11:01 -0800 (PST)
-From:   Kees Cook <keescook@chromium.org>
-To:     Gregory Greenman <gregory.greenman@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Benjamin Berg <benjamin.berg@intel.com>,
-        Sriram R <quic_srirrama@quicinc.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: iwlwifi: dvm: Add struct_group for struct iwl_keyinfo keys
-Date:   Sat, 18 Feb 2023 11:11:00 -0800
-Message-Id: <20230218191056.never.374-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Sun, 19 Feb 2023 00:41:54 -0500
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DFEF13D57
+        for <linux-hardening@vger.kernel.org>; Sat, 18 Feb 2023 21:41:37 -0800 (PST)
+Received: from cwcc.thunk.org (pool-173-48-120-46.bstnma.fios.verizon.net [173.48.120.46])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 31J5evJY024869
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 19 Feb 2023 00:40:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+        t=1676785262; bh=L1BHkHi6T6qz27wZYhHErthtb81Jb5TkLhnb88KVfFc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=W8q1MJILVWeW7U0Rr0HxqnkfP4cIr5QB0Q4dXqkSq+6YYZUmxY2nQnWQti4HUlQsv
+         ox3yih4VNlr/QeeFX39vnbJauYNwbFc5Xc37McUH/Lx+G+7tKKX9+Aey/JEgfyE9Cl
+         He+1J9s/GWZapxXm9YJUhcC8HqTFl096W3dR9svjlG2/o2s9PYQSexPiKfHHGrRq5/
+         oVAxgjJHFztjaPIMgwk4A3krlcTVoYAy/v5rJc2QG12FpH2mmMdKHu4j5OSr0z+x8W
+         1IzbgAMpNTEHiBQdYbKmVOjkKeaIfkRPgGxXX+UjwzpiT6FeGA4RJSFJyaosDOTF7C
+         JwVRQKmkeeLgQ==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+        id C977B15C35A7; Sun, 19 Feb 2023 00:40:55 -0500 (EST)
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        llvm@lists.linux.dev, Tom Rix <trix@redhat.com>,
+        linux-hardening@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>, stable@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Riccardo Schirone <sirmy15@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v2] ext4: Fix function prototype mismatch for ext4_feat_ktype
+Date:   Sun, 19 Feb 2023 00:40:47 -0500
+Message-Id: <167678522170.2723470.13730761644590168004.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.31.0
+In-Reply-To: <20230104210908.gonna.388-kees@kernel.org>
+References: <20230104210908.gonna.388-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2903; h=from:subject:message-id; bh=6ocLfuLUjbHMLL3EssbDtFFXg555hqCuVMArd3yFm64=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBj8SLD0yPX6FR7+Ky4Sm+eLKdlJc0JVCY7rZy1tsxd CLQhp2WJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY/EiwwAKCRCJcvTf3G3AJiymD/ 9g1362ck2iM1XQp/7+Yumk1DkPuUGDlhNkg07IPRr/Kp88Q7ZdiOrZLW4SrMunolnRZhKstjflj+GW z3rEomGJjTeZ0aTviKU8bPHectrVXlnbYG87hAeV5hneIcB+GgMzUecLsRBQc5rTZQ6u+qTQeEJcdk L2AEaxSeglKM+ADCDtBwYLzpNivNBOPKeiugRsLDCDEOTHI6khqu6z2+7XV5aEe+lqtMMMlhNq+iyG H79XSkCx/6rfeIgzEjNCUluknMczJ6XicYCEKf5mBI+nnKDe+eTqx/HtQKgrJaEeYoIa6wz/h6v7gN 3BpCsgJbP/HJCMD622gBgzNYJ6w1lpwH93K4HEmTGbkWAigbbcpaGOQSuEoa0tKaUGAymi+ClNK4g8 Mc/I3OhcP42LiR8Wxk01c7FgXCwtHQxJVEcSKdI1aPsieYXzE8HWy5GeNvVCdKYWosB9G/tFKR5MdU SK8x9l1EyyYPX54Wxn6+87HeTxf6UdddjKRcVVtAUuaJPhBDb31jyV9JnpCoX1yfNPzhUpMt3a6UOI B8boiLn5Eu/e0+Qxuj3nN4SG+Af16pN7RIXu0RIvVUR2mLlO7enI0b8GIy+lBPGmFzOhgBw2lK9Q6g Cj2FJzTbsq1AivdRNhSK4OcnTL87RcezT3i5MQD7N8nUeesuvUK6DdynRkoA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Function iwlagn_send_sta_key() was trying to write across multiple
-structure members in a single memcpy(). Add a struct group "keys" to
-let the compiler see the intended bounds of the memcpy, which includes
-the tkip keys as well. Silences false positive memcpy() run-time
-warning:
+On Wed, 4 Jan 2023 13:09:12 -0800, Kees Cook wrote:
+> With clang's kernel control flow integrity (kCFI, CONFIG_CFI_CLANG),
+> indirect call targets are validated against the expected function
+> pointer prototype to make sure the call target is valid to help mitigate
+> ROP attacks. If they are not identical, there is a failure at run time,
+> which manifests as either a kernel panic or thread getting killed.
+> 
+> ext4_feat_ktype was setting the "release" handler to "kfree", which
+> doesn't have a matching function prototype. Add a simple wrapper
+> with the correct prototype.
+> 
+> [...]
 
-  memcpy: detected field-spanning write (size 32) of single field "sta_cmd.key.key" at drivers/net/wireless/intel/iwlwifi/dvm/sta.c:1103 (size 16)
+Applied, thanks!
 
-Link: https://www.alionet.org/index.php?topic=1469.0
-Cc: Gregory Greenman <gregory.greenman@intel.com>
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: Benjamin Berg <benjamin.berg@intel.com>
-Cc: Sriram R <quic_srirrama@quicinc.com>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/intel/iwlwifi/dvm/commands.h | 10 ++++++----
- drivers/net/wireless/intel/iwlwifi/dvm/sta.c      |  4 ++--
- 2 files changed, 8 insertions(+), 6 deletions(-)
+[1/1] ext4: Fix function prototype mismatch for ext4_feat_ktype
+      commit: d99a55a94a0db8eda4a336a6f21730b844b8d2d2
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/commands.h b/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
-index 75a4b8e26232..0eceac4b9131 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/commands.h
-@@ -783,10 +783,12 @@ struct iwl_keyinfo {
- 	__le16 tkip_rx_ttak[5];	/* 10-byte unicast TKIP TTAK */
- 	u8 key_offset;
- 	u8 reserved2;
--	u8 key[16];		/* 16-byte unicast decryption key */
--	__le64 tx_secur_seq_cnt;
--	__le64 hw_tkip_mic_rx_key;
--	__le64 hw_tkip_mic_tx_key;
-+	struct_group(keys,
-+		u8 key[16];	/* 16-byte unicast decryption key */
-+		__le64 tx_secur_seq_cnt;
-+		__le64 hw_tkip_mic_rx_key;
-+		__le64 hw_tkip_mic_tx_key;
-+	);
- } __packed;
- 
- /**
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/sta.c b/drivers/net/wireless/intel/iwlwifi/dvm/sta.c
-index cef43cf80620..a1c9e201b058 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/sta.c
-@@ -1093,14 +1093,14 @@ static int iwlagn_send_sta_key(struct iwl_priv *priv,
- 	switch (keyconf->cipher) {
- 	case WLAN_CIPHER_SUITE_CCMP:
- 		key_flags |= STA_KEY_FLG_CCMP;
--		memcpy(sta_cmd.key.key, keyconf->key, keyconf->keylen);
-+		memcpy(&sta_cmd.key.keys, keyconf->key, keyconf->keylen);
- 		break;
- 	case WLAN_CIPHER_SUITE_TKIP:
- 		key_flags |= STA_KEY_FLG_TKIP;
- 		sta_cmd.key.tkip_rx_tsc_byte2 = tkip_iv32;
- 		for (i = 0; i < 5; i++)
- 			sta_cmd.key.tkip_rx_ttak[i] = cpu_to_le16(tkip_p1k[i]);
--		memcpy(sta_cmd.key.key, keyconf->key, keyconf->keylen);
-+		memcpy(&sta_cmd.key.keys, keyconf->key, keyconf->keylen);
- 		break;
- 	case WLAN_CIPHER_SUITE_WEP104:
- 		key_flags |= STA_KEY_FLG_KEY_SIZE_MSK;
+Best regards,
 -- 
-2.34.1
-
+Theodore Ts'o <tytso@mit.edu>
