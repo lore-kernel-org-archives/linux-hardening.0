@@ -2,219 +2,146 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B7BC05027
-	for <linux-hardening@archiver.kernel.org>; Sun, 19 Feb 2023 09:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18637C05027
+	for <linux-hardening@archiver.kernel.org>; Sun, 19 Feb 2023 13:41:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbjBSJpX (ORCPT
+        id S229917AbjBSNlb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 19 Feb 2023 04:45:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40230 "EHLO
+        Sun, 19 Feb 2023 08:41:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230109AbjBSJpV (ORCPT
+        with ESMTP id S229567AbjBSNl2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 19 Feb 2023 04:45:21 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C31BB1043B;
-        Sun, 19 Feb 2023 01:44:35 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id i5-20020a05600c354500b003e1f5f2a29cso285823wmq.4;
-        Sun, 19 Feb 2023 01:44:35 -0800 (PST)
+        Sun, 19 Feb 2023 08:41:28 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2130.outbound.protection.outlook.com [40.107.93.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F2CEFBD;
+        Sun, 19 Feb 2023 05:41:27 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=izkKK/bv45ug7yDctdCeORr7iwBsBdRJGhId6G7HHZu7ELKolpCUfZqatgY+565MUBkXH1klimCFcoJbM4yEfDKWRpQAcc7Kg0nL+ZQKI4koCq7XRgdFmA6XJNTLlQrdmSvUqFv+pcD8drWVQtIJkQYQuJAzdY+YFGtaRK2bgK8U1Qq3pVJA1Avd95wPDcTESBHP/GXvRr9vgI8qDgS2J6yIzlz/vtILB3xj7hBB4REcGTogDY6qD9M1vq+EKGo4md+esqPFlkL5A8d9Nf5wV5ukscpE1EFCIC7kw0rhmE4Dmgt/Dv3T5wCG3RP9b2UAL2rUJVXrDG1AvzV78iw44g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W0qvP3x6sgmffgkfBnG21t4wtrKO+EzDD5IBTKMuV1g=;
+ b=AxCeDPFQPjQd2TbaSBEn0Nl2czmdhQfGf4o19da24ejvVf3qqGrRBSdngMwiGI5xdPVS8qWzV8nZGcwylj7Aq4otWcjhMe5w75foQo0TL1FX4kqgbKFrjBskQ5lNxBpf3Om8+s9bt0C8ayfD2ggid/x8QQaa/VHe+kA8rJKCO/e0oAIyHyPCA2MsJyidSVxb71iwLfzZFZecxWJdFlOD4ODDpAnEMF1qxbydlxBeBqmfPF5koM/nfAJeFurJ09y73mHk6regRbT78jKqAfP9qyLqYiVFyEoAScB1aeYENIVtddiQo2dxTjKXYXikKKoUDNyo38RSkADgRD5idbdPtw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sMPdCMdS3VcScxunnSP7BsButuKXwgs+onI25X5O9Wc=;
-        b=XumHyq0Cel+dqLclnreHmI24z4esM8bQ4QTXjRvnlukF87pE4zpQVADGHFMsOkwnvI
-         +kRoyXBCMhN2n7Wk3f7YaVuguFfGb11LPoL56skE4G6TtIwU+Xt+RaKpA2aQR2TnAWv0
-         G6l/edmC4Bzuxa1F3QV2QBDgnW4+tntG6InSHaRJ+kNbAZis7czCOaAmw43A+JZI1ZFf
-         oMWw6bAayDEQroQsx3o4u/KUZcJs2DatuvYp9rPRcee91/Sq9nBB7I4ptgPtGtPQu4ES
-         4pXVWMKAMybmyHn/n93UvLuiDQTItMIpf1qpKZygxgSwJrxiL5iPRvZdEVYMPoTBeNxj
-         IjnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sMPdCMdS3VcScxunnSP7BsButuKXwgs+onI25X5O9Wc=;
-        b=nJTU3xf7k6K/vnhTIlpqG5wpt1xgJdqsY9i6tymZyIJVFyrzTFCrGf7Y2xIY40RUsT
-         NoNEzdxjZbWt3i8QmoiqWIdYEN2z7uFOsYG3eLefftzs1otWWD/uIrs0zRQ/x1NZ9jJN
-         Pjrzo27mu4/JEoL68PBuMiNVW4gOwELVo/1FhGgJL6h6Pr3uFT0zJqsUPZYkEMUqQXs4
-         1PJxDfclRz0/0dNxwespg8z2ZXmvh9Ngt9+urzo3ZH7XGDjLx8occI31EeVvQhAWUsBV
-         2/nyq0LHvW3NZ6KadD4r0oroqjoGUQAcKMoFEFwxs7Y0qbnbVha8FU46hO/oUOhgyuNZ
-         AVxQ==
-X-Gm-Message-State: AO0yUKVlwTqkSs2UVxqxpNgJ+ZwwAI4fqXV9Vmx6TUXpioU1V/Cnlirn
-        r2D4D2Kt/i6LzSHwJ1N+tPs=
-X-Google-Smtp-Source: AK7set8atZ/0JasJukEMru+9LylLz33ZwjogL+rdHQbeUs6uRBoAyZ26dM6gZyx+5AdgFnEZFXIpig==
-X-Received: by 2002:a05:600c:1895:b0:3e2:589:2512 with SMTP id x21-20020a05600c189500b003e205892512mr4627494wmp.21.1676799789000;
-        Sun, 19 Feb 2023 01:43:09 -0800 (PST)
-Received: from [192.168.0.106] ([77.126.33.94])
-        by smtp.gmail.com with ESMTPSA id u10-20020a05600c00ca00b003ddf2865aeasm5557673wmm.41.2023.02.19.01.43.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Feb 2023 01:43:08 -0800 (PST)
-Message-ID: <07b5c523-7174-ac30-65cb-182e07db08dc@gmail.com>
-Date:   Sun, 19 Feb 2023 11:43:06 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH] net/mlx4_en: Introduce flexible array to silence overflow
- warning
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Tariq Toukan <tariqt@nvidia.com>
-Cc:     Josef Oskera <joskera@redhat.com>,
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W0qvP3x6sgmffgkfBnG21t4wtrKO+EzDD5IBTKMuV1g=;
+ b=WM1xE4EMWGMmD6SkrkfT7Aw9I2YrbSSt4RJqkSlVY++V+Gjn1BRe4Roz2VkzpzJUQEQVzpnZrECmiCp7r29s7hyMZ7d3+zmGUNDrCuJz1kGEDQeFf+WjbeUzTeM6f4ES85pOxK3nXDKCby80TAND28T8WTZ/Nsu5ww5DDNgW+sg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by SJ0PR13MB5304.namprd13.prod.outlook.com (2603:10b6:a03:3d5::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.18; Sun, 19 Feb
+ 2023 13:41:24 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::85f5:bdb:fb9e:294c]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::85f5:bdb:fb9e:294c%9]) with mapi id 15.20.6111.018; Sun, 19 Feb 2023
+ 13:41:24 +0000
+Date:   Sun, 19 Feb 2023 14:41:16 +0100
+From:   Simon Horman <simon.horman@corigine.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Gregory Greenman <gregory.greenman@intel.com>,
+        Kalle Valo <kvalo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20230218183842.never.954-kees@kernel.org>
-From:   Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <20230218183842.never.954-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Johannes Berg <johannes.berg@intel.com>,
+        Benjamin Berg <benjamin.berg@intel.com>,
+        Sriram R <quic_srirrama@quicinc.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] wifi: iwlwifi: dvm: Add struct_group for struct
+ iwl_keyinfo keys
+Message-ID: <Y/Im/G6/Ij26oRhF@corigine.com>
+References: <20230218191056.never.374-kees@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230218191056.never.374-kees@kernel.org>
+X-ClientProxiedBy: AM8P251CA0004.EURP251.PROD.OUTLOOK.COM
+ (2603:10a6:20b:21b::9) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|SJ0PR13MB5304:EE_
+X-MS-Office365-Filtering-Correlation-Id: b01f7f49-f58f-48c1-36e2-08db127efdf9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JaYIYWKkESli669CT0e+0isHUaYdXE4ahNU2+pteWeSlf7qp2pBnXQrO8HC3ZBmkwP50rXCYJURyKV57mPdaG1SuVA1NkxMQQv2lJWJa+1vVNeMScoEWoMlSWKK6zS9o4P61rTD6x79wg2RfdMsRmBAO0m25hCdpiRgkzXhXZGrOq0uVaonKjyzQG6JbUHxBWW53P0Brg2RazDpqqutHzoiO70Z2NAi4nyrRFLW+HG9FjVFGSgAz3/2vfUL8hWYqXvZrGxOIiZbCeudHKZ38YzhhuzDddImSI/tG4vSXQj7gebsg06RTYvoVFXjMvjJnMJKuHFzIaxfe96c5yBoEaH4wprS4MQZHsDcvHCkDFm62Qk7uYz0DV2tYKnK3O5+ASI5SwEp2iW0Zp5v5iSP0nDn0g5W2qMVReiPwsyrp1VsuqkPb0h0GQ4bQwsaze3nowPPvuR0ITL96IL4L/+0HzyYI64xD2wPa8Qx7yrCduXVoMJH+sRKQvphXXG7TzozkHNMYnGp2Jhs6GfZQX1pb1OxW+oNg3Wq/KJUlPn4UXXjhOuXJyXvi93x0qmpqviaug1y+NXr0C2Bl55WtfFfxfw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(366004)(39830400003)(136003)(376002)(451199018)(2906002)(7416002)(6506007)(44832011)(8936002)(36756003)(5660300002)(16799955002)(4326008)(41300700001)(316002)(86362001)(54906003)(6916009)(66556008)(478600001)(6486002)(966005)(66476007)(66946007)(8676002)(6666004)(38100700002)(186003)(6512007)(2616005)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xIPpThP6+s4dfNY0Y2BgI2Hx/jK3jBKMsnxFHVPbbQVme8OcRp9dEOk9RYtz?=
+ =?us-ascii?Q?vtSRDPVz4OwQIgFHonjVhiP3ZqOGS0EUSsP58oSopznVTLrnGuqYCzyVhS2k?=
+ =?us-ascii?Q?F3SylcM8zqv43psNv7CPhKDEnnRmKI9cuHeMCLSWHvW7NVvCKHllUb9inHhi?=
+ =?us-ascii?Q?yujuWRQ0FBfee3nwtdbzeTUPc6YJm4oNPFzbY/GtQYriaa3y0aZuHtdp73mD?=
+ =?us-ascii?Q?Tk8kT5dxpMj9gtdLSnZ57eRbU7h7vHbQTpw+Wk/NvxEAgpMaRYMb5zZrKeqn?=
+ =?us-ascii?Q?ITgs6uSMSK3m5auAVEK8xkT6GjtT5D1vXDl+oKiLtY0t3nkClJIEG8kawqRN?=
+ =?us-ascii?Q?/YEYD35wK4nX0rSX6VfBIoDrwskl0E80NvBDiXIIEBPBApVK9QzcAQLQLRmt?=
+ =?us-ascii?Q?TgxoAOiiUSYEPaCEEY1TRby1tE/8G5hOx8XkGLnJc1qO+44E3XejBJWWJjGH?=
+ =?us-ascii?Q?6O/Violmj2IpoUyfLlpy9z9Ih9xhmcty7sFeONhp1KF98CSim50aIocS8+7r?=
+ =?us-ascii?Q?3wCPU/zyZHc9NGpsg0ZT+/KNR7/RZwk42brmn8yYP2e7gQiKC7gRRORm+8iF?=
+ =?us-ascii?Q?9ym8V8k5+0jDSC0wrgtQb83yUhYKtGggm5CUjak1J72UO8b0cvdJoQY/IhXc?=
+ =?us-ascii?Q?KrXLjMPNX3R58F7dTkUgBLGQ7B/ZzFjiof2K17zGysF4wYTqvhl9OCkW6Yub?=
+ =?us-ascii?Q?f8Fvn1hpp+jYWuRtcKIqnUP7v6yyuICVifIK5ETzzTeR8JHVQZG8wL8xgGVV?=
+ =?us-ascii?Q?k3VWK50Hqu1SbUxBrMwVpJ/76sLWWj+ry8YJg3ZFqS3w81fmbUZEnfntP5Pc?=
+ =?us-ascii?Q?VFlBrXat+9GHNKPKhePyst/MkHWEiEKeJ72jAxVpdyd6x/QR1nSz2MkHUoxY?=
+ =?us-ascii?Q?seHJ3tmdwUvRuz01eyJCoyrnQQTNbcuyjDfc9n5uxSAmTD81gsAykIgcn26N?=
+ =?us-ascii?Q?ibfSq2EqzpQnnmoP5vibAwbHawWed7plx70ZVyKS+m9bPrnQgG6jgrWA7/e2?=
+ =?us-ascii?Q?FHSkkUn1rpDqAq0zmp+89ULd/8rNQWMVh8/gDAm8DzI+klWyHXLDwLyLcOaN?=
+ =?us-ascii?Q?uVMiOE0CdcB5LVLgF/WzQNboQaPNUYqN9AqjVT7Nx5VO4M+pGyzYZoVmRJDm?=
+ =?us-ascii?Q?LwO2K/Z+smwocFegiq2GjQw2B833lt8Hw9q9HNmT+z4CoBEWH5LNSfMOuddW?=
+ =?us-ascii?Q?LtGgAH6E+0dRaoUEAXDPSu6b178WY/7sS4daRzTGjIwJ/KDktt4pAurfhQTp?=
+ =?us-ascii?Q?EyWxEOUeERZ2NL7i2QyBZZEXCtu2BfmK7ICzbUP1sMOo/fFF6MGAcHj2cWVV?=
+ =?us-ascii?Q?pn8QmbqLBoJ3TxJH8Ocnc7zF3Muyf+0PzdPTaoM+aEYVm+mWpRA32Sk6KIKc?=
+ =?us-ascii?Q?l3At4ZxtycEUn7sI1zPa+8zmoFuoWMhq2lQw2d01CE24qcLaNl181j0WPI2+?=
+ =?us-ascii?Q?CgFgf+4prryWxM+DVLF7mvVwsNqtRx/ATit3cK1/kguwoBVB1/76taP4m9fM?=
+ =?us-ascii?Q?88rTYPPdhWwGtknLpkLzPzgzp+/3Zv+VzwTIi6zMfslWT2t/g/aZ66YPM1pU?=
+ =?us-ascii?Q?A5E49zVn+ZKNfLDz3EQHkgYFNOZ6OP0K+WSWIRPqBKoKfrwDvHe1CHk2QDVQ?=
+ =?us-ascii?Q?LLkvW324iZjCze+AAKznTWuwPEmxQhxNLJcdlJed8jtTznkANVX2Vd/o8kNy?=
+ =?us-ascii?Q?SNaTRA=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b01f7f49-f58f-48c1-36e2-08db127efdf9
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Feb 2023 13:41:24.1496
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FvNUbFA6G4ep4aNwsAB39Y55hUgwUp0ptk2LnRXdlOK86tcz3r/XC8q00jlLB2ZIRI3TnTbOjjEHyoKeYklz/PWH/YAt5sfBAxT4XhkBuHI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR13MB5304
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 18/02/2023 20:38, Kees Cook wrote:
-> The call "skb_copy_from_linear_data(skb, inl + 1, spc)" triggers a FORTIFY
-> memcpy() warning on ppc64 platform:
+On Sat, Feb 18, 2023 at 11:11:00AM -0800, Kees Cook wrote:
+> Function iwlagn_send_sta_key() was trying to write across multiple
+> structure members in a single memcpy(). Add a struct group "keys" to
+> let the compiler see the intended bounds of the memcpy, which includes
+> the tkip keys as well. Silences false positive memcpy() run-time
+> warning:
 > 
-> In function ‘fortify_memcpy_chk’,
->      inlined from ‘skb_copy_from_linear_data’ at ./include/linux/skbuff.h:4029:2,
->      inlined from ‘build_inline_wqe’ at drivers/net/ethernet/mellanox/mlx4/en_tx.c:722:4,
->      inlined from ‘mlx4_en_xmit’ at drivers/net/ethernet/mellanox/mlx4/en_tx.c:1066:3:
-> ./include/linux/fortify-string.h:513:25: error: call to ‘__write_overflow_field’ declared with
-> attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()?
-> [-Werror=attribute-warning]
->    513 |                         __write_overflow_field(p_size_field, size);
->        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   memcpy: detected field-spanning write (size 32) of single field "sta_cmd.key.key" at drivers/net/wireless/intel/iwlwifi/dvm/sta.c:1103 (size 16)
 > 
-> Same behaviour on x86 you can get if you use "__always_inline" instead of
-> "inline" for skb_copy_from_linear_data() in skbuff.h
-> 
-> The call here copies data into inlined tx destricptor, which has 104
-> bytes (MAX_INLINE) space for data payload. In this case "spc" is known
-> in compile-time but the destination is used with hidden knowledge
-> (real structure of destination is different from that the compiler
-> can see). That cause the fortify warning because compiler can check
-> bounds, but the real bounds are different.  "spc" can't be bigger than
-> 64 bytes (MLX4_INLINE_ALIGN), so the data can always fit into inlined
-> tx descriptor. The fact that "inl" points into inlined tx descriptor is
-> determined earlier in mlx4_en_xmit().
-> 
-> Avoid confusing the compiler with "inl + 1" constructions to get to past
-> the inl header by introducing a flexible array "data" to the struct so
-> that the compiler can see that we are not dealing with an array of inl
-> structs, but rather, arbitrary data following the structure. There are
-> no changes to the structure layout reported by pahole, and the resulting
-> machine code is actually smaller.
-> 
-> Reported-by: Josef Oskera <joskera@redhat.com>
-> Link: https://lore.kernel.org/lkml/20230217094541.2362873-1-joskera@redhat.com
-> Fixes: f68f2ff91512 ("fortify: Detect struct member overflows in memcpy() at compile-time")
-> Cc: Tariq Toukan <tariqt@nvidia.com>
+> Link: https://www.alionet.org/index.php?topic=1469.0
+> Cc: Gregory Greenman <gregory.greenman@intel.com>
+> Cc: Kalle Valo <kvalo@kernel.org>
 > Cc: "David S. Miller" <davem@davemloft.net>
 > Cc: Eric Dumazet <edumazet@google.com>
 > Cc: Jakub Kicinski <kuba@kernel.org>
 > Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: Yishai Hadas <yishaih@nvidia.com>
+> Cc: Johannes Berg <johannes.berg@intel.com>
+> Cc: Benjamin Berg <benjamin.berg@intel.com>
+> Cc: Sriram R <quic_srirrama@quicinc.com>
+> Cc: linux-wireless@vger.kernel.org
 > Cc: netdev@vger.kernel.org
-> Cc: linux-rdma@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->   drivers/net/ethernet/mellanox/mlx4/en_tx.c | 22 +++++++++++-----------
->   include/linux/mlx4/qp.h                    |  1 +
->   2 files changed, 12 insertions(+), 11 deletions(-)
-> 
 
-Just saw your patch now, after commenting on the other thread. :)
+Reviewed-by: Simon Horman <simon.horman@corigine.com>
 
-So you choose not to fix similar usages in RDMA driver 
-drivers/infiniband/hw/mlx4/qp.c, like:
-
-3204         spc = MLX4_INLINE_ALIGN -
-3205                 ((unsigned long) (inl + 1) & (MLX4_INLINE_ALIGN - 1));
-3206         if (header_size <= spc) {
-3207                 inl->byte_count = cpu_to_be32(1 << 31 | header_size);
-3208                 memcpy(inl + 1, sqp->header_buf, header_size);
-3209                 i = 1;
-3210         } else {
-3211                 inl->byte_count = cpu_to_be32(1 << 31 | spc);
-3212                 memcpy(inl + 1, sqp->header_buf, spc);
-3213
-3214                 inl = (void *) (inl + 1) + spc;
-3215                 memcpy(inl + 1, sqp->header_buf + spc, header_size 
-- spc);
-
-This keeps the patch minimal indeed.
-
-Did you repro the issue and test this solution?
-Maybe Josef can also verify it works for him?
-
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/en_tx.c b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-> index c5758637b7be..2f79378fbf6e 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-> +++ b/drivers/net/ethernet/mellanox/mlx4/en_tx.c
-> @@ -699,32 +699,32 @@ static void build_inline_wqe(struct mlx4_en_tx_desc *tx_desc,
->   			inl->byte_count = cpu_to_be32(1 << 31 | skb->len);
->   		} else {
->   			inl->byte_count = cpu_to_be32(1 << 31 | MIN_PKT_LEN);
-> -			memset(((void *)(inl + 1)) + skb->len, 0,
-> +			memset(inl->data + skb->len, 0,
->   			       MIN_PKT_LEN - skb->len);
->   		}
-> -		skb_copy_from_linear_data(skb, inl + 1, hlen);
-> +		skb_copy_from_linear_data(skb, inl->data, hlen);
->   		if (shinfo->nr_frags)
-> -			memcpy(((void *)(inl + 1)) + hlen, fragptr,
-> +			memcpy(inl->data + hlen, fragptr,
->   			       skb_frag_size(&shinfo->frags[0]));
->   
->   	} else {
->   		inl->byte_count = cpu_to_be32(1 << 31 | spc);
->   		if (hlen <= spc) {
-> -			skb_copy_from_linear_data(skb, inl + 1, hlen);
-> +			skb_copy_from_linear_data(skb, inl->data, hlen);
->   			if (hlen < spc) {
-> -				memcpy(((void *)(inl + 1)) + hlen,
-> +				memcpy(inl->data + hlen,
->   				       fragptr, spc - hlen);
->   				fragptr +=  spc - hlen;
->   			}
-> -			inl = (void *) (inl + 1) + spc;
-> -			memcpy(((void *)(inl + 1)), fragptr, skb->len - spc);
-> +			inl = (void *)inl->data + spc;
-> +			memcpy(inl->data, fragptr, skb->len - spc);
->   		} else {
-> -			skb_copy_from_linear_data(skb, inl + 1, spc);
-> -			inl = (void *) (inl + 1) + spc;
-> -			skb_copy_from_linear_data_offset(skb, spc, inl + 1,
-> +			skb_copy_from_linear_data(skb, inl->data, spc);
-> +			inl = (void *)inl->data + spc;
-
-No need now for all these (void *) castings.
-
-> +			skb_copy_from_linear_data_offset(skb, spc, inl->data,
->   							 hlen - spc);
->   			if (shinfo->nr_frags)
-> -				memcpy(((void *)(inl + 1)) + hlen - spc,
-> +				memcpy(inl->data + hlen - spc,
->   				       fragptr,
->   				       skb_frag_size(&shinfo->frags[0]));
->   		}
-> diff --git a/include/linux/mlx4/qp.h b/include/linux/mlx4/qp.h
-> index c78b90f2e9a1..b9a7b1319f5d 100644
-> --- a/include/linux/mlx4/qp.h
-> +++ b/include/linux/mlx4/qp.h
-> @@ -446,6 +446,7 @@ enum {
->   
->   struct mlx4_wqe_inline_seg {
->   	__be32			byte_count;
-> +	__u8			data[];
->   };
->   
->   enum mlx4_update_qp_attr {
