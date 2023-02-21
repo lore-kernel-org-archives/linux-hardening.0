@@ -2,88 +2,149 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1F4C61DA3
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Feb 2023 00:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D12C6379F
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Feb 2023 11:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232375AbjBUAkT (ORCPT
+        id S234080AbjBUL0c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Feb 2023 19:40:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58014 "EHLO
+        Tue, 21 Feb 2023 06:26:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232149AbjBUAkT (ORCPT
+        with ESMTP id S233460AbjBUL0b (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Feb 2023 19:40:19 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9E71A66E;
-        Mon, 20 Feb 2023 16:40:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BFF5D60F58;
-        Tue, 21 Feb 2023 00:40:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1472CC433EF;
-        Tue, 21 Feb 2023 00:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676940017;
-        bh=VhTw6+ty7Uy7+7gPWBXLZ20yxCWQedsCuDqOZ/YlgEg=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=evKo+/LxHtHqQziyotx04ypCXrRCodUs41h4o7IpwaRL8cD4ZPOBvoiGX/SGIjnNh
-         dh47Wf2uz2YDLPv9rBSM3RVG75bxBbdJxn9S8YikvrV7vNmKcptQvposkZ5Ld1Ra+F
-         Iz3E+yjpqpqHtbPgyg+uQJkzj2gyc7+NaeLDrPzwSXNXRe6+hJbg8RTwGQA/aYz46f
-         G0+WkO6EiFS7Feu9mg01iivlzCUbmS9yAXGSiROjdTS18VW9RA55jsAGskYfpOb9vW
-         N6HHAs2YTHE1dhgn4DYkMsFKRsRPcEruVkbUqc8lRPFnYWQazyQ3DAmHmn4AFP3FYV
-         q/afxOrJ9Oj2A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EE8DBC691DE;
-        Tue, 21 Feb 2023 00:40:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 21 Feb 2023 06:26:31 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDA722DE6;
+        Tue, 21 Feb 2023 03:26:30 -0800 (PST)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31LARU9F024421;
+        Tue, 21 Feb 2023 11:26:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=/Wy6qoadl6SGbuKajU9rwIy3JAd97ZcZ5RR1eQKvzFI=;
+ b=lvu4b4E/PSu/U2lJP8hvZUnw1LnDYl0Yax7e5bTb7h+95Yt+8yCH3y41ce6SeB0Y5Aox
+ N4AorHuujyYghHj2fZSafxqd9HmiQjs0l5F93xUqp11sASABC/iV/IxFbYh+XblH3X7R
+ QNf56+yh9B36WDG09G6pPiCk+4559y+oVU/zFICmCRuyEiVBVSJqwKhI6YGx+qn6gk+e
+ P/GECR6Hvvcx0FeQLMMUf2ibbw6Bb+h17Tpo9S/87nIAOWfVCz20HdK+Hi2q2AXAIyVW
+ Fm6/qB4WsySQcd7AuZxxpafRNaISL3hw05nLOwg7EPVPeMF+djIdGZSWgbtqi3en+UCY LQ== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nvp4v0y6d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Feb 2023 11:26:01 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31LBQ1dW005630
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Feb 2023 11:26:01 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Tue, 21 Feb 2023 03:25:56 -0800
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Mukesh Ojha <quic_mojha@quicinc.com>
+Subject: [RFC PATCH 0/6] Add basic Minidump kernel driver support
+Date:   Tue, 21 Feb 2023 16:55:07 +0530
+Message-ID: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net/mlx4_en: Introduce flexible array to silence overflow
- warning
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167694001697.5796.9907214630396973552.git-patchwork-notify@kernel.org>
-Date:   Tue, 21 Feb 2023 00:40:16 +0000
-References: <20230218183842.never.954-kees@kernel.org>
-In-Reply-To: <20230218183842.never.954-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     tariqt@nvidia.com, joskera@redhat.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        yishaih@nvidia.com, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: a5P6fu8JZBUxR4Ov9Ud2zNc6pYHWhwNy
+X-Proofpoint-GUID: a5P6fu8JZBUxR4Ov9Ud2zNc6pYHWhwNy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-21_06,2023-02-20_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ clxscore=1015 adultscore=0 spamscore=0 phishscore=0 suspectscore=0
+ bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302210098
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+Minidump is a best effort mechanism to collect useful and predefined data
+for first level of debugging on end user devices running on Qualcomm SoCs.
+It is built on the premise that System on Chip (SoC) or subsystem part of
+SoC crashes, due to a range of hardware and software bugs. Hence, the
+ability to collect accurate data is only a best-effort. The data collected
+could be invalid or corrupted, data collection itself could fail, and so on.
 
-This patch was applied to netdev/net-next.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+Qualcomm devices in engineering mode provides a mechanism for generating
+full system ramdumps for post mortem debugging. But in some cases it's
+however not feasible to capture the entire content of RAM. The minidump
+mechanism provides the means for selecting which snippets should be
+included in the ramdump.
 
-On Sat, 18 Feb 2023 10:38:50 -0800 you wrote:
-> The call "skb_copy_from_linear_data(skb, inl + 1, spc)" triggers a FORTIFY
-> memcpy() warning on ppc64 platform:
-> 
-> In function ‘fortify_memcpy_chk’,
->     inlined from ‘skb_copy_from_linear_data’ at ./include/linux/skbuff.h:4029:2,
->     inlined from ‘build_inline_wqe’ at drivers/net/ethernet/mellanox/mlx4/en_tx.c:722:4,
->     inlined from ‘mlx4_en_xmit’ at drivers/net/ethernet/mellanox/mlx4/en_tx.c:1066:3:
-> ./include/linux/fortify-string.h:513:25: error: call to ‘__write_overflow_field’ declared with
-> attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()?
-> [-Werror=attribute-warning]
->   513 |                         __write_overflow_field(p_size_field, size);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> [...]
+The core of minidump feature is part of Qualcomm's boot firmware code.
+It initializes shared memory (SMEM), which is a part of DDR and
+allocates a small section of SMEM to minidump table i.e also called
+global table of content (G-ToC). Each subsystem (APSS, ADSP, ...) has
+their own table of segments to be included in the minidump and all get
+their reference from G-ToC. Each segment/region has some details like
+name, physical address and it's size etc. and it could be anywhere
+scattered in the DDR.
 
-Here is the summary with links:
-  - net/mlx4_en: Introduce flexible array to silence overflow warning
-    https://git.kernel.org/netdev/net-next/c/f8f185e39b4d
+Existing upstream Qualcomm remoteproc driver[1] already supports minidump
+feature for remoteproc instances like ADSP, MODEM, ... where predefined
+selective segments of subsystem region can be dumped as part of
+coredump collection which generates smaller size artifacts compared to
+complete coredump of subsystem on crash.
 
-You are awesome, thank you!
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/remoteproc/qcom_common.c#n142
+
+In addition to managing and querying the APSS minidump description,
+the Linux driver maintains a ELF header in a segment. This segment
+gets updated with section/program header whenever a new entry gets
+registered.
+
+Patch 1/6 is very trivial change.
+Patch 2/6 moves the minidump specific data structure and macro to
+ qcom_minidump.h so that (3/6) minidump driver can use.
+Patch 3/6 implements qualcomm minidump kernel driver and exports
+ symbol which other minidump kernel client can use.
+Patch 4/6 enables the qualcomm minidump driver.
+Patch 5/6 Use the exported symbol from minidump driver in qcom_common
+ for querying minidump descriptor for a subsystem.
+Patch 6/6 Register pstore region with minidump.
+
+Testing of the patches has been done on sm8450 target with the help
+of out of tree patch which helps to set the download mode and storage
+type(on which dump will be saved) for which i will send separate series.
+
+Mukesh Ojha (6):
+  remoteproc: qcom: Expand MD_* as MINIDUMP_*
+  remoteproc: qcom: Move minidump specific data to qcom_minidump.h
+  soc: qcom: Add Qualcomm minidump kernel driver
+  arm64: defconfig: Enable Qualcomm minidump driver
+  remoterproc: qcom: refactor to leverage exported minidump symbol
+  pstore/ram: Register context with minidump
+
+ arch/arm64/configs/defconfig     |   1 +
+ drivers/remoteproc/qcom_common.c |  75 +-----
+ drivers/soc/qcom/Kconfig         |  14 ++
+ drivers/soc/qcom/Makefile        |   1 +
+ drivers/soc/qcom/qcom_minidump.c | 490 +++++++++++++++++++++++++++++++++++++++++
+ fs/pstore/ram.c                  |  77 ++++++
+ include/soc/qcom/minidump.h      |  40 ++++
+ include/soc/qcom/qcom_minidump.h |  88 +++++++
+ 8 files changed, 717 insertions(+), 69 deletions(-)
+ create mode 100644 drivers/soc/qcom/qcom_minidump.c
+ create mode 100644 include/soc/qcom/minidump.h
+ create mode 100644 include/soc/qcom/qcom_minidump.h
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.7.4
 
