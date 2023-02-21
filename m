@@ -2,172 +2,130 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E44C6379F
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Feb 2023 13:00:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC74DC61DA3
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Feb 2023 16:33:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233383AbjBUNAX (ORCPT
+        id S233404AbjBUQdv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Feb 2023 08:00:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56598 "EHLO
+        Tue, 21 Feb 2023 11:33:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233397AbjBUNAW (ORCPT
+        with ESMTP id S234277AbjBUQdu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Feb 2023 08:00:22 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2109.outbound.protection.outlook.com [40.107.244.109])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05905C143;
-        Tue, 21 Feb 2023 05:00:19 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TBX36V1N3zC7IoAqgbUGhwyOhpyjuDlSe7KVKBNM5shRmsGOgeg7tjyR5Cf+r0JjDssviUQ37Ouzfzh9kySQXxYhMKcrPt4lmV8nHTLd+GCWC+NjJ0VvnJMcwftpABrGVmkPHDhtWMlKfzVIDSW3T4RFx6jIVflfylJQSN8GKq9et65aByM7Pr0VjMIE6i88M6BfGIY7TtTU9kTmVp4NOp19KZ7HBAKZZLbuvfEO2MRRIXrdaq14R3VV6qLdtBSBmDXl2GtRc0coj00bnTcCbS+mSN0dRAxUdfJriEzgxrbguk8jbd6gJ6U3YAvAsFkrW80yG4nQ1R6uIgfUEOj63w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sBlpbQswyjg+jHz2DrxIohaMv38hv5ks7y+DuNA2oW0=;
- b=aiVm2CwR1peXuhWNe/DnaJrsgPaBwxGSNuw7THryrd1e3j7yjiHW1crM8QjDGxHF3jostb176tGWUYxHQLAim1HwptJx5ZxfH1WAIEefh/VJNsp6IticZ7p9W8XxP3A+qKUftMBxziXYNpnQTsQXIb8HrdZqB6UxrYS8mGxwBLekNH88pdD7g+HJ8CN8Vl9hKPRrMUoRyTv1xbPJf2BZxRUKb+o2BB+fjQIbAd/6hgMHty5s7Bw4GuII7NxgdiBMdZluR+rt5MRHDcU1mNzLPKRYBfMMmBSSCSKwwt6yyoOkuKh5FnBiWUy4UUyTmNBZP+fEXOdbRNediAbKVh2K2w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cornelisnetworks.com; dmarc=pass action=none
- header.from=cornelisnetworks.com; dkim=pass header.d=cornelisnetworks.com;
- arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cornelisnetworks.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBlpbQswyjg+jHz2DrxIohaMv38hv5ks7y+DuNA2oW0=;
- b=eF1Z0Mf4IwLB9K5ILtgffV03RJjIlkSQtDPf8yHIuBZUvNOG8KVPeYbeS/9yy8VVvlnYbZYn7+yn08KcW+lLfs9i2FbB/2BJ0Aw6qlkhqKFzRFVr8JfY6v/9Bj1IzcALnnQWJ5qCQrIue2E692o55GflSFDGKFQQX9kqhSOmiabfY7JWdscgeK5DwB49TaCE/eepuUWFr5z5pFao+B+DaCB+ozeid3oA6P0b47Z0O7n9NygXDbQs0G0TBZZx/Th/vV47slfVWp0cp+0+DXsyuIsSZsoQ3DYQFVJEujtP2UUZmiFuS6ffVmb3B/dn3FFUNT/uFdKQxpKy805ZATxowg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cornelisnetworks.com;
-Received: from BN6PR01MB2610.prod.exchangelabs.com (2603:10b6:404:d0::7) by
- SA1PR01MB8202.prod.exchangelabs.com (2603:10b6:806:373::22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6111.21; Tue, 21 Feb 2023 13:00:16 +0000
-Received: from BN6PR01MB2610.prod.exchangelabs.com
- ([fe80::5844:6112:4eb1:a8f8]) by BN6PR01MB2610.prod.exchangelabs.com
- ([fe80::5844:6112:4eb1:a8f8%9]) with mapi id 15.20.6111.021; Tue, 21 Feb 2023
- 13:00:15 +0000
-Message-ID: <6d2fe281-891c-8909-5330-f05d4407431a@cornelisnetworks.com>
-Date:   Tue, 21 Feb 2023 08:00:12 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.8.0
-Subject: Re: [PATCH] IB/rdmavt: Fix target union member for rvt_post_one_wr()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Zhang Yi <yizhan@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230218185701.never.779-kees@kernel.org>
-Content-Language: en-US
-From:   Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
-In-Reply-To: <20230218185701.never.779-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BLAPR03CA0086.namprd03.prod.outlook.com
- (2603:10b6:208:329::31) To BN6PR01MB2610.prod.exchangelabs.com
- (2603:10b6:404:d0::7)
+        Tue, 21 Feb 2023 11:33:50 -0500
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E08F1206C
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Feb 2023 08:33:49 -0800 (PST)
+Received: by mail-io1-f80.google.com with SMTP id v4-20020a6b5b04000000b0074065ea437aso2580763ioh.12
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Feb 2023 08:33:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oOhjUoQnskTkMpqfJaB/JbTGXYNinWurKj0BmzQc7Lg=;
+        b=g81ATNlMFDaRRz/Gkj4uk8Xz4iQ6xl3k16hvRwpUGTRYmhuj0uLlbEaHuyzUHx0F3W
+         19QKYIeWSX7eJqdUDkoDrB9qj40pCMNbnUXaFoYvoAwExg+kTBg3PSiTtAg67sBwW9eC
+         kdAzJ8T3NTXLciQPCMEQUPQA0jqCYsiSobR2Wjnua8r/+q1IFpulXi3E4QvfIkBWSxYT
+         9+hKzyWrHRXYOmNHajhTBCGiRMXRWDERboxpPcXm0aIT6VJiu5zHwj+fWqrF+bzgtk2+
+         k7SGbm+TC23kM3o05C1rKkuBIhJWgcb7OS4MUgUQMo8EdlyQLfuq/gnWse16amMDja75
+         wAxw==
+X-Gm-Message-State: AO0yUKWu5xJPkMgsdGR8oaJ7otDWhhC4U17xj6VNL3Ahlvi2ZIATDo3p
+        5ZrV5GWXgL12oGiu3CLn2ZKaLwRKdEU/AfmtZcJRZH8inyx4
+X-Google-Smtp-Source: AK7set/PmndAY7N0ZzuZ+dYr5XjX7uymv3DMFsjWh1nTxgmR9l+EOwIp3PofBP7+WrQES5vr8ou/d7+MyZak1XoQdZlz4NHe81ac
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN6PR01MB2610:EE_|SA1PR01MB8202:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6bf2d972-f835-4d17-3fcd-08db140b939a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8MYQ+z39+cxgNvMZGAKIMMLam+PuENEHnRO7GZjpL+zmnLU6cBwbNKQtJPQWVLrEXJkLBUxFejQGhsniM7+vsxe0+Suowea7ObJW+Kfr92lnte/wxTs5H6iWOQNtsXvYAkf8jiuKRoDTQNOHz+bM2nts7M+G4inCRi1wHHYjxSf2pJkuWena5HIT3miTKJiZbQRZdczVC/FrmVKjxYbpq/a8j6Sxknu9+EhlhGX9wR4VLkJnEjePLKELL8i6svYt2Hg62420GqwVtGXzypnKmbR2LLuQto+iSS598D2kETCTpyGYFSOsZSi3kdDE02pQViD4u/Rab2RRqQ+buaZFAjqo299rU4zRLrTR6iesL4/HRo2pCfL21bp1ISewdhf3eD3jokfgCDImHcrlwt7scjqXNfmGgbSLjP/0wI8JO0PAhMx+pqIoSIfvnBBRkk+K5ZTaywXhFITrC0IHUPkyspKo2kt9M8JkGhkvZ7wuHTeUs5Jn0ATKbvCnV4qv8b7Zr6nSZnceKNDemVpjqFzic/jQAcLEzUey1ibgFhmHoJEVviXw/ku/rtryDAr2Fn1ZiagGwoMPtGSNMOA74J89dim8HFg1su2tdZwA3AWCcxAu/SnFgwf4rZxrv18vwKiV0RTQVMS/3wznYLMD9v5wNs/As/C8Y0QTSk/Bn/BfJ1DzVzhptTr7HyIZghIqvKGkeZk8hfpHoTmY6Njo53kSjg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR01MB2610.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(396003)(39830400003)(136003)(346002)(366004)(451199018)(186003)(26005)(52116002)(6512007)(6486002)(966005)(36756003)(31696002)(31686004)(6916009)(478600001)(2616005)(86362001)(66476007)(316002)(8676002)(66946007)(66556008)(6506007)(6666004)(53546011)(54906003)(83380400001)(4326008)(41300700001)(8936002)(5660300002)(44832011)(2906002)(38350700002)(38100700002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NHNvTVFuNkJwYzlIZS9NcGhMRW5Hckg3R0tjL3NxQVRSeVNOaXNmcnN1bDJJ?=
- =?utf-8?B?OG1LUlhQdHdlZFMwRXdmSkZGWmFaUlo3WlpMeHluS2Nlbzd5TUY0VmQwNjZT?=
- =?utf-8?B?ZXk0enk1VUh1N2lPOFV3MDF2SHh5UlJJcncyc0ZqREtpWFFhU1ozUkJVQnRC?=
- =?utf-8?B?UlNNYm5nTmN6QlFIUnJkdXFsTFo4cXMvZTlWYkxSdjhyaVhJS0pHbWkxU0Nw?=
- =?utf-8?B?VnBTYkd6MDlPZGxEYm5ieFBlcGFCamxaaHJXUVZVa2hQMlRLMGlaeStYMEhC?=
- =?utf-8?B?bkp6amRyVnRURE4wMlZoZ2MxT3pDZzZFcUNmR0NHNzg3cFZUTkxuUGNiR2ZR?=
- =?utf-8?B?eTBSL2Rta1hUdVBIVmxHc1JHYW43dWxHQ0xKdzFSbDlySk5paXR2NlZQMmU1?=
- =?utf-8?B?L2FvUGdwMUsyd1BleHNjdVN1ZWJXOW95c2s0cXpWcDdjT2UzRVhqSVR5b25R?=
- =?utf-8?B?SVorU1hkOVdldnRuUGk3MlM5UWVVdE1OekppZDVvQ0RvSFNQTHlVOTVhcXJz?=
- =?utf-8?B?TXV3cmd1MzlRMGlTUWlKMU1taXJycFlVRlBWcUtqaTdEZ00xeWh5ZlZUUCtY?=
- =?utf-8?B?aThyOVhWcVFldllsTlpSTC9nUkxVcDRZY1E3WUd1T1pkU2U1cXhoOE9KL3ZM?=
- =?utf-8?B?dWY0VWt3c0FSNUc0QmdVM1RYc3F1OVFzVkY4d0FMck03NDFsOTJNZmtrTU1s?=
- =?utf-8?B?NXk3eWpUYi9wckNJQU5waHFLUG9YWnFZT0c1UkFuRi9sT0F4M0Myd29vRncz?=
- =?utf-8?B?dldOOWZhZ2lVampJZjkzNEdIODFFWGpFRXZyMldhWm9Celc5ZnY3d3M3UUVV?=
- =?utf-8?B?bkJ5UWtUcWVDMWgxMWZVdkppeDcwL0tYa2Q0ejNKanNOaVFXSWZKeDJTdExE?=
- =?utf-8?B?NzgvS1hPM25ERFdmV0Iyd0hwdkllbmFpZTg3enpjM0dCRUdpYlQveEVvTUxY?=
- =?utf-8?B?cHd0T1RmT09VVjI2ZkFFL21IaUdiSlBuUG0xQVpnQUZhYUlIbkFwdFdybEM4?=
- =?utf-8?B?M244MUREb1JqVS9ITGpHSWlzZXpqc3h0aEdheW92Y0d0dld6Qkw2aDRyRGF3?=
- =?utf-8?B?ZW5yV3NzWDVuUUFjaS9zYmpVZDRnemtRemFDelRoaWVrUFQwVzhXR2oxTE9J?=
- =?utf-8?B?QVdJL0hpWXRjNUN5ZDhhcjlYZFpDelZJR29hdTBZUFpxL0s1WmoyMFZBdDNH?=
- =?utf-8?B?VUpZRWVZdjF2aDhnNzVYM2w3eW0rVEdFaDZqaXArSUY1amFZS2F4T2ltNTha?=
- =?utf-8?B?ZklGdU9ubUR6YTVjbWNzdUhabWpXWDltRHZZVG9UNUlwTjZKS1ZQVVNCa00r?=
- =?utf-8?B?dm0vOXRhQTRmRlVhV3FBaUJhcnY2M3BHckVMTlpiVlhMSkxPTSsxSm5GR0J6?=
- =?utf-8?B?dUFGMjBHdnJuak5kbWVlVGt1Y2EwMDhUbDVIS2hkTENZQ1JYUWFjeTR0NVJr?=
- =?utf-8?B?UEtGNTZhY0Zjd2pqUnVHay9oVFZ2ZWRZSXJUWEcvUDFlVGI0ZjZLUkVZYklY?=
- =?utf-8?B?alFBWjVJbE5wUWN3elZvTFVENWdCbmJ1OFkrVHB1TDdOQURKSzdwUkxuUDBR?=
- =?utf-8?B?MUpSWm9UdyticUNpeUhoa2xYVjRsY3FKMjhaOFNNK21JcTlKS1lUdEwrTDI1?=
- =?utf-8?B?OFIyZ0pqRWFHQlA3d0l3Q2ZiS1VsRGk1VndiVGdDM1hxU1BYbVkwOW90M2dD?=
- =?utf-8?B?ZFhzK2xUZW91S3N3L3VUSzRpa0JqNE1LdWoreUQ0dTFndUp0a3FOUHhnQmR2?=
- =?utf-8?B?MDV0ay9SWkI3SXAvWVVTciswUFJMSU04RjFncXN1SllCeVpGSXV0YW5aUFBo?=
- =?utf-8?B?dGQ0bmQyVjUydlM2N1hPZ0tWN1V6SWFMTXlMU3BTOFd1ZmdhVzRRRVRJdDRU?=
- =?utf-8?B?ZkZpZHI1Q2JtVlNqeFYyZktCVWkzcEJXMzhTckZJY0VkYXloKzYyazdaUWFn?=
- =?utf-8?B?NFJoMXJMUXQwclNXSEEwV2gzVEVlQnMxOEFROE5xeTVjOGZ5a2g4TURvcHg4?=
- =?utf-8?B?T0lLOVBjR0Zzbm5DcWdWMFJzMlFhUU96N0dGNS81R2xLNCtZLzJta2Q3ZUsz?=
- =?utf-8?B?S2pWb3BBa2wzYkNLT3lOVDBvMUJwbFM1YXZEbHFoZm1rWHJkZ1cxOWZNMEh5?=
- =?utf-8?B?a1U5TVp4RG1scEFqQ1NscGJoVGhCZytHVlU3YWtNTmtJaFgvSVJkMytYcjM4?=
- =?utf-8?Q?T+qTOdzsz50wTgk4+Hf0Jes=3D?=
-X-OriginatorOrg: cornelisnetworks.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bf2d972-f835-4d17-3fcd-08db140b939a
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR01MB2610.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2023 13:00:15.8487
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4dbdb7da-74ee-4b45-8747-ef5ce5ebe68a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eTaHnkB0zyPG8059MaB5Sj721osXJAMty9mLTSAQM2CogQiKefIqsvRSM/cz5qJySIg4CctKc5ldD5NlTCEdWiGEQGi0+2eTrh60SfHM0U7ZgeLXXCoHY3olJWz/3JdV
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB8202
+X-Received: by 2002:a6b:7e48:0:b0:73e:13d6:2552 with SMTP id
+ k8-20020a6b7e48000000b0073e13d62552mr3432769ioq.70.1676997228951; Tue, 21 Feb
+ 2023 08:33:48 -0800 (PST)
+Date:   Tue, 21 Feb 2023 08:33:48 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001efd4205f53858e1@google.com>
+Subject: [syzbot] [hardening?] [mm?] BUG: bad usercopy in io_openat2_prep (3)
+From:   syzbot <syzbot+e443ef743ffab8e8bda9@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2/18/23 1:57 PM, Kees Cook wrote:
-> The "cplen" result used by the memcpy() into struct rvt_swqe "wqe" may
-> be sized to 80 for struct rvt_ud_wr (which is member "ud_wr", not "wr"
-> which is only 40 bytes in size). Change the destination union member so
-> the compiler can use the correct bounds check.
-> 
-> struct rvt_swqe {
->         union {
->                 struct ib_send_wr wr;   /* don't use wr.sg_list */
->                 struct rvt_ud_wr ud_wr;
-> 		...
-> 	};
-> 	...
-> };
-> 
-> Silences false positive memcpy() run-time warning:
-> 
->   memcpy: detected field-spanning write (size 80) of single field "&wqe->wr" at drivers/infiniband/sw/rdmavt/qp.c:2043 (size 40)
-> 
-> Reported-by: Zhang Yi <yizhan@redhat.com>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216561
-> Cc: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Cc: linux-rdma@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/infiniband/sw/rdmavt/qp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-> index 3acab569fbb9..3f707e1fa517 100644
-> --- a/drivers/infiniband/sw/rdmavt/qp.c
-> +++ b/drivers/infiniband/sw/rdmavt/qp.c
-> @@ -2040,7 +2040,7 @@ static int rvt_post_one_wr(struct rvt_qp *qp,
->  	wqe = rvt_get_swqe_ptr(qp, qp->s_head);
->  
->  	/* cplen has length from above */
-> -	memcpy(&wqe->wr, wr, cplen);
-> +	memcpy(&wqe->ud_wr, wr, cplen);
->  
->  	wqe->length = 0;
->  	j = 0;
+Hello,
 
-Thanks for the patch. We've been debating this issue internally since last week.
-The problem I have is this makes it look like everything is a "UD" req when it
-could be a different QP type. Maybe we just need a comment explaining.
+syzbot found the following issue on:
 
--Denny
+HEAD commit:    2d3827b3f393 Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=14eb5abf480000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=606ed7eeab569393
+dashboard link: https://syzkaller.appspot.com/bug?extid=e443ef743ffab8e8bda9
+compiler:       Debian clang version 15.0.7, GNU ld (GNU Binutils for Debian) 2.35.2
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13088227480000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1367b358c80000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/fd94d68ff17d/disk-2d3827b3.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f304fbef0773/vmlinux-2d3827b3.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/74eb318f51b0/Image-2d3827b3.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e443ef743ffab8e8bda9@syzkaller.appspotmail.com
+
+usercopy: Kernel memory overwrite attempt detected to SLUB object 'pid' (offset 24, size 24)!
+------------[ cut here ]------------
+kernel BUG at mm/usercopy.c:102!
+Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 4410 Comm: syz-executor832 Not tainted 6.2.0-rc7-syzkaller-17907-g2d3827b3f393 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/21/2023
+pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : usercopy_abort+0x90/0x94 mm/usercopy.c:90
+lr : usercopy_abort+0x90/0x94 mm/usercopy.c:90
+sp : ffff800012ee3b90
+x29: ffff800012ee3ba0 x28: 000000000000001c x27: ffff0000c72f8000
+x26: 0000000020000000 x25: ffff80000cf52000 x24: fffffc0000000000
+x23: 05ffc00000000200 x22: fffffc00030cbe40 x21: ffff0000c32f9f18
+x20: 0000000000000000 x19: 0000000000000018 x18: 0000000000002bce
+x17: 63656a626f204255 x16: ffff0000c72f89f8 x15: ffff80000dbd2118
+x14: ffff0000c72f8000 x13: 00000000ffffffff x12: ffff0000c72f8000
+x11: ff808000081bbb4c x10: 0000000000000000 x9 : adc5950f6e29d600
+x8 : adc5950f6e29d600 x7 : ffff80000bf650d4 x6 : 0000000000000000
+x5 : 0000000000000001 x4 : 0000000000000001 x3 : 0000000000000000
+x2 : ffff0001fefbff08 x1 : 0000000100000000 x0 : 000000000000005d
+Call trace:
+ usercopy_abort+0x90/0x94 mm/usercopy.c:90
+ __check_heap_object+0xa8/0x100 mm/slub.c:4761
+ check_heap_object mm/usercopy.c:196 [inline]
+ __check_object_size+0x208/0x6b8 mm/usercopy.c:251
+ check_object_size include/linux/thread_info.h:199 [inline]
+ check_copy_size include/linux/thread_info.h:235 [inline]
+ copy_from_user include/linux/uaccess.h:160 [inline]
+ copy_struct_from_user include/linux/uaccess.h:341 [inline]
+ io_openat2_prep+0xcc/0x2b8 io_uring/openclose.c:89
+ io_init_req io_uring/io_uring.c:2194 [inline]
+ io_submit_sqe io_uring/io_uring.c:2241 [inline]
+ io_submit_sqes+0x338/0xbb8 io_uring/io_uring.c:2395
+ __do_sys_io_uring_enter io_uring/io_uring.c:3343 [inline]
+ __se_sys_io_uring_enter io_uring/io_uring.c:3275 [inline]
+ __arm64_sys_io_uring_enter+0x168/0x1308 io_uring/io_uring.c:3275
+ __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
+ invoke_syscall+0x64/0x178 arch/arm64/kernel/syscall.c:52
+ el0_svc_common+0xbc/0x180 arch/arm64/kernel/syscall.c:142
+ do_el0_svc+0x48/0x110 arch/arm64/kernel/syscall.c:193
+ el0_svc+0x58/0x14c arch/arm64/kernel/entry-common.c:637
+ el0t_64_sync_handler+0x84/0xf0 arch/arm64/kernel/entry-common.c:655
+ el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:591
+Code: 91388800 aa0903e1 f90003e8 94e6d752 (d4210000) 
+---[ end trace 0000000000000000 ]---
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
