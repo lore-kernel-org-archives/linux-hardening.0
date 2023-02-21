@@ -2,75 +2,83 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A34C636D7
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Feb 2023 19:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A9AC61DA3
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Feb 2023 19:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbjBUT35 (ORCPT
+        id S229840AbjBUTtG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Feb 2023 14:29:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49010 "EHLO
+        Tue, 21 Feb 2023 14:49:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230071AbjBUT3z (ORCPT
+        with ESMTP id S229702AbjBUTtF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Feb 2023 14:29:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B310A2B618;
-        Tue, 21 Feb 2023 11:29:51 -0800 (PST)
+        Tue, 21 Feb 2023 14:49:05 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02F42D46;
+        Tue, 21 Feb 2023 11:49:04 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5C663B810A9;
-        Tue, 21 Feb 2023 19:29:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 165D7C433EF;
-        Tue, 21 Feb 2023 19:29:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2EA986119A;
+        Tue, 21 Feb 2023 19:49:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76FCFC433EF;
+        Tue, 21 Feb 2023 19:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677007789;
-        bh=IT9EKID+Ph3Gf3/paKBi2ouHoR8pyX2t3S8zj16/NJI=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=QDBfj75udVhL4U0fNWCxxWCCVqjDgIeyl1oDhqnDFxP2/MhIXUp0ozGWxJeHtIVe7
-         WIO0XmvoaGebxbrMfoC8nRADGBcLbXPe5hWMNv9QXwzUko3Jw7uFRkaMEeJ0FzoUeq
-         MW7884fX/Lgk1O/8gQ58+JaGlQjk1v5dO7zsGglCE/KteYOy7CZv+iGehrEl/89WXg
-         wsYR6kCJ6gaLmYnA1PG6FV7HipuaG3RUF04Pa2YNuwvPLs7efzf5TY2HeN8AkBN5SQ
-         rtxzzVPZYGzDnJzha6wUj1NXblnYBoVP2blKU2FVWeWEyHWVXAEsmYIdN9AQgLGJNS
-         QvvBUFBBldsGA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0572AC43158;
-        Tue, 21 Feb 2023 19:29:49 +0000 (UTC)
-Subject: Re: [GIT PULL] hardening updates for v6.3-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <63efd7ab.170a0220.3442b.6609@mx.google.com>
-References: <63efd7ab.170a0220.3442b.6609@mx.google.com>
-X-PR-Tracked-List-Id: <linux-hardening.vger.kernel.org>
-X-PR-Tracked-Message-Id: <63efd7ab.170a0220.3442b.6609@mx.google.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.3-rc1
-X-PR-Tracked-Commit-Id: 78f7a3fd6dc66cb788c21d7705977ed13c879351
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4a7d37e824f57dbace61abf62f53843800bd245c
-Message-Id: <167700778901.6594.12988996476611010913.pr-tracker-bot@kernel.org>
-Date:   Tue, 21 Feb 2023 19:29:49 +0000
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
+        s=k20201202; t=1677008943;
+        bh=RupYw2DGR5V306vxxYF2YLT8KFlxHxLPTkxqfdOg4gA=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=rtj4TWz4tw8KQOaANUPD4QAcyVf8cMOEtBOlk0RoMFLej/IVe9dW/etu+1jWqART7
+         EcaCQu0LSkFsJ9Rjc30+4RoVuRdaQPQ9uRM2EVNrxHN8u2D8l3oRwwZyZkJ/xwTKxN
+         Rb+f9iZ6GfhOlky5+V/bw0461ETn+85p3fzx5Scv3cMDJoLzHKZnAGq1RcoOjqeRzI
+         DLENNP2bKQfkRiGnl0iuFSpotMukYQ3qCCbkF0k7SRiZCCs+uyXfhfmIuiDDPMAu/X
+         m984Lb1QnQk+3Emni6IEaNnaRLQ6YvhRa+zoewb4QDrmWBSunYEr12L3AavYWxYSfV
+         ZMcW78LArfl1g==
+Date:   Tue, 21 Feb 2023 11:49:00 -0800
+From:   Kees Cook <kees@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>
+CC:     linux-kernel@vger.kernel.org,
         Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
         Sam James <sam@gentoo.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Eric Biggers <ebiggers@kernel.org>,
         Stephen Rothwell <sfr@canb.auug.org.au>,
         linux-hardening@vger.kernel.org
+Subject: Re: [GIT PULL] hardening updates for v6.3-rc1
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAHk-=wgw++ccN-Pd1npZsBSDD3z6EGUSKsWuAEh5YC-TmfJAug@mail.gmail.com>
+References: <63efd7ab.170a0220.3442b.6609@mx.google.com> <CAHk-=wgw++ccN-Pd1npZsBSDD3z6EGUSKsWuAEh5YC-TmfJAug@mail.gmail.com>
+Message-ID: <F522EBF9-9BB9-4258-B614-1BB87455B4F5@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The pull request you sent on Fri, 17 Feb 2023 11:38:18 -0800:
+On February 21, 2023 11:16:33 AM PST, Linus Torvalds <torvalds@linux-founda=
+tion=2Eorg> wrote:
+>On Fri, Feb 17, 2023 at 11:38 AM Kees Cook <keescook@chromium=2Eorg> wrot=
+e:
+>>
+>> Please pull these hardening updates for v6=2E3-rc1=2E
+>
+>So I've pulled this, but while looking at it, I see commit
+>5c0f220e1b2d ("Merge branch 'for-linus/hardening' into
+>for-next/hardening")=2E
+>
+>And that one-liner shortlog part is literally the whole commit message=2E
+>
+>I've said this before, and apparently I need to say this again: if you
+>cannot be bothered to explain *WHY* a merge exists, then that merge is
+>buggy garbage by definition=2E
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.3-rc1
+Okay, understood=2E This was a merge of the fixes for v6=2E2=2E I'll expla=
+in that more clearly in the log from now on=2E :)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4a7d37e824f57dbace61abf62f53843800bd245c
+-Kees
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+--=20
+Kees Cook
