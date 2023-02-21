@@ -2,94 +2,88 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FBDC636D6
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Feb 2023 08:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1F4C61DA3
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Feb 2023 00:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231221AbjBTIbD (ORCPT
+        id S232375AbjBUAkT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Feb 2023 03:31:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44202 "EHLO
+        Mon, 20 Feb 2023 19:40:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231185AbjBTIbA (ORCPT
+        with ESMTP id S232149AbjBUAkT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Feb 2023 03:31:00 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE06A13D7F;
-        Mon, 20 Feb 2023 00:30:42 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id bg25-20020a05600c3c9900b003e21af96703so1260957wmb.2;
-        Mon, 20 Feb 2023 00:30:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=38iBZGa7mhNZ+ybXNGzs0YzZQaRgPLDUglmvTZSdzf8=;
-        b=BsV5zdPskSj8ghH5JlJqRFefi7fNHP2JNs7LiuqtoTEuZw5vhwy9OCzDhPUZHEbxIQ
-         1fYiNp7947ovMQX67Svb38s1tj0jHXDe85g1Ayl7XLPF3MaaawYySEV+MZ9sEPWJQCsd
-         kPhaaFFX/4E3OHWQe5rcmWND/mtQzJhML44Y91zs6ARXUTHx3158xlAod1aCAKkXW5CH
-         sgMcB17Z6SJpC8z7kkKJR+/GQQ01Z2LscndGD3mhc+HbOUvM8gnkcx52vw/EjYVh6hR3
-         ee0rtGeEas1nugZ5yyVG+O/VVQUMTyBi4SWFh6dyzxbPGl/rM+FwTNEe6w/2YeFuVRGr
-         0u8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=38iBZGa7mhNZ+ybXNGzs0YzZQaRgPLDUglmvTZSdzf8=;
-        b=RSURK9c3L90R6Veo9eiEjSue3iuZCGlVKsABrkpiyZI9KS/Kpn/PzDJdTBRgFSO9Hh
-         PGX7sbu5JNuF9A3xUC6wQGKlmHzb7SBR9sOqW1pxQpYGIvK8n6S/TkpBF3iRN2oJZRqk
-         Mgzw7LvXV87r2YUYSlUOjFOzvehNbU7E3GohDNddnrJrWRSOQ9Z90MngCX/lzL2S85B0
-         YUtwI+ZRhmQCyPeckfg8d8luflZgpS6choCdBmzqF5ODlXx9+XTHyKCl1dhG7brK6Fvc
-         dQYt8S4iCQFTtuQz01H82Ynlcb/zRalAoDLwwd47K0o9tDb1lgmNFl/RS7ts5H7+uIVI
-         u6JQ==
-X-Gm-Message-State: AO0yUKXrpxhmb8r2x9CnhEQrCoUsd1jdvk/HbF1y6BChqYUe3ahXnq3N
-        DCLa9ztARHnFkzq7MtIdjQQ=
-X-Google-Smtp-Source: AK7set/qzxLQRKHaj6GQzJWNraXjbW3LuAlEL2csLSRSz7eHOVKxOLZGQbn+89Bs4fr/SJOwF5zOvQ==
-X-Received: by 2002:a05:600c:1f06:b0:3df:9858:c03c with SMTP id bd6-20020a05600c1f0600b003df9858c03cmr417216wmb.17.1676881841332;
-        Mon, 20 Feb 2023 00:30:41 -0800 (PST)
-Received: from [192.168.1.115] ([77.124.87.109])
-        by smtp.gmail.com with ESMTPSA id l18-20020adfe9d2000000b002bfe08c566fsm1505663wrn.106.2023.02.20.00.30.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Feb 2023 00:30:40 -0800 (PST)
-Message-ID: <19004c92-6913-9e8e-7dc3-7d9173f131c1@gmail.com>
-Date:   Mon, 20 Feb 2023 10:30:39 +0200
+        Mon, 20 Feb 2023 19:40:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E9E71A66E;
+        Mon, 20 Feb 2023 16:40:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BFF5D60F58;
+        Tue, 21 Feb 2023 00:40:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1472CC433EF;
+        Tue, 21 Feb 2023 00:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676940017;
+        bh=VhTw6+ty7Uy7+7gPWBXLZ20yxCWQedsCuDqOZ/YlgEg=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=evKo+/LxHtHqQziyotx04ypCXrRCodUs41h4o7IpwaRL8cD4ZPOBvoiGX/SGIjnNh
+         dh47Wf2uz2YDLPv9rBSM3RVG75bxBbdJxn9S8YikvrV7vNmKcptQvposkZ5Ld1Ra+F
+         Iz3E+yjpqpqHtbPgyg+uQJkzj2gyc7+NaeLDrPzwSXNXRe6+hJbg8RTwGQA/aYz46f
+         G0+WkO6EiFS7Feu9mg01iivlzCUbmS9yAXGSiROjdTS18VW9RA55jsAGskYfpOb9vW
+         N6HHAs2YTHE1dhgn4DYkMsFKRsRPcEruVkbUqc8lRPFnYWQazyQ3DAmHmn4AFP3FYV
+         q/afxOrJ9Oj2A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id EE8DBC691DE;
+        Tue, 21 Feb 2023 00:40:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
+Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH] net/mlx4_en: Introduce flexible array to silence overflow
  warning
-Content-Language: en-US
-To:     Josef Oskera <joskera@redhat.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Tariq Toukan <tariqt@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Yishai Hadas <yishaih@nvidia.com>, netdev@vger.kernel.org,
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167694001697.5796.9907214630396973552.git-patchwork-notify@kernel.org>
+Date:   Tue, 21 Feb 2023 00:40:16 +0000
+References: <20230218183842.never.954-kees@kernel.org>
+In-Reply-To: <20230218183842.never.954-kees@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     tariqt@nvidia.com, joskera@redhat.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        yishaih@nvidia.com, netdev@vger.kernel.org,
         linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-References: <20230218183842.never.954-kees@kernel.org>
- <07b5c523-7174-ac30-65cb-182e07db08dc@gmail.com>
- <CA+hmzGDGRTOv9RBe8Kt9b8LdKpHLiGNTA5DkivatraXigWbDjg@mail.gmail.com>
-From:   Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <CA+hmzGDGRTOv9RBe8Kt9b8LdKpHLiGNTA5DkivatraXigWbDjg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hello:
 
+This patch was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-On 20/02/2023 4:09, Josef Oskera wrote:
-> I've tried Kees's patch and it works for me. I am able to compile mlx4
-> without the fortify warning.
+On Sat, 18 Feb 2023 10:38:50 -0800 you wrote:
+> The call "skb_copy_from_linear_data(skb, inl + 1, spc)" triggers a FORTIFY
+> memcpy() warning on ppc64 platform:
 > 
-> ne 19. 2. 2023 v 10:43 odesílatel Tariq Toukan <ttoukan.linux@gmail.com> napsal:
+> In function ‘fortify_memcpy_chk’,
+>     inlined from ‘skb_copy_from_linear_data’ at ./include/linux/skbuff.h:4029:2,
+>     inlined from ‘build_inline_wqe’ at drivers/net/ethernet/mellanox/mlx4/en_tx.c:722:4,
+>     inlined from ‘mlx4_en_xmit’ at drivers/net/ethernet/mellanox/mlx4/en_tx.c:1066:3:
+> ./include/linux/fortify-string.h:513:25: error: call to ‘__write_overflow_field’ declared with
+> attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()?
+> [-Werror=attribute-warning]
+>   513 |                         __write_overflow_field(p_size_field, size);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> [...]
 
-Thanks Josef.
-Then let's go with this one.
+Here is the summary with links:
+  - net/mlx4_en: Introduce flexible array to silence overflow warning
+    https://git.kernel.org/netdev/net-next/c/f8f185e39b4d
 
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
