@@ -2,127 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D4CC64ED6
-	for <linux-hardening@archiver.kernel.org>; Thu, 23 Feb 2023 12:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC995C64ED8
+	for <linux-hardening@archiver.kernel.org>; Thu, 23 Feb 2023 19:43:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234059AbjBWMjF (ORCPT
+        id S229844AbjBWTn3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 23 Feb 2023 07:39:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35804 "EHLO
+        Thu, 23 Feb 2023 14:43:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233896AbjBWMjA (ORCPT
+        with ESMTP id S229784AbjBWTn2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 23 Feb 2023 07:39:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7B0CC00
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Feb 2023 04:37:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1677155876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=o5faige4boHy1KDnDJFUMGzlyi7Wgdd7JL40G0EvBo0=;
-        b=DAd69z/mYzo+WhTe+QrdMa5w37mfk94GO5CzaCRSOEbhF+nhiqNXPbPhC/TArBDxe5+B9+
-        liEk1vMkKXZ/PdYUSmxQYw0OoYAvhg33TEnNA7VnKGnwqpzN2PcPOSVg+edfytRdxDJTkD
-        bSzjTpjE7EMvgAL9ZDqsoUIkwDr3Q1o=
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
- [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-518-WDeSMvYEM_eQVM9eqe2NGw-1; Thu, 23 Feb 2023 07:37:55 -0500
-X-MC-Unique: WDeSMvYEM_eQVM9eqe2NGw-1
-Received: by mail-io1-f70.google.com with SMTP id s1-20020a6bd301000000b0073e7646594aso6524350iob.8
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Feb 2023 04:37:55 -0800 (PST)
+        Thu, 23 Feb 2023 14:43:28 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD52D4216
+        for <linux-hardening@vger.kernel.org>; Thu, 23 Feb 2023 11:43:27 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id i10so5410216plr.9
+        for <linux-hardening@vger.kernel.org>; Thu, 23 Feb 2023 11:43:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=LjnO9LX2oaudWt6rcbd+l5z7VPXLNIdPSojjdZ3yYwY=;
+        b=hiuStAIwYFXYL421s/3Lu/eOuoTSSlsQBwaCgifpmsZg6YhziKooeTzsZenHIOHT+I
+         314pOCAXOA2sfpZ/KQI3DoDZs5Cu6ZyyWzg0Tv7bGySCcvd0+owffRaZwi/mRsXbLhBG
+         1RokLHwoxZHNcxvJqODrJP0OpFr7Sx2dogisA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o5faige4boHy1KDnDJFUMGzlyi7Wgdd7JL40G0EvBo0=;
-        b=khuzR7GD+Zc1s9pNhmeBVbRQobPBgo8tg9tfdnzx2FvSoMVO8Y9c+SvEvanrUSa0If
-         mqS+mqiqQa8AsX6y8L2MFtOva1j7NfenTyuPQFrBG6HMm4KKD9A1pUktX6XmQOfsOUjY
-         qFTpD3NiZ4eyRndaMcsVXZohX038xwGhJ1eqO13RT6Ym4iMR5WcTu/0Om1xVUqMa8ZuK
-         rljJL6PJOkiYaKDpTuSHdPnSABbFiYfytAuUqoHK3ITo62JlQSF3VqrnKDgjm9IZqKGw
-         kciJb/OLcxLjLrpskMLimSPrG4Uzu200/5jym0i8d4k1oqJh5SbZquJ+D8/Ojos26yYg
-         5R2A==
-X-Gm-Message-State: AO0yUKUKNRsWUTyFufgNpf4MCz3mc6xg/wQsje+ZJw1KMIRVoP+HtuLR
-        Irye2R1Ja24ud3kRhpXXODw3dfHkv0Uh8nq8g2U3f7Pkzn6Id6m7vkwJHlvma4TfVi5f2DOysS6
-        /B2VN6Q341zWKuuouQPDsC+Imz2Oo2+kvcA==
-X-Received: by 2002:a05:6e02:1445:b0:316:e54a:828f with SMTP id p5-20020a056e02144500b00316e54a828fmr6493865ilo.6.1677155874524;
-        Thu, 23 Feb 2023 04:37:54 -0800 (PST)
-X-Google-Smtp-Source: AK7set/6AWA4CAuXGZNmzPhHzcrBdzMdBpWOTtYJucrF1Qv97MIIPEiFDxaTnG32VB1VQ2w0xUjrzA==
-X-Received: by 2002:a05:6e02:1445:b0:316:e54a:828f with SMTP id p5-20020a056e02144500b00316e54a828fmr6493856ilo.6.1677155874289;
-        Thu, 23 Feb 2023 04:37:54 -0800 (PST)
-Received: from x1 (c-73-214-169-22.hsd1.pa.comcast.net. [73.214.169.22])
-        by smtp.gmail.com with ESMTPSA id y22-20020a02bb16000000b0039e89ea68f9sm1759062jan.135.2023.02.23.04.37.52
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LjnO9LX2oaudWt6rcbd+l5z7VPXLNIdPSojjdZ3yYwY=;
+        b=AJVAMevQr8Kwvg0wEVwyBOGqBOSJBqUfj7RW/9osOg/1TO7p2pub+3pex5MkL1Q8xJ
+         EpsWBGMGreoZEDNZSzPTFCh3+9LokinQrD1CzmSGbzYPLm9Tzxt3x4gLEhSlREgMddyT
+         NbiCUi7QnWTSTDyuSLMRgj2dONbqldPKthXN8bOSTrqLAUqWEAuArt0YDMTlEA3KMIwv
+         EH8gTlKmZxF3h+F3DD0s+r9Xb9x05iAgeQWnL+XVEc4QQ+d3xI3bcJQ7IIXv0oKMZhml
+         KrNp5UvqkD0teBR8Wmty3wDyTbboiIsL/4zTDlH3Ai1q/YGS44SSMNGjrHw/v6u3+tvB
+         2ZKQ==
+X-Gm-Message-State: AO0yUKWaEDba6yd14dU9NYuradUUq2DQr3iomH57neY6YckV1I7l4Rbi
+        UKXAS5gBdd/SXmQN7vOYq9QOVA==
+X-Google-Smtp-Source: AK7set+TL9Ckjp+vyRH438uqoixtcPKXpe+lB8xFoGl83ryXnOWzsjiRVgjs0r/TRLnZz4KSDGKWBQ==
+X-Received: by 2002:a17:902:e890:b0:199:2a4f:be84 with SMTP id w16-20020a170902e89000b001992a4fbe84mr18564844plg.58.1677181407313;
+        Thu, 23 Feb 2023 11:43:27 -0800 (PST)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d5-20020a170902c18500b00198e12c499dsm7194331pld.282.2023.02.23.11.43.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Feb 2023 04:37:53 -0800 (PST)
-Date:   Thu, 23 Feb 2023 07:37:51 -0500
-From:   Brian Masney <bmasney@redhat.com>
+        Thu, 23 Feb 2023 11:43:26 -0800 (PST)
+Message-ID: <63f7c1de.170a0220.f48b.e137@mx.google.com>
+X-Google-Original-Message-ID: <202302231120.@keescook>
+Date:   Thu, 23 Feb 2023 11:43:26 -0800
+From:   Kees Cook <keescook@chromium.org>
 To:     Mukesh Ojha <quic_mojha@quicinc.com>
 Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        tony.luck@intel.com, gpiccoli@igalia.com, catalin.marinas@arm.com,
+        will@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH 0/6] Add basic Minidump kernel driver support
-Message-ID: <Y/deHzijzvuvCJ2M@x1>
+Subject: Re: [RFC PATCH 6/6] pstore/ram: Register context with minidump
 References: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
+ <1676978713-7394-7-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
-In-Reply-To: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1676978713-7394-7-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 21, 2023 at 04:55:07PM +0530, Mukesh Ojha wrote:
-> Minidump is a best effort mechanism to collect useful and predefined data
-> for first level of debugging on end user devices running on Qualcomm SoCs.
-> It is built on the premise that System on Chip (SoC) or subsystem part of
-> SoC crashes, due to a range of hardware and software bugs. Hence, the
-> ability to collect accurate data is only a best-effort. The data collected
-> could be invalid or corrupted, data collection itself could fail, and so on.
-> 
-> Qualcomm devices in engineering mode provides a mechanism for generating
-> full system ramdumps for post mortem debugging. But in some cases it's
-> however not feasible to capture the entire content of RAM. The minidump
-> mechanism provides the means for selecting which snippets should be
-> included in the ramdump.
-> 
-> The core of minidump feature is part of Qualcomm's boot firmware code.
-> It initializes shared memory (SMEM), which is a part of DDR and
-> allocates a small section of SMEM to minidump table i.e also called
-> global table of content (G-ToC). Each subsystem (APSS, ADSP, ...) has
-> their own table of segments to be included in the minidump and all get
-> their reference from G-ToC. Each segment/region has some details like
-> name, physical address and it's size etc. and it could be anywhere
-> scattered in the DDR.
-> 
-> Existing upstream Qualcomm remoteproc driver[1] already supports minidump
-> feature for remoteproc instances like ADSP, MODEM, ... where predefined
-> selective segments of subsystem region can be dumped as part of
-> coredump collection which generates smaller size artifacts compared to
-> complete coredump of subsystem on crash.
-> 
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/remoteproc/qcom_common.c#n142
-> 
-> In addition to managing and querying the APSS minidump description,
-> the Linux driver maintains a ELF header in a segment. This segment
-> gets updated with section/program header whenever a new entry gets
-> registered.
+On Tue, Feb 21, 2023 at 04:55:13PM +0530, Mukesh Ojha wrote:
+> There are system which does not uses pstore directly but
+> may have the interest in the context saved by pstore.
+> Register pstore regions with minidump so that it get
+> dumped on minidump collection.
 
-I'd like to test this series plus your series that sets the multiple
-download modes. Can you include documentation about how to actually use
-this new feature? Also the information that you provided above is really
-useful. I think that should also go in the documentation file as well.
+Okay, so, this is a really interesting case -- it's a RAM backend that
+is already found on a system by pstore via device tree, but there is
+_another_ RAM overlay (minidump) that would like to know more about how
+the pstore ram backend carves up the memory regions so it can examine
+them itself too. (i.e. it's another "interface" like the pstorefs.)
 
-I already have a reliable way to make a board go BOOM and go into
-ramdump mode.
+So we need to provide the mapping back to the overlay. It feels to me
+like the logic for this needs to live in the minidump driver itself
+(rather than in the pstore RAM backend). Specifically, it wants to know
+about all the operational frontends (dmesg, console, ftrace, pmsg) with
+their virt & phys addresses and size.
 
-Brian
+The frontends are defined via enum pstore_type_id, and the other values
+are "normal" types, so it should be possible to move this logic into
+minidump instead, leaving a simpler callback. Perhaps something like:
 
+void pstore_region_defined(enum pstore_type_id, void *virt,
+			   phys_addr_t phys, size_t size);
+
+How the pstore ram backend should know to call this, though, I'm
+struggling to find a sensible way. How can it determine if the device
+tree region is actually contained by a minidump overlay?
+
+-- 
+Kees Cook
