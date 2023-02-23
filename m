@@ -2,101 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC995C64ED8
-	for <linux-hardening@archiver.kernel.org>; Thu, 23 Feb 2023 19:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88855C64ED6
+	for <linux-hardening@archiver.kernel.org>; Thu, 23 Feb 2023 22:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229844AbjBWTn3 (ORCPT
+        id S229441AbjBWWXu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 23 Feb 2023 14:43:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37364 "EHLO
+        Thu, 23 Feb 2023 17:23:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229784AbjBWTn2 (ORCPT
+        with ESMTP id S229379AbjBWWXu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 23 Feb 2023 14:43:28 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD52D4216
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Feb 2023 11:43:27 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id i10so5410216plr.9
-        for <linux-hardening@vger.kernel.org>; Thu, 23 Feb 2023 11:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=LjnO9LX2oaudWt6rcbd+l5z7VPXLNIdPSojjdZ3yYwY=;
-        b=hiuStAIwYFXYL421s/3Lu/eOuoTSSlsQBwaCgifpmsZg6YhziKooeTzsZenHIOHT+I
-         314pOCAXOA2sfpZ/KQI3DoDZs5Cu6ZyyWzg0Tv7bGySCcvd0+owffRaZwi/mRsXbLhBG
-         1RokLHwoxZHNcxvJqODrJP0OpFr7Sx2dogisA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LjnO9LX2oaudWt6rcbd+l5z7VPXLNIdPSojjdZ3yYwY=;
-        b=AJVAMevQr8Kwvg0wEVwyBOGqBOSJBqUfj7RW/9osOg/1TO7p2pub+3pex5MkL1Q8xJ
-         EpsWBGMGreoZEDNZSzPTFCh3+9LokinQrD1CzmSGbzYPLm9Tzxt3x4gLEhSlREgMddyT
-         NbiCUi7QnWTSTDyuSLMRgj2dONbqldPKthXN8bOSTrqLAUqWEAuArt0YDMTlEA3KMIwv
-         EH8gTlKmZxF3h+F3DD0s+r9Xb9x05iAgeQWnL+XVEc4QQ+d3xI3bcJQ7IIXv0oKMZhml
-         KrNp5UvqkD0teBR8Wmty3wDyTbboiIsL/4zTDlH3Ai1q/YGS44SSMNGjrHw/v6u3+tvB
-         2ZKQ==
-X-Gm-Message-State: AO0yUKWaEDba6yd14dU9NYuradUUq2DQr3iomH57neY6YckV1I7l4Rbi
-        UKXAS5gBdd/SXmQN7vOYq9QOVA==
-X-Google-Smtp-Source: AK7set+TL9Ckjp+vyRH438uqoixtcPKXpe+lB8xFoGl83ryXnOWzsjiRVgjs0r/TRLnZz4KSDGKWBQ==
-X-Received: by 2002:a17:902:e890:b0:199:2a4f:be84 with SMTP id w16-20020a170902e89000b001992a4fbe84mr18564844plg.58.1677181407313;
-        Thu, 23 Feb 2023 11:43:27 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d5-20020a170902c18500b00198e12c499dsm7194331pld.282.2023.02.23.11.43.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Feb 2023 11:43:26 -0800 (PST)
-Message-ID: <63f7c1de.170a0220.f48b.e137@mx.google.com>
-X-Google-Original-Message-ID: <202302231120.@keescook>
-Date:   Thu, 23 Feb 2023 11:43:26 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        tony.luck@intel.com, gpiccoli@igalia.com, catalin.marinas@arm.com,
-        will@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH 6/6] pstore/ram: Register context with minidump
-References: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
- <1676978713-7394-7-git-send-email-quic_mojha@quicinc.com>
+        Thu, 23 Feb 2023 17:23:50 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D3F14208;
+        Thu, 23 Feb 2023 14:23:49 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B4F33617AB;
+        Thu, 23 Feb 2023 22:23:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E66A8C433EF;
+        Thu, 23 Feb 2023 22:23:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677191028;
+        bh=Fol8hNvH87YYIF1bZR/i5khr1RuizrUI3aldcifhpdo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KlZ4KxorGS+Tmv4YDi68lA4C7GenBJGAldBLipR+XVJ+TdU0ThBXzflYyNrY6xxIQ
+         b7cQ+STaqzkGVaEsnx1j+ycXkWXj0+CrV1cHmiTEWDwVUsrQhzYliNgZgxYqpWyACj
+         U0WYnPsGNwgGZAPJYSye/Qz8V8VEemCB6flLvhnna9vsY4nPjtWEwGwW3gki1avqYK
+         v8pgnh3UKBba7DGwYDKadKxMvlG8zkZCLuizcb9P2kvsHYmSSldqJ4mmyXTz3FdQaX
+         83mV6xnjW2+EE2XdQd3w5F7Ec4sWhhnOgoQl1QuwnPxxHoNb+O0avPxSvRizNrSuys
+         gEIzCfTOptEyA==
+Date:   Thu, 23 Feb 2023 16:24:13 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [GIT PULL] flexible-array transformations for 6.3-rc1
+Message-ID: <Y/fnjS5eHNauiUUR@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1676978713-7394-7-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Feb 21, 2023 at 04:55:13PM +0530, Mukesh Ojha wrote:
-> There are system which does not uses pstore directly but
-> may have the interest in the context saved by pstore.
-> Register pstore regions with minidump so that it get
-> dumped on minidump collection.
+The following changes since commit 88603b6dc419445847923fcb7fe5080067a30f98:
 
-Okay, so, this is a really interesting case -- it's a RAM backend that
-is already found on a system by pstore via device tree, but there is
-_another_ RAM overlay (minidump) that would like to know more about how
-the pstore ram backend carves up the memory regions so it can examine
-them itself too. (i.e. it's another "interface" like the pstorefs.)
+  Linux 6.2-rc2 (2023-01-01 13:53:16 -0800)
 
-So we need to provide the mapping back to the overlay. It feels to me
-like the logic for this needs to live in the minidump driver itself
-(rather than in the pstore RAM backend). Specifically, it wants to know
-about all the operational frontends (dmesg, console, ftrace, pmsg) with
-their virt & phys addresses and size.
+are available in the Git repository at:
 
-The frontends are defined via enum pstore_type_id, and the other values
-are "normal" types, so it should be possible to move this logic into
-minidump instead, leaving a simpler callback. Perhaps something like:
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flex-array-transformations-6.3-rc1
 
-void pstore_region_defined(enum pstore_type_id, void *virt,
-			   phys_addr_t phys, size_t size);
+for you to fetch changes up to b942a520d9e43bc31f0808d2f2267a1ddba75518:
 
-How the pstore ram backend should know to call this, though, I'm
-struggling to find a sensible way. How can it determine if the device
-tree region is actually contained by a minidump overlay?
+  bcache: Replace zero-length arrays with DECLARE_FLEX_ARRAY() helper (2023-01-05 17:48:45 -0600)
 
--- 
-Kees Cook
+----------------------------------------------------------------
+flexible-array transformations for 6.3-rc1
+
+Hi Linus,
+
+Please, pull the following patches that transform zero-length arrays,
+in unions, into flexible arrays. These patches have been baking in
+linux-next for the whole development cycle.
+
+Thanks
+--
+Gustavo
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (3):
+      exportfs: Replace zero-length array with DECLARE_FLEX_ARRAY() helper
+      mm/memremap: Replace zero-length array with DECLARE_FLEX_ARRAY() helper
+      bcache: Replace zero-length arrays with DECLARE_FLEX_ARRAY() helper
+
+ drivers/md/bcache/bcache_ondisk.h | 8 ++++----
+ include/linux/exportfs.h          | 2 +-
+ include/linux/memremap.h          | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
