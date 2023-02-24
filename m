@@ -2,58 +2,58 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC30FC6FA9D
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Feb 2023 09:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68D3C64ED8
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Feb 2023 09:00:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229898AbjBXJAL (ORCPT
+        id S229956AbjBXJAW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Feb 2023 04:00:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
+        Fri, 24 Feb 2023 04:00:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbjBXJAF (ORCPT
+        with ESMTP id S229884AbjBXJAK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Feb 2023 04:00:05 -0500
-Received: from mail-ed1-x54a.google.com (mail-ed1-x54a.google.com [IPv6:2a00:1450:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5947E55077
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Feb 2023 01:00:03 -0800 (PST)
-Received: by mail-ed1-x54a.google.com with SMTP id v12-20020a056402174c00b004acb5c6e52bso18215098edx.1
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Feb 2023 01:00:03 -0800 (PST)
+        Fri, 24 Feb 2023 04:00:10 -0500
+Received: from mail-ed1-x549.google.com (mail-ed1-x549.google.com [IPv6:2a00:1450:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73EAB3E087
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Feb 2023 01:00:08 -0800 (PST)
+Received: by mail-ed1-x549.google.com with SMTP id ec13-20020a0564020d4d00b004a621e993a8so18498741edb.13
+        for <linux-hardening@vger.kernel.org>; Fri, 24 Feb 2023 01:00:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ni0X0/loZejzrEM3ahtyHsQ4czmgqm9WNAw1TT3btvM=;
-        b=KNP4d6RVhpEjbQC3l2fT7kAl4C3wq4IJLBgd79IVsMNh23YbWQPxqNeNp4PNlX68dW
-         rVjsIqPdml9xCdbYExTQnHkglHOraVKUHi8/qeMC3A0BjfhF00nI7oV0i9lYvUjp+3Jy
-         06s7+Vsgaq+qITEL4UlWWmUEyFOmvxmbI33WEdvg/44hzTfS1YsYyJIlEIoO1pADPPyI
-         wUvDfvgb4DtiXPJvyc4ll/OFNetXkSHQURg/uKU+DyYrlA7oBOh6BQ/bmc0NaIgLL9F7
-         fa7+HKeZezfK5A1GpEJhWgtD/OGQgow/R7raRNgP6kyn44OIn90x9bADVFlDj7e3pksb
-         GLRg==
+        bh=AjV3k78q3XXhT1GHWCKfTuGEDWgoZOrO6Fv+xEYetZM=;
+        b=EAGIOwQG78YZ4s5FvVIyWmJSdj/9+oRp2Z+JOiSUHX7UEHTavbHpWoSCToIN25ZVBh
+         adJIFeTdGpgUgUlgPbR4Ed7A8vOy6wisOboBbYRYTdNzBqbwUwCAPRSSvoPl6Bh2MdOs
+         DxBjn4j0OaOB/g65HjuRXZVQ1recSusgjrsuNkNrBC2P4Rnt9uhiw7JBjRqIzDCLljyl
+         RPUozPvaTPHrb+3qYhJ4gLVhfC9eX0jRr0iYQ685BfQTxNz35kPbfNpdQBbihXcZZQ/x
+         MfmXpF+Z0ozIFxGcdCWnKbZF7Ky7Dr+DKmP+UpWWa7yzYqJWwtqt9X0IGq+6o/8Df7+R
+         thCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ni0X0/loZejzrEM3ahtyHsQ4czmgqm9WNAw1TT3btvM=;
-        b=nb8ahGwl/mKWgBJEWjovK6c721czis4HvBv2GWi/9g5TmpZPp/YP8tu/jw6K5t1e9w
-         i4CNekaJS5c7GD+yxG52A/hMCmYK1lp4A3YY9wYk5Jqt8+S7H+Nc0exO6dmEJyIjVNXP
-         PGUXU93StwFVpiesZ2EPnLo1/Azob7eTPQGlvR8yV2GxpOTnUIXk9zjXEEL+dRu+Zoqq
-         LFfbxomcJmkz14l5Pi++cUnnd6G0JXf0I4qHe6m6XLGGdHppkcVehWndfRm8GIHVxTxz
-         n3uFT8nDbhGIwAq6i/VFQdJ5n9TVsCqS/8f2HJ5X6ceqG97fJzCWP6u1Tkrpwz0qeSfn
-         ntDQ==
-X-Gm-Message-State: AO0yUKUVdoH4LAVx+WEPdZMJlnKJpDJXEpVAniXponPPgKNfh+VtFTUx
-        +G3SNrtpyid0HCnT9gaIjGGW3nwVng==
-X-Google-Smtp-Source: AK7set9rZ9eUb7bGWTMJ7DQioL+NOIJFyBh22lkV7CejLhB9j4FRWsGV+zy8NVqE9CeBwZV5bua6ewKcaw==
+        bh=AjV3k78q3XXhT1GHWCKfTuGEDWgoZOrO6Fv+xEYetZM=;
+        b=Dzr4JxCS++oNiTYQDk5UPs0t9tPqXIVKZi2VNFEaWtBgnRbziMMG9ccseqE/7cAMca
+         En8zO8zysQQYJODHh5x12GfL1YPoevvtTHwNsWIzQcW8FeMK9qwKEq7erl5yovGeHk/t
+         V/aSs7kaS5/2KleHPM6WV0j1VmUJG7GeADM6FLUYEbihxhrx19YJiKHgORLp1+02S+bV
+         NWetqfZ+V48olKxvZJGCR9Us2+nDu58DKJ9Uep41WG1NG2PWM3Frs6t6UYgOnqZlQEtm
+         UF+DmaLKAp1s1KWNCDGd9JeuH+CXZh30ZtFYaYtUyAAw269iHMetswn7u9knHePbr2af
+         CwWw==
+X-Gm-Message-State: AO0yUKVLgGjqg5dUCZuA90mYNawl59zLHgQiYX1PYa7meh4peqXnWDrE
+        5up92225MS7VmmVJBkMKiTAz2CUUSA==
+X-Google-Smtp-Source: AK7set+F0E0+hHGoUz0EDxGYty9hHOhM9cQA2n6bHMhFaQ+TBLOYuMWa+x6cFVA/P5UZsJl9kORIJ4SYdA==
 X-Received: from elver.muc.corp.google.com ([2a00:79e0:9c:201:53eb:6453:f5f5:3bb9])
- (user=elver job=sendgmr) by 2002:a50:d544:0:b0:4ad:6e3e:7da6 with SMTP id
- f4-20020a50d544000000b004ad6e3e7da6mr7001699edj.6.1677229201684; Fri, 24 Feb
- 2023 01:00:01 -0800 (PST)
-Date:   Fri, 24 Feb 2023 09:59:40 +0100
+ (user=elver job=sendgmr) by 2002:a05:6402:3216:b0:4ad:7bb2:eefb with SMTP id
+ g22-20020a056402321600b004ad7bb2eefbmr9255387eda.3.1677229206892; Fri, 24 Feb
+ 2023 01:00:06 -0800 (PST)
+Date:   Fri, 24 Feb 2023 09:59:42 +0100
 In-Reply-To: <20230224085942.1791837-1-elver@google.com>
 Mime-Version: 1.0
 References: <20230224085942.1791837-1-elver@google.com>
 X-Mailer: git-send-email 2.39.2.637.g21b0678d19-goog
-Message-ID: <20230224085942.1791837-2-elver@google.com>
-Subject: [PATCH v5 2/4] kasan: Treat meminstrinsic as builtins in
+Message-ID: <20230224085942.1791837-4-elver@google.com>
+Subject: [PATCH v5 4/4] kasan, x86: Don't rename memintrinsics in
  uninstrumented files
 From:   Marco Elver <elver@google.com>
 To:     elver@google.com, Andrew Morton <akpm@linux-foundation.org>
@@ -74,94 +74,57 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Kees Cook <keescook@chromium.org>,
         linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         linux-mm@kvack.org, linux-kbuild@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
+        linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Where the compiler instruments meminstrinsics by generating calls to
-__asan/__hwasan_ prefixed functions, let the compiler consider
-memintrinsics as builtin again.
+Now that memcpy/memset/memmove are no longer overridden by KASAN, we can
+just use the normal symbol names in uninstrumented files.
 
-To do so, never override memset/memmove/memcpy if the compiler does the
-correct instrumentation - even on !GENERIC_ENTRY architectures.
+Drop the preprocessor redefinitions.
 
 Fixes: 69d4c0d32186 ("entry, kasan, x86: Disallow overriding mem*() functions")
 Signed-off-by: Marco Elver <elver@google.com>
 Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 ---
-v4:
+v5:
 * New patch.
 ---
- lib/Kconfig.kasan      | 9 +++++++++
- mm/kasan/shadow.c      | 5 ++++-
- scripts/Makefile.kasan | 9 +++++++++
- 3 files changed, 22 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/string_64.h | 19 -------------------
+ 1 file changed, 19 deletions(-)
 
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index be6ee6020290..fdca89c05745 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -49,6 +49,15 @@ menuconfig KASAN
+diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+index 888731ccf1f6..c1e14cee0722 100644
+--- a/arch/x86/include/asm/string_64.h
++++ b/arch/x86/include/asm/string_64.h
+@@ -85,25 +85,6 @@ char *strcpy(char *dest, const char *src);
+ char *strcat(char *dest, const char *src);
+ int strcmp(const char *cs, const char *ct);
  
- if KASAN
- 
-+config CC_HAS_KASAN_MEMINTRINSIC_PREFIX
-+	def_bool (CC_IS_CLANG && $(cc-option,-fsanitize=kernel-address -mllvm -asan-kernel-mem-intrinsic-prefix=1)) || \
-+		 (CC_IS_GCC && $(cc-option,-fsanitize=kernel-address --param asan-kernel-mem-intrinsic-prefix=1))
-+	# Don't define it if we don't need it: compilation of the test uses
-+	# this variable to decide how the compiler should treat builtins.
-+	depends on !KASAN_HW_TAGS
-+	help
-+	  The compiler is able to prefix memintrinsics with __asan or __hwasan.
-+
- choice
- 	prompt "KASAN mode"
- 	default KASAN_GENERIC
-diff --git a/mm/kasan/shadow.c b/mm/kasan/shadow.c
-index f8a47cb299cb..43b6a59c8b54 100644
---- a/mm/kasan/shadow.c
-+++ b/mm/kasan/shadow.c
-@@ -38,11 +38,14 @@ bool __kasan_check_write(const volatile void *p, unsigned int size)
- }
- EXPORT_SYMBOL(__kasan_check_write);
- 
--#ifndef CONFIG_GENERIC_ENTRY
-+#if !defined(CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX) && !defined(CONFIG_GENERIC_ENTRY)
- /*
-  * CONFIG_GENERIC_ENTRY relies on compiler emitted mem*() calls to not be
-  * instrumented. KASAN enabled toolchains should emit __asan_mem*() functions
-  * for the sites they want to instrument.
-+ *
-+ * If we have a compiler that can instrument meminstrinsics, never override
-+ * these, so that non-instrumented files can safely consider them as builtins.
-  */
- #undef memset
- void *memset(void *addr, int c, size_t len)
-diff --git a/scripts/Makefile.kasan b/scripts/Makefile.kasan
-index fa9f836f8039..c186110ffa20 100644
---- a/scripts/Makefile.kasan
-+++ b/scripts/Makefile.kasan
-@@ -1,5 +1,14 @@
- # SPDX-License-Identifier: GPL-2.0
-+
-+ifdef CONFIG_CC_HAS_KASAN_MEMINTRINSIC_PREFIX
-+# Safe for compiler to generate meminstrinsic calls in uninstrumented files.
-+CFLAGS_KASAN_NOSANITIZE :=
-+else
-+# Don't let compiler generate memintrinsic calls in uninstrumented files
-+# because they are instrumented.
- CFLAGS_KASAN_NOSANITIZE := -fno-builtin
-+endif
-+
- KASAN_SHADOW_OFFSET ?= $(CONFIG_KASAN_SHADOW_OFFSET)
- 
- cc-param = $(call cc-option, -mllvm -$(1), $(call cc-option, --param $(1)))
+-#if (defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__))
+-/*
+- * For files that not instrumented (e.g. mm/slub.c) we
+- * should use not instrumented version of mem* functions.
+- */
+-
+-#undef memcpy
+-#define memcpy(dst, src, len) __memcpy(dst, src, len)
+-#undef memmove
+-#define memmove(dst, src, len) __memmove(dst, src, len)
+-#undef memset
+-#define memset(s, c, n) __memset(s, c, n)
+-
+-#ifndef __NO_FORTIFY
+-#define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
+-#endif
+-
+-#endif
+-
+ #ifdef CONFIG_ARCH_HAS_UACCESS_FLUSHCACHE
+ #define __HAVE_ARCH_MEMCPY_FLUSHCACHE 1
+ void __memcpy_flushcache(void *dst, const void *src, size_t cnt);
 -- 
 2.39.2.637.g21b0678d19-goog
 
