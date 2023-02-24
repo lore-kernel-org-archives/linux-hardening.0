@@ -2,97 +2,96 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D6DC61DA4
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Feb 2023 03:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8E6C61DA3
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Feb 2023 04:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjBXDo2 (ORCPT
+        id S229545AbjBXEBC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 23 Feb 2023 22:44:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46308 "EHLO
+        Thu, 23 Feb 2023 23:01:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229638AbjBXDo1 (ORCPT
+        with ESMTP id S229725AbjBXEBB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 23 Feb 2023 22:44:27 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD16CDC0;
-        Thu, 23 Feb 2023 19:44:04 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 538FD617AA;
-        Fri, 24 Feb 2023 03:44:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E30C433EF;
-        Fri, 24 Feb 2023 03:44:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677210242;
-        bh=RwjySR8hWiLpxUC0dXi0nzoxYZdFGRL2DklpueF5MkU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XJPbS1UbyjIiMYfcmex9BIoKABEj3kN1KuaUZ+IvDh89zdkURSzEyIBeswY5eP+8A
-         UJOavKCO4FBaAQAPmJrDObNsAjN1U2l8foWAGxdEToy4CrvylLIruyjB/IdsLtx6sr
-         3wQ+oogSYYJHgPQYe1GN3JzKpkiUKbUtu6gOYxPKDu9BPqn2gP+Nc/anNmV9ynkrqw
-         i6ScmFDZvSa0pyYTTxR9DEMjYphSu0iHa60/M7c4nPG4Hgglit1+u0PooNACanAFsr
-         8bpIPiKVZA44qq5M9Qc1uAlSEU976FiHj/vkZ+dIE+9tfOlGA7MK8+I3cEQuMWwNls
-         HrZ8rV9sEtKmA==
-Date:   Thu, 23 Feb 2023 21:44:28 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] usb: host: oxu210hp-hcd: Replace fake flex-array with
- flexible-array member
-Message-ID: <Y/gynI9Wv8RZTD8M@work>
+        Thu, 23 Feb 2023 23:01:01 -0500
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2644D51FBD;
+        Thu, 23 Feb 2023 20:00:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:Cc:
+        References:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=zkYsf7JBSZv/sXOMDMBwHcxliwl6peLQurvQ5+qR8Us=; b=QbviJzG+kaRduJTBnTKv+ZuBt5
+        2GJKnind+1FHlNSbGTdUd+V7Zl5udVrtQAC5RjUxTTsgn+wtxH3XMZeSAzoFzgxB10sEEYHLilQfa
+        Rn827U/yx7P2H7/FmcbOtMSETVCpg5Ix7ODm4O88ZtSjuAwuTxqfSVmQVhoNCDz2hKlk76qZjN5EQ
+        +ZdxBk9ATjsBdaz/kvIaWdPOm40JYA6H7Higdzd2rMkAAEXEnMkv06LcfJA87vWAWy00O95GNjl1X
+        70wX7bLTeea1k+6sJ4R8UMCEzYAO9LVw2Yjd194cKLeOn8aTfciXY9FwC0gN77xOxmK8WegLsEEcV
+        6/8MUUXg==;
+Received: from [187.10.60.249] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1pVPGM-00D84f-2z; Fri, 24 Feb 2023 05:00:50 +0100
+Message-ID: <290b055f-9fc1-2580-244f-24663fba171f@igalia.com>
+Date:   Fri, 24 Feb 2023 01:00:41 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v1 1/1] pstore/ram: Fix crash when setting number of cpus
+ to an odd number
+Content-Language: en-US
+To:     Weichen Chen <weichen.chen@mediatek.com>,
+        linux-hardening@vger.kernel.org
+References: <20230224023632.6840-1-weichen.chen@mediatek.com>
+Cc:     linux-kernel@vger.kernel.org, yt.shen@mediatek.com,
+        matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+        tony.luck@intel.com, keescook@chromium.org,
+        darren.chen@mediatek.com
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20230224023632.6840-1-weichen.chen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays as fake flexible arrays are deprecated and we are
-moving towards adopting C99 flexible-array members instead.
+On 23/02/2023 23:36, Weichen Chen wrote:
+> When the number of cpu cores is adjusted to 7 or other odd numbers,
+> the zone size will become an odd number.
+> The address of the zone will become:
+>     addr of zone0 = BASE
+>     addr of zone1 = BASE + zone_size
+>     addr of zone2 = BASE + zone_size*2
+>     ...
+> The address of zone1/3/5/7 will be mapped to non-alignment va.
+> Eventually crashes will occur when accessing these va.
+> 
+> So, use ALIGN_DOWN() to make sure the zone size is even
+> to avoid this bug.
+> 
+> Signed-off-by: Weichen Chen <weichen.chen@mediatek.com>
+> ---
+>  fs/pstore/ram.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index ade66dbe5f39..fc57ac97e506 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -528,6 +528,7 @@ static int ramoops_init_przs(const char *name,
+>  	}
+>  
+>  	zone_sz = mem_sz / *cnt;
+> +	zone_sz = ALIGN_DOWN(zone_sz, 2);
+>  	if (!zone_sz) {
+>  		dev_err(dev, "%s zone size == 0\n", name);
+>  		goto fail;
 
-Transform zero-length array into flexible-array member in struct
-ehci_regs.
+Thanks for resending! Feel free to add my:
 
-Address the following warnings found with GCC-13 and
--fstrict-flex-arrays=3 enabled:
-drivers/usb/host/oxu210hp-hcd.c:3983:30: warning: array subscript i is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/usb/host/oxu210hp-hcd.c:3986:38: warning: array subscript i is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/usb/host/oxu210hp-hcd.c:3971:30: warning: array subscript i is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/usb/host/oxu210hp-hcd.c:3978:30: warning: array subscript i is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/usb/host/oxu210hp-hcd.c:3523:30: warning: array subscript i is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/usb/host/oxu210hp-hcd.c:2774:39: warning: array subscript port is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/usb/host/oxu210hp-hcd.c:3569:35: warning: array subscript <unknown> is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/usb/host/oxu210hp-hcd.c:3888:36: warning: array subscript port is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/usb/host/oxu210hp-hcd.c:2911:45: warning: array subscript i is outside array bounds of ‘u32[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
+Tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+Cheers,
 
-Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/259
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/usb/host/oxu210hp-hcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/oxu210hp-hcd.c b/drivers/usb/host/oxu210hp-hcd.c
-index 3a441310c713..f998d3f1a78a 100644
---- a/drivers/usb/host/oxu210hp-hcd.c
-+++ b/drivers/usb/host/oxu210hp-hcd.c
-@@ -169,7 +169,7 @@ struct ehci_regs {
- #define FLAG_CF		(1<<0)		/* true: we'll support "high speed" */
- 
- 	/* PORTSC: offset 0x44 */
--	u32		port_status[0];	/* up to N_PORTS */
-+	u32		port_status[];	/* up to N_PORTS */
- /* 31:23 reserved */
- #define PORT_WKOC_E	(1<<22)		/* wake on overcurrent (enable) */
- #define PORT_WKDISC_E	(1<<21)		/* wake on disconnect (enable) */
--- 
-2.34.1
-
+Guilherme
