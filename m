@@ -2,125 +2,155 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90118C61DA4
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Feb 2023 13:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC52C7EE2F
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Feb 2023 17:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjBXNUz (ORCPT
+        id S229620AbjBXRPH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Feb 2023 08:20:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51496 "EHLO
+        Fri, 24 Feb 2023 12:15:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjBXNUx (ORCPT
+        with ESMTP id S229448AbjBXRPG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Feb 2023 08:20:53 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AFC6629E;
-        Fri, 24 Feb 2023 05:20:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677244852; x=1708780852;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7ODUv3D8xf81slIDQs9GhkgTjA9Y9Xu/c56SdK+cH1A=;
-  b=ikYK1b4s8SzlLNIWH96wKrMykydjc6qKyw45W2sqV4ca68RqUPQSeX91
-   1GGACTBfmfVgZV2E2LPHUmn2NJTVc6jZVyPhyDjArWuY9ndK7zBXSZhre
-   SVRP+IutSpFr1vMKWqJ+An8OgZWah5n6tv0QcEEVgwek0KPvVlxB19ZzE
-   1PLiGQN2Mmq8BV/fSj2Hy87OrDGILTcoPM2jf+bHIZlceWLexl/DmOtOj
-   f4sINztiVAHTBZV+EIelZbbURk/+9h0zk/AcEghc7lSErnDLZ/ccr8b6x
-   2dmQqxlGIOU21Qp6/SCkv5WVmQgPz2XGK19iSvf+5T6crbKb8KrVEEZnx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10630"; a="333477525"
-X-IronPort-AV: E=Sophos;i="5.97,324,1669104000"; 
-   d="scan'208";a="333477525"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 05:20:51 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10630"; a="741671090"
-X-IronPort-AV: E=Sophos;i="5.97,324,1669104000"; 
-   d="scan'208";a="741671090"
-Received: from nderuite-mobl1.ger.corp.intel.com (HELO [10.251.215.190]) ([10.251.215.190])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Feb 2023 05:20:48 -0800
-Message-ID: <f258311c-cbb3-7d5b-7f7f-2034809aad57@linux.intel.com>
-Date:   Fri, 24 Feb 2023 15:21:04 +0200
+        Fri, 24 Feb 2023 12:15:06 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2523312F3E;
+        Fri, 24 Feb 2023 09:15:04 -0800 (PST)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31OF15tv006904;
+        Fri, 24 Feb 2023 17:14:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=4DX+Ss95rJ/0e4IqY9IcRXeG1Ae0+xviDQHJIAilU2k=;
+ b=kUhbmQpRxEoBrFb0Kt9OWa53lDpM2L3AksNdd7h1/aAyxCK/W6SS2AhQEdS29asowzoI
+ PjK1pHHjjgsaJtJdLJBZ9tFuKpDBpVbl+IFG7sAjQOE6qymX7wdymRUMVEihjJoAG2b7
+ ro/nmMGyJmp6MmMDf9rWXRu8X0Scnkpxfb+YWbRrcuimFA74J01SZW6kAYNz/Lfp51E+
+ 9YKLRd+XC9hGAkdmdkP3ANLU1ODfyjLjizlRxQq2KZTsPi0TF9TYQ/XGw6e+hI3FGU8I
+ YxUfMTIz95YEbWfBnEaXZhIvnXO7moxeodzuFTFEHnkMhkmDvBGHYJwNf3XNrPJoY5T4 Zg== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nxugh923d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Feb 2023 17:14:37 +0000
+Received: from nasanex01a.na.qualcomm.com ([10.52.223.231])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31OHEbu1016216
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 24 Feb 2023 17:14:37 GMT
+Received: from [10.110.82.3] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 24 Feb
+ 2023 09:14:36 -0800
+Message-ID: <657d91c7-60ca-a64b-ad29-1d6dcc4b32ac@quicinc.com>
+Date:   Fri, 24 Feb 2023 09:14:35 -0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.7.2
-Subject: Re: [PATCH][next] ASoC: SOF: ipc4-topology: Replace fake flexible
- arrays with flexible-array member
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [RFC PATCH 0/6] Add basic Minidump kernel driver support
 Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     sound-open-firmware@alsa-project.org, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <Y/gyIg1qZduhigPi@work>
-From:   =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
-In-Reply-To: <Y/gyIg1qZduhigPi@work>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To:     Mukesh Ojha <quic_mojha@quicinc.com>,
+        Brian Masney <bmasney@redhat.com>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
+ <Y/deHzijzvuvCJ2M@x1> <47542dbb-8cf3-6eae-a38e-910d38bd960b@quicinc.com>
+From:   Trilok Soni <quic_tsoni@quicinc.com>
+In-Reply-To: <47542dbb-8cf3-6eae-a38e-910d38bd960b@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yKk6EAcEmKYClVQn4YzHl-1FuharUGK_
+X-Proofpoint-ORIG-GUID: yKk6EAcEmKYClVQn4YzHl-1FuharUGK_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-24_12,2023-02-24_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
+ bulkscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 suspectscore=0
+ priorityscore=1501 adultscore=0 malwarescore=0 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2302240136
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 24/02/2023 05:42, Gustavo A. R. Silva wrote:
-> Zero-length arrays as fake flexible arrays are deprecated and we are
-> moving towards adopting C99 flexible-array members, instead.
+On 2/24/2023 2:40 AM, Mukesh Ojha wrote:
+> Thanks Brian for your interest in this series.
 > 
-> Use the DECLARE_FLEX_ARRAY() helper macro to transform zero-length
-> arrays in unions with flexible-array members.
+> On 2/23/2023 6:07 PM, Brian Masney wrote:
+>> On Tue, Feb 21, 2023 at 04:55:07PM +0530, Mukesh Ojha wrote:
+>>> Minidump is a best effort mechanism to collect useful and predefined 
+>>> data
+>>> for first level of debugging on end user devices running on Qualcomm 
+>>> SoCs.
+>>> It is built on the premise that System on Chip (SoC) or subsystem 
+>>> part of
+>>> SoC crashes, due to a range of hardware and software bugs. Hence, the
+>>> ability to collect accurate data is only a best-effort. The data 
+>>> collected
+>>> could be invalid or corrupted, data collection itself could fail, and 
+>>> so on.
+>>>
+>>> Qualcomm devices in engineering mode provides a mechanism for generating
+>>> full system ramdumps for post mortem debugging. But in some cases it's
+>>> however not feasible to capture the entire content of RAM. The minidump
+>>> mechanism provides the means for selecting which snippets should be
+>>> included in the ramdump.
+>>>
+>>> The core of minidump feature is part of Qualcomm's boot firmware code.
+>>> It initializes shared memory (SMEM), which is a part of DDR and
+>>> allocates a small section of SMEM to minidump table i.e also called
+>>> global table of content (G-ToC). Each subsystem (APSS, ADSP, ...) has
+>>> their own table of segments to be included in the minidump and all get
+>>> their reference from G-ToC. Each segment/region has some details like
+>>> name, physical address and it's size etc. and it could be anywhere
+>>> scattered in the DDR.
+>>>
+>>> Existing upstream Qualcomm remoteproc driver[1] already supports 
+>>> minidump
+>>> feature for remoteproc instances like ADSP, MODEM, ... where predefined
+>>> selective segments of subsystem region can be dumped as part of
+>>> coredump collection which generates smaller size artifacts compared to
+>>> complete coredump of subsystem on crash.
+>>>
+>>> [1]
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/remoteproc/qcom_common.c#n142
+>>>
+>>> In addition to managing and querying the APSS minidump description,
+>>> the Linux driver maintains a ELF header in a segment. This segment
+>>> gets updated with section/program header whenever a new entry gets
+>>> registered.
+>>
+>> I'd like to test this series plus your series that sets the multiple
+>> download modes.
 > 
-> Address the following warnings found with GCC-13 and
-> -fstrict-flex-arrays=3 enabled:
-> sound/soc/sof/ipc4-control.c:176:77: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-control.c:78:29: warning: array subscript 0 is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-control.c:80:33: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-control.c:95:53: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-control.c:96:53: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-control.c:93:53: warning: array subscript 0 is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-control.c:140:58: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-control.c:141:29: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-control.c:142:29: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-topology.c:1475:36: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
-> sound/soc/sof/ipc4-topology.c:1476:36: warning: array subscript i is outside array bounds of ‘struct sof_ipc4_ctrl_value_chan[0]’ [-Warray-bounds=]
+> Sure, you are welcome, but for that you need a device running with 
+> Qualcomm SoC and if it has a upstream support.
 > 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
+> Also, testing of this patch needs some minimal out of tree patches and
+> i can help you with that.
+> 
+>> Can you include documentation about how to actually use
+>> this new feature?
+> 
+> Will surely do, Since this is still RFC, and i am doubtful on the path 
+> of it in documentation directory.
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@linux.intel.com>
+This is RFC anyways, you can start w/ the directory which you think best 
+fits here. The point here is to have the documentation file rather than 
+path to be fixed.
 
-> 
-> Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/193
-> Link: https://github.com/KSPP/linux/issues/258
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  sound/soc/sof/ipc4-topology.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/sound/soc/sof/ipc4-topology.h b/sound/soc/sof/ipc4-topology.h
-> index 72529179ac22..8507171a6e4d 100644
-> --- a/sound/soc/sof/ipc4-topology.h
-> +++ b/sound/soc/sof/ipc4-topology.h
-> @@ -266,8 +266,8 @@ struct sof_ipc4_control_data {
->  	int index;
->  
->  	union {
-> -		struct sof_ipc4_ctrl_value_chan chanv[0];
-> -		struct sof_abi_hdr data[0];
-> +		DECLARE_FLEX_ARRAY(struct sof_ipc4_ctrl_value_chan, chanv);
-> +		DECLARE_FLEX_ARRAY(struct sof_abi_hdr, data);
->  	};
->  };
->  
+You can start w/ Documentation/features/debug and let's see what others 
+have any suggestion. Please add a file in your next revision without 
+worrying about the path for now.
 
--- 
-Péter
+---Trilok Soni
+
