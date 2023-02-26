@@ -2,140 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72886C6FA8E
-	for <linux-hardening@archiver.kernel.org>; Sun, 26 Feb 2023 02:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843EBC64ED6
+	for <linux-hardening@archiver.kernel.org>; Sun, 26 Feb 2023 14:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbjBZCIv (ORCPT
+        id S230206AbjBZOvV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 25 Feb 2023 21:08:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36294 "EHLO
+        Sun, 26 Feb 2023 09:51:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjBZCIu (ORCPT
+        with ESMTP id S230210AbjBZOuq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 25 Feb 2023 21:08:50 -0500
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEFEA11157;
-        Sat, 25 Feb 2023 18:08:48 -0800 (PST)
-Received: by mail-io1-xd31.google.com with SMTP id bf15so1208886iob.7;
-        Sat, 25 Feb 2023 18:08:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZrjdtBILIDq+NV0DYk67jfytffL1y4tAnBSHMKXYiGE=;
-        b=d6kmUKplnpCinpxYtGel4x9i/A3TT7tllyN6U5q2EzObKlKOA5nH9Qdfh06S1n97Wf
-         9DhUo3Z6z8rUs3JeEPKZu/HgGpbfyjvGaZFVvOIlRsvJN2S5iD+OgucMIpNfmT42qKWd
-         TRRdiRtMbiYa9n0jPyWtjuIIbtylvj4+OPFIVqF7tuIxVXhme9aNB83Isx23zzxJQ0KM
-         7TXEMWEyrnaC/gIHaQw2DTqNdAaT73GpsMGwhe95HgYWL96WFv35ixpNANQqpdY0iuu5
-         Ksx+l/3n4RHXw8IOXDbgYvXUH6beOE3+s9vOawQKWGBH1W27ArPfPBcFAWbxoFwLPvve
-         CQeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZrjdtBILIDq+NV0DYk67jfytffL1y4tAnBSHMKXYiGE=;
-        b=x3Y2zzIvTHjO54qV84Do3ml1N1TrChw0bzTbUL1u3/WMC3xWizz6GX7nlLwpa0Rn6z
-         /sJ1uIsPqI38GO+/oZk2uHxzaSsjYPtdpq4ny9HgL82ypUf1HrAzk5tD5XTdOsXXUoXi
-         6IuFpp6yaKayeWVEFfCmfHGFD+4J81Wunlgk0XUl2Xje3DkIfMigywYD5BddKmxlUZNL
-         bh1D+yT3aEmXEpoXNmTQqqaCinOEU4yZWr8d9mJj3Aek177IUTnyDANx2NeruhcCinqT
-         gZc4fEkIgQdM4gZAI9tkoGAve3YSMOOSabCckS3gkMNWVy1Y+CgvJyuOPQUzJbVK4k7J
-         NrfQ==
-X-Gm-Message-State: AO0yUKXst7/5DJigZMbq+LJCVFFqHl31durquFPjSXugnipElm9Ro3FI
-        ZwePT4vaiXYIkHSNe1S77JGB1zG3BEO/2J9rkoM=
-X-Google-Smtp-Source: AK7set8NXG7XzplL6Lbk5ufmQAIWK7F8jnvQJX+YRsxLo9IaAZhKMPpj3Z6d4ohfmTGPflB99o9bRDch5WRUc4qPkF8=
-X-Received: by 2002:a05:6602:2d89:b0:74c:a82e:eed1 with SMTP id
- k9-20020a0566022d8900b0074ca82eeed1mr2999725iow.0.1677377328284; Sat, 25 Feb
- 2023 18:08:48 -0800 (PST)
+        Sun, 26 Feb 2023 09:50:46 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735AD16AE1;
+        Sun, 26 Feb 2023 06:48:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 987CB60C3D;
+        Sun, 26 Feb 2023 14:46:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E53DC433A4;
+        Sun, 26 Feb 2023 14:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677422767;
+        bh=X9kD3aKgNfLlx5BDHcTQjJAPnMiXAQhR9GFvlDICCWQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eiHBHDNHHan3iHOIt2e5SSQTZgprBcs4LD93a2Mf9qdbL7rkocKol8iRXmr1LbCmb
+         g2a+m1fYLFLdwN3vJO693s3Sj7hDFlfl5gG8sBqB7feFSViHv02T0Iw0D2lYELwW/E
+         mrq/Px+lrpoKE0PuiqBh7cxL4bqpxmLzSp30nPAM8u50VPBbJ6Y6+tRxSHAthA93RQ
+         NDRPkiKcjFfV0f+7OGQpZj1W48lQzA4NjT6ZhscQdo8VLL1Degtb2dRkPwUce89FSc
+         4268dQGSA+LN1lCHrz8xtG3ubWimcic8k2rMpNeYy+BHLvAQxzpmwMwShOuBRXDHtH
+         K9UWGjzk0zUFg==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sam James <sam@gentoo.org>, Kees Cook <keescook@chromium.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.2 33/53] gcc-plugins: drop -std=gnu++11 to fix GCC 13 build
+Date:   Sun, 26 Feb 2023 09:44:25 -0500
+Message-Id: <20230226144446.824580-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20230226144446.824580-1-sashal@kernel.org>
+References: <20230226144446.824580-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20220224060558.1856804-1-keescook@chromium.org>
-In-Reply-To: <20220224060558.1856804-1-keescook@chromium.org>
-From:   Matt Turner <mattst88@gmail.com>
-Date:   Sat, 25 Feb 2023 21:08:37 -0500
-Message-ID: <CAEdQ38Fg=Au5=BbyTHiEO+GaivheCe6hPBjcZhjgALxn4503Mg@mail.gmail.com>
-Subject: Re: [PATCH] alpha: Implement "current_stack_pointer"
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
-        linux-alpha@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 1:06 AM Kees Cook <keescook@chromium.org> wrote:
->
-> To follow the existing per-arch conventions replace open-coded use
-> of asm "$30" as "current_stack_pointer". This will let it be used in
-> non-arch places (like HARDENED_USERCOPY).
->
-> Cc: Richard Henderson <rth@twiddle.net>
-> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-> Cc: Matt Turner <mattst88@gmail.com>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
-> Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-> Cc: linux-alpha@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/alpha/Kconfig                   | 1 +
->  arch/alpha/include/asm/thread_info.h | 2 ++
->  arch/alpha/lib/stacktrace.c          | 2 +-
->  3 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
-> index 4e87783c90ad..31f3dbcdc28c 100644
-> --- a/arch/alpha/Kconfig
-> +++ b/arch/alpha/Kconfig
-> @@ -3,6 +3,7 @@ config ALPHA
->         bool
->         default y
->         select ARCH_32BIT_USTAT_F_TINODE
-> +       select ARCH_HAS_CURRENT_STACK_POINTER
->         select ARCH_MIGHT_HAVE_PC_PARPORT
->         select ARCH_MIGHT_HAVE_PC_SERIO
->         select ARCH_NO_PREEMPT
-> diff --git a/arch/alpha/include/asm/thread_info.h b/arch/alpha/include/asm/thread_info.h
-> index 2592356e3215..28214db31053 100644
-> --- a/arch/alpha/include/asm/thread_info.h
-> +++ b/arch/alpha/include/asm/thread_info.h
-> @@ -43,6 +43,8 @@ struct thread_info {
->  register struct thread_info *__current_thread_info __asm__("$8");
->  #define current_thread_info()  __current_thread_info
->
-> +register unsigned long *current_stack_pointer __asm__ ("$30");
-> +
->  #endif /* __ASSEMBLY__ */
->
->  /* Thread information allocation.  */
-> diff --git a/arch/alpha/lib/stacktrace.c b/arch/alpha/lib/stacktrace.c
-> index 62454a7810e2..2b1176dd5174 100644
-> --- a/arch/alpha/lib/stacktrace.c
-> +++ b/arch/alpha/lib/stacktrace.c
-> @@ -92,7 +92,7 @@ stacktrace(void)
->  {
->         instr * ret_pc;
->         instr * prologue = (instr *)stacktrace;
-> -       register unsigned char * sp __asm__ ("$30");
-> +       unsigned char *sp = (unsigned char *)current_stack_pointer;
->
->         printk("\tstack trace:\n");
->         do {
-> --
-> 2.30.2
->
+From: Sam James <sam@gentoo.org>
 
-Thanks for the patch! This was included in my pull request today and
-is now upstream in Linus' tree.
+[ Upstream commit 5a6b64adc18d9adfb497a529ff004d59b6df151f ]
+
+The latest GCC 13 snapshot (13.0.1 20230129) gives the following:
+```
+cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so
+ :./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: tree_code_type
+```
+
+This ends up being because of https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=b0241ce6e37031
+upstream in GCC which changes the visibility of some types used by the kernel's
+plugin infrastructure like tree_code_type.
+
+After discussion with the GCC folks, we found that the kernel needs to be building
+plugins with the same flags used to build GCC - and GCC defaults to gnu++17
+right now. The minimum GCC version needed to build the kernel is GCC 5.1
+and GCC 5.1 already defaults to gnu++14 anyway, so just drop the flag, as
+all GCCs that could be used to build GCC already default to an acceptable
+version which was >= the version we forced via flags until now.
+
+Bug: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108634
+Signed-off-by: Sam James <sam@gentoo.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/20230201230009.2252783-1-sam@gentoo.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ scripts/gcc-plugins/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
+index b34d11e226366..320afd3cf8e82 100644
+--- a/scripts/gcc-plugins/Makefile
++++ b/scripts/gcc-plugins/Makefile
+@@ -29,7 +29,7 @@ GCC_PLUGINS_DIR = $(shell $(CC) -print-file-name=plugin)
+ plugin_cxxflags	= -Wp,-MMD,$(depfile) $(KBUILD_HOSTCXXFLAGS) -fPIC \
+ 		  -include $(srctree)/include/linux/compiler-version.h \
+ 		  -DPLUGIN_VERSION=$(call stringify,$(KERNELVERSION)) \
+-		  -I $(GCC_PLUGINS_DIR)/include -I $(obj) -std=gnu++11 \
++		  -I $(GCC_PLUGINS_DIR)/include -I $(obj) \
+ 		  -fno-rtti -fno-exceptions -fasynchronous-unwind-tables \
+ 		  -ggdb -Wno-narrowing -Wno-unused-variable \
+ 		  -Wno-format-diag
+-- 
+2.39.0
+
