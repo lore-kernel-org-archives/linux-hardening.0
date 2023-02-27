@@ -2,99 +2,156 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E88C6FA8E
-	for <linux-hardening@archiver.kernel.org>; Sun, 26 Feb 2023 15:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF72C7EE2D
+	for <linux-hardening@archiver.kernel.org>; Mon, 27 Feb 2023 10:16:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbjBZPmS (ORCPT
+        id S230019AbjB0KQM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 26 Feb 2023 10:42:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56984 "EHLO
+        Mon, 27 Feb 2023 05:16:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjBZPmR (ORCPT
+        with ESMTP id S229712AbjB0KQL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 26 Feb 2023 10:42:17 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C705611B;
-        Sun, 26 Feb 2023 07:42:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 91C5060C5C;
-        Sun, 26 Feb 2023 14:47:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF20C4339B;
-        Sun, 26 Feb 2023 14:47:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677422879;
-        bh=X9kD3aKgNfLlx5BDHcTQjJAPnMiXAQhR9GFvlDICCWQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/wVEy2L6gzET+fvlM+x6DmvLXzbAVkfZl7ESW9UhTksUxEd/iST27sDr95saVIFn
-         F3CcaLj0FvxyDja8dCDBHzzHiMxkfBoFsxdhkLLZTtzD2Wq/DfbVQgYtBOJoVzJ8Jw
-         mxWuTuTQUaZiSehWcNZlmXNEM5i01lyEOeqADMMQQe3lwhSdyLROZe3NQPPeZPT6/d
-         DK5BOJ6fZ63LChHRflTVUK3LCcbSLZUdJSRzrN6TGYuyKXAiZIKcapd/dBV44y5gf+
-         9QoRlzvuYJxuFkqUD+M+s90zYJRQ59OTlKKKQ7DRb0jsjQ9y14OBHGvRQrJk1v+UCB
-         lV2uyNO+L67GQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sam James <sam@gentoo.org>, Kees Cook <keescook@chromium.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 30/49] gcc-plugins: drop -std=gnu++11 to fix GCC 13 build
-Date:   Sun, 26 Feb 2023 09:46:30 -0500
-Message-Id: <20230226144650.826470-30-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230226144650.826470-1-sashal@kernel.org>
-References: <20230226144650.826470-1-sashal@kernel.org>
+        Mon, 27 Feb 2023 05:16:11 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93D71F4AF;
+        Mon, 27 Feb 2023 02:16:09 -0800 (PST)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31R3t6k2018345;
+        Mon, 27 Feb 2023 10:15:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=9ULn6APhFpkbMZSaCjTHDmlWvN7u9qNdvH9HjL1FNu4=;
+ b=bW/LDKdmCo1j8lSZjGLc1NqcWknH78lsZejNherre/HNcgSm5rqP8pMY6mbHjOFQhgRb
+ +PAEZMC1xH09uX+nKW2Wli3CcgZ+utnEFvbmL3OXcW1qeYPiByHahDWdmzbxAi6fsdYf
+ joIMoidw0PqQycOb6LjtPz01fQM5qlyqu8Q7c0ZpPPXNt3TECdxBR6GWaT3KDi+5yDgn
+ MVW/6eP9V+s/VTCiQOsscsW9IsQT3xX/LVtYZIpFOSAIlJGNmqDq94WKDzvLM+y0Wqz/
+ b2dOYQVz+TfH73ouBeMKpVysYXmCBK3Tdvc5lkOjicmOMU32omyyGNNyUsVOq33iMMFq hg== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ny9a0vre7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Feb 2023 10:15:45 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31RAFi26009729
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 27 Feb 2023 10:15:44 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 27 Feb
+ 2023 02:15:40 -0800
+Message-ID: <14b11c3c-353c-50f9-f9a4-837fc5d06fa4@quicinc.com>
+Date:   Mon, 27 Feb 2023 15:45:31 +0530
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [RFC PATCH 0/6] Add basic Minidump kernel driver support
+To:     Brian Masney <bmasney@redhat.com>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
+ <Y/deHzijzvuvCJ2M@x1> <47542dbb-8cf3-6eae-a38e-910d38bd960b@quicinc.com>
+ <Y/kKn9tnvSQ2Pacn@x1>
+Content-Language: en-US
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <Y/kKn9tnvSQ2Pacn@x1>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: KBHzKjGxe0aLYMo37AVUS3Ff5TaxFmUa
+X-Proofpoint-GUID: KBHzKjGxe0aLYMo37AVUS3Ff5TaxFmUa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-26_22,2023-02-24_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 bulkscore=0 impostorscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302270080
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Sam James <sam@gentoo.org>
 
-[ Upstream commit 5a6b64adc18d9adfb497a529ff004d59b6df151f ]
 
-The latest GCC 13 snapshot (13.0.1 20230129) gives the following:
-```
-cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so
- :./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: tree_code_type
-```
+On 2/25/2023 12:36 AM, Brian Masney wrote:
+> Hi Mukesh,
+> 
+> On Fri, Feb 24, 2023 at 04:10:42PM +0530, Mukesh Ojha wrote:
+>> On 2/23/2023 6:07 PM, Brian Masney wrote:
+>>> I'd like to test this series plus your series that sets the multiple
+>>> download modes.
+>>
+>> Sure, you are welcome, but for that you need a device running with Qualcomm
+>> SoC and if it has a upstream support.
+> 
+> I will be testing this series on a sa8540p (QDrive3 Automotive
+> Development Board), which has the sc8280xp SoC with good upstream
+> support. This is also the same board that I have a reliable way to
+> make the board crash due to a known firmware bug.
+> 
 
-This ends up being because of https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=b0241ce6e37031
-upstream in GCC which changes the visibility of some types used by the kernel's
-plugin infrastructure like tree_code_type.
 
-After discussion with the GCC folks, we found that the kernel needs to be building
-plugins with the same flags used to build GCC - and GCC defaults to gnu++17
-right now. The minimum GCC version needed to build the kernel is GCC 5.1
-and GCC 5.1 already defaults to gnu++14 anyway, so just drop the flag, as
-all GCCs that could be used to build GCC already default to an acceptable
-version which was >= the version we forced via flags until now.
+Can you try below patch to just select minidump download mode and make 
+the device crash ?
 
-Bug: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108634
-Signed-off-by: Sam James <sam@gentoo.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20230201230009.2252783-1-sam@gentoo.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/gcc-plugins/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--------------------------------------->8-------------------------------
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi 
+b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+index 0d02599..bd8e1a8 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
+@@ -280,6 +280,7 @@
+         firmware {
+                 scm: scm {
+                         compatible = "qcom,scm-sc8280xp", "qcom,scm";
++                       qcom,dload-mode = <&tcsr 0x13000>;
+                 };
+         };
 
-diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-index b34d11e226366..320afd3cf8e82 100644
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@ -29,7 +29,7 @@ GCC_PLUGINS_DIR = $(shell $(CC) -print-file-name=plugin)
- plugin_cxxflags	= -Wp,-MMD,$(depfile) $(KBUILD_HOSTCXXFLAGS) -fPIC \
- 		  -include $(srctree)/include/linux/compiler-version.h \
- 		  -DPLUGIN_VERSION=$(call stringify,$(KERNELVERSION)) \
--		  -I $(GCC_PLUGINS_DIR)/include -I $(obj) -std=gnu++11 \
-+		  -I $(GCC_PLUGINS_DIR)/include -I $(obj) \
- 		  -fno-rtti -fno-exceptions -fasynchronous-unwind-tables \
- 		  -ggdb -Wno-narrowing -Wno-unused-variable \
- 		  -Wno-format-diag
--- 
-2.39.0
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index cdbfe54..e1539a2 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -20,7 +20,7 @@
 
+  #include "qcom_scm.h"
+
+-static bool download_mode = 
+IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
++static bool download_mode = true;
+  module_param(download_mode, bool, 0);
+
+  #define SCM_HAS_CORE_CLK       BIT(0)
+@@ -427,7 +427,7 @@ static void qcom_scm_set_download_mode(bool enable)
+                 ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+         } else if (__scm->dload_mode_addr) {
+                 ret = qcom_scm_io_writel(__scm->dload_mode_addr,
+-                               enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
++                               enable ? 0x20 : 0);
+         } else {
+                 dev_err(__scm->dev,
+                         "No available mechanism for setting download 
+mode\n");
+
+
+
+
+>> Also, testing of this patch needs some minimal out of tree patches and
+>> i can help you with that.
+> 
+> Yup, that's fine. Hopefully we can also work to get those dependencies
+> merged upstream as well.
+> 
+> Brian
+> 
