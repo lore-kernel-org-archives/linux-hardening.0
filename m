@@ -2,156 +2,179 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF72C7EE2D
-	for <linux-hardening@archiver.kernel.org>; Mon, 27 Feb 2023 10:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6054C64ED6
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Feb 2023 15:37:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbjB0KQM (ORCPT
+        id S229845AbjB1Phc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 27 Feb 2023 05:16:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56428 "EHLO
+        Tue, 28 Feb 2023 10:37:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjB0KQL (ORCPT
+        with ESMTP id S230087AbjB1Pha (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 27 Feb 2023 05:16:11 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A93D71F4AF;
-        Mon, 27 Feb 2023 02:16:09 -0800 (PST)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31R3t6k2018345;
-        Mon, 27 Feb 2023 10:15:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=9ULn6APhFpkbMZSaCjTHDmlWvN7u9qNdvH9HjL1FNu4=;
- b=bW/LDKdmCo1j8lSZjGLc1NqcWknH78lsZejNherre/HNcgSm5rqP8pMY6mbHjOFQhgRb
- +PAEZMC1xH09uX+nKW2Wli3CcgZ+utnEFvbmL3OXcW1qeYPiByHahDWdmzbxAi6fsdYf
- joIMoidw0PqQycOb6LjtPz01fQM5qlyqu8Q7c0ZpPPXNt3TECdxBR6GWaT3KDi+5yDgn
- MVW/6eP9V+s/VTCiQOsscsW9IsQT3xX/LVtYZIpFOSAIlJGNmqDq94WKDzvLM+y0Wqz/
- b2dOYQVz+TfH73ouBeMKpVysYXmCBK3Tdvc5lkOjicmOMU32omyyGNNyUsVOq33iMMFq hg== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ny9a0vre7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Feb 2023 10:15:45 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31RAFi26009729
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 27 Feb 2023 10:15:44 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 27 Feb
- 2023 02:15:40 -0800
-Message-ID: <14b11c3c-353c-50f9-f9a4-837fc5d06fa4@quicinc.com>
-Date:   Mon, 27 Feb 2023 15:45:31 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [RFC PATCH 0/6] Add basic Minidump kernel driver support
-To:     Brian Masney <bmasney@redhat.com>
-CC:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <keescook@chromium.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
- <Y/deHzijzvuvCJ2M@x1> <47542dbb-8cf3-6eae-a38e-910d38bd960b@quicinc.com>
- <Y/kKn9tnvSQ2Pacn@x1>
+        Tue, 28 Feb 2023 10:37:30 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2111.outbound.protection.outlook.com [40.107.93.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4520F30B37;
+        Tue, 28 Feb 2023 07:37:26 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mX2s38qQ3uOuoM0lXvg9jXOjkvY4HIWvUeXLsLY/DLl6O9drevwTws9ObBe6tXuankqRccEUbJJTG+5bl9AcdIp7eb0GAGBUOqDm6vXPeDSUiiOLuSnOKAV4XVcchB1Seo5CweryXZvFp1o+d4580DnNHdi1t3SENRAXQKovUq7qa1ukxtX8IULfDcyZynKl5n6c0rqNqTKG7oiuEog4gInE8D1TCvExeemyXHe/33kEUNTpxJfyHV9sI0AihEs8tqf7WATWzAwNvRlBPpClNzvBrwmnB+spkUk0Mqxhtgysvg5lphr7MjhQJvf9eOymkp92TqoHnBQai6b0mz5STQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oATAFSZ1NDAEiB5OvJcqbp/Jtzr3zGU4eKvkwrsp4YQ=;
+ b=PfC8okNy7F1apWSotqiS47Y/pXWE9pMSG4UEc4nPHVlxR2qq6gSXWzH5M9b+1Xrl9IdJyEbR0v0WjzoztcnesQACF4ypjWhBJjPKoTVC4nSyPFhsuYTcjxWHSOu+u5eINREORNGB5KO4JKtr2zG4+IGYEHCHiBwHRtLPa4z6a9pJDPCtZ3bMCykvY4nJhurYHYhRB+iahSl0KzO0gHrq+PjpPKAXdNUx4hZp9AHIdm/IFnvSoA8e9LM+hsegnY0uPznuAyge2ANFkei2k/ivMUrb/Lc3ZLiKz5t/sRnXzobNb+MDgj9v+x2fIJisC85+1jlehxhfxDy8ER9BBeTSKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cornelisnetworks.com; dmarc=pass action=none
+ header.from=cornelisnetworks.com; dkim=pass header.d=cornelisnetworks.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cornelisnetworks.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oATAFSZ1NDAEiB5OvJcqbp/Jtzr3zGU4eKvkwrsp4YQ=;
+ b=VC2ATWk0l5dybidaPg4TRRVVXr0P65PbD3KIXU4hL0VOk5g+cu6X/LiOLFhBVO0/HAUEDmq/yCNRrmu9gH1iojbIFaVr8aO1DZWdVOin1CFgJ+2lXmq2XCRNuvWdNOtsG6fzrJZkHXlPuDnyTFmlnUS7L3dgJM/01G1ahWl1XSIv3SQKoynaD/sw/fvinaCCeaBQYQeTmnn5pY8tZ3q1Q0j/gRRaM9zf/Pa93ZEsYca9ItVAayWX4gcoYssnj0B+qIKW9cGV2q7oT6xdM09xp1CP4jNsvT7qNcRSrUJ+ncwMJ2cTdQzSB+lFAcmw9/ffIrzPA2aQ9NjFRGnmayZrXw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cornelisnetworks.com;
+Received: from BN6PR01MB2610.prod.exchangelabs.com (2603:10b6:404:d0::7) by
+ BY3PR01MB6756.prod.exchangelabs.com (2603:10b6:a03:364::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6134.26; Tue, 28 Feb 2023 15:37:21 +0000
+Received: from BN6PR01MB2610.prod.exchangelabs.com
+ ([fe80::5844:6112:4eb1:a8f8]) by BN6PR01MB2610.prod.exchangelabs.com
+ ([fe80::5844:6112:4eb1:a8f8%9]) with mapi id 15.20.6134.029; Tue, 28 Feb 2023
+ 15:37:20 +0000
+Message-ID: <81922cc5-4de3-bcd6-b0c3-8f9e61a1e7c5@cornelisnetworks.com>
+Date:   Tue, 28 Feb 2023 10:37:17 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.8.0
+Subject: Re: [PATCH] IB/rdmavt: Fix target union member for rvt_post_one_wr()
 Content-Language: en-US
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <Y/kKn9tnvSQ2Pacn@x1>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From:   Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Zhang Yi <yizhan@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230218185701.never.779-kees@kernel.org>
+ <6d2fe281-891c-8909-5330-f05d4407431a@cornelisnetworks.com>
+In-Reply-To: <6d2fe281-891c-8909-5330-f05d4407431a@cornelisnetworks.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: KBHzKjGxe0aLYMo37AVUS3Ff5TaxFmUa
-X-Proofpoint-GUID: KBHzKjGxe0aLYMo37AVUS3Ff5TaxFmUa
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-26_22,2023-02-24_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302270080
+X-ClientProxiedBy: MN2PR15CA0025.namprd15.prod.outlook.com
+ (2603:10b6:208:1b4::38) To BN6PR01MB2610.prod.exchangelabs.com
+ (2603:10b6:404:d0::7)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN6PR01MB2610:EE_|BY3PR01MB6756:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1060d8e9-77d8-43a5-8bb1-08db19a1adde
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1DDhC/5LDJFfkJ9nIpWTPJtWRXOJ8tKe+0zXwmORayOgqMwyhDhXhNe4PZgI3jj0umxh87OOX8ILHlXbx71Fc9BNauxxpM/emvyt5qHk8K7payUanqhIHRreGhrf9/pTuymjhsZH6A1NnuNxoPlH6jVQgE0XoMYMCs6BNugtjTSnaSnrSWUh36C3OHAJtIFjRDEu1vuFJzxivbwVHITaBtebkea6FzH1rhORX2nYR5v3bDeRSzPMGw3EQNfjw7vdFQtf+C8H3IA5FsHyYaQC5VR/m7ZW8TdROnEufpfXAtjnWaRCbzZr7fQn2AF6JF0LePEUCAGyVETeHQL8UL654IdzOAxI2s2JpLFlXCTBcqwYJhehA31WWIReKP7QQpycfxyMas/+EwDFvhGDxa5kRWlic+Lx7mYxkK0YUh3iKP3fTbKWM83vVBPGAgB8/edJPnKq4Bz5kGwJcbtiyOP7uldK17k1VxKMGMVmejalJAMzjoJbxSMRsRr/RJAix0yxmkoaV5MjUbb72o36a040d99JeIBlX2IqKj42dx1/xPDebS5zcX6/iMKiB89ro0FZW00MgFkeyS6W6mnT9B5AWbyN6T5MX8bquV4lliOXfvFAQLPc0EMzWiJiVkyZmREJmRnDCxrTmMjj3YWCJYezy5DM4Pxr7VaX5HGKcJydEYTAXtxqFKI1fEwRTSn4Y3eBT4njmx9RqwWBAAzdN6T/Wg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR01MB2610.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(136003)(346002)(366004)(39840400004)(376002)(451199018)(186003)(5660300002)(38100700002)(2906002)(83380400001)(38350700002)(8936002)(66476007)(66946007)(4326008)(6506007)(66556008)(6916009)(44832011)(8676002)(41300700001)(26005)(478600001)(52116002)(6512007)(2616005)(6666004)(53546011)(966005)(316002)(31696002)(86362001)(54906003)(36756003)(31686004)(6486002)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MTVEbmM4K050ZkJ0YXVkdmJ4VXJVU1JldkE2dVQ1TklaR1c4aFB5VWtFZGE1?=
+ =?utf-8?B?c3RaU01pYmxKT3JGSkVyUzFoRG04bTJJU3JTQjM1bDJJQnpiYmlxQXdCOVpN?=
+ =?utf-8?B?cTZSUGl0UXJtNWtxSEpiMkdLaWoxTmsreU03Z250ZnhLUDY2Mjl1ZjE4UE5y?=
+ =?utf-8?B?aW5rMDRJZElnM3VTRTRRRXNSbmlxeEtxSG9zSTNtTTl4eFhMbDB0SEFvTDNW?=
+ =?utf-8?B?RWMwSEVaWUFDQzIvb0syLzY1Q2VzNDBNTGczLzRwWk1OdkJJRmJib0YzWUZ1?=
+ =?utf-8?B?cC9MUUR5M1Q4cmNWYTVzTWFxVktzRnZ0RDNMZE45UlR3QkNhdWJXMTBkVXUv?=
+ =?utf-8?B?ekEvMVExVkJWZnVOanlMNjZtM1dmU3dmMmFCR2hQUHJVazRiRE90R1Noc3ZG?=
+ =?utf-8?B?ZDBDZWh1SExyWVZyMEgxWTkxaUpjbDZrQVB1NklVR083MndTUUNaRFRrY3pZ?=
+ =?utf-8?B?TVN3TFo0eCtTTnU3WDRYUnZDQml6TnlCTlJ2OVdBK2FEaExRelJOL0ZHekQx?=
+ =?utf-8?B?RWhKNTdxWlZneC9NTk5QaWFON1BRWENoQ3pKTXBuS1Y5M0xudEUzbGgrczFD?=
+ =?utf-8?B?Zi9oWlhMQ0VhTjFOZlZleDdUSjZWM2RWcm41djk3UEpTZk85VHBkQmlaT0hz?=
+ =?utf-8?B?N0loaW9Gb1NSV1dhSTRLMFRMWGd2UmppQVBmN0kzaW5FdnJvNVpXajVpTEpR?=
+ =?utf-8?B?WG1WNXVGUHgxK2RXbWRDMUNQSlVrakJpc0dVeDhVYVhMMHk5ZFFnditvM0VD?=
+ =?utf-8?B?OEFRaHdJNnEzM2JHMjFwdFMyMjE4b1ZCOUN2TEd0SXpKS0tYU0xVTnZQNk1M?=
+ =?utf-8?B?d2d3aUFnMkxoc2tjUU05UGVNY0o4anM0MmovSk1LVEJESERFRktIOXg5a29x?=
+ =?utf-8?B?U3NZbUpkU1lXa3kxTG1obGNFcnBmWURYdXl0U0wyRXZiTko2NVh3NThtaGlI?=
+ =?utf-8?B?Q2F0cXJqdnVnSGpPaHpzUmwreTYxZXpCa2lWSzVTU3pRT1V5WVAwTXpBeHgr?=
+ =?utf-8?B?dmdFZ2NMazhZOTBaK1hUTW8yd1pnY1V4bG9odmtIaTZvUFc0bzVBOXJCMzQ0?=
+ =?utf-8?B?ZksyUzF6M0JzUDJETUVqaUpxdmFZYktXSkhKNnYrNEZwbUVzcWtNaHowK1ZV?=
+ =?utf-8?B?RW5rMHF3YUlCQ2pWWHBhZXhWWjAwVDUrK2ZYYVZ2VkI2cWliNmRxQUZ0ZUJv?=
+ =?utf-8?B?d29DbTNGQUN6eDErMXhWbDBHeHNwMmZXckZsNGVFM0xueS9BVU5YOWluaUFR?=
+ =?utf-8?B?cldIdVg1eGNaZllFNTdyZWVDMkdySGJQclhxN3JPaXFHQXRvdndWS0dSYlYz?=
+ =?utf-8?B?cDQ2WGJKQXhxdTBDSWlkQlZlOG0wai9EWURKOGRzWTFKRWFudFhjcnYxRFJC?=
+ =?utf-8?B?SUI4SlJ4STRUbTdMUGNoTmFpL2N3RFNXYXRCMnlLNUtRbm9QOTI0ZU1jSUVk?=
+ =?utf-8?B?Q0xKRWFGU2ZBbnQ5NUlLUzZwWlpJKy9UKzhmZkQwQmFBN1pTTmdSTkZoVGpk?=
+ =?utf-8?B?cW9ybDQvQVYxR05MY29zZXFVNk10QmtRUzA2QXhMMDhGc2ZGcmpET2lDWEZi?=
+ =?utf-8?B?ZjlsUlRXUm1yUDE1c2RzZEIrNHRSd0xwWUsvNE1ZblBQKzh3RjhsZEhVd1kx?=
+ =?utf-8?B?NEJvT1dFQllvWDNUZ29BakZra3lDQ1V0bTlLTVRCVUxNVlZUR0NQcS9BNlZL?=
+ =?utf-8?B?dndSVVUwVWFISzhmb0NPQ1B1RGJVcEt1a0duRHZZSU9MMGk1UjdxU28rb2Jk?=
+ =?utf-8?B?eFo1ZjZ5RjF3RXVRZ0o5SzN5UWJoc3U2SHlxa1Z2bjNvTDhpaTJieG9WWU5Q?=
+ =?utf-8?B?MkhCdHJUdXNLVUVpdEVmZmw5UkJXall5U29QSjBCRnhZclNETklGZVh3UHV1?=
+ =?utf-8?B?eW8vRHZpV2FMT2dvR01LaXFqcG43L0JTMnBpYjdEbng5a3pOQ1EvSlF0bmFM?=
+ =?utf-8?B?YWNmbGUxQ0JvaXJZeW95cUVOeHNwRWkyZnlXVEFwSTNTMXdiaG1TWEZla2w1?=
+ =?utf-8?B?Qmc4MzRDcDdKRHpGZVVjSjNwMnNsUXMxVVgveVJaTjUvZU5jYThsKy9odytN?=
+ =?utf-8?B?UXRqbGN5TGo3MzRJanYxdzh4SGY5TVl6d3grYjNDaUU5SmQxa1RRMWtIcUxZ?=
+ =?utf-8?B?YklucUNBajZOWi9ma3dUQmJ5ay9LRFFtalhTMFVobEtwdGo3cG92QXVocWc5?=
+ =?utf-8?Q?CDo56jdzrNEPJaH9Zm4H/d4=3D?=
+X-OriginatorOrg: cornelisnetworks.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1060d8e9-77d8-43a5-8bb1-08db19a1adde
+X-MS-Exchange-CrossTenant-AuthSource: BN6PR01MB2610.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2023 15:37:20.1935
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4dbdb7da-74ee-4b45-8747-ef5ce5ebe68a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x/+/UIHKyANlv9a5EmhVAajrvMOV67UBOI79hNX+BcD5O09PQjXEbB8VFDU7eqO8GewiGQE3l7pWylfz67XftQ6KFv5QQ0jgkI2lYXWQN772SIzCGdaGDFegRgi4qMl9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR01MB6756
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 2/25/2023 12:36 AM, Brian Masney wrote:
-> Hi Mukesh,
-> 
-> On Fri, Feb 24, 2023 at 04:10:42PM +0530, Mukesh Ojha wrote:
->> On 2/23/2023 6:07 PM, Brian Masney wrote:
->>> I'd like to test this series plus your series that sets the multiple
->>> download modes.
+On 2/21/23 8:00 AM, Dennis Dalessandro wrote:
+> On 2/18/23 1:57 PM, Kees Cook wrote:
+>> The "cplen" result used by the memcpy() into struct rvt_swqe "wqe" may
+>> be sized to 80 for struct rvt_ud_wr (which is member "ud_wr", not "wr"
+>> which is only 40 bytes in size). Change the destination union member so
+>> the compiler can use the correct bounds check.
 >>
->> Sure, you are welcome, but for that you need a device running with Qualcomm
->> SoC and if it has a upstream support.
+>> struct rvt_swqe {
+>>         union {
+>>                 struct ib_send_wr wr;   /* don't use wr.sg_list */
+>>                 struct rvt_ud_wr ud_wr;
+>> 		...
+>> 	};
+>> 	...
+>> };
+>>
+>> Silences false positive memcpy() run-time warning:
+>>
+>>   memcpy: detected field-spanning write (size 80) of single field "&wqe->wr" at drivers/infiniband/sw/rdmavt/qp.c:2043 (size 40)
+>>
+>> Reported-by: Zhang Yi <yizhan@redhat.com>
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216561
+>> Cc: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
+>> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>> Cc: Leon Romanovsky <leon@kernel.org>
+>> Cc: linux-rdma@vger.kernel.org
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> ---
+>>  drivers/infiniband/sw/rdmavt/qp.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+>> index 3acab569fbb9..3f707e1fa517 100644
+>> --- a/drivers/infiniband/sw/rdmavt/qp.c
+>> +++ b/drivers/infiniband/sw/rdmavt/qp.c
+>> @@ -2040,7 +2040,7 @@ static int rvt_post_one_wr(struct rvt_qp *qp,
+>>  	wqe = rvt_get_swqe_ptr(qp, qp->s_head);
+>>  
+>>  	/* cplen has length from above */
+>> -	memcpy(&wqe->wr, wr, cplen);
+>> +	memcpy(&wqe->ud_wr, wr, cplen);
+>>  
+>>  	wqe->length = 0;
+>>  	j = 0;
 > 
-> I will be testing this series on a sa8540p (QDrive3 Automotive
-> Development Board), which has the sc8280xp SoC with good upstream
-> support. This is also the same board that I have a reliable way to
-> make the board crash due to a known firmware bug.
-> 
+> Thanks for the patch. We've been debating this issue internally since last week.
+> The problem I have is this makes it look like everything is a "UD" req when it
+> could be a different QP type. Maybe we just need a comment explaining.
 
+For what it's worth I did test this patch. If you could add the comment that'd
+be great. If not I can touch it up later.
 
-Can you try below patch to just select minidump download mode and make 
-the device crash ?
-
---------------------------------------->8-------------------------------
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi 
-b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-index 0d02599..bd8e1a8 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-@@ -280,6 +280,7 @@
-         firmware {
-                 scm: scm {
-                         compatible = "qcom,scm-sc8280xp", "qcom,scm";
-+                       qcom,dload-mode = <&tcsr 0x13000>;
-                 };
-         };
-
-diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-index cdbfe54..e1539a2 100644
---- a/drivers/firmware/qcom_scm.c
-+++ b/drivers/firmware/qcom_scm.c
-@@ -20,7 +20,7 @@
-
-  #include "qcom_scm.h"
-
--static bool download_mode = 
-IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
-+static bool download_mode = true;
-  module_param(download_mode, bool, 0);
-
-  #define SCM_HAS_CORE_CLK       BIT(0)
-@@ -427,7 +427,7 @@ static void qcom_scm_set_download_mode(bool enable)
-                 ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
-         } else if (__scm->dload_mode_addr) {
-                 ret = qcom_scm_io_writel(__scm->dload_mode_addr,
--                               enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
-+                               enable ? 0x20 : 0);
-         } else {
-                 dev_err(__scm->dev,
-                         "No available mechanism for setting download 
-mode\n");
-
-
-
-
->> Also, testing of this patch needs some minimal out of tree patches and
->> i can help you with that.
-> 
-> Yup, that's fine. Hopefully we can also work to get those dependencies
-> merged upstream as well.
-> 
-> Brian
-> 
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
