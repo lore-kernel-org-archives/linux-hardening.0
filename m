@@ -2,114 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90062C678D4
-	for <linux-hardening@archiver.kernel.org>; Thu,  2 Mar 2023 19:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DF6C6FA8E
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Mar 2023 22:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbjCBTsN (ORCPT
+        id S229568AbjCBWEr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Mar 2023 14:48:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
+        Thu, 2 Mar 2023 17:04:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjCBTsN (ORCPT
+        with ESMTP id S229613AbjCBWEq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Mar 2023 14:48:13 -0500
+        Thu, 2 Mar 2023 17:04:46 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11811CC30;
-        Thu,  2 Mar 2023 11:48:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 300BC1ADFA;
+        Thu,  2 Mar 2023 14:04:27 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BE916B815AA;
-        Thu,  2 Mar 2023 19:48:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DE5FC433D2;
-        Thu,  2 Mar 2023 19:48:09 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F023DB815E2;
+        Thu,  2 Mar 2023 21:58:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E6E8C433D2;
+        Thu,  2 Mar 2023 21:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677786489;
-        bh=U0sFMYQ2MZWrog+LxnDSE1NcCkdmkv+nWCNr4IpUImM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IBcQY/JNf1hq0pLQUbEpDp/Gw1s463oB5s1idBbhH7KCdAXcLLI0Qng+ovbp/hIIb
-         OGlJygi5HhYhpVizgKzUOKMflQAOgDme19sZAX9X2WAWnO+WOAYkmHmb97k8w+ghYa
-         RVNvAjA5JXiraWNlc+w15Lo7cbYbheU4fyFgiZp1SQXDfToqGLjOLKh1Qfa98dTFyn
-         JCUTKf36Xoj5JIkrJu+XLkMCnvNbJIKK5esMWznlI7VpNs0MZwOc8buZSn5Xa257zp
-         d2FxyEAVUVLZzqe5iRtdopzdWk9jEN0dN4Sqbeti4C1pWfPfBCA6Oj73bwhn/Z4ALO
-         4U4eF+C140KAA==
-Date:   Thu, 2 Mar 2023 19:48:07 +0000
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Mateusz Guzik <mjguzik@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>, serge@hallyn.com,
-        paul@paul-moore.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] vfs: avoid duplicating creds in faccessat if
- possible
-Message-ID: <ZAD9d5P8bYVQ5qSs@gmail.com>
-References: <20230125155557.37816-2-mjguzik@gmail.com>
- <CAHk-=wgbm1rjkSs0w+dVJJzzK2M1No=j419c+i7T4V4ky2skOw@mail.gmail.com>
- <20230302083025.khqdizrnjkzs2lt6@wittgenstein>
- <CAHk-=wivxuLSE4ESRYv_=e8wXrD0GEjFQmUYnHKyR1iTDTeDwg@mail.gmail.com>
- <CAGudoHF9WKoKhKRHOH_yMsPnX+8Lh0fXe+y-K26mVR0gajEhaQ@mail.gmail.com>
- <ZADoeOiJs6BRLUSd@ZenIV>
- <CAGudoHFhnJ1z-81FKYpzfDmvcWFeHNkKGdr00CkuH5WJa2FAMQ@mail.gmail.com>
- <CAHk-=wjp5fMupRwnROtC5Yn+MVLA7v=J+_QJSi1rr3qAjdsfXw@mail.gmail.com>
- <CAHk-=wi11ZbOBdMR5hQDz0x0NNZ9gM-4SxXxK-7R3_yh7e10rQ@mail.gmail.com>
- <6400fb4b.a70a0220.39788.048e@mx.google.com>
+        s=k20201202; t=1677794280;
+        bh=haZ5hbK/FABM1NA11AyojbjxIeoGH44sYRzAH2/vIWo=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=mTK1o6Ba5YwhvY6woe7QZqTLyHnZn0Vd1a2uwxD0JQsGAaqdO2BjeQolchN1dWQYu
+         aTh3vuXXPwZs9hkVrOt2rruPGrCxqDpWVXGtQX5DAW2/f/Ihz1NRaSeZP/mOHBQcT0
+         9RMMYhtfC8N2d8VBKgJXAlRvKUhU4oSdgfkc/okao6KjoMsV6KKxfZs5g4PYjVv/1m
+         eSbfJJ/Gxl2A6BENWhmemCNV7e6gtU5yoau/8WoLE1I2sbnFNFId7Ajdk+QeXOvgWy
+         2fslfn7ck8wKTxjuCpe0zmDqnqyyvrlKCwG7KF3xpMNcPWtRCnyU1onPsYVbGjpyXJ
+         J1ksqqDLjlZBw==
+Date:   Thu, 02 Mar 2023 13:57:57 -0800
+From:   Kees Cook <kees@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>, Kees Cook <keescook@chromium.org>
+CC:     linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: splat in ikheaders_read (bpftrace)
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20230302112130.6e402a98@kernel.org>
+References: <20230302112130.6e402a98@kernel.org>
+Message-ID: <22EA7360-E2FC-4A23-BF0B-EFDE523F9605@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6400fb4b.a70a0220.39788.048e@mx.google.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 02, 2023 at 11:38:50AM -0800, Kees Cook wrote:
-> On Thu, Mar 02, 2023 at 11:10:03AM -0800, Linus Torvalds wrote:
-> > On Thu, Mar 2, 2023 at 11:03 AM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > > It might be best if we actually exposed it as a SLAB_SKIP_ZERO thing,
-> > > just to make it possible to say - exactly in situations like this -
-> > > that this particular slab cache has no advantage from pre-zeroing.
-> > 
-> > Actually, maybe it's just as well to keep it per-allocation, and just
-> > special-case getname_flags() itself.
-> > 
-> > We could replace the __getname() there with just a
-> > 
-> >         kmem_cache_alloc(names_cachep, GFP_KERNEL | __GFP_SKIP_ZERO);
-> > 
-> > we're going to overwrite the beginning of the buffer with the path we
-> > copy from user space, and then we'd have to make people comfortable
-> > with the fact that even with zero initialization hardening on, the
-> > space after the filename wouldn't be initialized...
-> 
-> Yeah, I'd love to have a way to safely opt-out of always-zero. The
-> discussion[1] when we originally did this devolved into a guessing
-> game on performance since no one could actually point to workloads
-> that were affected by it, beyond skbuff[2]. So in the interest of not
-> over-engineering a solution to an unknown problem, the plan was once
-> someone found a problem, we could find a sensible solution at that
-> time. And so here we are! :)
-> 
-> I'd always wanted to avoid a "don't zero" flag and instead adjust APIs so
-> the allocation could include a callback to do the memory content filling
-> that would return a size-that-was-initialized result. That way we don't
-> end up in the situations we've seen so many times with drivers, etc,
-> where an uninit buffer is handed off and some path fails to actually
-> fill it with anything. However, in practice, I think this kind of API
-> change becomes really hard to do.
-> 
+On March 2, 2023 11:21:30 AM PST, Jakub Kicinski <kuba@kernel=2Eorg> wrote:
+>Hi Kees!
+>
+>Running tests on net (Linus's tree as of Monday) I get this splat
+>trying to attach bpftrace to a tracepoint:
 
-Having not been following init_on_alloc very closely myself, I'm a bit surprised
-that an opt-out flag never made it into the final version.
+Can you give me an example command line to try to repro this?
 
-Was names_cachep considered in those earlier discussions?  I think that's a
-pretty obvious use case for an opt-out.  Every syscall that operates on a path
-allocates a 4K buffer from names_cachep.
+>
+>[ 2468=2E945793] kernel BUG at lib/string_helpers=2Ec:1027!
 
-- Eric
+Were there any lines above this? It must be memcpy blowing up due to what =
+it thinks is an overflow from having tracked an allocation size (that's the=
+ major change this cycle)=2E
+
+>[ 2468=2E949683] RIP: 0010:fortify_panic+0xf/0x20
+>=2E=2E=2E
+>[ 2468=2E961930] Call Trace:
+>[ 2468=2E962300]  <TASK>
+>[ 2468=2E962611]  ikheaders_read+0x45/0x50 [kheaders]
+
+static ssize_t
+ikheaders_read(struct file *file,  struct kobject *kobj,
+	       struct bin_attribute *bin_attr,
+	       char *buf, loff_t off, size_t len)
+{
+	memcpy(buf, &kernel_headers_data + off, len);
+	return len;
+}
+
+I will take a look at the caller's allocation of "buf" and kernel_headers_=
+data=2E
+
+-Kees
+
+
+--=20
+Kees Cook
