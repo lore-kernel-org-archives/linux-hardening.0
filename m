@@ -2,245 +2,83 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD455C7EE2D
-	for <linux-hardening@archiver.kernel.org>; Wed,  1 Mar 2023 12:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E219C6FA8E
+	for <linux-hardening@archiver.kernel.org>; Thu,  2 Mar 2023 19:21:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbjCAMiD (ORCPT
+        id S229780AbjCBTVi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 1 Mar 2023 07:38:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41180 "EHLO
+        Thu, 2 Mar 2023 14:21:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbjCAMiA (ORCPT
+        with ESMTP id S229758AbjCBTVf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 1 Mar 2023 07:38:00 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFABB19B;
-        Wed,  1 Mar 2023 04:37:55 -0800 (PST)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 321A0gCc025472;
-        Wed, 1 Mar 2023 12:37:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : from : to : cc : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=QoGvMHXX38XnI75b0QLFgKE5XwHrliZirwMsuxjRTz8=;
- b=Y8/v4glY8/mwZTU+aISn4uu9dO7KkcxWEi91UkOy+t+HYSNJg89c+9X5wgjpU7fT074N
- chdWihcB03nP0kwQrrfHYr6Wo59LVQ3frWdwcHOIpkkk1K0P2zhcZJ115xeBCNlzzaEt
- yBOEn0uEQEuLkvUi4TcgCqyPMGsmXRi1mjPCO1s0HYBz7Y4K+R9tc2hW2s4nm2fMHe7N
- kmWFETYnngISDS74Z+nanLkaPI6e7HkBtJYKLESCakECDEDwqEnW55xPvNN0ovfEdjTi
- dYw0Z1rxNPB2Jo6CfQIeBXPMXWVxDqWSuosyQ4zHWDgbOebqoC3Q5w4NWlJxq8svJe7T lw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3nyb72gs9p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Mar 2023 12:37:39 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 321B5vtG015883;
-        Wed, 1 Mar 2023 12:37:38 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2109.outbound.protection.outlook.com [104.47.58.109])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ny8s8pahr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Mar 2023 12:37:38 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TGb6rFjlqoCogeeRMEtP/bH9UNlPozlf4qvPSINTuikC5lJzstjaF8J99Eg2qAH2+b8dFaqOnrupF2LzEGxzPvQQ5pTE/DFNr5cN2BJi9wRSTkEpRxyY71XXgjf2jujH3PEIFZ72wfpt4ZFSq3Qyrowcm15OJs3kWNdZtnTI4kEagN8PSBNr2WnSrC9Bku9Qz4pxRa7kWFKPMf/BCsX3gG2wdtc/08CxgGkY4BLO//AMxkt7zOq4tE66jQNVOS1+QRkYGdISn3y4fxelSp1W+5oHtepa275yM8zfr0tmUAOuArG1zQw3HzJKfKKL9FTdlIZ33SIDLRRhYn8rz35Uqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QoGvMHXX38XnI75b0QLFgKE5XwHrliZirwMsuxjRTz8=;
- b=cRjJ8WuoT4+qeN22P7tboIzzCOM4UuKQO4Soi2luZB578l98gJmPUE0gc0oLgoVgVgFGCmiiz2PsU1rRFjtnPVsOWdqp2uLeMtG+aRunbbbF+BbQ/DPQq53VycG9a5tjw7BQZHTNM8cvFj51WLX5SAcWf6cfTQ490o9of7Z5mPxvH+M0BT9+XFCscGOlB1TBO7tEu/l0Z/LrJ79LJQ3jh2ltjTbnBdbn96G3bkIW9AmztySSWAN99Wev8l29gi41+EO/dDPfUckeeQNeSLIhCK0u+Nfr1FZCdZi4qcQ7+R776nHy1Oxp4OvSAO4jf3ERuQiXCyrDmsJKsI4u1lW8IQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-Received: from PH0PR10MB5433.namprd10.prod.outlook.com (2603:10b6:510:e0::9)
- by DS7PR10MB4958.namprd10.prod.outlook.com (2603:10b6:5:3a6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.18; Wed, 1 Mar
- 2023 12:37:36 +0000
-Received: from PH0PR10MB5433.namprd10.prod.outlook.com
- ([fe80::a0c1:677d:5394:bf43]) by PH0PR10MB5433.namprd10.prod.outlook.com
- ([fe80::a0c1:677d:5394:bf43%5]) with mapi id 15.20.6156.017; Wed, 1 Mar 2023
- 12:37:36 +0000
-Message-ID: <9bd1f286-15c0-0fe7-a566-802584fc629d@oracle.com>
-Date:   Wed, 1 Mar 2023 13:37:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v3] kmod: harden user namespaces with new
- kernel.ns_modules_allowed sysctl
-Content-Language: en-US
-From:   Vegard Nossum <vegard.nossum@oracle.com>
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, linux-kernel@vger.kernel.org,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-modules@vger.kernel.org,
-        John Haxby <john.haxby@oracle.com>,
-        Jann Horn <jannh@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>
-References: <20230112131911.7684-1-vegard.nossum@oracle.com>
- <20230112180045.GA18314@mail.hallyn.com>
- <8b0cfd73-d22c-2000-d4c6-41cf75531cdf@oracle.com>
-In-Reply-To: <8b0cfd73-d22c-2000-d4c6-41cf75531cdf@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PAZP264CA0039.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:102:1fc::21) To PH0PR10MB5433.namprd10.prod.outlook.com
- (2603:10b6:510:e0::9)
+        Thu, 2 Mar 2023 14:21:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D7963B651;
+        Thu,  2 Mar 2023 11:21:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DB629B815A3;
+        Thu,  2 Mar 2023 19:21:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752F5C433EF;
+        Thu,  2 Mar 2023 19:21:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677784891;
+        bh=wEIup45xv46tCRSDoT+bWcG5ZslyCy1gPpPIWJles6g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZJJLibcPdXVV8j4kxM4q/YuySbVqkUgb8aw/8kVB5ZI8JnYNEimJkesKpae5FV6OY
+         Af55a4s/DQ2YzTlEbOyUjoUUtG7GdevlfGdyr5Z2ZGA9ZIdETJjFDf4j2PHiWLeMgM
+         6Xtgon0TEheXZCM6sWUzfo5tGX2I12iXfVdo8+EFwFJakcb3P0lWhdoCkXPpvTYYiu
+         VJJ9UUHTGlZ1BKhrP3aDZRcCV+D1SdawOy/OMoq+Q/DchajSFOjYU735DCPd3N0LRi
+         RrK/mg/RRrPCKj51xWBEH9b3kjngWLJ93mZjy/VExmyQOId7XxOwD6kBTWgF99uwJA
+         XC8gR6WY76/Zw==
+Date:   Thu, 2 Mar 2023 11:21:30 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, bpf@vger.kernel.org
+Subject: splat in ikheaders_read (bpftrace)
+Message-ID: <20230302112130.6e402a98@kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5433:EE_|DS7PR10MB4958:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2b247f33-f0d8-4bb3-7d0a-08db1a51bc87
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nfiCWsLZbZmI3rFuGbhaI4U7QdRiJjBO2JYJ/RU2B4pvaeikylmaT5ERShIzldCozAc00g2rMFznMhS9GpCBOQHcPFjb1BXJMTAdob1Su6ja1GitvBcC7O7p05IfGp71L/C16hT9GqiWKKslTM2RG4lrak4NMEQlQHkrFf8u4F/a3O9KDHpRpR6Mx9MyTEc4RTGmYWbGZF/KiHO3HO3RRpnKn93ZaXu8JNBa7dbLn4QWlKPtGAiQyRA9xgsIPF5/fW77GFFLBQsX0HUdE17o8zL+21LchIicM0iIBL7FW0HE3+JCkOP0Q/MrmbKyhHE2s8VT31wQtHDj9QLKmvS4OwjGDIfDl0b1Bix1BH3UI3jgyiGX6c7w/oJwGOITB0AzGcda3u5Th1pbMEdGjYawneo++dESoiS6qcQfULsdeXGEmS4WT7xy2abDQZTjUlD5u+tAxUqSgwKbeEyMK+IGUB5Ulgm1ALKmENeEJ5nRaarCvpvPgSooukj7JTC2zm1b9gEsb6oMtP/oIC8IbyCAJNz/O5Tm/HVbiJbdSVgNHuA6S2OSh/PfljulePkulP7c0GczCLRKYbpu0/zqEYHmy/0eW+Ujt6AwoMRO5SVVm9rYsDE03B3r1XIi6np4IvVr3yEnPuTSr94hGO2iQ5fmeG8fNN3hFJ/g1RmXuwV3uCi6MOyVdYd9e4VV1kWStNd8Fb4R48yAlrNHdrp/wqdIaLQxBlbaVrQI35WBqBB5YGk=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5433.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(376002)(136003)(366004)(396003)(39860400002)(451199018)(36756003)(54906003)(316002)(478600001)(83380400001)(66476007)(6666004)(6486002)(2616005)(6506007)(53546011)(6512007)(186003)(26005)(8936002)(41300700001)(86362001)(2906002)(7416002)(5660300002)(31696002)(44832011)(66946007)(66556008)(38100700002)(6916009)(4326008)(8676002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WjR6Y3lNanUxZkFUOSs1U1d2Wld3UmgvV05OaDMzeFlGdFVRV2pPVVRoOGp1?=
- =?utf-8?B?STZ6aitnd3IxSXVxanoydDk1ZmZKL2x1RVJYYXZobnNOZENoa1FvZU5TTmtT?=
- =?utf-8?B?S0l1aWQ2aVo4NFJ0SUgyY0FDM1llOFNpS1lhZXVkcFBjb01pNncwZms0dTBq?=
- =?utf-8?B?b012QnVCYUE0YmhGQTFNenpTd0R5My9sYTJzbnJlemF2MVFMQW1TVkk4T3kv?=
- =?utf-8?B?c0lZVUhxSkhHV2V4bW1NZTg1NGNQZFVlNXlRNkRFaUd4RHduYlpHNFhTdzQy?=
- =?utf-8?B?Yk9UNTI0eEtnL0t4dThSZ1JmTVUvZDRNdTFNeGFrWGpsT2FTVU9SUlo3R1l4?=
- =?utf-8?B?YXhDcGdDYlN6YWR3QlZWbTNQdVFGclBnSVlCVnExYzZxa05UaVQyeFlHSllk?=
- =?utf-8?B?WXZNWGhKOGVRMDdmL0ErSktuelUrYThXcy9TVitnWlV6RFltc0s0SjhWYVZL?=
- =?utf-8?B?VVZMMzhEM0NSeDFSUDdtTGdSZmpsYnNKcmpyMGV3cjVIQVJmaHpUMG80RzRa?=
- =?utf-8?B?Q3dVV2ZKd3NCbWdIOWhWc0N5R1hyekFsMTFyWUtxR2pPeHJxaVQveFl1cmJQ?=
- =?utf-8?B?bHZaaGlpSHRZaExSb3pveVBzNzdHblVjOGIzc2E5NUtMaVF5RmNVY29udDMr?=
- =?utf-8?B?UnlWUHFxSFZTOHpsR1BFNThpd2xzZk9vYmVPNmRkbk5peVpFN3Qxcm9zazhH?=
- =?utf-8?B?QmZGN044MHFILzJCZjJ5RFJXaWV4YWxqNVNseHNaRllaVk9sUEt6QmVjVkVw?=
- =?utf-8?B?ZWtZcmVyTW1OTTNoOGlVenNFQVdRMmNaVW1kbGduNFFyMzU2Q3NVWXhQdjBi?=
- =?utf-8?B?aEF3T3M0UUhHVGlZWmV0TG5NVEx5VllXRmloakJBQkhUbk5rVUZ0V0YrdXkw?=
- =?utf-8?B?Z1FrYTk5aXhPa1RlSnpremVkTlVnQ3ZHd2JEWkw1RFduRjJWMmV3Wi90bVVO?=
- =?utf-8?B?N3ZUNWVYbTJXVUViMzR6VnRxR25LYXdBUm5ZaWFJL1BveDNTV2xaUWtESE5Q?=
- =?utf-8?B?TEJZdmpZaGQyNHpKN1o3NmxJV0w3Qy9zN2xiUkxzQkgxUzNVNm1KTHRoMXpN?=
- =?utf-8?B?T0xxVXg4ZnFFaWlSNnVJQ2JadlppaU5zU2ZBNnQ0NU9ZcTJBbkRzNGlnWGtN?=
- =?utf-8?B?RDFGOGJ1aVVvbU9WV1cwWjZBUE1BbFBWODFaS244dHptUStubDBmNktSU3JM?=
- =?utf-8?B?a3JyTmRUZy84ZFA1R2xXTTc4a3llQ2J0TDRSSXdIM3NWUDY0K3RId05iNUZj?=
- =?utf-8?B?M0tkNXJmNjlaNUEzVjkyd2FmWmZsYyt0ZzIwZUF2c1pzSFNBaHZSVS82SUdJ?=
- =?utf-8?B?ZmRQdkNHQlRNckNpM05HVGRIc0Q5dEhEUEJGZUZuem5ZVVNXOGtYbHJXYTlq?=
- =?utf-8?B?UU5odHlVTkRpbkFZaS9vSFhwdjV4Q2hiUHZ6R2ZlL3VsTFllU1ZBOHg1S09r?=
- =?utf-8?B?VFl5UXVYTE82QnJXK0NyUUVrcG9qaE9pVVROZ3FKSnZXbGpQazlLZG5ObE1M?=
- =?utf-8?B?V3E5SVJkSk1QTmFuQThCRkhmYVZCcjl0OFgwby9QOXpJb201WHpQSGZ4Wmww?=
- =?utf-8?B?TW44eXo1aVpyanlOM2I4MS9nSzlhUWwvQmYxQy9kam1DTDNEdG9VOHN0Zmhw?=
- =?utf-8?B?NHBHRDA2NTUzNUxWY29xaGw2UFF1czE5SmR5UWxpM3ZCVkJjVjgwZWs5aDZq?=
- =?utf-8?B?VkNLR1ErcVFVRkhERDZHUkJrZkI2UDhBd0NKbzViZGNkbXlMNW1iM0c1T25i?=
- =?utf-8?B?R0VNNUtJR1ZyZCtRdlg2NFVsNGJWdE1qNW15enlGWDdobzV3MDZuVllpVzFm?=
- =?utf-8?B?allZTk83OUV3dWtpcGZtbFFBbmFtOENCaThMMFZRNWdBRDBPdDRYcXNiY1Rx?=
- =?utf-8?B?YmNZbW93RDZ0WXFYbmpqNi9JbWFVRFpna2Z5TlVFNHFIakJIMklzRHdoWGFs?=
- =?utf-8?B?b1hGRkNUVTY0alg5RHZMcmkrZGVSOW9BU1NUT3oyb0VKVVNLa0RKNEJHLzVN?=
- =?utf-8?B?ZHdjc0hkUjNVUTMrMHUyNVQyMXFwbFppRGhNOHZQb2xBQldnOHJoaVovcWZJ?=
- =?utf-8?B?M1p0a3dnL01VR29Fb1VVa21QQjU2cWFUNGhtTFNKc3JTclg5K1gxbCtoUlox?=
- =?utf-8?B?SzdFaEJEM09WdG8xV1lHVkRoT0VJdE1STlF2dnBMdkJXN3Nla2pTMjBITmto?=
- =?utf-8?B?M3c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?eFozbVIyKzRaQnFNZWZpKzBFTEw1Ulo1QTQ3N3pZdEFWaW4wMjJWOHRVTVdV?=
- =?utf-8?B?ZWtkZVFmOGxjTDlua0JsRU50OEVGNnBlTFF0QjBaRSs2THY4dmZxRTdCckw3?=
- =?utf-8?B?bDV0NVI4UXV3RWtzK3VOS1JHTGNDWHFsZGZrcWhkaUFEckhMTWlyaEdLTEZL?=
- =?utf-8?B?YlBaNGFLTWtFYmw4VlBocWN4S0doZXdOa2JuWDVHNHAwRjN1MmxEWGU4Rmxz?=
- =?utf-8?B?OEhlbWZRcjdKN3VCR3JDc1FWTzBqdWE0dEgyQmxrTHpiZVVuK2YzajJ5N3BM?=
- =?utf-8?B?RWFLVzJDd1dPZXltY3laOTFTSlBNRlMybDFraC90YjVHSk1abEhlKzh1T1cv?=
- =?utf-8?B?VUdBUjNxZjU4QmVDeFZNZnFLU2p0SGJiSWhqb2Q5a1AxRGo1WmNPdXE2cXFr?=
- =?utf-8?B?Y2dVNnd5NjMxY1EyMEpIbmJwc3lqNURMWjVhSTJveHdNNVdTRGVDbEtPMDVD?=
- =?utf-8?B?UmJWbXNKZ1BRdHh2UVAxa1g4aU5iMnJQM0RBd0tUbDZsTEQ3RWhTNXJtcEho?=
- =?utf-8?B?SEhIdXZRVkJjMXVYWDg4NmRqTzNLRjE2cDVPSHFGTk1JQjFibWJDSVJENndm?=
- =?utf-8?B?OC8wOGlmZGxkNjhiYXdoRVBhYUVRSWVsK0dFVVRqN0pjdzdnRGlGSnBkcllr?=
- =?utf-8?B?amtSY1RCT3kxYXZhaFp5K2pJcEl2R3BLaHAyblVpelB4NHBiMisxRmZoOXJa?=
- =?utf-8?B?ZDFIVHdyVkN4UUw0dW5WTjZzemhwbnVFY1VPcWV6bXJNNEQyTTFqSHNxOUV2?=
- =?utf-8?B?d0kxandFKy9HSllWZkQ2c0R4RHoycmd1bDhpZG5vbDFNeGlNZm1EMEdiOXAz?=
- =?utf-8?B?eVpweDJTY09zN2M1QXFUNk95M245NFdlbjcwYVdydk0ybEJwblhuNzMrdVEw?=
- =?utf-8?B?enIzMDAxdW5UcUV5ZkNJSVFUUnBZK2RrcDhtQkY0K1Z1SHBob1BOS0J6TjRD?=
- =?utf-8?B?bk8rK1JtR21wanVjY2ZKSnJac2xXRnljYWlxNWpqVyswRXBYSUxwcUJ1cEVE?=
- =?utf-8?B?UWJabHQxYmsraTFQRWRJWDlzak1UdnQvcVhBVEdDWmZXZnZwaFVEL3ltSlNX?=
- =?utf-8?B?N05HdFlSSU9sbWFZcS9RWUkzd0FsMnVLY0RrYkIyUmtsT3pLQmUwa1o5UGxL?=
- =?utf-8?B?T3hiM3pOTVYyN0NUZ0hLMzArUjM2dWgrTWphdmFhbzlTbHlCUUI5cUVVSmpD?=
- =?utf-8?B?NGxySHZnTU1ZeEpDWjNsODZXNXZhcDEyTGhzWnR0dU1UM3ZGSXVuM2tzYjhi?=
- =?utf-8?B?K3g3dVJtdnduQmdSWFFIOWVpY2J5bVVFWDBaVG1NbzlTTWVoNk9ZNldKSDFS?=
- =?utf-8?Q?gEsXM4u/A+jyc=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2b247f33-f0d8-4bb3-7d0a-08db1a51bc87
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5433.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Mar 2023 12:37:36.3537
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DzClZjcnSrNcEhN2lCFYG7EP0GNLPIbSwQJJq2iabU3VuZr1JbpQEQAo9lbCjF5hXDqU5HXwpgCZqET3FTJ7N7CPnu02nwBhE/8ygeyA7FM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4958
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-01_08,2023-03-01_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 adultscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303010106
-X-Proofpoint-ORIG-GUID: fkjE5htNfMB8kAa7ZlJ6z340sLfyyA63
-X-Proofpoint-GUID: fkjE5htNfMB8kAa7ZlJ6z340sLfyyA63
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hi Kees!
 
-On 3/1/23 12:09, Vegard Nossum wrote:
-> 
-> On 1/12/23 19:00, Serge E. Hallyn wrote:
->> On Thu, Jan 12, 2023 at 02:19:11PM +0100, Vegard Nossum wrote:
->>> Creating a new user namespace grants you the ability to reach a lot 
->>> of code
->>> (including loading certain kernel modules) that would otherwise be 
->>> out of
->>> reach of an attacker. We can reduce the attack surface and block 
->>> exploits
->>> by ensuring that user namespaces cannot trigger module (auto-)loading.
->>>
->>> A cursory search of exploits found online yields the following
->>> non-exhaustive list of vulnerabilities, and shows that the technique is
->>> both old and still in use:
->>>
->>> - CVE-2016-8655
->>> - CVE-2017-1000112
->>> - CVE-2021-32606
->>> - CVE-2022-2588
->>> - CVE-2022-27666
->>> - CVE-2022-34918
->>> - CVE-2023-0179
->>
->> I think it would be worth pointing out how many of the above would
->> actually be aided by this patch.  The first two would not, but certainly
->> at least the can module one counts.  So I support this at least in
->> principle.  I'll take a closer look at the code hopefully tonight.
-> 
-> The intention was to list _only_ CVEs with exploits that would be
-> mitigated by this patch. Let me go through them one by one, just using
-> public exploits found with Google:
-> 
-> CVE-2016-8655: this uses AF_PACKET. I guess your objection is that
-> AF_PACKET is rarely built as a module and even then would most certainly
-> already be loaded as part of regular operations? I see at least one
-> distro kernel having used CONFIG_PACKET=m in the past, so I wouldn't
-> write this off completely. You need CAP_NET_RAW to create this socket
-> type AFAICT, which is why the exploit uses user/network namespaces.
-> 
-> CVE-2017-1000112: uses AF_INET. Agreed that this would certainly be
-> compiled in or already loaded, so we can drop this.
+Running tests on net (Linus's tree as of Monday) I get this splat
+trying to attach bpftrace to a tracepoint:
 
-[...]
-
-> All the exploits seem to be using user namespaces, for CVE-2017-1000112
-> I think it needs it to set the MTU of a dummy interface. I'm happy to
-> drop this CVE from the list (I probably looked too fast when looking at
-> it), but I think the rest are legitimate. Added Andrey Konovalov to Cc
-> as he wrote the exploit I looked at and can maybe confirm (and in
-> general has more experience with exploits).
-
-Oh, I see -- the request_module() call in socket() happens before the
-CAP_NET_RAW check in e.g. packet_create(), which means you don't need
-user namespaces to _load_ these protocols, you can just do the socket()
-call in the init user namespace, which will load the module but fail
-creating the socket, then call socket() again inside the user namespace,
-which now succeeds because the module has been loaded...
-
-I haven't looked at the other CVEs from this angle, I'll look over them
-again and see what I can find.
-
-
-Vegard
+[ 2468.945793] kernel BUG at lib/string_helpers.c:1027!
+[ 2468.946602] invalid opcode: 0000 [#8] SMP KASAN
+[ 2468.947416] CPU: 1 PID: 1094 Comm: tar Tainted: G      D            6.2.0-12879-g040b4d2ce1ad #646
+[ 2468.948547] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.1-2.fc37 04/01/2014
+[ 2468.949683] RIP: 0010:fortify_panic+0xf/0x20
+[ 2468.950291] Code: 85 ff 75 d3 bb ea ff ff ff 89 d8 5b 5d 41 5c 41 5d 41 5e c3 0f 1f 80 00 00 00 00 48 89 fe 48 c7 c7 c0 dd 6b a6 e8 01 73 90 ff <0f> 0b 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 41 54 55 53 48
+[ 2468.952438] RSP: 0018:ffff888011c77d10 EFLAGS: 00010246
+[ 2468.953125] RAX: 0000000000000022 RBX: ffff8880129fd400 RCX: ffffffffa528008e
+[ 2468.954022] RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88806d33338c
+[ 2468.954935] RBP: ffff888011c77e00 R08: 0000000000000001 R09: ffff888011c77b67
+[ 2468.955788] R10: ffffed100238ef6c R11: 7970636d656d6564 R12: ffff888011c77db0
+[ 2468.956719] R13: ffff888011d5e000 R14: ffffffffa5716ef0 R15: ffff8880129fd558
+[ 2468.957678] FS:  00007fd375e3d280(0000) GS:ffff88806d300000(0000) knlGS:0000000000000000
+[ 2468.958729] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2468.959482] CR2: 000055b2b8ad81c8 CR3: 000000000f07e006 CR4: 0000000000370ee0
+[ 2468.960318] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 2468.961109] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 2468.961930] Call Trace:
+[ 2468.962300]  <TASK>
+[ 2468.962611]  ikheaders_read+0x45/0x50 [kheaders]
+[ 2468.963178]  kernfs_fop_read_iter+0x1a4/0x2f0
+[ 2468.963724]  vfs_read+0x39f/0x4b0
+[ 2468.964127]  ? kernel_read+0xc0/0xc0
+[ 2468.964563]  ? build_open_flags+0x230/0x230
+[ 2468.965041]  ? __fget_light+0xd7/0xf0
+[ 2468.965521]  ksys_read+0xc7/0x160
+[ 2468.965905]  ? __ia32_sys_pwrite64+0x140/0x140
+[ 2468.966385]  do_syscall_64+0x34/0x80
+[ 2468.966834]  entry_SYSCALL_64_after_hwframe+0x46/0xb0
+[ 2468.967490] RIP: 0033:0x7fd375d01852
+[ 2468.968903] Code: c0 e9 b2 fe ff ff 50 48 8d 3d 9a d0 0b 00 e8 55 f6 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89 54 24
