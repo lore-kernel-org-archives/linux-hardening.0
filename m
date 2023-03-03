@@ -2,143 +2,216 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393C2C678D4
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Mar 2023 03:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69524C6FA8E
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Mar 2023 03:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbjCCDIO (ORCPT
+        id S229502AbjCCDcr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 2 Mar 2023 22:08:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58512 "EHLO
+        Thu, 2 Mar 2023 22:32:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbjCCDIN (ORCPT
+        with ESMTP id S229453AbjCCDcr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 2 Mar 2023 22:08:13 -0500
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD74115143
-        for <linux-hardening@vger.kernel.org>; Thu,  2 Mar 2023 19:08:12 -0800 (PST)
-Received: by mail-qt1-x82d.google.com with SMTP id y10so1599738qtj.2
-        for <linux-hardening@vger.kernel.org>; Thu, 02 Mar 2023 19:08:12 -0800 (PST)
+        Thu, 2 Mar 2023 22:32:47 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DEE3E09B
+        for <linux-hardening@vger.kernel.org>; Thu,  2 Mar 2023 19:32:45 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id bn17so700586pgb.10
+        for <linux-hardening@vger.kernel.org>; Thu, 02 Mar 2023 19:32:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1677812892;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EtFwTdVwKlt2HPFqS6JWdnkwoS9VbQjLUEhGF6OSSZE=;
-        b=QE/EDs4Ix3xkylm5Fcz5nQL80rHtuziqGz2kedrkucExE5w8dXBV35aYo7K5fMbAiH
-         S8MTdKueuqDmWABSVE0/moawK2y5Unlj/SQYKCHbHPaobw864hSn3jhGLWuO0PABMeey
-         5LcbQaH3D3W01hp8XAUtcUD9sNhRL4mKqAtNw=
+        d=chromium.org; s=google; t=1677814365;
+        h=to:references:message-id:cc:date:in-reply-to:from:subject
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lemNha6CdZ03DdpY+DGIXxDoAzjAR/JIIRXioSxiGsY=;
+        b=nPmT3nZCj8Ifn2vQPaoKgqZzHSFQzBpt3Y0naZPvrxsnd4IFQkNEtxStcDwHXC/UKA
+         VP2wySlPhbG0fTgOAM+EUnU7of9TZ6elMhaEpp5H9B/zkqYTR4Dxn859YjamZh8zTlLg
+         HbBxm4GJW8xcBohqHiv5cj66bNfgyL6KgTbNg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677812892;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EtFwTdVwKlt2HPFqS6JWdnkwoS9VbQjLUEhGF6OSSZE=;
-        b=pfww9qXdtWFzIASVfBakNQ1howy088Idysu2MpSXkcwZSRHb1vw/5FwgdTM1Yi+TQ6
-         jQy/txjYR48mMElImejhGRAuY2VHbiiucFOP7N2VGtOe50sS+kAUhGRwc2GtkHQgF4ww
-         zHvm1qPtUr18a+uR/podw98QVCb0oFgfkXGWk9Kn7REcy++pA1VVBHtYZadVHAuFiTBU
-         mVZ0ZC4uvxnRZiIZwECnNtaAmAUv0lwtD8SqP/XDbkKPen4c1Agds7w3Qv6B9fA3dogX
-         qIeGNT0LZVr/Ewt0j7v6G1Do+wq0v8A9auMXyKIsdKNcUyGnwiK8XhAba4ydGuxWkQAl
-         rx+A==
-X-Gm-Message-State: AO0yUKUy38yie8cmfG8pCRwg3uB9suB2j2IwIif3Qp+eD/MMiaSVLoQi
-        oi9+bhXHhwfVlMdM9dR3fyoy4JZcpbu/5wtI
-X-Google-Smtp-Source: AK7set8p1efjvsmZsXnYTfWfn4EuoPfVyXTwuYw5lQLPIyH8QD7/cBl02oG9UI97rsa78ytUbKBzsw==
-X-Received: by 2002:a05:622a:553:b0:3bf:bac6:9961 with SMTP id m19-20020a05622a055300b003bfbac69961mr646660qtx.55.1677812891786;
-        Thu, 02 Mar 2023 19:08:11 -0800 (PST)
-Received: from localhost (129.239.188.35.bc.googleusercontent.com. [35.188.239.129])
-        by smtp.gmail.com with ESMTPSA id 17-20020ac85651000000b003b62bc6cd1csm902902qtt.82.2023.03.02.19.08.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Mar 2023 19:08:10 -0800 (PST)
-Date:   Fri, 3 Mar 2023 03:08:10 +0000
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jakub Kicinski <kuba@kernel.org>, stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kheaders: Use array declaration instead of char
-Message-ID: <20230303030810.GA1598250@google.com>
-References: <20230302224946.never.243-kees@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230302224946.never.243-kees@kernel.org>
+        d=1e100.net; s=20210112; t=1677814365;
+        h=to:references:message-id:cc:date:in-reply-to:from:subject
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lemNha6CdZ03DdpY+DGIXxDoAzjAR/JIIRXioSxiGsY=;
+        b=b3lJ9lojDlGnEoOxs8AKFmKTAVNs2sBYPrP5QAyrEMO2VpLCx+3vX9hi06oZqE15oG
+         MHsEVEgitxbuZ4Ryn8FzV28K5QtCblOCbIaID93BDXPgrzsWwE5xWQO+IxoTeL9qGsFt
+         uAVWwb3UoOcbIe4cdKumQktwoy3VgZwNO3AkN0mHapN8awgqtH0KDyYASVDeRHk7JLIG
+         bXKLHU+XXZq0omRoIlhOJVYY9oKWzFl8X/lAiY7oqF9Ix8PKaswBRiO27pzgGB4xQSbh
+         vnNK0qpNAK0R2jz1U5nvTKlgPsPA/el54tpJv+1OFAqW1J5IGV8rWXrmGTgWXQXW/d80
+         ACEQ==
+X-Gm-Message-State: AO0yUKW5Lopx0iNlCbOM3ZXcFSJo+eHaEiT719OvdrTxvotPUQjK5zSm
+        vgG6LKrpA+2bHdsmyNyO8zN5WA==
+X-Google-Smtp-Source: AK7set/YExY2J9v1FwHxhkrx+vpSlKbYcmsaKdoSGDfyWSmgRomqp7Dmt2eZvX56Dfa+ysW+AOAu0g==
+X-Received: by 2002:a62:6185:0:b0:5a9:d4fa:d3c7 with SMTP id v127-20020a626185000000b005a9d4fad3c7mr762211pfb.7.1677814364987;
+        Thu, 02 Mar 2023 19:32:44 -0800 (PST)
+Received: from smtpclient.apple ([2601:200:c001:9ec0:45cf:6564:e2d8:9372])
+        by smtp.gmail.com with ESMTPSA id z23-20020aa785d7000000b005d6cb790c35sm421449pfn.119.2023.03.02.19.32.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 02 Mar 2023 19:32:44 -0800 (PST)
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_2F6FE8AF-033C-4E1C-86E1-66A770DB9386";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.2\))
+Subject: Re: [PATCH] x86: enable Data Operand Independent Timing Mode
+From:   Roxana Bradescu <roxabee@chromium.org>
+In-Reply-To: <fbf8d93e-2426-67f7-33c6-fe7d1a1a15b2@intel.com>
+Date:   Thu, 2 Mar 2023 19:32:41 -0800
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Adam Langley <agl@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Pawan Kumar Gupta <pawan.kumar.gupta@intel.com>,
+        Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Message-Id: <29D41476-1617-4F6C-9046-82FBE70E01C9@chromium.org>
+References: <20230125012801.362496-1-ebiggers@kernel.org>
+ <fbf8d93e-2426-67f7-33c6-fe7d1a1a15b2@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+X-Mailer: Apple Mail (2.3696.120.41.1.2)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 02, 2023 at 02:49:50PM -0800, Kees Cook wrote:
-> Under CONFIG_FORTIFY_SOURCE, memcpy() will check the size of destination
-> and source buffers. Defining kernel_headers_data as "char" would trip
-> this check. Since these addresses are treated as byte arrays, define
-> them as arrays (as done everywhere else).
-> 
-> This was seen with:
-> 
->   $ cat /sys/kernel/kheaders.tar.xz >> /dev/null
-> 
->   detected buffer overflow in memcpy
->   kernel BUG at lib/string_helpers.c:1027!
->   ...
->   RIP: 0010:fortify_panic+0xf/0x20
->   [...]
->   Call Trace:
->    <TASK>
->    ikheaders_read+0x45/0x50 [kheaders]
->    kernfs_fop_read_iter+0x1a4/0x2f0
->   ...
-> 
-> Reported-by: Jakub Kicinski <kuba@kernel.org>
-> Link: https://lore.kernel.org/bpf/20230302112130.6e402a98@kernel.org/
-> Tested-by: Jakub Kicinski <kuba@kernel.org>
 
-Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-
-thanks,
-
- - Joel
+--Apple-Mail=_2F6FE8AF-033C-4E1C-86E1-66A770DB9386
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
 
-> Fixes: 43d8ce9d65a5 ("Provide in-kernel headers to make extending kernel easier")
-> Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  kernel/kheaders.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/kheaders.c b/kernel/kheaders.c
-> index 8f69772af77b..42163c9e94e5 100644
-> --- a/kernel/kheaders.c
-> +++ b/kernel/kheaders.c
-> @@ -26,15 +26,15 @@ asm (
->  "	.popsection				\n"
->  );
->  
-> -extern char kernel_headers_data;
-> -extern char kernel_headers_data_end;
-> +extern char kernel_headers_data[];
-> +extern char kernel_headers_data_end[];
->  
->  static ssize_t
->  ikheaders_read(struct file *file,  struct kobject *kobj,
->  	       struct bin_attribute *bin_attr,
->  	       char *buf, loff_t off, size_t len)
->  {
-> -	memcpy(buf, &kernel_headers_data + off, len);
-> +	memcpy(buf, &kernel_headers_data[off], len);
->  	return len;
->  }
->  
-> @@ -48,8 +48,8 @@ static struct bin_attribute kheaders_attr __ro_after_init = {
->  
->  static int __init ikheaders_init(void)
->  {
-> -	kheaders_attr.size = (&kernel_headers_data_end -
-> -			      &kernel_headers_data);
-> +	kheaders_attr.size = (kernel_headers_data_end -
-> +			      kernel_headers_data);
->  	return sysfs_create_bin_file(kernel_kobj, &kheaders_attr);
->  }
->  
-> -- 
-> 2.34.1
-> 
+
+> On Feb 3, 2023, at 10:25 AM, Dave Hansen <dave.hansen@intel.com> =
+wrote:
+>=20
+> BTW, I'm basically moving forward assuming that we're going to apply
+> this patch in _some_ form.  I'm going to make some changes, but I'll
+> discuss them in this thread to make sure we're all on the same page =
+first.
+
+Just checking in on the changes mentioned here.
+
+> On 1/24/23 17:28, Eric Biggers wrote:
+>> +Affected CPUs
+>> +-------------
+>> +
+>> +This vulnerability affects Intel Core family processors based on the =
+Ice Lake
+>> +and later microarchitectures, and Intel Atom family processors based =
+on the
+>> +Gracemont and later microarchitectures.  For more information, see =
+Intel's
+>> +documentation [1]_.
+>=20
+> I had a hard time following the docs in this area.
+>=20
+> But I'm not sure this statement is correct.  The docs actually say:
+>=20
+> 	For Intel=C2=AE Core=E2=84=A2 family processors based on =
+microarchitectures
+> 	before Ice Lake and Intel Atom=C2=AE family processors based on
+> 	microarchitectures before Gracemont that do not enumerate
+> 	IA32_UARCH_MISC_CTL, developers may assume that the instructions
+> 	listed here operate as if DOITM is enabled.
+
+Have we been able to clarify if this assumption is guaranteed?
+
+>=20
+> A processor needs to be before "Ice Lake" and friends *AND* not
+> enumerate IA32_UARCH_MISC_CTL to be unaffected.
+>=20
+> There's also another tweak that's needed because:
+>=20
+> 	Processors that do not enumerate IA32_ARCH_CAPABILITIES[DOITM]
+> 	when the latest microcode is applied do not need to set
+> 	IA32_UARCH_MISC_CTL [DOITM] in order to have the behavior
+> 	described in this document...
+>=20
+> First, we need to mention the "latest microcode" thing in the kernel
+> docs.  I also _think_ the whole "microarchitectures before" stuff is
+> rather irrelevant and we can simplify this down to:
+>=20
+> 	This vulnerability affects all Intel processors that support
+> 	MSR_IA32_ARCH_CAPABILITIES and set =
+MSR_IA32_ARCH_CAPABILITIES[DOITM]
+> 	when the latest microcode is applied.
+>=20
+
+Certainly a lot cleaner. Would be great if the Intel docs reflected =
+this.
+
+=E2=80=94
+Regards, Roxana
+
+
+> Which reminds me.  This:
+>=20
+>> +void update_doitm_msr(void)
+>> +{
+>> +	u64 msr;
+>> +
+>> +	if (doitm_off)
+>> +		return;
+>> +
+>> +	rdmsrl(MSR_IA32_UARCH_MISC_CTL, msr);
+>> +	wrmsrl(MSR_IA32_UARCH_MISC_CTL, msr | UARCH_MISC_DOITM);
+>> +}
+>=20
+> should probably be:
+>=20
+> void update_doitm_msr(void)
+> {
+> 	u64 msr;
+>=20
+> 	/*
+> 	 * All processors that enumerate support for DOIT
+> 	 * are affected *and* have the mitigation available.
+> 	 */
+> 	if (!boot_cpu_has_bug(X86_BUG_DODT))
+> 		return;
+>=20
+> 	rdmsrl(MSR_IA32_UARCH_MISC_CTL, msr);
+> 	if (doitm_off)
+> 		msr &=3D ~UARCH_MISC_DOITM;
+> 	else
+> 		msr |=3D UARCH_MISC_DOITM;
+> 	wrmsrl(MSR_IA32_UARCH_MISC_CTL, msr);
+> }
+>=20
+> in case the CPU isn't actually coming out of reset, like if kexec() =
+left
+> DOITM=3D1.
+>=20
+
+
+--Apple-Mail=_2F6FE8AF-033C-4E1C-86E1-66A770DB9386
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEgZzAKV63cJrecgABXEIiv89pXdUFAmQBalkACgkQXEIiv89p
+XdVLvA//fTFy+1BHiMaqGNYoPma392WQGm3Y/qzx/bVE9r1fwhMrqk/yZ2GPw+L0
+C8JprobKgy9/4xHx5AEaw9zASJVg7beTfsyqZ8bqpx5uA4Ct2G/nzljOl/NEWXFE
+pGRCzeluyG17qBrARsQXM6/sXhHHSPeFTgl80DkW+CJgy9PjjPxvp2oURyOx8bLr
+Y1bgyFMHJhHuMpXHNyneqSMnngSFybB084YcYkLhsLmL7YMT1IEOYdEkPWB+F/ta
+9KYI7HMA1PKRsFtSDmGahujFLXT3QrQ8UpODp1+leUxEjwDe5F6crZmWbzTMu0xj
+jqUgTbG2QHcD895trUSBU499PIeCOU4CUJoCBFoXe0O/5oa911teyfwjTHxRXAri
+42KX1nlh6nwfDrKHVEuJXxn03MyzSXpxTQtzM7MKrejXcZTuH0HOjB0kCpo9sSR7
+774y2nFhSRTxpl6eldK4Gq5wy7dszfsHe9PV0n1+AwqO3x8Azj1MO5tfAld0Y/y9
+fpL7XHrS4sEc6rnR9USkYy2P5kaPx7v3WxtRuc57beGAo3xwqUOKmQ6SglOQI8u3
+51TWfAhmzZBSVa4S7NiAeGCvKLSX0IoAuExNbWq5oOQCQ0EAkMSv+LendkwIFIaB
+P/deUgANTrk5/kCM69USslq7H0HAxH+ltu3cyawgirILwS5NICk=
+=8hd8
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_2F6FE8AF-033C-4E1C-86E1-66A770DB9386--
