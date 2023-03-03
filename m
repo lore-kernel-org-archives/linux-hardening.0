@@ -2,150 +2,142 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC40C7EE32
-	for <linux-hardening@archiver.kernel.org>; Fri,  3 Mar 2023 20:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CE0C64EC4
+	for <linux-hardening@archiver.kernel.org>; Fri,  3 Mar 2023 21:38:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231726AbjCCUgP (ORCPT
+        id S231933AbjCCViE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Mar 2023 15:36:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55436 "EHLO
+        Fri, 3 Mar 2023 16:38:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231719AbjCCUgN (ORCPT
+        with ESMTP id S231936AbjCCViB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Mar 2023 15:36:13 -0500
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5979B62D81
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Mar 2023 12:36:11 -0800 (PST)
-Received: by mail-pj1-x1031.google.com with SMTP id y2so3791102pjg.3
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Mar 2023 12:36:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1677875771;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=geAmPjDQxdljXtlXmphTlxxF1JLXM9iUHwEO1xPqi18=;
-        b=U41Mag/c9CHHfte/BaVhSK7Yl0vhq3mrqmh3RRfl6XuCTyx3VeZgJdw8M44ftCDf+I
-         lkLMuIIbBkM4j69mSN7DPIYqqUMH8j1knPYp11zDWxDVL7aX1P5anqGeh/wA1HxD1YAb
-         +YtZ/ArzfKpN7b35FHO5Ds0H/vpc3ZSb4kOFE=
+        Fri, 3 Mar 2023 16:38:01 -0500
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BDE5596
+        for <linux-hardening@vger.kernel.org>; Fri,  3 Mar 2023 13:37:56 -0800 (PST)
+Received: by mail-il1-f199.google.com with SMTP id a5-20020a92ce45000000b00318aa18d2fbso2068221ilr.23
+        for <linux-hardening@vger.kernel.org>; Fri, 03 Mar 2023 13:37:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677875771;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=geAmPjDQxdljXtlXmphTlxxF1JLXM9iUHwEO1xPqi18=;
-        b=VvwElS8WcB/a1sVwurePAYj9LCnrFAk0ySsJPuysRr4G2RQ32S+BPTlLpgq+LOHcv2
-         DV0XizXSyT2NLHVci4kGLe4jEruCByBTx3ZUcbeQ0lrge3RPM6sPPSlj0zTYXFUmfLYc
-         LR98Oq9N0BDZ5e2LxK/zib/8lu08DstnX18nDFeopLp19ub43iDQG6gRdHM78GDV674x
-         1wtAAgwDCwazkAXzdcfQsd68B4CnNlFNruavVqL1cOByayRHI/iPwuAWyUQRZofTic6O
-         Y7u8J5gMHFnV4JYb6rwcLY0h1GEK0jJkM1kqw7uPHqni4mKcgAziddFvFuLGl4iwNrBj
-         tfCw==
-X-Gm-Message-State: AO0yUKURhvy3DgYpi9z+IAVJqp7EUn2fsAfX8rG5rsSH/AGadKPt+rvf
-        5tp3OHPKOy3rmEfVQU0ZJR6ZileuTg1KyYUK
-X-Google-Smtp-Source: AK7set9ywfSft3cMRiD0v6Edcwehkcu8/K7S+id3Tl9yCFXURbPhno3Wwnvqlg/u7NhF2oxqRYuxxA==
-X-Received: by 2002:a17:902:ed11:b0:19d:af21:dc2f with SMTP id b17-20020a170902ed1100b0019daf21dc2fmr2568711pld.33.1677875770781;
-        Fri, 03 Mar 2023 12:36:10 -0800 (PST)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o17-20020a170902d4d100b0019e81c8fd01sm1896816plg.249.2023.03.03.12.36.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Mar 2023 12:36:10 -0800 (PST)
-Message-ID: <64025a3a.170a0220.dba96.3fcf@mx.google.com>
-X-Google-Original-Message-ID: <202303031231.@keescook>
-Date:   Fri, 3 Mar 2023 12:36:09 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Jakub Kicinski <kuba@kernel.org>, stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kheaders: Use array declaration instead of char
-References: <20230302224946.never.243-kees@kernel.org>
- <89e3ecb6-0e1a-3d86-cb05-cbb034c68dc4@intel.com>
+        d=1e100.net; s=20210112;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VDb/oN8pa2bSuFN4Ui9nfP2pxdomt8W/GDE9wFn9RyQ=;
+        b=hB2uX1X5frHQX46Qn2X0vAmOD7/Hqw/PzK0HuX0ayLb5tZLUL23H+PcU/9GhJG+j5m
+         93S2mQozjlG+XB5mrrthP6KQ0ZeWZgyFXVZBEvSk4rhe1Nc9RHKPixF23alFF/dfRK/n
+         Hz4NHQKFpG7cNX3l1HUbfDpfU7Qo5wYe9uM9sNb3uRXNINZLVf/oiQiC6QdYa58y/rD/
+         3cvUE+YOVFXw2STF4rEXVNUt37SO2PYAyqvQ8gbksktBBYwmPS1E9lR7OXrzxsXgv1Dr
+         ARF5ev+VZVh9qsAZTFM9QHrirckINUlqMbn5emPOFBkxdxuvm7xogj5e4P7FI5igwmsc
+         e9Vg==
+X-Gm-Message-State: AO0yUKVwGJHez3BIx+IeRFhiKc/iDCJxwWxX9tkt9gE2DY+8mwqVP87t
+        C3FKF2iYaKO7fj5ZJNgmtCsg6Z/Hx9ffTOjdXT7G9KfiZMmG
+X-Google-Smtp-Source: AK7set+AwR/J9UVhmgkmV9QeFWskMRZYdkjiZFq8Cxv5vt6ZXRsSD5jwvnuIY5btoSPErVNvUsloFypusjrLzeda4T31tsiz4eT3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <89e3ecb6-0e1a-3d86-cb05-cbb034c68dc4@intel.com>
+X-Received: by 2002:a92:b512:0:b0:30f:543d:e52c with SMTP id
+ f18-20020a92b512000000b0030f543de52cmr1646847ile.2.1677879475508; Fri, 03 Mar
+ 2023 13:37:55 -0800 (PST)
+Date:   Fri, 03 Mar 2023 13:37:55 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001d1fb505f605c295@google.com>
+Subject: [syzbot] [hardening?] [mm?] BUG: bad usercopy in con_font_op
+From:   syzbot <syzbot+3af17071816b61e807ed@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Mar 03, 2023 at 04:19:51PM +0100, Alexander Lobakin wrote:
-> From: Kees Cook <keescook@chromium.org>
-> Date: Thu,  2 Mar 2023 14:49:50 -0800
-> 
-> > Under CONFIG_FORTIFY_SOURCE, memcpy() will check the size of destination
-> > and source buffers. Defining kernel_headers_data as "char" would trip
-> > this check. Since these addresses are treated as byte arrays, define
-> > them as arrays (as done everywhere else).
-> 
-> Yet another array-as-one-char, I wonder how many are still here...
+Hello,
 
-Yeah, good point. They do tend to stand out; we could find them:
+syzbot found the following issue on:
 
-$ git grep 'extern char [^\*\[\( ]*;'
-arch/alpha/boot/bootp.c:extern char _end;
-arch/alpha/boot/bootpz.c:extern char _end;
-arch/alpha/boot/main.c: extern char _end;
-arch/arm/mach-rockchip/core.h:extern char rockchip_secondary_trampoline;
-arch/arm/mach-rockchip/core.h:extern char rockchip_secondary_trampoline_end;
-arch/arm/mach-zynq/common.h:extern char zynq_secondary_trampoline;
-arch/arm/mach-zynq/common.h:extern char zynq_secondary_trampoline_jump;
-arch/arm/mach-zynq/common.h:extern char zynq_secondary_trampoline_end;
-arch/hexagon/include/uapi/asm/setup.h:extern char external_cmdline_buffer;
-arch/ia64/include/asm/smp.h:extern char no_int_routing;
-arch/ia64/kernel/process.c:     extern char ia64_ret_from_clone;
-arch/mips/dec/prom/memory.c:    extern char genexcept_early;
-arch/mips/kernel/traps.c:       extern char except_vec3_generic;
-arch/mips/kernel/traps.c:       extern char except_vec4;
-arch/mips/kernel/traps.c:       extern char except_vec3_r4000;
-arch/mips/mm/c-octeon.c:        extern char except_vec2_octeon;
-arch/parisc/boot/compressed/misc.c:extern char output_len;
-arch/parisc/boot/compressed/misc.c:extern char _startcode_end;
-arch/powerpc/include/asm/smp.h:extern char __secondary_hold;
-arch/s390/include/asm/kvm_host.h:extern char sie_exit;
-arch/sh/boards/mach-ap325rxa/setup.c:extern char ap325rxa_sdram_enter_start;
-arch/sh/boards/mach-ap325rxa/setup.c:extern char ap325rxa_sdram_enter_end;
-arch/sh/boards/mach-ap325rxa/setup.c:extern char ap325rxa_sdram_leave_start;
-arch/sh/boards/mach-ap325rxa/setup.c:extern char ap325rxa_sdram_leave_end;
-arch/sh/boards/mach-ecovec24/setup.c:extern char ecovec24_sdram_enter_start;
-arch/sh/boards/mach-ecovec24/setup.c:extern char ecovec24_sdram_enter_end;
-arch/sh/boards/mach-ecovec24/setup.c:extern char ecovec24_sdram_leave_start;
-arch/sh/boards/mach-ecovec24/setup.c:extern char ecovec24_sdram_leave_end;
-arch/sh/boards/mach-kfr2r09/setup.c:extern char kfr2r09_sdram_enter_start;
-arch/sh/boards/mach-kfr2r09/setup.c:extern char kfr2r09_sdram_enter_end;
-arch/sh/boards/mach-kfr2r09/setup.c:extern char kfr2r09_sdram_leave_start;
-arch/sh/boards/mach-kfr2r09/setup.c:extern char kfr2r09_sdram_leave_end;
-arch/sh/boards/mach-migor/setup.c:extern char migor_sdram_enter_start;
-arch/sh/boards/mach-migor/setup.c:extern char migor_sdram_enter_end;
-arch/sh/boards/mach-migor/setup.c:extern char migor_sdram_leave_start;
-arch/sh/boards/mach-migor/setup.c:extern char migor_sdram_leave_end;
-arch/sh/boards/mach-se/7724/setup.c:extern char ms7724se_sdram_enter_start;
-arch/sh/boards/mach-se/7724/setup.c:extern char ms7724se_sdram_enter_end;
-arch/sh/boards/mach-se/7724/setup.c:extern char ms7724se_sdram_leave_start;
-arch/sh/boards/mach-se/7724/setup.c:extern char ms7724se_sdram_leave_end;
-arch/sh/kernel/cpu/shmobile/pm.c:extern char sh_mobile_sleep_enter_start;
-arch/sh/kernel/cpu/shmobile/pm.c:extern char sh_mobile_sleep_enter_end;
-arch/sh/kernel/cpu/shmobile/pm.c:extern char sh_mobile_sleep_resume_start;
-arch/sh/kernel/cpu/shmobile/pm.c:extern char sh_mobile_sleep_resume_end;
-arch/x86/entry/vsyscall/vsyscall_64.c:  extern char __vsyscall_page;
-arch/x86/include/asm/vvar.h:extern char __vvar_page;
-kernel/configs.c:extern char kernel_config_data;
-kernel/configs.c:extern char kernel_config_data_end;
-net/bpfilter/bpfilter_kern.c:extern char bpfilter_umh_start;
-net/bpfilter/bpfilter_kern.c:extern char bpfilter_umh_end;
-samples/bpf/task_fd_query_user.c:       extern char __executable_start;
-tools/testing/selftests/kvm/lib/aarch64/processor.c:    extern char vectors;
-tools/testing/selftests/x86/test_syscall_vdso.c:extern char int80;
+HEAD commit:    2eb29d59ddf0 Merge tag 'drm-next-2023-03-03-1' of git://an..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=12e88ebcc80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cab35c936731a347
+dashboard link: https://syzkaller.appspot.com/bug?extid=3af17071816b61e807ed
+compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b71504c80000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f02d9cc80000
 
-Of those, it looks like only a handful might trip FORTIFY:
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ea23ee201337/disk-2eb29d59.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/40a9db02dede/vmlinux-2eb29d59.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8d4b574642d0/bzImage-2eb29d59.xz
 
-$ for i in $(git grep 'extern char [^\*\[\( ]*;' | grep -v boot/ | awk -F' ' '{print $NF}' | cut -d';' -f1); do git grep -E '(strcpy|memcpy|memset).*'"$i",; done
-arch/arm/mach-rockchip/platsmp.c:       memcpy_toio(sram_base_addr, &rockchip_secondary_trampoline, trampoline_sz);
-arch/arm/mach-zynq/platsmp.c:                   memcpy_toio(zero, &zynq_secondary_trampoline,
-arch/mips/dec/prom/memory.c:    memcpy((void *)(CKSEG0 + 0x80), &genexcept_early, 0x80);
-arch/sh/kernel/cpu/shmobile/pm.c:       memcpy(vp, &sh_mobile_sleep_enter_start, n);
-arch/sh/kernel/cpu/shmobile/pm.c:       memcpy(vp, &sh_mobile_sleep_resume_start, n);
-arch/arm64/mm/trans_pgd.c:      memcpy(hyp_stub, &trans_pgd_stub_vectors, ARM64_VECTOR_TABLE_LEN);
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3af17071816b61e807ed@syzkaller.appspotmail.com
+
+usercopy: Kernel memory exposure attempt detected from page alloc (offset 0, size 4194560)!
+------------[ cut here ]------------
+kernel BUG at mm/usercopy.c:102!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 5073 Comm: syz-executor309 Not tainted 6.2.0-syzkaller-13277-g2eb29d59ddf0 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/16/2023
+RIP: 0010:usercopy_abort+0xb7/0xd0 mm/usercopy.c:102
+Code: e8 fe e8 a1 ff 49 89 d9 4c 89 e1 48 89 ee 41 56 48 c7 c7 00 73 5b 8a 41 55 41 57 4c 8b 44 24 20 48 8b 54 24 18 e8 59 8b 85 ff <0f> 0b 48 c7 c3 00 71 5b 8a 49 89 df 49 89 d8 e9 71 ff ff ff 0f 1f
+RSP: 0018:ffffc90003bcf9e0 EFLAGS: 00010286
+RAX: 000000000000005b RBX: ffffffff8a5b7100 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff816931fc RDI: 0000000000000005
+RBP: ffffffff8a5b72c0 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000080000000 R11: 0000000000000000 R12: ffffffff8a5b7500
+R13: 0000000000000000 R14: 0000000000400100 R15: ffffffff8a5b7100
+FS:  0000555555b1b300(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000000 CR3: 0000000075655000 CR4: 0000000000350ee0
+Call Trace:
+ <TASK>
+ check_heap_object mm/usercopy.c:200 [inline]
+ __check_object_size mm/usercopy.c:251 [inline]
+ __check_object_size+0x50a/0x6e0 mm/usercopy.c:213
+ check_object_size include/linux/thread_info.h:215 [inline]
+ check_copy_size include/linux/thread_info.h:251 [inline]
+ copy_to_user include/linux/uaccess.h:168 [inline]
+ con_font_get drivers/tty/vt/vt.c:4580 [inline]
+ con_font_op+0x397/0xf10 drivers/tty/vt/vt.c:4674
+ vt_k_ioctl drivers/tty/vt/vt_ioctl.c:474 [inline]
+ vt_ioctl+0x620/0x2df0 drivers/tty/vt/vt_ioctl.c:752
+ tty_ioctl+0x773/0x16e0 drivers/tty/tty_io.c:2777
+ vfs_ioctl fs/ioctl.c:51 [inline]
+ __do_sys_ioctl fs/ioctl.c:870 [inline]
+ __se_sys_ioctl fs/ioctl.c:856 [inline]
+ __x64_sys_ioctl+0x197/0x210 fs/ioctl.c:856
+ do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+ do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
+ entry_SYSCALL_64_after_hwframe+0x63/0xcd
+RIP: 0033:0x7f6672fd82d9
+Code: 28 c3 e8 2a 14 00 00 66 2e 0f 1f 84 00 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 c0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffc66955e38 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f6672fd82d9
+RDX: 0000000020000000 RSI: 0000000000004b72 RDI: 0000000000000003
+RBP: 00007f6672f9c0c0 R08: 000000000000000d R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6672f9c150
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:usercopy_abort+0xb7/0xd0 mm/usercopy.c:102
+Code: e8 fe e8 a1 ff 49 89 d9 4c 89 e1 48 89 ee 41 56 48 c7 c7 00 73 5b 8a 41 55 41 57 4c 8b 44 24 20 48 8b 54 24 18 e8 59 8b 85 ff <0f> 0b 48 c7 c3 00 71 5b 8a 49 89 df 49 89 d8 e9 71 ff ff ff 0f 1f
+RSP: 0018:ffffc90003bcf9e0 EFLAGS: 00010286
+RAX: 000000000000005b RBX: ffffffff8a5b7100 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff816931fc RDI: 0000000000000005
+RBP: ffffffff8a5b72c0 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000080000000 R11: 0000000000000000 R12: ffffffff8a5b7500
+R13: 0000000000000000 R14: 0000000000400100 R15: ffffffff8a5b7100
+FS:  0000555555b1b300(0000) GS:ffff8880b9900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000000 CR3: 0000000075655000 CR4: 0000000000350ee0
 
 
--- 
-Kees Cook
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
