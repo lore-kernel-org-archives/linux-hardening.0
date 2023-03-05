@@ -2,77 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451BBC6FA99
-	for <linux-hardening@archiver.kernel.org>; Sat,  4 Mar 2023 04:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A61C61DA4
+	for <linux-hardening@archiver.kernel.org>; Sun,  5 Mar 2023 17:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjCDEgT (ORCPT
+        id S229545AbjCERzE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 3 Mar 2023 23:36:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33382 "EHLO
+        Sun, 5 Mar 2023 12:55:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbjCDEgS (ORCPT
+        with ESMTP id S229539AbjCERzC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 3 Mar 2023 23:36:18 -0500
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF7251ACC9
-        for <linux-hardening@vger.kernel.org>; Fri,  3 Mar 2023 20:36:16 -0800 (PST)
-Received: by mail-io1-f70.google.com with SMTP id v10-20020a056602058a00b007076e06ba3dso2464475iox.20
-        for <linux-hardening@vger.kernel.org>; Fri, 03 Mar 2023 20:36:16 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qBM8f3nfkQPiCUxCkC/1jIKN/CSWO63Mv0FZdwLHa7w=;
-        b=WkG3Lp5cJVi5MP6OylisznAJCW3kp0M35t0lowacSZpzYZZZUF8E3E8uZZcUSeQXFu
-         8LX4q04qG6Oef65o5hXJZdXQNuuydYgeeHewmRhw5jLn5a/TL5QKqjj2aBk3L6ANghWW
-         X4S6R5olb2lX4K4vB7l93yEZYW+9XVpHMXYMGTWdYvV/SfdA+n2akqfVlfKBCJ0WcaP/
-         dyeSetqq4ZegLigh8I99V6SZHaXmcUtWIqffE0aVtOWWwyUiYG8zIOSoIsUTpoL6vW8/
-         BRoH2H0JEL80LejTwH9wn+PHaGBKi9TdLDMvJ4xf30BJ5rAiPEON7aZ885maRBe7vI+k
-         DIsg==
-X-Gm-Message-State: AO0yUKW6uuCNtmbB/bPlwtEi0xIAoiyZqstwI5oFjVTfK/CsSKpDhQhi
-        rH4Vntatu8Yw6oWbMjEo+DY5esdotmq88QeAHiwtMrP7RD/e
-X-Google-Smtp-Source: AK7set9ivc7a0hTa59+MlzQADnVR9rVesqaUQ/nvWX6Tgg9CYI6nEEqLldZZLLoEwGD8VgHEij9xXEv9mpDaSxPxdEDomAm6DdMV
-MIME-Version: 1.0
-X-Received: by 2002:a02:94cd:0:b0:3e1:fb3d:4dce with SMTP id
- x71-20020a0294cd000000b003e1fb3d4dcemr1851215jah.0.1677904576128; Fri, 03 Mar
- 2023 20:36:16 -0800 (PST)
-Date:   Fri, 03 Mar 2023 20:36:16 -0800
-In-Reply-To: <0000000000001d1fb505f605c295@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003a2e5e05f60b9aff@google.com>
-Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in con_font_op
-From:   syzbot <syzbot+3af17071816b61e807ed@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, daniel@ffwll.ch, deller@gmx.de,
-        dri-devel@lists.freedesktop.org, gregkh@linuxfoundation.org,
-        jirislaby@kernel.org, keescook@chromium.org,
-        linux-fbdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Sun, 5 Mar 2023 12:55:02 -0500
+Received: from sonata.ens-lyon.org (sonata.ens-lyon.org [140.77.166.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1605BEB43;
+        Sun,  5 Mar 2023 09:55:00 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by sonata.ens-lyon.org (Postfix) with ESMTP id 36F1E2014B;
+        Sun,  5 Mar 2023 18:54:58 +0100 (CET)
+Received: from sonata.ens-lyon.org ([127.0.0.1])
+        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id qwdomEwogYZd; Sun,  5 Mar 2023 18:54:58 +0100 (CET)
+Received: from begin (lfbn-bor-1-1163-184.w92-158.abo.wanadoo.fr [92.158.138.184])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by sonata.ens-lyon.org (Postfix) with ESMTPSA id CD3CB20148;
+        Sun,  5 Mar 2023 18:54:57 +0100 (CET)
+Received: from samy by begin with local (Exim 4.96)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1pYsZV-009vau-1B;
+        Sun, 05 Mar 2023 18:54:57 +0100
+Date:   Sun, 5 Mar 2023 18:54:57 +0100
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     syzbot <syzbot+3af17071816b61e807ed@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        samuel.thibault@ens-lyon.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        syzkaller-bugs@googlegroups.com, Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [syzbot] [hardening?] [mm?] BUG: bad usercopy in con_font_op
+Message-ID: <20230305175457.kp6b5lmwwdxw4ii6@begin>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Kees Cook <keescook@chromium.org>,
+        syzbot <syzbot+3af17071816b61e807ed@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        syzkaller-bugs@googlegroups.com, Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <0000000000001d1fb505f605c295@google.com>
+ <64026f89.170a0220.7940.49ff@mx.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64026f89.170a0220.7940.49ff@mx.google.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-syzbot has bisected this issue to:
+Kees Cook, le ven. 03 mars 2023 14:07:04 -0800, a ecrit:
+> #define max_font_width  64
+> #define max_font_height 128
+> #define max_font_glyphs 512
+> #define max_font_size   (max_font_glyphs*max_font_width*max_font_height)
+> 	...
+>         font.data = kvmalloc(max_font_size, GFP_KERNEL);
+> 	...
+>         if (op->data && copy_to_user(op->data, font.data, c))
+>                 rc = -EFAULT;
+> 
+> it is correctly seeing "c" (4194560 in the report) as larger than
+> "max_font_size" (4194304, seen reported by "folio_size(folio)"). The
+> "c" calculation comes from:
+> 
+>         unsigned int vpitch = op->op == KD_FONT_OP_GET_TALL ? op->height : 32;
+> 	...
+>                 rc = vc->vc_sw->con_font_get(vc, &font, vpitch);
+> 	...
+>         c = (font.width+7)/8 * vpitch * font.charcount;
+> 
+> So yes, 4194560 is larger than 4194304, and a memory exposure was,
+> in fact, blocked here.
+> 
+> Given the recent work in this area, I'm not sure which calculation is
+> wrong, max_font_size or c. Samuel?
 
-commit 24d69384bcd34b9dcaf5dab744bf7096e84d1abd
-Author: Samuel Thibault <samuel.thibault@ens-lyon.org>
-Date:   Thu Jan 19 15:19:16 2023 +0000
+They are not wrong. It's the vpitch value (coming from userland's
+op.height) which is out of bound and missing a check.
 
-    VT: Add KD_FONT_OP_SET/GET_TALL operations
+The patch below should be fixing it, could you check?
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=120b3232c80000
-start commit:   2eb29d59ddf0 Merge tag 'drm-next-2023-03-03-1' of git://an..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=110b3232c80000
-console output: https://syzkaller.appspot.com/x/log.txt?x=160b3232c80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cab35c936731a347
-dashboard link: https://syzkaller.appspot.com/bug?extid=3af17071816b61e807ed
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10b71504c80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f02d9cc80000
+I don't know how I am supposed to properly reference the syzbot report
+etc., could somebody used to the process handle submitting the fix?
 
-Reported-by: syzbot+3af17071816b61e807ed@syzkaller.appspotmail.com
+Samuel
+
+
+VT: Protect KD_FONT_OP_GET_TALL from unbound access
+
+In ioctl(KD_FONT_OP_GET_TALL), userland tells through op->height which
+vpitch should be used to copy over the font. In con_font_get, we were
+not checking that it is within the maximum height value, and thus
+userland could make the vc->vc_sw->con_font_get(vc, &font, vpitch);
+call possibly overflow the allocated max_font_size bytes, and the
+copy_to_user(op->data, font.data, c) call possibly read out of that
+allocated buffer.
+
+By checking vpitch against max_font_height, the max_font_size buffer
+will always be large enough for the vc->vc_sw->con_font_get(vc, &font,
+vpitch) call (since we already prevent loading a font larger than that),
+and c = (font.width+7)/8 * vpitch * font.charcount will always remain
+below max_font_size.
+
 Fixes: 24d69384bcd3 ("VT: Add KD_FONT_OP_SET/GET_TALL operations")
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index 57a5c23b51d4..3c2ea9c098f7 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -4545,6 +4545,9 @@ static int con_font_get(struct vc_data *vc, struct console_font_op *op)
+ 	int c;
+ 	unsigned int vpitch = op->op == KD_FONT_OP_GET_TALL ? op->height : 32;
+ 
++	if (vpitch > max_font_height)
++		return -EINVAL;
++
+ 	if (op->data) {
+ 		font.data = kvmalloc(max_font_size, GFP_KERNEL);
+ 		if (!font.data)
