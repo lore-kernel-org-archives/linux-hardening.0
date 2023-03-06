@@ -2,118 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFFEC61DA4
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Mar 2023 19:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BBCC61DA4
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Mar 2023 20:57:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbjCFT33 (ORCPT
+        id S229540AbjCFU5g (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Mar 2023 14:29:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
+        Mon, 6 Mar 2023 15:57:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjCFT32 (ORCPT
+        with ESMTP id S229484AbjCFU5f (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Mar 2023 14:29:28 -0500
-Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D01367CD
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Mar 2023 11:29:17 -0800 (PST)
-Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
-        by amity.mint.lgbt (Postfix) with ESMTP id 4PVlRG4cdvz1S5Jh
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Mar 2023 12:08:58 -0500 (EST)
-Authentication-Results: amity.mint.lgbt (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mint.lgbt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
-        content-transfer-encoding:mime-version:references:in-reply-to
-        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1678122537;
-         x=1678986538; bh=XBMOf7rDZmk1/gq6Hnv29VSjIdHlkH5Ie/sn9RbtUDE=; b=
-        SBLHlIZHp18TF8XEMfqxRVYUtBJ8qLg3S1zwWYUHk3/1VlWgP5VBKUhx2FOcNObe
-        NKPSq0pEBnqPVpEu5hfCaNZskZ9huTSWKm2nE6PbIkK5H9r6GoTV8nttG5Z1k/W8
-        vU2/KUzNaTASQ48/WQMRavNv6QfFgC5ytJt2hLqG+Msx1kpjDOcAY8AXTnPFoa/E
-        I81JWFq9fu7PjXv+TugiI5IBF27GhPX1w6VIBdK8dp0gDZjDclyF1P5nfeyVcaA1
-        i2XNs34AUdH0JpxREVX5t+j1+FEvws+YP93uj4NdXoz5QREYVqIpJ45Z6mQalNnQ
-        AL4udljajE26cFNUKTS85w==
-X-Virus-Scanned: amavisd-new at amity.mint.lgbt
-Received: from amity.mint.lgbt ([127.0.0.1])
-        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id JEeudlxopzLn for <linux-hardening@vger.kernel.org>;
-        Mon,  6 Mar 2023 12:08:57 -0500 (EST)
-Received: from dorothy.. (unknown [186.105.8.42])
-        by amity.mint.lgbt (Postfix) with ESMTPSA id 4PVlR46j1Tz1S5Jl;
-        Mon,  6 Mar 2023 12:08:48 -0500 (EST)
-From:   Lux Aliaga <they@mint.lgbt>
-To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, bvanassche@acm.org, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org,
-        marijn.suijten@somainline.org, Lux Aliaga <they@mint.lgbt>
-Subject: [PATCH v7 3/6] phy: qcom-qmp: Add SM6125 UFS PHY support
-Date:   Mon,  6 Mar 2023 14:08:13 -0300
-Message-Id: <20230306170817.3806-4-they@mint.lgbt>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230306170817.3806-1-they@mint.lgbt>
-References: <20230306170817.3806-1-they@mint.lgbt>
+        Mon, 6 Mar 2023 15:57:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E472E4A1D4;
+        Mon,  6 Mar 2023 12:57:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8E4EEB81128;
+        Mon,  6 Mar 2023 20:57:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E371C433EF;
+        Mon,  6 Mar 2023 20:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678136252;
+        bh=EEGNEdub0w4hIAmIaVGxgI/ZXHmKcyB1pnsQBSCuhEE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FyLAVFVmO0Pg0RRNFm+BnJxeoIq60hAKFr5DaE6cLm/WbCRPLeQFKals8/UBAMcGL
+         wJLr4h/+tsg3JOBIjRQbfrLPTHlYYYCxavZx/kuKHmISQv1KMv+NxRxX4pikoLM97w
+         2eUJFiV5xNKNtIo+J1jSBcB7dDuUztOs8NdatI7WxSeRSvO3VLE8u3Lkx5gdJhp12O
+         OQqGJ0G4j+hsXqv34WjsgDZxz6f6JQ2GQEjI/Juz2+vlt0ekQQC6U/EupAWvZI0ZJP
+         +NIzIX3ZJjz8QuxUcrXTauEPxiF0EZoDqazM/UQrgHTSkcdrfjLLWYlsETT3nPleS3
+         FdIwQ/mAvk8mg==
+Date:   Mon, 6 Mar 2023 14:57:59 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] rxrpc: Replace fake flex-array with flexible-array
+ member
+Message-ID: <ZAZT11n4q5bBttW0@work>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The SM6125 UFS PHY is compatible with the one from SM6115. Add a
-compatible for it and modify the config from SM6115 to make them
-compatible with the SC8280XP binding
+Zero-length arrays as fake flexible arrays are deprecated and we are
+moving towards adopting C99 flexible-array members instead.
 
-Signed-off-by: Lux Aliaga <they@mint.lgbt>
-Reviewed-by: Martin Botka <martin.botka@somainline.org>
+Transform zero-length array into flexible-array member in struct
+rxrpc_ackpacket.
+
+Address the following warnings found with GCC-13 and
+-fstrict-flex-arrays=3 enabled:
+net/rxrpc/call_event.c:149:38: warning: array subscript i is outside array bounds of ‘uint8_t[0]’ {aka ‘unsigned char[]’} [-Warray-bounds=]
+
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
+
+Link: https://github.com/KSPP/linux/issues/21
+Link: https://github.com/KSPP/linux/issues/263
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/rxrpc/protocol.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualco=
-mm/phy-qcom-qmp-ufs.c
-index 318eea35b972..44c29fdfc551 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-@@ -620,6 +620,13 @@ static const char * const qmp_phy_vreg_l[] =3D {
- 	"vdda-phy", "vdda-pll",
- };
-=20
-+static const struct qmp_ufs_offsets qmp_ufs_offsets_v3_660 =3D {
-+	.serdes		=3D 0,
-+	.pcs		=3D 0xc00,
-+	.tx		=3D 0x400,
-+	.rx		=3D 0x600,
-+};
-+
- static const struct qmp_ufs_offsets qmp_ufs_offsets_v5 =3D {
- 	.serdes		=3D 0,
- 	.pcs		=3D 0xc00,
-@@ -693,6 +700,8 @@ static const struct qmp_phy_cfg sdm845_ufsphy_cfg =3D=
- {
- static const struct qmp_phy_cfg sm6115_ufsphy_cfg =3D {
- 	.lanes			=3D 1,
-=20
-+	.offsets		=3D &qmp_ufs_offsets_v3_660,
-+
- 	.serdes_tbl		=3D sm6115_ufsphy_serdes_tbl,
- 	.serdes_tbl_num		=3D ARRAY_SIZE(sm6115_ufsphy_serdes_tbl),
- 	.tx_tbl			=3D sm6115_ufsphy_tx_tbl,
-@@ -1172,6 +1181,9 @@ static const struct of_device_id qmp_ufs_of_match_t=
-able[] =3D {
- 	}, {
- 		.compatible =3D "qcom,sm6115-qmp-ufs-phy",
- 		.data =3D &sm6115_ufsphy_cfg,
-+	}, {
-+		.compatible =3D "qcom,sm6125-qmp-ufs-phy",
-+		.data =3D &sm6115_ufsphy_cfg,
- 	}, {
- 		.compatible =3D "qcom,sm6350-qmp-ufs-phy",
- 		.data =3D &sdm845_ufsphy_cfg,
---=20
-2.39.2
+diff --git a/net/rxrpc/protocol.h b/net/rxrpc/protocol.h
+index 6760cb99c6d6..e8ee4af43ca8 100644
+--- a/net/rxrpc/protocol.h
++++ b/net/rxrpc/protocol.h
+@@ -126,7 +126,7 @@ struct rxrpc_ackpacket {
+ 	uint8_t		nAcks;		/* number of ACKs */
+ #define RXRPC_MAXACKS	255
+ 
+-	uint8_t		acks[0];	/* list of ACK/NAKs */
++	uint8_t		acks[];		/* list of ACK/NAKs */
+ #define RXRPC_ACK_TYPE_NACK		0
+ #define RXRPC_ACK_TYPE_ACK		1
+ 
+-- 
+2.34.1
 
