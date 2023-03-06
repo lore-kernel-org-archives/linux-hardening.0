@@ -2,83 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D395C61DA4
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Mar 2023 17:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F5FC6FA99
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Mar 2023 17:11:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbjCFRKX (ORCPT
+        id S229586AbjCFRLc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Mar 2023 12:10:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47520 "EHLO
+        Mon, 6 Mar 2023 12:11:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231354AbjCFRKB (ORCPT
+        with ESMTP id S229736AbjCFRL3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Mar 2023 12:10:01 -0500
-Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53291E076
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Mar 2023 09:09:27 -0800 (PST)
-Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
-        by amity.mint.lgbt (Postfix) with ESMTP id 4PVlQm4snPz1S5Jp
-        for <linux-hardening@vger.kernel.org>; Mon,  6 Mar 2023 12:08:32 -0500 (EST)
-Authentication-Results: amity.mint.lgbt (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mint.lgbt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
-        content-transfer-encoding:mime-version:x-mailer:message-id:date
-        :subject:to:from; s=dkim; t=1678122511; x=1678986512; bh=Cp0Pj3r
-        +o2NETU+8hKdAUsF77CSSWrab0rX6wePh+5w=; b=ycjXMdalEBc39Wr2qWrRfS6
-        ICUh45mzBKfMp4GOiXmyGGogv4S70CNnd2gyTxxTw2rchfYe9rxwgRcliEp33UMA
-        osq6BrXjx+dByZb0kwdMX964nxEPrkxAPb9mYfcV4daMh1FTw1Viewue5cI7Nc52
-        00NjsjWRGiOXaGKXrjYzcKskGlV/TuIcWN6ZosBHZ5fiRaCBpp4Cl+qzDmKewR56
-        mAQZTA4RA0SLEUb4ovZq9MPMx9o4kCgbMEF2keVNl9AmtZ+fsiDDpCKhoUeYjVbV
-        svqjwQErytf1rNuRv0r4cbRWacctW1PLB9IsH/cNLTDlcEP76YZVPZN7323K+NQ=
-        =
-X-Virus-Scanned: amavisd-new at amity.mint.lgbt
-Received: from amity.mint.lgbt ([127.0.0.1])
-        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id hrLRmRuEMMuj for <linux-hardening@vger.kernel.org>;
-        Mon,  6 Mar 2023 12:08:31 -0500 (EST)
-Received: from dorothy.. (unknown [186.105.8.42])
-        by amity.mint.lgbt (Postfix) with ESMTPSA id 4PVlQZ50bjz1S4vb;
-        Mon,  6 Mar 2023 12:08:22 -0500 (EST)
-From:   Lux Aliaga <they@mint.lgbt>
-To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org, alim.akhtar@samsung.com,
-        avri.altman@wdc.com, bvanassche@acm.org, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com
+        Mon, 6 Mar 2023 12:11:29 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A609AD0E
+        for <linux-hardening@vger.kernel.org>; Mon,  6 Mar 2023 09:10:46 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id bi9so13738151lfb.2
+        for <linux-hardening@vger.kernel.org>; Mon, 06 Mar 2023 09:10:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678122576;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9qYKcnlpWdMlBpcagLtIlBclO/koVb4A2hugmwuDjQQ=;
+        b=K/ALNyiVmwk2B7FaiVr9+CnGKCB/lcBSgTRyxUeKfghmfQ3LfkadXwYITQfgwcIYec
+         yjLbnMfJ3Y5IcIHbvOSl0YxygbcPkImfyfF3A+daz2LzVPW5u/4J5vPm/5tQEFILCaUh
+         WIg/nIbiQWKn450exLKg18eyoDQDd+A+VKIimnJd80kN1/NU6uuVcML52mI8fWP08JAw
+         xlycx5pHeYzmF5FEiOmVmHyUN40f0U2Dw1GfbIStj1/0Pzf0DsZ0V0osDVJMRw53sgEf
+         uafbaitDMcI/Gj7p0Emovr44UvrTN4G03BCks7HKCrIOLCewObrOT6IiwpTYtCTE00XI
+         F53Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678122576;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9qYKcnlpWdMlBpcagLtIlBclO/koVb4A2hugmwuDjQQ=;
+        b=b5S6c14g9y3iHK2DRSrS8gJRl6wyi8i2k/pZtQbm7C7ylHz3ceYAkLOFr+2k/RRSRf
+         VVUTwowa4hsoxZxOFrKEHdQvubisLwr+bleeUaJak56EyRoxluuADQKNAFw0jDhcUGwe
+         kttUud7LaBJgBjkgkGmX9ZsWKaQwCpDeLNUtTM2lE8cR4UoXJ7aXdDUcwXUiCgsm4B73
+         yInH+IOn5h+wNUfNoLk9EbYpzETgVr6g5pen1MQ+Z0LgspXUXh1MKtdfz76WPoHNGnje
+         SczWmrPh1cDr0g+nby36CmDGNGHCg0dlVTDyPtwfx//HXphP2yaYNiarke70fNtJE5fE
+         68zQ==
+X-Gm-Message-State: AO0yUKXxKfwdxhAkmbezcVWXq0cAb/0BM3BHrQcxeb6YuanzOwRApQXj
+        lw5VCde8xsBvNf6t0dZdz10RPw==
+X-Google-Smtp-Source: AK7set/Go5uO6Ko/jxC1RRWHo5FHKFy68YfXEpfah8KL+MgdxvhaMrkjjPKYCkUBXnHCDbX3tV62AA==
+X-Received: by 2002:ac2:558d:0:b0:4db:3882:8f42 with SMTP id v13-20020ac2558d000000b004db38828f42mr3558231lfg.45.1678122576059;
+        Mon, 06 Mar 2023 09:09:36 -0800 (PST)
+Received: from [192.168.1.101] (abym99.neoplus.adsl.tpnet.pl. [83.9.32.99])
+        by smtp.gmail.com with ESMTPSA id x19-20020a19f613000000b004db1cd5efcesm1692927lfe.241.2023.03.06.09.09.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Mar 2023 09:09:35 -0800 (PST)
+Message-ID: <dfd1d81e-76a0-f8eb-e529-9f8ea1e927b6@linaro.org>
+Date:   Mon, 6 Mar 2023 18:09:33 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v7 1/6] dt-bindings: ufs: qcom: Add SM6125 compatible
+ string
+Content-Language: en-US
+To:     Lux Aliaga <they@mint.lgbt>, agross@kernel.org,
+        andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
+        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com
 Cc:     ~postmarketos/upstreaming@lists.sr.ht,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
         linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
         phone-devel@vger.kernel.org, martin.botka@somainline.org,
-        marijn.suijten@somainline.org
-Subject: [PATCH v7 0/6] arm64: dts: qcom: sm6125: UFS and xiaomi-laurel-sprout support
-Date:   Mon,  6 Mar 2023 14:08:10 -0300
-Message-Id: <20230306170817.3806-1-they@mint.lgbt>
-X-Mailer: git-send-email 2.39.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        marijn.suijten@somainline.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20230306165246.14782-1-they@mint.lgbt>
+ <20230306165246.14782-2-they@mint.lgbt>
+ <4670ddae-6b01-1e5c-b0ed-1f2f498a4f66@mint.lgbt>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <4670ddae-6b01-1e5c-b0ed-1f2f498a4f66@mint.lgbt>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Introduce Universal Flash Storage support on SM6125 and add support for t=
-he Xiaomi Mi A3 based on the former platform.
-
-Changes since v6:
-- Add struct for v3-660 UFS PHY offsets and replace the v5 offsets in sm6=
-115 UFS PHY config to these
-- Set ufs_mem_phy reg size to 0xdb8 in sm6125.dtsi
-- Drop "#address-cells" and "#size-cells" properties on reserved-memory n=
-ode in xiaomi-laurel-sprout dts
-- Move "status" last on &pon_resin node in xiaomi-laurel-sprout dts
-- Modify "&pm6125_gpio" pointer to "&pm6125_gpios" in xiaomi-laurel-sprou=
-t dts
-
-v6: https://lore.kernel.org/linux-devicetree/20230108195336.388349-1-they=
-@mint.lgbt/
-v5: https://lore.kernel.org/linux-devicetree/20221231222420.75233-2-they@=
-mint.lgbt/
 
 
+On 6.03.2023 18:01, Lux Aliaga wrote:
+> 
+> On 06/03/2023 13:52, Lux Aliaga wrote:
+>> Document the compatible for UFS found on the SM6125.
+>>
+>> Signed-off-by: Lux Aliaga <they@mint.lgbt>
+>> Reviewed-by: Martin Botka <martin.botka@somainline.org>
+>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>   Documentation/devicetree/bindings/ufs/qcom,ufs.yaml | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml b/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
+>> index b517d76215e3..42422f3471b3 100644
+>> --- a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
+>> +++ b/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
+>> @@ -29,6 +29,7 @@ properties:
+>>             - qcom,sc8280xp-ufshc
+>>             - qcom,sdm845-ufshc
+>>             - qcom,sm6115-ufshc
+>> +          - qcom,sm6125-ufshc
+>>             - qcom,sm6350-ufshc
+>>             - qcom,sm8150-ufshc
+>>             - qcom,sm8250-ufshc
+>> @@ -185,6 +186,7 @@ allOf:
+>>             contains:
+>>               enum:
+>>                 - qcom,sm6115-ufshc
+>> +              - qcom,sm6125-ufshc
+>>       then:
+>>         properties:
+>>           clocks:
+> I have to apologize. I worked on a changelog for this patchset but I skipped the subject header, therefore it didn't send, and as I realized this I interrupted the process, leaving the patchset incomplete. I'll retry sending it, this time correctly.
+Happens, next time resend it with a RESEND prefix, e.g. [RESEND PATCH 1/2]
 
+Konrad
+> 
