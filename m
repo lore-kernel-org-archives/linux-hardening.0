@@ -2,47 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE3BC61DA4
-	for <linux-hardening@archiver.kernel.org>; Mon,  6 Mar 2023 20:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B30C64EC4
+	for <linux-hardening@archiver.kernel.org>; Mon,  6 Mar 2023 23:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229707AbjCFU6k (ORCPT
+        id S229646AbjCFXkG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 6 Mar 2023 15:58:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46502 "EHLO
+        Mon, 6 Mar 2023 18:40:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjCFU6j (ORCPT
+        with ESMTP id S229516AbjCFXkF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 6 Mar 2023 15:58:39 -0500
+        Mon, 6 Mar 2023 18:40:05 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FFF39B94;
-        Mon,  6 Mar 2023 12:58:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A0C44B81B;
+        Mon,  6 Mar 2023 15:40:03 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 114DA6068F;
-        Mon,  6 Mar 2023 20:58:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9D4FC433D2;
-        Mon,  6 Mar 2023 20:58:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C85C660DB9;
+        Mon,  6 Mar 2023 23:40:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B05DAC433EF;
+        Mon,  6 Mar 2023 23:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678136316;
-        bh=FnI5yCjhAbwL9Z08M/gMwkBQvJQHwg7HlnK/1zcv8bY=;
+        s=k20201202; t=1678146002;
+        bh=eCpOTQ0/Lt5qkPZVS4C+58a7vx2Eo4kKSq/QZthxn48=;
         h=Date:From:To:Cc:Subject:From;
-        b=OfGFw8IVDUl+/r9+w2wANHiGRk9SfNjqEFfoEpLqeEBo2IRb4wXiZanA4bzSQLvox
-         eazCcCwBVyJvOwA+rWNkM2XCts1417psYxrG12wEWGh30yigjhhTX1dDejCMok97/b
-         t6m/R37FvfEs8rh325X5CYsNfqddxqPjJSK4C2zQ8lJWnXeAEKunmdkX5eVd27XFcJ
-         5dn2Vq/XALccN2Urr1a2G8Z9Pmo0Ooj9W7zeQQZtNRIQIpgFxwdJtbxkQj7y3iHJJm
-         q4kcJUDdoFjW/n3A2eIaKn1M4BvV7j5hGPRvrzucxW9c9YhzdB34FKGQ7FQPe9jdXm
-         1DktXw3ht/KFg==
-Date:   Mon, 6 Mar 2023 14:59:04 -0600
+        b=SMiGFR90uM34CS5CQ4R/loMuIk3job4bqlLvDhnxURYR0lXYfwWEGz37UzqR1EhuQ
+         qalYsLAwRL47RRobA4rVlfu0z7vV4LERyPyoDIsl4431iLAwD2mrx7KghFHtITU3/Y
+         F1dXJ1/D1EoMBZrczbIL2JB7TFrk/auizjC5g97RV572XYPE6JafiwhR2zxSNGLt6N
+         JAPArJGYUzwunWzUIxPGw8sG6FU81FOBSGpyJ2nrOu75m98dbUe2HWnEtKB5ZedO+5
+         Mqws940ehWrFga9BNoP2JZsE99TFEM/gEGpxoh9e8OgB5gE8BN30euOpHeKbVRm/zm
+         AvCSYtryLHpGg==
+Date:   Mon, 6 Mar 2023 17:40:28 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Cc:     chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+To:     Manish Chopra <manishc@marvell.com>,
+        Rahul Verma <rahulv@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] platform/chrome: Replace fake flexible arrays with
+Subject: [PATCH][next] netxen_nic: Replace fake flex-array with
  flexible-array member
-Message-ID: <ZAZUGBmSLc5wg7AK@work>
+Message-ID: <ZAZ57I6WdQEwWh7v@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -54,39 +59,39 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 Zero-length arrays as fake flexible arrays are deprecated and we are
 moving towards adopting C99 flexible-array members instead.
 
-Use the DECLARE_FLEX_ARRAY() helper macro to transform zero-length
-arrays in unions with flexible-array members.
+Transform zero-length array into flexible-array member in struct
+nx_cardrsp_rx_ctx_t.
 
-Address the following warning found with GCC-13 and
+Address the following warnings found with GCC-13 and
 -fstrict-flex-arrays=3 enabled:
-drivers/iio/accel/cros_ec_accel_legacy.c:66:46: warning: array subscript <unknown> is outside array bounds of ‘struct ec_response_motion_sensor_data[0]’ [-Warray-bounds=]
+drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c:361:26: warning: array subscript <unknown> is outside array bounds of ‘char[0]’ [-Warray-bounds=]
+drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c:372:25: warning: array subscript <unknown> is outside array bounds of ‘char[0]’ [-Warray-bounds=]
 
 This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
 routines on memcpy() and help us make progress towards globally
 enabling -fstrict-flex-arrays=3 [1].
 
 Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/193
-Link: https://github.com/KSPP/linux/issues/262
+Link: https://github.com/KSPP/linux/issues/265
 Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/linux/platform_data/cros_ec_commands.h | 2 +-
+ drivers/net/ethernet/qlogic/netxen/netxen_nic.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/platform_data/cros_ec_commands.h b/include/linux/platform_data/cros_ec_commands.h
-index 7e9c76aedd2d..ab721cf13a98 100644
---- a/include/linux/platform_data/cros_ec_commands.h
-+++ b/include/linux/platform_data/cros_ec_commands.h
-@@ -2701,7 +2701,7 @@ struct ec_response_motion_sense {
- 			 * Sensor data is truncated if response_max is too small
- 			 * for holding all the data.
- 			 */
--			struct ec_response_motion_sensor_data sensor[0];
-+			DECLARE_FLEX_ARRAY(struct ec_response_motion_sensor_data, sensor);
- 		} dump;
+diff --git a/drivers/net/ethernet/qlogic/netxen/netxen_nic.h b/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
+index f13fa7396aef..3d36d23df0c6 100644
+--- a/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
++++ b/drivers/net/ethernet/qlogic/netxen/netxen_nic.h
+@@ -854,7 +854,7 @@ typedef struct {
+ 	   The following is packed:
+ 	   - N cardrsp_rds_rings
+ 	   - N cardrs_sds_rings */
+-	char data[0];
++	char data[];
+ } nx_cardrsp_rx_ctx_t;
  
- 		/* Used for MOTIONSENSE_CMD_INFO. */
+ #define SIZEOF_HOSTRQ_RX(HOSTRQ_RX, rds_rings, sds_rings)	\
 -- 
 2.34.1
 
