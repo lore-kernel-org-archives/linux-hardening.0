@@ -2,131 +2,104 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF023C678DB
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 05:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A9AC678DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 05:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbjCGF1e (ORCPT
+        id S230161AbjCGFar (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Mar 2023 00:27:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38118 "EHLO
+        Tue, 7 Mar 2023 00:30:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbjCGF1d (ORCPT
+        with ESMTP id S230137AbjCGFaq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Mar 2023 00:27:33 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D927E41B7C;
-        Mon,  6 Mar 2023 21:27:32 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id z11so7332669pfh.4;
-        Mon, 06 Mar 2023 21:27:32 -0800 (PST)
+        Tue, 7 Mar 2023 00:30:46 -0500
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C4557093;
+        Mon,  6 Mar 2023 21:30:45 -0800 (PST)
+Received: by mail-pg1-x534.google.com with SMTP id 132so6909329pgh.13;
+        Mon, 06 Mar 2023 21:30:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678166852;
-        h=in-reply-to:references:message-id:date:content-transfer-encoding:to
-         :from:subject:cc:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AlK7Hs19AjyIKqP3f0Dwl6HgKXmloRUX9J0NNF4qZqI=;
-        b=KiEN0lSrI7WdHvK+rnjlsSC8PfIXOqThM5Yhp6on6h/pS31vZIWhH8yTZ2qjPpe5xx
-         UisPU6FWCL9VtMjr0XD0FrVJdu8YtEuykkldNDr+WwhFsP/F2L/Ne7TzEO35zH/95bcJ
-         Dp9+DwQeI8qzAXIIGQ1RvRmUNtswyBa3EbimAMf71e18GzxGYULJFWQslySGV8fQ2Uuo
-         /+TYis8hkk9bNjVuQ0C47MRsNetBokRMxAA40JwP935fdjdtGoody8r/p6wUjtBo6zfK
-         f04A52pp7kPEEgX+t5potcw4pVyMQ6OGAO23JYjSahl4xpQqux4T0WH1z2DpwPPydO8g
-         mgCQ==
+        d=gmail.com; s=20210112; t=1678167045;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3XCBEBrW4KvfUOG26x/G4IxQZmFPxnQCEMhbweDvrUY=;
+        b=lVPfTyASkjYG0xnrzjzqppKWof6Fj7btl93WfQOXnLLBEdWjofk1J/zkxO0wKN01Mt
+         qzTElNXMsRid7cPPq/vg1kgTNAOKFLQnrbrWnOp4kdsu/UGmkOxOPh1oRCtVc2ehho+t
+         i30X9XZ29qj35nP3aKkosVNaig8oWBJHrdi3lNz3wMT4/f1VJ6GSjd7nwvy3+48b4FHQ
+         fGw6yQkLyg0j9IRe3IcW3/b+m4/0A1VUZOw4rnfv3a1pUZE0EwYqYRYLqMoIW29op7+0
+         R/87PmsUMwNipi4JxdzXMmG4OtS45dbRrBrqlyqYb4UThmJfd1+hf9xpYTB5C5JIQRpA
+         jXbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678166852;
-        h=in-reply-to:references:message-id:date:content-transfer-encoding:to
-         :from:subject:cc:mime-version:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AlK7Hs19AjyIKqP3f0Dwl6HgKXmloRUX9J0NNF4qZqI=;
-        b=EpK8gmKG8tQDoUSA7J3nuHT5376ewZQG9ZRcfLzncPQLvpwyk2NXY+rtHhWq7z84Dn
-         D+flSu5QkAeGpbQVU7ftWpOW5wBCpJinrnKb3Y4oGDfrBIdsVtC175D4SnmofQAKsAkK
-         SHAYTvyADwY9gUjyGaZDhJ5YlJS+2odEadsfmbLOHCRg2CNtyiY1JVik/f42KEIaGm+Z
-         pTktY4WR+UhGvmRiH3Ka2wbYB23rvDx1bMdJJw8s+DvrGYVmsB4jcyZo26T+wNePqciT
-         SnD4ixKgNzkGvb10evlc3jXS1gAJCHUbqUGFfPNGeCmVY6cwOOvJWr0xL0uwvfKjwxuk
-         y+nw==
-X-Gm-Message-State: AO0yUKX92pF28O47XCDIKIQMr2pMHinmeL2f0HAhhfaFBkuMCMs+ooGc
-        17Nm1BLD9pU/tz1SdefWmRc=
-X-Google-Smtp-Source: AK7set+9FsF4BJMmdn0oPnSFIvoRnnZoR2gOxBSb5vcLt0/zI12PgdR5eqnOvR8okCGeDSq2c4ccgw==
-X-Received: by 2002:a62:5401:0:b0:5e2:da34:4aaf with SMTP id i1-20020a625401000000b005e2da344aafmr10320547pfb.4.1678166852291;
-        Mon, 06 Mar 2023 21:27:32 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678167045;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=3XCBEBrW4KvfUOG26x/G4IxQZmFPxnQCEMhbweDvrUY=;
+        b=3e0Xz7FatkdnGQqVbTyToWDcVDxwTaHQKlTqLxHAVdD35NOU0kvp0kKhMblYHXctj1
+         WK8cWdjqbODiGduvVdjJ4o46w5H3X52G2jkR4d0J+sAHqmlxCnvYu+0LeJhiF5vleGbU
+         w/I1gJn69LteUxx43yF4u2LBCYPTzkZc3qSeolUiGuJ8GUkM1R/2++UwFPGHitB1E3jt
+         5lF1Q+Hayp7aHjr7PPzdLY78BNJ+M1ooIPrM7qkgjj4f4t/RKOfn4l/Y6P6rDp3y0KhA
+         xqCiKzjzq2vjOxQuKbk5OaL7dJHGiChk2LRCpitN6FIbFlPueeAwkwv2JQcXAKmXs0ij
+         drMw==
+X-Gm-Message-State: AO0yUKWUT03khKi7/qiM7YOgwH8lgyo4dC7MH2fZnJbkPKbvvRWQyw74
+        twXDBL8gvbXxoPzyno2Cinc=
+X-Google-Smtp-Source: AK7set+TN1hNGmcvzRh0OOKH77hWokb+NdmKcrZ8TCKMjxGyGrByxJaL0z9+yvxtyzYG8jN4g3ZT5w==
+X-Received: by 2002:a62:1dd4:0:b0:5d6:138f:5596 with SMTP id d203-20020a621dd4000000b005d6138f5596mr14087706pfd.14.1678167044871;
+        Mon, 06 Mar 2023 21:30:44 -0800 (PST)
 Received: from localhost ([203.220.77.23])
-        by smtp.gmail.com with ESMTPSA id q18-20020a62e112000000b005a8de0f4c64sm7137152pfh.82.2023.03.06.21.27.28
+        by smtp.gmail.com with ESMTPSA id j13-20020aa78dcd000000b005a8bf239f5csm7174096pfr.193.2023.03.06.21.30.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Mar 2023 21:27:31 -0800 (PST)
+        Mon, 06 Mar 2023 21:30:44 -0800 (PST)
 Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Cc:     <ajd@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <cmr@bluescreens.de>
-Subject: Re: [RFC PATCH 06/13] powerpc/dexcr: Add prctl implementation
-From:   "Nicholas Piggin" <npiggin@gmail.com>
+Date:   Tue, 07 Mar 2023 15:30:39 +1000
+Message-Id: <CQZWKF2U2GVM.1X6AAD3SM05D6@bobo>
 To:     "Benjamin Gray" <bgray@linux.ibm.com>,
         <linuxppc-dev@lists.ozlabs.org>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 07 Mar 2023 15:12:57 +1000
-Message-Id: <CQZW6V070YIU.3Q6OJGKRPH3KY@bobo>
+Cc:     <ajd@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <cmr@bluescreens.de>
+Subject: Re: [RFC PATCH 07/13] powerpc/dexcr: Add sysctl entry for SBHE
+ system override
+From:   "Nicholas Piggin" <npiggin@gmail.com>
 X-Mailer: aerc 0.13.0
 References: <20221128024458.46121-1-bgray@linux.ibm.com>
- <20221128024458.46121-7-bgray@linux.ibm.com>
-In-Reply-To: <20221128024458.46121-7-bgray@linux.ibm.com>
+ <20221128024458.46121-8-bgray@linux.ibm.com>
+In-Reply-To: <20221128024458.46121-8-bgray@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 On Mon Nov 28, 2022 at 12:44 PM AEST, Benjamin Gray wrote:
-> Adds an initial prctl interface implementation. Unprivileged processes
-> can query the current prctl setting, including whether an aspect is
-> implemented by the hardware or is permitted to be modified by a setter
-> prctl. Editable aspects can be changed by a CAP_SYS_ADMIN privileged
-> process.
+> The DEXCR Speculative Branch Hint Enable (SBHE) aspect controls whether
+> the hints provided by BO field of Branch instructions are obeyed during
+> speculative execution.
 >
-> The prctl setting represents what the process itself has requested, and
-> does not account for any overrides. Either the kernel or a hypervisor
-> may enforce a different setting for an aspect.
+> SBHE behaviour per ISA 3.1B:
 >
-> Userspace can access a readonly view of the current DEXCR via SPR 812,
-> and a readonly view of the aspects enforced by the hypervisor via
-> SPR 455. A bitwise OR of these two SPRs will give the effective
-> DEXCR aspect state of the process.
-
-You said (offline) that you were looking at the PR_SPEC_* speculation
-control APIs but that this was different enough that you needed a
-different one.
-
-It would be good to know what some of those issues were in the
-changelog, would be nice to have some docs (could we add something
-to spec_ctrl.rst maybe?). I assume at least one difference is that
-some of our bits are not speculative but architectural (e.g., the
-stack hash check).
-
-I also wonder if we could implement some of the PR_SPEC controls
-APIs by mapping relevant DEXCR aspects to them instead of (or as well
-as) the DEXCR controls? Or would the PR_SPEC users be amenable to
-extensions that make our usage fit a bit better?
-
-I'm just thinking if we can reduce reliance on arch specific APIs a
-bit would be nice.
-
+> 0:	The hints provided by BO field of Branch instructions may be
+> 	ignored during speculative execution
 >
-> Signed-off-by: Benjamin Gray <bgray@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/processor.h |  13 +++
->  arch/powerpc/kernel/dexcr.c          | 133 ++++++++++++++++++++++++++-
->  arch/powerpc/kernel/process.c        |   6 ++
->  3 files changed, 151 insertions(+), 1 deletion(-)
+> 1:	The hints provided by BO field of Branch instructions are obeyed
+> 	during speculative execution
 >
-> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/=
-asm/processor.h
-> index 2381217c95dc..4c995258f668 100644
-> --- a/arch/powerpc/include/asm/processor.h
-> +++ b/arch/powerpc/include/asm/processor.h
-> @@ -265,6 +265,9 @@ struct thread_struct {
->  	unsigned long   sier2;
->  	unsigned long   sier3;
->  	unsigned long	hashkeyr;
-> +	unsigned int	dexcr_override;
-> +	unsigned int	dexcr_mask;
+> Add a sysctl entry to allow changing this aspect globally in the system
+> at runtime:
+>
+> 	/proc/sys/kernel/speculative_branch_hint_enable
+>
+> Three values are supported:
+>
+> -1:	Disable DEXCR SBHE sysctl override
+>  0:	Override and set DEXCR[SBHE] aspect to 0
+>  1:	Override and set DEXCR[SBHE] aspect to 1
+>
+> Internally, introduces a mechanism to apply arbitrary system wide
+> overrides on top of the prctl() config.
 
-Hmm, what's the mask doing here? It only gets bits set and never
-cleared AFAIKS. What is different between an initial state and a
-SET then CLEAR state?
+Why have an override for this, and not others?
 
 Thanks,
 Nick
+
