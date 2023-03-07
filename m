@@ -2,167 +2,138 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514D6C6FD1A
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 17:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4E4C6FA99
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 21:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231713AbjCGRdd (ORCPT
+        id S231613AbjCGVtb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Mar 2023 12:33:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
+        Tue, 7 Mar 2023 16:49:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231587AbjCGRdR (ORCPT
+        with ESMTP id S231657AbjCGVtM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Mar 2023 12:33:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354B73E60C
-        for <linux-hardening@vger.kernel.org>; Tue,  7 Mar 2023 09:28:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678210081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cfPqcA1cwRLTFxhmqSenRbKcOcueH6OIZGXv5ofSOBc=;
-        b=c4x6i/1ShoGvdbrKw1MuLtUpu2DIGGEkuZIcJ3SBI4DxH/UUvAbglGzZ8I5DXDZwwE2vcu
-        Wy7dmZg4zXzZcVcz+YQtK68hU8aBIdRbnu9vpnX/O/0BnZ60RsSm1JHDkCHllEzemgghqX
-        BtgWJy4AQPICavxs9W4WiscZiqw/9Qc=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-247-TzsXXvBrNy21kOk2hw6GoQ-1; Tue, 07 Mar 2023 12:28:00 -0500
-X-MC-Unique: TzsXXvBrNy21kOk2hw6GoQ-1
-Received: by mail-io1-f69.google.com with SMTP id k13-20020a5d9d4d000000b0074caed3a2d2so7526461iok.12
-        for <linux-hardening@vger.kernel.org>; Tue, 07 Mar 2023 09:27:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678210079;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cfPqcA1cwRLTFxhmqSenRbKcOcueH6OIZGXv5ofSOBc=;
-        b=Pj2okPpw3YQq6xWA8D+RG+Z6Zx8bTnjI8TORYLsshR/hfLHbCrGSRR2hSr+ZTDtbha
-         FFiptNRhPq/dvnmWPrWdaaEVf/QbXPAB6FSUAMnkfe1IqC32D5LSf7Bk4PyE7ekWwBLy
-         Cw90xy3v/ZhenlaP1rY/D7hNK3G5N0kCk3qM7ggWKztG+dvzxkVCe9Zlzaobn9iwoOvn
-         APhH30azXry2bJCvvIhY9ErCAYDUOvj+H/vEsMShAEp0hnHaZyIEcJ6E70kgN/SNoqwR
-         7yVw8daFzk9RR2xVmL1CErh3xnqMxSr8BtLSsFcxaFJV8QmajaSZUcH8ImjbxY5cUo2h
-         R3YQ==
-X-Gm-Message-State: AO0yUKXBM+zoglUoYDWDAkcJANVCpokMfjuOVW9jaP7BB7FCcmefsiZF
-        vFHxV98Cg49aYXtOWRFcORTL9w7X7//3bLTH6LlPDXvDTCMPSXTv6ypH5c/IgbRot4ae29FsILh
-        9DAGkMyLhduSmIZ1YnkpGRCU1G64W
-X-Received: by 2002:a05:6e02:12cf:b0:317:3f4:c06c with SMTP id i15-20020a056e0212cf00b0031703f4c06cmr13683750ilm.20.1678210079348;
-        Tue, 07 Mar 2023 09:27:59 -0800 (PST)
-X-Google-Smtp-Source: AK7set/0WWrRrCd3gc67coU2cSQKQm4QzNjqBsadANxnjkNms5bcQylIzmjtvguW4ZIsk3I4wn0cYQ==
-X-Received: by 2002:a05:6e02:12cf:b0:317:3f4:c06c with SMTP id i15-20020a056e0212cf00b0031703f4c06cmr13683737ilm.20.1678210079049;
-        Tue, 07 Mar 2023 09:27:59 -0800 (PST)
-Received: from x1 (c-73-214-169-22.hsd1.pa.comcast.net. [73.214.169.22])
-        by smtp.gmail.com with ESMTPSA id g11-20020a02b70b000000b003a7c47efde0sm4344252jam.11.2023.03.07.09.27.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 09:27:58 -0800 (PST)
-Date:   Tue, 7 Mar 2023 12:27:56 -0500
-From:   Brian Masney <bmasney@redhat.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH 0/6] Add basic Minidump kernel driver support
-Message-ID: <ZAd0HPHtSEs+XX7P@x1>
-References: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
- <Y/deHzijzvuvCJ2M@x1>
- <47542dbb-8cf3-6eae-a38e-910d38bd960b@quicinc.com>
- <Y/kKn9tnvSQ2Pacn@x1>
- <14b11c3c-353c-50f9-f9a4-837fc5d06fa4@quicinc.com>
+        Tue, 7 Mar 2023 16:49:12 -0500
+Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05038A676D
+        for <linux-hardening@vger.kernel.org>; Tue,  7 Mar 2023 13:49:06 -0800 (PST)
+Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
+        by amity.mint.lgbt (Postfix) with ESMTP id 4PWTbt67FRz1S5Jy
+        for <linux-hardening@vger.kernel.org>; Tue,  7 Mar 2023 16:48:58 -0500 (EST)
+Authentication-Results: amity.mint.lgbt (amavisd-new);
+        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
+        header.d=mint.lgbt
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
+        content-transfer-encoding:content-type:in-reply-to:from
+        :references:to:content-language:subject:user-agent:mime-version
+        :date:message-id; s=dkim; t=1678225735; x=1679089736; bh=LBDNRan
+        2Cd8nNBtnj8IHxtHFO6mc9pcFTMtM8qGwz6s=; b=X2z9Dsayhu4KWlNcB7whmXg
+        zKTUxyqY5o8Wv3jPrV1MVZPidmzBNHjcw6ieAS+0Jp+mFTMSXmQru2rnjvPal3F/
+        zQ/l0txh/kZBvWXTlED2861cz5kQj62mGQdXSH6hEKIfg98h1tHdX9X6KUQ+oSgR
+        Ksf1eG1t2y9rQ6fa0Q+XXLs8I//ScK/VBoT1qceeBg7U19KegpGz8qUH3bHOj+fx
+        /ytN7tiukSQ2mSKfASvDSbRQeBW5gV7zgboi8+JfqZBj+c4CRmc/3EuQOT2uyydy
+        gSjv+Sk7V3CHEscktNAtyBUk/8WNx0YWMXQfodu1B7+6Vcw//pIuvS8UwumnhEQ=
+        =
+X-Virus-Scanned: amavisd-new at amity.mint.lgbt
+Received: from amity.mint.lgbt ([127.0.0.1])
+        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 7BYZ-qKw-ooN for <linux-hardening@vger.kernel.org>;
+        Tue,  7 Mar 2023 16:48:55 -0500 (EST)
+Received: from [192.168.1.90] (unknown [186.105.8.42])
+        by amity.mint.lgbt (Postfix) with ESMTPSA id 4PWTbS4Kjkz1S4yx;
+        Tue,  7 Mar 2023 16:48:35 -0500 (EST)
+Message-ID: <18156dee-4fd2-80e5-b04d-c96c267fb615@mint.lgbt>
+Date:   Tue, 7 Mar 2023 18:48:30 -0300
 MIME-Version: 1.0
-In-Reply-To: <14b11c3c-353c-50f9-f9a4-837fc5d06fa4@quicinc.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v7 1/6] dt-bindings: ufs: qcom: Add SM6125 compatible
+ string
+Content-Language: en-US, es-CL
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, agross@kernel.org,
+        andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
+        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com
+Cc:     ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
+        phone-devel@vger.kernel.org, martin.botka@somainline.org,
+        marijn.suijten@somainline.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20230306165246.14782-1-they@mint.lgbt>
+ <20230306165246.14782-2-they@mint.lgbt>
+ <4670ddae-6b01-1e5c-b0ed-1f2f498a4f66@mint.lgbt>
+ <dfd1d81e-76a0-f8eb-e529-9f8ea1e927b6@linaro.org>
+From:   Lux Aliaga <they@mint.lgbt>
+In-Reply-To: <dfd1d81e-76a0-f8eb-e529-9f8ea1e927b6@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 03:45:31PM +0530, Mukesh Ojha wrote:
-> 
-> 
-> On 2/25/2023 12:36 AM, Brian Masney wrote:
-> > Hi Mukesh,
-> > 
-> > On Fri, Feb 24, 2023 at 04:10:42PM +0530, Mukesh Ojha wrote:
-> > > On 2/23/2023 6:07 PM, Brian Masney wrote:
-> > > > I'd like to test this series plus your series that sets the multiple
-> > > > download modes.
-> > > 
-> > > Sure, you are welcome, but for that you need a device running with Qualcomm
-> > > SoC and if it has a upstream support.
-> > 
-> > I will be testing this series on a sa8540p (QDrive3 Automotive
-> > Development Board), which has the sc8280xp SoC with good upstream
-> > support. This is also the same board that I have a reliable way to
-> > make the board crash due to a known firmware bug.
-> > 
-> 
-> 
-> Can you try below patch to just select minidump download mode and make the
-> device crash ?
-> 
-> --------------------------------------->8-------------------------------
-> diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-> b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-> index 0d02599..bd8e1a8 100644
-> --- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-> @@ -280,6 +280,7 @@
->         firmware {
->                 scm: scm {
->                         compatible = "qcom,scm-sc8280xp", "qcom,scm";
-> +                       qcom,dload-mode = <&tcsr 0x13000>;
->                 };
->         };
-> 
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index cdbfe54..e1539a2 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -20,7 +20,7 @@
-> 
->  #include "qcom_scm.h"
-> 
-> -static bool download_mode =
-> IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
-> +static bool download_mode = true;
->  module_param(download_mode, bool, 0);
-> 
->  #define SCM_HAS_CORE_CLK       BIT(0)
-> @@ -427,7 +427,7 @@ static void qcom_scm_set_download_mode(bool enable)
->                 ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
->         } else if (__scm->dload_mode_addr) {
->                 ret = qcom_scm_io_writel(__scm->dload_mode_addr,
-> -                               enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
-> +                               enable ? 0x20 : 0);
->         } else {
->                 dev_err(__scm->dev,
->                         "No available mechanism for setting download
-> mode\n");
+On 3/6/2023 14:09, Konrad Dybcio wrote:
 
-Hi Mukesh,
+>
+> On 6.03.2023 18:01, Lux Aliaga wrote:
+>> On 06/03/2023 13:52, Lux Aliaga wrote:
+>>> Document the compatible for UFS found on the SM6125.
+>>>
+>>> Signed-off-by: Lux Aliaga <they@mint.lgbt>
+>>> Reviewed-by: Martin Botka <martin.botka@somainline.org>
+>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>> ---
+>>>  =C2=A0 Documentation/devicetree/bindings/ufs/qcom,ufs.yaml | 2 ++
+>>>  =C2=A0 1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml b/Do=
+cumentation/devicetree/bindings/ufs/qcom,ufs.yaml
+>>> index b517d76215e3..42422f3471b3 100644
+>>> --- a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
+>>> +++ b/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
+>>> @@ -29,6 +29,7 @@ properties:
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
+ qcom,sc8280xp-ufshc
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
+ qcom,sdm845-ufshc
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
+ qcom,sm6115-ufshc
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - qcom,sm6125=
+-ufshc
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
+ qcom,sm6350-ufshc
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
+ qcom,sm8150-ufshc
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
+ qcom,sm8250-ufshc
+>>> @@ -185,6 +186,7 @@ allOf:
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 c=
+ontains:
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 enum:
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 - qcom,sm6115-ufshc
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 - qcom,sm6125-ufshc
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 then:
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 properties:
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks:
+>> I have to apologize. I worked on a changelog for this patchset but I s=
+kipped the subject header, therefore it didn't send, and as I realized th=
+is I interrupted the process, leaving the patchset incomplete. I'll retry=
+ sending it, this time correctly.
+> Happens, next time resend it with a RESEND prefix, e.g. [RESEND PATCH 1=
+/2]
+>
+> Konrad
 
-I tried to test this series but I don't know how to actually use the
-minidump feature that's in this series. Some more documentation is
-needed.
+Thank you! Will take this into consideration for the future. I received=20
+this email after I resent the patchset, so that's why I didn't add the=20
+prefix.
 
-I added this series, plus your other series that adds the download modes
-to the SCM driver to my tree, along with your changes above. I
-downgraded the firmware on my sa8540p and I have my reproducible crash.
-Linux immediately loses control and the board firmware takes over.
-
-I assumed that I'd need to do a warm reboot so that DDR contents are
-still present so Linux can grab the memory contents on next reboot.
-However, 'fastboot devices' shows no devices so I can't reboot that
-way. I can do a cold boot but the DDR contents will be lost.
-
-Also this series needs to be rebased against 6.3rc1.
-
-Brian
+--=20
+Lux Aliaga
+https://nixgoat.me/
 
