@@ -2,125 +2,151 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1556C678D5
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 06:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F8CC678D4
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 15:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230201AbjCGGH5 (ORCPT
+        id S229913AbjCGPkY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Mar 2023 01:07:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41974 "EHLO
+        Tue, 7 Mar 2023 10:40:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbjCGGHz (ORCPT
+        with ESMTP id S231501AbjCGPkI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Mar 2023 01:07:55 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC67D6F639;
-        Mon,  6 Mar 2023 22:07:50 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id cw28so48035427edb.5;
-        Mon, 06 Mar 2023 22:07:50 -0800 (PST)
+        Tue, 7 Mar 2023 10:40:08 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2122.outbound.protection.outlook.com [40.107.93.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA80925E23;
+        Tue,  7 Mar 2023 07:39:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bdEl8onomhDtJVr0IWfcrW1H8bkAmAErvG7WEUEGQWxIu6jwqUud5Q5/sxumHo2M1s/JUVbQwC7kVy8FsmujHEoHguOhq8W3PxUuw5BZ6zoalOCbIlwgpSaxehbhUUb4vlZTEH8V278SUNe5i2c+nJCGfqI8siXRfbD+FSom9lSz4hW8iI96WWyUPHGqYd4l5j/M7crEVljHkxTSyDnP8gUUcFii18lDlch1zVtJAWgVS5FjHh7qCgfNzIf6ba6+pgC40+BzDKEre7PqBGFJDq1eav3UTO/9+iVSIFwerfBPrtVzcoT4D75RX2ANBVDz11mZZLyFA4aECWf/Ux0PDg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PaFnE6fNHRu6Ob11T0/JZiaBAwRe5hfPBtthp/nQvU4=;
+ b=H67HHJz8BGerEsUiXhaG+wxCsPY+HGZjKgxoDkQZQAsWnhVXH+O0oA+MokYXtcb8ogYrdbcrTji90Ffhe6/h1gb/DBatvz59Ej7JE197p2y/YLZnIue2DD8491nVU6xhXbkzGopkyLloQYht71TSYwrcoISrBVYROXNQrMuApBTb+xsPx/GFy2ikWTIEgSUNbkXKF2DHXwl+4Pu052ybVAPe1aTgXeyJXRQsrX2k0gym9tYlZzwUEkWasxt0fnl7XGYt4MJwraUlCt652lMqYf2010QhUF86qosdn51Z+ug3VulAR4nrJf9GZ7g5SJJ0iaFC6LZpErfENVP2wmn7Tw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678169269;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NaaJ5mwp2B7vcZxepa8ael4JwFO3FvkcfAQA0ygTwxs=;
-        b=mNytflcnoXuCs8IiRPnXYvDyR3rhOzSwHkfCamZmHh5C+9wBPL+OWZnI4ACmotADvt
-         nkRHZEKEvCOeCwP7Hg/6bVgUdO5hJabWjReZsjEZW5JanndolH3cjpGK4WXtu5+lnyUF
-         OJGldBUy/JKwC/kDUqYLkAWWC5I0oXcFWl770FRJe69IQcw2gnftZXWz8JyUtDelFoQO
-         NAXD7b6PLQGk8x51M+UjPhjw9X10epCKUzCGBiMvQ0+b4qoQ2IKdDFFTXQdlsr5r7rFE
-         0oz7esXyqtmQYGe+CTimsCq/RHK7itf95EiHDS2kwVYngJxNXxV8TWrCprgkH+PDiTV3
-         M+rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678169269;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NaaJ5mwp2B7vcZxepa8ael4JwFO3FvkcfAQA0ygTwxs=;
-        b=11RmVZnpvQUNERJUypiewekoRoaLhRRqe9FwuxaqYP4ov/xXPydBgcU/OR2WjNLH3U
-         9DLQyVbhnCnUWSgrl45rD1MxbpnHnjkeYPwYUiGW/plth95ggSG+/q9uYOa5Inu5Dpde
-         sD21dqzbemmDfOzwa6sY6DQ9cou3XnHJCABCe3B7CO08jFoL0ErXcxCGNQ0s75Z+5ZuK
-         Rw6DhfXVAWa3oPyBhzyICiOGBJcxN4C/zRvIa9jvd891ofBqq4+aWaWSCtLYtdOnRnS+
-         Sb01EwQSEVUQNoXyvttaqB7hwWjwAVUlQV/c3hw/v934Uye/G6CPO5BjoRzekUM20Jd5
-         Bulw==
-X-Gm-Message-State: AO0yUKXW6n7qeuzcmLz9Kan2NgYbD6L6wBafzAtcy7yeeYq8NWjNG2Rv
-        nFWU1TUO4T9DaSZdUJgB6sE=
-X-Google-Smtp-Source: AK7set9hxHeh9sazqSlyf+hBXCxINb64stdSubzvzrbRx4sTUJKOCsLZhjebVa+SFeEIIjaJjt92jg==
-X-Received: by 2002:a17:906:a08f:b0:8f8:35c2:1357 with SMTP id q15-20020a170906a08f00b008f835c21357mr11938387ejy.23.1678169269288;
-        Mon, 06 Mar 2023 22:07:49 -0800 (PST)
-Received: from [192.168.0.106] ([77.126.33.94])
-        by smtp.gmail.com with ESMTPSA id n8-20020a17090695c800b008c76facbbf7sm5636760ejy.171.2023.03.06.22.07.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Mar 2023 22:07:48 -0800 (PST)
-Message-ID: <dcebc99b-0e30-773f-3ae9-209463939751@gmail.com>
-Date:   Tue, 7 Mar 2023 08:07:46 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH][next] net/mlx4_en: Replace fake flex-array with
- flexible-array member
-Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Tariq Toukan <tariqt@nvidia.com>,
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PaFnE6fNHRu6Ob11T0/JZiaBAwRe5hfPBtthp/nQvU4=;
+ b=sc6QV7qnSHaQ8FdZNmP25qU8d/YDj/ePMXZj1X28i+cId3tySuB/aqF9jXHhRM4tK4S5WKpOvtU4eMjFvr9phrPtebZ0G4stpRImOYFVOIqOilaj3nOnfwfcrQEgqejRLrQb7Elt+a4Z4PrQlSSahbNTOBscIcOV8/3H67WQgNI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by PH0PR13MB5035.namprd13.prod.outlook.com (2603:10b6:510:75::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Tue, 7 Mar
+ 2023 15:39:22 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::85f5:bdb:fb9e:294c]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::85f5:bdb:fb9e:294c%2]) with mapi id 15.20.6156.029; Tue, 7 Mar 2023
+ 15:39:22 +0000
+Date:   Tue, 7 Mar 2023 16:39:15 +0100
+From:   Simon Horman <simon.horman@corigine.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Manish Chopra <manishc@marvell.com>,
+        Rahul Verma <rahulv@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZAZ8mNbphtPyZWM6@work>
-From:   Tariq Toukan <ttoukan.linux@gmail.com>
-In-Reply-To: <ZAZ8mNbphtPyZWM6@work>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Paolo Abeni <pabeni@redhat.com>, GR-Linux-NIC-Dev@marvell.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] netxen_nic: Replace fake flex-array with
+ flexible-array member
+Message-ID: <ZAdao7B1yeXy0OWH@corigine.com>
+References: <ZAZ57I6WdQEwWh7v@work>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZAZ57I6WdQEwWh7v@work>
+X-ClientProxiedBy: AM0PR02CA0226.eurprd02.prod.outlook.com
+ (2603:10a6:20b:28f::33) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|PH0PR13MB5035:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4eab3f16-6c8e-4756-c74f-08db1f221f7d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JZ1XQ7R5ZD9nTp5UZ3LeJlFAVTzVNfdYU7rFiM+iILOsanxYcARemQktqKFW21Z/oNvj4OI0RAcehMvdl0nchVtnXD08K9xss646JAotwT2a3vKFMzsvXbHamk64vL3JMmmWrbZFrAMicqpUrXrhurVdI44qYbdWucHKp+t+zTqPbKcrINLbajkgYw/G2Gexlv1G2MspnE3EeeRpvzpebC5x+4canifVNpyZDOiiWNCVdoX9SRaF5oSAeaiqRQx9xyp5X3CfeJufHhfH4sdszNXYhc762fdbopdJa72RI9fGaOJrtXoWbJCEwGhr/uMS2EZFPD5jghp9QrHCSIlq4w4Zkyt3Qt/NqHBUBL/Zhn8qMqo/sAnIlDA9t5LsYHnMTx8W9X3/VwfQ1ymmwtzXcC1KNgBsl0ylpmhYXc0f98VmWYlBvjZClznzJcGPFI46D14z/EFCOuB6YgNyjUtvCK06BsZzldATziT2o8WSUgg3LaIIkIk2an61qu7j17ZnUw9ZFjCVhi5A1S5/1CbjP+3fVnbOGVEYr3IiysiswX5D33zA3WQFX+igwoThNw70qVfZpclI6lbV0yRiorxiLQkhicm/u0fPl6THuRPbp3UlUM12TCZ2zjn+3Ql9IY9Y
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39840400004)(136003)(376002)(366004)(396003)(346002)(451199018)(38100700002)(86362001)(5660300002)(6666004)(36756003)(7416002)(44832011)(2906002)(4326008)(6916009)(66476007)(8676002)(8936002)(66946007)(66556008)(41300700001)(2616005)(186003)(83380400001)(316002)(6512007)(54906003)(6506007)(966005)(478600001)(6486002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MVV5Z2VxNDN5cG40Uy96U1hXbUdBdW9HQWhGWkp2b2l4ejM1NXlHVUNONHJk?=
+ =?utf-8?B?SUFvNHMwQ2lHV1ZWR01yWWcyQjV3WXlPb3RBWUs1cGxkWTJHekZNSW9tOHIv?=
+ =?utf-8?B?K0pTQ0NDeTFlMFVCclNnNFVrNFM3cTcrWW5zOXVqSnJnTytVeUJKQVFZbzJD?=
+ =?utf-8?B?S0Zia3NPdng0NHNJY3hQZFFOWmdnRkxWNkRGVUI0RStUTTVZT04rTHlDZmYy?=
+ =?utf-8?B?WVNLSFhLWjk1aTZDM1UvRkFUWkVlODVvdndtMUpGMHQyY3NwK3lCaGlHME1V?=
+ =?utf-8?B?WGlmRERzVG5qYy8rZGo2YU1la24ybEQ0RFFGWDdHdS9PTUJuQ215WjN2dHlw?=
+ =?utf-8?B?Sml6ek5EK3U1QUFDWi9uM1ZRaENEOW9iM0NXZUQrZktHS0tYWUlwbDVmK0Y2?=
+ =?utf-8?B?WExqRWlucDJGQTNtNFNnVERka0tKOG52WGQwVkNyc2ovR2dtVEFJQ0FrcHlW?=
+ =?utf-8?B?QWxkS3hsbXRFRlRVaGxlYUdFT1J2WDdjSHQ2VmdqQ080UjEzOVM1YlRUWlRs?=
+ =?utf-8?B?bjNCYktiY2ZSYlpKWXdXK3p6RTUyVnM2dmxURnpTQUxSTExBYUZUdlpwL0w4?=
+ =?utf-8?B?eW9lSkJGSGU2OEIzUnRtY01oUlRXVkozL1VkMWJMZ1NsakFram01aGRQaEVI?=
+ =?utf-8?B?bnpPWVI1akFGaTZZUzNENVlldmtvbDhOU29tTGxQbnVSNjNsRVkwYnhoUGgr?=
+ =?utf-8?B?eVd0OHBNUE9xWkVxTTMvb1dzWFhRMjF4RG5MYUc0WmhxRkwreFdJa0ZCVlJP?=
+ =?utf-8?B?SFBKOWw5Ny9WSDhlSXFJbHdhajYvL3Q5Vm5Qa3FyT1dQTTFqQ1ZxUC9EWkha?=
+ =?utf-8?B?U0xYNE5NNlYvdTByYlBYdEtENlArQTlDdVhBRll6MEhyMnpCTVV0VlUyN2wy?=
+ =?utf-8?B?N0tQb2hjM2dxOCtaNnNNMXBrVTZURjI0NktEd2ppelFETldud1I4V3pyelg1?=
+ =?utf-8?B?YXJoa1k0NVRpMHRBOGN2YzMvdWo0K1p6blY2ZHhOM3RtamI4dVQzUXNuRFhl?=
+ =?utf-8?B?VnE4TlNrVlluMUZTUkRmQWpzclNCZmhQdlozRDdPS3Jaakptb2NXVEJWZ2p0?=
+ =?utf-8?B?OURKcjhwZ0QrNWhhQ2duNUtOL2FGUTFQNlNSWjlCZ0lTQUxBNFNIQ2NFSE9L?=
+ =?utf-8?B?RWJqQ1FUS1EzNE1EMFNpRGNIRm1NcWVQWFNjZHlwbkZnZUltdWIyVmIyTFF1?=
+ =?utf-8?B?Qnh0dGM3U0N0ZEtGQWZwb0M5RXF0MEh1OVpPc0xZOU5ESUNVYzIxMW5Sekc5?=
+ =?utf-8?B?VzlFRXdwdE1pMm9JY1FCMzdTaXNQZjl4WWZwU3BHcHo0Qkd0bDMxTUNRc3VS?=
+ =?utf-8?B?ZUZnSjVqak9pcmhXdUpjMFR4ekZqdEI0UlNvYmJDSzVBd3R3UnNORzVnNGIw?=
+ =?utf-8?B?dmhDOEttWWR3VGNQNGROQXJIU29qZFhWVC9mYW1RVUdiOUw4LzdOQVk2dElG?=
+ =?utf-8?B?bkJkbjM2bkhWSElPQm1PK3hjYUMrN3JEZVArRTlja3hSNWlxajNZRDNlY0ti?=
+ =?utf-8?B?b2s2KytsRW9sRnMyNjREdHhFM3dWYW1aUDQvbysyUFZ5VlVpRTFINEtvMlBO?=
+ =?utf-8?B?VnJoWVpJMzV3RWMzN2FVbmJCci8yc2FLTDZTWkpiMUNKVCtyZVFnYU9VdWNW?=
+ =?utf-8?B?YktZS1VRakpNRUc4dGxiR2FtVHZreUtKK09Uakp6YTRQZURHNHRiVmhsVlhQ?=
+ =?utf-8?B?LzVKSjE1TkZLbFdpbVpqTTRzVnlJR3pkcTF5dGVKRlZhYWV3ZHFydUY4eUNK?=
+ =?utf-8?B?d2gxU3BBZk1BK1ZlV3F5NXBqaFZPZHRsWlg4eWFhZ1Z2ZzMwR0dna0wwTEUv?=
+ =?utf-8?B?eEI5Sm5UcXlKTG50RUhCSC9tdFN4Q0hhTHZJenVSQzRWc0NRV1grTXZHbUQy?=
+ =?utf-8?B?TWViN09oT1RzTVJnbjZ0bm13MU45amU5Q1BvK3BvNFJ5QUxiNDVzL3dLUDQz?=
+ =?utf-8?B?S0FhcTlxMHB5RWVobHZoVm0rOXM5aCtkTVE3ci9IeGkvTUNLeDF2QVZaS3Fh?=
+ =?utf-8?B?cjdSWFVmd1haRFZobzRUWU9YWm5uS1prU202akNYbnhrdVpRbXhoSHVsYWw0?=
+ =?utf-8?B?dWplbWdERjdYUDBTUjRTcVBQWXpTMFJBV0xReVA3bUpVVmtxZE82czhiZDBn?=
+ =?utf-8?B?ZWhwL3NQekV6aDNyZ05jSmJZWkRlcWtHNS9vb2s5T0xJbjYxR3UrZ2E1M2Zx?=
+ =?utf-8?B?UG0wVHBzQ2grSDB5eEtBc2pWQjk4NTBHQkx1Q2hvYWZxb2Y5YlBkTVhEbFYv?=
+ =?utf-8?B?cnZvZmVhOVU3Nm1uYms3SGRtMVdRPT0=?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4eab3f16-6c8e-4756-c74f-08db1f221f7d
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Mar 2023 15:39:22.2305
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p1dz9wxcrgLSnedW5iasGclZMU9KFjgvVjweTMEduxHBU3KStH1yjUwP+ecyQQcfOCCE53sqzFLaPWnjBYLlefW6SXE74zVSPO/yTfttANk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR13MB5035
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 07/03/2023 1:51, Gustavo A. R. Silva wrote:
+On Mon, Mar 06, 2023 at 05:40:28PM -0600, Gustavo A. R. Silva wrote:
 > Zero-length arrays as fake flexible arrays are deprecated and we are
 > moving towards adopting C99 flexible-array members instead.
 > 
 > Transform zero-length array into flexible-array member in struct
-> mlx4_en_rx_desc.
+> nx_cardrsp_rx_ctx_t.
 > 
 > Address the following warnings found with GCC-13 and
 > -fstrict-flex-arrays=3 enabled:
-> drivers/net/ethernet/mellanox/mlx4/en_rx.c:88:30: warning: array subscript i is outside array bounds of ‘struct mlx4_wqe_data_seg[0]’ [-Warray-bounds=]
-> drivers/net/ethernet/mellanox/mlx4/en_rx.c:149:30: warning: array subscript 0 is outside array bounds of ‘struct mlx4_wqe_data_seg[0]’ [-Warray-bounds=]
-> drivers/net/ethernet/mellanox/mlx4/en_rx.c:127:30: warning: array subscript i is outside array bounds of ‘struct mlx4_wqe_data_seg[0]’ [-Warray-bounds=]
-> drivers/net/ethernet/mellanox/mlx4/en_rx.c:128:30: warning: array subscript i is outside array bounds of ‘struct mlx4_wqe_data_seg[0]’ [-Warray-bounds=]
-> drivers/net/ethernet/mellanox/mlx4/en_rx.c:129:30: warning: array subscript i is outside array bounds of ‘struct mlx4_wqe_data_seg[0]’ [-Warray-bounds=]
-> drivers/net/ethernet/mellanox/mlx4/en_rx.c:117:30: warning: array subscript i is outside array bounds of ‘struct mlx4_wqe_data_seg[0]’ [-Warray-bounds=]
-> drivers/net/ethernet/mellanox/mlx4/en_rx.c:119:30: warning: array subscript i is outside array bounds of ‘struct mlx4_wqe_data_seg[0]’ [-Warray-bounds=]
+> drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c:361:26: warning: array subscript <unknown> is outside array bounds of ‘char[0]’ [-Warray-bounds=]
+> drivers/net/ethernet/qlogic/netxen/netxen_nic_ctx.c:372:25: warning: array subscript <unknown> is outside array bounds of ‘char[0]’ [-Warray-bounds=]
 > 
 > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
 > routines on memcpy() and help us make progress towards globally
 > enabling -fstrict-flex-arrays=3 [1].
 > 
 > Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/264
+> Link: https://github.com/KSPP/linux/issues/265
 > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/net/ethernet/mellanox/mlx4/mlx4_en.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-> index 544e09b97483..034733b13b1a 100644
-> --- a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-> +++ b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-> @@ -323,7 +323,7 @@ struct mlx4_en_tx_ring {
->   
->   struct mlx4_en_rx_desc {
->   	/* actual number of entries depends on rx ring stride */
-> -	struct mlx4_wqe_data_seg data[0];
-> +	DECLARE_FLEX_ARRAY(struct mlx4_wqe_data_seg, data);
->   };
->   
->   struct mlx4_en_rx_ring {
 
-Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+Reviewed-by: Simon Horman <simon.horman@corigine.com>
 
-Thanks for your patch.
