@@ -2,104 +2,112 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A9AC678DB
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 05:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583D3C678DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 05:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbjCGFar (ORCPT
+        id S230185AbjCGFiJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Mar 2023 00:30:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41236 "EHLO
+        Tue, 7 Mar 2023 00:38:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230137AbjCGFaq (ORCPT
+        with ESMTP id S229527AbjCGFiI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Mar 2023 00:30:46 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62C4557093;
-        Mon,  6 Mar 2023 21:30:45 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id 132so6909329pgh.13;
-        Mon, 06 Mar 2023 21:30:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678167045;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3XCBEBrW4KvfUOG26x/G4IxQZmFPxnQCEMhbweDvrUY=;
-        b=lVPfTyASkjYG0xnrzjzqppKWof6Fj7btl93WfQOXnLLBEdWjofk1J/zkxO0wKN01Mt
-         qzTElNXMsRid7cPPq/vg1kgTNAOKFLQnrbrWnOp4kdsu/UGmkOxOPh1oRCtVc2ehho+t
-         i30X9XZ29qj35nP3aKkosVNaig8oWBJHrdi3lNz3wMT4/f1VJ6GSjd7nwvy3+48b4FHQ
-         fGw6yQkLyg0j9IRe3IcW3/b+m4/0A1VUZOw4rnfv3a1pUZE0EwYqYRYLqMoIW29op7+0
-         R/87PmsUMwNipi4JxdzXMmG4OtS45dbRrBrqlyqYb4UThmJfd1+hf9xpYTB5C5JIQRpA
-         jXbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678167045;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3XCBEBrW4KvfUOG26x/G4IxQZmFPxnQCEMhbweDvrUY=;
-        b=3e0Xz7FatkdnGQqVbTyToWDcVDxwTaHQKlTqLxHAVdD35NOU0kvp0kKhMblYHXctj1
-         WK8cWdjqbODiGduvVdjJ4o46w5H3X52G2jkR4d0J+sAHqmlxCnvYu+0LeJhiF5vleGbU
-         w/I1gJn69LteUxx43yF4u2LBCYPTzkZc3qSeolUiGuJ8GUkM1R/2++UwFPGHitB1E3jt
-         5lF1Q+Hayp7aHjr7PPzdLY78BNJ+M1ooIPrM7qkgjj4f4t/RKOfn4l/Y6P6rDp3y0KhA
-         xqCiKzjzq2vjOxQuKbk5OaL7dJHGiChk2LRCpitN6FIbFlPueeAwkwv2JQcXAKmXs0ij
-         drMw==
-X-Gm-Message-State: AO0yUKWUT03khKi7/qiM7YOgwH8lgyo4dC7MH2fZnJbkPKbvvRWQyw74
-        twXDBL8gvbXxoPzyno2Cinc=
-X-Google-Smtp-Source: AK7set+TN1hNGmcvzRh0OOKH77hWokb+NdmKcrZ8TCKMjxGyGrByxJaL0z9+yvxtyzYG8jN4g3ZT5w==
-X-Received: by 2002:a62:1dd4:0:b0:5d6:138f:5596 with SMTP id d203-20020a621dd4000000b005d6138f5596mr14087706pfd.14.1678167044871;
-        Mon, 06 Mar 2023 21:30:44 -0800 (PST)
-Received: from localhost ([203.220.77.23])
-        by smtp.gmail.com with ESMTPSA id j13-20020aa78dcd000000b005a8bf239f5csm7174096pfr.193.2023.03.06.21.30.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Mar 2023 21:30:44 -0800 (PST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 07 Mar 2023 15:30:39 +1000
-Message-Id: <CQZWKF2U2GVM.1X6AAD3SM05D6@bobo>
-To:     "Benjamin Gray" <bgray@linux.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>
-Cc:     <ajd@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>, <cmr@bluescreens.de>
-Subject: Re: [RFC PATCH 07/13] powerpc/dexcr: Add sysctl entry for SBHE
- system override
-From:   "Nicholas Piggin" <npiggin@gmail.com>
-X-Mailer: aerc 0.13.0
+        Tue, 7 Mar 2023 00:38:08 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 185092E0C6;
+        Mon,  6 Mar 2023 21:38:06 -0800 (PST)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 327418ls032457;
+        Tue, 7 Mar 2023 05:37:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=VoBTceaYt9JCGmcdLxZJw8x/bOhn6s3tw9JaQeRiKy0=;
+ b=j/N1ga2KFROODXy2i4nxPXv1sYnepvLBfco1bHXAvBSpYycFXi7j/Vq1rWPpHXlVQkPl
+ e/J6FgyGVlbbWhYNyMSpXKZ0AjFcY3PZ5/fyZNTajflPvgayUCBWDBkDUKf5+jbJxDCC
+ OjWDaz82NaudEQimaavTl+dJj1F/daAelRMdIs9tIjgm8/U/qycRSjr2GazGRI2fLN6Y
+ WDZsHaWWQUVF3LjaaQgzNkjm/yOvliMtCjec7n08TGxrYCJv9o+KCORezY6zGXFZmehT
+ GpjcNk8ncrvq3cDPDI+/J/2bVpPWRE+pFCmSYn/1eQ86Hw9DLq7cBd57UPWNS/X9GyDX 3A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p4wswvcra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Mar 2023 05:37:55 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3275UMpr029385;
+        Tue, 7 Mar 2023 05:37:54 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p4wswvcqw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Mar 2023 05:37:54 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 326Lld6m011365;
+        Tue, 7 Mar 2023 05:37:52 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3p418v2xsf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Mar 2023 05:37:52 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3275bo4W58720734
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Mar 2023 05:37:50 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 673FC20043;
+        Tue,  7 Mar 2023 05:37:50 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DAD6120040;
+        Tue,  7 Mar 2023 05:37:49 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Mar 2023 05:37:49 +0000 (GMT)
+Received: from [10.61.2.107] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 28A2460235;
+        Tue,  7 Mar 2023 16:37:48 +1100 (AEDT)
+Message-ID: <eb19afda911f4868ec6ff194738afcfe7050d5c1.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH 04/13] powerpc/dexcr: Support userspace ROP
+ protection
+From:   Benjamin Gray <bgray@linux.ibm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     ajd@linux.ibm.com, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, cmr@bluescreens.de
+Date:   Tue, 07 Mar 2023 16:37:47 +1100
+In-Reply-To: <CQZW0SBFI6QM.3FW6O6LJ0PVS1@bobo>
 References: <20221128024458.46121-1-bgray@linux.ibm.com>
- <20221128024458.46121-8-bgray@linux.ibm.com>
-In-Reply-To: <20221128024458.46121-8-bgray@linux.ibm.com>
+         <20221128024458.46121-5-bgray@linux.ibm.com>
+         <CQZW0SBFI6QM.3FW6O6LJ0PVS1@bobo>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 2JSq7H7t-gkreVYe1Rk65jyRWOcElRP_
+X-Proofpoint-GUID: khednyvDzsNf_GUNhkpbdt17rekD4YC5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-06_14,2023-03-06_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
+ priorityscore=1501 impostorscore=0 phishscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=834 spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303070050
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon Nov 28, 2022 at 12:44 PM AEST, Benjamin Gray wrote:
-> The DEXCR Speculative Branch Hint Enable (SBHE) aspect controls whether
-> the hints provided by BO field of Branch instructions are obeyed during
-> speculative execution.
->
-> SBHE behaviour per ISA 3.1B:
->
-> 0:	The hints provided by BO field of Branch instructions may be
-> 	ignored during speculative execution
->
-> 1:	The hints provided by BO field of Branch instructions are obeyed
-> 	during speculative execution
->
-> Add a sysctl entry to allow changing this aspect globally in the system
-> at runtime:
->
-> 	/proc/sys/kernel/speculative_branch_hint_enable
->
-> Three values are supported:
->
-> -1:	Disable DEXCR SBHE sysctl override
->  0:	Override and set DEXCR[SBHE] aspect to 0
->  1:	Override and set DEXCR[SBHE] aspect to 1
->
-> Internally, introduces a mechanism to apply arbitrary system wide
-> overrides on top of the prctl() config.
+On Tue, 2023-03-07 at 15:05 +1000, Nicholas Piggin wrote:
+> I think it is not quite per-process? I don't actually know how the
+> user
+> toolchain side is put together, but I'm thinking we can not give it a
+> new
+> salt on fork(), but we could on exec(). I think we could actually
+> give
+> each thread their own salt within a process too, right?
 
-Why have an override for this, and not others?
-
-Thanks,
-Nick
-
+Yeah, the error case is we return further than we called in a given
+execution context. A forked child may return after the fork, meaning it
+needs the same key as the parent for the hashchk to work. Exec can get
+a new key because we can't return with any existing hashes. I haven't
+seen enough of kernel thread support to know if/how we can give threads
+their own key. I believe they go through the fork() call that copies
+the parent key currently.
