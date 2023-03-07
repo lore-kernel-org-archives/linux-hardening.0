@@ -2,138 +2,274 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4E4C6FA99
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 21:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D04AC678D5
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 22:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231613AbjCGVtb (ORCPT
+        id S230369AbjCGWWV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Mar 2023 16:49:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58684 "EHLO
+        Tue, 7 Mar 2023 17:22:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231657AbjCGVtM (ORCPT
+        with ESMTP id S230347AbjCGWWT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Mar 2023 16:49:12 -0500
-Received: from amity.mint.lgbt (vmi888983.contaboserver.net [149.102.157.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05038A676D
-        for <linux-hardening@vger.kernel.org>; Tue,  7 Mar 2023 13:49:06 -0800 (PST)
-Received: from amity.mint.lgbt (mx.mint.lgbt [127.0.0.1])
-        by amity.mint.lgbt (Postfix) with ESMTP id 4PWTbt67FRz1S5Jy
-        for <linux-hardening@vger.kernel.org>; Tue,  7 Mar 2023 16:48:58 -0500 (EST)
-Authentication-Results: amity.mint.lgbt (amavisd-new);
-        dkim=pass (2048-bit key) reason="pass (just generated, assumed good)"
-        header.d=mint.lgbt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mint.lgbt; h=
-        content-transfer-encoding:content-type:in-reply-to:from
-        :references:to:content-language:subject:user-agent:mime-version
-        :date:message-id; s=dkim; t=1678225735; x=1679089736; bh=LBDNRan
-        2Cd8nNBtnj8IHxtHFO6mc9pcFTMtM8qGwz6s=; b=X2z9Dsayhu4KWlNcB7whmXg
-        zKTUxyqY5o8Wv3jPrV1MVZPidmzBNHjcw6ieAS+0Jp+mFTMSXmQru2rnjvPal3F/
-        zQ/l0txh/kZBvWXTlED2861cz5kQj62mGQdXSH6hEKIfg98h1tHdX9X6KUQ+oSgR
-        Ksf1eG1t2y9rQ6fa0Q+XXLs8I//ScK/VBoT1qceeBg7U19KegpGz8qUH3bHOj+fx
-        /ytN7tiukSQ2mSKfASvDSbRQeBW5gV7zgboi8+JfqZBj+c4CRmc/3EuQOT2uyydy
-        gSjv+Sk7V3CHEscktNAtyBUk/8WNx0YWMXQfodu1B7+6Vcw//pIuvS8UwumnhEQ=
-        =
-X-Virus-Scanned: amavisd-new at amity.mint.lgbt
-Received: from amity.mint.lgbt ([127.0.0.1])
-        by amity.mint.lgbt (amity.mint.lgbt [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 7BYZ-qKw-ooN for <linux-hardening@vger.kernel.org>;
-        Tue,  7 Mar 2023 16:48:55 -0500 (EST)
-Received: from [192.168.1.90] (unknown [186.105.8.42])
-        by amity.mint.lgbt (Postfix) with ESMTPSA id 4PWTbS4Kjkz1S4yx;
-        Tue,  7 Mar 2023 16:48:35 -0500 (EST)
-Message-ID: <18156dee-4fd2-80e5-b04d-c96c267fb615@mint.lgbt>
-Date:   Tue, 7 Mar 2023 18:48:30 -0300
+        Tue, 7 Mar 2023 17:22:19 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12FECF96D;
+        Tue,  7 Mar 2023 14:22:15 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8B11EB81A40;
+        Tue,  7 Mar 2023 22:22:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF9EC433EF;
+        Tue,  7 Mar 2023 22:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678227732;
+        bh=hep12z65/htc8VobV1reqBOHqul0NinommIACH39giU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ldLwEkbOPvId1SGhV49JymfWZJ4wtC1cB1ISU8VtHRd6mgfBM4VJqByD8C6rSfEl+
+         oVMB5vsm8ffgDNJ8ydcbfH7o+aK9pRJ87QDnxtGspc3bcNUImPb403UxwDmtZ9gxI0
+         xWZ02PpOSKMaL1k5I71nBxuM6Fi6+loXhYHI/KSULt3RYJXHfJjHFqGToS6IVgyr3/
+         u+35JFk1nXXWx3QzmGK3dWZtldE9q5qfHMkzG7jHVGPYNEj762Pj/0A+cl50FISavT
+         fQLC1i3yqJGcn2DQIbv2XpJ56P7irz1XT9i9pGTQA2xFOAIALi05rhVUGuxD7eENhY
+         +8pUG/+qSzZUg==
+Date:   Tue, 7 Mar 2023 16:22:39 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] wifi: ath11k: Replace fake flex-array with
+ flexible-array member
+Message-ID: <ZAe5L5DtmsQxzqRH@work>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v7 1/6] dt-bindings: ufs: qcom: Add SM6125 compatible
- string
-Content-Language: en-US, es-CL
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>, agross@kernel.org,
-        andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
-        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
-        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org,
-        marijn.suijten@somainline.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20230306165246.14782-1-they@mint.lgbt>
- <20230306165246.14782-2-they@mint.lgbt>
- <4670ddae-6b01-1e5c-b0ed-1f2f498a4f66@mint.lgbt>
- <dfd1d81e-76a0-f8eb-e529-9f8ea1e927b6@linaro.org>
-From:   Lux Aliaga <they@mint.lgbt>
-In-Reply-To: <dfd1d81e-76a0-f8eb-e529-9f8ea1e927b6@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 3/6/2023 14:09, Konrad Dybcio wrote:
+Zero-length arrays as fake flexible arrays are deprecated and we are
+moving towards adopting C99 flexible-array members instead.
 
->
-> On 6.03.2023 18:01, Lux Aliaga wrote:
->> On 06/03/2023 13:52, Lux Aliaga wrote:
->>> Document the compatible for UFS found on the SM6125.
->>>
->>> Signed-off-by: Lux Aliaga <they@mint.lgbt>
->>> Reviewed-by: Martin Botka <martin.botka@somainline.org>
->>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>> ---
->>>  =C2=A0 Documentation/devicetree/bindings/ufs/qcom,ufs.yaml | 2 ++
->>>  =C2=A0 1 file changed, 2 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml b/Do=
-cumentation/devicetree/bindings/ufs/qcom,ufs.yaml
->>> index b517d76215e3..42422f3471b3 100644
->>> --- a/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
->>> +++ b/Documentation/devicetree/bindings/ufs/qcom,ufs.yaml
->>> @@ -29,6 +29,7 @@ properties:
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- qcom,sc8280xp-ufshc
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- qcom,sdm845-ufshc
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- qcom,sm6115-ufshc
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - qcom,sm6125=
--ufshc
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- qcom,sm6350-ufshc
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- qcom,sm8150-ufshc
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -=
- qcom,sm8250-ufshc
->>> @@ -185,6 +186,7 @@ allOf:
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 c=
-ontains:
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 enum:
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0 - qcom,sm6115-ufshc
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 - qcom,sm6125-ufshc
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 then:
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 properties:
->>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks:
->> I have to apologize. I worked on a changelog for this patchset but I s=
-kipped the subject header, therefore it didn't send, and as I realized th=
-is I interrupted the process, leaving the patchset incomplete. I'll retry=
- sending it, this time correctly.
-> Happens, next time resend it with a RESEND prefix, e.g. [RESEND PATCH 1=
-/2]
->
-> Konrad
+Address 25 of the following warnings found with GCC-13 and
+-fstrict-flex-arrays=3 enabled:
+drivers/net/wireless/ath/ath11k/debugfs_htt_stats.c:30:51: warning: array subscript <unknown> is outside array bounds of ‘const u32[0]’ {aka ‘const unsigned int[]’} [-Warray-bounds=]
 
-Thank you! Will take this into consideration for the future. I received=20
-this email after I resent the patchset, so that's why I didn't add the=20
-prefix.
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
---=20
-Lux Aliaga
-https://nixgoat.me/
+Link: https://github.com/KSPP/linux/issues/21
+Link: https://github.com/KSPP/linux/issues/266
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ .../wireless/ath/ath11k/debugfs_htt_stats.h   | 50 +++++++++----------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath11k/debugfs_htt_stats.h b/drivers/net/wireless/ath/ath11k/debugfs_htt_stats.h
+index 2b97cbbd28cb..db5c176e2e5b 100644
+--- a/drivers/net/wireless/ath/ath11k/debugfs_htt_stats.h
++++ b/drivers/net/wireless/ath/ath11k/debugfs_htt_stats.h
+@@ -143,7 +143,7 @@ enum htt_tx_pdev_underrun_enum {
+ /* Bytes stored in little endian order */
+ /* Length should be multiple of DWORD */
+ struct htt_stats_string_tlv {
+-	u32 data[0]; /* Can be variable length */
++	DECLARE_FLEX_ARRAY(u32, data); /* Can be variable length */
+ } __packed;
+ 
+ #define HTT_STATS_MAC_ID	GENMASK(7, 0)
+@@ -205,27 +205,27 @@ struct htt_tx_pdev_stats_cmn_tlv {
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_pdev_stats_urrn_tlv_v {
+-	u32 urrn_stats[0]; /* HTT_TX_PDEV_MAX_URRN_STATS */
++	DECLARE_FLEX_ARRAY(u32, urrn_stats); /* HTT_TX_PDEV_MAX_URRN_STATS */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_pdev_stats_flush_tlv_v {
+-	u32 flush_errs[0]; /* HTT_TX_PDEV_MAX_FLUSH_REASON_STATS */
++	DECLARE_FLEX_ARRAY(u32, flush_errs); /* HTT_TX_PDEV_MAX_FLUSH_REASON_STATS */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_pdev_stats_sifs_tlv_v {
+-	u32 sifs_status[0]; /* HTT_TX_PDEV_MAX_SIFS_BURST_STATS */
++	DECLARE_FLEX_ARRAY(u32, sifs_status); /* HTT_TX_PDEV_MAX_SIFS_BURST_STATS */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_pdev_stats_phy_err_tlv_v {
+-	u32  phy_errs[0]; /* HTT_TX_PDEV_MAX_PHY_ERR_STATS */
++	DECLARE_FLEX_ARRAY(u32, phy_errs); /* HTT_TX_PDEV_MAX_PHY_ERR_STATS */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_pdev_stats_sifs_hist_tlv_v {
+-	u32 sifs_hist_status[0]; /* HTT_TX_PDEV_SIFS_BURST_HIST_STATS */
++	DECLARE_FLEX_ARRAY(u32, sifs_hist_status); /* HTT_TX_PDEV_SIFS_BURST_HIST_STATS */
+ };
+ 
+ struct htt_tx_pdev_stats_tx_ppdu_stats_tlv_v {
+@@ -591,19 +591,19 @@ struct htt_tx_hwq_difs_latency_stats_tlv_v {
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_hwq_cmd_result_stats_tlv_v {
+ 	/* Histogram of sched cmd result */
+-	u32 cmd_result[0]; /* HTT_TX_HWQ_MAX_CMD_RESULT_STATS */
++	DECLARE_FLEX_ARRAY(u32, cmd_result); /* HTT_TX_HWQ_MAX_CMD_RESULT_STATS */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_hwq_cmd_stall_stats_tlv_v {
+ 	/* Histogram of various pause conitions */
+-	u32 cmd_stall_status[0]; /* HTT_TX_HWQ_MAX_CMD_STALL_STATS */
++	DECLARE_FLEX_ARRAY(u32, cmd_stall_status); /* HTT_TX_HWQ_MAX_CMD_STALL_STATS */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_hwq_fes_result_stats_tlv_v {
+ 	/* Histogram of number of user fes result */
+-	u32 fes_result[0]; /* HTT_TX_HWQ_MAX_FES_RESULT_STATS */
++	DECLARE_FLEX_ARRAY(u32, fes_result); /* HTT_TX_HWQ_MAX_FES_RESULT_STATS */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size
+@@ -636,7 +636,7 @@ struct htt_tx_hwq_tried_mpdu_cnt_hist_tlv_v {
+  */
+ struct htt_tx_hwq_txop_used_cnt_hist_tlv_v {
+ 	/* Histogram of txop used cnt */
+-	u32 txop_used_cnt_hist[0]; /* HTT_TX_HWQ_TXOP_USED_CNT_HIST */
++	DECLARE_FLEX_ARRAY(u32, txop_used_cnt_hist); /* HTT_TX_HWQ_TXOP_USED_CNT_HIST */
+ };
+ 
+ /* == TX SELFGEN STATS == */
+@@ -804,17 +804,17 @@ struct htt_tx_pdev_mpdu_stats_tlv {
+ /* == TX SCHED STATS == */
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_sched_txq_cmd_posted_tlv_v {
+-	u32 sched_cmd_posted[0]; /* HTT_TX_PDEV_SCHED_TX_MODE_MAX */
++	DECLARE_FLEX_ARRAY(u32, sched_cmd_posted); /* HTT_TX_PDEV_SCHED_TX_MODE_MAX */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_sched_txq_cmd_reaped_tlv_v {
+-	u32 sched_cmd_reaped[0]; /* HTT_TX_PDEV_SCHED_TX_MODE_MAX */
++	DECLARE_FLEX_ARRAY(u32, sched_cmd_reaped); /* HTT_TX_PDEV_SCHED_TX_MODE_MAX */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_sched_txq_sched_order_su_tlv_v {
+-	u32 sched_order_su[0]; /* HTT_TX_PDEV_NUM_SCHED_ORDER_LOG */
++	DECLARE_FLEX_ARRAY(u32, sched_order_su); /* HTT_TX_PDEV_NUM_SCHED_ORDER_LOG */
+ };
+ 
+ enum htt_sched_txq_sched_ineligibility_tlv_enum {
+@@ -842,7 +842,7 @@ enum htt_sched_txq_sched_ineligibility_tlv_enum {
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_sched_txq_sched_ineligibility_tlv_v {
+ 	/* indexed by htt_sched_txq_sched_ineligibility_tlv_enum */
+-	u32 sched_ineligibility[0];
++	DECLARE_FLEX_ARRAY(u32, sched_ineligibility);
+ };
+ 
+ #define	HTT_TX_PDEV_STATS_SCHED_PER_TXQ_MAC_ID	GENMASK(7, 0)
+@@ -888,17 +888,17 @@ struct htt_stats_tx_sched_cmn_tlv {
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_tqm_gen_mpdu_stats_tlv_v {
+-	u32 gen_mpdu_end_reason[0]; /* HTT_TX_TQM_MAX_GEN_MPDU_END_REASON */
++	DECLARE_FLEX_ARRAY(u32, gen_mpdu_end_reason); /* HTT_TX_TQM_MAX_GEN_MPDU_END_REASON */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_tqm_list_mpdu_stats_tlv_v {
+-	u32 list_mpdu_end_reason[0]; /* HTT_TX_TQM_MAX_LIST_MPDU_END_REASON */
++	DECLARE_FLEX_ARRAY(u32, list_mpdu_end_reason); /* HTT_TX_TQM_MAX_LIST_MPDU_END_REASON */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_tx_tqm_list_mpdu_cnt_tlv_v {
+-	u32 list_mpdu_cnt_hist[0];
++	DECLARE_FLEX_ARRAY(u32, list_mpdu_cnt_hist);
+ 			/* HTT_TX_TQM_MAX_LIST_MPDU_CNT_HISTOGRAM_BINS */
+ };
+ 
+@@ -1098,7 +1098,7 @@ struct htt_tx_de_compl_stats_tlv {
+  *                               ENTRIES_PER_BIN_COUNT)
+  */
+ struct htt_tx_de_fw2wbm_ring_full_hist_tlv {
+-	u32 fw2wbm_ring_full_hist[0];
++	DECLARE_FLEX_ARRAY(u32, fw2wbm_ring_full_hist);
+ };
+ 
+ struct htt_tx_de_cmn_stats_tlv {
+@@ -1151,7 +1151,7 @@ struct htt_ring_if_cmn_tlv {
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_sfm_client_user_tlv_v {
+ 	/* Number of DWORDS used per user and per client */
+-	u32 dwords_used_by_user_n[0];
++	DECLARE_FLEX_ARRAY(u32, dwords_used_by_user_n);
+ };
+ 
+ struct htt_sfm_client_tlv {
+@@ -1436,12 +1436,12 @@ struct htt_rx_soc_fw_stats_tlv {
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_rx_soc_fw_refill_ring_empty_tlv_v {
+-	u32 refill_ring_empty_cnt[0]; /* HTT_RX_STATS_REFILL_MAX_RING */
++	DECLARE_FLEX_ARRAY(u32, refill_ring_empty_cnt); /* HTT_RX_STATS_REFILL_MAX_RING */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_rx_soc_fw_refill_ring_num_refill_tlv_v {
+-	u32 refill_ring_num_refill[0]; /* HTT_RX_STATS_REFILL_MAX_RING */
++	DECLARE_FLEX_ARRAY(u32, refill_ring_num_refill); /* HTT_RX_STATS_REFILL_MAX_RING */
+ };
+ 
+ /* RXDMA error code from WBM released packets */
+@@ -1473,7 +1473,7 @@ enum htt_rx_rxdma_error_code_enum {
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_rx_soc_fw_refill_ring_num_rxdma_err_tlv_v {
+-	u32 rxdma_err[0]; /* HTT_RX_RXDMA_MAX_ERR_CODE */
++	DECLARE_FLEX_ARRAY(u32, rxdma_err); /* HTT_RX_RXDMA_MAX_ERR_CODE */
+ };
+ 
+ /* REO error code from WBM released packets */
+@@ -1505,7 +1505,7 @@ enum htt_rx_reo_error_code_enum {
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_rx_soc_fw_refill_ring_num_reo_err_tlv_v {
+-	u32 reo_err[0]; /* HTT_RX_REO_MAX_ERR_CODE */
++	DECLARE_FLEX_ARRAY(u32, reo_err); /* HTT_RX_REO_MAX_ERR_CODE */
+ };
+ 
+ /* == RX PDEV STATS == */
+@@ -1622,13 +1622,13 @@ struct htt_rx_pdev_fw_stats_phy_err_tlv {
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_rx_pdev_fw_ring_mpdu_err_tlv_v {
+ 	/* Num error MPDU for each RxDMA error type  */
+-	u32 fw_ring_mpdu_err[0]; /* HTT_RX_STATS_RXDMA_MAX_ERR */
++	DECLARE_FLEX_ARRAY(u32, fw_ring_mpdu_err); /* HTT_RX_STATS_RXDMA_MAX_ERR */
+ };
+ 
+ /* NOTE: Variable length TLV, use length spec to infer array size */
+ struct htt_rx_pdev_fw_mpdu_drop_tlv_v {
+ 	/* Num MPDU dropped  */
+-	u32 fw_mpdu_drop[0]; /* HTT_RX_STATS_FW_DROP_REASON_MAX */
++	DECLARE_FLEX_ARRAY(u32, fw_mpdu_drop); /* HTT_RX_STATS_FW_DROP_REASON_MAX */
+ };
+ 
+ #define HTT_PDEV_CCA_STATS_TX_FRAME_INFO_PRESENT               (0x1)
+-- 
+2.34.1
 
