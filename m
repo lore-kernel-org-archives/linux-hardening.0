@@ -2,153 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A105C678D5
-	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 05:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF023C678DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  7 Mar 2023 05:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230237AbjCGFIE (ORCPT
+        id S229929AbjCGF1e (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 7 Mar 2023 00:08:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52462 "EHLO
+        Tue, 7 Mar 2023 00:27:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbjCGFID (ORCPT
+        with ESMTP id S229611AbjCGF1d (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 7 Mar 2023 00:08:03 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35B076AD;
-        Mon,  6 Mar 2023 21:07:58 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id kb15so12116810pjb.1;
-        Mon, 06 Mar 2023 21:07:58 -0800 (PST)
+        Tue, 7 Mar 2023 00:27:33 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D927E41B7C;
+        Mon,  6 Mar 2023 21:27:32 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id z11so7332669pfh.4;
+        Mon, 06 Mar 2023 21:27:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678165678;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2cerkYXVbu0URi9ccp6U7ta2fpAAN/38HhqncKXgEBM=;
-        b=jVS7t3pwHdqAgiQzs/Eu5b3JG44b3/JFrhGyZYuNnfhrmRXE1PfSb8CgZpfDdBQdLH
-         1ukxnimSq4CQgqzekXoi5t0rrc4XOXdoTZVCDJFgvv+08bbw8Bn8zDqTjTruvgHLfA+L
-         NFZ68BDs5Gxn8aqy7xpbTkVpwfhPBxyVXUNh2Rx1rKKrBZyhJDYMevKRtFVLg8ddwm5X
-         8UHPMKiFow2EoSLqcU3bCNu9ZVyZliWEUEDBOWSKOmxt4djxOqqjZH4n3J4+hkVlHQov
-         eSAyffmufebu8u7iSamu1b05DYduKq22yrMCXpxkiSxbgaYB4447m9Qjr0QDep/qD3V2
-         2vkQ==
+        d=gmail.com; s=20210112; t=1678166852;
+        h=in-reply-to:references:message-id:date:content-transfer-encoding:to
+         :from:subject:cc:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AlK7Hs19AjyIKqP3f0Dwl6HgKXmloRUX9J0NNF4qZqI=;
+        b=KiEN0lSrI7WdHvK+rnjlsSC8PfIXOqThM5Yhp6on6h/pS31vZIWhH8yTZ2qjPpe5xx
+         UisPU6FWCL9VtMjr0XD0FrVJdu8YtEuykkldNDr+WwhFsP/F2L/Ne7TzEO35zH/95bcJ
+         Dp9+DwQeI8qzAXIIGQ1RvRmUNtswyBa3EbimAMf71e18GzxGYULJFWQslySGV8fQ2Uuo
+         /+TYis8hkk9bNjVuQ0C47MRsNetBokRMxAA40JwP935fdjdtGoody8r/p6wUjtBo6zfK
+         f04A52pp7kPEEgX+t5potcw4pVyMQ6OGAO23JYjSahl4xpQqux4T0WH1z2DpwPPydO8g
+         mgCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678165678;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2cerkYXVbu0URi9ccp6U7ta2fpAAN/38HhqncKXgEBM=;
-        b=tN/TXf1R9e+rdYM4fdB8pxuXbBY4PLvYOKk4vZpvOkn5NE2FswzF6O9bon61r89Ro5
-         Gy2sHAhiimkM6TRXFj/FDdeQE1VogqyQiKh0nPvwTF+pNSnK1xYtGOJzza5WuRBxmVNj
-         UqSTmV2GKPf3UCHCOpA+TS9LLA6FF/tVYR7FVFxBdPzoi31kIkgFzvxIloZ30WkpWhiU
-         gogKNDfIjT9yCZt+Gw59d1HLMqT7goqe8nGySeSW2dovqJkW9KkEKcK7W59BkuGzCHXU
-         jzKRbtimScIkpYYGieAExA4FSL/gB+Cq+n+qby2bfjJnQUehvPxDHacMuGgz3A9Gu4uc
-         DCxQ==
-X-Gm-Message-State: AO0yUKWJsROLxkcBLG26Bmx67jWrhW4eZ4FG3SJn+B1fEiuwiLePE/LO
-        OdSLK5w4u64SP8aOx6xvrKU=
-X-Google-Smtp-Source: AK7set9NP9z/POyu5+TRI/IlQrppY7U7cLGZI1NUtpVypi/csY/TTejBi6pizXd8hkgDvyO55PA4Jg==
-X-Received: by 2002:a17:902:c407:b0:19e:21d0:5b90 with SMTP id k7-20020a170902c40700b0019e21d05b90mr19936752plk.4.1678165678155;
-        Mon, 06 Mar 2023 21:07:58 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678166852;
+        h=in-reply-to:references:message-id:date:content-transfer-encoding:to
+         :from:subject:cc:mime-version:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AlK7Hs19AjyIKqP3f0Dwl6HgKXmloRUX9J0NNF4qZqI=;
+        b=EpK8gmKG8tQDoUSA7J3nuHT5376ewZQG9ZRcfLzncPQLvpwyk2NXY+rtHhWq7z84Dn
+         D+flSu5QkAeGpbQVU7ftWpOW5wBCpJinrnKb3Y4oGDfrBIdsVtC175D4SnmofQAKsAkK
+         SHAYTvyADwY9gUjyGaZDhJ5YlJS+2odEadsfmbLOHCRg2CNtyiY1JVik/f42KEIaGm+Z
+         pTktY4WR+UhGvmRiH3Ka2wbYB23rvDx1bMdJJw8s+DvrGYVmsB4jcyZo26T+wNePqciT
+         SnD4ixKgNzkGvb10evlc3jXS1gAJCHUbqUGFfPNGeCmVY6cwOOvJWr0xL0uwvfKjwxuk
+         y+nw==
+X-Gm-Message-State: AO0yUKX92pF28O47XCDIKIQMr2pMHinmeL2f0HAhhfaFBkuMCMs+ooGc
+        17Nm1BLD9pU/tz1SdefWmRc=
+X-Google-Smtp-Source: AK7set+9FsF4BJMmdn0oPnSFIvoRnnZoR2gOxBSb5vcLt0/zI12PgdR5eqnOvR8okCGeDSq2c4ccgw==
+X-Received: by 2002:a62:5401:0:b0:5e2:da34:4aaf with SMTP id i1-20020a625401000000b005e2da344aafmr10320547pfb.4.1678166852291;
+        Mon, 06 Mar 2023 21:27:32 -0800 (PST)
 Received: from localhost ([203.220.77.23])
-        by smtp.gmail.com with ESMTPSA id a8-20020a170902900800b0019a70a42b0asm7542949plp.169.2023.03.06.21.07.55
+        by smtp.gmail.com with ESMTPSA id q18-20020a62e112000000b005a8de0f4c64sm7137152pfh.82.2023.03.06.21.27.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Mar 2023 21:07:57 -0800 (PST)
+        Mon, 06 Mar 2023 21:27:31 -0800 (PST)
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 07 Mar 2023 15:07:52 +1000
-Message-Id: <CQZW2Z6JU55U.2M24IU59IQZ4D@bobo>
-To:     "Benjamin Gray" <bgray@linux.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>
 Cc:     <ajd@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>, <cmr@bluescreens.de>
-Subject: Re: [RFC PATCH 05/13] prctl: Define PowerPC DEXCR interface
+Subject: Re: [RFC PATCH 06/13] powerpc/dexcr: Add prctl implementation
 From:   "Nicholas Piggin" <npiggin@gmail.com>
+To:     "Benjamin Gray" <bgray@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 07 Mar 2023 15:12:57 +1000
+Message-Id: <CQZW6V070YIU.3Q6OJGKRPH3KY@bobo>
 X-Mailer: aerc 0.13.0
 References: <20221128024458.46121-1-bgray@linux.ibm.com>
- <20221128024458.46121-6-bgray@linux.ibm.com>
-In-Reply-To: <20221128024458.46121-6-bgray@linux.ibm.com>
+ <20221128024458.46121-7-bgray@linux.ibm.com>
+In-Reply-To: <20221128024458.46121-7-bgray@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 On Mon Nov 28, 2022 at 12:44 PM AEST, Benjamin Gray wrote:
-> Adds the definitions and generic handler for prctl control of the
-> PowerPC Dynamic Execution Control Register (DEXCR).
+> Adds an initial prctl interface implementation. Unprivileged processes
+> can query the current prctl setting, including whether an aspect is
+> implemented by the hardware or is permitted to be modified by a setter
+> prctl. Editable aspects can be changed by a CAP_SYS_ADMIN privileged
+> process.
+>
+> The prctl setting represents what the process itself has requested, and
+> does not account for any overrides. Either the kernel or a hypervisor
+> may enforce a different setting for an aspect.
+>
+> Userspace can access a readonly view of the current DEXCR via SPR 812,
+> and a readonly view of the aspects enforced by the hypervisor via
+> SPR 455. A bitwise OR of these two SPRs will give the effective
+> DEXCR aspect state of the process.
 
-Assuming we'd go with the later prctl patches, this prep patch
-is nice way to split out some of the mechanism.
+You said (offline) that you were looking at the PR_SPEC_* speculation
+control APIs but that this was different enough that you needed a
+different one.
 
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+It would be good to know what some of those issues were in the
+changelog, would be nice to have some docs (could we add something
+to spec_ctrl.rst maybe?). I assume at least one difference is that
+some of our bits are not speculative but architectural (e.g., the
+stack hash check).
+
+I also wonder if we could implement some of the PR_SPEC controls
+APIs by mapping relevant DEXCR aspects to them instead of (or as well
+as) the DEXCR controls? Or would the PR_SPEC users be amenable to
+extensions that make our usage fit a bit better?
+
+I'm just thinking if we can reduce reliance on arch specific APIs a
+bit would be nice.
 
 >
 > Signed-off-by: Benjamin Gray <bgray@linux.ibm.com>
 > ---
->  include/uapi/linux/prctl.h | 14 ++++++++++++++
->  kernel/sys.c               | 16 ++++++++++++++++
->  2 files changed, 30 insertions(+)
+>  arch/powerpc/include/asm/processor.h |  13 +++
+>  arch/powerpc/kernel/dexcr.c          | 133 ++++++++++++++++++++++++++-
+>  arch/powerpc/kernel/process.c        |   6 ++
+>  3 files changed, 151 insertions(+), 1 deletion(-)
 >
-> diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-> index a5e06dcbba13..b4720e8de6f3 100644
-> --- a/include/uapi/linux/prctl.h
-> +++ b/include/uapi/linux/prctl.h
-> @@ -281,6 +281,20 @@ struct prctl_mm_map {
->  # define PR_SME_VL_LEN_MASK		0xffff
->  # define PR_SME_VL_INHERIT		(1 << 17) /* inherit across exec */
-> =20
-> +/* PowerPC Dynamic Execution Control Register (DEXCR) controls */
-> +#define PR_PPC_GET_DEXCR		65
-> +#define PR_PPC_SET_DEXCR		66
-> +/* DEXCR aspect to act on */
-> +# define PR_PPC_DEXCR_SBHE		0 /* Speculative branch hint enable */
-> +# define PR_PPC_DEXCR_IBRTPD		1 /* Indirect branch recurrent target pred=
-iction disable */
-> +# define PR_PPC_DEXCR_SRAPD		2 /* Subroutine return address prediction d=
-isable */
-> +# define PR_PPC_DEXCR_NPHIE		3 /* Non-privileged hash instruction enable=
- */
-> +/* Action to apply / return */
-> +# define PR_PPC_DEXCR_PRCTL		(1 << 0)
-> +# define PR_PPC_DEXCR_SET_ASPECT	(1 << 1)
-> +# define PR_PPC_DEXCR_FORCE_SET_ASPECT	(1 << 2)
-> +# define PR_PPC_DEXCR_CLEAR_ASPECT	(1 << 3)
-> +
->  #define PR_SET_VMA		0x53564d41
->  # define PR_SET_VMA_ANON_NAME		0
-> =20
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index 5fd54bf0e886..55b8f7369059 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -139,6 +139,12 @@
->  #ifndef GET_TAGGED_ADDR_CTRL
->  # define GET_TAGGED_ADDR_CTRL()		(-EINVAL)
->  #endif
-> +#ifndef PPC_GET_DEXCR_ASPECT
-> +# define PPC_GET_DEXCR_ASPECT(a, b)	(-EINVAL)
-> +#endif
-> +#ifndef PPC_SET_DEXCR_ASPECT
-> +# define PPC_SET_DEXCR_ASPECT(a, b, c)	(-EINVAL)
-> +#endif
-> =20
->  /*
->   * this is where the system-wide overflow UID and GID are defined, for
-> @@ -2623,6 +2629,16 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long,=
- arg2, unsigned long, arg3,
->  		error =3D sched_core_share_pid(arg2, arg3, arg4, arg5);
->  		break;
->  #endif
-> +	case PR_PPC_GET_DEXCR:
-> +		if (arg3 || arg4 || arg5)
-> +			return -EINVAL;
-> +		error =3D PPC_GET_DEXCR_ASPECT(me, arg2);
-> +		break;
-> +	case PR_PPC_SET_DEXCR:
-> +		if (arg4 || arg5)
-> +			return -EINVAL;
-> +		error =3D PPC_SET_DEXCR_ASPECT(me, arg2, arg3);
-> +		break;
->  	case PR_SET_VMA:
->  		error =3D prctl_set_vma(arg2, arg3, arg4, arg5);
->  		break;
-> --=20
-> 2.38.1
+> diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/=
+asm/processor.h
+> index 2381217c95dc..4c995258f668 100644
+> --- a/arch/powerpc/include/asm/processor.h
+> +++ b/arch/powerpc/include/asm/processor.h
+> @@ -265,6 +265,9 @@ struct thread_struct {
+>  	unsigned long   sier2;
+>  	unsigned long   sier3;
+>  	unsigned long	hashkeyr;
+> +	unsigned int	dexcr_override;
+> +	unsigned int	dexcr_mask;
 
+Hmm, what's the mask doing here? It only gets bits set and never
+cleared AFAIKS. What is different between an initial state and a
+SET then CLEAR state?
+
+Thanks,
+Nick
