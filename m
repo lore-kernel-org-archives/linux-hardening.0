@@ -2,111 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 433C5C6FD1E
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Mar 2023 15:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A72C9C64EC4
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Mar 2023 16:06:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230431AbjCHP1L (ORCPT
+        id S232403AbjCHQG4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Mar 2023 10:27:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42764 "EHLO
+        Wed, 8 Mar 2023 11:06:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231843AbjCHP1K (ORCPT
+        with ESMTP id S232155AbjCHQGe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Mar 2023 10:27:10 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC82C5616
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Mar 2023 07:27:07 -0800 (PST)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 7F4081FE47;
-        Wed,  8 Mar 2023 15:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1678289226; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZGjH5COgVdP8437ejGbqbCLhP6qbEkoX1bMEbmXg6s8=;
-        b=ZYmQz5nlHTN0xS9mbciT79+soTvuQE30ot9nFoBK+YhirN7CQ6VlyRudO0INMDTd4jsPr2
-        AUHH4gdGUc9qeSydyeYaWujgN1rPllpTHCRwTPCTcNzj3nIp4jQ6AwZXyVzUzTQcdB92XS
-        4vvChGrt0yR5g9dGPq0EXpRXmzm59zI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1678289226;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZGjH5COgVdP8437ejGbqbCLhP6qbEkoX1bMEbmXg6s8=;
-        b=Z3HWQqX4PISkUhZTkMUt+ftG9Z2fQfTBHHQMt8QOmAXIJqJcWliSQR0gTzEe1vWIiUUFWW
-        mxjCE658vsJgLIAA==
-Received: from kitsune.suse.cz (kitsune.suse.cz [10.100.12.127])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id DADEE2C141;
-        Wed,  8 Mar 2023 15:27:03 +0000 (UTC)
-Date:   Wed, 8 Mar 2023 16:27:02 +0100
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        ajd@linux.ibm.com, anshuman.khandual@arm.com, npiggin@gmail.com,
-        linux-hardening@vger.kernel.org, aneesh.kumar@linux.ibm.com,
-        nicholas@linux.ibm.com
-Subject: Re: [PATCH v4 1/2] powerpc/mm: Support execute-only memory on the
- Radix MMU
-Message-ID: <20230308152702.GR19419@kitsune.suse.cz>
-References: <20220817050640.406017-1-ruscur@russell.cc>
- <166195163958.45984.15308325694886524412.b4-ty@ellerman.id.au>
+        Wed, 8 Mar 2023 11:06:34 -0500
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F20C460AC;
+        Wed,  8 Mar 2023 08:05:22 -0800 (PST)
+Received: from mail.ispras.ru (unknown [83.149.199.84])
+        by mail.ispras.ru (Postfix) with ESMTPSA id A2D2C44C1022;
+        Wed,  8 Mar 2023 16:05:18 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru A2D2C44C1022
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+        s=default; t=1678291518;
+        bh=Wnrv20x1Jmhl55a1g3nJS1uM99ls4YYXhgmxoQUqOAc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rioA+8DN1vkplbfxKnFZwMvuUxXCiOKmoYs0CdjYFfppkC24ZepCfxDqy7K6gqQKF
+         9iogjZQy4IgEXxuW4iB+PF7cRW2FSRccYG3nZijtgl9+Z6bycyLqf+sOGSZuxa3+QI
+         aUto010DVvtaKIT4X8E4zanpULrIMpemQbxxDaqc=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <166195163958.45984.15308325694886524412.b4-ty@ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Date:   Wed, 08 Mar 2023 19:05:18 +0300
+From:   Evgeniy Baskov <baskov@ispras.ru>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Peter Jones <pjones@redhat.com>,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
+        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v4 07/26] x86/build: Check W^X of vmlinux during build
+In-Reply-To: <CAMj1kXEMk1mLiwUuUTH4V1ro93MmBnwPnPMzJfSG+eH5ts8j3g@mail.gmail.com>
+References: <cover.1671098103.git.baskov@ispras.ru>
+ <3ca525852ce14a8e04949ff115cb6ec28c8f120b.1671098103.git.baskov@ispras.ru>
+ <CAMj1kXEMk1mLiwUuUTH4V1ro93MmBnwPnPMzJfSG+eH5ts8j3g@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.4
+Message-ID: <acdc9a8dc7ea944f25eb7c50aed94c1a@ispras.ru>
+X-Sender: baskov@ispras.ru
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello,
-
-On Wed, Aug 31, 2022 at 11:13:59PM +1000, Michael Ellerman wrote:
-> On Wed, 17 Aug 2022 15:06:39 +1000, Russell Currey wrote:
-> > Add support for execute-only memory (XOM) for the Radix MMU by using an
-> > execute-only mapping, as opposed to the RX mapping used by powerpc's
-> > other MMUs.
-> > 
-> > The Hash MMU already supports XOM through the execute-only pkey,
-> > which is a separate mechanism shared with x86.  A PROT_EXEC-only mapping
-> > will map to RX, and then the pkey will be applied on top of it.
-> > 
-> > [...]
+On 2023-03-08 12:34, Ard Biesheuvel wrote:
+> On Thu, 15 Dec 2022 at 13:38, Evgeniy Baskov <baskov@ispras.ru> wrote:
+>> 
+>> Check if there are simultaneously writable and executable
+>> program segments in vmlinux ELF image and fail build if there are any.
+>> 
+>> This would prevent accidental introduction of RWX segments.
+>> 
+>> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Tested-by: Peter Jones <pjones@redhat.com>
+>> Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
+>> ---
+>>  arch/x86/boot/compressed/Makefile | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>> 
+>> diff --git a/arch/x86/boot/compressed/Makefile 
+>> b/arch/x86/boot/compressed/Makefile
+>> index 1acff356d97a..4dcab38f5a38 100644
+>> --- a/arch/x86/boot/compressed/Makefile
+>> +++ b/arch/x86/boot/compressed/Makefile
+>> @@ -112,11 +112,17 @@ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+>>  vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+>>  vmlinux-objs-$(CONFIG_EFI_STUB) += 
+>> $(objtree)/drivers/firmware/efi/libstub/lib.a
+>> 
+>> +quiet_cmd_wx_check = WXCHK   $<
+>> +cmd_wx_check = if $(OBJDUMP) -p $< | grep "flags .wx" > /dev/null; \
+>> +              then (echo >&2 "$<: Simultaneously writable and 
+>> executable sections are prohibited"; \
+>> +                    /bin/false); fi
+>> +
+>>  $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+>>         $(call if_changed,ld)
+>> 
+>>  OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+>>  $(obj)/vmlinux.bin: vmlinux FORCE
+>> +       $(call cmd,wx_check)
 > 
-> Applied to powerpc/next.
+> This breaks the way we track dependencies between make targets: the
+> FORCE will result in the check being performed every time, even if
+> nothing gets rebuilt.
 > 
-> [1/2] powerpc/mm: Support execute-only memory on the Radix MMU
->       https://git.kernel.org/powerpc/c/395cac7752b905318ae454a8b859d4c190485510
+> Better to do something like the below (apologies for the alphabet soup)
+> 
+> 
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -112,18 +112,17 @@ vmlinux-objs-$(CONFIG_EFI) += $(obj)/efi.o
+>  vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_mixed.o
+>  vmlinux-objs-$(CONFIG_EFI_STUB) +=
+> $(objtree)/drivers/firmware/efi/libstub/lib.a
+> 
+> -quiet_cmd_wx_check = WXCHK   $<
+> -cmd_wx_check = if $(OBJDUMP) -p $< | grep "flags .wx" > /dev/null; \
+> -              then (echo >&2 "$<: Simultaneously writable and
+> executable sections are prohibited"; \
+> -                    /bin/false); fi
+> +quiet_cmd_objcopy_and_wx_check = $(quiet_cmd_objcopy)
+> +      cmd_objcopy_and_wx_check = if $(OBJDUMP) -p $< | grep "flags
+> .wx" > /dev/null; then \
+> +                                       (echo >&2 "$<: Simultaneously
+> writable and executable sections are prohibited"; \
+> +                                       /bin/false); else 
+> $(cmd_objcopy); fi
+> 
+>  $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+>         $(call if_changed,ld)
+> 
+>  OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+>  $(obj)/vmlinux.bin: vmlinux FORCE
+> -       $(call cmd,wx_check)
+> -       $(call if_changed,objcopy)
+> +       $(call if_changed,objcopy_and_wx_check)
 
-This breaks libaio tests (on POWER9 hash PowerVM):
-https://pagure.io/libaio/blob/master/f/harness/cases/5.t#_43
-
-cases/5.p
-expect   512: (w), res =   512 [Success]
-expect   512: (r), res =   512 [Success]
-expect   512: (r), res =   512 [Success]
-expect   512: (w), res =   512 [Success]
-expect   512: (w), res =   512 [Success]
-expect   -14: (r), res =   -14 [Bad address]
-expect   512: (r), res =   512 [Success]
-expect   512: (w), res =   512 [Success]
-test cases/5.t completed PASSED.
-
-cases/5.p
-expect   512: (w), res =   512 [Success]
-expect   512: (r), res =   512 [Success]
-expect   512: (r), res =   512 [Success]
-expect   512: (w), res =   512 [Success]
-expect   512: (w), res =   512 [Success]
-expect   -14: (r), res =   -14 [Bad address]
-expect   512: (r), res =   512 [Success]
-expect   -14: (w), res =   512 [Success] -- FAILED
-test cases/5.t completed FAILED.
-
-Can you have a look if that test assumption is OK?
-
-Thanks
-
-Michal
+Thank you for suggestion! I will fix it.
