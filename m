@@ -2,110 +2,110 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABABCC64EC4
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Mar 2023 10:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F533C64EC4
+	for <linux-hardening@archiver.kernel.org>; Wed,  8 Mar 2023 11:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230466AbjCHKrq (ORCPT
+        id S231310AbjCHLCD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Mar 2023 05:47:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42500 "EHLO
+        Wed, 8 Mar 2023 06:02:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjCHKrj (ORCPT
+        with ESMTP id S231290AbjCHLBz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Mar 2023 05:47:39 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D567A5F6E4;
-        Wed,  8 Mar 2023 02:47:36 -0800 (PST)
+        Wed, 8 Mar 2023 06:01:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6EDB4201;
+        Wed,  8 Mar 2023 03:01:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6139CB81B29;
-        Wed,  8 Mar 2023 10:47:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 286B3C433EF;
-        Wed,  8 Mar 2023 10:47:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CEDE861760;
+        Wed,  8 Mar 2023 11:01:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 311E2C433D2;
+        Wed,  8 Mar 2023 11:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678272454;
-        bh=vah1HKDBJppZCaU2t+guMzVDffwctWHUIjYOBY1sVNk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RGBQDLQ5ZCr4+kRitfXk/qnrEk20jryY3RogODYnKM2j58Dug8KO+Mw7lYF8Ilukz
-         K7OO1nFwqMcdoOsxDdECYygp7kmq3LG2YQqBK8RDhZXOs7RKEJQiHQo4hpe5ZosYL/
-         huGd935oP7r4AywCT79OAIVtQ+vfa/0Dp5Nl6f9w3v+QpmOXtuimNJvJ4TatL3efgS
-         sQNjP4xIGCU90xpgz4jtTdyj1L9v6zBdBn3iehb8GPKcWs7YOj6NiOrFl/gjjGGsgs
-         17x4j9Dkr1DapdH6tJCFcO9x3r5IwCsVaF89v+SIToOHcI+cT12zp9b9BHN8I8pxwo
-         RDdYozzKS488g==
-Received: by mail-lj1-f177.google.com with SMTP id t14so16107817ljd.5;
-        Wed, 08 Mar 2023 02:47:34 -0800 (PST)
-X-Gm-Message-State: AO0yUKX9XXJszNak45DyAb+wWP6SmMfl612g4rwOqrSLKJ2fd5rvMn+m
-        fLMFwsbJCtXRCTfMddj7WqbY6T6gmujXF7hLiCU=
-X-Google-Smtp-Source: AK7set+LDFxTNqmWQ/j2CsKSjRJ2Sw1MqBSEQ6/z8ex3z4eJ2/cmts3ofUKx6SeQkqaMH5VT+LJ6YoLqSNhHqGWFY4M=
-X-Received: by 2002:a05:651c:169a:b0:28e:d4ae:90ab with SMTP id
- bd26-20020a05651c169a00b0028ed4ae90abmr5303546ljb.2.1678272452210; Wed, 08
- Mar 2023 02:47:32 -0800 (PST)
+        s=k20201202; t=1678273313;
+        bh=tS9tmSwCiCb5Gj7uPqDRGFFYeZ7A5dLeyFKgap0zzuU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CMfX0sW3iJt8hkidpnTtasIdXfvgQhFiwmwRvHf+AEvlcP53j0zEeGcQVYUDbbJDc
+         tH94Qov0LYPeIrgbvpO87XFD4j+JOppbuvHymSaFYdUzMqEW89yS0Cj2amM5ZVfErV
+         P7k60e0NKUq+DjoWBau93zKM/bPTL8Qw69BTuqp/MWDZDbJqlc/sHS25ze1FvWuE9H
+         ylhqpg2oX6F02fcIMF7AzoQwG8TZcEeRp8E8T0PIUB5nZKmWjXgKMDfW1zlPyjWqOw
+         Z/GwZallNZxsL3JpkGzPwwXF1Dfs1yf11qQVH9Ns33ZrkYBk1TeL/DLG2ELezbcnjT
+         ySnFnjBbCvAkg==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1pZrZ9-0005wP-1P; Wed, 08 Mar 2023 12:02:39 +0100
+Date:   Wed, 8 Mar 2023 12:02:39 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc:     Lux Aliaga <they@mint.lgbt>, agross@kernel.org,
+        andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
+        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, ~postmarketos/upstreaming@lists.sr.ht,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
+        phone-devel@vger.kernel.org, martin.botka@somainline.org,
+        marijn.suijten@somainline.org
+Subject: Re: [PATCH v7 3/6] phy: qcom-qmp: Add SM6125 UFS PHY support
+Message-ID: <ZAhrT1ICTQjfdeGq@hovoldconsulting.com>
+References: <20230306170817.3806-1-they@mint.lgbt>
+ <20230306170817.3806-4-they@mint.lgbt>
+ <25c17af5-8f6b-a2c3-dab3-f9bc69711db7@linaro.org>
 MIME-Version: 1.0
-References: <cover.1671098103.git.baskov@ispras.ru> <63ea4796323a734c061ad774a68c88a47f5669a4.1671098103.git.baskov@ispras.ru>
-In-Reply-To: <63ea4796323a734c061ad774a68c88a47f5669a4.1671098103.git.baskov@ispras.ru>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 8 Mar 2023 11:47:20 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFjQemVpHph2K+ysNO44uH3E7mjfc0o+JPV+gzi+mtoZA@mail.gmail.com>
-Message-ID: <CAMj1kXFjQemVpHph2K+ysNO44uH3E7mjfc0o+JPV+gzi+mtoZA@mail.gmail.com>
-Subject: Re: [PATCH v4 06/26] x86/boot: Setup memory protection for bzImage code
-To:     Evgeniy Baskov <baskov@ispras.ru>
-Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Peter Jones <pjones@redhat.com>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <25c17af5-8f6b-a2c3-dab3-f9bc69711db7@linaro.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 15 Dec 2022 at 13:38, Evgeniy Baskov <baskov@ispras.ru> wrote:
->
-> Use previously added code to use 4KB pages for mapping. Map compressed
-> and uncompressed kernel with appropriate memory protection attributes.
-> For compressed kernel set them up manually. For uncompressed kernel
-> used flags specified in ELF header.
->
-> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
-> Tested-by: Peter Jones <pjones@redhat.com>
-> Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
->
+On Wed, Mar 08, 2023 at 11:09:48AM +0100, Konrad Dybcio wrote:
+> 
+> 
+> On 6.03.2023 18:08, Lux Aliaga wrote:
+> > The SM6125 UFS PHY is compatible with the one from SM6115. Add a
+> > compatible for it and modify the config from SM6115 to make them
+> > compatible with the SC8280XP binding
+> > 
+> > Signed-off-by: Lux Aliaga <they@mint.lgbt>
+> > Reviewed-by: Martin Botka <martin.botka@somainline.org>
+> > ---
+> >  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> > index 318eea35b972..44c29fdfc551 100644
+> > --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> > @@ -620,6 +620,13 @@ static const char * const qmp_phy_vreg_l[] = {
+> >  	"vdda-phy", "vdda-pll",
+> >  };
+> >  
+> > +static const struct qmp_ufs_offsets qmp_ufs_offsets_v3_660 = {
+> > +	.serdes		= 0,
+> > +	.pcs		= 0xc00,
+> > +	.tx		= 0x400,
+> > +	.rx		= 0x600,
+> > +};
+> > +
+> >  static const struct qmp_ufs_offsets qmp_ufs_offsets_v5 = {
+> >  	.serdes		= 0,
+> >  	.pcs		= 0xc00,
+> > @@ -693,6 +700,8 @@ static const struct qmp_phy_cfg sdm845_ufsphy_cfg = {
+> >  static const struct qmp_phy_cfg sm6115_ufsphy_cfg = {
+> >  	.lanes			= 1,
+> >  
+> > +	.offsets		= &qmp_ufs_offsets_v3_660,
+> Will this not trigger OOB r/w for the users of qcom,sm6115-smp-ufs-phy
+> which specify the regions separately (old binding style)?
 
-This patch breaks the 'nokaslr' command line option (at least with
-SeaBIOS) unless I apply the hunk below:
+No, that should work fine.
 
+But looks like this series needs to be rebased on 6.3-rc1 as these
+offsets are now already set in mainline.
 
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -329,7 +329,8 @@ static size_t parse_elf(void *output, unsigned
-long output_len,
-
-        handle_relocations(output, output_len, virt_addr);
-
--       if (!IS_ENABLED(CONFIG_RANDOMIZE_BASE))
-+       if (!IS_ENABLED(CONFIG_RANDOMIZE_BASE) ||
-+           cmdline_find_option_bool("nokaslr"))
-                goto skip_protect;
-
-        for (i = 0; i < ehdr.e_phnum; i++) {
-@@ -481,8 +482,10 @@ asmlinkage __visible void *extract_kernel(void
-*rmode, memptr heap,
-         * If KASLR is disabled input and output regions may overlap.
-         * In this case we need to map region excutable as well.
-         */
--       unsigned long map_flags = MAP_ALLOC | MAP_WRITE |
--                       (IS_ENABLED(CONFIG_RANDOMIZE_BASE) ? 0 : MAP_EXEC);
-+       unsigned long map_flags = MAP_ALLOC | MAP_WRITE;
-+       if (!IS_ENABLED(CONFIG_RANDOMIZE_BASE) ||
-+           cmdline_find_option_bool("nokaslr"))
-+               map_flags |= MAP_EXEC;
-        phys_addr = kernel_add_identity_map(phys_addr,
-                                            phys_addr + needed_size,
-                                            map_flags);
+Johan
