@@ -2,136 +2,173 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C63BC678D5
-	for <linux-hardening@archiver.kernel.org>; Wed,  8 Mar 2023 20:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D36C678D5
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Mar 2023 00:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230401AbjCHUu3 (ORCPT
+        id S229835AbjCIAQN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Mar 2023 15:50:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53052 "EHLO
+        Wed, 8 Mar 2023 19:16:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230385AbjCHUu2 (ORCPT
+        with ESMTP id S229657AbjCIAQL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Mar 2023 15:50:28 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 568C6867E5
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Mar 2023 12:50:25 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id j11so22912610lfg.13
-        for <linux-hardening@vger.kernel.org>; Wed, 08 Mar 2023 12:50:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678308623;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nYwLVEVSE2EPrgo1n3Ngcv+XtjRTRaLWqRbbxXSD/xk=;
-        b=mF3UAgvW9FF5NIOI22wReRQfggzTMJgofFBBwKGOrmg5LAczUktEc2NObfd9ME/gd8
-         76H2hBMj8VllegtTHYxUFxA3HNICN4w0HWvFBarUbPx9jihnOlT5jdq5a3bmmC5FefAj
-         RhYSrkwmqjQJuThodWT/tgeQqD048TLpdu7HWCbuyWMHNA09CVrc6yl++BSIZ6K6FqZO
-         88hd9tUo8kBN0tsNPorNeLdqOY9p7XAXTlZEYU3xDjBQjwtucgmbqt5GNwQZy4wo8nud
-         VtOSgdaWV/qPvXDZ03R+FPoFNyDQzWCS2phJJMf8TEqZwhUzeQSeVxdBwEx+kZUhzuM2
-         Tzvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678308623;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nYwLVEVSE2EPrgo1n3Ngcv+XtjRTRaLWqRbbxXSD/xk=;
-        b=57melHJTxFqrPh1F1Wg3JN6x0Wc5uCp8yHBXbkC8xQw4ycD52H5G2tsxWc5zJwkfSd
-         O2BqSz4wxKQCl1LspMAN6D68yE83JoQK/bQipQe3icJChnLAOJKHhnqD4P2el+vCSjS7
-         KQvcMq8aSumO1PzjUsfN0kioU+2qKJHxzEhQ4vtUwdHTETKsGh1Tm7asins8CWV+rH5I
-         R4ccRDy7Otf8CCSufEhZVZViqIPFrFmNHN9z1mcKg2jsqgfEv0rephP6X7JJIfH19yd1
-         wn+6wds2Q5P317rtx18nR2o9uw/PlG7rBlEm2tBS7aY0FhrvT641k08aVbbNGjXsMCyL
-         oc8w==
-X-Gm-Message-State: AO0yUKWXVHB+UeqO1HpUG4AO7mxGiH6RRr3UIXOD47piOAtmqGfb5+BH
-        Cu3r0w0Er5rOt4pqBfxKQKT4AA==
-X-Google-Smtp-Source: AK7set9UKMCiINw0hFDIUgHmTG4rK1PxVHXXhak5Qc5uybqo3hZizJSkZ9eh9Krp8wzZcpbaW6cxtQ==
-X-Received: by 2002:ac2:5630:0:b0:4db:384c:bb8 with SMTP id b16-20020ac25630000000b004db384c0bb8mr4868721lff.69.1678308623589;
-        Wed, 08 Mar 2023 12:50:23 -0800 (PST)
-Received: from [192.168.1.101] (abyj16.neoplus.adsl.tpnet.pl. [83.9.29.16])
-        by smtp.gmail.com with ESMTPSA id h3-20020ac25963000000b004cc8698c3f4sm2423472lfp.156.2023.03.08.12.50.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 Mar 2023 12:50:23 -0800 (PST)
-Message-ID: <88bd0152-8b53-5ae2-bb16-5060419ca580@linaro.org>
-Date:   Wed, 8 Mar 2023 21:50:21 +0100
+        Wed, 8 Mar 2023 19:16:11 -0500
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149E493E23
+        for <linux-hardening@vger.kernel.org>; Wed,  8 Mar 2023 16:16:08 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 0E83032000CC;
+        Wed,  8 Mar 2023 19:05:07 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 08 Mar 2023 19:05:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
+        1678320307; x=1678406707; bh=4iyVJ4N7edbrxfcyvsdNPy42ln5kQX3T6aR
+        UhzsWpqU=; b=eeX5oeIzi6BzR/+nDKOGJmPkapLWMEVwfO/hNm9/4Rdk0WXMTsZ
+        Y3GBivYrvL8HxXGZayJQCGPW4oZP81yRdpo/hnOaAWQEjLMa7/uXXasxJu5NRVTT
+        ww9fraptjbh1Lilv59g6rmJiTqXI95HV/FVEuUn7OO9EpsAcHLr3/p8tKs0+nqIc
+        TL/Bru6q3r0Z/WSfx27KQPO4MoN1TXyNJZFwO2F1jZtUFX95J1Re9oBOyyFbeKjU
+        BCNoxExzLKK8UVfwaxIXE/C+fYU13lgkHvSb645EkGLEJLQQbUb1XLtm3OIrGhq/
+        DQvUCJ0++6xrn7CjUbevAsPmQQgPB1UAz+Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1678320307; x=1678406707; bh=4iyVJ4N7edbrxfcyvsdNPy42ln5kQX3T6aR
+        UhzsWpqU=; b=rcLheJYaKEPd31MtqYaWxQbQQ1ocXlUYYbA3I97S+lOSg9XXvMi
+        FvKZNGAqTsdWzR2rZ8W4jYSTtqngk068T2fvtEEiglLZVMvq9MQAvlRGncl3337E
+        grd07qJB+js0BSYW1H18mE4/m5Ak7vs8V0RHitp1hM2FFeZnCWIMBAtuJVWCxx/L
+        5CORt9IS/8vVdomSF8rsKihif942qdlVm2RGISggjhwznuZLCprIpZApzoEHZa4G
+        Xr3+f+af5Cguuot80PVGVQQD1Xwptd7cDbtkhZKJ2wfU+F2+ykfzSJyNW0d0EaUy
+        lmwW3MhL0FAJgWzegum4nwgDkzkg0VNPqQg==
+X-ME-Sender: <xms:siIJZOWuD0gsNp28rY5Fkags5opUv38yWitbMIY0_vE1VA5KPbjZdA>
+    <xme:siIJZKlR4d5iy-GL3oX5iiZyQtQiDJb50iAccSGt9w_M40fLt52IN2x5w-kESOEdm
+    aJMW6zY2Va43XUtLw>
+X-ME-Received: <xmr:siIJZCbzeSJzzTMgFn1ALPA04zCGFT1d8kn9eGu-vkDlxljfTHQX0Qyxpcqz3WbXIhLRxjuhwy-MBVEOIF4WowTGysqAOV-WzGFjLo4RYb-AUA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddugedgudehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    gfrhhlucfvnfffucdluddtmdenucfjughrpefkuffhvfevffgjfhgtgfgfggesthhqredt
+    tderjeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruh
+    hsshgvlhhlrdgttgeqnecuggftrfgrthhtvghrnhepgfetvdffkedtueejgeduteehtddu
+    vefhveevudffgfejueehuedvtdeguddvfeegnecuffhomhgrihhnpehkvghrnhgvlhdroh
+    hrghdpphgrghhurhgvrdhiohenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehruhhstghurhesrhhushhsvghllhdrtggt
+X-ME-Proxy: <xmx:siIJZFUXTJ7nG2NqzrppI9H37okEY8PQ18S0B7hliOktMsjbItCQqg>
+    <xmx:siIJZIkR_Dd4J39WNO4Tqj9zIRuq2lHxT9HGEv7oTSw80gjCu3zGlQ>
+    <xmx:siIJZKcpR8f6kMupsttzxqkxjK5dfDTBuKqNosL5B0anlrKoTY1G2Q>
+    <xmx:syIJZC7xw1nTZ2mzPLm48YI-KbuGNpzmZhwiIW3G3BDS8aTxC7xbWg>
+Feedback-ID: i4421424f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 8 Mar 2023 19:05:03 -0500 (EST)
+Message-ID: <942163490c9cb552d93bec6ed89d7617056c6d35.camel@russell.cc>
+Subject: Re: [PATCH v4 1/2] powerpc/mm: Support execute-only memory on the
+ Radix MMU
+From:   Russell Currey <ruscur@russell.cc>
+To:     Michal =?ISO-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
+        Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, ajd@linux.ibm.com,
+        anshuman.khandual@arm.com, npiggin@gmail.com,
+        linux-hardening@vger.kernel.org, aneesh.kumar@linux.ibm.com,
+        nicholas@linux.ibm.com, bgray@linux.ibm.com
+Date:   Thu, 09 Mar 2023 11:05:00 +1100
+In-Reply-To: <20230308152702.GR19419@kitsune.suse.cz>
+References: <20220817050640.406017-1-ruscur@russell.cc>
+         <166195163958.45984.15308325694886524412.b4-ty@ellerman.id.au>
+         <20230308152702.GR19419@kitsune.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [RFC PATCH 3/6] soc: qcom: Add Qualcomm minidump kernel driver
-Content-Language: en-US
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, catalin.marinas@arm.com, will@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
- <1676978713-7394-4-git-send-email-quic_mojha@quicinc.com>
- <00b37174-f19e-ce59-b520-304891f6e2ef@linaro.org>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <00b37174-f19e-ce59-b520-304891f6e2ef@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Wed, 2023-03-08 at 16:27 +0100, Michal Such=C3=A1nek wrote:
+> Hello,
+>=20
+> On Wed, Aug 31, 2022 at 11:13:59PM +1000, Michael Ellerman wrote:
+> > On Wed, 17 Aug 2022 15:06:39 +1000, Russell Currey wrote:
+> > > Add support for execute-only memory (XOM) for the Radix MMU by
+> > > using an
+> > > execute-only mapping, as opposed to the RX mapping used by
+> > > powerpc's
+> > > other MMUs.
+> > >=20
+> > > The Hash MMU already supports XOM through the execute-only pkey,
+> > > which is a separate mechanism shared with x86.=C2=A0 A PROT_EXEC-only
+> > > mapping
+> > > will map to RX, and then the pkey will be applied on top of it.
+> > >=20
+> > > [...]
+> >=20
+> > Applied to powerpc/next.
+> >=20
+> > [1/2] powerpc/mm: Support execute-only memory on the Radix MMU
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> > https://git.kernel.org/powerpc/c/395cac7752b905318ae454a8b859d4c1904855=
+10
+>=20
+> This breaks libaio tests (on POWER9 hash PowerVM):
+> https://pagure.io/libaio/blob/master/f/harness/cases/5.t#_43
+>=20
+> cases/5.p
+> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 -14: (r), res =3D=C2=A0=C2=A0 -14 [Bad address]
+> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
+> test cases/5.t completed PASSED.
+>=20
+> cases/5.p
+> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 -14: (r), res =3D=C2=A0=C2=A0 -14 [Bad address]
+> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
+> expect=C2=A0=C2=A0 -14: (w), res =3D=C2=A0=C2=A0 512 [Success] -- FAILED
+> test cases/5.t completed FAILED.
+>=20
+> Can you have a look if that test assumption is OK?
 
+Hi Michal, thanks for the report.
 
-On 8.03.2023 21:22, Srinivas Kandagatla wrote:
-> 
-> 
-> On 21/02/2023 11:25, Mukesh Ojha wrote:
->> Minidump is a best effort mechanism to collect useful and predefined
->> data for first level of debugging on end user devices running on
->> Qualcomm SoCs. It is built on the premise that System on Chip (SoC)
->> or subsystem part of SoC crashes, due to a range of hardware and
->> software bugs. Hence, the ability to collect accurate data is only
->> a best-effort. The data collected could be invalid or corrupted,
->> data collection itself could fail, and so on.
->>
->> Qualcomm devices in engineering mode provides a mechanism for
->> generating full system ramdumps for post mortem debugging. But in some
->> cases it's however not feasible to capture the entire content of RAM.
->> The minidump mechanism provides the means for selecting region should
->> be included in the ramdump. The solution supports extracting the
->> ramdump/minidump produced either over USB or stored to an attached
->> storage device.
->>
->> The core of minidump feature is part of Qualcomm's boot firmware code.
->> It initializes shared memory(SMEM), which is a part of DDR and
->> allocates a small section of it to minidump table i.e also called
->> global table of content (G-ToC). Each subsystem (APSS, ADSP, ...) has
->> their own table of segments to be included in the minidump, all
->> references from a descriptor in SMEM (G-ToC). Each segment/region has
->> some details like name, physical address and it's size etc. and it
->> could be anywhere scattered in the DDR.
->>
->> Minidump kernel driver adds the capability to add linux region to be
->> dumped as part of ram dump collection. It provides appropriate symbol
->> to check its enablement and register client regions.
->>
->> To simplify post mortem debugging, it creates and maintain an ELF
->> header as first region that gets updated with upon registration
->> of a new region.
->>
->> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->> ---
-[...]
+This wasn't an intended behaviour change, so it is a bug.  I have no
+idea why we hit the fault in write() but not in io_submit(), though.=20
+The same issue applies under Radix.
 
->> +int qcom_minidump_ready(void)
->> +{
->> +    void *ptr;
->> +    struct device_node *np;
->> +    static bool is_smem_available = true;
->> +
->> +    if (!is_smem_available || !(np = of_find_compatible_node(NULL, NULL, "qcom,smem"))) {
-> 
-> just check for dt node here does not mean that smem device is available, you should probably check if the device is avaliable aswell using of_device_is_available()
-> 
-> 
-> We should proabably return -EPROBEDEFER incase the node is present and device is not present.
-qcom_smem_get() seems to handle -EPROBE_DEFER internally, so this check
-may be entirely redundant.
+What's happening here is that we're taking a page fault and calling
+into access_error() and returning true when we shouldn't.  Previously
+we didn't check for read faults and only checked for PROT_NONE.  My
+patch checks the vma flags to see if they lack VM_READ after we check
+for exec and write, which ignores that VM_WRITE implies read=20
 
-Konrad
+This means we're mishandling faults for write-only mappings by assuming
+that the lack of VM_READ means we're faulting from read, when that
+should only be possible under a PROT_EXEC-only mapping.
+
+I think the correct behaviour is
+
+	if (unlikely(!(vma->vm_flags & (VM_READ | VM_WRITE))))
+
+in access_error().
+
+Will do some more testing and send a patch soon.  I also need to verify
+that write implying read is true for all powerpc platforms.
+
+- Russell
+
+>=20
+> Thanks
+>=20
+> Michal
+
