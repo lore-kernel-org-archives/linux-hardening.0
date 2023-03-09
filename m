@@ -2,173 +2,686 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D36C678D5
-	for <linux-hardening@archiver.kernel.org>; Thu,  9 Mar 2023 00:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D7C64EC4
+	for <linux-hardening@archiver.kernel.org>; Thu,  9 Mar 2023 15:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbjCIAQN (ORCPT
+        id S231340AbjCIP6Q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 8 Mar 2023 19:16:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37412 "EHLO
+        Thu, 9 Mar 2023 10:58:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229657AbjCIAQL (ORCPT
+        with ESMTP id S229887AbjCIP6P (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 8 Mar 2023 19:16:11 -0500
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149E493E23
-        for <linux-hardening@vger.kernel.org>; Wed,  8 Mar 2023 16:16:08 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 0E83032000CC;
-        Wed,  8 Mar 2023 19:05:07 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 08 Mar 2023 19:05:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-        1678320307; x=1678406707; bh=4iyVJ4N7edbrxfcyvsdNPy42ln5kQX3T6aR
-        UhzsWpqU=; b=eeX5oeIzi6BzR/+nDKOGJmPkapLWMEVwfO/hNm9/4Rdk0WXMTsZ
-        Y3GBivYrvL8HxXGZayJQCGPW4oZP81yRdpo/hnOaAWQEjLMa7/uXXasxJu5NRVTT
-        ww9fraptjbh1Lilv59g6rmJiTqXI95HV/FVEuUn7OO9EpsAcHLr3/p8tKs0+nqIc
-        TL/Bru6q3r0Z/WSfx27KQPO4MoN1TXyNJZFwO2F1jZtUFX95J1Re9oBOyyFbeKjU
-        BCNoxExzLKK8UVfwaxIXE/C+fYU13lgkHvSb645EkGLEJLQQbUb1XLtm3OIrGhq/
-        DQvUCJ0++6xrn7CjUbevAsPmQQgPB1UAz+Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1678320307; x=1678406707; bh=4iyVJ4N7edbrxfcyvsdNPy42ln5kQX3T6aR
-        UhzsWpqU=; b=rcLheJYaKEPd31MtqYaWxQbQQ1ocXlUYYbA3I97S+lOSg9XXvMi
-        FvKZNGAqTsdWzR2rZ8W4jYSTtqngk068T2fvtEEiglLZVMvq9MQAvlRGncl3337E
-        grd07qJB+js0BSYW1H18mE4/m5Ak7vs8V0RHitp1hM2FFeZnCWIMBAtuJVWCxx/L
-        5CORt9IS/8vVdomSF8rsKihif942qdlVm2RGISggjhwznuZLCprIpZApzoEHZa4G
-        Xr3+f+af5Cguuot80PVGVQQD1Xwptd7cDbtkhZKJ2wfU+F2+ykfzSJyNW0d0EaUy
-        lmwW3MhL0FAJgWzegum4nwgDkzkg0VNPqQg==
-X-ME-Sender: <xms:siIJZOWuD0gsNp28rY5Fkags5opUv38yWitbMIY0_vE1VA5KPbjZdA>
-    <xme:siIJZKlR4d5iy-GL3oX5iiZyQtQiDJb50iAccSGt9w_M40fLt52IN2x5w-kESOEdm
-    aJMW6zY2Va43XUtLw>
-X-ME-Received: <xmr:siIJZCbzeSJzzTMgFn1ALPA04zCGFT1d8kn9eGu-vkDlxljfTHQX0Qyxpcqz3WbXIhLRxjuhwy-MBVEOIF4WowTGysqAOV-WzGFjLo4RYb-AUA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddugedgudehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    gfrhhlucfvnfffucdluddtmdenucfjughrpefkuffhvfevffgjfhgtgfgfggesthhqredt
-    tderjeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruh
-    hsshgvlhhlrdgttgeqnecuggftrfgrthhtvghrnhepgfetvdffkedtueejgeduteehtddu
-    vefhveevudffgfejueehuedvtdeguddvfeegnecuffhomhgrihhnpehkvghrnhgvlhdroh
-    hrghdpphgrghhurhgvrdhiohenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehruhhstghurhesrhhushhsvghllhdrtggt
-X-ME-Proxy: <xmx:siIJZFUXTJ7nG2NqzrppI9H37okEY8PQ18S0B7hliOktMsjbItCQqg>
-    <xmx:siIJZIkR_Dd4J39WNO4Tqj9zIRuq2lHxT9HGEv7oTSw80gjCu3zGlQ>
-    <xmx:siIJZKcpR8f6kMupsttzxqkxjK5dfDTBuKqNosL5B0anlrKoTY1G2Q>
-    <xmx:syIJZC7xw1nTZ2mzPLm48YI-KbuGNpzmZhwiIW3G3BDS8aTxC7xbWg>
-Feedback-ID: i4421424f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 8 Mar 2023 19:05:03 -0500 (EST)
-Message-ID: <942163490c9cb552d93bec6ed89d7617056c6d35.camel@russell.cc>
-Subject: Re: [PATCH v4 1/2] powerpc/mm: Support execute-only memory on the
- Radix MMU
-From:   Russell Currey <ruscur@russell.cc>
-To:     Michal =?ISO-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>,
-        Michael Ellerman <patch-notifications@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, ajd@linux.ibm.com,
-        anshuman.khandual@arm.com, npiggin@gmail.com,
-        linux-hardening@vger.kernel.org, aneesh.kumar@linux.ibm.com,
-        nicholas@linux.ibm.com, bgray@linux.ibm.com
-Date:   Thu, 09 Mar 2023 11:05:00 +1100
-In-Reply-To: <20230308152702.GR19419@kitsune.suse.cz>
-References: <20220817050640.406017-1-ruscur@russell.cc>
-         <166195163958.45984.15308325694886524412.b4-ty@ellerman.id.au>
-         <20230308152702.GR19419@kitsune.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        Thu, 9 Mar 2023 10:58:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5977A90;
+        Thu,  9 Mar 2023 07:58:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 13268B81072;
+        Thu,  9 Mar 2023 15:58:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D0BC433EF;
+        Thu,  9 Mar 2023 15:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678377487;
+        bh=eM8Q8Cg8NZYmXx0Xk4MP7husVrdyBVa9OinRG3H1PWs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=RurZeui7oWpXjgYLs+NqCbsMUzKwhCea6Hkk4AByRGu3wypY/ZKtJ2rGYF+dmc9n9
+         IjiDocyVoFerpGUihhUFasllAGYLmS2dSp88d3eptkeEmC6UBCCZM0G5N2DjvhdCuC
+         c1LfIH7XP8y+C9zBXjbV4h1nJUj86PK7NiR8qu4V/Iv4cEArypvz0/lSqrLRQTbaXM
+         /bvlw/wvjAWWUbS/K7F8yT6OLeR3u4TSdlaEpN/832wh+kXjm+2d4XF2Z74Zp6vIER
+         2uZY11JWNIxi2vIvtCtz6UnNUE+Y8qUQ6GhaiYrPnFA0+1+geEU48aynYq2jojdeI8
+         GxiAUoaQhY9FA==
+Received: by mail-lj1-f169.google.com with SMTP id a32so2323506ljr.9;
+        Thu, 09 Mar 2023 07:58:07 -0800 (PST)
+X-Gm-Message-State: AO0yUKWTzppiZXiSWN9Ym6gzNJtX3CF4psS2vV4AmsRgKTMW1JLFOdjS
+        t1Z0dI2siibYEbpXn4aXUQdx3i7SsWN82LqEv5k=
+X-Google-Smtp-Source: AK7set+FWgdM3TZe9SM5fXMa+zOIolXLftr61luss8UvJMIQz08akxBfnI0AC2JMTYF8ZMnvikGL60lh1MKW5lHrVfM=
+X-Received: by 2002:a2e:850a:0:b0:295:ba28:a43 with SMTP id
+ j10-20020a2e850a000000b00295ba280a43mr10518010lji.4.1678377485566; Thu, 09
+ Mar 2023 07:58:05 -0800 (PST)
 MIME-Version: 1.0
+References: <cover.1671098103.git.baskov@ispras.ru> <b80ee86cd2ef39e7e15d93ec6c5869946780b6e5.1671098103.git.baskov@ispras.ru>
+In-Reply-To: <b80ee86cd2ef39e7e15d93ec6c5869946780b6e5.1671098103.git.baskov@ispras.ru>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 9 Mar 2023 16:57:54 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXG_RTcU9T1FLQX3ZyqwP8xrjaXbyOZtZveL_JkoNaRWsw@mail.gmail.com>
+Message-ID: <CAMj1kXG_RTcU9T1FLQX3ZyqwP8xrjaXbyOZtZveL_JkoNaRWsw@mail.gmail.com>
+Subject: Re: [PATCH v4 19/26] x86/build: Cleanup tools/build.c
+To:     Evgeniy Baskov <baskov@ispras.ru>
+Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Peter Jones <pjones@redhat.com>,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
+        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 2023-03-08 at 16:27 +0100, Michal Such=C3=A1nek wrote:
-> Hello,
->=20
-> On Wed, Aug 31, 2022 at 11:13:59PM +1000, Michael Ellerman wrote:
-> > On Wed, 17 Aug 2022 15:06:39 +1000, Russell Currey wrote:
-> > > Add support for execute-only memory (XOM) for the Radix MMU by
-> > > using an
-> > > execute-only mapping, as opposed to the RX mapping used by
-> > > powerpc's
-> > > other MMUs.
-> > >=20
-> > > The Hash MMU already supports XOM through the execute-only pkey,
-> > > which is a separate mechanism shared with x86.=C2=A0 A PROT_EXEC-only
-> > > mapping
-> > > will map to RX, and then the pkey will be applied on top of it.
-> > >=20
-> > > [...]
-> >=20
-> > Applied to powerpc/next.
-> >=20
-> > [1/2] powerpc/mm: Support execute-only memory on the Radix MMU
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
-> > https://git.kernel.org/powerpc/c/395cac7752b905318ae454a8b859d4c1904855=
-10
->=20
-> This breaks libaio tests (on POWER9 hash PowerVM):
-> https://pagure.io/libaio/blob/master/f/harness/cases/5.t#_43
->=20
-> cases/5.p
-> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 -14: (r), res =3D=C2=A0=C2=A0 -14 [Bad address]
-> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
-> test cases/5.t completed PASSED.
->=20
-> cases/5.p
-> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 512: (w), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 -14: (r), res =3D=C2=A0=C2=A0 -14 [Bad address]
-> expect=C2=A0=C2=A0 512: (r), res =3D=C2=A0=C2=A0 512 [Success]
-> expect=C2=A0=C2=A0 -14: (w), res =3D=C2=A0=C2=A0 512 [Success] -- FAILED
-> test cases/5.t completed FAILED.
->=20
-> Can you have a look if that test assumption is OK?
+On Thu, 15 Dec 2022 at 13:42, Evgeniy Baskov <baskov@ispras.ru> wrote:
+>
+> Use newer C standard. Since kernel requires C99 compiler now,
+> we can make use of the new features to make the core more readable.
+>
+> Use mmap() for reading files also to make things simpler.
+>
+> Replace most magic numbers with defines.
+>
+> Should have no functional changes. This is done in preparation for the
+> next changes that makes generated PE header more spec compliant.
+>
+> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+> Tested-by: Peter Jones <pjones@redhat.com>
+> Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
+> ---
+>  arch/x86/boot/tools/build.c | 387 +++++++++++++++++++++++-------------
+>  1 file changed, 245 insertions(+), 142 deletions(-)
+>
+> diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
+> index bd247692b701..fbc5315af032 100644
+> --- a/arch/x86/boot/tools/build.c
+> +++ b/arch/x86/boot/tools/build.c
+> @@ -25,20 +25,21 @@
+>   * Substantially overhauled by H. Peter Anvin, April 2007
+>   */
+>
+> +#include <fcntl.h>
+> +#include <stdarg.h>
+> +#include <stdint.h>
+>  #include <stdio.h>
+> -#include <string.h>
+>  #include <stdlib.h>
+> -#include <stdarg.h>
+> -#include <sys/types.h>
+> +#include <string.h>
+> +#include <sys/mman.h>
+>  #include <sys/stat.h>
+> +#include <sys/types.h>
+>  #include <unistd.h>
+> -#include <fcntl.h>
+> -#include <sys/mman.h>
+> +
+>  #include <tools/le_byteshift.h>
+> +#include <linux/pe.h>
+>
+> -typedef unsigned char  u8;
+> -typedef unsigned short u16;
+> -typedef unsigned int   u32;
+> +#define round_up(x, n) (((x) + (n) - 1) & ~((n) - 1))
+>
+>  #define DEFAULT_MAJOR_ROOT 0
+>  #define DEFAULT_MINOR_ROOT 0
+> @@ -48,8 +49,13 @@ typedef unsigned int   u32;
+>  #define SETUP_SECT_MIN 5
+>  #define SETUP_SECT_MAX 64
+>
+> +#define PARAGRAPH_SIZE 16
+> +#define SECTOR_SIZE 512
+> +#define FILE_ALIGNMENT 512
+> +#define SECTION_ALIGNMENT 4096
+> +
+>  /* This must be large enough to hold the entire setup */
+> -u8 buf[SETUP_SECT_MAX*512];
+> +uint8_t buf[SETUP_SECT_MAX*SECTOR_SIZE];
+>
+>  #define PECOFF_RELOC_RESERVE 0x20
+>
+> @@ -59,6 +65,52 @@ u8 buf[SETUP_SECT_MAX*512];
+>  #define PECOFF_COMPAT_RESERVE 0x0
+>  #endif
+>
+> +#define RELOC_SECTION_SIZE 10
+> +
+> +/* PE header has different format depending on the architecture */
+> +#ifdef CONFIG_X86_64
+> +typedef struct pe32plus_opt_hdr pe_opt_hdr;
+> +#else
+> +typedef struct pe32_opt_hdr pe_opt_hdr;
+> +#endif
+> +
+> +static inline struct pe_hdr *get_pe_header(uint8_t *buf)
+> +{
+> +       uint32_t pe_offset = get_unaligned_le32(buf+MZ_HEADER_PEADDR_OFFSET);
+> +       return (struct pe_hdr *)(buf + pe_offset);
+> +}
+> +
+> +static inline pe_opt_hdr *get_pe_opt_header(uint8_t *buf)
+> +{
+> +       return (pe_opt_hdr *)(get_pe_header(buf) + 1);
+> +}
+> +
+> +static inline struct section_header *get_sections(uint8_t *buf)
+> +{
+> +       pe_opt_hdr *hdr = get_pe_opt_header(buf);
+> +       uint32_t n_data_dirs = get_unaligned_le32(&hdr->data_dirs);
+> +       uint8_t *sections = (uint8_t *)(hdr + 1) + n_data_dirs*sizeof(struct data_dirent);
+> +       return  (struct section_header *)sections;
+> +}
+> +
+> +static inline struct data_directory *get_data_dirs(uint8_t *buf)
+> +{
+> +       pe_opt_hdr *hdr = get_pe_opt_header(buf);
+> +       return (struct data_directory *)(hdr + 1);
+> +}
+> +
+> +#ifdef CONFIG_EFI_DXE_MEM_ATTRIBUTES
 
-Hi Michal, thanks for the report.
+Can we drop this conditional?
+> +#define SCN_RW (IMAGE_SCN_MEM_READ | IMAGE_SCN_MEM_WRITE | IMAGE_SCN_ALIGN_4096BYTES)
+> +#define SCN_RX (IMAGE_SCN_MEM_READ | IMAGE_SCN_MEM_EXECUTE | IMAGE_SCN_ALIGN_4096BYTES)
+> +#define SCN_RO (IMAGE_SCN_MEM_READ | IMAGE_SCN_ALIGN_4096BYTES)
 
-This wasn't an intended behaviour change, so it is a bug.  I have no
-idea why we hit the fault in write() but not in io_submit(), though.=20
-The same issue applies under Radix.
+Please drop the alignment flags - they don't apply to executable only
+object files.
 
-What's happening here is that we're taking a page fault and calling
-into access_error() and returning true when we shouldn't.  Previously
-we didn't check for read faults and only checked for PROT_NONE.  My
-patch checks the vma flags to see if they lack VM_READ after we check
-for exec and write, which ignores that VM_WRITE implies read=20
+> +#else
+> +/* With memory protection disabled all sections are RWX */
+> +#define SCN_RW (IMAGE_SCN_MEM_READ | IMAGE_SCN_MEM_WRITE | \
+> +               IMAGE_SCN_MEM_EXECUTE | IMAGE_SCN_ALIGN_4096BYTES)
+> +#define SCN_RX SCN_RW
+> +#define SCN_RO SCN_RW
+> +#endif
+> +
+>  static unsigned long efi32_stub_entry;
+>  static unsigned long efi64_stub_entry;
+>  static unsigned long efi_pe_entry;
+> @@ -70,7 +122,7 @@ static unsigned long _end;
+>
+>  /*----------------------------------------------------------------------*/
+>
+> -static const u32 crctab32[] = {
+> +static const uint32_t crctab32[] = {
 
-This means we're mishandling faults for write-only mappings by assuming
-that the lack of VM_READ means we're faulting from read, when that
-should only be possible under a PROT_EXEC-only mapping.
+Replacing all the type names makes this patch very messy. Can we back
+that out please?
 
-I think the correct behaviour is
-
-	if (unlikely(!(vma->vm_flags & (VM_READ | VM_WRITE))))
-
-in access_error().
-
-Will do some more testing and send a patch soon.  I also need to verify
-that write implying read is true for all powerpc platforms.
-
-- Russell
-
->=20
-> Thanks
->=20
-> Michal
-
+>         0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419,
+>         0x706af48f, 0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4,
+>         0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07,
+> @@ -125,12 +177,12 @@ static const u32 crctab32[] = {
+>         0x2d02ef8d
+>  };
+>
+> -static u32 partial_crc32_one(u8 c, u32 crc)
+> +static uint32_t partial_crc32_one(uint8_t c, uint32_t crc)
+>  {
+>         return crctab32[(crc ^ c) & 0xff] ^ (crc >> 8);
+>  }
+>
+> -static u32 partial_crc32(const u8 *s, int len, u32 crc)
+> +static uint32_t partial_crc32(const uint8_t *s, int len, uint32_t crc)
+>  {
+>         while (len--)
+>                 crc = partial_crc32_one(*s++, crc);
+> @@ -152,57 +204,106 @@ static void usage(void)
+>         die("Usage: build setup system zoffset.h image");
+>  }
+>
+> +static void *map_file(const char *path, size_t *psize)
+> +{
+> +       struct stat statbuf;
+> +       size_t size;
+> +       void *addr;
+> +       int fd;
+> +
+> +       fd = open(path, O_RDONLY);
+> +       if (fd < 0)
+> +               die("Unable to open `%s': %m", path);
+> +       if (fstat(fd, &statbuf))
+> +               die("Unable to stat `%s': %m", path);
+> +
+> +       size = statbuf.st_size;
+> +       /*
+> +        * Map one byte more, to allow adding null-terminator
+> +        * for text files.
+> +        */
+> +       addr = mmap(NULL, size + 1, PROT_READ | PROT_WRITE, MAP_PRIVATE, fd, 0);
+> +       if (addr == MAP_FAILED)
+> +               die("Unable to mmap '%s': %m", path);
+> +
+> +       close(fd);
+> +
+> +       *psize = size;
+> +       return addr;
+> +}
+> +
+> +static void unmap_file(void *addr, size_t size)
+> +{
+> +       munmap(addr, size + 1);
+> +}
+> +
+> +static void *map_output_file(const char *path, size_t size)
+> +{
+> +       void *addr;
+> +       int fd;
+> +
+> +       fd = open(path, O_RDWR | O_CREAT, 0660);
+> +       if (fd < 0)
+> +               die("Unable to create `%s': %m", path);
+> +
+> +       if (ftruncate(fd, size))
+> +               die("Unable to resize `%s': %m", path);
+> +
+> +       addr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+> +       if (addr == MAP_FAILED)
+> +               die("Unable to mmap '%s': %m", path);
+> +
+> +       return addr;
+> +}
+> +
+>  #ifdef CONFIG_EFI_STUB
+>
+> -static void update_pecoff_section_header_fields(char *section_name, u32 vma, u32 size, u32 datasz, u32 offset)
+> +static void update_pecoff_section_header_fields(char *section_name, uint32_t vma,
+> +                                               uint32_t size, uint32_t datasz,
+> +                                               uint32_t offset)
+>  {
+>         unsigned int pe_header;
+>         unsigned short num_sections;
+> -       u8 *section;
+> +       struct section_header *section;
+>
+> -       pe_header = get_unaligned_le32(&buf[0x3c]);
+> -       num_sections = get_unaligned_le16(&buf[pe_header + 6]);
+> -
+> -#ifdef CONFIG_X86_32
+> -       section = &buf[pe_header + 0xa8];
+> -#else
+> -       section = &buf[pe_header + 0xb8];
+> -#endif
+> +       struct pe_hdr *hdr = get_pe_header(buf);
+> +       num_sections = get_unaligned_le16(&hdr->sections);
+> +       section = get_sections(buf);
+>
+>         while (num_sections > 0) {
+> -               if (strncmp((char*)section, section_name, 8) == 0) {
+> +               if (strncmp(section->name, section_name, 8) == 0) {
+>                         /* section header size field */
+> -                       put_unaligned_le32(size, section + 0x8);
+> +                       put_unaligned_le32(size, &section->virtual_size);
+>
+>                         /* section header vma field */
+> -                       put_unaligned_le32(vma, section + 0xc);
+> +                       put_unaligned_le32(vma, &section->virtual_address);
+>
+>                         /* section header 'size of initialised data' field */
+> -                       put_unaligned_le32(datasz, section + 0x10);
+> +                       put_unaligned_le32(datasz, &section->raw_data_size);
+>
+>                         /* section header 'file offset' field */
+> -                       put_unaligned_le32(offset, section + 0x14);
+> +                       put_unaligned_le32(offset, &section->data_addr);
+>
+>                         break;
+>                 }
+> -               section += 0x28;
+> +               section++;
+>                 num_sections--;
+>         }
+>  }
+>
+> -static void update_pecoff_section_header(char *section_name, u32 offset, u32 size)
+> +static void update_pecoff_section_header(char *section_name, uint32_t offset, uint32_t size)
+>  {
+>         update_pecoff_section_header_fields(section_name, offset, size, size, offset);
+>  }
+>
+>  static void update_pecoff_setup_and_reloc(unsigned int size)
+>  {
+> -       u32 setup_offset = 0x200;
+> -       u32 reloc_offset = size - PECOFF_RELOC_RESERVE - PECOFF_COMPAT_RESERVE;
+> +       uint32_t setup_offset = SECTOR_SIZE;
+> +       uint32_t reloc_offset = size - PECOFF_RELOC_RESERVE - PECOFF_COMPAT_RESERVE;
+>  #ifdef CONFIG_EFI_MIXED
+> -       u32 compat_offset = reloc_offset + PECOFF_RELOC_RESERVE;
+> +       uint32_t compat_offset = reloc_offset + PECOFF_RELOC_RESERVE;
+>  #endif
+> -       u32 setup_size = reloc_offset - setup_offset;
+> +       uint32_t setup_size = reloc_offset - setup_offset;
+>
+>         update_pecoff_section_header(".setup", setup_offset, setup_size);
+>         update_pecoff_section_header(".reloc", reloc_offset, PECOFF_RELOC_RESERVE);
+> @@ -211,8 +312,8 @@ static void update_pecoff_setup_and_reloc(unsigned int size)
+>          * Modify .reloc section contents with a single entry. The
+>          * relocation is applied to offset 10 of the relocation section.
+>          */
+> -       put_unaligned_le32(reloc_offset + 10, &buf[reloc_offset]);
+> -       put_unaligned_le32(10, &buf[reloc_offset + 4]);
+> +       put_unaligned_le32(reloc_offset + RELOC_SECTION_SIZE, &buf[reloc_offset]);
+> +       put_unaligned_le32(RELOC_SECTION_SIZE, &buf[reloc_offset + 4]);
+>
+>  #ifdef CONFIG_EFI_MIXED
+>         update_pecoff_section_header(".compat", compat_offset, PECOFF_COMPAT_RESERVE);
+> @@ -224,19 +325,17 @@ static void update_pecoff_setup_and_reloc(unsigned int size)
+>          */
+>         buf[compat_offset] = 0x1;
+>         buf[compat_offset + 1] = 0x8;
+> -       put_unaligned_le16(0x14c, &buf[compat_offset + 2]);
+> +       put_unaligned_le16(IMAGE_FILE_MACHINE_I386, &buf[compat_offset + 2]);
+>         put_unaligned_le32(efi32_pe_entry + size, &buf[compat_offset + 4]);
+>  #endif
+>  }
+>
+> -static void update_pecoff_text(unsigned int text_start, unsigned int file_sz,
+> +static unsigned int update_pecoff_sections(unsigned int text_start, unsigned int text_sz,
+>                                unsigned int init_sz)
+>  {
+> -       unsigned int pe_header;
+> -       unsigned int text_sz = file_sz - text_start;
+> +       unsigned int file_sz = text_start + text_sz;
+>         unsigned int bss_sz = init_sz - file_sz;
+> -
+> -       pe_header = get_unaligned_le32(&buf[0x3c]);
+> +       pe_opt_hdr *hdr = get_pe_opt_header(buf);
+>
+>         /*
+>          * The PE/COFF loader may load the image at an address which is
+> @@ -254,18 +353,20 @@ static void update_pecoff_text(unsigned int text_start, unsigned int file_sz,
+>          * Size of code: Subtract the size of the first sector (512 bytes)
+>          * which includes the header.
+>          */
+> -       put_unaligned_le32(file_sz - 512 + bss_sz, &buf[pe_header + 0x1c]);
+> +       put_unaligned_le32(file_sz - SECTOR_SIZE + bss_sz, &hdr->text_size);
+>
+>         /* Size of image */
+> -       put_unaligned_le32(init_sz, &buf[pe_header + 0x50]);
+> +       put_unaligned_le32(init_sz, &hdr->image_size);
+>
+>         /*
+>          * Address of entry point for PE/COFF executable
+>          */
+> -       put_unaligned_le32(text_start + efi_pe_entry, &buf[pe_header + 0x28]);
+> +       put_unaligned_le32(text_start + efi_pe_entry, &hdr->entry_point);
+>
+>         update_pecoff_section_header_fields(".text", text_start, text_sz + bss_sz,
+>                                             text_sz, text_start);
+> +
+> +       return text_start + file_sz;
+>  }
+>
+>  static int reserve_pecoff_reloc_section(int c)
+> @@ -275,7 +376,7 @@ static int reserve_pecoff_reloc_section(int c)
+>         return PECOFF_RELOC_RESERVE;
+>  }
+>
+> -static void efi_stub_defaults(void)
+> +static void efi_stub_update_defaults(void)
+>  {
+>         /* Defaults for old kernel */
+>  #ifdef CONFIG_X86_32
+> @@ -298,7 +399,7 @@ static void efi_stub_entry_update(void)
+>
+>  #ifdef CONFIG_EFI_MIXED
+>         if (efi32_stub_entry != addr)
+> -               die("32-bit and 64-bit EFI entry points do not match\n");
+> +               die("32-bit and 64-bit EFI entry points do not match");
+>  #endif
+>  #endif
+>         put_unaligned_le32(addr, &buf[0x264]);
+> @@ -310,7 +411,7 @@ static inline void update_pecoff_setup_and_reloc(unsigned int size) {}
+>  static inline void update_pecoff_text(unsigned int text_start,
+>                                       unsigned int file_sz,
+>                                       unsigned int init_sz) {}
+> -static inline void efi_stub_defaults(void) {}
+> +static inline void efi_stub_update_defaults(void) {}
+>  static inline void efi_stub_entry_update(void) {}
+>
+>  static inline int reserve_pecoff_reloc_section(int c)
+> @@ -338,20 +439,15 @@ static int reserve_pecoff_compat_section(int c)
+>
+>  static void parse_zoffset(char *fname)
+>  {
+> -       FILE *file;
+> -       char *p;
+> -       int c;
+> +       size_t size;
+> +       char *data, *p;
+>
+> -       file = fopen(fname, "r");
+> -       if (!file)
+> -               die("Unable to open `%s': %m", fname);
+> -       c = fread(buf, 1, sizeof(buf) - 1, file);
+> -       if (ferror(file))
+> -               die("read-error on `zoffset.h'");
+> -       fclose(file);
+> -       buf[c] = 0;
+> +       data = map_file(fname, &size);
+>
+> -       p = (char *)buf;
+> +       /* We can do that, since we mapped one byte more */
+> +       data[size] = 0;
+> +
+> +       p = (char *)data;
+>
+>         while (p && *p) {
+>                 PARSE_ZOFS(p, efi32_stub_entry);
+> @@ -367,82 +463,99 @@ static void parse_zoffset(char *fname)
+>                 while (p && (*p == '\r' || *p == '\n'))
+>                         p++;
+>         }
+> +
+> +       unmap_file(data, size);
+>  }
+>
+> -int main(int argc, char ** argv)
+> +static unsigned int read_setup(char *path)
+>  {
+> -       unsigned int i, sz, setup_sectors, init_sz;
+> -       int c;
+> -       u32 sys_size;
+> -       struct stat sb;
+> -       FILE *file, *dest;
+> -       int fd;
+> -       void *kernel;
+> -       u32 crc = 0xffffffffUL;
+> -
+> -       efi_stub_defaults();
+> -
+> -       if (argc != 5)
+> -               usage();
+> -       parse_zoffset(argv[3]);
+> -
+> -       dest = fopen(argv[4], "w");
+> -       if (!dest)
+> -               die("Unable to write `%s': %m", argv[4]);
+> +       FILE *file;
+> +       unsigned int setup_size, file_size;
+>
+>         /* Copy the setup code */
+> -       file = fopen(argv[1], "r");
+> +       file = fopen(path, "r");
+>         if (!file)
+> -               die("Unable to open `%s': %m", argv[1]);
+> -       c = fread(buf, 1, sizeof(buf), file);
+> +               die("Unable to open `%s': %m", path);
+> +
+> +       file_size = fread(buf, 1, sizeof(buf), file);
+>         if (ferror(file))
+>                 die("read-error on `setup'");
+> -       if (c < 1024)
+> +
+> +       if (file_size < 2 * SECTOR_SIZE)
+>                 die("The setup must be at least 1024 bytes");
+> -       if (get_unaligned_le16(&buf[510]) != 0xAA55)
+> +
+> +       if (get_unaligned_le16(&buf[SECTOR_SIZE - 2]) != 0xAA55)
+>                 die("Boot block hasn't got boot flag (0xAA55)");
+> +
+>         fclose(file);
+>
+> -       c += reserve_pecoff_compat_section(c);
+> -       c += reserve_pecoff_reloc_section(c);
+> +       /* Reserve space for PE sections */
+> +       file_size += reserve_pecoff_compat_section(file_size);
+> +       file_size += reserve_pecoff_reloc_section(file_size);
+>
+>         /* Pad unused space with zeros */
+> -       setup_sectors = (c + 511) / 512;
+> -       if (setup_sectors < SETUP_SECT_MIN)
+> -               setup_sectors = SETUP_SECT_MIN;
+> -       i = setup_sectors*512;
+> -       memset(buf+c, 0, i-c);
+>
+> -       update_pecoff_setup_and_reloc(i);
+> +       setup_size = round_up(file_size, SECTOR_SIZE);
+> +
+> +       if (setup_size < SETUP_SECT_MIN * SECTOR_SIZE)
+> +               setup_size = SETUP_SECT_MIN * SECTOR_SIZE;
+> +
+> +       /*
+> +        * Global buffer is already initialised
+> +        * to 0, but just in case, zero out padding.
+> +        */
+> +
+> +       memset(buf + file_size, 0, setup_size - file_size);
+> +
+> +       return setup_size;
+> +}
+> +
+> +int main(int argc, char **argv)
+> +{
+> +       size_t kern_file_size;
+> +       unsigned int setup_size;
+> +       unsigned int setup_sectors;
+> +       unsigned int init_size;
+> +       unsigned int total_size;
+> +       unsigned int kern_size;
+> +       void *kernel;
+> +       uint32_t crc = 0xffffffffUL;
+> +       uint8_t *output;
+> +
+> +       if (argc != 5)
+> +               usage();
+> +
+> +       efi_stub_update_defaults();
+> +       parse_zoffset(argv[3]);
+> +
+> +       setup_size = read_setup(argv[1]);
+> +
+> +       setup_sectors = setup_size/SECTOR_SIZE;
+>
+>         /* Set the default root device */
+>         put_unaligned_le16(DEFAULT_ROOT_DEV, &buf[508]);
+>
+> -       /* Open and stat the kernel file */
+> -       fd = open(argv[2], O_RDONLY);
+> -       if (fd < 0)
+> -               die("Unable to open `%s': %m", argv[2]);
+> -       if (fstat(fd, &sb))
+> -               die("Unable to stat `%s': %m", argv[2]);
+> -       sz = sb.st_size;
+> -       kernel = mmap(NULL, sz, PROT_READ, MAP_SHARED, fd, 0);
+> -       if (kernel == MAP_FAILED)
+> -               die("Unable to mmap '%s': %m", argv[2]);
+> -       /* Number of 16-byte paragraphs, including space for a 4-byte CRC */
+> -       sys_size = (sz + 15 + 4) / 16;
+> +       /* Map kernel file to memory */
+> +       kernel = map_file(argv[2], &kern_file_size);
+> +
+>  #ifdef CONFIG_EFI_STUB
+> -       /*
+> -        * COFF requires minimum 32-byte alignment of sections, and
+> -        * adding a signature is problematic without that alignment.
+> -        */
+> -       sys_size = (sys_size + 1) & ~1;
+> +       /* PE specification require 512-byte minimum section file alignment */
+> +       kern_size = round_up(kern_file_size + 4, SECTOR_SIZE);
+> +       update_pecoff_setup_and_reloc(setup_size);
+> +#else
+> +       /* Number of 16-byte paragraphs, including space for a 4-byte CRC */
+> +       kern_size = round_up(kern_file_size + 4, PARAGRAPH_SIZE);
+>  #endif
+>
+>         /* Patch the setup code with the appropriate size parameters */
+> -       buf[0x1f1] = setup_sectors-1;
+> -       put_unaligned_le32(sys_size, &buf[0x1f4]);
+> +       buf[0x1f1] = setup_sectors - 1;
+> +       put_unaligned_le32(kern_size/PARAGRAPH_SIZE, &buf[0x1f4]);
+> +
+> +       /* Update kernel_info offset. */
+> +       put_unaligned_le32(kernel_info, &buf[0x268]);
+> +
+> +       init_size = get_unaligned_le32(&buf[0x260]);
+>
+> -       init_sz = get_unaligned_le32(&buf[0x260]);
+>  #ifdef CONFIG_EFI_STUB
+>         /*
+>          * The decompression buffer will start at ImageBase. When relocating
+> @@ -458,45 +571,35 @@ int main(int argc, char ** argv)
+>          * For future-proofing, increase init_sz if necessary.
+>          */
+>
+> -       if (init_sz - _end < i + _ehead) {
+> -               init_sz = (i + _ehead + _end + 4095) & ~4095;
+> -               put_unaligned_le32(init_sz, &buf[0x260]);
+> +       if (init_size - _end < setup_size + _ehead) {
+> +               init_size = round_up(setup_size + _ehead + _end, SECTION_ALIGNMENT);
+> +               put_unaligned_le32(init_size, &buf[0x260]);
+>         }
+> -#endif
+> -       update_pecoff_text(setup_sectors * 512, i + (sys_size * 16), init_sz);
+>
+> -       efi_stub_entry_update();
+> -
+> -       /* Update kernel_info offset. */
+> -       put_unaligned_le32(kernel_info, &buf[0x268]);
+> +       total_size = update_pecoff_sections(setup_size, kern_size, init_size);
+>
+> -       crc = partial_crc32(buf, i, crc);
+> -       if (fwrite(buf, 1, i, dest) != i)
+> -               die("Writing setup failed");
+> +       efi_stub_entry_update();
+> +#else
+> +       (void)init_size;
+> +       total_size = setup_size + kern_size;
+> +#endif
+>
+> -       /* Copy the kernel code */
+> -       crc = partial_crc32(kernel, sz, crc);
+> -       if (fwrite(kernel, 1, sz, dest) != sz)
+> -               die("Writing kernel failed");
+> +       output = map_output_file(argv[4], total_size);
+>
+> -       /* Add padding leaving 4 bytes for the checksum */
+> -       while (sz++ < (sys_size*16) - 4) {
+> -               crc = partial_crc32_one('\0', crc);
+> -               if (fwrite("\0", 1, 1, dest) != 1)
+> -                       die("Writing padding failed");
+> -       }
+> +       memcpy(output, buf, setup_size);
+> +       memcpy(output + setup_size, kernel, kern_file_size);
+> +       memset(output + setup_size + kern_file_size, 0, kern_size - kern_file_size);
+>
+> -       /* Write the CRC */
+> -       put_unaligned_le32(crc, buf);
+> -       if (fwrite(buf, 1, 4, dest) != 4)
+> -               die("Writing CRC failed");
+> +       /* Calculate and write kernel checksum. */
+> +       crc = partial_crc32(output, total_size - 4, crc);
+> +       put_unaligned_le32(crc, &output[total_size - 4]);
+>
+> -       /* Catch any delayed write failures */
+> -       if (fclose(dest))
+> -               die("Writing image failed");
+> +       /* Catch any delayed write failures. */
+> +       if (munmap(output, total_size) < 0)
+> +               die("Writing kernel failed");
+>
+> -       close(fd);
+> +       unmap_file(kernel, kern_file_size);
+>
+> -       /* Everything is OK */
+> +       /* Everything is OK. */
+>         return 0;
+>  }
+> --
+> 2.37.4
+>
