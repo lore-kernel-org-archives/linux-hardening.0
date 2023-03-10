@@ -2,149 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606A8C6FD19
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 09:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A8DC6FD19
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 09:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjCJJZ0 (ORCPT
+        id S229900AbjCJJba (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Mar 2023 04:25:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
+        Fri, 10 Mar 2023 04:31:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231362AbjCJJYx (ORCPT
+        with ESMTP id S231216AbjCJJbJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Mar 2023 04:24:53 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A16D7616A
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 01:21:00 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id g3so17894963eda.1
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 01:21:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678439995;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+jlcVFpkc+G4FJ/zWyYH6HfDuPu4pDDui18UUuFFCY0=;
-        b=KpIfO++r8WvXrnTJvTOfvuNYfH6VgFAChtMC07wInTR5iIFREy6p9E2plBwtW+1vkz
-         4Hq1Dj2pxKQzPB1SP1VsCC/6E0rUirHOb+YgkoUlejq7AWtXqmVy+Aem+NOzcY7lF6r1
-         qOCC8WQn9yQ5rAYRX6lxPKeYQ5mYkXJT1y6fQKuPn3h3X/ftcjzO/rr4++2gGcxTTFc/
-         DqOFnzKiQL+KVmYRqOHzngZ+Yn84ya5PV/u488VddbFJy7c5T4iF0xB8CY9JY0WpN41z
-         aA8NBCtDvXqC9oZ4/zITHybhcJlA38vbeLlwcnoGFJz4mOAIkwFFa6nfyUcFIO5OUDYH
-         4n4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678439995;
-        h=in-reply-to:references:cc:to:from:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+jlcVFpkc+G4FJ/zWyYH6HfDuPu4pDDui18UUuFFCY0=;
-        b=dB3WUGRSeUqIdeXKAphGeXAEOzy7wPQX2ZUcYMlB67HsqdolQ1GhKNc/KTZgbC1di1
-         KGf675oQeLbSjDEkAXGCKgBzPOcjiV4TxXf4aBBCSMFiR3uu3V5F6bRuFCKTIkwbWZAY
-         0Lh1mlXwawzL1XnYcYfgE209zm2Wyr6YV0H8pOv+VqCynDsCWrLOCmPrBMwzzFukB2GZ
-         0clPLxvOhiHxXmv6Bm6dPzlJszudyvavUV2uD4e4XbrXsBT0cQA+Oj1PAwBRUd8M45Nq
-         APTA+a9/yXo+rqK0BGFhM98zOXeY2yD763S1jONdHtBIi23TM3JYiZfyx8ZjESHZ0gFo
-         l5Zw==
-X-Gm-Message-State: AO0yUKXOemNkGN+qfQVp7aLXhvSmV9P0qGlP9ZTFNeiBQ+SsxUJdzGph
-        iTrt3oc1ffYNDhqO811KORTeGPnnXUsL3NT1
-X-Google-Smtp-Source: AK7set9+zadZW8nty9HJuXsGINTi2feWWxJeUgC6sYMnvOV+ndcdCxmQUC4CTb1WNEhmlyLBqnb9pw==
-X-Received: by 2002:a17:906:2b19:b0:8b1:7e88:c20e with SMTP id a25-20020a1709062b1900b008b17e88c20emr24127566ejg.41.1678439994881;
-        Fri, 10 Mar 2023 01:19:54 -0800 (PST)
-Received: from localhost ([2001:b07:5d37:537d:5e25:9ef5:7977:d60c])
-        by smtp.gmail.com with ESMTPSA id j16-20020a170906279000b008e724dfc44bsm729100ejc.78.2023.03.10.01.19.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Mar 2023 01:19:54 -0800 (PST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 10 Mar 2023 10:19:53 +0100
-Message-Id: <CR2LBKD251YR.2LJHOHOX6WPO0@vincent-arch>
+        Fri, 10 Mar 2023 04:31:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2602D5A928
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 01:28:27 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D336DB821EE
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 09:28:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04EF3C433D2;
+        Fri, 10 Mar 2023 09:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1678440492;
+        bh=o86gqTQ/rTfGe5zAXhQTcKjlfhTtUOrfS2KP4sHCoOk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hP8t1IJUQMBupLQ2B0hoWZ0fobtDTXAYvZtrwmkhAaeEQvtUxu2mZLu2fYI/AKQgk
+         C55LYtrRuiKeBLoT71C87y2xYZAwfASObDuEhlCSrt98fTU3c9bz/5WNjkmydw2u9k
+         TS0OQDiMYtRPIOYc8y6t6PIzFu6Xmezkzzw5T/po=
+Date:   Fri, 10 Mar 2023 10:28:09 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Vincenzo Palazzo <vincenzopalazzodev@gmail.com>
+Cc:     x86@kernel.org, luto@kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v1] x86: suppress warning generated by W=1
-From:   "Vincenzo Palazzo" <vincenzopalazzodev@gmail.com>
-To:     "Greg KH" <gregkh@linuxfoundation.org>
-Cc:     <x86@kernel.org>, <luto@kernel.org>,
-        <linux-hardening@vger.kernel.org>
-X-Mailer: aerc 0.14.0
+Message-ID: <ZAr4KXs7Y/8OPWKy@kroah.com>
 References: <20230309174854.350143-1-vincenzopalazzodev@gmail.com>
  <ZArdRi3Z6OXgCPgj@kroah.com>
-In-Reply-To: <ZArdRi3Z6OXgCPgj@kroah.com>
+ <CR2LBKD251YR.2LJHOHOX6WPO0@vincent-arch>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CR2LBKD251YR.2LJHOHOX6WPO0@vincent-arch>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri Mar 10, 2023 at 8:33 AM CET, Greg KH wrote:
-> On Thu, Mar 09, 2023 at 06:48:54PM +0100, Vincenzo Palazzo wrote:
-> > suppress unused warnings and fix the error that there is
-> > with the W=3D1 enabled.
->
-> Why are you building with that option enabled?  It's not a normal one at
-> all.
+On Fri, Mar 10, 2023 at 10:19:53AM +0100, Vincenzo Palazzo wrote:
+> On Fri Mar 10, 2023 at 8:33 AM CET, Greg KH wrote:
+> > On Thu, Mar 09, 2023 at 06:48:54PM +0100, Vincenzo Palazzo wrote:
+> > > suppress unused warnings and fix the error that there is
+> > > with the W=1 enabled.
+> >
+> > Why are you building with that option enabled?  It's not a normal one at
+> > all.
+> 
+> I was using this option because I would like to see if my c code has
+> warnings, but currently it is not possible compile the kernel with 
+> W=1.
 
-I was using this option because I would like to see if my c code has
-warnings, but currently it is not possible compile the kernel with=20
-W=3D1.
+Yes, that is the main issue here, the kernel does not build cleanly for
+lots of good reasons (i.e. foolish compiler warnings that are not
+actually pointing out a real problem), so that option is not enabled by
+default right now.
 
-Maybe I'm missing a little bit of history here, this is not the correct
-option to compile the kernel with -Wall?
+So this change is not needed right now, perhaps you can fix up the
+compiler to not make this type of warning for code that is correct?
 
-Or it is the wrong way to compile the kernel with -Wall, so at this
-point another good patch if we do not want to see the warnings, is
-rework the W=3D1 to allow a subset of warnings, like the one in this
-patch?
+> Maybe I'm missing a little bit of history here, this is not the correct
+> option to compile the kernel with -Wall?
 
->
-> >=20
-> > Warning generated
-> >=20
-> > arch/x86/entry/common.c:238:24: error: no previous prototype for =E2=80=
-=98do_SYSENTER_32=E2=80=99 [-Werror=3Dmissing-prototypes]
-> >   238 | __visible noinstr long do_SYSENTER_32(struct pt_regs *regs)
-> >=20
-> > Signed-off-by: Vincenzo Palazzo <vincenzopalazzodev@gmail.com>
-> > ---
-> >  arch/x86/entry/common.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >=20
-> > diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> > index 6c2826417b33..8f17b2c3e9de 100644
-> > --- a/arch/x86/entry/common.c
-> > +++ b/arch/x86/entry/common.c
-> > @@ -234,6 +234,9 @@ __visible noinstr long do_fast_syscall_32(struct pt=
-_regs *regs)
-> >  #endif
-> >  }
-> > =20
-> > +/* prototype is a placeholder to suppress the missing prototype wornin=
-g */
-> > +long do_SYSENTER_32(struct pt_regs *regs);
->
-> This feels wrong, sorry, and you have a spelling error in your comment.
+Yes, but the kernel does not build cleanly with that option, as you have
+found out.  Fixes for when the kernel code is wrong is great to have,
+but not at the expense of "we are doing this only to shut up the
+compiler because it does not understand our code" like you are doing
+here, sorry.
 
-Yeah it is, in fact this do not make sense because we are in a c file.
-However, looks like it is the only option to suppress the warnings in
-this case?
+thanks,
 
-Do you know some magic __attribute__ that can suppress it for a not
-static function like the one in this PATCH?
-
->
-> > +
-> >  /* Returns 0 to return using IRET or 1 to return using SYSEXIT/SYSRETL=
-. */
-> >  __visible noinstr long do_SYSENTER_32(struct pt_regs *regs)
->
-> It's wrong because look, you define it right here so why do you need a
-> prototype?
-
-Here the problem is the macros __visible that force the function to be=20
-not static because need to be visible outside, and in C as far I know a=20
-procedure without a prototype need to be static, for this reason I made the=
-=20
-previous trick to suppress the warning.
-
-I thought also to modify the macros in some way but I did not have a
-good idea.
-
-P.S: Thanks to catch the typo, I will provide a v2 when we converge in a
-common solution.
-
-Cheers!
-
-Vincent.
+greg k-h
