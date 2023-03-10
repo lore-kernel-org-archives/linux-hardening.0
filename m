@@ -2,81 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A8DC6FD19
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 09:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 703ACC6FD19
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 09:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbjCJJba (ORCPT
+        id S230258AbjCJJiw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Mar 2023 04:31:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37802 "EHLO
+        Fri, 10 Mar 2023 04:38:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231216AbjCJJbJ (ORCPT
+        with ESMTP id S230319AbjCJJi2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Mar 2023 04:31:09 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2602D5A928
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 01:28:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D336DB821EE
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 09:28:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04EF3C433D2;
-        Fri, 10 Mar 2023 09:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1678440492;
-        bh=o86gqTQ/rTfGe5zAXhQTcKjlfhTtUOrfS2KP4sHCoOk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hP8t1IJUQMBupLQ2B0hoWZ0fobtDTXAYvZtrwmkhAaeEQvtUxu2mZLu2fYI/AKQgk
-         C55LYtrRuiKeBLoT71C87y2xYZAwfASObDuEhlCSrt98fTU3c9bz/5WNjkmydw2u9k
-         TS0OQDiMYtRPIOYc8y6t6PIzFu6Xmezkzzw5T/po=
-Date:   Fri, 10 Mar 2023 10:28:09 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Vincenzo Palazzo <vincenzopalazzodev@gmail.com>
-Cc:     x86@kernel.org, luto@kernel.org, linux-hardening@vger.kernel.org
+        Fri, 10 Mar 2023 04:38:28 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D45E1CBEF
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 01:36:02 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id o12so17968243edb.9
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 01:36:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678440961;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mdEEwE4rFWJ9BxlAHqfRVp9gvtdNhg7dVU3b8WR81/Y=;
+        b=NDhzeG29Xhe7SB/n37AGapN6Gc0WpzMdwNlG+RQP0NBchu/YZshHKk+JiOXt3fFL0U
+         DuZ7d1u3eZ6pd7z7CZbwlPvgaUWKLPIuRAPHjGxFlQvxSIA3Bh/pW383VDyHRnMVH1Q0
+         gDy3BFGP2p9+8oEOnQGuoo4051UTcCBUzeljPsVEX+tATS27pfawoobGMhoHodwTbaxq
+         O/NvxacO0IbXdjovfftVwWAbPypdMo89q8HYJLwRHBpctgeWzTYPnOWLbmmmR9wQ4D1l
+         TEMpQvYX58YlebaGMLPwwvncnPUr/BdPpGBp0sReEvq2Vc7AWvB/kmzxb4rC/jWOSr1n
+         pl/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678440961;
+        h=in-reply-to:references:subject:cc:to:from:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mdEEwE4rFWJ9BxlAHqfRVp9gvtdNhg7dVU3b8WR81/Y=;
+        b=gkP5Ct+r8346Jicr7nLAKX8/FatcT+3r7HOeEtoCn6vCDuz4oLjbToepFowoTka9+O
+         o000107PynraUkBPEcztus9vaPSEpCOtc7m8OrcKt6w+SMVjomFvEIZyp49SdVDnjVO2
+         N1HuaPzKhFEXziIJxxLfmGnvh2kD+7cLZXaxMdVJWfjW2love28ESYmIC5BUGH/GAwcI
+         beIF3eLNJdpfG7ALMPH54SXbcNIJWEjx3D5sRjRHe0Uq3dmmUO91HnGzhw+lQL7lTIKO
+         f91s9geydswvHDMVlKWuiL9hlKF6Xmu2evabhQqYaCgmvwVFbuQ2wiw6VM9wMsbC0xY5
+         NPXw==
+X-Gm-Message-State: AO0yUKUI7Ox/jAxMcFArgpC6zsvWDDg7PQk3SDlZp77tgXAY9XlmxDXx
+        QJYSs1FwaaovRbBSvKd2+9mAiX21vSbvoRwE
+X-Google-Smtp-Source: AK7set/XJD1UwmrYch3sZYOQkktzX1dIL3jRZX4VSOr1r0fJgdiv+HagCBGJnNXd1TIpFKa3L7fJdw==
+X-Received: by 2002:a17:906:a042:b0:8aa:875d:9d9a with SMTP id bg2-20020a170906a04200b008aa875d9d9amr25356036ejb.50.1678440961078;
+        Fri, 10 Mar 2023 01:36:01 -0800 (PST)
+Received: from localhost ([2001:b07:5d37:537d:5e25:9ef5:7977:d60c])
+        by smtp.gmail.com with ESMTPSA id ss19-20020a170907039300b008d6e551e1bcsm740775ejb.2.2023.03.10.01.36.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Mar 2023 01:36:00 -0800 (PST)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 10 Mar 2023 10:35:59 +0100
+Message-Id: <CR2LNW3CP5YQ.11C2G8ZF14Z9N@vincent-arch>
+From:   "Vincenzo Palazzo" <vincenzopalazzodev@gmail.com>
+To:     "Greg KH" <gregkh@linuxfoundation.org>
+Cc:     <x86@kernel.org>, <luto@kernel.org>,
+        <linux-hardening@vger.kernel.org>
 Subject: Re: [PATCH v1] x86: suppress warning generated by W=1
-Message-ID: <ZAr4KXs7Y/8OPWKy@kroah.com>
+X-Mailer: aerc 0.14.0
 References: <20230309174854.350143-1-vincenzopalazzodev@gmail.com>
- <ZArdRi3Z6OXgCPgj@kroah.com>
- <CR2LBKD251YR.2LJHOHOX6WPO0@vincent-arch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CR2LBKD251YR.2LJHOHOX6WPO0@vincent-arch>
+ <ZArdRi3Z6OXgCPgj@kroah.com> <CR2LBKD251YR.2LJHOHOX6WPO0@vincent-arch>
+ <ZAr4KXs7Y/8OPWKy@kroah.com>
+In-Reply-To: <ZAr4KXs7Y/8OPWKy@kroah.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 10:19:53AM +0100, Vincenzo Palazzo wrote:
-> On Fri Mar 10, 2023 at 8:33 AM CET, Greg KH wrote:
-> > On Thu, Mar 09, 2023 at 06:48:54PM +0100, Vincenzo Palazzo wrote:
-> > > suppress unused warnings and fix the error that there is
-> > > with the W=1 enabled.
-> >
-> > Why are you building with that option enabled?  It's not a normal one at
-> > all.
-> 
-> I was using this option because I would like to see if my c code has
-> warnings, but currently it is not possible compile the kernel with 
-> W=1.
+On Fri Mar 10, 2023 at 10:28 AM CET, Greg KH wrote:
+> On Fri, Mar 10, 2023 at 10:19:53AM +0100, Vincenzo Palazzo wrote:
+> > On Fri Mar 10, 2023 at 8:33 AM CET, Greg KH wrote:
+> > > On Thu, Mar 09, 2023 at 06:48:54PM +0100, Vincenzo Palazzo wrote:
+> > > > suppress unused warnings and fix the error that there is
+> > > > with the W=3D1 enabled.
+> > >
+> > > Why are you building with that option enabled?  It's not a normal one=
+ at
+> > > all.
+> >=20
+> > I was using this option because I would like to see if my c code has
+> > warnings, but currently it is not possible compile the kernel with=20
+> > W=3D1.
+>
+> Yes, that is the main issue here, the kernel does not build cleanly for
+> lots of good reasons (i.e. foolish compiler warnings that are not
+> actually pointing out a real problem), so that option is not enabled by
+> default right now.
 
-Yes, that is the main issue here, the kernel does not build cleanly for
-lots of good reasons (i.e. foolish compiler warnings that are not
-actually pointing out a real problem), so that option is not enabled by
-default right now.
+I see, I was missing this info :) thanks!
 
-So this change is not needed right now, perhaps you can fix up the
-compiler to not make this type of warning for code that is correct?
+>
+> So this change is not needed right now, perhaps you can fix up the
+> compiler to not make this type of warning for code that is correct?
 
-> Maybe I'm missing a little bit of history here, this is not the correct
-> option to compile the kernel with -Wall?
+I would happy to, but I am pretty sure that the compiler guys had a
+strong option to keep this option enabled.
 
-Yes, but the kernel does not build cleanly with that option, as you have
-found out.  Fixes for when the kernel code is wrong is great to have,
-but not at the expense of "we are doing this only to shut up the
-compiler because it does not understand our code" like you are doing
-here, sorry.
+However, I could try to make an informative email to see if there is any
+way to fix this warning without write hacky code.
 
-thanks,
+>
+> > Maybe I'm missing a little bit of history here, this is not the correct
+> > option to compile the kernel with -Wall?
+>
+> Yes, but the kernel does not build cleanly with that option, as you have
+> found out.  Fixes for when the kernel code is wrong is great to have,
+> but not at the expense of "we are doing this only to shut up the
+> compiler because it does not understand our code" like you are doing
+> here, sorry.
 
-greg k-h
+Yep, I see you point and I share your idea to do not try to do this kind=20
+of suppress work just because the code do not looks like write
+in the standart way.
+
+>
+> thanks,
+
+Thanks to you for this good information.
+
+Cheers!
+
+Vincent.
