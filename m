@@ -2,37 +2,37 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694C9C74A44
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 19:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23741C76188
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 19:21:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbjCJTVF (ORCPT
+        id S230089AbjCJTVI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Mar 2023 14:21:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34816 "EHLO
+        Fri, 10 Mar 2023 14:21:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbjCJTVE (ORCPT
+        with ESMTP id S230391AbjCJTVG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Mar 2023 14:21:04 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0507A1219FC;
-        Fri, 10 Mar 2023 11:21:04 -0800 (PST)
+        Fri, 10 Mar 2023 14:21:06 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131D91219FC;
+        Fri, 10 Mar 2023 11:21:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 95A8861D48;
-        Fri, 10 Mar 2023 19:21:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44CECC433D2;
-        Fri, 10 Mar 2023 19:21:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F10E61D47;
+        Fri, 10 Mar 2023 19:21:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B580C4339B;
+        Fri, 10 Mar 2023 19:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678476063;
-        bh=OPYTUHEh3fWGMz9beNtrfmOvpvbY+exzeFoxVvvoHlU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XRia1pWIrpsaa4D3TyRv+H4JZ/INpBgBIi6UAWXjR8wMRYHOeVuPcbxmIRYJ+HxEw
-         OpmuBnJPwy+b/XBgzNS4gSOTsRcRdmtxDmKvUipE/5BmpQ6yGtjvEkI0qr7RpTXL3o
-         mTdqWdd5QpoVywr9m1v4iH1udSyfN0vYHuSV0sZfQzeu+XfmBwU4Pp/4TGYfC/x4Uq
-         4VJOr7+mst4J+yKLii1RbtZ6aZUu6c8tEIeTLs+NKQ1EioJ7TLoRH+rOx2GYVkt8M6
-         tWWdjnKOMy33TYC8ry/H5u4Ngbhcl0z8ZRlsVpZYJQXv9Edm8R1g58uMBgYBxAEXcs
-         oEwlaptNZoomA==
+        s=k20201202; t=1678476065;
+        bh=h96RzPVmfu4a9Zs2dUbwmPcGcesOoRHMhOcR2gVxLLA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cQaNtV3XbPWoEfrXdeuLV5g9naMD/sFMoCZ6lxQb5RyxrksCAsnLrISfzDnf9mBO/
+         cUAIqaz+faLwjLk1rcXrKKJIoF0GFVjZkpumZk/CgeVwgIWGPWwC2D08xCMB61blw9
+         2Jgm4A9UVIa7GtRwWAT8g28cLlI9O9XMuhu9Xz6IeSD0V4ulxudAXQRRUPOdBOjcdZ
+         19+xhexZ5u+orIWCvWPU9sP1Ci+Ns0UqIFa2/j2LsrmOH1VDRyiFLnNmigDlsnnKiy
+         BfSFSatEB7NW6auBhRRQeR+XlAjI8UqmsWgB8vLvIs4N7ll32/0N4Q8V99hGuu29rG
+         00wrjnDL2szEQ==
 From:   Ross Zwisler <zwisler@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ross Zwisler <zwisler@google.com>,
@@ -43,10 +43,12 @@ Cc:     Ross Zwisler <zwisler@google.com>,
         Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
         linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-mm@kvack.org
-Subject: [PATCH v3 0/3] use canonical ftrace path whenever possible
-Date:   Fri, 10 Mar 2023 12:20:47 -0700
-Message-Id: <20230310192050.4096886-1-zwisler@kernel.org>
+Subject: [PATCH v3 2/3] leaking_addresses: also skip canonical ftrace path
+Date:   Fri, 10 Mar 2023 12:20:49 -0700
+Message-Id: <20230310192050.4096886-3-zwisler@kernel.org>
 X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
+In-Reply-To: <20230310192050.4096886-1-zwisler@kernel.org>
+References: <20230310192050.4096886-1-zwisler@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -55,29 +57,38 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Ross Zwisler <zwisler@google.com>
 
-v2 here:
-https://lore.kernel.org/linux-trace-kernel/20230215223350.2658616-1-zwisler@google.com/
+The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
 
-Changes since v2:
- * Dropped patches that have been accepted into maintainer trees.
- * Collected Acked-by and Reviewed-by tags from Paolo, Mukesh and Steven.
-   Thank you for the reviews!
+But, from Documentation/trace/ftrace.rst:
 
-Ross Zwisler (3):
-  selftests: use canonical ftrace path
-  leaking_addresses: also skip canonical ftrace path
-  tools/kvm_stat: use canonical ftrace path
+  Before 4.1, all ftrace tracing control files were within the debugfs
+  file system, which is typically located at /sys/kernel/debug/tracing.
+  For backward compatibility, when mounting the debugfs file system,
+  the tracefs file system will be automatically mounted at:
 
- scripts/leaking_addresses.pl                      |  1 +
- tools/kvm/kvm_stat/kvm_stat                       |  2 +-
- tools/testing/selftests/mm/protection_keys.c      |  4 ++--
- tools/testing/selftests/user_events/dyn_test.c    |  2 +-
- tools/testing/selftests/user_events/ftrace_test.c | 10 +++++-----
- tools/testing/selftests/user_events/perf_test.c   |  8 ++++----
- 6 files changed, 14 insertions(+), 13 deletions(-)
+  /sys/kernel/debug/tracing
 
+scripts/leaking_addresses.pl only skipped this older debugfs path, so
+let's add the canonical path as well.
 
-base-commit: 55a21105ecc156495446d8ae75d7d73f66baed7b
+Acked-by: Tycho Andersen <tycho@tycho.pizza>
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+---
+ scripts/leaking_addresses.pl | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
+index 8f636a23bc3f..e695634d153d 100755
+--- a/scripts/leaking_addresses.pl
++++ b/scripts/leaking_addresses.pl
+@@ -61,6 +61,7 @@ my @skip_abs = (
+ 	'/proc/device-tree',
+ 	'/proc/1/syscall',
+ 	'/sys/firmware/devicetree',
++	'/sys/kernel/tracing/trace_pipe',
+ 	'/sys/kernel/debug/tracing/trace_pipe',
+ 	'/sys/kernel/security/apparmor/revision');
+ 
 -- 
 2.40.0.rc1.284.g88254d51c5-goog
 
