@@ -2,152 +2,149 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75B0C6FD1C
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 08:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 606A8C6FD19
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 09:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231138AbjCJIbQ (ORCPT
+        id S229522AbjCJJZ0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Mar 2023 03:31:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38470 "EHLO
+        Fri, 10 Mar 2023 04:25:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231145AbjCJIbE (ORCPT
+        with ESMTP id S231362AbjCJJYx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Mar 2023 03:31:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48888E9834
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 00:29:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678436997;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0VVY8kly3TcDFN9v8u5UAZIFaG8NcKB7KdRar2p0UPo=;
-        b=gcwXZKdJjfaYpRzASdQdDUOcZK7GhWSEkLJoKJ5d2i8lsjarxzWzi7oPOEdnLop4WcCkq7
-        EkTNWXM+7jbzKgHMAz23Cpw7GmvJ3aJYNmqRstxg0wvFwwzfqxcIjrTnKxoWqXTPrhZUSe
-        cuxVpbQ9JeDdsbz7/2o6jPlkoeONqrs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-627-vjnxKTwEMbGJqvMH13rG_g-1; Fri, 10 Mar 2023 03:29:56 -0500
-X-MC-Unique: vjnxKTwEMbGJqvMH13rG_g-1
-Received: by mail-wm1-f71.google.com with SMTP id 4-20020a05600c024400b003eb2e295c05so1527419wmj.0
-        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 00:29:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678436995;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        Fri, 10 Mar 2023 04:24:53 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A16D7616A
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 01:21:00 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id g3so17894963eda.1
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 01:21:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678439995;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0VVY8kly3TcDFN9v8u5UAZIFaG8NcKB7KdRar2p0UPo=;
-        b=M5yA04qWzQX+JY81hmsH+7Uva+yqI/NQKTGIVcczZaZnyC8OaLRKghhLGN96L7BZB0
-         ideCJsI89bUcmr2wNkklwBRJibm3ZLsBueHOKu/SzTnotDYWBNVx+I8uv3mDaIfRV7jK
-         /Gj8DNKd51yuX5PmAzrc4LU36VtsdDvwJEcJFye0b8zrmobjltTKa0kuaK4/aaYl8yff
-         rS6RSKU5bdYt2qSTGnMbghaBCZl+kNyP4011CSBVEKrfmVGe8j0v6TJEkbhr0XXDI98L
-         dr3BN8ysZvHlFjomKlL4WUPGLppjJAXqOmU9jmOqMaQhU5Cz0L4+pvbZI7k4t4XSbi2M
-         buEg==
-X-Gm-Message-State: AO0yUKUzNmiqxCEGo4uv2CnWIKCNkctdsd3VC8RpnEOdW2iG7ygGbGnP
-        g5Ajfqn/TO+3arISS/SHmz2BUPy9o87CjnvtQ/9zupYj4dYd8OCetLM4f68QZxjJviB2LCSTXZq
-        ylsCBxxI4cwuJQ38mS/e+U9KPKdCJ
-X-Received: by 2002:a05:600c:46d1:b0:3eb:29fe:fe19 with SMTP id q17-20020a05600c46d100b003eb29fefe19mr1724971wmo.34.1678436994993;
-        Fri, 10 Mar 2023 00:29:54 -0800 (PST)
-X-Google-Smtp-Source: AK7set/3NDIB2yQpnAOJ1gLOd87qFJtloJUYcD7foQwbKEjLNGWL6NTidbGAfi/e3Esc+ca2i7/9Kw==
-X-Received: by 2002:a05:600c:46d1:b0:3eb:29fe:fe19 with SMTP id q17-20020a05600c46d100b003eb29fefe19mr1724955wmo.34.1678436994706;
-        Fri, 10 Mar 2023 00:29:54 -0800 (PST)
-Received: from redhat.com ([2.52.9.88])
-        by smtp.gmail.com with ESMTPSA id l14-20020a1ced0e000000b003eb20d4d4a8sm1415501wmh.44.2023.03.10.00.29.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Mar 2023 00:29:54 -0800 (PST)
-Date:   Fri, 10 Mar 2023 03:29:49 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
-Message-ID: <20230310032921-mutt-send-email-mst@kernel.org>
-References: <20230215223350.2658616-1-zwisler@google.com>
-MIME-Version: 1.0
-In-Reply-To: <20230215223350.2658616-1-zwisler@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        bh=+jlcVFpkc+G4FJ/zWyYH6HfDuPu4pDDui18UUuFFCY0=;
+        b=KpIfO++r8WvXrnTJvTOfvuNYfH6VgFAChtMC07wInTR5iIFREy6p9E2plBwtW+1vkz
+         4Hq1Dj2pxKQzPB1SP1VsCC/6E0rUirHOb+YgkoUlejq7AWtXqmVy+Aem+NOzcY7lF6r1
+         qOCC8WQn9yQ5rAYRX6lxPKeYQ5mYkXJT1y6fQKuPn3h3X/ftcjzO/rr4++2gGcxTTFc/
+         DqOFnzKiQL+KVmYRqOHzngZ+Yn84ya5PV/u488VddbFJy7c5T4iF0xB8CY9JY0WpN41z
+         aA8NBCtDvXqC9oZ4/zITHybhcJlA38vbeLlwcnoGFJz4mOAIkwFFa6nfyUcFIO5OUDYH
+         4n4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678439995;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=+jlcVFpkc+G4FJ/zWyYH6HfDuPu4pDDui18UUuFFCY0=;
+        b=dB3WUGRSeUqIdeXKAphGeXAEOzy7wPQX2ZUcYMlB67HsqdolQ1GhKNc/KTZgbC1di1
+         KGf675oQeLbSjDEkAXGCKgBzPOcjiV4TxXf4aBBCSMFiR3uu3V5F6bRuFCKTIkwbWZAY
+         0Lh1mlXwawzL1XnYcYfgE209zm2Wyr6YV0H8pOv+VqCynDsCWrLOCmPrBMwzzFukB2GZ
+         0clPLxvOhiHxXmv6Bm6dPzlJszudyvavUV2uD4e4XbrXsBT0cQA+Oj1PAwBRUd8M45Nq
+         APTA+a9/yXo+rqK0BGFhM98zOXeY2yD763S1jONdHtBIi23TM3JYiZfyx8ZjESHZ0gFo
+         l5Zw==
+X-Gm-Message-State: AO0yUKXOemNkGN+qfQVp7aLXhvSmV9P0qGlP9ZTFNeiBQ+SsxUJdzGph
+        iTrt3oc1ffYNDhqO811KORTeGPnnXUsL3NT1
+X-Google-Smtp-Source: AK7set9+zadZW8nty9HJuXsGINTi2feWWxJeUgC6sYMnvOV+ndcdCxmQUC4CTb1WNEhmlyLBqnb9pw==
+X-Received: by 2002:a17:906:2b19:b0:8b1:7e88:c20e with SMTP id a25-20020a1709062b1900b008b17e88c20emr24127566ejg.41.1678439994881;
+        Fri, 10 Mar 2023 01:19:54 -0800 (PST)
+Received: from localhost ([2001:b07:5d37:537d:5e25:9ef5:7977:d60c])
+        by smtp.gmail.com with ESMTPSA id j16-20020a170906279000b008e724dfc44bsm729100ejc.78.2023.03.10.01.19.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Mar 2023 01:19:54 -0800 (PST)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 10 Mar 2023 10:19:53 +0100
+Message-Id: <CR2LBKD251YR.2LJHOHOX6WPO0@vincent-arch>
+Subject: Re: [PATCH v1] x86: suppress warning generated by W=1
+From:   "Vincenzo Palazzo" <vincenzopalazzodev@gmail.com>
+To:     "Greg KH" <gregkh@linuxfoundation.org>
+Cc:     <x86@kernel.org>, <luto@kernel.org>,
+        <linux-hardening@vger.kernel.org>
+X-Mailer: aerc 0.14.0
+References: <20230309174854.350143-1-vincenzopalazzodev@gmail.com>
+ <ZArdRi3Z6OXgCPgj@kroah.com>
+In-Reply-To: <ZArdRi3Z6OXgCPgj@kroah.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
-> Changes in v2:
->  * Dropped patches which were pulled into maintainer trees.
->  * Split BPF patches out into another series targeting bpf-next.
->  * trace-agent now falls back to debugfs if tracefs isn't present.
->  * Added Acked-by from mst@redhat.com to series.
->  * Added a typo fixup for the virtio-trace README.
-> 
-> Steven, assuming there are no objections, would you feel comfortable
-> taking this series through your tree?
+On Fri Mar 10, 2023 at 8:33 AM CET, Greg KH wrote:
+> On Thu, Mar 09, 2023 at 06:48:54PM +0100, Vincenzo Palazzo wrote:
+> > suppress unused warnings and fix the error that there is
+> > with the W=3D1 enabled.
+>
+> Why are you building with that option enabled?  It's not a normal one at
+> all.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+I was using this option because I would like to see if my c code has
+warnings, but currently it is not possible compile the kernel with=20
+W=3D1.
 
-if you want the virtio patches through my tree after all, let me know.
+Maybe I'm missing a little bit of history here, this is not the correct
+option to compile the kernel with -Wall?
 
-> ---
-> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
-> 
-> But, from Documentation/trace/ftrace.rst:
-> 
->   Before 4.1, all ftrace tracing control files were within the debugfs
->   file system, which is typically located at /sys/kernel/debug/tracing.
->   For backward compatibility, when mounting the debugfs file system,
->   the tracefs file system will be automatically mounted at:
-> 
->   /sys/kernel/debug/tracing
-> 
-> There are many places where this older debugfs path is still used in
-> code comments, selftests, examples and tools, so let's update them to
-> avoid confusion.
-> 
-> I've broken up the series as best I could by maintainer or directory,
-> and I've only sent people the patches that I think they care about to
-> avoid spamming everyone.
-> 
-> Ross Zwisler (6):
->   tracing: always use canonical ftrace path
->   selftests: use canonical ftrace path
->   leaking_addresses: also skip canonical ftrace path
->   tools/kvm_stat: use canonical ftrace path
->   tools/virtio: use canonical ftrace path
->   tools/virtio: fix typo in README instructions
-> 
->  include/linux/kernel.h                        |  2 +-
->  include/linux/tracepoint.h                    |  4 ++--
->  kernel/trace/Kconfig                          | 20 +++++++++----------
->  kernel/trace/kprobe_event_gen_test.c          |  2 +-
->  kernel/trace/ring_buffer.c                    |  2 +-
->  kernel/trace/synth_event_gen_test.c           |  2 +-
->  kernel/trace/trace.c                          |  2 +-
->  samples/user_events/example.c                 |  4 ++--
->  scripts/leaking_addresses.pl                  |  1 +
->  scripts/tracing/draw_functrace.py             |  6 +++---
->  tools/kvm/kvm_stat/kvm_stat                   |  2 +-
->  tools/lib/api/fs/tracing_path.c               |  4 ++--
->  .../testing/selftests/user_events/dyn_test.c  |  2 +-
->  .../selftests/user_events/ftrace_test.c       | 10 +++++-----
->  .../testing/selftests/user_events/perf_test.c |  8 ++++----
->  tools/testing/selftests/vm/protection_keys.c  |  4 ++--
->  tools/tracing/latency/latency-collector.c     |  2 +-
->  tools/virtio/virtio-trace/README              |  4 ++--
->  tools/virtio/virtio-trace/trace-agent.c       | 12 +++++++----
->  19 files changed, 49 insertions(+), 44 deletions(-)
-> 
-> -- 
-> 2.39.1.637.g21b0678d19-goog
+Or it is the wrong way to compile the kernel with -Wall, so at this
+point another good patch if we do not want to see the warnings, is
+rework the W=3D1 to allow a subset of warnings, like the one in this
+patch?
 
+>
+> >=20
+> > Warning generated
+> >=20
+> > arch/x86/entry/common.c:238:24: error: no previous prototype for =E2=80=
+=98do_SYSENTER_32=E2=80=99 [-Werror=3Dmissing-prototypes]
+> >   238 | __visible noinstr long do_SYSENTER_32(struct pt_regs *regs)
+> >=20
+> > Signed-off-by: Vincenzo Palazzo <vincenzopalazzodev@gmail.com>
+> > ---
+> >  arch/x86/entry/common.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >=20
+> > diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
+> > index 6c2826417b33..8f17b2c3e9de 100644
+> > --- a/arch/x86/entry/common.c
+> > +++ b/arch/x86/entry/common.c
+> > @@ -234,6 +234,9 @@ __visible noinstr long do_fast_syscall_32(struct pt=
+_regs *regs)
+> >  #endif
+> >  }
+> > =20
+> > +/* prototype is a placeholder to suppress the missing prototype wornin=
+g */
+> > +long do_SYSENTER_32(struct pt_regs *regs);
+>
+> This feels wrong, sorry, and you have a spelling error in your comment.
+
+Yeah it is, in fact this do not make sense because we are in a c file.
+However, looks like it is the only option to suppress the warnings in
+this case?
+
+Do you know some magic __attribute__ that can suppress it for a not
+static function like the one in this PATCH?
+
+>
+> > +
+> >  /* Returns 0 to return using IRET or 1 to return using SYSEXIT/SYSRETL=
+. */
+> >  __visible noinstr long do_SYSENTER_32(struct pt_regs *regs)
+>
+> It's wrong because look, you define it right here so why do you need a
+> prototype?
+
+Here the problem is the macros __visible that force the function to be=20
+not static because need to be visible outside, and in C as far I know a=20
+procedure without a prototype need to be static, for this reason I made the=
+=20
+previous trick to suppress the warning.
+
+I thought also to modify the macros in some way but I did not have a
+good idea.
+
+P.S: Thanks to catch the typo, I will provide a v2 when we converge in a
+common solution.
+
+Cheers!
+
+Vincent.
