@@ -2,368 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1889C6FD1F
-	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 16:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B35C6FD19
+	for <linux-hardening@archiver.kernel.org>; Fri, 10 Mar 2023 19:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230021AbjCJQUM (ORCPT
+        id S231393AbjCJTHk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 10 Mar 2023 11:20:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51448 "EHLO
+        Fri, 10 Mar 2023 14:07:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231509AbjCJQTj (ORCPT
+        with ESMTP id S231414AbjCJTHV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 10 Mar 2023 11:19:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61801ABF2;
-        Fri, 10 Mar 2023 08:14:55 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 234FF61ACC;
-        Fri, 10 Mar 2023 16:13:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62BE0C433AA;
-        Fri, 10 Mar 2023 16:13:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678464824;
-        bh=CRmmCCVCYuRyV1UwUiAjFxshSLvmJTpKgIm19VCDeXY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZgIKlqdsy6iSEToAjTypaUx+Y83EUQipULo7XU6+TFKyBpgWGDV6hu/ALWYM2lo0E
-         VtU37+vMVU/C2GvCsmScQoRZXJGMjHfm5syAC4MYC8ZjY0uAysHwVgpHadWy6jMlYv
-         mZQo4DedoTpc3ivClJAjp/eALgKRigl3cq1SIwz+AFo4YyEaZtmk1OMg4tqDbEq7hB
-         a7CsLO80tnhCgkw3AU09jsYlVz7VYdbhF8jCUQb3Rdbcx6kpNhothT92uLYXiA+n3Y
-         ptt9PuEJbBaMYcJCIVl7rhCPEhCbUWYGN0LJ/aZzIR+ZMxYo3KUEcI5+5Hkpf6HBC8
-         fWaIl9CZzIPYQ==
-Received: by mail-lf1-f43.google.com with SMTP id j11so7239889lfg.13;
-        Fri, 10 Mar 2023 08:13:44 -0800 (PST)
-X-Gm-Message-State: AO0yUKVbYEG3X4aURBeFiD23RQYSUjQxeDemcz8dPmBCUScEFgg79GXe
-        KSB7ODWtg/GT7wTRZsRFuM+gjx1wgIFT9FNNjbg=
-X-Google-Smtp-Source: AK7set8zGIPDV5VmqUsJ1Dx3sPb/4HMTBEnfe9fRYJ0xu8hrnV7VJXBPt/rDNGhREt4fw2wWgBn2v+TrTqUQcfdUN7I=
-X-Received: by 2002:ac2:5de1:0:b0:4dd:af74:fe17 with SMTP id
- z1-20020ac25de1000000b004ddaf74fe17mr8102308lfq.7.1678464822152; Fri, 10 Mar
- 2023 08:13:42 -0800 (PST)
+        Fri, 10 Mar 2023 14:07:21 -0500
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A97E1368BE
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 11:07:03 -0800 (PST)
+Received: by mail-io1-xd2e.google.com with SMTP id t129so2423941iof.12
+        for <linux-hardening@vger.kernel.org>; Fri, 10 Mar 2023 11:07:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1678475223;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eWqtsiqhGUvNVAxgRGNmyViFn5ukJIP+nu+2X15PDag=;
+        b=lP+cRiqQYogRnG8ytsvBRJH62sDPxM3+CDXZhL5XklrS+EMZfkeHz6srLEEcNzUSKm
+         DQr6N4ghWlycKeo8HTR6udWthHKnHA7p+Ry3Ppb6ljZKee48XYYfD10MMFYqFbKq2GfW
+         utJapnTS8BCSAfrd10vVbnnse/BcUYaInkirScHdlhRqAPQvySuKfHHF+hna6jkMbTjg
+         6U6WqLvkSxMbIpNEneCVMdD2tkpMgcJW3ntwItTTvy0/L26WDIzhDwqGm6Mc/l8JSwwd
+         XUAmsvkJbXHXjO8TP2D8SoCozFxRHUi2hiAfZzIu97sY/JgQCM3B5mqm+d6ANOxJwKix
+         +edQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678475223;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eWqtsiqhGUvNVAxgRGNmyViFn5ukJIP+nu+2X15PDag=;
+        b=TAEaXpRG2onpQfNYAE0CwVIqxOvk/LZ2KxKP0EWuWg/cEzAoKGxyxWZqwiCiGU/b/f
+         u+AlS7klf2jbyS4OuahdPc9t628Jqo4Sx/46nmMAXiTG2YfSJ6i44WNeYRZTIgCITv+v
+         UlazMFZHQstjHtTgmzQKaCW5xlzxOJAHFAsTL2K3lc/l1Fpc75JMnBAIU0KYpdeRtAVE
+         NQNh/3Aa8VnQKKk7fqdgCiVPGvvLfd709D28SLmhx156+ZjVwdghqXI+ZkN1aghEOnio
+         QMT7rhQrTlfwQiSsfaCYyl7vgS5SyNDPGdztMJ9j6Aqf5KRxHeP6A7jyy5I33yN6rIU/
+         i0hw==
+X-Gm-Message-State: AO0yUKU4Qj72M+gBJG9P9018NSuO86W1hSL3lzu9ysI2019Vp6olmxKf
+        9o44LE7oreE3apInKC+eDF6Q3w==
+X-Google-Smtp-Source: AK7set98xZN8awZ1NN+vEagnjcoQMPk9okvoD5NJwhGvEkQKUqEiVikUd2YXenveqqScArjHta7Ztw==
+X-Received: by 2002:a5d:8482:0:b0:74c:91c7:8794 with SMTP id t2-20020a5d8482000000b0074c91c78794mr4158053iom.21.1678475223076;
+        Fri, 10 Mar 2023 11:07:03 -0800 (PST)
+Received: from google.com ([2620:15c:183:200:4031:1c3f:5d8e:1b77])
+        by smtp.gmail.com with ESMTPSA id j2-20020a5d93c2000000b0074c7e84d0c8sm126473ioo.55.2023.03.10.11.07.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Mar 2023 11:07:02 -0800 (PST)
+Date:   Fri, 10 Mar 2023 12:06:58 -0700
+From:   Ross Zwisler <zwisler@google.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
+Message-ID: <20230310190658.GA3723158@google.com>
+References: <20230215223350.2658616-1-zwisler@google.com>
+ <20230310032921-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-References: <cover.1671098103.git.baskov@ispras.ru> <911afebbf7c30cf0b4af003ce4a63e42e45095d1.1671098103.git.baskov@ispras.ru>
-In-Reply-To: <911afebbf7c30cf0b4af003ce4a63e42e45095d1.1671098103.git.baskov@ispras.ru>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Fri, 10 Mar 2023 17:13:30 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXFv2V9YRgEJnMv1VrpT_TskrCUH6C09NrMO7nO3Xh3ZPQ@mail.gmail.com>
-Message-ID: <CAMj1kXFv2V9YRgEJnMv1VrpT_TskrCUH6C09NrMO7nO3Xh3ZPQ@mail.gmail.com>
-Subject: Re: [PATCH v4 23/26] efi/libstub: Use memory attribute protocol
-To:     Evgeniy Baskov <baskov@ispras.ru>
-Cc:     Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Peter Jones <pjones@redhat.com>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230310032921-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 15 Dec 2022 at 13:42, Evgeniy Baskov <baskov@ispras.ru> wrote:
->
-> Add EFI_MEMORY_ATTRIBUTE_PROTOCOL as preferred alternative to DXE
-> services for changing memory attributes in the EFISTUB.
->
-> Use DXE services only as a fallback in case aforementioned protocol
-> is not supported by UEFI implementation.
->
-> Move DXE services initialization code closer to the place they are used
-> to match EFI_MEMORY_ATTRIBUTE_PROTOCOL initialization code.
->
-> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
-> Tested-by: Peter Jones <pjones@redhat.com>
-> Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
+On Fri, Mar 10, 2023 at 03:29:49AM -0500, Michael S. Tsirkin wrote:
+> On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
+> > Changes in v2:
+> >  * Dropped patches which were pulled into maintainer trees.
+> >  * Split BPF patches out into another series targeting bpf-next.
+> >  * trace-agent now falls back to debugfs if tracefs isn't present.
+> >  * Added Acked-by from mst@redhat.com to series.
+> >  * Added a typo fixup for the virtio-trace README.
+> > 
+> > Steven, assuming there are no objections, would you feel comfortable
+> > taking this series through your tree?
+> 
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> 
+> if you want the virtio patches through my tree after all, let me know.
 
-I'm not convinced about the use of the DXE services for this, and I
-think we should replace this patch with changes that base all the new
-protection code on the EFI memory attributes protocol only.
+Yes, please, that would be great.  I'll send out v3 with the few patches that
+haven't gotten a response, but I'll drop the virtio patches assuming you've
+got them.
 
-We introduced that DXE code to remove protections from memory that was
-mapped read-only and/or non-executable, and described as such in the
-GCD memory map.
-
-Using it to manipulate restricted permissions like this is quite a
-different thing, and sadly (at least in EDK2), the GCD system memory
-map is not kept in sync with the updated permissions, i.e, the W^X
-protections for loaded images and the NX protection for arbitrary page
-allocations are both based on the PI CPU arch protocol, which
-manipulates the page tables directly, but does not record the modified
-attributes in the GCD or EFI memory maps, as this would result in
-massive fragmentation and break lots of other things.
-
-That means that, except for the specific use case for which we
-introduced the DXE services calls, the only reliable way to figure out
-what permission attributes a certain range of memory is using is the
-EFI memory attributes protocol, and I don't think we should use
-anything else for tightening down these protections.
-
-
-
-
-> ---
->  drivers/firmware/efi/libstub/mem.c      | 168 ++++++++++++++++++------
->  drivers/firmware/efi/libstub/x86-stub.c |  17 ---
->  2 files changed, 128 insertions(+), 57 deletions(-)
->
-> diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
-> index 3e47e5931f04..07d54c88c62e 100644
-> --- a/drivers/firmware/efi/libstub/mem.c
-> +++ b/drivers/firmware/efi/libstub/mem.c
-> @@ -5,6 +5,9 @@
->
->  #include "efistub.h"
->
-> +const efi_dxe_services_table_t *efi_dxe_table;
-> +efi_memory_attribute_protocol_t *efi_mem_attrib_proto;
-> +
->  /**
->   * efi_get_memory_map() - get memory map
->   * @map:               pointer to memory map pointer to which to assign the
-> @@ -129,66 +132,47 @@ void efi_free(unsigned long size, unsigned long addr)
->         efi_bs_call(free_pages, addr, nr_pages);
->  }
->
-> -/**
-> - * efi_adjust_memory_range_protection() - change memory range protection attributes
-> - * @start:     memory range start address
-> - * @size:      memory range size
-> - *
-> - * Actual memory range for which memory attributes are modified is
-> - * the smallest ranged with start address and size aligned to EFI_PAGE_SIZE
-> - * that includes [start, start + size].
-> - *
-> - * @return: status code
-> - */
-> -efi_status_t efi_adjust_memory_range_protection(unsigned long start,
-> -                                               unsigned long size,
-> -                                               unsigned long attributes)
-> +static void retrieve_dxe_table(void)
-> +{
-> +       efi_dxe_table = get_efi_config_table(EFI_DXE_SERVICES_TABLE_GUID);
-> +       if (efi_dxe_table &&
-> +           efi_dxe_table->hdr.signature != EFI_DXE_SERVICES_TABLE_SIGNATURE) {
-> +               efi_warn("Ignoring DXE services table: invalid signature\n");
-> +               efi_dxe_table = NULL;
-> +       }
-> +}
-> +
-> +static efi_status_t adjust_mem_attrib_dxe(efi_physical_addr_t rounded_start,
-> +                                         efi_physical_addr_t rounded_end,
-> +                                         unsigned long attributes)
->  {
->         efi_status_t status;
->         efi_gcd_memory_space_desc_t desc;
-> -       efi_physical_addr_t end, next;
-> -       efi_physical_addr_t rounded_start, rounded_end;
-> +       efi_physical_addr_t end, next, start;
->         efi_physical_addr_t unprotect_start, unprotect_size;
->
-> -       if (efi_dxe_table == NULL)
-> -               return EFI_UNSUPPORTED;
-> +       if (!efi_dxe_table) {
-> +               retrieve_dxe_table();
->
-> -       /*
-> -        * This function should not be used to modify attributes
-> -        * other than writable/executable.
-> -        */
-> -
-> -       if ((attributes & ~(EFI_MEMORY_RO | EFI_MEMORY_XP)) != 0)
-> -               return EFI_INVALID_PARAMETER;
-> -
-> -       /*
-> -        * Disallow simultaniously executable and writable memory
-> -        * to inforce W^X policy if direct extraction code is enabled.
-> -        */
-> -
-> -       if ((attributes & (EFI_MEMORY_RO | EFI_MEMORY_XP)) == 0) {
-> -               efi_warn("W^X violation at [%08lx,%08lx]\n",
-> -                        (unsigned long)rounded_start,
-> -                        (unsigned long)rounded_end);
-> +               if (!efi_dxe_table)
-> +                       return EFI_UNSUPPORTED;
->         }
->
-> -       rounded_start = rounddown(start, EFI_PAGE_SIZE);
-> -       rounded_end = roundup(start + size, EFI_PAGE_SIZE);
-> -
->         /*
->          * Don't modify memory region attributes, they are
->          * already suitable, to lower the possibility to
->          * encounter firmware bugs.
->          */
->
-> -       for (end = start + size; start < end; start = next) {
-> +
-> +       for (start = rounded_start, end = rounded_end; start < end; start = next) {
->
->                 status = efi_dxe_call(get_memory_space_descriptor,
->                                       start, &desc);
->
->                 if (status != EFI_SUCCESS) {
->                         efi_warn("Unable to get memory descriptor at %lx\n",
-> -                                start);
-> +                                (unsigned long)start);
->                         return status;
->                 }
->
-> @@ -230,3 +214,107 @@ efi_status_t efi_adjust_memory_range_protection(unsigned long start,
->
->         return EFI_SUCCESS;
->  }
-> +
-> +static void retrieve_memory_attributes_proto(void)
-> +{
-> +       efi_status_t status;
-> +       efi_guid_t guid = EFI_MEMORY_ATTRIBUTE_PROTOCOL_GUID;
-> +
-> +       status = efi_bs_call(locate_protocol, &guid, NULL,
-> +                            (void **)&efi_mem_attrib_proto);
-> +       if (status != EFI_SUCCESS)
-> +               efi_mem_attrib_proto = NULL;
-> +}
-> +
-> +/**
-> + * efi_adjust_memory_range_protection() - change memory range protection attributes
-> + * @start:     memory range start address
-> + * @size:      memory range size
-> + *
-> + * Actual memory range for which memory attributes are modified is
-> + * the smallest ranged with start address and size aligned to EFI_PAGE_SIZE
-> + * that includes [start, start + size].
-> + *
-> + * This function first attempts to use EFI_MEMORY_ATTRIBUTE_PROTOCOL,
-> + * that is a part of UEFI Specification since version 2.10.
-> + * If the protocol is unavailable it falls back to DXE services functions.
-> + *
-> + * @return: status code
-> + */
-> +efi_status_t efi_adjust_memory_range_protection(unsigned long start,
-> +                                               unsigned long size,
-> +                                               unsigned long attributes)
-> +{
-> +       efi_status_t status;
-> +       efi_physical_addr_t rounded_start, rounded_end;
-> +       unsigned long attr_clear;
-> +
-> +       /*
-> +        * This function should not be used to modify attributes
-> +        * other than writable/executable.
-> +        */
-> +
-> +       if ((attributes & ~(EFI_MEMORY_RO | EFI_MEMORY_XP)) != 0)
-> +               return EFI_INVALID_PARAMETER;
-> +
-> +       /*
-> +        * Warn if requested to make memory simultaneously
-> +        * executable and writable to enforce W^X policy.
-> +        */
-> +
-> +       if ((attributes & (EFI_MEMORY_RO | EFI_MEMORY_XP)) == 0) {
-> +               efi_warn("W^X violation at  [%08lx,%08lx]",
-> +                        (unsigned long)rounded_start,
-> +                        (unsigned long)rounded_end);
-> +       }
-> +
-> +       rounded_start = rounddown(start, EFI_PAGE_SIZE);
-> +       rounded_end = roundup(start + size, EFI_PAGE_SIZE);
-> +
-> +       if (!efi_mem_attrib_proto) {
-> +               retrieve_memory_attributes_proto();
-> +
-> +               /* Fall back to DXE services if unsupported */
-> +               if (!efi_mem_attrib_proto) {
-> +                       return adjust_mem_attrib_dxe(rounded_start,
-> +                                                    rounded_end,
-> +                                                    attributes);
-> +               }
-> +       }
-> +
-> +       /*
-> +        * Unlike DXE services functions, EFI_MEMORY_ATTRIBUTE_PROTOCOL
-> +        * does not clear unset protection bit, so it needs to be cleared
-> +        * explcitly
-> +        */
-> +
-> +       attr_clear = ~attributes &
-> +                    (EFI_MEMORY_RO | EFI_MEMORY_XP | EFI_MEMORY_RP);
-> +
-> +       status = efi_call_proto(efi_mem_attrib_proto,
-> +                               clear_memory_attributes,
-> +                               rounded_start,
-> +                               rounded_end - rounded_start,
-> +                               attr_clear);
-> +       if (status != EFI_SUCCESS) {
-> +               efi_warn("Failed to clear memory attributes at [%08lx,%08lx]: %lx",
-> +                        (unsigned long)rounded_start,
-> +                        (unsigned long)rounded_end,
-> +                        status);
-> +               return status;
-> +       }
-> +
-> +       status = efi_call_proto(efi_mem_attrib_proto,
-> +                               set_memory_attributes,
-> +                               rounded_start,
-> +                               rounded_end - rounded_start,
-> +                               attributes);
-> +       if (status != EFI_SUCCESS) {
-> +               efi_warn("Failed to set memory attributes at [%08lx,%08lx]: %lx",
-> +                        (unsigned long)rounded_start,
-> +                        (unsigned long)rounded_end,
-> +                        status);
-> +       }
-> +
-> +       return status;
-> +}
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index 60697fcd8950..06a62b121521 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -23,7 +23,6 @@
->  #define MAXMEM_X86_64_4LEVEL (1ull << 46)
->
->  const efi_system_table_t *efi_system_table;
-> -const efi_dxe_services_table_t *efi_dxe_table;
->  u32 image_offset __section(".data");
->  static efi_loaded_image_t *image __section(".data");
->
-> @@ -357,15 +356,6 @@ void __noreturn efi_exit(efi_handle_t handle, efi_status_t status)
->  static void setup_sections_memory_protection(unsigned long image_base)
->  {
->  #ifdef CONFIG_EFI_DXE_MEM_ATTRIBUTES
-> -       efi_dxe_table = get_efi_config_table(EFI_DXE_SERVICES_TABLE_GUID);
-> -
-> -       if (!efi_dxe_table ||
-> -           efi_dxe_table->hdr.signature != EFI_DXE_SERVICES_TABLE_SIGNATURE) {
-> -               efi_warn("Unable to locate EFI DXE services table\n");
-> -               efi_dxe_table = NULL;
-> -               return;
-> -       }
-> -
->         /* .setup [image_base, _head] */
->         efi_adjust_memory_range_protection(image_base,
->                                            (unsigned long)_head - image_base,
-> @@ -732,13 +722,6 @@ asmlinkage unsigned long efi_main(efi_handle_t handle,
->         if (efi_system_table->hdr.signature != EFI_SYSTEM_TABLE_SIGNATURE)
->                 efi_exit(handle, EFI_INVALID_PARAMETER);
->
-> -       efi_dxe_table = get_efi_config_table(EFI_DXE_SERVICES_TABLE_GUID);
-> -       if (efi_dxe_table &&
-> -           efi_dxe_table->hdr.signature != EFI_DXE_SERVICES_TABLE_SIGNATURE) {
-> -               efi_warn("Ignoring DXE services table: invalid signature\n");
-> -               efi_dxe_table = NULL;
-> -       }
-> -
->         setup_sections_memory_protection(bzimage_addr - image_offset);
->
->  #ifdef CONFIG_CMDLINE_BOOL
-> --
-> 2.37.4
->
+Thanks!
