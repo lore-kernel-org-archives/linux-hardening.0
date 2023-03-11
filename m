@@ -2,37 +2,62 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26E6C6FD1C
-	for <linux-hardening@archiver.kernel.org>; Sat, 11 Mar 2023 20:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F3FC6FD1F
+	for <linux-hardening@archiver.kernel.org>; Sat, 11 Mar 2023 22:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbjCKUZN (ORCPT
+        id S229621AbjCKW4T (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 11 Mar 2023 15:25:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46302 "EHLO
+        Sat, 11 Mar 2023 17:56:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjCKUZH (ORCPT
+        with ESMTP id S229478AbjCKW4S (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 11 Mar 2023 15:25:07 -0500
-Received: from smtp49.naquadria.it (smtp49.naquadria.it [185.54.213.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E13741B65
-        for <linux-hardening@vger.kernel.org>; Sat, 11 Mar 2023 12:25:05 -0800 (PST)
-Received: from smtp.naquadria.it (smtp [10.0.0.237])
-        by smtp40.naquadria.it (Postfix) with ESMTP id A49D04826EC
-        for <linux-hardening@vger.kernel.org>; Sat, 11 Mar 2023 21:24:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intre.it; s=default;
-        t=1678566295; bh=67YUKRljTtxMaX03oT9JHitcFOIZ4R2MxZy7qZt7iwI=;
-        h=From:To:Subject:Date:References:In-Reply-To;
-        b=H8MLrjOFQO3MEVjAHFpAMTwgxjd+1+1fDR8k+swxB8+vPzfEft6z+tsgMOsyHo4/U
-         XPbyCcU7ROP3gDM77eSF7B6tQEOOrO0gkjrWujJfNfwSu8Sy1eaOQLSSnEJoLh2gZz
-         F3x0Y8D44Eo/uuB6oEVForO1Y9YqqKie7kKsyL5A=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=intre.it; s=mail;
-        t=1678566289; bh=67YUKRljTtxMaX03oT9JHitcFOIZ4R2MxZy7qZt7iwI=;
-        h=From:To:Subject:Date:References:In-Reply-To;
-        b=D5aWb3ffB2qGWW5NtP/zltE1rk8guZja0OZQfbjiBbRRMQuvrNdjvDN4kDz+Iyzw1
-         0PmuZseBRZ3vuDF6kIUsn7OFKJiSekS8JQFn9aceEgS0CdwXnvIvDEz3urlTD4775+
-         Y42KxUq7qtkCk2yaoB17H/udX9cjfM8IIM5C1IWs=
-From:   Ornaghi Davide <davide.ornaghi@intre.it>
-To:     Kees Cook <kees@kernel.org>,
+        Sat, 11 Mar 2023 17:56:18 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5937059811;
+        Sat, 11 Mar 2023 14:56:17 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id q16so8184639wrw.2;
+        Sat, 11 Mar 2023 14:56:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678575376;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FRJm994bLxnOpAp+E4u5XM0Yn52ttuGkoeVqmWeZf60=;
+        b=OcMAdo4fhR3HXLrDBbxbeWQeJBDZMdhMxQSgOf7/Jr+CDqw5Tng8vnYs7/RAxxyKXj
+         pdCIJ76ms1rWp1fT6+l4oKNrROQhuJgIUWFi1xrt0V3FHkb5og2TpH8AIlkC5EFeD/ci
+         9nUIxzHh3w8xiRvUX0GXt+veKQti7ijt1pha/nCLY3yA0joG62yMjVy0AQgbSrclezaO
+         R9DRr2BP7bWYwjIwePFLBfYuIv9TYuXWQr+NnvjV2E09mK7++T+8SLUfIbRWOtQDcYbL
+         e8SM0sCMjENDBseY5x0F4BG6/aL630Eohvy63sUxn64MTTKIQ/hK1kniF/gBgha1hERQ
+         YNXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678575376;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FRJm994bLxnOpAp+E4u5XM0Yn52ttuGkoeVqmWeZf60=;
+        b=QRDCvUwbDTXyjT71qYMHwfNRdeBkRwLxF0uILip9o62Z36c3YJjG9sHDB3Nh3Qlm1S
+         FT2VAix6Wn3hcG0JVPYfUTbaOkCZTcmyakhkd0D4qhp4g/BrDdpdCvtJU85L+8UpppVU
+         Nr+4Bl1C0pWefZwmYrnEFJjarBkQXvA1HEtvf4Vg8kcTWEbkll4vej+AAP678zxn5PM0
+         /gtOMP6rC1oVZi0tlL63niEGmype4hQAZUuL8Q7ThNCTlWa7jjxU5+iie5r3JdfOGlts
+         0UX3j2tQvPfOrb9om+duwRDuDC5gfZbTggChsrzYJ0/cM6COP1g5QKJy1mM9g4oNg1ej
+         jSaw==
+X-Gm-Message-State: AO0yUKVNJR4V2zRvuTTQ2K/qjqVZSiBR+1F77PCsDg3jKnnQuod2zDZ4
+        RxA4lvVfgkiSNpy8yTX2r5bL1mnwdhXHHPFTE2RdYPnJM6flYw==
+X-Google-Smtp-Source: AK7set/SCcEDI2KJ4hEFObvnslfkf0macT3DAmUw1XPG0uSBoI5v5eIdyuiRt7RbnTZ7g66lkjinYdkohhIh+oLU7HA=
+X-Received: by 2002:a5d:6a48:0:b0:2c3:f972:cef with SMTP id
+ t8-20020a5d6a48000000b002c3f9720cefmr1257495wrw.0.1678575375619; Sat, 11 Mar
+ 2023 14:56:15 -0800 (PST)
+MIME-Version: 1.0
+References: <ef2c926cf7b148028f1902279cb35a41@intre.it> <906901ED-DAE3-4A36-A3E4-16DF6F251C48@kernel.org>
+ <c2d598d5a11d4a29815a4eca63606159@intre.it>
+In-Reply-To: <c2d598d5a11d4a29815a4eca63606159@intre.it>
+From:   Jere Viikari <jere.viikari@gmail.com>
+Date:   Sun, 12 Mar 2023 00:56:04 +0200
+Message-ID: <CALDd4YW6_Vw=VHaxzZiLjhr9w+tqbVmCaXKGiUFMeKbWxkiRxg@mail.gmail.com>
+Subject: Re: [RFC PATCH] Introduce per-interrupt kernel-stack randomization
+To:     Ornaghi Davide <davide.ornaghi@intre.it>
+Cc:     Kees Cook <kees@kernel.org>,
         "keescook@chromium.org" <keescook@chromium.org>,
         "paulmck@kernel.org" <paulmck@kernel.org>,
         "nsaenzju@redhat.com" <nsaenzju@redhat.com>,
@@ -41,140 +66,63 @@ To:     Kees Cook <kees@kernel.org>,
         "frederic@kernel.org" <frederic@kernel.org>,
         "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: R: [RFC PATCH] Introduce per-interrupt kernel-stack randomization
-Thread-Topic: [RFC PATCH] Introduce per-interrupt kernel-stack randomization
-Thread-Index: AQHZUsnUS1bJ0/NeckG7hJSc9SaMEa70GNEAgAG5L5A=
-Date:   Sat, 11 Mar 2023 20:25:10 +0000
-Message-ID: <c2d598d5a11d4a29815a4eca63606159@intre.it>
-References: <ef2c926cf7b148028f1902279cb35a41@intre.it>
- <906901ED-DAE3-4A36-A3E4-16DF6F251C48@kernel.org>
-In-Reply-To: <906901ED-DAE3-4A36-A3E4-16DF6F251C48@kernel.org>
-Accept-Language: it-IT, en-US
-Content-Language: it-IT
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [192.168.141.101]
-x-c2processedorg: 3c642b5e-0ab0-4568-9f09-fc6a11a1a8a0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-DQoNCg0KRGF2aWRlIE9ybmFnaGkNCk9mZmVuc2l2ZSBTZWN1cml0eSBTcGVjaWFsaXN0ICYgSW50
-cnVzaW9uIEFuYWx5c3QNCg0KVC4gKzM5IDAzOSAyOC40NS43NzQgICszOSAwMzkgOTYuMzQuNzE3
-DQpJbnRyw6kgU2VjdXJpdHkgLSBhIHZlbnR1cmUgb2YgSW50csOpIFMuci5sLg0Kd3d3LmludHJl
-Lml0DQoNCk5vdGEgaW5mb3JtYXRpdmE6IEluIG90dGVtcGVyYW56YSBkZWxsYSBMZWdnZSAxOTYv
-MjAwMyBlIGFsIFJlZ29sYW1lbnRvIFVFIDY3OS8yMDE2IChHRFBSKSBzdWxsYSB0dXRlbGEgZGVp
-IGRhdGkgcGVyc29uYWxpLCBsZSBpbmZvcm1hemlvbmkgY29udGVudXRlIGluIHF1ZXN0byBtZXNz
-YWdnaW8gc29ubyBzdHJldHRhbWVudGUgcmlzZXJ2YXRlIGUgc29ubyBlc2NsdXNpdmFtZW50ZSBp
-bmRpcml6emF0ZSBhbCBkZXN0aW5hdGFyaW8gaW5kaWNhdG8gKG9wcHVyZSBhbGxhIHBlcnNvbmEg
-cmVzcG9uc2FiaWxlIGRpIHJpbWV0dGVybG8gYWwgZGVzdGluYXRhcmlvKS4gTGUgaWRlZSBlIG9w
-aW5pb25pIGVzcHJlc3NlIHNvbm8gcXVlbGxlIGRlbGzigJlhdXRvcmUgZSwgYSBtZW5vIGNoZSBu
-b24gc2lhIGNoaWFyYW1lbnRlIHNjcml0dG8sIG5vbiByYXBwcmVzZW50YW5vIG5lY2Vzc2FyaWFt
-ZW50ZSBxdWVsbGUgZGkgSW50csOpIFMuci5sLiBRdWFsc2lhc2kgdXNvLCByaXByb2R1emlvbmUg
-byBkaXZ1bGdhemlvbmUgZGkgcXVlc3RvIG1lc3NhZ2dpbyBlJyB2aWV0YXRhLCBhbmNoZSBhaSBz
-ZW5zaSBkZWxs4oCZYXJ0LiA2MTYgYy5wLiBpdGFsaWFuby4gTmVsIGNhc28gaW4gY3VpIGF2ZXN0
-ZSByaWNldnV0byBxdWVzdGEgZS1tYWlsIHBlciBlcnJvcmUsIHZvZ2xpYXRlIGF2dmVydGlyY2kg
-YWwgcGl1JyBwcmVzdG8gYSBtZXp6byBwb3N0YSBlbGV0dHJvbmljYSBhbGzigJlpbmRpcml6em8g
-cHJpdmFjeUBpbnRyZS5pdCBlIGRpc3RydWdnZXJlIGlsIHByZXNlbnRlIG1lc3NhZ2dpby4NClBs
-ZWFzZSBub3RlOiBJbiByZWZlcmVuY2UgdG8gSXRhbGlhbiBsYXcgMTk2LzIwMDMgYW5kIHRvIHRo
-ZSBSZWd1bGF0aW9uIEVVIDY3OS8yMDE2IChHRFBSKSwgdGhpcyBlbWFpbCB0cmFuc21pc3Npb24g
-aW5jbHVkaW5nIGl0cyBhdHRhY2htZW50cywgaXMgaW50ZW5kZWQgb25seSBmb3IgdGhlIHBlcnNv
-biBvciBlbnRpdHkgdG8gd2hpY2ggaXQgaXMgYWRkcmVzc2VkIGFuZCBtYXkgY29udGFpbiBjb25m
-aWRlbnRpYWwgYW5kL29yIHByaXZpbGVnZWQgbWF0ZXJpYWwuIEFueSB2aWV3cyBvciBvcGluaW9u
-cyBhcmUgc29sZWx5IHRob3NlIG9mIHRoZSBhdXRob3IgYW5kIGRvIG5vdCBuZWNlc3NhcmlseSBy
-ZXByZXNlbnQgdGhvc2Ugb2YgSW50csOpIFMuci5sLiwgdW5sZXNzIHNwZWNpZmljYWxseSBzdGF0
-ZWQuIEFueSByZXZpZXcsIHJldHJhbnNtaXNzaW9uLCBkaXNzZW1pbmF0aW9uIG9yIG90aGVyIHVz
-ZSBvZiwgb3IgdGFraW5nIG9mIGFueSBhY3Rpb24gaW4gcmVsaWFuY2UgdXBvbiwgdGhpcyBpbmZv
-cm1hdGlvbiBieSBwZXJzb25zIG9yIGVudGl0aWVzIG90aGVyIHRoYW4gdGhlIGludGVuZGVkIHJl
-Y2lwaWVudCBpcyBwcm9oaWJpdGVkLiBJZiB5b3UgcmVjZWl2ZWQgdGhpcyBlbWFpbCBkdWUgdG8g
-YW4gZXJyb3IsIHBsZWFzZSBjb250YWN0IHRoZSBzZW5kZXIgdmlhIGUtbWFpbCB0byB0aGUgYWRk
-cmVzcyBwcml2YWN5QGludHJlLml0IGFuZCBkZWxldGUgdGhlIGVtYWlsIHRyYW5zbWlzc2lvbiBp
-bW1lZGlhdGVseS4NCj4gLS0tLS1NZXNzYWdnaW8gb3JpZ2luYWxlLS0tLS0NCj4gRGE6IEtlZXMg
-Q29vayA8a2Vlc0BrZXJuZWwub3JnPg0KPiBJbnZpYXRvOiB2ZW5lcmTDrCAxMCBtYXJ6byAyMDIz
-IDE2OjQ3DQo+IEE6IE9ybmFnaGkgRGF2aWRlIDxkYXZpZGUub3JuYWdoaUBpbnRyZS5pdD47IGtl
-ZXNjb29rQGNocm9taXVtLm9yZzsNCj4gcGF1bG1ja0BrZXJuZWwub3JnOyBuc2FlbnpqdUByZWRo
-YXQuY29tOyBwZXRlcnpAaW5mcmFkZWFkLm9yZzsNCj4gYmlnZWFzeUBsaW51dHJvbml4LmRlOyBm
-cmVkZXJpY0BrZXJuZWwub3JnOyBsaW51eC1oYXJkZW5pbmdAdmdlci5rZXJuZWwub3JnOw0KPiBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IE9nZ2V0dG86IFJlOiBbUkZDIFBBVENIXSBJ
-bnRyb2R1Y2UgcGVyLWludGVycnVwdCBrZXJuZWwtc3RhY2sgcmFuZG9taXphdGlvbg0KPg0KPiBP
-biBNYXJjaCA5LCAyMDIzIDE6MDA6MjAgUE0gUFNULCBPcm5hZ2hpIERhdmlkZSA8ZGF2aWRlLm9y
-bmFnaGlAaW50cmUuaXQ+DQo+IHdyb3RlOg0KPiA+UGVyLXN5c3RlbS1jYWxsIGtlcm5lbC1zdGFj
-ayByYW5kb21pemF0aW9uIHdhcyBpbnRyb2R1Y2VkIHRvIHByZXZlbnQNCj4gPmF0dGFja2VycyBm
-cm9tIHByZWRpY3RpbmcgdGhlIGFkZHJlc3NlcyBvZiBjZXJ0YWluIGRhdGEgc3RydWN0dXJlcyBv
-bg0KPiA+dGhlIHN0YWNrIHVwb24gc2VxdWVudGlhbCBzeXNjYWxscy4NCj4gPg0KPiA+SG93ZXZl
-ciwgd2hlbiBlbnRlcmluZyBzb2Z0IGludGVycnVwdCBjb250ZXh0LCBhIG5ldyBzdGFjayBpcyBh
-bGxvY2F0ZWQNCj4gPnZpYSB2bWFsbG9jIGF0IGEgbG9jYXRpb24gdGhhdCBzdGF5cyBjb25zdGFu
-dCBmb3IgZWFjaCBjcHUgdW50aWwgcmVib290Lg0KPiA+DQo+ID5SZWNlbnQgc2VjdXJpdHkgdnVs
-bmVyYWJpbGl0aWVzIHN1Y2ggYXMgQ1ZFLTIwMjMtMDE3OSBzaG93ZWQgaG93IGFuDQo+ID5pbmZv
-bGVhayB1bmRlciB0aGUgc29mdGlycSBjb250ZXh0IGNvdWxkIGFsbG93IHRoZSBhdHRhY2tlciB0
-byBsb2NhdGUNCj4gPmtlcm5lbCBkYXRhIHN0cnVjdHVyZXMgbGlrZSBuZnRhYmxlcyByZWdpc3Rl
-cnMsIHdoZXJlIGEgbWFsaWNpb3VzDQo+ID5wYXlsb2FkIGNvdWxkIGJlIHN0b3JlZC4NCj4gPg0K
-PiA+SW5zdGVhZCBvZiBrZWVwaW5nIGEgY29uc3RhbnQgYWRkcmVzcywgcmV1c2Uga3N0YWNrX29m
-ZnNldCB0byBhbHNvDQo+ID5yYW5kb21pemUgdGhlIHNvZnQgaW50ZXJydXB0IHN0YWNrIG9uIGV2
-ZXJ5IF9fZG9fc29mdGlycSBlbnRyeS4NCj4gPg0KPiA+VGhpcyBiYXNpYyBwYXRjaCB2ZXJzaW9u
-IGhhcyB0aGUgZHJhd2JhY2sgb2YgdXNpbmcgdGhlIHNhbWUgYmFzZQ0KPiA+YWRkcmVzcyBmb3Ig
-YWxsIHBlbmRpbmcgc29mdGlycXMsIGluY2x1ZGluZyBzb2Z0aXJxZCBvbmVzLCBidXQgaGFzIGxv
-dw0KPiA+aW1wYWN0cyBvbiBwZXJmb3JtYW5jZS4NCj4gPkFsdGVybmF0aXZlbHksIHRoZSBzdGFj
-ayBvZmZzZXQgY291bGQgYmUgdXBkYXRlZCBmb3IgZXZlcnkgc29mdGlycQ0KPiA+YWN0aW9uLCB3
-aGljaCBJIHN1c3BlY3QgbWlnaHQgY2F1c2Ugc29tZSBwZXJmb3JtYW5jZSBpc3N1ZXMuDQo+ID4N
-Cj4gPlNpZ25lZC1vZmYtYnk6IERhdmlkZSBPcm5hZ2hpIDxkYXZpZGUub3JuYWdoaUBpbnRyZS5p
-dD4NCj4NCj4gVGhpcyBzZWVtcyBsaWtlIGEgZ29vZCBwbGFjZSB0byBzdGFydC4gVGhhbmtzIQ0K
-Pg0KPiBSZXZpZXdlZC1ieTogS2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5vcmc+DQo+DQo+
-IE9uZSB0aG91Z2h0IGlzIHRoYXQgd2l0aG91dCBhIHJlc2VsZWN0aW9uIG9mIHRoZSBvZmZzZXQg
-YWZ0ZXIgdGhpcyB1c2UsIHRoZSBvZmZzZXQNCj4gd2lsbCBiZSBzaGFyZWQgYnkgdGhlIG5leHQg
-c3lzY2FsbCB0b28uIElmIHNvZnRpcnEgdGltaW5nIGlzIGNvbnRyb2xsYWJsZSBieSBhbg0KPiBh
-dHRhY2tlciwgdGhpcyBtaWdodCBhbGxvdyBmb3Igc29tZSBleHBvc3VyZT8NCg0KVGhhdCB3b3Vs
-ZCBiZSBhIHByb2JsZW0gaW5kZWVkLCBvbmUgd2F5IHRvIHNvbHZlIGl0IGlzIHRvIGtlZXAgdGhl
-IHNvZnRpcnEgb2Zmc2V0IGluZGVwZW5kZW50IGZyb20gdGhlIHN5c2NhbGwgb25lIGFuZCB1cGRh
-dGUgaXQgYXQgdGhlIGVuZCBvZiBfX2RvX3NvZnRpcnEuDQpTaG91bGQgd2UgYWRkIGEgbmV3IGJ1
-aWxkIG9wdGlvbiBvciBpbnRlZ3JhdGUgaXQgd2l0aCBDT05GSUdfUkFORE9NSVpFX0tTVEFDS19P
-RkZTRVQ/DQoNCi0gRGF2aWRlDQoNCj4NCj4gLUtlZXMNCj4NCj4gPi0tLQ0KPiA+IGtlcm5lbC9z
-b2Z0aXJxLmMgfCAyICsrDQo+ID4gMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0KPiA+
-DQo+ID5kaWZmIC0tZ2l0IGEva2VybmVsL3NvZnRpcnEuYyBiL2tlcm5lbC9zb2Z0aXJxLmMgaW5k
-ZXgNCj4gPmM4YTY5MTNjMDY3ZC4uOGMzZWIyZmZmZTM5IDEwMDY0NA0KPiA+LS0tIGEva2VybmVs
-L3NvZnRpcnEuYw0KPiA+KysrIGIva2VybmVsL3NvZnRpcnEuYw0KPiA+QEAgLTI3LDYgKzI3LDcg
-QEANCj4gPiAjaW5jbHVkZSA8bGludXgvdGljay5oPg0KPiA+ICNpbmNsdWRlIDxsaW51eC9pcnEu
-aD4NCj4gPiAjaW5jbHVkZSA8bGludXgvd2FpdF9iaXQuaD4NCj4gPisjaW5jbHVkZSA8bGludXgv
-cmFuZG9taXplX2tzdGFjay5oPg0KPiA+DQo+ID4gI2luY2x1ZGUgPGFzbS9zb2Z0aXJxX3N0YWNr
-Lmg+DQo+ID4NCj4gPkBAIC01MzUsNiArNTM2LDcgQEAgYXNtbGlua2FnZSBfX3Zpc2libGUgdm9p
-ZCBfX3NvZnRpcnFfZW50cnkNCj4gPl9fZG9fc29mdGlycSh2b2lkKQ0KPiA+ICBfX3UzMiBwZW5k
-aW5nOw0KPiA+ICBpbnQgc29mdGlycV9iaXQ7DQo+ID4NCj4gPisgYWRkX3JhbmRvbV9rc3RhY2tf
-b2Zmc2V0KCk7DQo+ID4gIC8qDQo+ID4gICogTWFzayBvdXQgUEZfTUVNQUxMT0MgYXMgdGhlIGN1
-cnJlbnQgdGFzayBjb250ZXh0IGlzIGJvcnJvd2VkIGZvcg0KPiA+dGhlDQo+ID4gICogc29mdGly
-cS4gQSBzb2Z0aXJxIGhhbmRsZWQsIHN1Y2ggYXMgbmV0d29yayBSWCwgbWlnaHQgc2V0DQo+ID5Q
-Rl9NRU1BTExPQw0KPiA+LS0NCj4gPjIuMzQuMQ0KPiA+DQo+ID4NCj4gPkRhdmlkZSBPcm5hZ2hp
-DQo+ID5PZmZlbnNpdmUgU2VjdXJpdHkgU3BlY2lhbGlzdCAmIEludHJ1c2lvbiBBbmFseXN0DQo+
-ID4NCj4gPlQuICszOSAwMzkgMjguNDUuNzc0ICszOSAwMzkgOTYuMzQuNzE3DQo+ID5JbnRyw6kg
-U2VjdXJpdHkgLSBhIHZlbnR1cmUgb2YgSW50csOpIFMuci5sLg0KPiA+d3d3LmludHJlLml0DQo+
-ID4NCj4gPk5vdGEgaW5mb3JtYXRpdmE6IEluIG90dGVtcGVyYW56YSBkZWxsYSBMZWdnZSAxOTYv
-MjAwMyBlIGFsIFJlZ29sYW1lbnRvDQo+IFVFIDY3OS8yMDE2IChHRFBSKSBzdWxsYSB0dXRlbGEg
-ZGVpIGRhdGkgcGVyc29uYWxpLCBsZSBpbmZvcm1hemlvbmkgY29udGVudXRlDQo+IGluIHF1ZXN0
-byBtZXNzYWdnaW8gc29ubyBzdHJldHRhbWVudGUgcmlzZXJ2YXRlIGUgc29ubyBlc2NsdXNpdmFt
-ZW50ZQ0KPiBpbmRpcml6emF0ZSBhbCBkZXN0aW5hdGFyaW8gaW5kaWNhdG8gKG9wcHVyZSBhbGxh
-IHBlcnNvbmEgcmVzcG9uc2FiaWxlIGRpDQo+IHJpbWV0dGVybG8gYWwgZGVzdGluYXRhcmlvKS4g
-TGUgaWRlZSBlIG9waW5pb25pIGVzcHJlc3NlIHNvbm8gcXVlbGxlIGRlbGwnYXV0b3JlIGUsDQo+
-IGEgbWVubyBjaGUgbm9uIHNpYSBjaGlhcmFtZW50ZSBzY3JpdHRvLCBub24gcmFwcHJlc2VudGFu
-byBuZWNlc3NhcmlhbWVudGUNCj4gcXVlbGxlIGRpIEludHLDqSBTLnIubC4gUXVhbHNpYXNpIHVz
-bywgcmlwcm9kdXppb25lIG8gZGl2dWxnYXppb25lIGRpIHF1ZXN0bw0KPiBtZXNzYWdnaW8gZScg
-dmlldGF0YSwgYW5jaGUgYWkgc2Vuc2kgZGVsbCdhcnQuIDYxNiBjLnAuIGl0YWxpYW5vLiBOZWwg
-Y2FzbyBpbiBjdWkNCj4gYXZlc3RlIHJpY2V2dXRvIHF1ZXN0YSBlLW1haWwgcGVyIGVycm9yZSwg
-dm9nbGlhdGUgYXZ2ZXJ0aXJjaSBhbCBwaXUnIHByZXN0byBhDQo+IG1lenpvIHBvc3RhIGVsZXR0
-cm9uaWNhIGFsbCdpbmRpcml6em8gcHJpdmFjeUBpbnRyZS5pdCBlIGRpc3RydWdnZXJlIGlsIHBy
-ZXNlbnRlDQo+IG1lc3NhZ2dpby4NCj4gPg0KPiA+UGxlYXNlIG5vdGU6IEluIHJlZmVyZW5jZSB0
-byBJdGFsaWFuIGxhdyAxOTYvMjAwMyBhbmQgdG8gdGhlIFJlZ3VsYXRpb24gRVUNCj4gNjc5LzIw
-MTYgKEdEUFIpLCB0aGlzIGVtYWlsIHRyYW5zbWlzc2lvbiBpbmNsdWRpbmcgaXRzIGF0dGFjaG1l
-bnRzLCBpcw0KPiBpbnRlbmRlZCBvbmx5IGZvciB0aGUgcGVyc29uIG9yIGVudGl0eSB0byB3aGlj
-aCBpdCBpcyBhZGRyZXNzZWQgYW5kIG1heQ0KPiBjb250YWluIGNvbmZpZGVudGlhbCBhbmQvb3Ig
-cHJpdmlsZWdlZCBtYXRlcmlhbC4gQW55IHZpZXdzIG9yIG9waW5pb25zIGFyZQ0KPiBzb2xlbHkg
-dGhvc2Ugb2YgdGhlIGF1dGhvciBhbmQgZG8gbm90IG5lY2Vzc2FyaWx5IHJlcHJlc2VudCB0aG9z
-ZSBvZiBJbnRyw6kgUy5yLmwuLA0KPiB1bmxlc3Mgc3BlY2lmaWNhbGx5IHN0YXRlZC4gQW55IHJl
-dmlldywgcmV0cmFuc21pc3Npb24sIGRpc3NlbWluYXRpb24gb3Igb3RoZXINCj4gdXNlIG9mLCBv
-ciB0YWtpbmcgb2YgYW55IGFjdGlvbiBpbiByZWxpYW5jZSB1cG9uLCB0aGlzIGluZm9ybWF0aW9u
-IGJ5IHBlcnNvbnMgb3INCj4gZW50aXRpZXMgb3RoZXIgdGhhbiB0aGUgaW50ZW5kZWQgcmVjaXBp
-ZW50IGlzIHByb2hpYml0ZWQuIElmIHlvdSByZWNlaXZlZCB0aGlzDQo+IGVtYWlsIGR1ZSB0byBh
-biBlcnJvciwgcGxlYXNlIGNvbnRhY3QgdGhlIHNlbmRlciB2aWEgZS1tYWlsIHRvIHRoZSBhZGRy
-ZXNzDQo+IHByaXZhY3lAaW50cmUuaXQgYW5kIGRlbGV0ZSB0aGUgZW1haWwgdHJhbnNtaXNzaW9u
-IGltbWVkaWF0ZWx5Lg0KPg0KPg0KPiAtLQ0KPiBLZWVzIENvb2sNCg==
+I am concerned about the disclaimer. When I replied, I had also to
+remove all other information to ensure that I did not violate the
+terms.
+
+> Nota informativa: In ottemperanza della Legge 196/2003 e al Regolamento U=
+E 679/2016 (GDPR) sulla tutela dei dati personali, le informazioni contenut=
+e in questo messaggio sono strettamente riservate e sono esclusivamente ind=
+irizzate al destinatario indicato (oppure alla persona responsabile di rime=
+tterlo al destinatario). Le idee e opinioni espresse sono quelle dell=E2=80=
+=99autore e, a meno che non sia chiaramente scritto, non rappresentano nece=
+ssariamente quelle di Intr=C3=A9 S.r.l. Qualsiasi uso, riproduzione o divul=
+gazione di questo messaggio e' vietata, anche ai sensi dell=E2=80=99art. 61=
+6 c.p. italiano. Nel caso in cui aveste ricevuto questa e-mail per errore, =
+vogliate avvertirci al piu' presto a mezzo posta elettronica all=E2=80=99in=
+dirizzo privacy@intre.it e distruggere il presente messaggio.
+> Please note: In reference to Italian law 196/2003 and to the Regulation E=
+U 679/2016 (GDPR), this email transmission including its attachments, is in=
+tended only for the person or entity to which it is addressed and may conta=
+in confidential and/or privileged material. Any views or opinions are solel=
+y those of the author and do not necessarily represent those of Intr=C3=A9 =
+S.r.l., unless specifically stated. Any review, retransmission, disseminati=
+on or other use of, or taking of any action in reliance upon, this informat=
+ion by persons or entities other than the intended recipient is prohibited.=
+ If you received this email due to an error, please contact the sender via =
+e-mail to the address privacy@intre.it and delete the email transmission im=
+mediately.
+
+Google translation in English:
+
+Information note: In compliance with Law 196/2003 and EU Regulation
+679/2016 (GDPR) on the protection of personal data, the information
+contained in this message is strictly confidential and is exclusively
+addressed to the indicated recipient (or to the person responsible for
+forwarding it to the recipient). The ideas and opinions expressed are
+those of the author and, unless clearly stated, do not necessarily
+represent those of Intr=C3=A9 S.r.l. Any use, reproduction or disclosure of
+this message is prohibited, also pursuant to art. 616 criminal code
+Italian. If you have received this e-mail in error, please notify us
+as soon as possible by e-mail at privacy@intre.it and destroy this
+message.
+Please note: In reference to Italian law 196/2003 and to the
+Regulation EU 679/2016 (GDPR), this email transmission including its
+attachments, is intended only for the person or entity to which it is
+addressed and may contain confidential and/or privileged material. Any
+views or opinions are solely those of the author and do not
+necessarily represent those of Intr=C3=A9 S.r.l., unless specifically
+stated. Any review, retransmission, dissemination or other use of, or
+taking of any action in reliance upon, this information by persons or
+entities other than the intended recipient is prohibited. If you
+received this email due to an error, please contact the sender via
+email to the address privacy@intre.it and delete the email
+transmission immediately.
+
+-Jere
