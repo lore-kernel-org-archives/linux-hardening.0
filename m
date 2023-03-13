@@ -2,79 +2,172 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CA7C6FD19
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Mar 2023 11:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C41C6FD19
+	for <linux-hardening@archiver.kernel.org>; Mon, 13 Mar 2023 21:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229753AbjCML5Z (ORCPT
+        id S229565AbjCMVSg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Mar 2023 07:57:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44868 "EHLO
+        Mon, 13 Mar 2023 17:18:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbjCML5M (ORCPT
+        with ESMTP id S229636AbjCMVSf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Mar 2023 07:57:12 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A23A49E8;
-        Mon, 13 Mar 2023 04:57:11 -0700 (PDT)
+        Mon, 13 Mar 2023 17:18:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6064584B3;
+        Mon, 13 Mar 2023 14:18:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0E141B80DFD;
-        Mon, 13 Mar 2023 11:57:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61F31C433EF;
-        Mon, 13 Mar 2023 11:57:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 361B6614F1;
+        Mon, 13 Mar 2023 21:18:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93956C433EF;
+        Mon, 13 Mar 2023 21:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678708628;
-        bh=QavBPPZ0mNNEzUh/31J0LQBKpXwXqiqNCg0R9a4pGmY=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=SIWV2JJ/AntNt7BYwvdZSn/6HXmKgdR67KrfzbK1dBeCV1yPI3s+gmMbmpwbPQaZM
-         if8+X7HCT0YfCzjS/qbSCzmRTjCisWlAA+c56xENbSWyaTJl57mAk2N7d63fr9jnRn
-         m3O79+2QJGW2jko19JCabQ+w4kMyKLXjiq+YlfBkNYfjICYsnGziooeUES8p3+9LFv
-         kv7L3QFkqFbknvtH0PRxHRM9qUz0vgyodYYLGMW8B5LDHocU/4YXkEDQFok7OiZtSp
-         BuhBFYWLYzrhNhgRF5hJYHiro4ouKmS3t+JQYTIGII6UpfMgBGcHt0F0YLp1pB8zNR
-         JRz8ps1nUCKCg==
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Zhang Yi <yizhan@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-In-Reply-To: <20230218185701.never.779-kees@kernel.org>
-References: <20230218185701.never.779-kees@kernel.org>
-Subject: Re: [PATCH] IB/rdmavt: Fix target union member for rvt_post_one_wr()
-Message-Id: <167870862523.139716.15466485320886964551.b4-ty@kernel.org>
-Date:   Mon, 13 Mar 2023 13:57:05 +0200
+        s=k20201202; t=1678742295;
+        bh=6mjt9yhry9OZrGSoFR8oPMv/MhGYAYm5/QiZHqwgr3Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SALdwbEY67uvSj2NKIONHf4FyVXtnGDxNlObLGFUagGwVN6ayhPWsXf3i4zYs8RFv
+         UH3MjeVdE4evNvqVpwAGOpINbdEBSnoUfb80mWBjePkoqSH7RA3/e6vk5zo5UOSADS
+         y8Kmpr6hzjYvbFcaKD0cx8dwZ9k4BUWJryD0iaVSKQ4YBXRqZDyGiCPFkgrhgSTu4/
+         IhdPoofNqzzGwVim6/IrdXd/mO/KiEhwfMlYv6Et70EBQ1hcMG+++5wcaUKDwLd0rD
+         vO47Vf0yxE7NdcPT/1qbCcqmsIebO+im14pbhnuNDFtG9SUKQCMLksghODxr9lhtWo
+         8K7ROvfOyUd0w==
+From:   Ross Zwisler <zwisler@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ross Zwisler <zwisler@google.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        Mukesh Ojha <quic_mojha@quicinc.com>
+Subject: [PATCH v4 1/3] selftests: use canonical ftrace path
+Date:   Mon, 13 Mar 2023 15:17:43 -0600
+Message-Id: <20230313211746.1541525-1-zwisler@kernel.org>
+X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12-dev-a055d
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+From: Ross Zwisler <zwisler@google.com>
 
-On Sat, 18 Feb 2023 10:57:05 -0800, Kees Cook wrote:
-> The "cplen" result used by the memcpy() into struct rvt_swqe "wqe" may
-> be sized to 80 for struct rvt_ud_wr (which is member "ud_wr", not "wr"
-> which is only 40 bytes in size). Change the destination union member so
-> the compiler can use the correct bounds check.
-> 
-> struct rvt_swqe {
->         union {
->                 struct ib_send_wr wr;   /* don't use wr.sg_list */
->                 struct rvt_ud_wr ud_wr;
-> 		...
-> 	};
-> 	...
-> };
-> 
-> [...]
+The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
 
-Applied, thanks!
+But, from Documentation/trace/ftrace.rst:
 
-[1/1] IB/rdmavt: Fix target union member for rvt_post_one_wr()
-      https://git.kernel.org/rdma/rdma/c/f2f6e1661d38fb
+  Before 4.1, all ftrace tracing control files were within the debugfs
+  file system, which is typically located at /sys/kernel/debug/tracing.
+  For backward compatibility, when mounting the debugfs file system,
+  the tracefs file system will be automatically mounted at:
 
-Best regards,
+  /sys/kernel/debug/tracing
+
+A few spots in tools/testing/selftests still refer to this older debugfs
+path, so let's update them to avoid confusion.
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+---
+
+v3 here:
+https://lore.kernel.org/all/20230310192050.4096886-1-zwisler@kernel.org/
+
+Changes from v3:
+ * Added Reviwed-by from Steven to patch 2
+ * Rebased onto the current linux/master
+
+ tools/testing/selftests/mm/protection_keys.c      |  4 ++--
+ tools/testing/selftests/user_events/dyn_test.c    |  2 +-
+ tools/testing/selftests/user_events/ftrace_test.c | 10 +++++-----
+ tools/testing/selftests/user_events/perf_test.c   |  8 ++++----
+ 4 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/tools/testing/selftests/mm/protection_keys.c b/tools/testing/selftests/mm/protection_keys.c
+index 95f403a0c46d..0381c34fdd56 100644
+--- a/tools/testing/selftests/mm/protection_keys.c
++++ b/tools/testing/selftests/mm/protection_keys.c
+@@ -98,7 +98,7 @@ int tracing_root_ok(void)
+ void tracing_on(void)
+ {
+ #if CONTROL_TRACING > 0
+-#define TRACEDIR "/sys/kernel/debug/tracing"
++#define TRACEDIR "/sys/kernel/tracing"
+ 	char pidstr[32];
+ 
+ 	if (!tracing_root_ok())
+@@ -124,7 +124,7 @@ void tracing_off(void)
+ #if CONTROL_TRACING > 0
+ 	if (!tracing_root_ok())
+ 		return;
+-	cat_into_file("0", "/sys/kernel/debug/tracing/tracing_on");
++	cat_into_file("0", "/sys/kernel/tracing/tracing_on");
+ #endif
+ }
+ 
+diff --git a/tools/testing/selftests/user_events/dyn_test.c b/tools/testing/selftests/user_events/dyn_test.c
+index d6265d14cd51..8879a7b04c6a 100644
+--- a/tools/testing/selftests/user_events/dyn_test.c
++++ b/tools/testing/selftests/user_events/dyn_test.c
+@@ -16,7 +16,7 @@
+ 
+ #include "../kselftest_harness.h"
+ 
+-const char *dyn_file = "/sys/kernel/debug/tracing/dynamic_events";
++const char *dyn_file = "/sys/kernel/tracing/dynamic_events";
+ const char *clear = "!u:__test_event";
+ 
+ static int Append(const char *value)
+diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
+index 404a2713dcae..a0b2c96eb252 100644
+--- a/tools/testing/selftests/user_events/ftrace_test.c
++++ b/tools/testing/selftests/user_events/ftrace_test.c
+@@ -16,11 +16,11 @@
+ 
+ #include "../kselftest_harness.h"
+ 
+-const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
+-const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
+-const char *enable_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/enable";
+-const char *trace_file = "/sys/kernel/debug/tracing/trace";
+-const char *fmt_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/format";
++const char *data_file = "/sys/kernel/tracing/user_events_data";
++const char *status_file = "/sys/kernel/tracing/user_events_status";
++const char *enable_file = "/sys/kernel/tracing/events/user_events/__test_event/enable";
++const char *trace_file = "/sys/kernel/tracing/trace";
++const char *fmt_file = "/sys/kernel/tracing/events/user_events/__test_event/format";
+ 
+ static inline int status_check(char *status_page, int status_bit)
+ {
+diff --git a/tools/testing/selftests/user_events/perf_test.c b/tools/testing/selftests/user_events/perf_test.c
+index 8b4c7879d5a7..31505642aa9b 100644
+--- a/tools/testing/selftests/user_events/perf_test.c
++++ b/tools/testing/selftests/user_events/perf_test.c
+@@ -18,10 +18,10 @@
+ 
+ #include "../kselftest_harness.h"
+ 
+-const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
+-const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
+-const char *id_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/id";
+-const char *fmt_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/format";
++const char *data_file = "/sys/kernel/tracing/user_events_data";
++const char *status_file = "/sys/kernel/tracing/user_events_status";
++const char *id_file = "/sys/kernel/tracing/events/user_events/__test_event/id";
++const char *fmt_file = "/sys/kernel/tracing/events/user_events/__test_event/format";
+ 
+ struct event {
+ 	__u32 index;
+
+base-commit: fc89d7fb499b0162e081f434d45e8d1b47e82ece
 -- 
-Leon Romanovsky <leon@kernel.org>
+2.40.0.rc1.284.g88254d51c5-goog
+
