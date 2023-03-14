@@ -2,100 +2,126 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B12C7619A
-	for <linux-hardening@archiver.kernel.org>; Mon, 13 Mar 2023 21:18:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4397C74A44
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Mar 2023 10:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjCMVSl (ORCPT
+        id S229854AbjCNKPy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 13 Mar 2023 17:18:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55432 "EHLO
+        Tue, 14 Mar 2023 06:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229807AbjCMVSi (ORCPT
+        with ESMTP id S229797AbjCNKPx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 13 Mar 2023 17:18:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01A0862FCE;
-        Mon, 13 Mar 2023 14:18:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 917C661518;
-        Mon, 13 Mar 2023 21:18:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00DA5C433A1;
-        Mon, 13 Mar 2023 21:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678742298;
-        bh=VoI18tD8o9ZMnsU9Cf6DTDg2Lm9gO1Nul+/I2tAuayk=;
+        Tue, 14 Mar 2023 06:15:53 -0400
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C639AFE6;
+        Tue, 14 Mar 2023 03:15:14 -0700 (PDT)
+Received: from localhost.localdomain (unknown [83.149.199.65])
+        by mail.ispras.ru (Postfix) with ESMTPSA id 9A36740755C6;
+        Tue, 14 Mar 2023 10:14:00 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 9A36740755C6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+        s=default; t=1678788840;
+        bh=J5zJSuuCzj+1C39z27zh+o9bfA57PDh8/CXoZdGgyyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCpgKbakOtkAns5toIg+NwkKvMGL+DU/SdMEBmWUkakSH/dMzXWwA7SDfX6clXZMK
-         gU/KyHhzhT0gDFeK9iucWz0e0IglHGtW32DmLtNqGHBiTDDudMb+/45zNVlOeIuvZl
-         Bo/12sLk3dj/tcHxQxjKCDttyWYQMzQznpLph3UWOcNhoURoNwuMtKVnnRoeaqNdoy
-         a5hf43SlvKT+tDcTLnSz57prfqT8Xjaf9pAmoouN8QsUhIHZrP7PTlSvqcoOY6P2ez
-         N3MOxbOKHntJ5z8gd4RjLpB+XMzx8H03MC+sPhcjiLTOUWadx1pk4yzLPHiUpm7qts
-         YK1pPGfXI5wag==
-From:   Ross Zwisler <zwisler@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH v4 3/3] tools/kvm_stat: use canonical ftrace path
-Date:   Mon, 13 Mar 2023 15:17:45 -0600
-Message-Id: <20230313211746.1541525-3-zwisler@kernel.org>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-In-Reply-To: <20230313211746.1541525-1-zwisler@kernel.org>
-References: <20230313211746.1541525-1-zwisler@kernel.org>
+        b=bZQowxWT7U+/gNyV66AeYgrHbuevv0qUoJikCUi0iBw2hO3m3mzHYKRw4xrYZhOn3
+         yYznLBK481C3v9vNbtgGhKz46WcBd2mJdRi+4kQMkebhtK/Kb7ogwR061COdNJqPWY
+         HCkDJkjGMp0phuVuhYI146H/uvO+ZQ0fpejPM9eU=
+From:   Evgeniy Baskov <baskov@ispras.ru>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Peter Jones <pjones@redhat.com>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        "Limonciello, Mario" <mario.limonciello@amd.com>,
+        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v5 01/27] x86/boot: Align vmlinuz sections on page size
+Date:   Tue, 14 Mar 2023 13:13:28 +0300
+Message-Id: <159597c484778da5e59c3a5728669f131f800b5a.1678785672.git.baskov@ispras.ru>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <cover.1678785672.git.baskov@ispras.ru>
+References: <cover.1678785672.git.baskov@ispras.ru>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Ross Zwisler <zwisler@google.com>
+To protect sections on page table level each section needs to be
+aligned on page size (4KB).
 
-The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+Set sections alignment in linker script for the kernel decompressor
+(boot/compressed/vmlinux.lds.S).
 
-But, from Documentation/trace/ftrace.rst:
+Also introduce symbols that can be used to reference compressed
+kernel blob section later in the later patches.
 
-  Before 4.1, all ftrace tracing control files were within the debugfs
-  file system, which is typically located at /sys/kernel/debug/tracing.
-  For backward compatibility, when mounting the debugfs file system,
-  the tracefs file system will be automatically mounted at:
-
-  /sys/kernel/debug/tracing
-
-A comment in kvm_stat still refers to this older debugfs path, so let's
-update it to avoid confusion.
-
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
-Signed-off-by: Ross Zwisler <zwisler@google.com>
+Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
 ---
- tools/kvm/kvm_stat/kvm_stat | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/boot/compressed/vmlinux.lds.S | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/kvm/kvm_stat/kvm_stat b/tools/kvm/kvm_stat/kvm_stat
-index 6f28180ffeea..15bf00e79e3f 100755
---- a/tools/kvm/kvm_stat/kvm_stat
-+++ b/tools/kvm/kvm_stat/kvm_stat
-@@ -627,7 +627,7 @@ class TracepointProvider(Provider):
-         name)'.
- 
-         All available events have directories under
--        /sys/kernel/debug/tracing/events/ which export information
-+        /sys/kernel/tracing/events/ which export information
-         about the specific event. Therefore, listing the dirs gives us
-         a list of all available events.
- 
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index b22f34b8684a..a5015b958085 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -27,31 +27,32 @@ SECTIONS
+ 		HEAD_TEXT
+ 		_ehead = . ;
+ 	}
+-	.rodata..compressed : {
++	.rodata..compressed : ALIGN(PAGE_SIZE) {
++		_compressed = .;
+ 		*(.rodata..compressed)
++		_ecompressed = .;
+ 	}
+-	.text :	{
++	.text :	ALIGN(PAGE_SIZE) {
+ 		_text = .; 	/* Text */
+ 		*(.text)
+ 		*(.text.*)
+ 		*(.noinstr.text)
+ 		_etext = . ;
+ 	}
+-	.rodata : {
++	.rodata : ALIGN(PAGE_SIZE) {
+ 		_rodata = . ;
+ 		*(.rodata)	 /* read-only data */
+ 		*(.rodata.*)
+ 		_erodata = . ;
+ 	}
+-	.data :	{
++	.data :	ALIGN(PAGE_SIZE) {
+ 		_data = . ;
+ 		*(.data)
+ 		*(.data.*)
+ 		*(.bss.efistub)
+ 		_edata = . ;
+ 	}
+-	. = ALIGN(L1_CACHE_BYTES);
+-	.bss : {
++	.bss : ALIGN(L1_CACHE_BYTES) {
+ 		_bss = . ;
+ 		*(.bss)
+ 		*(.bss.*)
+@@ -60,8 +61,7 @@ SECTIONS
+ 		_ebss = .;
+ 	}
+ #ifdef CONFIG_X86_64
+-       . = ALIGN(PAGE_SIZE);
+-       .pgtable : {
++       .pgtable : ALIGN(PAGE_SIZE) {
+ 		_pgtable = . ;
+ 		*(.pgtable)
+ 		_epgtable = . ;
 -- 
-2.40.0.rc1.284.g88254d51c5-goog
+2.39.2
 
