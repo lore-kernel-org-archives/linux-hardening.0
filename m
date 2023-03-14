@@ -2,49 +2,48 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 516A3C6FD1C
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Mar 2023 10:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ACEC6FD1C
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Mar 2023 10:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231299AbjCNKZS (ORCPT
+        id S229592AbjCNKw7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Mar 2023 06:25:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53088 "EHLO
+        Tue, 14 Mar 2023 06:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbjCNKYp (ORCPT
+        with ESMTP id S229590AbjCNKw5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Mar 2023 06:24:45 -0400
+        Tue, 14 Mar 2023 06:52:57 -0400
 Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26BAD5FE94;
-        Tue, 14 Mar 2023 03:24:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5D21974B2;
+        Tue, 14 Mar 2023 03:52:19 -0700 (PDT)
 Received: from localhost.localdomain (unknown [83.149.199.65])
-        by mail.ispras.ru (Postfix) with ESMTPSA id 3AEEF40755C6;
-        Tue, 14 Mar 2023 10:23:25 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 3AEEF40755C6
+        by mail.ispras.ru (Postfix) with ESMTPSA id 4038B4076B3E;
+        Tue, 14 Mar 2023 10:23:26 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 4038B4076B3E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1678789405;
-        bh=+Rs2iCTiek3yYBbmemqEMQIzt9ito44oHZ0zp2gqc10=;
+        s=default; t=1678789406;
+        bh=/4znEshL36zHB0h07IlC+ZODwPn07LA9fIruf/PmWac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YIY13fl2vX+jnARjSEo+Jv4ClNtCdXk4Pb/VJtM+8ZvDtbZgMkT8CnMO0Ah0uRMCh
-         EOva3BjomKBhR5fGAuUY6HWaCaBouOUtq33ZsGbwBST0QntXMNxWXIFx2EJIIWcl8y
-         Sp1t4Pjeb6CQWgnhTvv22eHB2np7MU6/5q4HTYuk=
+        b=oNiT1r+tLEAlAtfLGE/fu4wtk4UXquo6znS0SYXSk4OevG9JTnxxbA6SIVpWIbDnd
+         yiUAHQ1O/2bH+W6RQEW42WWg2OLHTmlXgc8o+FZmW/taJUxCRo5lEcIOUeTlw22PmM
+         xxGmYSB5eAtzt45XNoor0WNXdofGTlS7VeXcbKTo=
 From:   Evgeniy Baskov <baskov@ispras.ru>
 To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Evgeniy Baskov <baskov@ispras.ru>, Borislav Petkov <bp@alien8.de>,
+Cc:     Peter Jones <pjones@redhat.com>, Borislav Petkov <bp@alien8.de>,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Peter Jones <pjones@redhat.com>,
         Gerd Hoffmann <kraxel@redhat.com>,
         "Limonciello, Mario" <mario.limonciello@amd.com>,
         joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
         x86@kernel.org, linux-efi@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v5 22/27] x86/build: set type_of_loader for EFISTUB
-Date:   Tue, 14 Mar 2023 13:13:49 +0300
-Message-Id: <111d4120936d23e6023619660778444eb226a22f.1678785672.git.baskov@ispras.ru>
+Subject: [PATCH v5 27/27] efi/x86: don't try to set page attributes on 0-sized regions.
+Date:   Tue, 14 Mar 2023 13:13:54 +0300
+Message-Id: <465871c482bac0d996e81b5335fc6c307673517c.1678785672.git.baskov@ispras.ru>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <cover.1678785672.git.baskov@ispras.ru>
 References: <cover.1678785672.git.baskov@ispras.ru>
@@ -54,28 +53,42 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-After switching to the local copy of boot_params, EFISTUB stopped
-setting type_of_loader, using the default value of 0. Restore that
-behavior by assigning the right value at the build time.
+From: Peter Jones <pjones@redhat.com>
 
-Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
+In "efi/x86: Explicitly set sections memory attributes", the following
+region is defined to help compute page permissions:
+
+          /* .setup [image_base, _head] */
+          efi_adjust_memory_range_protection(image_base,
+                                             (unsigned long)_head - image_base,
+                                             EFI_MEMORY_RO | EFI_MEMORY_XP);
+
+In at least some cases, that will result in a size of 0, which will
+produce an error and a message on the console, though no actual failure
+will be caused in the boot process.
+
+This patch checks that case in efi_adjust_memory_range_protection() and
+returns the error without logging.
+
+Signed-off-by: Peter Jones <pjones@redhat.com>
 ---
- arch/x86/boot/tools/build.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/firmware/efi/libstub/mem.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
-index 476ef05f16fb..5ac4f08ed923 100644
---- a/arch/x86/boot/tools/build.c
-+++ b/arch/x86/boot/tools/build.c
-@@ -588,6 +588,8 @@ int main(int argc, char **argv)
- 	memcpy(output + setup_size + efi_boot_params + SETUP_HEADER_OFFSET,
- 	       setup_header, 0x290 - SETUP_HEADER_OFFSET
- 	       /* == max possible sizeof(struct setup_header) */);
-+	/* Set type_of_loader to the one that EFISTUB uses for the local copy */
-+	output[setup_size + efi_boot_params + SETUP_HEADER_OFFSET + 0x1F] = 0x21;
- #endif
+diff --git a/drivers/firmware/efi/libstub/mem.c b/drivers/firmware/efi/libstub/mem.c
+index d58b552739ed..f18c797785ac 100644
+--- a/drivers/firmware/efi/libstub/mem.c
++++ b/drivers/firmware/efi/libstub/mem.c
+@@ -251,6 +251,9 @@ efi_status_t efi_adjust_memory_range_protection(unsigned long start,
+ 	efi_physical_addr_t rounded_start, rounded_end;
+ 	unsigned long attr_clear;
  
- 	/* Calculate and write kernel checksum. */
++	if (size == 0)
++		return EFI_INVALID_PARAMETER;
++
+ 	/*
+ 	 * This function should not be used to modify attributes
+ 	 * other than writable/executable.
 -- 
 2.39.2
 
