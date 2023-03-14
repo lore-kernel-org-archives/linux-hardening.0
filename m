@@ -2,70 +2,70 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D846FC7618D
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Mar 2023 21:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF9DC6FD1F
+	for <linux-hardening@archiver.kernel.org>; Tue, 14 Mar 2023 23:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbjCNVYX (ORCPT
+        id S231139AbjCNXV3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Mar 2023 17:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37782 "EHLO
+        Tue, 14 Mar 2023 19:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230221AbjCNVYU (ORCPT
+        with ESMTP id S230380AbjCNXVZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Mar 2023 17:24:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C8EE55519;
-        Tue, 14 Mar 2023 14:24:04 -0700 (PDT)
+        Tue, 14 Mar 2023 19:21:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252494D29B
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Mar 2023 16:21:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7AF9A619E4;
-        Tue, 14 Mar 2023 21:24:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A530C4339B;
-        Tue, 14 Mar 2023 21:24:02 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CFEABB81C21
+        for <linux-hardening@vger.kernel.org>; Tue, 14 Mar 2023 23:21:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4A0C433EF;
+        Tue, 14 Mar 2023 23:21:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678829042;
-        bh=YqViZD41gexkA1fXl8jJ1gtu6PrOo8wk/cq3HkC/8tA=;
+        s=k20201202; t=1678836081;
+        bh=1LpG8Owr5h1Nv/yVkTjkl6nlXkxG8Oan2DRA4buy3zE=;
         h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-        b=RKLEvu4ThAfJ0unmpd/t1SefIVvTTYbe8Cs2R5GKuErwrCJo7hQmtgoV6Zmp46CdI
-         z6a3imXZeAt9lUefOL8vdsqFZIewsneMK516YvlfutIbEcsR3T+ivjr88OzGyj71VR
-         DqtFmQTNXXf666PbZdE86cCGPjHwbDbl4OnDiA66PSFYLIki8c+wu9UECuUit0IpKa
-         Lff0b5EWMOsDE5KZuVMa1hKwCF+Z/fmRWCAv+zK9ICvEb4GXnuqcK2BNx3LF9Tjaj1
-         0d9XbStBvb8MunU7dIKb4Ho1VHq9lH+EdoT2GpSIJ3RrTIVlbxBrUT5DlIQaKOexp9
-         AlPoonaAxs/9w==
+        b=TlmqXPQ6PCSyTMy7FM1O2V+iWNqVaBb7Iy3h36aSy8QcjtFubzEIPmPYMRvRoX2N5
+         VF7+9EUU7kesqX4EUfyFUKQNcTrnGfCXeAKuE5NKKaqJVBT845IBUpXYN9VoWJrdj5
+         qagmLbTfH4BQ+YD5VPK8IGVlZ/JN/pQyi7QiMkhl7lDxktwTO1WCUOUCsRxGEnWkVV
+         BBvM1o8rTitEkXvsQVf0e4iTN8kJ5IFk689Sf1cu2/ybM2YsOCufAp8HrdXO7SRjuS
+         rhWFiYRg3ct6h3OFgft0C2G7BT2cGjGEMHZgQKmCUIzJe5mxbtjK3FrgVgOpUUudug
+         NjjkyAWthKyJg==
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 05C1D27C0054;
-        Tue, 14 Mar 2023 17:24:00 -0400 (EDT)
+        by mailauth.nyi.internal (Postfix) with ESMTP id CE3D827C0054;
+        Tue, 14 Mar 2023 19:21:19 -0400 (EDT)
 Received: from imap48 ([10.202.2.98])
-  by compute3.internal (MEProxy); Tue, 14 Mar 2023 17:24:01 -0400
-X-ME-Sender: <xms:8OUQZKn6AMpqGGnCFFr_ESQ3UsDJc2WEV-8QnY0aNAR9r7GQ0dAypQ>
-    <xme:8OUQZB2sYM3ClM7ZFcJBS5O6AItJ1IPkuSI8dhMxUzqK7Qg6-v8TcGdXD36Dp1rKP
-    _v0AV9xvpRExnf1t3g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddviedgudehvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    nhguhicunfhuthhomhhirhhskhhifdcuoehluhhtoheskhgvrhhnvghlrdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpefhhffhjefgteeiudfgledvveejvdeugfehkeevudejgffhffdt
-    veffffelhedtvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtg
-    homhdpmhhitghrohhsohhfthdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgr
-    rhgrmhepmhgrihhlfhhrohhmpegrnhguhidomhgvshhmthhprghuthhhphgvrhhsohhnrg
-    hlihhthidqudduiedukeehieefvddqvdeifeduieeitdekqdhluhhtoheppehkvghrnhgv
-    lhdrohhrgheslhhinhhugidrlhhuthhordhush
-X-ME-Proxy: <xmx:8OUQZIqu5xQuQvVQPudIQnU0ZRnxDtEpF217ioYbfb2sx0tl3_HMjA>
-    <xmx:8OUQZOm4kOUpymH0f8YFQMKJ1Vn7-mTUOg68yZo4g7gXdrAQ7Hpf-w>
-    <xmx:8OUQZI3Vz4VoXpO2jGBTxOaLo2kKziVeAQfaGZ0puJa1Bc87vlyUNg>
-    <xmx:8OUQZCPfRMyO6dFwPhYMmr1hgEZIAjO5Q36IwH4XHHzu-DVsjC2Kig>
+  by compute3.internal (MEProxy); Tue, 14 Mar 2023 19:21:19 -0400
+X-ME-Sender: <xms:bgERZF-R6V2BvHK54N93fzcPxKyYc04MEA6T3NLYUK8L6QQ49J3r3w>
+    <xme:bgERZJtbmILXoH6H7gR_0JSDSFcLwvjYyMgsh2AiO2UDXAHk5U_xnC9E2LI_uUICX
+    tKUHNQv5KRKFB24DQg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddvjedgtdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ugihucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecugg
+    ftrfgrthhtvghrnhepgedugedtledtieduteffveevhfefheeuhfegfeduvdeltdeugeet
+    veeliedvfeehnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhguhidomhgvshhmthhprghu
+    thhhphgvrhhsohhnrghlihhthidqudduiedukeehieefvddqvdeifeduieeitdekqdhluh
+    htoheppehkvghrnhgvlhdrohhrgheslhhinhhugidrlhhuthhordhush
+X-ME-Proxy: <xmx:bgERZDCbcFEkx3oeJCN44ysiNNUUI0Fqa289qbZyDAjvNp2swyYjzg>
+    <xmx:bgERZJefgs1xsuybL_QtwGHtzoqyCJtwPMw957We9aZawtPxMqYmgA>
+    <xmx:bgERZKNhdykp_OA2tlYxeiYIR2IuPQbDA-pniq8zlxMl4tvBV3fidw>
+    <xmx:bwERZBkgrohfTVb_w_Y35cX-J-LaoJ_JiG8IBv0Fy0YsgTh6EV7LuQ>
 Feedback-ID: ieff94742:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2054F31A0063; Tue, 14 Mar 2023 17:24:00 -0400 (EDT)
+        id C2D3731A0063; Tue, 14 Mar 2023 19:21:18 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
 Mime-Version: 1.0
-Message-Id: <d575db7f-bad3-477e-a501-19d2d84527cd@app.fastmail.com>
-In-Reply-To: <cover.1678785672.git.baskov@ispras.ru>
+Message-Id: <ea1b6e36-c434-49e9-bede-b4bd2b41868d@app.fastmail.com>
+In-Reply-To: <d575db7f-bad3-477e-a501-19d2d84527cd@app.fastmail.com>
 References: <cover.1678785672.git.baskov@ispras.ru>
-Date:   Tue, 14 Mar 2023 14:23:39 -0700
+ <d575db7f-bad3-477e-a501-19d2d84527cd@app.fastmail.com>
+Date:   Tue, 14 Mar 2023 16:20:43 -0700
 From:   "Andy Lutomirski" <luto@kernel.org>
 To:     "Evgeniy Baskov" <baskov@ispras.ru>,
         "Ard Biesheuvel" <ardb@kernel.org>
@@ -89,69 +89,44 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Mar 14, 2023, at 3:13 AM, Evgeniy Baskov wrote:
-> This patchset is aimed
-> * to improve UEFI compatibility of compressed kernel code for x86_64
-> * to setup proper memory access attributes for code and rodata sections
-> * to implement W^X protection policy throughout the whole execution 
->   of compressed kernel for EFISTUB code path. 
 
-The overall code quality seems okay, but I have some questions as to what this is for.  The early boot environment is not exposed to most sorts of attacks -- there's no userspace, there's no network, and there is not a whole lot of input that isn't implicitly completely trusted.
 
-What parts of this series are actually needed to get these fancy new bootloaders to boot Linux?  And why?
-
+On Tue, Mar 14, 2023, at 2:23 PM, Andy Lutomirski wrote:
+> On Tue, Mar 14, 2023, at 3:13 AM, Evgeniy Baskov wrote:
+>>
+>> Kernel is made to be more compatible with PE image specification [3],
+>> allowing it to be successfully loaded by stricter PE loader
+>> implementations like the one from [2]. There is at least one
+>> known implementation that uses that loader in production [4].
+>> There are also ongoing efforts to upstream these changes.
 >
-> Kernel is made to be more compatible with PE image specification [3],
-> allowing it to be successfully loaded by stricter PE loader
-> implementations like the one from [2]. There is at least one
-> known implementation that uses that loader in production [4].
-> There are also ongoing efforts to upstream these changes.
+> Can you clarify 
 
-Can you clarify 
+Sorry, lost part of a sentence.  Can you clarify in what respect the loader is stricter?
 
->
-> Also the patchset adds EFI_MEMORY_ATTTRIBUTE_PROTOCOL, included into
-> EFI specification since version 2.10, as a better alternative to
-> using DXE services for memory protection attributes manipulation,
-> since it is defined by the UEFI specification itself and not UEFI PI
-> specification. This protocol is not widely available so the code
-> using DXE services is kept in place as a fallback in case specific
-> implementation does not support the new protocol.
-> One of EFI implementations that already support
-> EFI_MEMORY_ATTTRIBUTE_PROTOCOL is Microsoft Project Mu [5].
 
-Maybe make this a separate series?
+Anyway, I did some research.  I found:
 
-> 
-> Kernel image generation tool (tools/build.c) is refactored as a part
-> of changes that makes PE image more compatible.
->   
-> The patchset implements memory protection for compressed kernel
-> code while executing both inside EFI boot services and outside of
-> them. For EFISTUB code path W^X protection policy is maintained
-> throughout the whole execution of compressed kernel. The latter
-> is achieved by extracting the kernel directly from EFI environment
-> and jumping to it's head immediately after exiting EFI boot services.
-> As a side effect of this change one page table rebuild and a copy of
-> the kernel image is removed.
+https://github.com/rhboot/shim/pull/459/commits/99a8d19326f69665e0b86bcfa6a59d554f662fba
 
-I have no problem with this, but what's it needed for?
+which gives a somewhat incoherent-sounding description in which setting EFI_IMAGE_DLLCHARACTERISTICS_NX_COMPAT apparently enables allocating memory that isn't RWX.  But this seems odd EFI_IMAGE_DLLCHARACTERISTICS_NX_COMPAT is a property of the EFI *program*, not the boot services implementation.  And I'd be surprised if a flag on the application changes the behavior of boot services, but, OTOH, this is Microsoft.
 
->
-> Memory protection inside EFI environment is controlled by the
-> CONFIG_DXE_MEM_ATTRIBUTES option, although with these patches this
-> option also control the use EFI_MEMORY_ATTTRIBUTE_PROTOCOL and memory
-> protection attributes of PE sections and not only DXE services as the
-> name might suggest.
->
+And the PE 89 spec does say that EFI_IMAGE_DLLCHARACTERISTICS_NX_COMPAT means "Image is NX compatible" and that is the sole mention of NX in the document.
 
-> [1] 
-> https://lore.kernel.org/lkml/893da11995f93a7ea8f7485d17bf356a@ispras.ru/
-> [2] https://github.com/acidanthera/audk/tree/secure_pe
+And *this* seems to be the actual issue:
 
-Link is broken
+https://github.com/rhboot/shim/pull/459/commits/825d99361b4aaa16144392dc6cea43e24c8472ae
 
-> [3] 
-> https://download.microsoft.com/download/9/c/5/9c5b2167-8017-4bae-9fde-d599bac8184a/pecoff_v83.docx
+I assume that MS required this change as a condition for signing, but what do I know?  Anyway, the rules appear to be that the PE sections must not be both W and X at the same size.  (For those who are familiar with the abomination known as ELF but not with the abomination known as PE, a "section" is a range in the file that gets mapped into memory.  Like a PT_LOAD segment in ELF.)
 
-I skimmed this very briefly, and I have no idea what I'm supposed to look at.  This is the entire PE spec!
+Now I don't know whether anything prevents us from doing something awful like mapping the EFI stuf RX and then immediately *re*mapping everything RWX.  (Not that I'm seriously suggesting that.)  And it's not immediately clear to me how the rest of this series fits in, what this has to do with the identity map, etc.
+
+Anyway, I think the series needs to document what's going on, in the changelog and relevant comments.  And if the demand-population of the identity map is a problem, then there should be a comment like (made up -- don't say this unless it's correct):
+
+A sufficiently paranoid EFI implementation may enforce W^X when mapping memory through the boot services protocols.  And creating identity mappings in the page fault handler needs to use the boot services protocols to do so because [fill this in] [or it would be a bit of an abomination to do an end run around them by modifying the page tables ourselves] [or whatever is actually happening].  While we *could* look at the actual fault type and create an R or RW or RX mapping as appropriate, it's better to figure out what needs to be mapped for real and to map it with the correct permissions before faulting.
+
+But I still think we should keep the demand-faulting code as a fallback, even if it's hardcoded as RW, and just log the fault mode and address.  We certainly shouldn't be *executing* code that wasn't identity mapped.  Unless that code is boot services and we're creating the boot services mappings!
+
+For that matter, how confident are we that there aren't crappy boot services implementations out there that require that we fix up page faults? After all, it's not like EFI implementations, especially early ones, are any good.
+
+--Andy
