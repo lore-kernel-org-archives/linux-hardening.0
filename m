@@ -2,131 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF9DC6FD1F
-	for <linux-hardening@archiver.kernel.org>; Tue, 14 Mar 2023 23:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC41DC6FD1D
+	for <linux-hardening@archiver.kernel.org>; Wed, 15 Mar 2023 09:07:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbjCNXV3 (ORCPT
+        id S231967AbjCOJH0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 14 Mar 2023 19:21:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33728 "EHLO
+        Wed, 15 Mar 2023 05:07:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230380AbjCNXVZ (ORCPT
+        with ESMTP id S231969AbjCOJG7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 14 Mar 2023 19:21:25 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 252494D29B
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Mar 2023 16:21:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Mar 2023 05:06:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A877BA21
+        for <linux-hardening@vger.kernel.org>; Wed, 15 Mar 2023 02:05:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678871105;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5Mqz4aBhLPd8yTktiuvKtk7CpkmrnJC3LuH6Fk/wXuQ=;
+        b=d/vbo/kbJpp+8zyTKxcaPPrn1YbYeYVMwbpJPqsAxAYK9fEIG0CFvKyGg4HVPGlbtDwXFz
+        PbbYv1waU9zBKoY1U5YVfWzKQBAt6p7nvktOGba8WRTSN4/6EL5mWNhgOhDgdOzrgqlH6n
+        xaPDNk97Ca/LsBhLBEATM4D/Djm0dVs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-370-y8ENYj6HMtqbxEJlqJBR-A-1; Wed, 15 Mar 2023 05:05:00 -0400
+X-MC-Unique: y8ENYj6HMtqbxEJlqJBR-A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CFEABB81C21
-        for <linux-hardening@vger.kernel.org>; Tue, 14 Mar 2023 23:21:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4A0C433EF;
-        Tue, 14 Mar 2023 23:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678836081;
-        bh=1LpG8Owr5h1Nv/yVkTjkl6nlXkxG8Oan2DRA4buy3zE=;
-        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-        b=TlmqXPQ6PCSyTMy7FM1O2V+iWNqVaBb7Iy3h36aSy8QcjtFubzEIPmPYMRvRoX2N5
-         VF7+9EUU7kesqX4EUfyFUKQNcTrnGfCXeAKuE5NKKaqJVBT845IBUpXYN9VoWJrdj5
-         qagmLbTfH4BQ+YD5VPK8IGVlZ/JN/pQyi7QiMkhl7lDxktwTO1WCUOUCsRxGEnWkVV
-         BBvM1o8rTitEkXvsQVf0e4iTN8kJ5IFk689Sf1cu2/ybM2YsOCufAp8HrdXO7SRjuS
-         rhWFiYRg3ct6h3OFgft0C2G7BT2cGjGEMHZgQKmCUIzJe5mxbtjK3FrgVgOpUUudug
-         NjjkyAWthKyJg==
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id CE3D827C0054;
-        Tue, 14 Mar 2023 19:21:19 -0400 (EDT)
-Received: from imap48 ([10.202.2.98])
-  by compute3.internal (MEProxy); Tue, 14 Mar 2023 19:21:19 -0400
-X-ME-Sender: <xms:bgERZF-R6V2BvHK54N93fzcPxKyYc04MEA6T3NLYUK8L6QQ49J3r3w>
-    <xme:bgERZJtbmILXoH6H7gR_0JSDSFcLwvjYyMgsh2AiO2UDXAHk5U_xnC9E2LI_uUICX
-    tKUHNQv5KRKFB24DQg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddvjedgtdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehn
-    ugihucfnuhhtohhmihhrshhkihdfuceolhhuthhosehkvghrnhgvlhdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepgedugedtledtieduteffveevhfefheeuhfegfeduvdeltdeugeet
-    veeliedvfeehnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhguhidomhgvshhmthhprghu
-    thhhphgvrhhsohhnrghlihhthidqudduiedukeehieefvddqvdeifeduieeitdekqdhluh
-    htoheppehkvghrnhgvlhdrohhrgheslhhinhhugidrlhhuthhordhush
-X-ME-Proxy: <xmx:bgERZDCbcFEkx3oeJCN44ysiNNUUI0Fqa289qbZyDAjvNp2swyYjzg>
-    <xmx:bgERZJefgs1xsuybL_QtwGHtzoqyCJtwPMw957We9aZawtPxMqYmgA>
-    <xmx:bgERZKNhdykp_OA2tlYxeiYIR2IuPQbDA-pniq8zlxMl4tvBV3fidw>
-    <xmx:bwERZBkgrohfTVb_w_Y35cX-J-LaoJ_JiG8IBv0Fy0YsgTh6EV7LuQ>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id C2D3731A0063; Tue, 14 Mar 2023 19:21:18 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
-Mime-Version: 1.0
-Message-Id: <ea1b6e36-c434-49e9-bede-b4bd2b41868d@app.fastmail.com>
-In-Reply-To: <d575db7f-bad3-477e-a501-19d2d84527cd@app.fastmail.com>
-References: <cover.1678785672.git.baskov@ispras.ru>
- <d575db7f-bad3-477e-a501-19d2d84527cd@app.fastmail.com>
-Date:   Tue, 14 Mar 2023 16:20:43 -0700
-From:   "Andy Lutomirski" <luto@kernel.org>
-To:     "Evgeniy Baskov" <baskov@ispras.ru>,
-        "Ard Biesheuvel" <ardb@kernel.org>
-Cc:     "Borislav Petkov" <bp@alien8.de>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "Ingo Molnar" <mingo@redhat.com>,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6EF6B801206;
+        Wed, 15 Mar 2023 09:04:59 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.39.192.211])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CFF601410F1B;
+        Wed, 15 Mar 2023 09:04:58 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 5C88A1800393; Wed, 15 Mar 2023 10:04:57 +0100 (CET)
+Date:   Wed, 15 Mar 2023 10:04:57 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Evgeniy Baskov <baskov@ispras.ru>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Alexey Khoroshilov" <khoroshilov@ispras.ru>,
-        "Peter Jones" <pjones@redhat.com>,
-        "Gerd Hoffmann" <kraxel@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Peter Jones <pjones@redhat.com>,
         "Limonciello, Mario" <mario.limonciello@amd.com>,
         joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
         linux-efi@vger.kernel.org,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH v5 00/27] x86_64: Improvements at compressed kernel stage
-Content-Type: text/plain
+Message-ID: <20230315090457.6spo4f4v2l4qwdu2@sirius.home.kraxel.org>
+References: <cover.1678785672.git.baskov@ispras.ru>
+ <d575db7f-bad3-477e-a501-19d2d84527cd@app.fastmail.com>
+ <ea1b6e36-c434-49e9-bede-b4bd2b41868d@app.fastmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ea1b6e36-c434-49e9-bede-b4bd2b41868d@app.fastmail.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+  Hi,
 
+> And *this* seems to be the actual issue:
+> 
+> https://github.com/rhboot/shim/pull/459/commits/825d99361b4aaa16144392dc6cea43e24c8472ae
+> 
+> I assume that MS required this change as a condition for signing, but what do I know?
 
-On Tue, Mar 14, 2023, at 2:23 PM, Andy Lutomirski wrote:
-> On Tue, Mar 14, 2023, at 3:13 AM, Evgeniy Baskov wrote:
->>
->> Kernel is made to be more compatible with PE image specification [3],
->> allowing it to be successfully loaded by stricter PE loader
->> implementations like the one from [2]. There is at least one
->> known implementation that uses that loader in production [4].
->> There are also ongoing efforts to upstream these changes.
->
-> Can you clarify 
+Your guess is correct.  UEFI world is moving to being stricter, for
+example set page permissions according to the allocation type (RW for
+data, RX for code).
 
-Sorry, lost part of a sentence.  Can you clarify in what respect the loader is stricter?
+Microsoft raised the bar for PE binaries when it comes to secure boot
+signing as part of that effort.  Being a valid PE binary according to
+the PE spec is not good enough, some additional constrains like sections
+not overlapping and sections with different load flags not sharing pages
+(so setting strict page permissions is actually possible) are required
+now.  Stuff which is standard since years elsewhere.
 
+>  Anyway, the rules appear to be that the PE sections must not be both W and X at the same size.
 
-Anyway, I did some research.  I found:
+That too.
 
-https://github.com/rhboot/shim/pull/459/commits/99a8d19326f69665e0b86bcfa6a59d554f662fba
+> But I still think we should keep the demand-faulting code as a
+> fallback, even if it's hardcoded as RW, and just log the fault mode
+> and address.  We certainly shouldn't be *executing* code that wasn't
+> identity mapped.  Unless that code is boot services and we're creating
+> the boot services mappings!
 
-which gives a somewhat incoherent-sounding description in which setting EFI_IMAGE_DLLCHARACTERISTICS_NX_COMPAT apparently enables allocating memory that isn't RWX.  But this seems odd EFI_IMAGE_DLLCHARACTERISTICS_NX_COMPAT is a property of the EFI *program*, not the boot services implementation.  And I'd be surprised if a flag on the application changes the behavior of boot services, but, OTOH, this is Microsoft.
+Agree.
 
-And the PE 89 spec does say that EFI_IMAGE_DLLCHARACTERISTICS_NX_COMPAT means "Image is NX compatible" and that is the sole mention of NX in the document.
+> For that matter, how confident are we that there aren't crappy boot
+> services implementations out there that require that we fix up page
+> faults? After all, it's not like EFI implementations, especially early
+> ones, are any good.
 
-And *this* seems to be the actual issue:
+I don't expect much problems here.  Early EFI implementations don't
+bother setting page permissions and just identity-map everything using
+rwx huge pages, or run with paging turned off (hello ia32).
 
-https://github.com/rhboot/shim/pull/459/commits/825d99361b4aaa16144392dc6cea43e24c8472ae
+But playing safe (and keep demand-faulting just in case) is a good idea
+nevertheless.
 
-I assume that MS required this change as a condition for signing, but what do I know?  Anyway, the rules appear to be that the PE sections must not be both W and X at the same size.  (For those who are familiar with the abomination known as ELF but not with the abomination known as PE, a "section" is a range in the file that gets mapped into memory.  Like a PT_LOAD segment in ELF.)
+take care,
+  Gerd
 
-Now I don't know whether anything prevents us from doing something awful like mapping the EFI stuf RX and then immediately *re*mapping everything RWX.  (Not that I'm seriously suggesting that.)  And it's not immediately clear to me how the rest of this series fits in, what this has to do with the identity map, etc.
-
-Anyway, I think the series needs to document what's going on, in the changelog and relevant comments.  And if the demand-population of the identity map is a problem, then there should be a comment like (made up -- don't say this unless it's correct):
-
-A sufficiently paranoid EFI implementation may enforce W^X when mapping memory through the boot services protocols.  And creating identity mappings in the page fault handler needs to use the boot services protocols to do so because [fill this in] [or it would be a bit of an abomination to do an end run around them by modifying the page tables ourselves] [or whatever is actually happening].  While we *could* look at the actual fault type and create an R or RW or RX mapping as appropriate, it's better to figure out what needs to be mapped for real and to map it with the correct permissions before faulting.
-
-But I still think we should keep the demand-faulting code as a fallback, even if it's hardcoded as RW, and just log the fault mode and address.  We certainly shouldn't be *executing* code that wasn't identity mapped.  Unless that code is boot services and we're creating the boot services mappings!
-
-For that matter, how confident are we that there aren't crappy boot services implementations out there that require that we fix up page faults? After all, it's not like EFI implementations, especially early ones, are any good.
-
---Andy
