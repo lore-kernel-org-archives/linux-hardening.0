@@ -2,139 +2,168 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E284C6FD1D
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 19:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235E4C6FD1D
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 20:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229516AbjCQTuP (ORCPT
+        id S229999AbjCQUbd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Mar 2023 15:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
+        Fri, 17 Mar 2023 16:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbjCQTuN (ORCPT
+        with ESMTP id S230187AbjCQUba (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Mar 2023 15:50:13 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C02738B7C
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 12:50:10 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id cn6so6423042pjb.2
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 12:50:10 -0700 (PDT)
+        Fri, 17 Mar 2023 16:31:30 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41FF2D5A52
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 13:31:09 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id ek18so24949922edb.6
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 13:31:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679082609;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sTkWXMj0l/9cqk/U0QQ/wZMUy1oF1i/mojVUtfUyiYM=;
-        b=IE3ITaccsan+R7me0dIE2PcYdM+dVje3nOwIhznF4FJf+hmIF+M8+FcZ3hksSrj8xy
-         Ir31hHz9tz7PZ80scltPHUN/X+6xEhGUZzX+yDTRiZ0GdSN/CcsVwIibxohSfE4m2EFo
-         t/nqkHi+beP/WkbSedbxLWL9Q9pS2qIihwCZA=
+        d=linux-foundation.org; s=google; t=1679085065;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tdwPzVsmob+Q/2o5AaDTACeQ8LqTFlcH3duKRoFq2iQ=;
+        b=NRRDvzKrpe8pYBzozs6ge7vqHuUviWfY6zC02S2Qz2ecCTbPpe9T4e6uBCNFzMqCd8
+         seWjFsr2PePAi1T70JZzGYiFm0pUqoCfKAHToYFYfQSlppds1cRifzvCzqnfy5Hh7nnz
+         wA/Xac9eMopHZS+YhuCw941avlp3Q9/QDL2QY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679082609;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sTkWXMj0l/9cqk/U0QQ/wZMUy1oF1i/mojVUtfUyiYM=;
-        b=lhIc8kget1xwwVhyOa0/6qsJo+d0UIozyB1TI2S5QLAthn9ayzA321ODGOXNJo3Rrt
-         wDpl/e7vPKbUWX3b3dy43s1YWp/5/oDLxvvYBqyRwcZGibY3amOtTcJyzYK0hx7B1oGy
-         KYWPbOn3njIa/e+EZem3dVK+g0uz1zzgelNSYCcrVWVM6nXH6dcXkkQd7qON0gNGhTeg
-         PMgUj02sWyvXPOyHqVaprwou5M1qTcIHSEisQ7Kq+wjuAR6/KMvU/ZDiy1f8KA+xztyu
-         +56SONKvl/vxgoxo2QPIbgppNLKG03t2yX8d0A6uflv7Sa0Sh6y/yIIxuKwBUCFVvLb9
-         f/ew==
-X-Gm-Message-State: AO0yUKUNn++XIWhnZRvA0w7HzMhVbg8Jto5UQlfRel/oj1W9/DumXeZP
-        h3iXYlGB98sDyqOJqb8uFz0wn0zU8r2JoAmp1hQ=
-X-Google-Smtp-Source: AK7set9AzIb4HFRsROSmeue9TaLtzCV7t6cukuLBwQ5LSDNFbsd/UlVIO0YGe4xkZ/Axy9kZ6+LhcA==
-X-Received: by 2002:a05:6a20:728d:b0:ce:c188:68af with SMTP id o13-20020a056a20728d00b000cec18868afmr10510377pzk.17.1679082609596;
-        Fri, 17 Mar 2023 12:50:09 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h15-20020aa786cf000000b005b34d81b010sm1964869pfo.91.2023.03.17.12.50.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Mar 2023 12:50:08 -0700 (PDT)
-Message-ID: <6414c470.a70a0220.6b62f.3f02@mx.google.com>
-X-Google-Original-Message-ID: <202303171242.@keescook>
-Date:   Fri, 17 Mar 2023 12:50:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        d=1e100.net; s=20210112; t=1679085065;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tdwPzVsmob+Q/2o5AaDTACeQ8LqTFlcH3duKRoFq2iQ=;
+        b=CYW/o3mieW1nRekdKFsIaMz6YykDZDMBHvVdM3M8SsQUW9lxYxGSzWwrR5Q+TWKAGX
+         A7pzbcb+PCDbaFeumBf+MSkaTItSyvSI+rfcCUXVqb9R2G3kTWefxbIqFVQtl1sF+V4e
+         b2N4ZBmio/VwRV7wi3DLp7NWw3j2XKl5uApbV8bXo/i1GX6TdVbefevMJaUPGN6sDwb1
+         tuyjTpWfATM/loNNKhJmMx10PLcsVTAk3F2HrBRbzDPEwt+BskHzJH77ktgPJ7HSJw7I
+         oRgs0OhYy7JZJNAoI6iuThldcxUN/YRxMChKCBjQ2+hkrQHbmXiFWfK49bqaeMaeOFmK
+         xbNw==
+X-Gm-Message-State: AO0yUKVI2+1YZ8AcNr0DhC1XrltFJkXMjCSs+LNT0KvLGDkejg47Yyyi
+        c7XU3fjc+0g2Kb5y5GJGf1tCH5v6YqXhgVCTVcLhlw==
+X-Google-Smtp-Source: AK7set/OnSOmTsvIj4e0vn8Kz287HlQRlTLtXOXtoOelL6/ncJbRmbSMqsFXu1JuoYgUOga3U+eMJg==
+X-Received: by 2002:a05:6402:12c3:b0:4fd:2346:7225 with SMTP id k3-20020a05640212c300b004fd23467225mr5017511edx.34.1679085064612;
+        Fri, 17 Mar 2023 13:31:04 -0700 (PDT)
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com. [209.85.208.46])
+        by smtp.gmail.com with ESMTPSA id q3-20020a50cc83000000b004fc86fcc4b3sm1511194edi.80.2023.03.17.13.31.03
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Mar 2023 13:31:03 -0700 (PDT)
+Received: by mail-ed1-f46.google.com with SMTP id eg48so24830770edb.13
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 13:31:03 -0700 (PDT)
+X-Received: by 2002:a50:ce54:0:b0:4fa:794a:c0cc with SMTP id
+ k20-20020a50ce54000000b004fa794ac0ccmr2477649edj.2.1679085063365; Fri, 17 Mar
+ 2023 13:31:03 -0700 (PDT)
+MIME-Version: 1.0
+References: <9d0ef355-f430-e8e2-c844-b34cfcf60d88@kernel.dk>
+ <CAHk-=wgcYvgJ5YWJPy6PA-B_yRtPfpw01fmCqtvqGN9jouc_8w@mail.gmail.com>
+ <CAKwvOdmJkQUe6bhvQXHo0XOncdso0Kk26n8vdJZufm4Ku72tng@mail.gmail.com> <6414c470.a70a0220.6b62f.3f02@mx.google.com>
+In-Reply-To: <6414c470.a70a0220.6b62f.3f02@mx.google.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 17 Mar 2023 13:30:46 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi5yk0+NeqB34fRC-Zvt+8QZVPTiny9MvCxxjg+ZqDhKg@mail.gmail.com>
+Message-ID: <CAHk-=wi5yk0+NeqB34fRC-Zvt+8QZVPTiny9MvCxxjg+ZqDhKg@mail.gmail.com>
+Subject: Re: [GIT PULL] Block fixes for 6.3-rc3
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Jens Axboe <axboe@kernel.dk>,
         Nathan Chancellor <nathan@kernel.org>,
         "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
         clang-built-linux <llvm@lists.linux.dev>,
         linux-hardening@vger.kernel.org
-Subject: Re: [GIT PULL] Block fixes for 6.3-rc3
-References: <9d0ef355-f430-e8e2-c844-b34cfcf60d88@kernel.dk>
- <CAHk-=wgcYvgJ5YWJPy6PA-B_yRtPfpw01fmCqtvqGN9jouc_8w@mail.gmail.com>
- <CAKwvOdmJkQUe6bhvQXHo0XOncdso0Kk26n8vdJZufm4Ku72tng@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdmJkQUe6bhvQXHo0XOncdso0Kk26n8vdJZufm4Ku72tng@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 11:59:11AM -0700, Nick Desaulniers wrote:
-> +Sanitizer folks (BCC'd)
-> (Top of lore thread:
-> https://lore.kernel.org/linux-block/9d0ef355-f430-e8e2-c844-b34cfcf60d88@kernel.dk/)
-> 
-> On Fri, Mar 17, 2023 at 11:35 AM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Fri, Mar 17, 2023 at 10:16 AM Jens Axboe <axboe@kernel.dk> wrote:
-> > > Side note - when doing the usual allmodconfig builds with gcc-12 and
-> > > clang before sending them out, for the latter I see this warning being
-> > > spewed with clang-15:
-> > >
-> > > drivers/media/i2c/m5mols/m5mols.o: warning: objtool: m5mols_set_fmt() falls through to next function m5mols_get_frame_desc()
-> > >
-> > > Obviously not related to my changes, but mentioning it in case it has
-> > > been missed as I know you love squeaky clean builds :-). Doesn't happen
-> > > with clang-14.
-> >
-> > Hmm. I have clang-15 too, but I do the allmodconfig builds with gcc,
-> > and only my own "normal config" builds with clang.
-> >
-> > So I don't see this particular issue and my builds are still squeaky clean.
-> >
-> > That said, when I explicitly try that allmodconfig thing with clang, I
-> > can see it too. And the reason seems to be something we've seen
-> > before: UBSAN functions being considered non-return by clang, so clang
-> > generates code like this:
-> >
-> >    ....
-> > .LBB24_3:
-> >         callq   __sanitizer_cov_trace_pc@PLT
-> >         movl    $2, %esi
-> >         movq    $.L__unnamed_3, %rdi
-> >         callq   __ubsan_handle_out_of_bounds
-> > .Lfunc_end24:
-> >         .size   m5mols_set_fmt, .Lfunc_end24-m5mols_set_fmt
-> >
-> > ie the last thing in that m5mols_set_fmt() function is a call to
-> > __ubsan_handle_out_of_bounds, and then it "falls through" to the next
-> > function.
-> >
-> > And yes, I absolutely *detest* how clang does that. Not only does it
-> > cause objtool sanity checking issues, it fundamentally means that we
-> > can never treat UBSAN warnings as warnings. They are always fatal.
+On Fri, Mar 17, 2023 at 12:50=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
+>
+> I've hit these cases a few times too. The __ubsan_handle_* stuff
+> is designed to be recoverable. I think there are some cases where
+> we're tripping over Clang bugs, though. Some of the past issues
+> have been with Clang thinking some UBSAN feature was trap-only
+> (e.g. -fsanitizer=3Dlocal-bounds), but here it actually generated the cal=
+l,
+> but decided it was no-return. *sigh*
 
-I've hit these cases a few times too. The __ubsan_handle_* stuff
-is designed to be recoverable. I think there are some cases where
-we're tripping over Clang bugs, though. Some of the past issues
-have been with Clang thinking some UBSAN feature was trap-only
-(e.g. -fsanitizer=local-bounds), but here it actually generated the call,
-but decided it was no-return. *sigh*
+Hmm. The problem here is that we only get an objdump warning by pure luck.
 
-> > But I suspect we need to disable UBSAN for clang, because clang gets
-> > this so *horribly* wrong.
+This isn't a "objdump will always catch it", it's more like "objdump
+will only catch it if the code happens to be moved to the end of the
+function".
 
-Which is to say, it normally gets it right, but there are some instances
-where things go weird. If it was horribly wrong, there would be a LOT
-more objtool warnings. :)
+So I'm very happy to hear that it's not by design, and that's very good.
 
-I'm not opposed to disabling UBSAN for all*config builds if we need to,
-but I want to get these Clang bugs found and fixed so I'd be sad to lose
-the coverage.
+But the whole "this is a compiler bug" doesn't exactly give me the
+warm and fuzzies either.
 
--- 
-Kees Cook
+The code generation looks *really* odd to me. This is, as far as I can
+tell, the code sequence that this code has:
+
+m5mols_set_fmt:
+  ..
+        movq    %rdx, %rbp
+  ..
+        movl    16(%rbp), %ebx
+        movq    %rbx, %rdi
+  ..
+        cmpq    $16385, %rbx                    # imm =3D 0x4001
+        jne     .LBB24_1
+  ..
+.LBB24_1:
+        cmpl    $8199, %ebx                     # imm =3D 0x2007
+        jne     .LBB24_3
+  ..
+.LBB24_3:
+        callq   __sanitizer_cov_trace_pc@PLT
+        movl    $2, %esi
+        movq    $.L__unnamed_3, %rdi
+        callq   __ubsan_handle_out_of_bounds
+
+and as far as I can tell, that "movl 16(%rbp), %ebx" is
+
+        enum m5mols_restype stype =3D __find_restype(mf->code);
+
+in __find_resolution(). But I don't understand those odd constants
+it's comparing against at all.
+
+'enum m5mols_restype' should be in the range 0..2, but it seems to use
+a 64-bit compare against '16385' (and then a 32-bit compare against
+'8199') to decide it's out-of-bounds.
+
+I must be *completely* mis-reading this, because none of that makes a
+whit of sense to me.
+
+It's possible that clang is just *so* terminally confused that it just
+generates random code, but it's more likely that I'm mis-reading
+things.
+
+The above is my interpretation of what I see with the current F37
+clang version for a "allmodconfig" build of that file.
+
+My 'clang -v' says
+
+    clang version 15.0.7 (Fedora 15.0.7-1.fc37)
+
+in case some clang person wants to try to recreate this.
+
+> I'm not opposed to disabling UBSAN for all*config builds if we need to,
+> but I want to get these Clang bugs found and fixed so I'd be sad to lose
+> the coverage.
+
+I wonder how many people actually end up having UBSAN actually
+enabled. I get the feeling that most of the coverage it gets is
+exactly just the compile-only coverage by "allmodconfig" and friends.
+
+Otherwise it would be really easy to just say
+
+        depends on !COMPILE_TEST
+
+for all these run-time debug things. But exactly *because* they have
+caused endless amounts of build-time pain - *and* because I doubt how
+much real run-time testing they get - limiting it to non-build tests
+sounds a bit counter-productive.
+
+              Linus
