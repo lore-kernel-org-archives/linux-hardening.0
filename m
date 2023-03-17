@@ -2,77 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A83A8C74A5B
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 06:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10B2C74A5B
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 16:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230174AbjCQGur (ORCPT
+        id S229488AbjCQQ71 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Mar 2023 02:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40578 "EHLO
+        Fri, 17 Mar 2023 12:59:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbjCQGuq (ORCPT
+        with ESMTP id S229988AbjCQQ7Y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Mar 2023 02:50:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD6DBBB02;
-        Thu, 16 Mar 2023 23:50:45 -0700 (PDT)
+        Fri, 17 Mar 2023 12:59:24 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4418A20D25;
+        Fri, 17 Mar 2023 09:59:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F027621C4;
-        Fri, 17 Mar 2023 06:50:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41ADFC433EF;
-        Fri, 17 Mar 2023 06:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1679035844;
-        bh=FwNORm2z7EgotVkf6Y6iCjILfepzSXKUVVB30xpOWFs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HLZdzPRXFXKD6/L+Z5oU9Ss/XhzLlu15+WyhKn90xVDNWjEX0GUOdTinEt+NEOHUw
-         bTIW+50OY9iqdpCJAqzeCZKgbvm0ch+T3PG4Z1MNrmLg46U2PuReOiSvHzACd7prUU
-         MHHDS3mYIY6C2PdSMxaAdGzl1Om54yf+TOgeHxP8=
-Date:   Fri, 17 Mar 2023 07:50:41 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     kernel test robot <yujie.liu@intel.com>,
-        Kees Cook <keescook@chromium.org>, oe-lkp@lists.linux.dev,
-        lkp@intel.com, Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        tangmeng <tangmeng@uniontech.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        aliyunlinux2-dev@linux.alibaba.com, jane.lv@intel.com
-Subject: Re: [linux-stable-rc:linux-4.19.y] [panic] 4d00e68cfc:
- WARNING:at_fs/sysfs/file.c:#sysfs_emit_at
-Message-ID: <ZBQNwcVBKwe1WU3h@kroah.com>
-References: <202303141634.1e64fd76-yujie.liu@intel.com>
- <20230317063213.GC882@sol.localdomain>
+        by sin.source.kernel.org (Postfix) with ESMTPS id 0FBE7CE20FF;
+        Fri, 17 Mar 2023 16:59:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00E0C433EF;
+        Fri, 17 Mar 2023 16:59:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679072358;
+        bh=Yr+loVbWv0qK18b3WpWr9ZR4G6QuOAV94eNluGFAb18=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XniyUM26LziXHrexP/d/DUVLjnjl4qsrffDi+ERWh6SmXsGgmg7VJxMQtVgwshxny
+         dFvp0OpJhh/vfqa/cGeur5SEtghfBr9J8PS6x8rdr83Z7Jg2vnxLMEeyE9TQQsK9k7
+         7EyZpAMUKl0mpKAA3yBGWpDbAHZ/lKDCvl9dgxS3rljmW+AJt7BkR1YjB4s6tSDzHl
+         sk9WX3evD6kjhJWmuXcjEuXv0dg0BRT/rZhwCXMgMMRhznb5ZkmA2GgzdfCJPufpnS
+         /+KkNz7UZCe78TZKjBmBuqymn9RqBm3tnfT5q/gONOSHXhhcKMvGHhTCTTBOeDycaQ
+         bAouUTD5ks0FQ==
+Date:   Fri, 17 Mar 2023 10:59:48 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Bodo Stroesser <bostroesser@gmail.com>
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] uapi: target: Replace fake flex-array with
+ flexible-array member
+Message-ID: <ZBSchMvTdl7VObKI@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230317063213.GC882@sol.localdomain>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 16, 2023 at 11:32:13PM -0700, Eric Biggers wrote:
-> On Tue, Mar 14, 2023 at 04:34:22PM +0800, kernel test robot wrote:
-> > Greeting,
-> > 
-> > FYI, we noticed WARNING:at_fs/sysfs/file.c:#sysfs_emit_at due to commit (built with gcc-11):
-> > 
-> > commit: 4d00e68cfcfd91d3a8c794d47617429a96d623ed ("panic: Expose "warn_count" to sysfs")
-> > https://git.kernel.org/cgit/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> 
-> It turns out this is a longstanding bug in 4.19.y and 4.14.y caused by a bad
-> backport, which is not actually related to the above commit (or the patch series
-> that contained it) at all.  I've sent out fixes:
-> 
-> 4.19: https://lore.kernel.org/r/20230317062743.313169-1-ebiggers@kernel.org
-> 4.14: https://lore.kernel.org/r/20230317062801.313217-1-ebiggers@kernel.org
+Zero-length arrays as fake flexible arrays are deprecated and we are
+moving towards adopting C99 flexible-array members instead.
 
-Thanks for these, I'll queue it up the next round.
+Address the following warning found with GCC-13 and
+-fstrict-flex-arrays=3 enabled:
+  CC      drivers/target/target_core_user.o
+drivers/target/target_core_user.c: In function ‘queue_cmd_ring’:
+drivers/target/target_core_user.c:1096:15: warning: array subscript 0 is outside array bounds of ‘struct iovec[0]’ [-Warray-bounds=]
+ 1096 |         iov = &entry->req.iov[0];
+      |               ^~~~~~~~~~~~~~~~~~
+In file included from drivers/target/target_core_user.c:31:
+./include/uapi/linux/target_core_user.h:122:38: note: while referencing ‘iov’
+  122 |                         struct iovec iov[0];
+      |                                      ^~~
 
-greg k-h
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
+
+Link: https://github.com/KSPP/linux/issues/21
+Link: https://github.com/KSPP/linux/issues/270
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/uapi/linux/target_core_user.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/uapi/linux/target_core_user.h b/include/uapi/linux/target_core_user.h
+index fbd8ca67e107..f925a77f19ed 100644
+--- a/include/uapi/linux/target_core_user.h
++++ b/include/uapi/linux/target_core_user.h
+@@ -119,7 +119,7 @@ struct tcmu_cmd_entry {
+ 			__u64 cdb_off;
+ 			__u64 __pad1;
+ 			__u64 __pad2;
+-			struct iovec iov[0];
++			__DECLARE_FLEX_ARRAY(struct iovec, iov);
+ 		} req;
+ 		struct {
+ 			__u8 scsi_status;
+-- 
+2.34.1
+
