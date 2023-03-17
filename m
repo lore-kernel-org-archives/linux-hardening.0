@@ -2,135 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F4BC74A5B
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 19:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E284C6FD1D
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 19:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbjCQTUs (ORCPT
+        id S229516AbjCQTuP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Mar 2023 15:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57698 "EHLO
+        Fri, 17 Mar 2023 15:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230064AbjCQTUr (ORCPT
+        with ESMTP id S229480AbjCQTuN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Mar 2023 15:20:47 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB2F1CBE8;
-        Fri, 17 Mar 2023 12:20:44 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id cy23so24233969edb.12;
-        Fri, 17 Mar 2023 12:20:43 -0700 (PDT)
+        Fri, 17 Mar 2023 15:50:13 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C02738B7C
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 12:50:10 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id cn6so6423042pjb.2
+        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 12:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679080842;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ipteKbyLRilvrFKtkN552HGn3csqgfJvLO2UFDLogH8=;
-        b=T85EszIagCy3FQoMmIi3feGmH9uDu+x+vQBdKaGuG6qHAKIAkdxGsrHVyQTzD4Icm3
-         3Wnq+sWC1+Z2UVFKHsbIHcQYnTJrCdc8g0qNYFD9pPduns+JpW2+cjoUZ4ZNQtOap/Qa
-         W4ba/zFjWP7nglx1+KMsHyruLGLjt3kBzZUvbmv6yD2YSbTEDd4AWi3bdCQr+W0I3iih
-         HaHfQHa+WpsBD264wdVrRJ2/cwCRSQ7O5AHOz6/ycTGvjX88VeDhGeA9kkSGkPwTT5Co
-         aVMzLaIYOaTNkhjy5nxvHUPhrZiBw9e2wdAcj1S9Qn8tXtswLvFsD8jDfGAHIf/UDmfd
-         Z9eA==
+        d=chromium.org; s=google; t=1679082609;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=sTkWXMj0l/9cqk/U0QQ/wZMUy1oF1i/mojVUtfUyiYM=;
+        b=IE3ITaccsan+R7me0dIE2PcYdM+dVje3nOwIhznF4FJf+hmIF+M8+FcZ3hksSrj8xy
+         Ir31hHz9tz7PZ80scltPHUN/X+6xEhGUZzX+yDTRiZ0GdSN/CcsVwIibxohSfE4m2EFo
+         t/nqkHi+beP/WkbSedbxLWL9Q9pS2qIihwCZA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679080842;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20210112; t=1679082609;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ipteKbyLRilvrFKtkN552HGn3csqgfJvLO2UFDLogH8=;
-        b=W7jPKY1Uhbj+jovXeyqjcUzPQPoCc3wh6ydyPPBm6cUYu3aCnGIBtUgXkIi1IlSqYo
-         ljSzcAXzeQgDGry/gQzyF05WVDe951QH6HLYzWvkMkYmB6CCkWRflsZ0fUYNGXrQyjRw
-         u6r5whaEDnfjUbp67xE8XAfips6BR6jBSSbyiFR+5DeyWhqY3jSmdsuJu3tHq9LC8J/0
-         6U1J2gVEVvert52y79i3fpV1W74jWJJJ2H+5gtZaZG0xIQMlOSwgm2SSu4udw4TyC6+Y
-         v+KDCvozuAylz/4QQWZH7piDbYtNrZstc1zQ0i+ieBg+GLXJEzDrf5cXCkDUhoMFjVH9
-         cfXg==
-X-Gm-Message-State: AO0yUKWyoflVYiU01qKbW0vMAmKRFExDhVYbGG4wnrfo2xJ7pj5wOUFY
-        z6jriIWJz9SV7Q2qeO2drMI=
-X-Google-Smtp-Source: AK7set+BxqA20CFXrX4V7MY7Z9SiOFmNVC/HiodqrFYFKzxh3CwX85AfRREnrLxGdVkvjOLS35qZiQ==
-X-Received: by 2002:a17:906:3fcf:b0:92d:6078:3878 with SMTP id k15-20020a1709063fcf00b0092d60783878mr480494ejj.33.1679080842438;
-        Fri, 17 Mar 2023 12:20:42 -0700 (PDT)
-Received: from shift (p5b0d7c06.dip0.t-ipconnect.de. [91.13.124.6])
-        by smtp.gmail.com with ESMTPSA id ec21-20020a0564020d5500b004fc01b0aa55sm1451581edb.4.2023.03.17.12.20.42
+        bh=sTkWXMj0l/9cqk/U0QQ/wZMUy1oF1i/mojVUtfUyiYM=;
+        b=lhIc8kget1xwwVhyOa0/6qsJo+d0UIozyB1TI2S5QLAthn9ayzA321ODGOXNJo3Rrt
+         wDpl/e7vPKbUWX3b3dy43s1YWp/5/oDLxvvYBqyRwcZGibY3amOtTcJyzYK0hx7B1oGy
+         KYWPbOn3njIa/e+EZem3dVK+g0uz1zzgelNSYCcrVWVM6nXH6dcXkkQd7qON0gNGhTeg
+         PMgUj02sWyvXPOyHqVaprwou5M1qTcIHSEisQ7Kq+wjuAR6/KMvU/ZDiy1f8KA+xztyu
+         +56SONKvl/vxgoxo2QPIbgppNLKG03t2yX8d0A6uflv7Sa0Sh6y/yIIxuKwBUCFVvLb9
+         f/ew==
+X-Gm-Message-State: AO0yUKUNn++XIWhnZRvA0w7HzMhVbg8Jto5UQlfRel/oj1W9/DumXeZP
+        h3iXYlGB98sDyqOJqb8uFz0wn0zU8r2JoAmp1hQ=
+X-Google-Smtp-Source: AK7set9AzIb4HFRsROSmeue9TaLtzCV7t6cukuLBwQ5LSDNFbsd/UlVIO0YGe4xkZ/Axy9kZ6+LhcA==
+X-Received: by 2002:a05:6a20:728d:b0:ce:c188:68af with SMTP id o13-20020a056a20728d00b000cec18868afmr10510377pzk.17.1679082609596;
+        Fri, 17 Mar 2023 12:50:09 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h15-20020aa786cf000000b005b34d81b010sm1964869pfo.91.2023.03.17.12.50.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Mar 2023 12:20:42 -0700 (PDT)
-Received: from localhost ([127.0.0.1])
-        by shift with esmtp (Exim 4.96)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1pdFcE-0005Af-0A;
-        Fri, 17 Mar 2023 20:20:41 +0100
-Message-ID: <5dfdb3c9-59e2-0147-b29d-276511e81ec6@gmail.com>
-Date:   Fri, 17 Mar 2023 20:20:41 +0100
+        Fri, 17 Mar 2023 12:50:08 -0700 (PDT)
+Message-ID: <6414c470.a70a0220.6b62f.3f02@mx.google.com>
+X-Google-Original-Message-ID: <202303171242.@keescook>
+Date:   Fri, 17 Mar 2023 12:50:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Nathan Chancellor <nathan@kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        clang-built-linux <llvm@lists.linux.dev>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [GIT PULL] Block fixes for 6.3-rc3
+References: <9d0ef355-f430-e8e2-c844-b34cfcf60d88@kernel.dk>
+ <CAHk-=wgcYvgJ5YWJPy6PA-B_yRtPfpw01fmCqtvqGN9jouc_8w@mail.gmail.com>
+ <CAKwvOdmJkQUe6bhvQXHo0XOncdso0Kk26n8vdJZufm4Ku72tng@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH][next] carl9170: Fix multiple -Warray-bounds warnings
-Content-Language: de-DE
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZBSjx236+BTiRByf@work>
-From:   Christian Lamparter <chunkeey@gmail.com>
-In-Reply-To: <ZBSjx236+BTiRByf@work>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKwvOdmJkQUe6bhvQXHo0XOncdso0Kk26n8vdJZufm4Ku72tng@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 3/17/23 18:30, Gustavo A. R. Silva wrote:
-> GCC (and Clang)[1] does not like having a partially allocated object,
-> since it cannot reason about it for bounds checking. Instead, fully
-> allocate struct carl9170_cmd.
+On Fri, Mar 17, 2023 at 11:59:11AM -0700, Nick Desaulniers wrote:
+> +Sanitizer folks (BCC'd)
+> (Top of lore thread:
+> https://lore.kernel.org/linux-block/9d0ef355-f430-e8e2-c844-b34cfcf60d88@kernel.dk/)
 > 
-> Fix the following warnings Seen under GCC 13:
-> drivers/net/wireless/ath/carl9170/cmd.c:125:30: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[4]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:126:30: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[4]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:125:30: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[20]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:126:30: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[20]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:161:12: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[20]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:162:12: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[20]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:163:12: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[20]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:164:12: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[20]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:125:30: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[8]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:126:30: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[8]’ [-Warray-bounds=]
-> drivers/net/wireless/ath/carl9170/cmd.c:220:12: warning: array subscript ‘struct carl9170_cmd[0]’ is partly outside array bounds of ‘unsigned char[8]’ [-Warray-bounds=]
-> 
-> Link: https://github.com/KSPP/linux/issues/268
-> Link: godbolt.org/z/KP97sxh3T [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> On Fri, Mar 17, 2023 at 11:35 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Fri, Mar 17, 2023 at 10:16 AM Jens Axboe <axboe@kernel.dk> wrote:
+> > > Side note - when doing the usual allmodconfig builds with gcc-12 and
+> > > clang before sending them out, for the latter I see this warning being
+> > > spewed with clang-15:
+> > >
+> > > drivers/media/i2c/m5mols/m5mols.o: warning: objtool: m5mols_set_fmt() falls through to next function m5mols_get_frame_desc()
+> > >
+> > > Obviously not related to my changes, but mentioning it in case it has
+> > > been missed as I know you love squeaky clean builds :-). Doesn't happen
+> > > with clang-14.
+> >
+> > Hmm. I have clang-15 too, but I do the allmodconfig builds with gcc,
+> > and only my own "normal config" builds with clang.
+> >
+> > So I don't see this particular issue and my builds are still squeaky clean.
+> >
+> > That said, when I explicitly try that allmodconfig thing with clang, I
+> > can see it too. And the reason seems to be something we've seen
+> > before: UBSAN functions being considered non-return by clang, so clang
+> > generates code like this:
+> >
+> >    ....
+> > .LBB24_3:
+> >         callq   __sanitizer_cov_trace_pc@PLT
+> >         movl    $2, %esi
+> >         movq    $.L__unnamed_3, %rdi
+> >         callq   __ubsan_handle_out_of_bounds
+> > .Lfunc_end24:
+> >         .size   m5mols_set_fmt, .Lfunc_end24-m5mols_set_fmt
+> >
+> > ie the last thing in that m5mols_set_fmt() function is a call to
+> > __ubsan_handle_out_of_bounds, and then it "falls through" to the next
+> > function.
+> >
+> > And yes, I absolutely *detest* how clang does that. Not only does it
+> > cause objtool sanity checking issues, it fundamentally means that we
+> > can never treat UBSAN warnings as warnings. They are always fatal.
 
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
+I've hit these cases a few times too. The __ubsan_handle_* stuff
+is designed to be recoverable. I think there are some cases where
+we're tripping over Clang bugs, though. Some of the past issues
+have been with Clang thinking some UBSAN feature was trap-only
+(e.g. -fsanitizer=local-bounds), but here it actually generated the call,
+but decided it was no-return. *sigh*
 
-> ---
->   drivers/net/wireless/ath/carl9170/cmd.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/ath/carl9170/cmd.c b/drivers/net/wireless/ath/carl9170/cmd.c
-> index f2b4f537e4c1..b8ed193c0195 100644
-> --- a/drivers/net/wireless/ath/carl9170/cmd.c
-> +++ b/drivers/net/wireless/ath/carl9170/cmd.c
-> @@ -120,7 +120,7 @@ struct carl9170_cmd *carl9170_cmd_buf(struct ar9170 *ar,
->   {
->   	struct carl9170_cmd *tmp;
->   
-> -	tmp = kzalloc(sizeof(struct carl9170_cmd_head) + len, GFP_ATOMIC);
-> +	tmp = kzalloc(sizeof(*tmp), GFP_ATOMIC);
+> > But I suspect we need to disable UBSAN for clang, because clang gets
+> > this so *horribly* wrong.
 
+Which is to say, it normally gets it right, but there are some instances
+where things go weird. If it was horribly wrong, there would be a LOT
+more objtool warnings. :)
 
-This might throw-off people here. The reason this works is because carl9170_cmd struct
-looks like this:
-|
-|struct carl9170_cmd {
-|        struct carl9170_cmd_head hdr; <-- 4 bytes
-|        union {
-|                struct carl9170_set_key_cmd     setkey;
-| [...]
-|                struct carl9170_rx_filter_cmd   rx_filter;
-|                u8 data[CARL9170_MAX_CMD_PAYLOAD_LEN]; <---- that's 60 bytes
-|        } __packed __aligned(4);
-|} __packed __aligned(4);
+I'm not opposed to disabling UBSAN for all*config builds if we need to,
+but I want to get these Clang bugs found and fixed so I'd be sad to lose
+the coverage.
 
-All commands have to fit into the command endpoint max size which is 64 bytes.
+-- 
+Kees Cook
