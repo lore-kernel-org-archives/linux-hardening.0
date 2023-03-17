@@ -2,97 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2F5C6FD1D
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 18:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE59DC74A5B
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 19:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229600AbjCQSRj (ORCPT
+        id S229963AbjCQTLk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Mar 2023 14:17:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46572 "EHLO
+        Fri, 17 Mar 2023 15:11:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230452AbjCQSRh (ORCPT
+        with ESMTP id S229530AbjCQTLk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Mar 2023 14:17:37 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A76CA78A;
-        Fri, 17 Mar 2023 11:17:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9DA7BB82694;
-        Fri, 17 Mar 2023 18:17:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D4F7C433D2;
-        Fri, 17 Mar 2023 18:17:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679077052;
-        bh=fbZaO/bjuHxIfSFiexEmKgUXmB5DqFSacCk1E1Qa7kA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NaiXWbmMipdUChL0sNZn8tHfaLYCNmL+GrJeQF+JVWwxbhF0cbT7JbbIdXL+Yln3C
-         AYqXCMw7qwyYpUDj4C0DokfbR+wnEeW88kKEKjb0piZayVMG4sppxzRMg94P2yOVNq
-         MUEYUkWMqcyM6KKsFxD94M36dquiAul4LFGp535RYZ5uXfi+HM991iMEVmHl/5wzDc
-         t0MixSJk3S0gsYlC7ng1ePrMlMrvGKTV/gFlqLVumweHbTTROsxZEBKL3896j4jO/0
-         UszBUQSoo7ug+g8Mo31pf/iXpDMbHRW0IwaESH1kFKqSHPgB3V/F7AWp8f4bOmi5oz
-         sMTi4kpTm9KFw==
-Date:   Fri, 17 Mar 2023 12:18:01 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/i915/uapi: Replace fake flex-array with
- flexible-array member
-Message-ID: <ZBSu2QsUJy31kjSE@work>
+        Fri, 17 Mar 2023 15:11:40 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93172D7C20;
+        Fri, 17 Mar 2023 12:11:38 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id y4so24304144edo.2;
+        Fri, 17 Mar 2023 12:11:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679080297;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=60jQnIE0z011E/nipdT9TDjgG3QEglLPRrgCcdTJhoY=;
+        b=DYa3zsqMdFZuMiXOQ6WQDG/9EKJwwIgjrHQRcM+EoRU3W9Fc9szFxjb4zMzw+i0a7m
+         R5RFGCKL2niB9EBYc/U2WkiqgNWOJsWIpa4e+ijptGZY2QQ0+m3nLlKy6Q7OzWBuEAtI
+         NE1Oa+B/Tdtc+E+Oh14lTLaVc+X9tpXe3NF89FCYkMBsF/WhD/WVxEzMOfvIGwcnyRrS
+         xAaZyph0BZUIHVORDzNmUEPSu9SzncnxEFHLZPz+GZEFIxO1vcdgvz3B5Nz8EOStHkX2
+         TB0fqSYsWm1erZazH2zqKMcOZO4aR6z8bs/fRN6/pmjzzNk4UhSy/wvWre/tL8CsnvKI
+         iISQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679080297;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=60jQnIE0z011E/nipdT9TDjgG3QEglLPRrgCcdTJhoY=;
+        b=G/sGwWFW1C8OnBIiApRFiQVgj2uNbvTzrTR2BPhlFCQWHd4oQ9VhQpdNRjt76Kpiyi
+         Po85+673mxF2P/ir3R2qcazemmdokAgrGd0gxtBWXs2KpAHy48/ZVSg5rOONsltMDZc4
+         UnjqSErstfSZyLBz1SQ78f4AIbKsDracdmNrH8eecm52IsmD60d8umaBc/PDnMOuIWDK
+         uLw4x2keXOboI8B5glsLnH9H/05ZhIX5i1BF/RlnIV7E2d8Bae2FEbbox5RS3eP6Olnb
+         /sKu8ONLjysrg7ZbUpQUk/YSEsQ/BnPn+u7+ZMP30PpR2WdIPJLBd2euV1Q5bdufAmUb
+         6h5w==
+X-Gm-Message-State: AO0yUKVQaO8CBUL/A6Ia9KheyiqPpVrR1IrRfE5/1r7taDemWEoSsVes
+        1BhYTca+tSd9qeIRKD+9hl8=
+X-Google-Smtp-Source: AK7set9CcKyskSm7Jc8DN3kRofSMf7p7wWmS8YCYA9/7+SS4ML0cq+imGn8XHOXsRcMo8Z4AwyOCjQ==
+X-Received: by 2002:a17:906:bc8c:b0:86a:316:d107 with SMTP id lv12-20020a170906bc8c00b0086a0316d107mr350662ejb.72.1679080296986;
+        Fri, 17 Mar 2023 12:11:36 -0700 (PDT)
+Received: from shift (p5b0d7c06.dip0.t-ipconnect.de. [91.13.124.6])
+        by smtp.gmail.com with ESMTPSA id t23-20020a1709063e5700b00930b13f6abdsm1290540eji.98.2023.03.17.12.11.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Mar 2023 12:11:36 -0700 (PDT)
+Received: from localhost ([127.0.0.1])
+        by shift with esmtp (Exim 4.96)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1pdFTQ-00052U-1u;
+        Fri, 17 Mar 2023 20:11:36 +0100
+Message-ID: <03e1c436-f2c4-f227-0cd9-ea12afbda1fc@gmail.com>
+Date:   Fri, 17 Mar 2023 20:11:36 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH][next] wifi: carl9170: Replace fake flex-array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZBSl2M+aGIO1fnuG@work>
+Content-Language: de-DE
+From:   Christian Lamparter <chunkeey@gmail.com>
+In-Reply-To: <ZBSl2M+aGIO1fnuG@work>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays as fake flexible arrays are deprecated and we are
-moving towards adopting C99 flexible-array members instead.
+On 3/17/23 18:39, Gustavo A. R. Silva wrote:
+> Zero-length arrays as fake flexible arrays are deprecated and we are
+> moving towards adopting C99 flexible-array members instead.
+> 
+> Address the following warnings found with GCC-13 and
+> -fstrict-flex-arrays=3 enabled:
+> drivers/net/wireless/ath/carl9170/tx.c:702:61: warning: array subscript i is outside array bounds of ‘const struct _carl9170_tx_status[0]’ [-Warray-bounds=]
+> drivers/net/wireless/ath/carl9170/tx.c:701:65: warning: array subscript i is outside array bounds of ‘const struct _carl9170_tx_status[0]’ [-Warray-bounds=]
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/267
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Acked-by: Christian Lamparter <chunkeey@gmail.com>
 
-Address the following warning found with GCC-13 and
--fstrict-flex-arrays=3 enabled:
-drivers/gpu/drm/i915/gem/i915_gem_context.c: In function ‘set_proto_ctx_engines.isra’:
-drivers/gpu/drm/i915/gem/i915_gem_context.c:769:41: warning: array subscript n is outside array bounds of ‘struct i915_engine_class_instance[0]’ [-Warray-bounds=]
-  769 |                 if (copy_from_user(&ci, &user->engines[n], sizeof(ci))) {
-      |                                         ^~~~~~~~~~~~~~~~~
-./include/uapi/drm/i915_drm.h:2494:43: note: while referencing ‘engines’
- 2494 |         struct i915_engine_class_instance engines[0];
+FYI: Also uploaded that patch to carl9170fw.git.
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
-
-Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/271
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/uapi/drm/i915_drm.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/uapi/drm/i915_drm.h b/include/uapi/drm/i915_drm.h
-index 8df261c5ab9b..5e458d6f2895 100644
---- a/include/uapi/drm/i915_drm.h
-+++ b/include/uapi/drm/i915_drm.h
-@@ -2491,7 +2491,7 @@ struct i915_context_param_engines {
- #define I915_CONTEXT_ENGINES_EXT_LOAD_BALANCE 0 /* see i915_context_engines_load_balance */
- #define I915_CONTEXT_ENGINES_EXT_BOND 1 /* see i915_context_engines_bond */
- #define I915_CONTEXT_ENGINES_EXT_PARALLEL_SUBMIT 2 /* see i915_context_engines_parallel_submit */
--	struct i915_engine_class_instance engines[0];
-+	struct i915_engine_class_instance engines[];
- } __attribute__((packed));
- 
- #define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__, N__) struct { \
--- 
-2.34.1
+Cheers,
+Christian
 
