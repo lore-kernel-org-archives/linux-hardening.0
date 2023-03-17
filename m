@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4176C6FD1D
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 17:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE2F5C6FD1D
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 18:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231178AbjCQRj2 (ORCPT
+        id S229600AbjCQSRj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Mar 2023 13:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
+        Fri, 17 Mar 2023 14:17:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230252AbjCQRjL (ORCPT
+        with ESMTP id S230452AbjCQSRh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Mar 2023 13:39:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679B733CC4;
-        Fri, 17 Mar 2023 10:39:08 -0700 (PDT)
+        Fri, 17 Mar 2023 14:17:37 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A76CA78A;
+        Fri, 17 Mar 2023 11:17:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F05CF60B35;
-        Fri, 17 Mar 2023 17:39:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16824C4339C;
-        Fri, 17 Mar 2023 17:39:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9DA7BB82694;
+        Fri, 17 Mar 2023 18:17:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D4F7C433D2;
+        Fri, 17 Mar 2023 18:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679074747;
-        bh=d2dbiKmY5zdyizSPGR6FY41MGap7MSDENVLqaS/yv7A=;
+        s=k20201202; t=1679077052;
+        bh=fbZaO/bjuHxIfSFiexEmKgUXmB5DqFSacCk1E1Qa7kA=;
         h=Date:From:To:Cc:Subject:From;
-        b=Tnoc0wbFnYcI8PTEOW4setBX+PUqyFAClZo4S/KpN5fAdd461DOke0bIfLY0H+lwR
-         8H/6AEX3fYWWAK+91sB1j6HCKJASKKYDcuHDqdVLvUqtNPYVhFumLcp2NHNavfL0Jx
-         KlRKScg4cCHoEc/82rgagqqyssu/zEZZ3pdBrwL2jmhuVjmorl30IgeIa2KLjKFviR
-         t7p8SkMLSaX4G2tGhWwJ5+IeaMghtFZUqn3lM93+oibAaqBOkCHXKz9I1ebnnAKRgX
-         qUzJaRKSRfKqkFC7q3i7dnj6Aa7ZoPukq052Fv+wr9krAlWcDQP+M75Fnrm7dvHeYm
-         XUPM4vTcqr9Vg==
-Date:   Fri, 17 Mar 2023 11:39:36 -0600
+        b=NaiXWbmMipdUChL0sNZn8tHfaLYCNmL+GrJeQF+JVWwxbhF0cbT7JbbIdXL+Yln3C
+         AYqXCMw7qwyYpUDj4C0DokfbR+wnEeW88kKEKjb0piZayVMG4sppxzRMg94P2yOVNq
+         MUEYUkWMqcyM6KKsFxD94M36dquiAul4LFGp535RYZ5uXfi+HM991iMEVmHl/5wzDc
+         t0MixSJk3S0gsYlC7ng1ePrMlMrvGKTV/gFlqLVumweHbTTROsxZEBKL3896j4jO/0
+         UszBUQSoo7ug+g8Mo31pf/iXpDMbHRW0IwaESH1kFKqSHPgB3V/F7AWp8f4bOmi5oz
+         sMTi4kpTm9KFw==
+Date:   Fri, 17 Mar 2023 12:18:01 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Christian Lamparter <chunkeey@googlemail.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] wifi: carl9170: Replace fake flex-array with
+Subject: [PATCH][next] drm/i915/uapi: Replace fake flex-array with
  flexible-array member
-Message-ID: <ZBSl2M+aGIO1fnuG@work>
+Message-ID: <ZBSu2QsUJy31kjSE@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -59,39 +59,40 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 Zero-length arrays as fake flexible arrays are deprecated and we are
 moving towards adopting C99 flexible-array members instead.
 
-Address the following warnings found with GCC-13 and
+Address the following warning found with GCC-13 and
 -fstrict-flex-arrays=3 enabled:
-drivers/net/wireless/ath/carl9170/tx.c:702:61: warning: array subscript i is outside array bounds of ‘const struct _carl9170_tx_status[0]’ [-Warray-bounds=]
-drivers/net/wireless/ath/carl9170/tx.c:701:65: warning: array subscript i is outside array bounds of ‘const struct _carl9170_tx_status[0]’ [-Warray-bounds=]
+drivers/gpu/drm/i915/gem/i915_gem_context.c: In function ‘set_proto_ctx_engines.isra’:
+drivers/gpu/drm/i915/gem/i915_gem_context.c:769:41: warning: array subscript n is outside array bounds of ‘struct i915_engine_class_instance[0]’ [-Warray-bounds=]
+  769 |                 if (copy_from_user(&ci, &user->engines[n], sizeof(ci))) {
+      |                                         ^~~~~~~~~~~~~~~~~
+./include/uapi/drm/i915_drm.h:2494:43: note: while referencing ‘engines’
+ 2494 |         struct i915_engine_class_instance engines[0];
 
 This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
 routines on memcpy() and help us make progress towards globally
 enabling -fstrict-flex-arrays=3 [1].
 
 Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/267
+Link: https://github.com/KSPP/linux/issues/271
 Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- drivers/net/wireless/ath/carl9170/fwcmd.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/uapi/drm/i915_drm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/carl9170/fwcmd.h b/drivers/net/wireless/ath/carl9170/fwcmd.h
-index ff4b3b50250c..e5bcc364f088 100644
---- a/drivers/net/wireless/ath/carl9170/fwcmd.h
-+++ b/drivers/net/wireless/ath/carl9170/fwcmd.h
-@@ -320,9 +320,9 @@ struct carl9170_rsp {
- 		struct carl9170_u32_list	rreg_res;
- 		struct carl9170_u32_list	echo;
- #ifdef __CARL9170FW__
--		struct carl9170_tx_status	tx_status[0];
-+		DECLARE_FLEX_ARRAY(struct carl9170_tx_status, tx_status);
- #endif /* __CARL9170FW__ */
--		struct _carl9170_tx_status	_tx_status[0];
-+		DECLARE_FLEX_ARRAY(struct _carl9170_tx_status, _tx_status);
- 		struct carl9170_gpio		gpio;
- 		struct carl9170_tsf_rsp		tsf;
- 		struct carl9170_psm		psm;
+diff --git a/include/uapi/drm/i915_drm.h b/include/uapi/drm/i915_drm.h
+index 8df261c5ab9b..5e458d6f2895 100644
+--- a/include/uapi/drm/i915_drm.h
++++ b/include/uapi/drm/i915_drm.h
+@@ -2491,7 +2491,7 @@ struct i915_context_param_engines {
+ #define I915_CONTEXT_ENGINES_EXT_LOAD_BALANCE 0 /* see i915_context_engines_load_balance */
+ #define I915_CONTEXT_ENGINES_EXT_BOND 1 /* see i915_context_engines_bond */
+ #define I915_CONTEXT_ENGINES_EXT_PARALLEL_SUBMIT 2 /* see i915_context_engines_parallel_submit */
+-	struct i915_engine_class_instance engines[0];
++	struct i915_engine_class_instance engines[];
+ } __attribute__((packed));
+ 
+ #define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__, N__) struct { \
 -- 
 2.34.1
 
