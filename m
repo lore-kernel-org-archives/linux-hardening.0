@@ -2,116 +2,143 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644CCC6FD1D
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 20:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A20C6FD1D
+	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 20:56:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230003AbjCQUvk (ORCPT
+        id S230317AbjCQU4Q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Mar 2023 16:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
+        Fri, 17 Mar 2023 16:56:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbjCQUvj (ORCPT
+        with ESMTP id S230310AbjCQU4P (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Mar 2023 16:51:39 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414323E08F
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 13:51:37 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id er8so13397926edb.0
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 13:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1679086295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HGPinKOg8Q94FTw3RW1XhRjZJIhdvmuXH/yX2ELyuDQ=;
-        b=d+ZPrGN7mH+n06n73UyCuuGRKEzvOIcp0CnERIXzSKexwWJXV8UGn8lyuhffqPfRge
-         RTyCIpYh2JhNm6rmsEIkCp1eaacgKpnTxHswMQzZbV9/5GvKhIR8gaL4IeU2GLpf4XOO
-         ZbcYBBPCXyWtan3iA+0A71ES1364NVP+weSAA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679086295;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HGPinKOg8Q94FTw3RW1XhRjZJIhdvmuXH/yX2ELyuDQ=;
-        b=BJKPxx43x2EgqZo2jn2UWca4m0vvldxCmvcHskh+5cVBU3RkEKDmP+Au4PBkrUh9Yn
-         LRqxjiRyaPulCbivzZJmDQJPPGWDGrad0l36eEjMVkbpI2lsEHe4Tpf3md833bEx1uyB
-         smbCqnSWC1fPxoXM5ot9gXWxj6nYrKknnkmdAEviYGCdaxaZn3L+xBUidV6AA9BF0y9Z
-         eyNsS/2u4uLWWb8bhSvTUytX6ZWheg0+50ass4M/4KQ3kiqBxau5ai436zLmb6ZszSQT
-         EwvBfGZZ7kSAzrNzFZePLyMrY9GW48D++FbdogWSAdzrIKMqEdiJW1DK66CW2uDkOPVa
-         la0w==
-X-Gm-Message-State: AO0yUKWB5LGKRt3z+KUJQIiEHtzK9GVq6mK6JjqD5AndrntaBjgm+721
-        8h0LNJTMx4sP9PN4ztw7nlOrS9jv8+geB57datNrBA==
-X-Google-Smtp-Source: AK7set9FvDwTrOaauZrCq3o3WsEAwwD3lOGhDrFOslyIdecJXcbI/vGbUcpt/x4virnHfsT294L2Ow==
-X-Received: by 2002:a17:907:2bd2:b0:929:d2f4:1824 with SMTP id gv18-20020a1709072bd200b00929d2f41824mr612838ejc.21.1679086295506;
-        Fri, 17 Mar 2023 13:51:35 -0700 (PDT)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id wr5-20020a170907700500b008b133f9b33dsm1333457ejb.169.2023.03.17.13.51.34
-        for <linux-hardening@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 17 Mar 2023 13:51:34 -0700 (PDT)
-Received: by mail-ed1-f49.google.com with SMTP id r11so25136662edd.5
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 13:51:34 -0700 (PDT)
-X-Received: by 2002:a17:906:2695:b0:931:99b5:67a4 with SMTP id
- t21-20020a170906269500b0093199b567a4mr291317ejc.15.1679086294427; Fri, 17 Mar
- 2023 13:51:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <9d0ef355-f430-e8e2-c844-b34cfcf60d88@kernel.dk>
- <CAHk-=wgcYvgJ5YWJPy6PA-B_yRtPfpw01fmCqtvqGN9jouc_8w@mail.gmail.com>
- <CAKwvOdmJkQUe6bhvQXHo0XOncdso0Kk26n8vdJZufm4Ku72tng@mail.gmail.com>
- <6414c470.a70a0220.6b62f.3f02@mx.google.com> <CAHk-=wi5yk0+NeqB34fRC-Zvt+8QZVPTiny9MvCxxjg+ZqDhKg@mail.gmail.com>
- <CANiq72m46OzQPtZbS_VaQGgGknFV-hKvhBw8sVZx9ef=AzupTQ@mail.gmail.com>
-In-Reply-To: <CANiq72m46OzQPtZbS_VaQGgGknFV-hKvhBw8sVZx9ef=AzupTQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 17 Mar 2023 13:51:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgTSdKYbmB1JYM5vmHMcD9J9UZr0mn7BOYM_LudrP+Xvw@mail.gmail.com>
-Message-ID: <CAHk-=wgTSdKYbmB1JYM5vmHMcD9J9UZr0mn7BOYM_LudrP+Xvw@mail.gmail.com>
-Subject: Re: [GIT PULL] Block fixes for 6.3-rc3
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        clang-built-linux <llvm@lists.linux.dev>,
+        Fri, 17 Mar 2023 16:56:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 321575F6DD;
+        Fri, 17 Mar 2023 13:56:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CB22DB825DA;
+        Fri, 17 Mar 2023 20:56:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE28C4339B;
+        Fri, 17 Mar 2023 20:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679086570;
+        bh=VzXlHxYNFbUcVstTyt9EJfj+teDRoE31sK1fPAn46Oc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BaWU4SPzIsEjzmEUwROAS+A0XupSs9pAyKe6SsluWorDLlQLQ48c/R4PXMIjUoedc
+         l6OqnAFh9uO30POohnzH1oJgyTxZ+f/Hqmxf7TTBIbB1INTdvPH5ykgGPIRQUFM0M6
+         /BPC2XuqpbKgsrSyVHiKQpPrFv3l4mhFidDd7VyrpyK86bvhFkoftJsZVJu/vVEDIT
+         tBeZaCGmCb+uokVSbHxAJB1Is5v9mVVkDLuAUoezD8pLhBuHxs1nvpGNQQQAo5xLHq
+         4Y6JbrC9reKmg13EYFaXLK/HYGfy8PdYc4yuwIfSXuhppR2Sv38Y6n2qwZ7nNYnT4I
+         r5R2eub3YFFyA==
+Date:   Fri, 17 Mar 2023 14:56:39 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH][next] wifi: mt76: mt7921: Replace fake flex-arrays with
+ flexible-array members
+Message-ID: <ZBTUB/kJYQxq/6Cj@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 1:42=E2=80=AFPM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> It is comparing against just the `.code` in the `m5mols_default_ffmt`
-> table, i.e. the `MEDIA_BUS_FMT_VYUY8_2X8` (8199 =3D 0x2007) and
-> `MEDIA_BUS_FMT_JPEG_1X8` (16385 =3D 0x4001), see
+Zero-length arrays as fake flexible arrays are deprecated and we are
+moving towards adopting C99 flexible-array members instead.
 
-Yeah, I see what it's doing.
+Address the following warnings found with GCC-13 and
+-fstrict-flex-arrays=3 enabled:
+drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:266:25: warning: array subscript 0 is outside array bounds of ‘struct mt7921_asar_dyn_limit_v2[0]’ [-Warray-bounds=]
+drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:263:25: warning: array subscript 0 is outside array bounds of ‘struct mt7921_asar_dyn_limit[0]’ [-Warray-bounds=]
+drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:223:28: warning: array subscript <unknown> is outside array bounds of ‘struct mt7921_asar_geo_limit_v2[0]’ [-Warray-bounds=]
+drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:220:28: warning: array subscript <unknown> is outside array bounds of ‘struct mt7921_asar_geo_limit[0]’ [-Warray-bounds=]
+drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:334:37: warning: array subscript i is outside array bounds of ‘u8[0]’ {aka ‘unsigned char[]’} [-Warray-bounds=]
 
-But:
+Notice that the DECLARE_FLEX_ARRAY() helper allows for flexible-array
+members in unions.
 
-> If the condition had `++type` instead, it would not be a problem,
-> because the loop stops before we go into the out of bounds access thus
-> no UB.
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-Yeah, but clang really should have generated a proper third iteration,
-which calls that "out of bounds" case, and then returns, instead fo
-falling off the end.
+Link: https://github.com/KSPP/linux/issues/21
+Link: https://github.com/KSPP/linux/issues/272
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-I do think that on the kernel side, the fix is to just change
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h b/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
+index 35268b0890ad..6f2c4a572572 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
+@@ -24,7 +24,7 @@ struct mt7921_asar_dyn {
+ 	u8 names[4];
+ 	u8 enable;
+ 	u8 nr_tbl;
+-	struct mt7921_asar_dyn_limit tbl[0];
++	DECLARE_FLEX_ARRAY(struct mt7921_asar_dyn_limit, tbl);
+ } __packed;
+ 
+ struct mt7921_asar_dyn_limit_v2 {
+@@ -37,7 +37,7 @@ struct mt7921_asar_dyn_v2 {
+ 	u8 enable;
+ 	u8 rsvd;
+ 	u8 nr_tbl;
+-	struct mt7921_asar_dyn_limit_v2 tbl[0];
++	DECLARE_FLEX_ARRAY(struct mt7921_asar_dyn_limit_v2, tbl);
+ } __packed;
+ 
+ struct mt7921_asar_geo_band {
+@@ -55,7 +55,7 @@ struct mt7921_asar_geo {
+ 	u8 names[4];
+ 	u8 version;
+ 	u8 nr_tbl;
+-	struct mt7921_asar_geo_limit tbl[0];
++	DECLARE_FLEX_ARRAY(struct mt7921_asar_geo_limit, tbl);
+ } __packed;
+ 
+ struct mt7921_asar_geo_limit_v2 {
+@@ -69,7 +69,7 @@ struct mt7921_asar_geo_v2 {
+ 	u8 version;
+ 	u8 rsvd;
+ 	u8 nr_tbl;
+-	struct mt7921_asar_geo_limit_v2 tbl[0];
++	DECLARE_FLEX_ARRAY(struct mt7921_asar_geo_limit_v2, tbl);
+ } __packed;
+ 
+ struct mt7921_asar_cl {
+@@ -85,7 +85,7 @@ struct mt7921_asar_fg {
+ 	u8 rsvd;
+ 	u8 nr_flag;
+ 	u8 rsvd1;
+-	u8 flag[0];
++	u8 flag[];
+ } __packed;
+ 
+ struct mt7921_acpi_sar {
+-- 
+2.34.1
 
-        } while (type++ !=3D SIZE_DEFAULT_FFMT);
-
-to
-
-        } while (++type !=3D SIZE_DEFAULT_FFMT);
-
-but I would *really* like clang to be fixed to not silently generate
-code that does insane things and would be basically impossible to
-debug if it ever triggers.
-
-We would have spent a *lot* of time wondering how the heck we Oopsed
-in m5mols_get_frame_desc().
-
-             Linus
