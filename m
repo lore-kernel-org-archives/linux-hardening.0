@@ -2,102 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C201C6FD1D
-	for <linux-hardening@archiver.kernel.org>; Fri, 17 Mar 2023 22:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60C2C61DA4
+	for <linux-hardening@archiver.kernel.org>; Sat, 18 Mar 2023 13:01:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229478AbjCQW4a (ORCPT
+        id S229542AbjCRNBC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 17 Mar 2023 18:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50484 "EHLO
+        Sat, 18 Mar 2023 09:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjCQW43 (ORCPT
+        with ESMTP id S229640AbjCRNBB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 17 Mar 2023 18:56:29 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A9CE2
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 15:56:28 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id qe8-20020a17090b4f8800b0023f07253a2cso6802889pjb.3
-        for <linux-hardening@vger.kernel.org>; Fri, 17 Mar 2023 15:56:28 -0700 (PDT)
+        Sat, 18 Mar 2023 09:01:01 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7512C66F;
+        Sat, 18 Mar 2023 06:00:58 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id z21so30303526edb.4;
+        Sat, 18 Mar 2023 06:00:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679093788;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rgl6/Ew3LdfVeuq3EG0BPByS9IqpLUKC1pNwODZSZMU=;
-        b=e6R9EwymyM8VB3T/Qk9Bv7+QepHZSKJljv0Tk0WcqnlmSGmI/JU/r9KMRinX1eUh3Y
-         +2zTFGLlEhiGkYfExeZ0TLIqg4/MZG8WTJ1/bK4fTPeSFCS2KlnbRRscLIoJw/EiZvy3
-         wOjxustqLkj0IMLmd0C7JiYUaCLuTV3rJAnwmmblpoUX/eI5O02Ac2urVs3k6Sq3OddO
-         ukQ9C+M5H4d1KShMTho2fwl2AOx7i/LJljqCBPIb06zvUWJKpbUxefq9DUiXheNRTrCW
-         QsEYIYgTgsvg1dCdT+IwAGgGVI+1GztUQJscTfQvk5daK0y+1dfdmUH9ckBCUbrKy2o9
-         RmRQ==
+        d=gmail.com; s=20210112; t=1679144457;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6vdkOe9PDpkNSQ/x0t7vPqLMcU3kTL7t8MTur54JSuE=;
+        b=DQk+rU8btnnaErKEz5K1gVJ9Hw7fP07Vmbro03HZD+a2YFbGWV/cCLBOogDECPwgS4
+         pboT0zq1vQvbLROmaE3sA10QyXJkPBn9ZK4mk6fukaA37ITBxvCtGG9rJIVZ8T7d7Xj1
+         WSdRtNsEip0n1dKqQhOUA8OoiIFYPKjVUlFPLjIxNSwMqQAkims2SGix0r/r7a640P26
+         Xi1kcHBQtAE+dTeXnEkow/eEP356zUobRSIclGwCO2mYKE8ZpzZCHrXWLr3C7yIhU/Pf
+         3+NsZEtTUXdrAc/MZBCWCEtOdC5Nv9WcQHQFuNQRFuUhDCci1DX13Wzq+P4Vhfnauy2d
+         Lrlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679093788;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rgl6/Ew3LdfVeuq3EG0BPByS9IqpLUKC1pNwODZSZMU=;
-        b=dAhZg/kKP5gESsEH9eZXuEg6JYTbS6fDSE/P7EGXeBsZQv9c0AtlRQPo/ugRAHDgPv
-         K9/EBT8a8LYkDxzlE1302x2RXCQegm2O8mpXPmNynADELlIiZv/z95tUpSlhuhU8+yYA
-         DfQyMWDDpK0vZctVABqwmvgs31p6rZ4zY8CFHrVJVk2BFHHEkzns9/9Fk7lwgmVUJAol
-         6JemOvqnYQ+DsTa+9dyGrAYmlmK9+ADKZe/D5tuq4pSs31mk+6tPzi5vOOaOwNzXeUkl
-         k0IkHXaatlo7hX49ETvJyFqjx58IagvSnxW07mFHGSWLKCNuDd0seKkhVPHA7lmNKf7l
-         Tvqg==
-X-Gm-Message-State: AO0yUKUjGcfvbHHphsFDPc+3D5PdGSREiT6VwXUD/w6QUVaBCx67J0Ui
-        hDnAg4sNNdu/KSOThQ7gXP/i0P6rZbK08Vz101ZkZA==
-X-Google-Smtp-Source: AK7set+VZ1C/vdje0Qf+DN5K6lCsci8LicRW622ZINtSJOlwFek/UOb9dFwUqU2dwUFenMc0n7bU0LcAGLAMvZzPf6E=
-X-Received: by 2002:a17:902:e749:b0:1a0:4aa3:3a9a with SMTP id
- p9-20020a170902e74900b001a04aa33a9amr3500662plf.2.1679093787879; Fri, 17 Mar
- 2023 15:56:27 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679144457;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6vdkOe9PDpkNSQ/x0t7vPqLMcU3kTL7t8MTur54JSuE=;
+        b=B365gAnxwRvePfUXVwOkp7EIAFnfoN5lXOracH95hwAExz9tyBJ0cMgamEvNa6k3XM
+         89rw74WHD6FKVBZXsWT8h2AELzzSPsabu8MW9khV55mv2giO64nTdi1K5DXZ44JZ9lms
+         KaA34qGwuUkEnyrz7wrHCAr63W+2P7zhIGJPfxEZOeiXcmXt9NEXcmvjE55+M2W1qj2F
+         iJV7+xDk6FB3ygGEpL6TLkFwvRv2Pn4+jesfXbEDnz0qg2xMTmXH9jMJTWtnYveK1z8n
+         7QDDzKUZiP54WU5pDCc7LFSmJKHzVXIxTBIWN5swt4++H7wQkOdUinWWA6QW7123Ccwr
+         4s7Q==
+X-Gm-Message-State: AO0yUKVCDUQKTneuag7U7jpzV7Pn6/9HtVOwBNl6J9Cm8VyER0vJgV1F
+        KpcfI8c/XfV3QoIaei5OIyS2VEWAbPg=
+X-Google-Smtp-Source: AK7set81wi7yHnNaHILHOCoa40of7SYjOnHmyp851kgJqe2pbcV2r3HjIQrkjTNlowzS4caq80rCfg==
+X-Received: by 2002:a17:907:a066:b0:92a:7178:ab56 with SMTP id ia6-20020a170907a06600b0092a7178ab56mr2664232ejc.39.1679144456993;
+        Sat, 18 Mar 2023 06:00:56 -0700 (PDT)
+Received: from [192.168.178.40] (ip5f5b4297.dynamic.kabel-deutschland.de. [95.91.66.151])
+        by smtp.gmail.com with ESMTPSA id 22-20020a170906309600b0092f289b6fdbsm2149277ejv.181.2023.03.18.06.00.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 18 Mar 2023 06:00:56 -0700 (PDT)
+Message-ID: <d563cca7-57c6-289a-f551-a378f219aed4@gmail.com>
+Date:   Sat, 18 Mar 2023 14:00:55 +0100
 MIME-Version: 1.0
-References: <9d0ef355-f430-e8e2-c844-b34cfcf60d88@kernel.dk>
- <CAHk-=wgcYvgJ5YWJPy6PA-B_yRtPfpw01fmCqtvqGN9jouc_8w@mail.gmail.com>
- <CAKwvOdmJkQUe6bhvQXHo0XOncdso0Kk26n8vdJZufm4Ku72tng@mail.gmail.com>
- <6414c470.a70a0220.6b62f.3f02@mx.google.com> <CAHk-=wi5yk0+NeqB34fRC-Zvt+8QZVPTiny9MvCxxjg+ZqDhKg@mail.gmail.com>
- <CANiq72m46OzQPtZbS_VaQGgGknFV-hKvhBw8sVZx9ef=AzupTQ@mail.gmail.com>
- <CAHk-=wgTSdKYbmB1JYM5vmHMcD9J9UZr0mn7BOYM_LudrP+Xvw@mail.gmail.com> <CAHk-=wgLBjQZ1Xic9SDvtPOu3MNwRznZygZ35mqq4CpKmWdBtA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgLBjQZ1Xic9SDvtPOu3MNwRznZygZ35mqq4CpKmWdBtA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 17 Mar 2023 15:56:16 -0700
-Message-ID: <CAKwvOdkSBASKK9LZowSdNyN+OR7Kx+j5sMdiJ1nSwbvoQPzNVQ@mail.gmail.com>
-Subject: Re: [GIT PULL] Block fixes for 6.3-rc3
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        clang-built-linux <llvm@lists.linux.dev>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH][next] uapi: target: Replace fake flex-array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZBSchMvTdl7VObKI@work>
+Content-Language: en-US
+From:   Bodo Stroesser <bostroesser@gmail.com>
+In-Reply-To: <ZBSchMvTdl7VObKI@work>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 2:00=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Fri, Mar 17, 2023 at 1:51=E2=80=AFPM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > but I would *really* like clang to be fixed to not silently generate
-> > code that does insane things and would be basically impossible to
-> > debug if it ever triggers.
->
-> Side note: the key word here is "silently".
->
-> If clang notices that it generates crazy code, a warning at build-time
-> would be preferable to the "oh, we noticed the crazy code generation
-> because we do sanity checking that just happened to catch it".
+On 17.03.23 17:59, Gustavo A. R. Silva wrote:
+> Zero-length arrays as fake flexible arrays are deprecated and we are
+> moving towards adopting C99 flexible-array members instead.
+> 
+> Address the following warning found with GCC-13 and
+> -fstrict-flex-arrays=3 enabled:
+>    CC      drivers/target/target_core_user.o
+> drivers/target/target_core_user.c: In function ‘queue_cmd_ring’:
+> drivers/target/target_core_user.c:1096:15: warning: array subscript 0 is outside array bounds of ‘struct iovec[0]’ [-Warray-bounds=]
+>   1096 |         iov = &entry->req.iov[0];
+>        |               ^~~~~~~~~~~~~~~~~~
+> In file included from drivers/target/target_core_user.c:31:
+> ./include/uapi/linux/target_core_user.h:122:38: note: while referencing ‘iov’
+>    122 |                         struct iovec iov[0];
+>        |                                      ^~~
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/270
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   include/uapi/linux/target_core_user.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/uapi/linux/target_core_user.h b/include/uapi/linux/target_core_user.h
+> index fbd8ca67e107..f925a77f19ed 100644
+> --- a/include/uapi/linux/target_core_user.h
+> +++ b/include/uapi/linux/target_core_user.h
+> @@ -119,7 +119,7 @@ struct tcmu_cmd_entry {
+>   			__u64 cdb_off;
+>   			__u64 __pad1;
+>   			__u64 __pad2;
+> -			struct iovec iov[0];
+> +			__DECLARE_FLEX_ARRAY(struct iovec, iov);
+>   		} req;
+>   		struct {
+>   			__u8 scsi_status;
 
-That's fair.  I have something hacked up locally that can spot the
-fallthough from m5mols_set_fmt() as objtool did. With some polish, we
-can likely ship that as a compiler warning.  Then we can have these
-checks regardless of objtool arch support.
+Looks good. Thank you.
 
-First I need to teach LLVM that __stack_chk_fail is noreturn, though
-I've only verified that thus far in glibc, musl, and bionic; I still
-need to check that's the case for the BSDs' libcs.
---=20
-Thanks,
-~Nick Desaulniers
+Reviewed-by: Bodo Stroesser <bostroesser@gmail.com>
