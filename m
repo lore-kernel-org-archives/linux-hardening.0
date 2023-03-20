@@ -2,98 +2,102 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913ABC7618A
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 18:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D636C7618A
+	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 18:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230476AbjCTSlj (ORCPT
+        id S231299AbjCTSnf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Mar 2023 14:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43178 "EHLO
+        Mon, 20 Mar 2023 14:43:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231142AbjCTSlS (ORCPT
+        with ESMTP id S231354AbjCTSnR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Mar 2023 14:41:18 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711823BDB5
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 11:33:20 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id p3-20020a17090a74c300b0023f69bc7a68so8919636pjl.4
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 11:33:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679337196;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=K4mu+bNehauaTgSBwCnPiSfzrVvCzsepaH3d15QbbN4=;
-        b=ClQrVslAhJvgqbe8M3xHOKxNgniQIh/uBsT0fWFpMbXdu6MFA1Jpv9xYHkM3UDdd9u
-         Q1KcpFDNhByvRzXb6AIGsWNhSajaD0ZFJIvDdVjfFDmky2eS8jQfTixhQBQg+aZpR/E6
-         veAKsW9HkLBeX9ZAaVtQ1F3vihHnlFAw3UXa4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679337196;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4mu+bNehauaTgSBwCnPiSfzrVvCzsepaH3d15QbbN4=;
-        b=pf9Jz/mQ2gonzal7spelRVb81lWLbgN+9pah2XZdmAvMS1/9iDTJYPl7ga+zdUwflH
-         LkYDk/XwWHhv0WzQIH8/NLBynS+Aq+4mfyruiDT5MkYpC2b3STFV96pu0QWZB/6ngXX+
-         zBjr47P1/xjU4fvDuAOHBPlG/DbiIeA9rzDrBKUdFuaXCuoJaCS3PZ8hnftMz2yiEjXU
-         fNT+ePnvrY9z6GeUMWG2+rhLNAQMQtb1hNdHuCti32DmuhG2ij9GznxoEl3pEQYlUwzJ
-         ZJGYviczlZjP/qhA9RoBtZHtY7v9QtWSKEoP4MylS29usnTq9V/45SKv8LXWhERRoFOf
-         qi+Q==
-X-Gm-Message-State: AO0yUKVAtYDZETNSpc6/tXsHATeG+4bpTfvMIvpSziO/6jT6hyZK+agq
-        nWNE65hrunAUIojJ07dRutbjEg==
-X-Google-Smtp-Source: AK7set/pnmLIeD8BRH/9kRDtin7NNNPBnPbucuL8sJUzMrogrV26aMT63BiNpaTx4nZIFu8i2QAeRw==
-X-Received: by 2002:a05:6a20:4c84:b0:cd:ed5c:513 with SMTP id fq4-20020a056a204c8400b000cded5c0513mr303189pzb.31.1679337196653;
-        Mon, 20 Mar 2023 11:33:16 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k2-20020aa792c2000000b006089fb79f1asm6608990pfa.208.2023.03.20.11.33.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Mar 2023 11:33:16 -0700 (PDT)
-Message-ID: <6418a6ec.a70a0220.1f3d7.afc4@mx.google.com>
-X-Google-Original-Message-ID: <202303201133.@keescook>
-Date:   Mon, 20 Mar 2023 11:33:15 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Bodo Stroesser <bostroesser@gmail.com>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mon, 20 Mar 2023 14:43:17 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB6B3C79E;
+        Mon, 20 Mar 2023 11:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+        Resent-Cc:Resent-Message-ID; bh=C8FeRadYDnvzZ/bAurGOxXqZGb263UdMJpdekcM+TXg=;
+        t=1679337333; x=1680546933; b=FUJgMgRv4mHBS5nOEWpTSmisA2rXrHyHTCbArKUnlVKAqUI
+        SfG1cRNiSFBOoOb7TQyS7hsGRvKsuLafcZiv2YxtwMC6IPW0UVf3XQguj77snPgfzzVI8WOfM5bAd
+        0tlgtXrS83AQAq9mEFMlPeeQyzWWoLugGEVIZbaUFH1lqqodAb6gPgoOTXHBwCcqSxKnHTIh2qK01
+        fW1+LBGw2mtoJwVvW/4PJgEp75Y9LkYMEeEJA0jADPP50o50CU9kxnYKy6qK9V2JozJ4TzoBcWzFg
+        domG77IkWDyGvDRlmiJCwwNFXxPVjZm5ZZBT5DvN4Xo4fUnnyS2t0SoOjfgTsQxw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.96)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1peKLU-0096HN-1I;
+        Mon, 20 Mar 2023 19:35:00 +0100
+Message-ID: <0ec5fe8b6945ee545b335ef2f3bee75b0af458d0.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: iwlwifi: dvm: Add struct_group for struct
+ iwl_keyinfo keys
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Gregory Greenman <gregory.greenman@intel.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Benjamin Berg <benjamin.berg@intel.com>,
+        Sriram R <quic_srirrama@quicinc.com>,
+        lukasz.wojnilowicz@gmail.com, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] uapi: target: Replace fake flex-array with
- flexible-array member
-References: <ZBSchMvTdl7VObKI@work>
+Date:   Mon, 20 Mar 2023 19:34:59 +0100
+In-Reply-To: <641897bd.630a0220.174d9.9d11@mx.google.com>
+References: <20230218191056.never.374-kees@kernel.org>
+         <3181a89b49e571883525172a7773b12f046e8b09.camel@sipsolutions.net>
+         <641897bd.630a0220.174d9.9d11@mx.google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZBSchMvTdl7VObKI@work>
+X-malware-bazaar: not-scanned
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 10:59:48AM -0600, Gustavo A. R. Silva wrote:
-> Zero-length arrays as fake flexible arrays are deprecated and we are
-> moving towards adopting C99 flexible-array members instead.
-> 
-> Address the following warning found with GCC-13 and
-> -fstrict-flex-arrays=3 enabled:
->   CC      drivers/target/target_core_user.o
-> drivers/target/target_core_user.c: In function ‘queue_cmd_ring’:
-> drivers/target/target_core_user.c:1096:15: warning: array subscript 0 is outside array bounds of ‘struct iovec[0]’ [-Warray-bounds=]
->  1096 |         iov = &entry->req.iov[0];
->       |               ^~~~~~~~~~~~~~~~~~
-> In file included from drivers/target/target_core_user.c:31:
-> ./include/uapi/linux/target_core_user.h:122:38: note: while referencing ‘iov’
->   122 |                         struct iovec iov[0];
->       |                                      ^~~
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/270
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> >=20
+> > >  	case WLAN_CIPHER_SUITE_TKIP:
+> > >  		key_flags |=3D STA_KEY_FLG_TKIP;
+> > >  		sta_cmd.key.tkip_rx_tsc_byte2 =3D tkip_iv32;
+> > >  		for (i =3D 0; i < 5; i++)
+> > >  			sta_cmd.key.tkip_rx_ttak[i] =3D cpu_to_le16(tkip_p1k[i]);
+> > > -		memcpy(sta_cmd.key.key, keyconf->key, keyconf->keylen);
+> > > +		memcpy(&sta_cmd.key.keys, keyconf->key, keyconf->keylen);
+> >=20
+> > And that's actually a bug, we should've copied only 16 bytes, I guess.
+> > DVM didn't support MIC offload anyway (at least the way Linux uses the
+> > firmware, though I thought it doesn't at all), so we don't need the MIC
+> > RX/TX keys in there, but anyway the sequence counter values are not par=
+t
+> > of the key material on the host.
+> >=20
+> > I don't think I have a machine now to test this with (nor a TKIP AP, of
+> > course, but that could be changed) - but I suspect that since we
+> > actually calculate the TTAK above, we might not even need this memcpy()
+> > at all?
+>=20
+> It's the latter that is triggered in the real world, though. See the
+> referenced URL and also now on bugzilla:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D217214
+> i.e.: drivers/net/wireless/intel/iwlwifi/dvm/sta.c:1103
+>=20
+> So keyconf->keylen is coming in as 32. If this is a bug, I'm not sure
+> where/how to fix it.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Yes, I know it's coming in as such - I believe it should be copying 16
+bytes instead of the full keylen. TKIP keys are comprised of 16 bytes
+encryption/decryption key and 8 bytes TX/RX MIC keys for a total of 32,
+but since the device doesn't do MIC calculations, it only needs the
+first 16 bytes here (if even that, since we also give it the P1K which
+is derived from the TK...? maybe not even that)
 
--- 
-Kees Cook
+But I guess we should test it ... not sure I still have a machine that
+takes these NICs (I do have NICs).
+
+johannes
