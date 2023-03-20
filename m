@@ -2,94 +2,94 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0D4C7618A
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 17:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 913ABC7618A
+	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 18:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbjCTRnx (ORCPT
+        id S230476AbjCTSlj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Mar 2023 13:43:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53342 "EHLO
+        Mon, 20 Mar 2023 14:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230072AbjCTRne (ORCPT
+        with ESMTP id S231142AbjCTSlS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Mar 2023 13:43:34 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47E19EEF
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 10:39:15 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id q23so1624775pfs.2
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 10:39:14 -0700 (PDT)
+        Mon, 20 Mar 2023 14:41:18 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 711823BDB5
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 11:33:20 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id p3-20020a17090a74c300b0023f69bc7a68so8919636pjl.4
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 11:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679333953;
+        d=chromium.org; s=google; t=1679337196;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:subject:cc:to:from:date:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Mj8BMtgaqpcJ2izjHoCa3UBL6C1oS24zpeZ0O+klY+Q=;
-        b=Z3+VpLz+lOm8RKdKSJ/nRK4OcwRzXaiergdD3dh/LHJwXIL43nZZXSZvvei1uxJrrW
-         FKrtsg2XIWSzkx7w5Hte2o0ryKqwv7ugIIeLufW35kLDiwULMkpcynmBfHqmBFbGsA6l
-         OCIpwyBBoWAbT93Gxp+UflYk914/xh5zEO180=
+        bh=K4mu+bNehauaTgSBwCnPiSfzrVvCzsepaH3d15QbbN4=;
+        b=ClQrVslAhJvgqbe8M3xHOKxNgniQIh/uBsT0fWFpMbXdu6MFA1Jpv9xYHkM3UDdd9u
+         Q1KcpFDNhByvRzXb6AIGsWNhSajaD0ZFJIvDdVjfFDmky2eS8jQfTixhQBQg+aZpR/E6
+         veAKsW9HkLBeX9ZAaVtQ1F3vihHnlFAw3UXa4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679333953;
+        d=1e100.net; s=20210112; t=1679337196;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:subject:cc:to:from:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mj8BMtgaqpcJ2izjHoCa3UBL6C1oS24zpeZ0O+klY+Q=;
-        b=iaH/8sH4ukBxYkoCQISnHc+lnFKfEPUxbQGbYcMsU2hhvhMn5KRDAru43aSQVNJau5
-         4kkzdpRIk3aEGxxtPjU+6M+54HMfpyElBtdbYTblKnj1V9qMpidEQ5kiYdVJNbWNMZMZ
-         OtV5VNbChQt3hfgPLaqLk9iSV87P6QncymhrN9moEo2dlhIXAvYqhieqVhtO/WQLUV88
-         lfl7dwWOhQ5tL6RYh/OsvRDNY3xxiVbJMehGcIpLYcdGeeK+VCUf5ZvCeIgyCllWaJHM
-         zmS51O28ShLEk6UVaSbW+EFlSHNcMnkl06GTwK+Acfqcp01OOLcCZ5OcbAmphQ9m5ZXW
-         kH7g==
-X-Gm-Message-State: AO0yUKX2QpCsO8I4wW1JxmzKt/a43qYX5y+7KB4sVwc6j7PJkKqApomG
-        HKjv8QSvICZtSsUIx0QcS9NpFw==
-X-Google-Smtp-Source: AK7set8IIyRVLx7g0PGp9Q0H2+W3ieCdIjaAbxCxs39Qs/AxGF7FAqBfxjixUjvjyvOasatQ54Y7HQ==
-X-Received: by 2002:a62:1881:0:b0:623:dfdd:f7eb with SMTP id 123-20020a621881000000b00623dfddf7ebmr152756pfy.12.1679333952731;
-        Mon, 20 Mar 2023 10:39:12 -0700 (PDT)
+        bh=K4mu+bNehauaTgSBwCnPiSfzrVvCzsepaH3d15QbbN4=;
+        b=pf9Jz/mQ2gonzal7spelRVb81lWLbgN+9pah2XZdmAvMS1/9iDTJYPl7ga+zdUwflH
+         LkYDk/XwWHhv0WzQIH8/NLBynS+Aq+4mfyruiDT5MkYpC2b3STFV96pu0QWZB/6ngXX+
+         zBjr47P1/xjU4fvDuAOHBPlG/DbiIeA9rzDrBKUdFuaXCuoJaCS3PZ8hnftMz2yiEjXU
+         fNT+ePnvrY9z6GeUMWG2+rhLNAQMQtb1hNdHuCti32DmuhG2ij9GznxoEl3pEQYlUwzJ
+         ZJGYviczlZjP/qhA9RoBtZHtY7v9QtWSKEoP4MylS29usnTq9V/45SKv8LXWhERRoFOf
+         qi+Q==
+X-Gm-Message-State: AO0yUKVAtYDZETNSpc6/tXsHATeG+4bpTfvMIvpSziO/6jT6hyZK+agq
+        nWNE65hrunAUIojJ07dRutbjEg==
+X-Google-Smtp-Source: AK7set/pnmLIeD8BRH/9kRDtin7NNNPBnPbucuL8sJUzMrogrV26aMT63BiNpaTx4nZIFu8i2QAeRw==
+X-Received: by 2002:a05:6a20:4c84:b0:cd:ed5c:513 with SMTP id fq4-20020a056a204c8400b000cded5c0513mr303189pzb.31.1679337196653;
+        Mon, 20 Mar 2023 11:33:16 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b5-20020aa78105000000b005938f5b7231sm6573800pfi.201.2023.03.20.10.39.12
+        by smtp.gmail.com with ESMTPSA id k2-20020aa792c2000000b006089fb79f1asm6608990pfa.208.2023.03.20.11.33.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Mar 2023 10:39:12 -0700 (PDT)
-Message-ID: <64189a40.a70a0220.70bd2.b03b@mx.google.com>
-X-Google-Original-Message-ID: <202303201039.@keescook>
-Date:   Mon, 20 Mar 2023 10:39:11 -0700
+        Mon, 20 Mar 2023 11:33:16 -0700 (PDT)
+Message-ID: <6418a6ec.a70a0220.1f3d7.afc4@mx.google.com>
+X-Google-Original-Message-ID: <202303201133.@keescook>
+Date:   Mon, 20 Mar 2023 11:33:15 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+Cc:     Bodo Stroesser <bostroesser@gmail.com>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] rxrpc: Replace fake flex-array with flexible-array
- member
-References: <ZAZT11n4q5bBttW0@work>
+Subject: Re: [PATCH][next] uapi: target: Replace fake flex-array with
+ flexible-array member
+References: <ZBSchMvTdl7VObKI@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZAZT11n4q5bBttW0@work>
+In-Reply-To: <ZBSchMvTdl7VObKI@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 02:57:59PM -0600, Gustavo A. R. Silva wrote:
+On Fri, Mar 17, 2023 at 10:59:48AM -0600, Gustavo A. R. Silva wrote:
 > Zero-length arrays as fake flexible arrays are deprecated and we are
 > moving towards adopting C99 flexible-array members instead.
 > 
-> Transform zero-length array into flexible-array member in struct
-> rxrpc_ackpacket.
-> 
-> Address the following warnings found with GCC-13 and
+> Address the following warning found with GCC-13 and
 > -fstrict-flex-arrays=3 enabled:
-> net/rxrpc/call_event.c:149:38: warning: array subscript i is outside array bounds of ‘uint8_t[0]’ {aka ‘unsigned char[]’} [-Warray-bounds=]
+>   CC      drivers/target/target_core_user.o
+> drivers/target/target_core_user.c: In function ‘queue_cmd_ring’:
+> drivers/target/target_core_user.c:1096:15: warning: array subscript 0 is outside array bounds of ‘struct iovec[0]’ [-Warray-bounds=]
+>  1096 |         iov = &entry->req.iov[0];
+>       |               ^~~~~~~~~~~~~~~~~~
+> In file included from drivers/target/target_core_user.c:31:
+> ./include/uapi/linux/target_core_user.h:122:38: note: while referencing ‘iov’
+>   122 |                         struct iovec iov[0];
+>       |                                      ^~~
 > 
 > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
 > routines on memcpy() and help us make progress towards globally
 > enabling -fstrict-flex-arrays=3 [1].
 > 
 > Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/263
+> Link: https://github.com/KSPP/linux/issues/270
 > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
