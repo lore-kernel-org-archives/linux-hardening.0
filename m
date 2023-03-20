@@ -2,118 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFE6C761AF
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 17:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 757F0C7618A
+	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 17:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233565AbjCTRdu (ORCPT
+        id S233510AbjCTRlQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Mar 2023 13:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34622 "EHLO
+        Mon, 20 Mar 2023 13:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231954AbjCTRda (ORCPT
+        with ESMTP id S233781AbjCTRkb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Mar 2023 13:33:30 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C81A5E0
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 10:29:02 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id iw3so13243388plb.6
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 10:29:02 -0700 (PDT)
+        Mon, 20 Mar 2023 13:40:31 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8246B31E22
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 10:36:51 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id j13so12940037pjd.1
+        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 10:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679333310;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=HGGv9i5SqQhPeVLQl7XFwMBB4Y//OxKsNM+BHuTlas8=;
-        b=ZBEawW1wSpHzkK8/HS+Ri6QL65omkw6EFPifZrsWKp5WXg92lnowD26XisLziOhwVZ
-         2nEdzI2mGrGQQwM7ELifU6FvVl6g1xVYtgfF/WvXKD6ZxdtzyCiGqWQpbRJG1FgdKH4D
-         /3yms1mYL70RTGYRWZDBqjX+9WFMl/GoOmpjc=
+        d=chromium.org; s=google; t=1679333785;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hpUGiYeox1kWl4OfAxGx9LTy4s9lwzAPEC2LintUMTc=;
+        b=BtCwXN29zeO1Y2JubkxnqAj2y9r5ppxzyhIYMyUQ+7kjvqpqF6WoKT4KRHH7v86VmB
+         cmGLns+Rn5mdrrdVa8FbMLj4dwKKemEB/I3XQ3Dg2L5CNV/jfELfU6YlYE1BR0yw8z0K
+         lVe9NTGAOFCpmqwTdASeFMuSLzz2DXBQENOss=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679333310;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HGGv9i5SqQhPeVLQl7XFwMBB4Y//OxKsNM+BHuTlas8=;
-        b=oLSYtuqOo/n28yG+imRw4d9h20UNPckpbQ0W/sCNlZH16y6MnpQ5pj1pWny1BLuxbw
-         oOX8dvMo3MUKCP1IwMJZ3883TE2s5nSECl2zNqnwe/dk+s7A892IXLKOCKNCmwpGXDTx
-         jsNBrIVuBm/0MNea5Ob1jhNbOQgKwWXcoWsPRgJb+6LsM0OLGwt6xGU5P405MEWjDYzx
-         5zumdJvhViXE4EIU+D+nrx+TytCyJvpHQFK/zH+nMCiK83C4CyplzVB5D56KWF5G5kSl
-         DY4KtAzUxDIMvyimhpTMfZQgGjreasr9RThFi5G2IBv16tyPiAAHNBq/DEx2ILkqmNZd
-         62xg==
-X-Gm-Message-State: AO0yUKVjjlZw1rxPryUdOIGscgEAb8TMZ4o9gLfv4lbOZsfiCaSzYBjm
-        yavRmigY3MInVm/nivOyW6rKKA==
-X-Google-Smtp-Source: AK7set/ayPZk2u7OUUu1P2u2+Ohp9OuSPCNnu536DGSZrZvrFnAYMWMrktDkKv+SC9Ao+lvASsuOhA==
-X-Received: by 2002:a05:6a20:3b86:b0:d9:5c2f:99cb with SMTP id b6-20020a056a203b8600b000d95c2f99cbmr5279833pzh.33.1679333310589;
-        Mon, 20 Mar 2023 10:28:30 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679333785;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hpUGiYeox1kWl4OfAxGx9LTy4s9lwzAPEC2LintUMTc=;
+        b=bvi8gTKcRgOxe0S9Rn0RJtovI5ioVNhIBrZ0OYyxBSloblwj+pU/f0ZnvnltMZoNpt
+         TXIqVcAJWrs8mH0YofKpP/MRcE7k1CBEU84I5U+XV2co3XrUm/u8dIPOtKXB3aUlLowa
+         VK6s4EMA7tzHJvmyjLD4ElTYT59YhBiONb1/smqTLveDNl+YJqpwiDGP5hi3UReR+yrv
+         ZtbVBgFCEGs4NilUL0OowMSARlqithhfKvtmc9e4fmwVEiHXmmrSLn6e4XGpkVtcB1MQ
+         4geIk5zgU1OfHKFswDrrMtDZYNTq9BYnlcGlQw9M1gGl5EbN5E4UVErrcRwhVubd+Mmz
+         lRXA==
+X-Gm-Message-State: AO0yUKWUZuNHnS/bfK36mBtEVTeHA1wOUE1BnN9jxm16SjTiWuQlj8yV
+        DJB4WYlTmMsnMuolDGPDzjDxlw==
+X-Google-Smtp-Source: AK7set9t390bG2K3Xo5adX8F8Bk16FfVLogcMGAN0o6Fz61VzJapYPhoEvZSKsa75t3/lr7IoM3W2g==
+X-Received: by 2002:a17:903:120f:b0:1a0:549d:39a1 with SMTP id l15-20020a170903120f00b001a0549d39a1mr20418380plh.32.1679333785667;
+        Mon, 20 Mar 2023 10:36:25 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j10-20020a63fc0a000000b00503000f0492sm6305291pgi.14.2023.03.20.10.28.29
+        by smtp.gmail.com with ESMTPSA id k23-20020a170902ba9700b0019a95baaaa6sm6979664pls.222.2023.03.20.10.36.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Mar 2023 10:28:29 -0700 (PDT)
-Message-ID: <641897bd.630a0220.174d9.9d11@mx.google.com>
-X-Google-Original-Message-ID: <202303201024.@keescook>
-Date:   Mon, 20 Mar 2023 10:28:29 -0700
+        Mon, 20 Mar 2023 10:36:25 -0700 (PDT)
+Message-ID: <64189999.170a0220.fa1d9.c3f5@mx.google.com>
+X-Google-Original-Message-ID: <202303201036.@keescook>
+Date:   Mon, 20 Mar 2023 10:36:24 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Gregory Greenman <gregory.greenman@intel.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Benjamin Berg <benjamin.berg@intel.com>,
-        Sriram R <quic_srirrama@quicinc.com>,
-        lukasz.wojnilowicz@gmail.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] wifi: iwlwifi: dvm: Add struct_group for struct
- iwl_keyinfo keys
-References: <20230218191056.never.374-kees@kernel.org>
- <3181a89b49e571883525172a7773b12f046e8b09.camel@sipsolutions.net>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] drm/i915/uapi: Replace fake flex-array with
+ flexible-array member
+References: <ZBSu2QsUJy31kjSE@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3181a89b49e571883525172a7773b12f046e8b09.camel@sipsolutions.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZBSu2QsUJy31kjSE@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Feb 19, 2023 at 04:12:05PM +0100, Johannes Berg wrote:
-> On Sat, 2023-02-18 at 11:11 -0800, Kees Cook wrote:
-> > 
-> >  	case WLAN_CIPHER_SUITE_CCMP:
-> >  		key_flags |= STA_KEY_FLG_CCMP;
-> > -		memcpy(sta_cmd.key.key, keyconf->key, keyconf->keylen);
-> > +		memcpy(&sta_cmd.key.keys, keyconf->key, keyconf->keylen);
+On Fri, Mar 17, 2023 at 12:18:01PM -0600, Gustavo A. R. Silva wrote:
+> Zero-length arrays as fake flexible arrays are deprecated and we are
+> moving towards adopting C99 flexible-array members instead.
 > 
-> This should be fine though, only up to 16 bytes for CCMP.
+> Address the following warning found with GCC-13 and
+> -fstrict-flex-arrays=3 enabled:
+> drivers/gpu/drm/i915/gem/i915_gem_context.c: In function ‘set_proto_ctx_engines.isra’:
+> drivers/gpu/drm/i915/gem/i915_gem_context.c:769:41: warning: array subscript n is outside array bounds of ‘struct i915_engine_class_instance[0]’ [-Warray-bounds=]
+>   769 |                 if (copy_from_user(&ci, &user->engines[n], sizeof(ci))) {
+>       |                                         ^~~~~~~~~~~~~~~~~
+> ./include/uapi/drm/i915_drm.h:2494:43: note: while referencing ‘engines’
+>  2494 |         struct i915_engine_class_instance engines[0];
 > 
-> >  	case WLAN_CIPHER_SUITE_TKIP:
-> >  		key_flags |= STA_KEY_FLG_TKIP;
-> >  		sta_cmd.key.tkip_rx_tsc_byte2 = tkip_iv32;
-> >  		for (i = 0; i < 5; i++)
-> >  			sta_cmd.key.tkip_rx_ttak[i] = cpu_to_le16(tkip_p1k[i]);
-> > -		memcpy(sta_cmd.key.key, keyconf->key, keyconf->keylen);
-> > +		memcpy(&sta_cmd.key.keys, keyconf->key, keyconf->keylen);
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
 > 
-> And that's actually a bug, we should've copied only 16 bytes, I guess.
-> DVM didn't support MIC offload anyway (at least the way Linux uses the
-> firmware, though I thought it doesn't at all), so we don't need the MIC
-> RX/TX keys in there, but anyway the sequence counter values are not part
-> of the key material on the host.
-> 
-> I don't think I have a machine now to test this with (nor a TKIP AP, of
-> course, but that could be changed) - but I suspect that since we
-> actually calculate the TTAK above, we might not even need this memcpy()
-> at all?
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/271
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-It's the latter that is triggered in the real world, though. See the
-referenced URL and also now on bugzilla:
-https://bugzilla.kernel.org/show_bug.cgi?id=217214
-i.e.: drivers/net/wireless/intel/iwlwifi/dvm/sta.c:1103
-
-So keyconf->keylen is coming in as 32. If this is a bug, I'm not sure
-where/how to fix it.
-
-Perhaps this patch can be taken as-is, and a WARN_ON added for the >16
-case to be tracked down separately?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
