@@ -2,102 +2,102 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D636C7618A
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 18:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E23C6FD1C
+	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 19:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231299AbjCTSnf (ORCPT
+        id S230036AbjCTTdE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Mar 2023 14:43:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43168 "EHLO
+        Mon, 20 Mar 2023 15:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231354AbjCTSnR (ORCPT
+        with ESMTP id S230305AbjCTTck (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Mar 2023 14:43:17 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AB6B3C79E;
-        Mon, 20 Mar 2023 11:35:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=C8FeRadYDnvzZ/bAurGOxXqZGb263UdMJpdekcM+TXg=;
-        t=1679337333; x=1680546933; b=FUJgMgRv4mHBS5nOEWpTSmisA2rXrHyHTCbArKUnlVKAqUI
-        SfG1cRNiSFBOoOb7TQyS7hsGRvKsuLafcZiv2YxtwMC6IPW0UVf3XQguj77snPgfzzVI8WOfM5bAd
-        0tlgtXrS83AQAq9mEFMlPeeQyzWWoLugGEVIZbaUFH1lqqodAb6gPgoOTXHBwCcqSxKnHTIh2qK01
-        fW1+LBGw2mtoJwVvW/4PJgEp75Y9LkYMEeEJA0jADPP50o50CU9kxnYKy6qK9V2JozJ4TzoBcWzFg
-        domG77IkWDyGvDRlmiJCwwNFXxPVjZm5ZZBT5DvN4Xo4fUnnyS2t0SoOjfgTsQxw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.96)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1peKLU-0096HN-1I;
-        Mon, 20 Mar 2023 19:35:00 +0100
-Message-ID: <0ec5fe8b6945ee545b335ef2f3bee75b0af458d0.camel@sipsolutions.net>
-Subject: Re: [PATCH] wifi: iwlwifi: dvm: Add struct_group for struct
- iwl_keyinfo keys
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Gregory Greenman <gregory.greenman@intel.com>,
+        Mon, 20 Mar 2023 15:32:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84EA23B212;
+        Mon, 20 Mar 2023 12:26:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2550E617C3;
+        Mon, 20 Mar 2023 19:26:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3712C4339E;
+        Mon, 20 Mar 2023 19:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679340380;
+        bh=p3nfI37uSD2HaSJ85GLFWgl7AfpzPINmlDeM97COr3g=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LSbRdbY4kd9P9uxj3pLqomRsxEQw1KI3sfqU0vaasQo9/aJGViFhNiqlTlb9eHYa5
+         vubwALccOL5I2YMNuYB7Lb14Lq6C6B0aId2DQd5MdfuzSwEjkX5UzU+fqajqUeKcZ3
+         uGGNojiVjiXlAE7nE9ejACNKX4zYxJI+ongZew5BJfrglx6gIuhdlm9cuSdxlkmNiZ
+         hWlH5higqWB6ImYOJ3SA/TgQ7Um8r3fOTd5RHpHBnuiUyUCtQvLZwQj9SJZ9BGq0hi
+         atVLKDonKz2bJunCnZjifinF8cuYuUUQN74EZ4X48UrWrgP95n8keaRzwGnFMdwT+r
+         NUUBaQk/smCrQ==
+Date:   Mon, 20 Mar 2023 13:26:49 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Simon Horman <simon.horman@corigine.com>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
         Kalle Valo <kvalo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        Benjamin Berg <benjamin.berg@intel.com>,
-        Sriram R <quic_srirrama@quicinc.com>,
-        lukasz.wojnilowicz@gmail.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Date:   Mon, 20 Mar 2023 19:34:59 +0100
-In-Reply-To: <641897bd.630a0220.174d9.9d11@mx.google.com>
-References: <20230218191056.never.374-kees@kernel.org>
-         <3181a89b49e571883525172a7773b12f046e8b09.camel@sipsolutions.net>
-         <641897bd.630a0220.174d9.9d11@mx.google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: mt76: mt7921: Replace fake flex-arrays with
+ flexible-array members
+Message-ID: <ZBizeZ5DaBT5KKXN@work>
+References: <ZBTUB/kJYQxq/6Cj@work>
+ <ZBh0NhaNFnttWRz8@corigine.com>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZBh0NhaNFnttWRz8@corigine.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> >=20
-> > >  	case WLAN_CIPHER_SUITE_TKIP:
-> > >  		key_flags |=3D STA_KEY_FLG_TKIP;
-> > >  		sta_cmd.key.tkip_rx_tsc_byte2 =3D tkip_iv32;
-> > >  		for (i =3D 0; i < 5; i++)
-> > >  			sta_cmd.key.tkip_rx_ttak[i] =3D cpu_to_le16(tkip_p1k[i]);
-> > > -		memcpy(sta_cmd.key.key, keyconf->key, keyconf->keylen);
-> > > +		memcpy(&sta_cmd.key.keys, keyconf->key, keyconf->keylen);
-> >=20
-> > And that's actually a bug, we should've copied only 16 bytes, I guess.
-> > DVM didn't support MIC offload anyway (at least the way Linux uses the
-> > firmware, though I thought it doesn't at all), so we don't need the MIC
-> > RX/TX keys in there, but anyway the sequence counter values are not par=
-t
-> > of the key material on the host.
-> >=20
-> > I don't think I have a machine now to test this with (nor a TKIP AP, of
-> > course, but that could be changed) - but I suspect that since we
-> > actually calculate the TTAK above, we might not even need this memcpy()
-> > at all?
->=20
-> It's the latter that is triggered in the real world, though. See the
-> referenced URL and also now on bugzilla:
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D217214
-> i.e.: drivers/net/wireless/intel/iwlwifi/dvm/sta.c:1103
->=20
-> So keyconf->keylen is coming in as 32. If this is a bug, I'm not sure
-> where/how to fix it.
+On Mon, Mar 20, 2023 at 03:56:54PM +0100, Simon Horman wrote:
+> >  struct mt7921_asar_cl {
+> > @@ -85,7 +85,7 @@ struct mt7921_asar_fg {
+> >  	u8 rsvd;
+> >  	u8 nr_flag;
+> >  	u8 rsvd1;
+> > -	u8 flag[0];
+> > +	u8 flag[];
+> 
+> I am curious to know why DECLARE_FLEX_ARRAY isn't used here.
 
-Yes, I know it's coming in as such - I believe it should be copying 16
-bytes instead of the full keylen. TKIP keys are comprised of 16 bytes
-encryption/decryption key and 8 bytes TX/RX MIC keys for a total of 32,
-but since the device doesn't do MIC calculations, it only needs the
-first 16 bytes here (if even that, since we also give it the P1K which
-is derived from the TK...? maybe not even that)
+In contrast to the other structs, there is no object of type struct
+mt7921_asar_fg declared in a union:
 
-But I guess we should test it ... not sure I still have a machine that
-takes these NICs (I do have NICs).
+ 91 struct mt7921_acpi_sar {
+ 92         u8 ver;
+ 93         union {
+ 94                 struct mt7921_asar_dyn *dyn;
+ 95                 struct mt7921_asar_dyn_v2 *dyn_v2;
+ 96         };
+ 97         union {
+ 98                 struct mt7921_asar_geo *geo;
+ 99                 struct mt7921_asar_geo_v2 *geo_v2;
+100         };
+101         struct mt7921_asar_cl *countrylist;
+102         struct mt7921_asar_fg *fg;
+103 };
 
-johannes
+The DECLARE_FLEX_ARRAY() helper was created to declare flex-array members
+in unions or alone in structs[1].
+
+--
+Gustavo
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays
+
