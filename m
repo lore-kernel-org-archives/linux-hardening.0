@@ -2,131 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDBAC6FD1D
-	for <linux-hardening@archiver.kernel.org>; Mon, 20 Mar 2023 19:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A73AC74A5B
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Mar 2023 04:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230145AbjCTTwy (ORCPT
+        id S229731AbjCUEvg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 20 Mar 2023 15:52:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
+        Tue, 21 Mar 2023 00:51:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbjCTTwu (ORCPT
+        with ESMTP id S229835AbjCUEvb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 20 Mar 2023 15:52:50 -0400
+        Tue, 21 Mar 2023 00:51:31 -0400
 Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8BF312F1A
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 12:52:42 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id f6-20020a17090ac28600b0023b9bf9eb63so13627066pjt.5
-        for <linux-hardening@vger.kernel.org>; Mon, 20 Mar 2023 12:52:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C2FC311C0;
+        Mon, 20 Mar 2023 21:51:26 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id x15so4136071pjk.2;
+        Mon, 20 Mar 2023 21:51:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679341961;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=OANc0wddnbWObPg1WIjsngMYc5gPIbvx0gC9JppESQk=;
-        b=P3hxUHYnwFrcYrRWsgeprUnEMe8gM7vWq3kjfkBC/w3fC0+2t83Pj1mH+IGV1HzryC
-         SjdCoZSzKzPCHWi81j7IikGp5bnuDaBd/4k2V5B36Y1FCYLAt4wOcAtbzsDOuzqZsHwd
-         9QepYpaJ9TfJ8Fc0zSv+jPiwkoa0XB8oY3vN4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679341961;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20210112; t=1679374285;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OANc0wddnbWObPg1WIjsngMYc5gPIbvx0gC9JppESQk=;
-        b=u+OmDpioGzmOzeLXPp8pXXCq/AweOd/FCA0iJLnHpVN2FX6CGFLHt9I/6ZgXPHYQd0
-         NVrARkfGw8K+w5oNSU1q2VZw12XPcggKGlrkUvEYIVZSwrDK46bFE2XfWwZExZXfGAPw
-         3ayjKwbYMiPoz4sqsMuDJL/I8zkKwFPCpKiFl/q69CgLTXz7GIr0H/fVYjg7msQxEUWv
-         lfCRlZeIjYSnBOgJd8EdxzAiASmJBTAGs1f6M0Dz6p3mZRHxnW6H3gMNQWfjcIrwIDjT
-         +Cy88v36287z0FXh6xfBH1xF3a8UwgGtQhGlpWojBwCei/cCIIBSRzypedyG0oRK2bNx
-         L8NA==
-X-Gm-Message-State: AO0yUKVaCN4R/4rCv3mGTR2L8xZhNcoPBGT2e/9mTNsrRoYol2vmh1Zr
-        ahLnfICQmXkQWKPhfJf3imgGSA==
-X-Google-Smtp-Source: AK7set8PpnnGVghBCtjPCNtVCtxa8xBN7JiVeZFbL8yfnBFI/Vq6y0nlBsYmDSleIsZfo26fgmhYwA==
-X-Received: by 2002:a17:902:e0d3:b0:19f:1e3e:a84d with SMTP id e19-20020a170902e0d300b0019f1e3ea84dmr13488186pla.64.1679341961143;
-        Mon, 20 Mar 2023 12:52:41 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id w3-20020a170902d70300b0019f0e766809sm7119986ply.306.2023.03.20.12.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Mar 2023 12:52:40 -0700 (PDT)
-Message-ID: <6418b988.170a0220.82efc.cadd@mx.google.com>
-X-Google-Original-Message-ID: <202303201245.@keescook>
-Date:   Mon, 20 Mar 2023 12:52:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Gregory Greenman <gregory.greenman@intel.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Benjamin Berg <benjamin.berg@intel.com>,
-        Sriram R <quic_srirrama@quicinc.com>,
-        lukasz.wojnilowicz@gmail.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] wifi: iwlwifi: dvm: Add struct_group for struct
- iwl_keyinfo keys
-References: <20230218191056.never.374-kees@kernel.org>
- <3181a89b49e571883525172a7773b12f046e8b09.camel@sipsolutions.net>
- <641897bd.630a0220.174d9.9d11@mx.google.com>
- <0ec5fe8b6945ee545b335ef2f3bee75b0af458d0.camel@sipsolutions.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ec5fe8b6945ee545b335ef2f3bee75b0af458d0.camel@sipsolutions.net>
+        bh=dKZP2IQeKZfNceJJqfFFb5gI4In1QhMPjIWGQ5RwEkE=;
+        b=SFXLLRhog3LvGvScuULZnc/enXzhQoFExWZNbsG4AYv/4AjaXHjF0RTPQeCprMdDhA
+         NEkiLvFCeeI1Gf8e7MoCgclYAqipZ8RttL5tz9EAMgU32OnVqOyeploWGO3/cXrvz5FS
+         R9xPL3ZLHDO9b7RySLXic9MdaEbmbBQXw4FRv6iuQkQgcV6SG2GR4fJ9XgUQTatJqAF1
+         w32eymlkJg+Qi5sSdcfDYxBaUCfjC1ZL26nNMU8GNUSILO30e132JwALOTtuKNJFtrDa
+         yGq2vDOhQcuaexmMjngTAJ/RVXe2+KZckmQpsGV6gjeaJ+9eCr+jJ5zWfVTh+TipxdF8
+         pOTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679374285;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dKZP2IQeKZfNceJJqfFFb5gI4In1QhMPjIWGQ5RwEkE=;
+        b=sVV9ikk5IrpI2ZqJYmlTEFy3rsd1GrGxlgcERyMzyXYPURdyYa34lfg+msyI94lwXR
+         8eibeR0fwIdV0CDVnGiahOnpnC2Vs494r5opZ2diHM/ad7WmSh7IsYcxfPCjdiJnymeY
+         NSdOo1Cm859vUED5sgKObEcqi2ReItvLwF5D/uP9KIoHRovSnygmGe7kV0u0GlhfyncD
+         v0CeiEZGQS716uAoi8ZXdZ1lnnRRK8HiCOw+5pSuakyedy6JkRVZHbBgp4Umsci2NI4L
+         e4I2ycnfrJFXlVUuCWy19OZuw1s187HjJ6XRJZ2GuqCVguNkrMwvjXX5KtYFrpqPZFHn
+         XKrA==
+X-Gm-Message-State: AO0yUKX5o8ZitR1r4kCHxnFHGnSsrEbn/fUx1awRdsWfqeLI8ott2esn
+        NzTbewtRwXAeojDHVTuE10XZaHeDy1Y=
+X-Google-Smtp-Source: AK7set8bDzX0n3tWpsGHWVc7Zj7sEWISqlDTyyvnJYoYo2YgNuT9td8Abvmv9Kf6PldxKVxME+uGSA==
+X-Received: by 2002:a17:902:e882:b0:19a:b869:f2f8 with SMTP id w2-20020a170902e88200b0019ab869f2f8mr1279683plg.21.1679374285157;
+        Mon, 20 Mar 2023 21:51:25 -0700 (PDT)
+Received: from localhost (121-44-69-75.tpgi.com.au. [121.44.69.75])
+        by smtp.gmail.com with ESMTPSA id u19-20020a170902a61300b001a1dc2be791sm1559646plq.259.2023.03.20.21.51.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Mar 2023 21:51:24 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 21 Mar 2023 14:51:20 +1000
+Message-Id: <CRBSHXMZX79O.ESN0S8V6M644@bobo>
+Subject: Re: [RFC PATCH 04/13] powerpc/dexcr: Support userspace ROP
+ protection
+From:   "Nicholas Piggin" <npiggin@gmail.com>
+To:     "Benjamin Gray" <bgray@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>
+Cc:     <ajd@linux.ibm.com>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <cmr@bluescreens.de>
+X-Mailer: aerc 0.13.0
+References: <20221128024458.46121-1-bgray@linux.ibm.com>
+ <20221128024458.46121-5-bgray@linux.ibm.com>
+ <CQZW0SBFI6QM.3FW6O6LJ0PVS1@bobo>
+ <eb19afda911f4868ec6ff194738afcfe7050d5c1.camel@linux.ibm.com>
+In-Reply-To: <eb19afda911f4868ec6ff194738afcfe7050d5c1.camel@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 07:34:59PM +0100, Johannes Berg wrote:
-> > > 
-> > > >  	case WLAN_CIPHER_SUITE_TKIP:
-> > > >  		key_flags |= STA_KEY_FLG_TKIP;
-> > > >  		sta_cmd.key.tkip_rx_tsc_byte2 = tkip_iv32;
-> > > >  		for (i = 0; i < 5; i++)
-> > > >  			sta_cmd.key.tkip_rx_ttak[i] = cpu_to_le16(tkip_p1k[i]);
-> > > > -		memcpy(sta_cmd.key.key, keyconf->key, keyconf->keylen);
-> > > > +		memcpy(&sta_cmd.key.keys, keyconf->key, keyconf->keylen);
-> > > 
-> > > And that's actually a bug, we should've copied only 16 bytes, I guess.
-> > > DVM didn't support MIC offload anyway (at least the way Linux uses the
-> > > firmware, though I thought it doesn't at all), so we don't need the MIC
-> > > RX/TX keys in there, but anyway the sequence counter values are not part
-> > > of the key material on the host.
-> > > 
-> > > I don't think I have a machine now to test this with (nor a TKIP AP, of
-> > > course, but that could be changed) - but I suspect that since we
-> > > actually calculate the TTAK above, we might not even need this memcpy()
-> > > at all?
-> > 
-> > It's the latter that is triggered in the real world, though. See the
-> > referenced URL and also now on bugzilla:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=217214
-> > i.e.: drivers/net/wireless/intel/iwlwifi/dvm/sta.c:1103
-> > 
-> > So keyconf->keylen is coming in as 32. If this is a bug, I'm not sure
-> > where/how to fix it.
-> 
-> Yes, I know it's coming in as such - I believe it should be copying 16
-> bytes instead of the full keylen. TKIP keys are comprised of 16 bytes
-> encryption/decryption key and 8 bytes TX/RX MIC keys for a total of 32,
-> but since the device doesn't do MIC calculations, it only needs the
-> first 16 bytes here (if even that, since we also give it the P1K which
-> is derived from the TK...? maybe not even that)
-> 
-> But I guess we should test it ... not sure I still have a machine that
-> takes these NICs (I do have NICs).
+On Tue Mar 7, 2023 at 3:37 PM AEST, Benjamin Gray wrote:
+> On Tue, 2023-03-07 at 15:05 +1000, Nicholas Piggin wrote:
+> > I think it is not quite per-process? I don't actually know how the
+> > user
+> > toolchain side is put together, but I'm thinking we can not give it a
+> > new
+> > salt on fork(), but we could on exec(). I think we could actually
+> > give
+> > each thread their own salt within a process too, right?
+>
+> Yeah, the error case is we return further than we called in a given
+> execution context. A forked child may return after the fork, meaning it
+> needs the same key as the parent for the hashchk to work. Exec can get
+> a new key because we can't return with any existing hashes. I haven't
+> seen enough of kernel thread support to know if/how we can give threads
+> their own key. I believe they go through the fork() call that copies
+> the parent key currently.
 
-What sort of patch would you like here? How should the other cases in
-the switch statement behave?
+Could look at possibly doing per-thread keys afterward but what you're
+doing makes sense so no problem.
 
-Are these the correct bounds?
-
-	WLAN_CIPHER_SUITE_CCMP:   keylen <= 16
-	WLAN_CIPHER_SUITE_TKIP:   keylen <= 16
-	WLAN_CIPHER_SUITE_WEP104: keylen <= 13
-	WLAN_CIPHER_SUITE_WEP40:  keylen <= 13
-
-and should it silently ignore larger values in each case?
-
--- 
-Kees Cook
+Thanks,
+Nick
