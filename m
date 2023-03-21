@@ -2,101 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0C1C6FD1D
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Mar 2023 08:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C597C6FD1D
+	for <linux-hardening@archiver.kernel.org>; Tue, 21 Mar 2023 16:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230107AbjCUIo3 (ORCPT
+        id S229878AbjCUQOM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Mar 2023 04:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53408 "EHLO
+        Tue, 21 Mar 2023 12:14:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbjCUIo1 (ORCPT
+        with ESMTP id S229487AbjCUQOL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Mar 2023 04:44:27 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D85DEC48;
-        Tue, 21 Mar 2023 01:43:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679388208; x=1710924208;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cJdbBf+bpw+4ZJXIgzlJlPNlSnPstSFYZ4kxxJGkF7s=;
-  b=WdEViKIWktEpZURMkBzkhwlGoTKkARKsPiBHpl3wXHNO8GLLYdC+tvdT
-   hqspPNKk6DF3uHe5t5vyRvRD0h0E7acdWU41IGNSWLZaKNeeCpC0en/E1
-   ydmwjNDPRM6b8Rv/k31MtVkr/NiUR1RRpJq4WpYgj6FmBcCYSP0MFVyEU
-   MFdPnkxr6IWxDykJksMDsWch9EsjGwA4OJprpB1Nq1/IIZWVgSKnSx1ec
-   g31bJh+visYL/rCusUoMuIeIhS07Rsb2hKOir7cDAyDsfne3rhLoFVodx
-   DkupUBKmxUWl2FUqPjK6UiQNIx7SkkIPWwFjNH3qTOk1bchRg/qUnHv7d
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="340428308"
-X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
-   d="scan'208";a="340428308"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 01:43:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="674741495"
-X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
-   d="scan'208";a="674741495"
-Received: from scoyle-mobl.ger.corp.intel.com (HELO [10.213.210.173]) ([10.213.210.173])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 01:43:09 -0700
-Message-ID: <f72efa19-8f29-afcd-af07-d2ac89c9785d@linux.intel.com>
-Date:   Tue, 21 Mar 2023 08:43:07 +0000
+        Tue, 21 Mar 2023 12:14:11 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACC35BB9C;
+        Tue, 21 Mar 2023 09:14:07 -0700 (PDT)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32LGDkJZ020197;
+        Tue, 21 Mar 2023 16:13:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=STLxretgSrKorO1inoaxrMl0MOAruib27t8XQDWlDD4=;
+ b=Z2IqUBmDfKxFh4ISuw13EY5Ax8yKtY1doEku0tmBmIAddgbUVJV4FcjXhTGXNIjMvxiA
+ g3CeDUmt+b3qrk9mtlUAbZghTfmNmFsh6dCx+Mqpv7GW+kY2EavSBmmgsCN/JgemYywH
+ PxIDK2Pcu681smO5QhAqSlTu/Rf3fNn30uPe34IeDDDhqEKomhExaWBtuVSVaXKTuYxs
+ wEyVr2PlZit1FN19x/g1PehPY2Tac9ivpj4amO5RBafsgHvThlJPyLFIMgGlYO73N6u9
+ +eFfN9tZ0HgbMNqj+HyO1SR32dUdX2e9662jaHX8WWrZ+i1jAWuAxwpD12etrxeQkx6g dQ== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pfc2pru93-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Mar 2023 16:13:46 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32LGDde4011062
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Mar 2023 16:13:39 GMT
+Received: from [10.216.40.180] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 21 Mar
+ 2023 09:13:35 -0700
+Message-ID: <f48da7ea-0c09-a2fc-0ecc-55c946189fb5@quicinc.com>
+Date:   Tue, 21 Mar 2023 21:43:31 +0530
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH][next] drm/i915/uapi: Replace fake flex-array with
- flexible-array member
+Subject: Re: [RFC PATCH 6/6] pstore/ram: Register context with minidump
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZBSu2QsUJy31kjSE@work>
- <64189999.170a0220.fa1d9.c3f5@mx.google.com>
-From:   Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Organization: Intel Corporation UK Plc
-In-Reply-To: <64189999.170a0220.fa1d9.c3f5@mx.google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To:     Kees Cook <keescook@chromium.org>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <1676978713-7394-1-git-send-email-quic_mojha@quicinc.com>
+ <1676978713-7394-7-git-send-email-quic_mojha@quicinc.com>
+ <63f7c1de.170a0220.f48b.e137@mx.google.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <63f7c1de.170a0220.f48b.e137@mx.google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: abYGF1QvqcAsn1Ielr8hihDfoxktCQwA
+X-Proofpoint-GUID: abYGF1QvqcAsn1Ielr8hihDfoxktCQwA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-21_11,2023-03-21_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0 suspectscore=0
+ clxscore=1015 mlxlogscore=999 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303150002 definitions=main-2303210127
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-On 20/03/2023 17:36, Kees Cook wrote:
-> On Fri, Mar 17, 2023 at 12:18:01PM -0600, Gustavo A. R. Silva wrote:
->> Zero-length arrays as fake flexible arrays are deprecated and we are
->> moving towards adopting C99 flexible-array members instead.
->>
->> Address the following warning found with GCC-13 and
->> -fstrict-flex-arrays=3 enabled:
->> drivers/gpu/drm/i915/gem/i915_gem_context.c: In function ‘set_proto_ctx_engines.isra’:
->> drivers/gpu/drm/i915/gem/i915_gem_context.c:769:41: warning: array subscript n is outside array bounds of ‘struct i915_engine_class_instance[0]’ [-Warray-bounds=]
->>    769 |                 if (copy_from_user(&ci, &user->engines[n], sizeof(ci))) {
->>        |                                         ^~~~~~~~~~~~~~~~~
->> ./include/uapi/drm/i915_drm.h:2494:43: note: while referencing ‘engines’
->>   2494 |         struct i915_engine_class_instance engines[0];
->>
->> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
->> routines on memcpy() and help us make progress towards globally
->> enabling -fstrict-flex-arrays=3 [1].
->>
->> Link: https://github.com/KSPP/linux/issues/21
->> Link: https://github.com/KSPP/linux/issues/271
->> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+On 2/24/2023 1:13 AM, Kees Cook wrote:
+> On Tue, Feb 21, 2023 at 04:55:13PM +0530, Mukesh Ojha wrote:
+>> There are system which does not uses pstore directly but
+>> may have the interest in the context saved by pstore.
+>> Register pstore regions with minidump so that it get
+>> dumped on minidump collection.
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Okay, so, this is a really interesting case -- it's a RAM backend that
+> is already found on a system by pstore via device tree, but there is
+> _another_ RAM overlay (minidump) that would like to know more about how
+> the pstore ram backend carves up the memory regions so it can examine
+> them itself too. (i.e. it's another "interface" like the pstorefs.)
+> 
+> So we need to provide the mapping back to the overlay. It feels to me
+> like the logic for this needs to live in the minidump driver itself
+> (rather than in the pstore RAM backend). Specifically, it wants to know
+> about all the operational frontends (dmesg, console, ftrace, pmsg) with
+> their virt & phys addresses and size.
+> 
+> The frontends are defined via enum pstore_type_id, and the other values
+> are "normal" types, so it should be possible to move this logic into
+> minidump instead, leaving a simpler callback. Perhaps something like:
+> 
+> void pstore_region_defined(enum pstore_type_id, void *virt,
+> 			   phys_addr_t phys, size_t size);
+> 
+> How the pstore ram backend should know to call this, though, I'm
+> struggling to find a sensible way. How can it determine if the device
+> tree region is actually contained by a minidump overlay?
 
-Flexible array member is even consistent with the rest of our uapi, 
-pushed to drm-intel-gt-next, thanks!
 
-Regards,
+Do you think, if qcom_minidump_ready() can be used which checks minidump 
+readiness ?
 
-Tvrtko
+-Mukesh
+> 
