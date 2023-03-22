@@ -2,155 +2,272 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0523C74A5B
-	for <linux-hardening@archiver.kernel.org>; Wed, 22 Mar 2023 02:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0058C761AF
+	for <linux-hardening@archiver.kernel.org>; Wed, 22 Mar 2023 13:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230213AbjCVCdo (ORCPT
+        id S230445AbjCVNbJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Mar 2023 22:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52144 "EHLO
+        Wed, 22 Mar 2023 09:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbjCVCdn (ORCPT
+        with ESMTP id S229487AbjCVNbI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Mar 2023 22:33:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0724623C48
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Mar 2023 19:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679452374;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BzR3eLSpqoTMzxh2NgN0pV0oM+P8NH9sKNgtkW4tjlQ=;
-        b=IZi4b9wmRy2VokAZnpLkAKbkn5axwxhLgeVPtxgXzygCWcbs+UFiE1m/7dus1a2yL1JPG9
-        R/C4B3Vi0DbeVa9TzpUzMUWudO4sRywTZQ8x63hRwwVRfD7ofV+WLaSLsUa55IE+XHg3rM
-        IbyeFgD7Ac5J4+2JMimt7QWbKOKom40=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-124-QRJIIUgSO66YpiyHb4AuIQ-1; Tue, 21 Mar 2023 22:32:53 -0400
-X-MC-Unique: QRJIIUgSO66YpiyHb4AuIQ-1
-Received: by mail-wr1-f69.google.com with SMTP id h18-20020adfa4d2000000b002cea098a651so1961425wrb.3
-        for <linux-hardening@vger.kernel.org>; Tue, 21 Mar 2023 19:32:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679452372;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BzR3eLSpqoTMzxh2NgN0pV0oM+P8NH9sKNgtkW4tjlQ=;
-        b=o+7MthipxC7fSOgIJM53x39qkTIiti89RKTtkJKcGw6Jzr65gCuhztb82HGP/tHbXc
-         kK0iH/GuaG4jQGVQSgwmdgnMsmndOYY9jwfR7rEeOU8YHrlz6Wc+S/RyUBZmeaBuZbLE
-         7l57n48HlhYW2pOLf8b8jSqQ1zixINv0hEHZfIMBLN4YMdKb5F25wB81Yn3vllttjijT
-         oyCG3BlvBA7TxlfQzFNYkaLUyXrouQRWA4ONl9gndCCgzzW3D6Hry/MF9U4qAuJsuNGc
-         l3wadM2bcWURDwgJB2EQD4NdH1H8m9Dq7rmHcgOjNFBsLvu3QdOkWod4/hDLtaXfgWJz
-         EFCg==
-X-Gm-Message-State: AO0yUKWKublvHa8lFF9VSiVo8WkZ4uzRDgNwtHawXJyB0OW1DNKsVpUa
-        AI1InFjSiaCKps1Z7B6/D6cysMRz2jMR1WEHwjYFJ5LWlCHKSRlHVg5oolSZgCdeJvCbfsGLQD4
-        AT2Is4nEwn6AvHw9/hQw32XjNd5GW
-X-Received: by 2002:a5d:4521:0:b0:2cf:e827:b597 with SMTP id j1-20020a5d4521000000b002cfe827b597mr3982531wra.10.1679452371929;
-        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
-X-Google-Smtp-Source: AK7set+IAoeXaV5Ezy2+ySyjfqstu/owf9Mg6SdCShB52Q1gVgr7GbSGeNN3VY0ntYreU5GIBMrYUQ==
-X-Received: by 2002:a5d:4521:0:b0:2cf:e827:b597 with SMTP id j1-20020a5d4521000000b002cfe827b597mr3982509wra.10.1679452371580;
-        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
-Received: from redhat.com ([2.52.1.105])
-        by smtp.gmail.com with ESMTPSA id n1-20020a5d67c1000000b002cfe685bfd6sm12661630wrw.108.2023.03.21.19.32.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
-Date:   Tue, 21 Mar 2023 22:32:46 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
-Message-ID: <20230321223139-mutt-send-email-mst@kernel.org>
-References: <20230215223350.2658616-1-zwisler@google.com>
+        Wed, 22 Mar 2023 09:31:08 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F83F60422;
+        Wed, 22 Mar 2023 06:31:02 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32M9N8dn009236;
+        Wed, 22 Mar 2023 13:30:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=AD8hfL6PuJgNotwIIWest78G5vFSJt9I2wwvCPuA0eQ=;
+ b=PUZF0hb3soXOa5RvHUp6iX1Iti8NUcZtRri1yqze+Kpd8vlKS9e+VYdti1wJEEOnQ6gV
+ /XemfD/+NC8hos4nucFvxa0LFAtr9wkEX2vklvG3ldG2piSLqYOs792yR8LMO+v1ip0G
+ 1wfb8J2Vhjrm0O33pxGL3WQ/PFj9pgvXEHcjcIh9smbYtkxfcqvUjq2y9XfeOU3yIw4j
+ 8b7YfOIpihfx31zb2aVFuoksXr8dGqPNrOnw4Ae4g4LcfeVHownhwzZ92w1IWa9InXhR
+ gtH1Xn0o+GIHRkJDE4VoobvuNLqTJl1TB8LlqGIdpfM7B3KN7bXOZpTILizgHkmZCg4v jg== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pfrk0seac-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Mar 2023 13:30:39 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32MDUcWr000763
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 Mar 2023 13:30:38 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.41; Wed, 22 Mar 2023 06:30:34 -0700
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>, <will@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, "Mukesh Ojha" <quic_mojha@quicinc.com>
+Subject: [PATCH v2 0/6] Add basic Minidump kernel driver support
+Date:   Wed, 22 Mar 2023 19:00:11 +0530
+Message-ID: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20230215223350.2658616-1-zwisler@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: dZsjgXfjJbsZDoET2wrQrc5-J-2m757V
+X-Proofpoint-ORIG-GUID: dZsjgXfjJbsZDoET2wrQrc5-J-2m757V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-22_11,2023-03-22_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 priorityscore=1501 clxscore=1011 impostorscore=0 adultscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303150002
+ definitions=main-2303220098
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
-> Changes in v2:
->  * Dropped patches which were pulled into maintainer trees.
->  * Split BPF patches out into another series targeting bpf-next.
->  * trace-agent now falls back to debugfs if tracefs isn't present.
->  * Added Acked-by from mst@redhat.com to series.
->  * Added a typo fixup for the virtio-trace README.
-> 
-> Steven, assuming there are no objections, would you feel comfortable
-> taking this series through your tree?
+Minidump is a best effort mechanism to collect useful and predefined data
+for first level of debugging on end user devices running on Qualcomm SoCs.
+It is built on the premise that System on Chip (SoC) or subsystem part of
+SoC crashes, due to a range of hardware and software bugs. Hence, the
+ability to collect accurate data is only a best-effort. The data collected
+could be invalid or corrupted, data collection itself could fail, and so on.
 
-for merging up to patch 5 through another tree:
+Qualcomm devices in engineering mode provides a mechanism for generating
+full system ramdumps for post mortem debugging. But in some cases it's
+however not feasible to capture the entire content of RAM. The minidump
+mechanism provides the means for selecting which snippets should be
+included in the ramdump.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+The core of minidump feature is part of Qualcomm's boot firmware code.
+It initializes shared memory (SMEM), which is a part of DDR and
+allocates a small section of SMEM to minidump table i.e also called
+global table of content (G-ToC). Each subsystem (APSS, ADSP, ...) has
+their own table of segments to be included in the minidump and all get
+their reference from G-ToC. Each segment/region has some details like
+name, physical address and it's size etc. and it could be anywhere
+scattered in the DDR.
 
-I'll merge patch 6, no problem.
+Existing upstream Qualcomm remoteproc driver[1] already supports minidump
+feature for remoteproc instances like ADSP, MODEM, ... where predefined
+selective segments of subsystem region can be dumped as part of
+coredump collection which generates smaller size artifacts compared to
+complete coredump of subsystem on crash.
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/remoteproc/qcom_common.c#n142
+
+In addition to managing and querying the APSS minidump description,
+the Linux driver maintains a ELF header in a segment. This segment
+gets updated with section/program header whenever a new entry gets
+registered.
+
+Patch 1/6 is very trivial change.
+Patch 2/6 moves the minidump specific data structure and macro to
+ qcom_minidump.h so that (4/6) minidump driver can use.
+Patch 3/6 documents qualcomm minidump guide for users.
+Patch 4/6 implements qualcomm minidump kernel driver and exports
+ symbol which other minidump kernel client can use.
+Patch 5/6 enables the qualcomm minidump driver.
+Patch 6/6 Use the exported symbol from minidump driver in qcom_common
+ for querying minidump descriptor for a subsystem.
+
+Testing of the patches has been done on sm8450 target with the help
+of out of tree patch which helps to set the download mode and storage
+type and to warm reset the device.
+
+Download mode setting patches are floating here,
+https://lore.kernel.org/lkml/1679070482-8391-1-git-send-email-quic_mojha@quicinc.com/
+
+Default storage type is set to via USB, so minidump would be
+downloaded with the help of x86_64 machine running PCAT attached
+to Qualcomm device which has backed minidump boot firmware
+support(more can be found patch 3/6)
+
+Below patch [1] is to warm reset Qualcomm device which has upstream qcom
+watchdog driver support.
+
+After applying all patches, we can boot the device and can execute
+following command.
+
+echo mini > /sys/module/qcom_scm/parameters/download_mode
+echo c > /proc/sysrq-trigger
+
+This will make the device go to download mode and collect the
+minidump on to the attached x86 machine running the Qualcomm
+PCAT tool.
+
+We will see a bunch of predefined registered region as binary
+blobs starts with md_*. A sample client example to dump a linux
+region has been given in 3/6.
+
+[1]
+--------------------------->8-------------------------------------
+
+commit f1124ccebd47550b4c9627aa162d9cdceba2b76f
+Author: Mukesh Ojha <quic_mojha@quicinc.com>
+Date:   Thu Mar 16 14:08:35 2023 +0530
+
+    do not merge: watchdog bite on panic
+
+    Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+
+diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+index 0d2209c..767e84a 100644
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -12,6 +12,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/watchdog.h>
+ #include <linux/of_device.h>
++#include <linux/panic.h>
+
+ enum wdt_reg {
+        WDT_RST,
+@@ -114,12 +115,28 @@ static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
+        return qcom_wdt_start(wdd);
+ }
+
++static void qcom_wdt_bite_on_panic(struct qcom_wdt *wdt)
++{
++       writel(0, wdt_addr(wdt, WDT_EN));
++       writel(1, wdt_addr(wdt, WDT_BITE_TIME));
++       writel(1, wdt_addr(wdt, WDT_RST));
++       writel(QCOM_WDT_ENABLE, wdt_addr(wdt, WDT_EN));
++
++       wmb();
++
++       while(1)
++               udelay(1);
++}
++
+ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+                            void *data)
+ {
+        struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+        u32 timeout;
+
++       if (in_panic)
++               qcom_wdt_bite_on_panic(wdt);
++
+        /*
+         * Trigger watchdog bite:
+         *    Setup BITE_TIME to be 128ms, and enable WDT.
+diff --git a/include/linux/panic.h b/include/linux/panic.h
+index 979b776..f913629 100644
+--- a/include/linux/panic.h
++++ b/include/linux/panic.h
+@@ -22,6 +22,7 @@ extern int panic_on_oops;
+ extern int panic_on_unrecovered_nmi;
+ extern int panic_on_io_nmi;
+ extern int panic_on_warn;
++extern bool in_panic;
+
+ extern unsigned long panic_on_taint;
+ extern bool panic_on_taint_nousertaint;
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 487f5b0..714f7f4 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -65,6 +65,8 @@ static unsigned int warn_limit __read_mostly;
+
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
+ EXPORT_SYMBOL_GPL(panic_timeout);
++bool in_panic = false;
++EXPORT_SYMBOL_GPL(in_panic);
+
+ #define PANIC_PRINT_TASK_INFO          0x00000001
+ #define PANIC_PRINT_MEM_INFO           0x00000002
+@@ -261,6 +263,7 @@ void panic(const char *fmt, ...)
+        int old_cpu, this_cpu;
+        bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+
++       in_panic = true;
+        if (panic_on_warn) {
+                /*
+                 * This thread may hit another WARN() in the panic path.
+--------------------------------------------------------------------------
+
+Changes in v2:
+ - Addressed review comment made by [quic_tsoni/bmasney] to add documentation.
+ - Addressed comments made by [srinivas.kandagatla]
+ - Dropped pstore 6/6 from the last series, till i get conclusion to get pstore
+   region in minidump.
+ - Fixed issue reported by kernel test robot.
 
 
-> ---
-> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
-> 
-> But, from Documentation/trace/ftrace.rst:
-> 
->   Before 4.1, all ftrace tracing control files were within the debugfs
->   file system, which is typically located at /sys/kernel/debug/tracing.
->   For backward compatibility, when mounting the debugfs file system,
->   the tracefs file system will be automatically mounted at:
-> 
->   /sys/kernel/debug/tracing
-> 
-> There are many places where this older debugfs path is still used in
-> code comments, selftests, examples and tools, so let's update them to
-> avoid confusion.
-> 
-> I've broken up the series as best I could by maintainer or directory,
-> and I've only sent people the patches that I think they care about to
-> avoid spamming everyone.
-> 
-> Ross Zwisler (6):
->   tracing: always use canonical ftrace path
->   selftests: use canonical ftrace path
->   leaking_addresses: also skip canonical ftrace path
->   tools/kvm_stat: use canonical ftrace path
->   tools/virtio: use canonical ftrace path
->   tools/virtio: fix typo in README instructions
-> 
->  include/linux/kernel.h                        |  2 +-
->  include/linux/tracepoint.h                    |  4 ++--
->  kernel/trace/Kconfig                          | 20 +++++++++----------
->  kernel/trace/kprobe_event_gen_test.c          |  2 +-
->  kernel/trace/ring_buffer.c                    |  2 +-
->  kernel/trace/synth_event_gen_test.c           |  2 +-
->  kernel/trace/trace.c                          |  2 +-
->  samples/user_events/example.c                 |  4 ++--
->  scripts/leaking_addresses.pl                  |  1 +
->  scripts/tracing/draw_functrace.py             |  6 +++---
->  tools/kvm/kvm_stat/kvm_stat                   |  2 +-
->  tools/lib/api/fs/tracing_path.c               |  4 ++--
->  .../testing/selftests/user_events/dyn_test.c  |  2 +-
->  .../selftests/user_events/ftrace_test.c       | 10 +++++-----
->  .../testing/selftests/user_events/perf_test.c |  8 ++++----
->  tools/testing/selftests/vm/protection_keys.c  |  4 ++--
->  tools/tracing/latency/latency-collector.c     |  2 +-
->  tools/virtio/virtio-trace/README              |  4 ++--
->  tools/virtio/virtio-trace/trace-agent.c       | 12 +++++++----
->  19 files changed, 49 insertions(+), 44 deletions(-)
-> 
-> -- 
-> 2.39.1.637.g21b0678d19-goog
+Changes in v1: https://lore.kernel.org/lkml/1676978713-7394-1-git-send-email-quic_mojha@quicinc.com/
+
+Mukesh Ojha (6):
+  remoteproc: qcom: Expand MD_* as MINIDUMP_*
+  remoteproc: qcom: Move minidump specific data to qcom_minidump.h
+  docs: qcom: Add qualcomm minidump guide
+  soc: qcom: Add Qualcomm minidump kernel driver
+  arm64: defconfig: Enable Qualcomm minidump driver
+  remoterproc: qcom: refactor to leverage exported minidump symbol
+
+ Documentation/admin-guide/qcom_minidump.rst | 240 +++++++++++++
+ arch/arm64/configs/defconfig                |   1 +
+ drivers/remoteproc/qcom_common.c            |  75 +---
+ drivers/soc/qcom/Kconfig                    |  14 +
+ drivers/soc/qcom/Makefile                   |   1 +
+ drivers/soc/qcom/qcom_minidump.c            | 537 ++++++++++++++++++++++++++++
+ include/soc/qcom/minidump.h                 |  40 +++
+ include/soc/qcom/qcom_minidump.h            |  88 +++++
+ 8 files changed, 927 insertions(+), 69 deletions(-)
+ create mode 100644 Documentation/admin-guide/qcom_minidump.rst
+ create mode 100644 drivers/soc/qcom/qcom_minidump.c
+ create mode 100644 include/soc/qcom/minidump.h
+ create mode 100644 include/soc/qcom/qcom_minidump.h
+
+-- 
+2.7.4
 
