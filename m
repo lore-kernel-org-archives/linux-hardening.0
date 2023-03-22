@@ -2,116 +2,103 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869C7C6FD1F
-	for <linux-hardening@archiver.kernel.org>; Wed, 22 Mar 2023 13:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22671C761AF
+	for <linux-hardening@archiver.kernel.org>; Wed, 22 Mar 2023 16:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231153AbjCVNbu (ORCPT
+        id S231143AbjCVQwt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 22 Mar 2023 09:31:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
+        Wed, 22 Mar 2023 12:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231137AbjCVNba (ORCPT
+        with ESMTP id S230462AbjCVQws (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 22 Mar 2023 09:31:30 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A3910D1;
-        Wed, 22 Mar 2023 06:31:26 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32MCpcd5032660;
-        Wed, 22 Mar 2023 13:31:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=8nYnzsuGMPsj8JOqe13LRPBczbL/fuoMs9/mE/rmmaE=;
- b=X03QKN4NYu93RufzwPPydp0MUvzRl2QbwkZ5aMhMaERjnrmUwBAPPXaDRem9cuwCblM4
- k+e1TuIzhD9Q1BPQ7j6tCBR811PYbckhbuwqIFgtZO4oDp2fvaCPVu7GSCcQGioe2Qzp
- 4zcbihYfW/3S4Kx8zth+OrcVQv+//YJWsCBXDsV8FPVCDLUfaBBXVIuI9NYpPhhC4NZ8
- nW96oqJiBrtALUW3nMOtgiFqvei3/OKGZsSL4rERHrWw3stoniwRpESz4VlBypNdI0MA
- EIms2nO30dIuDIy+DOC9dnwNXUXgFHjFuKBnjXEIpnWzyIiOOP15lo4XfPLp+HMVa4ZI VA== 
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pfhnx284y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Mar 2023 13:31:10 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32MDV9rj013613
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Mar 2023 13:31:09 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Wed, 22 Mar 2023 06:31:04 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>, <will@kernel.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-doc@vger.kernel.org>, "Mukesh Ojha" <quic_mojha@quicinc.com>
-Subject: [PATCH v2 6/6] remoterproc: qcom: refactor to leverage exported minidump symbol
-Date:   Wed, 22 Mar 2023 19:00:17 +0530
-Message-ID: <1679491817-2498-7-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
-References: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
+        Wed, 22 Mar 2023 12:52:48 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7A15DED3
+        for <linux-hardening@vger.kernel.org>; Wed, 22 Mar 2023 09:52:38 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id r4so10199464ilt.8
+        for <linux-hardening@vger.kernel.org>; Wed, 22 Mar 2023 09:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1679503958;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l3zjB9M2d0SQWHDN6AWzzgIm2jt75ssYc9u25xKl8IE=;
+        b=hZCnPQWdr3tCG5xo0v92lpLk+DAmOiy31UKY1ztRu4DcmVfTcbbEZoBAx/XTFbMhVa
+         z95qnrw654vLf32Me4P1KY8p92d6nBBn+NVuDFzOjUlTq/NXl1GiPQ/mEfIl/Akf9gZ+
+         HyMaQPAUP6VaYutn86OT1tsv9qBvMdyYXXF9oKVG8nXuoDc5I0In0pt+UpiAh5XYPhgL
+         U2DLcpVKUoenwMm6iQx8Toz4D9xWDcqkstJpYVU/Ee2Unm0P59dB06Y/aJ0OPlway83D
+         8uSFduRk16DAZbshMI3ViMcX5wZeIJYP1bRXG7vG1ZVEy+tQs4jLvFxbXiJSgFP+6PQ4
+         KMhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679503958;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l3zjB9M2d0SQWHDN6AWzzgIm2jt75ssYc9u25xKl8IE=;
+        b=mW3c47GugLvqm/MdUDO6D4puPA+C4dFAgHJIhCYxOE3wrtieuDlXNx5fH6Fv0E1QGQ
+         jXwCNaKz2gn3Rzk/kMQmz6TKjpAc3p6+aRskPJhhwOIpN1OQDq+wdCmcijaDEMPawu9R
+         D8PDMgJCOKSslttjWsBnGeBBrGPNJcuUQAY9eEc/7PSORm8yKdl9YnWmfrZ1mQse6VxK
+         tPzlSJN7WcSGF34XdjjmGYhkAD25D6apgpFjODIN0cjDk0sl6Zk/trtuoglvgONlsYpN
+         C3YpmG1+yv6GlFveJjeg7t3xrHobZqZwoSNBHoGgylUU95GDn+D+F3wHEjdGLI/UtbAX
+         oyQQ==
+X-Gm-Message-State: AO0yUKW37i1w9uvb0C1xE7YuRpwUNztogAjxhMy8oVLg+6ZEKF+gwj6M
+        gN7V840FpaQ2KGLzSYa/G+8hzg==
+X-Google-Smtp-Source: AK7set/iHwdOxGZxb/coQap30EbwOdQq/VzCyxP9uY03QDMRgrI+8cfcaLD/yueaYS+BqRYm395aOQ==
+X-Received: by 2002:a92:db10:0:b0:315:4c1c:f9db with SMTP id b16-20020a92db10000000b003154c1cf9dbmr4947711iln.19.1679503957782;
+        Wed, 22 Mar 2023 09:52:37 -0700 (PDT)
+Received: from google.com ([2620:15c:183:200:7419:4945:3325:dd1e])
+        by smtp.gmail.com with ESMTPSA id t4-20020a025404000000b004061dfd9e23sm5359438jaa.19.2023.03.22.09.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Mar 2023 09:52:37 -0700 (PDT)
+Date:   Wed, 22 Mar 2023 10:52:33 -0600
+From:   Ross Zwisler <zwisler@google.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
+Message-ID: <20230322165233.GA2583234@google.com>
+References: <20230215223350.2658616-1-zwisler@google.com>
+ <20230321223139-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: OnW_maYzV8fjuRDitSe10T3kXENK82Hk
-X-Proofpoint-ORIG-GUID: OnW_maYzV8fjuRDitSe10T3kXENK82Hk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-22_11,2023-03-22_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 suspectscore=0
- bulkscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 clxscore=1015 phishscore=0 mlxscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303150002 definitions=main-2303220098
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230321223139-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-qcom_minidump driver provides qcom_minidump_subsystem_desc()
-exported API which other driver can use it query subsystem
-descriptor. Refactor qcom_minidump() to use this symbol.
+On Tue, Mar 21, 2023 at 10:32:46PM -0400, Michael S. Tsirkin wrote:
+> On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
+> > Changes in v2:
+> >  * Dropped patches which were pulled into maintainer trees.
+> >  * Split BPF patches out into another series targeting bpf-next.
+> >  * trace-agent now falls back to debugfs if tracefs isn't present.
+> >  * Added Acked-by from mst@redhat.com to series.
+> >  * Added a typo fixup for the virtio-trace README.
+> > 
+> > Steven, assuming there are no objections, would you feel comfortable
+> > taking this series through your tree?
+> 
+> for merging up to patch 5 through another tree:
+> 
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> 
+> I'll merge patch 6, no problem.
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/remoteproc/qcom_common.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+Hey Michael, would you also mind merging patch 5, the other virtio patch?
 
-diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-index 88fc984..240e9f7 100644
---- a/drivers/remoteproc/qcom_common.c
-+++ b/drivers/remoteproc/qcom_common.c
-@@ -94,19 +94,10 @@ void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
- {
- 	int ret;
- 	struct minidump_subsystem *subsystem;
--	struct minidump_global_toc *toc;
- 
--	/* Get Global minidump ToC*/
--	toc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, NULL);
--
--	/* check if global table pointer exists and init is set */
--	if (IS_ERR(toc) || !toc->status) {
--		dev_err(&rproc->dev, "Minidump TOC not found in SMEM\n");
-+	subsystem = qcom_minidump_subsystem_desc(minidump_id);
-+	if (IS_ERR(subsystem))
- 		return;
--	}
--
--	/* Get subsystem table of contents using the minidump id */
--	subsystem = &toc->subsystems[minidump_id];
- 
- 	/**
- 	 * Collect minidump if SS ToC is valid and segment table
--- 
-2.7.4
+[PATCH v2 5/6] tools/virtio: use canonical ftrace path
 
+https://lore.kernel.org/all/20230215223350.2658616-6-zwisler@google.com/
+
+I don't think Steven took this one through his tree.  Thanks!
