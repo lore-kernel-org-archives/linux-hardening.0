@@ -2,237 +2,155 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9FFC6FD1D
-	for <linux-hardening@archiver.kernel.org>; Tue, 21 Mar 2023 23:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0523C74A5B
+	for <linux-hardening@archiver.kernel.org>; Wed, 22 Mar 2023 02:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbjCUXqh (ORCPT
+        id S230213AbjCVCdo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 21 Mar 2023 19:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
+        Tue, 21 Mar 2023 22:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbjCUXqg (ORCPT
+        with ESMTP id S229692AbjCVCdn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 21 Mar 2023 19:46:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 309BF5653F;
-        Tue, 21 Mar 2023 16:46:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CCF1EB81ABA;
-        Tue, 21 Mar 2023 23:46:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D8AC433EF;
-        Tue, 21 Mar 2023 23:46:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679442392;
-        bh=ctESsV/yrTyc22yO7NKqlpVKkZMOWrOvz07ZHazO3WE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=KWxfD98I2rYiODnhLi/oaQFC2J2Nbzr3bx5hgZWNvmlPEWLsuay8f49wFtERXyOh0
-         OqOUe+mTKFkRveyzm1KCfFjUoWDi2L75Ve0BTCLVD6FfZLh42c2zuy7vCics6O6tKW
-         EfUDjTltodEzgNbDnw1PKD4N6s4FKSvueyl58tL4LVJCKADhmlZHn96lT2OcWht6t+
-         5bND/X1GJ3BugsgBgKhLVDZq9lONGxJx4IwRhYr4VNkO8FTYS/KnDBCb/6kB51NSE7
-         QnLQSGy7pSSNLrDKx1NcUcC49kEpP9RofWfo0reapzaLxHJy+yKm5OZPU0Ne1d3il5
-         DNkIv7+QnBpzA==
-Date:   Tue, 21 Mar 2023 17:47:03 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] RDMA/core: Fix multiple -Warray-bounds warnings
-Message-ID: <ZBpB91qQcB10m3Fw@work>
+        Tue, 21 Mar 2023 22:33:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0724623C48
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Mar 2023 19:32:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1679452374;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BzR3eLSpqoTMzxh2NgN0pV0oM+P8NH9sKNgtkW4tjlQ=;
+        b=IZi4b9wmRy2VokAZnpLkAKbkn5axwxhLgeVPtxgXzygCWcbs+UFiE1m/7dus1a2yL1JPG9
+        R/C4B3Vi0DbeVa9TzpUzMUWudO4sRywTZQ8x63hRwwVRfD7ofV+WLaSLsUa55IE+XHg3rM
+        IbyeFgD7Ac5J4+2JMimt7QWbKOKom40=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-124-QRJIIUgSO66YpiyHb4AuIQ-1; Tue, 21 Mar 2023 22:32:53 -0400
+X-MC-Unique: QRJIIUgSO66YpiyHb4AuIQ-1
+Received: by mail-wr1-f69.google.com with SMTP id h18-20020adfa4d2000000b002cea098a651so1961425wrb.3
+        for <linux-hardening@vger.kernel.org>; Tue, 21 Mar 2023 19:32:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679452372;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BzR3eLSpqoTMzxh2NgN0pV0oM+P8NH9sKNgtkW4tjlQ=;
+        b=o+7MthipxC7fSOgIJM53x39qkTIiti89RKTtkJKcGw6Jzr65gCuhztb82HGP/tHbXc
+         kK0iH/GuaG4jQGVQSgwmdgnMsmndOYY9jwfR7rEeOU8YHrlz6Wc+S/RyUBZmeaBuZbLE
+         7l57n48HlhYW2pOLf8b8jSqQ1zixINv0hEHZfIMBLN4YMdKb5F25wB81Yn3vllttjijT
+         oyCG3BlvBA7TxlfQzFNYkaLUyXrouQRWA4ONl9gndCCgzzW3D6Hry/MF9U4qAuJsuNGc
+         l3wadM2bcWURDwgJB2EQD4NdH1H8m9Dq7rmHcgOjNFBsLvu3QdOkWod4/hDLtaXfgWJz
+         EFCg==
+X-Gm-Message-State: AO0yUKWKublvHa8lFF9VSiVo8WkZ4uzRDgNwtHawXJyB0OW1DNKsVpUa
+        AI1InFjSiaCKps1Z7B6/D6cysMRz2jMR1WEHwjYFJ5LWlCHKSRlHVg5oolSZgCdeJvCbfsGLQD4
+        AT2Is4nEwn6AvHw9/hQw32XjNd5GW
+X-Received: by 2002:a5d:4521:0:b0:2cf:e827:b597 with SMTP id j1-20020a5d4521000000b002cfe827b597mr3982531wra.10.1679452371929;
+        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+IAoeXaV5Ezy2+ySyjfqstu/owf9Mg6SdCShB52Q1gVgr7GbSGeNN3VY0ntYreU5GIBMrYUQ==
+X-Received: by 2002:a5d:4521:0:b0:2cf:e827:b597 with SMTP id j1-20020a5d4521000000b002cfe827b597mr3982509wra.10.1679452371580;
+        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
+Received: from redhat.com ([2.52.1.105])
+        by smtp.gmail.com with ESMTPSA id n1-20020a5d67c1000000b002cfe685bfd6sm12661630wrw.108.2023.03.21.19.32.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
+Date:   Tue, 21 Mar 2023 22:32:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
+Message-ID: <20230321223139-mutt-send-email-mst@kernel.org>
+References: <20230215223350.2658616-1-zwisler@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20230215223350.2658616-1-zwisler@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-GCC-13 (and Clang)[1] does not like to access a partially allocated
-object, since it cannot reason about it for bounds checking.
+On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
+> Changes in v2:
+>  * Dropped patches which were pulled into maintainer trees.
+>  * Split BPF patches out into another series targeting bpf-next.
+>  * trace-agent now falls back to debugfs if tracefs isn't present.
+>  * Added Acked-by from mst@redhat.com to series.
+>  * Added a typo fixup for the virtio-trace README.
+> 
+> Steven, assuming there are no objections, would you feel comfortable
+> taking this series through your tree?
 
-In this case 140 bytes are allocated for an object of type struct
-ib_umad_packet:
+for merging up to patch 5 through another tree:
 
-        packet = kzalloc(sizeof(*packet) + IB_MGMT_RMPP_HDR, GFP_KERNEL);
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-However, notice that sizeof(*packet) is only 104 bytes:
+I'll merge patch 6, no problem.
 
-struct ib_umad_packet {
-        struct ib_mad_send_buf *   msg;                  /*     0     8 */
-        struct ib_mad_recv_wc *    recv_wc;              /*     8     8 */
-        struct list_head           list;                 /*    16    16 */
-        int                        length;               /*    32     4 */
 
-        /* XXX 4 bytes hole, try to pack */
-
-        struct ib_user_mad         mad __attribute__((__aligned__(8))); /*    40    64 */
-
-        /* size: 104, cachelines: 2, members: 5 */
-        /* sum members: 100, holes: 1, sum holes: 4 */
-        /* forced alignments: 1, forced holes: 1, sum forced holes: 4 */
-        /* last cacheline: 40 bytes */
-} __attribute__((__aligned__(8)));
-
-and 36 bytes extra bytes are allocated for a flexible-array member in
-struct ib_user_mad:
-
-include/rdma/ib_mad.h:
-120 enum {
-...
-123         IB_MGMT_RMPP_HDR = 36,
-... }
-
-struct ib_user_mad {
-        struct ib_user_mad_hdr     hdr;                  /*     0    64 */
-        /* --- cacheline 1 boundary (64 bytes) --- */
-        __u64                      data[] __attribute__((__aligned__(8))); /*    64     0 */
-
-        /* size: 64, cachelines: 1, members: 2 */
-        /* forced alignments: 1 */
-} __attribute__((__aligned__(8)));
-
-So we have sizeof(*packet) + IB_MGMT_RMPP_HDR == 140 bytes
-
-Then the address of the flex-array member (for which only 36 bytes were
-allocated) is casted and copied into a pointer to struct ib_rmpp_mad,
-which, in turn, is of size 256 bytes:
-
-        rmpp_mad = (struct ib_rmpp_mad *) packet->mad.data;
-
-struct ib_rmpp_mad {
-        struct ib_mad_hdr          mad_hdr;              /*     0    24 */
-        struct ib_rmpp_hdr         rmpp_hdr;             /*    24    12 */
-        u8                         data[220];            /*    36   220 */
-
-        /* size: 256, cachelines: 4, members: 3 */
-};
-
-The thing is that those 36 bytes allocated for flex-array member data
-in struct ib_user_mad onlly account for the size of both struct ib_mad_hdr
-and struct ib_rmpp_hdr, but nothing is left for array u8 data[220].
-So, the compiler is legitimately complaining about accessing an object
-for which not enough memory was allocated.
-
-Apparently, the only members of struct ib_rmpp_mad that are relevant
-(that are actually being used) in function ib_umad_write() are mad_hdr
-and rmpp_hdr. So, instead of casting packet->mad.data to
-(struct ib_rmpp_mad *) create a new structure
-
-struct ib_rmpp_mad_hdr {
-        struct ib_mad_hdr       mad_hdr;
-        struct ib_rmpp_hdr      rmpp_hdr;
-} __packed;
-
-and cast packet->mad.data to (struct ib_rmpp_mad_hdr *).
-
-Notice that
-
-        IB_MGMT_RMPP_HDR == sizeof(struct ib_rmpp_mad_hdr) == 36 bytes
-
-Refactor the rest of the code, accordingly.
-
-Fix the following warnings seen under GCC-13 and -Warray-bounds:
-drivers/infiniband/core/user_mad.c:564:50: warning: array subscript ‘struct ib_rmpp_mad[0]’ is partly outside array bounds of ‘unsigned char[140]’ [-Warray-bounds=]
-drivers/infiniband/core/user_mad.c:566:42: warning: array subscript ‘struct ib_rmpp_mad[0]’ is partly outside array bounds of ‘unsigned char[140]’ [-Warray-bounds=]
-drivers/infiniband/core/user_mad.c:618:25: warning: array subscript ‘struct ib_rmpp_mad[0]’ is partly outside array bounds of ‘unsigned char[140]’ [-Warray-bounds=]
-drivers/infiniband/core/user_mad.c:622:44: warning: array subscript ‘struct ib_rmpp_mad[0]’ is partly outside array bounds of ‘unsigned char[140]’ [-Warray-bounds=]
-
-Link: https://github.com/KSPP/linux/issues/273
-Link: https://godbolt.org/z/oYWaGM4Yb [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Hi!
-
-Another way to fix this is to create a new structure. I think I like
-this better; it avoids this horrid hack:
-
-rmpp_hdr = *(struct ib_rmpp_hdr *)((u8 *)packet->mad.data + sizeof(struct ib_mad_hdr));
-
-but it's up to you to pick the one you prefer. :)
-
-Changes in v2:
- - Create new struct ib_rmpp_mad_hdr.
-
-v1:
- Link: https://lore.kernel.org/linux-hardening/ZBo5x5e7B25hHr4F@work/
-
- drivers/infiniband/core/user_mad.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
-index f83954180a33..d21c0a042f0a 100644
---- a/drivers/infiniband/core/user_mad.c
-+++ b/drivers/infiniband/core/user_mad.c
-@@ -131,6 +131,11 @@ struct ib_umad_packet {
- 	struct ib_user_mad mad;
- };
- 
-+struct ib_rmpp_mad_hdr {
-+	struct ib_mad_hdr	mad_hdr;
-+	struct ib_rmpp_hdr      rmpp_hdr;
-+} __packed;
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/ib_umad.h>
- 
-@@ -494,11 +499,11 @@ static ssize_t ib_umad_write(struct file *filp, const char __user *buf,
- 			     size_t count, loff_t *pos)
- {
- 	struct ib_umad_file *file = filp->private_data;
-+	struct ib_rmpp_mad_hdr *rmpp_mad_hdr;
- 	struct ib_umad_packet *packet;
- 	struct ib_mad_agent *agent;
- 	struct rdma_ah_attr ah_attr;
- 	struct ib_ah *ah;
--	struct ib_rmpp_mad *rmpp_mad;
- 	__be64 *tid;
- 	int ret, data_len, hdr_len, copy_offset, rmpp_active;
- 	u8 base_version;
-@@ -506,7 +511,7 @@ static ssize_t ib_umad_write(struct file *filp, const char __user *buf,
- 	if (count < hdr_size(file) + IB_MGMT_RMPP_HDR)
- 		return -EINVAL;
- 
--	packet = kzalloc(sizeof *packet + IB_MGMT_RMPP_HDR, GFP_KERNEL);
-+	packet = kzalloc(sizeof(*packet) + IB_MGMT_RMPP_HDR, GFP_KERNEL);
- 	if (!packet)
- 		return -ENOMEM;
- 
-@@ -560,13 +565,13 @@ static ssize_t ib_umad_write(struct file *filp, const char __user *buf,
- 		goto err_up;
- 	}
- 
--	rmpp_mad = (struct ib_rmpp_mad *) packet->mad.data;
--	hdr_len = ib_get_mad_data_offset(rmpp_mad->mad_hdr.mgmt_class);
-+	rmpp_mad_hdr = (struct ib_rmpp_mad_hdr *)packet->mad.data;
-+	hdr_len = ib_get_mad_data_offset(rmpp_mad_hdr->mad_hdr.mgmt_class);
- 
--	if (ib_is_mad_class_rmpp(rmpp_mad->mad_hdr.mgmt_class)
-+	if (ib_is_mad_class_rmpp(rmpp_mad_hdr->mad_hdr.mgmt_class)
- 	    && ib_mad_kernel_rmpp_agent(agent)) {
- 		copy_offset = IB_MGMT_RMPP_HDR;
--		rmpp_active = ib_get_rmpp_flags(&rmpp_mad->rmpp_hdr) &
-+		rmpp_active = ib_get_rmpp_flags(&rmpp_mad_hdr->rmpp_hdr) &
- 						IB_MGMT_RMPP_FLAG_ACTIVE;
- 	} else {
- 		copy_offset = IB_MGMT_MAD_HDR;
-@@ -615,12 +620,12 @@ static ssize_t ib_umad_write(struct file *filp, const char __user *buf,
- 		tid = &((struct ib_mad_hdr *) packet->msg->mad)->tid;
- 		*tid = cpu_to_be64(((u64) agent->hi_tid) << 32 |
- 				   (be64_to_cpup(tid) & 0xffffffff));
--		rmpp_mad->mad_hdr.tid = *tid;
-+		rmpp_mad_hdr->mad_hdr.tid = *tid;
- 	}
- 
- 	if (!ib_mad_kernel_rmpp_agent(agent)
--	   && ib_is_mad_class_rmpp(rmpp_mad->mad_hdr.mgmt_class)
--	   && (ib_get_rmpp_flags(&rmpp_mad->rmpp_hdr) & IB_MGMT_RMPP_FLAG_ACTIVE)) {
-+	    && ib_is_mad_class_rmpp(rmpp_mad_hdr->mad_hdr.mgmt_class)
-+	    && (ib_get_rmpp_flags(&rmpp_mad_hdr->rmpp_hdr) & IB_MGMT_RMPP_FLAG_ACTIVE)) {
- 		spin_lock_irq(&file->send_lock);
- 		list_add_tail(&packet->list, &file->send_list);
- 		spin_unlock_irq(&file->send_lock);
--- 
-2.34.1
+> ---
+> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+> 
+> But, from Documentation/trace/ftrace.rst:
+> 
+>   Before 4.1, all ftrace tracing control files were within the debugfs
+>   file system, which is typically located at /sys/kernel/debug/tracing.
+>   For backward compatibility, when mounting the debugfs file system,
+>   the tracefs file system will be automatically mounted at:
+> 
+>   /sys/kernel/debug/tracing
+> 
+> There are many places where this older debugfs path is still used in
+> code comments, selftests, examples and tools, so let's update them to
+> avoid confusion.
+> 
+> I've broken up the series as best I could by maintainer or directory,
+> and I've only sent people the patches that I think they care about to
+> avoid spamming everyone.
+> 
+> Ross Zwisler (6):
+>   tracing: always use canonical ftrace path
+>   selftests: use canonical ftrace path
+>   leaking_addresses: also skip canonical ftrace path
+>   tools/kvm_stat: use canonical ftrace path
+>   tools/virtio: use canonical ftrace path
+>   tools/virtio: fix typo in README instructions
+> 
+>  include/linux/kernel.h                        |  2 +-
+>  include/linux/tracepoint.h                    |  4 ++--
+>  kernel/trace/Kconfig                          | 20 +++++++++----------
+>  kernel/trace/kprobe_event_gen_test.c          |  2 +-
+>  kernel/trace/ring_buffer.c                    |  2 +-
+>  kernel/trace/synth_event_gen_test.c           |  2 +-
+>  kernel/trace/trace.c                          |  2 +-
+>  samples/user_events/example.c                 |  4 ++--
+>  scripts/leaking_addresses.pl                  |  1 +
+>  scripts/tracing/draw_functrace.py             |  6 +++---
+>  tools/kvm/kvm_stat/kvm_stat                   |  2 +-
+>  tools/lib/api/fs/tracing_path.c               |  4 ++--
+>  .../testing/selftests/user_events/dyn_test.c  |  2 +-
+>  .../selftests/user_events/ftrace_test.c       | 10 +++++-----
+>  .../testing/selftests/user_events/perf_test.c |  8 ++++----
+>  tools/testing/selftests/vm/protection_keys.c  |  4 ++--
+>  tools/tracing/latency/latency-collector.c     |  2 +-
+>  tools/virtio/virtio-trace/README              |  4 ++--
+>  tools/virtio/virtio-trace/trace-agent.c       | 12 +++++++----
+>  19 files changed, 49 insertions(+), 44 deletions(-)
+> 
+> -- 
+> 2.39.1.637.g21b0678d19-goog
 
