@@ -2,72 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F37CC6FD1D
-	for <linux-hardening@archiver.kernel.org>; Thu, 23 Mar 2023 10:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A404C74A5B
+	for <linux-hardening@archiver.kernel.org>; Thu, 23 Mar 2023 20:40:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbjCWKUr (ORCPT
+        id S230321AbjCWUkv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 23 Mar 2023 06:20:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36786 "EHLO
+        Thu, 23 Mar 2023 16:40:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbjCWKUq (ORCPT
+        with ESMTP id S229997AbjCWUku (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 23 Mar 2023 06:20:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D45DD52B;
-        Thu, 23 Mar 2023 03:20:46 -0700 (PDT)
+        Thu, 23 Mar 2023 16:40:50 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC381E9F1;
+        Thu, 23 Mar 2023 13:40:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ABB0D6259D;
-        Thu, 23 Mar 2023 10:20:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B02EC433EF;
-        Thu, 23 Mar 2023 10:20:44 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 51C17B8224C;
+        Thu, 23 Mar 2023 20:40:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEB8EC433EF;
+        Thu, 23 Mar 2023 20:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679566845;
-        bh=vneMdXeEr1dmIAZE0iPop9xJ7JZjUeKpHnQwSXXFD34=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=d3uWBLyTOCMoMHel6zJXx6PdpRg5xcjZF56KLNLRkdFylulkIw42yuINAQTJ6rNbF
-         PgXrpqJ2TQpBntC3R5YyYPddEyC93q5LaKxM2bjkDJRBrkWJ6mobHIIWMaxtAfPJQW
-         bkoACNaG6ZRdh8+/MIe6u6u/N4zdejUDilBU0d28YROuIqdXPYtNYAVTprEywpnluC
-         h8l/zb4Mw7GEVH+QMg1m8J8vwn9JDNuZ0JvyY14Y33Mm3EDAwKIW4uwy83Lvg5vrbM
-         hlcqgptk4F151ZURhhYE6zJOzKtWz16tNMEoiEisrYkg4OQirSQTRKo49aSjC5/qR5
-         CX9RuBj/y/0cw==
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1679604046;
+        bh=AU1TdyoB8zhc8vEYalC7k4O460M1RgZWUgFB7iLob3Y=;
+        h=Date:From:To:Subject:From;
+        b=tqgxbhv6mqkp3VieEzLnD9QKqbX0If1rJTPXT0z1Z2bKfQkqIpbsvBngPwvqed/fv
+         FXXUjo+bolHV7TlSErE5YialZvIDdtKE2v5qRwStYcBOhOFjLGHTflvS7te65qop6k
+         3BtnvVl2QGcsabVpCtTVOr8MsTtu/DdJoPEckkUuy3WoCRQl7wwG9vRuQIPUHImFZe
+         zX9yEME1wiTV5LBzXt2G0YKVW9Yp49S3CTuft+nUGyZUgT4fkVJWjebu/wttJb6u8b
+         UTcEBxAyNuzkeTsJ7f8xzWJxCkJ6F3M1F5kQRMjfjF0WT3RELu2pT1tm7aqCr/z7L0
+         XP9+NSL4Syriw==
+Date:   Thu, 23 Mar 2023 14:41:16 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-In-Reply-To: <ZBpB91qQcB10m3Fw@work>
-References: <ZBpB91qQcB10m3Fw@work>
-Subject: Re: [PATCH v2][next] RDMA/core: Fix multiple -Warray-bounds warnings
-Message-Id: <167956684067.1736808.5456264646526617079.b4-ty@kernel.org>
-Date:   Thu, 23 Mar 2023 12:20:40 +0200
+Subject: [PATCH][next] uapi: net: ipv6: Replace fake flex-array with
+ flex-array member
+Message-ID: <ZBy5bNygP5yxnE9k@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12-dev-a055d
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Zero-length arrays as fake flexible arrays are deprecated and we are
+moving towards adopting C99 flexible-array members instead.
 
-On Tue, 21 Mar 2023 17:47:03 -0600, Gustavo A. R. Silva wrote:
-> GCC-13 (and Clang)[1] does not like to access a partially allocated
-> object, since it cannot reason about it for bounds checking.
-> 
-> In this case 140 bytes are allocated for an object of type struct
-> ib_umad_packet:
-> 
->         packet = kzalloc(sizeof(*packet) + IB_MGMT_RMPP_HDR, GFP_KERNEL);
-> 
-> [...]
+Address the following warning found with GCC-13 and
+-fstrict-flex-arrays=3 enabled:
+net/ipv6/exthdrs.c: In function ‘fl6_update_dst’:
+net/ipv6/exthdrs.c:1393:28: warning: array subscript 0 is outside array bounds of ‘struct in6_addr[0]’ [-Warray-bounds=]
+ 1393 |                 fl6->daddr = *((struct rt0_hdr *)opt->srcrt)->addr;
+      |                 ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from ./include/linux/ipv6.h:5,
+                 from ./include/linux/icmpv6.h:6,
+                 from net/ipv6/exthdrs.c:27:
+./include/uapi/linux/ipv6.h:84:33: note: while referencing ‘addr’
+   84 |         struct in6_addr         addr[0];
+      |                                 ^~~~
+net/ipv6/exthdrs.c: In function ‘ipv6_push_rthdr0.isra’:
+net/ipv6/exthdrs.c:1125:19: warning: array subscript <unknown> is outside array bounds of ‘struct in6_addr[0]’ [-Warray-bounds=]
+ 1125 |         phdr->addr[hops - 1] = **addr_p;
+      |         ~~~~~~~~~~^~~~~~~~~~
+./include/uapi/linux/ipv6.h:84:33: note: while referencing ‘addr’
+   84 |         struct in6_addr         addr[0];
+      |                                 ^~~~
 
-Applied, thanks!
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-[1/1] RDMA/core: Fix multiple -Warray-bounds warnings
-      https://git.kernel.org/rdma/rdma/c/aa4d540b415005
+Link: https://github.com/KSPP/linux/issues/21
+Link: https://github.com/KSPP/linux/issues/276
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/uapi/linux/ipv6.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
+diff --git a/include/uapi/linux/ipv6.h b/include/uapi/linux/ipv6.h
+index 53326dfc59ec..ac56605fe9bc 100644
+--- a/include/uapi/linux/ipv6.h
++++ b/include/uapi/linux/ipv6.h
+@@ -81,7 +81,7 @@ struct ipv6_opt_hdr {
+ struct rt0_hdr {
+ 	struct ipv6_rt_hdr	rt_hdr;
+ 	__u32			reserved;
+-	struct in6_addr		addr[0];
++	struct in6_addr		addr[];
+ 
+ #define rt0_type		rt_hdr.type
+ };
 -- 
-Leon Romanovsky <leon@kernel.org>
+2.34.1
+
