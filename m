@@ -2,45 +2,50 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A404C74A5B
-	for <linux-hardening@archiver.kernel.org>; Thu, 23 Mar 2023 20:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A937C6FD1C
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Mar 2023 01:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230321AbjCWUkv (ORCPT
+        id S230011AbjCXBLX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 23 Mar 2023 16:40:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54558 "EHLO
+        Thu, 23 Mar 2023 21:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbjCWUku (ORCPT
+        with ESMTP id S229499AbjCXBLX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 23 Mar 2023 16:40:50 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCC381E9F1;
-        Thu, 23 Mar 2023 13:40:49 -0700 (PDT)
+        Thu, 23 Mar 2023 21:11:23 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B888C7DA0;
+        Thu, 23 Mar 2023 18:11:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 51C17B8224C;
-        Thu, 23 Mar 2023 20:40:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEB8EC433EF;
-        Thu, 23 Mar 2023 20:40:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 710EBB822A6;
+        Fri, 24 Mar 2023 01:11:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDA7C433EF;
+        Fri, 24 Mar 2023 01:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679604046;
-        bh=AU1TdyoB8zhc8vEYalC7k4O460M1RgZWUgFB7iLob3Y=;
-        h=Date:From:To:Subject:From;
-        b=tqgxbhv6mqkp3VieEzLnD9QKqbX0If1rJTPXT0z1Z2bKfQkqIpbsvBngPwvqed/fv
-         FXXUjo+bolHV7TlSErE5YialZvIDdtKE2v5qRwStYcBOhOFjLGHTflvS7te65qop6k
-         3BtnvVl2QGcsabVpCtTVOr8MsTtu/DdJoPEckkUuy3WoCRQl7wwG9vRuQIPUHImFZe
-         zX9yEME1wiTV5LBzXt2G0YKVW9Yp49S3CTuft+nUGyZUgT4fkVJWjebu/wttJb6u8b
-         UTcEBxAyNuzkeTsJ7f8xzWJxCkJ6F3M1F5kQRMjfjF0WT3RELu2pT1tm7aqCr/z7L0
-         XP9+NSL4Syriw==
-Date:   Thu, 23 Mar 2023 14:41:16 -0600
+        s=k20201202; t=1679620275;
+        bh=jChlmGcZ3FGfnBX7fNnv8wDApgWT3zXUZGzW9tEgLMk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=svd0LywyWL2ynnX0mBXIZ+kWSUnvdX6jm7Ev/vgd3F/0X+iiWYpuSzOLnw/l67D39
+         ONzuxTiQRAu087pglXu9ZvZT6AL4veh/hn5T3TG/3xbSWeqdZ0sdqEJpC18isQKAks
+         PLd8jO0yTAm9VtkVelFWyXFL0z+3YVv5rjCjTdVHy0JJwdwUyo9YREvyl3k6fxxwGq
+         z+mt71F9b1hkzSes4xs0YOu4qVoodWP+UrBLvQkOZmrL2o8yRvIShA1wkR+ri2T3kX
+         /4Lddbz41FBbPIDwPxdRbO02aKv+8ZgXS1LXcKJTWd2m2hM8Pi1ZppufLJGgqeO0Zk
+         Fn3cZz2iafeyg==
+Date:   Thu, 23 Mar 2023 19:11:35 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     linux-kernel@vger.kernel.org,
+To:     Ping-Ke Shih <pkshih@realtek.com>, Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] uapi: net: ipv6: Replace fake flex-array with
- flex-array member
-Message-ID: <ZBy5bNygP5yxnE9k@work>
+Subject: [PATCH][next] rtlwifi: Replace fake flex-array with flex-array member
+Message-ID: <ZBz4x+MWoI/f65o1@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
@@ -54,49 +59,37 @@ moving towards adopting C99 flexible-array members instead.
 
 Address the following warning found with GCC-13 and
 -fstrict-flex-arrays=3 enabled:
-net/ipv6/exthdrs.c: In function ‘fl6_update_dst’:
-net/ipv6/exthdrs.c:1393:28: warning: array subscript 0 is outside array bounds of ‘struct in6_addr[0]’ [-Warray-bounds=]
- 1393 |                 fl6->daddr = *((struct rt0_hdr *)opt->srcrt)->addr;
-      |                 ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from ./include/linux/ipv6.h:5,
-                 from ./include/linux/icmpv6.h:6,
-                 from net/ipv6/exthdrs.c:27:
-./include/uapi/linux/ipv6.h:84:33: note: while referencing ‘addr’
-   84 |         struct in6_addr         addr[0];
-      |                                 ^~~~
-net/ipv6/exthdrs.c: In function ‘ipv6_push_rthdr0.isra’:
-net/ipv6/exthdrs.c:1125:19: warning: array subscript <unknown> is outside array bounds of ‘struct in6_addr[0]’ [-Warray-bounds=]
- 1125 |         phdr->addr[hops - 1] = **addr_p;
-      |         ~~~~~~~~~~^~~~~~~~~~
-./include/uapi/linux/ipv6.h:84:33: note: while referencing ‘addr’
-   84 |         struct in6_addr         addr[0];
-      |                                 ^~~~
+In function ‘fortify_memset_chk’,
+    inlined from ‘rtl_usb_probe’ at drivers/net/wireless/realtek/rtlwifi/usb.c:1044:2:
+./include/linux/fortify-string.h:430:25: warning: call to ‘__write_overflow_field’ declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
+  430 |                         __write_overflow_field(p_size_field, size);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
 routines on memcpy() and help us make progress towards globally
 enabling -fstrict-flex-arrays=3 [1].
 
 Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/276
+Link: https://github.com/KSPP/linux/issues/277
 Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- include/uapi/linux/ipv6.h | 2 +-
+ drivers/net/wireless/realtek/rtlwifi/wifi.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/ipv6.h b/include/uapi/linux/ipv6.h
-index 53326dfc59ec..ac56605fe9bc 100644
---- a/include/uapi/linux/ipv6.h
-+++ b/include/uapi/linux/ipv6.h
-@@ -81,7 +81,7 @@ struct ipv6_opt_hdr {
- struct rt0_hdr {
- 	struct ipv6_rt_hdr	rt_hdr;
- 	__u32			reserved;
--	struct in6_addr		addr[0];
-+	struct in6_addr		addr[];
- 
- #define rt0_type		rt_hdr.type
+diff --git a/drivers/net/wireless/realtek/rtlwifi/wifi.h b/drivers/net/wireless/realtek/rtlwifi/wifi.h
+index 31f9e9e5c680..082af216760f 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/wifi.h
++++ b/drivers/net/wireless/realtek/rtlwifi/wifi.h
+@@ -2831,7 +2831,7 @@ struct rtl_priv {
+ 	 * beyond  this structure like:
+ 	 * rtl_pci_priv or rtl_usb_priv
+ 	 */
+-	u8 priv[0] __aligned(sizeof(void *));
++	u8 priv[] __aligned(sizeof(void *));
  };
+ 
+ #define rtl_priv(hw)		(((struct rtl_priv *)(hw)->priv))
 -- 
 2.34.1
 
