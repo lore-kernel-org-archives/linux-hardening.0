@@ -2,97 +2,127 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9304AC6FD20
-	for <linux-hardening@archiver.kernel.org>; Fri, 24 Mar 2023 08:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCCDC76196
+	for <linux-hardening@archiver.kernel.org>; Fri, 24 Mar 2023 09:40:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbjCXIuB (ORCPT
+        id S231794AbjCXJk0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 24 Mar 2023 04:50:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
+        Fri, 24 Mar 2023 05:40:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231686AbjCXIuA (ORCPT
+        with ESMTP id S231868AbjCXJkK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 24 Mar 2023 04:50:00 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8EEC18AB8
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Mar 2023 01:49:58 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id r11so4961265edd.5
-        for <linux-hardening@vger.kernel.org>; Fri, 24 Mar 2023 01:49:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679647797;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DjhqcYRQohKWjL8txB/9vIdc1uHfeuQUOI0lOTwNUNg=;
-        b=J2SXK8WAFr9syAWNxzP9UEGgumD280cRNlVZyCO+9N7iFHr1B73zA9cUvLewnou//P
-         gFsyTvm6qUhFJTtw+qbOB1cHscEMO1v9t4G0+yKeeDToJgYJ4fh49v39Jk9xnLZpqT9p
-         vf9EqCHsSIkqeDAf57+YAE+LLg0Cmdb20JvAyFGj/nalNvz5L9C+sWaMfsi2s8FKC6Kt
-         nxJhLSPdvHUoftvneqrjoaXmwpx5heHOu3xIwGQU64r4iLVlpv7DIPZnVk7tiUX1Ht41
-         QCygOrlMj4BlB4Fo5/vsr95M8ICYt+t8SaBkjR9Hvu7tXUPoFWXW8uv41rxN8Ew1k1Uy
-         /N3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679647797;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DjhqcYRQohKWjL8txB/9vIdc1uHfeuQUOI0lOTwNUNg=;
-        b=FD2Sxf7lC5NSS/3TmhrBFezXklE/4d4UFA9HQWAJMaaKs0Wt6VZUWWdM3JB6wBvyH6
-         KrHK2FsdHuupcRdP04+JHgwdKDF1jObiyja0FVpmS6ez5KZOwFNZAZKSgQIRV5LL5mpX
-         0JYey5U5suS1TUX7U7Dux80Gu9ieyQEbYN8Ck3IxnGyHhusH5URD9AviBS31n1mjNA8V
-         TRh4OpDjyM4pWVQKfEVW3IO1ks8VQvE+tZfTFmlVOBB3QUzcD+9PHImx0OtH18G4DL3p
-         f6CvyZM9yFDK6n5fCtycBpRrt7eaFNzaxn6ucjTYc5bnD+AkYQmN+3TNC94sP6N6HcFg
-         an2g==
-X-Gm-Message-State: AAQBX9fGvaWjkGprX3bbuDhsWlYMiTs+cfQ9SY+WGMAYKkWREMMtoQHj
-        sywa5Tzh76cDh18A/ZTvSg6/aQ==
-X-Google-Smtp-Source: AKy350Y+LY978FHmR3PiWftX2mZjZLU8WMQ1HS43y2EM2peLkGLhVhwK0ndpXL1vW0ugIcOfXsNRJw==
-X-Received: by 2002:a05:6402:10d8:b0:4fb:2296:30b3 with SMTP id p24-20020a05640210d800b004fb229630b3mr2327474edu.15.1679647797427;
-        Fri, 24 Mar 2023 01:49:57 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:ce50:243f:54cc:5373? ([2a02:810d:15c0:828:ce50:243f:54cc:5373])
-        by smtp.gmail.com with ESMTPSA id x2-20020a50ba82000000b004fb30fc1dabsm10186429ede.96.2023.03.24.01.49.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Mar 2023 01:49:57 -0700 (PDT)
-Message-ID: <cc26c4a6-a498-ebb8-1fe2-548b6a9ca58e@linaro.org>
-Date:   Fri, 24 Mar 2023 09:49:55 +0100
+        Fri, 24 Mar 2023 05:40:10 -0400
+X-Greylist: delayed 1133 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 24 Mar 2023 02:39:37 PDT
+Received: from mail-m3169.qiye.163.com (mail-m3169.qiye.163.com [103.74.31.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B15241E0;
+        Fri, 24 Mar 2023 02:39:36 -0700 (PDT)
+Received: from localhost.localdomain (unknown [106.75.220.2])
+        by mail-m3169.qiye.163.com (Hmail) with ESMTPA id 220C37A0293;
+        Fri, 24 Mar 2023 17:20:38 +0800 (CST)
+From:   Faicker Mo <faicker.mo@ucloud.cn>
+To:     faicker.mo@ucloud.cn
+Cc:     Sridhar Samudrala <sridhar.samudrala@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] net/net_failover: fix txq exceeding warning
+Date:   Fri, 24 Mar 2023 17:19:54 +0800
+Message-Id: <20230324091954.1890561-1-faicker.mo@ucloud.cn>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v7 1/6] dt-bindings: ufs: qcom: Add SM6125 compatible
- string
-Content-Language: en-US
-To:     Lux Aliaga <they@mint.lgbt>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org,
-        kishon@kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
-        bvanassche@acm.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-hardening@vger.kernel.org,
-        phone-devel@vger.kernel.org, martin.botka@somainline.org,
-        marijn.suijten@somainline.org
-References: <20230306170817.3806-1-they@mint.lgbt>
- <20230306170817.3806-2-they@mint.lgbt>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230306170817.3806-2-they@mint.lgbt>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGEsdVk9OTUlDGExKTUMfT1UZERMWGhIXJBQOD1
+        lXWRgSC1lBWUpLTVVMTlVJSUtVSVlXWRYaDxIVHRRZQVlPS0hVSkpLSE5IVUpLS1VLWQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MjY6Tzo*NzJKNBMBDk8ZKAsh
+        EREKCjdVSlVKTUxCTU9CTUhDQkJJVTMWGhIXVR0aEhgQHglVFhQ7DhgXFA4fVRgVRVlXWRILWUFZ
+        SktNVUxOVUlJS1VJWVdZCAFZQU9PSUw3Bg++
+X-HM-Tid: 0a8712eb882c00a9kurm220c37a0293
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 06/03/2023 18:08, Lux Aliaga wrote:
-> Document the compatible for UFS found on the SM6125.
-> 
-> Signed-off-by: Lux Aliaga <they@mint.lgbt>
-> Reviewed-by: Martin Botka <martin.botka@somainline.org>
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+The failover txq is inited as 16 queues.
+when a packet is transmitted from the failover device firstly,
+the failover device will select the queue which is returned from
+the primary device if the primary device is UP and running.
+If the primary device txq is bigger than the default 16,
+it can lead to the following warning:
+eth0 selects TX queue 18, but real number of TX queues is 16
 
-I have trouble understanding why this patch was not applied... I don't
-know, maybe it should not be send with other patches.
+The warning backtrace is:
+[   32.146376] CPU: 18 PID: 9134 Comm: chronyd Tainted: G            E      6.2.8-1.el7.centos.x86_64 #1
+[   32.147175] Hardware name: Red Hat KVM, BIOS 1.10.2-3.el7_4.1 04/01/2014
+[   32.147730] Call Trace:
+[   32.147971]  <TASK>
+[   32.148183]  dump_stack_lvl+0x48/0x70
+[   32.148514]  dump_stack+0x10/0x20
+[   32.148820]  netdev_core_pick_tx+0xb1/0xe0
+[   32.149180]  __dev_queue_xmit+0x529/0xcf0
+[   32.149533]  ? __check_object_size.part.0+0x21c/0x2c0
+[   32.149967]  ip_finish_output2+0x278/0x560
+[   32.150327]  __ip_finish_output+0x1fe/0x2f0
+[   32.150690]  ip_finish_output+0x2a/0xd0
+[   32.151032]  ip_output+0x7a/0x110
+[   32.151337]  ? __pfx_ip_finish_output+0x10/0x10
+[   32.151733]  ip_local_out+0x5e/0x70
+[   32.152054]  ip_send_skb+0x19/0x50
+[   32.152366]  udp_send_skb.isra.0+0x163/0x3a0
+[   32.152736]  udp_sendmsg+0xba8/0xec0
+[   32.153060]  ? __folio_memcg_unlock+0x25/0x60
+[   32.153445]  ? __pfx_ip_generic_getfrag+0x10/0x10
+[   32.153854]  ? sock_has_perm+0x85/0xa0
+[   32.154190]  inet_sendmsg+0x6d/0x80
+[   32.154508]  ? inet_sendmsg+0x6d/0x80
+[   32.154838]  sock_sendmsg+0x62/0x70
+[   32.155152]  ____sys_sendmsg+0x134/0x290
+[   32.155499]  ___sys_sendmsg+0x81/0xc0
+[   32.155828]  ? _get_random_bytes.part.0+0x79/0x1a0
+[   32.156240]  ? ip4_datagram_release_cb+0x5f/0x1e0
+[   32.156649]  ? get_random_u16+0x69/0xf0
+[   32.156989]  ? __fget_light+0xcf/0x110
+[   32.157326]  __sys_sendmmsg+0xc4/0x210
+[   32.157657]  ? __sys_connect+0xb7/0xe0
+[   32.157995]  ? __audit_syscall_entry+0xce/0x140
+[   32.158388]  ? syscall_trace_enter.isra.0+0x12c/0x1a0
+[   32.158820]  __x64_sys_sendmmsg+0x24/0x30
+[   32.159171]  do_syscall_64+0x38/0x90
+[   32.159493]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
 
-Or maybe Rob can pick it up?
+Fix that by reducing txq number as the non-existent primary-dev does.
 
-Best regards,
-Krzysztof
+Fixes: cfc80d9a1163 ("net: Introduce net_failover driver")
+Signed-off-by: Faicker Mo <faicker.mo@ucloud.cn>
+---
+ drivers/net/net_failover.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/net/net_failover.c b/drivers/net/net_failover.c
+index 7a28e082436e..d0c916a53d7c 100644
+--- a/drivers/net/net_failover.c
++++ b/drivers/net/net_failover.c
+@@ -130,14 +130,10 @@ static u16 net_failover_select_queue(struct net_device *dev,
+ 			txq = ops->ndo_select_queue(primary_dev, skb, sb_dev);
+ 		else
+ 			txq = netdev_pick_tx(primary_dev, skb, NULL);
+-
+-		qdisc_skb_cb(skb)->slave_dev_queue_mapping = skb->queue_mapping;
+-
+-		return txq;
++	} else {
++		txq = skb_rx_queue_recorded(skb) ? skb_get_rx_queue(skb) : 0;
+ 	}
+ 
+-	txq = skb_rx_queue_recorded(skb) ? skb_get_rx_queue(skb) : 0;
+-
+ 	/* Save the original txq to restore before passing to the driver */
+ 	qdisc_skb_cb(skb)->slave_dev_queue_mapping = skb->queue_mapping;
+ 
+-- 
+2.39.1
 
