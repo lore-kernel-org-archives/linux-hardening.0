@@ -2,117 +2,208 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A09B1C761AF
-	for <linux-hardening@archiver.kernel.org>; Mon, 27 Mar 2023 09:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B1CEC76195
+	for <linux-hardening@archiver.kernel.org>; Mon, 27 Mar 2023 17:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232453AbjC0Jaj (ORCPT
+        id S232692AbjC0RBu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 27 Mar 2023 05:30:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44812 "EHLO
+        Mon, 27 Mar 2023 13:01:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233097AbjC0Jai (ORCPT
+        with ESMTP id S232602AbjC0RBk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 27 Mar 2023 05:30:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7617D46AA;
-        Mon, 27 Mar 2023 02:30:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8DqjXeO1tc2m6wXJ4uu/hd4TZQ+nIIRzc4UwCMqvjG8=; b=ju+MEMZ16NRWnIDWX78+WhqTZD
-        ikrhVB7IopcJONyDZgU+z4k71dPM9zCprIgO9Yh6YW/iq+MBarJoh/04SRlg3RmPOLuA8DaaoZY4F
-        F8Z2boePxShTaCL+vLO/ogb7T0r0qjHF6PRAE3bn18c0iH1Lc6T1XWvk+1uOQggT65mD3k1/PnYkr
-        sHSgh4bFQu3XQgTnsNGV1nzKLrse91+KjHFkGmTsYep0WiKeiiAjAvOZ1FQJU/AR7XmJ1k1xh2itY
-        Ujh0eJBNbGzJQkLenUzehssEwGgfLXN4fqfc1sxeAcUHVYt0EZ2cH5ZbRwwMCEg5BSk/1bpaWeayX
-        rtGZ0RDA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pgjBC-007HH2-81; Mon, 27 Mar 2023 09:30:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 488B73001E5;
-        Mon, 27 Mar 2023 11:30:17 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E8DF82014D86B; Mon, 27 Mar 2023 11:30:16 +0200 (CEST)
-Date:   Mon, 27 Mar 2023 11:30:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dan Li <ashimida.1990@gmail.com>
-Cc:     Aaron Tomlin <atomlin@redhat.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        gcc-patches@gcc.gnu.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
+        Mon, 27 Mar 2023 13:01:40 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 298B13C31;
+        Mon, 27 Mar 2023 10:01:36 -0700 (PDT)
+Received: by mail-oi1-f175.google.com with SMTP id r14so1183789oiw.12;
+        Mon, 27 Mar 2023 10:01:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679936495;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=A1cer0myC+DWXq6An3rnd+VU8s9Hlurez1Dtqg1RAXY=;
+        b=ROpqpACInh74Ci1JpVcsye1pNNkh2QC+5vt5MySEHLTB65qEc0+9VAo1Hdmp92yWRP
+         YqCoeKNy5+xl+WWB/sgoqeMvEsaSVJXPS8NFw61uk75VCWpdMk+czKjPbMGw5AmVtRAe
+         QRuG30rc/GoZKrawXgMn363rhx+86VoOaCmy7OdSIlTYLWKhSMo/z48a34Fre5g0iYlC
+         t4aIZVvRaJWjS/rYeBrs5mdQ3/BasskUEMzIZcSDsHKxE/oZopljBn8OPAnR0O93Y0i1
+         dwB0VJjt0qkO5sIQsbq3M5QOOXJ5GmcbbVEmCQQr1bIZFRHqOhWNfR6WVBbPJQFiIu+I
+         Xfgw==
+X-Gm-Message-State: AO0yUKXx0guzd08hsBFqKI01Vln+EpBMhLFVEYDcmUWXe5LMQAgVB2h8
+        A+qRuofsUUWJ1P92KYTGAg==
+X-Google-Smtp-Source: AK7set9SgajdaFm03+ruzVbdS8nr9AGDu1wFpBNE1MkKTQ3SXd6u3tEkVayylaoJu/IVuphkeImN8w==
+X-Received: by 2002:aca:2217:0:b0:387:6a3b:5a86 with SMTP id b23-20020aca2217000000b003876a3b5a86mr5256962oic.28.1679936493734;
+        Mon, 27 Mar 2023 10:01:33 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id n67-20020acabd46000000b0038919e6eb5esm1610639oif.3.2023.03.27.10.01.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Mar 2023 10:01:33 -0700 (PDT)
+Received: (nullmailer pid 4104036 invoked by uid 1000);
+        Mon, 27 Mar 2023 17:01:32 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Kees Cook <keescook@chromium.org>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Marco Elver <elver@google.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Roth <michael.roth@amd.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Richard Sandiford <richard.sandiford@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Song Liu <song@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Rix <trix@redhat.com>, Uros Bizjak <ubizjak@gmail.com>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        Yuntao Wang <ytcoode@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-modules@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC/RFT,V2] CFI: Add support for gcc CFI in aarch64
-Message-ID: <20230327093016.GB4253@hirez.programming.kicks-ass.net>
-References: <20221219061758.23321-1-ashimida.1990@gmail.com>
- <20230325085416.95191-1-ashimida.1990@gmail.com>
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] dt-bindings: reserved-memory: Drop unneeded quotes
+Date:   Mon, 27 Mar 2023 12:01:22 -0500
+Message-Id: <20230327170122.4103518-1-robh@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230325085416.95191-1-ashimida.1990@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Mar 25, 2023 at 01:54:16AM -0700, Dan Li wrote:
+Cleanup bindings dropping unneeded quotes. Once all these are fixed,
+checking for this can be enabled in yamllint.
 
-> In the compiler part[4], most of the content is the same as Sami's
-> implementation[3], except for some minor differences, mainly including:
-> 
-> 1. The function typeid is calculated differently and it is difficult
-> to be consistent.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/reserved-memory/google,open-dice.yaml          | 2 +-
+ .../bindings/reserved-memory/nvidia,tegra210-emc-table.yaml | 2 +-
+ .../devicetree/bindings/reserved-memory/phram.yaml          | 4 ++--
+ .../devicetree/bindings/reserved-memory/qcom,cmd-db.yaml    | 6 +++---
+ .../devicetree/bindings/reserved-memory/qcom,rmtfs-mem.yaml | 6 +++---
+ .../devicetree/bindings/reserved-memory/ramoops.yaml        | 6 +++---
+ .../bindings/reserved-memory/shared-dma-pool.yaml           | 2 +-
+ 7 files changed, 14 insertions(+), 14 deletions(-)
 
-This means there is an effective ABI break between the compilers, which
-is sad :-( Is there really nothing to be done about this?
+diff --git a/Documentation/devicetree/bindings/reserved-memory/google,open-dice.yaml b/Documentation/devicetree/bindings/reserved-memory/google,open-dice.yaml
+index a924fcfca085..c591ec37d7e8 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/google,open-dice.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/google,open-dice.yaml
+@@ -16,7 +16,7 @@ maintainers:
+   - David Brazdil <dbrazdil@google.com>
+ 
+ allOf:
+-  - $ref: "reserved-memory.yaml"
++  - $ref: reserved-memory.yaml
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/reserved-memory/nvidia,tegra210-emc-table.yaml b/Documentation/devicetree/bindings/reserved-memory/nvidia,tegra210-emc-table.yaml
+index b1b0421a4255..e2ace3df942a 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/nvidia,tegra210-emc-table.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/nvidia,tegra210-emc-table.yaml
+@@ -14,7 +14,7 @@ description: On Tegra210, firmware passes a binary representation of the
+   EMC frequency table via a reserved memory region.
+ 
+ allOf:
+-  - $ref: "reserved-memory.yaml"
++  - $ref: reserved-memory.yaml
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/reserved-memory/phram.yaml b/Documentation/devicetree/bindings/reserved-memory/phram.yaml
+index 6c4db28015f1..65c7cacf9be4 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/phram.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/phram.yaml
+@@ -17,8 +17,8 @@ maintainers:
+   - Vincent Whitchurch <vincent.whitchurch@axis.com>
+ 
+ allOf:
+-  - $ref: "reserved-memory.yaml"
+-  - $ref: "/schemas/mtd/mtd.yaml"
++  - $ref: reserved-memory.yaml
++  - $ref: /schemas/mtd/mtd.yaml
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.yaml b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.yaml
+index df1b5e0ed3f4..610f8ef37e8d 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/qcom,cmd-db.yaml
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: "http://devicetree.org/schemas/reserved-memory/qcom,cmd-db.yaml#"
+-$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/reserved-memory/qcom,cmd-db.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+ title: Qualcomm Command DB
+ 
+@@ -20,7 +20,7 @@ maintainers:
+   - Bjorn Andersson <bjorn.andersson@linaro.org>
+ 
+ allOf:
+-  - $ref: "reserved-memory.yaml"
++  - $ref: reserved-memory.yaml
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.yaml b/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.yaml
+index 08eb10c25821..bab982f00485 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/qcom,rmtfs-mem.yaml
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: "http://devicetree.org/schemas/reserved-memory/qcom,rmtfs-mem.yaml#"
+-$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/reserved-memory/qcom,rmtfs-mem.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+ title: Qualcomm Remote File System Memory
+ 
+@@ -15,7 +15,7 @@ maintainers:
+   - Bjorn Andersson <bjorn.andersson@linaro.org>
+ 
+ allOf:
+-  - $ref: "reserved-memory.yaml"
++  - $ref: reserved-memory.yaml
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+index 0391871cf44d..45cc39ecc9f8 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+ %YAML 1.2
+ ---
+-$id: "http://devicetree.org/schemas/reserved-memory/ramoops.yaml#"
+-$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/reserved-memory/ramoops.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+ title: Ramoops oops/panic logger
+ 
+@@ -27,7 +27,7 @@ maintainers:
+   - Kees Cook <keescook@chromium.org>
+ 
+ allOf:
+-  - $ref: "reserved-memory.yaml"
++  - $ref: reserved-memory.yaml
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/reserved-memory/shared-dma-pool.yaml b/Documentation/devicetree/bindings/reserved-memory/shared-dma-pool.yaml
+index 47696073b665..457de0920cd1 100644
+--- a/Documentation/devicetree/bindings/reserved-memory/shared-dma-pool.yaml
++++ b/Documentation/devicetree/bindings/reserved-memory/shared-dma-pool.yaml
+@@ -10,7 +10,7 @@ maintainers:
+   - devicetree-spec@vger.kernel.org
+ 
+ allOf:
+-  - $ref: "reserved-memory.yaml"
++  - $ref: reserved-memory.yaml
+ 
+ properties:
+   compatible:
+-- 
+2.39.2
+
