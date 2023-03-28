@@ -2,127 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C3EC76195
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Mar 2023 02:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D54BC761A6
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Mar 2023 06:44:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230380AbjC1CcM (ORCPT
+        id S229645AbjC1GoI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 27 Mar 2023 22:32:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35722 "EHLO
+        Tue, 28 Mar 2023 02:44:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232349AbjC1CcK (ORCPT
+        with ESMTP id S232220AbjC1Gnw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 27 Mar 2023 22:32:10 -0400
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3FC26B7;
-        Mon, 27 Mar 2023 19:32:07 -0700 (PDT)
-X-UUID: 9e4cd9b106cf4a5684c3be19ffc29b47-20230328
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.20,REQID:8978e95c-fe86-4f39-b70c-94e2bf5e2d58,IP:-32
-        768,URL:-32768,TC:-32768,Content:-32768,EDM:-32768,RT:-32768,SF:-32768,FIL
-        E:-32768,BULK:-32768,RULE:Release_Ham,ACTION:release,TS:0
-X-CID-INFO: VERSION:1.1.20,REQID:8978e95c-fe86-4f39-b70c-94e2bf5e2d58,IP:-3276
-        8,URL:-32768,TC:-32768,Content:-32768,EDM:-32768,RT:-32768,SF:-32768,FILE:
-        -32768,BULK:-32768,RULE:Release_Ham,ACTION:release,TS:0
-X-CID-META: VersionHash:25b5999,CLOUDID:nil,BulkID:nil,BulkQuantity:0,Recheck:
-        0,SF:nil,TC:nil,Content:nil,EDM:nil,IP:nil,URL:nil,File:nil,Bulk:nil,QS:ni
-        l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0
-X-CID-BVR: 0
-X-UUID: 9e4cd9b106cf4a5684c3be19ffc29b47-20230328
-X-User: zhouzongmin@kylinos.cn
-Received: from thinkpadx13gen2i.. [(116.128.244.169)] by mailgw
-        (envelope-from <zhouzongmin@kylinos.cn>)
-        (Generic MTA)
-        with ESMTP id 917128933; Tue, 28 Mar 2023 10:31:33 +0800
-From:   Zongmin Zhou <zhouzongmin@kylinos.cn>
-To:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch
-Cc:     keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        dmitry.baryshkov@linaro.org, neil.armstrong@linaro.org,
-        laurentiu.palcu@oss.nxp.com, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Zongmin Zhou <zhouzongmin@kylinos.cn>
-Subject: [PATCH] drm/probe_helper: fix the warning reported when calling drm_kms_helper_poll_disable during suspend
-Date:   Tue, 28 Mar 2023 10:31:29 +0800
-Message-Id: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+        Tue, 28 Mar 2023 02:43:52 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AF0130D2
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Mar 2023 23:43:50 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id eh3so45278409edb.11
+        for <linux-hardening@vger.kernel.org>; Mon, 27 Mar 2023 23:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679985829;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nmTvziNt2VFrSmXaXHn7cfTQldiBzclyda4PoCjJxWE=;
+        b=DPaN2l40XfdN9xbWxJI9FLfIuX9bVwJgZdpiuAH2PKxv20nB7cEwX+D0+QXFsj+zH9
+         +R1BNX9t/VB8qVFQX5HRW8ldTicErtXgvtiRUpE7zBGyldIZP5WMRiHTutasVJh/FI1k
+         +U6SCuoWIjlfn9DFlpm45jzH5IpyHbU/g6/OEdC7WV2Qw19yaBwU6RI10CZzUfrWiCga
+         qmeHp8d+OVI0OgV5MdMsDiXhHo6wAkVBSHzkWHaMdQmrA82iwZKi05gRY3EIoeZyuwZq
+         pt+R/cAjakQZJ+U2JdSc4cGhXofPFgzr4dqJVbVgSWSdtyq2N2+9d7Vl4u5O7fAJxF/3
+         ziyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679985829;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nmTvziNt2VFrSmXaXHn7cfTQldiBzclyda4PoCjJxWE=;
+        b=HY7rGBp3SBuv7JdhFwdda2PmLLLOLnaMtZnPJKdsFRFTyrpYfsTBuueBEgnrjowap2
+         jJlzqkJIa4RvUatS37vNCThmKcVs+F1M6DlPdZhCxas6Kr2cQ5gLiOzQ/Ye9ZL2oKOAs
+         bZT47lHKVB9+SeZlkJRFn1kuIPel6HjDfntsSi3AjZA5EEqMblS40WJprQ9rD/F9Bsrb
+         vhN1XoyouNHeoJfLJYOWLZmgCq8HWWZHtWEiWK0rG5o6oIRrOQhYibv+8dMYv/+aOF1P
+         CRwFi+oolQ6cvgR8fdAORuOwuRrYo49YzoABkKJU4Z27SnOVufqFeFEwzzOYNNwsEbcy
+         DihQ==
+X-Gm-Message-State: AAQBX9c/Y+0w69RRv90ZhI6sBPjU2pN2b2Cj9+MyksjrMerroCd1oeLg
+        s7KkeXDs7ylbZtg1/kboTiHzIw==
+X-Google-Smtp-Source: AKy350ZHO7213F8SJfPOYH/2LqcuXOEigoE0IsXpMbVKyLHe8zZ/kqfEcihEQE/XDSC44GiNCdeFFg==
+X-Received: by 2002:a17:906:b303:b0:933:48ce:73a5 with SMTP id n3-20020a170906b30300b0093348ce73a5mr14652999ejz.56.1679985829059;
+        Mon, 27 Mar 2023 23:43:49 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:9e92:dca6:241d:71b6? ([2a02:810d:15c0:828:9e92:dca6:241d:71b6])
+        by smtp.gmail.com with ESMTPSA id s30-20020a50ab1e000000b004c5d1a15bd5sm15404666edc.69.2023.03.27.23.43.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Mar 2023 23:43:48 -0700 (PDT)
+Message-ID: <07700bca-a717-aeb1-2658-a1dbda00affa@linaro.org>
+Date:   Tue, 28 Mar 2023 08:43:47 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH] dt-bindings: reserved-memory: Drop unneeded quotes
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20230327170122.4103518-1-robh@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230327170122.4103518-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When drivers call drm_kms_helper_poll_disable from
-their device suspend implementation without enabled output polling before,
-following warning will be reported,due to work->func not be initialized:
+On 27/03/2023 19:01, Rob Herring wrote:
+> Cleanup bindings dropping unneeded quotes. Once all these are fixed,
+> checking for this can be enabled in yamllint.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-[   55.141361] WARNING: CPU: 3 PID: 372 at kernel/workqueue.c:3066 __flush_work+0x22f/0x240
-[   55.141382] Modules linked in: nls_iso8859_1 snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hda_core snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq intel_rapl_msr intel_rapl_common bochs drm_vram_helper drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3 aesni_intel drm_kms_helper joydev input_leds syscopyarea crypto_simd snd cryptd sysfillrect sysimgblt mac_hid serio_raw soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp parport drm ramoops reed_solomon pstore_blk pstore_zone efi_pstore virtio_rng ip_tables x_tables autofs4 hid_generic usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover virtio_blk xhci_pci_renesas failover
-[   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not tainted 6.2.0-rc6+ #16
-[   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[   55.141435] Workqueue: events_unbound async_run_entry_fn
-[   55.141441] RIP: 0010:__flush_work+0x22f/0x240
-[   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff ff 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff ff 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2 54 d8 00 66 90 90 90 90 90 90
-[   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
-[   55.141449] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff9b72bcbe
-[   55.141450] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ff3ea01e4265e330
-[   55.141451] RBP: ff59221940833c90 R08: 0000000000000000 R09: 8080808080808080
-[   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f R12: ff3ea01e4265e330
-[   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80 R15: 0000000000000001
-[   55.141455] FS:  0000000000000000(0000) GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
-[   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005 CR4: 0000000000771ee0
-[   55.141464] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   55.141466] PKRU: 55555554
-[   55.141467] Call Trace:
-[   55.141469]  <TASK>
-[   55.141472]  ? pcie_wait_cmd+0xdf/0x220
-[   55.141478]  ? mptcp_seq_show+0xe0/0x180
-[   55.141484]  __cancel_work_timer+0x124/0x1b0
-[   55.141487]  cancel_delayed_work_sync+0x17/0x20
-[   55.141490]  drm_kms_helper_poll_disable+0x26/0x40 [drm_kms_helper]
-[   55.141516]  drm_mode_config_helper_suspend+0x25/0x90 [drm_kms_helper]
-[   55.141531]  ? __pm_runtime_resume+0x64/0x90
-[   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
-[   55.141540]  pci_pm_suspend+0x8b/0x1b0
-[   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
-[   55.141547]  dpm_run_callback+0x4c/0x160
-[   55.141550]  __device_suspend+0x14c/0x4c0
-[   55.141553]  async_suspend+0x24/0xa0
-[   55.141555]  async_run_entry_fn+0x34/0x120
-[   55.141557]  process_one_work+0x21a/0x3f0
-[   55.141560]  worker_thread+0x4e/0x3c0
-[   55.141563]  ? __pfx_worker_thread+0x10/0x10
-[   55.141565]  kthread+0xf2/0x120
-[   55.141568]  ? __pfx_kthread+0x10/0x10
-[   55.141570]  ret_from_fork+0x29/0x50
-[   55.141575]  </TASK>
-[   55.141575] ---[ end trace 0000000000000000 ]---
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Fixes: a4e771729a51 ("drm/probe_helper: sort out poll_running vs poll_enabled")
-Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
----
- drivers/gpu/drm/drm_probe_helper.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Best regards,
+Krzysztof
 
-diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
-index 8127be134c39..ac72b18e2257 100644
---- a/drivers/gpu/drm/drm_probe_helper.c
-+++ b/drivers/gpu/drm/drm_probe_helper.c
-@@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct drm_device *dev)
- 	if (dev->mode_config.poll_running)
- 		drm_kms_helper_disable_hpd(dev);
- 
--	cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
-+	if (dev->mode_config.poll_enabled)
-+		cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
- 
- 	dev->mode_config.poll_running = false;
- }
--- 
-2.34.1
-
-
-No virus found
-		Checked by Hillstone Network AntiVirus
