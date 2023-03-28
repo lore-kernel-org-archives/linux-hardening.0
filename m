@@ -2,34 +2,34 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD99FC76195
-	for <linux-hardening@archiver.kernel.org>; Tue, 28 Mar 2023 11:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDB2C76195
+	for <linux-hardening@archiver.kernel.org>; Tue, 28 Mar 2023 12:08:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231374AbjC1L6F (ORCPT
+        id S232211AbjC1MIq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Mar 2023 07:58:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51438 "EHLO
+        Tue, 28 Mar 2023 08:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjC1L6E (ORCPT
+        with ESMTP id S231987AbjC1MIp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Mar 2023 07:58:04 -0400
+        Tue, 28 Mar 2023 08:08:45 -0400
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 67B376E8B;
-        Tue, 28 Mar 2023 04:58:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D2CDA9008;
+        Tue, 28 Mar 2023 05:08:38 -0700 (PDT)
 Received: from loongson.cn (unknown [192.168.200.1])
-        by gateway (Coremail) with SMTP id _____8AxEk5H1iJkJhQTAA--.17781S3;
-        Tue, 28 Mar 2023 19:57:59 +0800 (CST)
+        by gateway (Coremail) with SMTP id _____8DxAf_F2CJkjxUTAA--.29397S3;
+        Tue, 28 Mar 2023 20:08:37 +0800 (CST)
 Received: from [0.0.0.0] (unknown [192.168.200.1])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxur1F1iJkSmAPAA--.10783S3;
-        Tue, 28 Mar 2023 19:57:58 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxqr3C2CJk3GIPAA--.8883S3;
+        Tue, 28 Mar 2023 20:08:36 +0800 (CST)
 Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To:     Qing Zhang <zhangqing@loongson.cn>
-References: <20230328111714.2056-1-zhangqing@loongson.cn>
-Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+To:     Qing Zhang <zhangqing@loongson.cn>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
         Jonathan Corbet <corbet@lwn.net>,
         Huacai Chen <chenhuacai@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20230328111714.2056-1-zhangqing@loongson.cn>
+Cc:     Alexander Potapenko <glider@google.com>,
         Andrey Konovalov <andreyknvl@gmail.com>,
         Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
@@ -39,31 +39,31 @@ Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
         linux-mm@kvack.org, loongarch@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 From:   Youling Tang <tangyouling@loongson.cn>
-Message-ID: <39af0c57-acff-d36c-a67d-e4a6783b57cd@loongson.cn>
-Date:   Tue, 28 Mar 2023 19:57:57 +0800
+Message-ID: <4647c773-c68f-beb3-f61d-4c464259ddf4@loongson.cn>
+Date:   Tue, 28 Mar 2023 20:08:34 +0800
 User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
  Thunderbird/45.4.0
 MIME-Version: 1.0
 In-Reply-To: <20230328111714.2056-1-zhangqing@loongson.cn>
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8Cxur1F1iJkSmAPAA--.10783S3
+X-CM-TRANSID: AQAAf8Bxqr3C2CJk3GIPAA--.8883S3
 X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvAXoWfJF1xuFWfKF4ftryrKrWUtwb_yoW8XFW5to
-        WFkF17Kw48Gw47CrZ8Ww1DJFyUtr1qkrWkZ39rZr1fWF1xAFW3C3yUtayagry3t34kGr1f
-        W3y2gFZay3sYyrn8n29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
+X-Coremail-Antispam: 1Uk129KBjvAXoWfAF43Zr15CFWxGry3Xw17trb_yoW5CF15Ko
+        WFyF47Kw48Gw17K39xXw1UJFyUtr1qk397Z39FvF4fWF1xArWYk3yUtFWagry7K395tr13
+        Wayvg39av3Wvyrnxn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
         J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
         UUvm1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64
-        kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY
+        kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY
         1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
         kF7I0E14v26F4UJVW0owAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
         jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
         x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
         r21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8V
-        WrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAF
+        WrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r4a6rW5MI8I3I0E5I8CrVAF
         wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc4
-        0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AK
-        xVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
+        0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AK
+        xVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
         1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUUGjg7UU
         UUU==
 Precedence: bulk
@@ -78,10 +78,16 @@ On 03/28/2023 07:17 PM, Qing Zhang wrote:
 > space(256T available) is insufficient to map all these segments to kasan
 > shadow memory with the common formula provided by kasan core, saying
 > addr >> KASAN_SHADOW_SCALE_SHIFT) + KASAN_SHADOW_OFFSET
+
+If you can provide a virtual memory layout (similar to 
+Documentation/riscv/vm-layout.rst), it will be convenient for everyone 
+to review the relevant code, and it will also better explain why 
+LoongArch needs to implement kasan_mem_to_shadow() separately.
+
+Thanks,
+Youling.
 >
 > So Loongarch has a ARCH specific mapping formula,different segments
-`Loongarch` -> `LoongArch`
-
 > are mapped individually, and only limited length of space of that
 > specific segment is mapped to shadow.
 >
@@ -224,11 +230,6 @@ On 03/28/2023 07:17 PM, Qing Zhang wrote:
 > +/* 64-bit segment value. */
 > +#define XKPRANGE_UC_SEG		(0x8000)
 > +#define XKPRANGE_CC_SEG		(0x9000)
-It is not recommended to use a fixed value, it can be as follows,
-
-CACHE_BASE >> DMW_PABITS
-UNCACHE_BASE >> DMW_PABITS
-
 > +#define XKVRANGE_VC_SEG		(0xffff)
 > +
 > +/* Cached */
@@ -428,8 +429,6 @@ UNCACHE_BASE >> DMW_PABITS
 > +	#ifdef CONFIG_KASAN
 > +	bl              kasan_early_init
 > +	#endif
-No tab operation is required before `#ifdef`.
-
 >
 >  	bl		start_kernel
 >  	ASM_BUG()
@@ -482,11 +481,477 @@ No tab operation is required before `#ifdef`.
 > +#if defined(CONFIG_KASAN)
 > +	kasan_init();
 > +#endif
-Can be added in arch/loongarch/include/asm/kasan.h,
-#else
-static inline void kasan_init(void) { }
-#endif
-
-
-Youling.
+>  }
+> diff --git a/arch/loongarch/lib/memcpy.S b/arch/loongarch/lib/memcpy.S
+> index 3b7e1dec7109..db92ef7bef3a 100644
+> --- a/arch/loongarch/lib/memcpy.S
+> +++ b/arch/loongarch/lib/memcpy.S
+> @@ -10,16 +10,18 @@
+>  #include <asm/export.h>
+>  #include <asm/regdef.h>
+>
+> -SYM_FUNC_START(memcpy)
+> +SYM_FUNC_START_WEAK(memcpy)
+>  	/*
+>  	 * Some CPUs support hardware unaligned access
+>  	 */
+>  	ALTERNATIVE	"b __memcpy_generic", \
+>  			"b __memcpy_fast", CPU_FEATURE_UAL
+>  SYM_FUNC_END(memcpy)
+> +SYM_FUNC_ALIAS(__memcpy, memcpy)
+>  _ASM_NOKPROBE(memcpy)
+>
+>  EXPORT_SYMBOL(memcpy)
+> +EXPORT_SYMBOL(__memcpy)
+>
+>  /*
+>   * void *__memcpy_generic(void *dst, const void *src, size_t n)
+> diff --git a/arch/loongarch/lib/memmove.S b/arch/loongarch/lib/memmove.S
+> index b796c3d6da05..a2dec5899f5c 100644
+> --- a/arch/loongarch/lib/memmove.S
+> +++ b/arch/loongarch/lib/memmove.S
+> @@ -10,7 +10,7 @@
+>  #include <asm/export.h>
+>  #include <asm/regdef.h>
+>
+> -SYM_FUNC_START(memmove)
+> +SYM_FUNC_START_WEAK(memmove)
+>  	blt	a0, a1, 1f	/* dst < src, memcpy */
+>  	blt	a1, a0, 3f	/* src < dst, rmemcpy */
+>  	jr	ra		/* dst == src, return */
+> @@ -19,27 +19,30 @@ SYM_FUNC_START(memmove)
+>  1:	ori	a3, zero, 64
+>  	sub.d	t0, a1, a0
+>  	blt	t0, a3, 2f
+> -	b	memcpy
+> +	b	__memcpy
+>  2:	b	__memcpy_generic
+>
+>  	/* if (dst - src) < 64, copy 1 byte at a time */
+>  3:	ori	a3, zero, 64
+>  	sub.d	t0, a0, a1
+>  	blt	t0, a3, 4f
+> -	b	rmemcpy
+> +	b	__rmemcpy
+>  4:	b	__rmemcpy_generic
+>  SYM_FUNC_END(memmove)
+> +SYM_FUNC_ALIAS(__memmove, memmove)
+>  _ASM_NOKPROBE(memmove)
+>
+>  EXPORT_SYMBOL(memmove)
+> +EXPORT_SYMBOL(__memmove)
+> +
+> +SYM_FUNC_START(__rmemcpy)
+>
+> -SYM_FUNC_START(rmemcpy)
+>  	/*
+>  	 * Some CPUs support hardware unaligned access
+>  	 */
+>  	ALTERNATIVE	"b __rmemcpy_generic", \
+>  			"b __rmemcpy_fast", CPU_FEATURE_UAL
+> -SYM_FUNC_END(rmemcpy)
+> +SYM_FUNC_END(__rmemcpy)
+>  _ASM_NOKPROBE(rmemcpy)
+>
+>  /*
+> diff --git a/arch/loongarch/lib/memset.S b/arch/loongarch/lib/memset.S
+> index a9eb732ab2ad..b5cdbecba8ef 100644
+> --- a/arch/loongarch/lib/memset.S
+> +++ b/arch/loongarch/lib/memset.S
+> @@ -16,16 +16,18 @@
+>  	bstrins.d \r0, \r0, 63, 32
+>  .endm
+>
+> -SYM_FUNC_START(memset)
+> +SYM_FUNC_START_WEAK(memset)
+>  	/*
+>  	 * Some CPUs support hardware unaligned access
+>  	 */
+>  	ALTERNATIVE	"b __memset_generic", \
+>  			"b __memset_fast", CPU_FEATURE_UAL
+>  SYM_FUNC_END(memset)
+> +SYM_FUNC_ALIAS(__memset, memset)
+>  _ASM_NOKPROBE(memset)
+>
+>  EXPORT_SYMBOL(memset)
+> +EXPORT_SYMBOL(__memset)
+>
+>  /*
+>   * void *__memset_generic(void *s, int c, size_t n)
+> diff --git a/arch/loongarch/mm/Makefile b/arch/loongarch/mm/Makefile
+> index 8ffc6383f836..6e50cf6cf733 100644
+> --- a/arch/loongarch/mm/Makefile
+> +++ b/arch/loongarch/mm/Makefile
+> @@ -7,3 +7,5 @@ obj-y				+= init.o cache.o tlb.o tlbex.o extable.o \
+>  				   fault.o ioremap.o maccess.o mmap.o pgtable.o page.o
+>
+>  obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+> +obj-$(CONFIG_KASAN)		+= kasan_init.o
+> +KASAN_SANITIZE_kasan_init.o     := n
+> diff --git a/arch/loongarch/mm/kasan_init.c b/arch/loongarch/mm/kasan_init.c
+> new file mode 100644
+> index 000000000000..fb3077f8d508
+> --- /dev/null
+> +++ b/arch/loongarch/mm/kasan_init.c
+> @@ -0,0 +1,255 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 Loongson Technology Corporation Limited
+> + */
+> +#define pr_fmt(fmt) "kasan: " fmt
+> +#include <linux/kasan.h>
+> +#include <linux/memblock.h>
+> +#include <linux/sched/task.h>
+> +
+> +#include <asm/tlbflush.h>
+> +#include <asm/pgalloc.h>
+> +#include <asm-generic/sections.h>
+> +
+> +static pgd_t tmp_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+> +
+> +static inline int __p4d_none(int early, p4d_t p4d) {return 0; }
+> +
+> +#ifndef __PAGETABLE_PUD_FOLDED
+> +#define __p4d_none(early, p4d) (early ? (p4d_val(p4d) == 0) : \
+> +(__pa(p4d_val(p4d)) == (unsigned long)__pa(kasan_early_shadow_pud)))
+> +#endif
+> +
+> +#define __pud_none(early, pud) (early ? (pud_val(pud) == 0) : \
+> +(__pa(pud_val(pud)) == (unsigned long)__pa(kasan_early_shadow_pmd)))
+> +
+> +#define __pmd_none(early, pmd) (early ? (pmd_val(pmd) == 0) : \
+> +(__pa(pmd_val(pmd)) == (unsigned long)__pa(kasan_early_shadow_pte)))
+> +
+> +#define __pte_none(early, pte) (early ? pte_none(pte) : \
+> +((pte_val(pte) & _PFN_MASK) == (unsigned long)__pa(kasan_early_shadow_page)))
+> +
+> +bool kasan_early_stage = true;
+> +
+> +/*
+> + * Alloc memory for shadow memory page table.
+> + */
+> +static phys_addr_t __init kasan_alloc_zeroed_page(int node)
+> +{
+> +	void *p = memblock_alloc_try_nid(PAGE_SIZE, PAGE_SIZE,
+> +					__pa(MAX_DMA_ADDRESS),
+> +					MEMBLOCK_ALLOC_ACCESSIBLE, node);
+> +	if (!p)
+> +		panic("%s: Failed to allocate %lu bytes align=0x%lx nid=%d from=%llx\n",
+> +			__func__, PAGE_SIZE, PAGE_SIZE, node, __pa(MAX_DMA_ADDRESS));
+> +	return __pa(p);
+> +}
+> +
+> +static pte_t *kasan_pte_offset(pmd_t *pmdp, unsigned long addr, int node,
+> +				     bool early)
+> +{
+> +	if (__pmd_none(early, READ_ONCE(*pmdp))) {
+> +		phys_addr_t pte_phys = early ?
+> +				__pa_symbol(kasan_early_shadow_pte)
+> +					: kasan_alloc_zeroed_page(node);
+> +		if (!early)
+> +			memcpy(__va(pte_phys), kasan_early_shadow_pte,
+> +				sizeof(kasan_early_shadow_pte));
+> +		pmd_populate_kernel(NULL, pmdp, (pte_t *)__va(pte_phys));
+> +	}
+> +
+> +	return pte_offset_kernel(pmdp, addr);
+> +}
+> +
+> +static inline void kasan_set_pgd(pgd_t *pgdp, pgd_t pgdval)
+> +{
+> +	WRITE_ONCE(*pgdp, pgdval);
+> +}
+> +
+> +static pmd_t *kasan_pmd_offset(pud_t *pudp, unsigned long addr, int node,
+> +				     bool early)
+> +{
+> +	if (__pud_none(early, READ_ONCE(*pudp))) {
+> +		phys_addr_t pmd_phys = early ?
+> +				__pa_symbol(kasan_early_shadow_pmd)
+> +					: kasan_alloc_zeroed_page(node);
+> +		if (!early)
+> +			memcpy(__va(pmd_phys), kasan_early_shadow_pmd,
+> +				sizeof(kasan_early_shadow_pmd));
+> +		pud_populate(&init_mm, pudp, (pmd_t *)__va(pmd_phys));
+> +	}
+> +
+> +	return pmd_offset(pudp, addr);
+> +}
+> +
+> +static pud_t *__init kasan_pud_offset(p4d_t *p4dp, unsigned long addr, int node,
+> +					    bool early)
+> +{
+> +	if (__p4d_none(early, READ_ONCE(*p4dp))) {
+> +		phys_addr_t pud_phys = early ?
+> +			__pa_symbol(kasan_early_shadow_pud)
+> +				: kasan_alloc_zeroed_page(node);
+> +		if (!early)
+> +			memcpy(__va(pud_phys), kasan_early_shadow_pud,
+> +				sizeof(kasan_early_shadow_pud));
+> +		p4d_populate(&init_mm, p4dp, (pud_t *)__va(pud_phys));
+> +	}
+> +
+> +	return pud_offset(p4dp, addr);
+> +}
+> +
+> +static void  kasan_pte_populate(pmd_t *pmdp, unsigned long addr,
+> +				      unsigned long end, int node, bool early)
+> +{
+> +	unsigned long next;
+> +	pte_t *ptep = kasan_pte_offset(pmdp, addr, node, early);
+> +
+> +	do {
+> +		phys_addr_t page_phys = early ?
+> +					__pa_symbol(kasan_early_shadow_page)
+> +					      : kasan_alloc_zeroed_page(node);
+> +		next = addr + PAGE_SIZE;
+> +		set_pte(ptep, pfn_pte(__phys_to_pfn(page_phys), PAGE_KERNEL));
+> +	} while (ptep++, addr = next, addr != end && __pte_none(early, READ_ONCE(*ptep)));
+> +}
+> +
+> +static void kasan_pmd_populate(pud_t *pudp, unsigned long addr,
+> +				      unsigned long end, int node, bool early)
+> +{
+> +	unsigned long next;
+> +	pmd_t *pmdp = kasan_pmd_offset(pudp, addr, node, early);
+> +
+> +	do {
+> +		next = pmd_addr_end(addr, end);
+> +		kasan_pte_populate(pmdp, addr, next, node, early);
+> +	} while (pmdp++, addr = next, addr != end && __pmd_none(early, READ_ONCE(*pmdp)));
+> +}
+> +
+> +static void __init kasan_pud_populate(p4d_t *p4dp, unsigned long addr,
+> +					    unsigned long end, int node, bool early)
+> +{
+> +	unsigned long next;
+> +	pud_t *pudp = kasan_pud_offset(p4dp, addr, node, early);
+> +
+> +	do {
+> +		next = pud_addr_end(addr, end);
+> +		kasan_pmd_populate(pudp, addr, next, node, early);
+> +	} while (pudp++, addr = next, addr != end);
+> +}
+> +
+> +static void __init kasan_p4d_populate(pgd_t *pgdp, unsigned long addr,
+> +					    unsigned long end, int node, bool early)
+> +{
+> +	unsigned long next;
+> +	p4d_t *p4dp = p4d_offset(pgdp, addr);
+> +
+> +	do {
+> +		next = p4d_addr_end(addr, end);
+> +		kasan_pud_populate(p4dp, addr, next, node, early);
+> +	} while (p4dp++, addr = next, addr != end);
+> +}
+> +
+> +static void __init kasan_pgd_populate(unsigned long addr, unsigned long end,
+> +				      int node, bool early)
+> +{
+> +	unsigned long next;
+> +	pgd_t *pgdp;
+> +
+> +	pgdp = pgd_offset_k(addr);
+> +
+> +	do {
+> +		next = pgd_addr_end(addr, end);
+> +		kasan_p4d_populate(pgdp, addr, next, node, early);
+> +	} while (pgdp++, addr = next, addr != end);
+> +
+> +}
+> +
+> +asmlinkage void __init kasan_early_init(void)
+> +{
+> +	BUILD_BUG_ON(!IS_ALIGNED(KASAN_SHADOW_START, PGDIR_SIZE));
+> +	BUILD_BUG_ON(!IS_ALIGNED(KASAN_SHADOW_END, PGDIR_SIZE));
+> +}
+> +
+> +/* Set up full kasan mappings, ensuring that the mapped pages are zeroed */
+> +static void __init kasan_map_populate(unsigned long start, unsigned long end,
+> +				      int node)
+> +{
+> +	kasan_pgd_populate(start & PAGE_MASK, PAGE_ALIGN(end), node, false);
+> +}
+> +
+> +static void __init clear_pgds(unsigned long start, unsigned long end)
+> +{
+> +	/*
+> +	 * Remove references to kasan page tables from
+> +	 * swapper_pg_dir. pgd_clear() can't be used
+> +	 * here because it's nop on 2,3-level pagetable setups
+> +	 */
+> +	for (; start < end; start += PGDIR_SIZE)
+> +		kasan_set_pgd((pgd_t *)pgd_offset_k(start), __pgd(0));
+> +}
+> +
+> +void __init kasan_init(void)
+> +{
+> +	u64 i;
+> +	phys_addr_t pa_start, pa_end;
+> +	/*
+> +	 * PGD was populated as invalid_pmd_table or invalid_pud_table
+> +	 * in pagetable_init() which depends on how many levels of page
+> +	 * table you are using, but we had to clean the gpd of kasan
+> +	 * shadow memory, as the pgd value is none-zero.
+> +	 * The assertion pgd_none is going to be false and the formal populate
+> +	 * afterwards is not going to create any new pgd at all.
+> +	 */
+> +	memcpy(tmp_pg_dir, swapper_pg_dir, sizeof(tmp_pg_dir));
+> +	__sync();
+> +	csr_write64(__pa_symbol(tmp_pg_dir), LOONGARCH_CSR_PGDH);
+> +	local_flush_tlb_all();
+> +
+> +	clear_pgds(KASAN_SHADOW_START, KASAN_SHADOW_END);
+> +
+> +	/* Maps everything to a single page of zeroes */
+> +	kasan_pgd_populate(KASAN_SHADOW_START, KASAN_SHADOW_END,
+> +			NUMA_NO_NODE, true);
+> +
+> +	kasan_populate_early_shadow(kasan_mem_to_shadow((void *)MODULES_END),
+> +			kasan_mem_to_shadow((void *)VMEMMAP_END));
+> +
+> +	if (!IS_ENABLED(CONFIG_KASAN_VMALLOC))
+> +		kasan_populate_early_shadow(kasan_mem_to_shadow((void *)VMALLOC_START),
+> +					    kasan_mem_to_shadow((void *)VMALLOC_END));
+> +
+> +	kasan_early_stage = false;
+> +
+> +	/* Populate the linear mapping */
+> +	for_each_mem_range(i, &pa_start, &pa_end) {
+> +		void *start = (void *)phys_to_virt(pa_start);
+> +		void *end   = (void *)phys_to_virt(pa_end);
+> +
+> +		if (start >= end)
+> +			break;
+> +
+> +		kasan_map_populate((unsigned long)kasan_mem_to_shadow(start),
+> +			(unsigned long)kasan_mem_to_shadow(end), NUMA_NO_NODE);
+> +	}
+> +
+> +	/* Populate modules mapping */
+> +	kasan_map_populate((unsigned long)kasan_mem_to_shadow((void *)MODULES_VADDR),
+> +		(unsigned long)kasan_mem_to_shadow((void *)MODULES_END), NUMA_NO_NODE);
+> +	/*
+> +	 * Kasan may reuse the contents of kasan_early_shadow_pte directly, so we
+> +	 * should make sure that it maps the zero page read-only.
+> +	 */
+> +	for (i = 0; i < PTRS_PER_PTE; i++)
+> +		set_pte(&kasan_early_shadow_pte[i],
+> +			pfn_pte(__phys_to_pfn(__pa_symbol(kasan_early_shadow_page)),
+> +				PAGE_KERNEL_RO));
+> +
+> +	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
+> +	 __sync();
+> +	csr_write64(__pa_symbol(swapper_pg_dir), LOONGARCH_CSR_PGDH);
+> +	local_flush_tlb_all();
+> +
+> +	/* At this point kasan is fully initialized. Enable error messages */
+> +	init_task.kasan_depth = 0;
+> +	pr_info("KernelAddressSanitizer initialized.\n");
+> +}
+> diff --git a/arch/loongarch/vdso/Makefile b/arch/loongarch/vdso/Makefile
+> index d89e2ac75f7b..df328cd92875 100644
+> --- a/arch/loongarch/vdso/Makefile
+> +++ b/arch/loongarch/vdso/Makefile
+> @@ -1,6 +1,10 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Objects to go into the VDSO.
+>
+> +ifdef CONFIG_KASAN
+> +KASAN_SANITIZE := n
+> +endif
+> +
+>  # Absolute relocation type $(ARCH_REL_TYPE_ABS) needs to be defined before
+>  # the inclusion of generic Makefile.
+>  ARCH_REL_TYPE_ABS := R_LARCH_32|R_LARCH_64|R_LARCH_MARK_LA|R_LARCH_JUMP_SLOT
+> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
+> index f7ef70661ce2..3b91b941873d 100644
+> --- a/include/linux/kasan.h
+> +++ b/include/linux/kasan.h
+> @@ -54,11 +54,13 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
+>  int kasan_populate_early_shadow(const void *shadow_start,
+>  				const void *shadow_end);
+>
+> +#ifndef __HAVE_ARCH_SHADOW_MAP
+>  static inline void *kasan_mem_to_shadow(const void *addr)
+>  {
+>  	return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
+>  		+ KASAN_SHADOW_OFFSET;
+>  }
+> +#endif
+>
+>  int kasan_add_zero_shadow(void *start, unsigned long size);
+>  void kasan_remove_zero_shadow(void *start, unsigned long size);
+> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+> index e5eef670735e..f86194750df5 100644
+> --- a/mm/kasan/generic.c
+> +++ b/mm/kasan/generic.c
+> @@ -175,6 +175,11 @@ static __always_inline bool check_region_inline(unsigned long addr,
+>  	if (unlikely(!addr_has_metadata((void *)addr)))
+>  		return !kasan_report(addr, size, write, ret_ip);
+>
+> +#ifndef __HAVE_ARCH_SHADOW_MAP
+> +	if (unlikely(kasan_mem_to_shadow((unsigned long *)addr) == NULL))
+> +		return !kasan_report(addr, size, write, ret_ip);
+> +#endif
+> +
+>  	if (likely(!memory_is_poisoned(addr, size)))
+>  		return true;
+>
+> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+> index cc64ed6858c6..860061a22ca9 100644
+> --- a/mm/kasan/init.c
+> +++ b/mm/kasan/init.c
+> @@ -166,8 +166,9 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
+>  				if (!p)
+>  					return -ENOMEM;
+>  			} else {
+> -				pud_populate(&init_mm, pud,
+> -					early_alloc(PAGE_SIZE, NUMA_NO_NODE));
+> +				p = early_alloc(PAGE_SIZE, NUMA_NO_NODE);
+> +				pmd_init(p);
+> +				pud_populate(&init_mm, pud, p);
+>  			}
+>  		}
+>  		zero_pmd_populate(pud, addr, next);
+> @@ -207,8 +208,9 @@ static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
+>  				if (!p)
+>  					return -ENOMEM;
+>  			} else {
+> -				p4d_populate(&init_mm, p4d,
+> -					early_alloc(PAGE_SIZE, NUMA_NO_NODE));
+> +				p = early_alloc(PAGE_SIZE, NUMA_NO_NODE);
+> +				pud_init(p);
+> +				p4d_populate(&init_mm, p4d, p);
+>  			}
+>  		}
+>  		zero_pud_populate(p4d, addr, next);
+> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+> index a61eeee3095a..033335c13b25 100644
+> --- a/mm/kasan/kasan.h
+> +++ b/mm/kasan/kasan.h
+> @@ -291,16 +291,22 @@ struct kasan_stack_ring {
+>
+>  #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
+>
+> +#ifndef __HAVE_ARCH_SHADOW_MAP
+>  static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
+>  {
+>  	return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET)
+>  		<< KASAN_SHADOW_SCALE_SHIFT);
+>  }
+> +#endif
+>
+>  static __always_inline bool addr_has_metadata(const void *addr)
+>  {
+> +#ifdef __HAVE_ARCH_SHADOW_MAP
+> +	return (kasan_mem_to_shadow((void *)addr) != NULL);
+> +#else
+>  	return (kasan_reset_tag(addr) >=
+>  		kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
+> +#endif
+>  }
+>
+>  /**
+>
 
