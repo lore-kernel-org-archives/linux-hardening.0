@@ -2,55 +2,28 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7AEC77B6D
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Mar 2023 00:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893FFC761AF
+	for <linux-hardening@archiver.kernel.org>; Wed, 29 Mar 2023 02:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229674AbjC2AWz (ORCPT
+        id S229770AbjC2CCI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 28 Mar 2023 20:22:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
+        Tue, 28 Mar 2023 22:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229960AbjC2AWx (ORCPT
+        with ESMTP id S229745AbjC2CCF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 28 Mar 2023 20:22:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9654A1737;
-        Tue, 28 Mar 2023 17:22:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3492DB81F81;
-        Wed, 29 Mar 2023 00:22:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C522CC433A7;
-        Wed, 29 Mar 2023 00:22:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680049369;
-        bh=LsCNXXpY1cFgoqXqOINeaOkusUqANiRdFYpk75Ep5Ko=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kohoHxDpAa2IveHTr7jy9tKAbRaVBIuF6zCV3lP6pauXbsIULM4TR8vENRdV+sRxi
-         s5iplqD8Kf9yZuUxFVFKtOP+MzK3P6mQ+plHNV3Pc1W+xW2+wDzKj3kn/InfhxPQsK
-         qHF5hwPbzf6hYqCZkQ1qNCr6cCtoRhmaEbfCKecP408IxUMGZsGvYWXzz4Y1r4iFB1
-         9Xot0ltF4q/FhMB1xgQpe0vZApT+GQgGWH02F44s7TDcmGm8Vjo3ijDdx58KOHKl/9
-         OEFaINyEJDyfWI7phFuz82Mzxc6RoYHFMGbRoekUSjlXIBwyHNiIM0UvnH7TNu3E80
-         Jn7U1RHYAKRxg==
-Received: by mail-ed1-f46.google.com with SMTP id y4so56755915edo.2;
-        Tue, 28 Mar 2023 17:22:49 -0700 (PDT)
-X-Gm-Message-State: AAQBX9eKHwss+occXoM9xv8EadPQtW26OeIzVN2XY2zjcsPsLwHPg0eK
-        y/G3ub58DrCYd8a5V6KmxFzjsFUJHiznFPsRpnQ=
-X-Google-Smtp-Source: AKy350YShqqhafJiKivPvV3UEwHbIXvSZz7vIGbGfm68OD1wOOOEvCMQ8EQ72tLPfqXEpoJkur924JeuV1TKMI9pjxw=
-X-Received: by 2002:a50:a444:0:b0:4fc:6494:81c3 with SMTP id
- v4-20020a50a444000000b004fc649481c3mr8371871edb.1.1680049367907; Tue, 28 Mar
- 2023 17:22:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230328111714.2056-1-zhangqing@loongson.cn> <9817aaa043e9f0ed964bd523773447bd64f6e2c0.camel@xry111.site>
- <1c231587-3b70-22ab-d554-ebe3de407909@loongson.cn>
-In-Reply-To: <1c231587-3b70-22ab-d554-ebe3de407909@loongson.cn>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Wed, 29 Mar 2023 08:22:37 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
-Message-ID: <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
+        Tue, 28 Mar 2023 22:02:05 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1C356189;
+        Tue, 28 Mar 2023 19:02:02 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8DxUOUZnCNklHsTAA--.29798S3;
+        Wed, 29 Mar 2023 10:02:01 +0800 (CST)
+Received: from [10.130.0.102] (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxPL4XnCNkIQQQAA--.12984S3;
+        Wed, 29 Mar 2023 10:02:01 +0800 (CST)
 Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To:     Qing Zhang <zhangqing@loongson.cn>
+To:     Huacai Chen <chenhuacai@kernel.org>
 Cc:     Xi Ruoyao <xry111@xry111.site>,
         Andrey Ryabinin <ryabinin.a.a@gmail.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -64,73 +37,109 @@ Cc:     Xi Ruoyao <xry111@xry111.site>,
         kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
         linux-mm@kvack.org, loongarch@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20230328111714.2056-1-zhangqing@loongson.cn>
+ <9817aaa043e9f0ed964bd523773447bd64f6e2c0.camel@xry111.site>
+ <1c231587-3b70-22ab-d554-ebe3de407909@loongson.cn>
+ <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
+From:   Qing Zhang <zhangqing@loongson.cn>
+Message-ID: <9a6f11a3-d01c-e0c9-a4f3-47db25ce02f3@loongson.cn>
+Date:   Wed, 29 Mar 2023 10:01:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAAhV-H5APsBxC8nNa81t3HXum1EU1hOj4S6UC7xLHD7_BCJd7g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxPL4XnCNkIQQQAA--.12984S3
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uF43ur1UArykKF4xtw43Wrg_yoW8tw4Upr
+        y8GF4rtw48Jr40vrs2q34Duryjv3Z2qw1agr4DK34rZ3sF9F98Kr4DWr13uF929r1j9F4Y
+        vFWrtFWa934UJaDanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bq8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2kK
+        e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
+        aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
+        xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC
+        6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF
+        0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
+        vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+        6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2pVbDUUUU
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Mar 28, 2023 at 8:15=E2=80=AFPM Qing Zhang <zhangqing@loongson.cn> =
-wrote:
->
-> Hi, Ruoyao
->
-> On 2023/3/28 =E4=B8=8B=E5=8D=887:39, Xi Ruoyao wrote:
-> > On Tue, 2023-03-28 at 19:17 +0800, Qing Zhang wrote:
-> >
-> > /* snip */
-> >
-> >
-> >> -void * __init relocate_kernel(void)
-> >> +unsigned long __init relocate_kernel(void)
-> >
-> > Why we must modify relocate_kernel for KASAN?
->
-> When the CONFIG_RANDOMIZE_BASE is enabled, the kernel will be updated to
-> a random new address.
-> Kasan needs to call kasan_early_init before start_kernel.
-> There are two situations:
-> 1> After enabling CONFIG_RELOCATABLE, call kasan_early_init.
-> 2> After CONFIG_RELOCATABLE is not enabled, call kasan_early_init.
->
-> In order to prevent code redundancy and semantic problems caused by
-> calling kasan_early_init (before jr a0) at the old PC.
-In my opinion, you can call kasan_early_init before relocate_kernel in
-head.S, then no redundancy.
+Hi, Huacai
 
-Huacai
->
-> Thanks,
-> -Qing
-> >
-> >>   {
-> >>          unsigned long kernel_length;
-> >>          unsigned long random_offset =3D 0;
-> >>          void *location_new =3D _text; /* Default to original kernel s=
-tart */
-> >> -       void *kernel_entry =3D start_kernel; /* Default to original ke=
-rnel entry point */
-> >>          char *cmdline =3D early_ioremap(fw_arg1, COMMAND_LINE_SIZE); =
-/* Boot command line is passed in fw_arg1 */
-> >>
-> >>          strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
-> >> @@ -190,9 +189,6 @@ void * __init relocate_kernel(void)
-> >>
-> >>                  reloc_offset +=3D random_offset;
-> >>
-> >> -               /* Return the new kernel's entry point */
-> >> -               kernel_entry =3D RELOCATED_KASLR(start_kernel);
-> >> -
-> >>                  /* The current thread is now within the relocated ker=
-nel */
-> >>                  __current_thread_info =3D RELOCATED_KASLR(__current_t=
-hread_info);
-> >>
-> >> @@ -204,7 +200,7 @@ void * __init relocate_kernel(void)
-> >>
-> >>          relocate_absolute(random_offset);
-> >>
-> >> -       return kernel_entry;
-> >> +       return random_offset;
-> >
->
+On 2023/3/29 上午8:22, Huacai Chen wrote:
+> On Tue, Mar 28, 2023 at 8:15 PM Qing Zhang <zhangqing@loongson.cn> wrote:
+>>
+>> Hi, Ruoyao
+>>
+>> On 2023/3/28 下午7:39, Xi Ruoyao wrote:
+>>> On Tue, 2023-03-28 at 19:17 +0800, Qing Zhang wrote:
+>>>
+>>> /* snip */
+>>>
+>>>
+>>>> -void * __init relocate_kernel(void)
+>>>> +unsigned long __init relocate_kernel(void)
+>>>
+>>> Why we must modify relocate_kernel for KASAN?
+>>
+>> When the CONFIG_RANDOMIZE_BASE is enabled, the kernel will be updated to
+>> a random new address.
+>> Kasan needs to call kasan_early_init before start_kernel.
+>> There are two situations:
+>> 1> After enabling CONFIG_RELOCATABLE, call kasan_early_init.
+>> 2> After CONFIG_RELOCATABLE is not enabled, call kasan_early_init.
+>>
+>> In order to prevent code redundancy and semantic problems caused by
+>> calling kasan_early_init (before jr a0) at the old PC.
+> In my opinion, you can call kasan_early_init before relocate_kernel in
+> head.S, then no redundancy.
+> 
+It has no effect now, but kasan_early_init generally maps everything to
+a single page of zeroes in kasan area, if placed
+Before relocate_kernel, when the kernel was relocated, I worried that
+there were changes other than the memory layout.
+
+Thanks,
+- Qing
+> Huacai
+>>
+>> Thanks,
+>> -Qing
+>>>
+>>>>    {
+>>>>           unsigned long kernel_length;
+>>>>           unsigned long random_offset = 0;
+>>>>           void *location_new = _text; /* Default to original kernel start */
+>>>> -       void *kernel_entry = start_kernel; /* Default to original kernel entry point */
+>>>>           char *cmdline = early_ioremap(fw_arg1, COMMAND_LINE_SIZE); /* Boot command line is passed in fw_arg1 */
+>>>>
+>>>>           strscpy(boot_command_line, cmdline, COMMAND_LINE_SIZE);
+>>>> @@ -190,9 +189,6 @@ void * __init relocate_kernel(void)
+>>>>
+>>>>                   reloc_offset += random_offset;
+>>>>
+>>>> -               /* Return the new kernel's entry point */
+>>>> -               kernel_entry = RELOCATED_KASLR(start_kernel);
+>>>> -
+>>>>                   /* The current thread is now within the relocated kernel */
+>>>>                   __current_thread_info = RELOCATED_KASLR(__current_thread_info);
+>>>>
+>>>> @@ -204,7 +200,7 @@ void * __init relocate_kernel(void)
+>>>>
+>>>>           relocate_absolute(random_offset);
+>>>>
+>>>> -       return kernel_entry;
+>>>> +       return random_offset;
+>>>
+>>
+
