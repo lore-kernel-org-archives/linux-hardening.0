@@ -2,61 +2,28 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587CAC74A5B
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Mar 2023 02:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B168C74A5B
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Mar 2023 04:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbjC3C4T (ORCPT
+        id S229586AbjC3EdA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Mar 2023 22:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39108 "EHLO
+        Thu, 30 Mar 2023 00:33:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbjC3C4S (ORCPT
+        with ESMTP id S229552AbjC3Ec7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Mar 2023 22:56:18 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D81475B92;
-        Wed, 29 Mar 2023 19:56:08 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id o11so16839932ple.1;
-        Wed, 29 Mar 2023 19:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680144968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zcIEVyxOQ9ThEvdTZ3QimlrlYxsMccblwZq0nJEQf8Q=;
-        b=Zec5lJk4rXTCbA+qbB6XLLMkQsH0baL9XmFKOIVsa6DGOJodAy/QjlUIPA+YuJnisG
-         BLviy5bd66/mXjAw691bc1vI4BTemWYukYKjCZ1+jPr0XjLytUY1NT/zNqXehvPbHQ60
-         u//4jHceldp9UErdH8WTE+kZplg5WaFpToTSV3UlAnqAe5F6GUY6hMTMdwhuQqDTtOD2
-         u3vm2zcCg1Kk0SMP5H8FbNCOoU5dUs/LXyL76kqX2uLO96d7wuz5Ri66atDLcCfotByZ
-         DA0qxNlVVaf2BFurz3bXwPR7biZ4WJlZrmKAdrpggFJhgH5bTzqvysSpK1iQKoTWivaM
-         qsbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680144968;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zcIEVyxOQ9ThEvdTZ3QimlrlYxsMccblwZq0nJEQf8Q=;
-        b=tr4QwdFFNZ7nHi4Sm7fWTmgC1N5kzBuGW+fVbTF9xBImrdqj8NRC/7WoGaR494I0y4
-         TWuVjMBuDmFiKl0Xf1WjUWDyfvOqNw9cYO32vlNHC5p8G3thMGcvAYG0Or6KqW3OgWdb
-         O6TgkqBEsPh22Wvhxln47/whqkEeyJ13RLUC9xw0yh4C+rQ5r+VLDAu0kINjM4hciMP2
-         5qoFpZ7Z6vd+AGFQjLxJFklOFn7e9CZZ1sUeKeRS2fnT4FsF6rX+2+WWwVQDDanWXw10
-         ifJ8031KC9+l/BxKgB/5m6fpLFIDnwB/zjWIYgsmcXzsmwGSIFg1Km4z9V/gjoPE9aAr
-         lLxg==
-X-Gm-Message-State: AAQBX9cRtKI8jKuhBtokaugSlidtpitpTqq6E8CdIj2w4glF5pSNyhI3
-        aPFUyxbAnIuiuL9+mLI4SFRxINjOvp9SPv7QEgQ=
-X-Google-Smtp-Source: AKy350aaSitWK+oMnPBGI/HdGFv4oj337IShewGHsQKImjbS99hwBRaF/179UbwYduEu4LT8WrbvDdBJHlGFglrepNY=
-X-Received: by 2002:a17:902:ecc2:b0:1a0:7630:8ef1 with SMTP id
- a2-20020a170902ecc200b001a076308ef1mr8673024plh.11.1680144968218; Wed, 29 Mar
- 2023 19:56:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230328111714.2056-1-zhangqing@loongson.cn> <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
- <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn>
-In-Reply-To: <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn>
-From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Thu, 30 Mar 2023 04:55:57 +0200
-Message-ID: <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
+        Thu, 30 Mar 2023 00:32:59 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B840B10F2;
+        Wed, 29 Mar 2023 21:32:57 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8AxJIT4ECVklDcUAA--.31182S3;
+        Thu, 30 Mar 2023 12:32:56 +0800 (CST)
+Received: from [10.130.0.102] (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxLuT1ECVkA_oQAA--.48468S3;
+        Thu, 30 Mar 2023 12:32:55 +0800 (CST)
 Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To:     Qing Zhang <zhangqing@loongson.cn>
+To:     Andrey Konovalov <andreyknvl@gmail.com>
 Cc:     Jonathan Corbet <corbet@lwn.net>,
         Huacai Chen <chenhuacai@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -69,37 +36,76 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         linux-mm@kvack.org, loongarch@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20230328111714.2056-1-zhangqing@loongson.cn>
+ <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
+ <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn>
+ <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
+From:   Qing Zhang <zhangqing@loongson.cn>
+Message-ID: <2360000f-7292-9da8-d6b5-94b125c5f2b0@loongson.cn>
+Date:   Thu, 30 Mar 2023 12:32:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxLuT1ECVkA_oQAA--.48468S3
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWrKF4xGryxJF48Aw18Ww4UJwb_yoW8Jr4rpa
+        40kF95trsYyFn2vwn2kw1rtryjyF1fury3WFn8Kw1Fya4Y9Fy8KF1rGa4rCFykXrWxGw1Y
+        vwnFyasxJr4UAaDanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+        AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
+        AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
+        jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jz5lbUUUUU=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 4:06=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
-wrote:
->
-> > But I don't think you need this check here at all: addr_has_metadata
-> > already checks that shadow exists.
-> >
-> On LongArch, there's a lot of holes between different segments, so kasan
-> shadow area is some different type of memory that we concatenate, we
-> can't use if (unlikely((void *)addr <
-> kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) to determine the
-> validity, and in arch/loongarch/include/asm/kasan.h I construct invalid
-> NULL.
 
-I get that, but you already added a special case for
-__HAVE_ARCH_SHADOW_MAP to addr_has_metadata, so you can just call it?
 
-> This is because in pagetable_init on loongarch/mips, we populate pmd/pud
-> with invalid_pmd_table/invalid_pud_table,
+On 2023/3/30 上午10:55, Andrey Konovalov wrote:
+> On Thu, Mar 30, 2023 at 4:06 AM Qing Zhang <zhangqing@loongson.cn> wrote:
+>>
+>>> But I don't think you need this check here at all: addr_has_metadata
+>>> already checks that shadow exists.
+>>>
+>> On LongArch, there's a lot of holes between different segments, so kasan
+>> shadow area is some different type of memory that we concatenate, we
+>> can't use if (unlikely((void *)addr <
+>> kasan_shadow_to_mem((void *)KASAN_SHADOW_START))) to determine the
+>> validity, and in arch/loongarch/include/asm/kasan.h I construct invalid
+>> NULL.
+> 
+> I get that, but you already added a special case for
+> __HAVE_ARCH_SHADOW_MAP to addr_has_metadata, so you can just call it?
+> 
+ok, all the changes are going to be in v2.
 
-I see. Please add this into the patch description for v2.
+Thanks,
+-Qing
+>> This is because in pagetable_init on loongarch/mips, we populate pmd/pud
+>> with invalid_pmd_table/invalid_pud_table,
+> 
+> I see. Please add this into the patch description for v2.
+> 
+>> So pmd_init/pud_init(p) is required, perhaps we define them as __weak in
+>> mm/kasan/init.c, like mm/sparse-vmemmap.c.
+> 
+> Yes, this makes sense to do, so that KASAN doesn't depend on
+> definitions from sparse-vmemmap.c.
+> 
+> Thank you!
+> 
 
-> So pmd_init/pud_init(p) is required, perhaps we define them as __weak in
-> mm/kasan/init.c, like mm/sparse-vmemmap.c.
-
-Yes, this makes sense to do, so that KASAN doesn't depend on
-definitions from sparse-vmemmap.c.
-
-Thank you!
