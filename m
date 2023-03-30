@@ -2,174 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29043C74A5B
-	for <linux-hardening@archiver.kernel.org>; Wed, 29 Mar 2023 19:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18325C74A5B
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Mar 2023 01:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230009AbjC2TCw (ORCPT
+        id S229605AbjC3Bxe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 29 Mar 2023 15:02:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
+        Wed, 29 Mar 2023 21:53:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjC2TCv (ORCPT
+        with ESMTP id S229586AbjC3Bxd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 29 Mar 2023 15:02:51 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDEC74C2C;
-        Wed, 29 Mar 2023 12:02:50 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id l9-20020a17090a3f0900b0023d32684e7fso4405923pjc.1;
-        Wed, 29 Mar 2023 12:02:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680116570;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rysh7R9x0DwpV/wCJCeDcK+KSngeOrcjw+kFGG6R2os=;
-        b=U//sM9A7XL/kcpEYXKup4m2J/Sp3DBWPcq+cj4HsJc7+dUi9AsjU02Lwq3JoL1NQmq
-         ismSymj4IoQJ4VYIXTTfXj4IhuTC9V8imTeRJJl8wtp+cLMVycZbZpe5adelriSCB34Z
-         5JRPjQUp4XUV1p1ZJpj8FcgAadV1Nt3xAimI5KHOUF00ILkLWslBnB0DEXYGfhDpjDhs
-         aIvCu/RV/2Kg07dVMVnAXRKweMCcgh7xxmTEuGKD2hPrODR6SjG1EW0qSYoJJ5V2d+iM
-         usSHbr1+aiPi29yP82LVwaPfhD1cK7k46uCFb9ZLK21U4JbQEzxGF/pBiIfUsLTD3aFK
-         EHOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680116570;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rysh7R9x0DwpV/wCJCeDcK+KSngeOrcjw+kFGG6R2os=;
-        b=xEKQi/JXwz042lnfShalNSPDnl0ITm6qaK7R9b95prUQesvtl1M8O1ue7JZvSllaOx
-         lHYGMRPNdh5F4/8e8RNMJqD94OvfFwq+kUylzh/GtuzAqP3+pVkVyyFJWTjyJYzQlUtI
-         P0c4lY+ZT1h5/e6vMVTrexOV1nLXwEpRzV1+HiJnoBSUkG2B2IUhnJFOkMc2JugonqIx
-         XaKOVpuXd+BckYo5K8oASt/gFwX+EVRUJopfHjjLY68oumG7kYwLUv/iEXwYNJP5IDiW
-         VlY7x56mJpPeA8ctMqqJVq5j3XSja/JkrZzh/ZPJBL6z0jMLRUaiN7N8ozwglkEBeHVf
-         VlIg==
-X-Gm-Message-State: AAQBX9d+Gx9guwGzUYPo1EC137MnR8rFmpAziBPDHA+dNRsbT3UihVfD
-        vDv6eJpbX7U/sMaGw7z2gLnzvxYUPIRwIBJsD34=
-X-Google-Smtp-Source: AKy350a8ZyVGR+YsV1iqviDdiXUJrnHDdWNYLxQJ15oR6ir8sjH7TDn0yq8OS/FxjL5RmpSszu69Red3FULJ3Z/k/d4=
-X-Received: by 2002:a17:902:c213:b0:199:49d7:cead with SMTP id
- 19-20020a170902c21300b0019949d7ceadmr7378827pll.11.1680116570333; Wed, 29 Mar
- 2023 12:02:50 -0700 (PDT)
+        Wed, 29 Mar 2023 21:53:33 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393B09F;
+        Wed, 29 Mar 2023 18:53:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C6159B82581;
+        Thu, 30 Mar 2023 01:53:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA94C433EF;
+        Thu, 30 Mar 2023 01:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680141209;
+        bh=3XmANaFzBt3a+2sASRW3pZzJKWGwytosBj+PU3cNreY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=vBpMJ4k4UCgp74JR3KKcFqw9mZDJn651IODDcgfoSH2hVylUD6bbLyLUTq23qYkLS
+         o718vQ/9nOb+TcuEbi9fRfq26mS3I1l8Z5ztvcZJetA8asvxeqbQ+qJGbgT9tWcX4N
+         zOuz1BZxX6+xqHdJpJscAfZjhyPBXEK0nflyuNgUqCfCpo9l/5m19fgp/VzMb8RiUA
+         VeR5nzuJsAw9J6o3vIKtboOWRVq4HU3tVnGA0YL4lP7TKC3mkyqkd/WT+pio3FTNd3
+         sU5dKfZAN7XjBTZCirUCBQ+bRcn23bRSQ7ZoDVD688i2NaMZ/rSAM1XReEQPlDNqMe
+         YaV7a3Ur/53vg==
+Date:   Wed, 29 Mar 2023 19:54:02 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Cc:     chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] platform/chrome: Fix -Warray-bounds warnings
+Message-ID: <ZCTrutoN+9TiJM8u@work>
 MIME-Version: 1.0
-References: <20230328111714.2056-1-zhangqing@loongson.cn>
-In-Reply-To: <20230328111714.2056-1-zhangqing@loongson.cn>
-From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Wed, 29 Mar 2023 21:02:39 +0200
-Message-ID: <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
-Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To:     Qing Zhang <zhangqing@loongson.cn>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, loongarch@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index f7ef70661ce2..3b91b941873d 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -54,11 +54,13 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
->  int kasan_populate_early_shadow(const void *shadow_start,
->                                 const void *shadow_end);
->
-> +#ifndef __HAVE_ARCH_SHADOW_MAP
->  static inline void *kasan_mem_to_shadow(const void *addr)
->  {
->         return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
->                 + KASAN_SHADOW_OFFSET;
->  }
-> +#endif
->
->  int kasan_add_zero_shadow(void *start, unsigned long size);
->  void kasan_remove_zero_shadow(void *start, unsigned long size);
-> diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
-> index e5eef670735e..f86194750df5 100644
-> --- a/mm/kasan/generic.c
-> +++ b/mm/kasan/generic.c
-> @@ -175,6 +175,11 @@ static __always_inline bool check_region_inline(unsigned long addr,
->         if (unlikely(!addr_has_metadata((void *)addr)))
->                 return !kasan_report(addr, size, write, ret_ip);
->
-> +#ifndef __HAVE_ARCH_SHADOW_MAP
-> +       if (unlikely(kasan_mem_to_shadow((unsigned long *)addr) == NULL))
-> +               return !kasan_report(addr, size, write, ret_ip);
-> +#endif
+GCC-13 (and Clang) does not like having a partially allocated object,
+since it cannot reason about it for bounds checking.
 
-This should have been ifdef, right?
+Notice that the compiler is legitimately complaining about accessing
+an object (params, in this case) for which not enough memory was
+allocated.
 
-But I don't think you need this check here at all: addr_has_metadata
-already checks that shadow exists.
+The object is of size 20 bytes:
 
-> +
->         if (likely(!memory_is_poisoned(addr, size)))
->                 return true;
->
-> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
-> index cc64ed6858c6..860061a22ca9 100644
-> --- a/mm/kasan/init.c
-> +++ b/mm/kasan/init.c
-> @@ -166,8 +166,9 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
->                                 if (!p)
->                                         return -ENOMEM;
->                         } else {
-> -                               pud_populate(&init_mm, pud,
-> -                                       early_alloc(PAGE_SIZE, NUMA_NO_NODE));
-> +                               p = early_alloc(PAGE_SIZE, NUMA_NO_NODE);
-> +                               pmd_init(p);
-> +                               pud_populate(&init_mm, pud, p);
->                         }
->                 }
->                 zero_pmd_populate(pud, addr, next);
-> @@ -207,8 +208,9 @@ static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
->                                 if (!p)
->                                         return -ENOMEM;
->                         } else {
-> -                               p4d_populate(&init_mm, p4d,
-> -                                       early_alloc(PAGE_SIZE, NUMA_NO_NODE));
-> +                               p = early_alloc(PAGE_SIZE, NUMA_NO_NODE);
-> +                               pud_init(p);
-> +                               p4d_populate(&init_mm, p4d, p);
+struct ec_params_vbnvcontext {
+	uint32_t                   op;                   /*     0     4 */
+	uint8_t                    block[16];            /*     4    16 */
 
-Please explain why these changes are needed in the patch description.
+	/* size: 20, cachelines: 1, members: 2 */
+	/* last cacheline: 20 bytes */
+};
 
->                         }
->                 }
->                 zero_pud_populate(p4d, addr, next);
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index a61eeee3095a..033335c13b25 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -291,16 +291,22 @@ struct kasan_stack_ring {
->
->  #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
->
-> +#ifndef __HAVE_ARCH_SHADOW_MAP
->  static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->  {
->         return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET)
->                 << KASAN_SHADOW_SCALE_SHIFT);
->  }
-> +#endif
->
->  static __always_inline bool addr_has_metadata(const void *addr)
->  {
-> +#ifdef __HAVE_ARCH_SHADOW_MAP
-> +       return (kasan_mem_to_shadow((void *)addr) != NULL);
-> +#else
->         return (kasan_reset_tag(addr) >=
->                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
-> +#endif
->  }
->
->  /**
-> --
-> 2.20.1
->
+but only 16 bytes are allocated:
+
+sizeof(struct ec_response_vbnvcontext) == 16
+
+In this case, as only enough space for the op field is allocated,
+we can use an object of type uint32_t instead of a whole
+struct ec_params_vbnvcontext (for which not enough memory is
+allocated).
+
+Fix the following warning seen under GCC 13:
+drivers/platform/chrome/cros_ec_vbc.c: In function ‘vboot_context_read’:
+drivers/platform/chrome/cros_ec_vbc.c:36:15: warning: array subscript ‘struct ec_params_vbnvcontext[1]’ is partly outside array bounds of ‘unsigned char[36]’ [-Warray-bounds=]
+   36 |         params->op = EC_VBNV_CONTEXT_OP_READ;
+      |               ^~
+In file included from drivers/platform/chrome/cros_ec_vbc.c:12:
+In function ‘kmalloc’,
+    inlined from ‘vboot_context_read’ at drivers/platform/chrome/cros_ec_vbc.c:30:8:
+./include/linux/slab.h:580:24: note: at offset 20 into object of size 36 allocated by ‘kmalloc_trace’
+  580 |                 return kmalloc_trace(
+      |                        ^~~~~~~~~~~~~~
+  581 |                                 kmalloc_caches[kmalloc_type(flags)][index],
+      |                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  582 |                                 flags, size);
+      |                                 ~~~~~~~~~~~~
+
+Link: https://github.com/KSPP/linux/issues/278
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/platform/chrome/cros_ec_vbc.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/chrome/cros_ec_vbc.c b/drivers/platform/chrome/cros_ec_vbc.c
+index c859c862d7ac..b5a584f5469a 100644
+--- a/drivers/platform/chrome/cros_ec_vbc.c
++++ b/drivers/platform/chrome/cros_ec_vbc.c
+@@ -20,10 +20,14 @@ static ssize_t vboot_context_read(struct file *filp, struct kobject *kobj,
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+ 	struct cros_ec_device *ecdev = ec->ec_dev;
+-	struct ec_params_vbnvcontext *params;
+ 	struct cros_ec_command *msg;
++	/*
++	 * This should be a pointer to the same type as op field in
++	 * struct ec_params_vbnvcontext.
++	 */
++	uint32_t *params_op;
+ 	int err;
+-	const size_t para_sz = sizeof(params->op);
++	const size_t para_sz = sizeof(*params_op);
+ 	const size_t resp_sz = sizeof(struct ec_response_vbnvcontext);
+ 	const size_t payload = max(para_sz, resp_sz);
+ 
+@@ -32,8 +36,8 @@ static ssize_t vboot_context_read(struct file *filp, struct kobject *kobj,
+ 		return -ENOMEM;
+ 
+ 	/* NB: we only kmalloc()ated enough space for the op field */
+-	params = (struct ec_params_vbnvcontext *)msg->data;
+-	params->op = EC_VBNV_CONTEXT_OP_READ;
++	params_op = (uint32_t *)msg->data;
++	*params_op = EC_VBNV_CONTEXT_OP_READ;
+ 
+ 	msg->version = EC_VER_VBNV_CONTEXT;
+ 	msg->command = EC_CMD_VBNV_CONTEXT;
+-- 
+2.34.1
+
