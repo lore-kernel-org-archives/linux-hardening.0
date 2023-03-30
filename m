@@ -2,73 +2,66 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85230C7619A
-	for <linux-hardening@archiver.kernel.org>; Thu, 30 Mar 2023 22:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E455FC7619A
+	for <linux-hardening@archiver.kernel.org>; Thu, 30 Mar 2023 22:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230379AbjC3Wie (ORCPT
+        id S231165AbjC3Wpw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Mar 2023 18:38:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59576 "EHLO
+        Thu, 30 Mar 2023 18:45:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230146AbjC3Wie (ORCPT
+        with ESMTP id S230486AbjC3Wpg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Mar 2023 18:38:34 -0400
-X-Greylist: delayed 90 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 30 Mar 2023 15:38:32 PDT
-Received: from omta039.useast.a.cloudfilter.net (omta039.useast.a.cloudfilter.net [44.202.169.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DEBC667
-        for <linux-hardening@vger.kernel.org>; Thu, 30 Mar 2023 15:38:32 -0700 (PDT)
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+        Thu, 30 Mar 2023 18:45:36 -0400
+Received: from omta037.useast.a.cloudfilter.net (omta037.useast.a.cloudfilter.net [44.202.169.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B68D4FB3;
+        Thu, 30 Mar 2023 15:44:55 -0700 (PDT)
+Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
         by cmsmtp with ESMTP
-        id i0mSpL4idJlHBi0tBpe1Ow; Thu, 30 Mar 2023 22:37:01 +0000
+        id i0Wdp4vGvElIgi10op7gOG; Thu, 30 Mar 2023 22:44:54 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTP
-        id i0s8pyB3edC2Ci0s8pybcY; Thu, 30 Mar 2023 22:35:57 +0000
-X-Authority-Analysis: v=2.4 cv=VPrOIvDX c=1 sm=1 tr=0 ts=64260ecd
+        id i10npY8KNON9Ti10npuRHN; Thu, 30 Mar 2023 22:44:53 +0000
+X-Authority-Analysis: v=2.4 cv=fby+dmcF c=1 sm=1 tr=0 ts=642610e5
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
  a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=k__wU0fu6RkA:10
- a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=mDV3o1hIAAAA:8 a=VwQbUJbxAAAA:8
- a=rQwXfPfrytjjklgZoK0A:9 a=QEXdDO2ut3YA:10 a=3IOs8h2EC4YA:10
- a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22
+ a=wYkD_t78qR0A:10 a=p5TAKoIjpDPjIpOboVgA:9 a=QEXdDO2ut3YA:10
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=R1JjS+FsYaTvV0nY+Z+WOn3lLR0ZAanzw97ARsUZzOM=; b=OP5kZR/+CMEL3dXIpct5Z4Attb
-        GEr/mWagrnRfOpXxxsgS9C0wZlw+maYWFm7GdzUFevvSjPhsOqrKEi6G/Yibp8IK4WMm7h9fXEOOw
-        aJZaaYDqCty+3Vya8idObSla+jZ8Q5fgzzAOIhYtw9PKhz4wTxhwUUlW5Z2B4uOW+XVnovPmGxaMc
-        XAeJZdyKGWPQiaRpCRB9bbR6xRfVHIVnMWt+sWbJU4zlSZBEz1dcslNv8tHChRzdp7oHMUnVj+2ju
-        ycPBKurectZLBZnj5lX0kCHQjSvJUsmC6H0EJTwF5lMS5t03oc82OMVmG1qChdWxos7LryBflwf6X
-        kJkqWHMA==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:38692 helo=[192.168.15.7])
+        bh=2nUW9+DxCExNvW0W3XSMSOQ4Fi6oDWM9s6D5qR+DaQ8=; b=nmEhtqRxy+yNoNhBRq0XCWI8Q1
+        WmeqtLDLr7DFDJ8dsEXlagtuIBeQZL58NARsoNRZsknSDE+RdVgD6f3fIXms45dMytjee2e3tfmLf
+        DqbkZ4J3AuctkTv5RGUL8n2/UUf2SpaXysBmMMIgaGjAlhAojNWl7RjHfVmBR5wMNN7IvlbjZPs39
+        gBjqYNUpYCOZKdyxdD/bdHDIIbEUC8sSwM1cMrKML+AwuMNFAquNy72HVAcJZP5g5QNPJoMis/8nO
+        ++kwKLcr1xFjQtvYIuexGoGenH3g4XsoNDOH6Hv+eZQ0PWVvBt5suI99IS+KPyOZE72d1IwllvXnZ
+        86a4QPSw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:60900 helo=[192.168.15.7])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.95)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1phyVE-002aFZ-IV;
-        Thu, 30 Mar 2023 15:04:08 -0500
-Message-ID: <a3bfa2dd-cb4c-876e-b16a-e9cec230108f@embeddedor.com>
-Date:   Thu, 30 Mar 2023 14:04:42 -0600
+        id 1phz8C-003MTK-9U;
+        Thu, 30 Mar 2023 15:44:24 -0500
+Message-ID: <6c2e8022-155a-ba6c-a9c7-4a7eb9f6f916@embeddedor.com>
+Date:   Thu, 30 Mar 2023 14:44:59 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH][next] rtlwifi: Replace fake flex-array with flex-array
- member
+Subject: Re: [PATCH][next] platform/chrome: Fix -Warray-bounds warnings
 Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZBz4x+MWoI/f65o1@work>
+To:     Tzung-Bi Shih <tzungbi@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <ZCTrutoN+9TiJM8u@work> <ZCUzw9epJig2rTIY@google.com>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZBz4x+MWoI/f65o1@work>
+In-Reply-To: <ZCUzw9epJig2rTIY@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
 X-AntiAbuse: Original Domain - vger.kernel.org
@@ -77,64 +70,40 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1phyVE-002aFZ-IV
+X-Exim-ID: 1phz8C-003MTK-9U
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:38692
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:60900
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfI5qKs708t2Xwkh7NbPO4cmUSGDTuZ1Mvo5nTJ9VzYzU0GBSMVTTz/RugT5Qnoektc/66GgJBx92goJ2j1wSJdR+z2u5QI8WWzZ/KVsPTWRaNAm0IIdO
- EHuGUbtOhkR9iYs7gqfSF/1gAM+FxY1ItO1q8KQl+gIRkb9x+9SnhXCWKiPxUe5jreCqfnjBR9WXV8UipVz+/ikY7ev3Mjk413y0fUgm3+5PIZvGVEuOKJFI
+X-CMAE-Envelope: MS4xfMfLNSl0QahAoczvFxT1/NDhjZYFGVRBIGw2l3IGrU6ryDNV8QL9eBIr6VMuKSCuM4AnE7ymQO4IU8zm0CMfjkl4EyxmR0q18dUS30497fkZ7wz0lnmh
+ caprJCBNv1QLqd19goyP2DFDCacWiqZqctWDrLWtfZ5p32tmKsvXUJjQxxjTly2SxRApmVAYb2hfkrCUoRGX4hxLYIiq3wnv2AJ7ZFn8gSDB46rts8+/qaQm
+ Dd6VqHfc1yIXBxf+eIikbznfjMl5XqWofx6E+/uA7jo=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
 
-Friendly ping: who can take this, please? :)
+>>   	/* NB: we only kmalloc()ated enough space for the op field */
+>> -	params = (struct ec_params_vbnvcontext *)msg->data;
+>> -	params->op = EC_VBNV_CONTEXT_OP_READ;
+>> +	params_op = (uint32_t *)msg->data;
+>> +	*params_op = EC_VBNV_CONTEXT_OP_READ;
+> 
+> I don't see a good reason to partially allocate memory here.  Perhaps, just
+> let `para_sz = sizeof(struct ec_params_vbnvcontext)`?  If it also makes
+> sense to you, please remove the comment "NB: we only..." as well.
+
+It looks funny to me, too. However, I think that's material for a different
+patch.
+
+What I want to get fixed here is the -Warray-bounds warning, while not messing
+too much with the original implementation. :)
 
 Thanks
 --
 Gustavo
-
-On 3/23/23 19:11, Gustavo A. R. Silva wrote:
-> Zero-length arrays as fake flexible arrays are deprecated and we are
-> moving towards adopting C99 flexible-array members instead.
-> 
-> Address the following warning found with GCC-13 and
-> -fstrict-flex-arrays=3 enabled:
-> In function ‘fortify_memset_chk’,
->      inlined from ‘rtl_usb_probe’ at drivers/net/wireless/realtek/rtlwifi/usb.c:1044:2:
-> ./include/linux/fortify-string.h:430:25: warning: call to ‘__write_overflow_field’ declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
->    430 |                         __write_overflow_field(p_size_field, size);
->        |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/277
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   drivers/net/wireless/realtek/rtlwifi/wifi.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/wifi.h b/drivers/net/wireless/realtek/rtlwifi/wifi.h
-> index 31f9e9e5c680..082af216760f 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/wifi.h
-> +++ b/drivers/net/wireless/realtek/rtlwifi/wifi.h
-> @@ -2831,7 +2831,7 @@ struct rtl_priv {
->   	 * beyond  this structure like:
->   	 * rtl_pci_priv or rtl_usb_priv
->   	 */
-> -	u8 priv[0] __aligned(sizeof(void *));
-> +	u8 priv[] __aligned(sizeof(void *));
->   };
->   
->   #define rtl_priv(hw)		(((struct rtl_priv *)(hw)->priv))
