@@ -2,32 +2,31 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E02FC7619A
-	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 01:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0152C6FD18
+	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 03:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbjCaBSn (ORCPT
+        id S229643AbjCaDoX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Mar 2023 21:18:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39386 "EHLO
+        Thu, 30 Mar 2023 23:44:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjCaBSm (ORCPT
+        with ESMTP id S229584AbjCaDoV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Mar 2023 21:18:42 -0400
-X-Greylist: delayed 91 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 30 Mar 2023 18:18:40 PDT
-Received: from omta039.useast.a.cloudfilter.net (omta039.useast.a.cloudfilter.net [44.202.169.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F9BCDD1;
-        Thu, 30 Mar 2023 18:18:39 -0700 (PDT)
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+        Thu, 30 Mar 2023 23:44:21 -0400
+Received: from omta033.useast.a.cloudfilter.net (omta033.useast.a.cloudfilter.net [44.202.169.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C846EC76;
+        Thu, 30 Mar 2023 20:44:20 -0700 (PDT)
+Received: from eig-obgw-5015a.ext.cloudfilter.net ([10.0.29.155])
         by cmsmtp with ESMTP
-        id i39LpLj64JlHBi3O7peZb3; Fri, 31 Mar 2023 01:17:07 +0000
+        id i2BXpmmbjY6q8i5gZpCq8u; Fri, 31 Mar 2023 03:44:19 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTP
-        id i3O6pU8UuaJ3Di3O6pFfpG; Fri, 31 Mar 2023 01:17:07 +0000
-X-Authority-Analysis: v=2.4 cv=RqfWkQqK c=1 sm=1 tr=0 ts=64263493
+        id i5gYpYgnc8qini5gYpnonL; Fri, 31 Mar 2023 03:44:19 +0000
+X-Authority-Analysis: v=2.4 cv=Y5frDzSN c=1 sm=1 tr=0 ts=64265713
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
  a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=k__wU0fu6RkA:10
  a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=mDV3o1hIAAAA:8 a=VwQbUJbxAAAA:8
- a=lQcIFfJ85XhUBIXePCYA:9 a=QEXdDO2ut3YA:10 a=3IOs8h2EC4YA:10
+ a=mvvmVGHGh8sE2eZWOBoA:9 a=QEXdDO2ut3YA:10 a=3IOs8h2EC4YA:10
  a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -35,46 +34,38 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lc2/TazxozdDnvZb/b7lHdWwz27nbeuJ3CQk1i0zndI=; b=so+gIOLSJXjWDiSsnEL8KJlMhE
-        y9LJZejzwGh2PreEOGl57Bttp0lH8Q/Y+0knuhUG4cclvC8vMslE92OKvDN4xlt5casFi1b6fn7Qm
-        DGk3KcLdTm1kJHvcYXc5ia8zYZLk5OxDJs7X9EtjkR1umhli04I+TJy5FSTdZWe61OuK13kgwLjYs
-        1edRDqmBeKAWhc+zM+RSFNvy4nsTz0Zs9XBt3afdWSaNhjeehwlTypw3sK8YTlsPxOahDtCD+HdYS
-        vNrsVJI/knYLNAXwCncEjYf7K/F5kX4qDvURjbv9DXMO6Lg0x3FNB9+hC+6SR2mXtCKrk8WR235zJ
-        H7mBzkpQ==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:59296 helo=[192.168.15.7])
+        bh=5eXprcIlSCmNP0+hXkCotLeio81d6PPi52X+rolr6Bs=; b=x5tY3CALKqh0FtZknddMXTC50W
+        m1K4lxEWe1p11l++HQJ+fNplppv50prQ5m2JM7gpVe5/SUGR1yw44c99RrLGNxMk4Bhc9LnxkSBkN
+        yOIZcXiwHkNGQcJZxr7ZB4F/8Lfg+k9Eo50GRaqjYQcE8IeHWpt4Sl4nARkXwYCudsAPPbgsc+MD7
+        KR20RZbQ0K303ZW0xyvhPT9lipNa93CjRo4gWhcLHPwb+nEqfJG4puxhGxVn130P5ODP3SLEWiXwP
+        w8ZxTIh5Jv5DzrNlrcMY+qiPaVRsvtYGVqT7kpZR3qtlNTPJRJ5EighAursOyrapN8B8BsNsy7341
+        nsCY6FBw==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:36470 helo=[192.168.15.7])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.95)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1phycM-002lrn-Qy;
-        Thu, 30 Mar 2023 15:11:31 -0500
-Message-ID: <2f207323-9daf-e9ee-153b-d790429d0adf@embeddedor.com>
-Date:   Thu, 30 Mar 2023 14:11:55 -0600
+        id 1phydu-002oqq-Ra;
+        Thu, 30 Mar 2023 15:13:06 -0500
+Message-ID: <ef8d083a-a82b-669c-0b0a-959e0f120a26@embeddedor.com>
+Date:   Thu, 30 Mar 2023 14:13:41 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH][next] wifi: mt76: mt7921: Replace fake flex-arrays with
- flexible-array members
+Subject: Re: [PATCH][next] drm/i915/uapi: Replace fake flex-array with
+ flexible-array member
 Content-Language: en-US
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Shayne Chen <shayne.chen@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <ZBTUB/kJYQxq/6Cj@work>
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZBSu2QsUJy31kjSE@work>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZBTUB/kJYQxq/6Cj@work>
+In-Reply-To: <ZBSu2QsUJy31kjSE@work>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -85,20 +76,19 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.31.110
 X-Source-L: No
-X-Exim-ID: 1phycM-002lrn-Qy
+X-Exim-ID: 1phydu-002oqq-Ra
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:59296
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:36470
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 0
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNMV2MDrhgpYxh1v5u9Z2tOCdKDG1mhxa5FbD/2zSKDSh/w4BLe9GQX2FJGBexQUTEXj6GJQ8acLdLNXeCESl5J6kxFFp8byH1a8pDXaXO13i7I53wc7
- dOlEzfzCmGb2+Hw9lEjCEOzsamfE9km2gRsRr5P4FIWCtQDu9z37G5TvXFDhiHi3bu0Jb6Mjhj2NL/Or/KORF6N+6tCPCSND1jqvoEGk7j+XH4vm/ETKWKJH
- E7dE7+6e0yHveylJ1bqqPLd8z8dcG2prW2oWmXe5Mw6KADsn5bU4sMJMjOkV2WBe9GJVDPCDO7vEQpPPpyQrZfwfN4xBA86chLRUh3JkohEHHYKRsGBDmMN6
- HlOiDLvH
+X-CMAE-Envelope: MS4xfEv+S8oDVAlDw/SD2kuq8AKhKQROfPORYPUdQr6naFM90hgmY+HlEFbb89Kid0Seukx/L+WxIgdKTfN6eKdbea4tyG9FAAuEPq6qNV7RQce8VvqNqL5l
+ SLufD/FYNuzsUnq9HfTaB8QFdujmpRnPYASl2YjO9jlGHu/C8pPV7xI+tE2En19THtJSXQuMLvcDzdpYfGwHgpzmkNZV4HZyeOJuiYh9PPaS9t6YQ3dzIfba
+ aSo7OsLJqZFJEO625//RTCxD+EeYI0quZ5yIAWs4DZo=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -111,79 +101,41 @@ Thanks
 -- 
 Gustavo
 
-On 3/17/23 14:56, Gustavo A. R. Silva wrote:
+On 3/17/23 12:18, Gustavo A. R. Silva wrote:
 > Zero-length arrays as fake flexible arrays are deprecated and we are
 > moving towards adopting C99 flexible-array members instead.
 > 
-> Address the following warnings found with GCC-13 and
+> Address the following warning found with GCC-13 and
 > -fstrict-flex-arrays=3 enabled:
-> drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:266:25: warning: array subscript 0 is outside array bounds of ‘struct mt7921_asar_dyn_limit_v2[0]’ [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:263:25: warning: array subscript 0 is outside array bounds of ‘struct mt7921_asar_dyn_limit[0]’ [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:223:28: warning: array subscript <unknown> is outside array bounds of ‘struct mt7921_asar_geo_limit_v2[0]’ [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:220:28: warning: array subscript <unknown> is outside array bounds of ‘struct mt7921_asar_geo_limit[0]’ [-Warray-bounds=]
-> drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.c:334:37: warning: array subscript i is outside array bounds of ‘u8[0]’ {aka ‘unsigned char[]’} [-Warray-bounds=]
-> 
-> Notice that the DECLARE_FLEX_ARRAY() helper allows for flexible-array
-> members in unions.
+> drivers/gpu/drm/i915/gem/i915_gem_context.c: In function ‘set_proto_ctx_engines.isra’:
+> drivers/gpu/drm/i915/gem/i915_gem_context.c:769:41: warning: array subscript n is outside array bounds of ‘struct i915_engine_class_instance[0]’ [-Warray-bounds=]
+>    769 |                 if (copy_from_user(&ci, &user->engines[n], sizeof(ci))) {
+>        |                                         ^~~~~~~~~~~~~~~~~
+> ./include/uapi/drm/i915_drm.h:2494:43: note: while referencing ‘engines’
+>   2494 |         struct i915_engine_class_instance engines[0];
 > 
 > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
 > routines on memcpy() and help us make progress towards globally
 > enabling -fstrict-flex-arrays=3 [1].
 > 
 > Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/272
+> Link: https://github.com/KSPP/linux/issues/271
 > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->   drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
+>   include/uapi/drm/i915_drm.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h b/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
-> index 35268b0890ad..6f2c4a572572 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
-> @@ -24,7 +24,7 @@ struct mt7921_asar_dyn {
->   	u8 names[4];
->   	u8 enable;
->   	u8 nr_tbl;
-> -	struct mt7921_asar_dyn_limit tbl[0];
-> +	DECLARE_FLEX_ARRAY(struct mt7921_asar_dyn_limit, tbl);
->   } __packed;
+> diff --git a/include/uapi/drm/i915_drm.h b/include/uapi/drm/i915_drm.h
+> index 8df261c5ab9b..5e458d6f2895 100644
+> --- a/include/uapi/drm/i915_drm.h
+> +++ b/include/uapi/drm/i915_drm.h
+> @@ -2491,7 +2491,7 @@ struct i915_context_param_engines {
+>   #define I915_CONTEXT_ENGINES_EXT_LOAD_BALANCE 0 /* see i915_context_engines_load_balance */
+>   #define I915_CONTEXT_ENGINES_EXT_BOND 1 /* see i915_context_engines_bond */
+>   #define I915_CONTEXT_ENGINES_EXT_PARALLEL_SUBMIT 2 /* see i915_context_engines_parallel_submit */
+> -	struct i915_engine_class_instance engines[0];
+> +	struct i915_engine_class_instance engines[];
+>   } __attribute__((packed));
 >   
->   struct mt7921_asar_dyn_limit_v2 {
-> @@ -37,7 +37,7 @@ struct mt7921_asar_dyn_v2 {
->   	u8 enable;
->   	u8 rsvd;
->   	u8 nr_tbl;
-> -	struct mt7921_asar_dyn_limit_v2 tbl[0];
-> +	DECLARE_FLEX_ARRAY(struct mt7921_asar_dyn_limit_v2, tbl);
->   } __packed;
->   
->   struct mt7921_asar_geo_band {
-> @@ -55,7 +55,7 @@ struct mt7921_asar_geo {
->   	u8 names[4];
->   	u8 version;
->   	u8 nr_tbl;
-> -	struct mt7921_asar_geo_limit tbl[0];
-> +	DECLARE_FLEX_ARRAY(struct mt7921_asar_geo_limit, tbl);
->   } __packed;
->   
->   struct mt7921_asar_geo_limit_v2 {
-> @@ -69,7 +69,7 @@ struct mt7921_asar_geo_v2 {
->   	u8 version;
->   	u8 rsvd;
->   	u8 nr_tbl;
-> -	struct mt7921_asar_geo_limit_v2 tbl[0];
-> +	DECLARE_FLEX_ARRAY(struct mt7921_asar_geo_limit_v2, tbl);
->   } __packed;
->   
->   struct mt7921_asar_cl {
-> @@ -85,7 +85,7 @@ struct mt7921_asar_fg {
->   	u8 rsvd;
->   	u8 nr_flag;
->   	u8 rsvd1;
-> -	u8 flag[0];
-> +	u8 flag[];
->   } __packed;
->   
->   struct mt7921_acpi_sar {
+>   #define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__, N__) struct { \
