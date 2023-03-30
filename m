@@ -2,323 +2,136 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B00BC76196
-	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 08:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0368C76196
+	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 09:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231232AbjCaILd (ORCPT
+        id S231252AbjCaJJ3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 31 Mar 2023 04:11:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
+        Fri, 31 Mar 2023 05:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231186AbjCaILd (ORCPT
+        with ESMTP id S230239AbjCaJJU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 31 Mar 2023 04:11:33 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5831135A1;
-        Fri, 31 Mar 2023 01:11:30 -0700 (PDT)
-Received: from loongson.cn (unknown [192.168.200.1])
-        by gateway (Coremail) with SMTP id _____8AxJ_BdlSZkvuAUAA--.32184S3;
-        Fri, 31 Mar 2023 16:10:06 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxtrzZlCZkDuoRAA--.12556S3;
-        Fri, 31 Mar 2023 16:08:09 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To:     Qing Zhang <zhangqing@loongson.cn>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20230328111714.2056-1-zhangqing@loongson.cn>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, loongarch@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-From:   Youling Tang <tangyouling@loongson.cn>
-Message-ID: <8b472ba9-a39d-b9cc-d515-c1a9d42ae865@loongson.cn>
-Date:   Fri, 31 Mar 2023 16:07:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Fri, 31 Mar 2023 05:09:20 -0400
+Received: from omta037.useast.a.cloudfilter.net (omta037.useast.a.cloudfilter.net [44.202.169.36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E0EF77B;
+        Fri, 31 Mar 2023 02:09:19 -0700 (PDT)
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+        by cmsmtp with ESMTP
+        id i0wmp51qxElIgiAl3p9ZK1; Fri, 31 Mar 2023 09:09:18 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id iAl2p9L7X1O1NiAl2ps9Ay; Fri, 31 Mar 2023 09:09:17 +0000
+X-Authority-Analysis: v=2.4 cv=NsHCzuRJ c=1 sm=1 tr=0 ts=6426a33d
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=k__wU0fu6RkA:10
+ a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=mDV3o1hIAAAA:8 a=VwQbUJbxAAAA:8
+ a=9ic7p0EMSS3MKrTfbvcA:9 a=QEXdDO2ut3YA:10 a=3IOs8h2EC4YA:10
+ a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QYBk0OPmCB6p8kOb/XVyJI7inLkUJjeV0vKcdLVXoPM=; b=Lf3+WC2x3Wbp3hXFbidKhgntw4
+        wwL1Apr+wOS9AnVSyg2qMwVZ9S4nByhAtC5urYdc5RUvQRjUk1qruCzdqBC/LXOJ9Dyj+iazWA7pN
+        2cqZFxcPrfW6qZKcCunoHBFRASPeOlejYSJwJh2AvUFG+sGFeC4qgrnMkOorw/3iSXBPJNwlwKtJE
+        yS5dwOdsiwRWGJqrr3pZo80Q8g+OX9XB5oYArXpTpQDdgJ3ghhLXNtiChrM1EJmzYj8nvxmuVXiuc
+        wezx1mznuADHn3pA0pWiUp63ZJjDV4AyzqsdgUJqi2LVDdr4oRt6SLXCWZa194jM54KUz14znoiMj
+        Xy+GZzmQ==;
+Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:48012 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1phyZh-002gVr-HQ;
+        Thu, 30 Mar 2023 15:08:45 -0500
+Message-ID: <cfd01e87-6edc-2547-894a-72e7cd5ba9ef@embeddedor.com>
+Date:   Thu, 30 Mar 2023 14:09:20 -0600
 MIME-Version: 1.0
-In-Reply-To: <20230328111714.2056-1-zhangqing@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8CxtrzZlCZkDuoRAA--.12556S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3GF43try5WF4rZF13AryrJFb_yoWDGF47pr
-        WkCFyvgrWktF1Ig3yrKr1UJr1DJrs3Ga12gF13JFWfCF4xu3s2gr1DKFWkta4UXw4kJFyF
-        gFn5uayjq39rt37anT9S1TB71UUUUb7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bsAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-        AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF
-        7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-        CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-        jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-        x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
-        r21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8V
-        WrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAF
-        wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc4
-        0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AK
-        xVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-        1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUUGjg7UU
-        UUU==
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH][next] wifi: rndis_wlan: Replace fake flex-array with
+ flexible-array member
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jussi Kivilinna <jussi.kivilinna@iki.fi>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZBtIbU77L9eXqa4j@work>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <ZBtIbU77L9eXqa4j@work>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.31.110
+X-Source-L: No
+X-Exim-ID: 1phyZh-002gVr-HQ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:48012
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfC3oJgzMAK1i4Dizj7Hh56BS73gmpDXb9iDKgZAv5SMl6nhjVIuANcuUZZQkZ0hzm0SLAy3tIAAS1nNEnhil6kycbSJjq6mQHC5LHbujFcVgcYUBE6Gx
+ BcWEQlETfv7ZOn1xQTo7VJgYuQTY5ZZ+PwXV+1IWf2upc3AAG1JzcWFPRmEtIv+BoD842HndB+pGhoW7dZ+wzV/PaqhQS9Y6X20KISV2RS+iUddiH+qfmj97
+ WbUe+picvSkMlLoj1IqMP0U7ej0wgHR6xMT+APth+OlPYdUwB17Jo+ZvGE0fZaazTk7icYzSqhUgF6n92B7Yyrr+bZ505T2zdw6KCMWocO3FkCN+dXg2H4+o
+ y/onHFCB
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi, Qing
+Hi all,
 
-On 03/28/2023 07:17 PM, Qing Zhang wrote:
-> 1/8 of kernel addresses reserved for shadow memory. But for LoongArch,
-> There are a lot of holes between different segments and valid address
-> space(256T available) is insufficient to map all these segments to kasan
-> shadow memory with the common formula provided by kasan core, saying
-> addr >> KASAN_SHADOW_SCALE_SHIFT) + KASAN_SHADOW_OFFSET
->
-> So Loongarch has a ARCH specific mapping formula,different segments
-> are mapped individually, and only limited length of space of that
-> specific segment is mapped to shadow.
->
-> At early boot stage the whole shadow region populated with just
-> one physical page (kasan_early_shadow_page). Later, this page is
-> reused as readonly zero shadow for some memory that Kasan currently
-> don't track.
-> After mapping the physical memory, pages for shadow memory are
-> allocated and mapped.
->
-> Functions like memset/memmove/memcpy do a lot of memory accesses.
-> If bad pointer passed to one of these function it is important
-> to catch this. Compiler's instrumentation cannot do this since
-> these functions are written in assembly.
-> KASan replaces memory functions with manually instrumented variants.
-> Original functions declared as weak symbols so strong definitions
-> in mm/kasan/kasan.c could replace them. Original functions have aliases
-> with '__' prefix in name, so we could call non-instrumented variant
-> if needed.
->
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+Friendly ping: who can take this, please? 😄
+
+Thanks
+-- 
+Gustavo
+
+On 3/22/23 12:26, Gustavo A. R. Silva wrote:
+> Zero-length arrays as fake flexible arrays are deprecated and we are
+> moving towards adopting C99 flexible-array members instead.
+> 
+> Address the following warning found with GCC-13 and
+> -fstrict-flex-array=3 enabled:
+> drivers/net/wireless/rndis_wlan.c:2902:23: warning: array subscript 0 is outside array bounds of ‘struct ndis_80211_auth_request[0]’ [-Warray-bounds=]
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/274
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  Documentation/dev-tools/kasan.rst             |   4 +-
->  .../features/debug/KASAN/arch-support.txt     |   2 +-
->  arch/loongarch/Kconfig                        |   7 +
->  arch/loongarch/include/asm/kasan.h            | 120 +++++++++
->  arch/loongarch/include/asm/pgtable.h          |   7 +
->  arch/loongarch/include/asm/setup.h            |   2 +-
->  arch/loongarch/include/asm/string.h           |  20 ++
->  arch/loongarch/kernel/Makefile                |   3 +
->  arch/loongarch/kernel/head.S                  |  14 +-
->  arch/loongarch/kernel/relocate.c              |   8 +-
->  arch/loongarch/kernel/setup.c                 |   4 +
->  arch/loongarch/lib/memcpy.S                   |   4 +-
->  arch/loongarch/lib/memmove.S                  |  13 +-
->  arch/loongarch/lib/memset.S                   |   4 +-
->  arch/loongarch/mm/Makefile                    |   2 +
->  arch/loongarch/mm/kasan_init.c                | 255 ++++++++++++++++++
->  arch/loongarch/vdso/Makefile                  |   4 +
->  include/linux/kasan.h                         |   2 +
->  mm/kasan/generic.c                            |   5 +
->  mm/kasan/init.c                               |  10 +-
->  mm/kasan/kasan.h                              |   6 +
->  21 files changed, 470 insertions(+), 26 deletions(-)
->  create mode 100644 arch/loongarch/include/asm/kasan.h
->  create mode 100644 arch/loongarch/mm/kasan_init.c
->
-> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-> index e66916a483cd..ee91f2872767 100644
-> --- a/Documentation/dev-tools/kasan.rst
-> +++ b/Documentation/dev-tools/kasan.rst
-> @@ -41,8 +41,8 @@ Support
->  Architectures
->  ~~~~~~~~~~~~~
->
-> -Generic KASAN is supported on x86_64, arm, arm64, powerpc, riscv, s390, and
-> -xtensa, and the tag-based KASAN modes are supported only on arm64.
-> +Generic KASAN is supported on x86_64, arm, arm64, powerpc, riscv, s390, xtensa,
-> +and loongarch, and the tag-based KASAN modes are supported only on arm64.
-
-Maybe you need to update `Documentation/translations/zh_CN/dev-tools
-/kasan.rst` synchronously.
-
->
->  Compilers
->  ~~~~~~~~~
-> diff --git a/Documentation/features/debug/KASAN/arch-support.txt b/Documentation/features/debug/KASAN/arch-support.txt
-> index bf0124fae643..c4581c2edb28 100644
-> --- a/Documentation/features/debug/KASAN/arch-support.txt
-> +++ b/Documentation/features/debug/KASAN/arch-support.txt
-> @@ -13,7 +13,7 @@
->      |        csky: | TODO |
->      |     hexagon: | TODO |
->      |        ia64: | TODO |
-> -    |   loongarch: | TODO |
-> +    |   loongarch: |  ok  |
->      |        m68k: | TODO |
->      |  microblaze: | TODO |
->      |        mips: | TODO |
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 72dd00f48b8c..61f883c51045 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -7,6 +7,7 @@ config LOONGARCH
->  	select ACPI_MCFG if ACPI
->  	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
->  	select ARCH_BINFMT_ELF_STATE
-> +	select ARCH_DISABLE_KASAN_INLINE
->  	select ARCH_ENABLE_MEMORY_HOTPLUG
->  	select ARCH_ENABLE_MEMORY_HOTREMOVE
->  	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
-> @@ -83,6 +84,7 @@ config LOONGARCH
->  	select HAVE_ARCH_AUDITSYSCALL
->  	select HAVE_ARCH_MMAP_RND_BITS if MMU
->  	select HAVE_ARCH_SECCOMP_FILTER
-> +	select HAVE_ARCH_KASAN if 64BIT
->  	select HAVE_ARCH_TRACEHOOK
->  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
->  	select HAVE_ASM_MODVERSIONS
-> @@ -626,6 +628,11 @@ config ARCH_MMAP_RND_BITS_MIN
->  config ARCH_MMAP_RND_BITS_MAX
->  	default 18
->
-> +config KASAN_SHADOW_OFFSET
-> +	hex
-> +	default 0x0
-> +	depends on KASAN
-> +
->  menu "Power management options"
->
->  config ARCH_SUSPEND_POSSIBLE
-> diff --git a/arch/loongarch/include/asm/kasan.h b/arch/loongarch/include/asm/kasan.h
-> new file mode 100644
-> index 000000000000..582bcded311e
-> --- /dev/null
-> +++ b/arch/loongarch/include/asm/kasan.h
-> @@ -0,0 +1,120 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __ASM_KASAN_H
-> +#define __ASM_KASAN_H
-> +
-> +#ifndef __ASSEMBLY__
-> +
-> +#include <linux/linkage.h>
-> +#include <linux/mmzone.h>
-> +#include <asm/addrspace.h>
-> +#include <asm/io.h>
-> +#include <asm/pgtable.h>
-> +
-> +#define __HAVE_ARCH_SHADOW_MAP
-> +
-> +#define KASAN_SHADOW_SCALE_SHIFT 3
-> +#define KASAN_SHADOW_OFFSET	_AC(CONFIG_KASAN_SHADOW_OFFSET, UL)
-> +
-> +#define XRANGE_SHIFT (48)
-> +
-> +/* Valid address length */
-> +#define XRANGE_SHADOW_SHIFT	(PGDIR_SHIFT + PAGE_SHIFT - 3)
-> +/* Used for taking out the valid address */
-> +#define XRANGE_SHADOW_MASK	GENMASK_ULL(XRANGE_SHADOW_SHIFT - 1, 0)
-> +/* One segment whole address space size */
-> +#define	XRANGE_SIZE		(XRANGE_SHADOW_MASK + 1)
-> +
-> +/* 64-bit segment value. */
-> +#define XKPRANGE_UC_SEG		(0x8000)
-> +#define XKPRANGE_CC_SEG		(0x9000)
-> +#define XKVRANGE_VC_SEG		(0xffff)
-> +
-> +/* Cached */
-> +#define XKPRANGE_CC_START		CACHE_BASE
-> +#define XKPRANGE_CC_SIZE		XRANGE_SIZE
-> +#define XKPRANGE_CC_KASAN_OFFSET	(0)
-> +#define XKPRANGE_CC_SHADOW_SIZE		(XKPRANGE_CC_SIZE >> KASAN_SHADOW_SCALE_SHIFT)
-> +#define XKPRANGE_CC_SHADOW_END		(XKPRANGE_CC_KASAN_OFFSET + XKPRANGE_CC_SHADOW_SIZE)
-> +
-> +/* UnCached */
-> +#define XKPRANGE_UC_START		UNCACHE_BASE
-> +#define XKPRANGE_UC_SIZE		XRANGE_SIZE
-> +#define XKPRANGE_UC_KASAN_OFFSET	XKPRANGE_CC_SHADOW_END
-> +#define XKPRANGE_UC_SHADOW_SIZE		(XKPRANGE_UC_SIZE >> KASAN_SHADOW_SCALE_SHIFT)
-> +#define XKPRANGE_UC_SHADOW_END		(XKPRANGE_UC_KASAN_OFFSET + XKPRANGE_UC_SHADOW_SIZE)
-> +
-> +/* VMALLOC (Cached or UnCached)  */
-> +#define XKVRANGE_VC_START		MODULES_VADDR
-> +#define XKVRANGE_VC_SIZE		round_up(VMEMMAP_END - MODULES_VADDR + 1, PGDIR_SIZE)
-> +#define XKVRANGE_VC_KASAN_OFFSET	XKPRANGE_UC_SHADOW_END
-> +#define XKVRANGE_VC_SHADOW_SIZE		(XKVRANGE_VC_SIZE >> KASAN_SHADOW_SCALE_SHIFT)
-> +#define XKVRANGE_VC_SHADOW_END		(XKVRANGE_VC_KASAN_OFFSET + XKVRANGE_VC_SHADOW_SIZE)
-> +
-> +/* Kasan shadow memory start right after vmalloc. */
-> +#define KASAN_SHADOW_START		round_up(VMEMMAP_END, PGDIR_SIZE)
-> +#define KASAN_SHADOW_SIZE		(XKVRANGE_VC_SHADOW_END - XKPRANGE_CC_KASAN_OFFSET)
-> +#define KASAN_SHADOW_END		round_up(KASAN_SHADOW_START + KASAN_SHADOW_SIZE, PGDIR_SIZE)
-> +
-> +#define XKPRANGE_CC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKPRANGE_CC_KASAN_OFFSET)
-> +#define XKPRANGE_UC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKPRANGE_UC_KASAN_OFFSET)
-> +#define XKVRANGE_VC_SHADOW_OFFSET	(KASAN_SHADOW_START + XKVRANGE_VC_KASAN_OFFSET)
-> +
-> +extern bool kasan_early_stage;
-> +extern unsigned char kasan_early_shadow_page[PAGE_SIZE];
-> +
-> +static inline void *kasan_mem_to_shadow(const void *addr)
-> +{
-> +	if (kasan_early_stage) {
-> +		return (void *)(kasan_early_shadow_page);
-> +	} else {
-> +		unsigned long maddr = (unsigned long)addr;
-> +		unsigned long xrange = (maddr >> XRANGE_SHIFT) & 0xffff;
-> +		unsigned long offset = 0;
-> +
-> +		maddr &= XRANGE_SHADOW_MASK;
-> +		switch (xrange) {
-> +		case XKPRANGE_CC_SEG:
-> +			offset = XKPRANGE_CC_SHADOW_OFFSET;
-> +			break;
-> +		case XKPRANGE_UC_SEG:
-> +			offset = XKPRANGE_UC_SHADOW_OFFSET;
-> +			break;
-> +		case XKVRANGE_VC_SEG:
-> +			offset = XKVRANGE_VC_SHADOW_OFFSET;
-> +			break;
-> +		default:
-> +			WARN_ON(1);
-> +			return NULL;
-
-When the "earlycon=uart,mmio,0x1fe001e0,115200n8" cmdline parameter is
-added under CONFIG_KASAN, the kernel will not start normally and stay
-at the following position:
-...
-[    0.000000] On node 0, zone DMA32: 4 pages in unavailable ranges
-[    0.000000] On node 0, zone Normal: 8 pages in unavailable ranges
-[    0.000000] On node 0, zone Normal: 8 pages in unavailable ranges
-[    0.000000] On node 0, zone Normal: 160 pages in unavailable ranges
-[    0.000000] On node 0, zone Normal: 256 pages in unavailable ranges
-
-
-The reason is that when accessing the serial port address `0x1fe001e0`,
-kasan will add relevant checks, such as inserting `__asan_load1()`, and
-will eventually enter the `default` branch in kasan_mem_to_shadow(),
-causing the kernel to fail to start.
-
-Add the following modification to avoid inserting the kasan check in
-8250_early.o, and it will be able to start successfully.
-
-diff --git a/drivers/tty/serial/8250/Makefile 
-b/drivers/tty/serial/8250/Makefile
-index 4fc2fc1f41b6..3c17d0e72c83 100644
---- a/drivers/tty/serial/8250/Makefile
-+++ b/drivers/tty/serial/8250/Makefile
-@@ -3,6 +3,8 @@
-  # Makefile for the 8250 serial device drivers.
-  #
-
-+KASAN_SANITIZE_8250_early.o            := n
-+
-  obj-$(CONFIG_SERIAL_8250)              += 8250.o 8250_base.o
-  8250-y                                 := 8250_core.o
-  8250-$(CONFIG_ALPHA_GENERIC)           += 8250_alpha.o
-
-Thanks,
-Youling
-
+>   drivers/net/wireless/legacy/rndis_wlan.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wireless/legacy/rndis_wlan.c b/drivers/net/wireless/legacy/rndis_wlan.c
+> index bf72e5fd39cf..54c347fa54c4 100644
+> --- a/drivers/net/wireless/legacy/rndis_wlan.c
+> +++ b/drivers/net/wireless/legacy/rndis_wlan.c
+> @@ -209,7 +209,7 @@ struct ndis_80211_status_indication {
+>   	union {
+>   		__le32					media_stream_mode;
+>   		__le32					radio_status;
+> -		struct ndis_80211_auth_request		auth_request[0];
+> +		DECLARE_FLEX_ARRAY(struct ndis_80211_auth_request, auth_request);
+>   		struct ndis_80211_pmkid_cand_list	cand_list;
+>   	} u;
+>   } __packed;
