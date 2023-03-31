@@ -2,60 +2,47 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0152C6FD18
-	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 03:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2617DC76196
+	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 07:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229643AbjCaDoX (ORCPT
+        id S229928AbjCaHC3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 30 Mar 2023 23:44:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48704 "EHLO
+        Fri, 31 Mar 2023 03:02:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbjCaDoV (ORCPT
+        with ESMTP id S230237AbjCaHC1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 30 Mar 2023 23:44:21 -0400
-Received: from omta033.useast.a.cloudfilter.net (omta033.useast.a.cloudfilter.net [44.202.169.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C846EC76;
-        Thu, 30 Mar 2023 20:44:20 -0700 (PDT)
-Received: from eig-obgw-5015a.ext.cloudfilter.net ([10.0.29.155])
-        by cmsmtp with ESMTP
-        id i2BXpmmbjY6q8i5gZpCq8u; Fri, 31 Mar 2023 03:44:19 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id i5gYpYgnc8qini5gYpnonL; Fri, 31 Mar 2023 03:44:19 +0000
-X-Authority-Analysis: v=2.4 cv=Y5frDzSN c=1 sm=1 tr=0 ts=64265713
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=wTog8WU66it3cfrESHnF4A==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=k__wU0fu6RkA:10
- a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=mDV3o1hIAAAA:8 a=VwQbUJbxAAAA:8
- a=mvvmVGHGh8sE2eZWOBoA:9 a=QEXdDO2ut3YA:10 a=3IOs8h2EC4YA:10
- a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=5eXprcIlSCmNP0+hXkCotLeio81d6PPi52X+rolr6Bs=; b=x5tY3CALKqh0FtZknddMXTC50W
-        m1K4lxEWe1p11l++HQJ+fNplppv50prQ5m2JM7gpVe5/SUGR1yw44c99RrLGNxMk4Bhc9LnxkSBkN
-        yOIZcXiwHkNGQcJZxr7ZB4F/8Lfg+k9Eo50GRaqjYQcE8IeHWpt4Sl4nARkXwYCudsAPPbgsc+MD7
-        KR20RZbQ0K303ZW0xyvhPT9lipNa93CjRo4gWhcLHPwb+nEqfJG4puxhGxVn130P5ODP3SLEWiXwP
-        w8ZxTIh5Jv5DzrNlrcMY+qiPaVRsvtYGVqT7kpZR3qtlNTPJRJ5EighAursOyrapN8B8BsNsy7341
-        nsCY6FBw==;
-Received: from 187-162-31-110.static.axtel.net ([187.162.31.110]:36470 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1phydu-002oqq-Ra;
-        Thu, 30 Mar 2023 15:13:06 -0500
-Message-ID: <ef8d083a-a82b-669c-0b0a-959e0f120a26@embeddedor.com>
-Date:   Thu, 30 Mar 2023 14:13:41 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH][next] drm/i915/uapi: Replace fake flex-array with
- flexible-array member
-Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
+        Fri, 31 Mar 2023 03:02:27 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2590B46F;
+        Fri, 31 Mar 2023 00:02:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680246141; x=1711782141;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=yHMOEUPKsjHNBby8lcaub9KEv8oA6ClqWvka4yCdPFo=;
+  b=oCPmIZLC5w9ydxtl3q1IxwrMNpZ4ZNVLaWLxSrsGPrT6tKii0lKl1aTa
+   TBPpVUkMRYG3M5JkQ6H1rBUOwYivHtVsNk8sO5KKuUhAjD00LBUZsv6Dk
+   18i4UmNTIcw2E44EEaSSwCuMs2Lvca3qhrKSrDjwxBM0ij4rsGCA4fs8P
+   klKk/NIndct1m9hN0b0F69L5mQINcnpSAsDGDKiBIfnD01j9196Q9SZhY
+   OOXWHFiyxxYZaStumKDgyCsycl8WTeXbxckNlYUpXyTHaT2WAyVvGx1gh
+   QqwDLO2t4OOZkl0Ys1FHPxLNhrYpaOzInRdYlnbExv/VLovTR13+bdAHE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="321766916"
+X-IronPort-AV: E=Sophos;i="5.98,307,1673942400"; 
+   d="scan'208";a="321766916"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2023 00:02:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="715347402"
+X-IronPort-AV: E=Sophos;i="5.98,307,1673942400"; 
+   d="scan'208";a="715347402"
+Received: from colintro-mobl.ger.corp.intel.com (HELO localhost) ([10.252.41.4])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2023 00:02:07 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
@@ -63,79 +50,34 @@ To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         Daniel Vetter <daniel@ffwll.ch>
 Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] drm/i915/uapi: Replace fake flex-array with
+ flexible-array member
+In-Reply-To: <ef8d083a-a82b-669c-0b0a-959e0f120a26@embeddedor.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 References: <ZBSu2QsUJy31kjSE@work>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZBSu2QsUJy31kjSE@work>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.31.110
-X-Source-L: No
-X-Exim-ID: 1phydu-002oqq-Ra
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-31-110.static.axtel.net ([192.168.15.7]) [187.162.31.110]:36470
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEv+S8oDVAlDw/SD2kuq8AKhKQROfPORYPUdQr6naFM90hgmY+HlEFbb89Kid0Seukx/L+WxIgdKTfN6eKdbea4tyG9FAAuEPq6qNV7RQce8VvqNqL5l
- SLufD/FYNuzsUnq9HfTaB8QFdujmpRnPYASl2YjO9jlGHu/C8pPV7xI+tE2En19THtJSXQuMLvcDzdpYfGwHgpzmkNZV4HZyeOJuiYh9PPaS9t6YQ3dzIfba
- aSo7OsLJqZFJEO625//RTCxD+EeYI0quZ5yIAWs4DZo=
+ <ef8d083a-a82b-669c-0b0a-959e0f120a26@embeddedor.com>
+Date:   Fri, 31 Mar 2023 10:02:05 +0300
+Message-ID: <87ileh2yky.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
+On Thu, 30 Mar 2023, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+> Friendly ping: who can take this, please? =F0=9F=98=84
 
-Friendly ping: who can take this, please? 😄
+It's in drm-intel-gt-next.
 
-Thanks
--- 
-Gustavo
+commit 02abecdeebfcd3848b26b70778dd7f6eb0db65e1
+Author:     Gustavo A. R. Silva <gustavoars@kernel.org>
+AuthorDate: Fri Mar 17 12:18:01 2023 -0600
+Commit:     Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+CommitDate: Tue Mar 21 08:41:18 2023 +0000
 
-On 3/17/23 12:18, Gustavo A. R. Silva wrote:
-> Zero-length arrays as fake flexible arrays are deprecated and we are
-> moving towards adopting C99 flexible-array members instead.
-> 
-> Address the following warning found with GCC-13 and
-> -fstrict-flex-arrays=3 enabled:
-> drivers/gpu/drm/i915/gem/i915_gem_context.c: In function ‘set_proto_ctx_engines.isra’:
-> drivers/gpu/drm/i915/gem/i915_gem_context.c:769:41: warning: array subscript n is outside array bounds of ‘struct i915_engine_class_instance[0]’ [-Warray-bounds=]
->    769 |                 if (copy_from_user(&ci, &user->engines[n], sizeof(ci))) {
->        |                                         ^~~~~~~~~~~~~~~~~
-> ./include/uapi/drm/i915_drm.h:2494:43: note: while referencing ‘engines’
->   2494 |         struct i915_engine_class_instance engines[0];
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/271
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   include/uapi/drm/i915_drm.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/uapi/drm/i915_drm.h b/include/uapi/drm/i915_drm.h
-> index 8df261c5ab9b..5e458d6f2895 100644
-> --- a/include/uapi/drm/i915_drm.h
-> +++ b/include/uapi/drm/i915_drm.h
-> @@ -2491,7 +2491,7 @@ struct i915_context_param_engines {
->   #define I915_CONTEXT_ENGINES_EXT_LOAD_BALANCE 0 /* see i915_context_engines_load_balance */
->   #define I915_CONTEXT_ENGINES_EXT_BOND 1 /* see i915_context_engines_bond */
->   #define I915_CONTEXT_ENGINES_EXT_PARALLEL_SUBMIT 2 /* see i915_context_engines_parallel_submit */
-> -	struct i915_engine_class_instance engines[0];
-> +	struct i915_engine_class_instance engines[];
->   } __attribute__((packed));
->   
->   #define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__, N__) struct { \
+    drm/i915/uapi: Replace fake flex-array with flexible-array member
+
+
+--=20
+Jani Nikula, Intel Open Source Graphics Center
