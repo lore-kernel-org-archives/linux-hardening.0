@@ -2,92 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9562DC761A6
-	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 14:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605D1C761AF
+	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 15:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232678AbjCaOuD (ORCPT
+        id S232598AbjCaP6q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 31 Mar 2023 10:50:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55956 "EHLO
+        Fri, 31 Mar 2023 11:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230445AbjCaOuB (ORCPT
+        with ESMTP id S232106AbjCaP6p (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 31 Mar 2023 10:50:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FA501BF62;
-        Fri, 31 Mar 2023 07:50:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F19C4629BA;
-        Fri, 31 Mar 2023 14:49:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370C0C433EF;
-        Fri, 31 Mar 2023 14:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680274199;
-        bh=C0Zd4amGXRyk1IwiPYn8iKt5zSrsVKKFF8PWQuo8LLA=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=sXWp6Byp66QJMBS71Hca6KR8y9WFhLRf83NemTT7IUrJy7AdfeBJpigK0RrYv42oc
-         ncE7ijr6FxJqydhv7HpmLmsnDi98K7Hyql5x9r8VQqj4pj9mk3dbo1iqTu3Ta9NHPR
-         gQq47mMrB2Lc8X5BYPlgF1j+cO8oXtYd+MDQB+VYN7yjD2NlCFTGX2ZeYbOI+TsuMt
-         uSCPsulSa/X1BHcUYc5nOwItulUgJmr782tXPP/xPpFBz7oRoqNDxExH+5b/vpZRqb
-         ffoz9NXrpnRcM8It+EofEQ0SxkSd82ODQ0n5CYWI7ogWE88gA9AOKXK6so/tBid+mc
-         5SRRUd0wuxmEw==
-Content-Type: text/plain; charset="utf-8"
+        Fri, 31 Mar 2023 11:58:45 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13FBD51A;
+        Fri, 31 Mar 2023 08:58:44 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id gp15-20020a17090adf0f00b0023d1bbd9f9eso25905217pjb.0;
+        Fri, 31 Mar 2023 08:58:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680278324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fxJeRCNlob7RdsmYmplWDSRv896kgREUT/PanUMpg+I=;
+        b=df94nsGP/LSbkeu4EwTcd6OWf4bwFCVeTX2AV6GGuJjRqHHCAMue+ucZDrKHUhmKYG
+         rF1GcVAwowFS+Lw4R2ZOUyVGlohHcI6cjfHM7qK93vDDAl7K4QkmPtop0JyXgqtHXc7H
+         /5vLStTMRgLSeUXBayN0bKd/AONKgI/U1KUKS5/OQNcRAufgEZpwDgrUSWGMu6Y857ge
+         adjCqeJIwjNQ9e0ozCbwL/KW0l7dQvZWabnDNyAgsHKLIX9dRbhWd87DZu9ExUYc0qUd
+         3JnEV11La2lDBJeuBzAsXlD+zwvLmegtNhi0v+YBndpY86p8Vd75hORyoRDkG0cpykNS
+         EsYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680278324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fxJeRCNlob7RdsmYmplWDSRv896kgREUT/PanUMpg+I=;
+        b=AvyOfyGJYel+Cq0qttoEmJ9Q/pNCMBOEDdRu48h0Rmu/+BjLeODHIoz+XqNtSxxlhk
+         ZYu9z/TG1gi6sSHiEPPfiZ7I/EU7eXLLqbLA7ddt8uJVqHwbzPtsJxa1+MFO+dZGJ+tn
+         Csm5sJFXj8q9IVe3SxmxlaSbNLpF6dGcW1tzXPH8Ta1Z7TARrqPe4C0GOsnltnnqrw93
+         2vYWJkrjAnDcMS9Q3539mlnUCFfvdraLmVkWPdDHk3T+fAnP3ouJyE+0izuKY2M0IAIG
+         gMFc5xGIsmprNxLEFNrWXQJUUiw9o8j0l4Gt+t2LLE4XFIOqhXNhCRiq3uzTvkOygPTL
+         4mIw==
+X-Gm-Message-State: AAQBX9f3Mbi91F4AXC00VoCJJRL/vJR8TRVON5CIi28AYvsrxHz2fKHr
+        x1MxlzJONjpJ9ZZlL6XOBqhqKsnDWq8U4LtYjZc=
+X-Google-Smtp-Source: AKy350bz/tztNwieqBPr0YpIGhRToLQzKICehLEvyBJaRV3QsLjS5DSIpsQJaRhwDGwOw8j+ci7/+u06sPwz0OatqIU=
+X-Received: by 2002:a17:902:b48e:b0:1a1:dfd6:b0f0 with SMTP id
+ y14-20020a170902b48e00b001a1dfd6b0f0mr9675817plr.11.1680278324230; Fri, 31
+ Mar 2023 08:58:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [next] wifi: rtlwifi: Replace fake flex-array with flex-array
- member
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <ZBz4x+MWoI/f65o1@work>
-References: <ZBz4x+MWoI/f65o1@work>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Ping-Ke Shih <pkshih@realtek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <168027419512.32751.3442996258491675750.kvalo@kernel.org>
-Date:   Fri, 31 Mar 2023 14:49:57 +0000 (UTC)
+References: <20230328111714.2056-1-zhangqing@loongson.cn> <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
+ <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn> <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
+ <2360000f-7292-9da8-d6b5-94b125c5f2b0@loongson.cn>
+In-Reply-To: <2360000f-7292-9da8-d6b5-94b125c5f2b0@loongson.cn>
+From:   Andrey Konovalov <andreyknvl@gmail.com>
+Date:   Fri, 31 Mar 2023 17:58:33 +0200
+Message-ID: <CA+fCnZfoTszdoy7o_EfPXOc4QYo_Jgw9Qf0ua2JoNp0PXdrTPA@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
+To:     Qing Zhang <zhangqing@loongson.cn>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, loongarch@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+On Thu, Mar 30, 2023 at 6:32=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
+wrote:
+>
+> > I get that, but you already added a special case for
+> > __HAVE_ARCH_SHADOW_MAP to addr_has_metadata, so you can just call it?
+> >
+> ok, all the changes are going to be in v2.
 
-> Zero-length arrays as fake flexible arrays are deprecated and we are
-> moving towards adopting C99 flexible-array members instead.
-> 
-> Address the following warning found with GCC-13 and
-> -fstrict-flex-arrays=3 enabled:
-> In function ‘fortify_memset_chk’,
->     inlined from ‘rtl_usb_probe’ at drivers/net/wireless/realtek/rtlwifi/usb.c:1044:2:
-> ./include/linux/fortify-string.h:430:25: warning: call to ‘__write_overflow_field’ declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Wattribute-warning]
->   430 |                         __write_overflow_field(p_size_field, size);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/277
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Reviewed-by: Simon Horman <simon.horman@corigine.com>
-> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Could you also please put changes to the common KASAN code into a
+separate patch/patches? This will simplify any potential backporting
+of common KASAN code changes in the future.
 
-Patch applied to wireless-next.git, thanks.
-
-82d6077901c6 wifi: rtlwifi: Replace fake flex-array with flex-array member
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/ZBz4x+MWoI/f65o1@work/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Thanks!
