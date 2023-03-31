@@ -2,73 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552CCC761A6
-	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 14:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9010AC761A6
+	for <linux-hardening@archiver.kernel.org>; Fri, 31 Mar 2023 14:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232223AbjCaO0x (ORCPT
+        id S232505AbjCaOsm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 31 Mar 2023 10:26:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54182 "EHLO
+        Fri, 31 Mar 2023 10:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232714AbjCaO0v (ORCPT
+        with ESMTP id S231880AbjCaOsl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 31 Mar 2023 10:26:51 -0400
+        Fri, 31 Mar 2023 10:48:41 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6A91F786;
-        Fri, 31 Mar 2023 07:26:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81EEB1BF74;
+        Fri, 31 Mar 2023 07:48:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1785F62997;
-        Fri, 31 Mar 2023 14:26:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3246EC4339E;
-        Fri, 31 Mar 2023 14:26:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 013DD62982;
+        Fri, 31 Mar 2023 14:48:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC4BC433D2;
+        Fri, 31 Mar 2023 14:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680272776;
-        bh=ewI0YO1lqUjVj+mEEU98/eSZvXh5M/9VkRv94eEDfH4=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=SXhoiMoY9P+xQnHBzX5ok+e4ktg+c/08qYqzzylSTNEbzqqwxV9XM9tBNOCJxk+DF
-         UXTb5lu3Qba/lYwtakLvkvK35Yz5VESYAfAEQk+D7Xfz+8iXJi4ITfW9YGW+e2MyHM
-         cDdGkbuXqjJbb4JZlxQkIPSDQJirw5cwaGk1aJGj8C9l3fHkotcJog1jJTX+VM09gu
-         uZmXtMALJ/G8olLePX4zLjQdZ2CLjBem714wH7AOMdXZFEgPnS9gud5ZZ3H1FKA0Rj
-         xZpNw307gTSvRfHJRUK9i7Hf5E3aaAgLrIgpBF9Fgf/bUF31QOhDX9urcCeGO5Ci+0
-         TdjJnkbS6RnOA==
+        s=k20201202; t=1680274117;
+        bh=5ePi48wbJ5nUNiKpOzeUOhE93WQhUl7OagIaj68RWtc=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=HHoebeHZWshu5IOH6JeTSkEtwzcWHuyhuXAE0iq7Uy9J4iykllymczOrEUbUuvcHd
+         ptBX0AMJIP3FmLGMKyR5n22IE6AUOuYY5iAORKU6sRjALYux0TGNMTGj9d9hOF5BEW
+         vYijLVkJ3X1F2P4MjuzNhvNNvIXO9MaV83kfP1YXysFIocL35rLSDsbfkx/LFetUlE
+         OBm/l9m/uRMCf2aEBV10yheVekV4fyFU/cyAB6u6smC11p2fB449h59E7cdW0MK1Rp
+         xs5GeiM+sIznxPDzGgsaaT0SmyPgT3edrv7xNgk5yB3MGL0NaVAhfzs0ZxZBXS8UhU
+         ydpOfzedLsfew==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH][next] wifi: rndis_wlan: Replace fake flex-array with
+ flexible-array member
 From:   Kalle Valo <kvalo@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
+In-Reply-To: <ZBtIbU77L9eXqa4j@work>
+References: <ZBtIbU77L9eXqa4j@work>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jussi Kivilinna <jussi.kivilinna@iki.fi>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] rtlwifi: Replace fake flex-array with flex-array member
-References: <ZBz4x+MWoI/f65o1@work>
-        <a3bfa2dd-cb4c-876e-b16a-e9cec230108f@embeddedor.com>
-Date:   Fri, 31 Mar 2023 17:26:08 +0300
-In-Reply-To: <a3bfa2dd-cb4c-876e-b16a-e9cec230108f@embeddedor.com> (Gustavo A.
-        R. Silva's message of "Thu, 30 Mar 2023 14:04:42 -0600")
-Message-ID: <87mt3tatfj.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <168027411323.32751.4098580285097268358.kvalo@kernel.org>
+Date:   Fri, 31 Mar 2023 14:48:34 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-> Friendly ping: who can take this, please? :)
+> Zero-length arrays as fake flexible arrays are deprecated and we are
+> moving towards adopting C99 flexible-array members instead.
+> 
+> Address the following warning found with GCC-13 and
+> -fstrict-flex-array=3 enabled:
+> drivers/net/wireless/rndis_wlan.c:2902:23: warning: array subscript 0 is outside array bounds of ‘struct ndis_80211_auth_request[0]’ [-Warray-bounds=]
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/274
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-rtlwifi patches go through wireless-next, so usually me.
+Patch applied to wireless-next.git, thanks.
 
-Please be patient, it's only a week since you submitted the patch. We
-sometimes are busy and cannot take patches immeadiately. These friendly
-pings are just annoying, you can check the state of a wireless patch
-from the patchwork link below.
+06dabcccc08b wifi: rndis_wlan: Replace fake flex-array with flexible-array member
 
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+https://patchwork.kernel.org/project/linux-wireless/patch/ZBtIbU77L9eXqa4j@work/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
