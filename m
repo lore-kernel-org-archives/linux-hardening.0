@@ -2,94 +2,104 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5813C6FD1D
-	for <linux-hardening@archiver.kernel.org>; Sat,  1 Apr 2023 03:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A5CC76196
+	for <linux-hardening@archiver.kernel.org>; Sat,  1 Apr 2023 12:00:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbjDADYI (ORCPT
+        id S229900AbjDAMAb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 31 Mar 2023 23:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
+        Sat, 1 Apr 2023 08:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233151AbjDADXi (ORCPT
+        with ESMTP id S229441AbjDAMA3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 31 Mar 2023 23:23:38 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 72BB61F799;
-        Fri, 31 Mar 2023 20:23:29 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8Bxok6woydk9SQVAA--.21044S3;
-        Sat, 01 Apr 2023 11:23:28 +0800 (CST)
-Received: from [10.130.0.102] (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Axnr6uoydka4sSAA--.45160S3;
-        Sat, 01 Apr 2023 11:23:28 +0800 (CST)
-Subject: Re: [PATCH] LoongArch: Add kernel address sanitizer support
-To:     Andrey Konovalov <andreyknvl@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, loongarch@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-References: <20230328111714.2056-1-zhangqing@loongson.cn>
- <CA+fCnZevgYh7CzJ9gOWJ80SwY4Y9w8UO2ZiFAXEnAhQhFgrffA@mail.gmail.com>
- <dccfbff3-7bad-de33-4d96-248bdff44a8b@loongson.cn>
- <CA+fCnZddt50+10SZ+hZRKBudsmMF0W9XpsDG6=58p1ot62LjXQ@mail.gmail.com>
- <2360000f-7292-9da8-d6b5-94b125c5f2b0@loongson.cn>
- <CA+fCnZfoTszdoy7o_EfPXOc4QYo_Jgw9Qf0ua2JoNp0PXdrTPA@mail.gmail.com>
-From:   Qing Zhang <zhangqing@loongson.cn>
-Message-ID: <34a1a391-6ad9-8722-b206-1e830711b096@loongson.cn>
-Date:   Sat, 1 Apr 2023 11:23:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Sat, 1 Apr 2023 08:00:29 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5873D24413
+        for <linux-hardening@vger.kernel.org>; Sat,  1 Apr 2023 05:00:20 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1piZty-0008Jk-WD; Sat, 01 Apr 2023 14:00:11 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1piZtv-008DGQ-JT; Sat, 01 Apr 2023 14:00:07 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1piZtu-009hNJ-SW; Sat, 01 Apr 2023 14:00:06 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-hardening@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] pstore/ram: Convert to platform remove callback returning void
+Date:   Sat,  1 Apr 2023 14:00:00 +0200
+Message-Id: <20230401120000.2487153-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-In-Reply-To: <CA+fCnZfoTszdoy7o_EfPXOc4QYo_Jgw9Qf0ua2JoNp0PXdrTPA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1682; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=ZV4bC26dxUwofIABwwCtR03vphnH9lUv2WR8Lg3cC98=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkKBy//ou+6tPzoXwpTH2gfg4NLwG4my3XjFHmD K6DotCOGAWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZCgcvwAKCRCPgPtYfRL+ TqdyCACFkYP4bYfOdvzrvgt50OIPgO3mmGYKvyvJFb/AEIQM/eEMwmBM1wDf45QpT8tBOMlJzYl V5x6k0rvosSuHX2t8CRn10EQ+poA6xkmlikLhz3Iu72dBhfBQ/bVEHvYBb5rwFvPrpakwi5nNkO nnXLi3/QiwdhkTq7ZKSs2rYcY1VXumZ/EQN2C/M8v1IvAdYOK+psKEngihmKm+FxdSuazyliOYB hQpvofltnH/sFBA85vxXC4rXNgdIRctRdjAVKfw/Xd/Y8DWIPViLw0kn/Ac1JLBEgiQQ5RfKw0+ crzXvj78bG9PvgC+97SCRry3HKuR3cuQ+fF6dHDY/BdmDAVD
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Axnr6uoydka4sSAA--.45160S3
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-        BjDU0xBIdaVrnRJUUUmjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-        xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-        j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxV
-        AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E
-        14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
-        aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2
-        xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4c8EcI0En4kS14v26r1q6r43MxAqzxv26xkF
-        7I0En4kS14v26r1q6r43MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r
-        43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-        UI43ZEXa7IU8l38UUUUUU==
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023/3/31 下午11:58, Andrey Konovalov wrote:
-> On Thu, Mar 30, 2023 at 6:32 AM Qing Zhang <zhangqing@loongson.cn> wrote:
->>
->>> I get that, but you already added a special case for
->>> __HAVE_ARCH_SHADOW_MAP to addr_has_metadata, so you can just call it?
->>>
->> ok, all the changes are going to be in v2.
-> 
-> Could you also please put changes to the common KASAN code into a
-> separate patch/patches? This will simplify any potential backporting
-> of common KASAN code changes in the future.
-> 
-ok, no problem.
+The .remove() callback for a platform driver returns an int which makes
+many driver authors wrongly assume it's possible to do error handling by
+returning an error code. However the value returned is (mostly) ignored
+and this typically results in resource leaks. To improve here there is a
+quest to make the remove callback return void. In the first step of this
+quest all drivers are converted to .remove_new() which already returns
+void.
 
-Thanks,
--Qing
-> Thanks!
-> 
+Trivially convert this driver from always returning zero in the remove
+callback to the void returning variant.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ fs/pstore/ram.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index ade66dbe5f39..2f625e1fa8d8 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -875,7 +875,7 @@ static int ramoops_probe(struct platform_device *pdev)
+ 	return err;
+ }
+ 
+-static int ramoops_remove(struct platform_device *pdev)
++static void ramoops_remove(struct platform_device *pdev)
+ {
+ 	struct ramoops_context *cxt = &oops_cxt;
+ 
+@@ -885,8 +885,6 @@ static int ramoops_remove(struct platform_device *pdev)
+ 	cxt->pstore.bufsize = 0;
+ 
+ 	ramoops_free_przs(cxt);
+-
+-	return 0;
+ }
+ 
+ static const struct of_device_id dt_match[] = {
+@@ -896,7 +894,7 @@ static const struct of_device_id dt_match[] = {
+ 
+ static struct platform_driver ramoops_driver = {
+ 	.probe		= ramoops_probe,
+-	.remove		= ramoops_remove,
++	.remove_new	= ramoops_remove,
+ 	.driver		= {
+ 		.name		= "ramoops",
+ 		.of_match_table	= dt_match,
+
+base-commit: fe15c26ee26efa11741a7b632e9f23b01aca4cc6
+-- 
+2.39.2
 
