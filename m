@@ -2,178 +2,151 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D8BC77B78
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 May 2023 12:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BDBC7619A
+	for <linux-hardening@archiver.kernel.org>; Sun,  2 Apr 2023 21:51:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230499AbjEDM6X (ORCPT
+        id S229746AbjDBVvY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 4 May 2023 08:58:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45182 "EHLO
+        Sun, 2 Apr 2023 17:51:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230225AbjEDM6W (ORCPT
+        with ESMTP id S229448AbjDBVvX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 4 May 2023 08:58:22 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 267B0619A;
-        Thu,  4 May 2023 05:58:18 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3449ILrK001703;
-        Thu, 4 May 2023 12:57:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=J1bg+67OkOUP3/dK1K1LsKhWG0uCqMtDTWZMZgrQfbc=;
- b=Jnd2L3BKOh0hzEf3BHp6OarNMGf67ji3SisnK50NmboWbvZNLNDemWXht0+7/zDtKq+w
- ub5SOCF/iXg13rcImAV+5CzZ68H31uqW5SF4dmqoX5+8jbXqyHkgok3AM4tXVowX5cX4
- Wh9kXPHm43ctsrADpiQbAHHXTyPsDxjgxi2U/Du1YNKaFviiPMRZhbzrPvGMMNbYetNc
- 5GQ6IVgDvq6Xz/p6SksudKW1u5Nf7JDrFhRzoczkbuq2D1lbQBEENQdq08FJDfVi2AnZ
- Ir3jyRN3JrHwfmTfSocBFN2VZgqShaDC1o1LExP3i8oM2v4bfcSPZsIu3aF1yEYbNt8H dw== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qc5041466-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 May 2023 12:57:58 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 344CvuxW007531
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 4 May 2023 12:57:56 GMT
-Received: from [10.216.46.158] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 4 May 2023
- 05:57:48 -0700
-Message-ID: <d80868bf-610d-7e79-d279-da704efb38f0@quicinc.com>
-Date:   Thu, 4 May 2023 18:27:45 +0530
+        Sun, 2 Apr 2023 17:51:23 -0400
+X-Greylist: delayed 334 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 02 Apr 2023 14:51:21 PDT
+Received: from hera.aquilenet.fr (hera.aquilenet.fr [IPv6:2a0c:e300::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E44477299
+        for <linux-hardening@vger.kernel.org>; Sun,  2 Apr 2023 14:51:21 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id B22EC3D0
+        for <linux-hardening@vger.kernel.org>; Sun,  2 Apr 2023 23:45:43 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at hera.aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eqQeLLVWKQtL for <linux-hardening@vger.kernel.org>;
+        Sun,  2 Apr 2023 23:45:43 +0200 (CEST)
+Received: from begin (unknown [IPv6:2a01:cb19:4a:a400:de41:a9ff:fe47:ec49])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id 2E693AF
+        for <linux-hardening@vger.kernel.org>; Sun,  2 Apr 2023 23:45:43 +0200 (CEST)
+Received: from samy by begin with local (Exim 4.96)
+        (envelope-from <samuel.thibault@aquilenet.fr>)
+        id 1pj5WA-00Apfd-2j
+        for linux-hardening@vger.kernel.org;
+        Sun, 02 Apr 2023 23:45:42 +0200
+Received: from webmel.u-bordeaux.fr [147.210.215.28]
+        by begin.youpi.perso.aquilenet.fr with IMAP (fetchmail-6.4.37)
+        for <samy@localhost> (single-drop); Sat, 01 Apr 2023 08:25:30 +0200 (CEST)
+Received: from v-zimboxp12.srv.u-bordeaux.fr (LHLO
+ v-zimboxp12.srv.u-bordeaux.fr) (147.210.219.112) by
+ v-zimboxp12.srv.u-bordeaux.fr with LMTP; Sat, 1 Apr 2023 08:25:29 +0200
+ (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by v-zimboxp12.srv.u-bordeaux.fr (Postfix) with ESMTP id DD69FC0AA0
+        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:28 +0200 (CEST)
+Received: from v-zimboxp12.srv.u-bordeaux.fr ([127.0.0.1])
+        by localhost (v-zimboxp12.srv.u-bordeaux.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id AFZpRooWBhVM for <samuel.thibault@u-bordeaux.fr>;
+        Sat,  1 Apr 2023 08:25:28 +0200 (CEST)
+Received: from mta-in02.u-bordeaux.fr (mta-in02.u-bordeaux.fr [147.210.215.18])
+        by v-zimboxp12.srv.u-bordeaux.fr (Postfix) with ESMTPS id F2235C2275
+        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mta-in02.u-bordeaux.fr (Postfix) with ESMTP id E0C2CFADA1
+        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:27 +0200 (CEST)
+Received: from mta-in02.u-bordeaux.fr ([127.0.0.1])
+        by localhost (mta-in02.u-bordeaux.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id OdTOiQXWa6rW for <samuel.thibault@u-bordeaux.fr>;
+        Sat,  1 Apr 2023 08:25:27 +0200 (CEST)
+Received: from sonata.ens-lyon.org (sonata.ens-lyon.org [140.77.166.138])
+        by mta-in02.u-bordeaux.fr (Postfix) with ESMTPS id 7C191FADA0
+        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:27 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by sonata.ens-lyon.org (Postfix) with ESMTP id 3083A20156
+        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:26 +0200 (CEST)
+Received: from sonata.ens-lyon.org ([127.0.0.1])
+        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id oUvD67gVriIC for <samuel.thibault@u-bordeaux.fr>;
+        Sat,  1 Apr 2023 08:25:26 +0200 (CEST)
+X-policyd-weight: using cached result; rate: -6.1
+Received: from nimbus1.mmprivatehosting.com (nimbus1.mmprivatehosting.com [54.208.90.49])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by sonata.ens-lyon.org (Postfix) with ESMTPS id 1CAB120154
+        for <Samuel.Thibault@ens-lyon.org>; Sat,  1 Apr 2023 08:25:24 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by nimbus1.mmprivatehosting.com (Postfix) with ESMTP id BA80B60034;
+        Sat,  1 Apr 2023 06:25:24 +0000 (UTC)
+X-Virus-Scanned: amavis at mmprivatehosting.com
+Received: from dave.mielke.cc (unknown [174.116.27.113])
+        (Authenticated sender: relay@dave.mielke.cc)
+        by nimbus1.mmprivatehosting.com (Postfix) with ESMTPA;
+        Sat,  1 Apr 2023 06:25:24 +0000 (UTC)
+Received: from beta.private.mielke.cc (beta.private.mielke.cc [192.168.0.2])
+        by dave.mielke.cc (Postfix) with ESMTPS id 4BA8148E;
+        Sat,  1 Apr 2023 02:25:22 -0400 (EDT)
+Received: from beta.private.mielke.cc (localhost [127.0.0.1])
+        by beta.private.mielke.cc (8.17.1/8.15.2) with ESMTPS id 3316PLDh004836
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Sat, 1 Apr 2023 02:25:21 -0400
+Received: (from dave@localhost)
+        by beta.private.mielke.cc (8.17.1/8.17.1/Submit) id 3316PLs2004835;
+        Sat, 1 Apr 2023 02:25:21 -0400
+Date:   Sat, 1 Apr 2023 02:25:21 -0400
+From:   Dave Mielke <Dave@mielke.cc>
+To:     Linux Kernel Mailing List 
+        <linux-kernel%40vger.kernel.org@beta.private.mielke.cc>
+Cc:     Samuel Thibault <Samuel.Thibault@ens-lyon.org>
+Subject: The regrettable demise of the TIOCSTI ioctl.
+Message-ID: <ZCfOUSZ87LaBVjq7@beta.private.mielke.cc>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 02/18] remoteproc: qcom: Move minidump specific data to
- qcom_minidump.h
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-3-git-send-email-quic_mojha@quicinc.com>
- <fe94ed5c-c444-436d-720a-c96538c1026d@linaro.org>
- <e69862cc-4185-a7a2-07b2-15e331c4678a@quicinc.com>
- <659a9637-f82c-054b-99a8-dc25416c8e13@linaro.org>
- <33ea7c3b-4317-5aff-5e6a-af6e093d45a0@quicinc.com>
- <1a4f4b55-6284-6149-4c7b-7b45fa1de291@linaro.org>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <1a4f4b55-6284-6149-4c7b-7b45fa1de291@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9cR2SwDduMYBWJe-GF40DEwl8u4KK33H
-X-Proofpoint-ORIG-GUID: 9cR2SwDduMYBWJe-GF40DEwl8u4KK33H
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-04_08,2023-05-04_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=1 phishscore=0 malwarescore=0
- suspectscore=0 adultscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
- spamscore=1 priorityscore=1501 mlxlogscore=222 mlxscore=1 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2305040106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/2.1.5 (2021-12-30)
+X-Rspamd-Queue-Id: 7C191FADA0
+X-Rspamd-Action: no action
+X-Rspamd-Server: mta-in02
+X-Spamd-Result: default: False [0.01 / 15.00];
+        BAYES_HAM(-2.99)[99.97%];
+        FORGED_RECIPIENTS(2.00)[m:linux-kernel%40vger.kernel.org@beta.private.mielke.cc,m:Samuel.Thibault@ens-lyon.org,s:samuel.thibault@u-bordeaux.fr];
+        MID_RHS_MATCH_TO(1.00)[];
+        FORGED_SENDER(0.30)[Dave@mielke.cc,SRS0=8uky=7Y=mielke.cc=dave@bounce.ens-lyon.org];
+        R_SPF_ALLOW(-0.20)[+a:sonata.ens-lyon.org];
+        MIME_GOOD(-0.10)[text/plain];
+        R_DKIM_NA(0.00)[];
+        ASN(0.00)[asn:1945, ipnet:140.77.0.0/16, country:EU];
+        NEURAL_HAM(-0.00)[-0.761];
+        FROM_NEQ_ENVFROM(0.00)[Dave@mielke.cc,SRS0=8uky=7Y=mielke.cc=dave@bounce.ens-lyon.org];
+        MIME_TRACE(0.00)[0:+];
+        RCPT_COUNT_TWO(0.00)[2];
+        MID_RHS_MATCH_FROMTLD(0.00)[];
+        RCVD_COUNT_SEVEN(0.00)[9];
+        RCVD_VIA_SMTP_AUTH(0.00)[];
+        TO_DN_ALL(0.00)[];
+        ARC_NA(0.00)[];
+        DMARC_NA(0.00)[mielke.cc];
+        FROM_HAS_DN(0.00)[];
+        RCVD_TLS_LAST(0.00)[]
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+It seems that, starting in the 6.2 kernel (I think), there's a move underway to get rid of the TIOCSTI ioctl. The fact that the kernel configuration information says "provides no meaningful real-world utility any more" shows that the kernel developers seem to be unaware of an important subset of their users who absolutely depend on TIOCSTI.
 
+By removing TIOCSTI, you have broken several users' *ability* to work at all with their current hardware!
 
-On 5/4/2023 6:06 PM, Krzysztof Kozlowski wrote:
-> On 04/05/2023 14:26, Mukesh Ojha wrote:
->>
->>
->> On 5/4/2023 5:33 PM, Krzysztof Kozlowski wrote:
->>> On 04/05/2023 13:58, Mukesh Ojha wrote:
->>>>
->>>>
->>>> On 5/4/2023 5:08 PM, Krzysztof Kozlowski wrote:
->>>>> On 03/05/2023 19:02, Mukesh Ojha wrote:
->>>>>> Move minidump specific data types and macros to a separate internal
->>>>>> header(qcom_minidump.h) so that it can be shared among different
->>>>>> Qualcomm drivers.
->>>>>
->>>>> No, this is not internal header. You moved it to global header.
->>>>>
->>>>> There is no reason driver internals should be exposed to other unrelated
->>>>> subsystems.
->>>>>
->>>>>>
->>>>>> There is no change in functional behavior after this.
->>>>>
->>>>> It is. You made all these internal symbols available to others.
->>>>>
->>>>>>
->>>>>
->>>>> This comes without justification why other drivers needs to access
->>>>> private and internal data. It does not look correct design. NAK.
->>>>
->>>> Thanks for catching outdated commit text, will fix the commit with
->>>> more descriptive reasoning.
->>>>
->>>> It has to be global so that co-processor minidump and apss minidump can
->>>> share data structure and they are lying in different directory.
->>>>
->>>
->>> Then you should not share all the internals of memory layout but only
->>> few pieces necessary to talk with minidump driver. The minidump driver
->>> should organize everything how it wants.
->>
->> These are core data structure which is shared with boot firmware and the
->> one's are moved here all are required by minidump driver .
-> 
-> I am not sure if I understand correctly. If they are all required by
-> minidump driver, then this must not be in include, but stay with
-> minidump. Remoteproc then should not touch it.
-> 
-> I don't understand why internals of minidump should be important for
-> remoteproc. If they are, means you broken encapsulation.
-> 
->>
->> If you follow here[1], i raised by concern to make this particular one's
->> as private and later to avoid confusion went with single header.
->> But if others agree, I will keep the one that get shared with minidump
->> as separate one or if relative path of headers are allowed that can make
->> it private between these drivers(which i don't think, will be allowed or
->> recommended).
-> 
-> Let's be specific: why MD_REGION_VALID must be available for remoteproc
-> or any other driver after introducing qcom minidump driver?
+The users I'm referring to are those who rely on their ability to work productively with braille devices. They use BRLTTY (see brltty.app). Most braille devices, these days, have braille keyboards. BRLTTY interprets what its users type on those braille keyboards, and uses TIOCSTI to inject those characters. Since I'm unaware of any adequate replacement for TIOCSTI, I'm asking (begging?) that this ioctl please be NOT removed.
 
-Forget about this driver for a moment.
+Even disablign it isn't good because a blind user who relies on his/her braille keyboard won't be able to fix the problem by logging in and issuing the needed sysctl command (try imagining how you'd do that without your keyboard). We could distribute a brltty.conf sysctl.d file, but that isn't a great idea either given that, in
+the end, it'd end up being run on all systems since BRLTTY is generally distributed.
 
-I am not sure  how much you know about existing qcom_minidump()
-implementation and why is it there in first place in remoteproc
-code in driver/remoteproc/qcom_common.c
+Please understand that it simply isn't true at all that TIOCSTI has no practical use these days. It most certainly does!
 
-The idea is, remoteproc co-processor like adsp/cdsp etc. may have their
-static predefined region (segments) to be collected on their crash which 
-is what exactly existing qcom_minidump() is doing.
+Thanks for at least hearing me out.
 
-Now, after this minidump series, APSS (linux) will have it's
-own of collecting linux client region independent of whether
-remoteproc minidump collection.
+-- 
+I believe the Bible to be the very Word of God: http://Mielke.cc/bible/
+Dave Mielke            | 2213 Fox Crescent | WebHome: http://Mielke.cc/
+EMail: Dave@Mielke.cc  | Ottawa, Ontario   | Twitter: @Dave_Mielke
+Phone: +1 613 726 0014 | Canada  K2A 1H7   |
 
-I think, are you hinting to move all minidump related code from 
-remoteproc to qcom_minidump driver, is this what are you trying
-to say ?
-
--- Mukesh
-> 
-> 
-> Best regards,
-> Krzysztof
-> 
