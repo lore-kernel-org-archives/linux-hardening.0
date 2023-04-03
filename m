@@ -2,104 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A5CC76196
-	for <linux-hardening@archiver.kernel.org>; Sat,  1 Apr 2023 12:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCCDC76196
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Apr 2023 02:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbjDAMAb (ORCPT
+        id S230487AbjDCCP2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 1 Apr 2023 08:00:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33662 "EHLO
+        Sun, 2 Apr 2023 22:15:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjDAMA3 (ORCPT
+        with ESMTP id S230332AbjDCCPY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 1 Apr 2023 08:00:29 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5873D24413
-        for <linux-hardening@vger.kernel.org>; Sat,  1 Apr 2023 05:00:20 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1piZty-0008Jk-WD; Sat, 01 Apr 2023 14:00:11 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1piZtv-008DGQ-JT; Sat, 01 Apr 2023 14:00:07 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1piZtu-009hNJ-SW; Sat, 01 Apr 2023 14:00:06 +0200
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-hardening@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH] pstore/ram: Convert to platform remove callback returning void
-Date:   Sat,  1 Apr 2023 14:00:00 +0200
-Message-Id: <20230401120000.2487153-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+        Sun, 2 Apr 2023 22:15:24 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D89D9751;
+        Sun,  2 Apr 2023 19:15:23 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 332LixoP008023;
+        Mon, 3 Apr 2023 02:15:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2022-7-12;
+ bh=Xu7hxzHWg1GV5VbFTZHnDf3VeuIiLhcHX+Z5vYrEgog=;
+ b=zqxP6AlIsvf6FAptq9AoamUJPb0By8PTLQve7CRafKrbdosxDAorpm+GwD7fd+VcrAaA
+ Rp9uj017gOa1z92/yfHvHO25WiD3xgpzyMgv2satATBeRe9Sna0L8iciGA9Y60RHYeyk
+ k0c8kAHyZx63e6pCqKoFUkCduyQFK+Kq8e38QS1+YiNRpsYQjBVnSGYjseRnSfgEUZUL
+ jajBHzderRNxrhfaPXgZqzsh/b92tpQm9z94TF0WYv2rDZ5+PmtiRM0fnWwdczsJoJrC
+ 0VZ3uiUXNKIJU9EkPfeQ1UTg5rZxhgnK+SZt+hPKOXxtc0EDCFIk/npvEotHMdkVVZgr KQ== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ppb71j26n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Apr 2023 02:15:20 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3331jXZ3013907;
+        Mon, 3 Apr 2023 02:15:19 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ppt3ddbpd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 03 Apr 2023 02:15:19 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3332FHwj010318;
+        Mon, 3 Apr 2023 02:15:19 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3ppt3ddbn7-3;
+        Mon, 03 Apr 2023 02:15:19 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Bodo Stroesser <bostroesser@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] uapi: target: Replace fake flex-array with flexible-array member
+Date:   Sun,  2 Apr 2023 22:15:04 -0400
+Message-Id: <168031383543.650124.8544574837401067751.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <ZBSchMvTdl7VObKI@work>
+References: <ZBSchMvTdl7VObKI@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1682; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=ZV4bC26dxUwofIABwwCtR03vphnH9lUv2WR8Lg3cC98=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBkKBy//ou+6tPzoXwpTH2gfg4NLwG4my3XjFHmD K6DotCOGAWJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZCgcvwAKCRCPgPtYfRL+ TqdyCACFkYP4bYfOdvzrvgt50OIPgO3mmGYKvyvJFb/AEIQM/eEMwmBM1wDf45QpT8tBOMlJzYl V5x6k0rvosSuHX2t8CRn10EQ+poA6xkmlikLhz3Iu72dBhfBQ/bVEHvYBb5rwFvPrpakwi5nNkO nnXLi3/QiwdhkTq7ZKSs2rYcY1VXumZ/EQN2C/M8v1IvAdYOK+psKEngihmKm+FxdSuazyliOYB hQpvofltnH/sFBA85vxXC4rXNgdIRctRdjAVKfw/Xd/Y8DWIPViLw0kn/Ac1JLBEgiQQ5RfKw0+ crzXvj78bG9PvgC+97SCRry3HKuR3cuQ+fF6dHDY/BdmDAVD
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-31_07,2023-03-31_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=725 mlxscore=0 adultscore=0
+ suspectscore=0 spamscore=0 malwarescore=0 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304030015
+X-Proofpoint-ORIG-GUID: uu1SvPznW0d-c7kUgYBXcA2PIEn1FrCK
+X-Proofpoint-GUID: uu1SvPznW0d-c7kUgYBXcA2PIEn1FrCK
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The .remove() callback for a platform driver returns an int which makes
-many driver authors wrongly assume it's possible to do error handling by
-returning an error code. However the value returned is (mostly) ignored
-and this typically results in resource leaks. To improve here there is a
-quest to make the remove callback return void. In the first step of this
-quest all drivers are converted to .remove_new() which already returns
-void.
+On Fri, 17 Mar 2023 10:59:48 -0600, Gustavo A. R. Silva wrote:
 
-Trivially convert this driver from always returning zero in the remove
-callback to the void returning variant.
+> Zero-length arrays as fake flexible arrays are deprecated and we are
+> moving towards adopting C99 flexible-array members instead.
+> 
+> Address the following warning found with GCC-13 and
+> -fstrict-flex-arrays=3 enabled:
+>   CC      drivers/target/target_core_user.o
+> drivers/target/target_core_user.c: In function ‘queue_cmd_ring’:
+> drivers/target/target_core_user.c:1096:15: warning: array subscript 0 is outside array bounds of ‘struct iovec[0]’ [-Warray-bounds=]
+>  1096 |         iov = &entry->req.iov[0];
+>       |               ^~~~~~~~~~~~~~~~~~
+> In file included from drivers/target/target_core_user.c:31:
+> ./include/uapi/linux/target_core_user.h:122:38: note: while referencing ‘iov’
+>   122 |                         struct iovec iov[0];
+>       |                                      ^~~
+> 
+> [...]
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- fs/pstore/ram.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Applied to 6.4/scsi-queue, thanks!
 
-diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-index ade66dbe5f39..2f625e1fa8d8 100644
---- a/fs/pstore/ram.c
-+++ b/fs/pstore/ram.c
-@@ -875,7 +875,7 @@ static int ramoops_probe(struct platform_device *pdev)
- 	return err;
- }
- 
--static int ramoops_remove(struct platform_device *pdev)
-+static void ramoops_remove(struct platform_device *pdev)
- {
- 	struct ramoops_context *cxt = &oops_cxt;
- 
-@@ -885,8 +885,6 @@ static int ramoops_remove(struct platform_device *pdev)
- 	cxt->pstore.bufsize = 0;
- 
- 	ramoops_free_przs(cxt);
--
--	return 0;
- }
- 
- static const struct of_device_id dt_match[] = {
-@@ -896,7 +894,7 @@ static const struct of_device_id dt_match[] = {
- 
- static struct platform_driver ramoops_driver = {
- 	.probe		= ramoops_probe,
--	.remove		= ramoops_remove,
-+	.remove_new	= ramoops_remove,
- 	.driver		= {
- 		.name		= "ramoops",
- 		.of_match_table	= dt_match,
+[1/1] uapi: target: Replace fake flex-array with flexible-array member
+      https://git.kernel.org/mkp/scsi/c/5c8c74ef20e7
 
-base-commit: fe15c26ee26efa11741a7b632e9f23b01aca4cc6
 -- 
-2.39.2
-
+Martin K. Petersen	Oracle Linux Engineering
