@@ -2,408 +2,279 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5716FC761A6
-	for <linux-hardening@archiver.kernel.org>; Mon,  3 Apr 2023 12:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7131C76188
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Apr 2023 16:26:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232278AbjDCMHB (ORCPT
+        id S231895AbjDCQ0o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 3 Apr 2023 08:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35576 "EHLO
+        Mon, 3 Apr 2023 12:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231897AbjDCMHA (ORCPT
+        with ESMTP id S231655AbjDCQ0n (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 3 Apr 2023 08:07:00 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 548CAA9;
-        Mon,  3 Apr 2023 05:06:58 -0700 (PDT)
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PqqM04rq1zKwTX;
-        Mon,  3 Apr 2023 20:04:28 +0800 (CST)
-Received: from [10.67.110.48] (10.67.110.48) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 3 Apr
- 2023 20:06:55 +0800
-Message-ID: <eaefbf3b-1a81-5916-b084-79d33b712223@huawei.com>
-Date:   Mon, 3 Apr 2023 20:06:55 +0800
+        Mon, 3 Apr 2023 12:26:43 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A218171C;
+        Mon,  3 Apr 2023 09:26:39 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 333EUBEt022589;
+        Mon, 3 Apr 2023 16:26:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=ZmFvuCrKRi6qXSK9G1ra3ki/FkMe5vXp6BX6wDMROKk=;
+ b=fW29PkUhWctUz1miJvjLp777znUY0BK7JGu5QCjcY5U2tJ7IGEDgPG76GRA76/EKezk+
+ EgKEt1vmrbRgMz6ZxclWNMY3a/QkMBR2pPco9MfmlQ8Fc6TLNLvjIUuqKv19YboNZNrk
+ 082mJ1OW37GoBwNcVAqtHueIzvijnabgpxoDEy5ho8VGEuQW38USfPXUyTqr6e92QcuR
+ wwsWekK7Gm6HEaTw2BGPeRhn/UtiTzHYf3U7TCR1XssaCI/3XTzOs1qudEXQTvHFcvfg
+ 0glHCAZhONJp7kcNXvVoR29HU/OIDkRL/b0hnXsLwC4JDzIFLFDOlumt7fs3a7VS7MoS 4w== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pqtee99p9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Apr 2023 16:26:05 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 333GQ4t9023358
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 3 Apr 2023 16:26:04 GMT
+Received: from [10.216.35.203] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Mon, 3 Apr 2023
+ 09:25:59 -0700
+Message-ID: <714c239d-5813-5333-9267-9684ec1b0f4d@quicinc.com>
+Date:   Mon, 3 Apr 2023 21:55:56 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH RFC] Randomized slab caches for kmalloc()
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 0/6] Add basic Minidump kernel driver support
 Content-Language: en-US
-From:   Gong Ruiqi <gongruiqi1@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>, <will@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-hardening@vger.kernel.org>,
-        <kernel-hardening@lists.openwall.com>
-References: <20230315095459.186113-1-gongruiqi1@huawei.com>
-In-Reply-To: <20230315095459.186113-1-gongruiqi1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
+References: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.48]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: eDDI_nNXMOH3ZtYpt3kal14_qzpDdwVo
+X-Proofpoint-ORIG-GUID: eDDI_nNXMOH3ZtYpt3kal14_qzpDdwVo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-03_13,2023-04-03_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ priorityscore=1501 mlxlogscore=999 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1015 malwarescore=0 adultscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304030122
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
+Gentle ping;
 
-Friendly ping. Any suggestions are welcome.
+-Mukesh
 
-Thanks.
-Ruiqi
-
-On 2023/03/15 17:54, GONG, Ruiqi wrote:
-> When exploiting memory vulnerabilities, "heap spraying" is a common
-> technique targeting those related to dynamic memory allocation (i.e. the
-> "heap"), and it plays an important role in a successful exploitation.
-> Basically, it is to overwrite the memory area of vulnerable object by
-> triggering allocation in other subsystems or modules and therefore
-> getting a reference to the targeted memory location. It's usable on
-> various types of vulnerablity including use after free (UAF), heap out-
-> of-bound write and etc.
+On 3/22/2023 7:00 PM, Mukesh Ojha wrote:
+> Minidump is a best effort mechanism to collect useful and predefined data
+> for first level of debugging on end user devices running on Qualcomm SoCs.
+> It is built on the premise that System on Chip (SoC) or subsystem part of
+> SoC crashes, due to a range of hardware and software bugs. Hence, the
+> ability to collect accurate data is only a best-effort. The data collected
+> could be invalid or corrupted, data collection itself could fail, and so on.
 > 
-> There are (at least) two reasons why the heap can be sprayed: 1) generic
-> slab caches are shared among different subsystems and modules, and
-> 2) dedicated slab caches could be merged with the generic ones.
-> Currently these two factors cannot be prevented at a low cost: the first
-> one is a widely used memory allocation mechanism, and shutting down slab
-> merging completely via `slub_nomerge` would be overkill.
+> Qualcomm devices in engineering mode provides a mechanism for generating
+> full system ramdumps for post mortem debugging. But in some cases it's
+> however not feasible to capture the entire content of RAM. The minidump
+> mechanism provides the means for selecting which snippets should be
+> included in the ramdump.
 > 
-> To efficiently prevent heap spraying, we propose the following approach:
-> to create multiple copies of generic slab caches that will never be
-> merged, and random one of them will be used at allocation. The random
-> selection is based on the location of code that calls `kmalloc()`, which
-> means it is static at runtime (rather than dynamically determined at
-> each time of allocation, which could be bypassed by repeatedly spraying
-> in brute force). In this way, the vulnerable object and memory allocated
-> in other subsystems and modules will (most probably) be on different
-> slab caches, which prevents the object from being sprayed.
+> The core of minidump feature is part of Qualcomm's boot firmware code.
+> It initializes shared memory (SMEM), which is a part of DDR and
+> allocates a small section of SMEM to minidump table i.e also called
+> global table of content (G-ToC). Each subsystem (APSS, ADSP, ...) has
+> their own table of segments to be included in the minidump and all get
+> their reference from G-ToC. Each segment/region has some details like
+> name, physical address and it's size etc. and it could be anywhere
+> scattered in the DDR.
 > 
-> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
-> ---
+> Existing upstream Qualcomm remoteproc driver[1] already supports minidump
+> feature for remoteproc instances like ADSP, MODEM, ... where predefined
+> selective segments of subsystem region can be dumped as part of
+> coredump collection which generates smaller size artifacts compared to
+> complete coredump of subsystem on crash.
 > 
-> v0:
-> The current implementation only randomize slab caches for KMALLOC_NORMAL
-> allocation. Besides the patch itself, we would also like to know the
-> opinion of the community about whether or not it's necessary to extend
-> this randomization to all KMALLOC_*, and if so, if implementing a three-
-> dimensional `kmalloc_caches` is a better choice.
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/remoteproc/qcom_common.c#n142
+> 
+> In addition to managing and querying the APSS minidump description,
+> the Linux driver maintains a ELF header in a segment. This segment
+> gets updated with section/program header whenever a new entry gets
+> registered.
+> 
+> Patch 1/6 is very trivial change.
+> Patch 2/6 moves the minidump specific data structure and macro to
+>   qcom_minidump.h so that (4/6) minidump driver can use.
+> Patch 3/6 documents qualcomm minidump guide for users.
+> Patch 4/6 implements qualcomm minidump kernel driver and exports
+>   symbol which other minidump kernel client can use.
+> Patch 5/6 enables the qualcomm minidump driver.
+> Patch 6/6 Use the exported symbol from minidump driver in qcom_common
+>   for querying minidump descriptor for a subsystem.
+> 
+> Testing of the patches has been done on sm8450 target with the help
+> of out of tree patch which helps to set the download mode and storage
+> type and to warm reset the device.
+> 
+> Download mode setting patches are floating here,
+> https://lore.kernel.org/lkml/1679070482-8391-1-git-send-email-quic_mojha@quicinc.com/
+> 
+> Default storage type is set to via USB, so minidump would be
+> downloaded with the help of x86_64 machine running PCAT attached
+> to Qualcomm device which has backed minidump boot firmware
+> support(more can be found patch 3/6)
+> 
+> Below patch [1] is to warm reset Qualcomm device which has upstream qcom
+> watchdog driver support.
+> 
+> After applying all patches, we can boot the device and can execute
+> following command.
+> 
+> echo mini > /sys/module/qcom_scm/parameters/download_mode
+> echo c > /proc/sysrq-trigger
+> 
+> This will make the device go to download mode and collect the
+> minidump on to the attached x86 machine running the Qualcomm
+> PCAT tool.
+> 
+> We will see a bunch of predefined registered region as binary
+> blobs starts with md_*. A sample client example to dump a linux
+> region has been given in 3/6.
+> 
+> [1]
+> --------------------------->8-------------------------------------
+> 
+> commit f1124ccebd47550b4c9627aa162d9cdceba2b76f
+> Author: Mukesh Ojha <quic_mojha@quicinc.com>
+> Date:   Thu Mar 16 14:08:35 2023 +0530
+> 
+>      do not merge: watchdog bite on panic
+> 
+>      Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> 
+> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+> index 0d2209c..767e84a 100644
+> --- a/drivers/watchdog/qcom-wdt.c
+> +++ b/drivers/watchdog/qcom-wdt.c
+> @@ -12,6 +12,7 @@
+>   #include <linux/platform_device.h>
+>   #include <linux/watchdog.h>
+>   #include <linux/of_device.h>
+> +#include <linux/panic.h>
+> 
+>   enum wdt_reg {
+>          WDT_RST,
+> @@ -114,12 +115,28 @@ static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
+>          return qcom_wdt_start(wdd);
+>   }
+> 
+> +static void qcom_wdt_bite_on_panic(struct qcom_wdt *wdt)
+> +{
+> +       writel(0, wdt_addr(wdt, WDT_EN));
+> +       writel(1, wdt_addr(wdt, WDT_BITE_TIME));
+> +       writel(1, wdt_addr(wdt, WDT_RST));
+> +       writel(QCOM_WDT_ENABLE, wdt_addr(wdt, WDT_EN));
+> +
+> +       wmb();
+> +
+> +       while(1)
+> +               udelay(1);
+> +}
+> +
+>   static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+>                              void *data)
+>   {
+>          struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+>          u32 timeout;
+> 
+> +       if (in_panic)
+> +               qcom_wdt_bite_on_panic(wdt);
+> +
+>          /*
+>           * Trigger watchdog bite:
+>           *    Setup BITE_TIME to be 128ms, and enable WDT.
+> diff --git a/include/linux/panic.h b/include/linux/panic.h
+> index 979b776..f913629 100644
+> --- a/include/linux/panic.h
+> +++ b/include/linux/panic.h
+> @@ -22,6 +22,7 @@ extern int panic_on_oops;
+>   extern int panic_on_unrecovered_nmi;
+>   extern int panic_on_io_nmi;
+>   extern int panic_on_warn;
+> +extern bool in_panic;
+> 
+>   extern unsigned long panic_on_taint;
+>   extern bool panic_on_taint_nousertaint;
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 487f5b0..714f7f4 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -65,6 +65,8 @@ static unsigned int warn_limit __read_mostly;
+> 
+>   int panic_timeout = CONFIG_PANIC_TIMEOUT;
+>   EXPORT_SYMBOL_GPL(panic_timeout);
+> +bool in_panic = false;
+> +EXPORT_SYMBOL_GPL(in_panic);
+> 
+>   #define PANIC_PRINT_TASK_INFO          0x00000001
+>   #define PANIC_PRINT_MEM_INFO           0x00000002
+> @@ -261,6 +263,7 @@ void panic(const char *fmt, ...)
+>          int old_cpu, this_cpu;
+>          bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+> 
+> +       in_panic = true;
+>          if (panic_on_warn) {
+>                  /*
+>                   * This thread may hit another WARN() in the panic path.
+> --------------------------------------------------------------------------
+> 
+> Changes in v2:
+>   - Addressed review comment made by [quic_tsoni/bmasney] to add documentation.
+>   - Addressed comments made by [srinivas.kandagatla]
+>   - Dropped pstore 6/6 from the last series, till i get conclusion to get pstore
+>     region in minidump.
+>   - Fixed issue reported by kernel test robot.
 > 
 > 
->  include/linux/percpu.h  | 12 +++++++++---
->  include/linux/slab.h    | 24 +++++++++++++++++++-----
->  mm/Kconfig              | 20 ++++++++++++++++++++
->  mm/kfence/kfence_test.c |  4 ++--
->  mm/slab.c               |  2 +-
->  mm/slab.h               |  3 ++-
->  mm/slab_common.c        | 40 +++++++++++++++++++++++++++++++++++-----
->  7 files changed, 88 insertions(+), 17 deletions(-)
+> Changes in v1: https://lore.kernel.org/lkml/1676978713-7394-1-git-send-email-quic_mojha@quicinc.com/
 > 
-> diff --git a/include/linux/percpu.h b/include/linux/percpu.h
-> index 1338ea2aa720..6cee6425951f 100644
-> --- a/include/linux/percpu.h
-> +++ b/include/linux/percpu.h
-> @@ -34,6 +34,12 @@
->  #define PCPU_BITMAP_BLOCK_BITS		(PCPU_BITMAP_BLOCK_SIZE >>	\
->  					 PCPU_MIN_ALLOC_SHIFT)
->  
-> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-> +#define PERCPU_DYNAMIC_SIZE_SHIFT      13
-> +#else
-> +#define PERCPU_DYNAMIC_SIZE_SHIFT      10
-> +#endif
-> +
->  /*
->   * Percpu allocator can serve percpu allocations before slab is
->   * initialized which allows slab to depend on the percpu allocator.
-> @@ -41,7 +47,7 @@
->   * for this.  Keep PERCPU_DYNAMIC_RESERVE equal to or larger than
->   * PERCPU_DYNAMIC_EARLY_SIZE.
->   */
-> -#define PERCPU_DYNAMIC_EARLY_SIZE	(20 << 10)
-> +#define PERCPU_DYNAMIC_EARLY_SIZE	(20 << PERCPU_DYNAMIC_SIZE_SHIFT)
->  
->  /*
->   * PERCPU_DYNAMIC_RESERVE indicates the amount of free area to piggy
-> @@ -55,9 +61,9 @@
->   * intelligent way to determine this would be nice.
->   */
->  #if BITS_PER_LONG > 32
-> -#define PERCPU_DYNAMIC_RESERVE		(28 << 10)
-> +#define PERCPU_DYNAMIC_RESERVE		(28 << PERCPU_DYNAMIC_SIZE_SHIFT)
->  #else
-> -#define PERCPU_DYNAMIC_RESERVE		(20 << 10)
-> +#define PERCPU_DYNAMIC_RESERVE		(20 << PERCPU_DYNAMIC_SIZE_SHIFT)
->  #endif
->  
->  extern void *pcpu_base_addr;
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 87d687c43d8c..fea7644a1985 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -106,6 +106,12 @@
->  /* Avoid kmemleak tracing */
->  #define SLAB_NOLEAKTRACE	((slab_flags_t __force)0x00800000U)
->  
-> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-> +# define SLAB_RANDOMSLAB	((slab_flags_t __force)0x01000000U)
-> +#else
-> +# define SLAB_RANDOMSLAB	0
-> +#endif
-> +
->  /* Fault injection mark */
->  #ifdef CONFIG_FAILSLAB
->  # define SLAB_FAILSLAB		((slab_flags_t __force)0x02000000U)
-> @@ -336,6 +342,12 @@ static inline unsigned int arch_slab_minalign(void)
->  #define SLAB_OBJ_MIN_SIZE      (KMALLOC_MIN_SIZE < 16 ? \
->                                 (KMALLOC_MIN_SIZE) : 16)
->  
-> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-> +#define KMALLOC_RANDOM_NR CONFIG_RANDOM_KMALLOC_CACHES_NR
-> +#else
-> +#define KMALLOC_RANDOM_NR 1
-> +#endif
-> +
->  /*
->   * Whenever changing this, take care of that kmalloc_type() and
->   * create_kmalloc_caches() still work as intended.
-> @@ -345,7 +357,9 @@ static inline unsigned int arch_slab_minalign(void)
->   * kmem caches can have both accounted and unaccounted objects.
->   */
->  enum kmalloc_cache_type {
-> -	KMALLOC_NORMAL = 0,
-> +	KMALLOC_RANDOM_START = 0,
-> +	KMALLOC_RANDOM_END = KMALLOC_RANDOM_START + KMALLOC_RANDOM_NR - 1,
-> +	KMALLOC_NORMAL = KMALLOC_RANDOM_END,
->  #ifndef CONFIG_ZONE_DMA
->  	KMALLOC_DMA = KMALLOC_NORMAL,
->  #endif
-> @@ -378,14 +392,14 @@ kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
->  	(IS_ENABLED(CONFIG_ZONE_DMA)   ? __GFP_DMA : 0) |	\
->  	(IS_ENABLED(CONFIG_MEMCG_KMEM) ? __GFP_ACCOUNT : 0))
->  
-> -static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags)
-> +static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags, unsigned long caller)
->  {
->  	/*
->  	 * The most common case is KMALLOC_NORMAL, so test for it
->  	 * with a single branch for all the relevant flags.
->  	 */
->  	if (likely((flags & KMALLOC_NOT_NORMAL_BITS) == 0))
-> -		return KMALLOC_NORMAL;
-> +		return KMALLOC_RANDOM_START + caller % KMALLOC_RANDOM_NR;
->  
->  	/*
->  	 * At least one of the flags has to be set. Their priorities in
-> @@ -578,7 +592,7 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
->  
->  		index = kmalloc_index(size);
->  		return kmalloc_trace(
-> -				kmalloc_caches[kmalloc_type(flags)][index],
-> +				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
->  				flags, size);
->  	}
->  	return __kmalloc(size, flags);
-> @@ -604,7 +618,7 @@ static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t fla
->  
->  		index = kmalloc_index(size);
->  		return kmalloc_node_trace(
-> -				kmalloc_caches[kmalloc_type(flags)][index],
-> +				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
->  				flags, node, size);
->  	}
->  	return __kmalloc_node(size, flags, node);
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index bc828f640cd9..0b116bd8fdf0 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -333,6 +333,26 @@ config SLUB_CPU_PARTIAL
->  	  which requires the taking of locks that may cause latency spikes.
->  	  Typically one would choose no for a realtime system.
->  
-> +config RANDOM_KMALLOC_CACHES
-> +	default n
-> +	depends on SLUB
-> +	bool "Random slab caches for normal kmalloc"
-> +	help
-> +	  A hardening feature that creates multiple copies of slab caches for
-> +	  normal kmalloc allocation and makes kmalloc randomly pick one based
-> +	  on code address, which makes the attackers unable to spray vulnerable
-> +	  memory objects on the heap for exploiting memory vulnerabilities.
-> +
-> +config RANDOM_KMALLOC_CACHES_NR
-> +	int "Number of random slab caches copies"
-> +	default 16
-> +	range 4 16
-> +	depends on RANDOM_KMALLOC_CACHES
-> +	help
-> +	  The number of copies of random slab caches. Bigger value makes the
-> +	  potentially vulnerable memory object less likely to collide with
-> +	  objects allocated from other subsystems or modules.
-> +
->  endmenu # SLAB allocator options
->  
->  config SHUFFLE_PAGE_ALLOCATOR
-> diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
-> index b5d66a69200d..316d12af7202 100644
-> --- a/mm/kfence/kfence_test.c
-> +++ b/mm/kfence/kfence_test.c
-> @@ -213,7 +213,7 @@ static void test_cache_destroy(void)
->  
->  static inline size_t kmalloc_cache_alignment(size_t size)
->  {
-> -	return kmalloc_caches[kmalloc_type(GFP_KERNEL)][__kmalloc_index(size, false)]->align;
-> +	return kmalloc_caches[kmalloc_type(GFP_KERNEL, _RET_IP_)][__kmalloc_index(size, false)]->align;
->  }
->  
->  /* Must always inline to match stack trace against caller. */
-> @@ -284,7 +284,7 @@ static void *test_alloc(struct kunit *test, size_t size, gfp_t gfp, enum allocat
->  		if (is_kfence_address(alloc)) {
->  			struct slab *slab = virt_to_slab(alloc);
->  			struct kmem_cache *s = test_cache ?:
-> -					kmalloc_caches[kmalloc_type(GFP_KERNEL)][__kmalloc_index(size, false)];
-> +					kmalloc_caches[kmalloc_type(GFP_KERNEL, _RET_IP_)][__kmalloc_index(size, false)];
->  
->  			/*
->  			 * Verify that various helpers return the right values
-> diff --git a/mm/slab.c b/mm/slab.c
-> index dabc2a671fc6..8dc7e183dcc5 100644
-> --- a/mm/slab.c
-> +++ b/mm/slab.c
-> @@ -1675,7 +1675,7 @@ static size_t calculate_slab_order(struct kmem_cache *cachep,
->  			if (freelist_size > KMALLOC_MAX_CACHE_SIZE) {
->  				freelist_cache_size = PAGE_SIZE << get_order(freelist_size);
->  			} else {
-> -				freelist_cache = kmalloc_slab(freelist_size, 0u);
-> +				freelist_cache = kmalloc_slab(freelist_size, 0u, _RET_IP_);
->  				if (!freelist_cache)
->  					continue;
->  				freelist_cache_size = freelist_cache->size;
-> diff --git a/mm/slab.h b/mm/slab.h
-> index 43966aa5fadf..4f4caf422b77 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -280,7 +280,7 @@ void setup_kmalloc_cache_index_table(void);
->  void create_kmalloc_caches(slab_flags_t);
->  
->  /* Find the kmalloc slab corresponding for a certain size */
-> -struct kmem_cache *kmalloc_slab(size_t, gfp_t);
-> +struct kmem_cache *kmalloc_slab(size_t, gfp_t, unsigned long);
->  
->  void *__kmem_cache_alloc_node(struct kmem_cache *s, gfp_t gfpflags,
->  			      int node, size_t orig_size,
-> @@ -374,6 +374,7 @@ static inline bool is_kmalloc_cache(struct kmem_cache *s)
->  			      SLAB_TEMPORARY | \
->  			      SLAB_ACCOUNT | \
->  			      SLAB_KMALLOC | \
-> +			      SLAB_RANDOMSLAB | \
->  			      SLAB_NO_USER_FLAGS)
->  
->  bool __kmem_cache_empty(struct kmem_cache *);
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index bf4e777cfe90..895a3edb82d4 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -47,6 +47,7 @@ static DECLARE_WORK(slab_caches_to_rcu_destroy_work,
->   */
->  #define SLAB_NEVER_MERGE (SLAB_RED_ZONE | SLAB_POISON | SLAB_STORE_USER | \
->  		SLAB_TRACE | SLAB_TYPESAFE_BY_RCU | SLAB_NOLEAKTRACE | \
-> +		SLAB_RANDOMSLAB | \
->  		SLAB_FAILSLAB | kasan_never_merge())
->  
->  #define SLAB_MERGE_SAME (SLAB_RECLAIM_ACCOUNT | SLAB_CACHE_DMA | \
-> @@ -722,7 +723,7 @@ static inline unsigned int size_index_elem(unsigned int bytes)
->   * Find the kmem_cache structure that serves a given size of
->   * allocation
->   */
-> -struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
-> +struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags, unsigned long caller)
->  {
->  	unsigned int index;
->  
-> @@ -737,7 +738,7 @@ struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
->  		index = fls(size - 1);
->  	}
->  
-> -	return kmalloc_caches[kmalloc_type(flags)][index];
-> +	return kmalloc_caches[kmalloc_type(flags, caller)][index];
->  }
->  
->  size_t kmalloc_size_roundup(size_t size)
-> @@ -755,7 +756,7 @@ size_t kmalloc_size_roundup(size_t size)
->  		return PAGE_SIZE << get_order(size);
->  
->  	/* The flags don't matter since size_index is common to all. */
-> -	c = kmalloc_slab(size, GFP_KERNEL);
-> +	c = kmalloc_slab(size, GFP_KERNEL, _RET_IP_);
->  	return c ? c->object_size : 0;
->  }
->  EXPORT_SYMBOL(kmalloc_size_roundup);
-> @@ -778,12 +779,36 @@ EXPORT_SYMBOL(kmalloc_size_roundup);
->  #define KMALLOC_RCL_NAME(sz)
->  #endif
->  
-> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-> +#define __KMALLOC_RANDOM_CONCAT(a, b, c) a ## b ## c
-> +#define KMALLOC_RANDOM_NAME(N, sz) __KMALLOC_RANDOM_CONCAT(KMALLOC_RANDOM_, N, _NAME)(sz)
-> +#define KMALLOC_RANDOM_1_NAME(sz)                             .name[KMALLOC_RANDOM_START +  0] = "kmalloc-random-01-" #sz,
-> +#define KMALLOC_RANDOM_2_NAME(sz)  KMALLOC_RANDOM_1_NAME(sz)  .name[KMALLOC_RANDOM_START +  1] = "kmalloc-random-02-" #sz,
-> +#define KMALLOC_RANDOM_3_NAME(sz)  KMALLOC_RANDOM_2_NAME(sz)  .name[KMALLOC_RANDOM_START +  2] = "kmalloc-random-03-" #sz,
-> +#define KMALLOC_RANDOM_4_NAME(sz)  KMALLOC_RANDOM_3_NAME(sz)  .name[KMALLOC_RANDOM_START +  3] = "kmalloc-random-04-" #sz,
-> +#define KMALLOC_RANDOM_5_NAME(sz)  KMALLOC_RANDOM_4_NAME(sz)  .name[KMALLOC_RANDOM_START +  4] = "kmalloc-random-05-" #sz,
-> +#define KMALLOC_RANDOM_6_NAME(sz)  KMALLOC_RANDOM_5_NAME(sz)  .name[KMALLOC_RANDOM_START +  5] = "kmalloc-random-06-" #sz,
-> +#define KMALLOC_RANDOM_7_NAME(sz)  KMALLOC_RANDOM_6_NAME(sz)  .name[KMALLOC_RANDOM_START +  6] = "kmalloc-random-07-" #sz,
-> +#define KMALLOC_RANDOM_8_NAME(sz)  KMALLOC_RANDOM_7_NAME(sz)  .name[KMALLOC_RANDOM_START +  7] = "kmalloc-random-08-" #sz,
-> +#define KMALLOC_RANDOM_9_NAME(sz)  KMALLOC_RANDOM_8_NAME(sz)  .name[KMALLOC_RANDOM_START +  8] = "kmalloc-random-09-" #sz,
-> +#define KMALLOC_RANDOM_10_NAME(sz) KMALLOC_RANDOM_9_NAME(sz)  .name[KMALLOC_RANDOM_START +  9] = "kmalloc-random-10-" #sz,
-> +#define KMALLOC_RANDOM_11_NAME(sz) KMALLOC_RANDOM_10_NAME(sz) .name[KMALLOC_RANDOM_START + 10] = "kmalloc-random-11-" #sz,
-> +#define KMALLOC_RANDOM_12_NAME(sz) KMALLOC_RANDOM_11_NAME(sz) .name[KMALLOC_RANDOM_START + 11] = "kmalloc-random-12-" #sz,
-> +#define KMALLOC_RANDOM_13_NAME(sz) KMALLOC_RANDOM_12_NAME(sz) .name[KMALLOC_RANDOM_START + 12] = "kmalloc-random-13-" #sz,
-> +#define KMALLOC_RANDOM_14_NAME(sz) KMALLOC_RANDOM_13_NAME(sz) .name[KMALLOC_RANDOM_START + 13] = "kmalloc-random-14-" #sz,
-> +#define KMALLOC_RANDOM_15_NAME(sz) KMALLOC_RANDOM_14_NAME(sz) .name[KMALLOC_RANDOM_START + 14] = "kmalloc-random-15-" #sz,
-> +#define KMALLOC_RANDOM_16_NAME(sz) KMALLOC_RANDOM_15_NAME(sz) .name[KMALLOC_RANDOM_START + 15] = "kmalloc-random-16-" #sz,
-> +#else
-> +#define KMALLOC_RANDOM_NAME(N, sz)
-> +#endif
-> +
->  #define INIT_KMALLOC_INFO(__size, __short_size)			\
->  {								\
->  	.name[KMALLOC_NORMAL]  = "kmalloc-" #__short_size,	\
->  	KMALLOC_RCL_NAME(__short_size)				\
->  	KMALLOC_CGROUP_NAME(__short_size)			\
->  	KMALLOC_DMA_NAME(__short_size)				\
-> +	KMALLOC_RANDOM_NAME(CONFIG_RANDOM_KMALLOC_CACHES_NR, __short_size)	\
->  	.size = __size,						\
->  }
->  
-> @@ -879,6 +904,11 @@ new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
->  		flags |= SLAB_CACHE_DMA;
->  	}
->  
-> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-> +	if (type >= KMALLOC_RANDOM_START && type <= KMALLOC_RANDOM_END)
-> +		flags |= SLAB_RANDOMSLAB;
-> +#endif
-> +
->  	kmalloc_caches[type][idx] = create_kmalloc_cache(
->  					kmalloc_info[idx].name[type],
->  					kmalloc_info[idx].size, flags, 0,
-> @@ -905,7 +935,7 @@ void __init create_kmalloc_caches(slab_flags_t flags)
->  	/*
->  	 * Including KMALLOC_CGROUP if CONFIG_MEMCG_KMEM defined
->  	 */
-> -	for (type = KMALLOC_NORMAL; type < NR_KMALLOC_TYPES; type++) {
-> +	for (type = KMALLOC_RANDOM_START; type < NR_KMALLOC_TYPES; type++) {
->  		for (i = KMALLOC_SHIFT_LOW; i <= KMALLOC_SHIFT_HIGH; i++) {
->  			if (!kmalloc_caches[type][i])
->  				new_kmalloc_cache(i, type, flags);
-> @@ -958,7 +988,7 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node, unsigned long caller
->  		return ret;
->  	}
->  
-> -	s = kmalloc_slab(size, flags);
-> +	s = kmalloc_slab(size, flags, caller);
->  
->  	if (unlikely(ZERO_OR_NULL_PTR(s)))
->  		return s;
+> Mukesh Ojha (6):
+>    remoteproc: qcom: Expand MD_* as MINIDUMP_*
+>    remoteproc: qcom: Move minidump specific data to qcom_minidump.h
+>    docs: qcom: Add qualcomm minidump guide
+>    soc: qcom: Add Qualcomm minidump kernel driver
+>    arm64: defconfig: Enable Qualcomm minidump driver
+>    remoterproc: qcom: refactor to leverage exported minidump symbol
+> 
+>   Documentation/admin-guide/qcom_minidump.rst | 240 +++++++++++++
+>   arch/arm64/configs/defconfig                |   1 +
+>   drivers/remoteproc/qcom_common.c            |  75 +---
+>   drivers/soc/qcom/Kconfig                    |  14 +
+>   drivers/soc/qcom/Makefile                   |   1 +
+>   drivers/soc/qcom/qcom_minidump.c            | 537 ++++++++++++++++++++++++++++
+>   include/soc/qcom/minidump.h                 |  40 +++
+>   include/soc/qcom/qcom_minidump.h            |  88 +++++
+>   8 files changed, 927 insertions(+), 69 deletions(-)
+>   create mode 100644 Documentation/admin-guide/qcom_minidump.rst
+>   create mode 100644 drivers/soc/qcom/qcom_minidump.c
+>   create mode 100644 include/soc/qcom/minidump.h
+>   create mode 100644 include/soc/qcom/qcom_minidump.h
+> 
