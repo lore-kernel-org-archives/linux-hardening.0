@@ -2,26 +2,26 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C59CC77B62
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Apr 2023 08:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08716C6FD1D
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Apr 2023 08:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233988AbjDDInZ (ORCPT
+        id S233890AbjDDIn2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Apr 2023 04:43:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50448 "EHLO
+        Tue, 4 Apr 2023 04:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233938AbjDDInX (ORCPT
+        with ESMTP id S233983AbjDDInZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Apr 2023 04:43:23 -0400
+        Tue, 4 Apr 2023 04:43:25 -0400
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A47162709;
-        Tue,  4 Apr 2023 01:43:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B6733211D;
+        Tue,  4 Apr 2023 01:43:14 -0700 (PDT)
 Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8Dx_5cf4ytkr10WAA--.34838S3;
-        Tue, 04 Apr 2023 16:43:11 +0800 (CST)
+        by gateway (Coremail) with SMTP id _____8AxYeUh4ytkx10WAA--.34733S3;
+        Tue, 04 Apr 2023 16:43:13 +0800 (CST)
 Received: from localhost.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxT+Qc4ytkChcVAA--.55041S2;
-        Tue, 04 Apr 2023 16:43:09 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxT+Qc4ytkChcVAA--.55041S4;
+        Tue, 04 Apr 2023 16:43:12 +0800 (CST)
 From:   Qing Zhang <zhangqing@loongson.cn>
 To:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -36,96 +36,77 @@ Cc:     Alexander Potapenko <glider@google.com>,
         kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
         linux-mm@kvack.org, loongarch@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 4/6] kasan: Add __HAVE_ARCH_SHADOW_MAP to support arch specific mapping
-Date:   Tue,  4 Apr 2023 16:43:06 +0800
-Message-Id: <20230404084308.813-1-zhangqing@loongson.cn>
+Subject: [PATCH v2 6/6] LoongArch: Add ARCH_HAS_FORTIFY_SOURCE
+Date:   Tue,  4 Apr 2023 16:43:08 +0800
+Message-Id: <20230404084308.813-3-zhangqing@loongson.cn>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230404084308.813-1-zhangqing@loongson.cn>
+References: <20230404084308.813-1-zhangqing@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxT+Qc4ytkChcVAA--.55041S2
+X-CM-TRANSID: AQAAf8AxT+Qc4ytkChcVAA--.55041S4
 X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WryDtw1xWw18Xw1UAr17Awb_yoW8uw4UpF
-        ZrGFyxtrs2qFy0ga43Cr4Uur15JrnaqF4ktrZIgw4rCFy5W3WvqF1q9F9Yyrn7Wr47tFyY
-        vwn7ZFZxJr90q3DanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7uF1xtF18KFW5Gr1ktw4DXFb_yoW8WFyrpF
+        nrA3s5Jr48CFn7AFWjy34UWryUWF97Kr42gFyYya48AFy3XryDXrs2q3Z0vFy5Za1rG3yx
+        uFyfWa4aqF4DX37anT9S1TB71UUUUb7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
         qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bhxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-        M2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
-        CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2
-        z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x
-        0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCF
-        I7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-        106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-        xVW7JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcI
-        k0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8
-        JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU08gA7UUUUU==
+        b6xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
+        8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
+        JwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4
+        CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_GryDMcIj
+        6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMx
+        kF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+        MxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+        0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+        14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI
+        8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AK
+        xVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jDjjDUUUUU=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Like the LoongArch, which has many holes between different segments
-and valid address space(256T available) is insufficient to map all
-these segments to kasan shadow memory with the common formula provided
-by kasan core, We need architecture specific mapping formula,different
-segments are mapped individually, and only limited length of space of
-that specific segment is mapped to shadow.
+FORTIFY_SOURCE could detect various overflows at compile and run time.
+ARCH_HAS_FORTIFY_SOURCE means that the architecture can be built and
+run with CONFIG_FORTIFY_SOURCE. Select it in LoongArch.
 
-Therefore, when the incoming address is converted to a shadow, we need
-to add a condition to determine whether it is valid.
+See more about this feature from commit 6974f0c4555e
+("include/linux/string.h: add the option of fortified string.h functions").
 
 Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
 ---
- include/linux/kasan.h | 2 ++
- mm/kasan/kasan.h      | 6 ++++++
- 2 files changed, 8 insertions(+)
+ arch/loongarch/Kconfig              | 1 +
+ arch/loongarch/include/asm/string.h | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-index f7ef70661ce2..3b91b941873d 100644
---- a/include/linux/kasan.h
-+++ b/include/linux/kasan.h
-@@ -54,11 +54,13 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D];
- int kasan_populate_early_shadow(const void *shadow_start,
- 				const void *shadow_end);
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 61f883c51045..6c525e50bb7c 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -11,6 +11,7 @@ config LOONGARCH
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE
+ 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
++	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+diff --git a/arch/loongarch/include/asm/string.h b/arch/loongarch/include/asm/string.h
+index a6482abdc8b3..5bb5a90d2681 100644
+--- a/arch/loongarch/include/asm/string.h
++++ b/arch/loongarch/include/asm/string.h
+@@ -28,6 +28,10 @@ extern void *__memmove(void *__dest, __const__ void *__src, size_t __n);
+ #define memcpy(dst, src, len) __memcpy(dst, src, len)
+ #define memmove(dst, src, len) __memmove(dst, src, len)
  
-+#ifndef __HAVE_ARCH_SHADOW_MAP
- static inline void *kasan_mem_to_shadow(const void *addr)
- {
- 	return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
- 		+ KASAN_SHADOW_OFFSET;
- }
++#ifndef __NO_FORTIFY
++#define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
 +#endif
++
+ #endif
  
- int kasan_add_zero_shadow(void *start, unsigned long size);
- void kasan_remove_zero_shadow(void *start, unsigned long size);
-diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-index a61eeee3095a..033335c13b25 100644
---- a/mm/kasan/kasan.h
-+++ b/mm/kasan/kasan.h
-@@ -291,16 +291,22 @@ struct kasan_stack_ring {
- 
- #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
- 
-+#ifndef __HAVE_ARCH_SHADOW_MAP
- static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
- {
- 	return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET)
- 		<< KASAN_SHADOW_SCALE_SHIFT);
- }
-+#endif
- 
- static __always_inline bool addr_has_metadata(const void *addr)
- {
-+#ifdef __HAVE_ARCH_SHADOW_MAP
-+	return (kasan_mem_to_shadow((void *)addr) != NULL);
-+#else
- 	return (kasan_reset_tag(addr) >=
- 		kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
-+#endif
- }
- 
- /**
+ #endif /* _ASM_STRING_H */
 -- 
 2.20.1
 
