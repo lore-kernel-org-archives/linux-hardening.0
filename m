@@ -2,33 +2,66 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08716C6FD1D
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Apr 2023 08:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE9CC6FD1D
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Apr 2023 22:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233890AbjDDIn2 (ORCPT
+        id S236576AbjDDWJc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Apr 2023 04:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50516 "EHLO
+        Tue, 4 Apr 2023 18:09:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233983AbjDDInZ (ORCPT
+        with ESMTP id S236498AbjDDWJc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Apr 2023 04:43:25 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B6733211D;
-        Tue,  4 Apr 2023 01:43:14 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8AxYeUh4ytkx10WAA--.34733S3;
-        Tue, 04 Apr 2023 16:43:13 +0800 (CST)
-Received: from localhost.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxT+Qc4ytkChcVAA--.55041S4;
-        Tue, 04 Apr 2023 16:43:12 +0800 (CST)
-From:   Qing Zhang <zhangqing@loongson.cn>
-To:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Tue, 4 Apr 2023 18:09:32 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 046BB2D4B;
+        Tue,  4 Apr 2023 15:09:31 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so35410082pjz.1;
+        Tue, 04 Apr 2023 15:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680646170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ypW3uCkatd85laSwJoEHyhvz6A6Q9ytym+XuTNT93dU=;
+        b=JoPIXnG83ROdZ1kq4xk1n+ZIq8MPvMAtV87d4GO9cK1Ht5tNTGA78J92/9fyfQ8qOz
+         zOkXvSQyi0fCdcUqwDCF1aySQtYSj47zHGZnMA6yXhwZv9AQyrF4VswADo/gInOgv8cV
+         EDAQSv8DIu5lKaQgYKo3yqqGWLmwn21LgwsYD2Hyci1hzAh6UsJvZJCr+689gc8dKlqn
+         eS1k5e6m5h04Bp+/UQ/F13SBvUKzlkK5oXRvgxzxk3Kk5KyPaC5gueNPmztxsO+0cjDR
+         KyU54efHq5YIukhd5Dzmoy4gKq97Wol87Sn4yfXNtziL0Ij6a9VFiH9OrZ1WyDfc4cc6
+         lwxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680646170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ypW3uCkatd85laSwJoEHyhvz6A6Q9ytym+XuTNT93dU=;
+        b=hI+WXQpcrNmGUXSy6/l80cLBs2s8yvweemGmdIbpblnGLkS5dPInQpkF7LR5+QWtzk
+         C3SscGx5peHymdT02Mah7xeilIFQlbtuqGyZpJUrG/fYnXsOTTNgZ3VKAQm/Ks4w9Xyi
+         +Dk5yj68GgaNDNPT8UJ5Cfa3ZxXRxv5zACLQp8fqt0b/IsX9qzaVVL5a0BDD2iH8dfhH
+         m39s5llClKnW5Y407C/sJM4j66i6mwRJ48nYjI51ZYyHLa98coKzXyfFQu9dCzqj2oVW
+         WvJseYoNIOfjy+eOqiIxKHAxqpXjkaXhvEEb5b/gU+U6v/gLGyQ1lLfvFlxzsW+Sy3RF
+         waOA==
+X-Gm-Message-State: AAQBX9fTDw/lqE/9LymvHGi0QRAlUo1YNZc+U7eGKDyoO4K0nD1I/EON
+        7cPgTzGKCu/trLXwZAfwG5p8AkkkigfLAcmBbsw=
+X-Google-Smtp-Source: AKy350auMB5aAW5vcPRu5Z3zk0kCG0J70wFTxHDdx38zTGhfy79hnQwCL23EHjo5fAbzVlHyZYpeRiAzV27aaZOYeGI=
+X-Received: by 2002:a17:902:8604:b0:1a0:48ff:539c with SMTP id
+ f4-20020a170902860400b001a048ff539cmr1636900plo.11.1680646170341; Tue, 04 Apr
+ 2023 15:09:30 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230404084308.813-1-zhangqing@loongson.cn> <20230404084308.813-2-zhangqing@loongson.cn>
+In-Reply-To: <20230404084308.813-2-zhangqing@loongson.cn>
+From:   Andrey Konovalov <andreyknvl@gmail.com>
+Date:   Wed, 5 Apr 2023 00:09:19 +0200
+Message-ID: <CA+fCnZf-segLxa3QxStd6v15ZCge=3=3rOL-9Q_eMc-y2j1nhg@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] kasan: Add (pmd|pud)_init for LoongArch
+ zero_(pud|p4d)_populate process
+To:     Qing Zhang <zhangqing@loongson.cn>
+Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
         Jonathan Corbet <corbet@lwn.net>,
         Huacai Chen <chenhuacai@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
         Dmitry Vyukov <dvyukov@google.com>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         WANG Xuerui <kernel@xen0n.name>,
@@ -36,77 +69,87 @@ Cc:     Alexander Potapenko <glider@google.com>,
         kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
         linux-mm@kvack.org, loongarch@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 6/6] LoongArch: Add ARCH_HAS_FORTIFY_SOURCE
-Date:   Tue,  4 Apr 2023 16:43:08 +0800
-Message-Id: <20230404084308.813-3-zhangqing@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230404084308.813-1-zhangqing@loongson.cn>
-References: <20230404084308.813-1-zhangqing@loongson.cn>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxT+Qc4ytkChcVAA--.55041S4
-X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uF1xtF18KFW5Gr1ktw4DXFb_yoW8WFyrpF
-        nrA3s5Jr48CFn7AFWjy34UWryUWF97Kr42gFyYya48AFy3XryDXrs2q3Z0vFy5Za1rG3yx
-        uFyfWa4aqF4DX37anT9S1TB71UUUUb7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        b6xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
-        8EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4U
-        JwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4
-        CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_GryDMcIj
-        6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMx
-        kF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
-        MxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
-        0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
-        14v26w1j6s0DMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIIF0xvE42xK8VAvwI
-        8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AK
-        xVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07jDjjDUUUUU=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-FORTIFY_SOURCE could detect various overflows at compile and run time.
-ARCH_HAS_FORTIFY_SOURCE means that the architecture can be built and
-run with CONFIG_FORTIFY_SOURCE. Select it in LoongArch.
+On Tue, Apr 4, 2023 at 10:43=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
+wrote:
+>
+> Loongarch populate pmd/pud with invalid_pmd_table/invalid_pud_table in
+> pagetable_init, So pmd_init/pud_init(p) is required, define them as __wea=
+k
+> in mm/kasan/init.c, like mm/sparse-vmemmap.c.
+>
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> ---
+>  mm/kasan/init.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+> index cc64ed6858c6..a7fa223b96e4 100644
+> --- a/mm/kasan/init.c
+> +++ b/mm/kasan/init.c
+> @@ -139,6 +139,10 @@ static int __ref zero_pmd_populate(pud_t *pud, unsig=
+ned long addr,
+>         return 0;
+>  }
+>
+> +void __weak __meminit pmd_init(void *addr)
+> +{
+> +}
+> +
+>  static int __ref zero_pud_populate(p4d_t *p4d, unsigned long addr,
+>                                 unsigned long end)
+>  {
+> @@ -166,8 +170,9 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsign=
+ed long addr,
+>                                 if (!p)
+>                                         return -ENOMEM;
+>                         } else {
+> -                               pud_populate(&init_mm, pud,
+> -                                       early_alloc(PAGE_SIZE, NUMA_NO_NO=
+DE));
+> +                               p =3D early_alloc(PAGE_SIZE, NUMA_NO_NODE=
+);
+> +                               pmd_init(p);
+> +                               pud_populate(&init_mm, pud, p);
+>                         }
+>                 }
+>                 zero_pmd_populate(pud, addr, next);
+> @@ -176,6 +181,10 @@ static int __ref zero_pud_populate(p4d_t *p4d, unsig=
+ned long addr,
+>         return 0;
+>  }
+>
+> +void __weak __meminit pud_init(void *addr)
+> +{
+> +}
+> +
+>  static int __ref zero_p4d_populate(pgd_t *pgd, unsigned long addr,
+>                                 unsigned long end)
+>  {
+> @@ -207,8 +216,9 @@ static int __ref zero_p4d_populate(pgd_t *pgd, unsign=
+ed long addr,
+>                                 if (!p)
+>                                         return -ENOMEM;
+>                         } else {
+> -                               p4d_populate(&init_mm, p4d,
+> -                                       early_alloc(PAGE_SIZE, NUMA_NO_NO=
+DE));
+> +                               p =3D early_alloc(PAGE_SIZE, NUMA_NO_NODE=
+);
+> +                               pud_init(p);
+> +                               p4d_populate(&init_mm, p4d, p);
+>                         }
+>                 }
+>                 zero_pud_populate(p4d, addr, next);
+> --
+> 2.20.1
+>
 
-See more about this feature from commit 6974f0c4555e
-("include/linux/string.h: add the option of fortified string.h functions").
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
 
-Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
----
- arch/loongarch/Kconfig              | 1 +
- arch/loongarch/include/asm/string.h | 4 ++++
- 2 files changed, 5 insertions(+)
-
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 61f883c51045..6c525e50bb7c 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -11,6 +11,7 @@ config LOONGARCH
- 	select ARCH_ENABLE_MEMORY_HOTPLUG
- 	select ARCH_ENABLE_MEMORY_HOTREMOVE
- 	select ARCH_HAS_ACPI_TABLE_UPGRADE	if ACPI
-+	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_NMI_SAFE_THIS_CPU_OPS
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
-diff --git a/arch/loongarch/include/asm/string.h b/arch/loongarch/include/asm/string.h
-index a6482abdc8b3..5bb5a90d2681 100644
---- a/arch/loongarch/include/asm/string.h
-+++ b/arch/loongarch/include/asm/string.h
-@@ -28,6 +28,10 @@ extern void *__memmove(void *__dest, __const__ void *__src, size_t __n);
- #define memcpy(dst, src, len) __memcpy(dst, src, len)
- #define memmove(dst, src, len) __memmove(dst, src, len)
- 
-+#ifndef __NO_FORTIFY
-+#define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
-+#endif
-+
- #endif
- 
- #endif /* _ASM_STRING_H */
--- 
-2.20.1
-
+Thanks!
