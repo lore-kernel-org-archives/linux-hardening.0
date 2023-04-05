@@ -2,149 +2,197 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ED6C761A6
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Apr 2023 22:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DDAC761A6
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Apr 2023 02:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236600AbjDDWJx (ORCPT
+        id S236733AbjDECYI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Apr 2023 18:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
+        Tue, 4 Apr 2023 22:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236581AbjDDWJw (ORCPT
+        with ESMTP id S236548AbjDECYH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Apr 2023 18:09:52 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42963421F;
-        Tue,  4 Apr 2023 15:09:50 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id j13so32066920pjd.1;
-        Tue, 04 Apr 2023 15:09:50 -0700 (PDT)
+        Tue, 4 Apr 2023 22:24:07 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A80F84699
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Apr 2023 19:24:03 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id kc4so33083576plb.10
+        for <linux-hardening@vger.kernel.org>; Tue, 04 Apr 2023 19:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680646190;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FhW41Lz+Mez52y9+7Sqb35hmOmVdAZ3fg2uw11nAPAE=;
-        b=gUnEta5Yb6BtuCcTbAobNapAGPwc0djL/m8TaRV6zg1dmzIbN9ViSxcJdaPoUxzS4b
-         lqAg8chb72IJSS+FDlhtOK8Q6TNt1dX6HhF5uUTVwsIiKbA7yXZaggFVpSNKPB/kpfG5
-         UGE6OA1h2UEWP7hBlWDMJIm6VAA88W4h5iUein/TQ4pBlGSVHPr+4gtWEGZz1NccX+1O
-         pzrByG745s8cPaG1Bv9BjxgAeCG+TOnfx7Zf8ZthRcuoQ7uY/PzreoHfTKIwH39L6NMf
-         +ihHktT0J0n+iD3LRnqvnglDvtpJ0jraXnTyclvvFj3bOpjrIKalZFNddiclc0ueDpSP
-         hxZw==
+        d=chromium.org; s=google; t=1680661443;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gE096tbbtegWsFsNSRWQe6szhT/Ie2gS6GnCnw+q6nk=;
+        b=lhVtRJy2kAsB1GaC5KfK+0pirxSB6oDFSixG0x3X1FfItOSi0+ukF3YXzpuQYCbPQA
+         y0scIOfAr07Xvbt0AxIdbtbIzn5/YVCCiGSPljzw7Cx4kBWnjz6GlFl5jYG7UmtJfIet
+         roub5J7g8iw2CYtKESulYuOy4tJAUdU9w0xS4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680646190;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FhW41Lz+Mez52y9+7Sqb35hmOmVdAZ3fg2uw11nAPAE=;
-        b=CrGrfHtBlvOjjTF4xStir0n6IHEnpwk3c3p5eO2cvlgiQBpqqsEyjqfDBMM3joe5qG
-         wRZopbF0XAfy0CnoEAghgb+GkQ3ZRkk2bor9fCvOCYfhdAWAso+xFNX1nU29fbt9IA5+
-         nKxWq5kCGr6inhS1j9pJrybfQwtwYqOO0LucM2SkCTFEg/Mnedk0YoXhQtR62FmH/D4f
-         U+89JyTOkp1mdXLBAxMKPP8x2AInWn3BANFPxu7g00JJV0fRiAZtwR6kvzNELpQqdifj
-         v5sOZ0obEfKV62ewg+7YvBUw/1fdQ74J8jtksoeCmu5I81OHtmtdwmbxF2I4p1mGfZ4L
-         jC1Q==
-X-Gm-Message-State: AAQBX9dY5SJI6FRkol+3Rv5sY3RsdJDF7XBcvF9TqKOr51m220K4M4XH
-        aEJOX7WDa8AhcjNP8G5me1EKYZ9diAyeVLtwZrY=
-X-Google-Smtp-Source: AKy350bBMyaLkYHcsUf3JTXKneddX4ZVx0+3AX9RSmsTAdcXvoVPs11LPU8Ekd9MaEE01X2e0f3RDUQs/sOmoWXiTBE=
-X-Received: by 2002:a17:90b:e09:b0:240:228:95bd with SMTP id
- ge9-20020a17090b0e0900b00240022895bdmr1533929pjb.5.1680646189645; Tue, 04 Apr
- 2023 15:09:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230404084308.813-1-zhangqing@loongson.cn>
-In-Reply-To: <20230404084308.813-1-zhangqing@loongson.cn>
-From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Wed, 5 Apr 2023 00:09:38 +0200
-Message-ID: <CA+fCnZentBDXuyyrZFzPLpt8Vdfo7YyAyxbgb506LFrR+v-D9Q@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] kasan: Add __HAVE_ARCH_SHADOW_MAP to support arch
- specific mapping
-To:     Qing Zhang <zhangqing@loongson.cn>
-Cc:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, loongarch@lists.linux.dev,
+        d=1e100.net; s=20210112; t=1680661443;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gE096tbbtegWsFsNSRWQe6szhT/Ie2gS6GnCnw+q6nk=;
+        b=plT6NbYGeIg8/f2zvnUD/H5uVElLgk0+JvT2zV0TRiXV6SW21qQYCD8HoV/AQ0Wi99
+         P6+El7VcN870VeDZuTSg4TpeppFBxd3oM9OX4wdiM2d5OtwwB7KU75Py6mkDWxEjvffW
+         XJho7PSVrOgBrf7rpiff5n4waW6izOiUf5ph1YKjZR4xr3P1zn2hYeKrQ3Y9k9eZG17j
+         Jj7xzUyAteT/yNpeQnZj8QnEMF4eGtoPsBZefOBYhwcuWXl396N0SJ+nj9dblzXK5MLs
+         RfhKMBT0mj9f/vXssjIPfiwENfLmWnOqp1LIYWAn9VC1Fzv9KkGdIpp6RPDp09lFy/gM
+         YE8g==
+X-Gm-Message-State: AAQBX9dAhJc8LohVaTp1C2X49GKm1/q+PagVByA86FCdAlXFtRr90q18
+        kPfoF6sLaJ9h+ujTm1dMHd7oHA==
+X-Google-Smtp-Source: AKy350bszIXwKxf3DRMbVNx2JAkaypaKo50esXSu/LfCtTSKytiwFU5u7bEWiULWHWpfRU3fEA0r1Q==
+X-Received: by 2002:a17:90b:4d8c:b0:23d:31c3:c9a4 with SMTP id oj12-20020a17090b4d8c00b0023d31c3c9a4mr5050686pjb.26.1680661443098;
+        Tue, 04 Apr 2023 19:24:03 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d17-20020a17090ad3d100b0023cfa3f7c9fsm238204pjw.10.2023.04.04.19.24.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 19:24:02 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>, Tom Rix <trix@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kbuild@vger.kernel.org,
+        llvm@lists.linux.dev, Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH v2] ubsan: Tighten UBSAN_BOUNDS on GCC
+Date:   Tue,  4 Apr 2023 19:23:59 -0700
+Message-Id: <20230405022356.gonna.338-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5095; h=from:subject:message-id; bh=DBjfeXxQtW9VJ4aQuL4Gd8SY0x0mddkkuOVfELeFHFY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkLNu/MDRN9xOaI1ECqP5sHrBCWmfraRQppPeauIpP LfAoNyuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZCzbvwAKCRCJcvTf3G3AJiRGD/ 9GCblVh+rJ+X9fKxstnSMt5g50rvZ8boQ9jGquDwwRBPpjQBUmfUEu7Hbdr8ebTYfs3Dqk2oeyzBZ3 nlk1pUUOquhlYmykziGexGPPkOC2d5vRxsfJYKIeHG4w10GDvipj/gG83VRAQZUt0xKoQs6WCLNsbp M657SX1rxhqGi6u6ewxDxE23rf8uOvmmn0cOCYKcufAdufamxphOSQHvfsFmxIM6NXV9bVQFtyn6Cr WiOaMa6SvP8PRdD5fv7YGXSzmDbhU1l/ru1LNWK+xGa36s4SJHVeu5Iv3UBZXwk+9LA3VfvHoaIMsv 8w2sPe6V//sMG8q8churBvO4ZBO3zqMpgYxzCAHVOyv4opKptJnqlY9j4la8Osn7xfi+XPtC0uzltU hgkJm9CFbgyoaC7gplFIbQycJVvtPRLgSo7smzZ1cQchP4C+H2nTNzUCQ/Q7Uo9pIe/OZ9bZrprAi5 JfIHyfpyahzjJIeWzvnv6NafzVSFc2C/sIy759irKviiy9U6CCyO0nEdjuvVEXm/Tg1OnoB6iKssAY fhTFHVqPI63ZT9s8fTPdUu+oPAp7NKHCHyF67cJce8rlegUDGSPfJ2lnLXB2wEwc5xWhpWvYjfdkin qGoEv5YkJbVTSezSB4kC/iitqSE69L/P07s28/VlpWLRSsSXL13FyjMeFF8w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 4, 2023 at 10:43=E2=80=AFAM Qing Zhang <zhangqing@loongson.cn> =
-wrote:
->
-> Like the LoongArch, which has many holes between different segments
-> and valid address space(256T available) is insufficient to map all
-> these segments to kasan shadow memory with the common formula provided
-> by kasan core, We need architecture specific mapping formula,different
-> segments are mapped individually, and only limited length of space of
-> that specific segment is mapped to shadow.
->
-> Therefore, when the incoming address is converted to a shadow, we need
-> to add a condition to determine whether it is valid.
->
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> ---
->  include/linux/kasan.h | 2 ++
->  mm/kasan/kasan.h      | 6 ++++++
->  2 files changed, 8 insertions(+)
->
-> diff --git a/include/linux/kasan.h b/include/linux/kasan.h
-> index f7ef70661ce2..3b91b941873d 100644
-> --- a/include/linux/kasan.h
-> +++ b/include/linux/kasan.h
-> @@ -54,11 +54,13 @@ extern p4d_t kasan_early_shadow_p4d[MAX_PTRS_PER_P4D]=
-;
->  int kasan_populate_early_shadow(const void *shadow_start,
->                                 const void *shadow_end);
->
-> +#ifndef __HAVE_ARCH_SHADOW_MAP
->  static inline void *kasan_mem_to_shadow(const void *addr)
->  {
->         return (void *)((unsigned long)addr >> KASAN_SHADOW_SCALE_SHIFT)
->                 + KASAN_SHADOW_OFFSET;
->  }
-> +#endif
->
->  int kasan_add_zero_shadow(void *start, unsigned long size);
->  void kasan_remove_zero_shadow(void *start, unsigned long size);
-> diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
-> index a61eeee3095a..033335c13b25 100644
-> --- a/mm/kasan/kasan.h
-> +++ b/mm/kasan/kasan.h
-> @@ -291,16 +291,22 @@ struct kasan_stack_ring {
->
->  #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
->
-> +#ifndef __HAVE_ARCH_SHADOW_MAP
->  static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
->  {
->         return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET=
-)
->                 << KASAN_SHADOW_SCALE_SHIFT);
->  }
-> +#endif
->
->  static __always_inline bool addr_has_metadata(const void *addr)
->  {
-> +#ifdef __HAVE_ARCH_SHADOW_MAP
-> +       return (kasan_mem_to_shadow((void *)addr) !=3D NULL);
-> +#else
->         return (kasan_reset_tag(addr) >=3D
->                 kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
-> +#endif
->  }
->
->  /**
-> --
-> 2.20.1
->
+The use of -fsanitize=bounds on GCC will ignore some trailing arrays,
+leaving a gap in coverage. Switch to using -fsanitize=bounds-strict to
+match Clang's stricter behavior.
 
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Marco Elver <elver@google.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nicolas Schier <nicolas@fjasle.eu>
+Cc: Tom Rix <trix@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: linux-kbuild@vger.kernel.org
+Cc: llvm@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: improve help text (nathan)
+v1: https://lore.kernel.org/lkml/20230302225444.never.053-kees@kernel.org/
+---
+ lib/Kconfig.ubsan      | 56 +++++++++++++++++++++++-------------------
+ scripts/Makefile.ubsan |  2 +-
+ 2 files changed, 32 insertions(+), 26 deletions(-)
 
-Thanks!
+diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+index fd15230a703b..65d8bbcba438 100644
+--- a/lib/Kconfig.ubsan
++++ b/lib/Kconfig.ubsan
+@@ -27,16 +27,29 @@ config UBSAN_TRAP
+ 	  the system. For some system builders this is an acceptable
+ 	  trade-off.
+ 
+-config CC_HAS_UBSAN_BOUNDS
+-	def_bool $(cc-option,-fsanitize=bounds)
++config CC_HAS_UBSAN_BOUNDS_STRICT
++	def_bool $(cc-option,-fsanitize=bounds-strict)
++	help
++	  The -fsanitize=bounds-strict option is only available on GCC,
++	  but uses the more strict handling of arrays that includes knowledge
++	  of flexible arrays, which is comparable to Clang's regular
++	  -fsanitize=bounds.
+ 
+ config CC_HAS_UBSAN_ARRAY_BOUNDS
+ 	def_bool $(cc-option,-fsanitize=array-bounds)
++	help
++	  Under Clang, the -fsanitize=bounds option is actually composed
++	  of two more specific options, -fsanitize=array-bounds and
++	  -fsanitize=local-bounds. However, -fsanitize=local-bounds can
++	  only be used when trap mode is enabled. (See also the help for
++	  CONFIG_LOCAL_BOUNDS.) Explicitly check for -fsanitize=array-bounds
++	  so that we can build up the options needed for UBSAN_BOUNDS
++	  with or without UBSAN_TRAP.
+ 
+ config UBSAN_BOUNDS
+ 	bool "Perform array index bounds checking"
+ 	default UBSAN
+-	depends on CC_HAS_UBSAN_ARRAY_BOUNDS || CC_HAS_UBSAN_BOUNDS
++	depends on CC_HAS_UBSAN_ARRAY_BOUNDS || CC_HAS_UBSAN_BOUNDS_STRICT
+ 	help
+ 	  This option enables detection of directly indexed out of bounds
+ 	  array accesses, where the array size is known at compile time.
+@@ -44,33 +57,26 @@ config UBSAN_BOUNDS
+ 	  to the {str,mem}*cpy() family of functions (that is addressed
+ 	  by CONFIG_FORTIFY_SOURCE).
+ 
+-config UBSAN_ONLY_BOUNDS
+-	def_bool CC_HAS_UBSAN_BOUNDS && !CC_HAS_UBSAN_ARRAY_BOUNDS
+-	depends on UBSAN_BOUNDS
++config UBSAN_BOUNDS_STRICT
++	def_bool UBSAN_BOUNDS && CC_HAS_UBSAN_BOUNDS_STRICT
+ 	help
+-	  This is a weird case: Clang's -fsanitize=bounds includes
+-	  -fsanitize=local-bounds, but it's trapping-only, so for
+-	  Clang, we must use -fsanitize=array-bounds when we want
+-	  traditional array bounds checking enabled. For GCC, we
+-	  want -fsanitize=bounds.
++	  GCC's bounds sanitizer. This option is used to select the
++	  correct options in Makefile.ubsan.
+ 
+ config UBSAN_ARRAY_BOUNDS
+-	def_bool CC_HAS_UBSAN_ARRAY_BOUNDS
+-	depends on UBSAN_BOUNDS
++	def_bool UBSAN_BOUNDS && CC_HAS_UBSAN_ARRAY_BOUNDS
++	help
++	  Clang's array bounds sanitizer. This option is used to select
++	  the correct options in Makefile.ubsan.
+ 
+ config UBSAN_LOCAL_BOUNDS
+-	bool "Perform array local bounds checking"
+-	depends on UBSAN_TRAP
+-	depends on $(cc-option,-fsanitize=local-bounds)
+-	help
+-	  This option enables -fsanitize=local-bounds which traps when an
+-	  exception/error is detected. Therefore, it may only be enabled
+-	  with CONFIG_UBSAN_TRAP.
+-
+-	  Enabling this option detects errors due to accesses through a
+-	  pointer that is derived from an object of a statically-known size,
+-	  where an added offset (which may not be known statically) is
+-	  out-of-bounds.
++	def_bool UBSAN_ARRAY_BOUNDS && UBSAN_TRAP
++	help
++	  This option enables Clang's -fsanitize=local-bounds which traps
++	  when an access through a pointer that is derived from an object
++	  of a statically-known size, where an added offset (which may not
++	  be known statically) is out-of-bounds. Since this option is
++	  trap-only, it depends on CONFIG_UBSAN_TRAP.
+ 
+ config UBSAN_SHIFT
+ 	bool "Perform checking for bit-shift overflows"
+diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
+index 7099c603ff0a..4749865c1b2c 100644
+--- a/scripts/Makefile.ubsan
++++ b/scripts/Makefile.ubsan
+@@ -2,7 +2,7 @@
+ 
+ # Enable available and selected UBSAN features.
+ ubsan-cflags-$(CONFIG_UBSAN_ALIGNMENT)		+= -fsanitize=alignment
+-ubsan-cflags-$(CONFIG_UBSAN_ONLY_BOUNDS)	+= -fsanitize=bounds
++ubsan-cflags-$(CONFIG_UBSAN_BOUNDS_STRICT)	+= -fsanitize=bounds-strict
+ ubsan-cflags-$(CONFIG_UBSAN_ARRAY_BOUNDS)	+= -fsanitize=array-bounds
+ ubsan-cflags-$(CONFIG_UBSAN_LOCAL_BOUNDS)	+= -fsanitize=local-bounds
+ ubsan-cflags-$(CONFIG_UBSAN_SHIFT)		+= -fsanitize=shift
+-- 
+2.34.1
+
