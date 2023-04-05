@@ -2,76 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399F0C761AF
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Apr 2023 16:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF074C7619A
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Apr 2023 17:13:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230237AbjDEQSK (ORCPT
+        id S231953AbjDERNn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Apr 2023 12:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
+        Wed, 5 Apr 2023 13:13:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjDEQR4 (ORCPT
+        with ESMTP id S231346AbjDERNm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Apr 2023 12:17:56 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE2DC7A8D;
-        Wed,  5 Apr 2023 09:17:22 -0700 (PDT)
+        Wed, 5 Apr 2023 13:13:42 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9262B1BEF;
+        Wed,  5 Apr 2023 10:13:39 -0700 (PDT)
 Received: from zn.tnic (p5de8e687.dip0.t-ipconnect.de [93.232.230.135])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C9AA41EC0104;
-        Wed,  5 Apr 2023 18:17:18 +0200 (CEST)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E9E381EC041F;
+        Wed,  5 Apr 2023 19:13:37 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1680711438;
+        t=1680714818;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=pkmewBtVUuj1GupUaGo/aeGQOsh5X5V6VVHDAZE0b9c=;
-        b=YSOrnjytoNbMZ8AhY5Lq9ZDtp1RlA/CQoyBW4bieV8zO0OgoeH8KbIj1MhdO4rEs3qIBWB
-        CHRm6aOs+txfnnZwubIDkF8SoyjQj/cJO8sjA3aFVHCphkkuDx6sqayIKLvwNIMhc2SECt
-        t9M0/f4z1TKZRwNxv51xoNyEvNdMYRY=
-Date:   Wed, 5 Apr 2023 18:17:14 +0200
+        bh=l1yYjOVfDDFDfs+ACNRWWBr1VXqTIVZyacyw+scxJDU=;
+        b=Gmn6hTWrm+VCwVrg4U8luazNYwEGUj0L7/c8GfWaRGh/2QUA59eMWi9NEYt8MRAyVGeyzA
+        qXNifYvSySqG3DJL92TIzWdPoRPuar8waRlL8Tv7rX97R0nZNT6hatwJ6jvmis/4L7nLps
+        mRcXntv6qCLJqe6IowxCItjNC8wChHg=
+Date:   Wed, 5 Apr 2023 19:13:33 +0200
 From:   Borislav Petkov <bp@alien8.de>
-To:     Peter Jones <pjones@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Evgeniy Baskov <baskov@ispras.ru>,
-        Ard Biesheuvel <ardb@kernel.org>,
+To:     Evgeniy Baskov <baskov@ispras.ru>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Ingo Molnar <mingo@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Peter Jones <pjones@redhat.com>,
         Gerd Hoffmann <kraxel@redhat.com>,
         "Limonciello, Mario" <mario.limonciello@amd.com>,
         joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 00/27] x86_64: Improvements at compressed kernel stage
-Message-ID: <20230405161714.GCZC2fCg0SrV5v9LZg@fat_crate.local>
+        x86@kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 01/27] x86/boot: Align vmlinuz sections on page size
+Message-ID: <20230405171333.GDZC2sPc3D7rDdK6TH@fat_crate.local>
 References: <cover.1678785672.git.baskov@ispras.ru>
- <d575db7f-bad3-477e-a501-19d2d84527cd@app.fastmail.com>
- <ea1b6e36-c434-49e9-bede-b4bd2b41868d@app.fastmail.com>
- <8493680a-0bad-43de-a7a0-caa48e430139@uncooperative.org>
+ <159597c484778da5e59c3a5728669f131f800b5a.1678785672.git.baskov@ispras.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8493680a-0bad-43de-a7a0-caa48e430139@uncooperative.org>
+In-Reply-To: <159597c484778da5e59c3a5728669f131f800b5a.1678785672.git.baskov@ispras.ru>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 01:57:33PM -0400, Peter Jones wrote:
-> Currently I think the only shipping systems that implement
-> NX-requirements are from Microsoft - the Surface product line and
-> Windows Dev Kit - and they don't allow you to disable it at all.  Other
-> vendors have produced firmware that isn't shipping yet (I *think*) that
-> has it as a setting in the firmware menu, and they're looking to move to
-> enabling it by default on some product lines.
+On Tue, Mar 14, 2023 at 01:13:28PM +0300, Evgeniy Baskov wrote:
+> To protect sections on page table level each section needs to be
+> aligned on page size (4KB).
 
-I hope they realize that they must leave the off switch in the BIOS for
-older kernels...
+Protect against what?
+
+> Set sections alignment in linker script for the kernel decompressor
+> (boot/compressed/vmlinux.lds.S).
+
+Do not talk about *what* the patch is doing in the commit message - that
+should be obvious from the diff itself. Rather, concentrate on the *why*
+it needs to be done.
+
+> Also introduce symbols that can be used to reference compressed
+> kernel blob section later in the later patches.
+
+Introduce those with the respective patch that uses them. This one is
+adding section alignment only and that's all that it should do.
+
+Thx.
 
 -- 
 Regards/Gruss,
