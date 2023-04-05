@@ -2,132 +2,168 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E59AC76188
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Apr 2023 12:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17767C7619A
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Apr 2023 12:51:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237787AbjDEM10 (ORCPT
+        id S237218AbjDEMvA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Apr 2023 08:27:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37672 "EHLO
+        Wed, 5 Apr 2023 08:51:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237878AbjDEM1Z (ORCPT
+        with ESMTP id S232502AbjDEMu7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Apr 2023 08:27:25 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D785FF0;
-        Wed,  5 Apr 2023 05:27:03 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id ja10so34250514plb.5;
-        Wed, 05 Apr 2023 05:27:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680697623;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nSvnKg+6McgJprhw+if0EMirzUlxLZrKLELfH8kmkS0=;
-        b=fM4nuxkN1Ei+BgN0LfgInD/FqvdDFyrcUJt6tJ9MGBcbHfDzOvDgdjMfDv1xwok/Aa
-         9RjaLwxsBr2IuiM89fnTkhckVTwYkS2yjfmKhfiwNcxjPH4ByAuC8n6iaFqACu1uL670
-         pxXkSSGIikzz/GeTjhj1sBDY5Spq7ZwhOVsjk92/0K4Kp2QZcn2z02Ocb3w3qkhfwtWq
-         U9AysHle5TBRsinBVNCyhTa28PO84v+vV+OItmsQQZZgdYAmnhsmhuFAUMrg9s9tdJAY
-         mN9taF/HO+BqEHwFP2OBMidoI8e+lQDL5cPUxlJ+UjygOvwR+YotbhUdGUwEFwN1KP1k
-         GYHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680697623;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nSvnKg+6McgJprhw+if0EMirzUlxLZrKLELfH8kmkS0=;
-        b=BrPKWxrZcDFs2UUNq1vdzPudspG83JVG4Ue3apwn8ep/2Cs7uqn5AyDSdQ4Skq1rHc
-         f0Tfhxe8Vjthfhsr98fU2wqzTuGr6dRZHNsxoQ815SvHtC2upiq7uf/Q1SpvZ7IbAZW2
-         95AUpakE94D4+OqL1Op0UHgEI7O1wWmswhNuNL9dL23r+EorL4TNg2BZpLSyDI6CYgaN
-         ipwkB6qIrCT6sehyYJkf2UOYnkwFWLVD8eoGxgicWaCX0tCI+Zizq02dUaqxXBYzP0e+
-         +RTlGbkAIC8BJwqvPB8pJSrYrMIsCt+uwrlB++kAy5lVAAziIO6vnkxqy2WRZHEu/aWZ
-         /Irg==
-X-Gm-Message-State: AAQBX9cVYvu559dGXwAPoHs9pPRc2ESt0GHJF1+etLO1LaklLikdaHiX
-        Y+BCntxIWB87d1626HNuK3qhq8RWYej0MGLp
-X-Google-Smtp-Source: AKy350ZMkRxurclMd6nCYANZunIt1p5smgB/rGPfUYGFhir3yWVrLgE+h08qu9R7KxqBDQ43zijgbg==
-X-Received: by 2002:a17:90b:1c91:b0:23b:4388:7d8a with SMTP id oo17-20020a17090b1c9100b0023b43887d8amr6718995pjb.21.1680697623102;
-        Wed, 05 Apr 2023 05:27:03 -0700 (PDT)
-Received: from [192.168.0.6] ([211.108.101.96])
-        by smtp.gmail.com with ESMTPSA id q23-20020a170902789700b0019ac7319ed1sm10055186pll.126.2023.04.05.05.26.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Apr 2023 05:27:02 -0700 (PDT)
-Message-ID: <b7a7c5d7-d3c8-503f-7447-602ec2a18fb0@gmail.com>
-Date:   Wed, 5 Apr 2023 21:26:47 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH RFC] Randomized slab caches for kmalloc()
-To:     "GONG, Ruiqi" <gongruiqi1@huawei.com>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Cc:     Roman Gushchin <roman.gushchin@linux.dev>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        Wed, 5 Apr 2023 08:50:59 -0400
+X-Greylist: delayed 331 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 05 Apr 2023 05:50:54 PDT
+Received: from outbound-smtp22.blacknight.com (outbound-smtp22.blacknight.com [81.17.249.190])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A68B49F1
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Apr 2023 05:50:53 -0700 (PDT)
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+        by outbound-smtp22.blacknight.com (Postfix) with ESMTPS id F19E3BAC15
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Apr 2023 13:45:20 +0100 (IST)
+Received: (qmail 19508 invoked from network); 5 Apr 2023 12:45:20 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.21.103])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 5 Apr 2023 12:45:20 -0000
+Date:   Wed, 5 Apr 2023 13:45:19 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
-        linux-security-module@vger.kernel.org,
-        James Morris <jmorris@namei.org>,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>
-References: <20230315095459.186113-1-gongruiqi1@huawei.com>
-Content-Language: en-US
-From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
-In-Reply-To: <20230315095459.186113-1-gongruiqi1@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        linux-hardening@vger.kernel.org,
+        Alexander Halbuer <halbuer@sra.uni-hannover.de>
+Subject: Re: [PATCH] mm, page_alloc: reduce page alloc/free sanity checks
+Message-ID: <20230405124519.ir7y54aunmyg3tcn@techsingularity.net>
+References: <20230216095131.17336-1-vbabka@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20230216095131.17336-1-vbabka@suse.cz>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 3/15/2023 6:54 PM, GONG, Ruiqi wrote:
-> When exploiting memory vulnerabilities, "heap spraying" is a common
-> technique targeting those related to dynamic memory allocation (i.e. the
-> "heap"), and it plays an important role in a successful exploitation.
-> Basically, it is to overwrite the memory area of vulnerable object by
-> triggering allocation in other subsystems or modules and therefore
-> getting a reference to the targeted memory location. It's usable on
-> various types of vulnerablity including use after free (UAF), heap out-
-> of-bound write and etc.
->
-> There are (at least) two reasons why the heap can be sprayed: 1) generic
-> slab caches are shared among different subsystems and modules, and
-> 2) dedicated slab caches could be merged with the generic ones.
-> Currently these two factors cannot be prevented at a low cost: the first
-> one is a widely used memory allocation mechanism, and shutting down slab
-> merging completely via `slub_nomerge` would be overkill.
->
-> To efficiently prevent heap spraying, we propose the following approach:
-> to create multiple copies of generic slab caches that will never be
-> merged, and random one of them will be used at allocation. The random
-> selection is based on the location of code that calls `kmalloc()`, which
-> means it is static at runtime (rather than dynamically determined at
-> each time of allocation, which could be bypassed by repeatedly spraying
-> in brute force). In this way, the vulnerable object and memory allocated
-> in other subsystems and modules will (most probably) be on different
-> slab caches, which prevents the object from being sprayed.
->
-> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
-> ---
+On Thu, Feb 16, 2023 at 10:51:31AM +0100, Vlastimil Babka wrote:
+> Historically, we have performed sanity checks on all struct pages being
+> allocated or freed, making sure they have no unexpected page flags or
+> certain field values. This can detect insufficient cleanup and some
+> cases of use-after-free, although on its own it can't always identify
+> the culprit. The result is a warning and the "bad page" being leaked.
+> 
+> The checks do need some cpu cycles, so in 4.7 with commits 479f854a207c
+> ("mm, page_alloc: defer debugging checks of pages allocated from the
+> PCP") and 4db7548ccbd9 ("mm, page_alloc: defer debugging checks of freed
+> pages until a PCP drain") they were no longer performed in the hot paths
+> when allocating and freeing from pcplists, but only when pcplists are
+> bypassed, refilled or drained. For debugging purposes, with
+> CONFIG_DEBUG_VM enabled the checks were instead still done in the
+> hot paths and not when refilling or draining pcplists.
+> 
+> With 4462b32c9285 ("mm, page_alloc: more extensive free page checking
+> with debug_pagealloc"), enabling debug_pagealloc also moved the sanity
+> checks back to hot pahs. When both debug_pagealloc and CONFIG_DEBUG_VM
+> are enabled, the checks are done both in hotpaths and pcplist
+> refill/drain.
+> 
+> Even though the non-debug default today might seem to be a sensible
+> tradeoff between overhead and ability to detect bad pages, on closer
+> look it's arguably not. As most allocations go through the pcplists,
+> catching any bad pages when refilling or draining pcplists has only a
+> small chance, insufficient for debugging or serious hardening purposes.
+> On the other hand the cost of the checks is concentrated in the already
+> expensive drain/refill batching operations, and those are done under the
+> often contended zone lock. That was recently identified as an issue for
+> page allocation and the zone lock contention reduced by moving the
+> checks outside of the locked section with a patch "mm: reduce lock
+> contention of pcp buffer refill", but the cost of the checks is still
+> visible compared to their removal [1]. In the pcplist draining path
+> free_pcppages_bulk() the checks are still done under zone->lock.
+> 
+> Thus, remove the checks from pcplist refill and drain paths completely.
+> Introduce a static key check_pages_enabled to control checks during page
+> allocation a freeing (whether pcplist is used or bypassed). The static
+> key is enabled if either is true:
+> - kernel is built with CONFIG_DEBUG_VM=y (debugging)
+> - debug_pagealloc or page poisoning is boot-time enabled (debugging)
+> - init_on_alloc or init_on_free is boot-time enabled (hardening)
+> 
+> The resulting user visible changes:
+> - no checks when draining/refilling pcplists - less overhead, with
+>   likely no practical reduction of ability to catch bad pages
+> - no checks when bypassing pcplists in default config (no
+>   debugging/hardening) - less overhead etc. as above
+> - on typical hardened kernels [2], checks are now performed on each page
+>   allocation/free (previously only when bypassing/draining/refilling
+>   pcplists) - the init_on_alloc/init_on_free enabled should be sufficient
+>   indication for preferring more costly alloc/free operations for
+>   hardening purposes and we shouldn't need to introduce another toggle
+> - code (various wrappers) removal and simplification
+> 
+> [1] https://lore.kernel.org/all/68ba44d8-6899-c018-dcb3-36f3a96e6bea@sra.uni-hannover.de/
+> [2] https://lore.kernel.org/all/63ebc499.a70a0220.9ac51.29ea@mx.google.com/
+> 
+> Reported-by: Alexander Halbuer <halbuer@sra.uni-hannover.de>
+> Reported-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-I'm not yet sure if this feature is appropriate for mainline kernel.
+Acked-by: Mel Gorman <mgorman@techsingularity.net>
 
-I have few questions:
+Some minor comments below
 
-1) What is cost of this configuration, in terms of memory overhead, or 
-execution time?
+> @@ -1432,9 +1448,11 @@ static __always_inline bool free_pages_prepare(struct page *page,
+>  		for (i = 1; i < (1 << order); i++) {
+>  			if (compound)
+>  				bad += free_tail_pages_check(page, page + i);
 
+free_tail_pages_check is also a function that only does something useful
+when CONFIG_DEBUG_VM is set. While it might be outside the scope of the
+patch, it might also benefit from check_pages_enabled checks?
 
-2) The actual cache depends on caller which is static at build time, not 
-runtime.
+> -			if (unlikely(free_page_is_bad(page + i))) {
+> -				bad++;
+> -				continue;
+> +			if (static_branch_unlikely(&check_pages_enabled)) {
+> +				if (unlikely(free_page_is_bad(page + i))) {
+> +					bad++;
+> +					continue;
+> +				}
+>  			}
+>  			(page + i)->flags &= ~PAGE_FLAGS_CHECK_AT_PREP;
+>  		}
 
-     What about using (caller ^ (some subsystem-wide random sequence)),
+The unlikely() within a static_branch_unlikely probably adds very little
+given the block is so tiny. 
 
-     which is static at runtime?
+> @@ -2392,56 +2369,20 @@ static inline int check_new_page(struct page *page)
+>  	return 1;
+>  }
+>  
+> -static bool check_new_pages(struct page *page, unsigned int order)
+> +static inline bool check_new_pages(struct page *page, unsigned int order)
+>  {
+> -	int i;
+> -	for (i = 0; i < (1 << order); i++) {
+> -		struct page *p = page + i;
+> +	if (static_branch_unlikely(&check_pages_enabled)) {
+> +		for (int i = 0; i < (1 << order); i++) {
+> +			struct page *p = page + i;
+>  
+> -		if (unlikely(check_new_page(p)))
+> -			return true;
+> +			if (unlikely(check_new_page(p)))
+> +				return true;
+> +		}
+>  	}
+>  
 
+unlikely() within static_branch_unlikely probably adds very little.
+
+Otherwise, looks good. I agree that with changes over time that the ability
+of the checks to detect anything is reduced and it's probably at the point
+where it can only detect a very specific bit corruption instead of broken
+code. Commit 44042b449872 ("mm/page_alloc: allow high-order pages to be
+stored on the per-cpu lists") also likely reduced the ability of the checks
+to find anything.
+
+-- 
+Mel Gorman
+SUSE Labs
