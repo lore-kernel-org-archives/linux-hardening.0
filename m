@@ -2,55 +2,55 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043B6C761A6
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 00:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59A4C7618D
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 00:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234302AbjDFACt (ORCPT
+        id S234233AbjDFACs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Apr 2023 20:02:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48048 "EHLO
+        Wed, 5 Apr 2023 20:02:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232605AbjDFACZ (ORCPT
+        with ESMTP id S233294AbjDFACX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Apr 2023 20:02:25 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 031447A8D
-        for <linux-hardening@vger.kernel.org>; Wed,  5 Apr 2023 17:02:20 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id q102so35661470pjq.3
-        for <linux-hardening@vger.kernel.org>; Wed, 05 Apr 2023 17:02:20 -0700 (PDT)
+        Wed, 5 Apr 2023 20:02:23 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A8097685
+        for <linux-hardening@vger.kernel.org>; Wed,  5 Apr 2023 17:02:19 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id f22so31833639plr.0
+        for <linux-hardening@vger.kernel.org>; Wed, 05 Apr 2023 17:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680739340;
+        d=chromium.org; s=google; t=1680739339;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aGVmFbO1Y3SrBAnAifK0ihmdOIjmdFYZw8LCIDp6wGM=;
-        b=LxuIX9/ul4iLS8S1aSht29ovUoxEWtGqAQzkZBAuM1aqCB5+3YSKswbAGoEOIAFZHU
-         5+ZEOX44gt7UQ/6UDEk2oYWZHiuiZJCSUgfTLAzMP7qUKPaD9+iZvbO+rCCFfPu902DU
-         yKxO2jiNZJkpWIJ/VwUKDp+AP65jBVlINGOLs=
+        bh=GVeZITSFOSVosu4yNU0kSm2zQr6awWpiVL1awBqfF1Y=;
+        b=B/TOjH/gJOJvYf37Vu/+Cs/gN7vffw64dSKGAky15XutUioGX5f8rLUB9TzZ4m3Ufj
+         XexxluTFeBPrRAqfB7h5gMNZIl95Kgy77dUpp5Yk913Cx8biwmbNpK95u1Xufd4OlsLU
+         +cxukVTpxvXiAZJx8YEOP64dJ5NbP/bw2zVcc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680739340;
+        d=1e100.net; s=20210112; t=1680739339;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aGVmFbO1Y3SrBAnAifK0ihmdOIjmdFYZw8LCIDp6wGM=;
-        b=Voey1Ejtm95SmD+OteM3TiyuhEQhoDJ21/wPmQie2eCdeVP3USn1dzmI+EiCJs77WI
-         3mgTbTbfXTYv0xr23mLWngvRUrSm6KbdMspxJHqj7Z0R4PykWWfEBIWyJEd2AzWgtBmm
-         03DTktI6aig9LdT2TUNBzerUSWZrSfAg06tQijOrtGqMHKGRct/xxu4TSHewHyjvo/oX
-         Wl+NjMrcyzLuUf94jk2IGPKVHVa+iIla0NsNH66wJARZnDlkRfSd7Rxm+J+sM5S63+zP
-         Xv10iKdUYvfaNF5Abft3LECnwPqhmcuUtDxpfxUgv9TpWMd4rXWKy8ZBuqwIe5qXgg2A
-         kixQ==
-X-Gm-Message-State: AAQBX9fX3PrjL9yoT8rb5gJmbMpuHestiWA1freFbqHGWGtep0I3AdLi
-        gal/t5cu0doDqeDPPV5D71n86g==
-X-Google-Smtp-Source: AKy350ZzdST7ynXxaHkIFbOo3qCq3yyAa47OlYAX17JCcj3YVJqO9U5rE0aLbsCxGmdw5S4FmAKxkA==
-X-Received: by 2002:a17:902:d2ce:b0:1a2:1a5b:cc69 with SMTP id n14-20020a170902d2ce00b001a21a5bcc69mr9937827plc.32.1680739339837;
-        Wed, 05 Apr 2023 17:02:19 -0700 (PDT)
+        bh=GVeZITSFOSVosu4yNU0kSm2zQr6awWpiVL1awBqfF1Y=;
+        b=xUuGbpUjdYakRknuSk8c1NN/NCCs6+bkkKbJhBrlFjJI6xF+FOwVUgtdRzhdDV3bhM
+         yVtxrT4j8PsmSRj8c7PZ6jC2tJZb5uAyEGwOSbCXz50w8kXCm+6/G4xanLpFilUJhJIM
+         yXORXqw/VdPe1imn6NmgjMYoIhp+2f30tEefWkKLOe8RrB0v3NX8QMYYv6CTiIdMW4uv
+         Gy3G82Tvm+lj1fgQ3tgXp4jvZ0qFf7sBbA1ON/5902q/g9ktnIEgOdBZPgsDOZl5Zn0c
+         X3tU6/r9Uxr32BHUqKNxGm7F72Axtmg1mPgcGV8BEdSt5E/BlVvNIIi8S/6mWfxg5Avy
+         DhMw==
+X-Gm-Message-State: AAQBX9dXpSyM8WGPT76JcYM+DRQiKAOBajMHA2upCWZvYGxLnaAU8u2h
+        e/G/PIoA6Rhc/bNkeDguMM/5Jg==
+X-Google-Smtp-Source: AKy350Zu4aYpBrViFItjynucrhtslV0Npr6rpnlclbLBmZBOoQobu3mUEtgBTTXVCYiPsCQfgeXZIg==
+X-Received: by 2002:a17:902:f544:b0:1a1:b8cc:59da with SMTP id h4-20020a170902f54400b001a1b8cc59damr9433799plf.33.1680739338883;
+        Wed, 05 Apr 2023 17:02:18 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p10-20020a170902b08a00b0019cbd37a335sm93665plr.93.2023.04.05.17.02.16
+        by smtp.gmail.com with ESMTPSA id y4-20020a1709027c8400b001a04d37a4acsm106056pll.9.2023.04.05.17.02.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 05 Apr 2023 17:02:17 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Kees Cook <kees@outflux.net>,
+Cc:     Kees Cook <keescook@chromium.org>,
         Andy Shevchenko <andy@kernel.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
@@ -80,794 +80,361 @@ Cc:     Kees Cook <keescook@chromium.org>, Kees Cook <kees@outflux.net>,
         Daniel Latypov <dlatypov@google.com>,
         =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>,
         linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Subject: [PATCH 8/9] fortify: Add KUnit tests for runtime overflows
-Date:   Wed,  5 Apr 2023 17:02:07 -0700
-Message-Id: <20230406000212.3442647-8-keescook@chromium.org>
+Subject: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
+Date:   Wed,  5 Apr 2023 17:02:05 -0700
+Message-Id: <20230406000212.3442647-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230405235832.never.487-kees@kernel.org>
 References: <20230405235832.never.487-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=29256; i=keescook@chromium.org;
- h=from:subject; bh=93uSHieIIEjRUuw59HxOto+9Z0ygPJhGlaPpgK8yUi0=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkLgv/Eee2x9D/oTNO8DmEDkp1d4E7VwNznal84U3D
- Z5T/FeaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZC4L/wAKCRCJcvTf3G3AJuQnD/
- 9HcOyFb96Sg7V/6cPe30hGahUjaFGv1GJfhTo1eskyLJvf490QordO1B8ZxUJ37i4l7HNDFoBD7gbU
- k+V3dnqQuks53s7OPhS51I38yshsdhmdHmoHtXIYfc3SrbbmPG2cgWRGo8xtqSK9Kva2myh2nFax6y
- tbcRrFiKQxBcM0M/V3fuw4Mmd1M2yp3diPAEnlzdTx8OoKsMedFtr0IG9azL8xTx8z9rb9kfIkaw52
- UXeFOXOHo/aiZhe/n2X5rWhbywBQ06NVg4HN9pSFtHCWW41y2FbQmfdMZvA6rgSrG2fyLrVKf0Y+Qt
- hwRvjEmAjmQXowe0K/zJ2NUFDmaCyey3jnrf+V2nqK2gk0qdaZxCcArh7tPail+7pDkS4BdNlbEHNP
- JaKkLIFa1vz3MXuBXLBWNJZXeIYnBk9g4620cJU25/tpaGtCs6dFFMLrp8oWa8orSkMnRxFG+01yX8
- dUMGsEA2wF2LIqJZgnQ9orDYUk+fYxHowQ/h67qjTqqjBW1fEtRVFcIUTFMR6WBzvNy7DrtjBO5mZY
- AypftjP2RcG3FS1fucjbxIt37jlDlR67LRUa/xShcHMBtMtNgMUVeLu25sDGt2ZNUz1UlGarFdLMtH
- 3MEXbzgAEBC/+yUST0x/69+evQL2UvyD/WBQ6oDdw/kuLYC7PlXJLkcwVnuQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11820; h=from:subject; bh=unK9/F7S4FUxqEzGNDbeCYLXq18RsKeeVFU9xRkUXsI=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkLgv/Wwi9CD4BEpJoI75TveBPXRcut2QdfsP7sq0t vflFcsmJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZC4L/wAKCRCJcvTf3G3AJhDAD/ 9+VFjHhYUtmkAtvm/ml4DQSaa6P/0Y+N6+4FhTbbGHVKigx+qRFJV4RRq6kasXh3ZzA8EHhUq7fbTp Iec2D1Nlyex5HIwNr+118srvlS2SZUOnEQxpyu9IBzmPdX7fMiwJ38qypqUkcuRNwapFb7Ppy4nCyX 0o+0bqQRv3cX5txcZXrJL0lNw6xn4Ci142qhSQNAhJ8Fuu3ITrrXSVtxDc53J42BoBpEYGEz4f9klT s4kjKEbhdcefB3fkY1S6s/b7pfcbGDzQYoWyERPI7u3dMGVW7Tw7qn/yeDbX0uJPpXAztjQdFlKwln wm2twRnu5aSFU082MWwjMvy+5Ld7f8ZJmsUfYGTTSbft17ac4Qi+Gqy0gyOkktm57sNpZ/tlGauNzG TkFSzIFmnpQyyM4aRjRHpPF7LgCdoC6shVaF1JkTuqUhJrJMjYtKPAB2QcDm86lXypAl9TWjyj8/tO 8r8a9Ob782ODDAiOlGHlrHzQV0/UxbDRz1hlOpiwsqew89XDt2D6w0eEdd1Bq5MHXBWWjBnc7n7roV v+aD1CE5viiZHAWgjCsRQYHTFDvkxBRblO5zW7VcsnkimaRSd8/g8f9kSqUXnm/ScbKAS6RVcPzhRG R81/JwTKZanUtzfC5kSl/oR43vWw9l9GoMc9K5LmNzgGs4FM2hVXxrcTbV8w==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <kees@outflux.net>
+In preparation for KUnit testing and further improvements in fortify
+failure reporting, split out the report and encode the function and
+access failure (read or write overflow) into a single int argument. This
+mainly ends up saving some space in the data segment. For a defconfig
+with FORTIFY_SOURCE enabled:
 
-With fortify overflows able to be redirected, we can use KUnit to
-exercise the overflow conditions. Add tests for every API covered by
-CONFIG_FORTIFY_SOURCE.
+$ size gcc/vmlinux.before gcc/vmlinux.after
+   text  	  data     bss     dec    	    hex filename
+26132309        9760658 2195460 38088427        2452eeb gcc/vmlinux.before
+26132386        9748382 2195460 38076228        244ff44 gcc/vmlinux.after
 
-Signed-off-by: Kees Cook <kees@outflux.net>
+Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+Cc: Puyou Lu <puyou.lu@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- lib/fortify_kunit.c | 733 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 733 insertions(+)
+ include/linux/fortify-string.h | 72 +++++++++++++++++++++++-----------
+ lib/string_helpers.c           | 70 +++++++++++++++++++++++++++++++--
+ tools/objtool/check.c          |  2 +-
+ 3 files changed, 118 insertions(+), 26 deletions(-)
 
-diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-index f7523c25d341..b7c884037629 100644
---- a/lib/fortify_kunit.c
-+++ b/lib/fortify_kunit.c
-@@ -357,6 +357,723 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
- } while (0)
- DEFINE_ALLOC_SIZE_TEST_PAIR(devm_kmalloc)
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 41dbd641f55c..6db4052db459 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -9,7 +9,34 @@
+ #define __FORTIFY_INLINE extern __always_inline __gnu_inline __overloadable
+ #define __RENAME(x) __asm__(#x)
  
-+/*
-+ * We can't have an array at the end of a structure or else
-+ * builds without -fstrict-flex-arrays=3 will report them as
-+ * being an unknown length. Additionally, add bytes before
-+ * and after the string to catch over/underflows if tests
-+ * fail.
-+ */
-+struct fortify_padding {
-+	unsigned long bytes_before;
-+	char buf[32];
-+	unsigned long bytes_after;
-+};
-+/* Force compiler into not being able to resolve size at compile-time. */
-+static volatile int unconst = 0;
-+
-+static void strlen_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	int i, end = sizeof(pad.buf) - 1;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+
-+	/* Fill 31 bytes with valid characters. */
-+	for (i = 0; i < sizeof(pad.buf) - 1; i++)
-+		pad.buf[i] = i + '0';
-+	/* Trailing bytes are still %NUL. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[end], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* String is terminated, so strlen() is valid. */
-+	KUNIT_EXPECT_EQ(test, strlen(pad.buf), end);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+
-+	/* Make string unterminated, and recount. */
-+	pad.buf[end] = 'A';
-+	end = sizeof(pad.buf);
-+	KUNIT_EXPECT_EQ(test, strlen(pad.buf), end);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+}
-+
-+static void strnlen_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	int i, end = sizeof(pad.buf) - 1;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+
-+	/* Fill 31 bytes with valid characters. */
-+	for (i = 0; i < sizeof(pad.buf) - 1; i++)
-+		pad.buf[i] = i + '0';
-+	/* Trailing bytes are still %NUL. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[end], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* String is terminated, so strnlen() is valid. */
-+	KUNIT_EXPECT_EQ(test, strnlen(pad.buf, sizeof(pad.buf)), end);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	/* A truncated strnlen() will be safe, too. */
-+	KUNIT_EXPECT_EQ(test, strnlen(pad.buf, sizeof(pad.buf) / 2),
-+					sizeof(pad.buf) / 2);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+
-+	/* Make string unterminated, and recount. */
-+	pad.buf[end] = 'A';
-+	end = sizeof(pad.buf);
-+	/* Reading beyond with strncpy() will fail. */
-+	KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+	KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+
-+	/* Early-truncated is safe still, though. */
-+	KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end), end);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+
-+	end = sizeof(pad.buf) / 2;
-+	KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end), end);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+}
-+
-+static void strcpy_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	char src[sizeof(pad.buf) + 1] = { };
-+	int i;
-+
-+	skip_without_fortify();
-+
-+	/* Fill 31 bytes with valid characters. */
-+	for (i = 0; i < sizeof(src) - 2; i++)
-+		src[i] = i + '0';
-+
-+	fortify_read_overflows = 0;
-+	fortify_write_overflows = 0;
-+
-+	/* Destination is %NUL-filled to start with. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_before, 0);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Legitimate strcpy() 1 less than of max size. */
-+	KUNIT_ASSERT_TRUE(test, strcpy(pad.buf, src)
-+				== pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Only last byte should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	src[sizeof(src) - 2] = 'A';
-+	/* But now we trip the overflow checking. */
-+	KUNIT_ASSERT_TRUE(test, strcpy(pad.buf, src)
-+				== pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 1);
-+	/* Trailing %NUL -- thanks to FORTIFY. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* And we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	src[sizeof(src) - 1] = 'A';
-+	/* And for sure now, two bytes past. */
-+	KUNIT_ASSERT_TRUE(test, strcpy(pad.buf, src)
-+				== pad.buf);
-+	/*
-+	 * Which trips both the strlen() on the unterminated src,
-+	 * and the resulting copy attempt.
-+	 */
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+	/* Trailing %NUL -- thanks to FORTIFY. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* And we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+}
-+
-+static void strncpy_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	char src[] = "Copy me fully into a small buffer and I will overflow!";
-+
-+	skip_without_fortify();
-+
-+	fortify_write_overflows = 0;
-+
-+	/* Destination is %NUL-filled to start with. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_before, 0);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Legitimate strncpy() 1 less than of max size. */
-+	KUNIT_ASSERT_TRUE(test, strncpy(pad.buf, src,
-+					sizeof(pad.buf) + unconst - 1)
-+				== pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Only last byte should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* Legitimate (though unterminated) max-size strncpy. */
-+	KUNIT_ASSERT_TRUE(test, strncpy(pad.buf, src,
-+					sizeof(pad.buf) + unconst)
-+				== pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* No trailing %NUL -- thanks strncpy API. */
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* But we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Now verify that FORTIFY is working... */
-+	KUNIT_ASSERT_TRUE(test, strncpy(pad.buf, src,
-+					sizeof(pad.buf) + unconst + 1)
-+				== pad.buf);
-+	/* Should catch the overflow. */
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 1);
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* And we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* And further... */
-+	KUNIT_ASSERT_TRUE(test, strncpy(pad.buf, src,
-+					sizeof(pad.buf) + unconst + 2)
-+				== pad.buf);
-+	/* Should catch the overflow. */
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* And we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+}
-+
-+static void strlcpy_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	char src[] = "Copy me fully into a small buffer and I will overflow!";
-+	char tiny[4] = "abcd";
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+	fortify_write_overflows = 0;
-+
-+	/* Destination is %NUL-filled to start with. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_before, 0);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Legitimate strlcpy() 1 less than of max size. */
-+	KUNIT_ASSERT_EQ(test, strlcpy(pad.buf, src,
-+				      sizeof(pad.buf) + unconst - 1),
-+			sizeof(src) - 1);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Keeping space for %NUL, last two bytes should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* Legitimate max-size strlcpy. */
-+	KUNIT_ASSERT_EQ(test, strlcpy(pad.buf, src,
-+				      sizeof(pad.buf) + unconst),
-+			sizeof(src) - 1);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* A trailing %NUL will exist. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+
-+	/* Now verify that FORTIFY is working... */
-+	KUNIT_ASSERT_EQ(test, strlcpy(pad.buf, src,
-+				      sizeof(pad.buf) + unconst + 1),
-+			sizeof(src) - 1);
-+	/* Should catch the overflow. */
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 1);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* And we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* And much further... */
-+	KUNIT_ASSERT_EQ(test, strlcpy(pad.buf, src,
-+				      sizeof(src) * 2 + unconst),
-+			sizeof(src) - 1);
-+	/* Should catch the overflow. */
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* And we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Catch over-read. */
-+	KUNIT_ASSERT_EQ(test, strlcpy(pad.buf, tiny,
-+				      sizeof(pad.buf) + unconst),
-+			sizeof(tiny));
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+}
-+
-+static void strscpy_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	char src[] = "Copy me fully into a small buffer and I will overflow!";
-+
-+	skip_without_fortify();
-+
-+	fortify_write_overflows = 0;
-+
-+	/* Destination is %NUL-filled to start with. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_before, 0);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Legitimate strscpy() 1 less than of max size. */
-+	KUNIT_ASSERT_EQ(test, strscpy(pad.buf, src,
-+				      sizeof(pad.buf) + unconst - 1),
-+			-E2BIG);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Keeping space for %NUL, last two bytes should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* Legitimate max-size strscpy. */
-+	KUNIT_ASSERT_EQ(test, strscpy(pad.buf, src,
-+				      sizeof(pad.buf) + unconst),
-+			-E2BIG);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* A trailing %NUL will exist. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+
-+	/* Now verify that FORTIFY is working... */
-+	KUNIT_ASSERT_EQ(test, strscpy(pad.buf, src,
-+				      sizeof(pad.buf) + unconst + 1),
-+			-E2BIG);
-+	/* Should catch the overflow. */
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 1);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* And we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* And much further... */
-+	KUNIT_ASSERT_EQ(test, strscpy(pad.buf, src,
-+				      sizeof(src) * 2 + unconst),
-+			-E2BIG);
-+	/* Should catch the overflow. */
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	/* And we will not have gone beyond. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+}
-+
-+static void strcat_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	char src[sizeof(pad.buf) / 2] = { };
-+	char one[] = "A";
-+	char two[] = "BC";
-+	int i;
-+
-+	skip_without_fortify();
-+
-+	fortify_write_overflows = 0;
-+
-+	/* Fill 15 bytes with valid characters. */
-+	for (i = 0; i < sizeof(src) - 1; i++)
-+		src[i] = i + 'A';
-+
-+	/* Destination is %NUL-filled to start with. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_before, 0);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Legitimate strcat() using less than half max size. */
-+	KUNIT_ASSERT_TRUE(test, strcat(pad.buf, src) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Legitimate strcat() now 2 bytes shy of end. */
-+	KUNIT_ASSERT_TRUE(test, strcat(pad.buf, src) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Last two bytes should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* Add one more character to the end. */
-+	KUNIT_ASSERT_TRUE(test, strcat(pad.buf, one) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Last byte should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* And this one char will overflow. */
-+	KUNIT_ASSERT_TRUE(test, strcat(pad.buf, one) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 1);
-+	/* Last byte should be %NUL thanks to FORTIFY. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* And adding two will overflow more. */
-+	KUNIT_ASSERT_TRUE(test, strcat(pad.buf, two) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+	/* Last byte should be %NUL thanks to FORTIFY. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+}
-+
-+static void strncat_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	char src[sizeof(pad.buf)] = { };
-+	int i, partial;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+	fortify_write_overflows = 0;
-+
-+	/* Fill 31 bytes with valid characters. */
-+	partial = sizeof(src) / 2 - 1;
-+	for (i = 0; i < partial; i++)
-+		src[i] = i + 'A';
-+
-+	/* Destination is %NUL-filled to start with. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_before, 0);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Legitimate strncat() using less than half max size. */
-+	KUNIT_ASSERT_TRUE(test, strncat(pad.buf, src, partial) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Legitimate strncat() now 2 bytes shy of end. */
-+	KUNIT_ASSERT_TRUE(test, strncat(pad.buf, src, partial) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Last two bytes should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* Add one more character to the end. */
-+	KUNIT_ASSERT_TRUE(test, strncat(pad.buf, src, 1) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Last byte should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* And this one char will overflow. */
-+	KUNIT_ASSERT_TRUE(test, strncat(pad.buf, src, 1) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 1);
-+	/* Last byte should be %NUL thanks to FORTIFY. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* And adding two will overflow more. */
-+	KUNIT_ASSERT_TRUE(test, strncat(pad.buf, src, 2) == pad.buf);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+	/* Last byte should be %NUL thanks to FORTIFY. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Force an unterminated destination, and overflow. */
-+	pad.buf[sizeof(pad.buf) - 1] = 'A';
-+	KUNIT_ASSERT_TRUE(test, strncat(pad.buf, src, 1) == pad.buf);
-+	/* This will have tripped both strlen() and strcat(). */
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 3);
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	/* But we should not go beyond the end. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+}
-+
-+static void strlcat_test(struct kunit *test)
-+{
-+	struct fortify_padding pad = { };
-+	char src[sizeof(pad.buf)] = { };
-+	int i, partial;
-+	int len = sizeof(pad.buf) + unconst;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+	fortify_write_overflows = 0;
-+
-+	/* Fill 15 bytes with valid characters. */
-+	partial = sizeof(src) / 2 - 1;
-+	for (i = 0; i < partial; i++)
-+		src[i] = i + 'A';
-+
-+	/* Destination is %NUL-filled to start with. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_before, 0);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Legitimate strlcat() using less than half max size. */
-+	KUNIT_ASSERT_EQ(test, strlcat(pad.buf, src, len), partial);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Legitimate strlcat() now 2 bytes shy of end. */
-+	KUNIT_ASSERT_EQ(test, strlcat(pad.buf, src, len), partial * 2);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Last two bytes should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* Add one more character to the end. */
-+	KUNIT_ASSERT_EQ(test, strlcat(pad.buf, "Q", len), partial * 2 + 1);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 0);
-+	/* Last byte should be %NUL */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+
-+	/* And this one char will overflow. */
-+	KUNIT_ASSERT_EQ(test, strlcat(pad.buf, "V", len * 2), len);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 1);
-+	/* Last byte should be %NUL thanks to FORTIFY. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* And adding two will overflow more. */
-+	KUNIT_ASSERT_EQ(test, strlcat(pad.buf, "QQ", len * 2), len + 1);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+	/* Last byte should be %NUL thanks to FORTIFY. */
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Force an unterminated destination, and overflow. */
-+	pad.buf[sizeof(pad.buf) - 1] = 'A';
-+	KUNIT_ASSERT_EQ(test, strlcat(pad.buf, "TT", len * 2), len + 2);
-+	/* This will have tripped both strlen() and strlcat(). */
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 2);
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 2], '\0');
-+	KUNIT_EXPECT_NE(test, pad.buf[sizeof(pad.buf) - 3], '\0');
-+	/* But we should not go beyond the end. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+
-+	/* Force an unterminated source, and overflow. */
-+	memset(src, 'B', sizeof(src));
-+	pad.buf[sizeof(pad.buf) - 1] = '\0';
-+	KUNIT_ASSERT_EQ(test, strlcat(pad.buf, src, len * 3), len - 1 + sizeof(src));
-+	/* This will have tripped both strlen() and strlcat(). */
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 3);
-+	KUNIT_EXPECT_EQ(test, fortify_write_overflows, 3);
-+	KUNIT_EXPECT_EQ(test, pad.buf[sizeof(pad.buf) - 1], '\0');
-+	/* But we should not go beyond the end. */
-+	KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
-+}
-+
-+static void memscan_test(struct kunit *test)
-+{
-+	char haystack[] = "Where oh where is my memory range?";
-+	char *mem = haystack + strlen("Where oh where is ");
-+	char needle = 'm';
-+	size_t len = sizeof(haystack) + unconst;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+
-+	KUNIT_ASSERT_PTR_EQ(test, memscan(haystack, needle, len),
-+				  mem);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	/* Catch too-large range. */
-+	KUNIT_ASSERT_PTR_EQ(test, memscan(haystack, needle, len + 1),
-+				  NULL);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+	KUNIT_ASSERT_PTR_EQ(test, memscan(haystack, needle, len * 2),
-+				  NULL);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+}
-+
-+static void memchr_test(struct kunit *test)
-+{
-+	char haystack[] = "Where oh where is my memory range?";
-+	char *mem = haystack + strlen("Where oh where is ");
-+	char needle = 'm';
-+	size_t len = sizeof(haystack) + unconst;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+
-+	KUNIT_ASSERT_PTR_EQ(test, memchr(haystack, needle, len),
-+				  mem);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	/* Catch too-large range. */
-+	KUNIT_ASSERT_PTR_EQ(test, memchr(haystack, needle, len + 1),
-+				  NULL);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+	KUNIT_ASSERT_PTR_EQ(test, memchr(haystack, needle, len * 2),
-+				  NULL);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+}
-+
-+static void memchr_inv_test(struct kunit *test)
-+{
-+	char haystack[] = "Where oh where is my memory range?";
-+	char *mem = haystack + 1;
-+	char needle = 'W';
-+	size_t len = sizeof(haystack) + unconst;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+
-+	/* Normal search is okay. */
-+	KUNIT_ASSERT_PTR_EQ(test, memchr_inv(haystack, needle, len),
-+				  mem);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	/* Catch too-large range. */
-+	KUNIT_ASSERT_PTR_EQ(test, memchr_inv(haystack, needle, len + 1),
-+				  NULL);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+	KUNIT_ASSERT_PTR_EQ(test, memchr_inv(haystack, needle, len * 2),
-+				  NULL);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+}
-+
-+static void memcmp_test(struct kunit *test)
-+{
-+	char one[] = "My mind is going ...";
-+	char two[] = "My mind is going ... I can feel it.";
-+	size_t one_len = sizeof(one) + unconst - 1;
-+	size_t two_len = sizeof(two) + unconst - 1;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+
-+	/* We match the first string (ignoring the %NUL). */
-+	KUNIT_ASSERT_EQ(test, memcmp(one, two, one_len), 0);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	/* Still in bounds, but no longer matching. */
-+	KUNIT_ASSERT_EQ(test, memcmp(one, two, one_len + 1), -32);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+
-+	/* Catch too-large ranges. */
-+	KUNIT_ASSERT_EQ(test, memcmp(one, two, one_len + 2), INT_MIN);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+
-+	KUNIT_ASSERT_EQ(test, memcmp(two, one, two_len + 2), INT_MIN);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+}
-+
-+static void kmemdup_test(struct kunit *test)
-+{
-+	char src[] = "I got Doom running on it!";
-+	char *copy;
-+	size_t len = sizeof(src) + unconst;
-+
-+	skip_without_fortify();
-+
-+	fortify_read_overflows = 0;
-+
-+	/* Copy is within bounds. */
-+	copy = kmemdup(src, len, GFP_KERNEL);
-+	KUNIT_EXPECT_NOT_NULL(test, copy);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	kfree(copy);
-+
-+	/* Without %NUL. */
-+	copy = kmemdup(src, len - 1, GFP_KERNEL);
-+	KUNIT_EXPECT_NOT_NULL(test, copy);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	kfree(copy);
-+
-+	/* Tiny bounds. */
-+	copy = kmemdup(src, 1, GFP_KERNEL);
-+	KUNIT_EXPECT_NOT_NULL(test, copy);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
-+	kfree(copy);
-+
-+	/* Out of bounds by 1 byte. */
-+	copy = kmemdup(src, len + 1, GFP_KERNEL);
-+	KUNIT_EXPECT_NULL(test, copy);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
-+	kfree(copy);
-+
-+	/* Way out of bounds. */
-+	copy = kmemdup(src, len * 2, GFP_KERNEL);
-+	KUNIT_EXPECT_NULL(test, copy);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
-+	kfree(copy);
-+
-+	/* Starting offset causing out of bounds. */
-+	copy = kmemdup(src + 1, len, GFP_KERNEL);
-+	KUNIT_EXPECT_NULL(test, copy);
-+	KUNIT_EXPECT_EQ(test, fortify_read_overflows, 3);
-+	kfree(copy);
-+}
-+
- static int fortify_test_init(struct kunit *test)
+-void fortify_panic(const char *name) __noreturn __cold;
++#define fortify_reason(func, write)	(((func) << 1) | !!(write))
++
++#define fortify_panic(func, write)	\
++	__fortify_panic(fortify_reason(func, write))
++
++#define FORTIFY_READ		 0
++#define FORTIFY_WRITE		 1
++
++#define FORTIFY_FUNC_strncpy	 0
++#define FORTIFY_FUNC_strnlen	 1
++#define FORTIFY_FUNC_strlen	 2
++#define FORTIFY_FUNC_strlcpy	 3
++#define FORTIFY_FUNC_strscpy	 4
++#define FORTIFY_FUNC_strlcat	 5
++#define FORTIFY_FUNC_strcat	 6
++#define FORTIFY_FUNC_strncat	 7
++#define FORTIFY_FUNC_memset	 8
++#define FORTIFY_FUNC_memcpy	 9
++#define FORTIFY_FUNC_memmove	10
++#define FORTIFY_FUNC_memscan	11
++#define FORTIFY_FUNC_memcmp	12
++#define FORTIFY_FUNC_memchr	13
++#define FORTIFY_FUNC_memchr_inv	14
++#define FORTIFY_FUNC_kmemdup	15
++#define FORTIFY_FUNC_strcpy	16
++
++void __fortify_report(u8 reason);
++void __fortify_panic(u8 reason) __cold __noreturn;
+ void __read_overflow(void) __compiletime_error("detected read beyond size of object (1st parameter)");
+ void __read_overflow2(void) __compiletime_error("detected read beyond size of object (2nd parameter)");
+ void __read_overflow2_field(size_t avail, size_t wanted) __compiletime_warning("detected read beyond size of field (2nd parameter); maybe use struct_group()?");
+@@ -147,7 +174,7 @@ char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__write_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE);
+ 	return __underlying_strncpy(p, q, size);
+ }
+ 
+@@ -178,7 +205,7 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
+ 	/* Do not check characters beyond the end of p. */
+ 	ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+ 	if (p_size <= ret && maxlen != ret)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ);
+ 	return ret;
+ }
+ 
+@@ -214,7 +241,7 @@ __kernel_size_t __fortify_strlen(const char * const POS p)
+ 		return __underlying_strlen(p);
+ 	ret = strnlen(p, p_size);
+ 	if (p_size <= ret)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ);
+ 	return ret;
+ }
+ 
+@@ -256,7 +283,7 @@ __FORTIFY_INLINE size_t strlcpy(char * const POS p, const char * const POS q, si
+ 	}
+ 	if (size) {
+ 		if (len >= p_size)
+-			fortify_panic(__func__);
++			fortify_panic(FORTIFY_FUNC_strlcpy, FORTIFY_WRITE);
+ 		__underlying_memcpy(p, q, len);
+ 		p[len] = '\0';
+ 	}
+@@ -334,7 +361,7 @@ __FORTIFY_INLINE ssize_t strscpy(char * const POS p, const char * const POS q, s
+ 	 * p_size.
+ 	 */
+ 	if (len > p_size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE);
+ 
+ 	/*
+ 	 * We can now safely call vanilla strscpy because we are protected from:
+@@ -392,7 +419,7 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
+ 
+ 	/* Give up if string is already overflowed. */
+ 	if (p_size <= p_len)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ);
+ 
+ 	if (actual >= avail) {
+ 		copy_len = avail - p_len - 1;
+@@ -401,7 +428,7 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
+ 
+ 	/* Give up if copy will overflow. */
+ 	if (p_size <= actual)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE);
+ 	__underlying_memcpy(p + p_len, q, copy_len);
+ 	p[actual] = '\0';
+ 
+@@ -430,7 +457,7 @@ char *strcat(char * const POS p, const char *q)
+ 	size_t p_size = __member_size(p);
+ 
+ 	if (strlcat(p, q, p_size) >= p_size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE);
+ 	return p;
+ }
+ 
+@@ -466,7 +493,7 @@ char *strncat(char * const POS p, const char * const POS q, __kernel_size_t coun
+ 	p_len = strlen(p);
+ 	copy_len = strnlen(q, count);
+ 	if (p_size < p_len + copy_len + 1)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE);
+ 	__underlying_memcpy(p + p_len, q, copy_len);
+ 	p[p_len + copy_len] = '\0';
+ 	return p;
+@@ -507,7 +534,7 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
+ 	 * lengths are unknown.)
+ 	 */
+ 	if (p_size != SIZE_MAX && p_size < size)
+-		fortify_panic("memset");
++		fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE);
+ }
+ 
+ #define __fortify_memset_chk(p, c, size, p_size, p_size_field) ({	\
+@@ -561,7 +588,7 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 					 const size_t q_size,
+ 					 const size_t p_size_field,
+ 					 const size_t q_size_field,
+-					 const char *func)
++					 const u8 func)
  {
- 	kunit_add_named_resource(test, NULL, NULL, &read_resource,
-@@ -379,6 +1096,22 @@ static struct kunit_case fortify_test_cases[] = {
- 	KUNIT_CASE(alloc_size_kvmalloc_dynamic_test),
- 	KUNIT_CASE(alloc_size_devm_kmalloc_const_test),
- 	KUNIT_CASE(alloc_size_devm_kmalloc_dynamic_test),
-+	KUNIT_CASE(strlen_test),
-+	KUNIT_CASE(strnlen_test),
-+	KUNIT_CASE(strcpy_test),
-+	KUNIT_CASE(strncpy_test),
-+	KUNIT_CASE(strlcpy_test),
-+	KUNIT_CASE(strscpy_test),
-+	KUNIT_CASE(strcat_test),
-+	KUNIT_CASE(strncat_test),
-+	KUNIT_CASE(strlcat_test),
-+	/* skip memset: performs bounds checking on whole structs */
-+	/* skip memcpy: still using warn-and-clobber instead of hard-fail */
-+	KUNIT_CASE(memscan_test),
-+	KUNIT_CASE(memchr_test),
-+	KUNIT_CASE(memchr_inv_test),
-+	KUNIT_CASE(memcmp_test),
-+	KUNIT_CASE(kmemdup_test),
- 	{}
- };
+ 	if (__builtin_constant_p(size)) {
+ 		/*
+@@ -605,9 +632,10 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 	 * (The SIZE_MAX test is to optimize away checks where the buffer
+ 	 * lengths are unknown.)
+ 	 */
+-	if ((p_size != SIZE_MAX && p_size < size) ||
+-	    (q_size != SIZE_MAX && q_size < size))
+-		fortify_panic(func);
++	if (p_size != SIZE_MAX && p_size < size)
++		fortify_panic(func, FORTIFY_WRITE);
++	else if (q_size != SIZE_MAX && q_size < size)
++		fortify_panic(func, FORTIFY_READ);
  
+ 	/*
+ 	 * Warn when writing beyond destination field size.
+@@ -640,7 +668,7 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_size_t size,
+ 	const size_t __q_size_field = (q_size_field);			\
+ 	WARN_ONCE(fortify_memcpy_chk(__fortify_size, __p_size,		\
+ 				     __q_size, __p_size_field,		\
+-				     __q_size_field, #op),		\
++				     __q_size_field, FORTIFY_FUNC_ ##op), \
+ 		  #op ": detected field-spanning write (size %zu) of single %s (size %zu)\n", \
+ 		  __fortify_size,					\
+ 		  "field \"" #p "\" at " __FILE__ ":" __stringify(__LINE__), \
+@@ -707,7 +735,7 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size_t size)
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__read_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ);
+ 	return __real_memscan(p, c, size);
+ }
+ 
+@@ -724,7 +752,7 @@ int memcmp(const void * const POS0 p, const void * const POS0 q, __kernel_size_t
+ 			__read_overflow2();
+ 	}
+ 	if (p_size < size || q_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ);
+ 	return __underlying_memcmp(p, q, size);
+ }
+ 
+@@ -736,7 +764,7 @@ void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__read_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ);
+ 	return __underlying_memchr(p, c, size);
+ }
+ 
+@@ -748,7 +776,7 @@ __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size_t size)
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__read_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ);
+ 	return __real_memchr_inv(p, c, size);
+ }
+ 
+@@ -761,7 +789,7 @@ __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, gfp_t gfp
+ 	if (__compiletime_lessthan(p_size, size))
+ 		__read_overflow();
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ);
+ 	return __real_kmemdup(p, size, gfp);
+ }
+ 
+@@ -798,7 +826,7 @@ char *strcpy(char * const POS p, const char * const POS q)
+ 		__write_overflow();
+ 	/* Run-time check for dynamic size overflow. */
+ 	if (p_size < size)
+-		fortify_panic(__func__);
++		fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE);
+ 	__underlying_memcpy(p, q, size);
+ 	return p;
+ }
+diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+index 230020a2e076..631c50657096 100644
+--- a/lib/string_helpers.c
++++ b/lib/string_helpers.c
+@@ -1021,10 +1021,74 @@ EXPORT_SYMBOL(__read_overflow2_field);
+ void __write_overflow_field(size_t avail, size_t wanted) { }
+ EXPORT_SYMBOL(__write_overflow_field);
+ 
+-void fortify_panic(const char *name)
++void __fortify_report(u8 reason)
+ {
+-	pr_emerg("detected buffer overflow in %s\n", name);
++	const char *name;
++	const bool write = !!(reason & 0x1);
++
++	switch (reason >> 1) {
++	case FORTIFY_FUNC_strncpy:
++		name = "strncpy";
++		break;
++	case FORTIFY_FUNC_strnlen:
++		name = "strnlen";
++		break;
++	case FORTIFY_FUNC_strlen:
++		name = "strlen";
++		break;
++	case FORTIFY_FUNC_strlcpy:
++		name = "strlcpy";
++		break;
++	case FORTIFY_FUNC_strscpy:
++		name = "strscpy";
++		break;
++	case FORTIFY_FUNC_strlcat:
++		name = "strlcat";
++		break;
++	case FORTIFY_FUNC_strcat:
++		name = "strcat";
++		break;
++	case FORTIFY_FUNC_strncat:
++		name = "strncat";
++		break;
++	case FORTIFY_FUNC_memset:
++		name = "memset";
++		break;
++	case FORTIFY_FUNC_memcpy:
++		name = "memcpy";
++		break;
++	case FORTIFY_FUNC_memmove:
++		name = "memmove";
++		break;
++	case FORTIFY_FUNC_memscan:
++		name = "memscan";
++		break;
++	case FORTIFY_FUNC_memcmp:
++		name = "memcmp";
++		break;
++	case FORTIFY_FUNC_memchr:
++		name = "memchr";
++		break;
++	case FORTIFY_FUNC_memchr_inv:
++		name = "memchr_inv";
++		break;
++	case FORTIFY_FUNC_kmemdup:
++		name = "kmemdup";
++		break;
++	case FORTIFY_FUNC_strcpy:
++		name = "strcpy";
++		break;
++	default:
++		name = "unknown";
++	}
++	WARN(1, "%s: detected buffer %s overflow\n", name, write ? "write" : "read");
++}
++EXPORT_SYMBOL(__fortify_report);
++
++void __fortify_panic(const u8 reason)
++{
++	__fortify_report(reason);
+ 	BUG();
+ }
+-EXPORT_SYMBOL(fortify_panic);
++EXPORT_SYMBOL(__fortify_panic);
+ #endif /* CONFIG_FORTIFY_SOURCE */
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index f937be1afe65..2d0a67ce1c51 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -197,6 +197,7 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 	 * attribute isn't provided in ELF data. Keep 'em sorted.
+ 	 */
+ 	static const char * const global_noreturns[] = {
++		"__fortify_panic",
+ 		"__invalid_creds",
+ 		"__module_put_and_kthread_exit",
+ 		"__reiserfs_panic",
+@@ -208,7 +209,6 @@ static bool __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"do_group_exit",
+ 		"do_task_dead",
+ 		"ex_handler_msr_mce",
+-		"fortify_panic",
+ 		"kthread_complete_and_exit",
+ 		"kthread_exit",
+ 		"kunit_try_catch_throw",
 -- 
 2.34.1
 
