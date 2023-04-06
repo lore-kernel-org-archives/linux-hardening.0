@@ -2,148 +2,109 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A8CC7618D
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 18:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B670C77B6C
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 22:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240296AbjDFS4f (ORCPT
+        id S230458AbjDFWuy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 14:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51764 "EHLO
+        Thu, 6 Apr 2023 18:50:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239786AbjDFS4e (ORCPT
+        with ESMTP id S230426AbjDFWux (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 14:56:34 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 809C58688
-        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 11:56:33 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id cf7so47225716ybb.5
-        for <linux-hardening@vger.kernel.org>; Thu, 06 Apr 2023 11:56:33 -0700 (PDT)
+        Thu, 6 Apr 2023 18:50:53 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C47A430D4
+        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 15:50:51 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id j14-20020a17090a7e8e00b002448c0a8813so2622203pjl.0
+        for <linux-hardening@vger.kernel.org>; Thu, 06 Apr 2023 15:50:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680807392;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ucnAW8w35vol8Pg57OLPiTr9yW6zisn9tO1ygQITttI=;
-        b=biLsD71bt/4qhOiC+fjKpXwMJ7DLuQs+qj3u1Sm3s/qCNkrktChSmO29ZgGtDVliSq
-         gzoFMDRfEEJ1Id8nivsrn+6O2Bm9wkSqLZRb/Z4MGRDMuQeGoV46EtSSmF50tPOQx0qw
-         m4ZIY3q50IWmZPapaUOGPmVxbiKyoEz4TmtOxpH98EC3Fmo3VpqOd4AcPfubhe4dXsOZ
-         Ma6IJj+keATFHXQvx1xtILQ8Pt8JGRCtihK6+VaQyuog4KgGxKfPg7FaUzFgxnyGr2lB
-         qWpfjWGeReUfg1lDInoDgjJ2Ey/TplX3Fv0IH6fda92c2lYRCWfL3iWfv8ZADggCSPPd
-         nk+g==
+        d=chromium.org; s=google; t=1680821451;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=O0msV0O5AHB0NF46Jr69g0S/BTV0Y+vyG/TkYJyeoWo=;
+        b=KpaqO2Mr4cYhgn6Qnh6DVdi2arSPzn8iI1d2dKHoh6jWuL6ejpYsJmj7gu9ha09+eQ
+         5ebaKDgl6gycDOa+YMUY27WT5nhNLz17ktjH9TStUMIjDtPGiWbFZc1gio/Gv/mtmsTN
+         Yl7YRXuJDp3WQJGHSqn3DC+ETeLI+qMqnD/1k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680807392;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ucnAW8w35vol8Pg57OLPiTr9yW6zisn9tO1ygQITttI=;
-        b=jtB3jvgwFlKzdLJaKV8dPGRDJnfVJ9ZNGc9wOQwadU0sM9eEPh9y0i63CeTKRoIp/Q
-         hrmeWJFlSSbDHHQfp+ud5M7GNC/WmAk34+t6vJ9IlgRlnh6LJWKazI6f2MLfXQUvHAzo
-         LAV6L9rGAUDnakdbWgBUAclmIXvdgw6dKfq9n39tN3GVrExi0oYN/AJS0eeGAhMa4yuT
-         6br7FL7FZXFiVFJKvah3byF67wNTJgY5I+ForxGvwWU4WDupCo9dRN+qO7XgLyHuBLNb
-         ZlWABcSMRjp7JrGg+uHeIstcsDGfUupxj0wslqWtznohE00/A1bDz4Fq0JN6iIErRsI5
-         +76A==
-X-Gm-Message-State: AAQBX9cAZcgp3d/Wa+GVAEvtNOHmWYi7w/JhvSKrn9h3i0CORsoHdgL2
-        Kd05uB0hlf2rrOukTWHqmvaV+1RBZiXNpykDVDL8ROVmK6uDw/Fa
-X-Google-Smtp-Source: AKy350aLyY8waJyCoRar/QqAuHJLAJ4vbrM/5IkmzmLH9JFqvplgiFfoD5QooPuJEJQ83FPjVX8k1FVTGH4xULbcZa8=
-X-Received: by 2002:a25:d64e:0:b0:b8b:f02b:ba20 with SMTP id
- n75-20020a25d64e000000b00b8bf02bba20mr210452ybg.9.1680807392707; Thu, 06 Apr
- 2023 11:56:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230406-topic-lenovo_features-v1-0-c73a5180e48e@linaro.org>
- <20230406-topic-lenovo_features-v1-4-c73a5180e48e@linaro.org>
- <7476b5ba-426c-3701-c4aa-d3e2db3de112@linaro.org> <bceb91fa-c94b-a0bf-a612-19fc5778810e@linaro.org>
-In-Reply-To: <bceb91fa-c94b-a0bf-a612-19fc5778810e@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Thu, 6 Apr 2023 21:56:21 +0300
-Message-ID: <CAA8EJprmzibdarZCKDtAa14HTShxTwQ6FQfi665hbVR_=5MLaQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm64: dts: qcom: sm6115p-j606f: Enable ATH10K WiFi
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
+        d=1e100.net; s=20210112; t=1680821451;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O0msV0O5AHB0NF46Jr69g0S/BTV0Y+vyG/TkYJyeoWo=;
+        b=ESKS/FxqNbiIwkQrEsUuVmj4SWNkx07PVWNbeDvPQ4Ups+tVSgFMDRR0BiaGk6FPqC
+         4o+tu/maeFauMbqdDV7pvAcepfLDPChO9G5yZ8SU4YVblnW378IuObI61enJ+cwfTF49
+         PLco8LaNoZsTKBk7zoGQSgShtKqmW34wh9H2Gy1EnbMBzHu417FESX1+iSV8x3rF/eO+
+         SQTaAElUfaplGw2KXzorWlyrNcgf+qUSTSmZl9pjBzE2gh6Bhaty6HLIBoMI+Jo0pv9x
+         vQlP5lCX12I00Ee0FNZtpFebDCl1xf5vQoE2hiSzu1bVdys9qFqXrja/oiHhaRedVWpU
+         SvUA==
+X-Gm-Message-State: AAQBX9eczSFW3F62hwj7zQ1jXlTLgUVEsByZaB0s9fG1Oemt4pzKYchG
+        UN/SgZLkpGpWUqKO5SfZm9m4htGRto4yqttwbrw=
+X-Google-Smtp-Source: AKy350ZpDPPfEg2CRUkH/bpwiBnQwgDuvVdD66YyvZ4O3oYBdtUxV4c5isYOpXQ5G9jXLA7UI5SP0g==
+X-Received: by 2002:a17:90a:640d:b0:240:acdb:c4eb with SMTP id g13-20020a17090a640d00b00240acdbc4ebmr141177pjj.45.1680821451292;
+        Thu, 06 Apr 2023 15:50:51 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id oj5-20020a17090b4d8500b0023cfdbb6496sm3660204pjb.1.2023.04.06.15.50.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Apr 2023 15:50:50 -0700 (PDT)
+Message-ID: <642f4cca.170a0220.db953.9229@mx.google.com>
+X-Google-Original-Message-ID: <202304061550.@keescook>
+Date:   Thu, 6 Apr 2023 15:50:49 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-hardening@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] pstore/ram: Convert to platform remove callback
+ returning void
+References: <20230401120000.2487153-1-u.kleine-koenig@pengutronix.de>
+ <ee6bcb45-765b-30b8-fa38-a634b58391db@igalia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ee6bcb45-765b-30b8-fa38-a634b58391db@igalia.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 6 Apr 2023 at 21:32, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
->
->
->
-> On 6.04.2023 19:51, Dmitry Baryshkov wrote:
-> > On 06/04/2023 18:25, Konrad Dybcio wrote:
-> >> Enable the onboard QCA Wi-Fi. HW identifiers for reference:
-> >> qmi chip_id 0x320 chip_family 0x4001 board_id 0xff soc_id 0x400e0000
-> >>
-> >> Firmware sources:
-> >> /vendor/firmware_mnt/image/wlanmdsp.bin -> qcom/.../wlanmdsp.mbn
-> >> /vendor/firmware_mnt/image/bdwlan.bXX [1] -> [2] -> ath10k/.../board-2.bin
-> >> [3] -> ath10k/.../firmware-5.bin
-> >>
-> >> Not sure where 3 comes from on the device itself, gotta investigate that..
-> >>
-> >> According to [4], it's called WCN3990_STRAIT.
-> >>
-> >> [1] XX = board_id printed when the file is missing or by your downstream
-> >> kernel firmware loader in the dmesg; if XX=ff, use bdwlan.bin
-> >
-> > Since the board_id is 0xff, please add qcom,ath10k-calibration-variant
-> Do I make up a name, or is there some convention?
->
-> I see Johan used "LE_X13S" in commit 2702f54f400ad3979632cdb76553772414f4c5e3.
-> Should I go with "LE_P11"?
+On Thu, Apr 06, 2023 at 12:57:30PM -0300, Guilherme G. Piccoli wrote:
+> On 01/04/2023 09:00, Uwe Kleine-König wrote:
+> > The .remove() callback for a platform driver returns an int which makes
+> > many driver authors wrongly assume it's possible to do error handling by
+> > returning an error code. However the value returned is (mostly) ignored
+> > and this typically results in resource leaks. To improve here there is a
+> > quest to make the remove callback return void. In the first step of this
+> > quest all drivers are converted to .remove_new() which already returns
+> > void.
+> > 
+> > Trivially convert this driver from always returning zero in the remove
+> > callback to the void returning variant.
+> > 
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> Thanks, it makes sense for me! Code-wise, it looks fine.
+> 
+> What would be interesting it to mention a mail thread discussing this or
+> maybe the patch itself that added the .remove_new() idea
+> [https://git.kernel.org/linus/5c5a7680e67b right?].
+> 
+> BTW, nice idea - converting all at once would be a terrible sync effort,
+> I guess this way things will go smoothly.
+> Feel free to add my:
+> 
+> Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-I think Lenovo_P11 or LENOVO_P11 might be better.
+Thanks! Looks good to me.
 
->
-> >
-> > Ideally, could you please send the bdwlan to ath10k for inclusion, see https://wireless.wiki.kernel.org/en/users/drivers/ath10k/boardfiles .
-> The legal situation is ambiguous at best :/
+Acked-by: Kees Cook <keescook@chromium.org>
 
-As usual :-(
+Do you want to take these view some other tree, or should I take this
+via my pstore tree?
 
->
-> Konrad
-> >
-> >>
-> >> [2] https://github.com/jhugo/linux/blob/5.5rc2_wifi/README
-> >> [3] https://github.com/kvalo/ath10k-firmware/blob/master/WCN3990/hw1.0/HL3.1/WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1/firmware-5.bin
-> >> [4] https://git.codelinaro.org/clo/la/platform/vendor/qcom-opensource/wlan/qca-wifi-host-cmn/-/blob/LA.VENDOR.1.0.r1-20700-WAIPIO.QSSI13.0/hif/src/hif_hw_version.h#L55
-> >>
-> >> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> >> ---
-> >>   arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts | 8 ++++++++
-> >>   1 file changed, 8 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
-> >> index 2aac25171dec..4ba8e59a27d8 100644
-> >> --- a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
-> >> +++ b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
-> >> @@ -315,6 +315,14 @@ &usb_hsphy {
-> >>       status = "okay";
-> >>   };
-> >>   +&wifi {
-> >> +    vdd-0.8-cx-mx-supply = <&pm6125_l8>;
-> >> +    vdd-1.8-xo-supply = <&pm6125_l16>;
-> >> +    vdd-1.3-rfa-supply = <&pm6125_l17>;
-> >> +    vdd-3.3-ch0-supply = <&pm6125_l23>;
-> >> +    status = "okay";
-> >> +};
-> >> +
-> >>   &xo_board {
-> >>       clock-frequency = <19200000>;
-> >>   };
-> >>
-> >
-
-
+-Kees
 
 -- 
-With best wishes
-Dmitry
+Kees Cook
