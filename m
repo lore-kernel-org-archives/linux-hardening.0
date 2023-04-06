@@ -2,118 +2,126 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E703C7618D
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 18:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75647C76196
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 18:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbjDFSSD (ORCPT
+        id S240193AbjDFSaC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 14:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36274 "EHLO
+        Thu, 6 Apr 2023 14:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbjDFSSC (ORCPT
+        with ESMTP id S240188AbjDFSaB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 14:18:02 -0400
-Received: from omta35.uswest2.a.cloudfilter.net (omta35.uswest2.a.cloudfilter.net [35.89.44.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB2DA3
-        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 11:17:57 -0700 (PDT)
-Received: from eig-obgw-5019a.ext.cloudfilter.net ([10.0.29.142])
-        by cmsmtp with ESMTP
-        id kPDhpbeqXE9lPkUBIpxLr8; Thu, 06 Apr 2023 18:17:56 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id kUBHplH7T4T4FkUBIpdYzQ; Thu, 06 Apr 2023 18:17:56 +0000
-X-Authority-Analysis: v=2.4 cv=DJucXgBb c=1 sm=1 tr=0 ts=642f0cd4
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=r5y7L3YFV7pC399TSlF17w==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=dKHAf1wccvYA:10
- a=wYkD_t78qR0A:10 a=_Wotqz80AAAA:8 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8
- a=5PrvhKeIWMso7PqsVc4A:9 a=QEXdDO2ut3YA:10 a=buJP51TR1BpY-zbLSsyS:22
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=lV0u8gCzN+IVJnUOSxifOKoxf9sWC9J5lL5XQpoJLvo=; b=GW5vBFG8RNacOKxrvZIq9qCZzf
-        miMkjyb/m61EfNcnfNBlyT9HaIt8j5v1iQT7sb/qhYLUgG27dGGeVZ0YWpF2swgs67QssFrEJ1CI4
-        jk56vZs7kU48nCC5hb7q2OFlHScCDlyTKSKVfb+acgN1kBeMaJ6iZg2Ggf9jwY+enI0shFYSiudDN
-        ONMpOvMzbbygGQjCgZ6jV7g537ihKqQ5xOGADQgWHBXjK0GHD6fUmuLUq0KT3BSSdPthPN3qbIJ63
-        yv0IuE+A5RXa/DnxQ4STpskWezTCgef30Fo+n/HfODTruPstLHQoZoGvJNsy13OqM8G9iv2D5XsDY
-        NRaJiGtw==;
-Received: from 187.184.158.238.cable.dyn.cableonline.com.mx ([187.184.158.238]:28874 helo=[192.168.0.24])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1pkSS9-003zjR-7q;
-        Thu, 06 Apr 2023 11:27:13 -0500
-Message-ID: <e84ea7ad-e804-325a-a17b-5a939e0fc61d@embeddedor.com>
-Date:   Thu, 6 Apr 2023 10:27:55 -0600
+        Thu, 6 Apr 2023 14:30:01 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C4B6196
+        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 11:29:59 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id q16so51964362lfe.10
+        for <linux-hardening@vger.kernel.org>; Thu, 06 Apr 2023 11:29:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680805798;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Neijv2zq96R0GfdQjQwNKcSFKV86CYJRcfc1aaFu1qk=;
+        b=XlOX4iBsYDzB8wgJK6e2EygD58sqmxulgjX5qqPLTfJEt8z15r/HdkriynKKcYX2Bq
+         Msof2eYI5neCNb+upoBnjZHBmUVqRYQHHGYJctHDxezQ4Cb9QfWZzNAq/MetS9UXCAgd
+         AdnCCJmHS/gE6xkAUmP7rR5yETIcYFo5XIMXKbK+khXUj12Jqx5BVIqCi0XL/f+/Wwv6
+         lAbd/OFVk9+4dNyuccCRWlfk48MwAQMQga7khS4+oI1Gq1pvaRyvlMYYRM5Uw+Wr8wa5
+         4FsvJziidvPZmQeAMtyo6xWUS1iLQaI5TSLJ/dGUfel7N/MHZrd95B0d5YoeFnrHlrJk
+         r3uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680805798;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Neijv2zq96R0GfdQjQwNKcSFKV86CYJRcfc1aaFu1qk=;
+        b=45JUHN7fjoU9TdFTz5bRsLcKVkltLqK6xbDfEDzrzDcehakoizj+IE0oQX+R7GXSVs
+         Yq52iGT8TX4+zhaxf7MAerkdmiBjVgyKgBA+ELAjaCmhdt906tGrD+pi/4i5ALl2/7sc
+         rf316BGT56hN1wwMwrmwUpLOzUTdRKOS8VUKn/2u/kpLZj8cylrI6Ep1NDZWSDveZ417
+         Eq232vG7N4T0Qc0kFAAf4fokuT+6yz6u7FCHY9iyXSv9ZNlUYa5TSMOUtupnETgP5qWf
+         M/pVdfPQof8P1ojoELes6cW1ox6vMRpb7XtdWMC66MvqlCWNd3VAYHpIyVED+AdErLzR
+         FzFA==
+X-Gm-Message-State: AAQBX9eq06kkxjZVjr3Ozi7Q/7XQcoVHVft2qDwifnj3iEDV7HEZPxHt
+        bRImkpC3NtdaG9n55XWwcRQ+9Q==
+X-Google-Smtp-Source: AKy350ZEODeEm9sOvgyuO0IIzT81OsrB7gbD3ClS6luG0xT13OBKwnwD8262UKlr8jcIal295NttLw==
+X-Received: by 2002:a19:f508:0:b0:4db:3a70:e9f3 with SMTP id j8-20020a19f508000000b004db3a70e9f3mr35061lfb.69.1680805797945;
+        Thu, 06 Apr 2023 11:29:57 -0700 (PDT)
+Received: from [192.168.1.101] (abxh37.neoplus.adsl.tpnet.pl. [83.9.1.37])
+        by smtp.gmail.com with ESMTPSA id r15-20020ac25a4f000000b004e848782e2esm371641lfn.57.2023.04.06.11.29.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Apr 2023 11:29:57 -0700 (PDT)
+Message-ID: <eacc380a-aa33-5b1d-0a11-124b584cd1aa@linaro.org>
+Date:   Thu, 6 Apr 2023 20:29:52 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH][next] drm/i915/uapi: Replace fake flex-array with
- flexible-array member
+ Thunderbird/102.9.1
+Subject: Re: [PATCH 1/4] arm64: dts: qcom: sm6115-j606f: Add ramoops node
 Content-Language: en-US
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZBSu2QsUJy31kjSE@work>
- <ef8d083a-a82b-669c-0b0a-959e0f120a26@embeddedor.com>
- <87ileh2yky.fsf@intel.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <87ileh2yky.fsf@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20230406-topic-lenovo_features-v1-0-c73a5180e48e@linaro.org>
+ <20230406-topic-lenovo_features-v1-1-c73a5180e48e@linaro.org>
+ <9554be2b-c80d-8c5b-48e3-2508a7b4ecd1@linaro.org>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <9554be2b-c80d-8c5b-48e3-2508a7b4ecd1@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.184.158.238
-X-Source-L: No
-X-Exim-ID: 1pkSS9-003zjR-7q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187.184.158.238.cable.dyn.cableonline.com.mx ([192.168.0.24]) [187.184.158.238]:28874
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOcTbaJ/hS7WYOR69Ic+YFUfv2JlVwcWNqpowKuxkGCSYG9ySt3fDaktQ8oC21AzTmrqq2KvUWh+H2uTKa/NSLMgW8XiTXHCnr+xcIrrmgWSIUAxqTW+
- CPsdfXmFD76L7GRCx+3fYfUMYOz07EIeQgn6fRceiNY9UBJA4gPfr42YQQpZiT/lSOZwah24I4KZrysxOcXyXHx810U6n7cR3hc11PUWw1Eit9IjJCKfNHXx
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 3/31/23 01:02, Jani Nikula wrote:
-> On Thu, 30 Mar 2023, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
->> Friendly ping: who can take this, please? 😄
+On 6.04.2023 19:54, Dmitry Baryshkov wrote:
+> On 06/04/2023 18:25, Konrad Dybcio wrote:
+>> Add a ramoops node to enable retrieving crash logs.
+>>
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
+>> index 10c9d338446c..fd064899791c 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
+>> @@ -52,6 +52,17 @@ key-volume-up {
+>>               wakeup-source;
+>>           };
+>>       };
+>> +
+>> +    reserved-memory {
+>> +        ramoops@ffc00000 {
+>> +            compatible = "ramoops";
+>> +            reg = <0x0 0xffc00000 0x0 0x100000>;
+>> +            record-size = <0x1000>;
+>> +            console-size = <0x40000>;
 > 
-> It's in drm-intel-gt-next.
+> no ftrace-size?
+It could use some!
 
-Awesome. :) Thank you!
+> 
+>> +            ecc-size = <16>;
+>> +            no-map;
+> 
+> I see that other ramoops defines are not marked with no-map. Is there any reason for that?
+Hm, not really. I can get rid of it for v2.
 
---
-Gustavo
-
+Konrad
 > 
-> commit 02abecdeebfcd3848b26b70778dd7f6eb0db65e1
-> Author:     Gustavo A. R. Silva <gustavoars@kernel.org>
-> AuthorDate: Fri Mar 17 12:18:01 2023 -0600
-> Commit:     Tvrtko Ursulin <tvrtko.ursulin@intel.com>
-> CommitDate: Tue Mar 21 08:41:18 2023 +0000
-> 
->      drm/i915/uapi: Replace fake flex-array with flexible-array member
-> 
+>> +        };
+>> +    };
+>>   };
+>>     &dispcc {
+>>
 > 
