@@ -2,88 +2,105 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B261C761A6
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 12:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B799C77B72
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 13:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237224AbjDFMAK (ORCPT
+        id S237068AbjDFNdB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 08:00:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33180 "EHLO
+        Thu, 6 Apr 2023 09:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238642AbjDFL7u (ORCPT
+        with ESMTP id S237171AbjDFNdA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 07:59:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE09AD1A
-        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 04:56:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680782163;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hYu6beRr7Ncw3h1cfQofNH9KOL1VzFTX2Sp4LLx77mM=;
-        b=Y2Poi8g3q3O7Ehn55FlwnSrSDhqOYI2i1uCoGjQcRnQrNjeNNBl7rZ3TBOhW8TSomVXh7O
-        huIy9enoV/z+ohuX/i9Hh9ZG+8bBxdtV72/i+GsDNmIWHmiQgveOTJ/gEaBPkcBv12jCxF
-        JUHtGbsFdl2GvSa7Y4MKbZAw3QgMcCU=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-592-WnaSA1slOL2hfGK6Oe5gpA-1; Thu, 06 Apr 2023 07:42:04 -0400
-X-MC-Unique: WnaSA1slOL2hfGK6Oe5gpA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 30F033C0F37F;
-        Thu,  6 Apr 2023 11:42:03 +0000 (UTC)
-Received: from sirius.home.kraxel.org (unknown [10.39.193.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 993E014171BC;
-        Thu,  6 Apr 2023 11:42:02 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id C77F61800081; Thu,  6 Apr 2023 13:42:00 +0200 (CEST)
-Date:   Thu, 6 Apr 2023 13:42:00 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Evgeniy Baskov <baskov@ispras.ru>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Peter Jones <pjones@redhat.com>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 02/27] x86/build: Remove RWX sections and align on 4KB
-Message-ID: <x244aglrxdjgudpkp5uwnbsft5vorgvmztqlnrwdiiobyj5srx@3ewfdpiuatkq>
-References: <cover.1678785672.git.baskov@ispras.ru>
- <edf3afbdcd87cb6c61815068084ac6de35be15a2.1678785672.git.baskov@ispras.ru>
- <20230405174059.GEZC2yq9WiXFsICyEy@fat_crate.local>
+        Thu, 6 Apr 2023 09:33:00 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A768B93E4;
+        Thu,  6 Apr 2023 06:32:52 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-536af432ee5so740419607b3.0;
+        Thu, 06 Apr 2023 06:32:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680787971; x=1683379971;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8GHSx+N8dU3EBkDSNQMUy0v9E7wtAUYHQ9r3K57DJLA=;
+        b=DsBRi40CKlV7/aNO9KGEHjd/76bhFdgnZD576CS2G9JwrT7HVWBKl36yaGnX0nmY7L
+         u3QucvZ2o5lu9YH9auRjF5RBzROO/5R9Ud/if4iNGQFmu9gQyQLGA2Pu/KtIAU4be74f
+         XlIAkX0dGZGxAcB8xG4+SJ/G6oVjdqAiteSRXCAmBNrhgUegbn0j7JFiI1Vz+sr0sqwi
+         U3KQaikFmutuM3wR53YxBvLou5MvcLfmLa5EmSF7MdXo9XZnfTLWq06GJgmEMDmqE0cC
+         naqorm1D78n6qwHrsTfWo25bTqB3ev398e6LGtfkxCqIZODNTe3YZweklRJOnNHF+6no
+         H0Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680787971; x=1683379971;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8GHSx+N8dU3EBkDSNQMUy0v9E7wtAUYHQ9r3K57DJLA=;
+        b=ORdwG/d/VIEaRO41yp7xh8e7ytu8yMb91gPxjFlpgM86k9R9CBWtPirBqeHe0XApX4
+         d1iewYGU24aZVH+nScCGHDqEzXrR11kxw7a6jaJf8mI2itRYjNJwPWEPf7L6ai4AJ6E0
+         CvCQlj2IP+7cH1j9Pf6kwx7kB2sD61K0IuIwUTZ/SJTu5XgDMdQ+EGsVRmv3rbnIFdh+
+         4QZGna8DhuEF+l+x7GdE9Pp59fAQ+u2JXa5iAwqsbfwAgizxShp4HKNvg/0deVTSKjlF
+         KJB0pbmUxxTYPqPM5yP2M1pYuftH+0XlQYN7MkzTv8lsDoqN6F6Ve9767raSRNJPW7UG
+         LnDg==
+X-Gm-Message-State: AAQBX9dS1J1MqoRR4S6tr5qhE2KBYLp9MnSNT2GzQdpBG2n8std3PQns
+        hZaUIXqNHLO14MHtVBAaMk5l7BO4H8DJKyJ2eaU=
+X-Google-Smtp-Source: AKy350bwE3GK78p1Z0LxwIffWANmDZ0yDm05v1Sowh2dYYe6vSHaFKpr4e0+yYM8NblaW32OK0llR0E6eN8PG4Dn8bk=
+X-Received: by 2002:a81:b245:0:b0:533:8f19:4576 with SMTP id
+ q66-20020a81b245000000b005338f194576mr5967901ywh.0.1680787971647; Thu, 06 Apr
+ 2023 06:32:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230405174059.GEZC2yq9WiXFsICyEy@fat_crate.local>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-4-keescook@chromium.org>
+In-Reply-To: <20230406000212.3442647-4-keescook@chromium.org>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 6 Apr 2023 15:32:40 +0200
+Message-ID: <CANiq72nku=HWzOXgZkbjpC7ii=_SwJj0N+GnXoa=dgcpxR=MVg@mail.gmail.com>
+Subject: Re: [PATCH 4/9] fortify: Add protection for strlcat()
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, Kees Cook <kees@outflux.net>,
+        Andy Shevchenko <andy@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Sander Vanheule <sander@svanheule.net>,
+        Eric Biggers <ebiggers@google.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Latypov <dlatypov@google.com>,
+        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-  Hi,
+On Thu, Apr 6, 2023 at 2:02=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> +       size_t p_size =3D __member_size(p);
+> +       size_t q_size =3D __member_size(q);
 
-> > Currently paging is disabled in x86_32 in compressed kernel, so
-> > protection is not applied anyways, but .init code was incorrectly
-> > placed in non-executable ".data" segment. This should not change
-> > anything meaningful in memory layout now, but might be required in case
-> > memory protection will also be implemented in compressed kernel for
-> > x86_32.
-> 
-> I highly doubt that - no one cares about 32-bit x86 anymore.
+Since I noticed the patches appear to go for const-correctness even
+for parameters (which is great, I support it), these could be `const`
+too.
 
-Indeed.  ia32 edk2 runs without paging even in latest tianocore/edk2,
-and I don't expect that to change until ia32 support gets removed.
-
-take care,
-  Gerd
-
+Cheers,
+Miguel
