@@ -2,61 +2,54 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C60EC76196
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 10:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39C8C76196
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 11:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236689AbjDFKVb (ORCPT
+        id S236160AbjDFLVP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 06:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44754 "EHLO
+        Thu, 6 Apr 2023 07:21:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233568AbjDFKVa (ORCPT
+        with ESMTP id S232115AbjDFLVO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 06:21:30 -0400
-Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EDF13C0B;
-        Thu,  6 Apr 2023 03:21:29 -0700 (PDT)
-Received: by mail-qk1-x72b.google.com with SMTP id de37so12848472qkb.7;
-        Thu, 06 Apr 2023 03:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680776488;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hhH1P9/Ou2ivYg8M0kXj+1/xpjcKuMD6jZ1NT+hctEA=;
-        b=aTI+qPFAXepvjwEnscwxUhj5toI8/5PUr62gjcnWd4MfPami4x/hzpGI06RvrW8MQS
-         Yh7WVXLnj9cvCiytNjR6nzXwTr1HqURE1/i8/ISO2Wi/X+ZJ8KBwHF14/0oRqUrkovz5
-         7Iy78QJqpXopC3cxs7ArZhOdlU9ewDbaoJ0BL6mS7JVfpj7TbWq9zVB0VMs908MCINAN
-         ZygqrhF649J9sVPiB56UQo2RpVNphiRTgerpP/f5UH8EO5Nl+t/DTEKdqtntJlF30ZuU
-         W3SdVGtRH5OcBUykpSZqa/9GhSPDrxbsRrqFco2/N0ZHXdpdRklTScXgaQWpV0qrrE41
-         0G0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680776488;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hhH1P9/Ou2ivYg8M0kXj+1/xpjcKuMD6jZ1NT+hctEA=;
-        b=hczM4o+5CzhOzOwMe16FwW7z/Y2JKHx1A1xs5ay3fJ7C3S+STr0ppBdyO6k7VJbsc+
-         ZdMMECwB1SB85OENT2upQo6eZdV4hgctV+tEbSeHEZoSCo+qT3HJDSr2Rct0Sw6SmfWs
-         /10x9BLUbqZL/aACet54jIpCPnCnA37rI0vRL/RfdRHKOaUQ5cFiDCkVOAIOwU6sXywg
-         Y9mjkMtr5N/mMLTpVfBlocixDrJJUrfksE6rH+45puTP1LjlsuW5ZnrWutTk/qHtnpJs
-         IAaQt/ea7Vlscl2+HT23fxY0ojMx1pL5W8TRLlZ+RgLDlNHnOjRR3yV0oJdoRP5iWOL4
-         cKXw==
-X-Gm-Message-State: AAQBX9eyLQheBoJJzQlWzFJ6jzACjBKBoXyXFbRVLl66qMyGHL2zzxd/
-        Y5b3NqqFnWt2EBsNrb3v3ntN6Ca7MTSwE4xpw9A=
-X-Google-Smtp-Source: AKy350a+6ce7qoEKrdrtHeJlw/xAk3gJ0PJeZbsSqnFX5GJ+rk4EZEYEy0iQ3pnO4reJ+DZLRlMsWvVLD3RlQvJShBQ=
-X-Received: by 2002:a05:620a:170f:b0:746:af25:7e8a with SMTP id
- az15-20020a05620a170f00b00746af257e8amr2065188qkb.14.1680776488314; Thu, 06
- Apr 2023 03:21:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-6-keescook@chromium.org>
-In-Reply-To: <20230406000212.3442647-6-keescook@chromium.org>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 6 Apr 2023 13:20:52 +0300
-Message-ID: <CAHp75Vf-nG865UwbVjwFjVTtXA7mAdi4FfKCpTHDx55eFnbvAA@mail.gmail.com>
-Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Thu, 6 Apr 2023 07:21:14 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 349525FE1
+        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 04:21:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680780061; x=1712316061;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MXRWgeeeuucicATdvWXdJpi4j7VRWmOq+LFsppDD6zQ=;
+  b=QMvNfontuoxMTnlqhUM6O2dqHzz+IDOpwbOrrUTidjzJUH9Z7ayN3Y32
+   nMbeyqy7E7hJtLvzjg7GImyCJaN8KFsNXQZ9A3KTnj4m5WQf2NZXjPAoD
+   UEZp52l4zrqHERNzaV+Bzekkr/MRHOu3dO2Itf9UFbIlBFHyXzOWtReDo
+   ovQVlDLt0u3NNup6K5bPQw/+oL8z1ZuscD0Z5N99QCHGoY23qQR29WpI/
+   E5c1SPKvJSUfY8qQn8tZPA6XWERPYxi7ITpr468se9GvFEdxMIiR/jJqZ
+   rq432M2/fL0JZRlUnuCUKbwhWqvYCF7euWeo+d/kOhOa2Y5wLtiVw/fvH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="370543805"
+X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
+   d="scan'208";a="370543805"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2023 04:20:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="664406087"
+X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
+   d="scan'208";a="664406087"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 06 Apr 2023 04:20:49 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pkNfc-000RKI-2a;
+        Thu, 06 Apr 2023 11:20:48 +0000
+Date:   Thu, 6 Apr 2023 19:19:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -64,6 +57,7 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Brendan Higgins <brendan.higgins@linux.dev>,
         David Gow <davidgow@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Alexander Potapenko <glider@google.com>,
         Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
@@ -81,113 +75,63 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Eric Biggers <ebiggers@google.com>,
         "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
         Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string
+ pointer
+Message-ID: <202304061930.4Au0PASm-lkp@intel.com>
+References: <20230406000212.3442647-6-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230406000212.3442647-6-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 6, 2023 at 3:02=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> In preparation for KUnit testing and further improvements in fortify
-> failure reporting, split out the report and encode the function and
-> access failure (read or write overflow) into a single int argument. This
-> mainly ends up saving some space in the data segment. For a defconfig
-> with FORTIFY_SOURCE enabled:
->
-> $ size gcc/vmlinux.before gcc/vmlinux.after
->    text           data     bss     dec              hex filename
-> 26132309        9760658 2195460 38088427        2452eeb gcc/vmlinux.befor=
-e
-> 26132386        9748382 2195460 38076228        244ff44 gcc/vmlinux.after
+Hi Kees,
 
-...
+kernel test robot noticed the following build errors:
 
-> +       const char *name;
-> +       const bool write =3D !!(reason & 0x1);
+[auto build test ERROR on kees/for-next/hardening]
+[also build test ERROR on kees/for-next/pstore kees/for-next/kspp akpm-mm/mm-everything linus/master v6.3-rc5 next-20230406]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Perhaps define that as
+url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/kunit-tool-Enable-CONFIG_FORTIFY_SOURCE-under-UML/20230406-081014
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+patch link:    https://lore.kernel.org/r/20230406000212.3442647-6-keescook%40chromium.org
+patch subject: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
+config: arm-randconfig-r025-20230403 (https://download.01.org/0day-ci/archive/20230406/202304061930.4Au0PASm-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 67409911353323ca5edf2049ef0df54132fa1ca7)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/4fd520e6ee549e1ffe8859e26e57ea64b48e78ea
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Kees-Cook/kunit-tool-Enable-CONFIG_FORTIFY_SOURCE-under-UML/20230406-081014
+        git checkout 4fd520e6ee549e1ffe8859e26e57ea64b48e78ea
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
 
-FORTIFY_READ_WRITE  BIT(0)
-FORTIFY_FUNC_SHIFT  1
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304061930.4Au0PASm-lkp@intel.com/
 
-const bool write =3D reason & FORTIFY_READ_WRITE; // and note no need for !=
-! part
+All errors (new ones prefixed by >>):
 
-switch (reason >> FORTIFY_FUNC_SHIFT) {
+>> ld.lld: error: undefined symbol: __fortify_panic
+   >>> referenced by fortify-string.h:208 (include/linux/fortify-string.h:208)
+   >>>               arch/arm/boot/compressed/fdt_ro.o:(fdt_stringlist_count)
+   >>> referenced by fortify-string.h:208 (include/linux/fortify-string.h:208)
+   >>>               arch/arm/boot/compressed/fdt_ro.o:(fdt_stringlist_search)
+   >>> referenced by fortify-string.h:208 (include/linux/fortify-string.h:208)
+   >>>               arch/arm/boot/compressed/fdt_ro.o:(fdt_stringlist_get)
 
-> +       switch (reason >> 1) {
-> +       case FORTIFY_FUNC_strncpy:
-> +               name =3D "strncpy";
-> +               break;
-> +       case FORTIFY_FUNC_strnlen:
-> +               name =3D "strnlen";
-> +               break;
-> +       case FORTIFY_FUNC_strlen:
-> +               name =3D "strlen";
-> +               break;
-> +       case FORTIFY_FUNC_strlcpy:
-> +               name =3D "strlcpy";
-> +               break;
-> +       case FORTIFY_FUNC_strscpy:
-> +               name =3D "strscpy";
-> +               break;
-> +       case FORTIFY_FUNC_strlcat:
-> +               name =3D "strlcat";
-> +               break;
-> +       case FORTIFY_FUNC_strcat:
-> +               name =3D "strcat";
-> +               break;
-> +       case FORTIFY_FUNC_strncat:
-> +               name =3D "strncat";
-> +               break;
-> +       case FORTIFY_FUNC_memset:
-> +               name =3D "memset";
-> +               break;
-> +       case FORTIFY_FUNC_memcpy:
-> +               name =3D "memcpy";
-> +               break;
-> +       case FORTIFY_FUNC_memmove:
-> +               name =3D "memmove";
-> +               break;
-> +       case FORTIFY_FUNC_memscan:
-> +               name =3D "memscan";
-> +               break;
-> +       case FORTIFY_FUNC_memcmp:
-> +               name =3D "memcmp";
-> +               break;
-> +       case FORTIFY_FUNC_memchr:
-> +               name =3D "memchr";
-> +               break;
-> +       case FORTIFY_FUNC_memchr_inv:
-> +               name =3D "memchr_inv";
-> +               break;
-> +       case FORTIFY_FUNC_kmemdup:
-> +               name =3D "kmemdup";
-> +               break;
-> +       case FORTIFY_FUNC_strcpy:
-> +               name =3D "strcpy";
-> +               break;
-> +       default:
-> +               name =3D "unknown";
-> +       }
-
-...
-
-> +       WARN(1, "%s: detected buffer %s overflow\n", name, write ? "write=
-" : "read");
-
-Using str_read_write() ?
-
-Dunno if it's already there or needs to be added. I have some patches
-to move those str_*() to string_choices.h. We can also prepend yours
-with those.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
