@@ -2,62 +2,61 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B799C77B72
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 13:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E85C76196
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 13:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237068AbjDFNdB (ORCPT
+        id S236806AbjDFNpd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 09:33:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
+        Thu, 6 Apr 2023 09:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237171AbjDFNdA (ORCPT
+        with ESMTP id S237561AbjDFNpI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 09:33:00 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A768B93E4;
-        Thu,  6 Apr 2023 06:32:52 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-536af432ee5so740419607b3.0;
-        Thu, 06 Apr 2023 06:32:52 -0700 (PDT)
+        Thu, 6 Apr 2023 09:45:08 -0400
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02FAB59CD;
+        Thu,  6 Apr 2023 06:45:06 -0700 (PDT)
+Received: by mail-yb1-xb36.google.com with SMTP id m16so25849929ybk.0;
+        Thu, 06 Apr 2023 06:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680787971; x=1683379971;
+        d=gmail.com; s=20210112; t=1680788705; x=1683380705;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8GHSx+N8dU3EBkDSNQMUy0v9E7wtAUYHQ9r3K57DJLA=;
-        b=DsBRi40CKlV7/aNO9KGEHjd/76bhFdgnZD576CS2G9JwrT7HVWBKl36yaGnX0nmY7L
-         u3QucvZ2o5lu9YH9auRjF5RBzROO/5R9Ud/if4iNGQFmu9gQyQLGA2Pu/KtIAU4be74f
-         XlIAkX0dGZGxAcB8xG4+SJ/G6oVjdqAiteSRXCAmBNrhgUegbn0j7JFiI1Vz+sr0sqwi
-         U3KQaikFmutuM3wR53YxBvLou5MvcLfmLa5EmSF7MdXo9XZnfTLWq06GJgmEMDmqE0cC
-         naqorm1D78n6qwHrsTfWo25bTqB3ev398e6LGtfkxCqIZODNTe3YZweklRJOnNHF+6no
-         H0Pw==
+        bh=4KhgXC9DXFmj1WgtxHdsXUKjqNnttjWFACOtfeQvRuo=;
+        b=NfMWpbEiHyU83kdpf1M1hzSt71X9hawep43qeU5J/cVYOw7/vCuuyx+XObPcTgqPIT
+         5uslXlk4gD/VtX9nuMHfMX/CO0fMXJM7SHuZvwU60/DhqDpmxxQ1T1o5co6wj4O5YFBd
+         nooF1u4x2YK/H74ICeQEta7trx9kfKAVkU0JqdZIDxNQzObKq34NPTq+bNB/i+0yE6fn
+         BugseBoTV20FJUlmU7Lm65F4MAFhKseB/QQS60kL/jC/cudtqpNPQ1AcwWAlapiIrB/q
+         SQBU+lqmldR1pcejXSxtAZW0DBPe/cFRJIINapf0lst3/8gHKLiKmIOxJK/iD9Zjo0v6
+         WuPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680787971; x=1683379971;
+        d=1e100.net; s=20210112; t=1680788705; x=1683380705;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8GHSx+N8dU3EBkDSNQMUy0v9E7wtAUYHQ9r3K57DJLA=;
-        b=ORdwG/d/VIEaRO41yp7xh8e7ytu8yMb91gPxjFlpgM86k9R9CBWtPirBqeHe0XApX4
-         d1iewYGU24aZVH+nScCGHDqEzXrR11kxw7a6jaJf8mI2itRYjNJwPWEPf7L6ai4AJ6E0
-         CvCQlj2IP+7cH1j9Pf6kwx7kB2sD61K0IuIwUTZ/SJTu5XgDMdQ+EGsVRmv3rbnIFdh+
-         4QZGna8DhuEF+l+x7GdE9Pp59fAQ+u2JXa5iAwqsbfwAgizxShp4HKNvg/0deVTSKjlF
-         KJB0pbmUxxTYPqPM5yP2M1pYuftH+0XlQYN7MkzTv8lsDoqN6F6Ve9767raSRNJPW7UG
-         LnDg==
-X-Gm-Message-State: AAQBX9dS1J1MqoRR4S6tr5qhE2KBYLp9MnSNT2GzQdpBG2n8std3PQns
-        hZaUIXqNHLO14MHtVBAaMk5l7BO4H8DJKyJ2eaU=
-X-Google-Smtp-Source: AKy350bwE3GK78p1Z0LxwIffWANmDZ0yDm05v1Sowh2dYYe6vSHaFKpr4e0+yYM8NblaW32OK0llR0E6eN8PG4Dn8bk=
-X-Received: by 2002:a81:b245:0:b0:533:8f19:4576 with SMTP id
- q66-20020a81b245000000b005338f194576mr5967901ywh.0.1680787971647; Thu, 06 Apr
- 2023 06:32:51 -0700 (PDT)
+        bh=4KhgXC9DXFmj1WgtxHdsXUKjqNnttjWFACOtfeQvRuo=;
+        b=YXy1zPCox2NaxPzbZy3KKuC59XaxN4+E6AzcgC63cf1kRxUTrJ1GxbcqRmjv/P4fob
+         TR7ha62cOWUFxira2CpthIvRBFotz5VNWMVELCJf0cHH4f/Q+H6dYOZYtOxUxCKnYQjz
+         ZWbrvNClKe/vy9lH8dmtns+EL/BTd09iIezJpMdcOGeeXOCw2T8u4vCHigHIS3LLnm16
+         YeR/O3X0J4nakzsY/z6JzqvN4yHZ6zvVXg50vgWWuQrO4Y+q3Y4gab7p6xIpKPYCelpn
+         wpUxV6pI4UlL/YM1z1/ZGjOSbdyy8I1Gwt+hiQXSSaQa9SXNXBmQExj2Ah6N8gB5KAy1
+         VI7g==
+X-Gm-Message-State: AAQBX9fDePBCvSVja7snf9pbb9SEk0spjwayDKZxqCJwZFueT70xYzfE
+        B2PyAzrxRfiSPq9OH0eiEFErFHoqJvcrFihpGIs=
+X-Google-Smtp-Source: AKy350ZZ+8HQ7o20RvPaIt6FEcp/i3sJxj4UVr1mQ9nJOcEP2zBMvW25I7hIgyNBWYjK4sAiFSvD/BkmcywJJWKvGwg=
+X-Received: by 2002:a25:d603:0:b0:b21:5fb4:c6e6 with SMTP id
+ n3-20020a25d603000000b00b215fb4c6e6mr1678180ybg.11.1680788705031; Thu, 06 Apr
+ 2023 06:45:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-4-keescook@chromium.org>
-In-Reply-To: <20230406000212.3442647-4-keescook@chromium.org>
+References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-6-keescook@chromium.org>
+In-Reply-To: <20230406000212.3442647-6-keescook@chromium.org>
 From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 6 Apr 2023 15:32:40 +0200
-Message-ID: <CANiq72nku=HWzOXgZkbjpC7ii=_SwJj0N+GnXoa=dgcpxR=MVg@mail.gmail.com>
-Subject: Re: [PATCH 4/9] fortify: Add protection for strlcat()
+Date:   Thu, 6 Apr 2023 15:44:54 +0200
+Message-ID: <CANiq72=Awa4B1qL+Zdkuj1-EX+Tv=fK=pRM_DMdYCDmByEVOHg@mail.gmail.com>
+Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Kees Cook <kees@outflux.net>,
-        Andy Shevchenko <andy@kernel.org>,
+Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -95,12 +94,25 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 On Thu, Apr 6, 2023 at 2:02=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
 ote:
 >
-> +       size_t p_size =3D __member_size(p);
-> +       size_t q_size =3D __member_size(q);
+> +void __fortify_report(u8 reason);
+> +void __fortify_panic(u8 reason) __cold __noreturn;
 
-Since I noticed the patches appear to go for const-correctness even
-for parameters (which is great, I support it), these could be `const`
-too.
+(snip)
+
+> +void __fortify_report(u8 reason)
+
+(snip)
+
+> +void __fortify_panic(const u8 reason)
+
+I am curious: for some reason (no pun intended :) the `reason`s above
+are not `const` except this one, but then in a later patch they become
+`const` (including the declarations).
+
+So perhaps make everything `const` when they are introduced? Or is
+there some other reason? (e.g. I saw one patch that moved a function,
+so there it seemed to make sense to keep things as they are to make
+the copy 1:1).
 
 Cheers,
 Miguel
