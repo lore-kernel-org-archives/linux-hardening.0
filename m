@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75647C76196
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 18:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB357C7618D
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 18:32:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240193AbjDFSaC (ORCPT
+        id S239744AbjDFScs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 14:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47108 "EHLO
+        Thu, 6 Apr 2023 14:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240188AbjDFSaB (ORCPT
+        with ESMTP id S229463AbjDFScr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 14:30:01 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C4B6196
-        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 11:29:59 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id q16so51964362lfe.10
-        for <linux-hardening@vger.kernel.org>; Thu, 06 Apr 2023 11:29:59 -0700 (PDT)
+        Thu, 6 Apr 2023 14:32:47 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F14FA260
+        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 11:32:42 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id y7so9167925ljp.2
+        for <linux-hardening@vger.kernel.org>; Thu, 06 Apr 2023 11:32:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680805798;
+        d=linaro.org; s=google; t=1680805960;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Neijv2zq96R0GfdQjQwNKcSFKV86CYJRcfc1aaFu1qk=;
-        b=XlOX4iBsYDzB8wgJK6e2EygD58sqmxulgjX5qqPLTfJEt8z15r/HdkriynKKcYX2Bq
-         Msof2eYI5neCNb+upoBnjZHBmUVqRYQHHGYJctHDxezQ4Cb9QfWZzNAq/MetS9UXCAgd
-         AdnCCJmHS/gE6xkAUmP7rR5yETIcYFo5XIMXKbK+khXUj12Jqx5BVIqCi0XL/f+/Wwv6
-         lAbd/OFVk9+4dNyuccCRWlfk48MwAQMQga7khS4+oI1Gq1pvaRyvlMYYRM5Uw+Wr8wa5
-         4FsvJziidvPZmQeAMtyo6xWUS1iLQaI5TSLJ/dGUfel7N/MHZrd95B0d5YoeFnrHlrJk
-         r3uQ==
+        bh=Bb7AHlVzzDMUYgUKWXYiRLmXkdswaw+n2t+bRcy2/rg=;
+        b=fqjOEAr1lUjhphcKWwklh6oWc9fP/hWg8Lzk+AugAVD+xDpjzY5VsPsm3zYdiH2MJo
+         vyadlXylXGaG3UTtmIZQTqUGYTE8ztTvH3Sm0cXNfS2To3y4smrm8ckbXyFAXcWrAqsd
+         ZzlvY2aO7qiHwAeelLI2LC786Cgs1rs3Q4fRhUc+kdsWu3ql15huNeTmAWMd4NNcOAoz
+         BGxUE+Ig/l6IA0Ij7MpUfE9UW8EaP8YTBXJuXltMrdbcx1YJMgSlu37JXH6TgoN0cPp7
+         FSvNLMqsW3i6UXzb5soW1A17XkQFnMgNlr4LdHsCkyg63D5lXZu3WQS4h7fXOsPN+dcL
+         12bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680805798;
+        d=1e100.net; s=20210112; t=1680805960;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Neijv2zq96R0GfdQjQwNKcSFKV86CYJRcfc1aaFu1qk=;
-        b=45JUHN7fjoU9TdFTz5bRsLcKVkltLqK6xbDfEDzrzDcehakoizj+IE0oQX+R7GXSVs
-         Yq52iGT8TX4+zhaxf7MAerkdmiBjVgyKgBA+ELAjaCmhdt906tGrD+pi/4i5ALl2/7sc
-         rf316BGT56hN1wwMwrmwUpLOzUTdRKOS8VUKn/2u/kpLZj8cylrI6Ep1NDZWSDveZ417
-         Eq232vG7N4T0Qc0kFAAf4fokuT+6yz6u7FCHY9iyXSv9ZNlUYa5TSMOUtupnETgP5qWf
-         M/pVdfPQof8P1ojoELes6cW1ox6vMRpb7XtdWMC66MvqlCWNd3VAYHpIyVED+AdErLzR
-         FzFA==
-X-Gm-Message-State: AAQBX9eq06kkxjZVjr3Ozi7Q/7XQcoVHVft2qDwifnj3iEDV7HEZPxHt
-        bRImkpC3NtdaG9n55XWwcRQ+9Q==
-X-Google-Smtp-Source: AKy350ZEODeEm9sOvgyuO0IIzT81OsrB7gbD3ClS6luG0xT13OBKwnwD8262UKlr8jcIal295NttLw==
-X-Received: by 2002:a19:f508:0:b0:4db:3a70:e9f3 with SMTP id j8-20020a19f508000000b004db3a70e9f3mr35061lfb.69.1680805797945;
-        Thu, 06 Apr 2023 11:29:57 -0700 (PDT)
+        bh=Bb7AHlVzzDMUYgUKWXYiRLmXkdswaw+n2t+bRcy2/rg=;
+        b=fNbIciF5XfIewtt0CXjDidvZn31B4g7k9XbOUdfvb4aVmGZlc5Fw0cChWFgymJriER
+         5Pa7gJeUKAKpUDosa3TY1hxr4D7iGMMdM9kVWacif7nAgGCJO8TKxoJPtAdY+GGFF6ni
+         nh22YhRpbhrVeVO4S1K+AqycRGc9yz3rzgzy8uh9R21PHPHEminWcXjfV1Sr30Or49la
+         x6a6UqoMpqI0vFRAammuLKyey3EFJEi612Oaq3f7pHfHIaHPh+fDkIEHSBSn/oDV1Eri
+         59G2eujG4yW1I1ripEi3njAGDgWAlqkOavuJ1YXQzh3L0Zy7TWKGfo2KN1fl8Ez0xe/9
+         0qbw==
+X-Gm-Message-State: AAQBX9e4X4zqAwg0pt3yI6GNBpuLW+GU0tJG++5k9IKlQZ8sej8h2EYg
+        2PZfrTU6zn9R5yT040idnDDqSA==
+X-Google-Smtp-Source: AKy350bBUgim2iNgD2sYabdzyBZz7uqHM8WGfuNvgZIC5MmNx80787Am4O9xaU3OYx332Z41SAoMCQ==
+X-Received: by 2002:a2e:7814:0:b0:29d:ce75:5d06 with SMTP id t20-20020a2e7814000000b0029dce755d06mr3227238ljc.32.1680805960605;
+        Thu, 06 Apr 2023 11:32:40 -0700 (PDT)
 Received: from [192.168.1.101] (abxh37.neoplus.adsl.tpnet.pl. [83.9.1.37])
-        by smtp.gmail.com with ESMTPSA id r15-20020ac25a4f000000b004e848782e2esm371641lfn.57.2023.04.06.11.29.54
+        by smtp.gmail.com with ESMTPSA id n9-20020a2e8789000000b00295a21c7954sm383798lji.50.2023.04.06.11.32.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 11:29:57 -0700 (PDT)
-Message-ID: <eacc380a-aa33-5b1d-0a11-124b584cd1aa@linaro.org>
-Date:   Thu, 6 Apr 2023 20:29:52 +0200
+        Thu, 06 Apr 2023 11:32:40 -0700 (PDT)
+Message-ID: <bceb91fa-c94b-a0bf-a612-19fc5778810e@linaro.org>
+Date:   Thu, 6 Apr 2023 20:32:30 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH 1/4] arm64: dts: qcom: sm6115-j606f: Add ramoops node
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: sm6115p-j606f: Enable ATH10K WiFi
 Content-Language: en-US
 To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Andy Gross <agross@kernel.org>,
@@ -70,10 +70,10 @@ Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20230406-topic-lenovo_features-v1-0-c73a5180e48e@linaro.org>
- <20230406-topic-lenovo_features-v1-1-c73a5180e48e@linaro.org>
- <9554be2b-c80d-8c5b-48e3-2508a7b4ecd1@linaro.org>
+ <20230406-topic-lenovo_features-v1-4-c73a5180e48e@linaro.org>
+ <7476b5ba-426c-3701-c4aa-d3e2db3de112@linaro.org>
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <9554be2b-c80d-8c5b-48e3-2508a7b4ecd1@linaro.org>
+In-Reply-To: <7476b5ba-426c-3701-c4aa-d3e2db3de112@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -82,46 +82,62 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 6.04.2023 19:54, Dmitry Baryshkov wrote:
+On 6.04.2023 19:51, Dmitry Baryshkov wrote:
 > On 06/04/2023 18:25, Konrad Dybcio wrote:
->> Add a ramoops node to enable retrieving crash logs.
+>> Enable the onboard QCA Wi-Fi. HW identifiers for reference:
+>> qmi chip_id 0x320 chip_family 0x4001 board_id 0xff soc_id 0x400e0000
 >>
->> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
+>> Firmware sources:
+>> /vendor/firmware_mnt/image/wlanmdsp.bin -> qcom/.../wlanmdsp.mbn
+>> /vendor/firmware_mnt/image/bdwlan.bXX [1] -> [2] -> ath10k/.../board-2.bin
+>> [3] -> ath10k/.../firmware-5.bin
 >>
->> diff --git a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
->> index 10c9d338446c..fd064899791c 100644
->> --- a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
->> +++ b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
->> @@ -52,6 +52,17 @@ key-volume-up {
->>               wakeup-source;
->>           };
->>       };
->> +
->> +    reserved-memory {
->> +        ramoops@ffc00000 {
->> +            compatible = "ramoops";
->> +            reg = <0x0 0xffc00000 0x0 0x100000>;
->> +            record-size = <0x1000>;
->> +            console-size = <0x40000>;
+>> Not sure where 3 comes from on the device itself, gotta investigate that..
+>>
+>> According to [4], it's called WCN3990_STRAIT.
+>>
+>> [1] XX = board_id printed when the file is missing or by your downstream
+>> kernel firmware loader in the dmesg; if XX=ff, use bdwlan.bin
 > 
-> no ftrace-size?
-It could use some!
+> Since the board_id is 0xff, please add qcom,ath10k-calibration-variant
+Do I make up a name, or is there some convention?
+
+I see Johan used "LE_X13S" in commit 2702f54f400ad3979632cdb76553772414f4c5e3.
+Should I go with "LE_P11"?
 
 > 
->> +            ecc-size = <16>;
->> +            no-map;
-> 
-> I see that other ramoops defines are not marked with no-map. Is there any reason for that?
-Hm, not really. I can get rid of it for v2.
+> Ideally, could you please send the bdwlan to ath10k for inclusion, see https://wireless.wiki.kernel.org/en/users/drivers/ath10k/boardfiles .
+The legal situation is ambiguous at best :/
 
 Konrad
 > 
->> +        };
->> +    };
+>>
+>> [2] https://github.com/jhugo/linux/blob/5.5rc2_wifi/README
+>> [3] https://github.com/kvalo/ath10k-firmware/blob/master/WCN3990/hw1.0/HL3.1/WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1/firmware-5.bin
+>> [4] https://git.codelinaro.org/clo/la/platform/vendor/qcom-opensource/wlan/qca-wifi-host-cmn/-/blob/LA.VENDOR.1.0.r1-20700-WAIPIO.QSSI13.0/hif/src/hif_hw_version.h#L55
+>>
+>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
+>> index 2aac25171dec..4ba8e59a27d8 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
+>> +++ b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
+>> @@ -315,6 +315,14 @@ &usb_hsphy {
+>>       status = "okay";
 >>   };
->>     &dispcc {
+>>   +&wifi {
+>> +    vdd-0.8-cx-mx-supply = <&pm6125_l8>;
+>> +    vdd-1.8-xo-supply = <&pm6125_l16>;
+>> +    vdd-1.3-rfa-supply = <&pm6125_l17>;
+>> +    vdd-3.3-ch0-supply = <&pm6125_l23>;
+>> +    status = "okay";
+>> +};
+>> +
+>>   &xo_board {
+>>       clock-frequency = <19200000>;
+>>   };
 >>
 > 
