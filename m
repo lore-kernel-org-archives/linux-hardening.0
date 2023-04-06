@@ -2,50 +2,60 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 045F2C76196
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 14:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A92C76196
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 14:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236859AbjDFO3B (ORCPT
+        id S239196AbjDFOiy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 10:29:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48224 "EHLO
+        Thu, 6 Apr 2023 10:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238767AbjDFO24 (ORCPT
+        with ESMTP id S238352AbjDFOid (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 10:28:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEFE8A5B;
-        Thu,  6 Apr 2023 07:28:55 -0700 (PDT)
+        Thu, 6 Apr 2023 10:38:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87284CC10;
+        Thu,  6 Apr 2023 07:36:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1DBBA60DEC;
-        Thu,  6 Apr 2023 14:28:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92CF8C433EF;
-        Thu,  6 Apr 2023 14:28:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CCCE06478C;
+        Thu,  6 Apr 2023 14:31:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48A63C4339C;
+        Thu,  6 Apr 2023 14:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680791334;
-        bh=PgjoeleWbPd7GMFZN7QiM6u68Sl9VVb7kxLeMWqvAZI=;
+        s=k20201202; t=1680791494;
+        bh=fS1epBKc6/LIuAlKccrK1+yZRgDIBGUB741ssPvpdOQ=;
         h=Date:From:To:Cc:Subject:From;
-        b=sWWo8JWXkw6mg9upeDBqXewzR+2cCDbpfuDDv0j80fGtMsyb4qJQznDV8yPGICHCy
-         QoXTsBC4UHID/BDVJ9sKpSdLdy+7YyqEkWpT0YzugzTUHMaIb3SssFMrZNIY66CBo7
-         9pg7TO32raKSkP3m1NMvXdc3mSjlpA7yYoBHOTgZO5fO86t0tO7swkbGYISRCsX8mF
-         wIQ46hStd03A8aJIa5F3M2npcLagmAFS32XJ+jwSpRJXN/EpxDvBY3fDiZVb3uPjOR
-         le5CgR2gi4vCu4YMr8I0hxZimdr39y7cuvlKKS08PxAPb1T9QWjaMuHtIrWjSuwNRC
-         DIoOBCTBaub1Q==
-Date:   Thu, 6 Apr 2023 08:29:35 -0600
+        b=SjiLsj18bWuofLs6hhWeLC/lLw/a3iNtZ9wlEueFZEmCpkNlYBNfrW2g/JfGJHGTi
+         vet9hVGN3GV90yUx+3gAa/XNftBN0j39XOMRCSz2X9AIryTOjRKZkau8WazkdAVbKe
+         7jo/OiVuhS8JxGUofx57NN8frKBM2tj4fn33MN5OokPIYjhPFpYfjxIVlje0uFnNYq
+         o+keawWHSe/sdTrcyzxIyVKkwcke3vee+fUSrJSER8RnbtzoGn6X9DOk/pfIaR/jlM
+         ZoF5CIu1w4YilJ9YwXKoTj0fnpznmfu4LCYmI1CVH3mBWnGcBheecAhLYWYKRmVcUM
+         1CooyEc8vqBvg==
+Date:   Thu, 6 Apr 2023 08:32:12 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] s390/fcx: Replace zero-length array with
+Subject: [PATCH][next] wifi: mt76: Replace zero-length array with
  flexible-array member
-Message-ID: <ZC7XT5prvoE4Yunm@work>
+Message-ID: <ZC7X7KCb+JEkPe5D@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -64,22 +74,22 @@ Link: https://github.com/KSPP/linux/issues/78 [1]
 Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- arch/s390/include/asm/fcx.h | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/fcx.h b/arch/s390/include/asm/fcx.h
-index b8a028a36173..29784b4b44f6 100644
---- a/arch/s390/include/asm/fcx.h
-+++ b/arch/s390/include/asm/fcx.h
-@@ -286,7 +286,7 @@ struct tccb_tcat {
-  */
- struct tccb {
- 	struct tccb_tcah tcah;
--	u8 tca[0];
-+	u8 tca[];
- } __attribute__ ((packed, aligned(8)));
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+index a5e6ee4daf92..9bf4b4199ee3 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+@@ -127,7 +127,7 @@ struct mt76_connac2_mcu_rxd {
+ 	u8 rsv1[2];
+ 	u8 s2d_index;
  
- struct tcw *tcw_get_intrg(struct tcw *tcw);
+-	u8 tlv[0];
++	u8 tlv[];
+ };
+ 
+ struct mt76_connac2_patch_hdr {
 -- 
 2.34.1
 
