@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31011C77B71
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 09:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C60EC76196
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 10:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234663AbjDFJLv (ORCPT
+        id S236689AbjDFKVb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 05:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51538 "EHLO
+        Thu, 6 Apr 2023 06:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235795AbjDFJLt (ORCPT
+        with ESMTP id S233568AbjDFKVa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 05:11:49 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19DC019D
-        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 02:11:49 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id u97so3332589ybi.10
-        for <linux-hardening@vger.kernel.org>; Thu, 06 Apr 2023 02:11:49 -0700 (PDT)
+        Thu, 6 Apr 2023 06:21:30 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EDF13C0B;
+        Thu,  6 Apr 2023 03:21:29 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id de37so12848472qkb.7;
+        Thu, 06 Apr 2023 03:21:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680772308;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8kd1BcfwPPSqwXTX0SEVb5soTBP6qJhq+QXHtHsYn9Y=;
-        b=a++H6iu7o/Cl0qisj3TeHIvqYQ1G2yInrxtOqcuj+73vykQfjPOzZ59oE+o6MpUfHl
-         cDN/C2oe8jFPpaPIx9kvb6uUaSDAfhswh1ZaMcmOTDLfjgcQTTipom/KagLe1f0rkHA6
-         SD2rv1EGBznEj8ImNCMljoM8bbpFMaZwyx+xflXOCue5CXK0N1O3NyaHoD2yhfDcqe+M
-         g0LUPutgX7NXar8Mvq+ekBGjq4c5wS6Vwc2OCkts5qGym2W2480J1OcJp7RYRBmeUKDS
-         yd5+xcCSU/NjiCQsmoxoFJaCA/SShUWYlOosVPErN5dGrPPOGoPBRCJb2Uv5q7wSYrjQ
-         upLg==
+        d=gmail.com; s=20210112; t=1680776488;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hhH1P9/Ou2ivYg8M0kXj+1/xpjcKuMD6jZ1NT+hctEA=;
+        b=aTI+qPFAXepvjwEnscwxUhj5toI8/5PUr62gjcnWd4MfPami4x/hzpGI06RvrW8MQS
+         Yh7WVXLnj9cvCiytNjR6nzXwTr1HqURE1/i8/ISO2Wi/X+ZJ8KBwHF14/0oRqUrkovz5
+         7Iy78QJqpXopC3cxs7ArZhOdlU9ewDbaoJ0BL6mS7JVfpj7TbWq9zVB0VMs908MCINAN
+         ZygqrhF649J9sVPiB56UQo2RpVNphiRTgerpP/f5UH8EO5Nl+t/DTEKdqtntJlF30ZuU
+         W3SdVGtRH5OcBUykpSZqa/9GhSPDrxbsRrqFco2/N0ZHXdpdRklTScXgaQWpV0qrrE41
+         0G0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680772308;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8kd1BcfwPPSqwXTX0SEVb5soTBP6qJhq+QXHtHsYn9Y=;
-        b=JfNvFIkCId/6xUY1YIChswgh6xz+ttvb3A7GGj25AN6ayqyb4o7yOaDp944FjIID2w
-         Dfr6POfwO8nTOrYyNK2mzvbDNnTlM270uEXYQXtOovwSoxfgHFFWV93aKmI5vsHbr5jQ
-         gFoYk6VrWWjoxadrNBxE5K+2kKzKYTu/Ki7NU5leLBGJ9aN+z1HmSW8zk3UFXmunnjAW
-         GASRdHhbbPaqygnSfulqdkZziye16ZKlrbS1SMVNSr3+ENsNMW4fQPqvR398ub3a+9/g
-         ubrZdC1hx4xzTuu/bWR3KobNGdtmUUs77DB+fCmARrh8Oby5X6tpVIzbxGXBeZLFoUj4
-         Fu6Q==
-X-Gm-Message-State: AAQBX9cxOfjoO9fz6vvXpSGutqqe/Dx8QBSDlmYgSXuxOrLdmhlPVBpJ
-        mJOBo9OkTLQEQJDCa8IAvayxrwNdPwDqgK4BdW4YQw7xflc1dmoTAZhq3g==
-X-Google-Smtp-Source: AKy350b28nJPi9ZcNpz1lgIyJkEGuXrdiEoRKs9W2DQ6woHEVVBrHw/uP2w9Z5Xq5GatvTwKypwven4PIvdIbUXNXPo=
-X-Received: by 2002:a25:2786:0:b0:b75:760a:966b with SMTP id
- n128-20020a252786000000b00b75760a966bmr1576483ybn.23.1680772308148; Thu, 06
- Apr 2023 02:11:48 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680776488;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hhH1P9/Ou2ivYg8M0kXj+1/xpjcKuMD6jZ1NT+hctEA=;
+        b=hczM4o+5CzhOzOwMe16FwW7z/Y2JKHx1A1xs5ay3fJ7C3S+STr0ppBdyO6k7VJbsc+
+         ZdMMECwB1SB85OENT2upQo6eZdV4hgctV+tEbSeHEZoSCo+qT3HJDSr2Rct0Sw6SmfWs
+         /10x9BLUbqZL/aACet54jIpCPnCnA37rI0vRL/RfdRHKOaUQ5cFiDCkVOAIOwU6sXywg
+         Y9mjkMtr5N/mMLTpVfBlocixDrJJUrfksE6rH+45puTP1LjlsuW5ZnrWutTk/qHtnpJs
+         IAaQt/ea7Vlscl2+HT23fxY0ojMx1pL5W8TRLlZ+RgLDlNHnOjRR3yV0oJdoRP5iWOL4
+         cKXw==
+X-Gm-Message-State: AAQBX9eyLQheBoJJzQlWzFJ6jzACjBKBoXyXFbRVLl66qMyGHL2zzxd/
+        Y5b3NqqFnWt2EBsNrb3v3ntN6Ca7MTSwE4xpw9A=
+X-Google-Smtp-Source: AKy350a+6ce7qoEKrdrtHeJlw/xAk3gJ0PJeZbsSqnFX5GJ+rk4EZEYEy0iQ3pnO4reJ+DZLRlMsWvVLD3RlQvJShBQ=
+X-Received: by 2002:a05:620a:170f:b0:746:af25:7e8a with SMTP id
+ az15-20020a05620a170f00b00746af257e8amr2065188qkb.14.1680776488314; Thu, 06
+ Apr 2023 03:21:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-3-keescook@chromium.org>
-In-Reply-To: <20230406000212.3442647-3-keescook@chromium.org>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Thu, 6 Apr 2023 11:11:09 +0200
-Message-ID: <CAG_fn=V-3yxPihQdt+OJuOfF6sBuNvQ2OQfYNZak1xbx6viU2w@mail.gmail.com>
-Subject: Re: [PATCH 3/9] string: Add Kunit tests for strcat() family
+References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-6-keescook@chromium.org>
+In-Reply-To: <20230406000212.3442647-6-keescook@chromium.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 6 Apr 2023 13:20:52 +0300
+Message-ID: <CAHp75Vf-nG865UwbVjwFjVTtXA7mAdi4FfKCpTHDx55eFnbvAA@mail.gmail.com>
+Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
 To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Kees Cook <kees@outflux.net>,
-        Andy Shevchenko <andy@kernel.org>,
+Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -65,6 +65,7 @@ Cc:     linux-hardening@vger.kernel.org, Kees Cook <kees@outflux.net>,
         David Gow <davidgow@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Nathan Chancellor <nathan@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
         Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
         Randy Dunlap <rdunlap@infradead.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -85,31 +86,108 @@ Cc:     linux-hardening@vger.kernel.org, Kees Cook <kees@outflux.net>,
         =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
         linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> +static void strncat_test(struct kunit *test)
-> +{
-> +       char dest[8];
-> +
-> +       /* Destination is terminated. */
-> +       memset(dest, 0, sizeof(dest));
-> +       KUNIT_EXPECT_EQ(test, strlen(dest), 0);
-> +       /* Empty copy of size 0 does nothing. */
-> +       KUNIT_EXPECT_TRUE(test, strncat(dest, "", 0) == dest);
-> +       KUNIT_EXPECT_STREQ(test, dest, "");
-> +       /* Empty copy of size 1 does nothing too. */
-> +       KUNIT_EXPECT_TRUE(test, strncat(dest, "", 1) == dest);
-> +       KUNIT_EXPECT_STREQ(test, dest, "");
-> +       /* Copy of max 0 characters should do nothing. */
-> +       KUNIT_EXPECT_TRUE(test, strncat(dest, "asdf", 0) == dest);
-> +       KUNIT_EXPECT_STREQ(test, dest, "");
-> +
-> +       /* 4 characters copied in, even if max is 8. */
-> +       KUNIT_EXPECT_TRUE(test, strncat(dest, "four\000123", 8) == dest);
-> +       KUNIT_EXPECT_STREQ(test, dest, "four");
-> +       KUNIT_EXPECT_EQ(test, dest[5], '\0');
+On Thu, Apr 6, 2023 at 3:02=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> In preparation for KUnit testing and further improvements in fortify
+> failure reporting, split out the report and encode the function and
+> access failure (read or write overflow) into a single int argument. This
+> mainly ends up saving some space in the data segment. For a defconfig
+> with FORTIFY_SOURCE enabled:
+>
+> $ size gcc/vmlinux.before gcc/vmlinux.after
+>    text           data     bss     dec              hex filename
+> 26132309        9760658 2195460 38088427        2452eeb gcc/vmlinux.befor=
+e
+> 26132386        9748382 2195460 38076228        244ff44 gcc/vmlinux.after
 
-Maybe also add a test case for strncat(dest, "four", 4) that checks
-that the fourth byte of dest is not 0?
+...
+
+> +       const char *name;
+> +       const bool write =3D !!(reason & 0x1);
+
+Perhaps define that as
+
+FORTIFY_READ_WRITE  BIT(0)
+FORTIFY_FUNC_SHIFT  1
+
+const bool write =3D reason & FORTIFY_READ_WRITE; // and note no need for !=
+! part
+
+switch (reason >> FORTIFY_FUNC_SHIFT) {
+
+> +       switch (reason >> 1) {
+> +       case FORTIFY_FUNC_strncpy:
+> +               name =3D "strncpy";
+> +               break;
+> +       case FORTIFY_FUNC_strnlen:
+> +               name =3D "strnlen";
+> +               break;
+> +       case FORTIFY_FUNC_strlen:
+> +               name =3D "strlen";
+> +               break;
+> +       case FORTIFY_FUNC_strlcpy:
+> +               name =3D "strlcpy";
+> +               break;
+> +       case FORTIFY_FUNC_strscpy:
+> +               name =3D "strscpy";
+> +               break;
+> +       case FORTIFY_FUNC_strlcat:
+> +               name =3D "strlcat";
+> +               break;
+> +       case FORTIFY_FUNC_strcat:
+> +               name =3D "strcat";
+> +               break;
+> +       case FORTIFY_FUNC_strncat:
+> +               name =3D "strncat";
+> +               break;
+> +       case FORTIFY_FUNC_memset:
+> +               name =3D "memset";
+> +               break;
+> +       case FORTIFY_FUNC_memcpy:
+> +               name =3D "memcpy";
+> +               break;
+> +       case FORTIFY_FUNC_memmove:
+> +               name =3D "memmove";
+> +               break;
+> +       case FORTIFY_FUNC_memscan:
+> +               name =3D "memscan";
+> +               break;
+> +       case FORTIFY_FUNC_memcmp:
+> +               name =3D "memcmp";
+> +               break;
+> +       case FORTIFY_FUNC_memchr:
+> +               name =3D "memchr";
+> +               break;
+> +       case FORTIFY_FUNC_memchr_inv:
+> +               name =3D "memchr_inv";
+> +               break;
+> +       case FORTIFY_FUNC_kmemdup:
+> +               name =3D "kmemdup";
+> +               break;
+> +       case FORTIFY_FUNC_strcpy:
+> +               name =3D "strcpy";
+> +               break;
+> +       default:
+> +               name =3D "unknown";
+> +       }
+
+...
+
+> +       WARN(1, "%s: detected buffer %s overflow\n", name, write ? "write=
+" : "read");
+
+Using str_read_write() ?
+
+Dunno if it's already there or needs to be added. I have some patches
+to move those str_*() to string_choices.h. We can also prepend yours
+with those.
+
+--=20
+With Best Regards,
+Andy Shevchenko
