@@ -2,109 +2,215 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B670C77B6C
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 22:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98883C77B6E
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 22:54:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230458AbjDFWuy (ORCPT
+        id S233130AbjDFWyF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 18:50:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55894 "EHLO
+        Thu, 6 Apr 2023 18:54:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230426AbjDFWux (ORCPT
+        with ESMTP id S231143AbjDFWyE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 18:50:53 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C47A430D4
-        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 15:50:51 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id j14-20020a17090a7e8e00b002448c0a8813so2622203pjl.0
-        for <linux-hardening@vger.kernel.org>; Thu, 06 Apr 2023 15:50:51 -0700 (PDT)
+        Thu, 6 Apr 2023 18:54:04 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F9965FE1
+        for <linux-hardening@vger.kernel.org>; Thu,  6 Apr 2023 15:54:03 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id z19so38774275plo.2
+        for <linux-hardening@vger.kernel.org>; Thu, 06 Apr 2023 15:54:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680821451;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=O0msV0O5AHB0NF46Jr69g0S/BTV0Y+vyG/TkYJyeoWo=;
-        b=KpaqO2Mr4cYhgn6Qnh6DVdi2arSPzn8iI1d2dKHoh6jWuL6ejpYsJmj7gu9ha09+eQ
-         5ebaKDgl6gycDOa+YMUY27WT5nhNLz17ktjH9TStUMIjDtPGiWbFZc1gio/Gv/mtmsTN
-         Yl7YRXuJDp3WQJGHSqn3DC+ETeLI+qMqnD/1k=
+        d=chromium.org; s=google; t=1680821642;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=QPaVVGm2qUWSfNz4tA7arzn4mNtciwkt4EN4fGqYaQs=;
+        b=n59sYTtqlD/xmJk02Aq4C3Fma1uygmEHaYsIbT9NSqVRwJX0M9RH93Rm4t5PnfM2+C
+         0S1swQ/5MoXJtxmZ7OInbAGReQ5DRKj9ec0285syYJeYLIuAVM6uyVdbS4Nhf7qpxhOm
+         eiT39dnkmEYHYLoWzHuU0oSRFxbxkpHE2Kew4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680821451;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O0msV0O5AHB0NF46Jr69g0S/BTV0Y+vyG/TkYJyeoWo=;
-        b=ESKS/FxqNbiIwkQrEsUuVmj4SWNkx07PVWNbeDvPQ4Ups+tVSgFMDRR0BiaGk6FPqC
-         4o+tu/maeFauMbqdDV7pvAcepfLDPChO9G5yZ8SU4YVblnW378IuObI61enJ+cwfTF49
-         PLco8LaNoZsTKBk7zoGQSgShtKqmW34wh9H2Gy1EnbMBzHu417FESX1+iSV8x3rF/eO+
-         SQTaAElUfaplGw2KXzorWlyrNcgf+qUSTSmZl9pjBzE2gh6Bhaty6HLIBoMI+Jo0pv9x
-         vQlP5lCX12I00Ee0FNZtpFebDCl1xf5vQoE2hiSzu1bVdys9qFqXrja/oiHhaRedVWpU
-         SvUA==
-X-Gm-Message-State: AAQBX9eczSFW3F62hwj7zQ1jXlTLgUVEsByZaB0s9fG1Oemt4pzKYchG
-        UN/SgZLkpGpWUqKO5SfZm9m4htGRto4yqttwbrw=
-X-Google-Smtp-Source: AKy350ZpDPPfEg2CRUkH/bpwiBnQwgDuvVdD66YyvZ4O3oYBdtUxV4c5isYOpXQ5G9jXLA7UI5SP0g==
-X-Received: by 2002:a17:90a:640d:b0:240:acdb:c4eb with SMTP id g13-20020a17090a640d00b00240acdbc4ebmr141177pjj.45.1680821451292;
-        Thu, 06 Apr 2023 15:50:51 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680821642;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QPaVVGm2qUWSfNz4tA7arzn4mNtciwkt4EN4fGqYaQs=;
+        b=ikTr6snCD7RXMkF/dLR2WvZBmxUku3470bWT999Qep13OK0xVawy+3vZj5LSkBFQ7P
+         XGr7m4Xbk3PGqTQrR1Raj5de/huyfy5E4C8R6wk9WbJd93lSUlTQsiKiufbeDplPZ8Dz
+         +mtwBPy25pCj7UgvrnI+Q9YitcyOgFPS7q8FFAgdpLrMbZzo7pigOWCmj+zCe17H8pr0
+         yIo5U1Hqv7RI4zo9DFoMkYbFrVKoa0+y/gDXluQ6BkUMWPGk2CzBdRVM2NHfIkMwcyQ1
+         drWAhUm6kufBYypU0zcrWp97syTc622udHnkYDclM55SEwnl0cmKCyBVq0ZwWKLoRyPO
+         Ao0A==
+X-Gm-Message-State: AAQBX9eZYzXVKK6oAiEK1SMm6vKtA+a9grwsFZjlweoutfnyS35+1U0K
+        3xlnigcFsIGylZ740YdV7cE7eA==
+X-Google-Smtp-Source: AKy350bR9zWuebqL/aA1LV8KxI7JWqQyZIsvvjMnLHlLZ3NbQXDSDF+xNCzWM/6aHQc/62ahVWwguw==
+X-Received: by 2002:a05:6a20:659c:b0:d9:b820:10a4 with SMTP id p28-20020a056a20659c00b000d9b82010a4mr133641pzh.8.1680821642686;
+        Thu, 06 Apr 2023 15:54:02 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id oj5-20020a17090b4d8500b0023cfdbb6496sm3660204pjb.1.2023.04.06.15.50.50
+        by smtp.gmail.com with ESMTPSA id k20-20020a63d854000000b0050f7208b4bcsm1578608pgj.89.2023.04.06.15.54.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 15:50:50 -0700 (PDT)
-Message-ID: <642f4cca.170a0220.db953.9229@mx.google.com>
-X-Google-Original-Message-ID: <202304061550.@keescook>
-Date:   Thu, 6 Apr 2023 15:50:49 -0700
+        Thu, 06 Apr 2023 15:54:02 -0700 (PDT)
+Message-ID: <642f4d8a.630a0220.179b4.3576@mx.google.com>
+X-Google-Original-Message-ID: <202304061551.@keescook>
+Date:   Thu, 6 Apr 2023 15:54:01 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-hardening@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] pstore/ram: Convert to platform remove callback
- returning void
-References: <20230401120000.2487153-1-u.kleine-koenig@pengutronix.de>
- <ee6bcb45-765b-30b8-fa38-a634b58391db@igalia.com>
+To:     Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Sander Vanheule <sander@svanheule.net>,
+        Eric Biggers <ebiggers@google.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Latypov <dlatypov@google.com>,
+        =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
+Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string
+ pointer
+References: <20230405235832.never.487-kees@kernel.org>
+ <20230406000212.3442647-6-keescook@chromium.org>
+ <0ff0548e-7348-d6cb-75a5-838a110b7d82@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ee6bcb45-765b-30b8-fa38-a634b58391db@igalia.com>
+In-Reply-To: <0ff0548e-7348-d6cb-75a5-838a110b7d82@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 06, 2023 at 12:57:30PM -0300, Guilherme G. Piccoli wrote:
-> On 01/04/2023 09:00, Uwe Kleine-König wrote:
-> > The .remove() callback for a platform driver returns an int which makes
-> > many driver authors wrongly assume it's possible to do error handling by
-> > returning an error code. However the value returned is (mostly) ignored
-> > and this typically results in resource leaks. To improve here there is a
-> > quest to make the remove callback return void. In the first step of this
-> > quest all drivers are converted to .remove_new() which already returns
-> > void.
+On Thu, Apr 06, 2023 at 05:23:54PM +0200, Alexander Lobakin wrote:
+> From: Kees Cook <keescook@chromium.org>
+> Date: Wed,  5 Apr 2023 17:02:05 -0700
+> 
+> > In preparation for KUnit testing and further improvements in fortify
+> > failure reporting, split out the report and encode the function and
+> > access failure (read or write overflow) into a single int argument. This
+> > mainly ends up saving some space in the data segment. For a defconfig
+> > with FORTIFY_SOURCE enabled:
 > > 
-> > Trivially convert this driver from always returning zero in the remove
-> > callback to the void returning variant.
+> > $ size gcc/vmlinux.before gcc/vmlinux.after
+> >    text  	  data     bss     dec    	    hex filename
+> > 26132309        9760658 2195460 38088427        2452eeb gcc/vmlinux.before
+> > 26132386        9748382 2195460 38076228        244ff44 gcc/vmlinux.after
 > > 
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > Cc: Andy Shevchenko <andy@kernel.org>
+> > Cc: Cezary Rojewski <cezary.rojewski@intel.com>
+> > Cc: Puyou Lu <puyou.lu@gmail.com>
+> > Cc: Mark Brown <broonie@kernel.org>
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  include/linux/fortify-string.h | 72 +++++++++++++++++++++++-----------
+> >  lib/string_helpers.c           | 70 +++++++++++++++++++++++++++++++--
+> >  tools/objtool/check.c          |  2 +-
+> >  3 files changed, 118 insertions(+), 26 deletions(-)
+> > 
+> > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+> > index 41dbd641f55c..6db4052db459 100644
+> > --- a/include/linux/fortify-string.h
+> > +++ b/include/linux/fortify-string.h
+> > @@ -9,7 +9,34 @@
+> >  #define __FORTIFY_INLINE extern __always_inline __gnu_inline __overloadable
+> >  #define __RENAME(x) __asm__(#x)
+> >  
+> > -void fortify_panic(const char *name) __noreturn __cold;
+> > +#define fortify_reason(func, write)	(((func) << 1) | !!(write))
+> > +
+> > +#define fortify_panic(func, write)	\
+> > +	__fortify_panic(fortify_reason(func, write))
+> > +
+> > +#define FORTIFY_READ		 0
+> > +#define FORTIFY_WRITE		 1
+> > +
+> > +#define FORTIFY_FUNC_strncpy	 0
+> > +#define FORTIFY_FUNC_strnlen	 1
+> > +#define FORTIFY_FUNC_strlen	 2
+> > +#define FORTIFY_FUNC_strlcpy	 3
+> > +#define FORTIFY_FUNC_strscpy	 4
+> > +#define FORTIFY_FUNC_strlcat	 5
+> > +#define FORTIFY_FUNC_strcat	 6
+> > +#define FORTIFY_FUNC_strncat	 7
+> > +#define FORTIFY_FUNC_memset	 8
+> > +#define FORTIFY_FUNC_memcpy	 9
+> > +#define FORTIFY_FUNC_memmove	10
+> > +#define FORTIFY_FUNC_memscan	11
+> > +#define FORTIFY_FUNC_memcmp	12
+> > +#define FORTIFY_FUNC_memchr	13
+> > +#define FORTIFY_FUNC_memchr_inv	14
+> > +#define FORTIFY_FUNC_kmemdup	15
+> > +#define FORTIFY_FUNC_strcpy	16
 > 
-> Thanks, it makes sense for me! Code-wise, it looks fine.
+> enum?
+
+I opted to avoid an enum due to the binary operations used in
+"fortify_reason" to collapse it to a u8. It just seemed like more work
+to put in enums, and then do u8 casts, etc, all for a strictly
+"internal" set of magic numbers.
+
 > 
-> What would be interesting it to mention a mail thread discussing this or
-> maybe the patch itself that added the .remove_new() idea
-> [https://git.kernel.org/linus/5c5a7680e67b right?].
+> > --- a/lib/string_helpers.c
+> > +++ b/lib/string_helpers.c
+> > @@ -1021,10 +1021,74 @@ EXPORT_SYMBOL(__read_overflow2_field);
+> >  void __write_overflow_field(size_t avail, size_t wanted) { }
+> >  EXPORT_SYMBOL(__write_overflow_field);
+> >  
+> > -void fortify_panic(const char *name)
+> > +void __fortify_report(u8 reason)
+> >  {
+> > -	pr_emerg("detected buffer overflow in %s\n", name);
+> > +	const char *name;
+> > +	const bool write = !!(reason & 0x1);
+> > +
+> > +	switch (reason >> 1) {
 > 
-> BTW, nice idea - converting all at once would be a terrible sync effort,
-> I guess this way things will go smoothly.
-> Feel free to add my:
+> As already mentioned, I'd use bitfield helpers + couple definitions to
+> not miss something when changing the way it's encoded
 > 
-> Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> #define FORTIFY_REASON_DIR(r)	FIELD_GET(BIT(0), r)
+> #define FORTIFY_REASON_FUNC(r)	FIELD_GET(GENMASK(7, 1), r)
 
-Thanks! Looks good to me.
+Yeah, good idea. Thanks for the FIELD_GET examples!
 
-Acked-by: Kees Cook <keescook@chromium.org>
+> [...]
+> > +		break;
+> > +	default:
+> > +		name = "unknown";
+> > +	}
+> 
+> I know this is far from hotpath, but could we save some object code and
+> do that via O(1) array lookup? Plus some macro to compress things:
+> 
+> #define FORTIFY_ENTRY(name)		\
+> 	[FORTIFY_FUNC_##name]	= #name
+> 
+> static const char * const fortify_funcs[] = {
+> 	FORTIFY_ENTRY(strncpy),
+> 	...
+> }
+> 
+> 	// array bounds check here if you wish, I wouldn't bother as
+> 	// we're panicking anyway
+> 
+> 	name = fortify_funcs[reason >> 1];
 
-Do you want to take these view some other tree, or should I take this
-via my pstore tree?
-
--Kees
+Fair enough. I had considered it and then forgot about it for some
+reason. :)
 
 -- 
 Kees Cook
