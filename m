@@ -2,117 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E85C76196
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 13:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D01C761A6
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Apr 2023 14:28:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236806AbjDFNpd (ORCPT
+        id S238963AbjDFO2M (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Apr 2023 09:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48408 "EHLO
+        Thu, 6 Apr 2023 10:28:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237561AbjDFNpI (ORCPT
+        with ESMTP id S238965AbjDFO2K (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Apr 2023 09:45:08 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02FAB59CD;
-        Thu,  6 Apr 2023 06:45:06 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id m16so25849929ybk.0;
-        Thu, 06 Apr 2023 06:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680788705; x=1683380705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4KhgXC9DXFmj1WgtxHdsXUKjqNnttjWFACOtfeQvRuo=;
-        b=NfMWpbEiHyU83kdpf1M1hzSt71X9hawep43qeU5J/cVYOw7/vCuuyx+XObPcTgqPIT
-         5uslXlk4gD/VtX9nuMHfMX/CO0fMXJM7SHuZvwU60/DhqDpmxxQ1T1o5co6wj4O5YFBd
-         nooF1u4x2YK/H74ICeQEta7trx9kfKAVkU0JqdZIDxNQzObKq34NPTq+bNB/i+0yE6fn
-         BugseBoTV20FJUlmU7Lm65F4MAFhKseB/QQS60kL/jC/cudtqpNPQ1AcwWAlapiIrB/q
-         SQBU+lqmldR1pcejXSxtAZW0DBPe/cFRJIINapf0lst3/8gHKLiKmIOxJK/iD9Zjo0v6
-         WuPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680788705; x=1683380705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4KhgXC9DXFmj1WgtxHdsXUKjqNnttjWFACOtfeQvRuo=;
-        b=YXy1zPCox2NaxPzbZy3KKuC59XaxN4+E6AzcgC63cf1kRxUTrJ1GxbcqRmjv/P4fob
-         TR7ha62cOWUFxira2CpthIvRBFotz5VNWMVELCJf0cHH4f/Q+H6dYOZYtOxUxCKnYQjz
-         ZWbrvNClKe/vy9lH8dmtns+EL/BTd09iIezJpMdcOGeeXOCw2T8u4vCHigHIS3LLnm16
-         YeR/O3X0J4nakzsY/z6JzqvN4yHZ6zvVXg50vgWWuQrO4Y+q3Y4gab7p6xIpKPYCelpn
-         wpUxV6pI4UlL/YM1z1/ZGjOSbdyy8I1Gwt+hiQXSSaQa9SXNXBmQExj2Ah6N8gB5KAy1
-         VI7g==
-X-Gm-Message-State: AAQBX9fDePBCvSVja7snf9pbb9SEk0spjwayDKZxqCJwZFueT70xYzfE
-        B2PyAzrxRfiSPq9OH0eiEFErFHoqJvcrFihpGIs=
-X-Google-Smtp-Source: AKy350ZZ+8HQ7o20RvPaIt6FEcp/i3sJxj4UVr1mQ9nJOcEP2zBMvW25I7hIgyNBWYjK4sAiFSvD/BkmcywJJWKvGwg=
-X-Received: by 2002:a25:d603:0:b0:b21:5fb4:c6e6 with SMTP id
- n3-20020a25d603000000b00b215fb4c6e6mr1678180ybg.11.1680788705031; Thu, 06 Apr
- 2023 06:45:05 -0700 (PDT)
+        Thu, 6 Apr 2023 10:28:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926408A51;
+        Thu,  6 Apr 2023 07:28:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F23B6450C;
+        Thu,  6 Apr 2023 14:28:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B733C4339B;
+        Thu,  6 Apr 2023 14:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680791288;
+        bh=jhxfiG+JEN/B7SPCpeaq7cxeMMnz6qoyQOvS5SSFFt0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Zz13cmWj82aEGrHXBsUl6d2i6L41xOIQlyFWVqKmFZgKD6M904c1r218ROElrMQ9e
+         zFaFbH958fBz/SaFcIwTI83FUGr8lFbeRg8emfKkWGRKE6uB/VH5w7FFUyaBzH/Oyg
+         LBEL0vghIj5G5axIRSasIhhO99Vz25g0l/hYW2Lbzfc/DRcQSv+uHMIhAVcNCItb6x
+         js09de36T1/ugJkwXO/LOwudjUuzWWWZrWSwKQzJXpXlEzP5a+tI7YbjsEg1OZ07pw
+         3EY8sNNdLZEN+/MrUTpXavu0ePj+aNWo/5sToRYMtvT7MDhnzF6t5QPDnPVHB+01tO
+         JA46rB1hJyiiQ==
+Date:   Thu, 6 Apr 2023 08:28:42 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] s390/diag: Replace zero-length array with
+ flexible-array member
+Message-ID: <ZC7XGpUtVhqlRLhH@work>
 MIME-Version: 1.0
-References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-6-keescook@chromium.org>
-In-Reply-To: <20230406000212.3442647-6-keescook@chromium.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 6 Apr 2023 15:44:54 +0200
-Message-ID: <CANiq72=Awa4B1qL+Zdkuj1-EX+Tv=fK=pRM_DMdYCDmByEVOHg@mail.gmail.com>
-Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Apr 6, 2023 at 2:02=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> +void __fortify_report(u8 reason);
-> +void __fortify_panic(u8 reason) __cold __noreturn;
+Zero-length arrays are deprecated [1] and have to be replaced by C99
+flexible-array members.
 
-(snip)
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+on memcpy() and help to make progress towards globally enabling
+-fstrict-flex-arrays=3 [2]
 
-> +void __fortify_report(u8 reason)
+Link: https://github.com/KSPP/linux/issues/78 [1]
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ arch/s390/include/asm/diag.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-(snip)
+diff --git a/arch/s390/include/asm/diag.h b/arch/s390/include/asm/diag.h
+index 674a939f16ee..902e0330dd91 100644
+--- a/arch/s390/include/asm/diag.h
++++ b/arch/s390/include/asm/diag.h
+@@ -90,7 +90,7 @@ struct diag8c {
+ 	u8 num_partitions;
+ 	u16 width;
+ 	u16 height;
+-	u8 data[0];
++	u8 data[];
+ } __packed __aligned(4);
+ 
+ extern int diag8c(struct diag8c *out, struct ccw_dev_id *devno);
+-- 
+2.34.1
 
-> +void __fortify_panic(const u8 reason)
-
-I am curious: for some reason (no pun intended :) the `reason`s above
-are not `const` except this one, but then in a later patch they become
-`const` (including the declarations).
-
-So perhaps make everything `const` when they are introduced? Or is
-there some other reason? (e.g. I saw one patch that moved a function,
-so there it seemed to make sense to keep things as they are to make
-the copy 1:1).
-
-Cheers,
-Miguel
