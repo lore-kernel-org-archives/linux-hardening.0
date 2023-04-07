@@ -2,118 +2,132 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5743FC77B7F
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 19:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092FFC6FD1D
+	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 19:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230409AbjDGTta (ORCPT
+        id S230217AbjDGTy6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 15:49:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43408 "EHLO
+        Fri, 7 Apr 2023 15:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230527AbjDGTt1 (ORCPT
+        with ESMTP id S231386AbjDGTyy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Apr 2023 15:49:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D3257EC9;
-        Fri,  7 Apr 2023 12:49:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ACE8965215;
-        Fri,  7 Apr 2023 19:49:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1DFCC433D2;
-        Fri,  7 Apr 2023 19:49:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680896966;
-        bh=k3rEJvN6OcdfsS7djVPf2/IZ21/jhRKFWcyEmi+OzIc=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=NEuTACBOiD+ytvaG/5SgC3rc9OepJH3/VuSw+b8tFzueXQ9+NvYxv/+KLvC1LzqIJ
-         QFYzfbtJk77zwrB2vD+H4mI/5cGMtoAF9NG6FVcPJyZukXBGoINWl8nHNfuH8dqu3z
-         2tFQveH4/s7c7ds1X2tuBqEWkFGVVmfWkYRZHnZVoCuj9Y8EZGYyb57gy4GezfynFt
-         5pqgTzswMA7gSK+8/NH74ohCY/8sSM+saMZ6vBn7CqoGwnfdrx5nWTyG/f1lhdHcUo
-         rWsdiO4ZrnmG+u4eF/PSUV0gSoSzXTvM3JP/1TjelXe/KcwIqCnTg6DnqQ8X5fJabI
-         /tBrLQLhJX6Xg==
-Date:   Fri, 07 Apr 2023 12:49:25 -0700
-From:   Kees Cook <kees@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-CC:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?ISO-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_6/9=5D_fortify=3A_Split_repor?= =?US-ASCII?Q?ting_and_avoid_passing_string_pointer?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAHp75VfyT9A0xAYquSS0AeOemLPZSq9+6H2D-PLaGfGoDa3_9w@mail.gmail.com>
-References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-6-keescook@chromium.org> <CAHp75Vf-nG865UwbVjwFjVTtXA7mAdi4FfKCpTHDx55eFnbvAA@mail.gmail.com> <642f4e62.170a0220.1f11f.36df@mx.google.com> <CAHp75VfyT9A0xAYquSS0AeOemLPZSq9+6H2D-PLaGfGoDa3_9w@mail.gmail.com>
-Message-ID: <778548BD-653C-4F7C-8B1C-B4A40E23BC85@kernel.org>
+        Fri, 7 Apr 2023 15:54:54 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEA09EC1
+        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 12:54:53 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id y15so55637461lfa.7
+        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 12:54:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680897292;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UnW6A28IKcreFUAfuKike2SwwSqJ7t/qMOojsEiWd3o=;
+        b=MwmFmghBv6y4HhNOaxXFNNuzkqK19RmVnmxCLV9ziJFoBJj36Uyj22QNGse8V10FED
+         Ycn7rsZiJL7XOKtpf2EWV4qpPMfUhdv759rK9a2kBagd+9O0MfW2SvdgHXF+DUTidvs6
+         0NuHdJn3tVfqdpCDpOulLjBicpoCTzr3Z76kGINvmk9J8UjgMozQcjVmuJe1r162BW8k
+         xPPpd9R1EejUZmmFLIXV0Fs3gJ58IpJjXaP2QB7wdOKDHWeyecXoDyo9R5jEoEolHS/L
+         9TsgTijFoz1ncDgN4P1a1yY63cg2NdIvwe9c3BJ1gmk8w49kPK3Pyl/XcLIrZN90ocYf
+         MEJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680897292;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UnW6A28IKcreFUAfuKike2SwwSqJ7t/qMOojsEiWd3o=;
+        b=7SVXFlqfc/CKRqsn2vMuTcwOU1rOVv2E4xtL2vg/QfMGokPd5jn8qAL8RxbdcjV7C5
+         pY9yjxlc/va9FRWZ61HawPx0VZStRStrlh3/nLShHwl5ySJQNhOzKmh/4KpcqlrlWWau
+         R+7AzhNmhcphg7zwBr+dRhg7jl8NG8bjvGNf/5dX2+Ob2bySee+9GtTtJQ33Szyg7uZY
+         MzDqwm2UYhl6D91lzmRYEjj9JlSFVX3tqwxL37M8gswoMxbiLkhxAovp+u23JzYOqfDZ
+         H/csRHeBqKBEARZYkRoQ+7kOVtHluUaWKYtsARSmF9RiSMb+5S2HLuy4/wCaYjkM6uzO
+         n/jg==
+X-Gm-Message-State: AAQBX9fPnbWsWDYyahJDzsRhlwrv/VIPYXVnPqvyikzhk5IBEkTlSHH8
+        XAe6SxcNpNI3PybdSQ3b/HN+BA==
+X-Google-Smtp-Source: AKy350ZZhBTnloXL3RG6GqwZQd81A/jMWiVaAxZ9A4Rr9J2WSc8pzQlD5NC/nIpe1C+nfs6cMJsEPw==
+X-Received: by 2002:ac2:5f0f:0:b0:4eb:13ff:6ca7 with SMTP id 15-20020ac25f0f000000b004eb13ff6ca7mr918254lfq.16.1680897292119;
+        Fri, 07 Apr 2023 12:54:52 -0700 (PDT)
+Received: from [192.168.1.101] (abxh37.neoplus.adsl.tpnet.pl. [83.9.1.37])
+        by smtp.gmail.com with ESMTPSA id u5-20020ac248a5000000b004d856fe5121sm839981lfg.194.2023.04.07.12.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Apr 2023 12:54:51 -0700 (PDT)
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Date:   Fri, 07 Apr 2023 21:54:44 +0200
+Subject: [PATCH v2 4/4] arm64: dts: qcom: sm6115p-j606f: Enable ATH10K WiFi
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230406-topic-lenovo_features-v2-4-625d7cb4a944@linaro.org>
+References: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
+In-Reply-To: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1680897283; l=1763;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=b3Zu3ZZnDQhyKIftWOiLA89iYJJNHGbq+oJ3wY2oUSk=;
+ b=eVPsQfPvLHPeKGN8di7rL5TOwfLtMuC4wjd3d03xaNYMEJ9N8wylr+p90aUi7lfQEjG2NeH+8QY4
+ XrznSAhtCYgwlrLVRl/DbslgdBrm3qdA/s64o9xWOM3fnCnTixe/
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On April 7, 2023 1:34:41 AM PDT, Andy Shevchenko <andy=2Eshevchenko@gmail=
-=2Ecom> wrote:
->On Fri, Apr 7, 2023 at 1:57=E2=80=AFAM Kees Cook <keescook@chromium=2Eorg=
-> wrote:
->> On Thu, Apr 06, 2023 at 01:20:52PM +0300, Andy Shevchenko wrote:
->> > On Thu, Apr 6, 2023 at 3:02=E2=80=AFAM Kees Cook <keescook@chromium=
-=2Eorg> wrote:
->
->=2E=2E=2E
->
->> > > +       WARN(1, "%s: detected buffer %s overflow\n", name, write ? =
-"write" : "read");
->> >
->> > Using str_read_write() ?
->> >
->> > Dunno if it's already there or needs to be added=2E I have some patch=
-es
->> > to move those str_*() to string_choices=2Eh=2E We can also prepend yo=
-urs
->> > with those=2E
->>
->> Oh! Hah=2E I totally forgot about str_read_write=2E :) I will use that=
-=2E
->
->Btw, makes sense to add
->
->  #define str_write_read(v)    str_read_write(!(v))
->
->to the header, so we won't use negation in the parameter for better reada=
-bility=2E
+Enable the onboard QCA Wi-Fi. HW identifiers for reference:
+qmi chip_id 0x320 chip_family 0x4001 board_id 0xff soc_id 0x400e0000
 
-I ended up not going this far because the use of str_read_write() gets rem=
-oved again in the last patch in the series=2E
+Firmware sources:
+/vendor/firmware_mnt/image/wlanmdsp.bin -> qcom/.../wlanmdsp.mbn
+/vendor/firmware_mnt/image/bdwlan.bXX [1] -> [2] -> ath10k/.../board-2.bin
+[3] -> ath10k/.../firmware-5.bin
 
+Not sure where 3 comes from on the device itself, gotta investigate that..
 
+According to [4], it's called WCN3990_STRAIT.
 
---=20
-Kees Cook
+[1] XX = board_id printed when the file is missing or by your downstream
+kernel firmware loader in the dmesg; if XX=ff, use bdwlan.bin
+
+[2] https://github.com/jhugo/linux/blob/5.5rc2_wifi/README
+[3] https://github.com/kvalo/ath10k-firmware/blob/master/WCN3990/hw1.0/HL3.1/WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1/firmware-5.bin
+[4] https://git.codelinaro.org/clo/la/platform/vendor/qcom-opensource/wlan/qca-wifi-host-cmn/-/blob/LA.VENDOR.1.0.r1-20700-WAIPIO.QSSI13.0/hif/src/hif_hw_version.h#L55
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
+index bc232deb802b..ea3340d31110 100644
+--- a/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
++++ b/arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts
+@@ -315,6 +315,15 @@ &usb_hsphy {
+ 	status = "okay";
+ };
+ 
++&wifi {
++	vdd-0.8-cx-mx-supply = <&pm6125_l8>;
++	vdd-1.8-xo-supply = <&pm6125_l16>;
++	vdd-1.3-rfa-supply = <&pm6125_l17>;
++	vdd-3.3-ch0-supply = <&pm6125_l23>;
++	qcom,ath10k-calibration-variant = "Lenovo_P11";
++	status = "okay";
++};
++
+ &xo_board {
+ 	clock-frequency = <19200000>;
+ };
+
+-- 
+2.40.0
+
