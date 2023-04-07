@@ -2,62 +2,53 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E658C77B61
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 08:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B222DC77B61
+	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 10:27:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240009AbjDGIfZ (ORCPT
+        id S230309AbjDGK14 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 04:35:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53660 "EHLO
+        Fri, 7 Apr 2023 06:27:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240006AbjDGIfW (ORCPT
+        with ESMTP id S239705AbjDGK1w (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Apr 2023 04:35:22 -0400
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C434AAD34;
-        Fri,  7 Apr 2023 01:35:18 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id u4so7329684qkp.11;
-        Fri, 07 Apr 2023 01:35:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680856518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B+2md01EKsHKSciMrf5z7tCNggOZWfH57xjCKSn/olM=;
-        b=A1jPBXmrOolJmsmPCx2F3U+yP0Z09Z+HEDlNMG+rNMQUAUMxMp6cB/HEtH0eJmvsQw
-         eUDgLOPfEvo1aCk4gGov1Tly0mBUklxpifDc8qyb4FB/ofCAtCwLCktgkfL2/s8S8f0/
-         YCgmWjGPWXndTdBKoDbSw4+sg5kcBY2zWdWpJiFqYgRXyD2MbgsJ3ArKaAm1c85j0yO+
-         oqLtmywFlyAGgrNWnzKV5uLTJtKf1ECVvVCYiAr+eHV7dio+eBUui24Ql3ZQd0p0fb/h
-         M4WseQNA38l3PteAALEd1X9jyw4mspGaLI88F3/kUCg/QgGBYrghRJCDXUT8V0oFXEEM
-         Z6kg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680856518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B+2md01EKsHKSciMrf5z7tCNggOZWfH57xjCKSn/olM=;
-        b=qXnMGcA5rqvyZsilSw7RFnoOzaJicZAAOf5+NSQz+b8p9PoPiWAPN1+0u0G2qPt7lb
-         /5blMoMSeX6m88uRigc1TRqfNcDHQK3ttpG7aqk+t7lPWo+A+ASXv1l4Pa90iLg521e0
-         PXMKffysS2NLSIHwkXFYDHdfYu7zLjXybsmkrJXhss3EI6Ncx8S7vVkeQaHcnbkRJaCf
-         Gjjr3Sf7XB1POz8O2ZmITiWpXCEL3tDD85aI2BK8NoW4AWOzdRNzGPn3baHknEcmaYKV
-         MN9a2SUstdXVzfWn9LlBL9BqkrAqPsOOn2kTSjFPEBwrsA4PJOLOmqyqUvUPofDjyN2J
-         ye7A==
-X-Gm-Message-State: AAQBX9eQKVKMtScUrps7eAFI3xrxk7OJUZ8qt4b17fD5KGiGc2WMt6u5
-        Fr0WpMnbH+EG1oWUqfyXoboV4a+WBkfC7Xp+UI4=
-X-Google-Smtp-Source: AKy350aKRJ4eBlldpwIsuSBKd++F36Q3HKkhF8lrzSBPCUrYeEa8xuaVn3IW7i3R4SaVID7E5ynsnbemA3AI2oYGkyQ=
-X-Received: by 2002:a05:620a:1994:b0:74a:5668:da9a with SMTP id
- bm20-20020a05620a199400b0074a5668da9amr259539qkb.14.1680856517829; Fri, 07
- Apr 2023 01:35:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-6-keescook@chromium.org>
- <CAHp75Vf-nG865UwbVjwFjVTtXA7mAdi4FfKCpTHDx55eFnbvAA@mail.gmail.com> <642f4e62.170a0220.1f11f.36df@mx.google.com>
-In-Reply-To: <642f4e62.170a0220.1f11f.36df@mx.google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 7 Apr 2023 11:34:41 +0300
-Message-ID: <CAHp75VfyT9A0xAYquSS0AeOemLPZSq9+6H2D-PLaGfGoDa3_9w@mail.gmail.com>
-Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Fri, 7 Apr 2023 06:27:52 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EAB6A5D3
+        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 03:27:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680863269; x=1712399269;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7edVbc99053vvbrnLS4HCEABW1YsZFGYJKqGCy78KsM=;
+  b=Ir61D+ZsB/aoUnY37iE637rIXCbQns9/0UznUpN38x5NBMM/TH5bYoQn
+   uYL31jRiR+QrocubTl8CWd8fv0ExoQ/a987aQeXBbxyocoS2P6CE+SUUD
+   LLTAZkqHmyKsCXzeF7oAXJ2NNtPS3eFJ56StjzzeEWH+hgJRF3wkQLOTu
+   5/ZqxGWVD8rBaXvHz5LQYRaMab5wu6QnO9Us8CahzciwQz7DNfJ3xVqDC
+   qx4v2zc59lrrE0reTM+QdDBHFh6bWGSlR05gh3k2UnDMxUrACT8HzT/4H
+   8uEtahhf4DBFiS1F+cRCuvgaGo4P/kY4GTLL3bNe6Iayy+wICoRrB1KVT
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10672"; a="344734397"
+X-IronPort-AV: E=Sophos;i="5.98,326,1673942400"; 
+   d="scan'208";a="344734397"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 03:27:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10672"; a="756679889"
+X-IronPort-AV: E=Sophos;i="5.98,326,1673942400"; 
+   d="scan'208";a="756679889"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Apr 2023 03:27:40 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pkjJj-000SNG-12;
+        Fri, 07 Apr 2023 10:27:39 +0000
+Date:   Fri, 7 Apr 2023 18:26:51 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -65,6 +56,7 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Brendan Higgins <brendan.higgins@linux.dev>,
         David Gow <davidgow@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Alexander Potapenko <glider@google.com>,
         Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
@@ -82,42 +74,174 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Eric Biggers <ebiggers@google.com>,
         "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
         Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 6/9] fortify: Split reporting and avoid passing string
+ pointer
+Message-ID: <202304071824.648116sH-lkp@intel.com>
+References: <20230406000212.3442647-6-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230406000212.3442647-6-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 7, 2023 at 1:57=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
-ote:
-> On Thu, Apr 06, 2023 at 01:20:52PM +0300, Andy Shevchenko wrote:
-> > On Thu, Apr 6, 2023 at 3:02=E2=80=AFAM Kees Cook <keescook@chromium.org=
-> wrote:
+Hi Kees,
 
-...
+kernel test robot noticed the following build warnings:
 
-> > > +       WARN(1, "%s: detected buffer %s overflow\n", name, write ? "w=
-rite" : "read");
-> >
-> > Using str_read_write() ?
-> >
-> > Dunno if it's already there or needs to be added. I have some patches
-> > to move those str_*() to string_choices.h. We can also prepend yours
-> > with those.
->
-> Oh! Hah. I totally forgot about str_read_write. :) I will use that.
+[auto build test WARNING on kees/for-next/hardening]
+[also build test WARNING on kees/for-next/pstore kees/for-next/kspp akpm-mm/mm-everything linus/master v6.3-rc5 next-20230406]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Btw, makes sense to add
+url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/kunit-tool-Enable-CONFIG_FORTIFY_SOURCE-under-UML/20230406-081014
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+patch link:    https://lore.kernel.org/r/20230406000212.3442647-6-keescook%40chromium.org
+patch subject: [PATCH 6/9] fortify: Split reporting and avoid passing string pointer
+config: arm64-randconfig-s053-20230406 (https://download.01.org/0day-ci/archive/20230407/202304071824.648116sH-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 12.1.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # apt-get install sparse
+        # sparse version: v0.6.4-39-gce1a6720-dirty
+        # https://github.com/intel-lab-lkp/linux/commit/4fd520e6ee549e1ffe8859e26e57ea64b48e78ea
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Kees-Cook/kunit-tool-Enable-CONFIG_FORTIFY_SOURCE-under-UML/20230406-081014
+        git checkout 4fd520e6ee549e1ffe8859e26e57ea64b48e78ea
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=arm64 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=arm64 SHELL=/bin/bash
 
-  #define str_write_read(v)    str_read_write(!(v))
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304071824.648116sH-lkp@intel.com/
 
-to the header, so we won't use negation in the parameter for better readabi=
-lity.
+sparse warnings: (new ones prefixed by >>)
+   lib/string_helpers.c:1030:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strncpy'
+   lib/string_helpers.c:1033:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strnlen'
+   lib/string_helpers.c:1036:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strlen'
+   lib/string_helpers.c:1039:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strlcpy'
+   lib/string_helpers.c:1042:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strscpy'
+   lib/string_helpers.c:1045:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strlcat'
+   lib/string_helpers.c:1048:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strcat'
+   lib/string_helpers.c:1051:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strncat'
+   lib/string_helpers.c:1054:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_memset'
+   lib/string_helpers.c:1057:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_memcpy'
+   lib/string_helpers.c:1060:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_memmove'
+   lib/string_helpers.c:1063:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_memscan'
+   lib/string_helpers.c:1066:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_memcmp'
+   lib/string_helpers.c:1069:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_memchr'
+   lib/string_helpers.c:1072:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_memchr_inv'
+   lib/string_helpers.c:1075:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_kmemdup'
+   lib/string_helpers.c:1078:14: sparse: sparse: undefined identifier 'FORTIFY_FUNC_strcpy'
+>> lib/string_helpers.c:1030:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1033:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1036:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1039:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1042:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1045:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1048:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1051:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1054:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1057:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1060:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1063:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1066:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1069:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1072:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1075:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1078:14: sparse: sparse: incompatible types for 'case' statement
+   lib/string_helpers.c:1030:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1033:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1036:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1039:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1042:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1045:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1048:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1051:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1054:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1057:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1060:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1063:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1066:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1069:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1072:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1075:14: sparse: sparse: Expected constant expression in case statement
+   lib/string_helpers.c:1078:14: sparse: sparse: Expected constant expression in case statement
 
---=20
-With Best Regards,
-Andy Shevchenko
+vim +/case +1030 lib/string_helpers.c
+
+  1023	
+  1024	void __fortify_report(u8 reason)
+  1025	{
+  1026		const char *name;
+  1027		const bool write = !!(reason & 0x1);
+  1028	
+  1029		switch (reason >> 1) {
+> 1030		case FORTIFY_FUNC_strncpy:
+  1031			name = "strncpy";
+  1032			break;
+  1033		case FORTIFY_FUNC_strnlen:
+  1034			name = "strnlen";
+  1035			break;
+  1036		case FORTIFY_FUNC_strlen:
+  1037			name = "strlen";
+  1038			break;
+  1039		case FORTIFY_FUNC_strlcpy:
+  1040			name = "strlcpy";
+  1041			break;
+  1042		case FORTIFY_FUNC_strscpy:
+  1043			name = "strscpy";
+  1044			break;
+  1045		case FORTIFY_FUNC_strlcat:
+  1046			name = "strlcat";
+  1047			break;
+  1048		case FORTIFY_FUNC_strcat:
+  1049			name = "strcat";
+  1050			break;
+  1051		case FORTIFY_FUNC_strncat:
+  1052			name = "strncat";
+  1053			break;
+> 1054		case FORTIFY_FUNC_memset:
+  1055			name = "memset";
+  1056			break;
+  1057		case FORTIFY_FUNC_memcpy:
+  1058			name = "memcpy";
+  1059			break;
+  1060		case FORTIFY_FUNC_memmove:
+  1061			name = "memmove";
+  1062			break;
+  1063		case FORTIFY_FUNC_memscan:
+  1064			name = "memscan";
+  1065			break;
+  1066		case FORTIFY_FUNC_memcmp:
+  1067			name = "memcmp";
+  1068			break;
+  1069		case FORTIFY_FUNC_memchr:
+  1070			name = "memchr";
+  1071			break;
+  1072		case FORTIFY_FUNC_memchr_inv:
+  1073			name = "memchr_inv";
+  1074			break;
+  1075		case FORTIFY_FUNC_kmemdup:
+  1076			name = "kmemdup";
+  1077			break;
+  1078		case FORTIFY_FUNC_strcpy:
+  1079			name = "strcpy";
+  1080			break;
+  1081		default:
+  1082			name = "unknown";
+  1083		}
+  1084		WARN(1, "%s: detected buffer %s overflow\n", name, write ? "write" : "read");
+  1085	}
+  1086	EXPORT_SYMBOL(__fortify_report);
+  1087	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
