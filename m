@@ -2,84 +2,203 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5549DC77B6C
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 23:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DCAC76196
+	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 23:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjDGXhW (ORCPT
+        id S229720AbjDGXmm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 19:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34914 "EHLO
+        Fri, 7 Apr 2023 19:42:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229720AbjDGXhV (ORCPT
+        with ESMTP id S229448AbjDGXml (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Apr 2023 19:37:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76AA8C66B;
-        Fri,  7 Apr 2023 16:37:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D5C265569;
-        Fri,  7 Apr 2023 23:37:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F83EC433D2;
-        Fri,  7 Apr 2023 23:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680910639;
-        bh=CnGXvD8rCX992q5WEVr+sstDQgDU+kc91sEVP9dsAa4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i5XlKoHcfVfMl9Z2fYOXGrfKzlYdaTSkjQR35SHNx3u0J3acfkOqy9iPA1qwvz1C5
-         8f7YiWfK4O+/vzMOzFY879ZPUsDsrhUMb2pOvCT4rFSAgRNlRgkgY0eH7dq3AhksnX
-         WvE0EX5mJvO17UJx+vHLvNNaSo04Io7JxBai5VulE0J6pIVqohCetGEUpxbo2ERUnX
-         f0VH61MpWBv1WUZ5USHgiuSZvtTbUZPqPlVEdooojU5LGOLQamdY0zlGFaUrxA8Hwi
-         T4jfPOaB5jkKpQ9w5UHZrXcHMYxWAGCgNFD4wvEk2eMgykVDtFsyFL+y/vZoU7sc6U
-         v5f5JYrwJXunw==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Tab P11 features
-Date:   Fri,  7 Apr 2023 16:40:04 -0700
-Message-Id: <168091080212.2759405.12118976491725806960.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
-References: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
+        Fri, 7 Apr 2023 19:42:41 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 487CAE195
+        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 16:42:40 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-517c5738c8bso20773a12.3
+        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 16:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680910959; x=1683502959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jopHTn8ww2PUxgk7uQ6jiARzlAliPQkQTV3+oULvbUk=;
+        b=q5Tm6khTLskVetsOOzBJgVCGpkTFxmXDrKkKSs6n4di3bLCz/LHZT+AgjcWmzrp+zl
+         zZIsvfBe3w8xCtOZwdriFK4Fjn+eSSPi7zpcMwOyVImSiFV6MwDY6a3m59VT/gxdF4iJ
+         L20Elp89TZrlWfeBTWe+1My/8yY+8s/d/5cSUfb+IF3oLMl10EmyE6HotvB2R/HtzxmD
+         8bZtoZUSmNCz+u98MjKnQUmCN29b9qW9tTRMmwkYj3peZAoDrjvYiDLu5UG7W/zAxMsu
+         tYymHWX1Lcw9KCaHlgZdFQHj2L6+ZZ0BQv1qFouk39a61Kw9cpI/YQ0ux+7TG7izEv3E
+         rxZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680910959; x=1683502959;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jopHTn8ww2PUxgk7uQ6jiARzlAliPQkQTV3+oULvbUk=;
+        b=lG+UWEvSKZLGmaki0LDFOfMvfZJakS9rg2+T9gtpNYXhkxDAfnVmiCC4KJ3kjBpKpG
+         fv1zVsan4E7Ra47HW5RbyG0ae2Z0rrptbmfLLDe4y5T10Me9IeEAnAQW1WNIlEkJQ+lm
+         QdM++Z609VeVqlrqvnDaJwIV9cew8AOTW92MHlE2DGCF/leI+N0QQPKy5GFbiFU2Sd3y
+         ZINSHS9scx769UewpsH2bxq88nwdudHrwPLI/Ml5AAp6gPHnT1etr6XI/FjB6IFH9olZ
+         rVM7GZ2M9itN53yrPqOMiStqea8KdzpJK5u7sxn56lzR7FXcI8wCBmYGf9jTW9arSja4
+         ANJQ==
+X-Gm-Message-State: AAQBX9fbbdUKjZwu4l1IDML1D3ZIdKVnjQeFyuetvDcAPQohuQjKlpYy
+        L5cOrXBm48TFs7WzhEC/HCQaP2uWfshUQWIGwldNvg==
+X-Google-Smtp-Source: AKy350ae8GOYODNUXSN4leByoxrd0wIpXfCmTUWaycN5fMHok3ErO2LrxTuUgoIw8rw21NZWpM9hTpD4LUrSK4l6xcs=
+X-Received: by 2002:a05:6a00:2e23:b0:62a:d87a:a375 with SMTP id
+ fc35-20020a056a002e2300b0062ad87aa375mr1948477pfb.4.1680910959263; Fri, 07
+ Apr 2023 16:42:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20230407191904.gonna.522-kees@kernel.org> <20230407192717.636137-1-keescook@chromium.org>
+ <CAKwvOdk5JjB21FU85Zxubs+LV8bTY-az598V1hvewndAfhohQA@mail.gmail.com>
+In-Reply-To: <CAKwvOdk5JjB21FU85Zxubs+LV8bTY-az598V1hvewndAfhohQA@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 7 Apr 2023 16:42:27 -0700
+Message-ID: <CAKwvOd=yZw_Ju67D52GfUz39MaAFA639hOxR5Jo2dRdp+xciyQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/10] kunit: tool: Enable CONFIG_FORTIFY_SOURCE under UML
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Sander Vanheule <sander@svanheule.net>,
+        Eric Biggers <ebiggers@google.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Latypov <dlatypov@google.com>,
+        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 07 Apr 2023 21:54:40 +0200, Konrad Dybcio wrote:
-> v1 -> v2:
-> - Add ftrace-size and drop no-map under pstore [1/4]
-> - Add qcom,ath10k-calibration-variant [4/4]
-> - Pick up rbs
-> 
-> v1: https://lore.kernel.org/r/20230406-topic-lenovo_features-v1-0-c73a5180e48e@linaro.org
-> 
-> [...]
+On Fri, Apr 7, 2023 at 4:33=E2=80=AFPM Nick Desaulniers <ndesaulniers@googl=
+e.com> wrote:
+>
+> On Fri, Apr 7, 2023 at 12:27=E2=80=AFPM Kees Cook <keescook@chromium.org>=
+ wrote:
+> >
+> > Since commit ba38961a069b ("um: Enable FORTIFY_SOURCE"), it's possible
+> > to run the FORTIFY tests under UML. Enable CONFIG_FORTIFY_SOURCE when
+> > running with --altests to gain additional coverage, and by default unde=
+r
+>
+> two L's in alltest?
 
-Applied, thanks!
+Also, while testing this series:
+```
+$ LLVM=3D1 ./tools/testing/kunit/kunit.py run
+...
+[16:40:09] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D fortify (=
+24 subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[16:40:09] [PASSED] known_sizes_test
+[16:40:09] [PASSED] control_flow_split_test
+[16:40:09] [PASSED] alloc_size_kmalloc_const_test
+[16:40:09]     # alloc_size_kmalloc_dynamic_test: EXPECTATION FAILED
+at lib/fortify_kunit.c:249
+[16:40:09]     Expected __builtin_dynamic_object_size(p, 1) =3D=3D expected=
+, but
+[16:40:09]         __builtin_dynamic_object_size(p, 1) =3D=3D -1
+(0xffffffffffffffff)
+[16:40:09]         expected =3D=3D 11 (0xb)
+[16:40:09] __alloc_size() not working with __bdos on kmemdup("hello
+there", len, gfp)
+[16:40:09] [FAILED] alloc_size_kmalloc_dynamic_test
+[16:40:09] [PASSED] alloc_size_vmalloc_const_test
+[16:40:09] [PASSED] alloc_size_vmalloc_dynamic_test
+[16:40:09] [PASSED] alloc_size_kvmalloc_const_test
+[16:40:09] [PASSED] alloc_size_kvmalloc_dynamic_test
+[16:40:09] [PASSED] alloc_size_devm_kmalloc_const_test
+[16:40:09] [PASSED] alloc_size_devm_kmalloc_dynamic_test
+[16:40:09] [PASSED] strlen_test
+[16:40:09] [PASSED] strnlen_test
+[16:40:09] [PASSED] strcpy_test
+[16:40:09] [PASSED] strncpy_test
+[16:40:09] [PASSED] strlcpy_test
+[16:40:09] [PASSED] strscpy_test
+[16:40:09] [PASSED] strcat_test
+[16:40:09] [PASSED] strncat_test
+[16:40:09] [PASSED] strlcat_test
+[16:40:09] [PASSED] memscan_test
+[16:40:09] [PASSED] memchr_test
+[16:40:09] [PASSED] memchr_inv_test
+[16:40:09] [PASSED] memcmp_test
+[16:40:09] [PASSED] kmemdup_test
+[16:40:09] # fortify: pass:23 fail:1 skip:0 total:24
+[16:40:09] # Totals: pass:23 fail:1 skip:0 total:24
+[16:40:09] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
+[FAILED] fortify =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+```
+It would be cool to understand that failure in BDOS BEFORE turning on
+these tests by default.
 
-[1/4] arm64: dts: qcom: sm6115-j606f: Add ramoops node
-      commit: 8b0ac59c2da69aaf8e65c6bd648a06b755975302
-[2/4] arm64: dts: qcom: sm6115: Add RMTFS
-      commit: ecc61a207d0fad45ba991e0ce0273382b20bb226
-[3/4] arm64: dts: qcom: sm6115p-j606f: Enable remoteprocs
-      commit: 7584284537c2a82227ed2ea359b2c53f28e6abbf
-[4/4] arm64: dts: qcom: sm6115p-j606f: Enable ATH10K WiFi
-      commit: 137e5c267232c89b2284ea44229545d4820bcb26
+>
+> > UML.
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  tools/testing/kunit/configs/all_tests.config | 2 ++
+> >  tools/testing/kunit/configs/arch_uml.config  | 3 +++
+> >  2 files changed, 5 insertions(+)
+> >
+> > diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testi=
+ng/kunit/configs/all_tests.config
+> > index f990cbb73250..0393940c706a 100644
+> > --- a/tools/testing/kunit/configs/all_tests.config
+> > +++ b/tools/testing/kunit/configs/all_tests.config
+> > @@ -9,6 +9,8 @@ CONFIG_KUNIT=3Dy
+> >  CONFIG_KUNIT_EXAMPLE_TEST=3Dy
+> >  CONFIG_KUNIT_ALL_TESTS=3Dy
+> >
+> > +CONFIG_FORTIFY_SOURCE=3Dy
+> > +
+> >  CONFIG_IIO=3Dy
+> >
+> >  CONFIG_EXT4_FS=3Dy
+> > diff --git a/tools/testing/kunit/configs/arch_uml.config b/tools/testin=
+g/kunit/configs/arch_uml.config
+> > index e824ce43b05a..54ad8972681a 100644
+> > --- a/tools/testing/kunit/configs/arch_uml.config
+> > +++ b/tools/testing/kunit/configs/arch_uml.config
+> > @@ -3,3 +3,6 @@
+> >  # Enable virtio/pci, as a lot of tests require it.
+> >  CONFIG_VIRTIO_UML=3Dy
+> >  CONFIG_UML_PCI_OVER_VIRTIO=3Dy
+> > +
+> > +# Enable FORTIFY_SOURCE for wider checking.
+> > +CONFIG_FORTIFY_SOURCE=3Dy
+> > --
+> > 2.34.1
+> >
+>
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+
+
+--=20
+Thanks,
+~Nick Desaulniers
