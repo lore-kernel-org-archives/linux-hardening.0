@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADD7C77B73
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 19:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D42EC77B6C
+	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 19:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230269AbjDGT1Y (ORCPT
+        id S230527AbjDGT1Z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 15:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
+        Fri, 7 Apr 2023 15:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229842AbjDGT1X (ORCPT
+        with ESMTP id S230015AbjDGT1Y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Apr 2023 15:27:23 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8A39AD02
-        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 12:27:21 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id qe8-20020a17090b4f8800b0023f07253a2cso44040840pjb.3
-        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 12:27:21 -0700 (PDT)
+        Fri, 7 Apr 2023 15:27:24 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7527BB95
+        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 12:27:22 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1a5158cff37so808795ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 12:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680895641;
+        d=chromium.org; s=google; t=1680895642;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LCqEfE4fF+BMO3eztdtksvLApA4/hcoAiL2AO2Jx8jE=;
-        b=OX3M/cgfb49p9aUt+RUI68YYZOAp9CkoHt47Dmbxx98uIvKmfGf3dBaA8pp8pq2ITO
-         lzjjSLnPNEb/pjy4QNBnWJ92X3qsc9lX+L0+eakeysaXYjxi7WE8OfFHzIM2XyxCtach
-         N5uDxmje1iFdHde3TXNXWRjbku4Bt3uqCfQ7M=
+        bh=lH3dZcNrJEcXdI6gLg/VVjSGY3YcGh7oSZMfJQoWlZk=;
+        b=Y6dsI+xaLywGjLzrDUE4NPsihTXJPkDDqEy1KlHDQJOljbqAf23LYpKKnxZGCY0Ix3
+         K/gQTNK5PGOrBxMnW/S3DxxG+G6DKJyIazDTG0sBOwTQS9/4TXOJZdzGlYJCaumE75eB
+         exf7mrC7xy3XNiZXspsAYimbRc6Quu/lXQjwU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680895641;
+        d=1e100.net; s=20210112; t=1680895642;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LCqEfE4fF+BMO3eztdtksvLApA4/hcoAiL2AO2Jx8jE=;
-        b=7epARD4tiBL7EJHPnnz7PhMTcR906veZ2UHWbmTBvpX1SIKwMSEipbwZqPXjgRMJQu
-         jEtDMqBa6i9W1XUVjCwenMM62suEHbTFcfXPkyaFpc7wSmUWzI5o3PfMJ5s/CQuJYVq9
-         thtPskEOlApLeNyfAROZlCqfW9G8UukqQzCFMB9f4y8B0wxf1c1cRTK2/w4QsacniEtF
-         eMe5KISOTTTvFtr8tSdTbGmczxh8gN8i1GWfxaArPoVmqSsgunBhBaSoSWdKQVQ4Ral3
-         bnYXZVQeKIVliCaEmE7uEOV8PopxRYzv+psXSihyojT1Zcq+Z8J3Rx7gwSHMLVxXXZho
-         ulkw==
-X-Gm-Message-State: AAQBX9c6IbV2btNLzqnaUPL9FcM3/4Zw5lIUdo1CNsFnybFp/Iaw4Ael
-        80FWFzzW6poslInAg16nXgV2jg==
-X-Google-Smtp-Source: AKy350bjtjw5AGqYagHL7I5B6JAL1NMTHI3kKf2X4CBIP1qmaxR6OLAaaGq2m1B3qWyJw3qwLcEskw==
-X-Received: by 2002:a05:6a20:be04:b0:d8:a1c9:c9bc with SMTP id ge4-20020a056a20be0400b000d8a1c9c9bcmr4044320pzb.25.1680895641278;
-        Fri, 07 Apr 2023 12:27:21 -0700 (PDT)
+        bh=lH3dZcNrJEcXdI6gLg/VVjSGY3YcGh7oSZMfJQoWlZk=;
+        b=wNlbpDt9CpP6WllyqKdYqhUODICO10i5OaYPrcLh1l+lPnw3wlG6TmgKbtWt9aVJWu
+         iE5Q9ofOll4y/Xk2KG7UKRUtf/8ZBZVmD0j5fEeypBWVKppinXlpxaPfGZemOHOSLaco
+         qWEXrPfOFCLdeF6Hmc9vaHFIMbVjE8KuE0gfkfngYcfBFBhkOpMVq9kEIUPGSPg9HEh/
+         30D8xoR1MI0HrUVe3LK/e6fvCXC4Q9cWqB5RnnlBrszBV+pb23673x/YPQHN0YRXkXyo
+         iVa/2MNbkGNrseMxJXfF3o7R3axhmukndh0CG5y8bmmsX5aFs7uNIgERpbjzB2+VCsvF
+         7G+A==
+X-Gm-Message-State: AAQBX9fgeryNKzaq9aCYuCSqSmTlhuv/LGXxpzNEHsKvS2b1o+jnSWHv
+        zupf0kIUkC32ksAzO6SURp9EHw==
+X-Google-Smtp-Source: AKy350YuL6Xs7by8SNDk+HQdmk4IcrYdk70nudo84K771qx45gacfI/TGaEDLdcrhZ+xploqpEiuVw==
+X-Received: by 2002:aa7:9793:0:b0:628:650:4835 with SMTP id o19-20020aa79793000000b0062806504835mr3238044pfp.13.1680895642266;
+        Fri, 07 Apr 2023 12:27:22 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f5-20020aa78b05000000b0062d8c855ee9sm3498171pfd.149.2023.04.07.12.27.17
+        by smtp.gmail.com with ESMTPSA id v12-20020aa7850c000000b005da23d8cbffsm3369357pfn.158.2023.04.07.12.27.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Apr 2023 12:27:18 -0700 (PDT)
+        Fri, 07 Apr 2023 12:27:21 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -81,182 +81,99 @@ Cc:     Kees Cook <keescook@chromium.org>,
         "Daniel Latypov" <dlatypov@google.com>,
         =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>,
         linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Subject: [PATCH v2 03/10] string: Add Kunit tests for strcat() family
-Date:   Fri,  7 Apr 2023 12:27:09 -0700
-Message-Id: <20230407192717.636137-3-keescook@chromium.org>
+Subject: [PATCH v2 06/10] fortify: strcat: Move definition to use fortified strlcat()
+Date:   Fri,  7 Apr 2023 12:27:12 -0700
+Message-Id: <20230407192717.636137-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230407191904.gonna.522-kees@kernel.org>
 References: <20230407191904.gonna.522-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5622; h=from:subject; bh=d0/+ooOvDGbjHMvg1I4tGXInlU+netRGkDw9mqAzd+o=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkMG6TM3Sr8YBDzEUgHpm9Qr7os7WBitixulj8nyjt 4IeCxByJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZDBukwAKCRCJcvTf3G3AJpXDD/ 9UN2Ut16jFY359dFCbJjLXQb706yyaKLP/jKphDrnKusXpsMKZtx7ddsCcggAGrsFG8P8Mw97dEgOK KrKDzpv6YrAOd0BVd8olFxWKJehE1xiHdKxF3AYFaGm6nI/1iN9CTtHsKDhOE0WOovrB6TaTld5WXU KmrUJYC8cVxXI+f5SODkl7+1GC2zhlP8oQlTAwnHxT6eTUAj8omY2igdi7t3Wmwesl2hrNXBG6TkCY HsgcYW5reqdSl6TFYO/ftLyFNh/uoki30fnkB5FKopLtThS3kRapKJVVcibBEvHV61YLNauvCxF9yD M0dvpw9BSJhchgp9SrlVXtbkdq6MMUuPbhOZWKBpkqebN8Lc5zF8+xg91vKx36ehiuOmlYSL7O0hke cBtEdg9JwgUp/jnWx6+Z/Ut75zSbIrwE4HrX1vHeQ/CHSxxoCMcRexL0RXlxTJVHDUyf7HmaBPvfwQ SOiJ66o2n8RtaLnlKQpa/B0+THyl1bhcGg3Gc8Fc3I97QAeAcIvNpgNcU23B+R1lf+eqr91Odo+wkX 1pKBjP3ui1+Fnin30M836PZ0E/dY7utp3JrnqWI7YrtNgRbcZyoD/9Dv44/+YLxqjG6xkY5symZcBa IlfNB+lCBxYGxpvbYa2w/fpcL0nLMJ6QVrZiRZyDYnAAfKE+zGFXyW2Uetgg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2641; h=from:subject; bh=fgN4hsz1FdWUIQbkd6Iy2KfoErfwaK/Oc+dmURYf7Mo=; b=owEBbAKT/ZANAwAKAYly9N/cbcAmAcsmYgBkMG6TtMTKotZ5UuZ6/J+WNgqbctlvvaLeCtSAKQ0/ hLnjmgWJAjIEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZDBukwAKCRCJcvTf3G3AJoL6D/ i7HpHWgvMyI90z6CVCbQynb9o1brHw6iGmsTfNl0mrHayNgEnN50mQihqYfKpauwm1bEwTokrzBAsx oM8LLACRlDZrdzx2H8I/ZADgDIrMDceD20KpRp7hxjYibuGhlg3bOcp3BX/FLPDaQWo0CaEeTwuzvy 7wXxB2ekUV2JLQY8bjkx7KfHHoQ3n6R6LTLyaiTOEQCKnJFoteC5j32zzaWZNbZ/jbetpJOzeswFSY cOPj+VOVPvUdubTMKyKx4EjbOrb4qZEHA7hQ5SHpoCw60vpIs4jDY9VtqBMp0/sbYmdXg82YkxAqOI BUecXs5caWAfp8qvMjo739H86eS0piU2I7f8j0+IjOiL7LF08P3XJqjsoipz+xPJYmEJulwauWDKoi 1VuuVZjK2Kemw0oucpfWyWa8ghBipwF+fy7vQ0hZb/3z+Lqc07Ps17aTr4aYqI98eV/r9YLbIQzS5A 61h8Yz8PcbFc240wOdvLPxomh0tLyslgSobvWE9fqyA6YjoQZBBGSi59olM7JLn2a3Fy6+oJzPzjvq 3zU0TwLzoT8SCqJke00Ud27ZWAyT33To+3WeB2LrYN0P5cRSyrIV4DS1Nq2u43BidS5K/ej0G7YGzJ vZaR1hhi6sJmdX00dgIYTeBA49t3CTFHxhkyWHMFoQOSKzFLIJlmJyUYYM
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add tests to make sure the strcat() family of functions behave
-correctly.
+Move the definition of fortified strcat() to after strlcat() to use it
+for bounds checking.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- MAINTAINERS        |   1 +
- lib/Kconfig.debug  |   5 +++
- lib/Makefile       |   1 +
- lib/strcat_kunit.c | 104 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 111 insertions(+)
- create mode 100644 lib/strcat_kunit.c
+ include/linux/fortify-string.h | 53 +++++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 27 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ec57c42ed544..86c0012b5130 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8021,6 +8021,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/har
- F:	include/linux/fortify-string.h
- F:	lib/fortify_kunit.c
- F:	lib/memcpy_kunit.c
-+F:	lib/strcat_kunit.c
- F:	lib/strscpy_kunit.c
- F:	lib/test_fortify/*
- F:	scripts/test_fortify.sh
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index d48a5f4b471e..86157aa5e979 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2631,6 +2631,11 @@ config HW_BREAKPOINT_KUNIT_TEST
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index 8cf17ef81905..ab058d092817 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -151,33 +151,6 @@ char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
+ 	return __underlying_strncpy(p, q, size);
+ }
  
- 	  If unsure, say N.
+-/**
+- * strcat - Append a string to an existing string
+- *
+- * @p: pointer to NUL-terminated string to append to
+- * @q: pointer to NUL-terminated source string to append from
+- *
+- * Do not use this function. While FORTIFY_SOURCE tries to avoid
+- * read and write overflows, this is only possible when the
+- * destination buffer size is known to the compiler. Prefer
+- * building the string with formatting, via scnprintf() or similar.
+- * At the very least, use strncat().
+- *
+- * Returns @p.
+- *
+- */
+-__FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
+-char *strcat(char * const POS p, const char *q)
+-{
+-	const size_t p_size = __member_size(p);
+-
+-	if (p_size == SIZE_MAX)
+-		return __underlying_strcat(p, q);
+-	if (strlcat(p, q, p_size) >= p_size)
+-		fortify_panic(__func__);
+-	return p;
+-}
+-
+ extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
+ /**
+  * strnlen - Return bounded count of characters in a NUL-terminated string
+@@ -435,6 +408,32 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
+ 	return wanted;
+ }
  
-+config STRCAT_KUNIT_TEST
-+	tristate "Test strcat() family of functions at runtime" if !KUNIT_ALL_TESTS
-+	depends on KUNIT
-+	default KUNIT_ALL_TESTS
-+
- config STRSCPY_KUNIT_TEST
- 	tristate "Test strscpy*() family of functions at runtime" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
-diff --git a/lib/Makefile b/lib/Makefile
-index baf2821f7a00..6582d8fe1a77 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -389,6 +389,7 @@ obj-$(CONFIG_STACKINIT_KUNIT_TEST) += stackinit_kunit.o
- CFLAGS_fortify_kunit.o += $(call cc-disable-warning, unsequenced)
- CFLAGS_fortify_kunit.o += $(DISABLE_STRUCTLEAK_PLUGIN)
- obj-$(CONFIG_FORTIFY_KUNIT_TEST) += fortify_kunit.o
-+obj-$(CONFIG_STRCAT_KUNIT_TEST) += strcat_kunit.o
- obj-$(CONFIG_STRSCPY_KUNIT_TEST) += strscpy_kunit.o
- obj-$(CONFIG_SIPHASH_KUNIT_TEST) += siphash_kunit.o
- 
-diff --git a/lib/strcat_kunit.c b/lib/strcat_kunit.c
-new file mode 100644
-index 000000000000..e21be95514af
---- /dev/null
-+++ b/lib/strcat_kunit.c
-@@ -0,0 +1,104 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Kernel module for testing 'strcat' family of functions.
++/* Defined after fortified strlcat() to reuse it. */
++/**
++ * strcat - Append a string to an existing string
++ *
++ * @p: pointer to NUL-terminated string to append to
++ * @q: pointer to NUL-terminated source string to append from
++ *
++ * Do not use this function. While FORTIFY_SOURCE tries to avoid
++ * read and write overflows, this is only possible when the
++ * destination buffer size is known to the compiler. Prefer
++ * building the string with formatting, via scnprintf() or similar.
++ * At the very least, use strncat().
++ *
++ * Returns @p.
++ *
 + */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+#include <kunit/test.h>
-+#include <linux/string.h>
-+
-+static volatile int unconst;
-+
-+static void strcat_test(struct kunit *test)
++__FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
++char *strcat(char * const POS p, const char *q)
 +{
-+	char dest[8];
++	const size_t p_size = __member_size(p);
 +
-+	/* Destination is terminated. */
-+	memset(dest, 0, sizeof(dest));
-+	KUNIT_EXPECT_EQ(test, strlen(dest), 0);
-+	/* Empty copy does nothing. */
-+	KUNIT_EXPECT_TRUE(test, strcat(dest, "") == dest);
-+	KUNIT_EXPECT_STREQ(test, dest, "");
-+	/* 4 characters copied in, stops at %NUL. */
-+	KUNIT_EXPECT_TRUE(test, strcat(dest, "four\000123") == dest);
-+	KUNIT_EXPECT_STREQ(test, dest, "four");
-+	KUNIT_EXPECT_EQ(test, dest[5], '\0');
-+	/* 2 more characters copied in okay. */
-+	KUNIT_EXPECT_TRUE(test, strcat(dest, "AB") == dest);
-+	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
++	if (strlcat(p, q, p_size) >= p_size)
++		fortify_panic(__func__);
++	return p;
 +}
 +
-+static void strncat_test(struct kunit *test)
-+{
-+	char dest[8];
-+
-+	/* Destination is terminated. */
-+	memset(dest, 0, sizeof(dest));
-+	KUNIT_EXPECT_EQ(test, strlen(dest), 0);
-+	/* Empty copy of size 0 does nothing. */
-+	KUNIT_EXPECT_TRUE(test, strncat(dest, "", 0 + unconst) == dest);
-+	KUNIT_EXPECT_STREQ(test, dest, "");
-+	/* Empty copy of size 1 does nothing too. */
-+	KUNIT_EXPECT_TRUE(test, strncat(dest, "", 1 + unconst) == dest);
-+	KUNIT_EXPECT_STREQ(test, dest, "");
-+	/* Copy of max 0 characters should do nothing. */
-+	KUNIT_EXPECT_TRUE(test, strncat(dest, "asdf", 0 + unconst) == dest);
-+	KUNIT_EXPECT_STREQ(test, dest, "");
-+
-+	/* 4 characters copied in, even if max is 8. */
-+	KUNIT_EXPECT_TRUE(test, strncat(dest, "four\000123", 8 + unconst) == dest);
-+	KUNIT_EXPECT_STREQ(test, dest, "four");
-+	KUNIT_EXPECT_EQ(test, dest[5], '\0');
-+	KUNIT_EXPECT_EQ(test, dest[6], '\0');
-+	/* 2 characters copied in okay, 2 ignored. */
-+	KUNIT_EXPECT_TRUE(test, strncat(dest, "ABCD", 2 + unconst) == dest);
-+	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
-+}
-+
-+static void strlcat_test(struct kunit *test)
-+{
-+	char dest[8] = "";
-+	int len = sizeof(dest) + unconst;
-+
-+	/* Destination is terminated. */
-+	KUNIT_EXPECT_EQ(test, strlen(dest), 0);
-+	/* Empty copy is size 0. */
-+	KUNIT_EXPECT_EQ(test, strlcat(dest, "", len), 0);
-+	KUNIT_EXPECT_STREQ(test, dest, "");
-+	/* Size 1 should keep buffer terminated, report size of source only. */
-+	KUNIT_EXPECT_EQ(test, strlcat(dest, "four", 1 + unconst), 4);
-+	KUNIT_EXPECT_STREQ(test, dest, "");
-+
-+	/* 4 characters copied in. */
-+	KUNIT_EXPECT_EQ(test, strlcat(dest, "four", len), 4);
-+	KUNIT_EXPECT_STREQ(test, dest, "four");
-+	/* 2 characters copied in okay, gets to 6 total. */
-+	KUNIT_EXPECT_EQ(test, strlcat(dest, "AB", len), 6);
-+	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
-+	/* 2 characters ignored if max size (7) reached. */
-+	KUNIT_EXPECT_EQ(test, strlcat(dest, "CD", 7 + unconst), 8);
-+	KUNIT_EXPECT_STREQ(test, dest, "fourAB");
-+	/* 1 of 2 characters skipped, now at true max size. */
-+	KUNIT_EXPECT_EQ(test, strlcat(dest, "EFG", len), 9);
-+	KUNIT_EXPECT_STREQ(test, dest, "fourABE");
-+	/* Everything else ignored, now at full size. */
-+	KUNIT_EXPECT_EQ(test, strlcat(dest, "1234", len), 11);
-+	KUNIT_EXPECT_STREQ(test, dest, "fourABE");
-+}
-+
-+static struct kunit_case strcat_test_cases[] = {
-+	KUNIT_CASE(strcat_test),
-+	KUNIT_CASE(strncat_test),
-+	KUNIT_CASE(strlcat_test),
-+	{}
-+};
-+
-+static struct kunit_suite strcat_test_suite = {
-+	.name = "strcat",
-+	.test_cases = strcat_test_cases,
-+};
-+
-+kunit_test_suite(strcat_test_suite);
-+
-+MODULE_LICENSE("GPL");
+ /**
+  * strncat - Append a string to an existing string
+  *
 -- 
 2.34.1
 
