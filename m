@@ -2,143 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCB1C76196
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 23:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5549DC77B6C
+	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 23:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbjDGXew (ORCPT
+        id S230117AbjDGXhW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 19:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59466 "EHLO
+        Fri, 7 Apr 2023 19:37:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjDGXev (ORCPT
+        with ESMTP id S229720AbjDGXhV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Apr 2023 19:34:51 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03039FF07
-        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 16:34:27 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id cv11so14358766pfb.8
-        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 16:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680910435; x=1683502435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=06aeoqWpNiijpeI6eB3KfJuOvE83nAPBY5T1nVItygw=;
-        b=eEqX5GQsSIT1ib03PuaWvCog9rPYAClxGQ6SYoayXujdj9Vwh3oFSXC/1mJtPeqxFh
-         ZpSum1yFKCynUjMpq9rU2BWz7PYUDEcs2ifNSLaZslGJ1GwvqLnc+Onoky1nHCF2+yVS
-         zrE/P2hNSmY6bElfXjJ9M9zMYtBXZd8K+Ote/FNSwc0PbnukyY2EdaUjW3dzN5edyorL
-         tzpgmZHKeNU6PEYre0EU+f2cdqwdDpZOlj4uDszICEHHyU1TRMnS3u6R8nMUromyocrP
-         yItCom/VSudEr1pZCo8WBYeEjue3dFpDeQmoKwAYacXjS9q+gC6DDLydCm6CbXBXi/LS
-         254Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680910435; x=1683502435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=06aeoqWpNiijpeI6eB3KfJuOvE83nAPBY5T1nVItygw=;
-        b=mUjgLOxRdzjRtv5xkraF/+n9dyhCGs5c7BEMNE2H0HQdvTYscWVVTP9IX1oYnUCSL8
-         ObTOhgw9urMl1F4AS2NmJtDahGe0KsDpHxiHTMbe225pdAE5NSvXeHMioleyBuga0SVs
-         z4Xj3Z55Gk+CxoNiYnbJxVS7ddzaa/W5EEYzuQQHnBk/hD7ELMQoH89ftyN0SU/4m3M3
-         ijtkpInp6WqaKk1CCUWf5FOYB0vpoUqCR0tlgHCevZhwWgN66Dwm1MnP2DbQXAaZekwZ
-         7LvD6/GjgOAesY0nJ/zI2He0CPrx9pBI56GHIqKmcbOj/U/FWTr2bH75p3dEz/YTuUH3
-         xjYQ==
-X-Gm-Message-State: AAQBX9d0d1Xpu6VfQwTGFNQfl/pZHXUqA+avhAuqilqy2BP0tDv590ww
-        FGwW6zYn9tA6FhoAwNA7DvEvuSsyqLlwYSIbZcoSEA==
-X-Google-Smtp-Source: AKy350Y80laGeXozMwqopyOyp6O/Wc6NHSiXHA+TBD0qwgUXtD1pcGPHuzmDzQtW+NGkzGW9E4jcDIPqOEDpn/KvRag=
-X-Received: by 2002:a65:6201:0:b0:4fc:2058:fa29 with SMTP id
- d1-20020a656201000000b004fc2058fa29mr792545pgv.1.1680910434569; Fri, 07 Apr
- 2023 16:33:54 -0700 (PDT)
+        Fri, 7 Apr 2023 19:37:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76AA8C66B;
+        Fri,  7 Apr 2023 16:37:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D5C265569;
+        Fri,  7 Apr 2023 23:37:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F83EC433D2;
+        Fri,  7 Apr 2023 23:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680910639;
+        bh=CnGXvD8rCX992q5WEVr+sstDQgDU+kc91sEVP9dsAa4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=i5XlKoHcfVfMl9Z2fYOXGrfKzlYdaTSkjQR35SHNx3u0J3acfkOqy9iPA1qwvz1C5
+         8f7YiWfK4O+/vzMOzFY879ZPUsDsrhUMb2pOvCT4rFSAgRNlRgkgY0eH7dq3AhksnX
+         WvE0EX5mJvO17UJx+vHLvNNaSo04Io7JxBai5VulE0J6pIVqohCetGEUpxbo2ERUnX
+         f0VH61MpWBv1WUZ5USHgiuSZvtTbUZPqPlVEdooojU5LGOLQamdY0zlGFaUrxA8Hwi
+         T4jfPOaB5jkKpQ9w5UHZrXcHMYxWAGCgNFD4wvEk2eMgykVDtFsyFL+y/vZoU7sc6U
+         v5f5JYrwJXunw==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        linux-hardening@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/4] Tab P11 features
+Date:   Fri,  7 Apr 2023 16:40:04 -0700
+Message-Id: <168091080212.2759405.12118976491725806960.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
+References: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
 MIME-Version: 1.0
-References: <20230407191904.gonna.522-kees@kernel.org> <20230407192717.636137-1-keescook@chromium.org>
-In-Reply-To: <20230407192717.636137-1-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 7 Apr 2023 16:33:43 -0700
-Message-ID: <CAKwvOdk5JjB21FU85Zxubs+LV8bTY-az598V1hvewndAfhohQA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] kunit: tool: Enable CONFIG_FORTIFY_SOURCE under UML
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 7, 2023 at 12:27=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> Since commit ba38961a069b ("um: Enable FORTIFY_SOURCE"), it's possible
-> to run the FORTIFY tests under UML. Enable CONFIG_FORTIFY_SOURCE when
-> running with --altests to gain additional coverage, and by default under
+On Fri, 07 Apr 2023 21:54:40 +0200, Konrad Dybcio wrote:
+> v1 -> v2:
+> - Add ftrace-size and drop no-map under pstore [1/4]
+> - Add qcom,ath10k-calibration-variant [4/4]
+> - Pick up rbs
+> 
+> v1: https://lore.kernel.org/r/20230406-topic-lenovo_features-v1-0-c73a5180e48e@linaro.org
+> 
+> [...]
 
-two L's in alltest?
+Applied, thanks!
 
-> UML.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  tools/testing/kunit/configs/all_tests.config | 2 ++
->  tools/testing/kunit/configs/arch_uml.config  | 3 +++
->  2 files changed, 5 insertions(+)
->
-> diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing=
-/kunit/configs/all_tests.config
-> index f990cbb73250..0393940c706a 100644
-> --- a/tools/testing/kunit/configs/all_tests.config
-> +++ b/tools/testing/kunit/configs/all_tests.config
-> @@ -9,6 +9,8 @@ CONFIG_KUNIT=3Dy
->  CONFIG_KUNIT_EXAMPLE_TEST=3Dy
->  CONFIG_KUNIT_ALL_TESTS=3Dy
->
-> +CONFIG_FORTIFY_SOURCE=3Dy
-> +
->  CONFIG_IIO=3Dy
->
->  CONFIG_EXT4_FS=3Dy
-> diff --git a/tools/testing/kunit/configs/arch_uml.config b/tools/testing/=
-kunit/configs/arch_uml.config
-> index e824ce43b05a..54ad8972681a 100644
-> --- a/tools/testing/kunit/configs/arch_uml.config
-> +++ b/tools/testing/kunit/configs/arch_uml.config
-> @@ -3,3 +3,6 @@
->  # Enable virtio/pci, as a lot of tests require it.
->  CONFIG_VIRTIO_UML=3Dy
->  CONFIG_UML_PCI_OVER_VIRTIO=3Dy
-> +
-> +# Enable FORTIFY_SOURCE for wider checking.
-> +CONFIG_FORTIFY_SOURCE=3Dy
-> --
-> 2.34.1
->
+[1/4] arm64: dts: qcom: sm6115-j606f: Add ramoops node
+      commit: 8b0ac59c2da69aaf8e65c6bd648a06b755975302
+[2/4] arm64: dts: qcom: sm6115: Add RMTFS
+      commit: ecc61a207d0fad45ba991e0ce0273382b20bb226
+[3/4] arm64: dts: qcom: sm6115p-j606f: Enable remoteprocs
+      commit: 7584284537c2a82227ed2ea359b2c53f28e6abbf
+[4/4] arm64: dts: qcom: sm6115p-j606f: Enable ATH10K WiFi
+      commit: 137e5c267232c89b2284ea44229545d4820bcb26
 
-
---=20
-Thanks,
-~Nick Desaulniers
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
