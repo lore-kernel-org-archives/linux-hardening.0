@@ -2,49 +2,50 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF14C77B6C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F5DC6FD1D
 	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 19:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230335AbjDGT1W (ORCPT
+        id S230383AbjDGT1X (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 15:27:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53346 "EHLO
+        Fri, 7 Apr 2023 15:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229842AbjDGT1V (ORCPT
+        with ESMTP id S230015AbjDGT1V (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 7 Apr 2023 15:27:21 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FAE6BB8E
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39EC8B752
         for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 12:27:20 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id fy10-20020a17090b020a00b0023b4bcf0727so44103598pjb.0
+Received: by mail-pl1-x631.google.com with SMTP id iw3so40733767plb.6
         for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 12:27:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680895640;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yu3dx+Zfk7gIiLRJSnMfXUW5bNiNhV3WSuApT75nJdg=;
-        b=aXbwo/mNtK34pKA9pfABop4HM/6mbfsUOMDA7T87TNEAPPXZcLFDTkdioJZeeCFhmc
-         9p4Zf9fwkAiJsF+fAwoBefIf9f19BhlSy2vcLDUWU5mfk/UahEhvSXWEfMJQo+syb8DM
-         qSIHHmW++y45EQokgGeFObegvO5Ol/S+BNQho=
+        d=chromium.org; s=google; t=1680895639;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8iceky2qZBmmPvb+84ZhVCagAV37KBLs6ikPPwI/vVU=;
+        b=LPbqMcG9W63inybkR1IO+JjW/8sCJ47LPwDmEyXhUpWSy1fntw5h/1h7xZsPDgdd70
+         mFP3DM413LFcwH9H7Ql3Ey8aU6Dgk3sZuG3MLwLccmbH6W5NANpZrUqjzeUr30SNkTWC
+         YRVicFBycx5jr5GjrNes2ZqBKlQnP6T++wYlc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680895640;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Yu3dx+Zfk7gIiLRJSnMfXUW5bNiNhV3WSuApT75nJdg=;
-        b=ZhLSs4FrFo4iZj/l4YJhdnBF/pFTFMjOGRdbFHgwejA66b2mfhX0Za0zTa/+ibTRDV
-         9Y6bMAOYCW1bKhWwfM/EhZXpwmpWrV7oa/7xcaVk1iP40kIfKJP5X7BH+xftA8fJmlao
-         1sl2pmhgzyAsAuwqHfYI5E1DYWWR+bRF30+FEl9SmHZTA4dQ5a9a1QeOWT41KUpFeuMM
-         cfs1C8NSPSjb+KQbmptN+UUCeNIzBnFeWIjDtwmp7Oog9IISkeVgW4f+poXMZiA650/V
-         hPHQLPZIn0siFYMVvKCFqdvuyIX0XIdzTIMMbUsSifWTCppf8BTjaz1kyQDhXd8NABgP
-         PukA==
-X-Gm-Message-State: AAQBX9dzSYZVRNMjtBdMEow2qO3ZPpUjqvZylPnAROosggaMaF6ZSv9o
-        n67yC5CtKhsJn38WpCrJzA0t1w==
-X-Google-Smtp-Source: AKy350Z4bqJcVylH3caT6XDtNNwRMnZoCSPaG50rLicnPHmBrLiyzww9IBEF98IesLn0UiUqnBLreQ==
-X-Received: by 2002:a17:903:1c9:b0:1a5:153f:2442 with SMTP id e9-20020a17090301c900b001a5153f2442mr3877038plh.52.1680895640003;
-        Fri, 07 Apr 2023 12:27:20 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680895639;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8iceky2qZBmmPvb+84ZhVCagAV37KBLs6ikPPwI/vVU=;
+        b=vWKVM1XHvNp1YEKQjh++iwO5NnRfdX9NOcRZz/pciSCv0aeQHR7XPIOewfJ5Gtn9Wv
+         qdgEtnlf+NQnvPKJ72QJ7NwvEiYcWAlDiN/hi44qo6jKYBkIqMJhsZ8PmYrzO1ZKYteW
+         31s23780Mw2bzxCCsT/lRkwUY6l7CC3oWeygKRYJ9aYoNHL+W46KUaAg5HLvfBQf/07P
+         sUMEXWyeW2Nh1k+rayWTu9xl4Mra+HJLRsdG44vL/q+XmZhUvATbpWeN9XfFewKibE65
+         k7k/ZcX4PYADhHBVV9qWVto5m9LB/PQgC+2hU105Th+Pq0sGJb//PHchHvK5LQJFO1Bc
+         aMcA==
+X-Gm-Message-State: AAQBX9fgyG1lc+oGke/TADQFERoyJPW5QjfmgieUa70YSQos7ewe/NH5
+        OL3TyxrOXZLa2omrj5yYclWfOA==
+X-Google-Smtp-Source: AKy350aShXShg+rC+CAz781JC0+6J+BvF9ozBrLq7uaabaeLnQY51uyEREZJGjnvjWTRSKsuNNwPUw==
+X-Received: by 2002:a05:6a20:b98:b0:e8:fe82:583a with SMTP id i24-20020a056a200b9800b000e8fe82583amr1487041pzh.26.1680895639635;
+        Fri, 07 Apr 2023 12:27:19 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e4-20020a170902784400b001a0763fa8d6sm1493300pln.98.2023.04.07.12.27.17
+        by smtp.gmail.com with ESMTPSA id g5-20020aa78745000000b0061949fe3beasm3411886pfo.22.2023.04.07.12.27.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 07 Apr 2023 12:27:18 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -80,63 +81,82 @@ Cc:     Kees Cook <keescook@chromium.org>,
         "Daniel Latypov" <dlatypov@google.com>,
         =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>,
         linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Subject: [PATCH v2 00/10] fortify: Add KUnit tests for runtime overflows
-Date:   Fri,  7 Apr 2023 12:27:06 -0700
-Message-Id: <20230407191904.gonna.522-kees@kernel.org>
+Subject: [PATCH v2 02/10] fortify: Allow KUnit test to build without FORTIFY
+Date:   Fri,  7 Apr 2023 12:27:08 -0700
+Message-Id: <20230407192717.636137-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230407191904.gonna.522-kees@kernel.org>
+References: <20230407191904.gonna.522-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2028; h=from:subject:message-id; bh=vvIOMtmmSuqLt1XEtyLD1Bm0GMeh4viDL6QKhNTcpmw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkMG6TIg3fRVWwqBJQQ1q94yOb7y1oa6PnzfTQK+Fq 6fbzrkiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZDBukwAKCRCJcvTf3G3AJrbqD/ oC3ncHOoEFp7lDWC4Amm4O5jH78WF3GLd9EaKL1Bb4WH8VcG3DCfDNsqeGlIvKZLWNzyOK9P/W4h2p YaTInxAvOlGqKE7R7Bj2ho1mkOrqID8cm8UQ3iwBAquQOo7RLC31iKgNHyZXqudm2jDvouNkxog05/ crmcv7lKB1wBP0FbA+TXPPGnrTCQAiCuHH7XUirf/m/ajefQG3QfbeQXn740ErdSEnA1gmVx5D/AiD VMRni5G+uKT1Pqr9GlIJzZKE2U1Sq/bRcKZBGRG4658HjSNAf29hZyH/Z0CkO/mm160K+4gU+GXp61 /Ib8xRsGxexJs5Jg5Kr+LuA6ABSwBEIZsSPQ66vGg3MrKCCLxRdsFfklJwsaJsaNX60ZZoo2Om6x5E xAKQl7q5V8P023eW0AiB/y7PwPsVPrpwf8BYvK1+xjK2GBDwMpiwy1CovB+QdzkRTvZ5H7Q54GxylF tP0y8UOqw9PP2EIg4XfaIkhDUijwGpCccEQtSC2EwPKftQhICAnRm5I1piQ1+QQzcGm68zuiqHTG7M 2G4HOmHFJ9vR6T6xU2b/t9CCyEHxHT0shq7j2WkO/INQt2ihL+HD7NO9fcH/NhiT5pxnmPmP4rfWEE ZCyiBX0HqsexOSPEbIcuqAa4FdyLulOMQd5sHkFwfRlCppGM2Pj1g8Zb3LyA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2116; h=from:subject; bh=ccG2bNY7K5BZtbleuqiKVnIVFX8WC48jOVbBodSXYXk=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkMG6TM2zrha7Ipa7uDmzoHRpb9RWuePb2XGcS7CJv en17kyyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZDBukwAKCRCJcvTf3G3AJn7YEA CER3124RngLsuvZqHAvpzkO00CzkPYu9RLFpI3cKRivKzkUkR5wxM/NC00ecF5sxvG6Sw9DWeJkVeN MNAKx38AC1EyPN5nmnhxbVnhwcU/PJJleVj1Bw2t+U/rE3Xara/ECkj6yX3aysw+2xJJYT8XpQch+t TwZ4XmilZ9le6Rfj+YioA9Jmiu0dEVO79l+reOQ+9/NTEiy6t3hYxx9cfE8iX841bZvCuo9ziloHeU 3uUHoE7RxPec0fqA6a/n72NL/aHNWTE3GthVRhAqFnK6jgRLgecdcVo6tCqFJJ2Pus2z+hbqaHbPlQ u45gFLyO+AfC9lFZLk7N6sNhThbzDS4Bbz5cRlT7SQBBlX9XVJYaY9pY2+NZTX6dumTtEM7Qf9h0DB VMdagi6uXGY6TOH9j2kTlVN+mbWiNJO2TL1i8hAWHTEe3iNqFyIQQ2bNRmCMoK4mr2jaSwsg3IwS2V okMgL1acUel87FDPsB8puAJleQ2eavuclaC5L+GwcD5jjK1mV9LKyLHBZkTMFA8vnVJaUiMWQKchEB gc7bmlmT1U3USfTbreSenFr4OqEa5mIZf5TTZEDibWczL9S5mgdhNUjRKasbVlvYz81KO7TsBLVi40 w9bldPkvRyN/Nl0lag1fccQ2jP219rdmt2y+n8cwtBr7dRkvTm+GGl90Tdbg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+In order for CI systems to notice all the skipped tests related to
+CONFIG_FORTIFY_SOURCE, allow the FORTIFY_SOURCE KUnit tests to build
+with or without CONFIG_FORTIFY_SOURCE.
 
-This series adds KUnit tests for the CONFIG_FORTIFY_SOURCE behavior of the
-standard C string functions, and for the strcat() family of functions,
-as those were updated during refactoring. Finally, fortification error
-messages are improved to give more context for the failure condition.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ lib/Kconfig.debug   |  2 +-
+ lib/fortify_kunit.c | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
--Kees
-
-v2:
-- fix From/SoB
-- strcat: force non-const length arguments (lkp)
-- fix x86 and arm fortify_panic prototypes (lkp)
-- move test-skip to init function (dlatypov)
-- constify p_size, q_size everywhere (miguel)
-- enum-ify, string-ify, bit-ify function name passing (aleksander & andy)
-v1: https://lore.kernel.org/lkml/20230405235832.never.487-kees@kernel.org/
-
-Kees Cook (10):
-  kunit: tool: Enable CONFIG_FORTIFY_SOURCE under UML
-  fortify: Allow KUnit test to build without FORTIFY
-  string: Add Kunit tests for strcat() family
-  fortify: Use const variables for __member_size tracking
-  fortify: Add protection for strlcat()
-  fortify: strcat: Move definition to use fortified strlcat()
-  fortify: Split reporting and avoid passing string pointer
-  fortify: Provide KUnit counters for failure testing
-  fortify: Add KUnit tests for runtime overflows
-  fortify: Improve buffer overflow reporting
-
- MAINTAINERS                                  |   1 +
- arch/arm/boot/compressed/misc.c              |   2 +-
- arch/x86/boot/compressed/misc.c              |   2 +-
- include/linux/fortify-string.h               | 257 +++++--
- lib/Kconfig.debug                            |   7 +-
- lib/Makefile                                 |   1 +
- lib/fortify_kunit.c                          | 731 +++++++++++++++++++
- lib/strcat_kunit.c                           | 104 +++
- lib/string_helpers.c                         |  26 +-
- tools/objtool/check.c                        |   2 +-
- tools/testing/kunit/configs/all_tests.config |   2 +
- tools/testing/kunit/configs/arch_uml.config  |   3 +
- 12 files changed, 1059 insertions(+), 79 deletions(-)
- create mode 100644 lib/strcat_kunit.c
-
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index c8b379e2e9ad..d48a5f4b471e 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2614,7 +2614,7 @@ config STACKINIT_KUNIT_TEST
+ 
+ config FORTIFY_KUNIT_TEST
+ 	tristate "Test fortified str*() and mem*() function internals at runtime" if !KUNIT_ALL_TESTS
+-	depends on KUNIT && FORTIFY_SOURCE
++	depends on KUNIT
+ 	default KUNIT_ALL_TESTS
+ 	help
+ 	  Builds unit tests for checking internals of FORTIFY_SOURCE as used
+diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+index c8c33cbaae9e..524132f33cf0 100644
+--- a/lib/fortify_kunit.c
++++ b/lib/fortify_kunit.c
+@@ -25,6 +25,11 @@ static const char array_of_10[] = "this is 10";
+ static const char *ptr_of_11 = "this is 11!";
+ static char array_unknown[] = "compiler thinks I might change";
+ 
++/* Handle being built without CONFIG_FORTIFY_SOURCE */
++#ifndef __compiletime_strlen
++# define __compiletime_strlen __builtin_strlen
++#endif
++
+ static void known_sizes_test(struct kunit *test)
+ {
+ 	KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
+@@ -307,6 +312,14 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
+ } while (0)
+ DEFINE_ALLOC_SIZE_TEST_PAIR(devm_kmalloc)
+ 
++static int fortify_test_init(struct kunit *test)
++{
++	if (!IS_ENABLED(CONFIG_FORTIFY_SOURCE))
++		kunit_skip(test, "Not built with CONFIG_FORTIFY_SOURCE=y");
++
++	return 0;
++}
++
+ static struct kunit_case fortify_test_cases[] = {
+ 	KUNIT_CASE(known_sizes_test),
+ 	KUNIT_CASE(control_flow_split_test),
+@@ -323,6 +336,7 @@ static struct kunit_case fortify_test_cases[] = {
+ 
+ static struct kunit_suite fortify_test_suite = {
+ 	.name = "fortify",
++	.init = fortify_test_init,
+ 	.test_cases = fortify_test_cases,
+ };
+ 
 -- 
 2.34.1
 
