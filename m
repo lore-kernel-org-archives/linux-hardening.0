@@ -2,64 +2,65 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A32C77B76
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC18AC77B79
 	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 19:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231271AbjDGTzB (ORCPT
+        id S231281AbjDGTzC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 15:55:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
+        Fri, 7 Apr 2023 15:55:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231279AbjDGTyw (ORCPT
+        with ESMTP id S230284AbjDGTyt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Apr 2023 15:54:52 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB08A27B
-        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 12:54:51 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id d7so10639056lfj.3
-        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 12:54:51 -0700 (PDT)
+        Fri, 7 Apr 2023 15:54:49 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B06A5D5
+        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 12:54:47 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id x17so55713365lfu.5
+        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 12:54:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680897289;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5hc2CsV2PdwIrwzsquuwQ6o8Ebf/JgkdU7cj1UvOiFY=;
-        b=QvQt0Ei+1MDhYXEJ07cnGLSac1IxZsgQMdLEILTL+nv/+Ks/4Lvaa4cLWm4j6nQp9L
-         mGDwAyQIExKHg3wa/3GtozueaeeN67KgioUY05VLevyQMgj5ti2Cqjgm3krfDrcHsFwV
-         KLcP9mqjtpfTGMyL94juV8bN4Wsf9kS/+NOtVNjTkuYJSJKXDqIVA9fvJ1GSTMN1ILBF
-         eh8SGNJe6V6Tdpkfknv+D0p+xd3H9ha4z1ojcZRWKk6rBqGmGlXFmkivHsao/pVW6LmX
-         fSiVaN+bmiRngu5fAPM8jmFcEKL/R6oIa7BrDU/rmVJFFMvZM78E5tlWSTXnV3ItxSsB
-         n8pg==
+        d=linaro.org; s=google; t=1680897286;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+AFb5wfJ9U1U6y3PYFeGEqZliVIyqi+6YzMhEDe6CJc=;
+        b=P7ZjaEaTvMs1BcDqx1TVJyQbDfbs0tD4f/GJNOMFWjvTuwh6bf+UOyxTianQsBbQJC
+         M6Hyl/9++/kNx9ycYamEW0R/3vt0ukQJwxUszl6wtnaDxy/+oSbGrqgZdfbjhjf1nx19
+         pmX5FHB+eqtcSMxRUs9rWayPmZ9SjIZEBi/ueWYyVwcxqYb2TuIKz2AwLgGJFO12ttGS
+         wT+b6KCadywhuFGRp6DCIZ82g3ijRahiGvjMH8G8YV+IU15RdvOk1vhv5YAyGohT4DSr
+         wCfyOgLsuT6sXPK6j7aEp8Lk3iHctoomiQO2oCCq8Opbl6PnfrtsfM/FiQQzgnK6qLpF
+         hHHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680897289;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5hc2CsV2PdwIrwzsquuwQ6o8Ebf/JgkdU7cj1UvOiFY=;
-        b=lw9nSPN5bDCTwMWAWI0tCL5SnArn51J34TEK5amv/dnu54KJ5W6RNi8WOPAgvMvGBW
-         J4FAicJjABDvdOtnoljZ6eZSsawCM8m/Sy7Af0+yuessnFDXlOmNHJgwW8dmVA1r91AZ
-         ht1TBdtT6N56JGXwSQdjWM8MDfjIkM/zOcZBcmv+KA4a+u3uBgS9wrbpzsDMKQzxlgRI
-         1PaGOLFWsL2DFPl4eWTFu5kTHMDRMoXeGHtl3yAqVk7Knb6gGTiVzgAngdzJfUFA76Xg
-         71slmrYwU5dno7F/A8QO+SnqLfLPJvfiRax0JUMfDmbyLwhvD2Rxs8EGfip4V5IQCYu5
-         DTzw==
-X-Gm-Message-State: AAQBX9ewhhemlOkkPSGSwUV9SioFNROiX6AGAEwXQT8sm6Zt2HJDxNn1
-        PEt8JhDLwP47w4uC4wX3ruwaOA==
-X-Google-Smtp-Source: AKy350brwHhDHTUjaTh8oqttmQTVfaSdK6qmK4y44KS68oPBdw4iu1VqnPwG/ZS46VJHIxlcPiQgtg==
-X-Received: by 2002:ac2:5094:0:b0:4eb:3cac:23b9 with SMTP id f20-20020ac25094000000b004eb3cac23b9mr764776lfm.9.1680897289310;
-        Fri, 07 Apr 2023 12:54:49 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680897286;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+AFb5wfJ9U1U6y3PYFeGEqZliVIyqi+6YzMhEDe6CJc=;
+        b=VK/QybsJ+RwdfuCS8l3bj5VQ+08N57UHpx6r3cl7jJlpnf/MG7ySI8DPahKwnksbqX
+         /Gg78dXwEMdqozj+nO90HN8luTilRgwvTbb1rSyoEIehyKjyq3YgK0WI7aRL9HlOwbWN
+         aGGgKBZJttutw0JXQXUZdXNOHVTw/HUF2/qADDMBd3wWl6b2M5Ve3YoHHnD9NzqWzqKb
+         oP1aBEMMCMjMhW4lPZqmZShFb9pS4zUdJ9GNOWNAXOii95WNkz2dKn7ZWjQoBtAcWEep
+         jDsFtM32ThHYvg+5Z8GxkCJAETrKGfOskjXkSW8iLDci1Lre86gRFNoPWcEJMwvT0QrA
+         8XvQ==
+X-Gm-Message-State: AAQBX9drc8sv1679IZ984c9NDVYXV5bxvivZgD61Ab4JCRgDs873G15X
+        jD3aZhFfVS4/Yld/2SWcor6Wzg==
+X-Google-Smtp-Source: AKy350Yig0hO9NGzEF3/rRaCn3/Y8UIVoiFM4pMUN2LM2+WmpLzFxVCp9dnLp3B0VHCGAjs6snj4rg==
+X-Received: by 2002:ac2:5f0f:0:b0:4d7:ccef:6b52 with SMTP id 15-20020ac25f0f000000b004d7ccef6b52mr1019597lfq.39.1680897285900;
+        Fri, 07 Apr 2023 12:54:45 -0700 (PDT)
 Received: from [192.168.1.101] (abxh37.neoplus.adsl.tpnet.pl. [83.9.1.37])
-        by smtp.gmail.com with ESMTPSA id u5-20020ac248a5000000b004d856fe5121sm839981lfg.194.2023.04.07.12.54.47
+        by smtp.gmail.com with ESMTPSA id u5-20020ac248a5000000b004d856fe5121sm839981lfg.194.2023.04.07.12.54.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Apr 2023 12:54:48 -0700 (PDT)
+        Fri, 07 Apr 2023 12:54:45 -0700 (PDT)
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Date:   Fri, 07 Apr 2023 21:54:42 +0200
-Subject: [PATCH v2 2/4] arm64: dts: qcom: sm6115: Add RMTFS
+Subject: [PATCH v2 0/4] Tab P11 features
+Date:   Fri, 07 Apr 2023 21:54:40 +0200
+Message-Id: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230406-topic-lenovo_features-v2-2-625d7cb4a944@linaro.org>
-References: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
-In-Reply-To: <20230406-topic-lenovo_features-v2-0-625d7cb4a944@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAAB1MGQC/42N0QqDIBRAfyV8nkOzUva0/xgxbnorITS0ZCP69
+ 1lPe9sez4HD2UjEYDGSW7GRgMlG612G8lIQPYIbkFqTmZSsFKxiDV38bDWd0Pnknz3CsgaM1Ei
+ msOYaQCLJbQcRaRfA6THXbp2mLOeAvX2ds0ebebRx8eF9vhM/7K9N4pRRYwQXBkqlZHOfrIPgr
+ z4Mx/afXEsBNVcMK4Xfebvv+wfVXxfbDwEAAA==
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,55 +74,47 @@ Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1680897283; l=1251;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1680897283; l=1028;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=IIk+twEwz0LlHdxtIsrn9UJGLOCT8VZyIM/WB4QSvH0=;
- b=I9rgSh4Kma+lc/Zkd3I2PwnJjpRVICDW88ksWJU/j7VwMjJs4MCqm1bT39j3aVdu+jnXciLSG1Pj
- CxRQkMzUDTkGjcgbvNxsfMJQzXoTENCv6Wxik2nL2Z6arW/YRZv8
+ bh=0hnuSRNhOLqupAv3AXDiTRWpTdMlZAZTpQkLVrqvS0w=;
+ b=fCKUp4CYhU2DuPrrZVXj2GpZnDnN7tiV1vHJB9vV1SNCPpajGeQP5lYo41o7qshkbMz9mzLmV3VT
+ jsPYdJBMB2BCzKx1d1PN3iHpsIo+ioSX8eXUFvZKHFxgLsh7ImP+
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add a node for RMTFS and associate it with MSA and NAV IDs to enable
-modem functionality on SM6115.
+v1 -> v2:
+- Add ftrace-size and drop no-map under pstore [1/4]
+- Add qcom,ath10k-calibration-variant [4/4]
+- Pick up rbs
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+v1: https://lore.kernel.org/r/20230406-topic-lenovo_features-v1-0-c73a5180e48e@linaro.org
+
+This short series brings a couple of "nice" features to the Tab P11:
+- Wi-Fi
+- remoteprocs (+RMTFS)
+- ramoops
+
+No external dependencies.
+
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sm6115.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Konrad Dybcio (4):
+      arm64: dts: qcom: sm6115-j606f: Add ramoops node
+      arm64: dts: qcom: sm6115: Add RMTFS
+      arm64: dts: qcom: sm6115p-j606f: Enable remoteprocs
+      arm64: dts: qcom: sm6115p-j606f: Enable ATH10K WiFi
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-index 2505c815c65a..99c6550663c8 100644
---- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/clock/qcom,sm6115-gpucc.h>
- #include <dt-bindings/clock/qcom,rpmcc.h>
- #include <dt-bindings/dma/qcom-gpi.h>
-+#include <dt-bindings/firmware/qcom,scm.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
-@@ -290,6 +291,15 @@ removed_mem: memory@60000000 {
- 			reg = <0x0 0x60000000 0x0 0x3900000>;
- 			no-map;
- 		};
-+
-+		rmtfs_mem: memory@89b01000 {
-+			compatible = "qcom,rmtfs-mem";
-+			reg = <0x0 0x89b01000 0x0 0x200000>;
-+			no-map;
-+
-+			qcom,client-id = <1>;
-+			qcom,vmid = <QCOM_SCM_VMID_MSS_MSA QCOM_SCM_VMID_NAV>;
-+		};
- 	};
- 
- 	rpm-glink {
+ arch/arm64/boot/dts/qcom/sm6115.dtsi              | 10 +++++++
+ arch/arm64/boot/dts/qcom/sm6115p-lenovo-j606f.dts | 35 +++++++++++++++++++++++
+ 2 files changed, 45 insertions(+)
+---
+base-commit: e134c93f788fb93fd6a3ec3af9af850a2048c7e6
+change-id: 20230406-topic-lenovo_features-d708e51caa7e
 
+Best regards,
 -- 
-2.40.0
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
