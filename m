@@ -2,228 +2,138 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7E8C6FD1D
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 22:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCB1C76196
+	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 23:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231549AbjDGWAu (ORCPT
+        id S229497AbjDGXew (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 18:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55712 "EHLO
+        Fri, 7 Apr 2023 19:34:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbjDGWAt (ORCPT
+        with ESMTP id S229456AbjDGXev (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Apr 2023 18:00:49 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11844B463
-        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 15:00:48 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id j14-20020a17090a7e8e00b002448c0a8813so4441507pjl.0
-        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 15:00:48 -0700 (PDT)
+        Fri, 7 Apr 2023 19:34:51 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03039FF07
+        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 16:34:27 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id cv11so14358766pfb.8
+        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 16:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680904847; x=1683496847;
+        d=google.com; s=20210112; t=1680910435; x=1683502435;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uv3+/FcAlGbbBCIx4A9TsIAc0Dqtqlhpt96UpJ0Kojk=;
-        b=CxoTg1pCdseNoKoVXH22p6uGJwz/TXY7TXMqG/bVWcA4Lc9LdHfP0CmXYfJEKGal1o
-         5VD1UVmcV3YlmZCZyZ2nHY242rOOAkzrJjpmS7lB5/RQRgBf4u+xbm6HHILq+pKb0YSX
-         UU66Tlc+m/WI1OeJXqm6+OM/GKTiwGhPFyTaa6o9JJftptHlYDW4c2n3BH1yWXtEDzxK
-         JIccT7mIjvk2CJ1yIpHf3dKEKGbfh1om16rSCT3IhOoLN/x62/OCZdlTktfRgUyq0nrN
-         UFmOMRabZemFTIh+irFo0pOZNjn5lx9X8W4/sBYNWd+LwWvtfVGQjv8kS23ZWPLJQBgx
-         kHWQ==
+        bh=06aeoqWpNiijpeI6eB3KfJuOvE83nAPBY5T1nVItygw=;
+        b=eEqX5GQsSIT1ib03PuaWvCog9rPYAClxGQ6SYoayXujdj9Vwh3oFSXC/1mJtPeqxFh
+         ZpSum1yFKCynUjMpq9rU2BWz7PYUDEcs2ifNSLaZslGJ1GwvqLnc+Onoky1nHCF2+yVS
+         zrE/P2hNSmY6bElfXjJ9M9zMYtBXZd8K+Ote/FNSwc0PbnukyY2EdaUjW3dzN5edyorL
+         tzpgmZHKeNU6PEYre0EU+f2cdqwdDpZOlj4uDszICEHHyU1TRMnS3u6R8nMUromyocrP
+         yItCom/VSudEr1pZCo8WBYeEjue3dFpDeQmoKwAYacXjS9q+gC6DDLydCm6CbXBXi/LS
+         254Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680904847; x=1683496847;
+        d=1e100.net; s=20210112; t=1680910435; x=1683502435;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uv3+/FcAlGbbBCIx4A9TsIAc0Dqtqlhpt96UpJ0Kojk=;
-        b=6OzbRMtaa9TIkP2AnbRZY5ybrCzWlBDscBCU6+r9xWuOA2iVNuDs/Pb4WII4iyi3Gu
-         1+xAFYn8VIJ15aTDHO786/yhVptBMRopb/0reCuY8Vc9uCy3ylnx2UCtRgIrXWipHVLD
-         FiZawLtCeE2kuzBcffFU1AENF90YAKUvvH5uJWVVmtysOiDhM2uXrzv9rfFuBEbGHSJD
-         0qW0v0KezTNdGscQcjokFYw4e2uOE3VIvw4+EEHVytkj7yF8u+86WeH2gdBmIRuOQP+M
-         zoOcqwAa9nA06c10uTy4ZEfF2ZdoasLIp8KjoCmssDKSEaUhIjc3DNEmNWgrkjTbKOxw
-         YyGg==
-X-Gm-Message-State: AAQBX9cRmCL/UWXAPq1E4IC1x1qtJMXxpfdJNAdudHnbYAw1i2VrCj9w
-        e3ir09Z+ZiiM5xvvIjW8l4wmCA6L8cn/jDInvIgJhw==
-X-Google-Smtp-Source: AKy350bHoqfSfuy42Ml7tM84z4MtgDwskIQCcyEcgsj17HCmjzQqaKZzjCii+dXKYUUzhy87mi9tkdu+Vtq/WICJdtI=
-X-Received: by 2002:a17:90a:cc01:b0:244:9909:6e60 with SMTP id
- b1-20020a17090acc0100b0024499096e60mr915183pju.3.1680904847203; Fri, 07 Apr
- 2023 15:00:47 -0700 (PDT)
+        bh=06aeoqWpNiijpeI6eB3KfJuOvE83nAPBY5T1nVItygw=;
+        b=mUjgLOxRdzjRtv5xkraF/+n9dyhCGs5c7BEMNE2H0HQdvTYscWVVTP9IX1oYnUCSL8
+         ObTOhgw9urMl1F4AS2NmJtDahGe0KsDpHxiHTMbe225pdAE5NSvXeHMioleyBuga0SVs
+         z4Xj3Z55Gk+CxoNiYnbJxVS7ddzaa/W5EEYzuQQHnBk/hD7ELMQoH89ftyN0SU/4m3M3
+         ijtkpInp6WqaKk1CCUWf5FOYB0vpoUqCR0tlgHCevZhwWgN66Dwm1MnP2DbQXAaZekwZ
+         7LvD6/GjgOAesY0nJ/zI2He0CPrx9pBI56GHIqKmcbOj/U/FWTr2bH75p3dEz/YTuUH3
+         xjYQ==
+X-Gm-Message-State: AAQBX9d0d1Xpu6VfQwTGFNQfl/pZHXUqA+avhAuqilqy2BP0tDv590ww
+        FGwW6zYn9tA6FhoAwNA7DvEvuSsyqLlwYSIbZcoSEA==
+X-Google-Smtp-Source: AKy350Y80laGeXozMwqopyOyp6O/Wc6NHSiXHA+TBD0qwgUXtD1pcGPHuzmDzQtW+NGkzGW9E4jcDIPqOEDpn/KvRag=
+X-Received: by 2002:a65:6201:0:b0:4fc:2058:fa29 with SMTP id
+ d1-20020a656201000000b004fc2058fa29mr792545pgv.1.1680910434569; Fri, 07 Apr
+ 2023 16:33:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230405022356.gonna.338-kees@kernel.org>
-In-Reply-To: <20230405022356.gonna.338-kees@kernel.org>
+References: <20230407191904.gonna.522-kees@kernel.org> <20230407192717.636137-1-keescook@chromium.org>
+In-Reply-To: <20230407192717.636137-1-keescook@chromium.org>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 7 Apr 2023 15:00:35 -0700
-Message-ID: <CAKwvOdkeQa7xOJUZnUYu4v1wmM54z=y0yPzGKfVofr2Fh27A3A@mail.gmail.com>
-Subject: Re: [PATCH v2] ubsan: Tighten UBSAN_BOUNDS on GCC
+Date:   Fri, 7 Apr 2023 16:33:43 -0700
+Message-ID: <CAKwvOdk5JjB21FU85Zxubs+LV8bTY-az598V1hvewndAfhohQA@mail.gmail.com>
+Subject: Re: [PATCH v2 01/10] kunit: tool: Enable CONFIG_FORTIFY_SOURCE under UML
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Marco Elver <elver@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nicolas Schier <nicolas@fjasle.eu>, Tom Rix <trix@redhat.com>,
+Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>, linux-kbuild@vger.kernel.org,
-        llvm@lists.linux.dev, Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+        Peter Zijlstra <peterz@infradead.org>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Sander Vanheule <sander@svanheule.net>,
+        Eric Biggers <ebiggers@google.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Latypov <dlatypov@google.com>,
+        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 4, 2023 at 7:24=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
+On Fri, Apr 7, 2023 at 12:27=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
 >
-> The use of -fsanitize=3Dbounds on GCC will ignore some trailing arrays,
-> leaving a gap in coverage. Switch to using -fsanitize=3Dbounds-strict to
-> match Clang's stricter behavior.
+> Since commit ba38961a069b ("um: Enable FORTIFY_SOURCE"), it's possible
+> to run the FORTIFY tests under UML. Enable CONFIG_FORTIFY_SOURCE when
+> running with --altests to gain additional coverage, and by default under
+
+two L's in alltest?
+
+> UML.
 >
-> Cc: Marco Elver <elver@google.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-> Cc: Miroslav Benes <mbenes@suse.cz>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: llvm@lists.linux.dev
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
-> v2: improve help text (nathan)
-> v1: https://lore.kernel.org/lkml/20230302225444.never.053-kees@kernel.org=
-/
-> ---
->  lib/Kconfig.ubsan      | 56 +++++++++++++++++++++++-------------------
->  scripts/Makefile.ubsan |  2 +-
->  2 files changed, 32 insertions(+), 26 deletions(-)
+>  tools/testing/kunit/configs/all_tests.config | 2 ++
+>  tools/testing/kunit/configs/arch_uml.config  | 3 +++
+>  2 files changed, 5 insertions(+)
 >
-> diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
-> index fd15230a703b..65d8bbcba438 100644
-> --- a/lib/Kconfig.ubsan
-> +++ b/lib/Kconfig.ubsan
-> @@ -27,16 +27,29 @@ config UBSAN_TRAP
->           the system. For some system builders this is an acceptable
->           trade-off.
+> diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing=
+/kunit/configs/all_tests.config
+> index f990cbb73250..0393940c706a 100644
+> --- a/tools/testing/kunit/configs/all_tests.config
+> +++ b/tools/testing/kunit/configs/all_tests.config
+> @@ -9,6 +9,8 @@ CONFIG_KUNIT=3Dy
+>  CONFIG_KUNIT_EXAMPLE_TEST=3Dy
+>  CONFIG_KUNIT_ALL_TESTS=3Dy
 >
-> -config CC_HAS_UBSAN_BOUNDS
-> -       def_bool $(cc-option,-fsanitize=3Dbounds)
-> +config CC_HAS_UBSAN_BOUNDS_STRICT
-> +       def_bool $(cc-option,-fsanitize=3Dbounds-strict)
-> +       help
-> +         The -fsanitize=3Dbounds-strict option is only available on GCC,
-> +         but uses the more strict handling of arrays that includes knowl=
-edge
-> +         of flexible arrays, which is comparable to Clang's regular
-> +         -fsanitize=3Dbounds.
+> +CONFIG_FORTIFY_SOURCE=3Dy
+> +
+>  CONFIG_IIO=3Dy
 >
->  config CC_HAS_UBSAN_ARRAY_BOUNDS
->         def_bool $(cc-option,-fsanitize=3Darray-bounds)
-> +       help
-> +         Under Clang, the -fsanitize=3Dbounds option is actually compose=
-d
-> +         of two more specific options, -fsanitize=3Darray-bounds and
-
-Heh, that was literally the latest blog post I was working on...2
-weeks ago? WIP.
-
-Would it make sense to use CC_IS_CLANG (as in lib/Kconfig.k{a|c}san)
-and CC_IS_GCC in addition to the cc-option tests, since the help texts
-make it clear there's compiler specific differences here?
-
-I've also sent
-https://lore.kernel.org/llvm/20230407215406.768464-1-ndesaulniers@google.co=
-m/
-while looking at this patch.  Maybe more cc-option tests are no longer
-necessary at this point, but I haven't checked the rest.
-
-> +         -fsanitize=3Dlocal-bounds. However, -fsanitize=3Dlocal-bounds c=
-an
-> +         only be used when trap mode is enabled. (See also the help for
-> +         CONFIG_LOCAL_BOUNDS.) Explicitly check for -fsanitize=3Darray-b=
-ounds
-> +         so that we can build up the options needed for UBSAN_BOUNDS
-> +         with or without UBSAN_TRAP.
->
->  config UBSAN_BOUNDS
->         bool "Perform array index bounds checking"
->         default UBSAN
-> -       depends on CC_HAS_UBSAN_ARRAY_BOUNDS || CC_HAS_UBSAN_BOUNDS
-> +       depends on CC_HAS_UBSAN_ARRAY_BOUNDS || CC_HAS_UBSAN_BOUNDS_STRIC=
-T
->         help
->           This option enables detection of directly indexed out of bounds
->           array accesses, where the array size is known at compile time.
-> @@ -44,33 +57,26 @@ config UBSAN_BOUNDS
->           to the {str,mem}*cpy() family of functions (that is addressed
->           by CONFIG_FORTIFY_SOURCE).
->
-> -config UBSAN_ONLY_BOUNDS
-> -       def_bool CC_HAS_UBSAN_BOUNDS && !CC_HAS_UBSAN_ARRAY_BOUNDS
-> -       depends on UBSAN_BOUNDS
-> +config UBSAN_BOUNDS_STRICT
-> +       def_bool UBSAN_BOUNDS && CC_HAS_UBSAN_BOUNDS_STRICT
->         help
-> -         This is a weird case: Clang's -fsanitize=3Dbounds includes
-> -         -fsanitize=3Dlocal-bounds, but it's trapping-only, so for
-> -         Clang, we must use -fsanitize=3Darray-bounds when we want
-> -         traditional array bounds checking enabled. For GCC, we
-> -         want -fsanitize=3Dbounds.
-> +         GCC's bounds sanitizer. This option is used to select the
-> +         correct options in Makefile.ubsan.
->
->  config UBSAN_ARRAY_BOUNDS
-> -       def_bool CC_HAS_UBSAN_ARRAY_BOUNDS
-> -       depends on UBSAN_BOUNDS
-> +       def_bool UBSAN_BOUNDS && CC_HAS_UBSAN_ARRAY_BOUNDS
-> +       help
-> +         Clang's array bounds sanitizer. This option is used to select
-> +         the correct options in Makefile.ubsan.
->
->  config UBSAN_LOCAL_BOUNDS
-> -       bool "Perform array local bounds checking"
-> -       depends on UBSAN_TRAP
-> -       depends on $(cc-option,-fsanitize=3Dlocal-bounds)
-> -       help
-> -         This option enables -fsanitize=3Dlocal-bounds which traps when =
-an
-> -         exception/error is detected. Therefore, it may only be enabled
-> -         with CONFIG_UBSAN_TRAP.
-> -
-> -         Enabling this option detects errors due to accesses through a
-> -         pointer that is derived from an object of a statically-known si=
-ze,
-> -         where an added offset (which may not be known statically) is
-> -         out-of-bounds.
-> +       def_bool UBSAN_ARRAY_BOUNDS && UBSAN_TRAP
-> +       help
-> +         This option enables Clang's -fsanitize=3Dlocal-bounds which tra=
-ps
-> +         when an access through a pointer that is derived from an object
-> +         of a statically-known size, where an added offset (which may no=
-t
-> +         be known statically) is out-of-bounds. Since this option is
-> +         trap-only, it depends on CONFIG_UBSAN_TRAP.
->
->  config UBSAN_SHIFT
->         bool "Perform checking for bit-shift overflows"
-> diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
-> index 7099c603ff0a..4749865c1b2c 100644
-> --- a/scripts/Makefile.ubsan
-> +++ b/scripts/Makefile.ubsan
-> @@ -2,7 +2,7 @@
->
->  # Enable available and selected UBSAN features.
->  ubsan-cflags-$(CONFIG_UBSAN_ALIGNMENT)         +=3D -fsanitize=3Dalignme=
-nt
-> -ubsan-cflags-$(CONFIG_UBSAN_ONLY_BOUNDS)       +=3D -fsanitize=3Dbounds
-> +ubsan-cflags-$(CONFIG_UBSAN_BOUNDS_STRICT)     +=3D -fsanitize=3Dbounds-=
-strict
->  ubsan-cflags-$(CONFIG_UBSAN_ARRAY_BOUNDS)      +=3D -fsanitize=3Darray-b=
-ounds
->  ubsan-cflags-$(CONFIG_UBSAN_LOCAL_BOUNDS)      +=3D -fsanitize=3Dlocal-b=
-ounds
->  ubsan-cflags-$(CONFIG_UBSAN_SHIFT)             +=3D -fsanitize=3Dshift
+>  CONFIG_EXT4_FS=3Dy
+> diff --git a/tools/testing/kunit/configs/arch_uml.config b/tools/testing/=
+kunit/configs/arch_uml.config
+> index e824ce43b05a..54ad8972681a 100644
+> --- a/tools/testing/kunit/configs/arch_uml.config
+> +++ b/tools/testing/kunit/configs/arch_uml.config
+> @@ -3,3 +3,6 @@
+>  # Enable virtio/pci, as a lot of tests require it.
+>  CONFIG_VIRTIO_UML=3Dy
+>  CONFIG_UML_PCI_OVER_VIRTIO=3Dy
+> +
+> +# Enable FORTIFY_SOURCE for wider checking.
+> +CONFIG_FORTIFY_SOURCE=3Dy
 > --
 > 2.34.1
 >
