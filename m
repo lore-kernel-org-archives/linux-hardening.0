@@ -2,127 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9138C77B61
-	for <linux-hardening@archiver.kernel.org>; Sat,  8 Apr 2023 08:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62174C7619A
+	for <linux-hardening@archiver.kernel.org>; Sat,  8 Apr 2023 14:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjDHIKU (ORCPT
+        id S229504AbjDHOBX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 8 Apr 2023 04:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46618 "EHLO
+        Sat, 8 Apr 2023 10:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjDHIKU (ORCPT
+        with ESMTP id S229456AbjDHOBW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 8 Apr 2023 04:10:20 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D10B76C
-        for <linux-hardening@vger.kernel.org>; Sat,  8 Apr 2023 01:10:18 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pl3eD-0004T8-Vd; Sat, 08 Apr 2023 10:10:10 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pl3eA-009n2J-VI; Sat, 08 Apr 2023 10:10:06 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pl3eA-00BVDV-2H; Sat, 08 Apr 2023 10:10:06 +0200
-Date:   Sat, 8 Apr 2023 10:10:07 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-hardening@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH] pstore/ram: Convert to platform remove callback
- returning void
-Message-ID: <20230408081007.haisxrinicaxkkqp@pengutronix.de>
-References: <20230401120000.2487153-1-u.kleine-koenig@pengutronix.de>
- <ee6bcb45-765b-30b8-fa38-a634b58391db@igalia.com>
- <642f4cca.170a0220.db953.9229@mx.google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6hnqyppa3vbrrvlc"
-Content-Disposition: inline
-In-Reply-To: <642f4cca.170a0220.db953.9229@mx.google.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
+        Sat, 8 Apr 2023 10:01:22 -0400
+Received: from mail-m11880.qiye.163.com (mail-m11880.qiye.163.com [115.236.118.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72464EF88;
+        Sat,  8 Apr 2023 07:01:20 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPV6:240e:3b7:3279:cf80:b96f:666f:20ca:bc83])
+        by mail-m11880.qiye.163.com (Hmail) with ESMTPA id 60349201AB;
+        Sat,  8 Apr 2023 22:01:12 +0800 (CST)
+From:   Ding Hui <dinghui@sangfor.com.cn>
+To:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, intel-wired-lan@lists.osuosl.org
+Cc:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        keescook@chromium.org, grzegorzx.szczurek@intel.com,
+        mateusz.palczewski@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Ding Hui <dinghui@sangfor.com.cn>
+Subject: [PATCH net 0/2] iavf: Fix issues when setting channels concurrency
+Date:   Sat,  8 Apr 2023 22:00:28 +0800
+Message-Id: <20230408140030.5769-1-dinghui@sangfor.com.cn>
+X-Mailer: git-send-email 2.17.1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSB1MVkkfQ0lDH09MShlNH1UTARMWGhIXJBQOD1
+        lXWRgSC1lBWUlPSx5BSBlMQUhJTEJBGB1DS0EZQk0dQU1NTR1BSUsYGkEZGENIWVdZFhoPEhUdFF
+        lBWU9LSFVKSktCSE5VSktLVUtZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PxQ6DQw5Pz0cTzcXSSo#HEox
+        MzQaCi5VSlVKTUNLQk1JT0xISkJLVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
+        QVlJT0seQUgZTEFISUxCQRgdQ0tBGUJNHUFNTU0dQUlLGBpBGRhDSFlXWQgBWUFJTUJLNwY+
+X-HM-Tid: 0a87612bcb4d2eb6kusn60349201ab
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+There are two issues can be reproduced by the following script:
 
---6hnqyppa3vbrrvlc
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[root@host ~]# cat test-iavf-1.sh
+#!/bin/bash
 
-On Thu, Apr 06, 2023 at 03:50:49PM -0700, Kees Cook wrote:
-> On Thu, Apr 06, 2023 at 12:57:30PM -0300, Guilherme G. Piccoli wrote:
-> > On 01/04/2023 09:00, Uwe Kleine-K=F6nig wrote:
-> > > The .remove() callback for a platform driver returns an int which mak=
-es
-> > > many driver authors wrongly assume it's possible to do error handling=
- by
-> > > returning an error code. However the value returned is (mostly) ignor=
-ed
-> > > and this typically results in resource leaks. To improve here there i=
-s a
-> > > quest to make the remove callback return void. In the first step of t=
-his
-> > > quest all drivers are converted to .remove_new() which already returns
-> > > void.
-> > >=20
-> > > Trivially convert this driver from always returning zero in the remove
-> > > callback to the void returning variant.
-> > >=20
-> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> >=20
-> > Thanks, it makes sense for me! Code-wise, it looks fine.
-> >=20
-> > What would be interesting it to mention a mail thread discussing this or
-> > maybe the patch itself that added the .remove_new() idea
-> > [https://git.kernel.org/linus/5c5a7680e67b right?].
-> >=20
-> > BTW, nice idea - converting all at once would be a terrible sync effort,
-> > I guess this way things will go smoothly.
-> > Feel free to add my:
-> >=20
-> > Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
->=20
-> Thanks! Looks good to me.
->=20
-> Acked-by: Kees Cook <keescook@chromium.org>
->=20
-> Do you want to take these view some other tree, or should I take this
-> via my pstore tree?
+pf_dbsf="0000:40:01.1/0000:41:00.0"
+vf0_dbsf="0000:40:01.1/0000:41:02.0"
+g_pids=()
 
-Take it via your tree please. There are still >1000 drivers to convert,
-so I guess this patch will be in Linus' tree long before I can convert
-struct platform_driver.
+function do_set_numvf()
+{
+    echo "set 2 vfs"
+    echo 2 >/sys/bus/pci/devices/${pf_dbsf}/sriov_numvfs
+    sleep $((RANDOM%3+1))
+    echo "set 0 vfs"
+    echo 0 >/sys/bus/pci/devices/${pf_dbsf}/sriov_numvfs
+    sleep $((RANDOM%3+1))
+}
 
-Best regards and thanks
-Uwe
+function do_nic_reset()
+{
+    local nic=$(ls -1 --indicator-style=none /sys/bus/pci/devices/${vf0_dbsf}/net/)
+    [ -z "$nic" ] && { sleep $((RANDOM%3)) ; return 1; }
+    ifconfig $nic 192.168.18.5 netmask 255.255.255.0
+    ifconfig $nic up
+    echo "set $nic 1 combined"
+    ethtool -L $nic combined 1
+    echo "set $nic 4 combined"
+    ethtool -L $nic combined 4
+    sleep $((RANDOM%3))
+}
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+function on_exit()
+{
+    local pid
+    for pid in "${g_pids[@]}"; do
+        kill -0 "$pid" &>/dev/null && kill "$pid" &>/dev/null
+    done
+    g_pids=()
+}
 
---6hnqyppa3vbrrvlc
-Content-Type: application/pgp-signature; name="signature.asc"
+trap "on_exit; exit" EXIT
 
------BEGIN PGP SIGNATURE-----
+while :; do do_set_numvf ; done &
+g_pids+=($!)
+while :; do do_nic_reset ; done &
+g_pids+=($!)
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmQxIV4ACgkQj4D7WH0S
-/k4r/Af9G7UwXpklOHfl9t2NTalqXnzKBRIAtLsqOjGDhEYhkLzhEofiF2i4rs+E
-6KlViqpenOdUm321rI3qoe6yyTe0xNyPNxQqj94X80kOcuK0ARXyt24ZUd5Tqt5H
-tmPRV6EhQDr7EwdgBvCVvIJrAFuB9Uif4zJUlBJJhtqnA+sAP76yhT7MhAyRq2LX
-9dbRrznU0Go2MTeffw7G+2Sbbv+QmdgvQI660fDK/nFRDDEeqMLeQoR0Y+Ru6Ngv
-SgLreZGmtPup2l3R4hJPJZtAIFhF6YaF7tzTZjmDV5zehvHIpLX3ecfLZKX2QNlY
-GEUyZldL7U8a7vjWZ4Gqtypht2jX3g==
-=j2SV
------END PGP SIGNATURE-----
+wait
 
---6hnqyppa3vbrrvlc--
+
+Ding Hui (2):
+  iavf: Fix use-after-free in free_netdev
+  iavf: Fix out-of-bounds when setting channels on remove
+
+ drivers/net/ethernet/intel/iavf/iavf_ethtool.c | 4 +++-
+ drivers/net/ethernet/intel/iavf/iavf_main.c    | 6 +-----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+-- 
+2.17.1
+
