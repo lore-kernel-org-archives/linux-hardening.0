@@ -2,62 +2,53 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DCAC76196
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Apr 2023 23:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BC6C76196
+	for <linux-hardening@archiver.kernel.org>; Sat,  8 Apr 2023 00:33:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbjDGXmm (ORCPT
+        id S229452AbjDHAd0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Apr 2023 19:42:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
+        Fri, 7 Apr 2023 20:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjDGXml (ORCPT
+        with ESMTP id S229436AbjDHAd0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Apr 2023 19:42:41 -0400
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 487CAE195
-        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 16:42:40 -0700 (PDT)
-Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-517c5738c8bso20773a12.3
-        for <linux-hardening@vger.kernel.org>; Fri, 07 Apr 2023 16:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680910959; x=1683502959;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jopHTn8ww2PUxgk7uQ6jiARzlAliPQkQTV3+oULvbUk=;
-        b=q5Tm6khTLskVetsOOzBJgVCGpkTFxmXDrKkKSs6n4di3bLCz/LHZT+AgjcWmzrp+zl
-         zZIsvfBe3w8xCtOZwdriFK4Fjn+eSSPi7zpcMwOyVImSiFV6MwDY6a3m59VT/gxdF4iJ
-         L20Elp89TZrlWfeBTWe+1My/8yY+8s/d/5cSUfb+IF3oLMl10EmyE6HotvB2R/HtzxmD
-         8bZtoZUSmNCz+u98MjKnQUmCN29b9qW9tTRMmwkYj3peZAoDrjvYiDLu5UG7W/zAxMsu
-         tYymHWX1Lcw9KCaHlgZdFQHj2L6+ZZ0BQv1qFouk39a61Kw9cpI/YQ0ux+7TG7izEv3E
-         rxZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680910959; x=1683502959;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jopHTn8ww2PUxgk7uQ6jiARzlAliPQkQTV3+oULvbUk=;
-        b=lG+UWEvSKZLGmaki0LDFOfMvfZJakS9rg2+T9gtpNYXhkxDAfnVmiCC4KJ3kjBpKpG
-         fv1zVsan4E7Ra47HW5RbyG0ae2Z0rrptbmfLLDe4y5T10Me9IeEAnAQW1WNIlEkJQ+lm
-         QdM++Z609VeVqlrqvnDaJwIV9cew8AOTW92MHlE2DGCF/leI+N0QQPKy5GFbiFU2Sd3y
-         ZINSHS9scx769UewpsH2bxq88nwdudHrwPLI/Ml5AAp6gPHnT1etr6XI/FjB6IFH9olZ
-         rVM7GZ2M9itN53yrPqOMiStqea8KdzpJK5u7sxn56lzR7FXcI8wCBmYGf9jTW9arSja4
-         ANJQ==
-X-Gm-Message-State: AAQBX9fbbdUKjZwu4l1IDML1D3ZIdKVnjQeFyuetvDcAPQohuQjKlpYy
-        L5cOrXBm48TFs7WzhEC/HCQaP2uWfshUQWIGwldNvg==
-X-Google-Smtp-Source: AKy350ae8GOYODNUXSN4leByoxrd0wIpXfCmTUWaycN5fMHok3ErO2LrxTuUgoIw8rw21NZWpM9hTpD4LUrSK4l6xcs=
-X-Received: by 2002:a05:6a00:2e23:b0:62a:d87a:a375 with SMTP id
- fc35-20020a056a002e2300b0062ad87aa375mr1948477pfb.4.1680910959263; Fri, 07
- Apr 2023 16:42:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230407191904.gonna.522-kees@kernel.org> <20230407192717.636137-1-keescook@chromium.org>
- <CAKwvOdk5JjB21FU85Zxubs+LV8bTY-az598V1hvewndAfhohQA@mail.gmail.com>
-In-Reply-To: <CAKwvOdk5JjB21FU85Zxubs+LV8bTY-az598V1hvewndAfhohQA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 7 Apr 2023 16:42:27 -0700
-Message-ID: <CAKwvOd=yZw_Ju67D52GfUz39MaAFA639hOxR5Jo2dRdp+xciyQ@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] kunit: tool: Enable CONFIG_FORTIFY_SOURCE under UML
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Fri, 7 Apr 2023 20:33:26 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08373C66C
+        for <linux-hardening@vger.kernel.org>; Fri,  7 Apr 2023 17:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680914004; x=1712450004;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+4kq+ByesKZ4cTl2OIrt3sTsul9XMQzu+dHP9ObqPHM=;
+  b=VH8Y/lV5zHx5uoKuVnw+c9+Yg/o6Qnkx3iWJs+RJN0mwo1x6zbSYA7wL
+   MTxfkVL03GrHgVV4EA6pb/N0yhYivEpDYfsIbuR2NG9sYw8FuDZB1QKvj
+   4xo26SZzjheJrxjL4FmB5v9b8sEMx87gQs2PGhWd7GXxOzKSWIojJbJvv
+   IE6YmxCm1c0mzP9f5Za1ccHx+iv0wDP2AgLZ0NUr5bskRTC0gPuk9jrK1
+   9EnDaSF+sQgdpgsqqSr2cVamE0YbowgvuQ4jBdSx61rSRhya1qGvMrRN4
+   s2Cb7Wwboh9RRXRXFOchMAFyUZ0WFEWL9JUG+WsHmz6zw8938WOV+H4Z0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="345749412"
+X-IronPort-AV: E=Sophos;i="5.98,328,1673942400"; 
+   d="scan'208";a="345749412"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 17:33:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="717987704"
+X-IronPort-AV: E=Sophos;i="5.98,328,1673942400"; 
+   d="scan'208";a="717987704"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 07 Apr 2023 17:33:15 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pkwW2-000T4T-3C;
+        Sat, 08 Apr 2023 00:33:14 +0000
+Date:   Sat, 8 Apr 2023 08:33:14 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -65,6 +56,7 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Brendan Higgins <brendan.higgins@linux.dev>,
         David Gow <davidgow@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Alexander Potapenko <glider@google.com>,
         Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
@@ -72,6 +64,7 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Miguel Ojeda <ojeda@kernel.org>,
         Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Liam Howlett <liam.howlett@oracle.com>,
         Vlastimil Babka <vbabka@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -81,124 +74,132 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Sander Vanheule <sander@svanheule.net>,
         Eric Biggers <ebiggers@google.com>,
         "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Andrey Konovalov <andreyknvl@gmail.com>
+Subject: Re: [PATCH v2 09/10] fortify: Add KUnit tests for runtime overflows
+Message-ID: <202304080811.nYP4KpPZ-lkp@intel.com>
+References: <20230407192717.636137-9-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230407192717.636137-9-keescook@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 7, 2023 at 4:33=E2=80=AFPM Nick Desaulniers <ndesaulniers@googl=
-e.com> wrote:
->
-> On Fri, Apr 7, 2023 at 12:27=E2=80=AFPM Kees Cook <keescook@chromium.org>=
- wrote:
-> >
-> > Since commit ba38961a069b ("um: Enable FORTIFY_SOURCE"), it's possible
-> > to run the FORTIFY tests under UML. Enable CONFIG_FORTIFY_SOURCE when
-> > running with --altests to gain additional coverage, and by default unde=
-r
->
-> two L's in alltest?
+Hi Kees,
 
-Also, while testing this series:
-```
-$ LLVM=3D1 ./tools/testing/kunit/kunit.py run
-...
-[16:40:09] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D fortify (=
-24 subtests) =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[16:40:09] [PASSED] known_sizes_test
-[16:40:09] [PASSED] control_flow_split_test
-[16:40:09] [PASSED] alloc_size_kmalloc_const_test
-[16:40:09]     # alloc_size_kmalloc_dynamic_test: EXPECTATION FAILED
-at lib/fortify_kunit.c:249
-[16:40:09]     Expected __builtin_dynamic_object_size(p, 1) =3D=3D expected=
-, but
-[16:40:09]         __builtin_dynamic_object_size(p, 1) =3D=3D -1
-(0xffffffffffffffff)
-[16:40:09]         expected =3D=3D 11 (0xb)
-[16:40:09] __alloc_size() not working with __bdos on kmemdup("hello
-there", len, gfp)
-[16:40:09] [FAILED] alloc_size_kmalloc_dynamic_test
-[16:40:09] [PASSED] alloc_size_vmalloc_const_test
-[16:40:09] [PASSED] alloc_size_vmalloc_dynamic_test
-[16:40:09] [PASSED] alloc_size_kvmalloc_const_test
-[16:40:09] [PASSED] alloc_size_kvmalloc_dynamic_test
-[16:40:09] [PASSED] alloc_size_devm_kmalloc_const_test
-[16:40:09] [PASSED] alloc_size_devm_kmalloc_dynamic_test
-[16:40:09] [PASSED] strlen_test
-[16:40:09] [PASSED] strnlen_test
-[16:40:09] [PASSED] strcpy_test
-[16:40:09] [PASSED] strncpy_test
-[16:40:09] [PASSED] strlcpy_test
-[16:40:09] [PASSED] strscpy_test
-[16:40:09] [PASSED] strcat_test
-[16:40:09] [PASSED] strncat_test
-[16:40:09] [PASSED] strlcat_test
-[16:40:09] [PASSED] memscan_test
-[16:40:09] [PASSED] memchr_test
-[16:40:09] [PASSED] memchr_inv_test
-[16:40:09] [PASSED] memcmp_test
-[16:40:09] [PASSED] kmemdup_test
-[16:40:09] # fortify: pass:23 fail:1 skip:0 total:24
-[16:40:09] # Totals: pass:23 fail:1 skip:0 total:24
-[16:40:09] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-[FAILED] fortify =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-```
-It would be cool to understand that failure in BDOS BEFORE turning on
-these tests by default.
+kernel test robot noticed the following build warnings:
 
->
-> > UML.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  tools/testing/kunit/configs/all_tests.config | 2 ++
-> >  tools/testing/kunit/configs/arch_uml.config  | 3 +++
-> >  2 files changed, 5 insertions(+)
-> >
-> > diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testi=
-ng/kunit/configs/all_tests.config
-> > index f990cbb73250..0393940c706a 100644
-> > --- a/tools/testing/kunit/configs/all_tests.config
-> > +++ b/tools/testing/kunit/configs/all_tests.config
-> > @@ -9,6 +9,8 @@ CONFIG_KUNIT=3Dy
-> >  CONFIG_KUNIT_EXAMPLE_TEST=3Dy
-> >  CONFIG_KUNIT_ALL_TESTS=3Dy
-> >
-> > +CONFIG_FORTIFY_SOURCE=3Dy
-> > +
-> >  CONFIG_IIO=3Dy
-> >
-> >  CONFIG_EXT4_FS=3Dy
-> > diff --git a/tools/testing/kunit/configs/arch_uml.config b/tools/testin=
-g/kunit/configs/arch_uml.config
-> > index e824ce43b05a..54ad8972681a 100644
-> > --- a/tools/testing/kunit/configs/arch_uml.config
-> > +++ b/tools/testing/kunit/configs/arch_uml.config
-> > @@ -3,3 +3,6 @@
-> >  # Enable virtio/pci, as a lot of tests require it.
-> >  CONFIG_VIRTIO_UML=3Dy
-> >  CONFIG_UML_PCI_OVER_VIRTIO=3Dy
-> > +
-> > +# Enable FORTIFY_SOURCE for wider checking.
-> > +CONFIG_FORTIFY_SOURCE=3Dy
-> > --
-> > 2.34.1
-> >
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
+[auto build test WARNING on kees/for-next/hardening]
+[also build test WARNING on kees/for-next/pstore kees/for-next/kspp linus/master tip/x86/core v6.3-rc5 next-20230406]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/kunit-tool-Enable-CONFIG_FORTIFY_SOURCE-under-UML/20230408-032959
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+patch link:    https://lore.kernel.org/r/20230407192717.636137-9-keescook%40chromium.org
+patch subject: [PATCH v2 09/10] fortify: Add KUnit tests for runtime overflows
+config: openrisc-randconfig-r034-20230405 (https://download.01.org/0day-ci/archive/20230408/202304080811.nYP4KpPZ-lkp@intel.com/config)
+compiler: or1k-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/d212962ef7682ee160bf38fa455475558f031759
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Kees-Cook/kunit-tool-Enable-CONFIG_FORTIFY_SOURCE-under-UML/20230408-032959
+        git checkout d212962ef7682ee160bf38fa455475558f031759
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=openrisc olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=openrisc SHELL=/bin/bash lib/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304080811.nYP4KpPZ-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from lib/fortify_kunit.c:28:
+   lib/fortify_kunit.c: In function 'strnlen_test':
+>> lib/fortify_kunit.c:412:31: warning: 'strnlen' specified bound 33 exceeds source size 32 [-Wstringop-overread]
+     412 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
+   include/kunit/test.h:584:38: note: in definition of macro 'KUNIT_BASE_BINARY_ASSERTION'
+     584 |         const typeof(left) __left = (left);                                    \
+         |                                      ^~~~
+   include/kunit/test.h:776:9: note: in expansion of macro 'KUNIT_BINARY_INT_ASSERTION'
+     776 |         KUNIT_BINARY_INT_ASSERTION(test,                                       \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/kunit/test.h:773:9: note: in expansion of macro 'KUNIT_EXPECT_EQ_MSG'
+     773 |         KUNIT_EXPECT_EQ_MSG(test, left, right, NULL)
+         |         ^~~~~~~~~~~~~~~~~~~
+   lib/fortify_kunit.c:412:9: note: in expansion of macro 'KUNIT_EXPECT_EQ'
+     412 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
+         |         ^~~~~~~~~~~~~~~
+   lib/fortify_kunit.c:359:14: note: source object allocated here
+     359 |         char buf[32];
+         |              ^~~
+   lib/fortify_kunit.c:414:31: warning: 'strnlen' specified bound 34 exceeds source size 32 [-Wstringop-overread]
+     414 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
+   include/kunit/test.h:584:38: note: in definition of macro 'KUNIT_BASE_BINARY_ASSERTION'
+     584 |         const typeof(left) __left = (left);                                    \
+         |                                      ^~~~
+   include/kunit/test.h:776:9: note: in expansion of macro 'KUNIT_BINARY_INT_ASSERTION'
+     776 |         KUNIT_BINARY_INT_ASSERTION(test,                                       \
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/kunit/test.h:773:9: note: in expansion of macro 'KUNIT_EXPECT_EQ_MSG'
+     773 |         KUNIT_EXPECT_EQ_MSG(test, left, right, NULL)
+         |         ^~~~~~~~~~~~~~~~~~~
+   lib/fortify_kunit.c:414:9: note: in expansion of macro 'KUNIT_EXPECT_EQ'
+     414 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
+         |         ^~~~~~~~~~~~~~~
+   lib/fortify_kunit.c:359:14: note: source object allocated here
+     359 |         char buf[32];
+         |              ^~~
 
 
+vim +/strnlen +412 lib/fortify_kunit.c
 
---=20
-Thanks,
-~Nick Desaulniers
+   387	
+   388	static void strnlen_test(struct kunit *test)
+   389	{
+   390		struct fortify_padding pad = { };
+   391		int i, end = sizeof(pad.buf) - 1;
+   392	
+   393		/* Fill 31 bytes with valid characters. */
+   394		for (i = 0; i < sizeof(pad.buf) - 1; i++)
+   395			pad.buf[i] = i + '0';
+   396		/* Trailing bytes are still %NUL. */
+   397		KUNIT_EXPECT_EQ(test, pad.buf[end], '\0');
+   398		KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
+   399	
+   400		/* String is terminated, so strnlen() is valid. */
+   401		KUNIT_EXPECT_EQ(test, strnlen(pad.buf, sizeof(pad.buf)), end);
+   402		KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
+   403		/* A truncated strnlen() will be safe, too. */
+   404		KUNIT_EXPECT_EQ(test, strnlen(pad.buf, sizeof(pad.buf) / 2),
+   405						sizeof(pad.buf) / 2);
+   406		KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
+   407	
+   408		/* Make string unterminated, and recount. */
+   409		pad.buf[end] = 'A';
+   410		end = sizeof(pad.buf);
+   411		/* Reading beyond with strncpy() will fail. */
+ > 412		KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
+   413		KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
+   414		KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
+   415		KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+   416	
+   417		/* Early-truncated is safe still, though. */
+   418		KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end), end);
+   419		KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+   420	
+   421		end = sizeof(pad.buf) / 2;
+   422		KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end), end);
+   423		KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+   424	}
+   425	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
