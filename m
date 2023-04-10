@@ -2,99 +2,85 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9F4C7619A
-	for <linux-hardening@archiver.kernel.org>; Sat,  8 Apr 2023 15:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65BDC76196
+	for <linux-hardening@archiver.kernel.org>; Mon, 10 Apr 2023 10:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbjDHPJO (ORCPT
+        id S229722AbjDJKGI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 8 Apr 2023 11:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
+        Mon, 10 Apr 2023 06:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjDHPJN (ORCPT
+        with ESMTP id S229741AbjDJKGG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 8 Apr 2023 11:09:13 -0400
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58B263581;
-        Sat,  8 Apr 2023 08:09:12 -0700 (PDT)
-Received: from mail.ispras.ru (unknown [83.149.199.84])
-        by mail.ispras.ru (Postfix) with ESMTPSA id A23EF44C1018;
-        Sat,  8 Apr 2023 15:09:10 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru A23EF44C1018
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-        s=default; t=1680966550;
-        bh=GGK8J8ROSB8RdorZJID1wyP7viogzq8rSNKxlSR5gEM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qkW7h3uFhxQENtEMvCwovNUZ1V5vIFL8XJpjCB48UfQQGAejq4BVt/MLhg63AQv1Y
-         OGvcwUsx4UxnIaB2MLHzeZsqzpE7WesfbUSqVKMuqmEhn7ivRlPVrxeecwAKFmBZy8
-         iUMLvkw+Ip6OHkVgxitYXHED+eupzRK3q7iaJWjQ=
+        Mon, 10 Apr 2023 06:06:06 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2742249EB;
+        Mon, 10 Apr 2023 03:06:04 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id z8so7575687lfb.12;
+        Mon, 10 Apr 2023 03:06:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1681121162;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ATMiUtX64qR0hwTrZDgb3RHiSTdBt+7AzkUE71TDEpA=;
+        b=gct+lbvYlrtdNbqog/h6bLfpEnPaE247rt+vXA19R+KcjQa2tfFmZW17wCi4DI9Ti1
+         hf5KHwycpKXUFQWY4eUvBpNGZq/47owrFhn85GJ9S6WEvuSsOJBYMo1UUfExhdZzPj0U
+         tvOZsbj2dKAnPc5e8c57rBnL4OcmZ1vcUf1DJWX7vPWA1Mk3ItkqvapId+/mnH0FXCoU
+         XeFC43Ej3DdXAc178xiG7+75caZijBIu3eBZni+DJ8PT7plHTJEwbJJ3eyhM1fEMSkkR
+         7hxoV1avDx5u2igYk860iu5jn0l2Wx2U3/rYawuYr3rP7Wkqhj/HU0J22gWTf+JN6Mek
+         /aBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681121162;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ATMiUtX64qR0hwTrZDgb3RHiSTdBt+7AzkUE71TDEpA=;
+        b=2toNQxEzRkoGpKB0EI8Z2mtf2vpqSsdVNFdLpyGNRBdCBxmBGRT3ETUhKsF9+IBZoE
+         6uGtt+iNQh0h3NxelgXKNKvyhWgQAoIhCNxlbDJaYN7JF5LZCR69rRrzSHMClBQ19Q0I
+         JjIxxVGv7iJ9auKWENuYPykqC/AuSH22KGAF+cHt0B4iSL62K0iootElpXS1Qi9s5o/3
+         kGKoEpPF94fkJnmUdEM14z1IZ6ItYmRN7DkxeBIHX9TzwAN9FpD4PX/E7HCcHDM0hquq
+         9jzI1QojPMgOvmnDm7Qy37PvBVkjgGB7F8lwGBchE4U8jCZla6DFnf0CIPPbDeTjwgdB
+         CEqw==
+X-Gm-Message-State: AAQBX9fAiuyp9SBgAkPxEDcAgPiRk1OLJxmCO4aWWBt7+O2Rwb1UrbFq
+        Pa+xxWGa2J9pAtn4GdZxjhFfELuztpU=
+X-Google-Smtp-Source: AKy350YPnoDYffi3mvhIikGdK6c67KY+WRWZhkyE4MK7NQ5GJr5B2lpdmBmV9SkFOP/gf5oNz80bJg==
+X-Received: by 2002:ac2:42c6:0:b0:4dd:cbf3:e981 with SMTP id n6-20020ac242c6000000b004ddcbf3e981mr2448219lfl.28.1681121162052;
+        Mon, 10 Apr 2023 03:06:02 -0700 (PDT)
+Received: from [192.168.1.13] (81-197-197-13.elisa-laajakaista.fi. [81.197.197.13])
+        by smtp.gmail.com with ESMTPSA id a17-20020a056512021100b00498f67cbfa9sm2045804lfo.22.2023.04.10.03.06.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Apr 2023 03:06:01 -0700 (PDT)
+Message-ID: <640c4327-0b40-f964-0b5b-c978683ac9ba@gmail.com>
+Date:   Mon, 10 Apr 2023 13:06:00 +0300
 MIME-Version: 1.0
-Date:   Sat, 08 Apr 2023 18:09:10 +0300
-From:   Evgeniy Baskov <baskov@ispras.ru>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Peter Jones <pjones@redhat.com>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        joeyli <jlee@suse.com>, lvc-project@linuxtesting.org,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v5 03/27] x86/boot: Set cr0 to known state in trampoline
-In-Reply-To: <20230405175441.GFZC214WxyhULbtl3P@fat_crate.local>
-References: <cover.1678785672.git.baskov@ispras.ru>
- <63368ff665956a64f07aee9bc863b70c86b8b0c8.1678785672.git.baskov@ispras.ru>
- <20230405175441.GFZC214WxyhULbtl3P@fat_crate.local>
-User-Agent: Roundcube Webmail/1.4.4
-Message-ID: <6910b36b28213b4b47bd3173d7be47f3@ispras.ru>
-X-Sender: baskov@ispras.ru
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Content-Language: en-US
+To:     linux-modules <linux-modules@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Topi Miettinen <toiwoton@gmail.com>
+Subject: Per-process flag set via prctl() to deny module loading?
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-04-05 20:54, Borislav Petkov wrote:
-> On Tue, Mar 14, 2023 at 01:13:30PM +0300, Evgeniy Baskov wrote:
->> Ensure WP bit to be set to prevent boot code from writing to
->> non-writable memory pages.
->> 
->> Tested-by: Mario Limonciello <mario.limonciello@amd.com>
->> Signed-off-by: Evgeniy Baskov <baskov@ispras.ru>
->> ---
->>  arch/x86/boot/compressed/head_64.S | 5 ++---
->>  1 file changed, 2 insertions(+), 3 deletions(-)
->> 
->> diff --git a/arch/x86/boot/compressed/head_64.S 
->> b/arch/x86/boot/compressed/head_64.S
->> index 03c4328a88cb..01fa42d31648 100644
->> --- a/arch/x86/boot/compressed/head_64.S
->> +++ b/arch/x86/boot/compressed/head_64.S
->> @@ -660,9 +660,8 @@ SYM_CODE_START(trampoline_32bit_src)
->>  	pushl	$__KERNEL_CS
->>  	pushl	%eax
->> 
->> -	/* Enable paging again. */
->> -	movl	%cr0, %eax
->> -	btsl	$X86_CR0_PG_BIT, %eax
->> +	/* Enable paging and set CR0 to known state (this also sets WP flag) 
->> */
->> +	movl	$CR0_STATE, %eax
-> 
-> This sets a lot more than WP. Why?
+I'd propose to add a per-process flag to irrevocably deny any loading of 
+kernel modules for the process and its children. The flag could be set 
+(but not unset) via prctl() and for unprivileged processes, only when 
+NoNewPrivileges is also set. This would be similar to CAP_SYS_MODULE, 
+but unlike capabilities, there would be no issues with namespaces since 
+the flag isn't namespaced.
 
-Because there are code paths where cr0 state is not initialized
-(e.g. the EFISTUB code path) and it's better to know it exactly.
-Although we don't actually care about MP, ET, NE and AM flags, but they
-should be all supported, so the choice was arbitrary. Also they are 
-already
-initialized to this value on one code path -- when the kernel started 
-its
-execution via startup_32.
+The implementation should be very simple.
 
-Thanks.
+Preferably the flag, when configured, would be set by systemd, Firejail 
+and maybe also container managers. The expectation would be that the 
+permission to load modules would be retained only by udev and where SUID 
+needs to be allowed (NoNewPrivileges unset).
+
+-Topi
