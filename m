@@ -2,100 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D82C77B6F
-	for <linux-hardening@archiver.kernel.org>; Mon, 10 Apr 2023 21:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AE1C76196
+	for <linux-hardening@archiver.kernel.org>; Mon, 10 Apr 2023 21:26:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229703AbjDJVEg (ORCPT
+        id S229778AbjDJV0B (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 10 Apr 2023 17:04:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48238 "EHLO
+        Mon, 10 Apr 2023 17:26:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbjDJVEf (ORCPT
+        with ESMTP id S229507AbjDJV0A (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 10 Apr 2023 17:04:35 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34DD10F6;
-        Mon, 10 Apr 2023 14:04:34 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id a23so8424236lfk.4;
-        Mon, 10 Apr 2023 14:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681160673;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ko7QXPbIjeGGHDhMu4npXiL/4qFqfqYW7bib84R6aNU=;
-        b=lpvPFtUOP3XhFCJ7Xk611x6D8hZ+kTQRj1OcX61VyNYNxN/okXXr2n0MjOXIdaRTEX
-         82X3Em+8AMDFbbbRUwRG8a7Xc8Lx6ZScGdRX6NOVgo6/cH1f86RKS1JERLXxS1ee5XPA
-         l0dbCOfG1OLPRgdNiWF/yFY+6oreawyFJAJXcKKVAVFo7+RtnECs3NkVfComi6WdiG/E
-         PHbInMiKfIX1fVzaco+up5yfev/cckrlYksisO9zJeMW2s46ujRMdGzrULItwIOWAlGv
-         FFwrQLY6qXbV7HTnuOXTLPO5fGmROzrgTQDGxMwKcvu4vXJRa3VB2WCbx8Y2YF4vFlGP
-         OE+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681160673;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ko7QXPbIjeGGHDhMu4npXiL/4qFqfqYW7bib84R6aNU=;
-        b=d0EHNhGhcbZCeo/EGesQwlkvp+Cm6tZxh6KxiW6axfmBPwxjutSNSAFxmq4aHj/YH7
-         AaIRHascIY5EAXpW6f4K2gaGckw9qiC9pXs6b8X4xRHU1o4ZA9G01eVENL5zMxARXEBi
-         t0gMX0lCtw87jlUdgOn0ADz4Z+ZstAb9DjaS3NAktVw//pS/9IKJRHsDvPeOD34O+tNM
-         J1spThnY5lqrkSuqe4sE5KYCztK9f1gJjh3Zx1UqYCoYvfPbUFCazInC4wm9r7S5EyUi
-         WvRn54ko7V4xkrVfUu763Y5CY4oVll6ZI1Rs90PICfhf8Kbv1lDykZfHhlmFF669CSb2
-         eKXQ==
-X-Gm-Message-State: AAQBX9dAAufEjkgMGKD0aOil/2xx6VT/WvI8V1N7+yLOXLJtA0lp14UK
-        dE7fTUwNfP+3E1zo88AvckqkT9WqHTY=
-X-Google-Smtp-Source: AKy350aaXf7tXMoq/bDIX5RcTUjwlvNj4/ZV58esCJnG/KA/wgu03yQ50TGQoFVlOrSEBxSV3L5hJg==
-X-Received: by 2002:ac2:5929:0:b0:4dc:828f:ef97 with SMTP id v9-20020ac25929000000b004dc828fef97mr3028369lfi.60.1681160672813;
-        Mon, 10 Apr 2023 14:04:32 -0700 (PDT)
-Received: from [192.168.1.13] (81-197-197-13.elisa-laajakaista.fi. [81.197.197.13])
-        by smtp.gmail.com with ESMTPSA id j25-20020a19f519000000b004d093d60f50sm2233167lfb.215.2023.04.10.14.04.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Apr 2023 14:04:32 -0700 (PDT)
-Message-ID: <52301293-0e21-2885-904b-776b82d5a18d@gmail.com>
-Date:   Tue, 11 Apr 2023 00:04:31 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: Per-process flag set via prctl() to deny module loading?
-Content-Language: en-US
-To:     Greg KH <gregkh@linuxfoundation.org>
+        Mon, 10 Apr 2023 17:26:00 -0400
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63FD1724;
+        Mon, 10 Apr 2023 14:25:58 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 47996320005D;
+        Mon, 10 Apr 2023 17:25:56 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 10 Apr 2023 17:25:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
+        cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1681161955; x=1681248355; bh=cr
+        TAf9yOGTm4ffk3dkC8Fr9jQPKpoUJV7Nw6WJRp4fI=; b=ZMWHI6FKcSv0sCDgFi
+        uPZrQ1mKE6+TX8kfNP7LfiZnT3/NpXwJU0rxlPterjMJmKoQpmBr05aSjwjSW0Nw
+        wZ8Nd+FwosARAgsTybYy547MeXFcpnoaK0bWMwV6pXKPDObgoSFbaN+3rcQZ3jVu
+        bqgLDARwkwRY+lpPsLJ4hJiCBeumV9+rEOBOFnEnR1111j8qxfwurz6hl0x6C+8S
+        gxUWCaMe4cunKcEBtuGdFpb4/BQ4nibFosDd/YmDJdzGol3ZUJbBHpSN9FcgppuC
+        aCfSkoLD1Lgn5yHPaQdMGPJtaxSBMFZwiAfdwmiNrQYYJZcm5wyp8EjIFIqN6j1n
+        nV5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1681161955; x=1681248355; bh=crTAf9yOGTm4f
+        fk3dkC8Fr9jQPKpoUJV7Nw6WJRp4fI=; b=GGuMnoQcq0Yms+h3gZFnXpEAtQSmf
+        hS8hh1TlPT22Or3+Lsz6ZeIwgXOtPBsHnPEIKKhIsStZwA6yQp9QtlFEwPCX1Mir
+        ajopvaLPpy3R1hnH8fdVl62MO3qfIyTBYXa9iNOR8jozv0AbfBLY7DV8auBX55KQ
+        RnLemdDzFStISulRMlPg1hizZcPm4y683TKTUbC6Mjun5BcsLF/RVWofaSfNj11P
+        ZPgNRCYVB+jja74ymrqVP96NOQRlkotqNkDC5gUWFzTfhz6/F73mXAEk3MGMW4vN
+        UOnVP9Ce00fD1emrHq9UZukPwxgQulpMkYVDgyqaoQKWT99AoF0uVnwGQ==
+X-ME-Sender: <xms:4340ZGoSPHbEjgF66C53lpbVX0885I86ngifQnhgCrQYSX1w2LJOHg>
+    <xme:4340ZEovzX2jd3yslFO-0IPCCEsO9FguqrCQ8KpCvjNdjYEjOsGXbcvVJriQ0Vk1J
+    -w7TgnGo98HJ66pwiM>
+X-ME-Received: <xmr:4340ZLP2caSw_jwecVD8gkLNSLMStsztUI1M_Le_Jmst3sDIC0XN8xGI1vojIQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdekvddgudeitdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhigt
+    hhhoucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtf
+    frrghtthgvrhhnpeeutedttefgjeefffehffffkeejueevieefudelgeejuddtfeffteek
+    lefhleelteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehthigthhhosehthigthhhordhpihiiiigr
+X-ME-Proxy: <xmx:4340ZF5IElT4BWljqMlWfF2mXm7ADpwfR0Qsd-RPiAGQ3lcjnoo63g>
+    <xmx:4340ZF4Iua-nECCv6X9y4NnNcwr0J41QIIUTEwLVY1kkM4w3pRFhBQ>
+    <xmx:4340ZFig28qwYamX-F2CUlnSAY_HbBTZIJPzj48QhyhPJReu3C5qUQ>
+    <xmx:4340ZPm4RknNUuIvm7ZHQW4f9SxRLKj5531W9iXktcFZxkd5Pz8iGg>
+Feedback-ID: i21f147d5:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 10 Apr 2023 17:25:54 -0400 (EDT)
+Date:   Mon, 10 Apr 2023 15:25:53 -0600
+From:   Tycho Andersen <tycho@tycho.pizza>
+To:     Topi Miettinen <toiwoton@gmail.com>
 Cc:     linux-modules <linux-modules@vger.kernel.org>,
         Kernel Hardening <kernel-hardening@lists.openwall.com>,
         "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: Per-process flag set via prctl() to deny module loading?
+Message-ID: <ZDR+4R4AKfnBcMOu@tycho.pizza>
 References: <640c4327-0b40-f964-0b5b-c978683ac9ba@gmail.com>
- <2023041010-vacation-scribble-ba46@gregkh>
-From:   Topi Miettinen <toiwoton@gmail.com>
-In-Reply-To: <2023041010-vacation-scribble-ba46@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <ZDQQ0B35NcYwQMyy@tycho.pizza>
+ <4017c904-9918-3e0c-b687-f55cfc5c4f4d@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4017c904-9918-3e0c-b687-f55cfc5c4f4d@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 10.4.2023 21.37, Greg KH wrote:
-> On Mon, Apr 10, 2023 at 01:06:00PM +0300, Topi Miettinen wrote:
->> I'd propose to add a per-process flag to irrevocably deny any loading of
->> kernel modules for the process and its children. The flag could be set (but
->> not unset) via prctl() and for unprivileged processes, only when
->> NoNewPrivileges is also set. This would be similar to CAP_SYS_MODULE, but
->> unlike capabilities, there would be no issues with namespaces since the flag
->> isn't namespaced.
->>
->> The implementation should be very simple.
+On Mon, Apr 10, 2023 at 11:47:16PM +0300, Topi Miettinen wrote:
+> On 10.4.2023 16.36, Tycho Andersen wrote:
+> > On Mon, Apr 10, 2023 at 01:06:00PM +0300, Topi Miettinen wrote:
+> > > I'd propose to add a per-process flag to irrevocably deny any loading of
+> > > kernel modules for the process and its children. The flag could be set (but
+> > > not unset) via prctl() and for unprivileged processes, only when
+> > > NoNewPrivileges is also set. This would be similar to CAP_SYS_MODULE, but
+> > > unlike capabilities, there would be no issues with namespaces since the flag
+> > > isn't namespaced.
+> > > 
+> > > The implementation should be very simple.
+> > > 
+> > > Preferably the flag, when configured, would be set by systemd, Firejail and
+> > > maybe also container managers. The expectation would be that the permission
+> > > to load modules would be retained only by udev and where SUID needs to be
+> > > allowed (NoNewPrivileges unset).
+> > 
+> > You can do something like this today via STATIC_USERMODEHELPER without
+> > the need for kernel patches. It is a bit heavyweight for a
+> > general-purpose system though.
 > 
-> Patches are always welcome to be reviewed.
-> 
-> But note, please watch out for processes that cause devices to be found,
-> and then modules to be loaded that way, it's not going to be as simple
-> as you might have imagined...
+> So the user mode helper would be launched whenever there is a module request
+> and it would check whether the process is allowed to load modules or not?
 
-A very simple version would only add a simple check like 
-!current->allow_module_load after every !capable(CAP_SYS_MODULE). It 
-wouldn't block all the ways how modules could be caused to be loaded 
-indirectly.
+Yes, exactly.
 
-I think a less simple version could also do the check at __request_module().
+> Does it know which process caused the module to be loaded and what were its
+> credentials at that time?
 
--Topi
+It doesn't know which process caused the module load, which is kind of
+unfortunate. It looks like you could stick it in the environment in
+kernel/kmod.c:call_modprobe() without breaking too many things,
+though.
 
+Tycho
