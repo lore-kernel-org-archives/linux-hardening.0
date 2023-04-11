@@ -2,119 +2,229 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AE1C76196
-	for <linux-hardening@archiver.kernel.org>; Mon, 10 Apr 2023 21:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E26C7619A
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Apr 2023 20:23:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbjDJV0B (ORCPT
+        id S229679AbjDKUXe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 10 Apr 2023 17:26:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34298 "EHLO
+        Tue, 11 Apr 2023 16:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjDJV0A (ORCPT
+        with ESMTP id S229491AbjDKUXb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 10 Apr 2023 17:26:00 -0400
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C63FD1724;
-        Mon, 10 Apr 2023 14:25:58 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 47996320005D;
-        Mon, 10 Apr 2023 17:25:56 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 10 Apr 2023 17:25:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-        cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1681161955; x=1681248355; bh=cr
-        TAf9yOGTm4ffk3dkC8Fr9jQPKpoUJV7Nw6WJRp4fI=; b=ZMWHI6FKcSv0sCDgFi
-        uPZrQ1mKE6+TX8kfNP7LfiZnT3/NpXwJU0rxlPterjMJmKoQpmBr05aSjwjSW0Nw
-        wZ8Nd+FwosARAgsTybYy547MeXFcpnoaK0bWMwV6pXKPDObgoSFbaN+3rcQZ3jVu
-        bqgLDARwkwRY+lpPsLJ4hJiCBeumV9+rEOBOFnEnR1111j8qxfwurz6hl0x6C+8S
-        gxUWCaMe4cunKcEBtuGdFpb4/BQ4nibFosDd/YmDJdzGol3ZUJbBHpSN9FcgppuC
-        aCfSkoLD1Lgn5yHPaQdMGPJtaxSBMFZwiAfdwmiNrQYYJZcm5wyp8EjIFIqN6j1n
-        nV5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1681161955; x=1681248355; bh=crTAf9yOGTm4f
-        fk3dkC8Fr9jQPKpoUJV7Nw6WJRp4fI=; b=GGuMnoQcq0Yms+h3gZFnXpEAtQSmf
-        hS8hh1TlPT22Or3+Lsz6ZeIwgXOtPBsHnPEIKKhIsStZwA6yQp9QtlFEwPCX1Mir
-        ajopvaLPpy3R1hnH8fdVl62MO3qfIyTBYXa9iNOR8jozv0AbfBLY7DV8auBX55KQ
-        RnLemdDzFStISulRMlPg1hizZcPm4y683TKTUbC6Mjun5BcsLF/RVWofaSfNj11P
-        ZPgNRCYVB+jja74ymrqVP96NOQRlkotqNkDC5gUWFzTfhz6/F73mXAEk3MGMW4vN
-        UOnVP9Ce00fD1emrHq9UZukPwxgQulpMkYVDgyqaoQKWT99AoF0uVnwGQ==
-X-ME-Sender: <xms:4340ZGoSPHbEjgF66C53lpbVX0885I86ngifQnhgCrQYSX1w2LJOHg>
-    <xme:4340ZEovzX2jd3yslFO-0IPCCEsO9FguqrCQ8KpCvjNdjYEjOsGXbcvVJriQ0Vk1J
-    -w7TgnGo98HJ66pwiM>
-X-ME-Received: <xmr:4340ZLP2caSw_jwecVD8gkLNSLMStsztUI1M_Le_Jmst3sDIC0XN8xGI1vojIQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdekvddgudeitdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefvhigt
-    hhhoucetnhguvghrshgvnhcuoehthigthhhosehthigthhhordhpihiiiigrqeenucggtf
-    frrghtthgvrhhnpeeutedttefgjeefffehffffkeejueevieefudelgeejuddtfeffteek
-    lefhleelteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpehthigthhhosehthigthhhordhpihiiiigr
-X-ME-Proxy: <xmx:4340ZF5IElT4BWljqMlWfF2mXm7ADpwfR0Qsd-RPiAGQ3lcjnoo63g>
-    <xmx:4340ZF4Iua-nECCv6X9y4NnNcwr0J41QIIUTEwLVY1kkM4w3pRFhBQ>
-    <xmx:4340ZFig28qwYamX-F2CUlnSAY_HbBTZIJPzj48QhyhPJReu3C5qUQ>
-    <xmx:4340ZPm4RknNUuIvm7ZHQW4f9SxRLKj5531W9iXktcFZxkd5Pz8iGg>
-Feedback-ID: i21f147d5:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 10 Apr 2023 17:25:54 -0400 (EDT)
-Date:   Mon, 10 Apr 2023 15:25:53 -0600
-From:   Tycho Andersen <tycho@tycho.pizza>
-To:     Topi Miettinen <toiwoton@gmail.com>
-Cc:     linux-modules <linux-modules@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Per-process flag set via prctl() to deny module loading?
-Message-ID: <ZDR+4R4AKfnBcMOu@tycho.pizza>
-References: <640c4327-0b40-f964-0b5b-c978683ac9ba@gmail.com>
- <ZDQQ0B35NcYwQMyy@tycho.pizza>
- <4017c904-9918-3e0c-b687-f55cfc5c4f4d@gmail.com>
+        Tue, 11 Apr 2023 16:23:31 -0400
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB663C3C;
+        Tue, 11 Apr 2023 13:23:04 -0700 (PDT)
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+        by cmsmtp with ESMTP
+        id m4a6puf6W7P45mKW6pPVKP; Tue, 11 Apr 2023 20:23:03 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id mKW5pYXOpuDdbmKW6p1png; Tue, 11 Apr 2023 20:23:02 +0000
+X-Authority-Analysis: v=2.4 cv=HM/Qq6hv c=1 sm=1 tr=0 ts=6435c1a6
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=d0f9/bL53tV7TyBwAeBj+g==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=dKHAf1wccvYA:10
+ a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=mDV3o1hIAAAA:8 a=VwQbUJbxAAAA:8
+ a=sIshrF94AAAA:8 a=Wzh0sZPFK0vZwZ7TA3YA:9 a=QEXdDO2ut3YA:10 a=3IOs8h2EC4YA:10
+ a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22 a=39svzKx7NMVfYuMjZabV:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:References:Cc:To:Subject:From:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vAQB5OrwRhZSt8DZNQ7EIcCPHq37jFquzX1qe3wm1Oo=; b=JyaVBGsKBehpvCeTF9OGrH2z+E
+        asL4PDUKYGZsAoJqI5w4voIUMHwuV7yRKOLxzK1P9BgOPWGq9gOaMFJcIVwB1c39aQ4mUQYV/j2Cc
+        oMwAo0BI7dm15+ksLAT+AlhTzllZi6fSnzpA3PxIKvdps1tONAQFBK+T0pT2h0EyzbM9scV59M+37
+        a3eddtGiNXT46j6MaGBtMLflnB/vRa7nFrbzcrhjd4buBtnfq4rASIKCyL2M1sZ3ru8oYGzjlwgCD
+        TDaAzVzyz5sD1Yj33PMNXEuLwDX52ETfp1xz0KSb8K+tlPY6RtP+L2ZsrszwgYI5u1tPgyBbIMgrP
+        NCqyUzgA==;
+Received: from 189.215.208.238.cable.dyn.cableonline.com.mx ([189.215.208.238]:14202 helo=[192.168.0.24])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1pmIsm-003i6h-P7;
+        Tue, 11 Apr 2023 13:38:20 -0500
+Message-ID: <cec9fa10-eb1e-dd5b-8ec0-579e87b5bc1d@embeddedor.com>
+Date:   Tue, 11 Apr 2023 12:39:06 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4017c904-9918-3e0c-b687-f55cfc5c4f4d@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] wifi: mt76: Replace zero-length array with
+ flexible-array member
+To:     Simon Horman <simon.horman@corigine.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
+References: <ZC7X7KCb+JEkPe5D@work> <ZC/FA/t1mzrRydD7@corigine.com>
+Content-Language: en-US
+In-Reply-To: <ZC/FA/t1mzrRydD7@corigine.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.215.208.238
+X-Source-L: No
+X-Exim-ID: 1pmIsm-003i6h-P7
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 189.215.208.238.cable.dyn.cableonline.com.mx ([192.168.0.24]) [189.215.208.238]:14202
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfDIrWkGexl/N/hqy94Tp3ZQKjXA/a/W9VOEuCcta6Fd5vUkEdsLrW4iPsqtmuj0EcMhPTOxFawjvk7A2na2U+swrymSfHwHyiv3bRHkpFJIkvsKJkKWw
+ 6bOW/vaY0lpqn9QnH0ZhqmfU1vc1MHB4akucAY17qc5pmix4tsGjM/eLblBd8LB0qBvTIMx/LJ8SnVBVVhSI6MBXsJtz3QhDje0PWjkN85QX0dR0ZzdoEBoK
+ oYRbebfpsXQEDsnmuhwW/qtBzZ6u5/t/UTuSJeGj1EhuwJ4nds0rfFYKeQSk3nh1AAKrUu+dwTaACVHWcPQNcl6aJleDDANHlW9pXMiOTq9n3Y91MzsNLAuT
+ i/XUsMLy
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Apr 10, 2023 at 11:47:16PM +0300, Topi Miettinen wrote:
-> On 10.4.2023 16.36, Tycho Andersen wrote:
-> > On Mon, Apr 10, 2023 at 01:06:00PM +0300, Topi Miettinen wrote:
-> > > I'd propose to add a per-process flag to irrevocably deny any loading of
-> > > kernel modules for the process and its children. The flag could be set (but
-> > > not unset) via prctl() and for unprivileged processes, only when
-> > > NoNewPrivileges is also set. This would be similar to CAP_SYS_MODULE, but
-> > > unlike capabilities, there would be no issues with namespaces since the flag
-> > > isn't namespaced.
-> > > 
-> > > The implementation should be very simple.
-> > > 
-> > > Preferably the flag, when configured, would be set by systemd, Firejail and
-> > > maybe also container managers. The expectation would be that the permission
-> > > to load modules would be retained only by udev and where SUID needs to be
-> > > allowed (NoNewPrivileges unset).
-> > 
-> > You can do something like this today via STATIC_USERMODEHELPER without
-> > the need for kernel patches. It is a bit heavyweight for a
-> > general-purpose system though.
+
+
+On 4/7/23 01:23, Simon Horman wrote:
+> On Thu, Apr 06, 2023 at 08:32:12AM -0600, Gustavo A. R. Silva wrote:
+>> Zero-length arrays are deprecated [1] and have to be replaced by C99
+>> flexible-array members.
+>>
+>> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+>> on memcpy() and help to make progress towards globally enabling
+>> -fstrict-flex-arrays=3 [2]
+>>
+>> Link: https://github.com/KSPP/linux/issues/78 [1]
+>> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > 
-> So the user mode helper would be launched whenever there is a module request
-> and it would check whether the process is allowed to load modules or not?
+> Reviewed-by: Simon Horman <simon.horman@corigine.com>
 
-Yes, exactly.
+Thanks :)
 
-> Does it know which process caused the module to be loaded and what were its
-> credentials at that time?
+> 
+>> ---
+>>   drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+>> index a5e6ee4daf92..9bf4b4199ee3 100644
+>> --- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+>> +++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+>> @@ -127,7 +127,7 @@ struct mt76_connac2_mcu_rxd {
+>>   	u8 rsv1[2];
+>>   	u8 s2d_index;
+>>   
+>> -	u8 tlv[0];
+>> +	u8 tlv[];
+>>   };
+>>   
+>>   struct mt76_connac2_patch_hdr {
+> 
+> Curiously -fstrict-flex-arrays=3 didn't flag this one in my environment,
+> Ubuntu Lunar.
 
-It doesn't know which process caused the module load, which is kind of
-unfortunate. It looks like you could stick it in the environment in
-kernel/kmod.c:call_modprobe() without breaking too many things,
-though.
+Yep; that's why I didn't include any warning message in the changelog text
+this time.
 
-Tycho
+And the reason for that is that tlv is not being indexed anywhere in the
+code. However, it's being used in the pointer arithmetic operation below:
+
+drivers/net/wireless/mediatek/mt76/mt7921/mcu.c:
+  164         rxd = (struct mt76_connac2_mcu_rxd *)skb->data;
+  165         grant = (struct mt7921_roc_grant_tlv *)(rxd->tlv + 4);
+
+
+which means that it can be considered as an array of size greater than zero
+at some point. Hence, it should be transformed into a C99 flexible array.
+
+> 
+>   gcc-13 --version
+>   gcc-13 (Ubuntu 13-20230320-1ubuntu1) 13.0.1 20230320 (experimental) [master r13-6759-g5194ad1958c]
+>   Copyright (C) 2023 Free Software Foundation, Inc.
+>   This is free software; see the source for copying conditions.  There is NO
+>   warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> 
+> I did, however, notice some other problems reported by gcc-13 with
+> -fstrict-flex-arrays=3 in drivers/net/wireless/mediatek/mt76
+> when run against net-next wireless. I've listed them in diff format below.
+> 
+> Are these on your radar too?
+
+Yep; those are being addressed here:
+
+https://lore.kernel.org/linux-hardening/ZBTUB%2FkJYQxq%2F6Cj@work/
+
+--
+Gustavo
+
+> 
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h b/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
+> index 35268b0890ad..d09bb4eed1ec 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
+> @@ -24,7 +24,7 @@ struct mt7921_asar_dyn {
+>   	u8 names[4];
+>   	u8 enable;
+>   	u8 nr_tbl;
+> -	struct mt7921_asar_dyn_limit tbl[0];
+> +	struct mt7921_asar_dyn_limit tbl[];
+>   } __packed;
+>   
+>   struct mt7921_asar_dyn_limit_v2 {
+> @@ -37,7 +37,7 @@ struct mt7921_asar_dyn_v2 {
+>   	u8 enable;
+>   	u8 rsvd;
+>   	u8 nr_tbl;
+> -	struct mt7921_asar_dyn_limit_v2 tbl[0];
+> +	struct mt7921_asar_dyn_limit_v2 tbl[];
+>   } __packed;
+>   
+>   struct mt7921_asar_geo_band {
+> @@ -55,7 +55,7 @@ struct mt7921_asar_geo {
+>   	u8 names[4];
+>   	u8 version;
+>   	u8 nr_tbl;
+> -	struct mt7921_asar_geo_limit tbl[0];
+> +	struct mt7921_asar_geo_limit tbl[];
+>   } __packed;
+>   
+>   struct mt7921_asar_geo_limit_v2 {
+> @@ -69,7 +69,7 @@ struct mt7921_asar_geo_v2 {
+>   	u8 version;
+>   	u8 rsvd;
+>   	u8 nr_tbl;
+> -	struct mt7921_asar_geo_limit_v2 tbl[0];
+> +	struct mt7921_asar_geo_limit_v2 tbl[];
+>   } __packed;
+>   
+>   struct mt7921_asar_cl {
+> @@ -85,7 +85,7 @@ struct mt7921_asar_fg {
+>   	u8 rsvd;
+>   	u8 nr_flag;
+>   	u8 rsvd1;
+> -	u8 flag[0];
+> +	u8 flag[];
+>   } __packed;
+>   
+>   struct mt7921_acpi_sar {
