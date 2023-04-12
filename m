@@ -2,160 +2,129 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A69C77B6E
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Apr 2023 12:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51983C77B6E
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Apr 2023 15:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230377AbjDLMfA (ORCPT
+        id S231299AbjDLPMN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Apr 2023 08:35:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46786 "EHLO
+        Wed, 12 Apr 2023 11:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230341AbjDLMet (ORCPT
+        with ESMTP id S229548AbjDLPMM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Apr 2023 08:34:49 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FC54EE1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Apr 2023 05:34:37 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id y186so11534700yby.13
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Apr 2023 05:34:37 -0700 (PDT)
+        Wed, 12 Apr 2023 11:12:12 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811564C1F
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Apr 2023 08:12:08 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id p8so11775084plk.9
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Apr 2023 08:12:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681302877;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1YXoQo6py9BlLlLB4luwS0T52CdFK6DSEsc9nX8DvME=;
-        b=m6oOMaq7AIpz/zpcB4O7LFlpyQPl17ZHtvQZoBkc3xWvlBktd8Ba6FJGqvuKUIcy1V
-         EyefnbJD4EHx3fWLpEyoXTjXuSTlsQP222pfKSbFQFhkMz/iSOSdw2q7Xx+G+T2Dc3l0
-         u9mAgIwLAC18tvLHMZzaXATUQqN60W0jjr0BPxu+CudLclmufl8TelDCAyQnYl5oN13N
-         WjuH8lo5pv3ZELSjxR+QJRA0mS7rWfHMLI/9UUimPO4jL+NSUm3gfaQbT6jc+QVivkim
-         fXsin3wqOPHiyj3fFNJr6/9dUgfjOVyIUWlwKSKHrJRsAEb/yahYst9Yd+hQsQ4xr8yA
-         e/rQ==
+        d=chromium.org; s=google; t=1681312328; x=1683904328;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=G+2dE/XzSoYgXLKmNcRjV06GDc4+0/b0Vl1y/hE9n7M=;
+        b=aeDFGpvbhptI26N7c0q6p8N0elzrhrH4jXsXeTNEjUyEmrYyXyguS0uqTeAQjP4Xiu
+         qdW1W55Dxz+ZLoGpJW6kOy66QNh2ekD+py7oe7R6tIR1j5Y/Cvcgeo8T0l2JKRmHvNLJ
+         j1WZnXp081ZVJbRr2ZvT1E4bX7MyYb2M8Ki3Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681302877;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1YXoQo6py9BlLlLB4luwS0T52CdFK6DSEsc9nX8DvME=;
-        b=UHaLM7gzhBDs67lsbwhJN2HlIqtFuDCTegGYpjEusvc65UR2z84WT3ITovAUv8bhjA
-         FBajQ3eXdMcwUdxLblaHA3m448CzDk42+0tWA4E6hT5BRvC0idBE/6cfnoA4iH/idIab
-         sDCK02i6jyze4RhbGBRFrJxEclsFOvpDPLmXffC33wKw2u2AkL3viygCuPwdxXC3T3wq
-         tE5kgAtM5vd7idL1JYrudbSvLAFrim1XQFFnVC+O9iDRZJ74JXhojinCsQ6X7v2xKoPp
-         VdGIEDnIEHqhJDy8LciYJkEH3/yMpc0DkZAz+HpEGsuLvNdKq0QymoOtYhVMT+OY6Ff4
-         bYtg==
-X-Gm-Message-State: AAQBX9dygfDQpTWnG1VDfk0fAzWjW2OdsojR1nVj7xm0+jygQFo+uh7E
-        xCKb12xCk1c8UogsPx7FYAldRgQJh86GvbeBeLmHSBRtiKhKwo6Q8gSCLA==
-X-Google-Smtp-Source: AKy350bgchv0LG5sx6bzIAWgGjZuU7bgT+7Hyw1P0akFhpQeWT7o7YMnyLaVTmDda+Kf4w5Mx7naI30fiNP/V8qR+eU=
-X-Received: by 2002:a05:6902:1206:b0:b8f:34a5:25b0 with SMTP id
- s6-20020a056902120600b00b8f34a525b0mr2481198ybu.27.1681302876634; Wed, 12 Apr
- 2023 05:34:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230405235832.never.487-kees@kernel.org> <20230406000212.3442647-3-keescook@chromium.org>
- <CAG_fn=V-3yxPihQdt+OJuOfF6sBuNvQ2OQfYNZak1xbx6viU2w@mail.gmail.com> <642f50b8.170a0220.95ab9.859f@mx.google.com>
-In-Reply-To: <642f50b8.170a0220.95ab9.859f@mx.google.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Wed, 12 Apr 2023 14:34:00 +0200
-Message-ID: <CAG_fn=VfHU7-ixnxXN=34nvnNyvfZ2QVgOVWfvj7AxKZR706bQ@mail.gmail.com>
-Subject: Re: [PATCH 3/9] string: Add Kunit tests for strcat() family
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Kees Cook <kees@outflux.net>,
-        Andy Shevchenko <andy@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
+        d=1e100.net; s=20210112; t=1681312328; x=1683904328;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G+2dE/XzSoYgXLKmNcRjV06GDc4+0/b0Vl1y/hE9n7M=;
+        b=jriE/oZBRDncU6hU83vYxEd30zG+0nWxiHUntmzg8EGBbcAkns4zyKNdzi6ydQSnLC
+         m8xSxjO5UO7RPrATHMacmsHriYm4fdW1EK2Zm3W4u+q1UWwhk5sTy3xI8XhXkTQitzc6
+         WNehnUmb9+Us2XcgC7UV5YwU9FY/RJ+gBQrtz2jTuwofRnyH4CwoBJHu723qJFTUYd8E
+         dj6xuKWyREztGj8FwcQvgUopCyM9tB6WMFvfIxxf4NO7dK2HCAxQJ4ui+d3fMT+vqySF
+         UXUhjN6WHc2lAdIyAu55M/Eb4sqK+REVas9lLPS2My2r2KXAm2OBvv8PaYw9f2lOY6AN
+         DkeA==
+X-Gm-Message-State: AAQBX9dl6CK4OpJql7zCaSLhyV5YZ6lZtSuJbrRilHUcoZJxfh68XXgD
+        5BT4iIcS/yCpGKEXEYiVudKFPA==
+X-Google-Smtp-Source: AKy350YBEJPE8oxKW+WKrzBNuJQ82N/lSby57TJKNApeGFAafpixV3EqtqR6r0kXgUhHbCjyxU4xFA==
+X-Received: by 2002:a05:6a20:b047:b0:db:6026:4393 with SMTP id dx7-20020a056a20b04700b000db60264393mr18616114pzb.59.1681312327946;
+        Wed, 12 Apr 2023 08:12:07 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u20-20020aa78494000000b005a8bf239f5csm5518679pfn.193.2023.04.12.08.12.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 08:12:07 -0700 (PDT)
+Message-ID: <6436ca47.a70a0220.e83cf.adf4@mx.google.com>
+X-Google-Original-Message-ID: <202304120811.@keescook>
+Date:   Wed, 12 Apr 2023 08:12:06 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Fangrui Song <maskray@google.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-hardening@vger.kernel.org, Tom Rix <trix@redhat.com>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH] ubsan: remove cc-option test for UBSAN_TRAP
+References: <20230407215406.768464-1-ndesaulniers@google.com>
+ <20230407215824.GA1524475@dev-arch.thelio-3990X>
+ <CAFP8O3+YzvwgeSS_GvU3oTtxunyUm8qMaAnV3Mt-ezTsxZ=Q0Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFP8O3+YzvwgeSS_GvU3oTtxunyUm8qMaAnV3Mt-ezTsxZ=Q0Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 7, 2023 at 1:07=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> On Thu, Apr 06, 2023 at 11:11:09AM +0200, Alexander Potapenko wrote:
-> > > +static void strncat_test(struct kunit *test)
-> > > +{
-> > > +       char dest[8];
-> > > +
-> > > +       /* Destination is terminated. */
-> > > +       memset(dest, 0, sizeof(dest));
-> > > +       KUNIT_EXPECT_EQ(test, strlen(dest), 0);
-> > > +       /* Empty copy of size 0 does nothing. */
-> > > +       KUNIT_EXPECT_TRUE(test, strncat(dest, "", 0) =3D=3D dest);
-> > > +       KUNIT_EXPECT_STREQ(test, dest, "");
-> > > +       /* Empty copy of size 1 does nothing too. */
-> > > +       KUNIT_EXPECT_TRUE(test, strncat(dest, "", 1) =3D=3D dest);
-> > > +       KUNIT_EXPECT_STREQ(test, dest, "");
-> > > +       /* Copy of max 0 characters should do nothing. */
-> > > +       KUNIT_EXPECT_TRUE(test, strncat(dest, "asdf", 0) =3D=3D dest)=
-;
-> > > +       KUNIT_EXPECT_STREQ(test, dest, "");
-> > > +
-> > > +       /* 4 characters copied in, even if max is 8. */
-> > > +       KUNIT_EXPECT_TRUE(test, strncat(dest, "four\000123", 8) =3D=
-=3D dest);
-> > > +       KUNIT_EXPECT_STREQ(test, dest, "four");
-> > > +       KUNIT_EXPECT_EQ(test, dest[5], '\0');
+On Tue, Apr 11, 2023 at 05:12:24PM -0700, Fangrui Song wrote:
+> On Fri, Apr 7, 2023 at 2:58 PM Nathan Chancellor <nathan@kernel.org> wrote:
 > >
-> > Maybe also add a test case for strncat(dest, "four", 4) that checks
-> > that the fourth byte of dest is not 0?
->
-> I think I don't understand what state you want to test for? The line
-> above (STREQ is checking dest is "four". Maybe I should check for
-> dest[6] being 0 as well as dest[5]. But if that's not what you mean, I'm
-> not sure. Is it something here:
+> > On Fri, Apr 07, 2023 at 02:54:06PM -0700, Nick Desaulniers wrote:
+> > > -fsanitize-undefined-trap-on-error has been supported since GCC 5.1 and
+> > > Clang 3.2.  The minimum supported version of these according to
+> > > Documentation/process/changes.rst is 5.1 and 11.0.0 respectively. Drop
+> > > this cc-option check.
+> > >
+> > > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> >
+> > Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+> >
+> > As an aside, we should really consider having some standard format of
+> > comment around cc-option checks so that we can easily remove them when
+> > they become stale...
+> >
+> > > ---
+> > > Masahiro, Kees: get_maintainer.pl leaves much to be desired for this
+> > > file. Can one of you please pick this up?
+> > >
+> > >  lib/Kconfig.ubsan | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > >
+> > > diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> > > index fd15230a703b..0e7ad0782399 100644
+> > > --- a/lib/Kconfig.ubsan
+> > > +++ b/lib/Kconfig.ubsan
+> > > @@ -15,7 +15,6 @@ if UBSAN
+> > >  config UBSAN_TRAP
+> > >       bool "On Sanitizer warnings, abort the running kernel code"
+> > >       depends on !COMPILE_TEST
+> > > -     depends on $(cc-option, -fsanitize-undefined-trap-on-error)
+> > >       help
+> > >         Building kernels with Sanitizer features enabled tends to grow
+> > >         the kernel size by around 5%, due to adding all the debugging
+> > > --
+> > > 2.40.0.577.gac1e443424-goog
+> > >
+> >
+> 
+> -fsanitize-undefined-trap-on-error is a legacy option from 2013 when
+> -fcatch-undefined-behavior instead of -fsanitize=undefined enabled
+> UBSan.
+> On the Clang side, http://reviews.llvm.org/D10464 added
+> -fsanitize-trap= in June 2015.
+> It's best to use -fsanitize-trap=undefined and avoid uses of
+> -fsanitize-undefined-trap-on-error.
 
-Sorry, not sure why I wrote "strncat" here, I was thinking about
-strncpy, which is handled in a different patch.
-Please disregard.
+But that's Clang-only. -fsanitize-undefined-trap-on-error works for both
+GCC and Clang.
 
-> char dest[16];
-> memset(dest, 0, sizeof(dest));
-> // dest =3D=3D ""
-> strncat(dest, "four", 4);
-> // dest =3D=3D "four"
-> strncat(dest, "four", 4);
-> // dest =3D=3D "fourfour"
->
-> strncat's "n" is how much to reach from source -- dest will always be
-> terminated.
->
-> --
-> Kees Cook
-
-
-
---=20
-Alexander Potapenko
-Software Engineer
-
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Liana Sebastian
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+-- 
+Kees Cook
