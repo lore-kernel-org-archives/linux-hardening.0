@@ -2,229 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E26C7619A
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Apr 2023 20:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD49FC7619A
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Apr 2023 00:12:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjDKUXe (ORCPT
+        id S229546AbjDLAMj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Apr 2023 16:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38410 "EHLO
+        Tue, 11 Apr 2023 20:12:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjDKUXb (ORCPT
+        with ESMTP id S229541AbjDLAMi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Apr 2023 16:23:31 -0400
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB663C3C;
-        Tue, 11 Apr 2023 13:23:04 -0700 (PDT)
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-        by cmsmtp with ESMTP
-        id m4a6puf6W7P45mKW6pPVKP; Tue, 11 Apr 2023 20:23:03 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id mKW5pYXOpuDdbmKW6p1png; Tue, 11 Apr 2023 20:23:02 +0000
-X-Authority-Analysis: v=2.4 cv=HM/Qq6hv c=1 sm=1 tr=0 ts=6435c1a6
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=d0f9/bL53tV7TyBwAeBj+g==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=dKHAf1wccvYA:10
- a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=mDV3o1hIAAAA:8 a=VwQbUJbxAAAA:8
- a=sIshrF94AAAA:8 a=Wzh0sZPFK0vZwZ7TA3YA:9 a=QEXdDO2ut3YA:10 a=3IOs8h2EC4YA:10
- a=_FVE-zBwftR9WsbkzFJk:22 a=AjGcO6oz07-iQ99wixmX:22 a=39svzKx7NMVfYuMjZabV:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:References:Cc:To:Subject:From:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vAQB5OrwRhZSt8DZNQ7EIcCPHq37jFquzX1qe3wm1Oo=; b=JyaVBGsKBehpvCeTF9OGrH2z+E
-        asL4PDUKYGZsAoJqI5w4voIUMHwuV7yRKOLxzK1P9BgOPWGq9gOaMFJcIVwB1c39aQ4mUQYV/j2Cc
-        oMwAo0BI7dm15+ksLAT+AlhTzllZi6fSnzpA3PxIKvdps1tONAQFBK+T0pT2h0EyzbM9scV59M+37
-        a3eddtGiNXT46j6MaGBtMLflnB/vRa7nFrbzcrhjd4buBtnfq4rASIKCyL2M1sZ3ru8oYGzjlwgCD
-        TDaAzVzyz5sD1Yj33PMNXEuLwDX52ETfp1xz0KSb8K+tlPY6RtP+L2ZsrszwgYI5u1tPgyBbIMgrP
-        NCqyUzgA==;
-Received: from 189.215.208.238.cable.dyn.cableonline.com.mx ([189.215.208.238]:14202 helo=[192.168.0.24])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1pmIsm-003i6h-P7;
-        Tue, 11 Apr 2023 13:38:20 -0500
-Message-ID: <cec9fa10-eb1e-dd5b-8ec0-579e87b5bc1d@embeddedor.com>
-Date:   Tue, 11 Apr 2023 12:39:06 -0600
+        Tue, 11 Apr 2023 20:12:38 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 919F044A3
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Apr 2023 17:12:36 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id w11so10217498pjh.5
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Apr 2023 17:12:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1681258356; x=1683850356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EUfNHvgbMHbCxR7Z5ej0J4OW6YiW5Ee09V0uQZNWLuA=;
+        b=yRuWuTRhiWx3XwFpc57Ol2M1IPyVrYtxZC3LJYOl+z6YsIP1MVABRg2+I1SYgCvB5r
+         9ma9A/JibUHa8FeY439yp5Z1o59QK0Jr36B5oqQWOJiPUjdfX83Yl8tuXtbQFh6gLWR8
+         dwnI3QGeP/PgL/C7Bi7zDPqNmKSIwYahqjJxsklqdeVWzEfsf3VWL64TZmkx+pwkwv7a
+         gY7m98i6jaFqo3atHGNZpP8nwW4Vil4325RnsXUn1l8VDrF2qkisVY/7Id5ooJQIC4gk
+         6zn380pEKuZ0vlDDYZsLg2fIGhtIJ61YuSVuQnxwtUt/6ag6cQGbY825Ls8Jf7Edy4hD
+         ff9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681258356; x=1683850356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EUfNHvgbMHbCxR7Z5ej0J4OW6YiW5Ee09V0uQZNWLuA=;
+        b=jPtYuHB80qQyLpwypD9AgVWMwM+oSAkaivgX2NXU7zWwZECUnj9A9CFTzsWi87TZ1s
+         tyPhrqN9cdtGl7jk6L5Z35MSAz6mis6XCYQcrfg7/KorZK8EDijt5M29jOTSaTVpUSXe
+         C+tmwyLGQ3txwbqUl9PwKYrreri4udi2M4v8+2okOTw/QuvjI+WR0c8syR5CHp6xz3wW
+         oZCQDEgBh1NoO1jFSymvU2Q80qzCd/YghbykYgyrx/Lm1m0sOx6HSmGW3AO2ly8g/qzh
+         dR9F4MiW4eoi7WyqZ3bbkWyoaLSRYFmMmzK+1p1BERFb6q6v0QfMNAHtL63z23k8vqKc
+         HVxA==
+X-Gm-Message-State: AAQBX9d4nl3aObRvdDxdd2Hgc7C5VV2YMYSF2l/HYeRpPIT2EYM/vC2a
+        ZfU9ydH8ej00AqQHz6M0K4EexVuGbKz5K506QmTl8A==
+X-Google-Smtp-Source: AKy350a6v0Bzy8uTYnPo43Z1a0p7U8LI2dM7an6ki1cKagG6JpglxhSHLcrBIVpCj5q+AYqQphGmoJQ/Nqm5Pnc108M=
+X-Received: by 2002:a17:90b:3641:b0:244:987c:a873 with SMTP id
+ nh1-20020a17090b364100b00244987ca873mr4635662pjb.7.1681258355815; Tue, 11 Apr
+ 2023 17:12:35 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH][next] wifi: mt76: Replace zero-length array with
- flexible-array member
-To:     Simon Horman <simon.horman@corigine.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Shayne Chen <shayne.chen@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
-References: <ZC7X7KCb+JEkPe5D@work> <ZC/FA/t1mzrRydD7@corigine.com>
-Content-Language: en-US
-In-Reply-To: <ZC/FA/t1mzrRydD7@corigine.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.215.208.238
-X-Source-L: No
-X-Exim-ID: 1pmIsm-003i6h-P7
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 189.215.208.238.cable.dyn.cableonline.com.mx ([192.168.0.24]) [189.215.208.238]:14202
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfDIrWkGexl/N/hqy94Tp3ZQKjXA/a/W9VOEuCcta6Fd5vUkEdsLrW4iPsqtmuj0EcMhPTOxFawjvk7A2na2U+swrymSfHwHyiv3bRHkpFJIkvsKJkKWw
- 6bOW/vaY0lpqn9QnH0ZhqmfU1vc1MHB4akucAY17qc5pmix4tsGjM/eLblBd8LB0qBvTIMx/LJ8SnVBVVhSI6MBXsJtz3QhDje0PWjkN85QX0dR0ZzdoEBoK
- oYRbebfpsXQEDsnmuhwW/qtBzZ6u5/t/UTuSJeGj1EhuwJ4nds0rfFYKeQSk3nh1AAKrUu+dwTaACVHWcPQNcl6aJleDDANHlW9pXMiOTq9n3Y91MzsNLAuT
- i/XUsMLy
+References: <20230407215406.768464-1-ndesaulniers@google.com> <20230407215824.GA1524475@dev-arch.thelio-3990X>
+In-Reply-To: <20230407215824.GA1524475@dev-arch.thelio-3990X>
+From:   Fangrui Song <maskray@google.com>
+Date:   Tue, 11 Apr 2023 17:12:24 -0700
+Message-ID: <CAFP8O3+YzvwgeSS_GvU3oTtxunyUm8qMaAnV3Mt-ezTsxZ=Q0Q@mail.gmail.com>
+Subject: Re: [PATCH] ubsan: remove cc-option test for UBSAN_TRAP
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Chancellor <nathan@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-hardening@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-kbuild@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Fri, Apr 7, 2023 at 2:58=E2=80=AFPM Nathan Chancellor <nathan@kernel.org=
+> wrote:
+>
+> On Fri, Apr 07, 2023 at 02:54:06PM -0700, Nick Desaulniers wrote:
+> > -fsanitize-undefined-trap-on-error has been supported since GCC 5.1 and
+> > Clang 3.2.  The minimum supported version of these according to
+> > Documentation/process/changes.rst is 5.1 and 11.0.0 respectively. Drop
+> > this cc-option check.
+> >
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+>
+> As an aside, we should really consider having some standard format of
+> comment around cc-option checks so that we can easily remove them when
+> they become stale...
+>
+> > ---
+> > Masahiro, Kees: get_maintainer.pl leaves much to be desired for this
+> > file. Can one of you please pick this up?
+> >
+> >  lib/Kconfig.ubsan | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/lib/Kconfig.ubsan b/lib/Kconfig.ubsan
+> > index fd15230a703b..0e7ad0782399 100644
+> > --- a/lib/Kconfig.ubsan
+> > +++ b/lib/Kconfig.ubsan
+> > @@ -15,7 +15,6 @@ if UBSAN
+> >  config UBSAN_TRAP
+> >       bool "On Sanitizer warnings, abort the running kernel code"
+> >       depends on !COMPILE_TEST
+> > -     depends on $(cc-option, -fsanitize-undefined-trap-on-error)
+> >       help
+> >         Building kernels with Sanitizer features enabled tends to grow
+> >         the kernel size by around 5%, due to adding all the debugging
+> > --
+> > 2.40.0.577.gac1e443424-goog
+> >
+>
+
+-fsanitize-undefined-trap-on-error is a legacy option from 2013 when
+-fcatch-undefined-behavior instead of -fsanitize=3Dundefined enabled
+UBSan.
+On the Clang side, http://reviews.llvm.org/D10464 added
+-fsanitize-trap=3D in June 2015.
+It's best to use -fsanitize-trap=3Dundefined and avoid uses of
+-fsanitize-undefined-trap-on-error.
 
 
-On 4/7/23 01:23, Simon Horman wrote:
-> On Thu, Apr 06, 2023 at 08:32:12AM -0600, Gustavo A. R. Silva wrote:
->> Zero-length arrays are deprecated [1] and have to be replaced by C99
->> flexible-array members.
->>
->> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
->> on memcpy() and help to make progress towards globally enabling
->> -fstrict-flex-arrays=3 [2]
->>
->> Link: https://github.com/KSPP/linux/issues/78 [1]
->> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Reviewed-by: Simon Horman <simon.horman@corigine.com>
 
-Thanks :)
-
-> 
->> ---
->>   drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
->> index a5e6ee4daf92..9bf4b4199ee3 100644
->> --- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
->> +++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
->> @@ -127,7 +127,7 @@ struct mt76_connac2_mcu_rxd {
->>   	u8 rsv1[2];
->>   	u8 s2d_index;
->>   
->> -	u8 tlv[0];
->> +	u8 tlv[];
->>   };
->>   
->>   struct mt76_connac2_patch_hdr {
-> 
-> Curiously -fstrict-flex-arrays=3 didn't flag this one in my environment,
-> Ubuntu Lunar.
-
-Yep; that's why I didn't include any warning message in the changelog text
-this time.
-
-And the reason for that is that tlv is not being indexed anywhere in the
-code. However, it's being used in the pointer arithmetic operation below:
-
-drivers/net/wireless/mediatek/mt76/mt7921/mcu.c:
-  164         rxd = (struct mt76_connac2_mcu_rxd *)skb->data;
-  165         grant = (struct mt7921_roc_grant_tlv *)(rxd->tlv + 4);
-
-
-which means that it can be considered as an array of size greater than zero
-at some point. Hence, it should be transformed into a C99 flexible array.
-
-> 
->   gcc-13 --version
->   gcc-13 (Ubuntu 13-20230320-1ubuntu1) 13.0.1 20230320 (experimental) [master r13-6759-g5194ad1958c]
->   Copyright (C) 2023 Free Software Foundation, Inc.
->   This is free software; see the source for copying conditions.  There is NO
->   warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-> 
-> I did, however, notice some other problems reported by gcc-13 with
-> -fstrict-flex-arrays=3 in drivers/net/wireless/mediatek/mt76
-> when run against net-next wireless. I've listed them in diff format below.
-> 
-> Are these on your radar too?
-
-Yep; those are being addressed here:
-
-https://lore.kernel.org/linux-hardening/ZBTUB%2FkJYQxq%2F6Cj@work/
-
---
-Gustavo
-
-> 
-> diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h b/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
-> index 35268b0890ad..d09bb4eed1ec 100644
-> --- a/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
-> +++ b/drivers/net/wireless/mediatek/mt76/mt7921/acpi_sar.h
-> @@ -24,7 +24,7 @@ struct mt7921_asar_dyn {
->   	u8 names[4];
->   	u8 enable;
->   	u8 nr_tbl;
-> -	struct mt7921_asar_dyn_limit tbl[0];
-> +	struct mt7921_asar_dyn_limit tbl[];
->   } __packed;
->   
->   struct mt7921_asar_dyn_limit_v2 {
-> @@ -37,7 +37,7 @@ struct mt7921_asar_dyn_v2 {
->   	u8 enable;
->   	u8 rsvd;
->   	u8 nr_tbl;
-> -	struct mt7921_asar_dyn_limit_v2 tbl[0];
-> +	struct mt7921_asar_dyn_limit_v2 tbl[];
->   } __packed;
->   
->   struct mt7921_asar_geo_band {
-> @@ -55,7 +55,7 @@ struct mt7921_asar_geo {
->   	u8 names[4];
->   	u8 version;
->   	u8 nr_tbl;
-> -	struct mt7921_asar_geo_limit tbl[0];
-> +	struct mt7921_asar_geo_limit tbl[];
->   } __packed;
->   
->   struct mt7921_asar_geo_limit_v2 {
-> @@ -69,7 +69,7 @@ struct mt7921_asar_geo_v2 {
->   	u8 version;
->   	u8 rsvd;
->   	u8 nr_tbl;
-> -	struct mt7921_asar_geo_limit_v2 tbl[0];
-> +	struct mt7921_asar_geo_limit_v2 tbl[];
->   } __packed;
->   
->   struct mt7921_asar_cl {
-> @@ -85,7 +85,7 @@ struct mt7921_asar_fg {
->   	u8 rsvd;
->   	u8 nr_flag;
->   	u8 rsvd1;
-> -	u8 flag[0];
-> +	u8 flag[];
->   } __packed;
->   
->   struct mt7921_acpi_sar {
+--=20
+=E5=AE=8B=E6=96=B9=E7=9D=BF
