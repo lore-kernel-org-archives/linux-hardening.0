@@ -2,32 +2,32 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8EBC77B61
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Apr 2023 14:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E11C77B71
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Apr 2023 14:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230324AbjDMOmv (ORCPT
+        id S230362AbjDMOmw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Apr 2023 10:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37072 "EHLO
+        Thu, 13 Apr 2023 10:42:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbjDMOmu (ORCPT
+        with ESMTP id S230281AbjDMOmv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Apr 2023 10:42:50 -0400
+        Thu, 13 Apr 2023 10:42:51 -0400
 Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94AF4EFD
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9B349EE0
         for <linux-hardening@vger.kernel.org>; Thu, 13 Apr 2023 07:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1681396536; bh=rfau5OufM0BiNWhby4onOK71jyUiBVhrPZSigYK+sks=;
+        t=1681396556; bh=X9rNsbyg8P2zc9bEIgObTak89L4pwM16nNASnZu43Cs=;
         h=From:To:Subject:Date:Message-Id:MIME-Version;
-        b=OxAmEuHTfbSVCKdAfkQv02ZaI1VeZo+oqjWjiC0NDnzKYZ3QYcB9qQyCqVjceU2ns
-         rxhuI69vMigg8bi+XZKz1aHRqvd2Fh79cHKvc0lQ77ndsMQ05s7rXerNHiGe+prOm1
-         gOsnVWdqjcuh0XBYfv+WIC50Ias0u2u6N7+9OgmvK90VpGloW7Ibfedr8mrjBZ6jDz
-         AowZ4/ypEnQjcdRWoM2TE4resLxelcNFFJZl/CWzbHUKZRTSPNDZ9ODt+1/nfQv6xg
-         6hLraqC7BpImr5CalHFlNHbXvDZAuL1MHtuYMiiJly2ZfZGeuwTLB36ChB3fqlHhkG
-         RAmlX0Fi5l1hQ==
+        b=WOd2wAMW+qWyWk2cozpwKyj07x00lw52yUR5HaZdPGBbmkRAsTWGwqtV4xojlHTRU
+         lrn2hlJ0NoQXTg/RXGrmpXYosF0+ezrHGt6IvOMYzpxxh0gWREg8Exc5Ll4cgJ6QpN
+         WFuOLwbBjXRATVVksmR+4UgxmIFNurKRNZax42wcu13DClam0KAovkAc4dbIb7KIil
+         5evduAa7H3S4EyyGES25mPnXNjuR+FY6LJ8ALnPYP7zkmHkoswxvMea3Ln8HZsqRad
+         WKV4ZpV7JX8ZnLUOwJg1kHzSuSNFoUeuPsyIi1ziiNT7RjrJR6CrMg+Fhcrcay2kYH
+         V94yuCgc8bh/A==
 Received: from xiongwei.. (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-        by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id 540711805A0;
-        Thu, 13 Apr 2023 14:35:30 +0000 (UTC)
+        by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id 2010B18065F;
+        Thu, 13 Apr 2023 14:35:50 +0000 (UTC)
 From:   sxwjean@me.com
 To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
         iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
@@ -36,22 +36,22 @@ To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         Xiongwei Song <xiongwei.song@windriver.com>
-Subject: [PATCH 1/5] slub: Correct the error code when slab_kset is NULL
-Date:   Thu, 13 Apr 2023 22:34:48 +0800
-Message-Id: <20230413143452.211250-2-sxwjean@me.com>
+Subject: [PATCH 4/5] slub: Remove slabs_node() function
+Date:   Thu, 13 Apr 2023 22:34:51 +0800
+Message-Id: <20230413143452.211250-5-sxwjean@me.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230413143452.211250-1-sxwjean@me.com>
 References: <20230413143452.211250-1-sxwjean@me.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 51lpZUJemfRvfvuXf7GNT1NeHV8UTyvG
-X-Proofpoint-ORIG-GUID: 51lpZUJemfRvfvuXf7GNT1NeHV8UTyvG
+X-Proofpoint-GUID: kXvLyGF-H8usFLhMixCBzmU7tdwWLDs3
+X-Proofpoint-ORIG-GUID: kXvLyGF-H8usFLhMixCBzmU7tdwWLDs3
 X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
  =?UTF-8?Q?2903e8d5c8f:6.0.517,18.0.883,17.0.605.474.0000000_definitions?=
  =?UTF-8?Q?=3D2022-06-21=5F08:2022-06-21=5F01,2022-06-21=5F08,2020-01-23?=
  =?UTF-8?Q?=5F02_signatures=3D0?=
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=989
+ bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
  mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2209130000 definitions=main-2304130130
 Precedence: bulk
@@ -60,28 +60,72 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Xiongwei Song <xiongwei.song@windriver.com>
 
-The -ENOSYS is inproper when kset_create_and_add call returns a NULL
-pointer, the failure more likely is because lacking memory, hence
-returning -ENOMEM is better.
+When traversing nodes one by one, the get_node() function called in
+for_each_kmem_cache_node macro, no need to call get_node() again in
+slabs_node(), just reading nr_slabs field should be enough. However, the
+node_nr_slabs() function can do this. Hence, the slabs_node() function
+is not needed anymore.
 
 Signed-off-by: Xiongwei Song <xiongwei.song@windriver.com>
 ---
- mm/slub.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/slub.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 28ca576d988d..5cc56f780241 100644
+index d897df8fe7e7..33b4fec6bc7a 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -6225,7 +6225,7 @@ static int __init slab_sysfs_init(void)
- 	if (!slab_kset) {
- 		mutex_unlock(&slab_mutex);
- 		pr_err("Cannot register slab subsystem.\n");
--		return -ENOSYS;
-+		return -ENOMEM;
+@@ -1344,14 +1344,6 @@ static void remove_full(struct kmem_cache *s, struct kmem_cache_node *n, struct
+ 	list_del(&slab->slab_list);
+ }
+ 
+-/* Tracking of the number of slabs for debugging purposes */
+-static inline unsigned long slabs_node(struct kmem_cache *s, int node)
+-{
+-	struct kmem_cache_node *n = get_node(s, node);
+-
+-	return atomic_long_read(&n->nr_slabs);
+-}
+-
+ static inline unsigned long node_nr_slabs(struct kmem_cache_node *n)
+ {
+ 	return atomic_long_read(&n->nr_slabs);
+@@ -1722,8 +1714,6 @@ slab_flags_t kmem_cache_flags(unsigned int object_size,
+ 
+ #define disable_higher_order_debug 0
+ 
+-static inline unsigned long slabs_node(struct kmem_cache *s, int node)
+-							{ return 0; }
+ static inline unsigned long node_nr_slabs(struct kmem_cache_node *n)
+ 							{ return 0; }
+ static inline void inc_slabs_node(struct kmem_cache *s, int node,
+@@ -4599,7 +4589,7 @@ bool __kmem_cache_empty(struct kmem_cache *s)
+ 	struct kmem_cache_node *n;
+ 
+ 	for_each_kmem_cache_node(s, node, n)
+-		if (n->nr_partial || slabs_node(s, node))
++		if (n->nr_partial || node_nr_slabs(n))
+ 			return false;
+ 	return true;
+ }
+@@ -4616,7 +4606,7 @@ int __kmem_cache_shutdown(struct kmem_cache *s)
+ 	/* Attempt to free all objects */
+ 	for_each_kmem_cache_node(s, node, n) {
+ 		free_partial(s, n);
+-		if (n->nr_partial || slabs_node(s, node))
++		if (n->nr_partial || node_nr_slabs(n))
+ 			return 1;
+ 	}
+ 	return 0;
+@@ -4829,7 +4819,7 @@ static int __kmem_cache_do_shrink(struct kmem_cache *s)
+ 		list_for_each_entry_safe(slab, t, &discard, slab_list)
+ 			free_slab(s, slab);
+ 
+-		if (slabs_node(s, node))
++		if (node_nr_slabs(n))
+ 			ret = 1;
  	}
  
- 	slab_state = FULL;
 -- 
 2.30.2
 
