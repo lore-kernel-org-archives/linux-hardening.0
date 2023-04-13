@@ -2,118 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197A9C77B6E
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Apr 2023 14:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8EBC77B61
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Apr 2023 14:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbjDMOOp (ORCPT
+        id S230324AbjDMOmv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Apr 2023 10:14:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47372 "EHLO
+        Thu, 13 Apr 2023 10:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230281AbjDMOOo (ORCPT
+        with ESMTP id S229571AbjDMOmu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Apr 2023 10:14:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D42742D4E;
-        Thu, 13 Apr 2023 07:14:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6FFC563EFF;
-        Thu, 13 Apr 2023 14:14:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A3DC433EF;
-        Thu, 13 Apr 2023 14:14:37 +0000 (UTC)
-Date:   Thu, 13 Apr 2023 15:14:34 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Marco Elver <elver@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jakub Jelinek <jakub@redhat.com>,
-        linux-toolchains@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, linux-kbuild@vger.kernel.org,
+        Thu, 13 Apr 2023 10:42:50 -0400
+Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D94AF4EFD
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Apr 2023 07:42:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1681396536; bh=rfau5OufM0BiNWhby4onOK71jyUiBVhrPZSigYK+sks=;
+        h=From:To:Subject:Date:Message-Id:MIME-Version;
+        b=OxAmEuHTfbSVCKdAfkQv02ZaI1VeZo+oqjWjiC0NDnzKYZ3QYcB9qQyCqVjceU2ns
+         rxhuI69vMigg8bi+XZKz1aHRqvd2Fh79cHKvc0lQ77ndsMQ05s7rXerNHiGe+prOm1
+         gOsnVWdqjcuh0XBYfv+WIC50Ias0u2u6N7+9OgmvK90VpGloW7Ibfedr8mrjBZ6jDz
+         AowZ4/ypEnQjcdRWoM2TE4resLxelcNFFJZl/CWzbHUKZRTSPNDZ9ODt+1/nfQv6xg
+         6hLraqC7BpImr5CalHFlNHbXvDZAuL1MHtuYMiiJly2ZfZGeuwTLB36ChB3fqlHhkG
+         RAmlX0Fi5l1hQ==
+Received: from xiongwei.. (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
+        by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id 540711805A0;
+        Thu, 13 Apr 2023 14:35:30 +0000 (UTC)
+From:   sxwjean@me.com
+To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
+        roman.gushchin@linux.dev, 42.hyeyoo@gmail.com,
+        keescook@chromium.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: Re: [PATCH v5 1/4] kasan: Emit different calls for instrumentable
- memintrinsics
-Message-ID: <ZDgOSp30Ec00u8wP@arm.com>
-References: <20230224085942.1791837-1-elver@google.com>
+        Xiongwei Song <xiongwei.song@windriver.com>
+Subject: [PATCH 1/5] slub: Correct the error code when slab_kset is NULL
+Date:   Thu, 13 Apr 2023 22:34:48 +0800
+Message-Id: <20230413143452.211250-2-sxwjean@me.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230413143452.211250-1-sxwjean@me.com>
+References: <20230413143452.211250-1-sxwjean@me.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230224085942.1791837-1-elver@google.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 51lpZUJemfRvfvuXf7GNT1NeHV8UTyvG
+X-Proofpoint-ORIG-GUID: 51lpZUJemfRvfvuXf7GNT1NeHV8UTyvG
+X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
+ =?UTF-8?Q?2903e8d5c8f:6.0.517,18.0.883,17.0.605.474.0000000_definitions?=
+ =?UTF-8?Q?=3D2022-06-21=5F08:2022-06-21=5F01,2022-06-21=5F08,2020-01-23?=
+ =?UTF-8?Q?=5F02_signatures=3D0?=
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=989
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2209130000 definitions=main-2304130130
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Marco,
+From: Xiongwei Song <xiongwei.song@windriver.com>
 
-On Fri, Feb 24, 2023 at 09:59:39AM +0100, Marco Elver wrote:
-> Clang 15 provides an option to prefix memcpy/memset/memmove calls with
-> __asan_/__hwasan_ in instrumented functions: https://reviews.llvm.org/D122724
-> 
-> GCC will add support in future:
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108777
-> 
-> Use it to regain KASAN instrumentation of memcpy/memset/memmove on
-> architectures that require noinstr to be really free from instrumented
-> mem*() functions (all GENERIC_ENTRY architectures).
-> 
-> Fixes: 69d4c0d32186 ("entry, kasan, x86: Disallow overriding mem*() functions")
-> Signed-off-by: Marco Elver <elver@google.com>
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
-> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-[...]
-> diff --git a/scripts/Makefile.kasan b/scripts/Makefile.kasan
-> index b9e94c5e7097..fa9f836f8039 100644
-> --- a/scripts/Makefile.kasan
-> +++ b/scripts/Makefile.kasan
-> @@ -38,6 +38,11 @@ endif
->  
->  CFLAGS_KASAN += $(call cc-param,asan-stack=$(stack_enable))
->  
-> +# Instrument memcpy/memset/memmove calls by using instrumented __asan_mem*()
-> +# instead. With compilers that don't support this option, compiler-inserted
-> +# memintrinsics won't be checked by KASAN on GENERIC_ENTRY architectures.
-> +CFLAGS_KASAN += $(call cc-param,asan-kernel-mem-intrinsic-prefix=1)
-> +
->  endif # CONFIG_KASAN_GENERIC
->  
->  ifdef CONFIG_KASAN_SW_TAGS
-> @@ -54,6 +59,9 @@ CFLAGS_KASAN := -fsanitize=kernel-hwaddress \
->  		$(call cc-param,hwasan-inline-all-checks=0) \
->  		$(instrumentation_flags)
->  
-> +# Instrument memcpy/memset/memmove calls by using instrumented __hwasan_mem*().
-> +CFLAGS_KASAN += $(call cc-param,hwasan-kernel-mem-intrinsic-prefix=1)
+The -ENOSYS is inproper when kset_create_and_add call returns a NULL
+pointer, the failure more likely is because lacking memory, hence
+returning -ENOMEM is better.
 
-This patch breaks the arm64 kernel builds with KASAN_SW_TAGS enabled and
-clang prior to version 15. Those prior clang versions don't like the
-'-mllvm -hwasan-kernel-mem-intrinsic-prefix=1' option, end up printing
-the help text instead of generating the object.
+Signed-off-by: Xiongwei Song <xiongwei.song@windriver.com>
+---
+ mm/slub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Do we need some combination of cc-option and cc-param? Or at least
-disable this instrumentation if earlier clang versions are used.
-
-It's already in mainline as commit
-51287dcb00cc715c27bf6a6b4dbd431621c5b65a.
-
-Thanks.
-
+diff --git a/mm/slub.c b/mm/slub.c
+index 28ca576d988d..5cc56f780241 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -6225,7 +6225,7 @@ static int __init slab_sysfs_init(void)
+ 	if (!slab_kset) {
+ 		mutex_unlock(&slab_mutex);
+ 		pr_err("Cannot register slab subsystem.\n");
+-		return -ENOSYS;
++		return -ENOMEM;
+ 	}
+ 
+ 	slab_state = FULL;
 -- 
-Catalin
+2.30.2
+
