@@ -2,32 +2,32 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2BCC77B6E
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Apr 2023 14:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F245C77B71
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Apr 2023 14:43:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230352AbjDMOmy (ORCPT
+        id S230254AbjDMOmy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Thu, 13 Apr 2023 10:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37112 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230360AbjDMOmw (ORCPT
+        with ESMTP id S230352AbjDMOmw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 13 Apr 2023 10:42:52 -0400
 Received: from pv50p00im-ztdg10011301.me.com (pv50p00im-ztdg10011301.me.com [17.58.6.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A9A4EFD
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Apr 2023 07:42:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9798558B
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Apr 2023 07:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-        t=1681396543; bh=8jRYHdyOLx4stczwHdVkraZpDl6WNFY1n6xs2s88Ih4=;
+        t=1681396550; bh=JAgRIwnVPHjbTYshg0Cq1C5avnVLUoxXJ3pl2kvDPSY=;
         h=From:To:Subject:Date:Message-Id:MIME-Version;
-        b=XcKoR5cL/+upnaXqW5vEFVtkOztLb/OPL22EeKcuRy5aCKbMwJbI0lmkNMOd97cF8
-         U4nWgm3EJLu3+KVDvf2gpegVHJId7BREhcCxvx0qgyQyLCBDTjraGch7/Mh+sNnUpG
-         92/s8k/7x+2YqeGtk54ynj7p2UiHQ7d14zQlskNXll1HQ2Y1ksAoVjU0kHOYzrYiPh
-         O4AJHBWOs1x1gkwS9kM8kB0zDEJDbBt+ipH34112Kl8ECnMt0m7FFOWkdnvWUFNQsi
-         BPcQeMwhwXLQhEceqI+c8OpkxVYB4WBRjjstjTcPZrynKlB+GOgOZrkIwuBvUOfAV7
-         O7Z4mjnAAXeZQ==
+        b=xO/T7yXeroPIvZvyiZbh8x1/X/oIWsBNuf3i2Jxqpee4hQabZaqIUSllys6W3vKOm
+         fhBd5rqPfi0VHzmUG9xcCqs8YguaGRJxQfSBNX2RKZgR3Tlwc58xclavJ+aEuMUzDp
+         e+MMrxFCGJH3sSBXM1INcprrw70wNtK4REsFYbv98wbX7EM8cHX+lQQUUVBqFY7Dq6
+         /ezTu0fwfSbI+qIgj5EbOxPknN9Z23QwKU4ckcDnydsfIrNH1Ov3I9Qa1QnevgbUFT
+         /Y/EKM+m8TSExEgq4Ox2jjM0CBZTPFZL/jgPmrlbTSuScAJTlidSuIG7euqikTjLSx
+         IuTLBj7bt7/LA==
 Received: from xiongwei.. (pv50p00im-dlb-asmtp-mailmevip.me.com [17.56.9.10])
-        by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id 95D4518043E;
-        Thu, 13 Apr 2023 14:35:37 +0000 (UTC)
+        by pv50p00im-ztdg10011301.me.com (Postfix) with ESMTPSA id BE746180985;
+        Thu, 13 Apr 2023 14:35:43 +0000 (UTC)
 From:   sxwjean@me.com
 To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
         iamjoonsoo.kim@lge.com, akpm@linux-foundation.org, vbabka@suse.cz,
@@ -36,22 +36,22 @@ To:     cl@linux.com, penberg@kernel.org, rientjes@google.com,
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         Xiongwei Song <xiongwei.song@windriver.com>
-Subject: [PATCH 2/5] slub: Put objects_show() into CONFIG_SLUB_DEBUG enabled block
-Date:   Thu, 13 Apr 2023 22:34:49 +0800
-Message-Id: <20230413143452.211250-3-sxwjean@me.com>
+Subject: [PATCH 3/5] slub: Remove CONFIG_SMP defined check
+Date:   Thu, 13 Apr 2023 22:34:50 +0800
+Message-Id: <20230413143452.211250-4-sxwjean@me.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230413143452.211250-1-sxwjean@me.com>
 References: <20230413143452.211250-1-sxwjean@me.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: QqH1Ghpj5ydBr4pmMZw4eIZhmrwWvj9d
-X-Proofpoint-ORIG-GUID: QqH1Ghpj5ydBr4pmMZw4eIZhmrwWvj9d
+X-Proofpoint-GUID: Y1U1vCSTKtKD3BAtj30KeORsRiE5ZfNE
+X-Proofpoint-ORIG-GUID: Y1U1vCSTKtKD3BAtj30KeORsRiE5ZfNE
 X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
  =?UTF-8?Q?2903e8d5c8f:6.0.517,18.0.883,17.0.605.474.0000000_definitions?=
  =?UTF-8?Q?=3D2022-06-21=5F08:2022-06-21=5F01,2022-06-21=5F08,2020-01-23?=
  =?UTF-8?Q?=5F02_signatures=3D0?=
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 clxscore=1015
- bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=999
+ bulkscore=0 malwarescore=0 adultscore=0 suspectscore=0 mlxlogscore=980
  mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2209130000 definitions=main-2304130130
 Precedence: bulk
@@ -60,45 +60,28 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Xiongwei Song <xiongwei.song@windriver.com>
 
-The SO_ALL|SO_OBJECTS pair is only used when enabling CONFIG_SLUB_DEBUG
-option, so the objects_show() definition should be surrounded by
-CONFIG_SLUB_DEBUG too.
+As CONFIG_SMP is one of dependencies of CONFIG_SLUB_CPU_PARTIAL, so if
+CONFIG_SLUB_CPU_PARTIAL is defined then CONFIG_SMP must be defined,
+no need to check CONFIG_SMP definition here.
 
 Signed-off-by: Xiongwei Song <xiongwei.song@windriver.com>
 ---
- mm/slub.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ mm/slub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/slub.c b/mm/slub.c
-index 5cc56f780241..b8afe12ebba1 100644
+index b8afe12ebba1..d897df8fe7e7 100644
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -5613,12 +5613,6 @@ static ssize_t cpu_slabs_show(struct kmem_cache *s, char *buf)
- }
- SLAB_ATTR_RO(cpu_slabs);
+@@ -5641,7 +5641,7 @@ static ssize_t slabs_cpu_partial_show(struct kmem_cache *s, char *buf)
+ 	objects = (slabs * oo_objects(s->oo)) / 2;
+ 	len += sysfs_emit_at(buf, len, "%d(%d)", objects, slabs);
  
--static ssize_t objects_show(struct kmem_cache *s, char *buf)
--{
--	return show_slab_objects(s, buf, SO_ALL|SO_OBJECTS);
--}
--SLAB_ATTR_RO(objects);
--
- static ssize_t objects_partial_show(struct kmem_cache *s, char *buf)
- {
- 	return show_slab_objects(s, buf, SO_PARTIAL|SO_OBJECTS);
-@@ -5713,6 +5707,12 @@ static ssize_t total_objects_show(struct kmem_cache *s, char *buf)
- }
- SLAB_ATTR_RO(total_objects);
+-#if defined(CONFIG_SLUB_CPU_PARTIAL) && defined(CONFIG_SMP)
++#ifdef CONFIG_SLUB_CPU_PARTIAL
+ 	for_each_online_cpu(cpu) {
+ 		struct slab *slab;
  
-+static ssize_t objects_show(struct kmem_cache *s, char *buf)
-+{
-+	return show_slab_objects(s, buf, SO_ALL|SO_OBJECTS);
-+}
-+SLAB_ATTR_RO(objects);
-+
- static ssize_t sanity_checks_show(struct kmem_cache *s, char *buf)
- {
- 	return sysfs_emit(buf, "%d\n", !!(s->flags & SLAB_CONSISTENCY_CHECKS));
 -- 
 2.30.2
 
