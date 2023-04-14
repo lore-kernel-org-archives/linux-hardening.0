@@ -2,244 +2,130 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0E3C77B6E
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Apr 2023 22:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A618DC77B76
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Apr 2023 02:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbjDMWcb (ORCPT
+        id S229582AbjDNC2Q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Apr 2023 18:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49028 "EHLO
+        Thu, 13 Apr 2023 22:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbjDMWca (ORCPT
+        with ESMTP id S229822AbjDNC2P (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Apr 2023 18:32:30 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E823B740
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Apr 2023 15:32:08 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id ud9so40936151ejc.7
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Apr 2023 15:32:08 -0700 (PDT)
+        Thu, 13 Apr 2023 22:28:15 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAED4EF2
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Apr 2023 19:28:05 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id kh6so15455770plb.0
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Apr 2023 19:28:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681425128; x=1684017128;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=l9L8tYYDKjHSQReGzmtMFXvGbvY7EYYVxpxKS7dXKNo=;
-        b=NUMlpInTsiaZkcsWcvkcKmtfHKuAwRbbbcmBduiX7PxlzMJoxEBi6ntfBNjafwJWoM
-         gFjLpY3wCQsp+inAdEZzlHrofabiy4tT0V+Anr/PbIjkKY+aJ4cTCvFFqCdmEK7m60Sh
-         g6rLHBXIjMBceh7AxpYizZozyK1Rp5mNB7qm+pN17SwcHNlET8i5K3ZGr+m6JAGs3oDK
-         sAqaOP6y+wtNmLzzh0OOpa+Lg7ILcHMFhqtK5NtfKRroSAFIl18IxB4XpMXpEYXw9CT3
-         FHSd0RA+21dHkMzMDkzB/aMTGUxyyZ68nsOH84EmaobTGoBlQcO6+VVtpJqyQgJP/SIF
-         T5dQ==
+        d=chromium.org; s=google; t=1681439285; x=1684031285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wV0ORfeXv57jdNTZ94hzyydSs04V0lY4z8KcxEzlrGU=;
+        b=LNh11wT4EHIzhimZwEgXV9BDMf7nHy+oBl6lf8qtqMoNiEz6OoQG9N1T2bGlwiCoe7
+         izBspUiGU1sLSEskgQCVo7NLelLl2Ec5Fsqg+nqpkAkfvZRlAPfALKIxZsDh5hB5bByW
+         Jd+YhfV2XTBYasK3IDCGRuYOotcdq44GCS8nw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681425128; x=1684017128;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9L8tYYDKjHSQReGzmtMFXvGbvY7EYYVxpxKS7dXKNo=;
-        b=PeTCQZm/QWyR2D9NegUfDLCgqaOUtLvCt5afGjbofCz09q7K5TZM6MX4xFxl58NtnI
-         Icok8/HQn6Z+ZW23Tq983g02Dey8cpZBbMBf113tRs6i0sE4Vg5MQqI7vkv8VWMYjIx4
-         8Yywyp9qggdyqVjFUIkdFkPWSIGXLuxcjAqEHl411W0+a9WDQMebSZ0A8MXp3m4XAmPQ
-         QKG4at5Ormj37GMfjTOfJkcoT+xJmwmh9sHKm0ZVXDA3SDpx6iN5X848oHCYHj4sSCFK
-         3+zevAfZtXqd6yf+lmN/PmPaby3/7UU/BMYl0sn7tWPO7G2p4VNWrBXjYXUCOhYHeHau
-         J+Rw==
-X-Gm-Message-State: AAQBX9eaZH1VbsrWranqbYNLEN/Ly6KFHbG9ssH7obgDS4OD17sHPiFx
-        IqDoDP6T1KnNrC3phLiPd9ph2w==
-X-Google-Smtp-Source: AKy350Yy95MU6ymMXBfdoUzvXczL7NB3u1Ku2n1nJfzBRl7LG4KzH69EMBs/RB5ypqmLO3ckzmGIOg==
-X-Received: by 2002:a17:906:6855:b0:930:6e31:3c11 with SMTP id a21-20020a170906685500b009306e313c11mr4393262ejs.70.1681425128140;
-        Thu, 13 Apr 2023 15:32:08 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id f17-20020a170906495100b009334219656dsm1567607ejt.56.2023.04.13.15.32.06
+        d=1e100.net; s=20221208; t=1681439285; x=1684031285;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wV0ORfeXv57jdNTZ94hzyydSs04V0lY4z8KcxEzlrGU=;
+        b=IYPedwyvb9OXWedPK03v5GFPxX9BC0Pbo37j3Ak/+0C9P+7xAlPZFzKG3dHHuXl9uA
+         flbP0h1tQ+16aO8m56m+oyOHkkYm2qiVCqGlsl8yrYQLuuwp8jIKEdKQ7uiir/NJ0XhJ
+         Cb6MuKuzQU5an0d9iKpDKbSBhpNsnzBtIke7ubPt9EIKP/r+bHmN4G7mpr/ZXtnUucBx
+         WQV2R5Qd2BbeBKfg1vmWUkrBF/Ci7um5IMbl65iI7F1YCsd8VnMkPwKBzNhy0vHYcoeU
+         0E1yXPJrgd88KrCaBlc7jOwxKkkNwWtf5/COx0k8w0eDXPJNMbMrY1cwhJZTcT9feOW3
+         cYdw==
+X-Gm-Message-State: AAQBX9dW+6iA786kBAyjo479ZBTkB+AY2aVHpx3i/HEokgor3Lr8q08I
+        emoHyUpQRSUDUF3sDttYYsw02g==
+X-Google-Smtp-Source: AKy350YAYoawfrxXQq9o1RU60KWyzyS6aXgZpnvHFLuSmoSnnEGsr+nci58MA60iAQlgbFwQQ9A5RA==
+X-Received: by 2002:a17:90a:7c0f:b0:23f:83de:7e4a with SMTP id v15-20020a17090a7c0f00b0023f83de7e4amr4082251pjf.7.1681439284753;
+        Thu, 13 Apr 2023 19:28:04 -0700 (PDT)
+Received: from localhost (183.43.230.35.bc.googleusercontent.com. [35.230.43.183])
+        by smtp.gmail.com with UTF8SMTPSA id m2-20020a17090aab0200b0024677263e36sm1972982pjq.43.2023.04.13.19.28.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Apr 2023 15:32:07 -0700 (PDT)
-Message-ID: <e74fb30d-4268-86b1-cdf7-ad3d104c6c40@linaro.org>
-Date:   Thu, 13 Apr 2023 23:32:06 +0100
+        Thu, 13 Apr 2023 19:28:04 -0700 (PDT)
+From:   jeffxu@chromium.org
+To:     skhan@linuxfoundation.org, keescook@chromium.org
+Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        kernel test robot <yujie.liu@intel.com>
+Subject: [PATCH] selftests/memfd: fix test_sysctl
+Date:   Fri, 14 Apr 2023 02:28:01 +0000
+Message-ID: <20230414022801.2545257-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2 2/6] remoteproc: qcom: Move minidump specific data to
- qcom_minidump.h
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-References: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
- <1679491817-2498-3-git-send-email-quic_mojha@quicinc.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <1679491817-2498-3-git-send-email-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+From: Jeff Xu <jeffxu@google.com>
 
+sysctl memfd_noexec is pid-namespaced, non-reservable,
+and inherent to the child process.
+Moving the inherence test from init ns to child ns, so
+init ns can keep the default value.
 
-On 22/03/2023 13:30, Mukesh Ojha wrote:
-> Move minidump specific data types and macros to a separate internal
-> header(qcom_minidump.h) so that it can be shared among different
+Signed-off-by: Jeff Xu <jeffxu@google.com>
+Reported-by: kernel test robot <yujie.liu@intel.com>
+Link: https://lore.kernel.org/oe-lkp/202303312259.441e35db-yujie.liu@intel.com
+---
+ tools/testing/selftests/memfd/memfd_test.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-minidump.h should be good as we are already in include/soc/qcom/
+diff --git a/tools/testing/selftests/memfd/memfd_test.c b/tools/testing/selftests/memfd/memfd_test.c
+index ae71f15f790d..dba0e8ba002f 100644
+--- a/tools/testing/selftests/memfd/memfd_test.c
++++ b/tools/testing/selftests/memfd/memfd_test.c
+@@ -43,6 +43,9 @@
+  */
+ static size_t mfd_def_size = MFD_DEF_SIZE;
+ static const char *memfd_str = MEMFD_STR;
++static pid_t spawn_newpid_thread(unsigned int flags, int (*fn)(void *));
++static int newpid_thread_fn2(void *arg);
++static void join_newpid_thread(pid_t pid);
+ 
+ static ssize_t fd2name(int fd, char *buf, size_t bufsize)
+ {
+@@ -1111,6 +1114,7 @@ static void test_noexec_seal(void)
+ static void test_sysctl_child(void)
+ {
+ 	int fd;
++	int pid;
+ 
+ 	printf("%s sysctl 0\n", memfd_str);
+ 	sysctl_assert_write("0");
+@@ -1129,6 +1133,10 @@ static void test_sysctl_child(void)
+ 			    mfd_def_size,
+ 			    MFD_CLOEXEC | MFD_ALLOW_SEALING);
+ 
++	printf("%s child ns\n", memfd_str);
++	pid = spawn_newpid_thread(CLONE_NEWPID, newpid_thread_fn2);
++	join_newpid_thread(pid);
++
+ 	mfd_assert_mode(fd, 0666);
+ 	mfd_assert_has_seals(fd, F_SEAL_EXEC);
+ 	mfd_fail_chmod(fd, 0777);
+@@ -1206,12 +1214,6 @@ static void test_sysctl(void)
+ 	int pid = spawn_newpid_thread(CLONE_NEWPID, newpid_thread_fn);
+ 
+ 	join_newpid_thread(pid);
+-
+-	printf("%s child ns\n", memfd_str);
+-	sysctl_assert_write("1");
+-
+-	pid = spawn_newpid_thread(CLONE_NEWPID, newpid_thread_fn2);
+-	join_newpid_thread(pid);
+ }
+ 
+ /*
+-- 
+2.40.0.577.gac1e443424-goog
 
---srini
-
-> Qualcomm drivers.
-> 
-> There is no change in functional behavior after this.
-> 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->   drivers/remoteproc/qcom_common.c | 56 +---------------------------------
->   include/soc/qcom/qcom_minidump.h | 66 ++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 67 insertions(+), 55 deletions(-)
->   create mode 100644 include/soc/qcom/qcom_minidump.h
-> 
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index 805e525..88fc984 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -18,6 +18,7 @@
->   #include <linux/slab.h>
->   #include <linux/soc/qcom/mdt_loader.h>
->   #include <linux/soc/qcom/smem.h>
-> +#include <soc/qcom/qcom_minidump.h>
->   
->   #include "remoteproc_internal.h"
->   #include "qcom_common.h"
-> @@ -26,61 +27,6 @@
->   #define to_smd_subdev(d) container_of(d, struct qcom_rproc_subdev, subdev)
->   #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, subdev)
->   
-> -#define MAX_NUM_OF_SS           10
-> -#define MAX_REGION_NAME_LENGTH  16
-> -#define SBL_MINIDUMP_SMEM_ID	602
-> -#define MINIDUMP_REGION_VALID		('V' << 24 | 'A' << 16 | 'L' << 8 | 'I' << 0)
-> -#define MINIDUMP_SS_ENCR_DONE		('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
-> -#define MINIDUMP_SS_ENABLED		('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' << 0)
-> -
-> -/**
-> - * struct minidump_region - Minidump region
-> - * @name		: Name of the region to be dumped
-> - * @seq_num:		: Use to differentiate regions with same name.
-> - * @valid		: This entry to be dumped (if set to 1)
-> - * @address		: Physical address of region to be dumped
-> - * @size		: Size of the region
-> - */
-> -struct minidump_region {
-> -	char	name[MAX_REGION_NAME_LENGTH];
-> -	__le32	seq_num;
-> -	__le32	valid;
-> -	__le64	address;
-> -	__le64	size;
-> -};
-> -
-> -/**
-> - * struct minidump_subsystem - Subsystem's SMEM Table of content
-> - * @status : Subsystem toc init status
-> - * @enabled : if set to 1, this region would be copied during coredump
-> - * @encryption_status: Encryption status for this subsystem
-> - * @encryption_required : Decides to encrypt the subsystem regions or not
-> - * @region_count : Number of regions added in this subsystem toc
-> - * @regions_baseptr : regions base pointer of the subsystem
-> - */
-> -struct minidump_subsystem {
-> -	__le32	status;
-> -	__le32	enabled;
-> -	__le32	encryption_status;
-> -	__le32	encryption_required;
-> -	__le32	region_count;
-> -	__le64	regions_baseptr;
-> -};
-> -
-> -/**
-> - * struct minidump_global_toc - Global Table of Content
-> - * @status : Global Minidump init status
-> - * @md_revision : Minidump revision
-> - * @enabled : Minidump enable status
-> - * @subsystems : Array of subsystems toc
-> - */
-> -struct minidump_global_toc {
-> -	__le32				status;
-> -	__le32				md_revision;
-> -	__le32				enabled;
-> -	struct minidump_subsystem	subsystems[MAX_NUM_OF_SS];
-> -};
-> -
->   struct qcom_ssr_subsystem {
->   	const char *name;
->   	struct srcu_notifier_head notifier_list;
-> diff --git a/include/soc/qcom/qcom_minidump.h b/include/soc/qcom/qcom_minidump.h
-> new file mode 100644
-> index 0000000..84c8605
-> --- /dev/null
-> +++ b/include/soc/qcom/qcom_minidump.h
-> @@ -0,0 +1,66 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Qualcomm minidump shared data structures and macros
-> + *
-> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#ifndef _QCOM_MINIDUMP_H_
-> +#define _QCOM_MINIDUMP_H_
-> +
-> +#define MAX_NUM_OF_SS           10
-> +#define MAX_REGION_NAME_LENGTH  16
-> +#define SBL_MINIDUMP_SMEM_ID	602
-> +#define MINIDUMP_REGION_VALID		('V' << 24 | 'A' << 16 | 'L' << 8 | 'I' << 0)
-> +#define MINIDUMP_SS_ENCR_DONE		('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
-> +#define MINIDUMP_SS_ENABLED		('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' << 0)
-> +
-> +/**
-> + * struct minidump_region - Minidump region
-> + * @name		: Name of the region to be dumped
-> + * @seq_num:		: Use to differentiate regions with same name.
-> + * @valid		: This entry to be dumped (if set to 1)
-> + * @address		: Physical address of region to be dumped
-> + * @size		: Size of the region
-> + */
-> +struct minidump_region {
-> +	char	name[MAX_REGION_NAME_LENGTH];
-> +	__le32	seq_num;
-> +	__le32	valid;
-> +	__le64	address;
-> +	__le64	size;
-> +};
-> +
-> +/**
-> + * struct minidump_subsystem - Subsystem's SMEM Table of content
-> + * @status : Subsystem toc init status
-> + * @enabled : if set to 1, this region would be copied during coredump
-> + * @encryption_status: Encryption status for this subsystem
-> + * @encryption_required : Decides to encrypt the subsystem regions or not
-> + * @region_count : Number of regions added in this subsystem toc
-> + * @regions_baseptr : regions base pointer of the subsystem
-> + */
-> +struct minidump_subsystem {
-> +	__le32	status;
-> +	__le32	enabled;
-> +	__le32	encryption_status;
-> +	__le32	encryption_required;
-> +	__le32	region_count;
-> +	__le64	regions_baseptr;
-> +};
-> +
-> +/**
-> + * struct minidump_global_toc - Global Table of Content
-> + * @status : Global Minidump init status
-> + * @md_revision : Minidump revision
-> + * @enabled : Minidump enable status
-> + * @subsystems : Array of subsystems toc
-> + */
-> +struct minidump_global_toc {
-> +	__le32				status;
-> +	__le32				md_revision;
-> +	__le32				enabled;
-> +	struct minidump_subsystem	subsystems[MAX_NUM_OF_SS];
-> +};
-> +
-> +#endif  /* _QCOM_MINIDUMP_H_ */
