@@ -2,233 +2,277 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26772C77B70
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Apr 2023 06:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83878C77B70
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Apr 2023 07:06:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbjDNG14 (ORCPT
+        id S229579AbjDNHGC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Apr 2023 02:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56356 "EHLO
+        Fri, 14 Apr 2023 03:06:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbjDNG1z (ORCPT
+        with ESMTP id S229553AbjDNHGB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Apr 2023 02:27:55 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 892B96EBD;
-        Thu, 13 Apr 2023 23:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681453651; x=1712989651;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=+yritlCRkBVeILdyakQW2+iCr8HVtIe5YIhezY80uT4=;
-  b=P3XhILBaYqvOTcXCjqmPV53Qbg3NvRJVrUYF+4l4MXV+kIl5I4RwOvoy
-   1Kq/XzafgSG1nkoQtKwp6y+11ansZpxDrIPCDmRM+x8kGnVMD9q86XGOq
-   aPR7x20f8u9C2by9vaH/ah3770j46iF3XfBPt36EVOZmqwSiC/Bk/r7V0
-   VIfTVqqVd9rZovPXbBgQSpsfxuOuQiBb3H0RlfCh6uIGQYsRoBL4vFoPN
-   6rf8t3pu0v7322n3R67ym4mIZNgMpUJVFmMisHHEl+bfIUOGZW6+Y97og
-   Va7rY0p4nueVctZszRClKyGG+iPI+eefZPiW6ym+K34m50VKAOfM531qx
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="343154689"
-X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
-   d="scan'208";a="343154689"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 23:26:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="689675823"
-X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
-   d="scan'208";a="689675823"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by orsmga002.jf.intel.com with ESMTP; 13 Apr 2023 23:26:49 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 13 Apr 2023 23:26:49 -0700
-Received: from orsmsx601.amr.corp.intel.com (10.22.229.14) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 13 Apr 2023 23:26:48 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Thu, 13 Apr 2023 23:26:48 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.171)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Thu, 13 Apr 2023 23:26:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VCVJ8IeO7Aq1N9PtOovpkS/7SNI5tl/QIJpu6hCJv9yVbfV7NDV06fz4L4Ny2QzplZzuNGzdRD3fm0I0jkIMgYdilhhqfTb/aeiSrs/eq3fZBt0N4DqfXzZio69P9QHGFkyRnpWc6aGvkvkQqf1Fz2gEEejT36E+hlDBA4n7VlLufbnyEogNIfaww5Gfkx9VVa8UCcx5khZNcYK1MU5EZpQ7LHChOZFZCz9HLkUuhWO1nObi++XB5z0EbUUJEktRunBbBV0vFesNWp1YdLzZMdHk7Yels/IsjwwD8NqxlnZXsJjOedNiG9M5do64mSKxYQA4P+EG2fUonpuq9q4Erw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=82/UvoSyVWHtVNXXJoNoW3I58uG+OcPXeR8ieSeDook=;
- b=Djd68WIMzLbKnI97rvOdRz2HWr5aI8Ok8IZIHfYhriTFQtXOCxVoZSXJOFkXVbJAm3uSIMCxHI7s3J2lXEuzCyFmGXSRiEb2tgMxIXMZLP6U9KrCsRriEoSljqvsl8WPH5o4DYhgHrKemxpDgyQ2DWW8/CyRmwbuxbzERD780amcyt4Sk6M7c1gEPxhmqUaVCobc8S0hMNatEfvKWj7PPYmuJoVxyWY7pz+GB6KljDHbdr3Ih8tnv+UV1SHIdxOX85rHdlpScAQetbom/iOw1xPqu/0U+hIuG7Jywt9VK/QDUGKQ+nzudEPb0o9BZedL/gYeXH2WAwHxErlJ3W7VMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
- by IA1PR11MB8245.namprd11.prod.outlook.com (2603:10b6:208:448::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Fri, 14 Apr
- 2023 06:26:44 +0000
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::5ac7:aae0:92aa:74f0]) by CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::5ac7:aae0:92aa:74f0%8]) with mapi id 15.20.6298.030; Fri, 14 Apr 2023
- 06:26:44 +0000
-Date:   Fri, 14 Apr 2023 14:23:33 +0800
-From:   Yujie Liu <yujie.liu@intel.com>
-To:     <jeffxu@chromium.org>
-CC:     <skhan@linuxfoundation.org>, <keescook@chromium.org>,
-        <akpm@linux-foundation.org>, <dmitry.torokhov@gmail.com>,
-        <dverkamp@chromium.org>, <hughd@google.com>, <jeffxu@google.com>,
-        <jorgelo@chromium.org>, <linux-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-mm@kvack.org>,
-        <jannh@google.com>, <linux-hardening@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH] selftests/memfd: fix test_sysctl
-Message-ID: <ZDjxZQRyhcF9V442@yujie-X299>
-References: <20230414022801.2545257-1-jeffxu@google.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230414022801.2545257-1-jeffxu@google.com>
-X-ClientProxiedBy: SG2PR04CA0215.apcprd04.prod.outlook.com
- (2603:1096:4:187::14) To CY5PR11MB6392.namprd11.prod.outlook.com
- (2603:10b6:930:37::15)
+        Fri, 14 Apr 2023 03:06:01 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA0630F5;
+        Fri, 14 Apr 2023 00:05:59 -0700 (PDT)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33E6UlGG031289;
+        Fri, 14 Apr 2023 07:05:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=1h16hUb3V1HHJiseU1aSCsalqmOi0P1+ZAFDaD80Qt8=;
+ b=dMSFJ7NbyEi/5vBUl7A2h6idvDX+qZ5LJJKCfiBRki8EZXV9r7Z3AXllfIlxD/mnYJKd
+ 6WRfT0bXKQywz5ICcITY1suF7A1kB0RvRgCKlC75jV1Izj5WkqxScqykgXkwlX7h4phV
+ ax3ci2KnyiQvqgG/UBKwppoxh89BMiySRe2tvSA2k6LOjvIocnBjIUry54OB/pOlBG4a
+ t5S1rEGqV47+E0vKb0PKjHsWeDFK4dVZ83EhUan4D7/n3gYzcGMW150OficPpjqce7EW
+ IgNnqDlWI7SQZsSS+4ZLOPGhhCQpzAz/twq8ljmN9Btci4ATJZsk167hMFNg9cbblAQc tg== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pxqf9964m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Apr 2023 07:05:11 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33E759T8032286
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Apr 2023 07:05:09 GMT
+Received: from [10.216.56.7] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Fri, 14 Apr
+ 2023 00:05:04 -0700
+Message-ID: <3df1ec27-7e4d-1f84-ff20-94e8ea91c86f@quicinc.com>
+Date:   Fri, 14 Apr 2023 12:35:00 +0530
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|IA1PR11MB8245:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cc8f6e0-7d74-4bd9-7046-08db3cb13735
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gim2dGXGgeXKXCwNePbQWlt7CxBtt3qZxG1tNLyIbFjfSgs1E6cZPjAMDH2k9h+mpk9qtUcis0G2MO8lgqWiMirHx8bqPsg/EXqq7alo+Bj33XT90a2z+e4j+j0gqo6xRirIv0pYUqTAJHjE/Y4KiUb1BkzQdGlErZ4HsQXWe2ssMLyWM94R8YXIlp7hpM2yqSlUFbKEyA1NtuxexTZukiURZuqhdIh8Of51YuUDk5PsugE71H9h6z/Vw0XIlmkUYWrXnbtNCBKIEuV/PwXScSCUsCn/5qlW1O5Kk/3EjUgGQfMqaZe5m/3sprHzh89lNm7O1Tvax1XavMEhUF3J7lyMy0T9kTW/WOMUhzTQiF2h6WVNFrfH/yCzQteiDraST7E0CHqRdhBtL+616eIAzjjXlidktd5FLwL9qrv9lj6GiGto2XuexAJKKnNs3c7miMbkRhxdjBgiYEaZYpJBxYndh7irDV686oxEkusrWGhkjw/QRY0wZ/hiDlPVYfp3C65E1R8YhapmOiOrbUspZCV548KW2UyF4MyfA1MS4Ds=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(376002)(366004)(396003)(136003)(39860400002)(346002)(451199021)(9686003)(26005)(6512007)(6506007)(186003)(83380400001)(966005)(6486002)(6666004)(5660300002)(41300700001)(82960400001)(316002)(8676002)(8936002)(86362001)(38100700002)(478600001)(4326008)(66946007)(66476007)(66556008)(6916009)(2906002)(33716001)(44832011)(7416002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?/XrciSpIqaqMCm/5HVZcma+w/fYdpXfJkV+cFFBX4hjFAjiufZ7ec/EnqkXK?=
- =?us-ascii?Q?+N8LsF0PR5AoeAUizSs5nOPsK78FHgexw63gHwjVtOPw0Yz9VNz5x+TOl/y9?=
- =?us-ascii?Q?7sFENVRh+mfmMB6TVX4qkG85irZ+tScfN1d8mnM6oGp5YKUBMg3Fvq9s6qv7?=
- =?us-ascii?Q?BF0KS99hEso6OuMr9V23GfFdMCj2JzlPkLADlkghncyQ1vsEEZ6ReiZ9IRLK?=
- =?us-ascii?Q?tWFW15YxeGZ0epIfl9A43uC1pfAJpvyrQeigNLA3JWBlXroFvioYQrdvlOTR?=
- =?us-ascii?Q?2HawvFcVua2LGXoRBaeuMGFOr+/MWcfK6NylDbk8FqlCySL5wRlFLGphXPbu?=
- =?us-ascii?Q?5ysCmQb4JRiGJrxJaE+8hEu9zAmXgo3f8775VJx4EThQTJBjr5vSoXkDXR/2?=
- =?us-ascii?Q?qVfmMneelZm36GJUi0vBtAj/fl5jpYtGZBkPokhaaJzIBH9/VbHCmbHd3oFj?=
- =?us-ascii?Q?OU248TUx4woahzfSu8wPqWF0k+MsyuZOUIgXOlUxfNTpZvN7naIwJY72Ypaq?=
- =?us-ascii?Q?L8Gvoc6ldlm4ItXhJccYBgIAqm+7031Jl9JhkBkj6pkXOoWOwFE+vuuVwKx8?=
- =?us-ascii?Q?MZ0DNB4Milui2gPQzF3eY9OGemuAb8P8tgz8nwCUr6DTNo0a101Nm6r4wPYX?=
- =?us-ascii?Q?K0bgHPCu7oNpK6E3S87SebTpECFYRO2+8fkQQNWybF8iO4T55Gw6Z33n7NmA?=
- =?us-ascii?Q?2kFMhTdqb8QBGKmRbtwbvOhu4+aHZOOe3iTm+zZ/Gv5L/kr3lBcvs5LspaCI?=
- =?us-ascii?Q?fELN6mA6MlC36wECGPhbbUCOaUX6tTABJTnW+Z73PxFCjfGjaviqtIEDbgZn?=
- =?us-ascii?Q?czLuOMf4CyhOOB5cB2sV26qjkHnbvNrDlYMu/UY8Oo9Z6I7J0U6m/tExNjoz?=
- =?us-ascii?Q?ZpaSPM+cuKCpp8PFs/ky3M93+9IyHs30MWqm2KMhgAkjq9hIXxC013/+SClj?=
- =?us-ascii?Q?rfkhlmB51G9/taVrC+bV9fpozJwdy4wuEa/93n4OK2hFQP2gXjohyi5ul7kj?=
- =?us-ascii?Q?qbE/rBNhwO4DoT3Xgq4lgKKpUXk1OGuGI13nO6xLL3bG9GM5uNZG7QB6ruUr?=
- =?us-ascii?Q?oIvXqTRdVLjUI9WREv3CI0YPgbgGJnHYeU2BKCYOOsOVi8VY/B3L9srb0ajB?=
- =?us-ascii?Q?TY78S1kRoRIrY82JduvzmAqU15fg85d3TImJKViKOHKdlrsC1BvXSy5BN0RP?=
- =?us-ascii?Q?T5RVPqlgBZ/fZQ6Vm2KGUozZXQU9bzdU32vpl4eoGdpgvTwQSwERHLtQmj9S?=
- =?us-ascii?Q?aN+OVOo9qA0XzXLegbglIBjB+FIL8K/3SFHRBJkPgCsJexVh2jvH48QkS9Ul?=
- =?us-ascii?Q?iYyOxm750vZi/X5+aFkCzhlgqHkZKVXgMDjb3v08L/6rq618HnYYrQQUsXtj?=
- =?us-ascii?Q?ZgeLIOIgknx/2mE/gI26Q6/z9d7HV4Tn9lwfHxaOcBZCGrgQN9OsDlq3pogM?=
- =?us-ascii?Q?BQAU2am4Mc88BhJN+pM8B1PlHnGyba53mgYB+cPB3cK+JHlaKUGk7AQ/7fyY?=
- =?us-ascii?Q?lTs6aLyAWfaExD1kDlfJ7ZXlAy2tyRGI6hORLzH6BFvOLc0zhrwrQWmAc4IQ?=
- =?us-ascii?Q?IhVrzFXFi/rF7r2iyc9SMmcJXmeoar8UyMFDE43T?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cc8f6e0-7d74-4bd9-7046-08db3cb13735
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2023 06:26:44.0015
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b+I5ZRZW6wBORU/MnfKhwtifEjzpZ3nYS4w155JZT6Tk6kzPUoEj652IqY2t0W2g+gBDMhLPN1awJ4hEksMXPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8245
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 2/6] remoteproc: qcom: Move minidump specific data to
+ qcom_minidump.h
+Content-Language: en-US
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>, <will@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
+References: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
+ <1679491817-2498-3-git-send-email-quic_mojha@quicinc.com>
+ <e74fb30d-4268-86b1-cdf7-ad3d104c6c40@linaro.org>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <e74fb30d-4268-86b1-cdf7-ad3d104c6c40@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Kjd3iZFPQAyO7ZDiYAcbngj41D7Q5c2b
+X-Proofpoint-ORIG-GUID: Kjd3iZFPQAyO7ZDiYAcbngj41D7Q5c2b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-14_02,2023-04-13_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ suspectscore=0 malwarescore=0 spamscore=0 phishscore=0 clxscore=1011
+ mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304140063
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 02:28:01AM +0000, jeffxu@chromium.org wrote:
-> From: Jeff Xu <jeffxu@google.com>
+Thanks again for coming back on this.
+
+On 4/14/2023 4:02 AM, Srinivas Kandagatla wrote:
 > 
-> sysctl memfd_noexec is pid-namespaced, non-reservable,
-> and inherent to the child process.
-> Moving the inherence test from init ns to child ns, so
-> init ns can keep the default value.
 > 
-> Signed-off-by: Jeff Xu <jeffxu@google.com>
-> Reported-by: kernel test robot <yujie.liu@intel.com>
-> Link: https://lore.kernel.org/oe-lkp/202303312259.441e35db-yujie.liu@intel.com
-
-The reported issue is gone after applying this patch. Thanks.
-
-Tested-by: Yujie Liu <yujie.liu@intel.com>
-
-=========================================================================================
-compiler/group/kconfig/rootfs/tbox_group/testcase:
-  gcc-11/group-02/x86_64-rhel-8.3-kselftests/debian-12-x86_64-20220629.cgz/lkp-skl-d06/kernel-selftests
-
-commit:
-  c4f75bc8bd6b3 ("mm/memfd: add write seals when apply SEAL_EXEC to executable memfd")
-  11f75a01448f1 ("selftests/memfd: add tests for MFD_NOEXEC_SEAL MFD_EXEC")
-  395874d592d77 ("selftests/memfd: fix test_sysctl")
-
-c4f75bc8bd6b3d62 11f75a01448f1b7a739e75dbd8f 395874d592d775d999d18ef9cae
----------------- --------------------------- ---------------------------
-       fail:runs  %reproduction    fail:runs  %reproduction    fail:runs
-           |             |             |             |             |
-           :6          233%          14:20           0%            :5     kernel-selftests.memfd.run_fuse_test.sh.fail
-
-> ---
->  tools/testing/selftests/memfd/memfd_test.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
+> On 22/03/2023 13:30, Mukesh Ojha wrote:
+>> Move minidump specific data types and macros to a separate internal
+>> header(qcom_minidump.h) so that it can be shared among different
 > 
-> diff --git a/tools/testing/selftests/memfd/memfd_test.c b/tools/testing/selftests/memfd/memfd_test.c
-> index ae71f15f790d..dba0e8ba002f 100644
-> --- a/tools/testing/selftests/memfd/memfd_test.c
-> +++ b/tools/testing/selftests/memfd/memfd_test.c
-> @@ -43,6 +43,9 @@
->   */
->  static size_t mfd_def_size = MFD_DEF_SIZE;
->  static const char *memfd_str = MEMFD_STR;
-> +static pid_t spawn_newpid_thread(unsigned int flags, int (*fn)(void *));
-> +static int newpid_thread_fn2(void *arg);
-> +static void join_newpid_thread(pid_t pid);
->  
->  static ssize_t fd2name(int fd, char *buf, size_t bufsize)
->  {
-> @@ -1111,6 +1114,7 @@ static void test_noexec_seal(void)
->  static void test_sysctl_child(void)
->  {
->  	int fd;
-> +	int pid;
->  
->  	printf("%s sysctl 0\n", memfd_str);
->  	sysctl_assert_write("0");
-> @@ -1129,6 +1133,10 @@ static void test_sysctl_child(void)
->  			    mfd_def_size,
->  			    MFD_CLOEXEC | MFD_ALLOW_SEALING);
->  
-> +	printf("%s child ns\n", memfd_str);
-> +	pid = spawn_newpid_thread(CLONE_NEWPID, newpid_thread_fn2);
-> +	join_newpid_thread(pid);
-> +
->  	mfd_assert_mode(fd, 0666);
->  	mfd_assert_has_seals(fd, F_SEAL_EXEC);
->  	mfd_fail_chmod(fd, 0777);
-> @@ -1206,12 +1214,6 @@ static void test_sysctl(void)
->  	int pid = spawn_newpid_thread(CLONE_NEWPID, newpid_thread_fn);
->  
->  	join_newpid_thread(pid);
-> -
-> -	printf("%s child ns\n", memfd_str);
-> -	sysctl_assert_write("1");
-> -
-> -	pid = spawn_newpid_thread(CLONE_NEWPID, newpid_thread_fn2);
-> -	join_newpid_thread(pid);
->  }
->  
->  /*
-> -- 
-> 2.40.0.577.gac1e443424-goog
+> minidump.h should be good as we are already in include/soc/qcom/
+
+
+Initially, i wanted to protect the content of qcom_minidump.h between 
+qcom_minidump.c and qcom_common.c
+
+Ideally, here qcom_minidump.h should be supplier/provider header and can 
+be shared among above qcom_minidump.c and qcom_common.c but since they 
+are not in same directory, moved it inside include/soc/qcom/ as separate 
+header than consumer header minidump.h .
+
+-Mukesh
 > 
+> --srini
+> 
+>> Qualcomm drivers.
+>>
+>> There is no change in functional behavior after this.
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   drivers/remoteproc/qcom_common.c | 56 
+>> +---------------------------------
+>>   include/soc/qcom/qcom_minidump.h | 66 
+>> ++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 67 insertions(+), 55 deletions(-)
+>>   create mode 100644 include/soc/qcom/qcom_minidump.h
+>>
+>> diff --git a/drivers/remoteproc/qcom_common.c 
+>> b/drivers/remoteproc/qcom_common.c
+>> index 805e525..88fc984 100644
+>> --- a/drivers/remoteproc/qcom_common.c
+>> +++ b/drivers/remoteproc/qcom_common.c
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/slab.h>
+>>   #include <linux/soc/qcom/mdt_loader.h>
+>>   #include <linux/soc/qcom/smem.h>
+>> +#include <soc/qcom/qcom_minidump.h>
+>>   #include "remoteproc_internal.h"
+>>   #include "qcom_common.h"
+>> @@ -26,61 +27,6 @@
+>>   #define to_smd_subdev(d) container_of(d, struct qcom_rproc_subdev, 
+>> subdev)
+>>   #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, subdev)
+>> -#define MAX_NUM_OF_SS           10
+>> -#define MAX_REGION_NAME_LENGTH  16
+>> -#define SBL_MINIDUMP_SMEM_ID    602
+>> -#define MINIDUMP_REGION_VALID        ('V' << 24 | 'A' << 16 | 'L' << 
+>> 8 | 'I' << 0)
+>> -#define MINIDUMP_SS_ENCR_DONE        ('D' << 24 | 'O' << 16 | 'N' << 
+>> 8 | 'E' << 0)
+>> -#define MINIDUMP_SS_ENABLED        ('E' << 24 | 'N' << 16 | 'B' << 8 
+>> | 'L' << 0)
+>> -
+>> -/**
+>> - * struct minidump_region - Minidump region
+>> - * @name        : Name of the region to be dumped
+>> - * @seq_num:        : Use to differentiate regions with same name.
+>> - * @valid        : This entry to be dumped (if set to 1)
+>> - * @address        : Physical address of region to be dumped
+>> - * @size        : Size of the region
+>> - */
+>> -struct minidump_region {
+>> -    char    name[MAX_REGION_NAME_LENGTH];
+>> -    __le32    seq_num;
+>> -    __le32    valid;
+>> -    __le64    address;
+>> -    __le64    size;
+>> -};
+>> -
+>> -/**
+>> - * struct minidump_subsystem - Subsystem's SMEM Table of content
+>> - * @status : Subsystem toc init status
+>> - * @enabled : if set to 1, this region would be copied during coredump
+>> - * @encryption_status: Encryption status for this subsystem
+>> - * @encryption_required : Decides to encrypt the subsystem regions or 
+>> not
+>> - * @region_count : Number of regions added in this subsystem toc
+>> - * @regions_baseptr : regions base pointer of the subsystem
+>> - */
+>> -struct minidump_subsystem {
+>> -    __le32    status;
+>> -    __le32    enabled;
+>> -    __le32    encryption_status;
+>> -    __le32    encryption_required;
+>> -    __le32    region_count;
+>> -    __le64    regions_baseptr;
+>> -};
+>> -
+>> -/**
+>> - * struct minidump_global_toc - Global Table of Content
+>> - * @status : Global Minidump init status
+>> - * @md_revision : Minidump revision
+>> - * @enabled : Minidump enable status
+>> - * @subsystems : Array of subsystems toc
+>> - */
+>> -struct minidump_global_toc {
+>> -    __le32                status;
+>> -    __le32                md_revision;
+>> -    __le32                enabled;
+>> -    struct minidump_subsystem    subsystems[MAX_NUM_OF_SS];
+>> -};
+>> -
+>>   struct qcom_ssr_subsystem {
+>>       const char *name;
+>>       struct srcu_notifier_head notifier_list;
+>> diff --git a/include/soc/qcom/qcom_minidump.h 
+>> b/include/soc/qcom/qcom_minidump.h
+>> new file mode 100644
+>> index 0000000..84c8605
+>> --- /dev/null
+>> +++ b/include/soc/qcom/qcom_minidump.h
+>> @@ -0,0 +1,66 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Qualcomm minidump shared data structures and macros
+>> + *
+>> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights 
+>> reserved.
+>> + */
+>> +
+>> +#ifndef _QCOM_MINIDUMP_H_
+>> +#define _QCOM_MINIDUMP_H_
+>> +
+>> +#define MAX_NUM_OF_SS           10
+>> +#define MAX_REGION_NAME_LENGTH  16
+>> +#define SBL_MINIDUMP_SMEM_ID    602
+>> +#define MINIDUMP_REGION_VALID        ('V' << 24 | 'A' << 16 | 'L' << 
+>> 8 | 'I' << 0)
+>> +#define MINIDUMP_SS_ENCR_DONE        ('D' << 24 | 'O' << 16 | 'N' << 
+>> 8 | 'E' << 0)
+>> +#define MINIDUMP_SS_ENABLED        ('E' << 24 | 'N' << 16 | 'B' << 8 
+>> | 'L' << 0)
+>> +
+>> +/**
+>> + * struct minidump_region - Minidump region
+>> + * @name        : Name of the region to be dumped
+>> + * @seq_num:        : Use to differentiate regions with same name.
+>> + * @valid        : This entry to be dumped (if set to 1)
+>> + * @address        : Physical address of region to be dumped
+>> + * @size        : Size of the region
+>> + */
+>> +struct minidump_region {
+>> +    char    name[MAX_REGION_NAME_LENGTH];
+>> +    __le32    seq_num;
+>> +    __le32    valid;
+>> +    __le64    address;
+>> +    __le64    size;
+>> +};
+>> +
+>> +/**
+>> + * struct minidump_subsystem - Subsystem's SMEM Table of content
+>> + * @status : Subsystem toc init status
+>> + * @enabled : if set to 1, this region would be copied during coredump
+>> + * @encryption_status: Encryption status for this subsystem
+>> + * @encryption_required : Decides to encrypt the subsystem regions or 
+>> not
+>> + * @region_count : Number of regions added in this subsystem toc
+>> + * @regions_baseptr : regions base pointer of the subsystem
+>> + */
+>> +struct minidump_subsystem {
+>> +    __le32    status;
+>> +    __le32    enabled;
+>> +    __le32    encryption_status;
+>> +    __le32    encryption_required;
+>> +    __le32    region_count;
+>> +    __le64    regions_baseptr;
+>> +};
+>> +
+>> +/**
+>> + * struct minidump_global_toc - Global Table of Content
+>> + * @status : Global Minidump init status
+>> + * @md_revision : Minidump revision
+>> + * @enabled : Minidump enable status
+>> + * @subsystems : Array of subsystems toc
+>> + */
+>> +struct minidump_global_toc {
+>> +    __le32                status;
+>> +    __le32                md_revision;
+>> +    __le32                enabled;
+>> +    struct minidump_subsystem    subsystems[MAX_NUM_OF_SS];
+>> +};
+>> +
+>> +#endif  /* _QCOM_MINIDUMP_H_ */
