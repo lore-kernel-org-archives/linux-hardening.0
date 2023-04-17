@@ -2,194 +2,204 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9BEC77B70
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Apr 2023 07:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2607C77B72
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Apr 2023 11:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230203AbjDQHtF (ORCPT
+        id S229955AbjDQLaj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Apr 2023 03:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37994 "EHLO
+        Mon, 17 Apr 2023 07:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbjDQHtD (ORCPT
+        with ESMTP id S229914AbjDQLag (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Apr 2023 03:49:03 -0400
-Received: from mail-m11875.qiye.163.com (mail-m11875.qiye.163.com [115.236.118.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6493C29;
-        Mon, 17 Apr 2023 00:48:58 -0700 (PDT)
-Received: from localhost.localdomain (unknown [113.92.156.116])
-        by mail-m11875.qiye.163.com (Hmail) with ESMTPA id 49C57281142;
-        Mon, 17 Apr 2023 15:40:54 +0800 (CST)
-From:   Ding Hui <dinghui@sangfor.com.cn>
-To:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com
-Cc:     keescook@chromium.org, grzegorzx.szczurek@intel.com,
-        mateusz.palczewski@intel.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        pengdonglin@sangfor.com.cn, huangcun@sangfor.com.cn,
-        Ding Hui <dinghui@sangfor.com.cn>
-Subject: [RESEND PATCH net 1/2] iavf: Fix use-after-free in free_netdev
-Date:   Mon, 17 Apr 2023 15:40:15 +0800
-Message-Id: <20230417074016.3920-2-dinghui@sangfor.com.cn>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230417074016.3920-1-dinghui@sangfor.com.cn>
-References: <20230417074016.3920-1-dinghui@sangfor.com.cn>
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHUxPVkNLHUNMGRkYGh4ZTFUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKSFVCSVVKTk1VSkpNWVdZFhoPEhUdFFlBWU9LSFVKSktISkNVSktLVUtZBg++
-X-HM-Tid: 0a878e28da782eb1kusn49c57281142
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nww6GRw5ET0UAh1PEg46PVER
-        ED0wFBNVSlVKTUNKTEpMSU5OSEJIVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
-        QVlKSkhVQklVSk5NVUpKTVlXWQgBWUFDQ0tDNwY+
+        Mon, 17 Apr 2023 07:30:36 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2072a.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e88::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D0B72B1;
+        Mon, 17 Apr 2023 04:29:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hHiraOzF6iW/Hd+bfMYdBnm3CBcejsQ+dlU3T/UYhdxwpedYRx09+Au9Q4GJTiKFsg4+j4NTPxBa0yW+E246lHgbQzvRJWcvfgvnlcBvDfrgQz3vRTQNQfvqKst687G6sh2Im7LDw/UjUxm4/RWjrMfhzT0q1JuP5aOFPs9bfJSwV8jHGLO43JQWVawtI2GwAGUFnJo4ih4PQKO8sLI6UqhKQovz15o0uAkE/YlLHBf4Nm9lsUM95bwrWFpKBn+O7qzAy6CcHiyhsMGe4yo8zaGB9ymLKtoVc3Ntb0Uh41Ou3g0W7M7+oqZlFAyzG0t0c0mEW13Cq16Ru2UKiSwzAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0TZuCnIPF8V0xIsRwTrobY6BXoO0odj0vW31o/UoNeo=;
+ b=Zxn816QbXXQevfTf0+lUcBR1C4d9F/vXMPyJCmXs89Nc8//LTybvZ3xlzZ4Rj3gSb0fDUiUtXtLood1tJWbGfhekXaU56u4dR+O5uxdFWgF0Lfb7skmjcSpJJoaaXnhrL5gbUQYMRH/9Z4mq2pHquq0fulSQ8bYZwap88d2FgxcM1mGjgUnfvaBKQSxwzDVjBihdiaAJw3tXdVJRLrP8sBzZwOe2fKth9lBfD9EKjbeKgz34cwLRBQPW7T8udHlA1Y/GdRmj6hDPy3HoW9JDClD8Y34aOMBf2ZXCJKy7NlRqoWajDqMM7XUlXQ3HX/PgwWV+9hO5Uzy4QWPutLdetQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0TZuCnIPF8V0xIsRwTrobY6BXoO0odj0vW31o/UoNeo=;
+ b=A2bBDJ/L/ogFT4IfukrhZB1KMTFy1MOq8Fo97gkAZ1ecOcd8ZP3yuDdYwZD05P+iqb7zLnWI8zXhcGqN7sxw3AE87WbVcAU1JOTjhCNvKaIlLTA5hH6VCBGlm9yQRaPFPQJF+P40KjAQN4JnS/k7rv07/nnnSdWq0pwkFK/788c=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by DM6PR13MB4035.namprd13.prod.outlook.com (2603:10b6:5:2a3::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Mon, 17 Apr
+ 2023 11:28:48 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::89d1:63f2:2ed4:9169]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::89d1:63f2:2ed4:9169%5]) with mapi id 15.20.6298.045; Mon, 17 Apr 2023
+ 11:28:48 +0000
+Date:   Mon, 17 Apr 2023 13:28:40 +0200
+From:   Simon Horman <simon.horman@corigine.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] wifi: mt76: Replace zero-length array with
+ flexible-array member
+Message-ID: <ZD0taOx3gjSIB3Ax@corigine.com>
+References: <ZC7X7KCb+JEkPe5D@work>
+ <ZC/FA/t1mzrRydD7@corigine.com>
+ <cec9fa10-eb1e-dd5b-8ec0-579e87b5bc1d@embeddedor.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cec9fa10-eb1e-dd5b-8ec0-579e87b5bc1d@embeddedor.com>
+X-ClientProxiedBy: AM0PR07CA0027.eurprd07.prod.outlook.com
+ (2603:10a6:208:ac::40) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|DM6PR13MB4035:EE_
+X-MS-Office365-Filtering-Correlation-Id: fbe5588d-2766-4af0-ca99-08db3f36e95e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sNKH3cvY7f4pIUz9fT6L3XyEMMJDa7CCyjiLaNxCBMAKExwy3fFzzIBMTo08gdKGf3ahRrlAesrz7a6yFWkoo8hIa9extwal9E1jYrpXlxrPqKYD4ITjSJVYmK+rpCWGtEGbuNvAP4Y3ffoyUpH/GJhu42ybvffCWBLUTxN8+Ygk1fQmfo15duboPSJxLdmlXhmSbZeVLx/nzNIjdpmzE4FcfUQRin/KAQYHjiCwT1/zTt6GvTvRt6DB6RQE6cDTwC0y9pZpRdLUl2cedOWfpoDxWH2w8eBk6Ziebs8GSGH6su+KBt0lZdhDICX2CPvLJ/83TfIG/xZqqLWbftIwfkf5S4DY5DObUWsD6AzrRTUD3XAcJ/XGjl9nMfxBy49+T6uE7EAVlqDXzkBTu7Zi3qtgQEo2e9EkyYIkvOxnVc7iS0d/0z+cANndGJpGb0TdfptJN+JNEziFZ+9qJiQynGYrf+oMgYwBwnkB5AgH03uC4+exkWZ1XvpBXpTQG9BwByh++FG8X6O/YgG3zCMOqopNwd1Eef9oSyZSLd0p3mRLexnZUjuoSuEeKYqIcg1aE1t6IEFtX9k0Ie6loiMhf7u7ZfJCNALMbAQYBkCoXrQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39830400003)(346002)(136003)(396003)(366004)(376002)(451199021)(38100700002)(8676002)(8936002)(44832011)(5660300002)(7416002)(2906002)(36756003)(86362001)(478600001)(6486002)(6666004)(54906003)(186003)(2616005)(966005)(6506007)(6512007)(53546011)(66946007)(66476007)(83380400001)(316002)(41300700001)(4326008)(6916009)(66556008)(2004002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?2rjRF4mML/xCcYkqyA6AItClbUWsW7hGIIbHkBSraLngFIN2Tz3E4+MoNCDH?=
+ =?us-ascii?Q?RRNphXkfq6fGlbLvOXczm0xwPKp0tBNceUNGHPalgFZkQ6BxVWzR+E85W5bv?=
+ =?us-ascii?Q?quzK8U2Zk4eqqvX3X33YeZW3HM0czoVnDjZ2RAxGdJibjZudkXsEMVei2vcB?=
+ =?us-ascii?Q?MyfxMAQxK50mc00A/l200zRxN8iLR3d4pgrC9Jb9+ZxMAEsgTYuZQaTyRIo/?=
+ =?us-ascii?Q?VnISAIAguRy2nkAj4J5h3JaYGsRw9hKL0wj2f3iWTT9FGSK+IUACfYAlAIC1?=
+ =?us-ascii?Q?khcdh8uh3V1SIEWp+v6T3qucZU3npFx9hhoi/vYY1f0YSCn+o04G9G7iYWMX?=
+ =?us-ascii?Q?81pdeKi53XE1g05KhOPmKawz59sFeOX56jAeweFawKg5S15nwHEKJlOJzH1n?=
+ =?us-ascii?Q?9fjrtoPYKKyiSVjg+6D8wwCyfwX499DitNpPFrEfIJTC3/Cd4J5fdEewIb7X?=
+ =?us-ascii?Q?sYpFIoMeOH8adrEYMXcRlfkG4BAT3KEa56rOgQrK00mBJqHwRkuHu+0VSaOB?=
+ =?us-ascii?Q?q7EFavT8XNfxQTOoDuycsXUc6GeQw80zwlgsSI01yRaylm8Nv+26s7O98AXS?=
+ =?us-ascii?Q?DuQ+wnqAwL0zBWOxP8+WLjMlSp3TnrHMUhyYuOGH33L51weW5alKMWNcDNSM?=
+ =?us-ascii?Q?e8cmGOvTWLNnxVdarZF7kCuoQWzdv+g3yF2xt/Z86MzHLEjP7oVI9HWkNq70?=
+ =?us-ascii?Q?xvGL5vHOZ6OgXZpGqqaIYZJISDD0XKyKyrihl3VVH7sinq5JDRpKztXITVTb?=
+ =?us-ascii?Q?nEWJqvb3TC2HQ9WWtPYdYojRZ7qdanfY5Lut30vtHLbVq+dmpZFdPnjV0+VW?=
+ =?us-ascii?Q?kvzNN0rWz5Rk1yD3eN/hkLMlLl07tjfT+YQm0dqUXYJZRKz0NrXTg4F0Hpwq?=
+ =?us-ascii?Q?2h303aF+FXx2o5rzCMbMjmPhW/c5jOGsJpuqL4wuz4mxaTPL5/7nSiKaWFJy?=
+ =?us-ascii?Q?wFS29TNCISDhcPJhYDUMssyNzJWeqDM8eskBW2xqx7QkbLe2sXXYcR2OAwCb?=
+ =?us-ascii?Q?wrEUjFII1c4aCdWe6L67OVSP7hhDucKFRlx7i8j11fCt1m8c1RiP95KZze9p?=
+ =?us-ascii?Q?3pzAe+NjG46tJb8DWnpTJlQDNUxj2ojdhsh3yg+MucoJVGALwv5m4MgAg4WS?=
+ =?us-ascii?Q?PZZa3b1prdV/TzahVuDyRDoBYwQsRBueYSbeVYjXJOivRMjRJPGvmxnxoWR1?=
+ =?us-ascii?Q?bqZo9rUbKYVyPbLqRLe6ASNiHNVCOJl/zRnvpL3kMRel2Bw+G2Z7fpARiOuw?=
+ =?us-ascii?Q?0zuBJ51vj+1lri1uHGIqLFXODN21VKfJQXUnexbqK783ZhySJ7HdwlFybzK3?=
+ =?us-ascii?Q?GD28kILGxaBBiM7J3wI8DvzVCty3ixOP2kszHo4+MRlFpd6WywWQXFvxb/eI?=
+ =?us-ascii?Q?0frC23NP4dpAdwRgfRgpTFt7ILc5zjXBEJToR/cXx7H9h9LjrGXy/fxzP1Uj?=
+ =?us-ascii?Q?ODPqX+gCvTXqx2qiTLqoqm+widsgY1mjJo36qE0BiImfFv66qFDyNVZ+yky0?=
+ =?us-ascii?Q?mkoHGN3qTu0Sp4fbOVveoU8ElukNNZqI6dQ4C6MuW8xwnQP47dxO5hxJIM9X?=
+ =?us-ascii?Q?uCvAIM8qlSe6PViMtW4wpbPX59jxzoAGeQdVH7gzXYgtLd0M9z3aOBjiajMV?=
+ =?us-ascii?Q?8jinLxfOI/L+ctaI+ulaFvNSbYysoK3JSe7mQEpGuQrgvcevW5lCq4YRdLpZ?=
+ =?us-ascii?Q?U+OiEQ=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbe5588d-2766-4af0-ca99-08db3f36e95e
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Apr 2023 11:28:48.2452
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: XRAjZ6crE6wFleHfwHJdK3nOz/lRr0netlVeVqJlPbhUleA2+gp70rZTtiugDCMwVt5fHONUNpgnQGOMnUtWbNQ9v1oyu+7zXGetCsLs+po=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB4035
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-We do netif_napi_add() for all allocated q_vectors[], but potentially
-do netif_napi_del() for part of them, then kfree q_vectors and lefted
-invalid pointers at dev->napi_list.
+On Tue, Apr 11, 2023 at 12:39:06PM -0600, Gustavo A. R. Silva wrote:
+> [You don't often get email from gustavo@embeddedor.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> On 4/7/23 01:23, Simon Horman wrote:
+> > On Thu, Apr 06, 2023 at 08:32:12AM -0600, Gustavo A. R. Silva wrote:
+> > > Zero-length arrays are deprecated [1] and have to be replaced by C99
+> > > flexible-array members.
+> > > 
+> > > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE routines
+> > > on memcpy() and help to make progress towards globally enabling
+> > > -fstrict-flex-arrays=3 [2]
+> > > 
+> > > Link: https://github.com/KSPP/linux/issues/78 [1]
+> > > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [2]
+> > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > 
+> > Reviewed-by: Simon Horman <simon.horman@corigine.com>
+> 
+> Thanks :)
+> 
+> > 
+> > > ---
+> > >   drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+> > > index a5e6ee4daf92..9bf4b4199ee3 100644
+> > > --- a/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+> > > +++ b/drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h
+> > > @@ -127,7 +127,7 @@ struct mt76_connac2_mcu_rxd {
+> > >      u8 rsv1[2];
+> > >      u8 s2d_index;
+> > > 
+> > > -    u8 tlv[0];
+> > > +    u8 tlv[];
+> > >   };
+> > > 
+> > >   struct mt76_connac2_patch_hdr {
+> > 
+> > Curiously -fstrict-flex-arrays=3 didn't flag this one in my environment,
+> > Ubuntu Lunar.
+> 
+> Yep; that's why I didn't include any warning message in the changelog text
+> this time.
+> 
+> And the reason for that is that tlv is not being indexed anywhere in the
+> code. However, it's being used in the pointer arithmetic operation below:
+> 
+> drivers/net/wireless/mediatek/mt76/mt7921/mcu.c:
+>  164         rxd = (struct mt76_connac2_mcu_rxd *)skb->data;
+>  165         grant = (struct mt7921_roc_grant_tlv *)(rxd->tlv + 4);
+> 
+> 
+> which means that it can be considered as an array of size greater than zero
+> at some point. Hence, it should be transformed into a C99 flexible array.
 
-If num_active_queues is changed to less than allocated q_vectors[] by
-unexpected, when iavf_remove, we might see UAF in free_netdev like this:
+Understood, thanks for the explanation.
 
-[ 4093.900222] ==================================================================
-[ 4093.900230] BUG: KASAN: use-after-free in free_netdev+0x308/0x390
-[ 4093.900232] Read of size 8 at addr ffff88b4dc145640 by task test-iavf-1.sh/6699
-[ 4093.900233]
-[ 4093.900236] CPU: 10 PID: 6699 Comm: test-iavf-1.sh Kdump: loaded Tainted: G           O     --------- -t - 4.18.0 #1
-[ 4093.900238] Hardware name: Powerleader PR2008AL/H12DSi-N6, BIOS 2.0 04/09/2021
-[ 4093.900239] Call Trace:
-[ 4093.900244]  dump_stack+0x71/0xab
-[ 4093.900249]  print_address_description+0x6b/0x290
-[ 4093.900251]  ? free_netdev+0x308/0x390
-[ 4093.900252]  kasan_report+0x14a/0x2b0
-[ 4093.900254]  free_netdev+0x308/0x390
-[ 4093.900261]  iavf_remove+0x825/0xd20 [iavf]
-[ 4093.900265]  pci_device_remove+0xa8/0x1f0
-[ 4093.900268]  device_release_driver_internal+0x1c6/0x460
-[ 4093.900271]  pci_stop_bus_device+0x101/0x150
-[ 4093.900273]  pci_stop_and_remove_bus_device+0xe/0x20
-[ 4093.900275]  pci_iov_remove_virtfn+0x187/0x420
-[ 4093.900277]  ? pci_iov_add_virtfn+0xe10/0xe10
-[ 4093.900278]  ? pci_get_subsys+0x90/0x90
-[ 4093.900280]  sriov_disable+0xed/0x3e0
-[ 4093.900282]  ? bus_find_device+0x12d/0x1a0
-[ 4093.900290]  i40e_free_vfs+0x754/0x1210 [i40e]
-[ 4093.900298]  ? i40e_reset_all_vfs+0x880/0x880 [i40e]
-[ 4093.900299]  ? pci_get_device+0x7c/0x90
-[ 4093.900300]  ? pci_get_subsys+0x90/0x90
-[ 4093.900306]  ? pci_vfs_assigned.part.7+0x144/0x210
-[ 4093.900309]  ? __mutex_lock_slowpath+0x10/0x10
-[ 4093.900315]  i40e_pci_sriov_configure+0x1fa/0x2e0 [i40e]
-[ 4093.900318]  sriov_numvfs_store+0x214/0x290
-[ 4093.900320]  ? sriov_totalvfs_show+0x30/0x30
-[ 4093.900321]  ? __mutex_lock_slowpath+0x10/0x10
-[ 4093.900323]  ? __check_object_size+0x15a/0x350
-[ 4093.900326]  kernfs_fop_write+0x280/0x3f0
-[ 4093.900329]  vfs_write+0x145/0x440
-[ 4093.900330]  ksys_write+0xab/0x160
-[ 4093.900332]  ? __ia32_sys_read+0xb0/0xb0
-[ 4093.900334]  ? fput_many+0x1a/0x120
-[ 4093.900335]  ? filp_close+0xf0/0x130
-[ 4093.900338]  do_syscall_64+0xa0/0x370
-[ 4093.900339]  ? page_fault+0x8/0x30
-[ 4093.900341]  entry_SYSCALL_64_after_hwframe+0x65/0xca
-[ 4093.900357] RIP: 0033:0x7f16ad4d22c0
-[ 4093.900359] Code: 73 01 c3 48 8b 0d d8 cb 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 89 24 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 fe dd 01 00 48 89 04 24
-[ 4093.900360] RSP: 002b:00007ffd6491b7f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-[ 4093.900362] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f16ad4d22c0
-[ 4093.900363] RDX: 0000000000000002 RSI: 0000000001a41408 RDI: 0000000000000001
-[ 4093.900364] RBP: 0000000001a41408 R08: 00007f16ad7a1780 R09: 00007f16ae1f2700
-[ 4093.900364] R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000002
-[ 4093.900365] R13: 0000000000000001 R14: 00007f16ad7a0620 R15: 0000000000000001
-[ 4093.900367]
-[ 4093.900368] Allocated by task 820:
-[ 4093.900371]  kasan_kmalloc+0xa6/0xd0
-[ 4093.900373]  __kmalloc+0xfb/0x200
-[ 4093.900376]  iavf_init_interrupt_scheme+0x63b/0x1320 [iavf]
-[ 4093.900380]  iavf_watchdog_task+0x3d51/0x52c0 [iavf]
-[ 4093.900382]  process_one_work+0x56a/0x11f0
-[ 4093.900383]  worker_thread+0x8f/0xf40
-[ 4093.900384]  kthread+0x2a0/0x390
-[ 4093.900385]  ret_from_fork+0x1f/0x40
-[ 4093.900387]  0xffffffffffffffff
-[ 4093.900387]
-[ 4093.900388] Freed by task 6699:
-[ 4093.900390]  __kasan_slab_free+0x137/0x190
-[ 4093.900391]  kfree+0x8b/0x1b0
-[ 4093.900394]  iavf_free_q_vectors+0x11d/0x1a0 [iavf]
-[ 4093.900397]  iavf_remove+0x35a/0xd20 [iavf]
-[ 4093.900399]  pci_device_remove+0xa8/0x1f0
-[ 4093.900400]  device_release_driver_internal+0x1c6/0x460
-[ 4093.900401]  pci_stop_bus_device+0x101/0x150
-[ 4093.900402]  pci_stop_and_remove_bus_device+0xe/0x20
-[ 4093.900403]  pci_iov_remove_virtfn+0x187/0x420
-[ 4093.900404]  sriov_disable+0xed/0x3e0
-[ 4093.900409]  i40e_free_vfs+0x754/0x1210 [i40e]
-[ 4093.900415]  i40e_pci_sriov_configure+0x1fa/0x2e0 [i40e]
-[ 4093.900416]  sriov_numvfs_store+0x214/0x290
-[ 4093.900417]  kernfs_fop_write+0x280/0x3f0
-[ 4093.900418]  vfs_write+0x145/0x440
-[ 4093.900419]  ksys_write+0xab/0x160
-[ 4093.900420]  do_syscall_64+0xa0/0x370
-[ 4093.900421]  entry_SYSCALL_64_after_hwframe+0x65/0xca
-[ 4093.900422]  0xffffffffffffffff
-[ 4093.900422]
-[ 4093.900424] The buggy address belongs to the object at ffff88b4dc144200
-                which belongs to the cache kmalloc-8k of size 8192
-[ 4093.900425] The buggy address is located 5184 bytes inside of
-                8192-byte region [ffff88b4dc144200, ffff88b4dc146200)
-[ 4093.900425] The buggy address belongs to the page:
-[ 4093.900427] page:ffffea00d3705000 refcount:1 mapcount:0 mapping:ffff88bf04415c80 index:0x0 compound_mapcount: 0
-[ 4093.900430] flags: 0x10000000008100(slab|head)
-[ 4093.900433] raw: 0010000000008100 dead000000000100 dead000000000200 ffff88bf04415c80
-[ 4093.900434] raw: 0000000000000000 0000000000030003 00000001ffffffff 0000000000000000
-[ 4093.900434] page dumped because: kasan: bad access detected
-[ 4093.900435]
-[ 4093.900435] Memory state around the buggy address:
-[ 4093.900436]  ffff88b4dc145500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[ 4093.900437]  ffff88b4dc145580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[ 4093.900438] >ffff88b4dc145600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[ 4093.900438]                                            ^
-[ 4093.900439]  ffff88b4dc145680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[ 4093.900440]  ffff88b4dc145700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[ 4093.900440] ==================================================================
+> >   gcc-13 --version
+> >   gcc-13 (Ubuntu 13-20230320-1ubuntu1) 13.0.1 20230320 (experimental) [master r13-6759-g5194ad1958c]
+> >   Copyright (C) 2023 Free Software Foundation, Inc.
+> >   This is free software; see the source for copying conditions.  There is NO
+> >   warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+> > 
+> > I did, however, notice some other problems reported by gcc-13 with
+> > -fstrict-flex-arrays=3 in drivers/net/wireless/mediatek/mt76
+> > when run against net-next wireless. I've listed them in diff format below.
+> > 
+> > Are these on your radar too?
+> 
+> Yep; those are being addressed here:
+> 
+> https://lore.kernel.org/linux-hardening/ZBTUB%2FkJYQxq%2F6Cj@work/
 
-Fix it by letting netif_napi_del() match to netif_napi_add().
-
-Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
-Cc: Donglin Peng <pengdonglin@sangfor.com.cn>
-CC: Huang Cun <huangcun@sangfor.com.cn>
----
- drivers/net/ethernet/intel/iavf/iavf_main.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-index 095201e83c9d..a57e3425f960 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_main.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-@@ -1849,19 +1849,15 @@ static int iavf_alloc_q_vectors(struct iavf_adapter *adapter)
- static void iavf_free_q_vectors(struct iavf_adapter *adapter)
- {
- 	int q_idx, num_q_vectors;
--	int napi_vectors;
- 
- 	if (!adapter->q_vectors)
- 		return;
- 
- 	num_q_vectors = adapter->num_msix_vectors - NONQ_VECS;
--	napi_vectors = adapter->num_active_queues;
- 
- 	for (q_idx = 0; q_idx < num_q_vectors; q_idx++) {
- 		struct iavf_q_vector *q_vector = &adapter->q_vectors[q_idx];
--
--		if (q_idx < napi_vectors)
--			netif_napi_del(&q_vector->napi);
-+		netif_napi_del(&q_vector->napi);
- 	}
- 	kfree(adapter->q_vectors);
- 	adapter->q_vectors = NULL;
--- 
-2.17.1
-
+Thanks, I had forgotten about that.
