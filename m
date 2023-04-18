@@ -2,252 +2,280 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A60C6FD18
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 18:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2D6C6FD18
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 19:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231218AbjDRS1Y (ORCPT
+        id S232640AbjDRTtE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Apr 2023 14:27:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
+        Tue, 18 Apr 2023 15:49:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230290AbjDRS1Y (ORCPT
+        with ESMTP id S231174AbjDRTtD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Apr 2023 14:27:24 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A499031
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:27:22 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id x8-20020a17090a6b4800b002474c5d3367so94749pjl.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:27:22 -0700 (PDT)
+        Tue, 18 Apr 2023 15:49:03 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2115.outbound.protection.outlook.com [40.107.244.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304D2B465;
+        Tue, 18 Apr 2023 12:48:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LadBcvJAoR+kwXTKXteXWKG+I9dWWwpnCZBHtlcd7om60eRLwSAobl5Ocz0i948q/pg3mVs1s6TaPFZBM3+6RF0PfbR6sO5RqwS/OmAHX8X969HI8nNEiKxpyAk3+foTw4hGWnBbsznVwwOrpzvbEQwbIGI7fUsVS12Mqemgt/1j7DNqwOZkzF14dYAL6RPD/nnxOa0FpAiU74TK3mMiYskF2DDOcTxkiiTyJrPc43lOyEb0KeW1NMVHLxoo11phWvYUe/7yAnz56zdmnHZebdc9hxwE6fp9JKaxsavM8lO+9uIUIMKRKdL+02oKolGDL+qs589SB9BEH3e9RnnNRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sjh/7vV8T12BuDREuiPqryYb5bMmkXaUzx838nzXqYY=;
+ b=FPiUS7+5Px6XfJs6oD52ot93tjoBMITRanRtEQmJUDBx4eLZVxnSUUmaCJe3XKZrg4cLa72F7VuoquKoBwoqaiv0qYPJrcWZbpdB8xIaqRGYhl7AcCJOiiRcYxfx/P3JR0ZFplY8nlKtaahYgyXwlcerGwa/EO4miHiuh0ZRBEqcDZVyqbZ2EIlMSHs4NPxGCqOs8MDkeS1dc/IDoKUunTPGXQv/6Fbc6+lKjONJdo7Dno+NAT8KzpA5P8m8rPS43Qgo2EyPmWS1RCVYocMMxsbXBfNNW21bwmEf9PMUP4sQsSGmTHtS5A3L5u/aReaXUUsu8rJS3XLlnHlmLdpGWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681842442; x=1684434442;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xan2Rb4LxJqnkwR/5yCpJ+HY7/yGaonUOCUizXrIxSQ=;
-        b=5dflFAVkwrsWE1u98WIy85LkOvAI6qFWx1pATeB2f4ij7axRKfMTBzK++4jekGsLO2
-         5KkXMdTJ6Nk/mMHiOjeR1SZMw1ht0js0q+qUFuCsUloFk/Kcqy3P5zyfrfOBZ3o59tBE
-         XtJ3S70O2EbG6nZ55MqDrhL924yYH3ZuQUi9pC7I5AQPk5NbQk5ABnlIfZQs++uIaAtN
-         7MvyRguXCuWASxxWy+cGZA8J11kl8fbDdzyglpYSG4tREh2Z+UkmEVHvGBHRzUKhUQ0V
-         GlEDuPZidM2w73HG00MCci24EvunQ04MCWgVWOP8/TD9z6UonCHZ2+LmunHz4cwYDBZJ
-         ZJkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681842442; x=1684434442;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xan2Rb4LxJqnkwR/5yCpJ+HY7/yGaonUOCUizXrIxSQ=;
-        b=aj7dZZYZzq8exfsu8ye/H8gDKXSl17d2PycK+R8Wjpr6uE/rWojXx00hfVgOON2AFT
-         o9c5l4Q15Ki3P9EXAKQ3FSB7xMuXFxbn8Lga+NC94vM1DYhCbczx/7dpdEXzD5WIDw7q
-         CI+GB0iDIMfqIlZq6UjBvXUo67OwixkZDJF3uXgJjnwbspToda2WjX0n4WSnyv/O7P1M
-         lWs5K6QKXRRlBRPf1yAy2iunWx9Dw1gwFZXPgZ+bJCM2BOUi6d9jARLc2KC6/RTz0NRJ
-         Q2ZnSNXosOapXMmz+5nn34w9AJvSdOD/4RQ9RI6Gi5C0emTq93VBVW68fq2/BmSrlW3L
-         iRLw==
-X-Gm-Message-State: AAQBX9eiMLYH0YAbuF1Cab4/3eWXgOdZdtcM1qVabLixkdE2Pp3hM59Y
-        gp4oG5Xvh/GOupVNsrlWysHk6DKzdaPT639ZwBvKUJBBIUtvsy5meFl1qQ==
-X-Google-Smtp-Source: AKy350bn9N834mGRnTfxRB/1sg3Gi0LNYnU/cXaXt6pc2dTMoJKCLYPpBlnafBq3HfEmUa+rzRWnlZEJ5MyF4YEvvsY=
-X-Received: by 2002:a05:6a20:1445:b0:f0:b6e3:90f2 with SMTP id
- a5-20020a056a20144500b000f0b6e390f2mr776981pzi.13.1681842441499; Tue, 18 Apr
- 2023 11:27:21 -0700 (PDT)
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sjh/7vV8T12BuDREuiPqryYb5bMmkXaUzx838nzXqYY=;
+ b=cglUImMeY2o87AmIGgohkO6esaeVyz62fD7jUYky0atBi0NbXw5UVh9f+QaI5p/OGlKF95ygbQe4ok3d6O3r2D/1Gjc39wRT2qzfbcetkQqFzOtkdj4pgJQUoLaCy9Dgia0lXQfq/8b4USorgHPK07hUxGCBdDl7c4+kmeU9Dpw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by PH0PR13MB5033.namprd13.prod.outlook.com (2603:10b6:510:90::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Tue, 18 Apr
+ 2023 19:48:37 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::89d1:63f2:2ed4:9169]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::89d1:63f2:2ed4:9169%5]) with mapi id 15.20.6298.045; Tue, 18 Apr 2023
+ 19:48:37 +0000
+Date:   Tue, 18 Apr 2023 21:48:28 +0200
+From:   Simon Horman <simon.horman@corigine.com>
+To:     Ding Hui <dinghui@sangfor.com.cn>
+Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
+        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        keescook@chromium.org, grzegorzx.szczurek@intel.com,
+        mateusz.palczewski@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        pengdonglin@sangfor.com.cn, huangcun@sangfor.com.cn
+Subject: Re: [RESEND PATCH net 1/2] iavf: Fix use-after-free in free_netdev
+Message-ID: <ZD70DKC3+K6gngTh@corigine.com>
+References: <20230417074016.3920-1-dinghui@sangfor.com.cn>
+ <20230417074016.3920-2-dinghui@sangfor.com.cn>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230417074016.3920-2-dinghui@sangfor.com.cn>
+X-ClientProxiedBy: AS4PR09CA0008.eurprd09.prod.outlook.com
+ (2603:10a6:20b:5e0::18) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
 MIME-Version: 1.0
-References: <20230407192717.636137-9-keescook@chromium.org> <202304080811.nYP4KpPZ-lkp@intel.com>
-In-Reply-To: <202304080811.nYP4KpPZ-lkp@intel.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Apr 2023 11:27:10 -0700
-Message-ID: <CAKwvOd=T5ownFTe5+M23ZLSPM876_7WAx23GzNeGxkqwGTHERQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/10] fortify: Add KUnit tests for runtime overflows
-To:     kernel test robot <lkp@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        oe-kbuild-all@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|PH0PR13MB5033:EE_
+X-MS-Office365-Filtering-Correlation-Id: fd7398a1-2e25-420f-4d2b-08db4045e5f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ashAf0OqN7zrEOELFp8zMUUTP/Wgm86heg1BS533Jz9SqlgFXSb6GWhkfE1HAfbY5N5E5MOYqYgUUCMqL+LkH2NR1R1XXUWZYUYF6bty//GGiZxBOG30SWvEfFK0v/go4gTWvu5ax86s0+26Xqc5o80PC7Gb1CbOn70NKD55BVhXKO2AZVi+mo2wAu9XE90tzm0qEMG7CVLNAe/4zvI2KYhvO0HQfWaOUny16r1kFrkOHSKwxQFlOa5bsibM1u5YB7G5CaKxOlZmh/AW65OKnZf9wPdE3HRvWtTpvrmj2cPLU/Mf0A1x73AaXb3zQvyoVydkxw13F1FNIMWio3dxYU/fBdqxCRG6eO/keSbql3IEt2wJxFmwWPWuDNHoGOpFYL+0x5sMO+UiHM9349rlDHV80iyGPWHSYhXNKznKbY70gkija6eSfFZrpn6lWnDFLPBK1qaOAv+isvhmVlWj0tzFuk0pYr63+i68fh0s9sijBhKxoNBmYrpVD8v8ahtXcqqVc1Huf6rc+9CxasVjR+vwDiKzg6xDozcv6jCUItlm/XdK4RLuP2l/TnCX+vdPVzCOnhMD1/pnU8XnIZ1VW+A/SSBlw9bbKEGfx5RDr6SMrMxpwtZ/crAdXyjMXwS2nsJNGt0Y1CqaNB8W8FDWZw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(366004)(376002)(39840400004)(396003)(346002)(451199021)(8936002)(38100700002)(36756003)(8676002)(44832011)(7416002)(2906002)(86362001)(5660300002)(478600001)(6486002)(84970400001)(6666004)(186003)(2616005)(66946007)(6506007)(66476007)(6512007)(41300700001)(316002)(83380400001)(6916009)(66556008)(4326008)(67856001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?05sRjgflEChtJOLnvLVYQCu1kCkMgTydgwa3lzI5Uq8aRscC8m9+Ya0XkNVe?=
+ =?us-ascii?Q?eM4Lm2hIQix5dgK7V1iwC9XbL/+6kA+76JsXL6jOI//C/zMaCPN8Ft4SFfOK?=
+ =?us-ascii?Q?Ceo8Nfpx84LO10lJ0opn9ownjhiTH7gWMrxheJbo7EKm+Jlf6Nn2Ud/+mzzY?=
+ =?us-ascii?Q?sycqeFOEZMQFVwezq0VTMuLL9ZrwgNoduvtqg5pygd06ugottlX8diERYwjU?=
+ =?us-ascii?Q?p1XaowS1RnMO5HQ7mn8RG6Susd1JVrmrckRC04dAti9nHjmNkq4N6zq7gTjc?=
+ =?us-ascii?Q?vW09lkizVkyLdKsKPf6pIR3EhO9eWFLbWkqy8jgRwDHsURYYVvZqsYZLLjwf?=
+ =?us-ascii?Q?sNV4A9pFBoj06FizJDBsQi52YBsbN4hE8wZ548VYkpP6DMMWhrKfNS+U5aGr?=
+ =?us-ascii?Q?YAC5QKkaKFC7XLcxJwU/mqRCnGzSqBOJpD2/M4t6ZQdXUCdXfx268yEMzGJR?=
+ =?us-ascii?Q?/RwwIobmbjieau414bazQsq9+dfHLhgte39lr37LlOxCccLkK18xMAWhAlVP?=
+ =?us-ascii?Q?Wm4vk9YTWfLyCCMo8i9iRcgNrtLaoUl/i8t2KOJvOXq9jDePZXwHS+aJ4yX4?=
+ =?us-ascii?Q?Y5lAvEiuGktUdbdckE66ALEfRYE3jsA3fDZ98w7mmWRReDnFxVeGknJ5R8b6?=
+ =?us-ascii?Q?8yyfmzk0Gjpf3KSyStk1cdAhDZ4IYR0GFpBlylv9z0APJyXIN0yk/VLfid2U?=
+ =?us-ascii?Q?f1Vwlyq/a3Ab888VKbkn8TIUXYYcZdeTOkUTkwhV4cCOKV7i67CoYS0NZhsE?=
+ =?us-ascii?Q?AiSpjH7doLHI4LGtOGgum9rHZhMEZL+M3WMoqMQmB09nqjddt+EPe+niMsAf?=
+ =?us-ascii?Q?+Mm0i0rLP6I+AUnW/rDSynbzW+tjlloaNueW7pqADsS9ovl6Yp6LpCC6ZCw3?=
+ =?us-ascii?Q?nihXmscBLApoL5qFhq+WnVzMEeoXd8c27VE9kzs8dEW75iJJt0U7dQQgIwQ8?=
+ =?us-ascii?Q?jFOSX20BS9oqJUrv2Mf9DtJviPXl6ODhASPgN+DXGfPywygjmmtJJkk+2gFH?=
+ =?us-ascii?Q?hu0KBfe6DNwZ6HH4KgL8ji6Y3+mPOh4BaZe2yP91BURGC3zvzugTP4znv84f?=
+ =?us-ascii?Q?dO5Cutuc+Np87mYG1xMWo5fpSN5ujTlmdxKv1qb5U0nysgWoNvnLlKsKGNm8?=
+ =?us-ascii?Q?mXdsrkuPIARbf6CXGrD3s1s+brUp3qrreifLu/S8GxSvf1yOfqSyXYtdi0OA?=
+ =?us-ascii?Q?jt+EFcwBhBxpCj06MzgUKE2wb5ShBlmS1SpUnHAvM8qA0ywmjfSGFCIUlND3?=
+ =?us-ascii?Q?URWJ88Z6O+yIeBq0cGJw8gmk56UzqGfeKUMjdyJ1YJlyPZTA90WUjlWdfvGu?=
+ =?us-ascii?Q?LfROOvKB+JHxMPAd51EMnnw4AF++0hpqIozl4ktWcwnFBQJ/dQr6ch6EiegF?=
+ =?us-ascii?Q?Xj8xw38KA2Y4goyIgnCXXKtsg0LUkuhHrXsGcAok5sRSnF3s9LEwekUv6cNy?=
+ =?us-ascii?Q?uOLOV1mrdS10C/wZWdkuRMsnm8kuAIPf676eF1LT1IwnsobpREknnskWqzaX?=
+ =?us-ascii?Q?qxcIuBuh/ghrn4eV7JhJaFNejkJ5uQWKSWdX4rphDbRkeMe4m5eLyvbavs2A?=
+ =?us-ascii?Q?d2hmlwBQDBngnnGONFo1uJ8J35PpkdMOQobg/w14jI0STVDBpGmQbF/nFNuA?=
+ =?us-ascii?Q?E0OcD5HE01MlICOiH6b9JbtZVMnDurHNkhG/ydk9YhNaOOenp3M9YJNKrGTE?=
+ =?us-ascii?Q?n+/DDw=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd7398a1-2e25-420f-4d2b-08db4045e5f8
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2023 19:48:36.7886
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6ynJzYHCp22qOuBmqBHkZAQkWfy04mwGDhaPNZfsQ25m70S20B/arrrbzPm4gbZWmmuofWZO8yvaiB/oxS1MFWmnglYFCuKHvFn1aCEieAs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR13MB5033
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 7, 2023 at 5:33=E2=80=AFPM kernel test robot <lkp@intel.com> wr=
-ote:
->
-> Hi Kees,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on kees/for-next/hardening]
-> [also build test WARNING on kees/for-next/pstore kees/for-next/kspp linus=
-/master tip/x86/core v6.3-rc5 next-20230406]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/kunit-to=
-ol-Enable-CONFIG_FORTIFY_SOURCE-under-UML/20230408-032959
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git fo=
-r-next/hardening
-> patch link:    https://lore.kernel.org/r/20230407192717.636137-9-keescook=
-%40chromium.org
-> patch subject: [PATCH v2 09/10] fortify: Add KUnit tests for runtime over=
-flows
-> config: openrisc-randconfig-r034-20230405 (https://download.01.org/0day-c=
-i/archive/20230408/202304080811.nYP4KpPZ-lkp@intel.com/config)
-> compiler: or1k-linux-gcc (GCC) 12.1.0
-> reproduce (this is a W=3D1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
-n/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/intel-lab-lkp/linux/commit/d212962ef7682ee16=
-0bf38fa455475558f031759
->         git remote add linux-review https://github.com/intel-lab-lkp/linu=
-x
->         git fetch --no-tags linux-review Kees-Cook/kunit-tool-Enable-CONF=
-IG_FORTIFY_SOURCE-under-UML/20230408-032959
->         git checkout d212962ef7682ee160bf38fa455475558f031759
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dgcc-12.1.0 make.cro=
-ss W=3D1 O=3Dbuild_dir ARCH=3Dopenrisc olddefconfig
->         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dgcc-12.1.0 make.cro=
-ss W=3D1 O=3Dbuild_dir ARCH=3Dopenrisc SHELL=3D/bin/bash lib/
->
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Link: https://lore.kernel.org/oe-kbuild-all/202304080811.nYP4KpPZ-lkp@i=
-ntel.com/
->
-> All warnings (new ones prefixed by >>):
->
->    In file included from lib/fortify_kunit.c:28:
->    lib/fortify_kunit.c: In function 'strnlen_test':
-> >> lib/fortify_kunit.c:412:31: warning: 'strnlen' specified bound 33 exce=
-eds source size 32 [-Wstringop-overread]
+Hi Ding Hui,
 
-If we expect to validate the runtime behavior of fortify, but using
-constants that the compiler can check for readability in this test,
-then we might need to use the
-_Pragma/__diag infrastructure from include/linux/compiler_types.h to
-disable -Wstringop-overread; or disable it at the makefile level.
+On Mon, Apr 17, 2023 at 03:40:15PM +0800, Ding Hui wrote:
+> We do netif_napi_add() for all allocated q_vectors[], but potentially
+> do netif_napi_del() for part of them, then kfree q_vectors and lefted
 
->      412 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
->    include/kunit/test.h:584:38: note: in definition of macro 'KUNIT_BASE_=
-BINARY_ASSERTION'
->      584 |         const typeof(left) __left =3D (left);                 =
-                   \
->          |                                      ^~~~
->    include/kunit/test.h:776:9: note: in expansion of macro 'KUNIT_BINARY_=
-INT_ASSERTION'
->      776 |         KUNIT_BINARY_INT_ASSERTION(test,                      =
-                 \
->          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/kunit/test.h:773:9: note: in expansion of macro 'KUNIT_EXPECT_=
-EQ_MSG'
->      773 |         KUNIT_EXPECT_EQ_MSG(test, left, right, NULL)
->          |         ^~~~~~~~~~~~~~~~~~~
->    lib/fortify_kunit.c:412:9: note: in expansion of macro 'KUNIT_EXPECT_E=
-Q'
->      412 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
->          |         ^~~~~~~~~~~~~~~
->    lib/fortify_kunit.c:359:14: note: source object allocated here
->      359 |         char buf[32];
->          |              ^~~
->    lib/fortify_kunit.c:414:31: warning: 'strnlen' specified bound 34 exce=
-eds source size 32 [-Wstringop-overread]
->      414 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
->    include/kunit/test.h:584:38: note: in definition of macro 'KUNIT_BASE_=
-BINARY_ASSERTION'
->      584 |         const typeof(left) __left =3D (left);                 =
-                   \
->          |                                      ^~~~
->    include/kunit/test.h:776:9: note: in expansion of macro 'KUNIT_BINARY_=
-INT_ASSERTION'
->      776 |         KUNIT_BINARY_INT_ASSERTION(test,                      =
-                 \
->          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
->    include/kunit/test.h:773:9: note: in expansion of macro 'KUNIT_EXPECT_=
-EQ_MSG'
->      773 |         KUNIT_EXPECT_EQ_MSG(test, left, right, NULL)
->          |         ^~~~~~~~~~~~~~~~~~~
->    lib/fortify_kunit.c:414:9: note: in expansion of macro 'KUNIT_EXPECT_E=
-Q'
->      414 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
->          |         ^~~~~~~~~~~~~~~
->    lib/fortify_kunit.c:359:14: note: source object allocated here
->      359 |         char buf[32];
->          |              ^~~
->
->
-> vim +/strnlen +412 lib/fortify_kunit.c
->
->    387
->    388  static void strnlen_test(struct kunit *test)
->    389  {
->    390          struct fortify_padding pad =3D { };
->    391          int i, end =3D sizeof(pad.buf) - 1;
->    392
->    393          /* Fill 31 bytes with valid characters. */
->    394          for (i =3D 0; i < sizeof(pad.buf) - 1; i++)
->    395                  pad.buf[i] =3D i + '0';
->    396          /* Trailing bytes are still %NUL. */
->    397          KUNIT_EXPECT_EQ(test, pad.buf[end], '\0');
->    398          KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
->    399
->    400          /* String is terminated, so strnlen() is valid. */
->    401          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, sizeof(pad.buf)), =
-end);
->    402          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
->    403          /* A truncated strnlen() will be safe, too. */
->    404          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, sizeof(pad.buf) / =
-2),
->    405                                          sizeof(pad.buf) / 2);
->    406          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
->    407
->    408          /* Make string unterminated, and recount. */
->    409          pad.buf[end] =3D 'A';
->    410          end =3D sizeof(pad.buf);
->    411          /* Reading beyond with strncpy() will fail. */
->  > 412          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
->    413          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
->    414          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
->    415          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
->    416
->    417          /* Early-truncated is safe still, though. */
->    418          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end), end);
->    419          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
->    420
->    421          end =3D sizeof(pad.buf) / 2;
->    422          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end), end);
->    423          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
->    424  }
->    425
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests
+nit: lefted -> leave
 
+> invalid pointers at dev->napi_list.
+> 
+> If num_active_queues is changed to less than allocated q_vectors[] by
+> unexpected, when iavf_remove, we might see UAF in free_netdev like this:
+> 
+> [ 4093.900222] ==================================================================
+> [ 4093.900230] BUG: KASAN: use-after-free in free_netdev+0x308/0x390
+> [ 4093.900232] Read of size 8 at addr ffff88b4dc145640 by task test-iavf-1.sh/6699
+> [ 4093.900233]
+> [ 4093.900236] CPU: 10 PID: 6699 Comm: test-iavf-1.sh Kdump: loaded Tainted: G           O     --------- -t - 4.18.0 #1
+> [ 4093.900238] Hardware name: Powerleader PR2008AL/H12DSi-N6, BIOS 2.0 04/09/2021
+> [ 4093.900239] Call Trace:
+> [ 4093.900244]  dump_stack+0x71/0xab
+> [ 4093.900249]  print_address_description+0x6b/0x290
+> [ 4093.900251]  ? free_netdev+0x308/0x390
+> [ 4093.900252]  kasan_report+0x14a/0x2b0
+> [ 4093.900254]  free_netdev+0x308/0x390
+> [ 4093.900261]  iavf_remove+0x825/0xd20 [iavf]
+> [ 4093.900265]  pci_device_remove+0xa8/0x1f0
+> [ 4093.900268]  device_release_driver_internal+0x1c6/0x460
+> [ 4093.900271]  pci_stop_bus_device+0x101/0x150
+> [ 4093.900273]  pci_stop_and_remove_bus_device+0xe/0x20
+> [ 4093.900275]  pci_iov_remove_virtfn+0x187/0x420
+> [ 4093.900277]  ? pci_iov_add_virtfn+0xe10/0xe10
+> [ 4093.900278]  ? pci_get_subsys+0x90/0x90
+> [ 4093.900280]  sriov_disable+0xed/0x3e0
+> [ 4093.900282]  ? bus_find_device+0x12d/0x1a0
+> [ 4093.900290]  i40e_free_vfs+0x754/0x1210 [i40e]
+> [ 4093.900298]  ? i40e_reset_all_vfs+0x880/0x880 [i40e]
+> [ 4093.900299]  ? pci_get_device+0x7c/0x90
+> [ 4093.900300]  ? pci_get_subsys+0x90/0x90
+> [ 4093.900306]  ? pci_vfs_assigned.part.7+0x144/0x210
+> [ 4093.900309]  ? __mutex_lock_slowpath+0x10/0x10
+> [ 4093.900315]  i40e_pci_sriov_configure+0x1fa/0x2e0 [i40e]
+> [ 4093.900318]  sriov_numvfs_store+0x214/0x290
+> [ 4093.900320]  ? sriov_totalvfs_show+0x30/0x30
+> [ 4093.900321]  ? __mutex_lock_slowpath+0x10/0x10
+> [ 4093.900323]  ? __check_object_size+0x15a/0x350
+> [ 4093.900326]  kernfs_fop_write+0x280/0x3f0
+> [ 4093.900329]  vfs_write+0x145/0x440
+> [ 4093.900330]  ksys_write+0xab/0x160
+> [ 4093.900332]  ? __ia32_sys_read+0xb0/0xb0
+> [ 4093.900334]  ? fput_many+0x1a/0x120
+> [ 4093.900335]  ? filp_close+0xf0/0x130
+> [ 4093.900338]  do_syscall_64+0xa0/0x370
+> [ 4093.900339]  ? page_fault+0x8/0x30
+> [ 4093.900341]  entry_SYSCALL_64_after_hwframe+0x65/0xca
+> [ 4093.900357] RIP: 0033:0x7f16ad4d22c0
+> [ 4093.900359] Code: 73 01 c3 48 8b 0d d8 cb 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 89 24 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 fe dd 01 00 48 89 04 24
+> [ 4093.900360] RSP: 002b:00007ffd6491b7f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> [ 4093.900362] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f16ad4d22c0
+> [ 4093.900363] RDX: 0000000000000002 RSI: 0000000001a41408 RDI: 0000000000000001
+> [ 4093.900364] RBP: 0000000001a41408 R08: 00007f16ad7a1780 R09: 00007f16ae1f2700
+> [ 4093.900364] R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000002
+> [ 4093.900365] R13: 0000000000000001 R14: 00007f16ad7a0620 R15: 0000000000000001
+> [ 4093.900367]
+> [ 4093.900368] Allocated by task 820:
+> [ 4093.900371]  kasan_kmalloc+0xa6/0xd0
+> [ 4093.900373]  __kmalloc+0xfb/0x200
+> [ 4093.900376]  iavf_init_interrupt_scheme+0x63b/0x1320 [iavf]
+> [ 4093.900380]  iavf_watchdog_task+0x3d51/0x52c0 [iavf]
+> [ 4093.900382]  process_one_work+0x56a/0x11f0
+> [ 4093.900383]  worker_thread+0x8f/0xf40
+> [ 4093.900384]  kthread+0x2a0/0x390
+> [ 4093.900385]  ret_from_fork+0x1f/0x40
+> [ 4093.900387]  0xffffffffffffffff
+> [ 4093.900387]
+> [ 4093.900388] Freed by task 6699:
+> [ 4093.900390]  __kasan_slab_free+0x137/0x190
+> [ 4093.900391]  kfree+0x8b/0x1b0
+> [ 4093.900394]  iavf_free_q_vectors+0x11d/0x1a0 [iavf]
+> [ 4093.900397]  iavf_remove+0x35a/0xd20 [iavf]
+> [ 4093.900399]  pci_device_remove+0xa8/0x1f0
+> [ 4093.900400]  device_release_driver_internal+0x1c6/0x460
+> [ 4093.900401]  pci_stop_bus_device+0x101/0x150
+> [ 4093.900402]  pci_stop_and_remove_bus_device+0xe/0x20
+> [ 4093.900403]  pci_iov_remove_virtfn+0x187/0x420
+> [ 4093.900404]  sriov_disable+0xed/0x3e0
+> [ 4093.900409]  i40e_free_vfs+0x754/0x1210 [i40e]
+> [ 4093.900415]  i40e_pci_sriov_configure+0x1fa/0x2e0 [i40e]
+> [ 4093.900416]  sriov_numvfs_store+0x214/0x290
+> [ 4093.900417]  kernfs_fop_write+0x280/0x3f0
+> [ 4093.900418]  vfs_write+0x145/0x440
+> [ 4093.900419]  ksys_write+0xab/0x160
+> [ 4093.900420]  do_syscall_64+0xa0/0x370
+> [ 4093.900421]  entry_SYSCALL_64_after_hwframe+0x65/0xca
+> [ 4093.900422]  0xffffffffffffffff
+> [ 4093.900422]
+> [ 4093.900424] The buggy address belongs to the object at ffff88b4dc144200
+>                 which belongs to the cache kmalloc-8k of size 8192
+> [ 4093.900425] The buggy address is located 5184 bytes inside of
+>                 8192-byte region [ffff88b4dc144200, ffff88b4dc146200)
+> [ 4093.900425] The buggy address belongs to the page:
+> [ 4093.900427] page:ffffea00d3705000 refcount:1 mapcount:0 mapping:ffff88bf04415c80 index:0x0 compound_mapcount: 0
+> [ 4093.900430] flags: 0x10000000008100(slab|head)
+> [ 4093.900433] raw: 0010000000008100 dead000000000100 dead000000000200 ffff88bf04415c80
+> [ 4093.900434] raw: 0000000000000000 0000000000030003 00000001ffffffff 0000000000000000
+> [ 4093.900434] page dumped because: kasan: bad access detected
+> [ 4093.900435]
+> [ 4093.900435] Memory state around the buggy address:
+> [ 4093.900436]  ffff88b4dc145500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 4093.900437]  ffff88b4dc145580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 4093.900438] >ffff88b4dc145600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 4093.900438]                                            ^
+> [ 4093.900439]  ffff88b4dc145680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 4093.900440]  ffff88b4dc145700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 4093.900440] ==================================================================
+> 
+> Fix it by letting netif_napi_del() match to netif_napi_add().
+> 
+> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
+> Cc: Donglin Peng <pengdonglin@sangfor.com.cn>
+> CC: Huang Cun <huangcun@sangfor.com.cn>
 
+as this is a fix it probably should have a fixes tag.
+I wonder if it should be:
 
---=20
-Thanks,
-~Nick Desaulniers
+Fixes: cc0529271f23 ("i40evf: don't use more queues than CPUs")
+
+Code change looks good to me.
+
+Reviewed-by: Simon Horman <simon.horman@corigine.com>
+
+> ---
+>  drivers/net/ethernet/intel/iavf/iavf_main.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
+> index 095201e83c9d..a57e3425f960 100644
+> --- a/drivers/net/ethernet/intel/iavf/iavf_main.c
+> +++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
+> @@ -1849,19 +1849,15 @@ static int iavf_alloc_q_vectors(struct iavf_adapter *adapter)
+>  static void iavf_free_q_vectors(struct iavf_adapter *adapter)
+>  {
+>  	int q_idx, num_q_vectors;
+> -	int napi_vectors;
+>  
+>  	if (!adapter->q_vectors)
+>  		return;
+>  
+>  	num_q_vectors = adapter->num_msix_vectors - NONQ_VECS;
+> -	napi_vectors = adapter->num_active_queues;
+>  
+>  	for (q_idx = 0; q_idx < num_q_vectors; q_idx++) {
+>  		struct iavf_q_vector *q_vector = &adapter->q_vectors[q_idx];
+> -
+> -		if (q_idx < napi_vectors)
+> -			netif_napi_del(&q_vector->napi);
+> +		netif_napi_del(&q_vector->napi);
+>  	}
+>  	kfree(adapter->q_vectors);
+>  	adapter->q_vectors = NULL;
+> -- 
+> 2.17.1
+> 
