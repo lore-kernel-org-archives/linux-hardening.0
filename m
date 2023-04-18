@@ -2,60 +2,59 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BFDC6FD18
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 18:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761ACC77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 18:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230454AbjDRSJ4 (ORCPT
+        id S232573AbjDRSUj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Apr 2023 14:09:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44176 "EHLO
+        Tue, 18 Apr 2023 14:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229838AbjDRSJz (ORCPT
+        with ESMTP id S232580AbjDRSUi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Apr 2023 14:09:55 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E312718
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:09:53 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id w1so5223365plg.6
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:09:53 -0700 (PDT)
+        Tue, 18 Apr 2023 14:20:38 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C781445D
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:20:27 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-2496863c2c7so806878a91.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:20:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681841393; x=1684433393;
+        d=google.com; s=20221208; t=1681842026; x=1684434026;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MvYJv9dOjy+UuDbqsW2nTRdYTEQVKFBOOB3qhqiqwVk=;
-        b=IaEdy0EjS+dkJyFf7jEB4cf+UKn6AFvwFyjTjHw9CYyMSQssUj66B1D7Nv4FoN8khO
-         jDzkieXoE9rcTy+iawdFz7ljwwZtZRaSm/S5I1BYNwt3rvpq5uUMww1FxmzB2D5lnp/X
-         yLveUunsgUNSDDXaN/suDvGvkeYn7hMdkp6Jukj3pg6//mURtP+3393OQ/JYXsUW2jYK
-         L3gJZMxHX6vjfUQFvB4fMxyKHeSZBL8Z9iW7jldxmPqEJ2zXgOvD7H2g7nKDfd/BqmvO
-         OZppDJt+Cg3YIAs7nUL64499E4XldMaDSLpRAQFNYhwqBmbhXqH7TrcCidZ8Y6UYGxLm
-         Q+6Q==
+        bh=1DNDdHABsaakcA7jnUDjSieBuYQRHhRNZYcEhWrZDSY=;
+        b=kur/cOjpvSIbg0KQNCVz0ofmvhzaZAv5XVmVJc9qNgH2zdCX/BWEau6siJUSno0N9b
+         uBmUFaw7nq4x4xFsQ8rReRCeCwt5YWzfpjj6GKAGWRDtPXAUykGELP9fVEbulLu6NT/e
+         QWRJEZEGPZbKT5oyEamSNF0YwnOaYshBbPuluxVKhxyLxZ2iMBtbi07QYyYvPC+aDzHK
+         46tQRXFZzBExLC4lOpX6mU4dRs1mCCVXMvL4wMkw46dbNSgYzq4XPG2ao3FZoH649u60
+         NFtaqOCeN0dCGvRD8dNsuxkvnAxP0+JmTZlabTYfJCS9yek0y5txyS1dkll6cyfIVUO3
+         8tkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681841393; x=1684433393;
+        d=1e100.net; s=20221208; t=1681842026; x=1684434026;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MvYJv9dOjy+UuDbqsW2nTRdYTEQVKFBOOB3qhqiqwVk=;
-        b=jXDoX22DIf7DJfsrwudix1fAjDsx1U+GTXh8EQPH7oYz/cMFbl0oCyIAXNNXpPafbl
-         8qWo2rC0aCIQISarx+4sNwUOZEEr32a7EycB+FJ8kAfeGnbe7868K0abHBvJ2eX88kxD
-         z1arec3w6IvkWMcX9QLAJX18XP1GBNkVn1HCoPE2hRCIQ/tWhd+/hQ0UljYHCnn6rpBW
-         zEGBfVaXhtTnW1vIZYmWpo/dAb0ny1+84zjTHf2SZXtjVLQ8uOATbmPbWK+IPd8KcBBX
-         Rkv/BQfXCtK9YxDljUQuOkG+3C9IYGDCwgTT+gljx+I0MjEZlx2Pd4xsJgWJb/+AROYQ
-         3nkA==
-X-Gm-Message-State: AAQBX9eiYTtlO9MzA2f6i/2v97ndN8tHrI8nLCPGCaf3OogXK0OudPPc
-        hB/Ek4xuHggCOIGhcqHbxG9zerVrfE+Ad4wVoJAGkQ==
-X-Google-Smtp-Source: AKy350YWJtgptpWdJFruXeLGCxuNU4bvvRi4laL/0AlgGBB5Ic+fMqnQZtaErwzhGEYzDKQdJzhSYAdpzn0Dqwy8UVc=
-X-Received: by 2002:a05:6a20:8422:b0:db:4fae:ad15 with SMTP id
- c34-20020a056a20842200b000db4faead15mr598370pzd.42.1681841392775; Tue, 18 Apr
- 2023 11:09:52 -0700 (PDT)
+        bh=1DNDdHABsaakcA7jnUDjSieBuYQRHhRNZYcEhWrZDSY=;
+        b=i7JlQzOeaFu8aHbQVubA5qTXg7VtPNgCjT9oVH4rYTNTBKYmaV83zUFWQKaErL3Apx
+         vQBB5yyXF/yG3ltqRuD6qj4iESS0NEWkfTPaKhM5R8LM3WG1lEjnACeuwUTis0GhICa6
+         bTJZ8iu0gZIIfXUK33edSBLfjpyT3V+aOJffg4YjwI4FJMrT8jnIC2JDDsISUG75OE7/
+         EKl/EGLpq+yKUwK34wVAarFTS8M49ysA2fPoxW3p8rmp4mxLU0dWbThA7fUvN6l9R58B
+         KkWW7Y8GIL5AfK2zXLNKeLEvp4IDznOsNFyXNdFwh7ngXeQsgDjpy92Yahd5OadyFld9
+         n+1w==
+X-Gm-Message-State: AAQBX9e84She2H9ZvXp393Xt7iQBj1p9c1pU684BBVLJb7GwhWK4TE/0
+        hxY0OXfxx3x0a7F+bdS9J+pUFJoFlmMPH2hWsXbL+w==
+X-Google-Smtp-Source: AKy350boFioJgp8wtE1Dr3UOwZAK5o7Q9dtF8zyg/RlPVaopO3qU+LnCEoEoLgghcttNeKteMSY9oMSYHT5iXb+5JVc=
+X-Received: by 2002:a17:90b:38c6:b0:237:c209:5b14 with SMTP id
+ nn6-20020a17090b38c600b00237c2095b14mr472426pjb.22.1681842026333; Tue, 18 Apr
+ 2023 11:20:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230407191904.gonna.522-kees@kernel.org> <20230407192717.636137-6-keescook@chromium.org>
-In-Reply-To: <20230407192717.636137-6-keescook@chromium.org>
+References: <20230407191904.gonna.522-kees@kernel.org> <20230407192717.636137-8-keescook@chromium.org>
+In-Reply-To: <20230407192717.636137-8-keescook@chromium.org>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Apr 2023 11:09:41 -0700
-Message-ID: <CAKwvOdk+CT6S6LjLb2aRVsMSgnsyHRcoT-yyifNTW8vVVwTA-A@mail.gmail.com>
-Subject: Re: [PATCH v2 06/10] fortify: strcat: Move definition to use
- fortified strlcat()
+Date:   Tue, 18 Apr 2023 11:20:15 -0700
+Message-ID: <CAKwvOd=qh9WGmD6dAxsfHo7iBxAVr6ethAAavxkMUaOQ6LJEyA@mail.gmail.com>
+Subject: Re: [PATCH v2 08/10] fortify: Provide KUnit counters for failure testing
 To:     Kees Cook <keescook@chromium.org>
 Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
@@ -95,112 +94,339 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 On Fri, Apr 7, 2023 at 12:27=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
 rote:
 >
-> Move the definition of fortified strcat() to after strlcat() to use it
-> for bounds checking.
+> The standard C string APIs were not designed to have a failure mode;
+> they were expected to always succeed without memory safety issues.
+> Normally, CONFIG_FORTIFY_SOURCE will use fortify_panic() to stop
+> processing, as truncating a read or write may provide an even worse
+> system state. However, this creates a problem for testing under things
+> like KUnit, which needs a way to survive failures.
+>
+> When building with CONFIG_KUNIT, provide a failure path for all users
+> for fortify_panic, and track whether the failure was a read overflow or
+> a write overflow, for KUnit tests to examine. Inspired by similar logic
+> in the slab tests.
 >
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  include/linux/fortify-string.h | 53 +++++++++++++++++-----------------
->  1 file changed, 26 insertions(+), 27 deletions(-)
+>  include/linux/fortify-string.h | 45 +++++++++++++++++++---------------
+>  lib/fortify_kunit.c            | 44 +++++++++++++++++++++++++++++++++
+>  lib/string_helpers.c           |  2 ++
+>  3 files changed, 71 insertions(+), 20 deletions(-)
 >
 > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-strin=
 g.h
-> index 8cf17ef81905..ab058d092817 100644
+> index 19906b45fb98..5d04c0e95854 100644
 > --- a/include/linux/fortify-string.h
 > +++ b/include/linux/fortify-string.h
-> @@ -151,33 +151,6 @@ char *strncpy(char * const POS p, const char *q, __k=
-ernel_size_t size)
+> @@ -15,8 +15,12 @@
+>  #define FORTIFY_REASON(func, write)    (FIELD_PREP(BIT(0), write) | \
+>                                          FIELD_PREP(GENMASK(7, 1), func))
+>
+> -#define fortify_panic(func, write)     \
+> +#ifdef FORTIFY_KUNIT_OVERRIDE
+> +# define fortify_panic kunit_fortify_panic
+> +#else
+> +# define fortify_panic(func, write, retfail)   \
+>         __fortify_panic(FORTIFY_REASON(func, write))
+> +#endif
+
+Could we provide a different definition of fortify_panic in
+lib/string_helpers.c rather than this macro indirection?
+
+>
+>  #define FORTIFY_READ            0
+>  #define FORTIFY_WRITE           1
+> @@ -186,7 +190,7 @@ char *strncpy(char * const POS p, const char *q, __ke=
+rnel_size_t size)
+>         if (__compiletime_lessthan(p_size, size))
+>                 __write_overflow();
+>         if (p_size < size)
+> -               fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE);
+> +               fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE, p);
 >         return __underlying_strncpy(p, q, size);
 >  }
 >
-> -/**
-> - * strcat - Append a string to an existing string
-> - *
-> - * @p: pointer to NUL-terminated string to append to
-> - * @q: pointer to NUL-terminated source string to append from
-> - *
-> - * Do not use this function. While FORTIFY_SOURCE tries to avoid
-> - * read and write overflows, this is only possible when the
-> - * destination buffer size is known to the compiler. Prefer
-> - * building the string with formatting, via scnprintf() or similar.
-> - * At the very least, use strncat().
-> - *
-> - * Returns @p.
-> - *
-> - */
-> -__FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
-> -char *strcat(char * const POS p, const char *q)
-> -{
-> -       const size_t p_size =3D __member_size(p);
-> -
-> -       if (p_size =3D=3D SIZE_MAX)
-> -               return __underlying_strcat(p, q);
-> -       if (strlcat(p, q, p_size) >=3D p_size)
-> -               fortify_panic(__func__);
-> -       return p;
-> -}
-> -
->  extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __R=
-ENAME(strnlen);
->  /**
->   * strnlen - Return bounded count of characters in a NUL-terminated stri=
-ng
-> @@ -435,6 +408,32 @@ size_t strlcat(char * const POS p, const char * cons=
-t POS q, size_t avail)
->         return wanted;
+> @@ -217,7 +221,7 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char *=
+ const POS p, __kernel_size
+>         /* Do not check characters beyond the end of p. */
+>         ret =3D __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+>         if (p_size <=3D ret && maxlen !=3D ret)
+> -               fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ);
+> +               fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ, ret);
+>         return ret;
 >  }
 >
-> +/* Defined after fortified strlcat() to reuse it. */
+> @@ -253,7 +257,7 @@ __kernel_size_t __fortify_strlen(const char * const P=
+OS p)
+>                 return __underlying_strlen(p);
+>         ret =3D strnlen(p, p_size);
+>         if (p_size <=3D ret)
+> -               fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ);
+> +               fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ, ret);
+>         return ret;
+>  }
+>
+> @@ -295,7 +299,7 @@ __FORTIFY_INLINE size_t strlcpy(char * const POS p, c=
+onst char * const POS q, si
+>         }
+>         if (size) {
+>                 if (len >=3D p_size)
+> -                       fortify_panic(FORTIFY_FUNC_strlcpy, FORTIFY_WRITE=
+);
+> +                       fortify_panic(FORTIFY_FUNC_strlcpy, FORTIFY_WRITE=
+, q_len);
+>                 __underlying_memcpy(p, q, len);
+>                 p[len] =3D '\0';
+>         }
+> @@ -373,7 +377,7 @@ __FORTIFY_INLINE ssize_t strscpy(char * const POS p, =
+const char * const POS q, s
+>          * p_size.
+>          */
+>         if (len > p_size)
+> -               fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE);
+> +               fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE, -E2BIG=
+);
+>
+>         /*
+>          * We can now safely call vanilla strscpy because we are protecte=
+d from:
+> @@ -431,7 +435,7 @@ size_t strlcat(char * const POS p, const char * const=
+ POS q, size_t avail)
+>
+>         /* Give up if string is already overflowed. */
+>         if (p_size <=3D p_len)
+> -               fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ);
+> +               fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ, wanted)=
+;
+>
+>         if (actual >=3D avail) {
+>                 copy_len =3D avail - p_len - 1;
+> @@ -440,7 +444,7 @@ size_t strlcat(char * const POS p, const char * const=
+ POS q, size_t avail)
+>
+>         /* Give up if copy will overflow. */
+>         if (p_size <=3D actual)
+> -               fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE);
+> +               fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE, wanted=
+);
+>         __underlying_memcpy(p + p_len, q, copy_len);
+>         p[actual] =3D '\0';
+>
+> @@ -469,7 +473,7 @@ char *strcat(char * const POS p, const char *q)
+>         const size_t p_size =3D __member_size(p);
+>
+>         if (strlcat(p, q, p_size) >=3D p_size)
+> -               fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE);
+> +               fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE, p);
+>         return p;
+>  }
+>
+> @@ -505,13 +509,13 @@ char *strncat(char * const POS p, const char * cons=
+t POS q, __kernel_size_t coun
+>         p_len =3D strlen(p);
+>         copy_len =3D strnlen(q, count);
+>         if (p_size < p_len + copy_len + 1)
+> -               fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE);
+> +               fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE, p);
+>         __underlying_memcpy(p + p_len, q, copy_len);
+>         p[p_len + copy_len] =3D '\0';
+>         return p;
+>  }
+>
+> -__FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
+> +__FORTIFY_INLINE bool fortify_memset_chk(__kernel_size_t size,
+>                                          const size_t p_size,
+>                                          const size_t p_size_field)
+>  {
+> @@ -546,7 +550,8 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_siz=
+e_t size,
+>          * lengths are unknown.)
+>          */
+>         if (p_size !=3D SIZE_MAX && p_size < size)
+> -               fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE);
+> +               fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE, true);
+> +       return false;
+>  }
+>
+>  #define __fortify_memset_chk(p, c, size, p_size, p_size_field) ({      \
+> @@ -645,9 +650,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_siz=
+e_t size,
+>          * lengths are unknown.)
+>          */
+>         if (p_size !=3D SIZE_MAX && p_size < size)
+> -               fortify_panic(func, FORTIFY_WRITE);
+> +               fortify_panic(func, FORTIFY_WRITE, true);
+>         else if (q_size !=3D SIZE_MAX && q_size < size)
+> -               fortify_panic(func, FORTIFY_READ);
+> +               fortify_panic(func, FORTIFY_READ, true);
+>
+>         /*
+>          * Warn when writing beyond destination field size.
+> @@ -747,7 +752,7 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, i=
+nt c, __kernel_size_t size)
+>         if (__compiletime_lessthan(p_size, size))
+>                 __read_overflow();
+>         if (p_size < size)
+> -               fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ);
+> +               fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ, NULL);
+>         return __real_memscan(p, c, size);
+>  }
+>
+> @@ -764,7 +769,7 @@ int memcmp(const void * const POS0 p, const void * co=
+nst POS0 q, __kernel_size_t
+>                         __read_overflow2();
+>         }
+>         if (p_size < size || q_size < size)
+> -               fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ);
+> +               fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ, INT_MIN)=
+;
+>         return __underlying_memcmp(p, q, size);
+>  }
+>
+> @@ -776,7 +781,7 @@ void *memchr(const void * const POS0 p, int c, __kern=
+el_size_t size)
+>         if (__compiletime_lessthan(p_size, size))
+>                 __read_overflow();
+>         if (p_size < size)
+> -               fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ);
+> +               fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ, NULL);
+>         return __underlying_memchr(p, c, size);
+>  }
+>
+> @@ -788,7 +793,7 @@ __FORTIFY_INLINE void *memchr_inv(const void * const =
+POS0 p, int c, size_t size)
+>         if (__compiletime_lessthan(p_size, size))
+>                 __read_overflow();
+>         if (p_size < size)
+> -               fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ);
+> +               fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ, NULL=
+);
+>         return __real_memchr_inv(p, c, size);
+>  }
+>
+> @@ -801,7 +806,7 @@ __FORTIFY_INLINE void *kmemdup(const void * const POS=
+0 p, size_t size, gfp_t gfp
+>         if (__compiletime_lessthan(p_size, size))
+>                 __read_overflow();
+>         if (p_size < size)
+> -               fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ);
+> +               fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ, NULL);
+>         return __real_kmemdup(p, size, gfp);
+>  }
+>
+> @@ -838,7 +843,7 @@ char *strcpy(char * const POS p, const char * const P=
+OS q)
+>                 __write_overflow();
+>         /* Run-time check for dynamic size overflow. */
+>         if (p_size < size)
+> -               fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE);
+> +               fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE, p);
+>         __underlying_memcpy(p, q, size);
+>         return p;
+>  }
+> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
+> index 524132f33cf0..ea2b39f279c2 100644
+> --- a/lib/fortify_kunit.c
+> +++ b/lib/fortify_kunit.c
+> @@ -15,12 +15,28 @@
+>   */
+>  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>
+> +/* Call kunit_fortify_panic() instead of fortify_panic() */
+> +#define FORTIFY_KUNIT_OVERRIDE
+> +void fortify_add_kunit_error(int write);
+> +#define kunit_fortify_panic(func, write, retfail)                      \
+> +       do {                                                            \
+> +               __fortify_report(FORTIFY_REASON(func, write));          \
+> +               fortify_add_kunit_error(write);                         \
+> +               return (retfail);                                       \
 
-I don't follow; the previous location was already defined in terms of
-calls to strlcat.  Why is this patch necessary?
+^ Does this return value even matter? Could we just return -1 or some
+other constant for all cases? Then you don't need an optional
+parameter addition to fortify_panic.
 
-Could this be fixed in 5/10
-https://lore.kernel.org/linux-hardening/20230407192717.636137-5-keescook@ch=
-romium.org/
-by just putting strlcat in the expected place in the first place?
-
-> +/**
-> + * strcat - Append a string to an existing string
-> + *
-> + * @p: pointer to NUL-terminated string to append to
-> + * @q: pointer to NUL-terminated source string to append from
-> + *
-> + * Do not use this function. While FORTIFY_SOURCE tries to avoid
-> + * read and write overflows, this is only possible when the
-> + * destination buffer size is known to the compiler. Prefer
-> + * building the string with formatting, via scnprintf() or similar.
-> + * At the very least, use strncat().
-> + *
-> + * Returns @p.
-> + *
-> + */
-> +__FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
-> +char *strcat(char * const POS p, const char *q)
-> +{
-> +       const size_t p_size =3D __member_size(p);
+> +       } while (0)
 > +
-
-This drops the `p_size =3D=3D SIZE_MAX` guard.  Might it be faster at
-runtime to dispatch to __underlying_strcat rather than __real_strlcat
-in such cases?
-
-What's the convention for __underlying_ vs __real_ prefixes in
-include/linux/fortify-string.h?
-
-> +       if (strlcat(p, q, p_size) >=3D p_size)
-> +               fortify_panic(__func__);
-> +       return p;
+>  #include <kunit/test.h>
+> +#include <kunit/test-bug.h>
+>  #include <linux/device.h>
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+>  #include <linux/vmalloc.h>
+>
+> +static struct kunit_resource read_resource;
+> +static struct kunit_resource write_resource;
+> +static int fortify_read_overflows;
+> +static int fortify_write_overflows;
+> +
+>  static const char array_of_10[] =3D "this is 10";
+>  static const char *ptr_of_11 =3D "this is 11!";
+>  static char array_unknown[] =3D "compiler thinks I might change";
+> @@ -30,6 +46,25 @@ static char array_unknown[] =3D "compiler thinks I mig=
+ht change";
+>  # define __compiletime_strlen __builtin_strlen
+>  #endif
+>
+> +void fortify_add_kunit_error(int write)
+> +{
+> +       struct kunit_resource *resource;
+> +       struct kunit *current_test;
+> +
+> +       current_test =3D kunit_get_current_test();
+> +       if (!current_test)
+> +               return;
+> +
+> +       resource =3D kunit_find_named_resource(current_test,
+> +                       write ? "fortify_write_overflows"
+> +                             : "fortify_read_overflows");
+> +       if (!resource)
+> +               return;
+> +
+> +       (*(int *)resource->data)++;
+> +       kunit_put_resource(resource);
 > +}
 > +
+>  static void known_sizes_test(struct kunit *test)
+>  {
+>         KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
+> @@ -317,6 +352,15 @@ static int fortify_test_init(struct kunit *test)
+>         if (!IS_ENABLED(CONFIG_FORTIFY_SOURCE))
+>                 kunit_skip(test, "Not built with CONFIG_FORTIFY_SOURCE=3D=
+y");
+>
+> +       fortify_read_overflows =3D 0;
+> +       kunit_add_named_resource(test, NULL, NULL, &read_resource,
+> +                                "fortify_read_overflows",
+> +                                &fortify_read_overflows);
+> +       fortify_write_overflows =3D 0;
+> +       kunit_add_named_resource(test, NULL, NULL, &write_resource,
+> +                                "fortify_write_overflows",
+> +                                &fortify_write_overflows);
+> +
+>         return 0;
+>  }
+>
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+> index 96d502e1e578..38edde20e61b 100644
+> --- a/lib/string_helpers.c
+> +++ b/lib/string_helpers.c
+> @@ -18,6 +18,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/string.h>
+>  #include <linux/string_helpers.h>
+> +#include <kunit/test.h>
+> +#include <kunit/test-bug.h>
+
+Why do we need these headers here?
+
+>
 >  /**
->   * strncat - Append a string to an existing string
->   *
+>   * string_get_size - get the size in the specified units
 > --
 > 2.34.1
 >
 
 
---=20
+--
 Thanks,
 ~Nick Desaulniers
