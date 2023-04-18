@@ -2,187 +2,292 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2E1C6FD18
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 16:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245D0C6FD18
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 17:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232130AbjDRQus (ORCPT
+        id S231352AbjDRR6X (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Apr 2023 12:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35104 "EHLO
+        Tue, 18 Apr 2023 13:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230445AbjDRQur (ORCPT
+        with ESMTP id S230526AbjDRR6W (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Apr 2023 12:50:47 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E2A61BA;
-        Tue, 18 Apr 2023 09:50:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681836646; x=1713372646;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=DyMeT2zuC1JPSYMCdia9cdgqrJZXYnTAzbi/Wlt1VFQ=;
-  b=k9selOPkqLrW6WTGSj6gQodYWUswLd1ehYCjP8Un4B9h78DLIeH5Qq8S
-   L8Ol5SaPb3PqYV2eVNThfKvWH0YHf51BY2iYzP+7P5OBH9aWubzmxpPtw
-   8lo3qFe2CB/boPDeEzjyXtfNhe1qGrVu//9hGNLWG0E9qKtbv3crVAv2j
-   xmTMBNm7N31A+/m3Otm/qOBvEMG2OQ1+l228OTzW9wp4kHzMCRWH/41Fk
-   CTybpiDNlMXzP06uml4nXw+eOGxre5qMovDZ4ZdYNH9Q3CJkxXpUUzkAx
-   JMJiTlvbXr2ykDdVY2YRnPbzjMBUhc/+xbHvzk28mpk7/cx97FddsG0Z+
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="343975982"
-X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
-   d="scan'208";a="343975982"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 09:50:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="721569021"
-X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
-   d="scan'208";a="721569021"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga008.jf.intel.com with ESMTP; 18 Apr 2023 09:50:45 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 18 Apr 2023 09:50:45 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 18 Apr 2023 09:50:45 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 18 Apr 2023 09:50:45 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.173)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 18 Apr 2023 09:50:44 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FmV61PkGTi3Iuim8uxIhtX0Ke0BpFEIBJCHmhA7eTSQWGawCxB8iBuTULGACybWUWNZGrN1cXPZg2Lns1QAwkKOr3s8qh7QnAtLA3xLsSsn7zExzaHEpxqR09jfXQwtCALbyk0CNBFxoeFqKe/9CY7H7tBuQLAZFXbc2Hc9uyquYTToq4fx3BhLybrI3olSwzFpr+c3CdIP1RQ1Q0JJlv42q8YaYGes42xaEPRkmMoDULJ5zlqLvM+/Y/3AIHOEpcC2ivB0WZepUgjNMRgFQHPnZMGeh47q4UHWDu34kL7UJGmB9ZmV/v3Pqa4ycEHMFCVlLomEaFrBosSldnJBz1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sYCS12S2QvXe48d/HAEL5nwtV/Typo6LoACrfi7FgOY=;
- b=kT9E2qiBXp/dtmWvmvku534/YsVyWcGare4cemPkt+c74+yAKEIqyTIkRdDOezgU9QUIjB+czIw3o1A5kencHurqjLLSEPMlDIHGxlNCalerTWAvvrf6DUTaDi0SAs8oZ09Xj3DLmbi5LCuRwOthu6Yi8pzMno/jxFJKIP7mi7Tsreiziy0sb+3GaJf9Zi1gyj8P/OYcwQWk0elhTRu2GXW8dcEh6+LDFomjhrAJ5vTK7tb7A2+1EL0uR5c5WUGP98R3dMo3nKQI0Ftop+6nZ4iBS9YdMbEuDQtP/AlqIB/LAdbb0DBOpe0gVVV706neQpnRPvyiYW7vgX4QpwupZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN6PR11MB3229.namprd11.prod.outlook.com (2603:10b6:805:ba::28)
- by CY5PR11MB6163.namprd11.prod.outlook.com (2603:10b6:930:28::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Tue, 18 Apr
- 2023 16:50:41 +0000
-Received: from SN6PR11MB3229.namprd11.prod.outlook.com
- ([fe80::4b81:e2b0:d5fa:ad47]) by SN6PR11MB3229.namprd11.prod.outlook.com
- ([fe80::4b81:e2b0:d5fa:ad47%3]) with mapi id 15.20.6298.045; Tue, 18 Apr 2023
- 16:50:41 +0000
-Message-ID: <be26a12c-6463-0e3b-9e05-eee8645e7fa6@intel.com>
-Date:   Tue, 18 Apr 2023 09:50:37 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH net 1/2] iavf: Fix use-after-free in free_netdev
-Content-Language: en-US
-To:     Ding Hui <dinghui@sangfor.com.cn>, <davem@davemloft.net>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <intel-wired-lan@lists.osuosl.org>
-CC:     <jesse.brandeburg@intel.com>, <keescook@chromium.org>,
-        <grzegorzx.szczurek@intel.com>, <mateusz.palczewski@intel.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        Donglin Peng <pengdonglin@sangfor.com.cn>,
-        Huang Cun <huangcun@sangfor.com.cn>
-References: <20230408140030.5769-1-dinghui@sangfor.com.cn>
- <20230408140030.5769-2-dinghui@sangfor.com.cn>
-From:   Tony Nguyen <anthony.l.nguyen@intel.com>
-In-Reply-To: <20230408140030.5769-2-dinghui@sangfor.com.cn>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0P220CA0022.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:a03:41b::33) To SN6PR11MB3229.namprd11.prod.outlook.com
- (2603:10b6:805:ba::28)
+        Tue, 18 Apr 2023 13:58:22 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B846F9766
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 10:58:20 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id o2so28033164plg.4
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 10:58:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1681840700; x=1684432700;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DTGJ+i+oQsymPHHwJcFJ9iLltFfpbe7LBlqn1W6eNDc=;
+        b=NswMtF0hj3QTqC65QMJKUTLLGxMayF+chHlfBPCxYR315Q06DNjAhT6SyhGyArQHrj
+         wJPiliYCo4grhuLcTesMlcFayFwH3W8baV+RGcDjAu5CZbMZLnUN6xtSbkcSA1JlFqHP
+         rDlg0/yK51mBJ3Q8aflsn7BqcRYoODVmjritpvxXOZu0N7HW3O+WppKwp+/03X3cB8AV
+         I7xGxk2hRF0PHOVG9YDKIEodA1HEoY2g4WQCbMMD9n76Iwz5f2ISilTDoLAfq0qj+rqB
+         I4EoCVpri+lDQN6K23N0M+ucGgx17bEhERcmo40vPjLW2FaDl+RXoDOcu2YHLuJpwiRi
+         DyxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681840700; x=1684432700;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DTGJ+i+oQsymPHHwJcFJ9iLltFfpbe7LBlqn1W6eNDc=;
+        b=h6n+A2Nj8IePs3qRYJUOs6GgBUGom3hpkIw6gISNuHsJ5LVr2ImfvzV4srJ8vN66Bt
+         Yor5Htd76V+sjw1PW2JEaLDvNLMwlxqS4vFK4Or5snwL9UduYXD9qWkPlAS+mqwosAo6
+         9WyOF4Dt/SSaVULo4ek1P5sSX6CkEs2YEHGHwHs2h6trLln8WFCaQ8JsQdvvIZla2WIh
+         2SwE4YlVj2JHzW+QVSrQjbVDIOutwfc6HfPBtZEWLmA0Vgt3oEzPrUWolNlJwpt5cMyC
+         tW8X+pXJRrVkoHbtBmT584Zx0YCo0wF6JXrhOBKIXd8J/ELBXLi1XQlJ/tGBR0Z7FZOF
+         5wzQ==
+X-Gm-Message-State: AAQBX9eL2474qNisSbGwn7aNwftqfBE3mj1gu6uFhQhFX+ujxV4eT4T1
+        wGG5zQiwN7SPRs4bJQzC1NGNywtfLWEaqZOABax56w==
+X-Google-Smtp-Source: AKy350YRRZ/3GoBhAIzVSM8X9gJZzcR+6rhrShxCz3VnYV6nJUBhuROlHXwNOzO+w8O/VHLk8O8xGCp9vcfm19wZVLU=
+X-Received: by 2002:a05:6a20:3c93:b0:f0:9e73:c77b with SMTP id
+ b19-20020a056a203c9300b000f09e73c77bmr575996pzj.20.1681840699906; Tue, 18 Apr
+ 2023 10:58:19 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR11MB3229:EE_|CY5PR11MB6163:EE_
-X-MS-Office365-Filtering-Correlation-Id: c696170c-be88-453b-3b7a-08db402d0b48
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: B3Y17ApFXy8ZJS/8C8C1HmeThZI2dAW7LuNNx0ZDjsSdP9cklFpp6NrmNoepfbWYCdC+abKSNOQV8wRixzIB/CMS4Mm6FseW6Cu9H7C16CHeiXI6z0k7qyfBEdwSb/v+l8F5j4+g1tPsn1T6OPMloUNPz10PT9s2UppAN2JSVDm1X822v+JnGYvka+ndvlewGf9rQvyLIfK+JG35hR2AlBHWdqIdaZv8epRFFY7M9tYqxzKZZ8SY0+VCxmxjykeO+iZ4KdLY1/trfUX46Z7pQv7qhSZcrcSCLgOOeTC7g4SNzZn/pl6U9FHIMcrNHXu1SHvelbs9OrqSmbw5aNA+PtLAhzLRyKf7RP3+iYlebclBamQgRKloZQDwWXbr7ZFZBhfWcxX8xkyRtForNNARSg+1CB2R3kQw83EU/VI1ydBmlcOWAAixOL29PTO3kmglJlIUMGafnzzmCIIZlHez7vc/0xRzB31YZpt0ylv828BB7du8xUuhPCDqtR4HgrM2dSLr96zAm3c9DXs08mP5gTyXkdD/0BbBgc6puRRmQGidqegzij6QktSmq1gObotFOZjvNkfZpvXmO+5EpeKbmxuXAK+EyTtRrvCB0HRdRmRl20jmZhtJn1alJ3yrPxm83Oh0hIHMf4gdEd7YSs0zZg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3229.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(136003)(366004)(376002)(39860400002)(396003)(451199021)(8676002)(38100700002)(8936002)(5660300002)(7416002)(2906002)(4744005)(36756003)(86362001)(31696002)(478600001)(6486002)(84970400001)(6666004)(54906003)(31686004)(186003)(2616005)(6512007)(53546011)(6506007)(26005)(66946007)(66476007)(41300700001)(82960400001)(316002)(4326008)(66556008)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OS9WWVJpV3BmeWZ2N3dHbEs5a2ZEcDV1QVNkQ3pJd0pPUmlZYkhEckxMK0FS?=
- =?utf-8?B?cXlvSjNJYmNTZFJFL2xvRHE5dWdwMTBHcFZuMW9xdXczTkpqNWdGVzVGYUtM?=
- =?utf-8?B?ZFFHUVFSd2l2bVRoRjU2bmxwRE0zNFBlMCtScGV3SkE1SlNVcEdUQ2I0MXAw?=
- =?utf-8?B?dTdGMkdXYU5CVGRuWjVaQ1FyeWFSYWtMUVN6OGV0c1JYS01jcGlNeHVTb25E?=
- =?utf-8?B?akgvc3Y4QTd2NFQvc1pyZ3RXdW1QbVFMZE1VK2pLU1ByTzlpdlFwbERoU1Bj?=
- =?utf-8?B?L1IxbjZ2Y2lHbWxPdDVFTGI5Q3ZnNkhLMWRTNldYRTlHd1RYWU4vYmxzREZW?=
- =?utf-8?B?SGg5Y3FReEZESmMyVWJlN083OWI0WWY3ajdtYUFaOUlxTVBrK1l3Sk83MDZL?=
- =?utf-8?B?Z0ppcjc1V29lbllmZ2tFdmJ4ZzZXV3h1bWd6UTFpSHpaS3FwazNqRjM5UWVw?=
- =?utf-8?B?YXpWdGt2YXNVM3FCL05sUkpkbkswNDl0ZWxQOVhvL2JMOCtpRml0QUNMV3Np?=
- =?utf-8?B?dHBZb0YrSlNmNExhU2hxU1dHSVhXVlBHMWRSZFVVdmNNMjhhUHl0c3BheUlH?=
- =?utf-8?B?WUovd2ZwbnhXSXVSMm1Gblg3aVBGL1FFYllxekN0Z090TnlWY0ttL1ZrbVJX?=
- =?utf-8?B?cjMrcW1SNG9ORjRrMHIwOFFHT1ZoUEhBamlZTlJheHFFWm16cUJielJWWlJl?=
- =?utf-8?B?Q2gwR2JjdXc3QUVqa3R1ZU1OZVpFU095djVKK0JxcklidmVnQzdxZllFTmZX?=
- =?utf-8?B?T2FzQXRkckJ4SmlWTXhMdXdaS01lRXNCVGxFMDdUTDVEdHNLdFUvYllKdVBR?=
- =?utf-8?B?bkliN091NGVRQ0QyRm5VSlRxSC9uUlhNbngxTmZIeE4zL01ueVdFbzVxQWFz?=
- =?utf-8?B?dklKZ0JSWjdRQ3oycmxRVjF6eVcwMXE1SFJDYkNJcUdwQ0o5UzhkK0w0V0ZB?=
- =?utf-8?B?WTJVRm1aNDdNQllmVlROWTZWVWJxTEl1VXY2SnZ6KzZoZ2JtZ1ZOOVFHa2Zs?=
- =?utf-8?B?MHlQOXRJV05FKzdGNW9kZTdMazRwSkJCQ09iMDY4REJjaWthU29FdDM2UUJB?=
- =?utf-8?B?TnEyYU05SlZ1V0d0S1NUMnZkNndITE41bERuWDdEOE5UY3FqUXpBQnVQd1R6?=
- =?utf-8?B?UTJiVngzK2hWSElGb0F0Z0p6SVhkaHhzSmM0cDFnSVloYzRaZzVJZ01GWjdV?=
- =?utf-8?B?RjAzbnV1M1RieDlqeWNsbUFybE9VTTdiNDlYdUQwMUI5QS9XSituZ0IrbVpw?=
- =?utf-8?B?c0xNM0JVckN1YVkxWmcyYjhiMGh3VFBQc1pxQmVmQnZNK3RBSTZndTIzRTlB?=
- =?utf-8?B?cWZSejUwUkZaT0tKeTZuOE5yek5tQ0thekcreksyN2R0aDVlN09WcEU0RkZ6?=
- =?utf-8?B?TW8xUFRGVnJpcGlvb0RMQ1JOTlBNYzhXZWFHYVM1ZXA5Kzhpa2YwWlVLNXpZ?=
- =?utf-8?B?UXo2RGl6bGY2bmZnOWhzYVo2T0J0U3N3WmNqci9aSngwcHV6NU55MHRRWGZB?=
- =?utf-8?B?a0YrVUdIRjJnbzZIUEV6dUQ1ZHgzcXV0VS9FYjV1Y1VQbUt5T01CVG5PU0pC?=
- =?utf-8?B?Q1JFOFFuN2VzWk9DajFJbVRIR2UvREhieWhBbHptc0dtRGhmR2F1K1ExNzZs?=
- =?utf-8?B?dVNuYU5ZVWdMTEV6Z28rUys5bFQ5dEdNRUdEb21JakVKRkl4b1VZcFRDVkF6?=
- =?utf-8?B?S2YycXhkb3pFc0xkWUxHckhxd3VHMzR6Zk4zYnBqK0JyMDZmTHpPc0Zqb092?=
- =?utf-8?B?NlZnSHBjSm94WTFOemxrZTFxVUpXVGdEaXllZG90UzIxLzRUMUV3Z0xVUDhz?=
- =?utf-8?B?MXhYWUdMbFRzV0t1eXVSVmp4OGVtRS9sOWJoUXdlblRUc1dCSFJ2aW4xYUlQ?=
- =?utf-8?B?M1BFaXY0bDRqOHdNZ3MxYXRtWS84aktscm1rbjFaOVUzeW80ajgwNng3SmNK?=
- =?utf-8?B?YXV6QzJTQjJnN2NkMmptWlM1cFp4TTBVb2Q3Ny9nTTNHdyt0MkU4b21mb3VV?=
- =?utf-8?B?YStIMlBuMUdyMGNVdmpNYmh6Zi9ZMGRSd0gwUmNUNE9VMm00WUV0Q3l3VnZC?=
- =?utf-8?B?UW0yN1J2RCtrdCtKTkJyNllxb0hZVG9nSVU5bkxUQ3JsemFHN2Y5TWpycjZw?=
- =?utf-8?B?bGNEa3VCZkpmQ1k1THd0WXprN0NLbzljWW9PR2pEN2hXUTlYTmlLNDlXd2Z3?=
- =?utf-8?B?dlE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c696170c-be88-453b-3b7a-08db402d0b48
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3229.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2023 16:50:41.3842
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9QD63i4LLw3V9aidLoszUg6+M96CwNYEpSCijJ0abG+dAxzUBaSZ0wNRfRex0f0AWihv5BWCsD84VelN0EfLuudhfgB8opUh+4f1q2TZZ8o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6163
-X-OriginatorOrg: intel.com
+References: <20230407191904.gonna.522-kees@kernel.org> <20230407192717.636137-4-keescook@chromium.org>
+In-Reply-To: <20230407192717.636137-4-keescook@chromium.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 18 Apr 2023 10:58:08 -0700
+Message-ID: <CAKwvOd=iztc+27ytBSmYNFHCERm+L--GP9b1c_xPd5BQwo7d+A@mail.gmail.com>
+Subject: Re: [PATCH v2 04/10] fortify: Use const variables for __member_size tracking
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Sander Vanheule <sander@svanheule.net>,
+        Eric Biggers <ebiggers@google.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Latypov <dlatypov@google.com>,
+        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 4/8/2023 7:00 AM, Ding Hui wrote:
-> We do netif_napi_add() for all allocated q_vectors[], but potentially
-> do netif_napi_del() for part of them, then kfree q_vectors and lefted
-> invalid pointers at dev->napi_list.
-> 
-> If num_active_queues is changed to less than allocated q_vectors[] by
-> by unexpected, when iavf_remove, we might see UAF in free_netdev like this:
-> 
-> [ 4093.900222] ==================================================================
-> [ 4093.900230] BUG: KASAN: use-after-free in free_netdev+0x308/0x390
-> [ 4093.900232] Read of size 8 at addr ffff88b4dc145640 by task test-iavf-1.sh/6699
+On Fri, Apr 7, 2023 at 12:27=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> The sizes reported by __member_size should never change in a given
+> function. Mark them as such.
+>
+> Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-...
+Thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-> Fix it by letting netif_napi_del() match to netif_napi_add().
-> 
+> ---
+>  include/linux/fortify-string.h | 42 +++++++++++++++++-----------------
+>  1 file changed, 21 insertions(+), 21 deletions(-)
+>
+> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-strin=
+g.h
+> index c9de1f59ee80..fae1bf4bd543 100644
+> --- a/include/linux/fortify-string.h
+> +++ b/include/linux/fortify-string.h
+> @@ -20,7 +20,7 @@ void __write_overflow_field(size_t avail, size_t wanted=
+) __compiletime_warning("
+>  ({                                                             \
+>         char *__p =3D (char *)(p);                                \
+>         size_t __ret =3D SIZE_MAX;                                \
+> -       size_t __p_size =3D __member_size(p);                     \
+> +       const size_t __p_size =3D __member_size(p);               \
+>         if (__p_size !=3D SIZE_MAX &&                             \
+>             __builtin_constant_p(*__p)) {                       \
+>                 size_t __p_len =3D __p_size - 1;                  \
+> @@ -142,7 +142,7 @@ extern char *__underlying_strncpy(char *p, const char=
+ *q, __kernel_size_t size)
+>  __FORTIFY_INLINE __diagnose_as(__builtin_strncpy, 1, 2, 3)
+>  char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
+>  {
+> -       size_t p_size =3D __member_size(p);
+> +       const size_t p_size =3D __member_size(p);
+>
+>         if (__compiletime_lessthan(p_size, size))
+>                 __write_overflow();
+> @@ -169,7 +169,7 @@ char *strncpy(char * const POS p, const char *q, __ke=
+rnel_size_t size)
+>  __FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
+>  char *strcat(char * const POS p, const char *q)
+>  {
+> -       size_t p_size =3D __member_size(p);
+> +       const size_t p_size =3D __member_size(p);
+>
+>         if (p_size =3D=3D SIZE_MAX)
+>                 return __underlying_strcat(p, q);
+> @@ -191,8 +191,8 @@ extern __kernel_size_t __real_strnlen(const char *, _=
+_kernel_size_t) __RENAME(st
+>   */
+>  __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __ker=
+nel_size_t maxlen)
+>  {
+> -       size_t p_size =3D __member_size(p);
+> -       size_t p_len =3D __compiletime_strlen(p);
+> +       const size_t p_size =3D __member_size(p);
+> +       const size_t p_len =3D __compiletime_strlen(p);
+>         size_t ret;
+>
+>         /* We can take compile-time actions when maxlen is const. */
+> @@ -233,8 +233,8 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char *=
+ const POS p, __kernel_size
+>  __FORTIFY_INLINE __diagnose_as(__builtin_strlen, 1)
+>  __kernel_size_t __fortify_strlen(const char * const POS p)
+>  {
+> +       const size_t p_size =3D __member_size(p);
+>         __kernel_size_t ret;
+> -       size_t p_size =3D __member_size(p);
+>
+>         /* Give up if we don't know how large p is. */
+>         if (p_size =3D=3D SIZE_MAX)
+> @@ -267,8 +267,8 @@ extern size_t __real_strlcpy(char *, const char *, si=
+ze_t) __RENAME(strlcpy);
+>   */
+>  __FORTIFY_INLINE size_t strlcpy(char * const POS p, const char * const P=
+OS q, size_t size)
+>  {
+> -       size_t p_size =3D __member_size(p);
+> -       size_t q_size =3D __member_size(q);
+> +       const size_t p_size =3D __member_size(p);
+> +       const size_t q_size =3D __member_size(q);
+>         size_t q_len;   /* Full count of source string length. */
+>         size_t len;     /* Count of characters going into destination. */
+>
+> @@ -318,10 +318,10 @@ extern ssize_t __real_strscpy(char *, const char *,=
+ size_t) __RENAME(strscpy);
+>   */
+>  __FORTIFY_INLINE ssize_t strscpy(char * const POS p, const char * const =
+POS q, size_t size)
+>  {
+> -       size_t len;
+>         /* Use string size rather than possible enclosing struct size. */
+> -       size_t p_size =3D __member_size(p);
+> -       size_t q_size =3D __member_size(q);
+> +       const size_t p_size =3D __member_size(p);
+> +       const size_t q_size =3D __member_size(q);
+> +       size_t len;
+>
+>         /* If we cannot get size of p and q default to call strscpy. */
+>         if (p_size =3D=3D SIZE_MAX && q_size =3D=3D SIZE_MAX)
+> @@ -394,9 +394,9 @@ __FORTIFY_INLINE ssize_t strscpy(char * const POS p, =
+const char * const POS q, s
+>  __FORTIFY_INLINE __diagnose_as(__builtin_strncat, 1, 2, 3)
+>  char *strncat(char * const POS p, const char * const POS q, __kernel_siz=
+e_t count)
+>  {
+> +       const size_t p_size =3D __member_size(p);
+> +       const size_t q_size =3D __member_size(q);
+>         size_t p_len, copy_len;
+> -       size_t p_size =3D __member_size(p);
+> -       size_t q_size =3D __member_size(q);
+>
+>         if (p_size =3D=3D SIZE_MAX && q_size =3D=3D SIZE_MAX)
+>                 return __underlying_strncat(p, q, count);
+> @@ -639,7 +639,7 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_siz=
+e_t size,
+>  extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memsc=
+an);
+>  __FORTIFY_INLINE void *memscan(void * const POS0 p, int c, __kernel_size=
+_t size)
+>  {
+> -       size_t p_size =3D __struct_size(p);
+> +       const size_t p_size =3D __struct_size(p);
+>
+>         if (__compiletime_lessthan(p_size, size))
+>                 __read_overflow();
+> @@ -651,8 +651,8 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, i=
+nt c, __kernel_size_t size)
+>  __FORTIFY_INLINE __diagnose_as(__builtin_memcmp, 1, 2, 3)
+>  int memcmp(const void * const POS0 p, const void * const POS0 q, __kerne=
+l_size_t size)
+>  {
+> -       size_t p_size =3D __struct_size(p);
+> -       size_t q_size =3D __struct_size(q);
+> +       const size_t p_size =3D __struct_size(p);
+> +       const size_t q_size =3D __struct_size(q);
+>
+>         if (__builtin_constant_p(size)) {
+>                 if (__compiletime_lessthan(p_size, size))
+> @@ -668,7 +668,7 @@ int memcmp(const void * const POS0 p, const void * co=
+nst POS0 q, __kernel_size_t
+>  __FORTIFY_INLINE __diagnose_as(__builtin_memchr, 1, 2, 3)
+>  void *memchr(const void * const POS0 p, int c, __kernel_size_t size)
+>  {
+> -       size_t p_size =3D __struct_size(p);
+> +       const size_t p_size =3D __struct_size(p);
+>
+>         if (__compiletime_lessthan(p_size, size))
+>                 __read_overflow();
+> @@ -680,7 +680,7 @@ void *memchr(const void * const POS0 p, int c, __kern=
+el_size_t size)
+>  void *__real_memchr_inv(const void *s, int c, size_t n) __RENAME(memchr_=
+inv);
+>  __FORTIFY_INLINE void *memchr_inv(const void * const POS0 p, int c, size=
+_t size)
+>  {
+> -       size_t p_size =3D __struct_size(p);
+> +       const size_t p_size =3D __struct_size(p);
+>
+>         if (__compiletime_lessthan(p_size, size))
+>                 __read_overflow();
+> @@ -693,7 +693,7 @@ extern void *__real_kmemdup(const void *src, size_t l=
+en, gfp_t gfp) __RENAME(kme
+>                                                                     __rea=
+lloc_size(2);
+>  __FORTIFY_INLINE void *kmemdup(const void * const POS0 p, size_t size, g=
+fp_t gfp)
+>  {
+> -       size_t p_size =3D __struct_size(p);
+> +       const size_t p_size =3D __struct_size(p);
+>
+>         if (__compiletime_lessthan(p_size, size))
+>                 __read_overflow();
+> @@ -720,8 +720,8 @@ __FORTIFY_INLINE void *kmemdup(const void * const POS=
+0 p, size_t size, gfp_t gfp
+>  __FORTIFY_INLINE __diagnose_as(__builtin_strcpy, 1, 2)
+>  char *strcpy(char * const POS p, const char * const POS q)
+>  {
+> -       size_t p_size =3D __member_size(p);
+> -       size_t q_size =3D __member_size(q);
+> +       const size_t p_size =3D __member_size(p);
+> +       const size_t q_size =3D __member_size(q);
+>         size_t size;
+>
+>         /* If neither buffer size is known, immediately give up. */
+> --
+> 2.34.1
+>
 
-Should this have a Fixes:?
 
-> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
-> Cc: Donglin Peng <pengdonglin@sangfor.com.cn>
-> CC: Huang Cun <huangcun@sangfor.com.cn>
+--=20
+Thanks,
+~Nick Desaulniers
