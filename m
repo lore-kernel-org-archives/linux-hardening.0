@@ -2,61 +2,62 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761ACC77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 18:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A60C6FD18
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 18:27:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232573AbjDRSUj (ORCPT
+        id S231218AbjDRS1Y (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Apr 2023 14:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51048 "EHLO
+        Tue, 18 Apr 2023 14:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232580AbjDRSUi (ORCPT
+        with ESMTP id S230290AbjDRS1Y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Apr 2023 14:20:38 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C781445D
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:20:27 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-2496863c2c7so806878a91.1
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:20:27 -0700 (PDT)
+        Tue, 18 Apr 2023 14:27:24 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A499031
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:27:22 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id x8-20020a17090a6b4800b002474c5d3367so94749pjl.2
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 11:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681842026; x=1684434026;
+        d=google.com; s=20221208; t=1681842442; x=1684434442;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1DNDdHABsaakcA7jnUDjSieBuYQRHhRNZYcEhWrZDSY=;
-        b=kur/cOjpvSIbg0KQNCVz0ofmvhzaZAv5XVmVJc9qNgH2zdCX/BWEau6siJUSno0N9b
-         uBmUFaw7nq4x4xFsQ8rReRCeCwt5YWzfpjj6GKAGWRDtPXAUykGELP9fVEbulLu6NT/e
-         QWRJEZEGPZbKT5oyEamSNF0YwnOaYshBbPuluxVKhxyLxZ2iMBtbi07QYyYvPC+aDzHK
-         46tQRXFZzBExLC4lOpX6mU4dRs1mCCVXMvL4wMkw46dbNSgYzq4XPG2ao3FZoH649u60
-         NFtaqOCeN0dCGvRD8dNsuxkvnAxP0+JmTZlabTYfJCS9yek0y5txyS1dkll6cyfIVUO3
-         8tkQ==
+        bh=xan2Rb4LxJqnkwR/5yCpJ+HY7/yGaonUOCUizXrIxSQ=;
+        b=5dflFAVkwrsWE1u98WIy85LkOvAI6qFWx1pATeB2f4ij7axRKfMTBzK++4jekGsLO2
+         5KkXMdTJ6Nk/mMHiOjeR1SZMw1ht0js0q+qUFuCsUloFk/Kcqy3P5zyfrfOBZ3o59tBE
+         XtJ3S70O2EbG6nZ55MqDrhL924yYH3ZuQUi9pC7I5AQPk5NbQk5ABnlIfZQs++uIaAtN
+         7MvyRguXCuWASxxWy+cGZA8J11kl8fbDdzyglpYSG4tREh2Z+UkmEVHvGBHRzUKhUQ0V
+         GlEDuPZidM2w73HG00MCci24EvunQ04MCWgVWOP8/TD9z6UonCHZ2+LmunHz4cwYDBZJ
+         ZJkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681842026; x=1684434026;
+        d=1e100.net; s=20221208; t=1681842442; x=1684434442;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1DNDdHABsaakcA7jnUDjSieBuYQRHhRNZYcEhWrZDSY=;
-        b=i7JlQzOeaFu8aHbQVubA5qTXg7VtPNgCjT9oVH4rYTNTBKYmaV83zUFWQKaErL3Apx
-         vQBB5yyXF/yG3ltqRuD6qj4iESS0NEWkfTPaKhM5R8LM3WG1lEjnACeuwUTis0GhICa6
-         bTJZ8iu0gZIIfXUK33edSBLfjpyT3V+aOJffg4YjwI4FJMrT8jnIC2JDDsISUG75OE7/
-         EKl/EGLpq+yKUwK34wVAarFTS8M49ysA2fPoxW3p8rmp4mxLU0dWbThA7fUvN6l9R58B
-         KkWW7Y8GIL5AfK2zXLNKeLEvp4IDznOsNFyXNdFwh7ngXeQsgDjpy92Yahd5OadyFld9
-         n+1w==
-X-Gm-Message-State: AAQBX9e84She2H9ZvXp393Xt7iQBj1p9c1pU684BBVLJb7GwhWK4TE/0
-        hxY0OXfxx3x0a7F+bdS9J+pUFJoFlmMPH2hWsXbL+w==
-X-Google-Smtp-Source: AKy350boFioJgp8wtE1Dr3UOwZAK5o7Q9dtF8zyg/RlPVaopO3qU+LnCEoEoLgghcttNeKteMSY9oMSYHT5iXb+5JVc=
-X-Received: by 2002:a17:90b:38c6:b0:237:c209:5b14 with SMTP id
- nn6-20020a17090b38c600b00237c2095b14mr472426pjb.22.1681842026333; Tue, 18 Apr
- 2023 11:20:26 -0700 (PDT)
+        bh=xan2Rb4LxJqnkwR/5yCpJ+HY7/yGaonUOCUizXrIxSQ=;
+        b=aj7dZZYZzq8exfsu8ye/H8gDKXSl17d2PycK+R8Wjpr6uE/rWojXx00hfVgOON2AFT
+         o9c5l4Q15Ki3P9EXAKQ3FSB7xMuXFxbn8Lga+NC94vM1DYhCbczx/7dpdEXzD5WIDw7q
+         CI+GB0iDIMfqIlZq6UjBvXUo67OwixkZDJF3uXgJjnwbspToda2WjX0n4WSnyv/O7P1M
+         lWs5K6QKXRRlBRPf1yAy2iunWx9Dw1gwFZXPgZ+bJCM2BOUi6d9jARLc2KC6/RTz0NRJ
+         Q2ZnSNXosOapXMmz+5nn34w9AJvSdOD/4RQ9RI6Gi5C0emTq93VBVW68fq2/BmSrlW3L
+         iRLw==
+X-Gm-Message-State: AAQBX9eiMLYH0YAbuF1Cab4/3eWXgOdZdtcM1qVabLixkdE2Pp3hM59Y
+        gp4oG5Xvh/GOupVNsrlWysHk6DKzdaPT639ZwBvKUJBBIUtvsy5meFl1qQ==
+X-Google-Smtp-Source: AKy350bn9N834mGRnTfxRB/1sg3Gi0LNYnU/cXaXt6pc2dTMoJKCLYPpBlnafBq3HfEmUa+rzRWnlZEJ5MyF4YEvvsY=
+X-Received: by 2002:a05:6a20:1445:b0:f0:b6e3:90f2 with SMTP id
+ a5-20020a056a20144500b000f0b6e390f2mr776981pzi.13.1681842441499; Tue, 18 Apr
+ 2023 11:27:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230407191904.gonna.522-kees@kernel.org> <20230407192717.636137-8-keescook@chromium.org>
-In-Reply-To: <20230407192717.636137-8-keescook@chromium.org>
+References: <20230407192717.636137-9-keescook@chromium.org> <202304080811.nYP4KpPZ-lkp@intel.com>
+In-Reply-To: <202304080811.nYP4KpPZ-lkp@intel.com>
 From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Apr 2023 11:20:15 -0700
-Message-ID: <CAKwvOd=qh9WGmD6dAxsfHo7iBxAVr6ethAAavxkMUaOQ6LJEyA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/10] fortify: Provide KUnit counters for failure testing
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+Date:   Tue, 18 Apr 2023 11:27:10 -0700
+Message-ID: <CAKwvOd=T5ownFTe5+M23ZLSPM876_7WAx23GzNeGxkqwGTHERQ@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] fortify: Add KUnit tests for runtime overflows
+To:     kernel test robot <lkp@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        oe-kbuild-all@lists.linux.dev, Andy Shevchenko <andy@kernel.org>,
         Cezary Rojewski <cezary.rojewski@intel.com>,
         Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
@@ -64,6 +65,7 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Brendan Higgins <brendan.higgins@linux.dev>,
         David Gow <davidgow@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Alexander Potapenko <glider@google.com>,
         Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
@@ -80,353 +82,172 @@ Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Sander Vanheule <sander@svanheule.net>,
         Eric Biggers <ebiggers@google.com>,
         "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
+        Andrey Konovalov <andreyknvl@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 7, 2023 at 12:27=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
+On Fri, Apr 7, 2023 at 5:33=E2=80=AFPM kernel test robot <lkp@intel.com> wr=
+ote:
 >
-> The standard C string APIs were not designed to have a failure mode;
-> they were expected to always succeed without memory safety issues.
-> Normally, CONFIG_FORTIFY_SOURCE will use fortify_panic() to stop
-> processing, as truncating a read or write may provide an even worse
-> system state. However, this creates a problem for testing under things
-> like KUnit, which needs a way to survive failures.
+> Hi Kees,
 >
-> When building with CONFIG_KUNIT, provide a failure path for all users
-> for fortify_panic, and track whether the failure was a read overflow or
-> a write overflow, for KUnit tests to examine. Inspired by similar logic
-> in the slab tests.
+> kernel test robot noticed the following build warnings:
 >
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/fortify-string.h | 45 +++++++++++++++++++---------------
->  lib/fortify_kunit.c            | 44 +++++++++++++++++++++++++++++++++
->  lib/string_helpers.c           |  2 ++
->  3 files changed, 71 insertions(+), 20 deletions(-)
+> [auto build test WARNING on kees/for-next/hardening]
+> [also build test WARNING on kees/for-next/pstore kees/for-next/kspp linus=
+/master tip/x86/core v6.3-rc5 next-20230406]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
 >
-> diff --git a/include/linux/fortify-string.h b/include/linux/fortify-strin=
-g.h
-> index 19906b45fb98..5d04c0e95854 100644
-> --- a/include/linux/fortify-string.h
-> +++ b/include/linux/fortify-string.h
-> @@ -15,8 +15,12 @@
->  #define FORTIFY_REASON(func, write)    (FIELD_PREP(BIT(0), write) | \
->                                          FIELD_PREP(GENMASK(7, 1), func))
+> url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/kunit-to=
+ol-Enable-CONFIG_FORTIFY_SOURCE-under-UML/20230408-032959
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git fo=
+r-next/hardening
+> patch link:    https://lore.kernel.org/r/20230407192717.636137-9-keescook=
+%40chromium.org
+> patch subject: [PATCH v2 09/10] fortify: Add KUnit tests for runtime over=
+flows
+> config: openrisc-randconfig-r034-20230405 (https://download.01.org/0day-c=
+i/archive/20230408/202304080811.nYP4KpPZ-lkp@intel.com/config)
+> compiler: or1k-linux-gcc (GCC) 12.1.0
+> reproduce (this is a W=3D1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbi=
+n/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # https://github.com/intel-lab-lkp/linux/commit/d212962ef7682ee16=
+0bf38fa455475558f031759
+>         git remote add linux-review https://github.com/intel-lab-lkp/linu=
+x
+>         git fetch --no-tags linux-review Kees-Cook/kunit-tool-Enable-CONF=
+IG_FORTIFY_SOURCE-under-UML/20230408-032959
+>         git checkout d212962ef7682ee160bf38fa455475558f031759
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dgcc-12.1.0 make.cro=
+ss W=3D1 O=3Dbuild_dir ARCH=3Dopenrisc olddefconfig
+>         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dgcc-12.1.0 make.cro=
+ss W=3D1 O=3Dbuild_dir ARCH=3Dopenrisc SHELL=3D/bin/bash lib/
 >
-> -#define fortify_panic(func, write)     \
-> +#ifdef FORTIFY_KUNIT_OVERRIDE
-> +# define fortify_panic kunit_fortify_panic
-> +#else
-> +# define fortify_panic(func, write, retfail)   \
->         __fortify_panic(FORTIFY_REASON(func, write))
-> +#endif
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Link: https://lore.kernel.org/oe-kbuild-all/202304080811.nYP4KpPZ-lkp@i=
+ntel.com/
+>
+> All warnings (new ones prefixed by >>):
+>
+>    In file included from lib/fortify_kunit.c:28:
+>    lib/fortify_kunit.c: In function 'strnlen_test':
+> >> lib/fortify_kunit.c:412:31: warning: 'strnlen' specified bound 33 exce=
+eds source size 32 [-Wstringop-overread]
 
-Could we provide a different definition of fortify_panic in
-lib/string_helpers.c rather than this macro indirection?
+If we expect to validate the runtime behavior of fortify, but using
+constants that the compiler can check for readability in this test,
+then we might need to use the
+_Pragma/__diag infrastructure from include/linux/compiler_types.h to
+disable -Wstringop-overread; or disable it at the makefile level.
 
+>      412 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
+>    include/kunit/test.h:584:38: note: in definition of macro 'KUNIT_BASE_=
+BINARY_ASSERTION'
+>      584 |         const typeof(left) __left =3D (left);                 =
+                   \
+>          |                                      ^~~~
+>    include/kunit/test.h:776:9: note: in expansion of macro 'KUNIT_BINARY_=
+INT_ASSERTION'
+>      776 |         KUNIT_BINARY_INT_ASSERTION(test,                      =
+                 \
+>          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>    include/kunit/test.h:773:9: note: in expansion of macro 'KUNIT_EXPECT_=
+EQ_MSG'
+>      773 |         KUNIT_EXPECT_EQ_MSG(test, left, right, NULL)
+>          |         ^~~~~~~~~~~~~~~~~~~
+>    lib/fortify_kunit.c:412:9: note: in expansion of macro 'KUNIT_EXPECT_E=
+Q'
+>      412 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
+>          |         ^~~~~~~~~~~~~~~
+>    lib/fortify_kunit.c:359:14: note: source object allocated here
+>      359 |         char buf[32];
+>          |              ^~~
+>    lib/fortify_kunit.c:414:31: warning: 'strnlen' specified bound 34 exce=
+eds source size 32 [-Wstringop-overread]
+>      414 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
+>    include/kunit/test.h:584:38: note: in definition of macro 'KUNIT_BASE_=
+BINARY_ASSERTION'
+>      584 |         const typeof(left) __left =3D (left);                 =
+                   \
+>          |                                      ^~~~
+>    include/kunit/test.h:776:9: note: in expansion of macro 'KUNIT_BINARY_=
+INT_ASSERTION'
+>      776 |         KUNIT_BINARY_INT_ASSERTION(test,                      =
+                 \
+>          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>    include/kunit/test.h:773:9: note: in expansion of macro 'KUNIT_EXPECT_=
+EQ_MSG'
+>      773 |         KUNIT_EXPECT_EQ_MSG(test, left, right, NULL)
+>          |         ^~~~~~~~~~~~~~~~~~~
+>    lib/fortify_kunit.c:414:9: note: in expansion of macro 'KUNIT_EXPECT_E=
+Q'
+>      414 |         KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
+>          |         ^~~~~~~~~~~~~~~
+>    lib/fortify_kunit.c:359:14: note: source object allocated here
+>      359 |         char buf[32];
+>          |              ^~~
 >
->  #define FORTIFY_READ            0
->  #define FORTIFY_WRITE           1
-> @@ -186,7 +190,7 @@ char *strncpy(char * const POS p, const char *q, __ke=
-rnel_size_t size)
->         if (__compiletime_lessthan(p_size, size))
->                 __write_overflow();
->         if (p_size < size)
-> -               fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE);
-> +               fortify_panic(FORTIFY_FUNC_strncpy, FORTIFY_WRITE, p);
->         return __underlying_strncpy(p, q, size);
->  }
 >
-> @@ -217,7 +221,7 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char *=
- const POS p, __kernel_size
->         /* Do not check characters beyond the end of p. */
->         ret =3D __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
->         if (p_size <=3D ret && maxlen !=3D ret)
-> -               fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ);
-> +               fortify_panic(FORTIFY_FUNC_strnlen, FORTIFY_READ, ret);
->         return ret;
->  }
+> vim +/strnlen +412 lib/fortify_kunit.c
 >
-> @@ -253,7 +257,7 @@ __kernel_size_t __fortify_strlen(const char * const P=
-OS p)
->                 return __underlying_strlen(p);
->         ret =3D strnlen(p, p_size);
->         if (p_size <=3D ret)
-> -               fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ);
-> +               fortify_panic(FORTIFY_FUNC_strlen, FORTIFY_READ, ret);
->         return ret;
->  }
+>    387
+>    388  static void strnlen_test(struct kunit *test)
+>    389  {
+>    390          struct fortify_padding pad =3D { };
+>    391          int i, end =3D sizeof(pad.buf) - 1;
+>    392
+>    393          /* Fill 31 bytes with valid characters. */
+>    394          for (i =3D 0; i < sizeof(pad.buf) - 1; i++)
+>    395                  pad.buf[i] =3D i + '0';
+>    396          /* Trailing bytes are still %NUL. */
+>    397          KUNIT_EXPECT_EQ(test, pad.buf[end], '\0');
+>    398          KUNIT_EXPECT_EQ(test, pad.bytes_after, 0);
+>    399
+>    400          /* String is terminated, so strnlen() is valid. */
+>    401          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, sizeof(pad.buf)), =
+end);
+>    402          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
+>    403          /* A truncated strnlen() will be safe, too. */
+>    404          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, sizeof(pad.buf) / =
+2),
+>    405                                          sizeof(pad.buf) / 2);
+>    406          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 0);
+>    407
+>    408          /* Make string unterminated, and recount. */
+>    409          pad.buf[end] =3D 'A';
+>    410          end =3D sizeof(pad.buf);
+>    411          /* Reading beyond with strncpy() will fail. */
+>  > 412          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 1), end);
+>    413          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 1);
+>    414          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end + 2), end);
+>    415          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+>    416
+>    417          /* Early-truncated is safe still, though. */
+>    418          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end), end);
+>    419          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+>    420
+>    421          end =3D sizeof(pad.buf) / 2;
+>    422          KUNIT_EXPECT_EQ(test, strnlen(pad.buf, end), end);
+>    423          KUNIT_EXPECT_EQ(test, fortify_read_overflows, 2);
+>    424  }
+>    425
 >
-> @@ -295,7 +299,7 @@ __FORTIFY_INLINE size_t strlcpy(char * const POS p, c=
-onst char * const POS q, si
->         }
->         if (size) {
->                 if (len >=3D p_size)
-> -                       fortify_panic(FORTIFY_FUNC_strlcpy, FORTIFY_WRITE=
-);
-> +                       fortify_panic(FORTIFY_FUNC_strlcpy, FORTIFY_WRITE=
-, q_len);
->                 __underlying_memcpy(p, q, len);
->                 p[len] =3D '\0';
->         }
-> @@ -373,7 +377,7 @@ __FORTIFY_INLINE ssize_t strscpy(char * const POS p, =
-const char * const POS q, s
->          * p_size.
->          */
->         if (len > p_size)
-> -               fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE);
-> +               fortify_panic(FORTIFY_FUNC_strscpy, FORTIFY_WRITE, -E2BIG=
-);
->
->         /*
->          * We can now safely call vanilla strscpy because we are protecte=
-d from:
-> @@ -431,7 +435,7 @@ size_t strlcat(char * const POS p, const char * const=
- POS q, size_t avail)
->
->         /* Give up if string is already overflowed. */
->         if (p_size <=3D p_len)
-> -               fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ);
-> +               fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_READ, wanted)=
-;
->
->         if (actual >=3D avail) {
->                 copy_len =3D avail - p_len - 1;
-> @@ -440,7 +444,7 @@ size_t strlcat(char * const POS p, const char * const=
- POS q, size_t avail)
->
->         /* Give up if copy will overflow. */
->         if (p_size <=3D actual)
-> -               fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE);
-> +               fortify_panic(FORTIFY_FUNC_strlcat, FORTIFY_WRITE, wanted=
-);
->         __underlying_memcpy(p + p_len, q, copy_len);
->         p[actual] =3D '\0';
->
-> @@ -469,7 +473,7 @@ char *strcat(char * const POS p, const char *q)
->         const size_t p_size =3D __member_size(p);
->
->         if (strlcat(p, q, p_size) >=3D p_size)
-> -               fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE);
-> +               fortify_panic(FORTIFY_FUNC_strcat, FORTIFY_WRITE, p);
->         return p;
->  }
->
-> @@ -505,13 +509,13 @@ char *strncat(char * const POS p, const char * cons=
-t POS q, __kernel_size_t coun
->         p_len =3D strlen(p);
->         copy_len =3D strnlen(q, count);
->         if (p_size < p_len + copy_len + 1)
-> -               fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE);
-> +               fortify_panic(FORTIFY_FUNC_strncat, FORTIFY_WRITE, p);
->         __underlying_memcpy(p + p_len, q, copy_len);
->         p[p_len + copy_len] =3D '\0';
->         return p;
->  }
->
-> -__FORTIFY_INLINE void fortify_memset_chk(__kernel_size_t size,
-> +__FORTIFY_INLINE bool fortify_memset_chk(__kernel_size_t size,
->                                          const size_t p_size,
->                                          const size_t p_size_field)
->  {
-> @@ -546,7 +550,8 @@ __FORTIFY_INLINE void fortify_memset_chk(__kernel_siz=
-e_t size,
->          * lengths are unknown.)
->          */
->         if (p_size !=3D SIZE_MAX && p_size < size)
-> -               fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE);
-> +               fortify_panic(FORTIFY_FUNC_memset, FORTIFY_WRITE, true);
-> +       return false;
->  }
->
->  #define __fortify_memset_chk(p, c, size, p_size, p_size_field) ({      \
-> @@ -645,9 +650,9 @@ __FORTIFY_INLINE bool fortify_memcpy_chk(__kernel_siz=
-e_t size,
->          * lengths are unknown.)
->          */
->         if (p_size !=3D SIZE_MAX && p_size < size)
-> -               fortify_panic(func, FORTIFY_WRITE);
-> +               fortify_panic(func, FORTIFY_WRITE, true);
->         else if (q_size !=3D SIZE_MAX && q_size < size)
-> -               fortify_panic(func, FORTIFY_READ);
-> +               fortify_panic(func, FORTIFY_READ, true);
->
->         /*
->          * Warn when writing beyond destination field size.
-> @@ -747,7 +752,7 @@ __FORTIFY_INLINE void *memscan(void * const POS0 p, i=
-nt c, __kernel_size_t size)
->         if (__compiletime_lessthan(p_size, size))
->                 __read_overflow();
->         if (p_size < size)
-> -               fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ);
-> +               fortify_panic(FORTIFY_FUNC_memscan, FORTIFY_READ, NULL);
->         return __real_memscan(p, c, size);
->  }
->
-> @@ -764,7 +769,7 @@ int memcmp(const void * const POS0 p, const void * co=
-nst POS0 q, __kernel_size_t
->                         __read_overflow2();
->         }
->         if (p_size < size || q_size < size)
-> -               fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ);
-> +               fortify_panic(FORTIFY_FUNC_memcmp, FORTIFY_READ, INT_MIN)=
-;
->         return __underlying_memcmp(p, q, size);
->  }
->
-> @@ -776,7 +781,7 @@ void *memchr(const void * const POS0 p, int c, __kern=
-el_size_t size)
->         if (__compiletime_lessthan(p_size, size))
->                 __read_overflow();
->         if (p_size < size)
-> -               fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ);
-> +               fortify_panic(FORTIFY_FUNC_memchr, FORTIFY_READ, NULL);
->         return __underlying_memchr(p, c, size);
->  }
->
-> @@ -788,7 +793,7 @@ __FORTIFY_INLINE void *memchr_inv(const void * const =
-POS0 p, int c, size_t size)
->         if (__compiletime_lessthan(p_size, size))
->                 __read_overflow();
->         if (p_size < size)
-> -               fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ);
-> +               fortify_panic(FORTIFY_FUNC_memchr_inv, FORTIFY_READ, NULL=
-);
->         return __real_memchr_inv(p, c, size);
->  }
->
-> @@ -801,7 +806,7 @@ __FORTIFY_INLINE void *kmemdup(const void * const POS=
-0 p, size_t size, gfp_t gfp
->         if (__compiletime_lessthan(p_size, size))
->                 __read_overflow();
->         if (p_size < size)
-> -               fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ);
-> +               fortify_panic(FORTIFY_FUNC_kmemdup, FORTIFY_READ, NULL);
->         return __real_kmemdup(p, size, gfp);
->  }
->
-> @@ -838,7 +843,7 @@ char *strcpy(char * const POS p, const char * const P=
-OS q)
->                 __write_overflow();
->         /* Run-time check for dynamic size overflow. */
->         if (p_size < size)
-> -               fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE);
-> +               fortify_panic(FORTIFY_FUNC_strcpy, FORTIFY_WRITE, p);
->         __underlying_memcpy(p, q, size);
->         return p;
->  }
-> diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-> index 524132f33cf0..ea2b39f279c2 100644
-> --- a/lib/fortify_kunit.c
-> +++ b/lib/fortify_kunit.c
-> @@ -15,12 +15,28 @@
->   */
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->
-> +/* Call kunit_fortify_panic() instead of fortify_panic() */
-> +#define FORTIFY_KUNIT_OVERRIDE
-> +void fortify_add_kunit_error(int write);
-> +#define kunit_fortify_panic(func, write, retfail)                      \
-> +       do {                                                            \
-> +               __fortify_report(FORTIFY_REASON(func, write));          \
-> +               fortify_add_kunit_error(write);                         \
-> +               return (retfail);                                       \
-
-^ Does this return value even matter? Could we just return -1 or some
-other constant for all cases? Then you don't need an optional
-parameter addition to fortify_panic.
-
-> +       } while (0)
-> +
->  #include <kunit/test.h>
-> +#include <kunit/test-bug.h>
->  #include <linux/device.h>
->  #include <linux/slab.h>
->  #include <linux/string.h>
->  #include <linux/vmalloc.h>
->
-> +static struct kunit_resource read_resource;
-> +static struct kunit_resource write_resource;
-> +static int fortify_read_overflows;
-> +static int fortify_write_overflows;
-> +
->  static const char array_of_10[] =3D "this is 10";
->  static const char *ptr_of_11 =3D "this is 11!";
->  static char array_unknown[] =3D "compiler thinks I might change";
-> @@ -30,6 +46,25 @@ static char array_unknown[] =3D "compiler thinks I mig=
-ht change";
->  # define __compiletime_strlen __builtin_strlen
->  #endif
->
-> +void fortify_add_kunit_error(int write)
-> +{
-> +       struct kunit_resource *resource;
-> +       struct kunit *current_test;
-> +
-> +       current_test =3D kunit_get_current_test();
-> +       if (!current_test)
-> +               return;
-> +
-> +       resource =3D kunit_find_named_resource(current_test,
-> +                       write ? "fortify_write_overflows"
-> +                             : "fortify_read_overflows");
-> +       if (!resource)
-> +               return;
-> +
-> +       (*(int *)resource->data)++;
-> +       kunit_put_resource(resource);
-> +}
-> +
->  static void known_sizes_test(struct kunit *test)
->  {
->         KUNIT_EXPECT_EQ(test, __compiletime_strlen("88888888"), 8);
-> @@ -317,6 +352,15 @@ static int fortify_test_init(struct kunit *test)
->         if (!IS_ENABLED(CONFIG_FORTIFY_SOURCE))
->                 kunit_skip(test, "Not built with CONFIG_FORTIFY_SOURCE=3D=
-y");
->
-> +       fortify_read_overflows =3D 0;
-> +       kunit_add_named_resource(test, NULL, NULL, &read_resource,
-> +                                "fortify_read_overflows",
-> +                                &fortify_read_overflows);
-> +       fortify_write_overflows =3D 0;
-> +       kunit_add_named_resource(test, NULL, NULL, &write_resource,
-> +                                "fortify_write_overflows",
-> +                                &fortify_write_overflows);
-> +
->         return 0;
->  }
->
-> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
-> index 96d502e1e578..38edde20e61b 100644
-> --- a/lib/string_helpers.c
-> +++ b/lib/string_helpers.c
-> @@ -18,6 +18,8 @@
->  #include <linux/slab.h>
->  #include <linux/string.h>
->  #include <linux/string_helpers.h>
-> +#include <kunit/test.h>
-> +#include <kunit/test-bug.h>
-
-Why do we need these headers here?
-
->
->  /**
->   * string_get_size - get the size in the specified units
 > --
-> 2.34.1
->
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests
 
 
---
+
+--=20
 Thanks,
 ~Nick Desaulniers
