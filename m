@@ -2,145 +2,502 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37CEC77B78
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 12:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E67BC77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 14:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231538AbjDRMNx (ORCPT
+        id S231971AbjDRODF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Apr 2023 08:13:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
+        Tue, 18 Apr 2023 10:03:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231690AbjDRMNi (ORCPT
+        with ESMTP id S231202AbjDRODE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Apr 2023 08:13:38 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFA0A5F8
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 05:13:16 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-760f29073b4so43146339f.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 05:13:16 -0700 (PDT)
+        Tue, 18 Apr 2023 10:03:04 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 950CC12CB0
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 07:03:01 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-3f09b9ac51dso68638115e9.0
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 07:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681819995; x=1684411995;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3C41xG4p1BHPpadBDL6pJd1psfwz5yd3WchMAQj7wTI=;
-        b=iK9lD1FZ7y5HJfDMDPFNomptkcBgNl6axnqn78SLgX4K2qOYsNBuDL+7R2yWQ3rMTU
-         s5S1gJmLLBclLDdkNeWaJ5aqxevBkq27swt/1UY7C1yb/Ue/wnfbQJoxHOKQfZVorXth
-         fsfwhmoMg1UWXgD09Rxnyb1s3m71WxbZzI+6ZQd+qlR+fn21cLSm9apNSG3WXxnauMYx
-         Uo/d+qzMrzNrRxL26/NoDjhgSo/qvdfP1m+7SoVhCMdFY7F9rqPDrx2PITxbBaM76N9D
-         a/Y26HlytOuPVd8gUnnIeXsBrbiI16SYU5yIFamRWkgmEaNjf3xW4WUGWGQybykWTmRv
-         R3sg==
+        d=linaro.org; s=google; t=1681826580; x=1684418580;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8dN7o3UP/8Ao66FSvmdNpzzSQHj/Mh8nRWTpz1hPrNo=;
+        b=FuUrP7BM015JZUf6hSRffuAcqb/unMMZQh0YBPISalK5+6DUo7gCi54O5BuG0njui7
+         qBR9jxEuXfMxXBpk7+vUD7lSGs20ERHZcvMuq6M/wAV0piHAbVqpY8raZqb07HEKolHX
+         4xHEHeqGub4tUzV3EvSI9zMdsXgLNv0hlsAUH6437woRbvLarb0CQfacj2kqjt49tb1P
+         JooJKMnUJ5t1MOawH7M1UIwGK0wRQJHYFVWF3Zv5pILWMr8f8zoD7GAwTf6E5A4ZP3Sj
+         Sg3sKPqEbU090CRq/Lc02a+l8EutKPiILdBWE6RbOoAzX8KAYCR5p/iIv/I6dpeYJjwl
+         8LeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681819995; x=1684411995;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3C41xG4p1BHPpadBDL6pJd1psfwz5yd3WchMAQj7wTI=;
-        b=e7gaKj8B8rHg2oS8lqxSl8J1En/4x4RiQ73Z0zqa30gIk/kjueh6yhKTdEpLf+hMFt
-         8bkhzBPrLIM52+mQEmOLBvUkCXNNj8KCzFtjb05LBJzVJyOYrXrPQrPiz2AF3fg2uxRN
-         +2oAifmHiCMbcEbVE8GxtlOVpTl1eJFzlOqR/i0R0odDrAXJpbrpapRb6iZPXs1+sThI
-         xYyYD02hify0vFqIN5QAKmznoGQYUmXomhIBZLegdAeHqMdu/eOQDgZM3RYhv8i4TDPU
-         D2rWd8G54Y+30T8tf5EXHTNHEVeUncQHmb6YbYNJnI6kEROucXwqsyi8at3a2wU2OSb9
-         b02Q==
-X-Gm-Message-State: AAQBX9dfZ/rCfsw4zbLew+wwVu2qQ+c2IUZznmXKJ3nvzNfvZ9nDJRLl
-        ln+/yTe6kLnOCS0e6sGuqxDQTiWv4QXcoPu9cMGZXQ==
-X-Google-Smtp-Source: AKy350ZfZvWa02fGm9TNYBrnOE+KkUawW1Q+TjXvWWE0Le8UwLNHTJEKGZCr3PzZ4WA37tJhHE1QeuNMJWiiACAZIic=
-X-Received: by 2002:a6b:6e06:0:b0:762:7e58:8d38 with SMTP id
- d6-20020a6b6e06000000b007627e588d38mr1759080ioh.10.1681819995595; Tue, 18 Apr
- 2023 05:13:15 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681826580; x=1684418580;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8dN7o3UP/8Ao66FSvmdNpzzSQHj/Mh8nRWTpz1hPrNo=;
+        b=c+30mf2J6ZR7yF97/6aJjByrQzEJ0GJ10VzMm0pvUL5JoFT0DvEJ47zQUeWFELj9z4
+         Mi/6n/sTuz+BdQteRemAxKexubJ2ORIYrfqeB6jeVE8ki09OiPCwcZjylcuoKyv+RD+M
+         rsKSdw4azKc1Q2nCAkwl/US15Ks9RpghAJo890eNDNuwondTe8TAICxymSTKmmfUt+DI
+         T3+ZjOywVbs7eBhNSTXuQLjZAI9gLkuUsySqmf9ULsxr5C6HYBAtK0g05KjPz7JnkAnt
+         +d+hTpoPo9J2OFoJWfy5eI/Ev0fCwrGgzWnr7Q0IVQ3ZOZ0lAnEtzu48iSMpXlgO2SHR
+         v2rw==
+X-Gm-Message-State: AAQBX9cgZuPc/XCn8cNdTDKH+3IrYX1h+N9ixNha2TO3+NXOji+VPLR+
+        /Xu/GU6r8UxhexUoPI4T+DN1WQ==
+X-Google-Smtp-Source: AKy350ZgZ7a9inQ+l/9iKwTimjDQqbaqVtdJwumC2sGEGjekSVfmNsKwCmgKRfTyDkxoQzm1pafHmQ==
+X-Received: by 2002:a05:6000:100f:b0:2fd:c315:bb2c with SMTP id a15-20020a056000100f00b002fdc315bb2cmr1480122wrx.22.1681826580003;
+        Tue, 18 Apr 2023 07:03:00 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id w16-20020a5d6810000000b002e5ff05765esm13281414wru.73.2023.04.18.07.02.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Apr 2023 07:02:59 -0700 (PDT)
+Message-ID: <f74dfcde-e59b-a9b3-9bbc-a8de644f6740@linaro.org>
+Date:   Tue, 18 Apr 2023 15:02:57 +0100
 MIME-Version: 1.0
-References: <20230224085942.1791837-1-elver@google.com> <ZDgOSp30Ec00u8wP@arm.com>
-In-Reply-To: <ZDgOSp30Ec00u8wP@arm.com>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 18 Apr 2023 14:12:39 +0200
-Message-ID: <CANpmjNMNNc8yizJE8T1+Xrg1rGm+EbBuqybF9j1YE9miqdtasA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/4] kasan: Emit different calls for instrumentable memintrinsics
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jakub Jelinek <jakub@redhat.com>,
-        linux-toolchains@vger.kernel.org,
-        Alexander Potapenko <glider@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-mm@kvack.org, linux-kbuild@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2 2/6] remoteproc: qcom: Move minidump specific data to
+ qcom_minidump.h
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        catalin.marinas@arm.com, will@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+References: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
+ <1679491817-2498-3-git-send-email-quic_mojha@quicinc.com>
+ <e74fb30d-4268-86b1-cdf7-ad3d104c6c40@linaro.org>
+ <3df1ec27-7e4d-1f84-ff20-94e8ea91c86f@quicinc.com>
+ <040a1992-baff-c3e4-69a9-ff3110de62e7@linaro.org>
+ <a33e2d43-d6a6-f830-8421-ec68baf8159d@quicinc.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <a33e2d43-d6a6-f830-8421-ec68baf8159d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 13 Apr 2023 at 16:14, Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> Hi Marco,
->
-> On Fri, Feb 24, 2023 at 09:59:39AM +0100, Marco Elver wrote:
-> > Clang 15 provides an option to prefix memcpy/memset/memmove calls with
-> > __asan_/__hwasan_ in instrumented functions: https://reviews.llvm.org/D122724
-> >
-> > GCC will add support in future:
-> > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108777
-> >
-> > Use it to regain KASAN instrumentation of memcpy/memset/memmove on
-> > architectures that require noinstr to be really free from instrumented
-> > mem*() functions (all GENERIC_ENTRY architectures).
-> >
-> > Fixes: 69d4c0d32186 ("entry, kasan, x86: Disallow overriding mem*() functions")
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
-> > Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> [...]
-> > diff --git a/scripts/Makefile.kasan b/scripts/Makefile.kasan
-> > index b9e94c5e7097..fa9f836f8039 100644
-> > --- a/scripts/Makefile.kasan
-> > +++ b/scripts/Makefile.kasan
-> > @@ -38,6 +38,11 @@ endif
-> >
-> >  CFLAGS_KASAN += $(call cc-param,asan-stack=$(stack_enable))
-> >
-> > +# Instrument memcpy/memset/memmove calls by using instrumented __asan_mem*()
-> > +# instead. With compilers that don't support this option, compiler-inserted
-> > +# memintrinsics won't be checked by KASAN on GENERIC_ENTRY architectures.
-> > +CFLAGS_KASAN += $(call cc-param,asan-kernel-mem-intrinsic-prefix=1)
-> > +
-> >  endif # CONFIG_KASAN_GENERIC
-> >
-> >  ifdef CONFIG_KASAN_SW_TAGS
-> > @@ -54,6 +59,9 @@ CFLAGS_KASAN := -fsanitize=kernel-hwaddress \
-> >               $(call cc-param,hwasan-inline-all-checks=0) \
-> >               $(instrumentation_flags)
-> >
-> > +# Instrument memcpy/memset/memmove calls by using instrumented __hwasan_mem*().
-> > +CFLAGS_KASAN += $(call cc-param,hwasan-kernel-mem-intrinsic-prefix=1)
->
-> This patch breaks the arm64 kernel builds with KASAN_SW_TAGS enabled and
-> clang prior to version 15. Those prior clang versions don't like the
-> '-mllvm -hwasan-kernel-mem-intrinsic-prefix=1' option, end up printing
-> the help text instead of generating the object.
->
-> Do we need some combination of cc-option and cc-param? Or at least
-> disable this instrumentation if earlier clang versions are used.
->
-> It's already in mainline as commit
-> 51287dcb00cc715c27bf6a6b4dbd431621c5b65a.
 
-Arnd posted a patch, but the reason why a workaround is needed is
-quite unfortunate:
-https://lore.kernel.org/all/CANpmjNMwYosrvqh4ogDO8rgn+SeDHM2b-shD21wTypm_6MMe=g@mail.gmail.com/
 
-Clang apparently interprets unknown options that start with "-h..",
-i.e. "-mllvm -h..." as a request to print help text, which has exit
-code 0. So this is only a problem for hwasan options.
+On 17/04/2023 14:22, Mukesh Ojha wrote:
+> 
+> 
+> On 4/14/2023 4:10 PM, Srinivas Kandagatla wrote:
+>>
+>>
+>> On 14/04/2023 08:05, Mukesh Ojha wrote:
+>>> Thanks again for coming back on this.
+>>>
+>>> On 4/14/2023 4:02 AM, Srinivas Kandagatla wrote:
+>>>>
+>>>>
+>>>> On 22/03/2023 13:30, Mukesh Ojha wrote:
+>>>>> Move minidump specific data types and macros to a separate internal
+>>>>> header(qcom_minidump.h) so that it can be shared among different
+>>>>
+>>>> minidump.h should be good as we are already in include/soc/qcom/
+>>>
+>>>
+>>> Initially, i wanted to protect the content of qcom_minidump.h between 
+>>> qcom_minidump.c and qcom_common.c
+>>>
+>>> Ideally, here qcom_minidump.h should be supplier/provider header and can 
+>>
+>> Am not sure if I understand the supplier concept correctly.
+>> AFAIU, we have a 2 sets of apis
+>>
+>> 1. get hold of minidump descriptor based on minidump_id fro gtoc using 
+>> qcom_minidump_subsystem_desc(). Am assuming which ever driver uses 
+>> this api will set there segments and regions in there respective drivers.
+>>
+>> 2. setting regions/segments in APSS minidump descriptors which are 
+>> done via qcom_minidump_region_register(). TBH this should be renamed 
+>> to qcom_apss_minidump_region_register().
+>>
+>> mixing of thsee apis makes it bit confusing, specially we have these 
+>> two category of apis that deal with different things.
+>>
+>> Does it make sense to spit and abstract them properly by doing?
+>>
+>>
+>> 1. minidump driver to deal with handling gtoc and providing 
+>> descriptors to the consumers like remoteproc or apss, This can 
+>> probably live within smem driver as loc for this support is very 
+>> minimal and proabably rename the api accordingly.
+>>
+> 
+>> 2. apss_minidump driver to allow other qcom drivers to 
+>> register/unregister regions within apss minidump descriptor.
+>>
+>> did I miss something?
+> 
+> No, you are correct with your understanding.
+> 
+> To your suggestion to split code and to keep 
+> qcom_minidump_subsystem_desc() live inside smem driver,
+> 
+> And how about the header qcom_minidump.h, should we keep it separate 
+> than the apss minidump client header minidump.h ?
+
+I tried to do what I suggested and it kinda looked okay w.r.t design but 
+started to look like a bit overdo.
+
+other thing that I tried like what you have in patches but creating a 
+dedicated platform driver for minidump (along with apss minidump), just 
+like other smem devices like socinfo..
+
+This should also get rid of qcom_minidump_ready().
+
+> 
+> Since, you kind of understand the driver now, do you think it is worth
+> to create platform device for minidump from smem driver, and
+> have a probe inside apss minidump driver to solve chicken and egg 
+> problem for the clients who comes before minidump and try to register 
+> itself without doing ready check and apss_minidump can note this client 
+> entry and only register this region once minidump probe success and then 
+> it can register all the noted clients in one go.
+yes, it is doable.
+
+> 
+> The reason to do this would be apss_minidump driver has no meaning 
+> without smem, and for this reason checking qcom_minidump_ready() would 
+> not be ideal for at least qcom clients and for core kernel may be.
+> 
+
+how about something like this:
+
+-------------------->cut<-----------------------
+diff --git a/drivers/soc/qcom/minidump.c b/drivers/soc/qcom/minidump.c
+new file mode 100644
+index 000000000000..4171054b268d
+--- /dev/null
++++ b/drivers/soc/qcom/minidump.c
+@@ -0,0 +1,100 @@
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/soc/qcom/smem.h>
++#include <linux/soc/qcom/minidump.h>
++
++...
++
++struct minidump {
++       struct minidump_global_toc      *md_gbl_toc;
++       struct minidump_subsystem       *md_apss_toc;
++       ...
++};
++
++struct minidump *__md;
++
++struct minidump_subsystem *qcom_minidump_subsystem_desc(unsigned int 
+minidump_index)
++{
++       if (!__md)
++               return PTR_ERR(-EPROBE_DEFER);
++
++       return &__mdgtoc->subsystems[minidump_index];
++}
++EXPORT_SYMBOL(qcom_minidump_subsystem_desc);
++
++
++int qcom_minidump_apss_region_register(const struct 
+qcom_minidump_region *region)
++{
++       if (!__mdgtoc)
++               return -EPROBE_DEFER;
++       ...
++}
++EXPORT_SYMBOL_GPL(qcom_minidump_apss_region_register);
++
++static int qcom_minidump_init_apss_subsystem(struct minidumd *md)
++{
++       struct minidump_subsystem *apsstoc;
++
++       apsstoc = qcom_minidump_subsystem_desc(MINIDUMP_APSS_DESC);
++       if (IS_ERR(apsstoc))
++               return -EINVAL;
++
++       md->md_regions = kcalloc(MAX_NUM_ENTRIES,
++                             sizeof(struct minidump_region), GFP_KERNEL);
++       if (!md->md_regions)
++               return -ENOMEM;
++
++       minidump.apss_toc = apsstoc;
++
++       ...
++
++       return 0;
++}
++static int qcom_minidump_probe(struct platform_device *pdev)
++{
++       struct minidump *md;
++       struct minidump_global_toc *mdgtoc;
++
++       md = devm_kzalloc(&pdev->dev, sizeof(*md), GFP_KERNEL);
++
++       ...
++       mdgtoc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, 
+&size);
++       if (IS_ERR(mdgtoc)) {
++               dev_err(&pdev->dev, "Couldn't find minidump\n");
++               return ERR_PTR(mdgtoc);
++       }
++
++       if (size < sizeof(*mdgtoc) || !mdgtoc->status) {
++               dev_err(&pdev->dev, "Minidump table is not initialized\n");
++               return ERR_PTR(-EINVAL);
++       }
++       ...
++       qcom_minidump_init_apss_subsystem(md);
++
++       __md = md;
++       ...
++       return 0;
++}
++
++static int qcom_minidump_remove(struct platform_device *pdev)
++{
++       struct qcom_minidump *qs = platform_get_drvdata(pdev);
++
++       ...
++
++       return 0;
++}
++
++static struct platform_driver qcom_minidump_driver = {
++       .probe = qcom_minidump_probe,
++       .remove = qcom_minidump_remove,
++       .driver  = {
++               .name = "qcom-minidump",
++       },
++};
++
++module_platform_driver(qcom_minidump_driver);
++
++MODULE_DESCRIPTION("Qualcomm minidump driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:qcom-minidump");
+diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
+index 4f163d62942c..d54b07095ddd 100644
+--- a/drivers/soc/qcom/smem.c
++++ b/drivers/soc/qcom/smem.c
+@@ -279,6 +279,7 @@ struct qcom_smem {
+
+         u32 item_count;
+         struct platform_device *socinfo;
++       struct platform_device *minidump;
+         struct smem_ptable *ptable;
+         struct smem_partition global_partition;
+         struct smem_partition partitions[SMEM_HOST_COUNT];
+@@ -1151,12 +1152,19 @@ static int qcom_smem_probe(struct 
+platform_device *pdev)
+         if (IS_ERR(smem->socinfo))
+                 dev_dbg(&pdev->dev, "failed to register socinfo device\n");
+
++       smem->minidump = platform_device_register_data(&pdev->dev, 
+"qcom-minidump",
++ 
+PLATFORM_DEVID_NONE, NULL,
++                                                     0);
++       if (IS_ERR(smem->minidump))
++               dev_dbg(&pdev->dev, "failed to register minidump device\n");
++
+         return 0;
+  }
+
+  static int qcom_smem_remove(struct platform_device *pdev)
+  {
+         platform_device_unregister(__smem->socinfo);
++       platform_device_unregister(__smem->minidump);
+
+         hwspin_lock_free(__smem->hwlock);
+         __smem = NULL;
+(END)
+-------------------->cut<-----------------------
+
+> --Mukesh
+>>
+>> thanks,
+>> Srini
+>>
+>>> be shared among above qcom_minidump.c and qcom_common.c but since 
+>>> they are not in same directory, moved it inside include/soc/qcom/ as 
+>>> separate header than consumer header minidump.h . >
+>>> -Mukesh
+>>>>
+>>>> --srini
+>>>>
+>>>>> Qualcomm drivers.
+>>>>>
+>>>>> There is no change in functional behavior after this.
+>>>>>
+>>>>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>>>>> ---
+>>>>>   drivers/remoteproc/qcom_common.c | 56 
+>>>>> +---------------------------------
+>>>>>   include/soc/qcom/qcom_minidump.h | 66 
+>>>>> ++++++++++++++++++++++++++++++++++++++++
+>>>>>   2 files changed, 67 insertions(+), 55 deletions(-)
+>>>>>   create mode 100644 include/soc/qcom/qcom_minidump.h
+>>>>>
+>>>>> diff --git a/drivers/remoteproc/qcom_common.c 
+>>>>> b/drivers/remoteproc/qcom_common.c
+>>>>> index 805e525..88fc984 100644
+>>>>> --- a/drivers/remoteproc/qcom_common.c
+>>>>> +++ b/drivers/remoteproc/qcom_common.c
+>>>>> @@ -18,6 +18,7 @@
+>>>>>   #include <linux/slab.h>
+>>>>>   #include <linux/soc/qcom/mdt_loader.h>
+>>>>>   #include <linux/soc/qcom/smem.h>
+>>>>> +#include <soc/qcom/qcom_minidump.h>
+>>>>>   #include "remoteproc_internal.h"
+>>>>>   #include "qcom_common.h"
+>>>>> @@ -26,61 +27,6 @@
+>>>>>   #define to_smd_subdev(d) container_of(d, struct 
+>>>>> qcom_rproc_subdev, subdev)
+>>>>>   #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, 
+>>>>> subdev)
+>>>>> -#define MAX_NUM_OF_SS           10
+>>>>> -#define MAX_REGION_NAME_LENGTH  16
+>>>>> -#define SBL_MINIDUMP_SMEM_ID    602
+>>>>> -#define MINIDUMP_REGION_VALID        ('V' << 24 | 'A' << 16 | 'L' 
+>>>>> << 8 | 'I' << 0)
+>>>>> -#define MINIDUMP_SS_ENCR_DONE        ('D' << 24 | 'O' << 16 | 'N' 
+>>>>> << 8 | 'E' << 0)
+>>>>> -#define MINIDUMP_SS_ENABLED        ('E' << 24 | 'N' << 16 | 'B' << 
+>>>>> 8 | 'L' << 0)
+>>>>> -
+>>>>> -/**
+>>>>> - * struct minidump_region - Minidump region
+>>>>> - * @name        : Name of the region to be dumped
+>>>>> - * @seq_num:        : Use to differentiate regions with same name.
+>>>>> - * @valid        : This entry to be dumped (if set to 1)
+>>>>> - * @address        : Physical address of region to be dumped
+>>>>> - * @size        : Size of the region
+>>>>> - */
+>>>>> -struct minidump_region {
+>>>>> -    char    name[MAX_REGION_NAME_LENGTH];
+>>>>> -    __le32    seq_num;
+>>>>> -    __le32    valid;
+>>>>> -    __le64    address;
+>>>>> -    __le64    size;
+>>>>> -};
+>>>>> -
+>>>>> -/**
+>>>>> - * struct minidump_subsystem - Subsystem's SMEM Table of content
+>>>>> - * @status : Subsystem toc init status
+>>>>> - * @enabled : if set to 1, this region would be copied during 
+>>>>> coredump
+>>>>> - * @encryption_status: Encryption status for this subsystem
+>>>>> - * @encryption_required : Decides to encrypt the subsystem regions 
+>>>>> or not
+>>>>> - * @region_count : Number of regions added in this subsystem toc
+>>>>> - * @regions_baseptr : regions base pointer of the subsystem
+>>>>> - */
+>>>>> -struct minidump_subsystem {
+>>>>> -    __le32    status;
+>>>>> -    __le32    enabled;
+>>>>> -    __le32    encryption_status;
+>>>>> -    __le32    encryption_required;
+>>>>> -    __le32    region_count;
+>>>>> -    __le64    regions_baseptr;
+>>>>> -};
+>>>>> -
+>>>>> -/**
+>>>>> - * struct minidump_global_toc - Global Table of Content
+>>>>> - * @status : Global Minidump init status
+>>>>> - * @md_revision : Minidump revision
+>>>>> - * @enabled : Minidump enable status
+>>>>> - * @subsystems : Array of subsystems toc
+>>>>> - */
+>>>>> -struct minidump_global_toc {
+>>>>> -    __le32                status;
+>>>>> -    __le32                md_revision;
+>>>>> -    __le32                enabled;
+>>>>> -    struct minidump_subsystem    subsystems[MAX_NUM_OF_SS];
+>>>>> -};
+>>>>> -
+>>>>>   struct qcom_ssr_subsystem {
+>>>>>       const char *name;
+>>>>>       struct srcu_notifier_head notifier_list;
+>>>>> diff --git a/include/soc/qcom/qcom_minidump.h 
+>>>>> b/include/soc/qcom/qcom_minidump.h
+>>>>> new file mode 100644
+>>>>> index 0000000..84c8605
+>>>>> --- /dev/null
+>>>>> +++ b/include/soc/qcom/qcom_minidump.h
+>>>>> @@ -0,0 +1,66 @@
+>>>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>>>> +/*
+>>>>> + * Qualcomm minidump shared data structures and macros
+>>>>> + *
+>>>>> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights 
+>>>>> reserved.
+>>>>> + */
+>>>>> +
+>>>>> +#ifndef _QCOM_MINIDUMP_H_
+>>>>> +#define _QCOM_MINIDUMP_H_
+>>>>> +
+>>>>> +#define MAX_NUM_OF_SS           10
+>>>>> +#define MAX_REGION_NAME_LENGTH  16
+>>>>> +#define SBL_MINIDUMP_SMEM_ID    602
+>>>>> +#define MINIDUMP_REGION_VALID        ('V' << 24 | 'A' << 16 | 'L' 
+>>>>> << 8 | 'I' << 0)
+>>>>> +#define MINIDUMP_SS_ENCR_DONE        ('D' << 24 | 'O' << 16 | 'N' 
+>>>>> << 8 | 'E' << 0)
+>>>>> +#define MINIDUMP_SS_ENABLED        ('E' << 24 | 'N' << 16 | 'B' << 
+>>>>> 8 | 'L' << 0)
+>>>>> +
+>>>>> +/**
+>>>>> + * struct minidump_region - Minidump region
+>>>>> + * @name        : Name of the region to be dumped
+>>>>> + * @seq_num:        : Use to differentiate regions with same name.
+>>>>> + * @valid        : This entry to be dumped (if set to 1)
+>>>>> + * @address        : Physical address of region to be dumped
+>>>>> + * @size        : Size of the region
+>>>>> + */
+>>>>> +struct minidump_region {
+>>>>> +    char    name[MAX_REGION_NAME_LENGTH];
+>>>>> +    __le32    seq_num;
+>>>>> +    __le32    valid;
+>>>>> +    __le64    address;
+>>>>> +    __le64    size;
+>>>>> +};
+>>>>> +
+>>>>> +/**
+>>>>> + * struct minidump_subsystem - Subsystem's SMEM Table of content
+>>>>> + * @status : Subsystem toc init status
+>>>>> + * @enabled : if set to 1, this region would be copied during 
+>>>>> coredump
+>>>>> + * @encryption_status: Encryption status for this subsystem
+>>>>> + * @encryption_required : Decides to encrypt the subsystem regions 
+>>>>> or not
+>>>>> + * @region_count : Number of regions added in this subsystem toc
+>>>>> + * @regions_baseptr : regions base pointer of the subsystem
+>>>>> + */
+>>>>> +struct minidump_subsystem {
+>>>>> +    __le32    status;
+>>>>> +    __le32    enabled;
+>>>>> +    __le32    encryption_status;
+>>>>> +    __le32    encryption_required;
+>>>>> +    __le32    region_count;
+>>>>> +    __le64    regions_baseptr;
+>>>>> +};
+>>>>> +
+>>>>> +/**
+>>>>> + * struct minidump_global_toc - Global Table of Content
+>>>>> + * @status : Global Minidump init status
+>>>>> + * @md_revision : Minidump revision
+>>>>> + * @enabled : Minidump enable status
+>>>>> + * @subsystems : Array of subsystems toc
+>>>>> + */
+>>>>> +struct minidump_global_toc {
+>>>>> +    __le32                status;
+>>>>> +    __le32                md_revision;
+>>>>> +    __le32                enabled;
+>>>>> +    struct minidump_subsystem    subsystems[MAX_NUM_OF_SS];
+>>>>> +};
+>>>>> +
+>>>>> +#endif  /* _QCOM_MINIDUMP_H_ */
