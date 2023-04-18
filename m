@@ -2,150 +2,250 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5D8C6FD18
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 15:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 323DEC77B78
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Apr 2023 16:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231314AbjDRP0q (ORCPT
+        id S229940AbjDRQDS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Apr 2023 11:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44082 "EHLO
+        Tue, 18 Apr 2023 12:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbjDRP0p (ORCPT
+        with ESMTP id S230002AbjDRQDR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Apr 2023 11:26:45 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EB8125A9
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 08:26:23 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id fw30so21432351ejc.5
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Apr 2023 08:26:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681831582; x=1684423582;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s9M4Cy3RAneTyQNPZZI73IssUJ+/tbZ24lCmil8/wy0=;
-        b=htQXPSbwfbKehEj5O/7VedrIOI3id8b1ElfrdoQSSii8SiWKOLqlzSn6hWxhFIS8dg
-         4oqduLcxCDchk60CK9IA7cQrPgG2/ON/bOhTOkF72rA/FpQq8gkL8nH0c5u/XUvbfwoG
-         Lx1nWaGc9ruXXr9Vks/3SYMXKpEIjNpC3N1/neydjeKlWS/OAOJEvpg/P2djaizMOdDb
-         c7zkFjq7XmHLex1XKayPQHWTKnuyxqHZ420lhoLFaygx5xwDvU5uPIx192J6wf2NyNUs
-         B5Zz/GRuXQcipbrTJf+oyjWtJdDMJsnO7bzm87XX/sdMFXYNn2xkljaBlbJTSAAG9UuB
-         VvDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681831582; x=1684423582;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s9M4Cy3RAneTyQNPZZI73IssUJ+/tbZ24lCmil8/wy0=;
-        b=Ffbffah261cEFpK3C1dyeK6umLlUfXXVHyPjJvurOKGXKjTpzbsGjX3nZ18YupaRfG
-         2aSG5vPzkgsUnNKbPCm2FzhV6mqBAnet40d2B+FN+kaVh7VMIr9aAaaF9C3K3KevhJFC
-         izwGmVm4vM/mVA1fpL91pDgZKBg+aSHsYxZo3eiIHl44Mp3vQZZGnwEqgus+k3onhvJO
-         gJcOyEROKcGoAPDeVUhmmmoj72HbGincfAqTBCn+Xza/eQXHFMwCPEOhrkniDx+Ij6Nz
-         LcYhy9tzZRPebaDLmZTDN+3nSWC3JfqwHYwi8XhRSK5d9aHNC7wTMldaeqKTySTMWiMw
-         Arbw==
-X-Gm-Message-State: AAQBX9eSkLDOKb+wL51agFHpj+svFAlCn4y+I+lfsLBB6Ad5D8pmzVBg
-        B2W43RHGWRZV+KgC8+hRxOcFm5ik0DLaY8zFC0o=
-X-Google-Smtp-Source: AKy350Y55KT8s6wtLY+JUO1aCm8Wql7NeBtVJbi/L7pgsU7v6MZvKexJNZSfPBUyTFJDx+wtKF8qXQ==
-X-Received: by 2002:a17:907:918c:b0:94d:f66c:3cdc with SMTP id bp12-20020a170907918c00b0094df66c3cdcmr9596474ejb.51.1681831582049;
-        Tue, 18 Apr 2023 08:26:22 -0700 (PDT)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id gv35-20020a1709072be300b0094f07545d43sm5646849ejc.188.2023.04.18.08.26.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Apr 2023 08:26:21 -0700 (PDT)
-Message-ID: <bd7ad4a2-3cd0-9d6e-00b8-5592c67d7205@linaro.org>
-Date:   Tue, 18 Apr 2023 16:26:20 +0100
+        Tue, 18 Apr 2023 12:03:17 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12E5E44;
+        Tue, 18 Apr 2023 09:03:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681833795; x=1713369795;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=gKSLb2xfYv+FjF89AVtwDNgBygmfsQ2kxQI3j+sPs4U=;
+  b=XTSjDaYjwvgZSFurFIeP9x23qdIO2KzxNpl0bGBoS6zON7d5fr/q3Qd4
+   GVG53OLJy5ONISG/PDFjYsjVmXANusHmH0C/gq1iiG6ZmTa4y4LTaqUqw
+   HWUZaZxk/lGut5UCUwV1ABC4K0HpgsTku26Owi3xLV7qq/D1sKHnbDP5q
+   BgEnQYad+Qr1dr4I+DX1lEQqkMsRRM4Y1iSJuqwKAtWNGQx78LVmh+xJA
+   xQYW/TfJSQIrjjCDW79gNEHoNucNH3pp+KZa4HDNJVaPvq536/v9/DJLc
+   U/7xGTM0fFI6OkMgctf9uq5p4G7o2WXzyJTGRNH5fMujh5UYHUHAjuHwx
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="408118878"
+X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
+   d="scan'208";a="408118878"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 09:03:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="723718088"
+X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
+   d="scan'208";a="723718088"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga001.jf.intel.com with ESMTP; 18 Apr 2023 09:03:02 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 18 Apr 2023 09:03:02 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 18 Apr 2023 09:03:02 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Tue, 18 Apr 2023 09:03:02 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.48) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Tue, 18 Apr 2023 09:03:02 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=boKOYWKbu6godHWfsK1ms4CLnI4gU1K+LcduxkHQSEU18pbXEuXzmIHxLuN7T20WPkdYHVAB0gtNhkVbl1S1LzwJR2VtpFPpGGOXPX8HZT17GlsPycfBpcSshYDMGdobREPbWgvY4E4sjVX/eQvlVXG9Oit9IMgWQ7GUroTiJR6ANJmVQx5OxgOxhJcCUqjPu9HF83PkZAqE1GAzHrE7otI4dtDN1t7pB6RwBqXJ04nsQRtsYBOhcQ/5coindnrBBqY5ZGdLHavIIqmeeWuYWcUDaziD1DOs7D1wP8HxdXvqroV+UPB467cxsMvUtylts7G8HouP5MaX4QLwdfSxRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+nGIsS/ZFurzMHsyqbjCWm3z0W1YSj0+osQryD5IQko=;
+ b=iHVpHOkZkjO29LZcgHqbPwy37uLTc3ob3HN0+s2FbY+R+ruTnVoyTdhUt+0eeeL1zRYHtRfrb6q2xIoKei4+x7jxX8KngPZb1baK4oxeWJt3H6vA0qY8RiWkTj6Gg3ltA2dugIMg3ox4O8KOxnrRc5m7Nh6hTQOXGEE5df1aRYMPy82uR/GN4vGdVchigLFtKJoeEmx80x2YHZ/zwj+hma3l83FEzMs6/8jjP6OPIeZJNCzLQie916UwQIV2QSk8CTlr3Hm2MkOrPT3vqLmgjyuDlSy+Xp314IXHUNIJdkG3x92Ak50/hYlG9zwTmbQBXFaJeEPFE5ajMBk8PRHGrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM6PR11MB2937.namprd11.prod.outlook.com (2603:10b6:5:62::13) by
+ PH8PR11MB8038.namprd11.prod.outlook.com (2603:10b6:510:25e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Tue, 18 Apr
+ 2023 16:02:53 +0000
+Received: from DM6PR11MB2937.namprd11.prod.outlook.com
+ ([fe80::f56d:630e:393f:1d28]) by DM6PR11MB2937.namprd11.prod.outlook.com
+ ([fe80::f56d:630e:393f:1d28%3]) with mapi id 15.20.6298.045; Tue, 18 Apr 2023
+ 16:02:53 +0000
+Date:   Tue, 18 Apr 2023 18:02:39 +0200
+From:   Michal Kubiak <michal.kubiak@intel.com>
+To:     Ding Hui <dinghui@sangfor.com.cn>
+CC:     <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <intel-wired-lan@lists.osuosl.org>,
+        <jesse.brandeburg@intel.com>, <anthony.l.nguyen@intel.com>,
+        <keescook@chromium.org>, <grzegorzx.szczurek@intel.com>,
+        <mateusz.palczewski@intel.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        "Donglin Peng" <pengdonglin@sangfor.com.cn>,
+        Huang Cun <huangcun@sangfor.com.cn>
+Subject: Re: [PATCH net 1/2] iavf: Fix use-after-free in free_netdev
+Message-ID: <ZD6/H9DotpfOxr1+@localhost.localdomain>
+References: <20230408140030.5769-1-dinghui@sangfor.com.cn>
+ <20230408140030.5769-2-dinghui@sangfor.com.cn>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230408140030.5769-2-dinghui@sangfor.com.cn>
+X-ClientProxiedBy: FRYP281CA0001.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::11)
+ To DM6PR11MB2937.namprd11.prod.outlook.com (2603:10b6:5:62::13)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2 3/6] docs: qcom: Add qualcomm minidump guide
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        Brian Masney <bmasney@redhat.com>
-References: <1679491817-2498-1-git-send-email-quic_mojha@quicinc.com>
- <1679491817-2498-4-git-send-email-quic_mojha@quicinc.com>
- <24ec8534-60a4-b308-0831-9ab6b983d902@linaro.org>
- <55d3dc01-8909-db69-fbac-60e7636febdc@quicinc.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <55d3dc01-8909-db69-fbac-60e7636febdc@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR11MB2937:EE_|PH8PR11MB8038:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9d2521fb-f371-454e-dd96-08db40265de6
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iSjcmh3BaakU6Ig0/jlDlyZpownXROIjFmuoHlAeIPVeWFLOrxoyR3CRD6yeQevZ1geJcuqhq9prqXd4YPy+J1RcyaVLrUzUNxs5jHB8qLvn2VIxH9/t1z528XmRhlurWn4BU8sWcFBfwOHXcFiKs0DdUkIHq7iXeJ0eszU3q43zv03e9St+XT9oj4B/nd6OfuDuNV4H4MXEM/x+VCa6o4dLvF3bHuZIMkIo+ZG0B8XWzUcFHSNvTgrCPtAp7Ydi6c236dGtFJKqGIEHx6/iu+Y7ueOgQKi2NdQ8qSscnWM5GeWuqgcUBljN37xvbyAyR2VzQCuQOWwKe1Sh5nlQrUjlp0hvUhcZL1aeS+Ia6xUBXlV4ZvVlSdowyI3ZN6IiLntWO1V+0buOyj2u5PlOhHHaxOZegCR2Isc7lkOJQEBi2b8/eDDeFdRd6tP8vGi2HuPTrKCU9xk9ShM0fPsckYF1e9SZzpf7LHG1kHPLk9vG2pjIcRstY72eRCKPYwUzSFxWNL5UohEbC9JlsVT9992irNc17+Sgijax4Fq67AQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2937.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(366004)(39860400002)(396003)(346002)(136003)(451199021)(9686003)(6666004)(6512007)(6506007)(26005)(186003)(86362001)(478600001)(54906003)(66946007)(316002)(66476007)(66556008)(83380400001)(6916009)(4326008)(6486002)(84970400001)(7416002)(44832011)(38100700002)(8936002)(5660300002)(8676002)(2906002)(41300700001)(82960400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?njN+IfxcR83nddzBvKy2XN8oCRwSgrN1m4FZja2m4J6FTaPQ2Uj6DpbBfLP2?=
+ =?us-ascii?Q?4AvpMsMwwf9BTcLBhA51FoxbLNJymRgcj3hwTrYSpTikr5XlkSTwWRKsrJ8G?=
+ =?us-ascii?Q?giSUfIrtbXt20P6l+xGaC4xK+C7nSDSqA7dz9c0jaiQwOdtUPb0hEheoYs8C?=
+ =?us-ascii?Q?5zR6t9vCHkzMDzBFKZwLQUBcRSEiNEiQKhSzqvkMPpJuZHHmVlP8fhQLtj8N?=
+ =?us-ascii?Q?9PNNdloUJmbaSFNFMVFNuAjib8tJBW+0qyVFl+955HQWFlEEiTQGAkHk1rli?=
+ =?us-ascii?Q?y7q8ULhDFZgSLMHcT+PwrvYHdTInP1+uAiOBMGv//nTuVLKSet7REND7L83E?=
+ =?us-ascii?Q?X3GPAmKXjI9UEYZWgkl+IfS0YTj9Sf1ITqiX8rgvGkYTi69Q5VhU8oqECLJt?=
+ =?us-ascii?Q?5kyNK679JXtAE7VElm9kkKDxOHotJIjLow6Xqp/EGgiLj1c374qc9vK0f++G?=
+ =?us-ascii?Q?XT+LwwIuWe0ccKvBJSDABjVbjsEeglxKleqSkkOad9WOib2GahadXqr3HHpt?=
+ =?us-ascii?Q?z5L+zEDKLcIu8EdQYEsOBh3sHr1vt5+1P8E9NFrH1nyga1PebGxji69cfLlT?=
+ =?us-ascii?Q?sxmIJcwwvj2enMfeSv2dSYc481VnkKG34/ynkL5N/qW8xnLXzZErVeM4tnXM?=
+ =?us-ascii?Q?jFUC83UpTBLFFO/HC7EovqcXeXSDqE5yHklkfyDGCY9P5r1O1/qukeacCQc8?=
+ =?us-ascii?Q?jm4Zfk+kyom2f1tQSQlFsQWtc69iPaBYCMfi7Ho0YpBWIXxnudlGbnZwsDvh?=
+ =?us-ascii?Q?vgI8WMdEKq+WetSc3nr0N+r0zhbwLZF8YlhcuXgL+Tgz+77yIR4xwSyTC+0c?=
+ =?us-ascii?Q?Q68Bz1xrJ7ecLYXfvE1+53WC0taSjNR18H9djeWZf/1zSxih7CN4kSErp+WS?=
+ =?us-ascii?Q?eqYebkEMDIVbTP/Tj88yl7g0KZ3HrcbL3u5daTiy737LaIk0q6bJ1/2ZlWTc?=
+ =?us-ascii?Q?qjD/SogUlUo3MzlMqU57J+bUN8EL/gIZ2XmjY2SgDlLpl2Rw8SD1YiYittDZ?=
+ =?us-ascii?Q?aJLmRBLA7JR2kkj8/cZuNUP0ynITs2wUOn4hMiL/yB/wx1mOglIZ4AIAL3DC?=
+ =?us-ascii?Q?YFTaVJtRX9wS7dnmL8UlF7D1dzxgAZQgPHziywdT3CQoSH+MuW3+hhcCKQ1L?=
+ =?us-ascii?Q?G9juV3WjMDAiM8/DQWzw2AqYRTpbZVv+cYery4DA8veVASwj3b0vbymOgbW5?=
+ =?us-ascii?Q?tD2VMuPONuCIM47ny25I1lu8ufgWH90fBul2bCkOaSLj76JmmAVLj3fIhzpY?=
+ =?us-ascii?Q?kBL6gC4SoVOIbCSjmhd8zSwSoL6F5+vf7WWVcQMOiP1dWwnTX0YcDg2vUIrQ?=
+ =?us-ascii?Q?EzihfNiW90rW1MppilP5SMFagvyFNDs12TO0lIAFNd/NHhzd6Hr9yOhdIVjk?=
+ =?us-ascii?Q?vK+3Iixv/Qm08kverlT8zqiK7Fx8cwG3BAKBuZ9+cmZJRERmuO1w4MQsR09K?=
+ =?us-ascii?Q?K+3kGlMExd8PqYNH7YLhYMJSXc7rKPUtKYgU0npsiguYKoH59RgFRZ/DmVBb?=
+ =?us-ascii?Q?qHZeZXRhMP/T7Ji+In7rBOIY3LRgkGgrWEtIWmdL1cHmNmZnmLRyQgT+iNif?=
+ =?us-ascii?Q?w0fVlS/bY1CTgrwk2EQbHpd5bnyioaSgmz9qfrK22Y6P717Ldqef1nc5gZUI?=
+ =?us-ascii?Q?OA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d2521fb-f371-454e-dd96-08db40265de6
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2937.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Apr 2023 16:02:53.3085
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Y+7W8E+gf6daUk79wSV4J61+G3ryiZHALq0NehTwLZ2hS6pYc/VcVJnQGT++T+gV0LP/My9g5Bu3fCwIayMn+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8038
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 18/04/2023 16:19, Mukesh Ojha wrote:
-> +@Brian
+On Sat, Apr 08, 2023 at 10:00:29PM +0800, Ding Hui wrote:
+> We do netif_napi_add() for all allocated q_vectors[], but potentially
+> do netif_napi_del() for part of them, then kfree q_vectors and lefted
+> invalid pointers at dev->napi_list.
 > 
-> On 4/14/2023 4:01 AM, Srinivas Kandagatla wrote:
->>
->>
->> On 22/03/2023 13:30, Mukesh Ojha wrote:
->>> +Dump collection
->>> +---------------
->>> +
->>> +The solution supports extracting the minidump produced either over 
->>> USB or
->>> +stored to an attached storage device.
->>> +
->>> +By default, dumps are downloaded via USB to the attached x86_64 machine
->>> +running PCAT (Qualcomm tool) software. Upon download, we will see
->>
->> Are these both PCAT and dexter tools public?
-> 
-> I think, PCAT comes as part of Qcom Package Kit.
+> If num_active_queues is changed to less than allocated q_vectors[] by
+> by unexpected, when iavf_remove, we might see UAF in free_netdev like this:
 
-yes, this is part of Qualcomm Package Manager.
+Nitpick: the word "by" is accidentally doubled.
+
+Also, I would recommend to add a description of reproduction steps (most
+preferably a script or a command sequence) which triggers such an error
+reported by KASAN.
 
 > 
-> Last time, I checked with @Brian, he was saying the they use PCAT 
-> software tool running on x86_64 machine attached to QCOM device to
-> get the dump(via USB) out of the device.
+> [ 4093.900222] ==================================================================
+> [ 4093.900230] BUG: KASAN: use-after-free in free_netdev+0x308/0x390
+> [ 4093.900232] Read of size 8 at addr ffff88b4dc145640 by task test-iavf-1.sh/6699
+> [ 4093.900233]
+> [ 4093.900236] CPU: 10 PID: 6699 Comm: test-iavf-1.sh Kdump: loaded Tainted: G           O     --------- -t - 4.18.0 #1
+> [ 4093.900238] Hardware name: Powerleader PR2008AL/H12DSi-N6, BIOS 2.0 04/09/2021
+> [ 4093.900239] Call Trace:
+> [ 4093.900244]  dump_stack+0x71/0xab
+> [ 4093.900249]  print_address_description+0x6b/0x290
+> [ 4093.900251]  ? free_netdev+0x308/0x390
+> [ 4093.900252]  kasan_report+0x14a/0x2b0
+> [ 4093.900254]  free_netdev+0x308/0x390
+> [ 4093.900261]  iavf_remove+0x825/0xd20 [iavf]
+> [ 4093.900265]  pci_device_remove+0xa8/0x1f0
+> [ 4093.900268]  device_release_driver_internal+0x1c6/0x460
+> [ 4093.900271]  pci_stop_bus_device+0x101/0x150
+> [ 4093.900273]  pci_stop_and_remove_bus_device+0xe/0x20
+> [ 4093.900275]  pci_iov_remove_virtfn+0x187/0x420
+> [ 4093.900277]  ? pci_iov_add_virtfn+0xe10/0xe10
+> [ 4093.900278]  ? pci_get_subsys+0x90/0x90
+> [ 4093.900280]  sriov_disable+0xed/0x3e0
+> [ 4093.900282]  ? bus_find_device+0x12d/0x1a0
+> [ 4093.900290]  i40e_free_vfs+0x754/0x1210 [i40e]
+> [ 4093.900298]  ? i40e_reset_all_vfs+0x880/0x880 [i40e]
+> [ 4093.900299]  ? pci_get_device+0x7c/0x90
+> [ 4093.900300]  ? pci_get_subsys+0x90/0x90
+> [ 4093.900306]  ? pci_vfs_assigned.part.7+0x144/0x210
+> [ 4093.900309]  ? __mutex_lock_slowpath+0x10/0x10
+> [ 4093.900315]  i40e_pci_sriov_configure+0x1fa/0x2e0 [i40e]
+> [ 4093.900318]  sriov_numvfs_store+0x214/0x290
+> [ 4093.900320]  ? sriov_totalvfs_show+0x30/0x30
+> [ 4093.900321]  ? __mutex_lock_slowpath+0x10/0x10
+> [ 4093.900323]  ? __check_object_size+0x15a/0x350
+> [ 4093.900326]  kernfs_fop_write+0x280/0x3f0
+> [ 4093.900329]  vfs_write+0x145/0x440
+> [ 4093.900330]  ksys_write+0xab/0x160
+> [ 4093.900332]  ? __ia32_sys_read+0xb0/0xb0
+> [ 4093.900334]  ? fput_many+0x1a/0x120
+> [ 4093.900335]  ? filp_close+0xf0/0x130
+> [ 4093.900338]  do_syscall_64+0xa0/0x370
+> [ 4093.900339]  ? page_fault+0x8/0x30
+> [ 4093.900341]  entry_SYSCALL_64_after_hwframe+0x65/0xca
+> [ 4093.900357] RIP: 0033:0x7f16ad4d22c0
+> ---
+>  drivers/net/ethernet/intel/iavf/iavf_main.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
 > 
-> Dexter.exe seems private tool, that only requires if we use storage
-> (via ufs/emmc) to save minidump on the target device itself and later 
-> use adb to pull out the rawdump partition dump and pass it through
-> dexter to convert it to same binary blobs which we got directly through
-> PCAT.
-> 
-> I don't at least have any way to avoid dexter tool at the moment.
-> However, i will think if we can develop any script which does the
-> same.
-That would be nice!
+> diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
+> index 095201e83c9d..a57e3425f960 100644
+> --- a/drivers/net/ethernet/intel/iavf/iavf_main.c
+> +++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
+> @@ -1849,19 +1849,15 @@ static int iavf_alloc_q_vectors(struct iavf_adapter *adapter)
+>  static void iavf_free_q_vectors(struct iavf_adapter *adapter)
+>  {
+>  	int q_idx, num_q_vectors;
+> -	int napi_vectors;
+>  
+>  	if (!adapter->q_vectors)
+>  		return;
+>  
+>  	num_q_vectors = adapter->num_msix_vectors - NONQ_VECS;
+> -	napi_vectors = adapter->num_active_queues;
+>  
+>  	for (q_idx = 0; q_idx < num_q_vectors; q_idx++) {
+>  		struct iavf_q_vector *q_vector = &adapter->q_vectors[q_idx];
+> -
+> -		if (q_idx < napi_vectors)
+> -			netif_napi_del(&q_vector->napi);
+> +		netif_napi_del(&q_vector->napi);
+>  	}
+>  	kfree(adapter->q_vectors);
+>  	adapter->q_vectors = NULL;
 
---srini
+The fix looks correct to me.
+We actually call "netif_napi_add()" for all allocated q_vectors unconditionally
+in "iavf_alloc_q_vectors()").
+
+Thanks,
+Michal
+
+> -- 
+> 2.17.1
 > 
-> -- Mukesh
-> 
->>
->> --srini
->>> +a set of binary blobs starts with name md_* in PCAT configured 
->>> directory
->>> +in x86_64 machine, so for above example from the client it will be
->>> +md_REGION_A.BIN. This binary blob depends on region content to 
->>> determine
->>> +whether it needs external parser support to get the content of the 
->>> region,
->>> +so for simple plain ASCII text we don't need any parsing and the 
->>> content
->>> +can be seen just opening the binary file.
->>> +
->>> +To collect the dump to attached storage type, one need to write 
->>> appropriate
->>> +value to IMEM register, in that case dumps are collected in rawdump
->>> +partition on the target device itself.
->>> +
->>> +One need to read the entire rawdump partition and pull out content to
->>> +save it onto the attached x86_64 machine over USB. Later, this rawdump
->>> +can be pass it to another tool dexter.exe(Qualcomm tool) which converts
->>> +this into the similar binary blobs which we have got it when 
->>> download type
->>> +was set to USB i.e a set of registered region as blobs and their name
->>> +starts with md_*.
->>> -- 2.7.4
