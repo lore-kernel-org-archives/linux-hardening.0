@@ -2,88 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585E5C6FD18
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Apr 2023 02:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B794BC77B73
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Apr 2023 07:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232918AbjDTCV4 (ORCPT
+        id S233697AbjDTHrG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Apr 2023 22:21:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35106 "EHLO
+        Thu, 20 Apr 2023 03:47:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjDTCVz (ORCPT
+        with ESMTP id S234113AbjDTHrE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Apr 2023 22:21:55 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0A336423A;
-        Wed, 19 Apr 2023 19:21:52 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8AxYeW_oUBk8jwfAA--.48952S3;
-        Thu, 20 Apr 2023 10:21:51 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Axlry+oUBkj2QwAA--.14S3;
-        Thu, 20 Apr 2023 10:21:51 +0800 (CST)
-Subject: Re: [PATCH v2 0/6] LoongArch: Add kernel address sanitizer support
-To:     Qing Zhang <zhangqing@loongson.cn>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20230404084148.744-1-zhangqing@loongson.cn>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, loongarch@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <7991cc06-cf68-8e2a-b008-760cb7b17f01@loongson.cn>
-Date:   Thu, 20 Apr 2023 10:21:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 20 Apr 2023 03:47:04 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63CE4221
+        for <linux-hardening@vger.kernel.org>; Thu, 20 Apr 2023 00:47:02 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33K6qnXJ016347;
+        Thu, 20 Apr 2023 07:46:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=a+pGMHrSGjYYH3pDWIbrrgHydtyHeXeEsmS0wtfm4Rk=;
+ b=CypS1GLVh+xNXVEsyYWkuGkax2s7tgOBAdtymNhkY1qxwt3QmDP2PwUNOUErKAWDDgK8
+ 3UgZsUZxyeXgU/UB+pDoFasedIrGzmBIkrNrdnWC+9hu17gOoM67CsF3WllhXb8ojjxz
+ ni8YK13dmMPQgNc/NVE+D3MDBKIape5Jl+26MPfR47jMr8Nb6iuxEI7YR2MOkZpHnZoD
+ R33csNdotVYuEdHr2v1PCrV25lBNxy2k0ogQ1GfRM5X3ZaE/N5em9mPP+jXfXC4jn1My
+ DPi0vbMSwvalxw81bSZ05C7jsHxtpP+IGCgF4segO71WSF2snD1u1LawE0S3Z2+XVovh eQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q30gx1gf7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Apr 2023 07:46:57 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33K7Kd2I023820;
+        Thu, 20 Apr 2023 07:46:57 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q30gx1geg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Apr 2023 07:46:57 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33K7hBvZ018922;
+        Thu, 20 Apr 2023 07:46:55 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3pykj6k7vm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Apr 2023 07:46:54 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33K7kqwf5112500
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Apr 2023 07:46:52 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9752920043;
+        Thu, 20 Apr 2023 07:46:52 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 16FB420040;
+        Thu, 20 Apr 2023 07:46:52 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Apr 2023 07:46:52 +0000 (GMT)
+Received: from li-c0a07e37-1ab2-11ed-80f2-9c2dcd4480e4.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3621D600E5;
+        Thu, 20 Apr 2023 17:46:49 +1000 (AEST)
+Message-ID: <03751d6651e65f848bfd7e574b53932a794f2f2a.camel@linux.ibm.com>
+Subject: Re: [PATCH] powerpc/rtas: Replace one-element arrays with flexible
+ arrays
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+To:     Nathan Lynch <nathanl@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc:     Leonardo Bras <leobras.c@gmail.com>,
+        linux-hardening@vger.kernel.org
+Date:   Thu, 20 Apr 2023 17:46:44 +1000
+In-Reply-To: <87357wp1h7.fsf@linux.ibm.com>
+References: <20230127085023.271674-1-ajd@linux.ibm.com>
+         <87357wp1h7.fsf@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.0 (3.48.0-1.fc38) 
 MIME-Version: 1.0
-In-Reply-To: <20230404084148.744-1-zhangqing@loongson.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8Axlry+oUBkj2QwAA--.14S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-        BjDU0xBIdaVrnRJUUUmFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-        xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-        j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxV
-        AFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7Cj
-        xVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
-        CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2
-        z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2
-        IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4c8EcI0En4kS14v26r1q6r43MxAqzxv2
-        6xkF7I0En4kS14v26r1q6r43MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r
-        1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-        b7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0x
-        vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-        cVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7IU8l38UUUUUU==
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 32cGLJVTY88E0VCAQ-aOeyhDAizePHFn
+X-Proofpoint-GUID: RAmsFaJ5T19-b50HcB8CzCbvbahgU8-C
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-20_04,2023-04-18_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ malwarescore=0 impostorscore=0 suspectscore=0 phishscore=0 spamscore=0
+ adultscore=0 clxscore=1011 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304200061
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
+On Fri, 2023-01-27 at 07:10 -0600, Nathan Lynch wrote:
+> > > > I see at least one place that consults the size of one of these
+> > > > structs,
+> > > > in get_pseries_errorlog():
+> > > >=20
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Check that we un=
+derstand the format */
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ext_log_length =
+< sizeof(struct
+> > > > rtas_ext_event_log_v6)
+> > > > ||
+> > > > ...
+> > > >=20
+> > > > Don't all such sites need to be audited/adjusted for changes
+> > > > like
+> > > > this?
 
-On 04/04/2023 04:41 PM, Qing Zhang wrote:
-> Kernel Address Sanitizer (KASAN) is a dynamic memory safety error detector
-> designed to find out-of-bounds and use-after-free bugs, Generic KASAN is
-> supported on LoongArch now.
+I did actually see that site, and concluded that for the purposes of
+that particular check, removing a single extra byte is irrelevant
+(maybe it makes the check more strictly correct, what if the vendor_log
+is actually of length 0?)
 
-For now, the arch-independent code (patch #5 and #6) has been
-received tags,
+Doing a binary diff, as Kees suggests, over the object files in
+arch/powerpc:
 
-   Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+- there's no difference at all caused by changing
+rtas_ext_event_log_v6.vendor_log, which kind of surprises me given the
+above.
 
-What's the merge plan for this?
-Take it as a whole through the loongarch-next tree?
+- changing rtas_error_log.buffer does seem to change some code
+generation in arch/powerpc/platforms/pseries/ras.o, I can't quite see
+why.
 
-Thanks,
-Tiezhu
+Andrew
 
+--=20
+Andrew Donnellan    OzLabs, ADL Canberra
+ajd@linux.ibm.com   IBM Australia Limited
