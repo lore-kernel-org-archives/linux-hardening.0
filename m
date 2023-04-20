@@ -2,133 +2,245 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B794BC77B73
-	for <linux-hardening@archiver.kernel.org>; Thu, 20 Apr 2023 07:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4EEC77B72
+	for <linux-hardening@archiver.kernel.org>; Thu, 20 Apr 2023 15:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233697AbjDTHrG (ORCPT
+        id S231479AbjDTPyI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 20 Apr 2023 03:47:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51930 "EHLO
+        Thu, 20 Apr 2023 11:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234113AbjDTHrE (ORCPT
+        with ESMTP id S231261AbjDTPyH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 20 Apr 2023 03:47:04 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63CE4221
-        for <linux-hardening@vger.kernel.org>; Thu, 20 Apr 2023 00:47:02 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33K6qnXJ016347;
-        Thu, 20 Apr 2023 07:46:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=a+pGMHrSGjYYH3pDWIbrrgHydtyHeXeEsmS0wtfm4Rk=;
- b=CypS1GLVh+xNXVEsyYWkuGkax2s7tgOBAdtymNhkY1qxwt3QmDP2PwUNOUErKAWDDgK8
- 3UgZsUZxyeXgU/UB+pDoFasedIrGzmBIkrNrdnWC+9hu17gOoM67CsF3WllhXb8ojjxz
- ni8YK13dmMPQgNc/NVE+D3MDBKIape5Jl+26MPfR47jMr8Nb6iuxEI7YR2MOkZpHnZoD
- R33csNdotVYuEdHr2v1PCrV25lBNxy2k0ogQ1GfRM5X3ZaE/N5em9mPP+jXfXC4jn1My
- DPi0vbMSwvalxw81bSZ05C7jsHxtpP+IGCgF4segO71WSF2snD1u1LawE0S3Z2+XVovh eQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q30gx1gf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Apr 2023 07:46:57 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33K7Kd2I023820;
-        Thu, 20 Apr 2023 07:46:57 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q30gx1geg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Apr 2023 07:46:57 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33K7hBvZ018922;
-        Thu, 20 Apr 2023 07:46:55 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3pykj6k7vm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Apr 2023 07:46:54 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33K7kqwf5112500
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Apr 2023 07:46:52 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9752920043;
-        Thu, 20 Apr 2023 07:46:52 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16FB420040;
-        Thu, 20 Apr 2023 07:46:52 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Apr 2023 07:46:52 +0000 (GMT)
-Received: from li-c0a07e37-1ab2-11ed-80f2-9c2dcd4480e4.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3621D600E5;
-        Thu, 20 Apr 2023 17:46:49 +1000 (AEST)
-Message-ID: <03751d6651e65f848bfd7e574b53932a794f2f2a.camel@linux.ibm.com>
-Subject: Re: [PATCH] powerpc/rtas: Replace one-element arrays with flexible
- arrays
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     Leonardo Bras <leobras.c@gmail.com>,
-        linux-hardening@vger.kernel.org
-Date:   Thu, 20 Apr 2023 17:46:44 +1000
-In-Reply-To: <87357wp1h7.fsf@linux.ibm.com>
-References: <20230127085023.271674-1-ajd@linux.ibm.com>
-         <87357wp1h7.fsf@linux.ibm.com>
+        Thu, 20 Apr 2023 11:54:07 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C3FA7;
+        Thu, 20 Apr 2023 08:54:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682006046; x=1713542046;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=QNewy+n2KzJClBBsTBSH3RwRv8TnPVHHGbLWC+LnolU=;
+  b=H0K4yzRhxEYZOqSJm0Ua8PBmAMvpplwuSGDeSj/ab7LDFG8HyjF30mvI
+   wUb7LiiDGVqzdYMP0yU2cNbasSHFxOQ4QRrfCGSr5q0E83X4kg/xgLvJ+
+   6TCq3n4tagCWI2baj9cA5jsepwezKJlxofpJGXzi8P5Dm7JmZeq04kO5F
+   CCn4/Ssdk1zE1bvI8tjubU97Hkva04LKC8fbKziDepuGja1loBY8TjJ4B
+   RaXu2/X9JVPaykRrpM5b6cUUsEuwMkTWvTvkTdWLdbuHUaAPLQyRP7rOY
+   RMC5dEw1BCgx9anTjAgwY/z16afVZj9VzfFvXsvIdO+dfixFoyisBIw/f
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="334613694"
+X-IronPort-AV: E=Sophos;i="5.99,213,1677571200"; 
+   d="scan'208";a="334613694"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 08:54:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="724461121"
+X-IronPort-AV: E=Sophos;i="5.99,213,1677571200"; 
+   d="scan'208";a="724461121"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga001.jf.intel.com with ESMTP; 20 Apr 2023 08:54:05 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 20 Apr 2023 08:54:05 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 20 Apr 2023 08:54:04 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Thu, 20 Apr 2023 08:54:04 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.173)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Thu, 20 Apr 2023 08:54:04 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jG79Qs8YPciEl2w6E5HE1Z62mKtoeXnvS7mmBQum/x1YV7KTj20peiBeYamca+WrRrqlgBEZECmobemCa4fzuuskgGzamgwkrcmllO7IFilC8zq0GlDVSMo5qaz1O6M98PaK/oJ2CSE0IYnDM9Uen/lqvPsmwdTGneDCiT56C+wIWSG9Fw+ukzZhgtchu2/Nz1nuRX7xbkaKwTsZ+NwN5BI9UVkTicleo0KBP7jl9cuhVZpptpdz7Jmq3Ibe1AKjO4M20lE9NrIXQYo+QiGxzAAkM8uldVJ9umukD3yt9qeG7Glyu0U2TPn4PpzhVRuHgIuWzgWGrc0PHWTxC8WCVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=efbUCd2q4mru0RHt9JM+vZHKjMWRz5EUZ8FgcUizrsk=;
+ b=nVrD7MOmQsMkWn69ZRe/dgQxR5yNWsm4n1emoQf6ApGrjakGFHPLkoIzT8bt4vPjD+WighNkDF5FzvGCyGOvjoo98WXlXhW2pRCqRNj3qfGOBPUqv00zsCDVb96XuJ9W+aUZDWJnrq8xm+HyexF0/Yye/6ffywWp99x5NOQ895Q9Mr+hKZu1pyOAW5EUQHOB5gSR3/7m7oCpjHEKu29EjYfAW5foVCw6Stfr4a5oVYo8yq3S6ZOnkKA3VBocrK4BTO6CDafzIZUufIDtK13pz14dwRSQClYTCsYtCiXylUgbeOa7MMbJA1p9qd013nq4GfK+i0+jah9OTN6x1bzQPQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM6PR11MB3625.namprd11.prod.outlook.com (2603:10b6:5:13a::21)
+ by SJ0PR11MB5166.namprd11.prod.outlook.com (2603:10b6:a03:2d8::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.22; Thu, 20 Apr
+ 2023 15:53:57 +0000
+Received: from DM6PR11MB3625.namprd11.prod.outlook.com
+ ([fe80::4c38:d223:b2ac:813e]) by DM6PR11MB3625.namprd11.prod.outlook.com
+ ([fe80::4c38:d223:b2ac:813e%5]) with mapi id 15.20.6319.022; Thu, 20 Apr 2023
+ 15:53:57 +0000
+Message-ID: <822f2bf4-0c7d-f4b8-5fe4-4edac7e67402@intel.com>
+Date:   Thu, 20 Apr 2023 17:52:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 07/10] fortify: Split reporting and avoid passing
+ string pointer
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+CC:     <linux-hardening@vger.kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        David Gow <davidgow@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        "Alexander Potapenko" <glider@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Yury Norov" <yury.norov@gmail.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Sander Vanheule" <sander@svanheule.net>,
+        Eric Biggers <ebiggers@google.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Daniel Latypov" <dlatypov@google.com>,
+        =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <kunit-dev@googlegroups.com>
+References: <20230407191904.gonna.522-kees@kernel.org>
+ <20230407192717.636137-7-keescook@chromium.org>
+From:   Alexander Lobakin <aleksander.lobakin@intel.com>
+In-Reply-To: <20230407192717.636137-7-keescook@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.0 (3.48.0-1.fc38) 
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FRYP281CA0009.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10::19)
+ To DM6PR11MB3625.namprd11.prod.outlook.com (2603:10b6:5:13a::21)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 32cGLJVTY88E0VCAQ-aOeyhDAizePHFn
-X-Proofpoint-GUID: RAmsFaJ5T19-b50HcB8CzCbvbahgU8-C
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-20_04,2023-04-18_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- malwarescore=0 impostorscore=0 suspectscore=0 phishscore=0 spamscore=0
- adultscore=0 clxscore=1011 mlxlogscore=999 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2304200061
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3625:EE_|SJ0PR11MB5166:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34c8b5ae-44c7-428b-a2d3-08db41b772cc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8ilmBQzg5vCvZAZRpe8IPttrfIujv7l+Dgl2joCU0DU7CMxXcI33A4/7kw+I0kMRXZlmXZ5Loyt8gJGbfWx64QjO7lc1v9gMA5M9O5P5dM6z6QAJAo/bKTleEKe4N8my88fxZj9+bHwlWy6HxvcuVuM0thJnYnaqZ7yIThWXseTMGXayIg1sCWwh57WBjOg0NGr1vmM5Ql0TtF+AmdJfY8rl2RAUITmMUWy9HadKJwkEan0CAmSzdJ29U8CcCjtA+r/9oaO/5sLnDGKCy9Mv3pJZaQFN7sCpgEqW26XJm0WtKqK7V5yjTJ/ttPesJgAC03HaCT13SRAvaSy82WhK0oNzsTJYC/MVI+AJCfF5fSVfmnG3VQEhE1NYK89esZ2rtAlRcvlcmhVr26VB1vulU04+rf/m7TsFNQARYcsabFSokSkM0ibkncdz0mUN+qlMeDovj3Ec0vRODLSPir3LRviAm2FZuBVIQMvfMQuX5ZIfY7TXHqA9073DF/rjii3ql7uZL5u93od9xj0qx872sr105GlqVkznVAVMyvP4XfPdJ158BJFzIxUnAOWIuQsS5wk1P4GK0UGcYTsO/yD9StGpVximVGdc5YRypB8vxYhoPW803KbD0V4K4trmGhdB+r1GndaL9i7Aw1ZrVBayRQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3625.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(346002)(366004)(396003)(39860400002)(376002)(451199021)(54906003)(31686004)(83380400001)(478600001)(2616005)(6486002)(26005)(6506007)(6512007)(6666004)(6916009)(316002)(82960400001)(4326008)(186003)(66476007)(66556008)(66946007)(5660300002)(7416002)(7406005)(8936002)(2906002)(8676002)(38100700002)(41300700001)(86362001)(31696002)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UngwL0hUREo1bVZtSVJ1dTFJZVIrejRjK3pOVXlJbHIrOU1iRFU3UzlIWXVJ?=
+ =?utf-8?B?YmJWaVZtSFllOTFvRVBnQVBwcTQ3a2JjNUdtWENZQmlWVzJXaVk3cWhNMmlz?=
+ =?utf-8?B?b1pINGNCYVUxZnZ4VjgyOXdDV3IwaUpoOWlvRm1xc1kvcFhySy9HR0FCZzFz?=
+ =?utf-8?B?ampuYlEralRVM1VpSWI0VVdZOG5YNGVhS0dEbWZUNjBpZVNiajdDdVI3aVk1?=
+ =?utf-8?B?RktuMkd4YlN3L3Y4TnFocnNkcCtDWUFKb3RoSVkzL3lQVmlPVmpEMk51TVl2?=
+ =?utf-8?B?dXlTYmtDM1l2bjlwWUFRMnp0UEFPZExIMDVweUJjamNzMEpjNC80U00xaDI4?=
+ =?utf-8?B?aWtndUVGRFFZUFlmL3hEVlVJTUljY3ViSmozQnpaM0xCckdxMUlVa0xYdXNF?=
+ =?utf-8?B?d0U0YlpyOFVHRFhMdVI0RWpyajJQNG90ZnU4SjI0Vjl4Y08xK0NKYkRZNUhj?=
+ =?utf-8?B?cVlGZVlLWWVqSFh0d3VDZnNVWU5hT1lPUzhPeUdRaGk0dEFwbVdjSHBaSG1G?=
+ =?utf-8?B?S0VDWEMxUUlMeEVJU0xPWHphTCt3aUJ0OFpKaFBMMWttSk5tR2ZDVThFc3JG?=
+ =?utf-8?B?VEdtM1cwZ0NrUHptSi9leEt1UWphUEVNaGdNNEF5T3hVbkI5UDZST3N4WERW?=
+ =?utf-8?B?VDNhcGJLQmpIY1FoUzlpWVk4QWs1b0owZnFBYVhkSkZPMENVUnJMRUJ0SkhD?=
+ =?utf-8?B?WEw1SGxhRy9QWGhGUHBjSXpqbi82dVUwVWpZRTZmNExUR0g5TXY3TWZjTWg3?=
+ =?utf-8?B?Q3NDWlRjZWplSGtUM3NCWGJqV3VhclpGbkkyOVNJeUs0Q3hZM1JCUDAyQjMz?=
+ =?utf-8?B?bWJNaUdzMWJZa3o5OWNtZG1IWHpXYXJnV2pJelN5cWJ1Slg5clNpbXFLYXpj?=
+ =?utf-8?B?WEhnMDQ1WktGK0IxdFRHSS9GYjNxb2ZPc294KzJ1c2puQUlvQ3pwVFNjczlZ?=
+ =?utf-8?B?ajM4dzdlZTdscUp0M0VPMlBVbENrQmJjZ0xyZnJ3RnhzMjN5aVl2bWpIcnRD?=
+ =?utf-8?B?bWF5cDA4M0VnOE04b1RBZGtCdlBDaVpYUHFKNm5GQ0hqTmQzQk5BZ0paK3NN?=
+ =?utf-8?B?UGw1VkRHNmNKcDdWYWVZUWNKY0hKS3orbUZ5SlBSQ09zc0dQdEROMTgzOTRO?=
+ =?utf-8?B?dmtHcHVRSDc1eHpCdk5Pa2N6QUo3eW1aUnRJQ01TYVM5RGd2a0VBTW5VRkxj?=
+ =?utf-8?B?N2hKblkrUG0xVDlRSlRxWG9LTGZ1Sm90cU1nSzRmckhlYzNQL09MOCtZRG1D?=
+ =?utf-8?B?UmsyQjZOQUdwUmZJOVUxZStXQ2RGcTZPTzZYTi9KZEhrZ3lBUTNSMnRzVjFR?=
+ =?utf-8?B?K2JFSHVQTzhYckNIMGkwLzBqV0VqNnJZOVB3WjlNQStsR1dpR3pyYTJxb3pO?=
+ =?utf-8?B?dnJYTU1iQjhhZ2NWazZEelBhSlBpQ2dKMjIwa21tVC9oOXYzdTJZTkVqSEhP?=
+ =?utf-8?B?VEpOeWJIU3A0dHcvQ2M0ZERVKzlTRzZEbk5QNVl3aC9rRFp0ZTJXc2gyd0pS?=
+ =?utf-8?B?VGkrRWVpQXNoWVg4RXVBWjBGZFlqeUtBUEIxa3E2VUVudVZWYkpQenRhNXJD?=
+ =?utf-8?B?eHc1NTFqTklOTG05WnFZWGEySHJ3TFE2a3Zuc09iVmZzd3NoU1NaSEtHdzJx?=
+ =?utf-8?B?Nkk5WmlXeWtXT28vV3JUWnRYa3dTOCsvR0hzMVJUMTQvdEw3WlpBV0t1QzFz?=
+ =?utf-8?B?Q2ZnNWlNQUNsRnJ5Ly9tYy9CNFpxd0FQNHdBSlkzNTVEV2h6ajlzRDFZS0s3?=
+ =?utf-8?B?bWtGeEcyT3luZFRyQmQzSUt3MVNzbGw5UXlXMmtycy9FMVRQbVJGTWRsUHp5?=
+ =?utf-8?B?WnlKTzhOekdFang0OHFsRFcwdnVtRHZ5bmRxckIzL3Fvb2M1SFZwUjBRNGJy?=
+ =?utf-8?B?M3lBa0RNWThuZUxQWjdFNXliM2FvakVkR0Q3NGtpbENHNjlFaVY0V3JiTEU0?=
+ =?utf-8?B?cXcvZUlmYXQ4a3MwZ3BVd1NDb0lwNUR1UkpnS0xmV2Q3Nm4yZ1oyamo3QmZo?=
+ =?utf-8?B?ejNJWUVHNWNGUXpPdkJQeXJhQXRPaW9EcDZteWsvc0lBV1F5MG44a01sVkJB?=
+ =?utf-8?B?SS91NWpHeDVGb1RUUmhxRjEwQTduZGF1RUZuSjNkTU1UZno2UjRPUFBwa0sy?=
+ =?utf-8?B?RVYxakxrR2dkQU15eHAwU0E1WGRQUTI2ZTNCLzA1TkxWeFkxTHBGeURxSk9X?=
+ =?utf-8?B?Q3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34c8b5ae-44c7-428b-a2d3-08db41b772cc
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3625.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2023 15:53:56.8527
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rcbCsl1KGaHstmGwtYF4TC7F4uIBrCisuoyfzPf4GB4h/d1ojS5mks7kbjJw3DS12jHnBQMfCg1a2MA83307Kq90j7LrMIxJ7OyrJdhdjN4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5166
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2023-01-27 at 07:10 -0600, Nathan Lynch wrote:
-> > > > I see at least one place that consults the size of one of these
-> > > > structs,
-> > > > in get_pseries_errorlog():
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Check that we un=
-derstand the format */
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ext_log_length =
-< sizeof(struct
-> > > > rtas_ext_event_log_v6)
-> > > > ||
-> > > > ...
-> > > >=20
-> > > > Don't all such sites need to be audited/adjusted for changes
-> > > > like
-> > > > this?
+From: Kees Cook <keescook@chromium.org>
+Date: Fri,  7 Apr 2023 12:27:13 -0700
 
-I did actually see that site, and concluded that for the purposes of
-that particular check, removing a single extra byte is irrelevant
-(maybe it makes the check more strictly correct, what if the vendor_log
-is actually of length 0?)
+> In preparation for KUnit testing and further improvements in fortify
+> failure reporting, split out the report and encode the function and
+> access failure (read or write overflow) into a single u8 argument. This
+> mainly ends up saving some space in the data segment. For a defconfig
+> with FORTIFY_SOURCE enabled:
 
-Doing a binary diff, as Kees suggests, over the object files in
-arch/powerpc:
+[...]
 
-- there's no difference at all caused by changing
-rtas_ext_event_log_v6.vendor_log, which kind of surprises me given the
-above.
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+> index 230020a2e076..96d502e1e578 100644
+> --- a/lib/string_helpers.c
+> +++ b/lib/string_helpers.c
+> @@ -1021,10 +1021,27 @@ EXPORT_SYMBOL(__read_overflow2_field);
+>  void __write_overflow_field(size_t avail, size_t wanted) { }
+>  EXPORT_SYMBOL(__write_overflow_field);
+>  
+> -void fortify_panic(const char *name)
+> +#define MAKE_FORTIFY_FUNC_NAME(func)	[MAKE_FORTIFY_FUNC(func)] = #func
+> +
+> +static const char * const fortify_func_name[] = {
+> +	EACH_FORTIFY_FUNC(MAKE_FORTIFY_FUNC_NAME)
+> +};
+> +
+> +void __fortify_report(const u8 reason)
+> +{
+> +	const u8 func = FORTIFY_REASON_FUNC(reason);
+> +	const bool write = FORTIFY_REASON_DIR(reason);
 
-- changing rtas_error_log.buffer does seem to change some code
-generation in arch/powerpc/platforms/pseries/ras.o, I can't quite see
-why.
+Nano-nit: RCT style here :s
 
-Andrew
+> +	const char *name;
+> +
+> +	name = fortify_func_name[min_t(u8, func, FORTIFY_FUNC_UNKNOWN)];
+> +	WARN(1, "%s: detected buffer %s overflow\n", name, str_read_write(!write));
+> +}
+> +EXPORT_SYMBOL(__fortify_report);
+> +
+> +void __fortify_panic(const u8 reason)
+>  {
+> -	pr_emerg("detected buffer overflow in %s\n", name);
+> +	__fortify_report(reason);
+>  	BUG();
+>  }
+> -EXPORT_SYMBOL(fortify_panic);
+> +EXPORT_SYMBOL(__fortify_panic);
+>  #endif /* CONFIG_FORTIFY_SOURCE */
 
---=20
-Andrew Donnellan    OzLabs, ADL Canberra
-ajd@linux.ibm.com   IBM Australia Limited
+[...]
+
+There's also a small build warning issue. Apart from that, I like how it
+does look now, thanks!
+
+Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+
+Thanks,
+Olek
