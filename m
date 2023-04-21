@@ -2,213 +2,196 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CF8C7618E
-	for <linux-hardening@archiver.kernel.org>; Fri, 21 Apr 2023 03:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62073C77B75
+	for <linux-hardening@archiver.kernel.org>; Fri, 21 Apr 2023 13:06:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234107AbjDUDC0 convert rfc822-to-8bit (ORCPT
+        id S232392AbjDUNGm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 20 Apr 2023 23:02:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
+        Fri, 21 Apr 2023 09:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234031AbjDUDBk (ORCPT
+        with ESMTP id S231936AbjDUNGl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 20 Apr 2023 23:01:40 -0400
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A34B86A8;
-        Thu, 20 Apr 2023 20:01:28 -0700 (PDT)
-X-UUID: 4b91f07f618d4ae5b48f46229cc7dbc6-20230421
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:e52280f5-6c42-4634-a19b-c8d67dc61862,IP:5,U
-        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:28,RULE:Release_Ham,ACTIO
-        N:release,TS:24
-X-CID-INFO: VERSION:1.1.22,REQID:e52280f5-6c42-4634-a19b-c8d67dc61862,IP:5,URL
-        :0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:28,RULE:Release_Ham,ACTION:
-        release,TS:24
-X-CID-META: VersionHash:120426c,CLOUDID:ca08c584-cd9c-45f5-8134-710979e3df0e,B
-        ulkID:23042104015933YJ2GA9,BulkQuantity:6,Recheck:0,SF:19|42|38|24|17|102,
-        TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:40|20,QS:nil,BEC:nil,COL
-        :0,OSI:0,OSA:0,AV:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-UUID: 4b91f07f618d4ae5b48f46229cc7dbc6-20230421
-X-User: zhouzongmin@kylinos.cn
-Received: from [172.20.12.156] [(116.128.244.169)] by mailgw
-        (envelope-from <zhouzongmin@kylinos.cn>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 142489521; Fri, 21 Apr 2023 11:01:25 +0800
-Message-ID: <4f9722f0235ebb9702f98b1ec17d36801add04ca.camel@kylinos.cn>
-Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
- drm_kms_helper_poll_disable during suspend
-From:   zongmin zhou <zhouzongmin@kylinos.cn>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Janne Grunau <j@jannau.net>
-Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-        neil.armstrong@linaro.org, tony.luck@intel.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, gpiccoli@igalia.com,
-        linux-hardening@vger.kernel.org, laurentiu.palcu@oss.nxp.com
-Date:   Fri, 21 Apr 2023 11:00:27 +0800
-In-Reply-To: <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
-References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
-         <20230420200148.GD3280@jannau.net>
-         <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Fri, 21 Apr 2023 09:06:41 -0400
+X-Greylist: delayed 343 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 21 Apr 2023 06:06:39 PDT
+Received: from sequoia-grove.ad.secure-endpoints.com (sequoia-grove.ad.secure-endpoints.com [IPv6:2001:470:1f07:f77:70f5:c082:a96a:5685])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED1A444A8
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Apr 2023 06:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
+        d=auristor.com; s=MDaemon; r=y; t=1682082054; x=1682686854;
+        i=jaltman@auristor.com; q=dns/txt; h=Message-ID:Date:
+        MIME-Version:User-Agent:Subject:Content-Language:To:Cc:
+        References:From:Organization:In-Reply-To:Content-Type; bh=QiNZ4D
+        bwfeRtR6XiuJp1Wqc0KMcg1d0rbJkt3W/VQOo=; b=WY4TkhmjpYpVsrvQZRB43C
+        grnCnnvb8mDwXXFaZ4KBLNuAQs1WO9n9TE15zu3prqGG07+6Js+Xhed0XXvsf+Be
+        13uptK/Gv5eSZOhNAyiY/hLOIRfFhb+I9U7Y00c83/Z8Po0GA8eeAUrBq8/HSvxb
+        fXkGPVKUBQQyc/TdHJX/k=
+X-MDAV-Result: clean
+X-MDAV-Processed: sequoia-grove.ad.secure-endpoints.com, Fri, 21 Apr 2023 09:00:54 -0400
+Received: from [IPV6:2603:7000:73c:9c99:b464:e099:19d:ace8] by auristor.com (IPv6:2001:470:1f07:f77:28d9:68fb:855d:c2a5) (MDaemon PRO v23.0.1) 
+        with ESMTPSA id md5001003405950.msg; Fri, 21 Apr 2023 09:00:54 -0400
+X-MDRemoteIP: 2603:7000:73c:9c99:b464:e099:19d:ace8
+X-MDHelo: [IPV6:2603:7000:73c:9c99:b464:e099:19d:ace8]
+X-MDArrival-Date: Fri, 21 Apr 2023 09:00:54 -0400
+X-MDOrigin-Country: US, NA
+X-Authenticated-Sender: jaltman@auristor.com
+X-Return-Path: prvs=1475361d20=jaltman@auristor.com
+X-Envelope-From: jaltman@auristor.com
+X-MDaemon-Deliver-To: linux-hardening@vger.kernel.org
+Message-ID: <5f69be9f-0008-0253-0fe2-e982fd718146@auristor.com>
+Date:   Fri, 21 Apr 2023 09:00:48 -0400
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH][next] rxrpc: Replace fake flex-array with flexible-array
+ member
+Content-Language: en-US
+To:     "Gustavo A. R. Silva (gustavoars@kernel.org)" <gustavoars@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-afs@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZAZT11n4q5bBttW0@work>
+From:   Jeffrey E Altman <jaltman@auristor.com>
+Organization: AuriStor, Inc.
+In-Reply-To: <ZAZT11n4q5bBttW0@work>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms060708090701030008070901"
+X-MDCFSigsAdded: auristor.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2023-04-20 at 23:07 +0300, Dmitry Baryshkov wrote:
-> On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net> wrote:
-> > 
-> > On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
-> > > When drivers call drm_kms_helper_poll_disable from
-> > > their device suspend implementation without enabled output
-> > > polling before,
-> > > following warning will be reported,due to work->func not be
-> > > initialized:
-> > 
-> > we see the same warning with the wpork in progress kms driver for
-> > apple
-> > silicon SoCs. The connectors do not need to polled so the driver
-> > never
-> > calls drm_kms_helper_poll_init().
-> > 
-> > > [   55.141361] WARNING: CPU: 3 PID: 372 at
-> > > kernel/workqueue.c:3066 __flush_work+0x22f/0x240
-> > > [   55.141382] Modules linked in: nls_iso8859_1
-> > > snd_hda_codec_generic ledtrig_audio snd_hda_intel
-> > > snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hda_core
-> > > snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi
-> > > snd_seq intel_rapl_msr intel_rapl_common bochs drm_vram_helper
-> > > drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul snd_timer
-> > > ghash_clmulni_intel binfmt_misc sha512_ssse3 aesni_intel
-> > > drm_kms_helper joydev input_leds syscopyarea crypto_simd snd
-> > > cryptd sysfillrect sysimgblt mac_hid serio_raw soundcore
-> > > qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp parport drm
-> > > ramoops reed_solomon pstore_blk pstore_zone efi_pstore virtio_rng
-> > > ip_tables x_tables autofs4 hid_generic usbhid hid ahci virtio_net
-> > > i2c_i801 crc32_pclmul psmouse virtio_scsi libahci i2c_smbus
-> > > lpc_ich xhci_pci net_failover virtio_blk xhci_pci_renesas
-> > > failover
-> > > [   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not tainted
-> > > 6.2.0-rc6+ #16
-> > > [   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9,
-> > > 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org
-> > > 04/01/2014
-> > > [   55.141435] Workqueue: events_unbound async_run_entry_fn
-> > > [   55.141441] RIP: 0010:__flush_work+0x22f/0x240
-> > > [   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff ff 4c
-> > > 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff ff 0f 0b
-> > > e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2 54 d8 00 66
-> > > 90 90 90 90 90 90
-> > > [   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
-> > > [   55.141449] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
-> > > ffffffff9b72bcbe
-> > > [   55.141450] RDX: 0000000000000001 RSI: 0000000000000001 RDI:
-> > > ff3ea01e4265e330
-> > > [   55.141451] RBP: ff59221940833c90 R08: 0000000000000000 R09:
-> > > 8080808080808080
-> > > [   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f R12:
-> > > ff3ea01e4265e330
-> > > [   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80 R15:
-> > > 0000000000000001
-> > > [   55.141455] FS:  0000000000000000(0000)
-> > > GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
-> > > [   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > [   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005 CR4:
-> > > 0000000000771ee0
-> > > [   55.141464] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> > > 0000000000000000
-> > > [   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> > > 0000000000000400
-> > > [   55.141466] PKRU: 55555554
-> > > [   55.141467] Call Trace:
-> > > [   55.141469]  <TASK>
-> > > [   55.141472]  ? pcie_wait_cmd+0xdf/0x220
-> > > [   55.141478]  ? mptcp_seq_show+0xe0/0x180
-> > > [   55.141484]  __cancel_work_timer+0x124/0x1b0
-> > > [   55.141487]  cancel_delayed_work_sync+0x17/0x20
-> > > [   55.141490]  drm_kms_helper_poll_disable+0x26/0x40
-> > > [drm_kms_helper]
-> > > [   55.141516]  drm_mode_config_helper_suspend+0x25/0x90
-> > > [drm_kms_helper]
-> > > [   55.141531]  ? __pm_runtime_resume+0x64/0x90
-> > > [   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
-> > > [   55.141540]  pci_pm_suspend+0x8b/0x1b0
-> > > [   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
-> > > [   55.141547]  dpm_run_callback+0x4c/0x160
-> > > [   55.141550]  __device_suspend+0x14c/0x4c0
-> > > [   55.141553]  async_suspend+0x24/0xa0
-> > > [   55.141555]  async_run_entry_fn+0x34/0x120
-> > > [   55.141557]  process_one_work+0x21a/0x3f0
-> > > [   55.141560]  worker_thread+0x4e/0x3c0
-> > > [   55.141563]  ? __pfx_worker_thread+0x10/0x10
-> > > [   55.141565]  kthread+0xf2/0x120
-> > > [   55.141568]  ? __pfx_kthread+0x10/0x10
-> > > [   55.141570]  ret_from_fork+0x29/0x50
-> > > [   55.141575]  </TASK>
-> > > [   55.141575] ---[ end trace 0000000000000000 ]---
-> > > 
-> > > Fixes: a4e771729a51 ("drm/probe_helper: sort out poll_running vs
-> > > poll_enabled")
-> > > Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
-> > > ---
-> > >  drivers/gpu/drm/drm_probe_helper.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/gpu/drm/drm_probe_helper.c
-> > > b/drivers/gpu/drm/drm_probe_helper.c
-> > > index 8127be134c39..ac72b18e2257 100644
-> > > --- a/drivers/gpu/drm/drm_probe_helper.c
-> > > +++ b/drivers/gpu/drm/drm_probe_helper.c
-> > > @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct
-> > > drm_device *dev)
-> > >       if (dev->mode_config.poll_running)
-> > >               drm_kms_helper_disable_hpd(dev);
-> > > 
-> > > -     cancel_delayed_work_sync(&dev-
-> > > >mode_config.output_poll_work);
-> > > +     if (dev->mode_config.poll_enabled)
-> > > +             cancel_delayed_work_sync(&dev-
-> > > >mode_config.output_poll_work);
-> > 
-> > Checking for dev->mode_config.poll_enabled at the start of the
-> > function
-> > and return early if it is not true looks more in style with the
-> > rest of
-> > drm_probe_helper.c.
-> 
-> I think it is an error to call drm_kms_helper_poll_disable() if
-> polling was not initialized. So, in my opinion the fix should go to
-> the drm_mode_config_helper_suspend() / _resume() instead. Please add
-> a
-> guard there using dev->mode_config.poll_enabled.
-> 
-In my test case,It's ok to check for dev->mode_config.poll_enabled in
-drm_mode_config_helper_suspend() / _resume() before calling
-drm_kms_helper_poll_disable().But I find that some device driver call
-drm_kms_helper_poll_disable()/_enable directly without call
-_suspend()/_resume() function.
+This is a cryptographically signed message in MIME format.
 
-So I think the safest way is to add a guard in
-drm_kms_helper_poll_disable() using dev->mode_config.poll_enabled.
+--------------ms060708090701030008070901
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-I'm looking forward to your comments and Suggestions.
+On 3/6/2023 3:57 PM, Gustavo A. R. Silva (gustavoars@kernel.org) wrote:
+> Zero-length arrays as fake flexible arrays are deprecated and we are
+> moving towards adopting C99 flexible-array members instead.
+>
+> Transform zero-length array into flexible-array member in struct
+> rxrpc_ackpacket.
+>
+> Address the following warnings found with GCC-13 and
+> -fstrict-flex-arrays=3 enabled:
+> net/rxrpc/call_event.c:149:38: warning: array subscript i is outside array bounds of ‘uint8_t[0]’ {aka ‘unsigned char[]’} [-Warray-bounds=]
+>
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+>
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/263
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>   net/rxrpc/protocol.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/net/rxrpc/protocol.h b/net/rxrpc/protocol.h
+> index 6760cb99c6d6..e8ee4af43ca8 100644
+> --- a/net/rxrpc/protocol.h
+> +++ b/net/rxrpc/protocol.h
+> @@ -126,7 +126,7 @@ struct rxrpc_ackpacket {
+>   	uint8_t		nAcks;		/* number of ACKs */
+>   #define RXRPC_MAXACKS	255
+>   
+> -	uint8_t		acks[0];	/* list of ACK/NAKs */
+> +	uint8_t		acks[];		/* list of ACK/NAKs */
+>   #define RXRPC_ACK_TYPE_NACK		0
+>   #define RXRPC_ACK_TYPE_ACK		1
+>   
 
-Thanks.
-> 
-> > No difference functionally of course. Tested with the apple kms
-> > driver.
-> > 
-> > Reviewed-by: Janne Grunau <j@jannau.net>
-> > 
-> > ciao
-> > Janne
-> 
-> 
-> 
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+
+
+
+--------------ms060708090701030008070901
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+DHEwggXSMIIEuqADAgECAhBAAYJpmi/rPn/F0fJyDlzMMA0GCSqGSIb3DQEBCwUAMDoxCzAJ
+BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEz
+MB4XDTIyMDgwNDE2MDQ0OFoXDTI1MTAzMTE2MDM0OFowcDEvMC0GCgmSJomT8ixkAQETH0Ew
+MTQxMEQwMDAwMDE4MjY5OUEyRkQyMDAwMjMzQ0QxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRt
+YW4xFTATBgNVBAoTDEF1cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQCkC7PKBBZnQqDKPtZPMLAy77zo2DPvwtGnd1hNjPvbXrpGxUb3
+xHZRtv179LHKAOcsY2jIctzieMxf82OMyhpBziMPsFAG/ukihBMFj3/xEeZVso3K27pSAyyN
+fO/wJ0rX7G+ges22Dd7goZul8rPaTJBIxbZDuaykJMGpNq4PQ8VPcnYZx+6b+nJwJJoJ46kI
+EEfNh3UKvB/vM0qtxS690iAdgmQIhTl+qfXq4IxWB6b+3NeQxgR6KLU4P7v88/tvJTpxIKkg
+9xj89ruzeThyRFd2DSe3vfdnq9+g4qJSHRXyTft6W3Lkp7UWTM4kMqOcc4VSRdufVKBQNXjG
+IcnhAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAwgYQGCCsGAQUFBwEBBHgwdjAwBggr
+BgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3QuY29tMEIGCCsGAQUF
+BzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NlcnRzL3RydXN0aWRjYWEx
+My5wN2MwHwYDVR0jBBgwFoAULbfeG1l+KpguzeHUG+PFEBJe6RQwCQYDVR0TBAIwADCCASsG
+A1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIBFj5odHRwczov
+L3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRt
+bDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJlZW4g
+aXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
+YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRp
+ZmljYXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8v
+dmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTMuY3JsMB8GA1UdEQQY
+MBaBFGphbHRtYW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBQB+nzqgljLocLTsiUn2yWqEc2s
+gjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAJwV
+eycprp8Ox1npiTyfwc5QaVaqtoe8Dcg2JXZc0h4DmYGW2rRLHp8YL43snEV93rPJVk6B2v4c
+WLeQfaMrnyNeEuvHx/2CT44cdLtaEk5zyqo3GYJYlLcRVz6EcSGHv1qPXgDT0xB/25etwGYq
+utYF4Chkxu4KzIpq90eDMw5ajkexw+8ARQz4N5+d6NRbmMCovd7wTGi8th/BZvz8hgKUiUJo
+Qle4wDxrdXdnIhCP7g87InXKefWgZBF4VX21t2+hkc04qrhIJlHrocPG9mRSnnk2WpsY0MXt
+a8ivbVKtfpY7uSNDZSKTDi1izEFH5oeQdYRkgIGb319a7FjslV8wggaXMIIEf6ADAgECAhBA
+AXA7OrqBjMk8rp4OuNQSMA0GCSqGSIb3DQEBCwUAMEoxCzAJBgNVBAYTAlVTMRIwEAYDVQQK
+EwlJZGVuVHJ1c3QxJzAlBgNVBAMTHklkZW5UcnVzdCBDb21tZXJjaWFsIFJvb3QgQ0EgMTAe
+Fw0yMDAyMTIyMTA3NDlaFw0zMDAyMTIyMTA3NDlaMDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQK
+EwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzMIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEAu6sUO01SDD99PM+QdZkNxKxJNt0NgQE+Zt6ixaNP0JKSjTd+SG5L
+wqxBWjnOgI/3dlwgtSNeN77AgSs+rA4bK4GJ75cUZZANUXRKw/et8pf9Qn6iqgB63OdHxBN/
+15KbM3HR+PyiHXQoUVIevCKW8nnlWnnZabT1FejOhRRKVUg5HACGOTfnCOONrlxlg+m1Vjgn
+o1uNqNuLM/jkD1z6phNZ/G9IfZGI0ppHX5AA/bViWceX248VmefNhSR14ADZJtlAAWOi2un0
+3bqrBPHA9nDyXxI8rgWLfUP5rDy8jx2hEItg95+ORF5wfkGUq787HBjspE86CcaduLka/Bk2
+VwIDAQABo4IChzCCAoMwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAYYwgYkG
+CCsGAQUFBwEBBH0wezAwBggrBgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVu
+dHJ1c3QuY29tMEcGCCsGAQUFBzAChjtodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29t
+L3Jvb3RzL2NvbW1lcmNpYWxyb290Y2ExLnA3YzAfBgNVHSMEGDAWgBTtRBnA0/AGi+6ke75C
+5yZUyI42djCCASQGA1UdIASCARswggEXMIIBEwYEVR0gADCCAQkwSgYIKwYBBQUHAgEWPmh0
+dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20vY2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRl
+eC5odG1sMIG6BggrBgEFBQcCAjCBrQyBqlRoaXMgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBoYXMg
+YmVlbiBpc3N1ZWQgaW4gYWNjb3JkYW5jZSB3aXRoIElkZW5UcnVzdCdzIFRydXN0SUQgQ2Vy
+dGlmaWNhdGUgUG9saWN5IGZvdW5kIGF0IGh0dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20v
+Y2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRleC5odG1sMEoGA1UdHwRDMEEwP6A9oDuGOWh0
+dHA6Ly92YWxpZGF0aW9uLmlkZW50cnVzdC5jb20vY3JsL2NvbW1lcmNpYWxyb290Y2ExLmNy
+bDAdBgNVHQ4EFgQULbfeG1l+KpguzeHUG+PFEBJe6RQwHQYDVR0lBBYwFAYIKwYBBQUHAwIG
+CCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4ICAQB/7BKcygLX6Nl4a03cDHt7TLdPxCzFvDF2
+bkVYCFTRX47UfeomF1gBPFDee3H/IPlLRmuTPoNt0qjdpfQzmDWN95jUXLdLPRToNxyaoB5s
+0hOhcV6H08u3FHACBif55i0DTDzVSaBv0AZ9h1XeuGx4Fih1Vm3Xxz24GBqqVudvPRLyMJ7u
+6hvBqTIKJ53uCs3dyQLZT9DXnp+kJv8y7ZSAY+QVrI/dysT8avtn8d7k7azNBkfnbRq+0e88
+QoBnel6u+fpwbd5NLRHywXeH+phbzULCa+bLPRMqJaW2lbhvSWrMHRDy3/d8HvgnLCBFK2s4
+Spns4YCN4xVcbqlGWzgolHCKUH39vpcsDo1ymZFrJ8QR6ihIn8FmJ5oKwAnnd/G6ADXFC9bu
+db9+532phSAXOZrrecIQn+vtP366PC+aClAPsIIDJDsotS5z4X2JUFsNIuEgXGqhiKE7SuZb
+rFG9sdcLprSlJN7TsRDc0W2b9nqwD+rj/5MN0C+eKwha+8ydv0+qzTyxPP90KRgaegGowC4d
+UsZyTk2n4Z3MuAHX5nAZL/Vh/SyDj/ajorV44yqZBzQ3ChKhXbfUSwe2xMmygA2Z5DRwMRJn
+p/BscizYdNk2WXJMTnH+wVLN8sLEwEtQR4eTLoFmQvrK2AMBS9kW5sBkMzINt/ZbbcZ3F+eA
+MDGCAxQwggMQAgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUG
+A1UEAxMOVHJ1c3RJRCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwDQYJYIZIAWUDBAIBBQCg
+ggGXMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDQyMTEz
+MDA0OFowLwYJKoZIhvcNAQkEMSIEIGAUYKKm/UHD1V7YhQdQtkR3vlSnYvwFBim3dz5awEt6
+MF0GCSsGAQQBgjcQBDFQME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEX
+MBUGA1UEAxMOVHJ1c3RJRCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwXwYLKoZIhvcNAQkQ
+AgsxUKBOMDoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRy
+dXN0SUQgQ0EgQTEzAhBAAYJpmi/rPn/F0fJyDlzMMGwGCSqGSIb3DQEJDzFfMF0wCwYJYIZI
+AWUDBAEqMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZI
+hvcNAwICAUAwBwYFKw4DAgcwDQYIKoZIhvcNAwICASgwDQYJKoZIhvcNAQEBBQAEggEAWMCT
+X8GER8luQ/B1/8syCMtQq1BIZs8GHopIR4z+OfT2iTlo6J7y25cd31KXLJp9fEZsiuM02awy
+fj+gk2hP/y9+lo/2eHgb1nDdSiFWxaBv3fTtWY3Qz94NfOii57W5i0SxUigQpdGM+AV9VmUx
+f5NLjpbGUCvPx0LEDGxNeOyX7JXrP31C/AB1WuBfI4JD8j/eRT20AfODYGr5KEdo2jOFppEf
+ts0DFRd4H3tNyoxxSsMg4mJj3+sny1xqsA9T4K9PiJrp8xTi1mDbAaFOgyJORdIQNqL4E7y+
++0dVWmeixjrZBN66Y5mMyT1ixgnD7HFDJumaaD8fJT9gH5KU5wAAAAAAAA==
+--------------ms060708090701030008070901--
 
