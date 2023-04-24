@@ -2,138 +2,128 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C33DCC77B60
-	for <linux-hardening@archiver.kernel.org>; Sun, 23 Apr 2023 20:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2C4C77B60
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Apr 2023 02:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbjDWUvG (ORCPT
+        id S230319AbjDXCyx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 23 Apr 2023 16:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46834 "EHLO
+        Sun, 23 Apr 2023 22:54:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjDWUvG (ORCPT
+        with ESMTP id S229477AbjDXCyw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 23 Apr 2023 16:51:06 -0400
-Received: from soltyk.jannau.net (soltyk.jannau.net [144.76.91.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 182D010D9;
-        Sun, 23 Apr 2023 13:51:04 -0700 (PDT)
-Received: by soltyk.jannau.net (Postfix, from userid 1000)
-        id 4361826FC9D; Sun, 23 Apr 2023 22:51:02 +0200 (CEST)
-Date:   Sun, 23 Apr 2023 22:51:02 +0200
-From:   Janne Grunau <j@jannau.net>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Zongmin Zhou <zhouzongmin@kylinos.cn>,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
-        neil.armstrong@linaro.org, tony.luck@intel.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, gpiccoli@igalia.com,
-        linux-hardening@vger.kernel.org, laurentiu.palcu@oss.nxp.com,
-        regressions@lists.linux.dev
-Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
- drm_kms_helper_poll_disable during suspend
-Message-ID: <20230423205102.GE3280@jannau.net>
-References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
- <20230420200148.GD3280@jannau.net>
- <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
+        Sun, 23 Apr 2023 22:54:52 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EAE8211F;
+        Sun, 23 Apr 2023 19:54:51 -0700 (PDT)
+Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Q4V7z50zBzKtrQ;
+        Mon, 24 Apr 2023 10:53:51 +0800 (CST)
+Received: from [10.67.110.48] (10.67.110.48) by dggpemm500016.china.huawei.com
+ (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 24 Apr
+ 2023 10:54:47 +0800
+Message-ID: <f5b23bbc-6fb5-84d3-fcad-6253b346328a@huawei.com>
+Date:   Mon, 24 Apr 2023 10:54:33 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH RFC] Randomized slab caches for kmalloc()
+Content-Language: en-US
+To:     Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>
+CC:     Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        <linux-hardening@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>
+References: <20230315095459.186113-1-gongruiqi1@huawei.com>
+ <b7a7c5d7-d3c8-503f-7447-602ec2a18fb0@gmail.com>
+ <36019eb3-4b71-26c4-21ad-b0e0eabd0ca5@intel.com>
+From:   Gong Ruiqi <gongruiqi1@huawei.com>
+In-Reply-To: <36019eb3-4b71-26c4-21ad-b0e0eabd0ca5@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.110.48]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500016.china.huawei.com (7.185.36.25)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-04-20 23:07:01 +0300, Dmitry Baryshkov wrote:
-> On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net> wrote:
-> >
-> > On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
-> > > When drivers call drm_kms_helper_poll_disable from
-> > > their device suspend implementation without enabled output polling before,
-> > > following warning will be reported,due to work->func not be initialized:
-> >
-> > we see the same warning with the wpork in progress kms driver for apple
-> > silicon SoCs. The connectors do not need to polled so the driver never
-> > calls drm_kms_helper_poll_init().
-> >
-> > > [   55.141361] WARNING: CPU: 3 PID: 372 at kernel/workqueue.c:3066 __flush_work+0x22f/0x240
-> > > [   55.141382] Modules linked in: nls_iso8859_1 snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hda_core snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi snd_seq intel_rapl_msr intel_rapl_common bochs drm_vram_helper drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3 aesni_intel drm_kms_helper joydev input_leds syscopyarea crypto_simd snd cryptd sysfillrect sysimgblt mac_hid serio_raw soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp parport drm ramoops reed_solomon pstore_blk pstore_zone efi_pstore virtio_rng ip_tables x_tables autofs4 hid_generic usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover virtio_blk xhci_pci_renesas failover
-> > > [   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not tainted 6.2.0-rc6+ #16
-> > > [   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-> > > [   55.141435] Workqueue: events_unbound async_run_entry_fn
-> > > [   55.141441] RIP: 0010:__flush_work+0x22f/0x240
-> > > [   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff ff 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff ff 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2 54 d8 00 66 90 90 90 90 90 90
-> > > [   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
-> > > [   55.141449] RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff9b72bcbe
-> > > [   55.141450] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ff3ea01e4265e330
-> > > [   55.141451] RBP: ff59221940833c90 R08: 0000000000000000 R09: 8080808080808080
-> > > [   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f R12: ff3ea01e4265e330
-> > > [   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80 R15: 0000000000000001
-> > > [   55.141455] FS:  0000000000000000(0000) GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
-> > > [   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > [   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005 CR4: 0000000000771ee0
-> > > [   55.141464] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > [   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > [   55.141466] PKRU: 55555554
-> > > [   55.141467] Call Trace:
-> > > [   55.141469]  <TASK>
-> > > [   55.141472]  ? pcie_wait_cmd+0xdf/0x220
-> > > [   55.141478]  ? mptcp_seq_show+0xe0/0x180
-> > > [   55.141484]  __cancel_work_timer+0x124/0x1b0
-> > > [   55.141487]  cancel_delayed_work_sync+0x17/0x20
-> > > [   55.141490]  drm_kms_helper_poll_disable+0x26/0x40 [drm_kms_helper]
-> > > [   55.141516]  drm_mode_config_helper_suspend+0x25/0x90 [drm_kms_helper]
-> > > [   55.141531]  ? __pm_runtime_resume+0x64/0x90
-> > > [   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
-> > > [   55.141540]  pci_pm_suspend+0x8b/0x1b0
-> > > [   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
-> > > [   55.141547]  dpm_run_callback+0x4c/0x160
-> > > [   55.141550]  __device_suspend+0x14c/0x4c0
-> > > [   55.141553]  async_suspend+0x24/0xa0
-> > > [   55.141555]  async_run_entry_fn+0x34/0x120
-> > > [   55.141557]  process_one_work+0x21a/0x3f0
-> > > [   55.141560]  worker_thread+0x4e/0x3c0
-> > > [   55.141563]  ? __pfx_worker_thread+0x10/0x10
-> > > [   55.141565]  kthread+0xf2/0x120
-> > > [   55.141568]  ? __pfx_kthread+0x10/0x10
-> > > [   55.141570]  ret_from_fork+0x29/0x50
-> > > [   55.141575]  </TASK>
-> > > [   55.141575] ---[ end trace 0000000000000000 ]---
-> > >
-> > > Fixes: a4e771729a51 ("drm/probe_helper: sort out poll_running vs poll_enabled")
-> > > Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
-> > > ---
-> > >  drivers/gpu/drm/drm_probe_helper.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_probe_helper.c b/drivers/gpu/drm/drm_probe_helper.c
-> > > index 8127be134c39..ac72b18e2257 100644
-> > > --- a/drivers/gpu/drm/drm_probe_helper.c
-> > > +++ b/drivers/gpu/drm/drm_probe_helper.c
-> > > @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct drm_device *dev)
-> > >       if (dev->mode_config.poll_running)
-> > >               drm_kms_helper_disable_hpd(dev);
-> > >
-> > > -     cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
-> > > +     if (dev->mode_config.poll_enabled)
-> > > +             cancel_delayed_work_sync(&dev->mode_config.output_poll_work);
-> >
-> > Checking for dev->mode_config.poll_enabled at the start of the function
-> > and return early if it is not true looks more in style with the rest of
-> > drm_probe_helper.c.
+Sorry for the late reply. I just came back from my paternity leave :)
+
+On 2023/04/05 23:15, Alexander Lobakin wrote:
+> From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+> Date: Wed, 5 Apr 2023 21:26:47 +0900
 > 
-> I think it is an error to call drm_kms_helper_poll_disable() if
-> polling was not initialized. So, in my opinion the fix should go to
-> the drm_mode_config_helper_suspend() / _resume() instead. Please add a
-> guard there using dev->mode_config.poll_enabled.
+>> ...
+>>
+>> I'm not yet sure if this feature is appropriate for mainline kernel.
+>>
+>> I have few questions:
+>>
+>> 1) What is cost of this configuration, in terms of memory overhead, or
+>> execution time?
+>>
+>>
+>> 2) The actual cache depends on caller which is static at build time, not
+>> runtime.
+>>
+>>     What about using (caller ^ (some subsystem-wide random sequence)),
+>>
+>>     which is static at runtime?
+> 
+> Why can't we just do
+> 
+> 	random_get_u32_below(CONFIG_RANDOM_KMALLOC_CACHES_NR)
+> 
+> ?
 
-While I tend to agree to the sentiment I do not think this is the 
-correct fix in this situation. drm_kms_helper_poll_disable had the
-check since at least 2014. a4e771729a51 is a regression. If we want to  
-change the behavior it should be done explicitly and after verifying all 
-drm_kms_helper_poll_disable() calls.
+This makes the cache selection "dynamic", i.e. each kmalloc() will
+randomly pick a different cache at each time it's executed. The problem
+of this approach is that it only reduces the probability of the cache
+being sprayed by the attacker, and the attacker can bypass it by simply
+repeating the attack multiple times in a brute-force manner.
 
-#regzbot ^introduced a4e771729a51
+Our proposal is to make the randomness be with respect to the code
+address rather than time, i.e. allocations in different code paths would
+most likely pick different caches, although kmalloc() at each place
+would use the same cache copy whenever it is executed. In this way, the
+code path that the attacker uses would most likely pick a different
+cache than which the targeted subsystem/driver would pick, which means
+in most of cases the heap spraying is unachievable.
 
-ciao
-Janne
+> It's fast enough according to Jason... `_RET_IP_ % nr` doesn't sound
+> "secure" to me. It really is a compile-time constant, which can be
+> calculated (or not?) manually. Even if it wasn't, `% nr` doesn't sound
+> good, there should be at least hash_32().
+
+Yes, `_RET_IP_ % nr` is a bit naive. Currently the patch is more like a
+PoC so I wrote this. Indeed a proper hash function should be used here.
+
+And yes _RET_IP_ could somehow be manually determined especially for
+kernels without KASLR, and I think adding a per-boot random seed into
+the selection could solve this.
+
+I will implement these in v2. Thanks!
+
+> 
+> Thanks,
+> Olek
+> 
