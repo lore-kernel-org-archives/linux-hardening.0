@@ -2,153 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0336C77B61
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Apr 2023 15:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2EDC6FD18
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Apr 2023 03:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231315AbjDXPWa (ORCPT
+        id S232454AbjDYDzY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Apr 2023 11:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60848 "EHLO
+        Mon, 24 Apr 2023 23:55:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232096AbjDXPW0 (ORCPT
+        with ESMTP id S229637AbjDYDzX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Apr 2023 11:22:26 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B65E76193
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Apr 2023 08:21:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682349703;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=h9mLtuhNzL4W66bGMVKcTb36aTtFdYTyTbAVeY28DY4=;
-        b=Y2sGcfYSzmUJ2qi/Pzau/pUkucUl+lStJFiB8+mYS2K3VqKj7fk4400K3zGfYe6P7EDkcM
-        peIVdWruha49iHp8G11nPMtPRJtJcNtv63tCJvFfOjzfs2nSXfs9AjSjTNapVq90warFe9
-        D9YwWUVwHywxD/jKBUpXQq/9F71ezZY=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-483-YJVlbVJuM5e0oATULxNdCw-1; Mon, 24 Apr 2023 11:21:39 -0400
-X-MC-Unique: YJVlbVJuM5e0oATULxNdCw-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-4ec55b6b585so721692e87.0
-        for <linux-hardening@vger.kernel.org>; Mon, 24 Apr 2023 08:21:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682349698; x=1684941698;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h9mLtuhNzL4W66bGMVKcTb36aTtFdYTyTbAVeY28DY4=;
-        b=YRu16/owfPmVmFAewe2PJCsE08Lne/OzVV4VQT128hxsNsjlwBAgioRcO+FVt5yknB
-         EaRTGFmBPYuPyI4OM0KlzdMAYLI3zjPtE5/2JWC3FGXaPoFwr68pOSHB9V3jg4AQoTDK
-         d6qVWGovBPoWaTkHCQ4W6lZ7QpV+RYvjTNYe1ymDiqfHpd6MQVltLM7V/L290jb5UnTc
-         Y7UPnrJaogd199/O5aAr6SNnSwyUS6wJ9pd4eU24v/tx3A1IP8ArrchpGC5zrNUfUTIj
-         9we7rwoisz8sJ9xw2nvpAp3H0/VwE7Z8P/UE/y5sVEmvwVIlB0/O/igvuX142XRGtzaH
-         VYww==
-X-Gm-Message-State: AAQBX9cy/BcWaERfLitu3kH5gsTwtRvgrO6SQeeyyKyHem0nZ3yAGXWA
-        m/NXd2ZBBLJ4vBVc2p5Otv2i87YCqZptSi1D+hd3VfPFeqHi4uJjYkSFtIUot0cgNZzRVVtiNbj
-        3F4e22dsa+afFEb0VjJKXmA6LlSRs9pcCmB4li9x8rAMh
-X-Received: by 2002:a2e:bea2:0:b0:2a7:ab72:1687 with SMTP id a34-20020a2ebea2000000b002a7ab721687mr3595014ljr.5.1682349698373;
-        Mon, 24 Apr 2023 08:21:38 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YxGt6Cwo4tIqSGLrVoLpjanytXyrNDC0r+4Mb8YdvhCBq1mG2uXlYEQc0hcpiACAZU/uRrtQYtpZLEX+kTCpc=
-X-Received: by 2002:a2e:bea2:0:b0:2a7:ab72:1687 with SMTP id
- a34-20020a2ebea2000000b002a7ab721687mr3595004ljr.5.1682349698092; Mon, 24 Apr
- 2023 08:21:38 -0700 (PDT)
+        Mon, 24 Apr 2023 23:55:23 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83575AD0F;
+        Mon, 24 Apr 2023 20:55:21 -0700 (PDT)
+Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Q57RK54VWzKvMB;
+        Tue, 25 Apr 2023 11:54:21 +0800 (CST)
+Received: from [10.67.110.48] (10.67.110.48) by dggpemm500016.china.huawei.com
+ (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 25 Apr
+ 2023 11:55:18 +0800
+Message-ID: <0f3abe0f-216b-dda6-38c4-26ffa79d966f@huawei.com>
+Date:   Tue, 25 Apr 2023 11:55:18 +0800
 MIME-Version: 1.0
-References: <CAHk-=whMiMqAv5ATKRkjrdgP2R7WgWmCS4hW2mPwBcL=gzdDNw@mail.gmail.com>
- <D57F9A07-AB77-4FF9-B0A6-C502DC60D093@kernel.org>
-In-Reply-To: <D57F9A07-AB77-4FF9-B0A6-C502DC60D093@kernel.org>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Mon, 24 Apr 2023 17:21:27 +0200
-Message-ID: <CACO55tvLHh4jfdT==t=B9JpPGEH-5vnEE3Q6AfJWZ_v_1uC6pg@mail.gmail.com>
-Subject: Re: Disabling -Warray-bounds for gcc-13 too
-To:     Kees Cook <kees@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>, gustavo@embeddedor.com,
-        nouveau@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        qing.zhao@oracle.com, Ben Skeggs <bskeggs@redhat.com>,
-        linux-hardening@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH RFC] Randomized slab caches for kmalloc()
+Content-Language: en-US
+To:     Alexander Lobakin <aleksander.lobakin@intel.com>
+CC:     Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <kasan-dev@googlegroups.com>,
+        Kees Cook <keescook@chromium.org>,
+        <linux-hardening@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        <linux-security-module@vger.kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>
+References: <20230315095459.186113-1-gongruiqi1@huawei.com>
+ <b7a7c5d7-d3c8-503f-7447-602ec2a18fb0@gmail.com>
+ <36019eb3-4b71-26c4-21ad-b0e0eabd0ca5@intel.com>
+ <f5b23bbc-6fb5-84d3-fcad-6253b346328a@huawei.com>
+ <ce1c307e-b7ae-2590-7b2e-43cbe963bc4d@intel.com>
+From:   Gong Ruiqi <gongruiqi1@huawei.com>
+In-Reply-To: <ce1c307e-b7ae-2590-7b2e-43cbe963bc4d@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.48]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500016.china.huawei.com (7.185.36.25)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 10:24=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On April 23, 2023 10:36:24 AM PDT, Linus Torvalds <torvalds@linux-foundat=
-ion.org> wrote:
-> >Kees,
-> >  I made the mistake of upgrading my M2 Macbook Air to Fedora-38, and
-> >in the process I got gcc-13 which is not WERROR-clean because we only
-> >limited the 'array-bounds' warning to gcc-11 and gcc-12. But gcc-13
-> >has all the same issues.
-> >
-> >And I want to be able to do my arm64 builds with WERROR on still...
-> >
-> >I guess it never made much sense to hope it was going to go away
-> >without having a confirmation, so I just changed it to be gcc-11+.
->
-> Yeah, that's fine. GCC 13 released without having a fix for at least one =
-(hopefully last) known array-bounds vs jump threading bug:
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D109071
->
-> >And one of them is from you.
-> >
-> >In particular, commit 4076ea2419cf ("drm/nouveau/disp: Fix
-> >nvif_outp_acquire_dp() argument size") cannot possibly be right, It
-> >changes
-> >
-> > nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[16],
-> >
-> >to
-> >
-> > nvif_outp_acquire_dp(struct nvif_outp *outp, u8 dpcd[DP_RECEIVER_CAP_SI=
-ZE],
-> >
-> >and then does
-> >
-> >        memcpy(args.dp.dpcd, dpcd, sizeof(args.dp.dpcd));
-> >
-> >where that 'args.dp.dpcd' is a 16-byte array, and DP_RECEIVER_CAP_SIZE i=
-s 15.
->
-> Yeah, it was an incomplete fix. I sent the other half here, but it fell t=
-hrough the cracks:
-> https://lore.kernel.org/lkml/20230204184307.never.825-kees@kernel.org/
->
 
-left a review on that patch. Any preferred way of getting it upstream?
-I could push it through drm-misc, but the delay until it reaches
-Linus' tree is a bit high.
 
->
->
-> >
->
-> >I think it's all entirely harmless from a code generation standpoint,
-> >because the 15-byte field will be padded out to 16 bytes in the
-> >structure that contains it, but it's most definitely buggy.
->
-> Right; between this, that GCC 13 wasn't released yet, and I had no feedba=
-ck from NV folks, I didn't chase down landing that fix.
->
-> >
-> >So that warning does find real cases of wrong code. But when those
-> >real cases are hidden by hundreds of lines of unfixable false
-> >positives, we don't have much choice.
->
-> Yup, totally agreed. The false positives I've looked at all seem to be si=
-milar to the outstanding jump threading bug, so I'm hoping once that gets f=
-ixed we'll finally have a good signal with that warning enabled. :)
->
-> -Kees
->
->
-> --
-> Kees Cook
->
+On 2023/04/24 21:46, Alexander Lobakin wrote:
+> From: Gong, Ruiqi <gongruiqi1@huawei.com>
+> Date: Mon, 24 Apr 2023 10:54:33 +0800
+> 
+> ...
+> 
+>>
+>>> It's fast enough according to Jason... `_RET_IP_ % nr` doesn't sound
+>>> "secure" to me. It really is a compile-time constant, which can be
+>>> calculated (or not?) manually. Even if it wasn't, `% nr` doesn't sound
+>>> good, there should be at least hash_32().
+>>
+>> Yes, `_RET_IP_ % nr` is a bit naive. Currently the patch is more like a
+>> PoC so I wrote this. Indeed a proper hash function should be used here.
+>>
+>> And yes _RET_IP_ could somehow be manually determined especially for
+>> kernels without KASLR, and I think adding a per-boot random seed into
+>> the selection could solve this.
+> 
+> I recall how it is done for kCFI/FineIBT in the x86 code -- it also uses
+> per-boot random seed (although it gets patched into the code itself each
+> time, when applying alternatives). So probably should be optimal enough.
+> The only thing I'm wondering is where to store this per-boot seed :D
+> It's generic code, so you can't patch it directly. OTOH storing it in
+> .data/.bss can make it vulnerable to attacks... Can't it?
 
+I think marking the seed with __ro_after_init is enough, since we don't
+mind it could be read by the attacker.
+
+Given that the code paths the attacker can utilize to spray the heap is
+limited, our address-related randomness in most cases prevents
+kmalloc()s on these paths from picking the same cache the vulnerable
+subsystem/module would pick. Although _RET_IP_ of kmalloc()s could be
+known, without tampering the source code and rebuilding the image, the
+attacker can't do anything to make those caches collide if the cache
+selection algorithm says they don't.
+
+So in my perspective the per-boot random seed is more like an
+enhancement: if one day, by analyzing the open source code, the attacker
+does find a usable kmalloc that happens to pick the same cache with the
+vulnerable subsystem/module, the seed could make his/her effort wasted ;)
+
+> 
+>>
+>> I will implement these in v2. Thanks!
+>>
+>>>
+>>> Thanks,
+>>> Olek
+>>>
+> 
+> Thanks,
+> Olek
