@@ -2,225 +2,220 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607D7C7618E
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Apr 2023 07:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32B2C77B60
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Apr 2023 09:10:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239752AbjDZHiI (ORCPT
+        id S239757AbjDZJKD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Apr 2023 03:38:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41156 "EHLO
+        Wed, 26 Apr 2023 05:10:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239727AbjDZHiG (ORCPT
+        with ESMTP id S239384AbjDZJKC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Apr 2023 03:38:06 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5241630F1
-        for <linux-hardening@vger.kernel.org>; Wed, 26 Apr 2023 00:38:05 -0700 (PDT)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33Q71xQT024433;
-        Wed, 26 Apr 2023 07:04:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=4TkZPpJQnJDIK2a0+LnEwn+qqAQJLzdFqbcw7FVDMGg=;
- b=CchTrACJQfWwqNPdXa9gYULhsXxhWlei95Rjs0xdpi2whKiHaXt7FmTdWtilU045dw8+
- BnF7M10L/kd9vzSmQ1iw/R0Ju7XWGk5iMJ6w78tqarkRy+KZxOWLHB/weIIa53mcswmE
- 4bInzZYYuAA4LFBiTM0U+HCoWvaSfR50eRdiYHfbKGWRoZGkqyo30xJFY2aofZKmk5BF
- pbAufUqog2IiJZfRt5Q7oIf08MxK5307P+BoDfUSRa8WE5WgNVpZMjxAW7Vfg4y+XGxQ
- NFPe28hw0nA1NQJISJ3gR9/E4avqhsqAXqFFgHZkgpn6LYlsUlANu9pADDb8QobB9kFV GQ== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q6xxr0nwc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Apr 2023 07:04:01 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33Q2U5VR028537;
-        Wed, 26 Apr 2023 07:03:58 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3q4776st6a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 26 Apr 2023 07:03:58 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33Q73uF027919052
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Apr 2023 07:03:56 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66E2D2004F;
-        Wed, 26 Apr 2023 07:03:56 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65B4F2004B;
-        Wed, 26 Apr 2023 07:03:55 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Apr 2023 07:03:55 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 237B96030D;
-        Wed, 26 Apr 2023 17:03:52 +1000 (AEST)
-Message-ID: <3963fc4a8a27c1cd03b1ba3d0b23f6adc843214d.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH 1/6] powerpc/64s: Fix assembly to support larger
- values of THREAD_SIZE
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Cc:     "ruscur@russell.cc" <ruscur@russell.cc>,
-        "cmr@bluescreens.de" <cmr@bluescreens.de>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Date:   Wed, 26 Apr 2023 17:03:28 +1000
-In-Reply-To: <204dee71-e3c3-e974-e8b4-ee6015cc7e3b@csgroup.eu>
-References: <20221104172737.391978-1-ajd@linux.ibm.com>
-         <20221104172737.391978-2-ajd@linux.ibm.com>
-         <204dee71-e3c3-e974-e8b4-ee6015cc7e3b@csgroup.eu>
+        Wed, 26 Apr 2023 05:10:02 -0400
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC9A40D1;
+        Wed, 26 Apr 2023 02:09:59 -0700 (PDT)
+X-UUID: 5c2d32fd3ca647fdb51d20e0c8e29252-20230426
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.22,REQID:28fa357b-08b4-4925-aefa-b1755d2736af,IP:5,U
+        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:-4
+X-CID-INFO: VERSION:1.1.22,REQID:28fa357b-08b4-4925-aefa-b1755d2736af,IP:5,URL
+        :0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+        elease,TS:-4
+X-CID-META: VersionHash:120426c,CLOUDID:ac084e85-cd9c-45f5-8134-710979e3df0e,B
+        ulkID:230426170936LX6P0C97,BulkQuantity:0,Recheck:0,SF:24|17|19|42|38|102,
+        TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+        ,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-UUID: 5c2d32fd3ca647fdb51d20e0c8e29252-20230426
+X-User: zhouzongmin@kylinos.cn
+Received: from [172.20.12.156] [(116.128.244.169)] by mailgw
+        (envelope-from <zhouzongmin@kylinos.cn>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 581281370; Wed, 26 Apr 2023 17:09:35 +0800
+Message-ID: <1186d62a5fe7f2aa6e06f06a3dc7605c0072f1eb.camel@kylinos.cn>
+Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
+ drm_kms_helper_poll_disable during suspend
+From:   zongmin zhou <zhouzongmin@kylinos.cn>
+To:     Janne Grunau <j@jannau.net>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+        neil.armstrong@linaro.org, tony.luck@intel.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org, laurentiu.palcu@oss.nxp.com,
+        regressions@lists.linux.dev
+Date:   Wed, 26 Apr 2023 17:08:51 +0800
+In-Reply-To: <1682386644754589.204.seg@mailgw>
+References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
+         <20230420200148.GD3280@jannau.net>
+         <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
+         <1682386644754589.204.seg@mailgw>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ZcK5-OEDNstyPtxS6DF1cUDVMe-AVMBL
-X-Proofpoint-ORIG-GUID: ZcK5-OEDNstyPtxS6DF1cUDVMe-AVMBL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-26_02,2023-04-25_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 clxscore=1011 mlxscore=0 impostorscore=0
- priorityscore=1501 spamscore=0 adultscore=0 phishscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304260059
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-T24gRnJpLCAyMDIyLTExLTA0IGF0IDE3OjUxICswMDAwLCBDaHJpc3RvcGhlIExlcm95IHdyb3Rl
-Ogo+IAo+IAo+IExlIDA0LzExLzIwMjIgw6AgMTg6MjcsIEFuZHJldyBEb25uZWxsYW4gYSDDqWNy
-aXTCoDoKPiA+IFdoZW4gQ09ORklHX1ZNQVBfU1RBQ0sgaXMgZW5hYmxlZCwgd2Ugc2V0IFRIUkVB
-RF9TSVpFIHRvIGJlIGF0Cj4gPiBsZWFzdCB0aGUKPiA+IHNpemUgb2YgYSBwYWdlLgo+ID4gCj4g
-PiBUaGVyZSdzIGEgZmV3IGJpdHMgb2YgYXNzZW1ibHkgaW4gdGhlIGJvb2szczY0IGNvZGUgdGhh
-dCB1c2UKPiA+IFRIUkVBRF9TSVpFIGluCj4gPiBpbW1lZGlhdGUgbW9kZSBpbnN0cnVjdGlvbnMs
-IHdoaWNoIGNhbiBvbmx5IHRha2UgYW4gb3BlcmFuZCBvZiB1cAo+ID4gdG8gMTYKPiA+IGJpdHMg
-c2lnbmVkLCB3aGljaCBpc24ndCBxdWl0ZSBsYXJnZSBlbm91Z2guCj4gPiAKPiA+IEZpeCB0aGVz
-ZSBzcG90cyB0byB1c2UgYSBzY3JhdGNoIHJlZ2lzdGVyIG9yIHVzZSB0d28gaW1tZWRpYXRlIG1v
-ZGUKPiA+IGluc3RydWN0aW9ucyBpbnN0ZWFkLCBzbyB3ZSBjYW4gbGF0ZXIgZW5hYmxlIFZNQVBf
-U1RBQ0suCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEFuZHJldyBEb25uZWxsYW4gPGFqZEBsaW51
-eC5pYm0uY29tPgo+ID4gLS0tCj4gPiDCoCBhcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vYXNtLWNv
-bXBhdC5owqDCoCB8IDIgKysKPiA+IMKgIGFyY2gvcG93ZXJwYy9rZXJuZWwvZW50cnlfNjQuU8Kg
-wqDCoMKgwqDCoMKgwqDCoCB8IDQgKysrLQo+ID4gwqAgYXJjaC9wb3dlcnBjL2tlcm5lbC9pcnEu
-Y8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCA4ICsrKysrKy0tCj4gPiDCoCBhcmNoL3Bv
-d2VycGMva2VybmVsL21pc2NfNjQuU8KgwqDCoMKgwqDCoMKgwqDCoMKgIHwgNCArKystCj4gPiDC
-oCBhcmNoL3Bvd2VycGMva3ZtL2Jvb2szc19odl9ybWhhbmRsZXJzLlMgfCAzICsrLQo+ID4gwqAg
-NSBmaWxlcyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+ID4gCj4g
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL2FzbS1jb21wYXQuaAo+ID4g
-Yi9hcmNoL3Bvd2VycGMvaW5jbHVkZS9hc20vYXNtLWNvbXBhdC5oCj4gPiBpbmRleCAyYmM1M2M2
-NDZjY2QuLjMwZGQ3ODEzYmYzYiAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9pbmNsdWRl
-L2FzbS9hc20tY29tcGF0LmgKPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9hc20t
-Y29tcGF0LmgKPiA+IEBAIC0xMSw2ICsxMSw3IEBACj4gPiDCoCAjZGVmaW5lIFBQQ19MTMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RyaW5naWZ5X2luX2MobGQpCj4gPiDCoCAjZGVm
-aW5lIFBQQ19TVEzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzdHJpbmdpZnlfaW5fYyhz
-dGQpCj4gPiDCoCAjZGVmaW5lIFBQQ19TVExVwqDCoMKgwqDCoMKgc3RyaW5naWZ5X2luX2Moc3Rk
-dSkKPiA+ICsjZGVmaW5lIFBQQ19TVExVWMKgwqDCoMKgwqDCoHN0cmluZ2lmeV9pbl9jKHN0ZHV4
-KQo+ID4gwqAgI2RlZmluZSBQUENfTENNUEnCoMKgwqDCoMKgc3RyaW5naWZ5X2luX2MoY21wZGkp
-Cj4gPiDCoCAjZGVmaW5lIFBQQ19MQ01QTEnCoMKgwqDCoHN0cmluZ2lmeV9pbl9jKGNtcGxkaSkK
-PiA+IMKgICNkZWZpbmUgUFBDX0xDTVDCoMKgwqDCoMKgwqBzdHJpbmdpZnlfaW5fYyhjbXBkKQo+
-ID4gQEAgLTQ1LDYgKzQ2LDcgQEAKPiA+IMKgICNkZWZpbmUgUFBDX0xMwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqBzdHJpbmdpZnlfaW5fYyhsd3opCj4gPiDCoCAjZGVmaW5lIFBQQ19T
-VEzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzdHJpbmdpZnlfaW5fYyhzdHcpCj4gPiDC
-oCAjZGVmaW5lIFBQQ19TVExVwqDCoMKgwqDCoMKgc3RyaW5naWZ5X2luX2Moc3R3dSkKPiA+ICsj
-ZGVmaW5lIFBQQ19TVExVWMKgwqDCoMKgwqDCoHN0cmluZ2lmeV9pbl9jKHN0d3V4KQo+ID4gwqAg
-I2RlZmluZSBQUENfTENNUEnCoMKgwqDCoMKgc3RyaW5naWZ5X2luX2MoY21wd2kpCj4gPiDCoCAj
-ZGVmaW5lIFBQQ19MQ01QTEnCoMKgwqDCoHN0cmluZ2lmeV9pbl9jKGNtcGx3aSkKPiA+IMKgICNk
-ZWZpbmUgUFBDX0xDTVDCoMKgwqDCoMKgwqBzdHJpbmdpZnlfaW5fYyhjbXB3KQo+ID4gZGlmZiAt
-LWdpdCBhL2FyY2gvcG93ZXJwYy9rZXJuZWwvZW50cnlfNjQuUwo+ID4gYi9hcmNoL3Bvd2VycGMv
-a2VybmVsL2VudHJ5XzY0LlMKPiA+IGluZGV4IDNlMmUzN2U2ZWNhYi4uYWYyNWRiNmUwMjA1IDEw
-MDY0NAo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2tlcm5lbC9lbnRyeV82NC5TCj4gPiArKysgYi9h
-cmNoL3Bvd2VycGMva2VybmVsL2VudHJ5XzY0LlMKPiA+IEBAIC0yMzgsNyArMjM4LDkgQEAgRU5E
-X0ZUUl9TRUNUSU9OX0lGQ0xSKENQVV9GVFJfQVJDSF8yMDdTKQo+ID4gwqDCoMKgwqDCoMKgwqDC
-oC8qIE5vdGU6IHRoaXMgdXNlcyBTV0lUQ0hfRlJBTUVfU0laRSByYXRoZXIgdGhhbgo+ID4gSU5U
-X0ZSQU1FX1NJWkUKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJlY2F1c2Ugd2UgZG9uJ3QgbmVl
-ZCB0byBsZWF2ZSB0aGUgMjg4LWJ5dGUgQUJJIGdhcCBhdAo+ID4gdGhlCj4gPiDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB0b3Agb2YgdGhlIGtlcm5lbCBzdGFjay4gKi8KPiA+IC3CoMKgwqDCoMKgwqDC
-oGFkZGnCoMKgwqDCoHI3LHI3LFRIUkVBRF9TSVpFLVNXSVRDSF9GUkFNRV9TSVpFCj4gPiArwqDC
-oMKgwqDCoMKgwqBsacKgwqDCoMKgwqDCoHI5LDAKPiA+ICvCoMKgwqDCoMKgwqDCoG9yacKgwqDC
-oMKgwqByOSxyOSxUSFJFQURfU0laRS1TV0lUQ0hfRlJBTUVfU0laRQo+ID4gK8KgwqDCoMKgwqDC
-oMKgYWRkwqDCoMKgwqDCoHI3LHI3LHI5Cj4gCj4gU28geW91IGFzc3VtZSBUSFJFQURfU0laRSBp
-cyBuZXZlciBtb3JlIHRoYW4gNjRrID8gSXMgdGhhdCBhIHZhbGlkIAo+IGFzc3VtcHRpb24gPwoK
-SXQgbG9va3MgbGlrZSBQUENfUEFHRV9TSElGVCBjYW4gYmUgdXAgdG8gMTgsIHdoaWNoIHdvdWxk
-IG1ha2UKVEhSRUFEX1NJWkUgMjU2SywgYnV0IHRoYXQncyBvbmx5IGlmIHlvdSBoYXZlIDI1Nksg
-cGFnZXMsIHdoaWNoIGlzIGEKNDR4IHNwZWNpZmljIGZlYXR1cmUuIE90aGVyd2lzZSBBRkFJQ1Qg
-eW91IGNhbid0IGdldCBUSFJFQURfU0hJRlQKbGFyZ2VyIHRoYW4gMTYgYW5kIHRoZXJlZm9yZSBU
-SFJFQURfU0laRSA8PSA2NEsuCgoKPiAKPiBXaGF0IGFib3V0IHRoZSBiZWxvdyBpbnN0ZWFkOgo+
-IAo+IMKgwqDCoMKgwqDCoMKgwqBhZGRpc8KgwqDCoHI3LHI3LFRIUkVBRF9TSVpFLVNXSVRDSF9G
-UkFNRV9TSVpFQGhhCj4gwqDCoMKgwqDCoMKgwqDCoGFkZGnCoMKgwqDCoHI3LHI3LFRIUkVBRF9T
-SVpFLVNXSVRDSF9GUkFNRV9TSVpFQGwKClRoYXQgbG9va3MgYmV0dGVyIGFueXdheSwgdGhhbmtz
-LgoKPiAKPiA+IMKgIAo+ID4gwqDCoMKgwqDCoMKgwqDCoC8qCj4gPiDCoMKgwqDCoMKgwqDCoMKg
-ICogUE1VIGludGVycnVwdHMgaW4gcmFkaXggbWF5IGNvbWUgaW4gaGVyZS4gVGhleSB3aWxsIHVz
-ZQo+ID4gcjEsIG5vdAo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9rZXJuZWwvaXJxLmMg
-Yi9hcmNoL3Bvd2VycGMva2VybmVsL2lycS5jCj4gPiBpbmRleCA5ZWRlNjFhNWE0NjkuLjA5OGNm
-NmFkY2VlYyAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9rZXJuZWwvaXJxLmMKPiA+ICsr
-KyBiL2FyY2gvcG93ZXJwYy9rZXJuZWwvaXJxLmMKPiA+IEBAIC0yMDQsNyArMjA0LDkgQEAgc3Rh
-dGljIF9fYWx3YXlzX2lubGluZSB2b2lkCj4gPiBjYWxsX2RvX3NvZnRpcnEoY29uc3Qgdm9pZCAq
-c3ApCj4gPiDCoCB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgLyogVGVtcG9yYXJpbHkgc3dpdGNoIHIx
-IHRvIHNwLCBjYWxsIF9fZG9fc29mdGlycSgpIHRoZW4KPiA+IHJlc3RvcmUgcjEuICovCj4gPiDC
-oMKgwqDCoMKgwqDCoMKgYXNtIHZvbGF0aWxlICgKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgUFBDX1NUTFUgIsKgwqDCoMKgwqAlJXIxLCAlW29mZnNldF0oJVtzcF0pwqDCoDsi
-Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImxpwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAlJXIwLCAwwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDsiCj4gPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIm9yacKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCUlcjAsICUlcjAsICVbb2Zmc2V0XcKgwqDCoDsiCj4gCj4gU2FtZSwgeW91IGFzc3VtZSBvZmZz
-ZXQgdG8gYmUgbWF4IDY0aywgaXMgdGhhdCBjb3JyZWN0ID8KPiAKPiBXaGF0IGFib3V0Cj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBsaXPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oHIwLCBvZmZzZXRAaAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgb3JpwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqByMCwgcjAsIG9mZnNldEBsCj4gCj4gPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIFBQQ19TVExVWCAiwqDCoMKgwqAlJXIxLCAlW3NwXSwgJSVyMMKg
-wqDCoMKgwqDCoMKgOyIKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIm1ywqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAlJXIxLCAlW3NwXcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgOyIKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImJswqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAlW2NhbGxlZV3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA7Igo+
-ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgUFBDX0xMICLCoMKgwqDCoMKgwqDC
-oCUlcjEsIDAoJSVyMSnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgOyIKPiA+IEBAIC0yNTYsNyArMjU4
-LDkgQEAgc3RhdGljIF9fYWx3YXlzX2lubGluZSB2b2lkIGNhbGxfZG9faXJxKHN0cnVjdAo+ID4g
-cHRfcmVncyAqcmVncywgdm9pZCAqc3ApCj4gPiDCoCAKPiA+IMKgwqDCoMKgwqDCoMKgwqAvKiBU
-ZW1wb3JhcmlseSBzd2l0Y2ggcjEgdG8gc3AsIGNhbGwgX19kb19pcnEoKSB0aGVuCj4gPiByZXN0
-b3JlIHIxLiAqLwo+ID4gwqDCoMKgwqDCoMKgwqDCoGFzbSB2b2xhdGlsZSAoCj4gPiAtwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFBQQ19TVExVICLCoMKgwqDCoMKgJSVyMSwgJVtvZmZz
-ZXRdKCVbc3BdKcKgwqA7Igo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJsacKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgJSVyMCwgMMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqA7Igo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJvcmnCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAlJXIwLCAlJXIwLCAlW29mZnNldF3CoMKgwqA7Igo+ID4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBQUENfU1RMVVggIsKgwqDCoMKgJSVyMSwgJVtzcF0s
-ICUlcjDCoMKgwqDCoMKgwqDCoDsiCj4gCj4gU2FtZQo+IAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAibXLCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCUlcjQsICUlcjHCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgOyIKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIm1ywqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAlJXIxLCAlW3NwXcKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgOyIKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImJs
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAlW2NhbGxlZV3CoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqA7Igo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9rZXJuZWwvbWlzY182NC5T
-Cj4gPiBiL2FyY2gvcG93ZXJwYy9rZXJuZWwvbWlzY182NC5TCj4gPiBpbmRleCAzNjE4NGNhZGEw
-MGIuLmZmNzFiOTg1MDBhMyAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9rZXJuZWwvbWlz
-Y182NC5TCj4gPiArKysgYi9hcmNoL3Bvd2VycGMva2VybmVsL21pc2NfNjQuUwo+ID4gQEAgLTM4
-NCw3ICszODQsOSBAQCBfR0xPQkFMKGtleGVjX3NlcXVlbmNlKQo+ID4gwqDCoMKgwqDCoMKgwqDC
-oHN0ZMKgwqDCoMKgwqByMCwxNihyMSkKPiA+IMKgIAo+ID4gwqDCoMKgwqDCoMKgwqDCoC8qIHN3
-aXRjaCBzdGFja3MgdG8gbmV3c3RhY2sgLS0gJmtleGVjX3N0YWNrLnN0YWNrICovCj4gPiAtwqDC
-oMKgwqDCoMKgwqBzdGR1wqDCoMKgwqByMSxUSFJFQURfU0laRS1TVEFDS19GUkFNRV9PVkVSSEVB
-RChyMykKPiA+ICvCoMKgwqDCoMKgwqDCoGxpwqDCoMKgwqDCoMKgcjAsMAo+ID4gK8KgwqDCoMKg
-wqDCoMKgb3JpwqDCoMKgwqDCoHIwLHIwLFRIUkVBRF9TSVpFLVNUQUNLX0ZSQU1FX09WRVJIRUFE
-Cj4gPiArwqDCoMKgwqDCoMKgwqBzdGR1eMKgwqDCoHIxLHIzLHIwCj4gCj4gU2FtZQo+IAo+ID4g
-wqDCoMKgwqDCoMKgwqDCoG1ywqDCoMKgwqDCoMKgcjEscjMKPiA+IMKgIAo+ID4gwqDCoMKgwqDC
-oMKgwqDCoGxpwqDCoMKgwqDCoMKgcjAsMAo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9r
-dm0vYm9vazNzX2h2X3JtaGFuZGxlcnMuUwo+ID4gYi9hcmNoL3Bvd2VycGMva3ZtL2Jvb2szc19o
-dl9ybWhhbmRsZXJzLlMKPiA+IGluZGV4IDM3ZjUwODYxZGQ5OC4uZDA1ZTNkMzI0ZjRkIDEwMDY0
-NAo+ID4gLS0tIGEvYXJjaC9wb3dlcnBjL2t2bS9ib29rM3NfaHZfcm1oYW5kbGVycy5TCj4gPiAr
-KysgYi9hcmNoL3Bvd2VycGMva3ZtL2Jvb2szc19odl9ybWhhbmRsZXJzLlMKPiA+IEBAIC0yNjg2
-LDcgKzI2ODYsOCBAQCBrdm1wcGNfYmFkX2hvc3RfaW50cjoKPiA+IMKgwqDCoMKgwqDCoMKgwqBt
-csKgwqDCoMKgwqDCoHI5LCByMQo+ID4gwqDCoMKgwqDCoMKgwqDCoHN0ZMKgwqDCoMKgwqByMSwg
-UEFDQVIxKHIxMykKPiA+IMKgwqDCoMKgwqDCoMKgwqBsZMKgwqDCoMKgwqDCoHIxLCBQQUNBRU1F
-UkdTUChyMTMpCj4gPiAtwqDCoMKgwqDCoMKgwqBzdWJpwqDCoMKgwqByMSwgcjEsIFRIUkVBRF9T
-SVpFLzIgKyBJTlRfRlJBTUVfU0laRQo+ID4gK8KgwqDCoMKgwqDCoMKgc3ViacKgwqDCoMKgcjEs
-IHIxLCBUSFJFQURfU0laRS8yCj4gPiArwqDCoMKgwqDCoMKgwqBzdWJpwqDCoMKgwqByMSwgcjEs
-IElOVF9GUkFNRV9TSVpFCj4gCj4gU2FtZSwgd2hhdCBhYm91dAo+IAo+IMKgwqDCoMKgwqDCoMKg
-wqBzdWJpc8KgwqDCoHIxLCByMSwgVEhSRUFEX1NJWkUvMiArIElOVF9GUkFNRV9TSVpFQGhhCj4g
-wqDCoMKgwqDCoMKgwqDCoHN1YmnCoMKgwqDCoHIxLCByMSwgVEhSRUFEX1NJWkUvMiArIElOVF9G
-UkFNRV9TSVpFQGwKPiAKPiA+IMKgwqDCoMKgwqDCoMKgwqBzdGTCoMKgwqDCoMKgcjksIDAocjEp
-Cj4gPiDCoMKgwqDCoMKgwqDCoMKgc3RkwqDCoMKgwqDCoHIwLCBHUFIwKHIxKQo+ID4gwqDCoMKg
-wqDCoMKgwqDCoHN0ZMKgwqDCoMKgwqByOSwgR1BSMShyMSkKCi0tIApBbmRyZXcgRG9ubmVsbGFu
-ICAgIE96TGFicywgQURMIENhbmJlcnJhCmFqZEBsaW51eC5pYm0uY29tICAgSUJNIEF1c3RyYWxp
-YSBMaW1pdGVkCg==
+On Sun, 2023-04-23 at 22:51 +0200, Janne Grunau wrote:
+> On 2023-04-20 23:07:01 +0300, Dmitry Baryshkov wrote:
+> > On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net> wrote:
+> > > 
+> > > On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
+> > > > When drivers call drm_kms_helper_poll_disable from
+> > > > their device suspend implementation without enabled output
+> > > > polling before,
+> > > > following warning will be reported,due to work->func not be
+> > > > initialized:
+> > > 
+> > > we see the same warning with the wpork in progress kms driver for
+> > > apple
+> > > silicon SoCs. The connectors do not need to polled so the driver
+> > > never
+> > > calls drm_kms_helper_poll_init().
+> > > 
+> > > > [   55.141361] WARNING: CPU: 3 PID: 372 at
+> > > > kernel/workqueue.c:3066 __flush_work+0x22f/0x240
+> > > > [   55.141382] Modules linked in: nls_iso8859_1
+> > > > snd_hda_codec_generic ledtrig_audio snd_hda_intel
+> > > > snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hda_core
+> > > > snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event snd_rawmidi
+> > > > snd_seq intel_rapl_msr intel_rapl_common bochs drm_vram_helper
+> > > > drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul
+> > > > snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3
+> > > > aesni_intel drm_kms_helper joydev input_leds syscopyarea
+> > > > crypto_simd snd cryptd sysfillrect sysimgblt mac_hid serio_raw
+> > > > soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp
+> > > > parport drm ramoops reed_solomon pstore_blk pstore_zone
+> > > > efi_pstore virtio_rng ip_tables x_tables autofs4 hid_generic
+> > > > usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse
+> > > > virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover
+> > > > virtio_blk xhci_pci_renesas failover
+> > > > [   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not tainted
+> > > > 6.2.0-rc6+ #16
+> > > > [   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9,
+> > > > 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org
+> > > > 04/01/2014
+> > > > [   55.141435] Workqueue: events_unbound async_run_entry_fn
+> > > > [   55.141441] RIP: 0010:__flush_work+0x22f/0x240
+> > > > [   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff ff
+> > > > 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff ff
+> > > > 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2 54
+> > > > d8 00 66 90 90 90 90 90 90
+> > > > [   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
+> > > > [   55.141449] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
+> > > > ffffffff9b72bcbe
+> > > > [   55.141450] RDX: 0000000000000001 RSI: 0000000000000001 RDI:
+> > > > ff3ea01e4265e330
+> > > > [   55.141451] RBP: ff59221940833c90 R08: 0000000000000000 R09:
+> > > > 8080808080808080
+> > > > [   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f R12:
+> > > > ff3ea01e4265e330
+> > > > [   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80 R15:
+> > > > 0000000000000001
+> > > > [   55.141455] FS:  0000000000000000(0000)
+> > > > GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
+> > > > [   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0:
+> > > > 0000000080050033
+> > > > [   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005 CR4:
+> > > > 0000000000771ee0
+> > > > [   55.141464] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> > > > 0000000000000000
+> > > > [   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> > > > 0000000000000400
+> > > > [   55.141466] PKRU: 55555554
+> > > > [   55.141467] Call Trace:
+> > > > [   55.141469]  <TASK>
+> > > > [   55.141472]  ? pcie_wait_cmd+0xdf/0x220
+> > > > [   55.141478]  ? mptcp_seq_show+0xe0/0x180
+> > > > [   55.141484]  __cancel_work_timer+0x124/0x1b0
+> > > > [   55.141487]  cancel_delayed_work_sync+0x17/0x20
+> > > > [   55.141490]  drm_kms_helper_poll_disable+0x26/0x40
+> > > > [drm_kms_helper]
+> > > > [   55.141516]  drm_mode_config_helper_suspend+0x25/0x90
+> > > > [drm_kms_helper]
+> > > > [   55.141531]  ? __pm_runtime_resume+0x64/0x90
+> > > > [   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
+> > > > [   55.141540]  pci_pm_suspend+0x8b/0x1b0
+> > > > [   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
+> > > > [   55.141547]  dpm_run_callback+0x4c/0x160
+> > > > [   55.141550]  __device_suspend+0x14c/0x4c0
+> > > > [   55.141553]  async_suspend+0x24/0xa0
+> > > > [   55.141555]  async_run_entry_fn+0x34/0x120
+> > > > [   55.141557]  process_one_work+0x21a/0x3f0
+> > > > [   55.141560]  worker_thread+0x4e/0x3c0
+> > > > [   55.141563]  ? __pfx_worker_thread+0x10/0x10
+> > > > [   55.141565]  kthread+0xf2/0x120
+> > > > [   55.141568]  ? __pfx_kthread+0x10/0x10
+> > > > [   55.141570]  ret_from_fork+0x29/0x50
+> > > > [   55.141575]  </TASK>
+> > > > [   55.141575] ---[ end trace 0000000000000000 ]---
+> > > > 
+> > > > Fixes: a4e771729a51 ("drm/probe_helper: sort out poll_running
+> > > > vs poll_enabled")
+> > > > Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
+> > > > ---
+> > > >  drivers/gpu/drm/drm_probe_helper.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/drm_probe_helper.c
+> > > > b/drivers/gpu/drm/drm_probe_helper.c
+> > > > index 8127be134c39..ac72b18e2257 100644
+> > > > --- a/drivers/gpu/drm/drm_probe_helper.c
+> > > > +++ b/drivers/gpu/drm/drm_probe_helper.c
+> > > > @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct
+> > > > drm_device *dev)
+> > > >       if (dev->mode_config.poll_running)
+> > > >               drm_kms_helper_disable_hpd(dev);
+> > > > 
+> > > > -     cancel_delayed_work_sync(&dev-
+> > > > >mode_config.output_poll_work);
+> > > > +     if (dev->mode_config.poll_enabled)
+> > > > +             cancel_delayed_work_sync(&dev-
+> > > > >mode_config.output_poll_work);
+> > > 
+> > > Checking for dev->mode_config.poll_enabled at the start of the
+> > > function
+> > > and return early if it is not true looks more in style with the
+> > > rest of
+> > > drm_probe_helper.c.
+> > 
+> > I think it is an error to call drm_kms_helper_poll_disable() if
+> > polling was not initialized. So, in my opinion the fix should go to
+> > the drm_mode_config_helper_suspend() / _resume() instead. Please
+> > add a
+> > guard there using dev->mode_config.poll_enabled.
+> 
+> While I tend to agree to the sentiment I do not think this is the 
+> correct fix in this situation. drm_kms_helper_poll_disable had the
+> check since at least 2014. a4e771729a51 is a regression. If we want
+> to  
+> change the behavior it should be done explicitly and after verifying
+> all 
+> drm_kms_helper_poll_disable() calls.
+> 
+> #regzbot ^introduced a4e771729a51
+> 
+> ciao
+> Janne
+
+Dear Janne:
+
+I agree with you like I mentioned on last letter.
+Thanks for your time.
+
+
+Dear Dmitry:
+
+Is there anything else I can do?
+Looking forward to your reply.
+
+Thanks
+
 
