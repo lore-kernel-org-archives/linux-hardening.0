@@ -2,71 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE60C7618E
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Apr 2023 17:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28256C7618E
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Apr 2023 01:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236258AbjDZRGn (ORCPT
+        id S239857AbjD0BPV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Apr 2023 13:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59588 "EHLO
+        Wed, 26 Apr 2023 21:15:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233926AbjDZRGe (ORCPT
+        with ESMTP id S233710AbjD0BPU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Apr 2023 13:06:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3367EC5;
-        Wed, 26 Apr 2023 10:06:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A3CA6226F;
-        Wed, 26 Apr 2023 17:06:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BE050C433EF;
-        Wed, 26 Apr 2023 17:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682528792;
-        bh=ofV3NUbR0fLH/FdltYXRmA7aAUbxkLpJbK95mAO8GZY=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=DYujjBDAluk165oFg4/hPTdSswXhC5/qtlJ8nJMO2gLgajNbxCS9/VmisNAhcXINO
-         wZUtaIZE7ezYfkT+d+dIAGT+hySbF0Mp2OWfo4pJUnvIFP+zKDeMwbXhKkcukx7Coo
-         9p4LodPe06a2aDnmkdhPIzEOASNxYytzNMcHxVbRUrCO6e1RFEG15H89dOeJLWuU1w
-         11Vx/yThrb8GxILIDPjoewDvohWxdnKvQZkuAGUJ7a5TH2JOnCbFnyxqbC90ocNwe5
-         fY4X/bScd7DI3ynu6aBtP8eE5u0SRN+mNn26TmO85sx+Qi+xfjLEMXk7XVtUaR1sI3
-         T+mc75ca2QuwA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id ADCD0E5FFC8;
-        Wed, 26 Apr 2023 17:06:32 +0000 (UTC)
-Subject: Re: [GIT PULL] flexible-array transformations for 6.4-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <ZEaNFzLag13mLxOL@work>
-References: <ZEaNFzLag13mLxOL@work>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZEaNFzLag13mLxOL@work>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flex-array-transformations-6.4-rc1
-X-PR-Tracked-Commit-Id: 00168b415a60cec7558608efb4fc50f2a73daae2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 98f99e67a1dc456e9a542584819b2aa265ffc737
-Message-Id: <168252879270.19907.8746142034603815070.pr-tracker-bot@kernel.org>
-Date:   Wed, 26 Apr 2023 17:06:32 +0000
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+        Wed, 26 Apr 2023 21:15:20 -0400
+Received: from mail-m11876.qiye.163.com (mail-m11876.qiye.163.com [115.236.118.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A1A19AE;
+        Wed, 26 Apr 2023 18:15:18 -0700 (PDT)
+Received: from [0.0.0.0] (unknown [172.96.223.238])
+        by mail-m11876.qiye.163.com (Hmail) with ESMTPA id 2526A3C00F0;
+        Thu, 27 Apr 2023 09:15:01 +0800 (CST)
+Message-ID: <650acda0-9ec9-7634-3e01-e4870c8890b7@sangfor.com.cn>
+Date:   Thu, 27 Apr 2023 09:14:43 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH net v2 1/2] iavf: Fix use-after-free in free_netdev
+Content-Language: en-US
+To:     Michal Kubiak <michal.kubiak@intel.com>, anthony.l.nguyen@intel.com
+Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
+        jesse.brandeburg@intel.com, keescook@chromium.org,
+        grzegorzx.szczurek@intel.com, mateusz.palczewski@intel.com,
+        mitch.a.williams@intel.com, gregory.v.rose@intel.com,
+        jeffrey.t.kirsher@intel.com, simon.horman@corigine.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, pengdonglin@sangfor.com.cn,
+        huangcun@sangfor.com.cn
+References: <20230419150709.24810-1-dinghui@sangfor.com.cn>
+ <20230419150709.24810-2-dinghui@sangfor.com.cn>
+ <ZElExd5bAL2FCpIB@localhost.localdomain>
+From:   Ding Hui <dinghui@sangfor.com.cn>
+In-Reply-To: <ZElExd5bAL2FCpIB@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQ0lKVhofHU5LThhPGR0fTlUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpMSVVCTVVJSUhVSUhDWVdZFhoPEhUdFFlBWU9LSFVKSktISkNVSktLVUtZBg++
+X-HM-Tid: 0a87c0474c3d2eb2kusn2526a3c00f0
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NRw6Ihw4Cj0TT0oBIyo3Eyw8
+        HTcaCk5VSlVKTUNJTk5DSkpKTEpNVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
+        QVlKTElVQk1VSUlIVUlIQ1lXWQgBWUFISEJINwY+
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The pull request you sent on Mon, 24 Apr 2023 08:07:19 -0600:
+On 2023/4/26 23:35, Michal Kubiak wrote:
+> On Wed, Apr 19, 2023 at 11:07:08PM +0800, Ding Hui wrote:
+>> Cc: Huang Cun <huangcun@sangfor.com.cn>
+>> Acked-by: Michal Kubiak <michal.kubiak@intel.com>
+> 
+> I'm sorry, but I don't remember giving "Acked-by" tag for that patch.
+> I gave "Reviewed-by" only for the v2 series.
+> 
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flex-array-transformations-6.4-rc1
+Sorry, that is added by myself since your reply for v1 "Looks OK to me"
+and "Looks correct to me", and I tried to ask for your agreement.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/98f99e67a1dc456e9a542584819b2aa265ffc737
+> We can't add any tags if they weren't given by the person himself.
 
-Thank you!
+I apologize to you.
+
+> Please fix that.
+
+Hi Tony Nguyen,
+the patches is already applied to your dev-queue branch, should I send
+v3 or you can fix it in your git?
+
+> Nacked-by: Michal Kubiak <michal.kubiak@intel.com>
+> 
+>> Reviewed-by: Simon Horman <simon.horman@corigine.com>
+>> ---
+>> v1 to v2:
+>>    - add Fixes: tag
+>>    - add reproduction script
+>>    - update commit message
+>>
+>> ---
+>>   drivers/net/ethernet/intel/iavf/iavf_main.c | 6 +-----
+>>   1 file changed, 1 insertion(+), 5 deletions(-)
+>>
+>> -- 
+>> 2.17.1
+>>
+> 
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+- Ding Hui
+
