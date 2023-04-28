@@ -2,257 +2,174 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3293AC77B61
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 Apr 2023 01:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E5F9C77B61
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 Apr 2023 16:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344467AbjD1BRX convert rfc822-to-8bit (ORCPT
+        id S229614AbjD1QmD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Apr 2023 21:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50170 "EHLO
+        Fri, 28 Apr 2023 12:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229869AbjD1BRW (ORCPT
+        with ESMTP id S229974AbjD1QmC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Apr 2023 21:17:22 -0400
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF6E62122;
-        Thu, 27 Apr 2023 18:17:19 -0700 (PDT)
-X-UUID: cd50ef11d3c34755ab4be2551cc1b666-20230428
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:408dea53-6e23-4300-b724-4ae2918a6d1e,IP:5,U
-        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-        :release,TS:-4
-X-CID-INFO: VERSION:1.1.22,REQID:408dea53-6e23-4300-b724-4ae2918a6d1e,IP:5,URL
-        :0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-        elease,TS:-4
-X-CID-META: VersionHash:120426c,CLOUDID:8eda256a-2f20-4998-991c-3b78627e4938,B
-        ulkID:230428091715JX7J7YU3,BulkQuantity:0,Recheck:0,SF:19|41|24|17|102,TC:
-        nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-        I:0,OSA:0,AV:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-UUID: cd50ef11d3c34755ab4be2551cc1b666-20230428
-X-User: zhouzongmin@kylinos.cn
-Received: from [172.20.12.156] [(116.128.244.169)] by mailgw
-        (envelope-from <zhouzongmin@kylinos.cn>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 710927598; Fri, 28 Apr 2023 09:17:14 +0800
-Message-ID: <6599319fea8ed1e3d6968e5b986661f0cf175902.camel@kylinos.cn>
-Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
- drm_kms_helper_poll_disable during suspend
-From:   zongmin zhou <zhouzongmin@kylinos.cn>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Janne Grunau <j@jannau.net>, maarten.lankhorst@linux.intel.com,
-        mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
-        daniel@ffwll.ch, neil.armstrong@linaro.org, tony.luck@intel.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, gpiccoli@igalia.com,
-        linux-hardening@vger.kernel.org, laurentiu.palcu@oss.nxp.com,
-        regressions@lists.linux.dev
-Date:   Fri, 28 Apr 2023 09:17:12 +0800
-In-Reply-To: <CAA8EJppmUtuhAF+VHPh3Q8tNYp1m4T6P7dZ0wYZ8Vzwo0DF6cg@mail.gmail.com>
-References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
-         <20230420200148.GD3280@jannau.net>
-         <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
-         <1682386644754589.204.seg@mailgw>
-         <1186d62a5fe7f2aa6e06f06a3dc7605c0072f1eb.camel@kylinos.cn>
-         <CAA8EJppmUtuhAF+VHPh3Q8tNYp1m4T6P7dZ0wYZ8Vzwo0DF6cg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Fri, 28 Apr 2023 12:42:02 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9F935261;
+        Fri, 28 Apr 2023 09:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682700121; x=1714236121;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=kTc9IEDiW1m5hYhMFaHI3NHH1xhI36WzCzFJbSMImZ4=;
+  b=MhUM6ck5Nkt9FeF4RvM3XUtzybtOWG7c47Kwzzz94SnRqmTVuZ6c5WtD
+   6vFCIAvjwW/dFKK8RbYds5QWYNn8DA1Vpaon8X9zqEb/WySM0Cq+GahR6
+   o7N1BS7U/quzOmk6i4dvNVFeprObNm16rHWsRvBxxKKefWo5RfRKv8gwu
+   X4IS76los/ZfAvuC1NpJqg47JTX2oD50FIutBHeDNZass2Wv26NW7Qpcf
+   Z3K2hVgucfWvXQhxEiXuuS0KSM/IvKojMB/p0YGOoKQwx8iUUb7HG6QLr
+   saQuFkObnj8SNM7g23U6T8XM3/8yNX2+ijYdvVjB3/LEumYLhuaB8yVjL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="327415280"
+X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
+   d="scan'208";a="327415280"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 09:42:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="819070132"
+X-IronPort-AV: E=Sophos;i="5.99,235,1677571200"; 
+   d="scan'208";a="819070132"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga004.jf.intel.com with ESMTP; 28 Apr 2023 09:41:57 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 28 Apr 2023 09:41:55 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Fri, 28 Apr 2023 09:41:55 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Fri, 28 Apr 2023 09:41:55 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FijLrwiQ1gTEw3gTMJLlaMR9pP4rYIo/ENCS5sp7VupRhfecG5KUO6DGewiBiYZpFbocmdRx8vK8JYBe3BHrf2W8WCwMwzYwLFWhL8LJi6DuKsPvfMzSPs7GV2XLQWX1L+Y9+clPMJPIpeloC9D9m6WVA9WaK9dQ0uBtOT6LS5KasZvm9Ih+40FipoBAaUzx3AQuqQJzVSDopFtYXYcmHEW87LjpIW9WGg1INl5AB71nrLLAT2VWMd5lBnQYi/H5y6NzqB4Bci7zVzzTU/Kwq4msZ9uw35Y3cxIZDgrcSPA8OBvK0Dy+D4tIdE7LPkFfYSVtN905U5JTeI7991+YAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kTc9IEDiW1m5hYhMFaHI3NHH1xhI36WzCzFJbSMImZ4=;
+ b=XLkykGdBnclegf2vHOeT/AbS9MReQtKVHxFUDXwZB9zHbnRWBpd9JQaOmyTazyt17Nk4H73E+qh8/A62CVA6PjQAKn1Zu4MDizPkx0+nptpiaAkoye7DyNsh07fqXeUGhYaLKetxvQtzjVaJ7K2BEQTj4lW9nXLyDDeuKF9JhPByle3nRXMVn7yAMi+cF90o+1Ah2jZhd00DEPB0tzu2WRNwZa9fSHLvgd1SNXsxXgm3sCFf7wxPWc/6Kazsvx+vryDKpbp6Fuk6nkg1wQVw/Ugx3RJw53G5mXoBPbq/rht08us0YFkqzS3AlikhZIQINSIJO1lOCo1HPDbFMTu8Sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SN6PR11MB3229.namprd11.prod.outlook.com (2603:10b6:805:ba::28)
+ by PH7PR11MB6673.namprd11.prod.outlook.com (2603:10b6:510:1ab::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21; Fri, 28 Apr
+ 2023 16:41:46 +0000
+Received: from SN6PR11MB3229.namprd11.prod.outlook.com
+ ([fe80::4b81:e2b0:d5fa:ad47]) by SN6PR11MB3229.namprd11.prod.outlook.com
+ ([fe80::4b81:e2b0:d5fa:ad47%6]) with mapi id 15.20.6319.034; Fri, 28 Apr 2023
+ 16:41:46 +0000
+Message-ID: <c7d70574-b03f-3d88-878b-ab21422ed214@intel.com>
+Date:   Fri, 28 Apr 2023 09:41:41 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH net v2 1/2] iavf: Fix use-after-free in free_netdev
+Content-Language: en-US
+To:     Ding Hui <dinghui@sangfor.com.cn>,
+        Michal Kubiak <michal.kubiak@intel.com>
+CC:     <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <intel-wired-lan@lists.osuosl.org>,
+        <jesse.brandeburg@intel.com>, <keescook@chromium.org>,
+        <grzegorzx.szczurek@intel.com>, <mateusz.palczewski@intel.com>,
+        <mitch.a.williams@intel.com>, <gregory.v.rose@intel.com>,
+        <jeffrey.t.kirsher@intel.com>, <simon.horman@corigine.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <pengdonglin@sangfor.com.cn>,
+        <huangcun@sangfor.com.cn>
+References: <20230419150709.24810-1-dinghui@sangfor.com.cn>
+ <20230419150709.24810-2-dinghui@sangfor.com.cn>
+ <ZElExd5bAL2FCpIB@localhost.localdomain>
+ <650acda0-9ec9-7634-3e01-e4870c8890b7@sangfor.com.cn>
+From:   Tony Nguyen <anthony.l.nguyen@intel.com>
+In-Reply-To: <650acda0-9ec9-7634-3e01-e4870c8890b7@sangfor.com.cn>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0206.namprd05.prod.outlook.com
+ (2603:10b6:a03:330::31) To SN6PR11MB3229.namprd11.prod.outlook.com
+ (2603:10b6:805:ba::28)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR11MB3229:EE_|PH7PR11MB6673:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed5b16f7-6432-4ece-ce87-08db48077457
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 67Nqj9K23AvtXsphrTQnk74YDe4ZL0yWj6Ow7PnmPEWlQL08ercEynhDDR2VLgbN2mxEJZ0dYvtK3kvXKmrCOF7vhVgrN0Qok7bLtRVSfJwAeMlvr7dGju7oG9yHGNJwrzeCPz4cCV0alzOY6jGm50vsAKwMwPpLl+AE1qoAqlTZa6k8OkPLhEu5e4+8RV9VVTzwNLdSmTOa+PN/C3n+XbMKvO95Ec9K0zA/t07PSb/y8v3OacWOv00zPpWpxX4KMP3oH8eXfLNJwd1DnIde2K/KHPb9KSY7QRN/0aS+jPf4287CkCwb8ajk6V7Ro/sGhderDv2Y9uWIYNJ5Eievo6utsuDGK/3qp78C82DKDqr6VPIyswYoPnbuasDNhTIkkjFzTFjYk2rNuVBcQ/SKc456NxITN5CYvKim8wzQCpiySIo/iSmsyR8eexnb9VwVFcHB4n4+Ao0xhVzgs2sfavK9b06iDEBbNcVN4KAU73dUNx+AmNHnsUCabB17A0gCzWojO3+YzHR/Yn/NDC+okxUv/0V2G/REGv9R54v7QLPa/b1RlZTKktf5wina/c8y9PKEoSEOsnWpshl8/rjkUtq1UJ7OgMpkjAPnRafn8o170SoYukoGywLSAwcZZCAL40EVQ6pwFbah4V/7Xgxl/w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3229.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(136003)(376002)(346002)(39860400002)(366004)(451199021)(31686004)(6506007)(6636002)(110136005)(26005)(186003)(478600001)(66946007)(2616005)(31696002)(86362001)(558084003)(83380400001)(6666004)(316002)(36756003)(6486002)(53546011)(2906002)(41300700001)(38100700002)(4326008)(8676002)(66476007)(5660300002)(66556008)(8936002)(82960400001)(6512007)(7416002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VG9saXlGR3E4WmVqVEhOTnV1bUhoaXJyRGdtdzhIYmU4SGN0RGhqVFhCbUww?=
+ =?utf-8?B?SnAyZ2Mxay9HM3VlQmpEYnNkVE5rSG1JdWZNdWhnTTNvVmt3R1RUcEdHbWIy?=
+ =?utf-8?B?TWJvSlM2R1JRRnpLdjhPUjhVVy9LTmpHWXd3cVd3WG5lektiZ2F0dmsyeWtx?=
+ =?utf-8?B?ZXYvaUVjT1hoNDJKcmNzOWk3TUgrNUVJUXdhNG9zbTIyL0hXckc4QTJGVlFq?=
+ =?utf-8?B?ektuY2E3YThBbzJvTTFycW5UTVdSU1NmN0laSFAxVlRsck8ydlhHcnJnbkNv?=
+ =?utf-8?B?cm9TVHoyMXNoazJBRlNUL3JzdUxjOXFlTVExTnBUMGlmNXJLZmNWTEF2c1Jx?=
+ =?utf-8?B?dFpnM0JicjlwbGNWQUd5UjdEQ24vRFJzVEtWQ1FMMnpMSEIzR1VaM2hFRmJ3?=
+ =?utf-8?B?WFBlWStqSFJudmdkZkRsQVJiNDRFUWE5ZytVeW1jVG02YklaWmdDaERwY2xi?=
+ =?utf-8?B?UTdJTHZCMXcveWpjZEMraWJ2TVNiVjhRMU1OSVMwVys5K2xnOVcrSnVaV1Nv?=
+ =?utf-8?B?MHo5OHU0bi9wY0FPRis2ZVRMbEM3V3FSQTNjS3QzSm5Oc09rTHN2aFQycUFq?=
+ =?utf-8?B?RGhVd2tqeWgvWHFtUGR5eXJidkxNZmkyNkdQVmNOREdvbE51TU9xVGtRLyty?=
+ =?utf-8?B?a3JQNXh4cktnb3lnRUZmczlYN2JEVUlIaG1SQzZEMkpuK3l6UGZKRDIzZmpV?=
+ =?utf-8?B?cEFJVmdveTJ0QlFSRzdSQlJFUlNpQWlLUlJoa3BVRi9uckRPYkNwV1ZTV0hW?=
+ =?utf-8?B?bjFldzVualBScmVOeTVaK1Brd1dRMENZK1VoNjhvWDhWNHNUeUYzdXUzSzVE?=
+ =?utf-8?B?OVFUbXA2aTZMT1daZ1ExT1l4aGo5bFF4eTlScWVxejNJYzBDcHNhZnVLbS9j?=
+ =?utf-8?B?UkVSQitJUXliczI0cXQ0SEJab1UxQ3ZrMUJlcUtmU2pWcXVENlozS3ZZSWJN?=
+ =?utf-8?B?c0NpdHpBdUZIUlJsd3dWSTN4aWpNVWVGN1AvenBwU2xleGJ5WDZpbjRBWkFw?=
+ =?utf-8?B?S0Z5SWtUZGM0aU94R2lRNmF0b293cExLQ002dHpSM0ZMS1h6T0tzWGsrRUds?=
+ =?utf-8?B?TkFaMkpmUEVQcDVCVFd3OVlSdmw4KzRJVXlONCsxZ3Y3eEVwL0lVZCtJOFFp?=
+ =?utf-8?B?cU52UnB2SmFrYmhIUit6OVVIZzBtb0ZhMHhPQ2h6RjNQZGpzM3YrM0VjUm5z?=
+ =?utf-8?B?aVQ5QlpEUUh6L2hNVEFxaWgvMlhqQ1Q1MWpzaEJoTDBXTE9RN3FYME5Yc0JH?=
+ =?utf-8?B?V0h5a3NaVzlEaXA0UHVzRDBVV0ZHNTZucUg2SGt1Z2puTUFRNDg2Qmhsb3VL?=
+ =?utf-8?B?bDlqb2NnUWM4d0czekJORGcrcjh1WXRoSjB3cGFDcTVGS1JEUzB2blphNWVZ?=
+ =?utf-8?B?OHgyVDFMVDExU3kyQmJWcU5rY0pPTE1YVFJ6QjJRZVNQVmJiR2lBYjR2Tm1t?=
+ =?utf-8?B?c3R0Z0h5RkFYV1hwakpTdDR3VWVFZHpUTnUydU1xdzdPRVZIdytYSlJuenBo?=
+ =?utf-8?B?SGt4RFNDQmN5OXBydUsvMnhtVlZnT1JvU3hURlFCMkQwSXYrQjNSNDIralVy?=
+ =?utf-8?B?d2NmUlYrMGdkUmszRys4YTY2OGZFWndDNkxydFBsUFd2bmZqMmV5S1psdnBG?=
+ =?utf-8?B?UVIxTTVjanFXYVhHZm4xb1FkamxQelZHeGMxSDNEcmhUbTVGMjFUeEtBNVdB?=
+ =?utf-8?B?emZDRWZqNXRGSkdhV3J0OExzR0E0MDd3Y3VtYzg0UFZzN0h5VUFBeFM3RHhr?=
+ =?utf-8?B?L2krTUpHZHpIMkZ1NzZLU2FMQUVRTVpRTlF6ZHdWTUZDWTFpN3VaQjlFUGtE?=
+ =?utf-8?B?NWRPRVFXNStzV01TeU5RTmpiM3FQRTlmUEhMQTNuT3B6SDRvbldLd1VYVWVp?=
+ =?utf-8?B?bmRoTEs2ZWdadzZRY0czNGtRK1BSY29aZStNVFFabnVUMEpSbWVxYi9uSU9G?=
+ =?utf-8?B?b1I1U05JWjhPZ2FjbUFQbHdmMUhmVlVZUE04TjNFUGY3YkE2ekVsRWFQbVdX?=
+ =?utf-8?B?QlVUcjdUSHUwWkNSbVY2bUhzc0xZTWJPRjZrL0ZLYklOMXAvRkNIR0VhZ2dK?=
+ =?utf-8?B?d0N5ZWQzOFdBYVV6dHBVVmVxYTVFdXFCdEdvUEIveFV5UW9iaEN2K2ZucVcv?=
+ =?utf-8?B?QXJJY2pBNStJM0pzd200Sm9rZEFjMFIxZmROSXZqSDJqMzBhaGlobXJFQm91?=
+ =?utf-8?B?c3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed5b16f7-6432-4ece-ce87-08db48077457
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3229.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2023 16:41:45.9204
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xq85QMzqty4kDK/OS20Ka4vqom03Br+3rNwThcGo21OWVYL4BqkaUdX/+3vJ26exYF6lPktrdQmPN7i+fNYS1pcPLnx8RKaPoK8yUZvCv7o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6673
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 2023-04-26 at 16:10 +0300, Dmitry Baryshkov wrote:
-> On Wed, 26 Apr 2023 at 12:09, zongmin zhou <zhouzongmin@kylinos.cn>
-> wrote:
-> > 
-> > On Sun, 2023-04-23 at 22:51 +0200, Janne Grunau wrote:
-> > > On 2023-04-20 23:07:01 +0300, Dmitry Baryshkov wrote:
-> > > > On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net>
-> > > > wrote:
-> > > > > 
-> > > > > On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
-> > > > > > When drivers call drm_kms_helper_poll_disable from
-> > > > > > their device suspend implementation without enabled output
-> > > > > > polling before,
-> > > > > > following warning will be reported,due to work->func not be
-> > > > > > initialized:
-> > > > > 
-> > > > > we see the same warning with the wpork in progress kms driver
-> > > > > for
-> > > > > apple
-> > > > > silicon SoCs. The connectors do not need to polled so the
-> > > > > driver
-> > > > > never
-> > > > > calls drm_kms_helper_poll_init().
-> > > > > 
-> > > > > > [   55.141361] WARNING: CPU: 3 PID: 372 at
-> > > > > > kernel/workqueue.c:3066 __flush_work+0x22f/0x240
-> > > > > > [   55.141382] Modules linked in: nls_iso8859_1
-> > > > > > snd_hda_codec_generic ledtrig_audio snd_hda_intel
-> > > > > > snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec
-> > > > > > snd_hda_core
-> > > > > > snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event
-> > > > > > snd_rawmidi
-> > > > > > snd_seq intel_rapl_msr intel_rapl_common bochs
-> > > > > > drm_vram_helper
-> > > > > > drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul
-> > > > > > snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3
-> > > > > > aesni_intel drm_kms_helper joydev input_leds syscopyarea
-> > > > > > crypto_simd snd cryptd sysfillrect sysimgblt mac_hid
-> > > > > > serio_raw
-> > > > > > soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp
-> > > > > > parport drm ramoops reed_solomon pstore_blk pstore_zone
-> > > > > > efi_pstore virtio_rng ip_tables x_tables autofs4
-> > > > > > hid_generic
-> > > > > > usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse
-> > > > > > virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover
-> > > > > > virtio_blk xhci_pci_renesas failover
-> > > > > > [   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not
-> > > > > > tainted
-> > > > > > 6.2.0-rc6+ #16
-> > > > > > [   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9,
-> > > > > > 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org
-> > > > > > 04/01/2014
-> > > > > > [   55.141435] Workqueue: events_unbound async_run_entry_fn
-> > > > > > [   55.141441] RIP: 0010:__flush_work+0x22f/0x240
-> > > > > > [   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff
-> > > > > > ff
-> > > > > > 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff
-> > > > > > ff
-> > > > > > 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2
-> > > > > > 54
-> > > > > > d8 00 66 90 90 90 90 90 90
-> > > > > > [   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
-> > > > > > [   55.141449] RAX: 0000000000000000 RBX: 0000000000000000
-> > > > > > RCX:
-> > > > > > ffffffff9b72bcbe
-> > > > > > [   55.141450] RDX: 0000000000000001 RSI: 0000000000000001
-> > > > > > RDI:
-> > > > > > ff3ea01e4265e330
-> > > > > > [   55.141451] RBP: ff59221940833c90 R08: 0000000000000000
-> > > > > > R09:
-> > > > > > 8080808080808080
-> > > > > > [   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f
-> > > > > > R12:
-> > > > > > ff3ea01e4265e330
-> > > > > > [   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80
-> > > > > > R15:
-> > > > > > 0000000000000001
-> > > > > > [   55.141455] FS:  0000000000000000(0000)
-> > > > > > GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
-> > > > > > [   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0:
-> > > > > > 0000000080050033
-> > > > > > [   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005
-> > > > > > CR4:
-> > > > > > 0000000000771ee0
-> > > > > > [   55.141464] DR0: 0000000000000000 DR1: 0000000000000000
-> > > > > > DR2:
-> > > > > > 0000000000000000
-> > > > > > [   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0
-> > > > > > DR7:
-> > > > > > 0000000000000400
-> > > > > > [   55.141466] PKRU: 55555554
-> > > > > > [   55.141467] Call Trace:
-> > > > > > [   55.141469]  <TASK>
-> > > > > > [   55.141472]  ? pcie_wait_cmd+0xdf/0x220
-> > > > > > [   55.141478]  ? mptcp_seq_show+0xe0/0x180
-> > > > > > [   55.141484]  __cancel_work_timer+0x124/0x1b0
-> > > > > > [   55.141487]  cancel_delayed_work_sync+0x17/0x20
-> > > > > > [   55.141490]  drm_kms_helper_poll_disable+0x26/0x40
-> > > > > > [drm_kms_helper]
-> > > > > > [   55.141516]  drm_mode_config_helper_suspend+0x25/0x90
-> > > > > > [drm_kms_helper]
-> > > > > > [   55.141531]  ? __pm_runtime_resume+0x64/0x90
-> > > > > > [   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
-> > > > > > [   55.141540]  pci_pm_suspend+0x8b/0x1b0
-> > > > > > [   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
-> > > > > > [   55.141547]  dpm_run_callback+0x4c/0x160
-> > > > > > [   55.141550]  __device_suspend+0x14c/0x4c0
-> > > > > > [   55.141553]  async_suspend+0x24/0xa0
-> > > > > > [   55.141555]  async_run_entry_fn+0x34/0x120
-> > > > > > [   55.141557]  process_one_work+0x21a/0x3f0
-> > > > > > [   55.141560]  worker_thread+0x4e/0x3c0
-> > > > > > [   55.141563]  ? __pfx_worker_thread+0x10/0x10
-> > > > > > [   55.141565]  kthread+0xf2/0x120
-> > > > > > [   55.141568]  ? __pfx_kthread+0x10/0x10
-> > > > > > [   55.141570]  ret_from_fork+0x29/0x50
-> > > > > > [   55.141575]  </TASK>
-> > > > > > [   55.141575] ---[ end trace 0000000000000000 ]---
-> > > > > > 
-> > > > > > Fixes: a4e771729a51 ("drm/probe_helper: sort out
-> > > > > > poll_running
-> > > > > > vs poll_enabled")
-> > > > > > Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
-> > > > > > ---
-> > > > > >  drivers/gpu/drm/drm_probe_helper.c | 3 ++-
-> > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > > > 
-> > > > > > diff --git a/drivers/gpu/drm/drm_probe_helper.c
-> > > > > > b/drivers/gpu/drm/drm_probe_helper.c
-> > > > > > index 8127be134c39..ac72b18e2257 100644
-> > > > > > --- a/drivers/gpu/drm/drm_probe_helper.c
-> > > > > > +++ b/drivers/gpu/drm/drm_probe_helper.c
-> > > > > > @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct
-> > > > > > drm_device *dev)
-> > > > > >       if (dev->mode_config.poll_running)
-> > > > > >               drm_kms_helper_disable_hpd(dev);
-> > > > > > 
-> > > > > > -     cancel_delayed_work_sync(&dev-
-> > > > > > > mode_config.output_poll_work);
-> > > > > > +     if (dev->mode_config.poll_enabled)
-> > > > > > +             cancel_delayed_work_sync(&dev-
-> > > > > > > mode_config.output_poll_work);
-> > > > > 
-> > > > > Checking for dev->mode_config.poll_enabled at the start of
-> > > > > the
-> > > > > function
-> > > > > and return early if it is not true looks more in style with
-> > > > > the
-> > > > > rest of
-> > > > > drm_probe_helper.c.
-> > > > 
-> > > > I think it is an error to call drm_kms_helper_poll_disable() if
-> > > > polling was not initialized. So, in my opinion the fix should
-> > > > go to
-> > > > the drm_mode_config_helper_suspend() / _resume() instead.
-> > > > Please
-> > > > add a
-> > > > guard there using dev->mode_config.poll_enabled.
-> > > 
-> > > While I tend to agree to the sentiment I do not think this is the
-> > > correct fix in this situation. drm_kms_helper_poll_disable had
-> > > the
-> > > check since at least 2014. a4e771729a51 is a regression. If we
-> > > want
-> > > to
-> > > change the behavior it should be done explicitly and after
-> > > verifying
-> > > all
-> > > drm_kms_helper_poll_disable() calls.
-> > > 
-> > > #regzbot ^introduced a4e771729a51
-> > > 
-> > > ciao
-> > > Janne
-> > 
-> > Dear Janne:
-> > 
-> > I agree with you like I mentioned on last letter.
-> > Thanks for your time.
-> > 
-> > 
-> > Dear Dmitry:
-> > 
-> > Is there anything else I can do?
-> > Looking forward to your reply.
-> 
-> If it is a common consensus, I'm fine with your approach.
-> 
-Dear Dmitry:
+On 4/26/2023 6:14 PM, Ding Hui wrote:
+> Hi Tony Nguyen,
+> the patches is already applied to your dev-queue branch, should I send
+> v3 or you can fix it in your git?
 
-Ok.Thanks for your reply.
+An updated v3 would be great.
 
-Best regards!
+Thanks,
+Tony
