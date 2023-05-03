@@ -2,96 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CD6C77B73
-	for <linux-hardening@archiver.kernel.org>; Mon,  1 May 2023 07:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9516DC77B75
+	for <linux-hardening@archiver.kernel.org>; Wed,  3 May 2023 03:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232238AbjEAHla (ORCPT
+        id S229633AbjECDQZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 1 May 2023 03:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39828 "EHLO
+        Tue, 2 May 2023 23:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231755AbjEAHl3 (ORCPT
+        with ESMTP id S229618AbjECDQY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 1 May 2023 03:41:29 -0400
+        Tue, 2 May 2023 23:16:24 -0400
 Received: from mail-m11876.qiye.163.com (mail-m11876.qiye.163.com [115.236.118.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295F61B9;
-        Mon,  1 May 2023 00:41:24 -0700 (PDT)
-Received: from [IPV6:240e:3b7:327f:5c30:7d8b:c3e:1a47:99e8] (unknown [IPV6:240e:3b7:327f:5c30:7d8b:c3e:1a47:99e8])
-        by mail-m11876.qiye.163.com (Hmail) with ESMTPA id 101163C021F;
-        Mon,  1 May 2023 15:41:17 +0800 (CST)
-Message-ID: <730cf5ed-2239-34f7-79a5-ffa4d9bb8fae@sangfor.com.cn>
-Date:   Mon, 1 May 2023 15:41:18 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH net v3 1/2] iavf: Fix use-after-free in free_netdev
-To:     Simon Horman <simon.horman@corigine.com>
-Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 877C6AD;
+        Tue,  2 May 2023 20:16:22 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPV6:240e:3b7:327f:5c30:95e8:3d27:11c5:1ee8])
+        by mail-m11876.qiye.163.com (Hmail) with ESMTPA id 7D4DC3C0234;
+        Wed,  3 May 2023 11:16:14 +0800 (CST)
+From:   Ding Hui <dinghui@sangfor.com.cn>
+To:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
         pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        keescook@chromium.org, grzegorzx.szczurek@intel.com,
+        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com
+Cc:     keescook@chromium.org, grzegorzx.szczurek@intel.com,
         mateusz.palczewski@intel.com, mitch.a.williams@intel.com,
         gregory.v.rose@intel.com, jeffrey.t.kirsher@intel.com,
-        michal.kubiak@intel.com, madhu.chittim@intel.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, pengdonglin@sangfor.com.cn,
-        huangcun@sangfor.com.cn
-References: <20230429132022.31765-1-dinghui@sangfor.com.cn>
- <20230429132022.31765-2-dinghui@sangfor.com.cn>
- <ZE9j4CHtQbm5S3cg@corigine.com>
-From:   Ding Hui <dinghui@sangfor.com.cn>
-In-Reply-To: <ZE9j4CHtQbm5S3cg@corigine.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        michal.kubiak@intel.com, simon.horman@corigine.com,
+        madhu.chittim@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        pengdonglin@sangfor.com.cn, huangcun@sangfor.com.cn,
+        Ding Hui <dinghui@sangfor.com.cn>
+Subject: [PATCH net v4 0/2] iavf: Fix issues when setting channels concurrency with removing
+Date:   Wed,  3 May 2023 11:15:39 +0800
+Message-Id: <20230503031541.27855-1-dinghui@sangfor.com.cn>
+X-Mailer: git-send-email 2.17.1
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSUNNVh1LTx5KH0gaHU4YQlUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUlPSx5BSBlMQUhJTB1BThhIS0FMH0MZQRhIHkFKGk9MQUJCHkNZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hKTFVKS0tVS1kG
-X-HM-Tid: 0a87d6423c432eb2kusn101163c021f
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCHUlCVh1KHU9CTkpPSUpMHVUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUlPSx5BSBlMQUhJTB1BThhIS0FCTh5DQUgfSUxBSkoYTkFKHh5DWVdZFhoPEhUdFF
+        lBWU9LSFVKSktISkxVSktLVUtZBg++
+X-HM-Tid: 0a87df9c4c802eb2kusn7d4dc3c0234
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N006Shw4KD0RCkIaHBQ5FA4I
-        HT4KFBpVSlVKTUNJQklNQ0xDSkhPVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
-        QVlJT0seQUgZTEFISUwdQU4YSEtBTB9DGUEYSB5BShpPTEFCQh5DWVdZCAFZQUhOT0M3Bg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N0k6Tgw6CD0OAToTMB8XQgIK
+        DkoaFC1VSlVKTUNIS0NITExOTkpIVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
+        QVlJT0seQUgZTEFISUwdQU4YSEtBQk4eQ0FIH0lMQUpKGE5BSh4eQ1lXWQgBWUFIS09ONwY+
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023/5/1 15:01, Simon Horman wrote:
-> On Sat, Apr 29, 2023 at 09:20:21PM +0800, Ding Hui wrote:
->> We do netif_napi_add() for all allocated q_vectors[], but potentially
->> do netif_napi_del() for part of them, then kfree q_vectors and leave
->> invalid pointers at dev->napi_list.
->>
->> ...
->>
->> Although the patch #2 (of 2) can avoid the issuse triggered by this
->> repro.sh, there still are other potential risks that if num_active_queues
->> is changed to less than allocated q_vectors[] by unexpected, the
->> mismatched netif_napi_add/del() can also casue UAF.
-> 
-> nit: ./checkpatch --codespell tells me:
-> 
->       s/casue/cause/
-> 
+The patchset fix two issues which can be reproduced by the following script:
 
-Sorry, I'll fix it in v4.
+[root@host ~]# cat repro.sh
+#!/bin/bash
 
->> Since we actually call netif_napi_add() for all allocated q_vectors
->> unconditionally in iavf_alloc_q_vectors(), so we should fix it by
->> letting netif_napi_del() match to netif_napi_add().
->>
->> Fixes: 5eae00c57f5e ("i40evf: main driver core")
->> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
->> Cc: Donglin Peng <pengdonglin@sangfor.com.cn>
->> Cc: Huang Cun <huangcun@sangfor.com.cn>
->> Reviewed-by: Simon Horman <simon.horman@corigine.com>
->> Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
->> Reviewed-by: Madhu Chittim <madhu.chittim@intel.com>
-> 
-> 
-> 
+pf_dbsf="0000:41:00.0"
+vf0_dbsf="0000:41:02.0"
+g_pids=()
+
+function do_set_numvf()
+{
+    echo 2 >/sys/bus/pci/devices/${pf_dbsf}/sriov_numvfs
+    sleep $((RANDOM%3+1))
+    echo 0 >/sys/bus/pci/devices/${pf_dbsf}/sriov_numvfs
+    sleep $((RANDOM%3+1))
+}
+
+function do_set_channel()
+{
+    local nic=$(ls -1 --indicator-style=none /sys/bus/pci/devices/${vf0_dbsf}/net/)
+    [ -z "$nic" ] && { sleep $((RANDOM%3)) ; return 1; }
+    ifconfig $nic 192.168.18.5 netmask 255.255.255.0
+    ifconfig $nic up
+    ethtool -L $nic combined 1
+    ethtool -L $nic combined 4
+    sleep $((RANDOM%3))
+}
+
+function on_exit()
+{
+    local pid
+    for pid in "${g_pids[@]}"; do
+        kill -0 "$pid" &>/dev/null && kill "$pid" &>/dev/null
+    done
+    g_pids=()
+}
+
+trap "on_exit; exit" EXIT
+
+while :; do do_set_numvf ; done &
+g_pids+=($!)
+while :; do do_set_channel ; done &
+g_pids+=($!)
+
+wait
+
+
+Ding Hui (2):
+  iavf: Fix use-after-free in free_netdev
+  iavf: Fix out-of-bounds when setting channels on remove
+
+ drivers/net/ethernet/intel/iavf/iavf_ethtool.c | 4 +++-
+ drivers/net/ethernet/intel/iavf/iavf_main.c    | 6 +-----
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
 -- 
-Thanks,
--dinghui
+2.17.1
 
