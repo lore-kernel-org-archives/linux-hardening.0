@@ -2,61 +2,62 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D521C7EE21
-	for <linux-hardening@archiver.kernel.org>; Thu,  4 May 2023 11:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F38C7EE23
+	for <linux-hardening@archiver.kernel.org>; Thu,  4 May 2023 11:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbjEDL0h (ORCPT
+        id S230052AbjEDL1K (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 4 May 2023 07:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46922 "EHLO
+        Thu, 4 May 2023 07:27:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230172AbjEDL0Y (ORCPT
+        with ESMTP id S230244AbjEDL0z (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 4 May 2023 07:26:24 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FE155AC
-        for <linux-hardening@vger.kernel.org>; Thu,  4 May 2023 04:26:20 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50bd37ca954so16235420a12.0
-        for <linux-hardening@vger.kernel.org>; Thu, 04 May 2023 04:26:19 -0700 (PDT)
+        Thu, 4 May 2023 07:26:55 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4643459CD
+        for <linux-hardening@vger.kernel.org>; Thu,  4 May 2023 04:26:50 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-965ac4dd11bso66021166b.2
+        for <linux-hardening@vger.kernel.org>; Thu, 04 May 2023 04:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683199578; x=1685791578;
+        d=linaro.org; s=google; t=1683199608; x=1685791608;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Zmyo4G6LovsSdZQtuaHVKeOOOrmhmVrTkT5aOfQ/+Y4=;
-        b=HVpNPPuaEKdoUXO+6kfA9OIt7pF/YKpDs15LiZYdzFhJrYDQqzxn57qlw9fiQAClnv
-         XRKX2et87KmKv5iG9fY0ikfS2JY6h0whYh3dzuQmb48kkiePI9U+PpG4T6HGo5YUs07s
-         EyMdf26Mew9WXd05xFdMOG9iXAkvM45aKZnGAk/ns0TZr5cezCfTmf4Xr+tSCRiUF/HX
-         IAreRrRl4+r1Xzf0Y+7M4FRi7UffgOxSpjLDN/tRNhLQ9wu793XIeYiBTvBcOFpXpDLR
-         cxRu4lpZ84xRkNO1TXjK9P0QJPHMR58EyNuBXb1Y/DVJAZKK63QLjGF/hfb6xRytQlCb
-         yOSA==
+        bh=wAm0Ms50RBuBQUWsCH7mnryZ0Ty/pL6QPQW4ux5OXOc=;
+        b=jRUeKBTv8reztpv61FqkPmZytNu1CYEVw/5vnkfOVUeU1o6Donl4SmGPXGLUxBpMj4
+         7ScpHla2J1uUjs50HNs5N6fJpt5yc4WFOgooj5gxPR6zB2jw4LLBqcHvY/cKbTEs9yQ1
+         v+cxEhecVPsShzhlzw1MAzGOambO/DT0SW0m3NPurOCaGDU2txwQKQxrGtQhVFRl0GFR
+         cAR9teT4SUScVl45XQEdDLAQjtS8hQoh3jem27xQrC1cv3VHFCH4qkBs5ZM2K3FMo704
+         0fo5ZQIrqDjYI+IUDcYHKbHz/hWQDD89gGDqNXGVrpb1wn9B8JUsvlrFAX75uTgZMS1M
+         GjQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683199578; x=1685791578;
+        d=1e100.net; s=20221208; t=1683199608; x=1685791608;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zmyo4G6LovsSdZQtuaHVKeOOOrmhmVrTkT5aOfQ/+Y4=;
-        b=D5g2lA2Z9h59fLhL31dw6hdYNjEAcp15R9OxV0Bxraaneoij0oJSwl1lMDgswOLnP5
-         MSUao7/0Rk+7+XqjQQ5R4HORmJgHiCeMbZApLMeijn7+VocOaUlmiK7M4rP9Ch5ITyfL
-         khwGulXCQhsiEvVwA6ebvH1BHsI8meI0PRUIpr57mkkztqKb3EGoXvFTVy6nG2gfYeV3
-         /9BK6vQ82TDql18HGFPxYzAjtmJ22VzZ1hKK7n7UfcNFz0bnBE03D7l/5yaxvYWyLMU7
-         AIwni/DYCt+gTOQe87UBVFGEBq9snwsUAwWjEiAX2JfwAGVCQV7WTjn4+4fG4Ru9Xb76
-         CYqw==
-X-Gm-Message-State: AC+VfDxG2RUVgU4X3TFldU+axe5ztzL5HbbaXwxelkLTpJ9BKUU9B4f3
-        NyOOhoJaAGWZaOV5SBNNcnBYhA==
-X-Google-Smtp-Source: ACHHUZ64m1mvreL/nPay7MR395goTxZZUC9gB4yz0Hu5sHdV4GKpzdJ3VrldZdKfS5ra9BA8uFJMeg==
-X-Received: by 2002:a17:907:1c8f:b0:94f:705e:d9e4 with SMTP id nb15-20020a1709071c8f00b0094f705ed9e4mr5139003ejc.31.1683199578546;
-        Thu, 04 May 2023 04:26:18 -0700 (PDT)
+        bh=wAm0Ms50RBuBQUWsCH7mnryZ0Ty/pL6QPQW4ux5OXOc=;
+        b=Cc6pMw/g6+Ni8rpJUBmnQjWpmu4UPa2HYfiZseMa5JIQDkATPAd04p8bU20+sUC6QG
+         iiloCg1dEClvEKPJ5MiHn/hNUR1bAKX1bjuIBL4v6vDfBA/JL0wcAcKcRKQ1h1Hf6mKx
+         8JF3bUmTD9zcyLe+C1Tdm9jFe5bxUjS2V1j0TI6wwZNJgEXHh5a+GHmlELy2KxYEIhdk
+         WpU5+FdihSCeqazEKki6FLhvhTLYjlhmVLP8bCLEb9dMaGAA1Hbsc9wTPvCfXZXD1Txp
+         usQXL+xPb1vEkjr2kZcGtfofPJbCz0snCezC8oXhNdsO2+ILBPR8wrWHwItNrTJK3ASI
+         8NNw==
+X-Gm-Message-State: AC+VfDzP3rs0QFIYa1BwtbaAdfeOnEaB5wYalB62m0KjHyhq9Vbsgqxc
+        frB57QLdkb4nCoqbVXk2hI70rw==
+X-Google-Smtp-Source: ACHHUZ5yK2lt/IMYfyS93awRoHs7nxXWC9mxqAyC9zaEYDSGdeRLwFZz8Pe8r/MHRR7wkuU3mMylDQ==
+X-Received: by 2002:a17:907:268a:b0:94f:2020:b5fb with SMTP id bn10-20020a170907268a00b0094f2020b5fbmr5629405ejc.27.1683199608642;
+        Thu, 04 May 2023 04:26:48 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:cbf1:e7ef:fb81:e912? ([2a02:810d:15c0:828:cbf1:e7ef:fb81:e912])
-        by smtp.gmail.com with ESMTPSA id gz9-20020a170907a04900b00965a52d2bf6sm855411ejc.88.2023.05.04.04.26.16
+        by smtp.gmail.com with ESMTPSA id ml12-20020a170906cc0c00b009659c23e78fsm1113658ejb.215.2023.05.04.04.26.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 04:26:17 -0700 (PDT)
-Message-ID: <ac0555ff-b294-e3ea-5aa0-15e8206c8013@linaro.org>
-Date:   Thu, 4 May 2023 13:26:16 +0200
+        Thu, 04 May 2023 04:26:48 -0700 (PDT)
+Message-ID: <a7f0b4e6-0594-024a-b416-fe778eee16fe@linaro.org>
+Date:   Thu, 4 May 2023 13:26:46 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.1
-Subject: Re: [PATCH v3 00/18] Add basic Minidump kernel driver support
+Subject: Re: [PATCH v3 11/18] arm64: dts: qcom: sm8450: Add Qualcomm ramoops
+ minidump node
 Content-Language: en-US
 To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
         andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
@@ -69,8 +70,9 @@ Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-12-git-send-email-quic_mojha@quicinc.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+In-Reply-To: <1683133352-10046-12-git-send-email-quic_mojha@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -78,21 +80,28 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 On 03/05/2023 19:02, Mukesh Ojha wrote:
-> Minidump is a best effort mechanism to collect useful and predefined data
-> for first level of debugging on end user devices running on Qualcomm SoCs.
-> It is built on the premise that System on Chip (SoC) or subsystem part of
-> SoC crashes, due to a range of hardware and software bugs. Hence, the
-> ability to collect accurate data is only a best-effort. The data collected
-> could be invalid or corrupted, data collection itself could fail, and so on.
+> This enable dynamic reserve memory for Qualcomm ramoops device,
+> Which will used to save ramoops frontend data and this region
+> gets dumped on crash via Qualcomm's minidump infrastructure.
+> qcom_pstore_minidump is the associated driver for this node.
+> 
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8450.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8450.dtsi b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> index 595533a..92d023f 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8450.dtsi
+> @@ -614,6 +614,17 @@
+>  			reg = <0x0 0xed900000 0x0 0x3b00000>;
+>  			no-map;
+>  		};
+> +
+> +		qcom_ramoops_md_region:qcom_ramoops_md {
 
-You organized the patch in a way making it very hard for us to review. I
-see mixed remoteproc, then soc, then defconfig (!!!), then remote proc,
-then soc, then bindings (! they must be before usage...), then dts
-(which should be the last), then soc then dts then... You see the point.
-
-Bindings, docs, changes organized by subsystem. Then DTS as separate
-patchset with a link to this one. If you have bisectability issues then
-it's a hint something is wrongly organized or done and must be fixed anyway.
+No underscores in node names. Didn't we talk about this?
 
 Best regards,
 Krzysztof
