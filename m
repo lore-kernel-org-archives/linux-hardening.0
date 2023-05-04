@@ -2,151 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BDBC7619A
-	for <linux-hardening@archiver.kernel.org>; Sun,  2 Apr 2023 21:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54C4C77B7C
+	for <linux-hardening@archiver.kernel.org>; Thu,  4 May 2023 14:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbjDBVvY (ORCPT
+        id S231210AbjEDORA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 2 Apr 2023 17:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
+        Thu, 4 May 2023 10:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjDBVvX (ORCPT
+        with ESMTP id S229948AbjEDOQ6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 2 Apr 2023 17:51:23 -0400
-X-Greylist: delayed 334 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 02 Apr 2023 14:51:21 PDT
-Received: from hera.aquilenet.fr (hera.aquilenet.fr [IPv6:2a0c:e300::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E44477299
-        for <linux-hardening@vger.kernel.org>; Sun,  2 Apr 2023 14:51:21 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by hera.aquilenet.fr (Postfix) with ESMTP id B22EC3D0
-        for <linux-hardening@vger.kernel.org>; Sun,  2 Apr 2023 23:45:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at hera.aquilenet.fr
-Received: from hera.aquilenet.fr ([127.0.0.1])
-        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id eqQeLLVWKQtL for <linux-hardening@vger.kernel.org>;
-        Sun,  2 Apr 2023 23:45:43 +0200 (CEST)
-Received: from begin (unknown [IPv6:2a01:cb19:4a:a400:de41:a9ff:fe47:ec49])
-        by hera.aquilenet.fr (Postfix) with ESMTPSA id 2E693AF
-        for <linux-hardening@vger.kernel.org>; Sun,  2 Apr 2023 23:45:43 +0200 (CEST)
-Received: from samy by begin with local (Exim 4.96)
-        (envelope-from <samuel.thibault@aquilenet.fr>)
-        id 1pj5WA-00Apfd-2j
-        for linux-hardening@vger.kernel.org;
-        Sun, 02 Apr 2023 23:45:42 +0200
-Received: from webmel.u-bordeaux.fr [147.210.215.28]
-        by begin.youpi.perso.aquilenet.fr with IMAP (fetchmail-6.4.37)
-        for <samy@localhost> (single-drop); Sat, 01 Apr 2023 08:25:30 +0200 (CEST)
-Received: from v-zimboxp12.srv.u-bordeaux.fr (LHLO
- v-zimboxp12.srv.u-bordeaux.fr) (147.210.219.112) by
- v-zimboxp12.srv.u-bordeaux.fr with LMTP; Sat, 1 Apr 2023 08:25:29 +0200
- (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by v-zimboxp12.srv.u-bordeaux.fr (Postfix) with ESMTP id DD69FC0AA0
-        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:28 +0200 (CEST)
-Received: from v-zimboxp12.srv.u-bordeaux.fr ([127.0.0.1])
-        by localhost (v-zimboxp12.srv.u-bordeaux.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id AFZpRooWBhVM for <samuel.thibault@u-bordeaux.fr>;
-        Sat,  1 Apr 2023 08:25:28 +0200 (CEST)
-Received: from mta-in02.u-bordeaux.fr (mta-in02.u-bordeaux.fr [147.210.215.18])
-        by v-zimboxp12.srv.u-bordeaux.fr (Postfix) with ESMTPS id F2235C2275
-        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:27 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mta-in02.u-bordeaux.fr (Postfix) with ESMTP id E0C2CFADA1
-        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:27 +0200 (CEST)
-Received: from mta-in02.u-bordeaux.fr ([127.0.0.1])
-        by localhost (mta-in02.u-bordeaux.fr [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id OdTOiQXWa6rW for <samuel.thibault@u-bordeaux.fr>;
-        Sat,  1 Apr 2023 08:25:27 +0200 (CEST)
-Received: from sonata.ens-lyon.org (sonata.ens-lyon.org [140.77.166.138])
-        by mta-in02.u-bordeaux.fr (Postfix) with ESMTPS id 7C191FADA0
-        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:27 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by sonata.ens-lyon.org (Postfix) with ESMTP id 3083A20156
-        for <samuel.thibault@u-bordeaux.fr>; Sat,  1 Apr 2023 08:25:26 +0200 (CEST)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oUvD67gVriIC for <samuel.thibault@u-bordeaux.fr>;
-        Sat,  1 Apr 2023 08:25:26 +0200 (CEST)
-X-policyd-weight: using cached result; rate: -6.1
-Received: from nimbus1.mmprivatehosting.com (nimbus1.mmprivatehosting.com [54.208.90.49])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by sonata.ens-lyon.org (Postfix) with ESMTPS id 1CAB120154
-        for <Samuel.Thibault@ens-lyon.org>; Sat,  1 Apr 2023 08:25:24 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by nimbus1.mmprivatehosting.com (Postfix) with ESMTP id BA80B60034;
-        Sat,  1 Apr 2023 06:25:24 +0000 (UTC)
-X-Virus-Scanned: amavis at mmprivatehosting.com
-Received: from dave.mielke.cc (unknown [174.116.27.113])
-        (Authenticated sender: relay@dave.mielke.cc)
-        by nimbus1.mmprivatehosting.com (Postfix) with ESMTPA;
-        Sat,  1 Apr 2023 06:25:24 +0000 (UTC)
-Received: from beta.private.mielke.cc (beta.private.mielke.cc [192.168.0.2])
-        by dave.mielke.cc (Postfix) with ESMTPS id 4BA8148E;
-        Sat,  1 Apr 2023 02:25:22 -0400 (EDT)
-Received: from beta.private.mielke.cc (localhost [127.0.0.1])
-        by beta.private.mielke.cc (8.17.1/8.15.2) with ESMTPS id 3316PLDh004836
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Sat, 1 Apr 2023 02:25:21 -0400
-Received: (from dave@localhost)
-        by beta.private.mielke.cc (8.17.1/8.17.1/Submit) id 3316PLs2004835;
-        Sat, 1 Apr 2023 02:25:21 -0400
-Date:   Sat, 1 Apr 2023 02:25:21 -0400
-From:   Dave Mielke <Dave@mielke.cc>
-To:     Linux Kernel Mailing List 
-        <linux-kernel%40vger.kernel.org@beta.private.mielke.cc>
-Cc:     Samuel Thibault <Samuel.Thibault@ens-lyon.org>
-Subject: The regrettable demise of the TIOCSTI ioctl.
-Message-ID: <ZCfOUSZ87LaBVjq7@beta.private.mielke.cc>
+        Thu, 4 May 2023 10:16:58 -0400
+X-Greylist: delayed 902 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 04 May 2023 07:16:57 PDT
+Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7F88A68
+        for <linux-hardening@vger.kernel.org>; Thu,  4 May 2023 07:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
+        q=dns/txt; i=@phytec.de; t=1683208913; x=1685800913;
+        h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/jhHcFJ1LJ1W+GNxuQ4Xu89JZAN9lv1YtQk70nLZhYg=;
+        b=KbnkbKv1o2EtOnTBGYsM8AxL1zbPUpKPNMicgIkPwhMC0ePhDQjrhrwkGvIf57dw
+        W/5SI8H0vvbayuVQK+kA28emst2RIpiSOYFsu54zQpeVuP3lcAPqeJPzb076wFd3
+        1ivkmGdK/KKYBMdzlAIKPBWT1Wl2fG+ewYi7bT/sKyg=;
+X-AuditID: ac14000a-923ff70000007ecb-c6-6453bad1c0cc
+Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
+        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client did not present a certificate)
+        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 20.DD.32459.1DAB3546; Thu,  4 May 2023 16:01:53 +0200 (CEST)
+Received: from augenblix2.phytec.de (172.25.0.11) by Berlix.phytec.de
+ (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Thu, 4 May
+ 2023 16:01:53 +0200
+From:   Wadim Egorov <w.egorov@phytec.de>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-hardening@vger.kernel.org>
+CC:     <upstream@lists.phytec.de>, <nm@ti.com>, <vigneshr@ti.com>,
+        <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>
+Subject: [PATCH 1/2] dt-bindings: arm: ti: Add bindings for PHYTEC AM62x based hardware
+Date:   Thu, 4 May 2023 16:01:42 +0200
+Message-ID: <20230504140143.1425951-1-w.egorov@phytec.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/2.1.5 (2021-12-30)
-X-Rspamd-Queue-Id: 7C191FADA0
-X-Rspamd-Action: no action
-X-Rspamd-Server: mta-in02
-X-Spamd-Result: default: False [0.01 / 15.00];
-        BAYES_HAM(-2.99)[99.97%];
-        FORGED_RECIPIENTS(2.00)[m:linux-kernel%40vger.kernel.org@beta.private.mielke.cc,m:Samuel.Thibault@ens-lyon.org,s:samuel.thibault@u-bordeaux.fr];
-        MID_RHS_MATCH_TO(1.00)[];
-        FORGED_SENDER(0.30)[Dave@mielke.cc,SRS0=8uky=7Y=mielke.cc=dave@bounce.ens-lyon.org];
-        R_SPF_ALLOW(-0.20)[+a:sonata.ens-lyon.org];
-        MIME_GOOD(-0.10)[text/plain];
-        R_DKIM_NA(0.00)[];
-        ASN(0.00)[asn:1945, ipnet:140.77.0.0/16, country:EU];
-        NEURAL_HAM(-0.00)[-0.761];
-        FROM_NEQ_ENVFROM(0.00)[Dave@mielke.cc,SRS0=8uky=7Y=mielke.cc=dave@bounce.ens-lyon.org];
-        MIME_TRACE(0.00)[0:+];
-        RCPT_COUNT_TWO(0.00)[2];
-        MID_RHS_MATCH_FROMTLD(0.00)[];
-        RCVD_COUNT_SEVEN(0.00)[9];
-        RCVD_VIA_SMTP_AUTH(0.00)[];
-        TO_DN_ALL(0.00)[];
-        ARC_NA(0.00)[];
-        DMARC_NA(0.00)[mielke.cc];
-        FROM_HAS_DN(0.00)[];
-        RCVD_TLS_LAST(0.00)[]
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.25.0.11]
+X-ClientProxiedBy: Berlix.phytec.de (172.25.0.12) To Berlix.phytec.de
+ (172.25.0.12)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBLMWRmVeSWpSXmKPExsWyRpKBR/firuAUgwcvZSzmHznHajHv/GF2
+        izPduRbLP89mt+h78ZDZYtPja0Dx9T8ZLS7vmsNm8ebHWSaL1r1H2C3eXLjHYtH9Tt3i/9kP
+        7A68HrMbLrJ4TJjdzeaxeM9LJo9NqzrZPO5c28PmsXlJvUd/dwurx/Eb25k8Pm+SC+CM4rJJ
+        Sc3JLEst0rdL4Mo4+SOx4C9bxaq7W5gaGNexdjFycEgImEi0TK7uYuTkEBJYwiSx6LFSFyMX
+        kP2YUeLX2ZvsIAk2AXWJOxu+sYLYIgK9jBJnWgpBipgFbjNKbF6ygw0kISwQLvHi3n4wm0VA
+        RWL7s9dgNq+ApcT923vAbAkBeYmZl76zQ8QFJU7OfMICYjMDxZu3zmaGsCUkDr54wQxxkbzE
+        i0vLWWB6p517zQxhh0ps/bKdaQKjwCwko2YhGTULyagFjMyrGIVyM5OzU4sys/UKMipLUpP1
+        UlI3MYJiR4SBawdj3xyPQ4xMHIyHGCU4mJVEeD8U+qUI8aYkVlalFuXHF5XmpBYfYpTmYFES
+        573fw5QoJJCeWJKanZpakFoEk2Xi4JRqYJz+MSzh1jNhgYYzqT+lr3w2qXfZJR/eVvJ0u9fi
+        NduW/uurz1h7S/KTFMd3l8t7G7bkqKpt3Oz0mXW6ssuzuojeoyFbHXPy/KOOaWqLpl24d7hD
+        65/XZo3l39ziO2ceUD4dzWzbwyHsff6G/JO512VP2e3LcJH9pnDsh398imOw2KyfhgaPniix
+        FGckGmoxFxUnAgBl/Fz4iwIAAA==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-It seems that, starting in the 6.2 kernel (I think), there's a move underway to get rid of the TIOCSTI ioctl. The fact that the kernel configuration information says "provides no meaningful real-world utility any more" shows that the kernel developers seem to be unaware of an important subset of their users who absolutely depend on TIOCSTI.
+Add devicetree bindings for AM62x based phyCORE-AM62 SoM
+and phyBOARD-Lyra RDK.
 
-By removing TIOCSTI, you have broken several users' *ability* to work at all with their current hardware!
+Signed-off-by: Wadim Egorov <w.egorov@phytec.de>
+---
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-The users I'm referring to are those who rely on their ability to work productively with braille devices. They use BRLTTY (see brltty.app). Most braille devices, these days, have braille keyboards. BRLTTY interprets what its users type on those braille keyboards, and uses TIOCSTI to inject those characters. Since I'm unaware of any adequate replacement for TIOCSTI, I'm asking (begging?) that this ioctl please be NOT removed.
-
-Even disablign it isn't good because a blind user who relies on his/her braille keyboard won't be able to fix the problem by logging in and issuing the needed sysctl command (try imagining how you'd do that without your keyboard). We could distribute a brltty.conf sysctl.d file, but that isn't a great idea either given that, in
-the end, it'd end up being run on all systems since BRLTTY is generally distributed.
-
-Please understand that it simply isn't true at all that TIOCSTI has no practical use these days. It most certainly does!
-
-Thanks for at least hearing me out.
-
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index e1183f90bb06..254b5ec51f34 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -25,6 +25,12 @@ properties:
+               - ti,am62a7-sk
+           - const: ti,am62a7
+ 
++      - description: K3 AM625 SoC PHYTEC phyBOARD-Lyra
++        items:
++          - const: phytec,am625-phyboard-lyra-rdk
++          - const: phytec,am62-phycore-som
++          - const: ti,am625
++
+       - description: K3 AM625 SoC
+         items:
+           - enum:
 -- 
-I believe the Bible to be the very Word of God: http://Mielke.cc/bible/
-Dave Mielke            | 2213 Fox Crescent | WebHome: http://Mielke.cc/
-EMail: Dave@Mielke.cc  | Ottawa, Ontario   | Twitter: @Dave_Mielke
-Phone: +1 613 726 0014 | Canada  K2A 1H7   |
+2.25.1
 
