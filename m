@@ -2,60 +2,60 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0DCC77B7C
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 May 2023 17:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5B7C7EE22
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 May 2023 17:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231852AbjEERSD (ORCPT
+        id S232648AbjEERbU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 May 2023 13:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
+        Fri, 5 May 2023 13:31:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230297AbjEERSC (ORCPT
+        with ESMTP id S232583AbjEERbS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 May 2023 13:18:02 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AB8CAD02
-        for <linux-hardening@vger.kernel.org>; Fri,  5 May 2023 10:18:01 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-51f7638a56fso1567821a12.3
-        for <linux-hardening@vger.kernel.org>; Fri, 05 May 2023 10:18:01 -0700 (PDT)
+        Fri, 5 May 2023 13:31:18 -0400
+Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204251A1F9
+        for <linux-hardening@vger.kernel.org>; Fri,  5 May 2023 10:31:17 -0700 (PDT)
+Received: by mail-pg1-x54a.google.com with SMTP id 41be03b00d2f7-5187bd3d365so1434211a12.3
+        for <linux-hardening@vger.kernel.org>; Fri, 05 May 2023 10:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683307081; x=1685899081;
+        d=google.com; s=20221208; t=1683307876; x=1685899876;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SxwNvfp9yRlruqDpvJxkAnrRtCk6mE67Bd3BubjypxQ=;
-        b=cXXc3M6yYogaCUYe2c+SrQc2MIdAmLJbXRkHUS9zG7xhw6MiEu2sitOw7/Gs8N+qYL
-         oXgYeStpeUI6b4JASS0HSftlcCCRj/X7n1N9WbKprVd/yNpe36+Ro8ZtPUj3p6Ld50JH
-         pqxQnHXwImJi8vy3sHQBgx80mx2LtgRBbImqJGjt3ifJhQvYtGUkTdTjALM0pcmAV+1D
-         6vpr8yMdnFBHG32elxIu/SKRWE8X5JKVIrtIk1RplILzJzkSNycRYJAr+Iqs6tbgmR/S
-         ugGjoODz+nslHOA/c91Rz89LssATB8IAOjXVho0NUWdysNmyIv7F6uQ3Fm1u7pfzIzFf
-         Lo4A==
+        bh=qAOxuvlzoNXvPjKXSolx+GWj91lIdWlZPd2J+lepu+A=;
+        b=YajfbfW6/wtHmrsLEvn1JkH+xI6N003d6IHsKYEdYKyQ4XBOf/ltXYAA8TT//7kx7h
+         8wJuT8QRTxgAHxrmJYouhI/7YgQTZm4mO10KjPCgeJdJMeuE5+h/bLiahSr81Gm/ecKB
+         zDx4TcPrzUJvkSrnc51y29YU+lehMTLTirJ8zF6Y7AvgQTUcfYtQ37OJnKLDHV7h0smL
+         PJn351waqBTnvLrthFCgyYl4ojqlUIUMdMZ9mvD3/1gMVpPtasu86bb2kRnLpCKWJhO/
+         k73RbTIykvnJHtRsAnnJa8Km60QZxDXHqCZ+6V04mHM7fIYa6vKKdRMKt3CdepgXl1bi
+         CXtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683307081; x=1685899081;
+        d=1e100.net; s=20221208; t=1683307876; x=1685899876;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=SxwNvfp9yRlruqDpvJxkAnrRtCk6mE67Bd3BubjypxQ=;
-        b=KZFVIG3dmqhV/fG1EVaGEORkBNb4rmrKhLv9u4MXG+wRF5vkPpt46z5B0dFXXLlHHd
-         dqm+mzorhnVJ5eyaSyO8qEwdUYfcSrvL9ORLaieSmyKoLvUX4OqAAPj0ri6tmsyUyx6n
-         QQvGGJTLXj7c1UxqAC3bQJpJJNCiCRWkWKovC3zp0TokPSc4WLM9QN7k5zXcZ+gMa2Cy
-         chXAu3eeCrZQGx/NBlMhD08jo7RQ4rP+LFFIxTRpc6/qvjcroVxLGeiGBmncv36/3M6t
-         naABIFyP2WIvOW/s67NC1XuM0RFBGWQfNzrNWIkotQQOAbv4TPy6vaUWEmXcNJBppC0c
-         8Q5A==
-X-Gm-Message-State: AC+VfDwCSTwNlpGlJyWNB4b09RuhpQbCI4efOY/iZj1K5wuqXW94svww
-        lGY1pKs2QaYZBs0Rp3mtGEBt+YZqh/Q=
-X-Google-Smtp-Source: ACHHUZ6uHVJCOE/ldx1w0hZ4Jds3kKbtJzThF7Cs+tG2xUZ0aBKcfdgS0+FUqexTD5OeTy31Ux2XqzCsKXc=
+        bh=qAOxuvlzoNXvPjKXSolx+GWj91lIdWlZPd2J+lepu+A=;
+        b=fj7vw1xqnq7s01ysdAyfjHdczanextI5TP5VGRMUcnvALjcwjIDmaQk3PSt0WFY4gG
+         YEx2mXrDlAranDUeDekTSiJyYDo+ZdAizCUjpC7gXOV2OQDifvk7HeWoV9Opw9fygmmy
+         nqk1sO2NcjLWceC6P4d0jjDvli8/WTDqz8kcSZ6/Sndn4s2wAHlRyVMBNMOl1g3TkiBY
+         XJNfKNEN5zQOZ/RLB0h4l1Pjqd67Zzq1iQj+A+alByQM34DSHtK74RCa56Kx0prgDH9E
+         F5GfrTC8M1A0dVZJSjNObArD1m+xFmxUs2crYP+8RIX/xZxgRuzWSsHGDVEQIDpEVcfX
+         DRMQ==
+X-Gm-Message-State: AC+VfDxmDm/9euw/Cpy+KisgDtWu/nJ3ck4ERHmLHeT7WU/p8XpACvQR
+        NnC5yrFvLmqtTPudoVDxVwYlBRSjzTs=
+X-Google-Smtp-Source: ACHHUZ5AKtrEhFxY1tyiq165vY9w3gn7Qqc7+wcBsvMx8OszEeBENNSnTQn/dNy8sL8BRZ1pG6YlJeRQjuk=
 X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a63:8ac1:0:b0:513:efd4:d76 with SMTP id
- y184-20020a638ac1000000b00513efd40d76mr529931pgd.5.1683307080808; Fri, 05 May
- 2023 10:18:00 -0700 (PDT)
-Date:   Fri, 5 May 2023 10:17:59 -0700
-In-Reply-To: <39125b11-659f-35f4-ac7a-a3ba31365950@digikod.net>
+ (user=seanjc job=sendgmr) by 2002:a63:152:0:b0:52c:407a:2279 with SMTP id
+ 79-20020a630152000000b0052c407a2279mr529292pgb.0.1683307876644; Fri, 05 May
+ 2023 10:31:16 -0700 (PDT)
+Date:   Fri, 5 May 2023 10:31:15 -0700
+In-Reply-To: <6412bf27-4d05-eab8-3db1-d4efa44af3aa@digikod.net>
 Mime-Version: 1.0
-References: <20230505152046.6575-1-mic@digikod.net> <20230505152046.6575-5-mic@digikod.net>
- <ZFUyhPuhtMbYdJ76@google.com> <39125b11-659f-35f4-ac7a-a3ba31365950@digikod.net>
-Message-ID: <ZFU6R2pZ0Vx5RpAj@google.com>
-Subject: Re: [PATCH v1 4/9] KVM: x86: Add new hypercall to set EPT permissions
+References: <20230505152046.6575-1-mic@digikod.net> <20230505152046.6575-3-mic@digikod.net>
+ <ZFUumGdZDNs1tkQA@google.com> <6412bf27-4d05-eab8-3db1-d4efa44af3aa@digikod.net>
+Message-ID: <ZFU9YzqG/T+Ty9gY@google.com>
+Subject: Re: [PATCH v1 2/9] KVM: x86/mmu: Add support for prewrite page tracking
 From:   Sean Christopherson <seanjc@google.com>
 To:     "=?iso-8859-1?Q?Micka=EBl_Sala=FCn?=" <mic@digikod.net>
 Cc:     Borislav Petkov <bp@alien8.de>,
@@ -94,74 +94,50 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 On Fri, May 05, 2023, Micka=EF=BF=BDl Sala=EF=BF=BDn wrote:
 >=20
-> On 05/05/2023 18:44, Sean Christopherson wrote:
-> > On Fri, May 05, 2023, Micka=EF=BF=BDl Sala=EF=BF=BDn wrote:
-> > > Add a new KVM_HC_LOCK_MEM_PAGE_RANGES hypercall that enables a guest =
-to
-> > > set EPT permissions on a set of page ranges.
+> On 05/05/2023 18:28, Sean Christopherson wrote:
+> > I have no doubt that we'll need to solve performance and scaling issues=
+ with the
+> > memory attributes implementation, e.g. to utilize xarray multi-range su=
+pport
+> > instead of storing information on a per-4KiB-page basis, but AFAICT, th=
+e core
+> > idea is sound.  And a very big positive from a maintenance perspective =
+is that
+> > any optimizations, fixes, etc. for one use case (CoCo vs. hardening) sh=
+ould also
+> > benefit the other use case.
 > >=20
-> > IMO, manipulation of protections, both for memory (this patch) and CPU =
-state
-> > (control registers in the next patch) should come from userspace.  I ha=
-ve no
-> > objection to KVM providing plumbing if necessary, but I think userspace=
- needs to
-> > to have full control over the actual state.
+> > [1] https://lore.kernel.org/all/20230311002258.852397-22-seanjc@google.=
+com
+> > [2] https://lore.kernel.org/all/Y2WB48kD0J4VGynX@google.com
+> > [3] https://lore.kernel.org/all/Y1a1i9vbJ%2FpVmV9r@google.com
 >=20
-> By user space, do you mean the host user space or the guest user space?
-
-Host userspace, a.k.a. the VMM.  Definitely not guest userspace.
-
-> About the guest user space, I see several issues to delegate this kind of
-> control:
-> - These are restrictions only relevant to the kernel.
-> - The threat model is to protect against user space as early as possible.
-> - It would be more complex for no obvious gain.
+> I agree, I used this mechanism because it was easier at first to rely on =
+a
+> previous work, but while I was working on the MBEC support, I realized th=
+at
+> it's not the optimal way to do it.
 >=20
-> This patch series is an extension of the kernel self-protections mechanis=
-ms,
-> and they are not configured by user space.
->=20
->=20
-> >=20
-> > One of the things that caused Intel's control register pinning series t=
-o stall
-> > out was how to handle edge cases like kexec() and reboot.  Deferring to=
- userspace
-> > means the kernel doesn't need to define policy, e.g. when to unprotect =
-memory,
-> > and avoids questions like "should userspace be able to overwrite pinned=
- control
-> > registers".
->=20
-> The idea is to authenticate every changes. For kexec, the VMM (or somethi=
-ng
-> else) would have to authenticate the new kernel. Do you have something el=
-se
-> in mind that could legitimately require such memory or CR changes?
+> I was thinking about using a new special EPT bit similar to
+> EPT_SPTE_HOST_WRITABLE, but it may not be portable though. What do you
+> think?
 
-I think we're on the same page, the VMM (host userspace) would need to ack =
-any
-changes.
+On x86, SPTEs are even more ephemeral than memslots.  E.g. for historical r=
+easons,
+KVM zaps all SPTEs if _any_ memslot is deleted, which is problematic if the=
+ guest
+is moving around BARs, using option ROMs, etc.
 
-FWIW, SMM is another wart as entry to SMM clobbers CRs.  Now that CONFIG_KV=
-M_SMM
-is a thing, the easiest solution would be to disallow coexistence with SMM,=
- though
-that might not be an option for many use cases (IIUC, QEMU-based deployment=
-s use
-SMM to implement secure boot).
+ARM's pKVM tracks metadata in its stage-2 PTEs, i.e. doesn't need an xarray=
+ to
+otrack attributes, but that works only because pKVM is more privileged than=
+ the
+host kernel, and the shared vs. private memory attribute that pKVM cares ab=
+out
+is very, very restricted in how it can be used and changed.
 
-> > And like the confidential VM use case, keeping userspace in the loop is=
- a big
-> > beneifit, e.g. the guest can't circumvent protections by coercing users=
-pace into
-> > writing to protected memory .
->=20
-> I don't understand this part. Are you talking about the host user space? =
-How
-> the guest could circumvent protections?
-
-Host userspace.  Guest configures a device buffer in write-protected memory=
-, gets
-a host (synthetic) device to write into the memory.
+I tried shoehorning private vs. shared metadata into x86's SPTEs in the pas=
+t, and
+it ended up being a constant battle with the kernel, e.g. page migration, a=
+nd with
+KVM itself, e.g. the above memslot mess.
