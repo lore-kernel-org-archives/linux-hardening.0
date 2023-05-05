@@ -2,112 +2,424 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66B9C77B7C
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 May 2023 13:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9893BC7EE22
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 May 2023 15:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232170AbjEENiV (ORCPT
+        id S232902AbjEEP3j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 May 2023 09:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60864 "EHLO
+        Fri, 5 May 2023 11:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232355AbjEENiU (ORCPT
+        with ESMTP id S232805AbjEEP3g (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 May 2023 09:38:20 -0400
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8642A20744
-        for <linux-hardening@vger.kernel.org>; Fri,  5 May 2023 06:38:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-        q=dns/txt; i=@phytec.de; t=1683293896; x=1685885896;
-        h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wxFL9G0S/t93w0CmIn6+BXOdHjm0l4hb+AZgw9N18gw=;
-        b=jUdQH0lZxkWf7us5n9znI8hkLbqzDq3c888YSRBOD4bA6xtR/+hXqJ4fYV6yjVbr
-        g5kLbm+VjVHLh0aaEycShENNgitYLpFfsW75447aXh1raHLo9/jZ5Vezv++yF/N8
-        fHqf5IvRVfYMwroXRJkm9KCCx9yGyZsQKwWZ//sxs+k=;
-X-AuditID: ac14000a-917fe70000007ecb-db-645506c8124e
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-        (using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 68.F8.32459.8C605546; Fri,  5 May 2023 15:38:16 +0200 (CEST)
-Received: from [172.25.39.28] (172.25.0.11) by Berlix.phytec.de (172.25.0.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Fri, 5 May
- 2023 15:38:14 +0200
-Message-ID: <8db31b08-5a8b-f317-a954-c228a08004a8@phytec.de>
-Date:   Fri, 5 May 2023 15:38:14 +0200
+        Fri, 5 May 2023 11:29:36 -0400
+X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 05 May 2023 08:29:29 PDT
+Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11A011DBB
+        for <linux-hardening@vger.kernel.org>; Fri,  5 May 2023 08:29:29 -0700 (PDT)
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QCZDD5yVJzMqDN2;
+        Fri,  5 May 2023 17:22:04 +0200 (CEST)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QCZDD0z6dzMpxBc;
+        Fri,  5 May 2023 17:22:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1683300124;
+        bh=numFKFwerBzb1GFmju5PzfUy3LvlXvoHGRlXH+KNT+c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aY8puWEd6eYwOhiBC5f3v2W8STDFR1ws5t4KGxnuMkV/veHF5dk9ikWYLtZACCzKL
+         ZZHQs/vJJkdeZe4WGYydF7qoNq+EgiNGsn5zsfWYHRSGNlObVxnWCaLzSzlH/rsRqO
+         0NTmO3IcYiupEfrP7vmngHe/c3dwNtOvqClQ6aug=
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?q?Mihai=20Don=C8=9Bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?q?Nicu=C8=99or=20C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?q?=C8=98tefan=20=C8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: [PATCH v1 7/9] KVM: VMX: Add MBEC support
+Date:   Fri,  5 May 2023 17:20:44 +0200
+Message-Id: <20230505152046.6575-8-mic@digikod.net>
+In-Reply-To: <20230505152046.6575-1-mic@digikod.net>
+References: <20230505152046.6575-1-mic@digikod.net>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 2/2] arm64: dts: ti: Add basic support for
- phyBOARD-Lyra-AM625
-Content-Language: en-US
-To:     Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-hardening@vger.kernel.org>, <upstream@lists.phytec.de>,
-        <vigneshr@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <keescook@chromium.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>
-References: <20230504140143.1425951-1-w.egorov@phytec.de>
- <20230504140143.1425951-2-w.egorov@phytec.de>
- <20230504142643.pkzsftrsrqph4vql@banked> <20230505093930.GS14287@atomide.com>
-From:   Wadim Egorov <w.egorov@phytec.de>
-In-Reply-To: <20230505093930.GS14287@atomide.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.25.0.11]
-X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCIsWRmVeSWpSXmKPExsWyRpKBR/cEW2iKwcbJnBbzj5xjtZh3/jC7
-        xZnuXIvln2ezW/S9eMhssenxNaD4+p+MFpd3zWGzePPjLJNF694j7BZvLtxjsdh/xcui+526
-        xf+zH9gd+Dy+fZ3E4jG74SKLx4TZ3Wwei/e8ZPLYtKqTzePOtT1sHpuX1Hv0d7ewehy/sZ3J
-        4/MmuQCuKC6blNSczLLUIn27BK6M5+0vWQraeSrett9hamA8xtnFyMkhIWAi8eXOO/YuRi4O
-        IYElTBKPJ59mhHDuMkpsnPmbDaSKV8BGom/5PFYQm0VAReLItcVMEHFBiZMzn7CA2KIC0RI3
-        ln8DiwsLhEh8P/YbzGYWEJe49WQ+mC0i4CAxfccHZoj4TSaJ58stIJbtZJRo/ruPHSTBJqAu
-        cWfDN7BlnAKGEpsv3WGDaLCQWPzmIDuELS+x/e0csEFCQPaLS8tZIN6Rl5h27jUzhB0qcWTT
-        aqYJjMKzkNw6C8lNs5CMnYVk7AJGllWMQrmZydmpRZnZegUZlSWpyXopqZsYQTErwsC1g7Fv
-        jschRiYOxkOMEhzMSiK8Hwr9UoR4UxIrq1KL8uOLSnNSiw8xSnOwKInz3u9hShQSSE8sSc1O
-        TS1ILYLJMnFwSjUwmqyZtbNh8pnHnhvP5Hydv+TF23szZ3ydoLxR3iHp7bvz0VxrPXK1Z3fv
-        mxzDLuBc8e9VSJyrURnD0k/2LL2VMvfj7re9k9uT9F1v2nGeaamz41dMbW7gieg9/VA1Z5d8
-        0veJr4pi5bZeWBEjab/m7fXjlX8W/stT/XLsZN7i2XOUl7wx7FpWnqfEUpyRaKjFXFScCAAK
-        rC1sxwIAAA==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+This changes add support for VMX_FEATURE_MODE_BASED_EPT_EXEC (named
+ept_mode_based_exec in /proc/cpuinfo and MBEC elsewhere), which enables
+to separate EPT execution bits for supervisor vs. user.  It transforms
+the semantic of VMX_EPT_EXECUTABLE_MASK from a global execution to a
+kernel execution, and use the VMX_EPT_USER_EXECUTABLE_MASK bit to
+identify user execution.
 
-Am 05.05.23 um 11:39 schrieb Tony Lindgren:
-> * Nishanth Menon <nm@ti.com> [230504 14:33]:
->> Just wondering: if the carrier board can easily work with different
->> SoMs.. in which case, we could do overlay to create the som + carrier
->> overlay to create rdk dtb - this might allow the scheme to scale to
->> additional SoMs and carrier combinations.. and the SoM dtb could be
->> sufficient for something like a bootloader.
-> It might be best to limit the overlay usage to devices that might see
-> dual use on the carrier board.. Not sure if setting up the entire
-> carrier board makes sense as an overlay :) Not sure if folks want to
-> debug boot issues on a remote server for example if an overlay is
-> needed to boot with Ethernet :)
+The main use case is to be able to restrict kernel execution while
+ignoring user space execution from the hypervisor point of view.
+Indeed, user space execution can already be restricted by the guest
+kernel.
 
-Our idea is to create overlays for SoM variants, e.g. an overlay for a SoM 
-without SPI NOR flash populated.
-If we want to reuse a carrier board, we could factor out the carrier board dts 
-into a dtsi file and provide the needed combinations in form of different dts files.
+This change enables MBEC but doesn't change the default configuration,
+which is to allow execution for all guest memory.  However, the next
+commit levages MBEC to restrict kernel memory pages.
 
-In the bootloader world the situation is a bit different.
-Here we would like to have a universal phycore_am62x "board" that should be able 
-to handle most carrier board designs using that SoM. And since u-boot is moving 
-towards having a single source of device trees, this concept will probably no 
-longer work anymore. So your idea with a SoM dtb sounds interesting.
-I wonder what ideas other SoM vendors have or how it is handled on other 
-architectures.
+MBEC can be configured with the new "enable_mbec" module parameter, set
+to true by default.  However, MBEC is disable for L1 and L2 for now.
 
-Regards,
-Wadim
+Replace EPT_VIOLATION_RWX_MASK (3 bits) with 4 dedicated
+EPT_VIOLATION_READ, EPT_VIOLATION_WRITE, EPT_VIOLATION_KERNEL_INSTR, and
+EPT_VIOLATION_USER_INSTR bits.
 
->
-> Regards,
->
-> Tony
+From the Intel 64 and IA-32 Architectures Software Developer's Manual,
+Volume 3C (System Programming Guide), Part 3:
+
+SECONDARY_EXEC_MODE_BASED_EPT_EXEC (bit 22):
+If either the "unrestricted guest" VM-execution control or the
+"mode-based execute control for EPT" VM-execution control is 1, the
+"enable EPT" VM-execution control must also be 1.
+
+EPT_VIOLATION_KERNEL_INSTR_BIT (bit 5):
+The logical-AND of bit 2 in the EPT paging-structure entries used to
+translate the guest-physical address of the access causing the EPT
+violation.  If the "mode-based execute control for EPT" VM-execution
+control is 0, this indicates whether the guest-physical address was
+executable. If that control is 1, this indicates whether the
+guest-physical address was executable for supervisor-mode linear
+addresses.
+
+EPT_VIOLATION_USER_INSTR_BIT (bit 6):
+If the "mode-based execute control" VM-execution control is 0, the value
+of this bit is undefined. If that control is 1, this bit is the
+logical-AND of bit 10 in the EPT paging-structures entries used to
+translate the guest-physical address of the access causing the EPT
+violation. In this case, it indicates whether the guest-physical address
+was executable for user-mode linear addresses.
+
+PT_USER_EXEC_MASK (bit 10):
+Execute access for user-mode linear addresses. If the "mode-based
+execute control for EPT" VM-execution control is 1, indicates whether
+instruction fetches are allowed from user-mode linear addresses in the
+512-GByte region controlled by this entry. If that control is 0, this
+bit is ignored.
+
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20230505152046.6575-8-mic@digikod.net
+---
+ arch/x86/include/asm/vmx.h      | 11 +++++++++--
+ arch/x86/kvm/mmu.h              |  3 ++-
+ arch/x86/kvm/mmu/mmu.c          |  6 +++++-
+ arch/x86/kvm/mmu/paging_tmpl.h  | 16 ++++++++++++++--
+ arch/x86/kvm/mmu/spte.c         |  4 +++-
+ arch/x86/kvm/vmx/capabilities.h |  7 +++++++
+ arch/x86/kvm/vmx/nested.c       |  7 +++++++
+ arch/x86/kvm/vmx/vmx.c          | 28 +++++++++++++++++++++++++---
+ arch/x86/kvm/vmx/vmx.h          |  1 +
+ 9 files changed, 73 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index 498dc600bd5c..452e7d153832 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -511,6 +511,7 @@ enum vmcs_field {
+ #define VMX_EPT_IPAT_BIT    			(1ull << 6)
+ #define VMX_EPT_ACCESS_BIT			(1ull << 8)
+ #define VMX_EPT_DIRTY_BIT			(1ull << 9)
++#define VMX_EPT_USER_EXECUTABLE_MASK		(1ull << 10)
+ #define VMX_EPT_RWX_MASK                        (VMX_EPT_READABLE_MASK |       \
+ 						 VMX_EPT_WRITABLE_MASK |       \
+ 						 VMX_EPT_EXECUTABLE_MASK)
+@@ -556,13 +557,19 @@ enum vm_entry_failure_code {
+ #define EPT_VIOLATION_ACC_READ_BIT	0
+ #define EPT_VIOLATION_ACC_WRITE_BIT	1
+ #define EPT_VIOLATION_ACC_INSTR_BIT	2
+-#define EPT_VIOLATION_RWX_SHIFT		3
++#define EPT_VIOLATION_READ_BIT		3
++#define EPT_VIOLATION_WRITE_BIT		4
++#define EPT_VIOLATION_KERNEL_INSTR_BIT	5
++#define EPT_VIOLATION_USER_INSTR_BIT	6
+ #define EPT_VIOLATION_GVA_IS_VALID_BIT	7
+ #define EPT_VIOLATION_GVA_TRANSLATED_BIT 8
+ #define EPT_VIOLATION_ACC_READ		(1 << EPT_VIOLATION_ACC_READ_BIT)
+ #define EPT_VIOLATION_ACC_WRITE		(1 << EPT_VIOLATION_ACC_WRITE_BIT)
+ #define EPT_VIOLATION_ACC_INSTR		(1 << EPT_VIOLATION_ACC_INSTR_BIT)
+-#define EPT_VIOLATION_RWX_MASK		(VMX_EPT_RWX_MASK << EPT_VIOLATION_RWX_SHIFT)
++#define EPT_VIOLATION_READ		(1 << EPT_VIOLATION_READ_BIT)
++#define EPT_VIOLATION_WRITE		(1 << EPT_VIOLATION_WRITE_BIT)
++#define EPT_VIOLATION_KERNEL_INSTR	(1 << EPT_VIOLATION_KERNEL_INSTR_BIT)
++#define EPT_VIOLATION_USER_INSTR	(1 << EPT_VIOLATION_USER_INSTR_BIT)
+ #define EPT_VIOLATION_GVA_IS_VALID	(1 << EPT_VIOLATION_GVA_IS_VALID_BIT)
+ #define EPT_VIOLATION_GVA_TRANSLATED	(1 << EPT_VIOLATION_GVA_TRANSLATED_BIT)
+ 
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 6bdaacb6faa0..3c4fd4618cc1 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -24,6 +24,7 @@ extern bool __read_mostly enable_mmio_caching;
+ #define PT_PAGE_SIZE_MASK (1ULL << PT_PAGE_SIZE_SHIFT)
+ #define PT_PAT_MASK (1ULL << 7)
+ #define PT_GLOBAL_MASK (1ULL << 8)
++#define PT_USER_EXEC_MASK (1ULL << 10)
+ #define PT64_NX_SHIFT 63
+ #define PT64_NX_MASK (1ULL << PT64_NX_SHIFT)
+ 
+@@ -102,7 +103,7 @@ static inline u8 kvm_get_shadow_phys_bits(void)
+ 
+ void kvm_mmu_set_mmio_spte_mask(u64 mmio_value, u64 mmio_mask, u64 access_mask);
+ void kvm_mmu_set_me_spte_mask(u64 me_value, u64 me_mask);
+-void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only);
++void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only, bool has_mbec);
+ 
+ void kvm_init_mmu(struct kvm_vcpu *vcpu);
+ void kvm_init_shadow_npt_mmu(struct kvm_vcpu *vcpu, unsigned long cr0,
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index e5d1e241ff0f..a47e63217eb8 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -27,6 +27,9 @@
+ #include "cpuid.h"
+ #include "spte.h"
+ 
++/* Required by paging_tmpl.h for enable_mbec */
++#include "../vmx/capabilities.h"
++
+ #include <linux/kvm_host.h>
+ #include <linux/types.h>
+ #include <linux/string.h>
+@@ -3763,7 +3766,8 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
+ 	 */
+ 	pm_mask = PT_PRESENT_MASK | shadow_me_value;
+ 	if (mmu->root_role.level >= PT64_ROOT_4LEVEL) {
+-		pm_mask |= PT_ACCESSED_MASK | PT_WRITABLE_MASK | PT_USER_MASK;
++		pm_mask |= PT_ACCESSED_MASK | PT_WRITABLE_MASK | PT_USER_MASK |
++			   PT_USER_EXEC_MASK;
+ 
+ 		if (WARN_ON_ONCE(!mmu->pml4_root)) {
+ 			r = -EIO;
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 0f6455072055..12119d519c77 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -498,8 +498,20 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+ 		 * Note, pte_access holds the raw RWX bits from the EPTE, not
+ 		 * ACC_*_MASK flags!
+ 		 */
+-		vcpu->arch.exit_qualification |= (pte_access & VMX_EPT_RWX_MASK) <<
+-						 EPT_VIOLATION_RWX_SHIFT;
++		vcpu->arch.exit_qualification |=
++			!!(pte_access & VMX_EPT_READABLE_MASK)
++			<< EPT_VIOLATION_READ_BIT;
++		vcpu->arch.exit_qualification |=
++			!!(pte_access & VMX_EPT_WRITABLE_MASK)
++			<< EPT_VIOLATION_WRITE_BIT;
++		vcpu->arch.exit_qualification |=
++			!!(pte_access & VMX_EPT_EXECUTABLE_MASK)
++			<< EPT_VIOLATION_KERNEL_INSTR_BIT;
++		if (enable_mbec) {
++			vcpu->arch.exit_qualification |=
++				!!(pte_access & VMX_EPT_USER_EXECUTABLE_MASK)
++				<< EPT_VIOLATION_USER_INSTR_BIT;
++		}
+ 	}
+ #endif
+ 	walker->fault.address = addr;
+diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
+index 639f220a1ed5..f1e2e3cad878 100644
+--- a/arch/x86/kvm/mmu/spte.c
++++ b/arch/x86/kvm/mmu/spte.c
+@@ -430,13 +430,15 @@ void kvm_mmu_set_me_spte_mask(u64 me_value, u64 me_mask)
+ }
+ EXPORT_SYMBOL_GPL(kvm_mmu_set_me_spte_mask);
+ 
+-void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
++void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only, bool has_mbec)
+ {
+ 	shadow_user_mask	= VMX_EPT_READABLE_MASK;
+ 	shadow_accessed_mask	= has_ad_bits ? VMX_EPT_ACCESS_BIT : 0ull;
+ 	shadow_dirty_mask	= has_ad_bits ? VMX_EPT_DIRTY_BIT : 0ull;
+ 	shadow_nx_mask		= 0ull;
+ 	shadow_x_mask		= VMX_EPT_EXECUTABLE_MASK;
++	if (has_mbec)
++		shadow_x_mask |= VMX_EPT_USER_EXECUTABLE_MASK;
+ 	shadow_present_mask	= has_exec_only ? 0ull : VMX_EPT_READABLE_MASK;
+ 	/*
+ 	 * EPT overrides the host MTRRs, and so KVM must program the desired
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index cd2ac9536c99..2cc5d7d20144 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -13,6 +13,7 @@ extern bool __read_mostly enable_vpid;
+ extern bool __read_mostly flexpriority_enabled;
+ extern bool __read_mostly enable_ept;
+ extern bool __read_mostly enable_unrestricted_guest;
++extern bool __read_mostly enable_mbec;
+ extern bool __read_mostly enable_ept_ad_bits;
+ extern bool __read_mostly enable_pml;
+ extern bool __read_mostly enable_ipiv;
+@@ -255,6 +256,12 @@ static inline bool cpu_has_vmx_xsaves(void)
+ 		SECONDARY_EXEC_XSAVES;
+ }
+ 
++static inline bool cpu_has_vmx_mbec(void)
++{
++	return vmcs_config.cpu_based_2nd_exec_ctrl &
++		SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
++}
++
+ static inline bool cpu_has_vmx_waitpkg(void)
+ {
+ 	return vmcs_config.cpu_based_2nd_exec_ctrl &
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index d93c715cda6a..3c381c75e2a9 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2317,6 +2317,9 @@ static void prepare_vmcs02_early(struct vcpu_vmx *vmx, struct loaded_vmcs *vmcs0
+ 		/* VMCS shadowing for L2 is emulated for now */
+ 		exec_control &= ~SECONDARY_EXEC_SHADOW_VMCS;
+ 
++		/* MBEC is currently only handled for L0. */
++		exec_control &= ~SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
++
+ 		/*
+ 		 * Preset *DT exiting when emulating UMIP, so that vmx_set_cr4()
+ 		 * will not have to rewrite the controls just for this bit.
+@@ -6870,6 +6873,10 @@ void nested_vmx_setup_ctls_msrs(struct vmcs_config *vmcs_conf, u32 ept_caps)
+ 	 */
+ 	msrs->secondary_ctls_low = 0;
+ 
++	/*
++	 * Currently, SECONDARY_EXEC_MODE_BASED_EPT_EXEC is only handled for
++	 * L0 and doesn't need to be exposed to L1 nor L2.
++	 */
+ 	msrs->secondary_ctls_high = vmcs_conf->cpu_based_2nd_exec_ctrl;
+ 	msrs->secondary_ctls_high &=
+ 		SECONDARY_EXEC_DESC |
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 931688edc8eb..004fd4e5e057 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -94,6 +94,9 @@ bool __read_mostly enable_unrestricted_guest = 1;
+ module_param_named(unrestricted_guest,
+ 			enable_unrestricted_guest, bool, S_IRUGO);
+ 
++bool __read_mostly enable_mbec = true;
++module_param_named(mbec, enable_mbec, bool, 0444);
++
+ bool __read_mostly enable_ept_ad_bits = 1;
+ module_param_named(eptad, enable_ept_ad_bits, bool, S_IRUGO);
+ 
+@@ -4518,10 +4521,21 @@ static u32 vmx_secondary_exec_control(struct vcpu_vmx *vmx)
+ 		exec_control &= ~SECONDARY_EXEC_ENABLE_VPID;
+ 	if (!enable_ept) {
+ 		exec_control &= ~SECONDARY_EXEC_ENABLE_EPT;
++		/*
++		 * From Intel's SDM:
++		 * If either the "unrestricted guest" VM-execution control or
++		 * the "mode-based execute control for EPT" VM-execution
++		 * control is 1, the "enable EPT" VM-execution control must
++		 * also be 1.
++		 */
+ 		enable_unrestricted_guest = 0;
++		enable_mbec = false;
+ 	}
+ 	if (!enable_unrestricted_guest)
+ 		exec_control &= ~SECONDARY_EXEC_UNRESTRICTED_GUEST;
++	if (!enable_mbec)
++		exec_control &= ~SECONDARY_EXEC_MODE_BASED_EPT_EXEC;
++
+ 	if (kvm_pause_in_guest(vmx->vcpu.kvm))
+ 		exec_control &= ~SECONDARY_EXEC_PAUSE_LOOP_EXITING;
+ 	if (!kvm_vcpu_apicv_active(vcpu))
+@@ -5658,7 +5672,7 @@ static int handle_task_switch(struct kvm_vcpu *vcpu)
+ 
+ static int handle_ept_violation(struct kvm_vcpu *vcpu)
+ {
+-	unsigned long exit_qualification;
++	unsigned long exit_qualification, rwx_mask;
+ 	gpa_t gpa;
+ 	u64 error_code;
+ 
+@@ -5688,7 +5702,11 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
+ 	error_code |= (exit_qualification & EPT_VIOLATION_ACC_INSTR)
+ 		      ? PFERR_FETCH_MASK : 0;
+ 	/* ept page table entry is present? */
+-	error_code |= (exit_qualification & EPT_VIOLATION_RWX_MASK)
++	rwx_mask = EPT_VIOLATION_READ | EPT_VIOLATION_WRITE |
++		   EPT_VIOLATION_KERNEL_INSTR;
++	if (enable_mbec)
++		rwx_mask |= EPT_VIOLATION_USER_INSTR;
++	error_code |= (exit_qualification & rwx_mask)
+ 		      ? PFERR_PRESENT_MASK : 0;
+ 
+ 	error_code |= (exit_qualification & EPT_VIOLATION_GVA_TRANSLATED) != 0 ?
+@@ -8345,6 +8363,9 @@ static __init int hardware_setup(void)
+ 	if (!cpu_has_vmx_unrestricted_guest() || !enable_ept)
+ 		enable_unrestricted_guest = 0;
+ 
++	if (!cpu_has_vmx_mbec() || !enable_ept)
++		enable_mbec = false;
++
+ 	if (!cpu_has_vmx_flexpriority())
+ 		flexpriority_enabled = 0;
+ 
+@@ -8404,7 +8425,8 @@ static __init int hardware_setup(void)
+ 
+ 	if (enable_ept)
+ 		kvm_mmu_set_ept_masks(enable_ept_ad_bits,
+-				      cpu_has_vmx_ept_execute_only());
++				      cpu_has_vmx_ept_execute_only(),
++				      enable_mbec);
+ 
+ 	/*
+ 	 * Setup shadow_me_value/shadow_me_mask to include MKTME KeyID
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index a3da84f4ea45..815db44cd51e 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -585,6 +585,7 @@ static inline u8 vmx_get_rvi(void)
+ 	 SECONDARY_EXEC_ENABLE_VMFUNC |					\
+ 	 SECONDARY_EXEC_BUS_LOCK_DETECTION |				\
+ 	 SECONDARY_EXEC_NOTIFY_VM_EXITING |				\
++	 SECONDARY_EXEC_MODE_BASED_EPT_EXEC |				\
+ 	 SECONDARY_EXEC_ENCLS_EXITING)
+ 
+ #define KVM_REQUIRED_VMX_TERTIARY_VM_EXEC_CONTROL 0
+-- 
+2.40.1
+
