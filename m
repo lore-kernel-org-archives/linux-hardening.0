@@ -2,43 +2,69 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3B7C7EE22
-	for <linux-hardening@archiver.kernel.org>; Fri,  5 May 2023 15:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1D8C7EE26
+	for <linux-hardening@archiver.kernel.org>; Fri,  5 May 2023 16:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232997AbjEEPeh (ORCPT
+        id S232892AbjEEQ2S (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 5 May 2023 11:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35856 "EHLO
+        Fri, 5 May 2023 12:28:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232990AbjEEPeg (ORCPT
+        with ESMTP id S232845AbjEEQ2Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 5 May 2023 11:34:36 -0400
-Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc09])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08C611A;
-        Fri,  5 May 2023 08:34:33 -0700 (PDT)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QCZD66dQnzMqFxM;
-        Fri,  5 May 2023 17:21:58 +0200 (CEST)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QCZD60R4vzMpxBm;
-        Fri,  5 May 2023 17:21:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1683300118;
-        bh=SrFXUO04Nqgobaetk479001er96mJxIHBBoQ7lZlahM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpaXL8F3FW0faPdmfsziq7KNPT5JCNQ53r4Uxr1P2zxnScOSqz2qoUmOrpuWgBv6i
-         NuH/ri5XXTqceSyc0YP1flR3e6CIXrSsEa0s/oRFw99Emxppybi4No1rUvvsCb7yVM
-         kRuXppKZpZtphifBIw5w6qtCumEL2JsEPthxKuz0=
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     Borislav Petkov <bp@alien8.de>,
+        Fri, 5 May 2023 12:28:16 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42D41191C0
+        for <linux-hardening@vger.kernel.org>; Fri,  5 May 2023 09:28:11 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-559c416b024so19687047b3.1
+        for <linux-hardening@vger.kernel.org>; Fri, 05 May 2023 09:28:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683304090; x=1685896090;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tpG4xiqP3mzArRx9Ask1She9PnSIKi9NV0T7HckdUAY=;
+        b=R7ZId5oM7hLrX+tcfVm/Bnk2u8JbAC1I8QSh2twc/YutVfGMASmtW7tbm2YP3uHqlk
+         RwtPwL861jZAZsMdLif5CXyQc6HVUK4hq+Rsigm7g9H5SwYxxSrPZKroysdphn0wBKMc
+         5pkuhlqCX/BOp4yTuk4h5T1NCQgcpfPZ9KLIiem4KASWPyrgXBR48rcxQa06YhEaqMbn
+         orfLSFQcdN2vNomHtco8b3soICbHS5a9W6R91ScgWRyqTuI6OJFa+omcbJE3G4QloJsc
+         Zd/UhaIHTp9GBfbJO6BShFyMFzXWMH9S7e+yp/9GzVVu/Y2uZsmKlNFrDjrpY2RYPhtU
+         7R+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683304090; x=1685896090;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tpG4xiqP3mzArRx9Ask1She9PnSIKi9NV0T7HckdUAY=;
+        b=ac+vI+QymMWK/0RiAX6RIjrBjaVRPvl9Ly5h7+2zCXxYuiTOLgNEtL1WXWc7BYCPhC
+         Syu0d5wWLM96GyESNdsHsSa4bIR/IvPPha+Zcg5V4FgC+wLCcw0xDql9dpsyQv3q7/Ap
+         Jd78eHUhW/abhckg9zFiqzyfKIGH+FS9jt6bwq3jTKYWQC6aaQLzXnOBEgSb6PB7Y/wP
+         87esJyGTUgIkccLXghUOHDQMPYtjq8T5IKroqj5o5U+dqhdL4VUyQLEP44z6LayfguSm
+         EC4R6bQ7t1W65XCJQ1u+qjXmrXoyCx+SlR7OLW6rkMiokWf9lBWy8oGFP4TREHeWTCWF
+         9f7g==
+X-Gm-Message-State: AC+VfDyB7PsBKuNZyaxQckcOOPmMtkuPvlmgZxxyPS/268SB8UGdktsd
+        d7UwYAVxAikZi2DFC1yv0ujAq0tVRCA=
+X-Google-Smtp-Source: ACHHUZ6MaxIQ4e6CYkENF40G6p9cF+vIn2nNSO3VXw5131N/TbPSwiBkXRT2QEZKyWmorm0BLuruUfs9Bhg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:ac24:0:b0:559:d859:d746 with SMTP id
+ k36-20020a81ac24000000b00559d859d746mr1208880ywh.10.1683304090087; Fri, 05
+ May 2023 09:28:10 -0700 (PDT)
+Date:   Fri, 5 May 2023 09:28:08 -0700
+In-Reply-To: <20230505152046.6575-3-mic@digikod.net>
+Mime-Version: 1.0
+References: <20230505152046.6575-1-mic@digikod.net> <20230505152046.6575-3-mic@digikod.net>
+Message-ID: <ZFUumGdZDNs1tkQA@google.com>
+Subject: Re: [PATCH v1 2/9] KVM: x86/mmu: Add support for prewrite page tracking
+From:   Sean Christopherson <seanjc@google.com>
+To:     "=?iso-8859-1?Q?Micka=EBl_Sala=FCn?=" <mic@digikod.net>
+Cc:     Borislav Petkov <bp@alien8.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
         Kees Cook <keescook@chromium.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Wanpeng Li <wanpengli@tencent.com>,
         Alexander Graf <graf@amazon.com>,
         Forrest Yuan Yu <yuanyu@google.com>,
         James Morris <jamorris@linux.microsoft.com>,
@@ -46,369 +72,123 @@ Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
         Liran Alon <liran.alon@oracle.com>,
         "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
         Marian Rotariu <marian.c.rotariu@gmail.com>,
-        =?UTF-8?q?Mihai=20Don=C8=9Bu?= <mdontu@bitdefender.com>,
-        =?UTF-8?q?Nicu=C8=99or=20C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>,
+        "Mihai =?utf-8?B?RG9uyJt1?=" <mdontu@bitdefender.com>,
+        "=?utf-8?B?TmljdciZb3IgQ8OuyJt1?=" <nicu.citu@icloud.com>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
         Thara Gopinath <tgopinath@microsoft.com>,
         Will Deacon <will@kernel.org>,
         Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?UTF-8?q?=C8=98tefan=20=C8=98icleru?= <ssicleru@bitdefender.com>,
+        "=?utf-8?Q?=C8=98tefan_=C8=98icleru?=" <ssicleru@bitdefender.com>,
         dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
         linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
         virtualization@lists.linux-foundation.org, x86@kernel.org,
         xen-devel@lists.xenproject.org
-Subject: [PATCH v1 2/9] KVM: x86/mmu: Add support for prewrite page tracking
-Date:   Fri,  5 May 2023 17:20:39 +0200
-Message-Id: <20230505152046.6575-3-mic@digikod.net>
-In-Reply-To: <20230505152046.6575-1-mic@digikod.net>
-References: <20230505152046.6575-1-mic@digikod.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add a new page tracking mode to deny a page update and throw a page
-fault to the guest.  This is useful for KVM to be able to make some
-pages non-writable (not read-only because it doesn't imply execution
-restrictions), see the next Heki commits.
+On Fri, May 05, 2023, Micka=EF=BF=BDl Sala=EF=BF=BDn wrote:
+> diff --git a/arch/x86/include/asm/kvm_page_track.h b/arch/x86/include/asm=
+/kvm_page_track.h
+> index eb186bc57f6a..a7fb4ff888e6 100644
+> --- a/arch/x86/include/asm/kvm_page_track.h
+> +++ b/arch/x86/include/asm/kvm_page_track.h
+> @@ -3,6 +3,7 @@
+>  #define _ASM_X86_KVM_PAGE_TRACK_H
+> =20
+>  enum kvm_page_track_mode {
+> +	KVM_PAGE_TRACK_PREWRITE,
 
-This kind of synthetic kernel page fault needs to be handled by the
-guest, which is not currently the case, making it try again and again.
-This will be part of a follow-up patch series.
+Heh, just when I decide to finally kill off support for multiple modes[1] :=
+-)
 
-Update emulator_read_write_onepage() to handle X86EMUL_CONTINUE and
-X86EMUL_PROPAGATE_FAULT.
+My assessment from that changelog still holds true for this case:
 
-Update page_fault_handle_page_track() to call
-kvm_slot_page_track_is_active() whenever this is required for
-KVM_PAGE_TRACK_PREWRITE and KVM_PAGE_TRACK_WRITE, even if one tracker
-already returned true.
+  Drop "support" for multiple page-track modes, as there is no evidence
+  that array-based and refcounted metadata is the optimal solution for
+  other modes, nor is there any evidence that other use cases, e.g. for
+  access-tracking, will be a good fit for the page-track machinery in
+  general.
+ =20
+  E.g. one potential use case of access-tracking would be to prevent guest
+  access to poisoned memory (from the guest's perspective).  In that case,
+  the number of poisoned pages is likely to be a very small percentage of
+  the guest memory, and there is no need to reference count the number of
+  access-tracking users, i.e. expanding gfn_track[] for a new mode would be
+  grossly inefficient.  And for poisoned memory, host userspace would also
+  likely want to trap accesses, e.g. to inject #MC into the guest, and that
+  isn't currently supported by the page-track framework.
+ =20
+  A better alternative for that poisoned page use case is likely a
+  variation of the proposed per-gfn attributes overlay (linked), which
+  would allow efficiently tracking the sparse set of poisoned pages, and by
+  default would exit to userspace on access.
 
-Invert the return code semantic for read_emulate() and write_emulate():
-- from 1=Ok 0=Error
-- to X86EMUL_* return codes (e.g. X86EMUL_CONTINUE == 0)
+Of particular relevance:
 
-Imported the prewrite page tracking support part originally written by
-Mihai Donțu, Marian Rotariu, and Ștefan Șicleru:
-https://lore.kernel.org/r/20211006173113.26445-27-alazar@bitdefender.com
-https://lore.kernel.org/r/20211006173113.26445-28-alazar@bitdefender.com
-Removed the GVA changes for page tracking, removed the
-X86EMUL_RETRY_INSTR case, and some emulation part for now.
+  - Using the page-track machinery is inefficient because the guest is like=
+ly
+    going to write-protect a minority of its memory.  And this
 
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
-Cc: Marian Rotariu <marian.c.rotariu@gmail.com>
-Cc: Mihai Donțu <mdontu@bitdefender.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Cc: Ștefan Șicleru <ssicleru@bitdefender.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20230505152046.6575-3-mic@digikod.net
----
- arch/x86/include/asm/kvm_page_track.h | 12 +++++
- arch/x86/kvm/mmu/mmu.c                | 64 ++++++++++++++++++++++-----
- arch/x86/kvm/mmu/page_track.c         | 33 +++++++++++++-
- arch/x86/kvm/mmu/spte.c               |  6 +++
- arch/x86/kvm/x86.c                    | 27 +++++++----
- 5 files changed, 122 insertions(+), 20 deletions(-)
+      select KVM_EXTERNAL_WRITE_TRACKING if KVM
 
-diff --git a/arch/x86/include/asm/kvm_page_track.h b/arch/x86/include/asm/kvm_page_track.h
-index eb186bc57f6a..a7fb4ff888e6 100644
---- a/arch/x86/include/asm/kvm_page_track.h
-+++ b/arch/x86/include/asm/kvm_page_track.h
-@@ -3,6 +3,7 @@
- #define _ASM_X86_KVM_PAGE_TRACK_H
- 
- enum kvm_page_track_mode {
-+	KVM_PAGE_TRACK_PREWRITE,
- 	KVM_PAGE_TRACK_WRITE,
- 	KVM_PAGE_TRACK_MAX,
- };
-@@ -22,6 +23,16 @@ struct kvm_page_track_notifier_head {
- struct kvm_page_track_notifier_node {
- 	struct hlist_node node;
- 
-+	/*
-+	 * It is called when guest is writing the write-tracked page
-+	 * and the write emulation didn't happened yet.
-+	 *
-+	 * @vcpu: the vcpu where the write access happened
-+	 * @gpa: the physical address written by guest
-+	 * @node: this nodet
-+	 */
-+	bool (*track_prewrite)(struct kvm_vcpu *vcpu, gpa_t gpa,
-+			       struct kvm_page_track_notifier_node *node);
- 	/*
- 	 * It is called when guest is writing the write-tracked page
- 	 * and write emulation is finished at that time.
-@@ -73,6 +84,7 @@ kvm_page_track_register_notifier(struct kvm *kvm,
- void
- kvm_page_track_unregister_notifier(struct kvm *kvm,
- 				   struct kvm_page_track_notifier_node *n);
-+bool kvm_page_track_prewrite(struct kvm_vcpu *vcpu, gpa_t gpa);
- void kvm_page_track_write(struct kvm_vcpu *vcpu, gpa_t gpa, const u8 *new,
- 			  int bytes);
- void kvm_page_track_flush_slot(struct kvm *kvm, struct kvm_memory_slot *slot);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 835426254e76..e5d1e241ff0f 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -793,9 +793,13 @@ static void account_shadowed(struct kvm *kvm, struct kvm_mmu_page *sp)
- 	slot = __gfn_to_memslot(slots, gfn);
- 
- 	/* the non-leaf shadow pages are keeping readonly. */
--	if (sp->role.level > PG_LEVEL_4K)
--		return kvm_slot_page_track_add_page(kvm, slot, gfn,
--						    KVM_PAGE_TRACK_WRITE);
-+	if (sp->role.level > PG_LEVEL_4K) {
-+		kvm_slot_page_track_add_page(kvm, slot, gfn,
-+					     KVM_PAGE_TRACK_PREWRITE);
-+		kvm_slot_page_track_add_page(kvm, slot, gfn,
-+					     KVM_PAGE_TRACK_WRITE);
-+		return;
-+	}
- 
- 	kvm_mmu_gfn_disallow_lpage(slot, gfn);
- 
-@@ -840,9 +844,13 @@ static void unaccount_shadowed(struct kvm *kvm, struct kvm_mmu_page *sp)
- 	gfn = sp->gfn;
- 	slots = kvm_memslots_for_spte_role(kvm, sp->role);
- 	slot = __gfn_to_memslot(slots, gfn);
--	if (sp->role.level > PG_LEVEL_4K)
--		return kvm_slot_page_track_remove_page(kvm, slot, gfn,
--						       KVM_PAGE_TRACK_WRITE);
-+	if (sp->role.level > PG_LEVEL_4K) {
-+		kvm_slot_page_track_remove_page(kvm, slot, gfn,
-+						KVM_PAGE_TRACK_PREWRITE);
-+		kvm_slot_page_track_remove_page(kvm, slot, gfn,
-+						KVM_PAGE_TRACK_WRITE);
-+		return;
-+	}
- 
- 	kvm_mmu_gfn_allow_lpage(slot, gfn);
- }
-@@ -2714,7 +2722,10 @@ int mmu_try_to_unsync_pages(struct kvm *kvm, const struct kvm_memory_slot *slot,
- 	 * track machinery is used to write-protect upper-level shadow pages,
- 	 * i.e. this guards the role.level == 4K assertion below!
- 	 */
--	if (kvm_slot_page_track_is_active(kvm, slot, gfn, KVM_PAGE_TRACK_WRITE))
-+	if (kvm_slot_page_track_is_active(kvm, slot, gfn,
-+						KVM_PAGE_TRACK_PREWRITE) ||
-+	    kvm_slot_page_track_is_active(kvm, slot, gfn,
-+						KVM_PAGE_TRACK_WRITE))
- 		return -EPERM;
- 
- 	/*
-@@ -4103,6 +4114,8 @@ static int handle_mmio_page_fault(struct kvm_vcpu *vcpu, u64 addr, bool direct)
- static bool page_fault_handle_page_track(struct kvm_vcpu *vcpu,
- 					 struct kvm_page_fault *fault)
- {
-+	bool ret = false;
-+
- 	if (unlikely(fault->rsvd))
- 		return false;
- 
-@@ -4113,10 +4126,14 @@ static bool page_fault_handle_page_track(struct kvm_vcpu *vcpu,
- 	 * guest is writing the page which is write tracked which can
- 	 * not be fixed by page fault handler.
- 	 */
--	if (kvm_slot_page_track_is_active(vcpu->kvm, fault->slot, fault->gfn, KVM_PAGE_TRACK_WRITE))
--		return true;
-+	ret = kvm_slot_page_track_is_active(vcpu->kvm, fault->slot, fault->gfn,
-+					    KVM_PAGE_TRACK_PREWRITE) ||
-+	      ret;
-+	ret = kvm_slot_page_track_is_active(vcpu->kvm, fault->slot, fault->gfn,
-+					    KVM_PAGE_TRACK_WRITE) ||
-+	      ret;
- 
--	return false;
-+	return ret;
- }
- 
- static void shadow_page_table_clear_flood(struct kvm_vcpu *vcpu, gva_t addr)
-@@ -5600,6 +5617,33 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
- 	if (r != RET_PF_EMULATE)
- 		return 1;
- 
-+	if ((error_code & PFERR_WRITE_MASK) &&
-+	    !kvm_page_track_prewrite(vcpu, cr2_or_gpa)) {
-+		struct x86_exception fault = {
-+			.vector = PF_VECTOR,
-+			.error_code_valid = true,
-+			.error_code = error_code,
-+			.nested_page_fault = false,
-+			/*
-+			 * TODO: This kind of kernel page fault needs to be handled by
-+			 * the guest, which is not currently the case, making it try
-+			 * again and again.
-+			 *
-+			 * You may want to test with cr2_or_gva to see the page
-+			 * fault caught by the guest kernel (thinking it is a
-+			 * user space fault).
-+			 */
-+			.address = static_call(kvm_x86_fault_gva)(vcpu),
-+			.async_page_fault = false,
-+		};
-+
-+		pr_warn_ratelimited(
-+			"heki-kvm: Creating write #PF at 0x%016llx\n",
-+			fault.address);
-+		kvm_inject_page_fault(vcpu, &fault);
-+		return RET_PF_INVALID;
-+	}
-+
- 	/*
- 	 * Before emulating the instruction, check if the error code
- 	 * was due to a RO violation while translating the guest page.
-diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
-index 2e09d1b6249f..2454887cd48b 100644
---- a/arch/x86/kvm/mmu/page_track.c
-+++ b/arch/x86/kvm/mmu/page_track.c
-@@ -131,9 +131,10 @@ void kvm_slot_page_track_add_page(struct kvm *kvm,
- 	 */
- 	kvm_mmu_gfn_disallow_lpage(slot, gfn);
- 
--	if (mode == KVM_PAGE_TRACK_WRITE)
-+	if (mode == KVM_PAGE_TRACK_PREWRITE || mode == KVM_PAGE_TRACK_WRITE) {
- 		if (kvm_mmu_slot_gfn_write_protect(kvm, slot, gfn, PG_LEVEL_4K))
- 			kvm_flush_remote_tlbs(kvm);
-+	}
- }
- EXPORT_SYMBOL_GPL(kvm_slot_page_track_add_page);
- 
-@@ -248,6 +249,36 @@ kvm_page_track_unregister_notifier(struct kvm *kvm,
- }
- EXPORT_SYMBOL_GPL(kvm_page_track_unregister_notifier);
- 
-+/*
-+ * Notify the node that a write access is about to happen. Returning false
-+ * doesn't stop the other nodes from being called, but it will stop
-+ * the emulation.
-+ *
-+ * The node should figure out if the written page is the one that the node
-+ * is interested in by itself.
-+ */
-+bool kvm_page_track_prewrite(struct kvm_vcpu *vcpu, gpa_t gpa)
-+{
-+	struct kvm_page_track_notifier_head *head;
-+	struct kvm_page_track_notifier_node *n;
-+	int idx;
-+	bool ret = true;
-+
-+	head = &vcpu->kvm->arch.track_notifier_head;
-+
-+	if (hlist_empty(&head->track_notifier_list))
-+		return ret;
-+
-+	idx = srcu_read_lock(&head->track_srcu);
-+	hlist_for_each_entry_srcu(n, &head->track_notifier_list, node,
-+				  srcu_read_lock_held(&head->track_srcu))
-+		if (n->track_prewrite)
-+			if (!n->track_prewrite(vcpu, gpa, n))
-+				ret = false;
-+	srcu_read_unlock(&head->track_srcu, idx);
-+	return ret;
-+}
-+
- /*
-  * Notify the node that write access is intercepted and write emulation is
-  * finished at this time.
-diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
-index c0fd7e049b4e..639f220a1ed5 100644
---- a/arch/x86/kvm/mmu/spte.c
-+++ b/arch/x86/kvm/mmu/spte.c
-@@ -144,6 +144,12 @@ bool make_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
- 	u64 spte = SPTE_MMU_PRESENT_MASK;
- 	bool wrprot = false;
- 
-+	if (kvm_slot_page_track_is_active(vcpu->kvm, slot, gfn,
-+					  KVM_PAGE_TRACK_PREWRITE) ||
-+	    kvm_slot_page_track_is_active(vcpu->kvm, slot, gfn,
-+					  KVM_PAGE_TRACK_WRITE))
-+		pte_access &= ~ACC_WRITE_MASK;
-+
- 	WARN_ON_ONCE(!pte_access && !shadow_present_mask);
- 
- 	if (sp->role.ad_disabled)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index a2c299d47e69..fd05f42c9913 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7325,6 +7325,7 @@ static int kvm_write_guest_virt_helper(gva_t addr, void *val, unsigned int bytes
- 			r = X86EMUL_IO_NEEDED;
- 			goto out;
- 		}
-+		kvm_page_track_write(vcpu, gpa, data, towrite);
- 
- 		bytes -= towrite;
- 		data += towrite;
-@@ -7441,13 +7442,12 @@ static int vcpu_mmio_gva_to_gpa(struct kvm_vcpu *vcpu, unsigned long gva,
- int emulator_write_phys(struct kvm_vcpu *vcpu, gpa_t gpa,
- 			const void *val, int bytes)
- {
--	int ret;
--
--	ret = kvm_vcpu_write_guest(vcpu, gpa, val, bytes);
--	if (ret < 0)
--		return 0;
-+	if (!kvm_page_track_prewrite(vcpu, gpa))
-+		return X86EMUL_PROPAGATE_FAULT;
-+	if (kvm_vcpu_write_guest(vcpu, gpa, val, bytes))
-+		return X86EMUL_UNHANDLEABLE;
- 	kvm_page_track_write(vcpu, gpa, val, bytes);
--	return 1;
-+	return X86EMUL_CONTINUE;
- }
- 
- struct read_write_emulator_ops {
-@@ -7477,7 +7477,9 @@ static int read_prepare(struct kvm_vcpu *vcpu, void *val, int bytes)
- static int read_emulate(struct kvm_vcpu *vcpu, gpa_t gpa,
- 			void *val, int bytes)
- {
--	return !kvm_vcpu_read_guest(vcpu, gpa, val, bytes);
-+	if (kvm_vcpu_read_guest(vcpu, gpa, val, bytes))
-+		return X86EMUL_UNHANDLEABLE;
-+	return X86EMUL_CONTINUE;
- }
- 
- static int write_emulate(struct kvm_vcpu *vcpu, gpa_t gpa,
-@@ -7551,8 +7553,12 @@ static int emulator_read_write_onepage(unsigned long addr, void *val,
- 			return X86EMUL_PROPAGATE_FAULT;
- 	}
- 
--	if (!ret && ops->read_write_emulate(vcpu, gpa, val, bytes))
--		return X86EMUL_CONTINUE;
-+	if (!ret) {
-+		ret = ops->read_write_emulate(vcpu, gpa, val, bytes);
-+		if (ret != X86EMUL_UNHANDLEABLE)
-+			/* Handles X86EMUL_CONTINUE and X86EMUL_PROPAGATE_FAULT. */
-+			return ret;
-+	}
- 
- 	/*
- 	 * Is this MMIO handled locally?
-@@ -7689,6 +7695,9 @@ static int emulator_cmpxchg_emulated(struct x86_emulate_ctxt *ctxt,
- 	if (kvm_is_error_hva(hva))
- 		goto emul_write;
- 
-+	if (!kvm_page_track_prewrite(vcpu, gpa))
-+		return X86EMUL_PROPAGATE_FAULT;
-+
- 	hva += offset_in_page(gpa);
- 
- 	switch (bytes) {
--- 
-2.40.1
+    is particularly nasty because simply enabling HEKI in the Kconfig will =
+cause
+    KVM to allocate rmaps and gfn tracking.
 
+  - There's no need to reference count the protection, i.e. 15 of the 16 bi=
+ts of
+    gfn_track are dead weight.
+
+  - As proposed, adding a second "mode" would double the cost of gfn tracki=
+ng.
+
+  - Tying the protections to the memslots will create an impossible-to-main=
+tain
+    ABI because the protections will be lost if the owning memslot is delet=
+ed and
+    recreated.
+
+  - The page-track framework provides incomplete protection and will lead t=
+o an
+    ongoing game of whack-a-mole, e.g. this patch catches the obvious cases=
+ by
+    adding calls to kvm_page_track_prewrite(), but misses things like kvm_v=
+cpu_map().
+
+  - The scaling and maintenance issues will only get worse if/when someone =
+tries
+    to support dropping read and/or execute permissions, e.g. for execute-o=
+nly.
+
+  - The code is x86-only, and is likely to stay that way for the foreseeabl=
+e
+    future.
+
+The proposed alternative is to piggyback the memory attributes implementati=
+on[2]
+that is being added (if all goes according to plan) for confidential VMs.  =
+This
+use case (dropping permissions) came up not too long ago[3], which is why I=
+ have
+a ready-made answer).
+
+I have no doubt that we'll need to solve performance and scaling issues wit=
+h the
+memory attributes implementation, e.g. to utilize xarray multi-range suppor=
+t
+instead of storing information on a per-4KiB-page basis, but AFAICT, the co=
+re
+idea is sound.  And a very big positive from a maintenance perspective is t=
+hat
+any optimizations, fixes, etc. for one use case (CoCo vs. hardening) should=
+ also
+benefit the other use case.
+
+[1] https://lore.kernel.org/all/20230311002258.852397-22-seanjc@google.com
+[2] https://lore.kernel.org/all/Y2WB48kD0J4VGynX@google.com
+[3] https://lore.kernel.org/all/Y1a1i9vbJ%2FpVmV9r@google.com
