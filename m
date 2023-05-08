@@ -2,149 +2,162 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD822C77B73
-	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 12:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9F6C77B7F
+	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 15:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233587AbjEHMnn (ORCPT
+        id S234090AbjEHPvp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 8 May 2023 08:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45472 "EHLO
+        Mon, 8 May 2023 11:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233057AbjEHMnm (ORCPT
+        with ESMTP id S234087AbjEHPvn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 8 May 2023 08:43:42 -0400
-X-Greylist: delayed 513 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 08 May 2023 05:43:40 PDT
-Received: from mail-m127104.qiye.163.com (mail-m127104.qiye.163.com [115.236.127.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFC8BC;
-        Mon,  8 May 2023 05:43:40 -0700 (PDT)
-Received: from [0.0.0.0] (unknown [172.96.223.238])
-        by mail-m127104.qiye.163.com (Hmail) with ESMTPA id 1D106A40483;
-        Mon,  8 May 2023 20:34:48 +0800 (CST)
-Message-ID: <8c243d68-583f-aeea-3d8f-e608746dd9e7@sangfor.com.cn>
-Date:   Mon, 8 May 2023 20:34:43 +0800
+        Mon, 8 May 2023 11:51:43 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4537AD1C;
+        Mon,  8 May 2023 08:51:27 -0700 (PDT)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 348ETuMH014109;
+        Mon, 8 May 2023 15:51:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=qcppdkim1;
+ bh=vDt2BEopWdrLVpdUsagAxhdZHq6YP8MKjw07AtfcvH0=;
+ b=aGstWzzBCJJstO4BFRffpwDi305+/qByh+mhIc4jOd2excN/BqmcSCeHjVT7OOuXuMgT
+ V6MRaGaaWFAAhMo5r97jHubbo4QKmdpWQk6Qtd1Pjq/Nx22cdTv8Go/7Dr+0BO5rZmzB
+ yVGrRP5neP6yy7cTaiEHMU8gxc0mpkzKZLl/lYk8BHWAQRNGcORZsNHfcsMWo/rIaCXn
+ NTSJ4t6ALBcKgyqWsdXBnK5h4ROChISxjvszfaiBwVL2w7JgsSLNP1pl9qzG1B4S9A03
+ S4AlMwU+yWdlOpl8AtUX0n2GYktz+eiDz7pAZqWYgKS3FZqct03GWyaCtAqHdUbW26fm EA== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qexf1gte2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 08 May 2023 15:51:13 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 348FpCok017726
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 8 May 2023 15:51:12 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Mon, 8 May 2023 08:51:08 -0700
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <keescook@chromium.org>, <gregkh@linuxfoundation.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <johannes@sipsolutions.net>, <rafael@kernel.org>
+CC:     <quic_mojha@quicinc.com>, <linux-hardening@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_shashim@quicinc.com>,
+        <quic_pkondeti@quicinc.com>
+Subject: RFC design of device coredump collection on panic in Pstore
+Date:   Mon, 8 May 2023 21:21:00 +0530
+Message-ID: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH net v4 2/2] iavf: Fix out-of-bounds when setting channels
- on remove
-Content-Language: en-US
-To:     Leon Romanovsky <leon@kernel.org>,
-        "Chittim, Madhu" <madhu.chittim@intel.com>
-Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        keescook@chromium.org, grzegorzx.szczurek@intel.com,
-        mateusz.palczewski@intel.com, mitch.a.williams@intel.com,
-        gregory.v.rose@intel.com, jeffrey.t.kirsher@intel.com,
-        michal.kubiak@intel.com, simon.horman@corigine.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, pengdonglin@sangfor.com.cn,
-        huangcun@sangfor.com.cn
-References: <20230503031541.27855-1-dinghui@sangfor.com.cn>
- <20230503031541.27855-3-dinghui@sangfor.com.cn>
- <20230503082458.GH525452@unreal>
- <d2351c0f-0bfe-9422-f6f3-f0a0db58c729@sangfor.com.cn>
- <20230503162932.GN525452@unreal>
- <941ad3cc-22d6-3459-dfbc-36bc47a8a22a@intel.com>
- <20230504075709.GS525452@unreal>
-From:   Ding Hui <dinghui@sangfor.com.cn>
-In-Reply-To: <20230504075709.GS525452@unreal>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQ05CVk5JQh5DTEIYTBpMT1UTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpMSVVCTVVJSUhVSUhDWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLVUtZBg++
-X-HM-Tid: 0a87fb5ba364b282kuuu1d106a40483
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mgw6PDo5AT0JKzYLEDUvLVYR
-        DxkKFEhVSlVKTUNITk9CSEtLT09NVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
-        QVlKTElVQk1VSUlIVUlIQ1lXWQgBWUFNSk1PNwY+
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 1Xp700i_CMCDeRK-27co6w6eQvGO0PXm
+X-Proofpoint-GUID: 1Xp700i_CMCDeRK-27co6w6eQvGO0PXm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-08_12,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=530 priorityscore=1501 mlxscore=0 suspectscore=0 phishscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305080105
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023/5/4 15:57, Leon Romanovsky wrote:
-> On Wed, May 03, 2023 at 12:22:00PM -0700, Chittim, Madhu wrote:
->>
->>
->> On 5/3/2023 9:29 AM, Leon Romanovsky wrote:
->>> On Wed, May 03, 2023 at 10:00:49PM +0800, Ding Hui wrote:
->>>> On 2023/5/3 4:24 下午, Leon Romanovsky wrote:
->>>>> On Wed, May 03, 2023 at 11:15:41AM +0800, Ding Hui wrote:
->>>>
->>>>>>
->>>>>> If we detected removing is in processing, we can avoid unnecessary
->>>>>> waiting and return error faster.
->>>>>>
->>>>>> On the other hand in timeout handling, we should keep the original
->>>>>> num_active_queues and reset num_req_queues to 0.
->>>>>>
->>>>>> Fixes: 4e5e6b5d9d13 ("iavf: Fix return of set the new channel count")
->>>>>> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
->>>>>> Cc: Donglin Peng <pengdonglin@sangfor.com.cn>
->>>>>> Cc: Huang Cun <huangcun@sangfor.com.cn>
->>>>>> Reviewed-by: Simon Horman <simon.horman@corigine.com>
->>>>>> Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
->>>>>> ---
->>>>>> v3 to v4:
->>>>>>      - nothing changed
->>>>>>
->>>>>> v2 to v3:
->>>>>>      - fix review tag
->>>>>>
->>>>>> v1 to v2:
->>>>>>      - add reproduction script
->>>>>>
->>>>>> ---
->>>>>>     drivers/net/ethernet/intel/iavf/iavf_ethtool.c | 4 +++-
->>>>>>     1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/net/ethernet/intel/iavf/iavf_ethtool.c b/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
->>>>>> index 6f171d1d85b7..d8a3c0cfedd0 100644
->>>>>> --- a/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
->>>>>> +++ b/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
->>>>>> @@ -1857,13 +1857,15 @@ static int iavf_set_channels(struct net_device *netdev,
->>>>>>     	/* wait for the reset is done */
->>>>>>     	for (i = 0; i < IAVF_RESET_WAIT_COMPLETE_COUNT; i++) {
->>>>>>     		msleep(IAVF_RESET_WAIT_MS);
->>>>>> +		if (test_bit(__IAVF_IN_REMOVE_TASK, &adapter->crit_section))
->>>>>> +			return -EOPNOTSUPP;
->>>>>
->>>>> This makes no sense without locking as change to __IAVF_IN_REMOVE_TASK
->>>>> can happen any time.
->>>>>
->>>>
->>>> The state doesn't need to be that precise here, it is optimized only for
->>>> the fast path. During the lifecycle of the adapter, the __IAVF_IN_REMOVE_TASK
->>>> state will only be set and not cleared.
->>>>
->>>> If we didn't detect the "removing" state, we also can fallback to timeout
->>>> handling.
->>>>
->>>> So I don't think the locking is necessary here, what do the maintainers
->>>> at Intel think?
->>>
->>> I'm not Intel maintainer, but your change, explanation and the following
->>> line from your commit message aren't really aligned.
->>>
->>> [ 3510.400799] ==================================================================
->>> [ 3510.400820] BUG: KASAN: slab-out-of-bounds in iavf_free_all_tx_resources+0x156/0x160 [iavf]
->>>
->>>
->>
->> __IAVF_IN_REMOVE_TASK is being set only in iavf_remove() and the above
->> change is ok in terms of coming out of setting channels early enough while
->> remove is in progress.
-> 
-> It is not, __IAVF_IN_REMOVE_TASK, set bit can be changed any time during
-> iavf_set_channels() and if it is not, I would expect test_bit(..) placed
-> at the beginning of iavf_set_channels() or even earlier.
-> 
+Hi All,
 
-Since we have a little dispute on __IAVF_IN_REMOVE_TASK, I'll remove the
-test_bit() in v5, and remove Reviewed-by: tags of 2/2 to review again.
+We are exploring a way where device driver(registered/interested and optional could be
+callback) can dump their data(consist of list of buffers or hardware registers) for post
+mortam debugging of a crash via dumping the content to pstore region. Some of the example
+data could be like clock dump/regulators/ etc.
+
+These stuff should be already part of entire RAM dump but in some cases it's however not
+feasible to capture the entire content of RAM, so was thinking if pstore region can be
+used to capture above information either in the form of elf or binary and how pstore
+can get this in human readable format can be discussed further.
+
+Also, existing devcoredump driver does not cover panic usecases so we thought of something
+like below RFC design where,
+
+1. Device_coredump allocates some configurable contigous memory that can be controlled
+   via CONFIG or bootargs and later registers for panic notifiers.
+2. Notifier gets added.
+3. Pstore adds device_coredump as its front-end via dumper registration similar
+   to kmsg being dump today.
+4. Successful registration of dumper.
+5. A device driver(A-Z) can register their buffer to be dumped as part of panic.
+6. buffer gets added to the dump list.
+7. Panic occurs.
+8. iterate over registered drivers and copy their dump list to its own memory and if
+   it crosses device core dump memory log an error stop iterating.
+9. Similar to devcore_dump() inline with kmsg_dump()
+10.Copy the content to pstore region and this could be elf or raw binary that can be
+   discussed.
+
+
+Device coredump memory(1) size could be passed from pstore and should be same as size
+of devcoredump frontend size given in DT or some other way.
+
+Let me know your concern and view on this.       
+                    
+
+                    pstore               device_coredump      deviceA..Z          panic
+                                                                  ┼                  │
+                       │                      │       panic_notifier(1)              │
+                       │                      ├───────────────────┬─────────────────►│
+                       │                      │ notifier added    │ (2)              │
+                       │                      │◄──────────────────┼──────────────────┤
+      pstore can give  │       (3)            │                   │                  │
+      its region for   │ dumper_registration  │                   │                  │
+      dump             ├─────────────────────►│                   │                  │
+                       │       (4)            │                   │                  │
+                       │◄─────────────────────┤                   │                  │
+                       │  register_dumper     │                   │                  │
+                       │                      │                   │                  │
+                       │                      │                   │                  │
+                       │                      │                   │ init             │
+                       │                      │                ───┼──                │
+                       │                      │       (5)         │                  │
+                       │                      │devcoredump_register(dev,buf));       │
+                       │                      │◄──────────────────┐                  │
+                       │                      │       (6)         │                  │
+                       │                      ├──────────────────►│                  │
+                       │                      │device/buf gets add│d                 │
+                       │                      │ to the list       │                  │panic
+                       │                      │                   │                ──┼───
+                       │                      │                   │                  │
+                       │                      │(7) panic_notifier │     call         │
+                       │                      │◄──────────────────┼──────────────────┤
+                       │                      │ prepare coredump  │for the deviceA-Z │
+                       │                      ├──────────────────►├────┐             │
+                       │                      │   (8)             │    │             │
+                       │                      │                   │    │             │
+                       │                      │                   │    │             │
+                       │                      │                   │◄───┘             │
+             dumper will                      │                   │            (9)   │dev_coredump()
+             write all the device dump to     │◄──────────────────┼──────────────────┤
+              pstore   ┌◄───┬─────────────────┤                   │                  │
+              region   │    │    (10)         │                   │                  │
+                       │    │                 │                   │                  │
+                       │    │                 │                   │                  │
+                       │◄───┘                 │                   │                  │
+                       │                      │                   │                  │
+                       │                      │                   
+
+
+
+Regards,
+Mukesh
 
 -- 
-Thanks,
-- Ding Hui
+2.7.4
 
