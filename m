@@ -2,85 +2,247 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A0EC77B75
-	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 08:41:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC387C7EE22
+	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 10:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232717AbjEHIlR (ORCPT
+        id S233912AbjEHKBa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 8 May 2023 04:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59086 "EHLO
+        Mon, 8 May 2023 06:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232080AbjEHIlQ (ORCPT
+        with ESMTP id S233917AbjEHKB2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 8 May 2023 04:41:16 -0400
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 834B315EFC;
-        Mon,  8 May 2023 01:41:15 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id E53308111;
-        Mon,  8 May 2023 08:41:14 +0000 (UTC)
-Date:   Mon, 8 May 2023 11:41:13 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Wadim Egorov <w.egorov@phytec.de>
-Cc:     Nishanth Menon <nm@ti.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, upstream@lists.phytec.de,
-        vigneshr@ti.com, kristo@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com
-Subject: Re: [PATCH 2/2] arm64: dts: ti: Add basic support for
- phyBOARD-Lyra-AM625
-Message-ID: <20230508084113.GV14287@atomide.com>
-References: <20230504140143.1425951-1-w.egorov@phytec.de>
- <20230504140143.1425951-2-w.egorov@phytec.de>
- <20230504142643.pkzsftrsrqph4vql@banked>
- <20230505093930.GS14287@atomide.com>
- <8db31b08-5a8b-f317-a954-c228a08004a8@phytec.de>
+        Mon, 8 May 2023 06:01:28 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65FD2E062;
+        Mon,  8 May 2023 03:01:26 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6439f186366so2134071b3a.2;
+        Mon, 08 May 2023 03:01:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683540086; x=1686132086;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rJvJGURrh5Y6Ahv+dvSHYL3+bNVZ9g/h4mq9+B66qRI=;
+        b=IPShIZ0hYGoGQZ+QpgYEoS7sXMWJihKWBFY8s06PyRBEPpO8fiac9zfXtKK+oC+7ks
+         +5JM8r+DcylJmbKZJjo1jkOrh4NpjgM1KMT/6PXtTdt7P16Q1bVpoOQMJu/xd6ZuQJf6
+         g0wxdJshfIpodgZPz8OSPuNG8QEfupLy5h2HhTz9rjIDjUPXK1rVQ7aazGvB5W8WfNld
+         JhRCRS6vM7Dl2sn+luKAPSacYOwUCV6Uu/hstIDQaxTcuZKxGKGwqUbCRdEAR5dMajWV
+         PZF1Vy+nsY72Pl4fdXRbabdzVh6jYSVvgiKnDr3yLcl7t0C5+d/Vc6M+qwI1gNWSsMZR
+         CAAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683540086; x=1686132086;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rJvJGURrh5Y6Ahv+dvSHYL3+bNVZ9g/h4mq9+B66qRI=;
+        b=FekkjWtelKJd+P4Mb9vrpEIxVnk2esoGx4LDivqTRewf1hOFKzkFKeGmrndua9se27
+         aC7+PAfVsjgIxqUrbro5F55kMgCieEtkAjOoED7gzPCMFV+UVawB4wJMaO1ZuavCW/Gk
+         UgGQlXuQ3gtdcOxnRZ/SzB07nlsskCJXlg77TC28U+oHIVzk5n1inCiCMjFdUNogqc7j
+         7ZTmcgqgJ9HDAN9qokuI/O5PgYBX6agI4CKZX3Osicx22lAkqOb/kq5gYlySqkZzMRh1
+         oVBTBFrY4T5dId0tiSJN6zgYh/7Wc7Pz0i56/LVZFOxQTG6wb+hzGiTJmCNEOZ/BJ9Ps
+         s1Lw==
+X-Gm-Message-State: AC+VfDzasEe6x5Gz24fMbjKYHa6wHogSVsCL+46dlYwyTwIpHmpb9Y7t
+        ZX8a+7Bj+NjlLikJYPreKHk=
+X-Google-Smtp-Source: ACHHUZ432kkuqfkRj7AzZft5/WbhfjXcUv0u9eGieSBZ3qtznBd/fiH77+wHRKFcmjTGSgYOzAr1dw==
+X-Received: by 2002:a05:6a00:1694:b0:63b:57cb:145f with SMTP id k20-20020a056a00169400b0063b57cb145fmr13083641pfc.20.1683540085842;
+        Mon, 08 May 2023 03:01:25 -0700 (PDT)
+Received: from debian.me (subs32-116-206-28-55.three.co.id. [116.206.28.55])
+        by smtp.gmail.com with ESMTPSA id i23-20020aa787d7000000b0062d90f36d16sm2667483pfo.88.2023.05.08.03.01.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 03:01:25 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+        id 0C36010687E; Mon,  8 May 2023 17:01:21 +0700 (WIB)
+Date:   Mon, 8 May 2023 17:01:21 +0700
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        srinivas.kandagatla@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 03/18] docs: qcom: Add qualcomm minidump guide
+Message-ID: <ZFjIcSRSitmOvmZw@debian.me>
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-4-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y9mITgkKFRXba6ks"
 Content-Disposition: inline
-In-Reply-To: <8db31b08-5a8b-f317-a954-c228a08004a8@phytec.de>
+In-Reply-To: <1683133352-10046-4-git-send-email-quic_mojha@quicinc.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-* Wadim Egorov <w.egorov@phytec.de> [230505 13:38]:
-> 
-> Am 05.05.23 um 11:39 schrieb Tony Lindgren:
-> > * Nishanth Menon <nm@ti.com> [230504 14:33]:
-> > > Just wondering: if the carrier board can easily work with different
-> > > SoMs.. in which case, we could do overlay to create the som + carrier
-> > > overlay to create rdk dtb - this might allow the scheme to scale to
-> > > additional SoMs and carrier combinations.. and the SoM dtb could be
-> > > sufficient for something like a bootloader.
-> > It might be best to limit the overlay usage to devices that might see
-> > dual use on the carrier board.. Not sure if setting up the entire
-> > carrier board makes sense as an overlay :) Not sure if folks want to
-> > debug boot issues on a remote server for example if an overlay is
-> > needed to boot with Ethernet :)
-> 
-> Our idea is to create overlays for SoM variants, e.g. an overlay for a SoM
-> without SPI NOR flash populated.
-> If we want to reuse a carrier board, we could factor out the carrier board
-> dts into a dtsi file and provide the needed combinations in form of
-> different dts files.
 
-It probably makes sens to limit the overlays for optional features that
-are not hardwired.
+--y9mITgkKFRXba6ks
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> In the bootloader world the situation is a bit different.
-> Here we would like to have a universal phycore_am62x "board" that should be
-> able to handle most carrier board designs using that SoM. And since u-boot
-> is moving towards having a single source of device trees, this concept will
-> probably no longer work anymore. So your idea with a SoM dtb sounds
-> interesting.
-> I wonder what ideas other SoM vendors have or how it is handled on other
-> architectures.
+On Wed, May 03, 2023 at 10:32:17PM +0530, Mukesh Ojha wrote:
+>  Documentation/admin-guide/qcom_minidump.rst | 246 ++++++++++++++++++++++=
+++++++
+>  1 file changed, 246 insertions(+)
 
-I'm not sure what the best way to organize things is if there are many
-SoM and carrier board variants, I guess it depends on the number of the
-possible permutations :)
+You forget to add toctree entry:
 
-Regards,
+---- >8 ----
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guid=
+e/index.rst
+index 43ea35613dfcd4..251d070486c2ab 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -120,6 +120,7 @@ configure specific aspects of kernel behavior to your l=
+iking.
+    perf-security
+    pm/index
+    pnp
++   qcom_minidump
+    rapidio
+    ras
+    rtc
 
-Tony
+> +Writing to sysfs node can also be used to set the mode to minidump.
+> +
+> +::
+> +	echo "mini" > /sys/module/qcom_scm/parameter/download_mode
+
+The snippet above isn't rendered to code block, so I have to fix it up:
+
+---- >8 ----
+diff --git a/Documentation/admin-guide/qcom_minidump.rst b/Documentation/ad=
+min-guide/qcom_minidump.rst
+index 062c797e90d9cf..408fe1beed1b78 100644
+--- a/Documentation/admin-guide/qcom_minidump.rst
++++ b/Documentation/admin-guide/qcom_minidump.rst
+@@ -208,9 +208,8 @@ Similarly, "full" is passed to set the download mode to=
+ full dump
+ where entire ddr dump will be collected while setting it "full,mini"
+ will collect minidump along with fulldump.
+=20
+-Writing to sysfs node can also be used to set the mode to minidump.
++Writing to sysfs node can also be used to set the mode to minidump::
+=20
+-::
+ 	echo "mini" > /sys/module/qcom_scm/parameter/download_mode
+=20
+ Once the download mode is set, any kind of crash will make the device coll=
+ect
+
+> +By default, dumps are downloaded via USB to the attached x86_64 machine
+> +running PCAT (Qualcomm tool) software. Upon download, we will see
+> +a set of binary blobs starts with name md_* in PCAT configured directory
+> +in x86_64 machine, so for above example from the client it will be
+> +md_REGION_A.BIN. This binary blob depends on region content to determine
+> +whether it needs external parser support to get the content of the regio=
+n,
+> +so for simple plain ASCII text we don't need any parsing and the content
+> +can be seen just opening the binary file.
+> +
+> <snipped> ...
+> +One need to read the entire rawdump partition and pull out content to
+> +save it onto the attached x86_64 machine over USB. Later, this rawdump
+> +can be pass it to another tool dexter.exe(Qualcomm tool) which converts
+> +this into the similar binary blobs which we have got it when download ty=
+pe
+> +was set to USB i.e a set of registered region as blobs and their name
+> +starts with md_*.
+> +
+> +Replacing the dexter.exe with some open source tool can be added as futu=
+re
+> +scope of this document.
+
+There is inconsistency on inlining code keywords, so I have to inline
+the rest:
+
+---- >8 ----
+diff --git a/Documentation/admin-guide/qcom_minidump.rst b/Documentation/ad=
+min-guide/qcom_minidump.rst
+index 408fe1beed1b78..117e61ef9fde67 100644
+--- a/Documentation/admin-guide/qcom_minidump.rst
++++ b/Documentation/admin-guide/qcom_minidump.rst
+@@ -118,7 +118,7 @@ Client driver can use ``qcom_apss_minidump_region_regis=
+ter`` API's to
+ register and ``qcom_apss_minidump_region_unregister`` to unregister
+ their region from minidump driver.
+=20
+-Client need to fill their region by filling qcom_apss_minidump_region
++Client need to fill their region by filling ``qcom_apss_minidump_region``
+ structure object which consist of the region name, region's
+ virtual and physical address and its size.
+=20
+@@ -166,7 +166,7 @@ Test
+=20
+ Existing Qualcomm devices already supports entire ddr dump (also called
+ full dump) by writing appropriate value to Qualcomm's top control and
+-status register(tcsr) in driver/firmware/qcom_scm.c .
++status register(tcsr) in ``driver/firmware/qcom_scm.c``.
+=20
+ SCM device Tree bindings required to support download mode
+ For example (sm8450) ::
+@@ -202,10 +202,10 @@ For example (sm8450) ::
+=20
+ 	};
+=20
+-User of minidump can pass qcom_scm.download_mode=3D"mini" to kernel
++User of minidump can pass ``qcom_scm.download_mode=3D"mini"`` to kernel
+ commandline to set the current download mode to minidump.
+-Similarly, "full" is passed to set the download mode to full dump
+-where entire ddr dump will be collected while setting it "full,mini"
++Similarly, ``"full"`` is passed to set the download mode to full dump
++where entire ddr dump will be collected while setting it ``"full,mini"``
+ will collect minidump along with fulldump.
+=20
+ Writing to sysfs node can also be used to set the mode to minidump::
+@@ -223,9 +223,9 @@ stored to an attached storage device.
+=20
+ By default, dumps are downloaded via USB to the attached x86_64 machine
+ running PCAT (Qualcomm tool) software. Upon download, we will see
+-a set of binary blobs starts with name md_* in PCAT configured directory
++a set of binary blobs starts with name ``md_*`` in PCAT configured directo=
+ry
+ in x86_64 machine, so for above example from the client it will be
+-md_REGION_A.BIN. This binary blob depends on region content to determine
++``md_REGION_A.BIN``. This binary blob depends on region content to determi=
+ne
+ whether it needs external parser support to get the content of the region,
+ so for simple plain ASCII text we don't need any parsing and the content
+ can be seen just opening the binary file.
+@@ -236,10 +236,10 @@ partition on the target device itself.
+=20
+ One need to read the entire rawdump partition and pull out content to
+ save it onto the attached x86_64 machine over USB. Later, this rawdump
+-can be pass it to another tool dexter.exe(Qualcomm tool) which converts
++can be pass it to another tool (``dexter.exe`` [Qualcomm tool]) which conv=
+erts
+ this into the similar binary blobs which we have got it when download type
+ was set to USB i.e a set of registered region as blobs and their name
+-starts with md_*.
++starts with ``md_*``.
+=20
+-Replacing the dexter.exe with some open source tool can be added as future
++Replacing the ``dexter.exe`` with some open source tool can be added as fu=
+ture
+ scope of this document.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--y9mITgkKFRXba6ks
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZFjIbAAKCRD2uYlJVVFO
+oyXUAP9Jdvp3ekfNs/R/xT6oObGE6Yey/Lz3Tnr82n5uZ2grhgD+Jc+IKZQhm8/Q
+linikE60BwEYt7d/w1AiQuaOIvuahgk=
+=PaTP
+-----END PGP SIGNATURE-----
+
+--y9mITgkKFRXba6ks--
