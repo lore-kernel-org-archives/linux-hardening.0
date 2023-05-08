@@ -2,162 +2,176 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9F6C77B7F
-	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 15:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C054EC77B7F
+	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 17:29:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234090AbjEHPvp (ORCPT
+        id S233394AbjEHR3r (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 8 May 2023 11:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34438 "EHLO
+        Mon, 8 May 2023 13:29:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234087AbjEHPvn (ORCPT
+        with ESMTP id S232429AbjEHR3q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 8 May 2023 11:51:43 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4537AD1C;
-        Mon,  8 May 2023 08:51:27 -0700 (PDT)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 348ETuMH014109;
-        Mon, 8 May 2023 15:51:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=qcppdkim1;
- bh=vDt2BEopWdrLVpdUsagAxhdZHq6YP8MKjw07AtfcvH0=;
- b=aGstWzzBCJJstO4BFRffpwDi305+/qByh+mhIc4jOd2excN/BqmcSCeHjVT7OOuXuMgT
- V6MRaGaaWFAAhMo5r97jHubbo4QKmdpWQk6Qtd1Pjq/Nx22cdTv8Go/7Dr+0BO5rZmzB
- yVGrRP5neP6yy7cTaiEHMU8gxc0mpkzKZLl/lYk8BHWAQRNGcORZsNHfcsMWo/rIaCXn
- NTSJ4t6ALBcKgyqWsdXBnK5h4ROChISxjvszfaiBwVL2w7JgsSLNP1pl9qzG1B4S9A03
- S4AlMwU+yWdlOpl8AtUX0n2GYktz+eiDz7pAZqWYgKS3FZqct03GWyaCtAqHdUbW26fm EA== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qexf1gte2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 08 May 2023 15:51:13 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 348FpCok017726
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 8 May 2023 15:51:12 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Mon, 8 May 2023 08:51:08 -0700
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <keescook@chromium.org>, <gregkh@linuxfoundation.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <johannes@sipsolutions.net>, <rafael@kernel.org>
-CC:     <quic_mojha@quicinc.com>, <linux-hardening@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_shashim@quicinc.com>,
-        <quic_pkondeti@quicinc.com>
-Subject: RFC design of device coredump collection on panic in Pstore
-Date:   Mon, 8 May 2023 21:21:00 +0530
-Message-ID: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 8 May 2023 13:29:46 -0400
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B80561B0;
+        Mon,  8 May 2023 10:29:44 -0700 (PDT)
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-643990c5319so3236692b3a.2;
+        Mon, 08 May 2023 10:29:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683566983; x=1686158983;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3rfke9qB1DRHiCuMEOyzzXuV8oi0P7zjijqnIYynp3o=;
+        b=WJfaSuuV1ekEBAiD7cPHXE8+V1fa6ljBFWX4+wgtGd2BpjmEc5oaB9B2TwapRwAKtM
+         MJJMVu8FqUEp8/0jin4K/2/FEUn1ZrE/k5wuDK7LRAoaocRmo8q9/T0ca3iTaW/CT7yS
+         wFLr/e7SWBhy3cZgm5USsixgEOS0fI9WAkt/OtV3xVGy5AfdOgViPI4pNCel3zzV/ins
+         2X6+wwY5b2gW26I4IcslgW6L1a0ovEfBYTw86Gi4l98rsdIkxYJO6SPC1xaEDc2gS9lt
+         xxCYUgV2LUyXr0nuoGnE398GdJ1Lz/xMmAWTyR5qvtV8WaYtjl2MNVP06GrB/ycOu8fv
+         R6OQ==
+X-Gm-Message-State: AC+VfDxQ4MBRreQPfAhZsHBpVT3fjSYHJlLjJpf3FR8c0uIzqOMeZ2Zi
+        QSG9tf/qKYdVSe7y/Wyo9rs=
+X-Google-Smtp-Source: ACHHUZ75U4lCk4iijzyP5tOZ0JsVrz/EkvkWJ7HQDBXg3iSt23KVdFrierjfNZySz59EZ1uNpntsKQ==
+X-Received: by 2002:a05:6a20:a107:b0:ff:7c74:a799 with SMTP id q7-20020a056a20a10700b000ff7c74a799mr11302220pzk.9.1683566983497;
+        Mon, 08 May 2023 10:29:43 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
+        by smtp.gmail.com with ESMTPSA id i4-20020aa787c4000000b0063d2d9990ecsm232036pfo.87.2023.05.08.10.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 10:29:43 -0700 (PDT)
+Date:   Mon, 8 May 2023 17:29:41 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
+        =?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH v1 3/9] virt: Implement Heki common code
+Message-ID: <ZFkxhWhjyIzrPkt8@liuwe-devbox-debian-v2>
+References: <20230505152046.6575-1-mic@digikod.net>
+ <20230505152046.6575-4-mic@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 1Xp700i_CMCDeRK-27co6w6eQvGO0PXm
-X-Proofpoint-GUID: 1Xp700i_CMCDeRK-27co6w6eQvGO0PXm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-08_12,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=530 priorityscore=1501 mlxscore=0 suspectscore=0 phishscore=0
- adultscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2305080105
+In-Reply-To: <20230505152046.6575-4-mic@digikod.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi All,
+On Fri, May 05, 2023 at 05:20:40PM +0200, Micka�l Sala�n wrote:
+> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+> 
+> Hypervisor Enforced Kernel Integrity (Heki) is a feature that will use
+> the hypervisor to enhance guest virtual machine security.
+> 
+> Configuration
+> =============
+> 
+> Define the config variables for the feature. This feature depends on
+> support from the architecture as well as the hypervisor.
+> 
+> Enabling HEKI
+> =============
+> 
+> Define a kernel command line parameter "heki" to turn the feature on or
+> off. By default, Heki is on.
 
-We are exploring a way where device driver(registered/interested and optional could be
-callback) can dump their data(consist of list of buffers or hardware registers) for post
-mortam debugging of a crash via dumping the content to pstore region. Some of the example
-data could be like clock dump/regulators/ etc.
+For such a newfangled feature can we have it off by default? Especially
+when there are unsolved issues around dynamically loaded code.
 
-These stuff should be already part of entire RAM dump but in some cases it's however not
-feasible to capture the entire content of RAM, so was thinking if pstore region can be
-used to capture above information either in the form of elf or binary and how pstore
-can get this in human readable format can be discussed further.
+> 
+[...]
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 3604074a878b..5cf5a7a97811 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -297,6 +297,7 @@ config X86
+>  	select FUNCTION_ALIGNMENT_4B
+>  	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>  	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+> +	select ARCH_SUPPORTS_HEKI		if X86_64
 
-Also, existing devcoredump driver does not cover panic usecases so we thought of something
-like below RFC design where,
+Why is there a restriction on X86_64?
 
-1. Device_coredump allocates some configurable contigous memory that can be controlled
-   via CONFIG or bootargs and later registers for panic notifiers.
-2. Notifier gets added.
-3. Pstore adds device_coredump as its front-end via dumper registration similar
-   to kmsg being dump today.
-4. Successful registration of dumper.
-5. A device driver(A-Z) can register their buffer to be dumped as part of panic.
-6. buffer gets added to the dump list.
-7. Panic occurs.
-8. iterate over registered drivers and copy their dump list to its own memory and if
-   it crosses device core dump memory log an error stop iterating.
-9. Similar to devcore_dump() inline with kmsg_dump()
-10.Copy the content to pstore region and this could be elf or raw binary that can be
-   discussed.
+>  
+>  config INSTRUCTION_DECODER
+>  	def_bool y
+> diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
+> index a6e8373a5170..42ef1e33b8a5 100644
+> --- a/arch/x86/include/asm/sections.h
+> +++ b/arch/x86/include/asm/sections.h
+[...]
+>  
+> +#ifdef CONFIG_HEKI
+> +
+> +/*
+> + * Gather all of the statically defined sections so heki_late_init() can
+> + * protect these sections in the host page table.
+> + *
+> + * The sections are defined under "SECTIONS" in vmlinux.lds.S
+> + * Keep this array in sync with SECTIONS.
+> + */
 
+This seems a bit fragile, because it requires constant attention from
+people who care about this functionality. Can this table be
+automatically generated?
 
-Device coredump memory(1) size could be passed from pstore and should be same as size
-of devcoredump frontend size given in DT or some other way.
+Thanks,
+Wei.
 
-Let me know your concern and view on this.       
-                    
-
-                    pstore               device_coredump      deviceA..Z          panic
-                                                                  ┼                  │
-                       │                      │       panic_notifier(1)              │
-                       │                      ├───────────────────┬─────────────────►│
-                       │                      │ notifier added    │ (2)              │
-                       │                      │◄──────────────────┼──────────────────┤
-      pstore can give  │       (3)            │                   │                  │
-      its region for   │ dumper_registration  │                   │                  │
-      dump             ├─────────────────────►│                   │                  │
-                       │       (4)            │                   │                  │
-                       │◄─────────────────────┤                   │                  │
-                       │  register_dumper     │                   │                  │
-                       │                      │                   │                  │
-                       │                      │                   │                  │
-                       │                      │                   │ init             │
-                       │                      │                ───┼──                │
-                       │                      │       (5)         │                  │
-                       │                      │devcoredump_register(dev,buf));       │
-                       │                      │◄──────────────────┐                  │
-                       │                      │       (6)         │                  │
-                       │                      ├──────────────────►│                  │
-                       │                      │device/buf gets add│d                 │
-                       │                      │ to the list       │                  │panic
-                       │                      │                   │                ──┼───
-                       │                      │                   │                  │
-                       │                      │(7) panic_notifier │     call         │
-                       │                      │◄──────────────────┼──────────────────┤
-                       │                      │ prepare coredump  │for the deviceA-Z │
-                       │                      ├──────────────────►├────┐             │
-                       │                      │   (8)             │    │             │
-                       │                      │                   │    │             │
-                       │                      │                   │    │             │
-                       │                      │                   │◄───┘             │
-             dumper will                      │                   │            (9)   │dev_coredump()
-             write all the device dump to     │◄──────────────────┼──────────────────┤
-              pstore   ┌◄───┬─────────────────┤                   │                  │
-              region   │    │    (10)         │                   │                  │
-                       │    │                 │                   │                  │
-                       │    │                 │                   │                  │
-                       │◄───┘                 │                   │                  │
-                       │                      │                   │                  │
-                       │                      │                   
-
-
-
-Regards,
-Mukesh
-
--- 
-2.7.4
-
+> +struct heki_va_range __initdata heki_va_ranges[] = {
+> +	{
+> +		.va_start = _stext,
+> +		.va_end = _etext,
+> +		.attributes = HEKI_ATTR_MEM_NOWRITE | HEKI_ATTR_MEM_EXEC,
+> +	},
+> +	{
+> +		.va_start = __start_rodata,
+> +		.va_end = __end_rodata,
+> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+> +	},
+> +#ifdef CONFIG_UNWINDER_ORC
+> +	{
+> +		.va_start = __start_orc_unwind_ip,
+> +		.va_end = __stop_orc_unwind_ip,
+> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+> +	},
+> +	{
+> +		.va_start = __start_orc_unwind,
+> +		.va_end = __stop_orc_unwind,
+> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+> +	},
+> +	{
+> +		.va_start = orc_lookup,
+> +		.va_end = orc_lookup_end,
+> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+> +	},
+> +#endif /* CONFIG_UNWINDER_ORC */
+> +};
+> +
