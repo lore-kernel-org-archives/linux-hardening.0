@@ -2,247 +2,149 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC387C7EE22
-	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 10:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD822C77B73
+	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 12:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233912AbjEHKBa (ORCPT
+        id S233587AbjEHMnn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 8 May 2023 06:01:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56882 "EHLO
+        Mon, 8 May 2023 08:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233917AbjEHKB2 (ORCPT
+        with ESMTP id S233057AbjEHMnm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 8 May 2023 06:01:28 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65FD2E062;
-        Mon,  8 May 2023 03:01:26 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6439f186366so2134071b3a.2;
-        Mon, 08 May 2023 03:01:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683540086; x=1686132086;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rJvJGURrh5Y6Ahv+dvSHYL3+bNVZ9g/h4mq9+B66qRI=;
-        b=IPShIZ0hYGoGQZ+QpgYEoS7sXMWJihKWBFY8s06PyRBEPpO8fiac9zfXtKK+oC+7ks
-         +5JM8r+DcylJmbKZJjo1jkOrh4NpjgM1KMT/6PXtTdt7P16Q1bVpoOQMJu/xd6ZuQJf6
-         g0wxdJshfIpodgZPz8OSPuNG8QEfupLy5h2HhTz9rjIDjUPXK1rVQ7aazGvB5W8WfNld
-         JhRCRS6vM7Dl2sn+luKAPSacYOwUCV6Uu/hstIDQaxTcuZKxGKGwqUbCRdEAR5dMajWV
-         PZF1Vy+nsY72Pl4fdXRbabdzVh6jYSVvgiKnDr3yLcl7t0C5+d/Vc6M+qwI1gNWSsMZR
-         CAAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683540086; x=1686132086;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rJvJGURrh5Y6Ahv+dvSHYL3+bNVZ9g/h4mq9+B66qRI=;
-        b=FekkjWtelKJd+P4Mb9vrpEIxVnk2esoGx4LDivqTRewf1hOFKzkFKeGmrndua9se27
-         aC7+PAfVsjgIxqUrbro5F55kMgCieEtkAjOoED7gzPCMFV+UVawB4wJMaO1ZuavCW/Gk
-         UgGQlXuQ3gtdcOxnRZ/SzB07nlsskCJXlg77TC28U+oHIVzk5n1inCiCMjFdUNogqc7j
-         7ZTmcgqgJ9HDAN9qokuI/O5PgYBX6agI4CKZX3Osicx22lAkqOb/kq5gYlySqkZzMRh1
-         oVBTBFrY4T5dId0tiSJN6zgYh/7Wc7Pz0i56/LVZFOxQTG6wb+hzGiTJmCNEOZ/BJ9Ps
-         s1Lw==
-X-Gm-Message-State: AC+VfDzasEe6x5Gz24fMbjKYHa6wHogSVsCL+46dlYwyTwIpHmpb9Y7t
-        ZX8a+7Bj+NjlLikJYPreKHk=
-X-Google-Smtp-Source: ACHHUZ432kkuqfkRj7AzZft5/WbhfjXcUv0u9eGieSBZ3qtznBd/fiH77+wHRKFcmjTGSgYOzAr1dw==
-X-Received: by 2002:a05:6a00:1694:b0:63b:57cb:145f with SMTP id k20-20020a056a00169400b0063b57cb145fmr13083641pfc.20.1683540085842;
-        Mon, 08 May 2023 03:01:25 -0700 (PDT)
-Received: from debian.me (subs32-116-206-28-55.three.co.id. [116.206.28.55])
-        by smtp.gmail.com with ESMTPSA id i23-20020aa787d7000000b0062d90f36d16sm2667483pfo.88.2023.05.08.03.01.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 03:01:25 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id 0C36010687E; Mon,  8 May 2023 17:01:21 +0700 (WIB)
-Date:   Mon, 8 May 2023 17:01:21 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 03/18] docs: qcom: Add qualcomm minidump guide
-Message-ID: <ZFjIcSRSitmOvmZw@debian.me>
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-4-git-send-email-quic_mojha@quicinc.com>
+        Mon, 8 May 2023 08:43:42 -0400
+X-Greylist: delayed 513 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 08 May 2023 05:43:40 PDT
+Received: from mail-m127104.qiye.163.com (mail-m127104.qiye.163.com [115.236.127.104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFC8BC;
+        Mon,  8 May 2023 05:43:40 -0700 (PDT)
+Received: from [0.0.0.0] (unknown [172.96.223.238])
+        by mail-m127104.qiye.163.com (Hmail) with ESMTPA id 1D106A40483;
+        Mon,  8 May 2023 20:34:48 +0800 (CST)
+Message-ID: <8c243d68-583f-aeea-3d8f-e608746dd9e7@sangfor.com.cn>
+Date:   Mon, 8 May 2023 20:34:43 +0800
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y9mITgkKFRXba6ks"
-Content-Disposition: inline
-In-Reply-To: <1683133352-10046-4-git-send-email-quic_mojha@quicinc.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH net v4 2/2] iavf: Fix out-of-bounds when setting channels
+ on remove
+Content-Language: en-US
+To:     Leon Romanovsky <leon@kernel.org>,
+        "Chittim, Madhu" <madhu.chittim@intel.com>
+Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
+        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        keescook@chromium.org, grzegorzx.szczurek@intel.com,
+        mateusz.palczewski@intel.com, mitch.a.williams@intel.com,
+        gregory.v.rose@intel.com, jeffrey.t.kirsher@intel.com,
+        michal.kubiak@intel.com, simon.horman@corigine.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, pengdonglin@sangfor.com.cn,
+        huangcun@sangfor.com.cn
+References: <20230503031541.27855-1-dinghui@sangfor.com.cn>
+ <20230503031541.27855-3-dinghui@sangfor.com.cn>
+ <20230503082458.GH525452@unreal>
+ <d2351c0f-0bfe-9422-f6f3-f0a0db58c729@sangfor.com.cn>
+ <20230503162932.GN525452@unreal>
+ <941ad3cc-22d6-3459-dfbc-36bc47a8a22a@intel.com>
+ <20230504075709.GS525452@unreal>
+From:   Ding Hui <dinghui@sangfor.com.cn>
+In-Reply-To: <20230504075709.GS525452@unreal>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQ05CVk5JQh5DTEIYTBpMT1UTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpMSVVCTVVJSUhVSUhDWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLVUtZBg++
+X-HM-Tid: 0a87fb5ba364b282kuuu1d106a40483
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mgw6PDo5AT0JKzYLEDUvLVYR
+        DxkKFEhVSlVKTUNITk9CSEtLT09NVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
+        QVlKTElVQk1VSUlIVUlIQ1lXWQgBWUFNSk1PNwY+
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On 2023/5/4 15:57, Leon Romanovsky wrote:
+> On Wed, May 03, 2023 at 12:22:00PM -0700, Chittim, Madhu wrote:
+>>
+>>
+>> On 5/3/2023 9:29 AM, Leon Romanovsky wrote:
+>>> On Wed, May 03, 2023 at 10:00:49PM +0800, Ding Hui wrote:
+>>>> On 2023/5/3 4:24 下午, Leon Romanovsky wrote:
+>>>>> On Wed, May 03, 2023 at 11:15:41AM +0800, Ding Hui wrote:
+>>>>
+>>>>>>
+>>>>>> If we detected removing is in processing, we can avoid unnecessary
+>>>>>> waiting and return error faster.
+>>>>>>
+>>>>>> On the other hand in timeout handling, we should keep the original
+>>>>>> num_active_queues and reset num_req_queues to 0.
+>>>>>>
+>>>>>> Fixes: 4e5e6b5d9d13 ("iavf: Fix return of set the new channel count")
+>>>>>> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
+>>>>>> Cc: Donglin Peng <pengdonglin@sangfor.com.cn>
+>>>>>> Cc: Huang Cun <huangcun@sangfor.com.cn>
+>>>>>> Reviewed-by: Simon Horman <simon.horman@corigine.com>
+>>>>>> Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+>>>>>> ---
+>>>>>> v3 to v4:
+>>>>>>      - nothing changed
+>>>>>>
+>>>>>> v2 to v3:
+>>>>>>      - fix review tag
+>>>>>>
+>>>>>> v1 to v2:
+>>>>>>      - add reproduction script
+>>>>>>
+>>>>>> ---
+>>>>>>     drivers/net/ethernet/intel/iavf/iavf_ethtool.c | 4 +++-
+>>>>>>     1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/net/ethernet/intel/iavf/iavf_ethtool.c b/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
+>>>>>> index 6f171d1d85b7..d8a3c0cfedd0 100644
+>>>>>> --- a/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
+>>>>>> +++ b/drivers/net/ethernet/intel/iavf/iavf_ethtool.c
+>>>>>> @@ -1857,13 +1857,15 @@ static int iavf_set_channels(struct net_device *netdev,
+>>>>>>     	/* wait for the reset is done */
+>>>>>>     	for (i = 0; i < IAVF_RESET_WAIT_COMPLETE_COUNT; i++) {
+>>>>>>     		msleep(IAVF_RESET_WAIT_MS);
+>>>>>> +		if (test_bit(__IAVF_IN_REMOVE_TASK, &adapter->crit_section))
+>>>>>> +			return -EOPNOTSUPP;
+>>>>>
+>>>>> This makes no sense without locking as change to __IAVF_IN_REMOVE_TASK
+>>>>> can happen any time.
+>>>>>
+>>>>
+>>>> The state doesn't need to be that precise here, it is optimized only for
+>>>> the fast path. During the lifecycle of the adapter, the __IAVF_IN_REMOVE_TASK
+>>>> state will only be set and not cleared.
+>>>>
+>>>> If we didn't detect the "removing" state, we also can fallback to timeout
+>>>> handling.
+>>>>
+>>>> So I don't think the locking is necessary here, what do the maintainers
+>>>> at Intel think?
+>>>
+>>> I'm not Intel maintainer, but your change, explanation and the following
+>>> line from your commit message aren't really aligned.
+>>>
+>>> [ 3510.400799] ==================================================================
+>>> [ 3510.400820] BUG: KASAN: slab-out-of-bounds in iavf_free_all_tx_resources+0x156/0x160 [iavf]
+>>>
+>>>
+>>
+>> __IAVF_IN_REMOVE_TASK is being set only in iavf_remove() and the above
+>> change is ok in terms of coming out of setting channels early enough while
+>> remove is in progress.
+> 
+> It is not, __IAVF_IN_REMOVE_TASK, set bit can be changed any time during
+> iavf_set_channels() and if it is not, I would expect test_bit(..) placed
+> at the beginning of iavf_set_channels() or even earlier.
+> 
 
---y9mITgkKFRXba6ks
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Since we have a little dispute on __IAVF_IN_REMOVE_TASK, I'll remove the
+test_bit() in v5, and remove Reviewed-by: tags of 2/2 to review again.
 
-On Wed, May 03, 2023 at 10:32:17PM +0530, Mukesh Ojha wrote:
->  Documentation/admin-guide/qcom_minidump.rst | 246 ++++++++++++++++++++++=
-++++++
->  1 file changed, 246 insertions(+)
+-- 
+Thanks,
+- Ding Hui
 
-You forget to add toctree entry:
-
----- >8 ----
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guid=
-e/index.rst
-index 43ea35613dfcd4..251d070486c2ab 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -120,6 +120,7 @@ configure specific aspects of kernel behavior to your l=
-iking.
-    perf-security
-    pm/index
-    pnp
-+   qcom_minidump
-    rapidio
-    ras
-    rtc
-
-> +Writing to sysfs node can also be used to set the mode to minidump.
-> +
-> +::
-> +	echo "mini" > /sys/module/qcom_scm/parameter/download_mode
-
-The snippet above isn't rendered to code block, so I have to fix it up:
-
----- >8 ----
-diff --git a/Documentation/admin-guide/qcom_minidump.rst b/Documentation/ad=
-min-guide/qcom_minidump.rst
-index 062c797e90d9cf..408fe1beed1b78 100644
---- a/Documentation/admin-guide/qcom_minidump.rst
-+++ b/Documentation/admin-guide/qcom_minidump.rst
-@@ -208,9 +208,8 @@ Similarly, "full" is passed to set the download mode to=
- full dump
- where entire ddr dump will be collected while setting it "full,mini"
- will collect minidump along with fulldump.
-=20
--Writing to sysfs node can also be used to set the mode to minidump.
-+Writing to sysfs node can also be used to set the mode to minidump::
-=20
--::
- 	echo "mini" > /sys/module/qcom_scm/parameter/download_mode
-=20
- Once the download mode is set, any kind of crash will make the device coll=
-ect
-
-> +By default, dumps are downloaded via USB to the attached x86_64 machine
-> +running PCAT (Qualcomm tool) software. Upon download, we will see
-> +a set of binary blobs starts with name md_* in PCAT configured directory
-> +in x86_64 machine, so for above example from the client it will be
-> +md_REGION_A.BIN. This binary blob depends on region content to determine
-> +whether it needs external parser support to get the content of the regio=
-n,
-> +so for simple plain ASCII text we don't need any parsing and the content
-> +can be seen just opening the binary file.
-> +
-> <snipped> ...
-> +One need to read the entire rawdump partition and pull out content to
-> +save it onto the attached x86_64 machine over USB. Later, this rawdump
-> +can be pass it to another tool dexter.exe(Qualcomm tool) which converts
-> +this into the similar binary blobs which we have got it when download ty=
-pe
-> +was set to USB i.e a set of registered region as blobs and their name
-> +starts with md_*.
-> +
-> +Replacing the dexter.exe with some open source tool can be added as futu=
-re
-> +scope of this document.
-
-There is inconsistency on inlining code keywords, so I have to inline
-the rest:
-
----- >8 ----
-diff --git a/Documentation/admin-guide/qcom_minidump.rst b/Documentation/ad=
-min-guide/qcom_minidump.rst
-index 408fe1beed1b78..117e61ef9fde67 100644
---- a/Documentation/admin-guide/qcom_minidump.rst
-+++ b/Documentation/admin-guide/qcom_minidump.rst
-@@ -118,7 +118,7 @@ Client driver can use ``qcom_apss_minidump_region_regis=
-ter`` API's to
- register and ``qcom_apss_minidump_region_unregister`` to unregister
- their region from minidump driver.
-=20
--Client need to fill their region by filling qcom_apss_minidump_region
-+Client need to fill their region by filling ``qcom_apss_minidump_region``
- structure object which consist of the region name, region's
- virtual and physical address and its size.
-=20
-@@ -166,7 +166,7 @@ Test
-=20
- Existing Qualcomm devices already supports entire ddr dump (also called
- full dump) by writing appropriate value to Qualcomm's top control and
--status register(tcsr) in driver/firmware/qcom_scm.c .
-+status register(tcsr) in ``driver/firmware/qcom_scm.c``.
-=20
- SCM device Tree bindings required to support download mode
- For example (sm8450) ::
-@@ -202,10 +202,10 @@ For example (sm8450) ::
-=20
- 	};
-=20
--User of minidump can pass qcom_scm.download_mode=3D"mini" to kernel
-+User of minidump can pass ``qcom_scm.download_mode=3D"mini"`` to kernel
- commandline to set the current download mode to minidump.
--Similarly, "full" is passed to set the download mode to full dump
--where entire ddr dump will be collected while setting it "full,mini"
-+Similarly, ``"full"`` is passed to set the download mode to full dump
-+where entire ddr dump will be collected while setting it ``"full,mini"``
- will collect minidump along with fulldump.
-=20
- Writing to sysfs node can also be used to set the mode to minidump::
-@@ -223,9 +223,9 @@ stored to an attached storage device.
-=20
- By default, dumps are downloaded via USB to the attached x86_64 machine
- running PCAT (Qualcomm tool) software. Upon download, we will see
--a set of binary blobs starts with name md_* in PCAT configured directory
-+a set of binary blobs starts with name ``md_*`` in PCAT configured directo=
-ry
- in x86_64 machine, so for above example from the client it will be
--md_REGION_A.BIN. This binary blob depends on region content to determine
-+``md_REGION_A.BIN``. This binary blob depends on region content to determi=
-ne
- whether it needs external parser support to get the content of the region,
- so for simple plain ASCII text we don't need any parsing and the content
- can be seen just opening the binary file.
-@@ -236,10 +236,10 @@ partition on the target device itself.
-=20
- One need to read the entire rawdump partition and pull out content to
- save it onto the attached x86_64 machine over USB. Later, this rawdump
--can be pass it to another tool dexter.exe(Qualcomm tool) which converts
-+can be pass it to another tool (``dexter.exe`` [Qualcomm tool]) which conv=
-erts
- this into the similar binary blobs which we have got it when download type
- was set to USB i.e a set of registered region as blobs and their name
--starts with md_*.
-+starts with ``md_*``.
-=20
--Replacing the dexter.exe with some open source tool can be added as future
-+Replacing the ``dexter.exe`` with some open source tool can be added as fu=
-ture
- scope of this document.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---y9mITgkKFRXba6ks
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZFjIbAAKCRD2uYlJVVFO
-oyXUAP9Jdvp3ekfNs/R/xT6oObGE6Yey/Lz3Tnr82n5uZ2grhgD+Jc+IKZQhm8/Q
-linikE60BwEYt7d/w1AiQuaOIvuahgk=
-=PaTP
------END PGP SIGNATURE-----
-
---y9mITgkKFRXba6ks--
