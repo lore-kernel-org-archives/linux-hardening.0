@@ -2,253 +2,244 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D4F2C7EE22
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 May 2023 13:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34146C77B7C
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 May 2023 15:46:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235544AbjEINkL (ORCPT
+        id S235814AbjEIPqG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 9 May 2023 09:40:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33564 "EHLO
+        Tue, 9 May 2023 11:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235550AbjEINkJ (ORCPT
+        with ESMTP id S231488AbjEIPqF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 9 May 2023 09:40:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7153596;
-        Tue,  9 May 2023 06:40:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 61CDD62F33;
-        Tue,  9 May 2023 13:40:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD540C433EF;
-        Tue,  9 May 2023 13:40:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683639602;
-        bh=331uf8VgM+EnxY1VTF6u21mARaxabgfX60a6qxEft7k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UnBHzn7USKmpexemqJkXyZr+6LpfL0ePMJCVpgwUHlXTIRGSWtJciUFtDn05sIq48
-         NY5BPGKH4DV7bAXPMGEsoYvUv8Sz+vpRPII+lZKVkX48MJPM+dGWRc1ecgf52/5ykX
-         WIfFbLSF1uN7A1jNVHRR1kLu+TrmJUTSc17tfZUqSYz9J76Q6K1LkBeEvmXD0ksxW6
-         trwqfl9gRgRMJre1sSLxWQAbe0OSzcJwWgZDeodvwyQC4QnRqkC68UlgfyobQ9gzNe
-         YMVeOYeTqqzR5vO4Jt/1/DLr1dizw8YQ25nETsfyDRzioxmz0AFhOXIBlzfTephf6C
-         CB5HsZ3JeZPxQ==
-Date:   Tue, 9 May 2023 16:39:58 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Ding Hui <dinghui@sangfor.com.cn>
-Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        keescook@chromium.org, grzegorzx.szczurek@intel.com,
-        mateusz.palczewski@intel.com, mitch.a.williams@intel.com,
-        gregory.v.rose@intel.com, jeffrey.t.kirsher@intel.com,
-        michal.kubiak@intel.com, simon.horman@corigine.com,
-        madhu.chittim@intel.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        pengdonglin@sangfor.com.cn, huangcun@sangfor.com.cn
-Subject: Re: [PATCH net v5 1/2] iavf: Fix use-after-free in free_netdev
-Message-ID: <20230509133958.GL38143@unreal>
-References: <20230509111148.4608-1-dinghui@sangfor.com.cn>
- <20230509111148.4608-2-dinghui@sangfor.com.cn>
+        Tue, 9 May 2023 11:46:05 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F46110CF;
+        Tue,  9 May 2023 08:46:04 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6435bbedb4fso6530350b3a.3;
+        Tue, 09 May 2023 08:46:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683647164; x=1686239164;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=71PM0c8jNHbE9hDVzelzE+44lPJ6yhnjh+al/DYMEGM=;
+        b=SEA4YE+jIMxurE4v8za3MHr2O6gaolZclraB7UcAIamSS+Dj8yKy0jXrX7aKbd7XqM
+         ODwEULvon/ZHeJlDO0e2X7NsBu3EQ9VjifJNDxJysAg5ImkgjjCBTeJ6aV/SAr+2PnrP
+         r73qgNNowQKOJlzR61Cj6po0v3hMx2fl8dDNacu/Ul+YccRQ6EzlQKoue3Ew4PvJ64e9
+         CvqZRSE4RgeGuuxOY+r+YWXqXDEAKd58vhrbbpGyklzNWQkYD10DyrnkdVVSnasi0q9O
+         3yA4Docte3BTc1xIHgWT7+39MYRFhDvH4p+r7yzJJlKu8w6kZxSHJqhNaPKRBoLRIFjE
+         2fYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683647164; x=1686239164;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=71PM0c8jNHbE9hDVzelzE+44lPJ6yhnjh+al/DYMEGM=;
+        b=FZcL8YF2172WCJ8SW2A+oz5iqIR7xklbEojaXM1KRdq5+8AXOyXjQyeEsaufIvR9lQ
+         txnJejphe+YD3iywews/JcyNfV7thdisO3N3PvdYAO6MiJ438qeBT1/7RGj0ruL6vZ4I
+         5OvgBTIQ/B5EyGYtjdqY/VUhTiyjcd9fwehECWKffsP9F/OuKFLBry0Jtu9TpX1J7pcm
+         af/MzEMxAYHL1a5fJzcL5yCL1puMfWJvDVescbzwShvCYnr/xITk9vfose4YoCXdB0rO
+         6NBU9GIrMbOTOj665my2ZK+4J7CylfwhfgQtinjTKrvlr5vcS/4mlDsJTGSNrwDHF69z
+         s8MA==
+X-Gm-Message-State: AC+VfDwdM6AQhMDYRhzUCktQafOGcm4ydRhun5QQhppVuW9yQ8bVbmMO
+        tWmxV06c/x777tVc2VstzNM=
+X-Google-Smtp-Source: ACHHUZ40OSB3ygellDJMvNryY1OSEE6VRfNqx3TuFWOwXIXAE8QVpIUy0A0EEw+J+Wkbd/hFvnAwEA==
+X-Received: by 2002:a05:6a20:429b:b0:101:4c8c:d1fa with SMTP id o27-20020a056a20429b00b001014c8cd1famr3595014pzj.5.1683647163538;
+        Tue, 09 May 2023 08:46:03 -0700 (PDT)
+Received: from [192.168.50.148] (net-2-32-39-33.cust.vodafonedsl.it. [2.32.39.33])
+        by smtp.gmail.com with ESMTPSA id b30-20020a631b1e000000b0050bd4bb900csm1489844pgb.71.2023.05.09.08.45.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 May 2023 08:46:02 -0700 (PDT)
+Message-ID: <e59064e1-a826-1b90-fed4-29b0cabb1a87@gmail.com>
+Date:   Tue, 9 May 2023 17:45:54 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230509111148.4608-2-dinghui@sangfor.com.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 12/18] soc: qcom: Register pstore frontend region with
+ minidump
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        srinivas.kandagatla@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-13-git-send-email-quic_mojha@quicinc.com>
+From:   Luca Stefani <luca.stefani.ge1@gmail.com>
+In-Reply-To: <1683133352-10046-13-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 09, 2023 at 07:11:47PM +0800, Ding Hui wrote:
-> We do netif_napi_add() for all allocated q_vectors[], but potentially
-> do netif_napi_del() for part of them, then kfree q_vectors and leave
-> invalid pointers at dev->napi_list.
-> 
-> Reproducer:
-> 
->   [root@host ~]# cat repro.sh
->   #!/bin/bash
-> 
->   pf_dbsf="0000:41:00.0"
->   vf0_dbsf="0000:41:02.0"
->   g_pids=()
-> 
->   function do_set_numvf()
->   {
->       echo 2 >/sys/bus/pci/devices/${pf_dbsf}/sriov_numvfs
->       sleep $((RANDOM%3+1))
->       echo 0 >/sys/bus/pci/devices/${pf_dbsf}/sriov_numvfs
->       sleep $((RANDOM%3+1))
->   }
-> 
->   function do_set_channel()
->   {
->       local nic=$(ls -1 --indicator-style=none /sys/bus/pci/devices/${vf0_dbsf}/net/)
->       [ -z "$nic" ] && { sleep $((RANDOM%3)) ; return 1; }
->       ifconfig $nic 192.168.18.5 netmask 255.255.255.0
->       ifconfig $nic up
->       ethtool -L $nic combined 1
->       ethtool -L $nic combined 4
->       sleep $((RANDOM%3))
->   }
-> 
->   function on_exit()
->   {
->       local pid
->       for pid in "${g_pids[@]}"; do
->           kill -0 "$pid" &>/dev/null && kill "$pid" &>/dev/null
->       done
->       g_pids=()
->   }
-> 
->   trap "on_exit; exit" EXIT
-> 
->   while :; do do_set_numvf ; done &
->   g_pids+=($!)
->   while :; do do_set_channel ; done &
->   g_pids+=($!)
-> 
->   wait
-> 
-> Result:
-> 
-> [ 4093.900222] ==================================================================
-> [ 4093.900230] BUG: KASAN: use-after-free in free_netdev+0x308/0x390
-> [ 4093.900232] Read of size 8 at addr ffff88b4dc145640 by task repro.sh/6699
-> [ 4093.900233]
-> [ 4093.900236] CPU: 10 PID: 6699 Comm: repro.sh Kdump: loaded Tainted: G           O     --------- -t - 4.18.0 #1
-> [ 4093.900238] Hardware name: Powerleader PR2008AL/H12DSi-N6, BIOS 2.0 04/09/2021
-> [ 4093.900239] Call Trace:
-> [ 4093.900244]  dump_stack+0x71/0xab
-> [ 4093.900249]  print_address_description+0x6b/0x290
-> [ 4093.900251]  ? free_netdev+0x308/0x390
-> [ 4093.900252]  kasan_report+0x14a/0x2b0
-> [ 4093.900254]  free_netdev+0x308/0x390
-> [ 4093.900261]  iavf_remove+0x825/0xd20 [iavf]
-> [ 4093.900265]  pci_device_remove+0xa8/0x1f0
-> [ 4093.900268]  device_release_driver_internal+0x1c6/0x460
-> [ 4093.900271]  pci_stop_bus_device+0x101/0x150
-> [ 4093.900273]  pci_stop_and_remove_bus_device+0xe/0x20
-> [ 4093.900275]  pci_iov_remove_virtfn+0x187/0x420
-> [ 4093.900277]  ? pci_iov_add_virtfn+0xe10/0xe10
-> [ 4093.900278]  ? pci_get_subsys+0x90/0x90
-> [ 4093.900280]  sriov_disable+0xed/0x3e0
-> [ 4093.900282]  ? bus_find_device+0x12d/0x1a0
-> [ 4093.900290]  i40e_free_vfs+0x754/0x1210 [i40e]
-> [ 4093.900298]  ? i40e_reset_all_vfs+0x880/0x880 [i40e]
-> [ 4093.900299]  ? pci_get_device+0x7c/0x90
-> [ 4093.900300]  ? pci_get_subsys+0x90/0x90
-> [ 4093.900306]  ? pci_vfs_assigned.part.7+0x144/0x210
-> [ 4093.900309]  ? __mutex_lock_slowpath+0x10/0x10
-> [ 4093.900315]  i40e_pci_sriov_configure+0x1fa/0x2e0 [i40e]
-> [ 4093.900318]  sriov_numvfs_store+0x214/0x290
-> [ 4093.900320]  ? sriov_totalvfs_show+0x30/0x30
-> [ 4093.900321]  ? __mutex_lock_slowpath+0x10/0x10
-> [ 4093.900323]  ? __check_object_size+0x15a/0x350
-> [ 4093.900326]  kernfs_fop_write+0x280/0x3f0
-> [ 4093.900329]  vfs_write+0x145/0x440
-> [ 4093.900330]  ksys_write+0xab/0x160
-> [ 4093.900332]  ? __ia32_sys_read+0xb0/0xb0
-> [ 4093.900334]  ? fput_many+0x1a/0x120
-> [ 4093.900335]  ? filp_close+0xf0/0x130
-> [ 4093.900338]  do_syscall_64+0xa0/0x370
-> [ 4093.900339]  ? page_fault+0x8/0x30
-> [ 4093.900341]  entry_SYSCALL_64_after_hwframe+0x65/0xca
-> [ 4093.900357] RIP: 0033:0x7f16ad4d22c0
-> [ 4093.900359] Code: 73 01 c3 48 8b 0d d8 cb 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 89 24 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 fe dd 01 00 48 89 04 24
-> [ 4093.900360] RSP: 002b:00007ffd6491b7f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> [ 4093.900362] RAX: ffffffffffffffda RBX: 0000000000000002 RCX: 00007f16ad4d22c0
-> [ 4093.900363] RDX: 0000000000000002 RSI: 0000000001a41408 RDI: 0000000000000001
-> [ 4093.900364] RBP: 0000000001a41408 R08: 00007f16ad7a1780 R09: 00007f16ae1f2700
-> [ 4093.900364] R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000002
-> [ 4093.900365] R13: 0000000000000001 R14: 00007f16ad7a0620 R15: 0000000000000001
-> [ 4093.900367]
-> [ 4093.900368] Allocated by task 820:
-> [ 4093.900371]  kasan_kmalloc+0xa6/0xd0
-> [ 4093.900373]  __kmalloc+0xfb/0x200
-> [ 4093.900376]  iavf_init_interrupt_scheme+0x63b/0x1320 [iavf]
-> [ 4093.900380]  iavf_watchdog_task+0x3d51/0x52c0 [iavf]
-> [ 4093.900382]  process_one_work+0x56a/0x11f0
-> [ 4093.900383]  worker_thread+0x8f/0xf40
-> [ 4093.900384]  kthread+0x2a0/0x390
-> [ 4093.900385]  ret_from_fork+0x1f/0x40
-> [ 4093.900387]  0xffffffffffffffff
-> [ 4093.900387]
-> [ 4093.900388] Freed by task 6699:
-> [ 4093.900390]  __kasan_slab_free+0x137/0x190
-> [ 4093.900391]  kfree+0x8b/0x1b0
-> [ 4093.900394]  iavf_free_q_vectors+0x11d/0x1a0 [iavf]
-> [ 4093.900397]  iavf_remove+0x35a/0xd20 [iavf]
-> [ 4093.900399]  pci_device_remove+0xa8/0x1f0
-> [ 4093.900400]  device_release_driver_internal+0x1c6/0x460
-> [ 4093.900401]  pci_stop_bus_device+0x101/0x150
-> [ 4093.900402]  pci_stop_and_remove_bus_device+0xe/0x20
-> [ 4093.900403]  pci_iov_remove_virtfn+0x187/0x420
-> [ 4093.900404]  sriov_disable+0xed/0x3e0
-> [ 4093.900409]  i40e_free_vfs+0x754/0x1210 [i40e]
-> [ 4093.900415]  i40e_pci_sriov_configure+0x1fa/0x2e0 [i40e]
-> [ 4093.900416]  sriov_numvfs_store+0x214/0x290
-> [ 4093.900417]  kernfs_fop_write+0x280/0x3f0
-> [ 4093.900418]  vfs_write+0x145/0x440
-> [ 4093.900419]  ksys_write+0xab/0x160
-> [ 4093.900420]  do_syscall_64+0xa0/0x370
-> [ 4093.900421]  entry_SYSCALL_64_after_hwframe+0x65/0xca
-> [ 4093.900422]  0xffffffffffffffff
-> [ 4093.900422]
-> [ 4093.900424] The buggy address belongs to the object at ffff88b4dc144200
->                 which belongs to the cache kmalloc-8k of size 8192
-> [ 4093.900425] The buggy address is located 5184 bytes inside of
->                 8192-byte region [ffff88b4dc144200, ffff88b4dc146200)
-> [ 4093.900425] The buggy address belongs to the page:
-> [ 4093.900427] page:ffffea00d3705000 refcount:1 mapcount:0 mapping:ffff88bf04415c80 index:0x0 compound_mapcount: 0
-> [ 4093.900430] flags: 0x10000000008100(slab|head)
-> [ 4093.900433] raw: 0010000000008100 dead000000000100 dead000000000200 ffff88bf04415c80
-> [ 4093.900434] raw: 0000000000000000 0000000000030003 00000001ffffffff 0000000000000000
-> [ 4093.900434] page dumped because: kasan: bad access detected
-> [ 4093.900435]
-> [ 4093.900435] Memory state around the buggy address:
-> [ 4093.900436]  ffff88b4dc145500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 4093.900437]  ffff88b4dc145580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 4093.900438] >ffff88b4dc145600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 4093.900438]                                            ^
-> [ 4093.900439]  ffff88b4dc145680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 4093.900440]  ffff88b4dc145700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 4093.900440] ==================================================================
-> 
-> Although the patch #2 (of 2) can avoid the issuse triggered by this
-> repro.sh, there still are other potential risks that if num_active_queues
-> is changed to less than allocated q_vectors[] by unexpected, the
-> mismatched netif_napi_add/del() can also cause UAF.
-> 
-> Since we actually call netif_napi_add() for all allocated q_vectors
-> unconditionally in iavf_alloc_q_vectors(), so we should fix it by
-> letting netif_napi_del() match to netif_napi_add().
-> 
-> Fixes: 5eae00c57f5e ("i40evf: main driver core")
-> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
-> Cc: Donglin Peng <pengdonglin@sangfor.com.cn>
-> Cc: Huang Cun <huangcun@sangfor.com.cn>
-> Reviewed-by: Simon Horman <simon.horman@corigine.com>
-> Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
-> Reviewed-by: Madhu Chittim <madhu.chittim@intel.com>
-> ---
-> v4 to v5:
->   - no changes
-> 
-> v3 to v4:
->   - fix typo in commit message
-> 
-> v2 to v3:
->   - fix review tag
-> 
-> v1 to v2:
->   - add Fixes: tag
->   - add reproduction script
->   - update commit message
-> 
-> ---
->  drivers/net/ethernet/intel/iavf/iavf_main.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
+FYI the following comments also apply to the downstream driver, as the 
+same bogus logic is implemented.
 
-Thanks,
-Reviewed-by: Leon Romanovsky <leonro@nvidia.com>
+On 03/05/23 19:02, Mukesh Ojha wrote:
+
+> Since qcom_pstore_minidump driver creates platform device
+> for qualcomm devices, so it knows the physical addresses
+> of the frontend region now. Let's register the regions
+> with qcom_minidump driver.
+>
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> ---
+>   drivers/soc/qcom/qcom_pstore_minidump.c | 80 ++++++++++++++++++++++++++++++++-
+>   1 file changed, 79 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/soc/qcom/qcom_pstore_minidump.c b/drivers/soc/qcom/qcom_pstore_minidump.c
+> index 8d58500..c2bba4e 100644
+> --- a/drivers/soc/qcom/qcom_pstore_minidump.c
+> +++ b/drivers/soc/qcom/qcom_pstore_minidump.c
+> @@ -11,6 +11,8 @@
+>   #include <linux/pstore_ram.h>
+>   #include <soc/qcom/qcom_minidump.h>
+>   
+> +#define QCOM_PSTORE_TYPE_MAX	4
+Unused
+> +
+>   struct qcom_ramoops_config {
+>   	unsigned long	record_size;
+>   	unsigned long	console_size;
+> @@ -24,6 +26,11 @@ struct qcom_ramoops_config {
+>   struct qcom_ramoops_dd {
+>   	struct ramoops_platform_data qcom_ramoops_pdata;
+>   	struct platform_device *ramoops_pdev;
+> +	struct device *dev;
+> +	struct qcom_apss_minidump_region *record_region;
+
+In the pstore driver record_size is used to split the KDMESG region into 
+different chunks.
+
+There's no "record" region anywhere in RAM that should be preserved, it 
+should instead be the dmesg_region.
+
+> +	struct qcom_apss_minidump_region *console_region;
+> +	struct qcom_apss_minidump_region *pmsg_region;
+> +	struct qcom_apss_minidump_region *ftrace_region;
+>   };
+>   
+>   static struct qcom_ramoops_config default_ramoops_config = {
+> @@ -35,6 +42,64 @@ static struct qcom_ramoops_config default_ramoops_config = {
+>   };
+>   
+>   static struct qcom_ramoops_dd *qcom_rdd;
+> +
+> +static int
+> +__qcom_ramoops_minidump_region_register(struct qcom_apss_minidump_region *md_region,
+> +					const char *name, phys_addr_t phys_addr,
+> +					unsigned long size)
+> +{
+> +	int ret;
+> +
+> +	if (!size)
+> +		return 0;
+> +
+> +	md_region = devm_kzalloc(qcom_rdd->dev, sizeof(*md_region), GFP_KERNEL);
+> +	if (!md_region)
+> +		return -ENOMEM;
+> +
+> +	strlcpy(md_region->name, name, sizeof(md_region->name));
+> +	md_region->phys_addr = phys_addr;
+> +	md_region->virt_addr = phys_to_virt(phys_addr);
+> +	md_region->size = size;
+> +	ret = qcom_apss_minidump_region_register(md_region);
+> +	if (ret)
+> +		dev_err(qcom_rdd->dev,
+> +			"failed to add %s in minidump: err: %d\n", name, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int
+> +qcom_ramoops_minidump_region_register(struct ramoops_platform_data *qcom_ramoops_data)
+> +{
+> +	phys_addr_t phys_addr;
+> +	int ret = 0;
+> +
+> +	phys_addr = qcom_ramoops_data->mem_address;
+> +	ret = __qcom_ramoops_minidump_region_register(qcom_rdd->record_region,
+> +			"KDMESG", phys_addr, qcom_ramoops_data->record_size);
+
+You can't use record_size here as it's not the actual size of the dmesg 
+region.
+
+The size is calculated in fs/pstore/ram.c as mem_size - console_size - 
+ftrace_size - pmsg_size, where mem_size is the size on the ramoops 
+memory region in the devicetree.
+
+Since the actual size is never exposed by the pstore driver you have to 
+re-purpose the same logic in this driver, hoping it never changes.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	phys_addr += qcom_ramoops_data->record_size;
+> +	ret = __qcom_ramoops_minidump_region_register(qcom_rdd->console_region,
+> +			"KCONSOLE", phys_addr, qcom_ramoops_data->console_size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	phys_addr += qcom_ramoops_data->console_size;
+> +	ret = __qcom_ramoops_minidump_region_register(qcom_rdd->pmsg_region,
+> +			"KPMSG", phys_addr, qcom_ramoops_data->pmsg_size);
+> +	if (ret)
+> +		return ret;
+> +
+> +	phys_addr += qcom_ramoops_data->pmsg_size;
+> +	ret = __qcom_ramoops_minidump_region_register(qcom_rdd->ftrace_region,
+> +			"KFTRACE", phys_addr, qcom_ramoops_data->ftrace_size);
+> +
+> +	return ret;
+> +}
+> +
+>   static int qcom_ramoops_probe(struct platform_device *pdev)
+>   {
+>   	struct device_node *of_node = pdev->dev.of_node;
+> @@ -59,6 +124,7 @@ static int qcom_ramoops_probe(struct platform_device *pdev)
+>   	if (!qcom_rdd)
+>   		return -ENOMEM;
+>   
+> +	qcom_rdd->dev = &pdev->dev;
+>   	cfg = of_device_get_match_data(&pdev->dev);
+>   	if (!cfg) {
+>   		dev_err(&pdev->dev, "failed to get supported matched data\n");
+> @@ -81,13 +147,25 @@ static int qcom_ramoops_probe(struct platform_device *pdev)
+>   		ret = PTR_ERR(qcom_rdd->ramoops_pdev);
+>   		dev_err(&pdev->dev, "could not create platform device: %ld\n", ret);
+>   		qcom_rdd->ramoops_pdev = NULL;
+> +		return ret;
+>   	}
+>   
+> -	return ret;
+> +	return qcom_ramoops_minidump_region_register(pdata);
+>   }
+>   
+>   static int qcom_ramoops_remove(struct platform_device *pdev)
+>   {
+> +	struct ramoops_platform_data *pdata;
+> +
+> +	pdata = &qcom_rdd->qcom_ramoops_pdata;
+> +	if (pdata->record_size)
+> +		qcom_apss_minidump_region_unregister(qcom_rdd->record_region);
+> +	if (pdata->console_size)
+> +		qcom_apss_minidump_region_unregister(qcom_rdd->console_region);
+> +	if (pdata->pmsg_size)
+> +		qcom_apss_minidump_region_unregister(qcom_rdd->pmsg_region);
+> +	if (pdata->ftrace_size)
+> +		qcom_apss_minidump_region_unregister(qcom_rdd->ftrace_region);
+>   	platform_device_unregister(qcom_rdd->ramoops_pdev);
+>   	qcom_rdd->ramoops_pdev = NULL;
+>   
+
+Regards,
+
+Luca Stefani
+
