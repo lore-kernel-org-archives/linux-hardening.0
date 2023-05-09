@@ -2,146 +2,138 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EC4C7EE24
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 May 2023 07:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372D9C7EE22
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 May 2023 08:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235204AbjEIHLk (ORCPT
+        id S230107AbjEII0H (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 9 May 2023 03:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
+        Tue, 9 May 2023 04:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234757AbjEIHLi (ORCPT
+        with ESMTP id S233238AbjEIIZl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 9 May 2023 03:11:38 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421741FC8
-        for <linux-hardening@vger.kernel.org>; Tue,  9 May 2023 00:11:36 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-50bc1612940so10306856a12.2
-        for <linux-hardening@vger.kernel.org>; Tue, 09 May 2023 00:11:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683616295; x=1686208295;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=APH4uf0HQ8cOpTtx4oEH1mlDXvsjwJke9jk7vwtuN80=;
-        b=e7j6qkllm/T/2M2c1EkqE/Qd/638PextIBR0EfhntkXwIPUhY6InG0cTEP19Pl6rJX
-         tzpjvB4ljG1Wpv06IP8v0iJEsTwM4pF4IdAbZvRdo2cjs5Wv4t8ffGIy4i89YSSwoyZY
-         QIWbShgowuM5OzwGJdJ1FxIYWJO8yENJsZnyGyyMcDCnf5X/AfB0a4iDpCyXAzK5kv83
-         YhQ2A8UNHBgzd9cPjbCi7+0ZFJkOowMKZg7uOa2zCrr9/kDcXodhAZYIk727px/1eZA4
-         D+/Wf5n6mnlx2gWnDoJQyYp8xv+TH0psqoE9I70jPYNednkYtru0ZwjFHM60MdO5DDQg
-         WJ8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683616295; x=1686208295;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=APH4uf0HQ8cOpTtx4oEH1mlDXvsjwJke9jk7vwtuN80=;
-        b=AcId4zUNg/hzLqWZFmdS41H94Fn90Jn5GQ5Uga5mxWsvPPHy5MTionKLGvmPTm1f3p
-         HxFr+obgAJZrgPVWE+I6GtjatHXlhaHRz05Q61kLLC1ewCIENPqM5bmbfdACVW67pIo6
-         o2cWFiTOrjWkOseVz6M632k+vEAQ5QCF1TV+XrlbFzRRECy4Ptc7yKYJUcfSt/CWkPEG
-         HToNGqGrjVqMv+4nMYT118/Ph0/3hKvQbPOhVqP9K9EDTswulCaqEEiNplkBDWN/fOgF
-         AZIXAd7dTw15WgfnHZi9McHoeBCyKFPAUOwRLBv6skpFclO+T2xUsBTDOPwvIWWzJX8R
-         G1ng==
-X-Gm-Message-State: AC+VfDwiEQI3k4F+uLBjGFt91acHSDRZQ/3dWM147j4Wk0nfkIDCXWUj
-        Tx6xVAwyyPd4bXyx4uwvB4CHDQ==
-X-Google-Smtp-Source: ACHHUZ4NTgyfxBlvxeFNFcg9A0+pojhfwrdDKrGACJsSCpzT73/PLN82DOw9k/K7FMCu1mximsVIng==
-X-Received: by 2002:a05:6402:8c3:b0:506:7d3e:ade5 with SMTP id d3-20020a05640208c300b005067d3eade5mr9710332edz.33.1683616294764;
-        Tue, 09 May 2023 00:11:34 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:d0d5:7818:2f46:5e76? ([2a02:810d:15c0:828:d0d5:7818:2f46:5e76])
-        by smtp.gmail.com with ESMTPSA id n7-20020aa7d047000000b004fbdfbb5acesm415192edo.89.2023.05.09.00.11.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 00:11:34 -0700 (PDT)
-Message-ID: <7777c016-4875-a6c9-cd5e-78c2ac686448@linaro.org>
-Date:   Tue, 9 May 2023 09:11:32 +0200
+        Tue, 9 May 2023 04:25:41 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB46E74
+        for <linux-hardening@vger.kernel.org>; Tue,  9 May 2023 01:25:40 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pwIf9-0006Ho-6B; Tue, 09 May 2023 10:25:35 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pwIf7-002BxA-H4; Tue, 09 May 2023 10:25:33 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pwIf6-002iSX-P2; Tue, 09 May 2023 10:25:32 +0200
+Date:   Tue, 9 May 2023 10:25:32 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-hardening@vger.kernel.org, kernel@pengutronix.de
+Subject: Re: [PATCH] pstore/ram: Convert to platform remove callback
+ returning void
+Message-ID: <20230509082532.ppnc6pyve5oqgh4u@pengutronix.de>
+References: <20230401120000.2487153-1-u.kleine-koenig@pengutronix.de>
+ <ee6bcb45-765b-30b8-fa38-a634b58391db@igalia.com>
+ <642f4cca.170a0220.db953.9229@mx.google.com>
+ <20230408081007.haisxrinicaxkkqp@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 04/18] soc: qcom: Add Qualcomm minidump kernel driver
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-5-git-send-email-quic_mojha@quicinc.com>
- <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
- <23b493f4-1a01-8d03-fc12-d588b2c6fd74@quicinc.com>
- <575a422d-6224-06b7-628c-8487b47882e9@linaro.org>
- <500e5abc-fb71-8468-a6b0-3ced2676b57c@linaro.org>
- <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uqnw7qwrw7jnpit6"
+Content-Disposition: inline
+In-Reply-To: <20230408081007.haisxrinicaxkkqp@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-hardening@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 08/05/2023 09:10, Mukesh Ojha wrote:
-> 
-> 
-> On 5/4/2023 10:04 PM, Krzysztof Kozlowski wrote:
->> On 04/05/2023 17:21, Krzysztof Kozlowski wrote:
->>>>>
->>>>>> +	ret = qcom_minidump_init_apss_subsystem(md);
->>>>>> +	if (ret) {
->>>>>> +		dev_err(&pdev->dev, "apss minidump initialization failed: %d\n", ret);
->>>>>> +		goto unlock;
->>>>>> +	}
->>>>>> +
->>>>>> +	__md = md;
->>>>>
->>>>> No. This is a platform device, so it can have multiple instances.
->>>>
->>>> It can have only one instance that is created from SMEM driver probe.
->>>
->>> Anyone can instantiate more of them.... how did you solve it?
->>
->> To clarify - sprinkling more of singletons makes everything tightly
->> coupled, difficult to debug and non-portable. You cannot have two
->> instances, you have to control concurrent initialization by yourself in
->> each of such singletons.
->>
->> I understand sometimes they are unavoidable, for example when this does
->> not map to hardware property. However here you have the parent - smem -
->> which can return you valid instance. Thus you avoid entire problem of
->> file-scope variables.
-> 
-> I get your point, why one's should avoid file scope variables.
-> 
-> 
-> This is infrastructure driver and will not have multiple instances and 
-> even if it happens could be avoided with with the help of global mutex 
-> and protect below function which i am already doing at the moment and 
 
-But we do not want global mutexes... so incorrect design is being
-improved by more incorrect design.
+--uqnw7qwrw7jnpit6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> fail the other probe if it is already initialized with proper logging..e.g
-> 
-> "already initialized..."
-> 
-> 
-> ret = qcom_minidump_init_apss_subsystem(md);
-> 
-> 
-> And this will be in-lined with
-> 
-> /* Pointer to the one and only smem handle */
-> static struct qcom_smem *__smem;
-> 
-> Let me know if you still disagree...and have some other way ?
+Hello Kees,
 
-Why the parent - smem - cannot return every consumer the instance it
-has? There will be one smem having only one minidump, so all problems
-solved?
+On Sat, Apr 08, 2023 at 10:10:07AM +0200, Uwe Kleine-K=F6nig wrote:
+> On Thu, Apr 06, 2023 at 03:50:49PM -0700, Kees Cook wrote:
+> > On Thu, Apr 06, 2023 at 12:57:30PM -0300, Guilherme G. Piccoli wrote:
+> > > On 01/04/2023 09:00, Uwe Kleine-K=F6nig wrote:
+> > > > The .remove() callback for a platform driver returns an int which m=
+akes
+> > > > many driver authors wrongly assume it's possible to do error handli=
+ng by
+> > > > returning an error code. However the value returned is (mostly) ign=
+ored
+> > > > and this typically results in resource leaks. To improve here there=
+ is a
+> > > > quest to make the remove callback return void. In the first step of=
+ this
+> > > > quest all drivers are converted to .remove_new() which already retu=
+rns
+> > > > void.
+> > > >=20
+> > > > Trivially convert this driver from always returning zero in the rem=
+ove
+> > > > callback to the void returning variant.
+> > > >=20
+> > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > >=20
+> > > Thanks, it makes sense for me! Code-wise, it looks fine.
+> > >=20
+> > > What would be interesting it to mention a mail thread discussing this=
+ or
+> > > maybe the patch itself that added the .remove_new() idea
+> > > [https://git.kernel.org/linus/5c5a7680e67b right?].
+> > >=20
+> > > BTW, nice idea - converting all at once would be a terrible sync effo=
+rt,
+> > > I guess this way things will go smoothly.
+> > > Feel free to add my:
+> > >=20
+> > > Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> >=20
+> > Thanks! Looks good to me.
+> >=20
+> > Acked-by: Kees Cook <keescook@chromium.org>
+> >=20
+> > Do you want to take these view some other tree, or should I take this
+> > via my pstore tree?
+>=20
+> Take it via your tree please. There are still >1000 drivers to convert,
+> so I guess this patch will be in Linus' tree long before I can convert
+> struct platform_driver.
 
-Best regards,
-Krzysztof
+This patch didn't make it into v6.4-rc1, is it still on your radar to
+queue it for the next merge window?
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--uqnw7qwrw7jnpit6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmRaA3sACgkQj4D7WH0S
+/k4P7wf+LcIPRU3QGbueS4w+jlwG9nfY8YVD6Woh0o26RczLC4RM9C641rTmqhML
+ZQJK4TK649jl0Cg210c/R/q4hy2UYTULPBmDUhKBJ6ynKLVehvwHjdfSZbNKiSkR
+uOnmp4I/e6kC29scFZpo5IzEi1j/xi7274LnPkoywBaDKgOG/fD4XbJIEPjhtpw8
+LxOgwb5ow6Tk/F8tFZ+Dl24Xi8Izyqf1xz52EP+hvBdYMRwuRQNjQ+i4AqIYsrtk
+wa4PHszBgLIM3sCSDZxj9mi30I094JnBVbO/bkyvVj5sW14g/7mPASePVurABEzb
+efHGGFqYhx7P9hJBrUzZrIv/QW2fDw==
+=urVO
+-----END PGP SIGNATURE-----
+
+--uqnw7qwrw7jnpit6--
