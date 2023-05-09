@@ -2,120 +2,146 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28725C7EE25
-	for <linux-hardening@archiver.kernel.org>; Mon,  8 May 2023 21:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31EC4C7EE24
+	for <linux-hardening@archiver.kernel.org>; Tue,  9 May 2023 07:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232876AbjEHVSe (ORCPT
+        id S235204AbjEIHLk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 8 May 2023 17:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58236 "EHLO
+        Tue, 9 May 2023 03:11:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjEHVSd (ORCPT
+        with ESMTP id S234757AbjEIHLi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 8 May 2023 17:18:33 -0400
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A927CC;
-        Mon,  8 May 2023 14:18:32 -0700 (PDT)
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so4593047a12.1;
-        Mon, 08 May 2023 14:18:32 -0700 (PDT)
+        Tue, 9 May 2023 03:11:38 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421741FC8
+        for <linux-hardening@vger.kernel.org>; Tue,  9 May 2023 00:11:36 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-50bc1612940so10306856a12.2
+        for <linux-hardening@vger.kernel.org>; Tue, 09 May 2023 00:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683616295; x=1686208295;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=APH4uf0HQ8cOpTtx4oEH1mlDXvsjwJke9jk7vwtuN80=;
+        b=e7j6qkllm/T/2M2c1EkqE/Qd/638PextIBR0EfhntkXwIPUhY6InG0cTEP19Pl6rJX
+         tzpjvB4ljG1Wpv06IP8v0iJEsTwM4pF4IdAbZvRdo2cjs5Wv4t8ffGIy4i89YSSwoyZY
+         QIWbShgowuM5OzwGJdJ1FxIYWJO8yENJsZnyGyyMcDCnf5X/AfB0a4iDpCyXAzK5kv83
+         YhQ2A8UNHBgzd9cPjbCi7+0ZFJkOowMKZg7uOa2zCrr9/kDcXodhAZYIk727px/1eZA4
+         D+/Wf5n6mnlx2gWnDoJQyYp8xv+TH0psqoE9I70jPYNednkYtru0ZwjFHM60MdO5DDQg
+         WJ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683580712; x=1686172712;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1683616295; x=1686208295;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z9LwMl3SaVI5b8sezFDQVcUBEvYrPsuHk5i8fgGhI70=;
-        b=VnZpj7UtLLQN1MVZaO2CuRaY3odcXC+WBgYW9KWN/w9/VXk6wLeA7D1NEdYk6jV+HX
-         DWf8qshGPFNZj941PGYl3HMs7BsglKDubIHyB2cu6JX9aJHWSmWkd04ZZQCoeJ1+e7oF
-         ar01CAoLFDbyQSUwF2CM7kSJAOquacbgm0yu/q/b+BBOBFmWy3UX4pAvScPcp4CgcosN
-         iZ+a7aQaAOewg2e8HZYUy5EFOwapCajY+WAuuu6x7lgeBas+blLC3BoKJ+cO4ao+hj7m
-         rZw3/QyeMFZnXwmVso3KjgETAhuYfsE9n44XEhP7V21lESmh8csZDADslV51SUPOJRVM
-         zbQg==
-X-Gm-Message-State: AC+VfDwwnbqC5lX+qH4e9narT1TMVQPXk9bKH3hfJC9ISFE0TafuuGpa
-        0ObwRReKIcCPRfvgN/HeX/o=
-X-Google-Smtp-Source: ACHHUZ6kteuJnNZnZsRe+bisWrFQUndJSqajeCoEM2/rFLcMVskwkNxu1jPZifG3ayQwvJCBSdGnnA==
-X-Received: by 2002:a05:6a20:1591:b0:f0:ec64:f3de with SMTP id h17-20020a056a20159100b000f0ec64f3demr15058351pzj.25.1683580711711;
-        Mon, 08 May 2023 14:18:31 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([20.69.120.36])
-        by smtp.gmail.com with ESMTPSA id c35-20020a631c23000000b00513ec871c01sm6699252pgc.16.2023.05.08.14.18.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 14:18:31 -0700 (PDT)
-Date:   Mon, 8 May 2023 21:18:29 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        Mihai =?utf-8?B?RG9uyJt1?= <mdontu@bitdefender.com>,
-        =?utf-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?utf-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH v1 6/9] KVM: x86: Add Heki hypervisor support
-Message-ID: <ZFlnJRsJh2fX3IJb@liuwe-devbox-debian-v2>
-References: <20230505152046.6575-1-mic@digikod.net>
- <20230505152046.6575-7-mic@digikod.net>
+        bh=APH4uf0HQ8cOpTtx4oEH1mlDXvsjwJke9jk7vwtuN80=;
+        b=AcId4zUNg/hzLqWZFmdS41H94Fn90Jn5GQ5Uga5mxWsvPPHy5MTionKLGvmPTm1f3p
+         HxFr+obgAJZrgPVWE+I6GtjatHXlhaHRz05Q61kLLC1ewCIENPqM5bmbfdACVW67pIo6
+         o2cWFiTOrjWkOseVz6M632k+vEAQ5QCF1TV+XrlbFzRRECy4Ptc7yKYJUcfSt/CWkPEG
+         HToNGqGrjVqMv+4nMYT118/Ph0/3hKvQbPOhVqP9K9EDTswulCaqEEiNplkBDWN/fOgF
+         AZIXAd7dTw15WgfnHZi9McHoeBCyKFPAUOwRLBv6skpFclO+T2xUsBTDOPwvIWWzJX8R
+         G1ng==
+X-Gm-Message-State: AC+VfDwiEQI3k4F+uLBjGFt91acHSDRZQ/3dWM147j4Wk0nfkIDCXWUj
+        Tx6xVAwyyPd4bXyx4uwvB4CHDQ==
+X-Google-Smtp-Source: ACHHUZ4NTgyfxBlvxeFNFcg9A0+pojhfwrdDKrGACJsSCpzT73/PLN82DOw9k/K7FMCu1mximsVIng==
+X-Received: by 2002:a05:6402:8c3:b0:506:7d3e:ade5 with SMTP id d3-20020a05640208c300b005067d3eade5mr9710332edz.33.1683616294764;
+        Tue, 09 May 2023 00:11:34 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:d0d5:7818:2f46:5e76? ([2a02:810d:15c0:828:d0d5:7818:2f46:5e76])
+        by smtp.gmail.com with ESMTPSA id n7-20020aa7d047000000b004fbdfbb5acesm415192edo.89.2023.05.09.00.11.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 May 2023 00:11:34 -0700 (PDT)
+Message-ID: <7777c016-4875-a6c9-cd5e-78c2ac686448@linaro.org>
+Date:   Tue, 9 May 2023 09:11:32 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230505152046.6575-7-mic@digikod.net>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v3 04/18] soc: qcom: Add Qualcomm minidump kernel driver
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        srinivas.kandagatla@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-5-git-send-email-quic_mojha@quicinc.com>
+ <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
+ <23b493f4-1a01-8d03-fc12-d588b2c6fd74@quicinc.com>
+ <575a422d-6224-06b7-628c-8487b47882e9@linaro.org>
+ <500e5abc-fb71-8468-a6b0-3ced2676b57c@linaro.org>
+ <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 05, 2023 at 05:20:43PM +0200, Mickaël Salaün wrote:
-> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+On 08/05/2023 09:10, Mukesh Ojha wrote:
 > 
-> Each supported hypervisor in x86 implements a struct x86_hyper_init to
-> define the init functions for the hypervisor.  Define a new init_heki()
-> entry point in struct x86_hyper_init.  Hypervisors that support Heki
-> must define this init_heki() function.  Call init_heki() of the chosen
-> hypervisor in init_hypervisor_platform().
 > 
-> Create a heki_hypervisor structure that each hypervisor can fill
-> with its data and functions. This will allow the Heki feature to work
-> in a hypervisor agnostic way.
+> On 5/4/2023 10:04 PM, Krzysztof Kozlowski wrote:
+>> On 04/05/2023 17:21, Krzysztof Kozlowski wrote:
+>>>>>
+>>>>>> +	ret = qcom_minidump_init_apss_subsystem(md);
+>>>>>> +	if (ret) {
+>>>>>> +		dev_err(&pdev->dev, "apss minidump initialization failed: %d\n", ret);
+>>>>>> +		goto unlock;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	__md = md;
+>>>>>
+>>>>> No. This is a platform device, so it can have multiple instances.
+>>>>
+>>>> It can have only one instance that is created from SMEM driver probe.
+>>>
+>>> Anyone can instantiate more of them.... how did you solve it?
+>>
+>> To clarify - sprinkling more of singletons makes everything tightly
+>> coupled, difficult to debug and non-portable. You cannot have two
+>> instances, you have to control concurrent initialization by yourself in
+>> each of such singletons.
+>>
+>> I understand sometimes they are unavoidable, for example when this does
+>> not map to hardware property. However here you have the parent - smem -
+>> which can return you valid instance. Thus you avoid entire problem of
+>> file-scope variables.
 > 
-> Declare and initialize a "heki_hypervisor" structure for KVM so KVM can
-> support Heki.  Define the init_heki() function for KVM.  In init_heki(),
-> set the hypervisor field in the generic "heki" structure to the KVM
-> "heki_hypervisor".  After this point, generic Heki code can access the
-> KVM Heki data and functions.
+> I get your point, why one's should avoid file scope variables.
 > 
-[...]
-> +static void kvm_init_heki(void)
-> +{
-> +	long err;
-> +
-> +	if (!kvm_para_available())
-> +		/* Cannot make KVM hypercalls. */
-> +		return;
-> +
-> +	err = kvm_hypercall3(KVM_HC_LOCK_MEM_PAGE_RANGES, -1, -1, -1);
+> 
+> This is infrastructure driver and will not have multiple instances and 
+> even if it happens could be avoided with with the help of global mutex 
+> and protect below function which i am already doing at the moment and 
 
-Why not do a proper version check or capability check here? If the ABI
-or supported features ever change then we have something to rely on?
+But we do not want global mutexes... so incorrect design is being
+improved by more incorrect design.
 
-Thanks,
-Wei.
+> fail the other probe if it is already initialized with proper logging..e.g
+> 
+> "already initialized..."
+> 
+> 
+> ret = qcom_minidump_init_apss_subsystem(md);
+> 
+> 
+> And this will be in-lined with
+> 
+> /* Pointer to the one and only smem handle */
+> static struct qcom_smem *__smem;
+> 
+> Let me know if you still disagree...and have some other way ?
+
+Why the parent - smem - cannot return every consumer the instance it
+has? There will be one smem having only one minidump, so all problems
+solved?
+
+Best regards,
+Krzysztof
+
