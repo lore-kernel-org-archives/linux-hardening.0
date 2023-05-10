@@ -2,295 +2,215 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2955C77B75
-	for <linux-hardening@archiver.kernel.org>; Tue,  9 May 2023 16:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5EA6C77B7C
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 12:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbjEIQGj (ORCPT
+        id S236366AbjEJMQ3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 9 May 2023 12:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35130 "EHLO
+        Wed, 10 May 2023 08:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231488AbjEIQGi (ORCPT
+        with ESMTP id S236943AbjEJMQ2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 9 May 2023 12:06:38 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78C7D46B5;
-        Tue,  9 May 2023 09:06:36 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-52caed90d17so3337166a12.0;
-        Tue, 09 May 2023 09:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683648396; x=1686240396;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3D71as6LJWsYMDTb4BiasqKDmId0LkGzfVkMgY6tMoc=;
-        b=i8dhhnQhpe5/KpsAyTAlVssvMR0ux0o5onT9Qxzie9BfoGIHQ6SOniG0AlO8B8ZxcL
-         5ycfkMwgNjmSIibN/NNfkn5qZaljGAlKPr57vAGXYGktC0jXrY5E3SYQOEMfRwCeEQFL
-         uKWsMhtcVzW3In+kDKdi2wn5Zt3T9g0umMlR3PVNGEAmEwpKDiQm8j3Nf2+fS8+b6wrQ
-         slylNYxXZbljTUQPhSahBLwdE6akjNBDXMX3KSnJBc6J9/YegRPSLvDgCQi4f4sn080/
-         TTwiccVSfo0zo/TKN8B3VIRGxBT4XF5YWG9gNZVgUmrGAPLNalb6F/h0pDd29iRKFfen
-         IzNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683648396; x=1686240396;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3D71as6LJWsYMDTb4BiasqKDmId0LkGzfVkMgY6tMoc=;
-        b=FL9KIVU6CPp+vYH4I42K4NbiR3GC85wqxdLwqyjbY3ibrN/m7fE1oUZccGIZfEMsUo
-         8LLP4jwH7JscImeBcc+zCko5NAlonuhdLVg+7exS5rzr0D4EFCIf7A6zuVN2lEoOZG6Y
-         iu8xqSbLsAsU3mPw5vFTsOVeQeY5vNgrVcDDXym6jZmRMo937o0e4mXL7C5/7e+faxgn
-         bPwPIrY5NJUK0oUQJgPm2k83bfqGp1h2lJyzu98fRixKNInjJJYBi9FlZ8KHZdEa4AXA
-         igZl8eC0beww4j+fzji17OsKCpY4pob8+bPS10B3zjLqloTMX0/kkWSjPsAyoWveke/h
-         IVbw==
-X-Gm-Message-State: AC+VfDwjOfKcYCdMy7TZQntMYl+nOwEP38FEibbkA5qMLQo84hQiUkb4
-        sANt2I58TYdDP/Vfux2h7S0=
-X-Google-Smtp-Source: ACHHUZ6vq6rgO7usSQ6hQ8Rf6iwdW69I+IF91CuCUFV2Mybvsjlx3XmHs9ctzTW8ientqNcQ3qg9iA==
-X-Received: by 2002:a17:90a:ba8a:b0:240:f8a6:55c7 with SMTP id t10-20020a17090aba8a00b00240f8a655c7mr14101831pjr.20.1683648395618;
-        Tue, 09 May 2023 09:06:35 -0700 (PDT)
-Received: from [192.168.50.148] (net-2-32-39-33.cust.vodafonedsl.it. [2.32.39.33])
-        by smtp.gmail.com with ESMTPSA id o6-20020a17090ac08600b00250ad795d72sm1599484pjs.44.2023.05.09.09.06.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 09:06:34 -0700 (PDT)
-Message-ID: <e25723bf-be85-b458-a84c-1a45392683bb@gmail.com>
-Date:   Tue, 9 May 2023 18:06:26 +0200
+        Wed, 10 May 2023 08:16:28 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B087EF7;
+        Wed, 10 May 2023 05:16:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683720983; x=1715256983;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=a9rx7MZ4u6Mf7caKRiVri47VPK4rzW/aLmdtbS9YcL4=;
+  b=XlEh/bb/NYJU9cdtyqSfAGhL+mMndpdrGi7g2jKoErV5YaLCZ3mgM8px
+   K/o4klK1JUzhRCy1EcK9rN6RoZESyuutdlDsYMtuhwwJzCKk0dLD1w3o8
+   iBaplYLhon8V4O2H/Euijh3iZWjWbKuBQZnfs51biNplGfSrtT6iET3d/
+   BkAKG1CY9so2IgiwBsf++ydYiK2cw4TCWIye7B/UJBrIL9vkE6NTZFWk4
+   lo8fxL+SQqQvTb5qIUY5UArB6hoSaEXAVx2qER3l/vRp8lZYU/uoNFIaj
+   4W4IkHLi47ZthWx/ejUvjVnnQDAUYQNmNR3lJNUcTyZ7Qmi9Gd9EAk/gL
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="350231930"
+X-IronPort-AV: E=Sophos;i="5.99,264,1677571200"; 
+   d="scan'208";a="350231930"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 05:16:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="699276592"
+X-IronPort-AV: E=Sophos;i="5.99,264,1677571200"; 
+   d="scan'208";a="699276592"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by orsmga002.jf.intel.com with ESMTP; 10 May 2023 05:16:17 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 10 May 2023 05:16:17 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Wed, 10 May 2023 05:16:17 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.109)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Wed, 10 May 2023 05:16:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aZfYb5FXM8Mw1GWnAxmfhxQ6I4JVNmk6akn5eRKO4MkL5R6y7VgPMd7oAf3IIw0VqWLUs/P4OixUAhO+0VbTEflDjJFGjoCH/fbp0wYHYTlAf9vvsm45bbq8KzyaHum0Iu4lKRPIOaekeFWwHgaVxVdH761Idd5RarzlvjAr9sYY0Hab3bSP535gaYcgIrl+b9gEbOakEkJjx1MREJ9MiSS2Ap09K8MGpzQgjEZgOTvxiM6zOgZGijlvtb/YikCnGfq8gYABV4+/ZWOF+0F158Hg3N5zTq14pjb1tA68vKiURRQcGKcuEbmenzR24FrKzYr6yvnnYVHoMMKtJi47Mw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5sfxgFDH7bt3iVHtm0qr/6CIPJH4h9nubaKFQ4DMz44=;
+ b=GKxPHikaVbtuwK5FVBY7ehNNMWgluFXt+/x/ay6LoB/SiMwLzX/CFcxzUfkdBx6Tzngxj91U3YSjv9u3lf4DPLLCFxutasYPCbbasYAJqkowctw5FT8JCDpoMPDqU60P9Z+02r4HbgXovgNHph3eWu4W+jhTBzBq9d2fbSpV5/omj8iywYMwNKmYuQVYSyXIS2J9lLG0hbsOJYrSk10bJtUNXwlhecVVWgMjfmvXWuEmFpRiAurHWbxWxG0LSaTXco2jMjN3RJ6R8Wp89+co7EGH8fF8zdmIyZLw7bb3xNw/VLQw888veEKKKgdo1qxLUmZPRLI3t0GsCtlNWws5Jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM6PR11MB2937.namprd11.prod.outlook.com (2603:10b6:5:62::13) by
+ SA0PR11MB4607.namprd11.prod.outlook.com (2603:10b6:806:9b::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6387.20; Wed, 10 May 2023 12:16:15 +0000
+Received: from DM6PR11MB2937.namprd11.prod.outlook.com
+ ([fe80::66f6:544e:665a:9bec]) by DM6PR11MB2937.namprd11.prod.outlook.com
+ ([fe80::66f6:544e:665a:9bec%6]) with mapi id 15.20.6363.032; Wed, 10 May 2023
+ 12:16:15 +0000
+Date:   Wed, 10 May 2023 14:16:07 +0200
+From:   Michal Kubiak <michal.kubiak@intel.com>
+To:     Ding Hui <dinghui@sangfor.com.cn>
+CC:     <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <intel-wired-lan@lists.osuosl.org>,
+        <jesse.brandeburg@intel.com>, <anthony.l.nguyen@intel.com>,
+        <keescook@chromium.org>, <grzegorzx.szczurek@intel.com>,
+        <mateusz.palczewski@intel.com>, <mitch.a.williams@intel.com>,
+        <gregory.v.rose@intel.com>, <jeffrey.t.kirsher@intel.com>,
+        <simon.horman@corigine.com>, <madhu.chittim@intel.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>, <pengdonglin@sangfor.com.cn>,
+        <huangcun@sangfor.com.cn>
+Subject: Re: [PATCH net v5 0/2] iavf: Fix issues when setting channels
+ concurrency with removing
+Message-ID: <ZFuLB7QwaWMzfY6F@localhost.localdomain>
+References: <20230509111148.4608-1-dinghui@sangfor.com.cn>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230509111148.4608-1-dinghui@sangfor.com.cn>
+X-ClientProxiedBy: FR3P281CA0001.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:1d::10) To DM6PR11MB2937.namprd11.prod.outlook.com
+ (2603:10b6:5:62::13)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 09/18] soc: qcom: Add qcom's pstore minidump driver
- support
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        srinivas.kandagatla@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-10-git-send-email-quic_mojha@quicinc.com>
-From:   Luca Stefani <luca.stefani.ge1@gmail.com>
-In-Reply-To: <1683133352-10046-10-git-send-email-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR11MB2937:EE_|SA0PR11MB4607:EE_
+X-MS-Office365-Filtering-Correlation-Id: 611c806c-56d9-4d28-6c1e-08db515059f3
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4/Qnpe2E1cNIg58bcuouVb9MPAejtZplXkoPizL+FuxuBZ3pNZ9cxc54aya9rhWglHNeqdqnNCCjOkv+SMMF7wwOz7lWvU8BJx3+0t6JBuHUkUjb71QdEnfYaFDbZLQbTAJSwGhLPRYjgovmvsQhe/i2WiSzuL1a99jLUJj8Zs440HA1Haotu12F96U2hvDrMVc0fQarqajmw4K1QX9Vtqjo4PE9G/pD+SLh7ueRrjqB6ah4wYWq22Xji2vUd6iJir64yilsXRdJ1VDN/ERTrKauuVZS8M20Xf0YoMirGveDeg7TpdlSCYnQTe8VBv+qhc08209n80S0lau4/BvOsMwVGEosAOANsPFA+fOspqXeLYrATqLgUTaRpr0xZ7DGlIbfJCr6zEhbAQw65DSroUKL5QFe5CsDnwIJsoqgJwAbA/qcDYcs+2fTbugBWRD5wbIIOrWOsdmCbUQ02Uqw8SNhfzfmx8qQ2sNXBW94jD2YQc74vwA8g+Ltsp5i2WYHH3la2flGS7K63gu2stgwkfjy6Es8pCMonmhOqb7sC/ktVG4FYNwrROp/T5xOPCaf
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB2937.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(366004)(396003)(376002)(39860400002)(346002)(451199021)(6486002)(6666004)(66476007)(66556008)(66946007)(4326008)(6916009)(82960400001)(2906002)(7416002)(44832011)(86362001)(41300700001)(38100700002)(316002)(8676002)(8936002)(5660300002)(478600001)(9686003)(6512007)(6506007)(186003)(26005)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VBb3AocJhbX48XUMk2x2/oCrSzWAIf5k8lkTXpeewWyYm4IS0Os5GZVTHhFu?=
+ =?us-ascii?Q?V0sg6Fss2Gv1MPc3ejyJkKNwkT5jSeTDkahm68npGfHccmH9Valtr6iu1BZD?=
+ =?us-ascii?Q?Nwrh4XIHRQD/52UBsTFUfInS/8eOHcYPCJa4cekAeAI6sjCCpT0683/wCjwv?=
+ =?us-ascii?Q?ubc0GrR0KDkprUcCk/l1PohjECnDTbSuQjM5ktqR1Id39zVLcR6C0K4g6jpd?=
+ =?us-ascii?Q?j6gtD6m+65dOCq11WX5IXQwqll4UxHeEDicwEpWFCPRjC3St1GNkgXm3JH2S?=
+ =?us-ascii?Q?RL+wF3FBnRnZIBUhZdMFEJWI2hpOSsF5QygIBhK0IjYGDJ7yxZgVNv6hTz8b?=
+ =?us-ascii?Q?fqCSE3/movaVXBMjLBC1dr+wmC/KOKmtgtR2a8ydSCNigfAD+CJIfWU5UBEY?=
+ =?us-ascii?Q?LltrDxO5T7if7RfoTBOoMfkA3/aZjJCG44MHnmyoku2WZqbo7ona16j0T7cW?=
+ =?us-ascii?Q?zs90RIvpukDJVNKVNEhx0JJBwZt76V5KKf5QsZ4EWFdCve5CZa5ZGdzkma0Z?=
+ =?us-ascii?Q?w1vZKCEtbdEWwf8gou/46fUeCXLH3oxO5eMzJ3a3rW8NANb9lcMVS44/VGCC?=
+ =?us-ascii?Q?exxNTmC5Kf2npi7u1JEzdWQBpH59eBCVnpfAMmaf8WbtaKMPlowS4XgEwCjN?=
+ =?us-ascii?Q?QVqN5Zq8HGW5cVRvSnAu9gVol8wU4QoUbMCArDSYDzOTjNaCBfTFVNb9/wRT?=
+ =?us-ascii?Q?F61oE9MKUA2XIyYXrfaVdRlwoxnK0xMlVzYDPi2rcq46bC6NEexIl2m5iRTq?=
+ =?us-ascii?Q?5IaPF3i4glNHQ/HmZigVFd2gpkCLW4p81BOzpiYGhaoLYgvOZ0wrzmUpLQsH?=
+ =?us-ascii?Q?Fhdgo8rOONMmDxEUAO/MIee6Hm/lJRDzVhLZ5KVAl57YzLNdMaYwtZ5HE+xD?=
+ =?us-ascii?Q?BX3kXxeiyPoyX7LeeU/dAnsXGdFJc6NbzwB8/njd17AiBtpfWbFjn5aP2oz0?=
+ =?us-ascii?Q?mNKY0VG8wVN00FzDLK/syZv8jW0AgZa+nDVDB8wbzyZhQNTf1/TOKR5wOhgx?=
+ =?us-ascii?Q?0J0MviETNvSs2pd6V712sRfzRCg/4TpkzgqEBhc8os3/RBlsdncB4YXDRlwO?=
+ =?us-ascii?Q?IaGE0yGuCjHbUx4ESiIZyA/r4zrcOaakz8aa/j+eqBJHj/jAledAYetxMPxM?=
+ =?us-ascii?Q?6yxugZEq+XOk2G7efVAQGnqhha0j/rSWgxH8d9FNT3UcsZQ+abu3En4LhKOl?=
+ =?us-ascii?Q?E4tUK79+tB37yfqqR5GXYtEr4bEkB9y821SWgw54PawiVul0rm9ptDDCjsoJ?=
+ =?us-ascii?Q?3ZTuDuG8swemQr7RGO1nrIPumKzu5FFKgSIr2ptf31gg6ROhxXeolil0rfh4?=
+ =?us-ascii?Q?AwXsotFIn+KW0j/1E7OldNU7LFVyGIf5oDVQxiVKEFAjUXAJNVPZsfbTNJ1G?=
+ =?us-ascii?Q?nIMjf5x+3KaYwz/HNj3KEFdPTjXNwmij/nRtD/n6fEQIiG/9nXnXpPc4ykZ7?=
+ =?us-ascii?Q?9RqenMyQRM3Djiakn7Ngq3Fh/ioxKGe2knmrXGGoJAgqCgOoLGpVvsn9eRAt?=
+ =?us-ascii?Q?I7xbaeO5uzLUBYMiD4i1/lImbuJoi6pc+zgL6yA8t46FNI9rvFN37l+Swj2L?=
+ =?us-ascii?Q?9EpyydZeIOh4uVjuOcPBa3jZWdtjkL42ZblBibtO4D2AAl2Y+c3yhFHT9dez?=
+ =?us-ascii?Q?UA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 611c806c-56d9-4d28-6c1e-08db515059f3
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB2937.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2023 12:16:15.3566
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZFxkIfQTKz4LxOSbG3MQfrYgqsX/qYC1uGJoBgiemHxQzbb0GAsRVU3R/pvhErHMA3Dj1Clu+XScWj/cT3KFIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4607
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, May 09, 2023 at 07:11:46PM +0800, Ding Hui wrote:
+> The patchset fix two issues which can be reproduced by the following script:
+> 
+> [root@host ~]# cat repro.sh
+> #!/bin/bash
+> 
+> pf_dbsf="0000:41:00.0"
+> vf0_dbsf="0000:41:02.0"
+> g_pids=()
+> 
+> function do_set_numvf()
+> {
+>     echo 2 >/sys/bus/pci/devices/${pf_dbsf}/sriov_numvfs
+>     sleep $((RANDOM%3+1))
+>     echo 0 >/sys/bus/pci/devices/${pf_dbsf}/sriov_numvfs
+>     sleep $((RANDOM%3+1))
+> }
+> 
+> function do_set_channel()
+> {
+>     local nic=$(ls -1 --indicator-style=none /sys/bus/pci/devices/${vf0_dbsf}/net/)
+>     [ -z "$nic" ] && { sleep $((RANDOM%3)) ; return 1; }
+>     ifconfig $nic 192.168.18.5 netmask 255.255.255.0
+>     ifconfig $nic up
+>     ethtool -L $nic combined 1
+>     ethtool -L $nic combined 4
+>     sleep $((RANDOM%3))
+> }
+> 
+> function on_exit()
+> {
+>     local pid
+>     for pid in "${g_pids[@]}"; do
+>         kill -0 "$pid" &>/dev/null && kill "$pid" &>/dev/null
+>     done
+>     g_pids=()
+> }
+> 
+> trap "on_exit; exit" EXIT
+> 
+> while :; do do_set_numvf ; done &
+> g_pids+=($!)
+> while :; do do_set_channel ; done &
+> g_pids+=($!)
+> 
+> wait
+> 
+> 
+> Ding Hui (2):
+>   iavf: Fix use-after-free in free_netdev
+>   iavf: Fix out-of-bounds when setting channels on remove
+> 
+>  drivers/net/ethernet/intel/iavf/iavf_ethtool.c | 4 +++-
+>  drivers/net/ethernet/intel/iavf/iavf_main.c    | 6 +-----
+>  2 files changed, 4 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
 
-On 03/05/23 19:02, Mukesh Ojha wrote:
-> This driver was inspired from the fact pstore ram region should be
-> fixed and boot firmware need to have awarness about this region,
-> so that it will be persistent across boot. But, there are many
-> QCOM SoC which does not support warm boot from hardware but they
-> have minidump support from the software, and for them, there is
-> no need of this pstore ram region to be fixed, but at the same
-> time have interest in the pstore frontends. So, this driver
-> get the dynamic reserved region from the ram and register the
-> ramoops platform device.
->
->   +---------+     +---------+   +--------+     +---------+
->   | console |     | pmsg    |   | ftrace |     | dmesg   |
->   +---------+     +---------+   +--------+     +---------+
->         |             |             |              |
->         |             |             |              |
->         +------------------------------------------+
->                            |
->                           \ /
->                    +----------------+
->              (1)   |pstore frontends|
->                    +----------------+
->                            |
->                           \ /
->                   +------------------- +
->              (2)  | pstore backend(ram)|
->                   +--------------------+
->                            |
->                           \ /
->                   +--------------------+
->              (3)  |qcom_pstore_minidump|
->                   +--------------------+
->                            |
->                           \ /
->                     +---------------+
->              (4)    | qcom_minidump |
->                     +---------------+
->
-> This driver will route all the pstore front data to the stored
-> in qcom pstore reserved region and the reason of showing an
-> arrow from (3) to (4) as qcom_pstore_minidump driver will register
-> all the available frontends region with qcom minidump driver
-> in upcoming patch.
->
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->   drivers/soc/qcom/Kconfig                |  11 +++
->   drivers/soc/qcom/Makefile               |   1 +
->   drivers/soc/qcom/qcom_pstore_minidump.c | 116 ++++++++++++++++++++++++++++++++
->   3 files changed, 128 insertions(+)
->   create mode 100644 drivers/soc/qcom/qcom_pstore_minidump.c
->
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index 15c931e..afdc634 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -293,4 +293,15 @@ config QCOM_MINIDUMP
->   	  these selective regions will be dumped instead of the entire DDR.
->   	  This saves significant amount of time and/or storage space.
->   
-> +config QCOM_PSTORE_MINIDUMP
-> +	tristate "Pstore support for QCOM Minidump"
-> +	depends on ARCH_QCOM
-> +	depends on PSTORE_RAM
-> +	depends on QCOM_MINIDUMP
-> +	help
-> +	  Enablement of this driver ensures that ramoops region can be anywhere
-> +	  reserved in ram instead of being fixed address which needs boot firmware
-> +	  awareness. So, this driver creates plaform device and registers available
-> +	  frontend region with the Qualcomm's minidump driver.
-> +
->   endmenu
-> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-> index 1ebe081..02d30d7 100644
-> --- a/drivers/soc/qcom/Makefile
-> +++ b/drivers/soc/qcom/Makefile
-> @@ -34,3 +34,4 @@ obj-$(CONFIG_QCOM_KRYO_L2_ACCESSORS) +=	kryo-l2-accessors.o
->   obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
->   obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= ice.o
->   obj-$(CONFIG_QCOM_MINIDUMP) += qcom_minidump.o
-> +obj-$(CONFIG_QCOM_PSTORE_MINIDUMP) += qcom_pstore_minidump.o
-> diff --git a/drivers/soc/qcom/qcom_pstore_minidump.c b/drivers/soc/qcom/qcom_pstore_minidump.c
-> new file mode 100644
-> index 0000000..8d58500
-> --- /dev/null
-> +++ b/drivers/soc/qcom/qcom_pstore_minidump.c
-> @@ -0,0 +1,116 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +/*
-> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_reserved_mem.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pstore_ram.h>
-> +#include <soc/qcom/qcom_minidump.h>
-> +
-> +struct qcom_ramoops_config {
-> +	unsigned long	record_size;
-> +	unsigned long	console_size;
-> +	unsigned long	ftrace_size;
-> +	unsigned long	pmsg_size;
-> +	unsigned int	mem_type;
-> +	unsigned int	flags;
-> +	int		max_reason;
-> +};
-> +
-> +struct qcom_ramoops_dd {
-> +	struct ramoops_platform_data qcom_ramoops_pdata;
-> +	struct platform_device *ramoops_pdev;
-> +};
-> +
-> +static struct qcom_ramoops_config default_ramoops_config = {
-> +	.mem_type = 2,
-> +	.record_size = 0x0,
-> +	.console_size = 0x200000,
-> +	.ftrace_size = 0x0,
-> +	.pmsg_size = 0x0,
-> +};
+For the series:
+Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
 
-This is effectively hard-cording the configuration of ramoops.
-
-Since the memory range is dynamic and by itself doesn't impose any 
-limitation this should be configurable in the device-tree, like a 
-standard ramoops entry backed by a memory range.
-
-I think this should provide the same interface/knobs as pstore-ram does, 
-unless there's some known limitations to minidump, in which case those 
-should be expressed.
-
-> +
-> +static struct qcom_ramoops_dd *qcom_rdd;
-> +static int qcom_ramoops_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *of_node = pdev->dev.of_node;
-> +	struct device_node *node;
-> +	const struct qcom_ramoops_config *cfg;
-> +	struct ramoops_platform_data *pdata;
-> +	struct reserved_mem *rmem;
-> +	long ret;
-> +
-> +	node = of_parse_phandle(of_node, "memory-region", 0);
-> +	if (!node)
-> +		return -ENODEV;
-> +
-> +	rmem = of_reserved_mem_lookup(node);
-> +	of_node_put(node);
-> +	if (!rmem) {
-> +		dev_err(&pdev->dev, "failed to locate DT /reserved-memory resource\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	qcom_rdd = devm_kzalloc(&pdev->dev, sizeof(*qcom_rdd), GFP_KERNEL);
-> +	if (!qcom_rdd)
-> +		return -ENOMEM;
-> +
-> +	cfg = of_device_get_match_data(&pdev->dev);
-> +	if (!cfg) {
-> +		dev_err(&pdev->dev, "failed to get supported matched data\n");
-> +		return -ENOENT;
-> +	}
-> +
-> +	pdata = &qcom_rdd->qcom_ramoops_pdata;
-> +	pdata->mem_size = rmem->size;
-> +	pdata->mem_address = rmem->base;
-> +	pdata->mem_type = cfg->mem_type;
-> +	pdata->record_size = cfg->record_size;
-> +	pdata->console_size = cfg->console_size;
-> +	pdata->ftrace_size = cfg->ftrace_size;
-> +	pdata->pmsg_size = cfg->pmsg_size;
-> +	pdata->max_reason = KMSG_DUMP_PANIC;
-> +
-> +	qcom_rdd->ramoops_pdev = platform_device_register_data(NULL, "ramoops", -1,
-> +							       pdata, sizeof(*pdata));
-> +	if (IS_ERR(qcom_rdd->ramoops_pdev)) {
-> +		ret = PTR_ERR(qcom_rdd->ramoops_pdev);
-> +		dev_err(&pdev->dev, "could not create platform device: %ld\n", ret);
-> +		qcom_rdd->ramoops_pdev = NULL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int qcom_ramoops_remove(struct platform_device *pdev)
-> +{
-> +	platform_device_unregister(qcom_rdd->ramoops_pdev);
-> +	qcom_rdd->ramoops_pdev = NULL;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id qcom_ramoops_of_match[] = {
-> +	{ .compatible = "qcom,sm8450-ramoops-minidump", .data = &default_ramoops_config },
-> +	{ .compatible = "qcom,ramoops-minidump", .data = &default_ramoops_config },
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, qcom_ramoops_of_match);
-> +static struct platform_driver qcom_ramoops_drv = {
-> +	.driver		= {
-> +		.name	= "qcom,ramoops-minidump",
-> +		.of_match_table = qcom_ramoops_of_match,
-> +	},
-> +	.probe = qcom_ramoops_probe,
-> +	.remove = qcom_ramoops_remove,
-> +};
-> +
-> +module_platform_driver(qcom_ramoops_drv);
-> +
-> +MODULE_DESCRIPTION("Qualcomm minidump pstore driver");
-> +MODULE_LICENSE("GPL");
+Thanks,
+Michal
