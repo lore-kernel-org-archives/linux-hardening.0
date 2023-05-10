@@ -2,141 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A46A7C77B7C
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 19:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D27C7EE22
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 21:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235912AbjEJTcf (ORCPT
+        id S236090AbjEJVJz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 May 2023 15:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33286 "EHLO
+        Wed, 10 May 2023 17:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236032AbjEJTcd (ORCPT
+        with ESMTP id S237034AbjEJVJx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 May 2023 15:32:33 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B486E8B;
-        Wed, 10 May 2023 12:32:32 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-24de2954bc5so5365382a91.1;
-        Wed, 10 May 2023 12:32:32 -0700 (PDT)
+        Wed, 10 May 2023 17:09:53 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18C2210C
+        for <linux-hardening@vger.kernel.org>; Wed, 10 May 2023 14:09:52 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-643ac91c51fso4676996b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 10 May 2023 14:09:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683747152; x=1686339152;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1683752992; x=1686344992;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ijF4JgZZ8UFh46m5QLshrYR4lf9mtf0Ki3Uhm/eh+mU=;
-        b=EeA4kqbs/2ShXxyXSqeEgub903IcQoIVk9QHMk/WTKOYXtPzEDkrTF571IR1lchCB+
-         3aOz0mbDORZd4rt70dqqaOlm1YlilzCB90u+esIDRmBB8b4iVYDmNz47qLx+hktv12AQ
-         eM/OOFh7PWAWB49LF9gEGypXCP17gZKMRmfqJCZP7MJtqX8yanaHOWdDVSbzljRf8bdn
-         bgqY0MfeDP7Jslg/K8TV3NoVq/fp5nNGfGKcQA5/NjcTDQziUs+GNZkR3U65fBo84Vk1
-         Wa0TylLoO93rBBYHoD7mD+XbhEyeTHLz2EyF+RojWwGVdaJKzNA0oS1GXg4uG7NO/MGD
-         +A/w==
+        bh=ENFy+sLOlFINgLHpwtbB3Etq2m1RDg+D2xn9XgOFptQ=;
+        b=XCWzOHZJGax+ETRUrlZctUyfMQgaI2zUPgBzO9Uyyf8v4xfbQQky4xBD2UXYG1E3v3
+         9P3y3+IT+K5UIP2Q2pjGAACy1RZaWhqpVoJrSfFvNr2+0H3Y9jZKXdCs3t8p8f+hg6Nm
+         vewWb/Qry1d1IlmOfbbr/W6pxyLqXQ61BCdLw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683747152; x=1686339152;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1683752992; x=1686344992;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ijF4JgZZ8UFh46m5QLshrYR4lf9mtf0Ki3Uhm/eh+mU=;
-        b=A/dabpc9Wk2FISAPGotdPCe4hN5o8NQhKn8WErwh0BNhOtAjzwMVQCAXfcSmgnA7Pj
-         yX4m1MqZP9+yCkfJ6/lAb+BNo9RSZ+Flh3794aRXWnksJ19dHxVgPvRPdOmmpwVWw+c2
-         MJg59w0Avl1VUk6rMaDzGmOHXdveTGQLWBH58eXeBC5ZlUqIf1ESAPkUQ6R3IYIaQIUH
-         iRmFPXBuzX5SW6qhbSeKSBhhL1gJnl3JJLRHg46Mz3hXNGCuxgTbRa2Axn9xHKmvwzER
-         aqLed21J/Fyor4UP5BlDcKwVog1kqLBAbz8646GrmaWKfo5qPPpIFMqrBXwroeRXqZp3
-         SGNA==
-X-Gm-Message-State: AC+VfDzbcfdNF6X6wOxs3fG45VIlV3iMtnqAMqikuf49i+uqvWV/JvS3
-        rzRkGUjv4fx40FeJBvS7NiamupSl7Xw/jFwQ4sY=
-X-Google-Smtp-Source: ACHHUZ6BOFYp0nK8Weo52A11Jq55ELUDLkcEf5hVS+AWnlPdz/PLLsNoX2B0dchmv6Qb9zAF/RbBwpp6FVBwIIRPhPI=
-X-Received: by 2002:a17:90a:a60d:b0:24e:2021:b410 with SMTP id
- c13-20020a17090aa60d00b0024e2021b410mr18111638pjq.14.1683747151922; Wed, 10
- May 2023 12:32:31 -0700 (PDT)
+        bh=ENFy+sLOlFINgLHpwtbB3Etq2m1RDg+D2xn9XgOFptQ=;
+        b=GaaON49AlmAibZtaICVq9b1lrsEVy/qWO+xirnKcu/LRjsLE+MSEpeg07A5Gnk+ecn
+         DMyMWVaAvUCaUmIUr74lmeIB382qWn8pNOX/MLP1W6JrypxmwZvv9W0UTt98Qdd720zT
+         J51YBaXW5u7c7bOGwb6rFm2olfIucu3UnVNMR6KJdpRIJjjzxrjWQB37wCPBSvWLvbXV
+         QVbfmwBgGEZBSDIckC9C5gwO+Gr1Oxt4Aq69DvAtc/dzbXFdESlzeUdHSw9tYK7c6P9i
+         Kni8ryFuHy5Wg0JBUmkOUmnGOA26hKWC6DWE3bIjb963QJkIwoNpcD7I+vK+SMC0dAZS
+         n2Cg==
+X-Gm-Message-State: AC+VfDybilLvqdwd9JXF/YY3fZC9YUDNqT0jgLmfWNJf2AgG6OxslsIB
+        1oAHopGgDYVRfAsMTCDBouWHzw==
+X-Google-Smtp-Source: ACHHUZ4gbch4ZPH7x8gayLyfQkXuri7/+DuE8u7HV88Qv0fq/GWrYt9s6yAxmDsAvTkYiX7wLhBaJw==
+X-Received: by 2002:a05:6a20:7345:b0:100:bda9:4b37 with SMTP id v5-20020a056a20734500b00100bda94b37mr14040932pzc.57.1683752992391;
+        Wed, 10 May 2023 14:09:52 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q16-20020a62e110000000b0062dae524006sm3917512pfh.157.2023.05.10.14.09.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 May 2023 14:09:51 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Kees Cook <keescook@chromium.org>, kernel@pengutronix.de,
+        Tony Luck <tony.luck@intel.com>, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] pstore/ram: Convert to platform remove callback returning void
+Date:   Wed, 10 May 2023 14:07:20 -0700
+Message-Id: <168375283737.2438356.7396268515330470842.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230401120000.2487153-1-u.kleine-koenig@pengutronix.de>
+References: <20230401120000.2487153-1-u.kleine-koenig@pengutronix.de>
 MIME-Version: 1.0
-References: <20230508075507.1720950-1-gongruiqi1@huawei.com> <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
-In-Reply-To: <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
-From:   Pedro Falcato <pedro.falcato@gmail.com>
-Date:   Wed, 10 May 2023 20:32:20 +0100
-Message-ID: <CAKbZUD1vpgke_-9sijF5rwbHZ8dfcLfyNMCRYcoa4izsKmYNKQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
-To:     Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc:     "GONG, Ruiqi" <gongruiqi1@huawei.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 10, 2023 at 7:44=E2=80=AFPM Hyeonggon Yoo <42.hyeyoo@gmail.com>=
- wrote:
->
-> On Mon, May 8, 2023 at 12:53=E2=80=AFAM GONG, Ruiqi <gongruiqi1@huawei.co=
-m> wrote:
-> >
-> > When exploiting memory vulnerabilities, "heap spraying" is a common
-> > technique targeting those related to dynamic memory allocation (i.e. th=
-e
-> > "heap"), and it plays an important role in a successful exploitation.
-> > Basically, it is to overwrite the memory area of vulnerable object by
-> > triggering allocation in other subsystems or modules and therefore
-> > getting a reference to the targeted memory location. It's usable on
-> > various types of vulnerablity including use after free (UAF), heap out-
-> > of-bound write and etc.
-> >
-> > There are (at least) two reasons why the heap can be sprayed: 1) generi=
-c
-> > slab caches are shared among different subsystems and modules, and
-> > 2) dedicated slab caches could be merged with the generic ones.
-> > Currently these two factors cannot be prevented at a low cost: the firs=
-t
-> > one is a widely used memory allocation mechanism, and shutting down sla=
-b
-> > merging completely via `slub_nomerge` would be overkill.
-> >
-> > To efficiently prevent heap spraying, we propose the following approach=
-:
-> > to create multiple copies of generic slab caches that will never be
-> > merged, and random one of them will be used at allocation. The random
-> > selection is based on the address of code that calls `kmalloc()`, which
-> > means it is static at runtime (rather than dynamically determined at
-> > each time of allocation, which could be bypassed by repeatedly spraying
-> > in brute force). In this way, the vulnerable object and memory allocate=
-d
-> > in other subsystems and modules will (most probably) be on different
-> > slab caches, which prevents the object from being sprayed.
-> >
-> > The overhead of performance has been tested on a 40-core x86 server by
-> > comparing the results of `perf bench all` between the kernels with and
-> > without this patch based on the latest linux-next kernel, which shows
-> > minor difference. A subset of benchmarks are listed below:
-> >
->
-> Please Cc maintainers/reviewers of corresponding subsystem in MAINTAINERS=
- file.
->
-> I dont think adding a hardening feature by sacrificing one digit
-> percent performance
-> (and additional complexity) is worth. Heap spraying can only occur
-> when the kernel contains
-> security vulnerabilities, and if there is no known ways of performing
-> such an attack,
-> then we would simply be paying a consistent cost.
->
+On Sat, 1 Apr 2023 14:00:00 +0200, Uwe Kleine-König wrote:
+> The .remove() callback for a platform driver returns an int which makes
+> many driver authors wrongly assume it's possible to do error handling by
+> returning an error code. However the value returned is (mostly) ignored
+> and this typically results in resource leaks. To improve here there is a
+> quest to make the remove callback return void. In the first step of this
+> quest all drivers are converted to .remove_new() which already returns
+> void.
+> 
+> [...]
 
-And does the kernel not contain security vulnerabilities? :v
-This feature is opt-in and locked behind a CONFIG_ and the kernel most
-certainly has security vulnerabilities.
+Applied to for-next/pstore, thanks!
 
-So... I don't see why adding the hardening feature would be a bad
-idea, barring it being a poor hardening feature, the patch being poor
-or the complexity being overwhelming.
+[1/1] pstore/ram: Convert to platform remove callback returning void
+      https://git.kernel.org/kees/c/48f2c681df43
 
---=20
-Pedro
+I will send this Linus's way for -rc2. Apologies for the delay!
+
+-- 
+Kees Cook
+
