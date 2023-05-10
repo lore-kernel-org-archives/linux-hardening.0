@@ -2,100 +2,112 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4385C7EE22
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 22:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5839AC7EE22
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 23:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236496AbjEJWNT (ORCPT
+        id S230467AbjEJXHw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 May 2023 18:13:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35104 "EHLO
+        Wed, 10 May 2023 19:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236527AbjEJWNN (ORCPT
+        with ESMTP id S229826AbjEJXHv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 May 2023 18:13:13 -0400
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE807DBC;
-        Wed, 10 May 2023 15:12:46 -0700 (PDT)
-Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-3318961b385so77481845ab.1;
-        Wed, 10 May 2023 15:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683756765; x=1686348765;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANF2ojEn6NgL1D5sNhaC7YhuPd6wu0qnDYngj5pnPkU=;
-        b=nEu9mUWoaNPoHYwPTUlOBLkE9eI5c+9gKv22yYXjwR7ORf8LbZFDqkEUGSW2agqm55
-         Yb8DGVp0d7FAmN0p9viEbpVPduepM6jwLmA4JRJ2VU0XdYJiPTLwFLtV6BUZDEYh4gCP
-         hAkDyM1EvORFtSlXmjwg7KhlbmotPuJITQVbsWz60AoU3o5+COesIGsGAsl1FMbaG9Xu
-         YFaDUfu9USDW0/a4d84vD+wum1lsd0679vJusn0ilnkifxd2j6ytgcC8dqlWeLVDmDN2
-         arLhepmewTkhOEuEy60R0Lg++bC86vlQlGzpvxYTtQCJKYQmUu6DlG+vNxE7bjN4xBqk
-         VMHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683756765; x=1686348765;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ANF2ojEn6NgL1D5sNhaC7YhuPd6wu0qnDYngj5pnPkU=;
-        b=hDF8EGvdadHyYfM/pGnf1+1THtre/FIfYXV50hb+yEJISfj2wBfbBmJtzmB0taXF8r
-         YD1mZuiVn/glYszhhdTNBKbGVvqPpTX4drlo9pBLyxr41Swi18cnl3oAdPdlviPTfK+D
-         +kpLGEje2lA16Ijn9XaX5SApp2g2C0LNqj14MRqunGvg6rii9Uc+HbgQS490zpj7IC+W
-         FOfg880IhN3w0WUBjDDbnD1eRCr+Tg3y58WjUi9PhNiPNpRUAnBBj8s2ELep8T2OM52P
-         mVtSfanleCQROJ/Ff1WOwmoFrUflAtXeuuzwl2sWntGRacbMqG63VOvTUMHzktvq/nMT
-         r96w==
-X-Gm-Message-State: AC+VfDyAuCa6zIofiD2jtCx2rbCFGmntsM9QBXHOTK10DC9ouTo3i2Xw
-        8mClo51q6DfdgJK4jdrPdsRDg8F7rLwmyg==
-X-Google-Smtp-Source: ACHHUZ4Jhhks3fH3zcxryOSm0ZDL1Wf68o9U3wBGpEuGzWV3uQdUM4WI6wNLfJv2JD+Q7XeYK/0fRQ==
-X-Received: by 2002:a6b:fe19:0:b0:76a:3481:2f17 with SMTP id x25-20020a6bfe19000000b0076a34812f17mr14670907ioh.1.1683756765327;
-        Wed, 10 May 2023 15:12:45 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id n5-20020a5d8245000000b0075c1eb2e228sm3844485ioo.15.2023.05.10.15.12.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 15:12:44 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        cluster-devel@redhat.com, linux-kernel@vger.kernel.org
-Subject: [PATCH] dlm: Replace all non-returning strlcpy with strscpy
-Date:   Wed, 10 May 2023 22:12:37 +0000
-Message-ID: <20230510221237.3509484-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
+        Wed, 10 May 2023 19:07:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDCE3102;
+        Wed, 10 May 2023 16:07:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 75B98635F4;
+        Wed, 10 May 2023 23:07:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3AA4C433D2;
+        Wed, 10 May 2023 23:07:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1683760067;
+        bh=fgE25D1hp4IWtAFkK0USGG1ZKqXkY7wUpEJmfwsr3t8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DN+agf4q5MwKo4DomiNNQD1lQZveu+mTwkOk1NlmTwFSaiKklJNp88Ex+ZvwcwNUp
+         TjcQRudm8pl9/bfmKneMPzrDktLsnrkjGkaFV3ofILXTs+cnY7A2cMulTzzQZPumM6
+         Wvu6aJc1eCIgJ4gXPhW/UqfPoSdKSs1C+i/w8clI=
+Date:   Thu, 11 May 2023 08:07:42 +0900
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Rong Tao <rtoax@foxmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Zhangfei Gao <zhangfei.gao@foxmail.com>,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: submitting-patches: Discuss interleaved replies
+Message-ID: <2023051132-erratic-reshoot-0cb5@gregkh>
+References: <20230510183423.never.877-kees@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230510183423.never.877-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
-No return values were used, so direct replacement is safe.
+On Wed, May 10, 2023 at 11:34:26AM -0700, Kees Cook wrote:
+> Top-posting has been strongly discouraged in Linux development, but this
+> was actually not written anywhere in the common documentation about
+> sending patches and replying to reviews. Add a section about trimming
+> and interleaved replies.
+> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Thorsten Leemhuis <linux@leemhuis.info>
+> Cc: Rong Tao <rtoax@foxmail.com>
+> Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Cc: Zhangfei Gao <zhangfei.gao@foxmail.com>
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  Documentation/process/submitting-patches.rst | 23 ++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+> index eac7167dce83..3e838da8822f 100644
+> --- a/Documentation/process/submitting-patches.rst
+> +++ b/Documentation/process/submitting-patches.rst
+> @@ -326,6 +326,29 @@ explaining difference aganst previous submission (see
+>  See Documentation/process/email-clients.rst for recommendations on email
+>  clients and mailing list etiquette.
+>  
+> +Use trimmed interleaved replies in email discussions
+> +----------------------------------------------------
+> +Top-posting is strongly discouraged in Linux kernel development
+> +discusions. Interleaved (or "inline") replies make conversations much
+> +easier to follow. For more details see:
+> +https://en.wikipedia.org/wiki/Posting_style#Interleaved_style
+> +
+> +As is frequently quoted on the mailing list:
+> +
+> +  A: http://en.wikipedia.org/wiki/Top_post
+> +  Q: Were do I find info about this thing called top-posting?
+> +  A: Because it messes up the order in which people normally read text.
+> +  Q: Why is top-posting such a bad thing?
+> +  A: Top-posting.
+> +  Q: What is the most annoying thing in e-mail?
+> +
+> +Similarly, please trim all unneeded quotations that aren't relevant
+> +to your reply. This makes replies easier to find, and saves time and
+> +space. For more details see: http://daringfireball.net/2007/07/on_top
+> +
+> +  A: No.
+> +  Q: Should I include quotations after my reply?
+> +
+>  .. _resend_reminders:
+>  
+>  Don't get discouraged - or impatient
+> -- 
+> 2.34.1
+> 
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
+Yes!!!
 
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- fs/dlm/config.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/dlm/config.c b/fs/dlm/config.c
-index d31319d08581..2beceff024e3 100644
---- a/fs/dlm/config.c
-+++ b/fs/dlm/config.c
-@@ -116,9 +116,9 @@ static ssize_t cluster_cluster_name_store(struct config_item *item,
- {
- 	struct dlm_cluster *cl = config_item_to_cluster(item);
- 
--	strlcpy(dlm_config.ci_cluster_name, buf,
-+	strscpy(dlm_config.ci_cluster_name, buf,
- 				sizeof(dlm_config.ci_cluster_name));
--	strlcpy(cl->cl_cluster_name, buf, sizeof(cl->cl_cluster_name));
-+	strscpy(cl->cl_cluster_name, buf, sizeof(cl->cl_cluster_name));
- 	return len;
- }
- 
-
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
