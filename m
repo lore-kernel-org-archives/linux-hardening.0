@@ -2,63 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E077FC77B7D
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 22:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF4FC77B7C
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 22:12:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230061AbjEJWKi (ORCPT
+        id S235765AbjEJWM1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 May 2023 18:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60682 "EHLO
+        Wed, 10 May 2023 18:12:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230165AbjEJWKh (ORCPT
+        with ESMTP id S236208AbjEJWM0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 May 2023 18:10:37 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 370687EF7;
-        Wed, 10 May 2023 15:10:01 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id ca18e2360f4ac-76c75d32005so20478039f.1;
-        Wed, 10 May 2023 15:10:01 -0700 (PDT)
+        Wed, 10 May 2023 18:12:26 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A69DF7AB0;
+        Wed, 10 May 2023 15:11:44 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-33131d7a26eso54973885ab.0;
+        Wed, 10 May 2023 15:11:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683756600; x=1686348600;
+        d=gmail.com; s=20221208; t=1683756703; x=1686348703;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3s4NS5h+ppIdgnnYQegn2z2147cbkAQceVt2XlyQw1Y=;
-        b=ImPDHWBF2qUQho/XSGzYwmUlPuFNt5nW0etWoAQx6NgoilJ5vmlVPRuX6Lbxc5bd8X
-         erKFHCSLp5kU9kyH1UEXsSCL1OeKxknhYhiCqHtMAZIt6/4hMA9tPMXd1ixAFYhUdY9I
-         ngeO9pyIGVx0Fe1/3lDNo+xH8rh8wyYrWLjkbuAfcusAgy6TpOuqVD932Kjh64493UBe
-         myoMDto8+XjFryW4HEm0xdCCxEVGuGCmwGTcgUkyKUngTZ2T2a/66/C3bbrvrUrYYpNY
-         HzPeLBosHjCK7IXn5tw+AZ6pw236RStp0hyIvHB2cC/qTiaoXv2YLcPKsMuSR12Joq6C
-         D+Mg==
+        bh=0eBhWhdJvdbtP/cnVajG86saO4yJvG+Hc382nRSfhlk=;
+        b=E6lG0OwFWDZ3U5f5gxctcCZMhZvskxVFapXQloPJidJO5OXcaTafBoprkIJmKztiGd
+         lYHNFouCAzYFQ4aKNZAL+n2h96PR4yVksN8hS3qehBXukLl48zGkmjEw3lms3wc6Gder
+         EFATSGHOZ8gTI+omzuPAVGZDAuX3wb+kaeU2JCddTcBGe4ieMQk1PAu9vlH9i9uF5vJl
+         Nc34xtYtaT1OqNvtTuw5bzXsY8fX7HYMAhAGVeTOJz20nm+7rvlMPT/sQ5PC3T+9TkrK
+         GcRANDErjMl4tN6OfXtvFBqHhGAPn0KuOQ6EVvt3K1ei+e7v68cRfxzQ9CAwfC+WUJRN
+         LwGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683756600; x=1686348600;
+        d=1e100.net; s=20221208; t=1683756703; x=1686348703;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3s4NS5h+ppIdgnnYQegn2z2147cbkAQceVt2XlyQw1Y=;
-        b=kP9uiGXvs6ZIunNM/w/QCbQPhk0z+18TW22cPiQXCzoFMENbVIUtx1VHhy9uStmVU+
-         hlm89Rs1o0YFtyBHujDfKeVj1ChHiF8nndhyc0lsKMyLQJ/v0qogaQR+Xe2bMKBOF8/b
-         f3m/0gNmccgLZQ8AJD2dcUZesS7ZbpH2tndWOt2Jyjqo0AjJY9PGowZJnjxXVkNBD/KV
-         CiYOBt+4dpXkQtyIdDteKlzwOfsDArjLrnGfOK17nQYYmgDZs7q/V+68gMmtQQO34VQn
-         lcE0zTJ/ZdD6gen24DU4VypbYeLKdaTI6iUn6BpcaIhtkcq5V08GKzSDVOK08u0iWOUY
-         tCdQ==
-X-Gm-Message-State: AC+VfDxBu9P8y62yuidbAcGwam4mQ4bAJvZNVRJqjfcEzsMpFDCbsMMv
-        ZVA364vHVAlSc2uSlWbA1YY=
-X-Google-Smtp-Source: ACHHUZ5Vr8aIzsxRpff9WfyD51ew3E6uvhrr4J0w4KIP58YXQy6L7ENpQQmdIKhw92vzL8FF4DvPUw==
-X-Received: by 2002:a5e:d603:0:b0:76c:5cc1:22a9 with SMTP id w3-20020a5ed603000000b0076c5cc122a9mr4929885iom.17.1683756600028;
-        Wed, 10 May 2023 15:10:00 -0700 (PDT)
+        bh=0eBhWhdJvdbtP/cnVajG86saO4yJvG+Hc382nRSfhlk=;
+        b=MVzFrTa7dhBH4XRvenhMdSyvivYbbwWj9hRxVayKbA37X9knCXHYOHJIoA6ZxWgSYA
+         3Wj6KoFZoLTESXseHWAAy8T+se2iai8tVie2alhJmCIV7m08tJ+oURECZEKFXhTFL/lJ
+         RMxq+6dGDuj5/Etsy8ubiay1/5ZERxJper/n6xb2DbiUjE5ZjctZ6rLAlKQhvqUv3Xmt
+         Hhn+kihCx95p9BkhJSepkpkEuf3ynfSG6OqCaMeJiQ48dfZ8iLghZ2bdASjyXguNw3s+
+         GU6HNB8NpuncGCzGQpQAWEEarvIaMsI+3zg4yfj1Fk6T7Yzq5ivcbieO4XyrK8wgIf8b
+         lhmw==
+X-Gm-Message-State: AC+VfDzNqm3BkIOrYLs85wQu0n/wf7tOnsAqoRNWu176zjdE3ABiy4zu
+        kX6YGo0Aih71Zi4gQHPliC0=
+X-Google-Smtp-Source: ACHHUZ6dy/sktjvNLR2RqHL7AB5LFLvOZuXHCXS1SnsViBu1Kh6VwYfbpECS2u25e1DewEbHqJsApg==
+X-Received: by 2002:a92:609:0:b0:328:8770:b9c2 with SMTP id x9-20020a920609000000b003288770b9c2mr13419316ilg.14.1683756703349;
+        Wed, 10 May 2023 15:11:43 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id s14-20020a02cf2e000000b0040fad79ac08sm3846047jar.89.2023.05.10.15.09.59
+        by smtp.gmail.com with ESMTPSA id b16-20020a92c850000000b0032e28db67dcsm3479124ilq.84.2023.05.10.15.11.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 15:09:59 -0700 (PDT)
+        Wed, 10 May 2023 15:11:42 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NFSD: Replace all non-returning strlcpy with strscpy
-Date:   Wed, 10 May 2023 22:09:52 +0000
-Message-ID: <20230510220952.3507366-1-azeemshaikh38@gmail.com>
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] vfs: Replace all non-returning strlcpy with strscpy
+Date:   Wed, 10 May 2023 22:11:19 +0000
+Message-ID: <20230510221119.3508930-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,20 +79,43 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- fs/nfsd/trace.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/char_dev.c |    2 +-
+ fs/super.c    |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 4183819ea082..9b32cda54808 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -1370,7 +1370,7 @@ TRACE_EVENT(nfsd_cb_setup,
- 	TP_fast_assign(
- 		__entry->cl_boot = clp->cl_clientid.cl_boot;
- 		__entry->cl_id = clp->cl_clientid.cl_id;
--		strlcpy(__entry->netid, netid, sizeof(__entry->netid));
-+		strscpy(__entry->netid, netid, sizeof(__entry->netid));
- 		__entry->authflavor = authflavor;
- 		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
- 				  clp->cl_cb_conn.cb_addrlen)
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index 13deb45f1ec6..950b6919fb87 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -150,7 +150,7 @@ __register_chrdev_region(unsigned int major, unsigned int baseminor,
+ 	cd->major = major;
+ 	cd->baseminor = baseminor;
+ 	cd->minorct = minorct;
+-	strlcpy(cd->name, name, sizeof(cd->name));
++	strscpy(cd->name, name, sizeof(cd->name));
+ 
+ 	if (!prev) {
+ 		cd->next = curr;
+diff --git a/fs/super.c b/fs/super.c
+index 34afe411cf2b..8d8d68799b34 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -595,7 +595,7 @@ struct super_block *sget_fc(struct fs_context *fc,
+ 	fc->s_fs_info = NULL;
+ 	s->s_type = fc->fs_type;
+ 	s->s_iflags |= fc->s_iflags;
+-	strlcpy(s->s_id, s->s_type->name, sizeof(s->s_id));
++	strscpy(s->s_id, s->s_type->name, sizeof(s->s_id));
+ 	list_add_tail(&s->s_list, &super_blocks);
+ 	hlist_add_head(&s->s_instances, &s->s_type->fs_supers);
+ 	spin_unlock(&sb_lock);
+@@ -674,7 +674,7 @@ struct super_block *sget(struct file_system_type *type,
+ 		return ERR_PTR(err);
+ 	}
+ 	s->s_type = type;
+-	strlcpy(s->s_id, type->name, sizeof(s->s_id));
++	strscpy(s->s_id, type->name, sizeof(s->s_id));
+ 	list_add_tail(&s->s_list, &super_blocks);
+ 	hlist_add_head(&s->s_instances, &type->fs_supers);
+ 	spin_unlock(&sb_lock);
 
