@@ -2,131 +2,141 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57FFC77B7C
-	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 19:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A46A7C77B7C
+	for <linux-hardening@archiver.kernel.org>; Wed, 10 May 2023 19:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231803AbjEJTYm (ORCPT
+        id S235912AbjEJTcf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 10 May 2023 15:24:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58062 "EHLO
+        Wed, 10 May 2023 15:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229826AbjEJTYl (ORCPT
+        with ESMTP id S236032AbjEJTcd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 10 May 2023 15:24:41 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D300F1BB
-        for <linux-hardening@vger.kernel.org>; Wed, 10 May 2023 12:24:39 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1aad6f2be8eso71501625ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 10 May 2023 12:24:39 -0700 (PDT)
+        Wed, 10 May 2023 15:32:33 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B486E8B;
+        Wed, 10 May 2023 12:32:32 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-24de2954bc5so5365382a91.1;
+        Wed, 10 May 2023 12:32:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683746679; x=1686338679;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HXHY5peLySfKV7fD6H1ijt1olAC50bP9lGE3KVhNLQg=;
-        b=OI0aC+/AEAMnd83LFI8Aag6udSJxYUe+70XR+T/z67fLGkrTod0pjrlql618r+gvqx
-         MfuO8oonl8fVsdJ+f+WQ4arWAtwK8c/6z+qrZvix2Vh05m2QjIWoVs5Sl0fTRTBCPCfl
-         kZQXXzaXVoWrhYFa80roLq9Q2Id2j6Yv55LBY=
+        d=gmail.com; s=20221208; t=1683747152; x=1686339152;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ijF4JgZZ8UFh46m5QLshrYR4lf9mtf0Ki3Uhm/eh+mU=;
+        b=EeA4kqbs/2ShXxyXSqeEgub903IcQoIVk9QHMk/WTKOYXtPzEDkrTF571IR1lchCB+
+         3aOz0mbDORZd4rt70dqqaOlm1YlilzCB90u+esIDRmBB8b4iVYDmNz47qLx+hktv12AQ
+         eM/OOFh7PWAWB49LF9gEGypXCP17gZKMRmfqJCZP7MJtqX8yanaHOWdDVSbzljRf8bdn
+         bgqY0MfeDP7Jslg/K8TV3NoVq/fp5nNGfGKcQA5/NjcTDQziUs+GNZkR3U65fBo84Vk1
+         Wa0TylLoO93rBBYHoD7mD+XbhEyeTHLz2EyF+RojWwGVdaJKzNA0oS1GXg4uG7NO/MGD
+         +A/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683746679; x=1686338679;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HXHY5peLySfKV7fD6H1ijt1olAC50bP9lGE3KVhNLQg=;
-        b=OIYra6Tb07YFlfWquwdh/h3MIowWJsyY/hXPuTF4ShDoLTBmIKIulPEr50T/LkweZ7
-         RdmXvFZ14APK1290p6A279ANqYdYWZdceDr8lxKxv+5qqAopD+y1whyWlxgx4dBNM3id
-         mMwq9/2L9LKbYoIYEWkwL82O8HE+s1a+sopgaHZE1raMaqiyhPdghiCMCtXQs4o0GBoj
-         XHt1T+5Ohp7327gZSqdt4m9DZOEOJw5WyASsriNLgx5Z72GmwuZ2T+DjUnGp16Veaozu
-         kS4pwfq06gbJTvDbtM5bVmDwy5CyiimjsJ/BqILuMZErVtLo/u1bRfdDDWJzb2TAVtvc
-         7uOQ==
-X-Gm-Message-State: AC+VfDzArpA9Y/QI0KLnfuBwCPvRx0CbvqkfosZWB/teg9cpOhBcKDvu
-        Nar/cUccD6aup8/W6kcktXf26Q==
-X-Google-Smtp-Source: ACHHUZ5CF7fA3Kqg/UxBd853ruj1Tzn0GgcCvZUFaYGJR4zX/wzc7t2kMAj1WEzPP7kw9FfgfS/0Aw==
-X-Received: by 2002:a17:902:e84d:b0:1ab:eee:c609 with SMTP id t13-20020a170902e84d00b001ab0eeec609mr23964108plg.40.1683746679344;
-        Wed, 10 May 2023 12:24:39 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u17-20020a170903125100b001aafe4f9b8esm4163639plh.180.2023.05.10.12.24.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 12:24:38 -0700 (PDT)
-Date:   Wed, 10 May 2023 12:24:38 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Subject: Re: [PATCH v2 01/10] kunit: tool: Enable CONFIG_FORTIFY_SOURCE under
- UML
-Message-ID: <202305101223.B940A881@keescook>
-References: <20230407191904.gonna.522-kees@kernel.org>
- <20230407192717.636137-1-keescook@chromium.org>
- <CAKwvOdk5JjB21FU85Zxubs+LV8bTY-az598V1hvewndAfhohQA@mail.gmail.com>
- <CAKwvOd=yZw_Ju67D52GfUz39MaAFA639hOxR5Jo2dRdp+xciyQ@mail.gmail.com>
+        d=1e100.net; s=20221208; t=1683747152; x=1686339152;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ijF4JgZZ8UFh46m5QLshrYR4lf9mtf0Ki3Uhm/eh+mU=;
+        b=A/dabpc9Wk2FISAPGotdPCe4hN5o8NQhKn8WErwh0BNhOtAjzwMVQCAXfcSmgnA7Pj
+         yX4m1MqZP9+yCkfJ6/lAb+BNo9RSZ+Flh3794aRXWnksJ19dHxVgPvRPdOmmpwVWw+c2
+         MJg59w0Avl1VUk6rMaDzGmOHXdveTGQLWBH58eXeBC5ZlUqIf1ESAPkUQ6R3IYIaQIUH
+         iRmFPXBuzX5SW6qhbSeKSBhhL1gJnl3JJLRHg46Mz3hXNGCuxgTbRa2Axn9xHKmvwzER
+         aqLed21J/Fyor4UP5BlDcKwVog1kqLBAbz8646GrmaWKfo5qPPpIFMqrBXwroeRXqZp3
+         SGNA==
+X-Gm-Message-State: AC+VfDzbcfdNF6X6wOxs3fG45VIlV3iMtnqAMqikuf49i+uqvWV/JvS3
+        rzRkGUjv4fx40FeJBvS7NiamupSl7Xw/jFwQ4sY=
+X-Google-Smtp-Source: ACHHUZ6BOFYp0nK8Weo52A11Jq55ELUDLkcEf5hVS+AWnlPdz/PLLsNoX2B0dchmv6Qb9zAF/RbBwpp6FVBwIIRPhPI=
+X-Received: by 2002:a17:90a:a60d:b0:24e:2021:b410 with SMTP id
+ c13-20020a17090aa60d00b0024e2021b410mr18111638pjq.14.1683747151922; Wed, 10
+ May 2023 12:32:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOd=yZw_Ju67D52GfUz39MaAFA639hOxR5Jo2dRdp+xciyQ@mail.gmail.com>
+References: <20230508075507.1720950-1-gongruiqi1@huawei.com> <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
+In-Reply-To: <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
+From:   Pedro Falcato <pedro.falcato@gmail.com>
+Date:   Wed, 10 May 2023 20:32:20 +0100
+Message-ID: <CAKbZUD1vpgke_-9sijF5rwbHZ8dfcLfyNMCRYcoa4izsKmYNKQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
+To:     Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc:     "GONG, Ruiqi" <gongruiqi1@huawei.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Apr 07, 2023 at 04:42:27PM -0700, Nick Desaulniers wrote:
-> On Fri, Apr 7, 2023 at 4:33 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+On Wed, May 10, 2023 at 7:44=E2=80=AFPM Hyeonggon Yoo <42.hyeyoo@gmail.com>=
+ wrote:
+>
+> On Mon, May 8, 2023 at 12:53=E2=80=AFAM GONG, Ruiqi <gongruiqi1@huawei.co=
+m> wrote:
 > >
-> > On Fri, Apr 7, 2023 at 12:27 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > Since commit ba38961a069b ("um: Enable FORTIFY_SOURCE"), it's possible
-> > > to run the FORTIFY tests under UML. Enable CONFIG_FORTIFY_SOURCE when
-> > > running with --altests to gain additional coverage, and by default under
+> > When exploiting memory vulnerabilities, "heap spraying" is a common
+> > technique targeting those related to dynamic memory allocation (i.e. th=
+e
+> > "heap"), and it plays an important role in a successful exploitation.
+> > Basically, it is to overwrite the memory area of vulnerable object by
+> > triggering allocation in other subsystems or modules and therefore
+> > getting a reference to the targeted memory location. It's usable on
+> > various types of vulnerablity including use after free (UAF), heap out-
+> > of-bound write and etc.
 > >
-> > two L's in alltest?
-> 
-> Also, while testing this series:
-> ```
-> $ LLVM=1 ./tools/testing/kunit/kunit.py run
-> ...
-> [16:40:09] ================== fortify (24 subtests) ===================
-> [16:40:09] [PASSED] known_sizes_test
-> [16:40:09] [PASSED] control_flow_split_test
-> [16:40:09] [PASSED] alloc_size_kmalloc_const_test
-> [16:40:09]     # alloc_size_kmalloc_dynamic_test: EXPECTATION FAILED
-> at lib/fortify_kunit.c:249
-> [16:40:09]     Expected __builtin_dynamic_object_size(p, 1) == expected, but
-> [16:40:09]         __builtin_dynamic_object_size(p, 1) == -1
-> (0xffffffffffffffff)
-> [16:40:09]         expected == 11 (0xb)
-> [16:40:09] __alloc_size() not working with __bdos on kmemdup("hello
-> there", len, gfp)
+> > There are (at least) two reasons why the heap can be sprayed: 1) generi=
+c
+> > slab caches are shared among different subsystems and modules, and
+> > 2) dedicated slab caches could be merged with the generic ones.
+> > Currently these two factors cannot be prevented at a low cost: the firs=
+t
+> > one is a widely used memory allocation mechanism, and shutting down sla=
+b
+> > merging completely via `slub_nomerge` would be overkill.
+> >
+> > To efficiently prevent heap spraying, we propose the following approach=
+:
+> > to create multiple copies of generic slab caches that will never be
+> > merged, and random one of them will be used at allocation. The random
+> > selection is based on the address of code that calls `kmalloc()`, which
+> > means it is static at runtime (rather than dynamically determined at
+> > each time of allocation, which could be bypassed by repeatedly spraying
+> > in brute force). In this way, the vulnerable object and memory allocate=
+d
+> > in other subsystems and modules will (most probably) be on different
+> > slab caches, which prevents the object from being sprayed.
+> >
+> > The overhead of performance has been tested on a 40-core x86 server by
+> > comparing the results of `perf bench all` between the kernels with and
+> > without this patch based on the latest linux-next kernel, which shows
+> > minor difference. A subset of benchmarks are listed below:
+> >
+>
+> Please Cc maintainers/reviewers of corresponding subsystem in MAINTAINERS=
+ file.
+>
+> I dont think adding a hardening feature by sacrificing one digit
+> percent performance
+> (and additional complexity) is worth. Heap spraying can only occur
+> when the kernel contains
+> security vulnerabilities, and if there is no known ways of performing
+> such an attack,
+> then we would simply be paying a consistent cost.
+>
 
-I'm still tracking this down. I'm not sure what's happening here, but it
-seems to be Clang-specific, and due to some interaction with the changes
-I made for Kunit examination. WHY it happens I haven't found yet.
+And does the kernel not contain security vulnerabilities? :v
+This feature is opt-in and locked behind a CONFIG_ and the kernel most
+certainly has security vulnerabilities.
 
--- 
-Kees Cook
+So... I don't see why adding the hardening feature would be a bad
+idea, barring it being a poor hardening feature, the patch being poor
+or the complexity being overwhelming.
+
+--=20
+Pedro
