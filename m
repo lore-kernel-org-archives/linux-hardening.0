@@ -2,111 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0823C77B7F
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 22:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2809CC77B7C
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 22:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238811AbjEKWKN (ORCPT
+        id S233279AbjEKWQt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 May 2023 18:10:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59688 "EHLO
+        Thu, 11 May 2023 18:16:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238953AbjEKWKL (ORCPT
+        with ESMTP id S233312AbjEKWQq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 May 2023 18:10:11 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 568B66A7A
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 15:10:03 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-6434e65d808so9755311b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 15:10:03 -0700 (PDT)
+        Thu, 11 May 2023 18:16:46 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D370359D4
+        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 15:16:44 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1aaf21bb42bso66185685ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 15:16:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683843003; x=1686435003;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ooac5tL+mseyTN9L+x1m+1D+z3zZPNRSrEyDHL8CuWc=;
-        b=JXR/xm0E+UUFmWf1wRMZgI6VaUWPK5W5tDN0vIDM2B0+aOQUWkZiPgoMyBO8V6cyke
-         HPakTwy7CgGnYSqHxcjTXah9Qt1GrRy+PSwbmabFLI+1TM111+Slg9bRn3Yhxy1XMF2z
-         G0R4D24TLDlxpvCnb1z6VM2qFUEpZO95MCunk=
+        d=chromium.org; s=google; t=1683843404; x=1686435404;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mYCkZW2ogs6OMYlPsNws7SbZYW9dz6tYyPZ1gWxGb8k=;
+        b=HkV1/6IE9cIGy1RW+z8Arp7eRsUPZAmopg2U5rg8IL4m0as9cOGnhLviwEqhk9uyp6
+         L3jkbvNUMZdBL9WuorKQ1KWPD0BAN8cdDO3oAfZd9vcxKrWlTvqtoaeJDwuulQeXEvPO
+         0izSDa+iwdk5v+qk7go4AYxUGOs9Y2NI5sJjM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683843003; x=1686435003;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ooac5tL+mseyTN9L+x1m+1D+z3zZPNRSrEyDHL8CuWc=;
-        b=OOrJ461hZOEBQ/TdZa7jfg8MGvp6py9FNdV4YDJ+SJZR0LlmcjJheveRpnzoYOWD0n
-         khfoDgFejCm67CxHCf3FOupltCpNSsMc/Pawx1ruK5TGJgQB74cDviobO0TGVg8wiK+Q
-         j40oie2kiboRBx33ixIGpMSupOIl871ZYdWQUOpQTSTwINAWKih1Z/Yj6RRGjwM/L75j
-         JP5O7j9IuGcOL5+Mz9oJPi9Jut7mWIfHTxvkntUa29Psdf5YwdPfOMsFLzWsYt8tikw8
-         PspenRTv105Sh3EKlOiOgP+eTQuodcKn6qvKWukjeFaL4AzBy6sfnXgSGGVtabr/WaoP
-         Wl6g==
-X-Gm-Message-State: AC+VfDw2u21koaJagfgOE89DV3aR3IplD32zR8za1GOWUlZlA7/GeMd+
-        FOoya2eJShmjpBmGPU049HClQg==
-X-Google-Smtp-Source: ACHHUZ4aUI8ISpA8NkZd6SJuB882GbxNnfGq9BATmlyfEHldSuNSzQ43VWj3WFDwdyJ0waq/rtxjPg==
-X-Received: by 2002:a05:6a00:8c5:b0:647:4dee:62a4 with SMTP id s5-20020a056a0008c500b006474dee62a4mr14029138pfu.34.1683843002834;
-        Thu, 11 May 2023 15:10:02 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683843404; x=1686435404;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mYCkZW2ogs6OMYlPsNws7SbZYW9dz6tYyPZ1gWxGb8k=;
+        b=JjmYV2DIs1hmkV73Hq3iyCanJNFbXH3iUS16HZ2Dz2P+YQ61cVMKBf4OZ4nNZdnCdj
+         yKI20rZ8gHBU2Sx1FyQiuOA4VHHSWmMRufqV+ajwiip43JTOLf1jpZxJtk9ltIJlvNAB
+         kbicus24zteI9tstV3KVGBLoXsPSz6YS9kYKNpsrJlp2aMDkTWBhLktOFBHKhiY1/1xO
+         1t/mhs5s5JmXGC313Q/wf6/+PpcGboDG5IeD1rN517lwlcfk77CsaDEKyC3aaZ9wPwLF
+         VTbzEVmbfvB16gCYcn2uE/TwTj3VpIOF8t9Ex5XaCILf878hl0SahnMuDBtBYloFAMLB
+         h8qw==
+X-Gm-Message-State: AC+VfDytk0KNV7wV5P2o9WftbtKGTB+qEhC8woW0buHIlItkwtKY1X82
+        GInr+U/8DRkSyN8C+Vc656p/tFMcuTMNXR6QDdBoKA==
+X-Google-Smtp-Source: ACHHUZ4JoAef92WR5VbZemTNr+hT6tqc5aZjq7DFDEUq2hse935X6MfDjjp8jOrQMbQVJQhzcASqmg==
+X-Received: by 2002:a17:902:c952:b0:1ad:ca0e:cf23 with SMTP id i18-20020a170902c95200b001adca0ecf23mr4279369pla.3.1683843404353;
+        Thu, 11 May 2023 15:16:44 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x20-20020aa793b4000000b0063d2bb0d107sm5803828pff.64.2023.05.11.15.10.01
+        by smtp.gmail.com with ESMTPSA id z9-20020a170902834900b001aaf2172418sm6406127pln.95.2023.05.11.15.16.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 15:10:02 -0700 (PDT)
+        Thu, 11 May 2023 15:16:43 -0700 (PDT)
+Date:   Thu, 11 May 2023 15:16:43 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] scsi: megaraid_sas: Convert union megasas_sgl to flex-arrays
-Date:   Thu, 11 May 2023 15:10:00 -0700
-Message-Id: <20230511220957.never.919-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     Joseph Myers <joseph@codesourcery.com>
+Cc:     Alejandro Colomar <alx.manpages@gmail.com>, GCC <gcc@gcc.gnu.org>,
+        Alejandro Colomar <alx@nginx.com>,
+        Andrew Clayton <a.clayton@nginx.com>,
+        Andrew Clayton <andrew@digital-domain.net>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [wish] Flexible array members in unions
+Message-ID: <202305111514.576EB7F@keescook>
+References: <ac2550e0-2f5c-3680-08e6-0c224d043036@gmail.com>
+ <44940599-7b43-99f6-5b09-4f050d645c7b@gmail.com>
+ <202305111158.C78642624@keescook>
+ <74ee73d2-04e-ea8-9430-93929446e925@codesourcery.com>
+ <202305111410.CFE0875F@keescook>
+ <bb3aac3c-f377-5598-cbf6-47d0be448f3@codesourcery.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1525; h=from:subject:message-id; bh=LtOldvtOS7BP2znGslCZolBglC52ivG2kUh4xsBr7gw=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkXWe4srTr9P0R2BfZ0l3zZwW7FDKgoLhejYjQrjIf E1DhPjSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZF1nuAAKCRCJcvTf3G3AJq5ID/ 0Y3B0fKlu1yboIdHGvoWREvQu7tbf7nV5Z41kc6P+Ojp9TNpFBIlG96li90StqxGhYgOIEkFSYH3l4 Wi2Yp/ZCkyNU+sYXJzElh/YaIzN1A6Lr4VmwQiuQaNPZImUSXDAK50ZtSe/bQOQA8dOhIlYn5UmsRX LT/qVO8M6go9nbw95DXaRuzKNy5quQ01yWS0WCZX6lfWOA3njEY4GdoIZctuxniV+tIbHQv4IXVwIp +fq1rperKy9ZE+7FnEBZ1MmQBk3XLJsk4eaO+QPEUr2g4z5U6VojjqnHwEqqcvixz0YGxl/iBe8Xap eIFLGGwEXeTl947aab86Qm1AnzMqCVKj1Wtln0muf7DGwuNOJkw6WFOLtIUFdur7GnWp7gyLDC939M fXuAQhCxIuWbzYU1hV3IjUs/PA4UufdBvofOg2+r9bje5PCZrSUXOT4XQkHwZC2OSrWva/mIQ5axn0 PDQA2r5xZuXYuDrgLookOhX0CfYleymhaYpFKZovIrPbBOb4S1WcHe/12vLSzMwfA4673xs9l8yATc e9gydMjqmpJ5+JfaKDyr8bUWxtR6omvsi0Z+YxP0HJSwm5MkHvpRXwi9h/Jg8M4LI3CJD0t5JonWy/ jLrcHchurIWO129uc/Vz5ExJ0UILUdacwQRf9o89nhNKx5C8TvKolC8Ep7Jg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bb3aac3c-f377-5598-cbf6-47d0be448f3@codesourcery.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In the ongoing effort to replace all fake flexible arrays with true
-flexible arrays, replace the sge32, sge64, and sge_skinny members of
-union megasas_sgl with true flexible arrays. No binary differences are
-seen after this change; sizes were already being manually calculated
-using the member struct sizes directly.
+On Thu, May 11, 2023 at 09:43:49PM +0000, Joseph Myers wrote:
+> On Thu, 11 May 2023, Kees Cook via Gcc wrote:
+> 
+> > Why are zero-sized objects missing in Standard C? Or, perhaps, the better
+> > question is: what's needed to support the idea of a zero-sized object?
+> 
+> Zero-sized objects break the principle that different objects have 
+> different addresses, and the principle of being able to subtract pointers 
+> to different elements of an array.  There would also be serious C++ 
+> compatibility concerns, since C++ allows a struct with no members but it 
+> has nonzero size, unlike the GNU C extension where a struct with no 
+> members has size zero.
 
-Cc: Kashyap Desai <kashyap.desai@broadcom.com>
-Cc: Sumit Saxena <sumit.saxena@broadcom.com>
-Cc: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: megaraidlinux.pdl@broadcom.com
-Cc: linux-scsi@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/scsi/megaraid/megaraid_sas.h | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Okay, understood. If this is a C-only thing, we can ignore the C++
+impact. What depends on the "different objects have different addresses"
+principle? And why do unions not break this -- they could point to the
+same locations within the object? And don't flexible arrays already need
+special handling in this regard?
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas.h b/drivers/scsi/megaraid/megaraid_sas.h
-index 63bac3684c19..3554f6b07727 100644
---- a/drivers/scsi/megaraid/megaraid_sas.h
-+++ b/drivers/scsi/megaraid/megaraid_sas.h
-@@ -1722,11 +1722,9 @@ struct megasas_sge_skinny {
- } __packed;
- 
- union megasas_sgl {
--
--	struct megasas_sge32 sge32[1];
--	struct megasas_sge64 sge64[1];
--	struct megasas_sge_skinny sge_skinny[1];
--
-+	DECLARE_FLEX_ARRAY(struct megasas_sge32, sge32);
-+	DECLARE_FLEX_ARRAY(struct megasas_sge64, sge64);
-+	DECLARE_FLEX_ARRAY(struct megasas_sge_skinny, sge_skinny);
- } __attribute__ ((packed));
- 
- struct megasas_header {
 -- 
-2.34.1
-
+Kees Cook
