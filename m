@@ -2,109 +2,77 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66052C7EE24
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 22:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DBD5C77B7C
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 22:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239244AbjEKW2o (ORCPT
+        id S238921AbjEKWwc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 May 2023 18:28:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37058 "EHLO
+        Thu, 11 May 2023 18:52:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231446AbjEKW2n (ORCPT
+        with ESMTP id S238053AbjEKWwc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 May 2023 18:28:43 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68B69272D
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 15:28:42 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-64ab2a37812so686362b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 15:28:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683844122; x=1686436122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=foguPMzaG5JiKYkGBK5Zqr8oTB+NWVY0GCMBbESmVbo=;
-        b=fE3rVckTldIGJ9X79t1Tocx/fvHS8/EWaaZUWVMfpCQjD6wKu7leVkN9G5nHE7F2LC
-         p4WBsp2m0LR3mee1GBx75i7GQ1hFNp4aJ0AeK9wRgq5DxKNNm6lsnOs+r+KExblYrhxr
-         az+pMa5mQwMDktKT2xO108h0iA2YD2f2nwjW8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683844122; x=1686436122;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=foguPMzaG5JiKYkGBK5Zqr8oTB+NWVY0GCMBbESmVbo=;
-        b=JqHebG5O+U80FpzsF9+A45YasDLnSs79VwQNBcSwvPMc9VviRravduONNsvOHvVi5f
-         lrwgEKzndOXzrEqyozB29dG9cixweuo6pB5XUABAz+7bq5jsa2A8JnKcjozqV1s9841/
-         bJoq9sePnwdiGpJMSRG3XP7grr7E2/MzWaqJEVUyQzfTqDvx6aGyEWKKeGOR50U/NpOp
-         buByCuQYRpZelo9Vlvw80DpFRJ0bXWsNutqJS0sYyuXxO0Wjt0XCzoIgGu9nxXDEkgiq
-         u0tI72eXXqSS9qE4IVVJ57LGOgYjC7JSwOXWUidnOM4lJsOLIpFHl85o51nyQUDGwRgw
-         ILaQ==
-X-Gm-Message-State: AC+VfDw41CanCwEEMbr0Q+IZeCDNm3/b0/lwmBhPjXNyAF+MBXlMPByj
-        lyIyfE+pkbfXm+FxzJ9lSiHNwg==
-X-Google-Smtp-Source: ACHHUZ6mEsMPqSDmeIgz0bMbow4zeO58axDoPLJOCw723w8mEoGZDcn2G0FDhPsF6SBJe8srfCjV2Q==
-X-Received: by 2002:a05:6a20:8e14:b0:101:3c60:6794 with SMTP id y20-20020a056a208e1400b001013c606794mr12671176pzj.2.1683844121954;
-        Thu, 11 May 2023 15:28:41 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p38-20020a631e66000000b0052c766b2f52sm5515338pgm.4.2023.05.11.15.28.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 15:28:41 -0700 (PDT)
-Date:   Thu, 11 May 2023 15:28:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH 07/32] mm: Bring back vmalloc_exec
-Message-ID: <202305111525.67001E5C4@keescook>
-References: <20230509165657.1735798-1-kent.overstreet@linux.dev>
- <20230509165657.1735798-8-kent.overstreet@linux.dev>
- <3508afc0-6f03-a971-e716-999a7373951f@wdc.com>
+        Thu, 11 May 2023 18:52:32 -0400
+Received: from esa2.mentor.iphmx.com (esa2.mentor.iphmx.com [68.232.141.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED11E42
+        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 15:52:31 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="5596161"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa2.mentor.iphmx.com with ESMTP; 11 May 2023 14:52:31 -0800
+IronPort-SDR: ocSW3JRScdrJzbDdvklpCVOJ/yoa4V+KWMngDsMe4FXNS2rV6K4a7QpkhVAVo2KmEf2KoTCk/5
+ yBHUAf0rhlOtDUuhsXskKlnz84jMX+/W3BzSV4QK6+/JLIlPqIAHHC6Nkvap7ftyOS2GZ3WQ2N
+ /cAaPUvuLdEG+RHvS7Gs1cAXJzU+kbBSwFQYbI/OvGOW0xDv+lr+PxLaMKVEKYtQLaCdXN4obf
+ xUYaVkXMF69Hf4sqrIQh+28RdJlka5NTRBJfUaUjUjq2UXsXHGbhX/yzCnJiQCUVIGdhvzcjqO
+ EuY=
+Date:   Thu, 11 May 2023 22:52:25 +0000
+From:   Joseph Myers <joseph@codesourcery.com>
+To:     Kees Cook <keescook@chromium.org>
+CC:     Alejandro Colomar <alx.manpages@gmail.com>, GCC <gcc@gcc.gnu.org>,
+        Alejandro Colomar <alx@nginx.com>,
+        Andrew Clayton <a.clayton@nginx.com>,
+        Andrew Clayton <andrew@digital-domain.net>,
+        <linux-hardening@vger.kernel.org>
+Subject: Re: [wish] Flexible array members in unions
+In-Reply-To: <202305111514.576EB7F@keescook>
+Message-ID: <a9f2739c-7582-853e-ea94-e13f5ea4698@codesourcery.com>
+References: <ac2550e0-2f5c-3680-08e6-0c224d043036@gmail.com> <44940599-7b43-99f6-5b09-4f050d645c7b@gmail.com> <202305111158.C78642624@keescook> <74ee73d2-04e-ea8-9430-93929446e925@codesourcery.com> <202305111410.CFE0875F@keescook>
+ <bb3aac3c-f377-5598-cbf6-47d0be448f3@codesourcery.com> <202305111514.576EB7F@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3508afc0-6f03-a971-e716-999a7373951f@wdc.com>
+Content-Type: text/plain; charset="US-ASCII"
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-14.mgc.mentorg.com (139.181.222.14) To
+ svr-ies-mbx-10.mgc.mentorg.com (139.181.222.10)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 10, 2023 at 03:05:48PM +0000, Johannes Thumshirn wrote:
-> On 09.05.23 18:56, Kent Overstreet wrote:
-> > +/**
-> > + * vmalloc_exec - allocate virtually contiguous, executable memory
-> > + * @size:	  allocation size
-> > + *
-> > + * Kernel-internal function to allocate enough pages to cover @size
-> > + * the page level allocator and map them into contiguous and
-> > + * executable kernel virtual space.
-> > + *
-> > + * For tight control over page level allocator and protection flags
-> > + * use __vmalloc() instead.
-> > + *
-> > + * Return: pointer to the allocated memory or %NULL on error
-> > + */
-> > +void *vmalloc_exec(unsigned long size, gfp_t gfp_mask)
-> > +{
-> > +	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
-> > +			gfp_mask, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
-> > +			NUMA_NO_NODE, __builtin_return_address(0));
-> > +}
-> > +EXPORT_SYMBOL_GPL(vmalloc_exec);
-> 
-> Uh W+X memory reagions.
-> The 90s called, they want their shellcode back.
+On Thu, 11 May 2023, Kees Cook via Gcc wrote:
 
-Just to clarify: the kernel must never create W+X memory regions. So,
-no, do not reintroduce vmalloc_exec().
+> Okay, understood. If this is a C-only thing, we can ignore the C++
+> impact.
 
-Dynamic code areas need to be constructed in a non-executable memory,
-then switched to read-only and verified to still be what was expected,
-and only then made executable.
+We're a lot more careful lately in WG14 about checking for C++ 
+compatibility issues and expecting approval from the liaison group for 
+anything with possible compatibility concerns for syntax in the common 
+subset of C and C++.  So, no, we can't ignore the C++ impact for adding 
+empty types; it would need careful consideration in the liaison group.
+
+> What depends on the "different objects have different addresses"
+> principle? And why do unions not break this -- they could point to the
+> same locations within the object? And don't flexible arrays already need
+> special handling in this regard?
+
+"including a pointer to an object and a subobject at its beginning" and 
+"one is a pointer to one past the end of one array object and the other is 
+a pointer to the start of a different array object that happens to 
+immediately follow the first array object in the address space" are both 
+cases included in the semantics for comparison operators.  If you allow 
+zero-size objects you get more special cases there (and quite possibly 
+affect optimizations based on points-to analysis that can determine 
+pointers are based on different objects, if an object is not known at 
+compile time to have nonzero size).
 
 -- 
-Kees Cook
+Joseph S. Myers
+joseph@codesourcery.com
