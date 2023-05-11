@@ -2,119 +2,147 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16128C77B7C
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 16:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E33C7EE22
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 18:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238637AbjEKQdL (ORCPT
+        id S238616AbjEKSiM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 May 2023 12:33:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48070 "EHLO
+        Thu, 11 May 2023 14:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238537AbjEKQdK (ORCPT
+        with ESMTP id S239030AbjEKShs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 May 2023 12:33:10 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758557DA2
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 09:32:35 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6439e6f5a33so5200719b3a.2
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 09:32:35 -0700 (PDT)
+        Thu, 11 May 2023 14:37:48 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE521BE2
+        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 11:37:47 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-64115eef620so59964143b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 11:37:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683822752; x=1686414752;
+        d=chromium.org; s=google; t=1683830267; x=1686422267;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=j2NBUWOOR11Ms/2PyvoDCmQ5v0ISgMExdmVp0dYwxIs=;
-        b=C7oTW0Zz5xXH199g4i+wko4FpuMlib2Mv0DGdJuj0reCFtwNIU/ydHVWPqjQpkfUbe
-         ZgiR4KjlJKcOmNZrs4bsvJ134SBm34Olli34gvXP6XCaiu+FKPC2FEBdAagwlwvHJC7h
-         OErMTEZ5w8y9LqkDfhUEjwyZvCygIHC/UYjl0=
+        bh=EyigEQsWQlpFj9oAYDvVkxAuY6bSSbrSpQ9TJU1fUQQ=;
+        b=VgulxXC92TIpai2A9mZMYW/IK9i/pbkk/lCSOAsmI4qCRS86ew58nvwMY4psK3waHa
+         oDnaGwbRJV+VxdhrEmkyR1EvYY7ZorZTP3NEnroWD2FtZIM9JEkoQKmbSQ3Cez+cFJRe
+         GXUEkuJLZZyYY/BP9gq3xXVRyYILmk+tYEOaU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683822752; x=1686414752;
+        d=1e100.net; s=20221208; t=1683830267; x=1686422267;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=j2NBUWOOR11Ms/2PyvoDCmQ5v0ISgMExdmVp0dYwxIs=;
-        b=Jb7T58P9Be0hU8AIsH5sTjqM4jVoscFB4FyhPhaTpsN366REqIDgSqsWIWSRRPr7Kr
-         pBH4LUWeSgKa5JNyTK/CfMvEahDUEBuVvZ5miBwJBZwwzkRJmpFSsrUbGF1s5CBZYVlg
-         efgKwUyVFyiPPaJ18dLdxucbgqlKMftk8n6SZJ5IH1b7mO2Yub2Ai/e9lDxqeoOGXeYO
-         +adQhrmU0Km5kO+p4MKytBWJWdT75pZXEn6WbeqTGg9RQOxBQMiYRvMbJRMRFuhnDLKi
-         USUlGvvXSX7XthxHL210IjJmSvCqjf5Q5Vkhm6pRC2rVFdlUwDq4WEr7AeP9HkKJjZab
-         Rwuw==
-X-Gm-Message-State: AC+VfDz8Asst1XDnZRWIKCYY5G+Dk9gvjXd2Zlu8FnknX+gNgaiyKkPw
-        2uFL9D+AEqcO/Ag6xA48bfiWpA==
-X-Google-Smtp-Source: ACHHUZ4zSWRkBNeMaRGVVX2fGuE+uy/c5q1dJPkr+NKw2O47VN5LWt0gytxvOCvz7Ee6+cDooJ68eA==
-X-Received: by 2002:a05:6a00:23c3:b0:637:f1ae:d3e with SMTP id g3-20020a056a0023c300b00637f1ae0d3emr30009088pfc.25.1683822752594;
-        Thu, 11 May 2023 09:32:32 -0700 (PDT)
+        bh=EyigEQsWQlpFj9oAYDvVkxAuY6bSSbrSpQ9TJU1fUQQ=;
+        b=OPsjcUSErYyUs2nLni/igHGPZJVj2Ek61m6WhT9TI7bbqQSCjFuPSMAX3G0l44kwkQ
+         AIip4uzN6am1BQKHky1DT3ymoGqxSuLI3Vmhs8hLTPiU9cjiMrH0Uol7+9x7lIxP1nYg
+         3NURkeDAmvmU6nXecAA8qnTYGAmB/EaOhiFL9XvoWX0rMY01BDcpKkTyw4zEcybGMMTj
+         R5tLJzjFBGE1j9MeoqqnzIz8ZnclAbBvD3JW3bTq3KOlawKCwHIcsVE9jR7omwGb9XAf
+         VrT1qJeQ34Jl2Gq8dHS+qsZzwVuRa7f4tp8Kgbzq7Qd7LxfJb6jDLlYut50YOp441ypv
+         12lQ==
+X-Gm-Message-State: AC+VfDzV/qWQEvLMrwzqOyGLdHZzUtBy+gjOwaGWef0ivYcANt0a6mQl
+        1TuHJyDiQjDKl8UsNjazTpiYSA==
+X-Google-Smtp-Source: ACHHUZ6zBr0iY5TfuweaLUlC4U2Dbutn7tnQtVNcPfDtPlUyC/U05dIfXupcFnLnDi3KcGlP2WAQeA==
+X-Received: by 2002:a17:902:dad2:b0:1ac:92db:9677 with SMTP id q18-20020a170902dad200b001ac92db9677mr13610451plx.28.1683830266731;
+        Thu, 11 May 2023 11:37:46 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id i14-20020aa78d8e000000b00646ebc77b1fsm5215220pfr.75.2023.05.11.09.32.31
+        by smtp.gmail.com with ESMTPSA id l5-20020a170902d34500b001ac912cac1asm6253294plk.175.2023.05.11.11.37.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 09:32:32 -0700 (PDT)
-Date:   Thu, 11 May 2023 09:32:31 -0700
+        Thu, 11 May 2023 11:37:46 -0700 (PDT)
+Date:   Thu, 11 May 2023 11:37:45 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] NFSD: Replace all non-returning strlcpy with strscpy
-Message-ID: <202305110927.12508719D2@keescook>
-References: <20230510220952.3507366-1-azeemshaikh38@gmail.com>
- <72239648-C807-4CDD-8DA7-18440C83384E@oracle.com>
+To:     Thorsten Leemhuis <linux@leemhuis.info>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rong Tao <rtoax@foxmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Zhangfei Gao <zhangfei.gao@foxmail.com>,
+        linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: submitting-patches: Discuss interleaved replies
+Message-ID: <202305111135.D65457C24@keescook>
+References: <20230510183423.never.877-kees@kernel.org>
+ <6c1f853b-b051-c390-267e-1ea1741e8537@leemhuis.info>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <72239648-C807-4CDD-8DA7-18440C83384E@oracle.com>
+In-Reply-To: <6c1f853b-b051-c390-267e-1ea1741e8537@leemhuis.info>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, May 11, 2023 at 02:47:54PM +0000, Chuck Lever III wrote:
-> Hello Azeem -
+On Thu, May 11, 2023 at 11:21:36AM +0200, Thorsten Leemhuis wrote:
+> On 10.05.23 20:34, Kees Cook wrote:
+> > Top-posting has been strongly discouraged in Linux development, but this
+> > was actually not written anywhere in the common documentation about
+> > sending patches and replying to reviews. Add a section about trimming
+> > and interleaved replies.
 > 
-> > On May 10, 2023, at 3:09 PM, Azeem Shaikh <azeemshaikh38@gmail.com> wrote:
-> > 
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read
-> > overflows if a source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> > No return values were used, so direct replacement is safe.
+> Thx for doing this.
 > 
-> Actually netid should use the __string() and __assign_str()
-> macros rather than open-coding a string copy, I think.
-
-Ah, hm, yeah, this is tracing wrappers.
-
-Steve, is there a reason __assign_str() is using "strcpy" and not
-strscpy()?
-
-> Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
-
-Yeah, that works. I was on the fence about adding Fixes for these kinds
-of refactoring. Like, it's not really _broken_; we're just trying to
-remove the API.
-
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > [...]
 > > ---
-> > fs/nfsd/trace.h |    2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > index 4183819ea082..9b32cda54808 100644
-> > --- a/fs/nfsd/trace.h
-> > +++ b/fs/nfsd/trace.h
-> > @@ -1370,7 +1370,7 @@ TRACE_EVENT(nfsd_cb_setup,
-> > TP_fast_assign(
-> > __entry->cl_boot = clp->cl_clientid.cl_boot;
-> > __entry->cl_id = clp->cl_clientid.cl_id;
-> > - strlcpy(__entry->netid, netid, sizeof(__entry->netid));
-> > + strscpy(__entry->netid, netid, sizeof(__entry->netid));
-> > __entry->authflavor = authflavor;
-> > __assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
-> >  clp->cl_cb_conn.cb_addrlen)
+> >  Documentation/process/submitting-patches.rst | 23 ++++++++++++++++++++
+> >  1 file changed, 23 insertions(+)
+> 
+> For some reason we have duplicate code^w documentation for this, hence
+> I'd say the same or a similar text should also be added to one of the
+> filed in Documentation/process/[0-9].*rst ; from a quick
+> Documentation/process/6.Followthrough.rst might be the best one.
+> 
+> Maybe in fact the text should move there and submitting-patches.rst
+> should have a much shorter version, as it's meant to be the terser of
+> the two docs about this.
 
-Leaving code context for Steve to see...
+Hm, The place where it is mentioned is even shorter, so I kind of like
+it in submittingpatches. But, I'm open to whatever seems best. I just
+want to have a URL to point people at, and I'm usually pointing to
+places in submittingpatches. :)
+
+> 
+> > diff --git a/Documentation/process/submitting-patches.rst b/Documentation/process/submitting-patches.rst
+> > index eac7167dce83..3e838da8822f 100644
+> > --- a/Documentation/process/submitting-patches.rst
+> > +++ b/Documentation/process/submitting-patches.rst
+> > @@ -326,6 +326,29 @@ explaining difference aganst previous submission (see
+> >  See Documentation/process/email-clients.rst for recommendations on email
+> >  clients and mailing list etiquette.
+> >  
+> > +Use trimmed interleaved replies in email discussions
+> > +----------------------------------------------------
+> > +Top-posting is strongly discouraged in Linux kernel development
+> > +discusions. Interleaved (or "inline") replies make conversations much
+> 
+> s/discusions/discussions/
+
+Agh, thanks. Fixed.
+
+> 
+> > +easier to follow. For more details see:
+> > +https://en.wikipedia.org/wiki/Posting_style#Interleaved_style
+> > +
+> > +As is frequently quoted on the mailing list:
+> > +
+> > +  A: http://en.wikipedia.org/wiki/Top_post
+> > +  Q: Were do I find info about this thing called top-posting?
+> > +  A: Because it messes up the order in which people normally read text.
+> > +  Q: Why is top-posting such a bad thing?
+> > +  A: Top-posting.
+> > +  Q: What is the most annoying thing in e-mail?
+> > +
+> > +Similarly, please trim all unneeded quotations that aren't relevant
+> > +to your reply. This makes replies easier to find, and saves time and
+> 
+> Nitpicking, feel free to ignore: maybe "s/replies/responses/" or
+> something like that, as at least my stupid brain accidentally thought of
+> the email reply (as whole) when reading this for the first time.
+
+Yeah, that is more readable. Fixed.
+
+> > +space. For more details see: http://daringfireball.net/2007/07/on_top
+> > [...]
+> 
+> Ciao, Thorsten
+
+Thanks!
 
 -- 
 Kees Cook
