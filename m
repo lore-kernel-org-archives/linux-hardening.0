@@ -2,62 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209B1C7EE22
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 21:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948FC77B7C
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 21:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239262AbjEKVn6 (ORCPT
+        id S239292AbjEKVsq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 May 2023 17:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46066 "EHLO
+        Thu, 11 May 2023 17:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239461AbjEKVn4 (ORCPT
+        with ESMTP id S238966AbjEKVso (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 May 2023 17:43:56 -0400
-Received: from esa2.mentor.iphmx.com (esa2.mentor.iphmx.com [68.232.141.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7148D2127
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 14:43:55 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
-   d="scan'208";a="5592447"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 11 May 2023 13:43:54 -0800
-IronPort-SDR: zOdNArBLMfW2DnkTfP2ikxcqWj0SqC7CthgmwmAjhNwGED2Gz8Qty0m8PUF6FN6LE7V9A/EvPE
- +xmG0OBpaHpNdSmHzVBcvmtKG6YXrgyQN4JwXePADr0Ocw0U3zNGTqdKEypXytRNDZZEvDIErO
- 4KlZLKXmXDgxIdeKCHIFR5E4Kwhevb3t+/8hbN0TPPvqkRen6AxzK2+los9Ubc1zgykEHH7vou
- +YbqWl8iHve0kWXNqFsVx32KAgG1STtl7m/Q/pd3DudUAFHfpngfrM6et3y3WOZnEjwfcgJQt9
- ehU=
-Date:   Thu, 11 May 2023 21:43:49 +0000
-From:   Joseph Myers <joseph@codesourcery.com>
-To:     Kees Cook <keescook@chromium.org>
-CC:     Alejandro Colomar <alx.manpages@gmail.com>, GCC <gcc@gcc.gnu.org>,
-        Alejandro Colomar <alx@nginx.com>,
-        Andrew Clayton <a.clayton@nginx.com>,
-        Andrew Clayton <andrew@digital-domain.net>,
-        <linux-hardening@vger.kernel.org>
-Subject: Re: [wish] Flexible array members in unions
-In-Reply-To: <202305111410.CFE0875F@keescook>
-Message-ID: <bb3aac3c-f377-5598-cbf6-47d0be448f3@codesourcery.com>
-References: <ac2550e0-2f5c-3680-08e6-0c224d043036@gmail.com> <44940599-7b43-99f6-5b09-4f050d645c7b@gmail.com> <202305111158.C78642624@keescook> <74ee73d2-04e-ea8-9430-93929446e925@codesourcery.com> <202305111410.CFE0875F@keescook>
+        Thu, 11 May 2023 17:48:44 -0400
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F454690;
+        Thu, 11 May 2023 14:48:42 -0700 (PDT)
+Received: from [10.230.83.65] (unknown [72.28.92.215])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 3722440026;
+        Thu, 11 May 2023 21:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1683841719;
+        bh=hjvm1zm7cWLOP+uGf76IIMlTIPMFKlV+xXfMnXyGB8Q=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=Cjhg1vG0eHurLwCGA5RC85fFZHhbtKuQVMy4+k9XxNBIQ2RfNELgpNkVU2786iQeU
+         EWeNhfVzikltesWaOsNXR8iVjzsuKOtRFjAqbHv2S5gyQt+bta974N+Z9gtor4AfPD
+         dVSTc/GDABBZ5f2Fo9wphW+bkvJ475qR9CcgmYj/u7rOUWmZURzTCskLqVCdRj7uXw
+         3BnhIR0AsBqBsLyPIIz83GmU5vJqRz5gMZJYa9J/d3fYIOfpkv0IuavddN5LKNur7U
+         +UheZL1FcyvGu6wfqcPKwdo1H4d2MuuTrzqDpzKEE4XP129oPMZeXOxU1oPUJ9DZEP
+         9q4Y5MdEPP25g==
+Message-ID: <7085879d-4d21-b90a-c08d-60450d1c7d38@canonical.com>
+Date:   Thu, 11 May 2023 14:48:29 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-15.mgc.mentorg.com (139.181.222.15) To
- svr-ies-mbx-10.mgc.mentorg.com (139.181.222.10)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] apparmor: aa_buffer: Convert 1-element array to flexible
+ array
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, apparmor@lists.ubuntu.com,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230511213441.never.401-kees@kernel.org>
+From:   John Johansen <john.johansen@canonical.com>
+Organization: Canonical
+In-Reply-To: <20230511213441.never.401-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 11 May 2023, Kees Cook via Gcc wrote:
+On 5/11/23 14:34, Kees Cook wrote:
+> In the ongoing effort to convert all fake flexible arrays to proper
+> flexible arrays, replace aa_buffer's 1-element "buffer" member with a
+> flexible array.
+> 
+> Cc: John Johansen <john.johansen@canonical.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: apparmor@lists.ubuntu.com
+> Cc: linux-security-module@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-> Why are zero-sized objects missing in Standard C? Or, perhaps, the better
-> question is: what's needed to support the idea of a zero-sized object?
+Acked-by: John Johansen <john.johansen@canonical.com>
 
-Zero-sized objects break the principle that different objects have 
-different addresses, and the principle of being able to subtract pointers 
-to different elements of an array.  There would also be serious C++ 
-compatibility concerns, since C++ allows a struct with no members but it 
-has nonzero size, unlike the GNU C extension where a struct with no 
-members has size zero.
+I have pulled this into my tree.
 
--- 
-Joseph S. Myers
-joseph@codesourcery.com
+> ---
+> One thing I notice here is that it may be rare for "buffer" to ever change
+> for a given kernel. Could this just be made PATH_MAX * 2 directly and
+> remove the module parameter, etc, etc?
+
+possibly. Currently the only use case I know of is for some stress testing
+where we drop the buffer size down really small to try and break things.
+This isn't part of the regular regression runs and could be handle with a
+config/compile time to a buffer size constant.
+
+
+> ---
+>   security/apparmor/lsm.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
+> index d6cc4812ca53..35eb41bb9e3a 100644
+> --- a/security/apparmor/lsm.c
+> +++ b/security/apparmor/lsm.c
+> @@ -46,7 +46,7 @@ int apparmor_initialized;
+>   
+>   union aa_buffer {
+>   	struct list_head list;
+> -	char buffer[1];
+> +	DECLARE_FLEX_ARRAY(char, buffer);
+>   };
+>   
+>   #define RESERVE_COUNT 2
+> @@ -1647,7 +1647,7 @@ char *aa_get_buffer(bool in_atomic)
+>   		list_del(&aa_buf->list);
+>   		buffer_count--;
+>   		spin_unlock(&aa_buffers_lock);
+> -		return &aa_buf->buffer[0];
+> +		return aa_buf->buffer;
+>   	}
+>   	if (in_atomic) {
+>   		/*
+> @@ -1670,7 +1670,7 @@ char *aa_get_buffer(bool in_atomic)
+>   		pr_warn_once("AppArmor: Failed to allocate a memory buffer.\n");
+>   		return NULL;
+>   	}
+> -	return &aa_buf->buffer[0];
+> +	return aa_buf->buffer;
+>   }
+>   
+>   void aa_put_buffer(char *buf)
+> @@ -1747,7 +1747,7 @@ static int __init alloc_buffers(void)
+>   			destroy_buffers();
+>   			return -ENOMEM;
+>   		}
+> -		aa_put_buffer(&aa_buf->buffer[0]);
+> +		aa_put_buffer(aa_buf->buffer);
+>   	}
+>   	return 0;
+>   }
+
