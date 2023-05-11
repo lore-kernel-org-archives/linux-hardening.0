@@ -2,132 +2,62 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36769C7EE24
-	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 21:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 209B1C7EE22
+	for <linux-hardening@archiver.kernel.org>; Thu, 11 May 2023 21:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239308AbjEKVew (ORCPT
+        id S239262AbjEKVn6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 May 2023 17:34:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37760 "EHLO
+        Thu, 11 May 2023 17:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232582AbjEKVev (ORCPT
+        with ESMTP id S239461AbjEKVn4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 May 2023 17:34:51 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D30B3C17
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 14:34:50 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-643990c5373so9262380b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 14:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683840889; x=1686432889;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q+0/GVZgLBH6PMkReAmP7J8wDURjmtx81m3HSPypGMA=;
-        b=jaNXHgOsOc00cBPbE6wx9gckIw2Q/Um/cKSBDT2gyxXE5t2692YhDFoGrbxBzaKGpz
-         fX1qUuRiG7BqMGEb6gWUkI9GBpnS6wPZpOhfYu7mu30SwaBpiNMxc+Ig0Rqc5DufL4RS
-         AqDHQzqAg+72MtBDEp+tAC3aLLMtJavmkawLw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683840889; x=1686432889;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q+0/GVZgLBH6PMkReAmP7J8wDURjmtx81m3HSPypGMA=;
-        b=CjXsWNpu0PR0hAUVFSmsuCbaBncHWqmTW6OZ6yLTsSETZeJatC0RxP0Zpg+hZ601ZA
-         Zd9DyCUB2HbLnmzSjSpBBgVYqec4CZnA1r6A/5hGAOOc8INVJJMN1Di5n/8KBISisEZX
-         337TxTL/nztTPlk6hjmVasM3fx17e5EHfFVb2QivO797YKJ6ipbA0FdsbpyYZUXvk6GG
-         Qm46DSQ5+d+XnSQBSH4tC4Ay+1UDE57t3hRF8MNcs4R7Y/DxNg+7f5nZNSmbLvdWF7/J
-         C7M5djALv3hJSXZ1DNmrNnnJjq8G0ceQly5Mq9a5PdPXgaim/ESaZeSeSCMxSsQGZUBw
-         BdXA==
-X-Gm-Message-State: AC+VfDypjdXlB/BWBjleM7HY5k2Eq4ZgbcNeby3fjhkoQZheh6qCjgBG
-        CEhp3GMh03HrBU3HjmpQeUNXzA==
-X-Google-Smtp-Source: ACHHUZ6aIVQi2PoT8nJNkXF7lJUrXqlz/U4E4/5bAfucHx/weKzuj5vTz8HeUezW4TkZKZWK6UC36A==
-X-Received: by 2002:a05:6a00:88f:b0:648:24c1:fe5a with SMTP id q15-20020a056a00088f00b0064824c1fe5amr11096650pfj.16.1683840889532;
-        Thu, 11 May 2023 14:34:49 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a13-20020aa7864d000000b0063b85893633sm5723353pfo.197.2023.05.11.14.34.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 14:34:49 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     John Johansen <john.johansen@canonical.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, apparmor@lists.ubuntu.com,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] apparmor: aa_buffer: Convert 1-element array to flexible array
-Date:   Thu, 11 May 2023 14:34:45 -0700
-Message-Id: <20230511213441.never.401-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Thu, 11 May 2023 17:43:56 -0400
+Received: from esa2.mentor.iphmx.com (esa2.mentor.iphmx.com [68.232.141.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7148D2127
+        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 14:43:55 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="5592447"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 11 May 2023 13:43:54 -0800
+IronPort-SDR: zOdNArBLMfW2DnkTfP2ikxcqWj0SqC7CthgmwmAjhNwGED2Gz8Qty0m8PUF6FN6LE7V9A/EvPE
+ +xmG0OBpaHpNdSmHzVBcvmtKG6YXrgyQN4JwXePADr0Ocw0U3zNGTqdKEypXytRNDZZEvDIErO
+ 4KlZLKXmXDgxIdeKCHIFR5E4Kwhevb3t+/8hbN0TPPvqkRen6AxzK2+los9Ubc1zgykEHH7vou
+ +YbqWl8iHve0kWXNqFsVx32KAgG1STtl7m/Q/pd3DudUAFHfpngfrM6et3y3WOZnEjwfcgJQt9
+ ehU=
+Date:   Thu, 11 May 2023 21:43:49 +0000
+From:   Joseph Myers <joseph@codesourcery.com>
+To:     Kees Cook <keescook@chromium.org>
+CC:     Alejandro Colomar <alx.manpages@gmail.com>, GCC <gcc@gcc.gnu.org>,
+        Alejandro Colomar <alx@nginx.com>,
+        Andrew Clayton <a.clayton@nginx.com>,
+        Andrew Clayton <andrew@digital-domain.net>,
+        <linux-hardening@vger.kernel.org>
+Subject: Re: [wish] Flexible array members in unions
+In-Reply-To: <202305111410.CFE0875F@keescook>
+Message-ID: <bb3aac3c-f377-5598-cbf6-47d0be448f3@codesourcery.com>
+References: <ac2550e0-2f5c-3680-08e6-0c224d043036@gmail.com> <44940599-7b43-99f6-5b09-4f050d645c7b@gmail.com> <202305111158.C78642624@keescook> <74ee73d2-04e-ea8-9430-93929446e925@codesourcery.com> <202305111410.CFE0875F@keescook>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1837; h=from:subject:message-id; bh=RrVUNVC3gegju2xKIW8jFRuLI/RiqJcR7VGQB4D/Evs=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkXV90iD6pl1iKdfr2Ps0RyjFlScFvSso0BrIaopyd ZQOueMqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZF1fdAAKCRCJcvTf3G3AJkTuD/ 4guSJdw3bNVmQ7eEYndRa0y3hZ2G3lDOgGzJbSemtYsubbOwoTLZe+nua0LcHDXyY5X27tNGTi+1SL M2w1+4cS74i5Wv7ig0XOjBlSTXJv99aZdTWoek/gPqxzNo/1Z1rvK+EO4jGYYR3eDZJhwpq0iP3REc OeS7z8lj2kaaaSmDPEwUlWqep+kgbb3uZoKAkxnOKRW8s3wLomio5a2iVMLTyohD92ibYs3j0eL7R3 CBOdQ2ZCrCz7kg0RkqC1mytmxEICPDNZokdROVAkKxlnHn03DVS+hQ4L/ytYUIF/LMXwRbP4y3wJWm UPc533JZYrKt1BpU7ubrsfXcuXcgrHRPvy91+GpRdUYNqIJbSwyn4gDo5UTSZs0S8B2m065X0BHcG/ 96PPWKo/woEwMCfFCTS12eG/zQrfrtQuwoCwGnzpwHfVw0r4GGRyv65ck8IRczuKsADvUdhiW5nKjT wE3i70lGdoI8OuMv1xbQVQLbm/Wapp+Xr/ff8uJWd4te9iULOl3bctVgAlTLGcn1bHZiwC7shh+vBE hEYELPR++NZekxFdRZr3ylL6b3TYMspR3f3aGPt1Je0uKcUIhYDuQFck85l2c3/lOikRFyW9ftK6/o GxUiMHjtwTAOBBNZlX0e1ylDvTaN+Gw1flVjeJt5AkPKxUwAp8O/Fqg7mnkw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-15.mgc.mentorg.com (139.181.222.15) To
+ svr-ies-mbx-10.mgc.mentorg.com (139.181.222.10)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-In the ongoing effort to convert all fake flexible arrays to proper
-flexible arrays, replace aa_buffer's 1-element "buffer" member with a
-flexible array.
+On Thu, 11 May 2023, Kees Cook via Gcc wrote:
 
-Cc: John Johansen <john.johansen@canonical.com>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: apparmor@lists.ubuntu.com
-Cc: linux-security-module@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-One thing I notice here is that it may be rare for "buffer" to ever change
-for a given kernel. Could this just be made PATH_MAX * 2 directly and
-remove the module parameter, etc, etc?
----
- security/apparmor/lsm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Why are zero-sized objects missing in Standard C? Or, perhaps, the better
+> question is: what's needed to support the idea of a zero-sized object?
 
-diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
-index d6cc4812ca53..35eb41bb9e3a 100644
---- a/security/apparmor/lsm.c
-+++ b/security/apparmor/lsm.c
-@@ -46,7 +46,7 @@ int apparmor_initialized;
- 
- union aa_buffer {
- 	struct list_head list;
--	char buffer[1];
-+	DECLARE_FLEX_ARRAY(char, buffer);
- };
- 
- #define RESERVE_COUNT 2
-@@ -1647,7 +1647,7 @@ char *aa_get_buffer(bool in_atomic)
- 		list_del(&aa_buf->list);
- 		buffer_count--;
- 		spin_unlock(&aa_buffers_lock);
--		return &aa_buf->buffer[0];
-+		return aa_buf->buffer;
- 	}
- 	if (in_atomic) {
- 		/*
-@@ -1670,7 +1670,7 @@ char *aa_get_buffer(bool in_atomic)
- 		pr_warn_once("AppArmor: Failed to allocate a memory buffer.\n");
- 		return NULL;
- 	}
--	return &aa_buf->buffer[0];
-+	return aa_buf->buffer;
- }
- 
- void aa_put_buffer(char *buf)
-@@ -1747,7 +1747,7 @@ static int __init alloc_buffers(void)
- 			destroy_buffers();
- 			return -ENOMEM;
- 		}
--		aa_put_buffer(&aa_buf->buffer[0]);
-+		aa_put_buffer(aa_buf->buffer);
- 	}
- 	return 0;
- }
+Zero-sized objects break the principle that different objects have 
+different addresses, and the principle of being able to subtract pointers 
+to different elements of an array.  There would also be serious C++ 
+compatibility concerns, since C++ allows a struct with no members but it 
+has nonzero size, unlike the GNU C extension where a struct with no 
+members has size zero.
+
 -- 
-2.34.1
-
+Joseph S. Myers
+joseph@codesourcery.com
