@@ -2,223 +2,149 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA450C77B7C
-	for <linux-hardening@archiver.kernel.org>; Fri, 12 May 2023 00:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E914BC77B7C
+	for <linux-hardening@archiver.kernel.org>; Fri, 12 May 2023 01:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238953AbjELA0J (ORCPT
+        id S231895AbjELB5j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 11 May 2023 20:26:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41378 "EHLO
+        Thu, 11 May 2023 21:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231578AbjELA0J (ORCPT
+        with ESMTP id S229763AbjELB5i (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 11 May 2023 20:26:09 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992BE3C24
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 17:26:07 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f41dceb9d4so64395285e9.1
-        for <linux-hardening@vger.kernel.org>; Thu, 11 May 2023 17:26:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683851166; x=1686443166;
-        h=in-reply-to:from:references:cc:to:content-language:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/pdxt8598+AuKVRd83LFJjNgz5XEcYwttkCXlHDv37Q=;
-        b=cQEGndHR1VI0rkWSwVwluTYVo6FbB2gsO09tWkjnXSZ6/fz6s8RplZDZMc07JOUOBX
-         fGAfWmrrLNMQ5SGMwKjfSQvU0WTpZyinO5Dy2yUZEiJrtzba07H4lwtM0totlbwLzXEF
-         OXjbSp1qKlJtVWr64nVjngAZX4PsfbeB70cFad8UOH2ei9t+J5xdxl+pOpJ8Axh3kTfF
-         VR9HkyMHtxhyygtHAcg5TVh0Tzer5+aOWDRNTxVavbRwMA6N/DED3AvO0BtBhkxMcPc4
-         Kszj+1c1BEyDvTcNV0oPjwyMJUBZ7i5g5wgyc654PbtT71UGtju9lJVJVUy+3B0O0RCR
-         sqqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683851166; x=1686443166;
-        h=in-reply-to:from:references:cc:to:content-language:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/pdxt8598+AuKVRd83LFJjNgz5XEcYwttkCXlHDv37Q=;
-        b=JWBJfQgeThKXZuPwSAIANzZd01wRb4a3os9GGOpXlBzCDTE7j4OBsDZrPJmwEo+e+j
-         dEvznKl/6Kt/SdvL8O3wmubr1awOvPQ0Akq/CXKZ0qCuj0xxwzGQdIdgjcyDSJcYVk5A
-         e3emt7C95LfIYt7Iwjazkmh/wzSHl4ai6QzYXowjregILtqvroMYdymx3C7kpP0zJcqt
-         HQ5vcHJGVc4Co9+J9zZhDstHhMuo8bOQtNHsEgI0FMxxFX9DSAtTkTMAFFddSpGDtfgV
-         4gGPjjHtSY7KrtvZd35zI/ACBg2TPujZZLG/Kb7EZnx+BnvOW1dNCDaZSKWY0JFXzXXJ
-         scMQ==
-X-Gm-Message-State: AC+VfDyvPDXsLzM5zqC9MzGz8Jw/nvErGjpY4Gr3IRxgG5uGZfThF5qM
-        XnUQ/u1EOXMJn9Tq4SF3OIA=
-X-Google-Smtp-Source: ACHHUZ5r4snoWkmpes4sbbKk60PJAGOQUJDpuEcyLF4BWWbBtrWcZSjegbTSNiwoXDluuRUTav4SLg==
-X-Received: by 2002:a1c:6a18:0:b0:3f4:294d:8529 with SMTP id f24-20020a1c6a18000000b003f4294d8529mr10076143wmc.19.1683851165712;
-        Thu, 11 May 2023 17:26:05 -0700 (PDT)
-Received: from [192.168.0.160] ([170.253.51.134])
-        by smtp.gmail.com with ESMTPSA id v2-20020a1cf702000000b003f32f013c3csm27148359wmh.6.2023.05.11.17.26.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 May 2023 17:26:05 -0700 (PDT)
-Message-ID: <240b09b1-ea14-4a96-5091-7fe50d049005@gmail.com>
-Date:   Fri, 12 May 2023 02:25:12 +0200
+        Thu, 11 May 2023 21:57:38 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C13BE53;
+        Thu, 11 May 2023 18:57:36 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8Bx6ekOnV1kQ_kHAA--.13667S3;
+        Fri, 12 May 2023 09:57:34 +0800 (CST)
+Received: from localhost.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxXrMMnV1kocdWAA--.23198S2;
+        Fri, 12 May 2023 09:57:33 +0800 (CST)
+From:   Qing Zhang <zhangqing@loongson.cn>
+To:     Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        kasan-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, loongarch@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v3 0/4] LoongArch: Add kernel address sanitizer support
+Date:   Fri, 12 May 2023 09:57:27 +0800
+Message-Id: <20230512015731.23787-1-zhangqing@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [wish] Flexible array members in unions
-Content-Language: en-US
-To:     Joseph Myers <joseph@codesourcery.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     GCC <gcc@gcc.gnu.org>, Alejandro Colomar <alx@nginx.com>,
-        Andrew Clayton <a.clayton@nginx.com>,
-        Andrew Clayton <andrew@digital-domain.net>,
-        linux-hardening@vger.kernel.org
-References: <ac2550e0-2f5c-3680-08e6-0c224d043036@gmail.com>
- <44940599-7b43-99f6-5b09-4f050d645c7b@gmail.com>
- <202305111158.C78642624@keescook>
- <74ee73d2-04e-ea8-9430-93929446e925@codesourcery.com>
- <202305111410.CFE0875F@keescook>
- <bb3aac3c-f377-5598-cbf6-47d0be448f3@codesourcery.com>
- <202305111514.576EB7F@keescook>
- <a9f2739c-7582-853e-ea94-e13f5ea4698@codesourcery.com>
-From:   Alejandro Colomar <alx.manpages@gmail.com>
-In-Reply-To: <a9f2739c-7582-853e-ea94-e13f5ea4698@codesourcery.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------Fe8uTpjyiA6kjMm0Y7SKYAhS"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8DxXrMMnV1kocdWAA--.23198S2
+X-CM-SenderInfo: x2kd0wptlqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxZFy3GrWkCr45Jw1DGryUWrg_yoW5tw1fpa
+        9rur95Gr4UGrnayrZ7t348ur13J3Z3Ka12qFyay395AF45Wr10vr4vkryDZF9rG3y8JFy0
+        q3WrGwn0gF4jya7anT9S1TB71UUUUb7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bfAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UM2kK
+        e7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280
+        aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4
+        kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+        1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+        Wlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I
+        6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
+        0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
+        cSsGvfC2KfnxnUUI43ZEXa7IU0L0ePUUUUU==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------Fe8uTpjyiA6kjMm0Y7SKYAhS
-Content-Type: multipart/mixed; boundary="------------ySemPXGO5xT86AvfUHBQi3k0";
- protected-headers="v1"
-From: Alejandro Colomar <alx.manpages@gmail.com>
-To: Joseph Myers <joseph@codesourcery.com>, Kees Cook <keescook@chromium.org>
-Cc: GCC <gcc@gcc.gnu.org>, Alejandro Colomar <alx@nginx.com>,
- Andrew Clayton <a.clayton@nginx.com>,
- Andrew Clayton <andrew@digital-domain.net>, linux-hardening@vger.kernel.org
-Message-ID: <240b09b1-ea14-4a96-5091-7fe50d049005@gmail.com>
-Subject: Re: [wish] Flexible array members in unions
-References: <ac2550e0-2f5c-3680-08e6-0c224d043036@gmail.com>
- <44940599-7b43-99f6-5b09-4f050d645c7b@gmail.com>
- <202305111158.C78642624@keescook>
- <74ee73d2-04e-ea8-9430-93929446e925@codesourcery.com>
- <202305111410.CFE0875F@keescook>
- <bb3aac3c-f377-5598-cbf6-47d0be448f3@codesourcery.com>
- <202305111514.576EB7F@keescook>
- <a9f2739c-7582-853e-ea94-e13f5ea4698@codesourcery.com>
-In-Reply-To: <a9f2739c-7582-853e-ea94-e13f5ea4698@codesourcery.com>
+1/8 of kernel addresses reserved for shadow memory. But for LoongArch,
+There are a lot of holes between different segments and valid address
+space (256T available) is insufficient to map all these segments to kasan
+shadow memory with the common formula provided by kasan core, saying
+(addr >> KASAN_SHADOW_SCALE_SHIFT) + KASAN_SHADOW_OFFSET
 
---------------ySemPXGO5xT86AvfUHBQi3k0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+So LoongArch has a arch-specific mapping formula, different segments are
+mapped individually, and only limited space lengths of these specific
+segments are mapped to shadow.
 
-Hi Joseph, Kees,
+At early boot stage the whole shadow region populated with just one
+physical page (kasan_early_shadow_page). Later, this page is reused as
+readonly zero shadow for some memory that kasan currently don't track.
+After mapping the physical memory, pages for shadow memory are allocated
+and mapped.
 
-On 5/12/23 00:52, Joseph Myers wrote:
-> On Thu, 11 May 2023, Kees Cook via Gcc wrote:
->=20
->> Okay, understood. If this is a C-only thing, we can ignore the C++
->> impact.
->=20
-> We're a lot more careful lately in WG14 about checking for C++=20
-> compatibility issues and expecting approval from the liaison group for =
+Functions like memset()/memcpy()/memmove() do a lot of memory accesses.
+If bad pointer passed to one of these function it is important to be
+caught. Compiler's instrumentation cannot do this since these functions
+are written in assembly.
 
-> anything with possible compatibility concerns for syntax in the common =
+KASan replaces memory functions with manually instrumented variants.
+Original functions declared as weak symbols so strong definitions in
+mm/kasan/kasan.c could replace them. Original functions have aliases
+with '__' prefix in names, so we could call non-instrumented variant
+if needed.
 
-> subset of C and C++.  So, no, we can't ignore the C++ impact for adding=
-=20
-> empty types; it would need careful consideration in the liaison group.
->=20
->> What depends on the "different objects have different addresses"
->> principle? And why do unions not break this -- they could point to the=
+Changes v2 -> v3:
+- Rebased on 6.4-rc1
+- Add Makefile ``KASAN_SANITIZE`` annotation for tlb related files
+  to adapt to multiple cores.
 
->> same locations within the object? And don't flexible arrays already ne=
-ed
->> special handling in this regard?
->=20
-> "including a pointer to an object and a subobject at its beginning" and=
-=20
-> "one is a pointer to one past the end of one array object and the other=
- is=20
-> a pointer to the start of a different array object that happens to=20
-> immediately follow the first array object in the address space" are bot=
-h=20
-> cases included in the semantics for comparison operators.  If you allow=
-=20
-> zero-size objects you get more special cases there (and quite possibly =
+Changes v1 -> v2:
+Suggested by Andrey:
+- Make two separate patches for changes to public files.
+- Removes unnecessary judgments in check_region_inline.
+- Add pud/pmd_init __weak define.
+- Add Empty function kasan_(early)_init when CONFIG_KASAN turned off.
+Suggested by Huacai:
+- Split the simplified relocation patch.
+Suggested by Youling:
+- Add ARCH_HAS_FORTIFY_SOURCE in Kconfig and split into separate patches.
+- update `Documentation/translations/zh_CN/dev-tools/kasan.rst`.
+- Use macros to avoid using magic values directly.
+- Modify patch sequence.
+- Remove redundant tab.
+- Modify submission information.
 
-> affect optimizations based on points-to analysis that can determine=20
-> pointers are based on different objects, if an object is not known at=20
-> compile time to have nonzero size).
+Qing Zhang (4):
+  kasan: Add __HAVE_ARCH_SHADOW_MAP to support arch specific mapping
+  kasan: Add (pmd|pud)_init for LoongArch zero_(pud|p4d)_populate
+    process
+  LoongArch: Simplify the processing of jumping new kernel for KASLR
+  LoongArch: Add kernel address sanitizer support
 
-Since GNU C already supports empty structs, how about allowing that in GC=
-C
-with no intention of adding it to ISO C?  We'll see how good it behaves i=
-n
-GCC, and if so suggest it for inclusion in the standard.
+ Documentation/dev-tools/kasan.rst             |   4 +-
+ .../features/debug/KASAN/arch-support.txt     |   2 +-
+ .../translations/zh_CN/dev-tools/kasan.rst    |   2 +-
+ arch/loongarch/Kconfig                        |   7 +
+ arch/loongarch/include/asm/kasan.h            | 120 +++++++++
+ arch/loongarch/include/asm/pgtable.h          |   7 +
+ arch/loongarch/include/asm/setup.h            |   2 +-
+ arch/loongarch/include/asm/string.h           |  20 ++
+ arch/loongarch/kernel/Makefile                |   6 +
+ arch/loongarch/kernel/head.S                  |  13 +-
+ arch/loongarch/kernel/relocate.c              |   8 +-
+ arch/loongarch/kernel/setup.c                 |   4 +
+ arch/loongarch/lib/memcpy.S                   |   4 +-
+ arch/loongarch/lib/memmove.S                  |  16 +-
+ arch/loongarch/lib/memset.S                   |   4 +-
+ arch/loongarch/mm/Makefile                    |   2 +
+ arch/loongarch/mm/kasan_init.c                | 255 ++++++++++++++++++
+ arch/loongarch/vdso/Makefile                  |   4 +
+ include/linux/kasan.h                         |   2 +
+ mm/kasan/init.c                               |  18 +-
+ mm/kasan/kasan.h                              |   6 +
+ 21 files changed, 478 insertions(+), 28 deletions(-)
+ create mode 100644 arch/loongarch/include/asm/kasan.h
+ create mode 100644 arch/loongarch/mm/kasan_init.c
 
-Why should GNU C, which allows empty structures, and de facto supports
-flexible arrays in empty structs and in unions (via the empty preceeding
-struct and the wrapper struct tricks, as the kernel does), shouldn't
-support them officially without tricks?
+-- 
+2.36.0
 
-Apart from violating artificial rules that disallow that use of flexible
-arrays, I believe the example program I provided in the first post
-doesn't violate aliasing rules or other similar rules that would result
-in optimization conflicts.  Does it?
-
-About zero-sized types, a union consisting of only flexible-array members=
-
-would effectively be a zero-sized type, so GCC should have similar issues=
-
-having this in unions and in empty structs.  So far, I don't see GCC
-complaining about such horrible thing as an array of empty structs:
-
-$ cat arr.c
-#include <stdio.h>
-
-struct s {};
-
-struct s x[10];
-
-int
-main(void)
-{
-	printf("x:    %zu, %p\n", sizeof(x), &x);
-	printf("x[3]: %zu, %p\n", sizeof(x[3]), &x[3]);
-}
-$ gcc-13 arr.c -Wall -Wextra
-$ ./a.out=20
-x:    0, 0x55c5f6d72019
-x[3]: 0, 0x55c5f6d72019
-
-
-
-So, in GNU C land, I think it is reasonable to add this feature.
-
-Cheers,
-Alex
-
---=20
-<http://www.alejandro-colomar.es/>
-GPG key fingerprint: A9348594CE31283A826FBDD8D57633D441E25BB5
-
---------------ySemPXGO5xT86AvfUHBQi3k0--
-
---------------Fe8uTpjyiA6kjMm0Y7SKYAhS
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmRdh2gACgkQnowa+77/
-2zK8WBAAhpZgIr8yTkaVcqMcSO4S3y9uvA7cbDNeIFufkPYpuRubBz65UiKz4TPv
-ECnyj63LI6hWi+2Y9Hf90eMMGpln4ouRYdBhz4JWB6ooi1dYJLJ35oDyoRilJxY6
-WelS6mXn5HIOupigM0lLlVrNJeaPjx9RSmghfWAC1MZkOP3YBxuWmY+7RYKQyIXQ
-Qbu5ZyQLCRf9bDtGjvnsaDa2giiN55t+Kz0FPQ2lj55ba9tF3RPK2B8f6OAYnBId
-qoIOe83h9WOVpF4SG2X4oiFBi9afOYjXJo1t3eHH7fNV9t0mqblOIqZ1cAsMdto7
-3ZOuqDoZ0dQMaQ7r4JDMkiaMw1svSSq1g2Atejw7fdCcHCEYeXph6za1J30ANE28
-H84uAfRVVVC/nXSkEjbSNxm67DIrwpyS9urYrNpdRWn2uf3XP9CYb5e4FY1/MsGb
-XBWflwYL7YcJJjzneqDRjP8Wnm07K9X+C+o0uf5uDS1g+BOqy6e58UDGmsr1NrJM
-pGY6CK02SV7xNrFPHQNsabf4CVl/nrermEMHVfLCbzYSF228DqrGvU5RTZweFZVS
-k3qQ9HAIR+bWvIBVjwx10Z9SyRTmgH2vvN8JyTWWRFUZvLEXynd1S8HHny/Jpvbx
-M2kPO/uZvyGsxbdVuW14jrz2tTTjacz/QSVNnUxbwoQGBGzyGe4=
-=J8t9
------END PGP SIGNATURE-----
-
---------------Fe8uTpjyiA6kjMm0Y7SKYAhS--
