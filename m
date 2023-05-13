@@ -2,95 +2,88 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50395C77B7C
-	for <linux-hardening@archiver.kernel.org>; Sat, 13 May 2023 09:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66ED1C77B7C
+	for <linux-hardening@archiver.kernel.org>; Sat, 13 May 2023 09:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237144AbjEMJN1 (ORCPT
+        id S236207AbjEMJYY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 13 May 2023 05:13:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
+        Sat, 13 May 2023 05:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbjEMJN0 (ORCPT
+        with ESMTP id S231446AbjEMJYX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 13 May 2023 05:13:26 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCDB12D57
-        for <linux-hardening@vger.kernel.org>; Sat, 13 May 2023 02:13:24 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-965d2749e2eso1610307366b.1
-        for <linux-hardening@vger.kernel.org>; Sat, 13 May 2023 02:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683969203; x=1686561203;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SXTHGE0Wl3MaP4uQCGWbuj/wOoT4T39v9HX0v0hxJf8=;
-        b=C44D9GW14rmvbs7slqJlRtWSEfFd9m39+QRGn2224B3WZhCy2QWUpTUK/lBtbqxYIC
-         iUZQ60xpLSaDuao6yvw1CKoebvNp5k0jXXOp31Cs/rcab+fomOK7Dk6edkGti7pS6h+U
-         rMh8qN+jlW0Z9aHfGw0ktcUVqK6KcDablHWy99+cx3sDFD5Z1s1T65/72xMgqVojPav0
-         lTahVG0K+dus6WDboiXKl0DVjo1Z9ClI2zt5MtjQNUtg5p7hRSVHulltwjriTq38DGNf
-         FIRLNAwqnCRlpjEFLRCHqORBLnDV/PpYOQ1XptPRFE2BB+waXZUF/XUb3ew1gETvNgyn
-         7EXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683969203; x=1686561203;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SXTHGE0Wl3MaP4uQCGWbuj/wOoT4T39v9HX0v0hxJf8=;
-        b=PnHeY/3hay60fVZOkTrhjDwiP88Ip0J3zzCLch6TyEpFKS3SP704TsycXw1rUfnfOI
-         9u7keY6WBuqx9IULhVccwWdri1VL3if6SyCQpqQrFDslMVf40/QmnaK4DDWPb9zsxLOA
-         Ka/oUpTefHRK9t7xsqv58cjA6RYrEs+Mz1m4yZXMyphjsKmSZ/XJQ5aIft5PGnLlexqp
-         pFlUjKv1WEcXAVlRso65iDKpmUDJP6geUnV6kxq9KK27pAgBoY+sDH4ddwCtt7yOq0vj
-         LmdAbPF36BrfKcBGn+s3MKZUqiKFhPpW5iOFZuaEb9LuOJu6Pylc55rK4KLaZXwOiCgg
-         kNBg==
-X-Gm-Message-State: AC+VfDyBNnn+JAeEj+uktVrDI1+8hA7kM1/UM+81/13fC87QGXJcOR+e
-        qcjPkrMukmx+y9u73p0HGnxdLw==
-X-Google-Smtp-Source: ACHHUZ7jtwC+5aOEbgSa4I23nZNu1ofmb71WzoHsdxR68vtuGufCicwFl3Sq/PA8VrfW+/qE2RKTQw==
-X-Received: by 2002:a17:907:9608:b0:969:e95e:e4f3 with SMTP id gb8-20020a170907960800b00969e95ee4f3mr17483776ejc.55.1683969203257;
-        Sat, 13 May 2023 02:13:23 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:1d0:810a:586c:c5ba? ([2a02:810d:15c0:828:1d0:810a:586c:c5ba])
-        by smtp.gmail.com with ESMTPSA id ib10-20020a1709072c6a00b009531d9efcc4sm6538708ejc.133.2023.05.13.02.13.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 May 2023 02:13:22 -0700 (PDT)
-Message-ID: <65cf0de4-42b9-2b25-ac16-9e2ddfcfdb93@linaro.org>
-Date:   Sat, 13 May 2023 11:13:21 +0200
+        Sat, 13 May 2023 05:24:23 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98B2540FB;
+        Sat, 13 May 2023 02:24:19 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pxlTx-0005lU-9d; Sat, 13 May 2023 11:24:05 +0200
+Message-ID: <10dfcc33-b3f9-57f7-1693-dd850f3adc6e@leemhuis.info>
+Date:   Sat, 13 May 2023 11:24:04 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2] docs: submitting-patches: Discuss interleaved replies
-To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Thorsten Leemhuis <linux@leemhuis.info>,
+ Thunderbird/102.10.0
+Content-Language: en-US, de-DE
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rong Tao <rtoax@foxmail.com>,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         Zhangfei Gao <zhangfei.gao@foxmail.com>,
         linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <code@tyhicks.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Xujun Leng <lengxujun2007@126.com>,
         linux-kernel@vger.kernel.org
-References: <20230511184131.gonna.399-kees@kernel.org>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230511184131.gonna.399-kees@kernel.org>
+References: <20230510183423.never.877-kees@kernel.org>
+ <6c1f853b-b051-c390-267e-1ea1741e8537@leemhuis.info>
+ <202305111135.D65457C24@keescook>
+From:   Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH] docs: submitting-patches: Discuss interleaved replies
+In-Reply-To: <202305111135.D65457C24@keescook>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1683969859;5f7505f3;
+X-HE-SMSGID: 1pxlTx-0005lU-9d
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 11/05/2023 20:41, Kees Cook wrote:
-> Top-posting has been strongly discouraged in Linux development, but this
-> was actually not written anywhere in the common documentation about
-> sending patches and replying to reviews. Add a section about trimming
-> and interleaved replies.
+On 11.05.23 20:37, Kees Cook wrote:
+> On Thu, May 11, 2023 at 11:21:36AM +0200, Thorsten Leemhuis wrote:
+>> On 10.05.23 20:34, Kees Cook wrote:
+>>> Top-posting has been strongly discouraged in Linux development, but this
+>>> was actually not written anywhere in the common documentation about
+>>> sending patches and replying to reviews. Add a section about trimming
+>>> and interleaved replies.
+>>
+>> Thx for doing this.
+>>
+>>> [...]
+>>> ---
+>>>  Documentation/process/submitting-patches.rst | 23 ++++++++++++++++++++
+>>>  1 file changed, 23 insertions(+)
+>>
+>> For some reason we have duplicate code^w documentation for this, hence
+>> I'd say the same or a similar text should also be added to one of the
+>> filed in Documentation/process/[0-9].*rst ; from a quick
+>> Documentation/process/6.Followthrough.rst might be the best one.
+>>
+>> Maybe in fact the text should move there and submitting-patches.rst
+>> should have a much shorter version, as it's meant to be the terser of
+>> the two docs about this.
 > 
-> Cc: Jonathan Corbet <corbet@lwn.net>
+> Hm, The place where it is mentioned is even shorter,
 
+Ohh, it is mentioned there already? I briefly looked, but had missed it.
+Sorry. :-/
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> so I kind of like
+> it in submittingpatches. But, I'm open to whatever seems best.
 
-Best regards,
-Krzysztof
+Guess that is Jonathan's call to make. Your v2 patch to me looks a bit
+like adding quite a bit of new and slow code to the fast path while
+adjusting faster code in the slow path.
 
+But the relation and interaction between those two texts in a bit messy
+already, so maybe it doesn't matter that much.
+
+Ciao, Thorsten
