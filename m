@@ -2,134 +2,122 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77614C77B7F
-	for <linux-hardening@archiver.kernel.org>; Sun, 14 May 2023 04:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539DDC7EE22
+	for <linux-hardening@archiver.kernel.org>; Sun, 14 May 2023 09:30:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjENERI (ORCPT
+        id S229704AbjENJaS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 14 May 2023 00:17:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53110 "EHLO
+        Sun, 14 May 2023 05:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbjENERH (ORCPT
+        with ESMTP id S229611AbjENJaR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 14 May 2023 00:17:07 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E1D1702;
-        Sat, 13 May 2023 21:17:06 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34E47Rfs008754;
-        Sun, 14 May 2023 04:16:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=co4vRrnTivwIzFDIwnV3dMAsjHlQ/SjpLfqX2dsGaik=;
- b=k23QVqg5w4yinxoAw3dYRHeFAfYqVk2BHZuL5zYY0M97waJIKEWDT06DiieWgBqvNeZY
- FRNQOzA2k9E5t54eO7UkDZYK+iWF23574W2dF2VZrrJics6p9ZxH8XqoAX8yiOOzwY0y
- Q+5s0UhOvyne4hgbMdT9BiL6wBtOx/4b1uGz8iptAyUMnwnYAm3LYKM7FyM8++tNRnQN
- STWj4jAMymLRs8peHQ71irPwwpvY/GKG6uW4hTP7FxXfI4FqbT9lABiLp8LocbV5YNpC
- V2WGE/E/F7djmrtVewkuVL6EGbmZkpPaUmYa+BevAkNgmUBhGjRkvsixTUyyazTXUIMD Bw== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qj257sc73-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 May 2023 04:16:34 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34E4GXxC003508
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 14 May 2023 04:16:33 GMT
-Received: from [10.110.80.184] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Sat, 13 May
- 2023 21:16:32 -0700
-Message-ID: <a8229e70-dd23-8a48-cf9b-fadc9db7ecdc@quicinc.com>
-Date:   Sat, 13 May 2023 21:16:31 -0700
+        Sun, 14 May 2023 05:30:17 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09011FFE;
+        Sun, 14 May 2023 02:30:15 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 1CCB521FB9;
+        Sun, 14 May 2023 09:30:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1684056613; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dHSZYYmiO6JSUTlgPd0JkN7TgOMKpr6vyTG9Hwy+Zzo=;
+        b=CTpsMPkbu+KTLlj7qn/aXMfbpi54eshjeH8xcgf1+nadUSMxP28eg4Nfz4wVFba5igv1iR
+        WaRTj7xQSoUUFuLYm/3TWx23mqTbPoO0DetltCTar+yIibuMaNXD6HFJtpvr0Y9dm9mcuF
+        TEXeOdPmW5AU0h3wj/rR0g3ZBwwENzk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1684056613;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dHSZYYmiO6JSUTlgPd0JkN7TgOMKpr6vyTG9Hwy+Zzo=;
+        b=SJgsbtU9ve0LLJmy6hXTCPVFmUdu6F9PBYYtaUsOr8qn9AI5+hn5kKcc367zVHMvWUno1I
+        gaQf9G4nN6C2OCBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B35D8138F5;
+        Sun, 14 May 2023 09:30:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id dzHeKiSqYGRbUwAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Sun, 14 May 2023 09:30:12 +0000
+Message-ID: <b9331fe4-11c8-5323-e757-5cae3c1e2233@suse.cz>
+Date:   Sun, 14 May 2023 11:30:30 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v3 04/18] soc: qcom: Add Qualcomm minidump kernel driver
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
 Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-5-git-send-email-quic_mojha@quicinc.com>
- <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
- <23b493f4-1a01-8d03-fc12-d588b2c6fd74@quicinc.com>
- <575a422d-6224-06b7-628c-8487b47882e9@linaro.org>
- <500e5abc-fb71-8468-a6b0-3ced2676b57c@linaro.org>
- <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
-From:   Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To:     Gong Ruiqi <gongruiqi1@huawei.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
+ <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
+ <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 0Zr-_av0jVj5LIrEzqJPzDiF31cnJxEQ
-X-Proofpoint-GUID: 0Zr-_av0jVj5LIrEzqJPzDiF31cnJxEQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-14_02,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- impostorscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
- spamscore=0 mlxscore=0 priorityscore=1501 suspectscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305140036
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 5/8/2023 12:10 AM, Mukesh Ojha wrote:
+On 5/12/23 12:11, Gong Ruiqi wrote:
 > 
 > 
-> On 5/4/2023 10:04 PM, Krzysztof Kozlowski wrote:
->> On 04/05/2023 17:21, Krzysztof Kozlowski wrote:
->>>>>
->>>>>> +    ret = qcom_minidump_init_apss_subsystem(md);
->>>>>> +    if (ret) {
->>>>>> +        dev_err(&pdev->dev, "apss minidump initialization failed: 
->>>>>> %d\n", ret);
->>>>>> +        goto unlock;
->>>>>> +    }
->>>>>> +
->>>>>> +    __md = md;
->>>>>
->>>>> No. This is a platform device, so it can have multiple instances.
->>>>
->>>> It can have only one instance that is created from SMEM driver probe.
+> On 2023/05/11 2:43, Hyeonggon Yoo wrote:
+>> On Mon, May 8, 2023 at 12:53 AM GONG, Ruiqi <gongruiqi1@huawei.com> wrote:
 >>>
->>> Anyone can instantiate more of them.... how did you solve it?
+> 
+> [...]
+> 
+>>>
+>>> The overhead of performance has been tested on a 40-core x86 server by
+>>> comparing the results of `perf bench all` between the kernels with and
+>>> without this patch based on the latest linux-next kernel, which shows
+>>> minor difference. A subset of benchmarks are listed below:
+>>>
 >>
->> To clarify - sprinkling more of singletons makes everything tightly
->> coupled, difficult to debug and non-portable. You cannot have two
->> instances, you have to control concurrent initialization by yourself in
->> each of such singletons.
->>
->> I understand sometimes they are unavoidable, for example when this does
->> not map to hardware property. However here you have the parent - smem -
->> which can return you valid instance. Thus you avoid entire problem of
->> file-scope variables.
+>> Please Cc maintainers/reviewers of corresponding subsystem in MAINTAINERS file.
 > 
-> I get your point, why one's should avoid file scope variables.
-> 
-> 
-> This is infrastructure driver and will not have multiple instances and 
-> even if it happens could be avoided with with the help of global mutex 
-> and protect below function which i am already doing at the moment and 
-> fail the other probe if it is already initialized with proper logging..e.g
+> Okay, I've appended maintainers/reviewers of linux-hardening and
+> security subsystem to the Cc list.
 
-Another way to think here is what if you have chiplets? Two SOCs looks 
-like one as a product? How does your driver will behave in those cases?
+I think they were CC'd on v1 but didn't respond yet. I thought maybe if
+I run into Kees at OSS, I will ask him about it, but didn't happen.
 
----Trilok Soni
+As a slab maintainer I don't mind adding such things if they don't
+complicate the code excessively, and have no overhead when configured
+out. This one would seem to be acceptable at first glance, although
+maybe the CONFIG space is too wide, and the amount of #defines in
+slab_common.c is also large (maybe there's a way to make it more
+concise, maybe not).
+
+But I don't have enough insight into hardening to decide if it's a
+useful mitigation that people would enable, so I'd hope for hardening
+folks to advise on that. Similar situation with freelist hardening in
+the past, which was even actively pushed by Kees, IIRC.
