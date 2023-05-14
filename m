@@ -2,97 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F99C77B7A
-	for <linux-hardening@archiver.kernel.org>; Sun, 14 May 2023 02:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77614C77B7F
+	for <linux-hardening@archiver.kernel.org>; Sun, 14 May 2023 04:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbjENCpO (ORCPT
+        id S229589AbjENERI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 13 May 2023 22:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
+        Sun, 14 May 2023 00:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjENCpN (ORCPT
+        with ESMTP id S229462AbjENERH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 13 May 2023 22:45:13 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268572130;
-        Sat, 13 May 2023 19:45:11 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-3075e802738so10442829f8f.1;
-        Sat, 13 May 2023 19:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684032309; x=1686624309;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xiDC0hqmGuu+AWr5snDs4ZPvEx68CUxrNjBnyoH2q44=;
-        b=pn7FoYNXIRIn+E6c/q/BzNQKgEbwP2xC+wezOpYznB/K8GjzF1FT3VugccVZPnMxkE
-         LpvZxGt9UG5VcSZ0/5UjpDaE3Cth+cDa5alaVQlJKSe6ZVsyQuOo15rF4Y/IhbUzOPZQ
-         Iv1l1fX7r3Z1AEszt5bDlQCLXetZ97earWrayxpN4z5+3KtZkTkFFzo0bgEOgTt2wfXp
-         oGQ9Rvm+qzPdPasQrDlfiD2emQr49Sg7nKj/MwQQyJdQiVYVL3VVPXmdy3p2A2GjYW9x
-         AJYqyfgDkarQtztCU7uFmaHIm5XBm5kPjq0gH7/03EjWgIK/c57HIURWolYs0I4BPXt+
-         3nyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684032309; x=1686624309;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xiDC0hqmGuu+AWr5snDs4ZPvEx68CUxrNjBnyoH2q44=;
-        b=ILwCD3kfNycihauJI6hmGG3KBCaaOfCSVzv4Hny2Qvagm2p6pW2+ZZS7YHSJbmhirO
-         FTBYwMMcsSwZM4nKj0nnPtlvCVwzxpcRzvwkFw+ufcZ8VKpPzHNe7SiKifFEvRmvkPSk
-         IFZWOrEGd6IzBiJfpDy8nhY4KftV7rPkoD7ZWs1e0JCpfP4wMQXj3CA1PFItyMFMRtn7
-         N7gwEAD9McoJRyBGKID/qmBYxQiGPm25tk+zTvgIZSRRXZuuTaLAkuN7h2jUsZ/K6P9t
-         2yosZsseGQg9/RH0WsqmeObQZYg1Yscij8ppAtHJuI6mamRpKXsuxrgL5Vl6MRJBcN6K
-         Xokw==
-X-Gm-Message-State: AC+VfDzp8AdN/86FTGWzrxe5nlKj26IfjvfsdKWjlt/Dxc4qfeXVObPE
-        YIROEokPOejOlK0Du+jjUv0PRM360iIrrm9iw8sihnpK
-X-Google-Smtp-Source: ACHHUZ4f1IZlUKwLOpGbFa5n+MOs72ZdOHLfYT31ZZxfcrNQW9xC8W6go1Y2ySbHoKKjxKANAmpYnoyLbnXhF/tcrog=
-X-Received: by 2002:a5d:42c9:0:b0:306:2d45:a8e0 with SMTP id
- t9-20020a5d42c9000000b003062d45a8e0mr21121582wrr.15.1684032309206; Sat, 13
- May 2023 19:45:09 -0700 (PDT)
+        Sun, 14 May 2023 00:17:07 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E1D1702;
+        Sat, 13 May 2023 21:17:06 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34E47Rfs008754;
+        Sun, 14 May 2023 04:16:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=co4vRrnTivwIzFDIwnV3dMAsjHlQ/SjpLfqX2dsGaik=;
+ b=k23QVqg5w4yinxoAw3dYRHeFAfYqVk2BHZuL5zYY0M97waJIKEWDT06DiieWgBqvNeZY
+ FRNQOzA2k9E5t54eO7UkDZYK+iWF23574W2dF2VZrrJics6p9ZxH8XqoAX8yiOOzwY0y
+ Q+5s0UhOvyne4hgbMdT9BiL6wBtOx/4b1uGz8iptAyUMnwnYAm3LYKM7FyM8++tNRnQN
+ STWj4jAMymLRs8peHQ71irPwwpvY/GKG6uW4hTP7FxXfI4FqbT9lABiLp8LocbV5YNpC
+ V2WGE/E/F7djmrtVewkuVL6EGbmZkpPaUmYa+BevAkNgmUBhGjRkvsixTUyyazTXUIMD Bw== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qj257sc73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 14 May 2023 04:16:34 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34E4GXxC003508
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 14 May 2023 04:16:33 GMT
+Received: from [10.110.80.184] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Sat, 13 May
+ 2023 21:16:32 -0700
+Message-ID: <a8229e70-dd23-8a48-cf9b-fadc9db7ecdc@quicinc.com>
+Date:   Sat, 13 May 2023 21:16:31 -0700
 MIME-Version: 1.0
-References: <20230512145356.396567-1-azeemshaikh38@gmail.com>
- <109A2974-3AE0-48C6-8EE3-FADE95E8EF30@oracle.com> <5E054593-8995-46FF-824E-55B18BF53BE2@oracle.com>
- <CADmuW3UQ-wqobay34PY+myyk1Pr7s-cf7b-U7TUCnarEf+jsxg@mail.gmail.com> <A1414FC8-9CE0-4B8C-ABB1-2365E2F62B10@oracle.com>
-In-Reply-To: <A1414FC8-9CE0-4B8C-ABB1-2365E2F62B10@oracle.com>
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Sat, 13 May 2023 22:44:58 -0400
-Message-ID: <CADmuW3UkNrSqwQPgZVqRc46hZPK9J6jGYNfU4iS1bQKmEib8bQ@mail.gmail.com>
-Subject: Re: [PATCH v2] NFSD: Remove all occurences of strlcpy
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v3 04/18] soc: qcom: Add Qualcomm minidump kernel driver
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-5-git-send-email-quic_mojha@quicinc.com>
+ <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
+ <23b493f4-1a01-8d03-fc12-d588b2c6fd74@quicinc.com>
+ <575a422d-6224-06b7-628c-8487b47882e9@linaro.org>
+ <500e5abc-fb71-8468-a6b0-3ced2676b57c@linaro.org>
+ <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
+From:   Trilok Soni <quic_tsoni@quicinc.com>
+In-Reply-To: <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 0Zr-_av0jVj5LIrEzqJPzDiF31cnJxEQ
+X-Proofpoint-GUID: 0Zr-_av0jVj5LIrEzqJPzDiF31cnJxEQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-14_02,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ impostorscore=0 mlxlogscore=999 lowpriorityscore=0 clxscore=1011
+ spamscore=0 mlxscore=0 priorityscore=1501 suspectscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305140036
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-> > No, I plan to land this patch before attempting to fix __assign_str itself.
-> > Let me know if the below description looks good to you and I'll send
-> > over a v3 patch:
-> >
-> > [PATCH v3] NFSD: Remove open coding of string copy
-> >
-> > Instead of open coding a __dynamic_array(), use the __string() and
-> > __assign_str()
-> > helper macros that exist for this kind of use case.
-> >
-> > Part of an effort to remove deprecated strlcpy() [1] completely from the
-> > kernel[2].
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> >
-> > Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
->
-> This looks good to me. So you'd like me to take this through
-> the nfsd tree, possibly for 6.4-rc ?
->
+On 5/8/2023 12:10 AM, Mukesh Ojha wrote:
+> 
+> 
+> On 5/4/2023 10:04 PM, Krzysztof Kozlowski wrote:
+>> On 04/05/2023 17:21, Krzysztof Kozlowski wrote:
+>>>>>
+>>>>>> +    ret = qcom_minidump_init_apss_subsystem(md);
+>>>>>> +    if (ret) {
+>>>>>> +        dev_err(&pdev->dev, "apss minidump initialization failed: 
+>>>>>> %d\n", ret);
+>>>>>> +        goto unlock;
+>>>>>> +    }
+>>>>>> +
+>>>>>> +    __md = md;
+>>>>>
+>>>>> No. This is a platform device, so it can have multiple instances.
+>>>>
+>>>> It can have only one instance that is created from SMEM driver probe.
+>>>
+>>> Anyone can instantiate more of them.... how did you solve it?
+>>
+>> To clarify - sprinkling more of singletons makes everything tightly
+>> coupled, difficult to debug and non-portable. You cannot have two
+>> instances, you have to control concurrent initialization by yourself in
+>> each of such singletons.
+>>
+>> I understand sometimes they are unavoidable, for example when this does
+>> not map to hardware property. However here you have the parent - smem -
+>> which can return you valid instance. Thus you avoid entire problem of
+>> file-scope variables.
+> 
+> I get your point, why one's should avoid file scope variables.
+> 
+> 
+> This is infrastructure driver and will not have multiple instances and 
+> even if it happens could be avoided with with the help of global mutex 
+> and protect below function which i am already doing at the moment and 
+> fail the other probe if it is already initialized with proper logging..e.g
 
-This is my first week contributing to the Linux kernel so I might be
-miscommunicating :)
-By "land this patch", I meant to get this patch into to the nfsd tree.
-I'll leave it up to you when you push it through to the mainline tree.
-Although, it would be great to get this through to 6.4-rc if that's at
-all possible.
+Another way to think here is what if you have chiplets? Two SOCs looks 
+like one as a product? How does your driver will behave in those cases?
+
+---Trilok Soni
