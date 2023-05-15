@@ -2,98 +2,179 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18275C77B75
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 11:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B3CC77B75
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 13:06:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240690AbjEOLVa (ORCPT
+        id S242161AbjEONGo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 07:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60522 "EHLO
+        Mon, 15 May 2023 09:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241238AbjEOLVW (ORCPT
+        with ESMTP id S242168AbjEONGb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 07:21:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88899189;
-        Mon, 15 May 2023 04:21:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B7A1A622A2;
-        Mon, 15 May 2023 11:21:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A29F6C433EF;
-        Mon, 15 May 2023 11:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684149676;
-        bh=i8R4ZHlQNtjYj8yfNoBTP4YCAmQ9Q1y7fL64MkEt668=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=essTLvsZbf+9I99/Sz/ANCYPD1SvFqzuHuxe4Bp+km8E47gAhoPQgmE4NYTXsDByS
-         2+Cy9XvSVERsN8iXM/NHeFXPxMiYzx0GHItjVreqyd/1dymaxMeEzlBLaYrg2m/pZ9
-         B3Ja09Sb34qOMEg4uPOWDAof7ZJC0PXNLYlJb0STfrA3Hjep/nWKdljpFx3jPTftJZ
-         paowHtVBgw6rUL07k9y2UCKIFWLWVd3vmbOaV3f6+H0Q8yN1i5AF+NddWKtMNf+x41
-         D+B/OaNIhiP7Nc0SamjltMMsIcw0ZwbED5aBixk0LQ10pOqO9DLv7YKSsaTdD354xf
-         aAJbrfwmPV0Tg==
-Message-ID: <338aa895e02c795329c980cee67463faef0fc57e.camel@kernel.org>
-Subject: Re: [PATCH v3] NFSD: Remove open coding of string copy
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 15 May 2023 07:21:14 -0400
-In-Reply-To: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
-References: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+        Mon, 15 May 2023 09:06:31 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6726C35A0
+        for <linux-hardening@vger.kernel.org>; Mon, 15 May 2023 06:06:01 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-52079a12451so9125380a12.3
+        for <linux-hardening@vger.kernel.org>; Mon, 15 May 2023 06:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684155960; x=1686747960;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x8d5WHH7LCFe26MinsbsZnyby5kr64LG/XJK9V0WNKg=;
+        b=NaHgRv2bUNBZrF0o+5C3FTpheRmJqZQFaOSP8QzMXPq7WqJETIhWEOKc2lqj4Nm5T5
+         a32pCCSQx3QIgMU9tHmNWc24LCETh4+iOmKh8vrKudEVT2S+1tbvRWw9LG+/FQnfDIYd
+         tKTg4DVijbBMGL0PW9Mno6mGxd/JJ4F4NkV9M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684155960; x=1686747960;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x8d5WHH7LCFe26MinsbsZnyby5kr64LG/XJK9V0WNKg=;
+        b=krOfhqksjGNJBFc+LvS271zEy6XZxaHppTcJRJfDJFGetcwBB/De0jGmWj8ex2Ypt3
+         jyC/gMghpOIpHUyJj5XIDduCTpFZ1DeM33PsyQsDivJt5KvKSMxe2p8oT37OI4jVNi7b
+         7VNgKIWPjnv+Iy2Kfj5JLQxiFgcJeM/x8k91gzQH5nLmIrtQBkSFUkdea9JOOS/DA28Q
+         T1aezP6sX2EQXMe/8S2WcuqmQRfyfaDeop8/ZMke4pq4D9Txlo/9xACOFK2NJwZ8mRrx
+         I+bncNrqAy2/C/519ZhyxSNkRXOf9mzz5wkOxgxPS6jEitYtjF0R0GktLuOn333rqE5Z
+         zHNA==
+X-Gm-Message-State: AC+VfDxCLzcOlvmJt/VckvkkZAkK/Gbnvodko5oUoA96nbavEdIXu4wH
+        iAnB9irmHdFvcy2To8yxJzTUHg==
+X-Google-Smtp-Source: ACHHUZ5TQiYvEA3rPzvQv/lZBIMaILwMcV3Xu9P4Ckghl/s+uNjurYMNj1KtT/hqR4tacuNKKlahcA==
+X-Received: by 2002:a17:902:dace:b0:1ac:6e1f:d1bd with SMTP id q14-20020a170902dace00b001ac6e1fd1bdmr37375631plx.19.1684155960357;
+        Mon, 15 May 2023 06:06:00 -0700 (PDT)
+Received: from localhost (183.43.230.35.bc.googleusercontent.com. [35.230.43.183])
+        by smtp.gmail.com with UTF8SMTPSA id ji1-20020a170903324100b001a9b7584824sm13461277plb.159.2023.05.15.06.05.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 May 2023 06:05:59 -0700 (PDT)
+From:   jeffxu@chromium.org
+To:     dave.hansen@intel.com, luto@kernel.org, jorgelo@chromium.org,
+        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
+        sroettger@google.com
+Cc:     akpm@linux-foundation.org, jeffxu@google.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Subject: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
+Date:   Mon, 15 May 2023 13:05:46 +0000
+Message-ID: <20230515130553.2311248-1-jeffxu@chromium.org>
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 2023-05-15 at 02:40 +0000, Azeem Shaikh wrote:
-> Instead of open coding a __dynamic_array(), use the __string() and
-> __assign_str() helper macros that exist for this kind of use case.
->=20
-> Part of an effort to remove deprecated strlcpy() [1] completely from the
-> kernel[2].
->=20
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
-y
-> [2] https://github.com/KSPP/linux/issues/89
->=20
-> Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> ---
->  fs/nfsd/trace.h |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index 4183819ea082..72a906a053dc 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -1365,19 +1365,19 @@ TRACE_EVENT(nfsd_cb_setup,
->  		__field(u32, cl_id)
->  		__field(unsigned long, authflavor)
->  		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
-> -		__array(unsigned char, netid, 8)
-> +		__string(netid, netid)
->  	),
->  	TP_fast_assign(
->  		__entry->cl_boot =3D clp->cl_clientid.cl_boot;
->  		__entry->cl_id =3D clp->cl_clientid.cl_id;
-> -		strlcpy(__entry->netid, netid, sizeof(__entry->netid));
-> +		__assign_str(netid, netid);
->  		__entry->authflavor =3D authflavor;
->  		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
->  				  clp->cl_cb_conn.cb_addrlen)
->  	),
->  	TP_printk("addr=3D%pISpc client %08x:%08x proto=3D%s flavor=3D%s",
->  		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
-> -		__entry->netid, show_nfsd_authflavor(__entry->authflavor))
-> +		__get_str(netid), show_nfsd_authflavor(__entry->authflavor))
->  );
-> =20
->  TRACE_EVENT(nfsd_cb_setup_err,
+From: Jeff Xu <jeffxu@google.com>
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+This is the first set of Memory mapping (VMA) protection patches using PKU.
+
+* * * 
+
+Background:
+
+As discussed previously in the kernel mailing list [1], V8 CFI [2] uses 
+PKU to protect memory, and Stephen Röttger proposes to extend the PKU to 
+memory mapping [3].
+
+We're using PKU for in-process isolation to enforce control-flow integrity
+for a JIT compiler. In our threat model, an attacker exploits a 
+vulnerability and has arbitrary read/write access to the whole process
+space concurrently to other threads being executed. This attacker can
+manipulate some arguments to syscalls from some threads.
+
+Under such a powerful attack, we want to create a “safe/isolated”
+thread environment. We assign dedicated PKUs to this thread, 
+and use those PKUs to protect the threads’ runtime environment.
+The thread has exclusive access to its run-time memory. This
+includes modifying the protection of the memory mapping, or
+munmap the memory mapping after use. And the other threads
+won’t be able to access the memory or modify the memory mapping
+(VMA) belonging to the thread.
+
+* * * 
+
+Proposed changes:
+
+This patch introduces a new flag, PKEY_ENFORCE_API, to the pkey_alloc()
+function. When a PKEY is created with this flag, it is enforced that any
+thread that wants to make changes to the memory mapping (such as mprotect)
+of the memory must have write access to the PKEY. PKEYs created without
+this flag will continue to work as they do now, for backwards 
+compatibility.
+
+Only PKEY created from user space can have the new flag set, the PKEY
+allocated by the kernel internally will not have it. In other words,
+ARCH_DEFAULT_PKEY(0) and execute_only_pkey won’t have this flag set,
+and continue work as today.
+
+This flag is checked only at syscall entry, such as mprotect/munmap in
+this set of patches. It will not apply to other call paths. In other
+words, if the kernel want to change attributes of VMA for some reasons,
+the kernel is free to do that and not affected by this new flag.
+
+This set of patch covers mprotect/munmap, I plan to work on other 
+syscalls after this. 
+
+* * * 
+
+Testing:
+
+I have tested this patch on a Linux kernel 5.15, 6,1, and 6.4-rc1,
+new selftest is added in: pkey_enforce_api.c 
+
+* * * 
+
+Discussion:
+
+We believe that this patch provides a valuable security feature. 
+It allows us to create “safe/isolated” thread environments that are 
+protected from attackers with arbitrary read/write access to 
+the process space.
+
+We believe that the interface change and the patch don't 
+introduce backwards compatibility risk.
+
+We would like to disucss this patch in Linux kernel community
+for feedback and support. 
+
+* * * 
+
+Reference:
+
+[1]https://lore.kernel.org/all/202208221331.71C50A6F@keescook/
+[2]https://docs.google.com/document/d/1O2jwK4dxI3nRcOJuPYkonhTkNQfbmwdvxQMyXgeaRHo/edit?usp=sharing
+[3]https://docs.google.com/document/d/1qqVoVfRiF2nRylL3yjZyCQvzQaej1HRPh3f5wj1AS9I/edit
+
+
+Best Regards,
+-Jeff Xu
+
+Jeff Xu (6):
+  PKEY: Introduce PKEY_ENFORCE_API flag
+  PKEY: Add arch_check_pkey_enforce_api()
+  PKEY: Apply PKEY_ENFORCE_API to mprotect
+  PKEY:selftest pkey_enforce_api for mprotect
+  KEY: Apply PKEY_ENFORCE_API to munmap
+  PKEY:selftest pkey_enforce_api for munmap
+
+ arch/powerpc/include/asm/pkeys.h              |   19 +-
+ arch/x86/include/asm/mmu.h                    |    7 +
+ arch/x86/include/asm/pkeys.h                  |   92 +-
+ arch/x86/mm/pkeys.c                           |    2 +-
+ include/linux/mm.h                            |    2 +-
+ include/linux/pkeys.h                         |   18 +-
+ include/uapi/linux/mman.h                     |    5 +
+ mm/mmap.c                                     |   34 +-
+ mm/mprotect.c                                 |   31 +-
+ mm/mremap.c                                   |    6 +-
+ tools/testing/selftests/mm/Makefile           |    1 +
+ tools/testing/selftests/mm/pkey_enforce_api.c | 1312 +++++++++++++++++
+ 12 files changed, 1507 insertions(+), 22 deletions(-)
+ create mode 100644 tools/testing/selftests/mm/pkey_enforce_api.c
+
+
+base-commit: ba0ad6ed89fd5dada3b7b65ef2b08e95d449d4ab
+-- 
+2.40.1.606.ga4b1b128d6-goog
+
