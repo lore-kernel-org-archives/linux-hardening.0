@@ -2,74 +2,85 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95622C77B75
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 18:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3050AC77B7D
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 19:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242982AbjEOSDe (ORCPT
+        id S244819AbjEOTWD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 14:03:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39740 "EHLO
+        Mon, 15 May 2023 15:22:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243251AbjEOSDJ (ORCPT
+        with ESMTP id S243925AbjEOTWC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 14:03:09 -0400
-Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FAEA16420
-        for <linux-hardening@vger.kernel.org>; Mon, 15 May 2023 11:00:44 -0700 (PDT)
-Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-1929818d7faso73456029fac.0
-        for <linux-hardening@vger.kernel.org>; Mon, 15 May 2023 11:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684173638; x=1686765638;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0mSaHf0z4H/25tkQER9uB8ytIeulJA6BHDHaGGeScc8=;
-        b=W4umkPDOYnX9LBbSIbjR8NqLV96FNNnGrKovk6clhtH+Ob6vVA/thEAIOGKBeslT+4
-         WbszT7aF4iGAuXxwF5unWu7UYp5nHO9D4r+3KjLgw+V2B74+eq8A+dWlhcpphfH1hErU
-         iXjlu0t5F+2kbJyT4RCcD3e68fxYU1/GUD9LU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684173638; x=1686765638;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0mSaHf0z4H/25tkQER9uB8ytIeulJA6BHDHaGGeScc8=;
-        b=ilcSb4OiyvAnpcpl04BUHM1NvfzSuqSu5ISG7TF9CgpL/GDAyPfoRaSXWs7IWdEq4W
-         4HsIoZ9F2fLH//ZQzbYT6PgWlgK6bRhI6j4aHE82CUoM+ePQOnuaqos4Hz2pQY8ScsEN
-         xo+FN8EqXd9dKJfdXMMPs+t/+7KHXdncgWVjUblfN8hHqF8SHdNfXbtvUTEjtk7RAFdD
-         R9dORCPsWoyk3im3fCPV5EH7B/p7Uwc5g0nfq8G2vAm+L3XwC1sqCntolXqq4NBZBKOe
-         6Ym7Jm6nTTGZlxCHNAuelEV/fsY+j99hI8p5TkIozROXJrIgsmc23ORhi7rwEzmJrpcd
-         vDpg==
-X-Gm-Message-State: AC+VfDxj5AKDPW1w2jaclYbKoji5PN7m43ge6NsBnN1gEEvToWsEAlbp
-        ovLvcf2TmfjL9PN2AvwMjKTycUzgGIZ+hZZUt5n/Wg==
-X-Google-Smtp-Source: ACHHUZ5ScY8TBqNcKrDXAoJzX4Fpk+Nh7sNbnwOLqmyOSrrnlSNwpiIoHeOyML3P8/0oaJ0S1WSTakp1dUEkzwA5B5o=
-X-Received: by 2002:aca:d885:0:b0:394:441a:6de7 with SMTP id
- p127-20020acad885000000b00394441a6de7mr8548261oig.12.1684173638588; Mon, 15
- May 2023 11:00:38 -0700 (PDT)
+        Mon, 15 May 2023 15:22:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FE7A270;
+        Mon, 15 May 2023 12:22:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B6B1063173;
+        Mon, 15 May 2023 19:22:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04484C433EF;
+        Mon, 15 May 2023 19:21:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684178520;
+        bh=dzKqueiaHaieX4+u+VL0PHmUBtkteWDdFF1DX61gWSE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=V5k6DIgiH/dlVpUdsMUEr8rKPeg7MPaQ60Bo5vOUKYZ+ZhNZVVZxwVgNFWRs/PyE+
+         815d/HlzGv/AsqhaZIJa+eAxpzJVczrik3YjSBNBB1Qbb9NVPwNSVncciDaxzO2TwU
+         surfV1shNXy8mxM5ph3+IOaSCmxSitMoeuac9dfkikbLllgRvUbk+6tUX5zqPdORcu
+         LlMQNu1uLuSmGgZLyVUi+SdoGBdLR8lqhmXduFSaF1gILEzT+xXDhO+TECAsoAfbns
+         WtiGrJ5k//Onnyle/pkcsKyXmLb92tcE3hALUi5gGuEDdx+/LsDKvQcb1QidcxDP62
+         jKNQHRzlQ67KA==
+Date:   Mon, 15 May 2023 13:22:48 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     mlxsw@nvidia.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] mlxfw: Replace zero-length array with
+ DECLARE_FLEX_ARRAY() helper
+Message-ID: <ZGKGiBxP0zHo6XSK@work>
 MIME-Version: 1.0
-From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Mon, 15 May 2023 11:00:27 -0700
-Message-ID: <CABi2SkXjN+5iFoBhxk71t3cmunTk-s=rB4T7qo0UQRh17s49PQ@mail.gmail.com>
-Subject: mprotect outbound check.
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
-        Jorge Lucangeli Obes <jorgelo@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Noticed there is a slight change for mprotect between 6.1 and 6.4 RC1
+Zero-length arrays are deprecated and we are moving towards adopting
+C99 flexible-array members, instead. So, replace zero-length arrays
+declarations alone in structs with the new DECLARE_FLEX_ARRAY()
+helper macro.
 
-For example:
-Consider the case below:
-1 mmap(0x5000000, PAGE_SIZE,  ...)
-2 mprotect(0x5000000, PAGE_SIZE*4, ...)
+This helper allows for flexible-array members alone in structs.
 
-in 6.1 and before, 2 will fail, and in 6.4 RC1, it will pass.
+Link: https://github.com/KSPP/linux/issues/193
+Link: https://github.com/KSPP/linux/issues/285
+Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_format.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I know that munmap will accept out-of-bound cases like this (because
-memory is freed anyway).
+diff --git a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_format.h b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_format.h
+index b001e5258091..47f6cc0401c3 100644
+--- a/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_format.h
++++ b/drivers/net/ethernet/mellanox/mlxfw/mlxfw_mfa2_format.h
+@@ -44,7 +44,7 @@ MLXFW_MFA2_TLV(multi, struct mlxfw_mfa2_tlv_multi,
+ 	       MLXFW_MFA2_TLV_MULTI_PART);
+ 
+ struct mlxfw_mfa2_tlv_psid {
+-	u8 psid[0];
++	DECLARE_FLEX_ARRAY(u8, psid);
+ } __packed;
+ 
+ MLXFW_MFA2_TLV_VARSIZE(psid, struct mlxfw_mfa2_tlv_psid,
+-- 
+2.34.1
 
-Is this change intentional ?
-
-Thanks!
-Best regards,
--Jeff
