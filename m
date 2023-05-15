@@ -2,75 +2,94 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4841FC77B7D
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 14:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455C7C77B7D
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 14:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239826AbjEOO2c (ORCPT
+        id S240091AbjEOOcA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 10:28:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
+        Mon, 15 May 2023 10:32:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232072AbjEOO2b (ORCPT
+        with ESMTP id S241730AbjEOObj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 10:28:31 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B4E135;
-        Mon, 15 May 2023 07:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684160910; x=1715696910;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xfYqN7JzCkoWyoq5r778vSA22m35h9Rh/Z7ivVg+D70=;
-  b=MgJzIN65On4PRivQcdUiaKv9uI/ANGlIdE1FenyRi2tmeqLONzMYQS9p
-   R7082gQymCIssLyq1uuKBqh/KwOb5RIfBAICi4XJqRWTY1g9A2VOQiPti
-   uPXjydQ8/hu1EjraE3SlR6cOxwu2HyhGt9EyTo048mKFSV7o0eBKTAuSi
-   CCf4/agoo8hqHFGiTrZtj6pZd1p2XhtMpIeg9pB1wMFlgC9ZFVHKXbsXr
-   c8X0s8j3ciQPhq4lAUqrq9PGJSMnllrLqc01xCNzjtjvFGbz9D4JfWVUj
-   whM2n/+HPK06qNWfjiMoGr4+IqA9r4Pffm7Ie2jQflL3nkRca5XFnjrj0
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="354372400"
-X-IronPort-AV: E=Sophos;i="5.99,276,1677571200"; 
-   d="scan'208";a="354372400"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 07:28:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="733897472"
-X-IronPort-AV: E=Sophos;i="5.99,276,1677571200"; 
-   d="scan'208";a="733897472"
-Received: from satwikja-mobl.amr.corp.intel.com (HELO [10.212.213.112]) ([10.212.213.112])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 07:28:30 -0700
-Message-ID: <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
-Date:   Mon, 15 May 2023 07:28:29 -0700
+        Mon, 15 May 2023 10:31:39 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D6B269D;
+        Mon, 15 May 2023 07:31:11 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3f427118644so84318805e9.0;
+        Mon, 15 May 2023 07:31:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684161069; x=1686753069;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CMPhyVWRqve92qYxQaDpJ5fmq5M8NJnbMmmflE/u0Cg=;
+        b=QuIZVY/rNSsT2I8KjDr8bvjq4OrrOe62ixH+1L0Btc9YqVkFojhhs+F1lS8GiDhGbk
+         QIprgLjJn0AnrYzqJ88jS67LGJqFlTuRk3GpmetbBvyrR6azel2H3Holhoj6y+l4l0oV
+         36vWDWJc/TcIDi7gzugJD1FNMqIRaoZR1VyrTwU7p1Od3QSwOAs8OgV7P8r3uAZaGhTI
+         qpU3/BSc3vbwLvN0jybs+AgrxAchE/QOM3GTvq7DDa4w1lYQK4G69K+Nz9ejb8AMnzX9
+         WJDoSgQRxOyS95AQWSvGD3eX0qw18ZLT+PfahmYqkQCCQ7IrAqKP6Xf5OB3/7orhru29
+         9N9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684161069; x=1686753069;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CMPhyVWRqve92qYxQaDpJ5fmq5M8NJnbMmmflE/u0Cg=;
+        b=DnUNcHiFJgt1lyiijaeBtPkUb2VzZrwjbMKk6SYeZ/MmIZqKlHZDszGw2hEGa/z21W
+         OiMcqxCqjxvaeVDDcekoG2za/iJQEohWU0uNhrk/HCuMNHMghW/gBDY+DgNPz5oMXgZc
+         jQB+IdKILi9wrp6NG2Y62L8zTSwYfxWsfFx2OhPQq/7DQIea2PkrKJASk3UA6gJVrPqf
+         btzHL6T1wCS5+CahuTG0Dlilv29WJglIbzxgMUxVZ0hn5M9Ivt9Vx5sNCEZ/TI+u4DJ+
+         7hLjjxIBamLhmOlaVGwytjrFuKkSX3QnlnTEt0ZqtISc3FcB8iYimefvQdwsouAZqQe0
+         ixFw==
+X-Gm-Message-State: AC+VfDzjnYUo2oJQF11g2efxcbDcmxc0IOzJVzySk5J3ioBwF7WGvKiI
+        Wi6wWcWjtuQeFDbt19YeIejRn1CUmL51cZT6sNM=
+X-Google-Smtp-Source: ACHHUZ6aF70Xv94MHjpGGQxsWd0hdVMfuAjDOC9asCmf8hXrviuwNa0iqV48/659KNPtV2SO/8x1NNWOspWCTDEDMA8=
+X-Received: by 2002:a1c:f202:0:b0:3f2:5be3:cd6a with SMTP id
+ s2-20020a1cf202000000b003f25be3cd6amr27501307wmc.4.1684161068525; Mon, 15 May
+ 2023 07:31:08 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
-Content-Language: en-US
-To:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
-        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
-        sroettger@google.com
-Cc:     akpm@linux-foundation.org, jeffxu@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-References: <20230515130553.2311248-1-jeffxu@chromium.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230515130553.2311248-1-jeffxu@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230515024044.2677124-1-azeemshaikh38@gmail.com> <338aa895e02c795329c980cee67463faef0fc57e.camel@kernel.org>
+In-Reply-To: <338aa895e02c795329c980cee67463faef0fc57e.camel@kernel.org>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Mon, 15 May 2023 10:30:57 -0400
+Message-ID: <CADmuW3V_J+5ikfArEmj8_a9HYpX57rON6BE9fV5bXsix+XtqxQ@mail.gmail.com>
+Subject: Re: [PATCH v3] NFSD: Remove open coding of string copy
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 5/15/23 06:05, jeffxu@chromium.org wrote:
-> We're using PKU for in-process isolation to enforce control-flow integrity
-> for a JIT compiler. In our threat model, an attacker exploits a 
-> vulnerability and has arbitrary read/write access to the whole process
-> space concurrently to other threads being executed. This attacker can
-> manipulate some arguments to syscalls from some threads.
+On Mon, May 15, 2023 at 7:21=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> On Mon, 2023-05-15 at 02:40 +0000, Azeem Shaikh wrote:
+> > Instead of open coding a __dynamic_array(), use the __string() and
+> > __assign_str() helper macros that exist for this kind of use case.
+> >
+> > Part of an effort to remove deprecated strlcpy() [1] completely from th=
+e
+> > kernel[2].
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
+cpy
+> > [2] https://github.com/KSPP/linux/issues/89
+> >
+> > Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
+> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > ---
 
-This all sounds like it hinges on the contents of PKRU in the attacker
-thread.
+v1 and v2 links for posterity.
+v1: https://lore.kernel.org/all/20230510220952.3507366-1-azeemshaikh38@gmai=
+l.com/
+v2: https://lore.kernel.org/all/20230512145356.396567-1-azeemshaikh38@gmail=
+.com/
 
-Could you talk a bit about how the attacker is prevented from running
-WRPKRU, XRSTOR or compelling the kernel to write to PKRU like at sigreturn?
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+Thanks!
