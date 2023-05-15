@@ -2,94 +2,74 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455C7C77B7D
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 14:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95622C77B75
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 18:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240091AbjEOOcA (ORCPT
+        id S242982AbjEOSDe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 10:32:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56230 "EHLO
+        Mon, 15 May 2023 14:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241730AbjEOObj (ORCPT
+        with ESMTP id S243251AbjEOSDJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 10:31:39 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D6B269D;
-        Mon, 15 May 2023 07:31:11 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id 5b1f17b1804b1-3f427118644so84318805e9.0;
-        Mon, 15 May 2023 07:31:11 -0700 (PDT)
+        Mon, 15 May 2023 14:03:09 -0400
+Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FAEA16420
+        for <linux-hardening@vger.kernel.org>; Mon, 15 May 2023 11:00:44 -0700 (PDT)
+Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-1929818d7faso73456029fac.0
+        for <linux-hardening@vger.kernel.org>; Mon, 15 May 2023 11:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684161069; x=1686753069;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CMPhyVWRqve92qYxQaDpJ5fmq5M8NJnbMmmflE/u0Cg=;
-        b=QuIZVY/rNSsT2I8KjDr8bvjq4OrrOe62ixH+1L0Btc9YqVkFojhhs+F1lS8GiDhGbk
-         QIprgLjJn0AnrYzqJ88jS67LGJqFlTuRk3GpmetbBvyrR6azel2H3Holhoj6y+l4l0oV
-         36vWDWJc/TcIDi7gzugJD1FNMqIRaoZR1VyrTwU7p1Od3QSwOAs8OgV7P8r3uAZaGhTI
-         qpU3/BSc3vbwLvN0jybs+AgrxAchE/QOM3GTvq7DDa4w1lYQK4G69K+Nz9ejb8AMnzX9
-         WJDoSgQRxOyS95AQWSvGD3eX0qw18ZLT+PfahmYqkQCCQ7IrAqKP6Xf5OB3/7orhru29
-         9N9w==
+        d=chromium.org; s=google; t=1684173638; x=1686765638;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0mSaHf0z4H/25tkQER9uB8ytIeulJA6BHDHaGGeScc8=;
+        b=W4umkPDOYnX9LBbSIbjR8NqLV96FNNnGrKovk6clhtH+Ob6vVA/thEAIOGKBeslT+4
+         WbszT7aF4iGAuXxwF5unWu7UYp5nHO9D4r+3KjLgw+V2B74+eq8A+dWlhcpphfH1hErU
+         iXjlu0t5F+2kbJyT4RCcD3e68fxYU1/GUD9LU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684161069; x=1686753069;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CMPhyVWRqve92qYxQaDpJ5fmq5M8NJnbMmmflE/u0Cg=;
-        b=DnUNcHiFJgt1lyiijaeBtPkUb2VzZrwjbMKk6SYeZ/MmIZqKlHZDszGw2hEGa/z21W
-         OiMcqxCqjxvaeVDDcekoG2za/iJQEohWU0uNhrk/HCuMNHMghW/gBDY+DgNPz5oMXgZc
-         jQB+IdKILi9wrp6NG2Y62L8zTSwYfxWsfFx2OhPQq/7DQIea2PkrKJASk3UA6gJVrPqf
-         btzHL6T1wCS5+CahuTG0Dlilv29WJglIbzxgMUxVZ0hn5M9Ivt9Vx5sNCEZ/TI+u4DJ+
-         7hLjjxIBamLhmOlaVGwytjrFuKkSX3QnlnTEt0ZqtISc3FcB8iYimefvQdwsouAZqQe0
-         ixFw==
-X-Gm-Message-State: AC+VfDzjnYUo2oJQF11g2efxcbDcmxc0IOzJVzySk5J3ioBwF7WGvKiI
-        Wi6wWcWjtuQeFDbt19YeIejRn1CUmL51cZT6sNM=
-X-Google-Smtp-Source: ACHHUZ6aF70Xv94MHjpGGQxsWd0hdVMfuAjDOC9asCmf8hXrviuwNa0iqV48/659KNPtV2SO/8x1NNWOspWCTDEDMA8=
-X-Received: by 2002:a1c:f202:0:b0:3f2:5be3:cd6a with SMTP id
- s2-20020a1cf202000000b003f25be3cd6amr27501307wmc.4.1684161068525; Mon, 15 May
- 2023 07:31:08 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684173638; x=1686765638;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0mSaHf0z4H/25tkQER9uB8ytIeulJA6BHDHaGGeScc8=;
+        b=ilcSb4OiyvAnpcpl04BUHM1NvfzSuqSu5ISG7TF9CgpL/GDAyPfoRaSXWs7IWdEq4W
+         4HsIoZ9F2fLH//ZQzbYT6PgWlgK6bRhI6j4aHE82CUoM+ePQOnuaqos4Hz2pQY8ScsEN
+         xo+FN8EqXd9dKJfdXMMPs+t/+7KHXdncgWVjUblfN8hHqF8SHdNfXbtvUTEjtk7RAFdD
+         R9dORCPsWoyk3im3fCPV5EH7B/p7Uwc5g0nfq8G2vAm+L3XwC1sqCntolXqq4NBZBKOe
+         6Ym7Jm6nTTGZlxCHNAuelEV/fsY+j99hI8p5TkIozROXJrIgsmc23ORhi7rwEzmJrpcd
+         vDpg==
+X-Gm-Message-State: AC+VfDxj5AKDPW1w2jaclYbKoji5PN7m43ge6NsBnN1gEEvToWsEAlbp
+        ovLvcf2TmfjL9PN2AvwMjKTycUzgGIZ+hZZUt5n/Wg==
+X-Google-Smtp-Source: ACHHUZ5ScY8TBqNcKrDXAoJzX4Fpk+Nh7sNbnwOLqmyOSrrnlSNwpiIoHeOyML3P8/0oaJ0S1WSTakp1dUEkzwA5B5o=
+X-Received: by 2002:aca:d885:0:b0:394:441a:6de7 with SMTP id
+ p127-20020acad885000000b00394441a6de7mr8548261oig.12.1684173638588; Mon, 15
+ May 2023 11:00:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230515024044.2677124-1-azeemshaikh38@gmail.com> <338aa895e02c795329c980cee67463faef0fc57e.camel@kernel.org>
-In-Reply-To: <338aa895e02c795329c980cee67463faef0fc57e.camel@kernel.org>
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Mon, 15 May 2023 10:30:57 -0400
-Message-ID: <CADmuW3V_J+5ikfArEmj8_a9HYpX57rON6BE9fV5bXsix+XtqxQ@mail.gmail.com>
-Subject: Re: [PATCH v3] NFSD: Remove open coding of string copy
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+From:   Jeff Xu <jeffxu@chromium.org>
+Date:   Mon, 15 May 2023 11:00:27 -0700
+Message-ID: <CABi2SkXjN+5iFoBhxk71t3cmunTk-s=rB4T7qo0UQRh17s49PQ@mail.gmail.com>
+Subject: mprotect outbound check.
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, linux-hardening@vger.kernel.org,
+        Jorge Lucangeli Obes <jorgelo@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 15, 2023 at 7:21=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Mon, 2023-05-15 at 02:40 +0000, Azeem Shaikh wrote:
-> > Instead of open coding a __dynamic_array(), use the __string() and
-> > __assign_str() helper macros that exist for this kind of use case.
-> >
-> > Part of an effort to remove deprecated strlcpy() [1] completely from th=
-e
-> > kernel[2].
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
-cpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> >
-> > Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> > ---
+Noticed there is a slight change for mprotect between 6.1 and 6.4 RC1
 
-v1 and v2 links for posterity.
-v1: https://lore.kernel.org/all/20230510220952.3507366-1-azeemshaikh38@gmai=
-l.com/
-v2: https://lore.kernel.org/all/20230512145356.396567-1-azeemshaikh38@gmail=
-.com/
+For example:
+Consider the case below:
+1 mmap(0x5000000, PAGE_SIZE,  ...)
+2 mprotect(0x5000000, PAGE_SIZE*4, ...)
 
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+in 6.1 and before, 2 will fail, and in 6.4 RC1, it will pass.
+
+I know that munmap will accept out-of-bound cases like this (because
+memory is freed anyway).
+
+Is this change intentional ?
 
 Thanks!
+Best regards,
+-Jeff
