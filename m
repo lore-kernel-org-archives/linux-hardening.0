@@ -2,210 +2,180 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04E7C77B7D
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 06:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0495AC77B7D
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 06:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239480AbjEOG04 (ORCPT
+        id S240421AbjEOGzp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 02:26:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59240 "EHLO
+        Mon, 15 May 2023 02:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239761AbjEOG0w (ORCPT
+        with ESMTP id S240473AbjEOGz3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 02:26:52 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981881FE8;
-        Sun, 14 May 2023 23:26:35 -0700 (PDT)
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QKTr91CXhzLmJB;
-        Mon, 15 May 2023 14:25:13 +0800 (CST)
-Received: from [10.67.110.48] (10.67.110.48) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 15 May
- 2023 14:26:31 +0800
-Message-ID: <fe79912f-3232-ffba-a191-477c80c703f4@huawei.com>
-Date:   Mon, 15 May 2023 14:26:31 +0800
+        Mon, 15 May 2023 02:55:29 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB033C23;
+        Sun, 14 May 2023 23:54:19 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34F6Ov5O029066;
+        Mon, 15 May 2023 06:52:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=qcppdkim1;
+ bh=yyrxhm/gYREWfg21/DeSezb5WJo7IQRtABWTUQAyulY=;
+ b=bGex/qZxQ+l5EbPPG6P0cKYeoOar6GbaU8xtzQDEnDJWUcU8450f+fe0WgjazyNWo0sq
+ lKdkUwzYeJL+Km1Cav5GUKMEDj+2M4RC4mpGKSA83kB0EEZ5KK7NgpK9F0BvljnnbJt4
+ 5UiGffxvb7QRwJdhfSZqv9Y5egrJ0+7esAQviqSU+AQzQcOKEtljgd300ekfYZqUPIKC
+ yMulLs6v5pDmuw7lzv4IlKCzhk2lnS2E75oEYwN8848MiyAgPiBaXsI2Aqs1vgYAWVUg
+ jqF553/l1QgjvqfKH9iOqfK6+ukdD1g7/JR6j8+8n98o81IdvZqkwHTgLOIl3r+Oqmrs 6w== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qj3qw2uq5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 May 2023 06:52:48 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34F6qjC0000933
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 May 2023 06:52:46 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Sun, 14 May 2023 23:52:16 -0700
+Date:   Mon, 15 May 2023 12:22:12 +0530
+From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+CC:     <keescook@chromium.org>, <gregkh@linuxfoundation.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <johannes@sipsolutions.net>, <rafael@kernel.org>,
+        <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_shashim@quicinc.com>, <quic_pkondeti@quicinc.com>
+Subject: Re: RFC design of device coredump collection on panic in Pstore
+Message-ID: <20230515065212.GA522679@hu-pkondeti-hyd.qualcomm.com>
+References: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
-Content-Language: en-US
-To:     Alexander Lobakin <aleksander.lobakin@intel.com>
-CC:     <linux-mm@kvack.org>, <linux-hardening@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        <kasan-dev@googlegroups.com>,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Pedro Falcato <pedro.falcato@gmail.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
- <75179e0d-f62c-6d3c-9353-e97dd5c9d9ad@intel.com>
-From:   Gong Ruiqi <gongruiqi1@huawei.com>
-In-Reply-To: <75179e0d-f62c-6d3c-9353-e97dd5c9d9ad@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.48]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: fsnMYaLkZqLkDubdd0ic2pr50xDfOEFB
+X-Proofpoint-GUID: fsnMYaLkZqLkDubdd0ic2pr50xDfOEFB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-15_04,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
+ mlxscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=562 clxscore=1011
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
+ definitions=main-2305150060
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-On 2023/05/11 22:54, Alexander Lobakin wrote:
-
-[...]
-
->> @@ -777,12 +783,44 @@ EXPORT_SYMBOL(kmalloc_size_roundup);
->>  #define KMALLOC_RCL_NAME(sz)
->>  #endif
->>  
->> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
->> +#define __KMALLOC_RANDOM_CONCAT(a, b, c) a ## b ## c
->> +#define KMALLOC_RANDOM_NAME(N, sz) __KMALLOC_RANDOM_CONCAT(KMALLOC_RANDOM_, N, _NAME)(sz)
->> +#if CONFIG_RANDOM_KMALLOC_CACHES_BITS >= 1
->> +#define KMALLOC_RANDOM_1_NAME(sz)                             .name[KMALLOC_RANDOM_START +  0] = "kmalloc-random-01-" #sz,
->> +#define KMALLOC_RANDOM_2_NAME(sz)  KMALLOC_RANDOM_1_NAME(sz)  .name[KMALLOC_RANDOM_START +  1] = "kmalloc-random-02-" #sz,
->> +#endif
->> +#if CONFIG_RANDOM_KMALLOC_CACHES_BITS >= 2
->> +#define KMALLOC_RANDOM_3_NAME(sz)  KMALLOC_RANDOM_2_NAME(sz)  .name[KMALLOC_RANDOM_START +  2] = "kmalloc-random-03-" #sz,
->> +#define KMALLOC_RANDOM_4_NAME(sz)  KMALLOC_RANDOM_3_NAME(sz)  .name[KMALLOC_RANDOM_START +  3] = "kmalloc-random-04-" #sz,
->> +#endif
->> +#if CONFIG_RANDOM_KMALLOC_CACHES_BITS >= 3
->> +#define KMALLOC_RANDOM_5_NAME(sz)  KMALLOC_RANDOM_4_NAME(sz)  .name[KMALLOC_RANDOM_START +  4] = "kmalloc-random-05-" #sz,
->> +#define KMALLOC_RANDOM_6_NAME(sz)  KMALLOC_RANDOM_5_NAME(sz)  .name[KMALLOC_RANDOM_START +  5] = "kmalloc-random-06-" #sz,
->> +#define KMALLOC_RANDOM_7_NAME(sz)  KMALLOC_RANDOM_6_NAME(sz)  .name[KMALLOC_RANDOM_START +  6] = "kmalloc-random-07-" #sz,
->> +#define KMALLOC_RANDOM_8_NAME(sz)  KMALLOC_RANDOM_7_NAME(sz)  .name[KMALLOC_RANDOM_START +  7] = "kmalloc-random-08-" #sz,
->> +#endif
->> +#if CONFIG_RANDOM_KMALLOC_CACHES_BITS >= 4
->> +#define KMALLOC_RANDOM_9_NAME(sz)  KMALLOC_RANDOM_8_NAME(sz)  .name[KMALLOC_RANDOM_START +  8] = "kmalloc-random-09-" #sz,
->> +#define KMALLOC_RANDOM_10_NAME(sz) KMALLOC_RANDOM_9_NAME(sz)  .name[KMALLOC_RANDOM_START +  9] = "kmalloc-random-10-" #sz,
->> +#define KMALLOC_RANDOM_11_NAME(sz) KMALLOC_RANDOM_10_NAME(sz) .name[KMALLOC_RANDOM_START + 10] = "kmalloc-random-11-" #sz,
->> +#define KMALLOC_RANDOM_12_NAME(sz) KMALLOC_RANDOM_11_NAME(sz) .name[KMALLOC_RANDOM_START + 11] = "kmalloc-random-12-" #sz,
->> +#define KMALLOC_RANDOM_13_NAME(sz) KMALLOC_RANDOM_12_NAME(sz) .name[KMALLOC_RANDOM_START + 12] = "kmalloc-random-13-" #sz,
->> +#define KMALLOC_RANDOM_14_NAME(sz) KMALLOC_RANDOM_13_NAME(sz) .name[KMALLOC_RANDOM_START + 13] = "kmalloc-random-14-" #sz,
->> +#define KMALLOC_RANDOM_15_NAME(sz) KMALLOC_RANDOM_14_NAME(sz) .name[KMALLOC_RANDOM_START + 14] = "kmalloc-random-15-" #sz,
->> +#define KMALLOC_RANDOM_16_NAME(sz) KMALLOC_RANDOM_15_NAME(sz) .name[KMALLOC_RANDOM_START + 15] = "kmalloc-random-16-" #sz,
+On Mon, May 08, 2023 at 09:21:00PM +0530, Mukesh Ojha wrote:
+> Hi All,
 > 
-> This all can be compressed. Only two things are variables here, so
+> We are exploring a way where device driver(registered/interested and optional could be
+> callback) can dump their data(consist of list of buffers or hardware registers) for post
+> mortam debugging of a crash via dumping the content to pstore region. Some of the example
+> data could be like clock dump/regulators/ etc.
 > 
-> #define KMALLOC_RANDOM_N_NAME(cur, prev, sz)	\
-> 	KMALLOC_RANDOM_##prev##_NAME(sz),	\	
-> 	.name[KMALLOC_RANDOM_START + prev] =	\
-> 		"kmalloc-random-##cur##-" #sz
+> These stuff should be already part of entire RAM dump but in some cases it's however not
+> feasible to capture the entire content of RAM, so was thinking if pstore region can be
+> used to capture above information either in the form of elf or binary and how pstore
+> can get this in human readable format can be discussed further.
 > 
-> #define KMALLOC_RANDOM_16_NAME(sz) KMALLOC_RANDOM_N_NAME(16, 15, sz)
+> Also, existing devcoredump driver does not cover panic usecases so we thought of something
+> like below RFC design where,
+> 
+> 1. Device_coredump allocates some configurable contigous memory that can be controlled
+>    via CONFIG or bootargs and later registers for panic notifiers.
+> 2. Notifier gets added.
+> 3. Pstore adds device_coredump as its front-end via dumper registration similar
+>    to kmsg being dump today.
+> 4. Successful registration of dumper.
+> 5. A device driver(A-Z) can register their buffer to be dumped as part of panic.
+> 6. buffer gets added to the dump list.
+> 7. Panic occurs.
+> 8. iterate over registered drivers and copy their dump list to its own memory and if
+>    it crosses device core dump memory log an error stop iterating.
+> 9. Similar to devcore_dump() inline with kmsg_dump()
+> 10.Copy the content to pstore region and this could be elf or raw binary that can be
+>    discussed.
+> 
+> 
+> Device coredump memory(1) size could be passed from pstore and should be same as size
+> of devcoredump frontend size given in DT or some other way.
+> 
+> Let me know your concern and view on this.       
+>                     
+> 
+>                     pstore               device_coredump      deviceA..Z          panic
+>                                                                   ┼                  │
+>                        │                      │       panic_notifier(1)              │
+>                        │                      ├───────────────────┬─────────────────►│
+>                        │                      │ notifier added    │ (2)              │
+>                        │                      │◄──────────────────┼──────────────────┤
+>       pstore can give  │       (3)            │                   │                  │
+>       its region for   │ dumper_registration  │                   │                  │
+>       dump             ├─────────────────────►│                   │                  │
+>                        │       (4)            │                   │                  │
+>                        │◄─────────────────────┤                   │                  │
+>                        │  register_dumper     │                   │                  │
+>                        │                      │                   │                  │
+>                        │                      │                   │                  │
+>                        │                      │                   │ init             │
+>                        │                      │                ───┼──                │
+>                        │                      │       (5)         │                  │
+>                        │                      │devcoredump_register(dev,buf));       │
+>                        │                      │◄──────────────────┐                  │
+>                        │                      │       (6)         │                  │
+>                        │                      ├──────────────────►│                  │
+>                        │                      │device/buf gets add│d                 │
+>                        │                      │ to the list       │                  │panic
+>                        │                      │                   │                ──┼───
+>                        │                      │                   │                  │
+>                        │                      │(7) panic_notifier │     call         │
+>                        │                      │◄──────────────────┼──────────────────┤
+>                        │                      │ prepare coredump  │for the deviceA-Z │
+>                        │                      ├──────────────────►├────┐             │
+>                        │                      │   (8)             │    │             │
+>                        │                      │                   │    │             │
+>                        │                      │                   │    │             │
+>                        │                      │                   │◄───┘             │
+>              dumper will                      │                   │            (9)   │dev_coredump()
+>              write all the device dump to     │◄──────────────────┼──────────────────┤
+>               pstore   ┌◄───┬─────────────────┤                   │                  │
+>               region   │    │    (10)         │                   │                  │
+>                        │    │                 │                   │                  │
+>                        │    │                 │                   │                  │
+>                        │◄───┘                 │                   │                  │
+>                        │                      │                   │                  │
+>                        │                      │                   
+> 
 > 
 
-I tried this way of implementation but it didn't work: it did not
-propagate from 16 to 1, but stopped in the middle. I think it's because
-the macro is somehow (indirectly) self-referential and the preprocessor
-won't expand it. Check this for more info:
+I really like the idea of providing an interface for device drivers to
+dump specific data for offline use. Currently in MSM/QCOM downstream
+kernel, we do register for panic notifiers and dump relavant data for
+later parsing/analysis. In some cases, this message gets printed to console
+so that it would also available in pstore / extracted dmesg. However
+having separate record/buffer for individual drivers would help.
 
-https://gcc.gnu.org/onlinedocs/cpp/Self-Referential-Macros.html
+I believe dev_coredump() is just an analogy here as it is meant for
+taking a dump of the device when the driver thinks its device/firmware
+is hung/crashed etc, AFAICT. IIUC, What we are looking for here a different
+interface/semantics i.e querying devices to dump any information when
+the *system* is crashed/paniced. May be something like dev_panicdump()
+and a separate method in device_driver.
 
-> Also I'd rather not put commas ',' at the end of each macro, they're
-> usually put outside where the macro is used.
+Also, are there any use cases for this dev_panicdump() outside the
+pstore()? For ex: it would still be helpful to gather all the relavant
+data of a device and put it a separate buffer. The list of such buffers
+can be parsed offline via standard ramdump analysis.
 
-It seems here we have to put commas at the end. Not only it's to align
-with how KMALLOC_{RCL,CGROUP,DMA}_NAME are implemented, but also
-otherwise the expansion of INIT_KMALLOC_INFO would in some cases be like:
-
-{
-	.name[KMALLOC_NORMAL]  = "kmalloc-" #__short_size,
-	, // an empty entry with a comma
-}
-
-which would cause compilation error in kmalloc_info[]'s initialization.
-
->> +#endif
->> +#else // CONFIG_RANDOM_KMALLOC_CACHES
->> +#define KMALLOC_RANDOM_NAME(N, sz)
->> +#endif
->> +
->>  #define INIT_KMALLOC_INFO(__size, __short_size)			\
->>  {								\
->>  	.name[KMALLOC_NORMAL]  = "kmalloc-" #__short_size,	\
->>  	KMALLOC_RCL_NAME(__short_size)				\
->>  	KMALLOC_CGROUP_NAME(__short_size)			\
->>  	KMALLOC_DMA_NAME(__short_size)				\
->> +	KMALLOC_RANDOM_NAME(CONFIG_RANDOM_KMALLOC_CACHES_NR, __short_size)	\
-> 
-> Can't those names be __initconst and here you'd just do one loop from 1
-> to KMALLOC_CACHES_NR, which would assign names? I'm not sure compilers
-> will expand that one to a compile-time constant and assigning 69
-> different string pointers per one kmalloc size is a bit of a waste to me.
-
-I'm not sure if I understand the question correctly, but I believe these
-names have been __initconst since kmalloc_info[] is already marked with
-it. Please let me know if it doesn't answer your question.
-
->>  	.size = __size,						\
->>  }
->>  
->> @@ -878,6 +916,11 @@ new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
->>  		flags |= SLAB_CACHE_DMA;
->>  	}
->>  
->> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
->> +	if (type >= KMALLOC_RANDOM_START && type <= KMALLOC_RANDOM_END)
->> +		flags |= SLAB_RANDOMSLAB;
->> +#endif
->> +
->>  	kmalloc_caches[type][idx] = create_kmalloc_cache(
->>  					kmalloc_info[idx].name[type],
->>  					kmalloc_info[idx].size, flags, 0,
->> @@ -904,7 +947,7 @@ void __init create_kmalloc_caches(slab_flags_t flags)
->>  	/*
->>  	 * Including KMALLOC_CGROUP if CONFIG_MEMCG_KMEM defined
->>  	 */
->> -	for (type = KMALLOC_NORMAL; type < NR_KMALLOC_TYPES; type++) {
->> +	for (type = KMALLOC_RANDOM_START; type < NR_KMALLOC_TYPES; type++) {
-> 
-> Can't we just define something like __KMALLOC_TYPE_START at the
-> beginning of the enum to not search for all such places each time
-> something new is added?
-
-Yeah I'm okay with this. Before I apply this change I would like to know
-more opinions (especially from the maintainers) about it.
-
-> 
->>  		for (i = KMALLOC_SHIFT_LOW; i <= KMALLOC_SHIFT_HIGH; i++) {
->>  			if (!kmalloc_caches[type][i])
->>  				new_kmalloc_cache(i, type, flags);
->> @@ -922,6 +965,9 @@ void __init create_kmalloc_caches(slab_flags_t flags)
->>  				new_kmalloc_cache(2, type, flags);
->>  		}
->>  	}
->> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
->> +	random_kmalloc_seed = get_random_u64();
->> +#endif
->>  
->>  	/* Kmalloc array is now usable */
->>  	slab_state = UP;
->> @@ -957,7 +1003,7 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node, unsigned long caller
->>  		return ret;
->>  	}
->>  
->> -	s = kmalloc_slab(size, flags);
->> +	s = kmalloc_slab(size, flags, caller);
->>  
->>  	if (unlikely(ZERO_OR_NULL_PTR(s)))
->>  		return s;
-> 
-> Thanks,
-> Olek
+Thanks,
+Pavan
