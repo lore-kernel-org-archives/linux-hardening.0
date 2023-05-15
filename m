@@ -2,180 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0495AC77B7D
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 06:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6022C77B75
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 07:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240421AbjEOGzp (ORCPT
+        id S239712AbjEOHvR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 02:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47334 "EHLO
+        Mon, 15 May 2023 03:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240473AbjEOGz3 (ORCPT
+        with ESMTP id S239715AbjEOHuw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 02:55:29 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB033C23;
-        Sun, 14 May 2023 23:54:19 -0700 (PDT)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34F6Ov5O029066;
-        Mon, 15 May 2023 06:52:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=qcppdkim1;
- bh=yyrxhm/gYREWfg21/DeSezb5WJo7IQRtABWTUQAyulY=;
- b=bGex/qZxQ+l5EbPPG6P0cKYeoOar6GbaU8xtzQDEnDJWUcU8450f+fe0WgjazyNWo0sq
- lKdkUwzYeJL+Km1Cav5GUKMEDj+2M4RC4mpGKSA83kB0EEZ5KK7NgpK9F0BvljnnbJt4
- 5UiGffxvb7QRwJdhfSZqv9Y5egrJ0+7esAQviqSU+AQzQcOKEtljgd300ekfYZqUPIKC
- yMulLs6v5pDmuw7lzv4IlKCzhk2lnS2E75oEYwN8848MiyAgPiBaXsI2Aqs1vgYAWVUg
- jqF553/l1QgjvqfKH9iOqfK6+ukdD1g7/JR6j8+8n98o81IdvZqkwHTgLOIl3r+Oqmrs 6w== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qj3qw2uq5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 May 2023 06:52:48 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34F6qjC0000933
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 May 2023 06:52:46 GMT
-Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Sun, 14 May 2023 23:52:16 -0700
-Date:   Mon, 15 May 2023 12:22:12 +0530
-From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-CC:     <keescook@chromium.org>, <gregkh@linuxfoundation.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <johannes@sipsolutions.net>, <rafael@kernel.org>,
-        <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_shashim@quicinc.com>, <quic_pkondeti@quicinc.com>
-Subject: Re: RFC design of device coredump collection on panic in Pstore
-Message-ID: <20230515065212.GA522679@hu-pkondeti-hyd.qualcomm.com>
-References: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
+        Mon, 15 May 2023 03:50:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14FAD1985;
+        Mon, 15 May 2023 00:50:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F6536140B;
+        Mon, 15 May 2023 07:50:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733DBC433D2;
+        Mon, 15 May 2023 07:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684137038;
+        bh=ae5VwYIxEjqbexaMut9c4sfZ65ZBScjHyi86EtHkf1Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YyLJALqoGRYFOhVY63TWZPiZ/wJ6Vy22syFcUSlf3Obvd6Nx1XWnNf1aFvmfQFLZC
+         isIaunbOZlxXEe40NOuqWS+GIUCywbEY58hzKSARleY0IIzIRp0LbsYLY6JBVXkDK6
+         8hosyvTt+87Vn0saH0ptzi7wL+ve5VRTgzm086CDNYZiuNDKgGWkMk+CYVgP07seu4
+         y69gb3o1Y1mCysjTrF6uppFLB2P+v5XMXF09UpB/e4iYF7dsLwN/YzyGRw0kuojnys
+         d8qpC+MtFOep3hsyPBUYVrTEV67YXJvYJ8bLLxJou5CSrAMbfeZgIyD902IpnPp1Ub
+         xqhu/RDTIgoiA==
+From:   Christian Brauner <brauner@kernel.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH] vfs: Replace all non-returning strlcpy with strscpy
+Date:   Mon, 15 May 2023 09:50:25 +0200
+Message-Id: <20230515-seenotrettung-variieren-10995fad7802@brauner>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230510221119.3508930-1-azeemshaikh38@gmail.com>
+References: <20230510221119.3508930-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1133; i=brauner@kernel.org; h=from:subject:message-id; bh=ae5VwYIxEjqbexaMut9c4sfZ65ZBScjHyi86EtHkf1Y=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQkPtGXWPIs3LLc58/8MO1DdyaxJLGECLtPaLBYdtByRkbh RH3tjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgInkJTD8T73ee6DAXvri/ZOML6q+nS 7g3lic43iLYWFufW2nwxb3cob/hQW2G+/y/hU6P/XNwu11Zd9mmwq2sTHFJ8vkxR2LcbLlAgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: fsnMYaLkZqLkDubdd0ic2pr50xDfOEFB
-X-Proofpoint-GUID: fsnMYaLkZqLkDubdd0ic2pr50xDfOEFB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-15_04,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 priorityscore=1501
- mlxscore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=562 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305150060
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 08, 2023 at 09:21:00PM +0530, Mukesh Ojha wrote:
-> Hi All,
+On Wed, 10 May 2023 22:11:19 +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
 > 
-> We are exploring a way where device driver(registered/interested and optional could be
-> callback) can dump their data(consist of list of buffers or hardware registers) for post
-> mortam debugging of a crash via dumping the content to pstore region. Some of the example
-> data could be like clock dump/regulators/ etc.
-> 
-> These stuff should be already part of entire RAM dump but in some cases it's however not
-> feasible to capture the entire content of RAM, so was thinking if pstore region can be
-> used to capture above information either in the form of elf or binary and how pstore
-> can get this in human readable format can be discussed further.
-> 
-> Also, existing devcoredump driver does not cover panic usecases so we thought of something
-> like below RFC design where,
-> 
-> 1. Device_coredump allocates some configurable contigous memory that can be controlled
->    via CONFIG or bootargs and later registers for panic notifiers.
-> 2. Notifier gets added.
-> 3. Pstore adds device_coredump as its front-end via dumper registration similar
->    to kmsg being dump today.
-> 4. Successful registration of dumper.
-> 5. A device driver(A-Z) can register their buffer to be dumped as part of panic.
-> 6. buffer gets added to the dump list.
-> 7. Panic occurs.
-> 8. iterate over registered drivers and copy their dump list to its own memory and if
->    it crosses device core dump memory log an error stop iterating.
-> 9. Similar to devcore_dump() inline with kmsg_dump()
-> 10.Copy the content to pstore region and this could be elf or raw binary that can be
->    discussed.
-> 
-> 
-> Device coredump memory(1) size could be passed from pstore and should be same as size
-> of devcoredump frontend size given in DT or some other way.
-> 
-> Let me know your concern and view on this.       
->                     
-> 
->                     pstore               device_coredump      deviceA..Z          panic
->                                                                   ┼                  │
->                        │                      │       panic_notifier(1)              │
->                        │                      ├───────────────────┬─────────────────►│
->                        │                      │ notifier added    │ (2)              │
->                        │                      │◄──────────────────┼──────────────────┤
->       pstore can give  │       (3)            │                   │                  │
->       its region for   │ dumper_registration  │                   │                  │
->       dump             ├─────────────────────►│                   │                  │
->                        │       (4)            │                   │                  │
->                        │◄─────────────────────┤                   │                  │
->                        │  register_dumper     │                   │                  │
->                        │                      │                   │                  │
->                        │                      │                   │                  │
->                        │                      │                   │ init             │
->                        │                      │                ───┼──                │
->                        │                      │       (5)         │                  │
->                        │                      │devcoredump_register(dev,buf));       │
->                        │                      │◄──────────────────┐                  │
->                        │                      │       (6)         │                  │
->                        │                      ├──────────────────►│                  │
->                        │                      │device/buf gets add│d                 │
->                        │                      │ to the list       │                  │panic
->                        │                      │                   │                ──┼───
->                        │                      │                   │                  │
->                        │                      │(7) panic_notifier │     call         │
->                        │                      │◄──────────────────┼──────────────────┤
->                        │                      │ prepare coredump  │for the deviceA-Z │
->                        │                      ├──────────────────►├────┐             │
->                        │                      │   (8)             │    │             │
->                        │                      │                   │    │             │
->                        │                      │                   │    │             │
->                        │                      │                   │◄───┘             │
->              dumper will                      │                   │            (9)   │dev_coredump()
->              write all the device dump to     │◄──────────────────┼──────────────────┤
->               pstore   ┌◄───┬─────────────────┤                   │                  │
->               region   │    │    (10)         │                   │                  │
->                        │    │                 │                   │                  │
->                        │    │                 │                   │                  │
->                        │◄───┘                 │                   │                  │
->                        │                      │                   │                  │
->                        │                      │                   
-> 
-> 
+> [...]
 
-I really like the idea of providing an interface for device drivers to
-dump specific data for offline use. Currently in MSM/QCOM downstream
-kernel, we do register for panic notifiers and dump relavant data for
-later parsing/analysis. In some cases, this message gets printed to console
-so that it would also available in pstore / extracted dmesg. However
-having separate record/buffer for individual drivers would help.
+I sincerely hope we'll be done with swapping out various string
+functions for one another at some point. Such patches always seems
+benign and straightforward but the potential for subtle bugs is
+feels rather high...
 
-I believe dev_coredump() is just an analogy here as it is meant for
-taking a dump of the device when the driver thinks its device/firmware
-is hung/crashed etc, AFAICT. IIUC, What we are looking for here a different
-interface/semantics i.e querying devices to dump any information when
-the *system* is crashed/paniced. May be something like dev_panicdump()
-and a separate method in device_driver.
+Applied to the vfs.misc branch of the vfs/vfs.git tree.
+Patches in the vfs.misc branch should appear in linux-next soon.
 
-Also, are there any use cases for this dev_panicdump() outside the
-pstore()? For ex: it would still be helpful to gather all the relavant
-data of a device and put it a separate buffer. The list of such buffers
-can be parsed offline via standard ramdump analysis.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-Thanks,
-Pavan
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.misc
+
+[1/1] vfs: Replace all non-returning strlcpy with strscpy
+      https://git.kernel.org/vfs/vfs/c/3c5d4d803c60
