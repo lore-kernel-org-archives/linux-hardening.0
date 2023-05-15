@@ -2,116 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF2FC77B7D
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 08:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18275C77B75
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 11:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232319AbjEOIWM (ORCPT
+        id S240690AbjEOLVa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 04:22:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
+        Mon, 15 May 2023 07:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbjEOIUL (ORCPT
+        with ESMTP id S241238AbjEOLVW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 04:20:11 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31BAE6C;
-        Mon, 15 May 2023 01:20:05 -0700 (PDT)
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QKXLN6zGXzsR3y;
-        Mon, 15 May 2023 16:18:04 +0800 (CST)
-Received: from [10.67.110.48] (10.67.110.48) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 15 May
- 2023 16:20:02 +0800
-Message-ID: <6db163dc-e7fc-e304-5007-74db66a3ad1a@huawei.com>
-Date:   Mon, 15 May 2023 16:20:02 +0800
+        Mon, 15 May 2023 07:21:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88899189;
+        Mon, 15 May 2023 04:21:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B7A1A622A2;
+        Mon, 15 May 2023 11:21:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A29F6C433EF;
+        Mon, 15 May 2023 11:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684149676;
+        bh=i8R4ZHlQNtjYj8yfNoBTP4YCAmQ9Q1y7fL64MkEt668=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=essTLvsZbf+9I99/Sz/ANCYPD1SvFqzuHuxe4Bp+km8E47gAhoPQgmE4NYTXsDByS
+         2+Cy9XvSVERsN8iXM/NHeFXPxMiYzx0GHItjVreqyd/1dymaxMeEzlBLaYrg2m/pZ9
+         B3Ja09Sb34qOMEg4uPOWDAof7ZJC0PXNLYlJb0STfrA3Hjep/nWKdljpFx3jPTftJZ
+         paowHtVBgw6rUL07k9y2UCKIFWLWVd3vmbOaV3f6+H0Q8yN1i5AF+NddWKtMNf+x41
+         D+B/OaNIhiP7Nc0SamjltMMsIcw0ZwbED5aBixk0LQ10pOqO9DLv7YKSsaTdD354xf
+         aAJbrfwmPV0Tg==
+Message-ID: <338aa895e02c795329c980cee67463faef0fc57e.camel@kernel.org>
+Subject: Re: [PATCH v3] NFSD: Remove open coding of string copy
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-hardening@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 15 May 2023 07:21:14 -0400
+In-Reply-To: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
+References: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
-Content-Language: en-US
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        <kasan-dev@googlegroups.com>,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
- <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
- <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
- <b9331fe4-11c8-5323-e757-5cae3c1e2233@suse.cz>
-From:   Gong Ruiqi <gongruiqi1@huawei.com>
-In-Reply-To: <b9331fe4-11c8-5323-e757-5cae3c1e2233@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.110.48]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Mon, 2023-05-15 at 02:40 +0000, Azeem Shaikh wrote:
+> Instead of open coding a __dynamic_array(), use the __string() and
+> __assign_str() helper macros that exist for this kind of use case.
+>=20
+> Part of an effort to remove deprecated strlcpy() [1] completely from the
+> kernel[2].
+>=20
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
+y
+> [2] https://github.com/KSPP/linux/issues/89
+>=20
+> Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> ---
+>  fs/nfsd/trace.h |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 4183819ea082..72a906a053dc 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -1365,19 +1365,19 @@ TRACE_EVENT(nfsd_cb_setup,
+>  		__field(u32, cl_id)
+>  		__field(unsigned long, authflavor)
+>  		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
+> -		__array(unsigned char, netid, 8)
+> +		__string(netid, netid)
+>  	),
+>  	TP_fast_assign(
+>  		__entry->cl_boot =3D clp->cl_clientid.cl_boot;
+>  		__entry->cl_id =3D clp->cl_clientid.cl_id;
+> -		strlcpy(__entry->netid, netid, sizeof(__entry->netid));
+> +		__assign_str(netid, netid);
+>  		__entry->authflavor =3D authflavor;
+>  		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
+>  				  clp->cl_cb_conn.cb_addrlen)
+>  	),
+>  	TP_printk("addr=3D%pISpc client %08x:%08x proto=3D%s flavor=3D%s",
+>  		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
+> -		__entry->netid, show_nfsd_authflavor(__entry->authflavor))
+> +		__get_str(netid), show_nfsd_authflavor(__entry->authflavor))
+>  );
+> =20
+>  TRACE_EVENT(nfsd_cb_setup_err,
 
-
-On 2023/05/14 17:30, Vlastimil Babka wrote:
-> On 5/12/23 12:11, Gong Ruiqi wrote:
->>
->>
->> On 2023/05/11 2:43, Hyeonggon Yoo wrote:
->>> On Mon, May 8, 2023 at 12:53 AM GONG, Ruiqi <gongruiqi1@huawei.com> wrote:
->>>>
->>
->> [...]
->>
->>>>
->>>> The overhead of performance has been tested on a 40-core x86 server by
->>>> comparing the results of `perf bench all` between the kernels with and
->>>> without this patch based on the latest linux-next kernel, which shows
->>>> minor difference. A subset of benchmarks are listed below:
->>>>
->>>
->>> Please Cc maintainers/reviewers of corresponding subsystem in MAINTAINERS file.
->>
->> Okay, I've appended maintainers/reviewers of linux-hardening and
->> security subsystem to the Cc list.
-> 
-> I think they were CC'd on v1 but didn't respond yet. I thought maybe if
-> I run into Kees at OSS, I will ask him about it, but didn't happen.
-
-Yeah it would be great if you can contact Kees or other developers of
-hardening to know their opinions about this, since I'm curious about
-what they think of this as well.
-
-> As a slab maintainer I don't mind adding such things if they don't
-> complicate the code excessively, and have no overhead when configured
-> out. This one would seem to be acceptable at first glance, although
-> maybe the CONFIG space is too wide, and the amount of #defines in
-> slab_common.c is also large (maybe there's a way to make it more
-> concise, maybe not).
-> 
-> But I don't have enough insight into hardening to decide if it's a
-> useful mitigation that people would enable, so I'd hope for hardening
-> folks to advise on that. Similar situation with freelist hardening in
-> the past, which was even actively pushed by Kees, IIRC.
-
-For the effectiveness of this mechanism, I would like to provide some
-results of the experiments I did. I conducted actual defense tests on
-CVE-2021-22555 and CVE-2016-8655 by reverting fixing patch to recreate
-exploitable environments, and running the exploits/PoCs on the
-vulnerable kernel with and without our randomized kmalloc caches patch.
-With our patch, the originally exploitable environments were not pwned
-by running the PoCs.
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
