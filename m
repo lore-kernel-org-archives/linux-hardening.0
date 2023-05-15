@@ -2,82 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6022C77B75
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 07:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF2FC77B7D
+	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 08:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239712AbjEOHvR (ORCPT
+        id S232319AbjEOIWM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 03:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59326 "EHLO
+        Mon, 15 May 2023 04:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239715AbjEOHuw (ORCPT
+        with ESMTP id S229820AbjEOIUL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 03:50:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14FAD1985;
-        Mon, 15 May 2023 00:50:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F6536140B;
-        Mon, 15 May 2023 07:50:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 733DBC433D2;
-        Mon, 15 May 2023 07:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684137038;
-        bh=ae5VwYIxEjqbexaMut9c4sfZ65ZBScjHyi86EtHkf1Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YyLJALqoGRYFOhVY63TWZPiZ/wJ6Vy22syFcUSlf3Obvd6Nx1XWnNf1aFvmfQFLZC
-         isIaunbOZlxXEe40NOuqWS+GIUCywbEY58hzKSARleY0IIzIRp0LbsYLY6JBVXkDK6
-         8hosyvTt+87Vn0saH0ptzi7wL+ve5VRTgzm086CDNYZiuNDKgGWkMk+CYVgP07seu4
-         y69gb3o1Y1mCysjTrF6uppFLB2P+v5XMXF09UpB/e4iYF7dsLwN/YzyGRw0kuojnys
-         d8qpC+MtFOep3hsyPBUYVrTEV67YXJvYJ8bLLxJou5CSrAMbfeZgIyD902IpnPp1Ub
-         xqhu/RDTIgoiA==
-From:   Christian Brauner <brauner@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH] vfs: Replace all non-returning strlcpy with strscpy
-Date:   Mon, 15 May 2023 09:50:25 +0200
-Message-Id: <20230515-seenotrettung-variieren-10995fad7802@brauner>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230510221119.3508930-1-azeemshaikh38@gmail.com>
-References: <20230510221119.3508930-1-azeemshaikh38@gmail.com>
+        Mon, 15 May 2023 04:20:11 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31BAE6C;
+        Mon, 15 May 2023 01:20:05 -0700 (PDT)
+Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QKXLN6zGXzsR3y;
+        Mon, 15 May 2023 16:18:04 +0800 (CST)
+Received: from [10.67.110.48] (10.67.110.48) by dggpemm500016.china.huawei.com
+ (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 15 May
+ 2023 16:20:02 +0800
+Message-ID: <6db163dc-e7fc-e304-5007-74db66a3ad1a@huawei.com>
+Date:   Mon, 15 May 2023 16:20:02 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1133; i=brauner@kernel.org; h=from:subject:message-id; bh=ae5VwYIxEjqbexaMut9c4sfZ65ZBScjHyi86EtHkf1Y=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQkPtGXWPIs3LLc58/8MO1DdyaxJLGECLtPaLBYdtByRkbh RH3tjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgInkJTD8T73ee6DAXvri/ZOML6q+nS 7g3lic43iLYWFufW2nwxb3cob/hQW2G+/y/hU6P/XNwu11Zd9mmwq2sTHFJ8vkxR2LcbLlAgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
+Content-Language: en-US
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        <kasan-dev@googlegroups.com>,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
+ <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
+ <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
+ <b9331fe4-11c8-5323-e757-5cae3c1e2233@suse.cz>
+From:   Gong Ruiqi <gongruiqi1@huawei.com>
+In-Reply-To: <b9331fe4-11c8-5323-e757-5cae3c1e2233@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.110.48]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500016.china.huawei.com (7.185.36.25)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 10 May 2023 22:11:19 +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
+
+
+On 2023/05/14 17:30, Vlastimil Babka wrote:
+> On 5/12/23 12:11, Gong Ruiqi wrote:
+>>
+>>
+>> On 2023/05/11 2:43, Hyeonggon Yoo wrote:
+>>> On Mon, May 8, 2023 at 12:53 AM GONG, Ruiqi <gongruiqi1@huawei.com> wrote:
+>>>>
+>>
+>> [...]
+>>
+>>>>
+>>>> The overhead of performance has been tested on a 40-core x86 server by
+>>>> comparing the results of `perf bench all` between the kernels with and
+>>>> without this patch based on the latest linux-next kernel, which shows
+>>>> minor difference. A subset of benchmarks are listed below:
+>>>>
+>>>
+>>> Please Cc maintainers/reviewers of corresponding subsystem in MAINTAINERS file.
+>>
+>> Okay, I've appended maintainers/reviewers of linux-hardening and
+>> security subsystem to the Cc list.
 > 
-> [...]
+> I think they were CC'd on v1 but didn't respond yet. I thought maybe if
+> I run into Kees at OSS, I will ask him about it, but didn't happen.
 
-I sincerely hope we'll be done with swapping out various string
-functions for one another at some point. Such patches always seems
-benign and straightforward but the potential for subtle bugs is
-feels rather high...
+Yeah it would be great if you can contact Kees or other developers of
+hardening to know their opinions about this, since I'm curious about
+what they think of this as well.
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+> As a slab maintainer I don't mind adding such things if they don't
+> complicate the code excessively, and have no overhead when configured
+> out. This one would seem to be acceptable at first glance, although
+> maybe the CONFIG space is too wide, and the amount of #defines in
+> slab_common.c is also large (maybe there's a way to make it more
+> concise, maybe not).
+> 
+> But I don't have enough insight into hardening to decide if it's a
+> useful mitigation that people would enable, so I'd hope for hardening
+> folks to advise on that. Similar situation with freelist hardening in
+> the past, which was even actively pushed by Kees, IIRC.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] vfs: Replace all non-returning strlcpy with strscpy
-      https://git.kernel.org/vfs/vfs/c/3c5d4d803c60
+For the effectiveness of this mechanism, I would like to provide some
+results of the experiments I did. I conducted actual defense tests on
+CVE-2021-22555 and CVE-2016-8655 by reverting fixing patch to recreate
+exploitable environments, and running the exploits/PoCs on the
+vulnerable kernel with and without our randomized kmalloc caches patch.
+With our patch, the originally exploitable environments were not pwned
+by running the PoCs.
