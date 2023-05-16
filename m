@@ -2,237 +2,462 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F792C77B7F
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 14:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C79BC7EE25
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 14:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233854AbjEPOK4 (ORCPT
+        id S232404AbjEPORg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 10:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48852 "EHLO
+        Tue, 16 May 2023 10:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233855AbjEPOKz (ORCPT
+        with ESMTP id S232676AbjEPORd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 10:10:55 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A03E5FD7;
-        Tue, 16 May 2023 07:10:53 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34GC00JU021155;
-        Tue, 16 May 2023 14:10:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=LyP1xgUNUl8JVszR4bfLlLb9hTYWLjAwf3KGAE1B2Tc=;
- b=J6+J34+ZM/ovG9CTgirjVDXQBjcI2DdQvykkExKMgCB8WBaXxoeIRk3vQp7DdrDu3q5Y
- B9L3MlZsAD7t43sCAYH5YNRdt0Do0lYZv/Xz1Sd+MAKPeEGlrwOpa4mYke/ae1X/Libi
- BV1F0oGlUZwguUQMbpwYQ7hy6NHd2bj5GM0/h2p7LAJq5+2DxW94StP1jiElE87TZQK9
- vutH/47mi5w6gA/CPRM3lufZu5Uam1Pa9MryXmU/F3lSenNqG8T0B19rp3BRT2Gh6D/7
- lkaLl0y3N6ESCsZMSeu4EgHDNgY+G8SeD1cPjNr77IzbUt6dk+Po6P2g40q94Y0H5TD2 EQ== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj2eb2rq6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 May 2023 14:10:46 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34GDsRrR023763;
-        Tue, 16 May 2023 14:10:44 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2045.outbound.protection.outlook.com [104.47.51.45])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qj10acpyr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 May 2023 14:10:44 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LX7TRwHTY27yNP8WKs8XAMqkxqmEC0gQUB+xYPW6XS695Y5a8kLvOsWizZ6UTMPJj7glHFa7MmFfN25VK0KxUUyreTD5NUVW0L58bkDVIXstTu/YQ2Wwn0j5yxnZBGC4s6Q19m3VnWUeDVSkXRhU6vivwjJbiUFPHGHsJRDw85YzraJhDodpTRLxFLI22B5VT/gG8GdS/krsmEXbsfTVzot6EyAm8GVALS02IvBk2W1IlHRkRmdAXwA2i0lszDUnAj2/fWSMIywGgAsoIKwlIWAUAdrcIXISFfTuAbSTugh3Bt15NoPm0bRILQ2N5v0aVML9AgW/OX0ECLkY1bXskQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LyP1xgUNUl8JVszR4bfLlLb9hTYWLjAwf3KGAE1B2Tc=;
- b=D32BpH7g7tKJaUhRs+O39pxKem6VJJx2EfdGACd9HhbtsYBrfS7qqU1qLVd1x+8mJQpMZgz7Dn7BdreDYIWqqz0kJTTOqNkr5R817IINbNMSwgHgQCHQnJfkHocqera/GuwZ2kOZFPJi9N+qkiprSrww9uIhlotJCNUsKbYigfKV9ZztkIXrVJa63YBGd+xnvgXOK97ReHGvAmWSADfMXL9fTGGWdfEemwYbJcZy65s0j3BXiHYlmA1bfJ2SxYlA/4VAsl3ILJJLFxjt9lYD6xEQVxcceTnE4PBVcqAuHMkxKPZLV8BnTcIwGVi4e8u0CbuvpmSEyiWp2leevWuk6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LyP1xgUNUl8JVszR4bfLlLb9hTYWLjAwf3KGAE1B2Tc=;
- b=S7F27NtPwgrt3Arlz3RQVOIZ7gyqHDfzGRM/YGfkyV1mHigLE4xCbRLROUb6Edhr593DOhKEv7SacXQEqR2yEVmJ0/PxcTVvbpOQ1a/nC/khGuqNaRIMN70WBtutGjXydUPt1eWzGEFQ59t+wWZFae2JGQ41MDMCOh3YUvRC6dQ=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SA2PR10MB4508.namprd10.prod.outlook.com (2603:10b6:806:11d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.33; Tue, 16 May
- 2023 14:10:43 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ecbd:fc46:2528:36db]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ecbd:fc46:2528:36db%5]) with mapi id 15.20.6387.034; Tue, 16 May 2023
- 14:10:42 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-CC:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] NFSD: Remove open coding of string copy
-Thread-Topic: [PATCH v3] NFSD: Remove open coding of string copy
-Thread-Index: AQHZhtarCM6kbMGNCESnN8mVXpKcz69cpWcAgABNRQA=
-Date:   Tue, 16 May 2023 14:10:42 +0000
-Message-ID: <63008A50-48CC-4915-88D6-71EA1B289322@oracle.com>
-References: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
- <d48a166d1cbc477f9cf063e91f7b3005@AcuMS.aculab.com>
-In-Reply-To: <d48a166d1cbc477f9cf063e91f7b3005@AcuMS.aculab.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.500.231)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SA2PR10MB4508:EE_
-x-ms-office365-filtering-correlation-id: dd0ed82b-3d27-421c-f308-08db561755f5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 07kAMdz6upraiwX6MhT/0/NeW4IEGCIkfW4Y2h8/OrxByBCEwV5quoscdHFG7kTG7LxrG2a89lnWKDivrSFtsVnUibz7hO0d5vSU30IvqH+/xb/w+jgndGjRCJ9QTR4qYG2IqUdHxwzkvoJGYLGlQy6egwv2AlooJA7+8hNWKn0C5HvFSThoOGFAd+n/2au//I9LB8RRwoiaqOg71FF+ZhvbvKWsZBmZbKR+sMvlI6OPnDGiL77VnBuphBhFU0VwfbuTnui3IVL2bjAa+lma8kP/gCEi4c2yWICUhm05sgu65uUrLSTcpA+m7jIB3lzBcc+1zIlcs4YItNjVQZhNxoXkpKLG1zRFTqN4DCmc738IeA8VoofZnPg01cbSRQZWG079BXdr4kkfpCUfBe4n6ae3JxvSk07YjpTEoN/2hKmThIlxWMNKlpPhtioQhFeaix1Jmy12u7mYp7DZOjbPPkTmCjUBLzm8NZC/LXQQiuCl3yKbMCGIJ+qY9I2VyLB4uCZ3EWQMWSM3Bx/zuO2oSmUWlgoAqsmI/UYaP4h3fgSW+H7de/XVYO2oWuog6klY5UPJy1AGKcYlxfJnw7Lz8n6rW4SgYrW8D7rAobmS9PDmpTjcuoudkPPDah6qU7BgXB2F8FBL1R2v9BfGv4ZGUIK63Gmrn96AwpOVWwyDoYXfRz0+KdSFk91x5Kj224Jf
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(346002)(39860400002)(366004)(136003)(376002)(451199021)(26005)(53546011)(6512007)(6506007)(966005)(83380400001)(36756003)(2616005)(122000001)(38100700002)(33656002)(86362001)(38070700005)(186003)(2906002)(54906003)(478600001)(5660300002)(4326008)(6916009)(64756008)(66446008)(66476007)(66556008)(8676002)(8936002)(91956017)(66946007)(76116006)(316002)(71200400001)(6486002)(41300700001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/NBl7OpaRc/2LOlZqtjoJUtmFW/EXm5zcxS0GEgzcyz8aVp2cFS4Y2SWavbk?=
- =?us-ascii?Q?FBita65yg2xs4W2SLmmsZ5eZuiFyYv+WPh4s5R+S6uWiC14B2I576BJyceNp?=
- =?us-ascii?Q?r1GCOJZHJmZOtg397XV3IWKPUJTlsCv3ZAhJt2/mFSjnWZs9v2msGrj2QejQ?=
- =?us-ascii?Q?jn7LMiO6tMoiNBhD5MhmwQgDQ/U6HKODknQ1JnBsA3WsgfijKrzwlDACUUpD?=
- =?us-ascii?Q?bTm7+LCs17llb3xonb6abuJ/1cM4ZAj++PEbn/n0ejZOIpA7SRTTp76WBR9q?=
- =?us-ascii?Q?WmP+8Uez5vGpVs47T7R1WMa/OER1S9KPl5dHx+9QUJ27im5mKJSjgVJNLQU7?=
- =?us-ascii?Q?nbs+d0Q4EO1mGTfSATsMLLsUYO3PE7lcVYze3qB/VCcFQCOuSQuuwk8czYHP?=
- =?us-ascii?Q?lLgVHzelQTLuO2vxHKLwilQmFwbCZN+8glY+7uadLHq0VTrp+6cmF0wKhOqZ?=
- =?us-ascii?Q?JR0cT+5VdZeY6gz5PS0lSooUOPiuEpxJudQfb4XnKVySZfMRFpwzDgJckzL1?=
- =?us-ascii?Q?gbl3o+N1d9M/D944twDDN9CpbEDSeQF2dxyrDvUBztkw2MbZa4dKZG8nG5Op?=
- =?us-ascii?Q?zKRiQhB0aQXs4Sa30IQZAXUlBj+q8kcyaJPSoXBxQqvQ+CmqUCQ3X+FJtqxn?=
- =?us-ascii?Q?PrpYTvjn2eakktQOoE3WKlKALJFayuCLCHGSvPzAYfqvQ3Nwl3I/vWWliH0U?=
- =?us-ascii?Q?xFt0r8I6tr8xa1AELlqwhjucn3CzeJ/ItJIghbclMQl8S3Kv/jaKE5wYeMTN?=
- =?us-ascii?Q?Pj1TDx8EqrrnzAOxfqgBqWxsZ9/NQ+eUAY70iEvZljMZfnd4PYH/hhgimk9H?=
- =?us-ascii?Q?33PwrrYIKCuK6ZRry/7m5fRXoZwpx7UnxMk9pll7wWY5FdlKOkmR2V6/FXpX?=
- =?us-ascii?Q?pYiZbz5tMpClssJkaqjtpydSeskcb4GreA64mS+U34JeyyX4ck99lYtVkLWE?=
- =?us-ascii?Q?MkEH+ipNt3sreJNh3KfjGAdKDs6HHNKQFPe4oG675unuPwilqaf0Qf5U/Md0?=
- =?us-ascii?Q?HCVBKjW35rRhYIr9dc8AkLJYrp6eoaxmMC5+CtySLtlG8gJEanikCvtDwrqd?=
- =?us-ascii?Q?Ka7jwcISq289qnHeKuc6/4XvJF2VwAyHeFR7sIMBdbZlWxdOK+2p2z260z0f?=
- =?us-ascii?Q?nixON+xKwk7leJWlDsMswt/DH3OduCzLEDh8nwsmZ2luTuFXb4O/L10htWlu?=
- =?us-ascii?Q?b7uYMbfEHlA9aDvqkYSELO12nQiK5jQp7thgTo6Dyf7BYvhs1tbkYiMi6qhH?=
- =?us-ascii?Q?mGf3/JfnEBOJ0fVoHaEIekgVmv4m8i9bR/kwjG+RjPi/4dRP/XODcYbgJxKh?=
- =?us-ascii?Q?2mxtj9kYs/h9DykkkX5J+mKjWC7JqAmf89tE1Xn3Xn2fA+T7q+BqPLGpqAQq?=
- =?us-ascii?Q?Fxt8h+sHZ4C7xFxpVEBtbipqzB3zxRKa9xJu0TowLXLnV0nl2cs+hU506VSx?=
- =?us-ascii?Q?Ez+dCTkPsCpuKtEViI4AqdEYPDA49VkXd7OQj7XQtdBW/hA5PDTllV6CW2rS?=
- =?us-ascii?Q?EzaHg2gF/aTusq4hc2sg9z6Oy1IdeSsCqe4HaJNbhSCPLlcSBrxY/bPA2Mqi?=
- =?us-ascii?Q?Zr1zxBM7W5q5l0LdWXRmIXNR1e2uJARJ4FQGLAPSHS5F0Vcp1zzWd0FLx2+z?=
- =?us-ascii?Q?KQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <918BD96CBD46DC4382B736961B2263AD@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 May 2023 10:17:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AE806E85;
+        Tue, 16 May 2023 07:17:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1901263A96;
+        Tue, 16 May 2023 14:17:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 801ADC433D2;
+        Tue, 16 May 2023 14:17:29 +0000 (UTC)
+Date:   Tue, 16 May 2023 10:17:27 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        David Ahern <dsahern@kernel.org>,
+        Mark Bloch <mbloch@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Kuniyuki Iwashima <kuniyu@amazon.com>
+Subject: Re: [PATCH] tracing: Replace all non-returning strlcpy with strscpy
+Message-ID: <20230516101727.7f19aae9@gandalf.local.home>
+In-Reply-To: <20230516043943.5234-1-azeemshaikh38@gmail.com>
+References: <20230516043943.5234-1-azeemshaikh38@gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: wvm9y+nMhoGP6BR6m5DozfvrWkOmI0wDp+utQ3Bi1/g2o6+VQGtvhb4Mt8BtWmxNe91WU9blPNE/98GLIZB0/5jgduOKdMokaznvCFojU8sHgeVH0Xp6D6G3OU7JZocX9CwAe/ZDi/qjV7EtvIwbcscl1oqdRYGzMIw0EeyHtUxye/WXQ1QSp8g3sj1h5wr4GqL767kqZUsRwh+1r+HxD9MBScrKmRu7LPWSl10dPR3R7lRhUu34QfPB1savA08KIHxM/sHAU1xLIfTMp5ta7o9UnmnUICMdsAefTzJqGRs6GEEg9VioOOHraV029bgAYZUidpNgbXAqxkVVZr/Ybjb4Mn7bi5joxLTx5Y+FZOyl+sSQs9aPVMcNxx1m3k5gIF/kVvBxRaeCKDH6eEy/z1LlCDxZV4cVPSQq/kdtCdWQDsn76KY9D1FmiOsB+vtFfWcmRPxorhooAafSE6XNERhQvIRb7ro6ZZqRucR2jAlfFpMe+pqUDDD3TBw6WfKQopwNzppLd4G8LzqmJz7n06ZBQPpAP0psHrtWVDmpKSBiOOpplKp1omzQMd57/5DcaFMursK2+pL8hOtKtOIcPhiEM+gEs9yDNhoVzGgcF/Jj/mtfeU0Q5vDv4unpbb1ArKAG78ntci8tmvFMSJXk5kfHaTiXs9EkOGvagG1on3q3ksIIapPIc6OtZjYqRPpVONMSdDHjRqXs+bgO6NvE1kC0esBizgaJekVcB6yJK8dYOVsIqLqtmhcSecX6dqCF/Orid+9KnU2haUdupF+cqZ3MN8Q/tTPry7ETtV3X7r0DsoEyVweY0kbnVzGzYdrqGNaIgOkklJ8PX8VvfgeGV28n66T/VaO6L7JzGJC0lrA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd0ed82b-3d27-421c-f308-08db561755f5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2023 14:10:42.9382
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AgtMLIscJrQA9dJqpgYNEWtXEK55x+Zt92f6ib+Fb5/Wp9EMpRZT/nIV73HA5HWYjTMn56qIeJtfqqqwhRjKJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4508
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-16_07,2023-05-16_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- phishscore=0 bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305160119
-X-Proofpoint-GUID: Pse3METyWGnQe18A-zQvknumJQQ-y4B3
-X-Proofpoint-ORIG-GUID: Pse3METyWGnQe18A-zQvknumJQQ-y4B3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, 16 May 2023 04:39:43 +0000
+Azeem Shaikh <azeemshaikh38@gmail.com> wrote:
+
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> 
+> No return values were used, so direct replacement with strlcpy is safe.
+
+> Occurences of strlcpy within TRACE_EVENT macros were replaced with
+> __string() and __assign_str() macro helpers instead.
+
+This part I have issues with (see below).
+
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> ---
+>  include/trace/events/fib.h         |    2 +-
+>  include/trace/events/fib6.h        |    2 +-
+>  include/trace/events/kyber.h       |   24 ++++++++++++------------
+>  include/trace/events/task.h        |    6 +++---
+>  include/trace/events/wbt.h         |   28 ++++++++++++----------------
+
+Please break this up into multiple patches. The above are actually
+maintained by the subsystems they are used in. Those changes should go
+through them. But I have issues with these changes as I mention below.
 
 
-> On May 16, 2023, at 5:33 AM, David Laight <David.Laight@ACULAB.COM> wrote=
-:
->=20
-> From: Azeem Shaikh
->> Sent: 15 May 2023 03:41
->>=20
->> Instead of open coding a __dynamic_array(), use the __string() and
->> __assign_str() helper macros that exist for this kind of use case.
->=20
-> Is this actually a dynamic array, or just a char[8] ?
-> On 64 bit copying a short fixed-length string is far better
-> than any kind of dynamic sized allocation.
+>  kernel/trace/trace.c               |    8 ++++----
+>  kernel/trace/trace_events.c        |    4 ++--
+>  kernel/trace/trace_events_inject.c |    4 ++--
+>  kernel/trace/trace_kprobe.c        |    2 +-
+>  kernel/trace/trace_probe.c         |    2 +-
+>  10 files changed, 39 insertions(+), 43 deletions(-)
+> 
+> diff --git a/include/trace/events/fib.h b/include/trace/events/fib.h
+> index 76297ecd4935..20b914250ce9 100644
+> --- a/include/trace/events/fib.h
+> +++ b/include/trace/events/fib.h
+> @@ -65,7 +65,7 @@ TRACE_EVENT(fib_table_lookup,
+>  		}
+>  
+>  		dev = nhc ? nhc->nhc_dev : NULL;
+> -		strlcpy(__entry->name, dev ? dev->name : "-", IFNAMSIZ);
+> +		strscpy(__entry->name, dev ? dev->name : "-", IFNAMSIZ);
+>  
+>  		if (nhc) {
+>  			if (nhc->nhc_gw_family == AF_INET) {
+> diff --git a/include/trace/events/fib6.h b/include/trace/events/fib6.h
+> index 4d3e607b3cde..5d7ee2610728 100644
+> --- a/include/trace/events/fib6.h
+> +++ b/include/trace/events/fib6.h
+> @@ -63,7 +63,7 @@ TRACE_EVENT(fib6_table_lookup,
+>  		}
+>  
+>  		if (res->nh && res->nh->fib_nh_dev) {
+> -			strlcpy(__entry->name, res->nh->fib_nh_dev->name, IFNAMSIZ);
+> +			strscpy(__entry->name, res->nh->fib_nh_dev->name, IFNAMSIZ);
+>  		} else {
+>  			strcpy(__entry->name, "-");
+>  		}
+> diff --git a/include/trace/events/kyber.h b/include/trace/events/kyber.h
+> index bf7533f171ff..d4db2fa60e7b 100644
+> --- a/include/trace/events/kyber.h
+> +++ b/include/trace/events/kyber.h
+> @@ -21,8 +21,8 @@ TRACE_EVENT(kyber_latency,
+>  
+>  	TP_STRUCT__entry(
+>  		__field(	dev_t,	dev				)
+> -		__array(	char,	domain,	DOMAIN_LEN		)
+> -		__array(	char,	type,	LATENCY_TYPE_LEN	)
+> +		__string(	domain,	domain				)
+> +		__string(	type,	type				)
 
-I'd prefer to use a string helper, since the netid is a string,
-and this documents the data type better and it is not subject
-to sudden breakage if someone creates a standard netid longer
-than 8 characters.
+Note, __string() adds a little bit more overhead. If the length is small
+enough (like 16 or 8, as the above are) then it is more efficient in both
+speed and size of the ring buffer to use the hard coded array, and not use
+the dynamic string.
 
-The nfsd_cb_setup tracepoint is not in a performance-sensitive
-path.
-
-In addition, trace consumers should be able to count on the
-string helpers to perform memory copies without overrunning
-either the source or destination buffers... one less source
-of error.
-
-
-> David
->=20
->>=20
->> Part of an effort to remove deprecated strlcpy() [1] completely from the
->> kernel[2].
->>=20
->> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlc=
-py
->> [2] https://github.com/KSPP/linux/issues/89
->>=20
->> Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
->> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
->> ---
->> fs/nfsd/trace.h |    6 +++---
->> 1 file changed, 3 insertions(+), 3 deletions(-)
->>=20
->> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
->> index 4183819ea082..72a906a053dc 100644
->> --- a/fs/nfsd/trace.h
->> +++ b/fs/nfsd/trace.h
->> @@ -1365,19 +1365,19 @@ TRACE_EVENT(nfsd_cb_setup,
->> __field(u32, cl_id)
->> __field(unsigned long, authflavor)
->> __sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
->> - __array(unsigned char, netid, 8)
->> + __string(netid, netid)
->> ),
->> TP_fast_assign(
->> __entry->cl_boot =3D clp->cl_clientid.cl_boot;
->> __entry->cl_id =3D clp->cl_clientid.cl_id;
->> - strlcpy(__entry->netid, netid, sizeof(__entry->netid));
->> + __assign_str(netid, netid);
->> __entry->authflavor =3D authflavor;
->> __assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
->>   clp->cl_cb_conn.cb_addrlen)
->> ),
->> TP_printk("addr=3D%pISpc client %08x:%08x proto=3D%s flavor=3D%s",
->> __get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
->> - __entry->netid, show_nfsd_authflavor(__entry->authflavor))
->> + __get_str(netid), show_nfsd_authflavor(__entry->authflavor))
->> );
->>=20
->> TRACE_EVENT(nfsd_cb_setup_err,
->> --
->> 2.40.1.606.ga4b1b128d6-goog
->>=20
->=20
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
+NACK on the above change.
 
 
---
-Chuck Lever
+>  		__field(	u8,	percentile			)
+>  		__field(	u8,	numerator			)
+>  		__field(	u8,	denominator			)
+> @@ -31,8 +31,8 @@ TRACE_EVENT(kyber_latency,
+>  
+>  	TP_fast_assign(
+>  		__entry->dev		= dev;
+> -		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
+> -		strlcpy(__entry->type, type, sizeof(__entry->type));
+> +		__assign_str(domain, domain);
+> +		__assign_str(type, type);
+>  		__entry->percentile	= percentile;
+>  		__entry->numerator	= numerator;
+>  		__entry->denominator	= denominator;
+> @@ -40,8 +40,8 @@ TRACE_EVENT(kyber_latency,
+>  	),
+>  
+>  	TP_printk("%d,%d %s %s p%u %u/%u samples=%u",
+> -		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->domain,
+> -		  __entry->type, __entry->percentile, __entry->numerator,
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __get_str(domain),
+> +		  __get_str(type), __entry->percentile, __entry->numerator,
+>  		  __entry->denominator, __entry->samples)
+>  );
+>  
+> @@ -53,18 +53,18 @@ TRACE_EVENT(kyber_adjust,
+>  
+>  	TP_STRUCT__entry(
+>  		__field(	dev_t,	dev			)
+> -		__array(	char,	domain,	DOMAIN_LEN	)
+> +		__string(	domain,	domain			)
+>  		__field(	unsigned int,	depth		)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__entry->dev		= dev;
+> -		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
+> +		__assign_str(domain, domain);
+>  		__entry->depth		= depth;
+>  	),
+>  
+>  	TP_printk("%d,%d %s %u",
+> -		  MAJOR(__entry->dev), MINOR(__entry->dev), __entry->domain,
+> +		  MAJOR(__entry->dev), MINOR(__entry->dev), __get_str(domain),
+>  		  __entry->depth)
+>  );
+>  
+> @@ -76,16 +76,16 @@ TRACE_EVENT(kyber_throttled,
+>  
+>  	TP_STRUCT__entry(
+>  		__field(	dev_t,	dev			)
+> -		__array(	char,	domain,	DOMAIN_LEN	)
 
+Again, do not blindly change fixed size strings to dynamic size, as the
+code requires more work to do the dynamic allocation and takes up 4 more
+bytes to store the meta data holding the size and offset of the string.
+
+> +		__string(	domain,	domain			)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__entry->dev		= dev;
+> -		strlcpy(__entry->domain, domain, sizeof(__entry->domain));
+> +		__assign_str(domain, domain);
+>  	),
+>  
+>  	TP_printk("%d,%d %s", MAJOR(__entry->dev), MINOR(__entry->dev),
+> -		  __entry->domain)
+> +		  __get_str(domain))
+>  );
+>  
+>  #define _TRACE_KYBER_H
+> diff --git a/include/trace/events/task.h b/include/trace/events/task.h
+> index 64d160930b0d..48b1bb868a86 100644
+> --- a/include/trace/events/task.h
+> +++ b/include/trace/events/task.h
+> @@ -40,20 +40,20 @@ TRACE_EVENT(task_rename,
+>  	TP_STRUCT__entry(
+>  		__field(	pid_t,	pid)
+>  		__array(	char, oldcomm,  TASK_COMM_LEN)
+> -		__array(	char, newcomm,  TASK_COMM_LEN)
+> +		__string(	newcomm,	comm)
+
+NACK.
+
+>  		__field(	short,	oom_score_adj)
+>  	),
+>  
+>  	TP_fast_assign(
+>  		__entry->pid = task->pid;
+>  		memcpy(entry->oldcomm, task->comm, TASK_COMM_LEN);
+> -		strlcpy(entry->newcomm, comm, TASK_COMM_LEN);
+> +		__assign_str(newcomm, comm);
+>  		__entry->oom_score_adj = task->signal->oom_score_adj;
+>  	),
+>  
+>  	TP_printk("pid=%d oldcomm=%s newcomm=%s oom_score_adj=%hd",
+>  		__entry->pid, __entry->oldcomm,
+> -		__entry->newcomm, __entry->oom_score_adj)
+> +		__get_str(newcomm), __entry->oom_score_adj)
+>  );
+>  
+>  #endif
+> diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
+> index 9c66e59d859c..874404822575 100644
+> --- a/include/trace/events/wbt.h
+> +++ b/include/trace/events/wbt.h
+> @@ -19,7 +19,7 @@ TRACE_EVENT(wbt_stat,
+>  	TP_ARGS(bdi, stat),
+>  
+>  	TP_STRUCT__entry(
+> -		__array(char, name, 32)
+> +		__string(name, bdi_dev_name(bdi))
+
+Again, don't change these.
+
+>  		__field(s64, rmean)
+>  		__field(u64, rmin)
+>  		__field(u64, rmax)
+> @@ -33,8 +33,7 @@ TRACE_EVENT(wbt_stat,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		strlcpy(__entry->name, bdi_dev_name(bdi),
+> -			ARRAY_SIZE(__entry->name));
+> +		__assign_str(name, bdi_dev_name(bdi));
+>  		__entry->rmean		= stat[0].mean;
+>  		__entry->rmin		= stat[0].min;
+>  		__entry->rmax		= stat[0].max;
+> @@ -47,7 +46,7 @@ TRACE_EVENT(wbt_stat,
+>  
+>  	TP_printk("%s: rmean=%llu, rmin=%llu, rmax=%llu, rsamples=%llu, "
+>  		  "wmean=%llu, wmin=%llu, wmax=%llu, wsamples=%llu",
+> -		  __entry->name, __entry->rmean, __entry->rmin, __entry->rmax,
+> +		  __get_str(name), __entry->rmean, __entry->rmin, __entry->rmax,
+>  		  __entry->rnr_samples, __entry->wmean, __entry->wmin,
+>  		  __entry->wmax, __entry->wnr_samples)
+>  );
+> @@ -63,17 +62,16 @@ TRACE_EVENT(wbt_lat,
+>  	TP_ARGS(bdi, lat),
+>  
+>  	TP_STRUCT__entry(
+> -		__array(char, name, 32)
+> +		__string(name, bdi_dev_name(bdi))
+>  		__field(unsigned long, lat)
+>  	),
+>  
+>  	TP_fast_assign(
+> -		strlcpy(__entry->name, bdi_dev_name(bdi),
+> -			ARRAY_SIZE(__entry->name));
+> +		__assign_str(name, bdi_dev_name(bdi));
+>  		__entry->lat = div_u64(lat, 1000);
+>  	),
+>  
+> -	TP_printk("%s: latency %lluus", __entry->name,
+> +	TP_printk("%s: latency %lluus", __get_str(name),
+>  			(unsigned long long) __entry->lat)
+>  );
+>  
+> @@ -95,7 +93,7 @@ TRACE_EVENT(wbt_step,
+>  	TP_ARGS(bdi, msg, step, window, bg, normal, max),
+>  
+>  	TP_STRUCT__entry(
+> -		__array(char, name, 32)
+> +		__string(name, bdi_dev_name(bdi))
+>  		__field(const char *, msg)
+>  		__field(int, step)
+>  		__field(unsigned long, window)
+> @@ -105,8 +103,7 @@ TRACE_EVENT(wbt_step,
+>  	),
+>  
+>  	TP_fast_assign(
+> -		strlcpy(__entry->name, bdi_dev_name(bdi),
+> -			ARRAY_SIZE(__entry->name));
+> +		__assign_str(name, bdi_dev_name(bdi));
+>  		__entry->msg	= msg;
+>  		__entry->step	= step;
+>  		__entry->window	= div_u64(window, 1000);
+> @@ -116,7 +113,7 @@ TRACE_EVENT(wbt_step,
+>  	),
+>  
+>  	TP_printk("%s: %s: step=%d, window=%luus, background=%u, normal=%u, max=%u",
+> -		  __entry->name, __entry->msg, __entry->step, __entry->window,
+> +		  __get_str(name), __entry->msg, __entry->step, __entry->window,
+>  		  __entry->bg, __entry->normal, __entry->max)
+>  );
+>  
+> @@ -134,21 +131,20 @@ TRACE_EVENT(wbt_timer,
+>  	TP_ARGS(bdi, status, step, inflight),
+>  
+>  	TP_STRUCT__entry(
+> -		__array(char, name, 32)
+> +		__string(name, bdi_dev_name(bdi))
+>  		__field(unsigned int, status)
+>  		__field(int, step)
+>  		__field(unsigned int, inflight)
+>  	),
+>  
+>  	TP_fast_assign(
+> -		strlcpy(__entry->name, bdi_dev_name(bdi),
+> -			ARRAY_SIZE(__entry->name));
+> +		__assign_str(name, bdi_dev_name(bdi));
+>  		__entry->status		= status;
+>  		__entry->step		= step;
+>  		__entry->inflight	= inflight;
+>  	),
+>  
+> -	TP_printk("%s: status=%u, step=%d, inflight=%u", __entry->name,
+> +	TP_printk("%s: status=%u, step=%d, inflight=%u", __get_str(name),
+>  		  __entry->status, __entry->step, __entry->inflight)
+>  );
+>  
+
+The below changes can be sent as its own patch, and I can take it.
+
+-- Steve
+
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index ebc59781456a..28ccd0c9bdf0 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -196,7 +196,7 @@ static int boot_snapshot_index;
+>  
+>  static int __init set_cmdline_ftrace(char *str)
+>  {
+> -	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+> +	strscpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+>  	default_bootup_tracer = bootup_tracer_buf;
+>  	/* We are using ftrace early, expand it */
+>  	ring_buffer_expanded = true;
+> @@ -281,7 +281,7 @@ static char trace_boot_options_buf[MAX_TRACER_SIZE] __initdata;
+>  
+>  static int __init set_trace_boot_options(char *str)
+>  {
+> -	strlcpy(trace_boot_options_buf, str, MAX_TRACER_SIZE);
+> +	strscpy(trace_boot_options_buf, str, MAX_TRACER_SIZE);
+>  	return 1;
+>  }
+>  __setup("trace_options=", set_trace_boot_options);
+> @@ -291,7 +291,7 @@ static char *trace_boot_clock __initdata;
+>  
+>  static int __init set_trace_boot_clock(char *str)
+>  {
+> -	strlcpy(trace_boot_clock_buf, str, MAX_TRACER_SIZE);
+> +	strscpy(trace_boot_clock_buf, str, MAX_TRACER_SIZE);
+>  	trace_boot_clock = trace_boot_clock_buf;
+>  	return 1;
+>  }
+> @@ -2521,7 +2521,7 @@ static void __trace_find_cmdline(int pid, char comm[])
+>  	if (map != NO_CMDLINE_MAP) {
+>  		tpid = savedcmd->map_cmdline_to_pid[map];
+>  		if (tpid == pid) {
+> -			strlcpy(comm, get_saved_cmdlines(map), TASK_COMM_LEN);
+> +			strscpy(comm, get_saved_cmdlines(map), TASK_COMM_LEN);
+>  			return;
+>  		}
+>  	}
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 654ffa40457a..dc83a259915b 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -2831,7 +2831,7 @@ static __init int setup_trace_triggers(char *str)
+>  	char *buf;
+>  	int i;
+>  
+> -	strlcpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
+> +	strscpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
+>  	ring_buffer_expanded = true;
+>  	disable_tracing_selftest("running event triggers");
+>  
+> @@ -3621,7 +3621,7 @@ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
+>  
+>  static __init int setup_trace_event(char *str)
+>  {
+> -	strlcpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
+> +	strscpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
+>  	ring_buffer_expanded = true;
+>  	disable_tracing_selftest("running event tracing");
+>  
+> diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
+> index d6b4935a78c0..abe805d471eb 100644
+> --- a/kernel/trace/trace_events_inject.c
+> +++ b/kernel/trace/trace_events_inject.c
+> @@ -217,7 +217,7 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
+>  			char *addr = (char *)(unsigned long) val;
+>  
+>  			if (field->filter_type == FILTER_STATIC_STRING) {
+> -				strlcpy(entry + field->offset, addr, field->size);
+> +				strscpy(entry + field->offset, addr, field->size);
+>  			} else if (field->filter_type == FILTER_DYN_STRING ||
+>  				   field->filter_type == FILTER_RDYN_STRING) {
+>  				int str_len = strlen(addr) + 1;
+> @@ -232,7 +232,7 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
+>  				}
+>  				entry = *pentry;
+>  
+> -				strlcpy(entry + (entry_size - str_len), addr, str_len);
+> +				strscpy(entry + (entry_size - str_len), addr, str_len);
+>  				str_item = (u32 *)(entry + field->offset);
+>  				if (field->filter_type == FILTER_RDYN_STRING)
+>  					str_loc -= field->offset + field->size;
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 59cda19a9033..1b3fa7b854aa 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -30,7 +30,7 @@ static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
+>  
+>  static int __init set_kprobe_boot_events(char *str)
+>  {
+> -	strlcpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
+> +	strscpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
+>  	disable_tracing_selftest("running kprobe events");
+>  
+>  	return 1;
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 2d2616678295..73055ba8d8ef 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -254,7 +254,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+>  			trace_probe_log_err(offset, GROUP_TOO_LONG);
+>  			return -EINVAL;
+>  		}
+> -		strlcpy(buf, event, slash - event + 1);
+> +		strscpy(buf, event, slash - event + 1);
+>  		if (!is_good_system_name(buf)) {
+>  			trace_probe_log_err(offset, BAD_GROUP_NAME);
+>  			return -EINVAL;
 
