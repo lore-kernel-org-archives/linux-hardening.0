@@ -2,132 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0641BC77B7A
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 08:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9307CC77B7F
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 09:34:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230484AbjEPIhs (ORCPT
+        id S231283AbjEPJeG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 04:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        Tue, 16 May 2023 05:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231478AbjEPIhq (ORCPT
+        with ESMTP id S231759AbjEPJeF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 04:37:46 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2099.outbound.protection.outlook.com [40.107.212.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E4A4C3B;
-        Tue, 16 May 2023 01:37:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g23JEsSKQKWeSWzcsk6SxYuJ+d+NatKKMpJq9/102pkSN0l1ul0zygOTFnvSkoYOjKOaFEY1Ys1ALJ2QRQvzWfD7meFmuRf4b6PNoqToRKbBbGo3NXAGEA4GV8lhczeH8wg2H833puGBKX7lOUUqH0QZ5hfiN1oCmN7ovY964IIJgJvYJmYDkwdM18mJR5oD/sVtMu90uONeXOhNG921s5NCKhQEOCySz5/FSq4kTo4p6GPD+820Y4bWic7q+/lGEnCP93JcsRmsoCYU6ZRj8eq3THhh0JVnBlO+igcSXClGogiOtUOpupL4SjYMflXoFp77FugaVAYEfSqyZL0NEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=t6L/buSjQTz29cSfQVXuu5fAv2EIC8EKt7/nOgvLYqQ=;
- b=cUx7DBp/OaR9428NjbMYZj90YE3pLX9lE2FCkJursxMHq9Tja/G4+DIKVOkq++k6EwC6opaNH2jBIz//RE/rhbmuwxF7CGBW7dj9PBeAgALFfMiXDtqxzN4/lpHvFoCYonKEaAYkeC/E6/CEvdxpP7SxGWnALvjU0f5glTXprw4llx88cxDfhYb2aBCHv4+mXc9IlPeHmgnoOrW+mN/AuTc6JebOxXQlCz/z/v6tH/p/zIl3Scr7WP/88pZJa+nc5CcY64VTnkWLtyr3taewhCnVzN0fn8Ze9g4dWywvxoGwpItYG0PfeZCi/QX0FXS5f3MoBeVj3C/8PXD8wSnKLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
- dkim=pass header.d=corigine.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t6L/buSjQTz29cSfQVXuu5fAv2EIC8EKt7/nOgvLYqQ=;
- b=F+M91k9nA1LcjvnpGaA6V4f5RF5FDDE8+36dfxnD09fcnhnYZPwnc8UtKvGg95sUIm/DMJBN1MdUOUsns86L/kyZO5jwJ+XLozTRE3Agw/X2i5idwsu5zaLiTKqmga32XvAeOt3AmrNA6LY1+WUCyFYft4iAlRiDIfTCNQKBJ94=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=corigine.com;
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
- by CH2PR13MB3669.namprd13.prod.outlook.com (2603:10b6:610:a1::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.33; Tue, 16 May
- 2023 08:37:32 +0000
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::f416:544d:18b7:bb34]) by PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::f416:544d:18b7:bb34%5]) with mapi id 15.20.6387.033; Tue, 16 May 2023
- 08:37:32 +0000
-Date:   Tue, 16 May 2023 10:37:25 +0200
-From:   Simon Horman <simon.horman@corigine.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] wifi: wil6210: wmi: Replace zero-length array with
- DECLARE_FLEX_ARRAY() helper
-Message-ID: <ZGNAxZgv7SKXig3q@corigine.com>
-References: <ZGKHM+MWFsuqzTjm@work>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZGKHM+MWFsuqzTjm@work>
-X-ClientProxiedBy: AS4P191CA0022.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d9::13) To PH0PR13MB4842.namprd13.prod.outlook.com
- (2603:10b6:510:78::6)
+        Tue, 16 May 2023 05:34:05 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93546E53
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 02:34:03 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-135-X5UBcpsYPH-IDE9hxwtcdQ-1; Tue, 16 May 2023 10:34:00 +0100
+X-MC-Unique: X5UBcpsYPH-IDE9hxwtcdQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 16 May
+ 2023 10:33:58 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Tue, 16 May 2023 10:33:58 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Azeem Shaikh' <azeemshaikh38@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>
+CC:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3] NFSD: Remove open coding of string copy
+Thread-Topic: [PATCH v3] NFSD: Remove open coding of string copy
+Thread-Index: AQHZhtarLR7mMXSOG0mD9inDFwvZGq9cpMAQ
+Date:   Tue, 16 May 2023 09:33:58 +0000
+Message-ID: <d48a166d1cbc477f9cf063e91f7b3005@AcuMS.aculab.com>
+References: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|CH2PR13MB3669:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5bd84928-8823-45c4-03c4-08db55e8ca4e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +UXf9iGU0vgZ4L7QIaanWFr9ffFAANyVMQ1eEXinMF78a4cQZIfvYckIE6nWpfFXtsqG1TDuws5Qh+wOJfUqpWks2Zd41xEgH8YwyRPzHpHUP6qAdYtKm1wglNofK1bUNYkeCUSl5qVHc1ODjzldBD0QWBerc/EtpqZIGqnBfDq+SUC1IVfmcYtxYMZXMeVttotXZHlerDuV5V//2gq0AagDlMx+EnWaGPU169Rd+I7Y73FyoeZYxn7ufZuETUSCGdrxX+XRuniIbL8m2j/sKxl78iQlspcbTxXxILknHEbh27C2lDp9jEUR5UHzwhfT0WY7ewjpqkhEUGLR8JO/mvUI5S2DPrImxSkWpU7Z+wljOdHdQ/zcgGYtIZq+kRhV3q3Q+o0oYBkTcHV5Xhn3k+5b+yuw+5QfOWCpW91E00PMSFFSGsVAnwAyPwl+tYhmVhwXRXN3mDPZhc4IjI8ZKn7iWOZxDxeDdeUV+F4uSnF9aJFP0zi2S9xl2OzS/XgmrAynvjz9quIFC6QGRQx8i+DAQnW027yyWdqNNZnQS9I=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(366004)(376002)(346002)(39840400004)(451199021)(38100700002)(36756003)(86362001)(316002)(6916009)(41300700001)(4326008)(186003)(5660300002)(6506007)(8936002)(8676002)(7416002)(54906003)(6512007)(44832011)(4744005)(2616005)(2906002)(66946007)(66476007)(966005)(66556008)(6666004)(6486002)(478600001)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+0UlobRGZPlZnp0eorAFIafAo5xXnQCg2firtzsDCroNBwcbpzq8nSgp2wXz?=
- =?us-ascii?Q?f3kQriIiC10WyXCOoNpA9mQSn1pXG5RNxyLvHkCFoAsJwRg5ItIjKapmFbwO?=
- =?us-ascii?Q?7vW0MWEef/Da4E2x1lvrcnlWX/6Vdcir9z3FhGNHSMKd1ImEXFVrdvIgsMfh?=
- =?us-ascii?Q?f4Jp5Bidp9k8XW0P+Tr2ajDrwOCAENrZ1oOqtjZ/zuhuiHe88Pugji+HOQiO?=
- =?us-ascii?Q?XQACvR7PSLNIsTJ4VCQzzo56qMzGxMRudBg5rNqhfLCn/boudymILQorK03P?=
- =?us-ascii?Q?Yh7Y3FX2rHKjorTUduSKxFmgxip4ug4WDE4Y9UG67QqfoyuerTAde72oUNzj?=
- =?us-ascii?Q?5hmV+VDwGUMhLvEGUxDcipveMZwpfSC7WkIaxsyOIwyOtqrHWbNhAy6Tyb4/?=
- =?us-ascii?Q?DcIln7Nc8AniuUQ8jxacSYyolLwaflDOxNRN/4tDvGhIwK9toUhInU+L4pN3?=
- =?us-ascii?Q?XI+z3rQg2tNxLLZSt2v+KxQHKm5s8nOPNHgIiWbdaesSUfAHSRs37uFjDMXv?=
- =?us-ascii?Q?P55WO6iMt9IrJd5Bi6v3GHHleSGIwXRvyJHp96OMcwFLy0jQ4PQyuRNRccsv?=
- =?us-ascii?Q?Xqbc4kqeP73pXsVhz4SGg8mo6/FgcZChkXaQguSv31yKaxUni4pLs6w/KGOs?=
- =?us-ascii?Q?sSNMo77QEw4uPp+Yq3JBJNwqDPPByjZb+m6YFEZjtOM06B+A7deR9UjseUFY?=
- =?us-ascii?Q?riellz4KNjG7ZU9bD2NGs5yG4Njj95ZmfMSVy5ZeGGNA+aSZFUv89/uTcIj2?=
- =?us-ascii?Q?4dUtaa+/irW875WlJSs8JwZalQ5CMtlW7dQlXryXCT5jB1z84UO2jbpWIdq+?=
- =?us-ascii?Q?f4xFzML6mBf7/dIthqsWzg7AKl3QLbRQPzfNRmiWqcvv7cxOOONpDYGpVuG/?=
- =?us-ascii?Q?yvqk38gOYtlLca8VlK9nIu4JOUjzgds5GidfcBJz0gWnhgez17t0jOIXZBSp?=
- =?us-ascii?Q?/H8SH8JLps53TjrN9XdIdlDGdE85zeC/Np6d28xLEQyE4gHm7FvDk8hKN5uw?=
- =?us-ascii?Q?ym4ypfRGwxsJWCtT0ydrkQIh4DDZ5sHn0IPzH60kjE/t0TunijRLjCGS44+e?=
- =?us-ascii?Q?SboBy2m+OOl6scKD6OYe7oYm5hSAYN4rI7MPMArT5tw+q9fX67PAkBQo8nDM?=
- =?us-ascii?Q?Xl73pZsrMKJO/0rViIjPB2GEUtLwh5JK0OmtKEj1xXE9YpKMTEssrozhCI6V?=
- =?us-ascii?Q?T6G0ODkT6ussGtWdca5iqGpp/W4/t16pZxSsfP5VZJWfUcKUqonaYrwNH/Pc?=
- =?us-ascii?Q?UfubyPTKLjsqPLsj8R2H1eZR+TDzcw+ziflyfFBX8kI1aahXNzY7vMTUzvBt?=
- =?us-ascii?Q?zSKKqyrunUmXmbXHaEUJar21pirwpcciPySUfnPixm6W0dgfb6JCBAIFUq32?=
- =?us-ascii?Q?tdles5EGnu1IJrVqNXP2zn8H2k3gkjztne3TCZEesGhLiLl1GBTK7ya3d49i?=
- =?us-ascii?Q?wQHYAQPb3RI3XsjzVhcDADZAN/lcvrkQfDPJP/Xbbu52eR+xI3V6o9D5vCMV?=
- =?us-ascii?Q?ivoA/4NKQCf5a93FXZKySeBksJVtAUKj44pNZXJbawi0i/kJLT2VHcTTVgts?=
- =?us-ascii?Q?4OEX20o0NsPS098ySm9CktJj9V8gaOHQrBBQTpkjr6AypZvEtJq0JmD+vWVl?=
- =?us-ascii?Q?gfw/IDx/wJTm0Oyo3AiYWwA8ygYxTJe8HqL45+Iv8S4NreTj/HkvxBAMlyem?=
- =?us-ascii?Q?2dxG9g=3D=3D?=
-X-OriginatorOrg: corigine.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5bd84928-8823-45c4-03c4-08db55e8ca4e
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2023 08:37:31.9367
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QAmBe/IzkAUKjrQGBco1GMCjTGe4nCOWhBvyXPrdZccGHDTG0LvPAUFRUhpS+jcOhCFPjhAGpPVlB7/Cf7JvbteCcXk3OxalNKkFnDwMd9M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3669
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 15, 2023 at 01:25:39PM -0600, Gustavo A. R. Silva wrote:
-> Zero-length arrays are deprecated, and we are moving towards adopting
-> C99 flexible-array members, instead. So, replace zero-length arrays
-> declarations alone in structs with the new DECLARE_FLEX_ARRAY()
-> helper macro.
+From: Azeem Shaikh
+> Sent: 15 May 2023 03:41
 > 
-> This helper allows for flexible-array members alone in structs.
-> 
-> Link: https://github.com/KSPP/linux/issues/193
-> Link: https://github.com/KSPP/linux/issues/288
-> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Instead of open coding a __dynamic_array(), use the __string() and
+> __assign_str() helper macros that exist for this kind of use case.
 
-Reviewed-by: Simon Horman <simon.horman@corigine.com>
+Is this actually a dynamic array, or just a char[8] ?
+On 64 bit copying a short fixed-length string is far better
+than any kind of dynamic sized allocation.
+
+	David
+
+> 
+> Part of an effort to remove deprecated strlcpy() [1] completely from the
+> kernel[2].
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> ---
+>  fs/nfsd/trace.h |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 4183819ea082..72a906a053dc 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -1365,19 +1365,19 @@ TRACE_EVENT(nfsd_cb_setup,
+>  		__field(u32, cl_id)
+>  		__field(unsigned long, authflavor)
+>  		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
+> -		__array(unsigned char, netid, 8)
+> +		__string(netid, netid)
+>  	),
+>  	TP_fast_assign(
+>  		__entry->cl_boot = clp->cl_clientid.cl_boot;
+>  		__entry->cl_id = clp->cl_clientid.cl_id;
+> -		strlcpy(__entry->netid, netid, sizeof(__entry->netid));
+> +		__assign_str(netid, netid);
+>  		__entry->authflavor = authflavor;
+>  		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
+>  				  clp->cl_cb_conn.cb_addrlen)
+>  	),
+>  	TP_printk("addr=%pISpc client %08x:%08x proto=%s flavor=%s",
+>  		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
+> -		__entry->netid, show_nfsd_authflavor(__entry->authflavor))
+> +		__get_str(netid), show_nfsd_authflavor(__entry->authflavor))
+>  );
+> 
+>  TRACE_EVENT(nfsd_cb_setup_err,
+> --
+> 2.40.1.606.ga4b1b128d6-goog
+> 
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
