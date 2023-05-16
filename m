@@ -2,92 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94470C7EE23
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 20:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A433C7EE23
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 20:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjEPUIt (ORCPT
+        id S229961AbjEPULT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 16:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58220 "EHLO
+        Tue, 16 May 2023 16:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229768AbjEPUIr (ORCPT
+        with ESMTP id S229648AbjEPULS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 16:08:47 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BEFE6EB1
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:08:45 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-24e1d272b09so67335a91.1
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:08:45 -0700 (PDT)
+        Tue, 16 May 2023 16:11:18 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4226EB1
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:11:17 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1aaebed5bd6so636105ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:11:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684267725; x=1686859725;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=u/V262qUw8XfF74g/94L9IkQoQb0N+5s9JpBNYIOMEA=;
-        b=bnALCqwxahspYiDsnD2PGqKtgwldIRdNo0VP23zL3wOvjH/is3DvQ9CoNkXBPWId9S
-         NoVsQmQhLs4CWxtdpZ1ESPDhZotmLPf7b6pt0ngExFaKxyE3s/NaYNMXxrovY94oSM/h
-         bLxopQw8iITqoQAiG/LEFjSNUhdlf6rH6bGqA=
+        d=chromium.org; s=google; t=1684267877; x=1686859877;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nLgrvnIbTez+ozLofGFvlDwgzYOgc3jwqI2qiIMZDlc=;
+        b=fwxxiq7jxyRdl/2cy/Sv+GQ5mQiGF2Lstfp3s18yImRvFgABuVehmXn56JwCzbRdhQ
+         KKufXmevtlLM+BTCz8VLc/cV+T/YAzLqsHnyHdPBjeUiw9eAvpKfIulQlnKV0CKwMsFA
+         jKjaL6cYIgkSXEiU+Ok8enWf1b1VtTDsVqZng=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684267725; x=1686859725;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u/V262qUw8XfF74g/94L9IkQoQb0N+5s9JpBNYIOMEA=;
-        b=BuvQYVbevA6j9lU/DxxchLxgXOejK2dOvMP+TGl8ikMyj4hK0rs1JgaWP5DdtA3LgV
-         E/F9OqmOeUK99lgFkTS/VmSdqMcanqQrREXPKnD/fcjFKoSTK/uqldGh6zIco92rpYph
-         YQJhAXehvu9Yz3fCu+NwN1/V/0sds8A86Nrl8WqfRCclj9M0XCIgYK8MNl4TiokAxTJI
-         QpRG65aYj1mJ2TtZfkkmR4X56XxS3k/7N+NdiXtlh2NVLrZEg/dhGGMzLO7QOKmmMudW
-         +Vjx7roMcSsrhBMMSDKFT1FegU/iQRAppdoDlRkj0G1RCFef4DTmJvXimVbGPcyq/vmf
-         RlWA==
-X-Gm-Message-State: AC+VfDwrTq6RdkSdyeFgbjS6f45GqsdJvNtNqKLsL4ze6rCs0EiO+czj
-        z7VdDNblQwb2Yy1o70baFwFs8A==
-X-Google-Smtp-Source: ACHHUZ6zYFxFN3um3mtqJr+uTQ5/Uy0JJzJJ5VCvYr/ssY4KnXlflGz6rnLj2XWp6sVUGOYly/A+uA==
-X-Received: by 2002:a17:90b:234f:b0:250:2d63:7b79 with SMTP id ms15-20020a17090b234f00b002502d637b79mr39485711pjb.43.1684267725084;
-        Tue, 16 May 2023 13:08:45 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684267877; x=1686859877;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nLgrvnIbTez+ozLofGFvlDwgzYOgc3jwqI2qiIMZDlc=;
+        b=OKsd7cJoW470B0bSZVFxmJLPlYxXmrKtJFRrF+Wm028d45RoxquxxOT0ApjgAbQ1GK
+         uBuNzS1QTglwIgDr9fl3bmL7wOaeQOH80oNN6Sj0VwxnESIklwlori6jk8956G/iHbIw
+         gJknuXK4ajBZdwCeUl/gCb67jIqMZEe5lzGheF9fuiyN3bSp5J9p7fMd2TJNkPLewMuQ
+         WUFtBg008Pm3URUDrudhveaLBchNrADPvhujdKgA4AMyhRafikv0C4Nv3+rw5ygINFe1
+         wpJQzxX7o/TfKHkNc6XQN7vLzeAE4pGvJbp5W7cIsQ3qxJOhvsqmKqCPTX6cLaKriV/f
+         r4Lw==
+X-Gm-Message-State: AC+VfDzjkD3z6tqCtcw6ZsmDBhhbNFa1KkHaEN/3T63aEZqfY9Vwa8+O
+        XTGNfVD8fNlawIqOIMCorq3ENQ==
+X-Google-Smtp-Source: ACHHUZ77IQniMgR4Y8NUBFcCMRu/KSrWXIuCgUNNDXjyikpYHkbmnL7WvFx0Bd2z/BIHgQdZGCLeMQ==
+X-Received: by 2002:a17:902:8c98:b0:1ad:be4d:5dfe with SMTP id t24-20020a1709028c9800b001adbe4d5dfemr21153767plo.27.1684267877266;
+        Tue, 16 May 2023 13:11:17 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c6-20020a170902c1c600b001a194df5a58sm15983487plc.167.2023.05.16.13.08.44
+        by smtp.gmail.com with ESMTPSA id p15-20020a1709027ecf00b001a1a07d04e6sm16019154plb.77.2023.05.16.13.11.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 13:08:44 -0700 (PDT)
-Date:   Tue, 16 May 2023 13:08:44 -0700
+        Tue, 16 May 2023 13:11:15 -0700 (PDT)
+Date:   Tue, 16 May 2023 13:11:14 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     jeffxu@chromium.org
-Cc:     dave.hansen@intel.com, luto@kernel.org, jorgelo@chromium.org,
-        groeck@chromium.org, jannh@google.com, sroettger@google.com,
-        akpm@linux-foundation.org, jeffxu@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
-Message-ID: <202305161307.4A16BB6A47@keescook>
-References: <20230515130553.2311248-1-jeffxu@chromium.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Replace all non-returning strlcpy with
+ strscpy
+Message-ID: <202305161311.0A9B37E131@keescook>
+References: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230515130553.2311248-1-jeffxu@chromium.org>
+In-Reply-To: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 15, 2023 at 01:05:46PM +0000, jeffxu@chromium.org wrote:
-> This patch introduces a new flag, PKEY_ENFORCE_API, to the pkey_alloc()
-> function. When a PKEY is created with this flag, it is enforced that any
-> thread that wants to make changes to the memory mapping (such as mprotect)
-> of the memory must have write access to the PKEY. PKEYs created without
-> this flag will continue to work as they do now, for backwards 
-> compatibility.
+On Tue, May 16, 2023 at 02:39:56PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
 > 
-> Only PKEY created from user space can have the new flag set, the PKEY
-> allocated by the kernel internally will not have it. In other words,
-> ARCH_DEFAULT_PKEY(0) and execute_only_pkey won’t have this flag set,
-> and continue work as today.
+> No return values were used, so direct replacement with strlcpy is safe.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-Cool! Yeah, this looks like it could become quite useful. I assume
-V8 folks are on board with this API, etc?
-
-> This set of patch covers mprotect/munmap, I plan to work on other 
-> syscalls after this. 
-
-Which ones are on your list currently?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
