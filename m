@@ -2,86 +2,168 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A433C7EE23
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 20:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48624C77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 20:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229961AbjEPULT (ORCPT
+        id S230094AbjEPUQ5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 16:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59310 "EHLO
+        Tue, 16 May 2023 16:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbjEPULS (ORCPT
+        with ESMTP id S229568AbjEPUQx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 16:11:18 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4226EB1
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:11:17 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1aaebed5bd6so636105ad.1
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684267877; x=1686859877;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nLgrvnIbTez+ozLofGFvlDwgzYOgc3jwqI2qiIMZDlc=;
-        b=fwxxiq7jxyRdl/2cy/Sv+GQ5mQiGF2Lstfp3s18yImRvFgABuVehmXn56JwCzbRdhQ
-         KKufXmevtlLM+BTCz8VLc/cV+T/YAzLqsHnyHdPBjeUiw9eAvpKfIulQlnKV0CKwMsFA
-         jKjaL6cYIgkSXEiU+Ok8enWf1b1VtTDsVqZng=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684267877; x=1686859877;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nLgrvnIbTez+ozLofGFvlDwgzYOgc3jwqI2qiIMZDlc=;
-        b=OKsd7cJoW470B0bSZVFxmJLPlYxXmrKtJFRrF+Wm028d45RoxquxxOT0ApjgAbQ1GK
-         uBuNzS1QTglwIgDr9fl3bmL7wOaeQOH80oNN6Sj0VwxnESIklwlori6jk8956G/iHbIw
-         gJknuXK4ajBZdwCeUl/gCb67jIqMZEe5lzGheF9fuiyN3bSp5J9p7fMd2TJNkPLewMuQ
-         WUFtBg008Pm3URUDrudhveaLBchNrADPvhujdKgA4AMyhRafikv0C4Nv3+rw5ygINFe1
-         wpJQzxX7o/TfKHkNc6XQN7vLzeAE4pGvJbp5W7cIsQ3qxJOhvsqmKqCPTX6cLaKriV/f
-         r4Lw==
-X-Gm-Message-State: AC+VfDzjkD3z6tqCtcw6ZsmDBhhbNFa1KkHaEN/3T63aEZqfY9Vwa8+O
-        XTGNfVD8fNlawIqOIMCorq3ENQ==
-X-Google-Smtp-Source: ACHHUZ77IQniMgR4Y8NUBFcCMRu/KSrWXIuCgUNNDXjyikpYHkbmnL7WvFx0Bd2z/BIHgQdZGCLeMQ==
-X-Received: by 2002:a17:902:8c98:b0:1ad:be4d:5dfe with SMTP id t24-20020a1709028c9800b001adbe4d5dfemr21153767plo.27.1684267877266;
-        Tue, 16 May 2023 13:11:17 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p15-20020a1709027ecf00b001a1a07d04e6sm16019154plb.77.2023.05.16.13.11.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 13:11:15 -0700 (PDT)
-Date:   Tue, 16 May 2023 13:11:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Replace all non-returning strlcpy with
- strscpy
-Message-ID: <202305161311.0A9B37E131@keescook>
-References: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
+        Tue, 16 May 2023 16:16:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60EFE1BE;
+        Tue, 16 May 2023 13:16:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E9BD763D86;
+        Tue, 16 May 2023 20:16:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F241FC433D2;
+        Tue, 16 May 2023 20:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684268205;
+        bh=TX21/LnZTnFYt/KzhqOgAcDna4xbf0dO5gIfq+6X2d0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CPkZpwmAyljr5hYRCZp41+IlxyJGnUUUY2PFiF8wDiKwZlCtSQKCOXwYYENGVaQOc
+         kvHM0N4e7sd4jRj4SgVz4Or7IWVEZSpj3dKPvEBPPbqIRMKkapVb/VK6dVHdir8CGJ
+         Tape4j6t+vE1wKyXLHUPVZaF4P574p+OSCURexJrpvkzU0lqOp6hlJ1WXcBJW4rJig
+         MqsWP57fV+6O+HUmAoW5JTGb2UtsyCIXdQDqZdQY8/Q0THfo8oQj5vvCq2WmKognTY
+         inkeYx7MhkBfJZYpqb1EfecGvUzuYE2cpc16bIEGu5FMyouEuCR/PZNwdrxc+TsgDf
+         lXKzkYBdIN+8Q==
+Date:   Tue, 16 May 2023 14:17:32 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] media: venus: Replace one-element arrays with
+ flexible-array members
+Message-ID: <ZGPk3PpvYzjD1+0/@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 16, 2023 at 02:39:56PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> 
-> No return values were used, so direct replacement with strlcpy is safe.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+One-element arrays are deprecated, and we are replacing them with flexible
+array members instead. So, replace one-element arrays with flexible-array
+members in multiple structures, and refactor the rest of the code,
+accordingly.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
+This results in no differences in binary output.
+
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/291
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/media/platform/qcom/venus/hfi_msgs.c |  4 ++--
+ drivers/media/platform/qcom/venus/hfi_msgs.h | 14 +++++++-------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.c b/drivers/media/platform/qcom/venus/hfi_msgs.c
+index df96db3761a7..6efd78606d9b 100644
+--- a/drivers/media/platform/qcom/venus/hfi_msgs.c
++++ b/drivers/media/platform/qcom/venus/hfi_msgs.c
+@@ -233,7 +233,7 @@ static void hfi_sys_init_done(struct venus_core *core, struct venus_inst *inst,
+ 		goto done;
+ 	}
+ 
+-	rem_bytes = pkt->hdr.size - sizeof(*pkt) + sizeof(u32);
++	rem_bytes = pkt->hdr.size - sizeof(*pkt);
+ 	if (rem_bytes <= 0) {
+ 		/* missing property data */
+ 		error = HFI_ERR_SYS_INSUFFICIENT_RESOURCES;
+@@ -434,7 +434,7 @@ static void hfi_session_init_done(struct venus_core *core,
+ 	if (!IS_V1(core))
+ 		goto done;
+ 
+-	rem_bytes = pkt->shdr.hdr.size - sizeof(*pkt) + sizeof(u32);
++	rem_bytes = pkt->shdr.hdr.size - sizeof(*pkt);
+ 	if (rem_bytes <= 0) {
+ 		error = HFI_ERR_SESSION_INSUFFICIENT_RESOURCES;
+ 		goto done;
+diff --git a/drivers/media/platform/qcom/venus/hfi_msgs.h b/drivers/media/platform/qcom/venus/hfi_msgs.h
+index 510513697335..8c2e17b0d36f 100644
+--- a/drivers/media/platform/qcom/venus/hfi_msgs.h
++++ b/drivers/media/platform/qcom/venus/hfi_msgs.h
+@@ -50,7 +50,7 @@ struct hfi_msg_event_notify_pkt {
+ 	u32 event_id;
+ 	u32 event_data1;
+ 	u32 event_data2;
+-	u32 ext_event_data[1];
++	u32 ext_event_data[];
+ };
+ 
+ struct hfi_msg_event_release_buffer_ref_pkt {
+@@ -63,7 +63,7 @@ struct hfi_msg_sys_init_done_pkt {
+ 	struct hfi_pkt_hdr hdr;
+ 	u32 error_type;
+ 	u32 num_properties;
+-	u32 data[1];
++	u32 data[];
+ };
+ 
+ struct hfi_msg_sys_pc_prep_done_pkt {
+@@ -81,7 +81,7 @@ struct hfi_msg_session_init_done_pkt {
+ 	struct hfi_session_hdr_pkt shdr;
+ 	u32 error_type;
+ 	u32 num_properties;
+-	u32 data[1];
++	u32 data[];
+ };
+ 
+ struct hfi_msg_session_end_done_pkt {
+@@ -228,7 +228,7 @@ struct hfi_msg_session_parse_sequence_header_done_pkt {
+ 	struct hfi_session_hdr_pkt shdr;
+ 	u32 error_type;
+ 	u32 num_properties;
+-	u32 data[1];
++	u32 data[];
+ };
+ 
+ struct hfi_msg_session_property_info_pkt {
+@@ -247,7 +247,7 @@ struct hfi_msg_session_release_buffers_done_pkt {
+ 	struct hfi_session_hdr_pkt shdr;
+ 	u32 error_type;
+ 	u32 num_buffers;
+-	u32 buffer_info[1];
++	u32 buffer_info[];
+ };
+ 
+ struct hfi_msg_sys_debug_pkt {
+@@ -256,7 +256,7 @@ struct hfi_msg_sys_debug_pkt {
+ 	u32 msg_size;
+ 	u32 time_stamp_hi;
+ 	u32 time_stamp_lo;
+-	u8 msg_data[1];
++	u8 msg_data[];
+ };
+ 
+ struct hfi_msg_sys_coverage_pkt {
+@@ -264,7 +264,7 @@ struct hfi_msg_sys_coverage_pkt {
+ 	u32 msg_size;
+ 	u32 time_stamp_hi;
+ 	u32 time_stamp_lo;
+-	u8 msg_data[1];
++	u8 msg_data[];
+ };
+ 
+ struct venus_core;
 -- 
-Kees Cook
+2.34.1
+
