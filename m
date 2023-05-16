@@ -2,175 +2,175 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD0FC77B7F
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 19:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ABFDC77B7A
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 20:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbjEPTeQ (ORCPT
+        id S229717AbjEPUHD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 15:34:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
+        Tue, 16 May 2023 16:07:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjEPTeP (ORCPT
+        with ESMTP id S229511AbjEPUHC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 15:34:15 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F753C33
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 12:34:13 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-64388cf3263so10350383b3a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 12:34:13 -0700 (PDT)
+        Tue, 16 May 2023 16:07:02 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFCDF6A4C
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:07:00 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-51b33c72686so10172040a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684265653; x=1686857653;
+        d=chromium.org; s=google; t=1684267620; x=1686859620;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NjomB45/tUXiCEV6Zx/tTP1f+pkWwWrPq8cCPi1RJqc=;
-        b=bNHc1U0CtPLI3FNYS2/3S7VOUmvNc8ETG2uTFHiP/LSmRcJAmNmEa1HQKz+0QsyCYV
-         3LJuktipJLdpM/MdCXUc32xdnPqgSUNSmKg5rGOpcm325DRNUYPUPtaRhkMspnvwt+oR
-         bB+y6nAPpHmohxYRaYqX0u/i97y1iy2CyL9sQ=
+        bh=/QuCuVjhhcOO3Zea8Ojz72a0aDME+xDMZBjsMgaOVPM=;
+        b=Xnhb742HBOFC+of4j29jqaBDFsMcnI2bBWd2I/rn2BPnPk+DXMds2VZTMFH3h+70b7
+         qJlfias3tguctur3g0m0oImJ3aVRiO8XaNedAn6a5mMRBF2q+hwKHlNrmoz+tnv32Cxr
+         tIShdQ3TA1x3sxS+Hq0LsMhE8Wa49Mq+bwx5Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684265653; x=1686857653;
+        d=1e100.net; s=20221208; t=1684267620; x=1686859620;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NjomB45/tUXiCEV6Zx/tTP1f+pkWwWrPq8cCPi1RJqc=;
-        b=OMfkD1ra41nzkoCZQcP+fHnVn8EC8H2Db/hDVHhPFZQ+nKBRdj/vPu5cWPILtpnHjs
-         N+3UAFJ4IlrWHJV+tS/ADPbiNQIwHa0FVyfvysDjWdHSZVPimKFDkuz2yWdHwlBgaQfV
-         hvJ/Aj8YFbDaOqbeJctnfYUXapeXFkbaSfvQPfgtQ4OkoHGZOtlSnUcAeyc6AZx2kykN
-         7mCMWxu4Zlqc7crKTzaq0thMY7NuoNyfNQAJDzDU9wgZNtVjE5vc1BLGVEWJIayOx8CO
-         KOZP62vXlLYUZ3n19ieGWzqxnjvJcpGdGFwS6KQ0HzZ+i6fFI9IoH2XrQLfqMh1tKP0x
-         9M3A==
-X-Gm-Message-State: AC+VfDxb7IvG3XZc0ntHLR8gTeNX9GZrQBeIAmbAPp5S5gs4vE7r9ErE
-        u7TtsUw7s1lqF2AyC/HU4jdG1Q==
-X-Google-Smtp-Source: ACHHUZ58B7WESNKne+9oMKYnTHer8L35nMXOvyVf4ZrSBq07pY0pLhMKLIfNUzXFqoCSIzJ7rgsnDw==
-X-Received: by 2002:a05:6a00:1141:b0:64a:ff32:7349 with SMTP id b1-20020a056a00114100b0064aff327349mr16158832pfm.32.1684265652878;
-        Tue, 16 May 2023 12:34:12 -0700 (PDT)
+        bh=/QuCuVjhhcOO3Zea8Ojz72a0aDME+xDMZBjsMgaOVPM=;
+        b=XsQNqxHQsJmIjzK7fosr1QDxZGBb67V3Ix3Jw5iFwOXZF3T/BfKkpGJoxOE3bwmMop
+         XDL52LSSAf2IXllcrOpuH2tDVVNVdCuJUutyGZJVY9i5oCgOdNN/5183XaJwRihjay2T
+         hKwixBGFsFTpxgxYgn33Cfxm9C02PzdkwnSbKbL0iHeBIbUNsOciezmO9fGNewWqgBQk
+         /psrBTde5X46xTW1PLM7jEub2Kfq38ktgztbWYXw7fqAPwzVnhklII4f6u6Ipdj19qVn
+         Ba9Y0bhOwSRZHXjt6QKr6elXw/bVIzUgeEQLDRxco9PYIIYOpwq5R0+er04I6kKf3VfJ
+         qLTw==
+X-Gm-Message-State: AC+VfDwpoxXYdTUQG79NAkkDWskp0oY9A0QawBjjTG2qQc2R2xbj1MR2
+        VnBQiBow/MQRYpk+Qqq7x3wHog==
+X-Google-Smtp-Source: ACHHUZ61o74nD4V5qCSGwRh6aCfStbDhEb2FBGoOYWddCCvlaJZ07qYwJhvr1vAOJVXOZ4rnCA8s2g==
+X-Received: by 2002:a05:6a00:98a:b0:643:85a0:57fe with SMTP id u10-20020a056a00098a00b0064385a057femr59504516pfg.2.1684267620306;
+        Tue, 16 May 2023 13:07:00 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g19-20020aa78753000000b00634b91326a9sm14259716pfo.143.2023.05.16.12.34.11
+        by smtp.gmail.com with ESMTPSA id fe25-20020a056a002f1900b0062dfe944c61sm13654396pfb.218.2023.05.16.13.06.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 12:34:12 -0700 (PDT)
-Date:   Tue, 16 May 2023 12:34:11 -0700
+        Tue, 16 May 2023 13:06:59 -0700 (PDT)
+Date:   Tue, 16 May 2023 13:06:58 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "GONG, Ruiqi" <gongruiqi1@huawei.com>, Jann Horn <jannh@google.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>
-Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
-Message-ID: <202305161204.CB4A87C13@keescook>
-References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
+To:     jeffxu@chromium.org
+Cc:     dave.hansen@intel.com, luto@kernel.org, jorgelo@chromium.org,
+        groeck@chromium.org, jannh@google.com, sroettger@google.com,
+        akpm@linux-foundation.org, jeffxu@google.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 5/6] KEY: Apply PKEY_ENFORCE_API to munmap
+Message-ID: <202305161302.16BF756DEA@keescook>
+References: <20230515130553.2311248-1-jeffxu@chromium.org>
+ <20230515130553.2311248-6-jeffxu@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230508075507.1720950-1-gongruiqi1@huawei.com>
+In-Reply-To: <20230515130553.2311248-6-jeffxu@chromium.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-For new CCs, the start of this thread is here[0].
-
-On Mon, May 08, 2023 at 03:55:07PM +0800, GONG, Ruiqi wrote:
-> When exploiting memory vulnerabilities, "heap spraying" is a common
-> technique targeting those related to dynamic memory allocation (i.e. the
-> "heap"), and it plays an important role in a successful exploitation.
-> Basically, it is to overwrite the memory area of vulnerable object by
-> triggering allocation in other subsystems or modules and therefore
-> getting a reference to the targeted memory location. It's usable on
-> various types of vulnerablity including use after free (UAF), heap out-
-> of-bound write and etc.
-
-I heartily agree we need some better approaches to deal with UAF, and
-by extension, heap spraying.
-
-> There are (at least) two reasons why the heap can be sprayed: 1) generic
-> slab caches are shared among different subsystems and modules, and
-> 2) dedicated slab caches could be merged with the generic ones.
-> Currently these two factors cannot be prevented at a low cost: the first
-> one is a widely used memory allocation mechanism, and shutting down slab
-> merging completely via `slub_nomerge` would be overkill.
+On Mon, May 15, 2023 at 01:05:51PM +0000, jeffxu@chromium.org wrote:
+> From: Jeff Xu <jeffxu@google.com>
 > 
-> To efficiently prevent heap spraying, we propose the following approach:
-> to create multiple copies of generic slab caches that will never be
-> merged, and random one of them will be used at allocation. The random
-> selection is based on the address of code that calls `kmalloc()`, which
-> means it is static at runtime (rather than dynamically determined at
-> each time of allocation, which could be bypassed by repeatedly spraying
-> in brute force). In this way, the vulnerable object and memory allocated
-> in other subsystems and modules will (most probably) be on different
-> slab caches, which prevents the object from being sprayed.
-
-This is a nice balance between the best option we have now
-("slub_nomerge") and most invasive changes (type-based allocation
-segregation, which requires at least extensive compiler support),
-forcing some caches to be "out of reach".
-
+> This patch enables PKEY_ENFORCE_API for the munmap
+> syscall.
 > 
-> The overhead of performance has been tested on a 40-core x86 server by
-> comparing the results of `perf bench all` between the kernels with and
-> without this patch based on the latest linux-next kernel, which shows
-> minor difference. A subset of benchmarks are listed below:
-> 
-> 			control		experiment (avg of 3 samples)
-> sched/messaging (sec)	0.019		0.019
-> sched/pipe (sec)	5.253		5.340
-> syscall/basic (sec)	0.741		0.742
-> mem/memcpy (GB/sec)	15.258789	14.860495
-> mem/memset (GB/sec)	48.828125	50.431069
-> 
-> The overhead of memory usage was measured by executing `free` after boot
-> on a QEMU VM with 1GB total memory, and as expected, it's positively
-> correlated with # of cache copies:
-> 
-> 		control		4 copies	8 copies	16 copies
-> total		969.8M		968.2M		968.2M		968.2M
-> used		20.0M		21.9M		24.1M		26.7M
-> free		936.9M		933.6M		931.4M		928.6M
-> available	932.2M		928.8M		926.6M		923.9M
-
-Great to see the impact: it's relatively tiny. Nice!
-
-Back when we looked at cache quarantines, Jann pointed out that it
-was still possible to perform heap spraying -- it just needed more
-allocations. In this case, I think that's addressed (probabilistically)
-by making it less likely that a cache where a UAF is reachable is merged
-with something with strong exploitation primitives (e.g. msgsnd).
-
-In light of all the UAF attack/defense breakdowns in Jann's blog
-post[1], I'm curious where this defense lands. It seems like it would
-keep the primitives described there (i.e. "upgrading" the heap spray
-into a page table "type confusion") would be addressed probabilistically
-just like any other style of attack. Jann, what do you think, and how
-does it compare to the KCTF work[2] you've been doing?
-
-In addition to this work, I'd like to see something like the kmalloc
-caches, but for kmem_cache_alloc(), where a dedicated cache of
-variably-sized allocations can be managed. With that, we can split off
-_dedicated_ caches where we know there are strong exploitation
-primitives (i.e. msgsnd, etc). Then we can carve off known weak heap
-allocation caches as well as make merging probabilistically harder.
-
-I imagine it would be possible to then split this series into two
-halves: one that creates the "make arbitrary-sized caches" API, and the
-second that applies that to kmalloc globally (as done here).
-
-> 
-> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+> Signed-off-by: Jeff Xu<jeffxu@google.com>
 > ---
+>  include/linux/mm.h |  2 +-
+>  mm/mmap.c          | 34 ++++++++++++++++++++++++++--------
+>  mm/mremap.c        |  6 ++++--
+>  3 files changed, 31 insertions(+), 11 deletions(-)
 > 
-> v2:
->   - Use hash_64() and a per-boot random seed to select kmalloc() caches.
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 27ce77080c79..48076e845d53 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -3136,7 +3136,7 @@ extern unsigned long do_mmap(struct file *file, unsigned long addr,
+>  	unsigned long pgoff, unsigned long *populate, struct list_head *uf);
+>  extern int do_vmi_munmap(struct vma_iterator *vmi, struct mm_struct *mm,
+>  			 unsigned long start, size_t len, struct list_head *uf,
+> -			 bool downgrade);
+> +			 bool downgrade, bool syscall);
 
-This is good: I was hoping there would be something to make it per-boot
-randomized beyond just compile-time.
+For type checking and readability, I suggest using an enum instead of
+"bool". Perhaps something like:
 
-So, yes, I think this is worth it, but I'd like to see what design holes
-Jann can poke in it first. :)
+enum caller_origin {
+	ON_BEHALF_OF_KERNEL = 0,
+	ON_BEHALF_OF_USERSPACE,
+};
 
--Kees
+ extern int do_vmi_munmap(struct vma_iterator *vmi, struct mm_struct *mm,
+ 			 unsigned long start, size_t len, struct list_head *uf,
+-			 bool downgrade);
++			 bool downgrade, enum caller_origin called);
 
-[0] https://lore.kernel.org/lkml/20230508075507.1720950-1-gongruiqi1@huawei.com/
-[1] https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html
-[2] https://github.com/thejh/linux/commit/a87ad16046f6f7fd61080ebfb93753366466b761
+>  extern int do_munmap(struct mm_struct *, unsigned long, size_t,
+>  		     struct list_head *uf);
+>  extern int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int behavior);
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 13678edaa22c..29329aa794a6 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -2498,6 +2498,7 @@ do_vmi_align_munmap(struct vma_iterator *vmi, struct vm_area_struct *vma,
+>   * @uf: The userfaultfd list_head
+>   * @downgrade: set to true if the user wants to attempt to write_downgrade the
+>   * mmap_lock
+> + * @syscall: set to true if this is called from syscall entry
+>   *
+>   * This function takes a @mas that is either pointing to the previous VMA or set
+>   * to MA_START and sets it up to remove the mapping(s).  The @len will be
+> @@ -2507,7 +2508,7 @@ do_vmi_align_munmap(struct vma_iterator *vmi, struct vm_area_struct *vma,
+>   */
+>  int do_vmi_munmap(struct vma_iterator *vmi, struct mm_struct *mm,
+>  		  unsigned long start, size_t len, struct list_head *uf,
+> -		  bool downgrade)
+> +		  bool downgrade, bool syscall)
+>  {
+>  	unsigned long end;
+>  	struct vm_area_struct *vma;
+> @@ -2519,6 +2520,19 @@ int do_vmi_munmap(struct vma_iterator *vmi, struct mm_struct *mm,
+>  	if (end == start)
+>  		return -EINVAL;
+>  
+> +	/*
+> +	 * When called by syscall from userspace, check if the calling
+> +	 * thread has the PKEY permission to modify the memory mapping.
+> +	 */
+> +	if (syscall && arch_check_pkey_enforce_api(mm, start, end) < 0) {
+
+	if (called == ON_BEHALF_OF_USERSPACE &&
+	    arch_check_pkey_enforce_api(mm, start, end) < 0) {
+
+> +		char comm[TASK_COMM_LEN];
+> +
+> +		pr_warn_ratelimited(
+> +			"munmap was denied on PKEY_ENFORCE_API memory, pid=%d '%s'\n",
+> +			task_pid_nr(current), get_task_comm(comm, current));
+> +		return -EACCES;
+> +	}
+> +
+>  	 /* arch_unmap() might do unmaps itself.  */
+>  	arch_unmap(mm, start, end);
+>  
+> @@ -2541,7 +2555,7 @@ int do_munmap(struct mm_struct *mm, unsigned long start, size_t len,
+>  {
+>  	VMA_ITERATOR(vmi, mm, start);
+>  
+> -	return do_vmi_munmap(&vmi, mm, start, len, uf, false);
+> +	return do_vmi_munmap(&vmi, mm, start, len, uf, false, false);
+
++	return do_vmi_munmap(&vmi, mm, start, len, uf, false, ON_BEHALF_OF_KERNEL);
+
+> [...]
+>  SYSCALL_DEFINE2(munmap, unsigned long, addr, size_t, len)
+>  {
+>  	addr = untagged_addr(addr);
+> -	return __vm_munmap(addr, len, true);
+> +	return __vm_munmap(addr, len, true, true);
+
++	return __vm_munmap(addr, len, true, ON_BEHALF_OF_USERSPACE);
+
+etc.
 
 -- 
 Kees Cook
