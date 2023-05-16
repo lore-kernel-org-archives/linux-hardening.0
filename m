@@ -2,64 +2,64 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7094C7EE24
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 23:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80154C77B7F
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 23:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231273AbjEPXjy (ORCPT
+        id S231446AbjEPX4K (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 19:39:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35748 "EHLO
+        Tue, 16 May 2023 19:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231267AbjEPXjx (ORCPT
+        with ESMTP id S231149AbjEPX4J (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 19:39:53 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DB13527C
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 16:39:51 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f423c17bafso16145e9.0
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 16:39:51 -0700 (PDT)
+        Tue, 16 May 2023 19:56:09 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B55459C0
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 16:56:08 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-4d9b2045e1cso537a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 16:56:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684280389; x=1686872389;
+        d=google.com; s=20221208; t=1684281366; x=1686873366;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UVbScJsRYo9C8gkT6czO0nTA247xNQRGalDUa94EESY=;
-        b=rAsLis5Y3Mdq3fZxLBr6Ca0RO0vz0Gkzk8RCL2v9vLJHKTkW/+MdQXeDqHAFwN34KM
-         c0ax5LGreSUOwVtsQIEfQ8v0yRszOR3m73CJKIIY+2jbxTreoCEozvFaFINhdMz1kUyi
-         myPgquXon0K3WyUmRzWUfJpZeDdFs4PdKILf4Dj/doPIJvE0a5Z+Bht2VHU+112WGnLI
-         9k5Re56g5wwro9pctcr5tmWFikkn3SU06EYMLK3e7jV/+/jHDwxMj92hnEmwo8hBD32m
-         3B7wbdkrrD9OhyN29J/eHPJF+CabK3s4fWUAC8Nul+I8Oe+zLdUOsIVjLKj9L4zNZPTR
-         Dg2A==
+        bh=pTpjK4cMLE86CEBQAy0o7c1MtYlIewmfVg/CfBkzS8g=;
+        b=S6BjV/lnZHhJsIdjUWkam5dY6C+mo1ieKbzG4UHHJfBP49QZq6QLvGuaPjGHLXxg/T
+         2QagfQVirGsBg/WEz5YrT6PSrDAffE5c/5zcneGPlcQfp6acvCmYADqIKiJ/FMKfkli7
+         W/TOL5WsLXPtrVzsCEwS76u2cllo0vfS7FRghu1qjn2qa86TDxkloHLOdW8YtVducYW+
+         4LzQP8VLdDH9r59mpqDKgyoE8+N98u8OiBpf6tBCB/dnc2pOeAJcRTGxMHTWlrs6OFTM
+         AVQcqOxRBEfW+4lavr1y5FtR31v5l2iTxXulaHqdpy3WEh02cuRJFKF1KpDuUZnmMcEk
+         eoFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684280389; x=1686872389;
+        d=1e100.net; s=20221208; t=1684281366; x=1686873366;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UVbScJsRYo9C8gkT6czO0nTA247xNQRGalDUa94EESY=;
-        b=OnHuQXj0zZXQcBW2SqUXNIbSpkutknZOnx/qXOetS5J+veZLoO4HKlIgIr5rZe8eEa
-         TELf2Yvxyv2XKlm9SwDE3ZbEO5GjMLe2PHGRLeR5Z9IWR/ijcr7n0BgZY9Z1HYVSfJMI
-         SRheZOTZqkHCUrT0ySz6k7l3ZWiUIUe5z2+KB4dGRetJ3Bu844GSEx2p/tXgfslO0h6Y
-         QL5/I9/mJaOGIKDxGkTB3TRw2to21hk2uAiYjRGItSuzr6ZCmysHJXXGh4LhZ2SMufwG
-         wGstp19FLJ0eCay6hV3vyU6Sqnup1JwFBkhj28RmurKBraHltC/ZXzG9mcJhukcRv02s
-         hGRQ==
-X-Gm-Message-State: AC+VfDxXTEqZyeqUnKECfgqqkKw3VuusbkxsyaVbvNJ6KF9n3OMtuFT8
-        bYySlI8gpy/X+LaSFxxz67W0tG1rezjHjfl8xIY9AQ==
-X-Google-Smtp-Source: ACHHUZ7RclDA07s2LmZ5quWcJhAyYC1M9Rvbz3x6pnOAsWZ2ONZ6exAsXWwFG979R7GurPzNMvNVQJAdM/7t1qsNBGA=
-X-Received: by 2002:a05:600c:3584:b0:3f5:f63:d490 with SMTP id
- p4-20020a05600c358400b003f50f63d490mr27707wmq.5.1684280389419; Tue, 16 May
- 2023 16:39:49 -0700 (PDT)
+        bh=pTpjK4cMLE86CEBQAy0o7c1MtYlIewmfVg/CfBkzS8g=;
+        b=QVK5TwMcGOC+sPVI5O7thYZpHg5fgkabmHkjjH7fDIBRL8vURAL3V6oabe9Qoh40SX
+         DB1pEb0P/qcHu8Cp9bWJ4OgjNHIKuZ0kfRvf60alW9WODnrqqYuh49FViB6y3miNBiR3
+         69n3mF+vHmyQZuRD60QYBoMnLMUDMs+2VcEQ+s2ZHO7HdxF54nkOy2IqNaPc4lc04w3F
+         KYElQZ4/T8YxjzoqmBJkkTprVZNmScMdpgyYz4ZRJ+RjJcGQmfQj86N5353gmsi9bBpk
+         fYYWKPSSFSwtqC6HFnf/k9ufinh8SJWBHhhksm+1Naf5idobBkFQqNYLHcqISEf2A7Or
+         F8fA==
+X-Gm-Message-State: AC+VfDzzNNTfl0+yWION7afJgTjdFMNmtTW3SABzB9h5pZQlkcNPepO9
+        K/MmF0bPtwLxshIozCQ1kcaxKQW8fr2IlCJ9U3JZUw==
+X-Google-Smtp-Source: ACHHUZ5ScDuPkH20J7HKHvZ0+VfHcTYMC1wGAQr7Rn/HstW93ubQaQWZPc77RY9AKiQO5HbaQBDv4cNtEDEtLylBffQ=
+X-Received: by 2002:a50:8752:0:b0:50d:bb88:a80c with SMTP id
+ 18-20020a508752000000b0050dbb88a80cmr19046edv.3.1684281365993; Tue, 16 May
+ 2023 16:56:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230515130553.2311248-1-jeffxu@chromium.org> <202305161307.4A16BB6A47@keescook>
- <CALmYWFteCd+h+tn+LmgTpN9Ld5=qAMMQ34=b1KCoE3OSBun+DQ@mail.gmail.com> <1656e926-f277-710e-71ad-1ff2fe77886b@intel.com>
-In-Reply-To: <1656e926-f277-710e-71ad-1ff2fe77886b@intel.com>
+References: <20230515130553.2311248-1-jeffxu@chromium.org> <20230515130553.2311248-2-jeffxu@chromium.org>
+ <6cb7df56-0479-30be-5389-b4b819572deb@intel.com>
+In-Reply-To: <6cb7df56-0479-30be-5389-b4b819572deb@intel.com>
 From:   Jeff Xu <jeffxu@google.com>
-Date:   Tue, 16 May 2023 16:39:12 -0700
-Message-ID: <CALmYWFsLx2CAwW5nWOC_sC4i6kYmRJQ0o8fiArXhozycsAoShA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
+Date:   Tue, 16 May 2023 16:55:28 -0700
+Message-ID: <CALmYWFszHvHa2_DqMPZcWkVqhAtKxrbpJ4Mzg+VWLnPHQD_fsw@mail.gmail.com>
+Subject: Re: [PATCH 1/6] PKEY: Introduce PKEY_ENFORCE_API flag
 To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, jeffxu@chromium.org,
-        luto@kernel.org, jorgelo@chromium.org, groeck@chromium.org,
-        jannh@google.com, sroettger@google.com, akpm@linux-foundation.org,
+Cc:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
+        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
+        sroettger@google.com, akpm@linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-mm@kvack.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
@@ -68,25 +68,33 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 16, 2023 at 3:30=E2=80=AFPM Dave Hansen <dave.hansen@intel.com>=
+On Tue, May 16, 2023 at 4:14=E2=80=AFPM Dave Hansen <dave.hansen@intel.com>=
  wrote:
 >
-> On 5/16/23 15:17, Jeff Xu wrote:
-> >>> This set of patch covers mprotect/munmap, I plan to work on other
-> >>> syscalls after this.
-> >> Which ones are on your list currently?
-> >>
-> > mprotect/mprotect_pkey/munmap
-> > mmap/mremap
-> > madvice,brk,sbrk
+> On 5/15/23 06:05, jeffxu@chromium.org wrote:
+> > --- a/arch/x86/mm/pkeys.c
+> > +++ b/arch/x86/mm/pkeys.c
+> > @@ -20,7 +20,7 @@ int __execute_only_pkey(struct mm_struct *mm)
+> >       /* Do we need to assign a pkey for mm's execute-only maps? */
+> >       if (execute_only_pkey =3D=3D -1) {
+> >               /* Go allocate one to use, which might fail */
+> > -             execute_only_pkey =3D mm_pkey_alloc(mm);
+> > +             execute_only_pkey =3D mm_pkey_alloc(mm, 0);
+> >               if (execute_only_pkey < 0)
+> >                       return -1;
+> >               need_to_set_mm_pkey =3D true;
 >
-> What about pkey_free()?
+> In your threat model, what mechanism prevents the attacker from
+> modifying executable mappings?
 >
-> Without that, someone can presumably free the pkey and then reallocate
-> it without PKEY_ENFORCE_API.
->
-Great catch. I will add it to the list.
-Thanks!
--Jeff Xu
+> I was trying to figure out if the implicit execute-only pkey should have
+> the PKEY_ENFORCE_API bit set.  I think that in particular would probably
+> cause some kind of ABI breakage, but it still reminded me that I have an
+> incomplete picture of the threat model.
+Yes. The main reason for not adding it now is the ABI breakage.
+As a next step,  we could potentially develop mseal(), which fits more
+to the code segment.
+The PKEY_ENFORCE_API allows munmap(), so the user case is slightly differen=
+t.
 
->
+I will leave the threat model / V8 specific question to Stephan.
