@@ -2,140 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C4C5C77B7A
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 22:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CABC77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 22:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbjEPWgW (ORCPT
+        id S229951AbjEPWln (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 18:36:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
+        Tue, 16 May 2023 18:41:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231128AbjEPWgT (ORCPT
+        with ESMTP id S229457AbjEPWlm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 18:36:19 -0400
-Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0B9F6A5E;
-        Tue, 16 May 2023 15:36:09 -0700 (PDT)
-Received: by mail-vs1-xe33.google.com with SMTP id ada2fe7eead31-4360bef3213so3441677137.2;
-        Tue, 16 May 2023 15:36:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684276569; x=1686868569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MO6goYlwL4iToGOjsZHzqUARbwpLkTb6qhA2YqxeeVE=;
-        b=hHu4z1Gzj57Y9XSFHW/ju30BU2KLMb+YSpi8TuZHrkg1bqrNjM+STsh81jCq26DBrX
-         3BQ+vYSJzyQh3G16m5/QRa+KcRgF2aXnu+npeWsJzJda+vECoDNreDI4q0V8KTnKK4bX
-         OrM9LKR5zrxY6TzZixoNRGdddtHCXf3CAKsXZ5cSUXlkbn1FlgyavZ+L7xFkIjAlUeG3
-         KSTbrT06+jf0pwl0qOG3axtRG8F7eEkx1y6Ik4idJUO5DhB2Drm8j8m0Cwg1LTBxrMu4
-         fkJdWxN1xnznd49FPjjGZEe9ovB/HzRTTtsimzJ/Vl3Go8dQKiabSbAQI3nKFZpKFdVH
-         8rfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684276569; x=1686868569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MO6goYlwL4iToGOjsZHzqUARbwpLkTb6qhA2YqxeeVE=;
-        b=d5JLOOU7fn4nfDPPmllELArkACNnbQVAn0g1XoMazYJtukYpsoZPLpiSW5Pgs797Ds
-         HPto6Q1atoHJQrLVHft6tBC8g4cZkb3VgCSbgWtGDdA5AsXTxkVQk78DhoqTwPkz1ayj
-         x4aZxRUap+FKruDzDBPgyCRHdvxj9oQGLnsho+3R20m56KlTPmmDIhV+HR4nByesKDgn
-         iF/ZU3OkD7lb9NmAaIMf8fXH+hMxWCjBR0yebPJJgb+JqklkbdeCyb3LBZQoa3sXv3lh
-         /gQKlSHNj1OM16NQWqi8MVlV3MyP8JZTJ9uTeAa5wVIcVtGLPGALn3RrPbDHBn9kjtGZ
-         6tEQ==
-X-Gm-Message-State: AC+VfDzV1XNuiEbap94PlsIJWnqizPIqvIUac5ZhMXrYa93gjyzKO51B
-        QW0Is5nQqjr6iocBxwk0NDz1npx53ZRdrKhjz+M=
-X-Google-Smtp-Source: ACHHUZ73RHEjDMwdKY0r76kxqXj9fZ3K2nw7Oc6gTCkuau/VaSGKaDGTs2MjpBab2/r5uvF6Zc3sahF0FENGRwGUKhE=
-X-Received: by 2002:a67:f30d:0:b0:436:3238:bd1 with SMTP id
- p13-20020a67f30d000000b0043632380bd1mr7960550vsf.34.1684276568666; Tue, 16
- May 2023 15:36:08 -0700 (PDT)
+        Tue, 16 May 2023 18:41:42 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062AC7688;
+        Tue, 16 May 2023 15:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684276901; x=1715812901;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IDhBF4fgjJGRK2kGvqetdUuW5dTqUG9nUhpZg9K0OCo=;
+  b=EyeYxWO9vH3wtSkq7AqI4AtjGmN7pjq8oIiTewXUFQZYljmAyMITAY9M
+   SepucNT+TiS2Q04y6ajTv/p46syN3auOru5gqEQDW9wlO79FfkSBIV8aD
+   fqIhRbWhe3SHRpPSmqrPB9/6nCNxxPVuOxjO72vDUBDdwrldKkLLmSDme
+   1J7GmEitfpa9U0bQUB9qnmKszw7Qafko6/CzcdroKNvZSHkDwM+Qyh3pf
+   fncOZgFN5HQzx4+KHl3jROTVesq20n841/qR9h9IV9RxvBNfD9k2rAyw+
+   QAgBd+ovSlfQz107TpHaEXj/XQ9D70AgMpmo6s2P6wHxHGkF3Wb/gAcFK
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="350447269"
+X-IronPort-AV: E=Sophos;i="5.99,280,1677571200"; 
+   d="scan'208";a="350447269"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 15:41:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="766534490"
+X-IronPort-AV: E=Sophos;i="5.99,280,1677571200"; 
+   d="scan'208";a="766534490"
+Received: from mtpanu-mobl1.amr.corp.intel.com (HELO [10.212.203.6]) ([10.212.203.6])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 15:41:40 -0700
+Message-ID: <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com>
+Date:   Tue, 16 May 2023 15:41:39 -0700
 MIME-Version: 1.0
-References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
- <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com> <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
-In-Reply-To: <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
-From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Date:   Wed, 17 May 2023 07:35:57 +0900
-Message-ID: <CAB=+i9R0GZiau7PKDSGdCOijPH1TVqA3rJ5tQLejJpoR55h6dg@mail.gmail.com>
-Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
-To:     Gong Ruiqi <gongruiqi1@huawei.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
+Content-Language: en-US
+To:     =?UTF-8?Q?Stephen_R=c3=b6ttger?= <sroettger@google.com>
+Cc:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
+        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
+        akpm@linux-foundation.org, jeffxu@google.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <20230515130553.2311248-1-jeffxu@chromium.org>
+ <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
+ <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-[Resending this email after noticing I did not reply-to-all]
+On 5/16/23 00:06, Stephen Röttger wrote:
+> On Mon, May 15, 2023 at 4:28 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>>
+>> On 5/15/23 06:05, jeffxu@chromium.org wrote:
+>>> We're using PKU for in-process isolation to enforce control-flow integrity
+>>> for a JIT compiler. In our threat model, an attacker exploits a
+>>> vulnerability and has arbitrary read/write access to the whole process
+>>> space concurrently to other threads being executed. This attacker can
+>>> manipulate some arguments to syscalls from some threads.
+>>
+>> This all sounds like it hinges on the contents of PKRU in the attacker
+>> thread.
+>>
+>> Could you talk a bit about how the attacker is prevented from running
+>> WRPKRU, XRSTOR or compelling the kernel to write to PKRU like at sigreturn?
+> 
+> (resending without html)
+> 
+> Since we're using the feature for control-flow integrity, we assume
+> the control-flow is still intact at this point. I.e. the attacker
+> thread can't run arbitrary instructions.
 
-On Fri, May 12, 2023 at 7:11=E2=80=AFPM Gong Ruiqi <gongruiqi1@huawei.com> =
-wrote:
->
->
->
-> On 2023/05/11 2:43, Hyeonggon Yoo wrote:
-> > I dont think adding a hardening feature by sacrificing one digit
-> > percent performance
-> > (and additional complexity) is worth. Heap spraying can only occur
-> > when the kernel contains
-> > security vulnerabilities, and if there is no known ways of performing
-> > such an attack,
-> > then we would simply be paying a consistent cost.
-> >
-> > Any opinions from hardening folks?
->
-> I did a more throughout performance test on the same machine in the same
-> way, and here are the results:
->
->               sched/  sched/  syscall/       mem/         mem/
->            messaging    pipe     basic     memcpy       memset
-> control1       0.019   5.459     0.733  15.258789    51.398026
-> control2       0.019   5.439     0.730  16.009221    48.828125
-> control3       0.019   5.282     0.735  16.009221    48.828125
-> control_avg    0.019   5.393     0.733  15.759077    49.684759
->
-> exp1           0.019   5.374     0.741  15.500992    46.502976
-> exp2           0.019   5.440     0.746  16.276042    51.398026
-> exp3           0.019   5.242     0.752  15.258789    51.398026
-> exp_avg        0.019   5.352     0.746  15.678608    49.766343
->
-> I believe the results show only minor differences and normal
-> fluctuation, and no substantial performance degradation.
->
-> As Pedro points out in his reply, unfortunately there are always
-> security vulnerabilities in the kernel, which is a fact that we have to
-> admit. Having a useful mitigation mechanism at the expense of a little
-> performance loss would be, in my opinion, quite a good deal in many
-> circumstances. And people can still choose not to have it by setting the
-> config to n.
+Can't run arbitrary instructions, but can make (pretty) arbitrary syscalls?
 
-Okay, now I don't think I need to tackle it from a performance
-perspective anymore, at least it looks like a good tradeoff.
+> * For JIT code, we're going to scan it for wrpkru instructions before
+> writing it to executable memory
 
-I had few design level concerns (i.e. in ARM64 instructions are 4-byte
-aligned) before switching to hash_64(^ random sequence), but looks
-good to me now.
+... and XRSTOR, right?
 
-> >> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-> >> +# define SLAB_RANDOMSLAB       ((slab_flags_t __force)0x01000000U)
-> >> +#else
-> >> +# define SLAB_RANDOMSLAB       0
-> >> +#endif
+> * For regular code, we only use wrpkru around short critical sections
+> to temporarily enable write access
+> 
+> Sigreturn is a separate problem that we hope to solve by adding pkey
+> support to sigaltstack
 
-There is already the SLAB_KMALLOC flag that indicates if a cache is a
-kmalloc cache. I think that would be enough for preventing merging
-kmalloc caches?
+What kind of support were you planning to add?
+
+I was thinking that an attacker with arbitrary write access would wait
+until PKRU was on the userspace stack and *JUST* before the kernel
+sigreturn code restores it to write a malicious value.  It could
+presumably do this with some asynchronous mechanism so that even if
+there was only one attacker thread, it could change its own value.
+
+Also, the kernel side respect for PKRU is ... well ... rather weak.
+It's a best effort and if we *happen* to be in a kernel context where
+PKRU is relevant, we can try to respect PKRU.  But there are a whole
+bunch of things like get_user_pages_remote() that just plain don't have
+PKRU available and can't respect it at all.
+
+I think io_uring also greatly expanded how common "remote" access to
+process memory is.
+
+So, overall, I'm thrilled to see another potential user for pkeys.  It
+sounds like there's an actual user lined up here, which would be
+wonderful.  But, I also want to make sure we don't go to the trouble to
+build something that doesn't actually present meaningful, durable
+obstacles to an attacker.
+
+I also haven't more than glanced at the code.
