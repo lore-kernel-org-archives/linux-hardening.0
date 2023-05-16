@@ -2,197 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52883C77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 21:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7061BC77B7F
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 21:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230387AbjEPVPG (ORCPT
+        id S229523AbjEPV3H (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 17:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42158 "EHLO
+        Tue, 16 May 2023 17:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230362AbjEPVPF (ORCPT
+        with ESMTP id S229458AbjEPV3G (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 17:15:05 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 330BA5BAB
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 14:15:03 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1ab1ce53ca6so1118915ad.0
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 14:15:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684271702; x=1686863702;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VR8MPIIli3X+0w90ArGaOIS0O6gxUxvBWBFob2QExGc=;
-        b=JJwxsdvpGVs+0EDt8UAqXDXYtojAG1dm4ioe8n6I0DrFJNG3f5T3C2Goe+40f9qRww
-         HfTuWYu2HxNDdflU3a4vvlaSZPMPqGgVyR/M6WsxnrRMEZQpZz2WdczB50mowo/Z4Sr8
-         d2K+oxvKCkAXkRhu9lD0TwUQ7YczXF7ahWqAw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684271702; x=1686863702;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VR8MPIIli3X+0w90ArGaOIS0O6gxUxvBWBFob2QExGc=;
-        b=MaFkJY4k/CaV9WCtEfeX/eT350tn5D90AUARsvKV2+0B5nGquwnMDcC0bz6pEg6Ou8
-         gVAXG7uhdF4o2PGDdN8VWIYOXw9BNhI3BswPcrbH5xZSzAsyYV5YHc4XEhsjymFJNTNW
-         Dp+puBnSm017cnE/JowyItlO6VKqXHHZrSEtFkKcGUelPZxZn1KXaxC2B4UYcXbO6P1X
-         /mTrkUkEkfBGUNNJKgecoqPR9O+ygVh6sePqrVni+7+z5enhGyA0j4m89hyOFctOAEBq
-         JxeTDw9hoCrdjpyHWsUHh6T5Pvk5D0vkPBJkml7XdSkydUxihhL/PG+YqQDYX/fRFBgi
-         lj5w==
-X-Gm-Message-State: AC+VfDwwR/mIZ+ZJ5uDGiZ65fMavgjIgVKvIqjdeD31B1sNgR47LAiR9
-        EXo+frWnOtlVimhjcR/5ad9Nvg==
-X-Google-Smtp-Source: ACHHUZ4PKGsOzYGNj1xP8rBaXRc7Tbpy5DWOQDAbTOANvxwCCYpLYpIyW0kqSB8gjnlHTa+N6IWdUg==
-X-Received: by 2002:a17:903:2405:b0:1a6:4b60:3195 with SMTP id e5-20020a170903240500b001a64b603195mr45748542plo.66.1684271702592;
-        Tue, 16 May 2023 14:15:02 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h4-20020a170902704400b001aaf370b1c7sm15894501plt.278.2023.05.16.14.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 14:15:02 -0700 (PDT)
-Date:   Tue, 16 May 2023 14:15:01 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
+        Tue, 16 May 2023 17:29:06 -0400
+X-Greylist: delayed 503 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 16 May 2023 14:29:05 PDT
+Received: from out-37.mta0.migadu.com (out-37.mta0.migadu.com [IPv6:2001:41d0:1004:224b::25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDC46A54
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 14:29:05 -0700 (PDT)
+Date:   Tue, 16 May 2023 17:20:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1684272038;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dbkTng8H6hiTn8uKTCVsk8fFMRZsv0G437tHoNcRdyw=;
+        b=SibD303eoaJKDw/Qhvvh03L8pvarBF0nYUklNoNZHgjjEpZ53aMlv5snN9FpqFXPEHQbx0
+        LHXWrEV8byrPRslwxSNZj55hzeuxAFGK+ubsNu2p2v/2BFgQ2akuSeiuhIiYnhMwXR9Doi
+        pF/mjBYG4GZWtq5+dZGjxFVscbKXIck=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Subject: Re: [PATCH v2 06/10] fortify: strcat: Move definition to use
- fortified strlcat()
-Message-ID: <202305161411.C0ED6E86F4@keescook>
-References: <20230407191904.gonna.522-kees@kernel.org>
- <20230407192717.636137-6-keescook@chromium.org>
- <CAKwvOdk+CT6S6LjLb2aRVsMSgnsyHRcoT-yyifNTW8vVVwTA-A@mail.gmail.com>
+        Uladzislau Rezki <urezki@gmail.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 07/32] mm: Bring back vmalloc_exec
+Message-ID: <ZGPzocRpSlg+4vgN@moria.home.lan>
+References: <20230509165657.1735798-1-kent.overstreet@linux.dev>
+ <20230509165657.1735798-8-kent.overstreet@linux.dev>
+ <3508afc0-6f03-a971-e716-999a7373951f@wdc.com>
+ <202305111525.67001E5C4@keescook>
+ <ZF6Ibvi8U9B+mV1d@moria.home.lan>
+ <202305161401.F1E3ACFAC@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKwvOdk+CT6S6LjLb2aRVsMSgnsyHRcoT-yyifNTW8vVVwTA-A@mail.gmail.com>
+In-Reply-To: <202305161401.F1E3ACFAC@keescook>
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 11:09:41AM -0700, Nick Desaulniers wrote:
-> On Fri, Apr 7, 2023 at 12:27 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Move the definition of fortified strcat() to after strlcat() to use it
-> > for bounds checking.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  include/linux/fortify-string.h | 53 +++++++++++++++++-----------------
-> >  1 file changed, 26 insertions(+), 27 deletions(-)
-> >
-> > diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
-> > index 8cf17ef81905..ab058d092817 100644
-> > --- a/include/linux/fortify-string.h
-> > +++ b/include/linux/fortify-string.h
-> > @@ -151,33 +151,6 @@ char *strncpy(char * const POS p, const char *q, __kernel_size_t size)
-> >         return __underlying_strncpy(p, q, size);
-> >  }
-> >
-> > -/**
-> > - * strcat - Append a string to an existing string
-> > - *
-> > - * @p: pointer to NUL-terminated string to append to
-> > - * @q: pointer to NUL-terminated source string to append from
-> > - *
-> > - * Do not use this function. While FORTIFY_SOURCE tries to avoid
-> > - * read and write overflows, this is only possible when the
-> > - * destination buffer size is known to the compiler. Prefer
-> > - * building the string with formatting, via scnprintf() or similar.
-> > - * At the very least, use strncat().
-> > - *
-> > - * Returns @p.
-> > - *
-> > - */
-> > -__FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
-> > -char *strcat(char * const POS p, const char *q)
-> > -{
-> > -       const size_t p_size = __member_size(p);
-> > -
-> > -       if (p_size == SIZE_MAX)
-> > -               return __underlying_strcat(p, q);
-> > -       if (strlcat(p, q, p_size) >= p_size)
-> > -               fortify_panic(__func__);
-> > -       return p;
-> > -}
-> > -
-> >  extern __kernel_size_t __real_strnlen(const char *, __kernel_size_t) __RENAME(strnlen);
-> >  /**
-> >   * strnlen - Return bounded count of characters in a NUL-terminated string
-> > @@ -435,6 +408,32 @@ size_t strlcat(char * const POS p, const char * const POS q, size_t avail)
-> >         return wanted;
-> >  }
-> >
-> > +/* Defined after fortified strlcat() to reuse it. */
-> 
-> I don't follow; the previous location was already defined in terms of
-> calls to strlcat.  Why is this patch necessary?
-> 
-> Could this be fixed in 5/10
-> https://lore.kernel.org/linux-hardening/20230407192717.636137-5-keescook@chromium.org/
-> by just putting strlcat in the expected place in the first place?
+On Tue, May 16, 2023 at 02:02:11PM -0700, Kees Cook wrote:
+> For something that small, why not use the text_poke API?
 
-I wanted to collect all the str*cat functions together.
+This looks like it's meant for patching existing kernel text, which
+isn't what I want - I'm generating new functions on the fly, one per
+btree node.
 
-> > +/**
-> > + * strcat - Append a string to an existing string
-> > + *
-> > + * @p: pointer to NUL-terminated string to append to
-> > + * @q: pointer to NUL-terminated source string to append from
-> > + *
-> > + * Do not use this function. While FORTIFY_SOURCE tries to avoid
-> > + * read and write overflows, this is only possible when the
-> > + * destination buffer size is known to the compiler. Prefer
-> > + * building the string with formatting, via scnprintf() or similar.
-> > + * At the very least, use strncat().
-> > + *
-> > + * Returns @p.
-> > + *
-> > + */
-> > +__FORTIFY_INLINE __diagnose_as(__builtin_strcat, 1, 2)
-> > +char *strcat(char * const POS p, const char *q)
-> > +{
-> > +       const size_t p_size = __member_size(p);
-> > +
-> 
-> This drops the `p_size == SIZE_MAX` guard.  Might it be faster at
-> runtime to dispatch to __underlying_strcat rather than __real_strlcat
-> in such cases?
+I'm working up a new allocator - a (very simple) slab allocator where
+you pass a buffer, and it gives you a copy of that buffer mapped
+executable, but not writeable.
 
-I wanted to avoid repeating the same checks, so since strlcat() already
-does the right checking, I avoided repeating it here.
+It looks like we'll be able to convert bpf, kprobes, and ftrace
+trampolines to it; it'll consolidate a fair amount of code (particularly
+in bpf), and they won't have to burn a full page per allocation anymore.
 
-> What's the convention for __underlying_ vs __real_ prefixes in
-> include/linux/fortify-string.h?
+bpf has a neat trick where it maps the same page in two different
+locations, one is the executable location and the other is the writeable
+location - I'm stealing that.
 
-__underlying may be wrapped by K*SAN before being implemented via
-__builtin, where as __real is used for things that aren't wrapped and/or
-aren't available with a __builtin (e.g. strscpy).
+external api will be:
 
--- 
-Kees Cook
+void *jit_alloc(void *buf, size_t len, gfp_t gfp);
+void jit_free(void *buf);
+void jit_update(void *buf, void *new_code, size_t len); /* update an existing allocation */
