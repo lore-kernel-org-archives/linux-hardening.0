@@ -2,226 +2,505 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9417EC77B75
-	for <linux-hardening@archiver.kernel.org>; Mon, 15 May 2023 19:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344C1C77B7D
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 00:05:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242991AbjEOT67 (ORCPT
+        id S233291AbjEPAF2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 15 May 2023 15:58:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54318 "EHLO
+        Mon, 15 May 2023 20:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234077AbjEOT65 (ORCPT
+        with ESMTP id S230170AbjEPAF1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 15 May 2023 15:58:57 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9921A658D
-        for <linux-hardening@vger.kernel.org>; Mon, 15 May 2023 12:58:56 -0700 (PDT)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34FJrwRl003047;
-        Mon, 15 May 2023 19:58:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=XPPsEOmf71zsHAnPsD5vSOfxzw6gEUOQAyuN8s0R3w8=;
- b=Zs/xXvaw3cl0jc06S2CoJ3aBcErnmzyzROWXWnMEZ2z0jonnb7Yv1ot2N3s20HJj0eD+
- 3ZG9f542uDft2XSqgXXj+M0mhZHC2fiNRie/wjMYY52reQXDUI+fH6OopBPEzLGeEBnl
- RR6RLsy+oksKaB+O4oxk8JhDI+/wre4f7LWTrV2QPo4j1KQlYJ/ACPmqBwVOXjxobY/k
- g2k4PVqruiuickY0pYWgQIcVrwK64jO54hBkmRnnZ/O88vujq+N4HZNnW8z8YNXxHW0m
- b71zhgyORsvF1V1zxtXQglXPdNOydusAg8aQwtWXmeyHclG7LuTbYJa3G8S9XmiZKdno 9A== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj2kdh676-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 May 2023 19:58:40 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34FII9SV018055;
-        Mon, 15 May 2023 19:58:39 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qj103m67r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 May 2023 19:58:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZukbvCwTLgwpaVAFH/nbTyv+eUUBhhW3nu2NTOfALFkEYxOZ2VcPS9yF+dPGFhE7Gh6tlyEZ1DqNeThmJSFCt4UJim+FBPqZSyb9NzR88YHmN6AF4R8ewZs4N67phzu6GxSvUVIOMtXUNIBGjZyV7dPc7vr3iI3MzPAWrwDboq8nhvE4RCKn5GxBVIrf+IrcLPRl3PkIhAjj3xIwfkwdWr7FMAjDfKCr7CKlo6bu48opcY8TNlwXWITJOzsvgWr++X47++xu7c/XX4w9FWzNL1Gsfs7Epwh/TlaoX+W7DQ6D0hIxtYAQ15M0VzTP5nAvrjNguxtzyB/diAnHZSPD/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XPPsEOmf71zsHAnPsD5vSOfxzw6gEUOQAyuN8s0R3w8=;
- b=SgQa1/jd+EoTuX5zcKt0HhOR4DQ4qlQym+9DQ2cpq38SLMTJQnzBJepXh3HVkB0peezbH96JFjID4aG+OoIbsFyPhXg2ogZyp99nxcL77s0eYameulsg1hh2r6kPCDTZRMctsHQe8oN+C7NMEH88nwY4/ynYlpjO3vNvJFOFwW7ac7CmHTDq7KJJDTrH1QK5PYbqrvEtDdlqYfGaFsodtmnEMFNuA4IqkJQ95MDr9x78akcIqP2F+WEfm4vE1H3PTkfoQtYHYxgTfBS6VHbFlbBH5EDx+CQC9GHp6NZ9bOyBjR7Yvk23AObNV54BNUylpL+7zEyl6DWWWQWUU5a9Vg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Mon, 15 May 2023 20:05:27 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB1A41727;
+        Mon, 15 May 2023 17:05:25 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id ca18e2360f4ac-7700622925fso30372239f.0;
+        Mon, 15 May 2023 17:05:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XPPsEOmf71zsHAnPsD5vSOfxzw6gEUOQAyuN8s0R3w8=;
- b=QS1LqULBtKTRT1S3NhrRYGsNjtXmKQj+E5Jorm5kh2PMzSS0U4FPgLIEYMq0FyTDwTRV9n+2e7BuoB550XwIK0kgooxcR7F7MkVgFGhUEmx4sGQjiBL/Ii/LbRZ5w64V1TqD8ZQ3bI9bRoPKSMs2J7vw/LWpBpL8v1BIZGBfoxY=
-Received: from CH2PR10MB4344.namprd10.prod.outlook.com (2603:10b6:610:af::19)
- by PH7PR10MB7720.namprd10.prod.outlook.com (2603:10b6:510:2fe::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30; Mon, 15 May
- 2023 19:58:37 +0000
-Received: from CH2PR10MB4344.namprd10.prod.outlook.com
- ([fe80::7aa1:df38:105a:21fa]) by CH2PR10MB4344.namprd10.prod.outlook.com
- ([fe80::7aa1:df38:105a:21fa%7]) with mapi id 15.20.6387.030; Mon, 15 May 2023
- 19:58:37 +0000
-From:   Qing Zhao <qing.zhao@oracle.com>
-To:     Richard Biener <richard.guenther@gmail.com>,
-        Joseph Myers <joseph@codesourcery.com>
-CC:     Kees Cook <keescook@chromium.org>,
-        Alejandro Colomar <alx.manpages@gmail.com>,
-        GCC <gcc@gcc.gnu.org>, Alejandro Colomar <alx@nginx.com>,
-        Andrew Clayton <a.clayton@nginx.com>,
-        Andrew Clayton <andrew@digital-domain.net>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [wish] Flexible array members in unions
-Thread-Topic: [wish] Flexible array members in unions
-Thread-Index: AQHZhCLuf5m2WRG8LkCSJk7/seKYAK9VQycAgAAsSQCAAB2sAIAABWAAgACX0ACABZyxgA==
-Date:   Mon, 15 May 2023 19:58:37 +0000
-Message-ID: <447B1CEB-B525-4143-854E-9BD2069C9E16@oracle.com>
-References: <ac2550e0-2f5c-3680-08e6-0c224d043036@gmail.com>
- <44940599-7b43-99f6-5b09-4f050d645c7b@gmail.com>
- <202305111158.C78642624@keescook>
- <74ee73d2-04e-ea8-9430-93929446e925@codesourcery.com>
- <202305111410.CFE0875F@keescook>
- <CAFiYyc1JRm6gm8aw2ZQmcycN3AF3hu5wjwGeUgDCN6gRN7UbbA@mail.gmail.com>
-In-Reply-To: <CAFiYyc1JRm6gm8aw2ZQmcycN3AF3hu5wjwGeUgDCN6gRN7UbbA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.2)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH2PR10MB4344:EE_|PH7PR10MB7720:EE_
-x-ms-office365-filtering-correlation-id: 5fb1fa93-e333-47a9-d4ef-08db557ec5a3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Wji0y28SVkM0kfiZfJ/ZTfVkyOiAExTb/M4JkEI8Ozu4pG/JJ001tBqVevLzrqBtHJ7J2mn/RUNk5EHQFUg8mTqWNNrz34B0PaJZOIu8BhpOK66OzGQZN+QcAe/Y5IyY/L1lV4z6A28AuuUCkaJCCzS2+6HqMuhQWOgyWWv4FBRMkigQaKaKicMnkQmq0YBMo5Qy0EwWWZDOFnfgL1JwkbBYFBWuNnVCiCvvOpmByRD8uGVoEefz2DiYwM9v/s04D1YKyvTDGtqSV3tph6YC/XLWLpdEqX7QPrajiwt7DN0HVl/YG9MITVSQjf790GjJNZCmFKHEx9ysWDwOipfHOOJW8/nyOUfWaTq3A8kmib/RyxSY4rcGOjAggEQ2jlG8DzH57vDAdAInspYQxCXdw+wgR8oPE7BvYFmWf6wTKZGjmM949BuKM7J06QCSRiYQ5irH0EofbTLwGYofY5DQLFLfnEGTAlMzpgp4f4Npkpvc515BUuaNPBHwEDIWq9NjjujtH/2yWdnYxptIaW1Jy7GZw2t2BYcbSkCSe7ti0KP8urcCNE8/udHZ9mL4duDlFdvdHXnweCftZv6gYlIoSH9lEC3wfY3gNknZ3vG6Wota/HOpoWh7eb/NSvfivBd0PL8Jcym5MqrA5pPjY1Zn5g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR10MB4344.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(136003)(346002)(39860400002)(366004)(396003)(451199021)(64756008)(66946007)(66476007)(66556008)(478600001)(66446008)(4326008)(76116006)(6486002)(86362001)(91956017)(316002)(54906003)(110136005)(36756003)(33656002)(83380400001)(186003)(53546011)(2616005)(6512007)(6506007)(71200400001)(8936002)(5660300002)(8676002)(44832011)(2906002)(122000001)(41300700001)(38100700002)(38070700005)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?M0ZpcTBrVVRiTGk1ckdpKzlBdEVsUVhZZENhdktGNThrZUgxcUhuRXBvWklX?=
- =?utf-8?B?LzVaSG85VVgwcUVKNDNZR1VwUkJiSXk0WVZ5QWpkYWlZWktBL3J6MGtUc29r?=
- =?utf-8?B?MUYwcjRXcWR0Sy9MMlBCWVUvZ1dLTkdaNG40bWV4TXJxNlJhODdSdlhGRzd2?=
- =?utf-8?B?dkNsOGRSWVY2NmppT0FHNHI2Wit3ZXB5WGVCU2szUmkxOURXMDhSUFpwN2hM?=
- =?utf-8?B?MXFMTnZsZFg5L3hTQnF0YXBZK3JwR1FKcnhML0VZY053NWs0RjN3RHV2aDBo?=
- =?utf-8?B?Zml2ek5Yb1NtZmVLVXhqc0hXK1FONzErYVdVelkvV0I0WWlna3VBRmNCRzZ4?=
- =?utf-8?B?SDZ2NGEwK3U2Z2lmckI1VGtDTkYwaURkdnF5cUx2OTF1R3p1V1laaG5qekJF?=
- =?utf-8?B?ZVcxTk1uaGU2UndXcFdFR0NBNEpNYjlKY3FBU0h3ckhieHdtR2lLUUpQVC9w?=
- =?utf-8?B?Y3Z2VFh2b1QrY0lKeEFScld0T2xyNlhVRGVQaitFRXhOZE1wcDUxUFdibTU4?=
- =?utf-8?B?V0VlUmRxZEx3UWpGcldzaVNsWFlWaytNcGI4aEg4dUR6WFJrekxWSVJCL3gz?=
- =?utf-8?B?SkdNaEtTa1dsR1dlSHZrU2k1aGlZbHAyQ1pPYU5wY1laRlVyOFZpRTZyNk5X?=
- =?utf-8?B?cnFZQ2RJOTBucm9uK2YrQ3JJbHkxd2ZUeFBhaXpTekpTRUxKbFRiY0lGcGxD?=
- =?utf-8?B?Z2pGek1rakNIelU0SXNZWHNpQWsxWmREc1BhSFk0UzlhK1B5czZsRlB6c3R1?=
- =?utf-8?B?cnhMNGRzelBZQUZBM25sL1E4anAzc3Y3VFN5VFBlZDdURlVLSmhiMDU1N1Ir?=
- =?utf-8?B?bFNkSGJMN3hoVkVJbXQ4cGtOdVFjOTVUWXlVYWo2WHhrZWJXb2dtZWFkSmk3?=
- =?utf-8?B?b3RoMTRtejRadWpFb0JwcFROWVA1ZCtmZ0V6Z1ZQNExPeFlOTFRPRlJURGVm?=
- =?utf-8?B?RE0yZXIzTFgybTF3ZWdLUFphWUE3NmpIUG5xam1UWEdwenF3RU5WWWZMT2lk?=
- =?utf-8?B?NXZ1alU3eklRaVp4ejdwV3Y0THVWVTZKOFRQZDFzYmluV244K3dsWmVjczNP?=
- =?utf-8?B?emgrT3lBa1NvZkFpKy9Rd0w2c3VWMEZROWZMMDNTR1hTWExCU0haU2Rkd0xh?=
- =?utf-8?B?VW5XdDQ0T3gxRHFVWTlvaENmTjBDekVFdFZHVHlXNGxJbHhEc3ZDRkNKN0p1?=
- =?utf-8?B?Q3hOa0U0YWcxVm1WaGlwbFJWWm12Q2F1ZnlWZUZTUmh0OGo5OEdYQUNNR1cz?=
- =?utf-8?B?YVAvWXo3UXBoRytCTUxEaWV4V1hyZVJRdGJ5cGYwSWorV3VHMjR1bEpMODZH?=
- =?utf-8?B?MXlBSTV2ZmtJUGkvK254ZVpTT1hhM0ZhaXpXOUtyNTRzZWR5czg4ZER3dkxm?=
- =?utf-8?B?QmxJNDBDeTJpbmlBOFlDMnFUVzFxcWd2V0FjSmNKNS9xWFVWSStWQjJnZTVj?=
- =?utf-8?B?UHd5eTVqQWQ0aUE1aEZRU1VEUmtGVkhQYzB3L2dUU0VhckdNU3lGMUJJcTRW?=
- =?utf-8?B?OStVY3FYRzRrSFU5ckRJeURYNDVyMEZtQTExUU85YlZWYVEvL1VXeThZWlFx?=
- =?utf-8?B?STZjNUFma3BLZlg0OXhhTGduVnZMa0lOYVozT2JYZkNiMUJvazRZNmRkS2pE?=
- =?utf-8?B?TVVPbnorUVg4aEdJNmw1akl5SUc5SFdFU2llc0V5Ymd6NFhmUkxzOXp5ZDgx?=
- =?utf-8?B?Yk5HaERrenV3ajdSejVWMTVNdDM2aTZiUGFSQ1crUnRUZ2M0Kzc1dkt5VHcy?=
- =?utf-8?B?RkRlVktiVTI5ZmpPR3lGcHVPcEFrdTRuMitIbkFadVVHUkNGbGpDdnN6RTF2?=
- =?utf-8?B?TmE5ZmFPTzNSZU5kSzA3c0Y4QTluNHliOUhLVHRSWm1VbjdiY3pzT0dXd2Q1?=
- =?utf-8?B?S2FGUGNhTGZEWFBjdFBRbkVyK2Yvcm9VaE1kak9qNXNnQjRMdU9BRk9XWHlD?=
- =?utf-8?B?NkVybGF1SHVUVFZhTWdPaXVPRnVRUVFqVjRsU2FWczQ2MXp1bzBFZ3R1RVdL?=
- =?utf-8?B?S2dlKzUwREV4VDZPUHQyUkhmSlRyY0JPU1dScnlxNFNBTXdFRDlYR3NFWERx?=
- =?utf-8?B?WHREb2toUWJkQmFRekdDUHEzYitaWDZsaVJCQ1R6eklORExXUzhMUTVKWko0?=
- =?utf-8?B?UE9kUWpYZ2loK1V2bmw2M1JIRzl5MlVObFd0M3F2M09nM0xLYmFoZVFMa3dF?=
- =?utf-8?Q?1PUQC8M1qRKoFmua7LcyFhg=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3062FB471B54B84CA0146F381A2C50B9@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20221208; t=1684195525; x=1686787525;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PhWfHUiDWBX0WQhFnGUzL/mJGHEL25RTZHUYmsH542s=;
+        b=Qw7/vMJ52zENA74PR7zVG0kDwZKhT697B/loTkYo1g/ltCW3He9LXFA+AsVHFO4a8c
+         8kT/hAWBHgvCP5idFI00y/+BC0lqO8pf95Mbrq6fek7cWqcY5no4ExsozYUDpdeCRB+P
+         X9pI4v83+Un51Gn9t5WvBaekgKRA2zaM09P/gm4cFT60KGBekL8I5uWZ+lqo3Sy7miQL
+         lrrWhZZ1B/aoXY9hnj+Jlg/a2aAoJw8S8TEgJtscV3TiywyXZc0RMyRGRkLiZRT/P51J
+         trrjQn+Pyh1sc4amYij5zZQPB1on0XbNe0DYvanVl+dFt7mmdj7ItnZCFU33TYv71kE7
+         F9/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684195525; x=1686787525;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PhWfHUiDWBX0WQhFnGUzL/mJGHEL25RTZHUYmsH542s=;
+        b=Hibpp6yoHXkQq8cZxWPu8HMB9tq2FWBTSJV8S+l33Ol8Rw+o5DAbCLD6c6h9iLulr3
+         Rdl8SgxHmGIwOMWVc4KWjlmpdt7Hg2aIlBWDtwX0SVwrumHUMajLn/MQ/HxuiJi9sD3j
+         r92Pt8jBsmuKAbGfdTSu4BcKSh7xUcEb6Ic03ihAOj53k+Lj+NagWccsV9GR/VTHAEy4
+         eQqmzuonYqChYFemJe88a8lkKbSUrt2cm/vv9zgxRBo4zbhLWU/gNLMrjWrt0s/eKj1M
+         3JAfj3wUL0LTO2pttqNyLnLBUOGSd64WX96bKOV9fxfFaC8Ymw+06z86Mg9Rufd4J/gQ
+         YQvw==
+X-Gm-Message-State: AC+VfDzfemWXU+uPhPA4qsBL5yNU6yhHN6ocR0F0RdZcYVa40ZuBzchZ
+        dYdXOwbGo1BnuVpRhsLXVVk=
+X-Google-Smtp-Source: ACHHUZ7R1ZwAXF5tdlCfYvgfY3bLdfdGn6E9Si8O3g0eHUk285ZtpLZgHx6yWfHKdXv5ssN+YpuP4w==
+X-Received: by 2002:a5d:8b95:0:b0:76c:79f9:9b29 with SMTP id p21-20020a5d8b95000000b0076c79f99b29mr811249iol.3.1684195524743;
+        Mon, 15 May 2023 17:05:24 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id n16-20020a027150000000b0040fa0f43777sm7324871jaf.161.2023.05.15.17.05.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 May 2023 17:05:24 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH] perf pmu: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 16 May 2023 00:05:00 +0000
+Message-ID: <20230516000500.3884588-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?elVCQ3RKa3NXcENFcUU1U2ZReFJFUWtzVUhhUzF4ZXF2b2VkYzQyeWt2Q3lM?=
- =?utf-8?B?OWVaYnR1aGJ5ZTVZK3Q1WVZFVlF1Wmp0ZXowc3F3TFh6ejNMNUt4b1hyVHZO?=
- =?utf-8?B?Yk9HeEkwSWlZL1hncDkyTGtZTVVaMzdKZGxTMzhmL2doSDVFWUlrYlI4NFVi?=
- =?utf-8?B?dWpxQjRMb1dSRGwrK1FuZVNxclE5cEk4NFp5UnRtbUM3UFZOY0xESktWSFcz?=
- =?utf-8?B?b2hrd2VIVXRtaTVaWC8rTVIrZE5aVjhLY0pXUVA0UjJobDc2SWYrajY5QnlD?=
- =?utf-8?B?QUZrU1hDdytrYnhOUXVNbHY5K2EzT2NKd2JsdllzeWU1eVhhMEhXWGo2bDdM?=
- =?utf-8?B?alJELzlMN0RuV2F6TkdKdVhwMUVjWFY2MmhxQ2l0OTZVYkpTWXVNdnc4OGRy?=
- =?utf-8?B?bnhkQ01PL2NGcFpVVGlWZlorQVBrUE5TNUdzaWFKWmdmL2lOQkNuT1ByWUhx?=
- =?utf-8?B?M2VPMnlCN0F2WHNmclYwTHZUTUV2eU5ISjIzclFhUEl1RTNzOWFid3JwWVBN?=
- =?utf-8?B?eDl2azU3blI3RmpKUWZDRjFMRXk5Z1FQT0JTQ1hUZTg1MWNvejRjeDl4c0JK?=
- =?utf-8?B?TlNCamgwazBDZElMaGVlclRtMWE3V3RPRGM0NlhvaHNOSWQzMW4yVXVhNFpp?=
- =?utf-8?B?WU5MaHRZRWRzd096VHBycUhXK2dBK3lzVmRwREVmKzNFRll4Zzk3eVRYbUU5?=
- =?utf-8?B?bjBFY3c5dXUxTjErS0M1d3BwTEFHUGp5TDI1NjRwcitrcHhTN0xwSjhQM1pR?=
- =?utf-8?B?V2E3Zlh0bWVrYlJ5dW5nU1EvTlRmQ3psWjh3a0hNMjdSSjhrU1VHYjRYSEk4?=
- =?utf-8?B?M3RVU0hmcWkvbFp6QzkyaWMwQ1hkQWp6dzRiVjUyMEVOOEgvbUQ2OFI2OU9B?=
- =?utf-8?B?K0lkYXpncjFYdGlLSHN3S1VWWFc2ek9mZmw2ZnBIQVNuYnMwWXJ6bXdxVzRh?=
- =?utf-8?B?SXVqQTJGL2piazQ3empwVThYa0Q2bjliNXpBWFVDdG1qUTRwc0Y5L0RSMldz?=
- =?utf-8?B?bVJxbXpjQnVzVHRiL1l0OWFsa3AvSU9vc2wveEY0elhWZkY1ejVHSldWSEll?=
- =?utf-8?B?QklpdFpXQTlxQTBYK2MwcHNac0xGZDRZWlNsTnZvUTNvd1pFbTcvdS92VFBl?=
- =?utf-8?B?bkUrZnB6L2d1YmYxa0NHOTBoc0xzYTRoNUpreWZMNTlrN1ZuZGNXaU1OeHlM?=
- =?utf-8?B?REJxeDlOTmdXZkc5V3grMDM2NytuTFFDMXkyc1N4Zk5tUXpPVTcrcXRIZy9i?=
- =?utf-8?B?VzJrN2xIM29HNUdYeSs3eGdMVG0yd0hJREZPZ2xIZ3JSc05iVUpWZVZTTVQ0?=
- =?utf-8?Q?aEhcfCAYpDnEk=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR10MB4344.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fb1fa93-e333-47a9-d4ef-08db557ec5a3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2023 19:58:37.2634
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dPkNCy486sGHSS3FiFC7T6Po8P5Bf4Rk/8n5jdwFDUi0G/q3V0zSaasEqDgyvObpgboo0CdsRb79Qpq06Ycf+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB7720
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-15_18,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
- bulkscore=0 suspectscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305150165
-X-Proofpoint-GUID: bBcR0Js-0WsKqjjRzsdQ9mzASBOfHEgE
-X-Proofpoint-ORIG-GUID: bBcR0Js-0WsKqjjRzsdQ9mzASBOfHEgE
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-DQoNCj4gT24gTWF5IDEyLCAyMDIzLCBhdCAyOjE2IEFNLCBSaWNoYXJkIEJpZW5lciB2aWEgR2Nj
-IDxnY2NAZ2NjLmdudS5vcmc+IHdyb3RlOg0KPiANCj4gT24gVGh1LCBNYXkgMTEsIDIwMjMgYXQg
-MTE6MTTigK9QTSBLZWVzIENvb2sgdmlhIEdjYyA8Z2NjQGdjYy5nbnUub3JnPiB3cm90ZToNCj4+
-IA0KPj4gT24gVGh1LCBNYXkgMTEsIDIwMjMgYXQgMDg6NTM6NTJQTSArMDAwMCwgSm9zZXBoIE15
-ZXJzIHdyb3RlOg0KPj4+IE9uIFRodSwgMTEgTWF5IDIwMjMsIEtlZXMgQ29vayB2aWEgR2NjIHdy
-b3RlOg0KPj4+IA0KPj4+PiBPbiBUaHUsIE1heSAxMSwgMjAyMyBhdCAwNjoyOToxMFBNICswMjAw
-LCBBbGVqYW5kcm8gQ29sb21hciB3cm90ZToNCj4+Pj4+IE9uIDUvMTEvMjMgMTg6MDcsIEFsZWph
-bmRybyBDb2xvbWFyIHdyb3RlOg0KPj4+Pj4gWy4uLl0NCj4+Pj4+PiBXb3VsZCB5b3UgYWxsb3cg
-ZmxleGlibGUgYXJyYXkgbWVtYmVycyBpbiB1bmlvbnM/ICBJcyB0aGVyZSBhbnkNCj4+Pj4+PiBz
-dHJvbmcgcmVhc29uIHRvIGRpc2FsbG93IHRoZW0/DQo+Pj4+IA0KPj4+PiBZZXMgcGxlYXNlISEg
-QW5kIGFsb25lIGluIGEgc3RydWN0LCB0b28uDQo+Pj4+IA0KPj4+PiBBRkFJQ1QsIHRoZXJlIGlz
-IG5vIG1lY2hhbmljYWwvYXJjaGl0ZWN0dXJhbCByZWFzb24gdG8gZGlzYWxsb3cgdGhlbQ0KPj4+
-PiAoZXNwZWNpYWxseSBzaW5jZSB0aGV5IF9jYW5fIGJlIGNvbnN0cnVjdGVkIHdpdGggc29tZSBm
-YW5jeSB0cmlja3MsDQo+Pj4+IGFuZCB0aGV5IGJlaGF2ZSBhcyBleHBlY3RlZC4pIE15IHVuZGVy
-c3RhbmRpbmcgaXMgdGhhdCBpdCdzIGRpc2FsbG93ZWQNCj4+Pj4gZHVlIHRvIGFuIG92ZXJseSBz
-dHJpY3QgcmVhZGluZyBvZiB0aGUgdmVyeSB0ZXJzZSBsYW5ndWFnZSB0aGF0IGNyZWF0ZWQNCj4+
-Pj4gZmxleGlibGUgYXJyYXlzIGluIEM5OS4NCj4+PiANCj4+PiBTdGFuZGFyZCBDIGhhcyBubyBz
-dWNoIHRoaW5nIGFzIGEgemVyby1zaXplIG9iamVjdCBvciB0eXBlLCB3aGljaCB3b3VsZA0KPj4+
-IGxlYWQgdG8gcHJvYmxlbXMgd2l0aCBhIHN0cnVjdCBvciB1bmlvbiB0aGF0IG9ubHkgY29udGFp
-bnMgYSBmbGV4aWJsZQ0KPj4+IGFycmF5IG1lbWJlciB0aGVyZS4NCj4+IA0KPj4gQWgtaGEsIG9r
-YXkuIFRoYXQgcm9vdCBjYXVzZSBtYWtlcyBzZW5zZSBub3cuDQo+IA0KPiBIbW0uIGJ1dCB0aGVu
-IHRoZSB3b3JrYXJvdW5kDQo+IA0KPiBzdHJ1Y3QgWCB7DQo+ICBpbnQgbjsNCj4gIHVuaW9uIHUg
-ew0KPiAgICAgIGNoYXIgYXRfbGVhc3Rfc2l6ZV9vbmU7DQo+ICAgICAgaW50IGlhcnJbXTsNCj4g
-ICAgICBzaG9ydCBzYXJyW107DQo+ICB9Ow0KPiB9Ow0KPiANCj4gZG9lc24ndCB3b3JrIGVpdGhl
-ci4gIFdlIGNvdWxkIG1ha2UgdGhhdCBhIEdOVSBleHRlbnNpb24gd2l0aG91dA0KPiBhZHZlcnNl
-IGVmZmVjdHM/DQoNCkkgdGhpbmsgdGhhdCB0aGlzIG1pZ2h0IGJlICBhIHZlcnkgbmljZSBleHRl
-bnNpb24sIHdoaWNoIGFkZHJlc3NlcyB0aGUgc3RhbmRhcmQgQ+KAmXMgcmVzdHJpY3Rpb24gIG9u
-IHRoZSB6ZXJvLXNpemUgb2JqZWN0LCBhbmQgYWxzbyBjYW4gcmVzb2x2ZSBrZXJuZWzigJlzIG5l
-ZWQuIChBbmQgYWxzbyBvdGhlciB1c2Vyc+KAmXMgc2ltaWxhciBwcm9ncmFtbWluZyBuZWVkPykN
-CkFuZCBtYXliZSBpdOKAmXMgYWxzbyBwb3NzaWJsZSB0byBhZGQgc3VjaCBleHRlbnNpb24gbGF0
-ZXIgdG8gU3RhbmRhcmQgQz8NCg0KU2ltaWxhciBhcyBmbGV4aWJsZSBhcnJheSBtZW1iZXIgaW4g
-U3RhbmRhcmQgQywgd2Ugc2hvdWxkIGxpbWl0IHN1Y2ggdW5pb24gYXMgdGhlIGxhc3QgZmllbGQg
-b2YgYW5vdGhlciBzdHJ1Y3R1cmUuICAoU2luY2UgYmFzaWNhbGx5IHRoaXMgdW5pb24gY2FuIGJl
-IHRyZWF0ZWQNCkFzIGEgZmxleGlibGUgYXJyYXkgbWVtYmVyKQ0KDQpRaW5nDQoNCj4gDQo+IFJp
-Y2hhcmQuDQo+IA0KPj4gV2h5IGFyZSB6ZXJvLXNpemVkIG9iamVjdHMgbWlzc2luZyBpbiBTdGFu
-ZGFyZCBDPyBPciwgcGVyaGFwcywgdGhlIGJldHRlcg0KPj4gcXVlc3Rpb24gaXM6IHdoYXQncyBu
-ZWVkZWQgdG8gc3VwcG9ydCB0aGUgaWRlYSBvZiBhIHplcm8tc2l6ZWQgb2JqZWN0Pw0KPj4gDQo+
-PiAtLQ0KPj4gS2VlcyBDb29rDQoNCg==
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
+
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ kernel/events/core.c                                |    6 +++---
+ tools/perf/arch/x86/util/event.c                    |    2 +-
+ tools/perf/arch/x86/util/machine.c                  |    2 +-
+ tools/perf/builtin-buildid-cache.c                  |    6 +++---
+ tools/perf/builtin-daemon.c                         |    4 ++--
+ tools/perf/jvmti/libjvmti.c                         |    2 +-
+ tools/perf/tests/dlfilter-test.c                    |    2 +-
+ tools/perf/tests/symbols.c                          |    2 +-
+ tools/perf/ui/tui/helpline.c                        |    2 +-
+ tools/perf/util/annotate.c                          |    4 ++--
+ tools/perf/util/auxtrace.c                          |    2 +-
+ tools/perf/util/dso.c                               |    2 +-
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    2 +-
+ tools/perf/util/llvm-utils.c                        |    4 ++--
+ tools/perf/util/machine.c                           |    8 ++++----
+ tools/perf/util/pmu-hybrid.c                        |    2 +-
+ tools/perf/util/pmu.c                               |    2 +-
+ tools/perf/util/probe-file.c                        |    2 +-
+ tools/perf/util/svghelper.c                         |    2 +-
+ tools/perf/util/symbol.c                            |    4 ++--
+ tools/perf/util/synthetic-events.c                  |    4 ++--
+ 21 files changed, 33 insertions(+), 33 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index db016e418931..6039fdf00b3c 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8245,7 +8245,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
+ 	unsigned int size;
+ 
+ 	memset(comm, 0, sizeof(comm));
+-	strlcpy(comm, comm_event->task->comm, sizeof(comm));
++	strscpy(comm, comm_event->task->comm, sizeof(comm));
+ 	size = ALIGN(strlen(comm)+1, sizeof(u64));
+ 
+ 	comm_event->comm = comm;
+@@ -8700,7 +8700,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
+ 	}
+ 
+ cpy_name:
+-	strlcpy(tmp, name, sizeof(tmp));
++	strscpy(tmp, name, sizeof(tmp));
+ 	name = tmp;
+ got_name:
+ 	/*
+@@ -9124,7 +9124,7 @@ void perf_event_ksymbol(u16 ksym_type, u64 addr, u32 len, bool unregister,
+ 	    ksym_type == PERF_RECORD_KSYMBOL_TYPE_UNKNOWN)
+ 		goto err;
+ 
+-	strlcpy(name, sym, KSYM_NAME_LEN);
++	strscpy(name, sym, KSYM_NAME_LEN);
+ 	name_len = strlen(name) + 1;
+ 	while (!IS_ALIGNED(name_len, sizeof(u64)))
+ 		name[name_len++] = '\0';
+diff --git a/tools/perf/arch/x86/util/event.c b/tools/perf/arch/x86/util/event.c
+index 5741ffe47312..91fe2ef920c7 100644
+--- a/tools/perf/arch/x86/util/event.c
++++ b/tools/perf/arch/x86/util/event.c
+@@ -64,7 +64,7 @@ int perf_event__synthesize_extra_kmaps(struct perf_tool *tool,
+ 		event->mmap.pgoff = map__pgoff(map);
+ 		event->mmap.pid   = machine->pid;
+ 
+-		strlcpy(event->mmap.filename, kmap->name, PATH_MAX);
++		strscpy(event->mmap.filename, kmap->name, PATH_MAX);
+ 
+ 		if (perf_tool__process_synth_event(tool, event, machine,
+ 						   process) != 0) {
+diff --git a/tools/perf/arch/x86/util/machine.c b/tools/perf/arch/x86/util/machine.c
+index 31679c35d493..1ff0be147205 100644
+--- a/tools/perf/arch/x86/util/machine.c
++++ b/tools/perf/arch/x86/util/machine.c
+@@ -40,7 +40,7 @@ static int add_extra_kernel_map(struct extra_kernel_map_info *mi, u64 start,
+ 	mi->maps[mi->cnt].start = start;
+ 	mi->maps[mi->cnt].end   = end;
+ 	mi->maps[mi->cnt].pgoff = pgoff;
+-	strlcpy(mi->maps[mi->cnt].name, name, KMAP_NAME_LEN);
++	strscpy(mi->maps[mi->cnt].name, name, KMAP_NAME_LEN);
+ 
+ 	mi->cnt += 1;
+ 
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index cd381693658b..0cc4c39558ad 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -36,7 +36,7 @@ static int build_id_cache__kcore_buildid(const char *proc_dir, char *sbuildid)
+ 	char root_dir[PATH_MAX];
+ 	char *p;
+ 
+-	strlcpy(root_dir, proc_dir, sizeof(root_dir));
++	strscpy(root_dir, proc_dir, sizeof(root_dir));
+ 
+ 	p = strrchr(root_dir, '/');
+ 	if (!p)
+@@ -104,7 +104,7 @@ static int build_id_cache__kcore_existing(const char *from_dir, char *to_dir,
+ 			  to_dir, dent->d_name);
+ 		if (!compare_proc_modules(from, to) &&
+ 		    same_kallsyms_reloc(from_dir, to_subdir)) {
+-			strlcpy(to_dir, to_subdir, to_dir_sz);
++			strscpy(to_dir, to_subdir, to_dir_sz);
+ 			ret = 0;
+ 			break;
+ 		}
+@@ -121,7 +121,7 @@ static int build_id_cache__add_kcore(const char *filename, bool force)
+ 	char from_dir[PATH_MAX], to_dir[PATH_MAX];
+ 	char *p;
+ 
+-	strlcpy(from_dir, filename, sizeof(from_dir));
++	strscpy(from_dir, filename, sizeof(from_dir));
+ 
+ 	p = strrchr(from_dir, '/');
+ 	if (!p || strcmp(p + 1, "kcore"))
+diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+index 34cbe3e959aa..aa6ebf46370a 100644
+--- a/tools/perf/builtin-daemon.c
++++ b/tools/perf/builtin-daemon.c
+@@ -606,7 +606,7 @@ static int setup_server_socket(struct daemon *daemon)
+ 	memset(&addr, 0, sizeof(addr));
+ 	addr.sun_family = AF_UNIX;
+ 
+-	strlcpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
++	strscpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
+ 	unlink(path);
+ 
+ 	if (bind(fd, (struct sockaddr *)&addr, sizeof(addr)) == -1) {
+@@ -877,7 +877,7 @@ static int setup_client_socket(struct daemon *daemon)
+ 
+ 	memset(&addr, 0, sizeof(addr));
+ 	addr.sun_family = AF_UNIX;
+-	strlcpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
++	strscpy(addr.sun_path, path, sizeof(addr.sun_path) - 1);
+ 
+ 	if (connect(fd, (struct sockaddr *) &addr, sizeof(addr)) == -1) {
+ 		perror("failed: connect");
+diff --git a/tools/perf/jvmti/libjvmti.c b/tools/perf/jvmti/libjvmti.c
+index fcca275e5bf9..04d6825d23c8 100644
+--- a/tools/perf/jvmti/libjvmti.c
++++ b/tools/perf/jvmti/libjvmti.c
+@@ -158,7 +158,7 @@ copy_class_filename(const char * class_sign, const char * file_name, char * resu
+ 		result[i] = '\0';
+ 	} else {
+ 		/* fallback case */
+-		strlcpy(result, file_name, max_length);
++		strscpy(result, file_name, max_length);
+ 	}
+ }
+ 
+diff --git a/tools/perf/tests/dlfilter-test.c b/tools/perf/tests/dlfilter-test.c
+index 086fd2179e41..7003418614ef 100644
+--- a/tools/perf/tests/dlfilter-test.c
++++ b/tools/perf/tests/dlfilter-test.c
+@@ -234,7 +234,7 @@ static int get_dlfilters_path(char *buf, size_t sz)
+ 		if (access(path, R_OK))
+ 			return -1;
+ 	}
+-	strlcpy(buf, dirname(path), sz);
++	strscpy(buf, dirname(path), sz);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
+index 2d1aa42d36a9..a6b44fa4ec6f 100644
+--- a/tools/perf/tests/symbols.c
++++ b/tools/perf/tests/symbols.c
+@@ -45,7 +45,7 @@ static void exit_test_info(struct test_info *ti)
+ static void get_test_dso_filename(char *filename, size_t max_sz)
+ {
+ 	if (dso_to_test)
+-		strlcpy(filename, dso_to_test, max_sz);
++		strscpy(filename, dso_to_test, max_sz);
+ 	else
+ 		perf_exe(filename, max_sz);
+ }
+diff --git a/tools/perf/ui/tui/helpline.c b/tools/perf/ui/tui/helpline.c
+index db4952f5990b..1040e4c33469 100644
+--- a/tools/perf/ui/tui/helpline.c
++++ b/tools/perf/ui/tui/helpline.c
+@@ -24,7 +24,7 @@ static void tui_helpline__push(const char *msg)
+ 	SLsmg_set_color(0);
+ 	SLsmg_write_nstring((char *)msg, SLtt_Screen_Cols);
+ 	SLsmg_refresh();
+-	strlcpy(ui_helpline__current, msg, sz);
++	strscpy(ui_helpline__current, msg, sz);
+ }
+ 
+ static int tui_helpline__show(const char *format, va_list ap)
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 11992cfe271c..5e1a623be915 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1702,7 +1702,7 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 		if (access(filename, R_OK) && errno == ENOENT && dso->nsinfo) {
+ 			char *new_name = dso__filename_with_chroot(dso, filename);
+ 			if (new_name) {
+-				strlcpy(filename, new_name, filename_size);
++				strscpy(filename, new_name, filename_size);
+ 				free(new_name);
+ 			}
+ 		}
+@@ -2002,7 +2002,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		kce.len = sym->end - sym->start;
+ 		if (!kcore_extract__create(&kce)) {
+ 			delete_extract = true;
+-			strlcpy(symfs_filename, kce.extract_filename,
++			strscpy(symfs_filename, kce.extract_filename,
+ 				sizeof(symfs_filename));
+ 		}
+ 	} else if (dso__needs_decompress(dso)) {
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index a0368202a746..e69841ba3014 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1213,7 +1213,7 @@ void auxtrace_synth_guest_error(struct perf_record_auxtrace_error *auxtrace_erro
+ 	auxtrace_error->fmt = 1;
+ 	auxtrace_error->ip = ip;
+ 	auxtrace_error->time = timestamp;
+-	strlcpy(auxtrace_error->msg, msg, MAX_AUXTRACE_ERROR_MSG);
++	strscpy(auxtrace_error->msg, msg, MAX_AUXTRACE_ERROR_MSG);
+ 	if (machine_pid) {
+ 		auxtrace_error->fmt = 2;
+ 		auxtrace_error->machine_pid = machine_pid;
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index a86614599269..7db2f30f6a0d 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -318,7 +318,7 @@ int filename__decompress(const char *name, char *pathname,
+ 		unlink(tmpbuf);
+ 
+ 	if (pathname && (fd >= 0))
+-		strlcpy(pathname, tmpbuf, len);
++		strscpy(pathname, tmpbuf, len);
+ 
+ 	return fd;
+ }
+diff --git a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+index b450178e3420..5b14c6701ecb 100644
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -507,7 +507,7 @@ int intel_pt__strerror(int code, char *buf, size_t buflen)
+ {
+ 	if (code < 1 || code >= INTEL_PT_ERR_MAX)
+ 		code = INTEL_PT_ERR_UNK;
+-	strlcpy(buf, intel_pt_err_msgs[code], buflen);
++	strscpy(buf, intel_pt_err_msgs[code], buflen);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/llvm-utils.c b/tools/perf/util/llvm-utils.c
+index 4e8e243a6e4b..3d7c614adc80 100644
+--- a/tools/perf/util/llvm-utils.c
++++ b/tools/perf/util/llvm-utils.c
+@@ -80,7 +80,7 @@ search_program(const char *def, const char *name,
+ 	if (def && def[0] != '\0') {
+ 		if (def[0] == '/') {
+ 			if (access(def, F_OK) == 0) {
+-				strlcpy(output, def, PATH_MAX);
++				strscpy(output, def, PATH_MAX);
+ 				return 0;
+ 			}
+ 		} else if (def[0] != '\0')
+@@ -99,7 +99,7 @@ search_program(const char *def, const char *name,
+ 	while (path) {
+ 		scnprintf(buf, sizeof(buf), "%s/%s", path, name);
+ 		if (access(buf, F_OK) == 0) {
+-			strlcpy(output, buf, PATH_MAX);
++			strscpy(output, buf, PATH_MAX);
+ 			ret = 0;
+ 			break;
+ 		}
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 9e02e19c1b7a..d035b35d226e 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -1223,7 +1223,7 @@ int machine__create_extra_kernel_map(struct machine *machine,
+ 
+ 	kmap = map__kmap(map);
+ 
+-	strlcpy(kmap->name, xm->name, KMAP_NAME_LEN);
++	strscpy(kmap->name, xm->name, KMAP_NAME_LEN);
+ 
+ 	err = maps__insert(machine__kernel_maps(machine), map);
+ 
+@@ -1314,7 +1314,7 @@ int machine__map_x86_64_entry_trampolines(struct machine *machine,
+ 			.pgoff = pgoff,
+ 		};
+ 
+-		strlcpy(xm.name, ENTRY_TRAMPOLINE_NAME, KMAP_NAME_LEN);
++		strscpy(xm.name, ENTRY_TRAMPOLINE_NAME, KMAP_NAME_LEN);
+ 
+ 		if (machine__create_extra_kernel_map(machine, kernel, &xm) < 0)
+ 			return -1;
+@@ -1935,7 +1935,7 @@ int machine__process_mmap2_event(struct machine *machine,
+ 			.pgoff = event->mmap2.pgoff,
+ 		};
+ 
+-		strlcpy(xm.name, event->mmap2.filename, KMAP_NAME_LEN);
++		strscpy(xm.name, event->mmap2.filename, KMAP_NAME_LEN);
+ 		ret = machine__process_kernel_mmap_event(machine, &xm, bid);
+ 		if (ret < 0)
+ 			goto out_problem;
+@@ -1992,7 +1992,7 @@ int machine__process_mmap_event(struct machine *machine, union perf_event *event
+ 			.pgoff = event->mmap.pgoff,
+ 		};
+ 
+-		strlcpy(xm.name, event->mmap.filename, KMAP_NAME_LEN);
++		strscpy(xm.name, event->mmap.filename, KMAP_NAME_LEN);
+ 		ret = machine__process_kernel_mmap_event(machine, &xm, NULL);
+ 		if (ret < 0)
+ 			goto out_problem;
+diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
+index 38628805a952..1c6e7f7da856 100644
+--- a/tools/perf/util/pmu-hybrid.c
++++ b/tools/perf/util/pmu-hybrid.c
+@@ -27,7 +27,7 @@ bool perf_pmu__hybrid_mounted(const char *name)
+ 	if (strncmp(name, "cpu_", 4))
+ 		return false;
+ 
+-	strlcpy(pmu_name, name, sizeof(pmu_name));
++	strscpy(pmu_name, name, sizeof(pmu_name));
+ 	return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
+ }
+ 
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index ad209c88a124..7e2d97926e9f 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -599,7 +599,7 @@ static struct perf_cpu_map *pmu_cpumask(int dirfd, const char *name)
+ 	struct perf_pmu pmu = {.name = pmu_name};
+ 	FILE *file;
+ 
+-	strlcpy(pmu_name, name, sizeof(pmu_name));
++	strscpy(pmu_name, name, sizeof(pmu_name));
+ 	for (template = templates; *template; template++) {
+ 		file = perf_pmu__open_file_at(&pmu, dirfd, *template);
+ 		if (!file)
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index 3d50de3217d5..8bc90b856ce3 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -459,7 +459,7 @@ static int probe_cache__open(struct probe_cache *pcache, const char *target,
+ 
+ 	if (target && build_id_cache__cached(target)) {
+ 		/* This is a cached buildid */
+-		strlcpy(sbuildid, target, SBUILD_ID_SIZE);
++		strscpy(sbuildid, target, SBUILD_ID_SIZE);
+ 		dir_name = build_id_cache__linkname(sbuildid, NULL, 0);
+ 		goto found;
+ 	}
+diff --git a/tools/perf/util/svghelper.c b/tools/perf/util/svghelper.c
+index 5c62d3118c41..dd877b259f75 100644
+--- a/tools/perf/util/svghelper.c
++++ b/tools/perf/util/svghelper.c
+@@ -332,7 +332,7 @@ static char *cpu_model(void)
+ 	if (file) {
+ 		while (fgets(buf, 255, file)) {
+ 			if (strstr(buf, "model name")) {
+-				strlcpy(cpu_m, &buf[13], 255);
++				strscpy(cpu_m, &buf[13], 255);
+ 				break;
+ 			}
+ 		}
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 6b9c55784b56..57223c770b89 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1967,7 +1967,7 @@ int dso__load(struct dso *dso, struct map *map)
+ 			char *new_name = dso__filename_with_chroot(dso, name);
+ 			if (new_name) {
+ 				is_reg = is_regular_file(new_name);
+-				strlcpy(name, new_name, PATH_MAX);
++				strscpy(name, new_name, PATH_MAX);
+ 				free(new_name);
+ 			}
+ 		}
+@@ -2254,7 +2254,7 @@ static int find_matching_kcore(struct map *map, char *dir, size_t dir_sz)
+ 		scnprintf(kallsyms_filename, sizeof(kallsyms_filename),
+ 			  "%s/%s/kallsyms", dir, nd->s);
+ 		if (!validate_kcore_addresses(kallsyms_filename, map)) {
+-			strlcpy(dir, kallsyms_filename, dir_sz);
++			strscpy(dir, kallsyms_filename, dir_sz);
+ 			ret = 0;
+ 			break;
+ 		}
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index b2e4afa5efa1..d7c13e3ded9f 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -1979,7 +1979,7 @@ int perf_event__synthesize_event_update_unit(struct perf_tool *tool, struct evse
+ 	if (ev == NULL)
+ 		return -ENOMEM;
+ 
+-	strlcpy(ev->unit, evsel->unit, size + 1);
++	strscpy(ev->unit, evsel->unit, size + 1);
+ 	err = process(tool, (union perf_event *)ev, NULL, NULL);
+ 	free(ev);
+ 	return err;
+@@ -2013,7 +2013,7 @@ int perf_event__synthesize_event_update_name(struct perf_tool *tool, struct evse
+ 	if (ev == NULL)
+ 		return -ENOMEM;
+ 
+-	strlcpy(ev->name, evsel->name, len + 1);
++	strscpy(ev->name, evsel->name, len + 1);
+ 	err = process(tool, (union perf_event *)ev, NULL, NULL);
+ 	free(ev);
+ 	return err;
+-- 
+2.40.1.606.ga4b1b128d6-goog
+
+
