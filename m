@@ -2,91 +2,122 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E757C77B7F
-	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 20:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD77C77B7A
+	for <linux-hardening@archiver.kernel.org>; Tue, 16 May 2023 21:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjEPUzZ (ORCPT
+        id S230225AbjEPVCP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 16:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
+        Tue, 16 May 2023 17:02:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjEPUzY (ORCPT
+        with ESMTP id S230203AbjEPVCP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 16:55:24 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E13559D3
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:55:23 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-53033a0b473so7632189a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 13:55:23 -0700 (PDT)
+        Tue, 16 May 2023 17:02:15 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679EC7681
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 14:02:13 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1ae4c5e1388so1400235ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 14:02:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684270523; x=1686862523;
+        d=chromium.org; s=google; t=1684270933; x=1686862933;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ej71yRmPRu8z2W7e0T8QvzS/1x48yctizGgEV8AzVJw=;
-        b=N1gLcB0OyN5P/6560cO03tcoXuunorDDRv8/T4ScocezDogLnisXjQRFXeEWIPaZNE
-         stvLqWsvqikUbOXMJQGdbb3NxGCGiZHtczbS/auERzUjSFl53q5J/HNhyLHJpxCM2BXz
-         KK9sMEAK94ZcYKUw4QSDoQUSsGVywLhBFCyDw=
+        bh=e4gb25Ei0JSEmyaarjaFRwAmoHZeJNXvUZ7mQGmJMkM=;
+        b=KtyRC9F1fE4nz8CrqDbA2xaYHOUBWDoNH74nB2uDcEebJO2VwplriHX7LlB09nU3G6
+         YEGNUg62dGFEI4no7AG3GW9J9lI/ZY4XPoDo6M0Rkq8hKgaouJ+v7vi0a45NctboVC/I
+         NSeJx6HcEkLywbA2pd4HCmOIKTzRc699Uyuv0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684270523; x=1686862523;
+        d=1e100.net; s=20221208; t=1684270933; x=1686862933;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ej71yRmPRu8z2W7e0T8QvzS/1x48yctizGgEV8AzVJw=;
-        b=HQvtCz6gqIIAVAk/cmggH3CR7RG0T1Hk4/W/kyZT/K9tBKhp9XXPJ9YEmuo7gyFqDL
-         nd9eTugWwnZ1o4wdUeXyL7gQMBUm2rOiETdQt+5mGGy9WbRWsCt413WrPOjINNwhu1yS
-         56bmoWSqH/HZauKFzA3NERQTMmX/KO50q6VA9wQpJajdEkWQRn9V5W+kiJRAv5/wYkEX
-         khmuzekoi/NXuiFS9/jNwuRoy48Fck1d+JEZeAy2BHcZEud2VRMadF6wswQ5TaGgxWM3
-         su/YNPO7W1TM31Wou2tkhZ9dRZ5Z6LNqJvrGknXg1GxoeYMmPuFCzhbhKNOf9ypJZhCK
-         20vg==
-X-Gm-Message-State: AC+VfDwIHf+9VFQIIQ5Uw8sSJxgqOj9a852Ul7qoM7bfqej4p6+pFp2d
-        d9P6jV5lYsqsgj7JjvRIxYv9Bt9g0fOeDgNPxFU=
-X-Google-Smtp-Source: ACHHUZ6w9wbKEGcdydgn0Ey6n7k6IZJ4OF5ycSXaYOoNrr5tDJZEyh1wKJB0NUIZQbaSs10wq8HRmQ==
-X-Received: by 2002:a05:6a20:9184:b0:100:d4ee:ba80 with SMTP id v4-20020a056a20918400b00100d4eeba80mr29367876pzd.27.1684270523147;
-        Tue, 16 May 2023 13:55:23 -0700 (PDT)
+        bh=e4gb25Ei0JSEmyaarjaFRwAmoHZeJNXvUZ7mQGmJMkM=;
+        b=lpxkjnYYBRZncTmfoykA8awY0a7Tfo+wPVwejzMRzKpuQKNN82DLBEyx9S0mI3rtd9
+         9GlW+au/HYiD7BPa32DM1tmplVClBL9pnWq/4mus3naM+cysD+mHEZKI71701bSNNajq
+         KlO3Jl2PKujyM1mENLlHNaizeZsX6Qpft8w5vayRUM2odftZy5OB39O6EQw1qxalFpQs
+         6bTWjznuYFX8bF2YlegDeMvyXnoID4eNf90RqLeAG+dTfltiyocjEuxT9jc9H6h9+DsM
+         MaSLvRQj0epuZf312BF51C4p296klBQVQ+1RfMwWXAwq7aitjOqVUNDt/tcSe581LmrA
+         cLLA==
+X-Gm-Message-State: AC+VfDyi1w5Tj3Bnf/9LMApSYKd/VRugKGmEgvlYqCyLCoLVjltqcdQL
+        luNNzT5A3A+eMU7/7iWUlyIPWw==
+X-Google-Smtp-Source: ACHHUZ7KotVRk+nJvBcqkyJKzbRGNTueF40ja0SXderHguWoH0vVOUylN9pvJx4d8nNrjCwTTD4G+g==
+X-Received: by 2002:a17:902:e545:b0:1ac:544c:12f4 with SMTP id n5-20020a170902e54500b001ac544c12f4mr45522015plf.2.1684270932915;
+        Tue, 16 May 2023 14:02:12 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u17-20020a62ed11000000b00649ac17779csm9633763pfh.160.2023.05.16.13.55.22
+        by smtp.gmail.com with ESMTPSA id ji1-20020a170903324100b001a9b7584824sm15940769plb.159.2023.05.16.14.02.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 13:55:22 -0700 (PDT)
-Date:   Tue, 16 May 2023 13:55:21 -0700
+        Tue, 16 May 2023 14:02:12 -0700 (PDT)
+Date:   Tue, 16 May 2023 14:02:11 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     gregkh@linuxfoundation.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, johannes@sipsolutions.net, rafael@kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_shashim@quicinc.com, quic_pkondeti@quicinc.com
-Subject: Re: RFC design of device coredump collection on panic in Pstore
-Message-ID: <202305161353.0F771E0@keescook>
-References: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
+To:     Kent Overstreet <kent.overstreet@linux.dev>
+Cc:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 07/32] mm: Bring back vmalloc_exec
+Message-ID: <202305161401.F1E3ACFAC@keescook>
+References: <20230509165657.1735798-1-kent.overstreet@linux.dev>
+ <20230509165657.1735798-8-kent.overstreet@linux.dev>
+ <3508afc0-6f03-a971-e716-999a7373951f@wdc.com>
+ <202305111525.67001E5C4@keescook>
+ <ZF6Ibvi8U9B+mV1d@moria.home.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1683561060-2197-1-git-send-email-quic_mojha@quicinc.com>
+In-Reply-To: <ZF6Ibvi8U9B+mV1d@moria.home.lan>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 08, 2023 at 09:21:00PM +0530, Mukesh Ojha wrote:
-> 1. Device_coredump allocates some configurable contigous memory that can be controlled
->    via CONFIG or bootargs and later registers for panic notifiers.
-> 2. Notifier gets added.
-> 3. Pstore adds device_coredump as its front-end via dumper registration similar
->    to kmsg being dump today.
-> 4. Successful registration of dumper.
-> 5. A device driver(A-Z) can register their buffer to be dumped as part of panic.
-> 6. buffer gets added to the dump list.
-> 7. Panic occurs.
-> 8. iterate over registered drivers and copy their dump list to its own memory and if
->    it crosses device core dump memory log an error stop iterating.
-> 9. Similar to devcore_dump() inline with kmsg_dump()
-> 10.Copy the content to pstore region and this could be elf or raw binary that can be
->    discussed.
+On Fri, May 12, 2023 at 02:41:50PM -0400, Kent Overstreet wrote:
+> On Thu, May 11, 2023 at 03:28:40PM -0700, Kees Cook wrote:
+> > On Wed, May 10, 2023 at 03:05:48PM +0000, Johannes Thumshirn wrote:
+> > > On 09.05.23 18:56, Kent Overstreet wrote:
+> > > > +/**
+> > > > + * vmalloc_exec - allocate virtually contiguous, executable memory
+> > > > + * @size:	  allocation size
+> > > > + *
+> > > > + * Kernel-internal function to allocate enough pages to cover @size
+> > > > + * the page level allocator and map them into contiguous and
+> > > > + * executable kernel virtual space.
+> > > > + *
+> > > > + * For tight control over page level allocator and protection flags
+> > > > + * use __vmalloc() instead.
+> > > > + *
+> > > > + * Return: pointer to the allocated memory or %NULL on error
+> > > > + */
+> > > > +void *vmalloc_exec(unsigned long size, gfp_t gfp_mask)
+> > > > +{
+> > > > +	return __vmalloc_node_range(size, 1, VMALLOC_START, VMALLOC_END,
+> > > > +			gfp_mask, PAGE_KERNEL_EXEC, VM_FLUSH_RESET_PERMS,
+> > > > +			NUMA_NO_NODE, __builtin_return_address(0));
+> > > > +}
+> > > > +EXPORT_SYMBOL_GPL(vmalloc_exec);
+> > > 
+> > > Uh W+X memory reagions.
+> > > The 90s called, they want their shellcode back.
+> > 
+> > Just to clarify: the kernel must never create W+X memory regions. So,
+> > no, do not reintroduce vmalloc_exec().
+> > 
+> > Dynamic code areas need to be constructed in a non-executable memory,
+> > then switched to read-only and verified to still be what was expected,
+> > and only then made executable.
+> 
+> So if we're opening this up to the topic if what an acceptible API would
+> look like - how hard is this requirement?
+> 
+> The reason is that the functions we're constructing are only ~50 bytes,
+> so we don't want to be burning a full page per function (particularly
+> for the 64kb page architectures...)
 
-Yeah, I think having something like the panic dump handlers for
-driver-specific data sounds like a fine idea (as long as we have actual
-users of such an interface).
-
-I think it would be easy to add another front-end to pstore (via the
-enums, etc), and expose it via a new template filename in the pstorefs.
+For something that small, why not use the text_poke API?
 
 -- 
 Kees Cook
