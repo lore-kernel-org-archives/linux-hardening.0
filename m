@@ -2,154 +2,176 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B455DC77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 22:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EDBC77B75
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 22:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbjEQW2W (ORCPT
+        id S229621AbjEQW6s (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 18:28:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
+        Wed, 17 May 2023 18:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjEQW2V (ORCPT
+        with ESMTP id S229483AbjEQW6r (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 18:28:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8F959DE;
-        Wed, 17 May 2023 15:28:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DDABE648F9;
-        Wed, 17 May 2023 22:28:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF56C433EF;
-        Wed, 17 May 2023 22:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684362499;
-        bh=KFREZcjLEiG8NztAj50tdQP1RgWuzfuivuMpu6iL7lU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MOMp5wi3hbzvqfoqvTmUUvhRxNtlfo0gRfrFFmV/bCdLQOO7cwZpflzzSzuuXqEB2
-         tYeAsfOOqSmRLo+su9SOHiMUxFaavhgpYZsMR0Zkva2gldyrF2Z2j7vpYw/ivMFcAa
-         l/1oFEpvLe3O30sVjNvzRi64h4PZBwcxtV0la0JFSyk92grL4l8x4TZWKkyMEPfVI2
-         w5AW9BgnguEIhVKbWrw2Qn2j++ySHAyBfTNUsI/SY6IF0lrKrPYqECvbTFMVYBMp4h
-         KGIB3tLsKC7cDlqnKP4bIqFM8r1Rz5LNQB7IlenQFlBUny35vQAHkOYuKcFDi88Jpe
-         KChVFVrEgK0cA==
-Date:   Thu, 18 May 2023 07:28:15 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Replace all non-returning strlcpy with strscpy
-Message-Id: <20230518072815.53fd9f67a3423d85f133d98b@kernel.org>
-In-Reply-To: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
-References: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 17 May 2023 18:58:47 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 835755B99
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 15:58:46 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-643a1fed360so978173b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 15:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684364326; x=1686956326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e2HrkykK6KYI+/dHSMkJ9CPc8h3CMNt34GiUjDW8pDA=;
+        b=Ay+LZ4vkQsZApcOeFB3Xz9LWqhCfsbJS3txcngKa4t1aNZ3LLsZrE1cI0yUzD1D7os
+         J7z+efPVG4WvUV01SUNSkLYruefAukJTPv4if5E0qgLyz0x4KE7re6AcYPrRMiZ5Ip0o
+         8FOdrDrJ9DNy8IrgiOosPfq+i6T3GlEew7zsI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684364326; x=1686956326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e2HrkykK6KYI+/dHSMkJ9CPc8h3CMNt34GiUjDW8pDA=;
+        b=Yc0TFwD9kAEXtxLD3ai6eKlayzoU0EX/qH70N6bD/bN0FX32cR+UlSyDOUU/flB7OA
+         cSksLbAPN/sgBLyl0L1jLgTCCaL+S074uXjSPefzSP9bHJ5DgUw8QW5AqcWW8SsXBexb
+         UCrxXlk2aXXMylNHmZDRm0TepjUvdNEhAcvZ5DLmUjtFZvOOKr0Tvs983bHwNyWJI0o1
+         Ppm7KKLoWqhtY1p57yXk8B/qr7SQtAUOLGcfpiIhTBhkDYS2hcRx5OquEfBVYI4HvCE2
+         mJ+/nHdkQmF7+1YphE0X5wq2HGcy4m3I1PpLidkmUOsAxZ+rFQtK86HeOkmf0aKbu+Og
+         yNbw==
+X-Gm-Message-State: AC+VfDz/gE7RjIGAncXOlJLecFMVx5RneMcKLufyP/6liGQbNeQWTQvH
+        IFw8aluj7fhxD+EMzB8uHcQkeQ==
+X-Google-Smtp-Source: ACHHUZ6Dcv3fAcZzqJxQ12RNOc3hOpIXMDhPd8lJUsgOK2YNOxma3nv1fpa2jFqh6n8DLQutqALkzg==
+X-Received: by 2002:a05:6a00:2291:b0:64b:43d8:a575 with SMTP id f17-20020a056a00229100b0064b43d8a575mr1739516pfe.25.1684364325950;
+        Wed, 17 May 2023 15:58:45 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id fe16-20020a056a002f1000b0063d6666ee4csm60165pfb.34.2023.05.17.15.58.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 15:58:45 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Daniel Verkamp <dverkamp@chromium.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Jeff Xu <jeffxu@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        syzbot+ac3b41786a2d0565b6d5@syzkaller.appspotmail.com,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] pid: Replace struct pid 1-element array with flex-array
+Date:   Wed, 17 May 2023 15:58:42 -0700
+Message-Id: <20230517225838.never.965-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3762; h=from:subject:message-id; bh=3VIzDUhfVBdAPvNGcA/e9saxBOkZkK+WtkJ5LzKNWZA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkZVwi+zjxK1xfiObiQXf1FPTnZFGfAWWd4T4RQyUa PXEWeOCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZGVcIgAKCRCJcvTf3G3AJqyrEA CvteYy+49n7gSRsFTro4fVccGpHcRN/iGrbnn5vBk3RZ/nZr6tvvNCKV+vCDUj6XH1qkIKIGg4lKe3 0qbgGGC//Dr0Fj/iFSV/0WCgbeiuXH1bPtal/Ee2K9o9Gh+hggH459j/CijEDV/NxTemY5OAQSLPgA ibc+hJHMvn8zXGON5/E2l7TVmaycTExeRIRRPx/pM75xtiqez9so+Pa0AjBSrN5zkg32V5gzbbnrh1 sUsHy3SxFoVr0RplRzsoM71gkR4A2YXVpGVRv1m9tawuaGXMvtbV9T6arD989Xgormk13pxnFVztAp 91qpk2GYZ1hgGRQlBwBWDfNMdPRpptPoA1jSE4b1gwnvmCTPPUg703GFxDmspm1p96gf5qrp3bK3iz EQc94i0KrRDWZGL1FC1SpWn3F8mR6LLABhyNUetq0PjPX/NwtcJdeoQZ/4eCOQxLurC+k6Mc7SzK/K 4aKKSc0BRfUcnA/OeuIm34ZTCYaQfhMVZKc2ZzPSG7rWv647eoIqbqqYgO+FcT0gjQsTp8Gvo/hCEf iWQGZJRy7T28twW+zV1LyofKTUqPSB1o3NjyVn+y6kdGzQp67mFq59DrU/r77sGakJN+0oODtL1vc7 DnZcQtnRKAcS0FNpM/zMeldeAtrc5vPGrhMLIz8b4p6M0gPegStdTNGU80Og==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 17 May 2023 14:53:23 +0000
-Azeem Shaikh <azeemshaikh38@gmail.com> wrote:
+For pid namespaces, struct pid uses a dynamically sized array member,
+"numbers". This was implemented using the ancient 1-element fake flexible
+array, which has been deprecated for decades. Replace it with a C99
+flexible array, refactor the array size calculations to use struct_size(),
+and address elements via indexes. Note that the static initializer (which
+defines a single element) works as-is, and requires no special handling.
 
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+Without this, CONFIG_UBSAN_BOUNDS (and potentially CONFIG_FORTIFY_SOURCE)
+will trigger bounds checks:
+https://lore.kernel.org/lkml/20230517-bushaltestelle-super-e223978c1ba6@brauner
 
-Looks good to me.
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Andreas Gruenbacher <agruenba@redhat.com>
+Cc: Daniel Verkamp <dverkamp@chromium.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Jeff Xu <jeffxu@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Reported-by: syzbot+ac3b41786a2d0565b6d5@syzkaller.appspotmail.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/linux/pid.h    |  2 +-
+ kernel/pid.c           | 13 ++++++++-----
+ kernel/pid_namespace.c |  2 +-
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-> ---
->  kernel/trace/ftrace.c |   18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 764668467155..6a77edb51f18 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5743,7 +5743,7 @@ bool ftrace_filter_param __initdata;
->  static int __init set_ftrace_notrace(char *str)
->  {
->  	ftrace_filter_param = true;
-> -	strlcpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
-> +	strscpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
->  	return 1;
->  }
->  __setup("ftrace_notrace=", set_ftrace_notrace);
-> @@ -5751,7 +5751,7 @@ __setup("ftrace_notrace=", set_ftrace_notrace);
->  static int __init set_ftrace_filter(char *str)
->  {
->  	ftrace_filter_param = true;
-> -	strlcpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
-> +	strscpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
->  	return 1;
->  }
->  __setup("ftrace_filter=", set_ftrace_filter);
-> @@ -5763,14 +5763,14 @@ static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
->  
->  static int __init set_graph_function(char *str)
->  {
-> -	strlcpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
-> +	strscpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
->  	return 1;
->  }
->  __setup("ftrace_graph_filter=", set_graph_function);
->  
->  static int __init set_graph_notrace_function(char *str)
->  {
-> -	strlcpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
-> +	strscpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
->  	return 1;
->  }
->  __setup("ftrace_graph_notrace=", set_graph_notrace_function);
-> @@ -6569,8 +6569,8 @@ static int ftrace_get_trampoline_kallsym(unsigned int symnum,
->  			continue;
->  		*value = op->trampoline;
->  		*type = 't';
-> -		strlcpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
-> -		strlcpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
-> +		strscpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
-> +		strscpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
->  		*exported = 0;
->  		return 0;
->  	}
-> @@ -6933,7 +6933,7 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
->  		if (off)
->  			*off = addr - found_func->ip;
->  		if (sym)
-> -			strlcpy(sym, found_func->name, KSYM_NAME_LEN);
-> +			strscpy(sym, found_func->name, KSYM_NAME_LEN);
->  
->  		return found_func->name;
->  	}
-> @@ -6987,8 +6987,8 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
->  
->  			*value = mod_func->ip;
->  			*type = 'T';
-> -			strlcpy(name, mod_func->name, KSYM_NAME_LEN);
-> -			strlcpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
-> +			strscpy(name, mod_func->name, KSYM_NAME_LEN);
-> +			strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
->  			*exported = 1;
->  			preempt_enable();
->  			return 0;
-> 
-
-
+diff --git a/include/linux/pid.h b/include/linux/pid.h
+index b75de288a8c2..653a527574c4 100644
+--- a/include/linux/pid.h
++++ b/include/linux/pid.h
+@@ -67,7 +67,7 @@ struct pid
+ 	/* wait queue for pidfd notifications */
+ 	wait_queue_head_t wait_pidfd;
+ 	struct rcu_head rcu;
+-	struct upid numbers[1];
++	struct upid numbers[];
+ };
+ 
+ extern struct pid init_struct_pid;
+diff --git a/kernel/pid.c b/kernel/pid.c
+index f93954a0384d..f5008146e2e4 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -131,7 +131,7 @@ void free_pid(struct pid *pid)
+ 
+ 	spin_lock_irqsave(&pidmap_lock, flags);
+ 	for (i = 0; i <= pid->level; i++) {
+-		struct upid *upid = pid->numbers + i;
++		struct upid *upid = &pid->numbers[i];
+ 		struct pid_namespace *ns = upid->ns;
+ 		switch (--ns->pid_allocated) {
+ 		case 2:
+@@ -265,7 +265,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+ 	init_waitqueue_head(&pid->wait_pidfd);
+ 	INIT_HLIST_HEAD(&pid->inodes);
+ 
+-	upid = pid->numbers + ns->level;
++	upid = &pid->numbers[ns->level];
+ 	spin_lock_irq(&pidmap_lock);
+ 	if (!(ns->pid_allocated & PIDNS_ADDING))
+ 		goto out_unlock;
+@@ -285,7 +285,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
+ out_free:
+ 	spin_lock_irq(&pidmap_lock);
+ 	while (++i <= ns->level) {
+-		upid = pid->numbers + i;
++		upid = &pid->numbers[i];
+ 		idr_remove(&upid->ns->idr, upid->nr);
+ 	}
+ 
+@@ -656,8 +656,11 @@ void __init pid_idr_init(void)
+ 
+ 	idr_init(&init_pid_ns.idr);
+ 
+-	init_pid_ns.pid_cachep = KMEM_CACHE(pid,
+-			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
++	init_pid_ns.pid_cachep = kmem_cache_create("pid",
++			struct_size((struct pid *)0, numbers, 1),
++			__alignof__(struct pid),
++			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT,
++			NULL);
+ }
+ 
+ static struct file *__pidfd_fget(struct task_struct *task, int fd)
+diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
+index b43eee07b00c..ebb20091a9da 100644
+--- a/kernel/pid_namespace.c
++++ b/kernel/pid_namespace.c
+@@ -48,7 +48,7 @@ static struct kmem_cache *create_pid_cachep(unsigned int level)
+ 		return kc;
+ 
+ 	snprintf(name, sizeof(name), "pid_%u", level + 1);
+-	len = sizeof(struct pid) + level * sizeof(struct upid);
++	len = struct_size((struct pid *)0, numbers, level + 1);
+ 	mutex_lock(&pid_caches_mutex);
+ 	/* Name collision forces to do allocation under mutex. */
+ 	if (!*pkc)
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
