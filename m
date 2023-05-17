@@ -2,58 +2,59 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A58C77B75
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 19:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B887C77B75
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 19:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbjEQTJP (ORCPT
+        id S229460AbjEQTJ6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 15:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55666 "EHLO
+        Wed, 17 May 2023 15:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjEQTJN (ORCPT
+        with ESMTP id S229895AbjEQTJv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 15:09:13 -0400
+        Wed, 17 May 2023 15:09:51 -0400
 Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F7B5AD09
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 12:09:10 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-3f38824a025so38311cf.0
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 12:09:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F31AD040
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 12:09:47 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-3f396606ab0so36121cf.0
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 12:09:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684350549; x=1686942549;
+        d=google.com; s=20221208; t=1684350586; x=1686942586;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wTCrNF1k6eLvgjFBEtoVOllbYMzqAXAFq2VPdBNe0PU=;
-        b=1RbKqgNlFVDn38jbjn+Xyf9v2PZkmr8NlkChy47jOU4d/MCsfICl4HNWXWC54W/pIG
-         1dofWJXAUWTCZsLtED0n1ndgNbYBCSAPo29fdxJKDrBAtQLgOX9f4pwZf9kS3ghxthb2
-         N0cN9RM3ETTW9YLxhlOsJZe46DUn6ZX78QPySHArvwB3zQoi3yo5ttMISt8BFPmlw110
-         S2XVBIeCofavikgM7slybu8BTtRWgBDobDNS6+35+preNvJmtRz207zhxdU79kZEcZuJ
-         wKIH702z053O+wSyqnfucxGZO8MfVQbrjAHBqACNkUsgYmu7+zNA5DF9+/qkjRd2vMvk
-         XikQ==
+        bh=+sfDGNxFljLZPwjQlmmmYoY6SbW+JgmdsgpLXcsCH5Y=;
+        b=0MvIVpu2NgSI501OvzcIRQfAWlfFh7IoDuwZnbku8+cdXhaFdzbKEfjNN/VKul/mZn
+         URKug3mfuS6JaTu5ojMXMT7+kKu9uiNFP0cnWqZUQJ49e9KwRGORJDFlPTfxNatgipeZ
+         Vgk+/vIlqdtEk+wmhus1K7LMgVqIdzKI3DvVuOMDgi79B1Rem50C/RmW/jYSX0G3i/zJ
+         WOiri7zt1F3RiHPjBIVcY26RtfboStBMhcPiP6HZXfy/9Qn+p4ZcTXmqmFGPxjPplVLk
+         TXWJmQW5KaljSVGcWaIIMIFS8eR7yaBJkgU+qUn+Bhfw0Ocdwm5GrWpiMIcIJtMP0XWo
+         K2ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684350549; x=1686942549;
+        d=1e100.net; s=20221208; t=1684350586; x=1686942586;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wTCrNF1k6eLvgjFBEtoVOllbYMzqAXAFq2VPdBNe0PU=;
-        b=Sl5Sy7jy40GuSzOtIdtgYYP9skAq/kaxfIkb2igRvK/VkgxZdyIa9amBbTqnj/SPzo
-         d7Mv4zJSBW+fXt3bvYxovlyxcy8iY26Yc0ZTX/61wHOmdTH1FZcvIT865lfmFHYCSVcE
-         hwNe1aYXu/yeK6/yIPSTLMv2VUX0SgnmDTd3ZAdm/supJWZLgDU98nnLBcLq5Aza1BF2
-         WmOGLuySyol83ypU/fN5ZGUyFwp9Rv5s3cuBgE317qV/dnZFy7fqz1UQh+84FF4Y0y55
-         Mc2bdtgOmDRSGgJ5vITFSiExmOzenTV+yUtB9WhwGIubkrZVIxKfVXcAfkzMM0ZH3P2c
-         +kHw==
-X-Gm-Message-State: AC+VfDw7DsuwFbQ9xGmZSl9wj/XVv79o5vz0KcHIHB8kQZCSfj326dbh
-        L3U4tmowfq3dm2x1QOn2oSKImaxbzQkt72SNkdtZ1g==
-X-Google-Smtp-Source: ACHHUZ4vHFPYr3XteL6OVBxr3sfjSsd2NrUvpo8AQLiFMWwfzIDeniQtS3efGU7DsGoHFylfwTLFONOliqHDKMSojjg=
-X-Received: by 2002:a05:622a:181b:b0:3ef:3083:a437 with SMTP id
- t27-20020a05622a181b00b003ef3083a437mr34609qtc.18.1684350549567; Wed, 17 May
- 2023 12:09:09 -0700 (PDT)
+        bh=+sfDGNxFljLZPwjQlmmmYoY6SbW+JgmdsgpLXcsCH5Y=;
+        b=BMN2biYQycJSGI0VPFP/d2Mvh3EK6WMaaqodwOFUUwHIIL8Eb9nYAAelJuNE1O953Y
+         +QHeSQVPUIYNq/hkxPGo5ymfyxFGxfyrUuWCQ1DafjHoqJvabPA4Mu78dE0Vu30M5qvi
+         PJjkae/juuapeZr3o+auUsdSwQI4pY2bWmsfj7YK1ERm/MkAWhJ8VOjKb+hCKxRbwrQ2
+         +wp6VtiypGwNTWwn9+1nTUojzwfKF3DorboemFksoWoobMheonZ3sVoXey9Kkl9aqXwE
+         MuYmR17xjl0bMlyKd3/QWNytsjnTwUOTyRPiOKsc0XeXXtXypmsUVxICdFa8ttnbt9wI
+         TTeQ==
+X-Gm-Message-State: AC+VfDxvZaJQGWw4Hx5QG4rAAxROrI0LMu0JS/AyvSCiQPUT6VYQQuPo
+        aNBuGwEUev7oNEUo/O3KbHQg+pMJa2ixLpDCmYFufQ==
+X-Google-Smtp-Source: ACHHUZ4xH8p2xAR9gogsMMo1l6go0T7O3blGg6ngP+XOlJcsKmi78F6t5pYwE2bb/x8i7L2vXtL9Yv+uOHHEhdQulvA=
+X-Received: by 2002:a05:622a:188f:b0:3ed:86f6:6eab with SMTP id
+ v15-20020a05622a188f00b003ed86f66eabmr19628qtc.14.1684350586364; Wed, 17 May
+ 2023 12:09:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230407215406.768464-1-ndesaulniers@google.com> <168435014337.2056649.7592777028793700479.b4-ty@chromium.org>
-In-Reply-To: <168435014337.2056649.7592777028793700479.b4-ty@chromium.org>
+References: <20230407215406.768464-1-ndesaulniers@google.com>
+ <168435014337.2056649.7592777028793700479.b4-ty@chromium.org> <CAFP8O3L_RsaTMJvT7hmjD6ON49uob9Fb4mWg8ZUav_Y-FCgTMA@mail.gmail.com>
+In-Reply-To: <CAFP8O3L_RsaTMJvT7hmjD6ON49uob9Fb4mWg8ZUav_Y-FCgTMA@mail.gmail.com>
 From:   Fangrui Song <maskray@google.com>
-Date:   Wed, 17 May 2023 12:08:58 -0700
-Message-ID: <CAFP8O3L_RsaTMJvT7hmjD6ON49uob9Fb4mWg8ZUav_Y-FCgTMA@mail.gmail.com>
+Date:   Wed, 17 May 2023 12:09:35 -0700
+Message-ID: <CAFP8O3JivZh+AAV7N90Nk7U2BHRNST6MRP0zHtfQ-Vj0m4+pDA@mail.gmail.com>
 Subject: Re: [PATCH] ubsan: remove cc-option test for UBSAN_TRAP
 To:     Kees Cook <keescook@chromium.org>
 Cc:     ndesaulniers@google.com, masahiroy@kernel.org,
@@ -67,38 +68,41 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 12:02=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+On Wed, May 17, 2023 at 12:08=E2=80=AFPM Fangrui Song <maskray@google.com> =
 wrote:
 >
-> On Fri, 7 Apr 2023 14:54:06 -0700, Nick Desaulniers wrote:
-> > -fsanitize-undefined-trap-on-error has been supported since GCC 5.1 and
-> > Clang 3.2.  The minimum supported version of these according to
-> > Documentation/process/changes.rst is 5.1 and 11.0.0 respectively. Drop
-> > this cc-option check.
+> On Wed, May 17, 2023 at 12:02=E2=80=AFPM Kees Cook <keescook@chromium.org=
+> wrote:
+> >
+> > On Fri, 7 Apr 2023 14:54:06 -0700, Nick Desaulniers wrote:
+> > > -fsanitize-undefined-trap-on-error has been supported since GCC 5.1 a=
+nd
+> > > Clang 3.2.  The minimum supported version of these according to
+> > > Documentation/process/changes.rst is 5.1 and 11.0.0 respectively. Dro=
+p
+> > > this cc-option check.
+> > >
+> > >
+> >
+> > Applied to for-next/hardening, thanks!
+> >
+> > [1/1] ubsan: remove cc-option test for UBSAN_TRAP
+> >       https://git.kernel.org/kees/c/08e4044243a6
+> >
+> > --
+> > Kees Cook
 > >
 > >
 >
-> Applied to for-next/hardening, thanks!
+> For this -fsanitize-undefined-trap-on-error, I think we need a v2 patch t=
+hat
+> tries -fsanitize-trap=3Dall as well.
+
+Correction: -fsanitize-trap=3Dundefined
+
+> -fsanitize-undefined-trap-on-error has been deprecated in Clang for 8
+> years, and at some point we will remove the option.
 >
-> [1/1] ubsan: remove cc-option test for UBSAN_TRAP
->       https://git.kernel.org/kees/c/08e4044243a6
->
-> --
-> Kees Cook
->
->
-
-For this -fsanitize-undefined-trap-on-error, I think we need a v2 patch tha=
-t
-tries -fsanitize-trap=3Dall as well.
-
--fsanitize-undefined-trap-on-error has been deprecated in Clang for 8
-years, and at some point we will remove the option.
-
-GCC implements -fsanitize-trap=3Dall later, but
--fsanitize-undefined-trap-on-error is documented as deprecated as
-well.
-
-
---=20
-=E5=AE=8B=E6=96=B9=E7=9D=BF
+> GCC implements -fsanitize-trap=3Dall later, but
+> -fsanitize-undefined-trap-on-error is documented as deprecated as
+> well.
