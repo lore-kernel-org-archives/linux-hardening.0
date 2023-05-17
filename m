@@ -2,84 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D56C77B7D
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 19:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFF6C77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 19:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbjEQTCd (ORCPT
+        id S229675AbjEQTI6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 15:02:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52194 "EHLO
+        Wed, 17 May 2023 15:08:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjEQTCc (ORCPT
+        with ESMTP id S229464AbjEQTI5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 15:02:32 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87F0040CF
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 12:02:31 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-643ac91c51fso901170b3a.1
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 12:02:31 -0700 (PDT)
+        Wed, 17 May 2023 15:08:57 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C5D2133
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 12:08:55 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1ae54b623c2so9523945ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 12:08:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684350151; x=1686942151;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5cQTCNheYZl+3yNBMCx3sHGYTeFIvig1PSLkqmRnl24=;
-        b=c4/xIh+TlUQipA53k5weP//Y9ntGrUcZcfCaC+Ro3CgAcfELru1Fwua2gzPbAkTxBJ
-         nJorT+TlzvlTJgfhob/eVzwHf/+d4pEhgSfC8n0AozlqfZY7nYbsoc6CK9P+UzlhNQfq
-         9l7QcA3K8bd9/EbKP8kNalAroP5gS6/wxxs8k=
+        d=chromium.org; s=google; t=1684350535; x=1686942535;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0VPi5GJ7kmLjbS0ChDvxnSbO/WFZryCQHS1zNojC1Jg=;
+        b=QAoKvlkXZAxsNAT7iJlbWuQC5CZ9lAmg+vD8qn89JEKx3i+Chbwjy34BBTAw3HenUM
+         95QJL8FLlicZ+roKErcDYlYs7dqg9pbjkYn1D++vPhog1nPSZ7JNL26LZYK2Jsy39vRj
+         K1OI4iaGO9d4YxchHs9cUQJDIpoyX0EpIlE3Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684350151; x=1686942151;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5cQTCNheYZl+3yNBMCx3sHGYTeFIvig1PSLkqmRnl24=;
-        b=J0QafXnFDwrgQqhDUGxtFVPK7IsTG+k91apfjnaXMdECClGiv5HzT9BfymC9G8WNXE
-         BZcHleBbITG+DplVfqbIcvaO3ovA5EVfeegu2PhIH250yU59eDhqZGWQx2CsLOeq+lJS
-         FWV/U5AyF4NU5pS+K7/P+V0OOVADUPYbWTi9smHPCM7UeW6a+mVSGbD6GyBeRGX10yjd
-         nDJcV3o/71PH1y3UKwvtrjyRLlQjoTK1uIa1NwWZGJhMcpm7HmaHd809sRh8wLmJ1uRh
-         U5wfVS4TOspLoG6NOcaz0nbi2U4qpMdt/zukmgOC3FJ1YKhhzIEZe4ELObevgDmOWIvM
-         FQxw==
-X-Gm-Message-State: AC+VfDz4W7O50/fhmh0RsZd1tsmwPKZYX1JkyKssSWxHhEI0adaOGeSJ
-        5OQHIS/IiYecmfFVDOqESnbGJA==
-X-Google-Smtp-Source: ACHHUZ5AQB3xPNC8HeE5B7ZSnQJ2q0B1Dhpm7pti083TO4i4yE+YkV+L4SebHFCZSa52EeGOU/k4+w==
-X-Received: by 2002:a05:6a20:4389:b0:105:6e1d:5605 with SMTP id i9-20020a056a20438900b001056e1d5605mr15348701pzl.62.1684350151063;
-        Wed, 17 May 2023 12:02:31 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684350535; x=1686942535;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0VPi5GJ7kmLjbS0ChDvxnSbO/WFZryCQHS1zNojC1Jg=;
+        b=i9ltnlF7OtjQ+7/Y2E/9Y/c8tsxoKz/xoecI/wYmk+Ojrjb8Zti0/DuIrV8e2Qs2GI
+         TZpXd5QhGooaEtk1+29knChsx6kD1RZmYmwaNYVu0swTVVWOEr2toSvUGqzOlUKMO/Fh
+         jhPSpMlrqCZ33y7e0m+R9M247LRIWg1ZUqVd3lLNyXCrMQsyUK6T0bSM09Z43uzm8gZR
+         kuAu9cJiOTXBHPtu0E5u3DadS8EL4euWnFXo/jYUEpE26lfrijhTi/gaCHPX82WLeynX
+         JWZ5uWYanB+31WLLkhkljhengNzY54yVwj1HBrEi3gqCx5i5wLVBaNWAyjcpC4+3VMOX
+         chFQ==
+X-Gm-Message-State: AC+VfDxwXyw1P96+eH8a/ffXAFWTK9KYgJdQoDjMW05o3yWxPD5UVPah
+        +Zo8vjMUvt1Lk/IJ12YaV4eFwg==
+X-Google-Smtp-Source: ACHHUZ4X5CjhFGFsKy9pS738nZl7R3AuPDeJNfdDh/ABCbUMCY6EEuqWdvHd5p+s0M+DHCZFWQDnHw==
+X-Received: by 2002:a17:903:d2:b0:1aa:fe40:6f96 with SMTP id x18-20020a17090300d200b001aafe406f96mr39969648plc.23.1684350535344;
+        Wed, 17 May 2023 12:08:55 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k3-20020aa790c3000000b0063d46ec5777sm15521703pfk.158.2023.05.17.12.02.30
+        by smtp.gmail.com with ESMTPSA id bh3-20020a170902a98300b00192aa53a7d5sm18013091plb.8.2023.05.17.12.08.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 12:02:30 -0700 (PDT)
+        Wed, 17 May 2023 12:08:54 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     ndesaulniers@google.com, masahiroy@kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, linux-kbuild@vger.kernel.org,
-        nathan@kernel.org, linux-hardening@vger.kernel.org,
-        jpoimboe@kernel.org, llvm@lists.linux.dev, mbenes@suse.cz,
-        linux-kernel@vger.kernel.org, trix@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH] ubsan: remove cc-option test for UBSAN_TRAP
-Date:   Wed, 17 May 2023 12:02:25 -0700
-Message-Id: <168435014337.2056649.7592777028793700479.b4-ty@chromium.org>
+To:     Miguel Ojeda <ojeda@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Bill Wendling <morbo@google.com>,
+        Qing Zhao <qing.zhao@oracle.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] Compiler Attributes: Add __counted_by macro
+Date:   Wed, 17 May 2023 12:08:44 -0700
+Message-Id: <20230517190841.gonna.796-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230407215406.768464-1-ndesaulniers@google.com>
-References: <20230407215406.768464-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2258; h=from:subject:message-id; bh=yahvJN5DCdafW0sbh3khm99IcP//ArMckUf9/Rm/k1Y=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkZSY8EEJAxM5wyI9gvstGb7zmJRvApBqEZyE9Udmr DyS5k9aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZGUmPAAKCRCJcvTf3G3AJrhjEA CHmN+3SQXNK++1nQr083pwerk7hnyxY/0CHVs/nd+VRVNIU4kbvdO/H/Hm3bs4+9THF5BAibH4f22f AF+mFhiS3xb8ADoFbZkKr9/fKhBnysCjg1A9p0ROOYVmQfGWe598FWh50dGb8yYBII2RRdKBtQ6C/I kcWGtEQhSY5BsRtfvEJJInQvoXaevjSM47tB9Re+tcHIG6S33Uba/07ek+0lVm3oydR/eumHn1HST/ /4VSivqreIggJen6dDe23s4U01qDbepY2T99mfcZs61U/DdONRUEzPdGo9jJLowtrVWpMOp3Qrrkay 4RiE9k0M+czZH3LIRANnchCZjRomfHUe6W8MwnZssrx8AY02Hf4z3g2ocsNVVWYlq0JaQiA2tjCJsk 0Cl53x+UTS1QGilWJQ+V6z2FzJVlYx0bfEp4nU375D3evPtqos0j7Z153C7igMkSJWwJdFQ/vfD4dO x51qKGl9f1x54XLlKVjOfKkh3h6Qx2mIXVYg5lzH/xxNunuphL24QBTI47jeMxmwg8ABMu6FamxKkf RhpsdZL2sGJtmiunsxqalimFqKyYWAtLl2V5ly+YNRtfhS8MgUud4SHAXFkO03Umx6rme9CqhA4tVS VUuPd+ULbQylFUrp/1QFDtTZvhtxg8byb3pEwkg22LzzulBTtz9JvDQ6CLLw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 7 Apr 2023 14:54:06 -0700, Nick Desaulniers wrote:
-> -fsanitize-undefined-trap-on-error has been supported since GCC 5.1 and
-> Clang 3.2.  The minimum supported version of these according to
-> Documentation/process/changes.rst is 5.1 and 11.0.0 respectively. Drop
-> this cc-option check.
-> 
-> 
+In an effort to annotate all flexible array members with their run-time
+size information, the "element_count" attribute is being introduced by
+Clang[1] and GCC[2] in future releases. This annotation will provide
+the CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE features the ability
+to perform run-time bounds checking on otherwise unknown-size flexible
+arrays.
 
-Applied to for-next/hardening, thanks!
+Even though the attribute is under development, we can start the
+annotation process in the kernel. This requires defining a macro for
+it, even if we have to change the name of the actual attribute later.
+Since it is likely that this attribute may change its name to "counted_by"
+in the future (to better align with a future total bytes "sized_by"
+attribute), name the wrapper macro "__counted_by", which also reads more
+clearly (and concisely) in structure definitions.
 
-[1/1] ubsan: remove cc-option test for UBSAN_TRAP
-      https://git.kernel.org/kees/c/08e4044243a6
+[1] https://reviews.llvm.org/D148381
+[2] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
 
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: Bill Wendling <morbo@google.com>
+Cc: Qing Zhao <qing.zhao@oracle.com>
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Tom Rix <trix@redhat.com>
+Cc: llvm@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: - update "Optional" comments
+v1: https://lore.kernel.org/all/20230504181636.never.222-kees@kernel.org/
+---
+ include/linux/compiler_attributes.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+index e659cb6fded3..a92d8887e8f0 100644
+--- a/include/linux/compiler_attributes.h
++++ b/include/linux/compiler_attributes.h
+@@ -123,6 +123,19 @@
+ # define __designated_init
+ #endif
+ 
++/*
++ * Optional: only supported since gcc >= 14
++ * Optional: only supported since clang >= 17
++ *
++ *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
++ * clang: https://reviews.llvm.org/D148381
++ */
++#if __has_attribute(__element_count__)
++# define __counted_by(member)		__attribute__((__element_count__(member)))
++#else
++# define __counted_by(member)
++#endif
++
+ /*
+  * Optional: only supported since clang >= 14.0
+  *
 -- 
-Kees Cook
+2.34.1
 
