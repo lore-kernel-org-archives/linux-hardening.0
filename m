@@ -2,153 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB1C7EE23
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 14:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF81EC77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 14:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231561AbjEQOSX (ORCPT
+        id S231732AbjEQOaX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 10:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44162 "EHLO
+        Wed, 17 May 2023 10:30:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbjEQOSU (ORCPT
+        with ESMTP id S229740AbjEQOaV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 10:18:20 -0400
-X-Greylist: delayed 61058 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 17 May 2023 07:18:18 PDT
-Received: from out-10.mta0.migadu.com (out-10.mta0.migadu.com [91.218.175.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2ACD170F
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 07:18:18 -0700 (PDT)
-Date:   Wed, 17 May 2023 10:18:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1684333096;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yJ5xyIjdnqOODdgYyT/tGprQTvXceNzR+PcU18XJA2Y=;
-        b=DRkNRqw2cpxP72oh9ESo41gFutZSDl+YmWd79P8rLziplWE9cmhMThXeM5UNfH3kBgthIO
-        a2S1CSe8ZEfb6r9FtPGIm+83nqHbWlyB9vWkyhrNJhAK04eoQo+AdJg4SsVr1UUtpeiZoX
-        R3WCAJelUZMAB+z0U6eH56SZab8kKuQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        song@kernel.org
-Subject: Re: [PATCH 07/32] mm: Bring back vmalloc_exec
-Message-ID: <ZGTiI49s8+YjBxVX@moria.home.lan>
-References: <20230509165657.1735798-1-kent.overstreet@linux.dev>
- <20230509165657.1735798-8-kent.overstreet@linux.dev>
- <3508afc0-6f03-a971-e716-999a7373951f@wdc.com>
- <202305111525.67001E5C4@keescook>
- <ZF6Ibvi8U9B+mV1d@moria.home.lan>
- <202305161401.F1E3ACFAC@keescook>
- <ZGPzocRpSlg+4vgN@moria.home.lan>
- <ZGP54T0d89TMySsf@casper.infradead.org>
- <ZGRmC2Qhe6oAHPIm@moria.home.lan>
- <ZGTe6zFYL25fNwcw@kernel.org>
+        Wed, 17 May 2023 10:30:21 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6C69C;
+        Wed, 17 May 2023 07:30:20 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-3361b08a564so5657245ab.3;
+        Wed, 17 May 2023 07:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684333820; x=1686925820;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yNUMQ1PEW/q33xRaa3QEUyTPfbVsUmYNJm0BWOVeXO4=;
+        b=WvGb/E9JOdG7FSmn8zE2q48KwNsDlB+LL/p9y2AqxtlKYYfLzI+ptQKMjtVgA2AyTR
+         7Qbj1enSn4b/no9DOQziR3ihlN30R6f22k6Aqb20hMPEduBgJWB5W8tb2RbjkdG6Z0n1
+         OtFAuYTgwNrAUy9DHLaA3aX1VygCPtb8MkoxmLwytPLZXwiPhsxAhJVdUk82dTLD8wjS
+         ppOgSs1dQQ9W2kRnW7f68XW8YMNGgtXorFTpfJNzwBIKMJJbqoxWa4pv33uF4MAvgp87
+         ufK0C9nM68+F4ZsK3sgDb6BrjV/PkAONiUnEcnDyJrstlJDrALt35E10GjsZ6wpWlMZz
+         C5pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684333820; x=1686925820;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yNUMQ1PEW/q33xRaa3QEUyTPfbVsUmYNJm0BWOVeXO4=;
+        b=N/lyGgaqf3VERBUrQYoHpX98+SOUhyXwWhjgA72nYLuvkt4dE5QjNI84sibI13D0uA
+         0//gzjPkk8EYugXiMEpN4pEZ61xBBLdlaHEQK+CZ66OwJIMpLtYaQ0RpiHy73xT9aroT
+         evYuh8rI838A/sgykqamA/mLwcEgaCpnX2iSflRToN9VN3Qvqelirl94qF8l8dEo7Iqy
+         c8gDbuuFMo715rRalbpsKaBTXrzjfwDjHcL5S67irXzw01EHNs4uoF+3GR3SacOZoyzO
+         Qb3X1ghnEOVANRv3MWwCvr82+SEPfDBGWBG7NDAoFcjRs5UhP+xcDYq+3+hFKSkSdlXR
+         kQNQ==
+X-Gm-Message-State: AC+VfDyR6ktK4x7gaYfFAVn3wKBMvi5SuZ7bGW+zwhQhI/YWjBgivur0
+        lZGtA6rnn/Yp47vcVQUO1EQzeZnwpTXyag==
+X-Google-Smtp-Source: ACHHUZ6/3uRbfAeIuIA2STlk3/JDq8+dYaVfVPym/azA03JYjDzYn7elAXf/5OV0s0wqu3dVjbTyTw==
+X-Received: by 2002:a92:de50:0:b0:338:1e73:ca0 with SMTP id e16-20020a92de50000000b003381e730ca0mr2354891ilr.11.1684333819595;
+        Wed, 17 May 2023 07:30:19 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id a2-20020a927f02000000b003312915e615sm8153185ild.28.2023.05.17.07.30.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 07:30:19 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Adam Radford <aradford@gmail.com>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH] scsi: 3w-9xxx: Replace all non-returning strlcpy with strscpy
+Date:   Wed, 17 May 2023 14:29:55 +0000
+Message-ID: <20230517142955.1519572-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZGTe6zFYL25fNwcw@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 05:04:27PM +0300, Mike Rapoport wrote:
-> On Wed, May 17, 2023 at 01:28:43AM -0400, Kent Overstreet wrote:
-> > On Tue, May 16, 2023 at 10:47:13PM +0100, Matthew Wilcox wrote:
-> > > On Tue, May 16, 2023 at 05:20:33PM -0400, Kent Overstreet wrote:
-> > > > On Tue, May 16, 2023 at 02:02:11PM -0700, Kees Cook wrote:
-> > > > > For something that small, why not use the text_poke API?
-> > > > 
-> > > > This looks like it's meant for patching existing kernel text, which
-> > > > isn't what I want - I'm generating new functions on the fly, one per
-> > > > btree node.
-> > > > 
-> > > > I'm working up a new allocator - a (very simple) slab allocator where
-> > > > you pass a buffer, and it gives you a copy of that buffer mapped
-> > > > executable, but not writeable.
-> > > > 
-> > > > It looks like we'll be able to convert bpf, kprobes, and ftrace
-> > > > trampolines to it; it'll consolidate a fair amount of code (particularly
-> > > > in bpf), and they won't have to burn a full page per allocation anymore.
-> > > > 
-> > > > bpf has a neat trick where it maps the same page in two different
-> > > > locations, one is the executable location and the other is the writeable
-> > > > location - I'm stealing that.
-> > > 
-> > > How does that avoid the problem of being able to construct an arbitrary
-> > > gadget that somebody else will then execute?  IOW, what bpf has done
-> > > seems like it's working around & undoing the security improvements.
-> > > 
-> > > I suppose it's an improvement that only the executable address is
-> > > passed back to the caller, and not the writable address.
-> > 
-> > Ok, here's what I came up with. Have not tested all corner cases, still
-> > need to write docs - but I think this gives us a nicer interface than
-> > what bpf/kprobes/etc. have been doing, and it does the sub-page sized
-> > allocations I need.
-> > 
-> > With an additional tweak to module_alloc() (not done in this patch yet)
-> > we avoid ever mapping in pages both writeable and executable:
-> > 
-> > -->--
-> > 
-> > From 6eeb6b8ef4271ea1a8d9cac7fbaeeb7704951976 Mon Sep 17 00:00:00 2001
-> > From: Kent Overstreet <kent.overstreet@linux.dev>
-> > Date: Wed, 17 May 2023 01:22:06 -0400
-> > Subject: [PATCH] mm: jit/text allocator
-> > 
-> > This provides a new, very simple slab allocator for jit/text, i.e. bpf,
-> > ftrace trampolines, or bcachefs unpack functions.
-> > 
-> > With this API we can avoid ever mapping pages both writeable and
-> > executable (not implemented in this patch: need to tweak
-> > module_alloc()), and it also supports sub-page sized allocations.
-> 
-> This looks like yet another workaround for that module_alloc() was not
-> designed to handle permission changes. Rather than create more and more
-> wrappers for module_alloc() we need to have core API for code allocation,
-> apparently on top of vmalloc, and then use that API for modules, bpf,
-> tracing and whatnot.
-> 
-> There was quite lengthy discussion about how to handle code allocations
-> here:
-> 
-> https://lore.kernel.org/linux-mm/20221107223921.3451913-1-song@kernel.org/
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
 
-Thanks for the link!
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-Added Song to the CC.
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ drivers/scsi/3w-9xxx.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Song, I'm looking at your code now - switching to hugepages is great,
-but I wonder if we might be able to combine our two approaches - with
-the slab allocator I did, do we have to bother with VMAs at all? And
-then it gets us sub-page sized allocations.
+diff --git a/drivers/scsi/3w-9xxx.c b/drivers/scsi/3w-9xxx.c
+index 38d20a69ee12..f925f8664c2c 100644
+--- a/drivers/scsi/3w-9xxx.c
++++ b/drivers/scsi/3w-9xxx.c
+@@ -617,7 +617,7 @@ static int twa_check_srl(TW_Device_Extension *tw_dev, int *flashed)
+ 	}
+ 
+ 	/* Load rest of compatibility struct */
+-	strlcpy(tw_dev->tw_compat_info.driver_version, TW_DRIVER_VERSION,
++	strscpy(tw_dev->tw_compat_info.driver_version, TW_DRIVER_VERSION,
+ 		sizeof(tw_dev->tw_compat_info.driver_version));
+ 	tw_dev->tw_compat_info.driver_srl_high = TW_CURRENT_DRIVER_SRL;
+ 	tw_dev->tw_compat_info.driver_branch_high = TW_CURRENT_DRIVER_BRANCH;
 
-> and Song is already working on improvements for module_alloc(), e.g. see
-> commit ac3b43283923 ("module: replace module_layout with module_memory")
-> 
-> Another thing, the code below will not even compile on !x86.
-
-Due to text_poke(), which I see is abstracted better in that patchset.
-
-I'm very curious why text_poke() does tlb flushing at all; it seems like
-flush_icache_range() is actually what's needed?
-
-text_poke() also only touching up to two pages, without that being
-documented, is also a footgun...
-
-And I'm really curious why text_poke() is needed at all. Seems like we
-could just use kmap_local() to create a temporary writeable mapping,
-except in my testing that got me a RO mapping. Odd.
