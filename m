@@ -2,77 +2,158 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60BCCC77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 16:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916F0C77B75
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 17:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbjEQQBT (ORCPT
+        id S229502AbjEQRSM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 12:01:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58820 "EHLO
+        Wed, 17 May 2023 13:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232114AbjEQQBB (ORCPT
+        with ESMTP id S229509AbjEQRSL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 12:01:01 -0400
-X-Greylist: delayed 64972 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 17 May 2023 09:00:32 PDT
-Received: from out-45.mta1.migadu.com (out-45.mta1.migadu.com [95.215.58.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B9C422D
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 09:00:31 -0700 (PDT)
-Date:   Wed, 17 May 2023 11:59:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1684339203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Uj5Rjh+AN0r/Ht1trw7qzyL7wBHUsoOZQ8wgW5hbJew=;
-        b=DKzUV2fMhLT8gizPcUiaWKOzbYxc5ECoXth7Jg+gW5iquDVvCug3k6eHhkGXh2VnHvbXsh
-        WF7yrhikG1PJYZw7Vgi2IvcQJXxvUN+yQTvVEiCRi+ldsou1jQ5un2NZgJyqsC8Ff95uqE
-        +hOLNw5zcm0cdTCRdL7KgsuYii08Ng8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        song@kernel.org
-Subject: Re: [PATCH 07/32] mm: Bring back vmalloc_exec
-Message-ID: <ZGT5/gBbh5kNYQgf@moria.home.lan>
-References: <3508afc0-6f03-a971-e716-999a7373951f@wdc.com>
- <202305111525.67001E5C4@keescook>
- <ZF6Ibvi8U9B+mV1d@moria.home.lan>
- <202305161401.F1E3ACFAC@keescook>
- <ZGPzocRpSlg+4vgN@moria.home.lan>
- <ZGP54T0d89TMySsf@casper.infradead.org>
- <ZGRmC2Qhe6oAHPIm@moria.home.lan>
- <ZGTe6zFYL25fNwcw@kernel.org>
- <ZGTiI49s8+YjBxVX@moria.home.lan>
- <20230517154412.GC4967@kernel.org>
+        Wed, 17 May 2023 13:18:11 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4DBD6E82
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 10:18:06 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2ac785015d6so10254571fa.0
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 10:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684343885; x=1686935885;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t/W+xyRZOrFaXXUosMsho+Wtkn3dRl1nHYsHDumTX8E=;
+        b=M7E8jA+AmNT97OdIY8EZEME/eE+/AXzah9OG3V8PaBGWJidzVYSF79fCHwsuldXoEW
+         3wVSO7Pe4WzDijxQujtsuoTQFfCyLlAVfYjPn4s0+18O3QY5mga3S5tAt6SC8I4bMZrJ
+         OeC0ztHE27ts2V4VdqDV6AK/zAFJ+oMde7kJbDBkuVMXBr9aAWumVVbtWOxpVoDjm7gP
+         dwocPRjQB6ttH9S2QDR+xLBBKpZ+lJMb2Tm0seZVVK1YzEHdbqpDAWfcxHZ7um/TcF1c
+         xXeKo9YrExNsV4ek9RCSFvP5fKVLXHZKOP38BHUoFgWjNEqFoVvdQ1dAxUUqHqQPRzA1
+         38YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684343885; x=1686935885;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t/W+xyRZOrFaXXUosMsho+Wtkn3dRl1nHYsHDumTX8E=;
+        b=CxyD61yQdzy7/zjJpYtao4CysJX7miYbUyBvAQwCuwcHGdPhztYVHUSBizBcfB1RbT
+         O1RGaK9K+AcI7JtL1Dr/EdVQyNLb1RKx3NQlHVt9Qv3Bgka6hI37ABlb5G8XQ7N6wRT2
+         xukqvVNZvpPrFxNJiBg7O8pZ5hXhh5wgrksO/cEXw7UXQ5PzyEZ4PDbe5QNOsb7AVco4
+         vITGCWFJCNIa3BlhTTfOYTKxvFaMaeymdV6sKvJoOvFCdn42V0r3Pwv576yfbHs+ABDr
+         K9FwdV7dA1ZYIlwQDFYNMeQ1qpmkLJYUuAUBVeIT0Nwd8WKx4SMNCJ1iGRXO12fg7DaD
+         Ovcg==
+X-Gm-Message-State: AC+VfDzvCS4w7a6l61315NeEZLH4Upnx3s8cYud2w68c6nz9HDdDlGXP
+        auFNA6g4wTVl2aGxBJiYQs6m3g==
+X-Google-Smtp-Source: ACHHUZ7qL3cLZD9LGj91BXwss6hJFPqDLP8pRWU4pQowx5XVm0GxnZn5iAX20K55cchMNdGFcvo7wg==
+X-Received: by 2002:a05:6512:75:b0:4ec:8816:f4fc with SMTP id i21-20020a056512007500b004ec8816f4fcmr481324lfo.6.1684343885003;
+        Wed, 17 May 2023 10:18:05 -0700 (PDT)
+Received: from [192.168.1.101] (abxi58.neoplus.adsl.tpnet.pl. [83.9.2.58])
+        by smtp.gmail.com with ESMTPSA id j18-20020ac24552000000b004f140788184sm1038284lfm.289.2023.05.17.10.18.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 May 2023 10:18:04 -0700 (PDT)
+Message-ID: <f6a491ce-57ad-66c8-8fa2-933bf208adac@linaro.org>
+Date:   Wed, 17 May 2023 19:18:01 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230517154412.GC4967@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH][next] media: venus: hfi_cmds: Replace fake flex-array
+ with flexible-array member
+Content-Language: en-US
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZGQn63U4IeRUiJWb@work>
+ <8f9ca4a1-26ee-cd37-6c15-abdc832d77b3@linaro.org>
+In-Reply-To: <8f9ca4a1-26ee-cd37-6c15-abdc832d77b3@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 06:44:12PM +0300, Mike Rapoport wrote:
-> On Wed, May 17, 2023 at 10:18:11AM -0400, Kent Overstreet wrote:
-> > On Wed, May 17, 2023 at 05:04:27PM +0300, Mike Rapoport wrote:
-> > 
-> > And I'm really curious why text_poke() is needed at all. Seems like we
-> > could just use kmap_local() to create a temporary writeable mapping,
-> 
-> On 64 bit kmap_local_page() is aliased to page_address() and does not map
-> anything. text_poke() is needed to actually create a temporary writable
-> mapping without touching page tables in vmalloc and/or direct map.
 
-Duh - thanks!
+
+On 17.05.2023 04:11, Konrad Dybcio wrote:
+> 
+> 
+> On 17.05.2023 03:03, Gustavo A. R. Silva wrote:
+>> One-element arrays are deprecated, and we are replacing them with flexible
+>> array members instead. So, replace one-element arrays with flexible-array
+>> members in struct hfi_sys_set_resource_pkt, and refactor the rest of
+>> the code, accordingly.
+>>
+>> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+>> routines on memcpy() and help us make progress towards globally
+>> enabling -fstrict-flex-arrays=3 [1].
+>>
+>> The only binary differences seen before/after changes are the
+>> following:
+>>
+>>      17ba:      mov    %rbx,%rdi
+>>      17bd:      call   17c2 <pkt_sys_set_resource+0x42>
+>>                         17be: R_X86_64_PLT32    __tsan_write4-0x4
+>> -    17c2:      movl   $0x14,(%rbx)
+>> +    17c2:      movl   $0x10,(%rbx)
+>>      17c8:      lea    0x4(%rbx),%rdi
+>>      17cc:      call   17d1 <pkt_sys_set_resource+0x51>
+>>                         17cd: R_X86_64_PLT32    __tsan_write4-0x4
+>>
+>> which is expected once this accounts for the following line of code
+>> at  drivers/media/platform/qcom/venus/hfi_cmds.c:73
+>>
+>> 73         pkt->hdr.size = sizeof(*pkt);
+>>
+>> and as *pkt is of type struct hfi_sys_set_resource_pkt, sizeof(*pkt) is
+>> reduced by 4 bytes, due to the flex-array transformation.
+>>
+>> Link: https://github.com/KSPP/linux/issues/79
+>> Link: https://github.com/KSPP/linux/issues/293
+>> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> ---
+>>  drivers/media/platform/qcom/venus/hfi_cmds.c | 2 +-
+>>  drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
+>>  2 files changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
+>> index 3f74d518ad08..7c82e212434e 100644
+>> --- a/drivers/media/platform/qcom/venus/hfi_cmds.c
+>> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
+>> @@ -83,7 +83,7 @@ int pkt_sys_set_resource(struct hfi_sys_set_resource_pkt *pkt, u32 id, u32 size,
+>>  		res->size = size;
+>>  		res->mem = addr;
+>>  		pkt->resource_type = HFI_RESOURCE_OCMEM;
+>> -		pkt->hdr.size += sizeof(*res) - sizeof(u32);
+>> +		pkt->hdr.size += sizeof(*res);
+>>  		break;
+>>  	}
+>>  	case VIDC_RESOURCE_NONE:
+>> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+>> index ba74d03eb9cd..dd9c5066442d 100644
+>> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
+>> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+>> @@ -56,7 +56,7 @@ struct hfi_sys_set_resource_pkt {
+>>  	struct hfi_pkt_hdr hdr;
+>>  	u32 resource_handle;
+>>  	u32 resource_type;
+>> -	u32 resource_data[1];
+>> +	u32 resource_data[];
+> Would making this an u32* be a better resolution?
+Nevermind, I overthought this by thinking in the terms of its size
+and not the data within the struct...
+
+Maybe struct_size could be used instead of subtracting sizeof(u32)
+though?
+
+Konrad
+> 
+> Konrad
+>>  };
+>>  
+>>  struct hfi_sys_release_resource_pkt {
