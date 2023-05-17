@@ -2,107 +2,196 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D687C7EE23
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 10:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E68C7EE2D
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 10:52:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230062AbjEQKtp (ORCPT
+        id S230444AbjEQKwB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 06:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32884 "EHLO
+        Wed, 17 May 2023 06:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230120AbjEQKto (ORCPT
+        with ESMTP id S230436AbjEQKwA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 06:49:44 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E58651FE5
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 03:49:42 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-783e4666739so469980241.0
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 03:49:42 -0700 (PDT)
+        Wed, 17 May 2023 06:52:00 -0400
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F080155AE
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 03:51:58 -0700 (PDT)
+Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-77d53b41485so225886241.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 03:51:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684320582; x=1686912582;
+        d=google.com; s=20221208; t=1684320718; x=1686912718;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rec6YKlDOAGzQGtVi5nvwUA4ZfiyTnlSBqqJes+beEE=;
-        b=Eh/LxNoPrjieCDCHX0NLUq0+v8l375Z61fGRygDaykreyxtQ0ljZtMnfBTHLc09p/E
-         2A1Jhuopkqk32TmM+/tuaLI6d8XDteOqbyoC818h5SkIJePHK5/u/x3oPpuSlvymBJkF
-         TK5N8XoRExAqMMrjRTs/wPO2Av2zqbfu0lEY1711q5vBTGVDrZ/gyppSjucq7I67dR9v
-         dx54GkCABJ4DXgB5UMp9XRQg/lyRX2v+emJ+ItdMU7pxqXaPIgGlbRg122xWIRYiERHu
-         AmShJoanrcNLtNvsJc+BAzXVVTZtJqSRVuDG4j/hsWhavkZRA7kHDR1tli9C4pJj/cSC
-         3GlQ==
+        bh=AsR6OUNwscL0NKUwMY5J2JHuZ/PQ7g/3tvTtjbNEn7U=;
+        b=3t3GXEKoq3aCl7bHc/wtwflVXeRt1BP16iGcdZLuLk2qXtH9aptAeFQyUehAC5X8yR
+         e05vmUbIj0VQcDAQ1RAjvdtmIrdXl4jl1zQBPLS8x2F/3nH5pQs/As+KfToqv6Zb0Kyp
+         Ss+8F5pMqzuU3X7XdZYckM1VTps5IhX/qKhWnwkVVIZm9MM2XrlnjeQtIcXKRzH/pg0j
+         gtKaOjIQpI8XgSqJRZu1Fk43ojdWWkrmca67AQQbIjSHsW7L+2N+ipMtUqfHeGddi04m
+         4FHsX6vkcYFQyzOqLcG3wJpYZ1gvbxrtQiV5GKfWVBgLbvE9eLBKO1iVSmCW2wgjhwVV
+         NnMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684320582; x=1686912582;
+        d=1e100.net; s=20221208; t=1684320718; x=1686912718;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rec6YKlDOAGzQGtVi5nvwUA4ZfiyTnlSBqqJes+beEE=;
-        b=KjrXBbt+V61zhzMF/QSPn6qIu25vGQJZZxrAzv4iQV5tPEQXIN4IlIOg+2sSYqmTUD
-         eZwZDgNtH8jvSJZKjieyvFntZZjmirHx+1u6X4ttP9Qz2ZdTchF8wyodoJQym7Lg4Pbw
-         pQgamIzBlJs2qBrjDa8k0NBqtX6QDEcCDcV6pu7hThtwW0HXN5mUwOXNRpJskSct2r6C
-         l+CtIs4HATFQdbG5yjXCUdzOy9yXiET2mOr5W6myib8WpwJrgdJI39l5D9zKdlTCw7dg
-         j0zbo1TpUj6No+3CP3fmPc+J/dUL/R4mrT1pzASC8BwDUViUYj8XlVlrxkns2HoXhmyB
-         hZug==
-X-Gm-Message-State: AC+VfDx5ntvhNFVQ23tFXt+RFti59F5vsU0sYdsWH8mtqop5j+tdv8Cd
-        5+5pO1lguwUZa51yXepUz1zE9ROPUYVrHzNN7V350Q==
-X-Google-Smtp-Source: ACHHUZ5XIVB9cSnyGkPwnNROE+X+rE6yITb1RkOAokMaOKl5265EQa54Etj7fujoMW0JpCmqvEkAbitPcHPrjKVM9lQ=
-X-Received: by 2002:a05:6102:384:b0:42c:3457:6718 with SMTP id
- m4-20020a056102038400b0042c34576718mr15375115vsq.5.1684320581922; Wed, 17 May
- 2023 03:49:41 -0700 (PDT)
+        bh=AsR6OUNwscL0NKUwMY5J2JHuZ/PQ7g/3tvTtjbNEn7U=;
+        b=j2SowMwhRq6K/mvCizn4HzgtUWj8piGzWojsHkQN7/hjiWhBKifMAN/EGAndTKLJE2
+         9LFZzfn773i5fLyhbEJV6CjFfRzQ777okpGpkOlfmQ+g13s5s4fgO7/qbPpajHcJ6t3D
+         XyNcQXEJsF0u4+cJDqKnT6Lnlq73JPryFJpFfdTB/B259gZuw2ayqUx4AV/yY2m84Ce8
+         ON+lQWU88NXXfO2JydcZbFc65aYJgUPwqVtO04ghDd+kfWc5VaIxtE8XR1ZsYBnUE56w
+         iFInA9BbAEUhFUF9agjgMhyZjqxgbo6wT/qVb1WRdLtPcTbVEVzJfDdfaXXzgLRaPi73
+         C/aQ==
+X-Gm-Message-State: AC+VfDx+27aV99kUJ+s5nvtuMZ2E9t0S6FuQ9MRhlyCZFzi8n4ZqLNyS
+        dMP3VQ7u6VDyaEVhjylAT0ASV8p5yGAil9bUY8sDtADvtWVd+QhtB+2y/g==
+X-Google-Smtp-Source: ACHHUZ66rJjWNZYq6nJTNc5AlzcXHzV+tCYVzjeXTglFFAJUnYEJ4O+6IgHtb+C9DuStZ08IHaLIBUE34tcTBCAklwA=
+X-Received: by 2002:a67:f3cb:0:b0:434:6b92:51b1 with SMTP id
+ j11-20020a67f3cb000000b004346b9251b1mr14878092vsn.16.1684320717825; Wed, 17
+ May 2023 03:51:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230515130553.2311248-1-jeffxu@chromium.org> <202305161307.4A16BB6A47@keescook>
-In-Reply-To: <202305161307.4A16BB6A47@keescook>
+References: <20230515130553.2311248-1-jeffxu@chromium.org> <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
+ <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com> <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com>
+In-Reply-To: <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com>
 From:   =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
-Date:   Wed, 17 May 2023 12:49:27 +0200
-Message-ID: <CAEAAPHZ2qv9hwM5p=UgieGND_52_GP-cx2rnXCzM9cJNgB1pow@mail.gmail.com>
+Date:   Wed, 17 May 2023 12:51:46 +0200
+Message-ID: <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
 Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
-To:     Kees Cook <keescook@chromium.org>
-Cc:     jeffxu@chromium.org, dave.hansen@intel.com, luto@kernel.org,
-        jorgelo@chromium.org, groeck@chromium.org, jannh@google.com,
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
+        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
         akpm@linux-foundation.org, jeffxu@google.com,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-mm@kvack.org, linux-hardening@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000feb44d05fbe17168"
+        boundary="00000000000019c20605fbe17a61"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---000000000000feb44d05fbe17168
+--00000000000019c20605fbe17a61
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 16, 2023 at 10:08=E2=80=AFPM Kees Cook <keescook@chromium.org> =
-wrote:
+On Wed, May 17, 2023 at 12:41=E2=80=AFAM Dave Hansen <dave.hansen@intel.com=
+> wrote:
 >
-> On Mon, May 15, 2023 at 01:05:46PM +0000, jeffxu@chromium.org wrote:
-> > This patch introduces a new flag, PKEY_ENFORCE_API, to the pkey_alloc()
-> > function. When a PKEY is created with this flag, it is enforced that an=
-y
-> > thread that wants to make changes to the memory mapping (such as mprote=
-ct)
-> > of the memory must have write access to the PKEY. PKEYs created without
-> > this flag will continue to work as they do now, for backwards
-> > compatibility.
+> On 5/16/23 00:06, Stephen R=C3=B6ttger wrote:
+> > On Mon, May 15, 2023 at 4:28=E2=80=AFPM Dave Hansen <dave.hansen@intel.=
+com> wrote:
+> >>
+> >> On 5/15/23 06:05, jeffxu@chromium.org wrote:
+> >>> We're using PKU for in-process isolation to enforce control-flow inte=
+grity
+> >>> for a JIT compiler. In our threat model, an attacker exploits a
+> >>> vulnerability and has arbitrary read/write access to the whole proces=
+s
+> >>> space concurrently to other threads being executed. This attacker can
+> >>> manipulate some arguments to syscalls from some threads.
+> >>
+> >> This all sounds like it hinges on the contents of PKRU in the attacker
+> >> thread.
+> >>
+> >> Could you talk a bit about how the attacker is prevented from running
+> >> WRPKRU, XRSTOR or compelling the kernel to write to PKRU like at sigre=
+turn?
 > >
-> > Only PKEY created from user space can have the new flag set, the PKEY
-> > allocated by the kernel internally will not have it. In other words,
-> > ARCH_DEFAULT_PKEY(0) and execute_only_pkey won=E2=80=99t have this flag=
- set,
-> > and continue work as today.
+> > (resending without html)
+> >
+> > Since we're using the feature for control-flow integrity, we assume
+> > the control-flow is still intact at this point. I.e. the attacker
+> > thread can't run arbitrary instructions.
 >
-> Cool! Yeah, this looks like it could become quite useful. I assume
-> V8 folks are on board with this API, etc?
+> Can't run arbitrary instructions, but can make (pretty) arbitrary syscall=
+s?
 
-Yes! (I'm from the v8 team driving the implementation on v8 side)
+The threat model is that the attacker has arbitrary read/write, while other
+threads run in parallel. So whenever a regular thread performs a syscall an=
+d
+takes a syscall argument from memory, we assume that argument can be attack=
+er
+controlled.
+Unfortunately, the line is a bit blurry which syscalls / syscall arguments =
+we
+need to assume to be attacker controlled. We're trying to approach this by
+roughly categorizing syscalls+args:
+* how commonly used is the syscall
+* do we expect the argument to be taken from writable memory
+* can we restrict the syscall+args with seccomp
+* how difficult is it to restrict the syscall in userspace vs kernel
+* does the syscall affect our protections (e.g. change control-flow or pkey=
+)
 
-> > This set of patch covers mprotect/munmap, I plan to work on other
-> > syscalls after this.
+Using munmap as an example:
+* it's a very common syscall (nearly every seccomp filter will allow munmap=
+)
+* the addr argument will come from memory
+* unmapping pkey-tagged pages breaks our assumptions
+* it's hard to restrict in userspace since we'd need to keep track of all
+  address ranges that are unsafe to unmap and hook the syscall to perform t=
+he
+  validation on every call in the codebase.
+* it's easy to validate in kernel with this patch
+
+For most other syscalls, they either don't affect the control-flow, are eas=
+y to
+avoid and block with seccomp or we can add validation in userspace (e.g. on=
+ly
+install signal handlers at program startup).
+
+> > * For JIT code, we're going to scan it for wrpkru instructions before
+> > writing it to executable memory
 >
-> Which ones are on your list currently?
->
-> --
-> Kees Cook
+> ... and XRSTOR, right?
 
---000000000000feb44d05fbe17168
+Right. We=E2=80=99ll just have a list of allowed instructions that the JIT =
+compiler can
+emit.
+
+>
+> > * For regular code, we only use wrpkru around short critical sections
+> > to temporarily enable write access
+> >
+> > Sigreturn is a separate problem that we hope to solve by adding pkey
+> > support to sigaltstack
+>
+> What kind of support were you planning to add?
+
+We=E2=80=99d like to allow registering pkey-tagged memory as a sigaltstack.=
+ This would
+allow the signal handler to run isolated from other threads. Right now, the
+main reason this doesn=E2=80=99t work is that the kernel would need to chan=
+ge the pkru
+state before storing the register state on the stack.
+
+> I was thinking that an attacker with arbitrary write access would wait
+> until PKRU was on the userspace stack and *JUST* before the kernel
+> sigreturn code restores it to write a malicious value.  It could
+> presumably do this with some asynchronous mechanism so that even if
+> there was only one attacker thread, it could change its own value.
+
+I=E2=80=99m not sure I follow the details, can you give an example of an as=
+ynchronous
+mechanism to do this? E.g. would this be the kernel writing to the memory i=
+n a
+syscall for example?
+
+> Also, the kernel side respect for PKRU is ... well ... rather weak.
+> It's a best effort and if we *happen* to be in a kernel context where
+> PKRU is relevant, we can try to respect PKRU.  But there are a whole
+> bunch of things like get_user_pages_remote() that just plain don't have
+> PKRU available and can't respect it at all.
+>
+> I think io_uring also greatly expanded how common "remote" access to
+> process memory is.
+>
+> So, overall, I'm thrilled to see another potential user for pkeys.  It
+> sounds like there's an actual user lined up here, which would be
+> wonderful.  But, I also want to make sure we don't go to the trouble to
+> build something that doesn't actually present meaningful, durable
+> obstacles to an attacker.
+>
+> I also haven't more than glanced at the code.
+
+--00000000000019c20605fbe17a61
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -170,13 +259,13 @@ uId+alGaBDlL5OAZQtmhRyh1MVd2wtgvGEfNGDGq603urx17nwEvM1gjSmOgnhEigOhhHH7DOeyt
 5zPYLaKguxLWPGXlZ0UUjA7lH3gxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
 ExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENB
 IDIwMjACEAGkX4MOebzHzp8Y/d5NuOkwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIE
-IAsDym7QVgBaFxPG4GvyOQtpPwYKLTA60kllYbOQJ1vsMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDUxNzEwNDk0MlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
+IKe26MzTodEX8ApXSda7lXK6EbvML4Nu13ijWG20U2XaMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
+BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDUxNzEwNTE1OFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
 ZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQow
-CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCf85LtV9budX9oqTK1
-kOVGxm/TmBb/4NS1ZOkwvYTEuYKL1fuj/Hyc3CYoLUSq/81Xkbm6kv8VEXzEBj8o0Ke2zgqlYJ2D
-phxgbe5qK3SX2Pj45cf4uT+SDuptuu/lQkIyOeILy/U35e9JfzP2TCOW9ciEAGFhUh5MeHgs15K+
-j9ezortF6HzAUGxSQhKNr/hfEEu46L0pgMBB7lofJfX9tDWKtHvtoxW+GIK1HBCGQRmOZQfT4bdB
-M3G/8sD3zg8HT+Qf3sZrI+3KqbEr6G12ZFDRz4XqWhHGPD8ETVv6F1Vwpg633u9tDRqhnsJzjMMu
-m3y+2aaWHroATh5t7d64
---000000000000feb44d05fbe17168--
+CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCuxh4kos5kFnK2j8eu
+Fbrtyu6uKFJrwL1r46N5vYcVKk3Hc+GAZmfIYkGvXiN7LX4fTNyf2sEkGrpLWCteIMJL5orIuwQ3
+Qotgq+Xdfb2aWXBsnXtXIwjDCgRN3JwQQnwCO8a5/YsVCuSeBIXD+vR8+Tm8/hOJo6WXoLWLn7Pc
+w1cYZhoBM2ziCjC7VEvo0c/EjDHIRordEKr40+kYz9Mmid6833w6b1zxgFklbqnB1ksXhVKo7J16
+5JnrMtOraFkEUFHnlZ81+5FqhqVn1f7tsI2Ww/jbuR/jSgAAEqdHShe6NoPCS8M+mEgLbVia8+6g
+NUP34ZqKQKSPKpQ3lCYn
+--00000000000019c20605fbe17a61--
