@@ -2,87 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521E7C7EE22
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 03:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 360F6C77B75
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 04:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232520AbjEQDo3 (ORCPT
+        id S231725AbjEQEvN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 23:44:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33536 "EHLO
+        Wed, 17 May 2023 00:51:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232525AbjEQDoA (ORCPT
+        with ESMTP id S229564AbjEQEvL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 23:44:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02BE040F2;
-        Tue, 16 May 2023 20:44:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B1D461631;
-        Wed, 17 May 2023 03:43:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 701DBC433EF;
-        Wed, 17 May 2023 03:43:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684295039;
-        bh=Q2ZbDs6s6Qb4ow2/OkPPdJPXinCRf1wvSh2xDl0bANU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SmUEVUPMUu7tHPzGAeEv5ytuXrKtHB42dhqUTv15zKAMY2EM1sx/kW7CVlKRD/Xtw
-         FIeO/PFkb78wR/nRnxBllzYD/cJNyNbyJeFKXEtLFjE3ICunclMIbWgejDHzyPMYew
-         gOXanAeOUQGVMEiO2deXaRoPAuFo4Al7760SG7Nqpk1pWdd8zxsez5+BsfodX959A4
-         xmSRT7p4Xpax6KJfgmCkkwOHCMYyuNGhtsP4IDq4D5pKODBEU0l00nfR4+p9aMKa9w
-         Y3t+eW+0b+HBPPJLLERl1W9gvbtMIwHLj+c22a9FrStpId4cNkQQVU1zhhiS3/v1In
-         C5D/EGWQbfGBA==
-Date:   Tue, 16 May 2023 21:44:46 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] media: venus: Replace one-element arrays with
- flexible-array members
-Message-ID: <ZGRNrvl3xwgMqTWF@work>
-References: <ZGPk3PpvYzjD1+0/@work>
- <202305161318.4AF9203EB@keescook>
+        Wed, 17 May 2023 00:51:11 -0400
+Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C4030C2
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 21:50:44 -0700 (PDT)
+Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-6ab174bb726so193065a34.1
+        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 21:50:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684299044; x=1686891044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SdpDNOc9IaRuXWWVjAWL4lPisTwamC4JuamnxWVl6aE=;
+        b=ZohEZycebbexSIQM0Ql/0E6KK0YPr6BzbEZTe+tngAPEGD/paFD3oAqhjkfLHe9/Sf
+         OrYnlCEwKocjgVyBCijJ1WCKZlFh+hTVcjuK4669s1299beA2zJl6d8pOjCDe9yN7ZNV
+         TaENAEhYCD95ZvD+k6mj3Tvw3gf6BYQ7tEUvc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684299044; x=1686891044;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SdpDNOc9IaRuXWWVjAWL4lPisTwamC4JuamnxWVl6aE=;
+        b=J12VoLnf2N4N106jO/YuLqAq+AOZYVt67hf7aJnzhLif2WulW9Vm5TiNlXdzWkSjUy
+         ujAX9v35VRKwF4el430Lo4UlswLF/tqaWpfLmPE+Nt3ZNJssoOUmuBfmMzHjo1/y3zVO
+         YcjMzewaq71kFkNfBBxVsc32AGA5NctOVrM5l7xQDIG01jd4II4vlaBgz3P/L5SkCXDq
+         xUG6saySz4n9QGpu0qN2TWFrFoEomKR0LGkyJ3w6uHFsj2FBAURNYvPWMb52nA5uuhvV
+         +k5GjRxiP7X1DSNNHkQjWcLXyxm7xUB1sb4PuONnyJGDxjK/ZS+kBCW9qKOXtfhXBS7u
+         uBNw==
+X-Gm-Message-State: AC+VfDyvMumPu/57cKebNc/F9sjqKdTvCjJiKubmXPKlxQ7vL8enp4B9
+        qLiiJVhdf2LcUrTjBhC8o2kK8IKK3CTY6KUDEf6W1w==
+X-Google-Smtp-Source: ACHHUZ6bP3yE1SLmRxIXkPdAaJJQitOTouGMseQ0lvlM4x1DeANqZcZ97RNjV1Jnv4U8agiHfeX6phHwNYamuOI+eN4=
+X-Received: by 2002:a05:6808:624e:b0:38c:1266:117e with SMTP id
+ dt14-20020a056808624e00b0038c1266117emr13723618oib.44.1684299043940; Tue, 16
+ May 2023 21:50:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202305161318.4AF9203EB@keescook>
+References: <20230515130553.2311248-1-jeffxu@chromium.org> <20230515130553.2311248-4-jeffxu@chromium.org>
+ <78bb0097-7dca-254f-45a6-5cea6baec0c4@intel.com> <CALmYWFvC55idHEyRiiuAwDOVv+rjP-3DejCfLW8c0iK8AGoJcw@mail.gmail.com>
+In-Reply-To: <CALmYWFvC55idHEyRiiuAwDOVv+rjP-3DejCfLW8c0iK8AGoJcw@mail.gmail.com>
+From:   Jeff Xu <jeffxu@chromium.org>
+Date:   Tue, 16 May 2023 21:50:31 -0700
+Message-ID: <CABi2SkXr6ubHFCCPBBZZhDzxOY+dtfbVa3rGYVxei+urhqhc3g@mail.gmail.com>
+Subject: Re: [PATCH 3/6] PKEY: Apply PKEY_ENFORCE_API to mprotect
+To:     Jeff Xu <jeffxu@google.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>, luto@kernel.org,
+        jorgelo@chromium.org, keescook@chromium.org, groeck@chromium.org,
+        jannh@google.com, sroettger@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 16, 2023 at 01:18:39PM -0700, Kees Cook wrote:
-> On Tue, May 16, 2023 at 02:17:32PM -0600, Gustavo A. R. Silva wrote:
-> > One-element arrays are deprecated, and we are replacing them with flexible
-> > array members instead. So, replace one-element arrays with flexible-array
-> > members in multiple structures, and refactor the rest of the code,
-> > accordingly.
-> > 
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [1].
-> > 
-> > This results in no differences in binary output.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/79
-> > Link: https://github.com/KSPP/linux/issues/291
-> > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> 
-> Oh fun, a subtraction variant! :)
+On Tue, May 16, 2023 at 4:37=E2=80=AFPM Jeff Xu <jeffxu@google.com> wrote:
+>
+> On Tue, May 16, 2023 at 4:19=E2=80=AFPM Dave Hansen <dave.hansen@intel.co=
+m> wrote:
+> >
+> > On 5/15/23 06:05, jeffxu@chromium.org wrote:
+> > >  /*
+> > >   * pkey=3D=3D-1 when doing a legacy mprotect()
+> > > + * syscall=3D=3Dtrue if this is called by syscall from userspace.
+> > > + * Note: this is always true for now, added as a reminder in case th=
+at
+> > > + * do_mprotect_pkey is called directly by kernel in the future.
+> > > + * Also it is consistent with __do_munmap().
+> > >   */
+> > >  static int do_mprotect_pkey(unsigned long start, size_t len,
+> > > -             unsigned long prot, int pkey)
+> > > +             unsigned long prot, int pkey, bool syscall)
+> > >  {
+> >
+> > The 'syscall' seems kinda silly (and a bit confusing).  It's easy to
+> > check if the caller is a kthread or has a current->mm=3D=3DNULL.  If yo=
+u
+> > *really* want a warning, I'd check for those rather than plumb a
+> > apparently unused argument in here.
+> >
+> > BTW, this warning is one of those things that will probably cause some
+> > amount of angst.  I'd move it to the end of the series or just axe it
+> > completely.
+>
+Okay, I will move the logging part to the end of the series.
 
-This code has everything, subtractions and additions :p
 
-https://lore.kernel.org/linux-hardening/ZGQn63U4IeRUiJWb@work/
-
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-
-Thanks!
---
-Gustavo
+> Agreed. syscall is not a good name here.
+> The intention is to check this at the system call entry point
+> For example, munmap can get called inside mremap(), but by that time
+> mremap() should already check that all the memory is writeable.
+>
+> I will remove "syscall" from do_mprotect_pkey signature, it seems it caus=
+ed
+> more confusion than helpful.  I will keep the comments/note in place to r=
+emind
+> future developer.
