@@ -2,202 +2,102 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9848C7EE2C
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 23:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D371C77B75
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 23:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbjEQXtW (ORCPT
+        id S229699AbjEQXy1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 19:49:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33396 "EHLO
+        Wed, 17 May 2023 19:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbjEQXtV (ORCPT
+        with ESMTP id S229632AbjEQXy0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 19:49:21 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFAEF40E4
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 16:49:18 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-50bf7bb76d0so3307a12.0
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 16:49:18 -0700 (PDT)
+        Wed, 17 May 2023 19:54:26 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F924EEF
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 16:54:21 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-64cb307d91aso1463348b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 16:54:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684367357; x=1686959357;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hEhi/F7IF7fOHVORB9HV9ejZFUaKkU7/Sl0HWjAsuNA=;
-        b=iMl6xWrYH04mrV0CwDQLr2HB1DnGbBIP3kGTJhzYuIXJK+qigdo+veLe/w/Bx16rKM
-         v4NN+MNO0tclMIFjUybEjY/qAJhzPVKNMzrrdhBY2dDucRH4CsibiP/fjoawx7cPMTkp
-         pHun/ufQ5l0yKC/jZLt74ipxGm1is3NuTaNppXnUGCVxrD1uHTefMNeQ4ykJJ7x0ayD1
-         8oXRBOs4PzUNqmCT0VXMSFYofRPLZeBRxm8gCDFzlql2qv0TKcSefwS3JJ/qdhx/dhoA
-         8vlaUWAZo80i0ThsOttdquge6fWzWTtX7FBxk6SKP7mWpJF51FdkwmcsQRflvPFXYcaj
-         imXQ==
+        d=chromium.org; s=google; t=1684367660; x=1686959660;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OJkvtlIShL7hTT2Aa3+8Z/JimWO9rp0EQhzVci6L5s8=;
+        b=KPPVpTXpvUyqnMeAe6og9yUz5RHzcUuM8kElmrTfkJrCfZLS+xLZn+FQlWm8Q9WA/u
+         lrHxR++52HxywkFqwnWYBjND1JL420AJqt5GCsiWSMP9Lin7Dl4RZxzTzuzacy7bHp2s
+         04gdj3cs/6kKkqxXDmvlDA+YiTa/zI4JOHCTs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684367357; x=1686959357;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hEhi/F7IF7fOHVORB9HV9ejZFUaKkU7/Sl0HWjAsuNA=;
-        b=YWe+rxgvzMeBL3g+djQfubPgK9iXNGerKx685xGzDsewhgIBRMpVWBSofy8JlnhIxJ
-         I0H3haBH8tMW5v1g11U1NzCBkcIOFMaKO33chsBl7IF7vwIEeITkewcq69GbjyVHqbTR
-         P0UvNjfIyj+oakU2Z6K9OoHFFEULFQn1qSBVpAr630v74GCrw/1arseGXK6fhVcwAvDA
-         i9065NWeoTcqPmy03pQCjLW78Vb39+QwGLZEMhE9xkB3WqzQVtH8dSmYzBbQPqRrkjxB
-         WceKg6hRoxIHGQ1t7p2JRfnyhCJdvU14T2+eoLSF9og8q3e88fkXUpa9adROmntXJav3
-         lqtQ==
-X-Gm-Message-State: AC+VfDw5v/fmdRYBwpTO4rJrw9ZFlQzvvXR4y1giP4QZeTVwpx+qR5MW
-        BhbKcH94IkxF47rpgzypfJLed7ZjxGbUx1g0mtRjIA==
-X-Google-Smtp-Source: ACHHUZ4XbKxbQOQLQG53OqE9dfOPzVmawUyUW2Ny+fMNBdc2uIPn3QUzAb17hrfujb59vMW5hnL59Bdx1QkYCl9hX6U=
-X-Received: by 2002:a50:ccd6:0:b0:505:863:d85f with SMTP id
- b22-20020a50ccd6000000b005050863d85fmr46998edj.4.1684367357123; Wed, 17 May
- 2023 16:49:17 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230515130553.2311248-1-jeffxu@chromium.org> <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
- <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
- <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com> <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
- <d8f2d5c2-6650-c2a6-3a20-25583eee579b@intel.com> <CALmYWFsnGjniVseJKuhKO6eet10Onyk_C0=KNe6ZzXoCiBKZOw@mail.gmail.com>
- <b69f6809-b483-158f-8be9-4976fad918d8@intel.com>
-In-Reply-To: <b69f6809-b483-158f-8be9-4976fad918d8@intel.com>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Wed, 17 May 2023 16:48:00 -0700
-Message-ID: <CALmYWFs5Vgosz2JUYWkoc4YwDbiB0tT32MFpo-y6aX4kwuoz8Q@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>,
-        jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
-        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
-        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        d=1e100.net; s=20221208; t=1684367660; x=1686959660;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OJkvtlIShL7hTT2Aa3+8Z/JimWO9rp0EQhzVci6L5s8=;
+        b=F1EoaBha65x8L+/L5G7cer+DUglGbEAlctD22WqjjjSqi+cOCO929YwV19rFl6qRPm
+         gGg/rdLmD42TN3/VrAyoqUtYdDFRtpuKn21Ruu8iOF3Ig2+6W5d/PuZdLIaBWMgV9L60
+         Lh0i9je2Yvq/n+wsKZ7g9+aWfwRyi6oL+oPtksBU5VrzrosGeIHpK85NV/oV2Plb20QT
+         LuWVmyZ4b3rpM89MWzbwNf1Dz0gnsolgDrhIiEqCDX6I6zNSRWAdApOpGaD0IXITMYuu
+         7Bk0JrlXNiRmsQ+Dwe5K/I2FzacsUXhWLxBPU5jafoWXdvAK1r/jcT2ei8Muhfg/HiEk
+         Kc0w==
+X-Gm-Message-State: AC+VfDzd14QMPY8oxlr6GzkLX1us2Hfb45Yfyk6YLk2Im0WJ+EU7h/pI
+        d7d/fMCRaqGwYynQbdvgjOazlw==
+X-Google-Smtp-Source: ACHHUZ604gn1TJitZOABGGG3lTS8APjKkQTKdVkjTCVrhRPcqWdQrqZ2XIvNaJ2+tk8EfvOowysy3g==
+X-Received: by 2002:a05:6a00:2351:b0:646:b944:4e1d with SMTP id j17-20020a056a00235100b00646b9444e1dmr1861371pfj.32.1684367660586;
+        Wed, 17 May 2023 16:54:20 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j9-20020aa78d09000000b0062ddaa823bfsm68836pfe.185.2023.05.17.16.54.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 16:54:19 -0700 (PDT)
+Date:   Wed, 17 May 2023 16:54:18 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Sam James <sam@gentoo.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        linux-kbuild@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] kbuild: Enable -fstrict-flex-arrays=3
+Message-ID: <202305171653.8A5393C6@keescook>
+References: <20230517232801.never.262-kees@kernel.org>
+ <87lehmh647.fsf@gentoo.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87lehmh647.fsf@gentoo.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 8:29=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> On 5/17/23 08:21, Jeff Xu wrote:
-> >>> I=E2=80=99m not sure I follow the details, can you give an example of=
- an asynchronous
-> >>> mechanism to do this? E.g. would this be the kernel writing to the me=
-mory in a
-> >>> syscall for example?
-> >> I was thinking of all of the IORING_OP_*'s that can write to memory or
-> >> aio(7).
-> > IORING is challenging from security perspectives, for now, it is
-> > disabled in ChromeOS. Though I'm not sure how aio is related ?
->
-> Let's say you're the attacking thread and you're the *only* attacking
-> thread.  You have three things at your disposal:
->
->  1. A benign thread doing aio_read()
->  2. An arbitrary write primitive
->  3. You can send signals to yourself
->  4. You can calculate where your signal stack will be
->
-> You calculate the address of PKRU on the future signal stack.  You then
-> leverage the otherwise benign aio_write() to write a 0 to that PKRU
-> location.  Then, send a signal to yourself.  The attacker's PKRU value
-> will be written to the stack.  If you can time it right, the AIO will
-> complete while the signal handler is in progress and PKRU is on the
-> stack.  On sigreturn, the kernel restores the aio_read()-placed,
-> attacker-provided PKRU value.  Now the attacker has PKRU=3D=3D0.  It
-> effectively build a WRPKRU primitive out of those other pieces.
->
->
-Ah, I understand the question now, thanks for the explanation.
-Signalling handling is the next project that I will be working on.
+On Thu, May 18, 2023 at 12:47:41AM +0100, Sam James wrote:
+> 
+> Kees Cook <keescook@chromium.org> writes:
+> 
+> > The -fstrict-flex-arrays=3 option is now available with the release
+> > of GCC 13[1] and Clang 16[2]. This feature instructs the compiler to
+> > treat only C99 flexible arrays as dynamically sized for the purposes of
+> > object size calculations. In other words, the ancient practice of using
+> > 1-element arrays, or the GNU extension of using 0-sized arrays, as a
+> > dynamically sized array is disabled. This allows CONFIG_UBSAN_BOUNDS,
+> > CONFIG_FORTIFY_SOURCE, and other object-size aware features to behave
+> > unambiguously in the face of trailing arrays: only C99 flexible arrays
+> > are considered to be dynamically sized.
+> >
+> > Enabling this will help track down any outstanding cases of fake
+> > flexible arrays that need attention in kernel code.
+> >
+> > [1] https://gcc.gnu.org/onlinedocs/gcc/C-Dialect-Options.html#index-fstrict-flex-arrays
+> > [2] https://clang.llvm.org/docs/ClangCommandLineReference.html#cmdoption-clang-fstrict-flex-arrays
+> >
+> 
+> Maybe link to https://people.kernel.org/kees/bounded-flexible-arrays-in-c as well 
+> just in case some confused soul ends up bisecting to this but doesn't
+> get the problem?
+> 
+> Not really required though, just a thought I had.
 
-I'm leaning towards saving PKRU register to the thread struct, similar
-to how context switch works. This will address the attack scenario you
-described.
-However, there are a few challenges I have not yet worked through.
-First, the code needs to track when the first signaling entry occurs
-(saving the PKRU register to the thread struct) and when it is last
-returned (restoring the PKRU register from the thread struct). One way
-to do this would be to add another member to the thread struct to
-track the level of signaling re-entry. Second, signal is used in
-error handling, including the kernel's own signaling handling code
-path. I haven't worked through this part of code logic completely.
+Ah yeah, good idea! :)
 
-If the first approach is too complicated or considered intrusive,  I
-could take a different approach. In this approach, I would not track
-signaling re-entry. Instead, I would modify the PKRU saved in AltStack
-during handling of the signal, the steps are:
-a> save PKRU to tmp variable.
-b> modify PKRU to allow writing to the PKEY protected AltStack
-c> XSAVE.
-d> write tmp to the memory address of PKRU in  AltStack at the
-correct offset.
-Since the thread's PKRU is saved to stack, XRSTOR will restore the
-thread's original PKRU during sigreturn in normal situations. This
-approach might be a little hacky because it overwrites XSAVE results.
-If we go with this route, I need someone's help on the overwriting
-function, it is CPU specific.
-However this approach will not work if an attacker can install its own
-signaling handling (therefore gains the ability to overwrite PKRU stored
-in stack, as you described), the application will want to install all the
-signaling handling with PKEY protected AltStack at startup time, and
-disallow additional signaling handling after that, this is programmatically
-achievable in V8, as Stephan mentioned.
-
-I would appreciate getting more comments in the signaling handling
-area on those two approaches, or are there  better ways to do what we
-want? Do you think we could continue signaling handling discussion
-from the original thread that Kees started [1] ? There were already
-lots of discussions there about signalling handling,  so it will be
-easier for future readers to understand the context. I can repost
-there. Or I can start a new thread for signaling handling, I'm
-worried that those discussions will get lengthy and context get lost
-with patch version update.
-
-Although the signaling handling project is related,  I think VMA
-protection using the PKRU project can stand on its own. We could solve
-this for V8 first then move next to Signaling handling, the work here
-could also pave the way to add mseal() in future, I expect lots of
-code logic will be similar.
-
-[1] https://lore.kernel.org/all/202208221331.71C50A6F@keescook/
-
-Thanks!
-Best regards,
--Jeff Xu
-
-
-
-
-
-
-
-
-On Wed, May 17, 2023 at 8:29=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> On 5/17/23 08:21, Jeff Xu wrote:
-> >>> I=E2=80=99m not sure I follow the details, can you give an example of=
- an asynchronous
-> >>> mechanism to do this? E.g. would this be the kernel writing to the me=
-mory in a
-> >>> syscall for example?
-> >> I was thinking of all of the IORING_OP_*'s that can write to memory or
-> >> aio(7).
-> > IORING is challenging from security perspectives, for now, it is
-> > disabled in ChromeOS. Though I'm not sure how aio is related ?
->
-> Let's say you're the attacking thread and you're the *only* attacking
-> thread.  You have three things at your disposal:
->
->  1. A benign thread doing aio_read()
->  2. An arbitrary write primitive
->  3. You can send signals to yourself
->  4. You can calculate where your signal stack will be
->
-> You calculate the address of PKRU on the future signal stack.  You then
-> leverage the otherwise benign aio_write() to write a 0 to that PKRU
-> location.  Then, send a signal to yourself.  The attacker's PKRU value
-> will be written to the stack.  If you can time it right, the AIO will
-> complete while the signal handler is in progress and PKRU is on the
-> stack.  On sigreturn, the kernel restores the aio_read()-placed,
-> attacker-provided PKRU value.  Now the attacker has PKRU=3D=3D0.  It
-> effectively build a WRPKRU primitive out of those other pieces.
->
->
+-- 
+Kees Cook
