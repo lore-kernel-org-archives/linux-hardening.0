@@ -2,176 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EDBC77B75
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 22:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F63C77B75
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 23:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbjEQW6s (ORCPT
+        id S229669AbjEQXBu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 18:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42048 "EHLO
+        Wed, 17 May 2023 19:01:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbjEQW6r (ORCPT
+        with ESMTP id S229596AbjEQXBt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 18:58:47 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 835755B99
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 15:58:46 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-643a1fed360so978173b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 15:58:46 -0700 (PDT)
+        Wed, 17 May 2023 19:01:49 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB2B2E4C
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 16:01:48 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1aad5245632so10703445ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 16:01:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684364326; x=1686956326;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=e2HrkykK6KYI+/dHSMkJ9CPc8h3CMNt34GiUjDW8pDA=;
-        b=Ay+LZ4vkQsZApcOeFB3Xz9LWqhCfsbJS3txcngKa4t1aNZ3LLsZrE1cI0yUzD1D7os
-         J7z+efPVG4WvUV01SUNSkLYruefAukJTPv4if5E0qgLyz0x4KE7re6AcYPrRMiZ5Ip0o
-         8FOdrDrJ9DNy8IrgiOosPfq+i6T3GlEew7zsI=
+        d=chromium.org; s=google; t=1684364508; x=1686956508;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7BzCe/htlM5mTAaSOzvP8pEpnyOYq7XwMu4hjpniWzo=;
+        b=B/J7qvOTlzVBF6bH+lZ1fSjUgxLBV+R4eZ+jYhz/z7+S5IILF0ehttCPGNSyoMI3ub
+         pZZlsX3zL98h9GWstYJknqvKryfgKw//T778pjlMZh+uODdCWwpS9hx/J36oaYLURxlS
+         cyqOXevDrp4eByr5L4zRgmx+xnpgp96/7O1Pw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684364326; x=1686956326;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e2HrkykK6KYI+/dHSMkJ9CPc8h3CMNt34GiUjDW8pDA=;
-        b=Yc0TFwD9kAEXtxLD3ai6eKlayzoU0EX/qH70N6bD/bN0FX32cR+UlSyDOUU/flB7OA
-         cSksLbAPN/sgBLyl0L1jLgTCCaL+S074uXjSPefzSP9bHJ5DgUw8QW5AqcWW8SsXBexb
-         UCrxXlk2aXXMylNHmZDRm0TepjUvdNEhAcvZ5DLmUjtFZvOOKr0Tvs983bHwNyWJI0o1
-         Ppm7KKLoWqhtY1p57yXk8B/qr7SQtAUOLGcfpiIhTBhkDYS2hcRx5OquEfBVYI4HvCE2
-         mJ+/nHdkQmF7+1YphE0X5wq2HGcy4m3I1PpLidkmUOsAxZ+rFQtK86HeOkmf0aKbu+Og
-         yNbw==
-X-Gm-Message-State: AC+VfDz/gE7RjIGAncXOlJLecFMVx5RneMcKLufyP/6liGQbNeQWTQvH
-        IFw8aluj7fhxD+EMzB8uHcQkeQ==
-X-Google-Smtp-Source: ACHHUZ6Dcv3fAcZzqJxQ12RNOc3hOpIXMDhPd8lJUsgOK2YNOxma3nv1fpa2jFqh6n8DLQutqALkzg==
-X-Received: by 2002:a05:6a00:2291:b0:64b:43d8:a575 with SMTP id f17-20020a056a00229100b0064b43d8a575mr1739516pfe.25.1684364325950;
-        Wed, 17 May 2023 15:58:45 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684364508; x=1686956508;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7BzCe/htlM5mTAaSOzvP8pEpnyOYq7XwMu4hjpniWzo=;
+        b=bfF/COYGqDXzThTnTcKfB9niKaA1mEarEqFyta9s8Ma+dnxXOvAGAbQfq6jyEepakP
+         MjdiDETJFSztuduOxk/h8+vrJEMEi4QFRhdkLBqTB5Jl+D2d0LgUm0dApTTWhu3RmFaQ
+         /H6MZKJvkiLcL+rzbHQxJnjtbEbNK3zPyOnfMjf/RPoM4XyyUT5Y2eLdu/np+pGKVMX8
+         4EN2zkYuocgeS6ME3OAHMJizOXivAzKvTM49LcQ1uDxNIota8T4B0H8oJVXZ20Ist8r4
+         DqSJyHL+KPCvt8mpPDYttN2CnfsrFoWfZG2YAsnKkMO/mcfT+sVm7ybdlXqlnAfTXDtr
+         CUkg==
+X-Gm-Message-State: AC+VfDzy4xzl+RlMyTd+QO88kjDTEwhOhR2NtJ3Wt129BkbXROATo6un
+        8E3y0TSfoJbZO8pptN2+vHglAg==
+X-Google-Smtp-Source: ACHHUZ54qKIN5A4ugmU6aiQY1NXaOIPnQ8RUOJisfyPF5LS+vhwZWZ17iQt+hucvIjzEZ21J39EIWQ==
+X-Received: by 2002:a17:902:e5c8:b0:1ad:fa2e:17fc with SMTP id u8-20020a170902e5c800b001adfa2e17fcmr530850plf.2.1684364508211;
+        Wed, 17 May 2023 16:01:48 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fe16-20020a056a002f1000b0063d6666ee4csm60165pfb.34.2023.05.17.15.58.44
+        by smtp.gmail.com with ESMTPSA id p20-20020a170902a41400b0019719f752c5sm9901606plq.59.2023.05.17.16.01.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 15:58:45 -0700 (PDT)
+        Wed, 17 May 2023 16:01:47 -0700 (PDT)
+Date:   Wed, 17 May 2023 16:01:47 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Daniel Verkamp <dverkamp@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Jeff Xu <jeffxu@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        syzbot+ac3b41786a2d0565b6d5@syzkaller.appspotmail.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] pid: Replace struct pid 1-element array with flex-array
-Date:   Wed, 17 May 2023 15:58:42 -0700
-Message-Id: <20230517225838.never.965-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 2/2][next] scsi: lpfc: Use struct_size() helper
+Message-ID: <202305171601.B3FF9D0BB@keescook>
+References: <cover.1684358315.git.gustavoars@kernel.org>
+ <99e06733f5f35c6cd62e05f530b93107bfd03362.1684358315.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3762; h=from:subject:message-id; bh=3VIzDUhfVBdAPvNGcA/e9saxBOkZkK+WtkJ5LzKNWZA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkZVwi+zjxK1xfiObiQXf1FPTnZFGfAWWd4T4RQyUa PXEWeOCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZGVcIgAKCRCJcvTf3G3AJqyrEA CvteYy+49n7gSRsFTro4fVccGpHcRN/iGrbnn5vBk3RZ/nZr6tvvNCKV+vCDUj6XH1qkIKIGg4lKe3 0qbgGGC//Dr0Fj/iFSV/0WCgbeiuXH1bPtal/Ee2K9o9Gh+hggH459j/CijEDV/NxTemY5OAQSLPgA ibc+hJHMvn8zXGON5/E2l7TVmaycTExeRIRRPx/pM75xtiqez9so+Pa0AjBSrN5zkg32V5gzbbnrh1 sUsHy3SxFoVr0RplRzsoM71gkR4A2YXVpGVRv1m9tawuaGXMvtbV9T6arD989Xgormk13pxnFVztAp 91qpk2GYZ1hgGRQlBwBWDfNMdPRpptPoA1jSE4b1gwnvmCTPPUg703GFxDmspm1p96gf5qrp3bK3iz EQc94i0KrRDWZGL1FC1SpWn3F8mR6LLABhyNUetq0PjPX/NwtcJdeoQZ/4eCOQxLurC+k6Mc7SzK/K 4aKKSc0BRfUcnA/OeuIm34ZTCYaQfhMVZKc2ZzPSG7rWv647eoIqbqqYgO+FcT0gjQsTp8Gvo/hCEf iWQGZJRy7T28twW+zV1LyofKTUqPSB1o3NjyVn+y6kdGzQp67mFq59DrU/r77sGakJN+0oODtL1vc7 DnZcQtnRKAcS0FNpM/zMeldeAtrc5vPGrhMLIz8b4p6M0gPegStdTNGU80Og==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99e06733f5f35c6cd62e05f530b93107bfd03362.1684358315.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-For pid namespaces, struct pid uses a dynamically sized array member,
-"numbers". This was implemented using the ancient 1-element fake flexible
-array, which has been deprecated for decades. Replace it with a C99
-flexible array, refactor the array size calculations to use struct_size(),
-and address elements via indexes. Note that the static initializer (which
-defines a single element) works as-is, and requires no special handling.
+On Wed, May 17, 2023 at 03:23:01PM -0600, Gustavo A. R. Silva wrote:
+> Prefer struct_size() over open-coded versions of idiom:
+> 
+> sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
+> 
+> where count is the max number of items the flexible array is supposed to
+> contain.
+> 
+> Link: https://github.com/KSPP/linux/issues/160
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/scsi/lpfc/lpfc_ct.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+> index e880d127d7f5..3b95c56023bf 100644
+> --- a/drivers/scsi/lpfc/lpfc_ct.c
+> +++ b/drivers/scsi/lpfc/lpfc_ct.c
+> @@ -3748,8 +3748,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
+>  		rap->obj[0].entity_id_len = vmid->vmid_len;
+>  		memcpy(rap->obj[0].entity_id, vmid->host_vmid, vmid->vmid_len);
+>  		size = RAPP_IDENT_OFFSET +
+> -			sizeof(struct lpfc_vmid_rapp_ident_list) +
+> -			sizeof(struct entity_id_object);
+> +			struct_size(rap, obj, rap->no_of_objects);
 
-Without this, CONFIG_UBSAN_BOUNDS (and potentially CONFIG_FORTIFY_SOURCE)
-will trigger bounds checks:
-https://lore.kernel.org/lkml/20230517-bushaltestelle-super-e223978c1ba6@brauner
+Has rap->no_of_objects always been "1"? (i.e. there was a prior
+multiplication here before...
 
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Andreas Gruenbacher <agruenba@redhat.com>
-Cc: Daniel Verkamp <dverkamp@chromium.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Jeff Xu <jeffxu@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Reported-by: syzbot+ac3b41786a2d0565b6d5@syzkaller.appspotmail.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/linux/pid.h    |  2 +-
- kernel/pid.c           | 13 ++++++++-----
- kernel/pid_namespace.c |  2 +-
- 3 files changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index b75de288a8c2..653a527574c4 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -67,7 +67,7 @@ struct pid
- 	/* wait queue for pidfd notifications */
- 	wait_queue_head_t wait_pidfd;
- 	struct rcu_head rcu;
--	struct upid numbers[1];
-+	struct upid numbers[];
- };
- 
- extern struct pid init_struct_pid;
-diff --git a/kernel/pid.c b/kernel/pid.c
-index f93954a0384d..f5008146e2e4 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -131,7 +131,7 @@ void free_pid(struct pid *pid)
- 
- 	spin_lock_irqsave(&pidmap_lock, flags);
- 	for (i = 0; i <= pid->level; i++) {
--		struct upid *upid = pid->numbers + i;
-+		struct upid *upid = &pid->numbers[i];
- 		struct pid_namespace *ns = upid->ns;
- 		switch (--ns->pid_allocated) {
- 		case 2:
-@@ -265,7 +265,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- 	init_waitqueue_head(&pid->wait_pidfd);
- 	INIT_HLIST_HEAD(&pid->inodes);
- 
--	upid = pid->numbers + ns->level;
-+	upid = &pid->numbers[ns->level];
- 	spin_lock_irq(&pidmap_lock);
- 	if (!(ns->pid_allocated & PIDNS_ADDING))
- 		goto out_unlock;
-@@ -285,7 +285,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
- out_free:
- 	spin_lock_irq(&pidmap_lock);
- 	while (++i <= ns->level) {
--		upid = pid->numbers + i;
-+		upid = &pid->numbers[i];
- 		idr_remove(&upid->ns->idr, upid->nr);
- 	}
- 
-@@ -656,8 +656,11 @@ void __init pid_idr_init(void)
- 
- 	idr_init(&init_pid_ns.idr);
- 
--	init_pid_ns.pid_cachep = KMEM_CACHE(pid,
--			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
-+	init_pid_ns.pid_cachep = kmem_cache_create("pid",
-+			struct_size((struct pid *)0, numbers, 1),
-+			__alignof__(struct pid),
-+			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT,
-+			NULL);
- }
- 
- static struct file *__pidfd_fget(struct task_struct *task, int fd)
-diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-index b43eee07b00c..ebb20091a9da 100644
---- a/kernel/pid_namespace.c
-+++ b/kernel/pid_namespace.c
-@@ -48,7 +48,7 @@ static struct kmem_cache *create_pid_cachep(unsigned int level)
- 		return kc;
- 
- 	snprintf(name, sizeof(name), "pid_%u", level + 1);
--	len = sizeof(struct pid) + level * sizeof(struct upid);
-+	len = struct_size((struct pid *)0, numbers, level + 1);
- 	mutex_lock(&pid_caches_mutex);
- 	/* Name collision forces to do allocation under mutex. */
- 	if (!*pkc)
 -- 
-2.34.1
-
+Kees Cook
