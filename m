@@ -2,155 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9964C77B7D
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 14:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E75C77B7D
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 15:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231403AbjEQOyV (ORCPT
+        id S229943AbjEQPIh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 10:54:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46658 "EHLO
+        Wed, 17 May 2023 11:08:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232305AbjEQOyF (ORCPT
+        with ESMTP id S230119AbjEQPIg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 10:54:05 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E826DAD34;
-        Wed, 17 May 2023 07:53:34 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-76c7b46a261so4096639f.1;
-        Wed, 17 May 2023 07:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684335213; x=1686927213;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zAZUJozcoVKmsjLyeB1bGV79CfS9One1jPdm+WsF08I=;
-        b=aYYHo7zbKhRT/HVxBLv6M1twfy2wwHKF7qG6JhX6whSTjIiNZCnGGp6PojOLpkmq/H
-         5xkQgCbr0/zmOcBXHseD07zi7KLmEg78q020Azwm54+uqJxNmIHM683VTo/c7n8q9Hy7
-         tq/Yc4B4XcHs6qQzyTmRlpNN+JrUByMsTEQoqn1y6JNz0Nq87t11WsvdvWfciE/+jmq/
-         3L7OOVM+oU5a8XICbPPdo1N4bdDxvDTeWU05thcGM7AsVl1sR8fhf5+o3i492qd/i/Y9
-         GagukKJdk6pjpQDkNY7Fj/z1QoOJo4VNLXZv/9v0KeIbjzLuSVvVolwSry6ZdjqYbzwx
-         6StQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684335213; x=1686927213;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zAZUJozcoVKmsjLyeB1bGV79CfS9One1jPdm+WsF08I=;
-        b=faQD1j2jM2wSK3zk17wLNV3M7/NQQtceGdY3EJKTvAgDDwowk5RqImnwOMpaiUHWyf
-         5HcR22Mh73bCLkUooMNzfWyR1+xzyrbZ0peeaowYcwt5IefZGZu2WESnJUxxq0lrVMBy
-         Gt4CYQqK/tImYVygDGhYpWut7lLbJ7wr+bmzMrIkFszS7an6/AxhzPaYcHjsr7QrHEm6
-         st6DHnqFJAi7ZxwxKDoL5E62JLNhCmH1a3XfMqiWz9m9GJQ3mbUZwSpCzf7PC0LGceGc
-         MKpY6i+t1UwWCkKYaUX3R9D6WcY/+zsAi5fVMJeHWe2j4lHtNTikBX3aOGxcFSs3TtVy
-         gFYg==
-X-Gm-Message-State: AC+VfDwSil9riM4wverKJKQof3HeXsd9B8NADkRCBInvK66TfKP+aBtq
-        0WkKDwW4JWaa9D+DvQWZdMTtkXnCXUttXg==
-X-Google-Smtp-Source: ACHHUZ4WEsrvwhzmJcdRbyYb0lJDcP9K4xTlgtQdZ1p77RNM9llM6MVqkmJ5ulUczj1vTYSSZ6jsdg==
-X-Received: by 2002:a6b:dc0e:0:b0:76c:8d6c:9654 with SMTP id s14-20020a6bdc0e000000b0076c8d6c9654mr1655694ioc.7.1684335213494;
-        Wed, 17 May 2023 07:53:33 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id a18-20020a056602209200b0076c76dfdaa0sm4921681ioa.25.2023.05.17.07.53.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 07:53:33 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] ftrace: Replace all non-returning strlcpy with strscpy
-Date:   Wed, 17 May 2023 14:53:23 +0000
-Message-ID: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
+        Wed, 17 May 2023 11:08:36 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524D88A7D;
+        Wed, 17 May 2023 08:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684336088; x=1715872088;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=m3M2b/UpB2Fp67mqL0iGGBx6gX63ZHkbp9fZFhoFbDc=;
+  b=LNktfhyb5vDqIPrqV7/yvy2WlB865lqQnQZHhYPQWj/67OArkLyXzWMK
+   StJ5rhDaIBFFL8BehlI5pC4FsgqlZ70NoKwczxnYzsTT/zlzvC8B2PfZ+
+   LHv3wmRf5qhtZn6w8gSKazCdL2UWa7cgcKkweqhs+r10OhobZfZeGiURa
+   F3r6XB6hjqs4ZFq0tPa9vGCXOKnySo8GR315xpApPrCALnhwW+XY70lPp
+   dJ/9Ct9i5by0rgG5b2i297EZ9R5vUvWz3u8/az3LRAr52Lr+XwanlybU5
+   JoUCE26iayD3RC8EjFGgD5FEjPQR28JMqcguPGTEVzae5Fp5hjbQdDsdq
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="354083128"
+X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
+   d="scan'208";a="354083128"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 08:07:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="652277994"
+X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
+   d="scan'208";a="652277994"
+Received: from cbrown-mobl1.amr.corp.intel.com (HELO [10.212.129.207]) ([10.212.129.207])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 08:07:07 -0700
+Message-ID: <d8f2d5c2-6650-c2a6-3a20-25583eee579b@intel.com>
+Date:   Wed, 17 May 2023 08:07:07 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
+Content-Language: en-US
+To:     =?UTF-8?Q?Stephen_R=c3=b6ttger?= <sroettger@google.com>
+Cc:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
+        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
+        akpm@linux-foundation.org, jeffxu@google.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <20230515130553.2311248-1-jeffxu@chromium.org>
+ <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
+ <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
+ <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com>
+ <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
-No return values were used, so direct replacement is safe.
+On 5/17/23 03:51, Stephen Röttger wrote:
+> On Wed, May 17, 2023 at 12:41 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>> Can't run arbitrary instructions, but can make (pretty) arbitrary syscalls?
+> 
+> The threat model is that the attacker has arbitrary read/write, while other
+> threads run in parallel. So whenever a regular thread performs a syscall and
+> takes a syscall argument from memory, we assume that argument can be attacker
+> controlled.
+> Unfortunately, the line is a bit blurry which syscalls / syscall arguments we
+> need to assume to be attacker controlled. 
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
+Ahh, OK.  So, it's not that the *attacker* can make arbitrary syscalls.
+It's that the attacker might leverage its arbitrary write to trick a
+victim thread into turning what would otherwise be a good syscall into a
+bad one with attacker-controlled content.
 
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- kernel/trace/ftrace.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+I guess that makes the readv/writev-style of things a bad idea in this
+environment.
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 764668467155..6a77edb51f18 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5743,7 +5743,7 @@ bool ftrace_filter_param __initdata;
- static int __init set_ftrace_notrace(char *str)
- {
- 	ftrace_filter_param = true;
--	strlcpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
-+	strscpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
- 	return 1;
- }
- __setup("ftrace_notrace=", set_ftrace_notrace);
-@@ -5751,7 +5751,7 @@ __setup("ftrace_notrace=", set_ftrace_notrace);
- static int __init set_ftrace_filter(char *str)
- {
- 	ftrace_filter_param = true;
--	strlcpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
-+	strscpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
- 	return 1;
- }
- __setup("ftrace_filter=", set_ftrace_filter);
-@@ -5763,14 +5763,14 @@ static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
- 
- static int __init set_graph_function(char *str)
- {
--	strlcpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
-+	strscpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
- 	return 1;
- }
- __setup("ftrace_graph_filter=", set_graph_function);
- 
- static int __init set_graph_notrace_function(char *str)
- {
--	strlcpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
-+	strscpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
- 	return 1;
- }
- __setup("ftrace_graph_notrace=", set_graph_notrace_function);
-@@ -6569,8 +6569,8 @@ static int ftrace_get_trampoline_kallsym(unsigned int symnum,
- 			continue;
- 		*value = op->trampoline;
- 		*type = 't';
--		strlcpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
--		strlcpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
-+		strscpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
-+		strscpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
- 		*exported = 0;
- 		return 0;
- 	}
-@@ -6933,7 +6933,7 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
- 		if (off)
- 			*off = addr - found_func->ip;
- 		if (sym)
--			strlcpy(sym, found_func->name, KSYM_NAME_LEN);
-+			strscpy(sym, found_func->name, KSYM_NAME_LEN);
- 
- 		return found_func->name;
- 	}
-@@ -6987,8 +6987,8 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
- 
- 			*value = mod_func->ip;
- 			*type = 'T';
--			strlcpy(name, mod_func->name, KSYM_NAME_LEN);
--			strlcpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
-+			strscpy(name, mod_func->name, KSYM_NAME_LEN);
-+			strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
- 			*exported = 1;
- 			preempt_enable();
- 			return 0;
+>>> Sigreturn is a separate problem that we hope to solve by adding pkey
+>>> support to sigaltstack
+>>
+>> What kind of support were you planning to add?
+> 
+> We’d like to allow registering pkey-tagged memory as a sigaltstack. This would
+> allow the signal handler to run isolated from other threads. Right now, the
+> main reason this doesn’t work is that the kernel would need to change the pkru
+> state before storing the register state on the stack.
+> 
+>> I was thinking that an attacker with arbitrary write access would wait
+>> until PKRU was on the userspace stack and *JUST* before the kernel
+>> sigreturn code restores it to write a malicious value.  It could
+>> presumably do this with some asynchronous mechanism so that even if
+>> there was only one attacker thread, it could change its own value.
+> 
+> I’m not sure I follow the details, can you give an example of an asynchronous
+> mechanism to do this? E.g. would this be the kernel writing to the memory in a
+> syscall for example?
 
+I was thinking of all of the IORING_OP_*'s that can write to memory or
+aio(7).
