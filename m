@@ -2,108 +2,267 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E75C77B7D
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 15:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF178C77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 15:16:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbjEQPIh (ORCPT
+        id S231514AbjEQPQ1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 11:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37224 "EHLO
+        Wed, 17 May 2023 11:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230119AbjEQPIg (ORCPT
+        with ESMTP id S231411AbjEQPQ0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 11:08:36 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524D88A7D;
-        Wed, 17 May 2023 08:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684336088; x=1715872088;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=m3M2b/UpB2Fp67mqL0iGGBx6gX63ZHkbp9fZFhoFbDc=;
-  b=LNktfhyb5vDqIPrqV7/yvy2WlB865lqQnQZHhYPQWj/67OArkLyXzWMK
-   StJ5rhDaIBFFL8BehlI5pC4FsgqlZ70NoKwczxnYzsTT/zlzvC8B2PfZ+
-   LHv3wmRf5qhtZn6w8gSKazCdL2UWa7cgcKkweqhs+r10OhobZfZeGiURa
-   F3r6XB6hjqs4ZFq0tPa9vGCXOKnySo8GR315xpApPrCALnhwW+XY70lPp
-   dJ/9Ct9i5by0rgG5b2i297EZ9R5vUvWz3u8/az3LRAr52Lr+XwanlybU5
-   JoUCE26iayD3RC8EjFGgD5FEjPQR28JMqcguPGTEVzae5Fp5hjbQdDsdq
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="354083128"
-X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
-   d="scan'208";a="354083128"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 08:07:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="652277994"
-X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
-   d="scan'208";a="652277994"
-Received: from cbrown-mobl1.amr.corp.intel.com (HELO [10.212.129.207]) ([10.212.129.207])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 08:07:07 -0700
-Message-ID: <d8f2d5c2-6650-c2a6-3a20-25583eee579b@intel.com>
-Date:   Wed, 17 May 2023 08:07:07 -0700
+        Wed, 17 May 2023 11:16:26 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7B9CA;
+        Wed, 17 May 2023 08:16:05 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pzIsS-0007mi-By; Wed, 17 May 2023 17:15:44 +0200
+Message-ID: <48deb3fa-1784-a08d-aa8c-93ccf63a4aba@leemhuis.info>
+Date:   Wed, 17 May 2023 17:15:43 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
-Content-Language: en-US
-To:     =?UTF-8?Q?Stephen_R=c3=b6ttger?= <sroettger@google.com>
-Cc:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
-        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
-        akpm@linux-foundation.org, jeffxu@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-References: <20230515130553.2311248-1-jeffxu@chromium.org>
- <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
- <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
- <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com>
- <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
+Subject: Re: [PATCH] drm/probe_helper: fix the warning reported when calling
+ drm_kms_helper_poll_disable during suspend
+Content-Language: en-US, de-DE
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Janne Grunau <j@jannau.net>, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+        daniel@ffwll.ch, neil.armstrong@linaro.org, tony.luck@intel.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org, laurentiu.palcu@oss.nxp.com,
+        regressions@lists.linux.dev, zongmin zhou <zhouzongmin@kylinos.cn>
+References: <20230328023129.3596968-1-zhouzongmin@kylinos.cn>
+ <20230420200148.GD3280@jannau.net>
+ <CAA8EJpoK3yv3E==bJuDoQhsW2Q1LdqKakJgdZx6S=ec-CvyGyw@mail.gmail.com>
+ <1682386644754589.204.seg@mailgw>
+ <1186d62a5fe7f2aa6e06f06a3dc7605c0072f1eb.camel@kylinos.cn>
+ <CAA8EJppmUtuhAF+VHPh3Q8tNYp1m4T6P7dZ0wYZ8Vzwo0DF6cg@mail.gmail.com>
+ <6599319fea8ed1e3d6968e5b986661f0cf175902.camel@kylinos.cn>
+From:   "Linux regression tracking (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <6599319fea8ed1e3d6968e5b986661f0cf175902.camel@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684336567;aea88f7a;
+X-HE-SMSGID: 1pzIsS-0007mi-By
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 5/17/23 03:51, Stephen Röttger wrote:
-> On Wed, May 17, 2023 at 12:41 AM Dave Hansen <dave.hansen@intel.com> wrote:
->> Can't run arbitrary instructions, but can make (pretty) arbitrary syscalls?
-> 
-> The threat model is that the attacker has arbitrary read/write, while other
-> threads run in parallel. So whenever a regular thread performs a syscall and
-> takes a syscall argument from memory, we assume that argument can be attacker
-> controlled.
-> Unfortunately, the line is a bit blurry which syscalls / syscall arguments we
-> need to assume to be attacker controlled. 
+Hi, Thorsten here, the Linux kernel's regression tracker. Top-posting
+for once, to make this easily accessible to everyone.
 
-Ahh, OK.  So, it's not that the *attacker* can make arbitrary syscalls.
-It's that the attacker might leverage its arbitrary write to trick a
-victim thread into turning what would otherwise be a good syscall into a
-bad one with attacker-controlled content.
+Dmitry, was any progress made to address this regression? Doesn't look
+like it, but I strongly suspect I'm missing something, as I'm not really
+sure if I properly understood this thread. It sounded a bit like
+a4e771729a51 should be reverted for now until all
+drm_kms_helper_poll_disable() calls have been verified. Is that right?
+Or did somebody already verify and fix all of them with bugs?
 
-I guess that makes the readv/writev-style of things a bad idea in this
-environment.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
->>> Sigreturn is a separate problem that we hope to solve by adding pkey
->>> support to sigaltstack
+#regzbot poke
+
+On 28.04.23 03:17, zongmin zhou wrote:
+> On Wed, 2023-04-26 at 16:10 +0300, Dmitry Baryshkov wrote:
+>> On Wed, 26 Apr 2023 at 12:09, zongmin zhou <zhouzongmin@kylinos.cn>
+>> wrote:
+>>> On Sun, 2023-04-23 at 22:51 +0200, Janne Grunau wrote:
+>>>> On 2023-04-20 23:07:01 +0300, Dmitry Baryshkov wrote:
+>>>>> On Thu, 20 Apr 2023 at 23:01, Janne Grunau <j@jannau.net>
+>>>>> wrote:
+>>>>>>
+>>>>>> On 2023-03-28 10:31:29 +0800, Zongmin Zhou wrote:
+>>>>>>> When drivers call drm_kms_helper_poll_disable from
+>>>>>>> their device suspend implementation without enabled output
+>>>>>>> polling before,
+>>>>>>> following warning will be reported,due to work->func not be
+>>>>>>> initialized:
+>>>>>>
+>>>>>> we see the same warning with the wpork in progress kms driver
+>>>>>> for
+>>>>>> apple
+>>>>>> silicon SoCs. The connectors do not need to polled so the
+>>>>>> driver
+>>>>>> never
+>>>>>> calls drm_kms_helper_poll_init().
+>>>>>>
+>>>>>>> [   55.141361] WARNING: CPU: 3 PID: 372 at
+>>>>>>> kernel/workqueue.c:3066 __flush_work+0x22f/0x240
+>>>>>>> [   55.141382] Modules linked in: nls_iso8859_1
+>>>>>>> snd_hda_codec_generic ledtrig_audio snd_hda_intel
+>>>>>>> snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec
+>>>>>>> snd_hda_core
+>>>>>>> snd_hwdep snd_pcm snd_seq_midi snd_seq_midi_event
+>>>>>>> snd_rawmidi
+>>>>>>> snd_seq intel_rapl_msr intel_rapl_common bochs
+>>>>>>> drm_vram_helper
+>>>>>>> drm_ttm_helper snd_seq_device nfit ttm crct10dif_pclmul
+>>>>>>> snd_timer ghash_clmulni_intel binfmt_misc sha512_ssse3
+>>>>>>> aesni_intel drm_kms_helper joydev input_leds syscopyarea
+>>>>>>> crypto_simd snd cryptd sysfillrect sysimgblt mac_hid
+>>>>>>> serio_raw
+>>>>>>> soundcore qemu_fw_cfg sch_fq_codel msr parport_pc ppdev lp
+>>>>>>> parport drm ramoops reed_solomon pstore_blk pstore_zone
+>>>>>>> efi_pstore virtio_rng ip_tables x_tables autofs4
+>>>>>>> hid_generic
+>>>>>>> usbhid hid ahci virtio_net i2c_i801 crc32_pclmul psmouse
+>>>>>>> virtio_scsi libahci i2c_smbus lpc_ich xhci_pci net_failover
+>>>>>>> virtio_blk xhci_pci_renesas failover
+>>>>>>> [   55.141430] CPU: 3 PID: 372 Comm: kworker/u16:9 Not
+>>>>>>> tainted
+>>>>>>> 6.2.0-rc6+ #16
+>>>>>>> [   55.141433] Hardware name: QEMU Standard PC (Q35 + ICH9,
+>>>>>>> 2009), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org
+>>>>>>> 04/01/2014
+>>>>>>> [   55.141435] Workqueue: events_unbound async_run_entry_fn
+>>>>>>> [   55.141441] RIP: 0010:__flush_work+0x22f/0x240
+>>>>>>> [   55.141444] Code: 8b 43 28 48 8b 53 30 89 c1 e9 f9 fe ff
+>>>>>>> ff
+>>>>>>> 4c 89 f7 e8 b5 95 d9 00 e8 00 53 08 00 45 31 ff e9 11 ff ff
+>>>>>>> ff
+>>>>>>> 0f 0b e9 0a ff ff ff <0f> 0b 45 31 ff e9 00 ff ff ff e8 e2
+>>>>>>> 54
+>>>>>>> d8 00 66 90 90 90 90 90 90
+>>>>>>> [   55.141446] RSP: 0018:ff59221940833c18 EFLAGS: 00010246
+>>>>>>> [   55.141449] RAX: 0000000000000000 RBX: 0000000000000000
+>>>>>>> RCX:
+>>>>>>> ffffffff9b72bcbe
+>>>>>>> [   55.141450] RDX: 0000000000000001 RSI: 0000000000000001
+>>>>>>> RDI:
+>>>>>>> ff3ea01e4265e330
+>>>>>>> [   55.141451] RBP: ff59221940833c90 R08: 0000000000000000
+>>>>>>> R09:
+>>>>>>> 8080808080808080
+>>>>>>> [   55.141453] R10: ff3ea01e42b3caf4 R11: 000000000000000f
+>>>>>>> R12:
+>>>>>>> ff3ea01e4265e330
+>>>>>>> [   55.141454] R13: 0000000000000001 R14: ff3ea01e505e5e80
+>>>>>>> R15:
+>>>>>>> 0000000000000001
+>>>>>>> [   55.141455] FS:  0000000000000000(0000)
+>>>>>>> GS:ff3ea01fb7cc0000(0000) knlGS:0000000000000000
+>>>>>>> [   55.141456] CS:  0010 DS: 0000 ES: 0000 CR0:
+>>>>>>> 0000000080050033
+>>>>>>> [   55.141458] CR2: 0000563543ad1546 CR3: 000000010ee82005
+>>>>>>> CR4:
+>>>>>>> 0000000000771ee0
+>>>>>>> [   55.141464] DR0: 0000000000000000 DR1: 0000000000000000
+>>>>>>> DR2:
+>>>>>>> 0000000000000000
+>>>>>>> [   55.141465] DR3: 0000000000000000 DR6: 00000000fffe0ff0
+>>>>>>> DR7:
+>>>>>>> 0000000000000400
+>>>>>>> [   55.141466] PKRU: 55555554
+>>>>>>> [   55.141467] Call Trace:
+>>>>>>> [   55.141469]  <TASK>
+>>>>>>> [   55.141472]  ? pcie_wait_cmd+0xdf/0x220
+>>>>>>> [   55.141478]  ? mptcp_seq_show+0xe0/0x180
+>>>>>>> [   55.141484]  __cancel_work_timer+0x124/0x1b0
+>>>>>>> [   55.141487]  cancel_delayed_work_sync+0x17/0x20
+>>>>>>> [   55.141490]  drm_kms_helper_poll_disable+0x26/0x40
+>>>>>>> [drm_kms_helper]
+>>>>>>> [   55.141516]  drm_mode_config_helper_suspend+0x25/0x90
+>>>>>>> [drm_kms_helper]
+>>>>>>> [   55.141531]  ? __pm_runtime_resume+0x64/0x90
+>>>>>>> [   55.141536]  bochs_pm_suspend+0x16/0x20 [bochs]
+>>>>>>> [   55.141540]  pci_pm_suspend+0x8b/0x1b0
+>>>>>>> [   55.141545]  ? __pfx_pci_pm_suspend+0x10/0x10
+>>>>>>> [   55.141547]  dpm_run_callback+0x4c/0x160
+>>>>>>> [   55.141550]  __device_suspend+0x14c/0x4c0
+>>>>>>> [   55.141553]  async_suspend+0x24/0xa0
+>>>>>>> [   55.141555]  async_run_entry_fn+0x34/0x120
+>>>>>>> [   55.141557]  process_one_work+0x21a/0x3f0
+>>>>>>> [   55.141560]  worker_thread+0x4e/0x3c0
+>>>>>>> [   55.141563]  ? __pfx_worker_thread+0x10/0x10
+>>>>>>> [   55.141565]  kthread+0xf2/0x120
+>>>>>>> [   55.141568]  ? __pfx_kthread+0x10/0x10
+>>>>>>> [   55.141570]  ret_from_fork+0x29/0x50
+>>>>>>> [   55.141575]  </TASK>
+>>>>>>> [   55.141575] ---[ end trace 0000000000000000 ]---
+>>>>>>>
+>>>>>>> Fixes: a4e771729a51 ("drm/probe_helper: sort out
+>>>>>>> poll_running
+>>>>>>> vs poll_enabled")
+>>>>>>> Signed-off-by: Zongmin Zhou<zhouzongmin@kylinos.cn>
+>>>>>>> ---
+>>>>>>>  drivers/gpu/drm/drm_probe_helper.c | 3 ++-
+>>>>>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/gpu/drm/drm_probe_helper.c
+>>>>>>> b/drivers/gpu/drm/drm_probe_helper.c
+>>>>>>> index 8127be134c39..ac72b18e2257 100644
+>>>>>>> --- a/drivers/gpu/drm/drm_probe_helper.c
+>>>>>>> +++ b/drivers/gpu/drm/drm_probe_helper.c
+>>>>>>> @@ -855,7 +855,8 @@ void drm_kms_helper_poll_disable(struct
+>>>>>>> drm_device *dev)
+>>>>>>>       if (dev->mode_config.poll_running)
+>>>>>>>               drm_kms_helper_disable_hpd(dev);
+>>>>>>>
+>>>>>>> -     cancel_delayed_work_sync(&dev-
+>>>>>>>> mode_config.output_poll_work);
+>>>>>>> +     if (dev->mode_config.poll_enabled)
+>>>>>>> +             cancel_delayed_work_sync(&dev-
+>>>>>>>> mode_config.output_poll_work);
+>>>>>>
+>>>>>> Checking for dev->mode_config.poll_enabled at the start of
+>>>>>> the
+>>>>>> function
+>>>>>> and return early if it is not true looks more in style with
+>>>>>> the
+>>>>>> rest of
+>>>>>> drm_probe_helper.c.
+>>>>>
+>>>>> I think it is an error to call drm_kms_helper_poll_disable() if
+>>>>> polling was not initialized. So, in my opinion the fix should
+>>>>> go to
+>>>>> the drm_mode_config_helper_suspend() / _resume() instead.
+>>>>> Please
+>>>>> add a
+>>>>> guard there using dev->mode_config.poll_enabled.
+>>>>
+>>>> While I tend to agree to the sentiment I do not think this is the
+>>>> correct fix in this situation. drm_kms_helper_poll_disable had
+>>>> the
+>>>> check since at least 2014. a4e771729a51 is a regression. If we
+>>>> want
+>>>> to
+>>>> change the behavior it should be done explicitly and after
+>>>> verifying
+>>>> all
+>>>> drm_kms_helper_poll_disable() calls.
+>>>>
+>>>> #regzbot ^introduced a4e771729a51
+>>>>
+>>>> ciao
+>>>> Janne
+>>>
+>>> Dear Janne:
+>>>
+>>> I agree with you like I mentioned on last letter.
+>>> Thanks for your time.
+>>>
+>>>
+>>> Dear Dmitry:
+>>>
+>>> Is there anything else I can do?
+>>> Looking forward to your reply.
 >>
->> What kind of support were you planning to add?
+>> If it is a common consensus, I'm fine with your approach.
+>>
+> Dear Dmitry:
 > 
-> We’d like to allow registering pkey-tagged memory as a sigaltstack. This would
-> allow the signal handler to run isolated from other threads. Right now, the
-> main reason this doesn’t work is that the kernel would need to change the pkru
-> state before storing the register state on the stack.
+> Ok.Thanks for your reply.
 > 
->> I was thinking that an attacker with arbitrary write access would wait
->> until PKRU was on the userspace stack and *JUST* before the kernel
->> sigreturn code restores it to write a malicious value.  It could
->> presumably do this with some asynchronous mechanism so that even if
->> there was only one attacker thread, it could change its own value.
+> Best regards!
 > 
-> I’m not sure I follow the details, can you give an example of an asynchronous
-> mechanism to do this? E.g. would this be the kernel writing to the memory in a
-> syscall for example?
-
-I was thinking of all of the IORING_OP_*'s that can write to memory or
-aio(7).
+> 
