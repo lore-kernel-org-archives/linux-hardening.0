@@ -2,123 +2,162 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41702C77B75
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 23:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CC0C77B75
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 23:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229701AbjEQXdT (ORCPT
+        id S229523AbjEQXhj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 19:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
+        Wed, 17 May 2023 19:37:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjEQXdS (ORCPT
+        with ESMTP id S229458AbjEQXhj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 19:33:18 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 213933A8D
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 16:33:17 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-5307502146aso935187a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 16:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684366396; x=1686958396;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZsdBaiO+SLRmvoF1oxELdQlQ303GgQ3he6ImyAqilwM=;
-        b=J/MaOic+T6lZSX9z6Crj6gInRjMD4E+E+bGF8IeK/gvj8+kVm52/pHWph1u3U31zYE
-         jIREYD7YA8vdvmTFseMWbpy5Nv0+FJ9aDZeIyNdd6yH1d6RIjSOmxQv7oWoVirv0X/E3
-         +iEcRGwC9ZGFbWfLGxA7xjhE6A9XCca1Op/D8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684366396; x=1686958396;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZsdBaiO+SLRmvoF1oxELdQlQ303GgQ3he6ImyAqilwM=;
-        b=VYmoWGn74e+gtMSv5hBCMNMnH7hu1TSVJKl8YqUJX/mJ++rcPNngYAVCZ45+t5b7BH
-         UV1RJM0F4IrfUmr3ShEmU2b1qemJ2Eigm/bgNc4spdjtAO25cOpoAAMApjnAnO6RD6Pr
-         9Tve6tKcI+piaASTB31XwL8F103amZxXUWKyf7q2HA6Xdf586RC57479qQhWOzxnziGV
-         kv24zMVsb9ne611jvh+wEa6C42F6uPHHvKz0ZSYdVKeoUVN5Zp8tfc5vA3OUq66NkGar
-         aoJDCpb1yLs7AhFWSYOfT1+3Neg3l77heovrUIUypptxlllxjJN7ZRZYk0dWw8//vnLq
-         qfdg==
-X-Gm-Message-State: AC+VfDzWf3TfHtgaLHpFCa0aDnsyR5gdZj1+XtprNFhNrOr4DKPeDnSY
-        I3HcO3FcXK4zPIwxvoE9g2pyZ8XIwpJL+lyxv5I=
-X-Google-Smtp-Source: ACHHUZ6E2Rw/PI0VAhjazUgu2RxKRx7eteRLCIGlE1gszdmLtBUw2S018ls9GRz9WQsxYdPoqGDQIQ==
-X-Received: by 2002:a17:903:441:b0:19d:1bc1:ce22 with SMTP id iw1-20020a170903044100b0019d1bc1ce22mr456930plb.5.1684366396668;
-        Wed, 17 May 2023 16:33:16 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170902690c00b001a04d27ee92sm18103534plk.241.2023.05.17.16.33.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 16:33:16 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Song Liu <song@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-raid@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH] md/raid5: Convert stripe_head's "dev" to flexible array member
-Date:   Wed, 17 May 2023 16:33:14 -0700
-Message-Id: <20230517233313.never.130-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Wed, 17 May 2023 19:37:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA80115;
+        Wed, 17 May 2023 16:37:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FA6164BDC;
+        Wed, 17 May 2023 23:37:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9EBC433D2;
+        Wed, 17 May 2023 23:37:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684366656;
+        bh=vuVnTgWxQpmJvzDxdn+D8W/c3eqLsteSK4ZcsNFRCWM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ZR4CEugP/P7xzTDnDOwqF8irR5Aqly5oOVFgm39EYAr3YxL/mz15CQYmt07ORgnNT
+         mWq5eSMHGxolIF3ruJl/f1MCNIuW1BdMldwb3RqUNpJPXFM5xitC9aPCRZMcP3kR1B
+         n1PoRgntGJfHRH8WY0ktB5Is4aIu9sOruaZlivc1RI3R4Jdzrz8XdGrfDQZ+bgSa/t
+         CBxkcPhaQbK+fhkCS52rm6JIlh2WPixlOyl4ECJQwSBmBXlktkEFsnjuYQzv1SK5d3
+         6EwoyHO4KIK6EwpsSxdnNgFRuQMsmkZHxGUU0e5Bl7K78qrq8GWSl5EIQr3YhuJjFC
+         yE5isIMMgJW5A==
+Date:   Wed, 17 May 2023 17:38:26 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] ALSA: mixart: Replace one-element arrays with simple
+ object declarations
+Message-ID: <ZGVlcpuvx1rSOMP8@work>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2199; h=from:subject:message-id; bh=dQaDdwwfJIKVOpP+xhSN1JdgX+awrlBT4qD4Mzl0Qq4=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkZWQ6fyNNtbsV/hrySf2Chk5e0QLsK0bNKO8z4CGK W/FZl+6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZGVkOgAKCRCJcvTf3G3AJkBVD/ 0VnC+3+XtytL1FbA2D8cGLXcifNdjNC2tFU+YvanxrXpbAXCMZMNbbLI9x/wA+DpnMgDCIorVvmzxp 5qOg6fKbI521D3qFRGLs8+zvjo97zAUnamMh5P10oVxDuR8+/mTpLJqOriXMDpbWQ59PPiue9d7y4i A2Ypz4LBiPgfwTy28j9oMEjIFrJdLJ8f6fDIk/+ylA13ye5HybcjkqMPnw0GFcaqSw9QKPY04SZwdI V3gofJWC4TrHAvO8UlrBXlHn/85ONM/WVetDN2CbBnAtnbhVM5Dvl4q6w/EIEmzpx0qLW2/K+XS/hc TBfQwNA3x/qN4Q05uJL8MOots/9ubwpvVAkP04R2GWnYra7dSuQ/qx9n7o31zZRAxNpLp4sZdCxg/j OPRzEvMElGft2bf2uZBvOhVkAmLIF3g4S9miE4hN112NTumjDidb3fDdAD6QOxN4WmV52AoNbYl9Wn vGAjU36QjmZHLEwcZT6tjXBIN2lZJhV5At1cWpn7wETRK2cf3/9hcvabLdoGem+0uSUPL/5dUtkE06 wgRJw/BNYXNanjMEU7MwSQH3+q/ZO8gs7KWh5tW9ugSylw28UAFJq9ZrkoX553GNAyC3q3cCGxLlEc jpl3o64ZLcZvNX0/+vF8mJpYtCDj+CmiWU6+qpL+68medw17eMHWEIKs1fGQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace old-style 1-element array of "dev" in struct stripe_head with
-modern C99 flexible array. In the future, we can additionally annotate
-it with the run-time size, found in the "disks" member.
+One-element arrays are deprecated, and we are replacing them with flexible
+array members, instead. However, in this case it seems those one-element
+arrays have never actually been used as fake flexible arrays.
 
-Cc: Song Liu <song@kernel.org>
-Cc: linux-raid@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
+See this code that dates from Linux-2.6.12-rc2 initial git repository build
+(commit 1da177e4c3f4 ("Linux-2.6.12-rc2")):
+
+sound/pci/mixart/mixart_core.h:
+ 215 struct mixart_stream_state_req
+ 216 {
+ 217         u32                 delayed;
+ 218         u64                 scheduler;
+ 219         u32                 reserved4np[3];
+ 220         u32                 stream_count;  /* set to 1 for instance */
+ 221         struct mixart_flow_info  stream_info;   /* could be an array[stream_cou    nt] */
+ 222 } __attribute__((packed));
+
+sound/pci/mixart/mixart.c:
+ 388
+ 389         memset(&stream_state_req, 0, sizeof(stream_state_req));
+ 390         stream_state_req.stream_count = 1;
+ 391         stream_state_req.stream_info.stream_desc.uid_pipe = stream->pipe->group_uid;
+ 392         stream_state_req.stream_info.stream_desc.stream_idx = stream->substream->number;
+ 393
+
+So, taking the code above as example, replace multiple one-element
+arrays with simple object declarations, and refactor the rest of the
+code, accordingly.
+
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
+
+This results in no differences in binary output.
+
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/296
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
-It looks like this memory calculation:
+ sound/pci/mixart/mixart.c      | 8 ++++----
+ sound/pci/mixart/mixart_core.h | 7 +++----
+ 2 files changed, 7 insertions(+), 8 deletions(-)
 
-        memory = conf->min_nr_stripes * (sizeof(struct stripe_head) +
-                 max_disks * ((sizeof(struct bio) + PAGE_SIZE))) / 1024;
-
-... was already buggy (i.e. it included the single "dev" bytes in the
-result). However, I'm not entirely sure if that is the right analysis,
-since "dev" is not related to struct bio nor PAGE_SIZE?
----
- drivers/md/raid5.c | 4 ++--
- drivers/md/raid5.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 4739ed891e75..95aa74aea076 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2433,7 +2433,7 @@ static int grow_stripes(struct r5conf *conf, int num)
+diff --git a/sound/pci/mixart/mixart.c b/sound/pci/mixart/mixart.c
+index 1b078b789604..7ceaf6a7a77e 100644
+--- a/sound/pci/mixart/mixart.c
++++ b/sound/pci/mixart/mixart.c
+@@ -98,7 +98,7 @@ static int mixart_set_pipe_state(struct mixart_mgr *mgr,
  
- 	conf->active_name = 0;
- 	sc = kmem_cache_create(conf->cache_name[conf->active_name],
--			       sizeof(struct stripe_head)+(devs-1)*sizeof(struct r5dev),
-+			       struct_size((struct stripe_head *)0, dev, devs),
- 			       0, 0, NULL);
- 	if (!sc)
- 		return 1;
-@@ -2559,7 +2559,7 @@ static int resize_stripes(struct r5conf *conf, int newsize)
+ 	memset(&group_state, 0, sizeof(group_state));
+ 	group_state.pipe_count = 1;
+-	group_state.pipe_uid[0] = pipe->group_uid;
++	group_state.pipe_uid = pipe->group_uid;
  
- 	/* Step 1 */
- 	sc = kmem_cache_create(conf->cache_name[1-conf->active_name],
--			       sizeof(struct stripe_head)+(newsize-1)*sizeof(struct r5dev),
-+			       struct_size((struct stripe_head *)0, dev, newsize),
- 			       0, 0, NULL);
- 	if (!sc)
- 		return -ENOMEM;
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index e873938a6125..6cfc74162b41 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -268,7 +268,7 @@ struct stripe_head {
- 		unsigned long	flags;
- 		u32		log_checksum;
- 		unsigned short	write_hint;
--	} dev[1]; /* allocated with extra space depending of RAID geometry */
-+	} dev[]; /* allocated with extra space depending of RAID geometry */
- };
+ 	if(start)
+ 		request.message_id = MSG_STREAM_START_STREAM_GRP_PACKET;
+@@ -185,7 +185,7 @@ static int mixart_set_clock(struct mixart_mgr *mgr,
+ 	clock_properties.clock_mode = CM_STANDALONE;
+ 	clock_properties.frequency = rate;
+ 	clock_properties.nb_callers = 1; /* only one entry in uid_caller ! */
+-	clock_properties.uid_caller[0] = pipe->group_uid;
++	clock_properties.uid_caller = pipe->group_uid;
  
- /* stripe_head_state - collects and tracks the dynamic state of a stripe_head
+ 	dev_dbg(&mgr->pci->dev, "mixart_set_clock to %d kHz\n", rate);
+ 
+@@ -565,8 +565,8 @@ static int mixart_set_format(struct mixart_stream *stream, snd_pcm_format_t form
+ 
+ 	stream_param.pipe_count = 1;      /* set to 1 */
+ 	stream_param.stream_count = 1;    /* set to 1 */
+-	stream_param.stream_desc[0].uid_pipe = stream->pipe->group_uid;
+-	stream_param.stream_desc[0].stream_idx = stream->substream->number;
++	stream_param.stream_desc.uid_pipe = stream->pipe->group_uid;
++	stream_param.stream_desc.stream_idx = stream->substream->number;
+ 
+ 	request.message_id = MSG_STREAM_SET_INPUT_STAGE_PARAM;
+ 	request.uid = (struct mixart_uid){0,0};
+diff --git a/sound/pci/mixart/mixart_core.h b/sound/pci/mixart/mixart_core.h
+index 2f0e29ed5d63..ac74b2133c97 100644
+--- a/sound/pci/mixart/mixart_core.h
++++ b/sound/pci/mixart/mixart_core.h
+@@ -231,7 +231,7 @@ struct mixart_group_state_req
+ 	u64           scheduler;
+ 	u32           reserved4np[2];
+ 	u32           pipe_count;    /* set to 1 for instance */
+-	struct mixart_uid  pipe_uid[1];   /* could be an array[pipe_count] */
++	struct mixart_uid  pipe_uid;
+ } __attribute__((packed));
+ 
+ struct mixart_group_state_resp
+@@ -314,7 +314,7 @@ struct mixart_clock_properties
+ 	u32 format;
+ 	u32 board_mask;
+ 	u32 nb_callers; /* set to 1 (see below) */
+-	struct mixart_uid uid_caller[1];
++	struct mixart_uid uid_caller;
+ } __attribute__((packed));
+ 
+ struct mixart_clock_properties_resp
+@@ -401,8 +401,7 @@ struct mixart_stream_param_desc
+ 	u32 reserved4np[3];
+ 	u32 pipe_count;                           /* set to 1 (array size !) */
+ 	u32 stream_count;                         /* set to 1 (array size !) */
+-	struct mixart_txx_stream_desc stream_desc[1];  /* only one stream per command, but this could be an array */
+-
++	struct mixart_txx_stream_desc stream_desc;
+ } __attribute__((packed));
+ 
+ 
 -- 
 2.34.1
 
