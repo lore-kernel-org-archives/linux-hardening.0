@@ -2,147 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40007C77B7D
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 18:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D16C77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 18:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229953AbjEQSH7 (ORCPT
+        id S229572AbjEQSZN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 14:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42734 "EHLO
+        Wed, 17 May 2023 14:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbjEQSH6 (ORCPT
+        with ESMTP id S229635AbjEQSZL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 14:07:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1BACB0;
-        Wed, 17 May 2023 11:07:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5BB23649E3;
-        Wed, 17 May 2023 18:07:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59121C433EF;
-        Wed, 17 May 2023 18:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684346876;
-        bh=fFAQZam9M9GaiJNW3WGAqDih6/zmyl0kx8ysWpMj0WQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k/QWdDVAs6ecpvp4JtgSMAgngJmiD4LVWf5EX+ggp09aHS5JhVJO5AZTR2rqwtvuD
-         PrZnBWsZTppJ8mC2sjtxPM0KR3WVmVR5DVqEahaByES2GmBUmfAT9tEVgE+xeICORj
-         VL+Z7nx1GkhOtWfwiiSwspOq92zj3kkvziWfsvcW1ltbfJLXd4fTXbJkCufDva4lW1
-         sbblEy8ZZ9oTGSRzNmGfoPZp98C3AV27Qraaaru72/6gwJvTS4b9yNc1UeCoI+DXKH
-         2BOBwCiDhQgxmjrpCDIbLp6SCC3CinzTinq64wh7Qktj1ggE55sEIeUEDX+pcQHNpE
-         G1DybcnsONI0w==
-Date:   Wed, 17 May 2023 12:08:46 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] media: venus: hfi_cmds: Replace fake flex-array
- with flexible-array member
-Message-ID: <ZGUYLoqwrcVsjiaH@work>
-References: <ZGQn63U4IeRUiJWb@work>
- <202305171049.9AB52166@keescook>
+        Wed, 17 May 2023 14:25:11 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1D883D8
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 11:25:10 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-517bdc9e81dso577743a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 11:25:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684347909; x=1686939909;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=45x6aIah125jOfw5DAw6akq7zYqDXWAyHyu9qSo7fA0=;
+        b=H4099AwsRNj44sSGT6ogy8ufHfUuk1mCMpajqaFZm2RTsiOdTWnzN9o7fIL1fi+EN/
+         DpMuUzPEUrTkIZFJWr7HT+5pu/aGMFZ9bFyqkVh4QGn8PH6i3QHtZBcMqwbgsN1Q26F9
+         IaNgpyu3EyiCRbB+GFhmdhMe3m9A6KuTRo4ag=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684347909; x=1686939909;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=45x6aIah125jOfw5DAw6akq7zYqDXWAyHyu9qSo7fA0=;
+        b=P8Ych5kUG6Luwx7yDg2mvVE+gw9H/iEFn34ilPhfLeOCn7OgAYFOyDzPvIutELfVoE
+         QI1hfLrqVDRcktglsfEwdkJntcPtFH8LsIitssLCdobKrlZAwk/OeWs/VY2zF53LXRCQ
+         beJKAhve0uPj7h0+Ujj7rD5IAWWS3BepTQzhdeTg+Mw9YiyuRcTDqNs+1KQUWQEr26Ik
+         WEhRBLIHQBLsbU1nlJoDTrkBM8u9PLmcBb36IUW8jUxSmWm1r6Xb9DmS+SH8NcPK6UOp
+         M5GNAgVXWdW14a7JFfdvLABSihUnA+1AoEmq4lepXwE6qXVEaX+OZksTcYM2hb2X5vM+
+         Bw/A==
+X-Gm-Message-State: AC+VfDwyUoObznNmgjRZnO5jIRQNHQplZofB+okLbjHIfg75AdodriOr
+        tEKz8fsQgFb+bDHLLV9mGdpf0g==
+X-Google-Smtp-Source: ACHHUZ7HRV57oX9mtBvMxH/rRkgfAocqgjQoyV0w1AqbEJxyB1hldkewGUNpqsBE+e10ortGtNQ0Lw==
+X-Received: by 2002:a05:6a20:1590:b0:105:5086:fd42 with SMTP id h16-20020a056a20159000b001055086fd42mr20303935pzj.45.1684347909705;
+        Wed, 17 May 2023 11:25:09 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id y24-20020aa78558000000b00634a96493f7sm13122932pfn.128.2023.05.17.11.25.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 11:25:09 -0700 (PDT)
+Date:   Wed, 17 May 2023 11:25:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Neil Armstrong <neil.armstrong@linaro.org>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] firmware: meson_sm: Fix memcpy vs iomem type warnings
+Message-ID: <202305171124.4EB0D65@keescook>
+References: <20221012185234.never.936-kees@kernel.org>
+ <166602031304.3572695.12870664862275915316.b4-ty@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202305171049.9AB52166@keescook>
+In-Reply-To: <166602031304.3572695.12870664862275915316.b4-ty@linaro.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 10:50:53AM -0700, Kees Cook wrote:
-> On Tue, May 16, 2023 at 07:03:39PM -0600, Gustavo A. R. Silva wrote:
-> > One-element arrays are deprecated, and we are replacing them with flexible
-> > array members instead. So, replace one-element arrays with flexible-array
-> > members in struct hfi_sys_set_resource_pkt, and refactor the rest of
-> > the code, accordingly.
-> > 
-> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> > routines on memcpy() and help us make progress towards globally
-> > enabling -fstrict-flex-arrays=3 [1].
-> > 
-> > The only binary differences seen before/after changes are the
-> > following:
-> > 
-> >      17ba:      mov    %rbx,%rdi
-> >      17bd:      call   17c2 <pkt_sys_set_resource+0x42>
-> >                         17be: R_X86_64_PLT32    __tsan_write4-0x4
-> > -    17c2:      movl   $0x14,(%rbx)
-> > +    17c2:      movl   $0x10,(%rbx)
-> >      17c8:      lea    0x4(%rbx),%rdi
-> >      17cc:      call   17d1 <pkt_sys_set_resource+0x51>
-> >                         17cd: R_X86_64_PLT32    __tsan_write4-0x4
-> > 
-> > which is expected once this accounts for the following line of code
-> > at  drivers/media/platform/qcom/venus/hfi_cmds.c:73
-> > 
-> > 73         pkt->hdr.size = sizeof(*pkt);
-> > 
-> > and as *pkt is of type struct hfi_sys_set_resource_pkt, sizeof(*pkt) is
-> > reduced by 4 bytes, due to the flex-array transformation.
-> 
-> Based on the other place that was subtracting the 1 element, this looks
+*thread necromancy*
 
-Do you mean the one you commented on yesterday?
-
-https://lore.kernel.org/linux-hardening/ZGPk3PpvYzjD1+0%2F@work/ this?
-
---
-Gustavo
-
-> like hfi_cmds.c:73 is an existing sizing bug that is now fixed with this
-> patch, yes?
+On Mon, Oct 17, 2022 at 05:25:13PM +0200, Neil Armstrong wrote:
+> Hi,
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> -Kees
-> 
+> On Wed, 12 Oct 2022 11:53:16 -0700, Kees Cook wrote:
+> > Use memcpy_{toio,fromio}() instead of memcpy(). Silences warnings from
+> > Sparse:
 > > 
-> > Link: https://github.com/KSPP/linux/issues/79
-> > Link: https://github.com/KSPP/linux/issues/293
-> > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/media/platform/qcom/venus/hfi_cmds.c | 2 +-
-> >  drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 1 (different address spaces)
+> > drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+> > drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+> > drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 2 (different address spaces)
+> > drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+> > drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+> > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> > drivers/firmware/meson/meson_sm.c:206:9:    expected void *
+> > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
 > > 
-> > diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
-> > index 3f74d518ad08..7c82e212434e 100644
-> > --- a/drivers/media/platform/qcom/venus/hfi_cmds.c
-> > +++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
-> > @@ -83,7 +83,7 @@ int pkt_sys_set_resource(struct hfi_sys_set_resource_pkt *pkt, u32 id, u32 size,
-> >  		res->size = size;
-> >  		res->mem = addr;
-> >  		pkt->resource_type = HFI_RESOURCE_OCMEM;
-> > -		pkt->hdr.size += sizeof(*res) - sizeof(u32);
-> > +		pkt->hdr.size += sizeof(*res);
-> >  		break;
-> >  	}
-> >  	case VIDC_RESOURCE_NONE:
-> > diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> > index ba74d03eb9cd..dd9c5066442d 100644
-> > --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-> > +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-> > @@ -56,7 +56,7 @@ struct hfi_sys_set_resource_pkt {
-> >  	struct hfi_pkt_hdr hdr;
-> >  	u32 resource_handle;
-> >  	u32 resource_type;
-> > -	u32 resource_data[1];
-> > +	u32 resource_data[];
-> >  };
-> >  
-> >  struct hfi_sys_release_resource_pkt {
-> > -- 
-> > 2.34.1
-> > 
+> > [...]
 > 
-> -- 
-> Kees Cook
+> Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.2/drivers)
+> 
+> [1/1] firmware: meson_sm: Fix memcpy vs iomem type warnings
+>       https://git.kernel.org/amlogic/c/7dc69c7d073e6004a281db8f7f15cf6ebf702ea0
+> 
+> These changes has been applied on the intermediate git tree [1].
+> 
+> The v6.2/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+> for inclusion in their intermediate git branches in order to be sent to Linus during
+> the next merge window, or sooner if it's a set of fixes.
+> 
+> In the cases of fixes, those will be merged in the current release candidate
+> kernel and as soon they appear on the Linux master branch they will be
+> backported to the previous Stable and Long-Stable kernels [2].
+> 
+> The intermediate git branches are merged daily in the linux-next tree [3],
+> people are encouraged testing these pre-release kernels and report issues on the
+> relevant mailing-lists.
+> 
+> If problems are discovered on those changes, please submit a signed-off-by revert
+> patch followed by a corrective changeset.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+Hi! This change seems to have never been mainlined and seems to have
+disappeared from linux-next.
+
+-- 
+Kees Cook
