@@ -2,190 +2,188 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796FCC77B75
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 11:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26296C77B7F
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 12:47:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230253AbjEQLHt (ORCPT
+        id S231745AbjEQMr1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 07:07:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54298 "EHLO
+        Wed, 17 May 2023 08:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231173AbjEQLHg (ORCPT
+        with ESMTP id S229654AbjEQMrZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 07:07:36 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F195B82
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 04:07:15 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-783ef1c0cfdso4972921241.0
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 04:07:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684321633; x=1686913633;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NjpVbRUEf8hVlehj2rqkBcIh/3dukJTVY7wvxHIGUVg=;
-        b=hob2U48SOzkJgwOaQgkD/AREmNbKrSnbCDzNpCBLygF/mJs2RTHWfyaKLFvyH+QQfr
-         xR5VNxolvWUCTFtOVRbDQOeQ/Qmet/ENeB7mgSzdATDpmDiTe3esbOiDANtexiTNnoR5
-         D6YNqCQ2pGHzj16+CN3PuTlKDgX5oiRm6aewnY2FuMWZXPeF91LEYv2GB3tj6crCEWFu
-         Cu5LxMVSieFZrFB5kxRs/9VwE8y+aQH2AA+JcAjVUuIMugC0vym3mIrLg70BGJOQbR8A
-         lE/l6BKQUfZ/Y+kaIm3YcbzD2cnYyoUV3/OuJvqTK65LXfbufTJe0Ar5gd+mP1Jc4ojO
-         nzoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684321633; x=1686913633;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NjpVbRUEf8hVlehj2rqkBcIh/3dukJTVY7wvxHIGUVg=;
-        b=b0GqxK0eXMcaoFgTRct2uCoD62T2mQst+aEyelsDKU9IGS6zZW2h06NiHSJ0d1iu0a
-         REIvYjb5pGUlWSIP6btkjZAs/9SvMWNv4yBjcoTIW/whhmYvqwim+ZYsbgHVjzO8+tL/
-         sQBj3jftstmiRYJYebgFQlAsArKf9JudTrKKJE94yf7FIW1AqrdFWLeuUVb+LU/N1QSe
-         lSP/ZSlyo7Jbya3R6/JS+0AlyqOK0d8I5t5qMoBUUng8kOHK8XhDSVg9/bblh8LJnT+O
-         uwFdDtEk2H8owVz6eT10VLSg0VCLhj/6Ez2DsHSl2sw3a3hvN+3iN5OhZBYh6SCThqsj
-         nLBA==
-X-Gm-Message-State: AC+VfDyKBH9YpiM6rWN0eTDQ4C0as9JvuG6XHFOxrUZKMPZLIXK0DLDE
-        yoD3eDXG1ua2THSmOYa48tP9IfflOLUcH5LKdv6OIQ==
-X-Google-Smtp-Source: ACHHUZ7NGWDwURvS+B/o20Pj1OlKKl8DdgirNwoFFAASL3RFJKZSpkMAoFKJJ0fqdOUdcBhe5ub9s9qt5fz41p672YQ=
-X-Received: by 2002:a05:6102:1506:b0:42e:5b08:ec71 with SMTP id
- f6-20020a056102150600b0042e5b08ec71mr540575vsv.11.1684321633590; Wed, 17 May
- 2023 04:07:13 -0700 (PDT)
+        Wed, 17 May 2023 08:47:25 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A61512C;
+        Wed, 17 May 2023 05:47:24 -0700 (PDT)
+Received: from [192.168.254.32] (unknown [47.186.50.133])
+        by linux.microsoft.com (Postfix) with ESMTPSA id D164820F069A;
+        Wed, 17 May 2023 05:47:21 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D164820F069A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1684327643;
+        bh=LhIkPpJhPvIClwJ39pJZmrIh6zoXx6jE68xfB8W+VWs=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=mumhyWRm4PGisYlV+6k79BLPaamhkccyeiIlh7D48PRTzPjbzjxh2vVIF5IMgB/kg
+         ffvKm60yYk2+lOntvrropzUTEW8F4BOwI+8ppjyBg+mNGMVj/ubDGGKoWDypVfUwG4
+         iLdY81ZYifmsEzXVwEDBYtRVqeqDXr8NLjfUncbw=
+Message-ID: <e8fcc1b8-6c0f-9556-a110-bd994d3fe3c6@linux.microsoft.com>
+Date:   Wed, 17 May 2023 07:47:20 -0500
 MIME-Version: 1.0
-References: <20230515130553.2311248-1-jeffxu@chromium.org> <20230515130553.2311248-2-jeffxu@chromium.org>
- <6cb7df56-0479-30be-5389-b4b819572deb@intel.com>
-In-Reply-To: <6cb7df56-0479-30be-5389-b4b819572deb@intel.com>
-From:   =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
-Date:   Wed, 17 May 2023 13:07:02 +0200
-Message-ID: <CAEAAPHYBEEbWu7kGVSi+TDQWypc+dNFKWBw9Y_LNf+nEL+Pf-Q@mail.gmail.com>
-Subject: Re: [PATCH 1/6] PKEY: Introduce PKEY_ENFORCE_API flag
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
-        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
-        akpm@linux-foundation.org, jeffxu@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="000000000000ad599b05fbe1b0f7"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v1 3/9] virt: Implement Heki common code
+To:     Wei Liu <wei.liu@kernel.org>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20230505152046.6575-1-mic@digikod.net>
+ <20230505152046.6575-4-mic@digikod.net>
+ <ZFkxhWhjyIzrPkt8@liuwe-devbox-debian-v2>
+Content-Language: en-US
+From:   "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+In-Reply-To: <ZFkxhWhjyIzrPkt8@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---000000000000ad599b05fbe1b0f7
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Sorry for the delay. See inline...
 
-On Wed, May 17, 2023 at 1:14=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> On 5/15/23 06:05, jeffxu@chromium.org wrote:
-> > --- a/arch/x86/mm/pkeys.c
-> > +++ b/arch/x86/mm/pkeys.c
-> > @@ -20,7 +20,7 @@ int __execute_only_pkey(struct mm_struct *mm)
-> >       /* Do we need to assign a pkey for mm's execute-only maps? */
-> >       if (execute_only_pkey =3D=3D -1) {
-> >               /* Go allocate one to use, which might fail */
-> > -             execute_only_pkey =3D mm_pkey_alloc(mm);
-> > +             execute_only_pkey =3D mm_pkey_alloc(mm, 0);
-> >               if (execute_only_pkey < 0)
-> >                       return -1;
-> >               need_to_set_mm_pkey =3D true;
->
-> In your threat model, what mechanism prevents the attacker from
-> modifying executable mappings?
+On 5/8/23 12:29, Wei Liu wrote:
+> On Fri, May 05, 2023 at 05:20:40PM +0200, Mickaël Salaün wrote:
+>> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+>>
+>> Hypervisor Enforced Kernel Integrity (Heki) is a feature that will use
+>> the hypervisor to enhance guest virtual machine security.
+>>
+>> Configuration
+>> =============
+>>
+>> Define the config variables for the feature. This feature depends on
+>> support from the architecture as well as the hypervisor.
+>>
+>> Enabling HEKI
+>> =============
+>>
+>> Define a kernel command line parameter "heki" to turn the feature on or
+>> off. By default, Heki is on.
+> 
+> For such a newfangled feature can we have it off by default? Especially
+> when there are unsolved issues around dynamically loaded code.
+> 
 
-There are different options how we can address this:
-1) having a generic mseal() API as Jeff mentioned
-2) tagging all code pages with the pkey we're using
-    (would this affect memory sharing between processes?)
-3) prevent this with seccomp + userspace validation
-If we have pkey support, we will only create executable memory using
-pkey_mprotect and everything else can be blocked with seccomp. This would s=
-till
-allow turning R-X memory into RW- memory, but you can't change it back with=
-out
-going through our codepath that has added validation.
+Yes. We can certainly do that.
 
-There's a similar challenge with making RO memory writable. For this we'll =
-need
-to use approach 1) or 2) instead.
+>>
+> [...]
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 3604074a878b..5cf5a7a97811 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -297,6 +297,7 @@ config X86
+>>  	select FUNCTION_ALIGNMENT_4B
+>>  	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>>  	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>> +	select ARCH_SUPPORTS_HEKI		if X86_64
+> 
+> Why is there a restriction on X86_64?
+> 
 
-> I was trying to figure out if the implicit execute-only pkey should have
-> the PKEY_ENFORCE_API bit set.  I think that in particular would probably
-> cause some kind of ABI breakage, but it still reminded me that I have an
-> incomplete picture of the threat model.
+We want to get the PoC working and reviewed on X64 first. We have tested this only on X64 so far.
 
---000000000000ad599b05fbe1b0f7
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+>>  
+>>  config INSTRUCTION_DECODER
+>>  	def_bool y
+>> diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
+>> index a6e8373a5170..42ef1e33b8a5 100644
+>> --- a/arch/x86/include/asm/sections.h
+>> +++ b/arch/x86/include/asm/sections.h
+> [...]
+>>  
+>> +#ifdef CONFIG_HEKI
+>> +
+>> +/*
+>> + * Gather all of the statically defined sections so heki_late_init() can
+>> + * protect these sections in the host page table.
+>> + *
+>> + * The sections are defined under "SECTIONS" in vmlinux.lds.S
+>> + * Keep this array in sync with SECTIONS.
+>> + */
+> 
+> This seems a bit fragile, because it requires constant attention from
+> people who care about this functionality. Can this table be
+> automatically generated?
+> 
 
-MIIPoQYJKoZIhvcNAQcCoIIPkjCCD44CAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ggz7MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-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
-2DeNJUdew/schvbvw4wolIIwTAYDVR0gBEUwQzBBBgkrBgEEAaAyASgwNDAyBggrBgEFBQcCARYm
-aHR0cHM6Ly93d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wDAYDVR0TAQH/BAIwADCBmgYI
-KwYBBQUHAQEEgY0wgYowPgYIKwYBBQUHMAGGMmh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2Nh
-L2dzYXRsYXNyM3NtaW1lY2EyMDIwMEgGCCsGAQUFBzAChjxodHRwOi8vc2VjdXJlLmdsb2JhbHNp
-Z24uY29tL2NhY2VydC9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcnQwHwYDVR0jBBgwFoAUfMwKaNei
-6x4schvRzV2Vb4378mMwRgYDVR0fBD8wPTA7oDmgN4Y1aHR0cDovL2NybC5nbG9iYWxzaWduLmNv
-bS9jYS9nc2F0bGFzcjNzbWltZWNhMjAyMC5jcmwwDQYJKoZIhvcNAQELBQADggEBAEWztMCBdTNW
-CGPLcNM/ovJHsl+VF/BsKdiiwJoodyWO9fmhOgEVex1vfc+njM0bkWC0b4U08iUPP91eksCFGhhi
-cCchsXpkAzfcKPJ7OsFd7J4xQUQPpi02r1P7Y9UKLa8nsNChf9ck1GAz1Skb77r1JWgSlHOcyuVZ
-UQ/JuUVMf/XW7flFfNybswGgFmfnBvDW1qrqBPHpEFmWeNYXISpFQj0UWyGmykQGKi8q44IPy5Qg
-uId+alGaBDlL5OAZQtmhRyh1MVd2wtgvGEfNGDGq603urx17nwEvM1gjSmOgnhEigOhhHH7DOeyt
-5zPYLaKguxLWPGXlZ0UUjA7lH3gxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
-ExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENB
-IDIwMjACEAGkX4MOebzHzp8Y/d5NuOkwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIE
-IMYb5TzgLLmy5EG6JB7gXi85H2/8tKyDlwIITx9Ez1Z7MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDUxNzExMDcxM1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
-ZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQow
-CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAVLvtya17hISoD6P9X
-fnV4fODrLsXCkUWrRL5dQJKIVYjYsqY6np805kYAgnltdEM0bkHoqt0Y+4yixCGMzMejZwR38kSH
-+A5o8Ps5Fu8L1lM8Erk/vFjSNsdTm+yv4xmRk7F4plDUfD+kQASe/MSg9x58SSw9yj6egW9PhprA
-hb6GCxdx/6ocgt/6j5o9Kvo4U8uEXutFyHD2xdxb/4ZCO2kalMwKaLnz69DumEDDScEjeaKVkRYq
-5KKjMWSQVrNGzXsUKAzPqidMBqPqvEegMpw1DIYG7Zax+8hVS2r0kb2wQRJsLndXlwAehbGlpxIU
-+gngFFEiubN3TyidKW38
---000000000000ad599b05fbe1b0f7--
+We realize that. But I don't know of a way this can be automatically generated. Also, the permissions for
+each section is specific to the use of that section. The developer who introduces a new section is the
+one who will know what the permissions should be.
+
+If any one has any ideas of how we can generate this table automatically or even just add a build time check
+of some sort, please let us know.
+
+Thanks.
+
+Madhavan
+
+> Thanks,
+> Wei.
+> 
+>> +struct heki_va_range __initdata heki_va_ranges[] = {
+>> +	{
+>> +		.va_start = _stext,
+>> +		.va_end = _etext,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE | HEKI_ATTR_MEM_EXEC,
+>> +	},
+>> +	{
+>> +		.va_start = __start_rodata,
+>> +		.va_end = __end_rodata,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+>> +	},
+>> +#ifdef CONFIG_UNWINDER_ORC
+>> +	{
+>> +		.va_start = __start_orc_unwind_ip,
+>> +		.va_end = __stop_orc_unwind_ip,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+>> +	},
+>> +	{
+>> +		.va_start = __start_orc_unwind,
+>> +		.va_end = __stop_orc_unwind,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+>> +	},
+>> +	{
+>> +		.va_start = orc_lookup,
+>> +		.va_end = orc_lookup_end,
+>> +		.attributes = HEKI_ATTR_MEM_NOWRITE,
+>> +	},
+>> +#endif /* CONFIG_UNWINDER_ORC */
+>> +};
+>> +
