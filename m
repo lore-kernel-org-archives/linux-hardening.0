@@ -2,98 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19923C7EE2A
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 00:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081E3C77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 01:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231487AbjEQAJY (ORCPT
+        id S229638AbjEQBCx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 20:09:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44816 "EHLO
+        Tue, 16 May 2023 21:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231453AbjEQAJW (ORCPT
+        with ESMTP id S229635AbjEQBCx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 20:09:22 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D192212F
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 17:09:20 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-50bf7bb76d0so2134a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 16 May 2023 17:09:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684282159; x=1686874159;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R6+sA3glVwNYujyPfaMc+ARRP8ltGy3qBe8Uw1+V7f8=;
-        b=4OwqK3P6d+8uCpUBN5+GlnVRSZ7+N/8GtPEUqUxg5irzupRwHMPWOqLLOfgTT9pFA9
-         Wt9NzaziMW34EUwoTL/wY0W/Ygyz8wvLhrm1UmwKh8DOdzmQvPgQAnkA3XG1ld8NQK6m
-         fZgIY6aIsnJu+nbYz/SX0ltNPasXQ2AvPzoJqZo2ifwS17FyZVaBXc7H5kgu89stkYoa
-         wpqd30vHKgTtnT4+9WiNVVcx0zB+E0BPTli2KLUQx6wFVAcAbLlGAPooPty0YaxMubdp
-         wJoJi/qTz+yj5C7VkuI7WWNcIB+TmDK407oQNiHSC/tCMwhwMhuZBfPomeOptbRQfMEu
-         L4vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684282159; x=1686874159;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R6+sA3glVwNYujyPfaMc+ARRP8ltGy3qBe8Uw1+V7f8=;
-        b=Jb35CL7QXAA2SwMbW0mPdm5UvBURC74FTQA7BisiI83Stsq4R6QpyTrZ2XIsUBlGaR
-         unTD9iVcqv4NLUdAxCcjG+cuJcNUJnzT8RZbQsw6/lYW6l6jyYFVSGseZVPCS1iEFzPP
-         AIyUghaxSKGE/LKzDo/WPtNPu97Hz9W6Sj14kzx+jg8JW8mriwOnOfVv5qRete7Euq3q
-         PReHbzQPbneFB1uyfBSSwAHsC8jLEB7+Jz7pYcyxZzc3V+XEHInAv3x370WFRvB+rWtF
-         rpi49hxrYpuK76m84P2MTVYRVRLfTF+uZydPwWuForqfxsL8sRr8ZAHveNGLaK4BiCA/
-         rJnQ==
-X-Gm-Message-State: AC+VfDylqaRVVAN3h7tyioO/NhqO6Gzj5v09rcRP5ndDdfY/yFGqRywK
-        vYViKuHT/egBcy/lyokgLUeperDSbQ6ns/rsNBSJDA==
-X-Google-Smtp-Source: ACHHUZ6DHEWoXAcS3gqSXdcAPxwYIzsFqlA3U40BHQD/hc3Ovr6xApDyft45NrvMujC4HgN2sonyY3noO8ubH+NBctc=
-X-Received: by 2002:a50:d4d5:0:b0:50b:c48c:8a25 with SMTP id
- e21-20020a50d4d5000000b0050bc48c8a25mr54691edj.6.1684282159196; Tue, 16 May
- 2023 17:09:19 -0700 (PDT)
+        Tue, 16 May 2023 21:02:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4557E1BFD;
+        Tue, 16 May 2023 18:02:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DB20264073;
+        Wed, 17 May 2023 01:02:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF893C433EF;
+        Wed, 17 May 2023 01:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684285371;
+        bh=nVMhlmmUXfL1NdxdVCdqZzrzgKQ9uLWQHIfd1j3SZzA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=AMP3rdH1zjSserQL0c9yAZPalpvwfhgz/4bMBrVqJE2dS6Ln6f/w24UpmFrinkwaG
+         MOW9rbW8RAsq4t6F+zAId0LrfuI/Fc3EcDNvhMYPjiu+RcI0rbEmkdy7fqZiSRsx6I
+         TQp1QqVq6YAKat7pbiwEp0AvhX2B6xZUB5+9pe2jiQYe+NCJKjK2XhGGpakPwJ2qbr
+         GJQnJRk5u78PDtRIVhh4P8Z0wXTNe37uc5cn8rZsoytD27gs7/ijuQz21G530mkx1u
+         Pd5HjfJJVLAdUxX8a1guhBCKCoeMRuxccDt5LheXXoWdLYXVvR64bnUGEK8QVO2VQQ
+         5ydG6NC7cR25g==
+Date:   Tue, 16 May 2023 19:03:39 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] media: venus: hfi_cmds: Replace fake flex-array with
+ flexible-array member
+Message-ID: <ZGQn63U4IeRUiJWb@work>
 MIME-Version: 1.0
-References: <20230515130553.2311248-1-jeffxu@chromium.org> <20230515130553.2311248-6-jeffxu@chromium.org>
- <4f14a645-3569-2e3b-f55c-3b17b567845a@intel.com>
-In-Reply-To: <4f14a645-3569-2e3b-f55c-3b17b567845a@intel.com>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Tue, 16 May 2023 17:08:42 -0700
-Message-ID: <CALmYWFvcZ+fGrCjfdx6DWNbYj0WQCJ-i4HFKHgSCqRU6Q4YbBQ@mail.gmail.com>
-Subject: Re: [PATCH 5/6] KEY: Apply PKEY_ENFORCE_API to munmap
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
-        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
-        sroettger@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 16, 2023 at 4:24=E2=80=AFPM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> On 5/15/23 06:05, jeffxu@chromium.org wrote:
-> > From: Jeff Xu <jeffxu@google.com>
-> >
-> > This patch enables PKEY_ENFORCE_API for the munmap
-> > syscall.
->
-> The basic problem here is how we know when the set of syscalls that are
-> patched here is good enough and how we catch future functionality that
-> might need to be captured as well.
->
-> This mechanism really needs to be able to defend against *any* changes
-> to the address space.  I assume that folks are using syscall filtering
-> to prevent new syscalls from causing havoc, but is there anything that
-> can be done for, say, things like madvise()?  I bet it was harmless for
-> a long time until MADV_DONTNEED showed up and made it able to
-> effectively zero memory.
+One-element arrays are deprecated, and we are replacing them with flexible
+array members instead. So, replace one-element arrays with flexible-array
+members in struct hfi_sys_set_resource_pkt, and refactor the rest of
+the code, accordingly.
 
-Not any change, just a limited set of syscall from user space.
-I think it is reasonable to hope that any kind of syscall ABI change that
-affects VMA will get reviewed thoroughly from now on.
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-Also, if we continue to add mseal() to the kernel, we will have to pay more
-attention to syscalls related to VMA.
+The only binary differences seen before/after changes are the
+following:
 
-Thanks
--Jeff Xu
+     17ba:      mov    %rbx,%rdi
+     17bd:      call   17c2 <pkt_sys_set_resource+0x42>
+                        17be: R_X86_64_PLT32    __tsan_write4-0x4
+-    17c2:      movl   $0x14,(%rbx)
++    17c2:      movl   $0x10,(%rbx)
+     17c8:      lea    0x4(%rbx),%rdi
+     17cc:      call   17d1 <pkt_sys_set_resource+0x51>
+                        17cd: R_X86_64_PLT32    __tsan_write4-0x4
+
+which is expected once this accounts for the following line of code
+at  drivers/media/platform/qcom/venus/hfi_cmds.c:73
+
+73         pkt->hdr.size = sizeof(*pkt);
+
+and as *pkt is of type struct hfi_sys_set_resource_pkt, sizeof(*pkt) is
+reduced by 4 bytes, due to the flex-array transformation.
+
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/293
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/media/platform/qcom/venus/hfi_cmds.c | 2 +-
+ drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
+index 3f74d518ad08..7c82e212434e 100644
+--- a/drivers/media/platform/qcom/venus/hfi_cmds.c
++++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
+@@ -83,7 +83,7 @@ int pkt_sys_set_resource(struct hfi_sys_set_resource_pkt *pkt, u32 id, u32 size,
+ 		res->size = size;
+ 		res->mem = addr;
+ 		pkt->resource_type = HFI_RESOURCE_OCMEM;
+-		pkt->hdr.size += sizeof(*res) - sizeof(u32);
++		pkt->hdr.size += sizeof(*res);
+ 		break;
+ 	}
+ 	case VIDC_RESOURCE_NONE:
+diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+index ba74d03eb9cd..dd9c5066442d 100644
+--- a/drivers/media/platform/qcom/venus/hfi_cmds.h
++++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+@@ -56,7 +56,7 @@ struct hfi_sys_set_resource_pkt {
+ 	struct hfi_pkt_hdr hdr;
+ 	u32 resource_handle;
+ 	u32 resource_type;
+-	u32 resource_data[1];
++	u32 resource_data[];
+ };
+ 
+ struct hfi_sys_release_resource_pkt {
+-- 
+2.34.1
+
