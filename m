@@ -2,63 +2,64 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06F9C77B7D
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 14:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9964C77B7D
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 14:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231534AbjEQOtZ (ORCPT
+        id S231403AbjEQOyV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 10:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41544 "EHLO
+        Wed, 17 May 2023 10:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232086AbjEQOtY (ORCPT
+        with ESMTP id S232305AbjEQOyF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 10:49:24 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F135140C0;
-        Wed, 17 May 2023 07:49:23 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-338335fe6d0so4258415ab.1;
-        Wed, 17 May 2023 07:49:23 -0700 (PDT)
+        Wed, 17 May 2023 10:54:05 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E826DAD34;
+        Wed, 17 May 2023 07:53:34 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-76c7b46a261so4096639f.1;
+        Wed, 17 May 2023 07:53:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684334963; x=1686926963;
+        d=gmail.com; s=20221208; t=1684335213; x=1686927213;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=f05y9R3Fl6VbAlQDanAd2cha5Cf54wSBkc374UYz9UI=;
-        b=bcV6hwSN/0UMrTECo6qVNLbcumprmfyioJE1mNkB4ZvaLkYCkIocelHX5SOEgYsMXy
-         4qohG/wVVQqGw+ecK8qY4Fy8IUXu264edouOtmhBZPY/71Fu3QLqaWfhSP3TcKcQF+In
-         ZO0mFghri6ezRm/oh0xOPXiR7FwL2bxHsWI25CcSeWyMwi/LdiWcisGKAXw+Xnq09mvP
-         8lzLtMvMEUOQm2xLIdJZdzNQJZR6D2b2F64LumxbPfun64507uFbXaDIIJPE9PDxSFNZ
-         +wfoK44iT56GTZxcV4/eUadsFzr09t6Wt4aFaPfQfz655XkMQiTC6ixOHuxsCI6Vzagc
-         vLQQ==
+        bh=zAZUJozcoVKmsjLyeB1bGV79CfS9One1jPdm+WsF08I=;
+        b=aYYHo7zbKhRT/HVxBLv6M1twfy2wwHKF7qG6JhX6whSTjIiNZCnGGp6PojOLpkmq/H
+         5xkQgCbr0/zmOcBXHseD07zi7KLmEg78q020Azwm54+uqJxNmIHM683VTo/c7n8q9Hy7
+         tq/Yc4B4XcHs6qQzyTmRlpNN+JrUByMsTEQoqn1y6JNz0Nq87t11WsvdvWfciE/+jmq/
+         3L7OOVM+oU5a8XICbPPdo1N4bdDxvDTeWU05thcGM7AsVl1sR8fhf5+o3i492qd/i/Y9
+         GagukKJdk6pjpQDkNY7Fj/z1QoOJo4VNLXZv/9v0KeIbjzLuSVvVolwSry6ZdjqYbzwx
+         6StQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684334963; x=1686926963;
+        d=1e100.net; s=20221208; t=1684335213; x=1686927213;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=f05y9R3Fl6VbAlQDanAd2cha5Cf54wSBkc374UYz9UI=;
-        b=YZqVMYAkaFFJE57OQV8dfs1NPpc24aVX658PDGGUmRPKSTaGfmXIg+xZSx4ij8oyXH
-         eknC/UXihP2vgjeYaTczxbXDmyTycgGSQ2Cri/fk7HjJp7bKjST9kxu7mrW0zH8mfZGz
-         6AdBijPvXj1y6v89hDvvwAzzGsy2kl+MctLcZjXZjaFVqNLu0kSnJm/RyjsdFYS9Geau
-         ZYrWwzJjqIZuZ0gNRiJshx6mToVoZ6cDIv4a07U4VOV3ab/W+vupSb8o337CjDnHzFHY
-         oPkBCZ6QbSXuNIWrlg3gniVqyCA8YYmR08g3F50vuXzSsR6ASfGZXN1Gk/rWeQSpuoB6
-         FcAQ==
-X-Gm-Message-State: AC+VfDwTeIBpkovE2yixqvNbc7K6569flLCG1ytS2qUVwfwuWmV0oUh+
-        rYJrcmfkK/Igfhh7dXXAyYLNN7vC3ScWLQ==
-X-Google-Smtp-Source: ACHHUZ5PNwtFgZ4TY7EG85CA8qH2DfYwiCJMnE4oFcAfjtFgIfd/LUSDC6uiZ1KAuZ3Wd6kntCwSLA==
-X-Received: by 2002:a92:c6cf:0:b0:32a:b78f:e7d5 with SMTP id v15-20020a92c6cf000000b0032ab78fe7d5mr2242319ilm.27.1684334963225;
-        Wed, 17 May 2023 07:49:23 -0700 (PDT)
+        bh=zAZUJozcoVKmsjLyeB1bGV79CfS9One1jPdm+WsF08I=;
+        b=faQD1j2jM2wSK3zk17wLNV3M7/NQQtceGdY3EJKTvAgDDwowk5RqImnwOMpaiUHWyf
+         5HcR22Mh73bCLkUooMNzfWyR1+xzyrbZ0peeaowYcwt5IefZGZu2WESnJUxxq0lrVMBy
+         Gt4CYQqK/tImYVygDGhYpWut7lLbJ7wr+bmzMrIkFszS7an6/AxhzPaYcHjsr7QrHEm6
+         st6DHnqFJAi7ZxwxKDoL5E62JLNhCmH1a3XfMqiWz9m9GJQ3mbUZwSpCzf7PC0LGceGc
+         MKpY6i+t1UwWCkKYaUX3R9D6WcY/+zsAi5fVMJeHWe2j4lHtNTikBX3aOGxcFSs3TtVy
+         gFYg==
+X-Gm-Message-State: AC+VfDwSil9riM4wverKJKQof3HeXsd9B8NADkRCBInvK66TfKP+aBtq
+        0WkKDwW4JWaa9D+DvQWZdMTtkXnCXUttXg==
+X-Google-Smtp-Source: ACHHUZ4WEsrvwhzmJcdRbyYb0lJDcP9K4xTlgtQdZ1p77RNM9llM6MVqkmJ5ulUczj1vTYSSZ6jsdg==
+X-Received: by 2002:a6b:dc0e:0:b0:76c:8d6c:9654 with SMTP id s14-20020a6bdc0e000000b0076c8d6c9654mr1655694ioc.7.1684335213494;
+        Wed, 17 May 2023 07:53:33 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id 18-20020a92c652000000b00335717785ecsm5925900ill.63.2023.05.17.07.49.22
+        by smtp.gmail.com with ESMTPSA id a18-20020a056602209200b0076c76dfdaa0sm4921681ioa.25.2023.05.17.07.53.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 07:49:22 -0700 (PDT)
+        Wed, 17 May 2023 07:53:33 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] cgroup: Replace all non-returning strlcpy with strscpy
-Date:   Wed, 17 May 2023 14:49:10 +0000
-Message-ID: <20230517144910.1521547-1-azeemshaikh38@gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ftrace: Replace all non-returning strlcpy with strscpy
+Date:   Wed, 17 May 2023 14:53:23 +0000
+Message-ID: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,29 +80,77 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- kernel/cgroup/cgroup-v1.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/ftrace.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index aeef06c465ef..d55216c4cc2d 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -563,7 +563,7 @@ static ssize_t cgroup_release_agent_write(struct kernfs_open_file *of,
- 	if (!cgrp)
- 		return -ENODEV;
- 	spin_lock(&release_agent_path_lock);
--	strlcpy(cgrp->root->release_agent_path, strstrip(buf),
-+	strscpy(cgrp->root->release_agent_path, strstrip(buf),
- 		sizeof(cgrp->root->release_agent_path));
- 	spin_unlock(&release_agent_path_lock);
- 	cgroup_kn_unlock(of->kn);
-@@ -797,7 +797,7 @@ void cgroup1_release_agent(struct work_struct *work)
- 		goto out_free;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 764668467155..6a77edb51f18 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5743,7 +5743,7 @@ bool ftrace_filter_param __initdata;
+ static int __init set_ftrace_notrace(char *str)
+ {
+ 	ftrace_filter_param = true;
+-	strlcpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
++	strscpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
+ 	return 1;
+ }
+ __setup("ftrace_notrace=", set_ftrace_notrace);
+@@ -5751,7 +5751,7 @@ __setup("ftrace_notrace=", set_ftrace_notrace);
+ static int __init set_ftrace_filter(char *str)
+ {
+ 	ftrace_filter_param = true;
+-	strlcpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
++	strscpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
+ 	return 1;
+ }
+ __setup("ftrace_filter=", set_ftrace_filter);
+@@ -5763,14 +5763,14 @@ static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
  
- 	spin_lock(&release_agent_path_lock);
--	strlcpy(agentbuf, cgrp->root->release_agent_path, PATH_MAX);
-+	strscpy(agentbuf, cgrp->root->release_agent_path, PATH_MAX);
- 	spin_unlock(&release_agent_path_lock);
- 	if (!agentbuf[0])
- 		goto out_free;
+ static int __init set_graph_function(char *str)
+ {
+-	strlcpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
++	strscpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
+ 	return 1;
+ }
+ __setup("ftrace_graph_filter=", set_graph_function);
+ 
+ static int __init set_graph_notrace_function(char *str)
+ {
+-	strlcpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
++	strscpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
+ 	return 1;
+ }
+ __setup("ftrace_graph_notrace=", set_graph_notrace_function);
+@@ -6569,8 +6569,8 @@ static int ftrace_get_trampoline_kallsym(unsigned int symnum,
+ 			continue;
+ 		*value = op->trampoline;
+ 		*type = 't';
+-		strlcpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
+-		strlcpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
++		strscpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
++		strscpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
+ 		*exported = 0;
+ 		return 0;
+ 	}
+@@ -6933,7 +6933,7 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+ 		if (off)
+ 			*off = addr - found_func->ip;
+ 		if (sym)
+-			strlcpy(sym, found_func->name, KSYM_NAME_LEN);
++			strscpy(sym, found_func->name, KSYM_NAME_LEN);
+ 
+ 		return found_func->name;
+ 	}
+@@ -6987,8 +6987,8 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
+ 
+ 			*value = mod_func->ip;
+ 			*type = 'T';
+-			strlcpy(name, mod_func->name, KSYM_NAME_LEN);
+-			strlcpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
++			strscpy(name, mod_func->name, KSYM_NAME_LEN);
++			strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+ 			*exported = 1;
+ 			preempt_enable();
+ 			return 0;
 
