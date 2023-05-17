@@ -2,158 +2,151 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916F0C77B75
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 17:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C9C77B7D
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 17:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbjEQRSM (ORCPT
+        id S229923AbjEQRu5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 17 May 2023 13:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59130 "EHLO
+        Wed, 17 May 2023 13:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjEQRSL (ORCPT
+        with ESMTP id S229673AbjEQRu4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 17 May 2023 13:18:11 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4DBD6E82
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 10:18:06 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2ac785015d6so10254571fa.0
-        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 10:18:06 -0700 (PDT)
+        Wed, 17 May 2023 13:50:56 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 153B1BE
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 10:50:55 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-52cbd7d0c37so687163a12.3
+        for <linux-hardening@vger.kernel.org>; Wed, 17 May 2023 10:50:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684343885; x=1686935885;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=t/W+xyRZOrFaXXUosMsho+Wtkn3dRl1nHYsHDumTX8E=;
-        b=M7E8jA+AmNT97OdIY8EZEME/eE+/AXzah9OG3V8PaBGWJidzVYSF79fCHwsuldXoEW
-         3wVSO7Pe4WzDijxQujtsuoTQFfCyLlAVfYjPn4s0+18O3QY5mga3S5tAt6SC8I4bMZrJ
-         OeC0ztHE27ts2V4VdqDV6AK/zAFJ+oMde7kJbDBkuVMXBr9aAWumVVbtWOxpVoDjm7gP
-         dwocPRjQB6ttH9S2QDR+xLBBKpZ+lJMb2Tm0seZVVK1YzEHdbqpDAWfcxHZ7um/TcF1c
-         xXeKo9YrExNsV4ek9RCSFvP5fKVLXHZKOP38BHUoFgWjNEqFoVvdQ1dAxUUqHqQPRzA1
-         38YQ==
+        d=chromium.org; s=google; t=1684345854; x=1686937854;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zUT9us1DezRMsnLU4PSux8SpLZ48zmMBvlSSjJkncm4=;
+        b=QjotMdSjQZIecoNUy/osx/x608ogH3q/xE1ordj7EdXGfExtIiozjxWLezNEvttun/
+         x0j8Ew+Eskxu3YuyfNq1LQjCMKoZVu1jnkJRW/IruBQ9tArjYXLG/EFXEp/6ys4DMIPH
+         +1H38AiggKVfv62qiG0zTd3sh6gpXwE47efmE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684343885; x=1686935885;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=t/W+xyRZOrFaXXUosMsho+Wtkn3dRl1nHYsHDumTX8E=;
-        b=CxyD61yQdzy7/zjJpYtao4CysJX7miYbUyBvAQwCuwcHGdPhztYVHUSBizBcfB1RbT
-         O1RGaK9K+AcI7JtL1Dr/EdVQyNLb1RKx3NQlHVt9Qv3Bgka6hI37ABlb5G8XQ7N6wRT2
-         xukqvVNZvpPrFxNJiBg7O8pZ5hXhh5wgrksO/cEXw7UXQ5PzyEZ4PDbe5QNOsb7AVco4
-         vITGCWFJCNIa3BlhTTfOYTKxvFaMaeymdV6sKvJoOvFCdn42V0r3Pwv576yfbHs+ABDr
-         K9FwdV7dA1ZYIlwQDFYNMeQ1qpmkLJYUuAUBVeIT0Nwd8WKx4SMNCJ1iGRXO12fg7DaD
-         Ovcg==
-X-Gm-Message-State: AC+VfDzvCS4w7a6l61315NeEZLH4Upnx3s8cYud2w68c6nz9HDdDlGXP
-        auFNA6g4wTVl2aGxBJiYQs6m3g==
-X-Google-Smtp-Source: ACHHUZ7qL3cLZD9LGj91BXwss6hJFPqDLP8pRWU4pQowx5XVm0GxnZn5iAX20K55cchMNdGFcvo7wg==
-X-Received: by 2002:a05:6512:75:b0:4ec:8816:f4fc with SMTP id i21-20020a056512007500b004ec8816f4fcmr481324lfo.6.1684343885003;
-        Wed, 17 May 2023 10:18:05 -0700 (PDT)
-Received: from [192.168.1.101] (abxi58.neoplus.adsl.tpnet.pl. [83.9.2.58])
-        by smtp.gmail.com with ESMTPSA id j18-20020ac24552000000b004f140788184sm1038284lfm.289.2023.05.17.10.18.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 10:18:04 -0700 (PDT)
-Message-ID: <f6a491ce-57ad-66c8-8fa2-933bf208adac@linaro.org>
-Date:   Wed, 17 May 2023 19:18:01 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH][next] media: venus: hfi_cmds: Replace fake flex-array
- with flexible-array member
-Content-Language: en-US
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+        d=1e100.net; s=20221208; t=1684345854; x=1686937854;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zUT9us1DezRMsnLU4PSux8SpLZ48zmMBvlSSjJkncm4=;
+        b=jDM/cmO6g/hZ6saKWfiBoZbshJxOjXeYOHITsrPRKKPDu7IaivHlpw1WSGYe5FMuqw
+         P6l6kc0arH6fAzCNb3ZoRUPByjQVe3T1ghE0KmMZUGKHpnxti5L+rokhAjrbMo1GGyGE
+         dGRaoZBXWyf8/lT+39qAnS9DIZYHg8g6va7Q6EiMQmiIF0UwYeTkx7L5/0QyS/39Pg8d
+         q0RCTjiZxBNAOvYj8ukkqtbdYeTrpfU13SduUmeDkkJCJmW46HrkSOkKGJKgzhlAVbku
+         6W3B4TGL9eidQYbW0CdWx1j54rQwQl3f8QO3YlZRYniE0oLaqZMdDAmQ4ZB1/OVVuYOg
+         RuNw==
+X-Gm-Message-State: AC+VfDzc1m9CM/21DSNkI9cy+kIGpS4kwYVPykCM843Or78MklJqVACO
+        0qCNrPEn1euhG0Un+SO67L3Tyw==
+X-Google-Smtp-Source: ACHHUZ5atc4t6+629ifcijOHATQmHDJlghJcNepJv1I/ddk3F3smO/swEB2POcnGNWpIegFFZScYBw==
+X-Received: by 2002:a05:6a20:441c:b0:100:bee5:c80d with SMTP id ce28-20020a056a20441c00b00100bee5c80dmr44711959pzb.25.1684345854541;
+        Wed, 17 May 2023 10:50:54 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id b23-20020aa78117000000b0063d670ad850sm6041141pfi.92.2023.05.17.10.50.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 10:50:54 -0700 (PDT)
+Date:   Wed, 17 May 2023 10:50:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
         Vikash Garodia <quic_vgarodia@quicinc.com>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] media: venus: hfi_cmds: Replace fake flex-array
+ with flexible-array member
+Message-ID: <202305171049.9AB52166@keescook>
 References: <ZGQn63U4IeRUiJWb@work>
- <8f9ca4a1-26ee-cd37-6c15-abdc832d77b3@linaro.org>
-In-Reply-To: <8f9ca4a1-26ee-cd37-6c15-abdc832d77b3@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZGQn63U4IeRUiJWb@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 17.05.2023 04:11, Konrad Dybcio wrote:
+On Tue, May 16, 2023 at 07:03:39PM -0600, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element arrays with flexible-array
+> members in struct hfi_sys_set_resource_pkt, and refactor the rest of
+> the code, accordingly.
 > 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
 > 
-> On 17.05.2023 03:03, Gustavo A. R. Silva wrote:
->> One-element arrays are deprecated, and we are replacing them with flexible
->> array members instead. So, replace one-element arrays with flexible-array
->> members in struct hfi_sys_set_resource_pkt, and refactor the rest of
->> the code, accordingly.
->>
->> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
->> routines on memcpy() and help us make progress towards globally
->> enabling -fstrict-flex-arrays=3 [1].
->>
->> The only binary differences seen before/after changes are the
->> following:
->>
->>      17ba:      mov    %rbx,%rdi
->>      17bd:      call   17c2 <pkt_sys_set_resource+0x42>
->>                         17be: R_X86_64_PLT32    __tsan_write4-0x4
->> -    17c2:      movl   $0x14,(%rbx)
->> +    17c2:      movl   $0x10,(%rbx)
->>      17c8:      lea    0x4(%rbx),%rdi
->>      17cc:      call   17d1 <pkt_sys_set_resource+0x51>
->>                         17cd: R_X86_64_PLT32    __tsan_write4-0x4
->>
->> which is expected once this accounts for the following line of code
->> at  drivers/media/platform/qcom/venus/hfi_cmds.c:73
->>
->> 73         pkt->hdr.size = sizeof(*pkt);
->>
->> and as *pkt is of type struct hfi_sys_set_resource_pkt, sizeof(*pkt) is
->> reduced by 4 bytes, due to the flex-array transformation.
->>
->> Link: https://github.com/KSPP/linux/issues/79
->> Link: https://github.com/KSPP/linux/issues/293
->> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>  drivers/media/platform/qcom/venus/hfi_cmds.c | 2 +-
->>  drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
->>  2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
->> index 3f74d518ad08..7c82e212434e 100644
->> --- a/drivers/media/platform/qcom/venus/hfi_cmds.c
->> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
->> @@ -83,7 +83,7 @@ int pkt_sys_set_resource(struct hfi_sys_set_resource_pkt *pkt, u32 id, u32 size,
->>  		res->size = size;
->>  		res->mem = addr;
->>  		pkt->resource_type = HFI_RESOURCE_OCMEM;
->> -		pkt->hdr.size += sizeof(*res) - sizeof(u32);
->> +		pkt->hdr.size += sizeof(*res);
->>  		break;
->>  	}
->>  	case VIDC_RESOURCE_NONE:
->> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
->> index ba74d03eb9cd..dd9c5066442d 100644
->> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
->> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
->> @@ -56,7 +56,7 @@ struct hfi_sys_set_resource_pkt {
->>  	struct hfi_pkt_hdr hdr;
->>  	u32 resource_handle;
->>  	u32 resource_type;
->> -	u32 resource_data[1];
->> +	u32 resource_data[];
-> Would making this an u32* be a better resolution?
-Nevermind, I overthought this by thinking in the terms of its size
-and not the data within the struct...
-
-Maybe struct_size could be used instead of subtracting sizeof(u32)
-though?
-
-Konrad
+> The only binary differences seen before/after changes are the
+> following:
 > 
-> Konrad
->>  };
->>  
->>  struct hfi_sys_release_resource_pkt {
+>      17ba:      mov    %rbx,%rdi
+>      17bd:      call   17c2 <pkt_sys_set_resource+0x42>
+>                         17be: R_X86_64_PLT32    __tsan_write4-0x4
+> -    17c2:      movl   $0x14,(%rbx)
+> +    17c2:      movl   $0x10,(%rbx)
+>      17c8:      lea    0x4(%rbx),%rdi
+>      17cc:      call   17d1 <pkt_sys_set_resource+0x51>
+>                         17cd: R_X86_64_PLT32    __tsan_write4-0x4
+> 
+> which is expected once this accounts for the following line of code
+> at  drivers/media/platform/qcom/venus/hfi_cmds.c:73
+> 
+> 73         pkt->hdr.size = sizeof(*pkt);
+> 
+> and as *pkt is of type struct hfi_sys_set_resource_pkt, sizeof(*pkt) is
+> reduced by 4 bytes, due to the flex-array transformation.
+
+Based on the other place that was subtracting the 1 element, this looks
+like hfi_cmds.c:73 is an existing sizing bug that is now fixed with this
+patch, yes?
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/293
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/media/platform/qcom/venus/hfi_cmds.c | 2 +-
+>  drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
+> index 3f74d518ad08..7c82e212434e 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_cmds.c
+> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
+> @@ -83,7 +83,7 @@ int pkt_sys_set_resource(struct hfi_sys_set_resource_pkt *pkt, u32 id, u32 size,
+>  		res->size = size;
+>  		res->mem = addr;
+>  		pkt->resource_type = HFI_RESOURCE_OCMEM;
+> -		pkt->hdr.size += sizeof(*res) - sizeof(u32);
+> +		pkt->hdr.size += sizeof(*res);
+>  		break;
+>  	}
+>  	case VIDC_RESOURCE_NONE:
+> diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> index ba74d03eb9cd..dd9c5066442d 100644
+> --- a/drivers/media/platform/qcom/venus/hfi_cmds.h
+> +++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+> @@ -56,7 +56,7 @@ struct hfi_sys_set_resource_pkt {
+>  	struct hfi_pkt_hdr hdr;
+>  	u32 resource_handle;
+>  	u32 resource_type;
+> -	u32 resource_data[1];
+> +	u32 resource_data[];
+>  };
+>  
+>  struct hfi_sys_release_resource_pkt {
+> -- 
+> 2.34.1
+> 
+
+-- 
+Kees Cook
