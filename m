@@ -2,117 +2,163 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CE0C77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 01:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F4E0C77B75
+	for <linux-hardening@archiver.kernel.org>; Wed, 17 May 2023 01:30:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231216AbjEQBRQ (ORCPT
+        id S229799AbjEQBaw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 16 May 2023 21:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36048 "EHLO
+        Tue, 16 May 2023 21:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjEQBRP (ORCPT
+        with ESMTP id S229658AbjEQBav (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 16 May 2023 21:17:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5844C469A;
-        Tue, 16 May 2023 18:17:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E137460B7A;
-        Wed, 17 May 2023 01:17:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8CC1C433D2;
-        Wed, 17 May 2023 01:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684286233;
-        bh=biYz7ct5sU3QISD2vSXIgOyTlRasPXZBZtOwjhRjsrM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=saHRChJIGfsafUmuXO023PW74V+JkbgAGVwicIQaN2miLZvt+AmbCh7M8Kwg9wJv6
-         LkXO/9sUIb1nGw518+w0XwIqKt/5dbDBS2sXLQ+SUoBKaAeCibJ2zF+DUyOBzJtiqH
-         sEC80+Ne2COWpqad3YGPM82fVOlW/8O34MZ8t46YA1LnKzVpnuDhgWL5DpkR+4GiNf
-         257i2IutbuZiOSr3YLmvoPH16nRbdhQE/02kPabwwEGXagA9+0HA/AcC36r6d9LE6f
-         /Oz2RbaexwN7xK4rllq8MQ9qXdJ6aZtcX81igf6555qO0F1oL2cPpfnHMFQNCzjX78
-         CtwFE6/lnp04Q==
-Date:   Tue, 16 May 2023 19:18:01 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] media: venus: hfi_cmds: Replace fake flex-arrays with
- flexible-array members
-Message-ID: <ZGQrSQ/zHu+pk7WU@work>
+        Tue, 16 May 2023 21:30:51 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A49111BEA;
+        Tue, 16 May 2023 18:30:50 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34GJxuAR020400;
+        Wed, 17 May 2023 01:30:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2023-03-30;
+ bh=7iBOYzgDh2IfhA6SvcCgwNibtIoxmkK2XS8iq7DIXaU=;
+ b=n/iPgdTqfLIjkQzlkl/UQ779jUgSQWP1+xXT7QFyXIxbN2eLwnTr+W/v4dHID+2WfEwN
+ Q0ymeQUn3LMhVuIv0d3CoF1z5q2ZpMdSvyKhRPYRFpZ3VhfSumMxS68xc+P6oAPa/qYY
+ CjtXOBDw+zMhAO+keuIefsHHA9g2hLoVO2PkS01WhN1iKNTQAqPmcbXnk6Ckfub2W7/d
+ NnuYynTP7swrPIhYzM5ghAR0IsS2jnQdqozSGqDnbttrKhWhpOb1ARVgza2fSiNMHq8i
+ OIPrl+7/o0KkeaNopVI36e6g352RW2FAjYmtshxg64iZt1YddGp/t9hvN8jL2aBPfyP+ Yg== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj1524mx7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 May 2023 01:30:44 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34H1BvlO033880;
+        Wed, 17 May 2023 01:30:44 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qj1059xg6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 May 2023 01:30:44 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Qjw2ldSP1vcy5/DJMbbg8H5rgSxwFmRIF3YUmVWVjowyQFYLkcIjtzCSLznfeVhq274FOIwhd1veBhO6vQU847d7malxdz13o54LKbOvgtEm/mQ56xcK1zE0cg13RIj/6sONcuBF0Xf/Pk3sIxe95OhhelqM8wJbX/NtBEt0Vlw47ywiyyvgjk2WrjCcpvVqftUcI9RxF2HkDc3nyFAIZtXCrN6P8MdrQx2FNOWCVolG21yMhozQjbSDyKbYtqtWDyeV8PlNipw0ZM29M+bXBHpvqwwSKYsIK3Y9vh87rBCSIWI8rxGIr4GZ7e7+1e6Tsn3ZCo61l9OIwUGsgeuoyA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7iBOYzgDh2IfhA6SvcCgwNibtIoxmkK2XS8iq7DIXaU=;
+ b=StMIKjqEzRQYZN2P6BpF0kZmLsnma+o0qF6mwWVRXR1T5uPtNV35nZ88Q5fwBusin6cLKBBxXocvrc1t67vwMfKvDvMfor6wQQ3AInxPvrIFjpXmt0QJUAeOFpAei2mt7I7BFyQoON8kC/efuRTrRKsHNW5EwPpoKcbFAaSDKXP5aocEKNoMY0Bp4pk8cTpau/iF+NUOjWcnNjgY00J2Ki+dlSACo0Po5Lsyj/8T+AgJ01Ak+bpJheKaH4YqIlOqeUI0LYNitDaK9s9QFm7fvI17i4zjPoavZf0Pa+EQLl8ehf1sFI0wIFliO26FZETbMTE0DLJQNVahq12KQCTfVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7iBOYzgDh2IfhA6SvcCgwNibtIoxmkK2XS8iq7DIXaU=;
+ b=xcaukpsNfhL+c0CX7jyO7nFrrT9/dWabwR4pvbn1vpzHtxE7vputTQGvbBZ/AI1uYxx4jOfA67SZBqH1xuKmhSMAW9E2osbN+i0VOhzAjNtdUrTiJwqDX3i++mMBHuZtJvUTnLRKfNnMLdBzHeG40S2Q484t/BX+aDwxCCjFrWY=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by BLAPR10MB4867.namprd10.prod.outlook.com (2603:10b6:208:321::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.17; Wed, 17 May
+ 2023 01:30:41 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::9a52:4c2f:9ec1:5f16]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::9a52:4c2f:9ec1:5f16%7]) with mapi id 15.20.6387.033; Wed, 17 May 2023
+ 01:30:40 +0000
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] scsi: megaraid_sas: Convert union megasas_sgl to
+ flex-arrays
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq15y8rvj60.fsf@ca-mkp.ca.oracle.com>
+References: <20230511220957.never.919-kees@kernel.org>
+Date:   Tue, 16 May 2023 21:30:37 -0400
+In-Reply-To: <20230511220957.never.919-kees@kernel.org> (Kees Cook's message
+        of "Thu, 11 May 2023 15:10:00 -0700")
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR05CA0081.namprd05.prod.outlook.com
+ (2603:10b6:a03:e0::22) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|BLAPR10MB4867:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b905ec7-c527-4b38-a88c-08db5676534e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gt03oK0KniqdsmpvmmY3LOJdymKbTZWfOhvFXiMs/YxduXy2rWu13NYYUaYNMvbA/ec8SOzSBgEdqK2K/PmYGLdm7qqjrm1QULJLs+P1TRKachFWkFejb4KcH198ApdJwoXjbduv1enXi4t+SJhYI3kj8n6jDNssf4wf7wY1jP7+a5g2UOz5GipuVB+qVLnuyPVNpXTxeOq4UEoSRnLvyZVfMk6ACygNMjUVLpC/BVNUjDazLSf+MwS+Lh+y5iGP/5tlm5ixQckjaORuWu/V/PfUwS6BkqCoPs0FKwUjpVMzCnzLxlvEdWKIVTph0pLlxz3mEJs9SYObbOOUlo6HR7r/z7bv0b+h2IsVl9E+6BMbNAUBnWax+hvp2PKirvy7Wq+A8p/MbwMvcErp6eL29iEfNGgeBVzVyw0WpGQ4KrlhMjwRvp+XgcQMqWHglEK2AuRErrnt43iby9Unu6lYM9F+bQB+StBYAMlmaAykdMQ+ee6Qv8ggebVdoXwbUvCYXGByFbvj2dxBDAgGyFojML2f+8UjUA59RAIPcFdAbTOOU4Jc4bJysA+6Mls/SuuE
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(366004)(136003)(376002)(346002)(396003)(451199021)(54906003)(2906002)(4744005)(5660300002)(7416002)(8676002)(8936002)(41300700001)(316002)(66476007)(66556008)(66946007)(478600001)(4326008)(6916009)(36916002)(6666004)(6486002)(26005)(6506007)(6512007)(86362001)(186003)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?0XKY8GGoRQkGzawKfnQ38trekVfDwOX72WXbixBTqv/PP9BGwUXBv0/YNrh1?=
+ =?us-ascii?Q?HokCFbNmK3LaCAOxTifRnKQTmwuppoXYw5HaDgbhtjPs/XQAvga7ws3w/URq?=
+ =?us-ascii?Q?/xFjeLc6KJ1MtBNLg4Q+AFzl5B9acqOMju9jjm9RbhEDe3JC6iUDqnkF1SxH?=
+ =?us-ascii?Q?T+hc9fcAdr39GcWQ5ftoDgmC6J6J6S9MsMASbZiwE6/IdKEDrkRHvqxDaanm?=
+ =?us-ascii?Q?BOmwfAfet3nE7ner/qKdjUYbLvucL4OAam37X/EWjzLjMM6D6qqkPmfUwymf?=
+ =?us-ascii?Q?sFa30cLP8jVP8vg0xsbfk1Pxqp7Qxdlluy1lbb424Qo50aTFqbUWMb5lns0z?=
+ =?us-ascii?Q?HQx53N9LRysYdvNa97mQmPtEU9ul38LKByoVjui6UdewOD0tvApPOu/p0pmv?=
+ =?us-ascii?Q?x5+jL4zE4DCEkQWaBq4julfJlW74m/WU2dimV6IRf0cAr4gGtxNcxgFjxqkP?=
+ =?us-ascii?Q?jqGjmTe29hraUECUlEdecs4xRP6pUFgBcltq8jXocLGQCFYiwe8/kosmxYuR?=
+ =?us-ascii?Q?Gn8o5lemHtM+gqvciN/P0S96NInHLhCE+ERcINX+s5Q3YIIcYnGGGFwp+3wC?=
+ =?us-ascii?Q?KqXZTYt1PUQ0IEmL9ty8HUforAE286VF5ht5T15+fpbWDFDzag9Ti+DkSwDi?=
+ =?us-ascii?Q?zaXEBbalnDzsBa9+nAGOZaAKpjlHmF/2SIetkEr+I8HlN0+XOcYYcyUQsUyd?=
+ =?us-ascii?Q?IR2DRce613iJVYRjGSKJsG1Tmz5uZqqYeFvMclEh6rb4M2uXstNqXFUT+Uhx?=
+ =?us-ascii?Q?fZ8GCkuR+KLKOwORDVkj4Qut3PBSomKhEtMpm+fwhnTWYkYqEU1D8MhN55QX?=
+ =?us-ascii?Q?ga27Cti+KasY5h7ER0h8u2CKBUJE37RgHMo/wm4GB6HdKHUdFVrvNtRP/Nku?=
+ =?us-ascii?Q?DMTm12ImPrspPzSYH7sWSNPCJeU6kZDrf1ohNihfYvVikPinnaduW1f3YhDV?=
+ =?us-ascii?Q?JOd53ztbx4S/V9GYAuFnirvM36S8UFeSCykcFcAltoxONvxEjcNsT451Mn0M?=
+ =?us-ascii?Q?+9wlms6JWnD5oJDqgSraf8SFOkELxNYYGRgCLA2EgHxCmXuN+aM9861i3Bt6?=
+ =?us-ascii?Q?gZFV7/FyYlGk5RZGWD+y4FzF43HJ64qzCg8ZvSCSK7Kh9dOaVolkMzzSI1AR?=
+ =?us-ascii?Q?loHbf0ZtCJVnVtI31r8yEPDSWSuRYB7hEaA4rQLNivb3dHUoVaakUemSK76i?=
+ =?us-ascii?Q?+aUXdsh1vhma9kaDrQ4tkJ/J2VyBjmNSfJzI7adNP7HLgtkBaYZ3cCr8plXh?=
+ =?us-ascii?Q?MmDhRk6Q6oN0eIlS30cFWKBmLFxVe5a9gGgLMUxKe+hEEZZcdA3ZI0oYza7D?=
+ =?us-ascii?Q?C+3m0hed6+essyZDoKCKlzJuSQ12IeRiZWZkAMFzly5hxiah/iYQqu2X8hqF?=
+ =?us-ascii?Q?jRTmBr4lI0sO+wad7YjuLI1ZDZ27NGXRf4Ldobs+4SmTAVNCDvf0xas28tEO?=
+ =?us-ascii?Q?CvvH3RuLAYi7tWFLvTh9Ujv0iJ6VRUtbdD6+2IYmjR4iUO2+jva4vpzcEeNC?=
+ =?us-ascii?Q?jsFKsTUEj6L3MdPYuEJt4LC6LQfauhfgled+QvKwxSqsl6MKq3wlW2CBQMBQ?=
+ =?us-ascii?Q?BgDZVulWAIxOOspyMseptnikNWEne1AMYf42qdgLKNcOAXXT7tU03gGBWXY+?=
+ =?us-ascii?Q?/w=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: hW8CSJBZ4iZQQkOD1Rr4dDNFtkVJghlojzQ0s+graFldIoVRUp+yKy5zzObHFDo1+LTpgRnOsDmsovbncD/Sw0RFjlBul6B6jL+1E82qSU9PYSUZmVy3QufgB89QYB3c1g0PLU6MiokURa5B3DsufaVecn12XY09WunNaI6dBnm7zwydjoz78rSIDcUZbxpFvZvldSyPuNTTb37ioYQ17cqwZ/lXrBziH2DOFSBrMoI1jz8FxeN/jGTU3TS8NVFx0W9EW8ImA1My7kwt6cmtTDI4a4nCdzHRmLuvbm4v39v0EE1Tx+bqZqdcJsMWEfpB6SOdc2QnnEQsDSbIR4rzFiEv2RM6AERdyoXQfVwKJbMJhR63til5tUcUR+hpMC2usE5jvb8XOt8VcRGUHiry4kIe0a/NA8TRwY8rwr9qwsjEdU7IdmzzoK7LBKghkQcElihaeRHblvW9dRHuabh1n/Y91tjnuylDSkmFSyELIA+aPDL6E71tZJTzUvvsk3uSBS+Fja9cCwsU9V2bJldUNczHCHeSr6V87gJOtMJZGC54qh7AaQJKFLv4RctUGZS68R75q7Rte+V0Gy8sZBnbDrMhxEqSqnSo2QjXkFLewnIUF0iTdvJ1hq+loDcGnO7AX6UFVfbtPJeTjfobtuULdC/rU+Yxsu7gwytWodUIEOSyEarrJFicL5cnA3pToAH4Gjvlqwu2x0yhbn4AXx2V3yH1u4nthMUOeVUUCY1vDA4B38al7EcqV5j+HesPtiYwR8RrnOy+GDX/ZI9+xYxZD4nDzH1QkcH0pqsBK/cepO+O+qhGYZtr+YaF4s1Z4LFCjeOAkMh6w81ZR3nVJLUUa/trYRGt/R1a8sXrzWQTMA05stoldwXDylM32GWlHmNqIPMahzuVavKZQgtzhCYPmg==
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b905ec7-c527-4b38-a88c-08db5676534e
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2023 01:30:40.8141
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pEGcpwLpnt5g61IWaahfcOZSGY67YRlAlMIzZCiwy3iBKdg3mhTHyuAYPzLDEuJeC56xzphfWj3JYHIWBZZwkdQUir/r3rgWJwIhniQYahA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB4867
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-16_14,2023-05-16_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
+ bulkscore=0 suspectscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
+ definitions=main-2305170010
+X-Proofpoint-GUID: RYW23HvXXJuSOffsOPj89g7k9p1jilhQ
+X-Proofpoint-ORIG-GUID: RYW23HvXXJuSOffsOPj89g7k9p1jilhQ
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with flexible
-array members instead. So, replace one-element arrays with flexible-array
-members in multiple structures.
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+Kees,
 
-This results in no differences in binary output.
+> In the ongoing effort to replace all fake flexible arrays with true
+> flexible arrays, replace the sge32, sge64, and sge_skinny members of
+> union megasas_sgl with true flexible arrays. No binary differences are
+> seen after this change; sizes were already being manually calculated
+> using the member struct sizes directly.
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/294
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/media/platform/qcom/venus/hfi_cmds.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Applied to 6.5/scsi-staging, thanks!
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
-index dd9c5066442d..55dd73ff073b 100644
---- a/drivers/media/platform/qcom/venus/hfi_cmds.h
-+++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
-@@ -82,7 +82,7 @@ struct hfi_sys_set_buffers_pkt {
- 	u32 buffer_type;
- 	u32 buffer_size;
- 	u32 num_buffers;
--	u32 buffer_addr[1];
-+	u32 buffer_addr[];
- };
- 
- struct hfi_sys_ping_pkt {
-@@ -177,7 +177,7 @@ struct hfi_session_empty_buffer_uncompressed_plane1_pkt {
- 	u32 filled_len;
- 	u32 offset;
- 	u32 packet_buffer2;
--	u32 data[1];
-+	u32 data[];
- };
- 
- struct hfi_session_empty_buffer_uncompressed_plane2_pkt {
-@@ -186,7 +186,7 @@ struct hfi_session_empty_buffer_uncompressed_plane2_pkt {
- 	u32 filled_len;
- 	u32 offset;
- 	u32 packet_buffer3;
--	u32 data[1];
-+	u32 data[];
- };
- 
- struct hfi_session_fill_buffer_pkt {
-@@ -227,7 +227,7 @@ struct hfi_session_release_buffer_pkt {
- 	u32 extradata_size;
- 	u32 response_req;
- 	u32 num_buffers;
--	u32 buffer_info[1];
-+	u32 buffer_info[];
- };
- 
- struct hfi_session_release_resources_pkt {
 -- 
-2.34.1
-
+Martin K. Petersen	Oracle Linux Engineering
