@@ -2,108 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECCDC7EE29
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 May 2023 21:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E3DC77B7D
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 May 2023 22:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229965AbjERVni (ORCPT
+        id S230339AbjERWwS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 May 2023 17:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53382 "EHLO
+        Thu, 18 May 2023 18:52:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjERVnh (ORCPT
+        with ESMTP id S230049AbjERWwR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 May 2023 17:43:37 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D97B180;
-        Thu, 18 May 2023 14:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684446216; x=1715982216;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FCvlPDXlcdJACB4EQCU/Yj0sO6IJ/Dvvnamlu77Mjcs=;
-  b=LdaN1Y/g2IGsYIw63zwoBXhpb38rbFb4rd4FdtM9PqsU0Wcowg73HMrW
-   6Glzmj2qvI6B8aSSWFTUVVPOz5YBZeqPeArRp7oQBJ/hYSIvNO0SaGFXW
-   85ZgK38oQoqM+S1C5/h17NEcA+CbkStTwn/RLAXRnfoOPb/yhNP25wbGI
-   He3hhQEJpAaE6lUCfmhKoUEaYNcQ/Kt5JR1TTtVK5RyoU5pvduOOYWgwe
-   wko3GW70SMSyYcsDOJv0ockAGMV4Zdea2mYYOiJlDfa2wOQ08Fr4wtbXY
-   DNFudSLusn0S6eRN4wV4yrmBh0HnPFAJIw8HGPbLYOq8/WV9mIZvfeXqm
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="354547437"
-X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="354547437"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 14:43:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="948850882"
-X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="948850882"
-Received: from nroy-mobl1.amr.corp.intel.com (HELO [10.209.81.123]) ([10.209.81.123])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 14:43:26 -0700
-Message-ID: <6dbbc3da-78c9-8101-d52a-0be47da9d67e@intel.com>
-Date:   Thu, 18 May 2023 14:43:25 -0700
+        Thu, 18 May 2023 18:52:17 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E43F103
+        for <linux-hardening@vger.kernel.org>; Thu, 18 May 2023 15:52:16 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-50dba8a52dcso3023a12.0
+        for <linux-hardening@vger.kernel.org>; Thu, 18 May 2023 15:52:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1684450335; x=1687042335;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jWnUteL7v7/EAzuWn1drf3iWgiZd3P6BMPM7r3CRrU4=;
+        b=p1QNWoXOV1xgKiAp3Uawa5ywP62PFwgqLlo1IX/Z7lbukYiaO8h726vLk1ksYI/7qK
+         SMove0r+bWiZcvsiSYWZVvJStA74wecehJFZuXtuZYpVjAd5Xlsi2RjcYi7IHBrmOv7i
+         yzKLfoDu7FGmybhsjsdzoQ8+9IPnyeexOugE2vYPc8H+CF77m1kr5AMWA0qoQIpVvUeK
+         sftIpAXu/jlLnagqS/IEHrCGZFL3YaUrmtF/yOHMwzEYlCPnOXXqpTnBBR/ORpDE38EB
+         3+IEJL2Q7VHbtlApuj2xkqYqRwVdFB0cMzSDD/LVhIzYEr1abR+8elMLu/GsxPG1m3us
+         Utsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684450335; x=1687042335;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jWnUteL7v7/EAzuWn1drf3iWgiZd3P6BMPM7r3CRrU4=;
+        b=WHoTJB0UzLSvirWQ1TmowzftZ51XJ4bADbBzk1kFFpuIrjkNjj5Fsav1T4nP/rnfOt
+         /QQFWTcbvSzD27TJHT42zoGQE4Zu4UqJ9qdShNC8HTS3Ovnkm1fZDSzqA5+0q9Eyx2Bm
+         BaPbYQX0lhpyHpo5FnP2qkiL44e9gLBIJkDSQV9r24LMl+oQYcbZr1Doi28kyEsCpg5e
+         ND8rP4ET95lrt8amSKWuTbFv5qGW8BIC+agn4O8SktJAQL9gakKUKyecmPyi/11fmWZw
+         QuSrBUR2TqYgcJD4N435Y7SgQkjyJ+pFGeA1hGnnJcD7ffKKnfBzuFUFw4wDtOhVMocM
+         XaOQ==
+X-Gm-Message-State: AC+VfDwcx8FcqK9AnOKW6rXkMYMt6lAWVLyskDEXUj/r89FUm1Mdly2v
+        kq4GN/4fvDjCXgAIm0xY1bNNgn81gRqUrotJLgIrMA==
+X-Google-Smtp-Source: ACHHUZ58Y4oMqMeXjqbXsW1ohvNxVWhDEQwCHRAmPCAwpg14J9f/4DWK5igsACs1JEnPwKg/pJtqoSJ6YjSrESVBaLo=
+X-Received: by 2002:a50:aac5:0:b0:502:2af:7b1d with SMTP id
+ r5-20020a50aac5000000b0050202af7b1dmr18114edc.3.1684450334862; Thu, 18 May
+ 2023 15:52:14 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
+References: <20230515130553.2311248-1-jeffxu@chromium.org> <20230515130553.2311248-3-jeffxu@chromium.org>
+ <6dbbc3da-78c9-8101-d52a-0be47da9d67e@intel.com>
+In-Reply-To: <6dbbc3da-78c9-8101-d52a-0be47da9d67e@intel.com>
+From:   Jeff Xu <jeffxu@google.com>
+Date:   Thu, 18 May 2023 15:51:38 -0700
+Message-ID: <CALmYWFtu-WzOTEs2aWU3zMW=KZUjaaL7OTE7hQtHjfwQfQNyEA@mail.gmail.com>
 Subject: Re: [PATCH 2/6] PKEY: Add arch_check_pkey_enforce_api()
-Content-Language: en-US
-To:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
         keescook@chromium.org, groeck@chromium.org, jannh@google.com,
-        sroettger@google.com
-Cc:     akpm@linux-foundation.org, jeffxu@google.com,
+        sroettger@google.com, akpm@linux-foundation.org,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-mm@kvack.org, linux-hardening@vger.kernel.org
-References: <20230515130553.2311248-1-jeffxu@chromium.org>
- <20230515130553.2311248-3-jeffxu@chromium.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230515130553.2311248-3-jeffxu@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 5/15/23 06:05, jeffxu@chromium.org wrote:
-> +static inline int __arch_check_vma_pkey_for_write(struct vm_area_struct *vma)
-> +{
-> +	int pkey = vma_pkey(vma);
-> +
-> +	if (mm_pkey_enforce_api(vma->vm_mm, pkey)) {
-> +		if (!__pkru_allows_write(read_pkru(), pkey))
-> +			return -EACCES;
-> +	}
-> +
-> +	return 0;
-> +}
+On Thu, May 18, 2023 at 2:43=E2=80=AFPM Dave Hansen <dave.hansen@intel.com>=
+ wrote:
+>
+> On 5/15/23 06:05, jeffxu@chromium.org wrote:
+> > +static inline int __arch_check_vma_pkey_for_write(struct vm_area_struc=
+t *vma)
+> > +{
+> > +     int pkey =3D vma_pkey(vma);
+> > +
+> > +     if (mm_pkey_enforce_api(vma->vm_mm, pkey)) {
+> > +             if (!__pkru_allows_write(read_pkru(), pkey))
+> > +                     return -EACCES;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+>
+> Please think very carefully about what I'm about to say:
+>
+> What connects vma->vm_mm to read_pkru() here?
+>
+> Now think about what happens when we have kthread_use_mm() or a ptrace()
+> doing get_task_mm() and working on another process's mm or VMA.
+>
+> Look at arch_vma_access_permitted() and notice how it avoids read_pkru()
+> for 'foreign' aka. 'remote' accesses:
+>
+> > static inline bool arch_vma_access_permitted(struct vm_area_struct *vma=
+,
+> >                 bool write, bool execute, bool foreign)
+> > {
+> ...
+> >         if (foreign || vma_is_foreign(vma))
+> >                 return true;
+> >         return // check read_pkru()
+> > }
+>
+> In other words, it lets all remote accesses right through.  That's
+> because there is *NOTHING* that fundamentally and tightly connects the
+> PKRU value in this context to the VMA or the context that initiated this
+> operation.
+>
+> If your security model depends on PKRU protection, this 'remote'
+> disconnection is problematic.  The PKRU enforcement inside the kernel is
+> best-effort.  That usually doesn't map into the security space very well.
+>
+> Do you have a solid handle on all call paths that will reach
+> __arch_check_vma_pkey_for_write() and can you ensure they are all
+> non-remote?
 
-Please think very carefully about what I'm about to say:
+Is this about the attack scenario where the attacker uses ptrace()
+into the chrome process ? if so it is not in our threat model, and
+that is more related to sandboxing on the host.
 
-What connects vma->vm_mm to read_pkru() here?
+Or is this about io_uring? Yes, io_uring kernel thread breaks our
+expectations of PKRU & user space threads, however I thought the break
+is not just for this - any syscall involved in memory operation will
+break after into io_uring ?
 
-Now think about what happens when we have kthread_use_mm() or a ptrace()
-doing get_task_mm() and working on another process's mm or VMA.
+Other than those, yes, I try to ensure the check is only used at the
+beginning of syscall entry in all cases, which should be non-remote I
+hope.
 
-Look at arch_vma_access_permitted() and notice how it avoids read_pkru()
-for 'foreign' aka. 'remote' accesses:
-
-> static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
->                 bool write, bool execute, bool foreign)
-> {
-...
->         if (foreign || vma_is_foreign(vma))
->                 return true;
->         return // check read_pkru()
-> }
-
-In other words, it lets all remote accesses right through.  That's
-because there is *NOTHING* that fundamentally and tightly connects the
-PKRU value in this context to the VMA or the context that initiated this
-operation.
-
-If your security model depends on PKRU protection, this 'remote'
-disconnection is problematic.  The PKRU enforcement inside the kernel is
-best-effort.  That usually doesn't map into the security space very well.
-
-Do you have a solid handle on all call paths that will reach
-__arch_check_vma_pkey_for_write() and can you ensure they are all
-non-remote?
+Thanks
+-Jeff
