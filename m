@@ -2,107 +2,170 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A47DC77B7A
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 May 2023 19:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6760BC77B7D
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 May 2023 20:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbjERT65 convert rfc822-to-8bit (ORCPT
+        id S230009AbjERUUr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 May 2023 15:58:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38518 "EHLO
+        Thu, 18 May 2023 16:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjERT64 (ORCPT
+        with ESMTP id S229627AbjERUUr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 May 2023 15:58:56 -0400
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE41E45;
-        Thu, 18 May 2023 12:58:54 -0700 (PDT)
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay03.hostedemail.com (Postfix) with ESMTP id 5B407A0989;
-        Thu, 18 May 2023 19:58:53 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf10.hostedemail.com (Postfix) with ESMTPA id F2FA032;
-        Thu, 18 May 2023 19:58:50 +0000 (UTC)
-Message-ID: <cc2ebace1821381e2eaac0a774aa39818dc9dc12.camel@perches.com>
-Subject: Re: [PATCH] checkpatch: Warn about 0-length and 1-element arrays
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Thu, 18 May 2023 12:58:49 -0700
-In-Reply-To: <20230517204530.never.151-kees@kernel.org>
-References: <20230517204530.never.151-kees@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        Thu, 18 May 2023 16:20:47 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900D810CF
+        for <linux-hardening@vger.kernel.org>; Thu, 18 May 2023 13:20:45 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-510e5a8704bso543a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 18 May 2023 13:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1684441244; x=1687033244;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MTWuRRNk/cl6sDlbBMZskmGX+zk6elTnHmxsNN+hPKI=;
+        b=rdm8g1VfSvgnUqlC2P98NKJnhO16smcqE5rlZtC93FgGVUdOwnqPhxBW1aoWXVefas
+         NlmhhOfi6kUSpGnQRR32JUlqq7QQbq7nVf8d44+k77elnlG7VRB7WfOC4LLxUt0RmEFO
+         r3c+BwOPW5JMd/Pj6FZKqgV67+Xtp1lK+4l1251jlNuhpWsTR9xsKBq64zaNrHtu2/jx
+         Ck+gYRhuh8cKvF995++9baMmAtCxMnP3AKVUEGiMw36yXFaIApXBSP5dir+3vSkFp9Ay
+         2UtydFJ911sxfhPxw75zc5C2dbqjJ3YJcUCbLJfYgeZM/d7sWU9r44yAwu1Hzq9csPsm
+         8HVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684441244; x=1687033244;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MTWuRRNk/cl6sDlbBMZskmGX+zk6elTnHmxsNN+hPKI=;
+        b=Lh2HHNM99zNwOXC+boqr2gOogkqM2v6lBh1b4DJWMtcHGqZoHKaf0LYxF4VtyFEEcC
+         4AcKQTLuQJ9pkGq4P2hEi7NPN09ulQbob1ByQ3wr717UDp6aQ/QpN2zsIljQx+YXbUgZ
+         VnFAyFm3cWsrNq8NC1FUcqhvF1w3/pUf7a4g0vci4aY66+2tDwRDMnou1MWBA5U4LECE
+         hiO34I4mfrYFQkbbla61bgRGyRFNGLXzQTMqYH/J6x6v8915wuG/Nd5vpKnTPaAuopv0
+         yNaRYQlJcZ9fgywd1A0vGsLrXyvyiuSSG1scFlnOccR1emN1wLQkIssjubz9N5+82hMt
+         ZuDw==
+X-Gm-Message-State: AC+VfDx4zUI7sTODYmpkuVkIauzm1kSnktKOIyHH+tdOtIbFK6EvWIGA
+        01r2bnG5quxFmBGPFSl3uBfdDo/T73O3lm7hfyCpoQ==
+X-Google-Smtp-Source: ACHHUZ4szDopDyKvT5uuGOC/RGIO4PSKNo0vEobwjmRHQfdAHmO+IiH6Y82C1wQQUgdrCaYZFjmP9jsUjXLcFNRwos4=
+X-Received: by 2002:a50:9ee3:0:b0:50b:f6ce:2f3d with SMTP id
+ a90-20020a509ee3000000b0050bf6ce2f3dmr4467edf.0.1684441243652; Thu, 18 May
+ 2023 13:20:43 -0700 (PDT)
 MIME-Version: 1.0
-X-Stat-Signature: puwyt1swyp41oowuiiowm11we38kzxpn
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: F2FA032
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+QD/3IXieWNNZePhd0mmr+m+MoTjTlcfQ=
-X-HE-Tag: 1684439930-789484
-X-HE-Meta: U2FsdGVkX1/R7LzBAcxWckEg3KFE0ItBSO2do6msyznA+8otsM8C2GluhqU4y0waxsgNs9ZBDx2mAZIK9Up33w==
+References: <20230515130553.2311248-1-jeffxu@chromium.org> <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
+ <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
+ <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com> <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
+ <d8f2d5c2-6650-c2a6-3a20-25583eee579b@intel.com> <CALmYWFsnGjniVseJKuhKO6eet10Onyk_C0=KNe6ZzXoCiBKZOw@mail.gmail.com>
+ <b69f6809-b483-158f-8be9-4976fad918d8@intel.com> <CALmYWFs5Vgosz2JUYWkoc4YwDbiB0tT32MFpo-y6aX4kwuoz8Q@mail.gmail.com>
+ <2b14036e-aed8-4212-bc0f-51ec4fe5a5c1@intel.com>
+In-Reply-To: <2b14036e-aed8-4212-bc0f-51ec4fe5a5c1@intel.com>
+From:   Jeff Xu <jeffxu@google.com>
+Date:   Thu, 18 May 2023 13:20:06 -0700
+Message-ID: <CALmYWFuSTc5Q7Hrra8FijE11+Y1KiROa=xCZWL1D3ifthrrDMQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>,
+        jeffxu@chromium.org, luto@kernel.org, jorgelo@chromium.org,
+        keescook@chromium.org, groeck@chromium.org, jannh@google.com,
+        akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
- * On Wed, 2023-05-17 at 13:45 -0700, Kees Cook wrote:
-> Fake flexible arrays have been deprecated since last millennium. Proper
-> C99 flexible arrays must be used throughout the kernel so
-> CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS can provide proper array
-> bounds checking.
+Hello Dave,
 
-I don't think this does what you want.
+Thanks for your email.
 
-After adding this patch to checkpatch with this diff: No warning
+On Thu, May 18, 2023 at 8:38=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
+ wrote:
+>
+> On 5/17/23 16:48, Jeff Xu wrote:
+> > However, there are a few challenges I have not yet worked through.
+> > First, the code needs to track when the first signaling entry occurs
+> > (saving the PKRU register to the thread struct) and when it is last
+> > returned (restoring the PKRU register from the thread struct).
+>
+> Would tracking signal "depth" work in the face of things like siglongjmp?
+>
+Thank you for your question! I am eager to learn more about this area
+and I worry about blind spots. I will investigate and get back to you.
 
------------------------
-diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-index 4f4f79532c6cf..513cb102b3b38 100644
---- a/drivers/net/netconsole.c
-+++ b/drivers/net/netconsole.c
-@@ -73,6 +73,11 @@ static DEFINE_SPINLOCK(target_list_lock);
- */
- static struct console netconsole_ext;
-+struct foobar {
-+ int a;
-+ int b[1];
-+};
-+
- /**
- * struct netconsole_target - Represents a configured netconsole target.
- * @list: Links this target into the target_list.
------------------------
+> Taking a step back...
+>
+> Here's my concern about this whole thing: it's headed down a rabbit hole
+> which is *highly* specialized both in the apps that will use it and the
+> attacks it will mitigate.  It probably *requires* turning off a bunch of
+> syscalls (like io_uring) that folks kinda like in general.
+>
+ChromeOS currently disabled io_uring, but it is not required to do so.
+io_uring supports the IORING_OP_MADVICE operation, which calls the
+do_madvise() function. This means that io_uring will have the same
+pkey checks as the madvice() system call.  From that perspective, we
+will fully support io_uring for this feature.
 
-because $context_function is DEFINE_SPINLOCK
+> We're balancing that highly specialized mitigation with a feature that
+> add new ABI, touches core memory management code and signal handling.
+>
+The ABI change uses the existing flag field in pkey_alloc() which is
+reserved. The implementation is backward compatible with all existing
+pkey usages in both kernel and user space.  Or do you have other
+concerns about ABI in mind ?
 
-I think you want something like:
----
- scripts/checkpatch.pl | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Yes, you are right about the risk of touching core mm code. To
+minimize the risk, I try to control the scope of the change (it is
+about 3 lines in mprotect, more in munmap but really just 3 effective
+lines from syscall entry). I added new self-tests in mm to make sure
+it doesn't regress in api behavior. I run those tests before and after
+my kernel code change to make sure the behavior remains the same, I
+tested it on 5.15 and 6.1 and 6.4-rc1.  Actually, the testing
+discovered a behavior change for mprotect() between 6.1 and 6.4  (not
+from this patch, there are refactoring works going on in mm) see this
+thread [1]
+I hope those steps will help to mitigate the risk.
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index b30114d637c40..778a0808c37cf 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -7418,6 +7418,18 @@ sub process {
- }
- }
-+ # check for array definition/declarations that should use flexible arrays instead
-+ if ($sline =~ /^[\+ ]\s*}\s*;\s*$/ &&
-+ $prevline =~ /^\+\s*$Type\s*$Ident\s*\[\s*(0|1)\s*\]\s*;\s*$/) {
-+ if ($1 =~ '0') {
-+ WARN("ZERO_LENGTH_ARRAY",
-+ "Prefer C99 flexible arrays instead of zero-length arrays - see https://github.com/KSPP/linux/issues/78\n" . $hereprev);
-+ } else {
-+ WARN("ONE_ELEMENT_ARRAY",
-+ "Prefer C99 flexible arrays instead of one-element arrays - see https://github.com/KSPP/linux/issues/79\n" . $hereprev);
-+ }
-+ }
-+
- # nested likely/unlikely calls
- if ($line =~ /\b(?:(?:un)?likely)\s*\(\s*!?\s*(IS_ERR(?:_OR_NULL|_VALUE)?|WARN)/) {
- WARN("LIKELY_MISUSE",
+Agreed on signaling handling is a tough part: what do you think about
+the approach (modifying PKRU from saved stack after XSAVE), is there a
+blocker ?
 
+> On the x86 side, PKRU is a painfully special snowflake.  It's exposed in
+> the "XSAVE" ABIs, but not actually managed *with* XSAVE in the kernel.
+> This would be making it an even more special snowflake because it would
+
+I admit I'm quite ignorant on XSAVE  to understand the above
+statement, and how that is related. Could you explain it to me please
+? And what is in your mind that might improve the situation ?
+
+> need new altstack ABI and handling.
+>
+I thought adding protected memory support to signaling handling is an
+independent project with its own weight. As Jann Horn points out in
+[2]:  "we could prevent the attacker from corrupting the signal
+context if we can protect the signal stack with a pkey."   However,
+the kernel will send SIGSEGV when the stack is protected by PKEY,  so
+there is a benefit to make this work.  (Maybe Jann can share some more
+thoughts on the benefits)
+
+And I believe we could do this in a way with minimum ABI change, as below:
+- allocate PKEY with a new flag (PKEY_ALTSTACK)
+- at sigaltstack() call, detect the memory is PKEY_ALTSTACK protected,
+(similar as what mprotect does in this patch) and save it along with
+stack address/size.
+- at signaling handling, use the saved info to fill in PKRU.
+The ABI change is similar to PKEY_ENFORCE_API, and there is no
+backward compatibility issue.
+
+Will these mentioned help our case ? What do you think ?
+
+(Stephan has more info on gains,  as far as I know, V8 engineers have
+worked/thought really hard to come to a suitable solution to make
+chrome browser safer)
+
+[1] https://lore.kernel.org/linux-mm/20230516165754.pocx4kaagn3yyw3r@revolv=
+er/T/
+[2] https://docs.google.com/document/d/1OlnJbR5TMoaOAJsf4hHOc-FdTmYK2aDUI7d=
+2hfCZSOo/edit?resourcekey=3D0-v9UJXONYsnG5PlCBbcYqIw#
+
+Thanks!
+Best regards,
+-Jeff
