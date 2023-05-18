@@ -2,41 +2,41 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28B7C7EE23
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 May 2023 14:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1692FC77B7D
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 May 2023 15:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231557AbjEROs0 (ORCPT
+        id S231276AbjERPIB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 May 2023 10:48:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33746 "EHLO
+        Thu, 18 May 2023 11:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231675AbjEROsZ (ORCPT
+        with ESMTP id S230424AbjERPIA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 May 2023 10:48:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F41F2E0;
-        Thu, 18 May 2023 07:48:23 -0700 (PDT)
+        Thu, 18 May 2023 11:08:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6749EE53;
+        Thu, 18 May 2023 08:07:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C08E64FD0;
-        Thu, 18 May 2023 14:48:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B10FEC433D2;
-        Thu, 18 May 2023 14:48:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D78DD60A52;
+        Thu, 18 May 2023 15:07:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2EA7C433D2;
+        Thu, 18 May 2023 15:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684421302;
-        bh=6hR6nJQ/Rih7qcH8pK2O1ZFy9hlR/TAHBgBtNcu7FWc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jzPN06K6wY4jUnyFcdlQfXm49l3Kc07uQK6Fd0nUEwzfmoBTM+my690NoDHWutUU9
-         Dc/6B0dZauOlRIXgEC6N8EnaGagCAajWeZ7gAsTbI7n3/ZDwNE3PT2teJXeuvCTITK
-         b0fLyo+bynqzFSzy4a0BcalMIr72hgd30izCLJtdT3hkNPsZv6YA+PWEYYQl8DCH6W
-         ZuI9z0J68WVR5V8SEZcdo7+Q+oharCrRF32tLcLw6Tnk24Y+OfqoPREuyDTKA1cqBZ
-         z4VgzU8Wqh1hofsZNZRgoAlQqJbQ8r56z9Y8g7Cgq03+v8qxs3OItGKsEVPXmLkN4s
-         ZkxL2Nh1FdWFQ==
-Date:   Thu, 18 May 2023 16:48:16 +0200
+        s=k20201202; t=1684422438;
+        bh=f3/XO3tDI8cfHGYDZ0syLZXznG3gRLsg5/8oiovlAlw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=b65lab1T8wpBHsy2Y2smM1BJXot5gzW8RwUxtLcHJyIfcPxEysEJI+woubyBe90gs
+         +XiCFESETIjIRwBeWGduHLQSG1nrx085/0mLgSYGcWjDrrAySFMKCDa7AlRxpboSVq
+         gfH3CS9NSm6DGntlsY/qqcFNPfd4OiX65b14GW4Rb7LmQ3aUsdvPuzXLVqbSZWuuZr
+         IRtsm4M9qWx9sQqQGoY/0e9plL3+1ndFC1xDDzTGULk0mVhdJdyxdSKN3OlOGnMPv9
+         cTxFBr1O4pEw6Cdb8XImH+RJ7YrXjGJpH9WXIi7dyBFMsRLGv4UDWBwZnQSB2ogW4y
+         biwzmuuk0yEyg==
 From:   Christian Brauner <brauner@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Jan Kara <jack@suse.cz>, Andreas Gruenbacher <agruenba@redhat.com>,
+Cc:     Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
         Daniel Verkamp <dverkamp@chromium.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Jeff Xu <jeffxu@google.com>,
@@ -47,17 +47,21 @@ Cc:     Jan Kara <jack@suse.cz>, Andreas Gruenbacher <agruenba@redhat.com>,
         syzbot+ac3b41786a2d0565b6d5@syzkaller.appspotmail.com,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Subject: Re: [PATCH] pid: Replace struct pid 1-element array with flex-array
-Message-ID: <20230518-zuneigen-brombeeren-0a57cd32b1a7@brauner>
+Date:   Thu, 18 May 2023 17:07:09 +0200
+Message-Id: <20230518-jemand-ehrte-80f8b538ca03@brauner>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230517225838.never.965-kees@kernel.org>
 References: <20230517225838.never.965-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230517225838.never.965-kees@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1163; i=brauner@kernel.org; h=from:subject:message-id; bh=f3/XO3tDI8cfHGYDZ0syLZXznG3gRLsg5/8oiovlAlw=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSk2UuULTvN+XNF2oQSr7aEYzY9bm0XHnYe4+Tye++5zmyn ndHKjlIWBjEuBlkxRRaHdpNwueU8FZuNMjVg5rAygQxh4OIUgIkcf83IsCf40+eqLNN7t5y72fU/+1 azxSY8+cmelWG46peyTc4VA4b/KVyL91a/ermM+4cOY5eF9Pzzj9QU7TVPpph5HNq5RK6EEwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 03:58:42PM -0700, Kees Cook wrote:
+On Wed, 17 May 2023 15:58:42 -0700, Kees Cook wrote:
 > For pid namespaces, struct pid uses a dynamically sized array member,
 > "numbers". This was implemented using the ancient 1-element fake flexible
 > array, which has been deprecated for decades. Replace it with a C99
@@ -65,97 +69,19 @@ On Wed, May 17, 2023 at 03:58:42PM -0700, Kees Cook wrote:
 > and address elements via indexes. Note that the static initializer (which
 > defines a single element) works as-is, and requires no special handling.
 > 
-> Without this, CONFIG_UBSAN_BOUNDS (and potentially CONFIG_FORTIFY_SOURCE)
-> will trigger bounds checks:
-> https://lore.kernel.org/lkml/20230517-bushaltestelle-super-e223978c1ba6@brauner
-> 
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Andreas Gruenbacher <agruenba@redhat.com>
-> Cc: Daniel Verkamp <dverkamp@chromium.org>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Jeff Xu <jeffxu@google.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Frederic Weisbecker <frederic@kernel.org>
-> Reported-by: syzbot+ac3b41786a2d0565b6d5@syzkaller.appspotmail.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/linux/pid.h    |  2 +-
->  kernel/pid.c           | 13 ++++++++-----
->  kernel/pid_namespace.c |  2 +-
->  3 files changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index b75de288a8c2..653a527574c4 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -67,7 +67,7 @@ struct pid
->  	/* wait queue for pidfd notifications */
->  	wait_queue_head_t wait_pidfd;
->  	struct rcu_head rcu;
-> -	struct upid numbers[1];
-> +	struct upid numbers[];
->  };
->  
->  extern struct pid init_struct_pid;
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index f93954a0384d..f5008146e2e4 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -131,7 +131,7 @@ void free_pid(struct pid *pid)
->  
->  	spin_lock_irqsave(&pidmap_lock, flags);
->  	for (i = 0; i <= pid->level; i++) {
-> -		struct upid *upid = pid->numbers + i;
-> +		struct upid *upid = &pid->numbers[i];
->  		struct pid_namespace *ns = upid->ns;
->  		switch (--ns->pid_allocated) {
->  		case 2:
-> @@ -265,7 +265,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
->  	init_waitqueue_head(&pid->wait_pidfd);
->  	INIT_HLIST_HEAD(&pid->inodes);
->  
-> -	upid = pid->numbers + ns->level;
-> +	upid = &pid->numbers[ns->level];
->  	spin_lock_irq(&pidmap_lock);
->  	if (!(ns->pid_allocated & PIDNS_ADDING))
->  		goto out_unlock;
-> @@ -285,7 +285,7 @@ struct pid *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
->  out_free:
->  	spin_lock_irq(&pidmap_lock);
->  	while (++i <= ns->level) {
-> -		upid = pid->numbers + i;
-> +		upid = &pid->numbers[i];
->  		idr_remove(&upid->ns->idr, upid->nr);
->  	}
->  
-> @@ -656,8 +656,11 @@ void __init pid_idr_init(void)
->  
->  	idr_init(&init_pid_ns.idr);
->  
-> -	init_pid_ns.pid_cachep = KMEM_CACHE(pid,
-> -			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
-> +	init_pid_ns.pid_cachep = kmem_cache_create("pid",
-> +			struct_size((struct pid *)0, numbers, 1),
-> +			__alignof__(struct pid),
-> +			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT,
-> +			NULL);
->  }
->  
->  static struct file *__pidfd_fget(struct task_struct *task, int fd)
-> diff --git a/kernel/pid_namespace.c b/kernel/pid_namespace.c
-> index b43eee07b00c..ebb20091a9da 100644
-> --- a/kernel/pid_namespace.c
-> +++ b/kernel/pid_namespace.c
-> @@ -48,7 +48,7 @@ static struct kmem_cache *create_pid_cachep(unsigned int level)
->  		return kc;
->  
->  	snprintf(name, sizeof(name), "pid_%u", level + 1);
-> -	len = sizeof(struct pid) + level * sizeof(struct upid);
-> +	len = struct_size((struct pid *)0, numbers, level + 1);
+> [...]
 
-Having this open-coded is a bit ugly tbh, especially the visible cast
-to 0. But fine we can probably live with this since it's really only
-localized to this file.
+Applied to the kernel.fork branch of the brauner/linux.git tree.
+Patches in the kernel.fork branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
+branch: kernel.fork
+
+[1/1] pid: Replace struct pid 1-element array with flex-array
+      https://git.kernel.org/brauner/linux/c/ad0ff58dc959
