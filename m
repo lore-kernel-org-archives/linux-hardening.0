@@ -2,95 +2,190 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF6EC77B7A
-	for <linux-hardening@archiver.kernel.org>; Thu, 18 May 2023 04:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C0BC7EE24
+	for <linux-hardening@archiver.kernel.org>; Thu, 18 May 2023 05:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbjEREsR (ORCPT
+        id S229602AbjERFM6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 May 2023 00:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
+        Thu, 18 May 2023 01:12:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjEREsQ (ORCPT
+        with ESMTP id S229513AbjERFM5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 May 2023 00:48:16 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E36A9211D;
-        Wed, 17 May 2023 21:48:15 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-30786c87cdaso1482231f8f.2;
-        Wed, 17 May 2023 21:48:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684385294; x=1686977294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YXzqCsmhWx6vLlLx9fa7LWO9eUQ6VRxv85e5IWG1dls=;
-        b=TsZ3BX4j7UQPLV7QbH52+4JxNJrU1AiCMlW3fc0cWwqiPmCa+kp0O+LPuYeG2s9lMY
-         HKridmd9zuHnSVd8mTe5rAjfnESPAynU+cAzSFQM3clbMQvQcGJV+S3eRig9W/IETr/v
-         OL7v/vDmBbysHed2pIvKydi/772V98+kGxqsV+cL2XGF6S5hfXpY+ykoo8nfUnqvOq6X
-         7mREjqJkQvsziTQNeKO3u861dcXk6T5sYVsusW1X3Bf5+bPsFX+acqTbOjIA9YATIMtk
-         Bdcm9PH3F+Ms8eTZ7BSwXHReHRknHuj4RMA5wJ5dmzjDH43+8f/1qqc2vKyJU+BI4O2y
-         0NRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684385294; x=1686977294;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YXzqCsmhWx6vLlLx9fa7LWO9eUQ6VRxv85e5IWG1dls=;
-        b=dkyN7lEdlDVpAZjafanizvrhMvMnZkQastUayYJVf4wc1okwE87b4jgJDQha2Kf5p2
-         Tiq+zlP+vXs+d3qd7gzk8+4ISBritftE5x2FVaxxBb3DTZhGBXhursdB4RagCHvEKFu6
-         MBwM6oltO/YuRsIopqzJdxoRrfEyqfCK6ROtoaiA/DBed+Fs3YRcmA6UfjNhs7N3+Ckj
-         D/BsXTZ+wHWqa6vsWBAKvqmrSxlLRfcMP49qcxt2k51NwD8gcf+izognunoT+skvq+Bx
-         fjr5s+B6g1f70od5IdIPxyht1HWBMGYiPpFADb2WD8IKKZLMf0bt967ZcZUpOyhpug6x
-         4xag==
-X-Gm-Message-State: AC+VfDzxyqp6D5dZfbrQsABshT/RJJdI6b3dLZUwhlLdrFCVRrGwrh2g
-        pfm9zRFsNW1zEM62o42fbnpc+g8XAYfmCwUBve8=
-X-Google-Smtp-Source: ACHHUZ55fbbvFhO5eBFO0p+flbgDgNbsz9EVZyM7FR6aKss6mij2A3xni/ZvfjpjjPEqbEB1k8KjB8iYlQsee4sCNqw=
-X-Received: by 2002:a5d:5963:0:b0:306:b3f8:690f with SMTP id
- e35-20020a5d5963000000b00306b3f8690fmr506638wri.36.1684385294081; Wed, 17 May
- 2023 21:48:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230516025404.2843867-1-azeemshaikh38@gmail.com>
- <yq1cz2zu42r.fsf@ca-mkp.ca.oracle.com> <CADmuW3U+AMVf5xDVTri4Mtyk1GnHf+E_6kPJcsNUSPjF05u7qQ@mail.gmail.com>
-In-Reply-To: <CADmuW3U+AMVf5xDVTri4Mtyk1GnHf+E_6kPJcsNUSPjF05u7qQ@mail.gmail.com>
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Thu, 18 May 2023 00:48:02 -0400
-Message-ID: <CADmuW3UvuHvVHnQx3AGZso2N6JwnJ_5--jHxJPa+q-FFFz6N7Q@mail.gmail.com>
-Subject: Re: [PATCH] scsi: qla2xxx: Replace all non-returning strlcpy with strscpy
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 18 May 2023 01:12:57 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 932561981;
+        Wed, 17 May 2023 22:12:56 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 4AE32226D0;
+        Thu, 18 May 2023 05:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1684386775; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OmO37DvP4UrQhaPjWX+79UtSaADTqvbeHrY+J312Cv8=;
+        b=KyyZX/81dQDVV43sNXuxFzpRZ+QWcCUN20/R+aCkeHVw6DJOFvTQQkakENvSNJdrZx37Ai
+        M8GqAXMTf3iKu7M2Sxwd8NXggRrebhHXqqmDQDPrZ9lzXJwrn7ZYJ8yVukGXwjkjMMp2zS
+        JfwzwMQ0zPGvO/ix/2wCuQBZnNMCdUs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1684386775;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OmO37DvP4UrQhaPjWX+79UtSaADTqvbeHrY+J312Cv8=;
+        b=lv9oiRk6o+Oy9nR16MSfeIAvW58O5YcxeWUrCMkrK6V22+eufGO3Qb/rHVVKlyxKQYP12C
+        z2UQdx/oqIrYpxAw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1EF92138F5;
+        Thu, 18 May 2023 05:12:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id e9hEBtezZWSxZwAAMHmgww
+        (envelope-from <tiwai@suse.de>); Thu, 18 May 2023 05:12:55 +0000
+Date:   Thu, 18 May 2023 07:12:54 +0200
+Message-ID: <87y1lmz0h5.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ALSA: mixart: Replace one-element arrays with simple object declarations
+In-Reply-To: <ZGVlcpuvx1rSOMP8@work>
+References: <ZGVlcpuvx1rSOMP8@work>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 10:11=E2=80=AFAM Azeem Shaikh <azeemshaikh38@gmail.=
-com> wrote:
->
-> On Tue, May 16, 2023 at 9:42=E2=80=AFPM Martin K. Petersen
-> <martin.petersen@oracle.com> wrote:
-> >
-> >
-> > Azeem,
-> >
-> > > strlcpy() reads the entire source buffer first. This read may exceed
-> > > the destination size limit. This is both inefficient and can lead to
-> > > linear read overflows if a source string is not NUL-terminated [1]. I=
-n
-> > > an effort to remove strlcpy() completely [2], replace strlcpy() here
-> > > with strscpy(). No return values were used, so direct replacement is
-> > > safe.
-> >
-> > Applied to 6.5/scsi-staging, thanks!
-> >
->
-> Thanks a lot for the quick response Martin (on this and other patches
-> too). Just for my understanding, do you mind pointing me to the
-> 6.5/scsi-staging tree?
+On Thu, 18 May 2023 01:38:26 +0200,
+Gustavo A. R. Silva wrote:
+> 
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members, instead. However, in this case it seems those one-element
+> arrays have never actually been used as fake flexible arrays.
+> 
+> See this code that dates from Linux-2.6.12-rc2 initial git repository build
+> (commit 1da177e4c3f4 ("Linux-2.6.12-rc2")):
+> 
+> sound/pci/mixart/mixart_core.h:
+>  215 struct mixart_stream_state_req
+>  216 {
+>  217         u32                 delayed;
+>  218         u64                 scheduler;
+>  219         u32                 reserved4np[3];
+>  220         u32                 stream_count;  /* set to 1 for instance */
+>  221         struct mixart_flow_info  stream_info;   /* could be an array[stream_cou    nt] */
+>  222 } __attribute__((packed));
+> 
+> sound/pci/mixart/mixart.c:
+>  388
+>  389         memset(&stream_state_req, 0, sizeof(stream_state_req));
+>  390         stream_state_req.stream_count = 1;
+>  391         stream_state_req.stream_info.stream_desc.uid_pipe = stream->pipe->group_uid;
+>  392         stream_state_req.stream_info.stream_desc.stream_idx = stream->substream->number;
+>  393
+> 
+> So, taking the code above as example, replace multiple one-element
+> arrays with simple object declarations, and refactor the rest of the
+> code, accordingly.
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> This results in no differences in binary output.
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/296
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Found it: https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/log/=
-?h=3D6.5/scsi-staging
+Replacing with a simple object itself is OK, but please keep the
+comment; the statement there is still valid, as it could be rather a multi-member array in theory.
+
+
+thanks,
+
+Takashi
+
+> ---
+>  sound/pci/mixart/mixart.c      | 8 ++++----
+>  sound/pci/mixart/mixart_core.h | 7 +++----
+>  2 files changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/sound/pci/mixart/mixart.c b/sound/pci/mixart/mixart.c
+> index 1b078b789604..7ceaf6a7a77e 100644
+> --- a/sound/pci/mixart/mixart.c
+> +++ b/sound/pci/mixart/mixart.c
+> @@ -98,7 +98,7 @@ static int mixart_set_pipe_state(struct mixart_mgr *mgr,
+>  
+>  	memset(&group_state, 0, sizeof(group_state));
+>  	group_state.pipe_count = 1;
+> -	group_state.pipe_uid[0] = pipe->group_uid;
+> +	group_state.pipe_uid = pipe->group_uid;
+>  
+>  	if(start)
+>  		request.message_id = MSG_STREAM_START_STREAM_GRP_PACKET;
+> @@ -185,7 +185,7 @@ static int mixart_set_clock(struct mixart_mgr *mgr,
+>  	clock_properties.clock_mode = CM_STANDALONE;
+>  	clock_properties.frequency = rate;
+>  	clock_properties.nb_callers = 1; /* only one entry in uid_caller ! */
+> -	clock_properties.uid_caller[0] = pipe->group_uid;
+> +	clock_properties.uid_caller = pipe->group_uid;
+>  
+>  	dev_dbg(&mgr->pci->dev, "mixart_set_clock to %d kHz\n", rate);
+>  
+> @@ -565,8 +565,8 @@ static int mixart_set_format(struct mixart_stream *stream, snd_pcm_format_t form
+>  
+>  	stream_param.pipe_count = 1;      /* set to 1 */
+>  	stream_param.stream_count = 1;    /* set to 1 */
+> -	stream_param.stream_desc[0].uid_pipe = stream->pipe->group_uid;
+> -	stream_param.stream_desc[0].stream_idx = stream->substream->number;
+> +	stream_param.stream_desc.uid_pipe = stream->pipe->group_uid;
+> +	stream_param.stream_desc.stream_idx = stream->substream->number;
+>  
+>  	request.message_id = MSG_STREAM_SET_INPUT_STAGE_PARAM;
+>  	request.uid = (struct mixart_uid){0,0};
+> diff --git a/sound/pci/mixart/mixart_core.h b/sound/pci/mixart/mixart_core.h
+> index 2f0e29ed5d63..ac74b2133c97 100644
+> --- a/sound/pci/mixart/mixart_core.h
+> +++ b/sound/pci/mixart/mixart_core.h
+> @@ -231,7 +231,7 @@ struct mixart_group_state_req
+>  	u64           scheduler;
+>  	u32           reserved4np[2];
+>  	u32           pipe_count;    /* set to 1 for instance */
+> -	struct mixart_uid  pipe_uid[1];   /* could be an array[pipe_count] */
+> +	struct mixart_uid  pipe_uid;
+>  } __attribute__((packed));
+>  
+>  struct mixart_group_state_resp
+> @@ -314,7 +314,7 @@ struct mixart_clock_properties
+>  	u32 format;
+>  	u32 board_mask;
+>  	u32 nb_callers; /* set to 1 (see below) */
+> -	struct mixart_uid uid_caller[1];
+> +	struct mixart_uid uid_caller;
+>  } __attribute__((packed));
+>  
+>  struct mixart_clock_properties_resp
+> @@ -401,8 +401,7 @@ struct mixart_stream_param_desc
+>  	u32 reserved4np[3];
+>  	u32 pipe_count;                           /* set to 1 (array size !) */
+>  	u32 stream_count;                         /* set to 1 (array size !) */
+> -	struct mixart_txx_stream_desc stream_desc[1];  /* only one stream per command, but this could be an array */
+> -
+> +	struct mixart_txx_stream_desc stream_desc;
+>  } __attribute__((packed));
+>  
+>  
+> -- 
+> 2.34.1
+> 
