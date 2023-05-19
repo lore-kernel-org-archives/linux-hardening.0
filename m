@@ -2,169 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F36C77B7A
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 May 2023 20:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D9CC77B7A
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 May 2023 21:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229885AbjESUx7 (ORCPT
+        id S230398AbjESVLi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 19 May 2023 16:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36218 "EHLO
+        Fri, 19 May 2023 17:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229871AbjESUx6 (ORCPT
+        with ESMTP id S229807AbjESVLh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 19 May 2023 16:53:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FEA0132;
-        Fri, 19 May 2023 13:53:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 20FD4615FF;
-        Fri, 19 May 2023 20:53:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE0E7C433D2;
-        Fri, 19 May 2023 20:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684529636;
-        bh=XMfD+fHTTCvtfUV7h2YoT8hriPxayi7IPm7YdA35a9s=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sBinAhr5gyilwc61wdhuktUwh92ixozkWmdVaCSMyCebtMWVvmdYuyWVPTV8gIDMK
-         o9IQGwO8DD5G0a00xR5wFUnOoMhq16LAhNwTENB5pFTdkyuyouivAMcMV65KDYqUV/
-         D34aHq1VRxT2angV5Ea99jtXFwMHR8AMi9/dyDFVAMosZRAoaavRQIKJGtgkY1GLRp
-         bvlB+slkUym0LGY4ATTGL1YYaQrVrIojTicPFth27D3C8CVNyVdCqjdECWwCUxwDuD
-         E/aDoFGHHCQTt3Pb7Uq4fc5R5KO4vLGWi+H67WVF0PlZSxJg34zVzX1tFLJxPPW4u0
-         Bdd5IHnVaQpNg==
-Date:   Fri, 19 May 2023 14:54:46 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] ALSA: mixart: Replace one-element arrays with
- simple object declarations
-Message-ID: <ZGfiFjcL8+r3mayq@work>
+        Fri, 19 May 2023 17:11:37 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A593E6E
+        for <linux-hardening@vger.kernel.org>; Fri, 19 May 2023 14:11:26 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-ba865ac594bso4994108276.0
+        for <linux-hardening@vger.kernel.org>; Fri, 19 May 2023 14:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1684530685; x=1687122685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u+uaRp35edSG069t4QPppFZtHmznzJV890/JpydoWIU=;
+        b=BoAQWGg0fziT/zVOVPWH8PYtpVitBPaeeLVUk6R+L4oeMGFKwW6WTKJ2ZDypPIE3bt
+         J4WVeUN5h4QgL2ors+1VSujBWlV+PnUarViclLLYozjpkzUGoTsnJvL380CWK8Y/L+N3
+         DLCbDZg/BiXn9VdPtJFsDPyXubDjRGGde3mKYPr5jvA+vdJrcLjl/G78IoSpk4DCBEnw
+         KLh+wxbi0evsny8MySXRD4wMDEdsvSFHaRNU9BBBXzSOnyHXajoATGr8RDIRXzKKPfq4
+         1J7K73sdoKIEAQvsUPGqkR5o32uS6Zs0n9mblErc+1+fUQeTVGixsnaoxna613FD86ls
+         WBOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684530685; x=1687122685;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u+uaRp35edSG069t4QPppFZtHmznzJV890/JpydoWIU=;
+        b=NPbmY9GTbV+Y2ZPSydxHunmfNalc0LjdEscw2lYrtOXx5BnvGl+3ZvAJPD4H6ixD1l
+         UH4Z6jwtch30eOycnQWeoIjzLXWqPTPkryGbKWPKg90aw5Fw6oVezkZolCaXUtveQ3cZ
+         5OUIr4HWvc9QxUQuPoK1vWhJxj5Rkn1hkYvR9UcoiEzWFgHopqtdj1buOgOukp7bKxJ8
+         HDO3Ue9FLzplN57/ujfhBhxjrzTd8woKMnJTeexFz2vX912UMrLd1DRhL6ywDJwcSOrB
+         AkxZ+6nGTB/MOD6Yr8OPG8gAqNEHoshDYWUXLLpcgCZVbEWpESundavhthCWxS0yEcNJ
+         B5BA==
+X-Gm-Message-State: AC+VfDwSafBcOuQ88Xxu7T2y4LG1/wnsuWwazAUJw/wUMa3T9IObqbVb
+        w6J+u/ljxVkJzYFZgWzpXkXeUtN6Gj3S/PtglBUg
+X-Google-Smtp-Source: ACHHUZ4f7bhfrf+CH5u40Igxst9OQUQGConCJcAscKSMQL/ATBnkacZF2ihDM40uCMIzetmJwXGL548xnpiUd+tsV7E=
+X-Received: by 2002:a25:da91:0:b0:ba7:ddd2:9909 with SMTP id
+ n139-20020a25da91000000b00ba7ddd29909mr3054255ybf.33.1684530685318; Fri, 19
+ May 2023 14:11:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20230518041513.1669386-1-azeemshaikh38@gmail.com> <CSPLMMXED66E.AMJRQGTPHKIS@suppilovahvero>
+In-Reply-To: <CSPLMMXED66E.AMJRQGTPHKIS@suppilovahvero>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 19 May 2023 17:11:14 -0400
+Message-ID: <CAHC9VhT6qfX9B=nhZNeyOsiaA-vg4bBm=rx8BGiVPCTK1g-L7g@mail.gmail.com>
+Subject: Re: [PATCH] KEYS: Replace all non-returning strlcpy with strscpy
+To:     Jarkko Sakkinen <jarkko@kernel.org>
+Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-hardening@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with flexible
-array members instead. However, in this case it seems those one-element
-arrays have never actually been used as fake flexible arrays.
+On Thu, May 18, 2023 at 2:01=E2=80=AFPM Jarkko Sakkinen <jarkko@kernel.org>=
+ wrote:
+> On Thu May 18, 2023 at 7:15 AM EEST, Azeem Shaikh wrote:
+> > strlcpy() reads the entire source buffer first.
+> > This read may exceed the destination size limit.
+> > This is both inefficient and can lead to linear read
+> > overflows if a source string is not NUL-terminated [1].
+> > In an effort to remove strlcpy() completely [2], replace
+> > strlcpy() here with strscpy().
+> > No return values were used, so direct replacement is safe.
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
+cpy
+> > [2] https://github.com/KSPP/linux/issues/89
+> >
+> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > ---
+> >  security/keys/request_key_auth.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/security/keys/request_key_auth.c b/security/keys/request_k=
+ey_auth.c
+> > index 41e9735006d0..8f33cd170e42 100644
+> > --- a/security/keys/request_key_auth.c
+> > +++ b/security/keys/request_key_auth.c
+> > @@ -178,7 +178,7 @@ struct key *request_key_auth_new(struct key *target=
+, const char *op,
+> >       if (!rka->callout_info)
+> >               goto error_free_rka;
+> >       rka->callout_len =3D callout_len;
+> > -     strlcpy(rka->op, op, sizeof(rka->op));
+> > +     strscpy(rka->op, op, sizeof(rka->op));
+> >
+> >       /* see if the calling process is already servicing the key reques=
+t of
+> >        * another process */
+>
+>
+> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-See this code that dates from Linux-2.6.12-rc2 initial git repository build
-(commit 1da177e4c3f4 ("Linux-2.6.12-rc2")):
+Since you maintain this code Jarkko, are you planning to merge this
+into your tree or would you prefer the KSPP folks merge it?
 
-sound/pci/mixart/mixart_core.h:
- 215 struct mixart_stream_state_req
- 216 {
- 217         u32                 delayed;
- 218         u64                 scheduler;
- 219         u32                 reserved4np[3];
- 220         u32                 stream_count;  /* set to 1 for instance */
- 221         struct mixart_flow_info  stream_info;   /* could be an array[stream_count] */
- 222 } __attribute__((packed));
-
-sound/pci/mixart/mixart.c:
- 388
- 389         memset(&stream_state_req, 0, sizeof(stream_state_req));
- 390         stream_state_req.stream_count = 1;
- 391         stream_state_req.stream_info.stream_desc.uid_pipe = stream->pipe->group_uid;
- 392         stream_state_req.stream_info.stream_desc.stream_idx = stream->substream->number;
- 393
-
-So, taking the code above as example, replace multiple one-element
-arrays with simple object declarations, and refactor the rest of the
-code, accordingly.
-
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
-
-This results in no differences in binary output.
-
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/296
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Keep the code comments (by Takashi Iwai) and explicitly mention that
-   the objects could be arrays, in theory.
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZGVlcpuvx1rSOMP8@work/
-
- sound/pci/mixart/mixart.c      | 8 ++++----
- sound/pci/mixart/mixart_core.h | 7 +++----
- 2 files changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/sound/pci/mixart/mixart.c b/sound/pci/mixart/mixart.c
-index 1b078b789604..7ceaf6a7a77e 100644
---- a/sound/pci/mixart/mixart.c
-+++ b/sound/pci/mixart/mixart.c
-@@ -98,7 +98,7 @@ static int mixart_set_pipe_state(struct mixart_mgr *mgr,
- 
- 	memset(&group_state, 0, sizeof(group_state));
- 	group_state.pipe_count = 1;
--	group_state.pipe_uid[0] = pipe->group_uid;
-+	group_state.pipe_uid = pipe->group_uid;
- 
- 	if(start)
- 		request.message_id = MSG_STREAM_START_STREAM_GRP_PACKET;
-@@ -185,7 +185,7 @@ static int mixart_set_clock(struct mixart_mgr *mgr,
- 	clock_properties.clock_mode = CM_STANDALONE;
- 	clock_properties.frequency = rate;
- 	clock_properties.nb_callers = 1; /* only one entry in uid_caller ! */
--	clock_properties.uid_caller[0] = pipe->group_uid;
-+	clock_properties.uid_caller = pipe->group_uid;
- 
- 	dev_dbg(&mgr->pci->dev, "mixart_set_clock to %d kHz\n", rate);
- 
-@@ -565,8 +565,8 @@ static int mixart_set_format(struct mixart_stream *stream, snd_pcm_format_t form
- 
- 	stream_param.pipe_count = 1;      /* set to 1 */
- 	stream_param.stream_count = 1;    /* set to 1 */
--	stream_param.stream_desc[0].uid_pipe = stream->pipe->group_uid;
--	stream_param.stream_desc[0].stream_idx = stream->substream->number;
-+	stream_param.stream_desc.uid_pipe = stream->pipe->group_uid;
-+	stream_param.stream_desc.stream_idx = stream->substream->number;
- 
- 	request.message_id = MSG_STREAM_SET_INPUT_STAGE_PARAM;
- 	request.uid = (struct mixart_uid){0,0};
-diff --git a/sound/pci/mixart/mixart_core.h b/sound/pci/mixart/mixart_core.h
-index 2f0e29ed5d63..d39233e0e070 100644
---- a/sound/pci/mixart/mixart_core.h
-+++ b/sound/pci/mixart/mixart_core.h
-@@ -231,7 +231,7 @@ struct mixart_group_state_req
- 	u64           scheduler;
- 	u32           reserved4np[2];
- 	u32           pipe_count;    /* set to 1 for instance */
--	struct mixart_uid  pipe_uid[1];   /* could be an array[pipe_count] */
-+	struct mixart_uid  pipe_uid; /* could be an array[pipe_count], in theory */
- } __attribute__((packed));
- 
- struct mixart_group_state_resp
-@@ -314,7 +314,7 @@ struct mixart_clock_properties
- 	u32 format;
- 	u32 board_mask;
- 	u32 nb_callers; /* set to 1 (see below) */
--	struct mixart_uid uid_caller[1];
-+	struct mixart_uid uid_caller;
- } __attribute__((packed));
- 
- struct mixart_clock_properties_resp
-@@ -401,8 +401,7 @@ struct mixart_stream_param_desc
- 	u32 reserved4np[3];
- 	u32 pipe_count;                           /* set to 1 (array size !) */
- 	u32 stream_count;                         /* set to 1 (array size !) */
--	struct mixart_txx_stream_desc stream_desc[1];  /* only one stream per command, but this could be an array */
--
-+	struct mixart_txx_stream_desc stream_desc; /* only one stream per command, but this could be an array, in theory */
- } __attribute__((packed));
- 
- 
--- 
-2.34.1
-
+--=20
+paul-moore.com
