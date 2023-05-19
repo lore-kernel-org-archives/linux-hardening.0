@@ -2,64 +2,60 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A17C77B75
-	for <linux-hardening@archiver.kernel.org>; Fri, 19 May 2023 11:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DD8C7EE23
+	for <linux-hardening@archiver.kernel.org>; Fri, 19 May 2023 11:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231181AbjESLOP (ORCPT
+        id S231258AbjESLWg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 19 May 2023 07:14:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51328 "EHLO
+        Fri, 19 May 2023 07:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjESLON (ORCPT
+        with ESMTP id S230362AbjESLWf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 19 May 2023 07:14:13 -0400
-Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4062E42
-        for <linux-hardening@vger.kernel.org>; Fri, 19 May 2023 04:14:11 -0700 (PDT)
-Received: by mail-vk1-xa32.google.com with SMTP id 71dfb90a1353d-4570a6b7b06so128818e0c.1
-        for <linux-hardening@vger.kernel.org>; Fri, 19 May 2023 04:14:11 -0700 (PDT)
+        Fri, 19 May 2023 07:22:35 -0400
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9E10132
+        for <linux-hardening@vger.kernel.org>; Fri, 19 May 2023 04:22:33 -0700 (PDT)
+Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-456d534f403so1369041e0c.2
+        for <linux-hardening@vger.kernel.org>; Fri, 19 May 2023 04:22:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684494851; x=1687086851;
+        d=google.com; s=20221208; t=1684495353; x=1687087353;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=a2sE4W/1jZXD9Ux5dsjb0MI71+lW67PHDSoQ65u0jl8=;
-        b=SCR+aG5goX8txcc90dES67Te5jb8WRXO1y2Pr4FdlMQ+2q8ojJQdOPxPI7UWpbK1jM
-         u8T1CAddid1lxWf1PyjWxJGCrd+W2taK0OIGQvRK7B+YBP1wXdKskPd7WMGvDsoGpNgu
-         CHZSe1+gRfJaq1lhpC993PfRZ5gsbAtPSYQ9mB/kHzU8ebxD+AyqRFSv8hG7WGVV1F96
-         1X3IEmioO+9cp0l7z3O0R3ZC+IB+U2sc3MnkEXjkKtgdi9wGdXS05Vw06YZFUGgBJjUB
-         ilm3cFvLCr9+2SPj25EOQuBrlRLMJU0fyaoj9BYmESg5povr4VLEPQIQB/v+HFCGWfxz
-         d1CA==
+        bh=SoNguawxKXbQWVk3EqtK8o2kVDOyz9uY4PNl3FbHiyU=;
+        b=eZt242F3g12QgH9va7OWSn+3CDnCUc0Oasa4J19qaYuS7BaYqLnhnCVLhKVZgULyW5
+         3bKQK1ZkID2Ok5TZKggR4045TA6mgTLBDCGw/glae76IoE6isUQ4IlxCR8OmT4+Cq5Gj
+         cRfhlHachMPcKlPPV8f0VsmxB5G1WPIGxvOGo5BeyUQhNM6SI7q3Ckd+HhgYKFx690XP
+         BH+5+ldbavPPOC6rNOSw5169/rcsf9aKSZKVn6BvcjNF1WkzyAfKdM5MAFXDukT7Nix4
+         OvNfpvV9n4SWi+VvfDAOIdBduXYisEQHkoLdA4U4abIhfoyF5I/WQtcO/h82IQso7tb8
+         MzIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684494851; x=1687086851;
+        d=1e100.net; s=20221208; t=1684495353; x=1687087353;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=a2sE4W/1jZXD9Ux5dsjb0MI71+lW67PHDSoQ65u0jl8=;
-        b=hAVt2Q/gB4Ssp/8/5Ax23kET9gVgnrofjjiGZh0yc54wnvobF+CbNXNB0vlMJo+boz
-         HW7bxTb10wJ3HQ8FWLCkwxgG44RFheH2/jUeHKqxSbMJhTWUe3GsimAmuK4SwSZPrdw3
-         DkXYo4HuU8ZtaKUvsc3t3vKYhd8pVe8IHjoPIbLIJRGh5k62pNo6Rz5DX9b5urPe27hD
-         KQi0H0+JcGOux5PhulyxE85zyDFukiSAoft7Plr9JuqDUO8lTYYmPr9TlmD8K5WhdUvy
-         yIdPrqqsfBWPX6IIItSEkMbic3gmPlRQe2eddr6gjiiyAxEIl/DJ5JiR/QRYJNiY3wbb
-         h8SA==
-X-Gm-Message-State: AC+VfDzrqFThAtMGDcIyN6BHfc/QduAr/2RKqW1oeQoNB1b8BO7rvRj8
-        1p3jocLb9+zwWcVJAkg9zuoMDqtBq5FskXsZcGqG1A==
-X-Google-Smtp-Source: ACHHUZ72KOKbnc7ZJgRil6BjAK1wv/qki81BuhNCEvX5p3V+Vs2KpLhZ0y4DH8YF6HUV7riSDdvP+OeFzKglqgbG7HA=
-X-Received: by 2002:a67:e98c:0:b0:430:16ac:4c99 with SMTP id
- b12-20020a67e98c000000b0043016ac4c99mr461242vso.2.1684494850772; Fri, 19 May
- 2023 04:14:10 -0700 (PDT)
+        bh=SoNguawxKXbQWVk3EqtK8o2kVDOyz9uY4PNl3FbHiyU=;
+        b=Cbi1ebBzLL0Z1795ZB3s7ySahuwBQ/e09pD2OenP9Q8IYyorlaQXG7JFlaLXSE/u1s
+         8c7uJhT21DZjo1/hIvkvN2hm5/eq4oABkkZsudB//iv43dMepr1JVhFj1isopI9TMyAZ
+         dXjQv/HejR0pa2viLrDogYj7Fucjtvl6sgeCPg28ECWo8DLVfHLTr+a3m7fYXuwzYsqJ
+         fn3+haR5jRDVYfZdJsQPvD/6upRGyLYYsEaftefj4WjRWTdexcnz3Fsj1lAUX+o0INHp
+         /p7urCMx7xGo7lOuK57QIM8WitxzHi5XqGYOar8Tm1Js52p4zhTxAnfhy0F2kAeH+wD9
+         xKAA==
+X-Gm-Message-State: AC+VfDyEbptoSJM1Wb7wlR6rAEDrZi3vZqRvjMcXN4wqfQI33K33wgsN
+        gFskRV5CQJDI7s9wzNUPyxMlVjRDZ6Cjvo7C2NQaZA==
+X-Google-Smtp-Source: ACHHUZ7m3qaP/XE7vb1368EreQjFE2cU1V3DCULqQOCIm46K9tyTtrCNoT9GRM8U6EPOAVWlCCXig+GTn2cUepThfS0=
+X-Received: by 2002:a67:ba03:0:b0:42c:543a:ab2a with SMTP id
+ l3-20020a67ba03000000b0042c543aab2amr584690vsn.35.1684495352840; Fri, 19 May
+ 2023 04:22:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230515130553.2311248-1-jeffxu@chromium.org> <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
- <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
- <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com> <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
- <d8f2d5c2-6650-c2a6-3a20-25583eee579b@intel.com> <CALmYWFsnGjniVseJKuhKO6eet10Onyk_C0=KNe6ZzXoCiBKZOw@mail.gmail.com>
- <b69f6809-b483-158f-8be9-4976fad918d8@intel.com> <CALmYWFs5Vgosz2JUYWkoc4YwDbiB0tT32MFpo-y6aX4kwuoz8Q@mail.gmail.com>
- <2b14036e-aed8-4212-bc0f-51ec4fe5a5c1@intel.com> <CALmYWFuSTc5Q7Hrra8FijE11+Y1KiROa=xCZWL1D3ifthrrDMQ@mail.gmail.com>
- <9d64c949-6d5f-06c0-47ef-caade67477e5@intel.com>
-In-Reply-To: <9d64c949-6d5f-06c0-47ef-caade67477e5@intel.com>
+References: <20230515130553.2311248-1-jeffxu@chromium.org> <20230515130553.2311248-3-jeffxu@chromium.org>
+ <6dbbc3da-78c9-8101-d52a-0be47da9d67e@intel.com> <CALmYWFtu-WzOTEs2aWU3zMW=KZUjaaL7OTE7hQtHjfwQfQNyEA@mail.gmail.com>
+ <c53c03e8-529f-5b72-42ab-f32f50aaab35@intel.com>
+In-Reply-To: <c53c03e8-529f-5b72-42ab-f32f50aaab35@intel.com>
 From:   =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>
-Date:   Fri, 19 May 2023 13:13:56 +0200
-Message-ID: <CAEAAPHYZfzkVex-ET=KnqSkS0rdrMJCza1Uaw1v1nbiXe1_7uA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
+Date:   Fri, 19 May 2023 13:22:21 +0200
+Message-ID: <CAEAAPHb5wzn6=9sL92-wq7mwT0-iu7NVmzpWM7tSiN85kZYO9w@mail.gmail.com>
+Subject: Re: [PATCH 2/6] PKEY: Add arch_check_pkey_enforce_api()
 To:     Dave Hansen <dave.hansen@intel.com>
 Cc:     Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org, luto@kernel.org,
         jorgelo@chromium.org, keescook@chromium.org, groeck@chromium.org,
@@ -67,183 +63,63 @@ Cc:     Jeff Xu <jeffxu@google.com>, jeffxu@chromium.org, luto@kernel.org,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-mm@kvack.org, linux-hardening@vger.kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000003bb41005fc0a0518"
+        boundary="00000000000027084205fc0a236e"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---0000000000003bb41005fc0a0518
+--00000000000027084205fc0a236e
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 18, 2023 at 11:04=E2=80=AFPM Dave Hansen <dave.hansen@intel.com=
-> wrote:
+On Fri, May 19, 2023 at 2:00=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
+ wrote:
 >
-> On 5/18/23 13:20, Jeff Xu wrote:>> Here's my concern about this whole
-> thing: it's headed down a rabbit hole
-> >> which is *highly* specialized both in the apps that will use it and th=
-e
-> >> attacks it will mitigate.  It probably *requires* turning off a bunch =
-of
-> >> syscalls (like io_uring) that folks kinda like in general.
-> >>
-> > ChromeOS currently disabled io_uring, but it is not required to do so.
-> > io_uring supports the IORING_OP_MADVICE operation, which calls the
-> > do_madvise() function. This means that io_uring will have the same
-> > pkey checks as the madvice() system call.  From that perspective, we
-> > will fully support io_uring for this feature.
+> On 5/18/23 15:51, Jeff Xu wrote:
+> >> Do you have a solid handle on all call paths that will reach
+> >> __arch_check_vma_pkey_for_write() and can you ensure they are all
+> >> non-remote?
+> > Is this about the attack scenario where the attacker uses ptrace()
+> > into the chrome process ? if so it is not in our threat model, and
+> > that is more related to sandboxing on the host.
 >
-> io_uring fundamentally doesn't have the same checks.  The kernel side
-> work can be done from an asynchronous kernel thread.  That kernel thread
-> doesn't have a meaningful PKRU value.  The register has a value, but
-> it's not really related to the userspace threads that are sending it
-> requests.
+> The attacker would use *some* remote interface.  ptrace() is just one of
+> those remote interfaces.
 >
-> >> We're balancing that highly specialized mitigation with a feature that
-> >> add new ABI, touches core memory management code and signal handling.
-> >>
-> > The ABI change uses the existing flag field in pkey_alloc() which is
-> > reserved. The implementation is backward compatible with all existing
-> > pkey usages in both kernel and user space.  Or do you have other
-> > concerns about ABI in mind ?
+> > Or is this about io_uring? Yes, io_uring kernel thread breaks our
+> > expectations of PKRU & user space threads, however I thought the break
+> > is not just for this - any syscall involved in memory operation will
+> > break after into io_uring ?
 >
-> I'm not worried about the past, I'm worried any time we add a new ABI
-> since we need to support it forever.
+> I'm not quite following.
 >
-> > Yes, you are right about the risk of touching core mm code. To
-> > minimize the risk, I try to control the scope of the change (it is
-> > about 3 lines in mprotect, more in munmap but really just 3 effective
-> > lines from syscall entry). I added new self-tests in mm to make sure
-> > it doesn't regress in api behavior. I run those tests before and after
-> > my kernel code change to make sure the behavior remains the same, I
-> > tested it on 5.15 and 6.1 and 6.4-rc1.  Actually, the testing
-> > discovered a behavior change for mprotect() between 6.1 and 6.4  (not
-> > from this patch, there are refactoring works going on in mm) see this
-> > thread [1]
-> > I hope those steps will help to mitigate the risk.
-> >
-> > Agreed on signaling handling is a tough part: what do you think about
-> > the approach (modifying PKRU from saved stack after XSAVE), is there a
-> > blocker ?
+> Please just do me a favor: have the io_uring maintainers look at your
+> proposal.  Make sure that the defenses you are building can work in a
+> process where io_uring is in use by the benign threads.
 >
-> Yes, signal entry and sigreturn are not necessarily symmetric so you
-> can't really have a stack.
+> Those same folks are pretty familiar with the other, more traditional
+> I/O syscalls that have in-memory descriptors that control syscall
+> behavior like readv/writev.  Those also need a close look.
 >
-> >> On the x86 side, PKRU is a painfully special snowflake.  It's exposed =
-in
-> >> the "XSAVE" ABIs, but not actually managed *with* XSAVE in the kernel.
-> >> This would be making it an even more special snowflake because it woul=
-d
-> >
-> > I admit I'm quite ignorant on XSAVE  to understand the above
-> > statement, and how that is related. Could you explain it to me please
-> > ? And what is in your mind that might improve the situation ?
+> > Other than those, yes, I try to ensure the check is only used at the
+> > beginning of syscall entry in all cases, which should be non-remote I
+> > hope.
 >
-> In a nutshell: XSAVE components are classified as either user or
-> supervisor.  User components can be modified from userspace and
-> supervisor ones only from the kernel.  In general, user components don't
-> affect the kernel; the kernel doesn't care what is in ZMM11 (an
-> XSAVE-managed register).  That lets us do fun stuff like be lazy about
-> when ZMM11 is saved/restored.  Being lazy is good because it give us
-> things like faster context switches and KVM VMEXIT handling.
+> You're right that synchronous, shallow syscall paths are usually
+> non-remote.  But those aren't the problem.  The problem is that there
+> *ARE* remote accesses and those are a potential hole for this whole
+> mechanism.
 >
-> PKRU is a user component, but it affects the kernel when the kernel does
-> copy_to/from_user() and friends.  That means that the kernel can't do
-> any "fun stuff" with PKRU.  As soon as userspace provides a new value,
-> the kernel needs to start respecting it.  That makes PKRU a very special
-> snowflake.
->
-> So, even though PKRU can be managed by XSAVE, it isn't.  It isn't kept
-> in the kernel XSAVE buffer.  But it *IS* in the signal stack XSAVE
-> buffer.  You *can* save/restore it with the other XSAVE components with
-> ptrace().  The user<->kernel ABI pretends that PKRU is XSAVE managed
-> even though it is not.
->
-> All of this is special-cased.  There's a ton of code to handle this
-> mess.  It's _complicated_.  I haven't even started talking about how
-> this interacts with KVM and guests.
->
-> How could we improve it?  A time machine would help to either change the
-> architecture or have Linux ignore the fact that XSAVE knows anything
-> about PKRU.
->
-> So, the bar is pretty high for things that want to further muck with
-> PKRU.  Add signal and sigaltstack in particular into the fray, and we've
-> got a recipe for disaster.  sigaltstack and XSAVE don't really get along
-> very well.  https://lwn.net/Articles/862541/
->
-> >> need new altstack ABI and handling.
-> >>
-> > I thought adding protected memory support to signaling handling is an
-> > independent project with its own weight. As Jann Horn points out in
-> > [2]:  "we could prevent the attacker from corrupting the signal
-> > context if we can protect the signal stack with a pkey."   However,
-> > the kernel will send SIGSEGV when the stack is protected by PKEY,  so
-> > there is a benefit to make this work.  (Maybe Jann can share some more
-> > thoughts on the benefits)
-> >
-> > And I believe we could do this in a way with minimum ABI change, as bel=
-ow:
-> > - allocate PKEY with a new flag (PKEY_ALTSTACK)
-> > - at sigaltstack() call, detect the memory is PKEY_ALTSTACK protected,
-> > (similar as what mprotect does in this patch) and save it along with
-> > stack address/size.
-> > - at signaling handling, use the saved info to fill in PKRU.
-> > The ABI change is similar to PKEY_ENFORCE_API, and there is no
-> > backward compatibility issue.
-> >
-> > Will these mentioned help our case ? What do you think ?
->
-> To be honest, no.
->
-> What you've laid out here is the tip of the complexity iceberg.  There
-> are a lot of pieces of the kernel that are not yet factored in.
->
-> Let's also remember: protection keys is *NOT* a security feature.  It's
-> arguable that pkeys is a square peg trying to go into a round security ho=
-le.
+> Can they be closed?  I don't know.  I honestly don't have a great grasp
+> on how widespread these things are.  You'll need a much more complete
+> grasp on them than I have before this thing can go forward.
 
-While they're not a security feature, they're pretty close to providing us =
-with
-exactly what we need: per-thread memory permissions that we can use for
-in-process isolation.
-We've spent quite some effort up front thinking about potential attacks and
-we're confident we can build something that will pose a meaningful boundary=
-.
+I don't think the remote writes are a problem for us if they're initiated f=
+rom
+the same process. It's a case of syscalls where we need to add special
+validation in userspace.
 
-> On the x86 side, PKRU is a painfully special snowflake.  It's exposed in
-> the "XSAVE" ABIs, but not actually managed *with* XSAVE in the kernel.
-> This would be making it an even more special snowflake because it would
-> need new altstack ABI and handling.
-
-Most of the complexity in the signal handling proposal seems to come from t=
-he
-saving/restoring pkru before/after the signal handler execution. However, t=
-his
-is just nice to have. We just need the kernel to allow us to register
-pkey-tagged memory as a sigaltstack, i.e. it shouldn't crash when trying to
-write the register state to the stack. Everything else, we can do in userla=
-nd.
-
-> It probably *requires* turning off a bunch of
-> syscalls (like io_uring) that folks kinda like in general.
-
-Kind of. This approach only works in combination with an effort in userland=
- to
-restrict the syscalls. Though that doesn't mean you have to turn them off,
-there's also the option of adding validation before it.
-The same applies to the memory management syscalls in this patchset. We can=
- add
-validation for these in userland, but we're hoping to do it in kernel inste=
-ad
-for the reasons I mentioned before (e.g. they're very common and it's much
-easier to validate in the kernel). Also subjectively it seems like a
-nice property
-if the pkey protections would not just apply to the memory contents, but al=
-so
-apply to the metadata.
-
---0000000000003bb41005fc0a0518
+--00000000000027084205fc0a236e
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -311,13 +187,13 @@ uId+alGaBDlL5OAZQtmhRyh1MVd2wtgvGEfNGDGq603urx17nwEvM1gjSmOgnhEigOhhHH7DOeyt
 5zPYLaKguxLWPGXlZ0UUjA7lH3gxggJqMIICZgIBATBoMFQxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
 ExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFzIFIzIFNNSU1FIENB
 IDIwMjACEAGkX4MOebzHzp8Y/d5NuOkwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIE
-IBeiU/BGvhzf0gYwkHnlJWueoMRgkjWXA1rmCf9vt2J+MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDUxOTExMTQxMVowaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
+IE0nAq+EvotYtTh7dWzvuIiOrnYIYYo0wWDwWWRq+Z+QMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
+BwEwHAYJKoZIhvcNAQkFMQ8XDTIzMDUxOTExMjIzM1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgB
 ZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQow
-CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQBjFEVEurLW8nTFLUhJ
-CikuBheDeZGVHHCa74Co18zaoUx2vEvwiZC7R2lhf8c7WGt3e3IRem79bgX5KV9e6mFW5ehjPN9d
-9e5hWnvZ2zmcZTqkoMoE0bcu1LzIK4PR0dh5B8WWPSaqSLoWs2Z/J8+62tIOPIzAXdvoKwIY5Cf9
-OJ/uJxepP2Tj3WShrFwr0Xfx8wk7MlNaXlOdhXYXzriPMncToUtSnoFK9dYX0uakUKnN9YpxASZA
-OcbIsagj0suj0HMYKin5OW0gok0kmIZXgwYvt5ZfRQtaRvTum+UbyGCd/k2okKpuYSgQGJXi0ygj
-SZtQmkmAgzJoDQHTivAE
---0000000000003bb41005fc0a0518--
+CwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQCcv6CjSuln+N+w7eq5
+XdOvXNuVF5J/89mVYERuinaf71Cf7CZJaemRjWsIr08MT/piZsGiaD0HF9k1KTkTH8H7pKiI5mMR
+cu5PFlFAjOoHNJq243lZuZTWBqhVn/cKiPhrhcKhwblvOgGRZYF8BHQLO2D9GsKpp4m7PY2DgdYN
+tjhBimMLr09QKDanxV1LUXzwFWr7bEkefhU8F+zYBpsZF3f3uE7gg0dQ9X2DxdCksOkP22D2w1Pd
+mquscqxelRuU2C8fIjyfP1kzSsK5F65Pr9gY9w0o205YuV9NZWDBi5qrgysIt5vod+60vQBDaKDA
+5MnKZXDoAREL0OWXHoXT
+--00000000000027084205fc0a236e--
