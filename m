@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE87BC7EE2C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EDBC7EE30
 	for <linux-hardening@archiver.kernel.org>; Fri, 19 May 2023 01:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230357AbjESBTd (ORCPT
+        id S229969AbjESBTc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 18 May 2023 21:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53576 "EHLO
+        Thu, 18 May 2023 21:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230298AbjESBTb (ORCPT
+        with ESMTP id S230240AbjESBTa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 18 May 2023 21:19:31 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4614B10D0
-        for <linux-hardening@vger.kernel.org>; Thu, 18 May 2023 18:19:29 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-24e14a24c9dso2157408a91.0
-        for <linux-hardening@vger.kernel.org>; Thu, 18 May 2023 18:19:29 -0700 (PDT)
+        Thu, 18 May 2023 21:19:30 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9B010C9
+        for <linux-hardening@vger.kernel.org>; Thu, 18 May 2023 18:19:28 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-64d1e96c082so939550b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 18 May 2023 18:19:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684459169; x=1687051169;
+        d=chromium.org; s=google; t=1684459168; x=1687051168;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TQS98FLuUxt8kfip9Nk8O1hVfeuWAt0sl7+06c/6tso=;
-        b=OGPd3mn4AXIrc1RRZIu250DTtUsK1KYvi8EfuJPLZrZrm+XTM1dOslqaOYntJ4QlnF
-         P1XUdOXQFW2q48KVb2YvQI1UOuJ6zvUuQNOwxGx4Ltcqz+zGeskAKaAjKOirPNTB39HS
-         jBq/1Yq0YsewgO7yu5hZy+p7qvRI04QhhT2rY=
+        bh=amUmjeQdjogZim3KCvDHtpibL1Mlx7r/unbXJ7VLzz4=;
+        b=GibbkWqfiwuo0GDKTjKpCXZxRAC34F6flBcYc63YtvRDvtZ56HZtHKuhrJYSdwe3/+
+         6kPjFdVzSbPq+cF3lXOpkjZLCMYa7ei/z4zXxpzej0So1g37PcWmqewUZUgxYJCMM+RN
+         jmAWbhNUMedM1L5m+UzN6elDn6LRlSsQzlPeM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684459169; x=1687051169;
+        d=1e100.net; s=20221208; t=1684459168; x=1687051168;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TQS98FLuUxt8kfip9Nk8O1hVfeuWAt0sl7+06c/6tso=;
-        b=MfnZY47MOM/l9a28REzgc8a86sCmvF9H6ci4htoK2pTf2mPiq4hfvFkQYOr3C3n+DD
-         qe8xxdJYAD2oDa+wDaYtSgrTqJMve7NnLrJ9zgbj1/6RysQxNCzngo0HvydTvHzadrsT
-         Wy1pmnY8SJsiyqrfj6SXnPwkidUg8ygV5PSiC/9tKZB7sSIao/8wKcnwIOSdX8TXx7u5
-         VwL1ch5kaNspVyjI9HaCK5TeP8XI6hyODn0T31kiNcEaaVmjY88rJU0FJi6wOLLfkpMr
-         UViNnGb4lrtg3ueffitlGoH6po/mfqtd8LuZij37U+RuzYWIwUNS8ROr6YI5i4tJ3jf7
-         jLYw==
-X-Gm-Message-State: AC+VfDyHpA0mArUFCwZK/9vIwjsUhK2smwKo6/FUsUGwXEViE1EzYtqZ
-        s0V53sPOzjkh9EJNcEEFYMEVfQ==
-X-Google-Smtp-Source: ACHHUZ61pfxccHt/KzXaf0wYbWk/1Tu3oFrft5OWJaPA3VQ8PQiXauBnEJkKqfgy+TrBmMg73D6nkg==
-X-Received: by 2002:a17:90b:3ecc:b0:246:85ec:d816 with SMTP id rm12-20020a17090b3ecc00b0024685ecd816mr538354pjb.3.1684459168766;
-        Thu, 18 May 2023 18:19:28 -0700 (PDT)
+        bh=amUmjeQdjogZim3KCvDHtpibL1Mlx7r/unbXJ7VLzz4=;
+        b=aW8lOGmUXzApiLQvDxMMVDRUrSQWN1lZTgdd6SwD5z65vKXDBpxR0WMsKW/KKglexM
+         vCLzW8rhjvP28Md4VRGreFtMzsAla1/KZP38jhZ5TnYJGWPPUA2M35mXn/RhuknHE2u9
+         ksCJvm6Y8uRjfkHayermSAIXu5myhmtqqF39VD2hLYPo01tmlTv2/jk+Tbd4GdM1Rg9s
+         liXIbFi/14AP8mGkmQezlV9lh4oPETgwNGKoLn1+bmBxXMXJ4fOd2zOxh/iiWmkbq9nb
+         Yc4x1vS73HiX+3tYCQyG4BwBeEEyYYR710MUQlYFabSPd3D7xicz7AQ8cwaJXP5YK6Pa
+         T6ag==
+X-Gm-Message-State: AC+VfDyJhOtHCBi6TVfqIosWx89aWhyJsCKQ+YkHDB2mb4hE/4aEQPRt
+        8cAw6cXnUDTDsoqpAkNrLD13Ew==
+X-Google-Smtp-Source: ACHHUZ6CRfRqSBxkPWsay/WrlVhskzJPviRUVesausHDoJ1nxVzNabu1OJDVAOucE5hVphusdAmIbw==
+X-Received: by 2002:a05:6a00:134c:b0:648:64fe:b14b with SMTP id k12-20020a056a00134c00b0064864feb14bmr881854pfu.32.1684459167669;
+        Thu, 18 May 2023 18:19:27 -0700 (PDT)
 Received: from localhost (183.43.230.35.bc.googleusercontent.com. [35.230.43.183])
-        by smtp.gmail.com with UTF8SMTPSA id a19-20020a17090acb9300b0025356cce0e4sm279592pju.24.2023.05.18.18.19.27
+        by smtp.gmail.com with UTF8SMTPSA id b6-20020a630c06000000b00502ecb91940sm1824283pgl.55.2023.05.18.18.19.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 May 2023 18:19:28 -0700 (PDT)
+        Thu, 18 May 2023 18:19:27 -0700 (PDT)
 From:   jeffxu@chromium.org
 To:     dave.hansen@intel.com, luto@kernel.org, jorgelo@chromium.org,
         keescook@chromium.org, groeck@chromium.org, jannh@google.com,
@@ -55,9 +55,9 @@ To:     dave.hansen@intel.com, luto@kernel.org, jorgelo@chromium.org,
 Cc:     akpm@linux-foundation.org, jeffxu@google.com,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v1 2/6] PKEY: Add arch_check_pkey_enforce_api()
-Date:   Fri, 19 May 2023 01:19:10 +0000
-Message-ID: <20230519011915.846407-3-jeffxu@chromium.org>
+Subject: [PATCH v1 1/6] PKEY: Introduce PKEY_ENFORCE_API flag
+Date:   Fri, 19 May 2023 01:19:09 +0000
+Message-ID: <20230519011915.846407-2-jeffxu@chromium.org>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
 In-Reply-To: <20230519011915.846407-1-jeffxu@chromium.org>
 References: <20230519011915.846407-1-jeffxu@chromium.org>
@@ -69,120 +69,238 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 From: Jeff Xu <jeffxu@google.com>
 
-This patch adds an architecture-independent function,
-arch_check_pkey_enforce_api(), that checks whether the calling thread
-has write access to the PKRU for a given range of memory. If the
-memory range is protected by PKEY_ENFORCE_API, then the thread must
-have write access to the PKRU in order to make changes to the memory
-mapping (such as mprotect/munmap).
+This patch introduces a new flag, PKEY_ENFORCE_API, to the pkey_alloc()
+function. When a PKEY is created with this flag, it is enforced that any
+thread that wants to make changes to the memory mapping (such as
+mprotect/munmap) of the memory must have write access to the PKEY.
+This is to prevent unauthorized access to protected memory.
 
-This function is used by the kernel to enforce the
-PKEY_ENFORCE_API flag.
+PKEYs created without this flag will continue to work as they do now,
+for backwards compatibility.
 
 Signed-off-by: Jeff Xu<jeffxu@google.com>
 ---
- arch/powerpc/include/asm/pkeys.h |  8 +++++
- arch/x86/include/asm/pkeys.h     | 50 ++++++++++++++++++++++++++++++++
- include/linux/pkeys.h            |  9 ++++++
- 3 files changed, 67 insertions(+)
+ arch/powerpc/include/asm/pkeys.h | 11 ++++++++-
+ arch/x86/include/asm/mmu.h       |  7 ++++++
+ arch/x86/include/asm/pkeys.h     | 42 ++++++++++++++++++++++++++++++--
+ arch/x86/mm/pkeys.c              |  2 +-
+ include/linux/pkeys.h            |  9 ++++++-
+ include/uapi/linux/mman.h        |  5 ++++
+ mm/mprotect.c                    |  6 ++---
+ 7 files changed, 74 insertions(+), 8 deletions(-)
 
 diff --git a/arch/powerpc/include/asm/pkeys.h b/arch/powerpc/include/asm/pkeys.h
-index 943333ac0fee..24c481e5e95b 100644
+index 59a2c7dbc78f..943333ac0fee 100644
 --- a/arch/powerpc/include/asm/pkeys.h
 +++ b/arch/powerpc/include/asm/pkeys.h
-@@ -177,5 +177,13 @@ static inline bool arch_check_pkey_alloc_flags(unsigned long flags)
- 	return true;
+@@ -82,7 +82,7 @@ static inline bool mm_pkey_is_allocated(struct mm_struct *mm, int pkey)
+  * Relies on the mmap_lock to protect against concurrency in mm_pkey_alloc() and
+  * mm_pkey_free().
+  */
+-static inline int mm_pkey_alloc(struct mm_struct *mm)
++static inline int mm_pkey_alloc(struct mm_struct *mm, unsigned long flags)
+ {
+ 	/*
+ 	 * Note: this is the one and only place we make sure that the pkey is
+@@ -168,5 +168,14 @@ static inline bool arch_pkeys_enabled(void)
+ 	return mmu_has_feature(MMU_FTR_PKEY);
  }
  
-+static inline int arch_check_pkey_enforce_api(struct mm_struct *mm,
-+					      unsigned long start,
-+					      unsigned long end)
++static inline bool arch_check_pkey_alloc_flags(unsigned long flags)
 +{
-+	/* Allow by default */
-+	return 0;
++	/* No flags supported yet. */
++	if (flags)
++		return false;
++
++	return true;
 +}
 +
  extern void pkey_mm_init(struct mm_struct *mm);
  #endif /*_ASM_POWERPC_KEYS_H */
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 0da5c227f490..d97594b44d9a 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -66,6 +66,13 @@ typedef struct {
+ 	 */
+ 	u16 pkey_allocation_map;
+ 	s16 execute_only_pkey;
++	/*
++	 * One bit per protection key.
++	 * When set, thread must have write permission on corresponding
++	 * PKRU in order to call memory mapping API, such as mprotect,
++	 * munmap, etc.
++	 */
++	u16 pkey_enforce_api_map;
+ #endif
+ } mm_context_t;
+ 
 diff --git a/arch/x86/include/asm/pkeys.h b/arch/x86/include/asm/pkeys.h
-index ecadf04a8251..8b94ffc4ca32 100644
+index 2e6c04d8a45b..ecadf04a8251 100644
 --- a/arch/x86/include/asm/pkeys.h
 +++ b/arch/x86/include/asm/pkeys.h
-@@ -161,4 +161,54 @@ static inline bool arch_check_pkey_alloc_flags(unsigned long flags)
+@@ -51,6 +51,17 @@ static inline int arch_override_mprotect_pkey(struct vm_area_struct *vma,
+ 	mm_pkey_allocation_map(mm) &= ~(1U << pkey);	\
+ } while (0)
  
- 	return true;
++#define mm_pkey_enforce_api_map(mm) (mm->context.pkey_enforce_api_map)
++#define mm_set_pkey_enforce_api(mm, pkey)                                      \
++	{                                                                      \
++		mm_pkey_enforce_api_map(mm) |= (1U << pkey);                   \
++	}
++
++#define mm_clear_pkey_enforce_api(mm, pkey)                                    \
++	{                                                                      \
++		mm_pkey_enforce_api_map(mm) &= ~(1U << pkey);                  \
++	}
++
+ static inline
+ bool mm_pkey_is_allocated(struct mm_struct *mm, int pkey)
+ {
+@@ -74,11 +85,25 @@ bool mm_pkey_is_allocated(struct mm_struct *mm, int pkey)
+ 	return mm_pkey_allocation_map(mm) & (1U << pkey);
  }
-+
-+static inline int __arch_check_vma_pkey_for_write(struct vm_area_struct *vma)
-+{
-+	int pkey = vma_pkey(vma);
-+
-+	if (mm_pkey_enforce_api(vma->vm_mm, pkey)) {
-+		if (!__pkru_allows_write(read_pkru(), pkey))
-+			return -EACCES;
-+	}
-+
-+	return 0;
-+}
-+
+ 
 +/*
-+ * arch_check_pkey_enforce_api is used by the kernel to enforce
-+ * PKEY_ENFORCE_API flag.
-+ * It checks whether the calling thread  has write access to the PKRU
-+ * for a given range of memory. If the  memory range is protected by
-+ * PKEY_ENFORCE_API, then the thread must  have write access to the
-+ * PKRU in order to make changes to the memory  mapping, such as
-+ * mprotect/munmap.
++ * Return true if the pkey has ENFORCE_API flag during allocation.
 + */
-+static inline int arch_check_pkey_enforce_api(struct mm_struct *mm,
-+					      unsigned long start,
-+					      unsigned long end)
++static inline bool mm_pkey_enforce_api(struct mm_struct *mm, int pkey)
 +{
-+	int error;
-+	struct vm_area_struct *vma;
++	/*
++	 * Only pkey created by user space has the flag.
++	 * execute_only_pkey check is in mm_pkey_is_allocated().
++	 */
++	if (pkey != ARCH_DEFAULT_PKEY && mm_pkey_is_allocated(mm, pkey))
++		return mm_pkey_enforce_api_map(mm) & (1U << pkey);
 +
-+	if (!arch_pkeys_enabled())
-+		return 0;
-+
-+	while (true) {
-+		vma = find_vma_intersection(mm, start, end);
-+		if (!vma)
-+			break;
-+
-+		error = __arch_check_vma_pkey_for_write(vma);
-+		if (error)
-+			return error;
-+
-+		if (vma->vm_end >= end)
-+			break;
-+
-+		start = vma->vm_end;
-+	}
-+
-+	return 0;
++	return false;
 +}
 +
+ /*
+  * Returns a positive, 4-bit key on success, or -1 on failure.
+  */
+-static inline
+-int mm_pkey_alloc(struct mm_struct *mm)
++static inline int mm_pkey_alloc(struct mm_struct *mm, unsigned long flags)
+ {
+ 	/*
+ 	 * Note: this is the one and only place we make sure
+@@ -101,6 +126,9 @@ int mm_pkey_alloc(struct mm_struct *mm)
+ 
+ 	mm_set_pkey_allocated(mm, ret);
+ 
++	if (flags & PKEY_ENFORCE_API)
++		mm_set_pkey_enforce_api(mm, ret);
++
+ 	return ret;
+ }
+ 
+@@ -110,6 +138,7 @@ int mm_pkey_free(struct mm_struct *mm, int pkey)
+ 	if (!mm_pkey_is_allocated(mm, pkey))
+ 		return -EINVAL;
+ 
++	mm_clear_pkey_enforce_api(mm, pkey);
+ 	mm_set_pkey_free(mm, pkey);
+ 
+ 	return 0;
+@@ -123,4 +152,13 @@ static inline int vma_pkey(struct vm_area_struct *vma)
+ 	return (vma->vm_flags & vma_pkey_mask) >> VM_PKEY_SHIFT;
+ }
+ 
++static inline bool arch_check_pkey_alloc_flags(unsigned long flags)
++{
++	unsigned long valid_flags = PKEY_ENFORCE_API;
++
++	if (flags & ~valid_flags)
++		return false;
++
++	return true;
++}
  #endif /*_ASM_X86_PKEYS_H */
+diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
+index 7418c367e328..a76981f44acf 100644
+--- a/arch/x86/mm/pkeys.c
++++ b/arch/x86/mm/pkeys.c
+@@ -20,7 +20,7 @@ int __execute_only_pkey(struct mm_struct *mm)
+ 	/* Do we need to assign a pkey for mm's execute-only maps? */
+ 	if (execute_only_pkey == -1) {
+ 		/* Go allocate one to use, which might fail */
+-		execute_only_pkey = mm_pkey_alloc(mm);
++		execute_only_pkey = mm_pkey_alloc(mm, 0);
+ 		if (execute_only_pkey < 0)
+ 			return -1;
+ 		need_to_set_mm_pkey = true;
 diff --git a/include/linux/pkeys.h b/include/linux/pkeys.h
-index 81a482c3e051..7b00689e1c24 100644
+index 86be8bf27b41..81a482c3e051 100644
 --- a/include/linux/pkeys.h
 +++ b/include/linux/pkeys.h
-@@ -53,6 +53,15 @@ static inline bool arch_check_pkey_alloc_flags(unsigned long flags)
- 		return false;
- 	return true;
+@@ -3,6 +3,7 @@
+ #define _LINUX_PKEYS_H
+ 
+ #include <linux/mm.h>
++#include <linux/mman.h>
+ 
+ #define ARCH_DEFAULT_PKEY	0
+ 
+@@ -25,7 +26,7 @@ static inline bool mm_pkey_is_allocated(struct mm_struct *mm, int pkey)
+ 	return (pkey == 0);
  }
-+
-+static inline int arch_check_pkey_enforce_api(struct mm_struct *mm,
-+					      unsigned long start,
-+					      unsigned long end)
+ 
+-static inline int mm_pkey_alloc(struct mm_struct *mm)
++static inline int mm_pkey_alloc(struct mm_struct *mm, unsigned long flags)
+ {
+ 	return -1;
+ }
+@@ -46,6 +47,12 @@ static inline bool arch_pkeys_enabled(void)
+ 	return false;
+ }
+ 
++static inline bool arch_check_pkey_alloc_flags(unsigned long flags)
 +{
-+	// Allow by default.
-+	return 0;
++	if (flags)
++		return false;
++	return true;
 +}
-+
  #endif /* ! CONFIG_ARCH_HAS_PKEYS */
  
  #endif /* _LINUX_PKEYS_H */
+diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+index f55bc680b5b0..8c69b9a7ff5b 100644
+--- a/include/uapi/linux/mman.h
++++ b/include/uapi/linux/mman.h
+@@ -41,4 +41,9 @@
+ #define MAP_HUGE_2GB	HUGETLB_FLAG_ENCODE_2GB
+ #define MAP_HUGE_16GB	HUGETLB_FLAG_ENCODE_16GB
+ 
++/*
++ * Flags for pkey_alloc
++ */
++#define PKEY_ENFORCE_API (1 << 0)
++
+ #endif /* _UAPI_LINUX_MMAN_H */
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 92d3d3ca390a..8a68fdca8487 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -894,15 +894,15 @@ SYSCALL_DEFINE2(pkey_alloc, unsigned long, flags, unsigned long, init_val)
+ 	int pkey;
+ 	int ret;
+ 
+-	/* No flags supported yet. */
+-	if (flags)
++	if (!arch_check_pkey_alloc_flags(flags))
+ 		return -EINVAL;
++
+ 	/* check for unsupported init values */
+ 	if (init_val & ~PKEY_ACCESS_MASK)
+ 		return -EINVAL;
+ 
+ 	mmap_write_lock(current->mm);
+-	pkey = mm_pkey_alloc(current->mm);
++	pkey = mm_pkey_alloc(current->mm, flags);
+ 
+ 	ret = -ENOSPC;
+ 	if (pkey == -1)
 -- 
 2.40.1.606.ga4b1b128d6-goog
 
