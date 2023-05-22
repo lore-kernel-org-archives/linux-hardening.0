@@ -2,129 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0404CC77B73
-	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 21:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0225BC7EE29
+	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 21:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231439AbjEVVVU (ORCPT
+        id S234173AbjEVVaC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 17:21:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40076 "EHLO
+        Mon, 22 May 2023 17:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231767AbjEVVVT (ORCPT
+        with ESMTP id S233193AbjEVVaA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 17:21:19 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE1A8C1
-        for <linux-hardening@vger.kernel.org>; Mon, 22 May 2023 14:21:17 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-5304913530fso5924132a12.0
-        for <linux-hardening@vger.kernel.org>; Mon, 22 May 2023 14:21:17 -0700 (PDT)
+        Mon, 22 May 2023 17:30:00 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96CC5102
+        for <linux-hardening@vger.kernel.org>; Mon, 22 May 2023 14:29:55 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id 41be03b00d2f7-52c30fa5271so3564887a12.0
+        for <linux-hardening@vger.kernel.org>; Mon, 22 May 2023 14:29:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684790477; x=1687382477;
+        d=chromium.org; s=google; t=1684790995; x=1687382995;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EtWptAsa4eS8Kz5UJ2iVjBJtBMlQ0SUqdqNlkHKBLEs=;
-        b=JIq7ayuhUCPY+jd41Z0soEOBn/LFyKyWmnktUDKUkFjbcodRiaN8GF9yRYnWncUysg
-         JMis495bRgGRsJPACvfNdeWyPpeRvfE+6TCQlXMJSjY4oCQAKJ2NcKfPCjEzu8E/qn+d
-         4O2sTSDN8hdrY3dVMXBStxPpbdjTlpkZ95Wb4=
+        bh=XBLyvMJIXVEoPILXi5pTygeAcZW5DafmkS3+kdAf2Kc=;
+        b=X82Q2HodtT8g9HraWMIl6WRHWVTb82m3RSWbgXxmB7cWHpQ/9EMmYZZIsVjf9DaLD8
+         SCAMWIwbtqwUg4HoPylm8ZEiqw1RJfD9rED4QOx8TyhkjCC33fQN6VzHYNghySnyMAB7
+         MGGfYIqkq2GjXt67wofcPVZ+leITFGwe2m8y4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684790477; x=1687382477;
+        d=1e100.net; s=20221208; t=1684790995; x=1687382995;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EtWptAsa4eS8Kz5UJ2iVjBJtBMlQ0SUqdqNlkHKBLEs=;
-        b=KWPTntFIXIkVFaYXg9gSjVN59oKNPNjWufZVh6U+xAFvtp23ftWhsAOr8i0pVlauIA
-         9uHtu4zO8dIbzJGSuA8DB0/+b4Agpynk2gIX8dTwQv+7jF9C/e6hvdrs1wf0XzGJS3La
-         JOqxmBRG3pPLmK7N7gnk4nzPdXIGUiumcOsuVSQTdJFhXEE+v6Ln/tJP2Oy2TkWfivXN
-         aAYezuXf0Uhb0xpzeI8s23o6XPq+a+GDeyueuiEQ4/ofIa5x9C8+nKBlno9fzgsYf7gY
-         7/pvCj/acQXwIPU7gqGGPJ1pvCQqbX9oDo+dXan7tszxE1KoFq+C9EU+bonySYsdFx8p
-         3e3A==
-X-Gm-Message-State: AC+VfDx0iaj+0E01zgKljvTqcHtJa0OS69ZeyinpDlUUKbBkEgtgwkuI
-        NwEhDag92VvtZPC9iqkD4m89eQ==
-X-Google-Smtp-Source: ACHHUZ4Qk7EITjWh+NVhaDiZRNwGFS+DHaJu7PM8BcgUFv03Lt3J0yK+zWPWlEVAJbnH7f3us6FDQQ==
-X-Received: by 2002:a17:903:48a:b0:1ae:52ea:5fa6 with SMTP id jj10-20020a170903048a00b001ae52ea5fa6mr11039976plb.8.1684790477220;
-        Mon, 22 May 2023 14:21:17 -0700 (PDT)
+        bh=XBLyvMJIXVEoPILXi5pTygeAcZW5DafmkS3+kdAf2Kc=;
+        b=CMf/YroC4Inmsd4sR4LqaljM/VnsWeQYY+0xriO29VdR57k4+c5AaHRDwX6+Yenm6a
+         1rY+YXVH6GhspqnlLfKhvTSS7jaAp19e5XVa4t0mk7Vnwgmd/OmmYCGfXMBERYFbBjFC
+         nkz21XwtPu5ikzwQzc2YwTX7Vi7VA1FH4ATYh+wsSHZRCIm+d6rKpV4vdm2tF57fKYBN
+         sgLkVcJwEJTA4UJ7hR4wpvzkwKDmiNPVAf9WFRhqJTUu2Ij3zp1H32A+22hiJa70wFyV
+         KsSaNc4zG7FwlWUpeOkEpNrVdOcl5SvRUiP8bxUiwfY5Tf0CS9L9tLIehHj0U+59LoRs
+         tLRA==
+X-Gm-Message-State: AC+VfDzgiZ24oju5GhBKGWsn/IMZFEliGI1LUro0mLggP8/3gudGWZ59
+        PJCaM/5kVoY+WGgkNyJtty5a2A==
+X-Google-Smtp-Source: ACHHUZ5KVf25c93mzqpzXVDAq4yl6joAPQnJgMH8lV5GMMJly5FJ0vAZt87hVF+Dyj3qhc2UMaYElA==
+X-Received: by 2002:a17:902:fe18:b0:1aa:e5cd:6478 with SMTP id g24-20020a170902fe1800b001aae5cd6478mr11818786plj.58.1684790995120;
+        Mon, 22 May 2023 14:29:55 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o18-20020a170902d4d200b001ae44e2f425sm5239217plg.223.2023.05.22.14.21.16
+        by smtp.gmail.com with ESMTPSA id z5-20020a170903018500b001ae5044c2aasm5277702plg.145.2023.05.22.14.29.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 14:21:16 -0700 (PDT)
+        Mon, 22 May 2023 14:29:54 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Song Liu <song@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] md/raid5: Convert stripe_head's "dev" to flexible array member
-Date:   Mon, 22 May 2023 14:21:15 -0700
-Message-Id: <20230522212114.gonna.589-kees@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] lkdtm/bugs: Switch from 1-element array to flexible array
+Date:   Mon, 22 May 2023 14:29:53 -0700
+Message-Id: <20230522212949.never.283-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2398; h=from:subject:message-id; bh=fm/ezGihLT88LzMah4Fd0e38oNOXvo+hj+2PCvpzioM=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBka9zLVXP5GF5nusCTtCCpiPzdqxuZYP1lhGnV3/nP RaabgLaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZGvcywAKCRCJcvTf3G3AJqLNEA CQhGxdsHJfIqJXnwaI/TKJqp1MlIRzOzuHQNQKFtG4lEGw33c0Z9FoyV3oXosgTp/gW+KVRR2Fp7Bn x4Ca7pXIy0HGuOLJlMhQJXKh3AfnPuibkkQVSpnvWqCjTcGz/mBhQOt+Q11QIAYdp+bL/n25kQV2Pm VuS3s0lLyhnltc6DArfq/ujY8mva8GUWZJ2i881mp2oL+BIgS7/4/HvvbcPj9tPQUXtKZv7UnVwFiK LhH/HXhio18g9cdQ9xgpsohuY0bjXL/Ij86RbwWRD3fhS6P7ndkUBXvFi3Fu4niWIWMKweZl6DdNnG 8nbNPhPd8QOCpREE2CfIW8irzwtgQo4wb6/xB1kaXjfnFb38T0HkDUP4lM4C5nOybf+CQiiEWJByHc Oo1q75O2wAAHLf7SG8kDsGKMyjXi4bKdFn8HW4qfaVITrNJIyayw8icR2WPeO+TAdMor4B+NDvJjtV 4YXgUxNr7U8KyTfeqSKfIP1/HJw20rOeFjeMwHSfHDtl5CMx6NzT9TceqDuw1TY/DnG7lPGP74L/JW 4he8eKVFBT/URlGL4CRj2P4gKD/FDj2Y6zVlR724kQKFHneEoSdRF0y40JyVXPD4Ixd+FvjxffTOYA K/6TvPUHFv6VKillKK3lpunJgPFx//uKrg35R9Fb1vkkMbmlz5+t0KQk4fOw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=833; h=from:subject:message-id; bh=y81tjhfBvnUmPtitkb7B7N9eatfqA8YTYmeHZOhOfxU=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBka97QZrwNn2mIbVBJBSpfEndS4xU/2XPiI0Wr+S0L Kun4w4mJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZGve0AAKCRCJcvTf3G3AJhfoD/ 42C/6DH/maDdsB2RoaWdC8ev+KyoGozc+vS5p1KDZ3iuw3IdatQX6VB19FAmC02Qfft/ityZtkUckj DyVfyVg19qbMD1BkB/qgdU8WXc8RkzbQvg3iBKVBA1WpCqo9IHzANU04bMYIFxH8gUXwM6qGdu6qTa hMGJEOG4ux3t7KkFPZeooTAsE2P+AfGD7Smctm/qEYdORFqp5bNrMNLZmwNR6szCNIYY5GjALFX4Ts FoZcxWAfoNOHT/LhIiSbsV9GftsB5mp/ifmu1jhd2Ttq3rYiQaH1seUxZkpUmRgElpA6KgcAI78Icp hqfYvhzGH03caTMr+GntC7w1V64N5w7Yr+Sv4taGCJ2YE3UJ3WFRUmQv4MvnMlxn0jqxhCZ7S4ew2J XtqhvQE8OwRE9icsBdehtRH5j+tcyVEn5Fc5Bw0rHaHvySqkhLsieKO8Lu8ja5zcekuK5Wk7E3CfRO U5Ceud1NDAdSdg57fvIDDrqsQDK0HYqgDP7QgeNFLcTYE7l6OEHvOwZApnOGpOygPTwMlYw+364roT jJZW6H1q8ZNH8ViIbM/d4y/xfeE2MFg+HlakXFQJfX6neJ2aYReVrOa65MS/IsSz5fkg7ut33y82zH JGxSuqXQZ3FB4ZaUIji8Q0OVcq00PQ6E8xX57dH1rzE5rZjFOUMISwSXQkHw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace old-style 1-element array of "dev" in struct stripe_head with
-modern C99 flexible array. In the future, we can additionally annotate
-it with the run-time size, found in the "disks" member.
+The testing for ARRAY_BOUNDS just wants an uninstrumented array,
+and the proper flexible array definition is fine for that.
 
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: linux-raid@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-It looks like this memory calculation:
+ drivers/misc/lkdtm/bugs.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-        memory = conf->min_nr_stripes * (sizeof(struct stripe_head) +
-                 max_disks * ((sizeof(struct bio) + PAGE_SIZE))) / 1024;
-
-... was already buggy (i.e. it included the single "dev" bytes in the
-result). However, I'm not entirely sure if that is the right analysis,
-since "dev" is not related to struct bio nor PAGE_SIZE?
-
-v1: https://lore.kernel.org/all/20230517233313.never.130-kees@kernel.org/
-v2: use new struct_size_t() helper from
-    https://lore.kernel.org/lkml/20230522211810.never.421-kees@kernel.org/
----
- drivers/md/raid5.c | 4 ++--
- drivers/md/raid5.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 4739ed891e75..64865f9dd3f5 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -2433,7 +2433,7 @@ static int grow_stripes(struct r5conf *conf, int num)
+diff --git a/drivers/misc/lkdtm/bugs.c b/drivers/misc/lkdtm/bugs.c
+index 48821f4c2b21..224f42cdddf2 100644
+--- a/drivers/misc/lkdtm/bugs.c
++++ b/drivers/misc/lkdtm/bugs.c
+@@ -305,11 +305,10 @@ static void lkdtm_OVERFLOW_UNSIGNED(void)
+ 	ignored = value;
+ }
  
- 	conf->active_name = 0;
- 	sc = kmem_cache_create(conf->cache_name[conf->active_name],
--			       sizeof(struct stripe_head)+(devs-1)*sizeof(struct r5dev),
-+			       struct_size_t(struct stripe_head, dev, devs),
- 			       0, 0, NULL);
- 	if (!sc)
- 		return 1;
-@@ -2559,7 +2559,7 @@ static int resize_stripes(struct r5conf *conf, int newsize)
- 
- 	/* Step 1 */
- 	sc = kmem_cache_create(conf->cache_name[1-conf->active_name],
--			       sizeof(struct stripe_head)+(newsize-1)*sizeof(struct r5dev),
-+			       struct_size_t(struct stripe_head, dev, newsize),
- 			       0, 0, NULL);
- 	if (!sc)
- 		return -ENOMEM;
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index e873938a6125..6cfc74162b41 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -268,7 +268,7 @@ struct stripe_head {
- 		unsigned long	flags;
- 		u32		log_checksum;
- 		unsigned short	write_hint;
--	} dev[1]; /* allocated with extra space depending of RAID geometry */
-+	} dev[]; /* allocated with extra space depending of RAID geometry */
+-/* Intentionally using old-style flex array definition of 1 byte. */
+ struct array_bounds_flex_array {
+ 	int one;
+ 	int two;
+-	char data[1];
++	char data[];
  };
  
- /* stripe_head_state - collects and tracks the dynamic state of a stripe_head
+ struct array_bounds {
 -- 
 2.34.1
 
