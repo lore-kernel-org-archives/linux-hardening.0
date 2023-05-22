@@ -2,176 +2,88 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F245CC77B75
-	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 20:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C95C7EE2A
+	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 20:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235109AbjEVUfw (ORCPT
+        id S232110AbjEVUy6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 16:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43374 "EHLO
+        Mon, 22 May 2023 16:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234818AbjEVUfa (ORCPT
+        with ESMTP id S234824AbjEVUyx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 16:35:30 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2051.outbound.protection.outlook.com [40.107.95.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1065110C;
-        Mon, 22 May 2023 13:35:20 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DlnEHzCGH4ZO+t5Htn+0x+CXQy4lKpHC/7PkhCSfyfVpFebSbWtj+T+JtfDHNRwtC3vhyiVFfLgYbgo0nfqayo6W1IdPhOGGgWutNjsgTNy6YndFHM1Jk59eaZDw6qZ7IRGqgU4dLNUh+IrCwJjr2VxFiqseolR3F4go0QtzpEnYHzNaycIcCwFNjzl+D2adVMf4d3QHYS1yn/Ny9TvSC/cEHxINvR9kS76KjeztFq1gOXpDPCf9BvgYnLLpyvHBxU+rktLL9rpMEsOy/1L88GpJ/Ar56BFfIAlEe3KAs13REpF8I15b/es/Xvllv0a2+8Lzgoxbg8V+YpJDEsGiRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RIvjw7evGQ4dvr2HCnF1F9P2M2E7jt4v7rzHukLw7KI=;
- b=IAdzvoPWv6kgESsaEh4xHPcIilsH1SXcw8WTfQW1OjGCJoTgcKSMQQsTPXpuHi4+wCyIb2MTCk2kaiiUbAsGz/VZ2YJF3KamgUKk7a/Djloidhd8Uhl4ive3AdcJBHwkumKoyZGr+Pk+nw0jp47CzqQa6FZt6tlsBI/EGiyex3l++EMFh5ifwqbAzn8k+5ZXf3zC32yg2aAsg+2SlRJY8PkvEo6g3bx5PoOWjr/36fVW2z9pqu7Qh6SDk5XLAXeUmtwkmlabvGGUerfbjroUd2ts8EuGrerk9chFHfzjzxhzMju+FQS0DVLUsh/DuGSy7gT3fTU96tMRiALYx3ipkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RIvjw7evGQ4dvr2HCnF1F9P2M2E7jt4v7rzHukLw7KI=;
- b=eWqSs76JMWVIXfYf62Ai0lmoLTTkddOWw38RgLlmRUP63++yLZlB0Y2Vf6IshN8vnQ45sA4ABZ+3gwgQ7NI9kVsMEevTOrzlp9x7JIkHnzuWKfr2PD1yGlDwM4peqwbRaABMzL/EL8xtFDfp0r8LMmNZL4k6rzZ4Ijko2Y877uw=
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com (2603:10b6:208:316::6)
- by MW3PR12MB4395.namprd12.prod.outlook.com (2603:10b6:303:5c::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Mon, 22 May
- 2023 20:35:17 +0000
-Received: from BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::c549:4aeb:a02f:56b2]) by BL1PR12MB5144.namprd12.prod.outlook.com
- ([fe80::c549:4aeb:a02f:56b2%4]) with mapi id 15.20.6411.028; Mon, 22 May 2023
- 20:35:17 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>
-CC:     "Quan, Evan" <Evan.Quan@amd.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Subject: RE: [PATCH] drm/amd/pm: Replace all non-returning strlcpy with
- strscpy
-Thread-Topic: [PATCH] drm/amd/pm: Replace all non-returning strlcpy with
- strscpy
-Thread-Index: AQHZjMV2SJSB4UBHh0iQY89Y7BirD69muvCAgAAFQ8A=
-Date:   Mon, 22 May 2023 20:35:17 +0000
-Message-ID: <BL1PR12MB51441977ABB724A43D4B54B7F7439@BL1PR12MB5144.namprd12.prod.outlook.com>
+        Mon, 22 May 2023 16:54:53 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11764B9
+        for <linux-hardening@vger.kernel.org>; Mon, 22 May 2023 13:54:52 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-53033a0b473so4586407a12.0
+        for <linux-hardening@vger.kernel.org>; Mon, 22 May 2023 13:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684788891; x=1687380891;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0NoMOPLv7no4oTfFk9NPdm7qdXLsHesaFY5RP9uixIY=;
+        b=YAbkAhamHMqgwB/fmb97d06Aas3nfKBdgo3MFaaijc8nFzNSIQN4hG+Q3a31wS63AP
+         K/0Q5fEOURfRDKRvNesUwiJ2FuPd/kvLXtteSJHVjZDEzM4ir/gWRYNlsj+jTs6J34x8
+         tM4UB+Q+LycG1DFt0P+cdepL/65Bzozly6vJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684788891; x=1687380891;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0NoMOPLv7no4oTfFk9NPdm7qdXLsHesaFY5RP9uixIY=;
+        b=lim8zunx4EIs0mft5zGu7T/KgfE8uWXd1h5yo0LxHjYFwIqarR7oHyTgQ6qdsx3PVX
+         yNrlt0J7YwvouBWgFm0Kkvib3uY918ve0xpCqdW+pKj4pQMSgvqdg9G0w7QuMGz1vh24
+         6uCRw5Q9wVfhedx1JpHX+jRjmPHJ+hcD8uj10YXJQXNWEyuBXit5suNo5fWmk0zkHW60
+         7zYFaRat60IAQ6UPBZLaEQa1VjkjgO4Ie2dMnKLXPar558i7M9C0vCLRukbEQx5TcGqO
+         6y/6aUTQuzzITFSMyOlCmikuXsDNzKO9DPWwXnZF7QtnO5d423CYnknq2xr3BR0ywh5V
+         ggTA==
+X-Gm-Message-State: AC+VfDyAfDIqERwJRDxey3be0aLMWP4Y8k1oe2mZoOMtF63IE4k07jre
+        +kFBSK5IQZ1NDj3Br1lMrUZCIQ==
+X-Google-Smtp-Source: ACHHUZ4WCaSPgXTc5XPwlg4IRq/kzCNCY0JzzAU84nb9QtSpKKa25DGdSRYQ9MlGMDG8WMvF0qdEIw==
+X-Received: by 2002:a17:902:c944:b0:1a6:46f2:4365 with SMTP id i4-20020a170902c94400b001a646f24365mr14314154pla.30.1684788891502;
+        Mon, 22 May 2023 13:54:51 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q10-20020a170902bd8a00b001a1a82fc6d3sm5231582pls.268.2023.05.22.13.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 13:54:50 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     azeemshaikh38@gmail.com, evan.quan@amd.com
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        Xinhui.Pan@amd.com, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, airlied@gmail.com,
+        alexander.deucher@amd.com, daniel@ffwll.ch,
+        linux-kernel@vger.kernel.org, christian.koenig@amd.com
+Subject: Re: [PATCH] drm/amd/pm: Replace all non-returning strlcpy with strscpy
+Date:   Mon, 22 May 2023 13:54:48 -0700
+Message-Id: <168478888725.1444594.3121115156306616962.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230522155245.2336818-1-azeemshaikh38@gmail.com>
 References: <20230522155245.2336818-1-azeemshaikh38@gmail.com>
- <202305221316.038CDF6B@keescook>
-In-Reply-To: <202305221316.038CDF6B@keescook>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2023-05-22T20:35:16Z;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=5e51233d-87c9-4d33-88d1-2579409638ef;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2023-05-22T20:35:16Z
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid: ea73eb22-777a-4517-8c44-90f9ea095896
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR12MB5144:EE_|MW3PR12MB4395:EE_
-x-ms-office365-filtering-correlation-id: 7b7dd004-5e4c-46b5-6962-08db5b040df5
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jOtHm1ruDkRcLaayIcCe8a/2yjQNYE87YnfZ6/drq0OQDwRFJe0aCu/S3MXPCcUhbzO97jaQrFo0XuphpQGbY3puxF+bSCFJsyAHCm66xEH/a8BAYR6wej8/0OxXrZ0Pz/igDko/N9XRzyL+XitVfCoWUBFdeUb+CkTpVqLkTG4aYwy3bMxmSEsqKnnCFIOkq0M/SqAgnCvOltmX1he7wvXRS8kuYJZ6Encr+go5+4W1Z636VTdJxVXoXIfMUKmqdVhk7lIRZYRDf/RHEvsJjrgEKGFaMijit5RPV164ib65yuhvT/C8ZuOatIQ+i9F7Xizo3TqFJwlGvyiLY1fjidAxw7z4hyGCur1E1Mk+ztaU6K6mjoFWZAZvZauccC78uxYYUa+/GzPfYg4zQvj9rqSzoTw1Er/jupX+0Ori8jNx9Da3rbxlOgC5aj7s2lNalCmPJIJ9oOG8UmVl3fPmTpKYr6xsmxA9lJhw2ukqqohWtFjBPdBCnPGXVPaUV5AzEwsHqJxtomgqZIVbUZbhifygbuPJ3Tbpt1c/MpfnS0yTNP32PC5wbqNhtXB+nbgIiVQvuf8AMy0DOcOcI8CPqK4I4u2E4jrg6FOBWODLB3OgIcFO7uzLV1wWCgQMg45rG+1tHlyhE0GRvnovUkiV/1TgJzRZQSUmJ72wvpZoz1w=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5144.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(39860400002)(346002)(136003)(396003)(376002)(451199021)(8936002)(8676002)(5660300002)(52536014)(53546011)(186003)(83380400001)(6506007)(9686003)(26005)(86362001)(122000001)(38100700002)(38070700005)(41300700001)(7696005)(71200400001)(33656002)(966005)(55016003)(76116006)(66556008)(66476007)(66446008)(66946007)(64756008)(316002)(4326008)(478600001)(54906003)(110136005)(2906002)(156123004);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?iZwf5WwmEuiho+wvhHDsQW6eneOD8gYFzZ/cXRLcP1dlsO+rjQpyZob+LApD?=
- =?us-ascii?Q?Qz9EKX/J3SXkvvahkbBzUuf45ctYu3vWaH+lZUoeH77RBRbhXyQTEzlhFyWl?=
- =?us-ascii?Q?sKiIFxPMdlWmKbn8r1uGPip0ZdY93ZKFYXNJRhRf73F0a4oqZ4yguXlGxSDW?=
- =?us-ascii?Q?m1mld8x3RO0N9PBB28dFxAMNu1l9rcI67XDUDIqpFDs+H6KedE56zAorz1Ea?=
- =?us-ascii?Q?myVKrnaSVkFYyLQ0S2KxQ0YkD2x0eniiVghjlDBQg2Basm2CZg3kt0Vj06Kc?=
- =?us-ascii?Q?tbwAxvLLnqbQB4f6B1h88fHEWddkv1AdnxxdJc9Mgr+XILoq+vXOh/HVNz/l?=
- =?us-ascii?Q?DfxKZ7TFxBGq5bRFvbwnVPfO1UuAfKbDJ5oK42oyUNaSwfcn1jaOHDE15tJh?=
- =?us-ascii?Q?deACO+9KNSaJsLgWuuHSrRAetOrKStQi/2D77OpcKh8888ZllNRq9Qwd7b9b?=
- =?us-ascii?Q?RKCUTryjsP5LKRk2wQ05ZvUT3UT3h+HMzwyVV+kfkyhXi68sjqfhU2L3IbPj?=
- =?us-ascii?Q?wsV14uXULR/foyrXbQKX6GSd/wXLGQoR7iR/yH7QhBDlUvDEpXyFxZ1SBxpV?=
- =?us-ascii?Q?KTUHNkcrFyujcbcieX9HkyNlgCw+99Y/Bu2g9acGnORhpO2x6m0fiTymDU/x?=
- =?us-ascii?Q?PYVyqxiqA2H5gDFfTGZ0Nsp65k5gnRyEjTGj6hq13D8ftBkNe0JmrxhugYeA?=
- =?us-ascii?Q?66JS9HhHLoeWEIUCDRTH0X8EspE6WQrkk/bqF9P+WedEHza0re9Hr7elwxxz?=
- =?us-ascii?Q?DLBW054aqekgGV1ab0lN9nMauShAmvv6zHJPGyrOXsfxR1WB4QgPyN3kr7Lu?=
- =?us-ascii?Q?XgYBZq6TWbMrb9+axJI31R3o7Zfglj9b+NM8K/Y0pPigi2ZSuGx6dABgatyX?=
- =?us-ascii?Q?rUHXKIff1EDbxlQDWWHYUZNz9go/8fWCO70rNy0p9SI6zo+aDjJs7c2Znbi6?=
- =?us-ascii?Q?I16fuZs99BxmEhoAVTePSdMWrmPIhKbrHI5J1u3/GWeCC/MSHrxPka59XeyP?=
- =?us-ascii?Q?QJvmv8SaD795Fh/MO6bKKEhZcEnQnK4P2JIbaBBhk2jYlFCO5MD+MW21e7ee?=
- =?us-ascii?Q?1lJr88E4DTGlbHRgxwk7wy4yPK/6pSwMbFTVFFwK2e7/H9cDG4qsXTna4RKl?=
- =?us-ascii?Q?83bqgmqi7ZM8bMXdHgHreYXvqFxKkgWS3iMjWKHbvCMEfXquAjrDW9emHRgZ?=
- =?us-ascii?Q?3SxKxVVtKwyGi0GcPHBRriQRhmZ4wyrxQQ2drT4fy8z2T6zfvGAQ3rADi17F?=
- =?us-ascii?Q?tVy11m08mzMSQ/2ZvodZajwFgfDFhCr0hfgG/tOSgqD5Ctcnn9zmptdwLIeT?=
- =?us-ascii?Q?l7bvlskYVyL0olEnj5opHWLw+0vh/6Vn0ljKUy46H6NgV6ap4bp9QHhAe9lU?=
- =?us-ascii?Q?1M1sTLLPZfFVEv2uTd1GHvSNpRM4zVsNyHQUTBG7Jqi7tKsKpc6trppVXkp6?=
- =?us-ascii?Q?Mb1R6mBJwikLC3Zc6H/8aK1Kztx/3Zmiaq1QGB9hEVtu8TWFW7SIKL0grCG7?=
- =?us-ascii?Q?eMtUaZYIMh2WkynmvrPlPnWezlkl+C3Y0f/J38p3nzFxZAC6ZYHhTHo4FuvS?=
- =?us-ascii?Q?XRAsiUJnpZgtwV8c9xg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5144.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b7dd004-5e4c-46b5-6962-08db5b040df5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2023 20:35:17.5205
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0fYTsxkwveEvmhZyUfSWaJxnzn9mOXVTerGe3OZzttSGV8APJAF+nSA+83X0iahebXMih41b37yzu+V1H1kLRQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4395
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-[Public]
+On Mon, 22 May 2023 15:52:45 +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
+> 
+> [...]
 
-> -----Original Message-----
-> From: Kees Cook <keescook@chromium.org>
-> Sent: Monday, May 22, 2023 4:16 PM
-> To: Azeem Shaikh <azeemshaikh38@gmail.com>
-> Cc: Quan, Evan <Evan.Quan@amd.com>; linux-hardening@vger.kernel.org;
-> amd-gfx@lists.freedesktop.org; linux-kernel@vger.kernel.org; Deucher,
-> Alexander <Alexander.Deucher@amd.com>; Koenig, Christian
-> <Christian.Koenig@amd.com>; Pan, Xinhui <Xinhui.Pan@amd.com>; David
-> Airlie <airlied@gmail.com>; Daniel Vetter <daniel@ffwll.ch>; dri-
-> devel@lists.freedesktop.org
-> Subject: Re: [PATCH] drm/amd/pm: Replace all non-returning strlcpy with
-> strscpy
->=20
-> On Mon, May 22, 2023 at 03:52:45PM +0000, Azeem Shaikh wrote:
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read overflows if a
-> > source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> > No return values were used, so direct replacement is safe.
-> >
-> > [1]
-> >
-> https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> >
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
->=20
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->=20
+Applied to for-next/hardening, thanks!
 
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+[1/1] drm/amd/pm: Replace all non-returning strlcpy with strscpy
+      https://git.kernel.org/kees/c/0f53b61b1ca0
 
-Ack to take this through whatever tree makes sense if you are trying to bat=
-ch all of these up.  Otherwise, I can pick them up.
+-- 
+Kees Cook
 
-Alex
