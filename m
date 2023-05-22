@@ -2,96 +2,65 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 035BFC7EE29
-	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 22:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D91C7EE29
+	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 23:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234915AbjEVWqq (ORCPT
+        id S229585AbjEVXCL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 18:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49654 "EHLO
+        Mon, 22 May 2023 19:02:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234906AbjEVWql (ORCPT
+        with ESMTP id S229554AbjEVXCJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 18:46:41 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB573102;
-        Mon, 22 May 2023 15:46:40 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34MKODIG004113;
-        Mon, 22 May 2023 22:46:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=NIpJyPWnm+pCo0TIrhUkfZz7LsYStrccZjB+3CKRxCk=;
- b=CbVLtzqVf24fYs86QoiuSpMF4+u6bJWqfr0MnE5hHc0D/KIQe8Fdt5apPUpTa+uYqR3c
- /OdfDGCm91kNtPnnWqOnE3puaIqmFFpQZKOx9YJ7DmbeGm2eV0IJBd7ytBEicPSgb/Lm
- pslxCjZ1m2ac4Dk40IyqGoJdlU0gPq3TMuKG9HUHmaBb7QX7JA9GOH4Nr5ES5ppsVtvR
- bUDS4/xLvsfT/v1r4p34uKvOm+tkE3lV9on/NsydiUrK4xH3Bdveboq68h0Sv/oe46ak
- rWMFPo/xwZj6ubkxt4Z3scHBrDaxVBZBNDYLuzC5WgaJUUA7B7q+ZP7WZLR5FFkCl+E/ AA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qpp423tvb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 May 2023 22:46:34 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34MM0h7A027571;
-        Mon, 22 May 2023 22:46:34 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2ctfdv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 May 2023 22:46:34 +0000
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34MMkPxg017332;
-        Mon, 22 May 2023 22:46:33 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2ctfa8-7;
-        Mon, 22 May 2023 22:46:33 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Kashyap Desai <kashyap.desai@broadcom.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Mon, 22 May 2023 19:02:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D05BBE0;
+        Mon, 22 May 2023 16:02:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 67DCE62C8D;
+        Mon, 22 May 2023 23:02:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97BD7C433D2;
+        Mon, 22 May 2023 23:02:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684796527;
+        bh=u8N+OPaghwg762KuxUjVvzRa7zi3LaGglh2Va+BvGUU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=o56/0pLv5cr+nA88DjGzAvPh11y4D3P6vBdgS3uHc7g9x9OwUty5xnEVTLyUODRap
+         H3dpY4ea4VS/pfANpVXycVaBrKMeHKutUJardXt9O0qBHPcGkhC3hqDH1OQgGHGYJS
+         kfjquvQE7kAoiDIrpdNDOQ+xhNzJo6yiIRAVqkuE6y3SfTS6X8LG4TRWYic1Yx5PWQ
+         M6VwTL8EVmhJ1kiU2dI5Uv0vLLtD7KmtFgpgK6CyfXpu9AlOt/NVs07qFebkVCGWL8
+         04qpnyGMTfja8wKQ5LkxJeV2u0sq/ieRcELOkKntTVj+uFDiscUt7f1p21PaeKTVme
+         4UWINAV8E6mgw==
+Date:   Mon, 22 May 2023 23:02:06 +0000
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] scsi: megaraid_sas: Convert union megasas_sgl to flex-arrays
-Date:   Mon, 22 May 2023 18:46:18 -0400
-Message-Id: <168479035938.1118074.1867782367788375137.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230511220957.never.919-kees@kernel.org>
-References: <20230511220957.never.919-kees@kernel.org>
+        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] fscrypt: Replace 1-element array with flexible array
+Message-ID: <20230522230206.GA3187780@google.com>
+References: <20230522213924.never.119-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-22_16,2023-05-22_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 phishscore=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305220192
-X-Proofpoint-ORIG-GUID: bzx41BLHbhy8hbFtgPsIBgt5Avyz6mOv
-X-Proofpoint-GUID: bzx41BLHbhy8hbFtgPsIBgt5Avyz6mOv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230522213924.never.119-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 11 May 2023 15:10:00 -0700, Kees Cook wrote:
+On Mon, May 22, 2023 at 02:39:28PM -0700, Kees Cook wrote:
+> In the future, we can add annotations for the flexible array member
+> "encrypted_path" to have a size determined by the "len" member.
 
-> In the ongoing effort to replace all fake flexible arrays with true
-> flexible arrays, replace the sge32, sge64, and sge_skinny members of
-> union megasas_sgl with true flexible arrays. No binary differences are
-> seen after this change; sizes were already being manually calculated
-> using the member struct sizes directly.
-> 
-> 
-> [...]
+That seems unlikely, as 'struct fscrypt_symlink_data' is an on-disk data
+structure.  The "len" field does not necessarily use CPU endianness, and before
+being validated it might be greater than the size of the allocated space.
 
-Applied to 6.5/scsi-queue, thanks!
+I agree that it should use a flex array (and thanks for catching this one that I
+had forgotten about...), but the above explanation seems wrong.
 
-[1/1] scsi: megaraid_sas: Convert union megasas_sgl to flex-arrays
-      https://git.kernel.org/mkp/scsi/c/aa67380056a4
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+- Eric
