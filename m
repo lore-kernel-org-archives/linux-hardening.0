@@ -2,121 +2,147 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B568DC7EE26
-	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 11:50:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA3EC77B73
+	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 15:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232704AbjEVLuL (ORCPT
+        id S233834AbjEVPuj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 07:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56364 "EHLO
+        Mon, 22 May 2023 11:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233446AbjEVLtu (ORCPT
+        with ESMTP id S229937AbjEVPui (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 07:49:50 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3932E0;
-        Mon, 22 May 2023 04:49:43 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QPwjG6hbbz4f3lXP;
-        Mon, 22 May 2023 19:49:38 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP4 (Coremail) with SMTP id gCh0CgD3X7PSVmtkTzLkJw--.54944S3;
-        Mon, 22 May 2023 19:49:40 +0800 (CST)
-Subject: Re: [PATCH] md/raid5: Convert stripe_head's "dev" to flexible array
- member
-To:     Christoph Hellwig <hch@infradead.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Song Liu <song@kernel.org>, linux-raid@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        "yukuai (C)" <yukuai3@huawei.com>
-References: <20230517233313.never.130-kees@kernel.org>
- <ZGWpLClY7vz+xl5A@infradead.org>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <229ac866-9710-5dbe-80c4-61498f807662@huaweicloud.com>
-Date:   Mon, 22 May 2023 19:49:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 22 May 2023 11:50:38 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8F5BB;
+        Mon, 22 May 2023 08:50:36 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id ca18e2360f4ac-76c791e2d8dso247681039f.3;
+        Mon, 22 May 2023 08:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684770636; x=1687362636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G5EoxSWTbZ7f4uUwHdfO8oRaR8Zf3HbYw6LZWLrtj7o=;
+        b=aYjyZeDKbWw1WoAP+tDEvTQT1TD+BXo/51E9aS5/pArAaKrVLxr48PvyaP7jTiJJaz
+         TAf5CKdO7dGCBePScjP2d0Kg0STVGh5vWX48aPZypMqefD7HAC8LDMTIilIUm2ICWmG+
+         rRueQ3vvpi8+69m39hTKR6yoTA2d+fJfGqkE3Qy+XeSP6I3zXXhFNkg5CkF/VlDCjsfa
+         fHPDeO/GxOtlZz0eVqg0AuKqHkOBefRH3qtfDK6yFEG0RCcFNH7JkrFSO9rCoE+JZvq8
+         jXtLfthtCJUhvje5mHJcckh+PB9bKXqrrMLg1VAPNvnZa6C/pIsyo+LllUYZBFMk4QAL
+         T8FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684770636; x=1687362636;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G5EoxSWTbZ7f4uUwHdfO8oRaR8Zf3HbYw6LZWLrtj7o=;
+        b=E1iZFqDWr061mnhaoxyHwl9R9quY3SYAfXYp60KW8tzxdKn6BOhbq/8K/ebQlrhwTE
+         NQaEDy9MdvyPeIhzQKaE13kOreuyHTtitxdSx21FC5UvIxPO95WNBODDviJLGx9jYHgn
+         DvxZrtbrhiLhkFEcf6jQ/O2GhIQfij3MAG9w3949zPRhzxqXgPr/sjIYqZvRpqX3pxRF
+         3fpwURAvlRGBrNgGhzIixhQgeK49oIBqTU6h0bu7YWYE1DCT37tbX59/VkKbNV+OeFpB
+         GbYBqJ2asYkKKo0A6ismwDTgIzDrdpaYOiKhYpByJzIHcd2YP+/23y26ddNG+jCkcAm8
+         oyfA==
+X-Gm-Message-State: AC+VfDxhmDQ0//h1P8MkuaFSLdJkb2hA+5+7gXyI46tMqk8ivehypfL9
+        aU4jqkDVIXGUC9N73kO354enivvTVo4=
+X-Google-Smtp-Source: ACHHUZ5bmd8UsBXwNVhG+/oYOyAjgR2LVwt3rBvruoZvMBljZmso4tozgBnOlHjQpZH9bjPF/mWoig==
+X-Received: by 2002:a92:d8cb:0:b0:332:f72b:3b30 with SMTP id l11-20020a92d8cb000000b00332f72b3b30mr7240899ilo.10.1684770635830;
+        Mon, 22 May 2023 08:50:35 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id e2-20020a056638020200b00418b8f08187sm1854683jaq.126.2023.05.22.08.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 08:50:35 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Pan Xinhui <Xinhui.Pan@amd.com>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH] drm/radeon: Replace all non-returning strlcpy with strscpy
+Date:   Mon, 22 May 2023 15:50:32 +0000
+Message-ID: <20230522155032.2336283-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
 MIME-Version: 1.0
-In-Reply-To: <ZGWpLClY7vz+xl5A@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgD3X7PSVmtkTzLkJw--.54944S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kr47trWDKFWxGw17CF1ftFb_yoW8ZFyrpF
-        WDZasrAr4UGr15Ka1DAw4DWFWrK39agFW7JFWIg3yrA3Z2gryvkay8GFWY9Fy5ZFWfCa4x
-        Za1qvryUZr4qyaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi, Christoph
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
 
-在 2023/05/18 12:27, Christoph Hellwig 写道:
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-It's not related to this patch, just I think I found a problem while
-reviewing raid5 code, commit e82ed3a4fbb5 ("md/raid6: refactor
-raid5_read_one_chunk") changes the caculation of 'end_sector',
-'end_sector' is compared to 'rdev->recovery_offset', so it should be
-offset to rdev, but this commit change it to offset to the array.
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ drivers/gpu/drm/amd/amdgpu/atom.c        |    2 +-
+ drivers/gpu/drm/radeon/radeon_atombios.c |    4 ++--
+ drivers/gpu/drm/radeon/radeon_combios.c  |    4 ++--
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-Perhaps following change will make sense:
-
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index 7e2bbcfef325..8686d629e3f2 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -5516,7 +5516,7 @@ static int raid5_read_one_chunk(struct mddev 
-*mddev, struct bio *raid_bio)
-
-         sector = raid5_compute_sector(conf, raid_bio->bi_iter.bi_sector, 0,
-                                       &dd_idx, NULL);
--       end_sector = bio_end_sector(raid_bio);
-+       end_sector = sector + bio_sectors(raid_bio);
-
-         rcu_read_lock();
-         if (r5c_big_stripe_cached(conf, sector))
-
-
-Thanks,
-Kuai
-> On Wed, May 17, 2023 at 04:33:14PM -0700, Kees Cook wrote:
->>   	sc = kmem_cache_create(conf->cache_name[conf->active_name],
->> -			       sizeof(struct stripe_head)+(devs-1)*sizeof(struct r5dev),
->> +			       struct_size((struct stripe_head *)0, dev, devs),
->>   			       0, 0, NULL);
->>   	if (!sc)
->>   		return 1;
->> @@ -2559,7 +2559,7 @@ static int resize_stripes(struct r5conf *conf, int newsize)
->>   
->>   	/* Step 1 */
->>   	sc = kmem_cache_create(conf->cache_name[1-conf->active_name],
->> -			       sizeof(struct stripe_head)+(newsize-1)*sizeof(struct r5dev),
->> +			       struct_size((struct stripe_head *)0, dev, newsize),
-> 
-> The constant you're casting here should be NULL, not 0.
-> Also given that this expression is duplicated, I'd suggest a little
-> helper for it…
-> 
->> -	} dev[1]; /* allocated with extra space depending of RAID geometry */
->> +	} dev[]; /* allocated with extra space depending of RAID geometry */
-> 
-> And this isn't extra space over the single entry anymore, so I'd
-> change this to:
-> 
-> 	/* allocated depending of RAID geometry */
-> .
-> 
+diff --git a/drivers/gpu/drm/amd/amdgpu/atom.c b/drivers/gpu/drm/amd/amdgpu/atom.c
+index 1c5d9388ad0b..5f610e9a5f0f 100644
+--- a/drivers/gpu/drm/amd/amdgpu/atom.c
++++ b/drivers/gpu/drm/amd/amdgpu/atom.c
+@@ -1509,7 +1509,7 @@ struct atom_context *amdgpu_atom_parse(struct card_info *card, void *bios)
+ 	str = CSTR(idx);
+ 	if (*str != '\0') {
+ 		pr_info("ATOM BIOS: %s\n", str);
+-		strlcpy(ctx->vbios_version, str, sizeof(ctx->vbios_version));
++		strscpy(ctx->vbios_version, str, sizeof(ctx->vbios_version));
+ 	}
+ 
+ 	atom_rom_header = (struct _ATOM_ROM_HEADER *)CSTR(base);
+diff --git a/drivers/gpu/drm/radeon/radeon_atombios.c b/drivers/gpu/drm/radeon/radeon_atombios.c
+index 4ad5a328d920..bf3c411a55c5 100644
+--- a/drivers/gpu/drm/radeon/radeon_atombios.c
++++ b/drivers/gpu/drm/radeon/radeon_atombios.c
+@@ -2105,7 +2105,7 @@ static int radeon_atombios_parse_power_table_1_3(struct radeon_device *rdev)
+ 			const char *name = thermal_controller_names[power_info->info.
+ 								    ucOverdriveThermalController];
+ 			info.addr = power_info->info.ucOverdriveControllerAddress >> 1;
+-			strlcpy(info.type, name, sizeof(info.type));
++			strscpy(info.type, name, sizeof(info.type));
+ 			i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
+ 		}
+ 	}
+@@ -2355,7 +2355,7 @@ static void radeon_atombios_add_pplib_thermal_controller(struct radeon_device *r
+ 				struct i2c_board_info info = { };
+ 				const char *name = pp_lib_thermal_controller_names[controller->ucType];
+ 				info.addr = controller->ucI2cAddress >> 1;
+-				strlcpy(info.type, name, sizeof(info.type));
++				strscpy(info.type, name, sizeof(info.type));
+ 				i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
+ 			}
+ 		} else {
+diff --git a/drivers/gpu/drm/radeon/radeon_combios.c b/drivers/gpu/drm/radeon/radeon_combios.c
+index 783a6b8802d5..795c3667f6d6 100644
+--- a/drivers/gpu/drm/radeon/radeon_combios.c
++++ b/drivers/gpu/drm/radeon/radeon_combios.c
+@@ -2702,7 +2702,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
+ 				struct i2c_board_info info = { };
+ 				const char *name = thermal_controller_names[thermal_controller];
+ 				info.addr = i2c_addr >> 1;
+-				strlcpy(info.type, name, sizeof(info.type));
++				strscpy(info.type, name, sizeof(info.type));
+ 				i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
+ 			}
+ 		}
+@@ -2719,7 +2719,7 @@ void radeon_combios_get_power_modes(struct radeon_device *rdev)
+ 				struct i2c_board_info info = { };
+ 				const char *name = "f75375";
+ 				info.addr = 0x28;
+-				strlcpy(info.type, name, sizeof(info.type));
++				strscpy(info.type, name, sizeof(info.type));
+ 				i2c_new_client_device(&rdev->pm.i2c_bus->adapter, &info);
+ 				DRM_INFO("Possible %s thermal controller at 0x%02x\n",
+ 					 name, info.addr);
 
