@@ -2,40 +2,66 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7758C77B75
-	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 07:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D1DC77B73
+	for <linux-hardening@archiver.kernel.org>; Mon, 22 May 2023 08:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232362AbjEVHfI (ORCPT
+        id S229639AbjEVIDd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 03:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58560 "EHLO
+        Mon, 22 May 2023 04:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231922AbjEVHfH (ORCPT
+        with ESMTP id S230363AbjEVIDb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 03:35:07 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F451A8;
-        Mon, 22 May 2023 00:35:05 -0700 (PDT)
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.56])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QPpyN5MqDz18LZm;
-        Mon, 22 May 2023 15:30:36 +0800 (CST)
-Received: from [10.67.110.48] (10.67.110.48) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 22 May
- 2023 15:35:03 +0800
-Message-ID: <19707cc6-fa5e-9835-f709-bc8568e4c9cd@huawei.com>
-Date:   Mon, 22 May 2023 15:35:02 +0800
+        Mon, 22 May 2023 04:03:31 -0400
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECDE69B;
+        Mon, 22 May 2023 01:03:30 -0700 (PDT)
+Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-783eef15004so1831098241.3;
+        Mon, 22 May 2023 01:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684742610; x=1687334610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5/deT6NIs/fCmfBK6TadeTF6djYRsWDmBLQzhkm7Whg=;
+        b=QK9rPLNa5YQIm4BrTN9G+Gp8sOyYcF3EKdXnKr8/9/PSYQ1vi0/0Uj4L/BmJbTc2we
+         qJs3SIOqu758OmnrJ2FEhJ4p1EVRlm2S9uxj/13VWFOw7RzBrlGoMWDWap2oBM20esBP
+         hZZywbt/uGTOo36/73mWU5yQCHlThzL7ebf0DmvA3dlBHdoqp9q1tO0k5T9U4/GH14R1
+         i5xQkpFtI0s54mLkHCRIpQnKsT8DxWJyP2Krgo6lhJtdRNcxYH1LgFDgr79CVKxVx1eH
+         jGYeIUAxIqXGi33JfzyBKulQ3Neom1TyrxEnKs0zyUdhp/vLUDXpNIrRPmBEicdh2VP7
+         syrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684742610; x=1687334610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5/deT6NIs/fCmfBK6TadeTF6djYRsWDmBLQzhkm7Whg=;
+        b=Dxewe7N0mGTlE7SKzJBkHZBTgZ/sNcrWI75hZ8OYqWcA0b6ExxA28B96UrMF5qFmNa
+         mFOcr9UMYxBiZpCVsvWUAGr0EqERCM2z9WULHkyg5NRctRZrwGGYCNTD8GLTKM1Q6M/l
+         ZVG1c6qx3cMhFidcHlLmVVcu6VHNBAzVkRcHz43LJeHOBjR0Z+VCqb0IRdAjcPXS2vjD
+         ccKM2qYWBtY4+Nk3S7Kpkeq8deOSWc4skuewqF/QuAcs07YJPAmvJ66BLzKtbAGjx4ky
+         042tmJPkhL/cJ8SezCfUVWunl4EDmm1SwDTYszIprI/Y690mKZNkKI46jbay0LgWSgRk
+         t4pA==
+X-Gm-Message-State: AC+VfDygLlUa5PQ6zmNvmQq/v1SUx7WhKDz/7eOrphLCkm7cpOiPPwW2
+        Ryb7xyKXl5nt1RfhDn1vI1UyNhSJOIXSJ9S6jJg=
+X-Google-Smtp-Source: ACHHUZ5RIyVZS4Zu5Pamc3MV66jkvYcnWuWIb5VA1JscKU7+8/Afy7hzNiltpdL4e7QJgffQP8PpI2kr86z8ouEF1ps=
+X-Received: by 2002:a67:fe17:0:b0:439:e3f:9d6 with SMTP id l23-20020a67fe17000000b004390e3f09d6mr2336475vsr.17.1684742609589;
+ Mon, 22 May 2023 01:03:29 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
+References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
+ <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
+ <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com> <CAB=+i9R0GZiau7PKDSGdCOijPH1TVqA3rJ5tQLejJpoR55h6dg@mail.gmail.com>
+ <19707cc6-fa5e-9835-f709-bc8568e4c9cd@huawei.com>
+In-Reply-To: <19707cc6-fa5e-9835-f709-bc8568e4c9cd@huawei.com>
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Date:   Mon, 22 May 2023 17:03:37 +0900
+Message-ID: <CAB=+i9T-iqtMZw8y7SxkaFBtiXA93YwFFEtQyGynBsorud1+_Q@mail.gmail.com>
 Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
-Content-Language: en-US
-To:     Hyeonggon Yoo <42.hyeyoo@gmail.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
+To:     Gong Ruiqi <gongruiqi1@huawei.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
         Alexander Lobakin <aleksander.lobakin@intel.com>,
-        <kasan-dev@googlegroups.com>,
-        Wang Weiyang <wangweiyang2@huawei.com>,
+        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
         Xiu Jianfeng <xiujianfeng@huawei.com>,
         Vlastimil Babka <vbabka@suse.cz>,
         Christoph Lameter <cl@linux.com>,
@@ -50,48 +76,63 @@ CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
- <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
- <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
- <CAB=+i9R0GZiau7PKDSGdCOijPH1TVqA3rJ5tQLejJpoR55h6dg@mail.gmail.com>
-From:   Gong Ruiqi <gongruiqi1@huawei.com>
-In-Reply-To: <CAB=+i9R0GZiau7PKDSGdCOijPH1TVqA3rJ5tQLejJpoR55h6dg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.110.48]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 2023/05/17 6:35, Hyeonggon Yoo wrote:
-> [Resending this email after noticing I did not reply-to-all]
-> 
-> On Fri, May 12, 2023 at 7:11 PM Gong Ruiqi <gongruiqi1@huawei.com> wrote:
->>
-
+On Mon, May 22, 2023 at 4:35=E2=80=AFPM Gong Ruiqi <gongruiqi1@huawei.com> =
+wrote:
+> On 2023/05/17 6:35, Hyeonggon Yoo wrote:
 [...]
+> >>>> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> >>>> +# define SLAB_RANDOMSLAB       ((slab_flags_t __force)0x01000000U)
+> >>>> +#else
+> >>>> +# define SLAB_RANDOMSLAB       0
+> >>>> +#endif
+> >
+> > There is already the SLAB_KMALLOC flag that indicates if a cache is a
+> > kmalloc cache. I think that would be enough for preventing merging
+> > kmalloc caches?
+>
+> After digging into the code of slab merging (e.g. slab_unmergeable(),
+> find_mergeable(), SLAB_NEVER_MERGE, SLAB_MERGE_SAME etc), I haven't
+> found an existing mechanism that prevents normal kmalloc caches with
+> SLAB_KMALLOC from being merged with other slab caches. Maybe I missed
+> something?
+>
+> While SLAB_RANDOMSLAB, unlike SLAB_KMALLOC, is added into
+> SLAB_NEVER_MERGE, which explicitly indicates the no-merge policy.
 
-> 
->>>> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
->>>> +# define SLAB_RANDOMSLAB       ((slab_flags_t __force)0x01000000U)
->>>> +#else
->>>> +# define SLAB_RANDOMSLAB       0
->>>> +#endif
-> 
-> There is already the SLAB_KMALLOC flag that indicates if a cache is a
-> kmalloc cache. I think that would be enough for preventing merging
-> kmalloc caches?
+I mean, why not make slab_unmergable()/find_mergeable() not to merge kmallo=
+c
+caches when CONFIG_RANDOM_KMALLOC_CACHES is enabled, instead of a new flag?
 
-After digging into the code of slab merging (e.g. slab_unmergeable(),
-find_mergeable(), SLAB_NEVER_MERGE, SLAB_MERGE_SAME etc), I haven't
-found an existing mechanism that prevents normal kmalloc caches with
-SLAB_KMALLOC from being merged with other slab caches. Maybe I missed
-something?
+Something like this:
 
-While SLAB_RANDOMSLAB, unlike SLAB_KMALLOC, is added into
-SLAB_NEVER_MERGE, which explicitly indicates the no-merge policy.
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 607249785c07..13ac08e3e6a0 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -140,6 +140,9 @@ int slab_unmergeable(struct kmem_cache *s)
+  if (slab_nomerge || (s->flags & SLAB_NEVER_MERGE))
+  return 1;
+
++ if (IS_ENALBED(CONFIG_RANDOM_KMALLOC_CACHES) && (flags & SLAB_KMALLOC))
++ return 1;
++
+  if (s->ctor)
+  return 1;
+
+@@ -176,6 +179,9 @@ struct kmem_cache *find_mergeable(unsigned int
+size, unsigned int align,
+  if (flags & SLAB_NEVER_MERGE)
+  return NULL;
+
++ if (IS_ENALBED(CONFIG_RANDOM_KMALLOC_CACHES) && (flags & SLAB_KMALLOC))
++ return NULL;
++
+  list_for_each_entry_reverse(s, &slab_caches, list) {
+  if (slab_unmergeable(s))
+  continue;
