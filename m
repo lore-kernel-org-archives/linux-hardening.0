@@ -2,90 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FBCC7EE23
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 13:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A58BC7EE23
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 14:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236944AbjEWNqc (ORCPT
+        id S237308AbjEWOez (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 09:46:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
+        Tue, 23 May 2023 10:34:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234585AbjEWNqb (ORCPT
+        with ESMTP id S237196AbjEWOew (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 09:46:31 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A3CCA;
-        Tue, 23 May 2023 06:46:30 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QQbFX1Z0xz4f3kjM;
-        Tue, 23 May 2023 21:46:24 +0800 (CST)
-Received: from [10.174.176.73] (unknown [10.174.176.73])
-        by APP2 (Coremail) with SMTP id Syh0CgAXvuuww2xkCSPIJw--.31377S3;
-        Tue, 23 May 2023 21:46:26 +0800 (CST)
-Subject: Re: [PATCH] md/raid5: Convert stripe_head's "dev" to flexible array
- member
-To:     Christoph Hellwig <hch@infradead.org>,
-        Yu Kuai <yukuai1@huaweicloud.com>
-Cc:     Kees Cook <keescook@chromium.org>, Song Liu <song@kernel.org>,
-        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
-References: <20230517233313.never.130-kees@kernel.org>
- <ZGWpLClY7vz+xl5A@infradead.org>
- <229ac866-9710-5dbe-80c4-61498f807662@huaweicloud.com>
- <ZGxU/zSGkqGhGWmF@infradead.org>
-From:   Yu Kuai <yukuai1@huaweicloud.com>
-Message-ID: <33c61f2b-2391-1199-d760-b438aff2cebe@huaweicloud.com>
-Date:   Tue, 23 May 2023 21:46:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 23 May 2023 10:34:52 -0400
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A30218E;
+        Tue, 23 May 2023 07:34:47 -0700 (PDT)
+Received: by mail-wr1-x429.google.com with SMTP id ffacd0b85a97d-30a8dc89c33so1921453f8f.0;
+        Tue, 23 May 2023 07:34:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684852486; x=1687444486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3i1MmRo9IlXQkc30ONLQUcnUbi2JdYKbcGrE+JQbvIg=;
+        b=g3LU+IJAqQN71No01lwOpjhPdnSS++pqefvW2AfZ6yFctiNBFQYl0OTSk0p6P6R2Yu
+         csuCpZE8PV783x8Rs5bpZFdCCkh1ZTMg1t+8J8hA5tXKjIt2K0PEmcxpyNRm6uyUb6jf
+         +5+k5MGrsshyfzUOlnAl/XZYQ7abM4wVI6ubstYfJQ5g+LKQi1bP+KNhuOhiiVZxNdpa
+         BPohkLlNHExbyCQG8s2Yv75yj+6smSd0rKKDPiMA/bUmV/S55W9OmYbBcWdVpo4YZlZK
+         IT/hGbMLfIdqE+9rrp9brCXTrjeXV1jeHwszGGvCUMq4Yr0KB9HtiJGoVYKPsKAaxsM8
+         gIGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684852486; x=1687444486;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3i1MmRo9IlXQkc30ONLQUcnUbi2JdYKbcGrE+JQbvIg=;
+        b=gX0h1cgXuSHfGlpA4ZGw1p4BnQSZlfOASGWyog9jnj3QZfSYN2A2OuYwd3xm8xTGpS
+         lOmGuYVdanKQFTNAj68EZZ2VBRHfhR15MNpQQITjg4/2UDTXPqJdNnglLQkREZ4Uj3d/
+         VDOVC+r/hSIDPPIOpifpCh9jI+KLjS51+fLEOJgc5hik7F0/Kwz9cUm8z7dfBBcf+qNW
+         wKdc9aHWbAwrp6B0I9WuFe701MS2xPgAq4Gxv/s/OTCiZF+mas4hC2Qnh3+qe9KxTmsK
+         dp1TT81ulVltwQkgmmDZaq5XLOofXAtcFaUK+nGFWYCVzxfUaWNHCh1ynaZQKxzNr1KM
+         UPyg==
+X-Gm-Message-State: AC+VfDzWfNV/69HcNI9aY01I1ZelrGG7RFVgIdiwtWSGHSnvsroeUzNm
+        zVUCFw2HmQgzN+eQCxKiItsRdL89cSSzzyR5FCXV/3A9SuEETQ==
+X-Google-Smtp-Source: ACHHUZ7yUKldLNpyhF38THwFUgL8EUge/GnGpW6AWgE6q23Pnsq9SPgv3BsOuQ058n8L+Op7EQkX96z9dC3Q+2h/+yA=
+X-Received: by 2002:adf:f784:0:b0:2ee:f77f:3d02 with SMTP id
+ q4-20020adff784000000b002eef77f3d02mr10201521wrp.0.1684852485567; Tue, 23 May
+ 2023 07:34:45 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ZGxU/zSGkqGhGWmF@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgAXvuuww2xkCSPIJw--.31377S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFW3Xr1UXF4rurykuFy3Arb_yoWxCwc_Za
-        1akF47Gr17AFyvvF47twn8WrWv93W8WFZxAry0gFs2q3s8Zas3Cr4kAwnavF98t3Wftr4Y
-        9F90qF15JFs7KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb4AFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WxJVW8Jr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVW8JVWx
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbU
-        UUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
-X-CFilter-Loop: Reflected
+References: <20230523021150.2406032-1-azeemshaikh38@gmail.com>
+ <20230523090540.GC2174496@google.com> <ZGyDx4Jg9j2zmjD6@kekkonen.localdomain>
+In-Reply-To: <ZGyDx4Jg9j2zmjD6@kekkonen.localdomain>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Tue, 23 May 2023 10:34:34 -0400
+Message-ID: <CADmuW3W+-7GeKX2LqvvTW408v6x1o_as5xuUFxrdHf9TyTTsnQ@mail.gmail.com>
+Subject: Re: [PATCH] i2c: Replace all non-returning strlcpy with strscpy
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Lee Jones <lee@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-hardening@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Thanks for the quick response Lee and Sakari.
 
-在 2023/05/23 13:54, Christoph Hellwig 写道:
-> On Mon, May 22, 2023 at 07:49:38PM +0800, Yu Kuai wrote:
->> Hi, Christoph
->>
->> 在 2023/05/18 12:27, Christoph Hellwig 写道:
->>
->> It's not related to this patch, just I think I found a problem while
->> reviewing raid5 code, commit e82ed3a4fbb5 ("md/raid6: refactor
->> raid5_read_one_chunk") changes the caculation of 'end_sector',
->> 'end_sector' is compared to 'rdev->recovery_offset', so it should be
->> offset to rdev, but this commit change it to offset to the array.
->>
->> Perhaps following change will make sense:
-> 
-> Yes, I think it does.  Can you send a patch?
-> .
-> 
+On Tue, May 23, 2023 at 5:13=E2=80=AFAM Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+>
+> Hi Lee, Azeem,
+>
+> On Tue, May 23, 2023 at 10:05:40AM +0100, Lee Jones wrote:
+> > On Tue, 23 May 2023, Azeem Shaikh wrote:
+> >
+> > > strlcpy() reads the entire source buffer first.
+> > > This read may exceed the destination size limit.
+> > > This is both inefficient and can lead to linear read
+> > > overflows if a source string is not NUL-terminated [1].
+> > > In an effort to remove strlcpy() completely [2], replace
+> > > strlcpy() here with strscpy().
+> > > No return values were used, so direct replacement is safe.
+> > >
+> > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#st=
+rlcpy
+> > > [2] https://github.com/KSPP/linux/issues/89
+> > >
+> > > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > > ---
+> > >  drivers/leds/flash/leds-as3645a.c |    4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > Please resubmit, taking the time to check the subject line please.
+>
+> I'd say also shorter description will suffice. Nowadays people understand
+> the motivation replacing strlcpy() by strscpy() without too much
+> elaboration. Lines may be up to 74 characters long, too, and period isn't
+> automatically followed by a newline.
+>
 
-Of course, thanks for your response.
+Let me know if this commit log looks good to you both and I'll send over a =
+v2.
 
-Kuai
+Subject: [PATCH] leds: as3645a: Replace all non-returning strlcpy with strs=
+cpy
 
+Part of a tree-wide effort to remove deprecated strlcpy()[1] and replace
+it with strscpy()[2]. No return values were used, so direct replacement
+is safe.
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
+
+> I also prefer my @linux.intel.com address, as in MAINTAINERS for this
+> driver.
+
+Fyi that the email address mentioned for this driver is not the
+@linux.intel.com -
+https://github.com/torvalds/linux/blob/44c026a73be8038f03dbdeef028b642880cf=
+1511/MAINTAINERS#L3070.
+I'm happy to send the v2 patch to sakari.ailus@linux.intel.com if you
+prefer that instead.
