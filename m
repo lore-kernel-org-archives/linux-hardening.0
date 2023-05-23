@@ -2,101 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7177FC7EE26
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 20:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67974C77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 20:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238329AbjEWUPY (ORCPT
+        id S234448AbjEWU3u (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 16:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59022 "EHLO
+        Tue, 23 May 2023 16:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234164AbjEWUPX (ORCPT
+        with ESMTP id S233535AbjEWU3s (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 16:15:23 -0400
+        Tue, 23 May 2023 16:29:48 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2D5129;
-        Tue, 23 May 2023 13:15:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18E8130;
+        Tue, 23 May 2023 13:29:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DA75461272;
-        Tue, 23 May 2023 20:15:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F10F5C433EF;
-        Tue, 23 May 2023 20:15:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4CEA663497;
+        Tue, 23 May 2023 20:29:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91306C4339C;
+        Tue, 23 May 2023 20:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684872921;
-        bh=bY6N2RxrtkdOJFb0NaV4w4DW0/gqoN0tnW3Zao2HvYs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=VtH6B7WzLJnkm8MmBMlZKipm/TbzeB4OX83fSJgoGJ5oQ2CUPK9ftS5U+bOcPV2NY
-         K36tlHrkzJQ7hIKjyEP6+eMmgQucr12O4S8p2F9b4ZW/qy6kcOC0yIpMF36HuWlPgL
-         erqzRg86D56gfnFn66FoSvOhR935/mVd1ep2Qul4MTE5AXfZomouGrlHCUt8Q1VdO1
-         VnzGJj4jYVVecWXH8HALGANFWejiL0IhawonWUGH6apKlvrtXPCqV3xzzEemT6Nqtx
-         keZtujjY5IBag47VzYQHcwZmf0abFZM3rWG79aMOVjeCVRhn4P5j6evgtZfzUdPRrj
-         IWga5Zh5hVcUg==
-Date:   Tue, 23 May 2023 14:16:13 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        s=k20201202; t=1684873786;
+        bh=3zormi991DJH+Ol8uhpUBr0tm4WKud04qZ9kQu+6tBc=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=XxLtyN2zRhNjNC5UpZMBju/c1LzM0hSW9dlYTi5yn82LF2zUZTN+lUd3eijnXCXLF
+         YorZJMah4CLS9xZevcNRQop+uYHisQBar0e3J1X2hKYtuURYZO3w8b5jK8exN8JLjG
+         wO1KIucQ4ia5mXd1fbffiIqJytOWRo1tFUX1AMOxaXxdHwWmNVY4maCgMuUDaIgjJG
+         rgKJ1+cSB9dn6STLlUn81hW7BUYB/XZcQqrUzduY+JgqpllIgSXPQqzvHjf8szgc6B
+         TPeC7bfRL1Qysv2y7+raePTNEcPLqHyKDuH6Ik9JFkPAxqF/rphBdMkIIF9g8KfAea
+         +CODsfSON8dTg==
+Date:   Tue, 23 May 2023 13:29:45 -0700
+From:   Kees Cook <kees@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-Subject: [PATCH v2][next] scsi: lpfc: Use struct_size() helper
-Message-ID: <ZG0fDdY/PPQ/ijlt@work>
+CC:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_1/2=5D=5Bnext=5D_scsi=3A_lpfc=3A_Replace_o?= =?US-ASCII?Q?ne-element_array_with_flexible-array_member?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <3d298c36-cdd8-62bd-2fef-c2ce63e662ef@embeddedor.com>
+References: <cover.1684358315.git.gustavoars@kernel.org> <6c6dcab88524c14c47fd06b9332bd96162656db5.1684358315.git.gustavoars@kernel.org> <yq11qj8nhy7.fsf@ca-mkp.ca.oracle.com> <202305231031.C9E6124@keescook> <3d298c36-cdd8-62bd-2fef-c2ce63e662ef@embeddedor.com>
+Message-ID: <9ECC5C8E-D8E1-4444-BC47-D49FE015144D@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Prefer struct_size() over open-coded versions of idiom:
+On May 23, 2023 12:46:54 PM PDT, "Gustavo A=2E R=2E Silva" <gustavo@embedde=
+dor=2Ecom> wrote:
+>
+>
+>On 5/23/23 11:31, Kees Cook wrote:
+>> On Mon, May 22, 2023 at 06:02:21PM -0400, Martin K=2E Petersen wrote:
+>>>=20
+>>> Gustavo,
+>>>=20
+>>>> One-element arrays are deprecated, and we are replacing them with fle=
+xible
+>>>> array members instead=2E So, replace one-element arrays with flexible=
+-array
+>>>> members in a couple of structures, and refactor the rest of the code,
+>>>> accordingly=2E
+>>>>=20
+>>>> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+>>>> routines on memcpy() and help us make progress towards globally
+>>>> enabling -fstrict-flex-arrays=3D3 [1]=2E
+>>>>=20
+>>>> This results in no differences in binary output=2E
+>>>=20
+>>> Applied to 6=2E5/scsi-staging, thanks!
+>>=20
+>> Martin, I think this patch is not right -- can you drop this from
+>> staging for the moment?
+>
+>Martin just took patch 1/2, which is correct:
+>
+>https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/mkp/scsi=2Egit/commit=
+/?h=3D6=2E5/scsi-staging&id=3De90644b0ce2d700a65579ac74ff594414e8ba30f
 
-sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
+Oops, yes, I thought both got pulled=2E 1/2 is fine=2E :)
 
-where count is the max number of items the flexible array is supposed to
-contain.
+-Kees
 
-Link: https://github.com/KSPP/linux/issues/160
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use literal 1 in call to struct_size(), instead of rap->no_of_objects
-   (Kees Cook). 
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/99e06733f5f35c6cd62e05f530b93107bfd03362.1684358315.git.gustavoars@kernel.org/
-
- drivers/scsi/lpfc/lpfc_ct.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-index e880d127d7f5..f52aeb73af8d 100644
---- a/drivers/scsi/lpfc/lpfc_ct.c
-+++ b/drivers/scsi/lpfc/lpfc_ct.c
-@@ -3747,9 +3747,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
- 		rap->no_of_objects = cpu_to_be32(1);
- 		rap->obj[0].entity_id_len = vmid->vmid_len;
- 		memcpy(rap->obj[0].entity_id, vmid->host_vmid, vmid->vmid_len);
--		size = RAPP_IDENT_OFFSET +
--			sizeof(struct lpfc_vmid_rapp_ident_list) +
--			sizeof(struct entity_id_object);
-+		size = RAPP_IDENT_OFFSET + struct_size(rap, obj, 1);
- 		retry = 1;
- 		break;
- 
-@@ -3767,9 +3765,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
- 		dap->no_of_objects = cpu_to_be32(1);
- 		dap->obj[0].entity_id_len = vmid->vmid_len;
- 		memcpy(dap->obj[0].entity_id, vmid->host_vmid, vmid->vmid_len);
--		size = DAPP_IDENT_OFFSET +
--			sizeof(struct lpfc_vmid_dapp_ident_list) +
--			sizeof(struct entity_id_object);
-+		size = DAPP_IDENT_OFFSET + struct_size(dap, obj, 1);
- 		write_lock(&vport->vmid_lock);
- 		vmid->flag &= ~LPFC_VMID_REGISTERED;
- 		write_unlock(&vport->vmid_lock);
--- 
-2.34.1
-
+--=20
+Kees Cook
