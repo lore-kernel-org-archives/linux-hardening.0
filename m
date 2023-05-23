@@ -2,71 +2,58 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E90EC7EE2A
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 08:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CF0C77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 08:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235791AbjEWIRn (ORCPT
+        id S236126AbjEWIWs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 04:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
+        Tue, 23 May 2023 04:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236081AbjEWIRG (ORCPT
+        with ESMTP id S236185AbjEWIWZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 04:17:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30631185
-        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 01:14:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684829668;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pK75x5ErRQbR7sZTyIQvs8c6Qw3cdzJ6+CtVUWa6Arg=;
-        b=AQjk4+6vhrQGvGYf8L6tDhOWFfEqacUgqNgg8X7UYWepwuVIL2PKJ47js16/NaAgCMJCw/
-        KmkV2oAvJ3ljevYSr2Reh5Miv47cDyFp4gGn9A9zJdM4fnPZ9f9RWvg2uDSJaKP1OdyMkw
-        4pMhEHo0wGy8JJqQoXPLDlbx6+qfMB4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-383-dSBAoavJM4-2KTz4XRfFbw-1; Tue, 23 May 2023 04:14:27 -0400
-X-MC-Unique: dSBAoavJM4-2KTz4XRfFbw-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-30959544cbdso2049302f8f.0
-        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 01:14:27 -0700 (PDT)
+        Tue, 23 May 2023 04:22:25 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0BD10F3;
+        Tue, 23 May 2023 01:19:33 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-3078a3f3b5fso6992861f8f.0;
+        Tue, 23 May 2023 01:19:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684829972; x=1687421972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MDpklUrK+KsfCrW9J+cj1U3VNImhXOwwklHmqV9tRbQ=;
+        b=nvBjXPaUtAE20exKxcpajzt0s9UGInpM1IKYKt+mkmJzmgyErp0/zsxncMuSCi6+8+
+         fGgYkrBYh8AtqxbnGocsqIxmDuUjvEXXKWGuPjlhWUxfNR6mddf2YGChKhrnEspP5vyn
+         2UETpjmeBpqV5KJiRrhze8epT9QkK/BgJRT7aWJXe+CqOM/gzD+u2k+JWEM1duK/b1b6
+         lrkTPirKyqIuTj2p+RKSJqWZIjwWw/BR1nmZR6Pt5S8qzAuPByXdbn7W7F84ybc3dDpR
+         SHawnjSM1BtccRJZKiRztLAurAYBKctyrkDNFAAmluuUv7QOV7HR3xjtElgIpMxpXSQx
+         Bi6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684829666; x=1687421666;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pK75x5ErRQbR7sZTyIQvs8c6Qw3cdzJ6+CtVUWa6Arg=;
-        b=CpIKR2/JOvecL5UkPrme25q9dGhe/wMgCQDUSBpBYgbQkw9iHV/bG3tsi4SRZJ/aUL
-         ksG72AJrlfu/FYGDXDohv8BS/xhzA8fWWXBGb1q0UrXiiFjw34YzvE4HlpgudS3Ljq+h
-         leA2ShrsFuDI3lfXN2FB9+3Vgdn1tq7b/iwkKCtrBXjVIbylpRQPb/Ijh1ruvV4yDh/0
-         ALwoiWfTt5+ZO/L9UtWcB7S/J0Tpxuxu9WdDrwoaqA3vKmtEg7NPvuqQvo4Df5vLlvVz
-         zhJDxXQ7DpYfdYv3ywQqBOID5nORlGpGUbsthpuLTHZGVXTVDgE7VpSAH76lXCAhgBec
-         oUYw==
-X-Gm-Message-State: AC+VfDw+6ktpE/2dC6tT+J6MuIiSqaq21erKIA0htqU0AcDSmHJY9T0v
-        6+Y6Vlk2H4ELGyEe+ftOkRB8HNmZxBuFsoWNdcga5rU2GQ7xGpVHsx7Lp14a5SohyVYOKtSZ0Y3
-        oVnQhonRfmJnsHddkPBrSvtMCvHSk
-X-Received: by 2002:adf:ea82:0:b0:30a:8f9e:8ee6 with SMTP id s2-20020adfea82000000b0030a8f9e8ee6mr4507355wrm.22.1684829666192;
-        Tue, 23 May 2023 01:14:26 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6H1MPKDPiSbV8c1ccyUYy2bHzIhCHQ2vPFAk/Ser7s8xXZJeKgLdg+5PD28Od7MlUSBAjG7A==
-X-Received: by 2002:adf:ea82:0:b0:30a:8f9e:8ee6 with SMTP id s2-20020adfea82000000b0030a8f9e8ee6mr4507320wrm.22.1684829665772;
-        Tue, 23 May 2023 01:14:25 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c74c:b400:5c8b:a0b2:f57e:e1cd? (p200300cbc74cb4005c8ba0b2f57ee1cd.dip0.t-ipconnect.de. [2003:cb:c74c:b400:5c8b:a0b2:f57e:e1cd])
-        by smtp.gmail.com with ESMTPSA id c11-20020adfe74b000000b00306281cfa59sm10367794wrn.47.2023.05.23.01.14.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 01:14:25 -0700 (PDT)
-Message-ID: <ca7860db-220f-ae77-93e6-2a38f6c1130a@redhat.com>
-Date:   Tue, 23 May 2023 10:14:24 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] mm/slab: remove HAVE_HARDENED_USERCOPY_ALLOCATOR
-To:     Lorenzo Stoakes <lstoakes@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christoph Lameter <cl@linux.com>,
+        d=1e100.net; s=20221208; t=1684829972; x=1687421972;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MDpklUrK+KsfCrW9J+cj1U3VNImhXOwwklHmqV9tRbQ=;
+        b=dxixqfUPcSSbEHJFO7v2j5hronQCpcjq/6qPxQepkpPbEGQ1f8L0MPEcpow5S1axGv
+         XW8Czb4sAknc85sQKQvfgPZ9mfjEIgcSPAxbfHYVECeNkdYTb/Y5YAAybRxME+YmDt3X
+         u2KZY2DVXe0USeJlx5GTm6RkfipO+WrqaUXqWrJGyg20n4uh13bGaKujeFD99SAlf+/D
+         9hMV9dQqwDt1+r1yQcpA759V855qtrSiDRqjMd+K8qlPwCaLg3T8O8lAj0N0osFwvV5Q
+         /cQZyGQeSrKH8lmZo6T636rbQSQ+lhjtKdEY5AE92iEfK1Fgxwg16UVL45b1jYWFxJqG
+         Ovew==
+X-Gm-Message-State: AC+VfDzOwXF3McxXzB3n8xs70aR9M1WMqyd0BgfgbENe2T8EutJAfdVZ
+        QF5PhBXKrfpovfvOagimkCk=
+X-Google-Smtp-Source: ACHHUZ5Jx/TmEjjLT2eWEUOapJJs0gZVKqgVZdNUx79sB2n/taEIWzDxtMsresMpxEfdSTrQLYlKBg==
+X-Received: by 2002:a5d:5588:0:b0:304:a40c:43c6 with SMTP id i8-20020a5d5588000000b00304a40c43c6mr9680909wrv.11.1684829971883;
+        Tue, 23 May 2023 01:19:31 -0700 (PDT)
+Received: from localhost (host81-154-179-160.range81-154.btcentralplus.com. [81.154.179.160])
+        by smtp.gmail.com with ESMTPSA id f12-20020a5d58ec000000b00309257ad16csm10267702wrd.29.2023.05.23.01.19.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 01:19:30 -0700 (PDT)
+Date:   Tue, 23 May 2023 09:19:30 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
         David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
@@ -75,107 +62,112 @@ Cc:     Christoph Lameter <cl@linux.com>,
         Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
         linux-hardening@vger.kernel.org, patches@lists.linux.dev,
         linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slab: remove HAVE_HARDENED_USERCOPY_ALLOCATOR
+Message-ID: <4674f97f-5f97-45b7-a4b9-a19ca46b7ce1@lucifer.local>
 References: <20230523073136.4900-1-vbabka@suse.cz>
  <310077ed-6f3f-41fe-afcf-36500a9408ec@lucifer.local>
  <623a87c6-c0d2-799a-c39e-0d14dcdfa6df@suse.cz>
  <ae3ff438-5e5a-4a75-b4e9-575324a584f7@lucifer.local>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <ae3ff438-5e5a-4a75-b4e9-575324a584f7@lucifer.local>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <ca7860db-220f-ae77-93e6-2a38f6c1130a@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca7860db-220f-ae77-93e6-2a38f6c1130a@redhat.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 23.05.23 09:56, Lorenzo Stoakes wrote:
-> On Tue, May 23, 2023 at 09:46:46AM +0200, Vlastimil Babka wrote:
->> On 5/23/23 09:42, Lorenzo Stoakes wrote:
->>> On Tue, May 23, 2023 at 09:31:36AM +0200, Vlastimil Babka wrote:
->>>> With SLOB removed, both remaining allocators support hardened usercopy,
->>>> so remove the config and associated #ifdef.
->>>>
->>>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
->>>> ---
->>>>   mm/Kconfig       | 2 --
->>>>   mm/slab.h        | 9 ---------
->>>>   security/Kconfig | 8 --------
->>>>   3 files changed, 19 deletions(-)
->>>>
->>>> diff --git a/mm/Kconfig b/mm/Kconfig
->>>> index 7672a22647b4..041f0da42f2b 100644
->>>> --- a/mm/Kconfig
->>>> +++ b/mm/Kconfig
->>>> @@ -221,7 +221,6 @@ choice
->>>>   config SLAB
->>>>   	bool "SLAB"
->>>>   	depends on !PREEMPT_RT
->>>> -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
->>>>   	help
->>>>   	  The regular slab allocator that is established and known to work
->>>>   	  well in all environments. It organizes cache hot objects in
->>>> @@ -229,7 +228,6 @@ config SLAB
->>>>
->>>>   config SLUB
->>>>   	bool "SLUB (Unqueued Allocator)"
->>>> -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
->>>>   	help
->>>>   	   SLUB is a slab allocator that minimizes cache line usage
->>>>   	   instead of managing queues of cached objects (SLAB approach).
->>>> diff --git a/mm/slab.h b/mm/slab.h
->>>> index f01ac256a8f5..695ef96b4b5b 100644
->>>> --- a/mm/slab.h
->>>> +++ b/mm/slab.h
->>>> @@ -832,17 +832,8 @@ struct kmem_obj_info {
->>>>   void __kmem_obj_info(struct kmem_obj_info *kpp, void *object, struct slab *slab);
->>>>   #endif
->>>>
->>>> -#ifdef CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR
->>>>   void __check_heap_object(const void *ptr, unsigned long n,
->>>>   			 const struct slab *slab, bool to_user);
->>>> -#else
->>>> -static inline
->>>> -void __check_heap_object(const void *ptr, unsigned long n,
->>>> -			 const struct slab *slab, bool to_user)
->>>> -{
->>>> -}
->>>> -#endif
->>>
->>> Hm, this is still defined in slab.c/slub.c and invoked in usercopy.c, do we
->>> not want the prototype?
->>
->> Well I didn't delete the prototype, just the ifdef/else around, so now it's
->> there unconditionally.
->>
->>> Perhaps replacing with #ifdef
->>> CONFIG_HARDENED_USERCOPY instead? I may be missing something here :)
->>
->> Putting it under that #ifdef would work and match that the implementations
->> of that function are under that same ifdef, but maybe it's unnecessary noise
->> in the header?
->>
-> 
-> Yeah my brain inserted extra '-'s there, sorry!
-> 
-> Given we only define __check_heap_object() in sl[au]b.c if
-> CONFIG_HARDENED_USERCOPY wouldn't we need to keep the empty version around
-> if !CONFIG_HARDENED_USERCOPY since check_heap_object() appears to be called
-> unconditionally?
-> 
+On Tue, May 23, 2023 at 10:14:24AM +0200, David Hildenbrand wrote:
+> On 23.05.23 09:56, Lorenzo Stoakes wrote:
+> > On Tue, May 23, 2023 at 09:46:46AM +0200, Vlastimil Babka wrote:
+> > > On 5/23/23 09:42, Lorenzo Stoakes wrote:
+> > > > On Tue, May 23, 2023 at 09:31:36AM +0200, Vlastimil Babka wrote:
+> > > > > With SLOB removed, both remaining allocators support hardened usercopy,
+> > > > > so remove the config and associated #ifdef.
+> > > > >
+> > > > > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> > > > > ---
+> > > > >   mm/Kconfig       | 2 --
+> > > > >   mm/slab.h        | 9 ---------
+> > > > >   security/Kconfig | 8 --------
+> > > > >   3 files changed, 19 deletions(-)
+> > > > >
+> > > > > diff --git a/mm/Kconfig b/mm/Kconfig
+> > > > > index 7672a22647b4..041f0da42f2b 100644
+> > > > > --- a/mm/Kconfig
+> > > > > +++ b/mm/Kconfig
+> > > > > @@ -221,7 +221,6 @@ choice
+> > > > >   config SLAB
+> > > > >   	bool "SLAB"
+> > > > >   	depends on !PREEMPT_RT
+> > > > > -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > >   	help
+> > > > >   	  The regular slab allocator that is established and known to work
+> > > > >   	  well in all environments. It organizes cache hot objects in
+> > > > > @@ -229,7 +228,6 @@ config SLAB
+> > > > >
+> > > > >   config SLUB
+> > > > >   	bool "SLUB (Unqueued Allocator)"
+> > > > > -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > >   	help
+> > > > >   	   SLUB is a slab allocator that minimizes cache line usage
+> > > > >   	   instead of managing queues of cached objects (SLAB approach).
+> > > > > diff --git a/mm/slab.h b/mm/slab.h
+> > > > > index f01ac256a8f5..695ef96b4b5b 100644
+> > > > > --- a/mm/slab.h
+> > > > > +++ b/mm/slab.h
+> > > > > @@ -832,17 +832,8 @@ struct kmem_obj_info {
+> > > > >   void __kmem_obj_info(struct kmem_obj_info *kpp, void *object, struct slab *slab);
+> > > > >   #endif
+> > > > >
+> > > > > -#ifdef CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > >   void __check_heap_object(const void *ptr, unsigned long n,
+> > > > >   			 const struct slab *slab, bool to_user);
+> > > > > -#else
+> > > > > -static inline
+> > > > > -void __check_heap_object(const void *ptr, unsigned long n,
+> > > > > -			 const struct slab *slab, bool to_user)
+> > > > > -{
+> > > > > -}
+> > > > > -#endif
+> > > >
+> > > > Hm, this is still defined in slab.c/slub.c and invoked in usercopy.c, do we
+> > > > not want the prototype?
+> > >
+> > > Well I didn't delete the prototype, just the ifdef/else around, so now it's
+> > > there unconditionally.
+> > >
+> > > > Perhaps replacing with #ifdef
+> > > > CONFIG_HARDENED_USERCOPY instead? I may be missing something here :)
+> > >
+> > > Putting it under that #ifdef would work and match that the implementations
+> > > of that function are under that same ifdef, but maybe it's unnecessary noise
+> > > in the header?
+> > >
+> >
+> > Yeah my brain inserted extra '-'s there, sorry!
+> >
+> > Given we only define __check_heap_object() in sl[au]b.c if
+> > CONFIG_HARDENED_USERCOPY wouldn't we need to keep the empty version around
+> > if !CONFIG_HARDENED_USERCOPY since check_heap_object() appears to be called
+> > unconditionally?
+> >
+>
+> The file is only compiled with CONFIG_HARDENED_USERCOPY:
+>
+> mm/Makefile:obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
+>
 
-The file is only compiled with CONFIG_HARDENED_USERCOPY:
+Yeah ugh at this sort of implicit thing. Anyway it'd be preferable to stick
+#ifdef CONFIG_HARDENED_USERCOPY around the prototype just so it's
+abundantly clear this function doesn't exist unless that is set.
 
-mm/Makefile:obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
-
-
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
--- 
-Thanks,
-
-David / dhildenb
-
+>
+>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+>
+> --
+> Thanks,
+>
+> David / dhildenb
+>
