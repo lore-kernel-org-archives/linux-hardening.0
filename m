@@ -2,114 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475C0C77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 18:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCA0C77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 19:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237403AbjEWS6l (ORCPT
+        id S238480AbjEWTrh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 14:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52898 "EHLO
+        Tue, 23 May 2023 15:47:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229834AbjEWS6k (ORCPT
+        with ESMTP id S238473AbjEWTrg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 14:58:40 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB4091;
-        Tue, 23 May 2023 11:58:38 -0700 (PDT)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34NHuHfO011599;
-        Tue, 23 May 2023 18:58:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pp1; bh=5aC+OJOtsi5c4oLl9XNjE+QV12mOzwsZDutiUzFGjXY=;
- b=mCxP5xMlCrJzGd7lfuwopfp8nSdPrsYPLxbVCWfT1JH6ZTlEW0rEdGmGjcsqPsHG3sxC
- iO320IvLGYvZao5uSpRmFJOLzZiokCB5vTYF/b8NypKomxs5roIGuDnMUGGHM3HPnp4c
- f2jPosuGLG13ceIp2HjDjW+YGIEKWqaZFiLGsnlfLEm5oBgvRRreIB/QrqS+dItszYW/
- YMJ0pAwQQNQ31ERGASAZWQYGft9x+jtXH/bRUtVOYJ6jowGFCPFLKKiZImcGC4GNpprl
- 8UO70g94gKBX+ciGEFgMpwAWuFGGKpMJw1kKms1ivHYEwReLLO9eiR0mH0mHBsiWhOHy dA== 
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qs2aqhv9s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 May 2023 18:58:36 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34NHVleh017921;
-        Tue, 23 May 2023 18:58:33 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3qppcs9bqd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 23 May 2023 18:58:33 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34NIwUfS24117848
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 May 2023 18:58:30 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 19B5320043;
-        Tue, 23 May 2023 18:58:30 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFC7420040;
-        Tue, 23 May 2023 18:58:28 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.171.19.15])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-        Tue, 23 May 2023 18:58:28 +0000 (GMT)
-Date:   Tue, 23 May 2023 20:58:26 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 0/2][next] vfio/ccw: Replace one-element array with
- flexible-array member
-Message-ID: <ZG0M0kzWHXcBQa0N@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
-References: <cover.1684805398.git.gustavoars@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1684805398.git.gustavoars@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Pp1HkwHa6AYGcy6FLtk71E6kwDCTo8PM
-X-Proofpoint-GUID: Pp1HkwHa6AYGcy6FLtk71E6kwDCTo8PM
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Tue, 23 May 2023 15:47:36 -0400
+X-Greylist: delayed 91 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 12:47:34 PDT
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5CB126
+        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 12:47:34 -0700 (PDT)
+Received: from eig-obgw-6013a.ext.cloudfilter.net ([10.0.30.177])
+        by cmsmtp with ESMTP
+        id 16KgqFW27DKaK1XxKq00Dm; Tue, 23 May 2023 19:46:02 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTP
+        id 1XxJq9SdUMMQq1XxJqh17W; Tue, 23 May 2023 19:46:01 +0000
+X-Authority-Analysis: v=2.4 cv=bcp47cDB c=1 sm=1 tr=0 ts=646d17f9
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10
+ a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8 a=kxGpGzF3zFx1SGUESVUA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ljMdlDdx5J+18DhoS8j4K1VQdJl1syC7905CE3fxYNA=; b=Z6e4ETW7+WGTJoQk8juniRCmgr
+        IfMLlfnM8z86BSWy81Z2wZqu6Qleuoj1q5/a+xsO7Wxqh4sTzrUpwQPI9VZZEIq3kkNczH00G0qBn
+        9CA6KqwjkjkC8O5VWHmfjLbJmEq+WM/0LSEmooPD4U4LMHg7xDDy+GZVF4DD2RFJ8iGfT2tAvPwtf
+        Kum244yx6WE0kMVyHIiBSBdgKRp1wfcq4ZD83t0FsHyh8bow7GYqC0pnFgSlQmo4FcE2pPVAYdDpa
+        fheb+OMtYLyQfg0YXaSoUaeEUN7EYc8JGw2/l4hDGMihz1ctWtClFJbEgRN1TM6WcWZoLNoruHQbY
+        ic0Z+YFA==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:58740 helo=[192.168.15.7])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1q1XxI-003bHK-HH;
+        Tue, 23 May 2023 14:46:00 -0500
+Message-ID: <3d298c36-cdd8-62bd-2fef-c2ce63e662ef@embeddedor.com>
+Date:   Tue, 23 May 2023 13:46:54 -0600
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-23_12,2023-05-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- bulkscore=0 lowpriorityscore=0 phishscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 impostorscore=0 spamscore=0 mlxlogscore=753
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305230150
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 1/2][next] scsi: lpfc: Replace one-element array with
+ flexible-array member
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <cover.1684358315.git.gustavoars@kernel.org>
+ <6c6dcab88524c14c47fd06b9332bd96162656db5.1684358315.git.gustavoars@kernel.org>
+ <yq11qj8nhy7.fsf@ca-mkp.ca.oracle.com> <202305231031.C9E6124@keescook>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202305231031.C9E6124@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1q1XxI-003bHK-HH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.7]) [187.162.21.192]:58740
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfOKj6kk+Cxigm/DTsUgxzFwmRY8udOF8BwZBNBoO7SPtTptSYgl0i/ALtdaPF2lfyBrcZokksQ1kDCG0mbX9B5fxKiwC+Oq0sr3iDsCI2dEtzcL+Tb7p
+ 3cLWbKuRK5eqxkbcVll3n4PTzdxrBh0RtsZ0i0NtXEu179BobaxfC5f9E6+xRJfTY4LK+0Cl7TkZZB5Oj1Lxlotrqs88ofI3fiDk8VtLkCW04fipodOunEJb
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 22, 2023 at 07:34:41PM -0600, Gustavo A. R. Silva wrote:
-> This small series aims to replace a one-element array with a
-> flexible-array member in struct vfio_ccw_parent.
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/160
-> Link: https://github.com/KSPP/linux/issues/297
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> 
-> Gustavo A. R. Silva (2):
->   vfio/ccw: Replace one-element array with flexible-array member
->   vfio/ccw: Use struct_size() helper
-> 
->  drivers/s390/cio/vfio_ccw_drv.c     | 2 +-
->  drivers/s390/cio/vfio_ccw_private.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
 
-Fixed duplicate "the the" in patch #1 commit message and applied.
 
-Thanks!
+On 5/23/23 11:31, Kees Cook wrote:
+> On Mon, May 22, 2023 at 06:02:21PM -0400, Martin K. Petersen wrote:
+>>
+>> Gustavo,
+>>
+>>> One-element arrays are deprecated, and we are replacing them with flexible
+>>> array members instead. So, replace one-element arrays with flexible-array
+>>> members in a couple of structures, and refactor the rest of the code,
+>>> accordingly.
+>>>
+>>> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+>>> routines on memcpy() and help us make progress towards globally
+>>> enabling -fstrict-flex-arrays=3 [1].
+>>>
+>>> This results in no differences in binary output.
+>>
+>> Applied to 6.5/scsi-staging, thanks!
+> 
+> Martin, I think this patch is not right -- can you drop this from
+> staging for the moment?
+
+Martin just took patch 1/2, which is correct:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/commit/?h=6.5/scsi-staging&id=e90644b0ce2d700a65579ac74ff594414e8ba30f
+
+--
+Gustavo
