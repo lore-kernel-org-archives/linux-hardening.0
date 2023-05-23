@@ -2,123 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCA0C77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 19:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7177FC7EE26
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 20:15:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238480AbjEWTrh (ORCPT
+        id S238329AbjEWUPY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 15:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
+        Tue, 23 May 2023 16:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238473AbjEWTrg (ORCPT
+        with ESMTP id S234164AbjEWUPX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 15:47:36 -0400
-X-Greylist: delayed 91 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 12:47:34 PDT
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5CB126
-        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 12:47:34 -0700 (PDT)
-Received: from eig-obgw-6013a.ext.cloudfilter.net ([10.0.30.177])
-        by cmsmtp with ESMTP
-        id 16KgqFW27DKaK1XxKq00Dm; Tue, 23 May 2023 19:46:02 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTP
-        id 1XxJq9SdUMMQq1XxJqh17W; Tue, 23 May 2023 19:46:01 +0000
-X-Authority-Analysis: v=2.4 cv=bcp47cDB c=1 sm=1 tr=0 ts=646d17f9
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10
- a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8 a=kxGpGzF3zFx1SGUESVUA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ljMdlDdx5J+18DhoS8j4K1VQdJl1syC7905CE3fxYNA=; b=Z6e4ETW7+WGTJoQk8juniRCmgr
-        IfMLlfnM8z86BSWy81Z2wZqu6Qleuoj1q5/a+xsO7Wxqh4sTzrUpwQPI9VZZEIq3kkNczH00G0qBn
-        9CA6KqwjkjkC8O5VWHmfjLbJmEq+WM/0LSEmooPD4U4LMHg7xDDy+GZVF4DD2RFJ8iGfT2tAvPwtf
-        Kum244yx6WE0kMVyHIiBSBdgKRp1wfcq4ZD83t0FsHyh8bow7GYqC0pnFgSlQmo4FcE2pPVAYdDpa
-        fheb+OMtYLyQfg0YXaSoUaeEUN7EYc8JGw2/l4hDGMihz1ctWtClFJbEgRN1TM6WcWZoLNoruHQbY
-        ic0Z+YFA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:58740 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1q1XxI-003bHK-HH;
-        Tue, 23 May 2023 14:46:00 -0500
-Message-ID: <3d298c36-cdd8-62bd-2fef-c2ce63e662ef@embeddedor.com>
-Date:   Tue, 23 May 2023 13:46:54 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 1/2][next] scsi: lpfc: Replace one-element array with
- flexible-array member
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Tue, 23 May 2023 16:15:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B2D5129;
+        Tue, 23 May 2023 13:15:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DA75461272;
+        Tue, 23 May 2023 20:15:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F10F5C433EF;
+        Tue, 23 May 2023 20:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684872921;
+        bh=bY6N2RxrtkdOJFb0NaV4w4DW0/gqoN0tnW3Zao2HvYs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VtH6B7WzLJnkm8MmBMlZKipm/TbzeB4OX83fSJgoGJ5oQ2CUPK9ftS5U+bOcPV2NY
+         K36tlHrkzJQ7hIKjyEP6+eMmgQucr12O4S8p2F9b4ZW/qy6kcOC0yIpMF36HuWlPgL
+         erqzRg86D56gfnFn66FoSvOhR935/mVd1ep2Qul4MTE5AXfZomouGrlHCUt8Q1VdO1
+         VnzGJj4jYVVecWXH8HALGANFWejiL0IhawonWUGH6apKlvrtXPCqV3xzzEemT6Nqtx
+         keZtujjY5IBag47VzYQHcwZmf0abFZM3rWG79aMOVjeCVRhn4P5j6evgtZfzUdPRrj
+         IWga5Zh5hVcUg==
+Date:   Tue, 23 May 2023 14:16:13 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     James Smart <james.smart@broadcom.com>,
         Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <cover.1684358315.git.gustavoars@kernel.org>
- <6c6dcab88524c14c47fd06b9332bd96162656db5.1684358315.git.gustavoars@kernel.org>
- <yq11qj8nhy7.fsf@ca-mkp.ca.oracle.com> <202305231031.C9E6124@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202305231031.C9E6124@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1q1XxI-003bHK-HH
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.7]) [187.162.21.192]:58740
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOKj6kk+Cxigm/DTsUgxzFwmRY8udOF8BwZBNBoO7SPtTptSYgl0i/ALtdaPF2lfyBrcZokksQ1kDCG0mbX9B5fxKiwC+Oq0sr3iDsCI2dEtzcL+Tb7p
- 3cLWbKuRK5eqxkbcVll3n4PTzdxrBh0RtsZ0i0NtXEu179BobaxfC5f9E6+xRJfTY4LK+0Cl7TkZZB5Oj1Lxlotrqs88ofI3fiDk8VtLkCW04fipodOunEJb
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: [PATCH v2][next] scsi: lpfc: Use struct_size() helper
+Message-ID: <ZG0fDdY/PPQ/ijlt@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Prefer struct_size() over open-coded versions of idiom:
 
+sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
 
-On 5/23/23 11:31, Kees Cook wrote:
-> On Mon, May 22, 2023 at 06:02:21PM -0400, Martin K. Petersen wrote:
->>
->> Gustavo,
->>
->>> One-element arrays are deprecated, and we are replacing them with flexible
->>> array members instead. So, replace one-element arrays with flexible-array
->>> members in a couple of structures, and refactor the rest of the code,
->>> accordingly.
->>>
->>> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
->>> routines on memcpy() and help us make progress towards globally
->>> enabling -fstrict-flex-arrays=3 [1].
->>>
->>> This results in no differences in binary output.
->>
->> Applied to 6.5/scsi-staging, thanks!
-> 
-> Martin, I think this patch is not right -- can you drop this from
-> staging for the moment?
+where count is the max number of items the flexible array is supposed to
+contain.
 
-Martin just took patch 1/2, which is correct:
+Link: https://github.com/KSPP/linux/issues/160
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use literal 1 in call to struct_size(), instead of rap->no_of_objects
+   (Kees Cook). 
 
-https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git/commit/?h=6.5/scsi-staging&id=e90644b0ce2d700a65579ac74ff594414e8ba30f
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/99e06733f5f35c6cd62e05f530b93107bfd03362.1684358315.git.gustavoars@kernel.org/
 
---
-Gustavo
+ drivers/scsi/lpfc/lpfc_ct.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+index e880d127d7f5..f52aeb73af8d 100644
+--- a/drivers/scsi/lpfc/lpfc_ct.c
++++ b/drivers/scsi/lpfc/lpfc_ct.c
+@@ -3747,9 +3747,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
+ 		rap->no_of_objects = cpu_to_be32(1);
+ 		rap->obj[0].entity_id_len = vmid->vmid_len;
+ 		memcpy(rap->obj[0].entity_id, vmid->host_vmid, vmid->vmid_len);
+-		size = RAPP_IDENT_OFFSET +
+-			sizeof(struct lpfc_vmid_rapp_ident_list) +
+-			sizeof(struct entity_id_object);
++		size = RAPP_IDENT_OFFSET + struct_size(rap, obj, 1);
+ 		retry = 1;
+ 		break;
+ 
+@@ -3767,9 +3765,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
+ 		dap->no_of_objects = cpu_to_be32(1);
+ 		dap->obj[0].entity_id_len = vmid->vmid_len;
+ 		memcpy(dap->obj[0].entity_id, vmid->host_vmid, vmid->vmid_len);
+-		size = DAPP_IDENT_OFFSET +
+-			sizeof(struct lpfc_vmid_dapp_ident_list) +
+-			sizeof(struct entity_id_object);
++		size = DAPP_IDENT_OFFSET + struct_size(dap, obj, 1);
+ 		write_lock(&vport->vmid_lock);
+ 		vmid->flag &= ~LPFC_VMID_REGISTERED;
+ 		write_unlock(&vport->vmid_lock);
+-- 
+2.34.1
+
