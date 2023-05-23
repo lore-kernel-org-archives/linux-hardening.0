@@ -2,63 +2,143 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A501EC77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 05:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407E4C7EE23
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 07:33:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234659AbjEWFz6 (ORCPT
+        id S235250AbjEWHc7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 01:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47788 "EHLO
+        Tue, 23 May 2023 03:32:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234624AbjEWFz5 (ORCPT
+        with ESMTP id S235277AbjEWHcd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 01:55:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10905120;
-        Mon, 22 May 2023 22:55:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eLhUu8UCBd/YYLdOP3ui5b1tEMg7x/uUoMmk7djKCEM=; b=bKvOSi6aMPy7rYVrte/3XLeNHl
-        qkBujmdDFFQ6BARVEU2twgXyiyjAwlKGIordV0kMs0H2djtSnYmE8ZurAQqKDqI0qLTOV2imQXtqf
-        biZFkYTJUwIarcadZT7ASdLzrmK3LWv4PL6zZPNaPUgMMS//rpRx9e6Hkb0yegUH2yJBZVnZ6LDKt
-        GAEfmKpNqlTQ4Kxftj1nvSA2L+Y7YTTWSsKFYBpfUYI5IDz0c8S1LLRY+TasePE9OosWa++5TvrgP
-        EjKnONZcCvS0q7YOiTlHucKoDFPzVO94VQc36ZZzPTt2KTXs14OOkW+bF1X9528rtXg8n9y0yGfDE
-        AT4p5gAg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1q1Kzy-0091NL-0x;
-        Tue, 23 May 2023 05:55:54 +0000
-Date:   Mon, 22 May 2023 22:55:54 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
-        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] md/raid5: Convert stripe_head's "dev" to flexible
- array member
-Message-ID: <ZGxVatFgD1u1x+5c@infradead.org>
-References: <20230522212114.gonna.589-kees@kernel.org>
+        Tue, 23 May 2023 03:32:33 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 670D510CB;
+        Tue, 23 May 2023 00:31:58 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 7F80722770;
+        Tue, 23 May 2023 07:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1684827104; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=ZEzc5LOCCEl4X9/BHaKPnOKiEHFUp8WpILtxUD4qjNg=;
+        b=12BbIW+5OtsAyqRSCvzLDYP3yElbsULJxVddqtKq/f2DjB9ngYqgGSk1x9aJAe2LFl0aT5
+        Av9d/xS5Au9Xg+ZXIMYrhmFHYiLJMZCFs1T3yHyWNXlbzGZoY+BYaJLAPzbQ3Hl+NgON2n
+        IfGbXRLe/wU9OxcQZ2tmlvn32ZeejU8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1684827104;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=ZEzc5LOCCEl4X9/BHaKPnOKiEHFUp8WpILtxUD4qjNg=;
+        b=JjwwBXLwGDpGwrmS1npS/eF+SP7rLitCKRX5eu3zbu10pCWZ8EHThUk1eJoi2X3/KY/Nwv
+        RRAeMt35EdLTFWBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5222913588;
+        Tue, 23 May 2023 07:31:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id cr9ZE+BrbGRSIQAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Tue, 23 May 2023 07:31:44 +0000
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc:     Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, patches@lists.linux.dev,
+        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH] mm/slab: remove HAVE_HARDENED_USERCOPY_ALLOCATOR
+Date:   Tue, 23 May 2023 09:31:36 +0200
+Message-Id: <20230523073136.4900-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230522212114.gonna.589-kees@kernel.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 22, 2023 at 02:21:15PM -0700, Kees Cook wrote:
-> -	} dev[1]; /* allocated with extra space depending of RAID geometry */
-> +	} dev[]; /* allocated with extra space depending of RAID geometry */
+With SLOB removed, both remaining allocators support hardened usercopy,
+so remove the config and associated #ifdef.
 
-I still think this should be:
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/Kconfig       | 2 --
+ mm/slab.h        | 9 ---------
+ security/Kconfig | 8 --------
+ 3 files changed, 19 deletions(-)
 
-	/* allocated depending of RAID geometry */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 7672a22647b4..041f0da42f2b 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -221,7 +221,6 @@ choice
+ config SLAB
+ 	bool "SLAB"
+ 	depends on !PREEMPT_RT
+-	select HAVE_HARDENED_USERCOPY_ALLOCATOR
+ 	help
+ 	  The regular slab allocator that is established and known to work
+ 	  well in all environments. It organizes cache hot objects in
+@@ -229,7 +228,6 @@ config SLAB
+ 
+ config SLUB
+ 	bool "SLUB (Unqueued Allocator)"
+-	select HAVE_HARDENED_USERCOPY_ALLOCATOR
+ 	help
+ 	   SLUB is a slab allocator that minimizes cache line usage
+ 	   instead of managing queues of cached objects (SLAB approach).
+diff --git a/mm/slab.h b/mm/slab.h
+index f01ac256a8f5..695ef96b4b5b 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -832,17 +832,8 @@ struct kmem_obj_info {
+ void __kmem_obj_info(struct kmem_obj_info *kpp, void *object, struct slab *slab);
+ #endif
+ 
+-#ifdef CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR
+ void __check_heap_object(const void *ptr, unsigned long n,
+ 			 const struct slab *slab, bool to_user);
+-#else
+-static inline
+-void __check_heap_object(const void *ptr, unsigned long n,
+-			 const struct slab *slab, bool to_user)
+-{
+-}
+-#endif
+-
+ #ifdef CONFIG_SLUB_DEBUG
+ void skip_orig_size_check(struct kmem_cache *s, const void *object);
+ #endif
+diff --git a/security/Kconfig b/security/Kconfig
+index 97abeb9b9a19..52c9af08ad35 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -127,16 +127,8 @@ config LSM_MMAP_MIN_ADDR
+ 	  this low address space will need the permission specific to the
+ 	  systems running LSM.
+ 
+-config HAVE_HARDENED_USERCOPY_ALLOCATOR
+-	bool
+-	help
+-	  The heap allocator implements __check_heap_object() for
+-	  validating memory ranges against heap object sizes in
+-	  support of CONFIG_HARDENED_USERCOPY.
+-
+ config HARDENED_USERCOPY
+ 	bool "Harden memory copies between kernel and userspace"
+-	depends on HAVE_HARDENED_USERCOPY_ALLOCATOR
+ 	imply STRICT_DEVMEM
+ 	help
+ 	  This option checks for obviously wrong memory regions when
+-- 
+2.40.1
 
-now or dropped entirely, as the extra only made sense when it always
-had that magic one.
-
-The actual code changes looks good to me:
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
