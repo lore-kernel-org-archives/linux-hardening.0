@@ -2,119 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 566ABC77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 17:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF8CC7EE23
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 17:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234547AbjEWRuA (ORCPT
+        id S236376AbjEWRxA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 13:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48144 "EHLO
+        Tue, 23 May 2023 13:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237830AbjEWRtq (ORCPT
+        with ESMTP id S229940AbjEWRw7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 13:49:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17DFE70;
-        Tue, 23 May 2023 10:49:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E998E61D51;
-        Tue, 23 May 2023 17:49:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF95C433EF;
-        Tue, 23 May 2023 17:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684864155;
-        bh=WulWyTLsl5PkcQrddm9jfceGIGntrpe2tN+xa+us7bo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cX2tItOE1A1Jntu+R2QwFXn1l2foJFtg3vTP5UqBKoyZAx1yIVSFWvsSppTEK/EOP
-         lN7uZmcVpfDnJLrPAK6p60xdJr60YQkvTKJ9egHit5rKTgaVtlfC5DrIIcVuVa1PFF
-         q1Rgb8mF6vjH0jYHR6CmpB5cz3pG5RY46o+x53evUnUB2rCdD4iCI7gCRQZHsgiqA2
-         KwyIutNcCQl9ndkkDPM89DD6D+5+/8NAiqoAUZuwyjrrjqs0bnFJc7HxI/H/oHPED7
-         K2Hu1Wx4MD5Ad4NUkal8QwWsuF0f1J8vGR9nTjgaKW8lAvglCsQTkZQ8a3n3daoFjQ
-         tIlPVx23OT0Gg==
-Date:   Tue, 23 May 2023 10:49:13 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Miguel Ojeda <ojeda@kernel.org>, Bill Wendling <morbo@google.com>,
-        Qing Zhao <qing.zhao@oracle.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] Compiler Attributes: Add __counted_by macro
-Message-ID: <20230523174913.GB1388474@dev-arch.thelio-3990X>
-References: <20230517190841.gonna.796-kees@kernel.org>
+        Tue, 23 May 2023 13:52:59 -0400
+X-Greylist: delayed 451 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 23 May 2023 10:52:58 PDT
+Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 93D0C97
+        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 10:52:58 -0700 (PDT)
+Received: from [192.168.1.18] ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id 1W4UqPsLO8SAU1W4UqtSil; Tue, 23 May 2023 19:45:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1684863919;
+        bh=6+vEzETCBUbqlh1LZrUq3iscDKbAGRNMMe5Z1TEFaUA=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=GMAwEpWkBjSvQeerMp4Irxwjp9ZtaXEwb196Z+fF3X/ErHcEzDX0EkZsPkf2/vxc6
+         KNAIrx+1kiuqC5dchulERoi3z98pTebsRrwp0U67RaOxsvmR10mjWq1A8bg3T5E9DK
+         +u18Swc6+IPUooc7vJqy8jxQmQQUOS4EBrxf2qNsTsSsNnBivgvXb6bJGzQrsKxB6z
+         +/O7zGLLEnZyWnbjBO/8nnG+a8lFgSQ1FkCQrs/51UJrHKZP9Q0Qv/To78heWX4y9U
+         O1q0u092cyEb7dB7nwhCEpctSrl11ORSvzN7MOLoh0+Swy75PZA8cFAm/Xlhtkx1ol
+         IX4lgafGL16Yg==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 23 May 2023 19:45:19 +0200
+X-ME-IP: 86.243.2.178
+Message-ID: <c3a473c2-1d4a-1b8a-648f-7f75b800ecd7@wanadoo.fr>
+Date:   Tue, 23 May 2023 19:45:18 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230517190841.gonna.796-kees@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 1/2][next] vfio/ccw: Replace one-element array with
+ flexible-array member
+Content-Language: fr, en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Eric Farman <farman@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <cover.1684805398.git.gustavoars@kernel.org>
+ <3c10549ebe1564eade68a2515bde233527376971.1684805398.git.gustavoars@kernel.org>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <3c10549ebe1564eade68a2515bde233527376971.1684805398.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 12:08:44PM -0700, Kees Cook wrote:
-> In an effort to annotate all flexible array members with their run-time
-> size information, the "element_count" attribute is being introduced by
-> Clang[1] and GCC[2] in future releases. This annotation will provide
-> the CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE features the ability
-> to perform run-time bounds checking on otherwise unknown-size flexible
-> arrays.
+Le 23/05/2023 à 03:35, Gustavo A. R. Silva a écrit :
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element array with flexible-array
+> member in struct vfio_ccw_parent and refactor the the rest of the code
+> accordingly.
 > 
-> Even though the attribute is under development, we can start the
-> annotation process in the kernel. This requires defining a macro for
-> it, even if we have to change the name of the actual attribute later.
-> Since it is likely that this attribute may change its name to "counted_by"
-> in the future (to better align with a future total bytes "sized_by"
-> attribute), name the wrapper macro "__counted_by", which also reads more
-> clearly (and concisely) in structure definitions.
-> 
-> [1] https://reviews.llvm.org/D148381
-> [2] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-> 
-> Cc: Miguel Ojeda <ojeda@kernel.org>
-> Cc: Bill Wendling <morbo@google.com>
-> Cc: Qing Zhao <qing.zhao@oracle.com>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/297
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> v2: - update "Optional" comments
-> v1: https://lore.kernel.org/all/20230504181636.never.222-kees@kernel.org/
-> ---
->  include/linux/compiler_attributes.h | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+>   drivers/s390/cio/vfio_ccw_drv.c     | 3 ++-
+>   drivers/s390/cio/vfio_ccw_private.h | 2 +-
+>   2 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-> index e659cb6fded3..a92d8887e8f0 100644
-> --- a/include/linux/compiler_attributes.h
-> +++ b/include/linux/compiler_attributes.h
-> @@ -123,6 +123,19 @@
->  # define __designated_init
->  #endif
->  
-> +/*
-> + * Optional: only supported since gcc >= 14
-> + * Optional: only supported since clang >= 17
-> + *
-> + *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-> + * clang: https://reviews.llvm.org/D148381
-> + */
-> +#if __has_attribute(__element_count__)
-> +# define __counted_by(member)		__attribute__((__element_count__(member)))
-> +#else
-> +# define __counted_by(member)
-> +#endif
-> +
->  /*
->   * Optional: only supported since clang >= 14.0
->   *
-> -- 
-> 2.34.1
-> 
+> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+> index ff538a086fc7..57906a9c6324 100644
+> --- a/drivers/s390/cio/vfio_ccw_drv.c
+> +++ b/drivers/s390/cio/vfio_ccw_drv.c
+> @@ -171,7 +171,8 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+>   		return -ENODEV;
+>   	}
+>   
+> -	parent = kzalloc(sizeof(*parent), GFP_KERNEL);
+> +	parent = kzalloc(sizeof(*parent) + sizeof(struct mdev_type *),
+
+Hi, wouldn't:
+
+    parent = kzalloc(struct_size(parent, mdev_types, 1)),
+
+be more informative and in the spirit of flexible array use?
+
+Just my 2c,
+
+CJ
+
+> +			 GFP_KERNEL);
+>   	if (!parent)
+>   		return -ENOMEM;
+>   
+> diff --git a/drivers/s390/cio/vfio_ccw_private.h b/drivers/s390/cio/vfio_ccw_private.h
+> index b441ae6700fd..b62bbc5c6376 100644
+> --- a/drivers/s390/cio/vfio_ccw_private.h
+> +++ b/drivers/s390/cio/vfio_ccw_private.h
+> @@ -79,7 +79,7 @@ struct vfio_ccw_parent {
+>   
+>   	struct mdev_parent	parent;
+>   	struct mdev_type	mdev_type;
+> -	struct mdev_type	*mdev_types[1];
+> +	struct mdev_type	*mdev_types[];
+>   };
+>   
+>   /**
+
