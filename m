@@ -2,90 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711CCC77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 17:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566ABC77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 17:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233260AbjEWRoO (ORCPT
+        id S234547AbjEWRuA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 13:44:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43194 "EHLO
+        Tue, 23 May 2023 13:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237501AbjEWRoM (ORCPT
+        with ESMTP id S237830AbjEWRtq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 13:44:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6988490;
-        Tue, 23 May 2023 10:44:07 -0700 (PDT)
+        Tue, 23 May 2023 13:49:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17DFE70;
+        Tue, 23 May 2023 10:49:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EE0756355A;
-        Tue, 23 May 2023 17:44:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C74C4339B;
-        Tue, 23 May 2023 17:44:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E998E61D51;
+        Tue, 23 May 2023 17:49:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF95C433EF;
+        Tue, 23 May 2023 17:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684863846;
-        bh=rFkmvkO0OpsALLfe8oNx4FG/ovMg2iAu1RwUUNxXPOk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=P1G5Bggfei3jyT4cBhkFKbGmpWhjxNa6mc9jYXeQzxNn8WmCrcdc+HCKddBnO8mUP
-         sShp2kKTJk6gWyhVLLCdl16VvhUUnhqim+omtCICUtyA+A+A7P12Cl/Tu3EKXHKmXU
-         RacbOqavhH0QMZYR5BiNbc7yWqtj1fJYD+RImi0DGtKlAqcuFyOa2tQdjlHKfpEDIl
-         i6DRD2DcNw18izG2+a1yMpBViqbBd7SQw0bdfGVP+vCXHaU2Bq6SA6vqe0o93GwoIN
-         NgHMlUDmjmuvr7x0VB2tF52q5uwaZXTR0zxOlo1npN42vPW06a7kfqBM3EJ0yM6Ot+
-         Ritn8eeVXa0dA==
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-4f3b39cea1eso163440e87.3;
-        Tue, 23 May 2023 10:44:06 -0700 (PDT)
-X-Gm-Message-State: AC+VfDxMVLAdYpYfsZSHmuI5gZOvVmhsYT6O1vQ0aiO/l+TRkmhM2jnP
-        d4EYVdpJEqL1+f1bRkO5LtTQEJmekMeAl0totVE=
-X-Google-Smtp-Source: ACHHUZ4DbuIfaUp1u6uliqoitws7+tPxKJaq+XmWOizvJLUvMg2ZyqPNF4XDkghkzwObqfKkvrOlK9KCdBIRIFnzJkg=
-X-Received: by 2002:a05:6512:922:b0:4eb:1361:895c with SMTP id
- f2-20020a056512092200b004eb1361895cmr5457525lft.55.1684863844325; Tue, 23 May
- 2023 10:44:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230522212114.gonna.589-kees@kernel.org>
-In-Reply-To: <20230522212114.gonna.589-kees@kernel.org>
-From:   Song Liu <song@kernel.org>
-Date:   Tue, 23 May 2023 10:43:52 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5ibONdyyJq0zVCEHuM38GUocn8A1abi4mTa9gUHH1hHQ@mail.gmail.com>
-Message-ID: <CAPhsuW5ibONdyyJq0zVCEHuM38GUocn8A1abi4mTa9gUHH1hHQ@mail.gmail.com>
-Subject: Re: [PATCH v2] md/raid5: Convert stripe_head's "dev" to flexible
- array member
+        s=k20201202; t=1684864155;
+        bh=WulWyTLsl5PkcQrddm9jfceGIGntrpe2tN+xa+us7bo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cX2tItOE1A1Jntu+R2QwFXn1l2foJFtg3vTP5UqBKoyZAx1yIVSFWvsSppTEK/EOP
+         lN7uZmcVpfDnJLrPAK6p60xdJr60YQkvTKJ9egHit5rKTgaVtlfC5DrIIcVuVa1PFF
+         q1Rgb8mF6vjH0jYHR6CmpB5cz3pG5RY46o+x53evUnUB2rCdD4iCI7gCRQZHsgiqA2
+         KwyIutNcCQl9ndkkDPM89DD6D+5+/8NAiqoAUZuwyjrrjqs0bnFJc7HxI/H/oHPED7
+         K2Hu1Wx4MD5Ad4NUkal8QwWsuF0f1J8vGR9nTjgaKW8lAvglCsQTkZQ8a3n3daoFjQ
+         tIlPVx23OT0Gg==
+Date:   Tue, 23 May 2023 10:49:13 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-raid@vger.kernel.org,
+Cc:     Miguel Ojeda <ojeda@kernel.org>, Bill Wendling <morbo@google.com>,
+        Qing Zhao <qing.zhao@oracle.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, llvm@lists.linux.dev,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] Compiler Attributes: Add __counted_by macro
+Message-ID: <20230523174913.GB1388474@dev-arch.thelio-3990X>
+References: <20230517190841.gonna.796-kees@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230517190841.gonna.796-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 22, 2023 at 2:21=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> Replace old-style 1-element array of "dev" in struct stripe_head with
-> modern C99 flexible array. In the future, we can additionally annotate
-> it with the run-time size, found in the "disks" member.
->
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: linux-raid@vger.kernel.org
+On Wed, May 17, 2023 at 12:08:44PM -0700, Kees Cook wrote:
+> In an effort to annotate all flexible array members with their run-time
+> size information, the "element_count" attribute is being introduced by
+> Clang[1] and GCC[2] in future releases. This annotation will provide
+> the CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE features the ability
+> to perform run-time bounds checking on otherwise unknown-size flexible
+> arrays.
+> 
+> Even though the attribute is under development, we can start the
+> annotation process in the kernel. This requires defining a macro for
+> it, even if we have to change the name of the actual attribute later.
+> Since it is likely that this attribute may change its name to "counted_by"
+> in the future (to better align with a future total bytes "sized_by"
+> attribute), name the wrapper macro "__counted_by", which also reads more
+> clearly (and concisely) in structure definitions.
+> 
+> [1] https://reviews.llvm.org/D148381
+> [2] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> 
+> Cc: Miguel Ojeda <ojeda@kernel.org>
+> Cc: Bill Wendling <morbo@google.com>
+> Cc: Qing Zhao <qing.zhao@oracle.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Tom Rix <trix@redhat.com>
+> Cc: llvm@lists.linux.dev
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+
 > ---
-> It looks like this memory calculation:
->
->         memory =3D conf->min_nr_stripes * (sizeof(struct stripe_head) +
->                  max_disks * ((sizeof(struct bio) + PAGE_SIZE))) / 1024;
->
-> ... was already buggy (i.e. it included the single "dev" bytes in the
-> result). However, I'm not entirely sure if that is the right analysis,
-> since "dev" is not related to struct bio nor PAGE_SIZE?
->
-> v1: https://lore.kernel.org/all/20230517233313.never.130-kees@kernel.org/
-> v2: use new struct_size_t() helper from
->     https://lore.kernel.org/lkml/20230522211810.never.421-kees@kernel.org=
-/
-
-LTGM. Thanks!
-
-I will hold this for a while until struct_size_t() merged.
-
-Song
+> v2: - update "Optional" comments
+> v1: https://lore.kernel.org/all/20230504181636.never.222-kees@kernel.org/
+> ---
+>  include/linux/compiler_attributes.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+> index e659cb6fded3..a92d8887e8f0 100644
+> --- a/include/linux/compiler_attributes.h
+> +++ b/include/linux/compiler_attributes.h
+> @@ -123,6 +123,19 @@
+>  # define __designated_init
+>  #endif
+>  
+> +/*
+> + * Optional: only supported since gcc >= 14
+> + * Optional: only supported since clang >= 17
+> + *
+> + *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> + * clang: https://reviews.llvm.org/D148381
+> + */
+> +#if __has_attribute(__element_count__)
+> +# define __counted_by(member)		__attribute__((__element_count__(member)))
+> +#else
+> +# define __counted_by(member)
+> +#endif
+> +
+>  /*
+>   * Optional: only supported since clang >= 14.0
+>   *
+> -- 
+> 2.34.1
+> 
