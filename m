@@ -2,93 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F5C7EE26
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 09:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23B3C7EE26
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 09:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235250AbjEWJGH (ORCPT
+        id S236337AbjEWJOQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 05:06:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
+        Tue, 23 May 2023 05:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236361AbjEWJGA (ORCPT
+        with ESMTP id S236340AbjEWJON (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 05:06:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DC4E52;
-        Tue, 23 May 2023 02:05:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 50290625DB;
-        Tue, 23 May 2023 09:05:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19CB5C433D2;
-        Tue, 23 May 2023 09:05:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684832745;
-        bh=Ktz8c9CHrsBCyq8EDDrmqMvG7rMPCaYUk0I1BJHxuRU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bBQwJUE045rFUQP9CaTfylO/L9qUNlhLCuacZzQ7g7NvBB7whRU3HywN4vIjcTQNw
-         G8e15bN/SttNz1xQ5JXEJfOBlob1rY+TU1VWrvgvMYXk9qFcw5bShck8PJukkTB/k4
-         6cO0EuE3NCKUtTquSoFblwoY50wyOPN1RqimPXJ6hgT7UxWa0I7nh7azSxsaJ4k+Ow
-         pgWLL0+CT5mLRprPhu9Ah2yCKdsUafPo/JvkWEt+2QnVCRMRRYUcl9jwZBj1Xuojca
-         DldQSCcSX5MQl8Bf+7JFlCWzkHpS/tlKfpTKpB4Czd/w65EUdg9UZQxMJZWiM2NGgQ
-         7sJ4Ai9VuNAYQ==
-Date:   Tue, 23 May 2023 10:05:40 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+        Tue, 23 May 2023 05:14:13 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1352D18C;
+        Tue, 23 May 2023 02:14:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684833241; x=1716369241;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=p11Fh3zV0aO7V1029S8TVD+DK0K/zYni8ofbYQ7Ur8U=;
+  b=dhjVFSoymcX7tLWEY1tE4i6E5V9Hi2pI2RP3t6LQzFhjY6nNfICgtWri
+   tgVhPUASZjT54s7XPSlhtjN4Vj1xayWdbV7k4zIKj/EfkBCvheO/1TjaD
+   rm0qGTIrBC1ftVZe/f+rPghk1C6l64thEWrReyT5fh26QuCAuWrw7Ck39
+   0MtZ2y36vFEci8VNzsKi/MlMw9kmkJS8hBZPjyQyVJWkBAkuIvHz9sHCj
+   MUz+8QXQgS69FvrIgfOZxKioDHD/xNKXjG9P4otYKBNxP54xHhLZHJGKk
+   IouYIpqm2YawlllW16qEMf/bMNvXskXjvEondvjOMx1YSpQfjEnjdJ6rM
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="439538453"
+X-IronPort-AV: E=Sophos;i="6.00,185,1681196400"; 
+   d="scan'208";a="439538453"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 02:13:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10718"; a="697986976"
+X-IronPort-AV: E=Sophos;i="6.00,185,1681196400"; 
+   d="scan'208";a="697986976"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 02:13:46 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+        by kekkonen.fi.intel.com (Postfix) with SMTP id E8B301202A8;
+        Tue, 23 May 2023 12:13:43 +0300 (EEST)
+Date:   Tue, 23 May 2023 09:13:43 +0000
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Lee Jones <lee@kernel.org>, Azeem Shaikh <azeemshaikh38@gmail.com>
 Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
         linux-hardening@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Pavel Machek <pavel@ucw.cz>
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
 Subject: Re: [PATCH] i2c: Replace all non-returning strlcpy with strscpy
-Message-ID: <20230523090540.GC2174496@google.com>
+Message-ID: <ZGyDx4Jg9j2zmjD6@kekkonen.localdomain>
 References: <20230523021150.2406032-1-azeemshaikh38@gmail.com>
+ <20230523090540.GC2174496@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230523021150.2406032-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230523090540.GC2174496@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 23 May 2023, Azeem Shaikh wrote:
+Hi Lee, Azeem,
 
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
+On Tue, May 23, 2023 at 10:05:40AM +0100, Lee Jones wrote:
+> On Tue, 23 May 2023, Azeem Shaikh wrote:
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
+> > strlcpy() reads the entire source buffer first.
+> > This read may exceed the destination size limit.
+> > This is both inefficient and can lead to linear read
+> > overflows if a source string is not NUL-terminated [1].
+> > In an effort to remove strlcpy() completely [2], replace
+> > strlcpy() here with strscpy().
+> > No return values were used, so direct replacement is safe.
+> > 
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> > [2] https://github.com/KSPP/linux/issues/89
+> > 
+> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > ---
+> >  drivers/leds/flash/leds-as3645a.c |    4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> ---
->  drivers/leds/flash/leds-as3645a.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Please resubmit, taking the time to check the subject line please.
 
-Please resubmit, taking the time to check the subject line please.
+I'd say also shorter description will suffice. Nowadays people understand
+the motivation replacing strlcpy() by strscpy() without too much
+elaboration. Lines may be up to 74 characters long, too, and period isn't
+automatically followed by a newline.
 
-> diff --git a/drivers/leds/flash/leds-as3645a.c b/drivers/leds/flash/leds-as3645a.c
-> index bb2249771acb..7dc574b18f5f 100644
-> --- a/drivers/leds/flash/leds-as3645a.c
-> +++ b/drivers/leds/flash/leds-as3645a.c
-> @@ -651,8 +651,8 @@ static int as3645a_v4l2_setup(struct as3645a *flash)
->  		},
->  	};
->  
-> -	strlcpy(cfg.dev_name, led->dev->kobj.name, sizeof(cfg.dev_name));
-> -	strlcpy(cfgind.dev_name, flash->iled_cdev.dev->kobj.name,
-> +	strscpy(cfg.dev_name, led->dev->kobj.name, sizeof(cfg.dev_name));
-> +	strscpy(cfgind.dev_name, flash->iled_cdev.dev->kobj.name,
->  		sizeof(cfgind.dev_name));
->  
->  	flash->vf = v4l2_flash_init(
-> 
+The patch itself seems fine.
+
+I also prefer my @linux.intel.com address, as in MAINTAINERS for this
+driver.
 
 -- 
-Lee Jones [李琼斯]
+Kind regards,
+
+Sakari Ailus
