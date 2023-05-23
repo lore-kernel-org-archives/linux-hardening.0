@@ -2,63 +2,66 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AE1C77B73
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B332C7EE26
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232576AbjEWCRK (ORCPT
+        id S234515AbjEWCUA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 22:17:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37582 "EHLO
+        Mon, 22 May 2023 22:20:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbjEWCRI (ORCPT
+        with ESMTP id S234533AbjEWCTs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 22:17:08 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2628E49;
-        Mon, 22 May 2023 19:16:44 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-3318bd82810so755925ab.1;
-        Mon, 22 May 2023 19:16:44 -0700 (PDT)
+        Mon, 22 May 2023 22:19:48 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B029CA;
+        Mon, 22 May 2023 19:19:47 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-332cc0efe88so2498565ab.0;
+        Mon, 22 May 2023 19:19:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684808203; x=1687400203;
+        d=gmail.com; s=20221208; t=1684808387; x=1687400387;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0NB99lYKRnx+FQmUmcJ1k5C7PBLcbIKJhm9jHT8RwDc=;
-        b=hwCrUSAAEVJ9qhd82IuiYCJHoSMMMhsJkiPHoe6M/a6asG7Ygr7txfBNgY7OoSF9ZK
-         sgKGL+R+S4gIFGm9tN8igYrhcFvJgxKZXfjixMJaOEjFDNkN+nOiY0TaRsy6Lq1ZlDw0
-         irfNqeY/EWrRGUUzdyskNK62WwfWKtidFoqvmtgSVROsAsFftKNv9Dt8eWISYJf8bIiM
-         4olnjezwemse5QXT1lLejTEJbVli4gSwV1fGlD7SrOK81LaLWhWIGUL9uQ8DkAjGIVYA
-         6QyGQ1OKEM8sTpOvVtH5PHcapU6ukipoq+t83/+dNqGA1r+AEqZPRKLCCjldF1Cgvj0+
-         FWRQ==
+        bh=kzTqOaIPWfW9eLUYmANhI0oqNLmXhJYkC7KiwdLC9Pk=;
+        b=HSD7l7aKqkH7bpomTMkzPvcKzQpp2eYwyn0IteDdsQLQjpEWrRaSrLc67veKl7F0/T
+         cn2iJlW2p3p+ttdzw9ZAV7HQ8xxxsTjGKeDqk9ze5VrKHVaDEi+t3OW7XqBuV/glXXnC
+         D2eds/9o/cQ3eOaOppD0DjNpMbm7bViiVNn4xVcB+ZMtP9Pzx2mqEv3rSuUKAgMxU6nL
+         gqqvNmyRkrNekvbh16k/UGWh5sknRUXgxI9DzPtYOgcYIE58tIKFTJbuDRwL5PBaJyQ5
+         8aQnfvzVb1Tev33snfKB5whGHevkySQHAoZR2clKZs9dZU5d0XWHlZc0r5BlpjMUYgkj
+         FfsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684808203; x=1687400203;
+        d=1e100.net; s=20221208; t=1684808387; x=1687400387;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0NB99lYKRnx+FQmUmcJ1k5C7PBLcbIKJhm9jHT8RwDc=;
-        b=BVCQTEsNEKWgU6pYq+1QLelf4zzNwzfQ71A0G2lEVAIUjN8+CtKL0x8uteww3YQPLQ
-         btHAk/dGvaFmTxU3gnwopNxrFvbFF70GLl7i25bDvWrL4UuKSScI63oQwGcmLQ1v6pQh
-         4HHmWxtnY9ET6Vj2Je8r2Zx+4A935FBy8wKJIl8zcNVAn1XzrWZVLZusawVTVG5rxWxF
-         LUprman5f7bkECOI32b1pyc1otFSsFijfkA5aDssqCVFj4L28oqj3jgLh0/kNde2tlfs
-         BsnenoxZk6D5a+fBM2zRorNTe804CmbOD7kSVJMomdl+J14ajmgM75qaCLQs12eSh3Zs
-         uRng==
-X-Gm-Message-State: AC+VfDzlrmlhwZK8NjPIIqR39MV9ThHr+R0PFRVAyR02ReTponfJJCTP
-        gXPpfkcUebJKPgPbFOufoceZ6SCJrUXC/w==
-X-Google-Smtp-Source: ACHHUZ6sehwshPL/GGR7VhnPWgP9QpjoGtYJvvM1p/nUUdwEr4yIvJzHsqFxLOY2ah38LSVi9qJajw==
-X-Received: by 2002:a92:da8d:0:b0:335:9220:2ec2 with SMTP id u13-20020a92da8d000000b0033592202ec2mr7895806iln.26.1684808203113;
-        Mon, 22 May 2023 19:16:43 -0700 (PDT)
+        bh=kzTqOaIPWfW9eLUYmANhI0oqNLmXhJYkC7KiwdLC9Pk=;
+        b=kq6wzNSJQ6z1OQfkS0x2XG8r8EX+Ae/nb8H3mpLXXCiLzp5L+5vviNji+Nuchj2y5T
+         QuBaoyx2TLmb/i5ZXhqo7q924X45bkZ0zks2Ht/SMkdC2xZ2sQaQYw+bISNZbY6544L0
+         zsuzhsZ7vZNvp1H+jFiWLcQ+/uKapEUN8utTIDz3YRgicHVFIu49EQwUTmb00j7rmguW
+         wy1Fb8fwHsfuWMkaFYt9sv23mjlT8Q0/2QLWYXaPyiDcCZa1/BAsf/Sc3yjBH6WKX5V/
+         yJzOl6YLNmwsncFlunT5opE01F2uUTkNLsP4lMtz/4tDQxf1tozWX8ODKIX1hbNopbyJ
+         imGw==
+X-Gm-Message-State: AC+VfDwXM8ZBZRtmokc2y6CygvOXZZA4nsDJ/9OMI9dT8c6YLw+9IpHQ
+        WPJtiCiB1qLzT4A2pidif0Q=
+X-Google-Smtp-Source: ACHHUZ4+DJLABRuPBSRDE1JxdVeIA6RNnSI8JrvW9bu3YuMmFMvYwh3HXeHrlA5FYY/ygXGrB/itLA==
+X-Received: by 2002:a92:d8cf:0:b0:338:1a22:bf47 with SMTP id l15-20020a92d8cf000000b003381a22bf47mr7507410ilo.21.1684808386720;
+        Mon, 22 May 2023 19:19:46 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id s5-20020a92cc05000000b00326bd11f5d1sm2110237ilp.11.2023.05.22.19.16.42
+        by smtp.gmail.com with ESMTPSA id x1-20020a920601000000b0033549a5fb36sm2131699ilg.27.2023.05.22.19.19.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 19:16:42 -0700 (PDT)
+        Mon, 22 May 2023 19:19:46 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
-        Christian Gromm <christian.gromm@microchip.com>
+To:     Sumit Semwal <sumit.semwal@linaro.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: most: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 23 May 2023 02:16:40 +0000
-Message-ID: <20230523021640.2406585-1-azeemshaikh38@gmail.com>
+        Gustavo Padovan <gustavo@padovan.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        linaro-mm-sig@lists.linaro.org
+Subject: [PATCH] dma-buf/sw_sync: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 23 May 2023 02:19:43 +0000
+Message-ID: <20230523021943.2406847-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,47 +82,20 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- drivers/most/configfs.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/dma-buf/sw_sync.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/most/configfs.c b/drivers/most/configfs.c
-index 27b0c923597f..36d8c917f65f 100644
---- a/drivers/most/configfs.c
-+++ b/drivers/most/configfs.c
-@@ -204,7 +204,7 @@ static ssize_t mdev_link_device_store(struct config_item *item,
- {
- 	struct mdev_link *mdev_link = to_mdev_link(item);
+diff --git a/drivers/dma-buf/sw_sync.c b/drivers/dma-buf/sw_sync.c
+index 348b3a9170fa..63f0aeb66db6 100644
+--- a/drivers/dma-buf/sw_sync.c
++++ b/drivers/dma-buf/sw_sync.c
+@@ -85,7 +85,7 @@ static struct sync_timeline *sync_timeline_create(const char *name)
  
--	strlcpy(mdev_link->device, page, sizeof(mdev_link->device));
-+	strscpy(mdev_link->device, page, sizeof(mdev_link->device));
- 	strim(mdev_link->device);
- 	return count;
- }
-@@ -219,7 +219,7 @@ static ssize_t mdev_link_channel_store(struct config_item *item,
- {
- 	struct mdev_link *mdev_link = to_mdev_link(item);
+ 	kref_init(&obj->kref);
+ 	obj->context = dma_fence_context_alloc(1);
+-	strlcpy(obj->name, name, sizeof(obj->name));
++	strscpy(obj->name, name, sizeof(obj->name));
  
--	strlcpy(mdev_link->channel, page, sizeof(mdev_link->channel));
-+	strscpy(mdev_link->channel, page, sizeof(mdev_link->channel));
- 	strim(mdev_link->channel);
- 	return count;
- }
-@@ -234,7 +234,7 @@ static ssize_t mdev_link_comp_store(struct config_item *item,
- {
- 	struct mdev_link *mdev_link = to_mdev_link(item);
- 
--	strlcpy(mdev_link->comp, page, sizeof(mdev_link->comp));
-+	strscpy(mdev_link->comp, page, sizeof(mdev_link->comp));
- 	strim(mdev_link->comp);
- 	return count;
- }
-@@ -250,7 +250,7 @@ static ssize_t mdev_link_comp_params_store(struct config_item *item,
- {
- 	struct mdev_link *mdev_link = to_mdev_link(item);
- 
--	strlcpy(mdev_link->comp_params, page, sizeof(mdev_link->comp_params));
-+	strscpy(mdev_link->comp_params, page, sizeof(mdev_link->comp_params));
- 	strim(mdev_link->comp_params);
- 	return count;
- }
+ 	obj->pt_tree = RB_ROOT;
+ 	INIT_LIST_HEAD(&obj->pt_list);
 
