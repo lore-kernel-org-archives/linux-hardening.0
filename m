@@ -2,150 +2,166 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E4EC7EE2D
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 16:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A60C77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 17:02:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237847AbjEWQzK (ORCPT
+        id S237912AbjEWRC2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 12:55:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33254 "EHLO
+        Tue, 23 May 2023 13:02:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236598AbjEWQzH (ORCPT
+        with ESMTP id S237920AbjEWRCX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 12:55:07 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B6EE6
-        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 09:55:04 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-64d3491609fso3461687b3a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 09:55:04 -0700 (PDT)
+        Tue, 23 May 2023 13:02:23 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25A7DA
+        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 10:02:19 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1a516fb6523so69321735ad.3
+        for <linux-hardening@vger.kernel.org>; Tue, 23 May 2023 10:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684860904; x=1687452904;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mZtmkk+jONnQa4W4uK+zgLIk9BnAdsu1LRB9JUp0pRA=;
-        b=YcXM7AizsHZKC+nEe8qqkjpFx8oVQxBrbpi8ehC37rTsPI6zK/kZYcQNxFv4kz6ci1
-         KIL2mpcoSJ+P5BKhnK+0xAapwCG6ywioPURxl56ZN9ov/DMRJY1jidUZaTuIL65LQ6OQ
-         2PdkMIrENbpeyLhUlp0+fLJUcbrnWlh0QqVAM=
+        d=chromium.org; s=google; t=1684861339; x=1687453339;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LD/AHmnjp0NpxhS4p9Yvs385A6w+BDeBdMrso5+Dd0Q=;
+        b=lzYLf2QhhI3UYhDz/x7zeHwaOXZjxjX8RJUlSR/iSQkPre1BbQqZhNaRDgEu4WxPpP
+         WNcoECD735LmNk3jkktPP1QBpuInwgX0QeDE+Je8kuS96RaNEoN22PMzB0jQKtPJ45VK
+         TC6KZnWUWzT8p80Ad1hgSWEZcepO1zypQ1sME=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684860904; x=1687452904;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mZtmkk+jONnQa4W4uK+zgLIk9BnAdsu1LRB9JUp0pRA=;
-        b=E3phNkKshYqWSIAqAFaTk0S42+UBDuM73KWmfMgaOPRw8wigzPmwGry2lwkXIRwjHk
-         r8FELZaJnpSaxbvzr0RKimC/r41vPq/0RRhBa50/+WNMga9rd9QBFJEyLgkodRAy/kJh
-         Ygq6gYCBiPyh7osZd62JsEzOtJG39n2U8pfaoRjU7+CWGkJRpW462uYdRoXGs6bqsMBh
-         LO6x+VLRvZyHu/LyVE8ufkmTvnCG3pIs+hPFzbMJZ4uIMijY24hICtrZxVkfcdnn11uh
-         +34oorDEiLC0KhcuGWlp1NU9jlm5PohTMrV8t7ydRq55JXm7KH/qn4s459QvV06Jjx6E
-         mJPg==
-X-Gm-Message-State: AC+VfDwXFL8sDaXbgIRafxWr7zpL2Mqaplb5ayuF5FX57mzy9/zXPY37
-        hh/PZuKZtGfDP6J09jfHGSrJGFDMVjuZ5l29SnA=
-X-Google-Smtp-Source: ACHHUZ4QKSw+1ing3KbGt7B+kOHy7kMOgtRyZ0ZvULR23hds7Q2OC0kA2NWfDALZ3ne9/6QoPXVZpA==
-X-Received: by 2002:a05:6a00:2310:b0:63b:859f:f094 with SMTP id h16-20020a056a00231000b0063b859ff094mr21374070pfh.20.1684860904384;
-        Tue, 23 May 2023 09:55:04 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684861339; x=1687453339;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LD/AHmnjp0NpxhS4p9Yvs385A6w+BDeBdMrso5+Dd0Q=;
+        b=lv8NvUGO1xnQGBIArMYnoXfsFK82zKnzLSMEFgFqKTycI+9oxjbs/KRZx2qQY1YvHk
+         prntaj8p41CLIFRmerhWTIsCVD+Rd/dUOAluw8uBmkHkTRhlBPx/TGl88Eq2r2eRTphk
+         Gq6xzFOMO9sX8bAgDLMTIBQR6N5Ud0LJ6jZs2Fdv30dMUOOEqWJ4+FRDwueG/yyio0Ig
+         gjQN5nPC/ADEwk42Zfn3kWK8yzS3zpQgZPLYhBImNG+af6kfjztqYcPTmON+uX+i5XQm
+         qIwbMamvVEsZAkNx6Cvj8TdzkNOwVDe/lUmwqB35HhDxZA3BE8si9Aoe3ttVlZ8CA4q+
+         kvyA==
+X-Gm-Message-State: AC+VfDyotjwY7fT6+BCMYT7wAi8y9LrD/W4/S9MXDlRiDEz8fXuxhkv4
+        pUZ9djNiLiwM/196xAeHcQghSA==
+X-Google-Smtp-Source: ACHHUZ6rSNlwleoHAlvIMBQhyIFB+/d1nvXlfbHZz0sPioooGAVPueHOXiNnTfSN1iiCo/VNjK8bMQ==
+X-Received: by 2002:a17:902:f815:b0:1ac:aaf6:ee3a with SMTP id ix21-20020a170902f81500b001acaaf6ee3amr13420526plb.32.1684861339266;
+        Tue, 23 May 2023 10:02:19 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d2-20020aa78e42000000b0062dcf5c01f9sm6069865pfr.36.2023.05.23.09.55.03
+        by smtp.gmail.com with ESMTPSA id r6-20020a170902be0600b001aafde15ff3sm6960489pls.293.2023.05.23.10.02.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 09:55:03 -0700 (PDT)
+        Tue, 23 May 2023 10:02:18 -0700 (PDT)
+Date:   Tue, 23 May 2023 10:02:17 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] fscrypt: Replace 1-element array with flexible array
-Date:   Tue, 23 May 2023 09:55:02 -0700
-Message-Id: <20230523165458.gonna.580-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Lorenzo Stoakes <lstoakes@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, patches@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slab: remove HAVE_HARDENED_USERCOPY_ALLOCATOR
+Message-ID: <202305231001.08BC6058@keescook>
+References: <20230523073136.4900-1-vbabka@suse.cz>
+ <310077ed-6f3f-41fe-afcf-36500a9408ec@lucifer.local>
+ <623a87c6-c0d2-799a-c39e-0d14dcdfa6df@suse.cz>
+ <ae3ff438-5e5a-4a75-b4e9-575324a584f7@lucifer.local>
+ <ca7860db-220f-ae77-93e6-2a38f6c1130a@redhat.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2915; h=from:subject:message-id; bh=5hU5H6VcCCVzxQwneKvoaEslQuGBTUVxQyklCojjRSc=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkbO/lCibWPVGnc+0KmunFnL6sqLePTIZbyoJB7dT3 hI0SbWOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZGzv5QAKCRCJcvTf3G3AJpvoEA CGQToI49kw84yifCeLDVhY5whkYA1MGP3c9qNIE5XRpaGAJiu9RTjCSfWp0vd3FhpOYk0qWytWdgA4 j46fK3lknxxumy9HSym1ampOtAhs4gvJbdeZhZxACZ8KXS6+WWRANB8rKhyjvN5SZGELGIQg4KfdWR xUoNyV/2E5vI5hwGtpKrW3hj7vXEFmc7FXzQPtkQ+fxHAwDHnTr7es+duoYenQ/DAQhaP5zXNJT/FU UUvpWSOeAaLVEHrq/Qob31nw/FYX5/B9a42R+0Hg75Ig6Z8u/bdJcOCAoIUNjK8oN2TdSK+3KpQq9d A4/61yxkuaEW2QgfT2FfZd5oHJcQcd9ywaeFRi2YLHFWUqwuGuzUeSIJZeGzgLQGZ4Wyoq8NCFG22Y PhGMOuN16eh0VPPdKcsgY/Z8aH8YDVmQfS+oSle0nmpo+CJKNhSZefziEXDYXPlzZQXxJb/QvjHRSS U6hzjaS+fAK7gQ1iRQWf5fAs7V5lPy/xhWQdUU8utvKDkaQMZ9JlFfJjP5L5pmig4bbvwGoZeiA4if 3qtLmPxig81K6YLJbMb+eNPa2n5cX5ZhxW7YM33U584KllbWHdCUQ9vZc0ffzaYujWTW72JFaBI+ab DMGwTR2/wsfXY7u43BWMyR6Abtq5Ihw2KhrjlnxLIdRKR0hGOm+HzJgp+OtQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca7860db-220f-ae77-93e6-2a38f6c1130a@redhat.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-1-element arrays are deprecated and are being replaced with C99
-flexible arrays[1].
+On Tue, May 23, 2023 at 10:14:24AM +0200, David Hildenbrand wrote:
+> On 23.05.23 09:56, Lorenzo Stoakes wrote:
+> > On Tue, May 23, 2023 at 09:46:46AM +0200, Vlastimil Babka wrote:
+> > > On 5/23/23 09:42, Lorenzo Stoakes wrote:
+> > > > On Tue, May 23, 2023 at 09:31:36AM +0200, Vlastimil Babka wrote:
+> > > > > With SLOB removed, both remaining allocators support hardened usercopy,
+> > > > > so remove the config and associated #ifdef.
+> > > > > 
+> > > > > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> > > > > ---
+> > > > >   mm/Kconfig       | 2 --
+> > > > >   mm/slab.h        | 9 ---------
+> > > > >   security/Kconfig | 8 --------
+> > > > >   3 files changed, 19 deletions(-)
+> > > > > 
+> > > > > diff --git a/mm/Kconfig b/mm/Kconfig
+> > > > > index 7672a22647b4..041f0da42f2b 100644
+> > > > > --- a/mm/Kconfig
+> > > > > +++ b/mm/Kconfig
+> > > > > @@ -221,7 +221,6 @@ choice
+> > > > >   config SLAB
+> > > > >   	bool "SLAB"
+> > > > >   	depends on !PREEMPT_RT
+> > > > > -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > >   	help
+> > > > >   	  The regular slab allocator that is established and known to work
+> > > > >   	  well in all environments. It organizes cache hot objects in
+> > > > > @@ -229,7 +228,6 @@ config SLAB
+> > > > > 
+> > > > >   config SLUB
+> > > > >   	bool "SLUB (Unqueued Allocator)"
+> > > > > -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > >   	help
+> > > > >   	   SLUB is a slab allocator that minimizes cache line usage
+> > > > >   	   instead of managing queues of cached objects (SLAB approach).
+> > > > > diff --git a/mm/slab.h b/mm/slab.h
+> > > > > index f01ac256a8f5..695ef96b4b5b 100644
+> > > > > --- a/mm/slab.h
+> > > > > +++ b/mm/slab.h
+> > > > > @@ -832,17 +832,8 @@ struct kmem_obj_info {
+> > > > >   void __kmem_obj_info(struct kmem_obj_info *kpp, void *object, struct slab *slab);
+> > > > >   #endif
+> > > > > 
+> > > > > -#ifdef CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > >   void __check_heap_object(const void *ptr, unsigned long n,
+> > > > >   			 const struct slab *slab, bool to_user);
+> > > > > -#else
+> > > > > -static inline
+> > > > > -void __check_heap_object(const void *ptr, unsigned long n,
+> > > > > -			 const struct slab *slab, bool to_user)
+> > > > > -{
+> > > > > -}
+> > > > > -#endif
+> > > > 
+> > > > Hm, this is still defined in slab.c/slub.c and invoked in usercopy.c, do we
+> > > > not want the prototype?
+> > > 
+> > > Well I didn't delete the prototype, just the ifdef/else around, so now it's
+> > > there unconditionally.
+> > > 
+> > > > Perhaps replacing with #ifdef
+> > > > CONFIG_HARDENED_USERCOPY instead? I may be missing something here :)
+> > > 
+> > > Putting it under that #ifdef would work and match that the implementations
+> > > of that function are under that same ifdef, but maybe it's unnecessary noise
+> > > in the header?
+> > > 
+> > 
+> > Yeah my brain inserted extra '-'s there, sorry!
+> > 
+> > Given we only define __check_heap_object() in sl[au]b.c if
+> > CONFIG_HARDENED_USERCOPY wouldn't we need to keep the empty version around
+> > if !CONFIG_HARDENED_USERCOPY since check_heap_object() appears to be called
+> > unconditionally?
+> > 
+> 
+> The file is only compiled with CONFIG_HARDENED_USERCOPY:
+> 
+> mm/Makefile:obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
 
-As sizes were being calculated with the extra byte intentionally,
-propagate the difference so there is no change in binary output.
+Right.
 
-[1] https://github.com/KSPP/linux/issues/79
+> Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-Cc: linux-fscrypt@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v2: update commit log to avoid mentioning "len" member.
-v1: https://lore.kernel.org/lkml/20230522213924.never.119-kees@kernel.org/
----
- fs/crypto/fscrypt_private.h |  2 +-
- fs/crypto/hooks.c           | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Thanks!
 
-diff --git a/fs/crypto/fscrypt_private.h b/fs/crypto/fscrypt_private.h
-index 7ab5a7b7eef8..2d63da48635a 100644
---- a/fs/crypto/fscrypt_private.h
-+++ b/fs/crypto/fscrypt_private.h
-@@ -171,7 +171,7 @@ fscrypt_policy_flags(const union fscrypt_policy *policy)
-  */
- struct fscrypt_symlink_data {
- 	__le16 len;
--	char encrypted_path[1];
-+	char encrypted_path[];
- } __packed;
- 
- /**
-diff --git a/fs/crypto/hooks.c b/fs/crypto/hooks.c
-index 9e786ae66a13..6238dbcadcad 100644
---- a/fs/crypto/hooks.c
-+++ b/fs/crypto/hooks.c
-@@ -255,10 +255,10 @@ int fscrypt_prepare_symlink(struct inode *dir, const char *target,
- 	 * for now since filesystems will assume it is there and subtract it.
- 	 */
- 	if (!__fscrypt_fname_encrypted_size(policy, len,
--					    max_len - sizeof(struct fscrypt_symlink_data),
-+					    max_len - sizeof(struct fscrypt_symlink_data) - 1,
- 					    &disk_link->len))
- 		return -ENAMETOOLONG;
--	disk_link->len += sizeof(struct fscrypt_symlink_data);
-+	disk_link->len += sizeof(struct fscrypt_symlink_data) + 1;
- 
- 	disk_link->name = NULL;
- 	return 0;
-@@ -289,7 +289,7 @@ int __fscrypt_encrypt_symlink(struct inode *inode, const char *target,
- 		if (!sd)
- 			return -ENOMEM;
- 	}
--	ciphertext_len = disk_link->len - sizeof(*sd);
-+	ciphertext_len = disk_link->len - sizeof(*sd) - 1;
- 	sd->len = cpu_to_le16(ciphertext_len);
- 
- 	err = fscrypt_fname_encrypt(inode, &iname, sd->encrypted_path,
-@@ -367,7 +367,7 @@ const char *fscrypt_get_symlink(struct inode *inode, const void *caddr,
- 	 * the ciphertext length, even though this is redundant with i_size.
- 	 */
- 
--	if (max_size < sizeof(*sd))
-+	if (max_size < sizeof(*sd) + 1)
- 		return ERR_PTR(-EUCLEAN);
- 	sd = caddr;
- 	cstr.name = (unsigned char *)sd->encrypted_path;
-@@ -376,7 +376,7 @@ const char *fscrypt_get_symlink(struct inode *inode, const void *caddr,
- 	if (cstr.len == 0)
- 		return ERR_PTR(-EUCLEAN);
- 
--	if (cstr.len + sizeof(*sd) - 1 > max_size)
-+	if (cstr.len + sizeof(*sd) > max_size)
- 		return ERR_PTR(-EUCLEAN);
- 
- 	err = fscrypt_fname_alloc_buffer(cstr.len, &pstr);
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 -- 
-2.34.1
-
+Kees Cook
