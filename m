@@ -2,50 +2,51 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDE9C77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 01:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36322C7EE29
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 01:23:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbjEWBVI (ORCPT
+        id S234169AbjEWBXR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 21:21:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44628 "EHLO
+        Mon, 22 May 2023 21:23:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjEWBVH (ORCPT
+        with ESMTP id S234264AbjEWBXQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 21:21:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA2693;
-        Mon, 22 May 2023 18:21:06 -0700 (PDT)
+        Mon, 22 May 2023 21:23:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8817B7;
+        Mon, 22 May 2023 18:23:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 435DA61990;
-        Tue, 23 May 2023 01:21:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FA92C433EF;
-        Tue, 23 May 2023 01:21:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D872C61990;
+        Tue, 23 May 2023 01:23:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C954C433D2;
+        Tue, 23 May 2023 01:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684804865;
-        bh=yFQuG1ghxykUNbtOvy6MwI9xsYMH1cMEJOySRSZyp10=;
+        s=k20201202; t=1684804989;
+        bh=vjk5rZMZaeZfGz8DvSil6k+A6PfapIMUVus7AmNsfMU=;
         h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=TVr/EPGOzgmSjA8a8vnrObQ2AQ5HFImBw3O1HSLT9mRjqlpHf7NvT6AExfWi+PRga
-         a+ZGU8do5SIBoxBQ5bCxmhsVlZiJ4tuwCke9A37Zawq/qf+GMHcqB+snt/7MISCf6+
-         haDcLPqGtyo30V4Qte9lqm9wmbZzEimLXnzw8NmNgzLyDO2mEcPcyEOHrwyowYgwes
-         4RBHhl1MXE3i8FKfOb4lVSatp187gEEwLqSyYDSl0tP05ecl/B0pkOHN7Go9H74VXM
-         UdBFwl9XAT9qS+TCmpxpE87RsTHbmTzgT5YSeYTDYOxQgprvD0ntyxomOtn1wfeBqC
-         LFpjkZUPvwspQ==
-Date:   Mon, 22 May 2023 18:21:02 -0700
+        b=FSvm9ect3zqer7zjI3xf1P8L/M6O4vv49bjcpdYLXBJ46m6SmJeLkujNgmgla6Gmr
+         36iyyOEYcsoeeKOZIts+NiGmPIg4VGcZYt/URe2+cIyJuzgq50iaKrFk5hbrcFyuzj
+         DFwO6buNlp3cYxGr1L3GjPFJuT+uBnauX/X++RHH1rixz1z+PGQN1sXM4bI15ANPT3
+         rsOBLWQOOcz0OfxHENqLtAu/FzuPyYaWO7ON6uZB8aEIZq9bz//xmjBFn9+YK4zIjI
+         A3gorKcrIttkE5d9r1M5Pv+jx1Sp/auQ2wXCHlE5cj/T9RV2DUfkyzvDwNzjfCXWvq
+         Crdt6aOYxm7aQ==
+Date:   Mon, 22 May 2023 18:23:06 -0700
 From:   Kees Cook <kees@kernel.org>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+To:     Eric Biggers <ebiggers@kernel.org>,
         Kees Cook <keescook@chromium.org>
-CC:     azeemshaikh38@gmail.com, Adam Radford <aradford@gmail.com>,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jejb@linux.ibm.com,
+CC:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_scsi=3A_3w-9xxx=3A_Replace_a?= =?US-ASCII?Q?ll_non-returning_strlcpy_with_strscpy?=
+Subject: Re: [PATCH] fscrypt: Replace 1-element array with flexible array
 User-Agent: K-9 Mail for Android
-In-Reply-To: <yq18rdgm1mo.fsf@ca-mkp.ca.oracle.com>
-References: <20230517142955.1519572-1-azeemshaikh38@gmail.com> <168478437626.244538.8257051598276343700.b4-ty@chromium.org> <yq18rdgm1mo.fsf@ca-mkp.ca.oracle.com>
-Message-ID: <A8157E92-E340-4031-8054-378728CC5BD4@kernel.org>
+In-Reply-To: <20230522230206.GA3187780@google.com>
+References: <20230522213924.never.119-kees@kernel.org> <20230522230206.GA3187780@google.com>
+Message-ID: <F340AF2B-C611-48FE-BCB6-C4FF45005409@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
@@ -54,35 +55,24 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On May 22, 2023 3:41:58 PM PDT, "Martin K=2E Petersen" <martin=2Epetersen@o=
-racle=2Ecom> wrote:
+On May 22, 2023 4:02:06 PM PDT, Eric Biggers <ebiggers@kernel=2Eorg> wrote:
+>On Mon, May 22, 2023 at 02:39:28PM -0700, Kees Cook wrote:
+>> In the future, we can add annotations for the flexible array member
+>> "encrypted_path" to have a size determined by the "len" member=2E
 >
->Kees,
->
->> On Wed, 17 May 2023 14:29:55 +0000, Azeem Shaikh wrote:
->>> strlcpy() reads the entire source buffer first=2E
->>> This read may exceed the destination size limit=2E
->>> This is both inefficient and can lead to linear read
->>> overflows if a source string is not NUL-terminated [1]=2E
->>> In an effort to remove strlcpy() completely [2], replace
->>> strlcpy() here with strscpy()=2E
->>> No return values were used, so direct replacement is safe=2E
->>>=20
->>> [=2E=2E=2E]
->>
->> Applied to for-next/hardening, thanks!
->>
->> [1/1] scsi: 3w-9xxx: Replace all non-returning strlcpy with strscpy
->>       https://git=2Ekernel=2Eorg/kees/c/fa36c95739ab
->
->Are you planning on sending these? That's fine with me, just need to
->know if I should close them in patchwork=2E=2E=2E
+>That seems unlikely, as 'struct fscrypt_symlink_data' is an on-disk data
+>structure=2E  The "len" field does not necessarily use CPU endianness, an=
+d before
+>being validated it might be greater than the size of the allocated space=
+=2E
 
-Yeah, I took a bunch that hadn't been picked up yet:
-https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/kees/linux=2Egit/log/?=
-h=3Dfor-next/hardening
+Oh yes, good point=2E
 
-Thanks!
+>I agree that it should use a flex array (and thanks for catching this one=
+ that I
+>had forgotten about=2E=2E=2E), but the above explanation seems wrong=2E
+
+Shall I spin a v2?
 
 
 --=20
