@@ -2,77 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DA3C7EE23
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 05:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A501EC77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 05:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231213AbjEWFz0 (ORCPT
+        id S234659AbjEWFz6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 01:55:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47402 "EHLO
+        Tue, 23 May 2023 01:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbjEWFzZ (ORCPT
+        with ESMTP id S234624AbjEWFz5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 01:55:25 -0400
+        Tue, 23 May 2023 01:55:57 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96809115;
-        Mon, 22 May 2023 22:55:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10905120;
+        Mon, 22 May 2023 22:55:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=; b=f9sp9X29rgCQutb1zyE01/AbOq
-        vvWhdCJdNJmWOTdpGbrPMqnfPwdWtXyJItgUJklC82G5xiqj0mrMp5gXWlrUyIeXR+Mo++eDaMld4
-        tWsVWKUUVdFiL9GEbmNRBORxElvBLme8vx5TTV6tYdjJ1e5eSV/VbS43P+Khj8kMOh1O1PmULkLJL
-        0OOzVdMaikHhPYDVaCp6lILsdt3BDSSS47fwmWLB1b9IJk0UQN9gdlYyugYZbkMVru3EO8fQg0G+G
-        R7W4esEGccYKZIxg5UNd3i+kRa2lJcm+3kpcPRdptBLx2RRxWT1S+kucCJVOfA0C6e6Y7HByMAMiS
-        62Q8eALw==;
+        bh=eLhUu8UCBd/YYLdOP3ui5b1tEMg7x/uUoMmk7djKCEM=; b=bKvOSi6aMPy7rYVrte/3XLeNHl
+        qkBujmdDFFQ6BARVEU2twgXyiyjAwlKGIordV0kMs0H2djtSnYmE8ZurAQqKDqI0qLTOV2imQXtqf
+        biZFkYTJUwIarcadZT7ASdLzrmK3LWv4PL6zZPNaPUgMMS//rpRx9e6Hkb0yegUH2yJBZVnZ6LDKt
+        GAEfmKpNqlTQ4Kxftj1nvSA2L+Y7YTTWSsKFYBpfUYI5IDz0c8S1LLRY+TasePE9OosWa++5TvrgP
+        EjKnONZcCvS0q7YOiTlHucKoDFPzVO94VQc36ZZzPTt2KTXs14OOkW+bF1X9528rtXg8n9y0yGfDE
+        AT4p5gAg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1q1Kz2-0091FK-2G;
-        Tue, 23 May 2023 05:54:56 +0000
-Date:   Mon, 22 May 2023 22:54:56 -0700
+        id 1q1Kzy-0091NL-0x;
+        Tue, 23 May 2023 05:55:54 +0000
+Date:   Mon, 22 May 2023 22:55:54 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        James Smart <james.smart@broadcom.com>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        HighPoint Linux Team <linux@highpoint-tech.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Don Brace <don.brace@microchip.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Guo Xuenan <guoxuenan@huawei.com>,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        kernel test robot <lkp@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, storagedev@microchip.com,
-        linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Tales Aparecida <tales.aparecida@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] overflow: Add struct_size_t() helper
-Message-ID: <ZGxVMAa/3QOd3cRf@infradead.org>
-References: <20230522211810.never.421-kees@kernel.org>
+Cc:     Song Liu <song@kernel.org>, Christoph Hellwig <hch@infradead.org>,
+        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] md/raid5: Convert stripe_head's "dev" to flexible
+ array member
+Message-ID: <ZGxVatFgD1u1x+5c@infradead.org>
+References: <20230522212114.gonna.589-kees@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230522211810.never.421-kees@kernel.org>
+In-Reply-To: <20230522212114.gonna.589-kees@kernel.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Looks good:
+On Mon, May 22, 2023 at 02:21:15PM -0700, Kees Cook wrote:
+> -	} dev[1]; /* allocated with extra space depending of RAID geometry */
+> +	} dev[]; /* allocated with extra space depending of RAID geometry */
+
+I still think this should be:
+
+	/* allocated depending of RAID geometry */
+
+now or dropped entirely, as the extra only made sense when it always
+had that magic one.
+
+The actual code changes looks good to me:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
