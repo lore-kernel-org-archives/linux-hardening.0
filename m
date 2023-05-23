@@ -2,63 +2,64 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B0AC7EE26
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EB6C7EE26
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232050AbjEWCMi (ORCPT
+        id S234077AbjEWCPZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 22:12:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33794 "EHLO
+        Mon, 22 May 2023 22:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231135AbjEWCMi (ORCPT
+        with ESMTP id S234545AbjEWCPN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 22:12:38 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EDC9CA;
-        Mon, 22 May 2023 19:12:37 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-76c5a225388so109165539f.1;
-        Mon, 22 May 2023 19:12:37 -0700 (PDT)
+        Mon, 22 May 2023 22:15:13 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8A6186;
+        Mon, 22 May 2023 19:14:44 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-333eb36e453so675005ab.3;
+        Mon, 22 May 2023 19:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684807956; x=1687399956;
+        d=gmail.com; s=20221208; t=1684808068; x=1687400068;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=stI6HotysgUAEccaZJdD2JXeGYeJR4OEFUyKkR3kMOk=;
-        b=QusAyHI64C46ry5WMaW7Y1pvGuOEhxkVuk9fedb9CiwSHgKcnWdyx3UuvK2oBJE86t
-         clu0mYFeSk0uZFSnXjbswOiy3dfaZy5FJu6YAV778SmVbaEr+wAIWrUXobxC84QHwCWI
-         H5V82YrUNaQM+sDdYNTUXhGtSotgWu0f7diSoHjazoqhTPU1HBI6tlMpZSB/z3ddBAem
-         fXdxdJ6+SnTfckBBSeQeyHU91T2v7IL1OSvVW0wpnZcQP4rghxypylX/sA7IfHjtfZ+J
-         5F31eZFWrd7XqgpzTeoR6AYaLaYLVql5wl1bQGXg3VnFCKToLog2mvta0LWc6w1Iaql8
-         aGfw==
+        bh=zX10SJBU8S1HDBYkbi8trIiB7376uD4rHt1agT0RgVE=;
+        b=OaujpSZZUqwVOx9NEQ6g6toA8bjHdiLSGCHF/k5eKXl3ABo1UGNtVSzhTAX0SAhrbE
+         cgx3x15bwXRGHk0+mEh2cffCJ3is4InYof0oCRfm9gT0XYCNJhUQfjzpIy2jthkLRpWM
+         eciWFP26qbGuLXO1Uf8zUXuD7HRpsvF5evYPF53lpz4UerC6UOC1F9lTMdeaI5n+EyjI
+         v9sQUBd0qgmEdzEd6Mkc6G0G9WXl0LXrI9LSILXFeM7ET6fhdiX33OYpZ4kZlp1IQ5ht
+         /oyvczEGS9vnKPLX8VcTgthDs3kdmKuTyRuPnCsCfTrKVKndpPrAS2GOUJHqCQig1F8k
+         QFFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684807956; x=1687399956;
+        d=1e100.net; s=20221208; t=1684808068; x=1687400068;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=stI6HotysgUAEccaZJdD2JXeGYeJR4OEFUyKkR3kMOk=;
-        b=CdXbPOH0PH341HZrQQ33LAfgYH6oWxQ/9EaJLsVIXPbI/rX/uYEyG9lkX9oCnVd9FY
-         j+xjcyY+ARqZgwHYU3AYHe3uSbRzk2mLA3MVBxbTqEtPrjvmDVmhazabc5t7bMzZaUbW
-         XZJxF94LcdG8IQnzpViJHSiYRJ3TiL2XDlpi0aDJ1em/x2zTbLthMCbdRpSCTAUzjfRv
-         SNER11FizCc8L3YCNm0Tbfi9NxNW/uBO/Qt5SSks6jYXCWXKGKI+A0KkS70rsfoP5rTh
-         jGq0OONLCEfbWU4KC0xGHPMx/gs6i3+HxW8LVtOh8seAHDPQyoIwr2YkpmKdvPDgJPAU
-         gYCQ==
-X-Gm-Message-State: AC+VfDyFQfy5Y08WoWQsI8nFILgZ9aKzD2UG1AtP8Jwady0mlY1MeOOZ
-        VW7U7bfRdMbioRxr1H0nptxiqx4bmK4JbA==
-X-Google-Smtp-Source: ACHHUZ4oztlg9Svvs/LNYkqjS0KaGdjEj1nT9/r2tlVL/EeWYqymX2IE4UFxsrKVBgqhDOrUVihH8Q==
-X-Received: by 2002:a92:c852:0:b0:32f:776d:711 with SMTP id b18-20020a92c852000000b0032f776d0711mr6886459ilq.30.1684807956403;
-        Mon, 22 May 2023 19:12:36 -0700 (PDT)
+        bh=zX10SJBU8S1HDBYkbi8trIiB7376uD4rHt1agT0RgVE=;
+        b=EK+67/SMp6rAyk2e9QeTg39GWeKs0ul31S+ZDQyVjbwh8lZ73WHQpuJkJKFKoVnBZc
+         U+PMJ4Q1jrcHhbe1at/xJTMaolFtDMYb7/Mash84xhDsZQqqPKRBP5tCJb/CDcgD5M5v
+         z3XowVEoNAbJuF5b53xmRUacws7csQfnetEtW0Kj4YI9YD77bazptsuAvrkjBIObpBxS
+         CIEq4pwDwgy5pYWG6hiWA8NLiqZlbuP8jVxzm6vWG7mvQojgSMEOS6aqmUWuUfb9nGND
+         no8dTEIS+ohpLJ4OVyCdp3FyYAx9OgvKbH627ksD3zLBfuczjvTguYIcZAY51OcUXP7r
+         Cw+w==
+X-Gm-Message-State: AC+VfDwbk94RGFUasphymmhsKdZz6hwkRh1g0h4zw5ClxHwXQ1PiaE3c
+        3xzaUUYLD+0H5OcO/Vuq6TZsZHe9OGhfVA==
+X-Google-Smtp-Source: ACHHUZ5F/Ce0ACQDapyA4JTnP2JZCUo2WThK1XKG2+ZKLbNVrxkTbmV0t/7CPbKthDMx/RVENWD5nQ==
+X-Received: by 2002:a92:de46:0:b0:335:1ed:359b with SMTP id e6-20020a92de46000000b0033501ed359bmr8482325ilr.15.1684808068359;
+        Mon, 22 May 2023 19:14:28 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id dl9-20020a056638278900b004167410a9bcsm2094556jab.113.2023.05.22.19.12.35
+        by smtp.gmail.com with ESMTPSA id i1-20020a056638380100b00418647d4279sm2223488jav.69.2023.05.22.19.14.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 19:12:36 -0700 (PDT)
+        Mon, 22 May 2023 19:14:27 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Jan-Simon Moeller <jansimon.moeller@gmx.de>
+To:     Qiang Zhao <qiang.zhao@nxp.com>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org
-Subject: [PATCH] leds: blinkm: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 23 May 2023 02:12:28 +0000
-Message-ID: <20230523021228.2406112-1-azeemshaikh38@gmail.com>
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Li Yang <leoyang.li@nxp.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] soc: fsl: qe: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 23 May 2023 02:14:25 +0000
+Message-ID: <20230523021425.2406309-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -79,20 +80,29 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- drivers/leds/leds-blinkm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/fsl/qe/qe.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/leds-blinkm.c b/drivers/leds/leds-blinkm.c
-index 37f2f32ae42d..8c2ae0798cfc 100644
---- a/drivers/leds/leds-blinkm.c
-+++ b/drivers/leds/leds-blinkm.c
-@@ -561,7 +561,7 @@ static int blinkm_detect(struct i2c_client *client, struct i2c_board_info *info)
- 		return -ENODEV;
- 	}
+diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+index b3c226eb5292..58746e570d14 100644
+--- a/drivers/soc/fsl/qe/qe.c
++++ b/drivers/soc/fsl/qe/qe.c
+@@ -524,7 +524,7 @@ int qe_upload_firmware(const struct qe_firmware *firmware)
+ 	 * saved microcode information and put in the new.
+ 	 */
+ 	memset(&qe_firmware_info, 0, sizeof(qe_firmware_info));
+-	strlcpy(qe_firmware_info.id, firmware->id, sizeof(qe_firmware_info.id));
++	strscpy(qe_firmware_info.id, firmware->id, sizeof(qe_firmware_info.id));
+ 	qe_firmware_info.extended_modes = be64_to_cpu(firmware->extended_modes);
+ 	memcpy(qe_firmware_info.vtraps, firmware->vtraps,
+ 		sizeof(firmware->vtraps));
+@@ -599,7 +599,7 @@ struct qe_firmware_info *qe_get_firmware_info(void)
+ 	/* Copy the data into qe_firmware_info*/
+ 	sprop = of_get_property(fw, "id", NULL);
+ 	if (sprop)
+-		strlcpy(qe_firmware_info.id, sprop,
++		strscpy(qe_firmware_info.id, sprop,
+ 			sizeof(qe_firmware_info.id));
  
--	strlcpy(info->type, "blinkm", I2C_NAME_SIZE);
-+	strscpy(info->type, "blinkm", I2C_NAME_SIZE);
- 	return 0;
- }
- 
+ 	of_property_read_u64(fw, "extended-modes",
 
