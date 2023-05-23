@@ -2,78 +2,85 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36322C7EE29
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 01:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B58FC7EE26
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 01:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234169AbjEWBXR (ORCPT
+        id S232030AbjEWBdx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 21:23:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
+        Mon, 22 May 2023 21:33:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234264AbjEWBXQ (ORCPT
+        with ESMTP id S229555AbjEWBdw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 21:23:16 -0400
+        Mon, 22 May 2023 21:33:52 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8817B7;
-        Mon, 22 May 2023 18:23:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649B58E;
+        Mon, 22 May 2023 18:33:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D872C61990;
-        Tue, 23 May 2023 01:23:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C954C433D2;
-        Tue, 23 May 2023 01:23:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0154662339;
+        Tue, 23 May 2023 01:33:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A284C433EF;
+        Tue, 23 May 2023 01:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684804989;
-        bh=vjk5rZMZaeZfGz8DvSil6k+A6PfapIMUVus7AmNsfMU=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=FSvm9ect3zqer7zjI3xf1P8L/M6O4vv49bjcpdYLXBJ46m6SmJeLkujNgmgla6Gmr
-         36iyyOEYcsoeeKOZIts+NiGmPIg4VGcZYt/URe2+cIyJuzgq50iaKrFk5hbrcFyuzj
-         DFwO6buNlp3cYxGr1L3GjPFJuT+uBnauX/X++RHH1rixz1z+PGQN1sXM4bI15ANPT3
-         rsOBLWQOOcz0OfxHENqLtAu/FzuPyYaWO7ON6uZB8aEIZq9bz//xmjBFn9+YK4zIjI
-         A3gorKcrIttkE5d9r1M5Pv+jx1Sp/auQ2wXCHlE5cj/T9RV2DUfkyzvDwNzjfCXWvq
-         Crdt6aOYxm7aQ==
-Date:   Mon, 22 May 2023 18:23:06 -0700
-From:   Kees Cook <kees@kernel.org>
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-CC:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1684805630;
+        bh=VLQAZ0ni90Kw6iE14tA7Ei4jvKZaqtf32yr37fGDBu4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=psNKhCSf1o9RfAcrMtHIcPoveO8TCKajkd0vKDcMLyD6rQh5PC7oobvqhSyGR0gZ3
+         0xXNkUft/oNmxPALM1nbNaL/j+5nr5G8P+gRm2bbAC475hPgpX0Q5V8zyvOekpvKkJ
+         rN2b69IWsBAKlzrTFVUt8hTcvd26vOYrM2llEnX0egB/Xi+rAxA6SdgxGTYb5+hwS7
+         IgmnpL90KU8te4ur38R0wFHWWtOqAs3Nj9+5JvFwemYEBrvoscmoB6qRtVMB7MTasb
+         Yf0MwlpFaG3TLe6o11vHtW22acjcBZET8JoojGGZuIk+qXUnMgbdXCn+nZKEcrA0Qx
+         URdn/s/tTGpxA==
+Date:   Mon, 22 May 2023 19:34:41 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Eric Farman <farman@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] fscrypt: Replace 1-element array with flexible array
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20230522230206.GA3187780@google.com>
-References: <20230522213924.never.119-kees@kernel.org> <20230522230206.GA3187780@google.com>
-Message-ID: <F340AF2B-C611-48FE-BCB6-C4FF45005409@kernel.org>
+Subject: [PATCH 0/2][next] vfio/ccw: Replace one-element array with
+ flexible-array member
+Message-ID: <cover.1684805398.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On May 22, 2023 4:02:06 PM PDT, Eric Biggers <ebiggers@kernel=2Eorg> wrote:
->On Mon, May 22, 2023 at 02:39:28PM -0700, Kees Cook wrote:
->> In the future, we can add annotations for the flexible array member
->> "encrypted_path" to have a size determined by the "len" member=2E
->
->That seems unlikely, as 'struct fscrypt_symlink_data' is an on-disk data
->structure=2E  The "len" field does not necessarily use CPU endianness, an=
-d before
->being validated it might be greater than the size of the allocated space=
-=2E
+Hi!
 
-Oh yes, good point=2E
+This small series aims to replace a one-element array with a
+flexible-array member in struct vfio_ccw_parent.
 
->I agree that it should use a flex array (and thanks for catching this one=
- that I
->had forgotten about=2E=2E=2E), but the above explanation seems wrong=2E
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-Shall I spin a v2?
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/160
+Link: https://github.com/KSPP/linux/issues/297
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
 
+Gustavo A. R. Silva (2):
+  vfio/ccw: Replace one-element array with flexible-array member
+  vfio/ccw: Use struct_size() helper
 
---=20
-Kees Cook
+ drivers/s390/cio/vfio_ccw_drv.c     | 2 +-
+ drivers/s390/cio/vfio_ccw_private.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.34.1
+
