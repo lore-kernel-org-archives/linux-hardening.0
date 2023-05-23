@@ -2,96 +2,76 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47138C77B73
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A80FC7EE26
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:50:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbjEWCVH (ORCPT
+        id S232457AbjEWCuL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 22:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40550 "EHLO
+        Mon, 22 May 2023 22:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjEWCVG (ORCPT
+        with ESMTP id S229605AbjEWCuK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 22:21:06 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3879C115;
-        Mon, 22 May 2023 19:20:43 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-3311691ebd0so800665ab.1;
-        Mon, 22 May 2023 19:20:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684808431; x=1687400431;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oYo4pMyUdPXoTIgJZPlxTi0wlXBCKivgPw4C35RfkhE=;
-        b=mn3iqGGY8l5fJKxQExXBk5R7/B8z/k4w/kyn53w6x0qvFrxRDgs0mZVuVbDEjUA1xY
-         +v98xGZ/ShB5GgbqyLcdZbdDjyAs+xYKZYoJxf9ThiRn27iTBsu2v65WoSvKb3p1HBeM
-         FCJ6IAqXl7pssqGRKKTtVqpzoSFFOvIxZrdYF0iy5vczERT8uyF4bf07nBvJ9hNzmgwz
-         ICfOtR2bs6+OCzXEbGhbc8tkqn4JZSAQLxjKznQ62WCQhC9HRkhKKqDbESP6BDzEghQQ
-         VSFjtP7h1CJ8kejzjt2fBoc/kEIStBAcdKIDJpZeTmoDREjr4WjUcO6Q5cOBwzQ6ifGq
-         NQTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684808431; x=1687400431;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oYo4pMyUdPXoTIgJZPlxTi0wlXBCKivgPw4C35RfkhE=;
-        b=a2rdm5unTjVTubVhdo+l0d8s29E4CmA5xkQd0vbozdBs8lGvUC3vGI/1Tbumrtpe0u
-         0x+Y8BoyUv7u/A7Bc5wgT9kx4BMMi0AY3gLLGLhyE6qIECg1X+7D1FksXkT94w8UtuGR
-         /mJOWhMPflECeujcyq+JPffB6anR5ZAqyLUzcTG8uX1anVJ4KBKD+oePGsjisq+pWtDP
-         f0Fd2YQd935T1yO90V/wzOEHCkcx1lJ++DPgoLSykVr42MCnpxmJl3jJK2C4mRNHtLkg
-         gylhkQyTMcpsfMOnx/FItb4hh1P5UJmTtgEQfMYvaN+RAGzDW2hAjwngdwKRv0SlKMAD
-         n/IQ==
-X-Gm-Message-State: AC+VfDxCWfpDKBw9E5N5DxvgHcc4rrrM5c5oP2ZzhMw7Ybz+i2j2qeDO
-        TZvEQE0dcvy73u0u9/BaeYY=
-X-Google-Smtp-Source: ACHHUZ5Kd6TdxFRK6Z9xrvAwgxEGZNeFR9ha6BzgqUmsqqM0uV2dgyzRx8l2DxbFe8V8Ji5a7mCsaA==
-X-Received: by 2002:a92:ce49:0:b0:331:40f0:69b2 with SMTP id a9-20020a92ce49000000b0033140f069b2mr7973831ilr.31.1684808431028;
-        Mon, 22 May 2023 19:20:31 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id cl9-20020a0566383d0900b0040faf78330asm2198932jab.28.2023.05.22.19.20.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 19:20:30 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] w1: sgi_w1: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 23 May 2023 02:20:23 +0000
-Message-ID: <20230523022023.2406955-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
+        Mon, 22 May 2023 22:50:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C93CCA;
+        Mon, 22 May 2023 19:50:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B552C62E36;
+        Tue, 23 May 2023 02:50:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF33BC433D2;
+        Tue, 23 May 2023 02:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684810209;
+        bh=CzakUcJHhCSYBooe6gFoQyfZa+C4bAclSd0YXYcgfWE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bKq4Pz1DLcQPqnPwxXCXYhZykp4/CmTjQLJ92OFeA/UaXsqQiMIRfDAByLhqZN3gK
+         v0mR71rUOX2G/mOLRAnxTLAUy+sVGl8/AfWuKE6603vVcoi2sJ2l9jwxxkdtvDLukh
+         RbXwAqRVG2kUc+2C8eSAcZRd3Aw+K7BkbM1HRFbzfIGgm8vvw7gGsz3R/OQlTXDz0e
+         aTYHnGXGxTpTtS8wmjYhhwnlePlZtkjfOGFycS0kkQyLJG74gW+PttVV5gcbz340a4
+         g3NlKUHZ0qzK9Yg1ogSi9zsPdzolnViUQoqh1JI1I308DWO8sJxNUjhl9bS4IGz5HX
+         BXNZJeGr8Dy3A==
+Date:   Tue, 23 May 2023 02:50:07 +0000
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <kees@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] fscrypt: Replace 1-element array with flexible array
+Message-ID: <20230523025007.GC3187780@google.com>
+References: <20230522213924.never.119-kees@kernel.org>
+ <20230522230206.GA3187780@google.com>
+ <F340AF2B-C611-48FE-BCB6-C4FF45005409@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <F340AF2B-C611-48FE-BCB6-C4FF45005409@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
-No return values were used, so direct replacement is safe.
+On Mon, May 22, 2023 at 06:23:06PM -0700, Kees Cook wrote:
+> On May 22, 2023 4:02:06 PM PDT, Eric Biggers <ebiggers@kernel.org> wrote:
+> >On Mon, May 22, 2023 at 02:39:28PM -0700, Kees Cook wrote:
+> >> In the future, we can add annotations for the flexible array member
+> >> "encrypted_path" to have a size determined by the "len" member.
+> >
+> >That seems unlikely, as 'struct fscrypt_symlink_data' is an on-disk data
+> >structure.  The "len" field does not necessarily use CPU endianness, and before
+> >being validated it might be greater than the size of the allocated space.
+> 
+> Oh yes, good point.
+> 
+> >I agree that it should use a flex array (and thanks for catching this one that I
+> >had forgotten about...), but the above explanation seems wrong.
+> 
+> Shall I spin a v2?
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
+Yes, please go ahead.
 
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- drivers/w1/masters/sgi_w1.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/w1/masters/sgi_w1.c b/drivers/w1/masters/sgi_w1.c
-index e8c7fa68d3cc..d7fbc3c146e1 100644
---- a/drivers/w1/masters/sgi_w1.c
-+++ b/drivers/w1/masters/sgi_w1.c
-@@ -93,7 +93,7 @@ static int sgi_w1_probe(struct platform_device *pdev)
- 
- 	pdata = dev_get_platdata(&pdev->dev);
- 	if (pdata) {
--		strlcpy(sdev->dev_id, pdata->dev_id, sizeof(sdev->dev_id));
-+		strscpy(sdev->dev_id, pdata->dev_id, sizeof(sdev->dev_id));
- 		sdev->bus_master.dev_id = sdev->dev_id;
- 	}
- 
-
+- Eric
