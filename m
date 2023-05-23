@@ -2,101 +2,158 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A75CC7EE29
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 14:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7278DC77B75
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 16:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237095AbjEWOlQ (ORCPT
+        id S235624AbjEWQeX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 10:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
+        Tue, 23 May 2023 12:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237372AbjEWOlN (ORCPT
+        with ESMTP id S236334AbjEWQeV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 10:41:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF7151B5;
-        Tue, 23 May 2023 07:41:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ACC6E63341;
-        Tue, 23 May 2023 14:41:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 054AEC433D2;
-        Tue, 23 May 2023 14:41:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684852867;
-        bh=d9J3DkDPYoY3R19fL1JMV5Kh4ZEEyVTMhbq27T3m+Tk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=etOhZG44wkJggVLmEJT26ihmCK04oldyLTDOs4/a17yQwOSWMGdPOrUlrOTRlcqdM
-         HMqarlJcFu81mB4zFNS9MpyG8gLgBh/AZVslrR4Eo073J9Jpe1CbF+dwrimwJIMDJq
-         sv4Thqo5bkx4pq4LJPvZ1K2q1hSHsE2m6IqvmLKtBqGn8LN+1ggaywHtOujvpUucJy
-         6bFWMzNUskpAm3vg/NPOlPrsQo4jxcM/aSkXKYk36H2UYXs2zvqeP1GawNs3CBdDP5
-         Rx9LmTIwyDqTEX8lXysrrqacTatQDqJRMkYEOag7/5+bfWJKS3NYKqoNRbIaK5INcX
-         g3D5+AqswI92Q==
-Date:   Tue, 23 May 2023 08:41:59 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2][next] scsi: lpfc: Use struct_size() helper
-Message-ID: <ZGzQt2VFG4P/Vufn@work>
-References: <cover.1684358315.git.gustavoars@kernel.org>
- <99e06733f5f35c6cd62e05f530b93107bfd03362.1684358315.git.gustavoars@kernel.org>
- <202305171601.B3FF9D0BB@keescook>
+        Tue, 23 May 2023 12:34:21 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64C0DC2;
+        Tue, 23 May 2023 09:34:05 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34NFpH8E029591;
+        Tue, 23 May 2023 16:33:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=yLQUjASuD0Wzz5ADqgfqMAhs+2Y8p1wr3eeG8IYvX74=;
+ b=s/X/T9RNu/ayUnMW5BVA8OU8elWdAQGYll0z9DZ3STopDBIazbSn8f7LKgsjy8SwQxuO
+ SPrKM4B7Vm4FqHD8WdOwn28a2+fPoaUX2BrM/49gSfBXbVs4kcvYGEabULqmKJJ/Uukk
+ Jc6RlnGAiItAOFcGH8MnMW0Jg6ggmwxI/U0AJL6QdJa5dl63/zIuMcNncld5bv/lqI2a
+ DPdUiKozejevP32CMZiVt53j91U39WvGLMWrEeNXLkGzZOgGuUozD1GBq21Vxoxs+hs3
+ 74/6C0fRnIsqiwkzPC0ec9xyXpu0+YTuQck78Devw0IADWi22eAullhm62rx73wRTQHm aA== 
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qs0gc0ypc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 May 2023 16:33:58 +0000
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34NEHcAH030404;
+        Tue, 23 May 2023 16:33:58 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([9.208.129.120])
+        by ppma04dal.us.ibm.com (PPS) with ESMTPS id 3qppcd3y7f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 May 2023 16:33:57 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+        by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34NGXt1E63439306
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 23 May 2023 16:33:56 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC78A58056;
+        Tue, 23 May 2023 16:33:55 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC3EF58052;
+        Tue, 23 May 2023 16:33:54 +0000 (GMT)
+Received: from li-479af74c-31f9-11b2-a85c-e4ddee11713b.ibm.com (unknown [9.61.95.28])
+        by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 23 May 2023 16:33:54 +0000 (GMT)
+Message-ID: <fa2905e329f2e723228eb4750b305ae54be2a1ad.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/2][next] vfio/ccw: Replace one-element array with
+ flexible-array member
+From:   Eric Farman <farman@linux.ibm.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date:   Tue, 23 May 2023 12:33:54 -0400
+In-Reply-To: <3c10549ebe1564eade68a2515bde233527376971.1684805398.git.gustavoars@kernel.org>
+References: <cover.1684805398.git.gustavoars@kernel.org>
+         <3c10549ebe1564eade68a2515bde233527376971.1684805398.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 0Ei0tlkdwj_V9c4MJxUtPHDu7Z6hbHnT
+X-Proofpoint-GUID: 0Ei0tlkdwj_V9c4MJxUtPHDu7Z6hbHnT
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202305171601.B3FF9D0BB@keescook>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-23_10,2023-05-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ malwarescore=0 mlxlogscore=763 priorityscore=1501 impostorscore=0
+ mlxscore=0 spamscore=0 clxscore=1011 suspectscore=0 lowpriorityscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305230132
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 17, 2023 at 04:01:47PM -0700, Kees Cook wrote:
-> On Wed, May 17, 2023 at 03:23:01PM -0600, Gustavo A. R. Silva wrote:
-> > Prefer struct_size() over open-coded versions of idiom:
-> > 
-> > sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * count
-> > 
-> > where count is the max number of items the flexible array is supposed to
-> > contain.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/160
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/scsi/lpfc/lpfc_ct.c | 6 ++----
-> >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-> > index e880d127d7f5..3b95c56023bf 100644
-> > --- a/drivers/scsi/lpfc/lpfc_ct.c
-> > +++ b/drivers/scsi/lpfc/lpfc_ct.c
-> > @@ -3748,8 +3748,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
-> >  		rap->obj[0].entity_id_len = vmid->vmid_len;
-> >  		memcpy(rap->obj[0].entity_id, vmid->host_vmid, vmid->vmid_len);
-> >  		size = RAPP_IDENT_OFFSET +
-> > -			sizeof(struct lpfc_vmid_rapp_ident_list) +
-> > -			sizeof(struct entity_id_object);
-> > +			struct_size(rap, obj, rap->no_of_objects);
-> 
-> Has rap->no_of_objects always been "1"? (i.e. there was a prior
-> multiplication here before...
+On Mon, 2023-05-22 at 19:35 -0600, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with
+> flexible
+> array members instead. So, replace one-element array with flexible-
+> array
+> member in struct vfio_ccw_parent and refactor the the rest of the
 
-Mmh.. not sure what multiplication you are talking about. I based these
-changes on the fact that rap->no_of_objects is set to cpu_to_be32(1);
-for both instances. It doesn't show up in the context of the patch, so
-here you go:
+s/the the/the/
 
-3747                 rap->no_of_objects = cpu_to_be32(1);
-3748                 rap->obj[0].entity_id_len = vmid->vmid_len;
-3749                 memcpy(rap->obj[0].entity_id, vmid->host_vmid, vmid->vmid_len);
-3750                 size = RAPP_IDENT_OFFSET +
-3751                         sizeof(struct lpfc_vmid_rapp_ident_list) +
-3752                         sizeof(struct entity_id_object);
+> code
+> accordingly.
+>=20
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/297
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
 
---
-Gustavo
+> ---
+> =C2=A0drivers/s390/cio/vfio_ccw_drv.c=C2=A0=C2=A0=C2=A0=C2=A0 | 3 ++-
+> =C2=A0drivers/s390/cio/vfio_ccw_private.h | 2 +-
+> =C2=A02 files changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/s390/cio/vfio_ccw_drv.c
+> b/drivers/s390/cio/vfio_ccw_drv.c
+> index ff538a086fc7..57906a9c6324 100644
+> --- a/drivers/s390/cio/vfio_ccw_drv.c
+> +++ b/drivers/s390/cio/vfio_ccw_drv.c
+> @@ -171,7 +171,8 @@ static int vfio_ccw_sch_probe(struct subchannel
+> *sch)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0return -ENODEV;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> =C2=A0
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0parent =3D kzalloc(sizeof(*par=
+ent), GFP_KERNEL);
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0parent =3D kzalloc(sizeof(*par=
+ent) + sizeof(struct mdev_type
+> *),
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERN=
+EL);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!parent)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0return -ENOMEM;
+> =C2=A0
+> diff --git a/drivers/s390/cio/vfio_ccw_private.h
+> b/drivers/s390/cio/vfio_ccw_private.h
+> index b441ae6700fd..b62bbc5c6376 100644
+> --- a/drivers/s390/cio/vfio_ccw_private.h
+> +++ b/drivers/s390/cio/vfio_ccw_private.h
+> @@ -79,7 +79,7 @@ struct vfio_ccw_parent {
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mdev_parent=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0parent;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mdev_type=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mdev_type;
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mdev_type=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*mdev_types[1];
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mdev_type=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0*mdev_types[];
+> =C2=A0};
+> =C2=A0
+> =C2=A0/**
+
