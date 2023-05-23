@@ -2,66 +2,62 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B332C7EE26
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47138C77B73
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:21:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234515AbjEWCUA (ORCPT
+        id S229757AbjEWCVH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 22:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39384 "EHLO
+        Mon, 22 May 2023 22:21:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234533AbjEWCTs (ORCPT
+        with ESMTP id S229605AbjEWCVG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 22:19:48 -0400
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B029CA;
-        Mon, 22 May 2023 19:19:47 -0700 (PDT)
-Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-332cc0efe88so2498565ab.0;
-        Mon, 22 May 2023 19:19:47 -0700 (PDT)
+        Mon, 22 May 2023 22:21:06 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3879C115;
+        Mon, 22 May 2023 19:20:43 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-3311691ebd0so800665ab.1;
+        Mon, 22 May 2023 19:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684808387; x=1687400387;
+        d=gmail.com; s=20221208; t=1684808431; x=1687400431;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=kzTqOaIPWfW9eLUYmANhI0oqNLmXhJYkC7KiwdLC9Pk=;
-        b=HSD7l7aKqkH7bpomTMkzPvcKzQpp2eYwyn0IteDdsQLQjpEWrRaSrLc67veKl7F0/T
-         cn2iJlW2p3p+ttdzw9ZAV7HQ8xxxsTjGKeDqk9ze5VrKHVaDEi+t3OW7XqBuV/glXXnC
-         D2eds/9o/cQ3eOaOppD0DjNpMbm7bViiVNn4xVcB+ZMtP9Pzx2mqEv3rSuUKAgMxU6nL
-         gqqvNmyRkrNekvbh16k/UGWh5sknRUXgxI9DzPtYOgcYIE58tIKFTJbuDRwL5PBaJyQ5
-         8aQnfvzVb1Tev33snfKB5whGHevkySQHAoZR2clKZs9dZU5d0XWHlZc0r5BlpjMUYgkj
-         FfsQ==
+        bh=oYo4pMyUdPXoTIgJZPlxTi0wlXBCKivgPw4C35RfkhE=;
+        b=mn3iqGGY8l5fJKxQExXBk5R7/B8z/k4w/kyn53w6x0qvFrxRDgs0mZVuVbDEjUA1xY
+         +v98xGZ/ShB5GgbqyLcdZbdDjyAs+xYKZYoJxf9ThiRn27iTBsu2v65WoSvKb3p1HBeM
+         FCJ6IAqXl7pssqGRKKTtVqpzoSFFOvIxZrdYF0iy5vczERT8uyF4bf07nBvJ9hNzmgwz
+         ICfOtR2bs6+OCzXEbGhbc8tkqn4JZSAQLxjKznQ62WCQhC9HRkhKKqDbESP6BDzEghQQ
+         VSFjtP7h1CJ8kejzjt2fBoc/kEIStBAcdKIDJpZeTmoDREjr4WjUcO6Q5cOBwzQ6ifGq
+         NQTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684808387; x=1687400387;
+        d=1e100.net; s=20221208; t=1684808431; x=1687400431;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kzTqOaIPWfW9eLUYmANhI0oqNLmXhJYkC7KiwdLC9Pk=;
-        b=kq6wzNSJQ6z1OQfkS0x2XG8r8EX+Ae/nb8H3mpLXXCiLzp5L+5vviNji+Nuchj2y5T
-         QuBaoyx2TLmb/i5ZXhqo7q924X45bkZ0zks2Ht/SMkdC2xZ2sQaQYw+bISNZbY6544L0
-         zsuzhsZ7vZNvp1H+jFiWLcQ+/uKapEUN8utTIDz3YRgicHVFIu49EQwUTmb00j7rmguW
-         wy1Fb8fwHsfuWMkaFYt9sv23mjlT8Q0/2QLWYXaPyiDcCZa1/BAsf/Sc3yjBH6WKX5V/
-         yJzOl6YLNmwsncFlunT5opE01F2uUTkNLsP4lMtz/4tDQxf1tozWX8ODKIX1hbNopbyJ
-         imGw==
-X-Gm-Message-State: AC+VfDwXM8ZBZRtmokc2y6CygvOXZZA4nsDJ/9OMI9dT8c6YLw+9IpHQ
-        WPJtiCiB1qLzT4A2pidif0Q=
-X-Google-Smtp-Source: ACHHUZ4+DJLABRuPBSRDE1JxdVeIA6RNnSI8JrvW9bu3YuMmFMvYwh3HXeHrlA5FYY/ygXGrB/itLA==
-X-Received: by 2002:a92:d8cf:0:b0:338:1a22:bf47 with SMTP id l15-20020a92d8cf000000b003381a22bf47mr7507410ilo.21.1684808386720;
-        Mon, 22 May 2023 19:19:46 -0700 (PDT)
+        bh=oYo4pMyUdPXoTIgJZPlxTi0wlXBCKivgPw4C35RfkhE=;
+        b=a2rdm5unTjVTubVhdo+l0d8s29E4CmA5xkQd0vbozdBs8lGvUC3vGI/1Tbumrtpe0u
+         0x+Y8BoyUv7u/A7Bc5wgT9kx4BMMi0AY3gLLGLhyE6qIECg1X+7D1FksXkT94w8UtuGR
+         /mJOWhMPflECeujcyq+JPffB6anR5ZAqyLUzcTG8uX1anVJ4KBKD+oePGsjisq+pWtDP
+         f0Fd2YQd935T1yO90V/wzOEHCkcx1lJ++DPgoLSykVr42MCnpxmJl3jJK2C4mRNHtLkg
+         gylhkQyTMcpsfMOnx/FItb4hh1P5UJmTtgEQfMYvaN+RAGzDW2hAjwngdwKRv0SlKMAD
+         n/IQ==
+X-Gm-Message-State: AC+VfDxCWfpDKBw9E5N5DxvgHcc4rrrM5c5oP2ZzhMw7Ybz+i2j2qeDO
+        TZvEQE0dcvy73u0u9/BaeYY=
+X-Google-Smtp-Source: ACHHUZ5Kd6TdxFRK6Z9xrvAwgxEGZNeFR9ha6BzgqUmsqqM0uV2dgyzRx8l2DxbFe8V8Ji5a7mCsaA==
+X-Received: by 2002:a92:ce49:0:b0:331:40f0:69b2 with SMTP id a9-20020a92ce49000000b0033140f069b2mr7973831ilr.31.1684808431028;
+        Mon, 22 May 2023 19:20:31 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id x1-20020a920601000000b0033549a5fb36sm2131699ilg.27.2023.05.22.19.19.46
+        by smtp.gmail.com with ESMTPSA id cl9-20020a0566383d0900b0040faf78330asm2198932jab.28.2023.05.22.19.20.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 19:19:46 -0700 (PDT)
+        Mon, 22 May 2023 19:20:30 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Sumit Semwal <sumit.semwal@linaro.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        linaro-mm-sig@lists.linaro.org
-Subject: [PATCH] dma-buf/sw_sync: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 23 May 2023 02:19:43 +0000
-Message-ID: <20230523021943.2406847-1-azeemshaikh38@gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] w1: sgi_w1: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 23 May 2023 02:20:23 +0000
+Message-ID: <20230523022023.2406955-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,20 +78,20 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- drivers/dma-buf/sw_sync.c |    2 +-
+ drivers/w1/masters/sgi_w1.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma-buf/sw_sync.c b/drivers/dma-buf/sw_sync.c
-index 348b3a9170fa..63f0aeb66db6 100644
---- a/drivers/dma-buf/sw_sync.c
-+++ b/drivers/dma-buf/sw_sync.c
-@@ -85,7 +85,7 @@ static struct sync_timeline *sync_timeline_create(const char *name)
+diff --git a/drivers/w1/masters/sgi_w1.c b/drivers/w1/masters/sgi_w1.c
+index e8c7fa68d3cc..d7fbc3c146e1 100644
+--- a/drivers/w1/masters/sgi_w1.c
++++ b/drivers/w1/masters/sgi_w1.c
+@@ -93,7 +93,7 @@ static int sgi_w1_probe(struct platform_device *pdev)
  
- 	kref_init(&obj->kref);
- 	obj->context = dma_fence_context_alloc(1);
--	strlcpy(obj->name, name, sizeof(obj->name));
-+	strscpy(obj->name, name, sizeof(obj->name));
+ 	pdata = dev_get_platdata(&pdev->dev);
+ 	if (pdata) {
+-		strlcpy(sdev->dev_id, pdata->dev_id, sizeof(sdev->dev_id));
++		strscpy(sdev->dev_id, pdata->dev_id, sizeof(sdev->dev_id));
+ 		sdev->bus_master.dev_id = sdev->dev_id;
+ 	}
  
- 	obj->pt_tree = RB_ROOT;
- 	INIT_LIST_HEAD(&obj->pt_list);
 
