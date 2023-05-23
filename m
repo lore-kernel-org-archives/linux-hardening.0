@@ -2,62 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33510C7EE26
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AE1C77B73
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:17:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233734AbjEWCPk (ORCPT
+        id S232576AbjEWCRK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 22:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35372 "EHLO
+        Mon, 22 May 2023 22:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233909AbjEWCPX (ORCPT
+        with ESMTP id S229544AbjEWCRI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 22:15:23 -0400
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FE6172B;
-        Mon, 22 May 2023 19:14:55 -0700 (PDT)
-Received: by mail-io1-xd29.google.com with SMTP id ca18e2360f4ac-77019719423so283952439f.2;
-        Mon, 22 May 2023 19:14:55 -0700 (PDT)
+        Mon, 22 May 2023 22:17:08 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2628E49;
+        Mon, 22 May 2023 19:16:44 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-3318bd82810so755925ab.1;
+        Mon, 22 May 2023 19:16:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684808095; x=1687400095;
+        d=gmail.com; s=20221208; t=1684808203; x=1687400203;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GFnzX1YeRTORJ2mp1cDV7I61mJxb5oiNjy6UFmq8zYE=;
-        b=nQaW1Rkp9W1d4h+h2FO8I2STIbpNl70lBJE2f/qvQgjtMWl01dZZ3fOf2Qo3WLgXKW
-         94YtelFAtd0NVkBGAw2qbWfxJjqbcTZgURTtd7wleVeeVYhEkm/XQDkXPp0p+o0GJESd
-         QfvgtdosYhkiCa2kg3BL/uSBxwGCONkPMs6tTN0zjzFC+7STM+jbt/5huTiEZJb8RMGW
-         bvmnV459HUBMyYQk4OqIpQ1E5eWPb2zyrczOjFUFlflNC+AG27dLNJj3PxHB5bC5SQjD
-         3ItVIcMB8IK/CbbPrmSvu2JhfHia66mChtEuRsELb1nop0RA8trXe8bc640eH8gXqZ/D
-         i/Tw==
+        bh=0NB99lYKRnx+FQmUmcJ1k5C7PBLcbIKJhm9jHT8RwDc=;
+        b=hwCrUSAAEVJ9qhd82IuiYCJHoSMMMhsJkiPHoe6M/a6asG7Ygr7txfBNgY7OoSF9ZK
+         sgKGL+R+S4gIFGm9tN8igYrhcFvJgxKZXfjixMJaOEjFDNkN+nOiY0TaRsy6Lq1ZlDw0
+         irfNqeY/EWrRGUUzdyskNK62WwfWKtidFoqvmtgSVROsAsFftKNv9Dt8eWISYJf8bIiM
+         4olnjezwemse5QXT1lLejTEJbVli4gSwV1fGlD7SrOK81LaLWhWIGUL9uQ8DkAjGIVYA
+         6QyGQ1OKEM8sTpOvVtH5PHcapU6ukipoq+t83/+dNqGA1r+AEqZPRKLCCjldF1Cgvj0+
+         FWRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684808095; x=1687400095;
+        d=1e100.net; s=20221208; t=1684808203; x=1687400203;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GFnzX1YeRTORJ2mp1cDV7I61mJxb5oiNjy6UFmq8zYE=;
-        b=dZa3sjK+thl3gSyRrkOh/ZD9t2PtRTeFu//GUwOS9dkOPQ5lra1afOwC5qBs0Le5qQ
-         qQFsMw37CUWlhMClrnUaO0AD7FGPFTE6gM9JryvjgELVW9TZ3azn25HBnO5j06VoM5h7
-         RgzLJb+Ac2JnSRBLVmC3YRPtjw23CvLdkgSCUSGfrk2PCC6OoYKHD2y1DFUbRlpHth4Q
-         S6UTYxOfUTLdqLHo+lHyASxHDmfMUKu8SIP9PC6E9VINOJbA4cBSgeM7jEIlc3DyXAYS
-         oTGQxsMi7KFbecnpIncMgt3q0QEsFcff3D2AVo0OyI+lMQ2MWj1OLwKACgt7jXazdmuU
-         uHQA==
-X-Gm-Message-State: AC+VfDzT2CUkoMc3tP9ZNMNUFsDgw8TkguLXUvUX4g+8ywLz3ncXxubG
-        s/TkALAQKOI9fJ26hLrBpX4=
-X-Google-Smtp-Source: ACHHUZ6AwniIp+HrDfguDY/5LqySPXpzDIVpGAuJ42gTefCub0YKiNO5Pwt5JNOELLpebUGFL3CL7w==
-X-Received: by 2002:a6b:dd12:0:b0:76c:7365:42d8 with SMTP id f18-20020a6bdd12000000b0076c736542d8mr8079568ioc.5.1684808094813;
-        Mon, 22 May 2023 19:14:54 -0700 (PDT)
+        bh=0NB99lYKRnx+FQmUmcJ1k5C7PBLcbIKJhm9jHT8RwDc=;
+        b=BVCQTEsNEKWgU6pYq+1QLelf4zzNwzfQ71A0G2lEVAIUjN8+CtKL0x8uteww3YQPLQ
+         btHAk/dGvaFmTxU3gnwopNxrFvbFF70GLl7i25bDvWrL4UuKSScI63oQwGcmLQ1v6pQh
+         4HHmWxtnY9ET6Vj2Je8r2Zx+4A935FBy8wKJIl8zcNVAn1XzrWZVLZusawVTVG5rxWxF
+         LUprman5f7bkECOI32b1pyc1otFSsFijfkA5aDssqCVFj4L28oqj3jgLh0/kNde2tlfs
+         BsnenoxZk6D5a+fBM2zRorNTe804CmbOD7kSVJMomdl+J14ajmgM75qaCLQs12eSh3Zs
+         uRng==
+X-Gm-Message-State: AC+VfDzlrmlhwZK8NjPIIqR39MV9ThHr+R0PFRVAyR02ReTponfJJCTP
+        gXPpfkcUebJKPgPbFOufoceZ6SCJrUXC/w==
+X-Google-Smtp-Source: ACHHUZ6sehwshPL/GGR7VhnPWgP9QpjoGtYJvvM1p/nUUdwEr4yIvJzHsqFxLOY2ah38LSVi9qJajw==
+X-Received: by 2002:a92:da8d:0:b0:335:9220:2ec2 with SMTP id u13-20020a92da8d000000b0033592202ec2mr7895806iln.26.1684808203113;
+        Mon, 22 May 2023 19:16:43 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id d59-20020a0285c1000000b004143ffd4399sm2104035jai.39.2023.05.22.19.14.54
+        by smtp.gmail.com with ESMTPSA id s5-20020a92cc05000000b00326bd11f5d1sm2110237ilp.11.2023.05.22.19.16.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 19:14:54 -0700 (PDT)
+        Mon, 22 May 2023 19:16:42 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>
+To:     Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
+        Christian Gromm <christian.gromm@microchip.com>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] leds: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 23 May 2023 02:14:51 +0000
-Message-ID: <20230523021451.2406362-1-azeemshaikh38@gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: most: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 23 May 2023 02:16:40 +0000
+Message-ID: <20230523021640.2406585-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,48 +79,47 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- drivers/leds/flash/leds-aat1290.c |    2 +-
- drivers/leds/led-class.c          |    2 +-
- drivers/leds/leds-spi-byte.c      |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/most/configfs.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/leds/flash/leds-aat1290.c b/drivers/leds/flash/leds-aat1290.c
-index 589484b22c79..f12ecb2c6580 100644
---- a/drivers/leds/flash/leds-aat1290.c
-+++ b/drivers/leds/flash/leds-aat1290.c
-@@ -425,7 +425,7 @@ static void aat1290_init_v4l2_flash_config(struct aat1290_led *led,
- 	struct led_classdev *led_cdev = &led->fled_cdev.led_cdev;
- 	struct led_flash_setting *s;
+diff --git a/drivers/most/configfs.c b/drivers/most/configfs.c
+index 27b0c923597f..36d8c917f65f 100644
+--- a/drivers/most/configfs.c
++++ b/drivers/most/configfs.c
+@@ -204,7 +204,7 @@ static ssize_t mdev_link_device_store(struct config_item *item,
+ {
+ 	struct mdev_link *mdev_link = to_mdev_link(item);
  
--	strlcpy(v4l2_sd_cfg->dev_name, led_cdev->dev->kobj.name,
-+	strscpy(v4l2_sd_cfg->dev_name, led_cdev->dev->kobj.name,
- 		sizeof(v4l2_sd_cfg->dev_name));
+-	strlcpy(mdev_link->device, page, sizeof(mdev_link->device));
++	strscpy(mdev_link->device, page, sizeof(mdev_link->device));
+ 	strim(mdev_link->device);
+ 	return count;
+ }
+@@ -219,7 +219,7 @@ static ssize_t mdev_link_channel_store(struct config_item *item,
+ {
+ 	struct mdev_link *mdev_link = to_mdev_link(item);
  
- 	s = &v4l2_sd_cfg->intensity;
-diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-index 9255bc11f99d..6dae56b914fe 100644
---- a/drivers/leds/led-class.c
-+++ b/drivers/leds/led-class.c
-@@ -409,7 +409,7 @@ static int led_classdev_next_name(const char *init_name, char *name,
- 	int ret = 0;
- 	struct device *dev;
+-	strlcpy(mdev_link->channel, page, sizeof(mdev_link->channel));
++	strscpy(mdev_link->channel, page, sizeof(mdev_link->channel));
+ 	strim(mdev_link->channel);
+ 	return count;
+ }
+@@ -234,7 +234,7 @@ static ssize_t mdev_link_comp_store(struct config_item *item,
+ {
+ 	struct mdev_link *mdev_link = to_mdev_link(item);
  
--	strlcpy(name, init_name, len);
-+	strscpy(name, init_name, len);
+-	strlcpy(mdev_link->comp, page, sizeof(mdev_link->comp));
++	strscpy(mdev_link->comp, page, sizeof(mdev_link->comp));
+ 	strim(mdev_link->comp);
+ 	return count;
+ }
+@@ -250,7 +250,7 @@ static ssize_t mdev_link_comp_params_store(struct config_item *item,
+ {
+ 	struct mdev_link *mdev_link = to_mdev_link(item);
  
- 	while ((ret < len) &&
- 	       (dev = class_find_device_by_name(leds_class, name))) {
-diff --git a/drivers/leds/leds-spi-byte.c b/drivers/leds/leds-spi-byte.c
-index 2bc5c99daf51..2c7ffc3c78e6 100644
---- a/drivers/leds/leds-spi-byte.c
-+++ b/drivers/leds/leds-spi-byte.c
-@@ -98,7 +98,7 @@ static int spi_byte_probe(struct spi_device *spi)
- 		return -ENOMEM;
- 
- 	of_property_read_string(child, "label", &name);
--	strlcpy(led->name, name, sizeof(led->name));
-+	strscpy(led->name, name, sizeof(led->name));
- 	led->spi = spi;
- 	mutex_init(&led->mutex);
- 	led->cdef = device_get_match_data(dev);
+-	strlcpy(mdev_link->comp_params, page, sizeof(mdev_link->comp_params));
++	strscpy(mdev_link->comp_params, page, sizeof(mdev_link->comp_params));
+ 	strim(mdev_link->comp_params);
+ 	return count;
+ }
 
