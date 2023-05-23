@@ -2,76 +2,67 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A80FC7EE26
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 02:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D329C7EE23
+	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 05:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232457AbjEWCuL (ORCPT
+        id S229459AbjEWFyV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 22 May 2023 22:50:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56938 "EHLO
+        Tue, 23 May 2023 01:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjEWCuK (ORCPT
+        with ESMTP id S229844AbjEWFyU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 22 May 2023 22:50:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C93CCA;
-        Mon, 22 May 2023 19:50:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B552C62E36;
-        Tue, 23 May 2023 02:50:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF33BC433D2;
-        Tue, 23 May 2023 02:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684810209;
-        bh=CzakUcJHhCSYBooe6gFoQyfZa+C4bAclSd0YXYcgfWE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bKq4Pz1DLcQPqnPwxXCXYhZykp4/CmTjQLJ92OFeA/UaXsqQiMIRfDAByLhqZN3gK
-         v0mR71rUOX2G/mOLRAnxTLAUy+sVGl8/AfWuKE6603vVcoi2sJ2l9jwxxkdtvDLukh
-         RbXwAqRVG2kUc+2C8eSAcZRd3Aw+K7BkbM1HRFbzfIGgm8vvw7gGsz3R/OQlTXDz0e
-         aTYHnGXGxTpTtS8wmjYhhwnlePlZtkjfOGFycS0kkQyLJG74gW+PttVV5gcbz340a4
-         g3NlKUHZ0qzK9Yg1ogSi9zsPdzolnViUQoqh1JI1I308DWO8sJxNUjhl9bS4IGz5HX
-         BXNZJeGr8Dy3A==
-Date:   Tue, 23 May 2023 02:50:07 +0000
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Kees Cook <kees@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] fscrypt: Replace 1-element array with flexible array
-Message-ID: <20230523025007.GC3187780@google.com>
-References: <20230522213924.never.119-kees@kernel.org>
- <20230522230206.GA3187780@google.com>
- <F340AF2B-C611-48FE-BCB6-C4FF45005409@kernel.org>
+        Tue, 23 May 2023 01:54:20 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EADE10C;
+        Mon, 22 May 2023 22:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=eOGZvrq3UBHLVwcyH2qrgqkXe/JNZU3LR0Uo24SPRYo=; b=HdUN3Ej40ryPCtevS9RP5MpOym
+        PJ5fCk7iN+O2p0Gg7Vx9q561Q+pIGJqVDNlfsNLWq5dNpMQ+1f7yyOzkwdjGifbihW+jokibf/1Xi
+        +KFCMCh33cf7eAUXnTQOg3y8WBzzawjuA8WFHOIV9WcXPWznOHOGrgdi8kUgQ3mSLrx5mKFo33QOX
+        vTg2A6ghVGhhb6XpwdK55eob7dsB2BhHHVkyr5l5iGxIs01S2OUx/5B3+2rOIBwjk+stcxRDKXXAz
+        bYNo/OF6wHY6YMnHgGLauBIYau11m5RBZfiRR2esXnJVpD7PFqErjKqKCKaFuUUiUuEYdeIKOEfXV
+        ZdaFZxZA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1q1KyF-0091Bs-2V;
+        Tue, 23 May 2023 05:54:07 +0000
+Date:   Mon, 22 May 2023 22:54:07 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yu Kuai <yukuai1@huaweicloud.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Kees Cook <keescook@chromium.org>, Song Liu <song@kernel.org>,
+        linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, "yukuai (C)" <yukuai3@huawei.com>
+Subject: Re: [PATCH] md/raid5: Convert stripe_head's "dev" to flexible array
+ member
+Message-ID: <ZGxU/zSGkqGhGWmF@infradead.org>
+References: <20230517233313.never.130-kees@kernel.org>
+ <ZGWpLClY7vz+xl5A@infradead.org>
+ <229ac866-9710-5dbe-80c4-61498f807662@huaweicloud.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <F340AF2B-C611-48FE-BCB6-C4FF45005409@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <229ac866-9710-5dbe-80c4-61498f807662@huaweicloud.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 22, 2023 at 06:23:06PM -0700, Kees Cook wrote:
-> On May 22, 2023 4:02:06 PM PDT, Eric Biggers <ebiggers@kernel.org> wrote:
-> >On Mon, May 22, 2023 at 02:39:28PM -0700, Kees Cook wrote:
-> >> In the future, we can add annotations for the flexible array member
-> >> "encrypted_path" to have a size determined by the "len" member.
-> >
-> >That seems unlikely, as 'struct fscrypt_symlink_data' is an on-disk data
-> >structure.  The "len" field does not necessarily use CPU endianness, and before
-> >being validated it might be greater than the size of the allocated space.
+On Mon, May 22, 2023 at 07:49:38PM +0800, Yu Kuai wrote:
+> Hi, Christoph
 > 
-> Oh yes, good point.
+> 在 2023/05/18 12:27, Christoph Hellwig 写道:
 > 
-> >I agree that it should use a flex array (and thanks for catching this one that I
-> >had forgotten about...), but the above explanation seems wrong.
+> It's not related to this patch, just I think I found a problem while
+> reviewing raid5 code, commit e82ed3a4fbb5 ("md/raid6: refactor
+> raid5_read_one_chunk") changes the caculation of 'end_sector',
+> 'end_sector' is compared to 'rdev->recovery_offset', so it should be
+> offset to rdev, but this commit change it to offset to the array.
 > 
-> Shall I spin a v2?
+> Perhaps following change will make sense:
 
-Yes, please go ahead.
-
-- Eric
+Yes, I think it does.  Can you send a patch?
