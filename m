@@ -2,163 +2,181 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A536C77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 05:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC5EC77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 06:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233554AbjEXFyU (ORCPT
+        id S239654AbjEXGPR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 24 May 2023 01:54:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40150 "EHLO
+        Wed, 24 May 2023 02:15:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232365AbjEXFyT (ORCPT
+        with ESMTP id S239356AbjEXGPQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 24 May 2023 01:54:19 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5CF113E;
-        Tue, 23 May 2023 22:54:18 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1ae5dc9eac4so4200555ad.1;
-        Tue, 23 May 2023 22:54:18 -0700 (PDT)
+        Wed, 24 May 2023 02:15:16 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E633D132;
+        Tue, 23 May 2023 23:15:14 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-52c40be1417so576365a12.1;
+        Tue, 23 May 2023 23:15:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684907658; x=1687499658;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qmpQ8CZWBqNpjBXlf/vqm5PoXrDI3CUBIg7+r/yPqX4=;
-        b=Ll/kZY4z6GmbqweRRDzeefXlVdAGFZlUdDBFJEEMbnx3h+Ai+c8cqNCxSTkGFketNw
-         C+DGOb0/ZJZRjKYhfBlEOR2yoc2OBWfvsq0i/+9Zev4wmSL3MPPsq29MahVf9CRjSJEh
-         ojsW9Q5vHIve/zDAZ12KN3ozwikW/7+QNf5Lgw/IJCVPBZnFAhikIxygmuWMi7bdaKyk
-         r/rI6PMOlYB1WLK/WOu3cw+D9+hYWYzwubMDCINnWIjDc+FbUqKiiMUQoROl6pqKpbcD
-         UZ3FkgMtjT6fd8zloBWdktCLFkjIo4tsryrYxDI4kfTTKW4LePLeEg2fCje+8yGW+EMU
-         E5HQ==
+        d=gmail.com; s=20221208; t=1684908914; x=1687500914;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lt0lGIpQnbErHODNwQ3cDengEUbpWKePGFq6txNOIKs=;
+        b=RAGhMbG8uOFFFCCrljvC4Hlt6lZKpOrXnJZBJuc+6CDr0+FBnbtd+sxDA+1SJpjzUC
+         aLfsNKz+j1G5RmQ6J2/dkjVTt/VYdCaJhfZNVPmX1rYCvZXSY+/1KWBCMywqmy3add74
+         L/V3gve/zC8GcldFhoOV29465IMljK6JFwkpGe2RUD0Rf/9KTy0gVmqcLMyRaSyhG015
+         AKjnzVZ/rK3LBOate3PwROFVWdl4lgD91wCC45CiIO34JyJPNmrG8+oZH+jm+fUYAEpR
+         oHGdWN/Y2mJpXswO8T/woskVa+kzsdptMlzC/R8POQdPMVBA1il1RXfkXQv/09c7PPRe
+         3QGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684907658; x=1687499658;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qmpQ8CZWBqNpjBXlf/vqm5PoXrDI3CUBIg7+r/yPqX4=;
-        b=ilhmHy4E7wMwNaYcYaSr0V4Evcl8iN5oz1R5UTM/t1MunQh4Zie+BEgtJZvMbSw3bR
-         Bkf5LaZTmCxxPjos1Q+M9E0NIp3QPY/r0LXVLV8RbQgYn7EOrFLqfDahp9Do2K1RL0B2
-         OqfhcqbbMZnzKluTIKbaCBRqCLj9HaNBD+zJ/Cn0S4laS9sgN6cKtoxuY/h5+ZkR04lN
-         Fbt/kv4JgbSKTCvX2m2XWc0C3ZA6bTfX5OXNgTasG6yg2NtGForWAkKZuNsBcMFDAfd4
-         pxYwltvtGcqlgvPYvqnkbgKvi2iozRGZmIPz1OcXuYxQOPccnbZW+SVFMd5grC98Ma3S
-         hCgg==
-X-Gm-Message-State: AC+VfDzcIMBB8dcYRKNjVYi7CQ7PQZI9TYPY7aWPfyi6otd18EDoUdSb
-        Ila0+BqKNFMn1DhjCWYn2yY=
-X-Google-Smtp-Source: ACHHUZ76vGdzaPECnMi7UdUsqTthz47m8It48b8hGnCFJV0vnlbq9vB/sfF/1XsTkmmCIr3dHhHU3A==
-X-Received: by 2002:a17:903:188:b0:1ae:600d:3d07 with SMTP id z8-20020a170903018800b001ae600d3d07mr18751108plg.4.1684907658072;
-        Tue, 23 May 2023 22:54:18 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684908914; x=1687500914;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lt0lGIpQnbErHODNwQ3cDengEUbpWKePGFq6txNOIKs=;
+        b=jGeJjHOkDIi560SLHr8oV/yaFkD+gR/MZ/xsRi1Koloi9KiR49NjK30FHNOqA+ffZM
+         SAyYObdOugcvqQcpL4tv2A1OWTcA8RSy1j7l6XrZZrER/KHY+tVn4Cxk7rvRosFjQXAK
+         iv05neef/wIICYPQA+HilhaLUF+ph6rqbRDbxwF5ecpqLWD3Sobq9wZrtDKsykdKiThG
+         Qtiks0dxDMPp21vy7bthB0yCkoZbiYRq8IUjw3XbzW4ZUT45kH3tuCOjQa3TAFRKJlu4
+         KPU/uDeqijSkF9UfMcGv+D65VbfBrWUEXVB6G/6W88iaPInUWVV3LuK4IHYnS87+sKoy
+         AmrA==
+X-Gm-Message-State: AC+VfDyjXvMrij/VbbF1xv5G7c+MWSdfN2SDnuo/JQ2ciXGwz++x0hDQ
+        4r0wZ1xCdIaCeVlrI01SELE=
+X-Google-Smtp-Source: ACHHUZ5xpGBbFd9LGPJJ1namXeHHXVm+E0C/DmK6xw6rAGu3//TbvfHJdMcm+i5Ilzbz16HusfjvCA==
+X-Received: by 2002:a17:902:ecd0:b0:1af:d6fb:199c with SMTP id a16-20020a170902ecd000b001afd6fb199cmr2593761plh.16.1684908914137;
+        Tue, 23 May 2023 23:15:14 -0700 (PDT)
 Received: from debian-BULLSEYE-live-builder-AMD64 ([211.216.218.61])
-        by smtp.gmail.com with ESMTPSA id m10-20020a170902bb8a00b001aaeeeebaf1sm7723002pls.201.2023.05.23.22.54.12
+        by smtp.gmail.com with ESMTPSA id w9-20020a170902d3c900b001a6d08eb054sm7836077plb.78.2023.05.23.23.15.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 22:54:17 -0700 (PDT)
-Date:   Wed, 24 May 2023 14:54:33 +0900
+        Tue, 23 May 2023 23:15:13 -0700 (PDT)
+Date:   Wed, 24 May 2023 15:15:26 +0900
 From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
-To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
+To:     David Rientjes <rientjes@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        David Hildenbrand <david@redhat.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
         Vlastimil Babka <vbabka@suse.cz>,
         Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         Pekka Enberg <penberg@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Gong Ruiqi <gongruiqi1@huawei.com>
-Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
-Message-ID: <ZG2mmWT5dxfMC3DW@debian-BULLSEYE-live-builder-AMD64>
-References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
- <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
- <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
- <CAB=+i9R0GZiau7PKDSGdCOijPH1TVqA3rJ5tQLejJpoR55h6dg@mail.gmail.com>
- <19707cc6-fa5e-9835-f709-bc8568e4c9cd@huawei.com>
- <CAB=+i9T-iqtMZw8y7SxkaFBtiXA93YwFFEtQyGynBsorud1+_Q@mail.gmail.com>
- <1cec95d5-5cd4-fbf9-754b-e6a1229d45c3@huaweicloud.com>
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, patches@lists.linux.dev,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm/slab: remove HAVE_HARDENED_USERCOPY_ALLOCATOR
+Message-ID: <ZG2rX4PN03Db8l4C@debian-BULLSEYE-live-builder-AMD64>
+References: <20230523073136.4900-1-vbabka@suse.cz>
+ <310077ed-6f3f-41fe-afcf-36500a9408ec@lucifer.local>
+ <623a87c6-c0d2-799a-c39e-0d14dcdfa6df@suse.cz>
+ <ae3ff438-5e5a-4a75-b4e9-575324a584f7@lucifer.local>
+ <ca7860db-220f-ae77-93e6-2a38f6c1130a@redhat.com>
+ <202305231001.08BC6058@keescook>
+ <7a16b351-c7f6-b6a3-869b-5163c0d0793f@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1cec95d5-5cd4-fbf9-754b-e6a1229d45c3@huaweicloud.com>
+In-Reply-To: <7a16b351-c7f6-b6a3-869b-5163c0d0793f@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, May 22, 2023 at 04:58:25PM +0800, GONG, Ruiqi wrote:
+On Tue, May 23, 2023 at 05:31:47PM -0700, David Rientjes wrote:
+> On Tue, 23 May 2023, Kees Cook wrote:
 > 
+> > On Tue, May 23, 2023 at 10:14:24AM +0200, David Hildenbrand wrote:
+> > > On 23.05.23 09:56, Lorenzo Stoakes wrote:
+> > > > On Tue, May 23, 2023 at 09:46:46AM +0200, Vlastimil Babka wrote:
+> > > > > On 5/23/23 09:42, Lorenzo Stoakes wrote:
+> > > > > > On Tue, May 23, 2023 at 09:31:36AM +0200, Vlastimil Babka wrote:
+> > > > > > > With SLOB removed, both remaining allocators support hardened usercopy,
+> > > > > > > so remove the config and associated #ifdef.
+> > > > > > > 
+> > > > > > > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> > > > > > > ---
+> > > > > > >   mm/Kconfig       | 2 --
+> > > > > > >   mm/slab.h        | 9 ---------
+> > > > > > >   security/Kconfig | 8 --------
+> > > > > > >   3 files changed, 19 deletions(-)
+> > > > > > > 
+> > > > > > > diff --git a/mm/Kconfig b/mm/Kconfig
+> > > > > > > index 7672a22647b4..041f0da42f2b 100644
+> > > > > > > --- a/mm/Kconfig
+> > > > > > > +++ b/mm/Kconfig
+> > > > > > > @@ -221,7 +221,6 @@ choice
+> > > > > > >   config SLAB
+> > > > > > >   	bool "SLAB"
+> > > > > > >   	depends on !PREEMPT_RT
+> > > > > > > -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > > > >   	help
+> > > > > > >   	  The regular slab allocator that is established and known to work
+> > > > > > >   	  well in all environments. It organizes cache hot objects in
+> > > > > > > @@ -229,7 +228,6 @@ config SLAB
+> > > > > > > 
+> > > > > > >   config SLUB
+> > > > > > >   	bool "SLUB (Unqueued Allocator)"
+> > > > > > > -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > > > >   	help
+> > > > > > >   	   SLUB is a slab allocator that minimizes cache line usage
+> > > > > > >   	   instead of managing queues of cached objects (SLAB approach).
+> > > > > > > diff --git a/mm/slab.h b/mm/slab.h
+> > > > > > > index f01ac256a8f5..695ef96b4b5b 100644
+> > > > > > > --- a/mm/slab.h
+> > > > > > > +++ b/mm/slab.h
+> > > > > > > @@ -832,17 +832,8 @@ struct kmem_obj_info {
+> > > > > > >   void __kmem_obj_info(struct kmem_obj_info *kpp, void *object, struct slab *slab);
+> > > > > > >   #endif
+> > > > > > > 
+> > > > > > > -#ifdef CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR
+> > > > > > >   void __check_heap_object(const void *ptr, unsigned long n,
+> > > > > > >   			 const struct slab *slab, bool to_user);
+> > > > > > > -#else
+> > > > > > > -static inline
+> > > > > > > -void __check_heap_object(const void *ptr, unsigned long n,
+> > > > > > > -			 const struct slab *slab, bool to_user)
+> > > > > > > -{
+> > > > > > > -}
+> > > > > > > -#endif
+> > > > > > 
+> > > > > > Hm, this is still defined in slab.c/slub.c and invoked in usercopy.c, do we
+> > > > > > not want the prototype?
+> > > > > 
+> > > > > Well I didn't delete the prototype, just the ifdef/else around, so now it's
+> > > > > there unconditionally.
+> > > > > 
+> > > > > > Perhaps replacing with #ifdef
+> > > > > > CONFIG_HARDENED_USERCOPY instead? I may be missing something here :)
+> > > > > 
+> > > > > Putting it under that #ifdef would work and match that the implementations
+> > > > > of that function are under that same ifdef, but maybe it's unnecessary noise
+> > > > > in the header?
+> > > > > 
+> > > > 
+> > > > Yeah my brain inserted extra '-'s there, sorry!
+> > > > 
+> > > > Given we only define __check_heap_object() in sl[au]b.c if
+> > > > CONFIG_HARDENED_USERCOPY wouldn't we need to keep the empty version around
+> > > > if !CONFIG_HARDENED_USERCOPY since check_heap_object() appears to be called
+> > > > unconditionally?
+> > > > 
+> > > 
+> > > The file is only compiled with CONFIG_HARDENED_USERCOPY:
+> > > 
+> > > mm/Makefile:obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
+> > 
+> > Right.
+> > 
+> > > Reviewed-by: David Hildenbrand <david@redhat.com>
+> > 
+> > Thanks!
+> > 
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > 
 > 
-> On 2023/05/22 16:03, Hyeonggon Yoo wrote:
-> > On Mon, May 22, 2023 at 4:35 PM Gong Ruiqi <gongruiqi1@huawei.com> wrote:
-> >> On 2023/05/17 6:35, Hyeonggon Yoo wrote:
-> > [...]
-> >>>>>> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
-> >>>>>> +# define SLAB_RANDOMSLAB       ((slab_flags_t __force)0x01000000U)
-> >>>>>> +#else
-> >>>>>> +# define SLAB_RANDOMSLAB       0
-> >>>>>> +#endif
-> >>>
-> >>> There is already the SLAB_KMALLOC flag that indicates if a cache is a
-> >>> kmalloc cache. I think that would be enough for preventing merging
-> >>> kmalloc caches?
-> >>
-> >> After digging into the code of slab merging (e.g. slab_unmergeable(),
-> >> find_mergeable(), SLAB_NEVER_MERGE, SLAB_MERGE_SAME etc), I haven't
-> >> found an existing mechanism that prevents normal kmalloc caches with
-> >> SLAB_KMALLOC from being merged with other slab caches. Maybe I missed
-> >> something?
-> >>
-> >> While SLAB_RANDOMSLAB, unlike SLAB_KMALLOC, is added into
-> >> SLAB_NEVER_MERGE, which explicitly indicates the no-merge policy.
-> > 
-> > I mean, why not make slab_unmergable()/find_mergeable() not to merge kmalloc
-> > caches when CONFIG_RANDOM_KMALLOC_CACHES is enabled, instead of a new flag?
-> > 
-> > Something like this:
-> > 
-> > diff --git a/mm/slab_common.c b/mm/slab_common.c
-> > index 607249785c07..13ac08e3e6a0 100644
-> > --- a/mm/slab_common.c
-> > +++ b/mm/slab_common.c
-> > @@ -140,6 +140,9 @@ int slab_unmergeable(struct kmem_cache *s)
-> >   if (slab_nomerge || (s->flags & SLAB_NEVER_MERGE))
-> >   return 1;
-> > 
-> > + if (IS_ENALBED(CONFIG_RANDOM_KMALLOC_CACHES) && (flags & SLAB_KMALLOC))
-> > + return 1;
-> > +
-> >   if (s->ctor)
-> >   return 1;
-> > 
-> > @@ -176,6 +179,9 @@ struct kmem_cache *find_mergeable(unsigned int
-> > size, unsigned int align,
-> >   if (flags & SLAB_NEVER_MERGE)
-> >   return NULL;
-> > 
-> > + if (IS_ENALBED(CONFIG_RANDOM_KMALLOC_CACHES) && (flags & SLAB_KMALLOC))
-> > + return NULL;
-> > +
-> >   list_for_each_entry_reverse(s, &slab_caches, list) {
-> >   if (slab_unmergeable(s))
-> >   continue;
-> 
-> Ah I see. My concern is that it would affect not only normal kmalloc
-> caches, but kmalloc_{dma,cgroup,rcl} as well: since they were all marked
-> with SLAB_KMALLOC when being created, this code could potentially change
-> their mergeablity. I think it's better not to influence those irrelevant
-> caches.
+> Acked-by: David Rientjes <rientjes@google.com>
 
-I see. no problem at all as we're not running out of cache flags.
+looks fine to me,
 
-By the way, is there any reason to only randomize normal caches
-and not dma/cgroup/rcl caches?
-
-Thanks,
+Acked-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
 
 -- 
 Hyeonggon Yoo
