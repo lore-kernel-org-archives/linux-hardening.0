@@ -2,190 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E01C77B7C
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 04:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C87C77B73
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 05:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238596AbjEXEju (ORCPT
+        id S234498AbjEXFZe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 24 May 2023 00:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41782 "EHLO
+        Wed, 24 May 2023 01:25:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238735AbjEXEjs (ORCPT
+        with ESMTP id S233010AbjEXFZd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 24 May 2023 00:39:48 -0400
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B13EA1A1;
-        Tue, 23 May 2023 21:39:46 -0700 (PDT)
-Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
-        by cmsmtp with ESMTP
-        id 1bC1qCvNoQFHR1gHpqcg8T; Wed, 24 May 2023 04:39:45 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id 1gHoq0TjHdNGj1gHpquJr9; Wed, 24 May 2023 04:39:45 +0000
-X-Authority-Analysis: v=2.4 cv=XtPphHJ9 c=1 sm=1 tr=0 ts=646d9511
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=P0xRbXHiH_UA:10
- a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8 a=VwQbUJbxAAAA:8 a=2OZTvG03Zy49M_lQ8uoA:9
- a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vEhgjlTSMZ2idYpm+0XIdDGZ5cANpn8hdQCwS9DpvY8=; b=CDm3BxOJUfFQ0aC3JKbOmtYcoV
-        dgmV+IyMAoJveixsNEoU69GqUuzmrcvuic5RgJZfZs70T9AIlVS4CdjXNPMT5A51V95iY6ClY+6at
-        7agr55+pBcBVrlGAh6vVvxx5pwK95uiJ21dndNlpiiFwz1dovJVqtahM0es+RCnxfzZVYdVLxYYRo
-        1q8z3nVg2umNvWU5ykomtiPrq73S+vC0vU1QCdsd6cSQvf6Sl2ZUXUatbdGywcde79h450ONQAeA+
-        /d8pqcDXWJT+uvfJBN7Graj27OLow5sszowfxX10ZGPGXt9QDs4Vn4lS84ZdsN6O++azE8t66ZpQG
-        8rvt8WIg==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:33692 helo=[192.168.15.7])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1q1dVF-0004pM-GV;
-        Tue, 23 May 2023 20:41:25 -0500
-Message-ID: <136d72e5-287c-ebaf-c1e1-92b10e68ba8d@embeddedor.com>
-Date:   Tue, 23 May 2023 19:42:20 -0600
+        Wed, 24 May 2023 01:25:33 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC58189;
+        Tue, 23 May 2023 22:25:32 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-bac6f8325b5so124168276.0;
+        Tue, 23 May 2023 22:25:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684905932; x=1687497932;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oH4s8cUK60HKvQMnl3udCHQWgNAGeoNm3adasEf3BeI=;
+        b=EtU+mR1OYpsJNNTFwpg4D8QQJbMHQ4a5uqyj6zRLZDgv7mWLEtbYpaANTf4Fz3kogN
+         HHGevm+Nj8JaM4yETGV00Kwi0i6n8XD+WSIofFgkZmz752SzBmT38YjXXP9b1VWW2V++
+         YF74bKD204tdcj8w/333WWrIb4OmlFbWZE8DozGg7thl8kt5BNAHsCCHy1+K7J9g9q9q
+         4Xmb1Ep5eHvxoRpKFZYbb9RWxc70dtX0u6naZ88wdF46MMP+v9AghNLeaGOi1IjVOELK
+         u014acznuXCwtcUxWiDzeZn8/Jro+GWNsZ96lwg9aMtqeu3n7oo0bO/ibjNUJaJdKrFJ
+         y0dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684905932; x=1687497932;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oH4s8cUK60HKvQMnl3udCHQWgNAGeoNm3adasEf3BeI=;
+        b=IzgCJKiuW6z+LLLuxcNAc89481v1ET88ZePxQUKIDz7BEE9ATh7wRgxZKbk0IFcxTW
+         qYLhjKaZBA8b9SLvGpl8IvMKBkT4dZ3GRbdDObsBbcRApC7jZgfqhLqvDam4coOM9+5h
+         Tz5l/kRcszCroCVs8uxMm8F1F8IONmGAXl8ot47dHmheiu++JhugRHdadULq31waoU9r
+         GNNCZ1bw4SJ84gZAaXW5jHJ/RsnVqvAAN5Jym8BbEO9sxdKAS0WpP5lInU6kCgwsHq5L
+         m5bff6j7OOFHtW0Cu9iDHq7GIjq8Z3JR4rPi9RNmJSLfKhtQR43SgcIgmm/BLxd64nnc
+         MtfA==
+X-Gm-Message-State: AC+VfDyzzVfGNMFJeQ3G3ktcdxe/U0G7GqpcVC13HXiTkJf6kbBFQ71E
+        cohqi5U0wIBMpMf/gH5bkEh3MBWa1Phvxppbkto=
+X-Google-Smtp-Source: ACHHUZ5D1kD1NK05V+gmlHB7e3f2u66707rziAvZ2xTBkT0SfDoedOHj+1nnTnxb5NEukzdVv26wCAVcMAR56PCfD7c=
+X-Received: by 2002:a81:9956:0:b0:565:1d8a:cf94 with SMTP id
+ q83-20020a819956000000b005651d8acf94mr7077340ywg.1.1684905932077; Tue, 23 May
+ 2023 22:25:32 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH][next] nfsd: Replace one-element array with flexible-array
- member
-Content-Language: en-US
-To:     Chuck Lever <cel@kernel.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        dai.ngo@oracle.com
-References: <ZG1d51tGG4c97qqb@work> <ZG1iBLw85MxtysWI@manet.1015granger.net>
- <4b9c7386-c2b1-2eb7-d248-ddfdc3c2cd1f@embeddedor.com>
- <ZG1o2LFiRekz/pMy@manet.1015granger.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZG1o2LFiRekz/pMy@manet.1015granger.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1q1dVF-0004pM-GV
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.7]) [187.162.21.192]:33692
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMYhrRmp4dnnAP19+EePrfGSBrtlz7lAQ0qw03vzl+Lj3h+Bwnu6ysUHnQ9AcoKSkbTrFBBd1K4RUjmVG6kuDWhBvpfHM+R0ADi2zROoFjgZA79cWFjU
- /LX7YkdDYbmJ5e4FotYs3bufTkDTrZqx1orbyp/H5C/jo90CtapduUJwoorbfZPFacQ4L9ScbV4/C8DCFpmsI4dHDqPLrMJyNFwzvM6yA7BMaYqc8I6zPpP2
- L7YxHortO1Z/85PrEaa3ha7fCpBdlMTJCTr1J/a7GDkwzUXw0c6+AJst8VjUP5LmnvsJs1j8hDWWbqGqGgYJcg==
+References: <ZG0fDdY/PPQ/ijlt@work>
+In-Reply-To: <ZG0fDdY/PPQ/ijlt@work>
+From:   Justin Tee <justintee8345@gmail.com>
+Date:   Tue, 23 May 2023 22:25:20 -0700
+Message-ID: <CABPRKS9ykHvaOGUboDXZ261LLPS78+YFpOZAcJEeLKGfEUe21g@mail.gmail.com>
+Subject: Re: [PATCH v2][next] scsi: lpfc: Use struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Justin Tee <justin.tee@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+no_of_objects may be hardcoded to 1 right now, but does it make more
+sense to use?
 
+struct_size(rap, obj, be32_to_cpu(rap->no_of_objects));
 
-On 5/23/23 19:31, Chuck Lever wrote:
-> On Tue, May 23, 2023 at 07:11:37PM -0600, Gustavo A. R. Silva wrote:
->>
->> On 5/23/23 19:01, Chuck Lever wrote:
->>> On Tue, May 23, 2023 at 06:44:23PM -0600, Gustavo A. R. Silva wrote:
->>>> One-element arrays are deprecated, and we are replacing them with
->>>> flexible array members instead. So, replace a one-element array
->>>> with a flexible-arrayº member in struct vbi_anc_data and refactor
->>>
->>> I don't know what "struct vbi_anc_data" is. Is the patch description
->>> correct?
->>
->> Oops, copy/paste error. I'll fix it up. :)
->>
->>>
->>>
->>>> the rest of the code, accordingly.
->>>>
->>>> This results in no differences in binary output.
->>>>
->>>> Link: https://github.com/KSPP/linux/issues/79
->>>> Link: https://github.com/KSPP/linux/issues/298
->>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>
->>>> ---
->>>>    fs/nfsd/nfs4callback.c | 2 +-
->>>>    fs/nfsd/xdr4.h         | 2 +-
->>>>    2 files changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
->>>> index 4039ffcf90ba..2c688d51135d 100644
->>>> --- a/fs/nfsd/nfs4callback.c
->>>> +++ b/fs/nfsd/nfs4callback.c
->>>> @@ -353,7 +353,7 @@ encode_cb_recallany4args(struct xdr_stream *xdr,
->>>>    {
->>>>    	encode_nfs_cb_opnum4(xdr, OP_CB_RECALL_ANY);
->>>>    	encode_uint32(xdr, ra->ra_keep);
->>>> -	encode_bitmap4(xdr, ra->ra_bmval, ARRAY_SIZE(ra->ra_bmval));
->>>> +	encode_bitmap4(xdr, ra->ra_bmval, 1);
->>>
->>> I find the new code less self-documenting.
->>>
->>>
->>>>    	hdr->nops++;
->>>>    }
->>>> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
->>>> index 510978e602da..68072170eac8 100644
->>>> --- a/fs/nfsd/xdr4.h
->>>> +++ b/fs/nfsd/xdr4.h
->>>> @@ -899,7 +899,7 @@ struct nfsd4_operation {
->>>>    struct nfsd4_cb_recall_any {
->>>>    	struct nfsd4_callback	ra_cb;
->>>>    	u32			ra_keep;
->>>> -	u32			ra_bmval[1];
->>>> +	u32			ra_bmval[];
->>>
->>> This is not a placeholder for "1 or more elements". We actually want
->>> just a single u32 element in this array. Doesn't this change the
->>> sizeof(struct nfsd4_cb_recall_any) ?
->>
->> I see. Yes, it does change the size. Can we replace it with a simple
->> object of type u32? or do you actually need this to stay an array?
-> 
-> It's not impossible to make it a scalar u32, however...
-> 
-> In this area of code, *_bmval is always a bitmap -- an array of u32s.
-> Helpers like encode_bitmap4() assume an array. I think it would be
-> less confusing overall to human readers if it remained an array.
-> 
-> In this case, it is a single element array because CB_RECALL_ANY
-> doesn't happen to use bits above the first 32-bit word of the
-> bitmap.
+We probably should have declared no_of_objects as __be32 to have
+avoided this confusion.
 
-I see. If this is never going to be treated as a flexible array, then
-it can stay as is.
-
--fstrict-flex-arrays=3 should not warn about this because the array
-will never ever be tried to be accessed beyond element 1. :)
-
-Thanks for the feedback!
---
-Gustavo
-
-> 
-> We could make it a 2-element array, I think, without harm. Send a
-> patch for that, and Dai can test it to make sure there are no
-> unexpected interoperability consequences.
-> 
-> I hope that would avoid suspicious-looking array definitions.
-> 
-> 
->>>>    };
->>>>    #endif
->>>> -- 
->>>> 2.34.1
->>>>
+On Tue, May 23, 2023 at 1:33=E2=80=AFPM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> Prefer struct_size() over open-coded versions of idiom:
+>
+> sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * cou=
+nt
+>
+> where count is the max number of items the flexible array is supposed to
+> contain.
+>
+> Link: https://github.com/KSPP/linux/issues/160
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> Changes in v2:
+>  - Use literal 1 in call to struct_size(), instead of rap->no_of_objects
+>    (Kees Cook).
+>
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/99e06733f5f35c6cd62e05f5=
+30b93107bfd03362.1684358315.git.gustavoars@kernel.org/
+>
+>  drivers/scsi/lpfc/lpfc_ct.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
+> index e880d127d7f5..f52aeb73af8d 100644
+> --- a/drivers/scsi/lpfc/lpfc_ct.c
+> +++ b/drivers/scsi/lpfc/lpfc_ct.c
+> @@ -3747,9 +3747,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
+>                 rap->no_of_objects =3D cpu_to_be32(1);
+>                 rap->obj[0].entity_id_len =3D vmid->vmid_len;
+>                 memcpy(rap->obj[0].entity_id, vmid->host_vmid, vmid->vmid=
+_len);
+> -               size =3D RAPP_IDENT_OFFSET +
+> -                       sizeof(struct lpfc_vmid_rapp_ident_list) +
+> -                       sizeof(struct entity_id_object);
+> +               size =3D RAPP_IDENT_OFFSET + struct_size(rap, obj, 1);
+>                 retry =3D 1;
+>                 break;
+>
+> @@ -3767,9 +3765,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
+>                 dap->no_of_objects =3D cpu_to_be32(1);
+>                 dap->obj[0].entity_id_len =3D vmid->vmid_len;
+>                 memcpy(dap->obj[0].entity_id, vmid->host_vmid, vmid->vmid=
+_len);
+> -               size =3D DAPP_IDENT_OFFSET +
+> -                       sizeof(struct lpfc_vmid_dapp_ident_list) +
+> -                       sizeof(struct entity_id_object);
+> +               size =3D DAPP_IDENT_OFFSET + struct_size(dap, obj, 1);
+>                 write_lock(&vport->vmid_lock);
+>                 vmid->flag &=3D ~LPFC_VMID_REGISTERED;
+>                 write_unlock(&vport->vmid_lock);
+> --
+> 2.34.1
+>
