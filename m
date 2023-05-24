@@ -2,97 +2,79 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67974C77B75
-	for <linux-hardening@archiver.kernel.org>; Tue, 23 May 2023 20:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17B0C7EE26
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 00:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234448AbjEWU3u (ORCPT
+        id S239014AbjEXATt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 16:29:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33592 "EHLO
+        Tue, 23 May 2023 20:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233535AbjEWU3s (ORCPT
+        with ESMTP id S239005AbjEXATs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 16:29:48 -0400
+        Tue, 23 May 2023 20:19:48 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B18E8130;
-        Tue, 23 May 2023 13:29:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A21B5;
+        Tue, 23 May 2023 17:19:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4CEA663497;
-        Tue, 23 May 2023 20:29:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91306C4339C;
-        Tue, 23 May 2023 20:29:46 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E5DE635F2;
+        Wed, 24 May 2023 00:19:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF87C433D2;
+        Wed, 24 May 2023 00:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684873786;
-        bh=3zormi991DJH+Ol8uhpUBr0tm4WKud04qZ9kQu+6tBc=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=XxLtyN2zRhNjNC5UpZMBju/c1LzM0hSW9dlYTi5yn82LF2zUZTN+lUd3eijnXCXLF
-         YorZJMah4CLS9xZevcNRQop+uYHisQBar0e3J1X2hKYtuURYZO3w8b5jK8exN8JLjG
-         wO1KIucQ4ia5mXd1fbffiIqJytOWRo1tFUX1AMOxaXxdHwWmNVY4maCgMuUDaIgjJG
-         rgKJ1+cSB9dn6STLlUn81hW7BUYB/XZcQqrUzduY+JgqpllIgSXPQqzvHjf8szgc6B
-         TPeC7bfRL1Qysv2y7+raePTNEcPLqHyKDuH6Ik9JFkPAxqF/rphBdMkIIF9g8KfAea
-         +CODsfSON8dTg==
-Date:   Tue, 23 May 2023 13:29:45 -0700
-From:   Kees Cook <kees@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-CC:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <james.smart@broadcom.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1684887586;
+        bh=hixGdc1nHEoCc/d3qs1AQBwSDjqbYfvrtLPRskFMBvY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CHuGI6gMsRzy1m4Y8y1Mk4UEu2sIlb5MlVltFq4BGV+PjQyQTUzhuVUzjPUx/YRji
+         wz9b/gjzXwwdjj4eFenbTB06urAgBpj0kU8dArGgPJDQo5K4Pe3ME0Bwz3fa8b+Nnk
+         +YI6DyNveg9VNQjY4wCUkEOr22PwL8SfSMuaUP0Xzz05BOZVR0xse7cScT95RJdVds
+         QjjAuDT1mEMXTeQZlmPkEaBaHOkrE1+Je5/CnIAAwx/1G0Z9AU8qPBRImCX3pua9U9
+         5mHDBwJzbQuVrU40bn27wwzIvR00U6B+1vXsGoQ7Nr9HSLQN9W2Slh/z8gA60K8AL1
+         9Vc8vsTBr8G3A==
+Date:   Tue, 23 May 2023 18:20:38 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Andy Walls <awalls@md.metrocast.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_1/2=5D=5Bnext=5D_scsi=3A_lpfc=3A_Replace_o?= =?US-ASCII?Q?ne-element_array_with_flexible-array_member?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <3d298c36-cdd8-62bd-2fef-c2ce63e662ef@embeddedor.com>
-References: <cover.1684358315.git.gustavoars@kernel.org> <6c6dcab88524c14c47fd06b9332bd96162656db5.1684358315.git.gustavoars@kernel.org> <yq11qj8nhy7.fsf@ca-mkp.ca.oracle.com> <202305231031.C9E6124@keescook> <3d298c36-cdd8-62bd-2fef-c2ce63e662ef@embeddedor.com>
-Message-ID: <9ECC5C8E-D8E1-4444-BC47-D49FE015144D@kernel.org>
+Subject: [PATCH][next] media: pci: cx18-av-vbi: Replace one-element array
+ with flexible-array member
+Message-ID: <ZG1YVji9thTLWeRm@work>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On May 23, 2023 12:46:54 PM PDT, "Gustavo A=2E R=2E Silva" <gustavo@embedde=
-dor=2Ecom> wrote:
->
->
->On 5/23/23 11:31, Kees Cook wrote:
->> On Mon, May 22, 2023 at 06:02:21PM -0400, Martin K=2E Petersen wrote:
->>>=20
->>> Gustavo,
->>>=20
->>>> One-element arrays are deprecated, and we are replacing them with fle=
-xible
->>>> array members instead=2E So, replace one-element arrays with flexible=
--array
->>>> members in a couple of structures, and refactor the rest of the code,
->>>> accordingly=2E
->>>>=20
->>>> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
->>>> routines on memcpy() and help us make progress towards globally
->>>> enabling -fstrict-flex-arrays=3D3 [1]=2E
->>>>=20
->>>> This results in no differences in binary output=2E
->>>=20
->>> Applied to 6=2E5/scsi-staging, thanks!
->>=20
->> Martin, I think this patch is not right -- can you drop this from
->> staging for the moment?
->
->Martin just took patch 1/2, which is correct:
->
->https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/mkp/scsi=2Egit/commit=
-/?h=3D6=2E5/scsi-staging&id=3De90644b0ce2d700a65579ac74ff594414e8ba30f
+One-element arrays are deprecated, and we are replacing them with flexible
+array members instead. So, replace one-element arrays with flexible-array
+members in struct vbi_anc_data.
 
-Oops, yes, I thought both got pulled=2E 1/2 is fine=2E :)
+This results in no differences in binary output.
 
--Kees
+Link: https://github.com/KSPP/linux/issues/79
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/media/pci/cx18/cx18-av-vbi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/media/pci/cx18/cx18-av-vbi.c b/drivers/media/pci/cx18/cx18-av-vbi.c
+index a0d465924e75..65281d40c681 100644
+--- a/drivers/media/pci/cx18/cx18-av-vbi.c
++++ b/drivers/media/pci/cx18/cx18-av-vbi.c
+@@ -51,7 +51,7 @@ struct vbi_anc_data {
+ 	u8 sdid;
+ 	u8 data_count;
+ 	u8 idid[2];
+-	u8 payload[1]; /* data_count of payload */
++	u8 payload[]; /* data_count of payload */
+ 	/* u8 checksum; */
+ 	/* u8 fill[]; Variable number of fill bytes */
+ };
+-- 
+2.34.1
 
---=20
-Kees Cook
