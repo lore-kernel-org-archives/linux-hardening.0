@@ -2,185 +2,103 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC5EC77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 06:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E385DC77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 07:16:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239654AbjEXGPR (ORCPT
+        id S239634AbjEXHQd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 24 May 2023 02:15:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49942 "EHLO
+        Wed, 24 May 2023 03:16:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239356AbjEXGPQ (ORCPT
+        with ESMTP id S239505AbjEXHPv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 24 May 2023 02:15:16 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E633D132;
-        Tue, 23 May 2023 23:15:14 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-52c40be1417so576365a12.1;
-        Tue, 23 May 2023 23:15:14 -0700 (PDT)
+        Wed, 24 May 2023 03:15:51 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F185690;
+        Wed, 24 May 2023 00:15:26 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-30a95ec7744so386165f8f.3;
+        Wed, 24 May 2023 00:15:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684908914; x=1687500914;
+        d=gmail.com; s=20221208; t=1684912525; x=1687504525;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lt0lGIpQnbErHODNwQ3cDengEUbpWKePGFq6txNOIKs=;
-        b=RAGhMbG8uOFFFCCrljvC4Hlt6lZKpOrXnJZBJuc+6CDr0+FBnbtd+sxDA+1SJpjzUC
-         aLfsNKz+j1G5RmQ6J2/dkjVTt/VYdCaJhfZNVPmX1rYCvZXSY+/1KWBCMywqmy3add74
-         L/V3gve/zC8GcldFhoOV29465IMljK6JFwkpGe2RUD0Rf/9KTy0gVmqcLMyRaSyhG015
-         AKjnzVZ/rK3LBOate3PwROFVWdl4lgD91wCC45CiIO34JyJPNmrG8+oZH+jm+fUYAEpR
-         oHGdWN/Y2mJpXswO8T/woskVa+kzsdptMlzC/R8POQdPMVBA1il1RXfkXQv/09c7PPRe
-         3QGQ==
+        bh=QTwUX3qEpiLdoo2WOruxY9BVcBrptDaoYsD2JHxAesc=;
+        b=j8e8aqmI8nrYA59qDNX4vMDiOXCYqlzQxVL4aYAfwG42G4CYrBVAzwMIaQ1Erv4hSX
+         kGnV/G7awoKyLM0rQLSvaUFEp3Hpw4ah+4cG8HaHB56syFLX7L0MYR65eGXbihrEsIoD
+         SKFnAIVtSLLkt1jAT0tsSLblry/Honk98G/08iXl1PQRBddaPXBvuSyHUw1Kmn+ylCCT
+         sV7KZtxCVJuQCifkRIaVp8pQX52QrXsytC2TEwVxo/cqI6OlZidu3v4eKWO7B/5iLSJY
+         xGr6RyW9Eu6cY4erU9ajh/uOeMhMdmwf7XUieuntprkeSa6X871PlVGHWwJZJh9y1mF0
+         A1Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684908914; x=1687500914;
+        d=1e100.net; s=20221208; t=1684912525; x=1687504525;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lt0lGIpQnbErHODNwQ3cDengEUbpWKePGFq6txNOIKs=;
-        b=jGeJjHOkDIi560SLHr8oV/yaFkD+gR/MZ/xsRi1Koloi9KiR49NjK30FHNOqA+ffZM
-         SAyYObdOugcvqQcpL4tv2A1OWTcA8RSy1j7l6XrZZrER/KHY+tVn4Cxk7rvRosFjQXAK
-         iv05neef/wIICYPQA+HilhaLUF+ph6rqbRDbxwF5ecpqLWD3Sobq9wZrtDKsykdKiThG
-         Qtiks0dxDMPp21vy7bthB0yCkoZbiYRq8IUjw3XbzW4ZUT45kH3tuCOjQa3TAFRKJlu4
-         KPU/uDeqijSkF9UfMcGv+D65VbfBrWUEXVB6G/6W88iaPInUWVV3LuK4IHYnS87+sKoy
-         AmrA==
-X-Gm-Message-State: AC+VfDyjXvMrij/VbbF1xv5G7c+MWSdfN2SDnuo/JQ2ciXGwz++x0hDQ
-        4r0wZ1xCdIaCeVlrI01SELE=
-X-Google-Smtp-Source: ACHHUZ5xpGBbFd9LGPJJ1namXeHHXVm+E0C/DmK6xw6rAGu3//TbvfHJdMcm+i5Ilzbz16HusfjvCA==
-X-Received: by 2002:a17:902:ecd0:b0:1af:d6fb:199c with SMTP id a16-20020a170902ecd000b001afd6fb199cmr2593761plh.16.1684908914137;
-        Tue, 23 May 2023 23:15:14 -0700 (PDT)
-Received: from debian-BULLSEYE-live-builder-AMD64 ([211.216.218.61])
-        by smtp.gmail.com with ESMTPSA id w9-20020a170902d3c900b001a6d08eb054sm7836077plb.78.2023.05.23.23.15.10
+        bh=QTwUX3qEpiLdoo2WOruxY9BVcBrptDaoYsD2JHxAesc=;
+        b=DViwCu5oYZMQo/t7wXh8255Z5MDB4232QD0aQSCnW3pFmpw5XiCrreI6vDp+yhZ7ex
+         CBcxWMF94GyUQoFGQY/fowzI9JD6hh1Uo5wELYVkDhrwjdufJmGr3/zSS6TTJ2Ga2XgR
+         JKx+WSk2UDA9qMzHQ+vPm2EGrBFBTa20Wb0ZOETHvZ0fE1jKCx0wWO3+NvmQQVaLRC2m
+         ABgskU0S4LJjcENwbGWTBCOpQp281h/K1+EJE6YL7HjSDqc84QCZiGw8Fc1lAdWnDNFu
+         TKYWNPKzJcjyeVf1Huqwr68QWX2QE+HJDEps/LErItU+IcrDndRcV/MMVYl30bHuqbuC
+         s15Q==
+X-Gm-Message-State: AC+VfDxpXIxeEKAeFwUiAm79Xtsnl8UUBW8CGAwe02W9qUYXzntWi8u2
+        aVGXAxIK6v80iwW9nc0y4MY=
+X-Google-Smtp-Source: ACHHUZ7XW0cvABpggLT4CBW+cXjOYhS4kBeHV38swA1xGYzOVfRUCNPM9inU5JsOBBUisX0wNc+F7A==
+X-Received: by 2002:adf:e912:0:b0:307:7e64:4b52 with SMTP id f18-20020adfe912000000b003077e644b52mr14169357wrm.36.1684912525160;
+        Wed, 24 May 2023 00:15:25 -0700 (PDT)
+Received: from localhost (host81-154-179-160.range81-154.btcentralplus.com. [81.154.179.160])
+        by smtp.gmail.com with ESMTPSA id a2-20020a5d53c2000000b002ffbf2213d4sm13537164wrw.75.2023.05.24.00.15.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 23:15:13 -0700 (PDT)
-Date:   Wed, 24 May 2023 15:15:26 +0900
-From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        David Hildenbrand <david@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
+        Wed, 24 May 2023 00:15:23 -0700 (PDT)
+Date:   Wed, 24 May 2023 08:15:23 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
         Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
         Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
         linux-hardening@vger.kernel.org, patches@lists.linux.dev,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] mm/slab: remove HAVE_HARDENED_USERCOPY_ALLOCATOR
-Message-ID: <ZG2rX4PN03Db8l4C@debian-BULLSEYE-live-builder-AMD64>
+Message-ID: <f2ca936a-1441-4cbd-b16c-ff2d54630a75@lucifer.local>
 References: <20230523073136.4900-1-vbabka@suse.cz>
  <310077ed-6f3f-41fe-afcf-36500a9408ec@lucifer.local>
  <623a87c6-c0d2-799a-c39e-0d14dcdfa6df@suse.cz>
  <ae3ff438-5e5a-4a75-b4e9-575324a584f7@lucifer.local>
  <ca7860db-220f-ae77-93e6-2a38f6c1130a@redhat.com>
- <202305231001.08BC6058@keescook>
- <7a16b351-c7f6-b6a3-869b-5163c0d0793f@google.com>
+ <4674f97f-5f97-45b7-a4b9-a19ca46b7ce1@lucifer.local>
+ <9191d9b0-3318-4e70-a81b-69acff184fc6@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7a16b351-c7f6-b6a3-869b-5163c0d0793f@google.com>
+In-Reply-To: <9191d9b0-3318-4e70-a81b-69acff184fc6@redhat.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 23, 2023 at 05:31:47PM -0700, David Rientjes wrote:
-> On Tue, 23 May 2023, Kees Cook wrote:
-> 
-> > On Tue, May 23, 2023 at 10:14:24AM +0200, David Hildenbrand wrote:
-> > > On 23.05.23 09:56, Lorenzo Stoakes wrote:
-> > > > On Tue, May 23, 2023 at 09:46:46AM +0200, Vlastimil Babka wrote:
-> > > > > On 5/23/23 09:42, Lorenzo Stoakes wrote:
-> > > > > > On Tue, May 23, 2023 at 09:31:36AM +0200, Vlastimil Babka wrote:
-> > > > > > > With SLOB removed, both remaining allocators support hardened usercopy,
-> > > > > > > so remove the config and associated #ifdef.
-> > > > > > > 
-> > > > > > > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> > > > > > > ---
-> > > > > > >   mm/Kconfig       | 2 --
-> > > > > > >   mm/slab.h        | 9 ---------
-> > > > > > >   security/Kconfig | 8 --------
-> > > > > > >   3 files changed, 19 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/mm/Kconfig b/mm/Kconfig
-> > > > > > > index 7672a22647b4..041f0da42f2b 100644
-> > > > > > > --- a/mm/Kconfig
-> > > > > > > +++ b/mm/Kconfig
-> > > > > > > @@ -221,7 +221,6 @@ choice
-> > > > > > >   config SLAB
-> > > > > > >   	bool "SLAB"
-> > > > > > >   	depends on !PREEMPT_RT
-> > > > > > > -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
-> > > > > > >   	help
-> > > > > > >   	  The regular slab allocator that is established and known to work
-> > > > > > >   	  well in all environments. It organizes cache hot objects in
-> > > > > > > @@ -229,7 +228,6 @@ config SLAB
-> > > > > > > 
-> > > > > > >   config SLUB
-> > > > > > >   	bool "SLUB (Unqueued Allocator)"
-> > > > > > > -	select HAVE_HARDENED_USERCOPY_ALLOCATOR
-> > > > > > >   	help
-> > > > > > >   	   SLUB is a slab allocator that minimizes cache line usage
-> > > > > > >   	   instead of managing queues of cached objects (SLAB approach).
-> > > > > > > diff --git a/mm/slab.h b/mm/slab.h
-> > > > > > > index f01ac256a8f5..695ef96b4b5b 100644
-> > > > > > > --- a/mm/slab.h
-> > > > > > > +++ b/mm/slab.h
-> > > > > > > @@ -832,17 +832,8 @@ struct kmem_obj_info {
-> > > > > > >   void __kmem_obj_info(struct kmem_obj_info *kpp, void *object, struct slab *slab);
-> > > > > > >   #endif
-> > > > > > > 
-> > > > > > > -#ifdef CONFIG_HAVE_HARDENED_USERCOPY_ALLOCATOR
-> > > > > > >   void __check_heap_object(const void *ptr, unsigned long n,
-> > > > > > >   			 const struct slab *slab, bool to_user);
-> > > > > > > -#else
-> > > > > > > -static inline
-> > > > > > > -void __check_heap_object(const void *ptr, unsigned long n,
-> > > > > > > -			 const struct slab *slab, bool to_user)
-> > > > > > > -{
-> > > > > > > -}
-> > > > > > > -#endif
-> > > > > > 
-> > > > > > Hm, this is still defined in slab.c/slub.c and invoked in usercopy.c, do we
-> > > > > > not want the prototype?
-> > > > > 
-> > > > > Well I didn't delete the prototype, just the ifdef/else around, so now it's
-> > > > > there unconditionally.
-> > > > > 
-> > > > > > Perhaps replacing with #ifdef
-> > > > > > CONFIG_HARDENED_USERCOPY instead? I may be missing something here :)
-> > > > > 
-> > > > > Putting it under that #ifdef would work and match that the implementations
-> > > > > of that function are under that same ifdef, but maybe it's unnecessary noise
-> > > > > in the header?
-> > > > > 
-> > > > 
-> > > > Yeah my brain inserted extra '-'s there, sorry!
-> > > > 
-> > > > Given we only define __check_heap_object() in sl[au]b.c if
-> > > > CONFIG_HARDENED_USERCOPY wouldn't we need to keep the empty version around
-> > > > if !CONFIG_HARDENED_USERCOPY since check_heap_object() appears to be called
-> > > > unconditionally?
-> > > > 
-> > > 
+On Tue, May 23, 2023 at 10:28:32AM +0200, David Hildenbrand wrote:
+[snip]
 > > > The file is only compiled with CONFIG_HARDENED_USERCOPY:
-> > > 
+> > >
 > > > mm/Makefile:obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
-> > 
-> > Right.
-> > 
-> > > Reviewed-by: David Hildenbrand <david@redhat.com>
-> > 
-> > Thanks!
-> > 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> 
-> Acked-by: David Rientjes <rientjes@google.com>
+> > >
+> >
+> > Yeah ugh at this sort of implicit thing. Anyway it'd be preferable to stick
+> > #ifdef CONFIG_HARDENED_USERCOPY around the prototype just so it's
+> > abundantly clear this function doesn't exist unless that is set.
+>
+> I recall that it is very common to not use ifdefs unless really required.
+> Because less ifefs are obviously preferable ;)
+>
+> Compilation+linking will fail in any case.
+>
 
-looks fine to me,
+I don't want to insist so hard on something that doesn't really matter, the
+bike shed can be blue, green or red it's fine :P
 
-Acked-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+So,
 
--- 
-Hyeonggon Yoo
-
-Doing kernel stuff as a hobby
-Undergraduate | Chungnam National University
-Dept. Computer Science & Engineering
+Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
