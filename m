@@ -2,80 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E319C7EE2D
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 02:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E69C7EE23
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 03:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239210AbjEXCzd (ORCPT
+        id S239401AbjEXDyC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 22:55:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
+        Tue, 23 May 2023 23:54:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239208AbjEXCzc (ORCPT
+        with ESMTP id S239404AbjEXDyA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 22:55:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B65FD186;
-        Tue, 23 May 2023 19:55:31 -0700 (PDT)
+        Tue, 23 May 2023 23:54:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A740196;
+        Tue, 23 May 2023 20:53:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3CC8B63615;
-        Wed, 24 May 2023 02:55:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63E3CC433D2;
-        Wed, 24 May 2023 02:55:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DC7D563870;
+        Wed, 24 May 2023 03:53:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD908C433D2;
+        Wed, 24 May 2023 03:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684896930;
-        bh=hgzNNL06TsbhwPSXrFqaywaqvF+gB0OSOd50WtTbY+4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ubs/vCGvvKVN2uuegygIma9dz4N56ne0ieBH+T7VhhZL6m2Bt+2xqN46+YiyaqvMi
-         HZDgD9HInhjehRt+uMCXhBtK+eAFauzZ3d5ppBMOf3vxz+7eAfCCBhJERxSj2iCytv
-         8vglElowrbo39GSoS0RkXdvD2a/eERiQ97vekJk+8sM1LekoB/x+654245TSq4jroS
-         HT9hyUDEU9H1miEs/phRkoW5IELg0O0HeVEOQpWeMb8fIruIhUZevQE0+6TTdvUZTg
-         Ny5QseHjtsF5+vSR/wGCd9kH/XKhvYHQ2HnwIYyikA2dy15DK21403unVv3VxN+pPq
-         UaBxJ+MoDlM1A==
-Date:   Tue, 23 May 2023 19:55:28 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
+        s=k20201202; t=1684900437;
+        bh=4f1gt/BCfbLHog09/Xsin0iYouAloZtBkhPaw5h+3Uk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VTjRau/bNOfmdJ33zPP9fzppLzalj2n66xWeUM8et/U2kDIXenWJlws9ke/J63cua
+         7h8nbEpBrHk+3kbBwK4hYrTG0TJuuA4Y8nyVrZV34Feh/wVZUCXe9pHkiL5GrZpTPb
+         1pUq0WoLiV4z1hh/q8nIAUP6Q7nvRsPe6zxlxMbem5vTDjKC2IBSsISEX6TycDAT+K
+         E11xrcZaYzPDD+AvVcAUfQueTdIeTLMtPcPMx7rpOceZRwETWUuo1o7AcoLQuOypBm
+         fbpREO7W2cFcnLHLSfIPlJAIvbGWiK22cduJxuIMSKGEpMfWr2jO0/7hSlREuEGrtM
+         7Bq4VihlXfeWA==
+Date:   Tue, 23 May 2023 20:53:54 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] fscrypt: Replace 1-element array with flexible array
-Message-ID: <20230524025528.GA1076@sol.localdomain>
-References: <20230523165458.gonna.580-kees@kernel.org>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        James Smart <james.smart@broadcom.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        HighPoint Linux Team <linux@highpoint-tech.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Don Brace <don.brace@microchip.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Guo Xuenan <guoxuenan@huawei.com>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Daniel Latypov <dlatypov@google.com>,
+        kernel test robot <lkp@intel.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, storagedev@microchip.com,
+        linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Tales Aparecida <tales.aparecida@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] overflow: Add struct_size_t() helper
+Message-ID: <20230523205354.06b147c6@kernel.org>
+In-Reply-To: <20230522211810.never.421-kees@kernel.org>
+References: <20230522211810.never.421-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230523165458.gonna.580-kees@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 23, 2023 at 09:55:02AM -0700, Kees Cook wrote:
-> 1-element arrays are deprecated and are being replaced with C99
-> flexible arrays[1].
-> 
-> As sizes were being calculated with the extra byte intentionally,
-> propagate the difference so there is no change in binary output.
-> 
-> [1] https://github.com/KSPP/linux/issues/79
-> 
-> Cc: Eric Biggers <ebiggers@kernel.org>
-> Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
-> Cc: Jaegeuk Kim <jaegeuk@kernel.org>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: linux-fscrypt@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: update commit log to avoid mentioning "len" member.
-> v1: https://lore.kernel.org/lkml/20230522213924.never.119-kees@kernel.org/
-> ---
->  fs/crypto/fscrypt_private.h |  2 +-
->  fs/crypto/hooks.c           | 10 +++++-----
->  2 files changed, 6 insertions(+), 6 deletions(-)
+On Mon, 22 May 2023 14:18:13 -0700 Kees Cook wrote:
+> diff --git a/drivers/net/ethernet/intel/ice/ice_ddp.h b/drivers/net/ethernet/intel/ice/ice_ddp.h
+> index 37eadb3d27a8..41acfe26df1c 100644
+> --- a/drivers/net/ethernet/intel/ice/ice_ddp.h
+> +++ b/drivers/net/ethernet/intel/ice/ice_ddp.h
+> @@ -185,7 +185,7 @@ struct ice_buf_hdr {
+>  
+>  #define ICE_MAX_ENTRIES_IN_BUF(hd_sz, ent_sz)                                 \
+>  	((ICE_PKG_BUF_SIZE -                                                  \
+> -	  struct_size((struct ice_buf_hdr *)0, section_entry, 1) - (hd_sz)) / \
+> +	  struct_size_t(struct ice_buf_hdr,  section_entry, 1) - (hd_sz)) / \
+>  	 (ent_sz))
+>  
+>  /* ice package section IDs */
+> @@ -297,7 +297,7 @@ struct ice_label_section {
+>  };
+>  
+>  #define ICE_MAX_LABELS_IN_BUF                                             \
+> -	ICE_MAX_ENTRIES_IN_BUF(struct_size((struct ice_label_section *)0, \
+> +	ICE_MAX_ENTRIES_IN_BUF(struct_size_t(struct ice_label_section,  \
+>  					   label, 1) -                    \
+>  				       sizeof(struct ice_label),          \
+>  			       sizeof(struct ice_label))
+> @@ -352,7 +352,7 @@ struct ice_boost_tcam_section {
+>  };
+>  
+>  #define ICE_MAX_BST_TCAMS_IN_BUF                                               \
+> -	ICE_MAX_ENTRIES_IN_BUF(struct_size((struct ice_boost_tcam_section *)0, \
+> +	ICE_MAX_ENTRIES_IN_BUF(struct_size_t(struct ice_boost_tcam_section,  \
+>  					   tcam, 1) -                          \
+>  				       sizeof(struct ice_boost_tcam_entry),    \
+>  			       sizeof(struct ice_boost_tcam_entry))
+> @@ -372,8 +372,7 @@ struct ice_marker_ptype_tcam_section {
+>  };
+>  
+>  #define ICE_MAX_MARKER_PTYPE_TCAMS_IN_BUF                                    \
+> -	ICE_MAX_ENTRIES_IN_BUF(                                              \
+> -		struct_size((struct ice_marker_ptype_tcam_section *)0, tcam, \
+> +	ICE_MAX_ENTRIES_IN_BUF(struct_size_t(struct ice_marker_ptype_tcam_section,  tcam, \
+>  			    1) -                                             \
+>  			sizeof(struct ice_marker_ptype_tcam_entry),          \
+>  		sizeof(struct ice_marker_ptype_tcam_entry))
 
-Thanks, applied to
-https://git.kernel.org/pub/scm/fs/fscrypt/linux.git/log/?h=for-next
+Acked-by: Jakub Kicinski <kuba@kernel.org>
 
-- Eric
+but Intel ICE folks please speak up if this has a high chance of
+conflicts, I think I've seen some ICE DDP patches flying around :(
