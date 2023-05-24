@@ -2,109 +2,80 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 324CAC77B7E
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 02:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E319C7EE2D
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 02:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237460AbjEXCtV (ORCPT
+        id S239210AbjEXCzd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 23 May 2023 22:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35300 "EHLO
+        Tue, 23 May 2023 22:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234537AbjEXCtU (ORCPT
+        with ESMTP id S239208AbjEXCzc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 23 May 2023 22:49:20 -0400
+        Tue, 23 May 2023 22:55:32 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA43139;
-        Tue, 23 May 2023 19:49:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B65FD186;
+        Tue, 23 May 2023 19:55:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2D2B36380F;
-        Wed, 24 May 2023 02:49:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4DADC433EF;
-        Wed, 24 May 2023 02:49:16 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3CC8B63615;
+        Wed, 24 May 2023 02:55:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63E3CC433D2;
+        Wed, 24 May 2023 02:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684896558;
-        bh=kSGZ55rsr5dJiLWkpkFLBLP8jA/WSpaddfGvMXXt2cw=;
-        h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-        b=oKCBjoYByiTTnC+hvePx7mbaMWltTpxzyziUztwHJ1UJsCTiSCnHkdqU/rEz+Y3BC
-         c5Q7W7i6rLHlYZ0gyYgBVGsMHm++u5iIK+qnm5oG5/vM9UILu3kb+Jw02U+slBqpVg
-         jzfrfXunTDDnkOcolYha/kXab3DB2vL2KUehKX5PizLM6J1aNNIJc5A3k37BVDg1hD
-         RKCbKDPnrSGUE8fMG1mwyR9yeZDKijLOy0jI8wubrpSxUeq1ALEUW7pY2+shTe2s5/
-         BrdRTlJioSbsr3blvg1tB7n62nTRS5EbYwKN37H1j6cNrBvzs/OrF31dPj6xlCdUk9
-         vEQxe/4HD9zVQ==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 24 May 2023 05:49:14 +0300
-Message-Id: <CSU5ZBMDTF20.1SZ9MIKVP9L45@suppilovahvero>
-Cc:     "Azeem Shaikh" <azeemshaikh38@gmail.com>,
-        "David Howells" <dhowells@redhat.com>,
-        <linux-hardening@vger.kernel.org>, <keyrings@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, "James Morris" <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH] KEYS: Replace all non-returning strlcpy with strscpy
-From:   "Jarkko Sakkinen" <jarkko@kernel.org>
-To:     "Jarkko Sakkinen" <jarkko@kernel.org>,
-        "Paul Moore" <paul@paul-moore.com>
-X-Mailer: aerc 0.14.0
-References: <20230518041513.1669386-1-azeemshaikh38@gmail.com>
- <CSPLMMXED66E.AMJRQGTPHKIS@suppilovahvero>
- <CAHC9VhT6qfX9B=nhZNeyOsiaA-vg4bBm=rx8BGiVPCTK1g-L7g@mail.gmail.com>
- <CSU5WB51YOBW.3IYPGJ2QG8GLK@suppilovahvero>
-In-Reply-To: <CSU5WB51YOBW.3IYPGJ2QG8GLK@suppilovahvero>
+        s=k20201202; t=1684896930;
+        bh=hgzNNL06TsbhwPSXrFqaywaqvF+gB0OSOd50WtTbY+4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ubs/vCGvvKVN2uuegygIma9dz4N56ne0ieBH+T7VhhZL6m2Bt+2xqN46+YiyaqvMi
+         HZDgD9HInhjehRt+uMCXhBtK+eAFauzZ3d5ppBMOf3vxz+7eAfCCBhJERxSj2iCytv
+         8vglElowrbo39GSoS0RkXdvD2a/eERiQ97vekJk+8sM1LekoB/x+654245TSq4jroS
+         HT9hyUDEU9H1miEs/phRkoW5IELg0O0HeVEOQpWeMb8fIruIhUZevQE0+6TTdvUZTg
+         Ny5QseHjtsF5+vSR/wGCd9kH/XKhvYHQ2HnwIYyikA2dy15DK21403unVv3VxN+pPq
+         UaBxJ+MoDlM1A==
+Date:   Tue, 23 May 2023 19:55:28 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        linux-fscrypt@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] fscrypt: Replace 1-element array with flexible array
+Message-ID: <20230524025528.GA1076@sol.localdomain>
+References: <20230523165458.gonna.580-kees@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230523165458.gonna.580-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed May 24, 2023 at 5:45 AM EEST, Jarkko Sakkinen wrote:
-> On Sat May 20, 2023 at 12:11 AM EEST, Paul Moore wrote:
-> > On Thu, May 18, 2023 at 2:01=E2=80=AFPM Jarkko Sakkinen <jarkko@kernel.=
-org> wrote:
-> > > On Thu May 18, 2023 at 7:15 AM EEST, Azeem Shaikh wrote:
-> > > > strlcpy() reads the entire source buffer first.
-> > > > This read may exceed the destination size limit.
-> > > > This is both inefficient and can lead to linear read
-> > > > overflows if a source string is not NUL-terminated [1].
-> > > > In an effort to remove strlcpy() completely [2], replace
-> > > > strlcpy() here with strscpy().
-> > > > No return values were used, so direct replacement is safe.
-> > > >
-> > > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#=
-strlcpy
-> > > > [2] https://github.com/KSPP/linux/issues/89
-> > > >
-> > > > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> > > > ---
-> > > >  security/keys/request_key_auth.c |    2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/security/keys/request_key_auth.c b/security/keys/reque=
-st_key_auth.c
-> > > > index 41e9735006d0..8f33cd170e42 100644
-> > > > --- a/security/keys/request_key_auth.c
-> > > > +++ b/security/keys/request_key_auth.c
-> > > > @@ -178,7 +178,7 @@ struct key *request_key_auth_new(struct key *ta=
-rget, const char *op,
-> > > >       if (!rka->callout_info)
-> > > >               goto error_free_rka;
-> > > >       rka->callout_len =3D callout_len;
-> > > > -     strlcpy(rka->op, op, sizeof(rka->op));
-> > > > +     strscpy(rka->op, op, sizeof(rka->op));
-> > > >
-> > > >       /* see if the calling process is already servicing the key re=
-quest of
-> > > >        * another process */
-> > >
-> > >
-> > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> >
-> > Since you maintain this code Jarkko, are you planning to merge this
-> > into your tree or would you prefer the KSPP folks merge it?
->
-> I can pick it.
+On Tue, May 23, 2023 at 09:55:02AM -0700, Kees Cook wrote:
+> 1-element arrays are deprecated and are being replaced with C99
+> flexible arrays[1].
+> 
+> As sizes were being calculated with the extra byte intentionally,
+> propagate the difference so there is no change in binary output.
+> 
+> [1] https://github.com/KSPP/linux/issues/79
+> 
+> Cc: Eric Biggers <ebiggers@kernel.org>
+> Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
+> Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: linux-fscrypt@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> v2: update commit log to avoid mentioning "len" member.
+> v1: https://lore.kernel.org/lkml/20230522213924.never.119-kees@kernel.org/
+> ---
+>  fs/crypto/fscrypt_private.h |  2 +-
+>  fs/crypto/hooks.c           | 10 +++++-----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 
-Applied.
+Thanks, applied to
+https://git.kernel.org/pub/scm/fs/fscrypt/linux.git/log/?h=for-next
 
-BR, Jarkko
+- Eric
