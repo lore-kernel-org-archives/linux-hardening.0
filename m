@@ -2,103 +2,105 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E385DC77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 07:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5537FC7EE2E
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 10:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239634AbjEXHQd (ORCPT
+        id S229611AbjEXKkE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 24 May 2023 03:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52096 "EHLO
+        Wed, 24 May 2023 06:40:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239505AbjEXHPv (ORCPT
+        with ESMTP id S231787AbjEXKkD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 24 May 2023 03:15:51 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F185690;
-        Wed, 24 May 2023 00:15:26 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-30a95ec7744so386165f8f.3;
-        Wed, 24 May 2023 00:15:26 -0700 (PDT)
+        Wed, 24 May 2023 06:40:03 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FEB131
+        for <linux-hardening@vger.kernel.org>; Wed, 24 May 2023 03:40:01 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-510e90d785fso1537531a12.2
+        for <linux-hardening@vger.kernel.org>; Wed, 24 May 2023 03:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684912525; x=1687504525;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTwUX3qEpiLdoo2WOruxY9BVcBrptDaoYsD2JHxAesc=;
-        b=j8e8aqmI8nrYA59qDNX4vMDiOXCYqlzQxVL4aYAfwG42G4CYrBVAzwMIaQ1Erv4hSX
-         kGnV/G7awoKyLM0rQLSvaUFEp3Hpw4ah+4cG8HaHB56syFLX7L0MYR65eGXbihrEsIoD
-         SKFnAIVtSLLkt1jAT0tsSLblry/Honk98G/08iXl1PQRBddaPXBvuSyHUw1Kmn+ylCCT
-         sV7KZtxCVJuQCifkRIaVp8pQX52QrXsytC2TEwVxo/cqI6OlZidu3v4eKWO7B/5iLSJY
-         xGr6RyW9Eu6cY4erU9ajh/uOeMhMdmwf7XUieuntprkeSa6X871PlVGHWwJZJh9y1mF0
-         A1Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684912525; x=1687504525;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1684924800; x=1687516800;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QTwUX3qEpiLdoo2WOruxY9BVcBrptDaoYsD2JHxAesc=;
-        b=DViwCu5oYZMQo/t7wXh8255Z5MDB4232QD0aQSCnW3pFmpw5XiCrreI6vDp+yhZ7ex
-         CBcxWMF94GyUQoFGQY/fowzI9JD6hh1Uo5wELYVkDhrwjdufJmGr3/zSS6TTJ2Ga2XgR
-         JKx+WSk2UDA9qMzHQ+vPm2EGrBFBTa20Wb0ZOETHvZ0fE1jKCx0wWO3+NvmQQVaLRC2m
-         ABgskU0S4LJjcENwbGWTBCOpQp281h/K1+EJE6YL7HjSDqc84QCZiGw8Fc1lAdWnDNFu
-         TKYWNPKzJcjyeVf1Huqwr68QWX2QE+HJDEps/LErItU+IcrDndRcV/MMVYl30bHuqbuC
-         s15Q==
-X-Gm-Message-State: AC+VfDxpXIxeEKAeFwUiAm79Xtsnl8UUBW8CGAwe02W9qUYXzntWi8u2
-        aVGXAxIK6v80iwW9nc0y4MY=
-X-Google-Smtp-Source: ACHHUZ7XW0cvABpggLT4CBW+cXjOYhS4kBeHV38swA1xGYzOVfRUCNPM9inU5JsOBBUisX0wNc+F7A==
-X-Received: by 2002:adf:e912:0:b0:307:7e64:4b52 with SMTP id f18-20020adfe912000000b003077e644b52mr14169357wrm.36.1684912525160;
-        Wed, 24 May 2023 00:15:25 -0700 (PDT)
-Received: from localhost (host81-154-179-160.range81-154.btcentralplus.com. [81.154.179.160])
-        by smtp.gmail.com with ESMTPSA id a2-20020a5d53c2000000b002ffbf2213d4sm13537164wrw.75.2023.05.24.00.15.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 00:15:23 -0700 (PDT)
-Date:   Wed, 24 May 2023 08:15:23 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Kees Cook <keescook@chromium.org>, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org, patches@lists.linux.dev,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/slab: remove HAVE_HARDENED_USERCOPY_ALLOCATOR
-Message-ID: <f2ca936a-1441-4cbd-b16c-ff2d54630a75@lucifer.local>
-References: <20230523073136.4900-1-vbabka@suse.cz>
- <310077ed-6f3f-41fe-afcf-36500a9408ec@lucifer.local>
- <623a87c6-c0d2-799a-c39e-0d14dcdfa6df@suse.cz>
- <ae3ff438-5e5a-4a75-b4e9-575324a584f7@lucifer.local>
- <ca7860db-220f-ae77-93e6-2a38f6c1130a@redhat.com>
- <4674f97f-5f97-45b7-a4b9-a19ca46b7ce1@lucifer.local>
- <9191d9b0-3318-4e70-a81b-69acff184fc6@redhat.com>
+        bh=38iJHpKlIiWZbh1WDjxxGN+0tLET1s1ACGv1lr82oHc=;
+        b=Rz6wHr67S1cULfAOj1lT79Lh3G+fcFkDyCZnpmiyp0QRutIFDCh87U8llVuL6KrsIP
+         5+FrH0DrH8tWcSoiJ01musD/yKnK5UpEbk8NIm3A+pa75pB8XItq+/TpZaZwAj/CL0LR
+         vi2PJd5KJimgYUEpDO68Z+07waFH4+YjdadJBhE8JoxBEFhoVSLVK12/wIF0UIGmoKcy
+         afrnF7oI3RjLtZcmAsom2yxImNuJT4vQBz4i2wl8gJnMIThZO2bEXxMSIN424Irr/ucg
+         5uFIix90Da3cwxizk+RCqUMtlzAlSgEvdm+CGWI5XB4Cp3bnBBg1Nr7xrw1Mk71/TD9J
+         eaKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684924800; x=1687516800;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=38iJHpKlIiWZbh1WDjxxGN+0tLET1s1ACGv1lr82oHc=;
+        b=EJYkGnLhm05s/6xI/nWQ8uHS5mQeVAO01B1d4+rnPBaXCq7L4pWqKViMxivYBqqBQu
+         bwwRmLDF/2N675NTzGp+B37zv13rOFvj8i1gA/Ic9o/v7wDpOMmLcJmia2XaMyIgqgQ9
+         LjRomjvASXib71kyDU5MQgmX7piNutBlTUULqXT0/2Bf2c/ALABzs788m9D4GC6+nPdu
+         YQ0n75nEc7i+vrxE/JUuIFtY3dyZA/1VP54uKtvZ55UTfGNIuq8aDPCurQIVs0CQymqt
+         Mtqip/t9hA7fQOiqDMu5+FIOlD2W9oG9O6tVQ0/PpWdHi3SOF2uu9qA6AzHe6n2fYJG7
+         bA/Q==
+X-Gm-Message-State: AC+VfDwzkG5U313KGolELLpjDXfCMSCzwuEU2iH3+vwj3kRs8PzAZ/Tc
+        0NAlb1uRNbwrg6ukBUO6Z4P6WocVzPRPNnAC2R6fiA==
+X-Google-Smtp-Source: ACHHUZ5KEgHn+BODCBjPTJdXE32cq+ah2nLHIvhhJs/3W9A/frhnK+0OzySN5R8OvNNpBRTK6iEwFez2N6pDL6jV+Zo=
+X-Received: by 2002:aa7:c6c6:0:b0:50b:cd19:7545 with SMTP id
+ b6-20020aa7c6c6000000b0050bcd197545mr1445519eds.33.1684924799684; Wed, 24 May
+ 2023 03:39:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9191d9b0-3318-4e70-a81b-69acff184fc6@redhat.com>
+References: <20230523021943.2406847-1-azeemshaikh38@gmail.com> <202305231021.1AF1342BF@keescook>
+In-Reply-To: <202305231021.1AF1342BF@keescook>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Wed, 24 May 2023 16:09:48 +0530
+Message-ID: <CAO_48GHjU9nSugzjRqDJVU3_HNQuGx4qnTFqayXECd=mFVk_Jw@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf/sw_sync: Replace all non-returning strlcpy with strscpy
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        Gustavo Padovan <gustavo@padovan.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        linaro-mm-sig@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 23, 2023 at 10:28:32AM +0200, David Hildenbrand wrote:
-[snip]
-> > > The file is only compiled with CONFIG_HARDENED_USERCOPY:
-> > >
-> > > mm/Makefile:obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
-> > >
+Hello Azeem,
+
+
+On Tue, 23 May 2023 at 22:52, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, May 23, 2023 at 02:19:43AM +0000, Azeem Shaikh wrote:
+> > strlcpy() reads the entire source buffer first.
+> > This read may exceed the destination size limit.
+> > This is both inefficient and can lead to linear read
+> > overflows if a source string is not NUL-terminated [1].
+> > In an effort to remove strlcpy() completely [2], replace
+> > strlcpy() here with strscpy().
+> > No return values were used, so direct replacement is safe.
 > >
-> > Yeah ugh at this sort of implicit thing. Anyway it'd be preferable to stick
-> > #ifdef CONFIG_HARDENED_USERCOPY around the prototype just so it's
-> > abundantly clear this function doesn't exist unless that is set.
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
+cpy
+> > [2] https://github.com/KSPP/linux/issues/89
+Thank you for the patch; I'll queue it up.
+> >
+> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 >
-> I recall that it is very common to not use ifdefs unless really required.
-> Because less ifefs are obviously preferable ;)
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 >
-> Compilation+linking will fail in any case.
->
+> --
+> Kees Cook
 
-I don't want to insist so hard on something that doesn't really matter, the
-bike shed can be blue, green or red it's fine :P
+Best,
+Sumit.
 
-So,
+--=20
+Thanks and regards,
 
-Reviewed-by: Lorenzo Stoakes <lstoakes@gmail.com>
+Sumit Semwal (he / him)
+Tech Lead - LCG, Vertical Technologies
+Linaro.org =E2=94=82 Open source software for ARM SoCs
