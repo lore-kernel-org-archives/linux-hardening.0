@@ -2,134 +2,167 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C87C77B73
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 05:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A536C77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 05:54:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234498AbjEXFZe (ORCPT
+        id S233554AbjEXFyU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 24 May 2023 01:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56006 "EHLO
+        Wed, 24 May 2023 01:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233010AbjEXFZd (ORCPT
+        with ESMTP id S232365AbjEXFyT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 24 May 2023 01:25:33 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBC58189;
-        Tue, 23 May 2023 22:25:32 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-bac6f8325b5so124168276.0;
-        Tue, 23 May 2023 22:25:32 -0700 (PDT)
+        Wed, 24 May 2023 01:54:19 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5CF113E;
+        Tue, 23 May 2023 22:54:18 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1ae5dc9eac4so4200555ad.1;
+        Tue, 23 May 2023 22:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684905932; x=1687497932;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oH4s8cUK60HKvQMnl3udCHQWgNAGeoNm3adasEf3BeI=;
-        b=EtU+mR1OYpsJNNTFwpg4D8QQJbMHQ4a5uqyj6zRLZDgv7mWLEtbYpaANTf4Fz3kogN
-         HHGevm+Nj8JaM4yETGV00Kwi0i6n8XD+WSIofFgkZmz752SzBmT38YjXXP9b1VWW2V++
-         YF74bKD204tdcj8w/333WWrIb4OmlFbWZE8DozGg7thl8kt5BNAHsCCHy1+K7J9g9q9q
-         4Xmb1Ep5eHvxoRpKFZYbb9RWxc70dtX0u6naZ88wdF46MMP+v9AghNLeaGOi1IjVOELK
-         u014acznuXCwtcUxWiDzeZn8/Jro+GWNsZ96lwg9aMtqeu3n7oo0bO/ibjNUJaJdKrFJ
-         y0dg==
+        d=gmail.com; s=20221208; t=1684907658; x=1687499658;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qmpQ8CZWBqNpjBXlf/vqm5PoXrDI3CUBIg7+r/yPqX4=;
+        b=Ll/kZY4z6GmbqweRRDzeefXlVdAGFZlUdDBFJEEMbnx3h+Ai+c8cqNCxSTkGFketNw
+         C+DGOb0/ZJZRjKYhfBlEOR2yoc2OBWfvsq0i/+9Zev4wmSL3MPPsq29MahVf9CRjSJEh
+         ojsW9Q5vHIve/zDAZ12KN3ozwikW/7+QNf5Lgw/IJCVPBZnFAhikIxygmuWMi7bdaKyk
+         r/rI6PMOlYB1WLK/WOu3cw+D9+hYWYzwubMDCINnWIjDc+FbUqKiiMUQoROl6pqKpbcD
+         UZ3FkgMtjT6fd8zloBWdktCLFkjIo4tsryrYxDI4kfTTKW4LePLeEg2fCje+8yGW+EMU
+         E5HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684905932; x=1687497932;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oH4s8cUK60HKvQMnl3udCHQWgNAGeoNm3adasEf3BeI=;
-        b=IzgCJKiuW6z+LLLuxcNAc89481v1ET88ZePxQUKIDz7BEE9ATh7wRgxZKbk0IFcxTW
-         qYLhjKaZBA8b9SLvGpl8IvMKBkT4dZ3GRbdDObsBbcRApC7jZgfqhLqvDam4coOM9+5h
-         Tz5l/kRcszCroCVs8uxMm8F1F8IONmGAXl8ot47dHmheiu++JhugRHdadULq31waoU9r
-         GNNCZ1bw4SJ84gZAaXW5jHJ/RsnVqvAAN5Jym8BbEO9sxdKAS0WpP5lInU6kCgwsHq5L
-         m5bff6j7OOFHtW0Cu9iDHq7GIjq8Z3JR4rPi9RNmJSLfKhtQR43SgcIgmm/BLxd64nnc
-         MtfA==
-X-Gm-Message-State: AC+VfDyzzVfGNMFJeQ3G3ktcdxe/U0G7GqpcVC13HXiTkJf6kbBFQ71E
-        cohqi5U0wIBMpMf/gH5bkEh3MBWa1Phvxppbkto=
-X-Google-Smtp-Source: ACHHUZ5D1kD1NK05V+gmlHB7e3f2u66707rziAvZ2xTBkT0SfDoedOHj+1nnTnxb5NEukzdVv26wCAVcMAR56PCfD7c=
-X-Received: by 2002:a81:9956:0:b0:565:1d8a:cf94 with SMTP id
- q83-20020a819956000000b005651d8acf94mr7077340ywg.1.1684905932077; Tue, 23 May
- 2023 22:25:32 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684907658; x=1687499658;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qmpQ8CZWBqNpjBXlf/vqm5PoXrDI3CUBIg7+r/yPqX4=;
+        b=ilhmHy4E7wMwNaYcYaSr0V4Evcl8iN5oz1R5UTM/t1MunQh4Zie+BEgtJZvMbSw3bR
+         Bkf5LaZTmCxxPjos1Q+M9E0NIp3QPY/r0LXVLV8RbQgYn7EOrFLqfDahp9Do2K1RL0B2
+         OqfhcqbbMZnzKluTIKbaCBRqCLj9HaNBD+zJ/Cn0S4laS9sgN6cKtoxuY/h5+ZkR04lN
+         Fbt/kv4JgbSKTCvX2m2XWc0C3ZA6bTfX5OXNgTasG6yg2NtGForWAkKZuNsBcMFDAfd4
+         pxYwltvtGcqlgvPYvqnkbgKvi2iozRGZmIPz1OcXuYxQOPccnbZW+SVFMd5grC98Ma3S
+         hCgg==
+X-Gm-Message-State: AC+VfDzcIMBB8dcYRKNjVYi7CQ7PQZI9TYPY7aWPfyi6otd18EDoUdSb
+        Ila0+BqKNFMn1DhjCWYn2yY=
+X-Google-Smtp-Source: ACHHUZ76vGdzaPECnMi7UdUsqTthz47m8It48b8hGnCFJV0vnlbq9vB/sfF/1XsTkmmCIr3dHhHU3A==
+X-Received: by 2002:a17:903:188:b0:1ae:600d:3d07 with SMTP id z8-20020a170903018800b001ae600d3d07mr18751108plg.4.1684907658072;
+        Tue, 23 May 2023 22:54:18 -0700 (PDT)
+Received: from debian-BULLSEYE-live-builder-AMD64 ([211.216.218.61])
+        by smtp.gmail.com with ESMTPSA id m10-20020a170902bb8a00b001aaeeeebaf1sm7723002pls.201.2023.05.23.22.54.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 22:54:17 -0700 (PDT)
+Date:   Wed, 24 May 2023 14:54:33 +0900
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
+To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Gong Ruiqi <gongruiqi1@huawei.com>
+Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
+Message-ID: <ZG2mmWT5dxfMC3DW@debian-BULLSEYE-live-builder-AMD64>
+References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
+ <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
+ <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
+ <CAB=+i9R0GZiau7PKDSGdCOijPH1TVqA3rJ5tQLejJpoR55h6dg@mail.gmail.com>
+ <19707cc6-fa5e-9835-f709-bc8568e4c9cd@huawei.com>
+ <CAB=+i9T-iqtMZw8y7SxkaFBtiXA93YwFFEtQyGynBsorud1+_Q@mail.gmail.com>
+ <1cec95d5-5cd4-fbf9-754b-e6a1229d45c3@huaweicloud.com>
 MIME-Version: 1.0
-References: <ZG0fDdY/PPQ/ijlt@work>
-In-Reply-To: <ZG0fDdY/PPQ/ijlt@work>
-From:   Justin Tee <justintee8345@gmail.com>
-Date:   Tue, 23 May 2023 22:25:20 -0700
-Message-ID: <CABPRKS9ykHvaOGUboDXZ261LLPS78+YFpOZAcJEeLKGfEUe21g@mail.gmail.com>
-Subject: Re: [PATCH v2][next] scsi: lpfc: Use struct_size() helper
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Justin Tee <justin.tee@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1cec95d5-5cd4-fbf9-754b-e6a1229d45c3@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-no_of_objects may be hardcoded to 1 right now, but does it make more
-sense to use?
+On Mon, May 22, 2023 at 04:58:25PM +0800, GONG, Ruiqi wrote:
+> 
+> 
+> On 2023/05/22 16:03, Hyeonggon Yoo wrote:
+> > On Mon, May 22, 2023 at 4:35 PM Gong Ruiqi <gongruiqi1@huawei.com> wrote:
+> >> On 2023/05/17 6:35, Hyeonggon Yoo wrote:
+> > [...]
+> >>>>>> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> >>>>>> +# define SLAB_RANDOMSLAB       ((slab_flags_t __force)0x01000000U)
+> >>>>>> +#else
+> >>>>>> +# define SLAB_RANDOMSLAB       0
+> >>>>>> +#endif
+> >>>
+> >>> There is already the SLAB_KMALLOC flag that indicates if a cache is a
+> >>> kmalloc cache. I think that would be enough for preventing merging
+> >>> kmalloc caches?
+> >>
+> >> After digging into the code of slab merging (e.g. slab_unmergeable(),
+> >> find_mergeable(), SLAB_NEVER_MERGE, SLAB_MERGE_SAME etc), I haven't
+> >> found an existing mechanism that prevents normal kmalloc caches with
+> >> SLAB_KMALLOC from being merged with other slab caches. Maybe I missed
+> >> something?
+> >>
+> >> While SLAB_RANDOMSLAB, unlike SLAB_KMALLOC, is added into
+> >> SLAB_NEVER_MERGE, which explicitly indicates the no-merge policy.
+> > 
+> > I mean, why not make slab_unmergable()/find_mergeable() not to merge kmalloc
+> > caches when CONFIG_RANDOM_KMALLOC_CACHES is enabled, instead of a new flag?
+> > 
+> > Something like this:
+> > 
+> > diff --git a/mm/slab_common.c b/mm/slab_common.c
+> > index 607249785c07..13ac08e3e6a0 100644
+> > --- a/mm/slab_common.c
+> > +++ b/mm/slab_common.c
+> > @@ -140,6 +140,9 @@ int slab_unmergeable(struct kmem_cache *s)
+> >   if (slab_nomerge || (s->flags & SLAB_NEVER_MERGE))
+> >   return 1;
+> > 
+> > + if (IS_ENALBED(CONFIG_RANDOM_KMALLOC_CACHES) && (flags & SLAB_KMALLOC))
+> > + return 1;
+> > +
+> >   if (s->ctor)
+> >   return 1;
+> > 
+> > @@ -176,6 +179,9 @@ struct kmem_cache *find_mergeable(unsigned int
+> > size, unsigned int align,
+> >   if (flags & SLAB_NEVER_MERGE)
+> >   return NULL;
+> > 
+> > + if (IS_ENALBED(CONFIG_RANDOM_KMALLOC_CACHES) && (flags & SLAB_KMALLOC))
+> > + return NULL;
+> > +
+> >   list_for_each_entry_reverse(s, &slab_caches, list) {
+> >   if (slab_unmergeable(s))
+> >   continue;
+> 
+> Ah I see. My concern is that it would affect not only normal kmalloc
+> caches, but kmalloc_{dma,cgroup,rcl} as well: since they were all marked
+> with SLAB_KMALLOC when being created, this code could potentially change
+> their mergeablity. I think it's better not to influence those irrelevant
+> caches.
 
-struct_size(rap, obj, be32_to_cpu(rap->no_of_objects));
+I see. no problem at all as we're not running out of cache flags.
 
-We probably should have declared no_of_objects as __be32 to have
-avoided this confusion.
+By the way, is there any reason to only randomize normal caches
+and not dma/cgroup/rcl caches?
 
-On Tue, May 23, 2023 at 1:33=E2=80=AFPM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Prefer struct_size() over open-coded versions of idiom:
->
-> sizeof(struct-with-flex-array) + sizeof(typeof-flex-array-elements) * cou=
-nt
->
-> where count is the max number of items the flexible array is supposed to
-> contain.
->
-> Link: https://github.com/KSPP/linux/issues/160
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->  - Use literal 1 in call to struct_size(), instead of rap->no_of_objects
->    (Kees Cook).
->
-> v1:
->  - Link: https://lore.kernel.org/linux-hardening/99e06733f5f35c6cd62e05f5=
-30b93107bfd03362.1684358315.git.gustavoars@kernel.org/
->
->  drivers/scsi/lpfc/lpfc_ct.c | 8 ++------
->  1 file changed, 2 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/scsi/lpfc/lpfc_ct.c b/drivers/scsi/lpfc/lpfc_ct.c
-> index e880d127d7f5..f52aeb73af8d 100644
-> --- a/drivers/scsi/lpfc/lpfc_ct.c
-> +++ b/drivers/scsi/lpfc/lpfc_ct.c
-> @@ -3747,9 +3747,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
->                 rap->no_of_objects =3D cpu_to_be32(1);
->                 rap->obj[0].entity_id_len =3D vmid->vmid_len;
->                 memcpy(rap->obj[0].entity_id, vmid->host_vmid, vmid->vmid=
-_len);
-> -               size =3D RAPP_IDENT_OFFSET +
-> -                       sizeof(struct lpfc_vmid_rapp_ident_list) +
-> -                       sizeof(struct entity_id_object);
-> +               size =3D RAPP_IDENT_OFFSET + struct_size(rap, obj, 1);
->                 retry =3D 1;
->                 break;
->
-> @@ -3767,9 +3765,7 @@ lpfc_vmid_cmd(struct lpfc_vport *vport,
->                 dap->no_of_objects =3D cpu_to_be32(1);
->                 dap->obj[0].entity_id_len =3D vmid->vmid_len;
->                 memcpy(dap->obj[0].entity_id, vmid->host_vmid, vmid->vmid=
-_len);
-> -               size =3D DAPP_IDENT_OFFSET +
-> -                       sizeof(struct lpfc_vmid_dapp_ident_list) +
-> -                       sizeof(struct entity_id_object);
-> +               size =3D DAPP_IDENT_OFFSET + struct_size(dap, obj, 1);
->                 write_lock(&vport->vmid_lock);
->                 vmid->flag &=3D ~LPFC_VMID_REGISTERED;
->                 write_unlock(&vport->vmid_lock);
-> --
-> 2.34.1
->
+Thanks,
+
+-- 
+Hyeonggon Yoo
+
+Doing kernel stuff as a hobby
+Undergraduate | Chungnam National University
+Dept. Computer Science & Engineering
