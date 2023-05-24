@@ -2,105 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5537FC7EE2E
-	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 10:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91396C7EE23
+	for <linux-hardening@archiver.kernel.org>; Wed, 24 May 2023 12:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjEXKkE (ORCPT
+        id S232128AbjEXMP0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 24 May 2023 06:40:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54362 "EHLO
+        Wed, 24 May 2023 08:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231787AbjEXKkD (ORCPT
+        with ESMTP id S232240AbjEXMPY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 24 May 2023 06:40:03 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51FEB131
-        for <linux-hardening@vger.kernel.org>; Wed, 24 May 2023 03:40:01 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-510e90d785fso1537531a12.2
-        for <linux-hardening@vger.kernel.org>; Wed, 24 May 2023 03:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684924800; x=1687516800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=38iJHpKlIiWZbh1WDjxxGN+0tLET1s1ACGv1lr82oHc=;
-        b=Rz6wHr67S1cULfAOj1lT79Lh3G+fcFkDyCZnpmiyp0QRutIFDCh87U8llVuL6KrsIP
-         5+FrH0DrH8tWcSoiJ01musD/yKnK5UpEbk8NIm3A+pa75pB8XItq+/TpZaZwAj/CL0LR
-         vi2PJd5KJimgYUEpDO68Z+07waFH4+YjdadJBhE8JoxBEFhoVSLVK12/wIF0UIGmoKcy
-         afrnF7oI3RjLtZcmAsom2yxImNuJT4vQBz4i2wl8gJnMIThZO2bEXxMSIN424Irr/ucg
-         5uFIix90Da3cwxizk+RCqUMtlzAlSgEvdm+CGWI5XB4Cp3bnBBg1Nr7xrw1Mk71/TD9J
-         eaKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684924800; x=1687516800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=38iJHpKlIiWZbh1WDjxxGN+0tLET1s1ACGv1lr82oHc=;
-        b=EJYkGnLhm05s/6xI/nWQ8uHS5mQeVAO01B1d4+rnPBaXCq7L4pWqKViMxivYBqqBQu
-         bwwRmLDF/2N675NTzGp+B37zv13rOFvj8i1gA/Ic9o/v7wDpOMmLcJmia2XaMyIgqgQ9
-         LjRomjvASXib71kyDU5MQgmX7piNutBlTUULqXT0/2Bf2c/ALABzs788m9D4GC6+nPdu
-         YQ0n75nEc7i+vrxE/JUuIFtY3dyZA/1VP54uKtvZ55UTfGNIuq8aDPCurQIVs0CQymqt
-         Mtqip/t9hA7fQOiqDMu5+FIOlD2W9oG9O6tVQ0/PpWdHi3SOF2uu9qA6AzHe6n2fYJG7
-         bA/Q==
-X-Gm-Message-State: AC+VfDwzkG5U313KGolELLpjDXfCMSCzwuEU2iH3+vwj3kRs8PzAZ/Tc
-        0NAlb1uRNbwrg6ukBUO6Z4P6WocVzPRPNnAC2R6fiA==
-X-Google-Smtp-Source: ACHHUZ5KEgHn+BODCBjPTJdXE32cq+ah2nLHIvhhJs/3W9A/frhnK+0OzySN5R8OvNNpBRTK6iEwFez2N6pDL6jV+Zo=
-X-Received: by 2002:aa7:c6c6:0:b0:50b:cd19:7545 with SMTP id
- b6-20020aa7c6c6000000b0050bcd197545mr1445519eds.33.1684924799684; Wed, 24 May
- 2023 03:39:59 -0700 (PDT)
+        Wed, 24 May 2023 08:15:24 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF13A18C;
+        Wed, 24 May 2023 05:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684930523; x=1716466523;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=YWFNqek+VRG2S1Kpq+u/LIuoteJFwt9202gfFrPSfKQ=;
+  b=JfnqMsM+npo4c+ck2bENMDYNj4A8L3OrRLeJcX2CwB3HCg0mcYCh6gYt
+   FiD52Gh5aR+KQRK0AkHz3u35IUZJ3mMWT4JD4Pr3LVfSNtoEQvtNlD+fP
+   1+3rtafkz0CQ94T5RTvIeaEBYnkwz0v/1LNunDNKHJihlqi6+Q0WnSl1R
+   q+eZe9qDATD2QtnCo7jqBVBCWlyYdYYuWLLCXhDBJLr+Y4S0gwyTzuV/s
+   Z7K8mEy9G02tjOLIZcQLrPbgPP/rj8SMENNjxdKmHW+t01DDAwMp8Z7ru
+   +GyS0xpI5oNt+mgBS7qANZRwRe1/LwviheekcYRTOaHBqajtpKpWjSuCO
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="338122845"
+X-IronPort-AV: E=Sophos;i="6.00,189,1681196400"; 
+   d="scan'208";a="338122845"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 05:15:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="816552403"
+X-IronPort-AV: E=Sophos;i="6.00,189,1681196400"; 
+   d="scan'208";a="816552403"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 05:15:19 -0700
+Received: from kekkonen.localdomain (localhost [IPv6:::1])
+        by kekkonen.fi.intel.com (Postfix) with ESMTP id 914151202A9;
+        Wed, 24 May 2023 15:15:16 +0300 (EEST)
+Date:   Wed, 24 May 2023 12:15:16 +0000
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Lee Jones <lee@kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-hardening@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] i2c: Replace all non-returning strlcpy with strscpy
+Message-ID: <ZG3/1JS7UBzWNZBD@kekkonen.localdomain>
+References: <20230523021150.2406032-1-azeemshaikh38@gmail.com>
+ <20230523090540.GC2174496@google.com>
+ <ZGyDx4Jg9j2zmjD6@kekkonen.localdomain>
+ <CADmuW3W+-7GeKX2LqvvTW408v6x1o_as5xuUFxrdHf9TyTTsnQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230523021943.2406847-1-azeemshaikh38@gmail.com> <202305231021.1AF1342BF@keescook>
-In-Reply-To: <202305231021.1AF1342BF@keescook>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Wed, 24 May 2023 16:09:48 +0530
-Message-ID: <CAO_48GHjU9nSugzjRqDJVU3_HNQuGx4qnTFqayXECd=mFVk_Jw@mail.gmail.com>
-Subject: Re: [PATCH] dma-buf/sw_sync: Replace all non-returning strlcpy with strscpy
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-hardening@vger.kernel.org,
-        Gustavo Padovan <gustavo@padovan.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        linaro-mm-sig@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADmuW3W+-7GeKX2LqvvTW408v6x1o_as5xuUFxrdHf9TyTTsnQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello Azeem,
+Hi Azeema,
 
-
-On Tue, 23 May 2023 at 22:52, Kees Cook <keescook@chromium.org> wrote:
->
-> On Tue, May 23, 2023 at 02:19:43AM +0000, Azeem Shaikh wrote:
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read
-> > overflows if a source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> > No return values were used, so direct replacement is safe.
+On Tue, May 23, 2023 at 10:34:34AM -0400, Azeem Shaikh wrote:
+> Thanks for the quick response Lee and Sakari.
+> 
+> On Tue, May 23, 2023 at 5:13 AM Sakari Ailus
+> <sakari.ailus@linux.intel.com> wrote:
 > >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
-cpy
-> > [2] https://github.com/KSPP/linux/issues/89
-Thank you for the patch; I'll queue it up.
+> > Hi Lee, Azeem,
 > >
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> --
-> Kees Cook
+> > On Tue, May 23, 2023 at 10:05:40AM +0100, Lee Jones wrote:
+> > > On Tue, 23 May 2023, Azeem Shaikh wrote:
+> > >
+> > > > strlcpy() reads the entire source buffer first.
+> > > > This read may exceed the destination size limit.
+> > > > This is both inefficient and can lead to linear read
+> > > > overflows if a source string is not NUL-terminated [1].
+> > > > In an effort to remove strlcpy() completely [2], replace
+> > > > strlcpy() here with strscpy().
+> > > > No return values were used, so direct replacement is safe.
+> > > >
+> > > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> > > > [2] https://github.com/KSPP/linux/issues/89
+> > > >
+> > > > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > > > ---
+> > > >  drivers/leds/flash/leds-as3645a.c |    4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > Please resubmit, taking the time to check the subject line please.
+> >
+> > I'd say also shorter description will suffice. Nowadays people understand
+> > the motivation replacing strlcpy() by strscpy() without too much
+> > elaboration. Lines may be up to 74 characters long, too, and period isn't
+> > automatically followed by a newline.
+> >
+> 
+> Let me know if this commit log looks good to you both and I'll send over a v2.
+> 
+> Subject: [PATCH] leds: as3645a: Replace all non-returning strlcpy with strscpy
 
-Best,
-Sumit.
+All instances are replaced, so you can drop "all non-returning ".
 
---=20
-Thanks and regards,
+> 
+> Part of a tree-wide effort to remove deprecated strlcpy()[1] and replace
+> it with strscpy()[2]. No return values were used, so direct replacement
+> is safe.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
 
-Sumit Semwal (he / him)
-Tech Lead - LCG, Vertical Technologies
-Linaro.org =E2=94=82 Open source software for ARM SoCs
+Looks good to me.
+
+> 
+> > I also prefer my @linux.intel.com address, as in MAINTAINERS for this
+> > driver.
+> 
+> Fyi that the email address mentioned for this driver is not the
+> @linux.intel.com -
+> https://github.com/torvalds/linux/blob/44c026a73be8038f03dbdeef028b642880cf1511/MAINTAINERS#L3070.
+> I'm happy to send the v2 patch to sakari.ailus@linux.intel.com if you
+> prefer that instead.
+
+Oops, my mistake then. :-) I thought I already had changed this. Oh well.
+
+-- 
+Regards,
+
+Sakari Ailus
