@@ -2,209 +2,144 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAAEC77B7C
-	for <linux-hardening@archiver.kernel.org>; Thu, 25 May 2023 00:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A84C7EE29
+	for <linux-hardening@archiver.kernel.org>; Thu, 25 May 2023 10:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235331AbjEYAi6 (ORCPT
+        id S234095AbjEYKWg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 24 May 2023 20:38:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42328 "EHLO
+        Thu, 25 May 2023 06:22:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjEYAi5 (ORCPT
+        with ESMTP id S229687AbjEYKWe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 24 May 2023 20:38:57 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C35D3;
-        Wed, 24 May 2023 17:38:55 -0700 (PDT)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34P0TOdZ014158;
-        Thu, 25 May 2023 00:37:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=/e6B8PzwIMOA1NUnKfCKwK2WyRgcsLlUL/WWtMhoXOo=;
- b=p3qB04b9XJKftly38O5+vr0J26dCdM35VoVjloUmf9fYS0RaN82z0Hr3YOWh4ZJQsIjf
- BZiPx+ihcB08jdCDDKbmzPherYn1S2m1s//fnj9cxWlR23hvxTUQUVj+hShpm/tBZn5v
- jDiBZ5ioeyyjMpK+LEvalgHQPiEK8wKmXBNCpReedGyLTdn2zyAqM3iDTmQKde8ORkWM
- T86J62r2qVscXNPcq/nHDEto456qzSc9BtrhHoCSk2cNbiTANPUKFw9/ulvZYESobBSt
- WF7jcasL0f/+Lab6joyPDPm4sna1+eyFr3WPINyTsoOpta5EBv9ueff6H1jxJGX7j1Tt ww== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qscautcq9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 May 2023 00:37:18 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34P0bGcV018047
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 May 2023 00:37:16 GMT
-Received: from [10.110.74.38] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Wed, 24 May
- 2023 17:37:15 -0700
-Message-ID: <cf1d6831-dac9-f738-44b4-a9dbc575b7e9@quicinc.com>
-Date:   Wed, 24 May 2023 17:37:14 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
-Content-Language: en-US
-To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        "mic@digikod.net" <mic@digikod.net>,
-        "Christopherson,, Sean" <seanjc@google.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "yuanyu@google.com" <yuanyu@google.com>,
-        "jamorris@linux.microsoft.com" <jamorris@linux.microsoft.com>,
-        "marian.c.rotariu@gmail.com" <marian.c.rotariu@gmail.com>,
-        "Graf, Alexander" <graf@amazon.com>,
-        "Andersen, John S" <john.s.andersen@intel.com>,
-        "madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>,
-        "liran.alon@oracle.com" <liran.alon@oracle.com>,
-        "ssicleru@bitdefender.com" <ssicleru@bitdefender.com>,
-        "tgopinath@microsoft.com" <tgopinath@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "dev@lists.cloudhypervisor.org" <dev@lists.cloudhypervisor.org>,
-        "mdontu@bitdefender.com" <mdontu@bitdefender.com>,
+        Thu, 25 May 2023 06:22:34 -0400
+Received: from DM4PR02CU002.outbound.protection.outlook.com (mail-centralusazon11013000.outbound.protection.outlook.com [52.101.64.0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FA612E;
+        Thu, 25 May 2023 03:22:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=abTv3ZndeaPxUvtZcHXjVKSEyVMWg8WNKLJbhSZTCjxjNxuSBXW4Awmgc0FFXk5nHAbDxz/LLBUZGDj8MQSzyqrHSCbLgw6OTWCiUiSLQwEDjJWz/0w9nNX6AKhUmnMnDqS6HRI4lA49di2HQbE15xuSDSkyIISDKhxj4+SvINVX65c2ZuHjXtaJvrOA5dw8rgjkoFiIduWYyqIR9FjtFwzTRfKHMdp40ICGCF/IQfnZijSejpQdmpXzlE7cZblj+i6aMdlNdcqursE5JztsP6AL5Iil9B0GLdsxxEBfH97tyYxUfUslfU9YQwo/lLsc/yn4akKlsVZYyouASN+/aQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CgTpXbRw1aexKijbWSBCLxoL+HEEYHvMAycWvlsPfY4=;
+ b=NtMJ2B1AOlbq8Ay++VHVpKr6JO46gUrbDNslDcJC5Jlmk31V+7+/kSB0B9gRj2WllGMLylt0IsDcCn8DKQ0Jz8/u4+Tc+zmYcpYFc7Codzg/nmKf460fBJrEGyj0u/+eJ/i4xXFhbZXMopeIY1bnyC6zBSFdQ17JLGgMmJvuv+JyBM41O9WXVIgYGzIVVOY0+bHUnXEUyy1lMyZB5/Y7y0botdwApg9V1bg1VRZwOoUFisjkKJnDn4iQhmH7qiNDPsqYKbJqq/LvJEsd/5k6jO8Z5PC1JXppbGwI/tefV9NCyZAWDF2Fpv27RHrPwbrjquslmfk1D29a7MG0HLOX2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CgTpXbRw1aexKijbWSBCLxoL+HEEYHvMAycWvlsPfY4=;
+ b=ns+kSGAtlFXFv2m3tRm923xDV4ohMrCGG9F5YJun4D2CIEd5BMQtA/+fdxpbDi4kNNmBR8keNAmtuTbdK5EjM9rKA1jPon/NiVtHVrwp4C9JYRUeDDP86rkO2e0f99LyiN4I06U5QYHrlQPzaxmnNTjQb8To0WA2Nd/25Ce7c/I=
+Received: from BYAPR05MB4469.namprd05.prod.outlook.com (2603:10b6:a02:f4::21)
+ by CH3PR05MB9505.namprd05.prod.outlook.com (2603:10b6:610:141::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.17; Thu, 25 May
+ 2023 10:21:15 +0000
+Received: from BYAPR05MB4469.namprd05.prod.outlook.com
+ ([fe80::4389:dd0e:c4c0:eaad]) by BYAPR05MB4469.namprd05.prod.outlook.com
+ ([fe80::4389:dd0e:c4c0:eaad%7]) with mapi id 15.20.6411.027; Thu, 25 May 2023
+ 10:21:15 +0000
+From:   Keerthana Kalyanasundaram <keerthanak@vmware.com>
+To:     "keescook@chromium.org" <keescook@chromium.org>,
         "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "nicu.citu@icloud.com" <nicu.citu@icloud.com>,
-        "ztarkhani@microsoft.com" <ztarkhani@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>
-References: <20230505152046.6575-1-mic@digikod.net>
- <93726a7b9498ec66db21c5792079996d5fed5453.camel@intel.com>
-From:   Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <93726a7b9498ec66db21c5792079996d5fed5453.camel@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: IbOKlK9jsOZG2ChFhg5i0OOOj4Du3a1t
-X-Proofpoint-GUID: IbOKlK9jsOZG2ChFhg5i0OOOj4Du3a1t
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-24_17,2023-05-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- impostorscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 suspectscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305250003
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Alexey Makhalov <amakhalov@vmware.com>,
+        Ajay Kaher <akaher@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>
+Subject: PROBLEM: Using Randomize structure layout GCC plugin doesn't generate
+ proper debuginfo 
+Thread-Topic: PROBLEM: Using Randomize structure layout GCC plugin doesn't
+ generate proper debuginfo 
+Thread-Index: AQHZjvKinGBIPkMZHk24RxGLcx7vjg==
+Date:   Thu, 25 May 2023 10:21:15 +0000
+Message-ID: <DF6066B2-35AE-40BE-A217-D3C48DBF6751@vmware.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR05MB4469:EE_|CH3PR05MB9505:EE_
+x-ms-office365-filtering-correlation-id: 7306f866-9631-498d-df79-08db5d09c577
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: AaVlzDnMeC1UFAIf7n3/esI+vVdbGjcFKc7Deg7bwoo7Z14sgdUxMmmt2Jo0vqaoqrItXtEo64ZSlhoIa9hgM8/6KZlHIjzx5XXangBt672m8AbjnGqjub3SPtPrR7S9KYj1DC6CDnpkdk955iIJPCATbhpac0fw2RgdKWx3y7TgZFZNmga7t1SKCS73SRqrT6HS2rYKc8aJuCs13gsAAC2hJgZyOd1QYUFdoQGx+RglkgAGu0mX5o9TrvkAKx+BJUwAmz1fLU+wjMoBvDnBm/cxvTbhFJaTW6ep2T4lfA3t+CtHkkLrMszwlV9oMLDhohx7OT2xOoNrnR3pwj/mBB8AmqxXfvuJRbCqhn9jidL8JqlkSs1nrld6yn3grMloXecJcZjdF2bFYcxAaTFOIjmklThZ2dy8B5YckMSN6F3NdI/a4Hm8nj3M5IdxpAmsgu+8+W1BZIyeM8xOWSUmyCAQ4/DKrnic/A3wBJzZe+zOymDWwK8wxBeUQwEiYGqqqPl+nM+liL6K2xUfWiLoKMZWGOzq1YwMewrgkU58IBx6UAZQwI2AvthLljwhdW+Pj2w/RKZiwja8n7QmNOJJUUGmytPwlhqscQBnjQSWXE1XYWjIjfCEYQmseFcNT4+mFUwvEjsHb56Orc0MRUEQH3z2qzxlkTuM/Ba4tEaJ8ojocPXLeGgLLW3365fBJ48V
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR05MB4469.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(451199021)(966005)(91956017)(66446008)(64756008)(66946007)(66556008)(66476007)(76116006)(478600001)(4326008)(110136005)(316002)(54906003)(33656002)(38070700005)(86362001)(36756003)(83380400001)(6512007)(6506007)(26005)(107886003)(4743002)(186003)(2616005)(5660300002)(41300700001)(8936002)(8676002)(4744005)(2906002)(6486002)(71200400001)(38100700002)(122000001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UHB1dS92RXFBNktiRmJWSHVqZ2hDejJhNUlpSXUvVGR3ZWpka2pPeUZGRlpq?=
+ =?utf-8?B?cGFaby84MkRmZ21HdVFpSjJnZ2FvTkROSWl6UmVKdHdrUnNqaUJTZ01OZi9t?=
+ =?utf-8?B?MTUwMVFyVk45aVZQM28wemtWWFJqcFRkenpIYlY5VkM3ek5TcWVNSW1lbGZk?=
+ =?utf-8?B?dHd0QUNrV1lEVmVVa1ZaYXhlbzJlSVpYT1RTN1hMeHBZU3ZFbVJ0WWhTbUVQ?=
+ =?utf-8?B?WDdBejJlTEY2Q1c1Sm1oWGtMTDdzRnE4UVVucytqTXBCSVhKazh5cWFDQTRq?=
+ =?utf-8?B?eFZqUjQvR1lsWVV3d2pPeFhZRjZLZzBUVUc3bzFPUmFXWUpTMVZoQ0FQZkcz?=
+ =?utf-8?B?Z1p3TzFyYXQzV3EvZXhHWnJUWDY0SlVXRUIrMWFOMFA0K25Mclg2YTBQMFdo?=
+ =?utf-8?B?NXhPWFMyd2Zjb0dXZE9SMjBhVEV1a1FYcmlXMUc5UDVqM1k2RkZ5YWFIcFB2?=
+ =?utf-8?B?MGsyNVcyODBwVVVIS2pLOHhrdWNveEoxbFArL3FJaGFqNE4zYzRpaFkxU0hM?=
+ =?utf-8?B?blNpVTIxaU1MUWxWRDVVdjZlNUdCeTNWZFlNeXZieW55SEpyNjdpQXRtQkJT?=
+ =?utf-8?B?Nmd4U2o0emxVR2NPRUFGZ2wyVk95RkIvbmVhM25WZkZBWW04b05qZ1ZLL05H?=
+ =?utf-8?B?QU02R1ZDQkpOWUp2VmZFLzNIWmphWWZaRWZ0alBUeVR3VzNreU42bHc1ZFM5?=
+ =?utf-8?B?YUhXd21CUU1FalJzd0kwWEdiWWM4dXVVbXU1U1BHT1R1Kzg4cDdsNzJXek1l?=
+ =?utf-8?B?cTlRcHpmMWhIK0NKRHpycFdpWVYyTFBEY3ZwTi9CNnM2UGIrd1dsVURKa0Ju?=
+ =?utf-8?B?dGprbU5lcTRuQ2VoUmt5NmVad2p1aktPSjJzaVU4alA0ZlgzaHIwa3VZcUdt?=
+ =?utf-8?B?Q1N1UHJvN0pDRTlKL1RQell6S3loMWViNUlkQXFkYU52cFhMcHA2SlNQY0w3?=
+ =?utf-8?B?N3oySnVqUmZudkkyeTliSVMraFVSM1RQVWhOL1lLZytCVXBYQmFGRng1YW5T?=
+ =?utf-8?B?NnNvT2F3SnVUcWtBcWlWUTUyajJUZUQ3aldvVlEzZTRlaWFtVGZPdHlLdHBo?=
+ =?utf-8?B?bHo4QWJ1bGVpMHQ2bVZld3p3NkNCWk1rTVVDelp6QStxVU1BcU1rWDNWQ3NK?=
+ =?utf-8?B?TnZyV3FTbFU0c3dXTWtueVlwVDlCZHJSOVF5VXFVeGNtYXp1U1RBQXBZRDQw?=
+ =?utf-8?B?NFJnZVJWcjdvNTRDUk0yRDdaREdUTjZ4alAxcjB4TGEyYnh1RHFwUlZZZ0g5?=
+ =?utf-8?B?Z3JHbnhVN0ZUUzdsSUpmOFRmQVpyMThPVEk4bUlqRVFleWhESVo2NXJpcXBZ?=
+ =?utf-8?B?WVMyOTFqUnVMZjNqcXlkNDYzdWtQR2ZyS3ZZblNOa2JPQU84blhkL0RuYWFZ?=
+ =?utf-8?B?T1M1ckE2a292MHFYdGMyOE9GZCtteGkvbGRoUE1KbFlEK0hOMHg1Z09lQm1L?=
+ =?utf-8?B?L050TkQvUlM5R00rR1dtb3NmZWhCUHQyV0RxUDBOQUZvWU9XUzhjUThGWVE4?=
+ =?utf-8?B?eVJtd1Zqcjk4aHArWkxZbklZVjMrVFdMd0JnQ0VLZkowZ0xQVGM2SWRXVnVT?=
+ =?utf-8?B?RUtPMXFQQ0hnc1dod2hoTXkrYjBvUEUreWFXdnpRTWpuYVViUndVNXhGZWIr?=
+ =?utf-8?B?SkllNU1VVTBvVHdQODN2c0JTYXYvbjlGSHBpVVMzQ1dNMWJyYm0yUzhaSHph?=
+ =?utf-8?B?b0JOY1ZQdWMveFdVTzRQVGdrZTBBMTR0cUJrQ1lQTGJrN1Zya01sQ1lOdVlj?=
+ =?utf-8?B?dithMnpuaTMxS2RvbjdhZHFIaUpJN3UxZGJVaVd6RjBiSmJzM3U0M2Vadk1Y?=
+ =?utf-8?B?NVJHSTJ2WFNkN2VlSWlmYWl5dnFqQWtYUTZjME1JZGY1QVprR3gzU0pSMjNE?=
+ =?utf-8?B?YSttOTlSYk1DYUhPQWtiZmtWM0hOOXNpdFZ5NTRzUGZLZkJVOWFzSWFLOHpu?=
+ =?utf-8?B?MU15OXVIdDQ4RzNuaFhKOThxb2c1U2R6a2krTWFmNEdUYXl4NjQwUnJWQ1R6?=
+ =?utf-8?B?WkZldjNNOWIrRFJqODhxV1dMNmgxdGZXUkZkejc5eW9lMm43S0tGTUxrTmhv?=
+ =?utf-8?B?NlRLRmZYWDJGZEpXVDlIUFBkSkFqL0hFdTlucE0xcElXcWpvakpGTWVZaHM2?=
+ =?utf-8?B?NWRZbGcwMUlZenBSOGNTbmVPTDVnckdJVmFkY1NBZGQzTWxmZVpFbDR2U3d2?=
+ =?utf-8?B?clE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <4CFB84B21940BE4086D4C5A513BF582B@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR05MB4469.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7306f866-9631-498d-df79-08db5d09c577
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 May 2023 10:21:15.1637
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w2NkylgpjuB1qtJrJ107ADg+z94FdSWg/t+DqKwNyBL98ogLqzqKjmVmknrXfcNyWkPz3OLHFQb9pG26JQ7ViQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR05MB9505
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 5/24/2023 3:20 PM, Edgecombe, Rick P wrote:
-> On Fri, 2023-05-05 at 17:20 +0200, Mickaël Salaün wrote:
->> # How does it work?
->>
->> This implementation mainly leverages KVM capabilities to control the
->> Second
->> Layer Address Translation (or the Two Dimensional Paging e.g.,
->> Intel's EPT or
->> AMD's RVI/NPT) and Mode Based Execution Control (Intel's MBEC)
->> introduced with
->> the Kaby Lake (7th generation) architecture. This allows to set
->> permissions on
->> memory pages in a complementary way to the guest kernel's managed
->> memory
->> permissions. Once these permissions are set, they are locked and
->> there is no
->> way back.
->>
->> A first KVM_HC_LOCK_MEM_PAGE_RANGES hypercall enables the guest
->> kernel to lock
->> a set of its memory page ranges with either the HEKI_ATTR_MEM_NOWRITE
->> or the
->> HEKI_ATTR_MEM_EXEC attribute. The first one denies write access to a
->> specific
->> set of pages (allow-list approach), and the second only allows kernel
->> execution
->> for a set of pages (deny-list approach).
->>
->> The current implementation sets the whole kernel's .rodata (i.e., any
->> const or
->> __ro_after_init variables, which includes critical security data such
->> as LSM
->> parameters) and .text sections as non-writable, and the .text section
->> is the
->> only one where kernel execution is allowed. This is possible thanks
->> to the new
->> MBEC support also brough by this series (otherwise the vDSO would
->> have to be
->> executable). Thanks to this hardware support (VT-x, EPT and MBEC),
->> the
->> performance impact of such guest protection is negligible.
->>
->> The second KVM_HC_LOCK_CR_UPDATE hypercall enables guests to pin some
->> of its
->> CPU control register flags (e.g., X86_CR0_WP, X86_CR4_SMEP,
->> X86_CR4_SMAP),
->> which is another complementary hardening mechanism.
->>
->> Heki can be enabled with the heki=1 boot command argument.
->>
->>
-> 
-> Can the guest kernel ask the host VMM's emulated devices to DMA into
-> the protected data? It should go through the host userspace mappings I
-> think, which don't care about EPT permissions. Or did I miss where you
-> are protecting that another way? There are a lot of easy ways to ask
-> the host to write to guest memory that don't involve the EPT. You
-> probably need to protect the host userspace mappings, and also the
-> places in KVM that kmap a GPA provided by the guest.
-> 
-> [ snip ]
-> 
->>
->> # Current limitations
->>
->> The main limitation of this patch series is the statically enforced
->> permissions. This is not an issue for kernels without module but this
->> needs to
->> be addressed.  Mechanisms that dynamically impact kernel executable
->> memory are
->> not handled for now (e.g., kernel modules, tracepoints, eBPF JIT),
->> and such
->> code will need to be authenticated.  Because the hypervisor is highly
->> privileged and critical to the security of all the VMs, we don't want
->> to
->> implement a code authentication mechanism in the hypervisor itself
->> but delegate
->> this verification to something much less privileged. We are thinking
->> of two
->> ways to solve this: implement this verification in the VMM or spawn a
->> dedicated
->> special VM (similar to Windows's VBS). There are pros on cons to each
->> approach:
->> complexity, verification code ownership (guest's or VMM's), access to
->> guest
->> memory (i.e., confidential computing).
-> 
-> The kernel often creates writable aliases in order to write to
-> protected data (kernel text, etc). Some of this is done right as text
-> is being first written out (alternatives for example), and some happens
-> way later (jump labels, etc). So for verification, I wonder what stage
-> you would be verifying? If you want to verify the end state, you would
-> have to maintain knowledge in the verifier of all the touch-ups the
-> kernel does. I think it would get very tricky.
-
-Right and for the ARM (from what I know) is that Erratas can be applied
-using the alternatives fwk when you hotplug in the CPU post boot.
-
----Trilok Soni
+SGVsbG8sDQoNCknigJltIHJlcG9ydGluZyB0aGlzIGJ1ZyBpbiByYW5kb21pemUgc3RyY3R1cmUg
+bGF5b3V0IHBsdWdpbiBpbiBHQ0MgcGx1Z2lucyBjb2RlIG9mIGxpbnV4IGtlcm5lbCB0cmVlLg0K
+V2hlbiBJIGNvbXBpbGUgdGhlIGtlcm5lbCB3aXRoIHJhbmRvbWl6ZSBzdHJ1Y3R1cmUgbGF5b3V0
+IEdDQyBwbHVnaW4sIHRoZSByZXN1bHRpbmcgZGVidWdpbmZvIGRvZXMgbm90IGhhdmUgdGhlIHJh
+bmRvbWlzZWQgc3RydWN0dXJlcy4NCg0KVG8gcmVwcm9kdWNlIHRoaXMsIEkgaGF2ZSBhIEMgc2Ft
+cGxlIHByb2dyYW0gYW5kIGEgc2NyaXB0IHRvIGNvbXBpbGUgdGhlIHByb2dyYW0gd2l0aCBhbmQg
+d2l0aG91dCByYW5kb21pemVfbGF5b3V0X3BsdWdpbg0KZnJvbSBsaW51eCBrZXJuZWwsIHRoZSBy
+ZXN1bHRlZCBkZWJ1Z2luZm8gaW4gYm90aCBjYXNlcyBhcmUgc2FtZS4gVGhvdWdoIHRoZSBwbHVn
+aW4gc2h1ZmZsZXMgdGhlIHN0cnVjdHVyZSBtZW1iZXJzLCB0aGUgcmVzdWx0aW5nIGRlYnVnaW5m
+byANCmhhcyB1bnNodWZmbGVkIHN0cnVjdHVyZS4NCg0KSSBoYXZlIGZvdW5kIGFuIG9sZCBidWcg
+aW4gR0NDIHJlcG9ydGluZyB0aGUgc2FtZSBodHRwczovL2djYy5nbnUub3JnL2J1Z3ppbGxhL3No
+b3dfYnVnLmNnaT9pZD04NDA1MiBUaGlzIGJ1ZyBoYXMgYmVlbiBjbG9zZWQgYXMgaW52YWxpZCB0
+aG91Z2ggdGhlcmUgd2FzIGEgY29udmVyc2F0aW9uIGJldHdlZW4gUGFYIG1haW50YWluZXJzIGFu
+ZCBHQ0MgZGV2cy4NCg0KSSBhc3N1bWUgdGhpcyBpc3N1ZSBoYXMgYmVlbiB0aGVyZSBzaW5jZSB0
+aGUgcmFuZG9taXplX2xheW91dF9wbHVnaW4gaGFzIGJlZW4gYWRkZWQgaW4ga2VybmVsLiBQbGVh
+c2UgY29ycmVjdCBtZSBpZiBJ4oCZbSB3cm9uZy4NCg0KUGxlYXNlIGxldCBtZSBrbm93LCBpZiB5
+b3UgbmVlZCBtb3JlIGluZm9ybWF0aW9uLiBJIGhvcGUgeW91IGFyZSBhYmxlIHRvIGZpeCB0aGlz
+IGlzc3VlLg0KDQpUaGFua3MNCktlZXJ0aGFuYQ==
