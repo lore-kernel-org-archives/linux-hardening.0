@@ -2,110 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CEFC77B7A
-	for <linux-hardening@archiver.kernel.org>; Thu, 25 May 2023 16:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E44C77B7E
+	for <linux-hardening@archiver.kernel.org>; Thu, 25 May 2023 17:03:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231263AbjEYQHL (ORCPT
+        id S231869AbjEYRDW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 25 May 2023 12:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51256 "EHLO
+        Thu, 25 May 2023 13:03:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234699AbjEYQHI (ORCPT
+        with ESMTP id S233274AbjEYRDV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 25 May 2023 12:07:08 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B80EE56
-        for <linux-hardening@vger.kernel.org>; Thu, 25 May 2023 09:07:04 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba8cf175f5bso1669445276.0
-        for <linux-hardening@vger.kernel.org>; Thu, 25 May 2023 09:07:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685030822; x=1687622822;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T8fhdJsa5NorDsEqTWIJQ5b4Ve27T8A/3D8mN23h+AM=;
-        b=FEqq2WYT2bpFD+1TtSHkaFzNdRiEuyI2g6NACjIvhMwGd2nTXz/TFAkSgH9Ujas6q/
-         vhfG2wZKYTJDUOpnLW2+ofbeXlQQzMc4kCX+fmSU72PlK4P1Bu6ChRJwig3K6o+kmK9V
-         pCl4CF26O5Po2Isyv/JlTTvFCsfs3ZUrFwA7UHCTWbISgu9JRVShkNuOUaec2GLwo+qR
-         9KOOx1CsOYaN5w2VTeTg1ACrMvUsp1nWuR5WaKwUiyP0rqYNcgG1cqc/7vdfOhawEkwt
-         dDqOiNZlzeyBYZO39XTCtpGesfMZs3DSR4tffu8EiIq8HLxLRNoWCQV/DwcUzn5RT3NK
-         ujWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685030822; x=1687622822;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=T8fhdJsa5NorDsEqTWIJQ5b4Ve27T8A/3D8mN23h+AM=;
-        b=XdBSRVe1mG19l6Sh1hY6U8OiW36AQcqoUb7D5Mjsc93E1sfebGX0ZL+pIsJNP1KnpV
-         /4vzlG5NOOAMBxJh92GdLWTU/5DIw9sZqhGkgdqa4TRHbbJkAGk91aGJ5nbSJmJ7jOwu
-         JL7GviSsjPEYK6GzkRoHUAv/KRcAn1rWqLkPyJ01t6XuwDCV5Dqd2UrgCl9gP9Z37wL4
-         sBU3AqOxbIMwC3E+owiVLYpT0T0jlh8mRcU/KKYwhrcSQunIC8D433GzBuzPM4spHPjV
-         gGx20CTpDR1opDRWW5eLFWYZLb4aGMgl4BBM4G0tNihsYmS/EktRolg2yObMyyp8wzMk
-         iQLQ==
-X-Gm-Message-State: AC+VfDwtiA9YewhDPNOZAeXrewVMAPnredN3AICn+Hya8ev8q7ycYXvf
-        oAi2s02fh2z5rXlfjQ0oHEiYxKS9nyQ=
-X-Google-Smtp-Source: ACHHUZ6yBYNFZuYhfNGO52o3ys/I0sQ5pEx4h3FPL/IsVNBvdz1hiS3BsLpfaNj0iWMqAGXV//6VIasdS2w=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:6584:0:b0:ba8:381b:f764 with SMTP id
- z126-20020a256584000000b00ba8381bf764mr2233557ybb.3.1685030821985; Thu, 25
- May 2023 09:07:01 -0700 (PDT)
-Date:   Thu, 25 May 2023 09:07:00 -0700
-In-Reply-To: <7cb6c4c28c077bb9f866c2d795e918610e77d49f.camel@intel.com>
-Mime-Version: 1.0
-References: <20230505152046.6575-1-mic@digikod.net> <93726a7b9498ec66db21c5792079996d5fed5453.camel@intel.com>
- <facfd178-3157-80b4-243b-a5c8dabadbfb@digikod.net> <7cb6c4c28c077bb9f866c2d795e918610e77d49f.camel@intel.com>
-Message-ID: <ZG+HpFjIuSWvyo+B@google.com>
-Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
-From:   Sean Christopherson <seanjc@google.com>
-To:     Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc:     "mic@digikod.net" <mic@digikod.net>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "liran.alon@oracle.com" <liran.alon@oracle.com>,
-        "marian.c.rotariu@gmail.com" <marian.c.rotariu@gmail.com>,
-        Alexander Graf <graf@amazon.com>,
-        John S Andersen <john.s.andersen@intel.com>,
-        "madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>,
-        "ssicleru@bitdefender.com" <ssicleru@bitdefender.com>,
-        "yuanyu@google.com" <yuanyu@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tgopinath@microsoft.com" <tgopinath@microsoft.com>,
-        "jamorris@linux.microsoft.com" <jamorris@linux.microsoft.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "dev@lists.cloudhypervisor.org" <dev@lists.cloudhypervisor.org>,
-        "mdontu@bitdefender.com" <mdontu@bitdefender.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "nicu.citu@icloud.com" <nicu.citu@icloud.com>,
-        "ztarkhani@microsoft.com" <ztarkhani@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+        Thu, 25 May 2023 13:03:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F796C0;
+        Thu, 25 May 2023 10:03:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 14B0863FFB;
+        Thu, 25 May 2023 17:03:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D09C433D2;
+        Thu, 25 May 2023 17:03:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685034199;
+        bh=K9n01kiiSt4kRO6VRK0U3IaunCH/mjPmCGWushqaFCE=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=BW+9I/AXFnxNseELZ+15IxLElvl0zyNLVlnJWYcHRu0IrlpC7jiZkWiUGQ8ZvhK3q
+         HDr4fK4ssieD0qGC5k2Q/3YYQNbFKR078nRvsLNTW20nEiWjqcyMrEojIfYlTdzgtx
+         9UDH0sEMDZuKXC15O/yHOmcO8CKMQKKE8yGFosNNsLr4xOQ6S/Ds2T7MHWC5xzNTmv
+         6AWxobC8SwwDD3AnHlwIvELVJjS0nezwg0M2RHeKo83dd9PcITpL+SR9FKuut3eAV4
+         9iGLND/JSCEJTLidzJQUP1YWvPU7jpz0dFv/C1NyhzUzsIEx3BhSJHKrQmzJ93fuVl
+         PNGocxeBKbxDg==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH][next] wifi: wil6210: fw: Replace zero-length arrays with
+ DECLARE_FLEX_ARRAY() helper
+From:   Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <ZGKHByxujJoygK+l@work>
+References: <ZGKHByxujJoygK+l@work>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <168503419448.19957.18092228078896033455.kvalo@kernel.org>
+Date:   Thu, 25 May 2023 17:03:17 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, May 25, 2023, Rick P Edgecombe wrote:
-> I wonder if it might be a good idea to POC the guest side before
-> settling on the KVM interface. Then you can also look at the whole
-> thing and judge how much usage it would get for the different options
-> of restrictions.
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-As I said earlier[*], IMO the control plane logic needs to live in host userspace.
-I think any attempt to have KVM providen anything but the low level plumbing will
-suffer the same fate as CR4 pinning and XO memory.  Iterating on an imperfect
-solution to incremently improve security is far, far easier to do in userspace,
-and far more likely to get merged.
+> Zero-length arrays are deprecated, and we are moving towards adopting
+> C99 flexible-array members, instead. So, replace zero-length arrays
+> declarations alone in structs with the new DECLARE_FLEX_ARRAY()
+> helper macro.
+> 
+> This helper allows for flexible-array members alone in structs.
+> 
+> Link: https://github.com/KSPP/linux/issues/193
+> Link: https://github.com/KSPP/linux/issues/287
+> Link: https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Reviewed-by: Simon Horman <simon.horman@corigine.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-[*] https://lore.kernel.org/all/ZFUyhPuhtMbYdJ76@google.com
+Patch applied to ath-next branch of ath.git, thanks.
+
+cbb3debbb163 wifi: wil6210: fw: Replace zero-length arrays with DECLARE_FLEX_ARRAY() helper
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/ZGKHByxujJoygK+l@work/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
