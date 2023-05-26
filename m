@@ -2,125 +2,149 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8058C77B73
-	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 20:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73795C77B73
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 21:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237823AbjEZUr1 (ORCPT
+        id S229753AbjEZVAz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 26 May 2023 16:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49170 "EHLO
+        Fri, 26 May 2023 17:00:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236530AbjEZUr0 (ORCPT
+        with ESMTP id S229626AbjEZVAy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 26 May 2023 16:47:26 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B2A8187
-        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 13:47:25 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1ae87bdc452so7876535ad.2
-        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 13:47:25 -0700 (PDT)
+        Fri, 26 May 2023 17:00:54 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A692118D
+        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 14:00:52 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-51f1b6e8179so770992a12.3
+        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 14:00:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685134044; x=1687726044;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lfp02npkh0h/YWUAgBDsalIo85iCBRV6d/ctWRGEdlM=;
-        b=HWXQYRLK7ntwWtvuKa8oeGsD27iRIjXFFB3NKRgYTo6AbUXgLPeW3qK0kjBQERZ3A+
-         hpLbk5UD6xB7CAzhW10l0+DRI1R3CwdWx4tRagyUtmf6xVPsqRG9KuB8vBWnMxVh0omE
-         +Y+ZQrk4EVBT1bEzkphBCFItOUN81ElbIBCLY=
+        d=chromium.org; s=google; t=1685134852; x=1687726852;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ysEB3TrSbfOrgA9FR4FkyBXy/5R3r970UROIlGdQbeM=;
+        b=YyDaOhIzVZ5GWdlSNV5YF5iCNqGBU8gzhVHHQm4mhG/DAGqAKRL4mNA2ATxNfGkodP
+         5n38novKPUqRNZRr+ZsFlMPguyFMsRysxa/MJgGETi4wxn4NBUT68K4Bzaboyb78TTkS
+         GrLQwQafvFN1Xef1oehnbAzoKUicsYBPVA0u4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685134044; x=1687726044;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lfp02npkh0h/YWUAgBDsalIo85iCBRV6d/ctWRGEdlM=;
-        b=Wn2PdVdczB5fzQis8RoMrTIYlby/H0J5tT+RvtiC8US7zneHP2H9oL8rt/FGIxWZEq
-         +3DhrXn4/vDJdLOytMtS8IYVCSIbTGvWvDVqlmHvzwFL2F/398nd2F1ZiRwFlXTKyYDH
-         Kepo4X4DOztzWKMDiBoXthWoWTfP1e7rfZR/6BfQoHdnO4/gNxP3so1V5aIHlqL/MAdR
-         6RH3MMIkL7YXIR3l6tIgFhYMS0DW65ivMJt/un0S5HzUY11DfNvBzvflShPY3IhZkL2d
-         KzbPE6Sr9E1PQDgjSYPlHiIyvCDaBH0u+kDtYXNEVCnQPD7ROTHgdu/ulcbmFy1O34GY
-         omQg==
-X-Gm-Message-State: AC+VfDyzGua7DuuX2NqWEYWQO3mDqcFsc6F41FdeJjuNMS9m3P0dDp6t
-        KMDudNo8pfS9hmGLWFUxK25mRg==
-X-Google-Smtp-Source: ACHHUZ74jsM1296cY4bBvBCOf7HyRaDBLdiJgwSaoNdaJ9O57iSahTuW8wR3toOlGsGaHRgpudK/nQ==
-X-Received: by 2002:a17:903:27c3:b0:1ac:a02f:c9a4 with SMTP id km3-20020a17090327c300b001aca02fc9a4mr3542847plb.4.1685134044683;
-        Fri, 26 May 2023 13:47:24 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685134852; x=1687726852;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ysEB3TrSbfOrgA9FR4FkyBXy/5R3r970UROIlGdQbeM=;
+        b=dv7INnIRIzM0KeOpvCz0YxZlNuJqhc6ULOHWWRQQEMyVB5zWZMWJKmxToGTOUgN7Zf
+         KhBeT3eZ7G++0euhIMDa+bfxZXCuBarCQN2JandxojDcJKSJ7POnbWniNaT+taecDTGQ
+         bqmHYqO6pDiyoGdq7mHwOZm6LkT5N9EPPSZK9dVu1Y7oANvTnpUogUOk80RBJPKlt0A/
+         RoHlK4U7Hsbgu/DlcjeFKp7nFgkX3SotlkDMpOUHLiEyA76d/Xqr7GJVG0O2/R9tc1zY
+         H2O7upgt90AwK/z6tflRyxt6yzYLm3DPkas2AFcLBOANIhLTQsvnRWIkM9c7ZS4BW/wS
+         ZMUA==
+X-Gm-Message-State: AC+VfDyTL4cfClY47N8Ruw4EdU8D0XZ7SgSOo0xVpEZB4HGZ+DmOhR06
+        jr3xRnLhkZCvVdsTgp+sGivcug==
+X-Google-Smtp-Source: ACHHUZ4/lR1eDBoUYP08CmKaLuvmX5MhsSXCw931slnptyNF8cayHqvMk/u2bmUX4fNNayenLkoT1w==
+X-Received: by 2002:a05:6a21:999e:b0:10c:49e:6c67 with SMTP id ve30-20020a056a21999e00b0010c049e6c67mr744819pzb.33.1685134851856;
+        Fri, 26 May 2023 14:00:51 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h9-20020a170902f54900b001ac7c725c1asm3650623plf.6.2023.05.26.13.47.23
+        by smtp.gmail.com with ESMTPSA id t4-20020aa79384000000b005aa60d8545esm3085995pfe.61.2023.05.26.14.00.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 13:47:24 -0700 (PDT)
-Date:   Fri, 26 May 2023 13:47:23 -0700
+        Fri, 26 May 2023 14:00:51 -0700 (PDT)
+Date:   Fri, 26 May 2023 14:00:50 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Fangrui Song <maskray@google.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, ojeda@kernel.org,
-        qing.zhao@oracle.com, morbo@google.com, llvm@lists.linux.dev,
-        trix@redhat.com, linux-kernel@vger.kernel.org, nathan@kernel.org,
-        linux-hardening@vger.kernel.org, gustavoars@kernel.org,
-        ndesaulniers@google.com
-Subject: Re: [PATCH v2] Compiler Attributes: Add __counted_by macro
-Message-ID: <202305261344.A938E07789@keescook>
-References: <20230517190841.gonna.796-kees@kernel.org>
- <168512138720.187005.8346289423859319616.b4-ty@chromium.org>
- <CANiq72=38mdTnJ3cicgwPB2xWqtbnGsL8Rtr4pwq7xGRr-m=Wg@mail.gmail.com>
- <202305261156.67CDEE933D@keescook>
- <CAFP8O3JO42CD2EXk+DJ5pci8ieHvRifAZpKg4iR_NiqTaYfLdA@mail.gmail.com>
+To:     Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        "Keller, Jacob E" <jacob.e.keller@intel.com>
+Subject: Re: [PATCH][next] iavf: Replace one-element array with
+ flexible-array member
+Message-ID: <202305261358.EA0ACE712@keescook>
+References: <ZGLR3H1OTgJfOdFP@work>
+ <692650e7-c006-4f89-3b11-dd2f193f510c@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFP8O3JO42CD2EXk+DJ5pci8ieHvRifAZpKg4iR_NiqTaYfLdA@mail.gmail.com>
+In-Reply-To: <692650e7-c006-4f89-3b11-dd2f193f510c@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 26, 2023 at 12:48:26PM -0700, Fangrui Song wrote:
-> On Fri, May 26, 2023 at 11:56 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Fri, May 26, 2023 at 07:47:03PM +0200, Miguel Ojeda wrote:
-> > > On Fri, May 26, 2023 at 7:16 PM Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > FYI, applied to for-next/hardening:
-> > > >
-> > > > [1/1] Compiler Attributes: Add __counted_by macro
-> > > >       https://git.kernel.org/kees/c/86a76e91cbab
-> > >
-> > > Sorry, I was going to apply it soon -- in case you want it:
-> > >
-> > >     Acked-by: Miguel Ojeda <ojeda@kernel.org>
-> >
-> > Thanks!
-> >
-> > > And thanks Nathan for resubmitting the `Reviewed-by` from v1!
-> >
-> > Yes, apologies for missing this in my v2 submission!
-> >
-> > --
-> > Kees Cook
-> >
+On Tue, May 23, 2023 at 11:19:00AM -0700, Tony Nguyen wrote:
+> On 5/15/2023 5:44 PM, Gustavo A. R. Silva wrote:
+> > One-element arrays are deprecated, and we are replacing them with flexible
+> > array members instead. So, replace one-element array with flexible-array
+> > member in struct iavf_qvlist_info, and refactor the rest of the code,
+> > accordingly.
+> > 
+> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> > routines on memcpy() and help us make progress towards globally
+> > enabling -fstrict-flex-arrays=3 [1].
+> > 
+> > Link: https://github.com/KSPP/linux/issues/79
+> > Link: https://github.com/KSPP/linux/issues/289
+> > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> > ---
+> >   drivers/net/ethernet/intel/iavf/iavf_client.c | 2 +-
+> >   drivers/net/ethernet/intel/iavf/iavf_client.h | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/intel/iavf/iavf_client.c b/drivers/net/ethernet/intel/iavf/iavf_client.c
+> > index 93c903c02c64..782384b3aa38 100644
+> > --- a/drivers/net/ethernet/intel/iavf/iavf_client.c
+> > +++ b/drivers/net/ethernet/intel/iavf/iavf_client.c
+> > @@ -470,7 +470,7 @@ static int iavf_client_setup_qvlist(struct iavf_info *ldev,
+> >   	v_qvlist_info = (struct virtchnl_rdma_qvlist_info *)qvlist_info;
+> >   	msg_size = struct_size(v_qvlist_info, qv_info,
+> > -			       v_qvlist_info->num_vectors - 1);
+> > +			       v_qvlist_info->num_vectors);
 > 
-> https://discourse.llvm.org/t/rfc-enforcing-bounds-safety-in-c-fbounds-safety/70854
-> proposes a macro __counted_by as well.
-> This patch uses the same name:
+> The problem is this mirrors the virtchnl struct (virtchnl_rdma_qvlist_info)
+> so that structure needs to change as well... However, this goes back to the
+> interface that virtchnl provides between PF and VF [1].
 > 
-> > # define __counted_by(member)          __attribute__((__element_count__(member)))
+> I think removing the iavf structure and directly using the virtchnl one
+> would make sense. We'd need to adjust virtchnl and follow Kees' suggestion
+> [2].
+
+Note that at the time I suggested "[0]", but it should have been
+"[]". But, yes, Keeping the "over allocation" is fine since it's a
+hardware ABI.
+
+Alternatively, it could be defined with a union to keep all the sizes
+the same:
+
+ struct iavf_qvlist_info {
+ 	u32 num_vectors;
+-	struct iavf_qv_info qv_info[1];
++	union {
++		struct iavf_qv_info single_qv_info;
++		DECLARE_FLEX_ARRAY(struct iavf_qv_info, qv_info)
++	};
+ };
+
+-Kees
+
 > 
-> I wonder whether the two use cases are compatible so that using the
-> same macro name will be fine.
-
-Yeah, I have suggest the name change for the GCC proposal. However,
-given that there is still no code to test for -fbounds-safety, I'm
-sticking with __element_count for the moment, as there is code
-implementing that name in both GCC and Clang today.
-
-> #if defined(__has_feature) && __has_feature(bounds_safety)
-> #define __counted_by(T) __attribute__((__counted_by__(T)))
-> // ... other bounds annotations
-> #else
-> #define __counted_by(T) // defined as nothing // ... other bounds annotations
-> #endif
-
-Right. My main consideration for getting __counted_by defined by the
-kernel at all is so that annotation can begin. We can adjust the
-define's contents as needed. :)
+> >   	adapter->client_pending |= BIT(VIRTCHNL_OP_CONFIG_RDMA_IRQ_MAP);
+> >   	err = iavf_aq_send_msg_to_pf(&adapter->hw,
+> > diff --git a/drivers/net/ethernet/intel/iavf/iavf_client.h b/drivers/net/ethernet/intel/iavf/iavf_client.h
+> > index c5d51d7dc7cc..500269bc0f5b 100644
+> > --- a/drivers/net/ethernet/intel/iavf/iavf_client.h
+> > +++ b/drivers/net/ethernet/intel/iavf/iavf_client.h
+> > @@ -53,7 +53,7 @@ struct iavf_qv_info {
+> >   struct iavf_qvlist_info {
+> >   	u32 num_vectors;
+> > -	struct iavf_qv_info qv_info[1];
+> > +	struct iavf_qv_info qv_info[];
+> >   };
+> >   #define IAVF_CLIENT_MSIX_ALL 0xFFFFFFFF
+> 
+> [1] https://lore.kernel.org/intel-wired-lan/f3674339c0390ced22b365101f2d3e3a2bf26845.camel@intel.com/
+> [2] https://lore.kernel.org/intel-wired-lan/202106091424.37E833794@keescook/
 
 -- 
 Kees Cook
