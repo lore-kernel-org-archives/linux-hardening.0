@@ -2,123 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB86C7EE2E
-	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 16:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FF5C7EE23
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 17:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237139AbjEZQtV (ORCPT
+        id S230421AbjEZRQt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 26 May 2023 12:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48414 "EHLO
+        Fri, 26 May 2023 13:16:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236898AbjEZQtV (ORCPT
+        with ESMTP id S229951AbjEZRQs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 26 May 2023 12:49:21 -0400
-Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [IPv6:2001:1600:4:17::bc0e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23A8194
-        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 09:49:19 -0700 (PDT)
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QSW9963HFzMqBk5;
-        Fri, 26 May 2023 18:49:17 +0200 (CEST)
-Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QSW954GcnzMpq7x;
-        Fri, 26 May 2023 18:49:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1685119757;
-        bh=aghhZZz/jAHNei4obfycQdpoNYo23x/hMTO/WYvr+D4=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=aNpuEEhr3qfgoQBoABl/c/Soy37k/dWbg29l53qY084NrLE1aBB96NeIw1GJ+t33V
-         pd9trvFbpyUukW/iVPpk0eBX/Jwsza/CoS5PoumlcDlW/vnInB0QV0Wjo7cpI7eeQk
-         00f3/lqql1UIb9Yq02grk2akHYn3y+PAXnI212IM=
-Message-ID: <7671b432-569a-d176-315b-d5f66fe205ef@digikod.net>
-Date:   Fri, 26 May 2023 18:49:12 +0200
+        Fri, 26 May 2023 13:16:48 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F339B
+        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 10:16:47 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-52cbd7d0c37so644772a12.3
+        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 10:16:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1685121407; x=1687713407;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tt/68vR6SyeC2sLBcDQmwXBv1ANp28ndmxJPUsWE9hM=;
+        b=LnkvrIlQ8Tok1eY3MzXaVX3kUwG4iQ/TiKFyN8pB9xmQgyIk1TWe7Rhr0DTtyZlcDs
+         eVfyKux69riINbAJ3ut36H1rVoRrwRJT4yCWqFMFjVVbBMYEs2dxvwSjolS7rd4aewK5
+         xwaoXlV1TqZNJcLRm1EvoAdemOvEOa/ETWhKc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685121407; x=1687713407;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tt/68vR6SyeC2sLBcDQmwXBv1ANp28ndmxJPUsWE9hM=;
+        b=KKaydNqMD7cYiWH/OSE2JyHOxEQNBZ2+HXDHmfczEMLryTQoc2wvPHIXjD5vEzcp2Q
+         CG5OdG//Kv2V1GF8Lj1QEPPJgQKhaZUhHGeD18WvY5DTnINrpkqJJs2R8G8lL+A2N02i
+         L/RWGB3GuJ6qstG8Cgxp++XeRr/PJgNL8m08NMU6TBQdRKfqDuzh3XzTL2So98Zc87hJ
+         3q+Vi6s8N5MjxfF7hC03fjXFthqmtjsLfjXZF1UotmJFiab8xOXv9J5lihRFgDKCiyaW
+         60YAQcAbINsgQ849LK4IgFQcUB0NITH/0k/dgJmVK930OOA+H9YJMfXPUXT5O2YQcvmx
+         tHkw==
+X-Gm-Message-State: AC+VfDxV2E6F2hXnoFtiAl53PUC+3a1oYOwp1Ac1Ybf3mqVVnatolDLs
+        y0Atck0S7+Ka1WbeLXru/mz728iNCPoTO7AU4CY=
+X-Google-Smtp-Source: ACHHUZ5x1UtHJq0vBgeGLgQxf+Iim5Mb2xwowdl86d42mrNau8iDDUGU9hQVFxLDmRhXDrvIjkEZwQ==
+X-Received: by 2002:a17:903:10c:b0:1ac:8062:4f0b with SMTP id y12-20020a170903010c00b001ac80624f0bmr2720843plc.59.1685121407089;
+        Fri, 26 May 2023 10:16:47 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p23-20020a170902a41700b001aaecc0b6ffsm3490147plq.160.2023.05.26.10.16.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 May 2023 10:16:46 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     ojeda@kernel.org, keescook@chromium.org
+Cc:     qing.zhao@oracle.com, morbo@google.com, llvm@lists.linux.dev,
+        trix@redhat.com, linux-kernel@vger.kernel.org, nathan@kernel.org,
+        linux-hardening@vger.kernel.org, gustavoars@kernel.org,
+        ndesaulniers@google.com
+Subject: Re: [PATCH v2] Compiler Attributes: Add __counted_by macro
+Date:   Fri, 26 May 2023 10:16:29 -0700
+Message-Id: <168512138720.187005.8346289423859319616.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230517190841.gonna.796-kees@kernel.org>
+References: <20230517190841.gonna.796-kees@kernel.org>
 MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [PATCH v1 6/9] KVM: x86: Add Heki hypervisor support
-Content-Language: en-US
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
-        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-References: <20230505152046.6575-1-mic@digikod.net>
- <20230505152046.6575-7-mic@digikod.net>
- <ZFlnJRsJh2fX3IJb@liuwe-devbox-debian-v2>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <ZFlnJRsJh2fX3IJb@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-On 08/05/2023 23:18, Wei Liu wrote:
-> On Fri, May 05, 2023 at 05:20:43PM +0200, Mickaël Salaün wrote:
->> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
->>
->> Each supported hypervisor in x86 implements a struct x86_hyper_init to
->> define the init functions for the hypervisor.  Define a new init_heki()
->> entry point in struct x86_hyper_init.  Hypervisors that support Heki
->> must define this init_heki() function.  Call init_heki() of the chosen
->> hypervisor in init_hypervisor_platform().
->>
->> Create a heki_hypervisor structure that each hypervisor can fill
->> with its data and functions. This will allow the Heki feature to work
->> in a hypervisor agnostic way.
->>
->> Declare and initialize a "heki_hypervisor" structure for KVM so KVM can
->> support Heki.  Define the init_heki() function for KVM.  In init_heki(),
->> set the hypervisor field in the generic "heki" structure to the KVM
->> "heki_hypervisor".  After this point, generic Heki code can access the
->> KVM Heki data and functions.
->>
+On Wed, 17 May 2023 12:08:44 -0700, Kees Cook wrote:
+> In an effort to annotate all flexible array members with their run-time
+> size information, the "element_count" attribute is being introduced by
+> Clang[1] and GCC[2] in future releases. This annotation will provide
+> the CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE features the ability
+> to perform run-time bounds checking on otherwise unknown-size flexible
+> arrays.
+> 
 > [...]
->> +static void kvm_init_heki(void)
->> +{
->> +	long err;
->> +
->> +	if (!kvm_para_available())
->> +		/* Cannot make KVM hypercalls. */
->> +		return;
->> +
->> +	err = kvm_hypercall3(KVM_HC_LOCK_MEM_PAGE_RANGES, -1, -1, -1);
-> 
-> Why not do a proper version check or capability check here? If the ABI
-> or supported features ever change then we have something to rely on?
 
-The attributes will indeed get extended, but I wanted to have a simple 
-proposal for now.
+FYI, applied to for-next/hardening:
 
-Do you mean to get the version of this hypercall e.g., with a dedicated 
-flag, like with the 
-landlock_create_ruleset/LANDLOCK_CREATE_RULESET_VERSION syscall?
+[1/1] Compiler Attributes: Add __counted_by macro
+      https://git.kernel.org/kees/c/86a76e91cbab
 
+-- 
+Kees Cook
 
-> 
-> Thanks,
-> Wei.
