@@ -2,69 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A32AC77B7E
-	for <linux-hardening@archiver.kernel.org>; Thu, 25 May 2023 19:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29977C77B7E
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 02:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233627AbjEYTjd (ORCPT
+        id S233614AbjEZCgX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 25 May 2023 15:39:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55724 "EHLO
+        Thu, 25 May 2023 22:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232203AbjEYTjd (ORCPT
+        with ESMTP id S233071AbjEZCgU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 25 May 2023 15:39:33 -0400
-X-Greylist: delayed 1188 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 May 2023 12:39:03 PDT
-Received: from smtp.outflux.net (mta.outflux.net [IPv6:2001:19d0:2:6:c0de:0:736d:7471])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9175101
-        for <linux-hardening@vger.kernel.org>; Thu, 25 May 2023 12:39:03 -0700 (PDT)
-Received: from serenity.outflux.net (serenity.outflux.net [10.2.0.2])
-        by vinyl.outflux.net (8.15.2/8.15.2/Debian-10) with ESMTP id 34PIeYCD025811;
-        Thu, 25 May 2023 11:40:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=outflux.net;
-        s=2016010; t=1685040034;
-        bh=9zwtAfyKF73stEa8mnj95uzHY/DupItIN7pSr8gdlHY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=suyALfLFerSxQu4aHfUApIxWgxMlsLWM5WmEIEkT0K8HhWTgRglPKBLTfliOPAPrN
-         fc5hQTEFRcL2pdtd0WMLEXv7KzrWwsDFM+Atw6y8DZwQQHKSCJHJZyzmJyI/1L426A
-         GhG6BdUkNUAZ2UFL3AyaJPNo4uDErH9AcQWDFFmE=
-Date:   Thu, 25 May 2023 11:40:34 -0700
-From:   Kees Cook <kees@outflux.net>
-To:     Heiko Carstens <hca@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>
-Cc:     linux-hardening@vger.kernel.org
-Subject: Re: s390/defconfigs: set CONFIG_INIT_STACK_NONE=y
-Message-ID: <ZG+rogQJO+U3kS4a@outflux.net>
+        Thu, 25 May 2023 22:36:20 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD380BC;
+        Thu, 25 May 2023 19:36:18 -0700 (PDT)
+Received: by linux.microsoft.com (Postfix, from userid 1001)
+        id 1932320FBE98; Thu, 25 May 2023 19:36:18 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1932320FBE98
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685068578;
+        bh=QsI2Tqrh7Dq8rATEw0dJAIe6Y8MEWIZaKj+0i4m1b94=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=rc/phama1ktXAiy+vs2NVCSXABwbcfYCYzvoNhWo6b4QznrBTZJyht2XFXGcOWpXT
+         eN3vRQ77IyNVtRNsEt3dUwkwOKfWmDDqOGFtsKRkzHP0DTyYh3PuCH9zyVE+5kTU93
+         rssQ3lVi3y4biGwhIuiBnmIaxdqEKLD8WYOLFyno=
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id 1639D30013A9;
+        Thu, 25 May 2023 19:36:18 -0700 (PDT)
+Date:   Thu, 25 May 2023 19:36:18 -0700 (PDT)
+From:   James Morris <jamorris@linux.microsoft.com>
+To:     =?ISO-8859-15?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
+cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?Q?Nicu=C8=99or_C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=C8=98tefan_=C8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
+In-Reply-To: <20230505152046.6575-1-mic@digikod.net>
+Message-ID: <17f62cb1-a5de-2020-2041-359b8e96b8c0@linux.microsoft.com>
+References: <20230505152046.6575-1-mic@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Organization: Outflux
-X-MIMEDefang-Filter: outflux$Revision: 1.316 $
-X-HELO: serenity.outflux.net
-Envelope-To: linux-hardening@vger.kernel.org
-Envelope-To: hca@linux.ibm.com
-Envelope-To: agordeev@linux.ibm.com
-X-Scanned-By: MIMEDefang 2.83
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Heiko,
+[Side topic]
 
-I had this[1] patch pointed out to me, but I couldn't find any discussion
-about it on public lists. Can you give me some background on this? There
-haven't been any general workloads identified where this has been
-a problem, so I'm curious why this was seen as globally an issue on
-s390. The expectation was to use __uninitialized on any variables where
-this was noticed as a performance issue, and where the memory safety of
-the variable could be proven. Turning it off by default seems like
-rather too much, but perhaps there is something unique to s390 I don't
-know about. :)
+Would folks be interested in a Linux Plumbers Conference MC on this 
+topic generally, across different hypervisors, VMMs, and architectures?
 
-Thanks,
+If so, please let me know who the key folk would be and we can try writing 
+up an MC proposal.
 
--Kees
 
-[1] https://git.kernel.org/linus/124acbe275040809abfa5fbe6e25790a53d5a161
 
 -- 
-Kees Cook                                            @outflux.net
+James Morris
+<jamorris@linux.microsoft.com>
