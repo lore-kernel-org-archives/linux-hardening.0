@@ -2,86 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FDDC7EE2F
-	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 17:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1674C77B7A
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 17:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235984AbjEZRmY (ORCPT
+        id S242767AbjEZRny (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 26 May 2023 13:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51516 "EHLO
+        Fri, 26 May 2023 13:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242720AbjEZRmX (ORCPT
+        with ESMTP id S242754AbjEZRnx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 26 May 2023 13:42:23 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60354E65
-        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 10:42:01 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-64d24136663so910227b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 10:42:01 -0700 (PDT)
+        Fri, 26 May 2023 13:43:53 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F6BFD8
+        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 10:43:51 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-2563c462e06so442389a91.3
+        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 10:43:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685122920; x=1687714920;
+        d=chromium.org; s=google; t=1685123030; x=1687715030;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mzkLCtK6sSR84gGu0pHUyFqZuhAc6wVW3zGt3fCHd8A=;
-        b=QT6t4K12P7rnXTLcm5Lx1LIZR1MPJa9FlTsCngYetkrHw3sW46rIqrAG1AFjR8sWb6
-         kIvHb3q2cPGCw6h3OkWVbOiBxVeSEpSTqOqfM+xcIz7QH+jBL8MQ9P0vdtnqEraXN+Yt
-         QJqA79OMHWrFkJtTGNVC03Dm7r4+gPEB2HJnY=
+        bh=hg9Y1Zeqm2LukQubiT8t4V/vqubtiFOiCTgTYUMaUVs=;
+        b=lta3MXHxjS1c7AJAUPLUOeHcr5x4Zo3I0sh7vWvpASJEc8uOh/eMfflNOlqqurTpiC
+         y1tn4GMr/aIo9mLeE/wroXnkfagYh0cxm5KsTTxf2BD+1Xlltby4ztTCm4k6kClJA5qo
+         sIYWv8PJerV3mljMW1vWIqC1jQcttRocREL9A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685122920; x=1687714920;
+        d=1e100.net; s=20221208; t=1685123030; x=1687715030;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mzkLCtK6sSR84gGu0pHUyFqZuhAc6wVW3zGt3fCHd8A=;
-        b=Uhg49VwWuX3AIeYT3RDoLWok/YR4yGXyBl7wmilvmnqNKWFJDLMe7yXcRI1SxZ/uFJ
-         MtJvTF2nJsZVgMy+dKb9I8TjPiARu7XopvFk9FC1wlZ+7Z3KBPleyYrAgRbKSqaPmTNh
-         b6LG6UI1f/r2SxPuysv6w2+sxpbyndU6M7ns37M0dJWp2KMqm0UHM5eofnq8zFp0sjbZ
-         8lhavwifOPcQWox2GfcizttYpTN/fkj6tvLznc/w2OhuhOTY8QM+IuAVV7AyJyfttM1e
-         07bZ3wo4t1iZWOvzEsZR8yK77a1vlh/unJ16MiEC2WxFJqFxAGcZJ04Lsq6lfb+egqS+
-         oICQ==
-X-Gm-Message-State: AC+VfDxvP701jctngDcSWweCsPkXJJZTN5KAoRc3F9cb6g3wE4pgnwLe
-        C5JKfdT4g7lDJTYBP/hywrDF1w==
-X-Google-Smtp-Source: ACHHUZ7p9OpMzdYLLWHwtPA3GpWN9Mb1f0Jb0YPuUcHlrUWjMSB7QL9tkgbq8shEv5eS5UX10tipJA==
-X-Received: by 2002:a05:6a00:98e:b0:64a:c673:d064 with SMTP id u14-20020a056a00098e00b0064ac673d064mr4744620pfg.17.1685122920652;
-        Fri, 26 May 2023 10:42:00 -0700 (PDT)
+        bh=hg9Y1Zeqm2LukQubiT8t4V/vqubtiFOiCTgTYUMaUVs=;
+        b=MiycjNUTOLUFvCKcQe9x7eUDSap6/zg8c5ztrvvlr+Fo0d38gj/aKqX/VOGgV/4FNZ
+         d4sk8oBmL0vt2Si0D4lY6s9LzWPSe+EUhVwlrxFXI+DxC+Mv2Rd+UmoEdY1VGgTRvKj1
+         nrKCvdwbq56LSbgUjF+KpgnacFWTJCZSCeLOa49Qks55AXKl4ZHlxQLSkcxhq5MEInyj
+         gUwvPfE4f9fKP13rRfp81x6rvmF+iiyh6v2FEhTlWSMjXqQlhdye3vgUvvezdQgkuQ78
+         rfFgpoLvn0U4+BvA8vlqkMLzWAxdqd7lsqln2NiyUfJSNdYAgFAl+nlt0GHeWeCXj+TN
+         YnGA==
+X-Gm-Message-State: AC+VfDyi3ZXwouhPhWuoH8rFV7U3l7vFzmQ3IU25NSHXGxxUf6XjwznQ
+        KNNh9T0g6EK77dLfJldQkI3Y9w==
+X-Google-Smtp-Source: ACHHUZ7/7bJzxKpXODcLcQHpGpV/j9si5r5SwPI1mqbMjnGFBZlzEi+VmgCEu3f6lGaHSTOA1ark4A==
+X-Received: by 2002:a17:90a:55c9:b0:253:27b4:cd4d with SMTP id o9-20020a17090a55c900b0025327b4cd4dmr2849789pjm.27.1685123030618;
+        Fri, 26 May 2023 10:43:50 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n17-20020aa78a51000000b0064389eab4c8sm2947098pfa.126.2023.05.26.10.42.00
+        by smtp.gmail.com with ESMTPSA id 127-20020a630385000000b0051b5d0fe708sm3074081pgd.43.2023.05.26.10.43.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 10:42:00 -0700 (PDT)
-Date:   Fri, 26 May 2023 10:41:59 -0700
+        Fri, 26 May 2023 10:43:50 -0700 (PDT)
+Date:   Fri, 26 May 2023 10:43:49 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Justin Tee <justintee8345@gmail.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Justin Tee <justin.tee@broadcom.com>
-Subject: Re: [PATCH v2][next] scsi: lpfc: Use struct_size() helper
-Message-ID: <202305261041.4C23B96F@keescook>
-References: <ZG0fDdY/PPQ/ijlt@work>
- <CABPRKS9ykHvaOGUboDXZ261LLPS78+YFpOZAcJEeLKGfEUe21g@mail.gmail.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Andy Walls <awalls@md.metrocast.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] media: pci: cx18-av-vbi: Replace one-element array
+ with flexible-array member
+Message-ID: <202305261043.A86E75BD5B@keescook>
+References: <ZG1YVji9thTLWeRm@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABPRKS9ykHvaOGUboDXZ261LLPS78+YFpOZAcJEeLKGfEUe21g@mail.gmail.com>
+In-Reply-To: <ZG1YVji9thTLWeRm@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 23, 2023 at 10:25:20PM -0700, Justin Tee wrote:
-> no_of_objects may be hardcoded to 1 right now, but does it make more
-> sense to use?
+On Tue, May 23, 2023 at 06:20:38PM -0600, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element arrays with flexible-array
+> members in struct vbi_anc_data.
 > 
-> struct_size(rap, obj, be32_to_cpu(rap->no_of_objects));
+> This results in no differences in binary output.
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Oh yeah, that's nicer. :)
-
-> We probably should have declared no_of_objects as __be32 to have
-> avoided this confusion.
-
-Perhaps this patch can add that too?
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
