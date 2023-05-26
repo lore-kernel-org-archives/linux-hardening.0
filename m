@@ -2,123 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C8EC77B73
-	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 16:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB86C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Fri, 26 May 2023 16:49:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230298AbjEZQhT (ORCPT
+        id S237139AbjEZQtV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 26 May 2023 12:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
+        Fri, 26 May 2023 12:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230041AbjEZQhS (ORCPT
+        with ESMTP id S236898AbjEZQtV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 26 May 2023 12:37:18 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0274FBC
-        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 09:37:18 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-51f6461af24so617703a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 09:37:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685119037; x=1687711037;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Azb9/wXA9VoPaWPI5lGZTtQI0vZpDzZEb+cEjRX2Ydk=;
-        b=n0H6EYp3E20SjwfM0SwJuXPC3JEWid26w4lpvxOENCBKtzIH0lhc4Ra+X+3jsxXagO
-         tu2yS+JJXHWoS6chG+rRIif1q/iGKy8saTmyeii9q5OBnfjVyNlBgFfFJ+O0gEYUBjhL
-         KbhOXFcznqwy7/0irei3Zc0SemodHKJ0+70ng=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685119037; x=1687711037;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Azb9/wXA9VoPaWPI5lGZTtQI0vZpDzZEb+cEjRX2Ydk=;
-        b=AC3rxliH5ZsXWwJARgZyKpw9Brq132Ax14n1Bc+vSFBITqprhXfgfvL2+nIDz+7dah
-         It/53vG6TYV4FOANfXdtJQ2WkZwz+PUIZlN5uqUsDlIGLj2uIxoVY6LaRCFuXr01k5om
-         vSsxukUbb8n4Rl7TFF2lN7a440tuR5566KYL3ivs2ws3imRE2qVcRL7uXDDkuZRRa40i
-         qj/d2hYBqWEJsLKPRHOR6CwAYQt277SuIFhVqYp/hZ3db8oQqCC+DE1qCdUOHqW+CrJq
-         Ur/7q+MHqVwdZgi25ZTKAYCVBQJxx1pd3MEUs4I6eynAiCEOPPbPkD1mEkBI5caR3hbt
-         WWbg==
-X-Gm-Message-State: AC+VfDxO0Sdcv88+PTjyNhDuJeah0YaZX0VOTQd0bjBmrC/8MJ3etdZ9
-        0fNB4Hx/zFgjskX3CsoG+VffhqQZzJc6qbi8x6Y=
-X-Google-Smtp-Source: ACHHUZ5OlMcp05v+8Sy2wQ8qHrpseBKUcgff8PjZUqJZmZSnj0xej2pJJXrPrl0bQVrBkfiVG/zo2A==
-X-Received: by 2002:a17:902:b684:b0:1ae:305f:e949 with SMTP id c4-20020a170902b68400b001ae305fe949mr2755604pls.6.1685119037441;
-        Fri, 26 May 2023 09:37:17 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id z6-20020a1709028f8600b001a96562642dsm3449797plo.277.2023.05.26.09.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 09:37:16 -0700 (PDT)
-Date:   Fri, 26 May 2023 09:37:16 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-hardening@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: s390/defconfigs: set CONFIG_INIT_STACK_NONE=y
-Message-ID: <202305260922.F98F90290@keescook>
-References: <ZG+rogQJO+U3kS4a@outflux.net>
- <ZHC3YJ3FHwYxYrMG@osiris>
+        Fri, 26 May 2023 12:49:21 -0400
+Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [IPv6:2001:1600:4:17::bc0e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C23A8194
+        for <linux-hardening@vger.kernel.org>; Fri, 26 May 2023 09:49:19 -0700 (PDT)
+Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
+        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QSW9963HFzMqBk5;
+        Fri, 26 May 2023 18:49:17 +0200 (CEST)
+Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QSW954GcnzMpq7x;
+        Fri, 26 May 2023 18:49:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1685119757;
+        bh=aghhZZz/jAHNei4obfycQdpoNYo23x/hMTO/WYvr+D4=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=aNpuEEhr3qfgoQBoABl/c/Soy37k/dWbg29l53qY084NrLE1aBB96NeIw1GJ+t33V
+         pd9trvFbpyUukW/iVPpk0eBX/Jwsza/CoS5PoumlcDlW/vnInB0QV0Wjo7cpI7eeQk
+         00f3/lqql1UIb9Yq02grk2akHYn3y+PAXnI212IM=
+Message-ID: <7671b432-569a-d176-315b-d5f66fe205ef@digikod.net>
+Date:   Fri, 26 May 2023 18:49:12 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZHC3YJ3FHwYxYrMG@osiris>
+User-Agent: 
+Subject: Re: [PATCH v1 6/9] KVM: x86: Add Heki hypervisor support
+Content-Language: en-US
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20230505152046.6575-1-mic@digikod.net>
+ <20230505152046.6575-7-mic@digikod.net>
+ <ZFlnJRsJh2fX3IJb@liuwe-devbox-debian-v2>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+In-Reply-To: <ZFlnJRsJh2fX3IJb@liuwe-devbox-debian-v2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, May 26, 2023 at 03:42:56PM +0200, Heiko Carstens wrote:
-> Hi Kees,
+
+On 08/05/2023 23:18, Wei Liu wrote:
+> On Fri, May 05, 2023 at 05:20:43PM +0200, Mickaël Salaün wrote:
+>> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+>>
+>> Each supported hypervisor in x86 implements a struct x86_hyper_init to
+>> define the init functions for the hypervisor.  Define a new init_heki()
+>> entry point in struct x86_hyper_init.  Hypervisors that support Heki
+>> must define this init_heki() function.  Call init_heki() of the chosen
+>> hypervisor in init_hypervisor_platform().
+>>
+>> Create a heki_hypervisor structure that each hypervisor can fill
+>> with its data and functions. This will allow the Heki feature to work
+>> in a hypervisor agnostic way.
+>>
+>> Declare and initialize a "heki_hypervisor" structure for KVM so KVM can
+>> support Heki.  Define the init_heki() function for KVM.  In init_heki(),
+>> set the hypervisor field in the generic "heki" structure to the KVM
+>> "heki_hypervisor".  After this point, generic Heki code can access the
+>> KVM Heki data and functions.
+>>
+> [...]
+>> +static void kvm_init_heki(void)
+>> +{
+>> +	long err;
+>> +
+>> +	if (!kvm_para_available())
+>> +		/* Cannot make KVM hypercalls. */
+>> +		return;
+>> +
+>> +	err = kvm_hypercall3(KVM_HC_LOCK_MEM_PAGE_RANGES, -1, -1, -1);
 > 
-> > I had this[1] patch pointed out to me, but I couldn't find any discussion
-> > about it on public lists. Can you give me some background on this? There
-> > haven't been any general workloads identified where this has been
-> > a problem, so I'm curious why this was seen as globally an issue on
-> > s390. The expectation was to use __uninitialized on any variables where
-> > this was noticed as a performance issue, and where the memory safety of
-> > the variable could be proven. Turning it off by default seems like
-> > rather too much, but perhaps there is something unique to s390 I don't
-> > know about. :)
+> Why not do a proper version check or capability check here? If the ABI
+> or supported features ever change then we have something to rely on?
+
+The attributes will indeed get extended, but I wanted to have a simple 
+proposal for now.
+
+Do you mean to get the version of this hypercall e.g., with a dedicated 
+flag, like with the 
+landlock_create_ruleset/LANDLOCK_CREATE_RULESET_VERSION syscall?
+
+
 > 
-> This was the result of some micro benchmarks being reported "too slow".
-> Actually our syscall entry/exit path got naturally slower since we switched
-> to generic entry; now we are trying to improve things a bit again.
-> 
-> There is also this RFC from Sven, which tries to inline some of the
-> generic system call functions, in order to avoid function calls:
-> https://lore.kernel.org/lkml/20230516133810.171487-1-svens@linux.ibm.com/
-> 
-> I stumbled upon CONFIG_INIT_STACK_NONE only by accident when wondering why
-> the compiler would generate quite some instructions which aren't necessary,
-> just to zero variables. For the getpid() system call this makes a runtime
-> difference of ~3%, which is quite a bit.
-
-Hm, that does seem high. It implies there are large variable that are
-being passed by reference, perhaps in the syscall path? I had similar
-problems a while back on x86 but due to stack-protector seeing the
-register arrays and thinking they needed protection. I had to explicitly
-turn that off for the entry code, since they're provably safe. :)
-
-> What is the overhead on other architectures?
-
-It's been in the noise for real workloads.
-
-> That said: I was also unaware of __uninitialized. But on the other hand,
-> there is no sign of __uninitialized in the kernel, nor could I find
-> anything that could match in compiler_attributes.h.
-> Am I missing something here?
-
-No, nothing missed -- there just have been no workloads identified yet
-where it's needed.
-
-> Thanks for bringing this up, I guess if there is some annotation available,
-> we can revisit at least the architecture specific entry code, and maybe
-> figure out how to avoid most of the extra runtime, but still keep the
-> feature enabled.
-> 
-> (Adding Sven, since I will be offline the next two weeks).
-
-Yeah, if you find a place where it's needed, please add the compiler
-attribute and put it to use. It'll give people an example use-case for
-it. :)
-
--- 
-Kees Cook
+> Thanks,
+> Wei.
