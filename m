@@ -2,214 +2,112 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D86C7EE2F
-	for <linux-hardening@archiver.kernel.org>; Sun, 28 May 2023 11:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4999C77B7E
+	for <linux-hardening@archiver.kernel.org>; Sun, 28 May 2023 20:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229448AbjE1Laf (ORCPT
+        id S229592AbjE1UZs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 28 May 2023 07:30:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
+        Sun, 28 May 2023 16:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjE1Lad (ORCPT
+        with ESMTP id S229584AbjE1UZs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 28 May 2023 07:30:33 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503529C;
-        Sun, 28 May 2023 04:30:30 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34SBOPBM024011;
-        Sun, 28 May 2023 11:30:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=jdM3HzsaV7JScZljybz8uxp47jRGdtnCoIrsyHQwbM0=;
- b=TfgCiPvzSdIi5Z+uc+xbTLjYSTFXb0mqTWsn8RDS1y2kg+aTf/yUlsc7uWN+NXhEQN2/
- ZIoJMO4ZM5o5bXVclCuCS+Ol5gSSw5F6FR5uV+sdAEYdsUTkBGWDub/wABhtav0vpkN7
- J5ZJIPEEN/aQX/Ss1fLosnNBGWmFhPKpHg7scxR9Mno7UEC6fDo2SCRb1BeSEhE/Xf0C
- GGCq1XooUTazixCwlp06+qQvYtu4ZriNib5inZgfr1QXOrtk85MSPJQtfCjsW+jBJ9wT
- LHQRm5asVC874Qc4C3gGMPsDRxUO/23zcM4/FxO1iaztTqnNilDmtHOUH9j8g71zRZZd fg== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3quanx9kdw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 28 May 2023 11:30:01 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34SBU0et003198
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 28 May 2023 11:30:00 GMT
-Received: from [10.216.57.186] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Sun, 28 May
- 2023 04:29:53 -0700
-Message-ID: <c2496855-113a-56e6-f6e2-9a9bd03a1267@quicinc.com>
-Date:   Sun, 28 May 2023 16:59:48 +0530
+        Sun, 28 May 2023 16:25:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAC499;
+        Sun, 28 May 2023 13:25:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6EE06618FF;
+        Sun, 28 May 2023 20:25:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA952C433EF;
+        Sun, 28 May 2023 20:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685305545;
+        bh=e/BaBW7sBtQzZAFcqXZIr6cq7jQWmf347wE2UrNWXvo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=FTEYgj2FnQEvAiguJAMacBw5p1NZqoD4NnK0xqagSVW2y+RV4Cy6CxnEkio28/hxW
+         NJmTo1snvbRMzSKbItYqw/k5XlB7TtrylKaWr/Y/ZTHzrXpEeywm9kGGvVU/9VcRiW
+         ula1LF2SKa1xNguOXil1199HZwd+escpztA2+cVA2hoo9oF7AbPGmubSYSH2JzWiCg
+         ktVvceTgB9onw2zpkPvieEACFgIPInxQcMgUI92WJqYsOD+VP0GRwp7UD+O/EDsWb7
+         DsTGJHBPgtElBetm/i5rZsDZ1XjyaR9+jsJWglnF834kL83xR1IsQp8YqfbbAvbJB/
+         BKBPsvFTpMCeQ==
+Date:   Sun, 28 May 2023 14:26:37 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] drm/amdgpu/discovery: Replace fake flex-arrays with
+ flexible-array members
+Message-ID: <ZHO4/Z+iO+lqV4rW@work>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 04/18] soc: qcom: Add Qualcomm minidump kernel driver
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-5-git-send-email-quic_mojha@quicinc.com>
- <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
- <23b493f4-1a01-8d03-fc12-d588b2c6fd74@quicinc.com>
- <575a422d-6224-06b7-628c-8487b47882e9@linaro.org>
- <500e5abc-fb71-8468-a6b0-3ced2676b57c@linaro.org>
- <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
- <7777c016-4875-a6c9-cd5e-78c2ac686448@linaro.org>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <7777c016-4875-a6c9-cd5e-78c2ac686448@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Wq_YQJJaMTn_p0i8IQNdSFF-sgN61CTi
-X-Proofpoint-GUID: Wq_YQJJaMTn_p0i8IQNdSFF-sgN61CTi
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-28_08,2023-05-25_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 suspectscore=0 phishscore=0 clxscore=1015
- mlxscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305280099
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Krzysztof,
+Zero-length and one-element arrays are deprecated, and we are moving
+towards adopting C99 flexible-array members, instead.
 
-On 5/9/2023 12:41 PM, Krzysztof Kozlowski wrote:
-> On 08/05/2023 09:10, Mukesh Ojha wrote:
->>
->>
->> On 5/4/2023 10:04 PM, Krzysztof Kozlowski wrote:
->>> On 04/05/2023 17:21, Krzysztof Kozlowski wrote:
->>>>>>
->>>>>>> +	ret = qcom_minidump_init_apss_subsystem(md);
->>>>>>> +	if (ret) {
->>>>>>> +		dev_err(&pdev->dev, "apss minidump initialization failed: %d\n", ret);
->>>>>>> +		goto unlock;
->>>>>>> +	}
->>>>>>> +
->>>>>>> +	__md = md;
->>>>>>
->>>>>> No. This is a platform device, so it can have multiple instances.
->>>>>
->>>>> It can have only one instance that is created from SMEM driver probe.
->>>>
->>>> Anyone can instantiate more of them.... how did you solve it?
->>>
->>> To clarify - sprinkling more of singletons makes everything tightly
->>> coupled, difficult to debug and non-portable. You cannot have two
->>> instances, you have to control concurrent initialization by yourself in
->>> each of such singletons.
->>>
->>> I understand sometimes they are unavoidable, for example when this does
->>> not map to hardware property. However here you have the parent - smem -
->>> which can return you valid instance. Thus you avoid entire problem of
->>> file-scope variables.
->>
->> I get your point, why one's should avoid file scope variables.
->>
->>
->> This is infrastructure driver and will not have multiple instances and
->> even if it happens could be avoided with with the help of global mutex
->> and protect below function which i am already doing at the moment and
-> 
-> But we do not want global mutexes... so incorrect design is being
-> improved by more incorrect design.
-> 
->> fail the other probe if it is already initialized with proper logging..e.g
->>
->> "already initialized..."
->>
->>
->> ret = qcom_minidump_init_apss_subsystem(md);
->>
->>
->> And this will be in-lined with
->>
->> /* Pointer to the one and only smem handle */
->> static struct qcom_smem *__smem;
->>
->> Let me know if you still disagree...and have some other way ?
-> 
-> Why the parent - smem - cannot return every consumer the instance it
-> has? There will be one smem having only one minidump, so all problems
-> solved?
+Use the DECLARE_FLEX_ARRAY() helper macro to transform zero-length
+arrays in a union into flexible-array members. And replace a one-element
+array with a C99 flexible-array member.
 
-Sorry, I am extending this discussion but it is needed to avoid rework
-in upcoming patches.
+Address the following warnings found with GCC-13 and
+-fstrict-flex-arrays=3 enabled:
+drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1009:89: warning: array subscript kk is outside array bounds of ‘uint32_t[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
+drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1007:94: warning: array subscript kk is outside array bounds of ‘uint64_t[0]’ {aka ‘long long unsigned int[]’} [-Warray-bounds=]
+drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1310:94: warning: array subscript k is outside array bounds of ‘uint64_t[0]’ {aka ‘long long unsigned int[]’} [-Warray-bounds=]
+drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1309:57: warning: array subscript k is outside array bounds of ‘uint32_t[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
 
-I am inline with the thought of each smem has its own minidump instance, 
-which is basically one at this moment as SMEM has only instance in DT.
-In that way, Client driver calling qcom_apss_minidump_region_register()
-will also need to know the instance it need to register with right?
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
-However, I do have a use case [1] where SMEM or similar region 
-supporting memory mapped region could be virtualized and guest vm does
-not have direct access to it, that way it will only have one backend at 
-a time.But even if they exist together that can be done with below approach.
+This results in no differences in binary output.
 
-File scope variable is still needed in minidump core but can be avoided 
-in backend drivers where each backend register with core and get added 
-itself in the list and for list protection, list mutex would be needed.
+Link: https://github.com/KSPP/linux/issues/21
+Link: https://github.com/KSPP/linux/issues/193
+Link: https://github.com/KSPP/linux/issues/300
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/gpu/drm/amd/include/discovery.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/include/discovery.h b/drivers/gpu/drm/amd/include/discovery.h
+index 9181e57887db..f43e29722ef7 100644
+--- a/drivers/gpu/drm/amd/include/discovery.h
++++ b/drivers/gpu/drm/amd/include/discovery.h
+@@ -122,7 +122,7 @@ typedef struct ip_v3
+ 	uint8_t sub_revision : 4;               /* HCID Sub-Revision */
+ 	uint8_t variant : 4;                    /* HW variant */
+ #endif
+-	uint32_t base_address[1];               /* Base Address list. Corresponds to the num_base_address field*/
++	uint32_t base_address[];		/* Base Address list. Corresponds to the num_base_address field*/
+ } ip_v3;
+ 
+ typedef struct ip_v4 {
+@@ -140,8 +140,8 @@ typedef struct ip_v4 {
+ 	uint8_t sub_revision : 4;               /* HCID Sub-Revision */
+ #endif
+ 	union {
+-		uint32_t base_address[0];               /* 32-bit Base Address list. Corresponds to the num_base_address field*/
+-		uint64_t base_address_64[0];            /* 64-bit Base Address list. Corresponds to the num_base_address field*/
++		DECLARE_FLEX_ARRAY(uint32_t, base_address);	/* 32-bit Base Address list. Corresponds to the num_base_address field*/
++		DECLARE_FLEX_ARRAY(uint64_t, base_address_64);	/* 64-bit Base Address list. Corresponds to the num_base_address field*/
+ 	} __packed;
+ } ip_v4;
+ 
+-- 
+2.34.1
 
-#define SMEM       0;
-#define MMIO       1;
-or enum may be..
-
-And client can call this to the instance it need to register with..
-int qcom_apss_minidump_region_register(region, SMEM);
-int qcom_apss_minidump_region_register(region, MMIO);
-
-Do you agree with this approach?
-
-[1]
-
-            +----------------+
-            |                |
-            | client A-Z     |
-            +-----+----------+
-                  |
-                  |
-                  |
-                  |
-                  v
-       +------------------------+
-       |                        |                other backends
-       |    minidump core       +----------------------------+
-       |                        |                            |
-       +--+---------------------+                            |
-          |                     |                            |
-          |                     |                            |
-          |                     |                            |e.g,
-          |                     |                            |gunyah-rm
-+--------v------+        +-----v-----------+             +--+---------+
-|               |        |                 |             |            |
-|minidump_smem  |        | minidump_mmio   |             | .....      |
-+---------------+        +-----------------+             +------------+
-  SMEM backend              mmio backend where
-                            smem may be virtualized
-
-
--- Mukesh
-> 
-> Best regards,
-> Krzysztof
-> 
