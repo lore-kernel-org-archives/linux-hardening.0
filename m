@@ -2,256 +2,214 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DA1C77B73
-	for <linux-hardening@archiver.kernel.org>; Sat, 27 May 2023 04:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D86C7EE2F
+	for <linux-hardening@archiver.kernel.org>; Sun, 28 May 2023 11:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbjE0Ebr convert rfc822-to-8bit (ORCPT
+        id S229448AbjE1Laf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 27 May 2023 00:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40272 "EHLO
+        Sun, 28 May 2023 07:30:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjE0Ebq (ORCPT
+        with ESMTP id S229445AbjE1Lad (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 27 May 2023 00:31:46 -0400
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6C59F3;
-        Fri, 26 May 2023 21:31:43 -0700 (PDT)
-Received: from omf09.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay06.hostedemail.com (Postfix) with ESMTP id 7A355AEDF7;
-        Sat, 27 May 2023 04:31:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf09.hostedemail.com (Postfix) with ESMTPA id 1C27920024;
-        Sat, 27 May 2023 04:31:39 +0000 (UTC)
-Message-ID: <75851e1185821084c0a1b7e5aaf60e9f38e0f792.camel@perches.com>
-Subject: Re: [PATCH v3] checkpatch: Check for 0-length and 1-element arrays
-From:   Joe Perches <joe@perches.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Andy Whitcroft <apw@canonical.com>
-Cc:     Dwaipayan Ray <dwaipayanray1@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Fri, 26 May 2023 21:31:39 -0700
-In-Reply-To: <20230527020929.give.261-kees@kernel.org>
-References: <20230527020929.give.261-kees@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+        Sun, 28 May 2023 07:30:33 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 503529C;
+        Sun, 28 May 2023 04:30:30 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34SBOPBM024011;
+        Sun, 28 May 2023 11:30:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=jdM3HzsaV7JScZljybz8uxp47jRGdtnCoIrsyHQwbM0=;
+ b=TfgCiPvzSdIi5Z+uc+xbTLjYSTFXb0mqTWsn8RDS1y2kg+aTf/yUlsc7uWN+NXhEQN2/
+ ZIoJMO4ZM5o5bXVclCuCS+Ol5gSSw5F6FR5uV+sdAEYdsUTkBGWDub/wABhtav0vpkN7
+ J5ZJIPEEN/aQX/Ss1fLosnNBGWmFhPKpHg7scxR9Mno7UEC6fDo2SCRb1BeSEhE/Xf0C
+ GGCq1XooUTazixCwlp06+qQvYtu4ZriNib5inZgfr1QXOrtk85MSPJQtfCjsW+jBJ9wT
+ LHQRm5asVC874Qc4C3gGMPsDRxUO/23zcM4/FxO1iaztTqnNilDmtHOUH9j8g71zRZZd fg== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3quanx9kdw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 28 May 2023 11:30:01 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34SBU0et003198
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 28 May 2023 11:30:00 GMT
+Received: from [10.216.57.186] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Sun, 28 May
+ 2023 04:29:53 -0700
+Message-ID: <c2496855-113a-56e6-f6e2-9a9bd03a1267@quicinc.com>
+Date:   Sun, 28 May 2023 16:59:48 +0530
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 1C27920024
-X-Stat-Signature: 7xs8qoys85rfj8cia6q67yri4533kui7
-X-Rspamd-Server: rspamout08
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX19DFYopygFzH4DcLfvlIBhSms69M9ZZszQ=
-X-HE-Tag: 1685161899-625514
-X-HE-Meta: U2FsdGVkX1+4Ti+HK7nThf7d4Bb7xBvwyl6bR/qrsQ22OiWD5Xje4I4HWHFlr+7z88ShhcyvBR1w01yeN+oFFQ==
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 04/18] soc: qcom: Add Qualcomm minidump kernel driver
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <1683133352-10046-5-git-send-email-quic_mojha@quicinc.com>
+ <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
+ <23b493f4-1a01-8d03-fc12-d588b2c6fd74@quicinc.com>
+ <575a422d-6224-06b7-628c-8487b47882e9@linaro.org>
+ <500e5abc-fb71-8468-a6b0-3ced2676b57c@linaro.org>
+ <e714566e-39b7-d46b-13bd-3c0e20e9f944@quicinc.com>
+ <7777c016-4875-a6c9-cd5e-78c2ac686448@linaro.org>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <7777c016-4875-a6c9-cd5e-78c2ac686448@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Wq_YQJJaMTn_p0i8IQNdSFF-sgN61CTi
+X-Proofpoint-GUID: Wq_YQJJaMTn_p0i8IQNdSFF-sgN61CTi
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-28_08,2023-05-25_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxlogscore=999 malwarescore=0 suspectscore=0 phishscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 spamscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305280099
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 2023-05-26 at 19:09 -0700, Kees Cook wrote:
-> Fake flexible arrays have been deprecated since last millennium. Proper
-> C99 flexible arrays must be used throughout the kernel so
-> CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS can provide proper array
-> bounds checking.
+Hi Krzysztof,
 
-Hi again.
+On 5/9/2023 12:41 PM, Krzysztof Kozlowski wrote:
+> On 08/05/2023 09:10, Mukesh Ojha wrote:
+>>
+>>
+>> On 5/4/2023 10:04 PM, Krzysztof Kozlowski wrote:
+>>> On 04/05/2023 17:21, Krzysztof Kozlowski wrote:
+>>>>>>
+>>>>>>> +	ret = qcom_minidump_init_apss_subsystem(md);
+>>>>>>> +	if (ret) {
+>>>>>>> +		dev_err(&pdev->dev, "apss minidump initialization failed: %d\n", ret);
+>>>>>>> +		goto unlock;
+>>>>>>> +	}
+>>>>>>> +
+>>>>>>> +	__md = md;
+>>>>>>
+>>>>>> No. This is a platform device, so it can have multiple instances.
+>>>>>
+>>>>> It can have only one instance that is created from SMEM driver probe.
+>>>>
+>>>> Anyone can instantiate more of them.... how did you solve it?
+>>>
+>>> To clarify - sprinkling more of singletons makes everything tightly
+>>> coupled, difficult to debug and non-portable. You cannot have two
+>>> instances, you have to control concurrent initialization by yourself in
+>>> each of such singletons.
+>>>
+>>> I understand sometimes they are unavoidable, for example when this does
+>>> not map to hardware property. However here you have the parent - smem -
+>>> which can return you valid instance. Thus you avoid entire problem of
+>>> file-scope variables.
+>>
+>> I get your point, why one's should avoid file scope variables.
+>>
+>>
+>> This is infrastructure driver and will not have multiple instances and
+>> even if it happens could be avoided with with the help of global mutex
+>> and protect below function which i am already doing at the moment and
+> 
+> But we do not want global mutexes... so incorrect design is being
+> improved by more incorrect design.
+> 
+>> fail the other probe if it is already initialized with proper logging..e.g
+>>
+>> "already initialized..."
+>>
+>>
+>> ret = qcom_minidump_init_apss_subsystem(md);
+>>
+>>
+>> And this will be in-lined with
+>>
+>> /* Pointer to the one and only smem handle */
+>> static struct qcom_smem *__smem;
+>>
+>> Let me know if you still disagree...and have some other way ?
+> 
+> Why the parent - smem - cannot return every consumer the instance it
+> has? There will be one smem having only one minidump, so all problems
+> solved?
 
+Sorry, I am extending this discussion but it is needed to avoid rework
+in upcoming patches.
 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -7430,6 +7430,21 @@ sub process {
->  			}
->  		}
->  
-> +# check for array definition/declarations that should use flexible arrays instead
-> +		if ($sline =~ /^[\+ ]\s*}\s*;\s*$/ &&
-> +		    $prevline =~ /^\+\s*(?:\}|$Type)\s*$Ident\s*\[\s*(0|1)\s*\]\s*;\s*$/) {
+I am inline with the thought of each smem has its own minidump instance, 
+which is basically one at this moment as SMEM has only instance in DT.
+In that way, Client driver calling qcom_apss_minidump_region_register()
+will also need to know the instance it need to register with right?
 
-Ahh, now I see why you want to use (?:\}|$Type) to find
-struct arrays defined as the last object in another struct.
+However, I do have a use case [1] where SMEM or similar region 
+supporting memory mapped region could be virtualized and guest vm does
+not have direct access to it, that way it will only have one backend at 
+a time.But even if they exist together that can be done with below approach.
 
-e.g.: (from drivers/infiniband/hw/mlx5/odp.c)
-
-struct prefetch_mr_work {
-	struct work_struct work;
-	u32 pf_flags;
-	u32 num_sge;
-	struct {
-		u64 io_virt;
-		struct mlx5_ib_mr *mr;
-		size_t length;
-	} frags[];
-};
-
-grepping for some existing variants, perhaps the $sline test should
-be extended to something like:
-
-		if ($sline =~ /^[\+ ]\s*}\s*(?:__packed|__attribute__\s*$balanced_parens)?\s*;\s*$/ &&
-
-Dunno, the __packed/__attribute__ uses aren't particularly common.
-There are ~1000 uses kernel wide with flexible arrays and only
-about 100 with 0 or 1 that could be converted.
-
-like from drivers/net/hyperv/hyperv_net.h:
-
-struct nvsp_6_pd_batch_msg {
-	struct nvsp_message_header hdr;
-	u16 count;
-	u16 guest2host:1;
-	u16 is_recv:1;
-	u16 reserved:14;
-	struct nvsp_6_pd_buf pd_buf[0];
-} __packed;
-
-My list (probably incomplete), done with a stupid grep:
-(and the 0's are more interesting and much less common than the 1's)
-
-$ git grep -A1 -P '\w+\s+\w+[ \t]*\[\s*[01]?\s*\][ \t]*;'| \
-  grep -B1 "\-}" | \
-  grep -B1 -P "\-}.*(__attribute__|__packed)" | \
-  grep -P '\[\s*[01]\s*\]'
-drivers/gpu/drm/hyperv/hyperv_drm_proto.c:	struct video_output_situation video_output[1];
-drivers/gpu/drm/hyperv/hyperv_drm_proto.c:	struct rect rect[1];
-drivers/hid/intel-ish-hid/ishtp-hid.h:	} __packed reports[1];
-drivers/net/ethernet/brocade/bna/bfi_enet.h:	u8		rsvd1[1];
-drivers/net/ethernet/emulex/benet/be_cmds.h:	u32 data_buffer[1];
-drivers/net/ethernet/emulex/benet/be_cmds.h:	u32 data_buffer[1];
-drivers/net/hyperv/hyperv_net.h:	struct nvsp_1_receive_buffer_section sections[1];
-drivers/net/hyperv/hyperv_net.h:	struct nvsp_6_pd_buf pd_buf[0];
-drivers/net/wireless/ath/ath10k/htc.h:	struct ath10k_htc_record trailer[0];
-drivers/net/wireless/ath/ath10k/htt.h:	u8 prefetch[0]; /* start of frame, for FW classification engine */
-drivers/net/wireless/ath/ath10k/htt.h:	u8 prefetch[0]; /* start of frame, for FW classification engine */
-drivers/net/wireless/ath/ath10k/wmi.h:	struct host_memory_chunk items[1];
-drivers/net/wireless/ath/ath10k/wmi.h:	u8 tlvs[0];
-drivers/net/wireless/ath/ath10k/wmi.h:	struct wmi_channel channel_list[1];
-drivers/net/wireless/ath/ath10k/wmi.h:	u8 data[1];
-drivers/net/wireless/ath/ath10k/wmi.h:	u8 data[1];
-drivers/net/wireless/ath/ath10k/wmi.h:	struct wmi_channel peer_chan_list[1];
-drivers/net/wireless/ath/ath11k/htc.h:	struct ath11k_htc_record trailer[0];
-drivers/net/wireless/ath/ath6kl/usb.c:	__le32 _pad[1];
-drivers/net/wireless/ath/ath6kl/wmi.h:	u8 reserved[1];
-drivers/net/wireless/ath/ath6kl/wmi.h:	struct wmi_pmkid pmkid_list[1];
-drivers/net/wireless/ath/ath6kl/wmi.h:	u8 reserved[1];
-drivers/net/wireless/ath/carl9170/fwcmd.h:	u32	vals[0];
-drivers/net/wireless/ath/carl9170/fwcmd.h:	__le32		regs[0];
-drivers/net/wireless/ath/wcn36xx/hal.h:	u8 rem_ie_id[1];
-drivers/net/wireless/ath/wil6210/fw.h:	u8 data[0]; /* free-form data [data_size], see above */
-drivers/net/wireless/ath/wil6210/fw.h:	struct wil_fw_data_dwrite data[0];
-drivers/net/wireless/ath/wil6210/wmi.h:	u8 payload[0];
-drivers/net/wireless/ath/wil6210/wmi.h:	u8 reserved[1];
-drivers/net/wireless/atmel/at76c50x-usb.h:	u8 reserved[1];
-drivers/net/wireless/intel/iwlwifi/fw/api/d3.h:	u8 wake_packet[1];
-drivers/net/wireless/intel/iwlwifi/fw/api/rx.h:	__le32 reserved[1];
-drivers/net/wireless/intel/iwlwifi/pcie/internal.h:	u8 reserved[1];
-drivers/net/wireless/intersil/p54/lmac.h:	u8 exclude[1];
-drivers/net/wireless/marvell/mwifiex/fw.h:	struct mwifiex_chan_scan_param_set chan_scan_param[1];
-drivers/net/wireless/marvell/mwifiex/fw.h:	u8 bitmap[1];
-drivers/net/wireless/marvell/mwifiex/fw.h:	struct chan_band_param_set chan_band_param[1];
-drivers/net/wireless/marvell/mwifiex/fw.h:	u8 ssid[1];
-drivers/net/wireless/marvell/mwifiex/fw.h:	u8 tsf_data[1];
-drivers/net/wireless/marvell/mwifiex/fw.h:	u8 value[1];
-drivers/net/wireless/marvell/mwifiex/fw.h:	u8    tlv_buffer[1];
-drivers/net/wireless/marvell/mwifiex/fw.h:	struct ieee80211_country_ie_triplet triplet[1];
-drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h:	u8 rsv[1];
-drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h:	u8 rsv[1];
-drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h:	u8 pad[1];
-drivers/net/wireless/mediatek/mt76/mt76_connac_mcu.h:	u8 pad[1];
-drivers/net/wireless/mediatek/mt76/mt7996/mcu.h:	u8 __rsv2[1];
-drivers/net/wireless/mediatek/mt76/mt7996/mcu.h:	u8 __rsv2[1];
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:	u8 rsvd[1];
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:	u8 rsvd[1];
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:	u8 rsvd[1];
-drivers/net/wireless/quantenna/qtnfmac/qlink.h:	u8 rsvd[1];
-drivers/net/wireless/realtek/rtw89/coex.c:	u8 val[1];
-drivers/net/wireless/ti/wl18xx/acx.h:	u8 padding[1];
-drivers/net/wireless/ti/wl18xx/conf.h:	u8 padding[1];
-drivers/net/wireless/ti/wlcore/acx.h:	u8 pad[1];
-drivers/net/wireless/ti/wlcore/acx.h:	u8 pad[1];
-drivers/net/wireless/ti/wlcore/acx.h:	u8 pad[1];
-drivers/net/wireless/ti/wlcore/acx.h:	u8 padding[1];
-drivers/net/wireless/ti/wlcore/cmd.h:	u8 padding[1];
-drivers/nvmem/u-boot-env.c:	uint8_t data[0];
-drivers/platform/x86/dell/dcdbas.h:	__u8 command_buffer[1];
-drivers/scsi/be2iscsi/be_cmds.h:	struct	mgmt_conn_info	conn_list[1];
-drivers/scsi/be2iscsi/be_cmds.h:	u32 if_hndl_list[1];
-drivers/scsi/be2iscsi/be_main.h:	u32 dw[1];
-drivers/scsi/be2iscsi/be_main.h:	u32 dw[1];
-drivers/scsi/ipr.h:	struct ipr_hostrcb_config_element elem[1];
-drivers/scsi/ipr.h:	struct ipr_hostrcb64_config_element elem[1];
-drivers/scsi/ipr.h:	struct ipr_hostrcb_fabric_desc desc[1];
-drivers/scsi/ipr.h:	struct ipr_hostrcb64_fabric_desc desc[1];
-drivers/scsi/ipr.h:	struct ipr_sdt_entry entry[1];
-drivers/scsi/ipr.h:	struct ipr_software_inq_lid_info lid[1];
-drivers/scsi/megaraid/megaraid_sas.h:	struct MR_PD_ADDRESS   addr[1];
-drivers/scsi/megaraid/megaraid_sas.h:	struct MR_HOST_DEVICE_LIST_ENTRY	host_device_list[1];
-drivers/video/fbdev/hyperv_fb.c:	struct video_output_situation video_output[1];
-drivers/video/fbdev/hyperv_fb.c:	struct rect rect[1];
-fs/adfs/dir_fplus.h:	char	bigdirname[1];
-fs/crypto/fscrypt_private.h:	char encrypted_path[1];
-fs/isofs/rock.h:	__u8 flags[1];
-fs/ksmbd/smb2pdu.h:	__u8 Chunks[1]; /* array of srv_copychunk */
-fs/ksmbd/smb2pdu.h:	char name[1];
-fs/ksmbd/smb_common.h:	unsigned char DialectsArray[1];
-fs/ksmbd/smb_common.h:	__le16 FileSystemName[1]; /* do not have to save this - get subset? */
-fs/ksmbd/smb_common.h:	__le16 VolumeLabel[1];
-fs/ntfs/dir.h:	ntfschar name[0];
-fs/ntfs/layout.h:/* 42*/	ntfschar file_name[0];			/* File name in Unicode. */
-fs/ntfs/layout.h:	le32 sub_authority[1];		/* At least one sub_authority. */
-fs/ntfs/layout.h:	ntfschar name[0];	/* The name of the volume in Unicode. */
-fs/ntfs/layout.h:	u8 data[0];		/* The file's data contents. */
-fs/ntfs/layout.h:	u8 bitmap[0];			/* Array of bits. */
-fs/ntfs/layout.h:	u8 reparse_data[0];		/* Meaning depends on reparse_tag. */
-fs/reiserfs/reiserfs.h:	__u16 entry_sizes[1];
-include/linux/greybus/greybus_protocols.h:	__u8			data[0];
-include/linux/greybus/greybus_protocols.h:	__u8			data[0];
-include/linux/greybus/greybus_protocols.h:	__u8			data[0];
-include/linux/greybus/greybus_protocols.h:	__u8				report[0];
-include/linux/greybus/greybus_protocols.h:	__u8				data[0];	/* inbound data */
-include/linux/greybus/greybus_protocols.h:	__u8			data[0];/* inbound data */
-include/linux/hid.h:	struct hid_class_descriptor desc[1];
-include/linux/hyperv.h:	struct vmtransfer_page_range ranges[1];
-include/linux/hyperv.h:	struct gpa_range range[1];
-include/linux/hyperv.h:	struct gpa_range range[1];
-include/linux/hyperv.h:	unsigned char data[1];
-include/linux/ieee80211.h:	u8 virtual_map[1];
-include/linux/mtd/cfi.h:	struct cfi_intelext_blockinfo BlockTypes[1];
-include/linux/mtd/cfi.h:	uint32_t ProtField[1]; /* Not host ordered */
-include/linux/mtd/cfi.h:	uint32_t ConfField[1]; /* Not host ordered */
-include/linux/ti_wilink_st.h:	u8 data[0];
-include/scsi/fc/fc_ms.h:	struct fc_fdmi_port_name	port[1];
-include/uapi/linux/bpf.h:	__u64 __opaque[1];
-include/uapi/linux/usb/ch9.h:	__le16 wData[1];		/* UTF-16LE encoded */
-tools/include/uapi/linux/bpf.h:	__u64 __opaque[1];
-tools/testing/selftests/bpf/progs/btf_dump_test_case_padding.c:	char x[0];
-tools/testing/selftests/kvm/include/x86_64/processor.h:	u8			extended_state_area[0];
-
-> +			if ($1 == '0') {
-> +				if (ERROR("ZERO_LENGTH_ARRAY",
-> +					  "Use C99 flexible arrays instead of zero-length arrays - see https://github.com/KSPP/linux/issues/78\n" . $hereprev) &&
-
-Instead of github links, how about using:
-https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
+File scope variable is still needed in minidump core but can be avoided 
+in backend drivers where each backend register with core and get added 
+itself in the list and for list protection, list mutex would be needed.
 
 
-Why not combine both of these into a single ERROR?
-What's the value in separate types?
+#define SMEM       0;
+#define MMIO       1;
+or enum may be..
 
-			if (ERROR("FLEXIBLE_ARRAY",
-				  "Use C99 flexible arrays - see: https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays\n" . $hereprev) &&
-				  $fix && $1 == '0') {
-				etc...
-				
+And client can call this to the instance it need to register with..
+int qcom_apss_minidump_region_register(region, SMEM);
+int qcom_apss_minidump_region_register(region, MMIO);
 
-> +				    $fix) {
-> +					$fixed[$fixlinenr - 1] =~ s/\[\s*0\s*\]/[]/;
-> +				}
-> +			} else {
-> +				ERROR("ONE_ELEMENT_ARRAY",
-> +				      "Use C99 flexible arrays instead of one-element arrays - see https://github.com/KSPP/linux/issues/79\n" . $hereprev);
-> +			}
-> +		}
-> +
->  # nested likely/unlikely calls
->  		if ($line =~ /\b(?:(?:un)?likely)\s*\(\s*!?\s*(IS_ERR(?:_OR_NULL|_VALUE)?|WARN)/) {
->  			WARN("LIKELY_MISUSE",
+Do you agree with this approach?
 
+[1]
+
+            +----------------+
+            |                |
+            | client A-Z     |
+            +-----+----------+
+                  |
+                  |
+                  |
+                  |
+                  v
+       +------------------------+
+       |                        |                other backends
+       |    minidump core       +----------------------------+
+       |                        |                            |
+       +--+---------------------+                            |
+          |                     |                            |
+          |                     |                            |
+          |                     |                            |e.g,
+          |                     |                            |gunyah-rm
++--------v------+        +-----v-----------+             +--+---------+
+|               |        |                 |             |            |
+|minidump_smem  |        | minidump_mmio   |             | .....      |
++---------------+        +-----------------+             +------------+
+  SMEM backend              mmio backend where
+                            smem may be virtualized
+
+
+-- Mukesh
+> 
+> Best regards,
+> Krzysztof
+> 
