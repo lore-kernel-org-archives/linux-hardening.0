@@ -2,186 +2,94 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A34FC7EE23
-	for <linux-hardening@archiver.kernel.org>; Mon, 29 May 2023 16:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32788C77B7A
+	for <linux-hardening@archiver.kernel.org>; Mon, 29 May 2023 18:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbjE2QsM (ORCPT
+        id S229550AbjE2SvT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 29 May 2023 12:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44858 "EHLO
+        Mon, 29 May 2023 14:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjE2QsL (ORCPT
+        with ESMTP id S229457AbjE2SvS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 29 May 2023 12:48:11 -0400
-Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [185.125.25.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A50D7A3
-        for <linux-hardening@vger.kernel.org>; Mon, 29 May 2023 09:48:09 -0700 (PDT)
-Received: from smtp-2-0001.mail.infomaniak.ch (unknown [10.5.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QVM0S0h90zMqS8N;
-        Mon, 29 May 2023 18:48:08 +0200 (CEST)
-Received: from unknown by smtp-2-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QVM0N4qpgzMpvXY;
-        Mon, 29 May 2023 18:48:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1685378887;
-        bh=L+AoM15vKXrvn30NczrqA+aX9dwRdpATxmicKsa0b54=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=NIV0lHsv0wTD7BCC4ZXt7w9oowUL9SV7UxKoOT7S1KqEP+2aSUrieQxP9LJP59+mO
-         ZNd3IkCScExVnFAtc3C902qJRT2LHk41z0nJeTFW/IpjysBJPb3bghczvpI3mYK0CS
-         5fhux6+oZzWtW4Q9BILMrxW1qJ1honAjKd3plkns=
-Message-ID: <901ff104-215c-8e81-fbae-5ecd8fa94449@digikod.net>
-Date:   Mon, 29 May 2023 18:48:03 +0200
-MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [PATCH v1 5/9] KVM: x86: Add new hypercall to lock control
- registers
-Content-Language: en-US
-To:     Wei Liu <wei.liu@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
-        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        Mon, 29 May 2023 14:51:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEDD9F;
+        Mon, 29 May 2023 11:51:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C6004614C1;
+        Mon, 29 May 2023 18:51:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8820AC4339B;
+        Mon, 29 May 2023 18:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685386276;
+        bh=mawl8qMpP5viRoL6CkrK/gaq13n6bKJ6HvUhLIOtVsA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=tOuUuwakLBZIkoTaSMDxZeIXxooaeCi6u6ziQ5J4Y0kdscBs/USyp+KPgbs7IWTrY
+         r4b8WdwGW7GlDLBHSQa94FWIU+K1irRz6MKAPoJhExvwqmRVf5+2R7WW8u9eHuhugH
+         4ihm/oWMk5urUKttwFrsG+r+yNWP4AZicBGZpGKxDqup+mjrdOSGX459xEGRPSgR3z
+         gCQ4X54+QhXoqpYgJ5juo/7M6SJ13B48Hl4IIwgv2DHxYdBceAARfpMXx75CIzWK0x
+         eVsjV+JSIxl63Cyn2W9Yffuf4H3izJfNs7KoKWZzAM9u72mwLBq7ZOK45pPqvkri6c
+         b0h3jnXl2rAaw==
+Date:   Mon, 29 May 2023 12:52:07 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Cc:     linux1394-devel@lists.sourceforge.net,
         linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-References: <20230505152046.6575-1-mic@digikod.net>
- <20230505152046.6575-6-mic@digikod.net>
- <ZFlllHjntehpthma@liuwe-devbox-debian-v2>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <ZFlllHjntehpthma@liuwe-devbox-debian-v2>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] firewire: Replace zero-length array with
+ flexible-array member
+Message-ID: <ZHT0V3SpvHyxCv5W@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Zero-length and one-element arrays are deprecated, and we are moving
+towards adopting C99 flexible-array members, instead.
 
-On 08/05/2023 23:11, Wei Liu wrote:
-> On Fri, May 05, 2023 at 05:20:42PM +0200, Mickaël Salaün wrote:
->> This enables guests to lock their CR0 and CR4 registers with a subset of
->> X86_CR0_WP, X86_CR4_SMEP, X86_CR4_SMAP, X86_CR4_UMIP, X86_CR4_FSGSBASE
->> and X86_CR4_CET flags.
->>
->> The new KVM_HC_LOCK_CR_UPDATE hypercall takes two arguments.  The first
->> is to identify the control register, and the second is a bit mask to
->> pin (i.e. mark as read-only).
->>
->> These register flags should already be pinned by Linux guests, but once
->> compromised, this self-protection mechanism could be disabled, which is
->> not the case with this dedicated hypercall.
->>
->> Cc: Borislav Petkov <bp@alien8.de>
->> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: H. Peter Anvin <hpa@zytor.com>
->> Cc: Ingo Molnar <mingo@redhat.com>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
->> Cc: Paolo Bonzini <pbonzini@redhat.com>
->> Cc: Sean Christopherson <seanjc@google.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
->> Cc: Wanpeng Li <wanpengli@tencent.com>
->> Signed-off-by: Mickaël Salaün <mic@digikod.net>
->> Link: https://lore.kernel.org/r/20230505152046.6575-6-mic@digikod.net
-> [...]
->>   	hw_cr4 = (cr4_read_shadow() & X86_CR4_MCE) | (cr4 & ~X86_CR4_MCE);
->>   	if (is_unrestricted_guest(vcpu))
->> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->> index ffab64d08de3..a529455359ac 100644
->> --- a/arch/x86/kvm/x86.c
->> +++ b/arch/x86/kvm/x86.c
->> @@ -7927,11 +7927,77 @@ static unsigned long emulator_get_cr(struct x86_emulate_ctxt *ctxt, int cr)
->>   	return value;
->>   }
->>   
->> +#ifdef CONFIG_HEKI
->> +
->> +extern unsigned long cr4_pinned_mask;
->> +
-> 
-> Can this be moved to a header file?
+Address the following warnings found with GCC-13 and
+-fstrict-flex-arrays=3 enabled:
+sound/firewire/amdtp-stream.c: In function ‘build_it_pkt_header’:
+sound/firewire/amdtp-stream.c:694:17: warning: ‘generate_cip_header’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+  694 |                 generate_cip_header(s, cip_header, data_block_counter, syt);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sound/firewire/amdtp-stream.c:694:17: note: referencing argument 2 of type ‘__be32[2]’ {aka ‘unsigned int[2]’}
+sound/firewire/amdtp-stream.c:667:13: note: in a call to function ‘generate_cip_header’
+  667 | static void generate_cip_header(struct amdtp_stream *s, __be32 cip_header[2],
+      |             ^~~~~~~~~~~~~~~~~~~
 
-Yep, but I'm not sure which one. Any preference Kees?
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -fstrict-flex-arrays=3 [1].
 
+Link: https://github.com/KSPP/linux/issues/21
+Link: https://github.com/KSPP/linux/issues/303
+Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ include/linux/firewire.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
->> +static int heki_lock_cr(struct kvm *const kvm, const unsigned long cr,
->> +			unsigned long pin)
->> +{
->> +	if (!pin)
->> +		return -KVM_EINVAL;
->> +
->> +	switch (cr) {
->> +	case 0:
->> +		/* Cf. arch/x86/kernel/cpu/common.c */
->> +		if (!(pin & X86_CR0_WP))
->> +			return -KVM_EINVAL;
->> +
->> +		if ((read_cr0() & pin) != pin)
->> +			return -KVM_EINVAL;
->> +
->> +		atomic_long_or(pin, &kvm->heki_pinned_cr0);
->> +		return 0;
->> +	case 4:
->> +		/* Checks for irrelevant bits. */
->> +		if ((pin & cr4_pinned_mask) != pin)
->> +			return -KVM_EINVAL;
->> +
-> 
-> It is enforcing the host mask on the guest, right? If the guest's set is a
-> super set of the host's then it will get rejected.
-> 
-> 
->> +		/* Ignores bits not present in host. */
->> +		pin &= __read_cr4();
->> +		atomic_long_or(pin, &kvm->heki_pinned_cr4);
+diff --git a/include/linux/firewire.h b/include/linux/firewire.h
+index 1716c01c4e54..efb6e2cf2034 100644
+--- a/include/linux/firewire.h
++++ b/include/linux/firewire.h
+@@ -391,7 +391,7 @@ struct fw_iso_packet {
+ 	u32 tag:2;		/* tx: Tag in packet header		*/
+ 	u32 sy:4;		/* tx: Sy in packet header		*/
+ 	u32 header_length:8;	/* Length of immediate header		*/
+-	u32 header[0];		/* tx: Top of 1394 isoch. data_block	*/
++	u32 header[];		/* tx: Top of 1394 isoch. data_block	*/
+ };
+ 
+ #define FW_ISO_CONTEXT_TRANSMIT			0
+-- 
+2.34.1
 
-We assume that the host's mask is a superset of the guest's mask. I 
-guess we should check the absolute supported bits instead, even if it 
-would be weird for the host to not support these bits.
-
-
->> +		return 0;
->> +	}
->> +	return -KVM_EINVAL;
->> +}
->> +
->> +int heki_check_cr(const struct kvm *const kvm, const unsigned long cr,
->> +		  const unsigned long val)
->> +{
->> +	unsigned long pinned;
->> +
->> +	switch (cr) {
->> +	case 0:
->> +		pinned = atomic_long_read(&kvm->heki_pinned_cr0);
->> +		if ((val & pinned) != pinned) {
->> +			pr_warn_ratelimited(
->> +				"heki-kvm: Blocked CR0 update: 0x%lx\n", val);
-> 
-> I think if the message contains the VM and VCPU identifier it will
-> become more useful.
-
-Indeed, and this should be the case for all log messages, but I'd left 
-that for future work. ;) I'll update the logs for the next series with a 
-new kvm_warn_ratelimited() helper using VCPU's PID.
