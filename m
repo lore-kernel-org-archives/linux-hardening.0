@@ -2,112 +2,195 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4999C77B7E
-	for <linux-hardening@archiver.kernel.org>; Sun, 28 May 2023 20:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9518C7EE23
+	for <linux-hardening@archiver.kernel.org>; Mon, 29 May 2023 16:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbjE1UZs (ORCPT
+        id S229527AbjE2QDp (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 28 May 2023 16:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
+        Mon, 29 May 2023 12:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbjE1UZs (ORCPT
+        with ESMTP id S229512AbjE2QDo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 28 May 2023 16:25:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAC499;
-        Sun, 28 May 2023 13:25:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6EE06618FF;
-        Sun, 28 May 2023 20:25:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA952C433EF;
-        Sun, 28 May 2023 20:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685305545;
-        bh=e/BaBW7sBtQzZAFcqXZIr6cq7jQWmf347wE2UrNWXvo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=FTEYgj2FnQEvAiguJAMacBw5p1NZqoD4NnK0xqagSVW2y+RV4Cy6CxnEkio28/hxW
-         NJmTo1snvbRMzSKbItYqw/k5XlB7TtrylKaWr/Y/ZTHzrXpEeywm9kGGvVU/9VcRiW
-         ula1LF2SKa1xNguOXil1199HZwd+escpztA2+cVA2hoo9oF7AbPGmubSYSH2JzWiCg
-         ktVvceTgB9onw2zpkPvieEACFgIPInxQcMgUI92WJqYsOD+VP0GRwp7UD+O/EDsWb7
-         DsTGJHBPgtElBetm/i5rZsDZ1XjyaR9+jsJWglnF834kL83xR1IsQp8YqfbbAvbJB/
-         BKBPsvFTpMCeQ==
-Date:   Sun, 28 May 2023 14:26:37 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] drm/amdgpu/discovery: Replace fake flex-arrays with
- flexible-array members
-Message-ID: <ZHO4/Z+iO+lqV4rW@work>
+        Mon, 29 May 2023 12:03:44 -0400
+Received: from smtp-8faf.mail.infomaniak.ch (smtp-8faf.mail.infomaniak.ch [83.166.143.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB23CD;
+        Mon, 29 May 2023 09:03:36 -0700 (PDT)
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QVL131MNPzMqYfG;
+        Mon, 29 May 2023 18:03:35 +0200 (CEST)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4QVL0w4znNz3vb2;
+        Mon, 29 May 2023 18:03:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1685376215;
+        bh=n6vDyeLcnXuJ2e1Kx1oy6dfLDQBfFmEzNL/ERVZDqQU=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=kQUNssi6VBi8KE2R5ANm9fpqaLV9V+BO/pl/pZOb+r07FAQvClXzKkx8C9t2Hytji
+         /4n7ba89FjY/Zfl8t2rhFg1o9pE4iawj/J1DIhc82vGXeZvlW/Z9zID2JwoJwYww3/
+         p8LCe3PI5P3tfO/+Mau3UxTlSDY6CLpnXs/pesiA=
+Message-ID: <90ca1173-4ec1-099f-5744-3d6dc29d919d@digikod.net>
+Date:   Mon, 29 May 2023 18:03:28 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: 
+Subject: Re: [PATCH v1 3/9] virt: Implement Heki common code
+Content-Language: en-US
+To:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20230505152046.6575-1-mic@digikod.net>
+ <20230505152046.6575-4-mic@digikod.net>
+ <ZFkxhWhjyIzrPkt8@liuwe-devbox-debian-v2>
+ <e8fcc1b8-6c0f-9556-a110-bd994d3fe3c6@linux.microsoft.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+In-Reply-To: <e8fcc1b8-6c0f-9556-a110-bd994d3fe3c6@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length and one-element arrays are deprecated, and we are moving
-towards adopting C99 flexible-array members, instead.
 
-Use the DECLARE_FLEX_ARRAY() helper macro to transform zero-length
-arrays in a union into flexible-array members. And replace a one-element
-array with a C99 flexible-array member.
+On 17/05/2023 14:47, Madhavan T. Venkataraman wrote:
+> Sorry for the delay. See inline...
+> 
+> On 5/8/23 12:29, Wei Liu wrote:
+>> On Fri, May 05, 2023 at 05:20:40PM +0200, Mickaël Salaün wrote:
+>>> From: Madhavan T. Venkataraman <madvenka@linux.microsoft.com>
+>>>
+>>> Hypervisor Enforced Kernel Integrity (Heki) is a feature that will use
+>>> the hypervisor to enhance guest virtual machine security.
+>>>
+>>> Configuration
+>>> =============
+>>>
+>>> Define the config variables for the feature. This feature depends on
+>>> support from the architecture as well as the hypervisor.
+>>>
+>>> Enabling HEKI
+>>> =============
+>>>
+>>> Define a kernel command line parameter "heki" to turn the feature on or
+>>> off. By default, Heki is on.
+>>
+>> For such a newfangled feature can we have it off by default? Especially
+>> when there are unsolved issues around dynamically loaded code.
+>>
+> 
+> Yes. We can certainly do that.
 
-Address the following warnings found with GCC-13 and
--fstrict-flex-arrays=3 enabled:
-drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1009:89: warning: array subscript kk is outside array bounds of ‘uint32_t[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
-drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1007:94: warning: array subscript kk is outside array bounds of ‘uint64_t[0]’ {aka ‘long long unsigned int[]’} [-Warray-bounds=]
-drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1310:94: warning: array subscript k is outside array bounds of ‘uint64_t[0]’ {aka ‘long long unsigned int[]’} [-Warray-bounds=]
-drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1309:57: warning: array subscript k is outside array bounds of ‘uint32_t[0]’ {aka ‘unsigned int[]’} [-Warray-bounds=]
+By default the Kconfig option should definitely be off. We also need to 
+change the Kconfig option to only be set if kernel module, JIT, kprobes 
+and other dynamic text change feature are disabled at build time  (see 
+discussion with Sean).
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+With this new Kconfig option for the static case, I think the boot 
+option should be on by default because otherwise it would not really be 
+possible to switch back to on later without taking the risk to silently 
+breaking users' machines. However, we should rename this option to 
+something like "heki_static" to be in line with the new Kconfig option.
 
-This results in no differences in binary output.
+The goal of Heki is to improve and complement kernel self-protection 
+mechanisms (which don't have boot time options), and to make it 
+available to everyone, see 
+https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings
+In practice, it would then be kind of useless to be required to set a 
+boot option to enable Heki (rather than to disable it).
 
-Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/193
-Link: https://github.com/KSPP/linux/issues/300
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/gpu/drm/amd/include/discovery.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/include/discovery.h b/drivers/gpu/drm/amd/include/discovery.h
-index 9181e57887db..f43e29722ef7 100644
---- a/drivers/gpu/drm/amd/include/discovery.h
-+++ b/drivers/gpu/drm/amd/include/discovery.h
-@@ -122,7 +122,7 @@ typedef struct ip_v3
- 	uint8_t sub_revision : 4;               /* HCID Sub-Revision */
- 	uint8_t variant : 4;                    /* HW variant */
- #endif
--	uint32_t base_address[1];               /* Base Address list. Corresponds to the num_base_address field*/
-+	uint32_t base_address[];		/* Base Address list. Corresponds to the num_base_address field*/
- } ip_v3;
- 
- typedef struct ip_v4 {
-@@ -140,8 +140,8 @@ typedef struct ip_v4 {
- 	uint8_t sub_revision : 4;               /* HCID Sub-Revision */
- #endif
- 	union {
--		uint32_t base_address[0];               /* 32-bit Base Address list. Corresponds to the num_base_address field*/
--		uint64_t base_address_64[0];            /* 64-bit Base Address list. Corresponds to the num_base_address field*/
-+		DECLARE_FLEX_ARRAY(uint32_t, base_address);	/* 32-bit Base Address list. Corresponds to the num_base_address field*/
-+		DECLARE_FLEX_ARRAY(uint64_t, base_address_64);	/* 64-bit Base Address list. Corresponds to the num_base_address field*/
- 	} __packed;
- } ip_v4;
- 
--- 
-2.34.1
+> 
+>>>
+>> [...]
+>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>>> index 3604074a878b..5cf5a7a97811 100644
+>>> --- a/arch/x86/Kconfig
+>>> +++ b/arch/x86/Kconfig
+>>> @@ -297,6 +297,7 @@ config X86
+>>>   	select FUNCTION_ALIGNMENT_4B
+>>>   	imply IMA_SECURE_AND_OR_TRUSTED_BOOT    if EFI
+>>>   	select HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
+>>> +	select ARCH_SUPPORTS_HEKI		if X86_64
+>>
+>> Why is there a restriction on X86_64?
+>>
+> 
+> We want to get the PoC working and reviewed on X64 first. We have tested this only on X64 so far.
 
+X86_64 includes Intel CPUs, which can support EPT and MBEC, which are a 
+requirement for Heki. ARM might have similar features but we're focused 
+on x86 for now.
+
+As a side note, I only have access to an Intel machine, which means that 
+I cannot work on AMD support. However, I'll be pleased to implement such 
+support if I get access to a machine with a recent AMD CPU.
+
+
+> 
+>>>   
+>>>   config INSTRUCTION_DECODER
+>>>   	def_bool y
+>>> diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
+>>> index a6e8373a5170..42ef1e33b8a5 100644
+>>> --- a/arch/x86/include/asm/sections.h
+>>> +++ b/arch/x86/include/asm/sections.h
+>> [...]
+>>>   
+>>> +#ifdef CONFIG_HEKI
+>>> +
+>>> +/*
+>>> + * Gather all of the statically defined sections so heki_late_init() can
+>>> + * protect these sections in the host page table.
+>>> + *
+>>> + * The sections are defined under "SECTIONS" in vmlinux.lds.S
+>>> + * Keep this array in sync with SECTIONS.
+>>> + */
+>>
+>> This seems a bit fragile, because it requires constant attention from
+>> people who care about this functionality. Can this table be
+>> automatically generated?
+>>
+> 
+> We realize that. But I don't know of a way this can be automatically generated. Also, the permissions for
+> each section is specific to the use of that section. The developer who introduces a new section is the
+> one who will know what the permissions should be.
+> 
+> If any one has any ideas of how we can generate this table automatically or even just add a build time check
+> of some sort, please let us know.
+
+One clean solution might be to parse the vmlinux.lds.S file, extract 
+section and their permission, and fill that into an automatically 
+generated header file.
+
+Another way to do it would be to extract sections and associated 
+permissions with objdump, but that could be an issue because of longer 
+build time.
+
+A better solution would be to extract such sections and associated 
+permissions at boot time. I guess the kernel already has such helpers 
+used in early boot.
