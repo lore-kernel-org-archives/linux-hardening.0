@@ -2,94 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32788C77B7A
-	for <linux-hardening@archiver.kernel.org>; Mon, 29 May 2023 18:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FD3C77B7E
+	for <linux-hardening@archiver.kernel.org>; Mon, 29 May 2023 22:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbjE2SvT (ORCPT
+        id S229457AbjE2Wpz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 29 May 2023 14:51:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45788 "EHLO
+        Mon, 29 May 2023 18:45:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjE2SvS (ORCPT
+        with ESMTP id S229603AbjE2Wpy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 29 May 2023 14:51:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEDD9F;
-        Mon, 29 May 2023 11:51:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C6004614C1;
-        Mon, 29 May 2023 18:51:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8820AC4339B;
-        Mon, 29 May 2023 18:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685386276;
-        bh=mawl8qMpP5viRoL6CkrK/gaq13n6bKJ6HvUhLIOtVsA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tOuUuwakLBZIkoTaSMDxZeIXxooaeCi6u6ziQ5J4Y0kdscBs/USyp+KPgbs7IWTrY
-         r4b8WdwGW7GlDLBHSQa94FWIU+K1irRz6MKAPoJhExvwqmRVf5+2R7WW8u9eHuhugH
-         4ihm/oWMk5urUKttwFrsG+r+yNWP4AZicBGZpGKxDqup+mjrdOSGX459xEGRPSgR3z
-         gCQ4X54+QhXoqpYgJ5juo/7M6SJ13B48Hl4IIwgv2DHxYdBceAARfpMXx75CIzWK0x
-         eVsjV+JSIxl63Cyn2W9Yffuf4H3izJfNs7KoKWZzAM9u72mwLBq7ZOK45pPqvkri6c
-         b0h3jnXl2rAaw==
-Date:   Mon, 29 May 2023 12:52:07 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Takashi Sakamoto <o-takashi@sakamocchi.jp>
+        Mon, 29 May 2023 18:45:54 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63C32C7;
+        Mon, 29 May 2023 15:45:53 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 2D7B05C007D;
+        Mon, 29 May 2023 18:45:50 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Mon, 29 May 2023 18:45:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+         h=cc:cc:content-transfer-encoding:content-type:content-type
+        :date:date:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to;
+         s=fm1; t=1685400350; x=1685486750; bh=bgUG0LgYa+nh+rJ4ie+IkG0Q0
+        XRNLEsbQrNkQi4S5Fo=; b=ddLQxpXTJmdfbY0O8E4Tmy+qs8Orc4cxwMmYMbghr
+        Coy5CGunqgA/jgfnfdKES+ofnIeQ7YEFS7Yx/W4jGFpG83lG6GTiBmc7pb31STso
+        dd3mF9VJ17HzUarq5aII/xMMs05R2spM2LHpnjLr7hNchO+84dnW7xKn4/WVxZtS
+        hmwazfByLtsV0rga1R7JVd2o0lJZ3X/EHO6Xa3FIX3707x47qzAIugBvGqpXtnqX
+        AhVxEgQgjT7dSJaLYFV3Lqlw5zsWaz41igkrg1sURFH9cLbsm8w5D083PacYmEk5
+        euP1ey/ppOniFyXcChvvgAT2pdWNT43syrNkNyh4izP5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:date:feedback-id:feedback-id
+        :from:from:in-reply-to:in-reply-to:message-id:mime-version
+        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1685400350; x=1685486750; bh=bgUG0LgYa+nh+rJ4ie+IkG0Q0XRNLEsbQrN
+        kQi4S5Fo=; b=m02MiaP6vAxok/Lty6E/V6DYMW+CyjvuBA6mpiHVkl4phqzCfyN
+        At1JCcjKlEcrGJAUJYMDOc+5f7/p71ycWh60Ycw7HNRCPZlU9+/30/CX5b4kJojh
+        6bVr9CXui/DhoHQLJ+Y3mH7QtSd0t5LaTYo7vuEQGKY/TfjzBFeYjk+ZjUzY0IkZ
+        qxUvxX54b2u/wmW2ZEAOIplN5ZzPucPcmztvpOnjctNX6qGuaRKlZWD9II/vZk1g
+        w9IKbq2R/Iu87Z4RaoKV/wQZtpw8/5FS7ZiCle/4QqIOReewQuISSlf7Djeb7fEb
+        wyz+TDe/Eow5xkklxQeF/FM9tHZf2q3IqyQ==
+X-ME-Sender: <xms:HSt1ZFCyn9izx8vsp_Vc1U7mY-q0KGKV65h-NxuD9UO5whK0PSEkNA>
+    <xme:HSt1ZDjo6L9ZnrPjCxKZw1GVkdlPFPCdz4SsG2RkQe20tnJY_FnxMiQK7W3YHurNi
+    45lBCORR_iIVHf0bS4>
+X-ME-Received: <xmr:HSt1ZAmIzZG-HN2zJCEcnP58H3MDBDoYY3KHbbYdqLjIkQeXusO4x807VdI8qt3cu3Gp5hJ8w0RyCggqd1fjSKlrNaaCgZo7x-8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeekiedgudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfhfgggtugfgjgesth
+    ekredttddtjeenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgr
+    khgrshhhihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnheptedthe
+    egtdfgfffggeehhefgtdefueelteelfeduudeludeggfelffegfeeiudejnecuffhomhgr
+    ihhnpehgihhthhhusgdrtghomhdpghhnuhdrohhrghdpkhgvrhhnvghlrdhorhhgnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgr
+    shhhihesshgrkhgrmhhotggthhhirdhjph
+X-ME-Proxy: <xmx:HSt1ZPxt6jcgR1IuHbin3IzMCoQLK7myanau5vZqDzDwvjeFU7DQrQ>
+    <xmx:HSt1ZKQANZZOBjMwQmPmOBaNIM47c5zunCcczG1Cdw-QKiQZ0jR4Bg>
+    <xmx:HSt1ZCY6O-PfoQ75-5ClWhbZosX1DKUbFDzHmbV15U0mKSGlNLpUHQ>
+    <xmx:Hit1ZFf-ufi8dc8V9C2O83rlKmoYQF55qonfSAP9RcCY6DuPNsVX-A>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 29 May 2023 18:45:48 -0400 (EDT)
+Date:   Tue, 30 May 2023 07:45:46 +0900
+From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] firewire: Replace zero-length array with
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] firewire: Replace zero-length array with
  flexible-array member
-Message-ID: <ZHT0V3SpvHyxCv5W@work>
+Message-ID: <20230529224546.GA8560@workstation.local>
+Mail-Followup-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <ZHT0V3SpvHyxCv5W@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZHT0V3SpvHyxCv5W@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length and one-element arrays are deprecated, and we are moving
-towards adopting C99 flexible-array members, instead.
+Hi,
 
-Address the following warnings found with GCC-13 and
--fstrict-flex-arrays=3 enabled:
-sound/firewire/amdtp-stream.c: In function ‘build_it_pkt_header’:
-sound/firewire/amdtp-stream.c:694:17: warning: ‘generate_cip_header’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
-  694 |                 generate_cip_header(s, cip_header, data_block_counter, syt);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sound/firewire/amdtp-stream.c:694:17: note: referencing argument 2 of type ‘__be32[2]’ {aka ‘unsigned int[2]’}
-sound/firewire/amdtp-stream.c:667:13: note: in a call to function ‘generate_cip_header’
-  667 | static void generate_cip_header(struct amdtp_stream *s, __be32 cip_header[2],
-      |             ^~~~~~~~~~~~~~~~~~~
+On Mon, May 29, 2023 at 12:52:07PM -0600, Gustavo A. R. Silva wrote:
+> Zero-length and one-element arrays are deprecated, and we are moving
+> towards adopting C99 flexible-array members, instead.
+> 
+> Address the following warnings found with GCC-13 and
+> -fstrict-flex-arrays=3 enabled:
+> sound/firewire/amdtp-stream.c: In function ‘build_it_pkt_header’:
+> sound/firewire/amdtp-stream.c:694:17: warning: ‘generate_cip_header’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
+>   694 |                 generate_cip_header(s, cip_header, data_block_counter, syt);
+>       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> sound/firewire/amdtp-stream.c:694:17: note: referencing argument 2 of type ‘__be32[2]’ {aka ‘unsigned int[2]’}
+> sound/firewire/amdtp-stream.c:667:13: note: in a call to function ‘generate_cip_header’
+>   667 | static void generate_cip_header(struct amdtp_stream *s, __be32 cip_header[2],
+>       |             ^~~~~~~~~~~~~~~~~~~
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> Link: https://github.com/KSPP/linux/issues/21
+> Link: https://github.com/KSPP/linux/issues/303
+> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  include/linux/firewire.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -fstrict-flex-arrays=3 [1].
+Thanks for the patch. I applied it to for-linus branch as a fix for
+v6.4-rc4, instead of for-next branch.
 
-Link: https://github.com/KSPP/linux/issues/21
-Link: https://github.com/KSPP/linux/issues/303
-Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/linux/firewire.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+* https://git.kernel.org/ieee1394/linux1394/c/41dd10a086c5
 
-diff --git a/include/linux/firewire.h b/include/linux/firewire.h
-index 1716c01c4e54..efb6e2cf2034 100644
---- a/include/linux/firewire.h
-+++ b/include/linux/firewire.h
-@@ -391,7 +391,7 @@ struct fw_iso_packet {
- 	u32 tag:2;		/* tx: Tag in packet header		*/
- 	u32 sy:4;		/* tx: Sy in packet header		*/
- 	u32 header_length:8;	/* Length of immediate header		*/
--	u32 header[0];		/* tx: Top of 1394 isoch. data_block	*/
-+	u32 header[];		/* tx: Top of 1394 isoch. data_block	*/
- };
- 
- #define FW_ISO_CONTEXT_TRANSMIT			0
--- 
-2.34.1
 
+Thanks
+
+Takashi Sakamoto
