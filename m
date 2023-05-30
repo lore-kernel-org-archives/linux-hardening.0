@@ -2,125 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FD3C77B7E
-	for <linux-hardening@archiver.kernel.org>; Mon, 29 May 2023 22:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C7AC77B73
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 06:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjE2Wpz (ORCPT
+        id S229627AbjE3GoZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 29 May 2023 18:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56574 "EHLO
+        Tue, 30 May 2023 02:44:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbjE2Wpy (ORCPT
+        with ESMTP id S229603AbjE3GoY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 29 May 2023 18:45:54 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63C32C7;
-        Mon, 29 May 2023 15:45:53 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2D7B05C007D;
-        Mon, 29 May 2023 18:45:50 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Mon, 29 May 2023 18:45:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-         h=cc:cc:content-transfer-encoding:content-type:content-type
-        :date:date:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to;
-         s=fm1; t=1685400350; x=1685486750; bh=bgUG0LgYa+nh+rJ4ie+IkG0Q0
-        XRNLEsbQrNkQi4S5Fo=; b=ddLQxpXTJmdfbY0O8E4Tmy+qs8Orc4cxwMmYMbghr
-        Coy5CGunqgA/jgfnfdKES+ofnIeQ7YEFS7Yx/W4jGFpG83lG6GTiBmc7pb31STso
-        dd3mF9VJ17HzUarq5aII/xMMs05R2spM2LHpnjLr7hNchO+84dnW7xKn4/WVxZtS
-        hmwazfByLtsV0rga1R7JVd2o0lJZ3X/EHO6Xa3FIX3707x47qzAIugBvGqpXtnqX
-        AhVxEgQgjT7dSJaLYFV3Lqlw5zsWaz41igkrg1sURFH9cLbsm8w5D083PacYmEk5
-        euP1ey/ppOniFyXcChvvgAT2pdWNT43syrNkNyh4izP5g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1685400350; x=1685486750; bh=bgUG0LgYa+nh+rJ4ie+IkG0Q0XRNLEsbQrN
-        kQi4S5Fo=; b=m02MiaP6vAxok/Lty6E/V6DYMW+CyjvuBA6mpiHVkl4phqzCfyN
-        At1JCcjKlEcrGJAUJYMDOc+5f7/p71ycWh60Ycw7HNRCPZlU9+/30/CX5b4kJojh
-        6bVr9CXui/DhoHQLJ+Y3mH7QtSd0t5LaTYo7vuEQGKY/TfjzBFeYjk+ZjUzY0IkZ
-        qxUvxX54b2u/wmW2ZEAOIplN5ZzPucPcmztvpOnjctNX6qGuaRKlZWD9II/vZk1g
-        w9IKbq2R/Iu87Z4RaoKV/wQZtpw8/5FS7ZiCle/4QqIOReewQuISSlf7Djeb7fEb
-        wyz+TDe/Eow5xkklxQeF/FM9tHZf2q3IqyQ==
-X-ME-Sender: <xms:HSt1ZFCyn9izx8vsp_Vc1U7mY-q0KGKV65h-NxuD9UO5whK0PSEkNA>
-    <xme:HSt1ZDjo6L9ZnrPjCxKZw1GVkdlPFPCdz4SsG2RkQe20tnJY_FnxMiQK7W3YHurNi
-    45lBCORR_iIVHf0bS4>
-X-ME-Received: <xmr:HSt1ZAmIzZG-HN2zJCEcnP58H3MDBDoYY3KHbbYdqLjIkQeXusO4x807VdI8qt3cu3Gp5hJ8w0RyCggqd1fjSKlrNaaCgZo7x-8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeekiedgudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfhfgggtugfgjgesth
-    ekredttddtjeenucfhrhhomhepvfgrkhgrshhhihcuufgrkhgrmhhothhouceoohdqthgr
-    khgrshhhihesshgrkhgrmhhotggthhhirdhjpheqnecuggftrfgrthhtvghrnheptedthe
-    egtdfgfffggeehhefgtdefueelteelfeduudeludeggfelffegfeeiudejnecuffhomhgr
-    ihhnpehgihhthhhusgdrtghomhdpghhnuhdrohhrghdpkhgvrhhnvghlrdhorhhgnecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepohdqthgrkhgr
-    shhhihesshgrkhgrmhhotggthhhirdhjph
-X-ME-Proxy: <xmx:HSt1ZPxt6jcgR1IuHbin3IzMCoQLK7myanau5vZqDzDwvjeFU7DQrQ>
-    <xmx:HSt1ZKQANZZOBjMwQmPmOBaNIM47c5zunCcczG1Cdw-QKiQZ0jR4Bg>
-    <xmx:HSt1ZCY6O-PfoQ75-5ClWhbZosX1DKUbFDzHmbV15U0mKSGlNLpUHQ>
-    <xmx:Hit1ZFf-ufi8dc8V9C2O83rlKmoYQF55qonfSAP9RcCY6DuPNsVX-A>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 29 May 2023 18:45:48 -0400 (EDT)
-Date:   Tue, 30 May 2023 07:45:46 +0900
-From:   Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux1394-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] firewire: Replace zero-length array with
- flexible-array member
-Message-ID: <20230529224546.GA8560@workstation.local>
-Mail-Followup-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Tue, 30 May 2023 02:44:24 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F87E5
+        for <linux-hardening@vger.kernel.org>; Mon, 29 May 2023 23:44:21 -0700 (PDT)
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34U6i7t4006189;
+        Tue, 30 May 2023 06:44:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : references : date : in-reply-to : message-id : content-type :
+ mime-version; s=pp1; bh=1VJr5UdTDB51A0nQcs2qtFPfZtoTUX3XnI6AnTdjSeU=;
+ b=F2aSriN0B9XikM2qx5g96GvE24u2tbDd63eL+TyXppyL8hP6/le2xH0z9pyHpH2s9zcG
+ sz55VMX7NAoww5haI9Mi5L3YHuxCEoBIlP6MGDa6VE8g6VO1N7bySuQD6GiQhIIyTzOh
+ 8FRGU12B8EDps4DBuLgbcDsTDRolVkAgeZrVC2TJuYSsi2SIq6Ta/83bzblah+TdARH4
+ TIt/4i2F5HaXIdhSEkuE/iEa4k1EddP0avY/GeBJI1eo1y+2su9b4hgpMIW3N/Txmric
+ hneQm747WthrPxuZA30z5+ySb+NpTPkTxziYVn38gvTlz0ualfsRZfTybpCXTZh0z40Q 6A== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qwc4qg04r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 May 2023 06:44:19 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34U3UTJH029244;
+        Tue, 30 May 2023 06:44:17 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3qu9g51aef-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 May 2023 06:44:17 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34U6iEEq13435464
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 May 2023 06:44:14 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 069132004B;
+        Tue, 30 May 2023 06:44:14 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D021620040;
+        Tue, 30 May 2023 06:44:13 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Tue, 30 May 2023 06:44:13 +0000 (GMT)
+From:   Sven Schnelle <svens@linux.ibm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
         linux-hardening@vger.kernel.org
-References: <ZHT0V3SpvHyxCv5W@work>
+Subject: Re: s390/defconfigs: set CONFIG_INIT_STACK_NONE=y
+References: <ZG+rogQJO+U3kS4a@outflux.net> <ZHC3YJ3FHwYxYrMG@osiris>
+        <202305260922.F98F90290@keescook>
+Date:   Tue, 30 May 2023 08:44:13 +0200
+In-Reply-To: <202305260922.F98F90290@keescook> (Kees Cook's message of "Fri,
+        26 May 2023 09:37:16 -0700")
+Message-ID: <yt9dy1l6mi82.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: E3tETYDOvWDRIEzv5XJwQ6n7emqT1oxl
+X-Proofpoint-GUID: E3tETYDOvWDRIEzv5XJwQ6n7emqT1oxl
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZHT0V3SpvHyxCv5W@work>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-30_04,2023-05-29_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 clxscore=1011 malwarescore=0 phishscore=0 spamscore=0
+ suspectscore=0 priorityscore=1501 mlxscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305300053
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Hi Kees,
 
-On Mon, May 29, 2023 at 12:52:07PM -0600, Gustavo A. R. Silva wrote:
-> Zero-length and one-element arrays are deprecated, and we are moving
-> towards adopting C99 flexible-array members, instead.
-> 
-> Address the following warnings found with GCC-13 and
-> -fstrict-flex-arrays=3 enabled:
-> sound/firewire/amdtp-stream.c: In function ‘build_it_pkt_header’:
-> sound/firewire/amdtp-stream.c:694:17: warning: ‘generate_cip_header’ accessing 8 bytes in a region of size 0 [-Wstringop-overflow=]
->   694 |                 generate_cip_header(s, cip_header, data_block_counter, syt);
->       |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> sound/firewire/amdtp-stream.c:694:17: note: referencing argument 2 of type ‘__be32[2]’ {aka ‘unsigned int[2]’}
-> sound/firewire/amdtp-stream.c:667:13: note: in a call to function ‘generate_cip_header’
->   667 | static void generate_cip_header(struct amdtp_stream *s, __be32 cip_header[2],
->       |             ^~~~~~~~~~~~~~~~~~~
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -fstrict-flex-arrays=3 [1].
-> 
-> Link: https://github.com/KSPP/linux/issues/21
-> Link: https://github.com/KSPP/linux/issues/303
-> Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.html [1]
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  include/linux/firewire.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Kees Cook <keescook@chromium.org> writes:
 
-Thanks for the patch. I applied it to for-linus branch as a fix for
-v6.4-rc4, instead of for-next branch.
+> On Fri, May 26, 2023 at 03:42:56PM +0200, Heiko Carstens wrote:
+>> Hi Kees,
+>> 
+>> > I had this[1] patch pointed out to me, but I couldn't find any discussion
+>> > about it on public lists. Can you give me some background on this? There
+>> > haven't been any general workloads identified where this has been
+>> > a problem, so I'm curious why this was seen as globally an issue on
+>> > s390. The expectation was to use __uninitialized on any variables where
+>> > this was noticed as a performance issue, and where the memory safety of
+>> > the variable could be proven. Turning it off by default seems like
+>> > rather too much, but perhaps there is something unique to s390 I don't
+>> > know about. :)
+>> 
+>> This was the result of some micro benchmarks being reported "too slow".
+>> Actually our syscall entry/exit path got naturally slower since we switched
+>> to generic entry; now we are trying to improve things a bit again.
+>> 
+>> There is also this RFC from Sven, which tries to inline some of the
+>> generic system call functions, in order to avoid function calls:
+>> https://lore.kernel.org/lkml/20230516133810.171487-1-svens@linux.ibm.com/
+>> 
+>> I stumbled upon CONFIG_INIT_STACK_NONE only by accident when wondering why
+>> the compiler would generate quite some instructions which aren't necessary,
+>> just to zero variables. For the getpid() system call this makes a runtime
+>> difference of ~3%, which is quite a bit.
+>
+> Hm, that does seem high. It implies there are large variable that are
+> being passed by reference, perhaps in the syscall path? I had similar
+> problems a while back on x86 but due to stack-protector seeing the
+> register arrays and thinking they needed protection. I had to explicitly
+> turn that off for the entry code, since they're provably safe. :)
 
-* https://git.kernel.org/ieee1394/linux1394/c/41dd10a086c5
+From looking at our s390 specific entry code i don't see big arrays on
+the stack, but let me do some profiling. Maybe i missed something.
 
-
-Thanks
-
-Takashi Sakamoto
+Regards,
+Sven
