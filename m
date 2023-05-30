@@ -2,101 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50476C77B7A
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 16:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B1CC77B7A
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 18:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231256AbjE3Qll (ORCPT
+        id S231422AbjE3SQo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 12:41:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54586 "EHLO
+        Tue, 30 May 2023 14:16:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230491AbjE3Qlk (ORCPT
+        with ESMTP id S230399AbjE3SQn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 12:41:40 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975F6F9;
-        Tue, 30 May 2023 09:41:35 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-76c64da0e46so131049239f.0;
-        Tue, 30 May 2023 09:41:35 -0700 (PDT)
+        Tue, 30 May 2023 14:16:43 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1146A3
+        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 11:16:41 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-3f6c6320d4eso25601cf.1
+        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 11:16:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685464894; x=1688056894;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mxSEcH8XMhad+l3757OBmVZiqWVuwlAI7XsQ8Ql9GBg=;
-        b=ldetHcwivAH9hVYdV2CfRIcyuc61rIzapE+qyz2t/m97jOZHGzsNiVUd45x7s+8UL8
-         rCOeR27eyPrrhK3PUlcz2ZbryZXFfOiCJVD4zj75ckfvNiDWMfM27EE62ZLqEtLzn68P
-         +bWRRv2CD2gIlWYjvr0XlDref1iAldl36VKGQlUhi+3pIMRe9eBgxFUbmByqApMisoyn
-         eXL1kFbB1xow/c+dymFzgHcGyprrmJd2c6pC3ufh14PJ/hV/08ORmehUXGJaOJZnEP1L
-         Saa1AayrCDJF5/ycm39fd+pGF+IeHwzXprxDAZn9EJO2Z5oPgUBgp/mecb891XovaogK
-         mnTA==
+        d=google.com; s=20221208; t=1685470601; x=1688062601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2kVEj843CHgMv+dCunk1UqfhchtPivldBaBOHjhNqio=;
+        b=rnWe8N6fmz34Nmj+miuUcbtMxa9WO2Cj/nDwQB2qMId4XmWz3ogI6p3hfvx/IQrQmS
+         Q8i1Epz4HuCdfp36ZX8Jin0/6IqdnA4tfslHqab/T9b+yOOjm0giF1hQTvj7/lapmveN
+         /VcdoKqz7w64cvtCPxCxgv3Kr7Q9poRd93/DnBbD4WYi5mNi3lPW0SjofhVSMy1QIx+G
+         8AsfJhVB9WP3Njgjw18Y1UD6c07Jd7OrLzTFYs/ZCUxbrrKOoEhMLSZp0ec+Zfa8zUub
+         sX/pFd/9liMPgrHIqwByJZm3CqX6nJaGNTXhlonC8E8rK7SVR1HTlMUMfZCZ/8HVoYlN
+         oa7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685464894; x=1688056894;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mxSEcH8XMhad+l3757OBmVZiqWVuwlAI7XsQ8Ql9GBg=;
-        b=EFAUmtaBTYngoPqNZd8El4mrxwkWE0dh23IuRi5GsGqGQ+r+jcNDKLoHJwwgu0fOYy
-         JQlp3aLEQVwMz0sR4GEIeSpT76rHmvnJeZ0MjpUs0bThTttm5X8DBT17TVDxPM1vICMU
-         n1jJSUF6JC412Y6HsyWwZKiqlTk1aD1DhOYHF7wa7gSRYWBhiTn5WcKfg1uIGg3Qnp9S
-         Gw5tvzokyxL5Rj/VUh8q2QwZds6sNO6MyCNsDJ4JioN0M8N/FtKLuIz5pMMo/69bBMMB
-         gMaQ/kRmqdC0ZuUfzvwdX61wLkUk2IJC2kwLAorHqRpCtYAH9BATt7auluLHi+WqdQtt
-         TNwg==
-X-Gm-Message-State: AC+VfDxXIidyfKBx7IVOx8Qtwz4uziQhmWtVoux9R+1KQGK5szXoYz8B
-        5h7+ghN4xuHBhTVt2ohON90L2Bfhhsh3nw==
-X-Google-Smtp-Source: ACHHUZ7h6h6Eq4wXXvU4DGcSXirjIMhqpxh4fzQEe6FxgI8QuLAp8ANtFCztbuHT2NEDst+MhgAR4g==
-X-Received: by 2002:a5d:87c2:0:b0:774:7a6d:8753 with SMTP id q2-20020a5d87c2000000b007747a6d8753mr1970436ios.9.1685464894493;
-        Tue, 30 May 2023 09:41:34 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id q22-20020a5ea616000000b007767a221ea0sm3255267ioi.11.2023.05.30.09.41.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 09:41:34 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH] scsi: ufs: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 30 May 2023 16:41:31 +0000
-Message-ID: <20230530164131.987213-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
+        d=1e100.net; s=20221208; t=1685470601; x=1688062601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2kVEj843CHgMv+dCunk1UqfhchtPivldBaBOHjhNqio=;
+        b=jOwy9pnvy1p42O+dFspwcPx29tJHr9fFJmw0dKuUqObD9QiWinSFZMGWj6voGwhiGi
+         Nt8gvueCk2oh+9u8f6g2QzLg2UlOR9sSw7lv00BZlMw3/GTIH5MENpMoAvNDZHcaYf7o
+         oBzx7iWAHZvko6cRh7qHY669j/7Id6Kc2RLu1Cx1MNccjo4o3KNB1Kf6eoA9ocWH/0R5
+         vI2vmMzamOttXMuFwzFMFc5GlC25bXQyiJRD54DDYAkkJT3lPHMMc/fSxK3fQT7Eb8EA
+         gMHSthuX6AL9GFLmaJqYvMU86gUT4exAcSPzbb2g5ImDXlXEmS1dYKzqyfPno7UX+ava
+         NnAA==
+X-Gm-Message-State: AC+VfDxUlO1VTJySZHLBcZAx3vc5vyyARXr8M7kMp0bmABz/mCGtx7sN
+        wQLQSTb3eNjGw1Cv/BxsAKHLl0d3LYs111fZ6jYx
+X-Google-Smtp-Source: ACHHUZ56knjqd5JWW4SGlcgVP5Uoa+bIdal55cK7Ul2sjDA32jT0AibnM5236LiIyGfl5XDekw9XKUPTitMwt5Wwm0w=
+X-Received: by 2002:a05:622a:49:b0:3ef:3361:75d5 with SMTP id
+ y9-20020a05622a004900b003ef336175d5mr190529qtw.11.1685470600656; Tue, 30 May
+ 2023 11:16:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230530163546.986188-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230530163546.986188-1-azeemshaikh38@gmail.com>
+From:   John Stultz <jstultz@google.com>
+Date:   Tue, 30 May 2023 11:16:30 -0700
+Message-ID: <CANDhNCrZBWFGtt49_Eu=yvKLCxeydXXowbS_9VnTH2E6-wtvzg@mail.gmail.com>
+Subject: Re: [PATCH] clocksource: Replace all non-returning strlcpy with strscpy
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-hardening@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
-No return values were used, so direct replacement is safe.
+On Tue, May 30, 2023 at 9:35=E2=80=AFAM Azeem Shaikh <azeemshaikh38@gmail.c=
+om> wrote:
+>
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
+y
+> [2] https://github.com/KSPP/linux/issues/89
+>
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> ---
+>  kernel/time/clocksource.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+> index 91836b727cef..88cbc1181b23 100644
+> --- a/kernel/time/clocksource.c
+> +++ b/kernel/time/clocksource.c
+> @@ -1480,7 +1480,7 @@ static int __init boot_override_clocksource(char* s=
+tr)
+>  {
+>         mutex_lock(&clocksource_mutex);
+>         if (str)
+> -               strlcpy(override_name, str, sizeof(override_name));
+> +               strscpy(override_name, str, sizeof(override_name));
+>         mutex_unlock(&clocksource_mutex);
+>         return 1;
+>  }
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
+Sounds reasonable to me.
 
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- drivers/ufs/core/ufs-fault-injection.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: John Stultz <jstultz@google.com>
 
-diff --git a/drivers/ufs/core/ufs-fault-injection.c b/drivers/ufs/core/ufs-fault-injection.c
-index 7ac7c4e7ff83..5b1184aac585 100644
---- a/drivers/ufs/core/ufs-fault-injection.c
-+++ b/drivers/ufs/core/ufs-fault-injection.c
-@@ -54,7 +54,7 @@ static int ufs_fault_set(const char *val, const struct kernel_param *kp)
- 	if (!setup_fault_attr(attr, (char *)val))
- 		return -EINVAL;
- 
--	strlcpy(kp->arg, val, FAULT_INJ_STR_SIZE);
-+	strscpy(kp->arg, val, FAULT_INJ_STR_SIZE);
- 
- 	return 0;
- }
-
+Thanks for submitting this!
+-john
