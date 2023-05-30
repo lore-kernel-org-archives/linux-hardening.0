@@ -2,98 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50CBC77B73
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 16:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE25C7EE23
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 16:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231686AbjE3QD5 (ORCPT
+        id S233193AbjE3QJ0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 12:03:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
+        Tue, 30 May 2023 12:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232087AbjE3QDy (ORCPT
+        with ESMTP id S233170AbjE3QJY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 12:03:54 -0400
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB00138;
-        Tue, 30 May 2023 09:03:27 -0700 (PDT)
-Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-77496b0b345so114471939f.3;
-        Tue, 30 May 2023 09:03:27 -0700 (PDT)
+        Tue, 30 May 2023 12:09:24 -0400
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7EF6198;
+        Tue, 30 May 2023 09:09:10 -0700 (PDT)
+Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-30ae69ef78aso2004396f8f.1;
+        Tue, 30 May 2023 09:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685462606; x=1688054606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UEKIsEXdKLpGKZBlAIha7KqcLcJLHAXSdcsQ3sVyRjo=;
-        b=ruvnPIeJ1Sq+jrkh0VDmLz424q5HNzgEmxgk33feRyuEEdkyqZ+B15gc5GhVbIBS3J
-         7xxYzE3Yc0PBmckjUDV3k2eewrMrWIt1Vt1VmjScVhCpn4ihzQFp3LxW8iti0nuZjt9z
-         tIssPGma5sSAlpR7byVRFuCnPADheGGDj0ZcdLPJYfz736MYjn1Wh7+ePd0bWtR08phK
-         BF4//BN9FriLzaGr02CRWahmKO0H2HLcxdlV0Ux/WGgdmJtFNvndRB4rpVpKRog5nI2b
-         Kmtk0vq5mP1kWlkFLtThfus6c2omy0vbfVebolDVuYnN8gSEn5NfUIy6eirXivms5UJw
-         YMlQ==
+        d=gmail.com; s=20221208; t=1685462949; x=1688054949;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oi0/JSrKBypgCtjQEoow24NFxZocncTUaEgKTBeFpRQ=;
+        b=hVGRu0prW/3S+Zg8ZJ1Tz6XPV24/xDsOnyP8dFoMgmQfP0JUFuGqzGAcHbka3yAuPQ
+         SugcRLOkP9/VXsMnyb5id8VqYhISd6rVqpv+IzZhHwEnPh8gK+cOM9uUUlpuuRsgjaK8
+         DDZcZj56JHwrW2bTx31CI2+JAgYVbAo+zEklLQJSU8zRs/rUOUlaJyCRPdHZCMYUuS03
+         MzBB6AKo150s/58E822BDtV6WS0NMm+H2VhSceuzQ2kmLspIPTfBrfoJT0Nur10k+2+o
+         Jun10e6ds2y8NxmwzAY3mvh31Jc268Dw06p+PXjB9BUe0/Hdk7foKMlXbEm7xzvMo/jo
+         9mtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685462606; x=1688054606;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UEKIsEXdKLpGKZBlAIha7KqcLcJLHAXSdcsQ3sVyRjo=;
-        b=TL7xTc2qWb/Z/sWJe/LfAunrNMlcZTL/bHUqp1PkdTKIXOIdzuRWILIdA4sIgSYB8z
-         LLYUHr171GnfS4jgaUYbn0oqEt2+wFybn3Sv5oqj42HTJVTdldAvt/nRfoeF6SWegAjk
-         9rF/Y1VWZgLD1PBQLIr2ZvqzUDCIwHvz6s23220hlXbNwHcheABMNYR4w8M9+dOAZaiC
-         17Gz/ofiDxqxyVdU3PC8fA5RIQodbOFj4FHNwdzj6p+/+5v0U4LyykDhC1DyjREPq7HL
-         yi8yENTvlBxKi3LbHe5tTpfKypEOYCD/PN5y5YBPiWcV0bEWqS1DjBs8zzcJ5UHmuwxR
-         91/g==
-X-Gm-Message-State: AC+VfDzQfgVwGAj6qKhGSKjkunlgYowK8+IrHQC3VaEXOtVgD1D+Lcqc
-        Dl+RogBGe2hNTPq5SVqZg3vC151u8Hq67g==
-X-Google-Smtp-Source: ACHHUZ56E7vZFVGPKgd7I4fikcApbkWq3RIs9RFtkKtKKI4VmN5p6MbyDE4tMarLqBpL/2gdUJnHJA==
-X-Received: by 2002:a92:d4c4:0:b0:335:5b3b:82 with SMTP id o4-20020a92d4c4000000b003355b3b0082mr1722420ilm.26.1685462606607;
-        Tue, 30 May 2023 09:03:26 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id ay20-20020a056638411400b004141ce991aesm783054jab.179.2023.05.30.09.03.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 09:03:26 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH] scsi: sym53c8xx: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 30 May 2023 16:03:23 +0000
-Message-ID: <20230530160323.412484-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
+        d=1e100.net; s=20221208; t=1685462949; x=1688054949;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oi0/JSrKBypgCtjQEoow24NFxZocncTUaEgKTBeFpRQ=;
+        b=bd6JHjHl3ofOJAdWsEtxo022n+aeViLaSsx290UwP1xraMrmUwS4SOjnQPNJYdi6Gw
+         07Kv5KEywYU6gqh7wCR9OMPVK5XdNmHk1GNMtfvjvlSIOkWHutR4NlyhVS7fj5/phL6c
+         Wn8VtBt5IgXAfTU0j6vbZKGO6tjleDtvxdzsf+HvmD84hFyN9uYrREMjYq6rkS9Gpzio
+         Ug+0OxrwemzWFVeNycr0P7oiLMmsGbUFRRiTP+cIY30fWAjYZqklQeE/urjO0Rt/EUTZ
+         mNAohebvK2Hpr85gRxJwpp+ht0Z7dzCUaA5poI38NfTrTiM0x3DdSXdFTclGue+jzmP9
+         jrsA==
+X-Gm-Message-State: AC+VfDwPe4ZAFKCU1KUXsvVo72JmH6K3PJpDEe9BNLkAFgZ4Tp4Fldgb
+        93QdyzD489SUZp4GU/pf5Smm7GIEKJWYr7lW45Q=
+X-Google-Smtp-Source: ACHHUZ6aXodoM2hGVPxieUQ1l1WXdJrNDTm1QeHOWlvIwTAqEarAHbF9cm8DW7PE6ssRdnEeq4SfiQDwReqkPJLAiTQ=
+X-Received: by 2002:adf:f812:0:b0:2f6:661:c03c with SMTP id
+ s18-20020adff812000000b002f60661c03cmr2525443wrp.28.1685462948658; Tue, 30
+ May 2023 09:09:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230530160033.411441-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230530160033.411441-1-azeemshaikh38@gmail.com>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Tue, 30 May 2023 12:08:57 -0400
+Message-ID: <CADmuW3Vgraciy__V24wHF0fBstT8odmMm6t1bUxZLeyFi9P6fQ@mail.gmail.com>
+Subject: Re: [PATCH] soc: fsl: qe: Replace all non-returning strlcpy with strscpy
+To:     Qiang Zhao <qiang.zhao@nxp.com>
+Cc:     linux-hardening@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, Li Yang <leoyang.li@nxp.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
-No return values were used, so direct replacement is safe.
+Duplicate of https://lore.kernel.org/all/20230523021425.2406309-1-azeemshai=
+kh38@gmail.com/.
+Sorry about that.
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
-
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- drivers/scsi/sym53c8xx_2/sym_glue.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/sym53c8xx_2/sym_glue.c b/drivers/scsi/sym53c8xx_2/sym_glue.c
-index ee36a9c15d9c..17491ba10439 100644
---- a/drivers/scsi/sym53c8xx_2/sym_glue.c
-+++ b/drivers/scsi/sym53c8xx_2/sym_glue.c
-@@ -1286,7 +1286,7 @@ static struct Scsi_Host *sym_attach(const struct scsi_host_template *tpnt, int u
- 	/*
- 	 *  Edit its name.
- 	 */
--	strlcpy(np->s.chip_name, dev->chip.name, sizeof(np->s.chip_name));
-+	strscpy(np->s.chip_name, dev->chip.name, sizeof(np->s.chip_name));
- 	sprintf(np->s.inst_name, "sym%d", np->s.unit);
- 
- 	if ((SYM_CONF_DMA_ADDRESSING_MODE > 0) && (np->features & FE_DAC) &&
-
+On Tue, May 30, 2023 at 12:00=E2=80=AFPM Azeem Shaikh <azeemshaikh38@gmail.=
+com> wrote:
+>
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
+y
+> [2] https://github.com/KSPP/linux/issues/89
+>
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> ---
+>  drivers/soc/fsl/qe/qe.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+> index b3c226eb5292..58746e570d14 100644
+> --- a/drivers/soc/fsl/qe/qe.c
+> +++ b/drivers/soc/fsl/qe/qe.c
+> @@ -524,7 +524,7 @@ int qe_upload_firmware(const struct qe_firmware *firm=
+ware)
+>          * saved microcode information and put in the new.
+>          */
+>         memset(&qe_firmware_info, 0, sizeof(qe_firmware_info));
+> -       strlcpy(qe_firmware_info.id, firmware->id, sizeof(qe_firmware_inf=
+o.id));
+> +       strscpy(qe_firmware_info.id, firmware->id, sizeof(qe_firmware_inf=
+o.id));
+>         qe_firmware_info.extended_modes =3D be64_to_cpu(firmware->extende=
+d_modes);
+>         memcpy(qe_firmware_info.vtraps, firmware->vtraps,
+>                 sizeof(firmware->vtraps));
+> @@ -599,7 +599,7 @@ struct qe_firmware_info *qe_get_firmware_info(void)
+>         /* Copy the data into qe_firmware_info*/
+>         sprop =3D of_get_property(fw, "id", NULL);
+>         if (sprop)
+> -               strlcpy(qe_firmware_info.id, sprop,
+> +               strscpy(qe_firmware_info.id, sprop,
+>                         sizeof(qe_firmware_info.id));
+>
+>         of_property_read_u64(fw, "extended-modes",
+>
