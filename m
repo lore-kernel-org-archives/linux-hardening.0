@@ -2,70 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B1CC77B7A
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 18:16:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F674C77B7A
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 19:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231422AbjE3SQo (ORCPT
+        id S231374AbjE3TQ2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 14:16:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
+        Tue, 30 May 2023 15:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230399AbjE3SQn (ORCPT
+        with ESMTP id S231378AbjE3TQ0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 14:16:43 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1146A3
-        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 11:16:41 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-3f6c6320d4eso25601cf.1
-        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 11:16:41 -0700 (PDT)
+        Tue, 30 May 2023 15:16:26 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A31F7;
+        Tue, 30 May 2023 12:16:25 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-ba849c9e769so720457276.1;
+        Tue, 30 May 2023 12:16:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685470601; x=1688062601;
+        d=gmail.com; s=20221208; t=1685474184; x=1688066184;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2kVEj843CHgMv+dCunk1UqfhchtPivldBaBOHjhNqio=;
-        b=rnWe8N6fmz34Nmj+miuUcbtMxa9WO2Cj/nDwQB2qMId4XmWz3ogI6p3hfvx/IQrQmS
-         Q8i1Epz4HuCdfp36ZX8Jin0/6IqdnA4tfslHqab/T9b+yOOjm0giF1hQTvj7/lapmveN
-         /VcdoKqz7w64cvtCPxCxgv3Kr7Q9poRd93/DnBbD4WYi5mNi3lPW0SjofhVSMy1QIx+G
-         8AsfJhVB9WP3Njgjw18Y1UD6c07Jd7OrLzTFYs/ZCUxbrrKOoEhMLSZp0ec+Zfa8zUub
-         sX/pFd/9liMPgrHIqwByJZm3CqX6nJaGNTXhlonC8E8rK7SVR1HTlMUMfZCZ/8HVoYlN
-         oa7Q==
+        bh=ReF3huZIX5MctcfmMwDZUJKJfR+aqdvurL3+etSGPTE=;
+        b=eX75pXiciwV/nPpOs0cNYiWqohYG7dS/oJdv84zYd60x7tsg0skrvDTgTACmmG/nW7
+         NftcHo7jZiGXqGHTCMqelg3PoyQa+gIlCuLk25vwXUHg/KgoavIB80kuil7ODR00NCRC
+         Tw6jll+NN2TSm0Y9Q+DDOVvsHCczp49nOJjh/mYUfncelDFoXLJvbm7iuq20tYWltWxp
+         oBNfeqihCPhl+XDHiYCPbeaLHj0CWjlvpSflv3CmpQ9B94aEeNiDdEbH/3O6n0EHSmWf
+         QByVctJMof4P3L8NGej/AoSobqnpKF4yRgpLAf8AXaVXUbthYpWLP83jjmSfSJx4oY5l
+         jFpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685470601; x=1688062601;
+        d=1e100.net; s=20221208; t=1685474184; x=1688066184;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2kVEj843CHgMv+dCunk1UqfhchtPivldBaBOHjhNqio=;
-        b=jOwy9pnvy1p42O+dFspwcPx29tJHr9fFJmw0dKuUqObD9QiWinSFZMGWj6voGwhiGi
-         Nt8gvueCk2oh+9u8f6g2QzLg2UlOR9sSw7lv00BZlMw3/GTIH5MENpMoAvNDZHcaYf7o
-         oBzx7iWAHZvko6cRh7qHY669j/7Id6Kc2RLu1Cx1MNccjo4o3KNB1Kf6eoA9ocWH/0R5
-         vI2vmMzamOttXMuFwzFMFc5GlC25bXQyiJRD54DDYAkkJT3lPHMMc/fSxK3fQT7Eb8EA
-         gMHSthuX6AL9GFLmaJqYvMU86gUT4exAcSPzbb2g5ImDXlXEmS1dYKzqyfPno7UX+ava
-         NnAA==
-X-Gm-Message-State: AC+VfDxUlO1VTJySZHLBcZAx3vc5vyyARXr8M7kMp0bmABz/mCGtx7sN
-        wQLQSTb3eNjGw1Cv/BxsAKHLl0d3LYs111fZ6jYx
-X-Google-Smtp-Source: ACHHUZ56knjqd5JWW4SGlcgVP5Uoa+bIdal55cK7Ul2sjDA32jT0AibnM5236LiIyGfl5XDekw9XKUPTitMwt5Wwm0w=
-X-Received: by 2002:a05:622a:49:b0:3ef:3361:75d5 with SMTP id
- y9-20020a05622a004900b003ef336175d5mr190529qtw.11.1685470600656; Tue, 30 May
- 2023 11:16:40 -0700 (PDT)
+        bh=ReF3huZIX5MctcfmMwDZUJKJfR+aqdvurL3+etSGPTE=;
+        b=WY8g4metQIlxwKfvXU57BDMouBOHmtwSX63HkIxBrG46YLmkX1xfiBImhpK6cc8CEL
+         tfwXtKAfKQeZhlkJNkuGzWJ2EwwNLaoyTGV8RfJ5pmgwH357jxGrkaWKoqxTgdiAYT76
+         XCffiJKcGAbKfDx8QNuuR79AcCghlJR6n6M2Gt13rBNohNfFgMHLWgRhwuRN4mlGpv0f
+         NlT2hKA7n1Xt487BM9H+sy3gihzXdUoyy5onNo/uVEjQbEzhsAxIY+t9xVKi9TxqJdwG
+         uneeox2brhoSi7ewtNjyftfyOY5NDu4O3h+orrCWcp+vLS5sProbce1+N8JVO1DB+DH+
+         i99Q==
+X-Gm-Message-State: AC+VfDzv3tdNZY2Bhu3aoeEXebjDnq2zoVWrVyb19bGtjkffB7prMTVK
+        oM30iw0gS/Hl6x9oNWik7pkkHPf78ZN8sYG8Su4=
+X-Google-Smtp-Source: ACHHUZ5KF5sP458BAcc4MOaFQx+ppx14Rr714fryU4Pc0VR6ggbBG74ErZ8JzB+32dZEQBBzsN8PE9WmIWTSyjqnO48=
+X-Received: by 2002:a81:1a05:0:b0:565:be47:55d9 with SMTP id
+ a5-20020a811a05000000b00565be4755d9mr277679ywa.1.1685474184541; Tue, 30 May
+ 2023 12:16:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230530163546.986188-1-azeemshaikh38@gmail.com>
-In-Reply-To: <20230530163546.986188-1-azeemshaikh38@gmail.com>
-From:   John Stultz <jstultz@google.com>
-Date:   Tue, 30 May 2023 11:16:30 -0700
-Message-ID: <CANDhNCrZBWFGtt49_Eu=yvKLCxeydXXowbS_9VnTH2E6-wtvzg@mail.gmail.com>
-Subject: Re: [PATCH] clocksource: Replace all non-returning strlcpy with strscpy
+References: <20230530155745.343032-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230530155745.343032-1-azeemshaikh38@gmail.com>
+From:   Justin Tee <justintee8345@gmail.com>
+Date:   Tue, 30 May 2023 12:16:13 -0700
+Message-ID: <CABPRKS8Gx8kaSXXbyV2Ms=mPTvuR1grAcxbXROCVq3WFr3KL5Q@mail.gmail.com>
+Subject: Re: [PATCH] scsi: lpfc: Replace all non-returning strlcpy with strscpy
 To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        linux-hardening@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        linux-kernel@vger.kernel.org
+Cc:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 30, 2023 at 9:35=E2=80=AFAM Azeem Shaikh <azeemshaikh38@gmail.c=
+Hi Azeem,
+
+Looks good.
+
+Reviewed-by: Justin Tee <justin.tee@broadcom.com>
+
+Thanks,
+Justin
+
+On Tue, May 30, 2023 at 8:59=E2=80=AFAM Azeem Shaikh <azeemshaikh38@gmail.c=
 om> wrote:
 >
 > strlcpy() reads the entire source buffer first.
@@ -82,27 +94,22 @@ y
 >
 > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 > ---
->  kernel/time/clocksource.c |    2 +-
+>  drivers/scsi/lpfc/lpfc_hbadisc.c |    2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-> index 91836b727cef..88cbc1181b23 100644
-> --- a/kernel/time/clocksource.c
-> +++ b/kernel/time/clocksource.c
-> @@ -1480,7 +1480,7 @@ static int __init boot_override_clocksource(char* s=
-tr)
->  {
->         mutex_lock(&clocksource_mutex);
->         if (str)
-> -               strlcpy(override_name, str, sizeof(override_name));
-> +               strscpy(override_name, str, sizeof(override_name));
->         mutex_unlock(&clocksource_mutex);
->         return 1;
->  }
-
-Sounds reasonable to me.
-
-Acked-by: John Stultz <jstultz@google.com>
-
-Thanks for submitting this!
--john
+> diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hb=
+adisc.c
+> index 5ba3a9ad9501..239a6537b987 100644
+> --- a/drivers/scsi/lpfc/lpfc_hbadisc.c
+> +++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+> @@ -4835,7 +4835,7 @@ lpfc_nlp_state_name(char *buffer, size_t size, int =
+state)
+>         };
+>
+>         if (state < NLP_STE_MAX_STATE && states[state])
+> -               strlcpy(buffer, states[state], size);
+> +               strscpy(buffer, states[state], size);
+>         else
+>                 snprintf(buffer, size, "unknown (%d)", state);
+>         return buffer;
+>
