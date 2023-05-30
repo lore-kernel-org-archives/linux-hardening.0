@@ -2,64 +2,64 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42976C77B7A
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 15:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5B6C77B7A
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 16:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232821AbjE3P6m (ORCPT
+        id S232525AbjE3QAj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 11:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46170 "EHLO
+        Tue, 30 May 2023 12:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233092AbjE3P6f (ORCPT
+        with ESMTP id S231663AbjE3QAi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 11:58:35 -0400
-Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 705F6106;
-        Tue, 30 May 2023 08:58:22 -0700 (PDT)
-Received: by mail-io1-xd2a.google.com with SMTP id ca18e2360f4ac-776fdba68ecso131599439f.1;
-        Tue, 30 May 2023 08:58:22 -0700 (PDT)
+        Tue, 30 May 2023 12:00:38 -0400
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 614FBB2;
+        Tue, 30 May 2023 09:00:37 -0700 (PDT)
+Received: by mail-io1-xd35.google.com with SMTP id ca18e2360f4ac-76c5db6a5cfso337535239f.2;
+        Tue, 30 May 2023 09:00:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685462301; x=1688054301;
+        d=gmail.com; s=20221208; t=1685462436; x=1688054436;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0W1ZMJcFCP9WzzPAXOyz5x6oO4Ir7TdajV4+qJUvDFw=;
-        b=f0YG9MFO2a3+WhBY4erUhouLjfQGEreHM8y8IhX1YRkAz3+mxfoQTySIVyJs3ZIKjS
-         Niz8A+WLgToUy8DUbV52Z7casCFtu37uIsBvj6+BjPpmdyNYqU1GzcDnDJJ1asnjeQ+/
-         dvjLuABSIjHQA+9f6gwRQnVNkM7ri5ET/GlbeSv7nvz4wJ8lToYZA82rkbC6akJ9YiLy
-         5u/hxX6biDAlfb6jVqrMVOKbJN7uUkW1QChsQqUv2IvcwMin9tAwC7YmAu0PURRiY7hg
-         +M9W25LBsGgnTVA3FCeXPw157/CX/oP4ukWYnnEHiV2pNBAAH5fqcGKLh0fRLKo5Wug7
-         THDA==
+        bh=zX10SJBU8S1HDBYkbi8trIiB7376uD4rHt1agT0RgVE=;
+        b=T6kwuwNOMP7SpNBuj9ulB7wtBDWLgkSuq5HTmKEa5CuYtWLEVwQNJmgxnv+xiuEE0B
+         2rku+K4GXdjh+DlwdYc8eirLyEiOPsBAMctGxjT5iHZ04TBMqoKZjNUbSVqLgXtgU/AY
+         uIqH6Hz+yPtRarj8PvB6p42hNDUXz2yC3EjsLUjbFZlQKnzw5G7613CyK0oimxB+Llxh
+         gVYjawUUecbgmkn74c7SvBAIw6y3w9a25jdxXF4uoJoPSCqI7Mj6TPZObK+XUgqIakYx
+         iW8JW9dLDsdAdykEY7ARdusn6bbkgDwmmjvAaoiVj6JqvddlunlIU3PhGJ1THnj1/4bu
+         f2pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685462301; x=1688054301;
+        d=1e100.net; s=20221208; t=1685462436; x=1688054436;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0W1ZMJcFCP9WzzPAXOyz5x6oO4Ir7TdajV4+qJUvDFw=;
-        b=gbgejqd53Rb7LF2ia9UytEmyhH2Xk4HK9aOPfKp5MFr9fHYVtdngsHCf6PvJnlcNZW
-         vnrJ+Igu7YE952g9X7AZsXBsFYXIV1J8aSYBd+ewp6PmHsQWf3WT6Vx+Klgy3dLlOGoE
-         t5T9N5JxYtDL+yWneEECQOjxoYxR+JRe5oH1Q2Ot0yoXVZxTlsR0Ie33xqeeQwMQTcCR
-         xJ2cCtBNRTuyt3/Edn8AtfF18WdBXRasncSXay+g+HXejPdCAF/WLqIfmpsE7DyLFzDB
-         Z6/xGe1XyHEVWKYvS3RCAJsN9waGGXpNxD+MRYdZAlPHZ3c14/Xk0rh7GeS494hPZT9q
-         e6lQ==
-X-Gm-Message-State: AC+VfDzMQmRKux0q8hqJB+2FolnIdpVvF2lVxbXycvYiGLEIqWATfTsv
-        RLh35BdZBkxcQCZ49+JfVqo=
-X-Google-Smtp-Source: ACHHUZ7rTLYJyMJyACjRDHZgSepoJ6498WjYqFdhHsnCRGlYrMurJe+oMJhPKCnVsNiUf6wmtWxATA==
-X-Received: by 2002:a92:d405:0:b0:338:b9a1:5d06 with SMTP id q5-20020a92d405000000b00338b9a15d06mr47798ilm.2.1685462301630;
-        Tue, 30 May 2023 08:58:21 -0700 (PDT)
+        bh=zX10SJBU8S1HDBYkbi8trIiB7376uD4rHt1agT0RgVE=;
+        b=BRK+8AgZGV8F6GJAJDb1+Jw3xjlnnLslzv/ovnICluCUdiju9gZYA3Tl6xoF79rgUZ
+         C5AFDApD30DRN45CYjgNyTkDlEUjE1CE+CYz5m7kp6se6Fvv331SHQsXm2fTE0dgTskn
+         jydaBUJ4zFsyhFpTNChcxaALyGv9W3t0T5NNZt6a3R5RTrlgFyqgRfENCJUNOGnupnK6
+         DTXHa6nC6oforkiaxg4/PK2LlmNUemqFogOCtxKWN7yG8SCr7dOOkRhRdgqf92h8hdus
+         MGCfB5VmuEFvhoFIHo0NSYapTae4HuHcxZFhy6gqfg7YPYbG+6yWbAoXyvQf1Dm5i23t
+         VJXw==
+X-Gm-Message-State: AC+VfDyV+315VdJc98DhnG3XSaLFd0NGoQfEtdU8PfISHMTbSzAfe1ea
+        oP+/fxDcKDVdcQsq6sgHibs=
+X-Google-Smtp-Source: ACHHUZ4Y7vaByrfhYL39lnBvPFfAEKvFNbSJFnHyf/l553ue3parkMv7sOH7zAptCsOe6CzI2RFFWQ==
+X-Received: by 2002:a5e:8914:0:b0:73a:6c7f:c476 with SMTP id k20-20020a5e8914000000b0073a6c7fc476mr2352086ioj.16.1685462436590;
+        Tue, 30 May 2023 09:00:36 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id p31-20020a056638191f00b0041650ca49casm818570jal.83.2023.05.30.08.58.20
+        by smtp.gmail.com with ESMTPSA id q22-20020a5ea616000000b007767a221ea0sm3238153ioi.11.2023.05.30.09.00.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 08:58:21 -0700 (PDT)
+        Tue, 30 May 2023 09:00:36 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Hannes Reinecke <hare@suse.de>
+To:     Qiang Zhao <qiang.zhao@nxp.com>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH] scsi: libfcoe: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 30 May 2023 15:58:18 +0000
-Message-ID: <20230530155818.368562-1-azeemshaikh38@gmail.com>
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Li Yang <leoyang.li@nxp.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] soc: fsl: qe: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 30 May 2023 16:00:33 +0000
+Message-ID: <20230530160033.411441-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,20 +80,29 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- drivers/scsi/fcoe/fcoe_transport.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/fsl/qe/qe.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/fcoe/fcoe_transport.c b/drivers/scsi/fcoe/fcoe_transport.c
-index 46b0bf237be1..a48d24af9ac3 100644
---- a/drivers/scsi/fcoe/fcoe_transport.c
-+++ b/drivers/scsi/fcoe/fcoe_transport.c
-@@ -711,7 +711,7 @@ static struct net_device *fcoe_if_to_netdev(const char *buffer)
- 	char ifname[IFNAMSIZ + 2];
+diff --git a/drivers/soc/fsl/qe/qe.c b/drivers/soc/fsl/qe/qe.c
+index b3c226eb5292..58746e570d14 100644
+--- a/drivers/soc/fsl/qe/qe.c
++++ b/drivers/soc/fsl/qe/qe.c
+@@ -524,7 +524,7 @@ int qe_upload_firmware(const struct qe_firmware *firmware)
+ 	 * saved microcode information and put in the new.
+ 	 */
+ 	memset(&qe_firmware_info, 0, sizeof(qe_firmware_info));
+-	strlcpy(qe_firmware_info.id, firmware->id, sizeof(qe_firmware_info.id));
++	strscpy(qe_firmware_info.id, firmware->id, sizeof(qe_firmware_info.id));
+ 	qe_firmware_info.extended_modes = be64_to_cpu(firmware->extended_modes);
+ 	memcpy(qe_firmware_info.vtraps, firmware->vtraps,
+ 		sizeof(firmware->vtraps));
+@@ -599,7 +599,7 @@ struct qe_firmware_info *qe_get_firmware_info(void)
+ 	/* Copy the data into qe_firmware_info*/
+ 	sprop = of_get_property(fw, "id", NULL);
+ 	if (sprop)
+-		strlcpy(qe_firmware_info.id, sprop,
++		strscpy(qe_firmware_info.id, sprop,
+ 			sizeof(qe_firmware_info.id));
  
- 	if (buffer) {
--		strlcpy(ifname, buffer, IFNAMSIZ);
-+		strscpy(ifname, buffer, IFNAMSIZ);
- 		cp = ifname + strlen(ifname);
- 		while (--cp >= ifname && *cp == '\n')
- 			*cp = '\0';
+ 	of_property_read_u64(fw, "extended-modes",
 
