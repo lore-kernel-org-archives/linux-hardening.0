@@ -2,62 +2,62 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24E2C7EE23
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 16:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86515C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 16:31:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233015AbjE3Q15 (ORCPT
+        id S232672AbjE3QbS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 12:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42430 "EHLO
+        Tue, 30 May 2023 12:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232662AbjE3Q11 (ORCPT
+        with ESMTP id S231918AbjE3Qan (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 12:27:27 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5013E11C;
-        Tue, 30 May 2023 09:26:20 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id e9e14a558f8ab-33b89956cccso8842635ab.2;
-        Tue, 30 May 2023 09:26:20 -0700 (PDT)
+        Tue, 30 May 2023 12:30:43 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6206CE62;
+        Tue, 30 May 2023 09:30:22 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-33bb16ac2e9so1672085ab.3;
+        Tue, 30 May 2023 09:30:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685463973; x=1688055973;
+        d=gmail.com; s=20221208; t=1685464205; x=1688056205;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bINww4BS9Q6hxqerWqXoOb0apgrSo5QFqqzYaEsD6HE=;
-        b=MjX3/0w6ekjWWGcLGn9tr1TaBi4CybNxXDzzXBFtWRYXgboucEwWrJZJorQSHNBFZR
-         8xY+IPe69+dq1vkIKsmw8QoLy+bR0IDcFCLQRp1qdCXmjrHZO+T4iiW1yTXac52YZPZD
-         i8YPRtU9SP3ngHxSCMDT8HOe+TOw2bkcLqC4EL2HQpmYonYqZljzroaO6RH/Q4Y6BdFN
-         dPI1wWouIeFmezuItohGf1wF0UYddRct9iRw0s/q1PO5rRNW9yCv2lfeVCb/jNRrEpDn
-         ABjbjE2EGvyE2dhtxrV6ca3hWrivplnL2db1hoczt+wvlZPUnJcBo7N85dSt9iC007tt
-         FdKA==
+        bh=/LWWk7OiWzrpThqhVbFLSrSU5nSLgFLiDPfrnxleCDY=;
+        b=TQioqOjca+bUqcEeiDchD5sSjIHMiquSZWZJT8KvLIMJuKXOba+ePT3amyjsq1szBb
+         XomhM5aSn25xJj9YFCrEHDaHIJ9a8CYBqvCgmVecdW2n2QrGE1SYr0RJ3arZZbSkIlZ4
+         r+qL5UOPzAosqv9NxuFWeNQ5Kyv7sGOAWvAL7t5gkSzY09uctRXZE6cvXDXL53w1LmXv
+         LiLIShHLUxBX7cA3TyXI0+UtLCMRx10Hn71KHDu5ir02UHa/w6dsnidk4VdyFxh4A+uf
+         avDlFziEq+lNYzlRDrRWr9pOc/ZEANJ2CAkfuhDpIyJU1c4WLdSGvoNej98aNRlKMcTf
+         j5yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685463973; x=1688055973;
+        d=1e100.net; s=20221208; t=1685464205; x=1688056205;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bINww4BS9Q6hxqerWqXoOb0apgrSo5QFqqzYaEsD6HE=;
-        b=Qx5iHOkU8NRGujd9kZUOEFFYJ95TH/busR9c7k3jQ+94c1gNa5QU/87/zAeNsWCHEq
-         1QQ0Cr1bZFo6l2iCJSMglr1trhjqhpucroseChh5B1hNSlLDQ0BuK2ZJ95GFzXg0lnTe
-         Aqd04MIyRjba8AkExXnHD+MSNyGExeMtHXmSdOE9uJbwKrDq0A3gWhmw1vQ8KRdpongM
-         LT0XYaDMi6WYNppMk11dD7sI53dzYc50yL2cv6VQ3M8OWZPafs8bq+2yxu7w9O8G+id5
-         rnjcS4/EA9udR5M7mbJADt/vE3v4INKiLaVGCFEDA27UnxalOtAF8syb9atDPOTD0I+N
-         mibQ==
-X-Gm-Message-State: AC+VfDz39VsPq4ZIN36k2s7CrhgXid6NU61fVtUAJh68bh7r2R/FPTbO
-        bnkpGIAfaMfXaTak4OuMCCE=
-X-Google-Smtp-Source: ACHHUZ6Sa2LY0fq1KzWhqJx0FPoMbV4zIs2N8ChrvMxcXLtbcJBVPnr5k/m0XvNGrD47uTLmvPneuA==
-X-Received: by 2002:a92:cf43:0:b0:33b:7e4:167a with SMTP id c3-20020a92cf43000000b0033b07e4167amr77783ilr.15.1685463972964;
-        Tue, 30 May 2023 09:26:12 -0700 (PDT)
+        bh=/LWWk7OiWzrpThqhVbFLSrSU5nSLgFLiDPfrnxleCDY=;
+        b=cu+JbS3NPoUt5EEXvzP1zpJictd//jZpUV48gx31dMLFU+NYjM2fo7PZFrNePj954H
+         8r3f7PuUCq6c5dCHugeAu1OfWBwQB2l2SfEK/jxjjNi6fHDo3a29K6kJhAV+POM93pb4
+         97FXgFW5cUK6+sTv1Q7veaO0tnmGCQUMGY473c3JcsTKdMIz6q5O3GmalJAQC+hE2/BF
+         fUOdECI6H8lKGIubIVL/6BeC0WpXEHa3y1gex9zPux2hhTHTk5rCQIjegj7D2PsXiLwC
+         rUh0UrhiaH+95TSURfnN05izRPiwtf1Ph/Hop2P4oqjtuhU+YfAIX9/Yb/UrPppPSsl4
+         irGQ==
+X-Gm-Message-State: AC+VfDxrS82npn5CJplV8CF9R10vIJ6Mdo0igDbb4GaoUlMuGehE2uEJ
+        OW1OnbQatTTlSBqUenEuuHM=
+X-Google-Smtp-Source: ACHHUZ7OZ/XmHPC+oA4bkbBkK/58E7h3zga5Zp5f5CGOKNu0KJV57R9RZY4X0bC9fRZO7Ib1vNvT0Q==
+X-Received: by 2002:a92:d182:0:b0:335:3568:dc67 with SMTP id z2-20020a92d182000000b003353568dc67mr68169ilz.15.1685464205051;
+        Tue, 30 May 2023 09:30:05 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id x13-20020a026f0d000000b0041407c67451sm821769jab.165.2023.05.30.09.26.12
+        by smtp.gmail.com with ESMTPSA id d8-20020a0566380d4800b0041a9cf6651asm771148jak.138.2023.05.30.09.30.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 09:26:12 -0700 (PDT)
+        Tue, 30 May 2023 09:30:04 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Brian Cain <bcain@quicinc.com>
+To:     "David S. Miller" <davem@davemloft.net>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-hexagon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Hexagon: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 30 May 2023 16:26:08 +0000
-Message-ID: <20230530162608.984333-1-azeemshaikh38@gmail.com>
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] sparc64: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 30 May 2023 16:30:01 +0000
+Message-ID: <20230530163001.985256-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,32 +78,62 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- arch/hexagon/kernel/setup.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/sparc/kernel/ioport.c   |    2 +-
+ arch/sparc/kernel/setup_32.c |    2 +-
+ arch/sparc/kernel/setup_64.c |    2 +-
+ arch/sparc/prom/bootstr_32.c |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/hexagon/kernel/setup.c b/arch/hexagon/kernel/setup.c
-index 1880d9beaf2b..621674e86232 100644
---- a/arch/hexagon/kernel/setup.c
-+++ b/arch/hexagon/kernel/setup.c
-@@ -66,9 +66,9 @@ void __init setup_arch(char **cmdline_p)
- 		on_simulator = 0;
+diff --git a/arch/sparc/kernel/ioport.c b/arch/sparc/kernel/ioport.c
+index 4e4f3d3263e4..a8cbe403301f 100644
+--- a/arch/sparc/kernel/ioport.c
++++ b/arch/sparc/kernel/ioport.c
+@@ -191,7 +191,7 @@ static void __iomem *_sparc_alloc_io(unsigned int busno, unsigned long phys,
+ 		tack += sizeof (struct resource);
+ 	}
  
- 	if (p[0] != '\0')
--		strlcpy(boot_command_line, p, COMMAND_LINE_SIZE);
-+		strscpy(boot_command_line, p, COMMAND_LINE_SIZE);
- 	else
--		strlcpy(boot_command_line, default_command_line,
-+		strscpy(boot_command_line, default_command_line,
- 			COMMAND_LINE_SIZE);
+-	strlcpy(tack, name, XNMLN+1);
++	strscpy(tack, name, XNMLN+1);
+ 	res->name = tack;
  
- 	/*
-@@ -76,7 +76,7 @@ void __init setup_arch(char **cmdline_p)
- 	 * are both picked up by the init code. If no reason to
- 	 * make them different, pass the same pointer back.
- 	 */
--	strlcpy(cmd_line, boot_command_line, COMMAND_LINE_SIZE);
-+	strscpy(cmd_line, boot_command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = cmd_line;
+ 	va = _sparc_ioremap(res, busno, phys, size);
+diff --git a/arch/sparc/kernel/setup_32.c b/arch/sparc/kernel/setup_32.c
+index c8e0dd99f370..ace0e9adfd77 100644
+--- a/arch/sparc/kernel/setup_32.c
++++ b/arch/sparc/kernel/setup_32.c
+@@ -302,7 +302,7 @@ void __init setup_arch(char **cmdline_p)
  
+ 	/* Initialize PROM console and command line. */
+ 	*cmdline_p = prom_getbootargs();
+-	strlcpy(boot_command_line, *cmdline_p, COMMAND_LINE_SIZE);
++	strscpy(boot_command_line, *cmdline_p, COMMAND_LINE_SIZE);
  	parse_early_param();
+ 
+ 	boot_flags_init(*cmdline_p);
+diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
+index 48abee4eee29..6546ca9d4d3f 100644
+--- a/arch/sparc/kernel/setup_64.c
++++ b/arch/sparc/kernel/setup_64.c
+@@ -636,7 +636,7 @@ void __init setup_arch(char **cmdline_p)
+ {
+ 	/* Initialize PROM console and command line. */
+ 	*cmdline_p = prom_getbootargs();
+-	strlcpy(boot_command_line, *cmdline_p, COMMAND_LINE_SIZE);
++	strscpy(boot_command_line, *cmdline_p, COMMAND_LINE_SIZE);
+ 	parse_early_param();
+ 
+ 	boot_flags_init(*cmdline_p);
+diff --git a/arch/sparc/prom/bootstr_32.c b/arch/sparc/prom/bootstr_32.c
+index e3b731ff00f0..1c7cd258b0dc 100644
+--- a/arch/sparc/prom/bootstr_32.c
++++ b/arch/sparc/prom/bootstr_32.c
+@@ -52,7 +52,7 @@ prom_getbootargs(void)
+ 		 * V3 PROM cannot supply as with more than 128 bytes
+ 		 * of an argument. But a smart bootstrap loader can.
+ 		 */
+-		strlcpy(barg_buf, *romvec->pv_v2bootargs.bootargs, sizeof(barg_buf));
++		strscpy(barg_buf, *romvec->pv_v2bootargs.bootargs, sizeof(barg_buf));
+ 		break;
+ 	default:
+ 		break;
 
