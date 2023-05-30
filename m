@@ -2,71 +2,65 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76101C77B73
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 15:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B856C77B73
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 15:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232915AbjE3P5U (ORCPT
+        id S232714AbjE3P6D (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 11:57:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44990 "EHLO
+        Tue, 30 May 2023 11:58:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233082AbjE3P5K (ORCPT
+        with ESMTP id S231408AbjE3P6B (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 11:57:10 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3767B11A;
-        Tue, 30 May 2023 08:57:04 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id ca18e2360f4ac-7770c1570a6so97069639f.2;
-        Tue, 30 May 2023 08:57:04 -0700 (PDT)
+        Tue, 30 May 2023 11:58:01 -0400
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AC3012D;
+        Tue, 30 May 2023 08:57:51 -0700 (PDT)
+Received: by mail-io1-xd34.google.com with SMTP id ca18e2360f4ac-7748d634a70so331655639f.2;
+        Tue, 30 May 2023 08:57:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685462223; x=1688054223;
+        d=gmail.com; s=20221208; t=1685462270; x=1688054270;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+5ml+n3HD2eDlctb1SV+3KPtVS8DVTaTN+Q4XblTLM=;
-        b=BbIhlwc5JmmbjB4ooGvpeucoVtRlFL7RpqDk/j5+Od+D1jrYEYDUGraUWFS2hrK2df
-         jFvfYOlR4sjnzGEli6sasc/nPq7h09b61muTsjSK8KL7MQPGPYUisGXgFQy9OvfSOIyw
-         s524kuij6XYWggPDS3PkNyZk8yB3s8Lu+08/jSQQJCCb90hpRkV6qL5BqR2sEaaf6hoU
-         TURXOMbpwsBuGhHhprcQiK6AnIHWuUfFX1EaQeZDtJMno9GU/4RvltUT9OiPHrcPT2n3
-         LDm2HOJfau9+3PVqeo/8qVzOJsxd1CeKMqFkrmagQrKBPZAWH/BfDRuqJGgt8zFfMz1Q
-         pNMw==
+        bh=Y3nhZu/SST6liTzw12jwyRWaA0HI9Rq5mjkfPZUDJJ0=;
+        b=DBACDy960MdBUSi2MlfR3uIgS5rfyHfeBqYOQAko3egK2pkKXPOP4u71bmLzZjHsCr
+         sTalg02v1PJQJzhXMQanHZ3diAPmwvEWa7HK0VMcA6apamDXdtuf8kFwoPP7BG7WrnVD
+         jkz6c17mChq7dDeZVA0MR3w7u4aj/a3dMhjtag+qXUd1KSHjqbVqMiraq9w36iJhGBBP
+         nHYMZuWF9MDUOF0tb76rGcvIlMCbz30W2fs76HuoqXnCi63ytdVfg51G4ybYCzo2vrQ9
+         f+Gty/WgWz3LfyYTsYJZAyNdxywX/c6O2SMgIPHiG4F0yY+SL8Pp8YWBKhi9bT8qe2x0
+         T7kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685462223; x=1688054223;
+        d=1e100.net; s=20221208; t=1685462270; x=1688054270;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y+5ml+n3HD2eDlctb1SV+3KPtVS8DVTaTN+Q4XblTLM=;
-        b=M1kcLz8kvdVilXMxq8FL2w+dKiGuERJvgzdk4IcDnAz0tloT5IG7CP1RbA6MXNfLEL
-         uX73MH94Uo3UvevKUNRdT4iTvr7PxVV+u+3l7PAl+Dfm8582nMeFE9PuaD8Lc2TGGks1
-         Px1868SH6A4/KsnA7e19vBvuDrI+Ca3fT6K+GINbstf/r/dqf+PX4HK/065J0B2L+Jx3
-         A3oyIs84YLR5xZYoM7+/edopA7JRo+nMeb2iSZPBR1Cr4SkJbLtvavlEJOeeSyhMuXb0
-         wqBMuw9q0p+LPcqHTHE6ODoyvY78GyZeRKm9tUVtdFKIQnhXM2yPERl4yVLJn4OzpVSy
-         5/8A==
-X-Gm-Message-State: AC+VfDyeeEi0o9zPVl0EYVcXgRIZ4yLg8lif5nt9uHQvzHzRWS2MBKpg
-        MPf1SKY5+kkX1op7AXzLU8o=
-X-Google-Smtp-Source: ACHHUZ5QBWFzG3pzBNh8KYhdRtFNAjoXECGEfJVp83VzQNC6surICk6GmZRNMR8Pxw408LDeq+FChQ==
-X-Received: by 2002:a6b:fe0a:0:b0:76c:8674:81e7 with SMTP id x10-20020a6bfe0a000000b0076c867481e7mr1407579ioh.21.1685462223458;
-        Tue, 30 May 2023 08:57:03 -0700 (PDT)
+        bh=Y3nhZu/SST6liTzw12jwyRWaA0HI9Rq5mjkfPZUDJJ0=;
+        b=On6iRQEoH+V92lqMAj1vQYK8ypOUq1ZVFNYW4xazPrSZSZdvll7Zsl3DqovP9NWE8G
+         oxJfvULmk0iwKC5D0SJ2X5Of3RZ+CXsQ65S2C4oyQEPxLWAj4TY9zo6J5gNVXq5i+D35
+         UCvVWXchVkocbNnPtotrNsleCIqJ6fX5luLEHlTsppoc2oRL02c9JYKdvnyQo4li5Lu9
+         XWkusQ+3a5Wlhz2x9zsiQt7jYuOFfY5JMpHwFOpa4qNmukuPxe2EsvvC8VopjhjMav5H
+         ln2aPn1kFxuPNP5JScs7cD34W7cWYzgxpwvx3XTzEbL1Si+W1zPPHF4hw+Cj5HxoS3iz
+         yyGg==
+X-Gm-Message-State: AC+VfDxxqBC4QBHDdW7Yji2iI7tcobb1ipbBrmAymBpbdM6PhJm2ubpP
+        jeE5xYprc9VQuJt0rvNBjK0=
+X-Google-Smtp-Source: ACHHUZ7k6HhP0kdWImUTJu3N45pKv5Dy/HUTCEIcuL2SlRfI6/AzUh/f91cp4wiV4RLyhJVpd/MFKQ==
+X-Received: by 2002:a05:6602:4204:b0:774:8210:3c6a with SMTP id cb4-20020a056602420400b0077482103c6amr1900354iob.11.1685462270164;
+        Tue, 30 May 2023 08:57:50 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id 22-20020a5ea516000000b0076c569c7a48sm700293iog.39.2023.05.30.08.57.02
+        by smtp.gmail.com with ESMTPSA id y5-20020a6bd805000000b00774804141f1sm3431052iob.36.2023.05.30.08.57.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 08:57:03 -0700 (PDT)
+        Tue, 30 May 2023 08:57:49 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>
+To:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ilya Leoshkevich <iii@linux.ibm.com>
-Subject: [PATCH] bpf: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 30 May 2023 15:56:59 +0000
-Message-ID: <20230530155659.309657-1-azeemshaikh38@gmail.com>
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH] scsi: lpfc: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 30 May 2023 15:57:45 +0000
+Message-ID: <20230530155745.343032-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -87,23 +81,20 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- kernel/bpf/preload/bpf_preload_kern.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/lpfc/lpfc_hbadisc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/preload/bpf_preload_kern.c b/kernel/bpf/preload/bpf_preload_kern.c
-index b56f9f3314fd..0c63bc2cd895 100644
---- a/kernel/bpf/preload/bpf_preload_kern.c
-+++ b/kernel/bpf/preload/bpf_preload_kern.c
-@@ -23,9 +23,9 @@ static void free_links_and_skel(void)
+diff --git a/drivers/scsi/lpfc/lpfc_hbadisc.c b/drivers/scsi/lpfc/lpfc_hbadisc.c
+index 5ba3a9ad9501..239a6537b987 100644
+--- a/drivers/scsi/lpfc/lpfc_hbadisc.c
++++ b/drivers/scsi/lpfc/lpfc_hbadisc.c
+@@ -4835,7 +4835,7 @@ lpfc_nlp_state_name(char *buffer, size_t size, int state)
+ 	};
  
- static int preload(struct bpf_preload_info *obj)
- {
--	strlcpy(obj[0].link_name, "maps.debug", sizeof(obj[0].link_name));
-+	strscpy(obj[0].link_name, "maps.debug", sizeof(obj[0].link_name));
- 	obj[0].link = maps_link;
--	strlcpy(obj[1].link_name, "progs.debug", sizeof(obj[1].link_name));
-+	strscpy(obj[1].link_name, "progs.debug", sizeof(obj[1].link_name));
- 	obj[1].link = progs_link;
- 	return 0;
- }
+ 	if (state < NLP_STE_MAX_STATE && states[state])
+-		strlcpy(buffer, states[state], size);
++		strscpy(buffer, states[state], size);
+ 	else
+ 		snprintf(buffer, size, "unknown (%d)", state);
+ 	return buffer;
 
