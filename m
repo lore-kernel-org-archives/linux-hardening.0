@@ -2,62 +2,65 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86515C7EE2E
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 16:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4093C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 16:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232672AbjE3QbS (ORCPT
+        id S232347AbjE3Qbd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 12:31:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42496 "EHLO
+        Tue, 30 May 2023 12:31:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231918AbjE3Qan (ORCPT
+        with ESMTP id S232523AbjE3QbR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 12:30:43 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6206CE62;
-        Tue, 30 May 2023 09:30:22 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-33bb16ac2e9so1672085ab.3;
-        Tue, 30 May 2023 09:30:22 -0700 (PDT)
+        Tue, 30 May 2023 12:31:17 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B538D102;
+        Tue, 30 May 2023 09:30:46 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-3360a95c0a1so6350415ab.0;
+        Tue, 30 May 2023 09:30:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685464205; x=1688056205;
+        d=gmail.com; s=20221208; t=1685464244; x=1688056244;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/LWWk7OiWzrpThqhVbFLSrSU5nSLgFLiDPfrnxleCDY=;
-        b=TQioqOjca+bUqcEeiDchD5sSjIHMiquSZWZJT8KvLIMJuKXOba+ePT3amyjsq1szBb
-         XomhM5aSn25xJj9YFCrEHDaHIJ9a8CYBqvCgmVecdW2n2QrGE1SYr0RJ3arZZbSkIlZ4
-         r+qL5UOPzAosqv9NxuFWeNQ5Kyv7sGOAWvAL7t5gkSzY09uctRXZE6cvXDXL53w1LmXv
-         LiLIShHLUxBX7cA3TyXI0+UtLCMRx10Hn71KHDu5ir02UHa/w6dsnidk4VdyFxh4A+uf
-         avDlFziEq+lNYzlRDrRWr9pOc/ZEANJ2CAkfuhDpIyJU1c4WLdSGvoNej98aNRlKMcTf
-         j5yA==
+        bh=iLnzBlwd4R6Xah7NSEk7Gqbfnuy0fx7IzR6wWPi2abY=;
+        b=ZrBmmyjdqwAUMrQ0s1MT6bcQHlkw9VOKADCoct8GsAUr1nE4RCwwN5o/W71+uSJFYa
+         jhEFyLRZZh8JsKtJ87D/B5VWtVaJm0GRri631dez2iYRwMkuQGq12ecIFu3Q1fed0GTx
+         UjO6Ql+YxfHp3FY9pYI27aWHPTZSjaAVEcrGDHCC3mkeOjoUlMOX8IapM2wlEOl1nJi/
+         LyuPi27B99capG2hZahRtiHU+74lQfFpFocCQQ62uhK+iJ6XByVMbKpUPSAy/+zs0mp9
+         FQaLM3LYgmLy8tEYOqhBIkgvBOIsjcz1tNonw9v3PPvU0KemzJEELmI5hOeqKMaz7FY4
+         lx0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685464205; x=1688056205;
+        d=1e100.net; s=20221208; t=1685464244; x=1688056244;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/LWWk7OiWzrpThqhVbFLSrSU5nSLgFLiDPfrnxleCDY=;
-        b=cu+JbS3NPoUt5EEXvzP1zpJictd//jZpUV48gx31dMLFU+NYjM2fo7PZFrNePj954H
-         8r3f7PuUCq6c5dCHugeAu1OfWBwQB2l2SfEK/jxjjNi6fHDo3a29K6kJhAV+POM93pb4
-         97FXgFW5cUK6+sTv1Q7veaO0tnmGCQUMGY473c3JcsTKdMIz6q5O3GmalJAQC+hE2/BF
-         fUOdECI6H8lKGIubIVL/6BeC0WpXEHa3y1gex9zPux2hhTHTk5rCQIjegj7D2PsXiLwC
-         rUh0UrhiaH+95TSURfnN05izRPiwtf1Ph/Hop2P4oqjtuhU+YfAIX9/Yb/UrPppPSsl4
-         irGQ==
-X-Gm-Message-State: AC+VfDxrS82npn5CJplV8CF9R10vIJ6Mdo0igDbb4GaoUlMuGehE2uEJ
-        OW1OnbQatTTlSBqUenEuuHM=
-X-Google-Smtp-Source: ACHHUZ7OZ/XmHPC+oA4bkbBkK/58E7h3zga5Zp5f5CGOKNu0KJV57R9RZY4X0bC9fRZO7Ib1vNvT0Q==
-X-Received: by 2002:a92:d182:0:b0:335:3568:dc67 with SMTP id z2-20020a92d182000000b003353568dc67mr68169ilz.15.1685464205051;
-        Tue, 30 May 2023 09:30:05 -0700 (PDT)
+        bh=iLnzBlwd4R6Xah7NSEk7Gqbfnuy0fx7IzR6wWPi2abY=;
+        b=ZXQ5zFAY3qkdrlSzkElNH0ZV3yXaNcz38fd1xSFG6NVNpE0swimmkpm/dfdfFaKJsO
+         P+5WVNeueAOwFnJPYs2o+p00Ax7GBUr8RwNx5W1QZmFD0d2vTEZoktbHEXkdyvxb3QN7
+         MNqTAAp2OuUVa6vfQ4/6pTwiGMwUwr5NWLM5neJvgVNbIdzngxlSha8qJlRqHLy861PE
+         sy4poaYBiI/sFHrsp/D+hW4n/oRqcx6qn5cxGmm04oTodNmLP/9cHkYycwsOxmHNZrv2
+         jgL7vfl0V249tRm2r19brbePoqJpKNR8NuKrA+qj1VnZY00jjnXXZrPf3J7Fbexarp2Y
+         jtXA==
+X-Gm-Message-State: AC+VfDxYDJn0jVGtsHggORgF2oV1pzq1UirCEDGT4JP/PUdFQSDsZJGG
+        BeivZiPpFFkl6+1s8BM37kw=
+X-Google-Smtp-Source: ACHHUZ4x1Pt5L6exVrp0MlOS69Vf+DlbzGnXtN4/qVqrVNqTZ3F69SALBs4ZMhHtGUr32ghaP/Vp4g==
+X-Received: by 2002:a92:d203:0:b0:335:56cb:a3a with SMTP id y3-20020a92d203000000b0033556cb0a3amr74431ily.16.1685464244493;
+        Tue, 30 May 2023 09:30:44 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id d8-20020a0566380d4800b0041a9cf6651asm771148jak.138.2023.05.30.09.30.04
+        by smtp.gmail.com with ESMTPSA id a4-20020a92a304000000b0033af84e6321sm2543982ili.64.2023.05.30.09.30.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 09:30:04 -0700 (PDT)
+        Tue, 30 May 2023 09:30:44 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
+To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sparc64: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 30 May 2023 16:30:01 +0000
-Message-ID: <20230530163001.985256-1-azeemshaikh38@gmail.com>
+        linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] sh: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 30 May 2023 16:30:41 +0000
+Message-ID: <20230530163041.985456-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -78,62 +81,37 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- arch/sparc/kernel/ioport.c   |    2 +-
- arch/sparc/kernel/setup_32.c |    2 +-
- arch/sparc/kernel/setup_64.c |    2 +-
- arch/sparc/prom/bootstr_32.c |    2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ arch/sh/drivers/dma/dma-api.c |    2 +-
+ arch/sh/kernel/setup.c        |    4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/sparc/kernel/ioport.c b/arch/sparc/kernel/ioport.c
-index 4e4f3d3263e4..a8cbe403301f 100644
---- a/arch/sparc/kernel/ioport.c
-+++ b/arch/sparc/kernel/ioport.c
-@@ -191,7 +191,7 @@ static void __iomem *_sparc_alloc_io(unsigned int busno, unsigned long phys,
- 		tack += sizeof (struct resource);
- 	}
+diff --git a/arch/sh/drivers/dma/dma-api.c b/arch/sh/drivers/dma/dma-api.c
+index ab9170494dcc..89cd4a3b4cca 100644
+--- a/arch/sh/drivers/dma/dma-api.c
++++ b/arch/sh/drivers/dma/dma-api.c
+@@ -198,7 +198,7 @@ int request_dma(unsigned int chan, const char *dev_id)
+ 	if (atomic_xchg(&channel->busy, 1))
+ 		return -EBUSY;
  
--	strlcpy(tack, name, XNMLN+1);
-+	strscpy(tack, name, XNMLN+1);
- 	res->name = tack;
+-	strlcpy(channel->dev_id, dev_id, sizeof(channel->dev_id));
++	strscpy(channel->dev_id, dev_id, sizeof(channel->dev_id));
  
- 	va = _sparc_ioremap(res, busno, phys, size);
-diff --git a/arch/sparc/kernel/setup_32.c b/arch/sparc/kernel/setup_32.c
-index c8e0dd99f370..ace0e9adfd77 100644
---- a/arch/sparc/kernel/setup_32.c
-+++ b/arch/sparc/kernel/setup_32.c
-@@ -302,7 +302,7 @@ void __init setup_arch(char **cmdline_p)
+ 	if (info->ops->request) {
+ 		result = info->ops->request(channel);
+diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
+index af977ec4ca5e..e4f0f9a1d355 100644
+--- a/arch/sh/kernel/setup.c
++++ b/arch/sh/kernel/setup.c
+@@ -304,9 +304,9 @@ void __init setup_arch(char **cmdline_p)
+ 	bss_resource.end = virt_to_phys(__bss_stop)-1;
  
- 	/* Initialize PROM console and command line. */
- 	*cmdline_p = prom_getbootargs();
--	strlcpy(boot_command_line, *cmdline_p, COMMAND_LINE_SIZE);
-+	strscpy(boot_command_line, *cmdline_p, COMMAND_LINE_SIZE);
- 	parse_early_param();
- 
- 	boot_flags_init(*cmdline_p);
-diff --git a/arch/sparc/kernel/setup_64.c b/arch/sparc/kernel/setup_64.c
-index 48abee4eee29..6546ca9d4d3f 100644
---- a/arch/sparc/kernel/setup_64.c
-+++ b/arch/sparc/kernel/setup_64.c
-@@ -636,7 +636,7 @@ void __init setup_arch(char **cmdline_p)
- {
- 	/* Initialize PROM console and command line. */
- 	*cmdline_p = prom_getbootargs();
--	strlcpy(boot_command_line, *cmdline_p, COMMAND_LINE_SIZE);
-+	strscpy(boot_command_line, *cmdline_p, COMMAND_LINE_SIZE);
- 	parse_early_param();
- 
- 	boot_flags_init(*cmdline_p);
-diff --git a/arch/sparc/prom/bootstr_32.c b/arch/sparc/prom/bootstr_32.c
-index e3b731ff00f0..1c7cd258b0dc 100644
---- a/arch/sparc/prom/bootstr_32.c
-+++ b/arch/sparc/prom/bootstr_32.c
-@@ -52,7 +52,7 @@ prom_getbootargs(void)
- 		 * V3 PROM cannot supply as with more than 128 bytes
- 		 * of an argument. But a smart bootstrap loader can.
- 		 */
--		strlcpy(barg_buf, *romvec->pv_v2bootargs.bootargs, sizeof(barg_buf));
-+		strscpy(barg_buf, *romvec->pv_v2bootargs.bootargs, sizeof(barg_buf));
- 		break;
- 	default:
- 		break;
+ #ifdef CONFIG_CMDLINE_OVERWRITE
+-	strlcpy(command_line, CONFIG_CMDLINE, sizeof(command_line));
++	strscpy(command_line, CONFIG_CMDLINE, sizeof(command_line));
+ #else
+-	strlcpy(command_line, COMMAND_LINE, sizeof(command_line));
++	strscpy(command_line, COMMAND_LINE, sizeof(command_line));
+ #ifdef CONFIG_CMDLINE_EXTEND
+ 	strlcat(command_line, " ", sizeof(command_line));
+ 	strlcat(command_line, CONFIG_CMDLINE, sizeof(command_line));
 
