@@ -2,85 +2,110 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C65AC77B73
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 23:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771C7C77B7A
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 23:39:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbjE3X0y (ORCPT
+        id S231837AbjE3Xjt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 19:26:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53852 "EHLO
+        Tue, 30 May 2023 19:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233365AbjE3X0x (ORCPT
+        with ESMTP id S230374AbjE3Xjs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 19:26:53 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1829A9C
-        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 16:26:52 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-64d57cd373fso251779b3a.1
-        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 16:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685489211; x=1688081211;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=20rREOO4ExsqpWtT25NbGtwxcNpitkrMts/CeDpG8is=;
-        b=IOWJwO8cd4O72NmvBwHdGvQP3i7cqRoptJr1wMnEgtq33n37I4cIwcDx5x2FfX8XNk
-         D9rBNzdr6Dpl7jXKPEzy/bLZQzu8npHnbDZh4qVObIkn6hJIWIcE8RRob8BYMAzARfGF
-         H+KSnPUhh3BMrwv8YiDDXFpVabX4uDaPA6TjU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685489211; x=1688081211;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=20rREOO4ExsqpWtT25NbGtwxcNpitkrMts/CeDpG8is=;
-        b=YMyNXx0z8N2y74ScxObhODJB2wmML/XEPG+ScIsQgC7bDWZtJ5UXnlfTLnJvYEFRcQ
-         9CWSnYAXa7FDbRgeaJEg1CeOYnX9Cx7t5Sx0JlUaV+34BdC0wHbfTjg67CiCknkd3kjP
-         Sr9jP3bVwUt9NsF4FnHoEy4fr+HFwApVgkyw9QnAa4FBdcVbA5jRR7ehIofNiQUJMHAw
-         5obvFtjh9yBBuebAtDe3K3JA4Gl0NKeF5IeFakYJDXCBFAFIWthEXuC31cyejsX1aF/c
-         BkLd9LE9zU7x1cYYuJIdmH1WrM9YYC/llZao4AizoqoTR3g9HvpxfXF+X7thkiC4ZYst
-         exIA==
-X-Gm-Message-State: AC+VfDy3exGrjNMI5bv+I2Qrqia+ZJh63yZHo4wPG5+uVZCVjkGRT4sC
-        gMNNxrSqskcSd+IXl3R5iCnsZg==
-X-Google-Smtp-Source: ACHHUZ56FhVbFo+v/5QxJUxv9fOE+OkJsRH4Zi6ieowA+/ZNuWZvCGbZ7Trr9unf0U8xPAu9NSLSdA==
-X-Received: by 2002:a17:903:2350:b0:1a6:f93a:a136 with SMTP id c16-20020a170903235000b001a6f93aa136mr13179454plh.22.1685489211573;
-        Tue, 30 May 2023 16:26:51 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d20-20020a170902b71400b001a4edbabad3sm10817628pls.230.2023.05.30.16.26.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 16:26:51 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     tglx@linutronix.de, jstultz@google.com, azeemshaikh38@gmail.com
-Cc:     Kees Cook <keescook@chromium.org>, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] clocksource: Replace all non-returning strlcpy with strscpy
-Date:   Tue, 30 May 2023 16:26:49 -0700
-Message-Id: <168548920884.1352363.14399780018411204130.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230530163546.986188-1-azeemshaikh38@gmail.com>
-References: <20230530163546.986188-1-azeemshaikh38@gmail.com>
+        Tue, 30 May 2023 19:39:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D152EF9;
+        Tue, 30 May 2023 16:39:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E188632F3;
+        Tue, 30 May 2023 23:39:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CACF8C433D2;
+        Tue, 30 May 2023 23:39:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685489986;
+        bh=+BiZbz9ta2gOLBhRs7L9YQtEb6Ydyw/DhO9Lzb0xCq4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IfPAAgtwayXb6eCV863iVrlPs2nQghkvmi/L6XrNWxUz4mrr4WKzkGnaBUcr27vlF
+         yKoR/25zxOdQN8DFJ26AzXElYvaqSSJImDeYg4eo5YNrIoqdtnh9pvXwgDycbxIonA
+         6JGSn7Qxwh5IRBeZ/CUNpg/hPmXO36rr5bbVJWDhBzlUByuytnHLmOjyHIvTPlg9fD
+         8vQRNwgk0msG4Vb2GTLvvd19RgksMtJrJ2zyoA308JG1hxU2T6Sn3ev8xp+MZhsLp8
+         z5Btm7iGWOnOitVZEIdkmbob0ESiUke7vGhYEmoJGtmRmwWuY8zCXbpAr1ZPhehuXg
+         F+cxn7wWoHRmA==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-4f5021faa16so3250872e87.2;
+        Tue, 30 May 2023 16:39:46 -0700 (PDT)
+X-Gm-Message-State: AC+VfDzuhh8bnemxst6nDF5sskKuQfnt4suWVCNQD4rgblyiGkTBb+cR
+        +RKlPGxfKRYvqjpws0edR0GsCDg4gyEB44BYTKI=
+X-Google-Smtp-Source: ACHHUZ77hf6fLy8U+T9F9TzuiI0V32hxJtAUGDkLS8yoWRMn5b7cCdQa8hy9FoDzgJIMsXlfpzoV7iG1+nmWshVeodU=
+X-Received: by 2002:ac2:4a69:0:b0:4f5:1ac9:ab1b with SMTP id
+ q9-20020ac24a69000000b004f51ac9ab1bmr162937lfp.23.1685489984847; Tue, 30 May
+ 2023 16:39:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20230522212114.gonna.589-kees@kernel.org> <CAPhsuW5ibONdyyJq0zVCEHuM38GUocn8A1abi4mTa9gUHH1hHQ@mail.gmail.com>
+ <202305301600.EEF0BAAD@keescook>
+In-Reply-To: <202305301600.EEF0BAAD@keescook>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 30 May 2023 16:39:32 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4Z73azgqXVekYtibqOSKsx8XPU1FVwvZ7XOU5Qee7oAQ@mail.gmail.com>
+Message-ID: <CAPhsuW4Z73azgqXVekYtibqOSKsx8XPU1FVwvZ7XOU5Qee7oAQ@mail.gmail.com>
+Subject: Re: [PATCH v2] md/raid5: Convert stripe_head's "dev" to flexible
+ array member
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 30 May 2023 16:35:46 +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
-> 
-> [...]
+On Tue, May 30, 2023 at 4:00=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> On Tue, May 23, 2023 at 10:43:52AM -0700, Song Liu wrote:
+> > On Mon, May 22, 2023 at 2:21=E2=80=AFPM Kees Cook <keescook@chromium.or=
+g> wrote:
+> > >
+> > > Replace old-style 1-element array of "dev" in struct stripe_head with
+> > > modern C99 flexible array. In the future, we can additionally annotat=
+e
+> > > it with the run-time size, found in the "disks" member.
+> > >
+> > > Cc: Christoph Hellwig <hch@infradead.org>
+> > > Cc: linux-raid@vger.kernel.org
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > > It looks like this memory calculation:
+> > >
+> > >         memory =3D conf->min_nr_stripes * (sizeof(struct stripe_head)=
+ +
+> > >                  max_disks * ((sizeof(struct bio) + PAGE_SIZE))) / 10=
+24;
+> > >
+> > > ... was already buggy (i.e. it included the single "dev" bytes in the
+> > > result). However, I'm not entirely sure if that is the right analysis=
+,
+> > > since "dev" is not related to struct bio nor PAGE_SIZE?
+> > >
+> > > v1: https://lore.kernel.org/all/20230517233313.never.130-kees@kernel.=
+org/
+> > > v2: use new struct_size_t() helper from
+> > >     https://lore.kernel.org/lkml/20230522211810.never.421-kees@kernel=
+.org/
+> >
+> > LTGM. Thanks!
+>
+> Thanks!
+>
+> > I will hold this for a while until struct_size_t() merged.
+>
+> Since my tree will introduce struct_size_t(), I will just carry it
+> there.
 
-Applied to for-next/hardening, thanks!
+Sounds good! You can add
 
-[1/1] clocksource: Replace all non-returning strlcpy with strscpy
-      https://git.kernel.org/kees/c/40932d192ec8
+Acked-by: Song Liu <song@kernel.org>
 
--- 
-Kees Cook
-
+Thanks,
+Song
