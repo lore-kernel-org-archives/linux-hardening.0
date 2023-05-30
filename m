@@ -2,99 +2,244 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E80C77B7A
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 09:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD556C77B73
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 09:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229663AbjE3Jdi (ORCPT
+        id S230196AbjE3JzX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 05:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47296 "EHLO
+        Tue, 30 May 2023 05:55:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbjE3JdY (ORCPT
+        with ESMTP id S229875AbjE3JzW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 05:33:24 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D77F8F9;
-        Tue, 30 May 2023 02:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685439202; x=1716975202;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=05BdlmfEmHrP3826u78d0bwZDk474BhNjCAib6bQs+I=;
-  b=MXBWCNv+l+yblVqIRbS2NBlrfpfT5P32BnnL4Yq2o3ULNTnxc/FeISQ7
-   eRpvcGLXA92nzKak3iXjAdktj5T/O7iZs+a/ZgrQI8tbYY0GC/fwyO41t
-   OmGBSpv8LpwUZWJgi6+IpN+ZhWh01DzeEDYmgDlCHxbiw+FW/kU67HQe8
-   DJ49Tr7EZ3lNwJJAwj3eWCvrJzs02Wh70OooH2/MJMZx62lLhp6t5IoRv
-   NmMsbZ4jsVlAHNP45XRMVYThKXN1U4qbbBA7KEVSTJz5hNr8aTddxI7f5
-   0Z9J0K0vqACr6J8OeMfqDHbcgLM1pn17xGZ3MgUeOU4lNuX/vD143jijm
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="354877280"
-X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
-   d="scan'208";a="354877280"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 02:33:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="656775530"
-X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
-   d="scan'208";a="656775530"
-Received: from lkp-server01.sh.intel.com (HELO fd90924b3b99) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 30 May 2023 02:33:19 -0700
-Received: from kbuild by fd90924b3b99 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q3vjC-0000Fi-0P;
-        Tue, 30 May 2023 09:33:18 +0000
-Date:   Tue, 30 May 2023 17:32:31 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     jeffxu@chromium.org, dave.hansen@intel.com, luto@kernel.org,
-        jorgelo@chromium.org, keescook@chromium.org, groeck@chromium.org,
-        jannh@google.com, sroettger@google.com
-Cc:     oe-kbuild-all@lists.linux.dev, akpm@linux-foundation.org,
-        jeffxu@google.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v1 4/6] PKEY:selftest pkey_enforce_api for mprotect
-Message-ID: <202305301758.ddYd6um5-lkp@intel.com>
-References: <20230519011915.846407-5-jeffxu@chromium.org>
+        Tue, 30 May 2023 05:55:22 -0400
+Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc0f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE1D9137
+        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 02:54:54 -0700 (PDT)
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QVnn84WwTzMqW8D;
+        Tue, 30 May 2023 11:54:52 +0200 (CEST)
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QVnn45tdDzMptwh;
+        Tue, 30 May 2023 11:54:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1685440492;
+        bh=5ZmdG3yKx3sW/vBePa3RcoZacfn+S9kRY4DY3NdVPVQ=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=h4O+rX0i7QKKorWtjsx8mJ0onLcR/ElzKZ7tgeNnWZ2QuyLnqvL+j/z9Ef7HfLDJV
+         lLa7FoCZX6RPOVhgmpgBxsTMA5l1pV7MrAW4BE5zT3XXtq/2b4DJl4pJsUVwePUWqr
+         0SJDoyKVJy15X/pdAoU7Y1esqA0P8DJD36VJ+8Lc=
+Message-ID: <5a5454a1-9ef2-1100-aefd-bbb0267f5339@digikod.net>
+Date:   Tue, 30 May 2023 11:54:47 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230519011915.846407-5-jeffxu@chromium.org>
+User-Agent: 
+Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
+Content-Language: en-US
+To:     Trilok Soni <quic_tsoni@quicinc.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Forrest Yuan Yu <yuanyu@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        John Andersen <john.s.andersen@intel.com>,
+        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
+        Marian Rotariu <marian.c.rotariu@gmail.com>,
+        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
+        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Thara Gopinath <tgopinath@microsoft.com>,
+        Will Deacon <will@kernel.org>,
+        Zahra Tarkhani <ztarkhani@microsoft.com>,
+        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
+        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
+        virtualization@lists.linux-foundation.org, x86@kernel.org,
+        xen-devel@lists.xenproject.org
+References: <20230505152046.6575-1-mic@digikod.net>
+ <1e10da25-5704-18ee-b0ce-6de704e6f0e1@quicinc.com>
+ <0b069bc3-0362-d8ec-fc2a-05dd65218c39@digikod.net>
+ <e17da8f4-4d5d-adb7-02c9-631ffdfc9037@quicinc.com>
+From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
+In-Reply-To: <e17da8f4-4d5d-adb7-02c9-631ffdfc9037@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
 
-kernel test robot noticed the following build warnings:
+On 25/05/2023 20:34, Trilok Soni wrote:
+> On 5/25/2023 6:25 AM, Mickaël Salaün wrote:
+>>
+>> On 24/05/2023 23:04, Trilok Soni wrote:
+>>> On 5/5/2023 8:20 AM, Mickaël Salaün wrote:
+>>>> Hi,
+>>>>
+>>>> This patch series is a proof-of-concept that implements new KVM features
+>>>> (extended page tracking, MBEC support, CR pinning) and defines a new
+>>>> API to
+>>>> protect guest VMs. No VMM (e.g., Qemu) modification is required.
+>>>>
+>>>> The main idea being that kernel self-protection mechanisms should be
+>>>> delegated
+>>>> to a more privileged part of the system, hence the hypervisor. It is
+>>>> still the
+>>>> role of the guest kernel to request such restrictions according to its
+>>>
+>>> Only for the guest kernel images here? Why not for the host OS kernel?
+>>
+>> As explained in the Future work section, protecting the host would be
+>> useful, but that doesn't really fit with the KVM model. The Protected
+>> KVM project is a first step to help in this direction [11].
+>>
+>> In a nutshell, KVM is close to a type-2 hypervisor, and the host kernel
+>> is also part of the hypervisor.
+>>
+>>
+>>> Embedded devices w/ Android you have mentioned below supports the host
+>>> OS as well it seems, right?
+>>
+>> What do you mean?
+> 
+> I think you have answered this above w/ pKVM and I was referring the
+> host protection as well w/ Heki. The link/references below refers to the
+> Android OS it seems and not guest VM.
+> 
+>>
+>>
+>>>
+>>> Do we suggest that all the functionalities should be implemented in the
+>>> Hypervisor (NS-EL2 for ARM) or even at Secure EL like Secure-EL1 (ARM).
+>>
+>> KVM runs in EL2. TrustZone is mainly used to enforce DRM, which means
+>> that we may not control the related code.
+>>
+>> This patch series is dedicated to hypervisor-enforced kernel integrity,
+>> then KVM.
+>>
+>>>
+>>> I am hoping that whatever we suggest the interface here from the Guest
+>>> to the Hypervisor becomes the ABI right?
+>>
+>> Yes, hypercalls are part of the KVM ABI.
+> 
+> Sure. I just hope that they are extensible enough to support for other
+> Hypervisors too. I am not sure if they are on this list like ACRN / Xen
+> and see if it fits their need too.
 
-[auto build test WARNING on ba0ad6ed89fd5dada3b7b65ef2b08e95d449d4ab]
+KVM, Hyper-V and Xen mailing lists are CCed. The KVM hypercalls are 
+specific to KVM, but this patch series also include a common guest API 
+intended to be used with all hypervisors.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/jeffxu-chromium-org/PKEY-Introduce-PKEY_ENFORCE_API-flag/20230519-093355
-base:   ba0ad6ed89fd5dada3b7b65ef2b08e95d449d4ab
-patch link:    https://lore.kernel.org/r/20230519011915.846407-5-jeffxu%40chromium.org
-patch subject: [PATCH v1 4/6] PKEY:selftest pkey_enforce_api for mprotect
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce:
-        # https://github.com/intel-lab-lkp/linux/commit/ee635a3d72bf9f400d3542d27d1df9d2813640dc
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review jeffxu-chromium-org/PKEY-Introduce-PKEY_ENFORCE_API-flag/20230519-093355
-        git checkout ee635a3d72bf9f400d3542d27d1df9d2813640dc
-        make O=/tmp/kselftest headers
-        make O=/tmp/kselftest -C tools/testing/selftests
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202305301758.ddYd6um5-lkp@intel.com/
+> 
+> Is there any other Hypervisor you plan to test this feature as well?
 
-All warnings (new ones prefixed by >>):
+We're also working on Hyper-V.
 
-   In file included from pkey_enforce_api.c:72:
-   pkey-x86.h: In function 'expect_fault_on_read_execonly_key':
->> pkey-x86.h:165:13: warning: variable 'ptr_contents' set but not used [-Wunused-but-set-variable]
-     165 |         int ptr_contents;
-         |             ^~~~~~~~~~~~
+> 
+>>
+>>>
+>>>
+>>>>
+>>>> # Current limitations
+>>>>
+>>>> The main limitation of this patch series is the statically enforced
+>>>> permissions. This is not an issue for kernels without module but this
+>>>> needs to
+>>>> be addressed.  Mechanisms that dynamically impact kernel executable
+>>>> memory are
+>>>> not handled for now (e.g., kernel modules, tracepoints, eBPF JIT),
+>>>> and such
+>>>> code will need to be authenticated.  Because the hypervisor is highly
+>>>> privileged and critical to the security of all the VMs, we don't want to
+>>>> implement a code authentication mechanism in the hypervisor itself
+>>>> but delegate
+>>>> this verification to something much less privileged. We are thinking
+>>>> of two
+>>>> ways to solve this: implement this verification in the VMM or spawn a
+>>>> dedicated
+>>>> special VM (similar to Windows's VBS). There are pros on cons to each
+>>>> approach:
+>>>> complexity, verification code ownership (guest's or VMM's), access to
+>>>> guest
+>>>> memory (i.e., confidential computing).
+>>>
+>>> Do you foresee the performance regressions due to lot of tracking here?
+>>
+>> The performance impact of execution prevention should be negligible
+>> because once configured the hypervisor do nothing except catch
+>> illegitimate access attempts.
+> 
+> Yes, if you are using the static kernel only and not considering the
+> other dynamic patching features like explained. They need to be thought
+> upon differently to reduce the likely impact.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+What do you mean? We plan to support dynamic code, and performance is of 
+course part of the requirement.
+
+
+> 
+>>
+>>
+>>> Production kernels do have lot of tracepoints and we use it as feature
+>>> in the GKI kernel for the vendor hooks implementation and in those cases
+>>> every vendor driver is a module.
+>>
+>> As explained in this section, dynamic kernel modifications such as
+>> tracepoints or modules are not currently supported by this patch series.
+>> Handling tracepoints is possible but requires more work to define and
+>> check legitimate changes. This proposal is still useful for static
+>> kernels though.
+>>
+>>
+>>> Separate VM further fragments this
+>>> design and delegates more of it to proprietary solutions?
+>>
+>> What do you mean? KVM is not a proprietary solution.
+> 
+> Ah, I was referring the VBS Windows VM mentioned in the above text. Is
+> it open-source? The reference of VM (or dedicated VM) didn't mention
+> that VM itself will be open-source running Linux kernel.
+
+This patch series is dedicated to KVM. Windows VBS was only mentioned as 
+a comparable (but much more advanced) set of features. Everything 
+required to use this new KVM features is and will be open-source. There 
+is nothing to worry about licensing, the goal is to make it widely and 
+freely available to protect users.
+
+
+> 
+>>
+>> For dynamic checks, this would require code not run by KVM itself, but
+>> either the VMM or a dedicated VM. In this case, the dynamic
+>> authentication code could come from the guest VM or from the VMM itself.
+>> In the former case, it is more challenging from a security point of view
+>> but doesn't rely on external (proprietary) solution. In the latter case,
+>> open-source VMMs should implement the specification to provide the
+>> required service (e.g. check kernel module signature).
+>>
+>> The goal of the common API layer provided by this RFC is to share code
+>> as much as possible between different hypervisor backends.
+>>
+>>
+>>>
+>>> Do you have any performance numbers w/ current RFC?
+>>
+>> No, but the only hypervisor performance impact is at boot time and
+>> should be negligible. I'll try to get some numbers for the
+>> hardware-enforcement impact, but it should be negligible too.
+> 
+> Thanks. Please share the data once you have it ready.
+
+It's on my todo list, but again, that should not be an issue and I even 
+doubt the difference to be measurable.
