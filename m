@@ -2,107 +2,137 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E441AC77B7A
-	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 14:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE16C77B7A
+	for <linux-hardening@archiver.kernel.org>; Tue, 30 May 2023 15:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230389AbjE3Oo5 (ORCPT
+        id S232059AbjE3Pz0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 10:44:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53096 "EHLO
+        Tue, 30 May 2023 11:55:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232356AbjE3Oot (ORCPT
+        with ESMTP id S233196AbjE3PzV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 10:44:49 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5366FE
-        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 07:44:47 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-4d9b2045e1cso12266a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 07:44:47 -0700 (PDT)
+        Tue, 30 May 2023 11:55:21 -0400
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13475C5;
+        Tue, 30 May 2023 08:55:20 -0700 (PDT)
+Received: by mail-io1-xd2a.google.com with SMTP id ca18e2360f4ac-77749d2613bso54105039f.2;
+        Tue, 30 May 2023 08:55:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685457886; x=1688049886;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c+t5dTE8kSUxjA4+aUdL/P2lX5zwmHCfFiqOu5qhUdY=;
-        b=yw5ljc9t+qw8qp9m8RjQ71WrnyGtmNel4ldkFtv8NgwQ1lFcOiGyM5Y03pdzODVReB
-         XyA5LjDDtSrpAlzcw1kSC1vp6NoPzPenOhFIgzKlHd5tK/DGsWmxxLtS2zmVns88oEZZ
-         QHZfYe0C2eXuG9BCcrzZ2ZQru7H9GN5RdesPqnhapoaBWpzy10rxs0zca7JQXlqagULZ
-         jXE4wNcdiezkrXnejvIocjwvEuMNRuApA3uiDinisBkxhDDdkGa1UzHa8a+BMZl4cW4W
-         L6Y6HFlfGJORz6N3HHTzZU6UmOdER60ImpOy2QZHQCfOUUvpg/jMtsDa4n61z5DAMdIM
-         7JQw==
+        d=gmail.com; s=20221208; t=1685462119; x=1688054119;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HzLXJzmyM6ehvjxPhXBctuD6pzz/uhWxjF9MwpFFoX8=;
+        b=sV0vVcLuN/c8aFPDkzIKiJQGt1mMSPXwASTgM7ibpdqLu4XwGviCTR0sJaE6Y85YEg
+         Bk7z2RgujlJJ+T1mrbGiKUMJfbJNJ6WluHksu1/z3i5GqWa4L2bcSE97wFUpz7xqde+f
+         E7lUcUasW1cgj0yw2wQW10mE5LRvZB3IiOmCEBespXbVIN+QAJi6naMhwHctPslZorCN
+         q+Hl9sDTFvNL+xYcyznfDt9/xiTcXZQ8NYW1lZy55pfHhzvDuKKt+mYd0B1Jj2SwjUuH
+         ArEfKy+j/WGPnA5tlsZybGYerz7mnNAIlT8PG6qSpI7cVgTtBY4Kw9W//qEHQwLRHKkz
+         S0Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685457886; x=1688049886;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c+t5dTE8kSUxjA4+aUdL/P2lX5zwmHCfFiqOu5qhUdY=;
-        b=iKvgU30CoN8goZLQ41zXbTAEBbrRO9osA06CGfhvX2JytGblseGYIVuCGQXPxHp+tX
-         HvMuKscLyoNxIUDEFlYZ2mqXh29Iist6QkMsmjh+fo3EuDuFlqtECzy/AeVvf4DMhIv3
-         ZkvM/8tKWQXHz9Ui2aJXZSNKN9AoOdNTy8tnl044Nodrp4boULzDrjXHDN7eOwCvHFGW
-         npVxmCgYOROF/2JqQEcwqRSf8r3GOS6f+uKLMmtUQecEUCjkkqd44TzoQY2uWWc3EZRx
-         eG/p+J4tdrph+lic1XtLr2p7zIA00nV2BMVkvOa32KHOK2OENAaN+icsuFlJUU0zp3B+
-         FFzA==
-X-Gm-Message-State: AC+VfDyvXY/4YmlUDpKZvcc1loEDY/l3UJmyGlJeDxJfIT5CwpI7iimv
-        iejUM8Z2WaPA2r0QR1ghjs1bZLYhH/wFq1b9WpLHpg==
-X-Google-Smtp-Source: ACHHUZ4Lgy3noCUYRa49sMjUxhZy3XuJzFJvHTwdNMNfQRVP8eoz3gaoIpD8RTQf3zd55SfsnQjpmhiQug5cjIozG+s=
-X-Received: by 2002:a50:d55d:0:b0:50b:c48c:8a25 with SMTP id
- f29-20020a50d55d000000b0050bc48c8a25mr84565edj.6.1685457885886; Tue, 30 May
- 2023 07:44:45 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685462119; x=1688054119;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HzLXJzmyM6ehvjxPhXBctuD6pzz/uhWxjF9MwpFFoX8=;
+        b=Qt9z5yYKQKo6TCddR1hg3c/UPLIWE+ACIAOCQFw8BwcvH4uOUdLrhGjFnvBQjTHEZd
+         gx6DEP3usbDKHNef3jJQpwlFVyRDTpL+0UKjLnSfUA0ZzcDapnDGdNJVAgSzr3AhS2as
+         7XTPTvUnNXWuMqF+6yoqqIRNiPfR2GDPPG4HYwo1rajgpm/rMx970oTMLUtTr1gTdhyZ
+         UF5gh4Mnet0hhQXRYPVJO9Zc3nl5dcBdKi56jRoFZVCKzEG5rBumiUqdL8J+hr8jBEjU
+         X7e/XiF6zJM40ZFhMDZznPgjJpsLPeDtdnul3hl/SLDyR+s4RvHkDfXHbqpuEXgp37Z/
+         ZobQ==
+X-Gm-Message-State: AC+VfDzQUEHjZqBk8OCm30V7qVX1FaNUKQI46956EcIKV7s/r28KFN2P
+        C3DPffgRJ7MDOM6EFOEvX34W8NVPGkc=
+X-Google-Smtp-Source: ACHHUZ7VhLgjsIrOf3C7o216L4H7FCwqt2jO/nkrPwsRA1lUmBkSD3bXhTcVhfW939LXCv3HpK/z0g==
+X-Received: by 2002:a5e:dd07:0:b0:76c:89de:ba47 with SMTP id t7-20020a5edd07000000b0076c89deba47mr2064040iop.19.1685462119157;
+        Tue, 30 May 2023 08:55:19 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id ct13-20020a056638488d00b0041ceadd5f4dsm743187jab.70.2023.05.30.08.55.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 May 2023 08:55:18 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH] ARM: Replace all non-returning strlcpy with strscpy
+Date:   Tue, 30 May 2023 15:55:01 +0000
+Message-ID: <20230530155501.222213-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 MIME-Version: 1.0
-References: <20230517225838.never.965-kees@kernel.org> <20230518-jemand-ehrte-80f8b538ca03@brauner>
-In-Reply-To: <20230518-jemand-ehrte-80f8b538ca03@brauner>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Tue, 30 May 2023 07:44:09 -0700
-Message-ID: <CALmYWFt6F6h+NQR+BdrsjP53naS=Ps99Cpxmr4vpHM82=0-JSQ@mail.gmail.com>
-Subject: Re: [PATCH] pid: Replace struct pid 1-element array with flex-array
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Jan Kara <jack@suse.cz>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Daniel Verkamp <dverkamp@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        syzbot+ac3b41786a2d0565b6d5@syzkaller.appspotmail.com,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, May 18, 2023 at 8:07=E2=80=AFAM Christian Brauner <brauner@kernel.o=
-rg> wrote:
->
-> On Wed, 17 May 2023 15:58:42 -0700, Kees Cook wrote:
-> > For pid namespaces, struct pid uses a dynamically sized array member,
-> > "numbers". This was implemented using the ancient 1-element fake flexib=
-le
-> > array, which has been deprecated for decades. Replace it with a C99
-> > flexible array, refactor the array size calculations to use struct_size=
-(),
-> > and address elements via indexes. Note that the static initializer (whi=
-ch
-> > defines a single element) works as-is, and requires no special handling=
-.
-> >
-> > [...]
->
-> Applied to the kernel.fork branch of the brauner/linux.git tree.
-> Patches in the kernel.fork branch should appear in linux-next soon.
->
-> Please report any outstanding bugs that were missed during review in a
-> new review to the original patch series allowing us to drop it.
->
-> It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> patch has now been applied. If possible patch trailers will be updated.
->
-Acked-by: Jeff Xu <jeffxu@google.com>
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
 
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
-> branch: kernel.fork
->
-> [1/1] pid: Replace struct pid 1-element array with flex-array
->       https://git.kernel.org/brauner/linux/c/ad0ff58dc959
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ arch/arm/kernel/atags_parse.c |    4 ++--
+ arch/arm/kernel/setup.c       |    2 +-
+ arch/arm/kernel/vdso.c        |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/kernel/atags_parse.c b/arch/arm/kernel/atags_parse.c
+index 373b61f9a4f0..33f6eb5213a5 100644
+--- a/arch/arm/kernel/atags_parse.c
++++ b/arch/arm/kernel/atags_parse.c
+@@ -127,7 +127,7 @@ static int __init parse_tag_cmdline(const struct tag *tag)
+ #elif defined(CONFIG_CMDLINE_FORCE)
+ 	pr_warn("Ignoring tag cmdline (using the default kernel command line)\n");
+ #else
+-	strlcpy(default_command_line, tag->u.cmdline.cmdline,
++	strscpy(default_command_line, tag->u.cmdline.cmdline,
+ 		COMMAND_LINE_SIZE);
+ #endif
+ 	return 0;
+@@ -224,7 +224,7 @@ setup_machine_tags(void *atags_vaddr, unsigned int machine_nr)
+ 	}
+ 
+ 	/* parse_early_param needs a boot_command_line */
+-	strlcpy(boot_command_line, from, COMMAND_LINE_SIZE);
++	strscpy(boot_command_line, from, COMMAND_LINE_SIZE);
+ 
+ 	return mdesc;
+ }
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index 75cd4699e7b3..3048a685ea79 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -1142,7 +1142,7 @@ void __init setup_arch(char **cmdline_p)
+ 	setup_initial_init_mm(_text, _etext, _edata, _end);
+ 
+ 	/* populate cmd_line too for later use, preserving boot_command_line */
+-	strlcpy(cmd_line, boot_command_line, COMMAND_LINE_SIZE);
++	strscpy(cmd_line, boot_command_line, COMMAND_LINE_SIZE);
+ 	*cmdline_p = cmd_line;
+ 
+ 	early_fixmap_init();
+diff --git a/arch/arm/kernel/vdso.c b/arch/arm/kernel/vdso.c
+index 3408269d19c7..f297d66a8a76 100644
+--- a/arch/arm/kernel/vdso.c
++++ b/arch/arm/kernel/vdso.c
+@@ -135,7 +135,7 @@ static Elf32_Sym * __init find_symbol(struct elfinfo *lib, const char *symname)
+ 
+ 		if (lib->dynsym[i].st_name == 0)
+ 			continue;
+-		strlcpy(name, lib->dynstr + lib->dynsym[i].st_name,
++		strscpy(name, lib->dynstr + lib->dynsym[i].st_name,
+ 			MAX_SYMNAME);
+ 		c = strchr(name, '@');
+ 		if (c)
+
