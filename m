@@ -2,117 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45566C7EE2E
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 14:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44110C77B73
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 14:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235998AbjEaOds (ORCPT
+        id S230486AbjEaOtK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 10:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
+        Wed, 31 May 2023 10:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbjEaOdr (ORCPT
+        with ESMTP id S231806AbjEaOtG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 10:33:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9487995;
-        Wed, 31 May 2023 07:33:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2863263CCF;
-        Wed, 31 May 2023 14:33:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A6CC433D2;
-        Wed, 31 May 2023 14:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685543625;
-        bh=L/dTiuT+ktTPMYaEXn8ndEBWIS2gWoNfI9OE21M1RCg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DAWDh6MT2/MOtKpYopxqF6yhYjN3Qup3Cr0wyjAksB7/WUJjjrXFFe6DjOfpMfBM4
-         QZowXDJ9uBub7Qjj5Vt1XAJTM/HlFOmmg4X09fqxPu164R8LFPiGxGF1yOhpELJ1P9
-         SPBfjOB3mU8YdPM0ZSV0XgBA2bNFvS9E2sjK5KI5GSl5GToBpbbt6q1+bT+xJX1Htr
-         ZkXqctLQYhkudRx5Inv6rqeTVwzKiI6w3ReyywcO/G2KiKFB5hSZ3IjNKosI0kAeoN
-         43otBMx5iqyOI883q+oSEOCBdmreGVQmmSR7FOm0SMAsitUknO+pk8V8xrmBnxnO0v
-         PPH+G4yJm2wCg==
-Date:   Wed, 31 May 2023 07:33:42 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        Joan Bruguera =?iso-8859-1?Q?Mic=F3?= <joanbrugueram@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] s390/purgatory: Do not use fortified string functions
-Message-ID: <20230531143342.GA2250333@dev-arch.thelio-3990X>
-References: <20230531003414.never.050-kees@kernel.org>
+        Wed, 31 May 2023 10:49:06 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50AF12B;
+        Wed, 31 May 2023 07:48:58 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-30ad99fa586so5684809f8f.2;
+        Wed, 31 May 2023 07:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685544537; x=1688136537;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7V4aOa0uoRUYdUYR7nYgnOP0GeYZb+MEHjtYTAKUMpk=;
+        b=I7yQjZAPk+FyhtHqaIyqfNSBEuTn/tUjS1WTW8UzUCyC/TPspyBMOpyTVe5C1UwtkW
+         zBIUHtPdwRHfvbhwsf/wrk3TZBGgEQuIhkgigULoUwO1yazAQEuRaaZsDhHEKsroFnz9
+         jQgMaoPnkbVQ+IkipzRg9w//UbrJh0BjFT0XcgUHj+yvQCQoWs7opHwh2+cwqzFB8tJy
+         eJJxaAvRqAnF2ejEw79yQ0tyHKvikpJApcAM8hzWPj4KKGvU0hKx2liyXjHlLK3+VAYK
+         kOSi+WDzR1BVszmXwArP1TpCqoAjt0XjvrlTm40UldWxydE4tt/pSHH6L2gvKNb2i1LU
+         zpNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685544537; x=1688136537;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7V4aOa0uoRUYdUYR7nYgnOP0GeYZb+MEHjtYTAKUMpk=;
+        b=IKKabu9u/iYvRoysyiQG/uRbVbFsW7MF1TX3sdofRSDCNJ3dH0pNXqzarWRiJ7JwqM
+         mA8jHq4np/diGscY/99qpAMDaoN1qo9QPG9E92mA8dH6WKLWBD63MibpoKxEuIaUnzSu
+         UWHooIr9/fM20nw3rKyly/z9MT9Qt+p04+eh+A/cTzdqy/pkzVkxJybNtO0o8Rf100Mi
+         hcizmZ+d6QABSZO3TMiP9Ctt7bllgKO+OQmgfyRUXfAhUzcK0B/qLE98hIsZktL75FCm
+         2rcMI5WC/ti8fLyMfsCaosDV+Gq2rAG9JC2VK6MI406aZ1iYc30TXE0Shfrg8Bob9ZTF
+         e7sQ==
+X-Gm-Message-State: AC+VfDzlwe7YJaBOhJRdHkGGWrmCT62194YL6XxDGOllTQV5vMDvb2XK
+        Ish7zmKL3tNoTKeKynSuYCZ35ahUxX0S53+MlxQ=
+X-Google-Smtp-Source: ACHHUZ76Ha8CZKICeSBhZyU4Oyb1eBY8UiUyGLLhoB9dAjS/BuxWDWVoT4O+XDFk7Ug65aGOLRPzLbhLSjSA+TzBi4Q=
+X-Received: by 2002:adf:d851:0:b0:304:8147:f0ba with SMTP id
+ k17-20020adfd851000000b003048147f0bamr4748357wrl.3.1685544536973; Wed, 31 May
+ 2023 07:48:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230531003414.never.050-kees@kernel.org>
+References: <20230530164004.986750-1-azeemshaikh38@gmail.com>
+ <202305311135.zGMT1gYR-lkp@intel.com> <09A0C6FA-669F-4B73-9620-43AEA17E5D0C@kernel.org>
+ <103925562.158061.1685514200368.JavaMail.zimbra@nod.at> <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Wed, 31 May 2023 10:48:45 -0400
+Message-ID: <CADmuW3WXDg-5SFXkMDE6BmvSwLNHmXpTzBonaOL8eErc4+d3qQ@mail.gmail.com>
+Subject: Re: [PATCH] uml: Replace all non-returning strlcpy with strscpy
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Richard Weinberger <richard@nod.at>, Kees Cook <kees@kernel.org>,
+        kernel test robot <lkp@intel.com>,
+        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
+        oe-kbuild-all <oe-kbuild-all@lists.linux.dev>,
+        linux-hardening@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        anton ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-um <linux-um@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 30, 2023 at 05:34:15PM -0700, Kees Cook wrote:
-> With the addition of -fstrict-flex-arrays=3, struct sha256_state's
-> trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
-> 
-> struct sha256_state {
->         u32 state[SHA256_DIGEST_SIZE / 4];
->         u64 count;
->         u8 buf[SHA256_BLOCK_SIZE];
-> };
-> 
-> This means that the memcpy() calls with "buf" as a destination in
-> sha256.c's code will attempt to perform run-time bounds checking, which
-> could lead to calling missing functions, specifically a potential
-> WARN_ONCE, which isn't callable from purgatory.
-> 
-> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-> Closes: https://lore.kernel.org/lkml/175578ec-9dec-7a9c-8d3a-43f24ff86b92@leemhuis.info/
-> Bisected-by: "Joan Bruguera Micó" <joanbrugueram@gmail.com>
-> Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Cc: Sven Schnelle <svens@linux.ibm.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Linux Kernel Functional Testing <lkft@linaro.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-s390@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Thanks Geert and Richard for the review.
 
-Reading https://lore.kernel.org/202305301658.BF6ECF65C@keescook/ was
-some good additional context.
+On Wed, May 31, 2023 at 4:05=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> On Wed, May 31, 2023 at 8:23=E2=80=AFAM Richard Weinberger <richard@nod.a=
+t> wrote:
+> > ----- Urspr=C3=BCngliche Mail -----
+> > >>>> arch/um/os-Linux/drivers/tuntap_user.c:149:17: error: implicit dec=
+laration of
+> > >>>> function 'strscpy'; did you mean 'strncpy'?
+> > >>>> [-Werror=3Dimplicit-function-declaration]
+> > >>     149 |                 strscpy(ifr.ifr_name, pri->dev_name,
+> > >>     sizeof(ifr.ifr_name));
+> > >>         |                 ^~~~~~~
+> > >>         |                 strncpy
+> > >>   cc1: some warnings being treated as errors
+> > >
+> > > Ah, yeah, this is another "not actually in the kernel" cases. Let's i=
+gnore this
+> > > strlcpy for now.
+> >
+> > Well, actually it's another case of "not even compile tested". :-(
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+Argh, my test script wasn't cross-compiling for um. Sorry about that :(
 
-> ---
->  arch/s390/purgatory/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-> index 32573b4f9bd2..cf14740abd1c 100644
-> --- a/arch/s390/purgatory/Makefile
-> +++ b/arch/s390/purgatory/Makefile
-> @@ -10,7 +10,7 @@ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
->  $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
->  	$(call if_changed_rule,cc_o_c)
->  
-> -CFLAGS_sha256.o := -D__DISABLE_EXPORTS
-> +CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
->  
->  $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
->  	$(call if_changed_rule,as_o_S)
-> -- 
-> 2.34.1
-> 
+> > Well, strlcpy() isn't part of libc either, so all this would need is to
+> > add it to user.h just like strlcpy() is now?
+>
+> I think so.
+> Azeem, can you please test your changes with this fixup applied?
+>
+> diff --git a/arch/um/include/shared/user.h b/arch/um/include/shared/user.=
+h
+> index bda66e5a9d4e3..e5d3fbbafe4d2 100644
+> --- a/arch/um/include/shared/user.h
+> +++ b/arch/um/include/shared/user.h
+> @@ -52,6 +52,7 @@ static inline int printk(const char *fmt, ...)
+>  extern int in_aton(char *str);
+>  extern size_t strlcpy(char *, const char *, size_t);
+>  extern size_t strlcat(char *, const char *, size_t);
+> +extern ssize_t strscpy(char *, const char *, size_t);
+>
+>  /* Copied from linux/compiler-gcc.h since we can't include it directly *=
+/
+>  #define barrier() __asm__ __volatile__("": : :"memory")
+>
+
+Tested with this fixup, and it builds successfully on ARCH=3Dum
+SUBARCH=3Di386. Let me know if I need to test with any other
+cross-compilation options before I send out v2.
+
+>
+> Ah, yeah, this is another "not actually in the kernel" cases. Let's ignor=
+e this strlcpy for now.
+>
+> -Keed
+
+Planning to send out v2 with the fixup from Richard applied. Let me
+know if that's ok.
