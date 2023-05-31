@@ -2,89 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CEEC77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 22:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923EEC7EE29
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 23:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230433AbjEaWkk (ORCPT
+        id S230337AbjEaXCo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 18:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50950 "EHLO
+        Wed, 31 May 2023 19:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230372AbjEaWkj (ORCPT
+        with ESMTP id S230342AbjEaXCn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 18:40:39 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF37121;
-        Wed, 31 May 2023 15:40:38 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-3063433fa66so152649f8f.3;
-        Wed, 31 May 2023 15:40:38 -0700 (PDT)
+        Wed, 31 May 2023 19:02:43 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AC2107
+        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 16:02:38 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-ba829e17aacso193061276.0
+        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 16:02:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685572837; x=1688164837;
+        d=chromium.org; s=google; t=1685574158; x=1688166158;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Mi6o6YBQqUF5E3caW8zl2Irs9/xXSVFAwQzFaKiXZmI=;
-        b=ilcExTWptvZ35tJBshw5zSrbw7gIgcclVFsp3D2GCUQ/UFw7/qMzwny0HagS/eZxHO
-         W4MsBd1MJspYRXY04Fg9dt4UTlfVixT9+7DFLZPJO3kjCFXR/bKB36RTbNS7b1MqOZwe
-         orthUIigTa6Lmm/X/qgqYDOFPXjnQW7RWvUlBSBATxGWGNGoKXMi+++flZjg/on7FZx7
-         8Fy/1vdHb6sITdtXDPqTYzwoCJTgL8y8onc6R0O5Q/ZuDOD9Vqzn8eqD1J1Dfx8bIPLe
-         r/lpKU8GJ+P2x0QJhTD3ti+pAyY4IZ9yye0FzEsUdir5cyGlS8IWflXlaNqhQeWdBXcD
-         7IPA==
+        bh=0nzIRRbGx22h7W4dzVmFren/95lkctbr3Uctdnt7nnU=;
+        b=WmPDmQ1h0qMnUeHvgUMsjpTh6VPEpTtOoNQ11MIJWu8Yqw0fd3oAGLpJdpSMotScGS
+         spn0YANEwG/lKK1g4Gi1omZBv815jXYv6S6kCYbkEuBs2j/MYKV3FUNEHcvO7f+QbHQM
+         Z8eo/LSR+Uy2F4fCrZWf5thKAUw2VrOtPnSl4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685572837; x=1688164837;
+        d=1e100.net; s=20221208; t=1685574158; x=1688166158;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Mi6o6YBQqUF5E3caW8zl2Irs9/xXSVFAwQzFaKiXZmI=;
-        b=aiznCNuedWvLLM5STNtqCVsTxQx7hRIYGQuwuKX2GqkWMKqY1BSesJiF7796MfZj/w
-         IuPFz+6y7doG2kH1gAsBprcDUqy8y6RsxkOzt/abx03DZdr/og08UuZvKp0UmzTLxhfF
-         ZnbEXexa2c2LKAOISFTJo/FInZzvKwSxlW+YP0z4tZcomLW497q+cTinD9PTWX2mTBgK
-         fdRHoptaHKLEJyN+JQdYdKXd70/t1YKhGvIKPZx0V0RpO7YgWUw6QEnNLUY1SwV5wMkw
-         9blMT8JnHKRwPbSw51VRr1cUgnUc7iMfb3RNBfM0crudSlOdEZFMibkY7QKgKrHb6hdo
-         /OFA==
-X-Gm-Message-State: AC+VfDyDsOWIPmv+x8JNdURaXTsxQmFzmZ8yAV6G+atLqtfIICm4wJak
-        A1k1OozVrmwrplM6oq4W+CZ4EN0b5Gwn20uJRMw=
-X-Google-Smtp-Source: ACHHUZ5UviObvhddrwCqGP2Y/rchKHebgaKxm9q2zoSp9v0pc7hyzheOv/b9GzQ3xzKHhz8/ILXvf4VAtphN5f3yzzU=
-X-Received: by 2002:a5d:474d:0:b0:309:38af:91c6 with SMTP id
- o13-20020a5d474d000000b0030938af91c6mr360372wrs.68.1685572836768; Wed, 31 May
- 2023 15:40:36 -0700 (PDT)
+        bh=0nzIRRbGx22h7W4dzVmFren/95lkctbr3Uctdnt7nnU=;
+        b=edoptumf3thPRRsdE0EgBgzJ6VwFH/iR3Yhzz5YPRi2aeeIJ+PKg/+11hgaowOM22u
+         y5JJZvw4Suz1Y+pjbL7Fysppo+l/7klSPIWFFuw/nYVrXOxiAoROlBzcujX85j0wuMen
+         unLeuJzxlf7EGZSG/dfnjcp9ctPVj4oO8VxYSvfqxdqrS6ukESVFhL2Bsyw177decCFu
+         m3OHWHdPNM0d/p76RZTXlvkyMKps5jJlEgcevF3zyIWq3PLJdSxitPDiqMIs4zoRAiCf
+         cZ6QdpasBmHkR9clrQL4xjzTM+8Txi3aDOQZp6VtHdLKaUqOSQZWqYI4EongJ94xllLA
+         9FjQ==
+X-Gm-Message-State: AC+VfDxHjU9X9fxekibcwM5/dzKU6yxBwCm+/BUYjHBDwIULr9PJ3sG7
+        3bKHyZZPodw2ucLQ5jIoMI8rqNxkAQptMo27UBlrEA==
+X-Google-Smtp-Source: ACHHUZ5hYf4p5U4e13Z1TleOH6isd0dp1HozTXSttchtojblNVlRPE54CQdz6YsI5G/k0FTvb1SR8akrNc+ZPON09N4=
+X-Received: by 2002:a25:7303:0:b0:bab:ab4a:83e0 with SMTP id
+ o3-20020a257303000000b00babab4a83e0mr7718310ybc.26.1685574158132; Wed, 31 May
+ 2023 16:02:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230530155818.368562-1-azeemshaikh38@gmail.com> <yq1zg5kcgac.fsf@ca-mkp.ca.oracle.com>
-In-Reply-To: <yq1zg5kcgac.fsf@ca-mkp.ca.oracle.com>
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Wed, 31 May 2023 18:40:24 -0400
-Message-ID: <CADmuW3V=b3SOvijU0MPCBadpcRBtRYfT5eWVQOvL8WH-z-BqbA@mail.gmail.com>
-Subject: Re: [PATCH] scsi: libfcoe: Replace all non-returning strlcpy with strscpy
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Hannes Reinecke <hare@suse.de>, linux-hardening@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
+References: <20230515130553.2311248-1-jeffxu@chromium.org> <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
+ <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
+ <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com> <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
+ <d8f2d5c2-6650-c2a6-3a20-25583eee579b@intel.com> <CALmYWFsnGjniVseJKuhKO6eet10Onyk_C0=KNe6ZzXoCiBKZOw@mail.gmail.com>
+ <b69f6809-b483-158f-8be9-4976fad918d8@intel.com> <CALmYWFs5Vgosz2JUYWkoc4YwDbiB0tT32MFpo-y6aX4kwuoz8Q@mail.gmail.com>
+ <2b14036e-aed8-4212-bc0f-51ec4fe5a5c1@intel.com>
+In-Reply-To: <2b14036e-aed8-4212-bc0f-51ec4fe5a5c1@intel.com>
+From:   Jeff Xu <jeffxu@chromium.org>
+Date:   Wed, 31 May 2023 16:02:00 -0700
+Message-ID: <CABi2SkU9iDqpcXfPpwphEgL0-rBionphfT3+Zscq_Htx=ps+2g@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Jeff Xu <jeffxu@google.com>,
+        =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>,
+        luto@kernel.org, jorgelo@chromium.org, keescook@chromium.org,
+        groeck@chromium.org, jannh@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 31, 2023 at 6:03=E2=80=AFPM Martin K. Petersen
-<martin.petersen@oracle.com> wrote:
->
->
-> Azeem,
->
-> > strlcpy() reads the entire source buffer first. This read may exceed
-> > the destination size limit. This is both inefficient and can lead to
-> > linear read overflows if a source string is not NUL-terminated [1]. In
-> > an effort to remove strlcpy() completely [2], replace strlcpy() here
-> > with strscpy(). No return values were used, so direct replacement is
-> > safe.
->
-> Applied to 6.5/scsi-staging!
+Hi Dave,
 
-Thanks Martin!
+Regarding siglongjmp:
 
+On Thu, May 18, 2023 at 8:37=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
+ wrote:
 >
-> PS. It would help if you could submit changes like these as a series in
-> the future so I don't have to track each patch individually.
+> On 5/17/23 16:48, Jeff Xu wrote:
+> > However, there are a few challenges I have not yet worked through.
+> > First, the code needs to track when the first signaling entry occurs
+> > (saving the PKRU register to the thread struct) and when it is last
+> > returned (restoring the PKRU register from the thread struct).
 >
+> Would tracking signal "depth" work in the face of things like siglongjmp?
+>
+siglongjmp is interesting, thanks for bringing this up.
 
-Sure, I can do that.
+With siglongjmp, the thread doesn't go back to the place where signal is
+raised, indeed, this idea of tracking the first signaling entry
+doesn't work well with siglongjmp.
+
+Thanks for your insight!
+-Jeff
+
+
+-Jeff
