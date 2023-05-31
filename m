@@ -2,125 +2,124 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C49DC77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 00:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACA3C77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 00:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231791AbjEaAem (ORCPT
+        id S233516AbjEaAle (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 20:34:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49886 "EHLO
+        Tue, 30 May 2023 20:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232991AbjEaAel (ORCPT
+        with ESMTP id S231854AbjEaAld (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 20:34:41 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12728E5A
-        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 17:34:18 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-64d247a023aso3755582b3a.2
-        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 17:34:18 -0700 (PDT)
+        Tue, 30 May 2023 20:41:33 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F7E1115
+        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 17:41:02 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-64d3e5e5980so5963700b3a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 30 May 2023 17:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685493257; x=1688085257;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JjzJiAVnsEiyQDbH42BBgOLAQff4KMyAHDpgZ0nAe7A=;
-        b=Fr1wpaLPOjycQDUz0I9FHQixf/hJgEHVJn5kf6MreLAFhTSbQL71WkdzM+ox20m0tx
-         C9HD+G6BDZUZRour51+FuDaoOjUA+JDaMDVLCuZ/cchVzGaQUwr1O3F3Pnm/3pHE5i9M
-         4pv+/gMbxwXjlbDM+j8gKlrLMcWr+hcNB3Bxk=
+        d=chromium.org; s=google; t=1685493661; x=1688085661;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hdGugcn5c2JbfD3Z/D2lhqlqML+TkkwlsJOLG2bXoh8=;
+        b=Y5plRcLGLfqdQbw1UCKZWDoHUbZNcvVwqz2tAS84QoUFIX61CaS013NTvJ/l+TcnRL
+         uQBOKbUzrfPkieJ8GvjW/G0Hg3GswjuPNFXEwDtNQYUzUHX1+t8nV6YftMloja+Nuw1k
+         Bzhj1i5IB7rhPSpiBllVKoSGl4T2LkbkVqiSU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685493257; x=1688085257;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JjzJiAVnsEiyQDbH42BBgOLAQff4KMyAHDpgZ0nAe7A=;
-        b=BjUlNk9h2jAg3w7m6TFePIFN5nmzTm97y7LMT8Mbe9bQi3BKZt3UfNIBezHMpWUqk6
-         wsxwFSWe1NHDCsXWHYGRZQgp41rn1a6HK3VPcwZsjz6IeCXS5nGfZLCnv5pWSnhg8SLc
-         KQ31dRz7WpJLbV4EM93CnuzNd9iIOTAqiNOhaBoSYr7zn6FT7AWrwrw1moyIUPi5kxU1
-         7SN55/zlMIqnwGNEdsd7raNJQPrLnqgpCMn8JxilaIYJlmtYMA73San5YdrJFUqYUeZ2
-         Af4XVa+77i4TfaNt8iommK2U10yDF7B3TTm75ONqlcMpg++lQsyo2uIOSpY4B5IHMWKB
-         miqg==
-X-Gm-Message-State: AC+VfDzI+1EBUpczTJX6ILEZKokK4eMPTyexyn/2ebSE0IDQRZs3m4a+
-        MKy2N4536glrXxuiTP2oc3srmg==
-X-Google-Smtp-Source: ACHHUZ4X5qDGSuairtVKxDG2yKgUqeM7zao1Gk6IXDkD8LZrD8OgZtIsp8e/0KbWuh7KyootktePNQ==
-X-Received: by 2002:a05:6a20:6f05:b0:10b:a9ca:97bf with SMTP id gt5-20020a056a206f0500b0010ba9ca97bfmr4168184pzb.24.1685493257498;
-        Tue, 30 May 2023 17:34:17 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685493661; x=1688085661;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hdGugcn5c2JbfD3Z/D2lhqlqML+TkkwlsJOLG2bXoh8=;
+        b=Kg77UHBhUalZvB/4JBmtoybuvA2jpKNNqVKiNkejeqfkeE0kLn1O35S4AamxBEqwuL
+         mfywNy3zH7oIe5Hi4m0mYGXcH6ZUXA+TyLH9u7yl9U8xGlOoq9RJwnWRGmWnc9t7T7Rs
+         gCtsws+zGuUn6bdMWeYhsKvkK2ezkF246O6ahHxpktH802mB9Zkkg1IS9AUWUQqIQAD7
+         oZi31xsEVfYizUohY0ODVyviR3+99Vozglb1sAqoGeAyCtT0GbP+GLt1aMv1Uuqi/I2q
+         ZHWlzYK9qFKbNlGn7O+oaJdFIzt4LXVs1hCB2TUAXEep0g7RB9ImslhdZOYuebA44TWM
+         Nlnw==
+X-Gm-Message-State: AC+VfDxUFDFDnPj+L3Tgs+ESmA6P24zMR4rgXbWlSr/4U1Hdgk3tHz93
+        gTqsB6me2H9XavHrubmijs/1aQ==
+X-Google-Smtp-Source: ACHHUZ6o1TQD/LukUZ04g3mHlB+kzTrtMEcpfvB36LePlbV5OsZ8XYnic1rrkt7epqhp0cNM6nA69Q==
+X-Received: by 2002:a05:6a00:1a51:b0:64f:4812:8c7e with SMTP id h17-20020a056a001a5100b0064f48128c7emr4233724pfv.19.1685493660885;
+        Tue, 30 May 2023 17:41:00 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j9-20020aa783c9000000b00640defda6d2sm2122043pfn.207.2023.05.30.17.34.17
+        by smtp.gmail.com with ESMTPSA id j15-20020a62b60f000000b0064559b58eb8sm2141155pff.154.2023.05.30.17.41.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 17:34:17 -0700 (PDT)
+        Tue, 30 May 2023 17:41:00 -0700 (PDT)
+Date:   Tue, 30 May 2023 17:40:59 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Heiko Carstens <hca@linux.ibm.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kernel Functional Testing <lkft@linaro.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] s390/purgatory: Do not use fortified string functions
-Date:   Tue, 30 May 2023 17:34:15 -0700
-Message-Id: <20230531003414.never.050-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     Joe Perches <joe@perches.com>
+Cc:     Andy Whitcroft <apw@canonical.com>,
+        Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] checkpatch: Check for 0-length and 1-element arrays
+Message-ID: <202305301738.92C6DE1D@keescook>
+References: <20230527020929.give.261-kees@kernel.org>
+ <75851e1185821084c0a1b7e5aaf60e9f38e0f792.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1932; h=from:subject:message-id; bh=3fzKBd1zujjv+SG6w7I7Y4v19AUyPzbSQe4ghFml234=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkdpYGW+0BpAnJwD3TP9pZ65CDHX9QrJD+lbCVA5TY Tzp9khaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZHaWBgAKCRCJcvTf3G3AJs0cEA CiZUiBN0H8c1+y8rgHJICYG74xR2GG2LajP/p9SrpbxhpissdlyzA57ENFt0LF87e87DBVNtNV0Iay E09uGdf/Zb5Dr8ikL26Vyeug7TXOeWjSV9gTC43wG4mg7o4R1G2/SzQ83HJG71ey9w4eyINCv+2Yg4 zDbI6pTvlGUAqkH6bW+lxWZJcIGXHrP4rBB05IAw9lA8KVr+wCznrYPz+tEufVcLywElmC0WqsFHzr rs+VuthL0YG+s97qw3qexp6w4YHh7V1wIls0cHvOto/y3kT5PlyKijuqG+7f6BsHMRH7giF7x5C5un sgOEOY0v3OCHXNIqwm8wwNsWI3JOky0PRo+Sz8Vsh3dDJHk1JZLAj0K5/RWrh47BpmmgjjhI0Uq2zL g/WcmyITo50/UayP+VSE6XtCK8496iNV7lXQ7Xr7AbY6MG+XsILyCKHpv/kyKN8BcKc58UFQGOlq5D pwCuncOlx3OK2bbrCaYZeTAF8cjyJOYRDV4s9cShT/AnE0+dQ3H9krl+o5hjHWk5XTW95ztSVoY92v afgzazipmjg3I+bkS06U/i/J6cwWw6K1TjS+4QUTEYZw2dtPTN3iw9rEtTII+8FFqvVDmsKwE9u75b QO9CYHiDZ+eElpDqrzjXP7bj1IUfjpU1+3FFH2H4o6++IWEeJ31XoEjgzgRQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <75851e1185821084c0a1b7e5aaf60e9f38e0f792.camel@perches.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-With the addition of -fstrict-flex-arrays=3, struct sha256_state's
-trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
+On Fri, May 26, 2023 at 09:31:39PM -0700, Joe Perches wrote:
+> On Fri, 2023-05-26 at 19:09 -0700, Kees Cook wrote:
+> > Fake flexible arrays have been deprecated since last millennium. Proper
+> > C99 flexible arrays must be used throughout the kernel so
+> > CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS can provide proper array
+> > bounds checking.
+> 
+> Hi again.
+> 
+> 
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> []
+> > @@ -7430,6 +7430,21 @@ sub process {
+> >  			}
+> >  		}
+> >  
+> > +# check for array definition/declarations that should use flexible arrays instead
+> > +		if ($sline =~ /^[\+ ]\s*}\s*;\s*$/ &&
+> > +		    $prevline =~ /^\+\s*(?:\}|$Type)\s*$Ident\s*\[\s*(0|1)\s*\]\s*;\s*$/) {
+> 
+> Ahh, now I see why you want to use (?:\}|$Type) to find
+> struct arrays defined as the last object in another struct.
 
-struct sha256_state {
-        u32 state[SHA256_DIGEST_SIZE / 4];
-        u64 count;
-        u8 buf[SHA256_BLOCK_SIZE];
-};
+Yeah -- this has been a place where past "[1]"s have snuck in before. :)
 
-This means that the memcpy() calls with "buf" as a destination in
-sha256.c's code will attempt to perform run-time bounds checking, which
-could lead to calling missing functions, specifically a potential
-WARN_ONCE, which isn't callable from purgatory.
+> grepping for some existing variants, perhaps the $sline test should
+> be extended to something like:
+> 
+> 		if ($sline =~ /^[\+ ]\s*}\s*(?:__packed|__attribute__\s*$balanced_parens)?\s*;\s*$/ &&
 
-Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-Closes: https://lore.kernel.org/lkml/175578ec-9dec-7a9c-8d3a-43f24ff86b92@leemhuis.info/
-Bisected-by: "Joan Bruguera Micó" <joanbrugueram@gmail.com>
-Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Linux Kernel Functional Testing <lkft@linaro.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/s390/purgatory/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ugh, I forgot attributes. Hmmm. I don't need this check to be _perfect_
+either. :P Really only "__packed" has come up in other conversions.
 
-diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-index 32573b4f9bd2..cf14740abd1c 100644
---- a/arch/s390/purgatory/Makefile
-+++ b/arch/s390/purgatory/Makefile
-@@ -10,7 +10,7 @@ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
- $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
- 	$(call if_changed_rule,cc_o_c)
- 
--CFLAGS_sha256.o := -D__DISABLE_EXPORTS
-+CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
- 
- $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
- 	$(call if_changed_rule,as_o_S)
+> > +			if ($1 == '0') {
+> > +				if (ERROR("ZERO_LENGTH_ARRAY",
+> > +					  "Use C99 flexible arrays instead of zero-length arrays - see https://github.com/KSPP/linux/issues/78\n" . $hereprev) &&
+> 
+> Instead of github links, how about using:
+> https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays
+
+Yeah, though the issues have a bit more detail. Probably better to be
+self-referential. :)
+
+> 
+> 
+> Why not combine both of these into a single ERROR?
+> What's the value in separate types?
+
+Yup, with the same URL (instead of separate URLs), it gets cleaner too.
+
+Thanks!
+
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
