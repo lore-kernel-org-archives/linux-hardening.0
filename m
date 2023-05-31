@@ -2,181 +2,166 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC62C77B7C
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 03:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECB4C77B73
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 03:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232880AbjEaDTf (ORCPT
+        id S234035AbjEaDrx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 30 May 2023 23:19:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42234 "EHLO
+        Tue, 30 May 2023 23:47:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234206AbjEaDTE (ORCPT
+        with ESMTP id S229904AbjEaDrv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 30 May 2023 23:19:04 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2B2136;
-        Tue, 30 May 2023 20:18:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685503140; x=1717039140;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rc3ETc7I64gSMT1tTNMXUr3ZF19LVynActWENlkQG/Y=;
-  b=BVAAYqCG2WJAadD1PyDplh1+LtVlWN87YcN/nuq4VerY9cdbx4ZXC3Hn
-   Do4pexfGOAmvfvehRLpS/kmGSXHu3BNBHbY+PikJUVZ0hJIn3EXXx0gkg
-   pgVqFKlMTPuYeHAMCUrduJNAzbnMGC7VdULWa4NAHNOytTuffiAG5qUye
-   yqrbIh9g0UrH/U6wWEL28AgGYBsZvOtWHnb2iQ2CFDhsi8+tsZha0wGpJ
-   5yr1mW2n5pmisEzjyU6eXoUaOVFk01AAiiiA5HBaI7k3SolubIEJBHnsM
-   HaOMl8gUfaNzX+P1snk2HhkP/Y+Cwb9DXMdKBUd6I9aVh9mSMZ04djWJ4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="334741067"
-X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
-   d="scan'208";a="334741067"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 20:18:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="706702662"
-X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
-   d="scan'208";a="706702662"
-Received: from lkp-server01.sh.intel.com (HELO fb1ced2c09fb) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 30 May 2023 20:18:56 -0700
-Received: from kbuild by fb1ced2c09fb with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q4CMR-00012t-2t;
-        Wed, 31 May 2023 03:18:55 +0000
-Date:   Wed, 31 May 2023 11:18:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Maxim Krasnyansky <maxk@qti.qualcomm.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-um@lists.infradead.org
-Subject: Re: [PATCH] uml: Replace all non-returning strlcpy with strscpy
-Message-ID: <202305311135.zGMT1gYR-lkp@intel.com>
-References: <20230530164004.986750-1-azeemshaikh38@gmail.com>
+        Tue, 30 May 2023 23:47:51 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D95593;
+        Tue, 30 May 2023 20:47:49 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.169])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QWFb459NGz4f3v59;
+        Wed, 31 May 2023 11:47:44 +0800 (CST)
+Received: from [10.67.110.48] (unknown [10.67.110.48])
+        by APP3 (Coremail) with SMTP id _Ch0CgDXzhxKw3Zkmo0aJw--.10451S2;
+        Wed, 31 May 2023 11:47:45 +0800 (CST)
+Message-ID: <dac62b10-57c0-f021-0b87-5f7d0ab82678@huaweicloud.com>
+Date:   Wed, 31 May 2023 11:47:22 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230530164004.986750-1-azeemshaikh38@gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
+Content-Language: en-US
+To:     Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        kasan-dev@googlegroups.com, Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Gong Ruiqi <gongruiqi1@huawei.com>,
+        Jann Horn <jannh@google.com>
+References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
+ <CAB=+i9QxWL6ENDz_r1jPbiZsTUj1EE3u-j0uP6y_MxFSM9RerQ@mail.gmail.com>
+ <5f5a858a-7017-5424-0fa0-db3b79e5d95e@huawei.com>
+ <CAB=+i9R0GZiau7PKDSGdCOijPH1TVqA3rJ5tQLejJpoR55h6dg@mail.gmail.com>
+ <19707cc6-fa5e-9835-f709-bc8568e4c9cd@huawei.com>
+ <CAB=+i9T-iqtMZw8y7SxkaFBtiXA93YwFFEtQyGynBsorud1+_Q@mail.gmail.com>
+ <1cec95d5-5cd4-fbf9-754b-e6a1229d45c3@huaweicloud.com>
+ <ZG2mmWT5dxfMC3DW@debian-BULLSEYE-live-builder-AMD64>
+From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+In-Reply-To: <ZG2mmWT5dxfMC3DW@debian-BULLSEYE-live-builder-AMD64>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _Ch0CgDXzhxKw3Zkmo0aJw--.10451S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFykGF15GFyfKF1xGr43GFg_yoW5Aw48pF
+        WIyFyUAr48Wry7Cry0vw10ga9av3yxtF1Uu3s0gw17Zr1ktw1xXFn5Kry09F97uF45GFy3
+        ZFsYk3ZxWF9Iy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+        e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+        6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
+        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+        9x07UZ18PUUUUU=
+X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Azeem,
+Sorry for the late reply. I was trapped by other in-house kernel issues
+these days.
 
-kernel test robot noticed the following build errors:
+On 2023/05/24 13:54, Hyeonggon Yoo wrote:
+> On Mon, May 22, 2023 at 04:58:25PM +0800, GONG, Ruiqi wrote:
+>>
+>>
+>> On 2023/05/22 16:03, Hyeonggon Yoo wrote:
+>>> On Mon, May 22, 2023 at 4:35 PM Gong Ruiqi <gongruiqi1@huawei.com> wrote:
+>>>> On 2023/05/17 6:35, Hyeonggon Yoo wrote:
+>>> [...]
+>>>>>>>> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+>>>>>>>> +# define SLAB_RANDOMSLAB       ((slab_flags_t __force)0x01000000U)
+>>>>>>>> +#else
+>>>>>>>> +# define SLAB_RANDOMSLAB       0
+>>>>>>>> +#endif
+>>>>>
+>>>>> There is already the SLAB_KMALLOC flag that indicates if a cache is a
+>>>>> kmalloc cache. I think that would be enough for preventing merging
+>>>>> kmalloc caches?
+>>>>
+>>>> After digging into the code of slab merging (e.g. slab_unmergeable(),
+>>>> find_mergeable(), SLAB_NEVER_MERGE, SLAB_MERGE_SAME etc), I haven't
+>>>> found an existing mechanism that prevents normal kmalloc caches with
+>>>> SLAB_KMALLOC from being merged with other slab caches. Maybe I missed
+>>>> something?
+>>>>
+>>>> While SLAB_RANDOMSLAB, unlike SLAB_KMALLOC, is added into
+>>>> SLAB_NEVER_MERGE, which explicitly indicates the no-merge policy.
+>>>
+>>> I mean, why not make slab_unmergable()/find_mergeable() not to merge kmalloc
+>>> caches when CONFIG_RANDOM_KMALLOC_CACHES is enabled, instead of a new flag?
+>>>
+>>> Something like this:
+>>>
+>>> diff --git a/mm/slab_common.c b/mm/slab_common.c
+>>> index 607249785c07..13ac08e3e6a0 100644
+>>> --- a/mm/slab_common.c
+>>> +++ b/mm/slab_common.c
+>>> @@ -140,6 +140,9 @@ int slab_unmergeable(struct kmem_cache *s)
+>>>   if (slab_nomerge || (s->flags & SLAB_NEVER_MERGE))
+>>>   return 1;
+>>>
+>>> + if (IS_ENALBED(CONFIG_RANDOM_KMALLOC_CACHES) && (flags & SLAB_KMALLOC))
+>>> + return 1;
+>>> +
+>>>   if (s->ctor)
+>>>   return 1;
+>>>
+>>> @@ -176,6 +179,9 @@ struct kmem_cache *find_mergeable(unsigned int
+>>> size, unsigned int align,
+>>>   if (flags & SLAB_NEVER_MERGE)
+>>>   return NULL;
+>>>
+>>> + if (IS_ENALBED(CONFIG_RANDOM_KMALLOC_CACHES) && (flags & SLAB_KMALLOC))
+>>> + return NULL;
+>>> +
+>>>   list_for_each_entry_reverse(s, &slab_caches, list) {
+>>>   if (slab_unmergeable(s))
+>>>   continue;
+>>
+>> Ah I see. My concern is that it would affect not only normal kmalloc
+>> caches, but kmalloc_{dma,cgroup,rcl} as well: since they were all marked
+>> with SLAB_KMALLOC when being created, this code could potentially change
+>> their mergeablity. I think it's better not to influence those irrelevant
+>> caches.
+> 
+> I see. no problem at all as we're not running out of cache flags.
+> 
+> By the way, is there any reason to only randomize normal caches
+> and not dma/cgroup/rcl caches?
 
-[auto build test ERROR on uml/next]
-[also build test ERROR on uml/fixes wireless-next/main wireless/main linus/master v6.4-rc4 next-20230530]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The reason is mainly because based on my knowledge they are not commonly
+used for exploiting the kernel, i.e. they are not on the "attack
+surface", so it's unnecessary to do so. I'm not sure if other hardening
+experts have different opinions on that.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Azeem-Shaikh/uml-Replace-all-non-returning-strlcpy-with-strscpy/20230531-004115
-base:   git://git.kernel.org/pub/scm/linux/kernel/git/uml/linux next
-patch link:    https://lore.kernel.org/r/20230530164004.986750-1-azeemshaikh38%40gmail.com
-patch subject: [PATCH] uml: Replace all non-returning strlcpy with strscpy
-config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20230531/202305311135.zGMT1gYR-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/c51d7beb37cfbda321feb3811bbe0e381f804899
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Azeem-Shaikh/uml-Replace-all-non-returning-strlcpy-with-strscpy/20230531-004115
-        git checkout c51d7beb37cfbda321feb3811bbe0e381f804899
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=um SUBARCH=i386 olddefconfig
-        make W=1 O=build_dir ARCH=um SUBARCH=i386 SHELL=/bin/bash
+> 
+> Thanks,
+> 
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202305311135.zGMT1gYR-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   arch/um/os-Linux/drivers/tuntap_user.c: In function 'tuntap_open':
->> arch/um/os-Linux/drivers/tuntap_user.c:149:17: error: implicit declaration of function 'strscpy'; did you mean 'strncpy'? [-Werror=implicit-function-declaration]
-     149 |                 strscpy(ifr.ifr_name, pri->dev_name, sizeof(ifr.ifr_name));
-         |                 ^~~~~~~
-         |                 strncpy
-   cc1: some warnings being treated as errors
-
-
-vim +149 arch/um/os-Linux/drivers/tuntap_user.c
-
-   127	
-   128	static int tuntap_open(void *data)
-   129	{
-   130		struct ifreq ifr;
-   131		struct tuntap_data *pri = data;
-   132		char *output, *buffer;
-   133		int err, fds[2], len, used;
-   134	
-   135		err = tap_open_common(pri->dev, pri->gate_addr);
-   136		if (err < 0)
-   137			return err;
-   138	
-   139		if (pri->fixed_config) {
-   140			pri->fd = os_open_file("/dev/net/tun",
-   141					       of_cloexec(of_rdwr(OPENFLAGS())), 0);
-   142			if (pri->fd < 0) {
-   143				printk(UM_KERN_ERR "Failed to open /dev/net/tun, "
-   144				       "err = %d\n", -pri->fd);
-   145				return pri->fd;
-   146			}
-   147			memset(&ifr, 0, sizeof(ifr));
-   148			ifr.ifr_flags = IFF_TAP | IFF_NO_PI;
- > 149			strscpy(ifr.ifr_name, pri->dev_name, sizeof(ifr.ifr_name));
-   150			if (ioctl(pri->fd, TUNSETIFF, &ifr) < 0) {
-   151				err = -errno;
-   152				printk(UM_KERN_ERR "TUNSETIFF failed, errno = %d\n",
-   153				       errno);
-   154				close(pri->fd);
-   155				return err;
-   156			}
-   157		}
-   158		else {
-   159			err = socketpair(AF_UNIX, SOCK_DGRAM, 0, fds);
-   160			if (err) {
-   161				err = -errno;
-   162				printk(UM_KERN_ERR "tuntap_open : socketpair failed - "
-   163				       "errno = %d\n", errno);
-   164				return err;
-   165			}
-   166	
-   167			buffer = get_output_buffer(&len);
-   168			if (buffer != NULL)
-   169				len--;
-   170			used = 0;
-   171	
-   172			err = tuntap_open_tramp(pri->gate_addr, &pri->fd, fds[0],
-   173						fds[1], buffer, len, &used);
-   174	
-   175			output = buffer;
-   176			if (err < 0) {
-   177				printk("%s", output);
-   178				free_output_buffer(buffer);
-   179				printk(UM_KERN_ERR "tuntap_open_tramp failed - "
-   180				       "err = %d\n", -err);
-   181				return err;
-   182			}
-   183	
-   184			pri->dev_name = uml_strdup(buffer);
-   185			output += IFNAMSIZ;
-   186			printk("%s", output);
-   187			free_output_buffer(buffer);
-   188	
-   189			close(fds[0]);
-   190			iter_addresses(pri->dev, open_addr, pri->dev_name);
-   191		}
-   192	
-   193		return pri->fd;
-   194	}
-   195	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
