@@ -2,152 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34F7C7EE23
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 22:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CEEC77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 22:40:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbjEaWh3 (ORCPT
+        id S230433AbjEaWkk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 18:37:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49896 "EHLO
+        Wed, 31 May 2023 18:40:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230267AbjEaWh2 (ORCPT
+        with ESMTP id S230372AbjEaWkj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 18:37:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6108E9F;
-        Wed, 31 May 2023 15:37:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EB7EA62B7A;
-        Wed, 31 May 2023 22:37:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67BCAC433D2;
-        Wed, 31 May 2023 22:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685572646;
-        bh=EjcnHeLPSFskAfrECWzs0sBFgzC+oBoE4wsOMlpomy0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=edK7cDRjdx4uas4edYdeXU/b0jIuH8g7/WAZNO5DSDCcS0YaLilbgVUxIipuqn5Sp
-         lCrLS+s9ffLTuvceyREmandUiBzww2Vm0FYVd7oH4zVCgA7VgWyC4/aQm8/ZjNTSUf
-         b8dbYVPA/tpNUEHbYxINyxen0NE2uVgFjLwJopgxn2aGeJWfo+BwbqMuk5GklRaie4
-         BgZ3XO7jaS1yOCF3xtfHmqCN16wqOGz3/Y6/nx8TG/JM4IQehwiYUwDsrRH1KQ19w1
-         kYhSF0XubTIbUD/FtSIs0J51Ts29QRj156kFbUdfPrTl9s1jRsrnK2pZBGThy4VlGW
-         BHubXoEh2en9g==
-Date:   Wed, 31 May 2023 23:37:20 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        Joan Bruguera =?iso-8859-1?Q?Mic=F3?= <joanbrugueram@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Alyssa Ross <hi@alyssa.is>,
-        Heiko Stuebner <heiko.stuebner@vrull.eu>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] riscv/purgatory: Do not use fortified string functions
-Message-ID: <20230531-abruptly-settling-f9852f408dcd@spud>
-References: <20230531003404.never.167-kees@kernel.org>
+        Wed, 31 May 2023 18:40:39 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF37121;
+        Wed, 31 May 2023 15:40:38 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-3063433fa66so152649f8f.3;
+        Wed, 31 May 2023 15:40:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685572837; x=1688164837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mi6o6YBQqUF5E3caW8zl2Irs9/xXSVFAwQzFaKiXZmI=;
+        b=ilcExTWptvZ35tJBshw5zSrbw7gIgcclVFsp3D2GCUQ/UFw7/qMzwny0HagS/eZxHO
+         W4MsBd1MJspYRXY04Fg9dt4UTlfVixT9+7DFLZPJO3kjCFXR/bKB36RTbNS7b1MqOZwe
+         orthUIigTa6Lmm/X/qgqYDOFPXjnQW7RWvUlBSBATxGWGNGoKXMi+++flZjg/on7FZx7
+         8Fy/1vdHb6sITdtXDPqTYzwoCJTgL8y8onc6R0O5Q/ZuDOD9Vqzn8eqD1J1Dfx8bIPLe
+         r/lpKU8GJ+P2x0QJhTD3ti+pAyY4IZ9yye0FzEsUdir5cyGlS8IWflXlaNqhQeWdBXcD
+         7IPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685572837; x=1688164837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mi6o6YBQqUF5E3caW8zl2Irs9/xXSVFAwQzFaKiXZmI=;
+        b=aiznCNuedWvLLM5STNtqCVsTxQx7hRIYGQuwuKX2GqkWMKqY1BSesJiF7796MfZj/w
+         IuPFz+6y7doG2kH1gAsBprcDUqy8y6RsxkOzt/abx03DZdr/og08UuZvKp0UmzTLxhfF
+         ZnbEXexa2c2LKAOISFTJo/FInZzvKwSxlW+YP0z4tZcomLW497q+cTinD9PTWX2mTBgK
+         fdRHoptaHKLEJyN+JQdYdKXd70/t1YKhGvIKPZx0V0RpO7YgWUw6QEnNLUY1SwV5wMkw
+         9blMT8JnHKRwPbSw51VRr1cUgnUc7iMfb3RNBfM0crudSlOdEZFMibkY7QKgKrHb6hdo
+         /OFA==
+X-Gm-Message-State: AC+VfDyDsOWIPmv+x8JNdURaXTsxQmFzmZ8yAV6G+atLqtfIICm4wJak
+        A1k1OozVrmwrplM6oq4W+CZ4EN0b5Gwn20uJRMw=
+X-Google-Smtp-Source: ACHHUZ5UviObvhddrwCqGP2Y/rchKHebgaKxm9q2zoSp9v0pc7hyzheOv/b9GzQ3xzKHhz8/ILXvf4VAtphN5f3yzzU=
+X-Received: by 2002:a5d:474d:0:b0:309:38af:91c6 with SMTP id
+ o13-20020a5d474d000000b0030938af91c6mr360372wrs.68.1685572836768; Wed, 31 May
+ 2023 15:40:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZFT5h/br0IBkD5vu"
-Content-Disposition: inline
-In-Reply-To: <20230531003404.never.167-kees@kernel.org>
+References: <20230530155818.368562-1-azeemshaikh38@gmail.com> <yq1zg5kcgac.fsf@ca-mkp.ca.oracle.com>
+In-Reply-To: <yq1zg5kcgac.fsf@ca-mkp.ca.oracle.com>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Wed, 31 May 2023 18:40:24 -0400
+Message-ID: <CADmuW3V=b3SOvijU0MPCBadpcRBtRYfT5eWVQOvL8WH-z-BqbA@mail.gmail.com>
+Subject: Re: [PATCH] scsi: libfcoe: Replace all non-returning strlcpy with strscpy
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Hannes Reinecke <hare@suse.de>, linux-hardening@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Wed, May 31, 2023 at 6:03=E2=80=AFPM Martin K. Petersen
+<martin.petersen@oracle.com> wrote:
+>
+>
+> Azeem,
+>
+> > strlcpy() reads the entire source buffer first. This read may exceed
+> > the destination size limit. This is both inefficient and can lead to
+> > linear read overflows if a source string is not NUL-terminated [1]. In
+> > an effort to remove strlcpy() completely [2], replace strlcpy() here
+> > with strscpy(). No return values were used, so direct replacement is
+> > safe.
+>
+> Applied to 6.5/scsi-staging!
 
---ZFT5h/br0IBkD5vu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks Martin!
 
-Hey Kees,
+>
+> PS. It would help if you could submit changes like these as a series in
+> the future so I don't have to track each patch individually.
+>
 
-On Tue, May 30, 2023 at 05:34:04PM -0700, Kees Cook wrote:
-> With the addition of -fstrict-flex-arrays=3D3, struct sha256_state's
-> trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
->=20
-> struct sha256_state {
->         u32 state[SHA256_DIGEST_SIZE / 4];
->         u64 count;
->         u8 buf[SHA256_BLOCK_SIZE];
-> };
->=20
-> This means that the memcpy() calls with "buf" as a destination in
-> sha256.c's code will attempt to perform run-time bounds checking, which
-> could lead to calling missing functions, specifically a potential
-> WARN_ONCE, which isn't callable from purgatory.
->=20
-> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-> Closes: https://lore.kernel.org/lkml/175578ec-9dec-7a9c-8d3a-43f24ff86b92=
-@leemhuis.info/
-> Bisected-by: "Joan Bruguera Mic=F3" <joanbrugueram@gmail.com>
-> Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3D3")
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Conor Dooley <conor.dooley@microchip.com>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Alyssa Ross <hi@alyssa.is>
-> Cc: Heiko Stuebner <heiko.stuebner@vrull.eu>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: linux-riscv@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Perhaps this is indicative of other issues in RISC-V land, but
-allmodconfig complains about this patch:
-
-=2E./lib/string.c:17: warning: "__NO_FORTIFY" redefined
-=2E./lib/string.c:17:9: warning: preprocessor token __NO_FORTIFY redefined
-
-> ---
->  arch/riscv/purgatory/Makefile | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
-> index 5730797a6b40..11f4c275f141 100644
-> --- a/arch/riscv/purgatory/Makefile
-> +++ b/arch/riscv/purgatory/Makefile
-> @@ -31,9 +31,9 @@ $(obj)/strncmp.o: $(srctree)/arch/riscv/lib/strncmp.S F=
-ORCE
->  $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
->  	$(call if_changed_rule,cc_o_c)
-> =20
-> -CFLAGS_sha256.o :=3D -D__DISABLE_EXPORTS
-> -CFLAGS_string.o :=3D -D__DISABLE_EXPORTS
-> -CFLAGS_ctype.o :=3D -D__DISABLE_EXPORTS
-> +CFLAGS_sha256.o :=3D -D__DISABLE_EXPORTS -D__NO_FORTIFY
-> +CFLAGS_string.o :=3D -D__DISABLE_EXPORTS -D__NO_FORTIFY
-> +CFLAGS_ctype.o :=3D -D__DISABLE_EXPORTS -D__NO_FORTIFY
-> =20
->  # When linking purgatory.ro with -r unresolved symbols are not checked,
->  # also link a purgatory.chk binary without -r to check for unresolved sy=
-mbols.
-> --=20
-> 2.34.1
->=20
->=20
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
---ZFT5h/br0IBkD5vu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZHfMIAAKCRB4tDGHoIJi
-0skGAP0RP0L15KqUDxAa/Z7n2whLtyvwOJmOwsbDDBUC+eTiWAD/cULCWm/j6GXO
-GcD+DaRrgW5urSzwpXiAq1ng8PzMFwg=
-=q9r1
------END PGP SIGNATURE-----
-
---ZFT5h/br0IBkD5vu--
+Sure, I can do that.
