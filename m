@@ -2,83 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6C6C77B7C
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 11:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4028CC7EE23
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 12:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235326AbjEaLK1 (ORCPT
+        id S230476AbjEaMVs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 07:10:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58472 "EHLO
+        Wed, 31 May 2023 08:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235161AbjEaLKX (ORCPT
+        with ESMTP id S229765AbjEaMVs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 07:10:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F53C123;
-        Wed, 31 May 2023 04:10:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 31 May 2023 08:21:48 -0400
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAF7A10F;
+        Wed, 31 May 2023 05:21:46 -0700 (PDT)
+Received: from [192.168.192.83] (unknown [50.47.134.245])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 131C7639BF;
-        Wed, 31 May 2023 11:10:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5E640C433AA;
-        Wed, 31 May 2023 11:10:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685531421;
-        bh=VxuY/fz45/1OPprJtBqqQvLX1YX5laMRp+5DrTcdACQ=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=BE11DllLNI9e0jidWZPmC8GwYt4PYrmVI3Bx0oPMxpoh0nbWSOjXfEnVPfCfbCET2
-         2EN+M81Y4muvpD39kMSTuzFxXKoTo6U2RZBVqHlbW8hkais6TeNdyJgHtSq2hoYIPi
-         qY63nReaA/dWpbPmDDMM3rAMqCEKVybTMhbcfrX0KcpsMTRbSH8XutBqHRZGd+9xGb
-         SemGsABjXPvoixj5UzWdWZXlHCMFYEhQHMsnkjXk4Ph3Q9HDwOU0BpHwPb7dS0oNKC
-         andSZ9xAntGQEAog/NfN7HolOLstAXyHOZvfGp0mz1lbKo+XIDKMgFHYBtSddnrn3I
-         qTYiyqqzcpWfQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 37E97E4D002;
-        Wed, 31 May 2023 11:10:21 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 568DC41E12;
+        Wed, 31 May 2023 12:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1685535704;
+        bh=2RCEej4K5XPwpOdjmGnUsEFbXkDnSBYDQGM0QVWDj1s=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=L5DSDLE/du/kQdCq1yNvvc3K4Gx6NmH+18ZvXkQ7sjp9P4es8/Q++47hs8diF+nVm
+         wjk7Y8VH3VTf/gbt8XDwXbkyfKiJpZvL26u6vQWVIIzmdg9z96gCw+MxolgGQIVJVo
+         Xw7O7DSXWwDF5W/wgNgxF0CfPBGk2UzvZnhooZukpTuPwuKBGqfDb9TWxbdUXkxjNq
+         jTYMMDOmPyooRTUgQtnpZore5X+A0hgQyLi64VrUEv491y107FUwtZ4KduESsupr75
+         ibLCUDtoTx3Sm41No/ec9i+cR2WuQMr41nsjlpTlOS/DdaCy6MHRfb7fMm/i/4jxYq
+         01Tu6BfbuVfrg==
+Message-ID: <1f35dbba-9344-75c5-e870-31bc3198dbe0@canonical.com>
+Date:   Wed, 31 May 2023 05:21:40 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] bpf: Replace all non-returning strlcpy with strscpy
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <168553142122.8778.8422261276573581725.git-patchwork-notify@kernel.org>
-Date:   Wed, 31 May 2023 11:10:21 +0000
-References: <20230530155659.309657-1-azeemshaikh38@gmail.com>
-In-Reply-To: <20230530155659.309657-1-azeemshaikh38@gmail.com>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        linux-hardening@vger.kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
-        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iii@linux.ibm.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] apparmor: aa_buffer: Convert 1-element array to flexible
+ array
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, apparmor@lists.ubuntu.com,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230511213441.never.401-kees@kernel.org>
+ <7085879d-4d21-b90a-c08d-60450d1c7d38@canonical.com>
+ <202305301555.102E1890@keescook>
+From:   John Johansen <john.johansen@canonical.com>
+Organization: Canonical
+In-Reply-To: <202305301555.102E1890@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
-
-This patch was applied to bpf/bpf-next.git (master)
-by Daniel Borkmann <daniel@iogearbox.net>:
-
-On Tue, 30 May 2023 15:56:59 +0000 you wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
+On 5/30/23 15:55, Kees Cook wrote:
+> On Thu, May 11, 2023 at 02:48:29PM -0700, John Johansen wrote:
+>> On 5/11/23 14:34, Kees Cook wrote:
+>>> In the ongoing effort to convert all fake flexible arrays to proper
+>>> flexible arrays, replace aa_buffer's 1-element "buffer" member with a
+>>> flexible array.
+>>>
+>>> Cc: John Johansen <john.johansen@canonical.com>
+>>> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+>>> Cc: Paul Moore <paul@paul-moore.com>
+>>> Cc: James Morris <jmorris@namei.org>
+>>> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+>>> Cc: apparmor@lists.ubuntu.com
+>>> Cc: linux-security-module@vger.kernel.org
+>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>
+>> Acked-by: John Johansen <john.johansen@canonical.com>
+>>
+>> I have pulled this into my tree.
 > 
-> [...]
+> Just a quick ping: I haven't seen this show up in -next yet...
+> 
 
-Here is the summary with links:
-  - bpf: Replace all non-returning strlcpy with strscpy
-    https://git.kernel.org/bpf/bpf-next/c/ffadc372529e
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+oop, sorry looks like I didn't push, it should be fixed now
 
