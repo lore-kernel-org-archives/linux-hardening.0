@@ -2,134 +2,191 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44110C77B73
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 14:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D6CC77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 14:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230486AbjEaOtK (ORCPT
+        id S232648AbjEaO53 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 10:49:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
+        Wed, 31 May 2023 10:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231806AbjEaOtG (ORCPT
+        with ESMTP id S232329AbjEaO52 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 10:49:06 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50AF12B;
-        Wed, 31 May 2023 07:48:58 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-30ad99fa586so5684809f8f.2;
-        Wed, 31 May 2023 07:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685544537; x=1688136537;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7V4aOa0uoRUYdUYR7nYgnOP0GeYZb+MEHjtYTAKUMpk=;
-        b=I7yQjZAPk+FyhtHqaIyqfNSBEuTn/tUjS1WTW8UzUCyC/TPspyBMOpyTVe5C1UwtkW
-         zBIUHtPdwRHfvbhwsf/wrk3TZBGgEQuIhkgigULoUwO1yazAQEuRaaZsDhHEKsroFnz9
-         jQgMaoPnkbVQ+IkipzRg9w//UbrJh0BjFT0XcgUHj+yvQCQoWs7opHwh2+cwqzFB8tJy
-         eJJxaAvRqAnF2ejEw79yQ0tyHKvikpJApcAM8hzWPj4KKGvU0hKx2liyXjHlLK3+VAYK
-         kOSi+WDzR1BVszmXwArP1TpCqoAjt0XjvrlTm40UldWxydE4tt/pSHH6L2gvKNb2i1LU
-         zpNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685544537; x=1688136537;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7V4aOa0uoRUYdUYR7nYgnOP0GeYZb+MEHjtYTAKUMpk=;
-        b=IKKabu9u/iYvRoysyiQG/uRbVbFsW7MF1TX3sdofRSDCNJ3dH0pNXqzarWRiJ7JwqM
-         mA8jHq4np/diGscY/99qpAMDaoN1qo9QPG9E92mA8dH6WKLWBD63MibpoKxEuIaUnzSu
-         UWHooIr9/fM20nw3rKyly/z9MT9Qt+p04+eh+A/cTzdqy/pkzVkxJybNtO0o8Rf100Mi
-         hcizmZ+d6QABSZO3TMiP9Ctt7bllgKO+OQmgfyRUXfAhUzcK0B/qLE98hIsZktL75FCm
-         2rcMI5WC/ti8fLyMfsCaosDV+Gq2rAG9JC2VK6MI406aZ1iYc30TXE0Shfrg8Bob9ZTF
-         e7sQ==
-X-Gm-Message-State: AC+VfDzlwe7YJaBOhJRdHkGGWrmCT62194YL6XxDGOllTQV5vMDvb2XK
-        Ish7zmKL3tNoTKeKynSuYCZ35ahUxX0S53+MlxQ=
-X-Google-Smtp-Source: ACHHUZ76Ha8CZKICeSBhZyU4Oyb1eBY8UiUyGLLhoB9dAjS/BuxWDWVoT4O+XDFk7Ug65aGOLRPzLbhLSjSA+TzBi4Q=
-X-Received: by 2002:adf:d851:0:b0:304:8147:f0ba with SMTP id
- k17-20020adfd851000000b003048147f0bamr4748357wrl.3.1685544536973; Wed, 31 May
- 2023 07:48:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230530164004.986750-1-azeemshaikh38@gmail.com>
- <202305311135.zGMT1gYR-lkp@intel.com> <09A0C6FA-669F-4B73-9620-43AEA17E5D0C@kernel.org>
- <103925562.158061.1685514200368.JavaMail.zimbra@nod.at> <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com>
-In-Reply-To: <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com>
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Wed, 31 May 2023 10:48:45 -0400
-Message-ID: <CADmuW3WXDg-5SFXkMDE6BmvSwLNHmXpTzBonaOL8eErc4+d3qQ@mail.gmail.com>
-Subject: Re: [PATCH] uml: Replace all non-returning strlcpy with strscpy
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Richard Weinberger <richard@nod.at>, Kees Cook <kees@kernel.org>,
-        kernel test robot <lkp@intel.com>,
-        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
-        oe-kbuild-all <oe-kbuild-all@lists.linux.dev>,
-        linux-hardening@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        anton ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-um <linux-um@lists.infradead.org>
+        Wed, 31 May 2023 10:57:28 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C0E11D;
+        Wed, 31 May 2023 07:57:25 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34VEg85R030847;
+        Wed, 31 May 2023 14:56:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : reply-to : to : cc : date : in-reply-to : references : content-type
+ : mime-version : content-transfer-encoding; s=pp1;
+ bh=OBYjAsiQnYeqsncNk244KPMIAGvoR7IKEXAV3+x3XmY=;
+ b=VK4s0Z0LU5Q0JFwRrBWPdUE/BmlwNhytMGNfJyO7BjpGyJ+zdvyQjfXKbUn1TOITDfTH
+ bjNTrNWoxSidiPbdO/teq2cNU8Qk8ADaDKTbai7AV+z8XLe/ZBQCM2YaVUPalIxEKYvW
+ xOLFBvHQ/FpgspQC+jXzaZp2WG2C08Po4Ld0Bfbm/SFrKCJs4Odtzu2yJplCzqTC/D+W
+ 2vy4jvGbtp385jyzAUmTgfgKkS43xFfBmJ0WhbA49qvViVzepsFheod9YgMRB9pkdiD7
+ Lns0jelZ7KLOh7kDWOmoKufI5P/48rcUaYjESkzGqoGzOQzaQPtY0cm5qiav0r/ljDRH lA== 
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qx87s0fnv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 31 May 2023 14:56:56 +0000
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34VBZs0T008110;
+        Wed, 31 May 2023 14:56:54 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([9.208.129.117])
+        by ppma02wdc.us.ibm.com (PPS) with ESMTPS id 3qu9g8c5pf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 31 May 2023 14:56:54 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+        by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34VEureu4784708
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 May 2023 14:56:53 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7584A58057;
+        Wed, 31 May 2023 14:56:52 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7298558059;
+        Wed, 31 May 2023 14:56:51 +0000 (GMT)
+Received: from lingrow.int.hansenpartnership.com (unknown [9.61.55.64])
+        by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 31 May 2023 14:56:51 +0000 (GMT)
+Message-ID: <25ef15e7601e1b4510cbbd40c6d1ab7c64213863.camel@linux.ibm.com>
+Subject: Re: [PATCH][next] scsi: lpfc: Avoid -Wstringop-overflow warning
+From:   James Bottomley <jejb@linux.ibm.com>
+Reply-To: jejb@linux.ibm.com
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Date:   Wed, 31 May 2023 10:56:50 -0400
+In-Reply-To: <202305301529.1EEA11B@keescook>
+References: <ZHZq7AV9Q2WG1xRB@work>
+         <fe0739cbe279cf9db2ebff1146e7ae540cc1ad6c.camel@linux.ibm.com>
+         <202305301529.1EEA11B@keescook>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.42.4 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WBQatvEGQiKAHXw7oHidJWHURI-cBAD_
+X-Proofpoint-GUID: WBQatvEGQiKAHXw7oHidJWHURI-cBAD_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-31_08,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ bulkscore=0 lowpriorityscore=0 clxscore=1011 priorityscore=1501
+ suspectscore=0 spamscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305310124
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Thanks Geert and Richard for the review.
+On Tue, 2023-05-30 at 15:44 -0700, Kees Cook wrote:
+> On Tue, May 30, 2023 at 05:36:06PM -0400, James Bottomley wrote:
+> > On Tue, 2023-05-30 at 15:30 -0600, Gustavo A. R. Silva wrote:
+> > > Avoid confusing the compiler about possible negative sizes.
+> > > Use size_t instead of int for variables size and copied.
+> > > 
+> > > Address the following warning found with GCC-13:
+> > > In function ‘lpfc_debugfs_ras_log_data’,
+> > >     inlined from ‘lpfc_debugfs_ras_log_open’ at
+> > > drivers/scsi/lpfc/lpfc_debugfs.c:2271:15:
+> > > drivers/scsi/lpfc/lpfc_debugfs.c:2210:25: warning: ‘memcpy’
+> > > specified
+> > > bound between 18446744071562067968 and 18446744073709551615
+> > > exceeds
+> > > maximum object size 9223372036854775807 [-Wstringop-overflow=]
+> > >  2210 |                         memcpy(buffer + copied, dmabuf-
+> > > >virt,
+> > >       |                        
+> > > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >  2211 |                                size - copied - 1);
+> > >       |                                ~~~~~~~~~~~~~~~~~~
+> > > 
+> > 
+> > This looks like a compiler bug to me and your workaround would have
+> > us using unsigned types everywhere for sizes, which seems wrong. 
+> > There are calls which return size or error for which we have
+> > ssize_t and that type has to be usable in things like memcpy, so
+> > the compiler must be fixed or the warning disabled.
+> 
+> The compiler is (correctly) noticing that the calculation involving
+> "size" (from which "copied" is set) could go negative.
 
-On Wed, May 31, 2023 at 4:05=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> On Wed, May 31, 2023 at 8:23=E2=80=AFAM Richard Weinberger <richard@nod.a=
-t> wrote:
-> > ----- Urspr=C3=BCngliche Mail -----
-> > >>>> arch/um/os-Linux/drivers/tuntap_user.c:149:17: error: implicit dec=
-laration of
-> > >>>> function 'strscpy'; did you mean 'strncpy'?
-> > >>>> [-Werror=3Dimplicit-function-declaration]
-> > >>     149 |                 strscpy(ifr.ifr_name, pri->dev_name,
-> > >>     sizeof(ifr.ifr_name));
-> > >>         |                 ^~~~~~~
-> > >>         |                 strncpy
-> > >>   cc1: some warnings being treated as errors
-> > >
-> > > Ah, yeah, this is another "not actually in the kernel" cases. Let's i=
-gnore this
-> > > strlcpy for now.
-> >
-> > Well, actually it's another case of "not even compile tested". :-(
+It can?  But if it can, then changing size and copied to unsigned
+doesn't fix it, does it?
 
-Argh, my test script wasn't cross-compiling for um. Sorry about that :(
+> The "unsigned types everywhere" is a slippery slope argument that
+> doesn't apply: this is fixing a specific case of a helper taking a
+> size that is never expected to go negative in multiple places
+> (open-coded multiplication, vmalloc, lpfc_debugfs_ras_log_data, etc).
+> It should be bounds checked at the least...
 
-> > Well, strlcpy() isn't part of libc either, so all this would need is to
-> > add it to user.h just like strlcpy() is now?
->
-> I think so.
-> Azeem, can you please test your changes with this fixup applied?
->
-> diff --git a/arch/um/include/shared/user.h b/arch/um/include/shared/user.=
-h
-> index bda66e5a9d4e3..e5d3fbbafe4d2 100644
-> --- a/arch/um/include/shared/user.h
-> +++ b/arch/um/include/shared/user.h
-> @@ -52,6 +52,7 @@ static inline int printk(const char *fmt, ...)
->  extern int in_aton(char *str);
->  extern size_t strlcpy(char *, const char *, size_t);
->  extern size_t strlcat(char *, const char *, size_t);
-> +extern ssize_t strscpy(char *, const char *, size_t);
->
->  /* Copied from linux/compiler-gcc.h since we can't include it directly *=
-/
->  #define barrier() __asm__ __volatile__("": : :"memory")
->
+So your claim is the compiler only gets it wrong in this one case and
+if we just change this one case it will never get it wrong again?  I
+think I prefer the idea that there's a problem in the bounds checking
+code which should be susceptible to fixing if we file a compiler bug
+(either it should get it right or ignore the case if it can't decide).
 
-Tested with this fixup, and it builds successfully on ARCH=3Dum
-SUBARCH=3Di386. Let me know if I need to test with any other
-cross-compilation options before I send out v2.
+> struct lpfc_hba {
+>         ...
+>         uint32_t cfg_ras_fwlog_buffsize;
+>         ...
+> };
+> 
+> lpfc_debugfs_ras_log_open():
+>         ...
+>         struct lpfc_hba *phba = inode->i_private;
+>         int size;
+>         ...
+>         size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba-
+> >cfg_ras_fwlog_buffsize;
+>         debug->buffer = vmalloc(size);
+>         ...
+>         debug->len = lpfc_debugfs_ras_log_data(phba, debug->buffer,
+> size);
+>         ...
+> 
+> lpfc_debugfs_ras_log_data():
+>         ...
+>                 if ((copied + LPFC_RAS_MAX_ENTRY_SIZE) >= (size - 1))
+> {
+>                         memcpy(buffer + copied, dmabuf->virt,
+>                                size - copied - 1);
+> 
+> Honestly, the "if" above is the weirdest part, and perhaps that
+> should
+> just be adjusted instead:
+> 
+>         if (size <= LPFC_RAS_MAX_ENTRY_SIZE)
+>                 return -ENOMEM;
+>         ...
+>                 if (size - copied <= LPFC_RAS_MAX_ENTRY_SIZE) {
+>                         memcpy(..., size - copied - 1);
+>                         copied += size - copied - 1;
+>                         break;
+>                 }
+>                 ...
+>         }
+>         return copied;
 
->
-> Ah, yeah, this is another "not actually in the kernel" cases. Let's ignor=
-e this strlcpy for now.
->
-> -Keed
+No one said you couldn't improve the code.  It was claiming a fix by
+changing a signed variable to unsigned that got my attention because
+it's a classic indicator of compiler problems.  I didn't say anything
+about all the strlcpy replacements where the source is guaranteed to be
+zero terminated so the problem alluded to in the changelog doesn't
+exist.  But since it all becomes about the inefficiency of the ignored
+strlen it did strike me that the most common pattern in sysfs code is
+strlcpy followed by strim or strstrip, which could be done slightly
+more efficiently as a single operation, if someone wanted actually to
+improve our sysfs use cases ...
 
-Planning to send out v2 with the fixup from Richard applied. Let me
-know if that's ok.
+James
+
+
