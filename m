@@ -2,92 +2,109 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE5AC7EE2D
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 16:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9544C77B73
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 17:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229455AbjEaQVt (ORCPT
+        id S229716AbjEaRvK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 12:21:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50050 "EHLO
+        Wed, 31 May 2023 13:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjEaQVs (ORCPT
+        with ESMTP id S229640AbjEaRvJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 12:21:48 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 447F712B
-        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 09:21:47 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id ca18e2360f4ac-7757912a0d7so29761039f.0
-        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 09:21:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1685550106; x=1688142106;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hg+/RwjgAOmuS7CF1LaIbSlSxY/uKBLgXsnl2EkkK7k=;
-        b=E4TcNKU3cNdfY2ktgFq62wNxOPeKBNKmHA3yKEXTCab0bm2UE3Oj4hxBs99EjQfBRo
-         lc/eWGxWQMgtPaeTBZYDDszDeFBL1nMMQFK3ECeF0M0Fd43+vgu5lJcQ+I/gDMc3st+N
-         kYu8uwZCISnSzIG8RRQsUw4+kFRXZCtLb7mn6VoxBILAnN5K2JyU7BEbKVgb2mLUl6xA
-         yMzQqELcEVbhDeU33AB5ipI9SChFC6tqQjC0PI/uFqsAuPPH23lHnDTmCEsBiYc7Yukw
-         qog/3QUJsR+T8G43Y/Ja+hevdBnfNS9cI73yw0/UQ1lht8AGRySuGrJl6/Sktrsq9TI6
-         dYNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685550106; x=1688142106;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hg+/RwjgAOmuS7CF1LaIbSlSxY/uKBLgXsnl2EkkK7k=;
-        b=RmM/DoHKTwJi1r+/8V3eglgYQUxi8U1UDN9gbeGP5RZJ2gEvZreFtK7wN8d3o0cLxM
-         +90b6jpwkUOIx6tYfB/R4XXulVZNJGNrTtc7w0FKIQgfFmVYhmoRZGvA7amxGhrE3kZh
-         U5WYC1epj/Ia96sa0l+uwMH/2wMTgd9GxCONgfXZhtX/pPkVJGR1NjvxbjfvH38UJzka
-         KiqwDp4TV2dOyHn/WsJLpx5QZBO4OFs3un3tZI6F/wgvxjlmQQUW8vstuu8P+hYf2Veb
-         FWy1jay3ilpzSP5skNdZEQsLWPSu/7FXP8pXwIqaMI1v4PB8SRSC+TL5MFqPfVy2pfZP
-         rnKw==
-X-Gm-Message-State: AC+VfDw301XvHpFieoIfmwfuNhccZ/OJriUVzCmL3B4Vm/CXRtVhAtQF
-        it1n2/SpHd5uzQInLgX9htN4rg==
-X-Google-Smtp-Source: ACHHUZ7GTzr9QD+I+vo+zw7ihxMJan5que1vsiWmGxti6PhH0u6IJbyHy05bhK4+ZjTcZ3qoKq1pRw==
-X-Received: by 2002:a05:6e02:20ee:b0:33a:9887:ad6e with SMTP id q14-20020a056e0220ee00b0033a9887ad6emr1697813ilv.2.1685550106535;
-        Wed, 31 May 2023 09:21:46 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id i19-20020a02b693000000b004143ffd4399sm1503313jam.39.2023.05.31.09.21.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 09:21:45 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20230530155608.272266-1-azeemshaikh38@gmail.com>
-References: <20230530155608.272266-1-azeemshaikh38@gmail.com>
-Subject: Re: [PATCH] block: Replace all non-returning strlcpy with strscpy
-Message-Id: <168555010526.195181.15421490997743979443.b4-ty@kernel.dk>
-Date:   Wed, 31 May 2023 10:21:45 -0600
+        Wed, 31 May 2023 13:51:09 -0400
+Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89E8128;
+        Wed, 31 May 2023 10:51:05 -0700 (PDT)
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay06.hostedemail.com (Postfix) with ESMTP id D8E28AE40D;
+        Wed, 31 May 2023 17:51:03 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf05.hostedemail.com (Postfix) with ESMTPA id 2627220016;
+        Wed, 31 May 2023 17:50:59 +0000 (UTC)
+Message-ID: <f8efee7cd9f6f685dcf8b90f9169029fec6481e3.camel@perches.com>
+Subject: Re: [PATCH v4] checkpatch: Check for 0-length and 1-element arrays
+From:   Joe Perches <joe@perches.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Andy Whitcroft <apw@canonical.com>
+Cc:     Dwaipayan Ray <dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Date:   Wed, 31 May 2023 10:50:58 -0700
+In-Reply-To: <20230531004929.you.436-kees@kernel.org>
+References: <20230531004929.you.436-kees@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-00303
+X-Rspamd-Queue-Id: 2627220016
+X-Rspamd-Server: rspamout06
+X-Stat-Signature: 496175hzteijz6amhbb9zwp5k5ouzkxg
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/Jfx/imyxU+afF/ZXYFTbrkeypYQORHFk=
+X-HE-Tag: 1685555459-506856
+X-HE-Meta: U2FsdGVkX1+aNTuKxLN4EcbXc1zX6K25fsYiiCIKqnZSBShcyHIuzQnlt6oz3EFhzPcd7P3OnSsclk6GYxlreg==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-On Tue, 30 May 2023 15:56:08 +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
+On Tue, 2023-05-30 at 17:49 -0700, Kees Cook wrote:
+> Fake flexible arrays have been deprecated since last millennium. Proper
+> C99 flexible arrays must be used throughout the kernel so
+> CONFIG_FORTIFY_SOURCE and CONFIG_UBSAN_BOUNDS can provide proper array
+> bounds checking.
 > 
-> [...]
+> Cc: Andy Whitcroft <apw@canonical.com>
+> Cc: Joe Perches <joe@perches.com>
+> Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
+> Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Link: https://lore.kernel.org/r/20230517204530.never.151-kees@kernel.org
+> ---
+> v4:
+>  - combine errors (joe)
+>  - switch to kerndoc url (joe)
+>  - add __packed for struct matching (joe)
+> v3: https://lore.kernel.org/r/20230527020929.give.261-kees@kernel.org
+> v2: https://lore.kernel.org/lkml/20230526173921.gonna.349-kees@kernel.org
+> v1: https://lore.kernel.org/lkml/20230517204530.never.151-kees@kernel.org
+> ---
+>  scripts/checkpatch.pl | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 30b0b4fdb3bf..64d21b6aa6df 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -7430,6 +7430,16 @@ sub process {
+>  			}
+>  		}
+>  
+> +# check for array definition/declarations that should use flexible arrays instead
+> +		if ($sline =~ /^[\+ ]\s*}\s*;\s*$/ &&
+> +		    $prevline =~ /^\+\s*(?:\}(?:\s*__packed\s*)?|$Type)\s*$Ident\s*\[\s*(0|1)\s*\]\s*;\s*$/) {
 
-Applied, thanks!
+__packed could be used when a struct is defined and so
+needs to also be added to $sline.
 
-[1/1] block: Replace all non-returning strlcpy with strscpy
-      commit: 8e8fedab1194ef90e007636eb3d224c4f8e979a7
+		if ($sline =~ /^[\+ ]\s*}\s*(?:__packed\s*)?;\s*$/ &&
 
-Best regards,
--- 
-Jens Axboe
+e.g.:
 
+struct foo {
+	int a;
+	int b[0];
+} __packed;
 
+> +			if (ERROR("FLEXIBLE_ARRAY",
+> +				  "Use C99 flexible arrays - see https://docs.kernel.org/process/deprecated.html#zero-length-and-one-element-arrays\n" . $hereprev) &&
+> +			    $1 == '0' && $fix) {
+> +				$fixed[$fixlinenr - 1] =~ s/\[\s*0\s*\]/[]/;
+> +			}
+> +		}
+> +
+>  # nested likely/unlikely calls
+>  		if ($line =~ /\b(?:(?:un)?likely)\s*\(\s*!?\s*(IS_ERR(?:_OR_NULL|_VALUE)?|WARN)/) {
+>  			WARN("LIKELY_MISUSE",
 
