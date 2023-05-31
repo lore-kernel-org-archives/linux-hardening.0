@@ -2,93 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1499AC7EE23
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 13:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45566C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 14:33:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236509AbjEaNcD (ORCPT
+        id S235998AbjEaOds (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 09:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49050 "EHLO
+        Wed, 31 May 2023 10:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236575AbjEaNbm (ORCPT
+        with ESMTP id S231215AbjEaOdr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 09:31:42 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 772A61FC2
-        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 06:30:14 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-bad041bf313so8091106276.0
-        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 06:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685539797; x=1688131797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=itMAWlEVGbKwEk4rvkPhIkKoGJ+D+wP/v3giQWPxtxE=;
-        b=TKCUTBNhaMHi5eEwlnd8h2q+kD82oaJbKs2k83VnkFN/LAlkS5QIqyaEEiuaw+aq6u
-         LixoStQwyq04QLXTSmPDys2uR2TCA3/U4ubZVeqo0+ffYdGszIF/JuiUF8pvgOVMF504
-         bucgsWzvisZPfQVRXgJJ/DepOGZ6EOyDovqUQumwdIltz0mDRkPY6TgbikvaFwRc9IC/
-         xCRJ2taW6FATuHjTWctppSmYAU9kftlV3iq07JDkueaa5A1JhNnNBQe+iPBqWZakSHB1
-         Ph7q8ACJfKXxN/XM0vHaWmI1DM0bldtPVV09gEvgJYJzcWe2ZHKnKqm53Qg+5kuWdYqU
-         2xFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685539797; x=1688131797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=itMAWlEVGbKwEk4rvkPhIkKoGJ+D+wP/v3giQWPxtxE=;
-        b=N5FBHAM+kwY2G6DQYpVHdw8YkXJSM/93VmJZisKIDVl30rgQpkHKQxMjnYXOadE8JG
-         9ICfgXsh/z8M+rT4euzJSX9q1lSTb6p2JXfrwd9DqlfdkGps+DxY/lWfkxQCxB5Fv42C
-         TB9QgENBShk95susK9Z/wo1I7ZhqJBhhERRdEwsQUBauMvnSGtn9x4hhy7dho4tMUUJx
-         Msi/VmI+q8V7aMqFR2HfdzXqK1+5O9+L91zyVcorhq3M6qOLlVnq41+L3qQq9Gs5JKP6
-         IxIM2kP1EIYQoHZfw/6+WceEHjc7FsDjMe4ERjNEOAL1VCLFjHk6+WJV3y88H8UVGlSn
-         Z8Yg==
-X-Gm-Message-State: AC+VfDyqJSps2QEE8Vhj/I3YMCse+Dd/5GIjnloRANNZU/Fun13fBCoo
-        DZUaet69rfoItoygJt01ZXLfNgu19FP1VTyKxRB3XQ==
-X-Google-Smtp-Source: ACHHUZ4Py4Uo3YiGtvPZ/kUjXKdiyOhcEX0VVb0BTsQkmbteSEWWazQWYqFQhh8JSeV3efIYepXV/ugoOYAZMdYFtLI=
-X-Received: by 2002:a25:addc:0:b0:ba8:4bc6:7918 with SMTP id
- d28-20020a25addc000000b00ba84bc67918mr6555542ybe.32.1685539796988; Wed, 31
- May 2023 06:29:56 -0700 (PDT)
+        Wed, 31 May 2023 10:33:47 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9487995;
+        Wed, 31 May 2023 07:33:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2863263CCF;
+        Wed, 31 May 2023 14:33:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A6CC433D2;
+        Wed, 31 May 2023 14:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685543625;
+        bh=L/dTiuT+ktTPMYaEXn8ndEBWIS2gWoNfI9OE21M1RCg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DAWDh6MT2/MOtKpYopxqF6yhYjN3Qup3Cr0wyjAksB7/WUJjjrXFFe6DjOfpMfBM4
+         QZowXDJ9uBub7Qjj5Vt1XAJTM/HlFOmmg4X09fqxPu164R8LFPiGxGF1yOhpELJ1P9
+         SPBfjOB3mU8YdPM0ZSV0XgBA2bNFvS9E2sjK5KI5GSl5GToBpbbt6q1+bT+xJX1Htr
+         ZkXqctLQYhkudRx5Inv6rqeTVwzKiI6w3ReyywcO/G2KiKFB5hSZ3IjNKosI0kAeoN
+         43otBMx5iqyOI883q+oSEOCBdmreGVQmmSR7FOm0SMAsitUknO+pk8V8xrmBnxnO0v
+         PPH+G4yJm2wCg==
+Date:   Wed, 31 May 2023 07:33:42 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Heiko Carstens <hca@linux.ibm.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Joan Bruguera =?iso-8859-1?Q?Mic=F3?= <joanbrugueram@gmail.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kernel Functional Testing <lkft@linaro.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] s390/purgatory: Do not use fortified string functions
+Message-ID: <20230531143342.GA2250333@dev-arch.thelio-3990X>
+References: <20230531003414.never.050-kees@kernel.org>
 MIME-Version: 1.0
-References: <20230530155501.222213-1-azeemshaikh38@gmail.com>
-In-Reply-To: <20230530155501.222213-1-azeemshaikh38@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 31 May 2023 15:29:46 +0200
-Message-ID: <CACRpkdbf_biFPFC62uF1byXrMnK=0XbbBiZpJwT=GVnx5ZpP=g@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Replace all non-returning strlcpy with strscpy
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230531003414.never.050-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, May 30, 2023 at 5:55=E2=80=AFPM Azeem Shaikh <azeemshaikh38@gmail.c=
-om> wrote:
+On Tue, May 30, 2023 at 05:34:15PM -0700, Kees Cook wrote:
+> With the addition of -fstrict-flex-arrays=3, struct sha256_state's
+> trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
+> 
+> struct sha256_state {
+>         u32 state[SHA256_DIGEST_SIZE / 4];
+>         u64 count;
+>         u8 buf[SHA256_BLOCK_SIZE];
+> };
+> 
+> This means that the memcpy() calls with "buf" as a destination in
+> sha256.c's code will attempt to perform run-time bounds checking, which
+> could lead to calling missing functions, specifically a potential
+> WARN_ONCE, which isn't callable from purgatory.
+> 
+> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+> Closes: https://lore.kernel.org/lkml/175578ec-9dec-7a9c-8d3a-43f24ff86b92@leemhuis.info/
+> Bisected-by: "Joan Bruguera Micó" <joanbrugueram@gmail.com>
+> Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> Cc: Sven Schnelle <svens@linux.ibm.com>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Linux Kernel Functional Testing <lkft@linaro.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-s390@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
-y
-> [2] https://github.com/KSPP/linux/issues/89
->
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+Reading https://lore.kernel.org/202305301658.BF6ECF65C@keescook/ was
+some good additional context.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-Please put this into Russell's patch tracker:
-https://www.arm.linux.org.uk/developer/patches/
-
-Yours,
-Linus Walleij
+> ---
+>  arch/s390/purgatory/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+> index 32573b4f9bd2..cf14740abd1c 100644
+> --- a/arch/s390/purgatory/Makefile
+> +++ b/arch/s390/purgatory/Makefile
+> @@ -10,7 +10,7 @@ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+>  $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+>  	$(call if_changed_rule,cc_o_c)
+>  
+> -CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+> +CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
+>  
+>  $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
+>  	$(call if_changed_rule,as_o_S)
+> -- 
+> 2.34.1
+> 
