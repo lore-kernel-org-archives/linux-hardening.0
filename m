@@ -2,205 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3A97C7EE32
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 08:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63E6C7EE31
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 08:05:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234823AbjEaIBJ (ORCPT
+        id S235144AbjEaIFY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 04:01:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59446 "EHLO
+        Wed, 31 May 2023 04:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235379AbjEaIAf (ORCPT
+        with ESMTP id S235209AbjEaIFW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 04:00:35 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C8FF10D9;
-        Wed, 31 May 2023 00:59:51 -0700 (PDT)
-Received: from dggpemm500016.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QWM4Z0qGdz18Lsy;
-        Wed, 31 May 2023 15:55:10 +0800 (CST)
-Received: from [10.67.110.48] (10.67.110.48) by dggpemm500016.china.huawei.com
- (7.185.36.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 31 May
- 2023 15:59:47 +0800
-Message-ID: <83f6cfbd-d081-5a76-7c7f-5e0b90b4ac74@huawei.com>
-Date:   Wed, 31 May 2023 15:59:47 +0800
+        Wed, 31 May 2023 04:05:22 -0400
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC4B186;
+        Wed, 31 May 2023 01:05:19 -0700 (PDT)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-ba8afcc82c0so9674230276.2;
+        Wed, 31 May 2023 01:05:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685520318; x=1688112318;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WxrLCY7viWKO0bQukw/w0leEI6ByM9jS8ud+syXrPAA=;
+        b=Uhx7nKUaoSkSR62NEBI4+hdfkKdDskOZ99h5ShAzEEXktLfci1qrtO8J4Ve/Grkfc2
+         FoFoq5CC0yOptAp7JU1akzRvQZ/ZGeUAV7mcHuiLr6ZeRP8OiwKuCcN4zAJ9fkqPNHAt
+         8TheNPExjOC8+OsJ6k/PctPH4rfgMKaOs3msibusdQAOpP7H7jR6CMFVDx7gtz6RkVkl
+         HKy2szAZ8is3u74f0SoW1vAvBeOj68joKqlkHiMk4cKh5HgsWrzTh6DDimsP41ZSsOvq
+         O4uI3adh9ktVG0iHvKeFZls66Ynss8TqqQ15tbKFQ3K0EsdudutY+9oeAQ3QnE0GhgB+
+         79mQ==
+X-Gm-Message-State: AC+VfDzeC9699+uAG8CkybjsAd/vx5ZofCw1hOMQWV7Yk3kqz3C+Q2IE
+        mspNUqqvcpHZmgVVOMpqz+3pDBXqcJQjSQ==
+X-Google-Smtp-Source: ACHHUZ6/z6LDEEniz4dMW/GZfwhHxNId7kISyGyx8wVuDyiYrHmJoLvTwM6mhugc/W0w+P3ZEiOwrw==
+X-Received: by 2002:a25:c707:0:b0:ba8:9096:8207 with SMTP id w7-20020a25c707000000b00ba890968207mr6355433ybe.5.1685520318106;
+        Wed, 31 May 2023 01:05:18 -0700 (PDT)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
+        by smtp.gmail.com with ESMTPSA id cf13-20020a056902180d00b00bad07875d9bsm3545655ybb.11.2023.05.31.01.05.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 May 2023 01:05:17 -0700 (PDT)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-565eb83efe4so51934557b3.0;
+        Wed, 31 May 2023 01:05:16 -0700 (PDT)
+X-Received: by 2002:a0d:ccd3:0:b0:561:e89d:e263 with SMTP id
+ o202-20020a0dccd3000000b00561e89de263mr4627466ywd.52.1685520316792; Wed, 31
+ May 2023 01:05:16 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH RFC v2] Randomized slab caches for kmalloc()
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
-CC:     Vlastimil Babka <vbabka@suse.cz>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        <kasan-dev@googlegroups.com>,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-References: <20230508075507.1720950-1-gongruiqi1@huawei.com>
- <202305161204.CB4A87C13@keescook>
-From:   Gong Ruiqi <gongruiqi1@huawei.com>
-In-Reply-To: <202305161204.CB4A87C13@keescook>
+References: <20230530164004.986750-1-azeemshaikh38@gmail.com>
+ <202305311135.zGMT1gYR-lkp@intel.com> <09A0C6FA-669F-4B73-9620-43AEA17E5D0C@kernel.org>
+ <103925562.158061.1685514200368.JavaMail.zimbra@nod.at>
+In-Reply-To: <103925562.158061.1685514200368.JavaMail.zimbra@nod.at>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 31 May 2023 10:05:03 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com>
+Message-ID: <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com>
+Subject: Re: [PATCH] uml: Replace all non-returning strlcpy with strscpy
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Kees Cook <kees@kernel.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        kernel test robot <lkp@intel.com>,
+        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
+        oe-kbuild-all <oe-kbuild-all@lists.linux.dev>,
+        linux-hardening@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        anton ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-um <linux-um@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.48]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500016.china.huawei.com (7.185.36.25)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Sorry for the late reply. I was trapped by other in-house kernel issues
-these days.
+On Wed, May 31, 2023 at 8:23 AM Richard Weinberger <richard@nod.at> wrote:
+> ----- Ursprüngliche Mail -----
+> >>>> arch/um/os-Linux/drivers/tuntap_user.c:149:17: error: implicit declaration of
+> >>>> function 'strscpy'; did you mean 'strncpy'?
+> >>>> [-Werror=implicit-function-declaration]
+> >>     149 |                 strscpy(ifr.ifr_name, pri->dev_name,
+> >>     sizeof(ifr.ifr_name));
+> >>         |                 ^~~~~~~
+> >>         |                 strncpy
+> >>   cc1: some warnings being treated as errors
+> >
+> > Ah, yeah, this is another "not actually in the kernel" cases. Let's ignore this
+> > strlcpy for now.
+>
+> Well, actually it's another case of "not even compile tested". :-(
 
-On 2023/05/17 3:34, Kees Cook wrote:
-> For new CCs, the start of this thread is here[0].
-> 
-> On Mon, May 08, 2023 at 03:55:07PM +0800, GONG, Ruiqi wrote:
->> When exploiting memory vulnerabilities, "heap spraying" is a common
->> technique targeting those related to dynamic memory allocation (i.e. the
->> "heap"), and it plays an important role in a successful exploitation.
->> Basically, it is to overwrite the memory area of vulnerable object by
->> triggering allocation in other subsystems or modules and therefore
->> getting a reference to the targeted memory location. It's usable on
->> various types of vulnerablity including use after free (UAF), heap out-
->> of-bound write and etc.
-> 
-> I heartily agree we need some better approaches to deal with UAF, and
-> by extension, heap spraying.
+"But the AI said it was correct?!?" ;-)
 
-Thanks Kees :) Good to hear that!
+Gr{oetje,eeting}s,
 
-> 
->> There are (at least) two reasons why the heap can be sprayed: 1) generic
->> slab caches are shared among different subsystems and modules, and
->> 2) dedicated slab caches could be merged with the generic ones.
->> Currently these two factors cannot be prevented at a low cost: the first
->> one is a widely used memory allocation mechanism, and shutting down slab
->> merging completely via `slub_nomerge` would be overkill.
->>
->> To efficiently prevent heap spraying, we propose the following approach:
->> to create multiple copies of generic slab caches that will never be
->> merged, and random one of them will be used at allocation. The random
->> selection is based on the address of code that calls `kmalloc()`, which
->> means it is static at runtime (rather than dynamically determined at
->> each time of allocation, which could be bypassed by repeatedly spraying
->> in brute force). In this way, the vulnerable object and memory allocated
->> in other subsystems and modules will (most probably) be on different
->> slab caches, which prevents the object from being sprayed.
-> 
-> This is a nice balance between the best option we have now
-> ("slub_nomerge") and most invasive changes (type-based allocation
-> segregation, which requires at least extensive compiler support),
-> forcing some caches to be "out of reach".
+                        Geert
 
-Yes it is, and it's also cost-effective: achieving a quite satisfactory
-mitigation with a small amount of code (only ~130 lines).
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-I get this impression also because (believe it or not) we did try to
-implement similar idea as the latter one you mention, and that was super
-complex, and the workload was really huge ...
-
-> 
->>
->> The overhead of performance has been tested on a 40-core x86 server by
->> comparing the results of `perf bench all` between the kernels with and
->> without this patch based on the latest linux-next kernel, which shows
->> minor difference. A subset of benchmarks are listed below:
->>
->> 			control		experiment (avg of 3 samples)
->> sched/messaging (sec)	0.019		0.019
->> sched/pipe (sec)	5.253		5.340
->> syscall/basic (sec)	0.741		0.742
->> mem/memcpy (GB/sec)	15.258789	14.860495
->> mem/memset (GB/sec)	48.828125	50.431069
->>
->> The overhead of memory usage was measured by executing `free` after boot
->> on a QEMU VM with 1GB total memory, and as expected, it's positively
->> correlated with # of cache copies:
->>
->> 		control		4 copies	8 copies	16 copies
->> total		969.8M		968.2M		968.2M		968.2M
->> used		20.0M		21.9M		24.1M		26.7M
->> free		936.9M		933.6M		931.4M		928.6M
->> available	932.2M		928.8M		926.6M		923.9M
-> 
-> Great to see the impact: it's relatively tiny. Nice!
-> 
-> Back when we looked at cache quarantines, Jann pointed out that it
-> was still possible to perform heap spraying -- it just needed more
-> allocations. In this case, I think that's addressed (probabilistically)
-> by making it less likely that a cache where a UAF is reachable is merged
-> with something with strong exploitation primitives (e.g. msgsnd).
-> 
-> In light of all the UAF attack/defense breakdowns in Jann's blog
-> post[1], I'm curious where this defense lands. It seems like it would
-> keep the primitives described there (i.e. "upgrading" the heap spray
-> into a page table "type confusion") would be addressed probabilistically
-> just like any other style of attack. Jann, what do you think, and how
-> does it compare to the KCTF work[2] you've been doing?
-
-A kindly ping to Jann ;)
-
-> 
-> In addition to this work, I'd like to see something like the kmalloc
-> caches, but for kmem_cache_alloc(), where a dedicated cache of
-> variably-sized allocations can be managed. With that, we can split off
-> _dedicated_ caches where we know there are strong exploitation
-> primitives (i.e. msgsnd, etc). Then we can carve off known weak heap
-> allocation caches as well as make merging probabilistically harder.
-
-Would you please explain more about the necessity of applying similar
-mitigation mechanism to dedicated caches?
-
-Based on my knowledge, usually we believe dedicated caches are more
-secure, although it's still possible to spray them, e.g. by the
-technique that allocates & frees large amounts of slab objects to
-manipulate the heap in pages. Nevertheless in most of cases they are
-still good since such spraying is (considered to be) hard to implement.
-
-Meanwhile, the aforementioned spraying technique can hardly be mitigated
-within SLAB since it operates at the page level, and our randomization
-idea cannot protect against it either, so it also makes me inclined to
-believe it's not meaningful to apply randomization to dedicated caches.
-
-> I imagine it would be possible to then split this series into two
-> halves: one that creates the "make arbitrary-sized caches" API, and the
-> second that applies that to kmalloc globally (as done here).
-> 
->>
->> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
->> ---
->>
->> v2:
->>   - Use hash_64() and a per-boot random seed to select kmalloc() caches.
-> 
-> This is good: I was hoping there would be something to make it per-boot
-> randomized beyond just compile-time.
-> 
-> So, yes, I think this is worth it, but I'd like to see what design holes
-> Jann can poke in it first. :)
-
-Thanks again! I'm looking forward to receiving more comments from mm and
-hardening developers.
-
-> 
-> -Kees
-> 
-> [0] https://lore.kernel.org/lkml/20230508075507.1720950-1-gongruiqi1@huawei.com/
-> [1] https://googleprojectzero.blogspot.com/2021/10/how-simple-linux-kernel-memory.html
-> [2] https://github.com/thejh/linux/commit/a87ad16046f6f7fd61080ebfb93753366466b761
-> 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
