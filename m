@@ -2,100 +2,148 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63E6C7EE31
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 08:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A38BC77B7C
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 09:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235144AbjEaIFY convert rfc822-to-8bit (ORCPT
+        id S234590AbjEaJAK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 04:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37860 "EHLO
+        Wed, 31 May 2023 05:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235209AbjEaIFW (ORCPT
+        with ESMTP id S235279AbjEaI7b (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 04:05:22 -0400
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EC4B186;
-        Wed, 31 May 2023 01:05:19 -0700 (PDT)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-ba8afcc82c0so9674230276.2;
-        Wed, 31 May 2023 01:05:19 -0700 (PDT)
+        Wed, 31 May 2023 04:59:31 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AD821AE
+        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 01:59:17 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3f6094cb2d2so57435915e9.2
+        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 01:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685523556; x=1688115556;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=YBIQNd5CwMWOY24/Rr6Brie38sdaCVNySMcl3oJt0UY=;
+        b=lb1p6EnVRX+DTjwmsGXajDKG097RX6a3FHYa0py4zf7vRIItzJlmEJJdNvfPewp1gX
+         7+k3hzQmjLmlqSIBIWtywOM5/foA2so1Rkf24FhxAQ2SZPq2xkvjJBkvloKLrU76sV1s
+         dmqDXil/sJFyz5W1VVg/YzivVAyc/kjb0em6GtvR+MJJqkLdAr0qT9Biw3UTQan2RzQp
+         jhXAv9bq6EgjYcVoQCOHm+JSueQmuqUzf8qFZPEbjV1xLhMfVkHvDEgJVaGGQO4o0/D8
+         Znfjd3hvUgLCwL8rGGAevU8PxNxJ54jevizz+6yexbSHPwCZWh7EzmlMKXbDt3ReENQG
+         3/9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685520318; x=1688112318;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WxrLCY7viWKO0bQukw/w0leEI6ByM9jS8ud+syXrPAA=;
-        b=Uhx7nKUaoSkSR62NEBI4+hdfkKdDskOZ99h5ShAzEEXktLfci1qrtO8J4Ve/Grkfc2
-         FoFoq5CC0yOptAp7JU1akzRvQZ/ZGeUAV7mcHuiLr6ZeRP8OiwKuCcN4zAJ9fkqPNHAt
-         8TheNPExjOC8+OsJ6k/PctPH4rfgMKaOs3msibusdQAOpP7H7jR6CMFVDx7gtz6RkVkl
-         HKy2szAZ8is3u74f0SoW1vAvBeOj68joKqlkHiMk4cKh5HgsWrzTh6DDimsP41ZSsOvq
-         O4uI3adh9ktVG0iHvKeFZls66Ynss8TqqQ15tbKFQ3K0EsdudutY+9oeAQ3QnE0GhgB+
-         79mQ==
-X-Gm-Message-State: AC+VfDzeC9699+uAG8CkybjsAd/vx5ZofCw1hOMQWV7Yk3kqz3C+Q2IE
-        mspNUqqvcpHZmgVVOMpqz+3pDBXqcJQjSQ==
-X-Google-Smtp-Source: ACHHUZ6/z6LDEEniz4dMW/GZfwhHxNId7kISyGyx8wVuDyiYrHmJoLvTwM6mhugc/W0w+P3ZEiOwrw==
-X-Received: by 2002:a25:c707:0:b0:ba8:9096:8207 with SMTP id w7-20020a25c707000000b00ba890968207mr6355433ybe.5.1685520318106;
-        Wed, 31 May 2023 01:05:18 -0700 (PDT)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id cf13-20020a056902180d00b00bad07875d9bsm3545655ybb.11.2023.05.31.01.05.16
+        d=1e100.net; s=20221208; t=1685523556; x=1688115556;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YBIQNd5CwMWOY24/Rr6Brie38sdaCVNySMcl3oJt0UY=;
+        b=dqQSpzmfVsJSDFHb+VLj3ISUPS25pkO4CFfEAb0QURGsxvKWzk6V6/wr0wxLLgrwnA
+         QL2kxeLVn2nlUprhyTGXcvgI2i9T2BNsZX3Hdwy9uqESd7zVfrkOeV36NQkpo3dPq63s
+         j9yQbKjl65q0xiC/LLh9912wkkS7rZcA8B8po+cCL1ZcDccvP3IRBNpRv0fDTUMiqfxz
+         RZW4ALzzmiYsQK1T50SvNELq/Ij92e4rofD84xxg50ypmSaWslBHDDWxJYSKdH1xzQGY
+         rmLjsfjKw6P8vErSG4Dys1LR8nkfRKnqwlx4tgN/NQcA71wqV8ZU5vCGlcrTesQwqxAt
+         OYow==
+X-Gm-Message-State: AC+VfDxi954zUCXtmVHafLGnmLYFiVLF8c1q9uBUt8KuLtycf7Re3JJ6
+        pfuxnraTAhh7f1q7NF3zcL2YZA==
+X-Google-Smtp-Source: ACHHUZ4CNyYShz0ULzlda84VWuoupYNh91jdzgJrDhnk3SyJ0FhBR4Gm/AqQagB0heDaO1DIzvnK1Q==
+X-Received: by 2002:a1c:f30e:0:b0:3f6:e42:8f85 with SMTP id q14-20020a1cf30e000000b003f60e428f85mr3669312wmq.37.1685523555830;
+        Wed, 31 May 2023 01:59:15 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:5c28:3ad5:fcda:7779? ([2a01:e0a:982:cbb0:5c28:3ad5:fcda:7779])
+        by smtp.gmail.com with ESMTPSA id c21-20020a7bc855000000b003f1958eeadcsm23417092wml.17.2023.05.31.01.59.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 May 2023 01:05:17 -0700 (PDT)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-565eb83efe4so51934557b3.0;
-        Wed, 31 May 2023 01:05:16 -0700 (PDT)
-X-Received: by 2002:a0d:ccd3:0:b0:561:e89d:e263 with SMTP id
- o202-20020a0dccd3000000b00561e89de263mr4627466ywd.52.1685520316792; Wed, 31
- May 2023 01:05:16 -0700 (PDT)
+        Wed, 31 May 2023 01:59:15 -0700 (PDT)
+Message-ID: <9158d9ca-fe00-760c-4c95-f2ee045038ee@linaro.org>
+Date:   Wed, 31 May 2023 10:59:14 +0200
 MIME-Version: 1.0
-References: <20230530164004.986750-1-azeemshaikh38@gmail.com>
- <202305311135.zGMT1gYR-lkp@intel.com> <09A0C6FA-669F-4B73-9620-43AEA17E5D0C@kernel.org>
- <103925562.158061.1685514200368.JavaMail.zimbra@nod.at>
-In-Reply-To: <103925562.158061.1685514200368.JavaMail.zimbra@nod.at>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 31 May 2023 10:05:03 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com>
-Message-ID: <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com>
-Subject: Re: [PATCH] uml: Replace all non-returning strlcpy with strscpy
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Kees Cook <kees@kernel.org>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] firmware: meson_sm: Fix memcpy vs iomem type warnings
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         kernel test robot <lkp@intel.com>,
-        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
-        oe-kbuild-all <oe-kbuild-all@lists.linux.dev>,
-        linux-hardening@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        anton ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-um <linux-um@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+References: <20221012185234.never.936-kees@kernel.org>
+ <166602031304.3572695.12870664862275915316.b4-ty@linaro.org>
+ <202305171124.4EB0D65@keescook>
+Organization: Linaro Developer Services
+In-Reply-To: <202305171124.4EB0D65@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 31, 2023 at 8:23 AM Richard Weinberger <richard@nod.at> wrote:
-> ----- Ursprüngliche Mail -----
-> >>>> arch/um/os-Linux/drivers/tuntap_user.c:149:17: error: implicit declaration of
-> >>>> function 'strscpy'; did you mean 'strncpy'?
-> >>>> [-Werror=implicit-function-declaration]
-> >>     149 |                 strscpy(ifr.ifr_name, pri->dev_name,
-> >>     sizeof(ifr.ifr_name));
-> >>         |                 ^~~~~~~
-> >>         |                 strncpy
-> >>   cc1: some warnings being treated as errors
-> >
-> > Ah, yeah, this is another "not actually in the kernel" cases. Let's ignore this
-> > strlcpy for now.
->
-> Well, actually it's another case of "not even compile tested". :-(
+On 17/05/2023 20:25, Kees Cook wrote:
+> *thread necromancy*
+> 
+> On Mon, Oct 17, 2022 at 05:25:13PM +0200, Neil Armstrong wrote:
+>> Hi,
+>>
+>> On Wed, 12 Oct 2022 11:53:16 -0700, Kees Cook wrote:
+>>> Use memcpy_{toio,fromio}() instead of memcpy(). Silences warnings from
+>>> Sparse:
+>>>
+>>> drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 1 (different address spaces)
+>>> drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+>>> drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+>>> drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 2 (different address spaces)
+>>> drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+>>> drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+>>> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+>>> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+>>> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+>>> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+>>> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+>>> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+>>> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+>>> drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+>>> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+>>> drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+>>> drivers/firmware/meson/meson_sm.c:206:9:    expected void *
+>>> drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+>>>
+>>> [...]
+>>
+>> Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.2/drivers)
+>>
+>> [1/1] firmware: meson_sm: Fix memcpy vs iomem type warnings
+>>        https://git.kernel.org/amlogic/c/7dc69c7d073e6004a281db8f7f15cf6ebf702ea0
+>>
+>> These changes has been applied on the intermediate git tree [1].
+>>
+>> The v6.2/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+>> for inclusion in their intermediate git branches in order to be sent to Linus during
+>> the next merge window, or sooner if it's a set of fixes.
+>>
+>> In the cases of fixes, those will be merged in the current release candidate
+>> kernel and as soon they appear on the Linux master branch they will be
+>> backported to the previous Stable and Long-Stable kernels [2].
+>>
+>> The intermediate git branches are merged daily in the linux-next tree [3],
+>> people are encouraged testing these pre-release kernels and report issues on the
+>> relevant mailing-lists.
+>>
+>> If problems are discovered on those changes, please submit a signed-off-by revert
+>> patch followed by a corrective changeset.
+>>
+>> [1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+>> [2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+>> [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> 
+> Hi! This change seems to have never been mainlined and seems to have
+> disappeared from linux-next.
+> 
+Hi,
 
-"But the AI said it was correct?!?" ;-)
+Indeed it was rejected by Arnd, but I failed to find time to investigate how to fix it
 
-Gr{oetje,eeting}s,
+https://lore.kernel.org/all/4a6b34ef-f5d2-4e56-a7f6-6a7c9cdda416@app.fastmail.com/
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Neil
