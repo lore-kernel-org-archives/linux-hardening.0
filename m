@@ -2,162 +2,152 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B156EC77B73
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 22:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34F7C7EE23
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 22:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbjEaWH2 (ORCPT
+        id S230318AbjEaWh3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 18:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59102 "EHLO
+        Wed, 31 May 2023 18:37:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjEaWH1 (ORCPT
+        with ESMTP id S230267AbjEaWh2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 18:07:27 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0535511D;
-        Wed, 31 May 2023 15:07:25 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34VK8JFO032575;
-        Wed, 31 May 2023 22:07:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2023-03-30;
- bh=WIvendoBg1kZVZHpdCRTUUmDBfpXnofqOaQvC4VKhR0=;
- b=TtyMW8A1HI2O4C1Z9+qwS7ct4t37tnHZhfPzYLk54mIJKy4tsd5ACOLG5Itn25IT/DQg
- iGxdJmjIBZCyezFlkfccQWSoqPPv7jSfA/Q/Rv5KHbRvs7B9umcdxOegbAWAsBZkrz19
- 4PLQnwOS3W1npyw0sO/4QtAph7iXLj2Gq0Tnj9RsIJ8TuxjJNEzWD3eg5gloLK5adZId
- /mb4Wr9GfNxpI8evuhtQympz3fa+iuu6YKYX4HuMTGPzx5RrEZOooz9eqjVFsa/89dkQ
- M4jIZEHmrTedF/OL0+z9pj4cvp12EdQvmIiz8ddwUNlgOS02MoKXnYj2UNXgc4IUcNxG aQ== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qvhb974gq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 May 2023 22:07:17 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34VKajKB026034;
-        Wed, 31 May 2023 22:07:16 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2105.outbound.protection.outlook.com [104.47.55.105])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qu8acu761-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 May 2023 22:07:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ko3S5Z3OdPxVe5HpTmZKRLCCkWLayTfbhcg3vDNqTcb/Iac4tb6mVxCT3yvoIGPPI9Q+9gWutTV4pKIhkQIb/tsoT67/OH/zCbLCy0FQRmDxPsBaxEmI1OM2wouf5Mjlb5I/rEyo6l7rwpEBizYrMuSHtYeRQ+nD4wKzhmXglni1ciM5h/R2I0aw0udlnuFSbfQuTc3cDFnk+mS7kFOqMzoTnxNy8iGZbhfzV4KHIN7BZ+99ycX7Dy4vN/KcjBBlKSNWKSmfLYdm5OoCdDBioSMNlhaAIFY5jyrxSf9qklI2GGix3uHfAwC2ZsUzcfU5xj2ucLnoaZfDw4gvh1n3Rw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WIvendoBg1kZVZHpdCRTUUmDBfpXnofqOaQvC4VKhR0=;
- b=l+6FGGd+0Ik70961rMAU8yX7Z3VBBxAl1VvJAUH85WLuwdyY3xvu+Q8ZxtgqPXB5F17Uv9MaiO3/cTxy37agi9TTSEj9Y+628/j8XBTeSZQ3Owle2rbf/ufWOhxusriu9+tHH3jvlEpd96VTOhm6KuFcDCzSNCHkBAiSAZRNtTNX393mppgfWldbJwLmJl6yBSPwtpntf72c01boRJfrTuoLSnLtb1Yr2MKgbBBGZ2x95EI1Nd7Zzwk/UdcPOPFp/K1q1at/LklZEDvV7xthy4m7JPmWfTPaMhbs+qj7FUp5HyLlnFc48vQhNiB8Qp+ZPKvcPKHwtl2xrki/5zpgtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WIvendoBg1kZVZHpdCRTUUmDBfpXnofqOaQvC4VKhR0=;
- b=TrrHhet0pzyl/lJQux1T2zuHxYLM5QIuL6L3FCwMzW9NnyJUAt+nIxjif1KkulaGXsz4xphMCAVPNIGwkj48Uf+J9PVR5308qB8O2G1x23lf/gAD1Z/XnG6iL0bFIt4dbDjL8IBy8hqKLTIGPDIvwaLv2JY4VkCjI91LFysKNos=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by CY8PR10MB6802.namprd10.prod.outlook.com (2603:10b6:930:99::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Wed, 31 May
- 2023 22:07:13 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::9a52:4c2f:9ec1:5f16]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::9a52:4c2f:9ec1:5f16%7]) with mapi id 15.20.6433.022; Wed, 31 May 2023
- 22:07:13 +0000
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH] scsi: ufs: Replace all non-returning strlcpy with strscpy
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1cz2gcfzu.fsf@ca-mkp.ca.oracle.com>
-References: <20230530164131.987213-1-azeemshaikh38@gmail.com>
-Date:   Wed, 31 May 2023 18:07:10 -0400
-In-Reply-To: <20230530164131.987213-1-azeemshaikh38@gmail.com> (Azeem Shaikh's
-        message of "Tue, 30 May 2023 16:41:31 +0000")
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0084.namprd13.prod.outlook.com
- (2603:10b6:a03:2c4::29) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+        Wed, 31 May 2023 18:37:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6108E9F;
+        Wed, 31 May 2023 15:37:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EB7EA62B7A;
+        Wed, 31 May 2023 22:37:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67BCAC433D2;
+        Wed, 31 May 2023 22:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685572646;
+        bh=EjcnHeLPSFskAfrECWzs0sBFgzC+oBoE4wsOMlpomy0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=edK7cDRjdx4uas4edYdeXU/b0jIuH8g7/WAZNO5DSDCcS0YaLilbgVUxIipuqn5Sp
+         lCrLS+s9ffLTuvceyREmandUiBzww2Vm0FYVd7oH4zVCgA7VgWyC4/aQm8/ZjNTSUf
+         b8dbYVPA/tpNUEHbYxINyxen0NE2uVgFjLwJopgxn2aGeJWfo+BwbqMuk5GklRaie4
+         BgZ3XO7jaS1yOCF3xtfHmqCN16wqOGz3/Y6/nx8TG/JM4IQehwiYUwDsrRH1KQ19w1
+         kYhSF0XubTIbUD/FtSIs0J51Ts29QRj156kFbUdfPrTl9s1jRsrnK2pZBGThy4VlGW
+         BHubXoEh2en9g==
+Date:   Wed, 31 May 2023 23:37:20 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Joan Bruguera =?iso-8859-1?Q?Mic=F3?= <joanbrugueram@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alyssa Ross <hi@alyssa.is>,
+        Heiko Stuebner <heiko.stuebner@vrull.eu>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] riscv/purgatory: Do not use fortified string functions
+Message-ID: <20230531-abruptly-settling-f9852f408dcd@spud>
+References: <20230531003404.never.167-kees@kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|CY8PR10MB6802:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5909c787-921a-4fd6-e89f-08db62236328
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 33p3r3VL5qg91D/qXtChX4P6ucYX66NQWSBYPvkCXtDVFRo5HnmaCasVVLu7P/YTASW69g0i+cZTdXNg/dKNNo2EblyEPZ19/u1l3hH4RiaYsF+GZVPtNaQBybsi6zje6F2e0mApBdt8CsU0SL6IgCJnP4XFziwcBmTu4xaC6+bcW67BtT+DY3nEwOSosNRjJoigMPu9wbX1A+sYshxhl3Z4+qFCEDFGgkP5TDSkC97dl7lzdFfJxhjyygl8KpM23Ogdvcf6+Wq8FBg9DdYBi3WMyPkUEg62SS8NgekYr8YnRwOH5iHFc6qVYg7+VT/yfeVn6NN3ligMMCgDsCCFADPiG9hYGnrVbHRTXhtBU1pZHel7MRr755odZh2Js0je5wZ8UyA5uguCYb3geNX2QryDNaobYuFqYgMnLmupD76JoVPVpKTX/M4i3ZUL++4LFDhy1yAyjRp4dU1ndPeyKrHErhIoVWn0niYAWdPHPWQv+nGvDsZMwQgZa3xmxrIZRk/xoNgEzA8poqLfShEUuUmu/RdX7/Rqq2rRPXKbfbsu90lXHp8LK2Mw+jh3geF+0dLqSFJguWfkArPADbT4rVajn+uVgtuy2t1TlxL60Ok=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(376002)(39860400002)(346002)(366004)(396003)(451199021)(186003)(107886003)(41300700001)(38100700002)(6512007)(83380400001)(26005)(6486002)(36916002)(6506007)(478600001)(54906003)(66476007)(66556008)(6916009)(66946007)(4326008)(316002)(2906002)(8676002)(5660300002)(4744005)(8936002)(86362001)(156123004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?f8I3Kc4TojSHrGFE89W1peO0pXODsp82LMYaN9d8o55SviqKcfgL0if+7x0K?=
- =?us-ascii?Q?I7nmWGekQ7HF2Rdcq03gqOXtNADabQTWVKgxmM8TP1Jdeu7y1mqvc7Ojd7og?=
- =?us-ascii?Q?Hgc5ESxDDnHojS6n7njsTnw8AMPrai7ZoK1dpseq+K6q//HK92jmEqEUFyAh?=
- =?us-ascii?Q?EL/wSLCOXkN/7nIIhC/DQr18RXStKDZeMB6sryXHU+WO+OuMH3BgxLmPU6xW?=
- =?us-ascii?Q?PoQSgPX2C6iRQ7mj+jQjy88GcYbEeweFXycMg7H67EUOgscwkEt9tN0cVlmJ?=
- =?us-ascii?Q?Htfaz0t6R/akiG7PXsAWLzXTMhII233jRvEMWHk4v7JCqXaRFE5XJGTvmT0y?=
- =?us-ascii?Q?3PNg6VaqJFX2bfmxoe3zMEC+9amemdk1Kl1If9gyZlquMdwMn0K45IC9Z19z?=
- =?us-ascii?Q?XkiVSjNWWgY66h6ojZuV6BOacblNVEtFh4e1FVzW9JVci2OjD0lEnntpPGF/?=
- =?us-ascii?Q?9Ea1IGBpz7TdKaf3mGNYtrWcXdO400LNOc68wOg5BMuaXQeyYhM/nGn8eKAX?=
- =?us-ascii?Q?ZSz6sWreoLzQWmgDPe6mfhaDn6EYpEpK9shciVV54CNDEEX/Qmsxn/hU7fPY?=
- =?us-ascii?Q?8b7D8Bzio5dPvyUtyyt6g9D9JIZWk8440odnqi42FLHUFv6lwRHa5/nE+seu?=
- =?us-ascii?Q?QAGUrngt9ZbkJ5ho2TBE3h4J6U0vJLCPRG17yznXBTswC/9suXfxjcC6D8GI?=
- =?us-ascii?Q?a8TDnJl7q1i1AinlukAzNdXYK9f+oAQJXrTycV2B6FRqm6jMDtpOT9/Yi/Ku?=
- =?us-ascii?Q?VsCvyXtNKDCWhpGjnwq9VCZx4u0zyOoofiemaeHK0xCDUgPzkU30dCkI2he+?=
- =?us-ascii?Q?4kz0F0l4Q4k9jZ64fKxjdEcUWqo61liKARw1KwCAAy+roJX8q4tH44HgK0iV?=
- =?us-ascii?Q?DkAEnxbpF6ABjNd+FP3/8OQKyy06+2FerIYNJ2Z9DH6rrgYBSZNNondz5kmV?=
- =?us-ascii?Q?wa9XlDFrrDp0SIpSR0N+xdiNEZnJ2FefXYvTrVewdRVOUjSdaRNK/JEbZXvO?=
- =?us-ascii?Q?9z6JrjewpBep/B6XT7SQZceGASv4qkAtmhDZKkhGyvwsNoAkQTM+MVLRtPjP?=
- =?us-ascii?Q?MxZZRQrpAcssVywmUCTB4vh1zVpZcm76Przyp+Qf37I5fL/FSFZRdForwPxO?=
- =?us-ascii?Q?v9Ytksyp6IBe3Iao0wojBNLBTe5TFwKJVczzmyE/xHbBc+q5aPicxJG050Yr?=
- =?us-ascii?Q?eAobw6JxcUTvRCxOiZFdogkbPSk+sWIcsEhyBdA4CanJ78Cb2IfmFa83vlFf?=
- =?us-ascii?Q?mMY0QQXw/1qmuiepvsQXaHPHAppvew5ujSJcNVj1LtyuY/05a/EdTsDrE2aN?=
- =?us-ascii?Q?1JixF0DKP+UZ6Hx6Axg9LD8ZPIa7XeA7AAiYaeYONfRQ+S0/rlvKsMzJxsA8?=
- =?us-ascii?Q?u9/rAenOZ0j6iTh8lS5UFyezx+eiE+dnmXbBeCcmIVljUavCvDEzEIfs7i6N?=
- =?us-ascii?Q?kKATFIVDVksS02IKohzZ4jqWsAy54LLSPL/t6/MH20fDVrUrviRPgYlcgUpQ?=
- =?us-ascii?Q?dLuy3e3npTdn7dcZ5YYP3vFMK5iTGLLl2pt6hav7rO4TA59xWRxSzcbJgNlr?=
- =?us-ascii?Q?/An52aNFbN2RFpvepNQaD+RNKAVcn4yNPOBYxbTFFtMGzN9wj2R2qMEGmAjC?=
- =?us-ascii?Q?2g=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: cIY4PhDIB/dWzTWQPapEDcu/72xRkoH24wm8xF8sYOA1K3ZdPKUsEz3mTYWFQm7RayBXwzC7BYCDy8AeWUZHryGUMYzxjHHgSAdZQGQd8pNtHt9DD18cvlstqvLy04A0kuc1xv5mvii2l91XzwQTgrRXBEJTuyyaLlX4rbn3SC4kQnlefuA40+ol/8EI4jvzjqE0C3cljspvmt0/IrfWoxGzaZgqlzKezVkdSQwnNudg2rJC45xn3HTZq2G66g0EsXD2fHAdj+sjFwGboEV6RSXJ0CawOXpZcxrlIRqVGkChIwH6cFtAgWwTS0NWSSLtbeY9w+pUoyN+p5NP9ofy2DLyxFKmmTzFiJFwS9xkWS2CdUu8TXY2jrVJNZCMig709WLCORon9/PrPh/RGrahHOZNKs5J6Q3E6K7b/fHebyeGvF12bw2G7tJzxO+5KaV/6dVZAOdh6xe8xOx+FZTVvTQjQmLCxKzoMqwOXyXO+0FTYOvMTemCOqN+cZmRE+e6V0l9h7kf8haoUa5o5o1R+Wwn0HjYV4wOnA3vqFAfzuI8WxOYMhAO2oqmDxIkkE0DmlsBtZuLwxSSBjir6q28oPRflQV7ywcvzaN03TMvN8Z1lwGXV50q8sdkg6yB3pLJ73tyF6IMpA2r2KXxWkPDTYUO0xrBQtQe2MonX7InhgPtweMqvSGCdkaANAg4L5W1826ThJThk2QdRvTJKxSC6Gwgjq807ZyHC8pZQolpUtJX4JLEHKN8qpDtATRtZVD0esq1Ybn73fBB5H0AlBTUF3hB12Ct9t+XNuwCZe/PXE+l14AE8rZjCDmNMA7PLoBQLurm1aIo1euG4VVZ2Yi3VlY5NlyBZZIhXYq7VgsK3xkvOndz9d68OnVrfSDnly6fRQeu2WKGX6afj98yXg2Z9Q==
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5909c787-921a-4fd6-e89f-08db62236328
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 22:07:13.2034
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SXdYrTwDYWl9WQHCHWrYJNTKIzhyXWcmfP9eRNoLWEwtIhH4i3cJTP4MNajptR4o8vJ7fNQ9Y/I1xweim354x9L62nh+MHq1akrF7giXEL0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR10MB6802
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-31_16,2023-05-31_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 spamscore=0
- adultscore=0 mlxlogscore=927 bulkscore=0 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305310186
-X-Proofpoint-GUID: iSrzWxae_F3fdOGydO5dF6Z8GLvfgXL9
-X-Proofpoint-ORIG-GUID: iSrzWxae_F3fdOGydO5dF6Z8GLvfgXL9
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ZFT5h/br0IBkD5vu"
+Content-Disposition: inline
+In-Reply-To: <20230531003404.never.167-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-Azeem,
+--ZFT5h/br0IBkD5vu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> strlcpy() reads the entire source buffer first. This read may exceed
-> the destination size limit. This is both inefficient and can lead to
-> linear read overflows if a source string is not NUL-terminated [1]. In
-> an effort to remove strlcpy() completely [2], replace strlcpy() here
-> with strscpy(). No return values were used, so direct replacement is
-> safe.
+Hey Kees,
 
-Applied to 6.5/scsi-staging, thanks!
+On Tue, May 30, 2023 at 05:34:04PM -0700, Kees Cook wrote:
+> With the addition of -fstrict-flex-arrays=3D3, struct sha256_state's
+> trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
+>=20
+> struct sha256_state {
+>         u32 state[SHA256_DIGEST_SIZE / 4];
+>         u64 count;
+>         u8 buf[SHA256_BLOCK_SIZE];
+> };
+>=20
+> This means that the memcpy() calls with "buf" as a destination in
+> sha256.c's code will attempt to perform run-time bounds checking, which
+> could lead to calling missing functions, specifically a potential
+> WARN_ONCE, which isn't callable from purgatory.
+>=20
+> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+> Closes: https://lore.kernel.org/lkml/175578ec-9dec-7a9c-8d3a-43f24ff86b92=
+@leemhuis.info/
+> Bisected-by: "Joan Bruguera Mic=F3" <joanbrugueram@gmail.com>
+> Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3D3")
+> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+> Cc: Albert Ou <aou@eecs.berkeley.edu>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Conor Dooley <conor.dooley@microchip.com>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Alyssa Ross <hi@alyssa.is>
+> Cc: Heiko Stuebner <heiko.stuebner@vrull.eu>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: linux-riscv@lists.infradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Perhaps this is indicative of other issues in RISC-V land, but
+allmodconfig complains about this patch:
+
+=2E./lib/string.c:17: warning: "__NO_FORTIFY" redefined
+=2E./lib/string.c:17:9: warning: preprocessor token __NO_FORTIFY redefined
+
+> ---
+>  arch/riscv/purgatory/Makefile | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
+> index 5730797a6b40..11f4c275f141 100644
+> --- a/arch/riscv/purgatory/Makefile
+> +++ b/arch/riscv/purgatory/Makefile
+> @@ -31,9 +31,9 @@ $(obj)/strncmp.o: $(srctree)/arch/riscv/lib/strncmp.S F=
+ORCE
+>  $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+>  	$(call if_changed_rule,cc_o_c)
+> =20
+> -CFLAGS_sha256.o :=3D -D__DISABLE_EXPORTS
+> -CFLAGS_string.o :=3D -D__DISABLE_EXPORTS
+> -CFLAGS_ctype.o :=3D -D__DISABLE_EXPORTS
+> +CFLAGS_sha256.o :=3D -D__DISABLE_EXPORTS -D__NO_FORTIFY
+> +CFLAGS_string.o :=3D -D__DISABLE_EXPORTS -D__NO_FORTIFY
+> +CFLAGS_ctype.o :=3D -D__DISABLE_EXPORTS -D__NO_FORTIFY
+> =20
+>  # When linking purgatory.ro with -r unresolved symbols are not checked,
+>  # also link a purgatory.chk binary without -r to check for unresolved sy=
+mbols.
+> --=20
+> 2.34.1
+>=20
+>=20
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
+--ZFT5h/br0IBkD5vu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZHfMIAAKCRB4tDGHoIJi
+0skGAP0RP0L15KqUDxAa/Z7n2whLtyvwOJmOwsbDDBUC+eTiWAD/cULCWm/j6GXO
+GcD+DaRrgW5urSzwpXiAq1ng8PzMFwg=
+=q9r1
+-----END PGP SIGNATURE-----
+
+--ZFT5h/br0IBkD5vu--
