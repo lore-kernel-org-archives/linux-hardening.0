@@ -2,191 +2,167 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D6CC77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 14:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE38C7EE23
+	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 15:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232648AbjEaO53 (ORCPT
+        id S233771AbjEaP1z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 10:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58886 "EHLO
+        Wed, 31 May 2023 11:27:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232329AbjEaO52 (ORCPT
+        with ESMTP id S234053AbjEaP1y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 10:57:28 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C0E11D;
-        Wed, 31 May 2023 07:57:25 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34VEg85R030847;
-        Wed, 31 May 2023 14:56:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : reply-to : to : cc : date : in-reply-to : references : content-type
- : mime-version : content-transfer-encoding; s=pp1;
- bh=OBYjAsiQnYeqsncNk244KPMIAGvoR7IKEXAV3+x3XmY=;
- b=VK4s0Z0LU5Q0JFwRrBWPdUE/BmlwNhytMGNfJyO7BjpGyJ+zdvyQjfXKbUn1TOITDfTH
- bjNTrNWoxSidiPbdO/teq2cNU8Qk8ADaDKTbai7AV+z8XLe/ZBQCM2YaVUPalIxEKYvW
- xOLFBvHQ/FpgspQC+jXzaZp2WG2C08Po4Ld0Bfbm/SFrKCJs4Odtzu2yJplCzqTC/D+W
- 2vy4jvGbtp385jyzAUmTgfgKkS43xFfBmJ0WhbA49qvViVzepsFheod9YgMRB9pkdiD7
- Lns0jelZ7KLOh7kDWOmoKufI5P/48rcUaYjESkzGqoGzOQzaQPtY0cm5qiav0r/ljDRH lA== 
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qx87s0fnv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 31 May 2023 14:56:56 +0000
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34VBZs0T008110;
-        Wed, 31 May 2023 14:56:54 GMT
-Received: from smtprelay05.wdc07v.mail.ibm.com ([9.208.129.117])
-        by ppma02wdc.us.ibm.com (PPS) with ESMTPS id 3qu9g8c5pf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 31 May 2023 14:56:54 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-        by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34VEureu4784708
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 May 2023 14:56:53 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7584A58057;
-        Wed, 31 May 2023 14:56:52 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7298558059;
-        Wed, 31 May 2023 14:56:51 +0000 (GMT)
-Received: from lingrow.int.hansenpartnership.com (unknown [9.61.55.64])
-        by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 31 May 2023 14:56:51 +0000 (GMT)
-Message-ID: <25ef15e7601e1b4510cbbd40c6d1ab7c64213863.camel@linux.ibm.com>
-Subject: Re: [PATCH][next] scsi: lpfc: Avoid -Wstringop-overflow warning
-From:   James Bottomley <jejb@linux.ibm.com>
-Reply-To: jejb@linux.ibm.com
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Wed, 31 May 2023 11:27:54 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76BCAE69;
+        Wed, 31 May 2023 08:27:29 -0700 (PDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34VERHLo020019;
+        Wed, 31 May 2023 15:27:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : message-id : references : date : in-reply-to : content-type :
+ mime-version; s=corp-2023-03-30;
+ bh=H9VamHpeiV+SisNCfhoHAd1myops+8tYorMBH3nN6rc=;
+ b=b5PnlKtTN2wDC1E7sjFEqKyj+c27m8T+qsfDqf9AvOktXwLcCOg/X0D5EgzZIt1eDNjg
+ O9WKD5u2VP2io/j/7CaojZD6zmho9Xyjplsu3NvO9WsWiGxrizefFG/HesnagUcajthc
+ LdCC+obu3csZJLmSrl2+x8dJXBqblq7WN0/qVyveHkN8uI4jjroCZHI7qn8PZgaqqniX
+ jiXsQL3gO4bFOxilMymDGVEMzNY2TnJzVnqGSLjYM/OnJZITgSCNQWNAHQvgqVATXZSx
+ Dpf3GB0usaiDOGUtKfGJhNFESS0O7MPaUCCZ0GFVLKsl9kKBI0ybD/ka0Byn+kNCuHac wg== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qvhjh65n7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 May 2023 15:26:58 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34VF5cYS014581;
+        Wed, 31 May 2023 15:26:58 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qu8a5r72p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 May 2023 15:26:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YTd0SfhxAWZZsqIhyPSDim1GQGkPbzYNbFmKxYE8one4r+F8hUK3JJUvYXW0tFtvneb2HPNqkJiOKyvY5RHAXYb2iamYhcD0HPWTLH4CBpJVwALEwqpN4xjxfl9KM2ySVM+55PbPYJ4ciNuJ4cOcL7qYgeo8wO9VYUmHQu0MoXwatFJaTq1yUhscR5OGydYEWHW6gUSEdWa3HdmQnN97gdUWB8Va/Z67hX+CR/1CQQIv5Rl0P1oLj8JYc1n8kIK3JendayM+1tqxQbnWhRzDhluyeh+E2/ZfB6j97d9HcCtG1neO7ksInVVmnvXZBkDWkk8u4C36YuB9dBelCJrloQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H9VamHpeiV+SisNCfhoHAd1myops+8tYorMBH3nN6rc=;
+ b=RWV6mwP3O18AgvP5XZGDdUpmLu6nz8Aje6A2m8gbCZdStzzHG37jp8w1o2kQ6QfEvV/ljhvq01s+nqOGDXc5wvDZdXoBd5owq2JHFq4/xhJ/jxF/kRs0nUBMXbejMVwF4StxcM/92Mo2vtQa9IXO8SLxi2bfmdrNPrtnDjDKQzqdteAKMNCsya/z9F9gTZwU9zvNh554PryX8VuKxl5dfJO9qpCxj27zE3tsnbPJW9wtJ1GaAsH3Bl3kbSxrgtQEyVdSJlZ3VdPae5+U4luaF4ZTLPHBjrN5ffpVS9BNtyKWNqkx+jl+135fv8RLlaYqXwcmLt090C8mg3xtoHV6VQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H9VamHpeiV+SisNCfhoHAd1myops+8tYorMBH3nN6rc=;
+ b=HRYGyE2sddT1SCgCs+2MMEw5iF6WnkFPwOOVa3ngoqEaLL7XZEkQZhMZrspDclDbBogMkP0YB9IZFws023W+wbxpyhq9HDTlirYyO2LDDw4VXxb9v2qN2jpDLiXN4uEa+lmh/PUdxaampq28X2JVY2jQ0XRS/0xaboBWTW/Fc0g=
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
+ by SA1PR10MB7636.namprd10.prod.outlook.com (2603:10b6:806:376::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.22; Wed, 31 May
+ 2023 15:26:56 +0000
+Received: from PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::9a52:4c2f:9ec1:5f16]) by PH0PR10MB4759.namprd10.prod.outlook.com
+ ([fe80::9a52:4c2f:9ec1:5f16%7]) with mapi id 15.20.6433.022; Wed, 31 May 2023
+ 15:26:56 +0000
+To:     Justin Tee <justin.tee@broadcom.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Justin Tee <justintee8345@gmail.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         James Smart <james.smart@broadcom.com>,
         Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Date:   Wed, 31 May 2023 10:56:50 -0400
-In-Reply-To: <202305301529.1EEA11B@keescook>
-References: <ZHZq7AV9Q2WG1xRB@work>
-         <fe0739cbe279cf9db2ebff1146e7ae540cc1ad6c.camel@linux.ibm.com>
-         <202305301529.1EEA11B@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+Subject: Re: [PATCH v2][next] scsi: lpfc: Use struct_size() helper
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <yq1leh4froo.fsf@ca-mkp.ca.oracle.com>
+References: <ZG0fDdY/PPQ/ijlt@work>
+        <CABPRKS9ykHvaOGUboDXZ261LLPS78+YFpOZAcJEeLKGfEUe21g@mail.gmail.com>
+        <202305261041.4C23B96F@keescook>
+        <CAAmqgVPcSa36H7J2ABPmgCkkn8d7Asy+Wdn-xmQLuPqTupE5Gg@mail.gmail.com>
+Date:   Wed, 31 May 2023 11:26:49 -0400
+In-Reply-To: <CAAmqgVPcSa36H7J2ABPmgCkkn8d7Asy+Wdn-xmQLuPqTupE5Gg@mail.gmail.com>
+        (Justin Tee's message of "Fri, 26 May 2023 11:06:55 -0700")
+Content-Type: text/plain
+X-ClientProxiedBy: LO0P265CA0005.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:355::10) To PH0PR10MB4759.namprd10.prod.outlook.com
+ (2603:10b6:510:3d::12)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WBQatvEGQiKAHXw7oHidJWHURI-cBAD_
-X-Proofpoint-GUID: WBQatvEGQiKAHXw7oHidJWHURI-cBAD_
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|SA1PR10MB7636:EE_
+X-MS-Office365-Filtering-Correlation-Id: cc45a265-e786-400a-64b6-08db61eb77cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TZoUDeHz/rzKVzkueeujC2jSBAlOT6Q60pwginqa9vinJ+ZDmg0Cxj7DzCV0fnk6qq0N8FgexRzr+x8F99kPGevzjGNaUafk+C2iyo1l1QP3YeQkJtK90udub59cLMc6/fBTcx+WaME2ZJ4rZ1Mx3/vj/JcXl9bnZKNFtoDFdPdX2ZwJ06PJItw+Iv6PQ6AwqOQaNar8pfshbL96Tz/l6dAZXejYTnXLIQhnG6NlYDX1Te+JgZSzg9PLlQVJTQl1luXgOSbpgJ7KqkUcLfGMegEpTVWZ+BUDLpaW4vDeNW7QRapONI3jZjIwKzdRL3Et03F11psL4Yy/LptbcvTDdfIb/xOW2Fh3yj8tsmowamD8FIkCNApP7fQBarxQI6PE+uMRlN6VFaatQw9XV6HK3db/6yPpNt6cU1UKvadA2c/CSJddtO5dBJ6n7yoi64Nus3YP7M1YX7Trxy+vKwo+HFcrJubQZGr6s+kQIxvTn9LYwc/9RskGjuxsXUXyHiFMYkdL+BRBX2ZP4QyhhIMYydgH9CXdnDGqTbn0pkmKOGeIcMb/70giOrClsaz3sMVo
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(396003)(136003)(39860400002)(366004)(451199021)(66556008)(66946007)(66476007)(6916009)(186003)(4326008)(478600001)(86362001)(2906002)(316002)(38100700002)(26005)(41300700001)(558084003)(5660300002)(54906003)(7416002)(6506007)(6512007)(6486002)(36916002)(6666004)(8676002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?plCD1d88nlC4GvWwRj5PbYWG8acFAxkvBWtx+xST8H4WPl6a5iV5g/UQ0ogh?=
+ =?us-ascii?Q?LsqpCB9rhQjXD411yV3u2IQ1692JRaq9MJcKUcomL+fltNnnki0HyhgXACnb?=
+ =?us-ascii?Q?TqH8KafmjldTwDHtbwqdZY9jG/Q102NVTadtE92H4wzwv+/5CLHLHCdhLTdJ?=
+ =?us-ascii?Q?Wo0VJntoqdD0Jj3rqGEiZmmfSxm+vrOQZwwfJDLy3vHIfe28NmklbJpfcZsu?=
+ =?us-ascii?Q?L5rYSr9Xe5fXONS5VaSvgp1Y+jHzY6QdaEIgCL6z3yTrRBMzyOYIM8b+goUs?=
+ =?us-ascii?Q?pt/4jg1ZPAWgxaq40WNRc6cBEcTaduMZ6wx9Z9jaHm83CqoF07ls+nCetAsw?=
+ =?us-ascii?Q?T+bW5x0OfZP2zwkKkG6Eyrdj6wQhNfosiBZQBsINbGFmMM+5QQkVgD9xS3ZV?=
+ =?us-ascii?Q?9/tDvPlgtXm8azMp68zx3BG/JcXP2vnYoNUkSiCYFAZGpRXFbr1fuNQ+ACV5?=
+ =?us-ascii?Q?pqnAnUKkzvjb4zbcodf+V4JFMOXGNmMORapKbk2pmkwcvYpRrpi5323E9IMK?=
+ =?us-ascii?Q?gXKA3ksoF31cPQJ+WtoIb/FjQxQIFsORczKJffhWT/ob8ahUAxmCJt4HmHNn?=
+ =?us-ascii?Q?IgMM8MWFz6LrWEj7Qex8zjQOL7c6t046RuJDx0EU5emr3QCr0DH2K/xZHzLb?=
+ =?us-ascii?Q?WYXvbZ0Fey6wQOhdMN4H6+Qkp/E3mf3B33YVUIkEB9LJYpxm4ULL00yM+l7T?=
+ =?us-ascii?Q?00ZZVj8YqVYf/QXdOm9rBqjDmUARfX513iKf0FNfLIwT7fTcfouUdQahiHNh?=
+ =?us-ascii?Q?5cB1LWqgzZKMlcPePsefH5dQhpg8ZVX7BzgqFnCA/mJVai9s58T/53pJunUj?=
+ =?us-ascii?Q?jnPyAKWrKir5rtE7CXMc+vMl60kCoZ51OgtCg8As5pvrnF/rGISwo5fOKz3y?=
+ =?us-ascii?Q?owg4zA9DtdqVfLaPT/LW11ds4OGDvd/hgUJNT+qqVbDFGuswRHZOI+6I6jUA?=
+ =?us-ascii?Q?MODjKyQuIiaI22AxR7s2pHqZxWdWWszGVCOdvn0fPnaeBOnuWTrdv0tD5Bxm?=
+ =?us-ascii?Q?9Zo909ff77hqwk2Ipdn9rD+RsNyYUgDH1JqoxfBfvcbnN9mOlVX/fXXZyGTU?=
+ =?us-ascii?Q?+dDL49/ncwaeYN0wb5PMa3jOoL4w2Bp0GE4Hfy24VyjAx/HcWWrm8DV9Ni0P?=
+ =?us-ascii?Q?JyxLAYU0GIDQ9h9OFtOB2psuvUYJnTr17VKgK28kA3EBmV3gxy1jun/7hGXF?=
+ =?us-ascii?Q?6kshOi/dx5FzVZyuF0bdBMLj2KRmW/IEKbHy0kWuqogzx2TukLVAcYDfIEyQ?=
+ =?us-ascii?Q?11c3OmQ8N70PfV2Dl+/3U6gOwjONGcopjqmLaKtkvHs2L4uvxr4+UbaiPCG4?=
+ =?us-ascii?Q?jhJi1RolWMrBDLBTWu5Sln4060YMY9GX1ylrIHYhFR+tSPFmN34eqGJ/4GLk?=
+ =?us-ascii?Q?Lpmxfz5Pm8v8M8CR0jIiIf0ilvr4Tz55ebog4zMX70E8n/c+L/XpO0FfSckI?=
+ =?us-ascii?Q?FR0Ja41v5jZvk1P7+SxV2VoDmqSCLd1n6kdWAZZOq/RFzT3nI7/wyQarXZmk?=
+ =?us-ascii?Q?fvl2ejZeyWNMet5L2HDKggIrXDv68CDcuEF3U1xOM4jOYR98+5fgkMlldGDT?=
+ =?us-ascii?Q?g4Pw12Br7ZbOmTnhdtqY4ks+ztWAdclnV+kDaSdu1aknvSKYz+mVXD5WScmJ?=
+ =?us-ascii?Q?HQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: BYbLGC9TjMVkUo1A/2OtzaRBjrDjrXw64Z6UU5Zk6XpWtqMQmAiVMLvxwAFjCKzQgx2bFCtPq0mHstyj+UJg5mDJpkcHh3Bjk107aXWhJWRNJLO/RlMr68maOmcfxyxQRGk00h7ciuYuiQwUWyW0UhWYzuhKjjyP7bVlqqfIu765HNsMJFEsjx0mlG/KE9FtKZRrLq/XEStdJ+SGVP7rokAWptOU+NQxfUAKPMMcapDGF3NI87y4/jycZrhL7jxHGMPjYOrqW3UvN8JMrncE75AD5S2pw0snZ0CizKRNDhgtFjIykBRIyK9ebCrLOwPYETmtQ2RsIyCWeZ7J9izxFOZJHhnDcLiyYqQoLC94mI8rrEu/w49ARYFPJJBdGsKJ+FL7DwBN3+lMbhKlKXi8g4i0bpPeIhXT6naqAAJfpc0AaMn9B0q6NIT+pDcBiQ/5HC+qfcgIToCemoeqETuUAKz9KcHYzfZ9reVuaiIs2odxzvbuv4i+skVWPkxyPypJnA1c5BcpMNIZ3wRFcGJ8vNCi/kdn8qMLOgwCXtzVA7rhcntqE6m4O8g2YTxpzLpOzEdF7EJkFea3pO1eeQeLUSjm2R2x1minB6dWSlt69Vd1rBu5GqRzs+07yg0FMB6Cq73zG3BUcIt06QHjQSlClBMScxzoLRA3IhwX3zat+d9W6T4reB9an9fOBrhsJiXA1KxBCBYkHo6C6sqlxBTRX5wldSGxQmpqZJkhRgVftEAC8xpMUYSx5cVn3fQuCtf6eMk4OVW5woQ3qSmVB2E9Eiw9/2RYuDdW5zPLG6S3Kkqj2Kyyr17lzWsHVzCs4YX/n3F7diYQ2/wvnOp0lESd/iV5TGqzbBK9dart3wDUTkM7JZ6f4gxtmyueL0g8c0hGhvv6B/6ylvgHNSWjH2uENaM8VWYIbWsJVNzVOjDLU3s=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc45a265-e786-400a-64b6-08db61eb77cb
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 May 2023 15:26:55.9825
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qD+ho7YjVDfabAxiCAkkjYb0afQV2geh/rZGThr0xFHHmPl7Ta7qZTDbVSlrC5D4rvImy1KE3sCldgJnNx3ZrqQ8sjejRuc68/sl6rJX1zs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7636
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-31_08,2023-05-31_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- bulkscore=0 lowpriorityscore=0 clxscore=1011 priorityscore=1501
- suspectscore=0 spamscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305310124
+ definitions=2023-05-31_10,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=741 mlxscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
+ definitions=main-2305310131
+X-Proofpoint-GUID: E_kdF7S1pPJ8PXbzWqNWr1kHHodW0w-t
+X-Proofpoint-ORIG-GUID: E_kdF7S1pPJ8PXbzWqNWr1kHHodW0w-t
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 2023-05-30 at 15:44 -0700, Kees Cook wrote:
-> On Tue, May 30, 2023 at 05:36:06PM -0400, James Bottomley wrote:
-> > On Tue, 2023-05-30 at 15:30 -0600, Gustavo A. R. Silva wrote:
-> > > Avoid confusing the compiler about possible negative sizes.
-> > > Use size_t instead of int for variables size and copied.
-> > > 
-> > > Address the following warning found with GCC-13:
-> > > In function ‘lpfc_debugfs_ras_log_data’,
-> > >     inlined from ‘lpfc_debugfs_ras_log_open’ at
-> > > drivers/scsi/lpfc/lpfc_debugfs.c:2271:15:
-> > > drivers/scsi/lpfc/lpfc_debugfs.c:2210:25: warning: ‘memcpy’
-> > > specified
-> > > bound between 18446744071562067968 and 18446744073709551615
-> > > exceeds
-> > > maximum object size 9223372036854775807 [-Wstringop-overflow=]
-> > >  2210 |                         memcpy(buffer + copied, dmabuf-
-> > > >virt,
-> > >       |                        
-> > > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >  2211 |                                size - copied - 1);
-> > >       |                                ~~~~~~~~~~~~~~~~~~
-> > > 
-> > 
-> > This looks like a compiler bug to me and your workaround would have
-> > us using unsigned types everywhere for sizes, which seems wrong. 
-> > There are calls which return size or error for which we have
-> > ssize_t and that type has to be usable in things like memcpy, so
-> > the compiler must be fixed or the warning disabled.
-> 
-> The compiler is (correctly) noticing that the calculation involving
-> "size" (from which "copied" is set) could go negative.
 
-It can?  But if it can, then changing size and copied to unsigned
-doesn't fix it, does it?
+Gustavo/Justin,
 
-> The "unsigned types everywhere" is a slippery slope argument that
-> doesn't apply: this is fixing a specific case of a helper taking a
-> size that is never expected to go negative in multiple places
-> (open-coded multiplication, vmalloc, lpfc_debugfs_ras_log_data, etc).
-> It should be bounds checked at the least...
+>> > We probably should have declared no_of_objects as __be32 to have
+>> > avoided this confusion.
+>>
+>> Perhaps this patch can add that too?
+>
+> Yes, please.  Something like this is fine:
 
-So your claim is the compiler only gets it wrong in this one case and
-if we just change this one case it will never get it wrong again?  I
-think I prefer the idea that there's a problem in the bounds checking
-code which should be susceptible to fixing if we file a compiler bug
-(either it should get it right or ignore the case if it can't decide).
+Please send a formal patch. Thanks!
 
-> struct lpfc_hba {
->         ...
->         uint32_t cfg_ras_fwlog_buffsize;
->         ...
-> };
-> 
-> lpfc_debugfs_ras_log_open():
->         ...
->         struct lpfc_hba *phba = inode->i_private;
->         int size;
->         ...
->         size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba-
-> >cfg_ras_fwlog_buffsize;
->         debug->buffer = vmalloc(size);
->         ...
->         debug->len = lpfc_debugfs_ras_log_data(phba, debug->buffer,
-> size);
->         ...
-> 
-> lpfc_debugfs_ras_log_data():
->         ...
->                 if ((copied + LPFC_RAS_MAX_ENTRY_SIZE) >= (size - 1))
-> {
->                         memcpy(buffer + copied, dmabuf->virt,
->                                size - copied - 1);
-> 
-> Honestly, the "if" above is the weirdest part, and perhaps that
-> should
-> just be adjusted instead:
-> 
->         if (size <= LPFC_RAS_MAX_ENTRY_SIZE)
->                 return -ENOMEM;
->         ...
->                 if (size - copied <= LPFC_RAS_MAX_ENTRY_SIZE) {
->                         memcpy(..., size - copied - 1);
->                         copied += size - copied - 1;
->                         break;
->                 }
->                 ...
->         }
->         return copied;
-
-No one said you couldn't improve the code.  It was claiming a fix by
-changing a signed variable to unsigned that got my attention because
-it's a classic indicator of compiler problems.  I didn't say anything
-about all the strlcpy replacements where the source is guaranteed to be
-zero terminated so the problem alluded to in the changelog doesn't
-exist.  But since it all becomes about the inefficiency of the ignored
-strlen it did strike me that the most common pattern in sysfs code is
-strlcpy followed by strim or strstrip, which could be done slightly
-more efficiently as a single operation, if someone wanted actually to
-improve our sysfs use cases ...
-
-James
-
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
