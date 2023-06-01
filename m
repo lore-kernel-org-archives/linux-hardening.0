@@ -2,155 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6782C77B7A
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 22:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9165EC77B7A
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 23:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbjFAW2i (ORCPT
+        id S233149AbjFAXj6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Jun 2023 18:28:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46728 "EHLO
+        Thu, 1 Jun 2023 19:39:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbjFAW2i (ORCPT
+        with ESMTP id S232746AbjFAXjv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Jun 2023 18:28:38 -0400
+        Thu, 1 Jun 2023 19:39:51 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A3212C;
-        Thu,  1 Jun 2023 15:28:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3FEE136;
+        Thu,  1 Jun 2023 16:39:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A2A3364A7F;
-        Thu,  1 Jun 2023 22:28:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C511C4339B;
-        Thu,  1 Jun 2023 22:28:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B6EE646B3;
+        Thu,  1 Jun 2023 23:39:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA09C433EF;
+        Thu,  1 Jun 2023 23:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685658516;
-        bh=R7TPrCl84YiuCBQfEPy70uaHWlIn5vuvHUQAmc+LCvA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oO9ExzI3xpC85rpluTYF03EIjweEG7BDEzkV4XmEOXEeRmHXV7eqb+Run/hlIrkoz
-         q3toDgOfeP559QiU8jcSPuy+c4ng9vYCrIaUhBFfesCNAMYHASxFxIx+UeC+sXK0+i
-         eylvQiqMvgmXERO3NQkYe/U7tu9F4AMKY+xrjDOe5QCHLtJST2/W7zci/+62/4UYEe
-         OCEeJu4lIHeFXJtbqqoSAbvOmtiPBClrDufMhQFJOicZc9bIiFu5zffUco73gJGDoX
-         83K5jXtsmhNuMY4pethqAZFJpnthtvFhkV8nECpzJaR+d8EE0TCoKV88H3hEqDKqFz
-         ZM5FqjLX+uKDg==
-Date:   Thu, 1 Jun 2023 16:29:27 -0600
+        s=k20201202; t=1685662789;
+        bh=3jR6coTEIcQtDZcNzSMSFv+M4QM62RvBoRRP0rTVqDY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=fwc7Tv0DaRLNwBp0LIrrU8Ot+TZ8GxkknFOtF7HdZbG2BM2+QkEHGkrNQAhjeqfKC
+         95COu5tIu/DBAA9fFFzhQzVZG0gZBic5SJzHbJJIGGUGSyuDRZQfJgSRWRjOjahJtL
+         v5QQVcdPfunXzlsLY0XhxNr9yg0W2SMHZO6Me3den1nsWJWcablV46r1Wh+rSqhM+3
+         8OT+OgEPDdJf+Dy37ih6KM1QJ75q7NnSQj42MVexWoBqIWxH48DlgR1d5Q/IEw6Q0R
+         MhBTJXdyGFnICpULkSxMc/POPCMFpRJJCCMErrRmjGRxyZN2/B3A8B6qNtral0teVk
+         s7p9MKckvfIVw==
+Date:   Thu, 1 Jun 2023 17:40:41 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     James Bottomley <jejb@linux.ibm.com>,
-        James Smart <james.smart@broadcom.com>,
+To:     James Smart <james.smart@broadcom.com>,
         Dick Kennedy <dick.kennedy@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: lpfc: Avoid -Wstringop-overflow warning
-Message-ID: <ZHkbxyw8vLom2YEV@work>
-References: <ZHZq7AV9Q2WG1xRB@work>
- <fe0739cbe279cf9db2ebff1146e7ae540cc1ad6c.camel@linux.ibm.com>
- <202305301529.1EEA11B@keescook>
- <25ef15e7601e1b4510cbbd40c6d1ab7c64213863.camel@linux.ibm.com>
- <202306010931.92796DC@keescook>
+Subject: [PATCH v2][next] scsi: lpfc: Avoid -Wstringop-overflow warning
+Message-ID: <ZHkseX6TiFahvxJA@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202306010931.92796DC@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 09:48:55AM -0700, Kees Cook wrote:
-> On Wed, May 31, 2023 at 10:56:50AM -0400, James Bottomley wrote:
-> > On Tue, 2023-05-30 at 15:44 -0700, Kees Cook wrote:
-> > > On Tue, May 30, 2023 at 05:36:06PM -0400, James Bottomley wrote:
-> > > > On Tue, 2023-05-30 at 15:30 -0600, Gustavo A. R. Silva wrote:
-> > > > > Avoid confusing the compiler about possible negative sizes.
-> > > > > Use size_t instead of int for variables size and copied.
-> > > > > 
-> > > > > Address the following warning found with GCC-13:
-> > > > > In function ‘lpfc_debugfs_ras_log_data’,
-> > > > >     inlined from ‘lpfc_debugfs_ras_log_open’ at
-> > > > > drivers/scsi/lpfc/lpfc_debugfs.c:2271:15:
-> > > > > drivers/scsi/lpfc/lpfc_debugfs.c:2210:25: warning: ‘memcpy’
-> > > > > specified
-> > > > > bound between 18446744071562067968 and 18446744073709551615
-> > > > > exceeds
-> > > > > maximum object size 9223372036854775807 [-Wstringop-overflow=]
-> > > > >  2210 |                         memcpy(buffer + copied, dmabuf-
-> > > > > >virt,
-> > > > >       |                        
-> > > > > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > >  2211 |                                size - copied - 1);
-> > > > >       |                                ~~~~~~~~~~~~~~~~~~
-> > > > > 
-> > > > 
-> > > > This looks like a compiler bug to me and your workaround would have
-> > > > us using unsigned types everywhere for sizes, which seems wrong. 
-> > > > There are calls which return size or error for which we have
-> > > > ssize_t and that type has to be usable in things like memcpy, so
-> > > > the compiler must be fixed or the warning disabled.
-> > > 
-> > > The compiler is (correctly) noticing that the calculation involving
-> > > "size" (from which "copied" is set) could go negative.
-> > 
-> > It can?  But if it can, then changing size and copied to unsigned
-> > doesn't fix it, does it?
-> 
-> Yes:
-> 
-> 	(int)	(const expression 256 * 1024)		(u32)
->         size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsize;
-> 
-> this can wrap to negative if cfg_ras_fwlog_buffsize is large enough. If
-> "size" is size_t, it can't wrap, and is therefore never negative.
-> 
-> > So your claim is the compiler only gets it wrong in this one case and
-> > if we just change this one case it will never get it wrong again?
-> 
-> What? No, I'm saying this is a legitimate diagnostic, and the wrong type
-> was chosen for "size": it never needs to carry a negative value, and it
-> potentially needs to handle values greater than u32.
-> 
-> But you're right -- there is still a potential for runtime confusion in
-> that the return from lpfc_debugfs_ras_log_data() must be signed. So
-> perhaps the best option is to check for overflow directly.
-> 
-> Gustavo, does this fix it?
+Prevent any potential integer wrapping issue, and avoid a
+-Wstringop-overflow warning by using the check_mul_overflow() helper.
 
-Yep; it does.
+drivers/scsi/lpfc/lpfc.h:
+837:#define LPFC_RAS_MIN_BUFF_POST_SIZE (256 * 1024)
 
-I think we can go with this solution.
+drivers/scsi/lpfc/lpfc_debugfs.c:
+2266 size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsize;
 
-Thanks!
---
-Gustavo
+this can wrap to negative if cfg_ras_fwlog_buffsize is large
+enough. And even when in practice this is not possible (due to
+phba->cfg_ras_fwlog_buffsize never being larger than 4[1]), the
+compiler is legitimately warning us about potentially buggy code.
 
-> 
-> 
-> diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_debugfs.c
-> index bdf34af4ef36..7f9b221e7c34 100644
-> --- a/drivers/scsi/lpfc/lpfc_debugfs.c
-> +++ b/drivers/scsi/lpfc/lpfc_debugfs.c
-> @@ -2259,11 +2259,15 @@ lpfc_debugfs_ras_log_open(struct inode *inode, struct file *file)
->  		goto out;
->  	}
->  	spin_unlock_irq(&phba->hbalock);
-> -	debug = kmalloc(sizeof(*debug), GFP_KERNEL);
-> +
-> +	if (check_mul_overflow(LPFC_RAS_MIN_BUFF_POST_SIZE,
-> +			       phba->cfg_ras_fwlog_buffsize, &size))
-> +		goto out;
-> +
-> +	debug = kzalloc(sizeof(*debug), GFP_KERNEL);
->  	if (!debug)
->  		goto out;
->  
-> -	size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsize;
->  	debug->buffer = vmalloc(size);
->  	if (!debug->buffer)
->  		goto free_debug;
-> 
-> 
-> -Kees
-> 
-> -- 
-> Kees Cook
+Fix the following warning seen under GCC-13:
+In function ‘lpfc_debugfs_ras_log_data’,
+    inlined from ‘lpfc_debugfs_ras_log_open’ at drivers/scsi/lpfc/lpfc_debugfs.c:2271:15:
+drivers/scsi/lpfc/lpfc_debugfs.c:2210:25: warning: ‘memcpy’ specified bound between 18446744071562067968 and 18446744073709551615 exceeds maximum object size 9223372036854775807 [-Wstringop-overflow=]
+ 2210 |                         memcpy(buffer + copied, dmabuf->virt,
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 2211 |                                size - copied - 1);
+      |                                ~~~~~~~~~~~~~~~~~~
+
+Link: https://github.com/KSPP/linux/issues/305
+Link: https://lore.kernel.org/linux-hardening/CABPRKS8zyzrbsWt4B5fp7kMowAZFiMLKg5kW26uELpg1cDKY3A@mail.gmail.com/ [1]
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use check_mul_overflow() helper (Kees).
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/ZHZq7AV9Q2WG1xRB@work/
+
+ drivers/scsi/lpfc/lpfc_debugfs.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_debugfs.c
+index bdf34af4ef36..7f9b221e7c34 100644
+--- a/drivers/scsi/lpfc/lpfc_debugfs.c
++++ b/drivers/scsi/lpfc/lpfc_debugfs.c
+@@ -2259,11 +2259,15 @@ lpfc_debugfs_ras_log_open(struct inode *inode, struct file *file)
+ 		goto out;
+ 	}
+ 	spin_unlock_irq(&phba->hbalock);
+-	debug = kmalloc(sizeof(*debug), GFP_KERNEL);
++
++	if (check_mul_overflow(LPFC_RAS_MIN_BUFF_POST_SIZE,
++			       phba->cfg_ras_fwlog_buffsize, &size))
++		goto out;
++
++	debug = kzalloc(sizeof(*debug), GFP_KERNEL);
+ 	if (!debug)
+ 		goto out;
+ 
+-	size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsize;
+ 	debug->buffer = vmalloc(size);
+ 	if (!debug->buffer)
+ 		goto free_debug;
+-- 
+2.34.1
+
