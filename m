@@ -2,189 +2,182 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307E8C7EE23
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 21:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8B5C77B7E
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 22:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231558AbjFAVwa (ORCPT
+        id S230123AbjFAWOM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Jun 2023 17:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34170 "EHLO
+        Thu, 1 Jun 2023 18:14:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231241AbjFAVw3 (ORCPT
+        with ESMTP id S229498AbjFAWOL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Jun 2023 17:52:29 -0400
-Received: from smtp-1909.mail.infomaniak.ch (smtp-1909.mail.infomaniak.ch [IPv6:2001:1600:3:17::1909])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 687F8180
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Jun 2023 14:52:26 -0700 (PDT)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QXKc77569zMqSL0;
-        Thu,  1 Jun 2023 23:52:23 +0200 (CEST)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QXKc326PxzMpyf6;
-        Thu,  1 Jun 2023 23:52:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1685656343;
-        bh=Y4IDHny7hGy+XnSKBvFZqlpnWAHCn1rWumxGCLA50bQ=;
-        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-        b=H6zZL510qVdfzZeh/i5GoA9yME1fspu+DZZ0Oi5ZVA8yOwTq7CQKGpshOTn5FYk2m
-         fNE71TN9vpCm+pbkovBsqfYJ/zEMqsdW5HgzDcg4v5qxa6E4ngCPALSTCeNgrwWESi
-         5/j+zhczJVB0aePMSXY+seCsa5XOfmyxFayW64i8=
-Message-ID: <9a4edc66-a0a3-73e4-09c5-db68d4cfbb68@digikod.net>
-Date:   Thu, 1 Jun 2023 23:52:18 +0200
+        Thu, 1 Jun 2023 18:14:11 -0400
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD2CB1B4;
+        Thu,  1 Jun 2023 15:13:44 -0700 (PDT)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-561d1c4846cso328887b3.1;
+        Thu, 01 Jun 2023 15:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685657608; x=1688249608;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wgSe4yPKC4Ie6mfk+f6dt8MfVPoiPfF24WwsiP2m7pk=;
+        b=JgiWv+DBFw3orHyGwm/A7Uj0Gs+A/6iLpp2/S9llhZLFWJMa15tbHWSk1y3lxd7h82
+         8RAPPWHHwbu3MUu4vQA/COZM00+v+t7UCp7cpz5cv0BBHc0C8xjM4gCK5Xj8HiF2FmeG
+         jMm3+dKcEjlsemIMyw92zoiqg7CG1qzxJCxbqHuZkikIG39ZIAHNWz+Hooo/qGxSnR4D
+         5mXmfMwj4FJsNx5oYSvSd5G50gVb6XVr2wyKDe+68oq3Nqi/StZqAImiIzW9ja8g7bQ+
+         Kb3MLgjMCVuZK1iDbmCpD05cV+ErJyilmWbmWPho0ChMxZa5tLEtKtNGRTVyE26QbN09
+         bWOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685657608; x=1688249608;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wgSe4yPKC4Ie6mfk+f6dt8MfVPoiPfF24WwsiP2m7pk=;
+        b=Vwn2NDKRieZkeYq/cYbTRn16wfRCq1K/ttBAfk6NmsXrTudUASD36Gfdkxdkru+p2I
+         EOX3kf/RT8LFxsbQrThQazDQ4AKgeVg9gkwZiab3hr33n5qMoJN5MfM2w0kjuaXsUUUH
+         yMkjDSwKGo41uVi3peCH+FfqheZJebLPsivosb1+TSxmuoxmhDLn31/LRT0Sp7H6QlB4
+         icXrWTPZGgB4m61hDs6llzf4Dyamr95QL41QABjx0FXQJcaIkMtQ6ZMQQ9JH3DRKIZMt
+         nH8xv8TlOhWvYc6ES+azbFSkN0pj3xzmmIBRve9kHrf241bfy1Pfj7E0UJNA3Gxizlzo
+         3hwA==
+X-Gm-Message-State: AC+VfDyOEURppr2UbtEXlLCjZDYiDCntnC4N11Ea4NWCP0SGH05BAizN
+        aaWuZzADbpePDpkETcmqBtG1DIcgiZ8qhC/sJ0o=
+X-Google-Smtp-Source: ACHHUZ7FdK1COpLoHURlQ5kwJbzc1UrbXE+KoasqlIFy7FrHIBtaKwzHqkHZ7GjiaEbsOFUcXfnJ9clIDEHuKMWLkSY=
+X-Received: by 2002:a81:70cd:0:b0:561:eb6d:c0db with SMTP id
+ l196-20020a8170cd000000b00561eb6dc0dbmr8043695ywc.2.1685657607097; Thu, 01
+ Jun 2023 15:13:27 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [ANNOUNCE] KVM Microconference at LPC 2023
-Content-Language: en-US
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>
-Cc:     Sean Christopherson <seanjc@google.com>,
-        Marc Zyngier <maz@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Alexander Graf <graf@amazon.com>,
-        Forrest Yuan Yu <yuanyu@google.com>,
-        John Andersen <john.s.andersen@intel.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        "Madhavan T . Venkataraman" <madvenka@linux.microsoft.com>,
-        Marian Rotariu <marian.c.rotariu@gmail.com>,
-        =?UTF-8?Q?Mihai_Don=c8=9bu?= <mdontu@bitdefender.com>,
-        =?UTF-8?B?TmljdciZb3IgQ8OuyJt1?= <nicu.citu@icloud.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Thara Gopinath <tgopinath@microsoft.com>,
-        Will Deacon <will@kernel.org>,
-        Zahra Tarkhani <ztarkhani@microsoft.com>,
-        =?UTF-8?Q?=c8=98tefan_=c8=98icleru?= <ssicleru@bitdefender.com>,
-        dev@lists.cloudhypervisor.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, qemu-devel@nongnu.org,
-        virtualization@lists.linux-foundation.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org
-References: <2f19f26e-20e5-8198-294e-27ea665b706f@redhat.com>
- <4142c8dc-5385-fb1d-4f8b-2a98bb3f99af@digikod.net>
-In-Reply-To: <4142c8dc-5385-fb1d-4f8b-2a98bb3f99af@digikod.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+References: <ZHZq7AV9Q2WG1xRB@work> <fe0739cbe279cf9db2ebff1146e7ae540cc1ad6c.camel@linux.ibm.com>
+ <202305301529.1EEA11B@keescook> <25ef15e7601e1b4510cbbd40c6d1ab7c64213863.camel@linux.ibm.com>
+ <202306010931.92796DC@keescook>
+In-Reply-To: <202306010931.92796DC@keescook>
+From:   Justin Tee <justintee8345@gmail.com>
+Date:   Thu, 1 Jun 2023 15:13:16 -0700
+Message-ID: <CABPRKS8zyzrbsWt4B5fp7kMowAZFiMLKg5kW26uELpg1cDKY3A@mail.gmail.com>
+Subject: Re: [PATCH][next] scsi: lpfc: Avoid -Wstringop-overflow warning
+To:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     James Bottomley <jejb@linux.ibm.com>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+I understand the desire to satisfy a compiler warning, but for what
+it=E2=80=99s worth I don=E2=80=99t think "size" could ever be negative here=
+.
 
-What is the status of this microconference proposal? We'd be happy to 
-talk about Heki [1] and potentially other hypervisor supports.
+size =3D LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsize;
 
-Regards,
-  Mickaël
+phba->cfg_ras_fwlog_buffsize could never be larger than 4 because it
+is restricted via lpfc_ras_fwlog_buffsize_set and LPFC_ATTR=E2=80=99s call =
+to
+lpfc_rangecheck(val, 0, 4).
 
+And, #define LPFC_RAS_MIN_BUFF_POST_SIZE (256 * 1024).
 
-[1] https://lore.kernel.org/all/20230505152046.6575-1-mic@digikod.net/
+So, 256 * 1024 * 4 =3D 1,048,576 =3D 0x00100000 is the max =E2=80=9Csize=E2=
+=80=9D could ever be.
 
-
-On 26/05/2023 18:09, Mickaël Salaün wrote:
-> See James Morris's proposal here:
-> https://lore.kernel.org/all/17f62cb1-a5de-2020-2041-359b8e96b8c0@linux.microsoft.com/
-> 
-> On 26/05/2023 04:36, James Morris wrote:
->   > [Side topic]
->   >
->   > Would folks be interested in a Linux Plumbers Conference MC on this
->   > topic generally, across different hypervisors, VMMs, and architectures?
->   >
->   > If so, please let me know who the key folk would be and we can try
-> writing
->   > up an MC proposal.
-> 
-> The fine-grain memory management proposal from James Gowans looks
-> interesting, especially the "side-car" virtual machines:
-> https://lore.kernel.org/all/88db2d9cb42e471692ff1feb0b9ca855906a9d95.camel@amazon.com/
-> 
-> 
-> On 09/05/2023 11:55, Paolo Bonzini wrote:
->> Hi all!
->>
->> We are planning on submitting a CFP to host a KVM Microconference at
->> Linux Plumbers Conference 2023. To help justify the proposal, we would
->> like to gather a list of folks that would likely attend, and crowdsource
->> a list of topics to include in the proposal.
->>
->> For both this year and future years, the intent is that a KVM
->> Microconference will complement KVM Forum, *NOT* supplant it. As you
->> probably noticed, KVM Forum is going through a somewhat radical change in
->> how it's organized; the conference is now free and (with some help from
->> Red Hat) organized directly by the KVM and QEMU communities. Despite the
->> unexpected changes and some teething pains, community response to KVM
->> Forum continues to be overwhelmingly positive! KVM Forum will remain
->> the venue of choice for KVM/userspace collaboration, for educational
->> content covering both KVM and userspace, and to discuss new features in
->> QEMU and other userspace projects.
->>
->> At least on the x86 side, however, the success of KVM Forum led us
->> virtualization folks to operate in relative isolation. KVM depends on
->> and impacts multiple subsystems (MM, scheduler, perf) in profound ways,
->> and recently we’ve seen more and more ideas/features that require
->> non-trivial changes outside KVM and buy-in from stakeholders that
->> (typically) do not attend KVM Forum. Linux Plumbers Conference is a
->> natural place to establish such collaboration within the kernel.
->>
->> Therefore, the aim of the KVM Microconference will be:
->> * to provide a setting in which to discuss KVM and kernel internals
->> * to increase collaboration and reduce friction with other subsystems
->> * to discuss system virtualization issues that require coordination with
->> other subsystems (such as VFIO, or guest support in arch/)
->>
->> Below is a rough draft of the planned CFP submission.
->>
->> Thanks!
->>
->> Paolo Bonzini (KVM Maintainer)
->> Sean Christopherson (KVM x86 Co-Maintainer)
->> Marc Zyngier (KVM ARM Co-Maintainer)
->>
->>
->> ===================
->> KVM Microconference
->> ===================
->>
->> KVM (Kernel-based Virtual Machine) enables the use of hardware features
->> to improve the efficiency, performance, and security of virtual machines
->> created and managed by userspace.  KVM was originally developed to host
->> and accelerate "full" virtual machines running a traditional kernel and
->> operating system, but has long since expanded to cover a wide array of use
->> cases, e.g. hosting real time workloads, sandboxing untrusted workloads,
->> deprivileging third party code, reducing the trusted computed base of
->> security sensitive workloads, etc.  As KVM's use cases have grown, so too
->> have the requirements placed on KVM and the interactions between it and
->> other kernel subsystems.
->>
->> The KVM Microconference will focus on how to evolve KVM and adjacent
->> subsystems in order to satisfy new and upcoming requirements: serving
->> guest memory that cannot be accessed by host userspace[1], providing
->> accurate, feature-rich PMU/perf virtualization in cloud VMs[2], etc.
->>
->>
->> Potential Topics:
->>      - Serving inaccessible/unmappable memory for KVM guests (protected VMs)
->>      - Optimizing mmu_notifiers, e.g. reducing TLB flushes and spurious zapping
->>      - Supporting multiple KVM modules (for non-disruptive upgrades)
->>      - Improving and hardening KVM+perf interactions
->>      - Implementing arch-agnostic abstractions in KVM (e.g. MMU)
->>      - Defining KVM requirements for hardware vendors
->>      - Utilizing "fault" injection to increase test coverage of edge cases
->>      - KVM vs VFIO (e.g. memory types, a rather hot topic on the ARM side)
->>
->>
->> Key Attendees:
->>      - Paolo Bonzini <pbonzini@redhat.com> (KVM Maintainer)
->>      - Sean Christopherson <seanjc@google.com>  (KVM x86 Co-Maintainer)
->>      - Your name could be here!
->>
->> [1] https://lore.kernel.org/all/20221202061347.1070246-1-chao.p.peng@linux.intel.com
->> [2] https://lore.kernel.org/all/CALMp9eRBOmwz=mspp0m5Q093K3rMUeAsF3vEL39MGV5Br9wEQQ@mail.gmail.com
->>
->>
+On Thu, Jun 1, 2023 at 9:49=E2=80=AFAM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> On Wed, May 31, 2023 at 10:56:50AM -0400, James Bottomley wrote:
+> > On Tue, 2023-05-30 at 15:44 -0700, Kees Cook wrote:
+> > > On Tue, May 30, 2023 at 05:36:06PM -0400, James Bottomley wrote:
+> > > > On Tue, 2023-05-30 at 15:30 -0600, Gustavo A. R. Silva wrote:
+> > > > > Avoid confusing the compiler about possible negative sizes.
+> > > > > Use size_t instead of int for variables size and copied.
+> > > > >
+> > > > > Address the following warning found with GCC-13:
+> > > > > In function =E2=80=98lpfc_debugfs_ras_log_data=E2=80=99,
+> > > > >     inlined from =E2=80=98lpfc_debugfs_ras_log_open=E2=80=99 at
+> > > > > drivers/scsi/lpfc/lpfc_debugfs.c:2271:15:
+> > > > > drivers/scsi/lpfc/lpfc_debugfs.c:2210:25: warning: =E2=80=98memcp=
+y=E2=80=99
+> > > > > specified
+> > > > > bound between 18446744071562067968 and 18446744073709551615
+> > > > > exceeds
+> > > > > maximum object size 9223372036854775807 [-Wstringop-overflow=3D]
+> > > > >  2210 |                         memcpy(buffer + copied, dmabuf-
+> > > > > >virt,
+> > > > >       |
+> > > > > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > >  2211 |                                size - copied - 1);
+> > > > >       |                                ~~~~~~~~~~~~~~~~~~
+> > > > >
+> > > >
+> > > > This looks like a compiler bug to me and your workaround would have
+> > > > us using unsigned types everywhere for sizes, which seems wrong.
+> > > > There are calls which return size or error for which we have
+> > > > ssize_t and that type has to be usable in things like memcpy, so
+> > > > the compiler must be fixed or the warning disabled.
+> > >
+> > > The compiler is (correctly) noticing that the calculation involving
+> > > "size" (from which "copied" is set) could go negative.
+> >
+> > It can?  But if it can, then changing size and copied to unsigned
+> > doesn't fix it, does it?
+>
+> Yes:
+>
+>         (int)   (const expression 256 * 1024)           (u32)
+>         size =3D LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsi=
+ze;
+>
+> this can wrap to negative if cfg_ras_fwlog_buffsize is large enough. If
+> "size" is size_t, it can't wrap, and is therefore never negative.
+>
+> > So your claim is the compiler only gets it wrong in this one case and
+> > if we just change this one case it will never get it wrong again?
+>
+> What? No, I'm saying this is a legitimate diagnostic, and the wrong type
+> was chosen for "size": it never needs to carry a negative value, and it
+> potentially needs to handle values greater than u32.
+>
+> But you're right -- there is still a potential for runtime confusion in
+> that the return from lpfc_debugfs_ras_log_data() must be signed. So
+> perhaps the best option is to check for overflow directly.
+>
+> Gustavo, does this fix it?
+>
+>
+> diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_de=
+bugfs.c
+> index bdf34af4ef36..7f9b221e7c34 100644
+> --- a/drivers/scsi/lpfc/lpfc_debugfs.c
+> +++ b/drivers/scsi/lpfc/lpfc_debugfs.c
+> @@ -2259,11 +2259,15 @@ lpfc_debugfs_ras_log_open(struct inode *inode, st=
+ruct file *file)
+>                 goto out;
+>         }
+>         spin_unlock_irq(&phba->hbalock);
+> -       debug =3D kmalloc(sizeof(*debug), GFP_KERNEL);
+> +
+> +       if (check_mul_overflow(LPFC_RAS_MIN_BUFF_POST_SIZE,
+> +                              phba->cfg_ras_fwlog_buffsize, &size))
+> +               goto out;
+> +
+> +       debug =3D kzalloc(sizeof(*debug), GFP_KERNEL);
+>         if (!debug)
+>                 goto out;
+>
+> -       size =3D LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsi=
+ze;
+>         debug->buffer =3D vmalloc(size);
+>         if (!debug->buffer)
+>                 goto free_debug;
+>
+>
+> -Kees
+>
+> --
+> Kees Cook
