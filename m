@@ -2,90 +2,143 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C442C77B7E
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 08:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5794AC77B7A
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 14:16:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232194AbjFAIhC (ORCPT
+        id S229589AbjFAOQ5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Jun 2023 04:37:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44374 "EHLO
+        Thu, 1 Jun 2023 10:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232210AbjFAIgR (ORCPT
+        with ESMTP id S231607AbjFAOQ4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Jun 2023 04:36:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6792192;
-        Thu,  1 Jun 2023 01:35:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4B517641D5;
-        Thu,  1 Jun 2023 08:35:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6921C433A1;
-        Thu,  1 Jun 2023 08:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685608514;
-        bh=+YUAD//YlVKY5+gBa+79P7cJwXwdOQ+Jp7VlD1PAbyo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=P4bEPbdddBPCb87kzpJv07aaMARtLmWwzjkiom41+hsHBrl62JD1r1aBz8cKHjU9c
-         X9iu9Wm74cvVi+piVFvjrw7RVk0QYFoTynZ3NC6QR2BuP4tDEL8RlNr3ZPur330cOE
-         Q6uVHeKmiYvhBPIOugw4mRA7dnNrWHiZzN/9fuX0WChgHkQocHT/uKqzmvR8j8a3xw
-         dANIclAdTMyw005A1Kw25L9j1KqzX2r1j9bLbYGOxFPlY0SXFBFdPb7X1uyBilfPr9
-         +pNf2rydGlsyZHIev0KsctUhTFsYOZvW3tt6L2NCAtgArx6weXCnZIr4u9vMZ31IeT
-         +ckxpbqXZSRow==
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-4f3b9755961so598204e87.0;
-        Thu, 01 Jun 2023 01:35:14 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwG8OUV65sSOLepcZtLPNJwOI/zgGdQPBSrfQsgACF0xvXj2iwe
-        jgA7Le8A73OIEWq2DtcM7Weg1x/jUqEENch6P8I=
-X-Google-Smtp-Source: ACHHUZ6xuvvb5BPVfNACe6MUpNkE8UndZ+3fIhVFWcRPk2HabAj3IPXudsw5v84/8PYDOGj4ekJgWMf32Q1K1poixK8=
-X-Received: by 2002:ac2:59cf:0:b0:4f3:7b3c:2e16 with SMTP id
- x15-20020ac259cf000000b004f37b3c2e16mr887897lfn.39.1685608512676; Thu, 01 Jun
- 2023 01:35:12 -0700 (PDT)
+        Thu, 1 Jun 2023 10:16:56 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD291A6
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Jun 2023 07:16:29 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-650c8cb68aeso328781b3a.3
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Jun 2023 07:16:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1685628989; x=1688220989;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=twYg540X1PIqbMF2MOY+lphD+IJXhD0ehbrQ95GCUew=;
+        b=jGOM7i6CcGiTXBM1GKdxW+jDWjdpp2qglXKx6pdPELGipE5rc4OtuIloV7IG5PtsTa
+         AhO2ZY5uCu1mLbAzLjCtGTTEbs/0A5y+LD09wjEcQHrh5s5BmE8SOnMudG2hb0hv4qJI
+         63ENFL98pu0rrzG4Yqkt9aFn60UFMHD/omZWo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685628989; x=1688220989;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=twYg540X1PIqbMF2MOY+lphD+IJXhD0ehbrQ95GCUew=;
+        b=QhfiQZBGofLWhMZGDds+VOyjdhu3fY6GJNWpHoOJGRQSvjGzFq3KPBEv8HhbCnVysZ
+         I6hj627D99b4fsFMd04UrI1YzkgfFmnlfE34KqS3FJi9/v2KJsphbwKNDPl8lH2y/UaV
+         EFkjWN8nqtxxvp78eermmmbA0K3oT5fF+ZRFuZ4fV+d7+eV0JpxqI45N0r4tNKZBvdbr
+         RqUUF22tJW5JvjIFT9tf91D62GMJvOaRYDob3uUQHeoZW8o3/mb6BXrkWBqR03/omhlC
+         XFKuNHdIVHBAycFeVgw+4rMDWUN5fv8NITR+UNMWutZBI60zgPYwm7hiW59FjzklQwSb
+         giGQ==
+X-Gm-Message-State: AC+VfDyKmyBnp1cQHlxyn+9sKnyo2BnK/uyWtfNs2YZgvjVStwD19qjx
+        a89Vo9hlJ1KVQghK2/iRXJ8rjA==
+X-Google-Smtp-Source: ACHHUZ6dhSWZ+kaR9tr/tIo/y+AEBG5s4fnH5RJmGHToxHiUhgSxFkypP+G3Y/KlWXTXgmEvAZ48Zw==
+X-Received: by 2002:a05:6a00:24cc:b0:644:8172:3ea9 with SMTP id d12-20020a056a0024cc00b0064481723ea9mr7579505pfv.15.1685628989187;
+        Thu, 01 Jun 2023 07:16:29 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c24-20020aa78c18000000b0064fe332209esm5272822pfd.98.2023.06.01.07.16.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jun 2023 07:16:28 -0700 (PDT)
+Date:   Thu, 1 Jun 2023 07:16:27 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Neil Armstrong <neil.armstrong@linaro.org>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] firmware: meson_sm: Fix memcpy vs iomem type warnings
+Message-ID: <202306010716.02A835503C@keescook>
+References: <20221012185234.never.936-kees@kernel.org>
+ <166602031304.3572695.12870664862275915316.b4-ty@linaro.org>
+ <202305171124.4EB0D65@keescook>
+ <9158d9ca-fe00-760c-4c95-f2ee045038ee@linaro.org>
 MIME-Version: 1.0
-References: <20230530155501.222213-1-azeemshaikh38@gmail.com> <CACRpkdbf_biFPFC62uF1byXrMnK=0XbbBiZpJwT=GVnx5ZpP=g@mail.gmail.com>
-In-Reply-To: <CACRpkdbf_biFPFC62uF1byXrMnK=0XbbBiZpJwT=GVnx5ZpP=g@mail.gmail.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 1 Jun 2023 10:35:01 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGETX_zD=Us+E3+c0f1Cs3OA3gmZrR3Q-xhdh047V3-TQ@mail.gmail.com>
-Message-ID: <CAMj1kXGETX_zD=Us+E3+c0f1Cs3OA3gmZrR3Q-xhdh047V3-TQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Replace all non-returning strlcpy with strscpy
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9158d9ca-fe00-760c-4c95-f2ee045038ee@linaro.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 31 May 2023 at 15:30, Linus Walleij <linus.walleij@linaro.org> wrot=
-e:
->
-> On Tue, May 30, 2023 at 5:55=E2=80=AFPM Azeem Shaikh <azeemshaikh38@gmail=
-.com> wrote:
->
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read
-> > overflows if a source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> > No return values were used, so direct replacement is safe.
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
-cpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> >
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Please put this into Russell's patch tracker:
-> https://www.arm.linux.org.uk/developer/patches/
->
+On Wed, May 31, 2023 at 10:59:14AM +0200, Neil Armstrong wrote:
+> On 17/05/2023 20:25, Kees Cook wrote:
+> > *thread necromancy*
+> > 
+> > On Mon, Oct 17, 2022 at 05:25:13PM +0200, Neil Armstrong wrote:
+> > > Hi,
+> > > 
+> > > On Wed, 12 Oct 2022 11:53:16 -0700, Kees Cook wrote:
+> > > > Use memcpy_{toio,fromio}() instead of memcpy(). Silences warnings from
+> > > > Sparse:
+> > > > 
+> > > > drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 1 (different address spaces)
+> > > > drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+> > > > drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+> > > > drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 2 (different address spaces)
+> > > > drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
+> > > > drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
+> > > > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> > > > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> > > > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> > > > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> > > > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> > > > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> > > > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> > > > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
+> > > > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> > > > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
+> > > > drivers/firmware/meson/meson_sm.c:206:9:    expected void *
+> > > > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
+> > > > 
+> > > > [...]
+> > > 
+> > > Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.2/drivers)
+> > > 
+> > > [1/1] firmware: meson_sm: Fix memcpy vs iomem type warnings
+> > >        https://git.kernel.org/amlogic/c/7dc69c7d073e6004a281db8f7f15cf6ebf702ea0
+> > > 
+> > > These changes has been applied on the intermediate git tree [1].
+> > > 
+> > > The v6.2/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+> > > for inclusion in their intermediate git branches in order to be sent to Linus during
+> > > the next merge window, or sooner if it's a set of fixes.
+> > > 
+> > > In the cases of fixes, those will be merged in the current release candidate
+> > > kernel and as soon they appear on the Linux master branch they will be
+> > > backported to the previous Stable and Long-Stable kernels [2].
+> > > 
+> > > The intermediate git branches are merged daily in the linux-next tree [3],
+> > > people are encouraged testing these pre-release kernels and report issues on the
+> > > relevant mailing-lists.
+> > > 
+> > > If problems are discovered on those changes, please submit a signed-off-by revert
+> > > patch followed by a corrective changeset.
+> > > 
+> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+> > > [2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+> > > [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> > 
+> > Hi! This change seems to have never been mainlined and seems to have
+> > disappeared from linux-next.
+> > 
+> Hi,
+> 
+> Indeed it was rejected by Arnd, but I failed to find time to investigate how to fix it
+> 
+> https://lore.kernel.org/all/4a6b34ef-f5d2-4e56-a7f6-6a7c9cdda416@app.fastmail.com/
 
-https://www.armlinux.org.uk/developer/patches/viewpatch.php?id=3D9300/1
+Ah-ha! Thanks for the pointer.
+
+-- 
+Kees Cook
