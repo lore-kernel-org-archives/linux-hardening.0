@@ -2,97 +2,94 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 923EEC7EE29
-	for <linux-hardening@archiver.kernel.org>; Wed, 31 May 2023 23:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB2CC77B73
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 00:43:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbjEaXCo (ORCPT
+        id S229563AbjFAAnm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 31 May 2023 19:02:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
+        Wed, 31 May 2023 20:43:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230342AbjEaXCn (ORCPT
+        with ESMTP id S229537AbjFAAnk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 31 May 2023 19:02:43 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AC2107
-        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 16:02:38 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-ba829e17aacso193061276.0
-        for <linux-hardening@vger.kernel.org>; Wed, 31 May 2023 16:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685574158; x=1688166158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0nzIRRbGx22h7W4dzVmFren/95lkctbr3Uctdnt7nnU=;
-        b=WmPDmQ1h0qMnUeHvgUMsjpTh6VPEpTtOoNQ11MIJWu8Yqw0fd3oAGLpJdpSMotScGS
-         spn0YANEwG/lKK1g4Gi1omZBv815jXYv6S6kCYbkEuBs2j/MYKV3FUNEHcvO7f+QbHQM
-         Z8eo/LSR+Uy2F4fCrZWf5thKAUw2VrOtPnSl4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685574158; x=1688166158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0nzIRRbGx22h7W4dzVmFren/95lkctbr3Uctdnt7nnU=;
-        b=edoptumf3thPRRsdE0EgBgzJ6VwFH/iR3Yhzz5YPRi2aeeIJ+PKg/+11hgaowOM22u
-         y5JJZvw4Suz1Y+pjbL7Fysppo+l/7klSPIWFFuw/nYVrXOxiAoROlBzcujX85j0wuMen
-         unLeuJzxlf7EGZSG/dfnjcp9ctPVj4oO8VxYSvfqxdqrS6ukESVFhL2Bsyw177decCFu
-         m3OHWHdPNM0d/p76RZTXlvkyMKps5jJlEgcevF3zyIWq3PLJdSxitPDiqMIs4zoRAiCf
-         cZ6QdpasBmHkR9clrQL4xjzTM+8Txi3aDOQZp6VtHdLKaUqOSQZWqYI4EongJ94xllLA
-         9FjQ==
-X-Gm-Message-State: AC+VfDxHjU9X9fxekibcwM5/dzKU6yxBwCm+/BUYjHBDwIULr9PJ3sG7
-        3bKHyZZPodw2ucLQ5jIoMI8rqNxkAQptMo27UBlrEA==
-X-Google-Smtp-Source: ACHHUZ5hYf4p5U4e13Z1TleOH6isd0dp1HozTXSttchtojblNVlRPE54CQdz6YsI5G/k0FTvb1SR8akrNc+ZPON09N4=
-X-Received: by 2002:a25:7303:0:b0:bab:ab4a:83e0 with SMTP id
- o3-20020a257303000000b00babab4a83e0mr7718310ybc.26.1685574158132; Wed, 31 May
- 2023 16:02:38 -0700 (PDT)
+        Wed, 31 May 2023 20:43:40 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BDC411F;
+        Wed, 31 May 2023 17:43:40 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34VJtG3p032564;
+        Thu, 1 Jun 2023 00:43:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2023-03-30;
+ bh=8mIubt/iqIEj3yF916En/5c6+5bvMQgTYOSnnjWevvQ=;
+ b=xoDtlEmsRq+Oj7dQNXHb/6QdtRgYfo6zfJqrLysusF1PvzzaGmRwjCJ+9QDcMlJjDYQT
+ iiv/ZdAHAqRckb5mxPXCX8Mu+8X/dowPK91rhr6QcVJO4OoyPacmcE4PM5znTmSCsCgo
+ wW/Pl9YasLcrhJtZ32Yi6ScWKgctu021FwYpI/QJsVxRWoikwt5T70G2HBMc83UZKcVX
+ RwLlO9w0PlUbhtXcn54mO8p3nNOmw5Csl9TZTF7uNzwrQhHUw7qexZEfTfiFxSzNjdr+
+ +OO5o3CEPWK0kIwwLcPrE+f78q9c8Xa8m8EBUd4JQurYNXfw337o3tWv63nZF7QH6VaU dA== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qvhb97d73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 01 Jun 2023 00:43:34 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34VMje4a004350;
+        Thu, 1 Jun 2023 00:43:33 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qv4ye2eam-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 01 Jun 2023 00:43:33 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3510hV9J008516;
+        Thu, 1 Jun 2023 00:43:32 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3qv4ye2e6s-2;
+        Thu, 01 Jun 2023 00:43:32 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/2][next] scsi: lpfc: Replace one-element array with flexible-array member
+Date:   Wed, 31 May 2023 20:43:11 -0400
+Message-Id: <168558000061.2461197.16055588044567181053.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1684358315.git.gustavoars@kernel.org>
+References: <cover.1684358315.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-References: <20230515130553.2311248-1-jeffxu@chromium.org> <2bcffc9f-9244-0362-2da9-ece230055320@intel.com>
- <CAEAAPHYdRyZEMp97919errF7SDuYBJoSrD5i1wrTx1sMdr_ZdQ@mail.gmail.com>
- <fbe53dcf-6e21-e4cf-c632-4da8369d7e83@intel.com> <CAEAAPHa=zYyjV5RqvPryRsW7VqY9cJC_-CJW6HKczY0iVsy-bg@mail.gmail.com>
- <d8f2d5c2-6650-c2a6-3a20-25583eee579b@intel.com> <CALmYWFsnGjniVseJKuhKO6eet10Onyk_C0=KNe6ZzXoCiBKZOw@mail.gmail.com>
- <b69f6809-b483-158f-8be9-4976fad918d8@intel.com> <CALmYWFs5Vgosz2JUYWkoc4YwDbiB0tT32MFpo-y6aX4kwuoz8Q@mail.gmail.com>
- <2b14036e-aed8-4212-bc0f-51ec4fe5a5c1@intel.com>
-In-Reply-To: <2b14036e-aed8-4212-bc0f-51ec4fe5a5c1@intel.com>
-From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Wed, 31 May 2023 16:02:00 -0700
-Message-ID: <CABi2SkU9iDqpcXfPpwphEgL0-rBionphfT3+Zscq_Htx=ps+2g@mail.gmail.com>
-Subject: Re: [PATCH 0/6] Memory Mapping (VMA) protection using PKU - set 1
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Jeff Xu <jeffxu@google.com>,
-        =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>,
-        luto@kernel.org, jorgelo@chromium.org, keescook@chromium.org,
-        groeck@chromium.org, jannh@google.com, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-31_18,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=682
+ adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2306010004
+X-Proofpoint-GUID: 2A7n-JZDucLtJLPG9sjrQ4gP-FMROkEG
+X-Proofpoint-ORIG-GUID: 2A7n-JZDucLtJLPG9sjrQ4gP-FMROkEG
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Dave,
+On Wed, 17 May 2023 15:22:24 -0600, Gustavo A. R. Silva wrote:
 
-Regarding siglongjmp:
+> This small series aims to replace a one-element array with a
+> flexible-array member in a couple of structures.
+> 
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -fstrict-flex-arrays=3 [1].
+> 
+> [...]
 
-On Thu, May 18, 2023 at 8:37=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> On 5/17/23 16:48, Jeff Xu wrote:
-> > However, there are a few challenges I have not yet worked through.
-> > First, the code needs to track when the first signaling entry occurs
-> > (saving the PKRU register to the thread struct) and when it is last
-> > returned (restoring the PKRU register from the thread struct).
->
-> Would tracking signal "depth" work in the face of things like siglongjmp?
->
-siglongjmp is interesting, thanks for bringing this up.
+Applied to 6.5/scsi-queue, thanks!
 
-With siglongjmp, the thread doesn't go back to the place where signal is
-raised, indeed, this idea of tracking the first signaling entry
-doesn't work well with siglongjmp.
+[1/2] scsi: lpfc: Replace one-element array with flexible-array member
+      https://git.kernel.org/mkp/scsi/c/e90644b0ce2d
 
-Thanks for your insight!
--Jeff
-
-
--Jeff
+-- 
+Martin K. Petersen	Oracle Linux Engineering
