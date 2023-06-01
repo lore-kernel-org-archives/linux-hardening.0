@@ -2,143 +2,129 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5794AC77B7A
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 14:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8876FC77B7E
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 16:00:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjFAOQ5 (ORCPT
+        id S233480AbjFAQAk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Jun 2023 10:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38282 "EHLO
+        Thu, 1 Jun 2023 12:00:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231607AbjFAOQ4 (ORCPT
+        with ESMTP id S234474AbjFAQAi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Jun 2023 10:16:56 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD291A6
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Jun 2023 07:16:29 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-650c8cb68aeso328781b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Jun 2023 07:16:29 -0700 (PDT)
+        Thu, 1 Jun 2023 12:00:38 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A98E8198
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Jun 2023 09:00:33 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b03b9f02b4so4858625ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Jun 2023 09:00:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685628989; x=1688220989;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=twYg540X1PIqbMF2MOY+lphD+IJXhD0ehbrQ95GCUew=;
-        b=jGOM7i6CcGiTXBM1GKdxW+jDWjdpp2qglXKx6pdPELGipE5rc4OtuIloV7IG5PtsTa
-         AhO2ZY5uCu1mLbAzLjCtGTTEbs/0A5y+LD09wjEcQHrh5s5BmE8SOnMudG2hb0hv4qJI
-         63ENFL98pu0rrzG4Yqkt9aFn60UFMHD/omZWo=
+        d=chromium.org; s=google; t=1685635233; x=1688227233;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CSSMVbhKiQKes2FXn07HT2PehTcS3LvEK8iBz94W+GE=;
+        b=G40YuqS1UsFpH+HN2SRB+wSxhkekURBx9NKclSP3kmF3V6Fhww8jiP3cDwI15wLucl
+         SVk/ii9MR6JUzAtMSQ3vdNuC9icNcRIH+N5v2o4AiDjDBIa49c6JdpsvTGQJfLdq/7lp
+         S3EubNPyT2dJIDTD1Pvpj6u6Qf5IlwBF0m/Pg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685628989; x=1688220989;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=twYg540X1PIqbMF2MOY+lphD+IJXhD0ehbrQ95GCUew=;
-        b=QhfiQZBGofLWhMZGDds+VOyjdhu3fY6GJNWpHoOJGRQSvjGzFq3KPBEv8HhbCnVysZ
-         I6hj627D99b4fsFMd04UrI1YzkgfFmnlfE34KqS3FJi9/v2KJsphbwKNDPl8lH2y/UaV
-         EFkjWN8nqtxxvp78eermmmbA0K3oT5fF+ZRFuZ4fV+d7+eV0JpxqI45N0r4tNKZBvdbr
-         RqUUF22tJW5JvjIFT9tf91D62GMJvOaRYDob3uUQHeoZW8o3/mb6BXrkWBqR03/omhlC
-         XFKuNHdIVHBAycFeVgw+4rMDWUN5fv8NITR+UNMWutZBI60zgPYwm7hiW59FjzklQwSb
-         giGQ==
-X-Gm-Message-State: AC+VfDyKmyBnp1cQHlxyn+9sKnyo2BnK/uyWtfNs2YZgvjVStwD19qjx
-        a89Vo9hlJ1KVQghK2/iRXJ8rjA==
-X-Google-Smtp-Source: ACHHUZ6dhSWZ+kaR9tr/tIo/y+AEBG5s4fnH5RJmGHToxHiUhgSxFkypP+G3Y/KlWXTXgmEvAZ48Zw==
-X-Received: by 2002:a05:6a00:24cc:b0:644:8172:3ea9 with SMTP id d12-20020a056a0024cc00b0064481723ea9mr7579505pfv.15.1685628989187;
-        Thu, 01 Jun 2023 07:16:29 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685635233; x=1688227233;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CSSMVbhKiQKes2FXn07HT2PehTcS3LvEK8iBz94W+GE=;
+        b=dRavFdu8O77qjrSZCaY4h53uLcv4UKXvdK2XzRRb6eseVGJKJfOkOkET3onw1v7w46
+         ZBGrUUVdzXDH8LxGgkvP3ShjZ/UewanxT3UjX1l9wDgdSx6MBDhPKFa0pgTTvSuvCW6O
+         JaRnGqrqKGhHx4BdneU/K8565VThu+EPlezZkHoUhoSdE3csD0pnPTQcF2tja2Y72HF6
+         2gIH2uvF5sCafIZA37mBAhJXYwfnq+cynYlWIRlOWuQYUDLC+UqOSrE8rm/EmAdePobm
+         qnMmCeSn5jPM8UILxEBARZ8kA18hdDngDJOg4qtxIJjsSQFybm+9+JuG3Pxu/i52zDl/
+         fyAw==
+X-Gm-Message-State: AC+VfDxhJC3QyKg3nZixKEbVfJ53wZDp1lOBOtlzGPLOQKAyyWJj6sId
+        5e9GWdHNXBIoQaQAX7HbLd+SJA==
+X-Google-Smtp-Source: ACHHUZ7Y/j1K0K+OI8RiBenflSTAHsKRmF86JYQCC8TX/WswDP9/djNgLEAJ0bZT13bWWUVoH+F2WQ==
+X-Received: by 2002:a17:902:8307:b0:1ae:305f:e949 with SMTP id bd7-20020a170902830700b001ae305fe949mr5823287plb.6.1685635232876;
+        Thu, 01 Jun 2023 09:00:32 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c24-20020aa78c18000000b0064fe332209esm5272822pfd.98.2023.06.01.07.16.28
+        by smtp.gmail.com with ESMTPSA id u10-20020a17090341ca00b001ae42480c82sm3662096ple.226.2023.06.01.09.00.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jun 2023 07:16:28 -0700 (PDT)
-Date:   Thu, 1 Jun 2023 07:16:27 -0700
+        Thu, 01 Jun 2023 09:00:32 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] firmware: meson_sm: Fix memcpy vs iomem type warnings
-Message-ID: <202306010716.02A835503C@keescook>
-References: <20221012185234.never.936-kees@kernel.org>
- <166602031304.3572695.12870664862275915316.b4-ty@linaro.org>
- <202305171124.4EB0D65@keescook>
- <9158d9ca-fe00-760c-4c95-f2ee045038ee@linaro.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        =?UTF-8?q?Joan=20Bruguera=20Mic=C3=B3?= <joanbrugueram@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Alyssa Ross <hi@alyssa.is>,
+        Heiko Stuebner <heiko.stuebner@vrull.eu>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Andrew Jones <ajones@ventanamicro.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2] riscv/purgatory: Do not use fortified string functions
+Date:   Thu,  1 Jun 2023 09:00:28 -0700
+Message-Id: <20230601160025.gonna.868-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9158d9ca-fe00-760c-4c95-f2ee045038ee@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2046; h=from:subject:message-id; bh=D3i2fx38SuZJfTLJnG4ariCLKDkYJ4XMlsdasO2er94=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkeMCcr4GEaZm3mIC8bLTgzCfv0iCFwT3u6pSWp2/4 oidJwVuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZHjAnAAKCRCJcvTf3G3AJosmD/ 9VUGMkQRPLvYkOTpl4FX/cepeYlRCO0IrieC8te7msoWdE6Be3W2w+fdYWKAqFdqWAsxpFdq+r1dWa OlSjzEEEhmDAzdQyqllhVMRdKGSYQXUnj2QrDrq+ZHaMpAAQK9xDhDdsqtgpfpUQkfH4HPnJKn7EUJ 9fiG93rORBeoFqTeTjFguaR7qgPET/W/RhadhoeETdqeYKEibyeHTwnrONdW6SLkfmuXn9M4FOCE44 z+z7CZMwLYp5MxSQptwNFeg/XsQXCZlf2ieOvsS3J4xAoOFHGXaSQNorAzm+woUUMP2rdiK6xa08Hl IrCYt5TNpi/0oL0SEUnrEwj+wqCUQ1KPP2AnmfvST8kW/YDCCgEmonSuSNLtPw3LmUcEkc4nLXVPbN wul8nbMNGrFwms1JhbMFkjxGW1xvvqv3uqVahy0MPNOf9a7rABAbfmx5KQE3IjK8OQb75ieWxK5F+s shhk0Qz/JS5E8PM9YKzwIpMFA+I48NuQOSc0zNmxwCvKvJMUspLhUQaqqyosz+IGQw9wLNPLLycEdX PS+r83Gn1ZtHgbteZK2hGOlv4oDVxDE4OYZL/Fl2lHCvjDnXUxGqeqA40rVpidDWZyMkQMP372jPwa WbKuQ7fIa8qQqvkrjU8EzNp/oqETsJZs6fuaXUDAj5uLbRH6uHn2fB2I9BvQ==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, May 31, 2023 at 10:59:14AM +0200, Neil Armstrong wrote:
-> On 17/05/2023 20:25, Kees Cook wrote:
-> > *thread necromancy*
-> > 
-> > On Mon, Oct 17, 2022 at 05:25:13PM +0200, Neil Armstrong wrote:
-> > > Hi,
-> > > 
-> > > On Wed, 12 Oct 2022 11:53:16 -0700, Kees Cook wrote:
-> > > > Use memcpy_{toio,fromio}() instead of memcpy(). Silences warnings from
-> > > > Sparse:
-> > > > 
-> > > > drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 1 (different address spaces)
-> > > > drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
-> > > > drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
-> > > > drivers/firmware/meson/meson_sm.c:170:17: warning: incorrect type in argument 2 (different address spaces)
-> > > > drivers/firmware/meson/meson_sm.c:170:17:    expected void const *
-> > > > drivers/firmware/meson/meson_sm.c:170:17:    got void [noderef] __iomem *sm_shmem_out_base
-> > > > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
-> > > > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
-> > > > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
-> > > > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
-> > > > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
-> > > > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
-> > > > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
-> > > > drivers/firmware/meson/meson_sm.c:206:9:    expected void const *
-> > > > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
-> > > > drivers/firmware/meson/meson_sm.c:206:9: warning: incorrect type in argument 1 (different address spaces)
-> > > > drivers/firmware/meson/meson_sm.c:206:9:    expected void *
-> > > > drivers/firmware/meson/meson_sm.c:206:9:    got void [noderef] __iomem *sm_shmem_in_base
-> > > > 
-> > > > [...]
-> > > 
-> > > Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.2/drivers)
-> > > 
-> > > [1/1] firmware: meson_sm: Fix memcpy vs iomem type warnings
-> > >        https://git.kernel.org/amlogic/c/7dc69c7d073e6004a281db8f7f15cf6ebf702ea0
-> > > 
-> > > These changes has been applied on the intermediate git tree [1].
-> > > 
-> > > The v6.2/drivers branch will then be sent via a formal Pull Request to the Linux SoC maintainers
-> > > for inclusion in their intermediate git branches in order to be sent to Linus during
-> > > the next merge window, or sooner if it's a set of fixes.
-> > > 
-> > > In the cases of fixes, those will be merged in the current release candidate
-> > > kernel and as soon they appear on the Linux master branch they will be
-> > > backported to the previous Stable and Long-Stable kernels [2].
-> > > 
-> > > The intermediate git branches are merged daily in the linux-next tree [3],
-> > > people are encouraged testing these pre-release kernels and report issues on the
-> > > relevant mailing-lists.
-> > > 
-> > > If problems are discovered on those changes, please submit a signed-off-by revert
-> > > patch followed by a corrective changeset.
-> > > 
-> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
-> > > [2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-> > > [3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> > 
-> > Hi! This change seems to have never been mainlined and seems to have
-> > disappeared from linux-next.
-> > 
-> Hi,
-> 
-> Indeed it was rejected by Arnd, but I failed to find time to investigate how to fix it
-> 
-> https://lore.kernel.org/all/4a6b34ef-f5d2-4e56-a7f6-6a7c9cdda416@app.fastmail.com/
+With the addition of -fstrict-flex-arrays=3, struct sha256_state's
+trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
 
-Ah-ha! Thanks for the pointer.
+struct sha256_state {
+        u32 state[SHA256_DIGEST_SIZE / 4];
+        u64 count;
+        u8 buf[SHA256_BLOCK_SIZE];
+};
 
+This means that the memcpy() calls with "buf" as a destination in
+sha256.c's code will attempt to perform run-time bounds checking, which
+could lead to calling missing functions, specifically a potential
+WARN_ONCE, which isn't callable from purgatory.
+
+Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+Closes: https://lore.kernel.org/lkml/175578ec-9dec-7a9c-8d3a-43f24ff86b92@leemhuis.info/
+Bisected-by: "Joan Bruguera Micó" <joanbrugueram@gmail.com>
+Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Conor Dooley <conor.dooley@microchip.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Alyssa Ross <hi@alyssa.is>
+Cc: Heiko Stuebner <heiko.stuebner@vrull.eu>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-riscv@lists.infradead.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+v2: - only limit fortify for sha256 (conor)
+v1: https://lore.kernel.org/lkml/20230531003404.never.167-kees@kernel.org
+---
+ arch/riscv/purgatory/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/riscv/purgatory/Makefile b/arch/riscv/purgatory/Makefile
+index 5730797a6b40..8c73360c42bb 100644
+--- a/arch/riscv/purgatory/Makefile
++++ b/arch/riscv/purgatory/Makefile
+@@ -31,7 +31,7 @@ $(obj)/strncmp.o: $(srctree)/arch/riscv/lib/strncmp.S FORCE
+ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+ 	$(call if_changed_rule,cc_o_c)
+ 
+-CFLAGS_sha256.o := -D__DISABLE_EXPORTS
++CFLAGS_sha256.o := -D__DISABLE_EXPORTS -D__NO_FORTIFY
+ CFLAGS_string.o := -D__DISABLE_EXPORTS
+ CFLAGS_ctype.o := -D__DISABLE_EXPORTS
+ 
 -- 
-Kees Cook
+2.34.1
+
