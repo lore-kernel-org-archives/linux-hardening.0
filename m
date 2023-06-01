@@ -2,110 +2,159 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C37C77B7A
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 16:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68593C77B7A
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 16:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231298AbjFAQqC (ORCPT
+        id S230434AbjFAQtA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Jun 2023 12:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58686 "EHLO
+        Thu, 1 Jun 2023 12:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231259AbjFAQqB (ORCPT
+        with ESMTP id S231359AbjFAQs7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Jun 2023 12:46:01 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D3CA195;
-        Thu,  1 Jun 2023 09:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685637959; x=1717173959;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iDL6LVNWKZBuZvvnqj/X3vGXzRQAR73q49VVn7ziVp0=;
-  b=nJlhZ5IHgjL8o8J/ql3asMRn+gNDZsIDjLRnNE1WFYx9nA78dGprQKOo
-   HeHUd5O2vOLjkkVWiUZCdECHGymdryRwMwMxJHoDNCA4Xh8qTo9Rvlxep
-   lsZ3E2C2/0kxYxHOOyDF4p1Lk7lfmR7pzys2km0gp5MTBG0Nec+HtNiIO
-   vUuKXZxRa3Gf2tPs4hGJscvhPaGvP1V7tQUkzacC3mG7h2X8E7B7IATLb
-   UAb6Oir14dJ81KWZthRY1xzfwJZ1Ht2VxKYgkSUqJ09HvnqQ8hCIdyXw/
-   Lp105XooDWw6vGlFIJsa/S54yES8vaLMvmiB8F5Hitf/63iUv1CmxvxVh
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="358037897"
-X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
-   d="scan'208";a="358037897"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 09:45:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="701621225"
-X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
-   d="scan'208";a="701621225"
-Received: from jdboswor-mobl.amr.corp.intel.com (HELO [10.212.227.45]) ([10.212.227.45])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 09:45:57 -0700
-Message-ID: <3c67fdd6-bce9-f695-a6c5-0fe9209bd3e4@intel.com>
-Date:   Thu, 1 Jun 2023 09:45:57 -0700
+        Thu, 1 Jun 2023 12:48:59 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC08194
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Jun 2023 09:48:57 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b02085bf8dso5552245ad.0
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Jun 2023 09:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1685638137; x=1688230137;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=I7sIZxy7gcUStde8URE/x1USu0Ac7NEoHkxfkIRrq8Q=;
+        b=O5v9C+cpDpBpGItvH0zQNTTgjJRbBzUAAX5rLRQAlChNgLThGeWZ8wMHpncPDsbdhJ
+         0KADHgqApvBqugAsYXvWIIbtTQQc+if/6nCKJj0ogUPsLWEohV0AOTOXPf7TbnVme6vq
+         MWD0zkQymoph8GAivP/P+Twa2BLHeK4c8Bi2c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685638137; x=1688230137;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I7sIZxy7gcUStde8URE/x1USu0Ac7NEoHkxfkIRrq8Q=;
+        b=BO/H01W9EmLSU/B9Jt6VXLM83RKuNWFRWGUeJl/eOBpQA8y/NiuHkYGrNOEjICREsI
+         IRiV/aMy9xsoQLKDzw8CnGw9z/Cefcrwib01dZxHSev8LunlfTN/dc1AJUW3++gwwl8e
+         8FHBJiMUCYdquOyVs1RfmhOgJyQow86Blw4V5o3E8MPGIfudiOL4noxI6AS43HvYJTfh
+         DWXELTNnb6WU4poIB3oVAY4XhHW1va2W1s1UwcBsElaOivv/pOnBAxPcUxGh1oSWz7sz
+         wCPQEwafehX7fHaTc2Vbm1+swRChm7g5XQ2Uy6Xz2dsKdQfeH9xKDfYxvi4eXPas7s1D
+         sCWQ==
+X-Gm-Message-State: AC+VfDzGrTVBeoJUexC6kwa7Q9f2Wzo0ad9u4jiddPHq/vaM4s+IrXMX
+        xdKhBMXDOMUiwF4RJAaaMYYLTWk7pUvCrZ+Z3bY=
+X-Google-Smtp-Source: ACHHUZ6el6CagK7aXG5sNb126VxFGEOTWEKUyFtRTxw5GCMxYH7KhJqdaBU6w7GCuHNGGh667Yxm6w==
+X-Received: by 2002:a17:903:18c:b0:1ae:50cc:45b with SMTP id z12-20020a170903018c00b001ae50cc045bmr6738733plg.36.1685638136955;
+        Thu, 01 Jun 2023 09:48:56 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id i10-20020a17090332ca00b001af98dcf958sm3684665plr.288.2023.06.01.09.48.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jun 2023 09:48:56 -0700 (PDT)
+Date:   Thu, 1 Jun 2023 09:48:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     James Bottomley <jejb@linux.ibm.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: lpfc: Avoid -Wstringop-overflow warning
+Message-ID: <202306010931.92796DC@keescook>
+References: <ZHZq7AV9Q2WG1xRB@work>
+ <fe0739cbe279cf9db2ebff1146e7ae540cc1ad6c.camel@linux.ibm.com>
+ <202305301529.1EEA11B@keescook>
+ <25ef15e7601e1b4510cbbd40c6d1ab7c64213863.camel@linux.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] x86/purgatory: Do not use fortified string functions
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Thorsten Leemhuis <linux@leemhuis.info>,
-        =?UTF-8?Q?Joan_Bruguera_Mic=c3=b3?= <joanbrugueram@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alyssa Ross <hi@alyssa.is>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230531003345.never.325-kees@kernel.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230531003345.never.325-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <25ef15e7601e1b4510cbbd40c6d1ab7c64213863.camel@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 5/30/23 17:33, Kees Cook wrote:
-> With the addition of -fstrict-flex-arrays=3, struct sha256_state's
-> trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
+On Wed, May 31, 2023 at 10:56:50AM -0400, James Bottomley wrote:
+> On Tue, 2023-05-30 at 15:44 -0700, Kees Cook wrote:
+> > On Tue, May 30, 2023 at 05:36:06PM -0400, James Bottomley wrote:
+> > > On Tue, 2023-05-30 at 15:30 -0600, Gustavo A. R. Silva wrote:
+> > > > Avoid confusing the compiler about possible negative sizes.
+> > > > Use size_t instead of int for variables size and copied.
+> > > > 
+> > > > Address the following warning found with GCC-13:
+> > > > In function ‘lpfc_debugfs_ras_log_data’,
+> > > >     inlined from ‘lpfc_debugfs_ras_log_open’ at
+> > > > drivers/scsi/lpfc/lpfc_debugfs.c:2271:15:
+> > > > drivers/scsi/lpfc/lpfc_debugfs.c:2210:25: warning: ‘memcpy’
+> > > > specified
+> > > > bound between 18446744071562067968 and 18446744073709551615
+> > > > exceeds
+> > > > maximum object size 9223372036854775807 [-Wstringop-overflow=]
+> > > >  2210 |                         memcpy(buffer + copied, dmabuf-
+> > > > >virt,
+> > > >       |                        
+> > > > ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > >  2211 |                                size - copied - 1);
+> > > >       |                                ~~~~~~~~~~~~~~~~~~
+> > > > 
+> > > 
+> > > This looks like a compiler bug to me and your workaround would have
+> > > us using unsigned types everywhere for sizes, which seems wrong. 
+> > > There are calls which return size or error for which we have
+> > > ssize_t and that type has to be usable in things like memcpy, so
+> > > the compiler must be fixed or the warning disabled.
+> > 
+> > The compiler is (correctly) noticing that the calculation involving
+> > "size" (from which "copied" is set) could go negative.
 > 
-> struct sha256_state {
->         u32 state[SHA256_DIGEST_SIZE / 4];
->         u64 count;
->         u8 buf[SHA256_BLOCK_SIZE];
-> };
-> 
-> This means that the memcpy() calls with "buf" as a destination in
-> sha256.c's code will attempt to perform run-time bounds checking, which
-> could lead to calling missing functions, specifically a potential
-> WARN_ONCE, which isn't callable from purgatory.
-> 
-> Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
-> Closes: https://lore.kernel.org/lkml/175578ec-9dec-7a9c-8d3a-43f24ff86b92@leemhuis.info/
-> Bisected-by: "Joan Bruguera Micó" <joanbrugueram@gmail.com>
-> Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
+> It can?  But if it can, then changing size and copied to unsigned
+> doesn't fix it, does it?
 
-Hi Folks,
+Yes:
 
-The -fstrict-flex-arrays=3 commit isn't upstream yet, right?  That makes
-it a _bit_ wonky for us to carry this on the x86 side since among other
-things, the Fixes commit doesn't exist.  I'd be fine if this goes up
-along with the -fstrict-flex-arrays=3 code, so:
+	(int)	(const expression 256 * 1024)		(u32)
+        size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsize;
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+this can wrap to negative if cfg_ras_fwlog_buffsize is large enough. If
+"size" is size_t, it can't wrap, and is therefore never negative.
 
-We could also pick it up from the x86 side, but I think that would need
-a _bit_ of a different commit message to allude to it being to prepare
-for the _future_ setting of -fstrict-flex-arrays=3 and having no
-practical benefits now.
+> So your claim is the compiler only gets it wrong in this one case and
+> if we just change this one case it will never get it wrong again?
 
-Let me know if you don't want to send this up with the
--fstrict-flex-arrays=3 set.
+What? No, I'm saying this is a legitimate diagnostic, and the wrong type
+was chosen for "size": it never needs to carry a negative value, and it
+potentially needs to handle values greater than u32.
+
+But you're right -- there is still a potential for runtime confusion in
+that the return from lpfc_debugfs_ras_log_data() must be signed. So
+perhaps the best option is to check for overflow directly.
+
+Gustavo, does this fix it?
+
+
+diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_debugfs.c
+index bdf34af4ef36..7f9b221e7c34 100644
+--- a/drivers/scsi/lpfc/lpfc_debugfs.c
++++ b/drivers/scsi/lpfc/lpfc_debugfs.c
+@@ -2259,11 +2259,15 @@ lpfc_debugfs_ras_log_open(struct inode *inode, struct file *file)
+ 		goto out;
+ 	}
+ 	spin_unlock_irq(&phba->hbalock);
+-	debug = kmalloc(sizeof(*debug), GFP_KERNEL);
++
++	if (check_mul_overflow(LPFC_RAS_MIN_BUFF_POST_SIZE,
++			       phba->cfg_ras_fwlog_buffsize, &size))
++		goto out;
++
++	debug = kzalloc(sizeof(*debug), GFP_KERNEL);
+ 	if (!debug)
+ 		goto out;
+ 
+-	size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsize;
+ 	debug->buffer = vmalloc(size);
+ 	if (!debug->buffer)
+ 		goto free_debug;
+
+
+-Kees
+
+-- 
+Kees Cook
