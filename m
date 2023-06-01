@@ -2,90 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B36FC77B7A
-	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 16:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A9CC77B7A
+	for <linux-hardening@archiver.kernel.org>; Thu,  1 Jun 2023 17:03:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbjFAQ6m (ORCPT
+        id S231179AbjFARDs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 1 Jun 2023 12:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41376 "EHLO
+        Thu, 1 Jun 2023 13:03:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231480AbjFAQ6l (ORCPT
+        with ESMTP id S230151AbjFARDr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 1 Jun 2023 12:58:41 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2796FE54
-        for <linux-hardening@vger.kernel.org>; Thu,  1 Jun 2023 09:58:19 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-650bacd6250so521747b3a.2
-        for <linux-hardening@vger.kernel.org>; Thu, 01 Jun 2023 09:58:19 -0700 (PDT)
+        Thu, 1 Jun 2023 13:03:47 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E22D1
+        for <linux-hardening@vger.kernel.org>; Thu,  1 Jun 2023 10:03:46 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-97458c97333so29077266b.2
+        for <linux-hardening@vger.kernel.org>; Thu, 01 Jun 2023 10:03:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685638693; x=1688230693;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZKhobPWnbnSn8CDc9kRmjr1ySZ7qWKXo8uFk6p1fSNc=;
-        b=Ip4GuH7fzRSkg92E6MBt8yERcsjSIl6SBEW0a6W0BjK4GL0EYHnxVSKP5ft6N1od5b
-         lyHo4TZvcaxB5l6uE/2KI1t3v9PNKA0leWBjb0XnBuYyNdBbZM7WdB5K2eoco9pQ6ra8
-         Y+kpQcwoPCCWQTIA80IwkReDeWu2zdurcwcVM=
+        d=linaro.org; s=google; t=1685639024; x=1688231024;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PcZQvaUeP8ZliN22XvourXFhBfMMyu6zMeulrUEm0zk=;
+        b=aX4MefYccb/iozf3MwpC42dH5j3LsU1KvHrxvDwrG3rGOz5hI+Es1cV+sf5NaOiex8
+         H/5RfambBmNAW5nU7cE9nHd3DtVfzhDUZUSNvAkDo1p0lELhjEdxOPSm8gG7r0zd9ODj
+         pBy1tCRGEPV9JcjSVlYb6Bz4ZTqX4YBJ14gxLT99dEgpp5Fgw7+AHBfCaGyCn1MH+loV
+         VrHWlrS/LdQKeUBzMyDAxdreWWHunH3DzyD9/57WyzlS1bPsu46lO8jkm8sRclt6SYcn
+         Id9cLfkrxWbNCdvoRVcO5E47x0i1ZwOCsTG15Nke5sGtKej1xYlhD8IXQ4k5cE+OsI0A
+         6TdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685638693; x=1688230693;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZKhobPWnbnSn8CDc9kRmjr1ySZ7qWKXo8uFk6p1fSNc=;
-        b=Ll00xhrT4EoNd21cv4xDTB6qKw+WumHm9DOE5YKsaUu/fZcm66vATpnRYMVT7f+YW/
-         FwJDEs50rtTiC2DG/uARCuYMLCbx2Rb7InlD6oMqjRTahRbJtzPO2nZbQl6FR7txqvui
-         aKK+VuUA9QerdnwC9wsqWPEQOq7HE2dHB59/d9JRRwe+UA2mrsTmkACQzkokOEq7q0Qg
-         FhKfldt7Z4gNzBaYJ3HVGZemxaqAk59XRtJSdQTIXJr0V+6f9FiwcSgEqEvOfBzFa1oE
-         FKpKHN1GkQ29g+pEs9zhbmBnaHMDYc8NRMxs29EnzzN4UpphWEL3Nz8OXpBVIdYmpqQv
-         Izzg==
-X-Gm-Message-State: AC+VfDx1KRYZ4j8ZM7MP0he1GUKoB18OQ4Owyj8hs02a1owxPBwEpiKb
-        TvPWsH10wY07dVuRbX02OJpvaw==
-X-Google-Smtp-Source: ACHHUZ4ocg0kDCSGY6dDEOBfTbyf8G1qcPcG5mE1VEZzsqR4n0GkRXskDTI+ucZpVS7d3MneJ/xEYA==
-X-Received: by 2002:a05:6a00:2286:b0:646:8a8:9334 with SMTP id f6-20020a056a00228600b0064608a89334mr8620845pfe.20.1685638692984;
-        Thu, 01 Jun 2023 09:58:12 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n22-20020a62e516000000b006501b37e5e1sm2080978pff.194.2023.06.01.09.58.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jun 2023 09:58:12 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     keescook@chromium.org, hca@linux.ibm.com
-Cc:     svens@linux.ibm.com, gustavoars@kernel.org, agordeev@linux.ibm.com,
-        linux@leemhuis.info, gor@linux.ibm.com, borntraeger@linux.ibm.com,
-        linux-s390@vger.kernel.org, nathan@kernel.org,
-        linux-hardening@vger.kernel.org, masahiroy@kernel.org,
-        lkft@linaro.org, joanbrugueram@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/purgatory: Do not use fortified string functions
-Date:   Thu,  1 Jun 2023 09:58:11 -0700
-Message-Id: <168563869054.2890249.18018278036948799346.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230531003414.never.050-kees@kernel.org>
-References: <20230531003414.never.050-kees@kernel.org>
+        d=1e100.net; s=20221208; t=1685639024; x=1688231024;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PcZQvaUeP8ZliN22XvourXFhBfMMyu6zMeulrUEm0zk=;
+        b=ldcuNRqIw41ND5wowlz0SePP8tLz9AFuoadUVxfiuLPFm3xxoBVJ0cuz5IxExV7scn
+         0zwhuOoVqvmL1cSIhYav4dMLJ+0L5jo9F0ZgTWoCXLSYs976HZzi3w35kt9ls5iuRqNd
+         6XRx072W+3nlNSGxBcJuCxXzbIeeQokQRKXbMv76MJlrgPxjv+fNvJ43nTQsS2nqubWw
+         +UDYQltPB8oVoyCrv8O5yoLPLI4T1s0cft6oWFTMdnOz7HFdwJWE3VOu9hSIYTJ3c4UZ
+         LdPime6KkJjYFoSqBEeM3aS5eVomCSoQy2AjaIL242gI2c/0FO/UoVJf3X84jbFx584L
+         czlg==
+X-Gm-Message-State: AC+VfDwHgeAKnaxJlw4W9J8oM0v4Cxb1NPTwAX+QwnVDtEc22wuxJLC4
+        fGPJGJoGNaHS/Sgbtur9Znxs9w==
+X-Google-Smtp-Source: ACHHUZ7fOpjuGGqpiCVDmXgek3ciM6877wAMwgJFajxAb4WP11OHWVfqpecCjSlmlvG8ixE2CB7zCQ==
+X-Received: by 2002:a17:907:1c86:b0:96f:2b40:4503 with SMTP id nb6-20020a1709071c8600b0096f2b404503mr8219311ejc.74.1685639024521;
+        Thu, 01 Jun 2023 10:03:44 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.199.204])
+        by smtp.gmail.com with ESMTPSA id n13-20020a170906688d00b0096f641c6167sm10683441ejr.181.2023.06.01.10.03.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Jun 2023 10:03:43 -0700 (PDT)
+Message-ID: <5d9cf207-7984-6dd0-731f-e301aa7b25c2@linaro.org>
+Date:   Thu, 1 Jun 2023 19:03:41 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] w1: sgi_w1: Replace all non-returning strlcpy with
+ strscpy
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, azeemshaikh38@gmail.com
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230523022023.2406955-1-azeemshaikh38@gmail.com>
+ <168548796310.1350188.6990158151809298087.b4-ty@chromium.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <168548796310.1350188.6990158151809298087.b4-ty@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 30 May 2023 17:34:15 -0700, Kees Cook wrote:
-> With the addition of -fstrict-flex-arrays=3, struct sha256_state's
-> trailing array is no longer ignored by CONFIG_FORTIFY_SOURCE:
+On 31/05/2023 01:06, Kees Cook wrote:
+> On Tue, 23 May 2023 02:20:23 +0000, Azeem Shaikh wrote:
+>> strlcpy() reads the entire source buffer first.
+>> This read may exceed the destination size limit.
+>> This is both inefficient and can lead to linear read
+>> overflows if a source string is not NUL-terminated [1].
+>> In an effort to remove strlcpy() completely [2], replace
+>> strlcpy() here with strscpy().
+>> No return values were used, so direct replacement is safe.
+>>
+>> [...]
 > 
-> struct sha256_state {
->         u32 state[SHA256_DIGEST_SIZE / 4];
->         u64 count;
->         u8 buf[SHA256_BLOCK_SIZE];
-> };
+> Applied to for-next/hardening, thanks!
 > 
-> [...]
+> [1/1] w1: sgi_w1: Replace all non-returning strlcpy with strscpy
+>       https://git.kernel.org/kees/c/4e4424b20cc4
 
-Applied to for-next/hardening, thanks!
+Please drop. This was already fixed and is in linux-next since almost a
+month:
 
-[1/1] s390/purgatory: Do not use fortified string functions
-      https://git.kernel.org/kees/c/d11f44513655
+https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-w1.git/commit/?h=for-next&id=5dfd3c73ff81618fee0ef682b6fd7779863f41e4
 
--- 
-Kees Cook
+> 
+
+Best regards,
+Krzysztof
 
