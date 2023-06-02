@@ -2,135 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E6DDC77B7A
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jun 2023 15:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F11BC77B7A
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jun 2023 18:28:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236187AbjFBPIF (ORCPT
+        id S235249AbjFBS2D (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Jun 2023 11:08:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57658 "EHLO
+        Fri, 2 Jun 2023 14:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236366AbjFBPIE (ORCPT
+        with ESMTP id S235788AbjFBS2C (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Jun 2023 11:08:04 -0400
-Received: from smtp-42ae.mail.infomaniak.ch (smtp-42ae.mail.infomaniak.ch [84.16.66.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A391FE51;
-        Fri,  2 Jun 2023 08:08:00 -0700 (PDT)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QXmb25PBRzMpvbm;
-        Fri,  2 Jun 2023 17:07:58 +0200 (CEST)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QXmZy6vrvzMqFLN;
-        Fri,  2 Jun 2023 17:07:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1685718478;
-        bh=yJE/Ib8CPqqu+pE7BkHIlxbJFGVwWpFIuzDHb02zjjk=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=Y/lyrxGPo8c180stzPdCnGebpqaZr7guTmVJQXq4bERYM4B+j1lT37uiVerrU0Av9
-         75l0ubCibpTA3YwVLV/e32ZD5+ANNsE4cCxtQCdQgc16z+jTjh0iaoD9qUHXUYS4hO
-         bUNLdL5rf9ajSxeyAltPRwLo20RiTIQoinN2+7Mw=
-Message-ID: <97aabfe5-7f1a-8865-ab05-bf4af254e1b7@digikod.net>
-Date:   Fri, 2 Jun 2023 17:07:54 +0200
+        Fri, 2 Jun 2023 14:28:02 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 280A0E4C;
+        Fri,  2 Jun 2023 11:27:39 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-39817f3e08eso1617303b6e.1;
+        Fri, 02 Jun 2023 11:27:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685730458; x=1688322458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pCpdjBkJUYgIy9lNltbYiGa3ZgStuC7RDZQxLOMxnlo=;
+        b=Il2Q5vnEuOsVPn39znvA45ROyAzkapbksPf6Y4YCIcrxkofev6N1e6Esex7ub+8eHC
+         4Q0PKtXWaY7Ui4KlAWPrBoqDO7G1JxOHAy3ZiL7nnVsCXVhl5rZ532vtPGvhy7bInST5
+         dOupD8gMSF4cQ9CHL0PjeONm2DStZANIIQ/HxinhYDm55+dkSOfcGQPnQz4KjeKIDNPK
+         cgQhkqJJxnKXoYHtsPH8ya1QT2Cw+Ifer9AaLesI99NWxiXxNyUKwKab2E8b+VNInVKQ
+         Z2HHaXXWnyMk65a132dg0Pb5VL67/kjXvsNz859c/xrAxlIjgOFj5rP4f+C5B4r+Ovij
+         ta6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685730458; x=1688322458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pCpdjBkJUYgIy9lNltbYiGa3ZgStuC7RDZQxLOMxnlo=;
+        b=MMMIRLoEhWGsG9QJuViKyCfandCNXbZWfPeZZgpYLYsELP5Ffq6n8kfuOLysngQlV2
+         3rh3V79eaCuqU8BXlgrao+h+4/e754v2Mlv+kWOhkM/umQfIXBzIbobQfja8KZNzORJ2
+         dPnbkJIyIGoU6eJcqcLt/V/0qxR6A/Wp2AcvijKkbXQMpgt2Fh8sEFHFmB7Q73BfG8fk
+         mF0NTDCZBL5oQqB0FqEPmOfSdirxl0UpC0an9uuwbB24DBhiJi7bVuvGrN/0LDNH1G+E
+         YS0rD6b+dJbFkk0nfc/ql/jiM7Tr4wbRvCPfF/oEJ0tkaqeyMhpdodP42S/Q1keNuSV1
+         Gyjg==
+X-Gm-Message-State: AC+VfDz4aPxC1bmQc5F6GK4SL93MPIxb1ju/fs6T0BAbVt24bhYQDI4k
+        aIHU7ahq5PeP5Di54Rjhzgwo/5wEoSbIS9H+p5LRxraL
+X-Google-Smtp-Source: ACHHUZ6ddlIl1+vBO8rCXN3FsE7YAPPqd/gZ7JG3nMzrTa+Henmjmwa66Dam8+jtNM3QCKQhQ94Yn+n8o9qtcuYzxUM=
+X-Received: by 2002:a05:6808:15:b0:389:4f7b:949d with SMTP id
+ u21-20020a056808001500b003894f7b949dmr707601oic.22.1685730458405; Fri, 02 Jun
+ 2023 11:27:38 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [RFC PATCH v1 0/9] Hypervisor-Enforced Kernel Integrity
-Content-Language: en-US
-To:     Sean Christopherson <seanjc@google.com>,
-        Rick P Edgecombe <rick.p.edgecombe@intel.com>
-Cc:     "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "liran.alon@oracle.com" <liran.alon@oracle.com>,
-        "marian.c.rotariu@gmail.com" <marian.c.rotariu@gmail.com>,
-        Alexander Graf <graf@amazon.com>,
-        John S Andersen <john.s.andersen@intel.com>,
-        "madvenka@linux.microsoft.com" <madvenka@linux.microsoft.com>,
-        "ssicleru@bitdefender.com" <ssicleru@bitdefender.com>,
-        "yuanyu@google.com" <yuanyu@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tgopinath@microsoft.com" <tgopinath@microsoft.com>,
-        "jamorris@linux.microsoft.com" <jamorris@linux.microsoft.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "dev@lists.cloudhypervisor.org" <dev@lists.cloudhypervisor.org>,
-        "mdontu@bitdefender.com" <mdontu@bitdefender.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "nicu.citu@icloud.com" <nicu.citu@icloud.com>,
-        "ztarkhani@microsoft.com" <ztarkhani@microsoft.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        James Gowans <jgowans@amazon.com>
-References: <20230505152046.6575-1-mic@digikod.net>
- <93726a7b9498ec66db21c5792079996d5fed5453.camel@intel.com>
- <facfd178-3157-80b4-243b-a5c8dabadbfb@digikod.net>
- <58a803f6-c3de-3362-673f-767767a43f9c@digikod.net>
- <fd1dd8bcc172093ad20243ac1e7bb8fce45b38ef.camel@intel.com>
- <ZHes4a73Zg+6JuFB@google.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <ZHes4a73Zg+6JuFB@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+References: <ZHO4/Z+iO+lqV4rW@work> <202305301608.2982BD3CAF@keescook>
+In-Reply-To: <202305301608.2982BD3CAF@keescook>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Fri, 2 Jun 2023 14:27:27 -0400
+Message-ID: <CADnq5_O6fzoCOo5YEAEv=D8ComZaYShx5ot=TQBmdFf8ReEKrg@mail.gmail.com>
+Subject: Re: [PATCH][next] drm/amdgpu/discovery: Replace fake flex-arrays with
+ flexible-array members
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Applied.  Thanks!
 
-On 31/05/2023 22:24, Sean Christopherson wrote:
-> On Tue, May 30, 2023, Rick P Edgecombe wrote:
->> On Fri, 2023-05-26 at 17:22 +0200, Mickaï¿½l Salaï¿½n wrote:
->>>>> Can the guest kernel ask the host VMM's emulated devices to DMA into
->>>>> the protected data? It should go through the host userspace mappings I
->>>>> think, which don't care about EPT permissions. Or did I miss where you
->>>>> are protecting that another way? There are a lot of easy ways to ask
->>>>> the host to write to guest memory that don't involve the EPT. You
->>>>> probably need to protect the host userspace mappings, and also the
->>>>> places in KVM that kmap a GPA provided by the guest.
->>>>
->>>> Good point, I'll check this confused deputy attack. Extended KVM
->>>> protections should indeed handle all ways to map guests' memory.  I'm
->>>> wondering if current VMMs would gracefully handle such new restrictions
->>>> though.
->>>
->>> I guess the host could map arbitrary data to the guest, so that need to be
->>> handled, but how could the VMM (not the host kernel) bypass/update EPT
->>> initially used for the guest (and potentially later mapped to the host)?
->>
->> Well traditionally both QEMU and KVM accessed guest memory via host
->> mappings instead of the EPT.ï¿½So I'm wondering what is stopping the
->> guest from passing a protected gfn when setting up the DMA, and QEMU
->> being enticed to write to it? The emulator as well would use these host
->> userspace mappings and not consult the EPT IIRC.
->>
->> I think Sean was suggesting host userspace should be more involved in
->> this process, so perhaps it could protect its own alias of the
->> protected memory, for example mprotect() it as read-only.
-> 
-> Ya, though "suggesting" is really "demanding, unless someone provides super strong
-> justification for handling this directly in KVM".  It's basically the same argument
-> that led to Linux Security Modules: I'm all for KVM providing the framework and
-> plumbing, but I don't want KVM to get involved in defining policy, thread models, etc.
-
-I agree that KVM should not provide its own policy but only the building 
-blocks to enforce one. There is two complementary points:
-- policy definition by the guest, provided to KVM and the host;
-- policy enforcement by KVM and the host.
-
-A potential extension of this framework could be to enable the host to 
-define it's own policy for guests, but this would be a different threat 
-model.
-
-To avoid too much latency because of the host being involved in policy 
-enforcement, I'd like to explore an asynchronous approach that would 
-especially fit well for dynamic restrictions.
+On Tue, May 30, 2023 at 7:08=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> On Sun, May 28, 2023 at 02:26:37PM -0600, Gustavo A. R. Silva wrote:
+> > Zero-length and one-element arrays are deprecated, and we are moving
+> > towards adopting C99 flexible-array members, instead.
+> >
+> > Use the DECLARE_FLEX_ARRAY() helper macro to transform zero-length
+> > arrays in a union into flexible-array members. And replace a one-elemen=
+t
+> > array with a C99 flexible-array member.
+> >
+> > Address the following warnings found with GCC-13 and
+> > -fstrict-flex-arrays=3D3 enabled:
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1009:89: warning: array s=
+ubscript kk is outside array bounds of =E2=80=98uint32_t[0]=E2=80=99 {aka =
+=E2=80=98unsigned int[]=E2=80=99} [-Warray-bounds=3D]
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1007:94: warning: array s=
+ubscript kk is outside array bounds of =E2=80=98uint64_t[0]=E2=80=99 {aka =
+=E2=80=98long long unsigned int[]=E2=80=99} [-Warray-bounds=3D]
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1310:94: warning: array s=
+ubscript k is outside array bounds of =E2=80=98uint64_t[0]=E2=80=99 {aka =
+=E2=80=98long long unsigned int[]=E2=80=99} [-Warray-bounds=3D]
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_discovery.c:1309:57: warning: array s=
+ubscript k is outside array bounds of =E2=80=98uint32_t[0]=E2=80=99 {aka =
+=E2=80=98unsigned int[]=E2=80=99} [-Warray-bounds=3D]
+> >
+> > This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> > routines on memcpy() and help us make progress towards globally
+> > enabling -fstrict-flex-arrays=3D3 [1].
+> >
+> > This results in no differences in binary output.
+> >
+> > Link: https://github.com/KSPP/linux/issues/21
+> > Link: https://github.com/KSPP/linux/issues/193
+> > Link: https://github.com/KSPP/linux/issues/300
+> > Link: https://gcc.gnu.org/pipermail/gcc-patches/2022-October/602902.htm=
+l [1]
+> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> --
+> Kees Cook
