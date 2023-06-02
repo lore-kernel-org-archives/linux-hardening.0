@@ -2,944 +2,214 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0896DC7EE24
-	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jun 2023 10:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C764AC7EE29
+	for <linux-hardening@archiver.kernel.org>; Fri,  2 Jun 2023 13:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235703AbjFBKon (ORCPT
+        id S234594AbjFBNiB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 2 Jun 2023 06:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37304 "EHLO
+        Fri, 2 Jun 2023 09:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235536AbjFBKoj (ORCPT
+        with ESMTP id S234114AbjFBNh7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 2 Jun 2023 06:44:39 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 012DCE6E;
-        Fri,  2 Jun 2023 03:44:03 -0700 (PDT)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 352AcT97014342;
-        Fri, 2 Jun 2023 10:43:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=SNdO2jUgBI5432NwvfOfYl94XtIOTy5GWxwYPvbv9oQ=;
- b=pBOAc45AiXfL3zNYMofJhdlbS/YcydNtrNGcR7jjI3g+0htq/C7XJz1WBQZDiByP07QZ
- Zmrb8M1jFb32NEeiKYefshB79s0n3mRwFJVhDBKgndDmu6Mb0qxr+/8RvMnkV9qu71Hu
- ayZF1D/pFlxY/gC3kD5JERyU3byhlQ3cVesXMZkO3VTb5zLBrVTX8vSPeYdwFuoCL9YP
- 3TSkcw5bgTMKV0j/LZtx/9fHR/34OsOmzLCi/1z2IIuRS3fzVcbjLx+KtXKsTmemBDnI
- ZYcEBnbe5Mn+HE6aSpVkSWbmwmWrK23Z8/UjoglHXHnBW6+EYtlEmPwN2D85SKjfyCPe jA== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qy8390r4n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 02 Jun 2023 10:43:33 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 352AhWaY008902
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 2 Jun 2023 10:43:32 GMT
-Received: from [10.216.12.181] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Fri, 2 Jun 2023
- 03:43:25 -0700
-Message-ID: <32f01d26-e68c-6d88-3b0b-45e23212c72a@quicinc.com>
-Date:   Fri, 2 Jun 2023 16:13:15 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 04/18] soc: qcom: Add Qualcomm minidump kernel driver
+        Fri, 2 Jun 2023 09:37:59 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DF1137;
+        Fri,  2 Jun 2023 06:37:58 -0700 (PDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 352D43tU008555;
+        Fri, 2 Jun 2023 13:37:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=3/un6fpqQXmSEvJ/T20wtdW5crwpDfIvmdAf2gDLzg4=;
+ b=R9m3NtYsG+VEXut32Xa+N8AEIKtG1LPXIrz/E8c7cmveK75eLnkNEb8Y2hsxg9aY8jJp
+ nUSBEjoq+MpHmrvz1NdAKF9IXrXDahHUc6zSysKEwN1M+Y3e+pfnQWH8UrcKLiT3+gnK
+ 6ZIixcP1wk1Vlio45Bd6sYxDKTTf1d8yDkmomRlAnDyEYuIdBrE8dv/z0/HrcVgBWLdi
+ cJDFDk/ZKF6yKxMn3XWXc4Yq9aCEhRku6jAq+nKxWxITVe7jEtxHoUTZkoIbSqgW957q
+ 8xwDF9pKrU0naEaWFpTYw6Fuw1OjVbAL4P5OXjyC1ZfyWew6TLGgScIs5uZdCSnAboeK CQ== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qvhjhb051-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 02 Jun 2023 13:37:24 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 352CMH2l017268;
+        Fri, 2 Jun 2023 13:37:23 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2100.outbound.protection.outlook.com [104.47.58.100])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qv4yg890d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 02 Jun 2023 13:37:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EVnXL3PGVN8jc7i1bp26ye8qPFNxveLSuU/wJYcjO/B2lNrWooG7nAXTX6T7vVBI/l7ZXI6usEACmraxP4qilHFkFgJ0vuO4fPVZ/VnP99KGJly5+E3k0vKcN5L9E6XfqM2r/yrDpb2rGkeP+J6N9GXZI8V1S1fkMmIcjPpU0husVd/ttUqs/Kqueao2ZrSWOuwWD878UhWCQC0IJNCw4RVATsPiowPTo3PE5/Inm+sFqfgPWXjgtkTGE7KKPDprQdjCRJPHt7GvvdTMaxIS25XfUUQD05tXc9XbXSIKtb3T/HrDKjK/tUfB/GMrat0lUaUiifnteiwoEA5Ni3YptQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3/un6fpqQXmSEvJ/T20wtdW5crwpDfIvmdAf2gDLzg4=;
+ b=WUHP/KELGCW7Q0zcmvXoRKoHQjTWzJiIo3K60A8tSGlVPjMBe58SntmyXsjjlgIb0Ghp9GZZB10PPg+4JD4i/76N/99/KI5DTwPS7znK4ZjdYCPfkDN86kAGNE9cx+qtAqSsWSHoFr1L9XmxeMazKPkeLxUs73W2sWGYIgzoil005EUQJ7nDWnWosldxG10AuBSvzS8ewm5B43AkU7w10hRIS8zmPfJtIrzBnuxm4BJGmGUJejaFWOxDQYdQWqkBmjdkKTuNx/TXck9uAogqCOeZlL+jJ45BDgbWmWs9Nsbz8aCHThlBZ95vbJMdhwcxYybboOJaI7mbA77hdv6fGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3/un6fpqQXmSEvJ/T20wtdW5crwpDfIvmdAf2gDLzg4=;
+ b=WfstVYOtPKnqe9uxjMVrepzhyHa7GykaYGS9KfFrC530ZA6RrFi53Is76TrRsQoM61mr//3RqMAnaPE6AxNCUkkMtArAYr0LAJaZOPWomWQ+qSVbAJa0p59W0PAN8AmC3LWzdov4vhXSf/oo0Nv1jnk9jSMauiYE9cwqzF/2Ykc=
+Received: from MW5PR10MB5738.namprd10.prod.outlook.com (2603:10b6:303:19b::14)
+ by SA2PR10MB4778.namprd10.prod.outlook.com (2603:10b6:806:114::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.24; Fri, 2 Jun
+ 2023 13:37:20 +0000
+Received: from MW5PR10MB5738.namprd10.prod.outlook.com
+ ([fe80::cd78:868d:bb:1c47]) by MW5PR10MB5738.namprd10.prod.outlook.com
+ ([fe80::cd78:868d:bb:1c47%4]) with mapi id 15.20.6433.024; Fri, 2 Jun 2023
+ 13:37:20 +0000
+Message-ID: <808fe90f-9171-54e6-2170-224d4048e333@oracle.com>
+Date:   Fri, 2 Jun 2023 08:37:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] jfs: Use unsigned variable for length calculations
+To:     Christian Brauner <brauner@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Dave Chinner <dchinner@redhat.com>,
+        jfs-discussion@lists.sourceforge.net,
+        "Dr. David Alan Gilbert" <linux@treblig.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave Kleikamp <shaggy@kernel.org>
+References: <20230204183355.never.877-kees@kernel.org>
+ <20230602-unnahbar-halbmarathon-22e48883e051@brauner>
 Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <srinivas.kandagatla@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-doc@vger.kernel.org>
-References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
- <1683133352-10046-5-git-send-email-quic_mojha@quicinc.com>
- <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <c6f730b6-f702-91d4-4abd-71546e02f869@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From:   Dave Kleikamp <dave.kleikamp@oracle.com>
+In-Reply-To: <20230602-unnahbar-halbmarathon-22e48883e051@brauner>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ha9TNQw5EpfYB8LERGQ4Q_d39vXKbEY4
-X-Proofpoint-ORIG-GUID: ha9TNQw5EpfYB8LERGQ4Q_d39vXKbEY4
+X-ClientProxiedBy: CH0PR03CA0348.namprd03.prod.outlook.com
+ (2603:10b6:610:11a::23) To MW5PR10MB5738.namprd10.prod.outlook.com
+ (2603:10b6:303:19b::14)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW5PR10MB5738:EE_|SA2PR10MB4778:EE_
+X-MS-Office365-Filtering-Correlation-Id: e6c6e7cd-a561-4ea8-8caf-08db636e7d12
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: js2veQM+WgkquxpKCkEerEljvK+krbyX9VHsjq3H7rqUfXIyQxY8eY1ZsMcp83yJ9gNehQ9yx8eezGf1Em4TRjqKcDvPku72YwKj/gZTtgsNWZuc89Rg7itgoO69hXhVlPKlymiKf24C/nQ6b5nkQSj1eqZ8cEJbhgJszf664smTHag0bxSGNNW1lwKOP01dZIwnZMx9n6ZliFbzaV+HAVD2Kjo9SC/zOBEV1FKDU8BHpef/pX4x+O1xMcmNdondJiAd8Kv7fUP8QAfCqpd07LQ/BINyDrLloNOAMhBNRCZUU0Lq2yCKHos8EyliUiN3/KR90xjN2lAiti7F+REv+mwSu/Lp3dYepaT4ZA3X/dFp0SFAM+QpB0PXceP1FMKzRSwImIH+sTa28ESprlG22nKbzy0DDvN3Xw/97q55+2+5DLbcdP0dAkYp7u5Vi+brb2DDilN7UJmCT4yWzT2zE/eecNqg0PRXtydwCLR1LlJQpaSAzhql81YMkkU9yr/LfzMNr9WQeL23EByfLBd6zW4CqSGG6zLUacui+q1dbpka2lj0GSlf7TZICqHxtK8XOepW7n2K7R/044SXdpAhz2JcGjhsK4GJENkdiA045hqoxMILiAkxzB49ahceQOJs+NEMH7A9alHsnF1bBIRXJdVxnQff3x2Z7JjMBYNe8hA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR10MB5738.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(366004)(39860400002)(136003)(376002)(346002)(451199021)(54906003)(5660300002)(8936002)(8676002)(2906002)(66556008)(110136005)(66476007)(4326008)(66946007)(41300700001)(31686004)(316002)(44832011)(478600001)(6486002)(6666004)(6506007)(6512007)(26005)(186003)(966005)(36756003)(83380400001)(86362001)(2616005)(31696002)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d3M5S05zZjRhT1N5WFVSTGpDeFZ5dHdGMnhmSmF4ZGlUOUI4NU1ZUkx0eFB1?=
+ =?utf-8?B?SHBGK0xPaUdRaGtPRzRFa0FvbmwvZkwyL2gzNVBBUXNMd1NJbUp6ak1teGFq?=
+ =?utf-8?B?dS80OTFEaWErbmFzZU5Sc1kwQXpQR2lMeWhHS2tHdTQ3YWkwR1Qya1pleGkx?=
+ =?utf-8?B?YWpMQnBsUXNvSjBQeXFLb3hMNEpiM0xYS2RZZXdLMEYxWW9oRnRRM1NpcDJL?=
+ =?utf-8?B?TkJuNHZBa2xFMW9PREdXNFBzYndZWjAxd1UyQTR0ZUplTjFRNWx4SS8weUxZ?=
+ =?utf-8?B?QmJScEZtRyt5UjZYYzFya2lMUWQwSjVrZTdENXFNWThSVWlxMWpkOU9CTktH?=
+ =?utf-8?B?UExNeW9JT0t5cjFKMjI1R3I3TTE4OEhqVG9tdzRGWjl4eGZINGowVFBBVEV1?=
+ =?utf-8?B?a3pkWE5LTkk0bWJPSCtnOW9tZUlZTkExMElzd3gzbkZ1MHhMN3c3V24xYUpF?=
+ =?utf-8?B?M1N4MGZUWERDMk8yMDk1RUJxMVE3WkxlUGRtNTA0YjN2RlJXa0IxVGlSd1Vi?=
+ =?utf-8?B?Nm85R0Z1K2p3NFFZNHlQcjMyYlg5OGpEVDhEcldzMHNoblpUWnpHTTNSMHBl?=
+ =?utf-8?B?WnIvMkJyZ1Y3c21RN0c0K2pZRGppa0w3b005c3pQQUlWN2l6eHBOaDMwMWNr?=
+ =?utf-8?B?WStQSEpjMUsyOFNPVm4xNzd0MWFHQzd2RGtpRFI0dUE4TGFUVmkwbVh1UW9W?=
+ =?utf-8?B?YXNrVU5ZcndvTWxJOEJLdVRaK0VHSHVYZGpBV3NTdGNSRU5vZDFrK1E2eGhY?=
+ =?utf-8?B?bE1heG9rbVZyK2lIVUVzYjFEYlh5OFNYVTkvQ29ZMUwzczFJdTdLVEZLdE84?=
+ =?utf-8?B?aEVMYXNGR05ibE51NEoraC9FUDBZcC9nanpxbVdlZ3NyUGFGUVpVQzlRL1dw?=
+ =?utf-8?B?NGozeUJZdWNkdEJJdjlsd0ZqRzgxQy81WDVZcndocEcrVldVZ2Z1VmFtUmRt?=
+ =?utf-8?B?ZnFiMHRTb1dqMENHTExzVVRLZURSeFRTdEVEWlh4SFlaZXNHTHBmWk1wS3Vl?=
+ =?utf-8?B?NU9KSnBkQ3pJd21JMGdHeUlSREtpME4yK1FJRFhsNVYwamNPcXVXWGhBUXlG?=
+ =?utf-8?B?STE0ZytQekJVTzVwclBMQ1ducVJMUW55Qys5K0JxSVE1QlYxS3RxZldhZlZE?=
+ =?utf-8?B?ZFZrUFB5VzJlZUxjaDU4eEFQd3lpY01TSVhhRTh6UlRYVW9sd0NSU04wemhT?=
+ =?utf-8?B?MzJka0N2NHhJQU5oaGh3dW9XRDRKV0xlaGEzZktOVTZvZ0ZIV2djbWt6YWhL?=
+ =?utf-8?B?czdNRlRZWC9OR1Q2cTluUXJIVVBxRFM4MFhVeVF0Wnc1ZTdxVThRVnJCMkN6?=
+ =?utf-8?B?RmNnYWVYWFJOS1llT244ejZVbGoxV0xDQ3hPRlA5MVdaRXdweDR2bVFoQlhu?=
+ =?utf-8?B?akdFNFV2cWhQdWhSRTAyazhqSkhvdHY1T2xuTWRIdGdUZzFoTVpnZ0QzemYr?=
+ =?utf-8?B?Ny9BVDNFbXQ2NmRvU21iclkxeDhwY2xiVHlOMmppbEY1Ykw1SnQ2RFpWZzVG?=
+ =?utf-8?B?VkcvNllndExHTU1sUjVzZGJpd2dZWjQ2akF0NHBCV2I3SVhGOTBlR3l4cmIy?=
+ =?utf-8?B?TWpKK1o3UlhPZllyWWpDOExFZ0M4dFUzNzVUbE01ZDRQZ1BaMVowM1gwVHM2?=
+ =?utf-8?B?TUlFZDBGNE5xd0kxcS9LNlhTVEg4WmVYY1BHTXo1MEcrUFFjd05rVkVhK3hP?=
+ =?utf-8?B?akxTaDRJQ3R3V2FPWkozVlRsOTVhOEFTdWo4cUQ5dG9sRi8yNmhSQ3VqdGht?=
+ =?utf-8?B?dGhZZlJSUjRVcEtvRVdEdTBBTFlJNU9COGYvTEhmWlhuTkdlYjZxTmhaaTNO?=
+ =?utf-8?B?eUF1ZWZtZ09xN3N0WG5kdmxjb1F5RllEUmdONU12ZnY0S1VWNmoyZExZVWly?=
+ =?utf-8?B?T3Q2eVJTT25tMWxKM1VzZ09vMjE2VlZJOVlaM1dGVjdRMXdmUFlBeGtvQmpL?=
+ =?utf-8?B?aUYreDVEQW1sMHpEcGo0TlFlTVgzUmdDOFhUdlRPcHhJR1BRNFc0UUNYWnd0?=
+ =?utf-8?B?M21PeDVKanNRSXRNTHVFWElmN1NMbnkwK05SU2VXaTJGdmVIY3A5WmtKc05O?=
+ =?utf-8?B?VjIyclhlOENZMzhtQXJDUkZzSWE4eUdZZVprTi9SZDZhVlhOYkdkalRqaWsz?=
+ =?utf-8?B?bFFZcjdaR1JvMEtQbVlxNnVtQnQyUGYrK2hYVXcyZFc5dytvdDRPOGVlWDJE?=
+ =?utf-8?B?SEE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?QndyZVdySXozdnRZOG1hOXQ3Qm02TTM3Yms3cVZnMkwxRFNIRThaQkF0enRj?=
+ =?utf-8?B?NVZMTHc5dHNsNXkxWG1ZR3FCMVV5VlJBU21ZQzB2eVgwdE1aTUwvNjBPeU1S?=
+ =?utf-8?B?cXRhd2RLUmM4S0d1Q2M2cmZEdDhqcTlQN0ZGWW50dVZCdWRTclNvdTI3NHBv?=
+ =?utf-8?B?cjJSRkJGRllVaklEUWFSUFlGWjRiV1p0d1ZnVXdFN2o4UU1mOHRmZHZoemVS?=
+ =?utf-8?B?a2NmK0dOTWVDMU9leFBEWHFMdXdKMDdGUjNRVlE1UWVNVUhDN2J5UnR6ZFNq?=
+ =?utf-8?B?QjZrOWR0eVdPQWVXMndwQzhYWVZhbkdKV3pMUmdIVGRDbzRDWXc5TW5BeWhS?=
+ =?utf-8?B?Unk1eW10Qy9HdmlQR3hvUDhEVHg4MkZ5NDdkSitGOUhDRkVvdnZheng4STlw?=
+ =?utf-8?B?ZUdGSzFjK3g2NWZ2UnRGUGRYeVpZU0NnZS9zNnlmNGpkNkpBbjA0NllWSE5F?=
+ =?utf-8?B?bHNaVkVFdStaVHpjalVGaDQ0OHh0NW5CYUJTY1Mzdmdiam9MZ0s0c2F4bHpL?=
+ =?utf-8?B?OXJVNW1lNUQ0d1RtWW0rOHRsTlhieVdCejR2dUVoZFF6RUZZTmhJSmYvNnZC?=
+ =?utf-8?B?dXdMODhsbDBxN0tUSW5XVTRDZkZvcGNBOUMrTUNYSlA1cHNPdFp3M2o4K1RJ?=
+ =?utf-8?B?SHBJUFpicWxZZFhQeDd2bHM5bmZmMThkcmFsc2RVVDlUbHkxTnFpSzVDeEdW?=
+ =?utf-8?B?dFdUMmNTN05Ca2FacWxZZkF0c3lyS0dQejRLRTlDMUxLa1JqMjBKdlRmK0Ry?=
+ =?utf-8?B?Y2hFcStjcGdTbnBYMGYrMnY3RE94VFdvWXhWZ3VpQnhCNlJXUjdFYVpqNnRv?=
+ =?utf-8?B?OER3czRPNExQN1ZkV3JkU2VqVkc3RlhlczlRZmgzWkh1YzNhK2M3bDF1UXQ0?=
+ =?utf-8?B?ZU8vUENQWG1QdkhzdkJ1UktJVnd5M3BJK2F3MERHUURXOEFvUDRoYURqbHFa?=
+ =?utf-8?B?YjhpZjMxTGJoL2VCTTV6dWE0SHNLM25adTFBRnMreDZtQVMvVWhxZjNvRTlJ?=
+ =?utf-8?B?bVJEWnlGbW1MS3dKQXNmKzU1QndIZ3U3Nml6SUtKdXVONmxlYnpKdTZJakFB?=
+ =?utf-8?B?QmlOcThjaTI2RDBSVHBtNnArcElVdE94OVExU29rMU5FUmJyd0gvcWhqQ0Fi?=
+ =?utf-8?B?Y1B5MHZ4NTBxeVpBS1lWQUd6bExqamZFaEV6eFRHRmdMQytXMFJuTTdtZjQv?=
+ =?utf-8?B?UC9NY0ZHV1RtYUVqRXJVamNuY1ZheWd3ZHlJTlhVdllDTjFJMlEwSFpJWkJx?=
+ =?utf-8?Q?2ChkAmb/xYK/rz1?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e6c6e7cd-a561-4ea8-8caf-08db636e7d12
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR10MB5738.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2023 13:37:20.2078
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yqkAqZurZO+d1Qfcp8NszNLXYKyVMnhFcIfQYNsr2eN/M3YQI7kw/jKfYiVSU0eUz+T0Qfn2AnL3G6BjYYlgol0pZgOdblpB9JYwicnwq/4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4778
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-02_07,2023-05-31_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
- mlxscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0
- priorityscore=1501 spamscore=0 adultscore=0 malwarescore=0 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2306020079
+ definitions=2023-06-02_10,2023-06-02_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2306020102
+X-Proofpoint-GUID: uBYz-N4oRK3ZCnyd1nwrzBl5X4atpVvC
+X-Proofpoint-ORIG-GUID: uBYz-N4oRK3ZCnyd1nwrzBl5X4atpVvC
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+I apologize to all of you for letting this one go so long.
 
+Acked-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 
-On 5/4/2023 5:06 PM, Krzysztof Kozlowski wrote:
-> On 03/05/2023 19:02, Mukesh Ojha wrote:
->> Minidump is a best effort mechanism to collect useful and predefined
->> data for first level of debugging on end user devices running on
->> Qualcomm SoCs. It is built on the premise that System on Chip (SoC)
->> or subsystem part of SoC crashes, due to a range of hardware and
->> software bugs. Hence, the ability to collect accurate data is only
->> a best-effort. The data collected could be invalid or corrupted,
->> data collection itself could fail, and so on.
+On 6/2/23 3:32AM, Christian Brauner wrote:
+> On Sat, 04 Feb 2023 10:33:56 -0800, Kees Cook wrote:
+>> To avoid confusing the compiler about possible negative sizes, switch
+>> "ssize" which can never be negative from int to u32.  Seen with GCC 13:
 >>
->> Qualcomm devices in engineering mode provides a mechanism for
->> generating full system ramdumps for post mortem debugging. But in some
->> cases it's however not feasible to capture the entire content of RAM.
->> The minidump mechanism provides the means for selecting region should
->> be included in the ramdump. The solution supports extracting the
->> ramdump/minidump produced either over USB or stored to an attached
->> storage device.
+>> ../fs/jfs/namei.c: In function 'jfs_symlink': ../include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' pointer overflow between offset 0 and size [-2147483648, -1]
+>> [-Warray-bounds=]
+>>     57 | #define __underlying_memcpy     __builtin_memcpy
+>>        |                                 ^
+>> ...
+>> ../fs/jfs/namei.c:950:17: note: in expansion of macro 'memcpy'
+>>    950 |                 memcpy(ip->i_link, name, ssize);
+>>        |                 ^~~~~~
 >>
->> The core of minidump feature is part of Qualcomm's boot firmware code.
->> It initializes shared memory(SMEM), which is a part of DDR and
->> allocates a small section of it to minidump table i.e also called
->> global table of content (G-ToC). Each subsystem (APSS, ADSP, ...) has
->> their own table of segments to be included in the minidump, all
->> references from a descriptor in SMEM (G-ToC). Each segment/region has
->> some details like name, physical address and it's size etc. and it
->> could be anywhere scattered in the DDR.
->>
->> Minidump kernel driver adds the capability to add linux region to be
->> dumped as part of ram dump collection. It provides appropriate symbol
->> to check its enablement and register client regions.
->>
->> To simplify post mortem debugging, it creates and maintain an ELF
->> header as first region that gets updated upon registration
->> of a new region.
->>
->> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->> ---
->>   drivers/soc/qcom/Kconfig         |  14 +
->>   drivers/soc/qcom/Makefile        |   1 +
->>   drivers/soc/qcom/qcom_minidump.c | 581 +++++++++++++++++++++++++++++++++++++++
->>   drivers/soc/qcom/smem.c          |   8 +
->>   include/soc/qcom/qcom_minidump.h |  61 +++-
->>   5 files changed, 663 insertions(+), 2 deletions(-)
->>   create mode 100644 drivers/soc/qcom/qcom_minidump.c
->>
->> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
->> index a491718..15c931e 100644
->> --- a/drivers/soc/qcom/Kconfig
->> +++ b/drivers/soc/qcom/Kconfig
->> @@ -279,4 +279,18 @@ config QCOM_INLINE_CRYPTO_ENGINE
->>   	tristate
->>   	select QCOM_SCM
->>   
->> +config QCOM_MINIDUMP
->> +	tristate "QCOM Minidump Support"
->> +	depends on ARCH_QCOM || COMPILE_TEST
->> +	select QCOM_SMEM
->> +	help
->> +	  Enablement of core minidump feature is controlled from boot firmware
->> +	  side, and this config allow linux to query and manages APPS minidump
->> +	  table.
->> +
->> +	  Client drivers can register their internal data structures and debug
->> +	  messages as part of the minidump region and when the SoC is crashed,
->> +	  these selective regions will be dumped instead of the entire DDR.
->> +	  This saves significant amount of time and/or storage space.
->> +
->>   endmenu
->> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
->> index 0f43a88..1ebe081 100644
->> --- a/drivers/soc/qcom/Makefile
->> +++ b/drivers/soc/qcom/Makefile
->> @@ -33,3 +33,4 @@ obj-$(CONFIG_QCOM_RPMPD) += rpmpd.o
->>   obj-$(CONFIG_QCOM_KRYO_L2_ACCESSORS) +=	kryo-l2-accessors.o
->>   obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
->>   obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= ice.o
->> +obj-$(CONFIG_QCOM_MINIDUMP) += qcom_minidump.o
->> diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
->> new file mode 100644
->> index 0000000..d107a86
->> --- /dev/null
->> +++ b/drivers/soc/qcom/qcom_minidump.c
->> @@ -0,0 +1,581 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +
->> +/*
->> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
->> + */
->> +
->> +#include <linux/elf.h>
->> +#include <linux/err.h>
->> +#include <linux/errno.h>
->> +#include <linux/export.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/string.h>
->> +#include <linux/soc/qcom/smem.h>
->> +#include <soc/qcom/qcom_minidump.h>
->> +
->> +/**
->> + * struct minidump_elfhdr - Minidump table elf header
->> + * @ehdr: Elf main header
->> + * @shdr: Section header
->> + * @phdr: Program header
->> + * @elf_offset: Section offset in elf
->> + * @strtable_idx: String table current index position
->> + */
->> +struct minidump_elfhdr {
->> +	struct elfhdr		*ehdr;
->> +	struct elf_shdr		*shdr;
->> +	struct elf_phdr		*phdr;
->> +	size_t			elf_offset;
->> +	size_t			strtable_idx;
->> +};
->> +
->> +/**
->> + * struct minidump - Minidump driver private data
->> + * @md_gbl_toc	: Global TOC pointer
->> + * @md_apss_toc	: Application Subsystem TOC pointer
->> + * @md_regions	: High level OS region base pointer
->> + * @elf		: Minidump elf header
->> + * @dev		: Minidump device
->> + */
->> +struct minidump {
->> +	struct minidump_global_toc	*md_gbl_toc;
->> +	struct minidump_subsystem	*md_apss_toc;
->> +	struct minidump_region		*md_regions;
->> +	struct minidump_elfhdr		elf;
->> +	struct device			*dev;
->> +};
->> +
->> +/*
->> + * In some of the Old Qualcomm devices, boot firmware statically allocates 300
->> + * as total number of supported region (including all co-processors) in
->> + * minidump table out of which linux was using 201. In future, this limitation
->> + * from boot firmware might get removed by allocating the region dynamically.
->> + * So, keep it compatible with older devices, we can keep the current limit for
->> + * Linux to 201.
->> + */
->> +#define MAX_NUM_ENTRIES	  201
->> +#define MAX_STRTBL_SIZE	  (MAX_NUM_ENTRIES * MAX_REGION_NAME_LENGTH)
->> +
->> +static struct minidump *__md;
+>> [...]
 > 
-> No, no file scope or global scope statics.
+> Applied to the vfs.misc branch of the vfs/vfs.git tree.
+> Patches in the vfs.misc branch should appear in linux-next soon.
 > 
->> +static DEFINE_MUTEX(minidump_lock);
+> Please report any outstanding bugs that were missed during review in a
+> new review to the original patch series allowing us to drop it.
 > 
-> Neither this.
+> It's encouraged to provide Acked-bys and Reviewed-bys even though the
+> patch has now been applied. If possible patch trailers will be updated.
 > 
-> Also you need to clearly express what is protected by newn lock.
-
-Once i divide this driver into two (minidump core + smem backend driver
-as described here[1]) so there could more backend drivers could be 
-attached to minidump core. Some of the file scope variable still be 
-required.
-
-[1]
-https://lore.kernel.org/lkml/c2496855-113a-56e6-f6e2-9a9bd03a1267@quicinc.com/#t
-
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+> branch: vfs.misc
 > 
->> +
->> +static struct elf_shdr *elf_shdr_entry_addr(struct elfhdr *ehdr, int idx)
->> +{
->> +	struct elf_shdr *eshdr = (struct elf_shdr *)((size_t)ehdr + ehdr->e_shoff);
->> +
->> +	return &eshdr[idx];
->> +}
->> +
->> +static struct elf_phdr *elf_phdr_entry_addr(struct elfhdr *ehdr, int idx)
->> +{
->> +	struct elf_phdr *ephdr = (struct elf_phdr *)((size_t)ehdr + ehdr->e_phoff);
->> +
->> +	return &ephdr[idx];
->> +}
->> +
->> +static char *elf_str_table_start(struct elfhdr *ehdr)
->> +{
->> +	struct elf_shdr *eshdr;
->> +
->> +	if (ehdr->e_shstrndx == SHN_UNDEF)
->> +		return NULL;
->> +
->> +	eshdr = elf_shdr_entry_addr(ehdr, ehdr->e_shstrndx);
->> +	return (char *)ehdr + eshdr->sh_offset;
->> +}
->> +
->> +static char *elf_lookup_string(struct elfhdr *ehdr, int offset)
->> +{
->> +	char *strtab = elf_str_table_start(ehdr);
->> +
->> +	if (!strtab || (__md->elf.strtable_idx < offset))
->> +		return NULL;
->> +
->> +	return strtab + offset;
->> +}
->> +
->> +static unsigned int append_str_to_strtable(const char *name)
->> +{
->> +	char *strtab = elf_str_table_start(__md->elf.ehdr);
->> +	unsigned int old_idx = __md->elf.strtable_idx;
->> +	unsigned int ret;
->> +
->> +	if (!strtab || !name)
->> +		return 0;
->> +
->> +	ret = old_idx;
->> +	old_idx += strscpy((strtab + old_idx), name, MAX_REGION_NAME_LENGTH);
->> +	__md->elf.strtable_idx = old_idx + 1;
->> +	return ret;
->> +}
->> +
->> +static int
->> +get_apss_minidump_region_index(const struct qcom_apss_minidump_region *region)
->> +{
->> +	struct minidump_region *mdr;
->> +	unsigned int i;
->> +	unsigned int count;
->> +
->> +	count = le32_to_cpu(__md->md_apss_toc->region_count);
->> +	for (i = 0; i < count; i++) {
->> +		mdr = &__md->md_regions[i];
->> +		if (!strcmp(mdr->name, region->name))
->> +			return i;
->> +	}
->> +	return -ENOENT;
->> +}
->> +
->> +static void
->> +qcom_apss_minidump_update_elf_header(const struct qcom_apss_minidump_region *region)
-> 
-> You need to name everything shorter. Neither functions nor structs are
-> making it easy to follow.
-
-Would drop "apss" from the name;
-
-> 
->> +{
->> +	struct elfhdr *ehdr = __md->elf.ehdr;
->> +	struct elf_shdr *shdr;
->> +	struct elf_phdr *phdr;
->> +
->> +	shdr = elf_shdr_entry_addr(ehdr, ehdr->e_shnum++);
->> +	phdr = elf_phdr_entry_addr(ehdr, ehdr->e_phnum++);
->> +
->> +	shdr->sh_type = SHT_PROGBITS;
->> +	shdr->sh_name = append_str_to_strtable(region->name);
->> +	shdr->sh_addr = (elf_addr_t)region->virt_addr;
->> +	shdr->sh_size = region->size;
->> +	shdr->sh_flags = SHF_WRITE;
->> +	shdr->sh_offset = __md->elf.elf_offset;
->> +	shdr->sh_entsize = 0;
->> +
->> +	phdr->p_type = PT_LOAD;
->> +	phdr->p_offset = __md->elf.elf_offset;
->> +	phdr->p_vaddr = (elf_addr_t)region->virt_addr;
->> +	phdr->p_paddr = region->phys_addr;
->> +	phdr->p_filesz = phdr->p_memsz = region->size;
->> +	phdr->p_flags = PF_R | PF_W;
->> +	__md->elf.elf_offset += shdr->sh_size;
->> +}
->> +
->> +static void
->> +qcom_apss_minidump_add_region(const struct qcom_apss_minidump_region *region)
->> +{
->> +	struct minidump_region *mdr;
->> +	unsigned int region_cnt = le32_to_cpu(__md->md_apss_toc->region_count);
->> +
->> +	mdr = &__md->md_regions[region_cnt];
->> +	strscpy(mdr->name, region->name, sizeof(mdr->name));
->> +	mdr->address = cpu_to_le64(region->phys_addr);
->> +	mdr->size = cpu_to_le64(region->size);
->> +	mdr->valid = cpu_to_le32(MINIDUMP_REGION_VALID);
->> +	region_cnt++;
->> +	__md->md_apss_toc->region_count = cpu_to_le32(region_cnt);
->> +}
->> +
->> +static bool
->> +qcom_apss_minidump_valid_region(const struct qcom_apss_minidump_region *region)
->> +{
->> +	return region &&
->> +		strnlen(region->name, MAX_NAME_LENGTH) < MAX_NAME_LENGTH &&
->> +		region->virt_addr &&
->> +		region->size &&
->> +		IS_ALIGNED(region->size, 4);
->> +}
->> +
->> +static int qcom_apss_minidump_add_elf_header(void)
->> +{
->> +	struct qcom_apss_minidump_region elfregion;
->> +	struct elfhdr *ehdr;
->> +	struct elf_shdr *shdr;
->> +	struct elf_phdr *phdr;
->> +	unsigned int  elfh_size;
->> +	unsigned int strtbl_off;
->> +	unsigned int phdr_off;
->> +	char *banner;
->> +	unsigned int banner_len;
->> +
->> +	banner_len = strlen(linux_banner);
->> +	/*
->> +	 * Header buffer contains:
->> +	 * ELF header, (MAX_NUM_ENTRIES + 4) of Section and Program ELF headers,
->> +	 * where, 4 additional entries, one for empty header, one for string table
->> +	 * one for minidump table and one for linux banner.
->> +	 *
->> +	 * Linux banner is stored in minidump to aid post mortem tools to determine
->> +	 * the kernel version.
->> +	 */
->> +	elfh_size = sizeof(*ehdr);
->> +	elfh_size += MAX_STRTBL_SIZE;
->> +	elfh_size += banner_len + 1;
->> +	elfh_size += ((sizeof(*shdr) + sizeof(*phdr)) * (MAX_NUM_ENTRIES + 4));
->> +	elfh_size = ALIGN(elfh_size, 4);
->> +
->> +	__md->elf.ehdr = kzalloc(elfh_size, GFP_KERNEL);
->> +	if (!__md->elf.ehdr)
->> +		return -ENOMEM;
->> +
->> +	/* Register ELF header as first region */
->> +	strscpy(elfregion.name, "KELF_HEADER", sizeof(elfregion.name));
->> +	elfregion.virt_addr = __md->elf.ehdr;
->> +	elfregion.phys_addr = virt_to_phys(__md->elf.ehdr);
->> +	elfregion.size = elfh_size;
->> +	qcom_apss_minidump_add_region(&elfregion);
->> +
->> +	ehdr = __md->elf.ehdr;
->> +	/* Assign Section/Program headers offset */
->> +	__md->elf.shdr = shdr = (struct elf_shdr *)(ehdr + 1);
->> +	__md->elf.phdr = phdr = (struct elf_phdr *)(shdr + MAX_NUM_ENTRIES);
->> +	phdr_off = sizeof(*ehdr) + (sizeof(*shdr) * MAX_NUM_ENTRIES);
->> +
->> +	memcpy(ehdr->e_ident, ELFMAG, SELFMAG);
->> +	ehdr->e_ident[EI_CLASS] = ELF_CLASS;
->> +	ehdr->e_ident[EI_DATA] = ELF_DATA;
->> +	ehdr->e_ident[EI_VERSION] = EV_CURRENT;
->> +	ehdr->e_ident[EI_OSABI] = ELF_OSABI;
->> +	ehdr->e_type = ET_CORE;
->> +	ehdr->e_machine  = ELF_ARCH;
->> +	ehdr->e_version = EV_CURRENT;
->> +	ehdr->e_ehsize = sizeof(*ehdr);
->> +	ehdr->e_phoff = phdr_off;
->> +	ehdr->e_phentsize = sizeof(*phdr);
->> +	ehdr->e_shoff = sizeof(*ehdr);
->> +	ehdr->e_shentsize = sizeof(*shdr);
->> +	ehdr->e_shstrndx = 1;
->> +
->> +	__md->elf.elf_offset = elfh_size;
->> +
->> +	/*
->> +	 * The zeroth index of the section header is reserved and is rarely used.
->> +	 * Set the section header as null (SHN_UNDEF) and move to the next one.
->> +	 * 2nd Section is String table.
->> +	 */
->> +	__md->elf.strtable_idx = 1;
->> +	strtbl_off = sizeof(*ehdr) + ((sizeof(*phdr) + sizeof(*shdr)) * MAX_NUM_ENTRIES);
->> +	shdr++;
->> +	shdr->sh_type = SHT_STRTAB;
->> +	shdr->sh_offset = (elf_addr_t)strtbl_off;
->> +	shdr->sh_size = MAX_STRTBL_SIZE;
->> +	shdr->sh_entsize = 0;
->> +	shdr->sh_flags = 0;
->> +	shdr->sh_name = append_str_to_strtable("STR_TBL");
->> +	shdr++;
->> +
->> +	/* 3rd Section is Linux banner */
->> +	banner = (char *)ehdr + strtbl_off + MAX_STRTBL_SIZE;
->> +	memcpy(banner, linux_banner, banner_len);
->> +
->> +	shdr->sh_type = SHT_PROGBITS;
->> +	shdr->sh_offset = (elf_addr_t)(strtbl_off + MAX_STRTBL_SIZE);
->> +	shdr->sh_size = banner_len + 1;
->> +	shdr->sh_addr = (elf_addr_t)linux_banner;
->> +	shdr->sh_entsize = 0;
->> +	shdr->sh_flags = SHF_WRITE;
->> +	shdr->sh_name = append_str_to_strtable("linux_banner");
->> +
->> +	phdr->p_type = PT_LOAD;
->> +	phdr->p_offset = (elf_addr_t)(strtbl_off + MAX_STRTBL_SIZE);
->> +	phdr->p_vaddr = (elf_addr_t)linux_banner;
->> +	phdr->p_paddr = virt_to_phys(linux_banner);
->> +	phdr->p_filesz = phdr->p_memsz = banner_len + 1;
->> +	phdr->p_flags = PF_R | PF_W;
->> +
->> +	/*
->> +	 * Above are some prdefined sections/program header used
->> +	 * for debug, update their count here.
->> +	 */
->> +	ehdr->e_phnum = 1;
->> +	ehdr->e_shnum = 3;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * qcom_minidump_subsystem_desc() - Get minidump subsystem descriptor.
->> + * @minidump_index: minidump index for a subsystem in minidump table
->> + *
->> + * Return: minidump subsystem descriptor address on success and error
->> + * on failure
->> + */
->> +struct minidump_subsystem *qcom_minidump_subsystem_desc(unsigned int minidump_index)
->> +{
->> +	struct minidump_subsystem *md_ss_toc;
->> +
->> +	mutex_lock(&minidump_lock);
->> +	if (!__md) {
->> +		md_ss_toc = ERR_PTR(-EPROBE_DEFER);
->> +		goto unlock;
->> +	}
->> +
->> +	md_ss_toc = &__md->md_gbl_toc->subsystems[minidump_index];
->> +unlock:
->> +	mutex_unlock(&minidump_lock);
->> +	return md_ss_toc;
->> +}
->> +EXPORT_SYMBOL_GPL(qcom_minidump_subsystem_desc);
->> +
->> +/**
->> + * qcom_apss_minidump_region_register() - Register a region in Minidump table.
->> + * @region: minidump region.
->> + *
->> + * Return: On success, it returns 0, otherwise a negative error value on failure.
->> + */
->> +int qcom_apss_minidump_region_register(const struct qcom_apss_minidump_region *region)
->> +{
->> +	unsigned int num_region;
->> +	int ret;
->> +
->> +	if (!__md)
->> +		return -EPROBE_DEFER;
->> +
->> +	if (!qcom_apss_minidump_valid_region(region))
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&minidump_lock);
->> +	ret = get_apss_minidump_region_index(region);
->> +	if (ret >= 0) {
->> +		dev_info(__md->dev, "%s region is already registered\n", region->name);
->> +		ret = -EEXIST;
->> +		goto unlock;
->> +	}
->> +
->> +	/* Check if there is a room for a new entry */
->> +	num_region = le32_to_cpu(__md->md_apss_toc->region_count);
->> +	if (num_region >= MAX_NUM_ENTRIES) {
->> +		dev_err(__md->dev, "maximum region limit %u reached\n", num_region);
->> +		ret = -ENOSPC;
->> +		goto unlock;
->> +	}
->> +
->> +	qcom_apss_minidump_add_region(region);
->> +	qcom_apss_minidump_update_elf_header(region);
->> +	ret = 0;
->> +unlock:
->> +	mutex_unlock(&minidump_lock);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(qcom_apss_minidump_region_register);
->> +
->> +static int
->> +qcom_apss_minidump_clear_header(const struct qcom_apss_minidump_region *region)
->> +{
->> +	struct elfhdr *ehdr = __md->elf.ehdr;
->> +	struct elf_shdr *shdr;
->> +	struct elf_shdr *tmp_shdr;
->> +	struct elf_phdr *phdr;
->> +	struct elf_phdr *tmp_phdr;
->> +	unsigned int phidx;
->> +	unsigned int shidx;
->> +	unsigned int len;
->> +	unsigned int i;
->> +	char *shname;
->> +
->> +	for (i = 0; i < ehdr->e_phnum; i++) {
->> +		phdr = elf_phdr_entry_addr(ehdr, i);
->> +		if (phdr->p_paddr == region->phys_addr &&
->> +		    phdr->p_memsz == region->size)
->> +			break;
->> +	}
->> +
->> +	if (i == ehdr->e_phnum) {
->> +		dev_err(__md->dev, "Cannot find program header entry in elf\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	phidx = i;
->> +	for (i = 0; i < ehdr->e_shnum; i++) {
->> +		shdr = elf_shdr_entry_addr(ehdr, i);
->> +		shname = elf_lookup_string(ehdr, shdr->sh_name);
->> +		if (shname && !strcmp(shname, region->name) &&
->> +		    shdr->sh_addr == (elf_addr_t)region->virt_addr &&
->> +		    shdr->sh_size == region->size)
->> +			break;
->> +	}
->> +
->> +	if (i == ehdr->e_shnum) {
->> +		dev_err(__md->dev, "Cannot find section header entry in elf\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	shidx = i;
->> +	if (shdr->sh_offset != phdr->p_offset) {
->> +		dev_err(__md->dev, "Invalid entry details for region: %s\n", region->name);
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* Clear name in string table */
->> +	len = strlen(shname) + 1;
->> +	memmove(shname, shname + len,
->> +		__md->elf.strtable_idx - shdr->sh_name - len);
->> +	__md->elf.strtable_idx -= len;
->> +
->> +	/* Clear program header */
->> +	tmp_phdr = elf_phdr_entry_addr(ehdr, phidx);
->> +	for (i = phidx; i < ehdr->e_phnum - 1; i++) {
->> +		tmp_phdr = elf_phdr_entry_addr(ehdr, i + 1);
->> +		phdr = elf_phdr_entry_addr(ehdr, i);
->> +		memcpy(phdr, tmp_phdr, sizeof(struct elf_phdr));
->> +		phdr->p_offset = phdr->p_offset - region->size;
->> +	}
->> +	memset(tmp_phdr, 0, sizeof(struct elf_phdr));
->> +	ehdr->e_phnum--;
->> +
->> +	/* Clear section header */
->> +	tmp_shdr = elf_shdr_entry_addr(ehdr, shidx);
->> +	for (i = shidx; i < ehdr->e_shnum - 1; i++) {
->> +		tmp_shdr = elf_shdr_entry_addr(ehdr, i + 1);
->> +		shdr = elf_shdr_entry_addr(ehdr, i);
->> +		memcpy(shdr, tmp_shdr, sizeof(struct elf_shdr));
->> +		shdr->sh_offset -= region->size;
->> +		shdr->sh_name -= len;
->> +	}
->> +
->> +	memset(tmp_shdr, 0, sizeof(struct elf_shdr));
->> +	ehdr->e_shnum--;
->> +	__md->elf.elf_offset -= region->size;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * qcom_apss_minidump_region_unregister() - Unregister region from Minidump table.
->> + * @region: minidump region.
->> + *
->> + * Return: On success, it returns 0 and negative error value on failure.
->> + */
->> +int qcom_apss_minidump_region_unregister(const struct qcom_apss_minidump_region *region)
->> +{
->> +	struct minidump_region *mdr;
->> +	unsigned int num_region;
->> +	unsigned int idx;
->> +	int ret;
->> +
->> +	if (!region)
->> +		return -EINVAL;
->> +
->> +	mutex_lock(&minidump_lock);
->> +	if (!__md) {
->> +		ret = -EPROBE_DEFER;
->> +		goto unlock;
->> +	}
->> +
->> +	idx = get_apss_minidump_region_index(region);
->> +	if (idx < 0) {
->> +		dev_err(__md->dev, "%s region is not present\n", region->name);
->> +		ret = idx;
->> +		goto unlock;
->> +	}
->> +
->> +	mdr = &__md->md_regions[0];
->> +	num_region = le32_to_cpu(__md->md_apss_toc->region_count);
->> +	/*
->> +	 * Left shift all the regions exist after this removed region
->> +	 * index by 1 to fill the gap and zero out the last region
->> +	 * present at the end.
->> +	 */
->> +	memmove(&mdr[idx], &mdr[idx + 1],
->> +		(num_region - idx - 1) * sizeof(struct minidump_region));
->> +	memset(&mdr[num_region - 1], 0, sizeof(struct minidump_region));
->> +	ret = qcom_apss_minidump_clear_header(region);
->> +	if (ret) {
->> +		dev_err(__md->dev, "Failed to remove region: %s\n", region->name);
->> +		goto unlock;
->> +	}
->> +
->> +	num_region--;
->> +	__md->md_apss_toc->region_count = cpu_to_le32(num_region);
->> +unlock:
->> +	mutex_unlock(&minidump_lock);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(qcom_apss_minidump_region_unregister);
->> +
->> +static int qcom_minidump_init_apss_subsystem(struct minidump *md)
->> +{
->> +	struct minidump_subsystem *apsstoc;
->> +
->> +	apsstoc = &md->md_gbl_toc->subsystems[MINIDUMP_APSS_DESC];
->> +	md->md_regions = devm_kcalloc(md->dev, MAX_NUM_ENTRIES,
->> +				      sizeof(struct minidump_region), GFP_KERNEL);
->> +	if (!md->md_regions)
->> +		return -ENOMEM;
->> +
->> +	md->md_apss_toc = apsstoc;
->> +	apsstoc->regions_baseptr = cpu_to_le64(virt_to_phys(md->md_regions));
->> +	apsstoc->enabled = cpu_to_le32(MINIDUMP_SS_ENABLED);
->> +	apsstoc->status = cpu_to_le32(1);
->> +	apsstoc->region_count = cpu_to_le32(0);
->> +
->> +	/* Tell bootloader not to encrypt the regions of this subsystem */
->> +	apsstoc->encryption_status = cpu_to_le32(MINIDUMP_SS_ENCR_DONE);
->> +	apsstoc->encryption_required = cpu_to_le32(MINIDUMP_SS_ENCR_NOTREQ);
->> +
->> +	return 0;
->> +}
->> +
->> +static int qcom_minidump_probe(struct platform_device *pdev)
->> +{
->> +	struct minidump_global_toc *mdgtoc;
->> +	struct minidump *md;
->> +	size_t size;
->> +	int ret;
->> +
->> +	md = devm_kzalloc(&pdev->dev, sizeof(*md), GFP_KERNEL);
->> +	if (!md)
->> +		return -ENOMEM;
->> +
->> +	mdgtoc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, &size);
->> +	if (IS_ERR(mdgtoc)) {
->> +		ret = PTR_ERR(mdgtoc);
->> +		dev_err(&pdev->dev, "Couldn't find minidump smem item: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	if (size < sizeof(*mdgtoc) || !mdgtoc->status) {
->> +		ret = -EINVAL;
->> +		dev_err(&pdev->dev, "minidump table is not initialized: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	mutex_lock(&minidump_lock);
->> +	md->dev = &pdev->dev;
->> +	md->md_gbl_toc = mdgtoc;
-> 
-> What are you protecting here? It's not possible to have concurrent
-> access to md, is it?
-> 
->> +	ret = qcom_minidump_init_apss_subsystem(md);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "apss minidump initialization failed: %d\n", ret);
->> +		goto unlock;
->> +	}
->> +
->> +	__md = md;
-> 
-> No. This is a platform device, so it can have multiple instances.
-> 
->> +	/* First entry would be ELF header */
->> +	ret = qcom_apss_minidump_add_elf_header();
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to add elf header: %d\n", ret);
->> +		memset(md->md_apss_toc, 0, sizeof(struct minidump_subsystem));
->> +		__md = NULL;
->> +	}
->> +
->> +unlock:
->> +	mutex_unlock(&minidump_lock);
->> +	return ret;
->> +}
->> +
->> +static int qcom_minidump_remove(struct platform_device *pdev)
->> +{
->> +	memset(__md->md_apss_toc, 0, sizeof(struct minidump_subsystem));
->> +	__md = NULL;
-> 
-> Don't use __ in variable names. Drop it everywhere.
-> 
->> +
->> +	return 0;
->> +}
->> +
->> +static struct platform_driver qcom_minidump_driver = {
->> +	.probe = qcom_minidump_probe,
->> +	.remove = qcom_minidump_remove,
->> +	.driver  = {
->> +		.name = "qcom-minidump",
->> +	},
->> +};
->> +
->> +module_platform_driver(qcom_minidump_driver);
->> +
->> +MODULE_DESCRIPTION("Qualcomm APSS minidump driver");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:qcom-minidump");
->> diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
->> index 6be7ea9..d459656 100644
->> --- a/drivers/soc/qcom/smem.c
->> +++ b/drivers/soc/qcom/smem.c
->> @@ -279,6 +279,7 @@ struct qcom_smem {
->>   
->>   	u32 item_count;
->>   	struct platform_device *socinfo;
->> +	struct platform_device *minidump;
->>   	struct smem_ptable *ptable;
->>   	struct smem_partition global_partition;
->>   	struct smem_partition partitions[SMEM_HOST_COUNT];
->> @@ -1151,12 +1152,19 @@ static int qcom_smem_probe(struct platform_device *pdev)
->>   	if (IS_ERR(smem->socinfo))
->>   		dev_dbg(&pdev->dev, "failed to register socinfo device\n");
->>   
->> +	smem->minidump = platform_device_register_data(&pdev->dev, "qcom-minidump",
->> +						      PLATFORM_DEVID_NONE, NULL,
->> +						      0);
->> +	if (IS_ERR(smem->minidump))
->> +		dev_dbg(&pdev->dev, "failed to register minidump device\n");
->> +
->>   	return 0;
->>   }
->>   
->>   static int qcom_smem_remove(struct platform_device *pdev)
->>   {
->>   	platform_device_unregister(__smem->socinfo);
->> +	platform_device_unregister(__smem->minidump);
-> 
-> Wrong order. You registered first socinfo, right?
-> 
->>   
->>   	hwspin_lock_free(__smem->hwlock);
->>   	__smem = NULL;
->> diff --git a/include/soc/qcom/qcom_minidump.h b/include/soc/qcom/qcom_minidump.h
->> index 84c8605..1872668 100644
->> --- a/include/soc/qcom/qcom_minidump.h
->> +++ b/include/soc/qcom/qcom_minidump.h
->> @@ -1,6 +1,7 @@
->>   /* SPDX-License-Identifier: GPL-2.0-only */
->>   /*
->> - * Qualcomm minidump shared data structures and macros
->> + * This file contain Qualcomm minidump data structures and macros shared with
->> + * boot firmware and also apss minidump client's data structure
->>    *
->>    * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
->>    */
->> @@ -9,12 +10,27 @@
->>   #define _QCOM_MINIDUMP_H_
->>   
->>   #define MAX_NUM_OF_SS           10
->> +#define MAX_NAME_LENGTH		12
->>   #define MAX_REGION_NAME_LENGTH  16
->> +
->> +#define MINIDUMP_REVISION	1
->>   #define SBL_MINIDUMP_SMEM_ID	602
->> +
->> +/* Application processor minidump descriptor */
->> +#define MINIDUMP_APSS_DESC	0
->> +#define SMEM_ENTRY_SIZE		40
->> +
->>   #define MINIDUMP_REGION_VALID		('V' << 24 | 'A' << 16 | 'L' << 8 | 'I' << 0)
->> +#define MINIDUMP_REGION_INVALID		('I' << 24 | 'N' << 16 | 'V' << 8 | 'A' << 0)
->> +#define MINIDUMP_REGION_INIT		('I' << 24 | 'N' << 16 | 'I' << 8 | 'T' << 0)
->> +#define MINIDUMP_REGION_NOINIT		0
->> +
->> +#define MINIDUMP_SS_ENCR_REQ		(0 << 24 | 'Y' << 16 | 'E' << 8 | 'S' << 0)
->> +#define MINIDUMP_SS_ENCR_NOTREQ		(0 << 24 | 0 << 16 | 'N' << 8 | 'R' << 0)
->> +#define MINIDUMP_SS_ENCR_NONE		('N' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
->>   #define MINIDUMP_SS_ENCR_DONE		('D' << 24 | 'O' << 16 | 'N' << 8 | 'E' << 0)
->> +#define MINIDUMP_SS_ENCR_START		('S' << 24 | 'T' << 16 | 'R' << 8 | 'T' << 0)
->>   #define MINIDUMP_SS_ENABLED		('E' << 24 | 'N' << 16 | 'B' << 8 | 'L' << 0)
->> -
-> 
-> Why removing this?
-> 
->>   /**
->>    * struct minidump_region - Minidump region
->>    * @name		: Name of the region to be dumped
->> @@ -63,4 +79,45 @@ struct minidump_global_toc {
->>   	struct minidump_subsystem	subsystems[MAX_NUM_OF_SS];
->>   };
->>   
->> +/**
->> + * struct qcom_apss_minidump_region - APSS Minidump region information
->> + *
->> + * @name:	Entry name, Minidump will dump binary with this name.
->> + * @virt_addr:  Virtual address of the entry.
->> + * @phys_addr:	Physical address of the entry to dump.
->> + * @size:	Number of byte to dump from @address location,
->> + *		and it should be 4 byte aligned.
->> + */
->> +struct qcom_apss_minidump_region {
->> +	char		name[MAX_NAME_LENGTH];
->> +	void		*virt_addr;
->> +	phys_addr_t	phys_addr;
->> +	size_t		size;
->> +};
-> 
-> You expose way too much internals in global header.
-> 
->> +
->> +#if IS_ENABLED(CONFIG_QCOM_MINIDUMP)
->> +extern struct minidump_subsystem *
-> 
-> No externs.
-> 
-> The header is unreadable.
-> 
->> +qcom_minidump_subsystem_desc(unsigned int minidump_index);
->> +extern int
->> +qcom_apss_minidump_region_register(const struct qcom_apss_minidump_region *region);
->> +extern int
->> +qcom_apss_minidump_region_unregister(const struct qcom_apss_minidump_region *region);
-> 
-> Blank line
-> 
->> +#else
-> 
-> Blank line
-> 
->> +static inline
->> +struct minidump_subsystem *qcom_minidump_subsystem_desc(unsigned int minidump_index)
->> +{
->> +	return NULL;
->> +}
-> 
-> Blank line
-> 
->> +static inline int
->> +qcom_apss_minidump_region_register(const struct qcom_apss_minidump_region *region)
->> +{
->> +	/* Return quietly, if minidump is not enabled */
->> +	return 0;
->> +}
-> 
-> 
->> +static inline int
->> +qcom_apss_minidump_region_unregister(const struct qcom_apss_minidump_region *region)
->> +{
->> +	return 0;
->> +}
-> 
-
-Will apply the suggestion.
-
--- Mukesh
-
->> +#endif
-> 
-> /* CONFIG_QCOM_MINIDUMP */
-> 
->>   #endif  /* _QCOM_MINIDUMP_H_ */
-> 
-> Best regards,
-> Krzysztof
-> 
+> [1/1] jfs: Use unsigned variable for length calculations
+>        https://git.kernel.org/vfs/vfs/c/2d6e1895d440
