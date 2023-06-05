@@ -2,99 +2,68 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7DFC7EE24
-	for <linux-hardening@archiver.kernel.org>; Mon,  5 Jun 2023 13:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A210C77B73
+	for <linux-hardening@archiver.kernel.org>; Mon,  5 Jun 2023 20:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231751AbjFENY2 convert rfc822-to-8bit (ORCPT
+        id S231251AbjFEUHd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 5 Jun 2023 09:24:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39732 "EHLO
+        Mon, 5 Jun 2023 16:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbjFENY1 (ORCPT
+        with ESMTP id S231268AbjFEUHd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 5 Jun 2023 09:24:27 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71BA3DB
-        for <linux-hardening@vger.kernel.org>; Mon,  5 Jun 2023 06:24:22 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-2-O5Y6mELAM7an8ptyuTEDNw-1; Mon, 05 Jun 2023 14:24:19 +0100
-X-MC-Unique: O5Y6mELAM7an8ptyuTEDNw-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 5 Jun
- 2023 14:24:07 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 5 Jun 2023 14:24:07 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>,
-        "Dr. David Alan Gilbert" <linux@treblig.org>
-CC:     Dave Kleikamp <shaggy@kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        "jfs-discussion@lists.sourceforge.net" 
-        <jfs-discussion@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] jfs: Use unsigned variable for length calculations
-Thread-Topic: [PATCH] jfs: Use unsigned variable for length calculations
-Thread-Index: AQHZlKngOBVLl6H9ZkS0fkY79qOf5698NwmA
-Date:   Mon, 5 Jun 2023 13:24:07 +0000
-Message-ID: <a84cfb004c5f43589129d70b9b39c2b2@AcuMS.aculab.com>
-References: <20230204183355.never.877-kees@kernel.org>
- <Y96/SUlPUl7xH1NO@gallifrey> <63e1486a.050a0220.7001.ca15@mx.google.com>
- <Y+FaEp2blurmgVlH@gallifrey> <202306010954.23972A710A@keescook>
-In-Reply-To: <202306010954.23972A710A@keescook>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 5 Jun 2023 16:07:33 -0400
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED619E;
+        Mon,  5 Jun 2023 13:07:32 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 10B7363CC10C;
+        Mon,  5 Jun 2023 22:07:31 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id X6roPuzR374K; Mon,  5 Jun 2023 22:07:30 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id BF45E6081100;
+        Mon,  5 Jun 2023 22:07:30 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id xJjb7zySq9_X; Mon,  5 Jun 2023 22:07:30 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 9FE3863CC10C;
+        Mon,  5 Jun 2023 22:07:30 +0200 (CEST)
+Date:   Mon, 5 Jun 2023 22:07:30 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <kees@kernel.org>, kernel test robot <lkp@intel.com>,
+        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
+        oe-kbuild-all <oe-kbuild-all@lists.linux.dev>,
+        linux-hardening <linux-hardening@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        anton ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-um <linux-um@lists.infradead.org>
+Message-ID: <458187791.3685910.1685995650602.JavaMail.zimbra@nod.at>
+In-Reply-To: <CADmuW3WXDg-5SFXkMDE6BmvSwLNHmXpTzBonaOL8eErc4+d3qQ@mail.gmail.com>
+References: <20230530164004.986750-1-azeemshaikh38@gmail.com> <202305311135.zGMT1gYR-lkp@intel.com> <09A0C6FA-669F-4B73-9620-43AEA17E5D0C@kernel.org> <103925562.158061.1685514200368.JavaMail.zimbra@nod.at> <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com> <CADmuW3WXDg-5SFXkMDE6BmvSwLNHmXpTzBonaOL8eErc4+d3qQ@mail.gmail.com>
+Subject: Re: [PATCH] uml: Replace all non-returning strlcpy with strscpy
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
+Thread-Topic: Replace all non-returning strlcpy with strscpy
+Thread-Index: F0kvDMRUOo3WCvHaQMtuD24L4U1LkA==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook
-> Sent: 01 June 2023 17:55
-> 
-> On Mon, Feb 06, 2023 at 07:50:42PM +0000, Dr. David Alan Gilbert wrote:
-> > * Kees Cook (keescook@chromium.org) wrote:
-> > > On Sat, Feb 04, 2023 at 08:25:45PM +0000, Dr. David Alan Gilbert wrote:
-...
-> > > > > -	int ssize;		/* source pathname size */
-> > > > > +	u32 ssize;		/* source pathname size */
-> > > >
-> > > > Had you considered using size_t - this is set from a strlen and used by a memcpy
-> > > > that both talk size_t.
-> > >
-> > > I considered that, but I've had other maintainers upset about doubling
-> > > the variable size.
-> >
-> > I bet at least on some platforms it's cheaper as the 64 bit.
-> >
-> > > I opted to keep the variable 32-bit here, so the
-> > > machine code would only change to lose signed-ness.
+----- Ursprüngliche Mail -----
+> Von: "Azeem Shaikh" <azeemshaikh38@gmail.com>
+> Planning to send out v2 with the fixup from Richard applied. Let me
+> know if that's ok.
 
-On x86-64 'unsigned int' and 'signed long' are likely to
-generate the best code.
+Fine by me. :-)
 
-If you use 'signed int' it will to have to be sign extended
-if used in a 64-bit expression (eg as an array index).
-
-(That is probably true of most 64bit arch.)
-
-OTOH 'unsigned long' always requires a REX prefix - making the
-code that bit larger.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Thanks,
+//richard
