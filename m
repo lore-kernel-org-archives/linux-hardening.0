@@ -2,68 +2,199 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A210C77B73
-	for <linux-hardening@archiver.kernel.org>; Mon,  5 Jun 2023 20:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF92C7EE24
+	for <linux-hardening@archiver.kernel.org>; Tue,  6 Jun 2023 01:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231251AbjFEUHd convert rfc822-to-8bit (ORCPT
+        id S231268AbjFFBDY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 5 Jun 2023 16:07:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41588 "EHLO
+        Mon, 5 Jun 2023 21:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231268AbjFEUHd (ORCPT
+        with ESMTP id S233247AbjFFBDX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 5 Jun 2023 16:07:33 -0400
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED619E;
-        Mon,  5 Jun 2023 13:07:32 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 10B7363CC10C;
-        Mon,  5 Jun 2023 22:07:31 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id X6roPuzR374K; Mon,  5 Jun 2023 22:07:30 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id BF45E6081100;
-        Mon,  5 Jun 2023 22:07:30 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id xJjb7zySq9_X; Mon,  5 Jun 2023 22:07:30 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 9FE3863CC10C;
-        Mon,  5 Jun 2023 22:07:30 +0200 (CEST)
-Date:   Mon, 5 Jun 2023 22:07:30 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kees Cook <kees@kernel.org>, kernel test robot <lkp@intel.com>,
-        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
-        oe-kbuild-all <oe-kbuild-all@lists.linux.dev>,
-        linux-hardening <linux-hardening@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        anton ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-um <linux-um@lists.infradead.org>
-Message-ID: <458187791.3685910.1685995650602.JavaMail.zimbra@nod.at>
-In-Reply-To: <CADmuW3WXDg-5SFXkMDE6BmvSwLNHmXpTzBonaOL8eErc4+d3qQ@mail.gmail.com>
-References: <20230530164004.986750-1-azeemshaikh38@gmail.com> <202305311135.zGMT1gYR-lkp@intel.com> <09A0C6FA-669F-4B73-9620-43AEA17E5D0C@kernel.org> <103925562.158061.1685514200368.JavaMail.zimbra@nod.at> <CAMuHMdU70uRxnMNb8KCJe8M3BRPPxowRXtj+POcrh+KLkfQyAA@mail.gmail.com> <CADmuW3WXDg-5SFXkMDE6BmvSwLNHmXpTzBonaOL8eErc4+d3qQ@mail.gmail.com>
-Subject: Re: [PATCH] uml: Replace all non-returning strlcpy with strscpy
+        Mon, 5 Jun 2023 21:03:23 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B9FC102
+        for <linux-hardening@vger.kernel.org>; Mon,  5 Jun 2023 18:03:21 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1b0236ee816so40319845ad.1
+        for <linux-hardening@vger.kernel.org>; Mon, 05 Jun 2023 18:03:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1686013400; x=1688605400;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=P+MUoCOufjL+jgfYX81aknXyDcs0G9ERx0AOhezKwvw=;
+        b=HLXWeH9ydbwyjK2QQ2/FJYVRGGXWTlX/tgfxpc7B/NTahljnX7/GOTEa83lr3MjpNk
+         /Ze73Ehjg/OgWeWM5bYdduqVL7QukbHTf3XYFzHvflh4+GWtFKGv3qM1LLgUa8JR9c19
+         wucBprADLLGkv4uaUW81HEmxDAjHVpP/iFMQQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686013400; x=1688605400;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P+MUoCOufjL+jgfYX81aknXyDcs0G9ERx0AOhezKwvw=;
+        b=PclGHQWuG+g9MBwjRGMCaYQWiWecLz3oXk0Ae0aw/Xk8HZ1EtRAhESa03KTf16hGpF
+         rZ7uBP5IoBfvU+axTLaB0dABkPoYIU3GTSzd3SO7lx7uj6ioahNXkSzJATeOzulBScJy
+         jOB06xhUuTaLadnRPQiBtVIbS4Ig6bHrv6QqU5U8fdu7KYXW33fErBy67Cskc6iK69xa
+         c08UIy0Odx0AOxfV84lKPUp7Dv14k+B+ffaZD+vdlQqN6a8JKbAaLMkqyEyk+RrYT7gF
+         C46jsJ4djJ4SGAy/MWckk2k4tDcVxk1OjoDTF3Vor7QKX/ifKJVVlssqJT0w48UwMSYF
+         C0pg==
+X-Gm-Message-State: AC+VfDy1PuhAesFfIQ5dAPwSwvvG1ZItepqARRh4LozG7+fFwS9tpj+4
+        VdgHQyjmCq6zPPgajVdLS2+jNQ==
+X-Google-Smtp-Source: ACHHUZ6YVOiHbysOOAh2pnyOQ50zFHy6l3cr7qmte9qDKRcu8rilGyc0pA/1SxZkjc/xHX3RvgkpXw==
+X-Received: by 2002:a17:902:8343:b0:1b0:3ab6:5133 with SMTP id z3-20020a170902834300b001b03ab65133mr9426752pln.24.1686013400562;
+        Mon, 05 Jun 2023 18:03:20 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id q5-20020a170902c74500b001ac55a5e5eesm7204234plq.121.2023.06.05.18.03.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jun 2023 18:03:19 -0700 (PDT)
+Date:   Mon, 5 Jun 2023 18:03:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Gregory Greenman <gregory.greenman@intel.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Haim Dreyfuss <haim.dreyfuss@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] wifi: iwlwifi: mvm: Fix -Warray-bounds bug in
+ iwl_mvm_wait_d3_notif()
+Message-ID: <202306051758.CD86F1E638@keescook>
+References: <ZHpGN555FwAKGduH@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Replace all non-returning strlcpy with strscpy
-Thread-Index: F0kvDMRUOo3WCvHaQMtuD24L4U1LkA==
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZHpGN555FwAKGduH@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> Von: "Azeem Shaikh" <azeemshaikh38@gmail.com>
-> Planning to send out v2 with the fixup from Richard applied. Let me
-> know if that's ok.
+On Fri, Jun 02, 2023 at 01:42:47PM -0600, Gustavo A. R. Silva wrote:
+> kmemdup() at line 2735 is not duplicating enough memory for
+> notif->tid_tear_down and notif->station_id. As it only duplicates
+> 612 bytes: up to offsetofend(struct iwl_wowlan_info_notif,
+> received_beacons), this is the range of [0, 612) bytes.
+> 
+> 2735	notif = kmemdup(notif_v1,
+> 2736			offsetofend(struct iwl_wowlan_info_notif,
+> 2737				    received_beacons),
+> 2738			GFP_ATOMIC);
+> 
+> which evidently does not cover bytes 612 and 613 for members
+> tid_tear_down and station_id in struct iwl_wowlan_info_notif.
+> See below:
+> 
+> $ pahole -C iwl_wowlan_info_notif drivers/net/wireless/intel/iwlwifi/mvm/d3.o
+> struct iwl_wowlan_info_notif {
+> 	struct iwl_wowlan_gtk_status_v3 gtk[2];          /*     0   488 */
+> 	/* --- cacheline 7 boundary (448 bytes) was 40 bytes ago --- */
+> 	struct iwl_wowlan_igtk_status igtk[2];           /*   488    80 */
+> 	/* --- cacheline 8 boundary (512 bytes) was 56 bytes ago --- */
+> 	__le64                     replay_ctr;           /*   568     8 */
+> 	/* --- cacheline 9 boundary (576 bytes) --- */
+> 	__le16                     pattern_number;       /*   576     2 */
+> 	__le16                     reserved1;            /*   578     2 */
+> 	__le16                     qos_seq_ctr[8];       /*   580    16 */
+> 	__le32                     wakeup_reasons;       /*   596     4 */
+> 	__le32                     num_of_gtk_rekeys;    /*   600     4 */
+> 	__le32                     transmitted_ndps;     /*   604     4 */
+> 	__le32                     received_beacons;     /*   608     4 */
+> 	u8                         tid_tear_down;        /*   612     1 */
+> 	u8                         station_id;           /*   613     1 */
+> 	u8                         reserved2[2];         /*   614     2 */
+> 
+> 	/* size: 616, cachelines: 10, members: 13 */
+> 	/* last cacheline: 40 bytes */
+> };
+> 
+> Therefore, when the following assignments take place, actually no memory
+> has been allocated for those objects:
+> 
+> 2743	notif->tid_tear_down = notif_v1->tid_tear_down;
+> 2744	notif->station_id = notif_v1->station_id;
+> 
+> Fix this by allocating space for the whole notif object and zero out the
+> remaining space in memory after member station_id.
+> 
+> This also fixes the following -Warray-bounds issues:
+>  CC      drivers/net/wireless/intel/iwlwifi/mvm/d3.o
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function ‘iwl_mvm_wait_d3_notif’:
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2743:30: warning: array subscript ‘struct iwl_wowlan_info_notif[0]’ is partly outside array bounds of ‘unsigned char[612]’ [-Warray-bounds=]
+>  2743 |                         notif->tid_tear_down = notif_v1->tid_tear_down;
+>       |
+>                  from drivers/net/wireless/intel/iwlwifi/mvm/d3.c:7:
+> In function ‘kmemdup’,
+>     inlined from ‘iwl_mvm_wait_d3_notif’ at drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2735:12:
+> include/linux/fortify-string.h:765:16: note: object of size 612 allocated by ‘__real_kmemdup’
+>   765 |         return __real_kmemdup(p, size, gfp);
+>       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c: In function ‘iwl_mvm_wait_d3_notif’:
+> drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2744:30: warning: array subscript ‘struct iwl_wowlan_info_notif[0]’ is partly outside array bounds of ‘unsigned char[612]’ [-Warray-bounds=]
+>  2744 |                         notif->station_id = notif_v1->station_id;
+>       |                              ^~
+> In function ‘kmemdup’,
+>     inlined from ‘iwl_mvm_wait_d3_notif’ at drivers/net/wireless/intel/iwlwifi/mvm/d3.c:2735:12:
+> include/linux/fortify-string.h:765:16: note: object of size 612 allocated by ‘__real_kmemdup’
+>   765 |         return __real_kmemdup(p, size, gfp);
+>       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Link: https://github.com/KSPP/linux/issues/306
+> Fixes: 905d50ddbc83 ("wifi: iwlwifi: mvm: support wowlan info notification version 2")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Fine by me. :-)
+Nice catch!
 
-Thanks,
-//richard
+> ---
+> Changes in v2:
+>  - Use sizeof(*notif), instead of sizeof(struct iwl_wowlan_info_notif).
+>  - Fix typo in the changelog text s/bouds/bounds.
+> 
+> v1:
+>  - Link: https://lore.kernel.org/linux-hardening/ZHpEjTmBys5cCOGZ@work/
+> 
+>  drivers/net/wireless/intel/iwlwifi/mvm/d3.c | 8 ++------
+>  1 file changed, 2 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> index 37aa4676dc94..6d1007f24b4a 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/mvm/d3.c
+> @@ -2732,17 +2732,13 @@ static bool iwl_mvm_wait_d3_notif(struct iwl_notif_wait_data *notif_wait,
+>  		if (wowlan_info_ver < 2) {
+>  			struct iwl_wowlan_info_notif_v1 *notif_v1 = (void *)pkt->data;
+>  
+> -			notif = kmemdup(notif_v1,
+> -					offsetofend(struct iwl_wowlan_info_notif,
+> -						    received_beacons),
+> -					GFP_ATOMIC);
+> -
+> +			notif = kmemdup(notif_v1, sizeof(*notif), GFP_ATOMIC);
+
+The only question I have here is whether or not pkt->data actually
+contains sizeof(*notif)-many bytes? It seems the length isn't checked
+until after this area:
+
+                len = iwl_rx_packet_payload_len(pkt);
+
+So, perhaps this needs to be changed instead, and the length
+double-checked, etc. Perhaps a regular kzalloc + memcpy is needed to
+handle pkt->data not being large enough?
+
+>  			if (!notif)
+>  				return false;
+>  
+>  			notif->tid_tear_down = notif_v1->tid_tear_down;
+>  			notif->station_id = notif_v1->station_id;
+> -
+> +			memset_after(notif, 0, station_id);
+>  		} else {
+>  			notif = (void *)pkt->data;
+>  		}
+> -- 
+> 2.34.1
+> 
+
+-- 
+Kees Cook
