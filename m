@@ -2,93 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C842C77B7A
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Jun 2023 04:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7974EC77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Jun 2023 08:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233798AbjFGE1Z (ORCPT
+        id S235169AbjFGI2Z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Jun 2023 00:27:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44806 "EHLO
+        Wed, 7 Jun 2023 04:28:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233856AbjFGE0p (ORCPT
+        with ESMTP id S238263AbjFGI2Y (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Jun 2023 00:26:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE2091FD7;
-        Tue,  6 Jun 2023 21:23:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0446463A10;
-        Wed,  7 Jun 2023 04:23:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE47C433EF;
-        Wed,  7 Jun 2023 04:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686111822;
-        bh=7sP96yW6yc29Ckr2GzZEmGrtPlO4yW5CLupbhWesCjw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DiIynji1RhG+2QeeyvmhHbOno6Sf1ehLKKPh4D68VDruy2w3ooysdrKASf+z6UGoU
-         Ojcfzah5qzg6fTfj3JKiSHkpBgxECJS0H9XspVRQ77a+KwZVoc84jTBQP2kxI7EJdq
-         8UIprPkCU5ZKZeeZ2RvJ9Nwl+R7k78kMMerb+DOyIKtJG4ugllMGFmA6XTyKIh+35W
-         OO+BIePAbHh3N29muyQJwGaMCacx3VnomE3Gw+ABC5fR3F/lt8JoAg9Aeyn2sJqLC0
-         9b7IQsKlGBz9cYbtOL6X+ogSl8dnU+1Eeqw3cd0bh2vjps9Z/C7CWk5k0UZOWPqDfW
-         3pnOpfnstswPA==
-Date:   Tue, 6 Jun 2023 21:23:40 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+        Wed, 7 Jun 2023 04:28:24 -0400
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B3F1B5;
+        Wed,  7 Jun 2023 01:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+        Resent-Cc:Resent-Message-ID; bh=Hg9joOitzyrlswtLr/eslIOSFjCc+Bk2gMqM/S9yDPw=;
+        t=1686126503; x=1687336103; b=dAo85xRu7FJnjyGyxWa0Iu4I6MEDjHQ/AMvRXNeRu7y108g
+        E6zNGVDjqwvWlbWijx7F1X96RZIVmTs/z9s7x872E9pARg5i/gBw5Baos9Xe3UtIbrNbRBDiQ11bF
+        h4sz+I3yY3TkbDmtyNpNe4Ig55PEAixgjuMyVum8euWy56u7y6fZ5/VBbNZ0kffYAumL9Lu0YZ0Sg
+        Irx69vknRHHF933HiVjvCKUXPXsuTKkbBVGwLrg2t18XmmXBNsoZ+CcIV/7VwrF+3fnMOUqgQ9Pp0
+        Ukccr0TaSsJqHZjSJ8+OQbrYlqR9s09WYkYUyglBb8+aZuRubyBZ+k1WqTq/WYHg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.96)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1q6oWa-00GTQu-27;
+        Wed, 07 Jun 2023 10:28:12 +0200
+Message-ID: <57443d420183b7a0bcab8041c2dfe3ba44e054f4.camel@sipsolutions.net>
+Subject: Reported-by/Closes tag for uncommitted issues (was: Re: [PATCH v2]
+ uml: Replace strlcpy with strscpy)
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Eric Biggers <ebiggers@kernel.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
 Cc:     Richard Weinberger <richard@nod.at>,
         Maxim Krasnyansky <maxk@qti.qualcomm.com>,
         anton ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
         linux-hardening <linux-hardening@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         linux-um <linux-um@lists.infradead.org>,
         "Jason A. Donenfeld" <Jason@zx2c4.com>,
         kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] uml: Replace strlcpy with strscpy
-Message-ID: <20230607042340.GA941@sol.localdomain>
+Date:   Wed, 07 Jun 2023 10:28:11 +0200
+In-Reply-To: <20230607042340.GA941@sol.localdomain>
 References: <20230606182410.3976487-1-azeemshaikh38@gmail.com>
- <1833651082.3690424.1686084717406.JavaMail.zimbra@nod.at>
- <CADmuW3WzC61-si1j61kzwfx5EcsvSt4QBaY9VHiybBRWAN3yyA@mail.gmail.com>
+         <1833651082.3690424.1686084717406.JavaMail.zimbra@nod.at>
+         <CADmuW3WzC61-si1j61kzwfx5EcsvSt4QBaY9VHiybBRWAN3yyA@mail.gmail.com>
+         <20230607042340.GA941@sol.localdomain>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADmuW3WzC61-si1j61kzwfx5EcsvSt4QBaY9VHiybBRWAN3yyA@mail.gmail.com>
+X-malware-bazaar: not-scanned
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 06, 2023 at 05:08:27PM -0400, Azeem Shaikh wrote:
-> On Tue, Jun 6, 2023 at 4:51 PM Richard Weinberger <richard@nod.at> wrote:
-> >
-> > ----- Ursprüngliche Mail -----
-> > > Von: "Azeem Shaikh" <azeemshaikh38@gmail.com>
-> > > strlcpy() reads the entire source buffer first.
-> > > This read may exceed the destination size limit.
-> > > This is both inefficient and can lead to linear read
-> > > overflows if a source string is not NUL-terminated [1].
-> > > In an effort to remove strlcpy() completely [2], replace
-> > > strlcpy() here with strscpy().
-> > > No return values were used, so direct replacement is safe.
-> > >
-> > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> > > [2] https://github.com/KSPP/linux/issues/89
-> > >
-> > > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes:
-> > > https://lore.kernel.org/oe-kbuild-all/202305311135.zGMT1gYR-lkp@intel.com/
-> >
-> > Are you sure Reported-by and Closes make sense?
-> > AFAIK the report was only on your first patch and nothing against upstream.
-> > So stating this in the updated patch is in vain.
-> 
-> I left the metadata in only for the sake of posterity. If it's not
-> helpful, I'm ok with removing it.
-> 
+On Tue, 2023-06-06 at 21:23 -0700, Eric Biggers wrote:
+>=20
+> > > > Reported-by: kernel test robot <lkp@intel.com>
+> > > > Closes:
+> > > > https://lore.kernel.org/oe-kbuild-all/202305311135.zGMT1gYR-lkp@int=
+el.com/
+> > >=20
+> > > Are you sure Reported-by and Closes make sense?
+> > > AFAIK the report was only on your first patch and nothing against ups=
+tream.
+> > > So stating this in the updated patch is in vain.
+> >=20
+> > I left the metadata in only for the sake of posterity. If it's not
+> > helpful, I'm ok with removing it.
+> >=20
+>=20
+> IMO using Reported-by in cases like this is harmful, as it makes commits =
+seem
+> like bug fixes when they are not.
 
-IMO using Reported-by in cases like this is harmful, as it makes commits seem
-like bug fixes when they are not.
+I've yet to see anyone disagree with that, and yet, the robot actively
+asks for such tags to be included in patch resubmissions.
 
-- Eric
+On the one hand, I can understand their desire to be recognised for
+their efforts. At this point then we might suggest that we introduce a
+different tag, say "Improved-by:" or "Issues-found-by:" or something.
+
+On the other hand, I don't feel like we should give a robot more
+recognition than we give _people_ reviewing, and we currently really
+only recognise them by a Reviewed-by tag. Then again, that doesn't work
+with the robot - it is pretty much looking at each patch and only
+comments on a small fraction. We also really don't want it to comment on
+each and every patch ...
+
+
+So it seems we should ask the robot maintainers to just stop suggesting
+those tags?
+
+johannes
