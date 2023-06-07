@@ -2,116 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 517CEC77B7A
-	for <linux-hardening@archiver.kernel.org>; Tue,  6 Jun 2023 23:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C842C77B7A
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Jun 2023 04:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238224AbjFFXVk (ORCPT
+        id S233798AbjFGE1Z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 6 Jun 2023 19:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52932 "EHLO
+        Wed, 7 Jun 2023 00:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238262AbjFFXVd (ORCPT
+        with ESMTP id S233856AbjFGE0p (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 6 Jun 2023 19:21:33 -0400
+        Wed, 7 Jun 2023 00:26:45 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32B410C6;
-        Tue,  6 Jun 2023 16:21:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE2091FD7;
+        Tue,  6 Jun 2023 21:23:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F7A063903;
-        Tue,  6 Jun 2023 23:21:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E641FC433D2;
-        Tue,  6 Jun 2023 23:21:29 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0446463A10;
+        Wed,  7 Jun 2023 04:23:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE47C433EF;
+        Wed,  7 Jun 2023 04:23:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686093690;
-        bh=QLiV6Xl+X+ABZIsh3W9Glykjhx+2zH3dlEFevPn4GlE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mdy5/Q9UkOwGl/WyHJDdRLVVVKRXQkYQuKc/tfyTjUmReMC9esW2Y6QbZtAVgcVfc
-         ymPAHmww9bdTqrF+hs4R8+PABccA4gvKrOXzz+CM2fs4p/OCQvsfSGQ7cCL1QBNwde
-         Iwb2BLzElh0v/Ka9zpoq62zFuPAEEgRkRH73xpGdVQDcqYEZygoFpyNRHoMSqr6J6u
-         9A+U1iy7x4UsSpwrg82QUKEYK+LV9eAaoMdRFQLldXMgzBYEfvCcxXx1hax5Trg9Ck
-         lZCq2eOiVmirXEZHMXYIYeyY4785/VkFs5No2pEQhw+WT5VlBVcI8NX3SSv0T4kFhk
-         DgzxnaWV5XGUg==
-Date:   Tue, 6 Jun 2023 17:22:21 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Nilesh Javali <njavali@marvell.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     GR-QLogic-Storage-Upstream@marvell.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [RESEND][PATCH][next] Replace one-element array with
- DECLARE_FLEX_ARRAY() helper
-Message-ID: <ZH+/rZ1R1cBjIxjS@work>
+        s=k20201202; t=1686111822;
+        bh=7sP96yW6yc29Ckr2GzZEmGrtPlO4yW5CLupbhWesCjw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DiIynji1RhG+2QeeyvmhHbOno6Sf1ehLKKPh4D68VDruy2w3ooysdrKASf+z6UGoU
+         Ojcfzah5qzg6fTfj3JKiSHkpBgxECJS0H9XspVRQ77a+KwZVoc84jTBQP2kxI7EJdq
+         8UIprPkCU5ZKZeeZ2RvJ9Nwl+R7k78kMMerb+DOyIKtJG4ugllMGFmA6XTyKIh+35W
+         OO+BIePAbHh3N29muyQJwGaMCacx3VnomE3Gw+ABC5fR3F/lt8JoAg9Aeyn2sJqLC0
+         9b7IQsKlGBz9cYbtOL6X+ogSl8dnU+1Eeqw3cd0bh2vjps9Z/C7CWk5k0UZOWPqDfW
+         3pnOpfnstswPA==
+Date:   Tue, 6 Jun 2023 21:23:40 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Maxim Krasnyansky <maxk@qti.qualcomm.com>,
+        anton ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-hardening <linux-hardening@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] uml: Replace strlcpy with strscpy
+Message-ID: <20230607042340.GA941@sol.localdomain>
+References: <20230606182410.3976487-1-azeemshaikh38@gmail.com>
+ <1833651082.3690424.1686084717406.JavaMail.zimbra@nod.at>
+ <CADmuW3WzC61-si1j61kzwfx5EcsvSt4QBaY9VHiybBRWAN3yyA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADmuW3WzC61-si1j61kzwfx5EcsvSt4QBaY9VHiybBRWAN3yyA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays as fake flex arrays are deprecated and we are moving
-towards adopting C99 flexible-array members, instead. So, replace
-one-element array declaration in struct ct_sns_gpnft_rsp, which is
-ultimately being used inside a union:
+On Tue, Jun 06, 2023 at 05:08:27PM -0400, Azeem Shaikh wrote:
+> On Tue, Jun 6, 2023 at 4:51 PM Richard Weinberger <richard@nod.at> wrote:
+> >
+> > ----- Ursprüngliche Mail -----
+> > > Von: "Azeem Shaikh" <azeemshaikh38@gmail.com>
+> > > strlcpy() reads the entire source buffer first.
+> > > This read may exceed the destination size limit.
+> > > This is both inefficient and can lead to linear read
+> > > overflows if a source string is not NUL-terminated [1].
+> > > In an effort to remove strlcpy() completely [2], replace
+> > > strlcpy() here with strscpy().
+> > > No return values were used, so direct replacement is safe.
+> > >
+> > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> > > [2] https://github.com/KSPP/linux/issues/89
+> > >
+> > > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes:
+> > > https://lore.kernel.org/oe-kbuild-all/202305311135.zGMT1gYR-lkp@intel.com/
+> >
+> > Are you sure Reported-by and Closes make sense?
+> > AFAIK the report was only on your first patch and nothing against upstream.
+> > So stating this in the updated patch is in vain.
+> 
+> I left the metadata in only for the sake of posterity. If it's not
+> helpful, I'm ok with removing it.
+> 
 
-drivers/scsi/qla2xxx/qla_def.h:
-3240 struct ct_sns_gpnft_pkt {
-3241         union {
-3242                 struct ct_sns_req req;
-3243                 struct ct_sns_gpnft_rsp rsp;
-3244         } p;
-3245 };
+IMO using Reported-by in cases like this is harmful, as it makes commits seem
+like bug fixes when they are not.
 
-Refactor the rest of the code, accordingly.
-
-This issue was found with the help of Coccinelle.
-
-Link: https://github.com/KSPP/linux/issues/245
-Link: https://github.com/KSPP/linux/issues/193
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/qla2xxx/qla_def.h | 4 ++--
- drivers/scsi/qla2xxx/qla_gs.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/scsi/qla2xxx/qla_def.h b/drivers/scsi/qla2xxx/qla_def.h
-index 35009ce5246a..a9acdec003a3 100644
---- a/drivers/scsi/qla2xxx/qla_def.h
-+++ b/drivers/scsi/qla2xxx/qla_def.h
-@@ -3174,12 +3174,12 @@ struct ct_sns_gpnft_rsp {
- 		uint8_t vendor_unique;
- 	};
- 	/* Assume the largest number of targets for the union */
--	struct ct_sns_gpn_ft_data {
-+	DECLARE_FLEX_ARRAY(struct ct_sns_gpn_ft_data {
- 		u8 control_byte;
- 		u8 port_id[3];
- 		u32 reserved;
- 		u8 port_name[8];
--	} entries[1];
-+	}, entries);
- };
- 
- /* CT command response */
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index 4738f8935f7f..1cf9d200d563 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -3776,8 +3776,8 @@ int qla24xx_async_gpnft(scsi_qla_host_t *vha, u8 fc4_type, srb_t *sp)
- 		sp->u.iocb_cmd.u.ctarg.req_size = GPN_FT_REQ_SIZE;
- 
- 		rspsz = sizeof(struct ct_sns_gpnft_rsp) +
--			((vha->hw->max_fibre_devices - 1) *
--			    sizeof(struct ct_sns_gpn_ft_data));
-+			vha->hw->max_fibre_devices *
-+			    sizeof(struct ct_sns_gpn_ft_data);
- 
- 		sp->u.iocb_cmd.u.ctarg.rsp = dma_alloc_coherent(&vha->hw->pdev->dev,
- 								rspsz,
--- 
-2.34.1
-
+- Eric
