@@ -2,107 +2,155 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DCFC7EE23
-	for <linux-hardening@archiver.kernel.org>; Wed,  7 Jun 2023 14:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95240C7EE25
+	for <linux-hardening@archiver.kernel.org>; Wed,  7 Jun 2023 22:38:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235753AbjFGO0m (ORCPT
+        id S229584AbjFGWiZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Jun 2023 10:26:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54802 "EHLO
+        Wed, 7 Jun 2023 18:38:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234655AbjFGO0m (ORCPT
+        with ESMTP id S231178AbjFGWiZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Jun 2023 10:26:42 -0400
-Received: from smtp-bc0c.mail.infomaniak.ch (smtp-bc0c.mail.infomaniak.ch [45.157.188.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A2F1AE
-        for <linux-hardening@vger.kernel.org>; Wed,  7 Jun 2023 07:26:39 -0700 (PDT)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QbqR15MCqzMqD7J;
-        Wed,  7 Jun 2023 16:26:37 +0200 (CEST)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QbqR069WfzMprYb;
-        Wed,  7 Jun 2023 16:26:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1686147997;
-        bh=m5/OU8ZA8BTOAguX4rFhNG92rAq6z9BOAQWIqfh1lpM=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=HC7D6SuBn1pj6U+C0vEMnwbov6Cw7weqK0rSI/0YxUUCHYIWQ15Hjuv5JdaYdulRj
-         cs03XpEcjog/kSrqgS7+O5HgWuYEqXWQGJwh8cuId70OkOJVIdY8JoUrkeBRqX4AR9
-         U8EI+YWlqscxalhMP4/cTz1piCFXlIryyb3S8J8g=
-Message-ID: <3fd0f245-bad6-ab5b-5b52-c44a8afe2bfe@digikod.net>
-Date:   Wed, 7 Jun 2023 16:26:36 +0200
+        Wed, 7 Jun 2023 18:38:25 -0400
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B299E;
+        Wed,  7 Jun 2023 15:38:18 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 5876863CC10C;
+        Thu,  8 Jun 2023 00:38:17 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 2NQlVBlpCf14; Thu,  8 Jun 2023 00:38:16 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id D668963CC111;
+        Thu,  8 Jun 2023 00:38:16 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id OnWj-RF31K1B; Thu,  8 Jun 2023 00:38:16 +0200 (CEST)
+Received: from foxxylove.corp.sigma-star.at (unknown [82.150.214.1])
+        by lithops.sigma-star.at (Postfix) with ESMTPSA id 2F98E63CC10C;
+        Thu,  8 Jun 2023 00:38:16 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     linux-hardening@vger.kernel.org
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        keescook@chromium.org, Richard Weinberger <richard@nod.at>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+        Benno Lossin <benno.lossin@proton.me>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+Subject: [RFC PATCH 1/1] vsprintf: Warn on integer scanning overflows
+Date:   Thu,  8 Jun 2023 00:37:55 +0200
+Message-Id: <20230607223755.1610-2-richard@nod.at>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20230607223755.1610-1-richard@nod.at>
+References: <20230607223755.1610-1-richard@nod.at>
 MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [RFC PATCH part-1 0/5] pKVM on Intel Platform Introduction
-Content-Language: en-US
-To:     Keir Fraser <keirf@google.com>,
-        Sean Christopherson <seanjc@google.com>
-Cc:     Jason Chen CJ <jason.cj.chen@intel.com>, kvm@vger.kernel.org,
-        android-kvm@google.com, x86@kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20230312180048.1778187-1-jason.cj.chen@intel.com>
- <ZA9QZcADubkx/3Ev@google.com> <ZBCeH5JB14Gl3wOM@jiechen-ubuntu-dev>
- <ZBCC3qEPHGWnx2JO@google.com> <ZB17s69rC9ioomF7@google.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <ZB17s69rC9ioomF7@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Infomaniak-Routing: alpha
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+The scanf function family has no way to indicate overflows
+while scanning. As consequence users of these function have to make
+sure their input cannot cause an overflow.
+Since this is not always the case add WARN_ON_ONCE() guards to
+trigger a warning upon an overflow.
 
-On 24/03/2023 11:30, Keir Fraser wrote:
-> On Tue, Mar 14, 2023 at 07:21:18AM -0700, Sean Christopherson wrote:
->> On Tue, Mar 14, 2023, Jason Chen CJ wrote:
->>> On Mon, Mar 13, 2023 at 09:33:41AM -0700, Sean Christopherson wrote:
->>>
->>>> On Mon, Mar 13, 2023, Jason Chen CJ wrote:
->>>>> There are similar use cases on x86 platforms requesting protected
->>>>> environment which is isolated from host OS for confidential computing.
->>>>
->>>> What exactly are those use cases?  The more details you can provide, the better.
->>>> E.g. restricting the isolated VMs to 64-bit mode a la TDX would likely simplify
->>>> the pKVM implementation.
->>>
->>> Thanks Sean for your comments, I am very appreciated!
->>>
->>> We are expected
->>
->> Who is "we"?  Unless Intel is making a rather large pivot, I doubt Intel is the
->> end customer of pKVM-on-x86.  If you aren't at liberty to say due NDA/confidentiality,
->> then please work with whoever you need to in order to get permission to fully
->> disclose the use case.  Because realistically, without knowing exactly what is
->> in scope and why, this is going nowhere.
-> 
-> This is being seriously evaluated by ChromeOS as an alternative to
-> their existing ManaTEE design. Compared with that (hypervisor == full
-> Linux) the pKVM design is pretty attractive: smaller TCB, host Linux
-> "VM" runs closer to native and without nested scheduling, demonstrated
-> better performance, and closer alignment with Android virtualisation
-> (that's my team, which of course is ARM focused, but we'd love to see
-> broader uptake of pKVM in the kernel).
+Signed-off-by: Richard Weinberger <richard@nod.at>
+---
+ lib/vsprintf.c | 33 +++++++++++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 8 deletions(-)
 
-This pKVM implementation would definitely be useful to protect the host 
-from itself (i.e. improved kernel self-protection) thanks to the 
-Hypervisor-Enforced Kernel Integrity patch series: 
-https://lore.kernel.org/all/20230505152046.6575-1-mic@digikod.net/
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 40f560959b169..3d8d751306cdc 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -70,6 +70,7 @@ static noinline unsigned long long simple_strntoull(con=
+st char *startp, size_t m
+ 	prefix_chars =3D cp - startp;
+ 	if (prefix_chars < max_chars) {
+ 		rv =3D _parse_integer_limit(cp, base, &result, max_chars - prefix_char=
+s);
++		WARN_ON_ONCE(rv & KSTRTOX_OVERFLOW);
+ 		/* FIXME */
+ 		cp +=3D (rv & ~KSTRTOX_OVERFLOW);
+ 	} else {
+@@ -3657,22 +3658,34 @@ int vsscanf(const char *buf, const char *fmt, va_=
+list args)
+=20
+ 		switch (qualifier) {
+ 		case 'H':	/* that's 'hh' in format */
+-			if (is_sign)
++			if (is_sign) {
++				WARN_ON_ONCE(val.s > 127);
++				WARN_ON_ONCE(val.s < -128);
+ 				*va_arg(args, signed char *) =3D val.s;
+-			else
++			} else {
++				WARN_ON_ONCE(val.u > 255);
+ 				*va_arg(args, unsigned char *) =3D val.u;
++			}
+ 			break;
+ 		case 'h':
+-			if (is_sign)
++			if (is_sign) {
++				WARN_ON_ONCE(val.s > SHRT_MAX);
++				WARN_ON_ONCE(val.s < SHRT_MIN);
+ 				*va_arg(args, short *) =3D val.s;
+-			else
++			} else {
++				WARN_ON_ONCE(val.u > USHRT_MAX);
+ 				*va_arg(args, unsigned short *) =3D val.u;
++			}
+ 			break;
+ 		case 'l':
+-			if (is_sign)
++			if (is_sign) {
++				WARN_ON_ONCE(val.s > LONG_MAX);
++				WARN_ON_ONCE(val.s < LONG_MIN);
+ 				*va_arg(args, long *) =3D val.s;
+-			else
++			} else {
++				WARN_ON_ONCE(val.u > ULONG_MAX);
+ 				*va_arg(args, unsigned long *) =3D val.u;
++			}
+ 			break;
+ 		case 'L':
+ 			if (is_sign)
+@@ -3684,10 +3697,14 @@ int vsscanf(const char *buf, const char *fmt, va_=
+list args)
+ 			*va_arg(args, size_t *) =3D val.u;
+ 			break;
+ 		default:
+-			if (is_sign)
++			if (is_sign) {
++				WARN_ON_ONCE(val.s > INT_MAX);
++				WARN_ON_ONCE(val.s < INT_MIN);
+ 				*va_arg(args, int *) =3D val.s;
+-			else
++			} else {
++				WARN_ON_ONCE(val.u > UINT_MAX);
+ 				*va_arg(args, unsigned int *) =3D val.u;
++			}
+ 			break;
+ 		}
+ 		num++;
+--=20
+2.35.3
 
-Use cases would then include all bare metal Linux systems with security 
-requirements. They would initially configure pKVM with the dedicated 
-Heki hypercalls, but not necessarily launch guest VMs.
-
-
-> 
->   -- Keir
-> 
->>> to run protected VM with general OS and may with pass-thru secure devices support.
->>
->> Why?  What is the actual use case?
->>
->>> May I know your suggestion of "utilize SEAM" is to follow TDX SPEC then
->>> work out a SW-TDX solution, or just do some leverage from SEAM code?
->>
->> Throw away TDX and let KVM run its own code in SEAM.
->>
-> 
