@@ -2,114 +2,109 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF8AC7EE23
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Jun 2023 08:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AE5C7EE23
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Jun 2023 14:34:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234006AbjFHIKJ (ORCPT
+        id S236485AbjFHOeZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Jun 2023 04:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55012 "EHLO
+        Thu, 8 Jun 2023 10:34:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233944AbjFHIKJ (ORCPT
+        with ESMTP id S236514AbjFHOeY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Jun 2023 04:10:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8391730;
-        Thu,  8 Jun 2023 01:10:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BC3C064A13;
-        Thu,  8 Jun 2023 08:10:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B23AC433EF;
-        Thu,  8 Jun 2023 08:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686211807;
-        bh=C+rHEG/c674R9h1WxP8EIaYcHRasurafDpURUrS3qQg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dltILT6bKoAPPSMw5xWupLlWDU5o4L9XaCS2ZMazGeizX3vQkdHsebLwKQt7o9eML
-         Hw1UbbLRwG/6ACxqRnlrCSt5s8OMn5gIbNNfeGnBuy8AFt6L/TbOJBj8a+YUqnTG9I
-         kP+UVBudNizPrK8D7y1H8uL9vpMU2YbL7Rtpzc/LxMXvsWNXQlAAG0tcb8IncOg7k0
-         mwaeg8Vj4WMRvdrl71eLX79qM2bmeHVkfvBjrcoOpCXqlQ1dBdFSCMMBUH7Iho9GoT
-         aLp/Tm7pd9CB4gSGsthy8sWEeW5Q5312RL5IuzuoiyljinRV2rHi0QNeQEW6gUl2T0
-         sF2i5kx3SZcFA==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-4f6283d0d84so432817e87.1;
-        Thu, 08 Jun 2023 01:10:07 -0700 (PDT)
-X-Gm-Message-State: AC+VfDw0v9ubmUZbwUa1VY2v0wEIUts5aXTVGw7ZZMZaJYQybR6+OS+R
-        MRqhl9cqrg8yDxQTPNuh+tCtrxhg7pXqrDcFBZg=
-X-Google-Smtp-Source: ACHHUZ7ExumTs8tcu5KAEIGJtXlT6yHg7zABGWDQMrQgZdOrl3AS9d+MFyjfACdjHRn3fAjMpyShhY6nm6Xe9O08LqM=
-X-Received: by 2002:ac2:4c30:0:b0:4f2:74d3:8996 with SMTP id
- u16-20020ac24c30000000b004f274d38996mr2668920lfq.8.1686211805289; Thu, 08 Jun
- 2023 01:10:05 -0700 (PDT)
+        Thu, 8 Jun 2023 10:34:24 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFE02D53;
+        Thu,  8 Jun 2023 07:34:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686234860; x=1717770860;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XxmivJGLgaCaH1WntFP9Euy9AMy9td0vUpD6mlwrIWU=;
+  b=faAx3kZeM7Bc1PN1Gd3r1wwaWOutMgRsQkiczA6kkEcAs9HYVKLZ1Q1u
+   WXy/J69GpJ5WUQBsxzVwpXxa/1K1WjjCj2vQcNoMVTIbN9R0NkQ1vDK8I
+   q3w1PiIiC2b8z+w6EqN+nMlxpbIv5dc4YYiZThZoZRow721xKF7xAuF5S
+   weSLDD5lDHlUYKzxDUrC7nub83RWBpsaHTRVl8+YFz4zCL2u4uBM1yYzo
+   EdVN1DGx6t9jhUkRm3496vYX6eT1vWBqvn25ThSCYJ3SXN784nByY39Rg
+   L3DiJkALF4/65gPdnpeZNfZV0S8rXRJcLDDIEXPpohFxnGPYHIboenLAT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="423188590"
+X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
+   d="scan'208";a="423188590"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2023 07:27:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="1040125134"
+X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
+   d="scan'208";a="1040125134"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Jun 2023 07:27:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1q7GcA-002BKI-0n;
+        Thu, 08 Jun 2023 17:27:50 +0300
+Date:   Thu, 8 Jun 2023 17:27:50 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keescook@chromium.org,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+        Benno Lossin <benno.lossin@proton.me>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+Subject: Re: [RFC PATCH 1/1] vsprintf: Warn on integer scanning overflows
+Message-ID: <ZIHlZsPMZ2dI5/yG@smile.fi.intel.com>
+References: <20230607223755.1610-1-richard@nod.at>
+ <20230607223755.1610-2-richard@nod.at>
 MIME-Version: 1.0
-References: <ZIFVGwImU3kpaGeH@work>
-In-Reply-To: <ZIFVGwImU3kpaGeH@work>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 8 Jun 2023 10:09:53 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFErhC7k+zg2ga-Lgo9f6muarbO6AJVx3g0KCGTLWkakg@mail.gmail.com>
-Message-ID: <CAMj1kXFErhC7k+zg2ga-Lgo9f6muarbO6AJVx3g0KCGTLWkakg@mail.gmail.com>
-Subject: Re: [PATCH][next] ARM: OMAP2+: Fix -Warray-bounds warning in _pwrdm_state_switch()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "Peter 'p2' De Schrijver" <peter.de-schrijver@nokia.com>,
-        Kevin Hilman <khilman@deeprootsystems.com>,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230607223755.1610-2-richard@nod.at>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 8 Jun 2023 at 06:11, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
->
-> If function pwrdm_read_prev_pwrst() returns -EINVAL, we will end
-> up accessing array pwrdm->state_counter through negative index
-> -22. This is wrong and the compiler is legitimately warning us
-> about this potential problem.
->
-> Fix this by sanity checking the value stored in variable _prev_
-> before accessing array pwrdm->state_counter.
->
-> Address the following -Warray-bounds warning:
-> arch/arm/mach-omap2/powerdomain.c:178:45: warning: array subscript -22 is below array bounds of 'unsigned int[4]' [-Warray-bounds]
->
-> Link: https://github.com/KSPP/linux/issues/307
-> Fixes: ba20bb126940 ("OMAP: PM counter infrastructure.")
-> Cc: stable@vger.kernel.org
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/lkml/20230607050639.LzbPn%25lkp@intel.com/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Thu, Jun 08, 2023 at 12:37:55AM +0200, Richard Weinberger wrote:
+> The scanf function family has no way to indicate overflows
+> while scanning. As consequence users of these function have to make
+> sure their input cannot cause an overflow.
+> Since this is not always the case add WARN_ON_ONCE() guards to
+> trigger a warning upon an overflow.
 
-Nice to see this work paying off.
+...
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+>  	if (prefix_chars < max_chars) {
+>  		rv = _parse_integer_limit(cp, base, &result, max_chars - prefix_chars);
+> +		WARN_ON_ONCE(rv & KSTRTOX_OVERFLOW);
 
-Does the error case need further handling here?
+This seems incorrect. simple_strto*() are okay to overflow. It's by design.
+
+>  		/* FIXME */
+
+...and that's why this one is here.
+
+>  		cp += (rv & ~KSTRTOX_OVERFLOW);
+>  	} else {
 
 
-> ---
->  arch/arm/mach-omap2/powerdomain.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/mach-omap2/powerdomain.c b/arch/arm/mach-omap2/powerdomain.c
-> index 777f9f8e7cd8..5e05dd1324e7 100644
-> --- a/arch/arm/mach-omap2/powerdomain.c
-> +++ b/arch/arm/mach-omap2/powerdomain.c
-> @@ -174,7 +174,7 @@ static int _pwrdm_state_switch(struct powerdomain *pwrdm, int flag)
->                 break;
->         case PWRDM_STATE_PREV:
->                 prev = pwrdm_read_prev_pwrst(pwrdm);
-> -               if (pwrdm->state != prev)
-> +               if (prev >= 0 && pwrdm->state != prev)
->                         pwrdm->state_counter[prev]++;
->                 if (prev == PWRDM_POWER_RET)
->                         _update_logic_membank_counters(pwrdm);
-> --
-> 2.34.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
