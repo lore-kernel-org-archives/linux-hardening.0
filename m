@@ -2,56 +2,44 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AE5C7EE23
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Jun 2023 14:34:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F18C7EE23
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Jun 2023 15:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236485AbjFHOeZ (ORCPT
+        id S236621AbjFHP1s (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 8 Jun 2023 10:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34364 "EHLO
+        Thu, 8 Jun 2023 11:27:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236514AbjFHOeY (ORCPT
+        with ESMTP id S234497AbjFHP1r (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 8 Jun 2023 10:34:24 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAFE02D53;
-        Thu,  8 Jun 2023 07:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686234860; x=1717770860;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XxmivJGLgaCaH1WntFP9Euy9AMy9td0vUpD6mlwrIWU=;
-  b=faAx3kZeM7Bc1PN1Gd3r1wwaWOutMgRsQkiczA6kkEcAs9HYVKLZ1Q1u
-   WXy/J69GpJ5WUQBsxzVwpXxa/1K1WjjCj2vQcNoMVTIbN9R0NkQ1vDK8I
-   q3w1PiIiC2b8z+w6EqN+nMlxpbIv5dc4YYiZThZoZRow721xKF7xAuF5S
-   weSLDD5lDHlUYKzxDUrC7nub83RWBpsaHTRVl8+YFz4zCL2u4uBM1yYzo
-   EdVN1DGx6t9jhUkRm3496vYX6eT1vWBqvn25ThSCYJ3SXN784nByY39Rg
-   L3DiJkALF4/65gPdnpeZNfZV0S8rXRJcLDDIEXPpohFxnGPYHIboenLAT
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="423188590"
-X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
-   d="scan'208";a="423188590"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2023 07:27:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="1040125134"
-X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
-   d="scan'208";a="1040125134"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 08 Jun 2023 07:27:52 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1q7GcA-002BKI-0n;
-        Thu, 08 Jun 2023 17:27:50 +0300
-Date:   Thu, 8 Jun 2023 17:27:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Thu, 8 Jun 2023 11:27:47 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B42A172E;
+        Thu,  8 Jun 2023 08:27:43 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 2496D1FDE6;
+        Thu,  8 Jun 2023 15:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1686238062; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YjexGMdyJWeBEjd6xCsB5dyXSs2Z5hB+eEW3odtxG74=;
+        b=SfueeyNYTBrTihKqx8oxJyfXgJUEO72qrEaWzKN9n/xvcrRpUuC7wTlr5iQ5JU20AoKVk+
+        RIlBFvY+Q+Do9PokOXqyijq2TF/CAdHol/tiqVodfAgEosBNsgNhjvbDhDhwUi/3kUlSxU
+        tJXq1cRpat2EYGkHF7TOihaLs/AntV8=
+Received: from suse.cz (unknown [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 162EF2C141;
+        Thu,  8 Jun 2023 15:27:41 +0000 (UTC)
+Date:   Thu, 8 Jun 2023 17:27:40 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Richard Weinberger <richard@nod.at>,
+        linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
@@ -67,44 +55,66 @@ Cc:     linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
         Daniel Borkmann <daniel@iogearbox.net>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>
-Subject: Re: [RFC PATCH 1/1] vsprintf: Warn on integer scanning overflows
-Message-ID: <ZIHlZsPMZ2dI5/yG@smile.fi.intel.com>
+Subject: Re: [RFC PATCH 0/1] Integer overflows while scanning for integers
+Message-ID: <ZIHzbBXlxEz6As9N@alley>
 References: <20230607223755.1610-1-richard@nod.at>
- <20230607223755.1610-2-richard@nod.at>
+ <202306071634.51BBAFD14@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230607223755.1610-2-richard@nod.at>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <202306071634.51BBAFD14@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 12:37:55AM +0200, Richard Weinberger wrote:
-> The scanf function family has no way to indicate overflows
-> while scanning. As consequence users of these function have to make
-> sure their input cannot cause an overflow.
-> Since this is not always the case add WARN_ON_ONCE() guards to
-> trigger a warning upon an overflow.
+On Wed 2023-06-07 16:36:12, Kees Cook wrote:
+> On Thu, Jun 08, 2023 at 12:37:54AM +0200, Richard Weinberger wrote:
+> > Hi!
+> > 
+> > Lately I wondered whether users of integer scanning functions check
+> > for overflows.
+> > To detect such overflows around scanf I came up with the following
+> > patch. It simply triggers a WARN_ON_ONCE() upon an overflow.
+> > 
+> > After digging into various scanf users I found that the network device
+> > naming code can trigger an overflow.
+> > 
+> > e.g:
+> > $ ip link add 1 type veth peer name 9999999999
+> > $ ip link set name "%d" dev 1
+> > 
+> > It will trigger the following WARN_ON_ONCE():
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 2 PID: 433 at lib/vsprintf.c:3701 vsscanf+0x6ce/0x990
+> 
+> Hm, it's considered a bug if a WARN or BUG can be reached from
+> userspace,
 
-...
+Good point. WARN() does not look like the right way in this case.
 
->  	if (prefix_chars < max_chars) {
->  		rv = _parse_integer_limit(cp, base, &result, max_chars - prefix_chars);
-> +		WARN_ON_ONCE(rv & KSTRTOX_OVERFLOW);
+Another problem is that some users use panic_on_warn. In this case,
+the above "ip" command calls would trigger panic(). And it does not
+look like an optimal behavior.
 
-This seems incorrect. simple_strto*() are okay to overflow. It's by design.
+I know there already are some WARN_ONs for similar situations, e.g.
+set_field_width() or set_precision(). But these do not get random
+values. And it would actually be nice to introduce something like
+INFO() that would be usable for these less serious problems where
+the backtrace is useful but they should never trigger panic().
 
->  		/* FIXME */
+> so this probably needs to be rearranged (or callers fixed).
+> Do we need to change the scanf API for sane use inside the kernel?
 
-...and that's why this one is here.
+It seems that userspace implementation of sscanf() and vsscanf()
+returns -ERANGE in this case. It might be a reasonable solution.
 
->  		cp += (rv & ~KSTRTOX_OVERFLOW);
->  	} else {
+Well, there is a risk of introducing security problems. The error
+value might cause an underflow/overflow when the caller does not expect
+a negative value.
 
+Alternative solution would be to update the "ip" code so that it
+reads the number separately and treat zero return value as
+-EINVAL.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Best Regards,
+Petr
