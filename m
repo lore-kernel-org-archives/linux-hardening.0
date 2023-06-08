@@ -2,94 +2,91 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3B7C7EE43
-	for <linux-hardening@archiver.kernel.org>; Thu,  8 Jun 2023 01:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42CB5C7EE23
+	for <linux-hardening@archiver.kernel.org>; Thu,  8 Jun 2023 04:11:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233426AbjFHBmr (ORCPT
+        id S233210AbjFHELX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 7 Jun 2023 21:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53764 "EHLO
+        Thu, 8 Jun 2023 00:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232715AbjFHBmg (ORCPT
+        with ESMTP id S232466AbjFHELW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 7 Jun 2023 21:42:36 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33CFD1FEC;
-        Wed,  7 Jun 2023 18:42:36 -0700 (PDT)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 357LwklK019376;
-        Thu, 8 Jun 2023 01:42:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=CV7UX/nctwvfWFI0+kOOCsFqipiqUIxEJ/D1ZD501kQ=;
- b=P6kIQ4ALEnsQPCHbAcJT0HCDQHurMxs5QrMee2QsYOWJXjE8mgMbHrleRJhKDB8x9WNm
- bI9H75sah8AkyJZfLBMgP5drgIUSzhrJ6NgRoqJk9J+ZxJmN8bZLL0ixncxlqIVm6z9q
- BD70yzbKAQ79UM/maEEuWJf2Amrc+Ogj9rKNfi/w/U+sezYfrB1vHm3gQw75BboEVTqB
- Oc7TfmpyF/6T2nhWdvSnr3ue2z0pR/89H572RGouA7sgPExXn1pkVKcDxk5uKK/rzkE/
- YNbN9ERHwmFDsK3Ff/BQk1lU3IPtFepycjPnXdQ0l2i4zUyoAqPy11Av0TQqRUoOCCoR ow== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r2a6sk76f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Jun 2023 01:42:32 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 357MeU2x037112;
-        Thu, 8 Jun 2023 01:42:31 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3r2a6hyt5n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 08 Jun 2023 01:42:31 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3581gQUj031871;
-        Thu, 8 Jun 2023 01:42:30 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3r2a6hyt3a-4;
-        Thu, 08 Jun 2023 01:42:30 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Thu, 8 Jun 2023 00:11:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABDA22103;
+        Wed,  7 Jun 2023 21:11:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4EE2764788;
+        Thu,  8 Jun 2023 04:11:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B683BC433EF;
+        Thu,  8 Jun 2023 04:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686197480;
+        bh=DSH0+M06pJVuiYq4hobnTz4ISp38m37GUzm/tJ7iW2g=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qdAUd4C4ylFG61+SGH///Dv9II9UFcfIYOiBVRtiXAL4ew3U1sETw5bTjGcEEjXhy
+         rP4LZJniTKwC3BScLE6jnuRRqwN+rWXvcBQAQ4Vvr8q7ipqHzbJRZo6J09zwabGFko
+         JFXhq++chO85GFOfsfvqUfYcn9vti/8nIFwSpgtbrjECll6jC7LX3+dRhpw9B4hgGA
+         ok0EosExhs93H4kYdm3gfP79P4DYZEbZK9/e/+7xxOGDHfxd9vUQ4WlKMg9F20iTOC
+         2Q2npUvhw345cp8/uZO7x7KguoMwSRMR+NvurZYSQf7iFhc7k4y8Ffs3oq3pZLkvK0
+         2/MZvq8jq2K5Q==
+Date:   Wed, 7 Jun 2023 22:12:11 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Peter 'p2' De Schrijver <peter.de-schrijver@nokia.com>,
+        Kevin Hilman <khilman@deeprootsystems.com>
+Cc:     linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: Re: [PATCH] scsi: sym53c8xx: Replace all non-returning strlcpy with strscpy
-Date:   Wed,  7 Jun 2023 21:42:08 -0400
-Message-Id: <168618844272.2636448.5811508326302611111.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230530160323.412484-1-azeemshaikh38@gmail.com>
-References: <20230530160323.412484-1-azeemshaikh38@gmail.com>
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] ARM: OMAP2+: Fix -Warray-bounds warning in
+ _pwrdm_state_switch()
+Message-ID: <ZIFVGwImU3kpaGeH@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-07_13,2023-06-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 adultscore=0 mlxlogscore=956 bulkscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306080011
-X-Proofpoint-GUID: waLOh-oCUJL4e2B29tGPDQrZUsMKTLhP
-X-Proofpoint-ORIG-GUID: waLOh-oCUJL4e2B29tGPDQrZUsMKTLhP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 30 May 2023 16:03:23 +0000, Azeem Shaikh wrote:
+If function pwrdm_read_prev_pwrst() returns -EINVAL, we will end
+up accessing array pwrdm->state_counter through negative index
+-22. This is wrong and the compiler is legitimately warning us
+about this potential problem.
 
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
-> 
-> [...]
+Fix this by sanity checking the value stored in variable _prev_
+before accessing array pwrdm->state_counter.
 
-Applied to 6.5/scsi-queue, thanks!
+Address the following -Warray-bounds warning:
+arch/arm/mach-omap2/powerdomain.c:178:45: warning: array subscript -22 is below array bounds of 'unsigned int[4]' [-Warray-bounds]
 
-[1/1] scsi: sym53c8xx: Replace all non-returning strlcpy with strscpy
-      https://git.kernel.org/mkp/scsi/c/af0ce90200c9
+Link: https://github.com/KSPP/linux/issues/307
+Fixes: ba20bb126940 ("OMAP: PM counter infrastructure.")
+Cc: stable@vger.kernel.org
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/20230607050639.LzbPn%25lkp@intel.com/
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ arch/arm/mach-omap2/powerdomain.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/mach-omap2/powerdomain.c b/arch/arm/mach-omap2/powerdomain.c
+index 777f9f8e7cd8..5e05dd1324e7 100644
+--- a/arch/arm/mach-omap2/powerdomain.c
++++ b/arch/arm/mach-omap2/powerdomain.c
+@@ -174,7 +174,7 @@ static int _pwrdm_state_switch(struct powerdomain *pwrdm, int flag)
+ 		break;
+ 	case PWRDM_STATE_PREV:
+ 		prev = pwrdm_read_prev_pwrst(pwrdm);
+-		if (pwrdm->state != prev)
++		if (prev >= 0 && pwrdm->state != prev)
+ 			pwrdm->state_counter[prev]++;
+ 		if (prev == PWRDM_POWER_RET)
+ 			_update_logic_membank_counters(pwrdm);
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.34.1
+
