@@ -2,122 +2,209 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC36C7EE43
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Jun 2023 11:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3E8C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Jun 2023 17:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229462AbjFILFO (ORCPT
+        id S229667AbjFIRDI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Jun 2023 07:05:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52614 "EHLO
+        Fri, 9 Jun 2023 13:03:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbjFILEn (ORCPT
+        with ESMTP id S229454AbjFIRDH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Jun 2023 07:04:43 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E43210D;
-        Fri,  9 Jun 2023 04:04:42 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1b24b34b59fso6667645ad.3;
-        Fri, 09 Jun 2023 04:04:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686308682; x=1688900682;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aEZPAeIV/OtWRVRtfhWloaaTiFQRpVuQ6c3hWe/ckak=;
-        b=YaA7FMxKN+7vfMRVRCcEnnj7qFuw1UrPnx42VMlRMLMiKtKScyF2LosWNEBAlz9G84
-         oN/JbLD1ts2NmctqUJM380hZjHyjBEPjKpVyTWBEIOHIV/86tkGDqM/XIPJaVxHhBMRk
-         +1T4+NpQ/PKA05JzfA4KDADEa7jKcgvYdJNUuOtH0SbUvtqqRVBIE8PZ8elR26asbV4M
-         uqK7Uyij+97rzlSYEvJhWDoNa4BoL+qRp/nTUCrEb8YZm0rBy3QlixtBs58DFj2kY214
-         hp1O9ZiRMZ4JWBwKtTFhe/VOyKOlyZDTXSFnP97NqMkcPkoDFq9rdjQ9lqiClv59wi53
-         ffqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686308682; x=1688900682;
-        h=content-transfer-encoding:subject:from:cc:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aEZPAeIV/OtWRVRtfhWloaaTiFQRpVuQ6c3hWe/ckak=;
-        b=Uca+hI9Z8WuYC56jcLYXlNaNlQ84+1taNuF2r3NbZKN6l1X7kNvquEtsJKzCdXbfY3
-         OSyA9NAzLmd49maLTodPB3zcT9qmdVcKPf7RodRUCPUoECpN5vdLRv1RSsnhxx9slACE
-         M9UEWLtLC3+kpdY0JzUA7b7wrNYocs+17CRqxINFwp8MzhM7qUoU813H35prmOcA9RvI
-         /SfMl524BtVsQ0Vx8iPEVA2yQYIT7A6F48rYuxe8q4xnCGn7ItvclnnpvPDLiTkHQnSC
-         Zk99vlPzei53WEhmLlmFK9d8hF7CF545qqz1FYTk9X9PQhu6e8jrrtWMvkwxkFVkE+lD
-         rLmw==
-X-Gm-Message-State: AC+VfDyog+WCTchaovEnCmmwIgwVBBa/qVIx90J2PVOUlryqdKqaqc7g
-        A3Q+cfLb4ApyLDGTr3i0rk4=
-X-Google-Smtp-Source: ACHHUZ4PedxoYr1YVS117Tj0fzkFfE6nw0uZj3KY70eFDjoP9uhOO4uoh/QfIhve0hKdM1mR8BV7eA==
-X-Received: by 2002:a17:902:704a:b0:1b3:8862:2403 with SMTP id h10-20020a170902704a00b001b388622403mr709032plt.36.1686308681966;
-        Fri, 09 Jun 2023 04:04:41 -0700 (PDT)
-Received: from [192.168.43.80] (subs02-180-214-232-88.three.co.id. [180.214.232.88])
-        by smtp.gmail.com with ESMTPSA id p17-20020a170902ead100b001b06f7f5333sm3042080pld.1.2023.06.09.04.04.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jun 2023 04:04:41 -0700 (PDT)
-Message-ID: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
-Date:   Fri, 9 Jun 2023 18:04:31 +0700
+        Fri, 9 Jun 2023 13:03:07 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEAB1BD;
+        Fri,  9 Jun 2023 10:03:06 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id AA04D21A86;
+        Fri,  9 Jun 2023 17:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1686330184; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=REEDDTYjANwf4OYVzWw7svHHjEF/SXbfklTXuE905lA=;
+        b=EBNbp4pA5hDPn36pel+HGgMRUTpI5M+3xek6bwhBJkIIqV6PK9wc3FqPA1Ilo8PmKXJ7DD
+        5V1rDdeK/QSi0rMKdm5LIbTe/n9zH7N2OdhyL2krBe+FtcqKs6tzdb+2FsgQFgm6qf1evt
+        c6pmx4EZfvvohKqa9+pJbZ9e1jxJVc4=
+Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 9A8042C23D;
+        Fri,  9 Jun 2023 17:03:03 +0000 (UTC)
+Date:   Fri, 9 Jun 2023 19:02:59 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Richard Weinberger <richard@nod.at>,
+        linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+        Benno Lossin <benno.lossin@proton.me>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH 0/1] Integer overflows while scanning for integers
+Message-ID: <ZINbQ3eyMB2OGfiN@alley>
+References: <20230607223755.1610-1-richard@nod.at>
+ <202306071634.51BBAFD14@keescook>
+ <ZIHzbBXlxEz6As9N@alley>
+ <9cd596d9-0ecb-29fc-fe18-f19b86a5ba44@rasmusvillemoes.dk>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Content-Language: en-US
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Phillip Potter <phil@philpotter.co.uk>,
-        Joe Breuer <linux-kernel@jmbreuer.net>
-Cc:     Linux Power Management <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Hardening <linux-hardening@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux SCSI <linux-scsi@vger.kernel.org>
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Fwd: Waking up from resume locks up on sr device
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9cd596d9-0ecb-29fc-fe18-f19b86a5ba44@rasmusvillemoes.dk>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Added Linus into CC. Quick summary for him:
 
-I notice a regression report on Bugzilla [1]. Quoting from it:
+1. The original problem is best described in the cover letter, see
+   https://lore.kernel.org/r/20230607223755.1610-1-richard@nod.at
 
-> I'm running LibreELEC.tv on an x86_64 machine that, following a (kernel) update, now locks up hard while trying to device_resume() => device_lock() on sr 2:0:0:0 (the only sr device in the system).
-> 
-> Through some digging of my own, I can pretty much isolate the fault in this device_lock() call:
-> https://elixir.bootlin.com/linux/v6.3.4/source/drivers/base/power/main.c#L919
-> 
-> I put an additional debug line exactly before the device_lock(dev) call, like this:
-> dev_info(dev, "device_lock() in device_resume()");
-> 
-> This is the last diagnostic I see, that device_lock() call never returns, ie line 920 in main.c is never reached (confirmed via TRACE_RESUME).
-> The device, in my case, is printed as sr 2:0:0:0.
-> 
-> Knowing this, as a workaround, booting with libata.force=3:disable (libata port 3 corresponds to the SATA channel that sr 2:0:0:0 is attached to) allows suspend/resume to work correctly (but the optical drive is not accessible, obviously).
-> 
-> When resume hangs, the kernel is not _completely_ locked, interestingly the machine responds to pings and I see the e1000e 'link up' message a couple seconds after the hanging sr2 device_lock().
-> Magic SysRq, however, does NOT work in that state; possibly because not enough of USB is resumed yet. Resuming devices seems to broadly follow a kind of breadth-first order; I see USB ports getting resumed closely before the lockup, but no USB (target) devices.
-> 
-> This is a regression, earlier kernels would work correctly on the exact same hardware. Since it's an 'embedded' type (LibreELEC.tv) install that overwrites its system parts completely on each update, I don't have a clear historical record of kernel versions. From the timeline and my memory, moving from 5.x to 6.x would make sense. Due to the nature of the system, it's somewhat inconvenient for me to try numerous kernel versions blindly for a bisection; I will try to test against some current 5.x soon, however.
-> 
-> I do have the hope that this information already might give someone with more background a strong idea about the issue.
-> 
-> Next, I will try to put debug_show_all_locks() before device_lock(), since I can't Alt+SysRq+d.
+2. I think that we actually have two problems:
 
-See Bugzilla for the full thread.
+     a) How to find a code where sscanf() might get invalid output.
+	Such a code might require some special/better handling
+	of this situation.
 
-Anyway, I'm adding it to regzbot (with rough version range since the reporter
-only knows major kernel version numbers):
+     b) How to eventually provide a useful message back to
+	userspace.
 
-#regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
-#regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
 
-Thanks.
+On Fri 2023-06-09 12:10:29, Rasmus Villemoes wrote:
+> On 08/06/2023 17.27, Petr Mladek wrote:
+> > On Wed 2023-06-07 16:36:12, Kees Cook wrote:
+> 
+> > It seems that userspace implementation of sscanf() and vsscanf()
+> > returns -ERANGE in this case. It might be a reasonable solution.
+> 
+> Well. _Some_ userspace implementation does that. It's not in POSIX.
+> While "man scanf" lists that ERANGE error, it also explicitly says that:
+> 
+> CONFORMING TO
+>        The functions fscanf(), scanf(), and sscanf() conform to C89 and
+> C99 and POSIX.1-2001.  These standards do  not  specify  the
+>        ERANGE error.
+> 
+> I can't figure out what POSIX actually says should or could happen with
+> sscanf("99999999999999", "%i", &x);
 
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=217530
+It looks to me that it does not say anything about it. Even the latest
+IEEE Std 1003.1-2017 says just this:
 
--- 
-An old man doll... just what I always wanted! - Clara
+--- cut ---
+RETURN VALUE
+Upon successful completion, these functions shall return the number of
+successfully matched and assigned input items; this number can be zero
+in the event of an early matching failure. If the input ends before
+the first conversion (if any) has completed, and without a matching
+failure having occurred, EOF shall be returned. If an error occurs
+before the first conversion (if any) has completed, and without
+a matching failure having occurred, EOF shall be returned
+and errno shall be set to indicate the error. If a read error
+occurs, the error indicator for the stream shall be set.
+
+ERRORS
+For the conditions under which the fscanf() functions fail and may
+fail, refer to fgetc or fgetwc.
+
+In addition, the fscanf() function shall fail if:
+
+[EILSEQ]
+Input byte sequence does not form a valid character.
+[ENOMEM]
+Insufficient storage space is available.
+In addition, the fscanf() function may fail if:
+
+[EINVAL]
+There are insufficient arguments.
+--- cut ---
+
+I do not see anything about overflow anywhere.
+
+Well, the -ERANGE returned by the Linux implementation looks
+quite practical.
+
+> > Well, there is a risk of introducing security problems. The error
+> > value might cause an underflow/overflow when the caller does not expect
+> > a negative value.
+> 
+> There is absolutely no way we can start letting sscanf() return a
+> negative err value, in exactly the same way we cannot possibly let
+> vsnprintf() do that.
+
+I agree.
+
+> We can stop early, possibly with a WARNing if it's
+
+Thinking more about it, the WARN() is a really big hammer even
+if we introduced a never-panicking alternative, e.g. INFO()
+or REPORT().
+
+sscanf() does not know in which situation it is used and how
+serious the overflow would be. I mean that it does not know
+how to provide useful report and if it is needed at all.
+
+Also WARN()-like report would only help with the 1st problem,
+how find the code where the overflow might happen.
+But it would not help to handle it a reasonable way.
+
+> > Alternative solution would be to update the "ip" code so that it
+> > reads the number separately and treat zero return value as
+> > -EINVAL.
+> 
+> The netdev naming code _could_ be updated to just not use scanf at all
+> or the bitmap of in-use numbers, just do the "sprintf(buf, fmt, i)" in a
+> loop and stop when the name is not in use. That's a win as long as there
+> are less than ~256 names already matching the pattern, but the
+> performance absolutely tanks if there are many more than that. So I
+> won't actually suggest that.
+
+Yes, sscanf() might be replaced by a tricky code to better handle possible
+wrong input.
+
+Alternatively, we could provide sscanf_with_err() [*] which would
+return the error codes. It might be used in situations where
+the caller is ready to handle it.
+
+For example, __dev_alloc_name() might return -ERANGE or -EINVAL.
+As a result "ip" might exit with 2 status. It means an error
+from kernel. __dev_alloc_name() might eventually print some
+useful message into the kernel log. Normal user would not be
+able to read it. But they might ask admin to check the kernel log...
+
+
+My opinion:
+
+1. I would prefer to avoid WARN() even when a non-panic alternative
+   is used. It might be too noisy.
+
+   Well, it might be acceptable when it is enabled only with some
+   CONFIG_DEBUG_SSCANF. But the question is who would enable it.
+   If a developer knew that the problem might be in sscanf() then
+   they probably are close to the buggy code anyway.
+
+
+2. The sscanf_with_err() [*] variant looks practical to actually
+   handle the wrong input.
+
+
+[*] sscanf_with_error() is super ugly name. Any better idea is
+    welcome.
+
+Best Regards,
+Petr
