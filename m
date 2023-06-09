@@ -2,40 +2,71 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3E8C7EE2E
-	for <linux-hardening@archiver.kernel.org>; Fri,  9 Jun 2023 17:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9E0C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Fri,  9 Jun 2023 17:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjFIRDI (ORCPT
+        id S229985AbjFIRqz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Jun 2023 13:03:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57502 "EHLO
+        Fri, 9 Jun 2023 13:46:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjFIRDH (ORCPT
+        with ESMTP id S229997AbjFIRqy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Jun 2023 13:03:07 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DEAB1BD;
-        Fri,  9 Jun 2023 10:03:06 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id AA04D21A86;
-        Fri,  9 Jun 2023 17:03:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1686330184; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=REEDDTYjANwf4OYVzWw7svHHjEF/SXbfklTXuE905lA=;
-        b=EBNbp4pA5hDPn36pel+HGgMRUTpI5M+3xek6bwhBJkIIqV6PK9wc3FqPA1Ilo8PmKXJ7DD
-        5V1rDdeK/QSi0rMKdm5LIbTe/n9zH7N2OdhyL2krBe+FtcqKs6tzdb+2FsgQFgm6qf1evt
-        c6pmx4EZfvvohKqa9+pJbZ9e1jxJVc4=
-Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 9A8042C23D;
-        Fri,  9 Jun 2023 17:03:03 +0000 (UTC)
-Date:   Fri, 9 Jun 2023 19:02:59 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Fri, 9 Jun 2023 13:46:54 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7290DD
+        for <linux-hardening@vger.kernel.org>; Fri,  9 Jun 2023 10:46:51 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-97881a996a0so364413066b.0
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Jun 2023 10:46:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1686332810; x=1688924810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3EUzoE9dGxd3VuJpDmZxdF1iqIPMZ5+unNKrN952gKg=;
+        b=eDQYcwKtyZmEV2DNKKbjKDpTdYX7OeOl/qRoqsSfRZdLzP2mzKo2lgmUxHqgbBFa3C
+         MJS94yQ8RIAhhKNUbApeq+EBtH5k9PnhOk/8PWShYYieC6csWMJe6jXVw9ai4agwQAsn
+         zKtDRWE58eXCWNvIMq7+buKNr0ci84UZIhCtI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686332810; x=1688924810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3EUzoE9dGxd3VuJpDmZxdF1iqIPMZ5+unNKrN952gKg=;
+        b=dtADye/G4MswE+XZV48pEQQKE5BKYrwhpA3td0NgxzXXlU1QYL+678sElRsPNGXXTh
+         8GLf46/3DKHY9yVE64RI3zb8FzlAjkD5qDrWS/NxuekGN9QJ9ZPxT0c6qcCyfXJizuSc
+         7pf3GNhOfzy6yIEjjkAHORIYwtDRxR4q8a9TQnTmRd/WC25QyLC5sHek7ckHJkt0iAdU
+         GPD8mfRl4c01WaZvFpC18mMdbT9NJhiCcnEHTfnxdQoB15SWOQahWGMXXFSYvoZPZSFX
+         +GW9gSnS9l5HvF6yJOC0KS6XQQzN8TTL/mcnhCeyD6CK3klxaoFMXLAoSqvtBK2hsabN
+         YCJg==
+X-Gm-Message-State: AC+VfDy6IxBJQ3VgVZsQ7EVRRr8zc5P4eoo5f1CrZYHQtD7/ao3RcRh+
+        VsSjfYthlzuebAD8ej2/w28RFIO8rDVeWmiybzmNY5e9
+X-Google-Smtp-Source: ACHHUZ76fC6tW0uAA8uOnE35jHtTV9df7fgKfhyQhj9ffHIUKATA9zf4h7m2nsrSSanrft/Su72KVQ==
+X-Received: by 2002:a17:907:3f21:b0:969:93f2:259a with SMTP id hq33-20020a1709073f2100b0096993f2259amr2806618ejc.73.1686332810260;
+        Fri, 09 Jun 2023 10:46:50 -0700 (PDT)
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
+        by smtp.gmail.com with ESMTPSA id bk4-20020a170906b0c400b0096f675ce45csm1536570ejb.182.2023.06.09.10.46.48
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Jun 2023 10:46:49 -0700 (PDT)
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-977e7d6945aso361220766b.2
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Jun 2023 10:46:48 -0700 (PDT)
+X-Received: by 2002:a17:907:7d88:b0:977:d53e:4055 with SMTP id
+ oz8-20020a1709077d8800b00977d53e4055mr2799662ejc.58.1686332808499; Fri, 09
+ Jun 2023 10:46:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230607223755.1610-1-richard@nod.at> <202306071634.51BBAFD14@keescook>
+ <ZIHzbBXlxEz6As9N@alley> <9cd596d9-0ecb-29fc-fe18-f19b86a5ba44@rasmusvillemoes.dk>
+ <ZINbQ3eyMB2OGfiN@alley>
+In-Reply-To: <ZINbQ3eyMB2OGfiN@alley>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 9 Jun 2023 10:46:31 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whW0W3YY4dHGbQoSagMnWEQbQ=Kgv48LJYN1OwVFz8qTQ@mail.gmail.com>
+Message-ID: <CAHk-=whW0W3YY4dHGbQoSagMnWEQbQ=Kgv48LJYN1OwVFz8qTQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/1] Integer overflows while scanning for integers
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Kees Cook <keescook@chromium.org>,
         Richard Weinberger <richard@nod.at>,
         linux-hardening@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -49,162 +80,88 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Alex Gaynor <alex.gaynor@gmail.com>,
         Wedson Almeida Filho <wedsonaf@gmail.com>,
         Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        =?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+        =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
         Benno Lossin <benno.lossin@proton.me>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [RFC PATCH 0/1] Integer overflows while scanning for integers
-Message-ID: <ZINbQ3eyMB2OGfiN@alley>
-References: <20230607223755.1610-1-richard@nod.at>
- <202306071634.51BBAFD14@keescook>
- <ZIHzbBXlxEz6As9N@alley>
- <9cd596d9-0ecb-29fc-fe18-f19b86a5ba44@rasmusvillemoes.dk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9cd596d9-0ecb-29fc-fe18-f19b86a5ba44@rasmusvillemoes.dk>
+        John Fastabend <john.fastabend@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Added Linus into CC. Quick summary for him:
+On Fri, Jun 9, 2023 at 10:03=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+e:
+>
+> Added Linus into CC. Quick summary for him:
+>
+> 1. The original problem is best described in the cover letter, see
+>    https://lore.kernel.org/r/20230607223755.1610-1-richard@nod.at
 
-1. The original problem is best described in the cover letter, see
-   https://lore.kernel.org/r/20230607223755.1610-1-richard@nod.at
+Well, honestly, I'm not convinced this is a huge problem, but:
 
-2. I think that we actually have two problems:
+> > I can't figure out what POSIX actually says should or could happen with
+> > sscanf("99999999999999", "%i", &x);
+>
+> It looks to me that it does not say anything about it. Even the latest
+> IEEE Std 1003.1-2017 says just this:
 
-     a) How to find a code where sscanf() might get invalid output.
-	Such a code might require some special/better handling
-	of this situation.
+We really don't need to language-lawyer POSIX. It's one of those
+"let's follow it to minimize confusion" things, but no need to think
+our internal library decisions need to actually care deeply.
 
-     b) How to eventually provide a useful message back to
-	userspace.
+For example, we did all the '%pXYZ" extensions on the printf() side,
+which are very much *not* POSIX. They have been a huge success.
 
+And even when it comes to the user space ABI, we've always prioritized
+backwards compatibility over POSIX.
 
-On Fri 2023-06-09 12:10:29, Rasmus Villemoes wrote:
-> On 08/06/2023 17.27, Petr Mladek wrote:
-> > On Wed 2023-06-07 16:36:12, Kees Cook wrote:
-> 
-> > It seems that userspace implementation of sscanf() and vsscanf()
-> > returns -ERANGE in this case. It might be a reasonable solution.
-> 
-> Well. _Some_ userspace implementation does that. It's not in POSIX.
-> While "man scanf" lists that ERANGE error, it also explicitly says that:
-> 
-> CONFORMING TO
->        The functions fscanf(), scanf(), and sscanf() conform to C89 and
-> C99 and POSIX.1-2001.  These standards do  not  specify  the
->        ERANGE error.
-> 
-> I can't figure out what POSIX actually says should or could happen with
-> sscanf("99999999999999", "%i", &x);
+In some cases have actively disagreed with POSIX for being actively
+wrong. For example, POSIX at one point thought that 'accept()',
+'bind()' and friends should take a 'size_t' for the address length,
+which was complete garbage.
 
-It looks to me that it does not say anything about it. Even the latest
-IEEE Std 1003.1-2017 says just this:
+It's "int", and I absolutely refused to follow broken specs. They
+ended up fixing their completely broken spec to use 'socklen_t'
+instead, which is still completely wrong (it's "int", and anything
+else is wrong), but at least you can now be POSIX-compatible without
+being broken.
 
---- cut ---
-RETURN VALUE
-Upon successful completion, these functions shall return the number of
-successfully matched and assigned input items; this number can be zero
-in the event of an early matching failure. If the input ends before
-the first conversion (if any) has completed, and without a matching
-failure having occurred, EOF shall be returned. If an error occurs
-before the first conversion (if any) has completed, and without
-a matching failure having occurred, EOF shall be returned
-and errno shall be set to indicate the error. If a read error
-occurs, the error indicator for the stream shall be set.
+In this case, I would suggest:
 
-ERRORS
-For the conditions under which the fscanf() functions fail and may
-fail, refer to fgetc or fgetwc.
+ - absolutely do *NOT* add a WARNING() for this, because that just
+allows user space to arbitrarily cause kernel warnings. Not ok.
 
-In addition, the fscanf() function shall fail if:
+ - fail overflows by default
 
-[EILSEQ]
-Input byte sequence does not form a valid character.
-[ENOMEM]
-Insufficient storage space is available.
-In addition, the fscanf() function may fail if:
+ - to be able to deal with any compatibility issues, add a way to say
+"don't fail overflows" in the format specs, maybe using '!'.
 
-[EINVAL]
-There are insufficient arguments.
---- cut ---
+IOW, make
 
-I do not see anything about overflow anywhere.
+     sscanf("999999999999", "%d", &i);
 
-Well, the -ERANGE returned by the Linux implementation looks
-quite practical.
+return 0 (because it couldn't parse a single field - go ahead and set
+errno to ERANGE too if you care), but allow people to do
 
-> > Well, there is a risk of introducing security problems. The error
-> > value might cause an underflow/overflow when the caller does not expect
-> > a negative value.
-> 
-> There is absolutely no way we can start letting sscanf() return a
-> negative err value, in exactly the same way we cannot possibly let
-> vsnprintf() do that.
+     sscanf("999999999999", "%!d", &i);
 
-I agree.
+which would return 1 and set 'i' to -727379969.
 
-> We can stop early, possibly with a WARNing if it's
+That makes us error out on overflow by default, but gives us an easy
+way to say "in this case, I'll take the overflow value" if it turns
+out that we have some situation where people gave bad input and it
+"just worked".
 
-Thinking more about it, the WARN() is a really big hammer even
-if we introduced a never-panicking alternative, e.g. INFO()
-or REPORT().
+There's a special case of "overflow" that we may need to deal with:
+passing in "-1" as a way to set all bits to one in an unsigned value
+is not necessarily uncommon.
 
-sscanf() does not know in which situation it is used and how
-serious the overflow would be. I mean that it does not know
-how to provide useful report and if it is needed at all.
+So I suspect that even if the conversion is something like "%lu" (or
+"%x"), which is technically meant for unsigned values, we need to
+still allow negative values, and just say "it's not overflow, it's 2's
+complement".
 
-Also WARN()-like report would only help with the 1st problem,
-how find the code where the overflow might happen.
-But it would not help to handle it a reasonable way.
-
-> > Alternative solution would be to update the "ip" code so that it
-> > reads the number separately and treat zero return value as
-> > -EINVAL.
-> 
-> The netdev naming code _could_ be updated to just not use scanf at all
-> or the bitmap of in-use numbers, just do the "sprintf(buf, fmt, i)" in a
-> loop and stop when the name is not in use. That's a win as long as there
-> are less than ~256 names already matching the pattern, but the
-> performance absolutely tanks if there are many more than that. So I
-> won't actually suggest that.
-
-Yes, sscanf() might be replaced by a tricky code to better handle possible
-wrong input.
-
-Alternatively, we could provide sscanf_with_err() [*] which would
-return the error codes. It might be used in situations where
-the caller is ready to handle it.
-
-For example, __dev_alloc_name() might return -ERANGE or -EINVAL.
-As a result "ip" might exit with 2 status. It means an error
-from kernel. __dev_alloc_name() might eventually print some
-useful message into the kernel log. Normal user would not be
-able to read it. But they might ask admin to check the kernel log...
-
-
-My opinion:
-
-1. I would prefer to avoid WARN() even when a non-panic alternative
-   is used. It might be too noisy.
-
-   Well, it might be acceptable when it is enabled only with some
-   CONFIG_DEBUG_SSCANF. But the question is who would enable it.
-   If a developer knew that the problem might be in sscanf() then
-   they probably are close to the buggy code anyway.
-
-
-2. The sscanf_with_err() [*] variant looks practical to actually
-   handle the wrong input.
-
-
-[*] sscanf_with_error() is super ugly name. Any better idea is
-    welcome.
-
-Best Regards,
-Petr
+                 Linus
