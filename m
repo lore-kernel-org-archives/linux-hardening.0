@@ -2,131 +2,103 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC6EC77B7A
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Jun 2023 15:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F4CC77B7A
+	for <linux-hardening@archiver.kernel.org>; Sat, 10 Jun 2023 19:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233380AbjFJPEE (ORCPT
+        id S229735AbjFJTbw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 10 Jun 2023 11:04:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46950 "EHLO
+        Sat, 10 Jun 2023 15:31:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232738AbjFJPED (ORCPT
+        with ESMTP id S229450AbjFJTbw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 10 Jun 2023 11:04:03 -0400
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 623923588;
-        Sat, 10 Jun 2023 08:04:02 -0700 (PDT)
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-53fbb3a013dso1698367a12.1;
-        Sat, 10 Jun 2023 08:04:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686409442; x=1689001442;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A+2DK6e0ExwNggdgQrYc3qCt4Ssgi+vxV8OCcu+bbSs=;
-        b=lPMithFBpiUQDFD5jZ5tlqr+fJOn87UxuGVH/+yaJA431UMlh8E4iusRY5K8XO16mH
-         n5fV3FVH2ryQxk75E3jAKqNz92oWUFBnBfjYi83YsjEXn9V6SYwJ/7WRA7uME3mB60ov
-         lYmmqHZJEpXPNaD2neYgHkDlwPcAA1zs75EDX58Ls0bQeZIV+vvhD5zbLjNDITxlazbd
-         /J5szCblSNbw5CebTLgAIY13JrCqsd4+ECeU76cYo6xT3tzbLFbh06ra/GA32RDV/NYE
-         gGiIoAg426p0LrCAWw7A39UXvUw9CAeDYq6+Zx/hwD4eEaH5eSBUv2cmxa2JnJU9SOjG
-         PJjA==
-X-Gm-Message-State: AC+VfDzY+/NXzZrueNXLr2g5T+bF2ZqLpiILg4WpcJtHvtgN0TkwYfro
-        mNNwXtqbInBdj1a7o0osZko=
-X-Google-Smtp-Source: ACHHUZ5t/ck9Yx8w0Ts2mCKfu3UlWc1gun1eU3jLZdNKvdus7uTM+1aYKzQpak5qo25X7YqamCyyBg==
-X-Received: by 2002:a17:903:3293:b0:1af:9b8a:9c79 with SMTP id jh19-20020a170903329300b001af9b8a9c79mr2086591plb.34.1686409441578;
-        Sat, 10 Jun 2023 08:04:01 -0700 (PDT)
-Received: from [192.168.3.219] ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id u10-20020a170902bf4a00b001b2063d43a7sm5073944pls.249.2023.06.10.08.03.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Jun 2023 08:04:01 -0700 (PDT)
-Message-ID: <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
-Date:   Sat, 10 Jun 2023 08:03:59 -0700
+        Sat, 10 Jun 2023 15:31:52 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915D8A1
+        for <linux-hardening@vger.kernel.org>; Sat, 10 Jun 2023 12:31:50 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-133-ozbbM19YMVelK_WrTOSHKw-1; Sat, 10 Jun 2023 20:31:48 +0100
+X-MC-Unique: ozbbM19YMVelK_WrTOSHKw-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sat, 10 Jun
+ 2023 20:31:42 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sat, 10 Jun 2023 20:31:42 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Rasmus Villemoes' <linux@rasmusvillemoes.dk>,
+        Petr Mladek <pmladek@suse.com>,
+        Kees Cook <keescook@chromium.org>
+CC:     Richard Weinberger <richard@nod.at>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Paolo Abeni" <pabeni@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        "Boqun Feng" <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?utf-8?B?QmrDtnJuIFJveSBCYXJvbg==?= <bjorn3_gh@protonmail.com>,
+        Benno Lossin <benno.lossin@proton.me>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+Subject: RE: [RFC PATCH 0/1] Integer overflows while scanning for integers
+Thread-Topic: [RFC PATCH 0/1] Integer overflows while scanning for integers
+Thread-Index: AQHZmrqmhOoyRHuWh0WX/GnnSQjPva+ET1HA
+Date:   Sat, 10 Jun 2023 19:31:42 +0000
+Message-ID: <17e5e7c31b2347a6b87c6533c59899d0@AcuMS.aculab.com>
+References: <20230607223755.1610-1-richard@nod.at>
+ <202306071634.51BBAFD14@keescook> <ZIHzbBXlxEz6As9N@alley>
+ <9cd596d9-0ecb-29fc-fe18-f19b86a5ba44@rasmusvillemoes.dk>
+In-Reply-To: <9cd596d9-0ecb-29fc-fe18-f19b86a5ba44@rasmusvillemoes.dk>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: Fwd: Waking up from resume locks up on sr device
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-To:     Bagas Sanjaya <bagasdotme@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Damien Le Moal <dlemoal@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Phillip Potter <phil@philpotter.co.uk>,
-        Joe Breuer <linux-kernel@jmbreuer.net>,
-        Linux Power Management <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Hardening <linux-hardening@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux SCSI <linux-scsi@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
- <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
- <ZIQ6bkau3j6qGef8@duo.ucw.cz>
- <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 6/10/23 06:27, Bagas Sanjaya wrote:
-> On 6/10/23 15:55, Pavel Machek wrote:
->>>> #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
->>>> #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
->>>>
->>> The reporter had found the culprit (via bisection), so:
->>>
->>> #regzbot introduced: a19a93e4c6a98c
->> Maybe cc the authors of that commit?
-> 
-> Ah! I forgot to do that! Thanks anyway.
-
-Hi Damien,
-
-Why does the ATA code call scsi_rescan_device() before system resume has
-finished? Would ATA devices still work with the patch below applied?
-
-Thanks,
-
-Bart.
-
-
-diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
-index 6a959c993dd8..be3971b7fd27 100644
---- a/drivers/scsi/scsi_scan.c
-+++ b/drivers/scsi/scsi_scan.c
-@@ -1629,6 +1629,20 @@ void scsi_rescan_device(struct device *dev)
-  {
-  	struct scsi_device *sdev = to_scsi_device(dev);
-
-+#ifdef CONFIG_PM_SLEEP
-+	/*
-+	 * The ATA subsystem may call scsi_rescan_device() before resuming has
-+	 * finished. If this happens, prevent a deadlock on the device_lock()
-+	 * call by skipping rescanning.
-+	 */
-+	if (dev->power.is_suspended)
-+		return;
-+#endif
-+
-+	/*
-+	 * Serialize scsi_driver.rescan() calls and scsi_driver.gendrv.remove()
-+	 * calls.
-+	 */
-  	device_lock(dev);
-
-  	scsi_attach_vpd(sdev);
+RnJvbTogUmFzbXVzIFZpbGxlbW9lcw0KPiBTZW50OiAwOSBKdW5lIDIwMjMgMTE6MTANCj4gDQo+
+IE9uIDA4LzA2LzIwMjMgMTcuMjcsIFBldHIgTWxhZGVrIHdyb3RlOg0KPiA+IE9uIFdlZCAyMDIz
+LTA2LTA3IDE2OjM2OjEyLCBLZWVzIENvb2sgd3JvdGU6DQo+IA0KPiA+IEl0IHNlZW1zIHRoYXQg
+dXNlcnNwYWNlIGltcGxlbWVudGF0aW9uIG9mIHNzY2FuZigpIGFuZCB2c3NjYW5mKCkNCj4gPiBy
+ZXR1cm5zIC1FUkFOR0UgaW4gdGhpcyBjYXNlLiBJdCBtaWdodCBiZSBhIHJlYXNvbmFibGUgc29s
+dXRpb24uDQo+IA0KPiBXZWxsLiBfU29tZV8gdXNlcnNwYWNlIGltcGxlbWVudGF0aW9uIGRvZXMg
+dGhhdC4gSXQncyBub3QgaW4gUE9TSVguDQo+IFdoaWxlICJtYW4gc2NhbmYiIGxpc3RzIHRoYXQg
+RVJBTkdFIGVycm9yLCBpdCBhbHNvIGV4cGxpY2l0bHkgc2F5cyB0aGF0Og0KPiANCj4gQ09ORk9S
+TUlORyBUTw0KPiAgICAgICAgVGhlIGZ1bmN0aW9ucyBmc2NhbmYoKSwgc2NhbmYoKSwgYW5kIHNz
+Y2FuZigpIGNvbmZvcm0gdG8gQzg5IGFuZA0KPiBDOTkgYW5kIFBPU0lYLjEtMjAwMS4gIFRoZXNl
+IHN0YW5kYXJkcyBkbyAgbm90ICBzcGVjaWZ5ICB0aGUNCj4gICAgICAgIEVSQU5HRSBlcnJvci4N
+Cj4gDQo+IEkgY2FuJ3QgZmlndXJlIG91dCB3aGF0IFBPU0lYIGFjdHVhbGx5IHNheXMgc2hvdWxk
+IG9yIGNvdWxkIGhhcHBlbiB3aXRoDQo+IHNzY2FuZigiOTk5OTk5OTk5OTk5OTkiLCAiJWkiLCAm
+eCk7DQoNClBvc3NpYmx5ICd1bmRlZmluZWQgYmVoYXZpb3VyJyAtIHRoZXkgbGlrZSB0aGF0IG9u
+ZS4NCg0KQnV0IEknbSBzdXJlIEkgcmVtZW1iZXIgdGhlIFRvRyAnVW5peCcgZGVmaW5pdGlvbiBu
+b3QgcmVxdWlyaW5nIHRoYXQNCid1dGlsaXRpZXMnIGNoZWNrIGZvciBvdmVyZmxvdyBvbiBudW1l
+cmljIGNvbW1hbmQgbGluZSBwYXJhbWV0ZXJzLg0KKEl0IG1pZ2h0IGV2ZW4gaGF2ZSBzYWlkIHRo
+ZXkgd291bGRuJ3QgY2hlY2suKQ0KU28gaXQgd2FzIHBlcmZlY3RseSB2YWxpZCBmb3IgYSBzdHVw
+aWRseSBvdXQgb2YgcmFuZ2UgdmFsdWUNCnRvIGJlIHRyZWF0ZWQgYXMgYSBkaWZmZXJlbnQgKHBv
+c3NpYmx5IHZhbGlkKSB2YWx1ZS4NCg0KV2hhdCBpcyBjbGVhcmx5IHdyb25nIGlzIHRvIGp1c3Qg
+c3RvcCBwcm9jZXNzaW5nIHRoZQ0KaW5wdXQgc3RyaW5nLg0Kc3NjYW5mKCI5OTk5OTk5OTk5OTk5
+OTk5OTk5c2NhbGUiLCAiJWklcyIsICZ4LCAmc2NhbGUpDQp3cml0aW5nIGFueSAnOScgdG8gc2Nh
+bGUgaXMgY2xlYXJseSBicm9rZW4uDQoNClBlcnNvbmFsbHkgSSBhdm9pZCBzY2FuZigpIC0gaXQg
+aXMgZmFyIHRvbyBlYXN5IGZvciBpdCB0byBkbw0Kc29tZXRoaW5nIHlvdSBkaWRuJ3QgcmVhbGx5
+IGludGVuZC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJh
+bWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0
+cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
