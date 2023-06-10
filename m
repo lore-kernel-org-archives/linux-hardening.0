@@ -2,58 +2,58 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0DDC7EE45
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Jun 2023 00:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238DAC7EE25
+	for <linux-hardening@archiver.kernel.org>; Sat, 10 Jun 2023 00:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229985AbjFJAwR (ORCPT
+        id S232532AbjFJAwR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Fri, 9 Jun 2023 20:52:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52258 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230115AbjFJAwN (ORCPT
+        with ESMTP id S231932AbjFJAwP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Jun 2023 20:52:13 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC60F19D
-        for <linux-hardening@vger.kernel.org>; Fri,  9 Jun 2023 17:52:09 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56cd82e48bfso12635307b3.1
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Jun 2023 17:52:09 -0700 (PDT)
+        Fri, 9 Jun 2023 20:52:15 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB8AE1
+        for <linux-hardening@vger.kernel.org>; Fri,  9 Jun 2023 17:52:13 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-568a85f180dso30454427b3.2
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Jun 2023 17:52:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686358329; x=1688950329;
+        d=google.com; s=20221208; t=1686358332; x=1688950332;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ylzIdUa/HdrZ45yd+RRq5LnH+hOmWvIma/I97GpGtAs=;
-        b=Zmr+EkhSeSNvCLPC3fmn2tX9mMT6rgh3uQ/IJsxW1MCezHgJiQdRtFwdXdki72dVD5
-         CXjnrDMiJEXw566GTSbcLVdlvJmN0o4vXeFJm94iDce0N11wsaJRsjgjDQ9jt1oMOM1N
-         Atyk9QAqumY9ETSWsPdP0GGEPInAebRX8DFrjCTVHtfp2K3le9vulryAW+tjZwfiCl2l
-         tCSrakVDNP/LGpZxVVoNL7MIRcU4bnQOvwNkusbHS6wLTOcSJBgYigUfekT9aXn8yQes
-         Mx9d+Mna3RA/iTXw9GtQS+7tQvd63vIkJTP0UvjgIkbvBSfi0a1jgfk3zyaxGX0koNbO
-         QEtQ==
+        bh=JD9VPXNmaoVBy2gAiYJtNq7wx8MSqrStxnM3XpRxKVA=;
+        b=q21OucQNW4R7TYegSZEEbLLbvxXRHbQGDJ96QH08pyz1J6KQBPHqxc1IazXONp2w81
+         OM13ovDeJ5G/8Tm1+3t3jdOXgvDr8ol21ow3CnsdVYDIm75MWMPI76HnLsXVgbNQJ+RL
+         rfWba9qn8no74J6QglcrmJCijppFt3g91rp8zDIT7RWkTz6TuGyLn/aMaahbT/GQdx5c
+         RPLvfDR+QI1tRm+v5qLnkRQCVCdNow8zhlZ4xozUhyfzfoiEz2ElIzYcD9+dh5aLjSvV
+         zGAeVaXrxnCxqrEwmdW1abucmorAsp76hmagmxJSeMltB73RVuVr7Zn06wBU/ZLOPj5w
+         lfwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686358329; x=1688950329;
+        d=1e100.net; s=20221208; t=1686358332; x=1688950332;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ylzIdUa/HdrZ45yd+RRq5LnH+hOmWvIma/I97GpGtAs=;
-        b=CoQr4SKAq8D0463B8sa1omze2q2/2V/5CakrCUwXG4glNsTYVnD3KewZAvZbX+pKCZ
-         G5dZdWXV0TFOKtlhXA9Wzu3/ZgibcGSPa6f8VZeh9sPB+7wEs4STKN/bkgTl0cU5noh6
-         nN5zFEmxpWfcnr8MtntqKKB17683omesdfFvl/1ud3tDJWElfIs6W0wNL/ZOSLe3Wr5k
-         F/VcabdjN95Izlt0t9C0TQQtLg7i2YMXbtARwrlKzr+hZE4w1byeAZbR/qHEYPEmuOHY
-         +WCCNRMWjluFgl/eSSZ94gYYEvhbNCzXX1Wf9C30jUr657DQOgm0M0Zp9rBRyDZavoS0
-         iYNw==
-X-Gm-Message-State: AC+VfDyUWxr4/R5m43PyvYm2Iu7IH2h9/en21/ysNf+ptONAEaOwDga1
-        aJM/3TJjlaowihA2roWMUrENTS8+6w==
-X-Google-Smtp-Source: ACHHUZ6aVbU/xiu8xxQnCIprN1NVtQfosUsTiEtzBVSYhi87pylg/c24Jte89T8fkhjvtHjKHtPnmUIxIw==
+        bh=JD9VPXNmaoVBy2gAiYJtNq7wx8MSqrStxnM3XpRxKVA=;
+        b=AjrPSdOVHNZe8THWdsO34cf8ThHwkuH3X4wdNU4oANO77/3PR02J1N0nfWe49IpOWb
+         qtUXeDAd2KJxYaUs3xprxjUWw66OlJc4KQukErC20QxKqr46G3TELl6dJ6yLIg86OVlr
+         p52gBQvGgQE/yi0MiCOxJIJNQU9x2wddLbZSEz4DZPHdgmncQCi1Djgn7jnHvgYClfOA
+         GhqhTYL4cYN687j0ZvXB1WUohXEkipMS6CPMp1hTac4K/VX7Kx9yTN3LLv8OtWamBB16
+         Dj+ZY5X9bHqztCVvuKPb3+u74PZQYmDiFYLVMQ8au0uWtbZqGEFxHBk08fvsIohOcTMp
+         COFg==
+X-Gm-Message-State: AC+VfDx5RIh/V+IdfTkRNR8OiSSwBEjZmWufWHdf6GiOxCBsU3ZeY8aK
+        xHZx1HQlcYyNwi1pDJgPYu6LvumciA==
+X-Google-Smtp-Source: ACHHUZ5wVXyVqF42eIZPBvG8hcKoYDyK+tpTpA1FekD4DK+IEpUzvBZpSbGfcRJ5leBMjHptgwFvrDbpuA==
 X-Received: from rmoar-specialist.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:45d3])
- (user=rmoar job=sendgmr) by 2002:a81:8d0d:0:b0:569:8603:577 with SMTP id
- d13-20020a818d0d000000b0056986030577mr1681187ywg.4.1686358328849; Fri, 09 Jun
- 2023 17:52:08 -0700 (PDT)
-Date:   Sat, 10 Jun 2023 00:51:44 +0000
+ (user=rmoar job=sendgmr) by 2002:a81:af67:0:b0:561:94a8:29c4 with SMTP id
+ x39-20020a81af67000000b0056194a829c4mr1583110ywj.2.1686358332355; Fri, 09 Jun
+ 2023 17:52:12 -0700 (PDT)
+Date:   Sat, 10 Jun 2023 00:51:46 +0000
 In-Reply-To: <20230610005149.1145665-1-rmoar@google.com>
 Mime-Version: 1.0
 References: <20230610005149.1145665-1-rmoar@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Message-ID: <20230610005149.1145665-2-rmoar@google.com>
-Subject: [RFC v1 1/6] kunit: Add test attributes API structure
+Message-ID: <20230610005149.1145665-4-rmoar@google.com>
+Subject: [RFC v1 3/6] kunit: Add ability to filter attributes
 From:   Rae Moar <rmoar@google.com>
 To:     shuah@kernel.org, davidgow@google.com, dlatypov@google.com,
         brendan.higgins@linux.dev
@@ -66,321 +66,465 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add the basic structure of the test attribute API to KUnit, which can be
-used to save and access test associated data.
+Add filtering of test attributes. Users can filter tests using a
+module_param_array called "filter". This functionality will be added to
+kunit.py in the next patch.
 
-Add attributes.c and attributes.h to hold associated structs and functions
-for the API.
+The filters will be imputed in the format:
+"<attribute_name><operation><attribute_value>"
 
-Create a struct that holds a variety of associated helper functions for
-each test attribute. These helper functions will be used to get the
-attribute value, convert the value to a string, and filter based on the
-value. This struct is flexible by design to allow for attributes of
-numerous types and contexts.
+Example: "speed>slow"
 
-Add a method to print test attributes in the format of "# [<test_name if
-not suite>.]<attribute_name>: <attribute_value>".
+Operations include: >, <, >=, <=, !=, and =. These operations do not need
+to act the same for every attribute.
 
-Example for a suite: "# speed: slow"
+Add method to parse inputted filters.
 
-Example for a test case: "# test_case.speed: very_slow"
+Add the process of filtering tests based on attributes. The process of
+filtering follows these rules:
 
-Use this method to report attributes in the KTAP output and _list_tests
-output.
+A test case with a set attribute overrides its parent suite's attribute
+during filtering.
 
-In test.h, add fields and associated helper functions to test cases and
-suites to hold user-inputted test attributes.
+Also, if both the test case attribute and suite attribute are unset the
+test acts as the default attribute value during filtering.
+
+Finally, add a "filter" method for the speed attribute to parse and compare
+enum values of kunit_speed.
 
 Signed-off-by: Rae Moar <rmoar@google.com>
 ---
- include/kunit/attributes.h | 19 +++++++++++
- include/kunit/test.h       | 33 +++++++++++++++++++
- lib/kunit/Makefile         |  3 +-
- lib/kunit/attributes.c     | 65 ++++++++++++++++++++++++++++++++++++++
- lib/kunit/executor.c       | 10 +++++-
- lib/kunit/test.c           | 17 ++++++----
- 6 files changed, 138 insertions(+), 9 deletions(-)
- create mode 100644 include/kunit/attributes.h
- create mode 100644 lib/kunit/attributes.c
+ include/kunit/attributes.h |  22 +++++
+ lib/kunit/attributes.c     | 172 +++++++++++++++++++++++++++++++++++++
+ lib/kunit/executor.c       |  79 +++++++++++++----
+ lib/kunit/executor_test.c  |   8 +-
+ 4 files changed, 258 insertions(+), 23 deletions(-)
 
 diff --git a/include/kunit/attributes.h b/include/kunit/attributes.h
-new file mode 100644
-index 000000000000..9fcd184cce36
---- /dev/null
+index 9fcd184cce36..bca60d1181bb 100644
+--- a/include/kunit/attributes.h
 +++ b/include/kunit/attributes.h
-@@ -0,0 +1,19 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
+@@ -9,6 +9,15 @@
+ #ifndef _KUNIT_ATTRIBUTES_H
+ #define _KUNIT_ATTRIBUTES_H
+ 
 +/*
-+ * KUnit API to save and access test attributes
-+ *
-+ * Copyright (C) 2023, Google LLC.
-+ * Author: Rae Moar <rmoar@google.com>
++ * struct kunit_attr_filter - representation of attributes filter with the
++ * attribute object and string input
 + */
-+
-+#ifndef _KUNIT_ATTRIBUTES_H
-+#define _KUNIT_ATTRIBUTES_H
-+
-+/*
-+ * Print all test attributes for a test case or suite.
-+ * Output format for test cases: "# <test_name>.<attribute>: <value>"
-+ * Output format for test suites: "# <attribute>: <value>"
-+ */
-+void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int test_level);
-+
-+#endif /* _KUNIT_ATTRIBUTES_H */
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index 23120d50499e..1fc9155988e9 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -63,12 +63,16 @@ enum kunit_status {
- 	KUNIT_SKIPPED,
- };
- 
-+/* Holds attributes for each test case and suite */
-+struct kunit_attributes {};
-+
- /**
-  * struct kunit_case - represents an individual test case.
-  *
-  * @run_case: the function representing the actual test case.
-  * @name:     the name of the test case.
-  * @generate_params: the generator function for parameterized tests.
-+ * @attr:     the attributes associated with the test
-  *
-  * A test case is a function with the signature,
-  * ``void (*)(struct kunit *)``
-@@ -104,6 +108,7 @@ struct kunit_case {
- 	void (*run_case)(struct kunit *test);
- 	const char *name;
- 	const void* (*generate_params)(const void *prev, char *desc);
-+	struct kunit_attributes attr;
- 
- 	/* private: internal use only. */
- 	enum kunit_status status;
-@@ -133,6 +138,18 @@ static inline char *kunit_status_to_ok_not_ok(enum kunit_status status)
-  */
- #define KUNIT_CASE(test_name) { .run_case = test_name, .name = #test_name }
- 
-+/**
-+ * KUNIT_CASE_ATTR - A helper for creating a &struct kunit_case
-+ * with attributes
-+ *
-+ * @test_name: a reference to a test case function.
-+ * @attributes: a reference to a struct kunit_attributes object containing
-+ * test attributes
-+ */
-+#define KUNIT_CASE_ATTR(test_name, attributes)			\
-+		{ .run_case = test_name, .name = #test_name,	\
-+		  .attr = attributes }
-+
- /**
-  * KUNIT_CASE_PARAM - A helper for creation a parameterized &struct kunit_case
-  *
-@@ -154,6 +171,20 @@ static inline char *kunit_status_to_ok_not_ok(enum kunit_status status)
- 		{ .run_case = test_name, .name = #test_name,	\
- 		  .generate_params = gen_params }
- 
-+/**
-+ * KUNIT_CASE_PARAM_ATTR - A helper for creating a parameterized &struct
-+ * kunit_case with attributes
-+ *
-+ * @test_name: a reference to a test case function.
-+ * @gen_params: a reference to a parameter generator function.
-+ * @attributes: a reference to a struct kunit_attributes object containing
-+ * test attributes
-+ */
-+#define KUNIT_CASE_PARAM_ATTR(test_name, gen_params, attributes)	\
-+		{ .run_case = test_name, .name = #test_name,	\
-+		  .generate_params = gen_params,				\
-+		  .attr = attributes }
-+
- /**
-  * struct kunit_suite - describes a related collection of &struct kunit_case
-  *
-@@ -163,6 +194,7 @@ static inline char *kunit_status_to_ok_not_ok(enum kunit_status status)
-  * @init:	called before every test case.
-  * @exit:	called after every test case.
-  * @test_cases:	a null terminated array of test cases.
-+ * @attr:	the attributes associated with the test suite
-  *
-  * A kunit_suite is a collection of related &struct kunit_case s, such that
-  * @init is called before every test case and @exit is called after every
-@@ -182,6 +214,7 @@ struct kunit_suite {
- 	int (*init)(struct kunit *test);
- 	void (*exit)(struct kunit *test);
- 	struct kunit_case *test_cases;
-+	struct kunit_attributes attr;
- 
- 	/* private: internal use only */
- 	char status_comment[KUNIT_STATUS_COMMENT_SIZE];
-diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-index cb417f504996..46f75f23dfe4 100644
---- a/lib/kunit/Makefile
-+++ b/lib/kunit/Makefile
-@@ -6,7 +6,8 @@ kunit-objs +=				test.o \
- 					string-stream.o \
- 					assert.o \
- 					try-catch.o \
--					executor.o
-+					executor.o \
-+					attributes.o
- 
- ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
- kunit-objs +=				debugfs.o
-diff --git a/lib/kunit/attributes.c b/lib/kunit/attributes.c
-new file mode 100644
-index 000000000000..0ea641be795f
---- /dev/null
-+++ b/lib/kunit/attributes.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit API to save and access test attributes
-+ *
-+ * Copyright (C) 2023, Google LLC.
-+ * Author: Rae Moar <rmoar@google.com>
-+ */
-+
-+#include <kunit/test.h>
-+#include <kunit/attributes.h>
-+
-+/**
-+ * struct kunit_attr - represents a test attribute and holds flexible
-+ * helper functions to interact with attribute.
-+ *
-+ * @name: name of test attribute, eg. speed
-+ * @get_attr: function to return attribute value given a test
-+ * @to_string: function to return string representation of given
-+ * attribute value
-+ * @filter: function to indicate whether a given attribute value passes a
-+ * filter
-+ */
-+struct kunit_attr {
-+	const char *name;
-+	void *(*get_attr)(void *test_or_suite, bool is_test);
-+	const char *(*to_string)(void *attr, bool *to_free);
-+	int (*filter)(void *attr, const char *input, int *err);
-+	void *attr_default;
++struct kunit_attr_filter {
++	struct kunit_attr *attr;
++	char *input;
 +};
 +
-+/* List of all Test Attributes */
+ /*
+  * Print all test attributes for a test case or suite.
+  * Output format for test cases: "# <test_name>.<attribute>: <value>"
+@@ -16,4 +25,17 @@
+  */
+ void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int test_level);
+ 
++/*
++ * Parse attributes filter input and return an object containing the attribute
++ * object and the string input.
++ */
++struct kunit_attr_filter kunit_parse_filter_attr(char *input, int *err);
 +
-+static struct kunit_attr kunit_attr_list[1] = {};
 +
-+/* Helper Functions to Access Attributes */
++/*
++ * Returns a copy of the suite containing only tests that pass the filter.
++ */
++struct kunit_suite *kunit_filter_attr_tests(const struct kunit_suite *const suite,
++		struct kunit_attr_filter filter, int *err);
 +
-+void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int test_level)
+ #endif /* _KUNIT_ATTRIBUTES_H */
+diff --git a/lib/kunit/attributes.c b/lib/kunit/attributes.c
+index e17889f94693..4f753a28e4ee 100644
+--- a/lib/kunit/attributes.c
++++ b/lib/kunit/attributes.c
+@@ -49,6 +49,66 @@ static const char *attr_speed_to_string(void *attr, bool *to_free)
+ 	return attr_enum_to_string(attr, speed_str_list, to_free);
+ }
+ 
++/* Filter Methods */
++
++static int int_filter(long val, const char *op, int input, int *err)
 +{
-+	int i;
-+	bool to_free;
-+	void *attr;
-+	const char *attr_name, *attr_str;
-+	struct kunit_suite *suite = is_test ? NULL : test_or_suite;
-+	struct kunit_case *test = is_test ? test_or_suite : NULL;
++	if (!strncmp(op, "<=", 2))
++		return (val <= input);
++	else if (!strncmp(op, ">=", 2))
++		return (val >= input);
++	else if (!strncmp(op, "!=", 2))
++		return (val != input);
++	else if (!strncmp(op, ">", 1))
++		return (val > input);
++	else if (!strncmp(op, "<", 1))
++		return (val < input);
++	else if (!strncmp(op, "=", 1))
++		return (val == input);
++	*err = -EINVAL;
++	pr_err("kunit executor: invalid filter operation: %s\n", op);
++	return false;
++}
 +
-+	for (i = 0; i < ARRAY_SIZE(kunit_attr_list); i++) {
-+		attr = kunit_attr_list[i].get_attr(test_or_suite, is_test);
-+		if (attr) {
-+			attr_name = kunit_attr_list[i].name;
-+			attr_str = kunit_attr_list[i].to_string(attr, &to_free);
-+			if (test) {
-+				kunit_log(KERN_INFO, test, "%*s# %s.%s: %s",
-+					KUNIT_INDENT_LEN * test_level, "", test->name,
-+					attr_name, attr_str);
-+			} else {
-+				kunit_log(KERN_INFO, suite, "%*s# %s: %s",
-+					KUNIT_INDENT_LEN * test_level, "", attr_name, attr_str);
-+			}
++static int attr_enum_filter(void *attr, const char *input, int *err,
++		const char * const str_list[], int max)
++{
++	int i, j, input_int;
++	long test_val = (long)attr;
++	const char *input_val;
 +
-+			/* Free to_string of attribute if needed */
-+			if (to_free)
-+				kfree(attr_str);
++	for (i = 0; input[i]; i++) {
++		if (!strchr("<!=>", input[i])) {
++			input_val = input + i;
++			break;
 +		}
 +	}
++
++	if (!input_val) {
++		*err = -EINVAL;
++		pr_err("kunit executor: filter operation not found: %s\n", input);
++		return false;
++	}
++
++	for (j = 0; j <= max; j++) {
++		if (!strcmp(input_val, str_list[j]))
++			input_int = j;
++	}
++
++	if (!input_int) {
++		*err = -EINVAL;
++		pr_err("kunit executor: invalid filter input: %s\n", input);
++		return false;
++	}
++
++	return int_filter(test_val, input, input_int, err);
++}
++
++static int attr_speed_filter(void *attr, const char *input, int *err)
++{
++	return attr_enum_filter(attr, input, err, speed_str_list, KUNIT_SPEED_MAX);
++}
++
+ /* Get Attribute Methods */
+ 
+ static void *attr_speed_get(void *test_or_suite, bool is_test)
+@@ -68,6 +128,7 @@ static const struct kunit_attr speed_attr = {
+ 	.name = "speed",
+ 	.get_attr = attr_speed_get,
+ 	.to_string = attr_speed_to_string,
++	.filter = attr_speed_filter,
+ 	.attr_default = (void *)KUNIT_SPEED_NORMAL,
+ };
+ 
+@@ -106,3 +167,114 @@ void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int test_level
+ 		}
+ 	}
+ }
++
++/* Helper Functions to Filter Attributes */
++
++struct kunit_attr_filter kunit_parse_filter_attr(char *input, int *err)
++{
++	struct kunit_attr_filter filter;
++	int i, j, op_index = 0;
++	int attr_index = -1;
++	char op;
++
++	/* Parse input until operation */
++	for (i = 0; input[i]; i++) {
++		if (strchr("<>!=", input[i])) {
++			op_index = i;
++			break;
++		}
++		if (input[i] == ' ')
++			break;
++	}
++
++	if (!op_index) {
++		*err = -EINVAL;
++		pr_err("kunit executor: filter operation not found: %s\n", input);
++		return filter;
++	}
++
++	op = input[op_index];
++	input[op_index] = '\0';
++
++	/* Find associated kunit_attr object */
++	for (j = 0; j < ARRAY_SIZE(kunit_attr_list); j++) {
++		if (!strcmp(input, kunit_attr_list[j].name)) {
++			attr_index = j;
++			break;
++		}
++	}
++
++	input[op_index] = op;
++	filter.input = input + op_index;
++
++	if (attr_index < 0) {
++		*err = -EINVAL;
++		pr_err("kunit executor: attribute not found: %s\n", input);
++	} else {
++		filter.attr = &kunit_attr_list[attr_index];
++	}
++
++	return filter;
++}
++
++struct kunit_suite *kunit_filter_attr_tests(const struct kunit_suite *const suite,
++		struct kunit_attr_filter filter, int *err)
++{
++	int n = 0;
++	struct kunit_case *filtered, *test_case;
++	struct kunit_suite *copy;
++	void *suite_val, *test_val;
++	bool suite_result, test_result, default_result;
++
++	/* Allocate memory for new copy of suite and list of test cases */
++	copy = kmemdup(suite, sizeof(*copy), GFP_KERNEL);
++	if (!copy)
++		return ERR_PTR(-ENOMEM);
++
++	kunit_suite_for_each_test_case(suite, test_case) { n++; }
++
++	filtered = kcalloc(n + 1, sizeof(*filtered), GFP_KERNEL);
++	if (!filtered) {
++		kfree(copy);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	n = 0;
++
++	/* Save filtering result on default value */
++	default_result = filter.attr->filter(filter.attr->attr_default, filter.input, err);
++
++	/* Save suite attribute value and filtering result on that value */
++	suite_val = filter.attr->get_attr((void *)suite, false);
++	suite_result = filter.attr->filter(suite_val, filter.input, err);
++
++	/* For each test case, save test case if passes filtering. */
++	kunit_suite_for_each_test_case(suite, test_case) {
++		test_val = filter.attr->get_attr((void *) test_case, true);
++		test_result = filter.attr->filter(filter.attr->get_attr(test_case, true),
++				filter.input, err);
++		/*
++		 * If attribute value of test case is set, filter on that value.
++		 * If not, filter on suite value if set. If not, filter on
++		 * default value.
++		 */
++		if (test_val) {
++			if (test_result)
++				filtered[n++] = *test_case;
++		} else if (suite_val) {
++			if (suite_result)
++				filtered[n++] = *test_case;
++		} else if (default_result) {
++			filtered[n++] = *test_case;
++		}
++	}
++
++	if (n == 0) {
++		kfree(copy);
++		kfree(filtered);
++		return NULL;
++	}
++
++	copy->test_cases = filtered;
++	return copy;
 +}
 diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-index 74982b83707c..767a84e32f06 100644
+index 767a84e32f06..c67657821eec 100644
 --- a/lib/kunit/executor.c
 +++ b/lib/kunit/executor.c
-@@ -2,6 +2,7 @@
+@@ -15,8 +15,12 @@ extern struct kunit_suite * const __kunit_suites_end[];
  
- #include <linux/reboot.h>
- #include <kunit/test.h>
-+#include <kunit/attributes.h>
- #include <linux/glob.h>
- #include <linux/moduleparam.h>
+ #if IS_BUILTIN(CONFIG_KUNIT)
  
-@@ -180,10 +181,17 @@ static void kunit_exec_list_tests(struct suite_set *suite_set)
- 	/* Hack: print a ktap header so kunit.py can find the start of KUnit output. */
- 	pr_info("KTAP version 1\n");
- 
--	for (suites = suite_set->start; suites < suite_set->end; suites++)
-+	for (suites = suite_set->start; suites < suite_set->end; suites++) {
-+		/* Print suite name and suite attributes */
-+		pr_info("%s\n", (*suites)->name);
-+		kunit_print_attr((void *)(*suites), false, 0);
++#define MAX_FILTERS 10 // Limit of number of attribute filters
+ static char *filter_glob_param;
+ static char *action_param;
++static int filter_count;
++static char *filter_param[MAX_FILTERS];
 +
-+		/* Print test case name and attributes in suite */
- 		kunit_suite_for_each_test_case((*suites), test_case) {
- 			pr_info("%s.%s\n", (*suites)->name, test_case->name);
-+			kunit_print_attr((void *)test_case, true, 0);
- 		}
-+	}
- }
  
- int kunit_run_all_tests(void)
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 84e4666555c9..9ee55139ecd1 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -9,6 +9,7 @@
- #include <kunit/resource.h>
- #include <kunit/test.h>
- #include <kunit/test-bug.h>
-+#include <kunit/attributes.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-@@ -168,6 +169,13 @@ size_t kunit_suite_num_test_cases(struct kunit_suite *suite)
- }
- EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
+ module_param_named(filter_glob, filter_glob_param, charp, 0);
+ MODULE_PARM_DESC(filter_glob,
+@@ -26,15 +30,16 @@ MODULE_PARM_DESC(action,
+ 		 "Changes KUnit executor behavior, valid values are:\n"
+ 		 "<none>: run the tests like normal\n"
+ 		 "'list' to list test names instead of running them.\n");
++module_param_array_named(filter, filter_param, charp, &filter_count, 0);
  
-+/* Currently supported test levels */
-+enum {
-+	KUNIT_LEVEL_SUITE = 0,
-+	KUNIT_LEVEL_CASE,
-+	KUNIT_LEVEL_CASE_PARAM,
-+};
-+
- static void kunit_print_suite_start(struct kunit_suite *suite)
+ /* glob_match() needs NULL terminated strings, so we need a copy of filter_glob_param. */
+-struct kunit_test_filter {
++struct kunit_glob_filter {
+ 	char *suite_glob;
+ 	char *test_glob;
+ };
+ 
+ /* Split "suite_glob.test_glob" into two. Assumes filter_glob is not empty. */
+-static void kunit_parse_filter_glob(struct kunit_test_filter *parsed,
++static void kunit_parse_filter_glob(struct kunit_glob_filter *parsed,
+ 				    const char *filter_glob)
  {
- 	/*
-@@ -181,17 +189,11 @@ static void kunit_print_suite_start(struct kunit_suite *suite)
- 	pr_info(KUNIT_SUBTEST_INDENT "KTAP version 1\n");
- 	pr_info(KUNIT_SUBTEST_INDENT "# Subtest: %s\n",
- 		  suite->name);
-+	kunit_print_attr((void *)suite, false, KUNIT_LEVEL_CASE);
- 	pr_info(KUNIT_SUBTEST_INDENT "1..%zd\n",
- 		  kunit_suite_num_test_cases(suite));
+ 	const int len = strlen(filter_glob);
+@@ -56,7 +61,7 @@ static void kunit_parse_filter_glob(struct kunit_test_filter *parsed,
+ 
+ /* Create a copy of suite with only tests that match test_glob. */
+ static struct kunit_suite *
+-kunit_filter_tests(const struct kunit_suite *const suite, const char *test_glob)
++kunit_filter_glob_tests(const struct kunit_suite *const suite, const char *test_glob)
+ {
+ 	int n = 0;
+ 	struct kunit_case *filtered, *test_case;
+@@ -110,12 +115,15 @@ static void kunit_free_suite_set(struct suite_set suite_set)
+ 
+ static struct suite_set kunit_filter_suites(const struct suite_set *suite_set,
+ 					    const char *filter_glob,
++						char **filters,
++						int filter_count,
+ 					    int *err)
+ {
+-	int i;
+-	struct kunit_suite **copy, *filtered_suite;
++	int i, j, k;
++	struct kunit_suite **copy, *filtered_suite, *new_filtered_suite;
+ 	struct suite_set filtered;
+-	struct kunit_test_filter filter;
++	struct kunit_glob_filter parsed_glob;
++	struct kunit_attr_filter parsed_filters[MAX_FILTERS];
+ 
+ 	const size_t max = suite_set->end - suite_set->start;
+ 
+@@ -126,17 +134,49 @@ static struct suite_set kunit_filter_suites(const struct suite_set *suite_set,
+ 		return filtered;
+ 	}
+ 
+-	kunit_parse_filter_glob(&filter, filter_glob);
++	if (filter_glob)
++		kunit_parse_filter_glob(&parsed_glob, filter_glob);
+ 
+-	for (i = 0; &suite_set->start[i] != suite_set->end; i++) {
+-		if (!glob_match(filter.suite_glob, suite_set->start[i]->name))
+-			continue;
++	/* Parse attribute filters */
++	if (filter_count) {
++		for (j = 0; j < filter_count; j++) {
++			parsed_filters[j] = kunit_parse_filter_attr(filters[j], err);
++			if (*err)
++				return filtered;
++		}
++	}
+ 
+-		filtered_suite = kunit_filter_tests(suite_set->start[i], filter.test_glob);
+-		if (IS_ERR(filtered_suite)) {
+-			*err = PTR_ERR(filtered_suite);
+-			return filtered;
++	for (i = 0; &suite_set->start[i] != suite_set->end; i++) {
++		filtered_suite = suite_set->start[i];
++		if (filter_glob) {
++			if (!glob_match(parsed_glob.suite_glob, filtered_suite->name))
++				continue;
++			filtered_suite = kunit_filter_glob_tests(filtered_suite,
++					parsed_glob.test_glob);
++			if (IS_ERR(filtered_suite)) {
++				*err = PTR_ERR(filtered_suite);
++				return filtered;
++			}
+ 		}
++		if (filter_count) {
++			for (k = 0; k < filter_count; k++) {
++				new_filtered_suite = kunit_filter_attr_tests(filtered_suite,
++						parsed_filters[k], err);
++
++				/* Free previous copy of suite */
++				if (k > 0 || filter_glob)
++					kfree(filtered_suite);
++				filtered_suite = new_filtered_suite;
++
++				if (*err)
++					return filtered;
++				if (IS_ERR(filtered_suite)) {
++					*err = PTR_ERR(filtered_suite);
++					return filtered;
++				}
++			}
++		}
++
+ 		if (!filtered_suite)
+ 			continue;
+ 
+@@ -144,8 +184,8 @@ static struct suite_set kunit_filter_suites(const struct suite_set *suite_set,
+ 	}
+ 	filtered.end = copy;
+ 
+-	kfree(filter.suite_glob);
+-	kfree(filter.test_glob);
++	kfree(parsed_glob.suite_glob);
++	kfree(parsed_glob.test_glob);
+ 	return filtered;
  }
  
--/* Currently supported test levels */
--enum {
--	KUNIT_LEVEL_SUITE = 0,
--	KUNIT_LEVEL_CASE,
--	KUNIT_LEVEL_CASE_PARAM,
--};
--
- static void kunit_print_ok_not_ok(struct kunit *test,
- 				  unsigned int test_level,
- 				  enum kunit_status status,
-@@ -651,6 +653,7 @@ int kunit_run_tests(struct kunit_suite *suite)
- 			}
- 		}
+@@ -203,8 +243,9 @@ int kunit_run_all_tests(void)
+ 		goto out;
+ 	}
  
-+		kunit_print_attr((void *)test_case, true, KUNIT_LEVEL_CASE);
+-	if (filter_glob_param) {
+-		suite_set = kunit_filter_suites(&suite_set, filter_glob_param, &err);
++	if (filter_glob_param || filter_count) {
++		suite_set = kunit_filter_suites(&suite_set, filter_glob_param,
++				filter_param, filter_count, &err);
+ 		if (err) {
+ 			pr_err("kunit executor: error filtering suites: %d\n", err);
+ 			goto out;
+@@ -218,7 +259,7 @@ int kunit_run_all_tests(void)
+ 	else
+ 		pr_err("kunit executor: unknown action '%s'\n", action_param);
  
- 		kunit_print_test_stats(&test, param_stats);
+-	if (filter_glob_param) { /* a copy was made of each suite */
++	if (filter_glob_param || filter_count) { /* a copy was made of each suite */
+ 		kunit_free_suite_set(suite_set);
+ 	}
+ 
+diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
+index ce6749af374d..4c8cb46857b2 100644
+--- a/lib/kunit/executor_test.c
++++ b/lib/kunit/executor_test.c
+@@ -24,7 +24,7 @@ static struct kunit_case dummy_test_cases[] = {
+ 
+ static void parse_filter_test(struct kunit *test)
+ {
+-	struct kunit_test_filter filter = {NULL, NULL};
++	struct kunit_glob_filter filter = {NULL, NULL};
+ 
+ 	kunit_parse_filter_glob(&filter, "suite");
+ 	KUNIT_EXPECT_STREQ(test, filter.suite_glob, "suite");
+@@ -50,7 +50,7 @@ static void filter_suites_test(struct kunit *test)
+ 	subsuite[1] = alloc_fake_suite(test, "suite2", dummy_test_cases);
+ 
+ 	/* Want: suite1, suite2, NULL -> suite2, NULL */
+-	got = kunit_filter_suites(&suite_set, "suite2", &err);
++	got = kunit_filter_suites(&suite_set, "suite2", NULL, 0, &err);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start);
+ 	KUNIT_ASSERT_EQ(test, err, 0);
+ 	kfree_at_end(test, got.start);
+@@ -74,7 +74,7 @@ static void filter_suites_test_glob_test(struct kunit *test)
+ 	subsuite[1] = alloc_fake_suite(test, "suite2", dummy_test_cases);
+ 
+ 	/* Want: suite1, suite2, NULL -> suite2 (just test1), NULL */
+-	got = kunit_filter_suites(&suite_set, "suite2.test2", &err);
++	got = kunit_filter_suites(&suite_set, "suite2.test2", NULL, 0, &err);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start);
+ 	KUNIT_ASSERT_EQ(test, err, 0);
+ 	kfree_at_end(test, got.start);
+@@ -100,7 +100,7 @@ static void filter_suites_to_empty_test(struct kunit *test)
+ 	subsuite[0] = alloc_fake_suite(test, "suite1", dummy_test_cases);
+ 	subsuite[1] = alloc_fake_suite(test, "suite2", dummy_test_cases);
+ 
+-	got = kunit_filter_suites(&suite_set, "not_found", &err);
++	got = kunit_filter_suites(&suite_set, "not_found", NULL, 0, &err);
+ 	KUNIT_ASSERT_EQ(test, err, 0);
+ 	kfree_at_end(test, got.start); /* just in case */
  
 -- 
 2.41.0.162.gfafddb0af9-goog
