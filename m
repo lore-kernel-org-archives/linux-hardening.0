@@ -2,56 +2,58 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBEAC7EE25
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Jun 2023 00:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A18C7EE2F
+	for <linux-hardening@archiver.kernel.org>; Sat, 10 Jun 2023 00:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbjFJAwJ (ORCPT
+        id S232210AbjFJAwP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 9 Jun 2023 20:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52220 "EHLO
+        Fri, 9 Jun 2023 20:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230027AbjFJAwI (ORCPT
+        with ESMTP id S229985AbjFJAwN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 9 Jun 2023 20:52:08 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD77E1
-        for <linux-hardening@vger.kernel.org>; Fri,  9 Jun 2023 17:52:07 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bc3faa806cdso254453276.3
-        for <linux-hardening@vger.kernel.org>; Fri, 09 Jun 2023 17:52:07 -0700 (PDT)
+        Fri, 9 Jun 2023 20:52:13 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5550A1BDF
+        for <linux-hardening@vger.kernel.org>; Fri,  9 Jun 2023 17:52:11 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56cd8338406so19061497b3.0
+        for <linux-hardening@vger.kernel.org>; Fri, 09 Jun 2023 17:52:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686358326; x=1688950326;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Wg++2gE8/jht9e+KkYaoylKtJ1FY+uAMq5VBMWkg2vI=;
-        b=vZa0uQJub1/SthRtIpRIUdBcECAOCf4iTZtfveOCEH2qhZXN6OXSLQU4rxA4XAuWzc
-         rrF2wOzq4rqLr6cV80saM9nYxWLvo2dzC2QqLpKrmAn1QFps3fMUVaLZpX+hs6doupWf
-         +pcjaEgSTskPgaJ+dIkjcli6C7/q6N210FLnQScBFO/2EXIWNa4dYsshbKQ4hJK7OqOp
-         K3eLXaGxkOgCzqdEkUJPZgzhf8YRFJ4BmCoXVPCvTSlou9mIQf835BE68v9uc1K8AR9K
-         naQ/WX8z5MCpfalOCjg4+ro4EyFf4vZOzWQX2gmnoKO08v9Kvq1jPYFGpDGQW6QQZ9aL
-         30zw==
+        d=google.com; s=20221208; t=1686358330; x=1688950330;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kg21mZWTzPOwmlFSsLi8itlal2bzL2xDdn1UhMA3w20=;
+        b=WswYlHq6/ZHkfHrmbeb7arHsRL5XXKC8w3ETG7ZaFzcMXt+WpH/QTKK+jz6PoG+QBq
+         uSLDTqnyS2MGajKMA2iGh6RvicQOPQNCY9hKFYLRHors5KSEWpXfWHeYr5OioTJ9AZaR
+         g0DySrOCSRUfojMwgtpCy9mXPqIxoJEepKcqLZhGTnqA3PQCrSwPR5Hsc5RogDCN6I7w
+         l+YR05Q6aB93INFQnuCul5Nrk+j1ZgV0B8doglxFpMexoWkNgWPW74Kq2jJ5bEy+eIh7
+         b6O8jeGG3jRv3NtDrrmAR7MMIAZEBNe5HmVSmu2BiBOyacZdvyi+Qyfe7vjBpuIrhgnd
+         Pl8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686358326; x=1688950326;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Wg++2gE8/jht9e+KkYaoylKtJ1FY+uAMq5VBMWkg2vI=;
-        b=WFQ516WhIdvqglpycoPx4u/LhIEARxEkbqVZIhv3b0G4NhhsJPiBYsDc5RPTmJEn+O
-         6RwIO4zNlhS4O4KmEeKabE9cGPV+dCsmZL0R+IyQc81JAm6kxPGZeBBhzr4RwAMSouW+
-         MXNBrH8CVAEltkYpdrmAxDnYC1reKuxPTNb/ULhj1E+Skge+BNArOz1buc3UCj+quYoe
-         YKazhIRDfYQji9NRG7Ds/0W0qTD76FecgvUWjGxLd+yB+zbLlb14i/wdJRzHvy/1fMIB
-         Tr27iORSAYjgVV5Xzv1w1vjJABN6HTAfGP1lehoaDfy0e8CFfALVh+zmYPS7uD5VPYf1
-         +GQA==
-X-Gm-Message-State: AC+VfDxc56Jl5oQC+1OdR+DW8UdbWPsiyKZg8yX7SPG3124vZ7ILe7OM
-        bvSL1dq7rMhkJWbMBiZSo7kymX3u7Q==
-X-Google-Smtp-Source: ACHHUZ69QKqtFpwkYTh0ifon5IJmXcPzuTd7nuUrM8iS0yUyytLtTaZAuHUDpCTiTnbU9TDufxE0QfX6wA==
+        d=1e100.net; s=20221208; t=1686358330; x=1688950330;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kg21mZWTzPOwmlFSsLi8itlal2bzL2xDdn1UhMA3w20=;
+        b=ZCYHaDG+baiDWVskpbzbCceHL3+KwvWZ794g7U9oNER6WPvl9qcHcu3NRGS8rBoiEA
+         KKFOE6f8UaYPDIz15PkpnezrYDqOX6O5sI+394boU33sE1b3NJXr3wG+puEga6tJXIH3
+         9bNcYCCZXO6a6LFP0dG8GnN75uASP7ePeye1nUQV9Q2BWB74afOU7nUtWhwi0jP2NMm8
+         A2q/f9GsueihmIBjBATubTaaBG+Vmf1otV1BEjI8+z4B/sP4KiUiG3C6sCANUERU/C5O
+         u+yTYjlqZx0o3fE9vO5TPmRQydw4lpRwc/6S7JFXS+fwc6cKU4nKknDhnJnpkoLV+nvV
+         R9fw==
+X-Gm-Message-State: AC+VfDzHLSYcL9SlOxLPS1r3WvFzJoyZQwYMW/+w4KuUJCgwMUGcJQbU
+        b4f+glKR8ioYORL53R0ZSpQAT/GKpA==
+X-Google-Smtp-Source: ACHHUZ7RszgYDSykFAHyd5I6mFbzO6p8gosaq49TdYgyFazuZ9cddVRnvGvD+puCkZo6ToTL3ooh2Fefzw==
 X-Received: from rmoar-specialist.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:45d3])
- (user=rmoar job=sendgmr) by 2002:a5b:b4a:0:b0:bac:f608:7113 with SMTP id
- b10-20020a5b0b4a000000b00bacf6087113mr1547448ybr.4.1686358326518; Fri, 09 Jun
- 2023 17:52:06 -0700 (PDT)
-Date:   Sat, 10 Jun 2023 00:51:43 +0000
+ (user=rmoar job=sendgmr) by 2002:a05:690c:c01:b0:565:d5f6:a390 with SMTP id
+ cl1-20020a05690c0c0100b00565d5f6a390mr2450767ywb.2.1686358330655; Fri, 09 Jun
+ 2023 17:52:10 -0700 (PDT)
+Date:   Sat, 10 Jun 2023 00:51:45 +0000
+In-Reply-To: <20230610005149.1145665-1-rmoar@google.com>
 Mime-Version: 1.0
+References: <20230610005149.1145665-1-rmoar@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Message-ID: <20230610005149.1145665-1-rmoar@google.com>
-Subject: [RFC v1 0/6] kunit: Add test attributes API
+Message-ID: <20230610005149.1145665-3-rmoar@google.com>
+Subject: [RFC v1 2/6] kunit: Add speed attribute
 From:   Rae Moar <rmoar@google.com>
 To:     shuah@kernel.org, davidgow@google.com, dlatypov@google.com,
         brendan.higgins@linux.dev
@@ -64,63 +66,165 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello everyone,
+Add speed attribute to the test attribute API. This attribute will allow
+users to mark tests with a category of speed.
 
-This is an RFC patch series to propose the addition of a test attributes
-framework to KUnit.
+Currently the categories of speed proposed are: fast, normal, slow, and
+very_slow. These are outlined in the enum kunit_speed. Note the speed
+attribute can also be left as unset and then, will act as the default which
+is "normal", during filtering.
 
-There has been interest in filtering out "slow" KUnit tests. Most notably,
-a new config, CONFIG_MEMCPY_SLOW_KUNIT_TEST, has been added to exclude
-particularly slow memcpy tests
-(https://lore.kernel.org/all/20230118200653.give.574-kees@kernel.org/).
+Note speed is intended to be marked based on relative speeds rather than
+quantitative speeds of KUnit tests. This is because tests may run on
+various architectures at different speeds.
 
-This proposed attributes framework would be used to save and access test
-associated data, including whether a test is slow. These attributes would
-be reportable (via KTAP and command line output) and some will be
-filterable.
+Add the macro KUNIT_CASE_SLOW to set a test as slow, as this is likely a
+common use of the attributes API.
 
-This framework is designed to allow for the addition of other attributes in
-the future. These attributes could include whether the test is flaky,
-associated test files, etc.
+Add an example of marking a slow test to kunit-example-test.c.
 
-Note that this could intersect with the discussions on how to format
-test-associated data in KTAP v2 that I am also involved in
-(https://lore.kernel.org/all/20230420205734.1288498-1-rmoar@google.com/).
+Signed-off-by: Rae Moar <rmoar@google.com>
+---
+ include/kunit/test.h           | 31 ++++++++++++++++++++++-
+ lib/kunit/attributes.c         | 45 +++++++++++++++++++++++++++++++++-
+ lib/kunit/kunit-example-test.c |  9 +++++++
+ 3 files changed, 83 insertions(+), 2 deletions(-)
 
-If the overall idea seems good, I'll make sure to add tests/documentation,
-and more patches marking existing tests as slow to the patch series.
-
-Thanks!
-Rae
-
-Rae Moar (6):
-  kunit: Add test attributes API structure
-  kunit: Add speed attribute
-  kunit: Add ability to filter attributes
-  kunit: tool: Add command line interface to filter and report
-    attributes
-  kunit: memcpy: Mark tests as slow using test attributes
-  kunit: time: Mark test as slow using test attributes
-
- include/kunit/attributes.h             |  41 ++++
- include/kunit/test.h                   |  62 ++++++
- kernel/time/time_test.c                |   2 +-
- lib/kunit/Makefile                     |   3 +-
- lib/kunit/attributes.c                 | 280 +++++++++++++++++++++++++
- lib/kunit/executor.c                   |  89 ++++++--
- lib/kunit/executor_test.c              |   8 +-
- lib/kunit/kunit-example-test.c         |   9 +
- lib/kunit/test.c                       |  17 +-
- lib/memcpy_kunit.c                     |   8 +-
- tools/testing/kunit/kunit.py           |  34 ++-
- tools/testing/kunit/kunit_kernel.py    |   6 +-
- tools/testing/kunit/kunit_tool_test.py |  41 ++--
- 13 files changed, 536 insertions(+), 64 deletions(-)
- create mode 100644 include/kunit/attributes.h
- create mode 100644 lib/kunit/attributes.c
-
-
-base-commit: fefdb43943c1a0d87e1b43ae4d03e5f9a1d058f4
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index 1fc9155988e9..3d684723ae57 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -63,8 +63,26 @@ enum kunit_status {
+ 	KUNIT_SKIPPED,
+ };
+ 
++/* Attribute struct/enum definitions */
++
++/*
++ * Speed Attribute is stored as an enum and separated into categories of
++ * speed: very_slowm, slow, normal, and fast. These speeds are relative
++ * to other KUnit tests.
++ */
++enum kunit_speed {
++	KUNIT_SPEED_UNSET,
++	KUNIT_SPEED_VERY_SLOW,
++	KUNIT_SPEED_SLOW,
++	KUNIT_SPEED_NORMAL,
++	KUNIT_SPEED_FAST,
++	KUNIT_SPEED_MAX = KUNIT_SPEED_FAST,
++};
++
+ /* Holds attributes for each test case and suite */
+-struct kunit_attributes {};
++struct kunit_attributes {
++	enum kunit_speed speed;
++};
+ 
+ /**
+  * struct kunit_case - represents an individual test case.
+@@ -150,6 +168,17 @@ static inline char *kunit_status_to_ok_not_ok(enum kunit_status status)
+ 		{ .run_case = test_name, .name = #test_name,	\
+ 		  .attr = attributes }
+ 
++/**
++ * KUNIT_CASE_SLOW - A helper for creating a &struct kunit_case
++ * with the slow attribute
++ *
++ * @test_name: a reference to a test case function.
++ */
++
++#define KUNIT_CASE_SLOW(test_name)			\
++		{ .run_case = test_name, .name = #test_name,	\
++		  .attr.speed = KUNIT_SPEED_SLOW }
++
+ /**
+  * KUNIT_CASE_PARAM - A helper for creation a parameterized &struct kunit_case
+  *
+diff --git a/lib/kunit/attributes.c b/lib/kunit/attributes.c
+index 0ea641be795f..e17889f94693 100644
+--- a/lib/kunit/attributes.c
++++ b/lib/kunit/attributes.c
+@@ -28,9 +28,52 @@ struct kunit_attr {
+ 	void *attr_default;
+ };
+ 
++/* String Lists for enum Attributes */
++
++static const char * const speed_str_list[] = {"unset", "very_slow", "slow", "normal", "fast"};
++
++/* To String Methods */
++
++static const char *attr_enum_to_string(void *attr, const char * const str_list[], bool *to_free)
++{
++	long val = (long)attr;
++
++	*to_free = false;
++	if (!val)
++		return NULL;
++	return str_list[val];
++}
++
++static const char *attr_speed_to_string(void *attr, bool *to_free)
++{
++	return attr_enum_to_string(attr, speed_str_list, to_free);
++}
++
++/* Get Attribute Methods */
++
++static void *attr_speed_get(void *test_or_suite, bool is_test)
++{
++	struct kunit_suite *suite = is_test ? NULL : test_or_suite;
++	struct kunit_case *test = is_test ? test_or_suite : NULL;
++
++	if (test)
++		return ((void *) test->attr.speed);
++	else
++		return ((void *) suite->attr.speed);
++}
++
++/* Attribute Struct Definitions */
++
++static const struct kunit_attr speed_attr = {
++	.name = "speed",
++	.get_attr = attr_speed_get,
++	.to_string = attr_speed_to_string,
++	.attr_default = (void *)KUNIT_SPEED_NORMAL,
++};
++
+ /* List of all Test Attributes */
+ 
+-static struct kunit_attr kunit_attr_list[1] = {};
++static struct kunit_attr kunit_attr_list[1] = {speed_attr};
+ 
+ /* Helper Functions to Access Attributes */
+ 
+diff --git a/lib/kunit/kunit-example-test.c b/lib/kunit/kunit-example-test.c
+index b69b689ea850..01a769f35e1d 100644
+--- a/lib/kunit/kunit-example-test.c
++++ b/lib/kunit/kunit-example-test.c
+@@ -220,6 +220,14 @@ static void example_params_test(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, param->value % param->value, 0);
+ }
+ 
++/*
++ * This test should always pass. Can be used to practice filtering attributes.
++ */
++static void example_slow_test(struct kunit *test)
++{
++	KUNIT_EXPECT_EQ(test, 1 + 1, 2);
++}
++
+ /*
+  * Here we make a list of all the test cases we want to add to the test suite
+  * below.
+@@ -237,6 +245,7 @@ static struct kunit_case example_test_cases[] = {
+ 	KUNIT_CASE(example_all_expect_macros_test),
+ 	KUNIT_CASE(example_static_stub_test),
+ 	KUNIT_CASE_PARAM(example_params_test, example_gen_params),
++	KUNIT_CASE_SLOW(example_slow_test),
+ 	{}
+ };
+ 
 -- 
 2.41.0.162.gfafddb0af9-goog
 
