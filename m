@@ -2,129 +2,266 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDB5C7EE29
-	for <linux-hardening@archiver.kernel.org>; Sat, 10 Jun 2023 06:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5F6C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Sat, 10 Jun 2023 08:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230402AbjFJGi6 (ORCPT
+        id S231136AbjFJI3U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 10 Jun 2023 02:38:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56444 "EHLO
+        Sat, 10 Jun 2023 04:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229823AbjFJGi4 (ORCPT
+        with ESMTP id S229735AbjFJI3T (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 10 Jun 2023 02:38:56 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0642B1FDB;
-        Fri,  9 Jun 2023 23:38:55 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-25665d2a8bdso1050807a91.0;
-        Fri, 09 Jun 2023 23:38:55 -0700 (PDT)
+        Sat, 10 Jun 2023 04:29:19 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E67A9210E
+        for <linux-hardening@vger.kernel.org>; Sat, 10 Jun 2023 01:29:17 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f7f7dfc037so33195e9.0
+        for <linux-hardening@vger.kernel.org>; Sat, 10 Jun 2023 01:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686379134; x=1688971134;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yGVhz1sAD6q2mvEjxF0pg4PBT4Cx0EoYk9cX0ojzw7k=;
-        b=rHJzw9HMsYn6a13iz3WbD0crMFkPlXc0e8Yb3nBTH/Ssm1T5sus7EQNukL9JfVVGS4
-         NhFFKST/ybZ2ELB4j6sU9HWzeGhDnkWYc6bApg66RF/nJ7p81ynn0Xj09jqfa2134tU0
-         /4Ljln+XrOsfWgJ1KF8UuRv49o+em+kJMeogJjkB1rfs4jiShcJAhSumot7jlyjxC7SG
-         yI6No0XFpSdVPrNoMNNjrWNtTw1qkJxxQ+wbecsZjI21H2np7W4N8Sv5fkRoirIqtvNN
-         M3nYQExXPHipcWnwKCRlLTPLQwZB3Idn1BV7NmThpnCNR6AsWJS6+aI790ro7O/iAVyC
-         1FZg==
+        d=google.com; s=20221208; t=1686385756; x=1688977756;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=2xjS0tKEJDxUWxMLSBc7NBPub3WBIUDFr8DjMSarclw=;
+        b=rqyqnBhauOsmC7eSpbFz8zm7IotlOeILWjZ9BNrTwH+QAdj1hffWtDA3orMQN4MbNV
+         sgd9bpfEJ4YeKZlX+IKNw6vegJizKLRT9WC/zIrypEf7V9GWCl0x9yjRzUUqpiiUt7Jt
+         ehtG8HKlZo1536YpkioKxuSh8GI3avN19BsncJ7DFpapqtY72b+Yk8bixifvP+qllWKu
+         ++DB2JUOOXHzvQ57A8MKpmzrBooLQkoM71P1CtdQPv1BZcAdpZ8dgNBo4CngYdM5p6Vl
+         Nx/dPGMxzIYB5x5JNkfUKvF4xnCCNJffQFZ/2GAdXX0+u5cAAIbxGM9zQoQH42ZkZwDA
+         vjkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686379134; x=1688971134;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGVhz1sAD6q2mvEjxF0pg4PBT4Cx0EoYk9cX0ojzw7k=;
-        b=AuD9uK2PXJ0Az6U0zIjszscxAaDzTZISmYAeKReb4EAGDOR7MqNMuo6SiRa8OdBDMu
-         wprPQjUFPLApw0k/IssAsVU6dKLU4sCom1JjeglYzOw+l3UFCtoxMnIC7Ew51F6CM3/0
-         8lZ7zaFAvCXHgeY5KUF3UHzCta+FArzmNDs+sC8RipSph2nzrIA2CvI3VRtGtc6OxYiZ
-         8SXW/vhZcCIKz/XmJN4YBH24PawTh2fPos5Qd055BaP4tqJBKJZ2LIzaiCZM1bi7VIlA
-         TAMhx25HP6IjJYSn7aWEQAr1V/jsrSZQ6TIHK2VVNtGuHngdRhEDYs7lY2SlmGlS7jKA
-         6DbQ==
-X-Gm-Message-State: AC+VfDyZDjT17IdDjZNS9TuUFth7XwJO+6JoUzFqDmysRLxVPjURhzXa
-        zKQb7s6F2tdViyJgWu2U6qA=
-X-Google-Smtp-Source: ACHHUZ6U8LuPYo6qTIzC6FmLnF/Ulx2KVvuwaayPVlE29Z3/R06/68EjE8sPxR6bbsBIv8SJ3NMpvA==
-X-Received: by 2002:a17:90a:9746:b0:255:b1d3:5220 with SMTP id i6-20020a17090a974600b00255b1d35220mr2753407pjw.20.1686379134369;
-        Fri, 09 Jun 2023 23:38:54 -0700 (PDT)
-Received: from [192.168.43.80] (subs28-116-206-12-58.three.co.id. [116.206.12.58])
-        by smtp.gmail.com with ESMTPSA id j24-20020a17090a589800b0023b3d80c76csm3841294pji.4.2023.06.09.23.38.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jun 2023 23:38:53 -0700 (PDT)
-Message-ID: <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
-Date:   Sat, 10 Jun 2023 13:38:48 +0700
+        d=1e100.net; s=20221208; t=1686385756; x=1688977756;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2xjS0tKEJDxUWxMLSBc7NBPub3WBIUDFr8DjMSarclw=;
+        b=PqP9xsfbWZ0c5yzTTP100LMS3o4g+OxdBdm+HHuoeW+eOKEKvh6XHaLagD5d+v6IBk
+         CpPyY9IEoiYI6Edz+Gb1jY4vz4KNLbuJmyE6UsM2E99ggx0W3lIKATE8YPU2Nv6ZEKbQ
+         1TpKF8HX3r70AlqmosvK/LOutLIYg/93KezcAY73nVPTyFheTaGRvqwfFppqTVaOOx7V
+         K+Rs7KkxxzX8WsQxhePVv9afrEjohsDqfdEntDYbUZDMQH5J9QVGDXMiI+sDUMKxEDXG
+         Dn//+dr0EgT4nXX0J0v0hVg6oTS1xVPK87aF1gj7YL1kdmwBDIX2GrbMBgUdNf2VkROF
+         jFiw==
+X-Gm-Message-State: AC+VfDygbJnP+to0nMmzmX/GFwx538simHICJBwQSRxQx7JLOVOp9KKD
+        MPEr9aWWU2FCk66cNXoJXfP78fObXo2GwiEVZa3jQg==
+X-Google-Smtp-Source: ACHHUZ61Krth5dwEP3jMbulnS/O/xKnuAhK/3DsvjjVvCVnmzavCCZIiP85C2OM1DoMtChnNkqNYUw7oapQnSpLUBdA=
+X-Received: by 2002:a05:600c:45c8:b0:3f7:3654:8d3 with SMTP id
+ s8-20020a05600c45c800b003f7365408d3mr77190wmo.2.1686385756267; Sat, 10 Jun
+ 2023 01:29:16 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: Fwd: Waking up from resume locks up on sr device
-Content-Language: en-US
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Phillip Potter <phil@philpotter.co.uk>,
-        Joe Breuer <linux-kernel@jmbreuer.net>
-Cc:     Linux Power Management <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Hardening <linux-hardening@vger.kernel.org>,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Linux SCSI <linux-scsi@vger.kernel.org>
-References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
-In-Reply-To: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20230610005149.1145665-1-rmoar@google.com>
+In-Reply-To: <20230610005149.1145665-1-rmoar@google.com>
+From:   David Gow <davidgow@google.com>
+Date:   Sat, 10 Jun 2023 16:29:03 +0800
+Message-ID: <CABVgOS=By=bpUELmNBMv39Swx+-Ec_XHo-=3yUfmcpOPU7N=8A@mail.gmail.com>
+Subject: Re: [RFC v1 0/6] kunit: Add test attributes API
+To:     Rae Moar <rmoar@google.com>
+Cc:     shuah@kernel.org, dlatypov@google.com, brendan.higgins@linux.dev,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, jstultz@google.com,
+        tglx@linutronix.de, sboyd@kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="000000000000fb7d5905fdc247be"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 6/9/23 18:04, Bagas Sanjaya wrote:
-> Hi,
-> 
-> I notice a regression report on Bugzilla [1]. Quoting from it:
-> 
->> I'm running LibreELEC.tv on an x86_64 machine that, following a (kernel) update, now locks up hard while trying to device_resume() => device_lock() on sr 2:0:0:0 (the only sr device in the system).
->>
->> Through some digging of my own, I can pretty much isolate the fault in this device_lock() call:
->> https://elixir.bootlin.com/linux/v6.3.4/source/drivers/base/power/main.c#L919
->>
->> I put an additional debug line exactly before the device_lock(dev) call, like this:
->> dev_info(dev, "device_lock() in device_resume()");
->>
->> This is the last diagnostic I see, that device_lock() call never returns, ie line 920 in main.c is never reached (confirmed via TRACE_RESUME).
->> The device, in my case, is printed as sr 2:0:0:0.
->>
->> Knowing this, as a workaround, booting with libata.force=3:disable (libata port 3 corresponds to the SATA channel that sr 2:0:0:0 is attached to) allows suspend/resume to work correctly (but the optical drive is not accessible, obviously).
->>
->> When resume hangs, the kernel is not _completely_ locked, interestingly the machine responds to pings and I see the e1000e 'link up' message a couple seconds after the hanging sr2 device_lock().
->> Magic SysRq, however, does NOT work in that state; possibly because not enough of USB is resumed yet. Resuming devices seems to broadly follow a kind of breadth-first order; I see USB ports getting resumed closely before the lockup, but no USB (target) devices.
->>
->> This is a regression, earlier kernels would work correctly on the exact same hardware. Since it's an 'embedded' type (LibreELEC.tv) install that overwrites its system parts completely on each update, I don't have a clear historical record of kernel versions. From the timeline and my memory, moving from 5.x to 6.x would make sense. Due to the nature of the system, it's somewhat inconvenient for me to try numerous kernel versions blindly for a bisection; I will try to test against some current 5.x soon, however.
->>
->> I do have the hope that this information already might give someone with more background a strong idea about the issue.
->>
->> Next, I will try to put debug_show_all_locks() before device_lock(), since I can't Alt+SysRq+d.
-> 
-> See Bugzilla for the full thread.
-> 
-> Anyway, I'm adding it to regzbot (with rough version range since the reporter
-> only knows major kernel version numbers):
-> 
-> #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
-> #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
-> 
+--000000000000fb7d5905fdc247be
+Content-Type: text/plain; charset="UTF-8"
 
-The reporter had found the culprit (via bisection), so:
+On Sat, 10 Jun 2023 at 08:52, Rae Moar <rmoar@google.com> wrote:
+>
+> Hello everyone,
+>
+> This is an RFC patch series to propose the addition of a test attributes
+> framework to KUnit.
+>
+> There has been interest in filtering out "slow" KUnit tests. Most notably,
+> a new config, CONFIG_MEMCPY_SLOW_KUNIT_TEST, has been added to exclude
+> particularly slow memcpy tests
+> (https://lore.kernel.org/all/20230118200653.give.574-kees@kernel.org/).
 
-#regzbot introduced: a19a93e4c6a98c
+Awesome: this is a long overdue feature.
 
-Thanks.
+> This proposed attributes framework would be used to save and access test
+> associated data, including whether a test is slow. These attributes would
+> be reportable (via KTAP and command line output) and some will be
+> filterable.
 
--- 
-An old man doll... just what I always wanted! - Clara
+Why wouldn't they all be filterable? I guess I can imagine some where
+filtering wouldn't be useful, but I can't think of a technical reason
+why the filter shouldn't work.
 
+Also, as I understand it, I think this could also work with data which
+is not "saved" in this kunit_attributes struct you define. So we could
+have attributes which are generated automatically from other
+information about the test.
+ I could definitely see value in being able to filter on things like
+"is_parameterised" or "runs_at_init" or similar.
+
+Finally, it'd be really great if these attributes could apply to
+individual parameters in parameterised tests, in which case we could
+have and filter on the parameter value. That seems like it could be
+incredibly useful.
+
+>
+> This framework is designed to allow for the addition of other attributes in
+> the future. These attributes could include whether the test is flaky,
+> associated test files, etc.
+
+A small part of me is hesitant to add this much framework code for
+only one attribute, so it'd be nice to look into at least having an
+RFC for some of these. Hopefully we don't actually have flaky tests,
+but "is_deterministic" would be nice (alongside a future ability to
+inject a random seed, or similar). Other properties like
+"is_threadsafe", "is_reentrant", etc could be useful for future
+features. And I'm sure there could be some more subsystem-specific
+things which would be useful to filter on, too.
+
+Some of these could probably replace the need for custom code to make
+the test skip itself if dependencies aren't met, too, which would be
+fun.
+
+I'm not sure "associated test files" quite gels perfectly with this
+system as-is (assuming I understand what that refers to). If it's the
+ability to "attach" extra data (logs, etc) to the KTAP output, that's
+possibly best injected at runtime, or added by the separate parser,
+rather than hardcoded in the kernel.
+
+>
+> Note that this could intersect with the discussions on how to format
+> test-associated data in KTAP v2 that I am also involved in
+> (https://lore.kernel.org/all/20230420205734.1288498-1-rmoar@google.com/).
+>
+I definitely need to re-read and respond to that. I'm not 100%
+thrilled with the output format here, and I think the goal with KTAP
+"test associated data" is, as you say, related, but not identical to
+this. There'd definitely be data which doesn't make sense as a KUnit
+attribute which we might want to add to the output (e.g., data only
+calcuated while the test runs), and attributes which we might not want
+to always print out with the results.
+
+> If the overall idea seems good, I'll make sure to add tests/documentation,
+> and more patches marking existing tests as slow to the patch series.
+>
+
+I think the series is good overall. If no-one else objects, let's move
+forward with it.
+I'd definitely prefer to see a few more tests and some documentation.
+Having another attribute would be great, too, though I can certainly
+live with that being a separate series.
+
+
+> Thanks!
+> Rae
+>
+> Rae Moar (6):
+>   kunit: Add test attributes API structure
+>   kunit: Add speed attribute
+>   kunit: Add ability to filter attributes
+>   kunit: tool: Add command line interface to filter and report
+>     attributes
+>   kunit: memcpy: Mark tests as slow using test attributes
+>   kunit: time: Mark test as slow using test attributes
+>
+>  include/kunit/attributes.h             |  41 ++++
+>  include/kunit/test.h                   |  62 ++++++
+>  kernel/time/time_test.c                |   2 +-
+>  lib/kunit/Makefile                     |   3 +-
+>  lib/kunit/attributes.c                 | 280 +++++++++++++++++++++++++
+>  lib/kunit/executor.c                   |  89 ++++++--
+>  lib/kunit/executor_test.c              |   8 +-
+>  lib/kunit/kunit-example-test.c         |   9 +
+>  lib/kunit/test.c                       |  17 +-
+>  lib/memcpy_kunit.c                     |   8 +-
+>  tools/testing/kunit/kunit.py           |  34 ++-
+>  tools/testing/kunit/kunit_kernel.py    |   6 +-
+>  tools/testing/kunit/kunit_tool_test.py |  41 ++--
+>  13 files changed, 536 insertions(+), 64 deletions(-)
+>  create mode 100644 include/kunit/attributes.h
+>  create mode 100644 lib/kunit/attributes.c
+>
+>
+> base-commit: fefdb43943c1a0d87e1b43ae4d03e5f9a1d058f4
+> --
+> 2.41.0.162.gfafddb0af9-goog
+>
+
+--000000000000fb7d5905fdc247be
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
+dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
+6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
+c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
+I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
+AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
+BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
+CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
+AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
+MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
+My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
+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
+9IGQSBx2i4m+hGXJpET+MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
+dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
+AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
+c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
+LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
+LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
+Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQCRI3Z4cAidgFcv
+Usqdz765x6KMZSfg/WtFrYg8ewsP2NpCxVM2+EhPyyEQ0k0DhtzdtGoI/Ug+jdFDyCKB9P2+EPLh
+iMjMnFILp7Zs4r18ECHlvZuDZfH9m0BchXIxu5jLIuQyKUWrCRDZZEDNr510ZhhVfYSFPA8ms1nk
+jyzYFOHYQyv5IfML/3IBFKlON5OZa+V8EZYULYcNkp03DdWglafj7SXZ1/XgAbVYrC381UvrsYN8
+jndVvoa1GWwe+NVlIIK7Q3uAjV3qLEDQpaNPg1rr0oAn6YmvTccjVMqj2YNwN+RHhKNzgRGxY5ct
+FaN+8fXZhRhpv3bVbAWuPZXoMYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
+R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
+MDIwAhABAz5xDls09r2CKyYRqnNbMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCD/
+5V7mOVQBtw2t91HW33C3dkHqAdMg5JI3guMDq4iGXTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMzA2MTAwODI5MTZaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAlRTL1Ytl9KzrIqKSQpiQ
+34iMq4NHPDuo/OygRdRayFRFoQ1Q+b4gEFGw/SDSm719j3SE4qTBn7ZU/2mNedXet5aAso0Z7S7E
+k2VDopBtWj1RjqoCQFIorXUrblkMccLVRAOAXVQY2Utepaa2xSAmwvjG5Nec3nrAVfGHcDI4yuam
+9sFYU0TggJNJ0W/lEGsiz4Ili8xMnKUwiSpN5l7YzstOlW/uXqKag3Z6YQYJF7YAtgjLrpg8FG7+
+5j87MdLrxj1mWM1BdWZvTVi59aChy2wxjDDzWYYekIXYQZtqE3IRxWrHsi6hK/9XQsvKahBeJKV2
+Ii+Hel8vTLY4acm9JQ==
+--000000000000fb7d5905fdc247be--
