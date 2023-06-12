@@ -2,62 +2,46 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1CCC7EE2F
-	for <linux-hardening@archiver.kernel.org>; Sun, 11 Jun 2023 11:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D34C7EE23
+	for <linux-hardening@archiver.kernel.org>; Mon, 12 Jun 2023 03:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233604AbjFKLby (ORCPT
+        id S234453AbjFLDLR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 11 Jun 2023 07:31:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38554 "EHLO
+        Sun, 11 Jun 2023 23:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230233AbjFKLbx (ORCPT
+        with ESMTP id S234443AbjFLDKt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 11 Jun 2023 07:31:53 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053E7BD;
-        Sun, 11 Jun 2023 04:31:52 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b3c0c476d1so3131785ad.1;
-        Sun, 11 Jun 2023 04:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686483111; x=1689075111;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ET+8jv1Sr4c8KNb9UT3DWTBXEn+DrM0MENG4Vij4uyQ=;
-        b=ByLAexixDGYoAAbP+TdnYMa5G8F/VvOmM2T7/k+wQ3cghFSNw4Kj2IASok17J7GtyC
-         pCfzHh4wSayC2NXfPUYE5UTGZGAvsxY0hoesHUUjSvY+EXJAg9ApMd/ncGMQ8Zpt2zo5
-         2dWmy69/WS7xsoZGYIbNEeHU1wTzK9gHgmOHmK5TVmSO//bspmX9a+Q4oiBHTTJIybS5
-         oLsqXrllscjmhjrL7peXQSqiWz/CugCFIORxjrW1urVFQzRXSdzR2nNPxSfGRevYccb6
-         jvg/uAW9JNITn/Y2P/ySuDZpDuzJQnuAIaagbCQMyiIaIeG1iJzNxF5hkMtCzUQG2zy5
-         Yiig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686483111; x=1689075111;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ET+8jv1Sr4c8KNb9UT3DWTBXEn+DrM0MENG4Vij4uyQ=;
-        b=F25x8/9q6RvQzI5mpZMUirrQIWMaerufuyOkn3jVNhaxqin9zviZvTYc/GXb5/vUwB
-         ozd067vNTRMo3tf+itxhcD18YzpdAVfUyLG9sQJQXG1ewPuuzctpCUjGuTixOFCiBmkY
-         vToCJM2Y/uH/iXAa2mXsqikqT3GxYR8xECv3K/CoSyDff89m5agd8o0BsDf0N1Ew9RHY
-         WYq2wWUR8iGsnWeLLfmgH1B9pc+VgNYFgfkZpVHz5htOfi0hYqDSnWEPVtKEEoAZzMRw
-         VsPtuM9z2lO4papvOtkbu+DExHuYSpPVkbRUzbA2XNnan7M1SIF2zJe9h3+FrF6kVS8V
-         RAuA==
-X-Gm-Message-State: AC+VfDwCtHyr3ZTu+nsOro4GEhvuZPy8iA5Iqg3jMhZii+hLsR7M+6Kn
-        MZ6GZQACepJKtYSX3nJipRg=
-X-Google-Smtp-Source: ACHHUZ7cRXXUiwx/VGfZs4Qirpj+wNLdNsY/9ynhNKhbPawe6sObhyNHGvcYnjCovYAKTibn3tXS+Q==
-X-Received: by 2002:a17:902:8642:b0:1b0:348:2498 with SMTP id y2-20020a170902864200b001b003482498mr3561999plt.2.1686483111258;
-        Sun, 11 Jun 2023 04:31:51 -0700 (PDT)
-Received: from debian.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id jd4-20020a170903260400b001b3b83b7d4esm1417503plb.211.2023.06.11.04.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Jun 2023 04:31:50 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id 18522106A3A; Sun, 11 Jun 2023 18:31:34 +0700 (WIB)
-Date:   Sun, 11 Jun 2023 18:31:34 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Joe Breuer <linux-kernel@jmbreuer.net>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Damien Le Moal <dlemoal@kernel.org>
+        Sun, 11 Jun 2023 23:10:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 672E4170B;
+        Sun, 11 Jun 2023 20:09:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0003C60B67;
+        Mon, 12 Jun 2023 03:09:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C3DC433D2;
+        Mon, 12 Jun 2023 03:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686539373;
+        bh=m7heADEhyArv8WhRnVIeKrsbQux5pXrM8PZQfuvp/1I=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=igo6QEWLIt9O3QrvGCvgaUhH0LpB2exG9vZLb1FpGB7+B3lpunb1oOGvciTN9PaXb
+         nU2vEka/mpnDgv2o6PM1h535AMc0fpeSc4Mn2rnJTuhxwfpV8z1bCqYUSyc8ZsgIf9
+         tlMQdzGIr6QmhXuVOg/7ZvvVPjEfCyHctG9gS2vODHAjBSP1/E5dm1QJj+eQD8/zKN
+         gJudIir1oDDNEZ+d4Q7vIIi3T9UgW4ByTCiOBW7SMbWJFQWlC41wkJWOdc57S5RzE1
+         SPY9HgWQAgvzoEa0KU7E2BYIaM9ZtfE5iIpO3ezmG4bDM/eQmaanP4wV7dQ04fsmv7
+         e1MWLKbLyjEYA==
+Message-ID: <4005a768-9e45-0707-509d-98ce0d2769bd@kernel.org>
+Date:   Mon, 12 Jun 2023 12:09:29 +0900
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>
 Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <len.brown@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -68,6 +52,7 @@ Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Phillip Potter <phil@philpotter.co.uk>,
+        Joe Breuer <linux-kernel@jmbreuer.net>,
         Linux Power Management <linux-pm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Linux Hardening <linux-hardening@vger.kernel.org>,
@@ -79,73 +64,94 @@ Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Martin Kepplinger <martin.kepplinger@puri.sm>,
         Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: Re: Fwd: Waking up from resume locks up on sr device
-Message-ID: <ZIWwlptfVphjGz9u@debian.me>
 References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
  <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
  <ZIQ6bkau3j6qGef8@duo.ucw.cz>
  <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
  <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
- <b2cf6d96-a55a-d444-d22e-e9b3945ba43f@jmbreuer.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pJUn/uCZg2bV7nGQ"
-Content-Disposition: inline
-In-Reply-To: <b2cf6d96-a55a-d444-d22e-e9b3945ba43f@jmbreuer.net>
+Content-Language: en-US
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On 6/11/23 00:03, Bart Van Assche wrote:
+> On 6/10/23 06:27, Bagas Sanjaya wrote:
+>> On 6/10/23 15:55, Pavel Machek wrote:
+>>>>> #regzbot introduced: v5.0..v6.4-rc5 https://bugzilla.kernel.org/show_bug.cgi?id=217530
+>>>>> #regzbot title: Waking up from resume locks up on SCSI CD/DVD drive
+>>>>>
+>>>> The reporter had found the culprit (via bisection), so:
+>>>>
+>>>> #regzbot introduced: a19a93e4c6a98c
+>>> Maybe cc the authors of that commit?
+>>
+>> Ah! I forgot to do that! Thanks anyway.
+> 
+> Hi Damien,
+> 
+> Why does the ATA code call scsi_rescan_device() before system resume has
+> finished? Would ATA devices still work with the patch below applied?
 
---pJUn/uCZg2bV7nGQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I do not know the PM code well at all, need to dig into it. But your patch
+worries me as it seems it would prevent rescan of the device on a resume, which
+can be an issue if the device has changed.
 
-On Sun, Jun 11, 2023 at 11:05:27AM +0200, Joe Breuer wrote:
-> I'm the reporter of this issue.
->=20
-> I just tried this patch against 6.3.4, and it completely fixes my
-> suspend/resume issue.
->=20
-> The optical drive stays usable after resume, even suspending/resuming dur=
-ing
-> playback of CDDA content works flawlessly and playback resumes seamlessly
-> after system resume.
->=20
-> So, from my perspective: Good one!
->=20
+I am not yet 100% clear on the root cause for this, but I think it comes from
+the fact that ata_port_pm_resume() runs before the sci device resume is done, so
+with scsi_dev->power.is_suspended still true. And ata_port_pm_resume() calls
+ata_port_resume_async() which triggers EH (which will do reset + rescan)
+asynchronously. So it looks like we have scsi device resume and libata EH for
+rescan fighting each others for the scan mutex and device lock, leading to deadlock.
 
-Thanks for trying the fix and telling the result. But tl;dr:
+Trying to recreate this issue now to confirm and debug further. But I suspect
+the solution to this may be best implemented in libata, not in scsi.
+This looks definitely related to this thread:
 
-> A: http://en.wikipedia.org/wiki/Top_post
-> Q: Were do I find info about this thing called top-posting?
-> A: Because it messes up the order in which people normally read text.
-> Q: Why is top-posting such a bad thing?
-> A: Top-posting.
-> Q: What is the most annoying thing in e-mail?
->=20
-> A: No.
-> Q: Should I include quotations after my reply?
->=20
-> http://daringfireball.net/2007/07/on_top
+https://lore.kernel.org/linux-scsi/7b553268-69d3-913a-f9de-28f8d45bdb1e@acm.org/
 
-(while I'm removing the quoted context below your reply after the fact).
+Similaraly to your comment on that thread, having to look at
+dev->power.is_suspended is not ideal I think. What we need is to have ata and
+scsi pm resume be synchronized, but I am not yet 100% clear on the scsi layer side.
 
-Thanks.
+> 
+> Thanks,
+> 
+> Bart.
+> 
+> 
+> diff --git a/drivers/scsi/scsi_scan.c b/drivers/scsi/scsi_scan.c
+> index 6a959c993dd8..be3971b7fd27 100644
+> --- a/drivers/scsi/scsi_scan.c
+> +++ b/drivers/scsi/scsi_scan.c
+> @@ -1629,6 +1629,20 @@ void scsi_rescan_device(struct device *dev)
+>   {
+>   	struct scsi_device *sdev = to_scsi_device(dev);
+> 
+> +#ifdef CONFIG_PM_SLEEP
+> +	/*
+> +	 * The ATA subsystem may call scsi_rescan_device() before resuming has
+> +	 * finished. If this happens, prevent a deadlock on the device_lock()
+> +	 * call by skipping rescanning.
+> +	 */
+> +	if (dev->power.is_suspended)
+> +		return;
+> +#endif
+> +
+> +	/*
+> +	 * Serialize scsi_driver.rescan() calls and scsi_driver.gendrv.remove()
+> +	 * calls.
+> +	 */
+>   	device_lock(dev);
+> 
+>   	scsi_attach_vpd(sdev);
+> 
 
---=20
-An old man doll... just what I always wanted! - Clara
+-- 
+Damien Le Moal
+Western Digital Research
 
---pJUn/uCZg2bV7nGQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZIWwkAAKCRD2uYlJVVFO
-o0dcAQDBLvOwhF7MNiLJ3qtN+3ezvWqHj9xZ1JeN01prxbawGgD+NSKtGG1O0leF
-rjwIYm0dINVegT1HRoIZQ0flawMzpAg=
-=j2UP
------END PGP SIGNATURE-----
-
---pJUn/uCZg2bV7nGQ--
