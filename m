@@ -2,46 +2,46 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3DE1C7EE25
-	for <linux-hardening@archiver.kernel.org>; Mon, 12 Jun 2023 10:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C08C7EE45
+	for <linux-hardening@archiver.kernel.org>; Mon, 12 Jun 2023 10:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233645AbjFLKsY (ORCPT
+        id S235307AbjFLKvh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 12 Jun 2023 06:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51668 "EHLO
+        Mon, 12 Jun 2023 06:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233212AbjFLKsA (ORCPT
+        with ESMTP id S235425AbjFLKvK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 12 Jun 2023 06:48:00 -0400
+        Mon, 12 Jun 2023 06:51:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1945E7AA6;
-        Mon, 12 Jun 2023 03:32:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 067AA868B;
+        Mon, 12 Jun 2023 03:35:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E047561372;
-        Mon, 12 Jun 2023 10:32:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFAF5C433EF;
-        Mon, 12 Jun 2023 10:32:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E01A623E2;
+        Mon, 12 Jun 2023 10:35:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E2DDC433EF;
+        Mon, 12 Jun 2023 10:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1686565970;
-        bh=c7IlnrlA2Yxrp30Q52gHwzxuRfWVGZqbiKzCiQOiR2Q=;
+        s=korg; t=1686566137;
+        bh=IKwH/tBAoVNQ8juC60qCPJoFqJex7Fupw4VQCFwEX/c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sf7HRTUs5GwdIZs8AAc8eLnpCJ9paRc9cjAxONEWnWWkFhuWXq3Ww4IN1aljGWEWb
-         5dYri3HX7LPzSGhG54xyCzadPqQ7Ws1J9I1xqBrJyQrWClfJ+NKCq83gIItoxkzWba
-         wuGBnZ7haYYmwZPoaA+DW83qxXLAzNxM0DnXIZ/U=
+        b=b91dLeuUTA5gCmHXmyLkB3Jv08CRttQa4eXxozWUPFOvvYt17+NJlsBCLTfi8qODg
+         9u+3t6bfMG+TkRdyb1SfnX6cAOMQCMhXd7QQnE/LezZDBsaaTMIwwIfGzU5EJCzRPo
+         5tSRpkqVZBIw0SZD9W3+xs6HqyMcJSgXTLD1ejO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         patches@lists.linux.dev, Palmer Dabbelt <palmer@rivosinc.com>,
         linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Paul Barker <paul.barker@sancloud.com>
-Subject: [PATCH 5.10 02/68] gcc-plugins: Reorganize gimple includes for GCC 13
-Date:   Mon, 12 Jun 2023 12:25:54 +0200
-Message-ID: <20230612101658.540867935@linuxfoundation.org>
+Subject: [PATCH 5.15 02/91] gcc-plugins: Reorganize gimple includes for GCC 13
+Date:   Mon, 12 Jun 2023 12:25:51 +0200
+Message-ID: <20230612101702.184506593@linuxfoundation.org>
 X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230612101658.437327280@linuxfoundation.org>
-References: <20230612101658.437327280@linuxfoundation.org>
+In-Reply-To: <20230612101702.085813286@linuxfoundation.org>
+References: <20230612101702.085813286@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,42 +63,36 @@ Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
 Link: https://lore.kernel.org/all/20230113173033.4380-1-palmer@rivosinc.com/
 Cc: linux-hardening@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
-[ Modified to handle differences in other includes and conditional compilation in the 5.10.y tree. ]
+[ Modified to handle differences in other includes in the 5.15.y tree. ]
 Signed-off-by: Paul Barker <paul.barker@sancloud.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- scripts/gcc-plugins/gcc-common.h |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ scripts/gcc-plugins/gcc-common.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 --- a/scripts/gcc-plugins/gcc-common.h
 +++ b/scripts/gcc-plugins/gcc-common.h
-@@ -108,7 +108,13 @@
+@@ -77,7 +77,9 @@
  #include "varasm.h"
  #include "stor-layout.h"
  #include "internal-fn.h"
-+#endif
-+
 +#include "gimple.h"
-+
-+#if BUILDING_GCC_VERSION >= 4009
  #include "gimple-expr.h"
 +#include "gimple-iterator.h"
  #include "gimple-fold.h"
  #include "context.h"
  #include "tree-ssa-alias.h"
-@@ -124,13 +130,10 @@
+@@ -91,11 +93,9 @@
+ #include "tree-eh.h"
+ #include "stmt.h"
  #include "gimplify.h"
- #endif
- 
 -#include "gimple.h"
--
- #if BUILDING_GCC_VERSION >= 4009
  #include "tree-ssa-operands.h"
  #include "tree-phinodes.h"
  #include "tree-cfg.h"
 -#include "gimple-iterator.h"
  #include "gimple-ssa.h"
  #include "ssa-iterators.h"
- #endif
+ 
 
 
