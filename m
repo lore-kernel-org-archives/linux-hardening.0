@@ -2,77 +2,85 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5424C7EE2E
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 02:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A148C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 08:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232146AbjFMCh0 (ORCPT
+        id S241363AbjFMIfz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 12 Jun 2023 22:37:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
+        Tue, 13 Jun 2023 04:35:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230095AbjFMCh0 (ORCPT
+        with ESMTP id S241364AbjFMIfv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 12 Jun 2023 22:37:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D07410FE;
-        Mon, 12 Jun 2023 19:37:25 -0700 (PDT)
+        Tue, 13 Jun 2023 04:35:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6783C12A;
+        Tue, 13 Jun 2023 01:35:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 21E6662B05;
-        Tue, 13 Jun 2023 02:37:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C7CC433D2;
-        Tue, 13 Jun 2023 02:37:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EFA9F632B6;
+        Tue, 13 Jun 2023 08:35:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AAFDC433EF;
+        Tue, 13 Jun 2023 08:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686623844;
-        bh=ssAPgGS2d23iXRjVu4jNuQBYtcf86wc6r8T8a8Pw9PA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=snqC7+iqopXekqaUFANrgNUVQhgO6VAiiv5kUrVQoaQ7hwsgdK4dNTO7g1dant5/s
-         UDFnP9L3YGw6E2YBxw74L9LLH3SCRXpAoJsoOaneqHH4bUkF/p7mEZow74ZTQ8KRFU
-         zuaWQK48KFg9sVnBSKQhUtR2bk2XCRr4DL/yV/s6/s6OYMvW8K6EOk41stpCu4VIJM
-         Uxx7psw5pWQTigVUVepz8SgEFfnRqgrTc5lylPu0DaMtKFMDyz/orrcsf1UUUS6IW5
-         89aCZYCs0MAfiSDwTxjPy0h9DsfFps8GBPedMqnNHJGavtCVid/UBIJoG9bdsrOEJk
-         JWk8dljDVEG6Q==
-Date:   Mon, 12 Jun 2023 19:37:22 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-hardening@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: Replace strlcpy with strscpy
-Message-ID: <20230613023722.GA883@sol.localdomain>
-References: <20230613002258.3535506-1-azeemshaikh38@gmail.com>
+        s=k20201202; t=1686645341;
+        bh=7POap0BgReJndSfBWnUr9sOIww6wKlvURWhxSuQYNcQ=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=PIIvhn49fkhAq5d5lg+8yqih8TDoT9cLzsUMkI1hZK6IuCtrV+MgYvkckz7ek3Bqm
+         7+iNMMqJ4QzXPtJyHDGjhhKFlB9E8s41xREM+Yvo8iR9+rqbUIQ5uBJz8MBMwQGXgh
+         i5UdQz0UiCPpZvdXGqV4kufnN2fg+MtrX1Y1gp6WGFJT9clzGezrM9jFT5SHMo2KCz
+         beTt1JHCMjiF5zEg1FQe64GCMRw7bSzE1+koyqcQE5LLgMV5agu+wtQ9BI10z6XXit
+         sYL2u2h/0As18Gh0lyKJvqLwFoEqzUBy1ZTNkF07HkfyEhauJOhEvVIjs7Ym6pylVH
+         sz669fxJrD7UA==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230613002258.3535506-1-azeemshaikh38@gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] net/mediatek: strlcpy withreturn
+From:   Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20230613003458.3538812-1-azeemshaikh38@gmail.com>
+References: <20230613003458.3538812-1-azeemshaikh38@gmail.com>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>, linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <168664533370.24637.14116409515016851485.kvalo@kernel.org>
+Date:   Tue, 13 Jun 2023 08:35:39 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 12:22:58AM +0000, Azeem Shaikh wrote:
-> diff --git a/crypto/lrw.c b/crypto/lrw.c
-> index 1b0f76ba3eb5..bb8c1575645b 100644
-> --- a/crypto/lrw.c
-> +++ b/crypto/lrw.c
-> @@ -359,8 +359,8 @@ static int lrw_create(struct crypto_template *tmpl, struct rtattr **tb)
->  	if (!strncmp(cipher_name, "ecb(", 4)) {
->  		unsigned len;
->  
-> -		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
-> -		if (len < 2 || len >= sizeof(ecb_name))
-> +		len = strscpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
-> +		if (len < 2)
->  			goto err_free_inst;
+Azeem Shaikh <azeemshaikh38@gmail.com> wrote:
 
-This is wrong because 'len' is unsigned.  So the -EFBIG return value is not
-being checked for, so this patch actually removes the overflow check.
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> 
+> Direct replacement is safe here since DEV_ASSIGN is only used by
+> TRACE macros and the return values are ignored.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-It looks like you've sent over 60 strscpy conversion patches recently
-(https://lore.kernel.org/linux-hardening/?q=f%3Aazeemshaikh38+s%3Astrscpy).
-That's concerning because this is the only one that I happened to review, and it
-introduces a bug.  There are 60 others that could have this same bug.  Can you
-please review all your patches for this same bug?
+The title should be:
 
-- Eric
+wifi: mt7601u: replace strlcpy() with strscpy()
+
+I can fix that, no need to resend because of this.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20230613003458.3538812-1-azeemshaikh38@gmail.com/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
