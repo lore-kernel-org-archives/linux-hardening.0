@@ -2,73 +2,72 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF07BEB64D7
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 19:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030B5EB64DA
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 19:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229669AbjFMTal (ORCPT
+        id S232224AbjFMTcA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Jun 2023 15:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36832 "EHLO
+        Tue, 13 Jun 2023 15:32:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229766AbjFMTad (ORCPT
+        with ESMTP id S233782AbjFMTb7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Jun 2023 15:30:33 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6D4DE6F
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Jun 2023 12:30:32 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-651f2f38634so5949467b3a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Jun 2023 12:30:32 -0700 (PDT)
+        Tue, 13 Jun 2023 15:31:59 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A575CE69
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Jun 2023 12:31:57 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1b3db8f3d07so13257415ad.2
+        for <linux-hardening@vger.kernel.org>; Tue, 13 Jun 2023 12:31:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686684632; x=1689276632;
+        d=chromium.org; s=google; t=1686684717; x=1689276717;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p9zTL6WkhKlD8rEo4R4d64UgNtBnLNYoZuMTJCOlN+o=;
-        b=lAMvXmQMui7zMEyr/DPCNp/XJdds6GKxaPeycgssCkQOE9zzABt+B60heDpSUwgub0
-         T6bl3aZRtjyB2UGO/F2+mtawwBoFCu/22qjqzmBMJ9z9SsfbQZQbgXgl2OD8h6SxyF2f
-         qS0QoHEZtRplgwwONhm390XaklAvofry7DfpM=
+        bh=f5euzgeiZ5qWr3Kx1p765UIGm0BpE7qlZD/8jcIprGc=;
+        b=g4Xdj6IL66L7V4ix9KjnbpfTLfianXbn3R6cC3gdbzRXuEzA4dU+l9DbgpeacZXjBO
+         J1mDR4cFc/g8fb58ztIUGKiiLuED3wp9ics2T9egKaEnSCTM4JqXSnaor+C2Xa5a/Tg/
+         zBlKNm484JI940uwwzy5upXCEjwV/lfZ97ufE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686684632; x=1689276632;
+        d=1e100.net; s=20221208; t=1686684717; x=1689276717;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=p9zTL6WkhKlD8rEo4R4d64UgNtBnLNYoZuMTJCOlN+o=;
-        b=Y8arYLRMZaMBjSJ4mDAKRnGEI7K2Sa0jF6xoRIVh4oU3Dx4KOMuUE1aOMys4aMTz49
-         zKydItkw9C2Vwmgx8JScZaZwDp7GjZPG1ElULUraXvgnAo9LhCd9TNvPlj3mWESgwHWI
-         vt/BaZ/t2oQ4zXLpBdw2bFS6QOMItgxS/0CzGZeMMwuMPQ0iwMt6yeaUC/6a9nUkiel5
-         Fhz2o7gV/hFWNknu3GjaVCu6w21/6eG8IlzbJJnnDmMuYkFeYQ9RW7QEwywglp7/j0sP
-         FkBgqHRsnQLv4z31FTGGI2lr3rBL2pJUPJJ4BF+AJKWXEAFbs/vhYMpjuY34KhR+9xUM
-         7GWg==
-X-Gm-Message-State: AC+VfDzJ4fBkz31waMPgWqw6se75+NsLCPPXD7Mhci4muUMl6ytcPDxD
-        oT+VfKlhAaa2BfEeIYZL0Cu+4Ie5HS2QZskQ1aA=
-X-Google-Smtp-Source: ACHHUZ6N9gkZEMIB3vFpJ9HaIYshp93Z/o2OR28UTSw5/MCUvWPAgeLhGW714sGpBVb0mutFqUP4Mw==
-X-Received: by 2002:a05:6a20:7491:b0:118:c4c1:e0ed with SMTP id p17-20020a056a20749100b00118c4c1e0edmr16540792pzd.30.1686684632312;
-        Tue, 13 Jun 2023 12:30:32 -0700 (PDT)
+        bh=f5euzgeiZ5qWr3Kx1p765UIGm0BpE7qlZD/8jcIprGc=;
+        b=TN+dw46YiHTqhovxbp6fa6Z05zt7tzvWdTqsutlWcz4HGVYsSl4LZAz0zoPULEZWa7
+         uTLJe5ktnOGYmsasOE2l8v1JS3RQ9VKcDZmX8dVRhpVeb2ENNDATGZd6RBZmQH3rRPWq
+         +D1B15x1oWmExEftV4vLEAnQL3D2nWuXL3WlPxkmTEnXSeuKObyIwnpjeZ4G78peMCcO
+         8kVYp7b0qNj26JWurYDhMRa/WJ/AcO/aw2biy9CgKLrvl7RnjldbaTmEROiq3IH4KCxs
+         totTUqSvYRDkC3bcHQAKXzgF9C9rbjczOkhi06AWxDfVAUeTDhGAo8PT/g8Xuq3lTbAu
+         yBPQ==
+X-Gm-Message-State: AC+VfDyb0/V8D/ecLd3aNm+mlvMUbveEK2u+9DdRfjQiwrH0GOzC8I5L
+        AXVQAQrNyAECHdAOXF9xxhHfrA==
+X-Google-Smtp-Source: ACHHUZ48VUIKnVIubqBg9OkadgWv/RDkrdFOjNUm/zcfs1CQ34NnLMg6nLwOgDF8RhZ91vxZlxsydw==
+X-Received: by 2002:a17:902:d887:b0:1b0:6541:91c2 with SMTP id b7-20020a170902d88700b001b0654191c2mr9679573plz.63.1686684717178;
+        Tue, 13 Jun 2023 12:31:57 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 31-20020a630a1f000000b005348af1b84csm9761797pgk.74.2023.06.13.12.30.31
+        by smtp.gmail.com with ESMTPSA id p7-20020a1709026b8700b001b04b1fae4dsm239374plk.35.2023.06.13.12.31.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 12:30:31 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 12:30:31 -0700
+        Tue, 13 Jun 2023 12:31:56 -0700 (PDT)
+Date:   Tue, 13 Jun 2023 12:31:56 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Azeem Shaikh <azeemshaikh38@gmail.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-hardening@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Albert Briscoe <albertsbriscoe@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Subject: Re: [PATCH] usb: gadget: function: printer: Replace strlcpy with
- strscpy
-Message-ID: <202306131229.B5F2D9F@keescook>
-References: <20230613004341.3540325-1-azeemshaikh38@gmail.com>
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-hardening@vger.kernel.org, Hongren Zheng <i@zenithal.me>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usbip: usbip_host: Replace strlcpy with strscpy
+Message-ID: <202306131231.88243CB@keescook>
+References: <20230613004402.3540432-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230613004341.3540325-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230613004402.3540432-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 12:43:41AM +0000, Azeem Shaikh wrote:
+On Tue, Jun 13, 2023 at 12:44:02AM +0000, Azeem Shaikh wrote:
 > strlcpy() reads the entire source buffer first.
 > This read may exceed the destination size limit.
 > This is both inefficient and can lead to linear read
@@ -78,42 +77,42 @@ On Tue, Jun 13, 2023 at 12:43:41AM +0000, Azeem Shaikh wrote:
 > 
 > Direct replacement is safe here since return value of -E2BIG
 > is used to check for truncation instead of sizeof(dest).
-
-Perhaps say "PAGE_SIZE" here instead of sizeof(dest)?
-
 > 
 > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
 > [2] https://github.com/KSPP/linux/issues/89
 > 
 > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 > ---
->  drivers/usb/gadget/function/f_printer.c |    4 ++--
+>  drivers/usb/usbip/stub_main.c |    4 ++--
 >  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
-> index 28db3e336e7d..10dc7c55c25f 100644
-> --- a/drivers/usb/gadget/function/f_printer.c
-> +++ b/drivers/usb/gadget/function/f_printer.c
-> @@ -1211,8 +1211,8 @@ static ssize_t f_printer_opts_pnp_string_show(struct config_item *item,
->  	if (!opts->pnp_string)
->  		goto unlock;
+> diff --git a/drivers/usb/usbip/stub_main.c b/drivers/usb/usbip/stub_main.c
+> index e8c3131a8543..a92a284f5abb 100644
+> --- a/drivers/usb/usbip/stub_main.c
+> +++ b/drivers/usb/usbip/stub_main.c
+> @@ -174,8 +174,8 @@ static ssize_t match_busid_store(struct device_driver *dev, const char *buf,
+>  		return -EINVAL;
 >  
-> -	result = strlcpy(page, opts->pnp_string, PAGE_SIZE);
-> -	if (result >= PAGE_SIZE) {
-> +	result = strscpy(page, opts->pnp_string, PAGE_SIZE);
-> +	if (result == -E2BIG) {
+>  	/* busid needs to include \0 termination */
+> -	len = strlcpy(busid, buf + 4, BUSID_SIZE);
+> -	if (sizeof(busid) <= len)
+> +	len = strscpy(busid, buf + 4, BUSID_SIZE);
+> +	if (len == -E2BIG)
+>  		return -EINVAL;
 
-I think "< 1" might be a better test here.
+"len" is never used again, so maybe:
 
->  		result = PAGE_SIZE;
->  	} else if (page[result - 1] != '\n' && result + 1 < PAGE_SIZE) {
->  		page[result++] = '\n';
+	if (strscpy(...) < 0)
+		return -EINVAL;
+
+-Kees
+
+>  
+>  	if (!strncmp(buf, "add ", 4)) {
 > -- 
 > 2.41.0.162.gfafddb0af9-goog
 > 
 > 
-
--Kees
 
 -- 
 Kees Cook
