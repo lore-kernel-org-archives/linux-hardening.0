@@ -2,73 +2,77 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9A0C7EE2E
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 01:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5424C7EE2E
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 02:37:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233510AbjFMBEy (ORCPT
+        id S232146AbjFMCh0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 12 Jun 2023 21:04:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47120 "EHLO
+        Mon, 12 Jun 2023 22:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232574AbjFMBEx (ORCPT
+        with ESMTP id S230095AbjFMCh0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 12 Jun 2023 21:04:53 -0400
-Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10D810E3
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Jun 2023 18:04:50 -0700 (PDT)
-Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-19fa4346498so2998551fac.1
-        for <linux-hardening@vger.kernel.org>; Mon, 12 Jun 2023 18:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686618290; x=1689210290;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2KQwF+tqN3ar7O8HhmycujLeoInp3ui0gwcQNlvCNwM=;
-        b=UPMkiJ0u/r52W3Kl+RYwCsXZJiuT3Mm+08kVKuKrUrkGCKvEq/5lSJwMi3tSatCWX5
-         fKZ5SCt7kCgChYFhrjVIJLYlDTWxPiQv1XaGfv/TToLwmRB7FjZR7sz5K7ZNfY9CO0cm
-         JuotV47GNcz2c5fAGEv5zOj+PgmFiquq5jF2w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686618290; x=1689210290;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2KQwF+tqN3ar7O8HhmycujLeoInp3ui0gwcQNlvCNwM=;
-        b=QlNGdRQSU+fN/q1BNevJiarQyyaELCp1XYjJcxAcgA7xUPuYvZQHTV1IUiDYSjomfV
-         +Vb9iyWZ172Fv9ZpYbIJgOG5NOhOaZld2F9ETzH/IFp6h1+EqHuveuD4QtAGdBVqh8ZR
-         fd3KQ3QT0eDyFb4gBdHg+CVRbeeChGeVloESFkx1GcgylhEFo/ZgYzk2NMs6u5eoOtci
-         Vq1/y/I2htF/0D0f2UIM0W2iOPSCyVNn/jZr0feeOPBJ6linOjxtlU4dlRp/CjzpiWHs
-         qk2Lidpe6SEqHQ7mcae1qQgmkz7f8XTs/dr/YtdEitpdsXoQL+wCTHG6MPL+nreTpPSd
-         Ez0A==
-X-Gm-Message-State: AC+VfDwsdaiCe93Vfff/TQexw6S8f+DSmhgR+47rkWBWohdHhYRRRPiA
-        SF4IeaG7IRz3qa62HtTmRxzO/wYf+nVCI4b5083Kg8LyxFNwLNf1Tj0=
-X-Google-Smtp-Source: ACHHUZ6WW8micmaTUxPeuzv4crbx39qJfVCyq0oa28mnsHvqs0eCSd9KdZz6Jyl3DWmK3367T4vJGTsLVQQNnxxgRTw=
-X-Received: by 2002:a05:6870:1727:b0:19a:24cf:1597 with SMTP id
- h39-20020a056870172700b0019a24cf1597mr8526640oae.27.1686618289967; Mon, 12
- Jun 2023 18:04:49 -0700 (PDT)
+        Mon, 12 Jun 2023 22:37:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D07410FE;
+        Mon, 12 Jun 2023 19:37:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 21E6662B05;
+        Tue, 13 Jun 2023 02:37:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C7CC433D2;
+        Tue, 13 Jun 2023 02:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686623844;
+        bh=ssAPgGS2d23iXRjVu4jNuQBYtcf86wc6r8T8a8Pw9PA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=snqC7+iqopXekqaUFANrgNUVQhgO6VAiiv5kUrVQoaQ7hwsgdK4dNTO7g1dant5/s
+         UDFnP9L3YGw6E2YBxw74L9LLH3SCRXpAoJsoOaneqHH4bUkF/p7mEZow74ZTQ8KRFU
+         zuaWQK48KFg9sVnBSKQhUtR2bk2XCRr4DL/yV/s6/s6OYMvW8K6EOk41stpCu4VIJM
+         Uxx7psw5pWQTigVUVepz8SgEFfnRqgrTc5lylPu0DaMtKFMDyz/orrcsf1UUUS6IW5
+         89aCZYCs0MAfiSDwTxjPy0h9DsfFps8GBPedMqnNHJGavtCVid/UBIJoG9bdsrOEJk
+         JWk8dljDVEG6Q==
+Date:   Mon, 12 Jun 2023 19:37:22 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-hardening@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: Replace strlcpy with strscpy
+Message-ID: <20230613023722.GA883@sol.localdomain>
+References: <20230613002258.3535506-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
-From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Mon, 12 Jun 2023 18:04:39 -0700
-Message-ID: <CABi2SkWx_BnEHzGqqqbDMJi+vi-5a7XkQUCkyesN5PUtk23SgQ@mail.gmail.com>
-Subject: inconsistence in mprotect_fixup mlock_fixup madvise_update_vma
-To:     linux-mm@kvack.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230613002258.3535506-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello,
+On Tue, Jun 13, 2023 at 12:22:58AM +0000, Azeem Shaikh wrote:
+> diff --git a/crypto/lrw.c b/crypto/lrw.c
+> index 1b0f76ba3eb5..bb8c1575645b 100644
+> --- a/crypto/lrw.c
+> +++ b/crypto/lrw.c
+> @@ -359,8 +359,8 @@ static int lrw_create(struct crypto_template *tmpl, struct rtattr **tb)
+>  	if (!strncmp(cipher_name, "ecb(", 4)) {
+>  		unsigned len;
+>  
+> -		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
+> -		if (len < 2 || len >= sizeof(ecb_name))
+> +		len = strscpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
+> +		if (len < 2)
+>  			goto err_free_inst;
 
-There seems to be inconsistency in different VMA fixup
-implementations, for example:
-mlock_fixup will skip VMA that is hugettlb, etc, but those checks do
-not exist in mprotect_fixup and madvise_update_vma. Wouldn't this be a
-problem? the merge/split skipped by mlock_fixup, might get acted on in
-the madvice/mprotect case.
+This is wrong because 'len' is unsigned.  So the -EFBIG return value is not
+being checked for, so this patch actually removes the overflow check.
 
-mlock_fixup currently check for
-if (newflags == oldflags || (oldflags & VM_SPECIAL) ||
-is_vm_hugetlb_page(vma) || vma == get_gate_vma(current->mm) ||
-vma_is_dax(vma) || vma_is_secretmem(vma))
+It looks like you've sent over 60 strscpy conversion patches recently
+(https://lore.kernel.org/linux-hardening/?q=f%3Aazeemshaikh38+s%3Astrscpy).
+That's concerning because this is the only one that I happened to review, and it
+introduces a bug.  There are 60 others that could have this same bug.  Can you
+please review all your patches for this same bug?
 
-Should there be a common function to handle VMA merge/split ?
-
-Best
--Jeff
+- Eric
