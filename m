@@ -2,63 +2,65 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4774C7EE2E
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 00:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7ACC7EE2F
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 00:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230445AbjFMAla (ORCPT
+        id S238368AbjFMAnr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 12 Jun 2023 20:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
+        Mon, 12 Jun 2023 20:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233694AbjFMAl3 (ORCPT
+        with ESMTP id S238367AbjFMAnp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 12 Jun 2023 20:41:29 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5F7192;
-        Mon, 12 Jun 2023 17:41:29 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-34070ecad56so139915ab.3;
-        Mon, 12 Jun 2023 17:41:29 -0700 (PDT)
+        Mon, 12 Jun 2023 20:43:45 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48E1E7A;
+        Mon, 12 Jun 2023 17:43:44 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id ca18e2360f4ac-77acb944bdfso313120239f.0;
+        Mon, 12 Jun 2023 17:43:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686616888; x=1689208888;
+        d=gmail.com; s=20221208; t=1686617024; x=1689209024;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5rTOQWFVA6khqHtVp7GD0MN95ozRngFd7SU7JpSTOX8=;
-        b=HrrgygdGd34c3hZG9Ko9EXMPUVsYt81zKlXAISkhIkWi4VGAIIeUB8yV4tMn6EH5Ft
-         +TbZAoQg0H0yz2aG4uOjIOx9fmzXD/nfPETyD8Ircp6qYdBOtOxWCzwH6rQR0rHov4SZ
-         1tl9uHdNkhC9HMvwDreHqjE+VjO/HFT6SoHrVHnqxQmqy0qdZWEcEFOaWo3gsckMZZd6
-         Xmta/E1NggY5feulbzO82qkYgZvQ7FJJQ6Zi/ZESTfDHapp08v8sJvd5ue31SHClqXA6
-         uMm9qy0zYxvgph/jQvXdKYcR2xNTWWWJhf9z99/JQ3pIB7JfUQ110GXyjT02KBZLFchX
-         2iyQ==
+        bh=SUjTXpZGWUl8aPCIqnXmDVJiFmEW7gMN7vp18gmwoYo=;
+        b=IXpe7Emrl6ko4LD7DQoZAwv8z0/KdLITExfmWAAXsA+D25C04eyN8asLgKPw0QqTfy
+         sbei46gpq/X8JWoloCKU7vFBGj5+IoPn9Rz3Z8R/0fdIHlSLqXNik/g+VPAmrEu+5AbB
+         6gJaFwKYe4TiOcbpftpt7Ypd9DtTxGTZAHDLEqUY7Mv67eCMoLIVBy9pjfWgifdggQgf
+         t/vUE67hyFRErw1hAc0o7OU3DPWaNlwfdvH3cy/m95/Po20ZkyrDTbJkcrbyA4KZjsQy
+         /M9vU9XR4ArJegue/6zVWkk7mdyKDsbCdlRbMzzEw67/PSfwCN43R09lMxj0LCIrbAF1
+         RD8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686616888; x=1689208888;
+        d=1e100.net; s=20221208; t=1686617024; x=1689209024;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5rTOQWFVA6khqHtVp7GD0MN95ozRngFd7SU7JpSTOX8=;
-        b=Z0F32AuQ/6M/ISeNfOhNnYFIYneCmGBbw4rSNNq8WkVPvPd/zYEXmnFcSvYOhMu35N
-         MClxvY7MYSqyX+kUVESJyqJyXQG3zEPrBDqPTSUlnKIrpgq6veMU3qWRJu9zDyM2yb7z
-         H1jJB0kNNBd+wos2oufDo8X17ladGfLwMdyPCGKAvspFfAguAOrZ3H82Ma3YhNX1FWAT
-         O5Yy2dIVWZMRvbWG654bh9UplsMfwp15cSO2YtzeNvPoP5TqXJ+S0TnKWnUdlhRsTNZa
-         hOTEZCbImVHZU8QVw4MDH2FqKgxXUl3mPUl20pfEBxe0Ba+56N/Y0Mwal9cF9gTQooCC
-         pfyg==
-X-Gm-Message-State: AC+VfDx9mh+23bZL1rHQPBYKZX4rzhTpEWKqEIe+WhQkrG8U8FZ97s/f
-        KYEdFC7eivD+Z7K+wtMLWFE=
-X-Google-Smtp-Source: ACHHUZ5+aBw/9fdFocQCVdMI2dhsI0WYOI12EJh5UbhGeU2wuKe9u6YaezCaTrv9JoLIcSljChYktg==
-X-Received: by 2002:a92:d8c9:0:b0:334:f662:6406 with SMTP id l9-20020a92d8c9000000b00334f6626406mr8041778ilo.25.1686616888245;
-        Mon, 12 Jun 2023 17:41:28 -0700 (PDT)
+        bh=SUjTXpZGWUl8aPCIqnXmDVJiFmEW7gMN7vp18gmwoYo=;
+        b=gs4TyjkBxVn6UJ68GkD9DzG61MlWHajcAcI4i41c0lz46q3ZiCh1UPwTTLx3fwiNiR
+         uA4NRmmWiaxTT0s7fo7ZLD0K9W2Og+ePl8f8Cukd2NE3yRiolBaxQWUNp8Dnhb6U0EjY
+         OD+OsWOtlJvzf62u2JfRrtpm2aKiBLgk6AjSt1LAuY6/eWTMHZmIrcqYx9PkxJzXlNmZ
+         0ghz6NQxjZ8UNrc60AauG0R0GVV0BVTU7VAGjDMcGfkGmBmvrHktZW/SkKxn7tw5pETN
+         92kys7sYsehCrCY7hJNNH8zEzTlZX2IBAL3szoDpPYYFdu/J3G97NDGjwOrWXPWm4lgj
+         9JCQ==
+X-Gm-Message-State: AC+VfDyQXW9TckVFeC7Cbs2c9AbQR0l6J/PgLvxyi8SIKL5gArLq6zU8
+        5cOfB2nLRD6LNef80XgmDDs=
+X-Google-Smtp-Source: ACHHUZ7i6GSt2jdKr3j5yG/4NXkXwOGZEJuQD6eDvRYDUL6sL1IEo1hSDkdoL5M6ydeOg6lrivBmyQ==
+X-Received: by 2002:a5e:c64d:0:b0:777:b464:6ff9 with SMTP id s13-20020a5ec64d000000b00777b4646ff9mr8880457ioo.21.1686617024076;
+        Mon, 12 Jun 2023 17:43:44 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id l5-20020a92d8c5000000b00338a1272ce1sm3510408ilo.52.2023.06.12.17.41.27
+        by smtp.gmail.com with ESMTPSA id o11-20020a056638124b00b0041643b78cbesm3118861jas.120.2023.06.12.17.43.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 17:41:27 -0700 (PDT)
+        Mon, 12 Jun 2023 17:43:43 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing/boot: Replace strlcpy with strscpy
-Date:   Tue, 13 Jun 2023 00:41:25 +0000
-Message-ID: <20230613004125.3539934-1-azeemshaikh38@gmail.com>
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Albert Briscoe <albertsbriscoe@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Subject: [PATCH] usb: gadget: function: printer: Replace strlcpy with strscpy
+Date:   Tue, 13 Jun 2023 00:43:41 +0000
+Message-ID: <20230613004341.3540325-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -81,49 +83,24 @@ is used to check for truncation instead of sizeof(dest).
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- kernel/trace/trace_boot.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/gadget/function/f_printer.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 778200dd8ede..5fe525f1b8cc 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
+diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
+index 28db3e336e7d..10dc7c55c25f 100644
+--- a/drivers/usb/gadget/function/f_printer.c
++++ b/drivers/usb/gadget/function/f_printer.c
+@@ -1211,8 +1211,8 @@ static ssize_t f_printer_opts_pnp_string_show(struct config_item *item,
+ 	if (!opts->pnp_string)
+ 		goto unlock;
  
- 	/* Common ftrace options */
- 	xbc_node_for_each_array_value(node, "options", anode, p) {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
- 			pr_err("String is too long: %s\n", p);
- 			continue;
- 		}
-@@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
- 	const char *p;
- 
- 	xbc_node_for_each_array_value(node, "events", anode, p) {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
- 			pr_err("String is too long: %s\n", p);
- 			continue;
- 		}
-@@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
- 
- 	p = xbc_node_find_value(enode, "filter", NULL);
- 	if (p && *p != '\0') {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
- 			pr_err("filter string is too long: %s\n", p);
- 		else if (apply_event_filter(file, buf) < 0)
- 			pr_err("Failed to apply filter: %s\n", buf);
-@@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
- 
- 	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
- 		xbc_node_for_each_array_value(enode, "actions", anode, p) {
--			if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
-+			if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
- 				pr_err("action string is too long: %s\n", p);
- 			else if (trigger_process_regex(file, buf) < 0)
- 				pr_err("Failed to apply an action: %s\n", p);
+-	result = strlcpy(page, opts->pnp_string, PAGE_SIZE);
+-	if (result >= PAGE_SIZE) {
++	result = strscpy(page, opts->pnp_string, PAGE_SIZE);
++	if (result == -E2BIG) {
+ 		result = PAGE_SIZE;
+ 	} else if (page[result - 1] != '\n' && result + 1 < PAGE_SIZE) {
+ 		page[result++] = '\n';
 -- 
 2.41.0.162.gfafddb0af9-goog
 
