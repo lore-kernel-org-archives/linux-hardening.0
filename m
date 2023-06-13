@@ -2,130 +2,79 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D378EB64D7
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 21:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E02AEB64D7
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 22:15:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230269AbjFMV32 (ORCPT
+        id S230496AbjFMWPr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Jun 2023 17:29:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36490 "EHLO
+        Tue, 13 Jun 2023 18:15:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230220AbjFMV31 (ORCPT
+        with ESMTP id S230017AbjFMWPq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Jun 2023 17:29:27 -0400
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD2BCE4D
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Jun 2023 14:29:26 -0700 (PDT)
-Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-55b78f40301so24010eaf.0
-        for <linux-hardening@vger.kernel.org>; Tue, 13 Jun 2023 14:29:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686691766; x=1689283766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m5HE/be1fUs4mLPz2SaYKZccHzMwcgmBbh761wXiNnM=;
-        b=UvQvJ1HKFaAQUKjPmhDlN7jMvGSXBDIpN8pkmYF/Bwah+h8t3CYvGVpSGid2I0e1od
-         EVrSYsLxjZIKskXU0Vvt3brC/t3bA5LGP8JPpEtjL0RMSbnCD3G31q5hwxWjam+kQ7ex
-         xxV7ezNLLsVB0tD6+MpVreQkIk6yJG7zTek10=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686691766; x=1689283766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m5HE/be1fUs4mLPz2SaYKZccHzMwcgmBbh761wXiNnM=;
-        b=CUYYvOaLhuj896l4mR1NIjG/uNNPkn3pPtSxAe9OySPg/y0/dqubMzDm00Nh451jW+
-         DxV3G8uIyGRv0BQq9AM1hUrZLBXvhz3a5KkTbL8/yVLiWmRVixHcUG4WdGhqenZdKq5o
-         OIAINrm1BYJtAoEOs1V7XINIqDx32INwjSmU95eU09/6AB3/xlcPNPzL7DQFL0pXgQxw
-         ZtaGG2khbMLCYWyBH8azmwDSSWN1LDpva+pNujJpZebQ/B7nLKF1hly+II6aa85mPn5q
-         WlqF8tMBYpufn+aDFUrQeQ2Owhg6/oVT7c6ywVepfdVFA7h1HNwnBALHoWVM1N77E9Ch
-         iFvA==
-X-Gm-Message-State: AC+VfDzg6NF/aYC5xl0lVTw8H8H4NcH+4XXbZTRTa34f6FXp9aBjbE++
-        h36GPNfcdSG8SyMB0bsd5TkAOjADN/CnOKZEyjuQgg==
-X-Google-Smtp-Source: ACHHUZ7fbo8Kxz8Uov9OlVFEvorMOAwEZuA89XR8G2tpT+1NdcpRdHiv7waH1TAy4137LEZTgCftvDdUkcR4RpaqMKg=
-X-Received: by 2002:a4a:e9e2:0:b0:558:b424:8c31 with SMTP id
- w2-20020a4ae9e2000000b00558b4248c31mr8037821ooc.0.1686691766049; Tue, 13 Jun
- 2023 14:29:26 -0700 (PDT)
+        Tue, 13 Jun 2023 18:15:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816B719A;
+        Tue, 13 Jun 2023 15:15:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 65DC062012;
+        Tue, 13 Jun 2023 22:15:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522D1C433C0;
+        Tue, 13 Jun 2023 22:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686694543;
+        bh=qcO5Gh4O8Q63aCjwkm3HeTPqucX4BuJEg4NLQuZYNpc=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ob8kwTkjuXGGi6Ir+cBZ1TDTBMLhGcEgvPTwUfQ5At2Zag3f/sFmki0LmICMkwBWc
+         Elp6J1hDCTuWwXfRdxul3qMkFO0IipYBWKT7FhFAHFvbt3e5MmUwiIoITaLIpI5YYN
+         jkiuUwgayewfKYwrDY6gK0vQKuPmWpc/4FD1IwzRfVJ/4+Re290rRYoBSX5kkqs8cQ
+         H67Kr+zHf13r8/g2+lSew1fzVgkjTsp8/Jkzmp+kN4hA9QCsf/Ia/WjUYRMB1gTcc9
+         8HGzRfwQciNi0UjYBbM2bVsrTMcVLK2p+KieuBu26DJEupIsYDPy0t5CNQb41VqRze
+         nV2Un1I/YgENg==
+Message-ID: <45ed31e0-9ecd-56ea-c0d4-3c68a3fd8cf5@kernel.org>
+Date:   Tue, 13 Jun 2023 17:15:41 -0500
 MIME-Version: 1.0
-References: <CABi2SkWx_BnEHzGqqqbDMJi+vi-5a7XkQUCkyesN5PUtk23SgQ@mail.gmail.com>
- <CABi2SkXw6ZD-M1ZrcXNL7abtM=RzQXv716PPM_k=1Tay=5rUFA@mail.gmail.com> <ZIjOlU5EfVNt6NRU@x1n>
-In-Reply-To: <ZIjOlU5EfVNt6NRU@x1n>
-From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Tue, 13 Jun 2023 14:29:14 -0700
-Message-ID: <CABi2SkXE4pUhHucZ_c-_4Ux-VcLKic0+HY_DN2wUEC6DGkDvQQ@mail.gmail.com>
-Subject: Re: inconsistence in mprotect_fixup mlock_fixup madvise_update_vma
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-mm@kvack.org, linux-hardening@vger.kernel.org,
-        Liam.Howlett@oracle.com, zhangpeng.00@bytedance.com,
-        akpm@linux-foundation.org, koct9i@gmail.com, david@redhat.com,
-        ak@linux.intel.com, hughd@google.com, emunson@akamai.com,
-        rppt@linux.ibm.com, aarcange@redhat.com,
-        linux-kernel@vger.kernel.org, Lorenzo Stoakes <lstoakes@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] nios2: Replace all non-returning strlcpy with strscpy
+To:     Kees Cook <keescook@chromium.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230530162358.984149-1-azeemshaikh38@gmail.com>
+ <202305301620.346CC541@keescook>
+Content-Language: en-US
+From:   Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <202305301620.346CC541@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello Peter,
-
-Thanks for responding.
-
-On Tue, Jun 13, 2023 at 1:16=E2=80=AFPM Peter Xu <peterx@redhat.com> wrote:
->
-> Hi, Jeff,
->
-> On Tue, Jun 13, 2023 at 08:26:26AM -0700, Jeff Xu wrote:
-> > + more ppl to the list.
-> >
-> > On Mon, Jun 12, 2023 at 6:04=E2=80=AFPM Jeff Xu <jeffxu@chromium.org> w=
-rote:
-> > >
-> > > Hello,
-> > >
-> > > There seems to be inconsistency in different VMA fixup
-> > > implementations, for example:
-> > > mlock_fixup will skip VMA that is hugettlb, etc, but those checks do
-> > > not exist in mprotect_fixup and madvise_update_vma. Wouldn't this be =
-a
-> > > problem? the merge/split skipped by mlock_fixup, might get acted on i=
-n
-> > > the madvice/mprotect case.
-> > >
-> > > mlock_fixup currently check for
-> > > if (newflags =3D=3D oldflags || (oldflags & VM_SPECIAL) ||
-> > > is_vm_hugetlb_page(vma) || vma =3D=3D get_gate_vma(current->mm) ||
-> > > vma_is_dax(vma) || vma_is_secretmem(vma))
->
-> The special handling you mentioned in mlock_fixup mostly makes sense to m=
-e.
->
-> E.g., I think we can just ignore mlock a hugetlb page if it won't be
-> swapped anyway.
->
-> Do you encounter any issue with above?
->
-> > > Should there be a common function to handle VMA merge/split ?
->
-> IMHO vma_merge() and split_vma() are the "common functions".  Copy Lorenz=
-o
-> as I think he has plan to look into the interface to make it even easier =
-to
-> use.
->
-The mprotect_fixup doesn't have the same check as mlock_fixup. When
-userspace calls mlock(), two VMAs might not merge or split because of
-vma_is_secretmem check, However, when user space calls mprotect() with
-the same address range, it will merge/split.  If mlock() is doing the
-right thing to merge/split the VMAs, then mprotect() is not ?
-
-Also skipping merge of VMA might be OK, but skipping split doesn't,
-wouldn't that cause inconsistent between vma->vm_flags and what is
-provisioned in the page ?
-
-Thanks
--Jeff Xu
 
 
-> --
-> Peter Xu
->
+On 5/30/23 18:20, Kees Cook wrote:
+> On Tue, May 30, 2023 at 04:23:58PM +0000, Azeem Shaikh wrote:
+>> strlcpy() reads the entire source buffer first.
+>> This read may exceed the destination size limit.
+>> This is both inefficient and can lead to linear read
+>> overflows if a source string is not NUL-terminated [1].
+>> In an effort to remove strlcpy() completely [2], replace
+>> strlcpy() here with strscpy().
+>> No return values were used, so direct replacement is safe.
+>>
+>> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+>> [2] https://github.com/KSPP/linux/issues/89
+>>
+>> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> 
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+
+Applied!
+
+Thanks,
+Dinh
