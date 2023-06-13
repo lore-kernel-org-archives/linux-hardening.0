@@ -2,79 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E02AEB64D7
-	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 22:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE218EB64D7
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 22:51:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230496AbjFMWPr (ORCPT
+        id S231905AbjFMWvO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Jun 2023 18:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57004 "EHLO
+        Tue, 13 Jun 2023 18:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230017AbjFMWPq (ORCPT
+        with ESMTP id S231745AbjFMWvN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Jun 2023 18:15:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816B719A;
-        Tue, 13 Jun 2023 15:15:45 -0700 (PDT)
+        Tue, 13 Jun 2023 18:51:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37217EC;
+        Tue, 13 Jun 2023 15:51:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 65DC062012;
-        Tue, 13 Jun 2023 22:15:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 522D1C433C0;
-        Tue, 13 Jun 2023 22:15:43 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C0DC363611;
+        Tue, 13 Jun 2023 22:51:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B613C433C8;
+        Tue, 13 Jun 2023 22:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686694543;
-        bh=qcO5Gh4O8Q63aCjwkm3HeTPqucX4BuJEg4NLQuZYNpc=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=ob8kwTkjuXGGi6Ir+cBZ1TDTBMLhGcEgvPTwUfQ5At2Zag3f/sFmki0LmICMkwBWc
-         Elp6J1hDCTuWwXfRdxul3qMkFO0IipYBWKT7FhFAHFvbt3e5MmUwiIoITaLIpI5YYN
-         jkiuUwgayewfKYwrDY6gK0vQKuPmWpc/4FD1IwzRfVJ/4+Re290rRYoBSX5kkqs8cQ
-         H67Kr+zHf13r8/g2+lSew1fzVgkjTsp8/Jkzmp+kN4hA9QCsf/Ia/WjUYRMB1gTcc9
-         8HGzRfwQciNi0UjYBbM2bVsrTMcVLK2p+KieuBu26DJEupIsYDPy0t5CNQb41VqRze
-         nV2Un1I/YgENg==
-Message-ID: <45ed31e0-9ecd-56ea-c0d4-3c68a3fd8cf5@kernel.org>
-Date:   Tue, 13 Jun 2023 17:15:41 -0500
+        s=k20201202; t=1686696671;
+        bh=zVWmLSa3tOz3dzkcme4HlB9HKtQ3K2iGtgg1kJGmiRI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ePMi2Q+CTmtpgJVaIzPrukxiTC3TxB3QFM0s88Sryp7g8J8pap0u8KRphDdUOa+Hc
+         3n+gjevd+rbchrqK4t2C1AGaXtIUWAfKwlbnR4LjJwWOf42AsMGc5MSAt4EcLvTsGo
+         RbyH9qwiqhUtcOHEDRlk0jRnI3n7YzvISckIc/nbWNKwchWGJt0cP+YWJGPUJ5hlsF
+         8HkgyK7aNwncdd/FWqY0Wu4FUsKEFKLyix7my73Xm5JYXhDZeZRuPQGPQwxeYUhzf1
+         7WsV7bPegyYRBugI8AdTh7llIeRbqerMKLniBHW5Cyp8KQe95Rg8dlg5pZF1neqnNG
+         O/GAuthnXjn9A==
+Date:   Tue, 13 Jun 2023 16:52:08 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        kernel test robot <lkp@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?Q?J=F3_=C1gila?= Bitsch <jgilab@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] usb: ch9: Replace 1-element array with flexible array
+Message-ID: <ZIjzGCMWrar3kf1L@work>
+References: <20230613210400.never.078-kees@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] nios2: Replace all non-returning strlcpy with strscpy
-To:     Kees Cook <keescook@chromium.org>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230530162358.984149-1-azeemshaikh38@gmail.com>
- <202305301620.346CC541@keescook>
-Content-Language: en-US
-From:   Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <202305301620.346CC541@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230613210400.never.078-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 5/30/23 18:20, Kees Cook wrote:
-> On Tue, May 30, 2023 at 04:23:58PM +0000, Azeem Shaikh wrote:
->> strlcpy() reads the entire source buffer first.
->> This read may exceed the destination size limit.
->> This is both inefficient and can lead to linear read
->> overflows if a source string is not NUL-terminated [1].
->> In an effort to remove strlcpy() completely [2], replace
->> strlcpy() here with strscpy().
->> No return values were used, so direct replacement is safe.
->>
->> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
->> [2] https://github.com/KSPP/linux/issues/89
->>
->> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+On Tue, Jun 13, 2023 at 02:04:04PM -0700, Kees Cook wrote:
+> With "-fstrict-flex-arrays=3" enabled, UBSAN_BOUNDS no longer pretends
+> 1-element arrays are unbounded. Walking wData will trigger a warning,
+> so make it a proper flexible array. Add a union to keep the struct size
+> identical for userspace in case anything was depending on the old size.
 > 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202306102333.8f5a7443-oliver.sang@intel.com
+> Fixes: df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3")
+
+I always have mixed feelings about a 'Fixes' tag applied to a commit
+like this (one that enables a compiler option that avoids the introduction
+of buggy code), when we are addressing the potentially buggy code that
+the option is inteded to prevent. (thinkingface)
+
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: kernel test robot <lkp@intel.com>
+> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: "Jó Ágila Bitsch" <jgilab@gmail.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+--
+Gustavo
+
+> ---
+>  include/uapi/linux/usb/ch9.h | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-
-Applied!
-
-Thanks,
-Dinh
+> diff --git a/include/uapi/linux/usb/ch9.h b/include/uapi/linux/usb/ch9.h
+> index b17e3a21b15f..82ec6af71a1d 100644
+> --- a/include/uapi/linux/usb/ch9.h
+> +++ b/include/uapi/linux/usb/ch9.h
+> @@ -376,7 +376,10 @@ struct usb_string_descriptor {
+>  	__u8  bLength;
+>  	__u8  bDescriptorType;
+>  
+> -	__le16 wData[1];		/* UTF-16LE encoded */
+> +	union {
+> +		__le16 legacy_padding;
+> +		__DECLARE_FLEX_ARRAY(__le16, wData);	/* UTF-16LE encoded */
+> +	};
+>  } __attribute__ ((packed));
+>  
+>  /* note that "string" zero is special, it holds language codes that
+> -- 
+> 2.34.1
+> 
