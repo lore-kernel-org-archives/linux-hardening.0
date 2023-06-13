@@ -2,66 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B782C7EE2E
-	for <linux-hardening@archiver.kernel.org>; Mon, 12 Jun 2023 23:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A92C7EE43
+	for <linux-hardening@archiver.kernel.org>; Tue, 13 Jun 2023 00:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbjFLXXV (ORCPT
+        id S239662AbjFMA0F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 12 Jun 2023 19:23:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33528 "EHLO
+        Mon, 12 Jun 2023 20:26:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjFLXXV (ORCPT
+        with ESMTP id S240400AbjFMAZl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 12 Jun 2023 19:23:21 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB93E6B;
-        Mon, 12 Jun 2023 16:23:18 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id ca18e2360f4ac-77af28802c7so91892339f.1;
-        Mon, 12 Jun 2023 16:23:18 -0700 (PDT)
+        Mon, 12 Jun 2023 20:25:41 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45884EF6;
+        Mon, 12 Jun 2023 17:23:35 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id e9e14a558f8ab-33e4e59da95so30486155ab.2;
+        Mon, 12 Jun 2023 17:23:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686612198; x=1689204198;
+        d=gmail.com; s=20221208; t=1686615796; x=1689207796;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dxVyUY0dadSws9d1S/zE7Uf1J0Kd9LG7pWJtcUQbE5U=;
-        b=l7zrUKkhBHjs07Y20WY28bXIbFYRxRmVByeXNT1FoOAcaH2hF87Pmye9lTtnd1LCXQ
-         vr8F6/xf4hgNG99WU8q1wSdDTpDJh1Itk/A0xCvtdo8tsAa9Pz6TAaSn8Eg30j3r6nzP
-         OgjaQfQ8KRP9kNlQuehcIgCAiWSjBOzcg+IYHJN7/El1Za01CG4b/I7GoURkuoziMVNY
-         BtdNw41jZeew+f1JZt60uEHet+SlSQcfqVfTfTF4uQRwRsJI6ZAU7UW2ICTT1V+1yYKy
-         YuHlMRZd+UHSP5xpgssX2rW0QAuQJzCOptjrlRpGjoPRyWlkvE3bvSY8lvFyIvE6ebNQ
-         KTHw==
+        bh=8206uVleRcmenlUn2i22dXepe92OExv7mWA9sV/K12U=;
+        b=BSEHyGmwIli/13S+jTzcgBSD9+BkQSBkh7qCUMxdWHD8DeHngnFoEQhJH0IWxsp8Os
+         dfDojs1txQZDK7SupkV16NSLbrcwdSeGNOHo1U8nl6+S/+dSN1KqNrnpOi61VnhLeJjg
+         WzaqQUge0NeLtbnBj2NI2kTX6OFkfPkevnwVkXihzMAHIuvj0TyKsa8MT1qmlyoER6fy
+         2XcAyKg7TI51lpyceo6YRGVu+n9TxonWKRq3ODpqTsKRxXBdhtSK2hlX9ETQ0Ix895Ou
+         9jU7SZFo4a+5rIlBHO0Kt4OUewkDP5ncdafeWUaoi2dU7RGtzwZA5hTN3AvcKBTyYyUg
+         e+XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686612198; x=1689204198;
+        d=1e100.net; s=20221208; t=1686615796; x=1689207796;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dxVyUY0dadSws9d1S/zE7Uf1J0Kd9LG7pWJtcUQbE5U=;
-        b=SZ3mijSlYLaALP0xloE3g9FQ2mQxl3XsHpaJzH4eXAV2q4CGJqWxhi+f1e0eOOfL1+
-         2p+J1pvDjmAZC7EmFDUKdajb3V6lRhggwYFYdjZt1FxwEFAVgR/8iL2HlJOICciZC12G
-         aIh8GnS7XqB0/RiSJifcpLgiZEMNTJiEGv38gzQ0pa+33Ow7ykseXM16wRNgW/zu9IUS
-         edXRgDK9RV34XizjDGo6GEAopa/ovsWEJQ1E7Z9Jplx17ZjrDBuaxl8iKmsjDDboMpHH
-         jkHlMmBTyBtauRsb6YWnXCPLE1HeiRr2Eg5HOSLIkchqrvULPsprwyk+3R9UDc/7Z5CI
-         ZdAQ==
-X-Gm-Message-State: AC+VfDx1uG1cqjNN0CSbNO7Iz/Cc63F7wDG2WeOieTbQC5FK9mpMnTuJ
-        ULw51EvzXjypNrJll6kJ8Yg=
-X-Google-Smtp-Source: ACHHUZ78gkSUJOE5H6qbc7XJeTrq7lUqGE/Oj6psX6SiVlRtTaSfcOciouo6J+BQ8MOrQ1OKichmxA==
-X-Received: by 2002:a6b:7614:0:b0:777:91d5:c198 with SMTP id g20-20020a6b7614000000b0077791d5c198mr8178574iom.15.1686612198179;
-        Mon, 12 Jun 2023 16:23:18 -0700 (PDT)
+        bh=8206uVleRcmenlUn2i22dXepe92OExv7mWA9sV/K12U=;
+        b=hJuj2K7u9nFtT3SSd8R9kdgKSB6ZLi7urIH7FFWF7cyu+7gT8zE+wy1C2+D4my+h8/
+         KWBOROe8+uh09kvt6bBMfgybAnrSYhsDsv6NrLJjcDQuPnENHz98VbYqY6RUNcELUJoa
+         F5vSuHq7Xv864mDis+/CC2a7pfwjlSfexbS5y+EcVv3fIzpw444GdzCRi7q7vIP/Iim9
+         kdDqD0ozI3Ea6ntF/bRK5N0R+RhO3mwV6m26FpcRIDdmse8FXFTIa8khBTrPJnq1sQ4+
+         aHHFk1GujdPQUvkbqM6i9BWbBD7VIt89hm2k1kTsQonAEr4rGwUA6NRjB2rJnkwgW0ER
+         zgrg==
+X-Gm-Message-State: AC+VfDxINk+xwGsQMeYVjmbKTKi77kW8DH2dDBO14AEGlYy38Cx/Sgi6
+        t2LZ7ebg1Dmg2i1q0dRnWux2jBgu238IsA==
+X-Google-Smtp-Source: ACHHUZ5qMXaQ/+xAecmpHRzkNglZHV6P9CREnw86RKoOd4pQjnoeXtHmDzB9XspotZ0vLvRbDdmG6g==
+X-Received: by 2002:a05:6e02:4ca:b0:33a:efd3:add3 with SMTP id f10-20020a056e0204ca00b0033aefd3add3mr9704388ils.14.1686615796412;
+        Mon, 12 Jun 2023 17:23:16 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id t8-20020a05663801e800b0041f4d47722csm3099563jaq.126.2023.06.12.16.23.17
+        by smtp.gmail.com with ESMTPSA id p6-20020a92c606000000b003319d8574e2sm3534076ilm.25.2023.06.12.17.23.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 16:23:17 -0700 (PDT)
+        Mon, 12 Jun 2023 17:23:15 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Johannes Berg <johannes@sipsolutions.net>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Subject: [PATCH] cfg80211: cfg80211: strlcpy withreturn
-Date:   Mon, 12 Jun 2023 23:23:01 +0000
-Message-ID: <20230612232301.2572316-1-azeemshaikh38@gmail.com>
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: Replace strlcpy with strscpy
+Date:   Tue, 13 Jun 2023 00:22:58 +0000
+Message-ID: <20230613002258.3535506-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -76,30 +73,48 @@ overflows if a source string is not NUL-terminated [1].
 In an effort to remove strlcpy() completely [2], replace
 strlcpy() here with strscpy().
 
-Direct replacement is safe here since WIPHY_ASSIGN is only used by
-TRACE macros and the return values are ignored.
+Direct replacement is safe here since return value of -E2BIG
+is used to check for truncation instead of sizeof(dest).
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
 [2] https://github.com/KSPP/linux/issues/89
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- net/wireless/trace.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ crypto/lrw.c |    4 ++--
+ crypto/xts.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/wireless/trace.h b/net/wireless/trace.h
-index 716a1fa70069..a00da3ebfed5 100644
---- a/net/wireless/trace.h
-+++ b/net/wireless/trace.h
-@@ -22,7 +22,7 @@
+diff --git a/crypto/lrw.c b/crypto/lrw.c
+index 1b0f76ba3eb5..bb8c1575645b 100644
+--- a/crypto/lrw.c
++++ b/crypto/lrw.c
+@@ -359,8 +359,8 @@ static int lrw_create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	if (!strncmp(cipher_name, "ecb(", 4)) {
+ 		unsigned len;
  
- #define MAXNAME		32
- #define WIPHY_ENTRY	__array(char, wiphy_name, 32)
--#define WIPHY_ASSIGN	strlcpy(__entry->wiphy_name, wiphy_name(wiphy), MAXNAME)
-+#define WIPHY_ASSIGN	strscpy(__entry->wiphy_name, wiphy_name(wiphy), MAXNAME)
- #define WIPHY_PR_FMT	"%s"
- #define WIPHY_PR_ARG	__entry->wiphy_name
+-		len = strlcpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
+-		if (len < 2 || len >= sizeof(ecb_name))
++		len = strscpy(ecb_name, cipher_name + 4, sizeof(ecb_name));
++		if (len < 2)
+ 			goto err_free_inst;
  
+ 		if (ecb_name[len - 1] != ')')
+diff --git a/crypto/xts.c b/crypto/xts.c
+index 09be909a6a1a..8a9f9653426e 100644
+--- a/crypto/xts.c
++++ b/crypto/xts.c
+@@ -398,8 +398,8 @@ static int xts_create(struct crypto_template *tmpl, struct rtattr **tb)
+ 	if (!strncmp(cipher_name, "ecb(", 4)) {
+ 		unsigned len;
+ 
+-		len = strlcpy(ctx->name, cipher_name + 4, sizeof(ctx->name));
+-		if (len < 2 || len >= sizeof(ctx->name))
++		len = strscpy(ctx->name, cipher_name + 4, sizeof(ctx->name));
++		if (len < 2)
+ 			goto err_free_inst;
+ 
+ 		if (ctx->name[len - 1] != ')')
 -- 
 2.41.0.162.gfafddb0af9-goog
 
