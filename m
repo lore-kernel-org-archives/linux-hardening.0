@@ -2,118 +2,147 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02859EB64D8
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 19:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C89EEB64D8
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 22:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236486AbjFNT2h (ORCPT
+        id S232281AbjFNWos (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 15:28:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53786 "EHLO
+        Wed, 14 Jun 2023 18:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236701AbjFNT2e (ORCPT
+        with ESMTP id S229832AbjFNWor (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 15:28:34 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EE2B26B1
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jun 2023 12:28:19 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-666520247f8so991759b3a.2
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jun 2023 12:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686770899; x=1689362899;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ad+D5Dtf5P11brvT0TL8ATklSfv9b3VOTG50BZV541w=;
-        b=RYm1EFq4OePyg9ck8Sl8I5iSZ3CDZyaXMCgljtOh9kwtM6nZSqQ3R9HyDNaPWNspKI
-         3elpcXARrWz5tPL3BgrChjZHkC0PHmqkGyM+9GIOEysjw6Rxi4owW7QKRs6Z4khXilt5
-         63ce5ddLgp3cag7KclquGOMH5z7NBb6jDkFSs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686770899; x=1689362899;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ad+D5Dtf5P11brvT0TL8ATklSfv9b3VOTG50BZV541w=;
-        b=JC/M4LJqBAcNMKg+Qk2RsZAdQaEYVAT15ukTrXEUEP/E0eRGynLqTQ39T00RQOAp8G
-         XGGyAr/4T/+YPoA5ohrqbxmYbV1tndhH/rOoYDIGw/XTve8xgyqMMJiQdRwyuNIZvEFU
-         icWW3KGNRYZncSgRuuBCQIF0LVwQkXiEMdE+4tFzXon+KfSrnEA7ipkK/7lgc0OZAkql
-         eAkk1ut7RhyqCFRjCVe7Yo+lEH7Cs+eGA7CdOGtqAYln/VnOY6iLFv9cTgWUpLdgy+TE
-         2z7Ue/F3oi38k0Yb69B657C4qizeIP8JNoMqRPCpe1rhG3CVefk+VqonLGtU9nWabpfu
-         HBJQ==
-X-Gm-Message-State: AC+VfDzENwv8DAnSBFmUrlBG4Juc5zYoLT+6QsYoa3Z14YrvBZkJX4X9
-        Cb6vJy9SJOrPfCqEiYrjdFcA02X+n8wj/T+sduA=
-X-Google-Smtp-Source: ACHHUZ4qlSYkXTPrMZfYz6Guq3q8aOK4Yx6CUe+qOkfrwneambcP1ONPa+sRXsYkCRL/o507OdSNuw==
-X-Received: by 2002:a05:6a00:3904:b0:65b:ccb0:8f00 with SMTP id fh4-20020a056a00390400b0065bccb08f00mr3786380pfb.4.1686770899094;
-        Wed, 14 Jun 2023 12:28:19 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j24-20020a62b618000000b0065980654baasm10735199pff.130.2023.06.14.12.28.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jun 2023 12:28:18 -0700 (PDT)
-Date:   Wed, 14 Jun 2023 12:28:18 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     ysato@users.sourceforge.jp, azeemshaikh38@gmail.com,
-        dalias@libc.org, linux-kernel@vger.kernel.org,
-        rdunlap@infradead.org, linux-sh@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] sh: Replace all non-returning strlcpy with strscpy
-Message-ID: <202306141227.D4B2F1F6@keescook>
-References: <20230530163041.985456-1-azeemshaikh38@gmail.com>
- <168676826702.1963449.9061022814058323294.b4-ty@chromium.org>
- <2a1d8002f7e2982399cb8ab7641f54ac867270aa.camel@physik.fu-berlin.de>
- <202306141203.0CAB93DD13@keescook>
- <af114229f6231ec180266eebce4e62851732a446.camel@physik.fu-berlin.de>
+        Wed, 14 Jun 2023 18:44:47 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C45C1BF7;
+        Wed, 14 Jun 2023 15:44:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2B4556281D;
+        Wed, 14 Jun 2023 22:44:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5B01C433C0;
+        Wed, 14 Jun 2023 22:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686782685;
+        bh=lMvudJgKGP6G5z1D5G5ktPPOIHeYLAxIIf2pg1Bn6dA=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=Zk6bt6oVdjWME3wilTbcHVuIxYexd/ugfSoqlxQA+OKl7qFQrKmyiFMXVZXlSLBrh
+         7Jry8e84dvXNqFZPIPlrmBuZoyCRj9Y6/+vzIlZqLjR2NWK/Ahana4A/5nbZpJ+xds
+         c7GN7maBBDBmKOcMkmw2tuqPXW3rM46twikbRfrEt5C92i+eoeQbNcEOXPuJrwAEOe
+         qPfWvLRNKp0EL4+S82/uGEoYOD+Fpg8jyck9vu6YebQG1WBdkb99Gz+xlMyb2XkkyC
+         /EzMJ5NBWSplFJ1Wj39Ba6c4ldZQoyJUY+xKb3VF1YWmjkV9RicqPqmO8QnICaTDna
+         dUKeQNi4BltJQ==
+Message-ID: <bf142e7d-178e-43a8-32e8-7e9e396eeee7@kernel.org>
+Date:   Thu, 15 Jun 2023 07:44:39 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af114229f6231ec180266eebce4e62851732a446.camel@physik.fu-berlin.de>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        Joe Breuer <linux-kernel@jmbreuer.net>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Linux Power Management <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Hardening <linux-hardening@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux SCSI <linux-scsi@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+ <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
+ <ZIQ6bkau3j6qGef8@duo.ucw.cz>
+ <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
+ <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
+ <b2cf6d96-a55a-d444-d22e-e9b3945ba43f@jmbreuer.net>
+ <84f1c51c-86f9-04b3-0cd1-f685ebee7592@kernel.org>
+ <37ed36f0-6f72-115c-85fb-62ef5ad72e76@suse.de>
+ <b0fdf454-b2f7-c273-66f5-efe42fbc2807@kernel.org>
+ <859f0eda-4984-4489-9851-c9f6ec454a88@rowland.harvard.edu>
+ <3f85cb4a-8b14-623f-eb4e-40baab1ed888@acm.org>
+Content-Language: en-US
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <3f85cb4a-8b14-623f-eb4e-40baab1ed888@acm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 09:23:49PM +0200, John Paul Adrian Glaubitz wrote:
-> On Wed, 2023-06-14 at 12:03 -0700, Kees Cook wrote:
-> > On Wed, Jun 14, 2023 at 08:49:13PM +0200, John Paul Adrian Glaubitz wrote:
-> > > Hi Kees!
-> > > 
-> > > On Wed, 2023-06-14 at 11:44 -0700, Kees Cook wrote:
-> > > > On Tue, 30 May 2023 16:30:41 +0000, Azeem Shaikh wrote:
-> > > > > strlcpy() reads the entire source buffer first.
-> > > > > This read may exceed the destination size limit.
-> > > > > This is both inefficient and can lead to linear read
-> > > > > overflows if a source string is not NUL-terminated [1].
-> > > > > In an effort to remove strlcpy() completely [2], replace
-> > > > > strlcpy() here with strscpy().
-> > > > > No return values were used, so direct replacement is safe.
-> > > > > 
-> > > > > [...]
-> > > > 
-> > > > Build tested with sh4 GCC 13.1 from:
-> > > > https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/13.1.0/
-> > > > 
-> > > > with defconfig and:
-> > > > 	CONFIG_CPU_SUBTYPE_SH7343=y
-> > > > 	CONFIG_SH_DMA=y
-> > > > 	CONFIG_SH_DMA_API=y
-> > > > 
-> > > > Applied to for-next/hardening, thanks!
-> > > > 
-> > > > [1/1] sh: Replace all non-returning strlcpy with strscpy
-> > > >       https://git.kernel.org/kees/c/ca64da3052be
-> > > > 
-> > > 
-> > > Apologies, this fell off my table. I should have acked and tested this being the
-> > > SuperH maintainer. If you can still update the patch in your tree, I can both
-> > > test and ack this patch.
-> > 
-> > Absolutely! Thanks for double-checking. :)
+On 6/15/23 03:04, Bart Van Assche wrote:
+> On 6/14/23 07:26, Alan Stern wrote:
+>> On Wed, Jun 14, 2023 at 04:35:50PM +0900, Damien Le Moal wrote:
+>>> Or... Why the heck scsi_rescan_device() is calling device_lock() ? This
+>>> is the only place in scsi code I can see that takes this lock. I suspect
+>>> this is to serialize either rescans, or serialize with resume, or both.
+>>> For serializing rescans, we can use another lock. For serializing with
+>>> PM, we should wait for PM transitions...
+>>> Something is not right here.
+>>
+>> Here's what commit e27829dc92e5 ("scsi: serialize ->rescan against
+>> ->remove", written by Christoph Hellwig) says:
+>>
+>>      Lock the device embedded in the scsi_device to protect against
+>>      concurrent calls to ->remove.
+>>
+>> That's the commit which added the device_lock() call.
 > 
-> I have tested the patch on my SH-7785LCR board on top of Linus' tree and
-> also acked it.
+> Even if scsi_rescan_device() would use another mechanism for 
+> serialization against sd_remove() and sr_remove(), we still need to 
+> solve the issue that the ATA code calls scsi_rescan_device() before 
+> resuming has finished. scsi_rescan_device() issues I/O. Issuing I/O to a 
+> device is not allowed before that device has been resumed.
 
-Awesome. :) I have updated the tags and will push out my tree shortly.
+I am not convinced of that: scsi suspend quiecse the queue, thus preventing IOs
+from the block layer, but not internale scsi ml commands, which is what
+scsi_rescan_device() issues.
 
-Thanks!
+In any case, I am thinking that best (and quickest) fix for this issue for now
+is to have libata define a device link to make the scsi device a "parent" of the
+ata device (which is the ata link as of now). This way, PM operation ordering
+will ensure that the scsi device resume will be done before the ata device. What
+I really do not like about this though is that the suspend side would be done in
+the reverse order: ata first and then scsi, but we really want the reverse here
+to ensure that the request queue is quiesced before we suspend ata. That said,
+there is no such synchronization right now and so this is probably happening
+already without raising issues apparently.
 
--Kees
+So ideally:
+1) Make the ata device the parent of the scsi device using a device link
+2) For suspend, the scsi device suspend will be done first, followed by the ata
+device, which is what we want.
+3) For resume, ata device will be first, followed by scsi device. The call to
+scsi_rescan_device() from libata being in a work task, asynchronous from the ata
+resume context, we need to synchronize that work to wait for the scsi device
+resume to complete. (but do we really given that we are going to issue internal
+commands only ?)
+
+Alan, Rafael,
+
+For the synchronization of step (3), if I understand the pm code correctly,
+using device_pm_wait_for_dev() would work only if async resume is on. This would
+be ineffective for the sync case. How can we best deal with this ?
+
 
 -- 
-Kees Cook
+Damien Le Moal
+Western Digital Research
+
