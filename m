@@ -2,111 +2,164 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 961F2EB64DB
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 13:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1EFEB64DB
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 14:02:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245232AbjFNNuO (ORCPT
+        id S245299AbjFNOCQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 09:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54502 "EHLO
+        Wed, 14 Jun 2023 10:02:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245203AbjFNNuL (ORCPT
+        with ESMTP id S245303AbjFNOCO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 09:50:11 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34E691FF7;
-        Wed, 14 Jun 2023 06:50:00 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id e9e14a558f8ab-340a05c22deso2187135ab.1;
-        Wed, 14 Jun 2023 06:50:00 -0700 (PDT)
+        Wed, 14 Jun 2023 10:02:14 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C71B1FDA;
+        Wed, 14 Jun 2023 07:02:10 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3f8cc042ea9so6191625e9.2;
+        Wed, 14 Jun 2023 07:02:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686750599; x=1689342599;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZEPuphakaNp1fYcyZ4pObojDdVaUBwTgM8okY278g5E=;
-        b=ipsgnUCS9NMIbr5fKQnk6kUv67E3x/wY8Rq+aGR0dr6qp/ctIpczO2KxLo1i9Cez3l
-         y8qlys4Sx5KpiBn9Nnjg44K0M0X/fQ3mvM5r9ErMiOAADRI5WwBa5rpflBHNJ87ta5qN
-         Vj33y4B2iKVL/rP7Wi/cm2uV+G8nxboYFqLXVv1CuqLQ/MJq23RcFH3XD7OUkDBvQJCc
-         Wt/8MaUcl1t5faWXnbe3x198W8AabOJRZ0a+UaFI+MjqVfGYlZceaEqLt/FpCCw0q+co
-         /m0OOa1RD0pmujC8dngUrmQcYCRaL/5JGUqS9jRI14oY9K361mymCboKbWJACZHWfH02
-         cXWA==
+        d=gmail.com; s=20221208; t=1686751329; x=1689343329;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YalgAdoF4HFymEWC4l11A6+2Age3qqp8NisDolbvtPU=;
+        b=QnybpKAUtanktW1NTqvXGot+AfHVNeU6AerpBHIo1fxIJFR/xJTHuQ1z1p/Vf+cb/G
+         gEZIzy33cUC+FeFp+33YqtaRFviW9aINNTclbvSzNTUOFTFn5dKbvXA9IHPstlrOUNXy
+         11//5umbCH2XMBlKN+v1oe2kXOcZnVHRiTXjtLfnwbcOC1Y3QMPK+v8uoAAr3IwXtl/2
+         1JnHeStWibPkJNahcDotSTEYF1EZ2sjQuT8wSecgwIji5qRMVXMydmD0iLwPOjhuRn29
+         yClCCcA2tDJfTQ4CGTVxKBkFDeOay5E2gOIVFeBWVZW6sGN8ETwhWTxlyOmtxqgMwnu1
+         b8FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686750599; x=1689342599;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZEPuphakaNp1fYcyZ4pObojDdVaUBwTgM8okY278g5E=;
-        b=foYcaPNq4OHEIJ7vwPJaMP7oIgoOOR2VBZiw8NERWdIhAK476WqfF6CUXexdpjjBIJ
-         B/mMs+6y2Tf96NCzZnuEfxLDNnvo2wM6jSexljXxNg0sxy3rkK6wtEi0nHtl6xx5C0e5
-         0MJegbbFAxxGYbbeRlRWDrsiZAltPs2pkaQzXbTgZ9kWe2pA+kWsEmyIMmKSwNAsxG8a
-         Hm2nr7DMzFCmGt0qJbwUNfoQtiNQdHRawxLcJUrY4eDAdeqNx1/WnGGymswGQJgXNMFE
-         mPhbv+Aj5cRdV8xf7JDBvYlC3yfIiDjdUGg/Xl0ux/uWju0MCoD6Vx4YziH+/Qaqky0L
-         h3Ng==
-X-Gm-Message-State: AC+VfDwud9kqottb5ItIQTftJp0p7DEsGXnq2+jY1ECHIP0R6kawTJL4
-        gL1QnPi1q23lyMIxy0mhcf0=
-X-Google-Smtp-Source: ACHHUZ4Q+vvd86epl/4PhLMQWi6vLCuv0c4ale/GTY/nnvGPX8Z/2yHYNXQj/hF9L+IuVhfQH7e0pg==
-X-Received: by 2002:a92:cacd:0:b0:33a:5bb5:f8f6 with SMTP id m13-20020a92cacd000000b0033a5bb5f8f6mr11581580ilq.18.1686750599414;
-        Wed, 14 Jun 2023 06:49:59 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id a26-20020a056638019a00b004182f88c368sm5072190jaq.67.2023.06.14.06.49.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jun 2023 06:49:59 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Kalle Valo <kvalo@kernel.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        Johannes Berg <johannes@sipsolutions.net>
-Subject: [PATCH v3] wifi: cfg80211: replace strlcpy() with strscpy()
-Date:   Wed, 14 Jun 2023 13:49:56 +0000
-Message-ID: <20230614134956.2109252-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+        d=1e100.net; s=20221208; t=1686751329; x=1689343329;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YalgAdoF4HFymEWC4l11A6+2Age3qqp8NisDolbvtPU=;
+        b=KetymqZiKcI2nqhw5482YLJ/SVa0L7p5KBuN2Yx6pBFFHVpOWjku0Gd7NPcr0jftKZ
+         A0x0EIrr6H/tObzAWT9X4rneA9HO9RE8rAW9VtFCrkclzRDv5F5TaGcSVJ/KDqU5UsJa
+         MsOiqukMGs4z2ysZSVbWHvwlVdsst/V1l+xcWo0J173C//uHr7HORpCVuXQM3JwSzKrk
+         jsq1VLcDqqz8ZZI4jm5xCNAqqyWtnALpebNUImM0LbFFIqc2hIJNXIwgmzikARsqJ08d
+         UiI/a3eHSw0W/yTf0FbjU1Kxpe5bKca5GUzaQrz+NCg7usEl4cujv1vfb9Vd5cQNasnE
+         mcwQ==
+X-Gm-Message-State: AC+VfDzxwNiXIRIxMJDn+nWnvGtvL1YgeuKjcHtD0K6JnzIP9fx9Iy5M
+        5xK2kX+ZAf6zcQVi+E/UOEYs06DVrkpK1Ldl4WHzGz9Z/QXbJQ==
+X-Google-Smtp-Source: ACHHUZ5EaqveAacPXPNDJM4tjGLj5HuRAbt1AYBrTozys5NYQQW/PAONEGPCNpxSzbPnrafK+LtDyOTy/POM1L8ASbk=
+X-Received: by 2002:adf:ec0c:0:b0:309:49e3:efb4 with SMTP id
+ x12-20020adfec0c000000b0030949e3efb4mr8212615wrn.63.1686751328638; Wed, 14
+ Jun 2023 07:02:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230613004125.3539934-1-azeemshaikh38@gmail.com> <202306131227.26F90584F7@keescook>
+In-Reply-To: <202306131227.26F90584F7@keescook>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Wed, 14 Jun 2023 10:01:57 -0400
+Message-ID: <CADmuW3WeRG-_WsFVCogRzRNXoqtVr+gA84ryqDZ2URUu3wh6Tg@mail.gmail.com>
+Subject: Re: [PATCH] tracing/boot: Replace strlcpy with strscpy
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
+On Tue, Jun 13, 2023 at 3:27=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> On Tue, Jun 13, 2023 at 12:41:25AM +0000, Azeem Shaikh wrote:
+> > strlcpy() reads the entire source buffer first.
+> > This read may exceed the destination size limit.
+> > This is both inefficient and can lead to linear read
+> > overflows if a source string is not NUL-terminated [1].
+> > In an effort to remove strlcpy() completely [2], replace
+> > strlcpy() here with strscpy().
+> >
+> > Direct replacement is safe here since return value of -E2BIG
+> > is used to check for truncation instead of sizeof(dest).
+>
+> This looks technically correct, but I wonder if "< 0" is a better test?
 
-Direct replacement is safe here since WIPHY_ASSIGN is only used by
-TRACE macros and the return values are ignored.
-
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
-
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
-v1: https://lore.kernel.org/all/20230612232301.2572316-1-azeemshaikh38@gmail.com/
-v2: https://lore.kernel.org/all/20230614134552.2108471-1-azeemshaikh38@gmail.com/
-
-Changes from v1 and v2 - updated patch title.
-
- net/wireless/trace.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/wireless/trace.h b/net/wireless/trace.h
-index 716a1fa70069..a00da3ebfed5 100644
---- a/net/wireless/trace.h
-+++ b/net/wireless/trace.h
-@@ -22,7 +22,7 @@
- 
- #define MAXNAME		32
- #define WIPHY_ENTRY	__array(char, wiphy_name, 32)
--#define WIPHY_ASSIGN	strlcpy(__entry->wiphy_name, wiphy_name(wiphy), MAXNAME)
-+#define WIPHY_ASSIGN	strscpy(__entry->wiphy_name, wiphy_name(wiphy), MAXNAME)
- #define WIPHY_PR_FMT	"%s"
- #define WIPHY_PR_ARG	__entry->wiphy_name
- 
--- 
-2.41.0.162.gfafddb0af9-goog
+Agreed. "< 0" might more generically represent -errno. Happy to send
+over a v2 if you prefer that instead of sticking with this patch.
 
 
+>
+> >
+> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
+cpy
+> > [2] https://github.com/KSPP/linux/issues/89
+> >
+> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+>
+> Either way
+>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> -Kees
+>
+> > ---
+> >  kernel/trace/trace_boot.c |    8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+> > index 778200dd8ede..5fe525f1b8cc 100644
+> > --- a/kernel/trace/trace_boot.c
+> > +++ b/kernel/trace/trace_boot.c
+> > @@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *t=
+r, struct xbc_node *node)
+> >
+> >       /* Common ftrace options */
+> >       xbc_node_for_each_array_value(node, "options", anode, p) {
+> > -             if (strlcpy(buf, p, ARRAY_SIZE(buf)) >=3D ARRAY_SIZE(buf)=
+) {
+> > +             if (strscpy(buf, p, ARRAY_SIZE(buf)) =3D=3D -E2BIG) {
+> >                       pr_err("String is too long: %s\n", p);
+> >                       continue;
+> >               }
+> > @@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, stru=
+ct xbc_node *node)
+> >       const char *p;
+> >
+> >       xbc_node_for_each_array_value(node, "events", anode, p) {
+> > -             if (strlcpy(buf, p, ARRAY_SIZE(buf)) >=3D ARRAY_SIZE(buf)=
+) {
+> > +             if (strscpy(buf, p, ARRAY_SIZE(buf)) =3D=3D -E2BIG) {
+> >                       pr_err("String is too long: %s\n", p);
+> >                       continue;
+> >               }
+> > @@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, s=
+truct xbc_node *gnode,
+> >
+> >       p =3D xbc_node_find_value(enode, "filter", NULL);
+> >       if (p && *p !=3D '\0') {
+> > -             if (strlcpy(buf, p, ARRAY_SIZE(buf)) >=3D ARRAY_SIZE(buf)=
+)
+> > +             if (strscpy(buf, p, ARRAY_SIZE(buf)) =3D=3D -E2BIG)
+> >                       pr_err("filter string is too long: %s\n", p);
+> >               else if (apply_event_filter(file, buf) < 0)
+> >                       pr_err("Failed to apply filter: %s\n", buf);
+> > @@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, s=
+truct xbc_node *gnode,
+> >
+> >       if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
+> >               xbc_node_for_each_array_value(enode, "actions", anode, p)=
+ {
+> > -                     if (strlcpy(buf, p, ARRAY_SIZE(buf)) >=3D ARRAY_S=
+IZE(buf))
+> > +                     if (strscpy(buf, p, ARRAY_SIZE(buf)) =3D=3D -E2BI=
+G)
+> >                               pr_err("action string is too long: %s\n",=
+ p);
+> >                       else if (trigger_process_regex(file, buf) < 0)
+> >                               pr_err("Failed to apply an action: %s\n",=
+ p);
+> > --
+> > 2.41.0.162.gfafddb0af9-goog
+> >
+> >
+>
+> --
+> Kees Cook
