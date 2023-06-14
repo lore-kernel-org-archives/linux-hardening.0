@@ -2,82 +2,58 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33964EB64D9
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 07:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DBCEB64DB
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 08:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230303AbjFNHkR (ORCPT
+        id S243608AbjFNIIs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 03:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54322 "EHLO
+        Wed, 14 Jun 2023 04:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243554AbjFNHkJ (ORCPT
+        with ESMTP id S243553AbjFNIIf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 03:40:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFEE0119;
-        Wed, 14 Jun 2023 00:40:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4524363841;
-        Wed, 14 Jun 2023 07:40:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB759C433C0;
-        Wed, 14 Jun 2023 07:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686728407;
-        bh=9tKEuGeMMCSJYUtkoU+erfANYr53GikoWC56/oucmhw=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=cNeWSCyzGUnOEq9DRg7LIAwHY7RkxPD1/9283JqRK/sZw9GrXj4l9sexC5UmKqDjl
-         La7Ifdv6vRH7BrtN27+yDiiOGzkOM+jnr+8pbbtGN8T1XAAJlGCPWJuDTX+UFssAWp
-         nUr7yIZKEKeFYsWG5xGdy4wA/0eLB9r3DIsObl3+yc+aQbiHepcrcr8bOQdsvloSjJ
-         C0GlWILU7Xbxxnv8A/3hO5mCAPvRofQ9lN2wttU5BKmEv5m0TiUXpm2Fn+8cszVIc3
-         yxTl3Uep7MZX63seF2eThdKIT+dU1VuwQMxRh36SU+30BCW7PN1jp4f5ZvILtfuxjZ
-         CTfqBQwI1Gu+Q==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH] cfg80211: cfg80211: strlcpy withreturn
-References: <20230612232301.2572316-1-azeemshaikh38@gmail.com>
-Date:   Wed, 14 Jun 2023 10:40:00 +0300
-In-Reply-To: <20230612232301.2572316-1-azeemshaikh38@gmail.com> (Azeem
-        Shaikh's message of "Mon, 12 Jun 2023 23:23:01 +0000")
-Message-ID: <87fs6ufq5r.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 14 Jun 2023 04:08:35 -0400
+Received: from muru.com (muru.com [72.249.23.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 530701FCC;
+        Wed, 14 Jun 2023 01:08:09 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id B59988027;
+        Wed, 14 Jun 2023 08:07:41 +0000 (UTC)
+Date:   Wed, 14 Jun 2023 11:07:40 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Peter 'p2' De Schrijver <peter.de-schrijver@nokia.com>,
+        Kevin Hilman <khilman@deeprootsystems.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] ARM: OMAP2+: Fix -Warray-bounds warning in
+ _pwrdm_state_switch()
+Message-ID: <20230614080740.GH14287@atomide.com>
+References: <ZIFVGwImU3kpaGeH@work>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZIFVGwImU3kpaGeH@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Azeem Shaikh <azeemshaikh38@gmail.com> writes:
+* Gustavo A. R. Silva <gustavoars@kernel.org> [230608 07:11]:
+> If function pwrdm_read_prev_pwrst() returns -EINVAL, we will end
+> up accessing array pwrdm->state_counter through negative index
+> -22. This is wrong and the compiler is legitimately warning us
+> about this potential problem.
+> 
+> Fix this by sanity checking the value stored in variable _prev_
+> before accessing array pwrdm->state_counter.
+> 
+> Address the following -Warray-bounds warning:
+> arch/arm/mach-omap2/powerdomain.c:178:45: warning: array subscript -22 is below array bounds of 'unsigned int[4]' [-Warray-bounds]
 
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
->
-> Direct replacement is safe here since WIPHY_ASSIGN is only used by
-> TRACE macros and the return values are ignored.
->
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
->
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+Thanks applying into omap-for-v6.5/cleanup, seems this can wait
+for the merge window.
 
-The title should be:
+Regards,
 
-wifi: cfg80211: replace strlcpy() with strlscpy()
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Tony
