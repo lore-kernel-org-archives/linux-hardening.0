@@ -2,93 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00661EB64D8
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 17:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D5FEB64DD
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 18:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231358AbjFNRx0 (ORCPT
+        id S241048AbjFNSFt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 13:53:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32992 "EHLO
+        Wed, 14 Jun 2023 14:05:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230091AbjFNRxZ (ORCPT
+        with ESMTP id S241026AbjFNSFG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 13:53:25 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 514952110
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jun 2023 10:53:24 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1b3f66dda65so14381385ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 14 Jun 2023 10:53:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686765204; x=1689357204;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/9fj86uPzHKHKPX1wldmULl0XqXDSPGGeaR3eMmaqoM=;
-        b=g3wZP4kEF/0MGT5tCDD0ukqrS2SqYZB6jGjbDf/E8Joiv8RJrPZPnOOobgq3rKVC+L
-         RB9GPYodgn3JF/MlworDXZZE5sW6PWFSH0ZqOYzbpN0QoKvPhgGt9lPZx/Ob2rcgKLsM
-         euYoHENfjJ1jiKm6wHTYfUxTU47NznlaMimaA=
+        Wed, 14 Jun 2023 14:05:06 -0400
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E6426B5;
+        Wed, 14 Jun 2023 11:04:59 -0700 (PDT)
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6666d5f9803so548872b3a.0;
+        Wed, 14 Jun 2023 11:04:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686765204; x=1689357204;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/9fj86uPzHKHKPX1wldmULl0XqXDSPGGeaR3eMmaqoM=;
-        b=OJVCdVNof9VdFCl6xMvmuwP2MmQYsaCftItUy4FLAYdovzqaoKSkIF+GfB2VtD/vch
-         wVG7cVOTHO8hXNqHgXtzR9hXlPDapP3HfE9OVGrfbwfGgwAGYrfqsbEfJigm7AQQ6a0T
-         lcJkLwNix+lIU4iacHgksdhk3mFdax4naLYIsYYD3clSplZG3ZvCWe+Ah4afwGbiCMFg
-         ZhA+7wFZgH6US7hiQHBW1bTFuQHJDfT6DyBs/QccBCA435jCeJkDp2Wt3lo0DpkocYwR
-         YABdc/bWVX9+gfVajGDB86lBoE4HKMk4PSywek0BtiCgk8o4P0mClPmQAswB2sljtAe3
-         0XRA==
-X-Gm-Message-State: AC+VfDxNSl5o1uCOy3I+nuT/J1UVCMc/sp+7wbtIYy1nyCgF8jwViaks
-        oNAgJwHOTak4LeJuhgrwoD22ag==
-X-Google-Smtp-Source: ACHHUZ73ificKnBEN4Y4oJNws11Nh+V2R8igTOiWQQVlZNLGClfQYikoltoGKYfCx04Yj9HDDKth1g==
-X-Received: by 2002:a17:903:1104:b0:1b0:2d08:eb51 with SMTP id n4-20020a170903110400b001b02d08eb51mr16215661plh.12.1686765203877;
-        Wed, 14 Jun 2023 10:53:23 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 6-20020a170902c14600b001b045c9ababsm775899plj.264.2023.06.14.10.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jun 2023 10:53:23 -0700 (PDT)
-Date:   Wed, 14 Jun 2023 10:53:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Maninder Singh <maninder1.s@samsung.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH] kallsyms: Replace all non-returning strlcpy with strscpy
-Message-ID: <202306141053.8C337829@keescook>
-References: <20230614010354.1026096-1-azeemshaikh38@gmail.com>
+        d=1e100.net; s=20221208; t=1686765899; x=1689357899;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bfg7Pd8Qi4XV2mpEzR1AaDAP2KYNRF3glqHqxSDiUr8=;
+        b=EK0GrTKzHBbYTWp9usma6Nf+LfgCBhR+6T5R33A8OJW/J0oIFUFCsKOowVV9UaNlst
+         UWNhXItTM7eS3KhhwsHipRSuygE1rBdcRKMSIbwP0M4GDqGsqyrZXy7J52RPNwlX2L9I
+         On1gOyjjfIXAxDHfNu7oYuEh+o8rbC1Vn/Eo8440lTzVfoxq7isntagC4XVGzXzJ7thX
+         p4uv6TXWtzKxeVvZehzisjyM0D2I3zylQ3nTRLPlVSWMb+unITO4mnlWQwxKTAZmXk37
+         jCbzIMYhyqRa39qOu+sbU6Dy0bvASrr0X14AOOnHU9YNsCuPmCyV/uPXBEMzgGanSWPp
+         N7SQ==
+X-Gm-Message-State: AC+VfDyt9NSCl5hdQAci5/4MwAD4juiTOe2Ipi9UHHTv78NiTT8ho+zr
+        qP18vdvtM1tv+kxir6/WHps=
+X-Google-Smtp-Source: ACHHUZ508hquoDPA8b1+rAI5xOdbxD25gvcdJEa+YPdfH/GWCtVoyJJzwmdFY/bbOKj3msllkxqV3A==
+X-Received: by 2002:a05:6a20:4424:b0:11a:ce33:563a with SMTP id ce36-20020a056a20442400b0011ace33563amr3161528pzb.15.1686765898436;
+        Wed, 14 Jun 2023 11:04:58 -0700 (PDT)
+Received: from [192.168.51.14] ([98.51.102.78])
+        by smtp.gmail.com with ESMTPSA id a12-20020aa780cc000000b0063d24fcc2besm1595325pfn.125.2023.06.14.11.04.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Jun 2023 11:04:57 -0700 (PDT)
+Message-ID: <3f85cb4a-8b14-623f-eb4e-40baab1ed888@acm.org>
+Date:   Wed, 14 Jun 2023 11:04:55 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230614010354.1026096-1-azeemshaikh38@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+Content-Language: en-US
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Damien Le Moal <dlemoal@kernel.org>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        Joe Breuer <linux-kernel@jmbreuer.net>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Linux Power Management <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Hardening <linux-hardening@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux SCSI <linux-scsi@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+ <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
+ <ZIQ6bkau3j6qGef8@duo.ucw.cz>
+ <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
+ <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
+ <b2cf6d96-a55a-d444-d22e-e9b3945ba43f@jmbreuer.net>
+ <84f1c51c-86f9-04b3-0cd1-f685ebee7592@kernel.org>
+ <37ed36f0-6f72-115c-85fb-62ef5ad72e76@suse.de>
+ <b0fdf454-b2f7-c273-66f5-efe42fbc2807@kernel.org>
+ <859f0eda-4984-4489-9851-c9f6ec454a88@rowland.harvard.edu>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <859f0eda-4984-4489-9851-c9f6ec454a88@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 01:03:54AM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
+On 6/14/23 07:26, Alan Stern wrote:
+> On Wed, Jun 14, 2023 at 04:35:50PM +0900, Damien Le Moal wrote:
+>> Or... Why the heck scsi_rescan_device() is calling device_lock() ? This
+>> is the only place in scsi code I can see that takes this lock. I suspect
+>> this is to serialize either rescans, or serialize with resume, or both.
+>> For serializing rescans, we can use another lock. For serializing with
+>> PM, we should wait for PM transitions...
+>> Something is not right here.
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
+> Here's what commit e27829dc92e5 ("scsi: serialize ->rescan against
+> ->remove", written by Christoph Hellwig) says:
 > 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+>      Lock the device embedded in the scsi_device to protect against
+>      concurrent calls to ->remove.
+> 
+> That's the commit which added the device_lock() call.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Even if scsi_rescan_device() would use another mechanism for 
+serialization against sd_remove() and sr_remove(), we still need to 
+solve the issue that the ATA code calls scsi_rescan_device() before 
+resuming has finished. scsi_rescan_device() issues I/O. Issuing I/O to a 
+device is not allowed before that device has been resumed.
 
--- 
-Kees Cook
+Thanks,
+
+Bart.
