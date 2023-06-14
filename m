@@ -2,131 +2,87 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E66EB64D8
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 14:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E9A6EB64D9
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 14:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245436AbjFNOM2 (ORCPT
+        id S245439AbjFNOY1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 10:12:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41526 "EHLO
+        Wed, 14 Jun 2023 10:24:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235340AbjFNOM2 (ORCPT
+        with ESMTP id S236151AbjFNOY0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 10:12:28 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2988610CB;
-        Wed, 14 Jun 2023 07:12:27 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-30fc90f359fso2101859f8f.3;
-        Wed, 14 Jun 2023 07:12:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686751945; x=1689343945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5ZDLewBF8krwjKdzGPgy6i6KLvD9d5BWuqInYm38DtU=;
-        b=qOvO8407S5cG7o9xqLViYBblnALmkt8fd7TkCgM+0urVKiWsfTshA8i0bEzaqUDkfg
-         qOof2uWEX8/4m9eUNhxxaQRgh3CH6qbHl1FgylHIHfL+VRmCkAmU0rdxDUE87GM6ta9I
-         hk3OIUkxRimPdaNW/pqt3wADaV+YhWbYalf12FiAPyiSDhvrKzUBc9Kf1XYCENOVh2EM
-         JASNKqzcFII4/SvKmOpnX4uwoVtGN4AAPf2UIG6MaVAY8sVIw++755c4osCCS1f5YDkR
-         JqRapUsGrHY/flfj7/uVXGbDayT6WshjpKILYJxn4w5l54taI7p7RZqVy34+lrR8spvt
-         hBTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686751945; x=1689343945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5ZDLewBF8krwjKdzGPgy6i6KLvD9d5BWuqInYm38DtU=;
-        b=aRkwFz3nPk/qfR6Iveoja0E3vnY5otZhk/vDFL1Z7pQ+YbT3qVUHghqm1T5Y5BSn0H
-         mabPPe//c8oXxDK+TzGjieyYi8X4xdd1w5PA3JSyGgLTaG+qHVUnJq8y7StVyt7MKNLc
-         gwY98a/pq44pbgz680EvV8DRTIBKLYcxeqomX8ZadNrwNab3u1PMb45CILE25ILwVj44
-         YxTiUlTpc00cKJ5e4x4Lhae7tOVtKkkols12/2neWzNGX84zJEUJFS47BRCb6eK8zb3I
-         2pgUP/+s4k1hW5zcLeqCj+OmLxp1GGt8lMILJg8vtMCiaWeROPb0j/POcQd/Zn295zOy
-         OWFA==
-X-Gm-Message-State: AC+VfDxEH06eV2qv9/re/astp6D6UeFlfXwA+smzunqP2D8mNDJ7ZZqa
-        wrr7AGNEAhCKosKh3p3myQtFkz8iiWm8YyxBGjk=
-X-Google-Smtp-Source: ACHHUZ61hx7YoAY7ltQMo8T0HIryzg1K8HLWMEcRxmY5i+zfIV3yMhGTopjMnT6XjLYyp/tEgEQpnjHS9b04OSJHuQQ=
-X-Received: by 2002:adf:fb4a:0:b0:311:af5:ad64 with SMTP id
- c10-20020adffb4a000000b003110af5ad64mr1041315wrs.16.1686751945324; Wed, 14
- Jun 2023 07:12:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230613004341.3540325-1-azeemshaikh38@gmail.com> <202306131229.B5F2D9F@keescook>
-In-Reply-To: <202306131229.B5F2D9F@keescook>
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Wed, 14 Jun 2023 10:12:14 -0400
-Message-ID: <CADmuW3VEiseKt2UM9o9jzzR8nEawh1jxANyxdZcxk89U65pXEQ@mail.gmail.com>
-Subject: Re: [PATCH] usb: gadget: function: printer: Replace strlcpy with strscpy
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-hardening@vger.kernel.org, linux-usb@vger.kernel.org,
+        Wed, 14 Jun 2023 10:24:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 003F71721;
+        Wed, 14 Jun 2023 07:24:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 89100642ED;
+        Wed, 14 Jun 2023 14:24:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 101D4C433C0;
+        Wed, 14 Jun 2023 14:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686752664;
+        bh=FqUvtv9fuBbOa2cF0stc7Ubtd7EhOO9sRUnWlgEUXAQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=LiBeaZK8BUyAEjBrPaLbVcm91bl8Yb5AL+52JlAkAMN9cHgJZQ/RoxtPXQWvLZJxU
+         pL0men2FEq1b51j9taoqaMWFzz/KYrPxexiVI8VlVVqFlQAwcOA7+HAeIvcQh4hQ6a
+         K61OZ8DNdl+cLehJPmoXz9F6pB75znxKlvyppP8knd2zE4b9B5t6BASD0hLGvJPGbY
+         Zv93cyUotdQ8zCG7i2DA14XmNfwhaVNtPaGHO6JzJ/o28HoEkhAFtNCIbakz/ZwM20
+         IZM3sew8V4B8QPEuveh7AoqxEXpdaDkPWiCvk6+HbIjpf9LGWi8lhhocfHykjS9NvC
+         yEj1kv5BqbmUA==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Albert Briscoe <albertsbriscoe@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>
+Subject: Re: [PATCH v3] wifi: cfg80211: replace strlcpy() with strscpy()
+References: <20230614134956.2109252-1-azeemshaikh38@gmail.com>
+Date:   Wed, 14 Jun 2023 17:24:20 +0300
+In-Reply-To: <20230614134956.2109252-1-azeemshaikh38@gmail.com> (Azeem
+        Shaikh's message of "Wed, 14 Jun 2023 13:49:56 +0000")
+Message-ID: <874jnaf7fv.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 3:30=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Tue, Jun 13, 2023 at 12:43:41AM +0000, Azeem Shaikh wrote:
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read
-> > overflows if a source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> >
-> > Direct replacement is safe here since return value of -E2BIG
-> > is used to check for truncation instead of sizeof(dest).
->
-> Perhaps say "PAGE_SIZE" here instead of sizeof(dest)?
->
+Azeem Shaikh <azeemshaikh38@gmail.com> writes:
 
-Ack.
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+>
+> Direct replacement is safe here since WIPHY_ASSIGN is only used by
+> TRACE macros and the return values are ignored.
+>
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+>
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> ---
+> v1: https://lore.kernel.org/all/20230612232301.2572316-1-azeemshaikh38@gmail.com/
+> v2: https://lore.kernel.org/all/20230614134552.2108471-1-azeemshaikh38@gmail.com/
 
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
-cpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> >
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> > ---
-> >  drivers/usb/gadget/function/f_printer.c |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadg=
-et/function/f_printer.c
-> > index 28db3e336e7d..10dc7c55c25f 100644
-> > --- a/drivers/usb/gadget/function/f_printer.c
-> > +++ b/drivers/usb/gadget/function/f_printer.c
-> > @@ -1211,8 +1211,8 @@ static ssize_t f_printer_opts_pnp_string_show(str=
-uct config_item *item,
-> >       if (!opts->pnp_string)
-> >               goto unlock;
-> >
-> > -     result =3D strlcpy(page, opts->pnp_string, PAGE_SIZE);
-> > -     if (result >=3D PAGE_SIZE) {
-> > +     result =3D strscpy(page, opts->pnp_string, PAGE_SIZE);
-> > +     if (result =3D=3D -E2BIG) {
->
-> I think "< 1" might be a better test here.
->
+In the change log (after the "---" line) you should also describe what
+changes you made, more info in the wiki below. In this case it's clear
+as the patch is simple but please keep this in mind for future patches.
 
-Curious, why "< 1" instead of "< 0"?
+No need to resend because of this.
 
-> >               result =3D PAGE_SIZE;
-> >       } else if (page[result - 1] !=3D '\n' && result + 1 < PAGE_SIZE) =
-{
-> >               page[result++] =3D '\n';
-> > --
-> > 2.41.0.162.gfafddb0af9-goog
-> >
-> >
->
-> -Kees
->
-> --
-> Kees Cook
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
