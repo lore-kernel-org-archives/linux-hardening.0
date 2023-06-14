@@ -2,66 +2,73 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA453EB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 00:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF3BEB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 14 Jun 2023 01:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241447AbjFNAgJ (ORCPT
+        id S233325AbjFNBEK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 13 Jun 2023 20:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56520 "EHLO
+        Tue, 13 Jun 2023 21:04:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbjFNAgJ (ORCPT
+        with ESMTP id S230397AbjFNBEJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 13 Jun 2023 20:36:09 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4960F1980;
-        Tue, 13 Jun 2023 17:36:08 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-34096e3799bso1279985ab.2;
-        Tue, 13 Jun 2023 17:36:08 -0700 (PDT)
+        Tue, 13 Jun 2023 21:04:09 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B086D1BE6;
+        Tue, 13 Jun 2023 18:04:08 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-33cb82122c7so26158285ab.1;
+        Tue, 13 Jun 2023 18:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686702967; x=1689294967;
+        d=gmail.com; s=20221208; t=1686704648; x=1689296648;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xqWV/pnyyDUYkwTA+7Sh2AJ6YJrRKoUQXxS4iBU19zk=;
-        b=NCdkRND0uC2XlA7YPldjVoBxqUJXvAxX7EBgqaLCwuIE8u6vezjwlRYBPCd27LPDe7
-         IQPBonjnPAyfxfdB5Dcz/5eJSuoOPJxNja+LFwip4HxQ/92Y/HnfUiWrTXeptg9Ln3Di
-         Wpnbi5+1op2bx6K3IVIKJaczm6oe1uaiCJq5HA+2F5A2koZeG4Wqx79co2Jj5B9MqZlt
-         uYi22nj2CTpJLiSaXNDtdEQ4WhvmmeIQjw+QzbtvZ+X2DgW0ouQheD/ax8HxZO2Z9x60
-         jiPSN6NZv+Gh1KtGjKm5O2UurZN5ySGNk92P/embGIhWX4PqaZ3yxuusBfX/95562kKF
-         CO/g==
+        bh=bpUdBggZnHoq1zlVFxgo8EOItQu5v4wHe2ZS06ricxs=;
+        b=WTzdcCj5MSQnTu/zcHd0iVPWIl5NVOf5nldAKrvbRskPjHibBG39iMDXeKNqqE6oH+
+         K3j0qyJ0OLZMOlNPA8nvW00jlSDw+mPRxTzK44xDPc3EpWBYVl3akqgGTKsVbny6b24q
+         Y0Zix+Jet8++eqzmp2/22PE5rlamCOPyuE50xg6XJaLU5b2cAY/3QynmS9zCFXuc9MU6
+         IqfzsqqzmUnD6dh0hG3XH2tKA6RNZkQPs7d/hJD89fLd+rLlxoUPl2/+c4jb2gy4T/jb
+         /3zVebS/7a3qBYWOHT3EyQa50JVXy2mcCOHRDN9heBOBjnJWGihaB83+w4RqSXNF68G+
+         P/vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686702967; x=1689294967;
+        d=1e100.net; s=20221208; t=1686704648; x=1689296648;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xqWV/pnyyDUYkwTA+7Sh2AJ6YJrRKoUQXxS4iBU19zk=;
-        b=AC3JY/w8dOVBpQK5dyJPmT1fj9cpvRGJyq4zM10jYSY3xgG4Fug78Apxj/NQe1948P
-         P7/wz1LBIQkqY9OEXxMNMss2842nDcK4Y6NxYxhPW4Ml7zX3v1XoUMg/oa2GgD0So8Ro
-         gmRucUJPZim3SO8g/n06Z1by8n/k6jf9sIqXel+eAxqOCgERDn+LdrJkwOCq3j8Omo7g
-         IpJPzGXSi5KbpFDaQVvb5cPcfB9zN1VhlMTLBB4Leu3rHn7q2+7pABgmyWfeZrOhZzjj
-         ErDPECrOBIrnUW7sRO2HN75fJ/Yv5bZoXz2Ru3mXfTDfLwtWZCvrIXCxUUjrVExnsLx+
-         9P9A==
-X-Gm-Message-State: AC+VfDx+SVWR31C6pvtgTP2awlf/bYSiw3ol2Hr1atvc2o9n55w6VHQ0
-        czGN1K0XAFyBHb3u49iarsQ=
-X-Google-Smtp-Source: ACHHUZ49GziAH6p4LMsFcDvEgpV5WbArcvQ1nZ7RKW63pE36shMn/iEVZa5UqboftYUVTUBdPn2lIw==
-X-Received: by 2002:a92:d44d:0:b0:335:a70:5e4d with SMTP id r13-20020a92d44d000000b003350a705e4dmr11322786ilm.16.1686702967478;
-        Tue, 13 Jun 2023 17:36:07 -0700 (PDT)
+        bh=bpUdBggZnHoq1zlVFxgo8EOItQu5v4wHe2ZS06ricxs=;
+        b=kREInvsXXNpUyV6t0nsRscBfRtWzMGFrtRtJEkHaPDQiDW/CoNn6Uwdm6mPYC/FLdM
+         RldEGY4gLuD0DY9jzSsY/eRzTv+SCRqf8QkT3D4htqp8R429f73mGDM1KhIy7eymsmWe
+         rTPhQNdHLcvd6hMlUQnv/Mo+qAuz6wC1ufS37FM44XY1HU5iEKkDROKLlWJK/wOSxUaw
+         KvmObGGldfRHtVIzrQ+pzEbM335cXPRDKtFx1Rgjf99bp8Ves4kGStvsyxytQiU6U8O2
+         5AUPlLk0XQGPP3prmDJdHagqb30XD8DlP+HsR7uRx4XbCDYlIh7Sci6YYiMj6cW0qMIZ
+         gfhw==
+X-Gm-Message-State: AC+VfDzG6L92ZsYt/e7a0TTLsWCphiL6UUuXLQVB3/zf+Ixw6f2H2ZuO
+        C3BiGEx3kLWQkcrQakjlDmw=
+X-Google-Smtp-Source: ACHHUZ4Agytr6+ZyUd2Iuhgh5sPm4YOf7M1dnl/moE2gtA9y/bz2MI2nor/Tr+O6CBuE4kXx+4QlkA==
+X-Received: by 2002:a5e:df4a:0:b0:760:e308:107e with SMTP id g10-20020a5edf4a000000b00760e308107emr10980297ioq.0.1686704647997;
+        Tue, 13 Jun 2023 18:04:07 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id q18-20020a920512000000b0033b2c178254sm4131604ile.22.2023.06.13.17.36.06
+        by smtp.gmail.com with ESMTPSA id b15-20020a029a0f000000b0041f50bf668fsm3735448jal.57.2023.06.13.18.04.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 17:36:07 -0700 (PDT)
+        Tue, 13 Jun 2023 18:04:07 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Maxim Krasnyansky <maxk@qti.qualcomm.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH v3] uml: Replace strlcpy with strscpy
-Date:   Wed, 14 Jun 2023 00:36:04 +0000
-Message-ID: <20230614003604.1021205-1-azeemshaikh38@gmail.com>
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Maninder Singh <maninder1.s@samsung.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        bpf@vger.kernel.org
+Subject: [PATCH] kallsyms: Replace all non-returning strlcpy with strscpy
+Date:   Wed, 14 Jun 2023 01:03:54 +0000
+Message-ID: <20230614010354.1026096-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,41 +89,46 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
-v1: https://lore.kernel.org/all/20230530164004.986750-1-azeemshaikh38@gmail.com/
-v2: https://lore.kernel.org/all/20230606182410.3976487-1-azeemshaikh38@gmail.com/
+ kernel/kallsyms.c |    4 ++--
+ kernel/params.c   |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Changes from v1 - added strscpy declaration. v1 does not build.
-Changes from v2 - removed Reported-By: and Closes: tag from commit log.
-
- arch/um/include/shared/user.h          | 1 +
- arch/um/os-Linux/drivers/tuntap_user.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/um/include/shared/user.h b/arch/um/include/shared/user.h
-index bda66e5a9d4e..0347a190429c 100644
---- a/arch/um/include/shared/user.h
-+++ b/arch/um/include/shared/user.h
-@@ -52,6 +52,7 @@ static inline int printk(const char *fmt, ...)
- extern int in_aton(char *str);
- extern size_t strlcpy(char *, const char *, size_t);
- extern size_t strlcat(char *, const char *, size_t);
-+extern size_t strscpy(char *, const char *, size_t);
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 0f82c3d5a57d..7982cc9d497c 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -667,7 +667,7 @@ static int get_ksymbol_bpf(struct kallsym_iter *iter)
+ {
+ 	int ret;
  
- /* Copied from linux/compiler-gcc.h since we can't include it directly */
- #define barrier() __asm__ __volatile__("": : :"memory")
-diff --git a/arch/um/os-Linux/drivers/tuntap_user.c b/arch/um/os-Linux/drivers/tuntap_user.c
-index 53eb3d508645..2284e9c1cbbb 100644
---- a/arch/um/os-Linux/drivers/tuntap_user.c
-+++ b/arch/um/os-Linux/drivers/tuntap_user.c
-@@ -146,7 +146,7 @@ static int tuntap_open(void *data)
+-	strlcpy(iter->module_name, "bpf", MODULE_NAME_LEN);
++	strscpy(iter->module_name, "bpf", MODULE_NAME_LEN);
+ 	iter->exported = 0;
+ 	ret = bpf_get_kallsym(iter->pos - iter->pos_ftrace_mod_end,
+ 			      &iter->value, &iter->type,
+@@ -687,7 +687,7 @@ static int get_ksymbol_bpf(struct kallsym_iter *iter)
+  */
+ static int get_ksymbol_kprobe(struct kallsym_iter *iter)
+ {
+-	strlcpy(iter->module_name, "__builtin__kprobes", MODULE_NAME_LEN);
++	strscpy(iter->module_name, "__builtin__kprobes", MODULE_NAME_LEN);
+ 	iter->exported = 0;
+ 	return kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
+ 				  &iter->value, &iter->type,
+diff --git a/kernel/params.c b/kernel/params.c
+index 6a7548979aa9..07d01f6ce9a2 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -847,7 +847,7 @@ static void __init param_sysfs_builtin(void)
+ 			name_len = 0;
+ 		} else {
+ 			name_len = dot - kp->name + 1;
+-			strlcpy(modname, kp->name, name_len);
++			strscpy(modname, kp->name, name_len);
  		}
- 		memset(&ifr, 0, sizeof(ifr));
- 		ifr.ifr_flags = IFF_TAP | IFF_NO_PI;
--		strlcpy(ifr.ifr_name, pri->dev_name, sizeof(ifr.ifr_name));
-+		strscpy(ifr.ifr_name, pri->dev_name, sizeof(ifr.ifr_name));
- 		if (ioctl(pri->fd, TUNSETIFF, &ifr) < 0) {
- 			err = -errno;
- 			printk(UM_KERN_ERR "TUNSETIFF failed, errno = %d\n",
+ 		kernel_add_sysfs_param(modname, kp, name_len);
+ 	}
 -- 
-2.41.0.rc0.172.g3f132b7071-goog
+2.41.0.162.gfafddb0af9-goog
+
 
