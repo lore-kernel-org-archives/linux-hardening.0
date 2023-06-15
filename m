@@ -2,77 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64571EB64DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 09:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF699EB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 10:45:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245590AbjFOJd6 (ORCPT
+        id S245370AbjFOKpg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Jun 2023 05:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35586 "EHLO
+        Thu, 15 Jun 2023 06:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245591AbjFOJdw (ORCPT
+        with ESMTP id S245402AbjFOKpf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Jun 2023 05:33:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43682715;
-        Thu, 15 Jun 2023 02:33:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3AEF7616F6;
-        Thu, 15 Jun 2023 09:33:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D84C433C0;
-        Thu, 15 Jun 2023 09:33:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1686821617;
-        bh=3k+knOQOzZnH8UJm7bzmzxgb1d8QVR/mgApFW6PhNBk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R6DtK70SDECzJY5SatfKEV6HwkQ4t8exPWgleKEXqqYglnKNFi0jB74TDYe+zs9XQ
-         wEeg+FGNy2ojiq6aQ87OBnaWR5cHGWQLeQ+qEzmMG4q/dsg07CY8IxRwoFfyAhgrjk
-         ltKQ4mFzu2/ReB59b4KlzyzXgnGX+4aL0OXcrbU0=
-Date:   Thu, 15 Jun 2023 11:33:34 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org, Hongren Zheng <i@zenithal.me>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usbip: usbip_host: Replace strlcpy with strscpy
-Message-ID: <2023061516-stricken-prior-8057@gregkh>
-References: <20230614141026.2113749-1-azeemshaikh38@gmail.com>
+        Thu, 15 Jun 2023 06:45:35 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C65A62119;
+        Thu, 15 Jun 2023 03:45:33 -0700 (PDT)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 35FAjH01129102;
+        Thu, 15 Jun 2023 05:45:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1686825917;
+        bh=oxs9Na9lP7pahFFNgBeM/trs2fmCewsHB/EmIiLGWY8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=jtOwcmulfkjkjTCl6Ju3Dd2uF3gljMBbZEkcpf3dRcUbskFrG7K4xIbvBlJDPxadm
+         hTAIh5LQiGwl6rupieAZAL9IJtU5ed+ZdE3GEgCrZ4YFz8RZUiizEqOeCU6iTteqSU
+         VHthqO5uSxjFlwAukEp1IXzSnjMegHq3xbP1X1HI=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 35FAjHQn006922
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 15 Jun 2023 05:45:17 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 15
+ Jun 2023 05:45:16 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 15 Jun 2023 05:45:16 -0500
+Received: from uda0132425.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 35FAjCRQ060295;
+        Thu, 15 Jun 2023 05:45:13 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-hardening@vger.kernel.org>,
+        Wadim Egorov <w.egorov@phytec.de>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>, <upstream@lists.phytec.de>,
+        <nm@ti.com>, <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: ti: Add bindings for PHYTEC AM62x based hardware
+Date:   Thu, 15 Jun 2023 16:15:10 +0530
+Message-ID: <168681817164.2098323.15486911547839027350.b4-ty@ti.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230504140143.1425951-1-w.egorov@phytec.de>
+References: <20230504140143.1425951-1-w.egorov@phytec.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230614141026.2113749-1-azeemshaikh38@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 02:10:26PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> 
-> Direct replacement is safe here since return value of -errno
-> is used to check for truncation instead of sizeof(dest).
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> ---
-> v1: https://lore.kernel.org/all/20230613004402.3540432-1-azeemshaikh38@gmail.com/
-> 
-> Changes from v1 - uses "< 0" instead of "== -E2BIG".
+Hi Wadim Egorov,
 
-Please fix the reported errors from the build bot.
+On Thu, 04 May 2023 16:01:42 +0200, Wadim Egorov wrote:
+> Add devicetree bindings for AM62x based phyCORE-AM62 SoM
+> and phyBOARD-Lyra RDK.
+> 
+> 
 
-thanks
+I have applied the following to branch ti-k3-dts-next on [1].
+Thank you!
 
-greg k-h
+[1/2] dt-bindings: arm: ti: Add bindings for PHYTEC AM62x based hardware
+      commit: 94a58c5f131d7f0cf735af24574b7626aab77ab1
+[2/2] arm64: dts: ti: Add basic support for phyBOARD-Lyra-AM625
+      commit: 0ad58871f63cbc4a03360bebd4ccc967bd9346db
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
+
