@@ -2,97 +2,103 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07348EB64DD
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 02:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9E36EB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 02:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240986AbjFOCQh (ORCPT
+        id S238078AbjFOCsQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 22:16:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55792 "EHLO
+        Wed, 14 Jun 2023 22:48:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238287AbjFOCQg (ORCPT
+        with ESMTP id S237619AbjFOCsP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 22:16:36 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88905213B;
-        Wed, 14 Jun 2023 19:16:35 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35EK28It011675;
-        Thu, 15 Jun 2023 02:16:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=/HyjONeMU7stI1vytKXrTvwS3Ej/N+4v/h0ga9y7/NA=;
- b=wXnSFENMDmQciouprzR8mBM+zbRBHGsOlPaTukPZge++6yahnv+5i4GWmfNB0Hl7MosZ
- RuP6aRuucJ1jQkqQJ4XK6g1swkPomGomhyF0bvymAh2cL6zzsDtojAIhi/bGuovaaBiJ
- KYOkmPV6fsGlS29cipvtF37vN3enLG8wBw4yIQP62O2WT/mhBaQl7mARuVED/CuKKoRg
- oJIINpkWrgGZKa+iXJPoym9GgmwXpT1ftA53I2tNjblBF3sRspYiySdid70gvWQ9XMj0
- Ec/+3RUXB1kYo/EE/yTQ44pFjm21YBTEmfEbc0nWXmgkGcvcEYkTEXuUR/Cb9R4EAArp Dg== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r4gsu0tsb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Jun 2023 02:16:29 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35F1wg6p016286;
-        Thu, 15 Jun 2023 02:16:28 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3r4fm6bnxb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Jun 2023 02:16:28 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35F2EE7F027953;
-        Thu, 15 Jun 2023 02:16:28 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3r4fm6bnx8-1;
-        Thu, 15 Jun 2023 02:16:28 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] scsi: lpfc: Avoid -Wstringop-overflow warning
-Date:   Wed, 14 Jun 2023 22:16:20 -0400
-Message-Id: <168679535176.3778526.10107132390411297417.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <ZHkseX6TiFahvxJA@work>
-References: <ZHkseX6TiFahvxJA@work>
+        Wed, 14 Jun 2023 22:48:15 -0400
+Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76688E3;
+        Wed, 14 Jun 2023 19:48:13 -0700 (PDT)
+Received: from ed3e173716be.home.arpa (unknown [124.16.138.129])
+        by APP-05 (Coremail) with SMTP id zQCowACHpwTne4pkHH2QAg--.41156S2;
+        Thu, 15 Jun 2023 10:48:08 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     keescook@chromium.org
+Cc:     tony.luck@intel.com, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: Re: [PATCH] pstore/platform: Add check for kstrdup
+Date:   Thu, 15 Jun 2023 10:48:06 +0800
+Message-Id: <20230615024806.39381-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-14_14,2023-06-14_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=654 bulkscore=0 mlxscore=0
- spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306150017
-X-Proofpoint-GUID: p2Xwwe-FqLRVd-rqZUacazIlVRbLln9N
-X-Proofpoint-ORIG-GUID: p2Xwwe-FqLRVd-rqZUacazIlVRbLln9N
+X-CM-TRANSID: zQCowACHpwTne4pkHH2QAg--.41156S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1DGF48Xry7JF4kWFy3Arb_yoW8XF45p3
+        ykKFn8JFW0g3Wqgw1kX3W5ur4Y9a1vgr4rJ3y8ta1Ivas8Wr1DuryjgF4Y9FW8Xr97Gw10
+        qFWF9F15Z3s8ZF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkS14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4U
+        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
+        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
+        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+        W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5vtCUUUUU
+X-Originating-IP: [124.16.138.129]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 01 Jun 2023 17:40:41 -0600, Gustavo A. R. Silva wrote:
-
-> Prevent any potential integer wrapping issue, and avoid a
-> -Wstringop-overflow warning by using the check_mul_overflow() helper.
+On Thu, Jun 15, 2023 at 03:01:30PM +0800, Kees Cook wrote:
+> On Wed, Jun 14, 2023 at 06:00:20PM +0800, Jiasheng Jiang wrote:
+>> Add check for the return value of kstrdup() and return the error
+>> if it fails in order to avoid NULL pointer dereference.
+>> 
+>> Fixes: 563ca40ddf40 ("pstore/platform: Switch pstore_info::name to const")
+>> Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+>> ---
+>>  fs/pstore/platform.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>> 
+>> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+>> index cbc0b468c1ab..afe07f0d1216 100644
+>> --- a/fs/pstore/platform.c
+>> +++ b/fs/pstore/platform.c
+>> @@ -631,6 +631,10 @@ int pstore_register(struct pstore_info *psi)
+>>  	 * through /sys/module/pstore/parameters/backend
+>>  	 */
+>>  	backend = kstrdup(psi->name, GFP_KERNEL);
+>> +	if (!backend) {
+>> +		mutex_unlock(&psinfo_lock);
+>> +		return -ENOMEM;
+>> +	}
 > 
-> drivers/scsi/lpfc/lpfc.h:
-> 837:#define LPFC_RAS_MIN_BUFF_POST_SIZE (256 * 1024)
+> Hmm, I think this isn't the right place since there's been a bunch of
+> other allocations and registrations. I think it would be better to
+> allocate a copy (but not assign to "backend" yet) earlier, perhaps
+> before the taking the psinfo_lock lock? Like:
 > 
-> drivers/scsi/lpfc/lpfc_debugfs.c:
-> 2266 size = LPFC_RAS_MIN_BUFF_POST_SIZE * phba->cfg_ras_fwlog_buffsize;
+> 	char *new_backend;
+> 	...
+> 	new_backend = kstrdup(psi->name, GFP_KERNEL);
+> 	if (!new_backend)
+> 		return -ENOMEM;
 > 
-> [...]
+>         mutex_lock(&psinfo_lock);
+>         if (psinfo) {
+> 		...
+>                 mutex_unlock(&psinfo_lock);
+> 		kfree(new_backend);
+>                 return -EBUSY;
+>         }
+> 	...
+> 	backend = new_backend;
 
-Applied to 6.5/scsi-queue, thanks!
+Fine, I will submit a v2 to allocate earlier.
 
-[1/1] scsi: lpfc: Avoid -Wstringop-overflow warning
-      https://git.kernel.org/mkp/scsi/c/a48e2c328c65
+Thanks,
+Jiasheng
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
