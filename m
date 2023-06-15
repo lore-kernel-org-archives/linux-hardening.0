@@ -2,104 +2,79 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE89AEB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 02:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5928EEB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 04:40:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234331AbjFOCxW (ORCPT
+        id S229963AbjFOEkW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 22:53:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39338 "EHLO
+        Thu, 15 Jun 2023 00:40:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231177AbjFOCxV (ORCPT
+        with ESMTP id S229712AbjFOEkV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 22:53:21 -0400
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3386926A2;
-        Wed, 14 Jun 2023 19:53:19 -0700 (PDT)
-Received: from ed3e173716be.home.arpa (unknown [124.16.138.129])
-        by APP-05 (Coremail) with SMTP id zQCowACHpwQZfYpkfMiQAg--.41550S2;
-        Thu, 15 Jun 2023 10:53:13 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     keescook@chromium.org
-Cc:     tony.luck@intel.com, gpiccoli@igalia.com,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH v2] pstore/platform: Add check for kstrdup
-Date:   Thu, 15 Jun 2023 10:53:12 +0800
-Message-Id: <20230615025312.48712-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        Thu, 15 Jun 2023 00:40:21 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CFFB3;
+        Wed, 14 Jun 2023 21:40:21 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DCDA567373; Thu, 15 Jun 2023 06:40:15 +0200 (CEST)
+Date:   Thu, 15 Jun 2023 06:40:15 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Damien Le Moal <dlemoal@kernel.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Christoph Hellwig <hch@lst.de>, Hannes Reinecke <hare@suse.de>,
+        Joe Breuer <linux-kernel@jmbreuer.net>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Linux Power Management <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Hardening <linux-hardening@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux SCSI <linux-scsi@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+Message-ID: <20230615044015.GA4720@lst.de>
+References: <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com> <ZIQ6bkau3j6qGef8@duo.ucw.cz> <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com> <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org> <b2cf6d96-a55a-d444-d22e-e9b3945ba43f@jmbreuer.net> <84f1c51c-86f9-04b3-0cd1-f685ebee7592@kernel.org> <37ed36f0-6f72-115c-85fb-62ef5ad72e76@suse.de> <b0fdf454-b2f7-c273-66f5-efe42fbc2807@kernel.org> <859f0eda-4984-4489-9851-c9f6ec454a88@rowland.harvard.edu> <41b069c7-8723-4507-3e5a-1d1878db9002@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowACHpwQZfYpkfMiQAg--.41550S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7WFWfuw4xKr1rXw1fur1DGFg_yoW8XrW5p3
-        ykCwn3JFW8G3W29w1vq3WrZF4YqF4ktr4rJ3yxta1xtwn0gr1YvrWUt3ZavFy8JryfXr17
-        JF1rCw15uFZ0vF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkq14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r4U
-        MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-        0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-        wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
-        WxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbJ3ktUUUUU==
-X-Originating-IP: [124.16.138.129]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <41b069c7-8723-4507-3e5a-1d1878db9002@kernel.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add check for the return value of kstrdup() and return the error
-if it fails in order to avoid NULL pointer dereference.
+On Thu, Jun 15, 2023 at 09:10:28AM +0900, Damien Le Moal wrote:
+> > Here's what commit e27829dc92e5 ("scsi: serialize ->rescan against 
+> > ->remove", written by Christoph Hellwig) says:
+> > 
+> >     Lock the device embedded in the scsi_device to protect against
+> >     concurrent calls to ->remove.
+> > 
+> > That's the commit which added the device_lock() call.
+> 
+> Thanks for the information.
+> 
+> +Christoph
+> 
+> Why is adding the device_lock() needed ? We could just do a
+> scsi_device_get()+scsi_device_put() to serialize against remove. No ?
 
-Fixes: 563ca40ddf40 ("pstore/platform: Switch pstore_info::name to const")
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
-Changelog:
-
-v1 -> v2:
-
-1. Allocate a copy earlier.
----
- fs/pstore/platform.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index cbc0b468c1ab..727f8ce71062 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -573,6 +573,8 @@ static int pstore_write_user_compat(struct pstore_record *record,
-  */
- int pstore_register(struct pstore_info *psi)
- {
-+	char *new_backend;
-+
- 	if (backend && strcmp(backend, psi->name)) {
- 		pr_warn("backend '%s' already in use: ignoring '%s'\n",
- 			backend, psi->name);
-@@ -593,6 +595,10 @@ int pstore_register(struct pstore_info *psi)
- 		return -EINVAL;
- 	}
- 
-+	new_backend = kstrdup(psi->name, GFP_KERNEL);
-+	if (!new_backend)
-+		return -ENOMEM;
-+
- 	mutex_lock(&psinfo_lock);
- 	if (psinfo) {
- 		pr_warn("backend '%s' already loaded: ignoring '%s'\n",
-@@ -630,7 +636,7 @@ int pstore_register(struct pstore_info *psi)
- 	 * Update the module parameter backend, so it is visible
- 	 * through /sys/module/pstore/parameters/backend
- 	 */
--	backend = kstrdup(psi->name, GFP_KERNEL);
-+	backend = new_backend;
- 
- 	pr_info("Registered %s as persistent store backend\n", psi->name);
- 
--- 
-2.25.1
-
+No.  scsi_device_get just increments a reference count, and thus
+prevents ->release from beeing called.  ->remove is not in any way
+affected by the refcount.
