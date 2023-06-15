@@ -2,146 +2,233 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83845EB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 00:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB847EB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 00:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232281AbjFOABd (ORCPT
+        id S231356AbjFOAKf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 20:01:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42984 "EHLO
+        Wed, 14 Jun 2023 20:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230017AbjFOABc (ORCPT
+        with ESMTP id S229567AbjFOAKe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 20:01:32 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469181BF8;
-        Wed, 14 Jun 2023 17:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686787291; x=1718323291;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vlOy6sNgAGOk3m1Tw2KlI83PWTTLu4KM+zfhCO79zT0=;
-  b=SEffVFP0qRkZO/g+PYR+X68Coz40848nKC/oLkJjGC6WpJGvxX/d3LdY
-   nOnfklE0UUCRZzUGx32nebyOhL/wQOqLMTLBCjXO+7Qj67XWgOO9kVmRF
-   SeMZv4XuzOhf8yIfOSwerzRQRjJLOMG7mVNm+TW72vS/VZqvbcWE9tjC5
-   Q67kPRHfE7rhikmRz0lsPRwUM/Hg5ViwCvCJjpMJhAKvFTIaTZkPeiqJY
-   Uj0t649yeRbLbszofd3rCO/9DULw3fKB54Vzs+jwfd6f5fOXUqg6YUcaj
-   RhmUbuuz7wU8f1+4X6R0mHThJpsPX1QLK8fN0aHtnnT4Ahh0dLgjqKWCu
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="356259699"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="356259699"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 17:01:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="742021292"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="742021292"
-Received: from lkp-server02.sh.intel.com (HELO d59cacf64e9e) ([10.239.97.151])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jun 2023 17:01:25 -0700
-Received: from kbuild by d59cacf64e9e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q9aQ0-0001BJ-1e;
-        Thu, 15 Jun 2023 00:00:57 +0000
-Date:   Thu, 15 Jun 2023 07:59:56 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Hongren Zheng <i@zenithal.me>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] usbip: usbip_host: Replace strlcpy with strscpy
-Message-ID: <202306150753.vOUEonLq-lkp@intel.com>
-References: <20230614141026.2113749-1-azeemshaikh38@gmail.com>
+        Wed, 14 Jun 2023 20:10:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8EAF1FC3;
+        Wed, 14 Jun 2023 17:10:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4E326624E0;
+        Thu, 15 Jun 2023 00:10:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E521EC433C8;
+        Thu, 15 Jun 2023 00:10:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686787832;
+        bh=SQJrQpPv+nsje/JTZ9ubRFLugHjqBKrTYz9oEPnvMX8=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=DQd1SD2v+DT/5LH2F/qjevLJDCfDZYDsl8VlAXVbL9SdG4VDUi5+vZqVkrVKJwrMc
+         M0DzEeNtgS8T9IbwLpJQQdToqScOfwfUm+wRDemBMiD847d4ICIgTurEo3fe+fW62b
+         QzBE3FRrlHyuz+CM0lbPHn5O+u/jk8uWPIx7YlXrQvP4ma+PYuEtlt8oB8VCGnblaJ
+         1GrixbhoPvCx3VVFNh5/R+gMqeoAbz4wiroBx8jGQyycSM+OHMwO+u9vqFiKxUseCk
+         WWwoqqBScp4CxLYRlLyUzuZ5Xf+zBaN4ITAYvBKmjKvRqPde9aEJ9YeXwEZeZbFOqK
+         7COGWTA/eqmUA==
+Message-ID: <41b069c7-8723-4507-3e5a-1d1878db9002@kernel.org>
+Date:   Thu, 15 Jun 2023 09:10:28 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230614141026.2113749-1-azeemshaikh38@gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: Fwd: Waking up from resume locks up on sr device
+Content-Language: en-US
+To:     Alan Stern <stern@rowland.harvard.edu>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Hannes Reinecke <hare@suse.de>,
+        Joe Breuer <linux-kernel@jmbreuer.net>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Phillip Potter <phil@philpotter.co.uk>,
+        Linux Power Management <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Hardening <linux-hardening@vger.kernel.org>,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Linux SCSI <linux-scsi@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Martin Kepplinger <martin.kepplinger@puri.sm>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+References: <2d1fdf6d-682c-a18d-2260-5c5ee7097f7d@gmail.com>
+ <5513e29d-955a-f795-21d6-ec02a2e2e128@gmail.com>
+ <ZIQ6bkau3j6qGef8@duo.ucw.cz>
+ <07d6e2e7-a50a-8cf4-5c5d-200551bd6687@gmail.com>
+ <02e4f87a-80e8-dc5d-0d6e-46939f2c74ac@acm.org>
+ <b2cf6d96-a55a-d444-d22e-e9b3945ba43f@jmbreuer.net>
+ <84f1c51c-86f9-04b3-0cd1-f685ebee7592@kernel.org>
+ <37ed36f0-6f72-115c-85fb-62ef5ad72e76@suse.de>
+ <b0fdf454-b2f7-c273-66f5-efe42fbc2807@kernel.org>
+ <859f0eda-4984-4489-9851-c9f6ec454a88@rowland.harvard.edu>
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <859f0eda-4984-4489-9851-c9f6ec454a88@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Azeem,
+On 6/14/23 23:26, Alan Stern wrote:
+> On Wed, Jun 14, 2023 at 04:35:50PM +0900, Damien Le Moal wrote:
+>> On 6/14/23 15:57, Hannes Reinecke wrote:
+>>> On 6/14/23 06:49, Damien Le Moal wrote:
+>>>> On 6/11/23 18:05, Joe Breuer wrote:
+>>>>> I'm the reporter of this issue.
+>>>>>
+>>>>> I just tried this patch against 6.3.4, and it completely fixes my
+>>>>> suspend/resume issue.
+>>>>>
+>>>>> The optical drive stays usable after resume, even suspending/resuming
+>>>>> during playback of CDDA content works flawlessly and playback resumes
+>>>>> seamlessly after system resume.
+>>>>>
+>>>>> So, from my perspective: Good one!
+>>>>
+>>>> In place of Bart's fix, could you please try this patch ?
+>>>>
+>>>> diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+>>>> index b80e68000dd3..a81eb4f882ab 100644
+>>>> --- a/drivers/ata/libata-eh.c
+>>>> +++ b/drivers/ata/libata-eh.c
+>>>> @@ -4006,9 +4006,32 @@ static void ata_eh_handle_port_resume(struct
+>>>> ata_port *ap)
+>>>>          /* tell ACPI that we're resuming */
+>>>>          ata_acpi_on_resume(ap);
+>>>>
+>>>> -       /* update the flags */
+>>>>          spin_lock_irqsave(ap->lock, flags);
+>>>> +
+>>>> +       /* Update the flags */
+>>>>          ap->pflags &= ~(ATA_PFLAG_PM_PENDING | ATA_PFLAG_SUSPENDED);
+>>>> +
+>>>> +       /*
+>>>> +        * Resuming the port will trigger a rescan of the ATA device(s)
+>>>> +        * connected to it. Before scheduling the rescan, make sure that
+>>>> +        * the associated scsi device(s) are fully resumed as well.
+>>>> +        */
+>>>> +       ata_for_each_link(link, ap, HOST_FIRST) {
+>>>> +               ata_for_each_dev(dev, link, ENABLED) {
+>>>> +                       struct scsi_device *sdev = dev->sdev;
+>>>> +
+>>>> +                       if (!sdev)
+>>>> +                               continue;
+>>>> +                       if (scsi_device_get(sdev))
+>>>> +                               continue;
+>>>> +
+>>>> +                       spin_unlock_irqrestore(ap->lock, flags);
+>>>> +                       device_pm_wait_for_dev(&ap->tdev,
+>>>> +                                              &sdev->sdev_gendev);
+>>>> +                       scsi_device_put(sdev);
+>>>> +                       spin_lock_irqsave(ap->lock, flags);
+>>>> +               }
+>>>> +       }
+>>>>          spin_unlock_irqrestore(ap->lock, flags);
+>>>>   }
+>>>>   #endif /* CONFIG_PM */
+>>>>
+>>>> Thanks !
+>>>>
+>>> Well; not sure if that'll work out.
+>>> The whole reason why we initial a rescan is that we need to check if the
+>>> ports are still connected, and whether the devices react.
+>>> So we can't iterate the ports here as this is the very thing which gets
+>>> checked during EH.
+>>
+>> Hmmm... Right. So we need to move that loop into ata_scsi_dev_rescan(),
+>> which itself already loops over the port devices anyway.
+>>
+>>> We really should claim resume to be finished as soon as we can talk with
+>>> the HBA, and kick off EH asynchronously to let it finish the job after
+>>> resume has completed.
+>>
+>> That is what's done already:
+>>
+>> static int ata_port_pm_resume(struct device *dev)
+>> {
+>> 	ata_port_resume_async(to_ata_port(dev), PMSG_RESUME);
+>> 	pm_runtime_disable(dev);
+>> 	pm_runtime_set_active(dev);
+>> 	pm_runtime_enable(dev);
+>> 	return 0;
+>> }
+>>
+>> EH is kicked by ata_port_resume_async() -> ata_port_request_pm() and it
+>> is async. There is no synchronization in EH with the PM side though. We
+>> probably should have EH check that the port resume is done first, which
+>> can be done in ata_eh_handle_port_resume() since that is the first thing
+>> done when entering EH.
+>>
+>> The problem remains though that we *must* wait for the scsi device
+>> resume to be done before calling scsi_rescan_device(), which is done
+>> asynchronously from EH, as a different work. So that one needs to wait
+>> for the scsi side resume to be done.
+>>
+>> I also thought of trigerring the rescan from the scsi side, but since
+>> the resume may be asynchronous, we could endup trigerring it with the
+>> ata side not yet resumed... That would only turn the problem around
+>> instead of solving it.
+> 
+> The order in which devices get resumed isn't arbitrary.  If the system 
+> is set up not to use async suspends/resumes then the order is always the 
+> same as the order in which the devices were originally registered (for 
+> resume, that is -- suspend obviously takes place in the reverse order).
+> 
+> So if you're trying to perform an action that requires two devices to be 
+> active, you must not do it in the resume handler for the device that was 
+> registered first.  I don't know how the ATA and SCSI pieces interact 
+> here, but regardless, this is a pretty strict requirement.
+> 
+> It should be okay to perform the action in the resume handler for the 
+> device that was registered second.  But if the two devices aren't in an 
+> ancestor-descendant relationship then you also have to call 
+> device_pm_wait_for_dev() (or use device links as Rafael mentioned) to 
+> handle the async case properly.
+> 
+>> Or... Why the heck scsi_rescan_device() is calling device_lock() ? This
+>> is the only place in scsi code I can see that takes this lock. I suspect
+>> this is to serialize either rescans, or serialize with resume, or both.
+>> For serializing rescans, we can use another lock. For serializing with
+>> PM, we should wait for PM transitions...
+>> Something is not right here.
+> 
+> Here's what commit e27829dc92e5 ("scsi: serialize ->rescan against 
+> ->remove", written by Christoph Hellwig) says:
+> 
+>     Lock the device embedded in the scsi_device to protect against
+>     concurrent calls to ->remove.
+> 
+> That's the commit which added the device_lock() call.
 
-kernel test robot noticed the following build warnings:
+Thanks for the information.
 
-[auto build test WARNING on usb/usb-testing]
-[also build test WARNING on usb/usb-next usb/usb-linus linus/master v6.4-rc6 next-20230614]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
++Christoph
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Azeem-Shaikh/usbip-usbip_host-Replace-strlcpy-with-strscpy/20230614-221217
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-patch link:    https://lore.kernel.org/r/20230614141026.2113749-1-azeemshaikh38%40gmail.com
-patch subject: [PATCH v2] usbip: usbip_host: Replace strlcpy with strscpy
-config: i386-randconfig-i012-20230614 (https://download.01.org/0day-ci/archive/20230615/202306150753.vOUEonLq-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build):
-        git remote add usb https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
-        git fetch usb usb-testing
-        git checkout usb/usb-testing
-        b4 shazam https://lore.kernel.org/r/20230614141026.2113749-1-azeemshaikh38@gmail.com
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=i386 olddefconfig
-        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/usb/usbip/
+Why is adding the device_lock() needed ? We could just do a
+scsi_device_get()+scsi_device_put() to serialize against remove. No ?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306150753.vOUEonLq-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/usb/usbip/stub_main.c: In function 'match_busid_store':
->> drivers/usb/usbip/stub_main.c:170:13: warning: unused variable 'len' [-Wunused-variable]
-     170 |         int len;
-         |             ^~~
-
-
-vim +/len +170 drivers/usb/usbip/stub_main.c
-
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  166  
-cc3d53def83a99 drivers/usb/usbip/stub_main.c     Greg Kroah-Hartman 2017-06-09  167  static ssize_t match_busid_store(struct device_driver *dev, const char *buf,
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  168  				 size_t count)
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  169  {
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09 @170  	int len;
-e913397202b755 drivers/staging/usbip/stub_main.c Kay Sievers        2008-10-30  171  	char busid[BUSID_SIZE];
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  172  
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  173  	if (count < 5)
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  174  		return -EINVAL;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  175  
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  176  	/* busid needs to include \0 termination */
-7e5b2b663aa01a drivers/usb/usbip/stub_main.c     Azeem Shaikh       2023-06-14  177  	if (strscpy(busid, buf + 4, BUSID_SIZE) < 0)
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  178  		return -EINVAL;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  179  
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  180  	if (!strncmp(buf, "add ", 4)) {
-2183b77ece517f drivers/staging/usbip/stub_main.c Kurt Kanzenbach    2013-04-04  181  		if (add_match_busid(busid) < 0)
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  182  			return -ENOMEM;
-2183b77ece517f drivers/staging/usbip/stub_main.c Kurt Kanzenbach    2013-04-04  183  
-1a4b6f66285785 drivers/staging/usbip/stub_main.c matt mooney        2011-05-19  184  		pr_debug("add busid %s\n", busid);
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  185  		return count;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  186  	}
-2183b77ece517f drivers/staging/usbip/stub_main.c Kurt Kanzenbach    2013-04-04  187  
-2183b77ece517f drivers/staging/usbip/stub_main.c Kurt Kanzenbach    2013-04-04  188  	if (!strncmp(buf, "del ", 4)) {
-2183b77ece517f drivers/staging/usbip/stub_main.c Kurt Kanzenbach    2013-04-04  189  		if (del_match_busid(busid) < 0)
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  190  			return -ENODEV;
-2183b77ece517f drivers/staging/usbip/stub_main.c Kurt Kanzenbach    2013-04-04  191  
-1a4b6f66285785 drivers/staging/usbip/stub_main.c matt mooney        2011-05-19  192  		pr_debug("del busid %s\n", busid);
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  193  		return count;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  194  	}
-2183b77ece517f drivers/staging/usbip/stub_main.c Kurt Kanzenbach    2013-04-04  195  
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  196  	return -EINVAL;
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  197  }
-cc3d53def83a99 drivers/usb/usbip/stub_main.c     Greg Kroah-Hartman 2017-06-09  198  static DRIVER_ATTR_RW(match_busid);
-4d7b5c7f8ad49b drivers/staging/usbip/stub_main.c Takahiro Hirofuchi 2008-07-09  199  
+> 
+> Alan Stern
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Damien Le Moal
+Western Digital Research
+
