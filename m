@@ -2,66 +2,65 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A5AEB64D9
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 18:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA9EEB64DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 18:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbjFOSDj (ORCPT
+        id S230118AbjFOSE0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 15 Jun 2023 14:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
+        Thu, 15 Jun 2023 14:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjFOSDi (ORCPT
+        with ESMTP id S230093AbjFOSEZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 15 Jun 2023 14:03:38 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E32C294D;
-        Thu, 15 Jun 2023 11:03:37 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id ca18e2360f4ac-77a62a84855so330088639f.1;
-        Thu, 15 Jun 2023 11:03:37 -0700 (PDT)
+        Thu, 15 Jun 2023 14:04:25 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE33C294A;
+        Thu, 15 Jun 2023 11:04:23 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-33aa60f4094so4118675ab.1;
+        Thu, 15 Jun 2023 11:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686852217; x=1689444217;
+        d=gmail.com; s=20221208; t=1686852263; x=1689444263;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WO4wvoymcuMAWNuPabTIQ60hnmsXdbnj1sWoVRdUjgU=;
-        b=Q8rKplw1MdaA++C3yfoH/jMHoQRAjJwQ/Fx4HqfOtImtfsD0cokp/bK9NubdEPN0S3
-         lVi/CSVeKs3vS5C1pXcJIaY/eEvRTpDPNJuxiUSti98+ZkxRIRUPD8/divXb8MIGP+rr
-         YRH3TbNOsP3yzMIxSvxmxx7kuKNn/5Gp7kYHq4H3TS+zjurXlBA0HtLYLkulajaLP/g7
-         tQoaFNCtG+1k7hXKr9oZrz+GTJ65LC3WiQF7UBFJXweQfkZLRO/Sdxdk0+dmZce+QasM
-         VvxUmTXjhISrfONox49AauPTTUEuu4/o50oMy78PZMl5fBTk/TbHRF92BJOUzl64ANRY
-         +Iyg==
+        bh=/u+///EcupbIJP0wmwzWwwhqxbaWqaZ46VmaNSEFYns=;
+        b=NwXE6DH7KcGFqGahn7YCqVt/g6QP3KBqz0tDM1qLmE/9igLwfk2duRLPGN/GtJn6jU
+         Rwyg0UkRwZ1rz/JdQiDm+V0VodKkd0MvXTPpa9ZZmNdDnI2sed5D2pbzoHJdBrQt2WwN
+         3Zj3ibXFxp5Fw8jGzOI6gHa8hEFGFkWBsNEOXb7vv/sGK9ZvTPetn3VooYDBErUDVhMU
+         4uClS8KpJ7vDGKrUq9uKrsPJd6fMp0YcPgvDxwMNQwYCfZdpE8rWj/caC9Q7ZVBCsBjy
+         c+LD5iDkvLmzWguOcKUiWz/Ttna8GBYaLU9zh5khbuMGyqy5ZvbKkK44CrZaJIxGVYtg
+         sRDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686852217; x=1689444217;
+        d=1e100.net; s=20221208; t=1686852263; x=1689444263;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WO4wvoymcuMAWNuPabTIQ60hnmsXdbnj1sWoVRdUjgU=;
-        b=SipQg2Pzaegni1V+L22+/8wEXSkDFz6i4Mj8s+D1raYW8bOri8VK7wjwYwepqhbpLd
-         uQRAIG3L5DsApBzGZ+vxKZw4MRE4JigsrV48PqM24mPWKERcZjeOYVO5pIg9qC6Dq/7J
-         V5rHG71DEbeIhNpSO0qVqqbSd56fzj7yAA8PrktsOBqI0QYuXjbqbuTgQjD4v7Th+WA5
-         BUZ7L62OfFhrvazYjdYaatFCNGS3TQlbwahG+M5wE9ljwgtYajuvnohUolL8YAjLP0hk
-         x4NNWDyz0EzEfRKfYcVYSEDOnG3lAMgHPIFJDwkSsxqkl0s7D+qGHO4I6ZL7WXZZ+jcw
-         HfkA==
-X-Gm-Message-State: AC+VfDw1O0bn2KK1YiyjN85EuBM7Wv9X9DXUwFl/RRnU1Ya4XU8PLdnK
-        3kOF2bmECjfw35yd+Cloc8UvwqTnIgG3pQzw
-X-Google-Smtp-Source: ACHHUZ59/nicEQ8v5WP2ZpZIKHBGFfLebrsnAQ2jypcowPozX9jQwhD4cPS4Xl6AA2WyhvdMm2Ms3A==
-X-Received: by 2002:a6b:6d0f:0:b0:777:b531:eb57 with SMTP id a15-20020a6b6d0f000000b00777b531eb57mr263791iod.1.1686852216625;
-        Thu, 15 Jun 2023 11:03:36 -0700 (PDT)
+        bh=/u+///EcupbIJP0wmwzWwwhqxbaWqaZ46VmaNSEFYns=;
+        b=g9C+73OTJQaedG0T/sQbjASxELabJ8FbzYTJ7lQyGuY7HQGVIfT9h1F+MMy/w6j9d+
+         Podoq7q9VKoXOcrMxANiYh+xhSlNFikKtBNBpgkBOG3JK4yB970g61PLjGsbkXadEJ1j
+         LGmu/uPwVskRw3xfyaGNEuBiL1DH5Xx9lIP/E94guZBcEn3P4/6bTTbr6UPl6O72WtM5
+         QINSGORrJQwqcgAtLprkfX8lJGyrOJ8luUeK+Ylso5ozwR/Yt0klmqeIrInQ4ooWeLrv
+         j2MSUU1NFh0ytUhZRFXkgbiOqemALza/KSuORiwuNxaRahZh0+caYIHqO6GvxuUKdwBP
+         0LFg==
+X-Gm-Message-State: AC+VfDxAuB4G9rJw6TljM1awSVGKCBv0WfRmnVHHfttieDnWNqVKVsCy
+        iB0pA1gf0eVA2qVotfnyi4U=
+X-Google-Smtp-Source: ACHHUZ7zHUNNjFwo+XUa1IpVOBDaASLdVU8eFLjZMuf3xpn0Ypd/YbViRraMO9er1ZfPRv82PKSxMg==
+X-Received: by 2002:a05:6e02:ca9:b0:341:df27:8a97 with SMTP id 9-20020a056e020ca900b00341df278a97mr781250ilg.12.1686852262994;
+        Thu, 15 Jun 2023 11:04:22 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id l30-20020a02cd9e000000b0041d8acd35b0sm5732433jap.3.2023.06.15.11.03.35
+        by smtp.gmail.com with ESMTPSA id a11-20020a92a30b000000b0033ce0ef231bsm3039027ili.23.2023.06.15.11.04.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jun 2023 11:03:35 -0700 (PDT)
+        Thu, 15 Jun 2023 11:04:22 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Eric Biggers <ebiggers@kernel.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Albert Briscoe <albertsbriscoe@gmail.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH v2] usb: gadget: function: printer: Replace strlcpy with strscpy
-Date:   Thu, 15 Jun 2023 18:03:18 +0000
-Message-ID: <20230615180318.400639-1-azeemshaikh38@gmail.com>
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2] tracing/boot: Replace strlcpy with strscpy
+Date:   Thu, 15 Jun 2023 18:04:20 +0000
+Message-ID: <20230615180420.400769-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -77,7 +76,7 @@ In an effort to remove strlcpy() completely [2], replace
 strlcpy() here with strscpy().
 
 Direct replacement is safe here since return value of -errno
-is used to check for truncation instead of PAGE_SIZE.
+is used to check for truncation instead of sizeof(dest).
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
 [2] https://github.com/KSPP/linux/issues/89
@@ -85,30 +84,54 @@ is used to check for truncation instead of PAGE_SIZE.
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
 v2:
- * Use "< 1" instead of "== -E2BIG".
- * Update commit log to say PAGE_SIZE instead of sizeof(dest).
+ * Use "< 0" instead of -E2BIG.
 
 v1:
- * https://lore.kernel.org/all/20230613004341.3540325-1-azeemshaikh38@gmail.com/
+ * https://lore.kernel.org/all/20230613004125.3539934-1-azeemshaikh38@gmail.com/
 
- drivers/usb/gadget/function/f_printer.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_boot.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_printer.c b/drivers/usb/gadget/function/f_printer.c
-index 28db3e336e7d..b91425611969 100644
---- a/drivers/usb/gadget/function/f_printer.c
-+++ b/drivers/usb/gadget/function/f_printer.c
-@@ -1211,8 +1211,8 @@ static ssize_t f_printer_opts_pnp_string_show(struct config_item *item,
- 	if (!opts->pnp_string)
- 		goto unlock;
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 778200dd8ede..7ccc7a8e155b 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
  
--	result = strlcpy(page, opts->pnp_string, PAGE_SIZE);
--	if (result >= PAGE_SIZE) {
-+	result = strscpy(page, opts->pnp_string, PAGE_SIZE);
-+	if (result < 1) {
- 		result = PAGE_SIZE;
- 	} else if (page[result - 1] != '\n' && result + 1 < PAGE_SIZE) {
- 		page[result++] = '\n';
+ 	/* Common ftrace options */
+ 	xbc_node_for_each_array_value(node, "options", anode, p) {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
+ 			pr_err("String is too long: %s\n", p);
+ 			continue;
+ 		}
+@@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
+ 	const char *p;
+ 
+ 	xbc_node_for_each_array_value(node, "events", anode, p) {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
+ 			pr_err("String is too long: %s\n", p);
+ 			continue;
+ 		}
+@@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+ 
+ 	p = xbc_node_find_value(enode, "filter", NULL);
+ 	if (p && *p != '\0') {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
+ 			pr_err("filter string is too long: %s\n", p);
+ 		else if (apply_event_filter(file, buf) < 0)
+ 			pr_err("Failed to apply filter: %s\n", buf);
+@@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+ 
+ 	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
+ 		xbc_node_for_each_array_value(enode, "actions", anode, p) {
+-			if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
++			if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
+ 				pr_err("action string is too long: %s\n", p);
+ 			else if (trigger_process_regex(file, buf) < 0)
+ 				pr_err("Failed to apply an action: %s\n", p);
 -- 
 2.41.0.162.gfafddb0af9-goog
 
