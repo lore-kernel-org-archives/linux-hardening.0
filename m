@@ -2,94 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478EFEB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 01:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44BBEB64DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 15 Jun 2023 02:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230144AbjFOBR3 (ORCPT
+        id S238353AbjFOCQg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 14 Jun 2023 21:17:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35578 "EHLO
+        Wed, 14 Jun 2023 22:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjFOBR1 (ORCPT
+        with ESMTP id S238317AbjFOCQg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 14 Jun 2023 21:17:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3671FD2;
-        Wed, 14 Jun 2023 18:17:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2DC8161200;
-        Thu, 15 Jun 2023 01:17:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5D52C433C0;
-        Thu, 15 Jun 2023 01:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686791845;
-        bh=jC/V/5wTuDMjSNiSOnA5excD/Pg4jzWuQwRXLi7lZ5Q=;
-        h=Date:From:To:Cc:Subject:From;
-        b=LNn3r6SsDlIceMsugdzXzyHk9WrMjwzuxupyyplrVHyioNpMJdpql/gLeE+cky74M
-         7/gIN433a9Az+BryjDhdebV9l6Mnw4rB9+iqI6K5ce3PdjuOyjyiwgS3o4L1jcdmQY
-         t9PY3TpynCOtMjyn4mXp6Wga7IIu/2AZoBsp29aMD6JYTeKrrQppEc0MFMTKtgNwMF
-         krwRXUZxh2Vchb79SSKMEvvLrj7xm3Q1Tb5PktEXXLDaadwmoVq5AWvQv4qwKOV4hQ
-         Rs0JFIB02Mjw2n30gUblEh4OxBCw19+eCBmlKcuJ9iIvOLsYjFdW3V8a5voebM/9Ed
-         mRzHWmC4lfCxA==
-Date:   Wed, 14 Jun 2023 19:18:22 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
-Message-ID: <ZIpm3pcs3iCP9UaR@work>
+        Wed, 14 Jun 2023 22:16:36 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D8E11BE8;
+        Wed, 14 Jun 2023 19:16:35 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35EKJ3Jo021119;
+        Thu, 15 Jun 2023 02:16:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2023-03-30;
+ bh=AdkWYI7NNESNqwM1JoBBeU02ine8N/+vT2OqCf2mekg=;
+ b=yUEt/TYY9EvVM1apDd3VFbtZpNR1LIvzy87NlI/UH+XNsDpdxlP7YeYxHMEOHYSfnCO7
+ eD0lVhsQ4PhGn1qkAUlQH5sWEmrUhIpKkrCzpg20E63s9qdmrB8dikyechFEqpjKKqsp
+ Ch6jTVmGwsq/RBML79JPOyB8PSXsO5TqUaVTmdw800jPFJoKMGSRNmFX5PFpmqNCsxvZ
+ N5mZHFgQjK6pxVtqPkCi13vlwFWpKEaSYleRddUopTxixwvrC53RSGSCi+xcwFaoL1Dm
+ +9GCYkcfoPWTA+eRUK/bIBURBOHVuPziislyt18B+I+d5Wma1G6Bw8Vc5GWR2w3ndOBx cQ== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r4fkdrsq6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Jun 2023 02:16:29 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35ENrXI7016344;
+        Thu, 15 Jun 2023 02:16:29 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3r4fm6bnxe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Jun 2023 02:16:29 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35F2EE7H027953;
+        Thu, 15 Jun 2023 02:16:28 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3r4fm6bnx8-2;
+        Thu, 15 Jun 2023 02:16:28 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Nilesh Javali <njavali@marvell.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        GR-QLogic-Storage-Upstream@marvell.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [RESEND][PATCH][next] Replace one-element array with DECLARE_FLEX_ARRAY() helper
+Date:   Wed, 14 Jun 2023 22:16:21 -0400
+Message-Id: <168679535179.3778526.8210116739672829202.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <ZH+/rZ1R1cBjIxjS@work>
+References: <ZH+/rZ1R1cBjIxjS@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-14_14,2023-06-14_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=957 bulkscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306150017
+X-Proofpoint-ORIG-GUID: -aMQgYbIVKTx5uXcCiyAFp25AY7k3SIV
+X-Proofpoint-GUID: -aMQgYbIVKTx5uXcCiyAFp25AY7k3SIV
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Address the following -Wstringop-overflow warnings seen when
-built with ARM architecture and aspeed_g4_defconfig configuration
-(notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
-kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+On Tue, 06 Jun 2023 17:22:21 -0600, Gustavo A. R. Silva wrote:
 
-These changes are based on commit d20d30ebb199 ("cgroup: Avoid compiler
-warnings with no subsystems").
+> One-element arrays as fake flex arrays are deprecated and we are moving
+> towards adopting C99 flexible-array members, instead. So, replace
+> one-element array declaration in struct ct_sns_gpnft_rsp, which is
+> ultimately being used inside a union:
+> 
+> drivers/scsi/qla2xxx/qla_def.h:
+> 3240 struct ct_sns_gpnft_pkt {
+> 3241         union {
+> 3242                 struct ct_sns_req req;
+> 3243                 struct ct_sns_gpnft_rsp rsp;
+> 3244         } p;
+> 3245 };
+> 
+> [...]
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- kernel/cgroup/cgroup.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Applied to 6.5/scsi-queue, thanks!
 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index cd497b90e11a..1ee76e62eb98 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -1200,6 +1200,9 @@ static struct css_set *find_css_set(struct css_set *old_cset,
- 	unsigned long key;
- 	int ssid;
- 
-+	if (!CGROUP_HAS_SUBSYS_CONFIG)
-+		return NULL;
-+
- 	lockdep_assert_held(&cgroup_mutex);
- 
- 	/* First see if we already have a cgroup group that matches
-@@ -6045,6 +6048,9 @@ int __init cgroup_init(void)
- 	struct cgroup_subsys *ss;
- 	int ssid;
- 
-+	if (!CGROUP_HAS_SUBSYS_CONFIG)
-+		return -EINVAL;
-+
- 	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16);
- 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_base_files));
- 	BUG_ON(cgroup_init_cftypes(NULL, cgroup_psi_files));
+[1/1] Replace one-element array with DECLARE_FLEX_ARRAY() helper
+      https://git.kernel.org/mkp/scsi/c/512a365368c7
+
 -- 
-2.34.1
-
+Martin K. Petersen	Oracle Linux Engineering
