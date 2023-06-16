@@ -2,132 +2,111 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E77EEB64D7
-	for <linux-hardening@archiver.kernel.org>; Fri, 16 Jun 2023 11:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5683DEB64D7
+	for <linux-hardening@archiver.kernel.org>; Fri, 16 Jun 2023 11:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232292AbjFPLLT (ORCPT
+        id S1345078AbjFPLPK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 16 Jun 2023 07:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34088 "EHLO
+        Fri, 16 Jun 2023 07:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbjFPLLS (ORCPT
+        with ESMTP id S1345292AbjFPLPJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 16 Jun 2023 07:11:18 -0400
-X-Greylist: delayed 602 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 16 Jun 2023 04:11:15 PDT
-Received: from smtp-out.kfki.hu (smtp-out.kfki.hu [148.6.0.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 022F1C5;
-        Fri, 16 Jun 2023 04:11:14 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by smtp2.kfki.hu (Postfix) with ESMTP id 0F2FCCC0100;
-        Fri, 16 Jun 2023 12:51:21 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at smtp2.kfki.hu
-Received: from smtp2.kfki.hu ([127.0.0.1])
-        by localhost (smtp2.kfki.hu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP; Fri, 16 Jun 2023 12:51:18 +0200 (CEST)
-Received: from blackhole.kfki.hu (blackhole.szhk.kfki.hu [148.6.240.2])
-        by smtp2.kfki.hu (Postfix) with ESMTP id 8219DCC00FE;
-        Fri, 16 Jun 2023 12:51:16 +0200 (CEST)
-Received: by blackhole.kfki.hu (Postfix, from userid 1000)
-        id 5CB2B3431A9; Fri, 16 Jun 2023 12:51:16 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by blackhole.kfki.hu (Postfix) with ESMTP id 5B076343155;
-        Fri, 16 Jun 2023 12:51:16 +0200 (CEST)
-Date:   Fri, 16 Jun 2023 12:51:16 +0200 (CEST)
-From:   Jozsef Kadlecsik <kadlec@netfilter.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        linux-hardening@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Subject: Re: [PATCH] netfilter: ipset: Replace strlcpy with strscpy
-In-Reply-To: <20230613003437.3538694-1-azeemshaikh38@gmail.com>
-Message-ID: <b7f91b9f-84d9-8eb9-246f-68b4cb3721f9@netfilter.org>
-References: <20230613003437.3538694-1-azeemshaikh38@gmail.com>
+        Fri, 16 Jun 2023 07:15:09 -0400
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042A413E;
+        Fri, 16 Jun 2023 04:15:07 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4QjGlp5Fk4z4f48vB;
+        Fri, 16 Jun 2023 19:15:02 +0800 (CST)
+Received: from ubuntu20.huawei.com (unknown [10.67.174.33])
+        by APP1 (Coremail) with SMTP id cCh0CgDHLCcnRIxkwOG9LA--.4088S2;
+        Fri, 16 Jun 2023 19:15:01 +0800 (CST)
+From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Christoph Lameter <cl@linux.com>, Tejun Heo <tj@kernel.org>,
+        Dennis Zhou <dennis@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
+Cc:     Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Pedro Falcato <pedro.falcato@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gongruiqi1@huawei.com
+Subject: [PATCH v3 0/1] Randomized slab caches for kmalloc()
+Date:   Fri, 16 Jun 2023 19:18:42 +0800
+Message-Id: <20230616111843.3677378-1-gongruiqi@huaweicloud.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: cCh0CgDHLCcnRIxkwOG9LA--.4088S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF13WrWfZr1DCFW3XF1DWrg_yoW8GrWkpF
+        y8Gw45uF4rJryfCw4fCw1jqry5Xan5GFyxW342g345Cr45tF10grn7Kr109FyUGF97K3Wf
+        WrZIyr1qgryqv37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+        0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
+        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF
+        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
+        vE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
+        jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
+X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 13 Jun 2023, Azeem Shaikh wrote:
+I adapted the v2 patch to the latest linux-next tree and made the v3
+patch without "RFC", since this idea seems to be acceptable in general
+based on previous dicussion with mm and hardening folks. Please check
+the link specified below for more details of the discussion, and further
+suggestions are welcome.
 
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> 
-> Direct replacement is safe here since return value from all
-> callers of STRLCPY macro were ignored.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+v3:
+  - Replace SLAB_RANDOMSLAB with the new existing SLAB_NO_MERGE flag.
+  - Shorten long code lines by wrapping and renaming.
+  - Update commit message with latest perf benchmark and additional
+    theorectical explanation.
 
-Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+v2:
+  - Use hash_64() and a per-boot random seed to select kmalloc() caches.
+  - Change acceptable # of caches from [4,16] to {2,4,8,16}, which is
+    more compatible with hashing.
+  - Supplement results of performance and memory overhead tests.
+  - Link: https://lore.kernel.org/all/20230508075507.1720950-1-gongruiqi1@huawei.com/
 
-Best regards,
-Jozsef
+v1:
+  - Link: https://lore.kernel.org/all/20230315095459.186113-1-gongruiqi1@huawei.com/
 
-> ---
->  net/netfilter/ipset/ip_set_hash_netiface.c |   10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/net/netfilter/ipset/ip_set_hash_netiface.c b/net/netfilter/ipset/ip_set_hash_netiface.c
-> index 031073286236..95aeb31c60e0 100644
-> --- a/net/netfilter/ipset/ip_set_hash_netiface.c
-> +++ b/net/netfilter/ipset/ip_set_hash_netiface.c
-> @@ -40,7 +40,7 @@ MODULE_ALIAS("ip_set_hash:net,iface");
->  #define IP_SET_HASH_WITH_MULTI
->  #define IP_SET_HASH_WITH_NET0
->  
-> -#define STRLCPY(a, b)	strlcpy(a, b, IFNAMSIZ)
-> +#define STRSCPY(a, b)	strscpy(a, b, IFNAMSIZ)
->  
->  /* IPv4 variant */
->  
-> @@ -182,11 +182,11 @@ hash_netiface4_kadt(struct ip_set *set, const struct sk_buff *skb,
->  
->  		if (!eiface)
->  			return -EINVAL;
-> -		STRLCPY(e.iface, eiface);
-> +		STRSCPY(e.iface, eiface);
->  		e.physdev = 1;
->  #endif
->  	} else {
-> -		STRLCPY(e.iface, SRCDIR ? IFACE(in) : IFACE(out));
-> +		STRSCPY(e.iface, SRCDIR ? IFACE(in) : IFACE(out));
->  	}
->  
->  	if (strlen(e.iface) == 0)
-> @@ -400,11 +400,11 @@ hash_netiface6_kadt(struct ip_set *set, const struct sk_buff *skb,
->  
->  		if (!eiface)
->  			return -EINVAL;
-> -		STRLCPY(e.iface, eiface);
-> +		STRSCPY(e.iface, eiface);
->  		e.physdev = 1;
->  #endif
->  	} else {
-> -		STRLCPY(e.iface, SRCDIR ? IFACE(in) : IFACE(out));
-> +		STRSCPY(e.iface, SRCDIR ? IFACE(in) : IFACE(out));
->  	}
->  
->  	if (strlen(e.iface) == 0)
-> -- 
-> 2.41.0.162.gfafddb0af9-goog
-> 
-> 
-> 
+GONG, Ruiqi (1):
+  Randomized slab caches for kmalloc()
 
--
-E-mail  : kadlec@blackhole.kfki.hu, kadlecsik.jozsef@wigner.hu
-PGP key : https://wigner.hu/~kadlec/pgp_public_key.txt
-Address : Wigner Research Centre for Physics
-          H-1525 Budapest 114, POB. 49, Hungary
+ include/linux/percpu.h  | 12 ++++++---
+ include/linux/slab.h    | 20 ++++++++++++---
+ mm/Kconfig              | 49 ++++++++++++++++++++++++++++++++++++
+ mm/kfence/kfence_test.c |  6 +++--
+ mm/slab.c               |  2 +-
+ mm/slab.h               |  2 +-
+ mm/slab_common.c        | 55 +++++++++++++++++++++++++++++++++++++----
+ 7 files changed, 130 insertions(+), 16 deletions(-)
+
+-- 
+2.25.1
+
