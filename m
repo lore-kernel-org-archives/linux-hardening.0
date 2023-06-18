@@ -2,209 +2,110 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A150CEB64D9
-	for <linux-hardening@archiver.kernel.org>; Sat, 17 Jun 2023 20:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A151AEB64DB
+	for <linux-hardening@archiver.kernel.org>; Sun, 18 Jun 2023 11:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234447AbjFQUf0 (ORCPT
+        id S229512AbjFRLox (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 17 Jun 2023 16:35:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
+        Sun, 18 Jun 2023 07:44:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjFQUfZ (ORCPT
+        with ESMTP id S229764AbjFRLov (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 17 Jun 2023 16:35:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97AA11732
-        for <linux-hardening@vger.kernel.org>; Sat, 17 Jun 2023 13:35:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BB9660C5D
-        for <linux-hardening@vger.kernel.org>; Sat, 17 Jun 2023 20:35:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A21C433C8;
-        Sat, 17 Jun 2023 20:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687034123;
-        bh=LPH4D0EuhGovBKf9L5cFwblZMXTjBgzV3kREfhZQ+ks=;
-        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-        b=OMexxDFernOxeez6bulKg5fmSNlPAmeoBGhEVrSW6IrKR+yXX7BDZ8gZfohRD99x8
-         5lqCoIniVeRKUfW0lBQ/r/LqEdE1qcGMzMPP2cCjlxZDVLgPlEKKIEyAc8w2Axjgad
-         7Xhc7WxMVcDjoqayjmfB3/B83ay17wAU8WtbrhyGsIeGeyHJRAnOmGlyU1x+NzA3Q9
-         OMzruAH5Dj73NVyYkpbzf4+vCSRIWIadjOaV5wggGPtAf/E6rHuvmR8wgccNH/SuOC
-         xWiOXbRRU86tShqrLXKF/0OqGzoNOAe2Tpl85QFQno9LCMtbvr8JO6h+jEGTUfIr7o
-         L1ja1jjCKA3xw==
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 16EED27C005B;
-        Sat, 17 Jun 2023 16:35:22 -0400 (EDT)
-Received: from imap48 ([10.202.2.98])
-  by compute3.internal (MEProxy); Sat, 17 Jun 2023 16:35:22 -0400
-X-ME-Sender: <xms:CRmOZA_uQC2fjzsQD54my1MeXphVCaUfV-Ah9x5x4gfIXSvpyka3aA>
-    <xme:CRmOZIvyUFoPxVSKEk29Bv-sscEebfWvijmbdiHz_HVtB84NkFLtlDRyPrZ3jeHCY
-    oII4dlkqxeac_WOZuY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgedvjedgudehtdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    nhguhicunfhuthhomhhirhhskhhifdcuoehluhhtoheskhgvrhhnvghlrdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpedvhfeuvddthfdufffhkeekffetgffhledtleegffetheeugeej
-    ffduhefgteeihfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpegrnhguhidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudduiedu
-    keehieefvddqvdeifeduieeitdekqdhluhhtoheppehkvghrnhgvlhdrohhrgheslhhinh
-    hugidrlhhuthhordhush
-X-ME-Proxy: <xmx:CRmOZGB_5EetWlq8yUIXPGH-qotgY7vAXqsBc1RxtEeErkdD-f_ilQ>
-    <xmx:CRmOZAfoHdjCo5SC0XAtCcCi_rbzObNB2Dz2pOdKsYIzy4R5ola_sA>
-    <xmx:CRmOZFPZ6Rc23PfHcm7CM9A_lzm4GypiTlOcui-0Hg8mX_CprXlmxA>
-    <xmx:ChmOZIoYqfsPixz7i_DBNMwusVMNipEUDMBkFoEXcH0eM39l3yyVsA>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 8AC4E31A0063; Sat, 17 Jun 2023 16:35:21 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-496-g8c46984af0-fm-20230615.001-g8c46984a
-Mime-Version: 1.0
-Message-Id: <cb6533c6-cea0-4f04-95cf-b8240c6ab405@app.fastmail.com>
-In-Reply-To: <ZI4SyXjmA1DsR3Gl@moria.home.lan>
-References: <20230509165657.1735798-1-kent.overstreet@linux.dev>
- <20230509165657.1735798-8-kent.overstreet@linux.dev>
- <3508afc0-6f03-a971-e716-999a7373951f@wdc.com>
- <202305111525.67001E5C4@keescook> <ZF6Ibvi8U9B+mV1d@moria.home.lan>
- <202305161401.F1E3ACFAC@keescook> <ZGPzocRpSlg+4vgN@moria.home.lan>
- <1d249326-e3dd-9c9d-7b53-2fffeb39bfb4@kernel.org>
- <ZI3Sh6p8b4FcP0Y2@moria.home.lan>
- <1d332a4f-3c45-4e6c-81ca-7f8e669b0366@app.fastmail.com>
- <ZI4SyXjmA1DsR3Gl@moria.home.lan>
-Date:   Sat, 17 Jun 2023 13:35:01 -0700
-From:   "Andy Lutomirski" <luto@kernel.org>
-To:     "Kent Overstreet" <kent.overstreet@linux.dev>
-Cc:     "Kees Cook" <keescook@chromium.org>,
-        "Johannes Thumshirn" <Johannes.Thumshirn@wdc.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
-        "Kent Overstreet" <kent.overstreet@gmail.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Uladzislau Rezki" <urezki@gmail.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH 07/32] mm: Bring back vmalloc_exec
-Content-Type: text/plain
+        Sun, 18 Jun 2023 07:44:51 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5084E77
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Jun 2023 04:44:48 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-987accb4349so208007366b.0
+        for <linux-hardening@vger.kernel.org>; Sun, 18 Jun 2023 04:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1687088687; x=1689680687;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E2l62kT3eiLEXqJg8CxMuWY141wzPG/hn4e3QVCnoRo=;
+        b=whUyseXZjMZhBSfuawXlWU0LfE0rSHAdHQOKBNAIR+CrxT7m1V70RciIGp+YM6yHAO
+         6HBjvZg59OnFQ4FTYrhHWz5++OfJmZjh/N1fMrMG1FYn+jIlnvSs16EKkW38KUlxWgio
+         twb0wyP77TH8tW4/r30MLeOnFhuNQ9SbU2FJOTXg8m34sdv0HKH3NlW9bzL0L8rea+5X
+         7+SfIZjHdAkxwP9JjrWJeeUFZvoQhXWdST7kMH8kfsm8/k77iwPEhnpRzgTCMT+zKXOY
+         cPycoOoQ4QcAEbwMvox/Y1BPmrDkEgwXjUsIdQ+5Rs1r5HRxRTVYJ+6mzBdG0kstlCtA
+         ytVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687088687; x=1689680687;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E2l62kT3eiLEXqJg8CxMuWY141wzPG/hn4e3QVCnoRo=;
+        b=SZk4qlH4l5Z9EQefiUGZFsDPO5Z1k2XaWlys5eneap0o4TEWl8G2L/BFrg3rs4CoLE
+         6s6WAlNB7EykzD5PG8n0JAeVjVsBO4pTLUioqIMkt0i24nd2alu+d6fRZ5uMThKtZCrf
+         1lGzh+pZjKwjHs2+bPiWvLjMwcVTB1xaDxXu8Cn2Z+v7iy5VDZ/VrQWB7kMETaQI8F+A
+         04BHQT+GdS989hnyngPgZaZ1cxCO0QNAMZPDl0C/Rc+ocazl/XOaRv2bgAkDDRv1Sehv
+         dC+Ddh9XdUAyTsvKo6Yidk7psg2M0+EvsVX604TTWD0nLGqn9yrQasRmllo0W2r6U+v3
+         rAGg==
+X-Gm-Message-State: AC+VfDxzUN89cNMMgVk1b6DmnA5OPIS6wJqQQBnoAjnKiZ9VI4nbhz9i
+        mlOKIsYw3t5pp8oHvodmDvTlJA==
+X-Google-Smtp-Source: ACHHUZ7OkwHwZ354uyf5KpKgxVBy17PLodEGLL3XG9b4tYp1rBqRcUayxXIOn5EkFUKTc1VIZ7I1Gw==
+X-Received: by 2002:a17:907:7e91:b0:973:cb21:8479 with SMTP id qb17-20020a1709077e9100b00973cb218479mr7048460ejc.70.1687088687234;
+        Sun, 18 Jun 2023 04:44:47 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.219.26])
+        by smtp.gmail.com with ESMTPSA id p4-20020a1709060dc400b0096f937b0d3esm13183854eji.3.2023.06.18.04.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Jun 2023 04:44:46 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/7] arm64: dts: qcom: sm8350-hdk: correct FSA4480 port
+Date:   Sun, 18 Jun 2023 13:44:36 +0200
+Message-Id: <20230618114442.140185-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+FSA4480 has only one port according to bindings:
 
+  sm8350-hdk.dtb: typec-mux@42: 'port' is a required property
 
-On Sat, Jun 17, 2023, at 1:08 PM, Kent Overstreet wrote:
-> On Sat, Jun 17, 2023 at 12:19:41PM -0700, Andy Lutomirski wrote:
->> On Sat, Jun 17, 2023, at 8:34 AM, Kent Overstreet wrote:
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sm8350-hdk.dts | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
->> Great, then propose a model where the codegen operates in an
->> extra-safe protected context.  Or pre-generate the most common
->> variants, have them pull their constants from memory instead of
->> immediates, and use that.
->
-> I'll do no such nonsense.
+diff --git a/arch/arm64/boot/dts/qcom/sm8350-hdk.dts b/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
+index b182f4cf06cc..95a2a42ccb9e 100644
+--- a/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
++++ b/arch/arm64/boot/dts/qcom/sm8350-hdk.dts
+@@ -349,16 +349,9 @@ typec-mux@42 {
+ 		mode-switch;
+ 		orientation-switch;
+ 
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@0 {
+-				reg = <0>;
+-
+-				fsa4480_sbu_mux: endpoint {
+-					remote-endpoint = <&pmic_glink_sbu>;
+-				};
++		port {
++			fsa4480_sbu_mux: endpoint {
++				remote-endpoint = <&pmic_glink_sbu>;
+ 			};
+ 		};
+ 	};
+-- 
+2.34.1
 
-You can avoid generating code beyond what gcc generates at all, or you can pre-generate code but not on an ongoing basis at runtime, or you can generate code at runtime correctly.  I don't think there are many other options.
-
->
->> > If what you were saying was true, it would be an issue any time we
->> > mapped in new executable code for userspace - minor page faults would be
->> > stupidly slow.
->> 
->> I literally mentioned this in the email.
->
-> No, you didn't. Feel free to link or cite if you think otherwise.
-
-"It's clear that a way to do this without 
-serializing must exist, because that's what happens when code is paged 
-in from a user program."
-
->> > text_poke() doesn't even send IPIs.
->> 
->> text_poke() and the associated machinery is unbelievably complicated.  
->
-> It's not that bad.
-
-This is a useless discussion.
-
->
-> The only reference to IPIs in text_poke() is the comment that indicates
-> that flush_tlb_mm_range() may sometimes do IPIs, but explicitly
-> indicates that it does _not_ do IPIs the way text_poke() is using it.
->
->> Also, arch/x86/kernel/alternative.c contains:
->> 
->> void text_poke_sync(void)
->> {
->> 	on_each_cpu(do_sync_core, NULL, 1);
->> }
->
-> ...which is for modifying code that is currently being executed, not the
-> text_poke() or text_poke_copy() paths.
->
->> 
->> The magic in text_poke() was developed over the course of years, and
->> Intel architects were involved.
->> 
->> (And I think some text_poke() stuff uses RCU, which is another way to
->> sync without IPI.  I doubt the performance characteristics are
->> appropriate for bcachefs, but I could be wrong.)
->
-> No, it doesn't use RCU.
-
-It literally says in alternative.c:
-
- * Not safe against concurrent execution; useful for JITs to dump
- * new code blocks into unused regions of RX memory. Can be used in
- * conjunction with synchronize_rcu_tasks() to wait for existing
- * execution to quiesce after having made sure no existing functions
- * pointers are live.
-
-I don't know whether any callers actually do this.  I didn't look.
-
->
->> > I think you've been misled about some things :)
->> 
->> I wish.
->
-> Given your comments on text_poke(), I think you are. You're confusing
-> synchronization requirements for _self modifying_ code with the
-> synchronization requirements for writing new code to memory, and then
-> executing it.
-
-No, you are misunderstanding the difference.
-
-Version A:
-
-User mmap()s an executable file (DSO, whatever).  At first, there is either no PTE or a not-present PTE.  At some point, in response to a page fault or just the kernel prefetching, the kernel fills in the backing page and then creates the PTE.  From the CPU's perspective, the virtual address atomically transitions from having nothing there to having the final code there.  It works (despite the manual having nothing to say about this case).  It's also completely unavoidable.
-
-Version B:
-
-Kernel vmallocs some space *and populates the pagetables*.  There is backing storage, that is executable (or it's a non-NX system, although those are quite rare these days).
-
-Because the CPU hates you, it speculatively executes that code.  (Maybe you're under attack.  Maybe you're just unlucky.  Doesn't matter.)  It populates the instruction cache, remembers the decoded instructions, etc.  It does all the things that make the manual say scary things about serialization.  It notices that the speculative execution was wrong and backs it out, but nothing is invalidated.
-
-Now you write code into there.  Either you do this from a different CPU or you do it at a different linear address, so the magic hardware that invalidates for you does not trigger.
-
-Now you jump into that code, and you tell yourself that it was new code because it was all zeros before and you never intentionally executed it.  But the CPU could not care less what you think, and you lose.
-
->
-> And given that bcachefs is not doing anything new here - we're doing a
-> more limited form of what BPF is already doing - I don't think this is
-> even the appropriate place for this discussion. There is a new
-> executable memory allocator being developed and posted, which is
-> expected to wrap text_poke() in an arch-independent way so that
-> allocations can share pages, and so that we can remove the need to have
-> pages mapped both writeable and executable.
-
-I don't really care what BPF is doing, and BPF may well have the same problem.
-
-But if I understood what bcachefs is doing, it's creating code vastly more frequently than BPF, in response to entirely unprivileged operations from usermode.  It's a whole different amount of exposure.
-
->
-> If you've got knowledge you wish to share on how to get cache coherency
-> right, I think that might be a more appropriate thread.
-
-I'll look.
