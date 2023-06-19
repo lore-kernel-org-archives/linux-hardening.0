@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E4CEB64DB
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Jun 2023 09:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE96EB64DA
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Jun 2023 09:59:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231801AbjFSJ7B (ORCPT
+        id S231920AbjFSJ7O (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Jun 2023 05:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42250 "EHLO
+        Mon, 19 Jun 2023 05:59:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231800AbjFSJ6j (ORCPT
+        with ESMTP id S231781AbjFSJ64 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Jun 2023 05:58:39 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0A9E271E
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Jun 2023 02:57:48 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2b4725e9917so16941631fa.2
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Jun 2023 02:57:48 -0700 (PDT)
+        Mon, 19 Jun 2023 05:58:56 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFA410C1
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Jun 2023 02:58:06 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4f85966b0f2so3467979e87.3
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Jun 2023 02:58:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687168659; x=1689760659;
+        d=linaro.org; s=google; t=1687168673; x=1689760673;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iOef33aX9SqXLeZ6q1z0RA2Y2ZXLvzhAWSbAHkB3gyI=;
-        b=JoPmFBgSdhOddKGu9esD8ZJut/ty52ZYbQkZAlUPuv8Xd5N5SPKt2g9IACUsFNO7Sy
-         N5PXDBLvpRsmJTNfAOc8hqtySYGJK+hj57t8nND9o3I8zLYNu58qQFnOem3C07i2rOOD
-         cVoJNzSxiTlxIL4f28chtCKrkvtF3wzSx4BymQtKdBZrMU4cma/nOSe7Dxl9UHS7Cyes
-         pfAwaOjUu1hAeHozqU7sc9aYI7VF0N157443qOPI0EcwmujsemoieZWumfiT88V9tcFU
-         H7bm5AhR7rWQHCqLOE+HwLQdsUgHj9Fj3+TvSZr8IG1g0FqdVmHQUjkfMSWLMIDm+Ho3
-         tEdQ==
+        bh=shaQi0BVn1BxhqN9COT+jcDWVwBTRzmN4I4qbi6wbsI=;
+        b=Y81hMYF+OM3/3qDZSz7A7k2OjaPh4aenG9JJvSaZ4FEBGPc8sxRfXkaCVuY/mCXN5x
+         sWKluVOIT2UtfzGFczvFBS5y7oh6cgzNkZPJ3D20PkZMtGdSDLSTjhjIt6PAEOz3ZhVO
+         x8qWXiBtQZ9E3JumVihts1oPuj9G1QxIFXQ90qZBsXs5uphCUXv8meD7emwK/ucXJqKI
+         uLVQmfmF84MbbYLk/MBIY23VO6oRN2BF9rjKGtztHh+LBVyouYey5x/nfdurGVerieU7
+         zChN23sovI7qTioXLBtHRke7wqTpTUUrpEwZvf5CAi1Y+AVcsreaGvdfMo9WF+iW7KSr
+         jN8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687168659; x=1689760659;
+        d=1e100.net; s=20221208; t=1687168673; x=1689760673;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iOef33aX9SqXLeZ6q1z0RA2Y2ZXLvzhAWSbAHkB3gyI=;
-        b=c3xUhwxLf9t/VajG2VCyONY4gNRRx8fRHm4x+AQP6bJrn0pvlpzJcJi37fF8miujJ5
-         4xxgS64GwsveZzE9J1QgjXIPhW8QQJk/dxhiP5hq5HCCMoMFWgxb7j6dsIwgG6C/p7y1
-         J0oXYw45Gk+k1BE6cpn1dJi5srgl+0wQ3zn7K8xv9pDRufh8FhVtlEN3R2mkaN8aViGY
-         r+XxWM+CfYhDI4DfDTc8KQArcYaCvSbSe5uxQimSaMysD/Bpi7T2xGRyVbHnSobC1RlD
-         K/66f0dE5EiCnNwj0gY1M/epLtYME9rwLO5B/TjLXyZlUGxII9X8I7H3dP4oZ1iR1ePM
-         Z/UQ==
-X-Gm-Message-State: AC+VfDxbHr3P5j4CyqDmmZx4kuBItHcNalGYxyKOqxPGI1XMctC7jPT8
-        DpoB4QxBcxq6PxvbsZX7CNssvA==
-X-Google-Smtp-Source: ACHHUZ6jsvCNOIFPHYJ9QvPRqQzGliyLw0+8SuawY7NpXu4/dacDLz5JMbsAdwMSh1cF9wdf/AOZlw==
-X-Received: by 2002:a2e:95c2:0:b0:2ae:db65:2d01 with SMTP id y2-20020a2e95c2000000b002aedb652d01mr5622600ljh.23.1687168659695;
-        Mon, 19 Jun 2023 02:57:39 -0700 (PDT)
+        bh=shaQi0BVn1BxhqN9COT+jcDWVwBTRzmN4I4qbi6wbsI=;
+        b=Upn4SPyCZVrjqy7oKVjZQWVnLa98RCN1mBsLdV0uV/Y/1ItX+35URlzDhLd6jTPeTF
+         bt+8aEMeEDeYqT2m6XVUPefnmzl9AEHTd/etdgTF+UFRkdtueAL7tuKCVrRsuoPv8AHG
+         oFQoaGy/e+9S0JUJmZ19Xq9VcG2SDXAurQWdOFDYVwOVONtal+KVg+7Ve2bf5nnxxqr+
+         VokX+Xv/am6uL7PF0EfyXP7vFRcqb9b9AlNwi6Gjd5+aFBJ0qLd8xN5Cl0TUJI5xlzRU
+         7REpF4lnNLEkLvUo7w1/1fmJ/kEBK4RrltZFyhyP7WVQUJ//y9TxrXkUwt8q2LgYuY44
+         fATg==
+X-Gm-Message-State: AC+VfDxXt6wlPGr9/s5w77v3Bwm6n1WanT+rUCTi/0Q98hXhbN9uv4lc
+        jpg1tmrRkRTfzTXlG7fSBfJWYA==
+X-Google-Smtp-Source: ACHHUZ4UoQQq2loQjBjVAlRT9hjmVjwsO0FbmIvoSn4t/Q6ZX8UR+ZxHxheQdxpgG/yc7UtY2HTR7A==
+X-Received: by 2002:a19:e059:0:b0:4f8:67aa:4f03 with SMTP id g25-20020a19e059000000b004f867aa4f03mr2059960lfj.1.1687168673398;
+        Mon, 19 Jun 2023 02:57:53 -0700 (PDT)
 Received: from [192.168.1.101] (abyl242.neoplus.adsl.tpnet.pl. [83.9.31.242])
-        by smtp.gmail.com with ESMTPSA id s20-20020a2e2c14000000b002b1a8b926f3sm5116309ljs.3.2023.06.19.02.57.38
+        by smtp.gmail.com with ESMTPSA id q28-20020ac25a1c000000b004f3b4d17114sm4173296lfn.144.2023.06.19.02.57.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jun 2023 02:57:39 -0700 (PDT)
-Message-ID: <1da5b11f-0154-0fb1-0489-c617c44c6459@linaro.org>
-Date:   Mon, 19 Jun 2023 11:57:38 +0200
+        Mon, 19 Jun 2023 02:57:53 -0700 (PDT)
+Message-ID: <6d62cc6a-23ca-25a3-03b7-fb6f6c27cb6d@linaro.org>
+Date:   Mon, 19 Jun 2023 11:57:51 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH 6/7] arm64: dts: qcom: sm8150-kumano: correct ramoops
+Subject: Re: [PATCH 7/7] arm64: dts: qcom: sm8250-edo: correct ramoops
  pmsg-size
 Content-Language: en-US
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
@@ -71,9 +71,9 @@ To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20230618114442.140185-1-krzysztof.kozlowski@linaro.org>
- <20230618114442.140185-6-krzysztof.kozlowski@linaro.org>
+ <20230618114442.140185-7-krzysztof.kozlowski@linaro.org>
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230618114442.140185-6-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230618114442.140185-7-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -84,21 +84,21 @@ On 18.06.2023 13:44, Krzysztof Kozlowski wrote:
 > There is no 'msg-size' property in ramoops, so assume intention was for
 > 'pmsg-size':
 > 
->   sm8150-sony-xperia-kumano-griffin.dtb: ramoops@ffc00000: Unevaluated properties are not allowed ('msg-size' was unexpected)
+>   sm8250-sony-xperia-edo-pdx206.dtb: ramoops@ffc00000: Unevaluated properties are not allowed ('msg-size' was unexpected)
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
->  arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano.dtsi | 2 +-
+>  arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano.dtsi b/arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano.dtsi
-> index baafea53770b..ae0ca48b89a5 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150-sony-xperia-kumano.dtsi
-> @@ -222,7 +222,7 @@ ramoops@ffc00000 {
+> diff --git a/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi b/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
+> index 8ab82bacba81..9f3ea8d8d798 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
+> @@ -112,7 +112,7 @@ ramoops@ffc00000 {
 >  			reg = <0x0 0xffc00000 0x0 0x100000>;
 >  			record-size = <0x1000>;
 >  			console-size = <0x40000>;
