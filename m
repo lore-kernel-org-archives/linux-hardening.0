@@ -2,108 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE96EB64DA
-	for <linux-hardening@archiver.kernel.org>; Mon, 19 Jun 2023 09:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36259EB64D9
+	for <linux-hardening@archiver.kernel.org>; Mon, 19 Jun 2023 19:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231920AbjFSJ7O (ORCPT
+        id S229720AbjFSTps (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 19 Jun 2023 05:59:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43926 "EHLO
+        Mon, 19 Jun 2023 15:45:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231781AbjFSJ64 (ORCPT
+        with ESMTP id S229593AbjFSTpr (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 19 Jun 2023 05:58:56 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFA410C1
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Jun 2023 02:58:06 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4f85966b0f2so3467979e87.3
-        for <linux-hardening@vger.kernel.org>; Mon, 19 Jun 2023 02:58:06 -0700 (PDT)
+        Mon, 19 Jun 2023 15:45:47 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC02F119
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Jun 2023 12:45:45 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-66654d019d4so3237862b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 19 Jun 2023 12:45:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1687168673; x=1689760673;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=shaQi0BVn1BxhqN9COT+jcDWVwBTRzmN4I4qbi6wbsI=;
-        b=Y81hMYF+OM3/3qDZSz7A7k2OjaPh4aenG9JJvSaZ4FEBGPc8sxRfXkaCVuY/mCXN5x
-         sWKluVOIT2UtfzGFczvFBS5y7oh6cgzNkZPJ3D20PkZMtGdSDLSTjhjIt6PAEOz3ZhVO
-         x8qWXiBtQZ9E3JumVihts1oPuj9G1QxIFXQ90qZBsXs5uphCUXv8meD7emwK/ucXJqKI
-         uLVQmfmF84MbbYLk/MBIY23VO6oRN2BF9rjKGtztHh+LBVyouYey5x/nfdurGVerieU7
-         zChN23sovI7qTioXLBtHRke7wqTpTUUrpEwZvf5CAi1Y+AVcsreaGvdfMo9WF+iW7KSr
-         jN8w==
+        d=chromium.org; s=google; t=1687203945; x=1689795945;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2mZiRdSqt+8wYLSRq7eLPC9b4RpYVG9iNh28AaCGdYw=;
+        b=VbyQLRYNz3Mu4xhjfuwM6hsK60V4+prvJC2X+UK9XAc/Elig3W+lZfOdm3lsaFffXc
+         aLwRhEXpqpl49PVYjZsMWtH3rA+TStqTAEBqKAhOrHyss+uM65w2xGYEfuipVtRsXjG5
+         f8D6Fx7Bv1krhLICrN7S8Z1r0/mK+azg85Gk8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687168673; x=1689760673;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=shaQi0BVn1BxhqN9COT+jcDWVwBTRzmN4I4qbi6wbsI=;
-        b=Upn4SPyCZVrjqy7oKVjZQWVnLa98RCN1mBsLdV0uV/Y/1ItX+35URlzDhLd6jTPeTF
-         bt+8aEMeEDeYqT2m6XVUPefnmzl9AEHTd/etdgTF+UFRkdtueAL7tuKCVrRsuoPv8AHG
-         oFQoaGy/e+9S0JUJmZ19Xq9VcG2SDXAurQWdOFDYVwOVONtal+KVg+7Ve2bf5nnxxqr+
-         VokX+Xv/am6uL7PF0EfyXP7vFRcqb9b9AlNwi6Gjd5+aFBJ0qLd8xN5Cl0TUJI5xlzRU
-         7REpF4lnNLEkLvUo7w1/1fmJ/kEBK4RrltZFyhyP7WVQUJ//y9TxrXkUwt8q2LgYuY44
-         fATg==
-X-Gm-Message-State: AC+VfDxXt6wlPGr9/s5w77v3Bwm6n1WanT+rUCTi/0Q98hXhbN9uv4lc
-        jpg1tmrRkRTfzTXlG7fSBfJWYA==
-X-Google-Smtp-Source: ACHHUZ4UoQQq2loQjBjVAlRT9hjmVjwsO0FbmIvoSn4t/Q6ZX8UR+ZxHxheQdxpgG/yc7UtY2HTR7A==
-X-Received: by 2002:a19:e059:0:b0:4f8:67aa:4f03 with SMTP id g25-20020a19e059000000b004f867aa4f03mr2059960lfj.1.1687168673398;
-        Mon, 19 Jun 2023 02:57:53 -0700 (PDT)
-Received: from [192.168.1.101] (abyl242.neoplus.adsl.tpnet.pl. [83.9.31.242])
-        by smtp.gmail.com with ESMTPSA id q28-20020ac25a1c000000b004f3b4d17114sm4173296lfn.144.2023.06.19.02.57.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Jun 2023 02:57:53 -0700 (PDT)
-Message-ID: <6d62cc6a-23ca-25a3-03b7-fb6f6c27cb6d@linaro.org>
-Date:   Mon, 19 Jun 2023 11:57:51 +0200
+        d=1e100.net; s=20221208; t=1687203945; x=1689795945;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2mZiRdSqt+8wYLSRq7eLPC9b4RpYVG9iNh28AaCGdYw=;
+        b=N26oc8Owii+2SZJi8QDI72esOfKPlCWLLtPhgXzhCYRP/VFcQNEDHI2xGJyMfzgPW6
+         8CCN3BLel2h+3Pq24UUAWil0W6DZPgUGAjZuyX5FKz9a41NUsyaML0/BszdKbREKv34C
+         BP8J+viFsrlNINcd2vuC/6C2YoDk6Fcwp2l4BbhKWQ2Brdgys2u1PMmYaKGhYzoqMoXt
+         a2qja0CeFJHMz2fwL8+sV6VhdUZddS7YaGLrgptpZDyZbuX0VCcFrLTIK+s98JboaMDK
+         1F87zv4TI1lqebSzNlg6Tgi75NrqXchvJor3H558dPv4DzwQIhlIhVsfYnbLLSyUcjP4
+         ke5Q==
+X-Gm-Message-State: AC+VfDyIgrnieGeCw0Z/UQR0c9wugt6zlXmmg5iX9OEIb8e2Rn0lMQYt
+        WPzK9d4bOcOPacTKA4hX/ZUmPg==
+X-Google-Smtp-Source: ACHHUZ7onSh5feYj5qpymA9lTfUnolVSYLdS9M5+I0v+eTgmIbWulfKky2Q6Tl0VqKEkRqo1tB/S/w==
+X-Received: by 2002:a05:6a20:9389:b0:121:637e:f0e5 with SMTP id x9-20020a056a20938900b00121637ef0e5mr6130614pzh.5.1687203945205;
+        Mon, 19 Jun 2023 12:45:45 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id h18-20020a63f912000000b00519c3475f21sm76437pgi.46.2023.06.19.12.45.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Jun 2023 12:45:44 -0700 (PDT)
+Date:   Mon, 19 Jun 2023 12:45:43 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Kent Overstreet <kent.overstreet@linux.dev>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH 07/32] mm: Bring back vmalloc_exec
+Message-ID: <202306191228.6A98FD25@keescook>
+References: <20230509165657.1735798-1-kent.overstreet@linux.dev>
+ <20230509165657.1735798-8-kent.overstreet@linux.dev>
+ <3508afc0-6f03-a971-e716-999a7373951f@wdc.com>
+ <202305111525.67001E5C4@keescook>
+ <ZF6Ibvi8U9B+mV1d@moria.home.lan>
+ <202305161401.F1E3ACFAC@keescook>
+ <ZGPzocRpSlg+4vgN@moria.home.lan>
+ <1d249326-e3dd-9c9d-7b53-2fffeb39bfb4@kernel.org>
+ <ZI3Sh6p8b4FcP0Y2@moria.home.lan>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 7/7] arm64: dts: qcom: sm8250-edo: correct ramoops
- pmsg-size
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230618114442.140185-1-krzysztof.kozlowski@linaro.org>
- <20230618114442.140185-7-krzysztof.kozlowski@linaro.org>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230618114442.140185-7-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZI3Sh6p8b4FcP0Y2@moria.home.lan>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 18.06.2023 13:44, Krzysztof Kozlowski wrote:
-> There is no 'msg-size' property in ramoops, so assume intention was for
-> 'pmsg-size':
+On Sat, Jun 17, 2023 at 11:34:31AM -0400, Kent Overstreet wrote:
+> On Fri, Jun 16, 2023 at 09:13:22PM -0700, Andy Lutomirski wrote:
+> > On 5/16/23 14:20, Kent Overstreet wrote:
+> > > On Tue, May 16, 2023 at 02:02:11PM -0700, Kees Cook wrote:
+> > > > For something that small, why not use the text_poke API?
+> > > 
+> > > This looks like it's meant for patching existing kernel text, which
+> > > isn't what I want - I'm generating new functions on the fly, one per
+> > > btree node.
+> > 
+> > Dynamically generating code is a giant can of worms.
+> > 
+> > Kees touched on a basic security thing: a linear address mapped W+X is a big
+> > no-no.  And that's just scratching the surface -- ideally we would have a
+> > strong protocol for generating code: the code is generated in some
+> > extra-secure context, then it's made immutable and double-checked, then
+> > it becomes live.
 > 
->   sm8250-sony-xperia-edo-pdx206.dtb: ramoops@ffc00000: Unevaluated properties are not allowed ('msg-size' was unexpected)
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> "Double checking" arbitrary code is is fantasy. You can't "prove the
+> security" of arbitrary code post compilation.
 
-Konrad
->  arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi b/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
-> index 8ab82bacba81..9f3ea8d8d798 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo.dtsi
-> @@ -112,7 +112,7 @@ ramoops@ffc00000 {
->  			reg = <0x0 0xffc00000 0x0 0x100000>;
->  			record-size = <0x1000>;
->  			console-size = <0x40000>;
-> -			msg-size = <0x20000 0x20000>;
-> +			pmsg-size = <0x20000>;
->  			ecc-size = <16>;
->  			no-map;
->  		};
+I think there's a misunderstanding here about the threat model I'm
+interested in protecting against for JITs. While making sure the VM of a
+JIT is safe in itself, that's separate from what I'm concerned about.
+
+The threat model is about flaws _elsewhere_ in the kernel that can
+leverage the JIT machinery to convert a "write anything anywhere anytime"
+exploit primitive into an "execute anything" primitive. Arguments can
+be made to say "a write anything flaw means the total collapse of the
+security model so there's no point defending against it", but both that
+type of flaw and the slippery slope argument don't stand up well to
+real-world situations.
+
+The kinds of flaws we've seen are frequently limited in scope (write
+1 byte, write only NULs, write only in a specific range, etc), but
+when chained together, the weakest link is what ultimately compromises
+the kernel. As such, "W^X" is a basic building block of the kernel's
+self-defense methods, because it is such a potent target for a
+write->execute attack upgrades.
+
+Since a JIT constructs something that will become executable, it needs
+to defend itself against stray writes from other threads. Since Linux
+doesn't (really) use per-CPU page tables, the workspace for a JIT can be
+targeted by something that isn't the JIT. To deal with this, JITs need
+to use 3 phases: a writing pass (into W memory), then switch it to RO
+and perform a verification pass (construct it again, but compare results
+to the RO version), and finally switch it executable. Or, it can use
+writes to memory that only the local CPU can perform (i.e. text_poke(),
+which uses a different set of page tables with different permissions).
+
+Without basic W^X, it becomes extremely difficult to build further
+defenses (e.g. protecting page tables themselves, etc) since WX will
+remain the easiest target.
+
+-Kees
+
+-- 
+Kees Cook
