@@ -2,98 +2,91 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52898EB64D7
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jun 2023 20:16:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEF9EB64DB
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jun 2023 20:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbjFTUQR (ORCPT
+        id S229506AbjFTU3R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Jun 2023 16:16:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53468 "EHLO
+        Tue, 20 Jun 2023 16:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbjFTUQO (ORCPT
+        with ESMTP id S229782AbjFTU3P (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Jun 2023 16:16:14 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC7821FC6
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Jun 2023 13:15:44 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-666eba6f3d6so2156892b3a.3
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Jun 2023 13:15:44 -0700 (PDT)
+        Tue, 20 Jun 2023 16:29:15 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5DE71728
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jun 2023 13:29:08 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1b53b8465daso22367965ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jun 2023 13:29:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687292117; x=1689884117;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ugg5Bn6O5nwawhDuTl20N+YQmkiNRZWUsdUMwl/ozoM=;
-        b=eisvxZmVwycNuQOHor0Vhx2McMYxaUxYRyBHGhZapsWz+dARtltTBA9muZw0VNx8O5
-         KI7Cnhbi7j+8/K/SRnIj9Mp9UpWH3l/vApI+5jovdL1d3YtofCxK/0h+5RAC8vKW0MWQ
-         ZjgoYQS62LU+Ci7mZEGBpePdyojjDbX60jhH0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687292117; x=1689884117;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1687292948; x=1689884948;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ugg5Bn6O5nwawhDuTl20N+YQmkiNRZWUsdUMwl/ozoM=;
-        b=FgKurXPXXkbzCcGCY25Zq+Ih0Tw230Ocq80q/s9wZ7he15C3XJmumXbLZcqJjKInqo
-         H3HKDQNmFYEKsrPF4J9YD3hyXTjeU9v75tdmjtkGuLfsubPggT/r9VTeuM3tvowuuax5
-         whA8pXjpQ/mXYLnH55STuTKOqsTbmcU1HdiUm3ZHfEQmHlYPsXC0Ci+B9QpSYcmXq0ew
-         8N9+c00rxQ2FG2VIfk4Gr8/XgsL0uFdU7j1rIMvfYc+x0NWGGqrDOP1dT3/azDN0ZVJZ
-         /vaDgaDvGCzXCZsqgrWm+uR9i7v/hpz1uhTB1vfPJ4c26IcYtCEF63ddWnrkxedt8FMb
-         8fSQ==
-X-Gm-Message-State: AC+VfDyZ5LpQCZmkAvA9ZjaT0y/TPoKW2ot5qyc5nOY2KwMdqzvSynT+
-        KhMCh6ef/Ri8nakzEGPgHQoYKQ==
-X-Google-Smtp-Source: ACHHUZ7DHmliAxTvQVIqBr73bQmGkR82MdiWfo2PN+3zZtYfizCQt7jsEa85Fp+cEDXJ6T7X+ljRXw==
-X-Received: by 2002:a05:6a20:394d:b0:122:2bc1:8855 with SMTP id r13-20020a056a20394d00b001222bc18855mr4355231pzg.10.1687292117365;
-        Tue, 20 Jun 2023 13:15:17 -0700 (PDT)
+        bh=ZA9dgza1t316m8G0sWpsNY6BE+ynDTHmP6tBl5tH3qA=;
+        b=CMn9j5Qr0xGH6DPGZmJc+8hF5CS7hFNW/AUBWIcKDkQBdJ5uF/Iv6grWO3k2zaFj5R
+         Pcqdzrq3VhdcrvlV/2cztlPSb2r9XJBRdRkJ8sH2KLckg9WUwzrqJmnuo9T18h65CsPj
+         Q/sTtqBKU0QjMuls8JQTtSdsBjlIdAXmJUbvw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687292948; x=1689884948;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZA9dgza1t316m8G0sWpsNY6BE+ynDTHmP6tBl5tH3qA=;
+        b=Z64pNDME+n2yslflaFNLYdEhdgjVhInu+aLqFBrQbD55bcOjBj3738gdHgDFU5bS8J
+         bvO7v7Kxflf+FvlbQmLFD8S1p9rZFl5mYxxQKHcNOBuEvQF/9CzrSrkwTDkFCeMYUMmb
+         iFHM0nP/p5YacO5uQzzfvrpO2USZkADnR7yKqXf77qtHsN0sRQLk0st0FkIs1NOsyC+n
+         jkolGeNhDmK7Ec5zw5j7KLQjEOk+f/HdDodHl4xc/VgjZHHUIukI3eT0sLqgjjU+bwl1
+         31Qaqg8ZVMC77coOqZ5q9UuIU4W3JiWbWm5yoUSgVgjXmh1sZewkf5ibgGquhkChi1ms
+         mP4g==
+X-Gm-Message-State: AC+VfDzDhL2KguHASWdHRoSso1r2oDw1OzsJnHG0cXpiZB4Pv/EJIcHq
+        w0mimodkl3jEyzwoXbxzKLeoXg==
+X-Google-Smtp-Source: ACHHUZ6LzhHQEkbmov28C9WgtfEbYhAG2m29rvQZ0Ua4ICR8aQDGRoXYdt43oeJZee8pqeivB1cpJg==
+X-Received: by 2002:a17:903:2311:b0:1b6:6b18:94ff with SMTP id d17-20020a170903231100b001b66b1894ffmr5114043plh.34.1687292948154;
+        Tue, 20 Jun 2023 13:29:08 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g11-20020aa7818b000000b0064fd4a6b306sm1671184pfi.76.2023.06.20.13.15.16
+        by smtp.gmail.com with ESMTPSA id c2-20020a170903234200b001b6740207d2sm1990746plh.215.2023.06.20.13.29.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 13:15:16 -0700 (PDT)
-Date:   Tue, 20 Jun 2023 13:15:15 -0700
+        Tue, 20 Jun 2023 13:29:07 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>
-Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nios2: Replace all non-returning strlcpy with strscpy
-Message-ID: <202306201313.C425BCB@keescook>
-References: <20230530162358.984149-1-azeemshaikh38@gmail.com>
- <202305301620.346CC541@keescook>
- <45ed31e0-9ecd-56ea-c0d4-3c68a3fd8cf5@kernel.org>
+To:     fw@strlen.de, pablo@netfilter.org, azeemshaikh38@gmail.com,
+        kadlec@netfilter.org
+Cc:     Kees Cook <keescook@chromium.org>, netfilter-devel@vger.kernel.org,
+        kuba@kernel.org, pabeni@redhat.com, coreteam@netfilter.org,
+        linux-hardening@vger.kernel.org, davem@davemloft.net,
+        edumazet@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfilter: ipset: Replace strlcpy with strscpy
+Date:   Tue, 20 Jun 2023 13:28:24 -0700
+Message-Id: <168729290242.455922.9357942903753232037.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230613003437.3538694-1-azeemshaikh38@gmail.com>
+References: <20230613003437.3538694-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45ed31e0-9ecd-56ea-c0d4-3c68a3fd8cf5@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 05:15:41PM -0500, Dinh Nguyen wrote:
+On Tue, 13 Jun 2023 00:34:37 +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
 > 
-> 
-> On 5/30/23 18:20, Kees Cook wrote:
-> > On Tue, May 30, 2023 at 04:23:58PM +0000, Azeem Shaikh wrote:
-> > > strlcpy() reads the entire source buffer first.
-> > > This read may exceed the destination size limit.
-> > > This is both inefficient and can lead to linear read
-> > > overflows if a source string is not NUL-terminated [1].
-> > > In an effort to remove strlcpy() completely [2], replace
-> > > strlcpy() here with strscpy().
-> > > No return values were used, so direct replacement is safe.
-> > > 
-> > > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> > > [2] https://github.com/KSPP/linux/issues/89
-> > > 
-> > > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> > 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> 
-> Applied!
+> [...]
 
-Thanks for taking this patch! I just wanted to double-check, though; I
-haven't seen it show up in -next yet. Is this still queued?
+Since this got Acked and it's a trivial change, I'll take this via the
+hardening tree. Thanks!
 
-Thanks!
+Applied to for-next/hardening, thanks!
 
--Kees
+[1/1] netfilter: ipset: Replace strlcpy with strscpy
+      https://git.kernel.org/kees/c/0b2fa86361f4
 
 -- 
 Kees Cook
+
