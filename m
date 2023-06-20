@@ -2,193 +2,85 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1F8EB64D7
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jun 2023 19:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC50EB64D7
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jun 2023 19:51:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230454AbjFTTmo (ORCPT
+        id S230120AbjFTTvI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Jun 2023 15:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
+        Tue, 20 Jun 2023 15:51:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230136AbjFTTmm (ORCPT
+        with ESMTP id S229576AbjFTTvG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Jun 2023 15:42:42 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A431731
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Jun 2023 12:42:41 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-668730696a4so1635438b3a.1
-        for <linux-hardening@vger.kernel.org>; Tue, 20 Jun 2023 12:42:40 -0700 (PDT)
+        Tue, 20 Jun 2023 15:51:06 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0342D1712
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jun 2023 12:51:06 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-6686ef86110so1775083b3a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 20 Jun 2023 12:51:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687290160; x=1689882160;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QiWvvOkny6Xy7k99OTM/47lHKBPwF83xll3Sw/gFhO4=;
-        b=l/ofDUO2ioSYbR1TO6LuPUUbRDy0vC11XCoCsifV2el/IdJt4NoSmLMeK+aRBZ/cW7
-         WfOljBRisAzd+SJIHj93+Mjo+JcMHx2A/4WQk2ny6HrQYL0Ojju8eyqvWwFvRWMwtlPR
-         TQoKBB/f608TvjluNMh6pM1Vai6wS8pVvGINo=
+        d=chromium.org; s=google; t=1687290665; x=1689882665;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fEQfxADvgSzjQCfBomhgDaEgGtqyU75um/V6Dxu05cc=;
+        b=bYg+oupnLPHq6deMXlRsxgjqDTrfbi7ADGIUtbQfBQXgJObZaO/KjayEbPgKT45RRz
+         icYzOrlCbPuoaZu8Xl+6oXqqOBi/yyNQJ8SwgCBgJUredayRBaNxkcYKZygJDu16iCwy
+         OMnbMkyBU6X4YOPCSK3RdowMxqqtNjyQ0QM8Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687290160; x=1689882160;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QiWvvOkny6Xy7k99OTM/47lHKBPwF83xll3Sw/gFhO4=;
-        b=YPZ0msaFs5h9sYdvVqXCtnu5WLLxXNyIDRiWXfF1IHodUCyOukvALeeUGRQfHHwIMn
-         S3Vk1jd/pHilebkxDmkvno7PlTCShZFsHmH7WuCaAjhsYoAN/Z6XooR1FO/MLbuneUGC
-         6UDK0S1pCEZa6dWxpzaqE7smz+ejKB1OZs/dYwESt9aepGvM8vMPa9ANozsicJJvDN8W
-         Et9xteZPMB6qmPY5xSvVo+KR7MJfoM9OjbMkR5NtpEls/kc3ltsgloHoTyHioCiykOCv
-         AvN76TuA9DTaGUATkBm705bGUuX/XrP8tiBSM3ic2MVbVI59wJ+YYaMGXNcPcsdHqbvV
-         21Bg==
-X-Gm-Message-State: AC+VfDxyDQAgIQTyFQhKww3inkAZe9Q3wXVeC7ZIKN0yGdwwW2HChc3W
-        No3Qi42mTlVAfq3vfEmuRVHrxQ==
-X-Google-Smtp-Source: ACHHUZ5dcMRLPvb14TFJ3aCShstrDCBvAOeMdB6aCJH5XgjTeMUt18xvU3iHFGi2xDUBHKl9qzxdpQ==
-X-Received: by 2002:a05:6a20:938b:b0:10d:12a8:c95b with SMTP id x11-20020a056a20938b00b0010d12a8c95bmr10175186pzh.0.1687290160451;
-        Tue, 20 Jun 2023 12:42:40 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1687290665; x=1689882665;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fEQfxADvgSzjQCfBomhgDaEgGtqyU75um/V6Dxu05cc=;
+        b=YiQ6NP5b89YC6XI5L2bxa7iwdWhiXka0JSUbPqr2qSvh0Hq6AyGs6nfq/kunGBpuHf
+         CVbf2lpA1tFd+yOnvbVkKAXZoy+UZNp0+w1bPGUmba/XkGREvSGd5CUQuH5xsmGiR0wc
+         qJQsZRBUrDsI3JZE2dYizzi7DGcqfQxuH9i3OXFAMy6LIweOBGKbTo25TUXS6pkpSgKK
+         s/t1BGo1IFluuTu4Hoekuh0BzsnNQxPCdysAFSZ7MLogL+GzjaCtpNk7I8KT0ejlChAy
+         Cn9TvKA1iPHwI8HPZiASzEW52xkx4916ZaciASUf53UN8s0yGwGNLcPmxvPXPzfaWORV
+         uXrA==
+X-Gm-Message-State: AC+VfDzSkup0C11bvv5RRT31MLwFixhlnpKedVXxg+TcLgHOUXEmDsD3
+        qaIdqEMHa+5EInOW+Gz4VVLj5A==
+X-Google-Smtp-Source: ACHHUZ4TimNUxg4QuYmqqw/d7bpUNnlZ+a7/HOjhOBUmPcWtRzW9sHMHAQboQezXlCCQItZp438xZg==
+X-Received: by 2002:a05:6a00:1913:b0:668:7292:b2c2 with SMTP id y19-20020a056a00191300b006687292b2c2mr5636126pfi.2.1687290665523;
+        Tue, 20 Jun 2023 12:51:05 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m22-20020aa78a16000000b006635846f3a8sm1695038pfa.91.2023.06.20.12.42.39
+        by smtp.gmail.com with ESMTPSA id fe10-20020a056a002f0a00b0064f95bc04d3sm1655296pfb.20.2023.06.20.12.51.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 12:42:39 -0700 (PDT)
+        Tue, 20 Jun 2023 12:51:04 -0700 (PDT)
+Date:   Tue, 20 Jun 2023 12:51:04 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     M Chetan Kumar <m.chetan.kumar@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Florian Klink <flokli@flokli.de>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Intel Corporation <linuxwwan@intel.com>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] net: wwan: iosm: Convert single instance struct member to flexible array
-Date:   Tue, 20 Jun 2023 12:42:38 -0700
-Message-Id: <20230620194234.never.023-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
+Message-ID: <202306201250.6FA10ADF4@keescook>
+References: <ZIpm3pcs3iCP9UaR@work>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4385; h=from:subject:message-id; bh=w0ey3jYVfZj5AHRpJe0rHVawhkI1+aJHT5gZn7Bk6bY=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkkgEud9dflp1J5owk+erTI7LBPrYEWOo2lTuP+aEV YViN1HWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZJIBLgAKCRCJcvTf3G3AJowYD/ 9BHOnuOGAVdi7mvuOajH4baGnvJFg4KYB8j5QxNsz/5WBJlWQ/qq5kxuONQrUlIIUzzkjuu9XYq5W/ vzhAMkc9zfYQPQcZgWN7pLeLZbPJNJGCXu/dy/rTf2sBOG78PLgFSgjmGAJ0hQ9BvAPr4fx4Eoo0a5 SXM1IqD9ix6qkkaFfVPlaa3RaE4XT4phqF+RJqm8h6XoY+fG38Mk0PiKrepVMXfvFApbHL5x7667mB s+lY048TgwCUTAXsoRmqox+F04TGqAGt8UHyW7PM2qXOa09pF3rt3EIdE6R9YaDqul3aGfhqMDUVv+ 9ZmwVCSDrHFN4G3XytEr3W09oiYXTQhJqGrairSkt4Yi6Or27ThxeI2bHabQ21dITohcWyhH0GKFBW wWyL7kFw/j9eSEbnQvVzEagZOP6hsRMTUxPklJRUiD+iupMibMHHrqz6tt2XJ3p8e3nRx6udINdsKj Pt41jfjyFOQ+Yu3Pehpe0LSYINYhgPZON9svsPDJe+wxfKbmIoLYfqlGFCdmqlDfBWdF4ZQv76hLHc lKvIacBatj9SCJE8hEnq8C44W3S8yKm+k3MA2E7gq3NSjgIVd6GXO8FrSdWb14ah/DwUdnm5L6yX+6 PcQTh9aibawWhD6XyHDL7rNLgj/Xnq3JYVhvAApF669uTSDlgFCztMKzS5qQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZIpm3pcs3iCP9UaR@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-struct mux_adth actually ends with multiple struct mux_adth_dg members.
-This is seen both in the comments about the member:
+On Wed, Jun 14, 2023 at 07:18:22PM -0600, Gustavo A. R. Silva wrote:
+> Address the following -Wstringop-overflow warnings seen when
+> built with ARM architecture and aspeed_g4_defconfig configuration
+> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
+> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> 
+> These changes are based on commit d20d30ebb199 ("cgroup: Avoid compiler
+> warnings with no subsystems").
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-/**
- * struct mux_adth - Structure of the Aggregated Datagram Table Header.
- ...
- * @dg:		datagramm table with variable length
- */
+Ah nice, this should reduce code size for the "0" case too.
 
-and in the preparation for populating it:
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-                        adth_dg_size = offsetof(struct mux_adth, dg) +
-                                        ul_adb->dg_count[i] * sizeof(*dg);
-			...
-                        adth_dg_size -= offsetof(struct mux_adth, dg);
-                        memcpy(&adth->dg, ul_adb->dg[i], adth_dg_size);
-
-This was reported as a run-time false positive warning:
-
-memcpy: detected field-spanning write (size 16) of single field "&adth->dg" at drivers/net/wwan/iosm/iosm_ipc_mux_codec.c:852 (size 8)
-
-Adjust the struct mux_adth definition and associated sizeof() math; no binary
-output differences are observed in the resulting object file.
-
-Reported-by: Florian Klink <flokli@flokli.de>
-Closes: https://lore.kernel.org/lkml/dbfa25f5-64c8-5574-4f5d-0151ba95d232@gmail.com/
-Fixes: 1f52d7b62285 ("net: wwan: iosm: Enable M.2 7360 WWAN card support")
-Cc: M Chetan Kumar <m.chetan.kumar@intel.com>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Intel Corporation <linuxwwan@intel.com>
-Cc: Loic Poulain <loic.poulain@linaro.org>
-Cc: Sergey Ryazanov <ryazanov.s.a@gmail.com>
-Cc: Johannes Berg <johannes@sipsolutions.net>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: netdev@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 15 ++++++---------
- drivers/net/wwan/iosm/iosm_ipc_mux_codec.h |  2 +-
- 2 files changed, 7 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-index d6b166fc5c0e..bff46f7ca59f 100644
---- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-+++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.c
-@@ -626,14 +626,12 @@ static void mux_dl_adb_decode(struct iosm_mux *ipc_mux,
- 		if (adth->signature != cpu_to_le32(IOSM_AGGR_MUX_SIG_ADTH))
- 			goto adb_decode_err;
- 
--		if (le16_to_cpu(adth->table_length) < (sizeof(struct mux_adth) -
--				sizeof(struct mux_adth_dg)))
-+		if (le16_to_cpu(adth->table_length) < sizeof(struct mux_adth))
- 			goto adb_decode_err;
- 
- 		/* Calculate the number of datagrams. */
- 		nr_of_dg = (le16_to_cpu(adth->table_length) -
--					sizeof(struct mux_adth) +
--					sizeof(struct mux_adth_dg)) /
-+					sizeof(struct mux_adth)) /
- 					sizeof(struct mux_adth_dg);
- 
- 		/* Is the datagram table empty ? */
-@@ -649,7 +647,7 @@ static void mux_dl_adb_decode(struct iosm_mux *ipc_mux,
- 		}
- 
- 		/* New aggregated datagram table. */
--		dg = &adth->dg;
-+		dg = adth->dg;
- 		if (mux_dl_process_dg(ipc_mux, adbh, dg, skb, if_id,
- 				      nr_of_dg) < 0)
- 			goto adb_decode_err;
-@@ -849,7 +847,7 @@ static void ipc_mux_ul_encode_adth(struct iosm_mux *ipc_mux,
- 			adth->if_id = i;
- 			adth->table_length = cpu_to_le16(adth_dg_size);
- 			adth_dg_size -= offsetof(struct mux_adth, dg);
--			memcpy(&adth->dg, ul_adb->dg[i], adth_dg_size);
-+			memcpy(adth->dg, ul_adb->dg[i], adth_dg_size);
- 			ul_adb->if_cnt++;
- 		}
- 
-@@ -1426,14 +1424,13 @@ static int ipc_mux_get_payload_from_adb(struct iosm_mux *ipc_mux,
- 
- 		if (adth->signature == cpu_to_le32(IOSM_AGGR_MUX_SIG_ADTH)) {
- 			nr_of_dg = (le16_to_cpu(adth->table_length) -
--					sizeof(struct mux_adth) +
--					sizeof(struct mux_adth_dg)) /
-+					sizeof(struct mux_adth)) /
- 					sizeof(struct mux_adth_dg);
- 
- 			if (nr_of_dg <= 0)
- 				return payload_size;
- 
--			dg = &adth->dg;
-+			dg = adth->dg;
- 
- 			for (i = 0; i < nr_of_dg; i++, dg++) {
- 				if (le32_to_cpu(dg->datagram_index) <
-diff --git a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.h b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.h
-index 5d4e3b89542c..f8df88f816c4 100644
---- a/drivers/net/wwan/iosm/iosm_ipc_mux_codec.h
-+++ b/drivers/net/wwan/iosm/iosm_ipc_mux_codec.h
-@@ -161,7 +161,7 @@ struct mux_adth {
- 	u8 opt_ipv4v6;
- 	__le32 next_table_index;
- 	__le32 reserved2;
--	struct mux_adth_dg dg;
-+	struct mux_adth_dg dg[];
- };
- 
- /**
 -- 
-2.34.1
-
+Kees Cook
