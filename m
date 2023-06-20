@@ -2,93 +2,132 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44D9EB64D7
-	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jun 2023 15:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D804EB64D7
+	for <linux-hardening@archiver.kernel.org>; Tue, 20 Jun 2023 17:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233493AbjFTPGt (ORCPT
+        id S230384AbjFTR3s (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Jun 2023 11:06:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39830 "EHLO
+        Tue, 20 Jun 2023 13:29:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233454AbjFTPGr (ORCPT
+        with ESMTP id S231261AbjFTR3p (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Jun 2023 11:06:47 -0400
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB88C1A5;
-        Tue, 20 Jun 2023 08:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TF58PbEnutisgyOb8/ZMr1H0VJK22Rp1e0KXoeR8sbQ=; b=AbGUggnkPexptF8+XjIwEZckzf
-        BgsNsc/iE4pv7q/HfY5k4nTJxSvb9YlklOaJcWcLIaKLRVVGa2uWg7X6wy9U53yt3qdzA52ZfY9Cc
-        dMFYVWMAlfABEeCeREmsqSUXINQ41FaJb+lk2GphICwho1kL+t5xK1KalKDsQKrZ05cQSp33ipoUi
-        hpN0N+0zHVJrT7Jb0/hXoxcgLRO3fkP5IJQ3Yy7BKxK92p0Tw7XmpUvrG1uXv7c4FuLg9atuM8I0w
-        GJ/+T0mnzAGQa3tfJ9xrmU89XAoWIH1ORPftYbSIywJzv5EKpSXXksw44QidGGHp/WMBVhwOiUEJn
-        1NUjvvwA==;
-Received: from [177.94.78.149] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1qBcwD-000lqI-AB; Tue, 20 Jun 2023 17:06:33 +0200
-Message-ID: <3d9822ba-e692-e779-3ecb-bb284fa2a733@igalia.com>
-Date:   Tue, 20 Jun 2023 12:05:21 -0300
+        Tue, 20 Jun 2023 13:29:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5DAA3;
+        Tue, 20 Jun 2023 10:29:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A849061344;
+        Tue, 20 Jun 2023 17:29:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68B9CC433C9;
+        Tue, 20 Jun 2023 17:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687282181;
+        bh=2v0ful0jkg7uWqndTWCdzFH7x6ZP3BwJtCQbQPqXJnw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=g4HTY0/EKPj45X6/zaslEYJc9TOBSzNXRLcLqzEwUP3gW+jxG2AvYW46kZjwdFIPt
+         IlXHhCE7vZIbGItnqATcRkt4Ss29sfWWSXTBk/hmi2uj0QmO+RvJsQ5rFcq/yhgVwn
+         7zhy5Yzkdg2hvRA0c/Xfu3gnihDHdpb007vRfc5r7JFW8Uc9QuCk24U0D80Mb6Yokw
+         XuBMbUIdf/bGBP8IFfBVM4zaWRpeQTtjsCld/NmOrINxDnFlqH0iipAlfov4/VF0O1
+         GYwQXCvy4LRD77I0QYdQnpeCJr9fF6Rz4bgLo4p0PY53zzfWAO8zMQwDrvaMziBTPc
+         Sp6vifmQGhfBQ==
+Date:   Tue, 20 Jun 2023 11:30:36 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] readdir: Replace one-element arrays with
+ flexible-array members
+Message-ID: <ZJHiPJkNKwxkKz1c@work>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] igc: Ignore AER reset when device is suspended
-Content-Language: en-US
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com
-Cc:     linux-pci@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 20/06/2023 14:36, Kai-Heng Feng wrote:
-> [...]
-> So avoid resetting the device if it's not resumed. Once the device is
-> fully resumed, the device can work normally.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216850
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
->  drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> index fa764190f270..6a46f886ff43 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -6962,6 +6962,9 @@ static pci_ers_result_t igc_io_error_detected(struct pci_dev *pdev,
->  	struct net_device *netdev = pci_get_drvdata(pdev);
->  	struct igc_adapter *adapter = netdev_priv(netdev);
->  
-> +	if (!pci_is_enabled(pdev))
-> +		return 0;
-> +
->  	netif_device_detach(netdev);
->  
->  	if (state == pci_channel_io_perm_failure)
+One-element arrays are deprecated, and we are replacing them with flexible
+array members instead. So, replace one-element arrays with flexible-array
+members in multiple structures.
 
-Makes perfect sense to me, based on the days I've worked a lot with PCI
-resets and whatnot heh
+Address the following -Wstringop-overflow warnings seen when built
+m68k architecture with m5307c3_defconfig configuration:
+In function '__put_user_fn',
+    inlined from 'fillonedir' at fs/readdir.c:170:2:
+include/asm-generic/uaccess.h:49:35: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+   49 |                 *(u8 __force *)to = *(u8 *)from;
+      |                 ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+fs/readdir.c: In function 'fillonedir':
+fs/readdir.c:134:25: note: at offset 1 into destination object 'd_name' of size 1
+  134 |         char            d_name[1];
+      |                         ^~~~~~
+In function '__put_user_fn',
+    inlined from 'filldir' at fs/readdir.c:257:2:
+include/asm-generic/uaccess.h:49:35: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+   49 |                 *(u8 __force *)to = *(u8 *)from;
+      |                 ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
+fs/readdir.c: In function 'filldir':
+fs/readdir.c:211:25: note: at offset 1 into destination object 'd_name' of size 1
+  211 |         char            d_name[1];
+      |                         ^~~~~~
 
-Feel free to add:
-Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+This helps with the ongoing efforts to globally enable
+-Wstringop-overflow.
 
+This results in no differences in binary output.
 
-Cheers!
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/KSPP/linux/issues/312
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/readdir.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/readdir.c b/fs/readdir.c
+index 9c53edb60c03..b264ce60114d 100644
+--- a/fs/readdir.c
++++ b/fs/readdir.c
+@@ -131,7 +131,7 @@ struct old_linux_dirent {
+ 	unsigned long	d_ino;
+ 	unsigned long	d_offset;
+ 	unsigned short	d_namlen;
+-	char		d_name[1];
++	char		d_name[];
+ };
+ 
+ struct readdir_callback {
+@@ -208,7 +208,7 @@ struct linux_dirent {
+ 	unsigned long	d_ino;
+ 	unsigned long	d_off;
+ 	unsigned short	d_reclen;
+-	char		d_name[1];
++	char		d_name[];
+ };
+ 
+ struct getdents_callback {
+@@ -388,7 +388,7 @@ struct compat_old_linux_dirent {
+ 	compat_ulong_t	d_ino;
+ 	compat_ulong_t	d_offset;
+ 	unsigned short	d_namlen;
+-	char		d_name[1];
++	char		d_name[];
+ };
+ 
+ struct compat_readdir_callback {
+@@ -460,7 +460,7 @@ struct compat_linux_dirent {
+ 	compat_ulong_t	d_ino;
+ 	compat_ulong_t	d_off;
+ 	unsigned short	d_reclen;
+-	char		d_name[1];
++	char		d_name[];
+ };
+ 
+ struct compat_getdents_callback {
+-- 
+2.34.1
+
