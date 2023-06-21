@@ -2,224 +2,161 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4402EB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 16:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D004EB64DC
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 16:42:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbjFUQIt (ORCPT
+        id S231529AbjFUQmf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 12:08:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39202 "EHLO
+        Wed, 21 Jun 2023 12:42:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230448AbjFUQIs (ORCPT
+        with ESMTP id S232166AbjFUQmS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 12:08:48 -0400
-Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C455193
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 09:08:34 -0700 (PDT)
-Received: by mail-oo1-xc2b.google.com with SMTP id 006d021491bc7-560b56b638eso368182eaf.0
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 09:08:34 -0700 (PDT)
+        Wed, 21 Jun 2023 12:42:18 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9481FFC;
+        Wed, 21 Jun 2023 09:42:04 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b50d7b4aaaso27704785ad.3;
+        Wed, 21 Jun 2023 09:42:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687363714; x=1689955714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jYeghwLJr3eeZVSf92WTHbW6kPAlj9yXHnGi0sHDypU=;
-        b=MhNcQI5MOADt15GCiHEO7GsmtjxNzjczpjMuNbwOqeInmGYTx6fW/634bGd1LaJ4Ky
-         +/gtDS7TMyydtY2P1MxHV16TpQNjYmVehX6TBpq+YMLXZdCQjH195v51+Ga3owK5l6LN
-         w9V61439DewhQiQQN42zQ4i//U6Ho6EiHCMNA=
+        d=gmail.com; s=20221208; t=1687365724; x=1689957724;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pZeysVMxLr4V+mtdvRA0frrYDzh/8CDiDj5/Ledzf8A=;
+        b=bQJ6bOWQGKdsl9spwn87pEoV4njOCTfT+23Efi4pw7BInh8dGPzR+q2+IY0HwHp4oz
+         sdB65Ay702xN0sDc7ieTiRZ16ZJNsqnX6h5TCbFM0/IOL7ncNWDFfyqAFONlcNUunt4i
+         PVoqr1Vy0/m3mH1FHzxaymLGgUdVBOfq43ZwKRMzj69HwWZTtwFbguFuEMzZRDOPBoiU
+         T6jsJ7rg7fPs/FoAUDu+8La+j20luJ6TpClQLudLgZFR774UjJf4L3Fg5RwXvQgtIRFT
+         1/nPRA80kf6KO21z7oCj/P7V77dwqcB6u8ATGvesiWPG//mFKSleIPdVeKMRr8D9sLwv
+         47cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687363714; x=1689955714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1687365724; x=1689957724;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jYeghwLJr3eeZVSf92WTHbW6kPAlj9yXHnGi0sHDypU=;
-        b=cvAwLz8RM+zPCCpiBKpPgaxP73YIu+/g5ydOJ+3ugXabx36zFi/Qgw/3//VbArEcQ3
-         LI/4slsXyqjBsMDJc1U9bXStb+NT0ulYXfvgSisnYI1c5MlicNGie2EKtyr7litfpmJi
-         aE14t+O7kEAzcpiYCFx20U8xKfqVNxdW8gAZisRBMkd6+Rtfv5OYNySJqNlRzeI1DjI6
-         vfarxaPfIL3q8V5ZxU63oIt4GgimX2V1buQ1diA56QwzzP6zYUf4ryKBM4Wnef9o/04z
-         LMQZW6Ln8ce/rhuuctEax1AFOD4PIGga+5Ik7rrKJ8mqYqofPlJ7AYHIjakCmm27DefL
-         eiog==
-X-Gm-Message-State: AC+VfDwp/R5iPcKd0TnZfvb/v61L50KeKFcCItq2z7O8DCbhTHxkhqWG
-        A6DrorqBnB3utAeFO1QMJKwPoxZmRR74LSqpfwgr0A==
-X-Google-Smtp-Source: ACHHUZ5XH71fuQLzrmIT7pWr4OuhEegocxiqeU3jL5mRb6BLRR+IGYO6nfkeL5BFTVgsoiY1VOl7o3L7ZuWPsVb7tqI=
-X-Received: by 2002:a05:6820:1527:b0:560:b9f0:b9fc with SMTP id
- ay39-20020a056820152700b00560b9f0b9fcmr814279oob.0.1687363713839; Wed, 21 Jun
- 2023 09:08:33 -0700 (PDT)
+        bh=pZeysVMxLr4V+mtdvRA0frrYDzh/8CDiDj5/Ledzf8A=;
+        b=QnLcJM3hXwq21BHcRSaGVrWKxTxAJF1eVMTdhUHgs/E9yKBDiWi79+UGkz6n9jnNjT
+         7iF1ZjubL6Zaq79MzZ3V8qRbQiNz4JwtPYSaANG3FJEwYoJy/s8JsPdWG+miWRx1NvCS
+         4vlmO1a9LRtRRAuqJ7KOsdxQi9ao5Hgouh6rlPheQCpzXgcNqmuxKfuZoI8pRmXtSp4n
+         ri6H7+jonf5ocO7bbUntF86RSblWuOhsXz0zzImnY3TDLcUZaHEgz4mz+WspmaJoWVwU
+         Mg6xZf1bw9zUAvV1W2dr+0pcHXllz6VWO3LzMVEK0AYfDaFcQSzX+I02PYhkwAOid6x0
+         a/pQ==
+X-Gm-Message-State: AC+VfDyqthIW6NIc93PCYFjoTJMTxNTDAJqgqakAIMBmgQJKzrxh2/H1
+        Tiqfx/MXD9c1yJzBZejKLhI=
+X-Google-Smtp-Source: ACHHUZ6wjy33jCOordhGlER/jnFO55zfxhPkZeTwr+8ezi8uYHYbzmDJrgs5j9sgURuC5Hbp7PYOlA==
+X-Received: by 2002:a17:902:fa8d:b0:1b0:7739:657a with SMTP id lc13-20020a170902fa8d00b001b07739657amr8509709plb.50.1687365723865;
+        Wed, 21 Jun 2023 09:42:03 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e17-20020a17090301d100b001ae365072ccsm3755503plh.122.2023.06.21.09.42.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jun 2023 09:42:03 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Wed, 21 Jun 2023 09:42:01 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Marco Elver <elver@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>, Tom Rix <trix@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kbuild@vger.kernel.org,
+        llvm@lists.linux.dev, Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] ubsan: Tighten UBSAN_BOUNDS on GCC
+Message-ID: <07dea91f-9b93-4227-9fec-728a9e7a0d55@roeck-us.net>
+References: <20230405022356.gonna.338-kees@kernel.org>
 MIME-Version: 1.0
-References: <CABi2SkWx_BnEHzGqqqbDMJi+vi-5a7XkQUCkyesN5PUtk23SgQ@mail.gmail.com>
- <CABi2SkXw6ZD-M1ZrcXNL7abtM=RzQXv716PPM_k=1Tay=5rUFA@mail.gmail.com>
- <ZIjOlU5EfVNt6NRU@x1n> <CABi2SkXE4pUhHucZ_c-_4Ux-VcLKic0+HY_DN2wUEC6DGkDvQQ@mail.gmail.com>
- <20230614011814.sz2l6z6wbaubabk2@revolver> <20230614125731.GY52412@kernel.org>
- <CABi2SkXySaoRxB0dfhhTQz6P5jCL8iWpY_ti=LC7Qi49+2F01w@mail.gmail.com> <20230621055551.GE52412@kernel.org>
-In-Reply-To: <20230621055551.GE52412@kernel.org>
-From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Wed, 21 Jun 2023 09:08:22 -0700
-Message-ID: <CABi2SkUBMKOHB+pSDn2KqPZx384BXZQLn5YDzhATzQM41SgBJQ@mail.gmail.com>
-Subject: Re: inconsistence in mprotect_fixup mlock_fixup madvise_update_vma
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org, zhangpeng.00@bytedance.com,
-        akpm@linux-foundation.org, koct9i@gmail.com, david@redhat.com,
-        ak@linux.intel.com, hughd@google.com, emunson@akamai.com,
-        rppt@linux.ibm.com, aarcange@redhat.com,
-        linux-kernel@vger.kernel.org, Lorenzo Stoakes <lstoakes@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230405022356.gonna.338-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 10:56=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wr=
-ote:
->
-> On Tue, Jun 20, 2023 at 03:29:34PM -0700, Jeff Xu wrote:
-> > On Wed, Jun 14, 2023 at 5:58=E2=80=AFAM Mike Rapoport <rppt@kernel.org>=
- wrote:
-> > >
-> > > On Tue, Jun 13, 2023 at 09:18:14PM -0400, Liam R. Howlett wrote:
-> > > > * Jeff Xu <jeffxu@chromium.org> [230613 17:29]:
-> > > > > Hello Peter,
-> > > > >
-> > > > > Thanks for responding.
-> > > > >
-> > > > > On Tue, Jun 13, 2023 at 1:16=E2=80=AFPM Peter Xu <peterx@redhat.c=
-om> wrote:
-> > > > > >
-> > > > > > Hi, Jeff,
-> > > > > >
-> > > > > > On Tue, Jun 13, 2023 at 08:26:26AM -0700, Jeff Xu wrote:
-> > > > > > > + more ppl to the list.
-> > > > > > >
-> > > > > > > On Mon, Jun 12, 2023 at 6:04=E2=80=AFPM Jeff Xu <jeffxu@chrom=
-ium.org> wrote:
-> > > > > > > >
-> > > > > > > > Hello,
-> > > > > > > >
-> > > > > > > > There seems to be inconsistency in different VMA fixup
-> > > > > > > > implementations, for example:
-> > > > > > > > mlock_fixup will skip VMA that is hugettlb, etc, but those =
-checks do
-> > > > > > > > not exist in mprotect_fixup and madvise_update_vma. Wouldn'=
-t this be a
-> > > > > > > > problem? the merge/split skipped by mlock_fixup, might get =
-acted on in
-> > > > > > > > the madvice/mprotect case.
-> > > > > > > >
-> > > > > > > > mlock_fixup currently check for
-> > > > > > > > if (newflags =3D=3D oldflags ||
-> > > >
-> > > > newflags =3D=3D oldflags, then we don't need to do anything here, i=
-t's
-> > > > already at the desired mlock.  mprotect does this, madvise does thi=
-s..
-> > > > probably.. it's ugly.
-> > > >
-> > > > > > > > (oldflags & VM_SPECIAL) ||
-> > > >
-> > > > It's special, merging will fail always.  I don't know about splitti=
-ng,
-> > > > but I guess we don't want to alter the mlock state on special mappi=
-ngs.
-> > > >
-> > > > > > > > is_vm_hugetlb_page(vma) || vma =3D=3D get_gate_vma(current-=
->mm) ||
-> > > > > > > > vma_is_dax(vma) || vma_is_secretmem(vma))
-> > > > > >
-> > > > > > The special handling you mentioned in mlock_fixup mostly makes =
-sense to me.
-> > > > > >
-> > > > > > E.g., I think we can just ignore mlock a hugetlb page if it won=
-'t be
-> > > > > > swapped anyway.
-> > > > > >
-> > > > > > Do you encounter any issue with above?
-> > > > > >
-> > > > > > > > Should there be a common function to handle VMA merge/split=
- ?
-> > > > > >
-> > > > > > IMHO vma_merge() and split_vma() are the "common functions".  C=
-opy Lorenzo
-> > > > > > as I think he has plan to look into the interface to make it ev=
-en easier to
-> > > > > > use.
-> > > > > >
-> > > > > The mprotect_fixup doesn't have the same check as mlock_fixup. Wh=
-en
-> > > > > userspace calls mlock(), two VMAs might not merge or split becaus=
-e of
-> > > > > vma_is_secretmem check, However, when user space calls mprotect()=
- with
-> > > > > the same address range, it will merge/split.  If mlock() is doing=
- the
-> > > > > right thing to merge/split the VMAs, then mprotect() is not ?
-> > > >
-> > > > It looks like secretmem is mlock'ed to begin with so they don't wan=
-t it
-> > > > to be touched.  So, I think they will be treated differently and I =
-think
-> > > > it is correct.
-> > >
-> > > Right, they don't :)
-> > >
-> > > secretmem VMAs are always mlocked, they cannot be munlocked and there=
- is no
-> > > point trying to mlock them again.
-> > >
-> > > The mprotect for secretmem is Ok though, so e.g. if we (unlikely) hav=
-e two
-> > > adjacent secretmem VMAs in a range passed to mprotect, it's fine to m=
-erge
-> > > them.
-> > >
-> >
-> > I m thinking/brainstorming below, assuming:
-> > Address range 1: 0x5000 to 0x6000 (regular mmap)
-> > Address range 2: 0x6000 to 0x7000 (allocated to secretmem)
-> > Address range 3: 0x7000 to 0x8000 (regular mmap)
-> >
-> > User space call: mlock(0x5000,0x3000)
-> > range 1 and 2 won't merge.
-> > range 2 and 3  could merge, when mlock_fixup  checks current vma
-> > (range 3), it is not secretmem, so it will merge with prev vma.
->
-> But 2 and 3 have different vm_file, they won't merge.
->
-> > user space call: mprotect(0x5000,0x3000)
-> > range 1 2 3 could merge,  all three can have the same flags.
-> > Note: vma_is_secretmem() isn't checked in mprotect_fixup, same for
-> > vma_is_dax and get_gate_vma, those doesn't have included in
-> > vma->vm_flags
-> >
-> > Once 1 and 2 are merged, maybe user space is able to use
-> > munlock(0x5000,0x3000)
-> > to unlock range 1 to 3, this will include 2, right ? (haven't used the
-> > code to prove it)
->
-> But 1 and 2 won't merge because their vm_file's are different.
->
-Is that possible to be staged the same ?
+Hi,
 
-> > I'm using secretmem as an example here, having 3 different _fixup
-> > implementations seems to be error prone to me.
->
-> The actual decision whether to merge VMAs is taken in vma_merge rather th=
-an
-> by the _fixup functions. So while the checks around vma_merge might be
-> different in these functions, it does not mean it's possible to wrongly
-> merge VMA unless there is a bug in vma_merge. So in the end it boils down
-> to a single core implementation, don't you agree?
->
-I agree that vma_merge should also check, but it doesn't seem to be
-the case ? I looked for secretmem, get_gate_vma(current->mm),
-vma_is_dax()
+On Tue, Apr 04, 2023 at 07:23:59PM -0700, Kees Cook wrote:
+> The use of -fsanitize=bounds on GCC will ignore some trailing arrays,
+> leaving a gap in coverage. Switch to using -fsanitize=bounds-strict to
+> match Clang's stricter behavior.
+> 
+> Cc: Marco Elver <elver@google.com>
+> Cc: Masahiro Yamada <masahiroy@kernel.org>
+> Cc: Nathan Chancellor <nathan@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Cc: Nicolas Schier <nicolas@fjasle.eu>
+> Cc: Tom Rix <trix@redhat.com>
+> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+> Cc: Miroslav Benes <mbenes@suse.cz>
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: llvm@lists.linux.dev
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-Ideally,  the skip/go decisions should be inside vma_merge/vma_split()
-function, not in the _fixup(),  I think.
+This patch, presumably as side effect, enables CONFIG_ARCH_STM32
+for arm64:allmodconfig. As consequence, CONFIG_STM32_RPROC is enabled
+as well. This in turn results in the following build error.
 
-> > Thanks
-> > -Jeff
->
-> --
-> Sincerely yours,
-> Mike.
+Building arm64:allmodconfig ... failed
+--------------
+Error log:
+In file included from include/linux/printk.h:564,
+                 from include/asm-generic/bug.h:22,
+                 from arch/arm64/include/asm/bug.h:26,
+                 from include/linux/bug.h:5,
+                 from include/linux/fortify-string.h:5,
+                 from include/linux/string.h:254,
+                 from include/linux/dma-mapping.h:7,
+                 from drivers/remoteproc/stm32_rproc.c:9:
+drivers/remoteproc/stm32_rproc.c: In function 'stm32_rproc_mem_alloc':
+drivers/remoteproc/stm32_rproc.c:122:22: error: format '%x' expects argument of type 'unsigned int', but argument 5 has type 'size_t'
+
+I did not try to understand what is going on, but reverting this
+patch fixes the problem.
+
+---
+bisect script:
+
+rm .config
+make-arm64 mrproper
+make-arm64 -j allmodconfig
+if ! grep -q CONFIG_ARCH_STM32 .config; then
+    exit 1
+fi
+exit 0
+
+---
+bisect log:
+# bad: [15e71592dbae49a674429c618a10401d7f992ac3] Add linux-next specific files for 20230621
+# good: [45a3e24f65e90a047bef86f927ebdc4c710edaa1] Linux 6.4-rc7
+git bisect start 'HEAD' 'v6.4-rc7'
+# good: [e867e67cd55ae460c860ffd896c7fc96add2821c] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
+git bisect good e867e67cd55ae460c860ffd896c7fc96add2821c
+# good: [0ab4015a11182e2a19c3dd52db85418f370cef39] Merge branch 'for-next' of git://git.kernel.dk/linux-block.git
+git bisect good 0ab4015a11182e2a19c3dd52db85418f370cef39
+# good: [50b29407850776d7c61461f883e5896dcea596a4] Merge branch 'driver-core-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+git bisect good 50b29407850776d7c61461f883e5896dcea596a4
+# good: [04d46f23e86112fc9d6469fc0155ce19faabc181] Merge branch 'staging-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+git bisect good 04d46f23e86112fc9d6469fc0155ce19faabc181
+# good: [bdd44289ba061dab3863ff80a5999d4c6160b93d] Merge branch 'gpio/for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+git bisect good bdd44289ba061dab3863ff80a5999d4c6160b93d
+# good: [c7d13e64a19b0bbed1a6eb18e9b4fd55f7530e5d] Merge branch 'at24/for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+git bisect good c7d13e64a19b0bbed1a6eb18e9b4fd55f7530e5d
+# good: [6477d1cebd3339658f8421e05380576ed535677c] Merge branch 'rust-next' of https://github.com/Rust-for-Linux/linux.git
+git bisect good 6477d1cebd3339658f8421e05380576ed535677c
+# bad: [d01a77afd6bef1b3a2ed15e8ca6887ca7da0cddc] lib/string_helpers: Change returned value of the strreplace()
+git bisect bad d01a77afd6bef1b3a2ed15e8ca6887ca7da0cddc
+# bad: [d67790ddf0219aa0ad3e13b53ae0a7619b3425a2] overflow: Add struct_size_t() helper
+git bisect bad d67790ddf0219aa0ad3e13b53ae0a7619b3425a2
+# bad: [30ad0627f169f56180e668e7223eaa43aa190a75] dlm: Replace all non-returning strlcpy with strscpy
+git bisect bad 30ad0627f169f56180e668e7223eaa43aa190a75
+# bad: [3bf301e1ab85e18ed0e337ce124dc71d6d7b5fd7] string: Add Kunit tests for strcat() family
+git bisect bad 3bf301e1ab85e18ed0e337ce124dc71d6d7b5fd7
+# bad: [ead62aa370a81c4fb42a44c4edeafe13e0a3a703] fortify: strscpy: Fix flipped q and p docstring typo
+git bisect bad ead62aa370a81c4fb42a44c4edeafe13e0a3a703
+# bad: [2d47c6956ab3c8b580a59d7704aab3e2a4882b6c] ubsan: Tighten UBSAN_BOUNDS on GCC
+git bisect bad 2d47c6956ab3c8b580a59d7704aab3e2a4882b6c
+# first bad commit: [2d47c6956ab3c8b580a59d7704aab3e2a4882b6c] ubsan: Tighten UBSAN_BOUNDS on GCC
