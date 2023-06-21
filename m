@@ -2,118 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5427BEB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 20:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6443FEB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 20:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230171AbjFUU0j (ORCPT
+        id S229774AbjFUUmZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 16:26:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52344 "EHLO
+        Wed, 21 Jun 2023 16:42:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbjFUU02 (ORCPT
+        with ESMTP id S229564AbjFUUmY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 16:26:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2011BFC;
-        Wed, 21 Jun 2023 13:26:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B207E616A1;
-        Wed, 21 Jun 2023 20:26:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37288C433C0;
-        Wed, 21 Jun 2023 20:26:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687379185;
-        bh=IldafOrMYKZpxWjdW8Dzn1OfaBUtuI1eV2ylNsc6e4U=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Y2yqS/Y4fgeMMrBp4GVpPiqQbkfNRrlEDKuueTlTQcPCkJMvcZl93ZvoNBGz2WDfd
-         prh5aeFF+odgcGV6AHJovFc1nEKh5cxfzd3S8h2m07GFMUckTezMG4N7GGzAN8fHY4
-         d7JdCsfUVoBNmj2AlNadrUd87AzKOuZrRDvoL7MP1Vq9vBRZUd95XDNOMPjmUqQUKx
-         JMS2PKX5AmaDfvzGLvKQ6Fu1YquE0AdOgntp9F8JvZUElb/mbC3KGDpstXFzmfDT7D
-         xBHLVodDHNUxpMCFx2G+bfNhum2wBPFITdhqY5+waVCPStH3gMdb50Jy2z/dIh2biy
-         84S6CUf4NnFcQ==
-Date:   Wed, 21 Jun 2023 14:27:20 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Don Brace <don.brace@microchip.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     storagedev@microchip.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] scsi: smartpqi: Replace one-element arrays with
- flexible-array members
-Message-ID: <ZJNdKDkuRbFZpASS@work>
+        Wed, 21 Jun 2023 16:42:24 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B377110EC;
+        Wed, 21 Jun 2023 13:42:23 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id ca18e2360f4ac-777a6ebb542so261013939f.0;
+        Wed, 21 Jun 2023 13:42:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687380143; x=1689972143;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=efNPwXii9p40aEa8rDVFFS1wZk6ktbvmOO6XguzWEk8=;
+        b=DeEC7sohDKZ9WK1hcV069v/RrKf2OYtk4yfm9LUKkOHgANu2oXKTruOpn63bjz7Q00
+         Rk3blTvq+RMsoJPzTG4zlVbWhm+8YOxVCuhSrA5Or82BE5oVnjnmd1xZdJVHsa7GA8t7
+         /pS6bsBroCBBVQW6m1q7B0ex5DB/6rg18UhAXCRVI+4GCe31PJD8GGSK9Cx2MHbqZK6U
+         H6OSOvUB1kH3m1iZc0be1q2EO4rxGDGGydfX/1u+KOx+C2GQe0QRA+uJzAo67smH96kJ
+         ZZGZ/shnstWohFx9RAOhKZDAsZY7mQGJJxHOqbKb/qyz0l4Uk5rIfbRqhHO4Zl4dNeIg
+         2+Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687380143; x=1689972143;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=efNPwXii9p40aEa8rDVFFS1wZk6ktbvmOO6XguzWEk8=;
+        b=KBuI1IWdEcAzlPSGxkWvure1lE5iNa+r7hmrSBSVkZc0CkP3CbkTLafB/vAMhJ0n3r
+         xB8LmvB3eO/cNlEX/EWkUg0LtgBAmNh9BtCx3knxqkS91YrwxZpORYClVz1IQ284qf8E
+         tJgpqxfOhDO+aQmbbO9jJeE1YBoFWSxH/1EToC2GJPcZqTjh1aHM4GmRIP0QiKrR1Z54
+         xCw//CxO++h3VkOj5gqyWAM7h/EZFFMGmDHu+mdVVJAmZHK9Bxxgd/sITt9Nigtcb/ST
+         b3qI7y+seAJguHfi5k7851bNtphJSOCnTeph5WxI4FDe3qjyr1PyAhhBvCCziZyply/A
+         10GQ==
+X-Gm-Message-State: AC+VfDxOd1DCySm6/acwk8XIktITgSgON920VKgDvDORsMv1ie3wJ9J5
+        rm2siQ7ZL+E1WFt2xM3B5+4=
+X-Google-Smtp-Source: ACHHUZ5OvySq5xaRuaNJ+gh/NFTMJ6rkPySVRSoSp6LDuFfHmlPoSi0gM6hmHv82OQbBw9jqUrc6+Q==
+X-Received: by 2002:a5e:8515:0:b0:77a:c54c:1e51 with SMTP id i21-20020a5e8515000000b0077ac54c1e51mr12842246ioj.9.1687380142832;
+        Wed, 21 Jun 2023 13:42:22 -0700 (PDT)
+Received: from localhost (dhcp-72-235-13-41.hawaiiantel.net. [72.235.13.41])
+        by smtp.gmail.com with ESMTPSA id ei22-20020a05663829b600b0040f94261ab1sm1584455jab.12.2023.06.21.13.42.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jun 2023 13:42:22 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Wed, 21 Jun 2023 10:42:20 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
+Message-ID: <ZJNgrLEE7i9CfUnS@slm.duckdns.org>
+References: <ZIpm3pcs3iCP9UaR@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <ZIpm3pcs3iCP9UaR@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element arrays are deprecated, and we are replacing them with flexible
-array members instead. So, replace one-element arrays with flexible-array
-members in a couple of structures, and refactor the rest of the code,
-accordingly.
+On Wed, Jun 14, 2023 at 07:18:22PM -0600, Gustavo A. R. Silva wrote:
+> Address the following -Wstringop-overflow warnings seen when
+> built with ARM architecture and aspeed_g4_defconfig configuration
+> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
+> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> 
+> These changes are based on commit d20d30ebb199 ("cgroup: Avoid compiler
+> warnings with no subsystems").
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy().
+Applied to cgroup/for-6.5.
 
-This results in no differences in binary output.
+Thanks.
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/204
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/smartpqi/smartpqi.h      | 4 ++--
- drivers/scsi/smartpqi/smartpqi_init.c | 5 ++---
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/scsi/smartpqi/smartpqi.h b/drivers/scsi/smartpqi/smartpqi.h
-index f960b5095d09..e392eaf5b2bf 100644
---- a/drivers/scsi/smartpqi/smartpqi.h
-+++ b/drivers/scsi/smartpqi/smartpqi.h
-@@ -982,12 +982,12 @@ struct report_phys_lun_16byte_wwid {
- 
- struct report_phys_lun_8byte_wwid_list {
- 	struct report_lun_header header;
--	struct report_phys_lun_8byte_wwid lun_entries[1];
-+	struct report_phys_lun_8byte_wwid lun_entries[];
- };
- 
- struct report_phys_lun_16byte_wwid_list {
- 	struct report_lun_header header;
--	struct report_phys_lun_16byte_wwid lun_entries[1];
-+	struct report_phys_lun_16byte_wwid lun_entries[];
- };
- 
- struct raid_map_disk_data {
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index 19af36e9a16d..6aaaa7ebca37 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -1203,7 +1203,6 @@ static inline int pqi_report_phys_luns(struct pqi_ctrl_info *ctrl_info, void **b
- 	unsigned int i;
- 	u8 rpl_response_format;
- 	u32 num_physicals;
--	size_t rpl_16byte_wwid_list_length;
- 	void *rpl_list;
- 	struct report_lun_header *rpl_header;
- 	struct report_phys_lun_8byte_wwid_list *rpl_8byte_wwid_list;
-@@ -1232,9 +1231,9 @@ static inline int pqi_report_phys_luns(struct pqi_ctrl_info *ctrl_info, void **b
- 
- 	rpl_8byte_wwid_list = rpl_list;
- 	num_physicals = get_unaligned_be32(&rpl_8byte_wwid_list->header.list_length) / sizeof(rpl_8byte_wwid_list->lun_entries[0]);
--	rpl_16byte_wwid_list_length = sizeof(struct report_lun_header) + (num_physicals * sizeof(struct report_phys_lun_16byte_wwid));
- 
--	rpl_16byte_wwid_list = kmalloc(rpl_16byte_wwid_list_length, GFP_KERNEL);
-+	rpl_16byte_wwid_list = kmalloc(struct_size(rpl_16byte_wwid_list, lun_entries,
-+						   num_physicals), GFP_KERNEL);
- 	if (!rpl_16byte_wwid_list)
- 		return -ENOMEM;
- 
 -- 
-2.34.1
-
+tejun
