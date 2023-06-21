@@ -2,99 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9687AC0015E
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 13:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F94C001B3
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 14:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232426AbjFUNNG (ORCPT
+        id S232544AbjFUO4E (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 09:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46364 "EHLO
+        Wed, 21 Jun 2023 10:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232398AbjFUNNB (ORCPT
+        with ESMTP id S233105AbjFUOy5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 09:13:01 -0400
+        Wed, 21 Jun 2023 10:54:57 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4981739;
-        Wed, 21 Jun 2023 06:12:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 909F535BD;
+        Wed, 21 Jun 2023 07:50:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BEB3D614BF;
-        Wed, 21 Jun 2023 13:12:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94F80C433C0;
-        Wed, 21 Jun 2023 13:12:56 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9FC076157B;
+        Wed, 21 Jun 2023 14:49:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFA8C433C8;
+        Wed, 21 Jun 2023 14:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687353178;
-        bh=xkP28nQB96Oh4QiVptT3fJHnDXTgi6IiTCAHtTa0K4M=;
+        s=k20201202; t=1687358954;
+        bh=Vg/q4ub2LEKrZ4zBjRc7OAhNi+XpqXacU3lh8zGDHJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CEtlNSTxLmGwdRcOyd106AaQJqPM1T2rjODQDd6SoE40Sz+PEaxElGYTWwxYjMWe0
-         zxlhi3+C7Slk4LUL8A4Ha2btgW3FDivOBi4RbyOEAzPbXh8M37rF6McPczNCSSriYt
-         kuIRjz5B/0tNdCiYeyC/aLPpe14hqJep1g/QOXrmfSvn7EHjDFPWgHOd1bR1Ogjla+
-         beVmUX/7Dz9f66BKtkapFKG0yJlN+ZMsxvuCaalQvwuuCFpePvfciRhuP0T66nQhAz
-         Vm+/kmSZv/vDRo8UUw6TXkQsSP1AE9jMg13L8f34giADc98PNgeH02YiWd2WbhtcQ+
-         dhYz0NmYppBVg==
-From:   Christian Brauner <brauner@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH][next] readdir: Replace one-element arrays with flexible-array members
-Date:   Wed, 21 Jun 2023 15:12:41 +0200
-Message-Id: <20230621-frohe-kegeln-3549bb239263@brauner>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <ZJHiPJkNKwxkKz1c@work>
-References: <ZJHiPJkNKwxkKz1c@work>
+        b=owSMvesLWC51zX/w3HurcDsigUZBkUjBx89d/v/tKRNiBBfM/VPhtcpo9dR8B3ZMc
+         PDe+zG2re5PUV2UEoOrM44yZHSL3P+gwidySNM86UXsHOIUSf0Qky5oJOnhwT+qYA1
+         VHjBdUj8aQhn7E2OJZeHktqkQXMulITgMesuwodMynt+FeodeotnCrKXtehojXdeP7
+         Rt5fDUl3pvcPlLE3os7F2iynv0K5izO/6hmJUsAU9Ve36RmcIDosxIvUwnFlexo8aD
+         jsOHq3F8CCbhDrNkVWbhpXiTw0SnWBypegWbqxSnOuDF1wlYqhYk6Oc8oJmKfY5I3P
+         dUULt9UrCqVDg==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Christian Brauner <brauner@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 56/79] pstore: switch to new ctime accessors
+Date:   Wed, 21 Jun 2023 10:46:09 -0400
+Message-ID: <20230621144735.55953-55-jlayton@kernel.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230621144735.55953-1-jlayton@kernel.org>
+References: <20230621144507.55591-1-jlayton@kernel.org>
+ <20230621144735.55953-1-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2087; i=brauner@kernel.org; h=from:subject:message-id; bh=xkP28nQB96Oh4QiVptT3fJHnDXTgi6IiTCAHtTa0K4M=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRM+i4R8fv3hjlrX4bcDFoR/r3tk+oFo0M5QbPe3l8pt+zP XvdrKh2lLAxiXAyyYoosDu0m4XLLeSo2G2VqwMxhZQIZwsDFKQATEZJhZOg0Ykgq+rly2b+n9eFz2I 7Nk3i6v2rv9wU3uXf5yPvMfhTH8E/9Xl24fHmR+8c1J1SrtmxaXxV1aMHWrCTlqRZme76dlGEAAA==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 20 Jun 2023 11:30:36 -0600, Gustavo A. R. Silva wrote:
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element arrays with flexible-array
-> members in multiple structures.
-> 
-> Address the following -Wstringop-overflow warnings seen when built
-> m68k architecture with m5307c3_defconfig configuration:
-> In function '__put_user_fn',
->     inlined from 'fillonedir' at fs/readdir.c:170:2:
-> include/asm-generic/uaccess.h:49:35: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
->    49 |                 *(u8 __force *)to = *(u8 *)from;
->       |                 ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
-> fs/readdir.c: In function 'fillonedir':
-> fs/readdir.c:134:25: note: at offset 1 into destination object 'd_name' of size 1
->   134 |         char            d_name[1];
->       |                         ^~~~~~
-> In function '__put_user_fn',
->     inlined from 'filldir' at fs/readdir.c:257:2:
-> include/asm-generic/uaccess.h:49:35: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
->    49 |                 *(u8 __force *)to = *(u8 *)from;
->       |                 ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~
-> fs/readdir.c: In function 'filldir':
-> fs/readdir.c:211:25: note: at offset 1 into destination object 'd_name' of size 1
->   211 |         char            d_name[1];
->       |                         ^~~~~~
-> 
-> [...]
+In later patches, we're going to change how the ctime.tv_nsec field is
+utilized. Switch to using accessor functions instead of raw accesses of
+inode->i_ctime.
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/pstore/inode.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index ffbadb8b3032..20624d6006e6 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -223,7 +223,7 @@ static struct inode *pstore_get_inode(struct super_block *sb)
+ 	struct inode *inode = new_inode(sb);
+ 	if (inode) {
+ 		inode->i_ino = get_next_ino();
+-		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
++		inode->i_atime = inode->i_mtime = inode_ctime_set_current(inode);
+ 	}
+ 	return inode;
+ }
+@@ -390,7 +390,7 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+ 	inode->i_private = private;
+ 
+ 	if (record->time.tv_sec)
+-		inode->i_mtime = inode->i_ctime = record->time;
++		inode->i_mtime = inode_ctime_set(inode, record->time);
+ 
+ 	d_add(dentry, inode);
+ 
+-- 
+2.41.0
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
-
-[1/1] readdir: Replace one-element arrays with flexible-array members
-      https://git.kernel.org/vfs/vfs/c/2507135e4ff2
