@@ -2,100 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9485CEB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 00:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B27EB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 03:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbjFUAPF (ORCPT
+        id S230002AbjFUDAx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 20 Jun 2023 20:15:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42910 "EHLO
+        Tue, 20 Jun 2023 23:00:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229871AbjFUAPD (ORCPT
+        with ESMTP id S229470AbjFUDAv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 20 Jun 2023 20:15:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DB71987;
-        Tue, 20 Jun 2023 17:15:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 28CD8611D2;
-        Wed, 21 Jun 2023 00:15:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A339C433C8;
-        Wed, 21 Jun 2023 00:14:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687306499;
-        bh=oNWBDRKApdOLxdjKV1Rj6TJLCQPQyXjERxHyoSwvcnU=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=uMSEWNGYINBquxtH48bJhslQuNw5lB8rU6TotOiezIQZUXsnhRwuNsFkK1saArPiS
-         LYIMEoiUF6cU0Dbls+wLnKtP0uCUglXFIVj/PrB7NYMTw3PdZdNI/yQDxhGBSxQuNo
-         PX8qN1SQYOkw/a1mUZyAylOpi/mv0sFmHz0Jv6dd9mk2XrNuso72qV+sNblQTDK1zC
-         1dpuWK/sBqieGeFe6ohug9/tjEBL48ZNbOKi40r7P9RnJ2ONKyDdoHvyfaKqGDhhNc
-         1BiqZxFS7IUTglt2ypYlBwLAQzoEKnCe2JaLwrveMCK+YV1pKv0TH7ENjXxZurq7ZB
-         X6ITcbVMPPgkA==
-Date:   Tue, 20 Jun 2023 17:14:57 -0700
-From:   Kees Cook <kees@kernel.org>
-To:     Dinh Nguyen <dinguyen@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-CC:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nios2: Replace all non-returning strlcpy with strscpy
-User-Agent: K-9 Mail for Android
-In-Reply-To: <40af3815-b0ee-e96f-f7a8-9f0fe9f938d0@kernel.org>
-References: <20230530162358.984149-1-azeemshaikh38@gmail.com> <202305301620.346CC541@keescook> <45ed31e0-9ecd-56ea-c0d4-3c68a3fd8cf5@kernel.org> <202306201313.C425BCB@keescook> <40af3815-b0ee-e96f-f7a8-9f0fe9f938d0@kernel.org>
-Message-ID: <E72EB2A4-7165-47ED-B5D2-8F468B281FA3@kernel.org>
+        Tue, 20 Jun 2023 23:00:51 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF860E7E;
+        Tue, 20 Jun 2023 20:00:50 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-77e2c42de06so176194439f.1;
+        Tue, 20 Jun 2023 20:00:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687316450; x=1689908450;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yk+CCzKPoEK1DNGd+x8aPT6YCsf+viHVDJzfkXgbxwM=;
+        b=VRgq37DNHaxMgTnBuph6L5V1HPRkptAq8ksZwGPsvwidL2Xvf6TPy/M9KpkfUx0ZsC
+         iSVwUvnf9FMnQU44mimALZbKUh/FkA6Jsdla2+Q6qxYjhqSsWceFrngsZzqVr6UieB1R
+         GxJOORpgtrvXvXhpPNn89+bku4KgEnmGzzBqERZLxnRTMEut3yw6nmxCzXvuFU1dvm+R
+         Bh+OVpfnwT09V5A72HMZ1lTeh2fXxlelsKk9YzP+yZ8qiYcHpOhZvr4Bgd3N/EA9zikm
+         Q2E71GNrAlIaD4WhIBvhbSB19T9dVLcwbOjIucMNtjJmOnPB9IqubxVhMD5m3gNiAOlM
+         s75Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687316450; x=1689908450;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yk+CCzKPoEK1DNGd+x8aPT6YCsf+viHVDJzfkXgbxwM=;
+        b=CofBt2hm425r1r3Y4T7INGtdtXnIvfp+2BKSZ9SqRLp991W7CEOK9GzurCoRaEUV/5
+         38B3aXH+495Ceqmi8h1a6C1BpsXr6ndTPnq71OHYps+i7kYNBKB9cWnJrBP7PO+u7e1U
+         NACcsoadmk9UQsjnv3LdahcadRSHOWZDbZ7y/qLaO9FZdZBWuKNERTTbbbRt6y681I4l
+         NFPixB3wpQ9CA/Kw36L0oZJzzlLFIDrmpbdYp42B1UJDB6FiWb7fhh6/3W4A61J7fYea
+         oIBHXxRLNOZRVfYw2UN/3RGCSrHOK49kAH4DW9tbvZ1QF8cSqvihl9rPmwte1mKqEET4
+         0DRg==
+X-Gm-Message-State: AC+VfDyeaHNfU2wr0wGbIlO+TU+9PMDeApbDaDJQgukLp+qeOaXsAsvn
+        IRmORK/u/Kff4tZGwtI1XpukeoKnVoPfeQ==
+X-Google-Smtp-Source: ACHHUZ5tdpP+vH8ZxE1GLqqc/SHVOSQIlQ7gzYXMLVfVTpncwMOS3+mzoZuOl84qGUimIfjvOsU0LQ==
+X-Received: by 2002:a5e:8909:0:b0:777:b6cd:5a93 with SMTP id k9-20020a5e8909000000b00777b6cd5a93mr12837261ioj.2.1687316450166;
+        Tue, 20 Jun 2023 20:00:50 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id x6-20020a029706000000b0042682dd951dsm1035008jai.87.2023.06.20.20.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 20:00:49 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bodo Stroesser <bostroesser@gmail.com>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] scsi: Replace strlcpy with strscpy
+Date:   Wed, 21 Jun 2023 03:00:31 +0000
+Message-ID: <20230621030033.3800351-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On June 20, 2023 3:27:29 PM PDT, Dinh Nguyen <dinguyen@kernel=2Eorg> wrote:
->
->
->On 6/20/23 15:15, Kees Cook wrote:
->> On Tue, Jun 13, 2023 at 05:15:41PM -0500, Dinh Nguyen wrote:
->>>=20
->>>=20
->>> On 5/30/23 18:20, Kees Cook wrote:
->>>> On Tue, May 30, 2023 at 04:23:58PM +0000, Azeem Shaikh wrote:
->>>>> strlcpy() reads the entire source buffer first=2E
->>>>> This read may exceed the destination size limit=2E
->>>>> This is both inefficient and can lead to linear read
->>>>> overflows if a source string is not NUL-terminated [1]=2E
->>>>> In an effort to remove strlcpy() completely [2], replace
->>>>> strlcpy() here with strscpy()=2E
->>>>> No return values were used, so direct replacement is safe=2E
->>>>>=20
->>>>> [1] https://www=2Ekernel=2Eorg/doc/html/latest/process/deprecated=2E=
-html#strlcpy
->>>>> [2] https://github=2Ecom/KSPP/linux/issues/89
->>>>>=20
->>>>> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail=2Ecom>
->>>>=20
->>>> Reviewed-by: Kees Cook <keescook@chromium=2Eorg>
->>>>=20
->>>=20
->>> Applied!
->>=20
->> Thanks for taking this patch! I just wanted to double-check, though; I
->> haven't seen it show up in -next yet=2E Is this still queued?
->>=20
->> Thanks!
->
->I've queued it for v6=2E5=2E Do you need it in v6=2E4?
+This patch series replaces strlcpy in the scsi subsystem wherever trivial
+replacement is possible, i.e return value from strlcpy is unused. The patches
+themselves are independent of each other and are included as a series for
+ease of review. 
 
-6=2E5 is fine, yeah=2E I just wanted to make sure it didn't get lost=2E :)=
- (I didn't see it in sfr's linux-next merges tree=2E)
+Azeem Shaikh (2):
+  scsi: Replace strlcpy with strscpy
+  scsi: target: tcmu: Replace strlcpy with strscpy
 
-Thanks!
+ drivers/scsi/ncr53c8xx.c          | 2 +-
+ drivers/target/target_core_user.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
--Kees
+-- 
+2.41.0.162.gfafddb0af9-goog
 
-
-
---=20
-Kees Cook
