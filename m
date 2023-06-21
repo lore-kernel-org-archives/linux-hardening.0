@@ -2,104 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F06EB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 21:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344FEC0015E
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 21:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229984AbjFUVor (ORCPT
+        id S230093AbjFUVye (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 17:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55314 "EHLO
+        Wed, 21 Jun 2023 17:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229756AbjFUVoq (ORCPT
+        with ESMTP id S229690AbjFUVyd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 17:44:46 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91FB39B
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 14:44:45 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b516978829so50654125ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 14:44:45 -0700 (PDT)
+        Wed, 21 Jun 2023 17:54:33 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8193E1AC
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 14:54:19 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1b51780bed0so50605925ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 14:54:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687383885; x=1689975885;
+        d=chromium.org; s=google; t=1687384459; x=1689976459;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Rd40KBCWSsCbJWxPET1CFACuq5ZB3wmGFYxKgqNwkc=;
-        b=Ooor9E92TNcAvld0FWJty92UhU5ZJe3cq0fLlktiQEeF8kC9BZ8YBc5s9JJlW3nLys
-         PQ/53w9p3mTMyTjjZOraNa0q6bgpULJW1Jy1eC04LdGIkxWiCJ1s8AMAvZIP3c0yaa/F
-         OHlT/5r/bi/p3cjMtS09w0n7zytLB9bgn5Luk=
+        bh=DBUEVo1q7n30FsHvjVeF7u+PkYrRTPaQ7gRodIMSGHc=;
+        b=g0lMw2Rz4vHh0LSVgW2evkSBz+6/980KZyjZCsSI0elex38mMOmUGcG6hJIiOfkjOa
+         hh9nR9eDwEO3P9OIJboZkfv2xpsj/GYudHRuxRO2OZ4Gse0PeeiSZgwxjlJpooJyIBmZ
+         sdaEEBVfiOw3VSNlfZehux7NzQbiE9ZT91y68=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687383885; x=1689975885;
+        d=1e100.net; s=20221208; t=1687384459; x=1689976459;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4Rd40KBCWSsCbJWxPET1CFACuq5ZB3wmGFYxKgqNwkc=;
-        b=heIaD0sue3MDMqy3LVnNIulj8pdoYhZ4xg3Mw0vJ0Ly/rKptK3TonHQuuE40SBdkCZ
-         Jn5dbx7Mpk6hixK3F1Uu5kCq6pmAwJK1z1ppYvC5x1F/JZoMU11VzSJ7TAi+grZ5UqMK
-         YJva5+aAT+BTPnHGtdld2NJYzTWHZseCLlQQ0mGe7mejciTP8/6ZxaaQ7HRO7HhSqou3
-         VCJZEHXJUfZ8Hjj+2uZNsQbM4ZDO2x//W+SEDQITuyJ6R7yfs8ySQrsRm/iaQpQm0WEb
-         MtF1MYr9aMcZ8REGUIgWyq5fIMu0McofGlwOXsyQ6EL0G8n4zY1e64Zcevx9kCQcVUXL
-         Gxqw==
-X-Gm-Message-State: AC+VfDym+yLmYoYY6f4k53CEtMCqKe3svp3JVyLZaaW77xRzQHWDBJfr
-        WlbgU8QcrAytK5g5tkJvdx7kgQ==
-X-Google-Smtp-Source: ACHHUZ7gqJTbHl8WT+G1auX5bF8S63aJrNLzA2YHyy+W6rVFe4J3nRu/wOMaivJPPydajh1yPvu6aQ==
-X-Received: by 2002:a17:903:280e:b0:1ac:5717:fd5 with SMTP id kp14-20020a170903280e00b001ac57170fd5mr16450144plb.60.1687383885047;
-        Wed, 21 Jun 2023 14:44:45 -0700 (PDT)
+        bh=DBUEVo1q7n30FsHvjVeF7u+PkYrRTPaQ7gRodIMSGHc=;
+        b=gy9fKN9n+vmoXCUckL5xMh4mH7137RDUlDYSADSn+kB476iG4tRwSQ/S1HUAZs/LkW
+         KtN7jFTRW4mnd6qQWpgZ9hFpmJRZX8+6BkpR9NAt+N7daxZMuDxhVGcWSrIdCaxV5uS0
+         gt+X0xqRcGJS13JydCvr4VlhnXaCPprygb1fW56uLtT7OZpJMZYOEL1eTlFw/r+qwGpF
+         MnfCur+r9U0ac4lr0OdORlSYuQKo0gDOKoGyejLud5DnHmsbryCQj5e/83vBsIfbtNwv
+         M3CXVTCmc0fIwxgLVZVVzYaUFus2HG1yiXQcGbYRQs+QeyUP+czVq4+U2oQ+OrVrBD0A
+         Ahfw==
+X-Gm-Message-State: AC+VfDyWi2czV/QYL6MaIDFoKFB+x7IS+jeyF8euJDSJMzFu0m0zbMbK
+        m3lCNgWxsVWBOjnPk16tEk05rQ==
+X-Google-Smtp-Source: ACHHUZ7sSNSEdyXfVFVbwQZyuo/RmgZQEi8YADL8wI+y2YjTTaLRDJ6GJgpQ9q7lMzepkoUPJatsYg==
+X-Received: by 2002:a17:902:8c94:b0:1b1:a9e7:5d4b with SMTP id t20-20020a1709028c9400b001b1a9e75d4bmr15712370plo.22.1687384459016;
+        Wed, 21 Jun 2023 14:54:19 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m12-20020a1709026bcc00b00186a2274382sm3941752plt.76.2023.06.21.14.44.44
+        by smtp.gmail.com with ESMTPSA id i10-20020a17090332ca00b001b6758a2d94sm3903265plr.305.2023.06.21.14.54.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 14:44:44 -0700 (PDT)
-Date:   Wed, 21 Jun 2023 14:44:44 -0700
+        Wed, 21 Jun 2023 14:54:18 -0700 (PDT)
+Date:   Wed, 21 Jun 2023 14:54:17 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [linux-next:master 2819/11071] fs/ceph/addr.c:794:12: warning:
- stack frame size (2096) exceeds limit (2048) in 'ceph_writepages_start'
-Message-ID: <202306211444.EEB1506@keescook>
-References: <202306210637.TpfYq9gM-lkp@intel.com>
- <202306211437.EDDEDA582@keescook>
+To:     Dan Li <ashimida.1990@gmail.com>
+Cc:     Qing Zhao <qing.zhao@oracle.com>, gcc-patches@gcc.gnu.org,
+        Richard Sandiford <richard.sandiford@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Marco Elver <elver@google.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Song Liu <song@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uros Bizjak <ubizjak@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Borislav Petkov <bp@suse.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Yuntao Wang <ytcoode@gmail.com>,
+        Changbin Du <changbin.du@intel.com>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [RFC/RFT,V2 0/3] Add compiler support for Kernel Control Flow
+ Integrity
+Message-ID: <202306211451.CB0A34563@keescook>
+References: <20221219055431.22596-1-ashimida.1990@gmail.com>
+ <20230325081117.93245-1-ashimida.1990@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202306211437.EDDEDA582@keescook>
+In-Reply-To: <20230325081117.93245-1-ashimida.1990@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 02:39:39PM -0700, Kees Cook wrote:
-> On Wed, Jun 21, 2023 at 06:56:36AM +0800, kernel test robot wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-> > head:   9dbf40840551df336c95ce2a3adbdd25ed53c0ef
-> > commit: df8fc4e934c12b906d08050d7779f292b9c5c6b5 [2819/11071] kbuild: Enable -fstrict-flex-arrays=3
+On Sat, Mar 25, 2023 at 01:11:14AM -0700, Dan Li wrote:
+> This series of patches is mainly used to support the control flow
+> integrity protection of the linux kernel [1], which is similar to
+> -fsanitize=kcfi in clang 16.0 [2,3].
 > 
-> This looks very much like:
-> https://lore.kernel.org/all/202306100035.VTusNhm4-lkp@intel.com/
-> 
-> > config: riscv-randconfig-r004-20230620 (https://download.01.org/0day-ci/archive/20230621/202306210637.TpfYq9gM-lkp@intel.com/config)
-> > compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-> > reproduce: (https://download.01.org/0day-ci/archive/20230621/202306210637.TpfYq9gM-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202306210637.TpfYq9gM-lkp@intel.com/
-> > 
-> > All warnings (new ones prefixed by >>):
-> > 
-> > >> fs/ceph/addr.c:794:12: warning: stack frame size (2096) exceeds limit (2048) in 'ceph_writepages_start' [-Wframe-larger-than]
-> >    static int ceph_writepages_start(struct address_space *mapping,
-> >               ^
-> >    1820/2096 (86.83%) spills, 276/2096 (13.17%) variables
-> >    1 warning generated.
-> 
-> This appears to be a clang stack slot reuse issue. It continues to be
-> investigated.
+> Any suggestion please let me know :).
 
-We're currently tracking it here, though we may need to split the bug
-up:
-https://github.com/ClangBuiltLinux/linux/issues/39
+Hi Dan,
+
+It's been a couple months, and I didn't see any other feedback on this
+proposal. I was curious what the status of this work is. Are you able to
+attend GNU Cauldron[1] this year? I'd love to see this get some traction
+in GCC.
+
+Thanks!
+
+-Kees
+
+[1] https://gcc.gnu.org/wiki/cauldron2023
 
 -- 
 Kees Cook
