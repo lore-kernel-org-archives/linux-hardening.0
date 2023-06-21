@@ -2,161 +2,269 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D004EB64DC
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 16:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE764EB64DC
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 17:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231529AbjFUQmf (ORCPT
+        id S230335AbjFURLj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 12:42:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34322 "EHLO
+        Wed, 21 Jun 2023 13:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232166AbjFUQmS (ORCPT
+        with ESMTP id S229514AbjFURLi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 12:42:18 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9481FFC;
-        Wed, 21 Jun 2023 09:42:04 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b50d7b4aaaso27704785ad.3;
-        Wed, 21 Jun 2023 09:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687365724; x=1689957724;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pZeysVMxLr4V+mtdvRA0frrYDzh/8CDiDj5/Ledzf8A=;
-        b=bQJ6bOWQGKdsl9spwn87pEoV4njOCTfT+23Efi4pw7BInh8dGPzR+q2+IY0HwHp4oz
-         sdB65Ay702xN0sDc7ieTiRZ16ZJNsqnX6h5TCbFM0/IOL7ncNWDFfyqAFONlcNUunt4i
-         PVoqr1Vy0/m3mH1FHzxaymLGgUdVBOfq43ZwKRMzj69HwWZTtwFbguFuEMzZRDOPBoiU
-         T6jsJ7rg7fPs/FoAUDu+8La+j20luJ6TpClQLudLgZFR774UjJf4L3Fg5RwXvQgtIRFT
-         1/nPRA80kf6KO21z7oCj/P7V77dwqcB6u8ATGvesiWPG//mFKSleIPdVeKMRr8D9sLwv
-         47cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687365724; x=1689957724;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pZeysVMxLr4V+mtdvRA0frrYDzh/8CDiDj5/Ledzf8A=;
-        b=QnLcJM3hXwq21BHcRSaGVrWKxTxAJF1eVMTdhUHgs/E9yKBDiWi79+UGkz6n9jnNjT
-         7iF1ZjubL6Zaq79MzZ3V8qRbQiNz4JwtPYSaANG3FJEwYoJy/s8JsPdWG+miWRx1NvCS
-         4vlmO1a9LRtRRAuqJ7KOsdxQi9ao5Hgouh6rlPheQCpzXgcNqmuxKfuZoI8pRmXtSp4n
-         ri6H7+jonf5ocO7bbUntF86RSblWuOhsXz0zzImnY3TDLcUZaHEgz4mz+WspmaJoWVwU
-         Mg6xZf1bw9zUAvV1W2dr+0pcHXllz6VWO3LzMVEK0AYfDaFcQSzX+I02PYhkwAOid6x0
-         a/pQ==
-X-Gm-Message-State: AC+VfDyqthIW6NIc93PCYFjoTJMTxNTDAJqgqakAIMBmgQJKzrxh2/H1
-        Tiqfx/MXD9c1yJzBZejKLhI=
-X-Google-Smtp-Source: ACHHUZ6wjy33jCOordhGlER/jnFO55zfxhPkZeTwr+8ezi8uYHYbzmDJrgs5j9sgURuC5Hbp7PYOlA==
-X-Received: by 2002:a17:902:fa8d:b0:1b0:7739:657a with SMTP id lc13-20020a170902fa8d00b001b07739657amr8509709plb.50.1687365723865;
-        Wed, 21 Jun 2023 09:42:03 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e17-20020a17090301d100b001ae365072ccsm3755503plh.122.2023.06.21.09.42.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 09:42:03 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Wed, 21 Jun 2023 09:42:01 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Marco Elver <elver@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>, Tom Rix <trix@redhat.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>, linux-kbuild@vger.kernel.org,
-        llvm@lists.linux.dev, Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Wed, 21 Jun 2023 13:11:38 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68AF129;
+        Wed, 21 Jun 2023 10:11:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687367497; x=1718903497;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version:content-transfer-encoding;
+  bh=ouyyW1RWLlx0D/6B8cVMwnjeunonC+1tIEAPC3PI5cE=;
+  b=aXi4i72lUUQ6WFhq8rDVpPBNtfU1S0WclvUwRX6N2bfqhho0DXTJ/y+9
+   ehcWds4QuAMlOJuWiwfeuMCDeU4AVdtFnpcc5nZqMeX2OGc9xtMnVln9d
+   dUh2ngSAlk9xrnllBaVZo0xEZdsYEpF3hA+OQrLkNEOjnSsjVysKlDL9L
+   pM/z6OhpuQohbB2wWGPrsVefQr4KA/kXPKPaA/uHv6a8NgYZ9IkyQv2QA
+   7Wxn/h+NS6vaSO74qScEl6mNLKlmfePq6djwzUJA0fhdm3fwQY8LIQve6
+   AoVGrd+c5/JDbQBDCFK73xEgRM8Z9ukmc7IbSLU1ot8v8wPodk+LjtiSA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="344977732"
+X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
+   d="scan'208";a="344977732"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 10:10:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="714580017"
+X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
+   d="scan'208";a="714580017"
+Received: from jarteaga-mobl1.amr.corp.intel.com (HELO vcostago-mobl3) ([10.212.165.203])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 10:10:28 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com
+Cc:     linux-pci@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] ubsan: Tighten UBSAN_BOUNDS on GCC
-Message-ID: <07dea91f-9b93-4227-9fec-728a9e7a0d55@roeck-us.net>
-References: <20230405022356.gonna.338-kees@kernel.org>
+Subject: Re: [PATCH] igc: Ignore AER reset when device is suspended
+In-Reply-To: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
+References: <20230620123636.1854690-1-kai.heng.feng@canonical.com>
+Date:   Wed, 21 Jun 2023 10:10:27 -0700
+Message-ID: <87cz1ospvg.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230405022356.gonna.338-kees@kernel.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Kai-Heng Feng <kai.heng.feng@canonical.com> writes:
 
-On Tue, Apr 04, 2023 at 07:23:59PM -0700, Kees Cook wrote:
-> The use of -fsanitize=bounds on GCC will ignore some trailing arrays,
-> leaving a gap in coverage. Switch to using -fsanitize=bounds-strict to
-> match Clang's stricter behavior.
-> 
-> Cc: Marco Elver <elver@google.com>
-> Cc: Masahiro Yamada <masahiroy@kernel.org>
-> Cc: Nathan Chancellor <nathan@kernel.org>
-> Cc: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: Nicolas Schier <nicolas@fjasle.eu>
-> Cc: Tom Rix <trix@redhat.com>
-> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-> Cc: Miroslav Benes <mbenes@suse.cz>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: llvm@lists.linux.dev
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> When a system that connects to a Thunderbolt dock equipped with I225,
+> I225 stops working after S3 resume:
+>
+> [  606.527643] pcieport 0000:00:1d.0: AER: Multiple Corrected error recei=
+ved: 0000:00:1d.0
+> [  606.527791] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DCorrecte=
+d, type=3DTransaction Layer, (Receiver ID)
+> [  606.527795] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/m=
+ask=3D00008000/00002000
+> [  606.527800] pcieport 0000:00:1d.0:    [15] HeaderOF
+> [  606.527806] pcieport 0000:00:1d.0: AER:   Error of this Agent is repor=
+ted first
+> [  606.527853] pcieport 0000:07:04.0: PCIe Bus Error: severity=3DCorrecte=
+d, type=3DData Link Layer, (Receiver ID)
+> [  606.527856] pcieport 0000:07:04.0:   device [8086:0b26] error status/m=
+ask=3D00000080/00002000
+> [  606.527861] pcieport 0000:07:04.0:    [ 7] BadDLLP
+> [  606.527931] pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non-Fata=
+l) error received: 0000:00:1d.0
+> [  606.528064] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DUncorrec=
+ted (Non-Fatal), type=3DTransaction Layer, (Requester ID)
+> [  606.528068] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/m=
+ask=3D00100000/00004000
+> [  606.528072] pcieport 0000:00:1d.0:    [20] UnsupReq               (Fir=
+st)
+> [  606.528075] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a00005=
+2 00000000 00000000
+> [  606.528079] pcieport 0000:00:1d.0: AER:   Error of this Agent is repor=
+ted first
+> [  606.528098] pcieport 0000:04:01.0: PCIe Bus Error: severity=3DUncorrec=
+ted (Non-Fatal), type=3DTransaction Layer, (Requester ID)
+> [  606.528101] pcieport 0000:04:01.0:   device [8086:1136] error status/m=
+ask=3D00300000/00000000
+> [  606.528105] pcieport 0000:04:01.0:    [20] UnsupReq               (Fir=
+st)
+> [  606.528107] pcieport 0000:04:01.0:    [21] ACSViol
+> [  606.528110] pcieport 0000:04:01.0: AER:   TLP Header: 34000000 0400005=
+2 00000000 00000000
+> [  606.528187] thunderbolt 0000:05:00.0: AER: can't recover (no error_det=
+ected callback)
+> [  606.558729] ------------[ cut here ]------------
+> [  606.558729] igc 0000:38:00.0: disabling already-disabled device
+> [  606.558738] WARNING: CPU: 0 PID: 209 at drivers/pci/pci.c:2248 pci_dis=
+able_device+0xf6/0x150
+> [  606.558743] Modules linked in: rfcomm ccm cmac algif_hash algif_skciph=
+er af_alg usbhid bnep snd_hda_codec_hdmi snd_ctl_led snd_hda_codec_realtek =
+joydev snd_hda_codec_generic ledtrig_audio binfmt_misc snd_sof_pci_intel_tg=
+l snd_sof_intel_hda_common snd_soc_acpi_intel_match snd_soc_acpi snd_soc_hd=
+ac_hda snd_sof_pci snd_sof_xtensa_dsp x86_pkg_temp_thermal snd_sof_intel_hd=
+a_mlink intel_powerclamp snd_sof_intel_hda snd_sof snd_sof_utils snd_hda_ex=
+t_core snd_soc_core snd_compress snd_hda_intel coretemp snd_intel_dspcfg sn=
+d_hda_codec snd_hwdep kvm_intel snd_hda_core iwlmvm nls_iso8859_1 i915 snd_=
+pcm kvm mac80211 crct10dif_pclmul crc32_pclmul i2c_algo_bit uvcvideo ghash_=
+clmulni_intel snd_seq mei_pxp drm_buddy videobuf2_vmalloc sch_fq_codel sha5=
+12_ssse3 libarc4 aesni_intel mei_hdcp videobuf2_memops btusb uvc crypto_sim=
+d drm_display_helper snd_seq_device btrtl videobuf2_v4l2 cryptd snd_timer i=
+ntel_rapl_msr btbcm drm_kms_helper videodev iwlwifi snd btintel rapl input_=
+leds wmi_bmof hid_sensor_rotation btmtk hid_sensor_accel_3d
+> [  606.558778]  hid_sensor_gyro_3d hid_sensor_als syscopyarea videobuf2_c=
+ommon intel_cstate serio_raw soundcore bluetooth hid_sensor_trigger thunder=
+bolt sysfillrect cfg80211 mc mei_me industrialio_triggered_buffer sysimgblt=
+ processor_thermal_device_pci hid_sensor_iio_common hid_multitouch ecdh_gen=
+eric processor_thermal_device kfifo_buf cec 8250_dw mei ecc processor_therm=
+al_rfim industrialio rc_core processor_thermal_mbox ucsi_acpi processor_the=
+rmal_rapl ttm typec_ucsi intel_rapl_common msr typec video int3403_thermal =
+int340x_thermal_zone int3400_thermal intel_hid wmi acpi_pad acpi_thermal_re=
+l sparse_keymap acpi_tad mac_hid parport_pc ppdev lp parport drm ramoops re=
+ed_solomon efi_pstore ip_tables x_tables autofs4 hid_sensor_custom hid_sens=
+or_hub intel_ishtp_hid spi_pxa2xx_platform hid_generic dw_dmac dw_dmac_core=
+ rtsx_pci_sdmmc e1000e i2c_i801 igc nvme i2c_smbus intel_lpss_pci rtsx_pci =
+intel_ish_ipc nvme_core intel_lpss xhci_pci i2c_hid_acpi intel_ishtp idma64=
+ xhci_pci_renesas i2c_hid hid pinctrl_alderlake
+> [  606.558809] CPU: 0 PID: 209 Comm: irq/124-aerdrv Not tainted 6.4.0-rc7=
++ #119
+> [  606.558811] Hardware name: HP HP ZBook Fury 16 G9 Mobile Workstation P=
+C/89C6, BIOS U96 Ver. 01.07.01 04/06/2023
+> [  606.558812] RIP: 0010:pci_disable_device+0xf6/0x150
+> [  606.558814] Code: 4d 85 e4 75 07 4c 8b a3 d0 00 00 00 48 8d bb d0 00 0=
+0 00 e8 5c f5 1f 00 4c 89 e2 48 c7 c7 f8 e6 37 ae 48 89 c6 e8 9a 3e 86 ff <=
+0f> 0b e9 3c ff ff ff 48 8d 55 e6 be 04 00 00 00 48 89 df e8 62 0b
+> [  606.558815] RSP: 0018:ffffa70040a4fca0 EFLAGS: 00010246
+> [  606.558816] RAX: 0000000000000000 RBX: ffff8ac8434b2000 RCX: 000000000=
+0000000
+> [  606.558817] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000=
+0000000
+> [  606.558818] RBP: ffffa70040a4fcc0 R08: 0000000000000000 R09: 000000000=
+0000000
+> [  606.558818] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8ac84=
+3435dd0
+> [  606.558818] R13: ffff8ac84277c000 R14: 0000000000000001 R15: ffff8ac84=
+34b2150
+> [  606.558819] FS:  0000000000000000(0000) GS:ffff8acbd6a00000(0000) knlG=
+S:0000000000000000
+> [  606.558820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  606.558821] CR2: 00007f9740ba28e8 CR3: 00000001eb43a000 CR4: 000000000=
+0f50ef0
+> [  606.558822] PKRU: 55555554
+> [  606.558822] Call Trace:
+> [  606.558823]  <TASK>
+> [  606.558825]  ? show_regs+0x76/0x90
+> [  606.558828]  ? pci_disable_device+0xf6/0x150
+> [  606.558830]  ? __warn+0x91/0x160
+> [  606.558832]  ? pci_disable_device+0xf6/0x150
+> [  606.558834]  ? report_bug+0x1bf/0x1d0
+> [  606.558838] nvme nvme0: 24/0/0 default/read/poll queues
+> [  606.558837]  ? handle_bug+0x46/0x90
+> [  606.558841]  ? exc_invalid_op+0x1d/0x90
+> [  606.558843]  ? asm_exc_invalid_op+0x1f/0x30
+> [  606.558846]  ? pci_disable_device+0xf6/0x150
+> [  606.558849]  igc_io_error_detected+0x40/0x70 [igc]
+> [  606.558857]  report_error_detected+0xdb/0x1d0
+> [  606.558860]  ? __pfx_report_normal_detected+0x10/0x10
+> [  606.558862]  report_normal_detected+0x1a/0x30
+> [  606.558864]  pci_walk_bus+0x78/0xb0
+> [  606.558866]  pcie_do_recovery+0xba/0x340
+> [  606.558868]  ? __pfx_aer_root_reset+0x10/0x10
+> [  606.558870]  aer_process_err_devices+0x168/0x220
+> [  606.558871]  aer_isr+0x1d3/0x1f0
+> [  606.558874]  ? __pfx_irq_thread_fn+0x10/0x10
+> [  606.558876]  irq_thread_fn+0x29/0x70
+> [  606.558877]  irq_thread+0xee/0x1c0
+> [  606.558878]  ? __pfx_irq_thread_dtor+0x10/0x10
+> [  606.558879]  ? __pfx_irq_thread+0x10/0x10
+> [  606.558880]  kthread+0xf8/0x130
+> [  606.558882]  ? __pfx_kthread+0x10/0x10
+> [  606.558884]  ret_from_fork+0x29/0x50
+> [  606.558887]  </TASK>
+> [  606.558887] ---[ end trace 0000000000000000 ]---
+> [  606.570223] i915 0000:00:02.0: [drm] GT0: HuC: authenticated!
+> [  606.570228] i915 0000:00:02.0: [drm] GT0: GUC: submission disabled
+> [  606.570231] i915 0000:00:02.0: [drm] GT0: GUC: SLPC disabled
+> [  606.663042] xhci_hcd 0000:39:00.0: AER: can't recover (no error_detect=
+ed callback)
+> [  606.663111] pcieport 0000:00:1d.0: AER: device recovery failed
+> [  606.721642] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
+> [  606.721677] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
+> [  606.721687] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
+> [  606.721698] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
+> [  606.842877] usb 1-8: reset high-speed USB device number 3 using xhci_h=
+cd
+> [  607.048340] genirq: Flags mismatch irq 164. 00000000 (enp56s0) vs. 000=
+00000 (enp56s0)
+> [  607.050313] ------------[ cut here ]------------
+> ...
+> [  609.064160] igc 0000:38:00.0 enp56s0: Register Dump
+> [  609.064167] igc 0000:38:00.0 enp56s0: Register Name   Value
+> [  609.064181] igc 0000:38:00.0 enp56s0: CTRL            081c0641
+> [  609.064188] igc 0000:38:00.0 enp56s0: STATUS          40280401
+> [  609.064195] igc 0000:38:00.0 enp56s0: CTRL_EXT        100000c0
+> [  609.064202] igc 0000:38:00.0 enp56s0: MDIC            18017949
+> [  609.064208] igc 0000:38:00.0 enp56s0: ICR             80000010
+> [  609.064214] igc 0000:38:00.0 enp56s0: RCTL            04408022
+> [  609.064232] igc 0000:38:00.0 enp56s0: RDLEN[0-3]      00001000 0000100=
+0 00001000 00001000
+> [  609.064251] igc 0000:38:00.0 enp56s0: RDH[0-3]        00000000 0000000=
+0 00000000 00000000
+> [  609.064270] igc 0000:38:00.0 enp56s0: RDT[0-3]        000000ff 000000f=
+f 000000ff 000000ff
+> [  609.064289] igc 0000:38:00.0 enp56s0: RXDCTL[0-3]     00040808 0004080=
+8 00040808 00040808
+> [  609.064308] igc 0000:38:00.0 enp56s0: RDBAL[0-3]      ffc62000 fff6b00=
+0 fff6c000 fff6d000
+> [  609.064326] igc 0000:38:00.0 enp56s0: RDBAH[0-3]      00000000 0000000=
+0 00000000 00000000
+> [  609.064333] igc 0000:38:00.0 enp56s0: TCTL            a50400fa
+> [  609.064351] igc 0000:38:00.0 enp56s0: TDBAL[0-3]      fff6d000 ffcdf00=
+0 ffce0000 ffce1000
+> [  609.064369] igc 0000:38:00.0 enp56s0: TDBAH[0-3]      00000000 0000000=
+0 00000000 00000000
+> [  609.064387] igc 0000:38:00.0 enp56s0: TDLEN[0-3]      00001000 0000100=
+0 00001000 00001000
+> [  609.064405] igc 0000:38:00.0 enp56s0: TDH[0-3]        00000000 0000000=
+0 00000000 00000000
+> [  609.064423] igc 0000:38:00.0 enp56s0: TDT[0-3]        00000004 0000000=
+0 00000000 00000000
+> [  609.064441] igc 0000:38:00.0 enp56s0: TXDCTL[0-3]     00100108 0010010=
+8 00100108 00100108
+> [  609.064445] igc 0000:38:00.0 enp56s0: Reset adapter
+>
+> The issue is that the PTM requests are sending before driver resumes the
+> device. Since the issue can also be observed on Windows, it's quite
+> likely a firmware/hardwar limitation.
+>
+> So avoid resetting the device if it's not resumed. Once the device is
+> fully resumed, the device can work normally.
+>
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216850
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
 
-This patch, presumably as side effect, enables CONFIG_ARCH_STM32
-for arm64:allmodconfig. As consequence, CONFIG_STM32_RPROC is enabled
-as well. This in turn results in the following build error.
+Feel free to add my:
 
-Building arm64:allmodconfig ... failed
---------------
-Error log:
-In file included from include/linux/printk.h:564,
-                 from include/asm-generic/bug.h:22,
-                 from arch/arm64/include/asm/bug.h:26,
-                 from include/linux/bug.h:5,
-                 from include/linux/fortify-string.h:5,
-                 from include/linux/string.h:254,
-                 from include/linux/dma-mapping.h:7,
-                 from drivers/remoteproc/stm32_rproc.c:9:
-drivers/remoteproc/stm32_rproc.c: In function 'stm32_rproc_mem_alloc':
-drivers/remoteproc/stm32_rproc.c:122:22: error: format '%x' expects argument of type 'unsigned int', but argument 5 has type 'size_t'
+Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
-I did not try to understand what is going on, but reverting this
-patch fixes the problem.
+After the comments are addressed.
 
----
-bisect script:
 
-rm .config
-make-arm64 mrproper
-make-arm64 -j allmodconfig
-if ! grep -q CONFIG_ARCH_STM32 .config; then
-    exit 1
-fi
-exit 0
-
----
-bisect log:
-# bad: [15e71592dbae49a674429c618a10401d7f992ac3] Add linux-next specific files for 20230621
-# good: [45a3e24f65e90a047bef86f927ebdc4c710edaa1] Linux 6.4-rc7
-git bisect start 'HEAD' 'v6.4-rc7'
-# good: [e867e67cd55ae460c860ffd896c7fc96add2821c] Merge branch 'master' of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git
-git bisect good e867e67cd55ae460c860ffd896c7fc96add2821c
-# good: [0ab4015a11182e2a19c3dd52db85418f370cef39] Merge branch 'for-next' of git://git.kernel.dk/linux-block.git
-git bisect good 0ab4015a11182e2a19c3dd52db85418f370cef39
-# good: [50b29407850776d7c61461f883e5896dcea596a4] Merge branch 'driver-core-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
-git bisect good 50b29407850776d7c61461f883e5896dcea596a4
-# good: [04d46f23e86112fc9d6469fc0155ce19faabc181] Merge branch 'staging-next' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
-git bisect good 04d46f23e86112fc9d6469fc0155ce19faabc181
-# good: [bdd44289ba061dab3863ff80a5999d4c6160b93d] Merge branch 'gpio/for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-git bisect good bdd44289ba061dab3863ff80a5999d4c6160b93d
-# good: [c7d13e64a19b0bbed1a6eb18e9b4fd55f7530e5d] Merge branch 'at24/for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-git bisect good c7d13e64a19b0bbed1a6eb18e9b4fd55f7530e5d
-# good: [6477d1cebd3339658f8421e05380576ed535677c] Merge branch 'rust-next' of https://github.com/Rust-for-Linux/linux.git
-git bisect good 6477d1cebd3339658f8421e05380576ed535677c
-# bad: [d01a77afd6bef1b3a2ed15e8ca6887ca7da0cddc] lib/string_helpers: Change returned value of the strreplace()
-git bisect bad d01a77afd6bef1b3a2ed15e8ca6887ca7da0cddc
-# bad: [d67790ddf0219aa0ad3e13b53ae0a7619b3425a2] overflow: Add struct_size_t() helper
-git bisect bad d67790ddf0219aa0ad3e13b53ae0a7619b3425a2
-# bad: [30ad0627f169f56180e668e7223eaa43aa190a75] dlm: Replace all non-returning strlcpy with strscpy
-git bisect bad 30ad0627f169f56180e668e7223eaa43aa190a75
-# bad: [3bf301e1ab85e18ed0e337ce124dc71d6d7b5fd7] string: Add Kunit tests for strcat() family
-git bisect bad 3bf301e1ab85e18ed0e337ce124dc71d6d7b5fd7
-# bad: [ead62aa370a81c4fb42a44c4edeafe13e0a3a703] fortify: strscpy: Fix flipped q and p docstring typo
-git bisect bad ead62aa370a81c4fb42a44c4edeafe13e0a3a703
-# bad: [2d47c6956ab3c8b580a59d7704aab3e2a4882b6c] ubsan: Tighten UBSAN_BOUNDS on GCC
-git bisect bad 2d47c6956ab3c8b580a59d7704aab3e2a4882b6c
-# first bad commit: [2d47c6956ab3c8b580a59d7704aab3e2a4882b6c] ubsan: Tighten UBSAN_BOUNDS on GCC
+Cheers,
+--=20
+Vinicius
