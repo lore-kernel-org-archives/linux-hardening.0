@@ -2,172 +2,224 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71141EB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 14:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4402EB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 16:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232994AbjFUO5X (ORCPT
+        id S229995AbjFUQIt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 10:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35766 "EHLO
+        Wed, 21 Jun 2023 12:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233156AbjFUO5I (ORCPT
+        with ESMTP id S230448AbjFUQIs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 10:57:08 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2071d.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e83::71d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65E15193;
-        Wed, 21 Jun 2023 07:51:48 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Il0QNBZMbzbnPpF+NF4fe0qErmEWRANYmTGS2T+l5yaHfph4Srw2cHfyWn56MQsgVxvG9hBA18Cg0Z4+nFFY2yKCkK+Y7qthGE+TayxUBoTEvXtE/PTU9gYY4HKmZd4oV0Rj6Mvq2PqSiLkeEeSNFI4pRlgm1B3gFi3uEa6z89Q1bYJz+va/6WnWNU62zsf29OSbWcokEsY4xpZaGu6SxrYszKT+J2yxJyAxU2HJulOEKbEc7hqwU+HFpA9/Mat7IqhknFMMpQ/zaJNEnnovbHb7n8M6Q0xcLxgO8XjlsiM67AG7i6Xsa8GSXBq8nO1bL0P7TtNb2IIa5A1rvO01gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9o8z9/jDb92KQ1+/FU/acDwSNC/MfTbZf15wto/2JR0=;
- b=NXlsgWBU03771KTB6Krf8h38kl5nzGVyyndF814TJuN9p2qJ7HjnbAStlgJlY0Ls20iILEDBntBHjTSLFeEf2efhkH4Htl77q0Pwk4kbocwSndfMNu87Ek+OvzeuSjZ9qqwceNGzK6Qi9O7IFzLt4dphDBA2ZzJjfWYs01gzZcqxRqwQMZTjf8gz9RUUyUOPFnb3GoQnP5T7MXVmuVsqNf8Lwx6zJ8GVMcWLG0Aml2CyFw/E9sVPmsWCq+2zgVXvEW7N8y21oGFhsTbX+tS0ZeGz1aOYzQh6laCFBe9NwrartHBDHUFh3mwEt2r62CZ1eJgxwbDaNM2WzaseC6rj9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
- dkim=pass header.d=corigine.com; arc=none
+        Wed, 21 Jun 2023 12:08:48 -0400
+Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C455193
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 09:08:34 -0700 (PDT)
+Received: by mail-oo1-xc2b.google.com with SMTP id 006d021491bc7-560b56b638eso368182eaf.0
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 09:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9o8z9/jDb92KQ1+/FU/acDwSNC/MfTbZf15wto/2JR0=;
- b=Hb2saJ1YmMzHAESLltNT7gEXaqpVueAlOw24+Uojn6UcNtRJeuUMdEH6te2QRhGlmCT7ah8wX0Vi/jSBDwhSJTOYM192i1covDIBj1O5fie59yi+4zq+E0Q5Th1pB3XrzdWJq7Gb27+ZY43elWvv3IbRpAnJnH7hYgS0dtvK8VM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=corigine.com;
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
- by MW4PR13MB5888.namprd13.prod.outlook.com (2603:10b6:303:1b7::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Wed, 21 Jun
- 2023 14:50:06 +0000
-Received: from PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::eb8f:e482:76e0:fe6e]) by PH0PR13MB4842.namprd13.prod.outlook.com
- ([fe80::eb8f:e482:76e0:fe6e%5]) with mapi id 15.20.6521.023; Wed, 21 Jun 2023
- 14:50:06 +0000
-Date:   Wed, 21 Jun 2023 16:49:58 +0200
-From:   Simon Horman <simon.horman@corigine.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     M Chetan Kumar <m.chetan.kumar@intel.com>,
-        Florian Klink <flokli@flokli.de>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Intel Corporation <linuxwwan@intel.com>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Sergey Ryazanov <ryazanov.s.a@gmail.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] net: wwan: iosm: Convert single instance struct member
- to flexible array
-Message-ID: <ZJMOFnpONApGxOKi@corigine.com>
-References: <20230620194234.never.023-kees@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230620194234.never.023-kees@kernel.org>
-X-ClientProxiedBy: AM8P251CA0028.EURP251.PROD.OUTLOOK.COM
- (2603:10a6:20b:21b::33) To PH0PR13MB4842.namprd13.prod.outlook.com
- (2603:10b6:510:78::6)
+        d=chromium.org; s=google; t=1687363714; x=1689955714;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jYeghwLJr3eeZVSf92WTHbW6kPAlj9yXHnGi0sHDypU=;
+        b=MhNcQI5MOADt15GCiHEO7GsmtjxNzjczpjMuNbwOqeInmGYTx6fW/634bGd1LaJ4Ky
+         +/gtDS7TMyydtY2P1MxHV16TpQNjYmVehX6TBpq+YMLXZdCQjH195v51+Ga3owK5l6LN
+         w9V61439DewhQiQQN42zQ4i//U6Ho6EiHCMNA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687363714; x=1689955714;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jYeghwLJr3eeZVSf92WTHbW6kPAlj9yXHnGi0sHDypU=;
+        b=cvAwLz8RM+zPCCpiBKpPgaxP73YIu+/g5ydOJ+3ugXabx36zFi/Qgw/3//VbArEcQ3
+         LI/4slsXyqjBsMDJc1U9bXStb+NT0ulYXfvgSisnYI1c5MlicNGie2EKtyr7litfpmJi
+         aE14t+O7kEAzcpiYCFx20U8xKfqVNxdW8gAZisRBMkd6+Rtfv5OYNySJqNlRzeI1DjI6
+         vfarxaPfIL3q8V5ZxU63oIt4GgimX2V1buQ1diA56QwzzP6zYUf4ryKBM4Wnef9o/04z
+         LMQZW6Ln8ce/rhuuctEax1AFOD4PIGga+5Ik7rrKJ8mqYqofPlJ7AYHIjakCmm27DefL
+         eiog==
+X-Gm-Message-State: AC+VfDwp/R5iPcKd0TnZfvb/v61L50KeKFcCItq2z7O8DCbhTHxkhqWG
+        A6DrorqBnB3utAeFO1QMJKwPoxZmRR74LSqpfwgr0A==
+X-Google-Smtp-Source: ACHHUZ5XH71fuQLzrmIT7pWr4OuhEegocxiqeU3jL5mRb6BLRR+IGYO6nfkeL5BFTVgsoiY1VOl7o3L7ZuWPsVb7tqI=
+X-Received: by 2002:a05:6820:1527:b0:560:b9f0:b9fc with SMTP id
+ ay39-20020a056820152700b00560b9f0b9fcmr814279oob.0.1687363713839; Wed, 21 Jun
+ 2023 09:08:33 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|MW4PR13MB5888:EE_
-X-MS-Office365-Filtering-Correlation-Id: 61d3916a-1053-4c7f-9071-08db7266cd2b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: o3ABjdjkleM+qB614U0Lt2lwLXmUvz8aqBiKtWdl6EPc29kVE1Yl0FBrow526RMN5/xtYT+l5d0nw17CbZGtGlpI4raSN0EkAU9CgSG9RCMHBg21/ilwmIhNhymRXl/R77x+wg95zGdAqoqqiOULhSTMnTM0BJelS6VEUTKtFJ2x4XpsYsh5NbsUSQtFLxMU+sleMzVPyCT/rBrB/PEuZFoxVL/fm4EYwZlOltw8E64f0Albd2clxWxukhnhZxDEVo/c9evBaG78uJ2jLUXotUiSMSPkVJtHAsbQBBEQLin+Vrdn5fwVPrn5pn3wNRqdYAqhkwgr1s0/QntsWPiqwb9ie06VEL77tMuqmHfu+xM/nhAp3C1TWk/YLGDcaHMpH6VUmcZK4HYhe1165BOiSnpYD+kqP/l6qXVh1YBBFfDkpVAA3Dt8mQVfe9gbkbzswmIWDv53mZaaA1uKaSnITAIBSAiCvWTvObwKw43JM5K7QiM/JthTfXCTGlE6+Mrta0dysi2fHnl/5ctm2RE8jD2UPggnd8gWaHlh5730tWA6/6HWajSxxy5qQ2kbG8XHN2FV4GNMklOLl9e+JWMF4XxGUnSXAaB7CwvZI3NNC7A=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39840400004)(376002)(396003)(346002)(366004)(136003)(451199021)(4326008)(2906002)(478600001)(54906003)(86362001)(6486002)(38100700002)(966005)(6666004)(41300700001)(83380400001)(316002)(36756003)(6916009)(66946007)(66556008)(66476007)(2616005)(6512007)(6506007)(8676002)(8936002)(7416002)(44832011)(186003)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wWXByJ4jNgXSv+x61NKyU28QiIAj7frIlLkxDiTLkEOi4v59fM3oVvTRaQJm?=
- =?us-ascii?Q?fRDq9+4CGFAHeT+/iibd+ZNNxW5ABL/99zE8161g8c5BohMaBtY5aBMoz0tw?=
- =?us-ascii?Q?L3Xr/KBC7P1NZZfUgClKQSmrdEEo2xzsj0xzazmTNuPwbtPNdIg7TNehNsuG?=
- =?us-ascii?Q?IFXzsAdI97CPVugE6MQclnNcji57ihBjvR5JD08rqWaRDJdWZTcZMZpDZwAg?=
- =?us-ascii?Q?DUs8zf8xz1zWthl0S8zZZBsZTojipXusI6qLCAuQ2w7Mimsdf75P4penUFY4?=
- =?us-ascii?Q?3x4XB6Y1vjT3HZfoAk+40czo+yKL2OmCOr3iTmv/pS9BoKJXe1vrRltTaOm9?=
- =?us-ascii?Q?2F4tma5KB/wrA/JYMFdxmI9jMx8NrLpIRhSU36F17fPJoza93FZ5lKGSutjT?=
- =?us-ascii?Q?PD9IYioYJD53WXaMPbu/Mue+q77YoFbEqgeR1teptmu6rrSjmtRvLht9vYU5?=
- =?us-ascii?Q?kx1W41j0zbR5xwm+FVm8eaz6rSAxNSsfqn+vnkDXD33RJLWKT8n4t+V0kKJi?=
- =?us-ascii?Q?dRZWXY0a4jYsIlO6nEbJSG0LsbK2RI7hjFhhGPelLYLEphg+OXS5lmr/Za/T?=
- =?us-ascii?Q?bZi+zKY+Bd2WInq0cVn/vqRRYNW9IeHv6lsNH2xSyk8KCwWoI8qNNPBB+HsH?=
- =?us-ascii?Q?kBDJEwfL+vGqT5T4hDMzqKaf6sa7M1JbB2kvEK39Fa/7fL00IQkspC9TIaJG?=
- =?us-ascii?Q?dk+VelmdRv2Q64pipGr/CCzYt5/ieAiFx8TGx/lksfiG5ZkAKm+pGO5bBe75?=
- =?us-ascii?Q?ssVWla4yRKjh5X33GyF3SIbACeX6m0/OmR+E8TENgJds8RmjpcsFM9X6Adbm?=
- =?us-ascii?Q?DN4iLJNZRDVA16TN2ZO9zRzNQ6d0qWQOoY8Do/7djP8ofOHe280rHlrt4pe6?=
- =?us-ascii?Q?GJBTswGwYlOM+pcVleKgOydDDx52ZSJmR/bhA+G6ZvR11Wysb2mVSLAJmnF7?=
- =?us-ascii?Q?7Bf4unca/QciNge26dnbcQVzB9Exn6987FIh3O2wDVJOY3WUnwpxCh88stEX?=
- =?us-ascii?Q?O6/riRKewwZsgZamwSPsFS1VqQoIXGyIj+Ns3FYvClz3XhoqgvCORUfWyh/d?=
- =?us-ascii?Q?o2Ot+ocLqrstftWoMi4j311mQMFtfuM0zASiJk6e8xE3QeeCxzfaK41ThR9d?=
- =?us-ascii?Q?F1I8G7Js9yEfk7ERct93KIh2maQ85XFmGm14VP5TEADazHUF+g7EIbscfR0A?=
- =?us-ascii?Q?tCNreDuaLB+fbCGUVa5atdkyxh9bBXIJdI6pQzITM08c8iT1+HgV39GZlV99?=
- =?us-ascii?Q?hKw7ltq7bC7VLH+cmBlxZYiIVOr0TIRpqV3E7ZqP96j30tjSOstslEDFKYzn?=
- =?us-ascii?Q?6HqdobleATVeBgeidqNt0QNmLzmJVK63qEPcQ0wQ4bzyDbai/z2dg9BBYGZi?=
- =?us-ascii?Q?CwZ18zfgqxKhzPWKPvVicerSmFVAxs5LkzAN3li0RmpYxcRkn18bAoHv12C0?=
- =?us-ascii?Q?r3gUqBpiXB+hMstMBGBgxPpcSJKGBffRxNL2vr1pqhgodufA7t4C5TwX/Vev?=
- =?us-ascii?Q?LGYgKDvadEePdYOtiMiVsQd1L1+pk/IhBscuTcTgUlaXHWKIqGc8o5AggJP7?=
- =?us-ascii?Q?2b/Tctb0efMWko4u49N8fXEd54H9JblJrbJ8Pwds/USsgHMe/TaPHJTE3m6e?=
- =?us-ascii?Q?Arc2L46FaWaUW06is+8qOodUQe3iXgufoM7CYZNklwcbXHNrAQl0Fi/423NO?=
- =?us-ascii?Q?FL9cVA=3D=3D?=
-X-OriginatorOrg: corigine.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61d3916a-1053-4c7f-9071-08db7266cd2b
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 14:50:05.9494
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FlGlPr5oYv+H4y0D9p0J9hevYNQ/oykr/WtopF+lOwpcCjF3JRANHpot10HAdg7CQrnGueOVbT7XnYeyrdw82OJXz+xYA/iOtJKeKtuWrDA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR13MB5888
+References: <CABi2SkWx_BnEHzGqqqbDMJi+vi-5a7XkQUCkyesN5PUtk23SgQ@mail.gmail.com>
+ <CABi2SkXw6ZD-M1ZrcXNL7abtM=RzQXv716PPM_k=1Tay=5rUFA@mail.gmail.com>
+ <ZIjOlU5EfVNt6NRU@x1n> <CABi2SkXE4pUhHucZ_c-_4Ux-VcLKic0+HY_DN2wUEC6DGkDvQQ@mail.gmail.com>
+ <20230614011814.sz2l6z6wbaubabk2@revolver> <20230614125731.GY52412@kernel.org>
+ <CABi2SkXySaoRxB0dfhhTQz6P5jCL8iWpY_ti=LC7Qi49+2F01w@mail.gmail.com> <20230621055551.GE52412@kernel.org>
+In-Reply-To: <20230621055551.GE52412@kernel.org>
+From:   Jeff Xu <jeffxu@chromium.org>
+Date:   Wed, 21 Jun 2023 09:08:22 -0700
+Message-ID: <CABi2SkUBMKOHB+pSDn2KqPZx384BXZQLn5YDzhATzQM41SgBJQ@mail.gmail.com>
+Subject: Re: inconsistence in mprotect_fixup mlock_fixup madvise_update_vma
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, zhangpeng.00@bytedance.com,
+        akpm@linux-foundation.org, koct9i@gmail.com, david@redhat.com,
+        ak@linux.intel.com, hughd@google.com, emunson@akamai.com,
+        rppt@linux.ibm.com, aarcange@redhat.com,
+        linux-kernel@vger.kernel.org, Lorenzo Stoakes <lstoakes@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 12:42:38PM -0700, Kees Cook wrote:
-> struct mux_adth actually ends with multiple struct mux_adth_dg members.
-> This is seen both in the comments about the member:
-> 
-> /**
->  * struct mux_adth - Structure of the Aggregated Datagram Table Header.
->  ...
->  * @dg:		datagramm table with variable length
->  */
-> 
-> and in the preparation for populating it:
-> 
->                         adth_dg_size = offsetof(struct mux_adth, dg) +
->                                         ul_adb->dg_count[i] * sizeof(*dg);
-> 			...
->                         adth_dg_size -= offsetof(struct mux_adth, dg);
->                         memcpy(&adth->dg, ul_adb->dg[i], adth_dg_size);
-> 
-> This was reported as a run-time false positive warning:
-> 
-> memcpy: detected field-spanning write (size 16) of single field "&adth->dg" at drivers/net/wwan/iosm/iosm_ipc_mux_codec.c:852 (size 8)
-> 
-> Adjust the struct mux_adth definition and associated sizeof() math; no binary
-> output differences are observed in the resulting object file.
-> 
-> Reported-by: Florian Klink <flokli@flokli.de>
-> Closes: https://lore.kernel.org/lkml/dbfa25f5-64c8-5574-4f5d-0151ba95d232@gmail.com/
-> Fixes: 1f52d7b62285 ("net: wwan: iosm: Enable M.2 7360 WWAN card support")
-> Cc: M Chetan Kumar <m.chetan.kumar@intel.com>
-> Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-> Cc: Intel Corporation <linuxwwan@intel.com>
-> Cc: Loic Poulain <loic.poulain@linaro.org>
-> Cc: Sergey Ryazanov <ryazanov.s.a@gmail.com>
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/net/wwan/iosm/iosm_ipc_mux_codec.c | 15 ++++++---------
->  drivers/net/wwan/iosm/iosm_ipc_mux_codec.h |  2 +-
->  2 files changed, 7 insertions(+), 10 deletions(-)
+On Tue, Jun 20, 2023 at 10:56=E2=80=AFPM Mike Rapoport <rppt@kernel.org> wr=
+ote:
+>
+> On Tue, Jun 20, 2023 at 03:29:34PM -0700, Jeff Xu wrote:
+> > On Wed, Jun 14, 2023 at 5:58=E2=80=AFAM Mike Rapoport <rppt@kernel.org>=
+ wrote:
+> > >
+> > > On Tue, Jun 13, 2023 at 09:18:14PM -0400, Liam R. Howlett wrote:
+> > > > * Jeff Xu <jeffxu@chromium.org> [230613 17:29]:
+> > > > > Hello Peter,
+> > > > >
+> > > > > Thanks for responding.
+> > > > >
+> > > > > On Tue, Jun 13, 2023 at 1:16=E2=80=AFPM Peter Xu <peterx@redhat.c=
+om> wrote:
+> > > > > >
+> > > > > > Hi, Jeff,
+> > > > > >
+> > > > > > On Tue, Jun 13, 2023 at 08:26:26AM -0700, Jeff Xu wrote:
+> > > > > > > + more ppl to the list.
+> > > > > > >
+> > > > > > > On Mon, Jun 12, 2023 at 6:04=E2=80=AFPM Jeff Xu <jeffxu@chrom=
+ium.org> wrote:
+> > > > > > > >
+> > > > > > > > Hello,
+> > > > > > > >
+> > > > > > > > There seems to be inconsistency in different VMA fixup
+> > > > > > > > implementations, for example:
+> > > > > > > > mlock_fixup will skip VMA that is hugettlb, etc, but those =
+checks do
+> > > > > > > > not exist in mprotect_fixup and madvise_update_vma. Wouldn'=
+t this be a
+> > > > > > > > problem? the merge/split skipped by mlock_fixup, might get =
+acted on in
+> > > > > > > > the madvice/mprotect case.
+> > > > > > > >
+> > > > > > > > mlock_fixup currently check for
+> > > > > > > > if (newflags =3D=3D oldflags ||
+> > > >
+> > > > newflags =3D=3D oldflags, then we don't need to do anything here, i=
+t's
+> > > > already at the desired mlock.  mprotect does this, madvise does thi=
+s..
+> > > > probably.. it's ugly.
+> > > >
+> > > > > > > > (oldflags & VM_SPECIAL) ||
+> > > >
+> > > > It's special, merging will fail always.  I don't know about splitti=
+ng,
+> > > > but I guess we don't want to alter the mlock state on special mappi=
+ngs.
+> > > >
+> > > > > > > > is_vm_hugetlb_page(vma) || vma =3D=3D get_gate_vma(current-=
+>mm) ||
+> > > > > > > > vma_is_dax(vma) || vma_is_secretmem(vma))
+> > > > > >
+> > > > > > The special handling you mentioned in mlock_fixup mostly makes =
+sense to me.
+> > > > > >
+> > > > > > E.g., I think we can just ignore mlock a hugetlb page if it won=
+'t be
+> > > > > > swapped anyway.
+> > > > > >
+> > > > > > Do you encounter any issue with above?
+> > > > > >
+> > > > > > > > Should there be a common function to handle VMA merge/split=
+ ?
+> > > > > >
+> > > > > > IMHO vma_merge() and split_vma() are the "common functions".  C=
+opy Lorenzo
+> > > > > > as I think he has plan to look into the interface to make it ev=
+en easier to
+> > > > > > use.
+> > > > > >
+> > > > > The mprotect_fixup doesn't have the same check as mlock_fixup. Wh=
+en
+> > > > > userspace calls mlock(), two VMAs might not merge or split becaus=
+e of
+> > > > > vma_is_secretmem check, However, when user space calls mprotect()=
+ with
+> > > > > the same address range, it will merge/split.  If mlock() is doing=
+ the
+> > > > > right thing to merge/split the VMAs, then mprotect() is not ?
+> > > >
+> > > > It looks like secretmem is mlock'ed to begin with so they don't wan=
+t it
+> > > > to be touched.  So, I think they will be treated differently and I =
+think
+> > > > it is correct.
+> > >
+> > > Right, they don't :)
+> > >
+> > > secretmem VMAs are always mlocked, they cannot be munlocked and there=
+ is no
+> > > point trying to mlock them again.
+> > >
+> > > The mprotect for secretmem is Ok though, so e.g. if we (unlikely) hav=
+e two
+> > > adjacent secretmem VMAs in a range passed to mprotect, it's fine to m=
+erge
+> > > them.
+> > >
+> >
+> > I m thinking/brainstorming below, assuming:
+> > Address range 1: 0x5000 to 0x6000 (regular mmap)
+> > Address range 2: 0x6000 to 0x7000 (allocated to secretmem)
+> > Address range 3: 0x7000 to 0x8000 (regular mmap)
+> >
+> > User space call: mlock(0x5000,0x3000)
+> > range 1 and 2 won't merge.
+> > range 2 and 3  could merge, when mlock_fixup  checks current vma
+> > (range 3), it is not secretmem, so it will merge with prev vma.
+>
+> But 2 and 3 have different vm_file, they won't merge.
+>
+> > user space call: mprotect(0x5000,0x3000)
+> > range 1 2 3 could merge,  all three can have the same flags.
+> > Note: vma_is_secretmem() isn't checked in mprotect_fixup, same for
+> > vma_is_dax and get_gate_vma, those doesn't have included in
+> > vma->vm_flags
+> >
+> > Once 1 and 2 are merged, maybe user space is able to use
+> > munlock(0x5000,0x3000)
+> > to unlock range 1 to 3, this will include 2, right ? (haven't used the
+> > code to prove it)
+>
+> But 1 and 2 won't merge because their vm_file's are different.
+>
+Is that possible to be staged the same ?
 
-Reviewed-by: Simon Horman <simon.horman@corigine.com>
+> > I'm using secretmem as an example here, having 3 different _fixup
+> > implementations seems to be error prone to me.
+>
+> The actual decision whether to merge VMAs is taken in vma_merge rather th=
+an
+> by the _fixup functions. So while the checks around vma_merge might be
+> different in these functions, it does not mean it's possible to wrongly
+> merge VMA unless there is a bug in vma_merge. So in the end it boils down
+> to a single core implementation, don't you agree?
+>
+I agree that vma_merge should also check, but it doesn't seem to be
+the case ? I looked for secretmem, get_gate_vma(current->mm),
+vma_is_dax()
 
+Ideally,  the skip/go decisions should be inside vma_merge/vma_split()
+function, not in the _fixup(),  I think.
+
+> > Thanks
+> > -Jeff
+>
+> --
+> Sincerely yours,
+> Mike.
