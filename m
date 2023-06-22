@@ -2,88 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B1CEB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 00:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D3FEB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 00:51:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbjFVAFq (ORCPT
+        id S229661AbjFVAu7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 20:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46704 "EHLO
+        Wed, 21 Jun 2023 20:50:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230335AbjFVAFn (ORCPT
+        with ESMTP id S229501AbjFVAu6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 20:05:43 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BAD71BFC
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 17:05:14 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b51488ad67so34602405ad.3
-        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 17:05:14 -0700 (PDT)
+        Wed, 21 Jun 2023 20:50:58 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DF71995;
+        Wed, 21 Jun 2023 17:50:57 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b5018cb4dcso32873865ad.2;
+        Wed, 21 Jun 2023 17:50:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687392239; x=1689984239;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xq0dkv7azkvedb0KULWF4WuIbSO15dlwApz3MpULLXE=;
-        b=AwtajXI8+J6DndfxRUIKzXCkBY8xGz60/k5sDcezJKwVGjGClzxX4hXpgteDe2dQ9h
-         4d2HnnsDKY90T8y0a3ww96+rL99eVgWq1UXwqto72GaZgsChKyMxxDHywAY92C/ZdF6T
-         X74yKEqM1f90KQ6KGhb8eT7QKMRkG+1RM2z/Y=
+        d=gmail.com; s=20221208; t=1687395057; x=1689987057;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=YNnfLof80DYRhJzNzeXS0S7oXvTEkEp18dIa/GFxd8U=;
+        b=O+N9o0Xn9Ur3aYZ+8k6IZyPyQ/ODYR5uUlT/tmJx4rKO/eGGdN8F5nCfOWV3ZAq8gr
+         R8n6VOGMhTpJaafQAh5401KAVo/A8p4ErmOylXNQDvjF/qoeuOziVzBjXKt9UaRZRUYK
+         W2wK3aUBB0RElMIhL9Dct03zwUucBpD/rlhUFXtcJcAFDbWTUb9MiVX/UyvAdfxcTGJl
+         WnFDgqymWyNfGTqoW6WUiSJrBtMpkPRXcGRIxGTc1vTiXAZMtGTsD+ZSYnNiE4dprcGk
+         0tImjvth0+TxSnxUeSq6gfyf9CoaYh6ivLVjgYrJ/+QlPl801WP20cVXwQ0onRV+5gog
+         NpgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687392239; x=1689984239;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xq0dkv7azkvedb0KULWF4WuIbSO15dlwApz3MpULLXE=;
-        b=e/P9Kaa7a2UCG8Eai5RAJEJ88Zwla2CDx06C/FmSa533tYPnu6QrPxpgngZCAJ3msU
-         EyyIcCj1b2Pgkm8BQmgiVedmatZi3fKU8BvtWJe9GUflRuOqJs2TC3kwohG8CnL9wnIS
-         CuRh767JIYkIvSAKnqbCTS10rRQEN5JWehsPJBE0SkEh7cG4ZUMfKwxCdchrGTAQSY0Y
-         Cwss21ohp3Q7w+Sp/UffR4qhiJu8pJeF8lYbBz6eWMsfhOJayt1E5TQ2EETAwMZqbiFw
-         bYy3KrcLDVzrlCx2iU5zXPIZVPGD5pOkMW7pBpwoZrZG/WZmXlyT65oOyAVGSPQB8UBc
-         kb6w==
-X-Gm-Message-State: AC+VfDw0bDWN9Co3UIp7opBgGP92U54S75rYtyjLbzS/PIvFdqN8PYrY
-        G2qHTmNtFUtHzBWsoEWSpl3f+g==
-X-Google-Smtp-Source: ACHHUZ53xmAEhlIo0pgHgTU4ZsSk7xwA4q8JgCHr72rMOhDtXySNGOwMcP4W8fBuxFBj5os20ReXhQ==
-X-Received: by 2002:a17:902:e544:b0:1b6:7c9a:3a53 with SMTP id n4-20020a170902e54400b001b67c9a3a53mr6912803plf.67.1687392239478;
-        Wed, 21 Jun 2023 17:03:59 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id lg13-20020a170902fb8d00b0019aeddce6casm4013845plb.205.2023.06.21.17.03.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 17:03:58 -0700 (PDT)
-Date:   Wed, 21 Jun 2023 17:03:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] reiserfs: Replace one-element array with
- flexible-array member
-Message-ID: <202306211703.9AC418A@keescook>
-References: <ZJN9Kqhcs0ZGET/8@work>
+        d=1e100.net; s=20221208; t=1687395057; x=1689987057;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YNnfLof80DYRhJzNzeXS0S7oXvTEkEp18dIa/GFxd8U=;
+        b=T/vX+HJSA5cMSwhwMU8Gd02QNTy19aQJCffH8jAT4wrASNm4Lx/WV1actrNpE7r9s5
+         eCG+nT9A43m1LBceJ6gvIHtwhB6tV9EuH7nr3gVdhavKJZ5R+l6thOpE19fLZfdv8pep
+         wKScdg2aqYlusQWGf1vezElXwZonY0nOge6a+m6jo2Y02AVHygSPR0X39xCFSEQU2h74
+         OOMGLFaRLKmMyxXmq5wqPkdAk8sYEobYWJWrs4cMTTZJwYZdsPJPC/nteq1VV5EFn6Ad
+         JO3Z2dpamLLtpu5URnqpF3NpGYilFsWzr4suUD7cZNBm3hKQJYS6UaeQREirrojcHsWP
+         Rgvw==
+X-Gm-Message-State: AC+VfDww/wGyZqt1cKuwvGTaLltmauciU2WCzn4HdpFZnLFW2+318D1i
+        vMmWOPGoBHWMBDm/sVxwCjw=
+X-Google-Smtp-Source: ACHHUZ59/kLruU5N+IKAtTqbHgrt1BPIyAQdjeF0dVqOKxHz27D9SmufuvJNkxrPeSLkKJr08V1brA==
+X-Received: by 2002:a17:903:24c:b0:1b0:f727:bc41 with SMTP id j12-20020a170903024c00b001b0f727bc41mr7747529plh.42.1687395056754;
+        Wed, 21 Jun 2023 17:50:56 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l12-20020a170902f68c00b001ab061e352bsm4051896plg.195.2023.06.21.17.50.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Jun 2023 17:50:55 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <5fbe4977-c56d-2d97-bea3-28148807b5d9@roeck-us.net>
+Date:   Wed, 21 Jun 2023 17:50:53 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZJN9Kqhcs0ZGET/8@work>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2] ubsan: Tighten UBSAN_BOUNDS on GCC
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Marco Elver <elver@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>, Tom Rix <trix@redhat.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>, linux-kbuild@vger.kernel.org,
+        llvm@lists.linux.dev, Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20230405022356.gonna.338-kees@kernel.org>
+ <07dea91f-9b93-4227-9fec-728a9e7a0d55@roeck-us.net>
+ <202306211051.1D4038323@keescook>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <202306211051.1D4038323@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 04:43:54PM -0600, Gustavo A. R. Silva wrote:
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element array with flexible-array
-> member in direntry_uarea structure, and refactor the rest of the code,
-> accordingly.
+On 6/21/23 10:52, Kees Cook wrote:
+> On Wed, Jun 21, 2023 at 09:42:01AM -0700, Guenter Roeck wrote:
+>> Hi,
+>>
+>> On Tue, Apr 04, 2023 at 07:23:59PM -0700, Kees Cook wrote:
+>>> The use of -fsanitize=bounds on GCC will ignore some trailing arrays,
+>>> leaving a gap in coverage. Switch to using -fsanitize=bounds-strict to
+>>> match Clang's stricter behavior.
+>>>
+>>> Cc: Marco Elver <elver@google.com>
+>>> Cc: Masahiro Yamada <masahiroy@kernel.org>
+>>> Cc: Nathan Chancellor <nathan@kernel.org>
+>>> Cc: Nick Desaulniers <ndesaulniers@google.com>
+>>> Cc: Nicolas Schier <nicolas@fjasle.eu>
+>>> Cc: Tom Rix <trix@redhat.com>
+>>> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+>>> Cc: Miroslav Benes <mbenes@suse.cz>
+>>> Cc: linux-kbuild@vger.kernel.org
+>>> Cc: llvm@lists.linux.dev
+>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>> ---
+>>
+>> This patch, presumably as side effect, enables CONFIG_ARCH_STM32
+>> for arm64:allmodconfig. As consequence, CONFIG_STM32_RPROC is enabled
+>> as well. This in turn results in the following build error.
+>>
+>> Building arm64:allmodconfig ... failed
+>> --------------
+>> Error log:
+>> In file included from include/linux/printk.h:564,
+>>                   from include/asm-generic/bug.h:22,
+>>                   from arch/arm64/include/asm/bug.h:26,
+>>                   from include/linux/bug.h:5,
+>>                   from include/linux/fortify-string.h:5,
+>>                   from include/linux/string.h:254,
+>>                   from include/linux/dma-mapping.h:7,
+>>                   from drivers/remoteproc/stm32_rproc.c:9:
+>> drivers/remoteproc/stm32_rproc.c: In function 'stm32_rproc_mem_alloc':
+>> drivers/remoteproc/stm32_rproc.c:122:22: error: format '%x' expects argument of type 'unsigned int', but argument 5 has type 'size_t'
+>>
+>> I did not try to understand what is going on, but reverting this
+>> patch fixes the problem.
 > 
-> Worth mentioning is that before these changes, the original implementation
-> was returning two-too many bytes in function direntry_create_vi():
+> Well that is really weird! I will investigate... this patch should be
+> pretty self-contained...
 > 
-> fs/reiserfs/item_ops.c:464:     int size = sizeof(struct direntry_uarea);
-> ...
-> fs/reiserfs/item_ops.c-490-     size += (dir_u->entry_count * sizeof(short));
-> ...
-> fs/reiserfs/item_ops.c-517-     return size;
-> 
-> Link: https://github.com/KSPP/linux/issues/79
-> Link: https://github.com/KSPP/linux/issues/290
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Meh, it is. Sorry for the noise. My bisect script was wrong.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Guenter
 
--- 
-Kees Cook
