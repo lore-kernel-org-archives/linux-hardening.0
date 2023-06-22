@@ -2,121 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4F6EB64DC
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 17:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C84EEB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 17:58:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbjFVRjJ (ORCPT
+        id S230149AbjFVR6G (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 13:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34742 "EHLO
+        Thu, 22 Jun 2023 13:58:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231253AbjFVRjI (ORCPT
+        with ESMTP id S231454AbjFVR6F (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 13:39:08 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB921BD6;
-        Thu, 22 Jun 2023 10:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
- s=s31663417; t=1687455536; x=1688060336; i=deller@gmx.de;
- bh=roHB+JreyqbCyh46TX0VgJAq4m6SfZv4rdjO3VvVBp4=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=t2W/Wyhb4VhIczxIoOKN9JE4rhU6dpuOTmsZdFbVGM+3njVQO0Qzt48hpU1uWU6z6tlxEyk
- BJpTyDsehdRBny1NbTtS3bDV2qy8jzqaajwsPuhPMkIXwVqz9DN3iVQNSR/+uRCCiSInJuxKI
- Pz7O/WueZfo3+8Aa7cAAbEJYnypTP9yr5tOG06WUQ/nbqB1fCinJHDJWn7c9Jocl7aGluumF4
- fBuMhinEAPPdFQA/DoKtujFr58vBTA9eF5bSdB5o6XJwGkIGRuSe7/foyj1FKcr7e7hsQpsZK
- 4uRFvD+4Xxb0xO4zIKONQmjLHlmav5KYUyZFkawPNo0un4YvO4GA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.20.60] ([94.134.155.210]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MulmF-1pvXsJ3J6R-00rtA3; Thu, 22
- Jun 2023 19:38:56 +0200
-Message-ID: <ed5784a9-b707-dcd5-5898-cb76e8d169c1@gmx.de>
-Date:   Thu, 22 Jun 2023 19:38:56 +0200
+        Thu, 22 Jun 2023 13:58:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8662C2105;
+        Thu, 22 Jun 2023 10:58:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A9046188D;
+        Thu, 22 Jun 2023 17:58:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57BBDC433C0;
+        Thu, 22 Jun 2023 17:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687456683;
+        bh=Jve0JXuUNEDhINVuwULP+VQmXRRWVYgAlHyNdpfaxzg=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=Os/eOnhVqUemxJ5rZo6K9mQ6Z+zXKEmp1QCvl5y0+Pry6fwv4M3GzPIHPYTwqN+mF
+         VOiPvqI3gVsgnzHhFYpPhK9q24YHg2QgBrGIzKXtt7QNGtjIMruwi6lNKreB+Toly7
+         rCKfAm5aYYQw05+2qX4pneam+GjueKTZq2vFpT04kdAm9eKbAATNbs/0MrKD6DDGwk
+         IUZjwekdgIDDbeBVHVLZq1XlUY09+1Ziicp6RrzQP+C99p0ho9C8PlG9rJ1rzMB8wj
+         edWXeG/gzDwT6hPyl2SxVde/c3KKKL0/zOg4JNATBiFNmHEXZ2BW4SbR8PeSf/faj4
+         LyFzLQXlcPnJQ==
+Date:   Thu, 22 Jun 2023 10:58:01 -0700
+From:   Kees Cook <kees@kernel.org>
+To:     Isaac Manjarres <isaacmanjarres@google.com>,
+        Kees Cook <keescook@chromium.org>
+CC:     John Stultz <jstultz@google.com>, Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        kernel-team@android.com, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_pstore/ram=3A_Add_support_for_dy?= =?US-ASCII?Q?namically_allocated_ramoops_memory_regions?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <ZJSES98P+zzrhBI5@google.com>
+References: <20230622005213.458236-1-isaacmanjarres@google.com> <CANDhNCrEhx4LUPaz-FHZZJMG2yX670hk-vGTZs=HxiGR18zm5A@mail.gmail.com> <202306212212.5E53607@keescook> <ZJSES98P+zzrhBI5@google.com>
+Message-ID: <3A2CFB4D-27D0-4FEB-93B4-2F888305DE5A@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH][next] fbdev: sh7760fb: Fix -Wimplicit-fallthrough
- warnings
-Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZJR66f3UY0UFZJ01@work>
-From:   Helge Deller <deller@gmx.de>
-In-Reply-To: <ZJR66f3UY0UFZJ01@work>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0AMsLm4CGRzP+9jo/SLOyPBSOwhb9hi+YyvAI//2GPCYSgGDhjw
- WRULZVkxM4/xxLE1oa0lJb6lq+b2r2VgJNdwN2G0d378sKPwXO1pr8dY60fqiZWuWLOkf2u
- 20Mar4LMzlZKqIPGUYxAp7A+Wg0eJcmmobzVnKOS9mrBLct4zI38Jf/t2vJQ2Dfz58HTY2K
- KZLwRQr4Wh3pWSBvWj6/w==
-UI-OutboundReport: notjunk:1;M01:P0:v3wRNOQ3lDM=;KzA0nqjrywUt2MTT7Y/c7H59eyt
- F3OGcuyVoFdzNHAKczE6V1n7iEMqnpZLUed/Of1vvxhdw3sd/W42nXs92730SlZp98sozxz1b
- 0mWbwq8olHadQERt7yF4SuLjP4xMj1ZOHXGCS+RSRpTvkGR6T0VhGu4ju0c9KUS0lujWEr7ZR
- OtEpsHq0qXKDotgxxbiNwIxafQi1oT1/K+hY5FWSONJjZvnD2uB90pTjaB7WsDgopzYELwvL5
- SBOzeDTQYQ3RuYwS8ri4gf9HW9btRftxqZYPlLU2P/PbDd6Fs73DiEAakBKd1RoZFhhGr7Ikp
- f65ZliX59WV2kt4g3NZQfhxQC3Gb3k2sxxL53gH8ElGRt9DOT+QxvFNohR/WiUkd7pvSX9gB8
- cR36NuF6xoB3R8bGXI/vGKfFm8hVaypE90YOYSu8FU64n3+OSMpjjD8ed3ndS49eA0vWlM9ha
- 0GKl74aht4EqeJan8Yd7ttWFVxw3JpCrD/oxi7GHzCE5Oib0BUTThOGRNRHCyA0yBpxskvt0g
- /hh8EPpZwxni+wGWuSVpJ8UlOvSZB9SWRuQjVar9DUshdikCCxhWooUs9f2115+5HsR3+MhfZ
- j4ie5CpWdQ48GRYJpsz3IW8pv35chqyULjI2bTdAnAIP1knCySIwH+nWW5LxmemTHEWrDQBuU
- rCFb6blF0UbPpobYBUzOvDFI1xE8wO/Kz5qDW5NCcY9eh7TdHMN3KpPu6ZK5Da5R2vMRvEGxI
- aHasosJxMoq9TjbmoGXDBkwOa5SZBhQ5e5viUzJuhwlJN6ESDmPL50PxcSVCxoKr3lDCXmkOj
- r9ezznURd1jcofZT4VPgehaFQ5m7uyMS08E2CeB8KqVsRORsGBzIqNiQmhmWfCSQNf98CqMvu
- lU5seedc5HXj6BYFoRXFK01ZcugyT3BbLbVWW0NtHbcKWYdbIj3cK/D2zCm6lzXKABwzOtIQA
- 4vyvnw==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 6/22/23 18:46, Gustavo A. R. Silva wrote:
-> Fix the following fallthrough warnings seen after building sh
-> architecture with sh7763rdp_defconfig configuration:
+On June 22, 2023 10:26:35 AM PDT, Isaac Manjarres <isaacmanjarres@google=2E=
+com> wrote:
+>On Wed, Jun 21, 2023 at 10:15:45PM -0700, Kees Cook wrote:
+>> On Wed, Jun 21, 2023 at 09:47:26PM -0700, John Stultz wrote:
+>> > > The reserved memory region for ramoops is assumed to be at a fixed
+>> > > and known location when read from the devicetree=2E This is not des=
+irable
+>> > > in environments where it is preferred for the region to be dynamica=
+lly
+>> > > allocated early during boot (i=2Ee=2E the memory region is defined =
+with
+>> > > the "alloc-ranges" property instead of the "reg" property)=2E
+>> > >
+>> >=20
+>> > Thanks for sending this out, Isaac!
+>> >=20
+>> > Apologies, I've forgotten much of the details around dt bindings here=
+,
+>> > so forgive my questions:
+>> > If the memory is dynamically allocated from a specific range, is it
+>> > guaranteed to be consistently the same address boot to boot?
+>> >=20
+>> > > Since ramoops regions are part of the reserved-memory devicetree
+>> > > node, they exist in the reserved_mem array=2E This means that the
+>> > > of_reserved_mem_lookup() function can be used to retrieve the
+>> > > reserved_mem structure for the ramoops region, and that structure
+>> > > contains the base and size of the region, even if it has been
+>> > > dynamically allocated=2E
+>> >=20
+>> > I think this is answering my question above, but it's a little opaque=
+,
+>> > so I'm not sure=2E
+>>=20
+>> Yeah, I had exactly the same question: will this be the same
+>> boot-to-boot?
 >
-> drivers/video/fbdev/sh7760fb.c: In function 'sh7760fb_get_color_info':
-> drivers/video/fbdev/sh7760fb.c:138:23: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
->    138 |                 lgray =3D 1;
->        |                 ~~~~~~^~~
-> drivers/video/fbdev/sh7760fb.c:139:9: note: here
->    139 |         case LDDFR_4BPP:
->        |         ^~~~
-> drivers/video/fbdev/sh7760fb.c:143:23: warning: this statement may fall =
-through [-Wimplicit-fallthrough=3D]
->    143 |                 lgray =3D 1;
->        |                 ~~~~~~^~~
-> drivers/video/fbdev/sh7760fb.c:144:9: note: here
->    144 |         case LDDFR_8BPP:
->        |         ^~~~
+>Hi Kees,
 >
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-applied.
-
-Thanks!
-Helge
-
-> ---
->   drivers/video/fbdev/sh7760fb.c | 2 ++
->   1 file changed, 2 insertions(+)
+>Thank you for taking a look at this patch and for your review! When the
+>alloc-ranges property is used to describe a memory region, the memory
+>region will always be allocated within that range, but it's not
+>guaranteed to be allocated at the same base address across reboots=2E
 >
-> diff --git a/drivers/video/fbdev/sh7760fb.c b/drivers/video/fbdev/sh7760=
-fb.c
-> index 768011bdb430..98c5227098a8 100644
-> --- a/drivers/video/fbdev/sh7760fb.c
-> +++ b/drivers/video/fbdev/sh7760fb.c
-> @@ -136,11 +136,13 @@ static int sh7760fb_get_color_info(struct device *=
-dev,
->   		break;
->   	case LDDFR_4BPP_MONO:
->   		lgray =3D 1;
-> +		fallthrough;
->   	case LDDFR_4BPP:
->   		lbpp =3D 4;
->   		break;
->   	case LDDFR_6BPP_MONO:
->   		lgray =3D 1;
-> +		fallthrough;
->   	case LDDFR_8BPP:
->   		lbpp =3D 8;
->   		break;
+>I had proposed re-wording the end of the commit message in my response
+>to John as follows:
+>
+>"=2E=2E=2Eand that structure contains the address of the base of the regi=
+on
+>that was allocated at boot anywhere within the range specified by the
+>"alloc-ranges" devicetree property=2E"
+>
+>Does that clarify things better?
 
+I am probably misunderstanding something still, but it it varies from boot=
+ to boot, what utility is there for pstore if it changes? I=2Ee=2E the thin=
+gs written during the last boot would then no longer accessible at the next=
+ boot? E=2Eg=2E:
+
+Boot 1=2E
+Get address Foo=2E
+Crash, write to Foo=2E
+Boot 2=2E
+Get address Bar, different from Foo=2E
+Nothing found at Bar, so nothing populated in pstorefs; crash report from =
+Boot 1 unavailable=2E
+
+I feel like there is something I don't understand about the Foo/Bar addres=
+ses in my example=2E
+
+-Kees
+
+
+
+--=20
+Kees Cook
