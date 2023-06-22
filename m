@@ -2,71 +2,88 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13743EB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 21 Jun 2023 23:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B1CEB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 00:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229914AbjFUXhy (ORCPT
+        id S229967AbjFVAFq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 19:37:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60980 "EHLO
+        Wed, 21 Jun 2023 20:05:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229912AbjFUXhw (ORCPT
+        with ESMTP id S230335AbjFVAFn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 19:37:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BD61BD1;
-        Wed, 21 Jun 2023 16:37:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BD2FB616E4;
-        Wed, 21 Jun 2023 23:37:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFE2C433C0;
-        Wed, 21 Jun 2023 23:37:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687390668;
-        bh=VP8eLETNVwAQLt9TRTo8wYBeDNkQHL/7nKQlqfTCOeE=;
-        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
-        b=n12EE7MigKB29jYdnpziPZdBmQHzPY6IihIjPZDi0jy7CfeWD+olZaK64IRcvGwpI
-         TlK44zrvAlIX5ktSrLzlmYJBeXaNr6Y/by0Ycllvu9cgm8Vs51kzKSU7PkhPVh/bVH
-         HoNAOJAigycRwyJk1HhBPM6FyKMTK0ZMwU6lVtoxJe+4u3bEvp4oRFX4hhKj5qtdNf
-         QHFbuDJYowpfB3vSjbsgzyQUdP4Shp5YyLOWBLqFNQdfeYErqMh+JyV2jwbiipNBM4
-         lnRl6E5rn1DrjHZ/1AQZVNazuq5TnGfvwCylrJYAmA/987ChibNgq7SbHdTTNThDX6
-         9vPB+4KKmS8ag==
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-560bcee2aa1so690858eaf.3;
-        Wed, 21 Jun 2023 16:37:48 -0700 (PDT)
-X-Gm-Message-State: AC+VfDzz5tkFD17/ok2Ep+sAf+dsNSUjyiFze+AWvhEmbErC9aWdka5i
-        VwPwuExI4CBukyKOa24v/AvlxvdeOJuNx5E/gAg=
-X-Google-Smtp-Source: ACHHUZ5U8gWGFhuQgf+cIJa+/a08pge8ufuJKUNl7vzDgZsECMa+2yCmUKn0ivrmY70hJs5A6MDHEefStfFwkDVK0WE=
-X-Received: by 2002:a4a:d451:0:b0:558:b424:8c31 with SMTP id
- p17-20020a4ad451000000b00558b4248c31mr6112071oos.0.1687390667383; Wed, 21 Jun
- 2023 16:37:47 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:ac9:5e18:0:b0:4df:6fd3:a469 with HTTP; Wed, 21 Jun 2023
- 16:37:46 -0700 (PDT)
-In-Reply-To: <ZJNrsjDEfe0iwQ92@work>
-References: <ZJNrsjDEfe0iwQ92@work>
-From:   Namjae Jeon <linkinjeon@kernel.org>
-Date:   Thu, 22 Jun 2023 08:37:46 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd-E0Tc2BKV8sdtLp64WWnmt-hwgqyYPv+PScQwtOpUVnQ@mail.gmail.com>
-Message-ID: <CAKYAXd-E0Tc2BKV8sdtLp64WWnmt-hwgqyYPv+PScQwtOpUVnQ@mail.gmail.com>
-Subject: Re: [PATCH][next] ksmbd: Use struct_size() helper in ksmbd_negotiate_smb_dialect()
+        Wed, 21 Jun 2023 20:05:43 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BAD71BFC
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 17:05:14 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b51488ad67so34602405ad.3
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 17:05:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1687392239; x=1689984239;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xq0dkv7azkvedb0KULWF4WuIbSO15dlwApz3MpULLXE=;
+        b=AwtajXI8+J6DndfxRUIKzXCkBY8xGz60/k5sDcezJKwVGjGClzxX4hXpgteDe2dQ9h
+         4d2HnnsDKY90T8y0a3ww96+rL99eVgWq1UXwqto72GaZgsChKyMxxDHywAY92C/ZdF6T
+         X74yKEqM1f90KQ6KGhb8eT7QKMRkG+1RM2z/Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687392239; x=1689984239;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xq0dkv7azkvedb0KULWF4WuIbSO15dlwApz3MpULLXE=;
+        b=e/P9Kaa7a2UCG8Eai5RAJEJ88Zwla2CDx06C/FmSa533tYPnu6QrPxpgngZCAJ3msU
+         EyyIcCj1b2Pgkm8BQmgiVedmatZi3fKU8BvtWJe9GUflRuOqJs2TC3kwohG8CnL9wnIS
+         CuRh767JIYkIvSAKnqbCTS10rRQEN5JWehsPJBE0SkEh7cG4ZUMfKwxCdchrGTAQSY0Y
+         Cwss21ohp3Q7w+Sp/UffR4qhiJu8pJeF8lYbBz6eWMsfhOJayt1E5TQ2EETAwMZqbiFw
+         bYy3KrcLDVzrlCx2iU5zXPIZVPGD5pOkMW7pBpwoZrZG/WZmXlyT65oOyAVGSPQB8UBc
+         kb6w==
+X-Gm-Message-State: AC+VfDw0bDWN9Co3UIp7opBgGP92U54S75rYtyjLbzS/PIvFdqN8PYrY
+        G2qHTmNtFUtHzBWsoEWSpl3f+g==
+X-Google-Smtp-Source: ACHHUZ53xmAEhlIo0pgHgTU4ZsSk7xwA4q8JgCHr72rMOhDtXySNGOwMcP4W8fBuxFBj5os20ReXhQ==
+X-Received: by 2002:a17:902:e544:b0:1b6:7c9a:3a53 with SMTP id n4-20020a170902e54400b001b67c9a3a53mr6912803plf.67.1687392239478;
+        Wed, 21 Jun 2023 17:03:59 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id lg13-20020a170902fb8d00b0019aeddce6casm4013845plb.205.2023.06.21.17.03.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jun 2023 17:03:58 -0700 (PDT)
+Date:   Wed, 21 Jun 2023 17:03:58 -0700
+From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Steve French <sfrench@samba.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Cc:     reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] reiserfs: Replace one-element array with
+ flexible-array member
+Message-ID: <202306211703.9AC418A@keescook>
+References: <ZJN9Kqhcs0ZGET/8@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZJN9Kqhcs0ZGET/8@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-2023-06-22 6:29 GMT+09:00, Gustavo A. R. Silva <gustavoars@kernel.org>:
-> Prefer struct_size() over open-coded versions.
->
-> Link: https://github.com/KSPP/linux/issues/160
+On Wed, Jun 21, 2023 at 04:43:54PM -0600, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element array with flexible-array
+> member in direntry_uarea structure, and refactor the rest of the code,
+> accordingly.
+> 
+> Worth mentioning is that before these changes, the original implementation
+> was returning two-too many bytes in function direntry_create_vi():
+> 
+> fs/reiserfs/item_ops.c:464:     int size = sizeof(struct direntry_uarea);
+> ...
+> fs/reiserfs/item_ops.c-490-     size += (dir_u->entry_count * sizeof(short));
+> ...
+> fs/reiserfs/item_ops.c-517-     return size;
+> 
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/290
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-Acked-by: Namjae Jeon <linkinjeon@kernel.org>
 
-Thanks!
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
