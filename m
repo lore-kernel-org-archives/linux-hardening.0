@@ -2,125 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A923EB64DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 13:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA27EB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 13:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230509AbjFVNL2 (ORCPT
+        id S229969AbjFVN4S (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 09:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
+        Thu, 22 Jun 2023 09:56:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbjFVNL1 (ORCPT
+        with ESMTP id S230301AbjFVN4Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 09:11:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1F4184;
-        Thu, 22 Jun 2023 06:11:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Thu, 22 Jun 2023 09:56:16 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947DE19BE;
+        Thu, 22 Jun 2023 06:56:06 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C45DE6184A;
-        Thu, 22 Jun 2023 13:11:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD4E6C433C8;
-        Thu, 22 Jun 2023 13:11:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687439485;
-        bh=au2zGNMRZ0p6Mkinx6tnYwtEJKZLBcTxo0gn++q2a74=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=IKOo+QuyPCVrVRWrMVroUNNmli8B0Wt3YXpe1QZ3uedC3/luxMurbAaq0eLb+o+PG
-         vdltEkhR33pKyyihbS25c+DIhJfzHwUoBwN3AtBz7IU5MkEgrDY0IJY/WRQw1IZpdA
-         9oDwFA3pWo7MtcEgNevN1dwxNqHZPLOhDmO7wPsRDnFkQW1qaIUCrAFOP21dpZRXUk
-         goPyvoxlkllSpD1g4QAMJmP8imAnEf5cGntoGsR1K70kZ0A6LVDDEorxleqf1VTZ1O
-         NDnn236BCfuTdah4A+Olf8kSsYZMb88VSNLQdD9BhBBQrh8l+ptiq18Iw8XLl0w6o/
-         hUM1lzKjjuSbg==
-Date:   Thu, 22 Jun 2023 08:11:23 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Neftin, Sasha" <sasha.neftin@intel.com>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
-        "Gomes, Vinicius" <vinicius.gomes@intel.com>,
-        "Zulkifli, Muhammad Husaini" <muhammad.husaini.zulkifli@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kees Cook <keescook@chromium.org>, linux-pci@vger.kernel.org,
-        "Mushayev, Nikolay" <nikolay.mushayev@intel.com>,
-        linux-kernel@vger.kernel.org, jesse.brandeburg@intel.com,
-        "Edri, Michael" <michael.edri@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Eric Dumazet <edumazet@google.com>, anthony.l.nguyen@intel.com,
-        linux-hardening@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        Paolo Abeni <pabeni@redhat.com>,
-        "Avivi, Amir" <amir.avivi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [Intel-wired-lan] [PATCH] igc: Ignore AER reset when device is
- suspended
-Message-ID: <20230622131123.GA137990@bhelgaas>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 19E9122A8E;
+        Thu, 22 Jun 2023 13:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1687442165; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xPaIEngRL3T7x6VRCa5QVWYsxa8/mc85dKX9wqb7yEk=;
+        b=isKr+xSXffF+dLyPHf9G4AsOkCRvES8RC2VV0vJMT4mbay+1c6BiM0zPqwSSiqg4NxAsY6
+        ZpctKYnHqkGwrrRGz74i0peP0IYGgYAvXjBUcy544q9KDAVTy+Uenf4JcEbnQ4BNL+cmdr
+        xIKg2aE3Zc1h+bf11l3Wvdy0yT7EzKI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1687442165;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xPaIEngRL3T7x6VRCa5QVWYsxa8/mc85dKX9wqb7yEk=;
+        b=Nsdiw7QaG941AWh+1x0X4FGGyDyQx29Cd10FMOX5WO6OcheI0MpDKySlUP5CJGTPKc7gNf
+        GjS/cZiAvYv2AwBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B29E2132BE;
+        Thu, 22 Jun 2023 13:56:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id A/TeKvRSlGSEDwAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Thu, 22 Jun 2023 13:56:04 +0000
+Message-ID: <3fdc76f0-6c45-c405-0024-d1d69b5bf068@suse.cz>
+Date:   Thu, 22 Jun 2023 15:56:04 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16bcc313-a4e1-ab50-4487-c99ccf5ecdf9@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v3 1/1] Randomized slab caches for kmalloc()
+To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Christoph Lameter <cl@linux.com>, Tejun Heo <tj@kernel.org>,
+        Dennis Zhou <dennis@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
+Cc:     Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Pedro Falcato <pedro.falcato@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gongruiqi1@huawei.com
+References: <20230616111843.3677378-1-gongruiqi@huaweicloud.com>
+ <20230616111843.3677378-2-gongruiqi@huaweicloud.com>
+Content-Language: en-US
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20230616111843.3677378-2-gongruiqi@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 08:09:34AM +0300, Neftin, Sasha wrote:
-> On 6/21/2023 23:43, Bjorn Helgaas wrote:
-> > On Tue, Jun 20, 2023 at 08:36:36PM +0800, Kai-Heng Feng wrote:
-> > > When a system that connects to a Thunderbolt dock equipped with I225,
-> > > I225 stops working after S3 resume:
+On 6/16/23 13:18, GONG, Ruiqi wrote:
+> index a3c95338cd3a..6150e9a946a7 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -337,6 +337,55 @@ config SLUB_CPU_PARTIAL
+>  	  which requires the taking of locks that may cause latency spikes.
+>  	  Typically one would choose no for a realtime system.
+>  
+> +config RANDOM_KMALLOC_CACHES
+> +	default n
+> +	depends on SLUB
+> +	bool "Random slab caches for normal kmalloc"
+> +	help
+> +	  A hardening feature that creates multiple copies of slab caches for
+> +	  normal kmalloc allocation and makes kmalloc randomly pick one based
+> +	  on code address, which makes the attackers unable to spray vulnerable
+> +	  memory objects on the heap for exploiting memory vulnerabilities.
+> +
+> +choice
+> +	prompt "Number of random slab caches copies"
+> +	depends on RANDOM_KMALLOC_CACHES
+> +	default RANDOM_KMALLOC_CACHES_16
+> +	help
+> +	  The number of copies of random slab caches. Bigger value makes the
+> +	  potentially vulnerable memory object less likely to collide with
+> +	  objects allocated from other subsystems or modules.
 
-> > > The issue is that the PTM requests are sending before driver resumes the
-> > > device. Since the issue can also be observed on Windows, it's quite
-> > > likely a firmware/hardwar limitation.
-> > 
-> > I thought c01163dbd1b8 ("PCI/PM: Always disable PTM for all devices
-> > during suspend") would turn off PTM.  Is that not working for this
-> > path, or are we re-enabling PTM incorrectly, or something else?
-> 
-> I think we hit on the HW bug here. On some i225/6 parts, PTM requests are
-> sent before SW takes ownership of the device. This patch could help.
+When I read this, without further knowledge, why would I select anything
+else than the largest value? It should mention memory overhead maybe?
 
-Is there an erratum we can read?  If this is needed to work around a
-hardware defect, there should be a comment in the code to that effect,
-and we should have a better understanding because there may be other
-scenarios (suspend/resume, hotplug, etc) that need similar changes.
+Also would anyone really select only "2" and thus limit the collision
+probability to 50% and not less? "4" also seems quite low for the given
+purpose? Could we just pick and hardcode 8 or 16 and avoid the selection, at
+least until there's some more experience with the whole approach?
 
-(I know this patch is to work around a suspend/resume issue, but the
-change is in the AER error recovery path, so it doesn't quite fit
-together for me yet.)
-
-Are you saying the NIC sends PTM requests when it doesn't have PTM
-Enable set?
-
-What exactly does it mean for "SW to take ownership of the device"?
-What PCIe transaction would tell the device the SW has taken
-ownership?
-
-So far this feels kind of hand-wavey.
-
-> > Checking pci_is_enable() in the .error_detected() callback looks like
-> > a pattern that may need to be replicated in many other drivers, which
-> > makes me think it may not be the best approach.
-> > 
-> > > So avoid resetting the device if it's not resumed. Once the device is
-> > > fully resumed, the device can work normally.
-> > > 
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216850
-> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > > ---
-> > >   drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
-> > >   1 file changed, 3 insertions(+)
-> > > 
-> > > diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> > > index fa764190f270..6a46f886ff43 100644
-> > > --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> > > +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> > > @@ -6962,6 +6962,9 @@ static pci_ers_result_t igc_io_error_detected(struct pci_dev *pdev,
-> > >   	struct net_device *netdev = pci_get_drvdata(pdev);
-> > >   	struct igc_adapter *adapter = netdev_priv(netdev);
-> > > +	if (!pci_is_enabled(pdev))
-> > > +		return 0;
-> > > +
-> > >   	netif_device_detach(netdev);
-> > >   	if (state == pci_channel_io_perm_failure)
