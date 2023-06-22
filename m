@@ -2,133 +2,121 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9282CEB64DA
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 17:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4F6EB64DC
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 17:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231168AbjFVRb0 (ORCPT
+        id S231261AbjFVRjJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 13:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
+        Thu, 22 Jun 2023 13:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231140AbjFVRbX (ORCPT
+        with ESMTP id S231253AbjFVRjI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 13:31:23 -0400
-X-Greylist: delayed 90 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 22 Jun 2023 10:31:20 PDT
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13711FC6;
-        Thu, 22 Jun 2023 10:31:19 -0700 (PDT)
-Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
-        by cmsmtp with ESMTP
-        id CJuvqyYwYyYOwCO7vqvCIT; Thu, 22 Jun 2023 17:29:48 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id CO7uqGO5vlP3rCO7uqIbVz; Thu, 22 Jun 2023 17:29:46 +0000
-X-Authority-Analysis: v=2.4 cv=Ub1C9YeN c=1 sm=1 tr=0 ts=6494850a
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=of4jigFt-DYA:10
- a=wYkD_t78qR0A:10 a=Qe6B47XUAAAA:8 a=6N7Yd5KtQ_qG7vqdfvQA:9 a=QEXdDO2ut3YA:10
- a=-FEs8UIgK8oA:10 a=QWPKR-PWjQKaio0naagv:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=n5PserBqTU9pJTim+3fzKOkxgVhX1AauMCTNazI9mVQ=; b=zSpGVT94xBstFCH5TMotptKujm
-        y0iNyfoq26cvln04rn7FAjKDEYBf6jdPRFsSg0cuzAuOH16bH3Z6/RriMMHFPDLIV5g/Z/BAiMj5e
-        0K8J3A08o4WCBdzGlyd5yr4fE93DfJkrgsI5j4KxGemUlXq9fTwMpIpx2CaxOWVW/aIyZ/tvTyUAf
-        oNsuM8ZpFmX5HiHpcloOfGOKth6htgyfL/oJMsybny36hnYzhfrb41B4sAD212ThMZjlWGbUMRxCp
-        cLCMPzOPnxL6hjo76hk4b7fygRJFluBDnaU0E6Dt+0UqsL0efJJe3Z4GIIEO6lz8cAfVRmN6RTXx7
-        lJp5QfVQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:46156 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qCKzL-000Bg4-KH;
-        Thu, 22 Jun 2023 09:08:43 -0500
-Message-ID: <9b1f62bd-47b2-be64-4d09-7f6f2d52b3bc@embeddedor.com>
-Date:   Thu, 22 Jun 2023 08:09:40 -0600
+        Thu, 22 Jun 2023 13:39:08 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB921BD6;
+        Thu, 22 Jun 2023 10:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de;
+ s=s31663417; t=1687455536; x=1688060336; i=deller@gmx.de;
+ bh=roHB+JreyqbCyh46TX0VgJAq4m6SfZv4rdjO3VvVBp4=;
+ h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+ b=t2W/Wyhb4VhIczxIoOKN9JE4rhU6dpuOTmsZdFbVGM+3njVQO0Qzt48hpU1uWU6z6tlxEyk
+ BJpTyDsehdRBny1NbTtS3bDV2qy8jzqaajwsPuhPMkIXwVqz9DN3iVQNSR/+uRCCiSInJuxKI
+ Pz7O/WueZfo3+8Aa7cAAbEJYnypTP9yr5tOG06WUQ/nbqB1fCinJHDJWn7c9Jocl7aGluumF4
+ fBuMhinEAPPdFQA/DoKtujFr58vBTA9eF5bSdB5o6XJwGkIGRuSe7/foyj1FKcr7e7hsQpsZK
+ 4uRFvD+4Xxb0xO4zIKONQmjLHlmav5KYUyZFkawPNo0un4YvO4GA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.60] ([94.134.155.210]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MulmF-1pvXsJ3J6R-00rtA3; Thu, 22
+ Jun 2023 19:38:56 +0200
+Message-ID: <ed5784a9-b707-dcd5-5898-cb76e8d169c1@gmx.de>
+Date:   Thu, 22 Jun 2023 19:38:56 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
+ Thunderbird/102.10.0
+Subject: Re: [PATCH][next] fbdev: sh7760fb: Fix -Wimplicit-fallthrough
+ warnings
 Content-Language: en-US
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-References: <ZIpm3pcs3iCP9UaR@work>
- <361c2f87-1424-f452-912f-0e4a339f5c46@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <361c2f87-1424-f452-912f-0e4a339f5c46@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZJR66f3UY0UFZJ01@work>
+From:   Helge Deller <deller@gmx.de>
+In-Reply-To: <ZJR66f3UY0UFZJ01@work>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qCKzL-000Bg4-KH
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:46156
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfLdQvZY3AfLBRHvRIEcp0LwEDKNUm4AaRBiRFCohoFQDJkLWAt2SmINM/bN6cULSlZt3/cluINswRU5KENZ8pCaPAZNaIvM6pcj4fm1qWX827yvaN9zK
- gUCaZASrl8q/N8PlQG1dhI0GySznb8cVkl/DjoTfiXVbfPt5Wb3iNhueikmlZDRjhgK7UISfzB3P61M0u5BRxFS3kOCfgZ8p/2NqrrX68F9RUIg/qqkl2bGA
- E/wjeuTd5x/z7WMiCto2A9dO3DzZdFvOdVprL4/n+FLs1/VprYgRAtR2AA2fAvgeuMjBn7vCA10RQeURMzLtE04FUoKloXahb8vR/KmqIDHzwp8AbkjDDUi9
- Uv6/XxmI
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0AMsLm4CGRzP+9jo/SLOyPBSOwhb9hi+YyvAI//2GPCYSgGDhjw
+ WRULZVkxM4/xxLE1oa0lJb6lq+b2r2VgJNdwN2G0d378sKPwXO1pr8dY60fqiZWuWLOkf2u
+ 20Mar4LMzlZKqIPGUYxAp7A+Wg0eJcmmobzVnKOS9mrBLct4zI38Jf/t2vJQ2Dfz58HTY2K
+ KZLwRQr4Wh3pWSBvWj6/w==
+UI-OutboundReport: notjunk:1;M01:P0:v3wRNOQ3lDM=;KzA0nqjrywUt2MTT7Y/c7H59eyt
+ F3OGcuyVoFdzNHAKczE6V1n7iEMqnpZLUed/Of1vvxhdw3sd/W42nXs92730SlZp98sozxz1b
+ 0mWbwq8olHadQERt7yF4SuLjP4xMj1ZOHXGCS+RSRpTvkGR6T0VhGu4ju0c9KUS0lujWEr7ZR
+ OtEpsHq0qXKDotgxxbiNwIxafQi1oT1/K+hY5FWSONJjZvnD2uB90pTjaB7WsDgopzYELwvL5
+ SBOzeDTQYQ3RuYwS8ri4gf9HW9btRftxqZYPlLU2P/PbDd6Fs73DiEAakBKd1RoZFhhGr7Ikp
+ f65ZliX59WV2kt4g3NZQfhxQC3Gb3k2sxxL53gH8ElGRt9DOT+QxvFNohR/WiUkd7pvSX9gB8
+ cR36NuF6xoB3R8bGXI/vGKfFm8hVaypE90YOYSu8FU64n3+OSMpjjD8ed3ndS49eA0vWlM9ha
+ 0GKl74aht4EqeJan8Yd7ttWFVxw3JpCrD/oxi7GHzCE5Oib0BUTThOGRNRHCyA0yBpxskvt0g
+ /hh8EPpZwxni+wGWuSVpJ8UlOvSZB9SWRuQjVar9DUshdikCCxhWooUs9f2115+5HsR3+MhfZ
+ j4ie5CpWdQ48GRYJpsz3IW8pv35chqyULjI2bTdAnAIP1knCySIwH+nWW5LxmemTHEWrDQBuU
+ rCFb6blF0UbPpobYBUzOvDFI1xE8wO/Kz5qDW5NCcY9eh7TdHMN3KpPu6ZK5Da5R2vMRvEGxI
+ aHasosJxMoq9TjbmoGXDBkwOa5SZBhQ5e5viUzJuhwlJN6ESDmPL50PxcSVCxoKr3lDCXmkOj
+ r9ezznURd1jcofZT4VPgehaFQ5m7uyMS08E2CeB8KqVsRORsGBzIqNiQmhmWfCSQNf98CqMvu
+ lU5seedc5HXj6BYFoRXFK01ZcugyT3BbLbVWW0NtHbcKWYdbIj3cK/D2zCm6lzXKABwzOtIQA
+ 4vyvnw==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi!
+On 6/22/23 18:46, Gustavo A. R. Silva wrote:
+> Fix the following fallthrough warnings seen after building sh
+> architecture with sh7763rdp_defconfig configuration:
+>
+> drivers/video/fbdev/sh7760fb.c: In function 'sh7760fb_get_color_info':
+> drivers/video/fbdev/sh7760fb.c:138:23: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+>    138 |                 lgray =3D 1;
+>        |                 ~~~~~~^~~
+> drivers/video/fbdev/sh7760fb.c:139:9: note: here
+>    139 |         case LDDFR_4BPP:
+>        |         ^~~~
+> drivers/video/fbdev/sh7760fb.c:143:23: warning: this statement may fall =
+through [-Wimplicit-fallthrough=3D]
+>    143 |                 lgray =3D 1;
+>        |                 ~~~~~~^~~
+> drivers/video/fbdev/sh7760fb.c:144:9: note: here
+>    144 |         case LDDFR_8BPP:
+>        |         ^~~~
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-On 6/22/23 04:20, Krzysztof Kozlowski wrote:
-> On 15/06/2023 03:18, Gustavo A. R. Silva wrote:
->> Address the following -Wstringop-overflow warnings seen when
->> built with ARM architecture and aspeed_g4_defconfig configuration
->> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
->> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->>
-> 
-> Hi,
-> 
-> This patch landed in next but causes boot failures on
-> Exynos ARMv7 board (32 bit) with systemd (exynos_defconfig):
-> 
-> NFS-Mount: 192.168.1.10:/srv/nfs/odroidhc1
-> Waiting 10 seconds for device /dev/nfs ...
-> ERROR: device '/dev/nfs' not found. Skipping fsck.
-> Mount cmd:
-> mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
-> :: running cleanup hook [udev]
-> [   23.752917] systemd[1]: System time before build time, advancing clock.
-> [   23.851828] systemd[1]: Failed to mount tmpfs at /sys/fs/cgroup: No such file or directory
-> [   23.868459] systemd[1]: Failed to mount cgroup at /sys/fs/cgroup/systemd: No such file or directory
-> [!!!!!!] Failed to mount API filesystems.
-> [   23.914562] systemd[1]: Freezing execution.
-> 
-> Full log:
-> https://krzk.eu/#/builders/21/builds/4110/steps/15/logs/serial0
+applied.
 
-Thanks for reporting this issue. I'll take a look.
+Thanks!
+Helge
 
---
-Gustavo
+> ---
+>   drivers/video/fbdev/sh7760fb.c | 2 ++
+>   1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/video/fbdev/sh7760fb.c b/drivers/video/fbdev/sh7760=
+fb.c
+> index 768011bdb430..98c5227098a8 100644
+> --- a/drivers/video/fbdev/sh7760fb.c
+> +++ b/drivers/video/fbdev/sh7760fb.c
+> @@ -136,11 +136,13 @@ static int sh7760fb_get_color_info(struct device *=
+dev,
+>   		break;
+>   	case LDDFR_4BPP_MONO:
+>   		lgray =3D 1;
+> +		fallthrough;
+>   	case LDDFR_4BPP:
+>   		lbpp =3D 4;
+>   		break;
+>   	case LDDFR_6BPP_MONO:
+>   		lgray =3D 1;
+> +		fallthrough;
+>   	case LDDFR_8BPP:
+>   		lbpp =3D 8;
+>   		break;
+
