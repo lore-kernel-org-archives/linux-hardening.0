@@ -2,234 +2,128 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8287EB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 15:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6124EB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 16:16:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231486AbjFVPgY (ORCPT
+        id S229657AbjFVQQA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 11:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37256 "EHLO
+        Thu, 22 Jun 2023 12:16:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232085AbjFVPgV (ORCPT
+        with ESMTP id S229585AbjFVQP7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 11:36:21 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C178BE42;
-        Thu, 22 Jun 2023 08:36:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=apon558/odtCKX4PENSkkynPNzgEas9yD2oX8F2niU56bk13Gj1fXcuadhRHIEehwbEHX6EetzJSADLZ1pkoRzTa9V4JpMHsCeZFu7nGYlGsQ26l0oKJzA2yePzj1pyU0f0MIOKRy9eQqZL+NRd+cD3wYC1JDC+XH6IbdezYhlcOuXxx/ZHAl0QAiocs6cfduzq4i8c6LZ9yMbTySmwtUCEexXc5qkrd240vdBnRzPu/iCf8I3E5cvo5rVKdYYhj7RBs9u2McfnhWMNGwKku7r4Tiet8ecPEOKaDav7mah2FB7CtfFyfGNkO1Yc6qxgzT0SmyDgMKxYeAMQJ7tYflQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Mc+RFBLhHBbj+BpmB2sMllwjT1d6e33rEgLutCGjt+c=;
- b=kL0gAUqejn2rxDFnJzjbmce1pYeJ8tZbvE2J05RLORVkPYXgQxV+sVPEN7s6q9Wu/wYsWz00P6niIZuaHwx7Na0xGP39/pfbUApNiDvv77T3jzblN1y8Bc/kXrfFETjVbfR/sEPmvf1KL2+BZe2ooSkNdsqSGfTrx/vJW63NssTGsi+rOOy5udpE8ew90OTGBecakW0q7uzge3t1dpYZ6XGADPvIJn7GmPeXU2Chjagz4UuE/pXAfkfFCxFNoMqJYpWCv+BmB32CKuVYLq9uFpcF9fPQskwnLK5mBPdcFj/tdhnnx+jUeHlPT6MZcOhFFnBbRYbiVkgpWls7LhrKUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=chromium.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mc+RFBLhHBbj+BpmB2sMllwjT1d6e33rEgLutCGjt+c=;
- b=uBfJbK+mu1GWLXYFlPhUQDcLqmvh/sSRzemfpbO+dYnBLxHq33QIRPpeY9fpBrPwg2mYLReqhXoOaVBHrYcdKoGIwF9QZEBVVG3OM6ZoW/EhRYlCkIPXERBFv/CCyk77XPk52D/VdvG+Mtiq7x4en3YzKl+zuyVwfw0uhtQJ2mabXPuRwa4SZCHIVwncI2v4y1+JiEtqVgWt7N7SCJ6gdxtFWvZUNFu+ncbe52gSThTqc8SBw1TwK0IWLYYaKwiLv4eobq9QkTsYolfcrEwZYGtecg998dCePB8m4+BQoWPwH80mkQ+ovf3KjxEL0+isroJHYrej0cl7mPBkI/L4IQ==
-Received: from MW4PR04CA0326.namprd04.prod.outlook.com (2603:10b6:303:82::31)
- by CH3PR12MB7619.namprd12.prod.outlook.com (2603:10b6:610:14b::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.23; Thu, 22 Jun
- 2023 15:36:16 +0000
-Received: from MWH0EPF000989E6.namprd02.prod.outlook.com
- (2603:10b6:303:82:cafe::d8) by MW4PR04CA0326.outlook.office365.com
- (2603:10b6:303:82::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.24 via Frontend
- Transport; Thu, 22 Jun 2023 15:36:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- MWH0EPF000989E6.mail.protection.outlook.com (10.167.241.133) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6521.19 via Frontend Transport; Thu, 22 Jun 2023 15:36:15 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Thu, 22 Jun 2023
- 08:36:05 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Thu, 22 Jun
- 2023 08:36:05 -0700
-Received: from build-jeshuas-20230620T084931826.internal (10.127.8.14) by
- mail.nvidia.com (10.129.68.8) with Microsoft SMTP Server id 15.2.986.37 via
- Frontend Transport; Thu, 22 Jun 2023 08:36:05 -0700
-From:   Jeshua Smith <jeshuas@nvidia.com>
-To:     <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <lenb@kernel.org>, <james.morse@arm.com>,
-        <bp@alien8.de>
-CC:     <rafael@kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jeshua Smith <jeshuas@nvidia.com>
-Subject: [PATCH] ACPI: APEI: Use ERST timeout for slow devices
-Date:   Thu, 22 Jun 2023 15:35:54 +0000
-Message-ID: <20230622153554.16847-1-jeshuas@nvidia.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 22 Jun 2023 12:15:59 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04EAB19BF
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 09:15:59 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-54290603887so3923690a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 09:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1687450558; x=1690042558;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c/SMl2eUk/nDroYAOjSfGokmgVDDeq5auCGWm2t1cd4=;
+        b=FeF2iB0zuvON+PcoW0KxPXvcdRmLDVLDoo8VOi3XMmtjRlYHyXMsbX8+cztJRaZ2T1
+         hqZ9+GU2C06rTYgfpucx13oqSv4KdwPoefu/GZT0ukhpTJx2sHdp4p0KiuWFOZM6L6hP
+         WCPiJBrQlHJRgQX2szMZwtAUrQnxS7wDuZtoA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687450558; x=1690042558;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c/SMl2eUk/nDroYAOjSfGokmgVDDeq5auCGWm2t1cd4=;
+        b=LzcwglFhhvEjOQMjMhBWwh7KhhhaBTgbAOuTRTm5CwXRkqQo2oiC4HA8tk0ypVa7ZS
+         nCLXqd/BAhA3oR1jCLXrpCO3riFz4E9tMxVhjOAmF1bbmEuTlu25hi2r8C+cp1SzJ5Y9
+         qv+wzm1LbPTM4D0FkdzpQ3ItinaMP5LzxAsJdxP8SyW3bc0jvMT+wh8sB0NU0of0mZXb
+         y8hDb/qs7MvmXcKOlajpz0r6H1/exCdBiF87dm0WfIAQeFwLvGTz880wJ/iHMp0CDUhg
+         DMAHNz/itPnvinp8A5p0y3dTOPokopppE2gkP8U8LTV5pA1P3stVA9cmowBqbVMoIemn
+         zCFA==
+X-Gm-Message-State: AC+VfDyvHF0aalELCjMIKeFiHstdCQps6K932IJSDF43pKY1t5NSjNa7
+        yW5J2+B4GJlrcIzs0imYX+FGwXWl2tjTSeAQzfc=
+X-Google-Smtp-Source: ACHHUZ6cow/01J202NmnkrH4z1WXJPuOhV59qRx2HreC4rl8cdSjL0D9NbrNztTquV7zUiAEODQQLw==
+X-Received: by 2002:a05:6a21:9992:b0:111:1bd6:2731 with SMTP id ve18-20020a056a21999200b001111bd62731mr9277943pzb.7.1687450558430;
+        Thu, 22 Jun 2023 09:15:58 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j19-20020a62b613000000b00640f51801e6sm4734492pff.159.2023.06.22.09.15.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jun 2023 09:15:57 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 09:15:56 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Cc:     tony.luck@intel.com, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pstore/platform: Add check for kstrdup
+Message-ID: <202306220914.E881234A2C@keescook>
+References: <20230615025312.48712-1-jiasheng@iscas.ac.cn>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E6:EE_|CH3PR12MB7619:EE_
-X-MS-Office365-Filtering-Correlation-Id: c42a7d06-dc54-46cf-0f0a-08db73366ad5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VewTLpB4Zyu+5vBwPBMCKxoRxkC1aPxJb/0M+506/TH0D9Qt+U2iVidSnq208Z86ecRZlHFoy1RaQJLdTITXSTtgH8Bj0YQEVgicmkykZTI52gDeSyvSRwYrC/e54m+ejeYGwkgqZIQDAVJ4IjlUwumzotrPypfQ7tgpyHkKPtdHJ5KNqQaL72Up3PRR9x/C7zT7Nbe65kyvZ+0yCeXOyJAyLjbj/kTaKtks9Ir01eJnl1h0cLuWOQ9KFQUGe75fKcKqRcsKwHUa4J7sVGhc0IOd+m1KRW3VAPj9tbWiCR9o7KKStCsg7v0IL3h2DzYgk2DyiGIVbcyL2Hc6OHKCyYV29qv4yqwuRZVvFyJcfYvBkeP38WJ8k0EEXxQdO02knDlP4odZIQ25ZDpk9Z8Z4CUtTMOzJMOwqzsgrMwOWg7BdjLWBb52wghIOKQBalTWXMMr+KxxmFEeXE25tCXEWeokklUWvCbDQoBt/gSTDMhVM3bYEkM98hPhYSWDVZu+Qj5Ito+Mn315mTaqPQAyi7TIhoFOmhKjnoPZV3WRRgYfQ1HJ4so+3wJjZXbOQ5ZIUFvMCmuKUF/SWl4FFkfPCWFRSv9TzlBgCON2VYbJXBAagwMb/InKhjOz++IVKJ4WPABSZ5r4CUzpbBZyvA6OgJ3PFdH1C8hA1OGhCPwzur7g9IIYP6xZAwxJfukSCQAJcux9hP3FZQFPWjJPAroGE/kovmlVzX0kWAAsftrQ3dj/4DZS2vDztazJfL1NAuXK
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(396003)(39860400002)(376002)(451199021)(46966006)(36840700001)(40470700004)(478600001)(6666004)(54906003)(110136005)(4326008)(47076005)(40480700001)(336012)(83380400001)(426003)(86362001)(36756003)(36860700001)(40460700003)(2616005)(70586007)(2906002)(82310400005)(1076003)(107886003)(26005)(186003)(356005)(7636003)(82740400003)(41300700001)(8676002)(7416002)(8936002)(70206006)(316002)(5660300002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2023 15:36:15.9895
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c42a7d06-dc54-46cf-0f0a-08db73366ad5
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: MWH0EPF000989E6.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7619
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230615025312.48712-1-jiasheng@iscas.ac.cn>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Slow devices such as flash may not meet the default 1ms timeout value,
-so use the ERST max execution time value that they provide as the
-timeout if it is larger.
+On Thu, Jun 15, 2023 at 10:53:12AM +0800, Jiasheng Jiang wrote:
+> Add check for the return value of kstrdup() and return the error
+> if it fails in order to avoid NULL pointer dereference.
+> 
+> Fixes: 563ca40ddf40 ("pstore/platform: Switch pstore_info::name to const")
+> Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
 
-Signed-off-by: Jeshua Smith <jeshuas@nvidia.com>
----
- drivers/acpi/apei/erst.c | 41 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 37 insertions(+), 4 deletions(-)
+Thanks, this is looking better!
 
-diff --git a/drivers/acpi/apei/erst.c b/drivers/acpi/apei/erst.c
-index 247989060e29..eb0a05f032df 100644
---- a/drivers/acpi/apei/erst.c
-+++ b/drivers/acpi/apei/erst.c
-@@ -10,6 +10,7 @@
-  *
-  * Copyright 2010 Intel Corp.
-  *   Author: Huang Ying <ying.huang@intel.com>
-+ * Copyright (c) 2023 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
-  */
- 
- #include <linux/kernel.h>
-@@ -59,6 +60,12 @@ static struct acpi_table_erst *erst_tab;
- #define ERST_RANGE_NVRAM	0x0002
- #define ERST_RANGE_SLOW		0x0004
- 
-+/* ERST Exec timings */
-+#define ERST_EXEC_TIMING_MAX_MASK      0xFFFFFFFF00000000
-+#define ERST_EXEC_TIMING_MAX_SHIFT     32
-+#define ERST_EXEC_TIMING_TYPICAL_MASK  0x00000000FFFFFFFF
-+#define ERST_EXEC_TIMING_TYPICAL_SHIFT 0
-+
- /*
-  * ERST Error Log Address Range, used as buffer for reading/writing
-  * error records.
-@@ -68,6 +75,7 @@ static struct erst_erange {
- 	u64 size;
- 	void __iomem *vaddr;
- 	u32 attr;
-+	u64 timings;
- } erst_erange;
- 
- /*
-@@ -97,6 +105,19 @@ static inline int erst_errno(int command_status)
- 	}
- }
- 
-+static inline u64 erst_get_timeout(void)
-+{
-+	u64 timeout = FIRMWARE_TIMEOUT;
-+
-+	if (erst_erange.attr & ERST_RANGE_SLOW) {
-+		timeout = ((erst_erange.timings & ERST_EXEC_TIMING_MAX_MASK) >>
-+			ERST_EXEC_TIMING_MAX_SHIFT) * NSEC_PER_MSEC;
-+		if (timeout < FIRMWARE_TIMEOUT)
-+			timeout = FIRMWARE_TIMEOUT;
-+	}
-+	return timeout;
-+}
-+
- static int erst_timedout(u64 *t, u64 spin_unit)
- {
- 	if ((s64)*t < spin_unit) {
-@@ -191,9 +212,11 @@ static int erst_exec_stall_while_true(struct apei_exec_context *ctx,
- {
- 	int rc;
- 	u64 val;
--	u64 timeout = FIRMWARE_TIMEOUT;
-+	u64 timeout;
- 	u64 stall_time;
- 
-+	timeout = erst_get_timeout();
-+
- 	if (ctx->var1 > FIRMWARE_MAX_STALL) {
- 		if (!in_nmi())
- 			pr_warn(FW_WARN
-@@ -389,6 +412,10 @@ static int erst_get_erange(struct erst_erange *range)
- 	if (rc)
- 		return rc;
- 	range->attr = apei_exec_ctx_get_output(&ctx);
-+	rc = apei_exec_run(&ctx, ACPI_ERST_EXECUTE_TIMINGS);
-+	if (rc)
-+		return rc;
-+	range->timings = apei_exec_ctx_get_output(&ctx);
- 
- 	return 0;
- }
-@@ -621,10 +648,12 @@ EXPORT_SYMBOL_GPL(erst_get_record_id_end);
- static int __erst_write_to_storage(u64 offset)
- {
- 	struct apei_exec_context ctx;
--	u64 timeout = FIRMWARE_TIMEOUT;
-+	u64 timeout;
- 	u64 val;
- 	int rc;
- 
-+	timeout = erst_get_timeout();
-+
- 	erst_exec_ctx_init(&ctx);
- 	rc = apei_exec_run_optional(&ctx, ACPI_ERST_BEGIN_WRITE);
- 	if (rc)
-@@ -660,10 +689,12 @@ static int __erst_write_to_storage(u64 offset)
- static int __erst_read_from_storage(u64 record_id, u64 offset)
- {
- 	struct apei_exec_context ctx;
--	u64 timeout = FIRMWARE_TIMEOUT;
-+	u64 timeout;
- 	u64 val;
- 	int rc;
- 
-+	timeout = erst_get_timeout();
-+
- 	erst_exec_ctx_init(&ctx);
- 	rc = apei_exec_run_optional(&ctx, ACPI_ERST_BEGIN_READ);
- 	if (rc)
-@@ -703,10 +734,12 @@ static int __erst_read_from_storage(u64 record_id, u64 offset)
- static int __erst_clear_from_storage(u64 record_id)
- {
- 	struct apei_exec_context ctx;
--	u64 timeout = FIRMWARE_TIMEOUT;
-+	u64 timeout;
- 	u64 val;
- 	int rc;
- 
-+	timeout = erst_get_timeout();
-+
- 	erst_exec_ctx_init(&ctx);
- 	rc = apei_exec_run_optional(&ctx, ACPI_ERST_BEGIN_CLEAR);
- 	if (rc)
+> ---
+> Changelog:
+> 
+> v1 -> v2:
+> 
+> 1. Allocate a copy earlier.
+> ---
+>  fs/pstore/platform.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+> index cbc0b468c1ab..727f8ce71062 100644
+> --- a/fs/pstore/platform.c
+> +++ b/fs/pstore/platform.c
+> @@ -573,6 +573,8 @@ static int pstore_write_user_compat(struct pstore_record *record,
+>   */
+>  int pstore_register(struct pstore_info *psi)
+>  {
+> +	char *new_backend;
+> +
+>  	if (backend && strcmp(backend, psi->name)) {
+>  		pr_warn("backend '%s' already in use: ignoring '%s'\n",
+>  			backend, psi->name);
+> @@ -593,6 +595,10 @@ int pstore_register(struct pstore_info *psi)
+>  		return -EINVAL;
+>  	}
+>  
+> +	new_backend = kstrdup(psi->name, GFP_KERNEL);
+> +	if (!new_backend)
+> +		return -ENOMEM;
+> +
+>  	mutex_lock(&psinfo_lock);
+>  	if (psinfo) {
+>  		pr_warn("backend '%s' already loaded: ignoring '%s'\n",
+
+In my suggestion I had included a kfree() for new_backend in this above
+error path, which is missing here. Can you respin it with that added?
+
+> @@ -630,7 +636,7 @@ int pstore_register(struct pstore_info *psi)
+>  	 * Update the module parameter backend, so it is visible
+>  	 * through /sys/module/pstore/parameters/backend
+>  	 */
+> -	backend = kstrdup(psi->name, GFP_KERNEL);
+> +	backend = new_backend;
+>  
+>  	pr_info("Registered %s as persistent store backend\n", psi->name);
+>  
+> -- 
+> 2.25.1
+> 
+
+But otherwise, yeah, looks good. Thanks!
+
 -- 
-2.25.1
-
+Kees Cook
