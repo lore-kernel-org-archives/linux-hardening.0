@@ -2,93 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72391EB64DA
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 10:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FADCEB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 10:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231308AbjFVKU3 (ORCPT
+        id S229690AbjFVKrh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 06:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40582 "EHLO
+        Thu, 22 Jun 2023 06:47:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231285AbjFVKU1 (ORCPT
+        with ESMTP id S229561AbjFVKrf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 06:20:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E4C129;
-        Thu, 22 Jun 2023 03:20:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0DC60617BE;
-        Thu, 22 Jun 2023 10:20:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BCF4C433C8;
-        Thu, 22 Jun 2023 10:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687429223;
-        bh=SYl7L3El4kLgtnTMh7BKKEOpmUvMHtKtirHsySgizNw=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=msh7+e24+6Qq8hiSGIlXgZfnJmz/CXyamAAP5FY6G3LrO6XQNaRMxsW7HNqWIzMvn
-         XHg3Esi9AHN4l4bhAMYc18e/iTf3yBUvu9eYF19KNZnYfurj1+RX36rwkqwqguCSdZ
-         BBSXFsPBwPsjIMj8NbFDKR+Rk5FMvT1aghffwSYbBBN8vZzcf/BnC9TYj/4D2eZVVN
-         KMUNB3dhaP76Tf969sdwYzKcf9IEgDtC7WE7I/CDmxaVN0SeRQlgUmSq7fUxJWnEtg
-         AxTGbQgqAN74AiFIsXdgFURf6EOJag3g+8/xOdAMxo6TuzluJPB/zpE/7CNFc8bdWH
-         /FSDHYe/3jnLQ==
-Message-ID: <361c2f87-1424-f452-912f-0e4a339f5c46@kernel.org>
-Date:   Thu, 22 Jun 2023 12:20:13 +0200
+        Thu, 22 Jun 2023 06:47:35 -0400
+X-Greylist: delayed 311 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 22 Jun 2023 03:47:32 PDT
+Received: from forward204c.mail.yandex.net (forward204c.mail.yandex.net [178.154.239.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D6D19B4
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 03:47:32 -0700 (PDT)
+Received: from forward101c.mail.yandex.net (forward101c.mail.yandex.net [IPv6:2a02:6b8:c03:500:1:45:d181:d101])
+        by forward204c.mail.yandex.net (Yandex) with ESMTP id F0F8F6140E
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 13:42:21 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-18.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-18.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:5e29:0:640:6b8b:0])
+        by forward101c.mail.yandex.net (Yandex) with ESMTP id E04A960139;
+        Thu, 22 Jun 2023 13:42:16 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-18.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id GgDRYL4DSSw0-TgVHY75N;
+        Thu, 22 Jun 2023 13:42:16 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1687430536;
+        bh=MTlX4FfSsa+SjbT7mwpow96OuuSAsltYniOgOWr3iZs=;
+        h=Subject:From:Cc:To:Date:Message-ID;
+        b=Tzo1LMAh4mCGYnrrRRxEH22WsP7UIWZck3qO8RstScOaGQGG6biDAvAHFj9JyIEQc
+         C3E2aLFgzC6FYtvsgyHeDFTLwwubJTHCovU4YG3Dr4oPMhtLCWInAj7HgOHkLgbb3U
+         rU0tm9BzKjCg8WAoCCf5eo7tPr3s3AoEAS4+ocDI=
+Authentication-Results: mail-nwsmtp-smtp-production-main-18.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <1f3f722c-657d-21ec-d6e2-7f79ce5462e3@yandex.ru>
+Date:   Thu, 22 Jun 2023 13:42:16 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
 Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-References: <ZIpm3pcs3iCP9UaR@work>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <ZIpm3pcs3iCP9UaR@work>
-Content-Type: text/plain; charset=UTF-8
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org
+From:   Dmitry Antipov <dmantipov@yandex.ru>
+Subject: On clang vs. gcc fortify warnings
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 15/06/2023 03:18, Gustavo A. R. Silva wrote:
-> Address the following -Wstringop-overflow warnings seen when
-> built with ARM architecture and aspeed_g4_defconfig configuration
-> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
-> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> 
+Recently I've observed a (not so?) subtle difference using CONFIG_FORTIFY_SOURCE=y
+with clang vs. gcc. The problem may be illustrated by the following tiny module:
 
-Hi,
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/fortify-string.h>
 
-This patch landed in next but causes boot failures on
-Exynos ARMv7 board (32 bit) with systemd (exynos_defconfig):
+static const char example[][32] = {
+	"abcd",
+	"xyzt",
+	"1234",
+	"5678"
+};
 
-NFS-Mount: 192.168.1.10:/srv/nfs/odroidhc1
-Waiting 10 seconds for device /dev/nfs ...
-ERROR: device '/dev/nfs' not found. Skipping fsck.
-Mount cmd: 
-mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
-:: running cleanup hook [udev]
-[   23.752917] systemd[1]: System time before build time, advancing clock.
-[   23.851828] systemd[1]: Failed to mount tmpfs at /sys/fs/cgroup: No such file or directory
-[   23.868459] systemd[1]: Failed to mount cgroup at /sys/fs/cgroup/systemd: No such file or directory
-[!!!!!!] Failed to mount API filesystems.
-[   23.914562] systemd[1]: Freezing execution.
+static int __init test_init(void) {
+	char data0[128], data1[128];
 
-Full log:
-https://krzk.eu/#/builders/21/builds/4110/steps/15/logs/serial0
+	/* No warnings with both gcc 13.1.1 and clang 16.0.5 */
+         memcpy(data0, example, sizeof(example));
 
-Best regards,
-Krzysztof
+	/* No warning with gcc 13.1.1 but warning with clang 16.0.5:
 
+	   ./include/linux/fortify-string.h:529:4: warning: call to
+	   '__read_overflow2_field' declared with 'warning' attribute:
+	   detected read beyond size of field (2nd parameter); maybe
+	   use struct_group()? [-Wattribute-warning]
+                         __read_overflow2_field(q_size_field, size);
+	*/
+	
+	memcpy(data1, *example, sizeof(example));
+         return 0;
+}
+
+static void __exit test_exit(void) {
+}
+
+module_init(test_init);
+module_exit(test_exit);
+
+MODULE_LICENSE("GPL");
+
+I suppose that clang wins here because 'memcpy(data1, *example, sizeof(example))'
+may be interpreted as an attempt to copy 128 bytes from 32-byte source buffer.
+So the question is why gcc don't diagnose this as well.
+
+Thanks,
+Dmitry
