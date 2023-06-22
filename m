@@ -2,153 +2,142 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED20EEB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 14:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CEFEB64DC
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 14:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbjFVOZ5 (ORCPT
+        id S231864AbjFVOpG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 10:25:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37666 "EHLO
+        Thu, 22 Jun 2023 10:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbjFVOZ4 (ORCPT
+        with ESMTP id S231895AbjFVOoY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 10:25:56 -0400
-Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF376E2
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 07:25:54 -0700 (PDT)
-X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 45A4E261567;
-        Thu, 22 Jun 2023 14:25:54 +0000 (UTC)
-Received: from pdx1-sub0-mail-a222.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id CA807261D37;
-        Thu, 22 Jun 2023 14:25:53 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1687443953; a=rsa-sha256;
-        cv=none;
-        b=ZoIZMiRAbUiGYhcrSOpD53+bsuD71PpCJMm9unS4RxaRw6ANoMbGsShGh1KO9E4OkcbjXW
-        xmnGi9NmrAzYKpk1059qN8OxM4Gu9NVUKNRW5aeMDKmCdTES04a2pIrIuegw7aK3ySOIif
-        g3lUAiOtwqJ6IEpREKREHtdmptHNqWkH2Z9aMvAfYxqNH/Ab7+bgJKlXqqVI8zdfkMVYg/
-        nBwJSxCw/efXdPr8rhCJ9xXxzw4UYmM+09CtCzisBukmNZ+4CtjHXlXYETPeRlr1Nn1Bpk
-        gJmlIR0P7DyHGq6GZv6GoTUbw6PnYoLmkln2Si2XuKdSu4RqjEEitdKicNd4KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1687443953;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=1XaMIEOIpFCgVI3AkBJI+hbR5+jkWNHo0FSN5LpUksc=;
-        b=T5dBldBdvlj2OSgm4C3Mw9gyfH6QP5Eu5nBtRpCAGgxIx3jDlj8GGpDyW2ezhmPoa+ua79
-        xbe7oRDyNSDjxesuDASj3IfTWSzTu5Ed6osjsguUhb/3hihYybY9hq8v7CEBp2EBs/uxBK
-        ULaohnlCSFq2OIl881QbUm1XKPerMPaCT2rSfbsFmeV6KSlm7SPt4FOTjY0cSCf1gF8aKi
-        rHH75tRHBeSfVdtJlq8a/5np9Vn/11qkaZckq+rhb3rwBfLqFAfgZnssL+b5m0vihThtEb
-        Nzyb7ePxYnDq0LGkRM8HtV+J7rcQ3mHMRRwB0uKe2mxGRPbf8lXEOlR175KceA==
-ARC-Authentication-Results: i=1;
-        rspamd-9fcc56855-twxqs;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=siddhesh@gotplt.org
-X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
-X-MailChannels-Auth-Id: dreamhost
-X-Supply-Gusty: 226003e74f1c2b46_1687443954065_2201362872
-X-MC-Loop-Signature: 1687443954065:2513499042
-X-MC-Ingress-Time: 1687443954065
-Received: from pdx1-sub0-mail-a222.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.103.24.91 (trex/6.9.1);
-        Thu, 22 Jun 2023 14:25:54 +0000
-Received: from [192.168.0.182] (bras-vprn-toroon4834w-lp130-09-174-91-45-44.dsl.bell.ca [174.91.45.44])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        (Authenticated sender: siddhesh@gotplt.org)
-        by pdx1-sub0-mail-a222.dreamhost.com (Postfix) with ESMTPSA id 4Qn2jF2Dqtz3V;
-        Thu, 22 Jun 2023 07:25:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
-        s=dreamhost; t=1687443953;
-        bh=1XaMIEOIpFCgVI3AkBJI+hbR5+jkWNHo0FSN5LpUksc=;
-        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-        b=loVPWD+tgUjH3kjzlu18o4WjewQm3nx6/V3OfHsvPu8j+RBa/Vw5A+qPKjylPeoCM
-         Ak7PHzKEuLc1/W5nRGKnXtrxCsPPz28jK+Mir4P9l4cWiuO6pIc+vnqdXZXlFikNvl
-         XRL3Iy4IV2l/ihFPjFgto+39YbVl8usQTxOff5PlWGH8ant2eCQBqzflUCEyurSyAa
-         j21jJQ5GAdrh/5GRyZAgEemc/HewxLMwscICmVjRJA0tAAGdvASLnaeKRF3AExyTun
-         12ZCXA0XOTdvtaGfOErpik7RtFA4s3Iplsq4la3ed9i9KS8gkBHv6inViQeTvgaipx
-         24c1N0tv6LttQ==
-Message-ID: <048aeae6-6357-a29d-8e2c-8f75c4ce265b@gotplt.org>
-Date:   Thu, 22 Jun 2023 10:25:52 -0400
+        Thu, 22 Jun 2023 10:44:24 -0400
+Received: from frasgout12.his.huawei.com (unknown [14.137.139.154])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BEB52708;
+        Thu, 22 Jun 2023 07:44:00 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4Qn2qB6Gy2z9xFr8;
+        Thu, 22 Jun 2023 22:31:02 +0800 (CST)
+Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
+        by APP1 (Coremail) with SMTP id LxC2BwDHTQngXZRkeCaRAw--.29682S2;
+        Thu, 22 Jun 2023 15:42:54 +0100 (CET)
+Message-ID: <eb31920bd00e2c921b0aa6ebed8745cb0130b0e1.camel@huaweicloud.com>
+Subject: [QUESTION] Full user space process isolation?
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     Oleg Nesterov <oleg@redhat.com>, Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        LuisChamberlain <mcgrof@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Petr Tesarik <petrtesarik@huaweicloud.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Tejun Heo <tj@kernel.org>
+Cc:     linux-mm@kvack.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org
+Date:   Thu, 22 Jun 2023 16:42:37 +0200
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: On clang vs. gcc fortify warnings
-Content-Language: en-US
-To:     Dmitry Antipov <dmantipov@yandex.ru>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org
-References: <1f3f722c-657d-21ec-d6e2-7f79ce5462e3@yandex.ru>
-From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
-In-Reply-To: <1f3f722c-657d-21ec-d6e2-7f79ce5462e3@yandex.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LxC2BwDHTQngXZRkeCaRAw--.29682S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr4xtw1rXFyUGF4UJF13urg_yoW8Zw1fpF
+        9akFZ8GFn5GF429as7Wr48J3yrurZ3Xay3Gr9rKry3X34Y9Fy2yry3t3WrXF1DKrsY9a4j
+        vwsxtrWjya1DZa7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+        c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbQVy7
+        UUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAQBF1jj4sbAQABs3
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-06-22 06:42, Dmitry Antipov wrote:
-> Recently I've observed a (not so?) subtle difference using 
-> CONFIG_FORTIFY_SOURCE=y
-> with clang vs. gcc. The problem may be illustrated by the following tiny 
-> module:
-> 
-> #include <linux/kernel.h>
-> #include <linux/module.h>
-> #include <linux/fortify-string.h>
-> 
-> static const char example[][32] = {
->      "abcd",
->      "xyzt",
->      "1234",
->      "5678"
-> };
-> 
-> static int __init test_init(void) {
->      char data0[128], data1[128];
-> 
->      /* No warnings with both gcc 13.1.1 and clang 16.0.5 */
->          memcpy(data0, example, sizeof(example));
-> 
->      /* No warning with gcc 13.1.1 but warning with clang 16.0.5:
-> 
->         ./include/linux/fortify-string.h:529:4: warning: call to
->         '__read_overflow2_field' declared with 'warning' attribute:
->         detected read beyond size of field (2nd parameter); maybe
->         use struct_group()? [-Wattribute-warning]
->                          __read_overflow2_field(q_size_field, size);
->      */
-> 
->      memcpy(data1, *example, sizeof(example));
->          return 0;
-> }
-> 
-> static void __exit test_exit(void) {
-> }
-> 
-> module_init(test_init);
-> module_exit(test_exit);
-> 
-> MODULE_LICENSE("GPL");
-> 
-> I suppose that clang wins here because 'memcpy(data1, *example, 
-> sizeof(example))'
-> may be interpreted as an attempt to copy 128 bytes from 32-byte source 
-> buffer.
-> So the question is why gcc don't diagnose this as well.
+Hi everyone
 
-Sorry, I can't reproduce the warning on clang 16.0.5 with the default 
-config +CONFIG_FORTIFY_SOURCE on x86_64.  Could you share more details 
-on your config or a preprocessed source and compiler flags that get 
-passed in?
+I briefly discussed this topic at LSS NA 2023, but I wanted to have an
+opinion from a broader audience.
 
-Thanks,
-Sid
+
+In short:
+
+I wanted to execute some kernel workloads in a fully isolated user
+space process, started from a binary statically linked with klibc,
+connected to the kernel only through a pipe.
+
+I also wanted that, for the root user, tampering with that process is
+as hard as if the same code runs in kernel space.
+
+I would use the fully isolated process to parse and convert unsupported
+data formats to a supported one, after the kernel verified the
+authenticity of the original format (that already exists and cannot
+change).
+
+Preventing tampering of the process ensures that the conversion goes as
+expected. Also, the integrity of the binary needs to be verified.
+
+
+List of wished data formats:
+
+PGP: verify the authenticity of RPM/DEB/... headers
+RPM/DEB/... headers: extract reference file checksums for
+                    (kernel-based) file integrity check (e.g. with IMA)
+
+
+Alternative #1:
+
+Write the parsers to run in kernel space. That was rejected due to
+security and scalability concerns. If that changed, please let me know.
+
+
+Alternative #2:
+
+Linux distributions could provide what the kernel supports. However,
+from personal experience, the effort seems orders of magnitude higher
+than just writing a tiny component to support the original format. And
+there is no guarantee that all Linux distributions will do it.
+
+
+Full process isolation could be achieved in this way:
+
+process -> outside: set seccomp strict profile at process creation
+                    so that the process can only read/write/close the
+                    pipe and exit, no other system calls are allowed
+
+outside -> process: deny ptrace/kill with the process as target
+
+Anything else?
+
+
+The only risk I see is that a new feature allowing to interact with
+another process is added to the kernel, without the ptrace permission
+being asked.
+
+With the restrictions above, can we say that the code inside the
+process is as safe (against tampering) to execute as if it runs in
+kernel space?
+
+Thanks
+
+Roberto
+
