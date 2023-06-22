@@ -2,166 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF20EB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 17:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9282CEB64DA
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 17:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229956AbjFVR0n (ORCPT
+        id S231168AbjFVRb0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 13:26:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57586 "EHLO
+        Thu, 22 Jun 2023 13:31:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229830AbjFVR0l (ORCPT
+        with ESMTP id S231140AbjFVRbX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 13:26:41 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2587195
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 10:26:40 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1b520329adeso10175ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 10:26:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687454800; x=1690046800;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gp0t+PLucuEtsm8QBIhhl2b8jQzEk9CK2+LuMCdHbHY=;
-        b=2eo53V8GN6cveuVkUHlZRsCKdn6oG2YXGQjxCOTV4meYN/t4hLRLFk7Bw7ZJFu9YAS
-         n9NLFKwgU9QALg7gsLsZz189l3E9fwfS/q6d+07n0QkgDcB7bw3NkGj7LTYmvlQ3ZvER
-         OwLIYcB+zWsT/OUj+fFll72BBVeAbetIvVPeXgQduHl5wbk2uQdKUqxGTPwpklbupYKP
-         0pvZnb0BWcPJozEVoM2tSFP2tebAZcMJnmPq0CoE3pileVicN/IgJwWAYaQAI2qwQ4tO
-         r6ZG6p2mc6FeSpAYD9MYEXWs7ddb2KIxq0NI2XbPxDfYnKNT866iOo4AWiDGXCEeNAhx
-         8f0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687454800; x=1690046800;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gp0t+PLucuEtsm8QBIhhl2b8jQzEk9CK2+LuMCdHbHY=;
-        b=IqNQZJxbf6ZvU4GIKc34vzp1W3teRoz6FGOiiBYDeZxYBtcs5obS/JCMoeNQ7Rk/rg
-         9xfCEFQyut28xgVOUjkXZwn0Zi5RAuNBBx6vFYSLu3UgGhA3/LXj4mawOKsE0BsxCLR7
-         eL6QwQx7wOXPczh8il8PSk6ygvVn0FQAVU/5/XMgbU6PSbcpPqpV2bJQYMV7hqq/1uab
-         Cq7MQSNCgiM5OcCOqQCG50lDEuFQlGpkgCEi7xk+COctvi+eXxfKOWPa2s2ooTxXHddn
-         CbgIKrE+EdjgmdHlIYqVAVV577tOQ4sSsxjVMofPBONyxFMHdAXGWYHQ720rzqfFxbZw
-         I1GQ==
-X-Gm-Message-State: AC+VfDwmaz7wwR3/M09xtAy/XzRqviMFOJ7QeJ1mj2ZlV8YY69scXq6I
-        XB3dX/hcGN0N6in5qIMPUtAa/g==
-X-Google-Smtp-Source: ACHHUZ4+G/oeecut6TKOIjj0aeUUFs58jdW0biSd6uS6KQajdC89E1A7CiKsEZo6nWrRuaFm3UNoBA==
-X-Received: by 2002:a17:902:d2c6:b0:19c:c5d4:afd2 with SMTP id n6-20020a170902d2c600b0019cc5d4afd2mr129416plc.11.1687454799910;
-        Thu, 22 Jun 2023 10:26:39 -0700 (PDT)
-Received: from google.com ([2620:15c:2d:3:44d3:c215:d3c3:9a46])
-        by smtp.gmail.com with ESMTPSA id l18-20020a656812000000b00514256c05c2sm4711761pgt.7.2023.06.22.10.26.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jun 2023 10:26:39 -0700 (PDT)
-Date:   Thu, 22 Jun 2023 10:26:35 -0700
-From:   Isaac Manjarres <isaacmanjarres@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     John Stultz <jstultz@google.com>, Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        kernel-team@android.com, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pstore/ram: Add support for dynamically allocated
- ramoops memory regions
-Message-ID: <ZJSES98P+zzrhBI5@google.com>
-References: <20230622005213.458236-1-isaacmanjarres@google.com>
- <CANDhNCrEhx4LUPaz-FHZZJMG2yX670hk-vGTZs=HxiGR18zm5A@mail.gmail.com>
- <202306212212.5E53607@keescook>
+        Thu, 22 Jun 2023 13:31:23 -0400
+X-Greylist: delayed 90 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 22 Jun 2023 10:31:20 PDT
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13711FC6;
+        Thu, 22 Jun 2023 10:31:19 -0700 (PDT)
+Received: from eig-obgw-6009a.ext.cloudfilter.net ([10.0.30.184])
+        by cmsmtp with ESMTP
+        id CJuvqyYwYyYOwCO7vqvCIT; Thu, 22 Jun 2023 17:29:48 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id CO7uqGO5vlP3rCO7uqIbVz; Thu, 22 Jun 2023 17:29:46 +0000
+X-Authority-Analysis: v=2.4 cv=Ub1C9YeN c=1 sm=1 tr=0 ts=6494850a
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=of4jigFt-DYA:10
+ a=wYkD_t78qR0A:10 a=Qe6B47XUAAAA:8 a=6N7Yd5KtQ_qG7vqdfvQA:9 a=QEXdDO2ut3YA:10
+ a=-FEs8UIgK8oA:10 a=QWPKR-PWjQKaio0naagv:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=n5PserBqTU9pJTim+3fzKOkxgVhX1AauMCTNazI9mVQ=; b=zSpGVT94xBstFCH5TMotptKujm
+        y0iNyfoq26cvln04rn7FAjKDEYBf6jdPRFsSg0cuzAuOH16bH3Z6/RriMMHFPDLIV5g/Z/BAiMj5e
+        0K8J3A08o4WCBdzGlyd5yr4fE93DfJkrgsI5j4KxGemUlXq9fTwMpIpx2CaxOWVW/aIyZ/tvTyUAf
+        oNsuM8ZpFmX5HiHpcloOfGOKth6htgyfL/oJMsybny36hnYzhfrb41B4sAD212ThMZjlWGbUMRxCp
+        cLCMPzOPnxL6hjo76hk4b7fygRJFluBDnaU0E6Dt+0UqsL0efJJe3Z4GIIEO6lz8cAfVRmN6RTXx7
+        lJp5QfVQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:46156 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.95)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qCKzL-000Bg4-KH;
+        Thu, 22 Jun 2023 09:08:43 -0500
+Message-ID: <9b1f62bd-47b2-be64-4d09-7f6f2d52b3bc@embeddedor.com>
+Date:   Thu, 22 Jun 2023 08:09:40 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202306212212.5E53607@keescook>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+References: <ZIpm3pcs3iCP9UaR@work>
+ <361c2f87-1424-f452-912f-0e4a339f5c46@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <361c2f87-1424-f452-912f-0e4a339f5c46@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qCKzL-000Bg4-KH
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:46156
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfLdQvZY3AfLBRHvRIEcp0LwEDKNUm4AaRBiRFCohoFQDJkLWAt2SmINM/bN6cULSlZt3/cluINswRU5KENZ8pCaPAZNaIvM6pcj4fm1qWX827yvaN9zK
+ gUCaZASrl8q/N8PlQG1dhI0GySznb8cVkl/DjoTfiXVbfPt5Wb3iNhueikmlZDRjhgK7UISfzB3P61M0u5BRxFS3kOCfgZ8p/2NqrrX68F9RUIg/qqkl2bGA
+ E/wjeuTd5x/z7WMiCto2A9dO3DzZdFvOdVprL4/n+FLs1/VprYgRAtR2AA2fAvgeuMjBn7vCA10RQeURMzLtE04FUoKloXahb8vR/KmqIDHzwp8AbkjDDUi9
+ Uv6/XxmI
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 10:15:45PM -0700, Kees Cook wrote:
-> On Wed, Jun 21, 2023 at 09:47:26PM -0700, John Stultz wrote:
-> > > The reserved memory region for ramoops is assumed to be at a fixed
-> > > and known location when read from the devicetree. This is not desirable
-> > > in environments where it is preferred for the region to be dynamically
-> > > allocated early during boot (i.e. the memory region is defined with
-> > > the "alloc-ranges" property instead of the "reg" property).
-> > >
-> > 
-> > Thanks for sending this out, Isaac!
-> > 
-> > Apologies, I've forgotten much of the details around dt bindings here,
-> > so forgive my questions:
-> > If the memory is dynamically allocated from a specific range, is it
-> > guaranteed to be consistently the same address boot to boot?
-> > 
-> > > Since ramoops regions are part of the reserved-memory devicetree
-> > > node, they exist in the reserved_mem array. This means that the
-> > > of_reserved_mem_lookup() function can be used to retrieve the
-> > > reserved_mem structure for the ramoops region, and that structure
-> > > contains the base and size of the region, even if it has been
-> > > dynamically allocated.
-> > 
-> > I think this is answering my question above, but it's a little opaque,
-> > so I'm not sure.
+Hi!
+
+On 6/22/23 04:20, Krzysztof Kozlowski wrote:
+> On 15/06/2023 03:18, Gustavo A. R. Silva wrote:
+>> Address the following -Wstringop-overflow warnings seen when
+>> built with ARM architecture and aspeed_g4_defconfig configuration
+>> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
+>> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+>> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+>> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+>> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+>>
 > 
-> Yeah, I had exactly the same question: will this be the same
-> boot-to-boot?
-
-Hi Kees,
-
-Thank you for taking a look at this patch and for your review! When the
-alloc-ranges property is used to describe a memory region, the memory
-region will always be allocated within that range, but it's not
-guaranteed to be allocated at the same base address across reboots.
-
-I had proposed re-wording the end of the commit message in my response
-to John as follows:
-
-"...and that structure contains the address of the base of the region
-that was allocated at boot anywhere within the range specified by the
-"alloc-ranges" devicetree property."
-
-Does that clarify things better?
-
-> > 
-> > > Thus invoke of_reserved_mem_lookup() in case the call to
-> > > platform_get_resource() fails in order to support dynamically
-> > > allocated ramoops memory regions.
-> > >
-> > > Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-> > > Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
-> > > Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> > > Signed-off-by: Isaac J. Manjarres <isaacmanjarres@google.com>
+> Hi,
 > 
-> I think this should have "Co-developed-by:"s for each person, since this
-> isn't explicitly a S-o-B chain...
-
-Noted. I'll fix this up for v2 of the patch.
-
-> > > @@ -643,6 +644,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
-> > >  {
-> > >         struct device_node *of_node = pdev->dev.of_node;
-> > >         struct device_node *parent_node;
-> > > +       struct reserved_mem *rmem;
-> > >         struct resource *res;
-> > >         u32 value;
-> > >         int ret;
-> > > @@ -651,13 +653,20 @@ static int ramoops_parse_dt(struct platform_device *pdev,
-> > >
-> > >         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > >         if (!res) {
-> > > -               dev_err(&pdev->dev,
-> > > -                       "failed to locate DT /reserved-memory resource\n");
-> > > -               return -EINVAL;
-> > > +               rmem = of_reserved_mem_lookup(of_node);
-> > 
-> > Nit: you could keep rmem scoped locally here.
-> > 
-> > Otherwise the code looks sane, I just suspect the commit message could
-> > be more clear in explaining the need/utility of the dts entry using
-> > alloc-ranges.
+> This patch landed in next but causes boot failures on
+> Exynos ARMv7 board (32 bit) with systemd (exynos_defconfig):
 > 
-> I haven't looked closely at the API here, but does this need a "put"
-> like the "get" stuff? (I assume not, given the "lookup" is on a node...)
+> NFS-Mount: 192.168.1.10:/srv/nfs/odroidhc1
+> Waiting 10 seconds for device /dev/nfs ...
+> ERROR: device '/dev/nfs' not found. Skipping fsck.
+> Mount cmd:
+> mount.nfs4 -o vers=4,nolock 192.168.1.10:/srv/nfs/odroidhc1 /new_root
+> :: running cleanup hook [udev]
+> [   23.752917] systemd[1]: System time before build time, advancing clock.
+> [   23.851828] systemd[1]: Failed to mount tmpfs at /sys/fs/cgroup: No such file or directory
+> [   23.868459] systemd[1]: Failed to mount cgroup at /sys/fs/cgroup/systemd: No such file or directory
+> [!!!!!!] Failed to mount API filesystems.
+> [   23.914562] systemd[1]: Freezing execution.
+> 
+> Full log:
+> https://krzk.eu/#/builders/21/builds/4110/steps/15/logs/serial0
 
-No, it doesn't need a put, since of_reserved_mem_lookup() doesn't
-acquire a reference to anything.
+Thanks for reporting this issue. I'll take a look.
 
-Thanks,
-Isaac
+--
+Gustavo
