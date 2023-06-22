@@ -2,94 +2,144 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C742CEB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 16:45:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B114EB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 17:19:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjFVQpm (ORCPT
+        id S230322AbjFVRTi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 12:45:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39148 "EHLO
+        Thu, 22 Jun 2023 13:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229812AbjFVQpk (ORCPT
+        with ESMTP id S230320AbjFVRTh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 12:45:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 668F21FCC;
-        Thu, 22 Jun 2023 09:45:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F00F0618B0;
-        Thu, 22 Jun 2023 16:45:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2C70C433C0;
-        Thu, 22 Jun 2023 16:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687452338;
-        bh=mPXln+DmOt1KklaFQd3MJkA1//mD28lDoq4prtu8Qoo=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RVvLNYYIvAmGiq4BaiJ+/c8othvgt+IMGlJMhdFQy9LZVYJ2Xh3k64zYSQloMZJxq
-         rQUpRTSch8lojQ25h/Zkqy36qoY2/cYl0Fe5skuKVC8TNUW4Bzdhv3qgCosnUssb4L
-         AmrPOEMU57ueZ/pSZr8IBXKKv+rYNEx55PnTrKLtV+eihP/7kntUs/EF9RzRL5/Mv3
-         Srf/2XvnQa8LObzVYlGc1ZQYan5qonEfQc7KNytrYp5PiFRZy0Z6LMmI1PbguFJpXm
-         HpaTe9Kwwuo757fSU8ESd7Xlu+L93xv+Bh1KEmOc/7eCSt3RgcemqSqPGx0ppW+/J5
-         expgtpPfn9WuQ==
-Date:   Thu, 22 Jun 2023 10:46:33 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Helge Deller <deller@gmx.de>
-Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] fbdev: sh7760fb: Fix -Wimplicit-fallthrough warnings
-Message-ID: <ZJR66f3UY0UFZJ01@work>
+        Thu, 22 Jun 2023 13:19:37 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7511173F
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 10:19:36 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b54594ce62so8775ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 10:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1687454376; x=1690046376;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rYgiryxMLV4e1wwF96jggBbIc+/HG+JYrCu9TtuVpD0=;
+        b=iNT1dDGli5TNqBRoRBJ5UhKB+ATO3qZid68u+wCjQe3Xz6Qv2gjmx16rbguj3TS1Rx
+         Zlc6GQiWPjmNoFW5lSYLUFSvxzKaNCLeKaon/VmxXhoZSSmW7orLlwRd8xSsuf4SY5j5
+         L6a1IRffxsHURdImMazwbru8hPfBOzxaSwxSlmmEY8mWTJdJB8fR9EDQBltTAHS/2B6U
+         s33y2cSeO7ucnxdMJkGdQ/gRL2sFFZlk9btWPxlbo8hST9vEPc1JWx2pApApDxAlZUFE
+         4/HzrFL0ZNp10PpoD0fWznEvd1NixhcCQMTSV7KScsRhywO2hdNSJz92ix2TlBFJ+IIy
+         gPiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687454376; x=1690046376;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rYgiryxMLV4e1wwF96jggBbIc+/HG+JYrCu9TtuVpD0=;
+        b=UZQp8zm+EZCYZmG6j2RuyTiNVWS5S1gS4LTSEgUlDy1zPNcJZYweAs2p24DATcALaJ
+         RHgFvdy8wjb7pNANFeMHlT8zHKps5P3bTRmgaHHbmKpQXWtChbK1tSukWkDIaYZ4nyt9
+         rC7YuO1rM6unNoffJLqtMKHZjj3pS6+jBYNB84qY3nPUeLKmOZL0lku5Brilob4W3UGX
+         7ndjaJUV4seKqEkvadIBI3HzGYo/pfmi+oLStHREh1jzVWA32r5r/bgtKokoFM+h39rb
+         xepT/OGGeQMxC+l1yz+OdfSmUlWjx59/d7VUMBSQ6oAnQvRBI+dLmBeVXb9P9PO9rOx4
+         zfhA==
+X-Gm-Message-State: AC+VfDwvwuvTjN8NNmIWUdLRYYdcCtQaNgeuDajovfjbH0wSSVMZx/Nk
+        JQW8f2qeOU40c4pp9IbCq5kc4A==
+X-Google-Smtp-Source: ACHHUZ7+WdRQmTORhEeJOuI5JscjKUPB317l04qF4yis8TrSO8AkbZesEv3Q3RnUT9FPWt/WLixm4g==
+X-Received: by 2002:a17:902:fb44:b0:1af:90ce:5264 with SMTP id lf4-20020a170902fb4400b001af90ce5264mr1415616plb.27.1687454376123;
+        Thu, 22 Jun 2023 10:19:36 -0700 (PDT)
+Received: from google.com ([2620:15c:2d:3:44d3:c215:d3c3:9a46])
+        by smtp.gmail.com with ESMTPSA id t11-20020a17090ae50b00b0025be7b69d73sm21684pjy.12.2023.06.22.10.19.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jun 2023 10:19:35 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 10:19:31 -0700
+From:   Isaac Manjarres <isaacmanjarres@google.com>
+To:     John Stultz <jstultz@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        kernel-team@android.com, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pstore/ram: Add support for dynamically allocated
+ ramoops memory regions
+Message-ID: <ZJSCox1cJ1U0Qukz@google.com>
+References: <20230622005213.458236-1-isaacmanjarres@google.com>
+ <CANDhNCrEhx4LUPaz-FHZZJMG2yX670hk-vGTZs=HxiGR18zm5A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CANDhNCrEhx4LUPaz-FHZZJMG2yX670hk-vGTZs=HxiGR18zm5A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Fix the following fallthrough warnings seen after building sh
-architecture with sh7763rdp_defconfig configuration:
+On Wed, Jun 21, 2023 at 09:47:26PM -0700, John Stultz wrote:
+> > The reserved memory region for ramoops is assumed to be at a fixed
+> > and known location when read from the devicetree. This is not desirable
+> > in environments where it is preferred for the region to be dynamically
+> > allocated early during boot (i.e. the memory region is defined with
+> > the "alloc-ranges" property instead of the "reg" property).
+> >
+> 
+> Thanks for sending this out, Isaac!
+> 
+> Apologies, I've forgotten much of the details around dt bindings here,
+> so forgive my questions:
+> If the memory is dynamically allocated from a specific range, is it
+> guaranteed to be consistently the same address boot to boot?
 
-drivers/video/fbdev/sh7760fb.c: In function 'sh7760fb_get_color_info':
-drivers/video/fbdev/sh7760fb.c:138:23: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  138 |                 lgray = 1;
-      |                 ~~~~~~^~~
-drivers/video/fbdev/sh7760fb.c:139:9: note: here
-  139 |         case LDDFR_4BPP:
-      |         ^~~~
-drivers/video/fbdev/sh7760fb.c:143:23: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  143 |                 lgray = 1;
-      |                 ~~~~~~^~~
-drivers/video/fbdev/sh7760fb.c:144:9: note: here
-  144 |         case LDDFR_8BPP:
-      |         ^~~~
+Hi John,
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/video/fbdev/sh7760fb.c | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks for reviewing this patch! When you use the "alloc-ranges"
+property, you specify a range for the memory region to reside in.
+This means that the region will lie somewhere in between the range
+you specified, but it is not guaranteed to be in the same location
+across reboots.
 
-diff --git a/drivers/video/fbdev/sh7760fb.c b/drivers/video/fbdev/sh7760fb.c
-index 768011bdb430..98c5227098a8 100644
---- a/drivers/video/fbdev/sh7760fb.c
-+++ b/drivers/video/fbdev/sh7760fb.c
-@@ -136,11 +136,13 @@ static int sh7760fb_get_color_info(struct device *dev,
- 		break;
- 	case LDDFR_4BPP_MONO:
- 		lgray = 1;
-+		fallthrough;
- 	case LDDFR_4BPP:
- 		lbpp = 4;
- 		break;
- 	case LDDFR_6BPP_MONO:
- 		lgray = 1;
-+		fallthrough;
- 	case LDDFR_8BPP:
- 		lbpp = 8;
- 		break;
--- 
-2.34.1
+> > Since ramoops regions are part of the reserved-memory devicetree
+> > node, they exist in the reserved_mem array. This means that the
+> > of_reserved_mem_lookup() function can be used to retrieve the
+> > reserved_mem structure for the ramoops region, and that structure
+> > contains the base and size of the region, even if it has been
+> > dynamically allocated.
+> 
+> I think this is answering my question above, but it's a little opaque,
+> so I'm not sure.
 
+How about re-wording the end as such?
+
+"...and that structure contains the address of the base of the region
+that was allocated at boot anywhere within the range specified by the
+"alloc-ranges" devicetree property."
+
+
+> > @@ -643,6 +644,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+> >  {
+> >         struct device_node *of_node = pdev->dev.of_node;
+> >         struct device_node *parent_node;
+> > +       struct reserved_mem *rmem;
+> >         struct resource *res;
+> >         u32 value;
+> >         int ret;
+> > @@ -651,13 +653,20 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+> >
+> >         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >         if (!res) {
+> > -               dev_err(&pdev->dev,
+> > -                       "failed to locate DT /reserved-memory resource\n");
+> > -               return -EINVAL;
+> > +               rmem = of_reserved_mem_lookup(of_node);
+> 
+> Nit: you could keep rmem scoped locally here.
+
+Noted! Thanks for the feedback.
+
+> Otherwise the code looks sane, I just suspect the commit message could
+> be more clear in explaining the need/utility of the dts entry using
+> alloc-ranges.
+
+Got it; please let me know if the edit I suggested earlier clarifies
+things.
+
+Thanks,
+Isaac
