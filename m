@@ -2,149 +2,153 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AACD4EB64DB
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 14:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED20EEB64D8
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 14:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231130AbjFVOIR (ORCPT
+        id S230170AbjFVOZ5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 10:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56520 "EHLO
+        Thu, 22 Jun 2023 10:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230351AbjFVOIR (ORCPT
+        with ESMTP id S229628AbjFVOZ4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 10:08:17 -0400
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09123118
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 07:08:15 -0700 (PDT)
-Received: from eig-obgw-5007a.ext.cloudfilter.net ([10.0.29.141])
-        by cmsmtp with ESMTP
-        id CAlQqxORqyYOwCKysqu30y; Thu, 22 Jun 2023 14:08:14 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id CKysq7TMxp7AfCKysqeQs3; Thu, 22 Jun 2023 14:08:14 +0000
-X-Authority-Analysis: v=2.4 cv=RP+goqu+ c=1 sm=1 tr=0 ts=649455ce
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19 a=IkcTkHD0fZMA:10 a=of4jigFt-DYA:10
- a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8 a=f5R3gcx-rqYdtmm8484A:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=o3nVrYc6RnMxf0e4iXIYtKi5C8Jg0CJJ5aA5IElG1J4=; b=NgA+pmIXcZG44sheyyW+4X1RXY
-        smpeQnJ51qjrJ/tGhVsmFIqY7x6nBKhE8k6xCuSipNQc1IP19DirM4La5M1Ge9T6pbANFk6+/t0B1
-        M4kqNHjb02rpzZI6hy/+OCv693WiSmAdv7SI4hSMAKhh6LT3laJeSStXoI+jMknLTGdPu0Y6j+k5M
-        u3NY4wbs3bt0hYozTpgWxUOkcZKN6k53nBBJ3279HPdS3HH3D4WbFAfUcDGguMvJZhavp9U1IXX1P
-        27FMwsTERckNPsUodrrztxoo9JNMj78L+9fXGe3UK2ZaViArNdjSUuqZ/TkhIwyP8BCdYgaWQf1Iy
-        Jm3+xxAg==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:43202 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.95)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qCKyr-000Aa9-Dy;
-        Thu, 22 Jun 2023 09:08:13 -0500
-Message-ID: <0d6377ef-bc34-784a-8694-478d0ade085e@embeddedor.com>
-Date:   Thu, 22 Jun 2023 08:09:03 -0600
+        Thu, 22 Jun 2023 10:25:56 -0400
+Received: from bird.elm.relay.mailchannels.net (bird.elm.relay.mailchannels.net [23.83.212.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF376E2
+        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 07:25:54 -0700 (PDT)
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 45A4E261567;
+        Thu, 22 Jun 2023 14:25:54 +0000 (UTC)
+Received: from pdx1-sub0-mail-a222.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id CA807261D37;
+        Thu, 22 Jun 2023 14:25:53 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1687443953; a=rsa-sha256;
+        cv=none;
+        b=ZoIZMiRAbUiGYhcrSOpD53+bsuD71PpCJMm9unS4RxaRw6ANoMbGsShGh1KO9E4OkcbjXW
+        xmnGi9NmrAzYKpk1059qN8OxM4Gu9NVUKNRW5aeMDKmCdTES04a2pIrIuegw7aK3ySOIif
+        g3lUAiOtwqJ6IEpREKREHtdmptHNqWkH2Z9aMvAfYxqNH/Ab7+bgJKlXqqVI8zdfkMVYg/
+        nBwJSxCw/efXdPr8rhCJ9xXxzw4UYmM+09CtCzisBukmNZ+4CtjHXlXYETPeRlr1Nn1Bpk
+        gJmlIR0P7DyHGq6GZv6GoTUbw6PnYoLmkln2Si2XuKdSu4RqjEEitdKicNd4KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1687443953;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=1XaMIEOIpFCgVI3AkBJI+hbR5+jkWNHo0FSN5LpUksc=;
+        b=T5dBldBdvlj2OSgm4C3Mw9gyfH6QP5Eu5nBtRpCAGgxIx3jDlj8GGpDyW2ezhmPoa+ua79
+        xbe7oRDyNSDjxesuDASj3IfTWSzTu5Ed6osjsguUhb/3hihYybY9hq8v7CEBp2EBs/uxBK
+        ULaohnlCSFq2OIl881QbUm1XKPerMPaCT2rSfbsFmeV6KSlm7SPt4FOTjY0cSCf1gF8aKi
+        rHH75tRHBeSfVdtJlq8a/5np9Vn/11qkaZckq+rhb3rwBfLqFAfgZnssL+b5m0vihThtEb
+        Nzyb7ePxYnDq0LGkRM8HtV+J7rcQ3mHMRRwB0uKe2mxGRPbf8lXEOlR175KceA==
+ARC-Authentication-Results: i=1;
+        rspamd-9fcc56855-twxqs;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=siddhesh@gotplt.org
+X-Sender-Id: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|siddhesh@gotplt.org
+X-MailChannels-Auth-Id: dreamhost
+X-Supply-Gusty: 226003e74f1c2b46_1687443954065_2201362872
+X-MC-Loop-Signature: 1687443954065:2513499042
+X-MC-Ingress-Time: 1687443954065
+Received: from pdx1-sub0-mail-a222.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.103.24.91 (trex/6.9.1);
+        Thu, 22 Jun 2023 14:25:54 +0000
+Received: from [192.168.0.182] (bras-vprn-toroon4834w-lp130-09-174-91-45-44.dsl.bell.ca [174.91.45.44])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        (Authenticated sender: siddhesh@gotplt.org)
+        by pdx1-sub0-mail-a222.dreamhost.com (Postfix) with ESMTPSA id 4Qn2jF2Dqtz3V;
+        Thu, 22 Jun 2023 07:25:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gotplt.org;
+        s=dreamhost; t=1687443953;
+        bh=1XaMIEOIpFCgVI3AkBJI+hbR5+jkWNHo0FSN5LpUksc=;
+        h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+        b=loVPWD+tgUjH3kjzlu18o4WjewQm3nx6/V3OfHsvPu8j+RBa/Vw5A+qPKjylPeoCM
+         Ak7PHzKEuLc1/W5nRGKnXtrxCsPPz28jK+Mir4P9l4cWiuO6pIc+vnqdXZXlFikNvl
+         XRL3Iy4IV2l/ihFPjFgto+39YbVl8usQTxOff5PlWGH8ant2eCQBqzflUCEyurSyAa
+         j21jJQ5GAdrh/5GRyZAgEemc/HewxLMwscICmVjRJA0tAAGdvASLnaeKRF3AExyTun
+         12ZCXA0XOTdvtaGfOErpik7RtFA4s3Iplsq4la3ed9i9KS8gkBHv6inViQeTvgaipx
+         24c1N0tv6LttQ==
+Message-ID: <048aeae6-6357-a29d-8e2c-8f75c4ce265b@gotplt.org>
+Date:   Thu, 22 Jun 2023 10:25:52 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
+ Thunderbird/102.12.0
+Subject: Re: On clang vs. gcc fortify warnings
 Content-Language: en-US
-To:     Steven Price <steven.price@arm.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>
-References: <ZIpm3pcs3iCP9UaR@work>
- <726aae97-755d-9806-11d4-2fb21aa93428@arm.com>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <726aae97-755d-9806-11d4-2fb21aa93428@arm.com>
+To:     Dmitry Antipov <dmantipov@yandex.ru>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org
+References: <1f3f722c-657d-21ec-d6e2-7f79ce5462e3@yandex.ru>
+From:   Siddhesh Poyarekar <siddhesh@gotplt.org>
+In-Reply-To: <1f3f722c-657d-21ec-d6e2-7f79ce5462e3@yandex.ru>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qCKyr-000Aa9-Dy
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:43202
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 2
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfI0lxf5jjRgZsvlip2j+XYcqPOrlrteRVlAGdiamImjGelIpYnJ4jZkwJ9uXx8PdQWL3erJUoM1q1po86S5ExmMZ2yYbFyI2BIbFU8UgmjKLFsg8en6P
- xRdYpuLNduVFHiQ2dCZ4x5CMSItqcQwQdSG99kQCdfM/ddDHIcBvLkvIZckjLgKb/PqivtRTf7Pc5W7RLHw0ZytmDLznTXvzbro1Gd+rB+4f69j+XnAQ75Sw
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi!
-
-On 6/22/23 04:11, Steven Price wrote:
-> On 15/06/2023 02:18, Gustavo A. R. Silva wrote:
->> Address the following -Wstringop-overflow warnings seen when
->> built with ARM architecture and aspeed_g4_defconfig configuration
->> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
->> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->>
->> These changes are based on commit d20d30ebb199 ("cgroup: Avoid compiler
->> warnings with no subsystems").
->>
->> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->> ---
->>   kernel/cgroup/cgroup.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
->> index cd497b90e11a..1ee76e62eb98 100644
->> --- a/kernel/cgroup/cgroup.c
->> +++ b/kernel/cgroup/cgroup.c
->> @@ -1200,6 +1200,9 @@ static struct css_set *find_css_set(struct css_set *old_cset,
->>   	unsigned long key;
->>   	int ssid;
->>   
->> +	if (!CGROUP_HAS_SUBSYS_CONFIG)
->> +		return NULL;
->> +
->>   	lockdep_assert_held(&cgroup_mutex);
->>   
->>   	/* First see if we already have a cgroup group that matches
->> @@ -6045,6 +6048,9 @@ int __init cgroup_init(void)
->>   	struct cgroup_subsys *ss;
->>   	int ssid;
->>   
->> +	if (!CGROUP_HAS_SUBSYS_CONFIG)
->> +		return -EINVAL;
->> +
->>   	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16);
->>   	BUG_ON(cgroup_init_cftypes(NULL, cgroup_base_files));
->>   	BUG_ON(cgroup_init_cftypes(NULL, cgroup_psi_files));
+On 2023-06-22 06:42, Dmitry Antipov wrote:
+> Recently I've observed a (not so?) subtle difference using 
+> CONFIG_FORTIFY_SOURCE=y
+> with clang vs. gcc. The problem may be illustrated by the following tiny 
+> module:
 > 
-> This change (which landed in linux-next) causes a boot failure on my
-> (arm32) board because the cgroup filesystem isn't created which upsets
-> systemd:
+> #include <linux/kernel.h>
+> #include <linux/module.h>
+> #include <linux/fortify-string.h>
 > 
-> [   11.474767] systemd[1]: Failed to mount tmpfs at /sys/fs/cgroup: No such file or directory
-> [   11.489933] systemd[1]: Failed to mount cgroup at /sys/fs/cgroup/systemd: No such file or directory
-> [!!!!!!] Failed to mount API filesystems.
+> static const char example[][32] = {
+>      "abcd",
+>      "xyzt",
+>      "1234",
+>      "5678"
+> };
 > 
-> Reverting this commit on the head of linux-next gets the board working
-> again.
+> static int __init test_init(void) {
+>      char data0[128], data1[128];
+> 
+>      /* No warnings with both gcc 13.1.1 and clang 16.0.5 */
+>          memcpy(data0, example, sizeof(example));
+> 
+>      /* No warning with gcc 13.1.1 but warning with clang 16.0.5:
+> 
+>         ./include/linux/fortify-string.h:529:4: warning: call to
+>         '__read_overflow2_field' declared with 'warning' attribute:
+>         detected read beyond size of field (2nd parameter); maybe
+>         use struct_group()? [-Wattribute-warning]
+>                          __read_overflow2_field(q_size_field, size);
+>      */
+> 
+>      memcpy(data1, *example, sizeof(example));
+>          return 0;
+> }
+> 
+> static void __exit test_exit(void) {
+> }
+> 
+> module_init(test_init);
+> module_exit(test_exit);
+> 
+> MODULE_LICENSE("GPL");
+> 
+> I suppose that clang wins here because 'memcpy(data1, *example, 
+> sizeof(example))'
+> may be interpreted as an attempt to copy 128 bytes from 32-byte source 
+> buffer.
+> So the question is why gcc don't diagnose this as well.
 
-Thanks for reporting this issue. I'll take a look.
+Sorry, I can't reproduce the warning on clang 16.0.5 with the default 
+config +CONFIG_FORTIFY_SOURCE on x86_64.  Could you share more details 
+on your config or a preprocessed source and compiler flags that get 
+passed in?
 
---
-Gustavo
+Thanks,
+Sid
