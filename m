@@ -2,97 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FADCEB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 10:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A923EB64DB
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 13:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229690AbjFVKrh (ORCPT
+        id S230509AbjFVNL2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 06:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49734 "EHLO
+        Thu, 22 Jun 2023 09:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbjFVKrf (ORCPT
+        with ESMTP id S230301AbjFVNL1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 06:47:35 -0400
-X-Greylist: delayed 311 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 22 Jun 2023 03:47:32 PDT
-Received: from forward204c.mail.yandex.net (forward204c.mail.yandex.net [178.154.239.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D6D19B4
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 03:47:32 -0700 (PDT)
-Received: from forward101c.mail.yandex.net (forward101c.mail.yandex.net [IPv6:2a02:6b8:c03:500:1:45:d181:d101])
-        by forward204c.mail.yandex.net (Yandex) with ESMTP id F0F8F6140E
-        for <linux-hardening@vger.kernel.org>; Thu, 22 Jun 2023 13:42:21 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-18.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-18.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:5e29:0:640:6b8b:0])
-        by forward101c.mail.yandex.net (Yandex) with ESMTP id E04A960139;
-        Thu, 22 Jun 2023 13:42:16 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-18.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id GgDRYL4DSSw0-TgVHY75N;
-        Thu, 22 Jun 2023 13:42:16 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail; t=1687430536;
-        bh=MTlX4FfSsa+SjbT7mwpow96OuuSAsltYniOgOWr3iZs=;
-        h=Subject:From:Cc:To:Date:Message-ID;
-        b=Tzo1LMAh4mCGYnrrRRxEH22WsP7UIWZck3qO8RstScOaGQGG6biDAvAHFj9JyIEQc
-         C3E2aLFgzC6FYtvsgyHeDFTLwwubJTHCovU4YG3Dr4oPMhtLCWInAj7HgOHkLgbb3U
-         rU0tm9BzKjCg8WAoCCf5eo7tPr3s3AoEAS4+ocDI=
-Authentication-Results: mail-nwsmtp-smtp-production-main-18.iva.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
-Message-ID: <1f3f722c-657d-21ec-d6e2-7f79ce5462e3@yandex.ru>
-Date:   Thu, 22 Jun 2023 13:42:16 +0300
+        Thu, 22 Jun 2023 09:11:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A1F4184;
+        Thu, 22 Jun 2023 06:11:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C45DE6184A;
+        Thu, 22 Jun 2023 13:11:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD4E6C433C8;
+        Thu, 22 Jun 2023 13:11:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687439485;
+        bh=au2zGNMRZ0p6Mkinx6tnYwtEJKZLBcTxo0gn++q2a74=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=IKOo+QuyPCVrVRWrMVroUNNmli8B0Wt3YXpe1QZ3uedC3/luxMurbAaq0eLb+o+PG
+         vdltEkhR33pKyyihbS25c+DIhJfzHwUoBwN3AtBz7IU5MkEgrDY0IJY/WRQw1IZpdA
+         9oDwFA3pWo7MtcEgNevN1dwxNqHZPLOhDmO7wPsRDnFkQW1qaIUCrAFOP21dpZRXUk
+         goPyvoxlkllSpD1g4QAMJmP8imAnEf5cGntoGsR1K70kZ0A6LVDDEorxleqf1VTZ1O
+         NDnn236BCfuTdah4A+Olf8kSsYZMb88VSNLQdD9BhBBQrh8l+ptiq18Iw8XLl0w6o/
+         hUM1lzKjjuSbg==
+Date:   Thu, 22 Jun 2023 08:11:23 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Neftin, Sasha" <sasha.neftin@intel.com>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
+        "Gomes, Vinicius" <vinicius.gomes@intel.com>,
+        "Zulkifli, Muhammad Husaini" <muhammad.husaini.zulkifli@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Kees Cook <keescook@chromium.org>, linux-pci@vger.kernel.org,
+        "Mushayev, Nikolay" <nikolay.mushayev@intel.com>,
+        linux-kernel@vger.kernel.org, jesse.brandeburg@intel.com,
+        "Edri, Michael" <michael.edri@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Eric Dumazet <edumazet@google.com>, anthony.l.nguyen@intel.com,
+        linux-hardening@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        Paolo Abeni <pabeni@redhat.com>,
+        "Avivi, Amir" <amir.avivi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [Intel-wired-lan] [PATCH] igc: Ignore AER reset when device is
+ suspended
+Message-ID: <20230622131123.GA137990@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org
-From:   Dmitry Antipov <dmantipov@yandex.ru>
-Subject: On clang vs. gcc fortify warnings
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16bcc313-a4e1-ab50-4487-c99ccf5ecdf9@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Recently I've observed a (not so?) subtle difference using CONFIG_FORTIFY_SOURCE=y
-with clang vs. gcc. The problem may be illustrated by the following tiny module:
+On Thu, Jun 22, 2023 at 08:09:34AM +0300, Neftin, Sasha wrote:
+> On 6/21/2023 23:43, Bjorn Helgaas wrote:
+> > On Tue, Jun 20, 2023 at 08:36:36PM +0800, Kai-Heng Feng wrote:
+> > > When a system that connects to a Thunderbolt dock equipped with I225,
+> > > I225 stops working after S3 resume:
 
-#include <linux/kernel.h>
-#include <linux/module.h>
-#include <linux/fortify-string.h>
+> > > The issue is that the PTM requests are sending before driver resumes the
+> > > device. Since the issue can also be observed on Windows, it's quite
+> > > likely a firmware/hardwar limitation.
+> > 
+> > I thought c01163dbd1b8 ("PCI/PM: Always disable PTM for all devices
+> > during suspend") would turn off PTM.  Is that not working for this
+> > path, or are we re-enabling PTM incorrectly, or something else?
+> 
+> I think we hit on the HW bug here. On some i225/6 parts, PTM requests are
+> sent before SW takes ownership of the device. This patch could help.
 
-static const char example[][32] = {
-	"abcd",
-	"xyzt",
-	"1234",
-	"5678"
-};
+Is there an erratum we can read?  If this is needed to work around a
+hardware defect, there should be a comment in the code to that effect,
+and we should have a better understanding because there may be other
+scenarios (suspend/resume, hotplug, etc) that need similar changes.
 
-static int __init test_init(void) {
-	char data0[128], data1[128];
+(I know this patch is to work around a suspend/resume issue, but the
+change is in the AER error recovery path, so it doesn't quite fit
+together for me yet.)
 
-	/* No warnings with both gcc 13.1.1 and clang 16.0.5 */
-         memcpy(data0, example, sizeof(example));
+Are you saying the NIC sends PTM requests when it doesn't have PTM
+Enable set?
 
-	/* No warning with gcc 13.1.1 but warning with clang 16.0.5:
+What exactly does it mean for "SW to take ownership of the device"?
+What PCIe transaction would tell the device the SW has taken
+ownership?
 
-	   ./include/linux/fortify-string.h:529:4: warning: call to
-	   '__read_overflow2_field' declared with 'warning' attribute:
-	   detected read beyond size of field (2nd parameter); maybe
-	   use struct_group()? [-Wattribute-warning]
-                         __read_overflow2_field(q_size_field, size);
-	*/
-	
-	memcpy(data1, *example, sizeof(example));
-         return 0;
-}
+So far this feels kind of hand-wavey.
 
-static void __exit test_exit(void) {
-}
-
-module_init(test_init);
-module_exit(test_exit);
-
-MODULE_LICENSE("GPL");
-
-I suppose that clang wins here because 'memcpy(data1, *example, sizeof(example))'
-may be interpreted as an attempt to copy 128 bytes from 32-byte source buffer.
-So the question is why gcc don't diagnose this as well.
-
-Thanks,
-Dmitry
+> > Checking pci_is_enable() in the .error_detected() callback looks like
+> > a pattern that may need to be replicated in many other drivers, which
+> > makes me think it may not be the best approach.
+> > 
+> > > So avoid resetting the device if it's not resumed. Once the device is
+> > > fully resumed, the device can work normally.
+> > > 
+> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216850
+> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > ---
+> > >   drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
+> > >   1 file changed, 3 insertions(+)
+> > > 
+> > > diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+> > > index fa764190f270..6a46f886ff43 100644
+> > > --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> > > +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> > > @@ -6962,6 +6962,9 @@ static pci_ers_result_t igc_io_error_detected(struct pci_dev *pdev,
+> > >   	struct net_device *netdev = pci_get_drvdata(pdev);
+> > >   	struct igc_adapter *adapter = netdev_priv(netdev);
+> > > +	if (!pci_is_enabled(pdev))
+> > > +		return 0;
+> > > +
+> > >   	netif_device_detach(netdev);
+> > >   	if (state == pci_channel_io_perm_failure)
