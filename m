@@ -2,133 +2,149 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D3FEB64D8
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 00:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62129EB64D7
+	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 00:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbjFVAu7 (ORCPT
+        id S229840AbjFVAwV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 21 Jun 2023 20:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35896 "EHLO
+        Wed, 21 Jun 2023 20:52:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbjFVAu6 (ORCPT
+        with ESMTP id S229530AbjFVAwT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 21 Jun 2023 20:50:58 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DF71995;
-        Wed, 21 Jun 2023 17:50:57 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b5018cb4dcso32873865ad.2;
-        Wed, 21 Jun 2023 17:50:57 -0700 (PDT)
+        Wed, 21 Jun 2023 20:52:19 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A57197
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 17:52:18 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-57320c10635so60051127b3.3
+        for <linux-hardening@vger.kernel.org>; Wed, 21 Jun 2023 17:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687395057; x=1689987057;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=YNnfLof80DYRhJzNzeXS0S7oXvTEkEp18dIa/GFxd8U=;
-        b=O+N9o0Xn9Ur3aYZ+8k6IZyPyQ/ODYR5uUlT/tmJx4rKO/eGGdN8F5nCfOWV3ZAq8gr
-         R8n6VOGMhTpJaafQAh5401KAVo/A8p4ErmOylXNQDvjF/qoeuOziVzBjXKt9UaRZRUYK
-         W2wK3aUBB0RElMIhL9Dct03zwUucBpD/rlhUFXtcJcAFDbWTUb9MiVX/UyvAdfxcTGJl
-         WnFDgqymWyNfGTqoW6WUiSJrBtMpkPRXcGRIxGTc1vTiXAZMtGTsD+ZSYnNiE4dprcGk
-         0tImjvth0+TxSnxUeSq6gfyf9CoaYh6ivLVjgYrJ/+QlPl801WP20cVXwQ0onRV+5gog
-         NpgA==
+        d=google.com; s=20221208; t=1687395137; x=1689987137;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=udHRmMpy+xwUknnQXeH45s8WH+sOsn0OoP200LprEk8=;
+        b=GAJEjs2YZoM/GNZOZEMFVk5T7kspISkVDy/DFO4zdDGLHaO58YIs0C+goCRA6w7FzX
+         XsoR4zIwn2U7KXr86Epk78qLKvDKcmlmwzgG8YJt+IFdU5RbFzDfU6LU9T4QK7rt6lOK
+         SqOu2GTA7iNSkTXAecvssfTivjwu0eJx57ddopDEq5TgWfb9mUIsSvlzWrm0JkHiaE2k
+         tH69P30RnQ6ejx7AwVF6sbLpZEyMoc6/D3ZSNhCqi6rEytTLWhmqclLEdLEQcD3pJEzl
+         6SW0KfpS74Qxf7bfjYh972DHh5xr9NNZl83oQhXq2R4dEBPMaSJIw+unH7T+ZD8Qq81U
+         7Imw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687395057; x=1689987057;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YNnfLof80DYRhJzNzeXS0S7oXvTEkEp18dIa/GFxd8U=;
-        b=T/vX+HJSA5cMSwhwMU8Gd02QNTy19aQJCffH8jAT4wrASNm4Lx/WV1actrNpE7r9s5
-         eCG+nT9A43m1LBceJ6gvIHtwhB6tV9EuH7nr3gVdhavKJZ5R+l6thOpE19fLZfdv8pep
-         wKScdg2aqYlusQWGf1vezElXwZonY0nOge6a+m6jo2Y02AVHygSPR0X39xCFSEQU2h74
-         OOMGLFaRLKmMyxXmq5wqPkdAk8sYEobYWJWrs4cMTTZJwYZdsPJPC/nteq1VV5EFn6Ad
-         JO3Z2dpamLLtpu5URnqpF3NpGYilFsWzr4suUD7cZNBm3hKQJYS6UaeQREirrojcHsWP
-         Rgvw==
-X-Gm-Message-State: AC+VfDww/wGyZqt1cKuwvGTaLltmauciU2WCzn4HdpFZnLFW2+318D1i
-        vMmWOPGoBHWMBDm/sVxwCjw=
-X-Google-Smtp-Source: ACHHUZ59/kLruU5N+IKAtTqbHgrt1BPIyAQdjeF0dVqOKxHz27D9SmufuvJNkxrPeSLkKJr08V1brA==
-X-Received: by 2002:a17:903:24c:b0:1b0:f727:bc41 with SMTP id j12-20020a170903024c00b001b0f727bc41mr7747529plh.42.1687395056754;
-        Wed, 21 Jun 2023 17:50:56 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l12-20020a170902f68c00b001ab061e352bsm4051896plg.195.2023.06.21.17.50.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Jun 2023 17:50:55 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <5fbe4977-c56d-2d97-bea3-28148807b5d9@roeck-us.net>
-Date:   Wed, 21 Jun 2023 17:50:53 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2] ubsan: Tighten UBSAN_BOUNDS on GCC
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Marco Elver <elver@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>, Tom Rix <trix@redhat.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>, linux-kbuild@vger.kernel.org,
-        llvm@lists.linux.dev, Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230405022356.gonna.338-kees@kernel.org>
- <07dea91f-9b93-4227-9fec-728a9e7a0d55@roeck-us.net>
- <202306211051.1D4038323@keescook>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <202306211051.1D4038323@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        d=1e100.net; s=20221208; t=1687395137; x=1689987137;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=udHRmMpy+xwUknnQXeH45s8WH+sOsn0OoP200LprEk8=;
+        b=XNGIxtWNeWjo2PyHh6DZYt/bHdURtXeDnjiPsfryc7xlbQ0hUM7uVpM70kR6vy9N4i
+         jRoRKa+njzSFA2pLLu6CBmA8eNjGsoxuxccRNV+UGdKQe8M77Ky7uJdOoUbxc0fQvLF7
+         8qnvQHGZbMc5EaB/PbsbMLk7T9pEt/0L9/45fzkufeeay3PIekvDeY/Y6lNY29Yba/0F
+         0YoIqt7ziop+BJtY1B9cBMNHl0zViKw9PMaFLUao216/1g2S0tU38Gk4ENJ5Ro1hFuWT
+         cR0KOL7qesnj/QYdbEHbtQ6WT728bQS1aTUJjNGs8T32hqQG676WQ3CjnraxU+habxKt
+         5RZw==
+X-Gm-Message-State: AC+VfDyzuQx3rXDSPWiHoN1UqWntxjRd/OfBOpE07h6BeHWF1Of/tQDm
+        PzGPv1ep41LxxtJKS4fwK3dwbAHu9ZEi8EVZjSABdw==
+X-Google-Smtp-Source: ACHHUZ6u/7QlT4SDhN5KmiFjdmeN3Fuopi3BZMJM2tVW4FzTPKmxujg2fqXpY+4iNdUaSWeUTkYINsttv57coIFDE2Na1w==
+X-Received: from isaacmanjarres.irv.corp.google.com ([2620:15c:2d:3:e855:b0d7:44f2:fbb7])
+ (user=isaacmanjarres job=sendgmr) by 2002:a81:af46:0:b0:56c:e6fa:6ce9 with
+ SMTP id x6-20020a81af46000000b0056ce6fa6ce9mr7022607ywj.8.1687395137684; Wed,
+ 21 Jun 2023 17:52:17 -0700 (PDT)
+Date:   Wed, 21 Jun 2023 17:52:13 -0700
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.178.g377b9f9a00-goog
+Message-ID: <20230622005213.458236-1-isaacmanjarres@google.com>
+Subject: [PATCH] pstore/ram: Add support for dynamically allocated ramoops
+ memory regions
+From:   "Isaac J. Manjarres" <isaacmanjarres@google.com>
+To:     Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        "Isaac J . Manjarres" <isaacmanjarres@google.com>,
+        kernel-team@android.com, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 6/21/23 10:52, Kees Cook wrote:
-> On Wed, Jun 21, 2023 at 09:42:01AM -0700, Guenter Roeck wrote:
->> Hi,
->>
->> On Tue, Apr 04, 2023 at 07:23:59PM -0700, Kees Cook wrote:
->>> The use of -fsanitize=bounds on GCC will ignore some trailing arrays,
->>> leaving a gap in coverage. Switch to using -fsanitize=bounds-strict to
->>> match Clang's stricter behavior.
->>>
->>> Cc: Marco Elver <elver@google.com>
->>> Cc: Masahiro Yamada <masahiroy@kernel.org>
->>> Cc: Nathan Chancellor <nathan@kernel.org>
->>> Cc: Nick Desaulniers <ndesaulniers@google.com>
->>> Cc: Nicolas Schier <nicolas@fjasle.eu>
->>> Cc: Tom Rix <trix@redhat.com>
->>> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
->>> Cc: Miroslav Benes <mbenes@suse.cz>
->>> Cc: linux-kbuild@vger.kernel.org
->>> Cc: llvm@lists.linux.dev
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> ---
->>
->> This patch, presumably as side effect, enables CONFIG_ARCH_STM32
->> for arm64:allmodconfig. As consequence, CONFIG_STM32_RPROC is enabled
->> as well. This in turn results in the following build error.
->>
->> Building arm64:allmodconfig ... failed
->> --------------
->> Error log:
->> In file included from include/linux/printk.h:564,
->>                   from include/asm-generic/bug.h:22,
->>                   from arch/arm64/include/asm/bug.h:26,
->>                   from include/linux/bug.h:5,
->>                   from include/linux/fortify-string.h:5,
->>                   from include/linux/string.h:254,
->>                   from include/linux/dma-mapping.h:7,
->>                   from drivers/remoteproc/stm32_rproc.c:9:
->> drivers/remoteproc/stm32_rproc.c: In function 'stm32_rproc_mem_alloc':
->> drivers/remoteproc/stm32_rproc.c:122:22: error: format '%x' expects argument of type 'unsigned int', but argument 5 has type 'size_t'
->>
->> I did not try to understand what is going on, but reverting this
->> patch fixes the problem.
-> 
-> Well that is really weird! I will investigate... this patch should be
-> pretty self-contained...
-> 
-Meh, it is. Sorry for the noise. My bisect script was wrong.
+From: "Isaac J. Manjarres" <isaacm@codeaurora.org>
 
-Guenter
+The reserved memory region for ramoops is assumed to be at a fixed
+and known location when read from the devicetree. This is not desirable
+in environments where it is preferred for the region to be dynamically
+allocated early during boot (i.e. the memory region is defined with
+the "alloc-ranges" property instead of the "reg" property).
+
+If the location of the ramoops region is not fixed via the "reg"
+devicetree property, the call to platform_get_resource() will fail
+because resources of type IORESOURCE_MEM must be described with the
+"reg" property.
+
+Since ramoops regions are part of the reserved-memory devicetree
+node, they exist in the reserved_mem array. This means that the
+of_reserved_mem_lookup() function can be used to retrieve the
+reserved_mem structure for the ramoops region, and that structure
+contains the base and size of the region, even if it has been
+dynamically allocated.
+
+Thus invoke of_reserved_mem_lookup() in case the call to
+platform_get_resource() fails in order to support dynamically
+allocated ramoops memory regions.
+
+Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+Signed-off-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+Signed-off-by: Isaac J. Manjarres <isaacmanjarres@google.com>
+---
+ fs/pstore/ram.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index ade66dbe5f39..e4bbba187011 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -20,6 +20,7 @@
+ #include <linux/compiler.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/of_reserved_mem.h>
+ 
+ #include "internal.h"
+ #include "ram_internal.h"
+@@ -643,6 +644,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+ {
+ 	struct device_node *of_node = pdev->dev.of_node;
+ 	struct device_node *parent_node;
++	struct reserved_mem *rmem;
+ 	struct resource *res;
+ 	u32 value;
+ 	int ret;
+@@ -651,13 +653,20 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+-		dev_err(&pdev->dev,
+-			"failed to locate DT /reserved-memory resource\n");
+-		return -EINVAL;
++		rmem = of_reserved_mem_lookup(of_node);
++		if (rmem) {
++			pdata->mem_size = rmem->size;
++			pdata->mem_address = rmem->base;
++		} else {
++			dev_err(&pdev->dev,
++				"failed to locate DT /reserved-memory resource\n");
++			return -EINVAL;
++		}
++	} else {
++		pdata->mem_size = resource_size(res);
++		pdata->mem_address = res->start;
+ 	}
+ 
+-	pdata->mem_size = resource_size(res);
+-	pdata->mem_address = res->start;
+ 	/*
+ 	 * Setting "unbuffered" is deprecated and will be ignored if
+ 	 * "mem_type" is also specified.
+-- 
+2.41.0.178.g377b9f9a00-goog
 
