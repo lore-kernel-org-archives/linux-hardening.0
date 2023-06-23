@@ -2,94 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1685EB64DA
-	for <linux-hardening@archiver.kernel.org>; Thu, 22 Jun 2023 23:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E1CEB64DA
+	for <linux-hardening@archiver.kernel.org>; Fri, 23 Jun 2023 02:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231518AbjFVXnE (ORCPT
+        id S231214AbjFWC1S (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 22 Jun 2023 19:43:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
+        Thu, 22 Jun 2023 22:27:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230060AbjFVXnE (ORCPT
+        with ESMTP id S231135AbjFWC1S (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 22 Jun 2023 19:43:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD2542121;
-        Thu, 22 Jun 2023 16:43:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 650D661710;
-        Thu, 22 Jun 2023 23:43:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D7A8C433C8;
-        Thu, 22 Jun 2023 23:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687477381;
-        bh=XiHdQW2COChuhdW8/pHNZiGOCWZC/cyIHQHJxwAaX/w=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XPuPi2nRjJ1ZKqb8yiXgAFJRBNAh6RfTKlUPPDka5LPaOpshTka603rNJuU+b4y2m
-         ljolB9PryWxis7ZnW5nFJaw1HMfbgeSkAwDA3Sa0K6OO8pXiGYyrsq5zsJRcGPc4Vn
-         6h6aPvzWpPKlfR7i50bq7i9w4l0//9U0t1ROgvG/91lJQ8UwSe+TvN/oUVesRG9lHN
-         0lcoLWBGCaqJi+DQ1Cd7F/I8UL4pOvv8pI/1rllpFNr5UHMHmlk5x78DUkVtiioOix
-         OyJK4eEnRv3RVNEyD2V08kzKG//OH42lrGCImJxknwqypnT75CzHyECwtT+aFYDaOl
-         rpGcJXJg2iKVw==
-Date:   Thu, 22 Jun 2023 17:43:57 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] MIPS: dec: prom: Address -Warray-bounds warning
-Message-ID: <ZJTcvfpvhvF+OLjc@work>
+        Thu, 22 Jun 2023 22:27:18 -0400
+Received: from cstnet.cn (smtp80.cstnet.cn [159.226.251.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F9EBE2;
+        Thu, 22 Jun 2023 19:27:15 -0700 (PDT)
+Received: from ed3e173716be.home.arpa (unknown [124.16.138.129])
+        by APP-01 (Coremail) with SMTP id qwCowAA3PBj7ApVkl4IDAw--.15978S2;
+        Fri, 23 Jun 2023 10:27:08 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     keescook@chromium.org
+Cc:     tony.luck@intel.com, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: [PATCH v3] pstore/platform: Add check for kstrdup
+Date:   Fri, 23 Jun 2023 10:27:06 +0800
+Message-Id: <20230623022706.32125-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: qwCowAA3PBj7ApVkl4IDAw--.15978S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WFWfuw4rur1rWFy7Xr43Wrg_yoW8WFy5p3
+        ykCwn3ArW8G3W29w1vq3WrZF4avF4ktr4rJ3y8ta1Iywn0gr1jvrWUKa1S9Fy8JryfXr17
+        JF1rCw15uFZ0yr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUka14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+        6r4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gr1l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUgVyxUUUUU=
+X-Originating-IP: [124.16.138.129]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Zero-length arrays are deprecated, and we are replacing them with flexible
-array members instead. So, replace zero-length array with flexible-array
-member in struct memmap.
+Add check for the return value of kstrdup() and return the error
+if it fails in order to avoid NULL pointer dereference.
 
-Address the following warning found after building (with GCC-13) mips64
-with decstation_64_defconfig:
-In function 'rex_setup_memory_region',
-    inlined from 'prom_meminit' at arch/mips/dec/prom/memory.c:91:3:
-arch/mips/dec/prom/memory.c:72:31: error: array subscript i is outside array bounds of 'unsigned char[0]' [-Werror=array-bounds=]
-   72 |                 if (bm->bitmap[i] == 0xff)
-      |                     ~~~~~~~~~~^~~
-In file included from arch/mips/dec/prom/memory.c:16:
-./arch/mips/include/asm/dec/prom.h: In function 'prom_meminit':
-./arch/mips/include/asm/dec/prom.h:73:23: note: while referencing 'bitmap'
-   73 |         unsigned char bitmap[0];
-
-This helps with the ongoing efforts to globally enable -Warray-bounds.
-
-This results in no differences in binary output.
-
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/KSPP/linux/issues/323
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Fixes: 563ca40ddf40 ("pstore/platform: Switch pstore_info::name to const")
+Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
 ---
- arch/mips/include/asm/dec/prom.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changelog:
 
-diff --git a/arch/mips/include/asm/dec/prom.h b/arch/mips/include/asm/dec/prom.h
-index 1e1247add1cf..908e96e3a311 100644
---- a/arch/mips/include/asm/dec/prom.h
-+++ b/arch/mips/include/asm/dec/prom.h
-@@ -70,7 +70,7 @@ static inline bool prom_is_rex(u32 magic)
+v2 -> v3:
+
+1. Add kfree() in the later error handling.
+
+v1 -> v2:
+
+1. Allocate a copy earlier.
+---
+ fs/pstore/platform.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index cbc0b468c1ab..15cefe268ffd 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -573,6 +573,8 @@ static int pstore_write_user_compat(struct pstore_record *record,
   */
- typedef struct {
- 	int pagesize;
--	unsigned char bitmap[0];
-+	unsigned char bitmap[];
- } memmap;
+ int pstore_register(struct pstore_info *psi)
+ {
++	char *new_backend;
++
+ 	if (backend && strcmp(backend, psi->name)) {
+ 		pr_warn("backend '%s' already in use: ignoring '%s'\n",
+ 			backend, psi->name);
+@@ -593,11 +595,16 @@ int pstore_register(struct pstore_info *psi)
+ 		return -EINVAL;
+ 	}
  
++	new_backend = kstrdup(psi->name, GFP_KERNEL);
++	if (!new_backend)
++		return -ENOMEM;
++
+ 	mutex_lock(&psinfo_lock);
+ 	if (psinfo) {
+ 		pr_warn("backend '%s' already loaded: ignoring '%s'\n",
+ 			psinfo->name, psi->name);
+ 		mutex_unlock(&psinfo_lock);
++		kfree(new_backend);
+ 		return -EBUSY;
+ 	}
+ 
+@@ -630,7 +637,7 @@ int pstore_register(struct pstore_info *psi)
+ 	 * Update the module parameter backend, so it is visible
+ 	 * through /sys/module/pstore/parameters/backend
+ 	 */
+-	backend = kstrdup(psi->name, GFP_KERNEL);
++	backend = new_backend;
+ 
+ 	pr_info("Registered %s as persistent store backend\n", psi->name);
  
 -- 
-2.34.1
+2.25.1
 
