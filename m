@@ -2,149 +2,76 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FADEB64D7
-	for <linux-hardening@archiver.kernel.org>; Fri, 23 Jun 2023 16:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FBAEB64DA
+	for <linux-hardening@archiver.kernel.org>; Sat, 24 Jun 2023 03:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232284AbjFWQhs (ORCPT
+        id S229616AbjFXDuA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 23 Jun 2023 12:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47168 "EHLO
+        Fri, 23 Jun 2023 23:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231678AbjFWQho (ORCPT
+        with ESMTP id S229475AbjFXDt7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 23 Jun 2023 12:37:44 -0400
-Received: from smtp-190a.mail.infomaniak.ch (smtp-190a.mail.infomaniak.ch [185.125.25.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5C42955
-        for <linux-hardening@vger.kernel.org>; Fri, 23 Jun 2023 09:37:30 -0700 (PDT)
-Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QnjZc06rrzMq32R;
-        Fri, 23 Jun 2023 16:37:28 +0000 (UTC)
-Received: from unknown by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4QnjZZ1wx8zMpnPl;
-        Fri, 23 Jun 2023 18:37:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1687538247;
-        bh=NUnmcWSTTZt7eIqedPc0vDhEW1R152+j3rJCyoMrDTo=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=oGcrsAqZWWOJ+U00oFpn+r2lwbUpMB2vFtlwJyvMivLpdsFoNT4lQKpLdnbd+flfC
-         0tr4XiZWSIT0QU0AIRFRS0x2oS/cl3FFznrXu/Issul/L+yEZvVr3x/3rsPiuzSG8H
-         n8weT2YgmrClL/EwirWVq+g4Fc+nQVHyeledpolo=
-Message-ID: <77ec6e6c-7fb0-01ab-26c5-e9c9da392e2a@digikod.net>
-Date:   Fri, 23 Jun 2023 18:37:25 +0200
+        Fri, 23 Jun 2023 23:49:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9392226A0;
+        Fri, 23 Jun 2023 20:49:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 58C9661B9C;
+        Sat, 24 Jun 2023 03:49:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9E75C433C9;
+        Sat, 24 Jun 2023 03:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687578596;
+        bh=aQPtQfX+vTNM9nJygU5Fyd3Ey+a/BTH7D16Cf3wXHIU=;
+        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
+        b=VDqdfb90lGZQLOpWplRjYuHoa6j77VqeuTRCpasruJM/zutx8BgY0g+8T7OnJTWpF
+         YCJn86SRSCWmjHS9V83Whr8DWJKegmh+742kYpV3MIWpSH3Uwy4t2UQqM3fh5fn4dR
+         a2IwQR2cVAYnWGS6xrtN48r5JHiNGWi69bUE9qvHeE6k9kIIKn1BISs0oUjctH2q5C
+         aRcYvSv7DSXWB2YXlW91ViSBHALfaMi8N3YTQfQdcQMhnYC3CYLGUtmQMgF+2F4RNh
+         KA8liMCNlNq7Nw8yw0I1TqWVPCNy0ROl0vWtWeS1Le/nzKos4lkAmXeUwvOhJrOxRC
+         8a9iNZ51fbAxg==
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-560b56b638eso976902eaf.0;
+        Fri, 23 Jun 2023 20:49:56 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwPoi+Cd1tLTODFHRSB75ZtYlnsc30tTcC718Zea2Km1sihsxef
+        u7tTgurJxD8HKBaw89pozOOrNFsXT0fYxPfDE9o=
+X-Google-Smtp-Source: ACHHUZ5n3pvo2wJUTlDwdgugjI8xKaFqEGHY/4TudLoGYYUiX8prwI+W4ZabPuF6XrDBCC4FFZn4FkDZB62dmVYGNAs=
+X-Received: by 2002:a4a:e904:0:b0:563:16bf:4f9e with SMTP id
+ bx4-20020a4ae904000000b0056316bf4f9emr1424051oob.3.1687578595836; Fri, 23 Jun
+ 2023 20:49:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [PATCH v2 0/6] Landlock: ioctl support
-Content-Language: en-US
-To:     =?UTF-8?Q?G=c3=bcnther_Noack?= <gnoack@google.com>,
-        linux-security-module@vger.kernel.org
-Cc:     Jeff Xu <jeffxu@google.com>,
-        Jorge Lucangeli Obes <jorgelo@chromium.org>,
-        Allen Webb <allenwebb@google.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-        linux-fsdevel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-hardening@vger.kernel.org
-References: <20230623144329.136541-1-gnoack@google.com>
- <ZJW4O+HVymf4nB6A@google.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <ZJW4O+HVymf4nB6A@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+Received: by 2002:ac9:5e18:0:b0:4df:6fd3:a469 with HTTP; Fri, 23 Jun 2023
+ 20:49:55 -0700 (PDT)
+In-Reply-To: <ZJNnynWOoTp6uTwF@work>
+References: <ZJNnynWOoTp6uTwF@work>
+From:   Namjae Jeon <linkinjeon@kernel.org>
+Date:   Sat, 24 Jun 2023 12:49:55 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd-tjowbv83M4PFqFSfzkOOU4RFAFB8AATcoyx8Rfg5tXg@mail.gmail.com>
+Message-ID: <CAKYAXd-tjowbv83M4PFqFSfzkOOU4RFAFB8AATcoyx8Rfg5tXg@mail.gmail.com>
+Subject: Re: [PATCH][next] smb: Replace one-element array with flexible-array member
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Steve French <sfrench@samba.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Tom Talpey <tom@talpey.com>, linux-cifs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi, thanks for the patches!
+2023-06-22 6:12 GMT+09:00, Gustavo A. R. Silva <gustavoars@kernel.org>:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element array with flexible-array
+> member in struct smb_negotiate_req.
+>
+> This results in no differences in binary output.
+>
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/317
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Applied it with reviewed/acked-by tags  to #ksmbd-for-next-next.
 
-
-On 23/06/2023 17:20, Günther Noack wrote:
-> Hello!
-> 
-> On Fri, Jun 23, 2023 at 04:43:23PM +0200, Günther Noack wrote:
->> Proposed approach
->> ~~~~~~~~~~~~~~~~~
->>
->> Introduce the LANDLOCK_ACCESS_FS_IOCTL right, which restricts the use
->> of ioctl(2) on file descriptors.
->>
->> We attach the LANDLOCK_ACCESS_FS_IOCTL right to opened file
->> descriptors, as we already do for LANDLOCK_ACCESS_FS_TRUNCATE.
->>
->> I believe that this approach works for the majority of use cases, and
->> offers a good trade-off between Landlock API and implementation
->> complexity and flexibility when the feature is used.
->>
->> Current limitations
->> ~~~~~~~~~~~~~~~~~~~
->>
->> With this patch set, ioctl(2) requests can *not* be filtered based on
->> file type, device number (dev_t) or on the ioctl(2) request number.
->>
->> On the initial RFC patch set [1], we have reached consensus to start
->> with this simpler coarse-grained approach, and build additional ioctl
->> restriction capabilities on top in subsequent steps.
-> 
-> We *could* use this opportunity to blanket disable the TIOCSTI ioctl, if a
-> Landlock policy gets enabled and ioctls are handled.
-> 
-> TIOCSTI is a TTY ioctl which is commonly used as a sandbox escape, if the
-> sandboxes system can get a hold on a TTY file descriptor from outside the
-> sandbox (like STDOUT, hah).
-> 
-> An excellent summary of these problems was already written by Kees Cook on the
-> Linux patch which removes TIOCSTI depending on a kernel config option:
-> https://lore.kernel.org/lkml/20221022182828.give.717-kees@kernel.org/
-> 
-> Unfortunately on the distributions I have tested so far (Debian and Arch Linux),
-> TIOCSTI is still enabled.
-> 
-> ***Proposal***:
-> 
->    I am in favor of *disabling* TIOCSTI in all Landlocked processes,
->    if the Landlock policy handles the LANDLOCK_ACCESS_FS_IOCTL right.
-> 
-> If we want to do it in a backwards-compatible way, now would be the time to add
-> it to the patch set. :)
-
-What would that not be backward compatible?
-
-> 
-> As far as I can tell, there are no good legitimate use cases for TIOCSTI, and it
-> would fix the aforementioned sandbox escaping trick for a Landlocked process.
-> With the patch set as it is now, the only way to prevent that sandbox escape is
-> unfortunately to either (1) close the TTY file descriptors when enabling
-> Landlock, or (2) rely on an outside process to pass something else than a TTY
-> for FDs 0, 1 and 2.
-
-What about calling setsid()?
-
-Alternatively, seccomp could be used, even if it could block overlapping 
-IOCTLs as well…
-
-
-> 
-> Does that sound reasonable?  If yes, I'd send an update to this patch set which
-> forbids TIOCSTI.
-
-I agree that TIOCSTI is dangerous, but I don't see the rationale to add 
-an exception for this specific IOCTL. I'm sure there are a lot of 
-potentially dangerous IOCTLs out there, but from a kernel point of view, 
-why should Landlock handle this one in a specific way?
-
-Landlock should not define specific policies itself but let users manage 
-that. Landlock should only restrict kernel features that *directly* 
-enable to bypass its own restrictions (e.g. ptrace scope, FS topology 
-changes when FS restrictions are in place).
-
-I think we should instead focus on adding something like a 
-landlock_inode_attr rule type to restrict IOCTLs defined by 
-users/developers, and then extend it to make it possible to restrict 
-already opened FDs as well.
-
-> 
-> Thanks,
-> —Günther
-> 
+Thanks.
