@@ -2,145 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A52EB64DC
-	for <linux-hardening@archiver.kernel.org>; Sun, 25 Jun 2023 12:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73AC0EB64DC
+	for <linux-hardening@archiver.kernel.org>; Sun, 25 Jun 2023 22:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231356AbjFYMBQ (ORCPT
+        id S229489AbjFYWSM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 25 Jun 2023 08:01:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46410 "EHLO
+        Sun, 25 Jun 2023 18:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231249AbjFYMBQ (ORCPT
+        with ESMTP id S229480AbjFYWSL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 25 Jun 2023 08:01:16 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15269DA;
-        Sun, 25 Jun 2023 05:01:14 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QpqLt0v4lz4f41Tl;
-        Sun, 25 Jun 2023 20:01:10 +0800 (CST)
-Received: from [10.67.110.48] (unknown [10.67.110.48])
-        by APP1 (Coremail) with SMTP id cCh0CgCX8BqDLJhkkwNMLw--.23764S2;
-        Sun, 25 Jun 2023 20:01:09 +0800 (CST)
-Message-ID: <5c222541-4add-2ca6-90a1-faf11e0b5319@huaweicloud.com>
-Date:   Sun, 25 Jun 2023 20:01:07 +0800
+        Sun, 25 Jun 2023 18:18:11 -0400
+X-Greylist: delayed 534 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 25 Jun 2023 15:18:08 PDT
+Received: from hera.aquilenet.fr (hera.aquilenet.fr [IPv6:2a0c:e300::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEEAB1A5
+        for <linux-hardening@vger.kernel.org>; Sun, 25 Jun 2023 15:18:08 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by hera.aquilenet.fr (Postfix) with ESMTP id 0A0231D19
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Jun 2023 00:09:02 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at hera.aquilenet.fr
+Received: from hera.aquilenet.fr ([127.0.0.1])
+        by localhost (hera.aquilenet.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id NmL9K_Lqh0i0 for <linux-hardening@vger.kernel.org>;
+        Mon, 26 Jun 2023 00:09:01 +0200 (CEST)
+Received: from begin (reverse-177-225.fdn.fr [80.67.177.225])
+        by hera.aquilenet.fr (Postfix) with ESMTPSA id 578C3178E
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Jun 2023 00:09:01 +0200 (CEST)
+Received: from samy by begin with local (Exim 4.96)
+        (envelope-from <samuel.thibault@aquilenet.fr>)
+        id 1qDXum-008GP9-3D
+        for linux-hardening@vger.kernel.org;
+        Mon, 26 Jun 2023 00:09:01 +0200
+Date:   Sun, 25 Jun 2023 17:56:25 +0200
+From:   Samuel Thibault <samuel.thibault@aquilenet.fr>
+To:     Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Message-ID: <20230625155625.s4kvy7m2vw74ow4i@begin>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@aquilenet.fr>,
+        Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+References: <20221022182828.give.717-kees@kernel.org>
+ <20221022182949.2684794-2-keescook@chromium.org>
+ <20221227234000.jgosvixx7eahqb3z@begin>
+ <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
+ <20221228205726.rfevry7ud6gmttg5@begin>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 1/1] Randomized slab caches for kmalloc()
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Christoph Lameter <cl@linux.com>, Tejun Heo <tj@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>, Jann Horn <jannh@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Pedro Falcato <pedro.falcato@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gongruiqi1@huawei.com
-References: <20230616111843.3677378-1-gongruiqi@huaweicloud.com>
- <20230616111843.3677378-2-gongruiqi@huaweicloud.com>
- <3fdc76f0-6c45-c405-0024-d1d69b5bf068@suse.cz>
- <202306221307.6CF63BAC20@keescook>
-From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-In-Reply-To: <202306221307.6CF63BAC20@keescook>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: cCh0CgCX8BqDLJhkkwNMLw--.23764S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ary7tw18Jw1UZw48uFyrXrb_yoW5JFyDpF
-        W3J3W7trs5Jr45Cwn2va1Iqw1Fv3s5tF45Xw1fu345uwn8Ja4IgryDKr4Iqa4kArn3uw10
-        qF4j9F97Z3ZIv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-        e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-        Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
-        6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-        uYvjxUFDGOUUUUU
-X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221228205726.rfevry7ud6gmttg5@begin>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hello,
 
-
-On 2023/06/23 4:10, Kees Cook wrote:
-> On Thu, Jun 22, 2023 at 03:56:04PM +0200, Vlastimil Babka wrote:
->> On 6/16/23 13:18, GONG, Ruiqi wrote:
->>> index a3c95338cd3a..6150e9a946a7 100644
->>> --- a/mm/Kconfig
->>> +++ b/mm/Kconfig
->>> @@ -337,6 +337,55 @@ config SLUB_CPU_PARTIAL
->>>  	  which requires the taking of locks that may cause latency spikes.
->>>  	  Typically one would choose no for a realtime system.
->>>  
->>> +config RANDOM_KMALLOC_CACHES
->>> +	default n
->>> +	depends on SLUB
->>> +	bool "Random slab caches for normal kmalloc"
->>> +	help
->>> +	  A hardening feature that creates multiple copies of slab caches for
->>> +	  normal kmalloc allocation and makes kmalloc randomly pick one based
->>> +	  on code address, which makes the attackers unable to spray vulnerable
->>> +	  memory objects on the heap for exploiting memory vulnerabilities.
->>> +
->>> +choice
->>> +	prompt "Number of random slab caches copies"
->>> +	depends on RANDOM_KMALLOC_CACHES
->>> +	default RANDOM_KMALLOC_CACHES_16
->>> +	help
->>> +	  The number of copies of random slab caches. Bigger value makes the
->>> +	  potentially vulnerable memory object less likely to collide with
->>> +	  objects allocated from other subsystems or modules.
->>
->> When I read this, without further knowledge, why would I select anything
->> else than the largest value? It should mention memory overhead maybe?
+Samuel Thibault, le mer. 28 déc. 2022 21:57:26 +0100, a ecrit:
+> Kees Cook, le mar. 27 déc. 2022 19:32:55 -0800, a ecrit:
+> > On December 27, 2022 3:40:00 PM PST, Samuel Thibault <samuel.thibault@aquilenet.fr> wrote:
+> > >Kees Cook, le sam. 22 oct. 2022 11:29:49 -0700, a ecrit:
+> > >> TIOCSTI continues its long history of being used in privilege escalation
+> > >> attacks[1]. Prior attempts to provide a mechanism to disable this have
+> > >> devolved into discussions around creating full-blown LSMs to provide
+> > >> arbitrary ioctl filtering, which is hugely over-engineered -- only
+> > >> TIOCSTI is being used this way. 3 years ago OpenBSD entirely removed
+> > >> TIOCSTI[2], Android has had it filtered for longer[3], and the tools that
+> > >> had historically used TIOCSTI either do not need it, are not commonly
+> > >> built with it, or have had its use removed.
+> > >
+> > >No. The Brltty screen reader entirely relies on TIOCSTI to be able to
+> > >support input from various Braille devices. Please make sure to keep
+> > >TIOCSTI enabled by default, otherwise some people would just completely
+> > >lose their usual way of simply typing on Linux.
+> > 
+> > Yup, it remains default enabled:
 > 
-> Yeah, good idea.
-> 
+> Yes, but thining of it, very soon people in various security-sensitive
+> distributions will disable it, as they should indeed. And people who
+> need to use their Braille device on such distributions will get stuck.
 
-No problem. Will add some text about memory overhead into the help
-paragraph of RANDOM_KMALLOC_CACHES.
+And as expected, it did get disabled in Debian for instance, very much
+to the dismay of blind users, whose keyboard suddenly stopped working at
+all after rebooting with a Linux 6.3 kernel!...
 
->> Also would anyone really select only "2" and thus limit the collision
->> probability to 50% and not less? "4" also seems quite low for the given
->> purpose? Could we just pick and hardcode 8 or 16 and avoid the selection, at
->> least until there's some more experience with the whole approach?
-> 
-> I assume it was for doing performance (speed or space) analysis for
-> people interested in tuning it. The default is 16, which is what most
-> folks will end up with. i.e. I'm not sure I see a benefit to dropping 2
-> and 4, since I imagine people will either want the highest value (16),
-> or the ability to do a full comparison of each setting.
-> 
-> Regardless, I would be fine if we dropped 2 and 4, since I am focused on
-> the maximum number (16) of hash buckets. :)
-> 
+> Can we perhaps just introduce a CAP_TIOCSTI that the brltty daemon would
+> be able to use? We could even make it only allow TIOCSTI on the linux
+> console (tty->ops == con_ops).
 
-It's true that 2 and 4 don't make much sense from the hardening
-perspective, and I added them only to cover all possible choices. And
-since the overhead difference between 8 and 16 is small, I will hardcode
-16 and drop all other options in the next version.
+*Please* comment on this so we can progress. ATM people are
+advising each other to set dev.tty.legacy_tiocsti=1, which is just
+counter-productive in terms of security...
 
-> -Kees
-> 
+Really, this a serious regression for the people affected by this.
 
+Samuel
