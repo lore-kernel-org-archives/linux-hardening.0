@@ -2,28 +2,28 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0B8EB64DC
-	for <linux-hardening@archiver.kernel.org>; Sun, 25 Jun 2023 11:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A52EB64DC
+	for <linux-hardening@archiver.kernel.org>; Sun, 25 Jun 2023 12:01:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231152AbjFYLZi (ORCPT
+        id S231356AbjFYMBQ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 25 Jun 2023 07:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
+        Sun, 25 Jun 2023 08:01:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231967AbjFYLZh (ORCPT
+        with ESMTP id S231249AbjFYMBQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 25 Jun 2023 07:25:37 -0400
+        Sun, 25 Jun 2023 08:01:16 -0400
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BED1E73;
-        Sun, 25 Jun 2023 04:25:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15269DA;
+        Sun, 25 Jun 2023 05:01:14 -0700 (PDT)
 Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QppYd5kgRz4f3jJK;
-        Sun, 25 Jun 2023 19:25:25 +0800 (CST)
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4QpqLt0v4lz4f41Tl;
+        Sun, 25 Jun 2023 20:01:10 +0800 (CST)
 Received: from [10.67.110.48] (unknown [10.67.110.48])
-        by APP2 (Coremail) with SMTP id Syh0CgCXpuclJJhkCzGzMQ--.30443S2;
-        Sun, 25 Jun 2023 19:25:26 +0800 (CST)
-Message-ID: <81a71d95-fa22-a423-b94a-4bc35e1454f9@huaweicloud.com>
-Date:   Sun, 25 Jun 2023 19:25:25 +0800
+        by APP1 (Coremail) with SMTP id cCh0CgCX8BqDLJhkkwNMLw--.23764S2;
+        Sun, 25 Jun 2023 20:01:09 +0800 (CST)
+Message-ID: <5c222541-4add-2ca6-90a1-faf11e0b5319@huaweicloud.com>
+Date:   Sun, 25 Jun 2023 20:01:07 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
@@ -52,16 +52,17 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         gongruiqi1@huawei.com
 References: <20230616111843.3677378-1-gongruiqi@huaweicloud.com>
  <20230616111843.3677378-2-gongruiqi@huaweicloud.com>
- <202306211111.4E70CD6@keescook>
+ <3fdc76f0-6c45-c405-0024-d1d69b5bf068@suse.cz>
+ <202306221307.6CF63BAC20@keescook>
 From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-In-Reply-To: <202306211111.4E70CD6@keescook>
+In-Reply-To: <202306221307.6CF63BAC20@keescook>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: Syh0CgCXpuclJJhkCzGzMQ--.30443S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3GF4ftFykWry5uF1rZrW3Awb_yoW7uFyUpF
-        WfAF17JFZ5Jry7Cr1jvryUZry3Xw4rJrWUC34aq3ykZFyjyr10grnYgrWrury8ZF98C3Wj
-        qF4kKwn8Ww15AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+X-CM-TRANSID: cCh0CgCX8BqDLJhkkwNMLw--.23764S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ary7tw18Jw1UZw48uFyrXrb_yoW5JFyDpF
+        W3J3W7trs5Jr45Cwn2va1Iqw1Fv3s5tF45Xw1fu345uwn8Ja4IgryDKr4Iqa4kArn3uw10
+        qF4j9F97Z3ZIv3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
         6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
         vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
         xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
@@ -71,9 +72,9 @@ X-Coremail-Antispam: 1UD129KBjvJXoW3GF4ftFykWry5uF1rZrW3Awb_yoW7uFyUpF
         e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
         Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
         6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-        14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-        9x07UZ18PUUUUU=
+        kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
+        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
+        uYvjxUFDGOUUUUU
 X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -82,169 +83,64 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 2023/06/22 2:21, Kees Cook wrote:
-> On Fri, Jun 16, 2023 at 07:18:43PM +0800, GONG, Ruiqi wrote:
->> [...]
+On 2023/06/23 4:10, Kees Cook wrote:
+> On Thu, Jun 22, 2023 at 03:56:04PM +0200, Vlastimil Babka wrote:
+>> On 6/16/23 13:18, GONG, Ruiqi wrote:
+>>> index a3c95338cd3a..6150e9a946a7 100644
+>>> --- a/mm/Kconfig
+>>> +++ b/mm/Kconfig
+>>> @@ -337,6 +337,55 @@ config SLUB_CPU_PARTIAL
+>>>  	  which requires the taking of locks that may cause latency spikes.
+>>>  	  Typically one would choose no for a realtime system.
+>>>  
+>>> +config RANDOM_KMALLOC_CACHES
+>>> +	default n
+>>> +	depends on SLUB
+>>> +	bool "Random slab caches for normal kmalloc"
+>>> +	help
+>>> +	  A hardening feature that creates multiple copies of slab caches for
+>>> +	  normal kmalloc allocation and makes kmalloc randomly pick one based
+>>> +	  on code address, which makes the attackers unable to spray vulnerable
+>>> +	  memory objects on the heap for exploiting memory vulnerabilities.
+>>> +
+>>> +choice
+>>> +	prompt "Number of random slab caches copies"
+>>> +	depends on RANDOM_KMALLOC_CACHES
+>>> +	default RANDOM_KMALLOC_CACHES_16
+>>> +	help
+>>> +	  The number of copies of random slab caches. Bigger value makes the
+>>> +	  potentially vulnerable memory object less likely to collide with
+>>> +	  objects allocated from other subsystems or modules.
 >>
->> Signed-off-by: GONG, Ruiqi <gongruiqi@huaweicloud.com>
->> Co-developed-by: Xiu Jianfeng <xiujianfeng@huawei.com>
->> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+>> When I read this, without further knowledge, why would I select anything
+>> else than the largest value? It should mention memory overhead maybe?
 > 
-> I think this looks really good. Thanks for the respin! Some
-> nits/comments/questions below, but I think this can land and get
-> incrementally improved. Please consider it:
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Yeah, good idea.
 > 
 
-Thanks, Kees!
+No problem. Will add some text about memory overhead into the help
+paragraph of RANDOM_KMALLOC_CACHES.
 
->> diff --git a/include/linux/slab.h b/include/linux/slab.h
->> index 791f7453a04f..b7a5387f0dad 100644
->> --- a/include/linux/slab.h
->> +++ b/include/linux/slab.h
->> @@ -19,6 +19,9 @@
->>  #include <linux/workqueue.h>
->>  #include <linux/percpu-refcount.h>
->>  
->> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
->> +#include <linux/hash.h>
->> +#endif
+>> Also would anyone really select only "2" and thus limit the collision
+>> probability to 50% and not less? "4" also seems quite low for the given
+>> purpose? Could we just pick and hardcode 8 or 16 and avoid the selection, at
+>> least until there's some more experience with the whole approach?
 > 
-> I think this can just be included unconditionally, yes?
+> I assume it was for doing performance (speed or space) analysis for
+> people interested in tuning it. The default is 16, which is what most
+> folks will end up with. i.e. I'm not sure I see a benefit to dropping 2
+> and 4, since I imagine people will either want the highest value (16),
+> or the ability to do a full comparison of each setting.
 > 
-
-True. Will change it.
-
->> [...]
->> +extern unsigned long random_kmalloc_seed;
->> +
->> +static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags, unsigned long caller)
->>  {
->>  	/*
->>  	 * The most common case is KMALLOC_NORMAL, so test for it
->>  	 * with a single branch for all the relevant flags.
->>  	 */
->>  	if (likely((flags & KMALLOC_NOT_NORMAL_BITS) == 0))
->> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
->> +		return KMALLOC_RANDOM_START + hash_64(caller ^ random_kmalloc_seed,
->> +						      CONFIG_RANDOM_KMALLOC_CACHES_BITS);
->> +#else
->>  		return KMALLOC_NORMAL;
->> +#endif
-> 
-> The commit log talks about having no runtime lookup, but that's not
-> entirely true, given this routine. And xor and a hash_64... I wonder how
-> expensive this is compared to some kind of constant expression that
-> could be computed at build time... (the xor should stay, but that's
-> "cheap").
+> Regardless, I would be fine if we dropped 2 and 4, since I am focused on
+> the maximum number (16) of hash buckets. :)
 > 
 
-To be precise, currently the random selection is static during each time
-the system starts and runs, but not across different system startups. In
-the commit log, I've added the following paragraph to explain this
-feature, and will expand it a bit in the next version:
+It's true that 2 and 4 don't make much sense from the hardening
+perspective, and I added them only to cover all possible choices. And
+since the overhead difference between 8 and 16 is small, I will hardcode
+16 and drop all other options in the next version.
 
-"Meanwhile, the static random selection is further enhanced with a
-per-boot random seed, which prevents the attacker from finding a usable
-kmalloc that happens to pick the same cache with the vulnerable
-subsystem/module by analyzing the open source code."
-
-As for the build-time hashing, I think theoretically it could be
-achieved, as long as we can have a compile-time random number generator.
-However afaik the compiler has no support on this at the moment, and I
-can only find a few discussions about this (in the C++ community).
-
->>  
->>  	/*
->>  	 * At least one of the flags has to be set. Their priorities in
->> @@ -577,7 +589,7 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
->>  
->>  		index = kmalloc_index(size);
->>  		return kmalloc_trace(
->> -				kmalloc_caches[kmalloc_type(flags)][index],
->> +				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
->>  				flags, size);
->>  	}
->>  	return __kmalloc(size, flags);
->> @@ -593,7 +605,7 @@ static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t fla
->>  
->>  		index = kmalloc_index(size);
->>  		return kmalloc_node_trace(
->> -				kmalloc_caches[kmalloc_type(flags)][index],
->> +				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
->>  				flags, node, size);
->>  	}
->>  	return __kmalloc_node(size, flags, node);
-> 
-> The use of _RET_IP_ is generally fine here, but I wonder about some of
-> the allocation wrappers (like devm_kmalloc(), etc). I think those aren't
-> being bucketed correctly? Have you checked that?
-> 
-
-Yes, I checked the distribution of used slab caches by booting the
-kernel in QEMU, and /proc/slabinfo shows that they are in general evenly
-spread among the copies.
-
-I think in most cases, hashing on _RET_IP_ can effectively diverge
-allocation in different subsystems/modules into different caches. For
-example, using devm_kmalloc() on different places will acquire slab obj
-on different cache copies:
-
-xxx_func () {
-  devm_kmalloc() {
-------------  always inlined alloc_dr()  ---------------
-    __kmalloc_node_track_caller(..., _RET_IP_)
---------------------------------------------------------
-  }
-  next inst. of devm_kmalloc()     // where _RET_IP_ takes
-}
-
-There are cases like sk_alloc(), where the wrapping is deep and all
-struct sock would gather into a few caches:
-
-sk_alloc() {
-  sk_prot_alloc() {
-------------  always inlined kmalloc()  -----------------
-    kmalloc_trace(... kmalloc_type(flags, _RET_IP_) ...) // A
-    __kmalloc(...) {
-      __do_kmalloc_node(..., _RET_IP_)                   // B
-    }
---------------------------------------------------------
-    next inst. of kmalloc()                             // where B takes
-  }
-  next inst. of sk_prot_alloc()                         // where A takes
-}
-
-But it's still better than nothing. Currently _RET_IP_ is the best
-option I can think of, and in general it works.
-
->> [...]
->> @@ -776,12 +781,44 @@ EXPORT_SYMBOL(kmalloc_size_roundup);
->>  #define KMALLOC_RCL_NAME(sz)
->>  #endif
->>  
->> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
->> +#define __KMALLOC_RANDOM_CONCAT(a, b) a ## b
->> +#define KMALLOC_RANDOM_NAME(N, sz) __KMALLOC_RANDOM_CONCAT(KMA_RAND_, N)(sz)
->> +#if CONFIG_RANDOM_KMALLOC_CACHES_BITS >= 1
->> +#define KMA_RAND_1(sz)                  .name[KMALLOC_RANDOM_START +  0] = "kmalloc-random-01-" #sz,
-> 
-> I wonder if this name is getting too long? Should "random" be "rnd" ?
-> *shrug*
-> 
-
-Okay. Will do.
-
->> [...]
->> +#define KMA_RAND_16(sz) KMA_RAND_15(sz) .name[KMALLOC_RANDOM_START + 15] = "kmalloc-random-16-" #sz,
-> 
-> And if we wanted to save another character, this could be numbered 0-f,
-> but I defer these aesthetics to Vlastimil. :)
-
-Same with me ;)
-
-> 
 > -Kees
 > 
 
