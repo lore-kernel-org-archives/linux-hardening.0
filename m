@@ -2,225 +2,221 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1F5EB64D9
-	for <linux-hardening@archiver.kernel.org>; Mon, 26 Jun 2023 18:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDC1EB64D9
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jun 2023 01:20:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229666AbjFZSOU (ORCPT
+        id S230064AbjF0BUq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 26 Jun 2023 14:14:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56530 "EHLO
+        Mon, 26 Jun 2023 21:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230096AbjFZSON (ORCPT
+        with ESMTP id S230013AbjF0BUo (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 26 Jun 2023 14:14:13 -0400
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE116130;
-        Mon, 26 Jun 2023 11:14:06 -0700 (PDT)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3fb4146e8fcso5064715e9.0;
-        Mon, 26 Jun 2023 11:14:06 -0700 (PDT)
+        Mon, 26 Jun 2023 21:20:44 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 135D0173E
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Jun 2023 18:20:42 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3fa7b26b442so57675e9.0
+        for <linux-hardening@vger.kernel.org>; Mon, 26 Jun 2023 18:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687803245; x=1690395245;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/hc7Igig2hnS9scknbx0R0/Ks5IqVXjHHneOtwGiGts=;
-        b=nGARiJ7oJHkEIyhm/JrTF2Tcsl6mzXkrIVNkHXvBs0elXDCO1h5VTLEsG4CE8iclhB
-         f42yDrh3GursluajYlqcVpa5BEzEVD7N0F/cAZhZM/LxM+VkVuSbSM+c7v76vUjnXv3T
-         xGObGvqY04UE//V2ImKFtpNYvQjz2WXbgksWzhKeeKNXrxrB+j2i04aloHX6mSIKsEJD
-         +T0gL8KMACP+LnNsZWn0TGLHaTpq5/aLt+eUHqEQy1FSzgHu+3KkfpJ4bz0MXX6k/1uk
-         PwB/c/HXcmNCplYwE/yzxxei6jFKLPl5MZ1IWDm8HgLXX56zYQ0urqKMbWC3xp/Kg1cX
-         QCGQ==
+        d=google.com; s=20221208; t=1687828840; x=1690420840;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MwvCpFW/GbNtPlS+NY4oiqTY4IcMkcTsbkaeYou0CDY=;
+        b=MrXhAAJE9l6zSW90GA8n65w4+eCK49qK/xWh8182A8ET/4h+ybVFaIi0tNHp5ac5Bo
+         rSqwJWk9svsna+Mu53daPYTGiqe5GaNwXjVx9VAHJrGU4cJp9aHc6voM4wN0s5KO3K/y
+         +O/kPFMf+XtRWmXwYPmeIZZ9a/iT9pfCfMFmllEJbgdnlm83bCiBqBl53Y68hN5RfxrM
+         9W8t86scw7RxHinoj/GwRSRaUlFZu8cWPJsBazjhm0IJUgY3S2JGoVFeg9iUh08ZYBsH
+         MrXf8fbQAP4jm8jnmhmKSKxtAXDdwE2qdS21V2aGV4Xqc14Vm/OnkU5s0Ss/9sij+5Mi
+         ptYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687803245; x=1690395245;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/hc7Igig2hnS9scknbx0R0/Ks5IqVXjHHneOtwGiGts=;
-        b=QzGgNZIaPnbkyMxPscaqOatA5MR3/pBikEApg42PFeVD3V/JWMwSFjEvJFRIvO4MlT
-         j/zQFVtxOuPFsQo1UM8mJQxa0N/6b9UYjae/VC0XcJUrsSq8t85oynfA36VfMQrTLDmQ
-         PjmzYmAVVMVCUg2BYQksNDnC9CNZgc5YgRwSadmhN0fyqMuv10sRDpNWs18yMveQKxY3
-         cpSzZfSI4DyvoubLFmXw1e1dlh4gDvElIQZjp50dqzczdJ3jz9xAJBrJpcjjWVtXxP9z
-         VpfnRZJork8nqa5buOJOlYc3FdAuhzUXE/s2D21jBpqMdwYBiZ75n3n+N2ce1o1bk0S6
-         ef+g==
-X-Gm-Message-State: AC+VfDycacWZJcUggpQyf5pBJRYJskqvKQKNX9/UdQwZdfQ/jNNwhKLE
-        1zzth8NghCoP2r3A3uJ8jBg/dueUuGA=
-X-Google-Smtp-Source: ACHHUZ7y6JJ+0zoaNRoC01SVwuWTRfwo+AdiBHMtqP5iGGNv5ExkuoK8H3YMr77QRSCw1q95t4r4eg==
-X-Received: by 2002:a7b:cb04:0:b0:3f7:ecdf:ab2d with SMTP id u4-20020a7bcb04000000b003f7ecdfab2dmr28763497wmj.20.1687803244999;
-        Mon, 26 Jun 2023 11:14:04 -0700 (PDT)
-Received: from localhost ([2a02:168:633b:1:9d6a:15a4:c7d1:a0f0])
-        by smtp.gmail.com with ESMTPSA id m24-20020a7bcb98000000b003f727764b10sm8493123wmi.4.2023.06.26.11.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Jun 2023 11:14:04 -0700 (PDT)
-Date:   Mon, 26 Jun 2023 20:13:59 +0200
-From:   =?iso-8859-1?Q?G=FCnther?= Noack <gnoack3000@gmail.com>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     =?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
-        linux-security-module@vger.kernel.org, Jeff Xu <jeffxu@google.com>,
-        Jorge Lucangeli Obes <jorgelo@chromium.org>,
-        Allen Webb <allenwebb@google.com>,
-        Dmitry Torokhov <dtor@google.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-        linux-fsdevel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Landlock: ioctl support
-Message-ID: <20230626.0a8f70d4228e@gnoack.org>
-References: <20230623144329.136541-1-gnoack@google.com>
- <ZJW4O+HVymf4nB6A@google.com>
- <77ec6e6c-7fb0-01ab-26c5-e9c9da392e2a@digikod.net>
+        d=1e100.net; s=20221208; t=1687828840; x=1690420840;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MwvCpFW/GbNtPlS+NY4oiqTY4IcMkcTsbkaeYou0CDY=;
+        b=ConDYsYwWfAXU04YKWRlFh+3hQHTufFvMGsH8AyeheuLQLc+uq1vHqm6vTZSTER+w4
+         DO8EjZTQxnplq0WRqh9GfD2G0gtaMtFUfXg4tXJsh2c8e0U/SyL5UlkhG30frfA1ST4y
+         4zKrEUXloiiok6JNkgGOamydl7GIFZ84uRj5w7logi3MxxsICDKK9F+/L6Zh41yZdYFr
+         spP7GkkdFqO8U9UqnvWTSqRtRF5lqTLRmNc/61DkUkunQh0PfwMCZB/yuVHZRAmnGfty
+         MjTA/3sjws/yZihevaeqosIhbprwnHNoW2M2qnYU1Q3+BnXs3kKRRAjG4HyGrzbAlT1k
+         Emkg==
+X-Gm-Message-State: AC+VfDz1PZKwUE28GxyeJPO4MZ0Bd4AgU/4rsZbOQlAnTtFSql4nUzXo
+        jK+HR1sM2cD1RXki698pj7S+SkYVdcowubY4IGMa72tQJTfZzwAy+MhdTg==
+X-Google-Smtp-Source: ACHHUZ4yNnIeW6xZpPLiaVRnq3DPPpO7aR3C7mWs6623sflXXuUQ+liw5rmNxwTYrcSkLr+wQPlWHm14UHK8qJMbQK8=
+X-Received: by 2002:a05:600c:4fcd:b0:3f6:f4b:d4a6 with SMTP id
+ o13-20020a05600c4fcd00b003f60f4bd4a6mr283186wmq.7.1687828840459; Mon, 26 Jun
+ 2023 18:20:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <77ec6e6c-7fb0-01ab-26c5-e9c9da392e2a@digikod.net>
+From:   Yuxiao Zhang <yuxiaozhang@google.com>
+Date:   Mon, 26 Jun 2023 18:20:29 -0700
+Message-ID: <CAOOoKeQ=b4u1C_FZ-OFHSfVt5Z9xw1KtpJ4316zubt46Tny41Q@mail.gmail.com>
+Subject: support pmsg record size larger than kmalloc limitation
+To:     keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        linux-hardening@vger.kernel.org
+Cc:     William Kennington <wak@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
+Hi pstore maintainers,
 
-On Fri, Jun 23, 2023 at 06:37:25PM +0200, Mickaël Salaün wrote:
-> On 23/06/2023 17:20, Günther Noack wrote:
-> > ***Proposal***:
-> > 
-> >    I am in favor of *disabling* TIOCSTI in all Landlocked processes,
-> >    if the Landlock policy handles the LANDLOCK_ACCESS_FS_IOCTL right.
-> > 
-> > If we want to do it in a backwards-compatible way, now would be the time to add
-> > it to the patch set. :)
-> 
-> What would that not be backward compatible?
+Recently we are trying to use pmsg ramoops to store relatively large
+file. We found that even with enough space configured with pmsg-size,
+it still failed because of kmalloc limitation.
 
-What I meant is that disabling TIOCSTI for Landlocked processes would
-only be backwards compatible for Landlock users if they did a
-conscious step for opting in to that feature, such as specifying that
-"ioctl" should be a handled right.
+We are thinking of using kvmalloc instead of kmalloc for ramoops pmsg
+record buffer. It seems ok to us that the memory is not physically
+contiguous. We want to consult with you whether it is safe to do so.
 
+Below is the patch file, note that the change only touches the pmsg
+ram path, we don't touch other paths like pstore zone. It is not yet a
+solution for all the use case in pstore, just an idea of how we want
+to address the issue. We test this on 5.15 and large file works fine.
 
-> > As far as I can tell, there are no good legitimate use cases for TIOCSTI, and it
-> > would fix the aforementioned sandbox escaping trick for a Landlocked process.
-> > With the patch set as it is now, the only way to prevent that sandbox escape is
-> > unfortunately to either (1) close the TTY file descriptors when enabling
-> > Landlock, or (2) rely on an outside process to pass something else than a TTY
-> > for FDs 0, 1 and 2.
-> 
-> What about calling setsid()?
-> 
-> Alternatively, seccomp could be used, even if it could block overlapping
-> IOCTLs as well…
+-----------------------------------
 
-The possible approaches that I have seen kicked around are:
+From 5f7ac624d47b49ea827c1ad8e3b47534e0709ea3 Mon Sep 17 00:00:00 2001
+From: Yuxiao Zhang <yuxiaozhang@google.com>
+Date: Mon, 26 Jun 2023 16:40:40 -0700
+Subject: [PATCH] pstore: ramoops: support pmsg size larger than kmalloc
+ limitation
 
-setsid()
+Current pmsg implementation is using kmalloc for pmsg record buffer,
+which has max size limits based on page size. Currently even we
+allocate enough space with pmsg-size, pmsg will still fail if the
+file size is larger than what kmalloc allowed.
 
-  This does not work reliably from all processes, unfortunately.
-  In particular, it does not work in the common case where a process
-  gets started from a shell, without pipes or other bells and
-  whistles.
-  
-  From the man page:
+Since we don't need physical contiguous memory for pmsg buffer
+, we can use kvmalloc to avoid such limitation.
 
-    setsid() creates a new session if the calling process is not a
-    process group leader.
+Signed-off-by: Yuxiao Zhang <yuxiaozhang@google.com>
+---
+ fs/pstore/inode.c    | 2 +-
+ fs/pstore/platform.c | 9 +++++----
+ fs/pstore/ram.c      | 5 +++--
+ fs/pstore/ram_core.c | 3 ++-
+ 4 files changed, 11 insertions(+), 8 deletions(-)
 
-  Shells run subprocesses in their own process groups and if it is
-  only one, it is its own process group leader (see credentials(7)).
+diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+index ffbadb8b3032..df7fb2ad4599 100644
+--- a/fs/pstore/inode.c
++++ b/fs/pstore/inode.c
+@@ -54,7 +54,7 @@ static void free_pstore_private(struct
+pstore_private *private)
+  if (!private)
+  return;
+  if (private->record) {
+- kfree(private->record->buf);
++ kvfree(private->record->buf);
+  kfree(private->record->priv);
+  kfree(private->record);
+  }
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index cbc0b468c1ab..f51e9460ac9d 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -32,6 +32,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/jiffies.h>
+ #include <linux/workqueue.h>
++#include <linux/mm.h>
 
-  Such a process *could* of course run a subprocess and do it there,
-  but it would potentially require architectural changes in some
-  programs to do that, which de
+ #include "internal.h"
 
-seccomp-bpf
+@@ -549,7 +550,7 @@ static int pstore_write_user_compat(struct
+pstore_record *record,
+  if (record->buf)
+  return -EINVAL;
 
-  That's a fallback solution, yes, although I am still hoping in the
-  long run that we can get away without it.  The problem of tracking
-  the available syscall numbers as I previously discussed it at [1]
-  still exists: If the compiled program runs on a new kernel with a
-  new syscall number, and is linked against a new version of glibc,
-  that program might start doing this syscall but it can't tell apart
-  in the seccomp filter whether this is to be blocked or not.
+- record->buf = memdup_user(buf, record->size);
++ record->buf = vmemdup_user(buf, record->size);
+  if (IS_ERR(record->buf)) {
+  ret = PTR_ERR(record->buf);
+  goto out;
+@@ -557,7 +558,7 @@ static int pstore_write_user_compat(struct
+pstore_record *record,
 
-  It's a fundamentally flawed approach when linking against shared
-  objects and running on unknown (future) Linux versions.
+  ret = record->psi->write(record);
 
-  [1] https://blog.gnoack.org/post/pledge-on-linux/
+- kfree(record->buf);
++ kvfree(record->buf);
+ out:
+  record->buf = NULL;
 
-creating a new pseudo-terminal
+@@ -730,7 +731,7 @@ static void decompress_record(struct pstore_record *record)
+  return;
 
-  The cleaner solution suggested by Alan Cox in [2] is to create a new
-  pseudo terminal and run the program within that pseudo terminal.
+  /* Swap out compressed contents with decompressed contents. */
+- kfree(record->buf);
++ kvfree(record->buf);
+  record->buf = unzipped;
+  record->size = unzipped_len;
+  record->compressed = false;
+@@ -783,7 +784,7 @@ void pstore_get_backend_records(struct pstore_info *psi,
+  rc = pstore_mkfile(root, record);
+  if (rc) {
+  /* pstore_mkfile() did not take record, so free it. */
+- kfree(record->buf);
++ kvfree(record->buf);
+  kfree(record->priv);
+  kfree(record);
+  if (rc != -EEXIST || !quiet)
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index ade66dbe5f39..296465b14fa9 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -20,6 +20,7 @@
+ #include <linux/compiler.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
++#include <linux/mm.h>
 
-  This is also the technique used by programs like su (with the --pty
-  flag) and sudo.  The man pages of both programs talk about it.
+ #include "internal.h"
+ #include "ram_internal.h"
+@@ -268,7 +269,7 @@ static ssize_t ramoops_pstore_read(struct
+pstore_record *record)
+  /* ECC correction notice */
+  record->ecc_notice_size = persistent_ram_ecc_string(prz, NULL, 0);
 
-  Implementing this approach unfortunately also requires some
-  architectural changes to the program doing that - it would also
-  involve two processes again, one which keeps a reference to the tty
-  which shovels data between the old and new terminal, and one which
-  is sandboxed which only sees the pseudo-terminal.  The details are
-  described in "Advanced Programming in the UNIX Environment", Chapter
-  11.
+- record->buf = kmalloc(size + record->ecc_notice_size + 1, GFP_KERNEL);
++ record->buf = kvmalloc(size + record->ecc_notice_size + 1, GFP_KERNEL);
+  if (record->buf == NULL) {
+  size = -ENOMEM;
+  goto out;
+@@ -282,7 +283,7 @@ static ssize_t ramoops_pstore_read(struct
+pstore_record *record)
 
-  [2] https://lore.kernel.org/all/20170510212920.7f6bc5e6@alans-desktop/
+ out:
+  if (free_prz) {
+- kfree(prz->old_log);
++ kvfree(prz->old_log);
+  kfree(prz);
+  }
 
+diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+index 966191d3a5ba..3453d493ec27 100644
+--- a/fs/pstore/ram_core.c
++++ b/fs/pstore/ram_core.c
+@@ -17,6 +17,7 @@
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ #include <linux/vmalloc.h>
++#include <linux/mm.h>
+ #include <asm/page.h>
 
-I dislike all three of them for the Landlock use case:
+ #include "ram_internal.h"
+@@ -385,7 +386,7 @@ void *persistent_ram_old(struct persistent_ram_zone *prz)
 
- - Involving additional processes is a bigger change that the programs
-   using Landlock would have to deal with.
+ void persistent_ram_free_old(struct persistent_ram_zone *prz)
+ {
+- kfree(prz->old_log);
++ kvfree(prz->old_log);
+  prz->old_log = NULL;
+  prz->old_log_size = 0;
+ }
+--
 
- - Seccomp-BPF is a hack as well, due to the problem of having to
-   track syscall numbers across platforms.
-
-It might not be worth doing these things just to bridge the gap until
-we have a more proper solution in Landlock.
-
-For more entertaining/scary background reading, this search query in
-the CVE database has links where you can see how the issue has been
-dealt with in the past:
-
-https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=TIOCSTI
-
-The most recent one of these is in opendoas, the discussion in that
-thread also has some interesting pointers (and the team ended up stuck
-with the same three potential fixes which have similar problems for
-them and which they have not implemented so far):
-https://github.com/Duncaen/OpenDoas/issues/106
-
-
-
-> > Does that sound reasonable?  If yes, I'd send an update to this patch set which
-> > forbids TIOCSTI.
-> 
-> I agree that TIOCSTI is dangerous, but I don't see the rationale to add an
-> exception for this specific IOCTL. I'm sure there are a lot of potentially
-> dangerous IOCTLs out there, but from a kernel point of view, why should
-> Landlock handle this one in a specific way?
-> 
-> Landlock should not define specific policies itself but let users manage
-> that. Landlock should only restrict kernel features that *directly* enable
-> to bypass its own restrictions (e.g. ptrace scope, FS topology changes when
-> FS restrictions are in place).
-> 
-> I think we should instead focus on adding something like a
-> landlock_inode_attr rule type to restrict IOCTLs defined by
-> users/developers, and then extend it to make it possible to restrict already
-> opened FDs as well.
-
-After researching all the stuff above, I believe you are right - it's
-better to leave this up to userspace and let them define the ioctls
-that they actually need with an allow-listing approach, to reduce the
-risk from obscure TTY ioctls.
-
-Another point that also came up in the mail thread in [2] above was:
-TIOCSTI is not the only way to do harm through the tty FD.  Another
-one is TIOCLINUX (ioctl_console(2)) through its cut&paste
-functionality, and who knows what other ioctls there might be.
-
-So in that sense, I'm coming around to your approach of letting the
-user define it in the next iteration of this ioctl patch set -- but
-it will really be necessary to do that. o_O
-
-–Günther
+-------------------------------------------
+Thanks in advance.
+-Yuxiao
