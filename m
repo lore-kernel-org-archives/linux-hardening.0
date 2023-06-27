@@ -2,121 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E49EB64D9
-	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jun 2023 20:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F278EB64D9
+	for <linux-hardening@archiver.kernel.org>; Tue, 27 Jun 2023 21:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbjF0U2Z (ORCPT
+        id S229610AbjF0Vua (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 27 Jun 2023 16:28:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46512 "EHLO
+        Tue, 27 Jun 2023 17:50:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbjF0U2Y (ORCPT
+        with ESMTP id S229680AbjF0Vu2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 27 Jun 2023 16:28:24 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A6D1BD1;
-        Tue, 27 Jun 2023 13:28:23 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b7ffab9454so16619235ad.3;
-        Tue, 27 Jun 2023 13:28:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687897703; x=1690489703;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1vPucO0ah2tzqliaea+4BxYPUmdSJl3E6NC0kkOLyyk=;
-        b=GcPz2MczXgU6SpJzyuUl5ZD4eFfWwa6lXpX3o8lJFATWNOCXX6DanvxQuaugiOtK2e
-         7V/sQ2zJd4ziSFffOMg4pakURS6v8zqidYS048F6K8nwifBE0+qmkl2a5P0AAV2pUo13
-         QQ+bejyQT+XW3VHHULhOtYoDbHAPlman2IckwsYp8YN2V+RedkMOTMi+SLRC+/wfJfvg
-         hLedKXJ8X2wJ8G/aFduDmroJmXuHEjMuwXHniE7IDuYLVdO0fb/zlUtj+AaMBY48FllB
-         4vZ2Y6Q+NfmkDj7flIxL9a2lC8lEjs3yAc5v07Wt9NAlZ/RWfSPLEL3CYhX8w5TtbKtA
-         /fKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687897703; x=1690489703;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1vPucO0ah2tzqliaea+4BxYPUmdSJl3E6NC0kkOLyyk=;
-        b=jb8zfblovPtxrW9SpvBllChF92dWwrP4eEXxSOLREe/iy2pgWQLEj/JgiANe0Osb1Q
-         Wbr8uJMcGYQIuya01e5WN0kMfF8ZvRuyF1CjQJVHYKUVz0XoPQwzGt8MZc2esOyWUttg
-         Q2PLYWmEtIqixU4njrFyslcNHPWpM69eexR3fAnzYBJEbJpg+TOX5JvNfVrqWuRj4ohv
-         ETOP9WUAY4BT7WKDDgGSG/2aIKZ4Ku5t3Chrbo+wzo319OHjRPjPtIxurZfXK1r5aBEp
-         6QJP/MeoEDAiktw2JXsjQawR9rp/Rx7XNxlR+hpMjRmjExOt2pQPO5muzjEdgPCNQ2qT
-         OQOg==
-X-Gm-Message-State: AC+VfDwpWssMKDfugdot0Avo0mdhGnFn+9q6brYktKCkXEbyucqIgj0g
-        oqvA1Kv9SkZ2FTgL3Qx8Vnw=
-X-Google-Smtp-Source: ACHHUZ77hfIbpGXcAKSEQbUd/TPPDZ3S/WB6KmkpZA5rDwH82R6v0wU0/s+a9C+d8VxfMQky+5c0eg==
-X-Received: by 2002:a17:902:6ac3:b0:1b8:d90:d20f with SMTP id i3-20020a1709026ac300b001b80d90d20fmr4043915plt.3.1687897702939;
-        Tue, 27 Jun 2023 13:28:22 -0700 (PDT)
-Received: from smtpclient.apple ([2620:15c:2c0:5:9d65:e705:252e:8337])
-        by smtp.gmail.com with ESMTPSA id t10-20020a170902a5ca00b001b53c8659fesm6338819plq.30.2023.06.27.13.28.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 27 Jun 2023 13:28:22 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.600.7\))
-Subject: Re: support pmsg record size larger than kmalloc limitation
-From:   Yuxiao Zhang <yuxiaozh.zhang@gmail.com>
-In-Reply-To: <2023062702-frosty-winking-9257@gregkh>
-Date:   Tue, 27 Jun 2023 13:28:11 -0700
-Cc:     Yuxiao Zhang <yuxiaozhang@google.com>, keescook@chromium.org,
-        tony.luck@intel.com, gpiccoli@igalia.com,
-        linux-hardening@vger.kernel.org,
-        William Kennington <wak@google.com>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D4435632-785B-43AC-AE21-EC9797458F42@gmail.com>
-References: <CAOOoKeQ=b4u1C_FZ-OFHSfVt5Z9xw1KtpJ4316zubt46Tny41Q@mail.gmail.com>
- <2023062715-eldercare-washed-3c29@gregkh>
- <CAOOoKeSxJzJEwX2aVsn_jcqK7gsgEVpB3VdhoKjJPCJgdNf9Mg@mail.gmail.com>
- <2023062702-frosty-winking-9257@gregkh>
-To:     Greg KH <gregkh@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3731.600.7)
+        Tue, 27 Jun 2023 17:50:28 -0400
+Received: from sonata.ens-lyon.org (domu-toccata.ens-lyon.fr [140.77.166.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBDD11D;
+        Tue, 27 Jun 2023 14:50:26 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by sonata.ens-lyon.org (Postfix) with ESMTP id 3550420127;
+        Tue, 27 Jun 2023 23:50:24 +0200 (CEST)
+Received: from sonata.ens-lyon.org ([127.0.0.1])
+        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id tqwoBdzOrYAd; Tue, 27 Jun 2023 23:50:24 +0200 (CEST)
+Received: from begin (unknown [91.151.117.182])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by sonata.ens-lyon.org (Postfix) with ESMTPSA id DF1862011A;
+        Tue, 27 Jun 2023 23:50:23 +0200 (CEST)
+Received: from samy by begin with local (Exim 4.96)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1qEGZp-008z2f-1W;
+        Tue, 27 Jun 2023 23:50:21 +0200
+Date:   Tue, 27 Jun 2023 23:50:21 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Message-ID: <20230627215021.ajwlckics4ssquit@begin>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+References: <20221022182828.give.717-kees@kernel.org>
+ <20221022182949.2684794-2-keescook@chromium.org>
+ <20221227234000.jgosvixx7eahqb3z@begin>
+ <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
+ <20221228205726.rfevry7ud6gmttg5@begin>
+ <20230625155625.s4kvy7m2vw74ow4i@begin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230625155625.s4kvy7m2vw74ow4i@begin>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Thanks for the pointer, the document is very helpful. Seems that I =
-cannot use gmail to send patches. I sent it again by git send-email. I =
-also tested myself that the patch is well-formatted. Hopefully this time =
-it works.
+Samuel Thibault, le dim. 25 juin 2023 17:56:25 +0200, a ecrit:
+> Samuel Thibault, le mer. 28 déc. 2022 21:57:26 +0100, a ecrit:
+> > Can we perhaps just introduce a CAP_TIOCSTI that the brltty daemon would
+> > be able to use? We could even make it only allow TIOCSTI on the linux
+> > console (tty->ops == con_ops).
+> 
+> *Please* comment on this so we can progress. ATM people are
+> advising each other to set dev.tty.legacy_tiocsti=1, which is just
+> counter-productive in terms of security...
 
-> On Jun 27, 2023, at 10:35 AM, Greg KH <gregkh@linuxfoundation.org> =
-wrote:
->=20
-> On Tue, Jun 27, 2023 at 10:05:04AM -0700, Yuxiao Zhang wrote:
->>  kfree(record->priv);
->>  kfree(record);
->>  if (rc !=3D -EEXIST || !quiet)
->> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
->> index ade66dbe5f39..296465b14fa9 100644
->> --- a/fs/pstore/ram.c
->> +++ b/fs/pstore/ram.c
->> @@ -20,6 +20,7 @@
->> #include <linux/compiler.h>
->> #include <linux/of.h>
->> #include <linux/of_address.h>
->> +#include <linux/mm.h>
->>=20
->> #include "internal.h"
->> #include "ram_internal.h"
->> @@ -268,7 +269,7 @@ static ssize_t ramoops_pstore_read(struct
->> pstore_record *record)
->>  /* ECC correction notice */
->>  record->ecc_notice_size =3D persistent_ram_ecc_string(prz, NULL, 0);
->>=20
->> - record->buf =3D kmalloc(size + record->ecc_notice_size + 1, =
-GFP_KERNEL);
->> + record->buf =3D kvmalloc(size + record->ecc_notice_size + 1, =
-GFP_KERNEL);
->>  if (record->buf =3D=3D NULL) {
->>  size =3D -ENOMEM;
->>  goto out;
->=20
-> Please try emailing a patch to yourself and see if you can apply it
-> afterwards.  The kernel documentation has a section for how to handle
-> email clients, perhaps you should read it?
->=20
-> thanks,
->=20
-> greg k-h
+People are even discussing adding that configuration to the brltty
+package, which e.g. on ubuntu is installed by default, and thus
+defeating completely the security measure by default...
 
+Please do contribute to the discussion so we can fix this.
+
+Samuel
