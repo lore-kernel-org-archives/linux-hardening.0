@@ -2,117 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6387AEB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 19:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4B4EB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 20:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbjF1Tbj (ORCPT
+        id S231185AbjF1UJF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 15:31:39 -0400
-Received: from nautica.notk.org ([91.121.71.147]:38782 "EHLO nautica.notk.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231751AbjF1Tbb (ORCPT <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 15:31:31 -0400
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id 83007C01F; Wed, 28 Jun 2023 21:31:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1687980689; bh=kq+Cd3ze4IdymcmcbBkmObHA4RqjoJ5x5Sn/8OiQZFM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fLAUaL3zge/w0oyouSmSkjTKt4CPQh1/XcyOrs000ItkQlF5pJXSZAeQeO6S8YfFk
-         FZnS3VHrFKvpzVvlebSpbtZT6JeRO6YGvIFH5oAzlGMvBV9R1OCtw3mFvj1uNO97lz
-         C/08VbTIzlXtW2+3NUjk+M0zue7dwsWn0SjJPfC6WhH5B0lDCIFsWU0p5GOq/FxbgN
-         8IlqzOhCjU2Zb2VHLTMVLzesAArWsD1HSyxX2Q3LkDKFMvpp5uhe/GG5QiSq4o9PEr
-         XnYYdUEWHJx3fhKmocRcbKwLcM17Gi+pIm6/9UOpNQkhDVe3BaEF01J2RvrAmx6YQW
-         jd97PAO36/OHw==
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id ECF89C009;
-        Wed, 28 Jun 2023 21:31:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1687980688; bh=kq+Cd3ze4IdymcmcbBkmObHA4RqjoJ5x5Sn/8OiQZFM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EMNt9hc06DX1WRZOck1lTPJyOqIRq9yDZk7fUqoltSw8y+VnEhMBu4TKwazeDtCO1
-         +l+FT3MgGR99zwdb/VjlTSTdob2EnGmbDOKDLaTKkqLDoPQiMbjInagFrVuc5VRbP5
-         2rPzy6I1H4vB1GhtUJU3PhwpShEdJrNhVkgwLc7c5qt9OEh0wcCzBfPb5yXI9YO8c0
-         SDT9K9Rkk6UjwbejplGA1QTjnGRz87ur7z4SbqcGp2BvnxYU5dqPIujFl/23AKcS0K
-         SsTzEOX/VTG9PfBZdx0P+sG5UGOf65DUx7iHfe2EytyNFSd4gI8l5ccR/H3IHBiUvv
-         rY9Ebd/9RROPg==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 4821f3bd;
-        Wed, 28 Jun 2023 19:31:21 +0000 (UTC)
-Date:   Thu, 29 Jun 2023 04:31:05 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     jeffxu@chromium.org
-Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
-        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
-        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        jannh@google.com, linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
-Message-ID: <ZJyKeeqRJxzwlMhk@codewreck.org>
-References: <20221215001205.51969-1-jeffxu@google.com>
- <20221215001205.51969-4-jeffxu@google.com>
- <ZJwcsU0vI-nzgOB_@codewreck.org>
+        Wed, 28 Jun 2023 16:09:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230021AbjF1UJD (ORCPT
+        <rfc822;linux-hardening@vger.kernel.org>);
+        Wed, 28 Jun 2023 16:09:03 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D97A1FE7
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 13:09:01 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b7ffab7ff1so3294105ad.2
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 13:09:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1687982940; x=1690574940;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kD2OEdZdTzzghvOs1OtoVVgGOc4SQ+lxa4knp1TJQ4I=;
+        b=N9gpBLBiCFJKXDKwt98HxNss1tSUuUjNAoPP5v+TPKBnX9fySyU0vI2sYZjMSzpiTF
+         E9VF6p0ar88k5NynZdY5rkTT3KSZre5QlPyvW26ABMhgaIIFVcC1XA7CrK8KSVt6Q/27
+         1SIOteWSqj5H5qSXU0Tr54JL5ckntDnJZCp+k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687982940; x=1690574940;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kD2OEdZdTzzghvOs1OtoVVgGOc4SQ+lxa4knp1TJQ4I=;
+        b=E/mlpHS37fhnLHFIYPAXwE2fVIxOOh0IqhlEHNLbbnEw1JqSzXTEmuQWQoFYaPkm9V
+         6fjROOPFw7MdMplxMPSrWugNwPFYkwJ1xUAgnl1P/jJZn3t5sQfYkNzedHatQAyT4S9g
+         06ajclvAUq/IMGVGcOzfJ4gUBjpWfoq4JSVLCJrSOn7PD6vNDfbOpaO4iGuJZL3ILh2i
+         F3j7a+b89RBZynbtoEDPTCWYTfJdTscRMhkB4xg9tut8ojKRQT74iuXTLJqgzA344Bcc
+         6DDAqESGi5QabwEzkUkw5rW5CkloEacdVWAqKZPvoYWabDNzLG4toaxioOU7QAImL9hL
+         rCMw==
+X-Gm-Message-State: AC+VfDzm176DgNUL4IoU0sdTAvMbKcncRJffYtp7a7weEckDWLwjzRnW
+        RKfQAMsgct8R8mtgZsAg9Ijk1g==
+X-Google-Smtp-Source: ACHHUZ7zGIrMnjKfjDm04NUqas7nZLV2QYUC7y9FPVci064C1JvJ8VEzq0kae/AsVkSOVLQO17YoKw==
+X-Received: by 2002:a17:902:c40d:b0:1b5:5bf2:b7e2 with SMTP id k13-20020a170902c40d00b001b55bf2b7e2mr11799831plk.6.1687982940470;
+        Wed, 28 Jun 2023 13:09:00 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id t7-20020a1709028c8700b001b03842ab78sm8054527plo.89.2023.06.28.13.08.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jun 2023 13:08:59 -0700 (PDT)
+Date:   Wed, 28 Jun 2023 13:08:58 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     aacraid@microsemi.com, "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 00/10][next] scsi: aacraid: Replace one-element arrays
+ with flexible-array members
+Message-ID: <202306281307.BB7B4369F@keescook>
+References: <cover.1687974498.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZJwcsU0vI-nzgOB_@codewreck.org>
+In-Reply-To: <cover.1687974498.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Dominique Martinet wrote on Wed, Jun 28, 2023 at 08:42:41PM +0900:
-> If flags already has either MFD_EXEC or MFD_NOEXEC_SEAL, you don't check
-> the sysctl at all.
-> [...repro snipped..]
+On Wed, Jun 28, 2023 at 11:53:45AM -0600, Gustavo A. R. Silva wrote:
+> This series aims to replace one-element arrays with flexible-array
+> members in multiple structures in drivers/scsi/aacraid/aacraid.h.
 > 
-> What am I missing?
-
-(Perhaps the intent is just to force people to use the flag so it is
-easier to check for memfd_create in seccomp or other LSM?
-But I don't see why such a check couldn't consider the absence of a flag
-as well, so I don't see the point.)
-
-
-> BTW I find the current behaviour rather hard to use: setting this to 2
-> should still set NOEXEC by default in my opinion, just refuse anything
-> that explicitly requested EXEC.
-
-And I just noticed it's not possible to lower the value despite having
-CAP_SYS_ADMIN: what the heck?! I have never seen such a sysctl and it
-just forced me to reboot because I willy-nilly tested in the init pid
-namespace, and quite a few applications that don't require exec broke
-exactly as I described below.
-
-If the user has CAP_SYS_ADMIN there are more container escape methods
-than I can count, this is basically free pass to root on main namespace
-anyway, you're not protecting anything. Please let people set the sysctl
-to what they want.
-
-> Sure there's a warn_once that memfd_create was used without seal, but
-> right now on my system it's "used up" 5 seconds after boot by systemd:
-> [    5.854378] memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=1 'systemd'
+> This helps with the ongoing efforts to globally enable -Warray-bounds
+> and get us closer to being able to tighten the FORTIFY_SOURCE routines
+> on memcpy().
 > 
-> And anyway, older kernels will barf up EINVAL when calling memfd_create
-> with MFD_NOEXEC_SEAL, so even if userspace will want to adapt they'll
-> need to try calling memfd_create with the flag once and retry on EINVAL,
-> which let's face it is going to take a while to happen.
-> (Also, the flag has been added to glibc, but not in any release yet)
+> These issues were found with the help of Coccinelle and audited and fixed,
+> manually.
 > 
-> Making calls default to noexec AND refuse exec does what you want
-> (forbid use of exec in an app that wasn't in a namespace that allows
-> exec) while allowing apps that require it to work; that sounds better
-> than making all applications that haven't taken the pain of adding the
-> new flag to me.
-> Well, I guess an app that did require exec without setting the flag will
-> fail in a weird place instead of failing at memfd_create and having a
-> chance to fallback, so it's not like it doesn't make any sense;
-> I don't have such strong feelings about this if the sysctl works, but
-> for my use case I'm more likely to want to take a chance at memfd_create
-> not needing exec than having the flag set. Perhaps a third value if I
-> cared enough...
- 
+> Link: https://github.com/KSPP/linux/issues/79
+> 
+> Gustavo A. R. Silva (10):
+>   scsi: aacraid: Replace one-element array with flexible-array member
+>   scsi: aacraid: Use struct_size() helper in aac_get_safw_ciss_luns()
+>   scsi: aacraid: Replace one-element array with flexible-array member in
+>     struct aac_aifcmd
+>   scsi: aacraid: Replace one-element array with flexible-array member in
+>     struct user_sgmapraw
+>   scsi: aacraid: Replace one-element array with flexible-array member in
+>     struct sgmapraw
+>   scsi: aacraid: Use struct_size() helper in code related to struct
+>     sgmapraw
+>   scsi: aacraid: Replace one-element array with flexible-array member in
+>     struct user_sgmap64
+>   scsi: aacraid: Replace one-element array with flexible-array member in
+>     struct sgmap
+>   scsi: aacraid: Replace one-element array with flexible-array member in
+>     struct sgmap64
+>   scsi: aacraid: Replace one-element array with flexible-array member in
+>     struct user_sgmap
+
+I'd like to reorganize this series so that all the conversions are
+first, and then struct_size() additions are at the end. That way, if
+desired, the conversions can land as fixes to turn the Clang builds
+green again.
 
 -- 
-Dominique Martinet | Asmadeus
+Kees Cook
