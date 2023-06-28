@@ -2,117 +2,144 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A586CEB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 16:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952A4EB64DA
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 16:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231915AbjF1QdD (ORCPT
+        id S231151AbjF1QxY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 12:33:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39316 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232180AbjF1Qcb (ORCPT
+        Wed, 28 Jun 2023 12:53:24 -0400
+Received: from dfw.source.kernel.org ([139.178.84.217]:46110 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230059AbjF1QxW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 12:32:31 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544592D7F
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 09:32:23 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-666e5f0d60bso3354916b3a.3
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 09:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687969943; x=1690561943;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qDGMYCjLis4jKxTwr/XdUXoNY3JVle8y3T0ovRza2gI=;
-        b=So0cQmmYjKO65vw+/JsinQBhmojmi5xblarthQ+XwK6zfOrl6nidesbKTUolCr2pTj
-         v6gEfN3NB9a8q4sxVqNolfWNnRp4XqLAHKowxUgtk9uf3sWNhisK6K8UMc+/sGQs7zl3
-         7wNc+mBDuFAzumNdKdKkBJsTHBdBLtEE96zHw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687969943; x=1690561943;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qDGMYCjLis4jKxTwr/XdUXoNY3JVle8y3T0ovRza2gI=;
-        b=gEfKH+vDL82MNcgpABfuDTS2Funeza3U+queQoVH/hVtMHU36jjb39YMx5dMcZ/BC5
-         DwxHQhQNLT/aYTmmw+sLcx2VBf2hcbUWsOfMtudgtlo1GTLiKQ7S29iZk7sziSAz8O1Q
-         0AMqeqL9Eg5H3XNpxo/kC4sGiSBucNX1jsmk87ewp3Snqwbsw3VnSpcLWxCBkM7cItJC
-         rFoYpuJA071GZ3VyN63evUA0JOrrKKrRlUUeeE0s70i2WOwoEjMC1kNLWa95vWH6ch56
-         RYOsMf8s0G8cOMcOd5U3ZOEJWBDK0DjmMadEAae6EhicKpZ6DK4eUU1t05130nSSRElG
-         JFLQ==
-X-Gm-Message-State: AC+VfDztH6TJnp9CUvRv1mPHvrcrCL64ZMTdsgw44jFgx8auTx8mT7ZD
-        7YRSxMSw8BsHeGm3/QTHtW+pDQ==
-X-Google-Smtp-Source: ACHHUZ4hwJdblgv/IjbPFH+BZPSdbdvvXEegZidz0b10Rp2sJOYq5ixdTjeKDAOTEUFq8KxIhGOHvQ==
-X-Received: by 2002:a05:6a00:3994:b0:66a:3812:7eda with SMTP id fi20-20020a056a00399400b0066a38127edamr20180226pfb.9.1687969942751;
-        Wed, 28 Jun 2023 09:32:22 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id bm2-20020a056a00320200b00681783cfc85sm1263377pfb.144.2023.06.28.09.32.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 09:32:21 -0700 (PDT)
-Date:   Wed, 28 Jun 2023 09:32:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Kees Cook <kees@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Dave@mielke.cc
-Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
-Message-ID: <202306280930.8CBBB9B@keescook>
-References: <20221022182828.give.717-kees@kernel.org>
- <20221022182949.2684794-2-keescook@chromium.org>
- <20221227234000.jgosvixx7eahqb3z@begin>
- <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
- <20221228205726.rfevry7ud6gmttg5@begin>
- <20230625155625.s4kvy7m2vw74ow4i@begin>
- <202306271944.E80E1D0@keescook>
- <20230628060716.vvgtlgbushyjh6km@begin>
+        Wed, 28 Jun 2023 12:53:22 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F100E6129B;
+        Wed, 28 Jun 2023 16:53:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC8EC433C8;
+        Wed, 28 Jun 2023 16:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1687971201;
+        bh=gozokXz2eVh6fctzR506kgwTFWCpOKR95WNjlihKjp0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XSAZJUru2/LERqubKZhN960vjbBGOsstoqQchktqgk2eAmAtD04A8rchUv6KtMPCO
+         bluJTB4rl9FsREuSLLbvkM+kuLVOwWaqtIpM5FPIWWt2zmRAH96RiEjex7HjZ2P52U
+         90KKlCAHvvTURFden0f0Wv5p/9azoOifGjIJdo/I=
+Date:   Wed, 28 Jun 2023 18:53:18 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
+        will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+Message-ID: <2023062812-exporter-facing-aaf9@gregkh>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <2023062814-chance-flounder-f002@gregkh>
+ <10dd2ead-758a-89f0-cda4-70ae927269eb@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230628060716.vvgtlgbushyjh6km@begin>
+In-Reply-To: <10dd2ead-758a-89f0-cda4-70ae927269eb@quicinc.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 08:07:16AM +0200, Samuel Thibault wrote:
-> Kees Cook, le mar. 27 juin 2023 19:48:45 -0700, a ecrit:
-> > On Sun, Jun 25, 2023 at 05:56:25PM +0200, Samuel Thibault wrote:
-> > > > Can we perhaps just introduce a CAP_TIOCSTI that the brltty daemon would
-> > > > be able to use? We could even make it only allow TIOCSTI on the linux
-> > > > console (tty->ops == con_ops).
+On Wed, Jun 28, 2023 at 09:50:00PM +0530, Mukesh Ojha wrote:
+> 
+> 
+> On 6/28/2023 9:15 PM, Greg KH wrote:
+> > On Wed, Jun 28, 2023 at 06:04:27PM +0530, Mukesh Ojha wrote:
+> > > Minidump is a best effort mechanism to collect useful and predefined data
+> > > for first level of debugging on end user devices running on Qualcomm SoCs.
+> > > It is built on the premise that System on Chip (SoC) or subsystem part of
+> > > SoC crashes, due to a range of hardware and software bugs. Hence, the
+> > > ability to collect accurate data is only a best-effort. The data collected
+> > > could be invalid or corrupted, data collection itself could fail, and so on.
+> > > 
+> > > Qualcomm devices in engineering mode provides a mechanism for generating
+> > > full system ramdumps for post mortem debugging. But in some cases it's
+> > > however not feasible to capture the entire content of RAM. The minidump
+> > > mechanism provides the means for selecting which snippets should be
+> > > included in the ramdump.
+> > > 
+> > > Minidump kernel driver implementation is divided into two parts for
+> > > simplicity, one is minidump core which can also be called minidump
+> > > frontend(As API gets exported from this driver for registration with
+> > > backend) and the other part is minidump backend i.e, where the underlying
+> > > implementation of minidump will be there. There could be different way
+> > > how the backend is implemented like Shared memory, Memory mapped IO
+> > > or Resource manager(gunyah) based where the guest region information is
+> > > passed to hypervisor via hypercalls.
+> > > 
+> > >      Minidump Client-1     Client-2      Client-5    Client-n
+> > >               |               |              |             |
+> > >               |               |    ...       |   ...       |
+> > >               |               |              |             |
+> > >               |               |              |             |
+> > >               |               |              |             |
+> > >               |               |              |             |
+> > >               |               |              |             |
+> > >               |               |              |             |
+> > >               |           +---+--------------+----+        |
+> > >               +-----------+  qcom_minidump(core)  +--------+
+> > >                           |                       |
+> > >                           +------+-----+------+---+
+> > >                                  |     |      |
+> > >                                  |     |      |
+> > >                  +---------------+     |      +--------------------+
+> > >                  |                     |                           |
+> > >                  |                     |                           |
+> > >                  |                     |                           |
+> > >                  v                     v                           v
+> > >       +-------------------+      +-------------------+     +------------------+
+> > >       |qcom_minidump_smem |      |qcom_minidump_mmio |     | qcom_minidump_rm |
+> > >       |                   |      |                   |     |                  |
+> > >       +-------------------+      +-------------------+     +------------------+
+> > >         Shared memory              Memory mapped IO           Resource manager
+> > >          (backend)                   (backend)                   (backend)
+> > > 
+> > > 
+> > > Here, we will be giving all analogy of backend with SMEM as it is the
+> > > only implemented backend at present but general idea remains the same.
 > > 
-> > Does brltty run with CAP_SYS_ADMIN?
-> 
-> ATM most often, yes, though we are trying to reduce the CAP_* privileges
-> to what it actually needs.
-> 
-> > > *Please* comment on this so we can progress. ATM people are
-> > > advising each other to set dev.tty.legacy_tiocsti=1, which is just
-> > > counter-productive in terms of security...
+> > If you only have one "backend" then you don't need the extra compexity
+> > here at all, just remove that whole middle layer please and make this
+> > much simpler and smaller and easier to review and possibly accept.
 > > 
-> > So is there really no solution for brltty and TIOCSTI being disabled?
-> 
-> No, there is no way to simulate characters on the Linux console. The
-> alternative would be to use uinput, but that simulates keycodes, not
-> characters, thus requiring backtranslating first, which is very fragile.
-> 
-> > What is FreeBSD doing? I imagine it's the same situation there too,
-> > though maybe there is just no support?
-> 
-> There is just no support in the kernel, only a patch against "screen".
-> 
-> > > Really, this a serious regression for the people affected by this.
+> > We don't add layers when they are not needed, and never when there is no
+> > actual user.  If you need the extra "complexity" later, then add it
+> > later when it is needed as who knows when that will ever be.
 > > 
-> > Can you send a patch adding a CAP_SYS_ADMIN exception?
+> > Please redo this series based on that, thanks.
 > 
-> Sure!
+> I already followed without this middle layer till v3 since without
+> the middle layer it will be end up with lot of code duplication if there
+> is another backend.
 
-Thanks! (And be sure to use file->f_cred for the check[1], not "current",
-that way brltty can open the tty and drop caps and still do the ioctl.)
+But as this series does not have such a thing, only add it when needed
+please.  Don't make us review a whole bunch of stuff that is not
+actually used here.
 
--Kees
+Would you want to review such a thing?
 
-https://docs.kernel.org/security/credentials.html?highlight=confused+deputy#open-file-credentials
+> We already have other backend implementation in the downstream, if you
+> want to see them, i will try to post them in upcoming series..
 
--- 
-Kees Cook
+Ok, so if you already have it, yes, post it as part of the series,
+otherwise such a layer makes no sense.
+
+thanks,
+
+greg k-h
