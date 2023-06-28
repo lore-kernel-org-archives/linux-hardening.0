@@ -2,97 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEFBEB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 17:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D35EEB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 18:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231508AbjF1R6O (ORCPT
+        id S231573AbjF1SLo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 13:58:14 -0400
-Received: from dfw.source.kernel.org ([139.178.84.217]:38110 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232016AbjF1R4z (ORCPT
+        Wed, 28 Jun 2023 14:11:44 -0400
+Received: from fanzine2.igalia.com ([213.97.179.56]:48490 "EHLO
+        fanzine2.igalia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231454AbjF1SLj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 13:56:55 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8435F61425;
-        Wed, 28 Jun 2023 17:56:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20271C433C0;
-        Wed, 28 Jun 2023 17:56:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687975014;
-        bh=td4cyQQksCxGhpEodkvmN0yoaLrNPgSUoTLfY9rGDgw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fB+3roWxpteaF0aMShsipBAj4bahjfCFQctyoGq3B5zVfMEaqDe1n2TIWQmB68bxh
-         48BVgJYR8oLZtdVm9fFLMMr95TUufrtPx/eLi4IEMv9AXbOnvJvD4KVPQWbVt2egTH
-         1DINJwCnOgM2gFFjZM/r5lJ1Cd4Gu8d+9gqYl1sPHBKSNR0y74nuNdMkq+S7DHkAWx
-         3le0rEcZPDCBQY/VD5LtH7yfMFOgW41OqkK5b2DHNEdy92QVcRV0j/sEuFiL3hGC8p
-         UUcqI+BTPD6vtl7oZwqtj1HSBRPa9aVbPOWeGMokq/ZMyluYqtGbomLM/sMeLxBYlD
-         HewzNxyoc1/xA==
-Date:   Wed, 28 Jun 2023 11:57:48 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     aacraid@microsemi.com, "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 10/10][next] scsi: aacraid: Replace one-element array with
- flexible-array member in struct user_sgmap
-Message-ID: <2ebb702f25c4764fb36ab29f4f40728e12b0e42b.1687974498.git.gustavoars@kernel.org>
-References: <cover.1687974498.git.gustavoars@kernel.org>
+        Wed, 28 Jun 2023 14:11:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xRSiq7Rafs7M34eS/OFYDfhULalnpTg/cuwzQtHQsco=; b=PI7udsyRTWNT8t+lHm0W16OI4g
+        J97xeLtgbkhh1mHAe5gwSWFMp86rdK/uaIbJTtcZ+mOeqVutW0fIhcFbUqNF6P3r3Cjf0XFeXxcUS
+        YzTOHvSu5ktbw+xBeHhcls4xox+GNOBN+OEvQAaUQetZW+0bRHaZvGvTqx4vhtH2QwoUJ7/18MKti
+        48n6AqfUMNXP8P44ZCU1sX6qPX+a1Y6WofIysKnLTPbOZpQ5e+pMxTYr1ylDgq70sq6FsTo8GqPFd
+        jhybfi4Xdj8YZ9JC81fQrNswIIYN6++urXGn4BxDkF5s9vpYBLwnIBwHdydNW7BucOU8Frzc9t8e0
+        3Ci83m7Q==;
+Received: from [179.232.147.2] (helo=[192.168.0.5])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1qEZdd-005N4W-0I; Wed, 28 Jun 2023 20:11:33 +0200
+Message-ID: <28718037-ccf1-c36b-4eb6-716c518ca98f@igalia.com>
+Date:   Wed, 28 Jun 2023 15:12:10 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1687974498.git.gustavoars@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] pstore: ramoops: support pmsg size larger than kmalloc
+ limitation
+Content-Language: en-US
+To:     Yuxiao Zhang <yuxiaozhang@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wak@google.com
+References: <2023062832-barrier-strenuous-9499@gregkh>
+ <20230628171055.1312737-1-yuxiaozhang@google.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20230628171055.1312737-1-yuxiaozhang@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Replace one-element array with flexible-array member in struct
-user_sgmap and refactor the rest of the code, accordingly.
+On 28/06/2023 19:10, Yuxiao Zhang wrote:
+> Thanks for reviewing the patch.
+> 
+> On 28 Jun 2023 07:30:16 +0200, Greg KH wrote:
+>> What is that max size?
+> 
+> The max size is arch dependent, it should be 2^(PAGE_SIZE+MAX_ORDER). In our environment it is 4M.
+> 
+>> what in-kernel user is hitting this in the pstore implementation?
+> 
+> We are trying to use pmsg to hold a core dump file, so we have pmsg-size=32M and thus hit this issue.
+> 
+> Other than us, here is one I found that trying to save dmesg beyond kmalloc limitaton:
+> https://lore.kernel.org/lkml/b2d66d9f-15a6-415c-2485-44649027a1d5@igalia.com/T/
 
-Issue found with the help of Coccinelle and audited and fixed,
-manually.
+Hi Yuxiao Zhang, thanks for the improvement! And also, thanks for
+mentioning the thread above - I tested your patch today and was soon to
+write you this message heh
 
-This results in no differences in binary output.
+So, first of all, the patch works for the Steam Deck case - kernel 6.4
+with or without your patch behaved the same, i.e., pstore/ramoops worked
+and it was possible to collect the dmesg.
 
-Link: https://github.com/KSPP/linux/issues/79
-Link: https://github.com/ClangBuiltLinux/linux/issues/1851
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/aacraid/aacraid.h  | 2 +-
- drivers/scsi/aacraid/commctrl.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+But when I tried to increase the record size in ramoops, I got this
+error: https://termbin.com/b12e
 
-diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
-index fb3d93e4a99e..7d3f2f7348ff 100644
---- a/drivers/scsi/aacraid/aacraid.h
-+++ b/drivers/scsi/aacraid/aacraid.h
-@@ -512,7 +512,7 @@ struct sgmap {
- 
- struct user_sgmap {
- 	u32		count;
--	struct user_sgentry	sg[1];
-+	struct user_sgentry	sg[];
- };
- 
- struct sgmap64 {
-diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctrl.c
-index df811ad4afaa..74eb33eb70d3 100644
---- a/drivers/scsi/aacraid/commctrl.c
-+++ b/drivers/scsi/aacraid/commctrl.c
-@@ -523,7 +523,7 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
- 		goto cleanup;
- 	}
- 
--	if ((fibsize < (sizeof(struct user_aac_srb) - sizeof(struct user_sgentry))) ||
-+	if ((fibsize < sizeof(struct user_aac_srb)) ||
- 	    (fibsize > (dev->max_fib_size - sizeof(struct aac_fibhdr)))) {
- 		rcode = -EINVAL;
- 		goto cleanup;
--- 
-2.34.1
+This is the same error as mentioned in the thread above. And it happens
+when I try to bump the record size to 4MB, the biggest working value is
+still 2MB. Maybe a missing spot, which remained using kmalloc() instead
+of the virtual variant?
 
+Also - Kees certainly knows that way better, but - are we 100% sure that
+the region for pstore can be non-contiguous? For some reason, I always
+thought this was a requirement - grepping the code, I found this
+(wrong?) comment:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/pstore/zone.c#n3
+
+Cheers,
+
+
+Guilherme
