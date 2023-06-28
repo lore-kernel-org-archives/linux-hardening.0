@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE9CEB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 20:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ADFEB64DD
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 20:52:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjF1Uv0 (ORCPT
+        id S231648AbjF1Uwz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 16:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44668 "EHLO
+        Wed, 28 Jun 2023 16:52:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231416AbjF1UvW (ORCPT
+        with ESMTP id S231650AbjF1Uwv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 16:51:22 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEA6619B0
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 13:51:20 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id 46e09a7af769-6b5f362f4beso90313a34.2
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 13:51:20 -0700 (PDT)
+        Wed, 28 Jun 2023 16:52:51 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49DC01BD1
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 13:52:49 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-66f5faba829so160297b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 13:52:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687985480; x=1690577480;
+        d=chromium.org; s=google; t=1687985569; x=1690577569;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yP0bXSs2vVbWc7nKFI6QoxCUJ3C1YWOqkj+wTitBDqc=;
-        b=Lo2CcrCL9oe8kvhQVqlQS5R+0S7iqR0SsmjOLDWpnDgGi9bm8RKsBzZrOb43c7DA7O
-         nxbYkYcJgcZEPxP7sn7Crs5BiYti1hQz+prQ7O/08hw7IXMXrHQ2Hua7jebKEe0fN9Hf
-         AtkKlUbxX7bSFjCkyoiVHnmD7EDgVc5dYL0O4=
+        bh=hzojRQ1F0egJqRD59S+FcTqPfQzuWDtOgop6JLdMSGw=;
+        b=HiZCgsxp983FQwUw2sx6AdlekN/G/snxYdNfXGidR0MDb7jLkQBBFNFwLrGSrQ8Glp
+         fERHuElJlAG+HKiB7tDmZFk/hlwsXHeyhKiUZZa+VaBQhdTP1LUiOQJN4XErfGNoIihl
+         oMBaNPGR0mKrDczhcQ9qXSMBEhdHf7Gy6/UQo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687985480; x=1690577480;
+        d=1e100.net; s=20221208; t=1687985569; x=1690577569;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yP0bXSs2vVbWc7nKFI6QoxCUJ3C1YWOqkj+wTitBDqc=;
-        b=NWArOb9rcV/XW3wH+QEWVKf774mh+35/y0Y9oxah74LhyAMOo6HaTSbWnhdxTiPCaD
-         N7b1bQmEA7ybzWwVuDJmPUffBlfnbxl5GSzxflaIYOv6uwigpUe5her9dcsKEwUfNSM7
-         j3UJssXMz9VZDyDUCOJtQa/rc8gOyLtpipPAI/rHrerHVd4+CnXd2N1khtcZD7XTjBPa
-         ZMzQAea49nRtoSbzNuzBLpKiqkQ0DRTDlXEZhBVda3z7/V6rK71Qpk30XfJJCqBNPW5o
-         ZEsO7MPW4lc1mNwHwCksQpFqan4Q75oHdSJmvKNBqVglssjf2CvZBC5SNVijoqCVdill
-         69Fg==
-X-Gm-Message-State: AC+VfDy4XozYTXwOscsvrIYNr8AuMq4YL/7I7KQQrnY18R6h9pjdgB+b
-        qGo+xFJngXJ5+yq/N7y8LFZgNw==
-X-Google-Smtp-Source: ACHHUZ6jhyLKKeHPuPtSXt8ApEyv98ChgMOnNAtkcK9QOfalGkyJAcNmZpDpNOlEntpRLln4pnhyLA==
-X-Received: by 2002:a05:6830:613:b0:6b8:19d8:6925 with SMTP id w19-20020a056830061300b006b819d86925mr7542358oti.12.1687985480265;
-        Wed, 28 Jun 2023 13:51:20 -0700 (PDT)
+        bh=hzojRQ1F0egJqRD59S+FcTqPfQzuWDtOgop6JLdMSGw=;
+        b=C0H5UqVUyxItUpmvaDB3yAwCU7laAubeoRwkHcE71LrJntQl5jbHxbOKndJbOmyqI9
+         fL93Hz2YD5vYJ6LpbxNXFPaAcj0ra1ATmdbbHhC98v3MMP/4SC51unjJqY0F7gDUccGV
+         hM8jySdA/BHVtWSjFxhh/I8pCPrSfVR/pDtDUhTzCXcz6SCcOlQmpj6Fj2ixIGxFpMtf
+         1lT68uR1QCLloBWW/73y5WuebAnBEds7o0bZEFxC9vY6BdgiNuGd9kVwnJaL3gzghcqH
+         x13nGrBa5I+5QUGZ3PDS/dHGO9xOqUcnLEKXgGMvkHGnEguJpjXpGePhyVS6T49fTi1B
+         16Eg==
+X-Gm-Message-State: AC+VfDyucoCWNdEkRTXc1wcbvLvqYBpbogjJUle8i5raGBFyJpxi/kDV
+        9++aIi+gONCsvW5aL3fVIebNoLokJeoRrMErgMw=
+X-Google-Smtp-Source: ACHHUZ6aWKbpdlWdbqo0UZTOBgabSUelUcGn6RoJQGsfCDv2XWMn23NkmZOmuIik8ez8Eq2+BIMQaA==
+X-Received: by 2002:a05:6a00:2341:b0:680:98c:c58d with SMTP id j1-20020a056a00234100b00680098cc58dmr4879003pfj.2.1687985568796;
+        Wed, 28 Jun 2023 13:52:48 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 21-20020a17090a019500b00256b67208b1sm10669705pjc.56.2023.06.28.13.51.19
+        by smtp.gmail.com with ESMTPSA id d25-20020aa78159000000b0064378c52398sm7355134pfn.25.2023.06.28.13.52.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 13:51:19 -0700 (PDT)
-Date:   Wed, 28 Jun 2023 13:51:19 -0700
+        Wed, 28 Jun 2023 13:52:48 -0700 (PDT)
+Date:   Wed, 28 Jun 2023 13:52:47 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Cc:     aacraid@microsemi.com, "James E.J. Bottomley" <jejb@linux.ibm.com>,
@@ -56,7 +56,7 @@ Cc:     aacraid@microsemi.com, "James E.J. Bottomley" <jejb@linux.ibm.com>,
         linux-hardening@vger.kernel.org
 Subject: Re: [PATCH 06/10][next] scsi: aacraid: Use struct_size() helper in
  code related to struct sgmapraw
-Message-ID: <202306281351.6572899FE@keescook>
+Message-ID: <202306281352.815ED6569@keescook>
 References: <cover.1687974498.git.gustavoars@kernel.org>
  <be2e5ecf1c4410ab419e2290341fbc8a0e2ba963.1687974498.git.gustavoars@kernel.org>
 MIME-Version: 1.0
@@ -69,11 +69,9 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 
 On Wed, Jun 28, 2023 at 11:56:31AM -0600, Gustavo A. R. Silva wrote:
 > Prefer struct_size() over open-coded versions.
-> 
-> Link: https://github.com/KSPP/linux/issues/160
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Oh, I think you can add two more patches to convert sgmap and sgmap64
+fibsize calculations too.
 
 -- 
 Kees Cook
