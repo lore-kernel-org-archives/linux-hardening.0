@@ -2,76 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E070EB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 08:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A60EB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 08:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231979AbjF1IGN (ORCPT
+        id S230507AbjF1IiY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 04:06:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232278AbjF1IBv (ORCPT
+        Wed, 28 Jun 2023 04:38:24 -0400
+Received: from sonata.ens-lyon.org ([140.77.166.138]:37174 "EHLO
+        sonata.ens-lyon.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233934AbjF1Icx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 04:01:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A840030D5;
-        Wed, 28 Jun 2023 00:59:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Wed, 28 Jun 2023 04:32:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by sonata.ens-lyon.org (Postfix) with ESMTP id 522972011A;
+        Wed, 28 Jun 2023 08:07:19 +0200 (CEST)
+Received: from sonata.ens-lyon.org ([127.0.0.1])
+        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 8P8yQ3a3VF9W; Wed, 28 Jun 2023 08:07:19 +0200 (CEST)
+Received: from begin (unknown [91.151.117.182])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2160F6125F;
-        Wed, 28 Jun 2023 05:30:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25476C433C0;
-        Wed, 28 Jun 2023 05:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1687930220;
-        bh=ah8x13f4zofFMx5nsLEc6qs3jvoPHfNuOeEvmo9e0nY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eJofu9sV4aO9R5qfMoxcHszIoHkwd1dpN97CpkjTQHw47hcmonzjNcarLO5y/kgQN
-         qKsR200mYoOHYjRD48YozrqWPywN1JBWKbQnZha58QeS8pk/Xti6yqfTBsm8ZfTEfF
-         TaN8tzL9tOYeo1C0Dcicx6hQWQ5brcBEH/GIQ3Qc=
-Date:   Wed, 28 Jun 2023 07:30:16 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Yuxiao Zhang <yuxiaozhang@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
-        "'Guilherme G . Piccoli'" <gpiccoli@igalia.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wak@google.com
-Subject: Re: [PATCH] pstore: ramoops: support pmsg size larger than kmalloc
- limitation
-Message-ID: <2023062832-barrier-strenuous-9499@gregkh>
-References: <20230627202540.881909-2-yuxiaozhang@google.com>
+        by sonata.ens-lyon.org (Postfix) with ESMTPSA id 39C10200D5;
+        Wed, 28 Jun 2023 08:07:18 +0200 (CEST)
+Received: from samy by begin with local (Exim 4.96)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1qEOKi-009kLK-1u;
+        Wed, 28 Jun 2023 08:07:16 +0200
+Date:   Wed, 28 Jun 2023 08:07:16 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kees Cook <kees@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Message-ID: <20230628060716.vvgtlgbushyjh6km@begin>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Kees Cook <keescook@chromium.org>, Kees Cook <kees@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+References: <20221022182828.give.717-kees@kernel.org>
+ <20221022182949.2684794-2-keescook@chromium.org>
+ <20221227234000.jgosvixx7eahqb3z@begin>
+ <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
+ <20221228205726.rfevry7ud6gmttg5@begin>
+ <20230625155625.s4kvy7m2vw74ow4i@begin>
+ <202306271944.E80E1D0@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230627202540.881909-2-yuxiaozhang@google.com>
+In-Reply-To: <202306271944.E80E1D0@keescook>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 01:25:41PM -0700, Yuxiao Zhang wrote:
-> Current pmsg implementation is using kmalloc for pmsg record buffer,
-> which has max size limits based on page size.
-
-What is that max size?
-
-> Currently even we
-> allocate enough space with pmsg-size, pmsg will still fail if the
-> file size is larger than what kmalloc allowed.
+Kees Cook, le mar. 27 juin 2023 19:48:45 -0700, a ecrit:
+> On Sun, Jun 25, 2023 at 05:56:25PM +0200, Samuel Thibault wrote:
+> > > Can we perhaps just introduce a CAP_TIOCSTI that the brltty daemon would
+> > > be able to use? We could even make it only allow TIOCSTI on the linux
+> > > console (tty->ops == con_ops).
 > 
-> Since we don't need physical contiguous memory for pmsg buffer
-> , we can use kvmalloc to avoid such limitation.
+> Does brltty run with CAP_SYS_ADMIN?
 
-Odd placement of the ',' character :)
+ATM most often, yes, though we are trying to reduce the CAP_* privileges
+to what it actually needs.
 
-Anyway, thanks for getting this sent out.
+> > *Please* comment on this so we can progress. ATM people are
+> > advising each other to set dev.tty.legacy_tiocsti=1, which is just
+> > counter-productive in terms of security...
+> 
+> So is there really no solution for brltty and TIOCSTI being disabled?
 
-But, what in-kernel user is hitting this in the pstore implementation?
-How big of a buffer is it trying to create?  Is this a bug in older
-kernels with the in-kernel drivers as well?  If so, should it go to
-stable releases and how far back?
+No, there is no way to simulate characters on the Linux console. The
+alternative would be to use uinput, but that simulates keycodes, not
+characters, thus requiring backtranslating first, which is very fragile.
 
-thanks,
+> What is FreeBSD doing? I imagine it's the same situation there too,
+> though maybe there is just no support?
 
-greg k-h
+There is just no support in the kernel, only a patch against "screen".
+
+> > Really, this a serious regression for the people affected by this.
+> 
+> Can you send a patch adding a CAP_SYS_ADMIN exception?
+
+Sure!
+
+Samuel
