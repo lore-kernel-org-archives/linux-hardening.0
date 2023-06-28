@@ -2,41 +2,41 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6E5C00528
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 12:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 208DDC04FE0
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 12:40:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232856AbjF1Mj5 (ORCPT
+        id S231500AbjF1MkZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 08:39:57 -0400
-Received: from mx0b-0031df01.pphosted.com ([205.220.180.131]:52800 "EHLO
+        Wed, 28 Jun 2023 08:40:25 -0400
+Received: from mx0b-0031df01.pphosted.com ([205.220.180.131]:7312 "EHLO
         mx0b-0031df01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231706AbjF1Mhg (ORCPT
+        by vger.kernel.org with ESMTP id S232208AbjF1Mh5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 08:37:36 -0400
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35SBDGQm002370;
-        Wed, 28 Jun 2023 12:37:20 GMT
+        Wed, 28 Jun 2023 08:37:57 -0400
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35S8hwfV019656;
+        Wed, 28 Jun 2023 12:37:41 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=qcppdkim1;
- bh=jirypYn/l5H9pX+tgaMIYr1LepA3IkncZEaWrvK3Yog=;
- b=IrI3QiEuouHDdScyw2E4Z94ukTES20W3LZvX5/la8kT0FartU23ky/RAVSAJNZfymVGZ
- iiiL4zdmrCti1HX/BOBYSoGcyeNVBzI9jE+kpPHQcMlLrblFT4b89qLdfn/e2PZeWcmj
- vbzxPnPIBlMFOtKzFPHeelpKi9InYSW4Pb0yf9NQRqydl6wReuC7q4jwY+L85as0G5LV
- XWRm0pqxfmNGYgdBJRX9G+fW+AQFk8w8kHSFi3UmcfjmUEutaH94rVxWUZj0pPKEZyfO
- pxEf2kJrF1+xM+lmwdZP+zsvmfZXP+EACKHlwqW+PLselI6FaFXcLRC9hauaraUiQGVe Bw== 
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgetpgw7c-1
+ bh=orV3xaRgOXdBv+EvZhahI6WQdstYeA90CZqOQkv6cLI=;
+ b=UkwnUQPzsvBy/N+7oBJ1VdTYqGgjVAQ70vfr1gECSNgCOZRfSiS5hMP42KYlrUYylgD6
+ /OJU1KE8h0ljrxHe67E7qXGcUvGotbUze+XittlcOXVHIbyodTjAwG5xNBw1rGX5dLtj
+ SU9goPMK1v4ufPtn34pZDdnUxIynyeGoR00i3sfyqXYbs+Q9JPpNzkK0uZD8x2chWaqE
+ jt3ZnTU3DNIuOXThieOJ+mkvbntdigmlV1B1dXZFhqKY7fqYD9EQg7SNoBBYNRaMXIW+
+ ntX9fQ8bsRl0gb9jW1B5FTBle9vlctw3Sk9AlfZB7pqwcGb2ileF5QCPHd1v3N9XFdbC +Q== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rg7x3skw1-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 12:37:20 +0000
+        Wed, 28 Jun 2023 12:37:40 +0000
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35SCbJPk028450
+        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35SCbdFH010228
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 12:37:19 GMT
+        Wed, 28 Jun 2023 12:37:39 GMT
 Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
  nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Wed, 28 Jun 2023 05:37:12 -0700
+ 15.2.986.42; Wed, 28 Jun 2023 05:37:33 -0700
 From:   Mukesh Ojha <quic_mojha@quicinc.com>
 To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
         <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
@@ -52,9 +52,9 @@ CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-gpio@vger.kernel.org>,
         "Mukesh Ojha" <quic_mojha@quicinc.com>
-Subject: [PATCH v4 18/21] pinctrl: qcom: Use qcom_scm_io_update_field()
-Date:   Wed, 28 Jun 2023 18:04:45 +0530
-Message-ID: <1687955688-20809-19-git-send-email-quic_mojha@quicinc.com>
+Subject: [PATCH v4 21/21] firmware: qcom_scm: Add multiple download mode support
+Date:   Wed, 28 Jun 2023 18:04:48 +0530
+Message-ID: <1687955688-20809-22-git-send-email-quic_mojha@quicinc.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
 References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
@@ -65,69 +65,60 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: LkvDYJLcaIHW74S5BXOR2kSeIJcmyq30
-X-Proofpoint-GUID: LkvDYJLcaIHW74S5BXOR2kSeIJcmyq30
+X-Proofpoint-ORIG-GUID: 7N0NHCXx1HtIlnlWstC82DtCdSHMY6m1
+X-Proofpoint-GUID: 7N0NHCXx1HtIlnlWstC82DtCdSHMY6m1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-06-28_08,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxlogscore=903 spamscore=0 priorityscore=1501 suspectscore=0
- clxscore=1015 bulkscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306280111
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ spamscore=0 priorityscore=1501 suspectscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306280111
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use qcom_scm_io_update_field() exported function introduced
-in last commit.
+Currently, scm driver only supports full dump when download
+mode is selected. Add support to enable minidump as well as
+enable it along with fulldump.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 ---
- drivers/pinctrl/qcom/pinctrl-msm.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/firmware/qcom_scm.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index c5f52d4f7781..f31b54bf98e4 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1041,6 +1041,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	const struct msm_pingroup *g;
- 	unsigned long flags;
- 	bool was_enabled;
-+	u32 mask;
- 	u32 val;
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 946cb0f76a17..52e3b613a1af 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -31,6 +31,8 @@ static u32 download_mode;
+ #define SCM_HAS_BUS_CLK		BIT(2)
  
- 	if (msm_gpio_needs_dual_edge_parent_workaround(d, type)) {
-@@ -1075,23 +1076,20 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	 * With intr_target_use_scm interrupts are routed to
- 	 * application cpu using scm calls.
- 	 */
-+	mask = (GENMASK(2, 0) << g->intr_target_bit);
- 	if (pctrl->intr_target_use_scm) {
- 		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
- 		int ret;
+ #define QCOM_DOWNLOAD_FULLDUMP		 0x1
++#define QCOM_DOWNLOAD_MINIDUMP		 0x2
++#define QCOM_DOWNLOAD_BOTHDUMP		 (QCOM_DOWNLOAD_FULLDUMP | QCOM_DOWNLOAD_MINIDUMP)
+ #define QCOM_DOWNLOAD_NODUMP		 0x0
+ #define QCOM_DOWNLOAD_MODE_SHIFT	   4
+ #define QCOM_DOWNLOAD_MODE_MASK		0x30
+@@ -85,6 +87,8 @@ static const char * const qcom_scm_convention_names[] = {
+ static const char * const download_mode_name[] = {
+ 	[QCOM_DOWNLOAD_NODUMP]	 = "off",
+ 	[QCOM_DOWNLOAD_FULLDUMP] = "full",
++	[QCOM_DOWNLOAD_MINIDUMP] = "mini",
++	[QCOM_DOWNLOAD_BOTHDUMP] = "full,mini",
+ };
  
--		qcom_scm_io_readl(addr, &val);
--
--		val &= ~(7 << g->intr_target_bit);
--		val |= g->intr_target_kpss_val << g->intr_target_bit;
--
--		ret = qcom_scm_io_writel(addr, val);
-+		val = g->intr_target_kpss_val << g->intr_target_bit;
-+		ret = qcom_scm_io_update_field(addr, mask, val);
- 		if (ret)
- 			dev_err(pctrl->dev,
- 				"Failed routing %lu interrupt to Apps proc",
- 				d->hwirq);
- 	} else {
- 		val = msm_readl_intr_target(pctrl, g);
--		val &= ~(7 << g->intr_target_bit);
-+		val &= ~mask;
- 		val |= g->intr_target_kpss_val << g->intr_target_bit;
- 		msm_writel_intr_target(val, pctrl, g);
- 	}
+ static struct qcom_scm *__scm;
+@@ -1465,7 +1469,7 @@ static const struct kernel_param_ops download_mode_param_ops = {
+ 
+ module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
+ MODULE_PARM_DESC(download_mode,
+-		"download mode: off/full are acceptable values");
++		"download mode: off/full/mini/full,mini are acceptable values");
+ 
+ static int qcom_scm_probe(struct platform_device *pdev)
+ {
 -- 
 2.7.4
 
