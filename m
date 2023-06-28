@@ -2,141 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65296EB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 16:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A586CEB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 16:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230100AbjF1QaK (ORCPT
+        id S231915AbjF1QdD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 12:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38650 "EHLO
+        Wed, 28 Jun 2023 12:33:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232099AbjF1Q3q (ORCPT
+        with ESMTP id S232180AbjF1Qcb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 12:29:46 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C31E2733
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 09:29:45 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b7fb1a82c4so750475ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 09:29:45 -0700 (PDT)
+        Wed, 28 Jun 2023 12:32:31 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544592D7F
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 09:32:23 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-666e5f0d60bso3354916b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 09:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687969785; x=1690561785;
+        d=chromium.org; s=google; t=1687969943; x=1690561943;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sqKrDSgd4uFuqB+8yGDCf1EvrfOgDuHhZYf9n2oqenA=;
-        b=lQpayUTyjUp2A3gMubF0kw1VV3wpmvbGoT9P5eueQR0YRfymWkoTa+nRzmgPdH2pOi
-         BYTRLCEi3IRVDdUO9YEwrpp709o9iNkTa1tXPo96mY945Ni/iJSBEWl9WjfcEMV6IxHi
-         GO5fjMVQH/jGjoYH+UVlbhK+DSPKrId9uMcFg=
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qDGMYCjLis4jKxTwr/XdUXoNY3JVle8y3T0ovRza2gI=;
+        b=So0cQmmYjKO65vw+/JsinQBhmojmi5xblarthQ+XwK6zfOrl6nidesbKTUolCr2pTj
+         v6gEfN3NB9a8q4sxVqNolfWNnRp4XqLAHKowxUgtk9uf3sWNhisK6K8UMc+/sGQs7zl3
+         7wNc+mBDuFAzumNdKdKkBJsTHBdBLtEE96zHw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687969785; x=1690561785;
+        d=1e100.net; s=20221208; t=1687969943; x=1690561943;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sqKrDSgd4uFuqB+8yGDCf1EvrfOgDuHhZYf9n2oqenA=;
-        b=kJ5UkhWPiwf+fqhr6PBQLHW1SSckmRfz5d6LAYEOGTl+3gP+KJ2CT2JWaL4Li5cPId
-         JoJV+Bb3f70GrjjlR9d1lGKfglfibMJteAe5ub1ad6kf8oxsIFPvMBfLqY1FOhmxnkRs
-         waci+ShX4mfZ63x6ydrxg2AopHL/o/f9CXBheh7+qXyLvzL5BsuI+xW/PmIFQN880Czu
-         QOzs+F7IL2r4Hv0DDoQbFFGt9wJQETrURQjjXmfTpqg/EzAEeh3qb5TTFl3+5DoayxTl
-         ZXZfz022KNJUqh0BDcJEEGaBeLfzui/9agjE2Ffth9cYjrcbxjI+jJkz57+wozYsALUr
-         QuLg==
-X-Gm-Message-State: AC+VfDwvVerZEjfgDkAey82zvz6c9fwo8zO6E3xEfFznKkGke0VEf6F1
-        DxzOd7bih+87PCP8Zut+C/kn3A==
-X-Google-Smtp-Source: ACHHUZ5RyEP72eBVHjbEP+KjEVKNgHCOmAIxs2p5S+EWBaAbypM5cXIocfGTAzvGLZYTuHlytZyHBg==
-X-Received: by 2002:a17:902:ab95:b0:1af:ffda:855a with SMTP id f21-20020a170902ab9500b001afffda855amr9488995plr.9.1687969784812;
-        Wed, 28 Jun 2023 09:29:44 -0700 (PDT)
+        bh=qDGMYCjLis4jKxTwr/XdUXoNY3JVle8y3T0ovRza2gI=;
+        b=gEfKH+vDL82MNcgpABfuDTS2Funeza3U+queQoVH/hVtMHU36jjb39YMx5dMcZ/BC5
+         DwxHQhQNLT/aYTmmw+sLcx2VBf2hcbUWsOfMtudgtlo1GTLiKQ7S29iZk7sziSAz8O1Q
+         0AMqeqL9Eg5H3XNpxo/kC4sGiSBucNX1jsmk87ewp3Snqwbsw3VnSpcLWxCBkM7cItJC
+         rFoYpuJA071GZ3VyN63evUA0JOrrKKrRlUUeeE0s70i2WOwoEjMC1kNLWa95vWH6ch56
+         RYOsMf8s0G8cOMcOd5U3ZOEJWBDK0DjmMadEAae6EhicKpZ6DK4eUU1t05130nSSRElG
+         JFLQ==
+X-Gm-Message-State: AC+VfDztH6TJnp9CUvRv1mPHvrcrCL64ZMTdsgw44jFgx8auTx8mT7ZD
+        7YRSxMSw8BsHeGm3/QTHtW+pDQ==
+X-Google-Smtp-Source: ACHHUZ4hwJdblgv/IjbPFH+BZPSdbdvvXEegZidz0b10Rp2sJOYq5ixdTjeKDAOTEUFq8KxIhGOHvQ==
+X-Received: by 2002:a05:6a00:3994:b0:66a:3812:7eda with SMTP id fi20-20020a056a00399400b0066a38127edamr20180226pfb.9.1687969942751;
+        Wed, 28 Jun 2023 09:32:22 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c3-20020a170902848300b001b53d3d8f3dsm7932959plo.299.2023.06.28.09.29.43
+        by smtp.gmail.com with ESMTPSA id bm2-20020a056a00320200b00681783cfc85sm1263377pfb.144.2023.06.28.09.32.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 09:29:43 -0700 (PDT)
-Date:   Wed, 28 Jun 2023 09:29:42 -0700
+        Wed, 28 Jun 2023 09:32:21 -0700 (PDT)
+Date:   Wed, 28 Jun 2023 09:32:20 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Alexander Potapenko <glider@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Arne Welzel <arne.welzel@corelight.com>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Bill Wendling <morbo@google.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fangrui Song <maskray@google.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>,
-        Joe Perches <joe@perches.com>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        John Stultz <jstultz@google.com>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Marco Elver <elver@google.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Palmer Dabbelt <palmer@rivosinc.com>,
-        Simon Horman <simon.horman@corigine.com>,
-        Song Liu <song@kernel.org>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        Wyes Karny <wyes.karny@amd.com>, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [GIT PULL] hardening updates for v6.5-rc1
-Message-ID: <202306280920.CB69D0F75@keescook>
-References: <202306271729.813C8788@keescook>
- <ZJvRFZeYq6ZWLAWj@infradead.org>
+To:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Kees Cook <kees@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Message-ID: <202306280930.8CBBB9B@keescook>
+References: <20221022182828.give.717-kees@kernel.org>
+ <20221022182949.2684794-2-keescook@chromium.org>
+ <20221227234000.jgosvixx7eahqb3z@begin>
+ <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
+ <20221228205726.rfevry7ud6gmttg5@begin>
+ <20230625155625.s4kvy7m2vw74ow4i@begin>
+ <202306271944.E80E1D0@keescook>
+ <20230628060716.vvgtlgbushyjh6km@begin>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZJvRFZeYq6ZWLAWj@infradead.org>
+In-Reply-To: <20230628060716.vvgtlgbushyjh6km@begin>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 11:20:05PM -0700, Christoph Hellwig wrote:
-> On Tue, Jun 27, 2023 at 05:34:57PM -0700, Kees Cook wrote:
-> > - The under-development compiler attribute __counted_by has been added
-> >   so that we can start annotating flexible array members with their
-> >   associated structure member that tracks the count of flexible array
-> >   elements at run-time. It is possible (likely?) that the exact syntax
-> >   of the attribute will change before it is finalized, but GCC and Clang
-> >   are working together to sort it out. Any changes can be made to the
-> >   macro while we continue to add annotations. As an example, I have a
-> >   treewide commit waiting with such annotations found via Coccinelle:
-> >   https://git.kernel.org/linus/adc5b3cb48a049563dc673f348eab7b6beba8a9b
-> >   See commit dd06e72e68bcb4070ef211be100d2896e236c8fb for more details.
+On Wed, Jun 28, 2023 at 08:07:16AM +0200, Samuel Thibault wrote:
+> Kees Cook, le mar. 27 juin 2023 19:48:45 -0700, a ecrit:
+> > On Sun, Jun 25, 2023 at 05:56:25PM +0200, Samuel Thibault wrote:
+> > > > Can we perhaps just introduce a CAP_TIOCSTI that the brltty daemon would
+> > > > be able to use? We could even make it only allow TIOCSTI on the linux
+> > > > console (tty->ops == con_ops).
+> > 
+> > Does brltty run with CAP_SYS_ADMIN?
 > 
-> So I've been following the discussion of that feature for clang and
-> I can't wait to actually be able to use it.
+> ATM most often, yes, though we are trying to reduce the CAP_* privileges
+> to what it actually needs.
+> 
+> > > *Please* comment on this so we can progress. ATM people are
+> > > advising each other to set dev.tty.legacy_tiocsti=1, which is just
+> > > counter-productive in terms of security...
+> > 
+> > So is there really no solution for brltty and TIOCSTI being disabled?
+> 
+> No, there is no way to simulate characters on the Linux console. The
+> alternative would be to use uinput, but that simulates keycodes, not
+> characters, thus requiring backtranslating first, which is very fragile.
+> 
+> > What is FreeBSD doing? I imagine it's the same situation there too,
+> > though maybe there is just no support?
+> 
+> There is just no support in the kernel, only a patch against "screen".
+> 
+> > > Really, this a serious regression for the people affected by this.
+> > 
+> > Can you send a patch adding a CAP_SYS_ADMIN exception?
+> 
+> Sure!
 
-Me too! :)
+Thanks! (And be sure to use file->f_cred for the check[1], not "current",
+that way brltty can open the tty and drop caps and still do the ioctl.)
 
-> But this feels a bit premature to me, not only due to the ongoing
-> discussions on the syntax, but more importantly because I fear it
+-Kees
 
-I was on the fence about this too, and in the end, I decided that any
-syntax changes are going to be mostly mechanical, and in the meantime
-we needed a way to capture the associations. This has been a pain point
-for years as we've been doing flexible array conversions, since when
-doing the work it usually becomes clear which struct member is tracking
-the element count, but that information couldn't be reliably recorded
-anywhere. Now we can include the annotation (which is the really important
-part). If/when the exact syntax changes, we can either adjust the macro,
-or at worst we can easily do a tree-wide change. But I really want to
-start capturing the associations _now_, and get us all into the habit
-of doing it, and I want it to be through some kind of regular syntax
-(now that there are patches to both GCC and Clang that can validate the
-results), not just comments.
-
-> will be completely misued before we have a compiler actually supporting
-> available widely enough that we have it in the usual test bots.
-
-How do you see it being misused? Your mention of the test bots, I think,
-means you're worried the annotations will go unchecked for valid syntax?
-FWIW, I've got builders with the GCC and Clang patches that should catch
-this.
+https://docs.kernel.org/security/credentials.html?highlight=confused+deputy#open-file-credentials
 
 -- 
 Kees Cook
