@@ -2,91 +2,186 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EA6EB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 17:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7BD7EB64DD
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 17:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbjF1R44 (ORCPT
+        id S232306AbjF1R5b (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 13:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46908 "EHLO
+        Wed, 28 Jun 2023 13:57:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231594AbjF1R4B (ORCPT
+        with ESMTP id S232441AbjF1R4V (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 13:56:01 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2815A2942
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 10:56:00 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b8063aa2e1so1534205ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 10:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687974959; x=1690566959;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UFGqQjNLgtCZhOK9NTaUTj7bxMdQbyY6Zjaqy2ayJjA=;
-        b=HT4hhiN5JNn0QZARAU/GPGa/fqMUEU/xWerlomznK4qOeXv70AjIVWQytBKI7nuUOr
-         y30LJria+EJLeMYiwDI19PBMLCYv1zqAHrXhJ6OjGKVqFeNZQkbHJWTgPh+UcIJ+VZI8
-         nwgB7vTZxK12d6z/+pMZx7pQCb4SnIcPvgFdU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687974959; x=1690566959;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UFGqQjNLgtCZhOK9NTaUTj7bxMdQbyY6Zjaqy2ayJjA=;
-        b=CVzbdySFnc6d3FXdyg/n308R60P1w2TTAluEFmRVv94RnIJ5KoAnTf1aUlDf02QYz9
-         7LA0dCshz9irGAKZEWcsrqps9o1QEEUXXdBh+VPokZ5fXzjY8IkJDy1TrLSoM0n0AJhe
-         OocWDsefJdz0IFDlQ/tIOqOmeS+LhCBDS0Vkm72LOa0TaM5nv783v0+aRwn+gWyvOS6i
-         Ep2nfsUmKBxRIpONmK2yWD0e/ElhIgGKVXTkFGlsxDmZ9jwtowGglTwcNF5Whebak1n/
-         G3G/5mh2X1S/72lkbfAYY32bjn/AvbzS2p+kaB98EqL8Tk1aGyk0lU677oC+BTwel6ne
-         XX+Q==
-X-Gm-Message-State: AC+VfDz2Nuj0Ow1V9Cq7vGTu9VeAFxQoQ0XT4s5ieDgAU5wtFm0DHcMB
-        /JHpNOW0m3G/AJEvufFwQhAJfg==
-X-Google-Smtp-Source: ACHHUZ4pCHzrs3aB3Au1vDEg5t3p5jkohCdi/8ZwcCKxSUqYnxrYOVYU9Bcm50mn5vuXsh9GgTVoug==
-X-Received: by 2002:a17:902:dace:b0:1b3:c7c1:8ded with SMTP id q14-20020a170902dace00b001b3c7c18dedmr10816630plx.27.1687974959600;
-        Wed, 28 Jun 2023 10:55:59 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p8-20020a170902b08800b001b8307c81c8sm1970075plr.121.2023.06.28.10.55.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 10:55:58 -0700 (PDT)
-Date:   Wed, 28 Jun 2023 10:55:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Yuxiao Zhang <yuxiaozhang@google.com>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        "'Guilherme G . Piccoli'" <gpiccoli@igalia.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wak@google.com
-Subject: Re: [PATCH] pstore: ramoops: support pmsg size larger than kmalloc
- limitation
-Message-ID: <202306281053.EC5115465B@keescook>
-References: <20230627202540.881909-2-yuxiaozhang@google.com>
+        Wed, 28 Jun 2023 13:56:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EFD426B7;
+        Wed, 28 Jun 2023 10:56:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E9B2261426;
+        Wed, 28 Jun 2023 17:56:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB67C433C0;
+        Wed, 28 Jun 2023 17:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687974979;
+        bh=oURmBWezquiCxtgzQofhLG2vCq/AGJynRcxtSxdHtso=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kutrpgvcj50b2E0D25+J+Q1Qzv+1OZq6w/2/qYqixf1eZbltUDqp0P0utmW2fLHgI
+         1g+flEQ6xrEepEkkuv+wr7qu3DYNxUpD1TBOlg8xFN1TZb8b9gHuzEOEnDAiWC7EHz
+         wAEFETeWqMRdqTqpEk2Y9G5wQBGCfRgSIEoD7+W7xaabLbj71RF4b3RJTy60j0NEQ5
+         gIvMhuPy1/5A6cHNbArJlNCF1EqgXT4giwrXIPOdf+FpeRhS3FXsHd4ynapG7RkWqA
+         SgUlCifBVQTU6L1IrEORnAO8ET/RNVlYdm18rgjICXK49Hg5rVk4ICxOvKlrqeSA1H
+         183vSoEdJzxIQ==
+Date:   Wed, 28 Jun 2023 11:57:13 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     aacraid@microsemi.com, "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 08/10][next] scsi: aacraid: Replace one-element array with
+ flexible-array member in struct sgmap
+Message-ID: <0c7402fe6448186cda5a2618a35eb5f8d1cbb313.1687974498.git.gustavoars@kernel.org>
+References: <cover.1687974498.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230627202540.881909-2-yuxiaozhang@google.com>
+In-Reply-To: <cover.1687974498.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 27, 2023 at 01:25:41PM -0700, Yuxiao Zhang wrote:
-> Current pmsg implementation is using kmalloc for pmsg record buffer,
-> which has max size limits based on page size. Currently even we
-> allocate enough space with pmsg-size, pmsg will still fail if the
-> file size is larger than what kmalloc allowed.
-> 
-> Since we don't need physical contiguous memory for pmsg buffer
-> , we can use kvmalloc to avoid such limitation.
+Replace one-element array with flexible-array member in struct
+sgmap and refactor the rest of the code, accordingly.
 
-Conceptually, I am fine with this change. I need a little time to trace
-down the allocations. At first glance, I thought this patch only needed
-to cover pstore_write_user_compat(), but I guess the read side needs to
-be adjusted as well?
+Issue found with the help of Coccinelle and audited and fixed,
+manually.
 
-I'll double-check.
+Link: https://github.com/KSPP/linux/issues/79
+Link: https://github.com/ClangBuiltLinux/linux/issues/1851
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/scsi/aacraid/aachba.c   | 24 ++++++++++--------------
+ drivers/scsi/aacraid/aacraid.h  |  2 +-
+ drivers/scsi/aacraid/commctrl.c |  4 ++--
+ drivers/scsi/aacraid/comminit.c |  3 +--
+ 4 files changed, 14 insertions(+), 19 deletions(-)
 
-And yes, Greg's questions are all good -- fixing syntax and adding size
-details in the commit log would be appreciated.
-
--Kees
-
+diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+index 03ba974f6b2a..b2849e5cc104 100644
+--- a/drivers/scsi/aacraid/aachba.c
++++ b/drivers/scsi/aacraid/aachba.c
+@@ -1336,8 +1336,7 @@ static int aac_read_block(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u32
+ 	if (ret < 0)
+ 		return ret;
+ 	fibsize = sizeof(struct aac_read) +
+-			((le32_to_cpu(readcmd->sg.count) - 1) *
+-			 sizeof (struct sgentry));
++		  le32_to_cpu(readcmd->sg.count) * sizeof(struct sgentry);
+ 	BUG_ON (fibsize > (fib->dev->max_fib_size -
+ 				sizeof(struct aac_fibhdr)));
+ 	/*
+@@ -1471,8 +1470,7 @@ static int aac_write_block(struct fib * fib, struct scsi_cmnd * cmd, u64 lba, u3
+ 	if (ret < 0)
+ 		return ret;
+ 	fibsize = sizeof(struct aac_write) +
+-		((le32_to_cpu(writecmd->sg.count) - 1) *
+-		 sizeof (struct sgentry));
++		  le32_to_cpu(writecmd->sg.count) * sizeof(struct sgentry);
+ 	BUG_ON (fibsize > (fib->dev->max_fib_size -
+ 				sizeof(struct aac_fibhdr)));
+ 	/*
+@@ -1590,9 +1588,9 @@ static int aac_scsi_64(struct fib * fib, struct scsi_cmnd * cmd)
+ 	/*
+ 	 *	Build Scatter/Gather list
+ 	 */
+-	fibsize = sizeof (struct aac_srb) - sizeof (struct sgentry) +
+-		((le32_to_cpu(srbcmd->sg.count) & 0xff) *
+-		 sizeof (struct sgentry64));
++	fibsize = sizeof(struct aac_srb) +
++		  (le32_to_cpu(srbcmd->sg.count) & 0xff) *
++		  sizeof(struct sgentry64);
+ 	BUG_ON (fibsize > (fib->dev->max_fib_size -
+ 				sizeof(struct aac_fibhdr)));
+ 
+@@ -1621,9 +1619,9 @@ static int aac_scsi_32(struct fib * fib, struct scsi_cmnd * cmd)
+ 	/*
+ 	 *	Build Scatter/Gather list
+ 	 */
+-	fibsize = sizeof (struct aac_srb) +
+-		(((le32_to_cpu(srbcmd->sg.count) & 0xff) - 1) *
+-		 sizeof (struct sgentry));
++	fibsize = sizeof(struct aac_srb) +
++		  (le32_to_cpu(srbcmd->sg.count) & 0xff) *
++		  sizeof(struct sgentry);
+ 	BUG_ON (fibsize > (fib->dev->max_fib_size -
+ 				sizeof(struct aac_fibhdr)));
+ 
+@@ -1691,8 +1689,7 @@ static int aac_send_safw_bmic_cmd(struct aac_dev *dev,
+ 	fibptr->hw_fib_va->header.XferState &=
+ 		~cpu_to_le32(FastResponseCapable);
+ 
+-	fibsize  = sizeof(struct aac_srb) - sizeof(struct sgentry) +
+-						sizeof(struct sgentry64);
++	fibsize  = sizeof(struct aac_srb) + sizeof(struct sgentry64);
+ 
+ 	/* allocate DMA buffer for response */
+ 	addr = dma_map_single(&dev->pdev->dev, xfer_buf, xfer_len,
+@@ -2264,8 +2261,7 @@ int aac_get_adapter_info(struct aac_dev* dev)
+ 		dev->a_ops.adapter_bounds = aac_bounds_32;
+ 		dev->scsi_host_ptr->sg_tablesize = (dev->max_fib_size -
+ 			sizeof(struct aac_fibhdr) -
+-			sizeof(struct aac_write) + sizeof(struct sgentry)) /
+-				sizeof(struct sgentry);
++			sizeof(struct aac_write)) / sizeof(struct sgentry);
+ 		if (dev->dac_support) {
+ 			dev->a_ops.adapter_read = aac_read_block64;
+ 			dev->a_ops.adapter_write = aac_write_block64;
+diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
+index 94eb83d38be6..3fbc22ae72b6 100644
+--- a/drivers/scsi/aacraid/aacraid.h
++++ b/drivers/scsi/aacraid/aacraid.h
+@@ -507,7 +507,7 @@ struct sge_ieee1212 {
+ 
+ struct sgmap {
+ 	__le32		count;
+-	struct sgentry	sg[1];
++	struct sgentry	sg[];
+ };
+ 
+ struct user_sgmap {
+diff --git a/drivers/scsi/aacraid/commctrl.c b/drivers/scsi/aacraid/commctrl.c
+index e7cc927ed952..df811ad4afaa 100644
+--- a/drivers/scsi/aacraid/commctrl.c
++++ b/drivers/scsi/aacraid/commctrl.c
+@@ -561,8 +561,8 @@ static int aac_send_raw_srb(struct aac_dev* dev, void __user * arg)
+ 		rcode = -EINVAL;
+ 		goto cleanup;
+ 	}
+-	actual_fibsize = sizeof(struct aac_srb) - sizeof(struct sgentry) +
+-		((user_srbcmd->sg.count & 0xff) * sizeof(struct sgentry));
++	actual_fibsize = sizeof(struct aac_srb) +
++		(user_srbcmd->sg.count & 0xff) * sizeof(struct sgentry);
+ 	actual_fibsize64 = actual_fibsize + (user_srbcmd->sg.count & 0xff) *
+ 	  (sizeof(struct sgentry64) - sizeof(struct sgentry));
+ 	/* User made a mistake - should not continue */
+diff --git a/drivers/scsi/aacraid/comminit.c b/drivers/scsi/aacraid/comminit.c
+index bd99c5492b7d..d8dd89c87b01 100644
+--- a/drivers/scsi/aacraid/comminit.c
++++ b/drivers/scsi/aacraid/comminit.c
+@@ -523,8 +523,7 @@ struct aac_dev *aac_init_adapter(struct aac_dev *dev)
+ 	dev->max_fib_size = sizeof(struct hw_fib);
+ 	dev->sg_tablesize = host->sg_tablesize = (dev->max_fib_size
+ 		- sizeof(struct aac_fibhdr)
+-		- sizeof(struct aac_write) + sizeof(struct sgentry))
+-			/ sizeof(struct sgentry);
++		- sizeof(struct aac_write)) / sizeof(struct sgentry);
+ 	dev->comm_interface = AAC_COMM_PRODUCER;
+ 	dev->raw_io_interface = dev->raw_io_64 = 0;
+ 
 -- 
-Kees Cook
+2.34.1
+
