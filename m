@@ -2,144 +2,83 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 952A4EB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 16:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E934FEB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 17:11:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231151AbjF1QxY (ORCPT
+        id S231443AbjF1RLO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 12:53:24 -0400
-Received: from dfw.source.kernel.org ([139.178.84.217]:46110 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230059AbjF1QxW (ORCPT
+        Wed, 28 Jun 2023 13:11:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231607AbjF1RLA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 12:53:22 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F100E6129B;
-        Wed, 28 Jun 2023 16:53:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC8EC433C8;
-        Wed, 28 Jun 2023 16:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1687971201;
-        bh=gozokXz2eVh6fctzR506kgwTFWCpOKR95WNjlihKjp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XSAZJUru2/LERqubKZhN960vjbBGOsstoqQchktqgk2eAmAtD04A8rchUv6KtMPCO
-         bluJTB4rl9FsREuSLLbvkM+kuLVOwWaqtIpM5FPIWWt2zmRAH96RiEjex7HjZ2P52U
-         90KKlCAHvvTURFden0f0Wv5p/9azoOifGjIJdo/I=
-Date:   Wed, 28 Jun 2023 18:53:18 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
-        konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        will@kernel.org, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
- support
-Message-ID: <2023062812-exporter-facing-aaf9@gregkh>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <2023062814-chance-flounder-f002@gregkh>
- <10dd2ead-758a-89f0-cda4-70ae927269eb@quicinc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10dd2ead-758a-89f0-cda4-70ae927269eb@quicinc.com>
+        Wed, 28 Jun 2023 13:11:00 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4AF1BE4
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 10:10:57 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-565ba5667d5so557857b3.0
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 10:10:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1687972257; x=1690564257;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8hBGoSmAipjb7uFaXgommTCgThqhf3N/MwIcztkSaf0=;
+        b=LKSYSGBSIRpYNWo6GB3fAX7Sp7LGTqtVknZjcmaruG6ULOl4SWX3oMH6i1meJ7Jc7h
+         FQ429XW5BEHayOaB/G+854ylw3GR7iowaxfbA1xFNokKPSfZU9qHK8I56VYb3cj8v3Im
+         45og0RH/taCs9T6G0wgZA+ZvGKFqM1dg8NtbsIkZV4SfXADT8WOBUrRVnR+Zm4s8RAaz
+         L1yZuP/h04SwgiLgw/XhRTH6aFoMtzqLI2jNnU/1vQzPQvGtZzT2jgG0IfoYr8+mTB61
+         /6ygnTJiq0wZgf6c3XYT7MrTU9iIeg//d3keWlxl8gQY1GX+VQQyb5ID7ENUwO9M5Nw6
+         BwsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687972257; x=1690564257;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8hBGoSmAipjb7uFaXgommTCgThqhf3N/MwIcztkSaf0=;
+        b=I0Y9HLDeHkz4mZeQ8FNyo0Bkmxc3jUApZ/wWXhlY6G68ZZWkIpoGGOLP1f7uPm1+C/
+         BgupBEcPj03G9FeGi2C5U7SsF+Oq08MMTe4cIUDJ55XOxd2WA0jb5eBVmHgz5gr4eQ+1
+         z871RPnLO+OYEhPLCcSREMCVLDJ7ZB9wQAu2ompqhEaFcby2J2A9S+cvqb0ilrHxLSM6
+         hhRVRGIxG+oIwHSjRXLy8I9LfgLIU5dA5hHyeypcGiaHleZJWp1/JzFF8sTWoGNo8FmE
+         7GTdCQiAM1/2zPGk5R4k3tyk3aYV/6UhPBczQuHpJjyUW6qk2HtaulWYc3upJ718bUr+
+         opGg==
+X-Gm-Message-State: AC+VfDyWk5sH4QyZTLRVXcH1FqMlvrHuAdWK7/tS3+QW5isJg4pnW14J
+        olEdezn5Hyx9wGXO+HjeCZf6SeqpUnQy3mA0qA==
+X-Google-Smtp-Source: ACHHUZ537w0kvhE6ZiJ53ujP+GdQhdrmWEWLOQ3XFca0OfxDBa47iNnq2FuExHLMS2z28CiKkkkGNs1j3Za/uWd1MQ==
+X-Received: from yuxiao.svl.corp.google.com ([2620:15c:2a3:200:ee8e:ae51:26:66dc])
+ (user=yuxiaozhang job=sendgmr) by 2002:a81:ae07:0:b0:570:200:18e1 with SMTP
+ id m7-20020a81ae07000000b00570020018e1mr14077449ywh.3.1687972257123; Wed, 28
+ Jun 2023 10:10:57 -0700 (PDT)
+Date:   Wed, 28 Jun 2023 10:10:55 -0700
+In-Reply-To: <2023062832-barrier-strenuous-9499@gregkh>
+Mime-Version: 1.0
+References: <2023062832-barrier-strenuous-9499@gregkh>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+Message-ID: <20230628171055.1312737-1-yuxiaozhang@google.com>
+Subject: Re: Re: [PATCH] pstore: ramoops: support pmsg size larger than
+ kmalloc limitation
+From:   Yuxiao Zhang <yuxiaozhang@google.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+        "'Guilherme G . Piccoli'" <gpiccoli@igalia.com>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wak@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 09:50:00PM +0530, Mukesh Ojha wrote:
-> 
-> 
-> On 6/28/2023 9:15 PM, Greg KH wrote:
-> > On Wed, Jun 28, 2023 at 06:04:27PM +0530, Mukesh Ojha wrote:
-> > > Minidump is a best effort mechanism to collect useful and predefined data
-> > > for first level of debugging on end user devices running on Qualcomm SoCs.
-> > > It is built on the premise that System on Chip (SoC) or subsystem part of
-> > > SoC crashes, due to a range of hardware and software bugs. Hence, the
-> > > ability to collect accurate data is only a best-effort. The data collected
-> > > could be invalid or corrupted, data collection itself could fail, and so on.
-> > > 
-> > > Qualcomm devices in engineering mode provides a mechanism for generating
-> > > full system ramdumps for post mortem debugging. But in some cases it's
-> > > however not feasible to capture the entire content of RAM. The minidump
-> > > mechanism provides the means for selecting which snippets should be
-> > > included in the ramdump.
-> > > 
-> > > Minidump kernel driver implementation is divided into two parts for
-> > > simplicity, one is minidump core which can also be called minidump
-> > > frontend(As API gets exported from this driver for registration with
-> > > backend) and the other part is minidump backend i.e, where the underlying
-> > > implementation of minidump will be there. There could be different way
-> > > how the backend is implemented like Shared memory, Memory mapped IO
-> > > or Resource manager(gunyah) based where the guest region information is
-> > > passed to hypervisor via hypercalls.
-> > > 
-> > >      Minidump Client-1     Client-2      Client-5    Client-n
-> > >               |               |              |             |
-> > >               |               |    ...       |   ...       |
-> > >               |               |              |             |
-> > >               |               |              |             |
-> > >               |               |              |             |
-> > >               |               |              |             |
-> > >               |               |              |             |
-> > >               |               |              |             |
-> > >               |           +---+--------------+----+        |
-> > >               +-----------+  qcom_minidump(core)  +--------+
-> > >                           |                       |
-> > >                           +------+-----+------+---+
-> > >                                  |     |      |
-> > >                                  |     |      |
-> > >                  +---------------+     |      +--------------------+
-> > >                  |                     |                           |
-> > >                  |                     |                           |
-> > >                  |                     |                           |
-> > >                  v                     v                           v
-> > >       +-------------------+      +-------------------+     +------------------+
-> > >       |qcom_minidump_smem |      |qcom_minidump_mmio |     | qcom_minidump_rm |
-> > >       |                   |      |                   |     |                  |
-> > >       +-------------------+      +-------------------+     +------------------+
-> > >         Shared memory              Memory mapped IO           Resource manager
-> > >          (backend)                   (backend)                   (backend)
-> > > 
-> > > 
-> > > Here, we will be giving all analogy of backend with SMEM as it is the
-> > > only implemented backend at present but general idea remains the same.
-> > 
-> > If you only have one "backend" then you don't need the extra compexity
-> > here at all, just remove that whole middle layer please and make this
-> > much simpler and smaller and easier to review and possibly accept.
-> > 
-> > We don't add layers when they are not needed, and never when there is no
-> > actual user.  If you need the extra "complexity" later, then add it
-> > later when it is needed as who knows when that will ever be.
-> > 
-> > Please redo this series based on that, thanks.
-> 
-> I already followed without this middle layer till v3 since without
-> the middle layer it will be end up with lot of code duplication if there
-> is another backend.
+Thanks for reviewing the patch.
 
-But as this series does not have such a thing, only add it when needed
-please.  Don't make us review a whole bunch of stuff that is not
-actually used here.
+On 28 Jun 2023 07:30:16 +0200, Greg KH wrote:
+>What is that max size?
 
-Would you want to review such a thing?
+The max size is arch dependent, it should be 2^(PAGE_SIZE+MAX_ORDER). In our environment it is 4M.
 
-> We already have other backend implementation in the downstream, if you
-> want to see them, i will try to post them in upcoming series..
+>what in-kernel user is hitting this in the pstore implementation?
 
-Ok, so if you already have it, yes, post it as part of the series,
-otherwise such a layer makes no sense.
+We are trying to use pmsg to hold a core dump file, so we have pmsg-size=32M and thus hit this issue.
 
-thanks,
+Other than us, here is one I found that trying to save dmesg beyond kmalloc limitaton:
+https://lore.kernel.org/lkml/b2d66d9f-15a6-415c-2485-44649027a1d5@igalia.com/T/
 
-greg k-h
+Thanks,
+-Yuxiao Zhang
