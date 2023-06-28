@@ -2,200 +2,408 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED7AEB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 11:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21881EB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 12:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbjF1LnM (ORCPT
+        id S230486AbjF1Mfr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 07:43:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36408 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjF1LnL (ORCPT
+        Wed, 28 Jun 2023 08:35:47 -0400
+Received: from mx0b-0031df01.pphosted.com ([205.220.180.131]:17506 "EHLO
+        mx0b-0031df01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230100AbjF1Mfq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 07:43:11 -0400
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03AC51FE0;
-        Wed, 28 Jun 2023 04:43:08 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id 14827C020; Wed, 28 Jun 2023 13:43:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1687952587; bh=0WN8XsDGTRKDo6/ITLTj6m/cxiiek/G6u+FK4mhH5tw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gx4AJQyPcZtb7aI/TykWXoADzXo4bdOvVJjyQ+Cb7zPtfJwZrSDLZM/q7usRdrtog
-         FGQX2XjDpmyFls+QpV1tjeFplk/f8Mv2PypH+kgQmluS++wWM1Jk4xsG910vpF0ZHb
-         xfyxxB9Z51Yf4vzbEc5VpkGfigeF4+jr6nxREoQHxJJZFxpjkqAsLaHlkgm6Taefk3
-         05a9qf1lIsr0F9cQ+whwGIEyGAArCfDuQ2P2wRagOTsl2P2GEVE+7mLi78tGHI45XZ
-         kyhynML2tCWVqI7OKmGe+VDvEJlBRMR1LKHmoJXqT+9CZtBGCmtFHeAmY7YZlf3LW/
-         sBrJCnU4VSiGg==
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id 28BC5C009;
-        Wed, 28 Jun 2023 13:43:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1687952585; bh=0WN8XsDGTRKDo6/ITLTj6m/cxiiek/G6u+FK4mhH5tw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jvZ0TWI1KCV5Hc+MvIv/ZKAp0wL4fpBdccuM0cFUe0TFf+X6gYr9CDJd7QsRqmqG4
-         4YgnIfYF0sW7oFSn/jDjP6Uxo6MeXPqmEfiA1NPx2a4J4w2yM8x7NuuoZflv9h/9Y4
-         7p7dxCWhVcETdtOmMvlK7vbu32Umo3+ITlWpJzuvDeOmVrp+gAI/H2+RyVb8DbqCvN
-         e2BI3hh2HsD88feDgPMaHDYDcp+8hf6rETpXY9DD5JU77lb88PlAYN9u9cSjhLD0xb
-         RpjCi4BTEZ8N3Hkf8CmGuIOm7SEN6m26emULCkRXfrotBmD9pC5dBc1IYAax/a0P6V
-         aGEE7u5dhH38Q==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id f3a75d01;
-        Wed, 28 Jun 2023 11:42:56 +0000 (UTC)
-Date:   Wed, 28 Jun 2023 20:42:41 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     jeffxu@chromium.org
-Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
-        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
-        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        jannh@google.com, linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
-Message-ID: <ZJwcsU0vI-nzgOB_@codewreck.org>
-References: <20221215001205.51969-1-jeffxu@google.com>
- <20221215001205.51969-4-jeffxu@google.com>
+        Wed, 28 Jun 2023 08:35:46 -0400
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35SBLbka003643;
+        Wed, 28 Jun 2023 12:35:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=Jbpoh+q999tZ+ReLB4QMfPjB4UjzDixh2Tp3MM4YOsE=;
+ b=piHUTi7F8hLCWWD6yf8Y2FlDHDVnSC4+6vESK9IvP92cIROYdPm99g4qe9+WUoyWhgzJ
+ i6IToZJd/KXerk4GPnpGpP3OvS/GOXv/TjRBzebzUFUhGWAWaCPRB6xXIML8E7qbnwOm
+ l3aPZZyzdVQwAgFXyrami3FjtgusHBWVVirmHjvh03z9hlbbKQuMbubOEUEIZunGnt9x
+ qBxi38BbZM8Cse4KwH1LMI64Vt99KycNxFdMeSfqWFqIdUHbb3QxPiQJ0tuxsVBuXUoD
+ lRAfVfrMJOl0a6ShwxRNrHB1wRXodzTU9BY8Xg8+03OflvMr49jKXvk2kvnOX4KTujlj fA== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rg9pb1er0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Jun 2023 12:35:07 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35SCZ6b9029893
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 28 Jun 2023 12:35:06 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Wed, 28 Jun 2023 05:34:59 -0700
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+To:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>,
+        "Mukesh Ojha" <quic_mojha@quicinc.com>
+Subject: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related support
+Date:   Wed, 28 Jun 2023 18:04:27 +0530
+Message-ID: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20221215001205.51969-4-jeffxu@google.com>
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: V9UZYviBDquQNpF4oYInuvhhK6o8l55A
+X-Proofpoint-ORIG-GUID: V9UZYviBDquQNpF4oYInuvhhK6o8l55A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-28_08,2023-06-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
+ spamscore=0 bulkscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
+ phishscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306280111
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-jeffxu@chromium.org wrote on Thu, Dec 15, 2022 at 12:12:03AM +0000:
-> From: Jeff Xu <jeffxu@google.com>
-> 
-> The new MFD_NOEXEC_SEAL and MFD_EXEC flags allows application to
-> set executable bit at creation time (memfd_create).
-> 
-> When MFD_NOEXEC_SEAL is set, memfd is created without executable bit
-> (mode:0666), and sealed with F_SEAL_EXEC, so it can't be chmod to
-> be executable (mode: 0777) after creation.
-> 
-> when MFD_EXEC flag is set, memfd is created with executable bit
-> (mode:0777), this is the same as the old behavior of memfd_create.
-> 
-> The new pid namespaced sysctl vm.memfd_noexec has 3 values:
-> 0: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
->         MFD_EXEC was set.
-> 1: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
->         MFD_NOEXEC_SEAL was set.
-> 2: memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+Minidump is a best effort mechanism to collect useful and predefined data
+for first level of debugging on end user devices running on Qualcomm SoCs.
+It is built on the premise that System on Chip (SoC) or subsystem part of
+SoC crashes, due to a range of hardware and software bugs. Hence, the
+ability to collect accurate data is only a best-effort. The data collected
+could be invalid or corrupted, data collection itself could fail, and so on.
 
-So, erm, I'm a bit late to the party but I was just looking at a way of
-blocking memfd_create+exec in a container and this sounded perfect: my
-reading is that this is a security feature meant to be set for
-container's namespaces that'd totally disable something like
-memfd_create followed by fexecve (because we don't want weird binaries
-coming from who knows where to be executed on a shiny secure system),
-but. . . is this actually supposed to work?
-(see below)
+Qualcomm devices in engineering mode provides a mechanism for generating
+full system ramdumps for post mortem debugging. But in some cases it's
+however not feasible to capture the entire content of RAM. The minidump
+mechanism provides the means for selecting which snippets should be
+included in the ramdump.
 
-> [...]
-> --- a/mm/memfd.c
-> +++ b/mm/memfd.c
-> @@ -263,12 +264,14 @@ long memfd_fcntl(struct file *file, unsigned int cmd, unsigned long arg)
->  #define MFD_NAME_PREFIX_LEN (sizeof(MFD_NAME_PREFIX) - 1)
->  #define MFD_NAME_MAX_LEN (NAME_MAX - MFD_NAME_PREFIX_LEN)
->  
-> -#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB)
-> +#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB | MFD_NOEXEC_SEAL | MFD_EXEC)
->  
->  SYSCALL_DEFINE2(memfd_create,
->  		const char __user *, uname,
->  		unsigned int, flags)
->  {
-> +	char comm[TASK_COMM_LEN];
-> +	struct pid_namespace *ns;
->  	unsigned int *file_seals;
->  	struct file *file;
->  	int fd, error;
-> @@ -285,6 +288,39 @@ SYSCALL_DEFINE2(memfd_create,
->  			return -EINVAL;
->  	}
->  
-> +	/* Invalid if both EXEC and NOEXEC_SEAL are set.*/
-> +	if ((flags & MFD_EXEC) && (flags & MFD_NOEXEC_SEAL))
-> +		return -EINVAL;
-> +
-> +	if (!(flags & (MFD_EXEC | MFD_NOEXEC_SEAL))) {
-> +		[code that checks the sysctl]
+Minidump kernel driver implementation is divided into two parts for
+simplicity, one is minidump core which can also be called minidump
+frontend(As API gets exported from this driver for registration with
+backend) and the other part is minidump backend i.e, where the underlying
+implementation of minidump will be there. There could be different way
+how the backend is implemented like Shared memory, Memory mapped IO
+or Resource manager(gunyah) based where the guest region information is
+passed to hypervisor via hypercalls.
 
-If flags already has either MFD_EXEC or MFD_NOEXEC_SEAL, you don't check
-the sysctl at all.
-
-This can be verified easily:
------
-$ cat > memfd_exec.c <<'EOF'
-#define _GNU_SOURCE
-
-#include <errno.h>
-#include <stdio.h>
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-#ifndef MFD_EXEC
-#define MFD_EXEC                0x0010U
-#endif
-
-int main() { 
-    int fd = memfd_create("script", MFD_EXEC);
-    if (fd == -1)l
-        perror("memfd");
-    
-    char prog[] = "#!/bin/sh\necho Ran script\n";
-    if (write(fd, prog, sizeof(prog)-1) != sizeof(prog)-1)
-            perror("write");
-    
-    char *const argv[] = { "script", NULL };
-    char *const envp[] = { NULL };
-    fexecve(fd, argv, envp);
-    perror("fexecve");
-}   
-EOF
-$ gcc -o memfd_exec memfd_exec.c
-$ ./memfd_exec
-Ran script
-$ sysctl vm.memfd_noexec
-vm.memfd_noexec = 2
------
-(as opposed to failing hard on memfd_create if flag unset on sysctl=2,
-and failing on fexecve with flag unset and sysctl=1)
-
-What am I missing?
+    Minidump Client-1     Client-2      Client-5    Client-n
+             |               |              |             |
+             |               |    ...       |   ...       |
+             |               |              |             |
+             |               |              |             |
+             |               |              |             |
+             |               |              |             |
+             |               |              |             |
+             |               |              |             |
+             |           +---+--------------+----+        |
+             +-----------+  qcom_minidump(core)  +--------+
+                         |                       |
+                         +------+-----+------+---+
+                                |     |      |
+                                |     |      |
+                +---------------+     |      +--------------------+
+                |                     |                           |
+                |                     |                           |
+                |                     |                           |
+                v                     v                           v
+     +-------------------+      +-------------------+     +------------------+
+     |qcom_minidump_smem |      |qcom_minidump_mmio |     | qcom_minidump_rm |
+     |                   |      |                   |     |                  |
+     +-------------------+      +-------------------+     +------------------+
+       Shared memory              Memory mapped IO           Resource manager
+        (backend)                   (backend)                   (backend)
 
 
+Here, we will be giving all analogy of backend with SMEM as it is the
+only implemented backend at present but general idea remains the same.
 
-BTW I find the current behaviour rather hard to use: setting this to 2
-should still set NOEXEC by default in my opinion, just refuse anything
-that explicitly requested EXEC.
+The core of SMEM based minidump feature is part of Qualcomm's boot
+firmware code. It initializes shared memory (SMEM), which is a part of
+DDR and allocates a small section of SMEM to minidump table i.e also
+called global table of content (G-ToC). Each subsystem (APSS, ADSP, ...)
+has their own table of segments to be included in the minidump and all
+get their reference from G-ToC. Each segment/region has some details
+like name, physical address and it's size etc. and it could be anywhere
+scattered in the DDR.
 
-Sure there's a warn_once that memfd_create was used without seal, but
-right now on my system it's "used up" 5 seconds after boot by systemd:
-[    5.854378] memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=1 'systemd'
+Existing upstream Qualcomm remoteproc driver[1] already supports SMEM
+based minidump feature for remoteproc instances like ADSP, MODEM, ...
+where predefined selective segments of subsystem region can be dumped
+as part of coredump collection which generates smaller size artifacts
+compared to complete coredump of subsystem on crash.
 
-And anyway, older kernels will barf up EINVAL when calling memfd_create
-with MFD_NOEXEC_SEAL, so even if userspace will want to adapt they'll
-need to try calling memfd_create with the flag once and retry on EINVAL,
-which let's face it is going to take a while to happen.
-(Also, the flag has been added to glibc, but not in any release yet)
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/remoteproc/qcom_common.c#n142
 
-Making calls default to noexec AND refuse exec does what you want
-(forbid use of exec in an app that wasn't in a namespace that allows
-exec) while allowing apps that require it to work; that sounds better
-than making all applications that haven't taken the pain of adding the
-new flag to me.
-Well, I guess an app that did require exec without setting the flag will
-fail in a weird place instead of failing at memfd_create and having a
-chance to fallback, so it's not like it doesn't make any sense;
-I don't have such strong feelings about this if the sysctl works, but
-for my use case I'm more likely to want to take a chance at memfd_create
-not needing exec than having the flag set. Perhaps a third value if I
-cared enough...
+In addition to managing and querying the APSS minidump description,
+the Linux driver maintains a ELF header in a segment. This segment
+gets updated with section/program header whenever a new entry gets
+registered.
+
+
+ docs: qcom: Add qualcomm minidump guide
+  kallsyms: Export kallsyms_lookup_name
+  soc: qcom: Add qcom_minidump_smem module
+  soc: qcom: Add Qualcomm APSS minidump (frontend) feature support
+  soc: qcom: Add linux minidump smem backend driver support
+  soc: qcom: minidump: Add pending region registration support
+  soc: qcom: minidump: Add update region support
+  dt-bindings: reserved-memory: Add qcom,ramoops binding
+  pstore/ram : Export ramoops_parse_dt() symbol
+  soc: qcom: Add qcom's pstore minidump driver support
+  soc: qcom: Register pstore frontend region with minidump
+  remoteproc: qcom: Expand MD_* as MINIDUMP_*
+  remoterproc: qcom: refactor to leverage exported minidump symbol
+  MAINTAINERS: Add entry for minidump driver related support
+  arm64: defconfig: Enable Qualcomm Minidump related drivers
+  arm64: dts: qcom: sm8450: Add Qualcomm ramoops minidump node
+  firmware: qcom_scm: provide a read-modify-write function
+  pinctrl: qcom: Use qcom_scm_io_update_field()
+  firmware: scm: Modify only the download bits in TCSR register
+  firmware: qcom_scm: Refactor code to support multiple download mode
+  firmware: qcom_scm: Add multiple download mode support
+
+Patch 1/21 is qualcomm minidump document
+Patch 2/21 will export kallsyms_lookup_name will be needed for minidump module
+Patch 3/21 moves the minidump specific data structure and macro to
+ qcom_minidump_smem.c and later 13/21 will use the API and remove
+ minidump specific code to qcom_minidump_smem file.
+Patch 4/21 is qualcomm minidump core(frontend) driver
+Patch 5/21 implements qualcomm smem backend kernel driver
+Patch 6/21 add pending region support for the clients who came for
+ registration before minidump.
+Patch 7/21 add update region support for registered clients.
+Patch 8/21 Add dt-binding for qualcomm ramoops driver which is also a minidump client driver
+Patch 9/21 exported symbol from ramoops driver to avoid copy of the code.
+Patch 10/21 Add qcom's pstore minidump driver support which adds ramoops platform device
+            and 11/21 register existing pstore frontend regions.
+Patch 12/21 and 13/21 does some clean up and code reuse.
+Patch 16/21 enable qcom_ramoops driver for sm8450
+Patch 17-21 are not new and has already been through 6 versions and
+reason of adding here is for minidump testing purpose and it will be rebased
+automatically along with new version of minidump series.
+
+Testing of the patches has been done on sm8450 target after enabling config like
+CONFIG_PSTORE_RAM and CONFIG_PSTORE_CONSOLE and once the device boots up.
+Try crashing it via devmem2 0xf11c000(this is known to create xpu violation and
+and put the device in download mode) on command prompt.
+
+I have added download patch here numbered from 14/18 to 18/18
+Earlier download mode setting patches were sent separately
+https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+
+Default storage type is set to via USB, so minidump would be downloaded with the
+help of x86_64 machine (running PCAT tool) attached to Qualcomm device which has
+backed minidump boot firmware support (more can be found patch 3/18)
+
+Below patch [1] is to warm reset Qualcomm device which has upstream qcom
+watchdog driver support.
+
+After applying all patches, we can boot the device and can execute
+following command.
+
+echo mini > /sys/module/qcom_scm/parameters/download_mode
+echo c > /proc/sysrq-trigger
+
+This will make the device go to download mode and collect the minidump on to the
+attached x86 machine running the Qualcomm PCAT tool(This comes as part Qualcomm
+package manager kit).
+After that we will see a bunch of predefined registered region as binary blobs files
+starts with md_* downloaded on the x86 machine on given location in PCAT tool from
+the target device.
+
+A sample client example to dump a linux region has been given in patch 3/18 and as
+well as can be seen in patch 12/18.
+
+[1]
+--------------------------->8-------------------------------------
+
+commit f1124ccebd47550b4c9627aa162d9cdceba2b76f
+Author: Mukesh Ojha <quic_mojha@quicinc.com>
+Date:   Thu Mar 16 14:08:35 2023 +0530
+
+    do not merge: watchdog bite on panic
+
+    Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+
+diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+index 0d2209c..767e84a 100644
+--- a/drivers/watchdog/qcom-wdt.c
++++ b/drivers/watchdog/qcom-wdt.c
+@@ -12,6 +12,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/watchdog.h>
+ #include <linux/of_device.h>
++#include <linux/panic.h>
+
+ enum wdt_reg {
+        WDT_RST,
+@@ -114,12 +115,28 @@ static int qcom_wdt_set_pretimeout(struct watchdog_device *wdd,
+        return qcom_wdt_start(wdd);
+ }
+
++static void qcom_wdt_bite_on_panic(struct qcom_wdt *wdt)
++{
++       writel(0, wdt_addr(wdt, WDT_EN));
++       writel(1, wdt_addr(wdt, WDT_BITE_TIME));
++       writel(1, wdt_addr(wdt, WDT_RST));
++       writel(QCOM_WDT_ENABLE, wdt_addr(wdt, WDT_EN));
++
++       wmb();
++
++       while(1)
++               udelay(1);
++}
++
+ static int qcom_wdt_restart(struct watchdog_device *wdd, unsigned long action,
+                            void *data)
+ {
+        struct qcom_wdt *wdt = to_qcom_wdt(wdd);
+        u32 timeout;
+
++       if (in_panic)
++               qcom_wdt_bite_on_panic(wdt);
++
+        /*
+         * Trigger watchdog bite:
+         *    Setup BITE_TIME to be 128ms, and enable WDT.
+diff --git a/include/linux/panic.h b/include/linux/panic.h
+index 979b776..f913629 100644
+--- a/include/linux/panic.h
++++ b/include/linux/panic.h
+@@ -22,6 +22,7 @@ extern int panic_on_oops;
+ extern int panic_on_unrecovered_nmi;
+ extern int panic_on_io_nmi;
+ extern int panic_on_warn;
++extern bool in_panic;
+
+ extern unsigned long panic_on_taint;
+ extern bool panic_on_taint_nousertaint;
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 487f5b0..714f7f4 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -65,6 +65,8 @@ static unsigned int warn_limit __read_mostly;
+
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
+ EXPORT_SYMBOL_GPL(panic_timeout);
++bool in_panic = false;
++EXPORT_SYMBOL_GPL(in_panic);
+
+ #define PANIC_PRINT_TASK_INFO          0x00000001
+ #define PANIC_PRINT_MEM_INFO           0x00000002
+@@ -261,6 +263,7 @@ void panic(const char *fmt, ...)
+        int old_cpu, this_cpu;
+        bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+
++       in_panic = true;
+        if (panic_on_warn) {
+                /*
+                 * This thread may hit another WARN() in the panic path.
+--------------------------------------------------------------------------
+
+Changes in v4:
+ - Redesigned the driver and divided the driver into front end and backend (smem) so
+   that any new backend can be attached easily to avoid code duplication.
+ - Patch reordering as per the driver and subsystem to easier review of the code.
+ - Removed minidump specific code from remoteproc to minidump smem based driver.
+ - Enabled the all the driver as modules.
+ - Address comments made on documentation and yaml and Device tree file [Krzysztof/Konrad]
+ - Address comments made qcom_pstore_minidump driver and given its Device tree
+   same set of properties as ramoops. [Luca/Kees]
+ - Added patch for MAINTAINER file.
+ - Include defconfig change as one patch as per [Krzysztof] suggestion.
+ - Tried to remove the redundant file scope variables from the module as per [Krzysztof] suggestion.
+ - Addressed comments made on dload mode patch v6 version 
+   https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+
+Changes in v3: https://lore.kernel.org/lkml/1683133352-10046-1-git-send-email-quic_mojha@quicinc.com/
+ - Addressed most of the comments by Srini on v2 and refactored the minidump driver.
+    - Added platform device support
+    - Unregister region support.
+ - Added update region for clients.
+ - Added pending region support.
+ - Modified the documentation guide accordingly.
+ - Added qcom_pstore_ramdump client driver which happen to add ramoops platform
+   device and also registers ramoops region with minidump.
+ - Added download mode patch series with this minidump series. 
+    https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+
+Changes in v2: https://lore.kernel.org/lkml/1679491817-2498-1-git-send-email-quic_mojha@quicinc.com/
+ - Addressed review comment made by [quic_tsoni/bmasney] to add documentation.
+ - Addressed comments made by [srinivas.kandagatla]
+ - Dropped pstore 6/6 from the last series, till i get conclusion to get pstore
+   region in minidump.
+ - Fixed issue reported by kernel test robot.
+
+Changes in v1: https://lore.kernel.org/lkml/1676978713-7394-1-git-send-email-quic_mojha@quicinc.com/
+
+Mukesh Ojha (21):
+  docs: qcom: Add qualcomm minidump guide
+  kallsyms: Export kallsyms_lookup_name
+  soc: qcom: Add qcom_minidump_smem module
+  soc: qcom: Add Qualcomm APSS minidump (frontend) feature support
+  soc: qcom: Add linux minidump smem backend driver support
+  soc: qcom: minidump: Add pending region registration support
+  soc: qcom: minidump: Add update region support
+  dt-bindings: reserved-memory: Add qcom,ramoops binding
+  pstore/ram : Export ramoops_parse_dt() symbol
+  soc: qcom: Add qcom's pstore minidump driver support
+  soc: qcom: Register pstore frontend region with minidump
+  remoteproc: qcom: Expand MD_* as MINIDUMP_*
+  remoterproc: qcom: refactor to leverage exported minidump symbol
+  MAINTAINERS: Add entry for minidump driver related support
+  arm64: defconfig: Enable Qualcomm Minidump related drivers
+  arm64: dts: qcom: sm8450: Add Qualcomm ramoops minidump node
+  firmware: qcom_scm: provide a read-modify-write function
+  pinctrl: qcom: Use qcom_scm_io_update_field()
+  firmware: scm: Modify only the download bits in TCSR register
+  firmware: qcom_scm: Refactor code to support multiple download mode
+  firmware: qcom_scm: Add multiple download mode support
+
+ Documentation/admin-guide/index.rst                |   1 +
+ Documentation/admin-guide/qcom_minidump.rst        | 293 +++++++++++
+ .../devicetree/bindings/soc/qcom/qcom,ramoops.yaml | 126 +++++
+ MAINTAINERS                                        |  15 +
+ arch/arm64/boot/dts/qcom/sm8450.dtsi               |  12 +
+ arch/arm64/configs/defconfig                       |   4 +
+ drivers/firmware/Kconfig                           |  11 -
+ drivers/firmware/qcom_scm.c                        |  85 ++-
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |  12 +-
+ drivers/remoteproc/qcom_common.c                   | 142 +----
+ drivers/soc/qcom/Kconfig                           |  39 ++
+ drivers/soc/qcom/Makefile                          |   3 +
+ drivers/soc/qcom/qcom_minidump.c                   | 582 +++++++++++++++++++++
+ drivers/soc/qcom/qcom_minidump_internal.h          |  98 ++++
+ drivers/soc/qcom/qcom_minidump_smem.c              | 387 ++++++++++++++
+ drivers/soc/qcom/qcom_pstore_minidump.c            | 210 ++++++++
+ drivers/soc/qcom/smem.c                            |   9 +
+ fs/pstore/ram.c                                    |  26 +-
+ include/linux/firmware/qcom/qcom_scm.h             |   2 +
+ include/linux/pstore_ram.h                         |   2 +
+ include/soc/qcom/qcom_minidump.h                   |  64 +++
+ kernel/kallsyms.c                                  |   2 +-
+ 22 files changed, 1973 insertions(+), 152 deletions(-)
+ create mode 100644 Documentation/admin-guide/qcom_minidump.rst
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
+ create mode 100644 drivers/soc/qcom/qcom_minidump.c
+ create mode 100644 drivers/soc/qcom/qcom_minidump_internal.h
+ create mode 100644 drivers/soc/qcom/qcom_minidump_smem.c
+ create mode 100644 drivers/soc/qcom/qcom_pstore_minidump.c
+ create mode 100644 include/soc/qcom/qcom_minidump.h
 
 -- 
-Dominique Martinet | Asmadeus
+2.7.4
+
