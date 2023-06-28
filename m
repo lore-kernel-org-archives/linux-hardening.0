@@ -2,98 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A60EB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 08:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3728EB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 09:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230507AbjF1IiY (ORCPT
+        id S232540AbjF1Jk6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 04:38:24 -0400
-Received: from sonata.ens-lyon.org ([140.77.166.138]:37174 "EHLO
-        sonata.ens-lyon.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233934AbjF1Icx (ORCPT
+        Wed, 28 Jun 2023 05:40:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230365AbjF1H4L (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 04:32:53 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by sonata.ens-lyon.org (Postfix) with ESMTP id 522972011A;
-        Wed, 28 Jun 2023 08:07:19 +0200 (CEST)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 8P8yQ3a3VF9W; Wed, 28 Jun 2023 08:07:19 +0200 (CEST)
-Received: from begin (unknown [91.151.117.182])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by sonata.ens-lyon.org (Postfix) with ESMTPSA id 39C10200D5;
-        Wed, 28 Jun 2023 08:07:18 +0200 (CEST)
-Received: from samy by begin with local (Exim 4.96)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1qEOKi-009kLK-1u;
-        Wed, 28 Jun 2023 08:07:16 +0200
-Date:   Wed, 28 Jun 2023 08:07:16 +0200
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+        Wed, 28 Jun 2023 03:56:11 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0566F30F0;
+        Wed, 28 Jun 2023 00:55:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+WP3Kdd4a8kNUG84zf2b3FF04bm6RA3v9ntpchRkeW4=; b=nwXB9AbY9psyBzrYdDqhZgN+uK
+        4cXll5VhDslN3I0xrk9U3Qpu5mtRnhLENnZeEQzpGmzGVFllE/PL8DrCz9zsbGq1LOZEjBzC7qDH7
+        ws1LHoSKSZEKl7tI0YUMYul+viUB2r16Z7RFSie44rjjNDCyICNP+iEhb8nqLeZt25hrb0bzuTzOg
+        XXkdzoYDPDoaQypMX2DfWp0UDin0Cal9N9QJClYkSaVZhequQcz1aj+hFNWTux/4yBCh5ifzugHCY
+        b0vuaVmAnkVN4whPbmj6YR1Qlj83AlAnUABkaNm4Akkk0c7xN7X+StVehNAtPupW7OHXFgmseNijn
+        IfVx15Ug==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qEOX7-00Ewxn-0M;
+        Wed, 28 Jun 2023 06:20:05 +0000
+Date:   Tue, 27 Jun 2023 23:20:05 -0700
+From:   Christoph Hellwig <hch@infradead.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Kees Cook <kees@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Dave@mielke.cc
-Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
-Message-ID: <20230628060716.vvgtlgbushyjh6km@begin>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Kees Cook <keescook@chromium.org>, Kees Cook <kees@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Dave@mielke.cc
-References: <20221022182828.give.717-kees@kernel.org>
- <20221022182949.2684794-2-keescook@chromium.org>
- <20221227234000.jgosvixx7eahqb3z@begin>
- <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
- <20221228205726.rfevry7ud6gmttg5@begin>
- <20230625155625.s4kvy7m2vw74ow4i@begin>
- <202306271944.E80E1D0@keescook>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Arne Welzel <arne.welzel@corelight.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Bill Wendling <morbo@google.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fangrui Song <maskray@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>,
+        Joe Perches <joe@perches.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        John Stultz <jstultz@google.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Marco Elver <elver@google.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Song Liu <song@kernel.org>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Wyes Karny <wyes.karny@amd.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [GIT PULL] hardening updates for v6.5-rc1
+Message-ID: <ZJvRFZeYq6ZWLAWj@infradead.org>
+References: <202306271729.813C8788@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202306271944.E80E1D0@keescook>
-Organization: I am not organized
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <202306271729.813C8788@keescook>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook, le mar. 27 juin 2023 19:48:45 -0700, a ecrit:
-> On Sun, Jun 25, 2023 at 05:56:25PM +0200, Samuel Thibault wrote:
-> > > Can we perhaps just introduce a CAP_TIOCSTI that the brltty daemon would
-> > > be able to use? We could even make it only allow TIOCSTI on the linux
-> > > console (tty->ops == con_ops).
-> 
-> Does brltty run with CAP_SYS_ADMIN?
+On Tue, Jun 27, 2023 at 05:34:57PM -0700, Kees Cook wrote:
+> - The under-development compiler attribute __counted_by has been added
+>   so that we can start annotating flexible array members with their
+>   associated structure member that tracks the count of flexible array
+>   elements at run-time. It is possible (likely?) that the exact syntax
+>   of the attribute will change before it is finalized, but GCC and Clang
+>   are working together to sort it out. Any changes can be made to the
+>   macro while we continue to add annotations. As an example, I have a
+>   treewide commit waiting with such annotations found via Coccinelle:
+>   https://git.kernel.org/linus/adc5b3cb48a049563dc673f348eab7b6beba8a9b
+>   See commit dd06e72e68bcb4070ef211be100d2896e236c8fb for more details.
 
-ATM most often, yes, though we are trying to reduce the CAP_* privileges
-to what it actually needs.
+So I've been following the discussion of that feature for clang and
+I can't wait to actually be able to use it.
 
-> > *Please* comment on this so we can progress. ATM people are
-> > advising each other to set dev.tty.legacy_tiocsti=1, which is just
-> > counter-productive in terms of security...
-> 
-> So is there really no solution for brltty and TIOCSTI being disabled?
+But this feels a bit premature to me, not only due to the ongoing
+discussions on the syntax, but more importantly because I fear it
+will be completely misued before we have a compiler actually supporting
+available widely enough that we have it in the usual test bots.
 
-No, there is no way to simulate characters on the Linux console. The
-alternative would be to use uinput, but that simulates keycodes, not
-characters, thus requiring backtranslating first, which is very fragile.
-
-> What is FreeBSD doing? I imagine it's the same situation there too,
-> though maybe there is just no support?
-
-There is just no support in the kernel, only a patch against "screen".
-
-> > Really, this a serious regression for the people affected by this.
-> 
-> Can you send a patch adding a CAP_SYS_ADMIN exception?
-
-Sure!
-
-Samuel
