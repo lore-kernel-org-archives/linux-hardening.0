@@ -2,163 +2,141 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A961C001DB
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 16:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65296EB64D7
+	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 16:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231648AbjF1QUp (ORCPT
+        id S230100AbjF1QaK (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 12:20:45 -0400
-Received: from mx0a-0031df01.pphosted.com ([205.220.168.131]:17472 "EHLO
-        mx0a-0031df01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231652AbjF1QUl (ORCPT
+        Wed, 28 Jun 2023 12:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38650 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232099AbjF1Q3q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 12:20:41 -0400
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35SDtUVW018875;
-        Wed, 28 Jun 2023 16:20:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=EwVDj7xAWxMaQin2z34o8A2NmK4g7lRRidATpk7p6xA=;
- b=S9Ni0/QzzFh/cejWqPDW+NzQo7AgGrCBD+7x91tqrmPayMunWSJY91L9dMDYQlwpWwhY
- S4bLiFjFe9U0BnxbA7BEzhrgxPBWfn8MM9QKsMiJdVuQgvu+xNie06YXYNZ+EHbwvaIf
- ZfPX2rETz1dtQ9zPJ58B5FgSsi9GFgTIkeC0IzbVUEgsjG0UmGmTkMitVfW37HX7OWVp
- Lo4n3fq6/c+GO1eHGtFS0K+rzcglDvwhaC/kf8BasEx/MNWQ1gjDFCOq6fsWjbZa8i62
- CknK4g4h5YnSWcShVYT0gYeuu1/FN7eYPX/SYZE8PI3iLJDMKpYWTfUv9C7nTzBsN7qV eg== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rg21tb128-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 16:20:17 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35SGKH3B021301
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 28 Jun 2023 16:20:17 GMT
-Received: from [10.216.26.159] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Wed, 28 Jun
- 2023 09:20:05 -0700
-Message-ID: <10dd2ead-758a-89f0-cda4-70ae927269eb@quicinc.com>
-Date:   Wed, 28 Jun 2023 21:50:00 +0530
+        Wed, 28 Jun 2023 12:29:46 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C31E2733
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 09:29:45 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b7fb1a82c4so750475ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 09:29:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1687969785; x=1690561785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sqKrDSgd4uFuqB+8yGDCf1EvrfOgDuHhZYf9n2oqenA=;
+        b=lQpayUTyjUp2A3gMubF0kw1VV3wpmvbGoT9P5eueQR0YRfymWkoTa+nRzmgPdH2pOi
+         BYTRLCEi3IRVDdUO9YEwrpp709o9iNkTa1tXPo96mY945Ni/iJSBEWl9WjfcEMV6IxHi
+         GO5fjMVQH/jGjoYH+UVlbhK+DSPKrId9uMcFg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687969785; x=1690561785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sqKrDSgd4uFuqB+8yGDCf1EvrfOgDuHhZYf9n2oqenA=;
+        b=kJ5UkhWPiwf+fqhr6PBQLHW1SSckmRfz5d6LAYEOGTl+3gP+KJ2CT2JWaL4Li5cPId
+         JoJV+Bb3f70GrjjlR9d1lGKfglfibMJteAe5ub1ad6kf8oxsIFPvMBfLqY1FOhmxnkRs
+         waci+ShX4mfZ63x6ydrxg2AopHL/o/f9CXBheh7+qXyLvzL5BsuI+xW/PmIFQN880Czu
+         QOzs+F7IL2r4Hv0DDoQbFFGt9wJQETrURQjjXmfTpqg/EzAEeh3qb5TTFl3+5DoayxTl
+         ZXZfz022KNJUqh0BDcJEEGaBeLfzui/9agjE2Ffth9cYjrcbxjI+jJkz57+wozYsALUr
+         QuLg==
+X-Gm-Message-State: AC+VfDwvVerZEjfgDkAey82zvz6c9fwo8zO6E3xEfFznKkGke0VEf6F1
+        DxzOd7bih+87PCP8Zut+C/kn3A==
+X-Google-Smtp-Source: ACHHUZ5RyEP72eBVHjbEP+KjEVKNgHCOmAIxs2p5S+EWBaAbypM5cXIocfGTAzvGLZYTuHlytZyHBg==
+X-Received: by 2002:a17:902:ab95:b0:1af:ffda:855a with SMTP id f21-20020a170902ab9500b001afffda855amr9488995plr.9.1687969784812;
+        Wed, 28 Jun 2023 09:29:44 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c3-20020a170902848300b001b53d3d8f3dsm7932959plo.299.2023.06.28.09.29.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Jun 2023 09:29:43 -0700 (PDT)
+Date:   Wed, 28 Jun 2023 09:29:42 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Arne Welzel <arne.welzel@corelight.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Bill Wendling <morbo@google.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fangrui Song <maskray@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>,
+        Joe Perches <joe@perches.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        John Stultz <jstultz@google.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Marco Elver <elver@google.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Song Liu <song@kernel.org>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Wyes Karny <wyes.karny@amd.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [GIT PULL] hardening updates for v6.5-rc1
+Message-ID: <202306280920.CB69D0F75@keescook>
+References: <202306271729.813C8788@keescook>
+ <ZJvRFZeYq6ZWLAWj@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
- support
-Content-Language: en-US
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <2023062814-chance-flounder-f002@gregkh>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <2023062814-chance-flounder-f002@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4bKvRVyoEnkrTkaXXrIlB4hO_M8fRGoE
-X-Proofpoint-GUID: 4bKvRVyoEnkrTkaXXrIlB4hO_M8fRGoE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-28_11,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=728 phishscore=0
- adultscore=0 suspectscore=0 clxscore=1015 priorityscore=1501 mlxscore=0
- bulkscore=0 malwarescore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306280145
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZJvRFZeYq6ZWLAWj@infradead.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 6/28/2023 9:15 PM, Greg KH wrote:
-> On Wed, Jun 28, 2023 at 06:04:27PM +0530, Mukesh Ojha wrote:
->> Minidump is a best effort mechanism to collect useful and predefined data
->> for first level of debugging on end user devices running on Qualcomm SoCs.
->> It is built on the premise that System on Chip (SoC) or subsystem part of
->> SoC crashes, due to a range of hardware and software bugs. Hence, the
->> ability to collect accurate data is only a best-effort. The data collected
->> could be invalid or corrupted, data collection itself could fail, and so on.
->>
->> Qualcomm devices in engineering mode provides a mechanism for generating
->> full system ramdumps for post mortem debugging. But in some cases it's
->> however not feasible to capture the entire content of RAM. The minidump
->> mechanism provides the means for selecting which snippets should be
->> included in the ramdump.
->>
->> Minidump kernel driver implementation is divided into two parts for
->> simplicity, one is minidump core which can also be called minidump
->> frontend(As API gets exported from this driver for registration with
->> backend) and the other part is minidump backend i.e, where the underlying
->> implementation of minidump will be there. There could be different way
->> how the backend is implemented like Shared memory, Memory mapped IO
->> or Resource manager(gunyah) based where the guest region information is
->> passed to hypervisor via hypercalls.
->>
->>      Minidump Client-1     Client-2      Client-5    Client-n
->>               |               |              |             |
->>               |               |    ...       |   ...       |
->>               |               |              |             |
->>               |               |              |             |
->>               |               |              |             |
->>               |               |              |             |
->>               |               |              |             |
->>               |               |              |             |
->>               |           +---+--------------+----+        |
->>               +-----------+  qcom_minidump(core)  +--------+
->>                           |                       |
->>                           +------+-----+------+---+
->>                                  |     |      |
->>                                  |     |      |
->>                  +---------------+     |      +--------------------+
->>                  |                     |                           |
->>                  |                     |                           |
->>                  |                     |                           |
->>                  v                     v                           v
->>       +-------------------+      +-------------------+     +------------------+
->>       |qcom_minidump_smem |      |qcom_minidump_mmio |     | qcom_minidump_rm |
->>       |                   |      |                   |     |                  |
->>       +-------------------+      +-------------------+     +------------------+
->>         Shared memory              Memory mapped IO           Resource manager
->>          (backend)                   (backend)                   (backend)
->>
->>
->> Here, we will be giving all analogy of backend with SMEM as it is the
->> only implemented backend at present but general idea remains the same.
+On Tue, Jun 27, 2023 at 11:20:05PM -0700, Christoph Hellwig wrote:
+> On Tue, Jun 27, 2023 at 05:34:57PM -0700, Kees Cook wrote:
+> > - The under-development compiler attribute __counted_by has been added
+> >   so that we can start annotating flexible array members with their
+> >   associated structure member that tracks the count of flexible array
+> >   elements at run-time. It is possible (likely?) that the exact syntax
+> >   of the attribute will change before it is finalized, but GCC and Clang
+> >   are working together to sort it out. Any changes can be made to the
+> >   macro while we continue to add annotations. As an example, I have a
+> >   treewide commit waiting with such annotations found via Coccinelle:
+> >   https://git.kernel.org/linus/adc5b3cb48a049563dc673f348eab7b6beba8a9b
+> >   See commit dd06e72e68bcb4070ef211be100d2896e236c8fb for more details.
 > 
-> If you only have one "backend" then you don't need the extra compexity
-> here at all, just remove that whole middle layer please and make this
-> much simpler and smaller and easier to review and possibly accept.
-> 
-> We don't add layers when they are not needed, and never when there is no
-> actual user.  If you need the extra "complexity" later, then add it
-> later when it is needed as who knows when that will ever be.
-> 
-> Please redo this series based on that, thanks.
+> So I've been following the discussion of that feature for clang and
+> I can't wait to actually be able to use it.
 
-I already followed without this middle layer till v3 since without
-the middle layer it will be end up with lot of code duplication if there
-is another backend.
+Me too! :)
 
-We already have other backend implementation in the downstream, if you
-want to see them, i will try to post them in upcoming series..
+> But this feels a bit premature to me, not only due to the ongoing
+> discussions on the syntax, but more importantly because I fear it
 
--Mukesh
+I was on the fence about this too, and in the end, I decided that any
+syntax changes are going to be mostly mechanical, and in the meantime
+we needed a way to capture the associations. This has been a pain point
+for years as we've been doing flexible array conversions, since when
+doing the work it usually becomes clear which struct member is tracking
+the element count, but that information couldn't be reliably recorded
+anywhere. Now we can include the annotation (which is the really important
+part). If/when the exact syntax changes, we can either adjust the macro,
+or at worst we can easily do a tree-wide change. But I really want to
+start capturing the associations _now_, and get us all into the habit
+of doing it, and I want it to be through some kind of regular syntax
+(now that there are patches to both GCC and Clang that can validate the
+results), not just comments.
 
-> 
-> greg k-h
+> will be completely misued before we have a compiler actually supporting
+> available widely enough that we have it in the usual test bots.
+
+How do you see it being misused? Your mention of the test bots, I think,
+means you're worried the annotations will go unchecked for valid syntax?
+FWIW, I've got builders with the GCC and Clang patches that should catch
+this.
+
+-- 
+Kees Cook
