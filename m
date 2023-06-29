@@ -2,110 +2,263 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822A7EB64D7
-	for <linux-hardening@archiver.kernel.org>; Wed, 28 Jun 2023 23:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D709EB64DA
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 01:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230468AbjF1XYq (ORCPT
+        id S230401AbjF2Bpk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 19:24:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
+        Wed, 28 Jun 2023 21:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230014AbjF1XYq (ORCPT
+        with ESMTP id S229469AbjF2Bpj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 19:24:46 -0400
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28032131
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 16:24:45 -0700 (PDT)
-Received: by mail-oi1-x22e.google.com with SMTP id 5614622812f47-3a1d9b64837so78083b6e.0
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 16:24:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687994684; x=1690586684;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c+frzkmPtuGHmkYBEBylQsm3B7k7j/a5AOqV9ViqKmw=;
-        b=O9p5UCnhkvZg2oak3WZ/beM8V7vO1HSsIfVIfXJWkmoa2zWpncWupzqGoCh+quwuIw
-         eYYyc3pePyoePsAbtU+qWBwUYKcvrO/wVDctgrBl5NwF4ITfTWYlEQaFgQWKd6PoeST1
-         QFj5pZnhR8iCRMCT2X8Olzz1vC5f1zU/jultw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687994684; x=1690586684;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c+frzkmPtuGHmkYBEBylQsm3B7k7j/a5AOqV9ViqKmw=;
-        b=fDZZ3NUMVvPr+0yQ0UUx5w+CH/ijwvCGLA3aUzI/iyl6LJgztuiUmL2k0lALF6N2nc
-         J8dB3hpYHmE1EEP+OejhVPkx0vvJOZOpFDyh+IT9bO3fB1rOgAl13NwuEZgZHRVoGe0C
-         IibxFT9r1SQypg7qaPVYfEIqoYZno6KEhbbSfmJ8IImasVkt7mo+6O5lT8gy1OKL4mXd
-         LQeGTbABVy2nWsfcd9UVFZPkxgUykuXQ2lIoAI1dMfHIy1ciN3eb/6gq79A13OMPsByP
-         bK9szj8Q01HgndBaCY5r8g0XexVbpzE3IU5blq0mDchOj9k8vapyAHRTQs6FXUYcbh5/
-         /05g==
-X-Gm-Message-State: AC+VfDztZVJitnUFnDdkCc7lIwB67Ospnhdbf3AZbUjSsc2+/O2OIWyy
-        WArP8Cr4PaEm4eXoghnIGRCG+g==
-X-Google-Smtp-Source: ACHHUZ7HhfkP6W58+5+9ClYoNBGA81jUExDe/4f7+kl9C+BhJQdJF35IyU0QaJPazfnHmdZpMeeZaw==
-X-Received: by 2002:a05:6808:1a0d:b0:3a1:dbf5:fdbd with SMTP id bk13-20020a0568081a0d00b003a1dbf5fdbdmr13360315oib.27.1687994684100;
-        Wed, 28 Jun 2023 16:24:44 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u22-20020aa78496000000b00640f1e4a811sm5845474pfn.22.2023.06.28.16.24.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jun 2023 16:24:43 -0700 (PDT)
-Date:   Wed, 28 Jun 2023 16:24:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     Yuxiao Zhang <yuxiaozhang@google.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wak@google.com
-Subject: Re: [PATCH] pstore: ramoops: support pmsg size larger than kmalloc
- limitation
-Message-ID: <202306281615.360B12EFC@keescook>
-References: <2023062832-barrier-strenuous-9499@gregkh>
- <20230628171055.1312737-1-yuxiaozhang@google.com>
- <28718037-ccf1-c36b-4eb6-716c518ca98f@igalia.com>
+        Wed, 28 Jun 2023 21:45:39 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4781FCB;
+        Wed, 28 Jun 2023 18:45:37 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T0CrFQ029409;
+        Thu, 29 Jun 2023 01:45:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=qcppdkim1;
+ bh=ZYWynEvEKNe8VfOw/p/gTYwzAY7ckXkgyE3yqJuE0T0=;
+ b=MJA9ev2Hkxjx5p10t12BffBjoMcDAiGG2uua9kd2bo1QIn9+IMwwap3Gs5CMnbWzZ2HK
+ PCxYfg2M5Xs5vkGPJdyxpjK9trQ5yVfGDT3K+SOf1hhtRbMVdE1HyKQ8UewJ8IEEJdyf
+ k4RKtyrVOo+PsTmDAoF+JQV23BcN/JcvYGAVXDjW5zGfDfJJGmJrDwD44XhrXf7Ycivt
+ zEwNqjYeL7fWDg95JHWzsQAh7USekFhzTKtpLeXnfmLyDhWJaqgfxYZWFyBOVjKiYlUi
+ 3u/hy2R3J3J1HziDGZcAzXkGg9SZVSWVS3oP+QKsuPrC0fkbIlEP9qSsSMHyenUqhE8H dg== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgetpj99c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jun 2023 01:45:14 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35T1jCmm022921
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jun 2023 01:45:13 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.7; Wed, 28 Jun 2023 18:45:05 -0700
+Date:   Thu, 29 Jun 2023 07:15:01 +0530
+From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     Pavan Kondeti <quic_pkondeti@quicinc.com>,
+        Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linus.walleij@linaro.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v4 08/21] dt-bindings: reserved-memory: Add qcom,ramoops
+ binding
+Message-ID: <07e3a4ce-d1fd-4af7-a288-a88e8fb1c954@quicinc.com>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-9-git-send-email-quic_mojha@quicinc.com>
+ <87ba1c2d-fa0b-4ac5-ba79-b3556101b612@quicinc.com>
+ <CAL_Jsq+_G4wBR7tm+DvN-yYSaoAX6OgxHa0AToJYucDdhD=Dtg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <28718037-ccf1-c36b-4eb6-716c518ca98f@igalia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_Jsq+_G4wBR7tm+DvN-yYSaoAX6OgxHa0AToJYucDdhD=Dtg@mail.gmail.com>
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 9kp9rIKzyYn_Az1wGtxsEwfzcKAeNG4n
+X-Proofpoint-GUID: 9kp9rIKzyYn_Az1wGtxsEwfzcKAeNG4n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-28_14,2023-06-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 suspectscore=0
+ clxscore=1015 bulkscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306290014
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 03:12:10PM -0300, Guilherme G. Piccoli wrote:
-> Also - Kees certainly knows that way better, but - are we 100% sure that
-> the region for pstore can be non-contiguous? For some reason, I always
-> thought this was a requirement - grepping the code, I found this
-> (wrong?) comment:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/pstore/zone.c#n3
+On Wed, Jun 28, 2023 at 05:17:13PM -0600, Rob Herring wrote:
+> On Wed, Jun 28, 2023 at 8:11 AM Pavan Kondeti <quic_pkondeti@quicinc.com> wrote:
+> >
+> > On Wed, Jun 28, 2023 at 06:04:35PM +0530, Mukesh Ojha wrote:
+> > > Qualcomm ramoops minidump logger provide a means of storing
+> > > the ramoops data to some dynamically reserved memory instead
+> > > of traditionally implemented ramoops where the region should
+> > > be statically fixed ram region. Its device tree binding
+> > > would be exactly same as ramoops device tree binding and is
+> > > going to contain traditional ramoops frontend data and this
+> > > content will be collected via Qualcomm minidump infrastructure
+> > > provided from the boot firmware.
+> > >
+> > > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> > > ---
+> > >  .../devicetree/bindings/soc/qcom/qcom,ramoops.yaml | 126 +++++++++++++++++++++
+> > >  1 file changed, 126 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
+> > > new file mode 100644
+> > > index 000000000000..b1fdcf3f8ad4
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
+> > > @@ -0,0 +1,126 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: "http://devicetree.org/schemas/soc/qcom/qcom,ramoops.yaml#"
+> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > > +
+> > > +title: Qualcomm Ramoops minidump logger
+> > > +
+> > > +description: |
+> > > +  Qualcomm ramoops minidump logger provide a means of storing the ramoops
+> > > +  data to some dynamically reserved memory instead of traditionally
+> > > +  implemented ramoops where the region should be statically fixed ram
+> > > +  region. Because of its similarity with ramoops it will also have same
+> > > +  set of property what ramoops have it in its schema and is going to
+> > > +  contain traditional ramoops frontend data and this region will be
+> > > +  collected via Qualcomm minidump infrastructure provided from the
+> > > +  boot firmware.
+> > > +
+> > > +maintainers:
+> > > +  - Mukesh Ojha <quic_mojha@quicinc.com>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +          - qcom,sm8450-ramoops
+> > > +      - const: qcom,ramoops
+> > > +
+> > > +  memory-region:
+> > > +    maxItems: 1
+> > > +    description: handle to memory reservation for qcom,ramoops region.
+> > > +
+> > > +  ecc-size:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: enables ECC support and specifies ECC buffer size in bytes
+> > > +    default: 0 # no ECC
+> > > +
+> > > +  record-size:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: maximum size in bytes of each kmsg dump
+> > > +    default: 0
+> > > +
+> > > +  console-size:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: size in bytes of log buffer reserved for kernel messages
+> > > +    default: 0
+> > > +
+> > > +  ftrace-size:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: size in bytes of log buffer reserved for function tracing and profiling
+> > > +    default: 0
+> > > +
+> > > +  pmsg-size:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: size in bytes of log buffer reserved for userspace messages
+> > > +    default: 0
+> > > +
+> > > +  mem-type:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    description: if present, sets the type of mapping is to be used to map the reserved region.
+> > > +    default: 0
+> > > +    oneOf:
+> > > +      - const: 0
+> > > +        description: write-combined
+> > > +      - const: 1
+> > > +        description: unbuffered
+> > > +      - const: 2
+> > > +        description: cached
+> > > +
+> > > +  max-reason:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    default: 2 # log oopses and panics
+> > > +    maximum: 0x7fffffff
+> > > +    description: |
+> > > +      If present, sets maximum type of kmsg dump reasons to store.
+> > > +      This can be set to INT_MAX to store all kmsg dumps.
+> > > +      See include/linux/kmsg_dump.h KMSG_DUMP_* for other kmsg dump reason values.
+> > > +      Setting this to 0 (KMSG_DUMP_UNDEF), means the reason filtering will be
+> > > +      controlled by the printk.always_kmsg_dump boot param.
+> > > +      If unset, it will be 2 (KMSG_DUMP_OOPS), otherwise 5 (KMSG_DUMP_MAX).
+> > > +
+> > > +  flags:
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +    default: 0
+> > > +    description: |
+> > > +      If present, pass ramoops behavioral flags
+> > > +      (see include/linux/pstore_ram.h RAMOOPS_FLAG_* for flag values).
+> > > +
+> > > +  no-dump-oops:
+> > > +    deprecated: true
+> > > +    type: boolean
+> > > +    description: |
+> > > +      Use max_reason instead. If present, and max_reason is not specified,
+> > > +      it is equivalent to max_reason = 1 (KMSG_DUMP_PANIC).
+> > > +
+> > > +  unbuffered:
+> > > +    deprecated: true
+> > > +    type: boolean
+> > > +    description: |
+> > > +      Use mem_type instead. If present, and mem_type is not specified,
+> > > +      it is equivalent to mem_type = 1 and uses unbuffered mappings to map
+> > > +      the reserved region (defaults to buffered mappings mem_type = 0).
+> > > +      If both are specified -- "mem_type" overrides "unbuffered".
+> > > +
+> >
+> > Most of the properties you added here are already documented at
+> > Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+> 
+> That is certainly a problem. Don't define the same property more than
+> once. Not yet checked and enforced by the tools, but it will be.
+> 
+> > Can't we just reference them here? would something like work?
+> >
+> > max-reason:
+> >   $ref: "../../reserved-memory/ramoops.yaml#/properties/max-reason
+> 
+> Can work, but no. Common properties need to go into a schema of common
+> properties which the device specific schemas reference.
+> 
 
-The contiguous requirements are entirely for the RAM backend's storage,
-so these intermediate memory regions can use non-contiguous physical
-backing memory (i.e. vmalloc).
+Thanks for the clarification. We need to define the common properties
+and make it available under /schemas/<>.yaml and add a reference to it
+in these bindings. Is my understanding correct?
 
-Even the special case of crash-dumping should be fine for the large
-buffer used to hold the crash before doing compression.
+> >
+> > > +unevaluatedProperties: false
+> > > +
+> >
+> > will there be any additional properties be added dynamically? if not,
+> > should not we use "additionalProperties: false" here?
+> 
+> I don't know what you mean by dynamically, but that's not the criteria
+> for which to use.
+> 
+ok, I was wrong in saying dynamically. I should say "are there any other
+properties that will be included that are not documented here".
 
-There are effectively 4 types of allocations in pstore:
+is below my understanding correct?
 
-1- a physical -> virtual mapping for the RAM backend
-2- the allocations (if any) for non-RAM backends to hold a copy of pstore
-   records when extracted from the backend storage (e.g NVRAM, EFI vars,
-   etc).
-3- incoming allocations that are used temporarily to hand data to the
-   backend (e.g. the write_compat used in this patch)
-4- the allocation used for holding the pstorefs data contents (which I
-   need to double-check, but is entirely defined by the backends)
+additionalProperties needs to be set to false if at all this binding
+defines all the possible properties (including child nodes) and not
+referring to any other schemas.
 
-Changes aren't needed for (1), it's fine on its own. This patch changes
-allocations for (2) and (3) for pmsg and the RAM backend, if I'm reading
-it correctly. I think (4) is included as part of (2), but I need to
-check. As long as all paths use kvfree() for the record buffers,
-everything should Just Work for RAM. Switching the other backends to
-also use kvalloc() would allow for greater flexibility, though.
+If that is not the case and this binding references to other schemas,
+then unevaluatedProperties could be used since additionalProperties
+can't support combining schemas.
 
-Anyway, it's on my list to review and test. I'm still working through
-other things related to the merge window opening, so I may be a bit slow
-for the next week. :)
-
--Kees
-
--- 
-Kees Cook
+Thanks,
+Pavan
