@@ -2,56 +2,56 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95569C001B1
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 04:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C178CEB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 04:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231512AbjF2EON (ORCPT
+        id S229624AbjF2Edn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 00:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
+        Thu, 29 Jun 2023 00:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231290AbjF2EOM (ORCPT
+        with ESMTP id S231132AbjF2Edk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 00:14:12 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701AE1BCE
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 21:14:10 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-39e86b3da52so192242b6e.0
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 21:14:10 -0700 (PDT)
+        Thu, 29 Jun 2023 00:33:40 -0400
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4AE2116
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 21:33:38 -0700 (PDT)
+Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-3a3790a0a48so12495b6e.1
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 21:33:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688012049; x=1690604049;
+        d=chromium.org; s=google; t=1688013217; x=1690605217;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gFI0ylmPxIwEVqfEdxipNZjolrHgwmHjIaIurmggdCk=;
-        b=lPERBNzh9oBZQ+QUplulviVjCOP/BA2YFs+vzqqvva8Lh9HBJ3T/XqpVdZVvIJCV5R
-         oiUD0xCDsg8ZRy/IuoMjPMt6X0bw9U1BBP/72qABBfaPmwufk6rXtWqIwV0r5guJjFGN
-         ODCSn8zVYcvXw+OlqM3CRrhAxTBJUNYWGe9PY=
+        bh=eJW2r3ntggsBVvy1ila5sjLU4Aw8geyuKy3kMy86JU8=;
+        b=Oirx2ssq91MRt0ie2O1eepU4Csg8OJ2yDunQfSdCo0mSH0OqwXaLkb+02b3nMlfuIF
+         tyyOfQDBnTHmVypFsesVF3grpD7EFFj+dNe5tQn31FwPEmXyfxkvGgUCfpZH4qDxt/ey
+         E9KTWDd4AdMv5GWgLYQC+wGlLbEbbLDkFpGK8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688012049; x=1690604049;
+        d=1e100.net; s=20221208; t=1688013217; x=1690605217;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gFI0ylmPxIwEVqfEdxipNZjolrHgwmHjIaIurmggdCk=;
-        b=jBt0omacsqxF76/ZNHN3kPkSK8qIh2De4fMu8JqjctNk5VTXfxROW13IkbeH+aYGfQ
-         5T31Mb75kRDtSa2k6S3o0BiICY7LM3QyPYNexFcfzjAtFpKMOiRPaQtCJ9P9MYDjYwKn
-         2C0Db414JLHSrKmC42GyIoIf34H8PxALIXtMrllp5jZqCnOtdH8UgKig3QSr4yJUYCV5
-         8ZQrq0gbND+66sOJ+O6dSq1OST9sDBhdrJv/av0D7RlIirMfTsLtEKIfzYLccoGlXD7S
-         NTN4bAWzJzM89FqktKi1eFdA6Xyph7J/0LjXVXJd1aNuvD9L4rhKs47ScIIueqZMD3aV
-         JkLg==
-X-Gm-Message-State: AC+VfDzljG0rASY5CVY/Nr4PF0nAsk45eFcnGbsgbDzg6CjWgbH40OFZ
-        eVwnmqCYYahNVtQqVcd0jdm+p0RKptmfD9VmRINgeQ==
-X-Google-Smtp-Source: ACHHUZ4SX0IpPrAi8VAGsBsq9P7eKVBPxCksuggGgL4DjpZRAebGQhJ6Xnawo7+AkZotPjkeDDXTPwlHAh/4d5FsqCM=
-X-Received: by 2002:aca:bbc5:0:b0:3a0:54ea:e416 with SMTP id
- l188-20020acabbc5000000b003a054eae416mr2055075oif.17.1688012049129; Wed, 28
- Jun 2023 21:14:09 -0700 (PDT)
+        bh=eJW2r3ntggsBVvy1ila5sjLU4Aw8geyuKy3kMy86JU8=;
+        b=XEimsOLi9l9QVPFr0R+L/uXXln9gsdJuYJvgQlqOGuvQApiNoGPhTYH5qjHER3GvUc
+         7Hp72CX8vHAKCcbORVFSINrf8iuWbKqJEYl9gBCD2LwJOCDjbRUtl/r5Onn0bbxGEkkE
+         O9SRWWJ5UwOrlsbAA5+3LsMaLgLvVGBn1fvQ4M3qYsH4zCsFNSOk0ML2N2f6EvpRZ53B
+         s/QulnabnvTgnTR7UR1eI5uaWrTbXyilDdnlVujwreW1NmHfAHRv1U/sOYZwxuZ/va8F
+         I0mmf+Nz4Kp03uci2QsCzEBP3uEe7nbr6+HeD3cupgqBEEM00wVsla42GuouDWPggaP4
+         9svw==
+X-Gm-Message-State: AC+VfDw+AHpBVOQ3GpFnhs2y3XhuKHKooC8WY2hNbUHFbLGHEJCp4MW0
+        Zphny1BhBYRxaLJIrA0SMQdLfE4pX33+MAozalg3HQ==
+X-Google-Smtp-Source: ACHHUZ4WbBcGDRw30mJTQOdCSRmryXfsnM4fcbrvXYszwENk4IYIuPTU/UqW//jSW9jKBg3jtjF1hU6rRnoLABDI0PA=
+X-Received: by 2002:a05:6808:314:b0:3a0:61b4:1bed with SMTP id
+ i20-20020a056808031400b003a061b41bedmr16676381oie.35.1688013217553; Wed, 28
+ Jun 2023 21:33:37 -0700 (PDT)
 MIME-Version: 1.0
 References: <20221215001205.51969-1-jeffxu@google.com> <20221215001205.51969-4-jeffxu@google.com>
- <ZJwcsU0vI-nzgOB_@codewreck.org>
-In-Reply-To: <ZJwcsU0vI-nzgOB_@codewreck.org>
+ <ZJwcsU0vI-nzgOB_@codewreck.org> <ZJyKeeqRJxzwlMhk@codewreck.org>
+In-Reply-To: <ZJyKeeqRJxzwlMhk@codewreck.org>
 From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Wed, 28 Jun 2023 21:13:58 -0700
-Message-ID: <CABi2SkXUX_QqTQ10Yx9bBUGpN1wByOi_=gZU6WEy5a8MaQY3Jw@mail.gmail.com>
+Date:   Wed, 28 Jun 2023 21:33:27 -0700
+Message-ID: <CABi2SkWnAgHK1i6iqSqPMYuNEhtHBkO8jUuCvmG3RmUB5TKHJw@mail.gmail.com>
 Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
 To:     Dominique Martinet <asmadeus@codewreck.org>
 Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
@@ -68,179 +68,52 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello.
+Hello!
 
-Thank you for your email and interested in using memfd_noexec !
-
-On Wed, Jun 28, 2023 at 4:43=E2=80=AFAM Dominique Martinet
+On Wed, Jun 28, 2023 at 12:31=E2=80=AFPM Dominique Martinet
 <asmadeus@codewreck.org> wrote:
 >
-> jeffxu@chromium.org wrote on Thu, Dec 15, 2022 at 12:12:03AM +0000:
-> > From: Jeff Xu <jeffxu@google.com>
+> Dominique Martinet wrote on Wed, Jun 28, 2023 at 08:42:41PM +0900:
+> > If flags already has either MFD_EXEC or MFD_NOEXEC_SEAL, you don't chec=
+k
+> > the sysctl at all.
+> > [...repro snipped..]
 > >
-> > The new MFD_NOEXEC_SEAL and MFD_EXEC flags allows application to
-> > set executable bit at creation time (memfd_create).
-> >
-> > When MFD_NOEXEC_SEAL is set, memfd is created without executable bit
-> > (mode:0666), and sealed with F_SEAL_EXEC, so it can't be chmod to
-> > be executable (mode: 0777) after creation.
-> >
-> > when MFD_EXEC flag is set, memfd is created with executable bit
-> > (mode:0777), this is the same as the old behavior of memfd_create.
-> >
-> > The new pid namespaced sysctl vm.memfd_noexec has 3 values:
-> > 0: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
-> >         MFD_EXEC was set.
-> > 1: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
-> >         MFD_NOEXEC_SEAL was set.
-> > 2: memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+> > What am I missing?
 >
-> So, erm, I'm a bit late to the party but I was just looking at a way of
-> blocking memfd_create+exec in a container and this sounded perfect: my
-> reading is that this is a security feature meant to be set for
-> container's namespaces that'd totally disable something like
-> memfd_create followed by fexecve (because we don't want weird binaries
-> coming from who knows where to be executed on a shiny secure system),
-> but. . . is this actually supposed to work?
-> (see below)
+> (Perhaps the intent is just to force people to use the flag so it is
+> easier to check for memfd_create in seccomp or other LSM?
+> But I don't see why such a check couldn't consider the absence of a flag
+> as well, so I don't see the point.)
 >
-> > [...]
-> > --- a/mm/memfd.c
-> > +++ b/mm/memfd.c
-> > @@ -263,12 +264,14 @@ long memfd_fcntl(struct file *file, unsigned int =
-cmd, unsigned long arg)
-> >  #define MFD_NAME_PREFIX_LEN (sizeof(MFD_NAME_PREFIX) - 1)
-> >  #define MFD_NAME_MAX_LEN (NAME_MAX - MFD_NAME_PREFIX_LEN)
-> >
-> > -#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB)
-> > +#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB |=
- MFD_NOEXEC_SEAL | MFD_EXEC)
-> >
-> >  SYSCALL_DEFINE2(memfd_create,
-> >               const char __user *, uname,
-> >               unsigned int, flags)
-> >  {
-> > +     char comm[TASK_COMM_LEN];
-> > +     struct pid_namespace *ns;
-> >       unsigned int *file_seals;
-> >       struct file *file;
-> >       int fd, error;
-> > @@ -285,6 +288,39 @@ SYSCALL_DEFINE2(memfd_create,
-> >                       return -EINVAL;
-> >       }
-> >
-> > +     /* Invalid if both EXEC and NOEXEC_SEAL are set.*/
-> > +     if ((flags & MFD_EXEC) && (flags & MFD_NOEXEC_SEAL))
-> > +             return -EINVAL;
-> > +
-> > +     if (!(flags & (MFD_EXEC | MFD_NOEXEC_SEAL))) {
-> > +             [code that checks the sysctl]
->
-> If flags already has either MFD_EXEC or MFD_NOEXEC_SEAL, you don't check
-> the sysctl at all.
->
-> This can be verified easily:
-> -----
-> $ cat > memfd_exec.c <<'EOF'
-> #define _GNU_SOURCE
->
-> #include <errno.h>
-> #include <stdio.h>
-> #include <sys/mman.h>
-> #include <sys/types.h>
-> #include <sys/wait.h>
->
-> #ifndef MFD_EXEC
-> #define MFD_EXEC                0x0010U
-> #endif
->
-> int main() {
->     int fd =3D memfd_create("script", MFD_EXEC);
->     if (fd =3D=3D -1)l
->         perror("memfd");
->
->     char prog[] =3D "#!/bin/sh\necho Ran script\n";
->     if (write(fd, prog, sizeof(prog)-1) !=3D sizeof(prog)-1)
->             perror("write");
->
->     char *const argv[] =3D { "script", NULL };
->     char *const envp[] =3D { NULL };
->     fexecve(fd, argv, envp);
->     perror("fexecve");
-> }
-> EOF
-> $ gcc -o memfd_exec memfd_exec.c
-> $ ./memfd_exec
-> Ran script
-> $ sysctl vm.memfd_noexec
-> vm.memfd_noexec =3D 2
-> -----
-> (as opposed to failing hard on memfd_create if flag unset on sysctl=3D2,
-> and failing on fexecve with flag unset and sysctl=3D1)
->
-> What am I missing?
->
->
-At one point, I was thinking of having a security hook to block
-executable memfd [1], so this sysctl only works for the application
-that doesn't set EXEC bit. Now I think it makes sense to use
-vm.memfd_noexec =3D 2 to block the MFD_EXEC also.
-Anyway the commit msg says:
-2: memfd_create() without MFD_NOEXEC_SEAL will be rejected.
-Not doing that is a bug. I will send a fix for that.
-
-[1] https://lore.kernel.org/lkml/20221206150233.1963717-7-jeffxu@google.com=
-/
+Yes. There is consideration to motivate app devs to migrate their code
+to use the new EXEC/NOEXEC_SEAL flag for memfd_create, if that answers
+your question.
 
 >
-> BTW I find the current behaviour rather hard to use: setting this to 2
-> should still set NOEXEC by default in my opinion, just refuse anything
-> that explicitly requested EXEC.
+> > BTW I find the current behaviour rather hard to use: setting this to 2
+> > should still set NOEXEC by default in my opinion, just refuse anything
+> > that explicitly requested EXEC.
 >
-At one point [2] (v2 of patch) there were two sysctls, one is doing
-overwrite, one is enforcing, later I decided with one sysctl, the
-rationale is the kernel will eventually get out of the business of
-overwriting user space code.  Yes. It might take a long time to
-migrate all of the userspace.
-
-In the meantime,  to meet what you want, the solution is keep
-vm.memfd_noexec =3D 1 (for overwrite), and a new security policy
-(SELInux or Landlock) that uses security hook security_memfd_create,
-this can block one process from creating executable memfd. Indeed,
-security policy is better fit to cases like this than sysctl.
-
-[2] https://lore.kernel.org/linux-mm/CABi2SkWGo9Jrd=3Di1e2PoDWYGenGhR=3DpG=
-=3DyGsQP5VLmizTmg-iA@mail.gmail.com/
-
-> Sure there's a warn_once that memfd_create was used without seal, but
-> right now on my system it's "used up" 5 seconds after boot by systemd:
-> [    5.854378] memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=
-=3D1 'systemd'
+> And I just noticed it's not possible to lower the value despite having
+> CAP_SYS_ADMIN: what the heck?! I have never seen such a sysctl and it
+> just forced me to reboot because I willy-nilly tested in the init pid
+> namespace, and quite a few applications that don't require exec broke
+> exactly as I described below.
 >
-> And anyway, older kernels will barf up EINVAL when calling memfd_create
-> with MFD_NOEXEC_SEAL, so even if userspace will want to adapt they'll
-> need to try calling memfd_create with the flag once and retry on EINVAL,
-> which let's face it is going to take a while to happen.
-> (Also, the flag has been added to glibc, but not in any release yet)
+> If the user has CAP_SYS_ADMIN there are more container escape methods
+> than I can count, this is basically free pass to root on main namespace
+> anyway, you're not protecting anything. Please let people set the sysctl
+> to what they want.
 >
-Yes. Application will need to do some detection of the kernel. This is
-not avoidable.
+Yama has a similar setting,  for example, 3 (YAMA_SCOPE_NO_ATTACH)
+will not allow downgrading at runtime.
 
-> Making calls default to noexec AND refuse exec does what you want
-> (forbid use of exec in an app that wasn't in a namespace that allows
-> exec) while allowing apps that require it to work; that sounds better
-> than making all applications that haven't taken the pain of adding the
-> new flag to me.
-> Well, I guess an app that did require exec without setting the flag will
-> fail in a weird place instead of failing at memfd_create and having a
-> chance to fallback, so it's not like it doesn't make any sense;
-> I don't have such strong feelings about this if the sysctl works, but
-> for my use case I'm more likely to want to take a chance at memfd_create
-> not needing exec than having the flag set. Perhaps a third value if I
-> cared enough...
->
+Since this is a security feature, not allowing downgrading at run time
+is part of the security consideration. I hope you understand.
+
 > --
 > Dominique Martinet | Asmadeus
 
-Thanks
+Thanks!
 -Jeff
