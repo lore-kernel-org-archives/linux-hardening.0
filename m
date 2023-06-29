@@ -2,119 +2,141 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E24EB64D9
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 20:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42734C001B0
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 21:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232324AbjF2UEF (ORCPT
+        id S231631AbjF2VFg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 16:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
+        Thu, 29 Jun 2023 17:05:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232524AbjF2UDg (ORCPT
+        with ESMTP id S231522AbjF2VFb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 16:03:36 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 687CA35B0
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 13:02:44 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6682909acadso716594b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 13:02:44 -0700 (PDT)
+        Thu, 29 Jun 2023 17:05:31 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A6E2112
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 14:05:29 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-516500163b2so776a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 14:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688068964; x=1690660964;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OUs7U0BtKPJKG1fzCWygEf2HA0xht76oAjLsL2vUhyc=;
-        b=Twu/FkGZNZQcuDHDwKEwB2wyE3v1LbCDu0eqxi7o+F27rEm7sqDp80j39YE6UCfvl4
-         2rIhpm93D6ABz6M5sH7Md4uHRs/x09fOmcjvBWU2B8XV/lFuQKbjCTsr/PE9Iic01fqu
-         XPdl1KDY1NNtAmWmfm7AiO7oGkDHBajxuQFGc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688068964; x=1690660964;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1688072727; x=1690664727;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OUs7U0BtKPJKG1fzCWygEf2HA0xht76oAjLsL2vUhyc=;
-        b=ZDjH7Attw23A45m4ILmaXHxk2HuDHTaVbsaRgZAB3sM7C8SsbEzO/6YTcV8TzAKaX6
-         LGERE0gvYC9aseSG8elwT3QSvHJkfyKKRk+kgtDwx6iZ2tQxoqxdFnD9Qp706ComamNu
-         kM+8RJY2Xx3fGUVRkX29cvScR/lycmtFVefaVSXMHnZXiRF/NtmaVorAtKukQJ+z/OPX
-         nSkl+4uB19KOpnHZhWG2fi5tT+K+qu3x0fpkITuOXRxXFUuc0kNRT9lJMSyAehBJ3OTd
-         KLkcGU6xPlRympds4/yF2yM22iLw/r2mkOfUToezbFJbJrEqPr+dvYOch+OOgKNnrWqz
-         ORmA==
-X-Gm-Message-State: ABy/qLaMkBnoYdcoMGAcPDdqEmwL8X3kItNXIPOvCDdA9psCxA2aNZSK
-        M+7pYmWoi3nHr/MxAg4XvRkdjmZF3Gx5jyXaOVs=
-X-Google-Smtp-Source: APBJJlG5QTXFLOoEdTJA9LqV+/oEh+5BpFurv2cnrHa3QVzL6i65AYGPHUPw04F0k7YjzN3v6dquOg==
-X-Received: by 2002:a05:6a00:2d1a:b0:643:aa8d:8cd7 with SMTP id fa26-20020a056a002d1a00b00643aa8d8cd7mr968304pfb.32.1688068963869;
-        Thu, 29 Jun 2023 13:02:43 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q136-20020a632a8e000000b0055b0c330b30sm4599477pgq.84.2023.06.29.13.02.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jun 2023 13:02:43 -0700 (PDT)
-Date:   Thu, 29 Jun 2023 13:02:42 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] openprom: Use struct_size() helper
-Message-ID: <202306291300.7DBE393BC@keescook>
-References: <ZJTYWQ5NA726baWK@work>
+        bh=OtqC5U06rpgElL+2bahbcyOiaEJkZ6SnNFt7jo/MOuI=;
+        b=rOm8Rha28FTOFOHSJ4pnBUfd88CBGxDDkHvCX9orLeRV9Nhd/sglXEJd9xFznwQwHd
+         5VlVBjdmO2LahD1b6cH3urkETtnXQfY/PbKiucJ5ryGf2a6JyzHzZEvRRXX4lmUUj7Yt
+         3Ua2g9qSC0sJjbtn1YD0JRohiBcpvGdV38pmMwau+r/H8ubR7PjdpvEeCKtsU6Yjwqck
+         XqKuFnhUZod82aios1qhFvFAHUziSU8mO29aziPIaf34KZcJJwoSdwZr/EOzJ6YOYyI7
+         j1sqKAOtQND52d+TYHNgKyFWag50AjMTuFYSYOL3uOXYYoV7VSCOU/H2qn6tiR53l3n6
+         9tcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688072727; x=1690664727;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OtqC5U06rpgElL+2bahbcyOiaEJkZ6SnNFt7jo/MOuI=;
+        b=BRYkZwJeslo1XHCpKu4z2PQlqsgPBZWTbCVvuBh9X7Byd+71T/Q6NpLlJZK0qpCQGx
+         0PuDMzzMqOBurfKVMJ+h+NnSlSXbT/qNpjlIsrNefdWTxWXx0gUQtl7X8CaxMtOFEKtj
+         IoRAwCLbGfzpIFreAlVBN1DN4G+fWtOU23yn413mrwol87sS8jk3LZyiOLzs9sVMxSmp
+         rn5cpcoFsC4wNgv7c0no7udjZack4dAyh+pL7jrYpYH92Dz6wopyviO2dBU/bDfh4rNn
+         WBey701S0RF3+NYWmq9vfJwPX2Ij8HrLPpn7ldjNU5KtI6I3lfwlSWoy3sNBbhZnvYDx
+         kbkw==
+X-Gm-Message-State: AC+VfDwPqRFX8h3yFdalZ2S7ftkWIBltMjKbThgGDigiL+EikDsaoDW1
+        v79AY8Cl1f85Qzxual8N6pWAa60CsUT2vZDqFrBBeQ==
+X-Google-Smtp-Source: ACHHUZ7GbEWD4nWGsAzJazQOkKf5PEoLuhvKRiEGkpHOQkEqtf1+QVWBi7bo8ZkwYTh5iQe+Oky1ZmARdNPs7TuWi+w=
+X-Received: by 2002:a50:9f85:0:b0:51a:1d77:e69d with SMTP id
+ c5-20020a509f85000000b0051a1d77e69dmr166118edf.3.1688072727376; Thu, 29 Jun
+ 2023 14:05:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZJTYWQ5NA726baWK@work>
+References: <20221215001205.51969-1-jeffxu@google.com> <20221215001205.51969-4-jeffxu@google.com>
+ <ZJwcsU0vI-nzgOB_@codewreck.org> <ZJyKeeqRJxzwlMhk@codewreck.org>
+ <CABi2SkWnAgHK1i6iqSqPMYuNEhtHBkO8jUuCvmG3RmUB5TKHJw@mail.gmail.com> <ZJ1dGvWkJVAbBPn7@codewreck.org>
+In-Reply-To: <ZJ1dGvWkJVAbBPn7@codewreck.org>
+From:   Jeff Xu <jeffxu@google.com>
+Date:   Thu, 29 Jun 2023 14:04:50 -0700
+Message-ID: <CALmYWFv=bmO3_SfojE0W0Lt4ZS6M-t3=sswncq+gwD7w8HLNhQ@mail.gmail.com>
+Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     Jeff Xu <jeffxu@chromium.org>, skhan@linuxfoundation.org,
+        keescook@chromium.org, akpm@linux-foundation.org,
+        dmitry.torokhov@gmail.com, dverkamp@chromium.org, hughd@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 05:25:13PM -0600, Gustavo A. R. Silva wrote:
-> Prefer struct_size() over open-coded versions.
+Hello
 
-This commit log could be more descriptive since the replacement below
-isn't in the standard "sizeof(struct) + sizeof(element) * count" format.
-:) It took me a moment to figure out what was going on:
+On Thu, Jun 29, 2023 at 3:30=E2=80=AFAM Dominique Martinet
+<asmadeus@codewreck.org> wrote:
+>
+> Jeff Xu wrote on Wed, Jun 28, 2023 at 09:33:27PM -0700:
+> > > > BTW I find the current behaviour rather hard to use: setting this t=
+o 2
+> > > > should still set NOEXEC by default in my opinion, just refuse anyth=
+ing
+> > > > that explicitly requested EXEC.
+> > >
+> > > And I just noticed it's not possible to lower the value despite havin=
+g
+> > > CAP_SYS_ADMIN: what the heck?! I have never seen such a sysctl and it
+> > > just forced me to reboot because I willy-nilly tested in the init pid
+> > > namespace, and quite a few applications that don't require exec broke
+> > > exactly as I described below.
+> > >
+> > > If the user has CAP_SYS_ADMIN there are more container escape methods
+> > > than I can count, this is basically free pass to root on main namespa=
+ce
+> > > anyway, you're not protecting anything. Please let people set the sys=
+ctl
+> > > to what they want.
+> >
+> > Yama has a similar setting,  for example, 3 (YAMA_SCOPE_NO_ATTACH)
+> > will not allow downgrading at runtime.
+> >
+> > Since this is a security feature, not allowing downgrading at run time
+> > is part of the security consideration. I hope you understand.
+>
+> I didn't remember yama had this stuck bit; that still strikes me as
+> unusual, and if you require a custom LSM rule for memfd anyway I don't
+> see why it couldn't enforce that the sysctl is unchanged, but sure.
+>
+> Please, though:
+>  - I have a hard time thinking of 1 as a security flag in general (even
+> if I do agree a sloppy LSM rule could require it); I would only lock 2
+>  - please make it clear, I don't see any entry in the sysctl
+> documentation[1] about memfd_noexec, there should be one and you can
+> copy the wording from yama's doc[2]: "Once set, this sysctl value cannot
+> be changed"
+> [1] Documentation/admin-guide/sysctl/vm.rst
+> [2] Documentation/admin-guide/LSM/Yama.rst
+>
+Thanks for the suggestion.
+Yes, it would be good to have some documentation.
+I will send patch to update Documentation/admin-guide/sysctl/vm.rst
 
-struct openpromio
-{
-        unsigned int oprom_size;        /* Actual size of the oprom_array. */
-        char    oprom_array[];          /* Holds property names and values. */
-};
+>
+> Either way as it stands I still don't think one can expect most
+> userspace applications to be converted until some libc wrapper takes
+> care of the retry logic and a couple of years, so I'll go look for
+> another way of filtering this (and eventually setting this to 1) as you
+> suggested.
+> I'll leave the follow-up up to you and won't bother you more.
+>
+Not bothered at all! and thanks for reporting the bug to improve the
+quality of memfd_noexec !
 
-sizeof(struct openpromio) == sizeof(int)   :P
+Much appreciated.
+-Jeff
 
 
-> 
-> Link: https://github.com/KSPP/linux/issues/160
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/sbus/char/openprom.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/sbus/char/openprom.c b/drivers/sbus/char/openprom.c
-> index 30b9751aad30..de56c8fec373 100644
-> --- a/drivers/sbus/char/openprom.c
-> +++ b/drivers/sbus/char/openprom.c
-> @@ -76,7 +76,9 @@ static int copyin(struct openpromio __user *info, struct openpromio **opp_p)
->  	if (bufsize > OPROMMAXPARAM)
->  		bufsize = OPROMMAXPARAM;
->  
-> -	if (!(*opp_p = kzalloc(sizeof(int) + bufsize + 1, GFP_KERNEL)))
-> +	*opp_p = kzalloc(struct_size(*opp_p, oprom_array, bufsize + 1),
-> +			 GFP_KERNEL);
-> +	if (!*opp_p)
->  		return -ENOMEM;
->  
->  	if (copy_from_user(&(*opp_p)->oprom_array,
-> @@ -95,7 +97,9 @@ static int getstrings(struct openpromio __user *info, struct openpromio **opp_p)
->  	if (!info || !opp_p)
->  		return -EFAULT;
->  
-> -	if (!(*opp_p = kzalloc(sizeof(int) + OPROMMAXPARAM + 1, GFP_KERNEL)))
-> +	*opp_p = kzalloc(struct_size(*opp_p, oprom_array, OPROMMAXPARAM + 1),
-> +			 GFP_KERNEL);
-> +	if (!*opp_p)
->  		return -ENOMEM;
-
-With that understood, yeah, these look good to me. :)
-
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+> Thanks,
+> --
+> Dominique Martinet | Asmadeus
