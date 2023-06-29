@@ -2,141 +2,121 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42734C001B0
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 21:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843B9EB64DD
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 23:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231631AbjF2VFg (ORCPT
+        id S230364AbjF2XZI (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 17:05:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51064 "EHLO
+        Thu, 29 Jun 2023 19:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231522AbjF2VFb (ORCPT
+        with ESMTP id S229812AbjF2XZH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 17:05:31 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A6E2112
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 14:05:29 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-516500163b2so776a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 14:05:29 -0700 (PDT)
+        Thu, 29 Jun 2023 19:25:07 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701209E
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 16:25:06 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6b71cdb47e1so1034983a34.2
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 16:25:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1688072727; x=1690664727;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OtqC5U06rpgElL+2bahbcyOiaEJkZ6SnNFt7jo/MOuI=;
-        b=rOm8Rha28FTOFOHSJ4pnBUfd88CBGxDDkHvCX9orLeRV9Nhd/sglXEJd9xFznwQwHd
-         5VlVBjdmO2LahD1b6cH3urkETtnXQfY/PbKiucJ5ryGf2a6JyzHzZEvRRXX4lmUUj7Yt
-         3Ua2g9qSC0sJjbtn1YD0JRohiBcpvGdV38pmMwau+r/H8ubR7PjdpvEeCKtsU6Yjwqck
-         XqKuFnhUZod82aios1qhFvFAHUziSU8mO29aziPIaf34KZcJJwoSdwZr/EOzJ6YOYyI7
-         j1sqKAOtQND52d+TYHNgKyFWag50AjMTuFYSYOL3uOXYYoV7VSCOU/H2qn6tiR53l3n6
-         9tcw==
+        d=chromium.org; s=google; t=1688081106; x=1690673106;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8XkUN0EizrcPJdxYDyml9MD9K5nwnJEgupZt44caww4=;
+        b=DIOrkzvu8itXrRDVqrYwNUO8RR/O0uEKATtMBGoLT7ZDMAULfOV2+XLpRMwb4lSo1H
+         o8f4vm7uBwP6nRhUwyvViY15Yn73fB6S5rSl+En04NKl9NuKOjDAks0aqXtGB6itZkTx
+         hFE5wR4rTEM4DrLYzlMegMS5O2+oAyJQsqHkE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688072727; x=1690664727;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OtqC5U06rpgElL+2bahbcyOiaEJkZ6SnNFt7jo/MOuI=;
-        b=BRYkZwJeslo1XHCpKu4z2PQlqsgPBZWTbCVvuBh9X7Byd+71T/Q6NpLlJZK0qpCQGx
-         0PuDMzzMqOBurfKVMJ+h+NnSlSXbT/qNpjlIsrNefdWTxWXx0gUQtl7X8CaxMtOFEKtj
-         IoRAwCLbGfzpIFreAlVBN1DN4G+fWtOU23yn413mrwol87sS8jk3LZyiOLzs9sVMxSmp
-         rn5cpcoFsC4wNgv7c0no7udjZack4dAyh+pL7jrYpYH92Dz6wopyviO2dBU/bDfh4rNn
-         WBey701S0RF3+NYWmq9vfJwPX2Ij8HrLPpn7ldjNU5KtI6I3lfwlSWoy3sNBbhZnvYDx
-         kbkw==
-X-Gm-Message-State: AC+VfDwPqRFX8h3yFdalZ2S7ftkWIBltMjKbThgGDigiL+EikDsaoDW1
-        v79AY8Cl1f85Qzxual8N6pWAa60CsUT2vZDqFrBBeQ==
-X-Google-Smtp-Source: ACHHUZ7GbEWD4nWGsAzJazQOkKf5PEoLuhvKRiEGkpHOQkEqtf1+QVWBi7bo8ZkwYTh5iQe+Oky1ZmARdNPs7TuWi+w=
-X-Received: by 2002:a50:9f85:0:b0:51a:1d77:e69d with SMTP id
- c5-20020a509f85000000b0051a1d77e69dmr166118edf.3.1688072727376; Thu, 29 Jun
- 2023 14:05:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221215001205.51969-1-jeffxu@google.com> <20221215001205.51969-4-jeffxu@google.com>
- <ZJwcsU0vI-nzgOB_@codewreck.org> <ZJyKeeqRJxzwlMhk@codewreck.org>
- <CABi2SkWnAgHK1i6iqSqPMYuNEhtHBkO8jUuCvmG3RmUB5TKHJw@mail.gmail.com> <ZJ1dGvWkJVAbBPn7@codewreck.org>
-In-Reply-To: <ZJ1dGvWkJVAbBPn7@codewreck.org>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Thu, 29 Jun 2023 14:04:50 -0700
-Message-ID: <CALmYWFv=bmO3_SfojE0W0Lt4ZS6M-t3=sswncq+gwD7w8HLNhQ@mail.gmail.com>
-Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     Jeff Xu <jeffxu@chromium.org>, skhan@linuxfoundation.org,
-        keescook@chromium.org, akpm@linux-foundation.org,
-        dmitry.torokhov@gmail.com, dverkamp@chromium.org, hughd@google.com,
+        d=1e100.net; s=20221208; t=1688081106; x=1690673106;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8XkUN0EizrcPJdxYDyml9MD9K5nwnJEgupZt44caww4=;
+        b=g3IQaheMWzXjMae7Ik3CYl8fUd8pjlBP3T8ZlfzLTezwCx+ZnH8Ftou7rHxUlc4nyc
+         QYRZ/QKEEushBk/Ld73JyfAXPrpaNk8WYoy4ScEMJzcDtG/E2t5ClqCKW6gslOYps3QZ
+         FEANtuQdub40opdQTQbdKeUNegJ98842racCA/Iiw8ENmUAAAOG4DW6VjPQYa0NB6L34
+         L38qxWRAVzBPwvCOhINXIw8meeSxJRL4R0pV9B2jQpwkUn1qkf2l+s7y0Ihf8TRBpQpp
+         q5xgOt7kwJvHWdQLPM/7pFucT+Xs1WOVZ62KUcCWrrxqPbuiGKhbFdG0GqPSkvmxA6tr
+         An7g==
+X-Gm-Message-State: AC+VfDznzye53vWUTORla3D43aAh6cMQ1xN5CiqYXBopUp+OMwJuciHe
+        R0zGx2Heo0VfuL8EFCTcFsEp0A==
+X-Google-Smtp-Source: APBJJlGFQhB9pXlX/BZEhpArHhanMF0PsxvAgS8Ray5hkbYflejU/wjfaf/Ywe+hLWqeUIiTbaazMw==
+X-Received: by 2002:a05:6870:3c8c:b0:1aa:9eb6:974d with SMTP id gl12-20020a0568703c8c00b001aa9eb6974dmr1593876oab.41.1688081105835;
+        Thu, 29 Jun 2023 16:25:05 -0700 (PDT)
+Received: from localhost (183.43.230.35.bc.googleusercontent.com. [35.230.43.183])
+        by smtp.gmail.com with UTF8SMTPSA id g15-20020a17090ace8f00b002636e5c224asm573038pju.56.2023.06.29.16.25.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Jun 2023 16:25:05 -0700 (PDT)
+From:   jeffxu@chromium.org
+To:     skhan@linuxfoundation.org, keescook@chromium.org
+Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
         jorgelo@chromium.org, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
         jannh@google.com, linux-hardening@vger.kernel.org,
         linux-security-module@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH] Documentation: mm/memfd: vm.memfd_noexec
+Date:   Thu, 29 Jun 2023 23:25:01 +0000
+Message-ID: <20230629232501.4157671-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello
+From: Jeff Xu <jeffxu@google.com>
 
-On Thu, Jun 29, 2023 at 3:30=E2=80=AFAM Dominique Martinet
-<asmadeus@codewreck.org> wrote:
->
-> Jeff Xu wrote on Wed, Jun 28, 2023 at 09:33:27PM -0700:
-> > > > BTW I find the current behaviour rather hard to use: setting this t=
-o 2
-> > > > should still set NOEXEC by default in my opinion, just refuse anyth=
-ing
-> > > > that explicitly requested EXEC.
-> > >
-> > > And I just noticed it's not possible to lower the value despite havin=
-g
-> > > CAP_SYS_ADMIN: what the heck?! I have never seen such a sysctl and it
-> > > just forced me to reboot because I willy-nilly tested in the init pid
-> > > namespace, and quite a few applications that don't require exec broke
-> > > exactly as I described below.
-> > >
-> > > If the user has CAP_SYS_ADMIN there are more container escape methods
-> > > than I can count, this is basically free pass to root on main namespa=
-ce
-> > > anyway, you're not protecting anything. Please let people set the sys=
-ctl
-> > > to what they want.
-> >
-> > Yama has a similar setting,  for example, 3 (YAMA_SCOPE_NO_ATTACH)
-> > will not allow downgrading at runtime.
-> >
-> > Since this is a security feature, not allowing downgrading at run time
-> > is part of the security consideration. I hope you understand.
->
-> I didn't remember yama had this stuck bit; that still strikes me as
-> unusual, and if you require a custom LSM rule for memfd anyway I don't
-> see why it couldn't enforce that the sysctl is unchanged, but sure.
->
-> Please, though:
->  - I have a hard time thinking of 1 as a security flag in general (even
-> if I do agree a sloppy LSM rule could require it); I would only lock 2
->  - please make it clear, I don't see any entry in the sysctl
-> documentation[1] about memfd_noexec, there should be one and you can
-> copy the wording from yama's doc[2]: "Once set, this sysctl value cannot
-> be changed"
-> [1] Documentation/admin-guide/sysctl/vm.rst
-> [2] Documentation/admin-guide/LSM/Yama.rst
->
-Thanks for the suggestion.
-Yes, it would be good to have some documentation.
-I will send patch to update Documentation/admin-guide/sysctl/vm.rst
+Add documentation for sysctl vm.memfd_noexec
 
->
-> Either way as it stands I still don't think one can expect most
-> userspace applications to be converted until some libc wrapper takes
-> care of the retry logic and a couple of years, so I'll go look for
-> another way of filtering this (and eventually setting this to 1) as you
-> suggested.
-> I'll leave the follow-up up to you and won't bother you more.
->
-Not bothered at all! and thanks for reporting the bug to improve the
-quality of memfd_noexec !
+Link:https://lore.kernel.org/linux-mm/CABi2SkXUX_QqTQ10Yx9bBUGpN1wByOi_=gZU6WEy5a8MaQY3Jw@mail.gmail.com/T/
+Reported-by: Dominique Martinet <asmadeus@codewreck.org>
+Signed-off-by: Jeff Xu <jeffxu@google.com>
+---
+ Documentation/admin-guide/sysctl/vm.rst | 29 +++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-Much appreciated.
--Jeff
+diff --git a/Documentation/admin-guide/sysctl/vm.rst b/Documentation/admin-guide/sysctl/vm.rst
+index 45ba1f4dc004..71923c3d7044 100644
+--- a/Documentation/admin-guide/sysctl/vm.rst
++++ b/Documentation/admin-guide/sysctl/vm.rst
+@@ -424,6 +424,35 @@ e.g., up to one or two maps per allocation.
+ 
+ The default value is 65530.
+ 
++memfd_noexec:
++=============
++This pid namespaced sysctl controls memfd_create().
++
++The new MFD_NOEXEC_SEAL and MFD_EXEC flags of memfd_create() allows
++application to set executable bit at creation time.
++
++When MFD_NOEXEC_SEAL is set, memfd is created without executable bit
++(mode:0666), and sealed with F_SEAL_EXEC, so it can't be chmod to
++be executable (mode: 0777) after creation.
++
++when MFD_EXEC flag is set, memfd is created with executable bit
++(mode:0777), this is the same as the old behavior of memfd_create.
++
++The new pid namespaced sysctl vm.memfd_noexec has 3 values:
++0: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
++        MFD_EXEC was set.
++1: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
++        MFD_NOEXEC_SEAL was set.
++2: memfd_create() without MFD_NOEXEC_SEAL will be rejected.
++
++The default value is 0.
++
++Once set, it can't be downgraded at runtime, i.e. 2=>1, 1=>0
++are denied.
++
++This is pid namespaced sysctl, child processes inherit the parent
++process's pid at the time of fork. Changes to the parent process
++after fork are not automatically propagated to the child process.
+ 
+ memory_failure_early_kill:
+ ==========================
+-- 
+2.41.0.255.g8b1d071c50-goog
 
-
-> Thanks,
-> --
-> Dominique Martinet | Asmadeus
