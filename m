@@ -2,90 +2,80 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9EBEB64DC
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 13:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4252AEB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 15:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231953AbjF2Ncr (ORCPT
+        id S231794AbjF2Pg5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 09:32:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44994 "EHLO
+        Thu, 29 Jun 2023 11:36:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232081AbjF2Nck (ORCPT
+        with ESMTP id S229575AbjF2Pg4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 09:32:40 -0400
-Received: from sonata.ens-lyon.org (unknown [140.77.166.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422B53583;
-        Thu, 29 Jun 2023 06:32:35 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by sonata.ens-lyon.org (Postfix) with ESMTP id A599F20103;
-        Thu, 29 Jun 2023 15:32:20 +0200 (CEST)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 117FFccbxKwj; Thu, 29 Jun 2023 15:32:20 +0200 (CEST)
-Received: from begin.home (lfbn-bor-1-1163-184.w92-158.abo.wanadoo.fr [92.158.138.184])
+        Thu, 29 Jun 2023 11:36:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16043E49;
+        Thu, 29 Jun 2023 08:36:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by sonata.ens-lyon.org (Postfix) with ESMTPSA id 40424200FD;
-        Thu, 29 Jun 2023 15:32:20 +0200 (CEST)
-Received: from samy by begin.home with local (Exim 4.96)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1qErkx-009h1v-25;
-        Thu, 29 Jun 2023 15:32:19 +0200
-Date:   Thu, 29 Jun 2023 15:32:19 +0200
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Kees Cook <keescook@chromium.org>, Kees Cook <kees@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "Dave@mielke.cc" <Dave@mielke.cc>
-Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
-Message-ID: <20230629133219.5z667lt6pz25exkf@begin>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Kees Cook <keescook@chromium.org>, Kees Cook <kees@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "Dave@mielke.cc" <Dave@mielke.cc>
-References: <20221022182828.give.717-kees@kernel.org>
- <20221022182949.2684794-2-keescook@chromium.org>
- <20221227234000.jgosvixx7eahqb3z@begin>
- <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
- <20221228205726.rfevry7ud6gmttg5@begin>
- <20230625155625.s4kvy7m2vw74ow4i@begin>
- <202306271944.E80E1D0@keescook>
- <20230628060716.vvgtlgbushyjh6km@begin>
- <55c209a024a94d1f9c6af85dfddb11a0@AcuMS.aculab.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A84E96157B;
+        Thu, 29 Jun 2023 15:36:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8BCC433C8;
+        Thu, 29 Jun 2023 15:36:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1688053014;
+        bh=kSpwvCZSrV4ZbYU3Q5FvpCaAemmPCQQhwe8ZxmoemxI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=KVC28lW5yxngXLh5CccM8D8GYCbNrX2qHUHcnIIazRGP+JOx0zBuezE5LJR1VYZUD
+         h5XRSfxiyXKlFyLAge4GsKqyWVi4IZtqkqV/Xfsxap2UKkUdYmcIdEs3QR0Y0qGNwr
+         8PyTNSfEyEyrAh0Zwitxg0LlDGXYaXbrxejHBWLU=
+Date:   Thu, 29 Jun 2023 17:36:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     llvm@lists.linux.dev, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>, linux-usb@vger.kernel.org
+Subject: UBSAN spat in valid xhci code in Linus's current tree (6.4+)
+Message-ID: <2023062945-fencing-pebble-0411@gregkh>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <55c209a024a94d1f9c6af85dfddb11a0@AcuMS.aculab.com>
-Organization: I am not organized
-User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-David Laight, le jeu. 29 juin 2023 13:23:54 +0000, a ecrit:
-> From: Samuel Thibault
-> > Sent: 28 June 2023 07:07
-> ...
-> > > So is there really no solution for brltty and TIOCSTI being disabled?
-> > 
-> > No, there is no way to simulate characters on the Linux console. The
-> > alternative would be to use uinput, but that simulates keycodes, not
-> > characters, thus requiring backtranslating first, which is very fragile.
-> 
-> It could probably be rewritten to use a pseudo-tty pair.
+Hi Kees.
 
-That's what yasr does for instance, but that does not make the login
-prompt accessible, which is a must (just like sighted users don't log in
-blindly...)
+Boris just reported to me a UBSAN splat in the USB xhci driver in
+Linus's tree that wasn't present in 6.4-final, and given that no USB
+changes are merged yet there, I was confused.
 
-Samuel
+Turns out, I think you all missed a "variable length" structure in the
+xhci driver, which UBSAN is calling out a being an overrun, when really
+it isn't (it's just written that way...)
+
+The splat is:
+
+UBSAN: array-index-out-of-bounds in drivers/usb/host/xhci-hub.c:231:31
+index 1 is out of range for type '__le32 [1]'
+CPU: 0 PID: 1556 Comm: kworker/0:2 Not tainted 6.4.0+ #7
+
+
+And yes, the code there:
+	ssp_cap->bmSublinkSpeedAttr[offset++] = cpu_to_le32(attr);
+
+is accessing the ssp_cap->bmSublinkSpeedAttr field with is declared as:
+	_le32 bmSublinkSpeedAttr[1]; /* list of sublink speed attrib entries */
+
+in include/uapi/linux/usb/ch9.h
+
+So perhaps 2d47c6956ab3 ("ubsan: Tighten UBSAN_BOUNDS on GCC") should be
+reverted for now?  Or this field fixed up to properly be marked as a
+variable length array of at least one entry?
+
+thanks,
+
+greg k-h
+
