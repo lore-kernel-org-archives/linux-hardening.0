@@ -2,118 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C178CEB64D9
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 04:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B4FEB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 07:25:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbjF2Edn (ORCPT
+        id S232165AbjF2HZy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 00:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50168 "EHLO
+        Thu, 29 Jun 2023 03:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbjF2Edk (ORCPT
+        with ESMTP id S231191AbjF2HYi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 00:33:40 -0400
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4AE2116
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 21:33:38 -0700 (PDT)
-Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-3a3790a0a48so12495b6e.1
-        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 21:33:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688013217; x=1690605217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eJW2r3ntggsBVvy1ila5sjLU4Aw8geyuKy3kMy86JU8=;
-        b=Oirx2ssq91MRt0ie2O1eepU4Csg8OJ2yDunQfSdCo0mSH0OqwXaLkb+02b3nMlfuIF
-         tyyOfQDBnTHmVypFsesVF3grpD7EFFj+dNe5tQn31FwPEmXyfxkvGgUCfpZH4qDxt/ey
-         E9KTWDd4AdMv5GWgLYQC+wGlLbEbbLDkFpGK8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688013217; x=1690605217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eJW2r3ntggsBVvy1ila5sjLU4Aw8geyuKy3kMy86JU8=;
-        b=XEimsOLi9l9QVPFr0R+L/uXXln9gsdJuYJvgQlqOGuvQApiNoGPhTYH5qjHER3GvUc
-         7Hp72CX8vHAKCcbORVFSINrf8iuWbKqJEYl9gBCD2LwJOCDjbRUtl/r5Onn0bbxGEkkE
-         O9SRWWJ5UwOrlsbAA5+3LsMaLgLvVGBn1fvQ4M3qYsH4zCsFNSOk0ML2N2f6EvpRZ53B
-         s/QulnabnvTgnTR7UR1eI5uaWrTbXyilDdnlVujwreW1NmHfAHRv1U/sOYZwxuZ/va8F
-         I0mmf+Nz4Kp03uci2QsCzEBP3uEe7nbr6+HeD3cupgqBEEM00wVsla42GuouDWPggaP4
-         9svw==
-X-Gm-Message-State: AC+VfDw+AHpBVOQ3GpFnhs2y3XhuKHKooC8WY2hNbUHFbLGHEJCp4MW0
-        Zphny1BhBYRxaLJIrA0SMQdLfE4pX33+MAozalg3HQ==
-X-Google-Smtp-Source: ACHHUZ4WbBcGDRw30mJTQOdCSRmryXfsnM4fcbrvXYszwENk4IYIuPTU/UqW//jSW9jKBg3jtjF1hU6rRnoLABDI0PA=
-X-Received: by 2002:a05:6808:314:b0:3a0:61b4:1bed with SMTP id
- i20-20020a056808031400b003a061b41bedmr16676381oie.35.1688013217553; Wed, 28
- Jun 2023 21:33:37 -0700 (PDT)
+        Thu, 29 Jun 2023 03:24:38 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695BB10CF;
+        Thu, 29 Jun 2023 00:24:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Wns3r0TTkIooNvD1nufpc4D+UpqT9oVqnVmjgNsg158=; b=wk8f3Ib590Oy6Zk6oaPuaebYyp
+        PNgub5jvZc2a2nGa/t8NRBfvMssafOLeHs4kGfPWvs7Es7yAkQvgR41CHKrI94CuSlpjWPBP8h8tT
+        Qt/LS9G/p93aQX4C8FOU1IA/PGHNvtpqSpi67gZaq67CWG8UBy9mVTJuZ5gWd+u/nR9jQS6sBbPsW
+        YTfgFAhLQF+dDuuoi1rPvZyI2XdG8diejw2UATw17JQsqNoXBEBhBD1FIWjdUs+lAqqaZw/AZYpMO
+        eyN4dqglT4JM+ddzrBmkrjLDh8vmBi9X0Ic0V62roT8/JK37qLf7UPphIYrTTgBKqd8uhOgRA1Ov8
+        d7OOFclg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qEm0K-000CNP-22;
+        Thu, 29 Jun 2023 07:23:48 +0000
+Date:   Thu, 29 Jun 2023 00:23:48 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Alexander Potapenko <glider@google.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Arne Welzel <arne.welzel@corelight.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Bill Wendling <morbo@google.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fangrui Song <maskray@google.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>,
+        Joe Perches <joe@perches.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        John Stultz <jstultz@google.com>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Marco Elver <elver@google.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Palmer Dabbelt <palmer@rivosinc.com>,
+        Simon Horman <simon.horman@corigine.com>,
+        Song Liu <song@kernel.org>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Wyes Karny <wyes.karny@amd.com>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [GIT PULL] hardening updates for v6.5-rc1
+Message-ID: <ZJ0xhCenJr+Dzs/8@infradead.org>
+References: <202306271729.813C8788@keescook>
+ <ZJvRFZeYq6ZWLAWj@infradead.org>
+ <202306280920.CB69D0F75@keescook>
 MIME-Version: 1.0
-References: <20221215001205.51969-1-jeffxu@google.com> <20221215001205.51969-4-jeffxu@google.com>
- <ZJwcsU0vI-nzgOB_@codewreck.org> <ZJyKeeqRJxzwlMhk@codewreck.org>
-In-Reply-To: <ZJyKeeqRJxzwlMhk@codewreck.org>
-From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Wed, 28 Jun 2023 21:33:27 -0700
-Message-ID: <CABi2SkWnAgHK1i6iqSqPMYuNEhtHBkO8jUuCvmG3RmUB5TKHJw@mail.gmail.com>
-Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
-To:     Dominique Martinet <asmadeus@codewreck.org>
-Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
-        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
-        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        jannh@google.com, linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202306280920.CB69D0F75@keescook>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello!
+On Wed, Jun 28, 2023 at 09:29:42AM -0700, Kees Cook wrote:
+> > will be completely misued before we have a compiler actually supporting
+> > available widely enough that we have it in the usual test bots.
+> 
+> How do you see it being misused? Your mention of the test bots, I think,
+> means you're worried the annotations will go unchecked for valid syntax?
 
-On Wed, Jun 28, 2023 at 12:31=E2=80=AFPM Dominique Martinet
-<asmadeus@codewreck.org> wrote:
->
-> Dominique Martinet wrote on Wed, Jun 28, 2023 at 08:42:41PM +0900:
-> > If flags already has either MFD_EXEC or MFD_NOEXEC_SEAL, you don't chec=
-k
-> > the sysctl at all.
-> > [...repro snipped..]
-> >
-> > What am I missing?
->
-> (Perhaps the intent is just to force people to use the flag so it is
-> easier to check for memfd_create in seccomp or other LSM?
-> But I don't see why such a check couldn't consider the absence of a flag
-> as well, so I don't see the point.)
->
-Yes. There is consideration to motivate app devs to migrate their code
-to use the new EXEC/NOEXEC_SEAL flag for memfd_create, if that answers
-your question.
+Exactly.
 
->
-> > BTW I find the current behaviour rather hard to use: setting this to 2
-> > should still set NOEXEC by default in my opinion, just refuse anything
-> > that explicitly requested EXEC.
->
-> And I just noticed it's not possible to lower the value despite having
-> CAP_SYS_ADMIN: what the heck?! I have never seen such a sysctl and it
-> just forced me to reboot because I willy-nilly tested in the init pid
-> namespace, and quite a few applications that don't require exec broke
-> exactly as I described below.
->
-> If the user has CAP_SYS_ADMIN there are more container escape methods
-> than I can count, this is basically free pass to root on main namespace
-> anyway, you're not protecting anything. Please let people set the sysctl
-> to what they want.
->
-Yama has a similar setting,  for example, 3 (YAMA_SCOPE_NO_ATTACH)
-will not allow downgrading at runtime.
+> FWIW, I've got builders with the GCC and Clang patches that should catch
+> this.
 
-Since this is a security feature, not allowing downgrading at run time
-is part of the security consideration. I hope you understand.
+Are we going to get them wired up for automatic checks somewhere?
 
-> --
-> Dominique Martinet | Asmadeus
-
-Thanks!
--Jeff
