@@ -2,263 +2,128 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D709EB64DA
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 01:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FD4C001B1
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 02:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230401AbjF2Bpk (ORCPT
+        id S231919AbjF2CKG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 21:45:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45394 "EHLO
+        Wed, 28 Jun 2023 22:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjF2Bpj (ORCPT
+        with ESMTP id S231789AbjF2CKF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 21:45:39 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4781FCB;
-        Wed, 28 Jun 2023 18:45:37 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T0CrFQ029409;
-        Thu, 29 Jun 2023 01:45:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=qcppdkim1;
- bh=ZYWynEvEKNe8VfOw/p/gTYwzAY7ckXkgyE3yqJuE0T0=;
- b=MJA9ev2Hkxjx5p10t12BffBjoMcDAiGG2uua9kd2bo1QIn9+IMwwap3Gs5CMnbWzZ2HK
- PCxYfg2M5Xs5vkGPJdyxpjK9trQ5yVfGDT3K+SOf1hhtRbMVdE1HyKQ8UewJ8IEEJdyf
- k4RKtyrVOo+PsTmDAoF+JQV23BcN/JcvYGAVXDjW5zGfDfJJGmJrDwD44XhrXf7Ycivt
- zEwNqjYeL7fWDg95JHWzsQAh7USekFhzTKtpLeXnfmLyDhWJaqgfxYZWFyBOVjKiYlUi
- 3u/hy2R3J3J1HziDGZcAzXkGg9SZVSWVS3oP+QKsuPrC0fkbIlEP9qSsSMHyenUqhE8H dg== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgetpj99c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Jun 2023 01:45:14 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35T1jCmm022921
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Jun 2023 01:45:13 GMT
-Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.7; Wed, 28 Jun 2023 18:45:05 -0700
-Date:   Thu, 29 Jun 2023 07:15:01 +0530
-From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Pavan Kondeti <quic_pkondeti@quicinc.com>,
-        Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <keescook@chromium.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <linus.walleij@linaro.org>,
-        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v4 08/21] dt-bindings: reserved-memory: Add qcom,ramoops
- binding
-Message-ID: <07e3a4ce-d1fd-4af7-a288-a88e8fb1c954@quicinc.com>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-9-git-send-email-quic_mojha@quicinc.com>
- <87ba1c2d-fa0b-4ac5-ba79-b3556101b612@quicinc.com>
- <CAL_Jsq+_G4wBR7tm+DvN-yYSaoAX6OgxHa0AToJYucDdhD=Dtg@mail.gmail.com>
+        Wed, 28 Jun 2023 22:10:05 -0400
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8B71FEB;
+        Wed, 28 Jun 2023 19:10:02 -0700 (PDT)
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id 479A1579; Wed, 28 Jun 2023 21:10:00 -0500 (CDT)
+Date:   Wed, 28 Jun 2023 21:10:00 -0500
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        LuisChamberlain <mcgrof@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Petr Tesarik <petrtesarik@huaweicloud.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [QUESTION] Full user space process isolation?
+Message-ID: <20230629021000.GA368825@mail.hallyn.com>
+References: <eb31920bd00e2c921b0aa6ebed8745cb0130b0e1.camel@huaweicloud.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_Jsq+_G4wBR7tm+DvN-yYSaoAX6OgxHa0AToJYucDdhD=Dtg@mail.gmail.com>
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 9kp9rIKzyYn_Az1wGtxsEwfzcKAeNG4n
-X-Proofpoint-GUID: 9kp9rIKzyYn_Az1wGtxsEwfzcKAeNG4n
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-28_14,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 suspectscore=0
- clxscore=1015 bulkscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306290014
+In-Reply-To: <eb31920bd00e2c921b0aa6ebed8745cb0130b0e1.camel@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 05:17:13PM -0600, Rob Herring wrote:
-> On Wed, Jun 28, 2023 at 8:11 AM Pavan Kondeti <quic_pkondeti@quicinc.com> wrote:
-> >
-> > On Wed, Jun 28, 2023 at 06:04:35PM +0530, Mukesh Ojha wrote:
-> > > Qualcomm ramoops minidump logger provide a means of storing
-> > > the ramoops data to some dynamically reserved memory instead
-> > > of traditionally implemented ramoops where the region should
-> > > be statically fixed ram region. Its device tree binding
-> > > would be exactly same as ramoops device tree binding and is
-> > > going to contain traditional ramoops frontend data and this
-> > > content will be collected via Qualcomm minidump infrastructure
-> > > provided from the boot firmware.
-> > >
-> > > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> > > ---
-> > >  .../devicetree/bindings/soc/qcom/qcom,ramoops.yaml | 126 +++++++++++++++++++++
-> > >  1 file changed, 126 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
-> > > new file mode 100644
-> > > index 000000000000..b1fdcf3f8ad4
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
-> > > @@ -0,0 +1,126 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: "http://devicetree.org/schemas/soc/qcom/qcom,ramoops.yaml#"
-> > > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> > > +
-> > > +title: Qualcomm Ramoops minidump logger
-> > > +
-> > > +description: |
-> > > +  Qualcomm ramoops minidump logger provide a means of storing the ramoops
-> > > +  data to some dynamically reserved memory instead of traditionally
-> > > +  implemented ramoops where the region should be statically fixed ram
-> > > +  region. Because of its similarity with ramoops it will also have same
-> > > +  set of property what ramoops have it in its schema and is going to
-> > > +  contain traditional ramoops frontend data and this region will be
-> > > +  collected via Qualcomm minidump infrastructure provided from the
-> > > +  boot firmware.
-> > > +
-> > > +maintainers:
-> > > +  - Mukesh Ojha <quic_mojha@quicinc.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    items:
-> > > +      - enum:
-> > > +          - qcom,sm8450-ramoops
-> > > +      - const: qcom,ramoops
-> > > +
-> > > +  memory-region:
-> > > +    maxItems: 1
-> > > +    description: handle to memory reservation for qcom,ramoops region.
-> > > +
-> > > +  ecc-size:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: enables ECC support and specifies ECC buffer size in bytes
-> > > +    default: 0 # no ECC
-> > > +
-> > > +  record-size:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: maximum size in bytes of each kmsg dump
-> > > +    default: 0
-> > > +
-> > > +  console-size:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: size in bytes of log buffer reserved for kernel messages
-> > > +    default: 0
-> > > +
-> > > +  ftrace-size:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: size in bytes of log buffer reserved for function tracing and profiling
-> > > +    default: 0
-> > > +
-> > > +  pmsg-size:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: size in bytes of log buffer reserved for userspace messages
-> > > +    default: 0
-> > > +
-> > > +  mem-type:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    description: if present, sets the type of mapping is to be used to map the reserved region.
-> > > +    default: 0
-> > > +    oneOf:
-> > > +      - const: 0
-> > > +        description: write-combined
-> > > +      - const: 1
-> > > +        description: unbuffered
-> > > +      - const: 2
-> > > +        description: cached
-> > > +
-> > > +  max-reason:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    default: 2 # log oopses and panics
-> > > +    maximum: 0x7fffffff
-> > > +    description: |
-> > > +      If present, sets maximum type of kmsg dump reasons to store.
-> > > +      This can be set to INT_MAX to store all kmsg dumps.
-> > > +      See include/linux/kmsg_dump.h KMSG_DUMP_* for other kmsg dump reason values.
-> > > +      Setting this to 0 (KMSG_DUMP_UNDEF), means the reason filtering will be
-> > > +      controlled by the printk.always_kmsg_dump boot param.
-> > > +      If unset, it will be 2 (KMSG_DUMP_OOPS), otherwise 5 (KMSG_DUMP_MAX).
-> > > +
-> > > +  flags:
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +    default: 0
-> > > +    description: |
-> > > +      If present, pass ramoops behavioral flags
-> > > +      (see include/linux/pstore_ram.h RAMOOPS_FLAG_* for flag values).
-> > > +
-> > > +  no-dump-oops:
-> > > +    deprecated: true
-> > > +    type: boolean
-> > > +    description: |
-> > > +      Use max_reason instead. If present, and max_reason is not specified,
-> > > +      it is equivalent to max_reason = 1 (KMSG_DUMP_PANIC).
-> > > +
-> > > +  unbuffered:
-> > > +    deprecated: true
-> > > +    type: boolean
-> > > +    description: |
-> > > +      Use mem_type instead. If present, and mem_type is not specified,
-> > > +      it is equivalent to mem_type = 1 and uses unbuffered mappings to map
-> > > +      the reserved region (defaults to buffered mappings mem_type = 0).
-> > > +      If both are specified -- "mem_type" overrides "unbuffered".
-> > > +
-> >
-> > Most of the properties you added here are already documented at
-> > Documentation/devicetree/bindings/reserved-memory/ramoops.yaml
+On Thu, Jun 22, 2023 at 04:42:37PM +0200, Roberto Sassu wrote:
+> Hi everyone
 > 
-> That is certainly a problem. Don't define the same property more than
-> once. Not yet checked and enforced by the tools, but it will be.
+> I briefly discussed this topic at LSS NA 2023, but I wanted to have an
+> opinion from a broader audience.
 > 
-> > Can't we just reference them here? would something like work?
-> >
-> > max-reason:
-> >   $ref: "../../reserved-memory/ramoops.yaml#/properties/max-reason
 > 
-> Can work, but no. Common properties need to go into a schema of common
-> properties which the device specific schemas reference.
+> In short:
 > 
-
-Thanks for the clarification. We need to define the common properties
-and make it available under /schemas/<>.yaml and add a reference to it
-in these bindings. Is my understanding correct?
-
-> >
-> > > +unevaluatedProperties: false
-> > > +
-> >
-> > will there be any additional properties be added dynamically? if not,
-> > should not we use "additionalProperties: false" here?
+> I wanted to execute some kernel workloads in a fully isolated user
+> space process, started from a binary statically linked with klibc,
+> connected to the kernel only through a pipe.
 > 
-> I don't know what you mean by dynamically, but that's not the criteria
-> for which to use.
+> I also wanted that, for the root user, tampering with that process is
+> as hard as if the same code runs in kernel space.
 > 
-ok, I was wrong in saying dynamically. I should say "are there any other
-properties that will be included that are not documented here".
+> I would use the fully isolated process to parse and convert unsupported
+> data formats to a supported one, after the kernel verified the
 
-is below my understanding correct?
+Can you give some examples here of supported and unsupported data
+formats?  ext2 is supported, but we sadly don't trust the sb parser
+to read a an ext2fs coming from unknown source.  So I'm not quite
+clear what problem you're trying to solve.
 
-additionalProperties needs to be set to false if at all this binding
-defines all the possible properties (including child nodes) and not
-referring to any other schemas.
-
-If that is not the case and this binding references to other schemas,
-then unevaluatedProperties could be used since additionalProperties
-can't support combining schemas.
-
-Thanks,
-Pavan
+> authenticity of the original format (that already exists and cannot
+> change).
+> 
+> Preventing tampering of the process ensures that the conversion goes as
+> expected. Also, the integrity of the binary needs to be verified.
+> 
+> 
+> List of wished data formats:
+> 
+> PGP: verify the authenticity of RPM/DEB/... headers
+> RPM/DEB/... headers: extract reference file checksums for
+>                     (kernel-based) file integrity check (e.g. with IMA)
+> 
+> 
+> Alternative #1:
+> 
+> Write the parsers to run in kernel space. That was rejected due to
+> security and scalability concerns. If that changed, please let me know.
+> 
+> 
+> Alternative #2:
+> 
+> Linux distributions could provide what the kernel supports. However,
+> from personal experience, the effort seems orders of magnitude higher
+> than just writing a tiny component to support the original format. And
+> there is no guarantee that all Linux distributions will do it.
+> 
+> 
+> Full process isolation could be achieved in this way:
+> 
+> process -> outside: set seccomp strict profile at process creation
+>                     so that the process can only read/write/close the
+>                     pipe and exit, no other system calls are allowed
+> 
+> outside -> process: deny ptrace/kill with the process as target
+> 
+> Anything else?
+> 
+> 
+> The only risk I see is that a new feature allowing to interact with
+> another process is added to the kernel, without the ptrace permission
+> being asked.
+> 
+> With the restrictions above, can we say that the code inside the
+> process is as safe (against tampering) to execute as if it runs in
+> kernel space?
+> 
+> Thanks
+> 
+> Roberto
