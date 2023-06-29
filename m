@@ -2,170 +2,245 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5F0EB64DC
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 02:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95569C001B1
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 04:14:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231837AbjF2Cud (ORCPT
+        id S231512AbjF2EON (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 22:50:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60206 "EHLO
+        Thu, 29 Jun 2023 00:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231285AbjF2Cuc (ORCPT
+        with ESMTP id S231290AbjF2EOM (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 22:50:32 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B1C19C;
-        Wed, 28 Jun 2023 19:50:31 -0700 (PDT)
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T24SRr027932;
-        Thu, 29 Jun 2023 02:49:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=qcppdkim1; bh=IHjvrAZZ2vFqcGZoFB5wbCguNxEyOpwq3+w0MVzF6/c=;
- b=iZGpYfLHpxzbvPjXTusp5G/4TxEUpZhOqONYbRYYpsFYkczGSqApHKEzP1jiBa/HhcmD
- OLo/GG2YQtcDd6kLrm4koUXdcA9YDTx1rso03Hv6aqamM7ZHBguoWkhwH6hNqeQ+rC9E
- /xjfmiCcbOepSFmlvweK/76irtpIfE/+XXQMfD7pIl9aF5H9pkLnicpU81go7RjnpXi7
- /mrONZUoXNbcENJySiuNzRVWX+hHRUDf03IBOmChX+vP4HFIclDzDCDlPkgYLPxbuKIx
- Sr67eQ5gcD8+CA/Y84k+1uoCwuimqUGvSvCKK4rXa6V0paI6TsJSI8zZB5Rl8+NV/R7m Mw== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgextjdjb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Jun 2023 02:49:51 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35T2npEB016922
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Jun 2023 02:49:51 GMT
-Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.7; Wed, 28 Jun 2023 19:49:44 -0700
-Date:   Thu, 29 Jun 2023 08:19:40 +0530
-From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v4 07/21] soc: qcom: minidump: Add update region support
-Message-ID: <b099458b-8e37-43cb-831e-fe7812d11a65@quicinc.com>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-8-git-send-email-quic_mojha@quicinc.com>
+        Thu, 29 Jun 2023 00:14:12 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701AE1BCE
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 21:14:10 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-39e86b3da52so192242b6e.0
+        for <linux-hardening@vger.kernel.org>; Wed, 28 Jun 2023 21:14:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1688012049; x=1690604049;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gFI0ylmPxIwEVqfEdxipNZjolrHgwmHjIaIurmggdCk=;
+        b=lPERBNzh9oBZQ+QUplulviVjCOP/BA2YFs+vzqqvva8Lh9HBJ3T/XqpVdZVvIJCV5R
+         oiUD0xCDsg8ZRy/IuoMjPMt6X0bw9U1BBP/72qABBfaPmwufk6rXtWqIwV0r5guJjFGN
+         ODCSn8zVYcvXw+OlqM3CRrhAxTBJUNYWGe9PY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688012049; x=1690604049;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gFI0ylmPxIwEVqfEdxipNZjolrHgwmHjIaIurmggdCk=;
+        b=jBt0omacsqxF76/ZNHN3kPkSK8qIh2De4fMu8JqjctNk5VTXfxROW13IkbeH+aYGfQ
+         5T31Mb75kRDtSa2k6S3o0BiICY7LM3QyPYNexFcfzjAtFpKMOiRPaQtCJ9P9MYDjYwKn
+         2C0Db414JLHSrKmC42GyIoIf34H8PxALIXtMrllp5jZqCnOtdH8UgKig3QSr4yJUYCV5
+         8ZQrq0gbND+66sOJ+O6dSq1OST9sDBhdrJv/av0D7RlIirMfTsLtEKIfzYLccoGlXD7S
+         NTN4bAWzJzM89FqktKi1eFdA6Xyph7J/0LjXVXJd1aNuvD9L4rhKs47ScIIueqZMD3aV
+         JkLg==
+X-Gm-Message-State: AC+VfDzljG0rASY5CVY/Nr4PF0nAsk45eFcnGbsgbDzg6CjWgbH40OFZ
+        eVwnmqCYYahNVtQqVcd0jdm+p0RKptmfD9VmRINgeQ==
+X-Google-Smtp-Source: ACHHUZ4SX0IpPrAi8VAGsBsq9P7eKVBPxCksuggGgL4DjpZRAebGQhJ6Xnawo7+AkZotPjkeDDXTPwlHAh/4d5FsqCM=
+X-Received: by 2002:aca:bbc5:0:b0:3a0:54ea:e416 with SMTP id
+ l188-20020acabbc5000000b003a054eae416mr2055075oif.17.1688012049129; Wed, 28
+ Jun 2023 21:14:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1687955688-20809-8-git-send-email-quic_mojha@quicinc.com>
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: dl9a09ObcanbRwkFLT70EtpbFSz1yUaB
-X-Proofpoint-GUID: dl9a09ObcanbRwkFLT70EtpbFSz1yUaB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-28_14,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
- bulkscore=0 clxscore=1015 adultscore=0 suspectscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306290024
+References: <20221215001205.51969-1-jeffxu@google.com> <20221215001205.51969-4-jeffxu@google.com>
+ <ZJwcsU0vI-nzgOB_@codewreck.org>
+In-Reply-To: <ZJwcsU0vI-nzgOB_@codewreck.org>
+From:   Jeff Xu <jeffxu@chromium.org>
+Date:   Wed, 28 Jun 2023 21:13:58 -0700
+Message-ID: <CABi2SkXUX_QqTQ10Yx9bBUGpN1wByOi_=gZU6WEy5a8MaQY3Jw@mail.gmail.com>
+Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
+        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 06:04:34PM +0530, Mukesh Ojha wrote:
-> Add support to update client's region physical/virtual addresses,
-> which is useful for dynamic loadable modules, dynamic address
-> changing clients like if we want to collect current stack
-> information for each core and the current stack is changing on
-> each sched_switch event, So here virtual/physical address of
-> the current stack is changing. So, to cover such use cases
-> add the update region support in minidump driver and the
-> corresponding smem backend support.
-> 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->  drivers/soc/qcom/qcom_minidump.c          | 55 +++++++++++++++++++++++++++++++
->  drivers/soc/qcom/qcom_minidump_internal.h |  3 ++
->  drivers/soc/qcom/qcom_minidump_smem.c     | 21 ++++++++++++
->  include/soc/qcom/qcom_minidump.h          |  5 +++
->  4 files changed, 84 insertions(+)
-> 
-> diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
-> index cfdb63cc29d6..37d6ceb4d85c 100644
-> --- a/drivers/soc/qcom/qcom_minidump.c
-> +++ b/drivers/soc/qcom/qcom_minidump.c
-> @@ -318,6 +318,61 @@ int qcom_minidump_region_unregister(const struct qcom_minidump_region *region)
->  }
->  EXPORT_SYMBOL_GPL(qcom_minidump_region_unregister);
->  
-> +/**
-> + * qcom_minidump_update_region() - Update region information with new physical
-> + * address and virtual address for already registered region e.g, current task
-> + * stack for a core keeps on changing on each context switch, there it needs to
-> + * change registered region with new updated addresses.
-> + *
-> + * @region: Should be already registered minidump region.
-> + *
-> + * Return: On success, it returns 0 and negative error value on failure.
-> + */
-> +int qcom_minidump_update_region(const struct qcom_minidump_region *region)
-> +{
-> +	struct minidump_pregion *md_pregion;
-> +	struct qcom_minidump_region *tmp;
-> +	struct elfhdr *ehdr;
-> +	struct elf_shdr *shdr;
-> +	struct elf_phdr *phdr;
-> +	int idx;
-> +	int ret = 0;
-> +
-> +	if (!qcom_minidump_valid_region(region))
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&md_lock);
-> +	if (!md) {
-> +		md_pregion = check_if_pending_region_exist(region);
-> +		if (!md_pregion) {
-> +			ret = -ENOENT;
-> +			goto unlock;
-> +		}
-> +		tmp = &md_pregion->region;
-> +		tmp->phys_addr = region->phys_addr;
-> +		tmp->virt_addr = region->virt_addr;
-> +		goto unlock;
-> +	}
-> +
-> +	ret = md->ops->md_update_region(md, &idx, region);
-> +	if (ret)
-> +		goto unlock;
-> +
-> +	/* Skip predefined shdr/phdr header entry at the start */
-> +	ehdr = md->elf.ehdr;
-> +	shdr = elf_shdr_entry_addr(ehdr, idx + 4);
-> +	phdr = elf_phdr_entry_addr(ehdr, idx + 1);
-> +
-> +	shdr->sh_addr = (elf_addr_t)region->virt_addr;
-> +	phdr->p_vaddr = (elf_addr_t)region->virt_addr;
-> +	phdr->p_paddr = region->phys_addr;
-> +
-> +unlock:
-> +	mutex_unlock(&md_lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_minidump_update_region);
-> +
+Hello.
 
-I don't see any use of this API in the series. Do you plan to add one in
-the next version?
+Thank you for your email and interested in using memfd_noexec !
 
-Thanks,
-Pavan
+On Wed, Jun 28, 2023 at 4:43=E2=80=AFAM Dominique Martinet
+<asmadeus@codewreck.org> wrote:
+>
+> jeffxu@chromium.org wrote on Thu, Dec 15, 2022 at 12:12:03AM +0000:
+> > From: Jeff Xu <jeffxu@google.com>
+> >
+> > The new MFD_NOEXEC_SEAL and MFD_EXEC flags allows application to
+> > set executable bit at creation time (memfd_create).
+> >
+> > When MFD_NOEXEC_SEAL is set, memfd is created without executable bit
+> > (mode:0666), and sealed with F_SEAL_EXEC, so it can't be chmod to
+> > be executable (mode: 0777) after creation.
+> >
+> > when MFD_EXEC flag is set, memfd is created with executable bit
+> > (mode:0777), this is the same as the old behavior of memfd_create.
+> >
+> > The new pid namespaced sysctl vm.memfd_noexec has 3 values:
+> > 0: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
+> >         MFD_EXEC was set.
+> > 1: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL acts like
+> >         MFD_NOEXEC_SEAL was set.
+> > 2: memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+>
+> So, erm, I'm a bit late to the party but I was just looking at a way of
+> blocking memfd_create+exec in a container and this sounded perfect: my
+> reading is that this is a security feature meant to be set for
+> container's namespaces that'd totally disable something like
+> memfd_create followed by fexecve (because we don't want weird binaries
+> coming from who knows where to be executed on a shiny secure system),
+> but. . . is this actually supposed to work?
+> (see below)
+>
+> > [...]
+> > --- a/mm/memfd.c
+> > +++ b/mm/memfd.c
+> > @@ -263,12 +264,14 @@ long memfd_fcntl(struct file *file, unsigned int =
+cmd, unsigned long arg)
+> >  #define MFD_NAME_PREFIX_LEN (sizeof(MFD_NAME_PREFIX) - 1)
+> >  #define MFD_NAME_MAX_LEN (NAME_MAX - MFD_NAME_PREFIX_LEN)
+> >
+> > -#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB)
+> > +#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB |=
+ MFD_NOEXEC_SEAL | MFD_EXEC)
+> >
+> >  SYSCALL_DEFINE2(memfd_create,
+> >               const char __user *, uname,
+> >               unsigned int, flags)
+> >  {
+> > +     char comm[TASK_COMM_LEN];
+> > +     struct pid_namespace *ns;
+> >       unsigned int *file_seals;
+> >       struct file *file;
+> >       int fd, error;
+> > @@ -285,6 +288,39 @@ SYSCALL_DEFINE2(memfd_create,
+> >                       return -EINVAL;
+> >       }
+> >
+> > +     /* Invalid if both EXEC and NOEXEC_SEAL are set.*/
+> > +     if ((flags & MFD_EXEC) && (flags & MFD_NOEXEC_SEAL))
+> > +             return -EINVAL;
+> > +
+> > +     if (!(flags & (MFD_EXEC | MFD_NOEXEC_SEAL))) {
+> > +             [code that checks the sysctl]
+>
+> If flags already has either MFD_EXEC or MFD_NOEXEC_SEAL, you don't check
+> the sysctl at all.
+>
+> This can be verified easily:
+> -----
+> $ cat > memfd_exec.c <<'EOF'
+> #define _GNU_SOURCE
+>
+> #include <errno.h>
+> #include <stdio.h>
+> #include <sys/mman.h>
+> #include <sys/types.h>
+> #include <sys/wait.h>
+>
+> #ifndef MFD_EXEC
+> #define MFD_EXEC                0x0010U
+> #endif
+>
+> int main() {
+>     int fd =3D memfd_create("script", MFD_EXEC);
+>     if (fd =3D=3D -1)l
+>         perror("memfd");
+>
+>     char prog[] =3D "#!/bin/sh\necho Ran script\n";
+>     if (write(fd, prog, sizeof(prog)-1) !=3D sizeof(prog)-1)
+>             perror("write");
+>
+>     char *const argv[] =3D { "script", NULL };
+>     char *const envp[] =3D { NULL };
+>     fexecve(fd, argv, envp);
+>     perror("fexecve");
+> }
+> EOF
+> $ gcc -o memfd_exec memfd_exec.c
+> $ ./memfd_exec
+> Ran script
+> $ sysctl vm.memfd_noexec
+> vm.memfd_noexec =3D 2
+> -----
+> (as opposed to failing hard on memfd_create if flag unset on sysctl=3D2,
+> and failing on fexecve with flag unset and sysctl=3D1)
+>
+> What am I missing?
+>
+>
+At one point, I was thinking of having a security hook to block
+executable memfd [1], so this sysctl only works for the application
+that doesn't set EXEC bit. Now I think it makes sense to use
+vm.memfd_noexec =3D 2 to block the MFD_EXEC also.
+Anyway the commit msg says:
+2: memfd_create() without MFD_NOEXEC_SEAL will be rejected.
+Not doing that is a bug. I will send a fix for that.
+
+[1] https://lore.kernel.org/lkml/20221206150233.1963717-7-jeffxu@google.com=
+/
+
+>
+> BTW I find the current behaviour rather hard to use: setting this to 2
+> should still set NOEXEC by default in my opinion, just refuse anything
+> that explicitly requested EXEC.
+>
+At one point [2] (v2 of patch) there were two sysctls, one is doing
+overwrite, one is enforcing, later I decided with one sysctl, the
+rationale is the kernel will eventually get out of the business of
+overwriting user space code.  Yes. It might take a long time to
+migrate all of the userspace.
+
+In the meantime,  to meet what you want, the solution is keep
+vm.memfd_noexec =3D 1 (for overwrite), and a new security policy
+(SELInux or Landlock) that uses security hook security_memfd_create,
+this can block one process from creating executable memfd. Indeed,
+security policy is better fit to cases like this than sysctl.
+
+[2] https://lore.kernel.org/linux-mm/CABi2SkWGo9Jrd=3Di1e2PoDWYGenGhR=3DpG=
+=3DyGsQP5VLmizTmg-iA@mail.gmail.com/
+
+> Sure there's a warn_once that memfd_create was used without seal, but
+> right now on my system it's "used up" 5 seconds after boot by systemd:
+> [    5.854378] memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=
+=3D1 'systemd'
+>
+> And anyway, older kernels will barf up EINVAL when calling memfd_create
+> with MFD_NOEXEC_SEAL, so even if userspace will want to adapt they'll
+> need to try calling memfd_create with the flag once and retry on EINVAL,
+> which let's face it is going to take a while to happen.
+> (Also, the flag has been added to glibc, but not in any release yet)
+>
+Yes. Application will need to do some detection of the kernel. This is
+not avoidable.
+
+> Making calls default to noexec AND refuse exec does what you want
+> (forbid use of exec in an app that wasn't in a namespace that allows
+> exec) while allowing apps that require it to work; that sounds better
+> than making all applications that haven't taken the pain of adding the
+> new flag to me.
+> Well, I guess an app that did require exec without setting the flag will
+> fail in a weird place instead of failing at memfd_create and having a
+> chance to fallback, so it's not like it doesn't make any sense;
+> I don't have such strong feelings about this if the sysctl works, but
+> for my use case I'm more likely to want to take a chance at memfd_create
+> not needing exec than having the flag set. Perhaps a third value if I
+> cared enough...
+>
+> --
+> Dominique Martinet | Asmadeus
+
+Thanks
+-Jeff
