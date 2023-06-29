@@ -2,116 +2,84 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E016C0015E
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 10:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE3EEB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 13:24:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231663AbjF2Kao (ORCPT
+        id S231691AbjF2NYP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 06:30:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53452 "EHLO
+        Thu, 29 Jun 2023 09:24:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231835AbjF2Kaa (ORCPT
+        with ESMTP id S231496AbjF2NYP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 06:30:30 -0400
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433F82D5B;
-        Thu, 29 Jun 2023 03:30:12 -0700 (PDT)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id A808FC020; Thu, 29 Jun 2023 12:30:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1688034610; bh=if9qbAJfyLZr3BzQNxYrgUhfEv4hP+9JnW2xBmEgwCY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KEfVaX0t2OTlde6Nd3qey+ECr1O+nYrxhyKKZOCmXh/2Kgcop7vRZZGfXcxSCkW9O
-         vWBrQHO6EdSwboCUulup2O1xup6vfcwAA2DqiKe4OyYvd6TS6wbKjx41Lx5ZQxmYFv
-         zxl6hIZ+F/OljOeiV/hZ0rKO9KXNX19gdAieVTBhnlRlqRIKPe4znCamk91RyWjpgd
-         Zo4wwqIiqmylUaGksQz3sONpgxlJcMR0v+5kLVORcCl+zKCict7j3FOqPvvQYM5ZGL
-         SeG9xnU8RQs8NhqFGuZ8Ohh+FQRrWzJa8NGmufRUwA7LHNGGXMMOSq8i7/cS3aUDfk
-         62Jh4ql10yc5A==
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id 3F9D1C009;
-        Thu, 29 Jun 2023 12:30:04 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1688034609; bh=if9qbAJfyLZr3BzQNxYrgUhfEv4hP+9JnW2xBmEgwCY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tCJfaWg5ag2BGOgbHK7s89C2ekhrviQD8tcS4Twse5JOBeKNyoTJCAq6SGCTf3SSf
-         X1jwKdSvMnpNmpynUzepZLjmFnIxPK19pPmpvR+qjvvhZ2fvVcq/pmCh2GawrhqyeQ
-         b3QDV4VSIrSfZZ9w4doi9uyaaNanBZZZr+x/38T/xBOZaW9oDALteGq0rBLMZse75m
-         9Y++q6QRmQUnN8ijUoIV+bhbSd2BmwuIs4tjSf6bVKI0ogoVMNhVoYuu2VuWHmpuba
-         xjGs0VygsedMgSD2vLPool/GcdCoTQXjq0M3iwsj7gCkkDAMpgfqC87vJrtjrgn7mn
-         s5NXJ8uUYen7A==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 9e8fd47c;
-        Thu, 29 Jun 2023 10:30:01 +0000 (UTC)
-Date:   Thu, 29 Jun 2023 19:29:46 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
-To:     Jeff Xu <jeffxu@chromium.org>
-Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
-        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
-        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        jannh@google.com, linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
-Message-ID: <ZJ1dGvWkJVAbBPn7@codewreck.org>
-References: <20221215001205.51969-1-jeffxu@google.com>
- <20221215001205.51969-4-jeffxu@google.com>
- <ZJwcsU0vI-nzgOB_@codewreck.org>
- <ZJyKeeqRJxzwlMhk@codewreck.org>
- <CABi2SkWnAgHK1i6iqSqPMYuNEhtHBkO8jUuCvmG3RmUB5TKHJw@mail.gmail.com>
+        Thu, 29 Jun 2023 09:24:15 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1532C2D4A
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 06:24:13 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-54-8rh9MoxjMk2CwbwNRMsZVQ-1; Thu, 29 Jun 2023 14:23:55 +0100
+X-MC-Unique: 8rh9MoxjMk2CwbwNRMsZVQ-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 29 Jun
+ 2023 14:23:54 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 29 Jun 2023 14:23:54 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Samuel Thibault' <samuel.thibault@ens-lyon.org>,
+        Kees Cook <keescook@chromium.org>
+CC:     Kees Cook <kees@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "Dave@mielke.cc" <Dave@mielke.cc>
+Subject: RE: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Thread-Topic: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Thread-Index: AQHZqZu1MI//nXKQnEKNH07rOK4tp6+hxWvQ
+Date:   Thu, 29 Jun 2023 13:23:54 +0000
+Message-ID: <55c209a024a94d1f9c6af85dfddb11a0@AcuMS.aculab.com>
+References: <20221022182828.give.717-kees@kernel.org>
+ <20221022182949.2684794-2-keescook@chromium.org>
+ <20221227234000.jgosvixx7eahqb3z@begin>
+ <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
+ <20221228205726.rfevry7ud6gmttg5@begin>
+ <20230625155625.s4kvy7m2vw74ow4i@begin> <202306271944.E80E1D0@keescook>
+ <20230628060716.vvgtlgbushyjh6km@begin>
+In-Reply-To: <20230628060716.vvgtlgbushyjh6km@begin>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CABi2SkWnAgHK1i6iqSqPMYuNEhtHBkO8jUuCvmG3RmUB5TKHJw@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Jeff Xu wrote on Wed, Jun 28, 2023 at 09:33:27PM -0700:
-> > > BTW I find the current behaviour rather hard to use: setting this to 2
-> > > should still set NOEXEC by default in my opinion, just refuse anything
-> > > that explicitly requested EXEC.
-> >
-> > And I just noticed it's not possible to lower the value despite having
-> > CAP_SYS_ADMIN: what the heck?! I have never seen such a sysctl and it
-> > just forced me to reboot because I willy-nilly tested in the init pid
-> > namespace, and quite a few applications that don't require exec broke
-> > exactly as I described below.
-> >
-> > If the user has CAP_SYS_ADMIN there are more container escape methods
-> > than I can count, this is basically free pass to root on main namespace
-> > anyway, you're not protecting anything. Please let people set the sysctl
-> > to what they want.
->
-> Yama has a similar setting,  for example, 3 (YAMA_SCOPE_NO_ATTACH)
-> will not allow downgrading at runtime.
+From: Samuel Thibault
+> Sent: 28 June 2023 07:07
+...
+> > So is there really no solution for brltty and TIOCSTI being disabled?
 > 
-> Since this is a security feature, not allowing downgrading at run time
-> is part of the security consideration. I hope you understand.
+> No, there is no way to simulate characters on the Linux console. The
+> alternative would be to use uinput, but that simulates keycodes, not
+> characters, thus requiring backtranslating first, which is very fragile.
 
-I didn't remember yama had this stuck bit; that still strikes me as
-unusual, and if you require a custom LSM rule for memfd anyway I don't
-see why it couldn't enforce that the sysctl is unchanged, but sure.
+It could probably be rewritten to use a pseudo-tty pair.
+It might even be possible to emulate (the functionality of) TIOCSTI
+in the relay process that handles the pseudo-tty.
 
-Please, though:
- - I have a hard time thinking of 1 as a security flag in general (even
-if I do agree a sloppy LSM rule could require it); I would only lock 2
- - please make it clear, I don't see any entry in the sysctl
-documentation[1] about memfd_noexec, there should be one and you can
-copy the wording from yama's doc[2]: "Once set, this sysctl value cannot
-be changed"
-[1] Documentation/admin-guide/sysctl/vm.rst
-[2] Documentation/admin-guide/LSM/Yama.rst
+	David
 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-Either way as it stands I still don't think one can expect most
-userspace applications to be converted until some libc wrapper takes
-care of the retry logic and a couple of years, so I'll go look for
-another way of filtering this (and eventually setting this to 1) as you
-suggested.
-I'll leave the follow-up up to you and won't bother you more.
-
-Thanks,
--- 
-Dominique Martinet | Asmadeus
