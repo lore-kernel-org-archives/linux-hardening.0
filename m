@@ -2,94 +2,170 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 099FFEB64DC
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 02:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5F0EB64DC
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 02:50:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231253AbjF2Clp (ORCPT
+        id S231837AbjF2Cud (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 28 Jun 2023 22:41:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58404 "EHLO
+        Wed, 28 Jun 2023 22:50:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231494AbjF2Clm (ORCPT
+        with ESMTP id S231285AbjF2Cuc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 28 Jun 2023 22:41:42 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07734213D;
-        Wed, 28 Jun 2023 19:41:42 -0700 (PDT)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T1jdWI011098;
-        Thu, 29 Jun 2023 02:41:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=UvCn9ZNxcDPRHpVi/Z+CAyOuMROaxNkLOuH/lWROc1s=;
- b=G6Z+gxN5e5IQKR+aoDFIkeWJ0bMngm9cqTsK20RTTRrU7RiC9W4SBkSEaBxUk2Q7mDOq
- rW1domaRbUX187ipX82dGChdpPGZcRVZstiVUu/opGnn+dMueA2y4HNyyb9aTKUMIf+g
- 8GOqCyP5XUhKlvoHaVAUMVxdpKLHbs13TdH4ztc24QPJSB3xfaBFfuAO8m6ZTKoBCw/8
- 4Jg4NZKLJjnhL6No35UUW+gKDs/Z/YGVd8LwyEjnqA+VF8ppB0bZJOvmgLc4SLXNQyEM
- Z5YVp1NOpmxGSJjcMNEdU8B+jpoi3WdvBH/DJhj6KqauwxbLWrQmEO0etHfDPLsI5Vud HA== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdqdtt4yn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Jun 2023 02:41:36 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35T0DEH2004005;
-        Thu, 29 Jun 2023 02:41:35 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpxcvem5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Jun 2023 02:41:35 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35T2fYLH009945;
-        Thu, 29 Jun 2023 02:41:34 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3rdpxcveka-3;
-        Thu, 29 Jun 2023 02:41:34 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Don Brace <don.brace@microchip.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        storagedev@microchip.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: smartpqi: Replace one-element arrays with flexible-array members
-Date:   Wed, 28 Jun 2023 22:41:29 -0400
-Message-Id: <168800630155.587979.4081903286029728024.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <ZJNdKDkuRbFZpASS@work>
-References: <ZJNdKDkuRbFZpASS@work>
+        Wed, 28 Jun 2023 22:50:32 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B1C19C;
+        Wed, 28 Jun 2023 19:50:31 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T24SRr027932;
+        Thu, 29 Jun 2023 02:49:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
+ cc : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=qcppdkim1; bh=IHjvrAZZ2vFqcGZoFB5wbCguNxEyOpwq3+w0MVzF6/c=;
+ b=iZGpYfLHpxzbvPjXTusp5G/4TxEUpZhOqONYbRYYpsFYkczGSqApHKEzP1jiBa/HhcmD
+ OLo/GG2YQtcDd6kLrm4koUXdcA9YDTx1rso03Hv6aqamM7ZHBguoWkhwH6hNqeQ+rC9E
+ /xjfmiCcbOepSFmlvweK/76irtpIfE/+XXQMfD7pIl9aF5H9pkLnicpU81go7RjnpXi7
+ /mrONZUoXNbcENJySiuNzRVWX+hHRUDf03IBOmChX+vP4HFIclDzDCDlPkgYLPxbuKIx
+ Sr67eQ5gcD8+CA/Y84k+1uoCwuimqUGvSvCKK4rXa6V0paI6TsJSI8zZB5Rl8+NV/R7m Mw== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgextjdjb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jun 2023 02:49:51 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35T2npEB016922
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jun 2023 02:49:51 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.7; Wed, 28 Jun 2023 19:49:44 -0700
+Date:   Thu, 29 Jun 2023 08:19:40 +0530
+From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v4 07/21] soc: qcom: minidump: Add update region support
+Message-ID: <b099458b-8e37-43cb-831e-fe7812d11a65@quicinc.com>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-8-git-send-email-quic_mojha@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1687955688-20809-8-git-send-email-quic_mojha@quicinc.com>
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dl9a09ObcanbRwkFLT70EtpbFSz1yUaB
+X-Proofpoint-GUID: dl9a09ObcanbRwkFLT70EtpbFSz1yUaB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-06-28_14,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=735 bulkscore=0 spamscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306290022
-X-Proofpoint-GUID: N1OEdKKqtfguBYFJ4t_gdKa9W3y1nod4
-X-Proofpoint-ORIG-GUID: N1OEdKKqtfguBYFJ4t_gdKa9W3y1nod4
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
+ bulkscore=0 clxscore=1015 adultscore=0 suspectscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306290024
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 21 Jun 2023 14:27:20 -0600, Gustavo A. R. Silva wrote:
-
-> One-element arrays are deprecated, and we are replacing them with flexible
-> array members instead. So, replace one-element arrays with flexible-array
-> members in a couple of structures, and refactor the rest of the code,
-> accordingly.
+On Wed, Jun 28, 2023 at 06:04:34PM +0530, Mukesh Ojha wrote:
+> Add support to update client's region physical/virtual addresses,
+> which is useful for dynamic loadable modules, dynamic address
+> changing clients like if we want to collect current stack
+> information for each core and the current stack is changing on
+> each sched_switch event, So here virtual/physical address of
+> the current stack is changing. So, to cover such use cases
+> add the update region support in minidump driver and the
+> corresponding smem backend support.
 > 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy().
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> ---
+>  drivers/soc/qcom/qcom_minidump.c          | 55 +++++++++++++++++++++++++++++++
+>  drivers/soc/qcom/qcom_minidump_internal.h |  3 ++
+>  drivers/soc/qcom/qcom_minidump_smem.c     | 21 ++++++++++++
+>  include/soc/qcom/qcom_minidump.h          |  5 +++
+>  4 files changed, 84 insertions(+)
 > 
-> [...]
+> diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
+> index cfdb63cc29d6..37d6ceb4d85c 100644
+> --- a/drivers/soc/qcom/qcom_minidump.c
+> +++ b/drivers/soc/qcom/qcom_minidump.c
+> @@ -318,6 +318,61 @@ int qcom_minidump_region_unregister(const struct qcom_minidump_region *region)
+>  }
+>  EXPORT_SYMBOL_GPL(qcom_minidump_region_unregister);
+>  
+> +/**
+> + * qcom_minidump_update_region() - Update region information with new physical
+> + * address and virtual address for already registered region e.g, current task
+> + * stack for a core keeps on changing on each context switch, there it needs to
+> + * change registered region with new updated addresses.
+> + *
+> + * @region: Should be already registered minidump region.
+> + *
+> + * Return: On success, it returns 0 and negative error value on failure.
+> + */
+> +int qcom_minidump_update_region(const struct qcom_minidump_region *region)
+> +{
+> +	struct minidump_pregion *md_pregion;
+> +	struct qcom_minidump_region *tmp;
+> +	struct elfhdr *ehdr;
+> +	struct elf_shdr *shdr;
+> +	struct elf_phdr *phdr;
+> +	int idx;
+> +	int ret = 0;
+> +
+> +	if (!qcom_minidump_valid_region(region))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&md_lock);
+> +	if (!md) {
+> +		md_pregion = check_if_pending_region_exist(region);
+> +		if (!md_pregion) {
+> +			ret = -ENOENT;
+> +			goto unlock;
+> +		}
+> +		tmp = &md_pregion->region;
+> +		tmp->phys_addr = region->phys_addr;
+> +		tmp->virt_addr = region->virt_addr;
+> +		goto unlock;
+> +	}
+> +
+> +	ret = md->ops->md_update_region(md, &idx, region);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	/* Skip predefined shdr/phdr header entry at the start */
+> +	ehdr = md->elf.ehdr;
+> +	shdr = elf_shdr_entry_addr(ehdr, idx + 4);
+> +	phdr = elf_phdr_entry_addr(ehdr, idx + 1);
+> +
+> +	shdr->sh_addr = (elf_addr_t)region->virt_addr;
+> +	phdr->p_vaddr = (elf_addr_t)region->virt_addr;
+> +	phdr->p_paddr = region->phys_addr;
+> +
+> +unlock:
+> +	mutex_unlock(&md_lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_minidump_update_region);
+> +
 
-Applied to 6.5/scsi-queue, thanks!
+I don't see any use of this API in the series. Do you plan to add one in
+the next version?
 
-[1/1] scsi: smartpqi: Replace one-element arrays with flexible-array members
-      https://git.kernel.org/mkp/scsi/c/6f0a92fd7db1
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+Pavan
