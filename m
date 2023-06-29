@@ -2,161 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364EDEB64DD
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 19:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F89AEB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 19:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbjF2T4L (ORCPT
+        id S232291AbjF2T6N (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 15:56:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60008 "EHLO
+        Thu, 29 Jun 2023 15:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231543AbjF2T4J (ORCPT
+        with ESMTP id S232410AbjF2T6G (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 15:56:09 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D642D4C
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 12:56:02 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-666e6541c98so1014162b3a.2
-        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 12:56:02 -0700 (PDT)
+        Thu, 29 Jun 2023 15:58:06 -0400
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A6230F7
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 12:57:56 -0700 (PDT)
+Received: by mail-oi1-x235.google.com with SMTP id 5614622812f47-39ca120c103so755116b6e.2
+        for <linux-hardening@vger.kernel.org>; Thu, 29 Jun 2023 12:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688068562; x=1690660562;
+        d=chromium.org; s=google; t=1688068675; x=1690660675;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=79zP5YHFLGBu1+jfogz5W0vV+Z/KFoVgf5MKidFMDlI=;
-        b=COCl/U/c9SsKrj00+ygesw3WObTx3Osmqaz88cXeEi0v16GehgR4AlXwfn6v4ktv5I
-         C10xGRe6FXsRNz9GEZSDN0VUenIdW6qee5G9xjkEUo9iK7AYDUHEUJP+LhlE4uP5GoTc
-         yWmHeuNNBPf3DUPsveyOZm//CrDB/mUonJ6zE=
+        bh=RJ/xKxE/4SOUFhnWdePYMrjihUjgQXmu4T3rrVCYJnk=;
+        b=O7agXgqg/5EnBzgOf/hyEa3CfJrv+rnuzddn3TNmncxMzxlgkxVF400ns0ScHq8nwO
+         miBMky1Ts8sK6piTFjjx4u/zdn8kQOa7aAhFug4K34bwaFXNYZcv7WQ8qnHUTGujQV8e
+         hSPUrKYsB1Y3BCOweX0S5GaJzo71OMSbL4EF4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688068562; x=1690660562;
+        d=1e100.net; s=20221208; t=1688068675; x=1690660675;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=79zP5YHFLGBu1+jfogz5W0vV+Z/KFoVgf5MKidFMDlI=;
-        b=LW8xYdHXPLZeJM25JS0rz9XRhTEeJBtD6nofVD4QwrbJ9yntuRju8g0bFyzMM67iAp
-         bQT9DptANXxVHuCxyp5R9GOCaEOX/FiCjuLCvu0yvMTbyQ4dpS/TozRmWdUxwNYS7TEo
-         HEw5El3IZtGZxPs+ttyxBPsF2nebQ9TnbFiC8X7PMFIsBsFGNulpjqRcVyGOA5f5GYx6
-         uUX/2Qtv8gYEDcqqzmqAGOXwcjlkjDphHE0i3KRPeqkkdTCFVKhEt02C4gEBYdb36mfR
-         UVvKpp/ArgF26F6kfogNKjmc07B4sOkmq9O3GS+42tOBDldvErxEKn82kd0a69omveWL
-         VEGQ==
-X-Gm-Message-State: ABy/qLY3Zn9wv5xX+lE5ABSJqGk03A8d0TA92dvl86+52XX77LhEgmce
-        zH4iUiGhvdNvlRckGwc3bjLgVg==
-X-Google-Smtp-Source: APBJJlEbzji2f8hgYz10MuxdvDgsWischUCXYiFpjLORWOWrkG+Dgz+uKmmLCE30mTNIIFno7FxPWQ==
-X-Received: by 2002:a05:6a00:2d1d:b0:680:98c:c595 with SMTP id fa29-20020a056a002d1d00b00680098cc595mr1171263pfb.13.1688068562212;
-        Thu, 29 Jun 2023 12:56:02 -0700 (PDT)
+        bh=RJ/xKxE/4SOUFhnWdePYMrjihUjgQXmu4T3rrVCYJnk=;
+        b=dEtlmoCvpyvvoNzaKtVocVzBVn0HuG7xP4r1WDO71rQ7raQWvMOOwHWpHhWTCf6F0+
+         7N362EYdm2qq1sPgiXa0pazdqXumls4Vjbyibo4kJpApfHD5/DNOrSyfwKEQTU83tIbP
+         cClDRjoVHfxXaqAyb/lvAU0LAkYzkGBBd/z2p8IRSphuGKCj5FLI23042rWmTrw6i1gN
+         JnZZ5ED/29QHzd3NURjUL85OzeMIrYbo3WyOqI22Bfjh13WXTGait3NcGS0GAyhVcBPG
+         z5Ntz6FbLC1KsYM8twIGgF394pf7BM+pGhkqIrWVBCIaxEZ1F3ToKc75p8mwsUbSGf6Y
+         BThQ==
+X-Gm-Message-State: AC+VfDza9ZOnLKQMAMiMsJAWWKeEUZabZ1Qy1uA+t4kOm5HQWaTjYt4m
+        ygoeOQowalewH59lMXdEHLU0Zz8zTxsIeKSDtkE=
+X-Google-Smtp-Source: ACHHUZ5VfHaZQ1vgYvKEfwSq3bkC/Mv2QGtvfel8EjnRJ3kX52MGrTqrYD9m0XcISsUNgQjjJRV6uQ==
+X-Received: by 2002:aca:6707:0:b0:3a3:7eab:28a7 with SMTP id z7-20020aca6707000000b003a37eab28a7mr384557oix.30.1688068675495;
+        Thu, 29 Jun 2023 12:57:55 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h18-20020a62b412000000b0067c9ff80b64sm4590241pfn.113.2023.06.29.12.56.01
+        by smtp.gmail.com with ESMTPSA id 199-20020a6301d0000000b005533a901a5dsm9132408pgb.19.2023.06.29.12.57.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Jun 2023 12:56:01 -0700 (PDT)
-Date:   Thu, 29 Jun 2023 12:56:00 -0700
+        Thu, 29 Jun 2023 12:57:55 -0700 (PDT)
+Date:   Thu, 29 Jun 2023 12:57:54 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Christoph Lameter <cl@linux.com>, Tejun Heo <tj@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>, Jann Horn <jannh@google.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Pedro Falcato <pedro.falcato@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, linux-mm@kvack.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        gongruiqi1@huawei.com
-Subject: Re: [PATCH v4] Randomized slab caches for kmalloc()
-Message-ID: <202306291252.F916884987@keescook>
-References: <20230626031835.2279738-1-gongruiqi@huaweicloud.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] sparc: openpromio: Address -Warray-bounds warning
+Message-ID: <202306291257.FF5C86E@keescook>
+References: <ZJTV61z4+lsKlzQG@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230626031835.2279738-1-gongruiqi@huaweicloud.com>
+In-Reply-To: <ZJTV61z4+lsKlzQG@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 11:18:35AM +0800, GONG, Ruiqi wrote:
-> When exploiting memory vulnerabilities, "heap spraying" is a common
-> technique targeting those related to dynamic memory allocation (i.e. the
-> "heap"), and it plays an important role in a successful exploitation.
-> Basically, it is to overwrite the memory area of vulnerable object by
-> triggering allocation in other subsystems or modules and therefore
-> getting a reference to the targeted memory location. It's usable on
-> various types of vulnerablity including use after free (UAF), heap out-
-> of-bound write and etc.
+On Thu, Jun 22, 2023 at 05:14:51PM -0600, Gustavo A. R. Silva wrote:
+> One-element arrays are deprecated, and we are replacing them with flexible
+> array members instead. So, replace one-element array with flexible-array
+> member in struct openpromio.
 > 
-> There are (at least) two reasons why the heap can be sprayed: 1) generic
-> slab caches are shared among different subsystems and modules, and
-> 2) dedicated slab caches could be merged with the generic ones.
-> Currently these two factors cannot be prevented at a low cost: the first
-> one is a widely used memory allocation mechanism, and shutting down slab
-> merging completely via `slub_nomerge` would be overkill.
+> Address the following warning found after building (with GCC-13) sparc
+> with sparc64_defconfig:
+> In function 'opromgetprop',
+>     inlined from 'openprom_sunos_ioctl.isra' at drivers/sbus/char/openprom.c:312:11:
+> drivers/sbus/char/openprom.c:141:24: warning: array subscript 1 is above array bounds of 'char[1]' [-Warray-bounds=]
+>   141 |         op->oprom_array[len] = '\0';
+>       |         ~~~~~~~~~~~~~~~^~~~~
+> In file included from drivers/sbus/char/openprom.c:31:
+> arch/sparc/include/uapi/asm/openpromio.h: In function 'openprom_sunos_ioctl.isra':
+> arch/sparc/include/uapi/asm/openpromio.h:16:17: note: while referencing 'oprom_array'
+>    16 |         char    oprom_array[1];         /* Holds property names and values. */
+>       |                 ^~~~~~~~~~~
 > 
-> To efficiently prevent heap spraying, we propose the following approach:
-> to create multiple copies of generic slab caches that will never be
-> merged, and random one of them will be used at allocation. The random
-> selection is based on the address of code that calls `kmalloc()`, which
-> means it is static at runtime (rather than dynamically determined at
-> each time of allocation, which could be bypassed by repeatedly spraying
-> in brute force). In other words, the randomness of cache selection will
-> be with respect to the code address rather than time, i.e. allocations
-> in different code paths would most likely pick different caches,
-> although kmalloc() at each place would use the same cache copy whenever
-> it is executed. In this way, the vulnerable object and memory allocated
-> in other subsystems and modules will (most probably) be on different
-> slab caches, which prevents the object from being sprayed.
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -Warray-bounds.
 > 
-> Meanwhile, the static random selection is further enhanced with a
-> per-boot random seed, which prevents the attacker from finding a usable
-> kmalloc that happens to pick the same cache with the vulnerable
-> subsystem/module by analyzing the open source code. In other words, with
-> the per-boot seed, the random selection is static during each time the
-> system starts and runs, but not across different system startups.
+> This results in no differences in binary output.
 > 
-> The overhead of performance has been tested on a 40-core x86 server by
-> comparing the results of `perf bench all` between the kernels with and
-> without this patch based on the latest linux-next kernel, which shows
-> minor difference. A subset of benchmarks are listed below:
-> 
->                 sched/  sched/  syscall/       mem/       mem/
->              messaging    pipe     basic     memcpy     memset
->                  (sec)   (sec)     (sec)   (GB/sec)   (GB/sec)
-> 
-> control1         0.019   5.459     0.733  15.258789  51.398026
-> control2         0.019   5.439     0.730  16.009221  48.828125
-> control3         0.019   5.282     0.735  16.009221  48.828125
-> control_avg      0.019   5.393     0.733  15.759077  49.684759
-> 
-> experiment1      0.019   5.374     0.741  15.500992  46.502976
-> experiment2      0.019   5.440     0.746  16.276042  51.398026
-> experiment3      0.019   5.242     0.752  15.258789  51.398026
-> experiment_avg   0.019   5.352     0.746  15.678608  49.766343
-> 
-> The overhead of memory usage was measured by executing `free` after boot
-> on a QEMU VM with 1GB total memory, and as expected, it's positively
-> correlated with # of cache copies:
-> 
->            control  4 copies  8 copies  16 copies
-> 
-> total       969.8M    968.2M    968.2M     968.2M
-> used         20.0M     21.9M     24.1M      26.7M
-> free        936.9M    933.6M    931.4M     928.6M
-> available   932.2M    928.8M    926.6M     923.9M
-> 
-> Co-developed-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-> Signed-off-by: GONG, Ruiqi <gongruiqi@huaweicloud.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Link: https://github.com/KSPP/linux/issues/79
+> Link: https://github.com/KSPP/linux/issues/322
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Thanks for the v4; this looks good. :)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
