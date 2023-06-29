@@ -2,219 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AB1C001B1
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 09:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E016C0015E
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 10:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232163AbjF2JVI (ORCPT
+        id S231663AbjF2Kao (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 05:21:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36780 "EHLO
+        Thu, 29 Jun 2023 06:30:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232081AbjF2JVH (ORCPT
+        with ESMTP id S231835AbjF2Kaa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 05:21:07 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400E0107;
-        Thu, 29 Jun 2023 02:21:06 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T6rtB1017260;
-        Thu, 29 Jun 2023 09:20:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=MjdhA6zR0it5eEfUJ7/Fm6mpZWONkCOu6eACt6f/6sY=;
- b=P0Hsysd+jfP7/3EC7/PblShuoOapIjr3CLNKJWu/dyFm4jhLvT3B/AP+lP7oHHHbupao
- htPfXzE7k3DjTduzWcv8n/5uGfEvUHneETynIJE/Jk4xZlZApSwtAVoWHrgeD2VVQkQE
- SnFC+LkObLlhuVUdTIH5Eoyk7eiaU4IMdL6YSuoWajAM1IR2iwzXzJ81D1gTL0zRpHUF
- AweacokoZ70r0qPqlYGKc+Mw57dzmt5dgYJc8hlGAgMVCT9WKVXbNPn6yUybSuqx2TRx
- N5OLqRvt7TmPFN8xyvYkwPOjpHS5oAtCoVA3lH3OhWJu/a2VEgBbM1ig9YVoWxKTzhFG PA== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgetpjwp0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Jun 2023 09:20:46 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35T9KjHa004095
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Jun 2023 09:20:45 GMT
-Received: from [10.216.42.4] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 29 Jun
- 2023 02:20:37 -0700
-Message-ID: <cd4b7be5-4cfd-e330-458d-3e22019839b9@quicinc.com>
-Date:   Thu, 29 Jun 2023 14:50:34 +0530
+        Thu, 29 Jun 2023 06:30:30 -0400
+Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 433F82D5B;
+        Thu, 29 Jun 2023 03:30:12 -0700 (PDT)
+Received: by nautica.notk.org (Postfix, from userid 108)
+        id A808FC020; Thu, 29 Jun 2023 12:30:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+        t=1688034610; bh=if9qbAJfyLZr3BzQNxYrgUhfEv4hP+9JnW2xBmEgwCY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KEfVaX0t2OTlde6Nd3qey+ECr1O+nYrxhyKKZOCmXh/2Kgcop7vRZZGfXcxSCkW9O
+         vWBrQHO6EdSwboCUulup2O1xup6vfcwAA2DqiKe4OyYvd6TS6wbKjx41Lx5ZQxmYFv
+         zxl6hIZ+F/OljOeiV/hZ0rKO9KXNX19gdAieVTBhnlRlqRIKPe4znCamk91RyWjpgd
+         Zo4wwqIiqmylUaGksQz3sONpgxlJcMR0v+5kLVORcCl+zKCict7j3FOqPvvQYM5ZGL
+         SeG9xnU8RQs8NhqFGuZ8Ohh+FQRrWzJa8NGmufRUwA7LHNGGXMMOSq8i7/cS3aUDfk
+         62Jh4ql10yc5A==
+Received: from odin.codewreck.org (localhost [127.0.0.1])
+        by nautica.notk.org (Postfix) with ESMTPS id 3F9D1C009;
+        Thu, 29 Jun 2023 12:30:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+        t=1688034609; bh=if9qbAJfyLZr3BzQNxYrgUhfEv4hP+9JnW2xBmEgwCY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tCJfaWg5ag2BGOgbHK7s89C2ekhrviQD8tcS4Twse5JOBeKNyoTJCAq6SGCTf3SSf
+         X1jwKdSvMnpNmpynUzepZLjmFnIxPK19pPmpvR+qjvvhZ2fvVcq/pmCh2GawrhqyeQ
+         b3QDV4VSIrSfZZ9w4doi9uyaaNanBZZZr+x/38T/xBOZaW9oDALteGq0rBLMZse75m
+         9Y++q6QRmQUnN8ijUoIV+bhbSd2BmwuIs4tjSf6bVKI0ogoVMNhVoYuu2VuWHmpuba
+         xjGs0VygsedMgSD2vLPool/GcdCoTQXjq0M3iwsj7gCkkDAMpgfqC87vJrtjrgn7mn
+         s5NXJ8uUYen7A==
+Received: from localhost (odin.codewreck.org [local])
+        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 9e8fd47c;
+        Thu, 29 Jun 2023 10:30:01 +0000 (UTC)
+Date:   Thu, 29 Jun 2023 19:29:46 +0900
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     Jeff Xu <jeffxu@chromium.org>
+Cc:     skhan@linuxfoundation.org, keescook@chromium.org,
+        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
+        dverkamp@chromium.org, hughd@google.com, jeffxu@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v8 3/5] mm/memfd: add MFD_NOEXEC_SEAL and MFD_EXEC
+Message-ID: <ZJ1dGvWkJVAbBPn7@codewreck.org>
+References: <20221215001205.51969-1-jeffxu@google.com>
+ <20221215001205.51969-4-jeffxu@google.com>
+ <ZJwcsU0vI-nzgOB_@codewreck.org>
+ <ZJyKeeqRJxzwlMhk@codewreck.org>
+ <CABi2SkWnAgHK1i6iqSqPMYuNEhtHBkO8jUuCvmG3RmUB5TKHJw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 13/21] remoterproc: qcom: refactor to leverage exported
- minidump symbol
-Content-Language: en-US
-To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
-CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-14-git-send-email-quic_mojha@quicinc.com>
- <f1581356-97ba-4faa-8e1c-0d5c7ba994e3@quicinc.com>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <f1581356-97ba-4faa-8e1c-0d5c7ba994e3@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: YTcs0TExrbISpA_QGieGSozxYDyOmlZN
-X-Proofpoint-GUID: YTcs0TExrbISpA_QGieGSozxYDyOmlZN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-29_01,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- mlxlogscore=981 spamscore=0 priorityscore=1501 suspectscore=0
- clxscore=1015 bulkscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306290082
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CABi2SkWnAgHK1i6iqSqPMYuNEhtHBkO8jUuCvmG3RmUB5TKHJw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 6/28/2023 9:21 PM, Pavan Kondeti wrote:
-> On Wed, Jun 28, 2023 at 06:04:40PM +0530, Mukesh Ojha wrote:
->> -static int qcom_add_minidump_segments(struct rproc *rproc, struct minidump_subsystem *subsystem,
->> -			void (*rproc_dumpfn_t)(struct rproc *rproc, struct rproc_dump_segment *segment,
->> -				void *dest, size_t offset, size_t size))
->> +void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
->> +		void (*rproc_dumpfn_t)(struct rproc *rproc,
->> +		struct rproc_dump_segment *segment, void *dest, size_t offset,
->> +		size_t size))
->>   {
->> -	struct minidump_region __iomem *ptr;
->> -	struct minidump_region region;
->> -	int seg_cnt, i;
->>   	dma_addr_t da;
->>   	size_t size;
->> +	int seg_cnt;
->>   	char *name;
->> +	void *ptr;
->> +	int ret;
->> +	int i;
->>   
->>   	if (WARN_ON(!list_empty(&rproc->dump_segments))) {
->>   		dev_err(&rproc->dev, "dump segment list already populated\n");
->> -		return -EUCLEAN;
->> +		return;
->>   	}
->>   
->> -	seg_cnt = le32_to_cpu(subsystem->region_count);
->> -	ptr = ioremap((unsigned long)le64_to_cpu(subsystem->regions_baseptr),
->> -		      seg_cnt * sizeof(struct minidump_region));
->> +	ptr = qcom_ss_md_mapped_base(minidump_id, &seg_cnt);
->>   	if (!ptr)
->> -		return -EFAULT;
->> +		return;
->>   
->>   	for (i = 0; i < seg_cnt; i++) {
->> -		memcpy_fromio(&region, ptr + i, sizeof(region));
->> -		if (le32_to_cpu(region.valid) == MINIDUMP_REGION_VALID) {
->> -			name = kstrndup(region.name, MAX_REGION_NAME_LENGTH - 1, GFP_KERNEL);
->> -			if (!name) {
->> -				iounmap(ptr);
->> -				return -ENOMEM;
->> -			}
->> -			da = le64_to_cpu(region.address);
->> -			size = le64_to_cpu(region.size);
->> -			rproc_coredump_add_custom_segment(rproc, da, size, rproc_dumpfn_t, name);
->> +		ret = qcom_ss_valid_segment_info(ptr, i, &name, &da, &size);
->> +		if (ret < 0) {
->> +			iounmap(ptr);
->> +			dev_err(&rproc->dev,
->> +				"Failed with error: %d while adding minidump entries\n",
->> +				ret);
->> +			goto clean_minidump;
->>   		}
->> -	}
->> -
->> -	iounmap(ptr);
->> -	return 0;
->> -}
->> -
->> -void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
->> -		void (*rproc_dumpfn_t)(struct rproc *rproc,
->> -		struct rproc_dump_segment *segment, void *dest, size_t offset,
->> -		size_t size))
->> -{
->> -	int ret;
->> -	struct minidump_subsystem *subsystem;
->> -	struct minidump_global_toc *toc;
->> -
->> -	/* Get Global minidump ToC*/
->> -	toc = qcom_smem_get(QCOM_SMEM_HOST_ANY, SBL_MINIDUMP_SMEM_ID, NULL);
->> -
->> -	/* check if global table pointer exists and init is set */
->> -	if (IS_ERR(toc) || !toc->status) {
->> -		dev_err(&rproc->dev, "Minidump TOC not found in SMEM\n");
->> -		return;
->> -	}
->>   
->> -	/* Get subsystem table of contents using the minidump id */
->> -	subsystem = &toc->subsystems[minidump_id];
->> -
->> -	/**
->> -	 * Collect minidump if SS ToC is valid and segment table
->> -	 * is initialized in memory and encryption status is set.
->> -	 */
->> -	if (subsystem->regions_baseptr == 0 ||
->> -	    le32_to_cpu(subsystem->status) != 1 ||
->> -	    le32_to_cpu(subsystem->enabled) != MINIDUMP_SS_ENABLED ||
->> -	    le32_to_cpu(subsystem->encryption_status) != MINIDUMP_SS_ENCR_DONE) {
->> -		dev_err(&rproc->dev, "Minidump not ready, skipping\n");
->> -		return;
->> +		/* if it is a valid segment */
->> +		if (!ret)
->> +			rproc_coredump_add_custom_segment(rproc, da, size,
->> +							  rproc_dumpfn_t, name);
->>   	}
->>   
->> -	ret = qcom_add_minidump_segments(rproc, subsystem, rproc_dumpfn_t);
->> -	if (ret) {
->> -		dev_err(&rproc->dev, "Failed with error: %d while adding minidump entries\n", ret);
->> -		goto clean_minidump;
->> -	}
->> +	iounmap(ptr);
->>   	rproc_coredump_using_sections(rproc);
->> +
->>   clean_minidump:
->>   	qcom_minidump_cleanup(rproc);
->>   }
+Jeff Xu wrote on Wed, Jun 28, 2023 at 09:33:27PM -0700:
+> > > BTW I find the current behaviour rather hard to use: setting this to 2
+> > > should still set NOEXEC by default in my opinion, just refuse anything
+> > > that explicitly requested EXEC.
+> >
+> > And I just noticed it's not possible to lower the value despite having
+> > CAP_SYS_ADMIN: what the heck?! I have never seen such a sysctl and it
+> > just forced me to reboot because I willy-nilly tested in the init pid
+> > namespace, and quite a few applications that don't require exec broke
+> > exactly as I described below.
+> >
+> > If the user has CAP_SYS_ADMIN there are more container escape methods
+> > than I can count, this is basically free pass to root on main namespace
+> > anyway, you're not protecting anything. Please let people set the sysctl
+> > to what they want.
+>
+> Yama has a similar setting,  for example, 3 (YAMA_SCOPE_NO_ATTACH)
+> will not allow downgrading at runtime.
 > 
-> I like the idea of moving minidump pieces to drivers/soc/qcom/*minidump*.
-> 
-> Is it possible to accept one function callback from remoteproc and do
-> all of this in one function exported by minidump?
-> 
-> qcom_ss_valid_segment_info() seems a low level function to be exported..
+> Since this is a security feature, not allowing downgrading at run time
+> is part of the security consideration. I hope you understand.
 
-It was ending up with circular dependency due to
-rproc_coredump_add_custom_segment()
+I didn't remember yama had this stuck bit; that still strikes me as
+unusual, and if you require a custom LSM rule for memfd anyway I don't
+see why it couldn't enforce that the sysctl is unchanged, but sure.
+
+Please, though:
+ - I have a hard time thinking of 1 as a security flag in general (even
+if I do agree a sloppy LSM rule could require it); I would only lock 2
+ - please make it clear, I don't see any entry in the sysctl
+documentation[1] about memfd_noexec, there should be one and you can
+copy the wording from yama's doc[2]: "Once set, this sysctl value cannot
+be changed"
+[1] Documentation/admin-guide/sysctl/vm.rst
+[2] Documentation/admin-guide/LSM/Yama.rst
 
 
-rproc_coredump => qcom_common => qcom_minidump_smem => rproc_coredump
+Either way as it stands I still don't think one can expect most
+userspace applications to be converted until some libc wrapper takes
+care of the retry logic and a couple of years, so I'll go look for
+another way of filtering this (and eventually setting this to 1) as you
+suggested.
+I'll leave the follow-up up to you and won't bother you more.
 
--Mukesh
-
-> 
-> Thanks,
-> Pavan
-> 
+Thanks,
+-- 
+Dominique Martinet | Asmadeus
