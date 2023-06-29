@@ -2,209 +2,286 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED3CC001B1
-	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 08:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24A9C001DE
+	for <linux-hardening@archiver.kernel.org>; Thu, 29 Jun 2023 09:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232013AbjF2ISw convert rfc822-to-8bit (ORCPT
+        id S232438AbjF2JRg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 29 Jun 2023 04:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45162 "EHLO
+        Thu, 29 Jun 2023 05:17:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232528AbjF2ISF (ORCPT
+        with ESMTP id S232464AbjF2JRS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 29 Jun 2023 04:18:05 -0400
-Received: from frasgout13.his.huawei.com (unknown [14.137.139.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50CE35AF;
-        Thu, 29 Jun 2023 01:12:24 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.228])
-        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Qs9rX0XNWz9xGn5;
-        Thu, 29 Jun 2023 16:01:32 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwB34+6xPJ1kmC3dAw--.43057S2;
-        Thu, 29 Jun 2023 09:11:46 +0100 (CET)
-Message-ID: <14599d8216f1b7520ff5f6cfb27377fa79709f13.camel@huaweicloud.com>
-Subject: Re: [QUESTION] Full user space process isolation?
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        LuisChamberlain <mcgrof@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Petr Tesarik <petrtesarik@huaweicloud.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Date:   Thu, 29 Jun 2023 10:11:26 +0200
-In-Reply-To: <20230629021000.GA368825@mail.hallyn.com>
-References: <eb31920bd00e2c921b0aa6ebed8745cb0130b0e1.camel@huaweicloud.com>
-         <20230629021000.GA368825@mail.hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Thu, 29 Jun 2023 05:17:18 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D28B12134;
+        Thu, 29 Jun 2023 02:17:05 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35T8mXOb031688;
+        Thu, 29 Jun 2023 09:16:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=ejgo9Ha3IFB/uURLTL7ikLrQKDml9uYD+lWUNGD1J8Y=;
+ b=Q5HZqz2n2kb+NTEAkAMXSIizloKVYik7ju104y8OZn96yjHMUHE2r8UejPxDjrhEh+ps
+ cWd+wSjFgdc14K+PKEi3qq1azBZ4u8pIdlYimOLDmiz94hYg8zELLvYJKoMvoj5qSUlm
+ xiUF5h+AVna9EN8O6xmE+kS2MqM4CdpARbaD3NQkgbC4GLfavjf/FtljharaTs7g7lti
+ W5er+AR707Ti/P+vUgWcLn+r0mbJLrLF6PCLPJLahm3sSTqxYU6TXLloEYqyRTq0dHdq
+ vQaCRNeFWUgrW34kv5/90nBcHlAXjnLhsXVO/11Eb0P2sw0E9ZHOoCkdGvjaL0iDILnZ Pg== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgnxr9w8g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jun 2023 09:16:37 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35T9GZf5010847
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 29 Jun 2023 09:16:35 GMT
+Received: from [10.216.42.4] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 29 Jun
+ 2023 02:16:28 -0700
+Message-ID: <e0fef1b0-3fa1-08c1-3c0e-aca30c9da266@quicinc.com>
+Date:   Thu, 29 Jun 2023 14:46:18 +0530
 MIME-Version: 1.0
-X-CM-TRANSID: LxC2BwB34+6xPJ1kmC3dAw--.43057S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF1xCry7WF1rZw15Cr1Dtrb_yoW7Gr15pF
-        WqkFW5GFn8trs7CFZFqw4UGayFyrZ3JFW7Xrn3GryfZ34Y9FyIkrySkF13WFnIgrsY934j
-        vrs8JrW2kan8ZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
-        c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
-        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbJ73D
-        UUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQADBF1jj4+H0QACss
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 10/21] soc: qcom: Add qcom's pstore minidump driver
+ support
+Content-Language: en-US
+To:     Rob Herring <robh+dt@kernel.org>
+CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linus.walleij@linaro.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-11-git-send-email-quic_mojha@quicinc.com>
+ <CAL_Jsq+O70mnreuS1m54RKM+uZu_z1L87RT8sKBYEw5uvowGJg@mail.gmail.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <CAL_Jsq+O70mnreuS1m54RKM+uZu_z1L87RT8sKBYEw5uvowGJg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Ao0JE0wQQz6nMX3r1Yj7CGXQWb2hQpyl
+X-Proofpoint-GUID: Ao0JE0wQQz6nMX3r1Yj7CGXQWb2hQpyl
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-29_01,2023-06-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 mlxscore=0 spamscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306290082
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 2023-06-28 at 21:10 -0500, Serge E. Hallyn wrote:
-> On Thu, Jun 22, 2023 at 04:42:37PM +0200, Roberto Sassu wrote:
-> > Hi everyone
-> > 
-> > I briefly discussed this topic at LSS NA 2023, but I wanted to have an
-> > opinion from a broader audience.
-> > 
-> > 
-> > In short:
-> > 
-> > I wanted to execute some kernel workloads in a fully isolated user
-> > space process, started from a binary statically linked with klibc,
-> > connected to the kernel only through a pipe.
-> > 
-> > I also wanted that, for the root user, tampering with that process is
-> > as hard as if the same code runs in kernel space.
-> > 
-> > I would use the fully isolated process to parse and convert unsupported
-> > data formats to a supported one, after the kernel verified the
+
+
+On 6/29/2023 4:27 AM, Rob Herring wrote:
+> On Wed, Jun 28, 2023 at 6:37 AM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+>>
+>> This driver was inspired from the fact pstore ram region should be
+>> fixed and boot firmware need to have awarness about this region,
+>> so that it will be persistent across boot. But, there are many
+>> QCOM SoC which does not support warm boot from hardware but they
+>> have minidump support from the software, and for them, there is
+>> no need of this pstore ram region to be fixed, but at the same
+>> time have interest in the pstore frontends data. So, this driver
+>> get the dynamic reserved region from the ram and register the
+>> ramoops platform device.
+>>
+>>   +---------+     +---------+   +--------+     +---------+
+>>   | console |     | pmsg    |   | ftrace |     | dmesg   |
+>>   +---------+     +---------+   +--------+     +---------+
+>>         |             |             |              |
+>>         |             |             |              |
+>>         +------------------------------------------+
+>>                            |
+>>                           \ /
+>>                    +----------------+
+>>              (1)   |pstore frontends|
+>>                    +----------------+
+>>                            |
+>>                           \ /
+>>                   +------------------- +
+>>              (2)  | pstore backend(ram)|
+>>                   +--------------------+
+>>                            |
+>>                           \ /
+>>                   +--------------------+
+>>              (3)  |qcom_pstore_minidump|
+>>                   +--------------------+
+>>                            |
+>>                           \ /
+>>                     +---------------+
+>>              (4)    | qcom_minidump |
+>>                     +---------------+
+>>
+>> This driver will route all the pstore front data to the stored
+>> in qcom pstore reserved region and the reason of showing an
+>> arrow from (3) to (4) as qcom_pstore_minidump driver will register
+>> all the available frontends region with qcom minidump driver
+>> in upcoming patch.
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   drivers/soc/qcom/Kconfig                | 12 +++++
+>>   drivers/soc/qcom/Makefile               |  1 +
+>>   drivers/soc/qcom/qcom_pstore_minidump.c | 85 +++++++++++++++++++++++++++++++++
 > 
-> Can you give some examples here of supported and unsupported data
-> formats?  ext2 is supported, but we sadly don't trust the sb parser
-> to read a an ext2fs coming from unknown source.  So I'm not quite
-> clear what problem you're trying to solve.
+> drivers/soc/ is the dumping ground for things with no other place. As
+> this is a pstore driver, it belongs with pstore.
 
-+ eBPF guys (as I'm talking about eBPF)
+The inspiration of this driver was taken from 
+drivers/platform/chrome/chromeos_pstore.c, do you think that is misplaced ?
 
-File digests are distributed in a multitude of formats: RPM packages
-provide them in RPMTAG_FILEDIGESTS, DEB packages in md5sum (now
-sha256sum), containers I guess they have a manifest.
+> 
+>>   3 files changed, 98 insertions(+)
+>>   create mode 100644 drivers/soc/qcom/qcom_pstore_minidump.c
+>>
+>> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+>> index 1834213fd652..fbf08e30feda 100644
+>> --- a/drivers/soc/qcom/Kconfig
+>> +++ b/drivers/soc/qcom/Kconfig
+>> @@ -306,4 +306,16 @@ config QCOM_MINIDUMP_SMEM
+>>
+>>            This config should be enabled if the low level minidump is implemented
+>>            as part of SMEM.
+>> +
+>> +config QCOM_PSTORE_MINIDUMP
+>> +       tristate "Pstore support for QCOM Minidump"
+>> +       depends on ARCH_QCOM
+>> +       depends on PSTORE_RAM
+>> +       depends on QCOM_MINIDUMP
+>> +       help
+>> +         Enablement of this driver ensures that ramoops region can be anywhere
+>> +         reserved in ram instead of being fixed address which needs boot firmware
+>> +         awareness. So, this driver creates plaform device and registers available
+>> +         frontend region with the Qualcomm's minidump driver.
+>> +
+>>   endmenu
+>> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+>> index 737d868757ac..1ab59c1b364d 100644
+>> --- a/drivers/soc/qcom/Makefile
+>> +++ b/drivers/soc/qcom/Makefile
+>> @@ -36,3 +36,4 @@ qcom_ice-objs                 += ice.o
+>>   obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)        += qcom_ice.o
+>>   obj-$(CONFIG_QCOM_MINIDUMP) += qcom_minidump.o
+>>   obj-$(CONFIG_QCOM_MINIDUMP_SMEM) += qcom_minidump_smem.o
+>> +obj-$(CONFIG_QCOM_PSTORE_MINIDUMP) += qcom_pstore_minidump.o
+>> diff --git a/drivers/soc/qcom/qcom_pstore_minidump.c b/drivers/soc/qcom/qcom_pstore_minidump.c
+>> new file mode 100644
+>> index 000000000000..b07cd10340df
+>> --- /dev/null
+>> +++ b/drivers/soc/qcom/qcom_pstore_minidump.c
+>> @@ -0,0 +1,85 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +
+>> +/*
+>> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+> 
+> You probably don't need this include. Use the actual includes you need
+> and don't rely on implicit includes (because I'm trying to remove
+> those).
 
-File digests would be used as reference values for IMA Appraisal and
-IMA Measurement (to have a predictable PCR).
+Ok, will try to check..
 
-If we manage to write a tiny parser for RPM headers (I'm talking about
-something like 200 lines) to extract the file digests, basically we
-have all the information we need to do IMA Appraisal on current, past
-and future RPM-based Linux distributions.
+- Mukesh
 
-If we do the same for DEB (ok, well, when they switch from MD5 to
-SHA256), we can support all DEB-based Linux distributions too.
-
-On the opposite side, yes, we can change the RPM format, ask the
-distributions to sign per-file. If it was that easy, we would not be
-(still) waiting for the first distribution (Fedora 38) to support file
-signatures since 2016, when the feature was proposed (sorry if it looks
-like diminishing what Mimi and IBM proposed, I'm trying to convey the
-idea of how difficult is to realize that architecture).
-
-What about other formats? How long it could take for them to be adapted
-to store file signatures?
-
-Immediate support for IMA Appraisal is as far as looping into the RPM
-header sections to obtain the data offset of RPMTAG_FILEDIGESTS and
-converting the digests at that offset from hex to bin (we need also to
-verify the PGP signature of the RPM header, but I would leave it for
-later).
-
-You probably also see how close we are to accomplish the goal. I'm open
-to suggestions: if this idea of an isolated process doing the parsing
-is not suitable, I could implement it in a different way.
-
-So far I proposed:
-
-- In-kernel parser (dangerous, not scalable)
-https://lore.kernel.org/linux-integrity/20210914163401.864635-1-roberto.sassu@huawei.com/
-- eBPF (no program signatures, not compliant with the LSM conventions,
-  unsolved security issues)
-https://github.com/robertosassu/diglim-ebpf/commit/693745cb388bca7354233cadae1fe2d23d47ff9d
-- Isolated user space process (not enough isolation guarantees)
-https://lore.kernel.org/linux-kernel//20230317145240.363908-1-roberto.sassu@huaweicloud.com/
-https://lore.kernel.org/linux-kernel//20230425173557.724688-1-roberto.sassu@huaweicloud.com/
-
-Thanks
-
-Roberto
-
-> > authenticity of the original format (that already exists and cannot
-> > change).
-> > 
-> > Preventing tampering of the process ensures that the conversion goes as
-> > expected. Also, the integrity of the binary needs to be verified.
-> > 
-> > 
-> > List of wished data formats:
-> > 
-> > PGP: verify the authenticity of RPM/DEB/... headers
-> > RPM/DEB/... headers: extract reference file checksums for
-> >                     (kernel-based) file integrity check (e.g. with IMA)
-> > 
-> > 
-> > Alternative #1:
-> > 
-> > Write the parsers to run in kernel space. That was rejected due to
-> > security and scalability concerns. If that changed, please let me know.
-> > 
-> > 
-> > Alternative #2:
-> > 
-> > Linux distributions could provide what the kernel supports. However,
-> > from personal experience, the effort seems orders of magnitude higher
-> > than just writing a tiny component to support the original format. And
-> > there is no guarantee that all Linux distributions will do it.
-> > 
-> > 
-> > Full process isolation could be achieved in this way:
-> > 
-> > process -> outside: set seccomp strict profile at process creation
-> >                     so that the process can only read/write/close the
-> >                     pipe and exit, no other system calls are allowed
-> > 
-> > outside -> process: deny ptrace/kill with the process as target
-> > 
-> > Anything else?
-> > 
-> > 
-> > The only risk I see is that a new feature allowing to interact with
-> > another process is added to the kernel, without the ptrace permission
-> > being asked.
-> > 
-> > With the restrictions above, can we say that the code inside the
-> > process is as safe (against tampering) to execute as if it runs in
-> > kernel space?
-> > 
-> > Thanks
-> > 
-> > Roberto
-
+> 
+>> +#include <linux/of_reserved_mem.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pstore_ram.h>
+>> +
+>> +struct qcom_ramoops_dd {
+>> +       struct ramoops_platform_data qcom_ramoops_pdata;
+>> +       struct platform_device *ramoops_pdev;
+>> +};
+>> +
+>> +static int qcom_ramoops_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device_node *of_node = pdev->dev.of_node;
+>> +       struct qcom_ramoops_dd *qcom_rdd;
+>> +       struct ramoops_platform_data *pdata;
+>> +       struct reserved_mem *rmem;
+>> +       struct device_node *node;
+>> +       long ret;
+>> +
+>> +       node = of_parse_phandle(of_node, "memory-region", 0);
+>> +       if (!node)
+>> +               return -ENODEV;
+>> +
+>> +       rmem = of_reserved_mem_lookup(node);
+>> +       of_node_put(node);
+>> +       if (!rmem) {
+>> +               dev_err(&pdev->dev, "failed to locate DT /reserved-memory resource\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       qcom_rdd = devm_kzalloc(&pdev->dev, sizeof(*qcom_rdd), GFP_KERNEL);
+>> +       if (!qcom_rdd)
+>> +               return -ENOMEM;
+>> +
+>> +       pdata = &qcom_rdd->qcom_ramoops_pdata;
+>> +       pdata->mem_size = rmem->size;
+>> +       pdata->mem_address = rmem->base;
+>> +       ramoops_parse_dt(pdev, pdata);
+>> +
+>> +       qcom_rdd->ramoops_pdev = platform_device_register_data(NULL, "ramoops", -1,
+>> +                                                              pdata, sizeof(*pdata));
+>> +       if (IS_ERR(qcom_rdd->ramoops_pdev)) {
+>> +               ret = PTR_ERR(qcom_rdd->ramoops_pdev);
+>> +               dev_err(&pdev->dev, "could not create platform device: %ld\n", ret);
+>> +               qcom_rdd->ramoops_pdev = NULL;
+>> +       }
+>> +       platform_set_drvdata(pdev, qcom_rdd);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static void qcom_ramoops_remove(struct platform_device *pdev)
+>> +{
+>> +       struct qcom_ramoops_dd *qcom_rdd = platform_get_drvdata(pdev);
+>> +
+>> +       platform_device_unregister(qcom_rdd->ramoops_pdev);
+>> +       qcom_rdd->ramoops_pdev = NULL;
+>> +}
+>> +
+>> +static const struct of_device_id qcom_ramoops_of_match[] = {
+>> +       { .compatible = "qcom,ramoops"},
+>> +       {}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, qcom_ramoops_of_match);
+>> +
+>> +static struct platform_driver qcom_ramoops_drv = {
+>> +       .driver         = {
+>> +               .name   = "qcom,ramoops",
+>> +               .of_match_table = qcom_ramoops_of_match,
+>> +       },
+>> +       .probe = qcom_ramoops_probe,
+>> +       .remove_new = qcom_ramoops_remove,
+>> +};
+>> +
+>> +module_platform_driver(qcom_ramoops_drv);
+>> +
+>> +MODULE_DESCRIPTION("Qualcomm ramoops minidump driver");
+>> +MODULE_LICENSE("GPL");
+>> --
+>> 2.7.4
+>>
