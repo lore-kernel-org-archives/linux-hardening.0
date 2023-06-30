@@ -2,87 +2,154 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D1DEB64DA
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 13:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194CBEB64DA
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 14:58:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232660AbjF3NfR (ORCPT
+        id S232842AbjF3O6g (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Jun 2023 09:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52550 "EHLO
+        Fri, 30 Jun 2023 10:58:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232692AbjF3Nel (ORCPT
+        with ESMTP id S232823AbjF3O6a (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Jun 2023 09:34:41 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F493C22;
-        Fri, 30 Jun 2023 06:34:40 -0700 (PDT)
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D39BA1EC058B;
-        Fri, 30 Jun 2023 15:34:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1688132078;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=bzFFqTy0EcRSwkDePvlSP7HckW8PeiGxRa692w6XqtM=;
-        b=jkVEpK0PVhCToPQYsj2UCmB1cCYKDOPEnue0DoxEN9NSYRcoDK9SdCGDQNjhiCd0XoA5AH
-        3mxTEL2/iDl7+1ZRaw7RztJ0pvjvUtsqifnOXOHXC4fyFjhEkUQc79NvYsRlpRUtaOPgPq
-        7GaNTGb7zwW8OBZRSvf1UBW5rbwhQeI=
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-        header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-        by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id UxmK4IjONyF2; Fri, 30 Jun 2023 13:34:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-        t=1688132075; bh=bzFFqTy0EcRSwkDePvlSP7HckW8PeiGxRa692w6XqtM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k8ny5QVTJemCt7ciIx05B6xOXm2LjFWZqLy6jS45shQp3PUgMRxGL9OLuYipR8zrL
-         NcS6ibvR4hUPPzkBYelT7RlJPpNjYE5a+oJO+LJCquerBT0xzm1BtuG6oNPplPzS7z
-         a7MXUbOKVHUk/7eIOWuEbsTIFXc/afNwADrUN9mfDU1/oavfAg6KygoGbHmI/tlNsb
-         Tv1QGo4WmcGFiniBrvzBKIa/xHzLgTlkrpSZ24YPLmy3aCZishtqW2HZUsOWUw7fH0
-         9KLK4vJiX1ZJOLex4xE/GCyMM+Q6puklwNYMU90zgZ0Ul/FMZOpmB0BUPtQHfT5IYe
-         WaqYLg4rAXzkbV4KQDCWqQvG1mKw5ZGfdIO8IukMOAyWEmZnExSqFrIgRzEdwS19V8
-         IApsHpaeQZrePHsTDSKEEpP/p/U8Sw8YDzMZU9c/Km8IzjHY2NYrOXDW7FYqJij0U6
-         I0HMmBlAuSOxtlRpZo95Tgni/553UHgvPBT7Lwoq+rd1ueFF1bnNHh6xc/HhepoXzG
-         2IS8GmbCrpTnKxwqPqvVEGAQ5C3dKNYddi5VEOLrotrCrhrRfWB4rLfldP99nO4Few
-         OyUBdqTbtLCRcD4ovhglvn4l+ocFgb0+U1SgxpeSyLTmNpiRToC+YZNsdac07bwiah
-         bNd9mvWB+C8QR8Cnn6sY5Bek=
-Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 33FFF40E019B;
-        Fri, 30 Jun 2023 13:34:29 +0000 (UTC)
-Date:   Fri, 30 Jun 2023 15:34:23 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        =?utf-8?B?SsOzIMOBZ2lsYQ==?= Bitsch <jgilab@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] usb: ch9: Replace bmSublinkSpeedAttr 1-element array
- with flexible array
-Message-ID: <20230630133423.GAZJ7Z35+udZ1F/1MH@fat_crate.local>
-References: <20230629190900.never.787-kees@kernel.org>
- <2023062950-landowner-goofiness-d5d2@gregkh>
+        Fri, 30 Jun 2023 10:58:30 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD4B81FFA;
+        Fri, 30 Jun 2023 07:58:28 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35UDxH1M024499;
+        Fri, 30 Jun 2023 14:58:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=FWsoqs5iDUcCdUn2UKhCC9bwPd9A9e7CbTu4kW+ZpB8=;
+ b=fnmyUWxzzm79znoy8gnBpmXrs3gJhJSXo1UOKD1tZETinx1Ma/+OQH5xFCsuZeMKa3U2
+ lsbATJRcBgbH5IKztfChCgwFtt4FzEehkpFhUBEbM3su+EvQfSW+bwquruzksSQwGth9
+ 5VD+2JC7Fco1kHux2tLE45WUTMAes2EwQ5o9bhvwFNkDwcTngE1vbkPw+0zhV1vNdL0G
+ LEi7nXHToSomg04GA+Z2fTN4VDxtNlHfuCdIO11a7T1IY99SCpm8oydCdOciy2rKIO0V
+ bP+NjZQebj1KwBaAX4S8iYDONyrL3MS3oEwQE2uWj5Px9wIljdjiDFi+r6bdUhf5PxJE AA== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rgy1tm5kt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Jun 2023 14:58:06 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35UEw5n2006969
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Jun 2023 14:58:05 GMT
+Received: from [10.216.37.216] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Fri, 30 Jun
+ 2023 07:57:57 -0700
+Message-ID: <b13c8010-c7bb-db21-44c5-06e95b341b7c@quicinc.com>
+Date:   Fri, 30 Jun 2023 20:27:53 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2023062950-landowner-goofiness-d5d2@gregkh>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 19/21] firmware: scm: Modify only the download bits in
+ TCSR register
+Content-Language: en-US
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-20-git-send-email-quic_mojha@quicinc.com>
+ <d5c5671f-b6a8-9e97-f917-784dffed7f90@linaro.org>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <d5c5671f-b6a8-9e97-f917-784dffed7f90@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: LpiivA6ciBvOOGo7KcK_y1r3YaR7Kbj7
+X-Proofpoint-GUID: LpiivA6ciBvOOGo7KcK_y1r3YaR7Kbj7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-30_05,2023-06-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ impostorscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306300126
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jun 29, 2023 at 09:17:23PM +0200, Greg Kroah-Hartman wrote:
-> Boris, can you test if this fixes the issue you see or not?
 
-Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
 
--- 
-Regards/Gruss,
-    Boris.
+On 6/28/2023 8:50 PM, Konrad Dybcio wrote:
+> On 28.06.2023 14:34, Mukesh Ojha wrote:
+>> CrashDump collection is based on the DLOAD bit of TCSR register.
+>> To retain other bits, we read the register and modify only the
+>> DLOAD bit as the other bits have their own significance.
+>>
+>> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   drivers/firmware/qcom_scm.c | 12 ++++++++++--
+>>   1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+>> index 104d86e49b97..a9ff77d16c42 100644
+>> --- a/drivers/firmware/qcom_scm.c
+>> +++ b/drivers/firmware/qcom_scm.c
+>> @@ -30,6 +30,11 @@ module_param(download_mode, bool, 0);
+>>   #define SCM_HAS_IFACE_CLK	BIT(1)
+>>   #define SCM_HAS_BUS_CLK		BIT(2)
+>>   
+>> +#define QCOM_DOWNLOAD_FULLDUMP		 0x1
+>> +#define QCOM_DOWNLOAD_NODUMP		 0x0
+>> +#define QCOM_DOWNLOAD_MODE_SHIFT	   4
+>> +#define QCOM_DOWNLOAD_MODE_MASK		0x30
+> GENMASK and then FIELD_PREP below?
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Just checked about FIELD_PREP, it works, thanks.
+
+FIELD_PREP(GENMASK(5, 4), QCOM_DOWNLOAD_FULLDUMP)
+FIELD_PREP(GENMASK(5, 4), QCOM_DOWNLOAD_NODUMP)
+
+-Mukesh
+
+> 
+>> +
+>>   struct qcom_scm {
+>>   	struct device *dev;
+>>   	struct clk *core_clk;
+>> @@ -440,6 +445,7 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+>>   static void qcom_scm_set_download_mode(bool enable)
+>>   {
+>>   	bool avail;
+>> +	int val;
+> What's wrong with initializing it in the same line as ret?
+> 
+>>   	int ret = 0;
+>>   
+>>   	avail = __qcom_scm_is_call_available(__scm->dev,
+>> @@ -448,8 +454,10 @@ static void qcom_scm_set_download_mode(bool enable)
+>>   	if (avail) {
+>>   		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+>>   	} else if (__scm->dload_mode_addr) {
+>> -		ret = qcom_scm_io_writel(__scm->dload_mode_addr,
+>> -				enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
+>> +		val = (enable ? QCOM_DOWNLOAD_FULLDUMP : QCOM_DOWNLOAD_NODUMP);
+> unnecessary braces
+> 
+> Konrad
+>> +		val <<= QCOM_DOWNLOAD_MODE_SHIFT;
+>> +		ret = qcom_scm_io_update_field(__scm->dload_mode_addr,
+>> +				QCOM_DOWNLOAD_MODE_MASK, val);
+>>   	} else {
+>>   		dev_err(__scm->dev,
+>>   			"No available mechanism for setting download mode\n");
