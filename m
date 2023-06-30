@@ -2,111 +2,87 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC0AEB64DA
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 09:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D1DEB64DA
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 13:35:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232845AbjF3J2r (ORCPT
+        id S232660AbjF3NfR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Jun 2023 05:28:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36090 "EHLO
+        Fri, 30 Jun 2023 09:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232810AbjF3J2p (ORCPT
+        with ESMTP id S232692AbjF3Nel (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Jun 2023 05:28:45 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11FE23585;
-        Fri, 30 Jun 2023 02:28:43 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-51d9695ec29so1685569a12.1;
-        Fri, 30 Jun 2023 02:28:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688117321; x=1690709321;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fZCBSgni0sr8gGqL9uMypHbMvj7usQCYMwxdwYXW+jA=;
-        b=QRJY4EEw4g4/61MzEr/J5K3QI0OJoUCA5DROKENJS/ku/aNTGEPqXdfTm0SMgoekR5
-         XC6xdT9A46C8ytjZyw27lTco5+zkYCQ6Sx+E8Qw/rwCZjwhBSvzNkjjR9FT/uEL1LO/Q
-         UHfiqD9hqOYgoaZ+6OSLomuOJFJvmiwpEtClVR3s0nzaw1Qo4h4XcXcrwDJNNxlvPj/n
-         NTMLJtUpoq0XFRK5ck4PqsWC7eKdKCCyRaw4w3F5vDQA/uwNgauOdYVhrKLqe7KztF1Z
-         RTzyVc2NZ0vIR2KPiHL670A6QcN0Q8aNgNpbU0Y9y65QJlNq4g4IzpSyo3vDR9Vh+1jV
-         dbjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688117321; x=1690709321;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fZCBSgni0sr8gGqL9uMypHbMvj7usQCYMwxdwYXW+jA=;
-        b=QIZ0mz+Ddq5qMUCTmjVo2yMi9z6Akwtx5pALBoSJeh5C4PS+cGOZsPF8bwQ6jHYRaY
-         BUh6rB1RmhK+rWVIqbbb1RNUgoIYlenbBh5fyVi0iYbgQ3kgwQaAx/rARqD4ZQTeYdfi
-         kPr8svqV2y475sL0jeZO/1fIP/PTb8wEkjYA4SF3uQMIrMqAaVX+b48TcWOxCOeaJ2A6
-         3ZY5xCLv6zxm7ZvPSmQ/XtxeDAfiaDjfYbkrsqWseuf96443W8M/eoCfxtWbUSuLzm4N
-         Yb0gINuoI5Kr1HNAfs5gHbwra9ilimkJux0sK6KkoA8t1XtYPnVQHAkdgtbzYQYoVSgq
-         TMPg==
-X-Gm-Message-State: ABy/qLZmTXSAJfTlFnVnIudlsmBX4Vqjz9N7ohjZjnhYZ4Cow6NBOU/+
-        ITaiQpRNbr7MwaVKHl6Vr/eyX9oY4+B2LiANg/8=
-X-Google-Smtp-Source: APBJJlFMq2w/PbJ55327XebcvTTEwXkX993DxpgiQLo04cpZ/EAYzg2QeasZ9plssJgPvzLr9TsHaiWzwcGwfTIgqXA=
-X-Received: by 2002:aa7:c256:0:b0:51d:9ddf:f0f3 with SMTP id
- y22-20020aa7c256000000b0051d9ddff0f3mr1120614edo.31.1688117321377; Fri, 30
- Jun 2023 02:28:41 -0700 (PDT)
+        Fri, 30 Jun 2023 09:34:41 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F493C22;
+        Fri, 30 Jun 2023 06:34:40 -0700 (PDT)
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D39BA1EC058B;
+        Fri, 30 Jun 2023 15:34:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1688132078;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=bzFFqTy0EcRSwkDePvlSP7HckW8PeiGxRa692w6XqtM=;
+        b=jkVEpK0PVhCToPQYsj2UCmB1cCYKDOPEnue0DoxEN9NSYRcoDK9SdCGDQNjhiCd0XoA5AH
+        3mxTEL2/iDl7+1ZRaw7RztJ0pvjvUtsqifnOXOHXC4fyFjhEkUQc79NvYsRlpRUtaOPgPq
+        7GaNTGb7zwW8OBZRSvf1UBW5rbwhQeI=
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+        header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+        by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id UxmK4IjONyF2; Fri, 30 Jun 2023 13:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+        t=1688132075; bh=bzFFqTy0EcRSwkDePvlSP7HckW8PeiGxRa692w6XqtM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k8ny5QVTJemCt7ciIx05B6xOXm2LjFWZqLy6jS45shQp3PUgMRxGL9OLuYipR8zrL
+         NcS6ibvR4hUPPzkBYelT7RlJPpNjYE5a+oJO+LJCquerBT0xzm1BtuG6oNPplPzS7z
+         a7MXUbOKVHUk/7eIOWuEbsTIFXc/afNwADrUN9mfDU1/oavfAg6KygoGbHmI/tlNsb
+         Tv1QGo4WmcGFiniBrvzBKIa/xHzLgTlkrpSZ24YPLmy3aCZishtqW2HZUsOWUw7fH0
+         9KLK4vJiX1ZJOLex4xE/GCyMM+Q6puklwNYMU90zgZ0Ul/FMZOpmB0BUPtQHfT5IYe
+         WaqYLg4rAXzkbV4KQDCWqQvG1mKw5ZGfdIO8IukMOAyWEmZnExSqFrIgRzEdwS19V8
+         IApsHpaeQZrePHsTDSKEEpP/p/U8Sw8YDzMZU9c/Km8IzjHY2NYrOXDW7FYqJij0U6
+         I0HMmBlAuSOxtlRpZo95Tgni/553UHgvPBT7Lwoq+rd1ueFF1bnNHh6xc/HhepoXzG
+         2IS8GmbCrpTnKxwqPqvVEGAQ5C3dKNYddi5VEOLrotrCrhrRfWB4rLfldP99nO4Few
+         OyUBdqTbtLCRcD4ovhglvn4l+ocFgb0+U1SgxpeSyLTmNpiRToC+YZNsdac07bwiah
+         bNd9mvWB+C8QR8Cnn6sY5Bek=
+Received: from zn.tnic (pd9530d32.dip0.t-ipconnect.de [217.83.13.50])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+        (No client certificate requested)
+        by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 33FFF40E019B;
+        Fri, 30 Jun 2023 13:34:29 +0000 (UTC)
+Date:   Fri, 30 Jun 2023 15:34:23 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        =?utf-8?B?SsOzIMOBZ2lsYQ==?= Bitsch <jgilab@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] usb: ch9: Replace bmSublinkSpeedAttr 1-element array
+ with flexible array
+Message-ID: <20230630133423.GAZJ7Z35+udZ1F/1MH@fat_crate.local>
+References: <20230629190900.never.787-kees@kernel.org>
+ <2023062950-landowner-goofiness-d5d2@gregkh>
 MIME-Version: 1.0
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-21-git-send-email-quic_mojha@quicinc.com> <0ac3e4cd-485e-43a4-ae76-4c462a8145ed@quicinc.com>
-In-Reply-To: <0ac3e4cd-485e-43a4-ae76-4c462a8145ed@quicinc.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 30 Jun 2023 12:28:05 +0300
-Message-ID: <CAHp75Vdpg8R0FtECk_bqdVMQW7Nz_EY0pacaL8PA+0Xcfkyt3Q@mail.gmail.com>
-Subject: Re: [PATCH v4 20/21] firmware: qcom_scm: Refactor code to support
- multiple download mode
-To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
-Cc:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2023062950-landowner-goofiness-d5d2@gregkh>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jun 30, 2023 at 8:25=E2=80=AFAM Pavan Kondeti <quic_pkondeti@quicin=
-c.com> wrote:
-> On Wed, Jun 28, 2023 at 06:04:47PM +0530, Mukesh Ojha wrote:
+On Thu, Jun 29, 2023 at 09:17:23PM +0200, Greg Kroah-Hartman wrote:
+> Boris, can you test if this fixes the issue you see or not?
 
-...
+Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
 
-> > +static int set_download_mode(const char *val, const struct kernel_para=
-m *kp)
-> > +{
-> > +     u32 old =3D download_mode;
-> > +     int ret;
-> > +
-> > +     ret =3D sysfs_match_string(download_mode_name, val);
-> > +     if (ret < 0) {
+-- 
+Regards/Gruss,
+    Boris.
 
-> > +             download_mode =3D old;
-
-Why is this old variable needed at all?
-
-> > +             pr_err("qcom_scm: unknown download mode: %s\n", val);
-> > +             return -EINVAL;
-> > +     }
->
-> minor nit: %s/-EINVAL/ret
->
-> > +     download_mode =3D ret;
-> > +     if (__scm)
-> > +             qcom_scm_set_download_mode(download_mode);
-> > +
-> > +     return 0;
-> > +}
-
-
---=20
-With Best Regards,
-Andy Shevchenko
+https://people.kernel.org/tglx/notes-about-netiquette
