@@ -2,162 +2,210 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 031D4EB64D7
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 15:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46489C3DA40
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 16:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233056AbjF3Pg3 (ORCPT
+        id S232619AbjF3QE7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Jun 2023 11:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50656 "EHLO
+        Fri, 30 Jun 2023 12:04:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233130AbjF3PgM (ORCPT
+        with ESMTP id S230388AbjF3QE6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Jun 2023 11:36:12 -0400
-Received: from mail-pg1-f205.google.com (mail-pg1-f205.google.com [209.85.215.205])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7845744B0
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Jun 2023 08:35:59 -0700 (PDT)
-Received: by mail-pg1-f205.google.com with SMTP id 41be03b00d2f7-528ab7097afso1856968a12.1
-        for <linux-hardening@vger.kernel.org>; Fri, 30 Jun 2023 08:35:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688139359; x=1690731359;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dyyxruTMgopIXxdq7yS3dZbyVMmnSUAsRW7YyXZLY08=;
-        b=kv+gi6KlV9WKXivwTSRUbZf5kUdK4XJBeuk/1wKWfUXgrlvaBxHehVXMw3S7SMznJe
-         EnyI8Arpzr1rgQpzXfYwqxlNxdfTzXIS445B22tZ7CDlRGnxHLtmEzADBdXos4QqaN28
-         OGRwPyrLzUFZ+T5+6Rc/q0DeWqg6hIpBDR+swtNJz0/jXAb6EwSm6+0kUQMwYkcwpYWF
-         47AlZiky6vpOb0RZ//HyBwmvrKJQYYnVgtu36rA0g+3b5axepP+HwVAif4Y0Zu0VL7Eg
-         6ZqL9+T0MQM7pckQVFndJDiOoSG4QxQ8EtYILZP7ORAV8eEP0p+fgsJ0d+nGAFwFGJ6q
-         ukkw==
-X-Gm-Message-State: ABy/qLaGURi78HSHfiyhyzcxYi+BCGT2lmlKuUUQ4VUrKWL0NOEGF8FC
-        6Yy/+QaOOKlFH9ozHx+w0bm/J013STiQtGyp5H9YHW3tqJjK
-X-Google-Smtp-Source: APBJJlF3ebJXLQIKZoe1XjMHV+bDnSpB2G7tCRRVY0FsjVs3HnS8Mcfz1+mB+wK3rEHqq5cM7DZ096OzP8ks0MB2fk8QdFq9R3h+
+        Fri, 30 Jun 2023 12:04:58 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1441F10A;
+        Fri, 30 Jun 2023 09:04:56 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35UB80b3022110;
+        Fri, 30 Jun 2023 16:04:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=tky6m4fUf0fCfzuDZQBGDmIT+aFWsl+CwJAdAJ5dtR8=;
+ b=eohuH3XVi7if6yQGxcXHvspndAdCdUC1K8wFPmmbx5Acv4mHVmtVJzXrQGzx2mcuS/VB
+ 8Nzmdq8gUwN03mlvmqFTV4FesVyo6e2Lxj9KHts14fJnOK7RPOxZW61/pEwcbCRbL5J8
+ pidfbCDJVK8lxDW6ofo6c2JkQf0eGJ6hh/IdgQ0DXCFDJETCI2eUhTCKj71iwCjI8RKY
+ ryQmZcTh4QHTDRVV5/xXIn/ekdohDiUXXn8z7DLhhJ2kLqVlOlHGzXpb88yaXVdpZ5qI
+ 9p3ksx4MiPxl5uuhC6Cc+76QdmxmruHkmc7tuNwgwUiMWbThFpBuQerIKOeKvjWUlMsY cw== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rhsycs6sk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Jun 2023 16:04:22 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35UG4LHO028478
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Jun 2023 16:04:21 GMT
+Received: from [10.216.37.216] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Fri, 30 Jun
+ 2023 09:04:12 -0700
+Message-ID: <cc30660f-dd72-aade-6346-a93c6ad4b695@quicinc.com>
+Date:   Fri, 30 Jun 2023 21:34:08 +0530
 MIME-Version: 1.0
-X-Received: by 2002:a17:903:258b:b0:1b8:550f:9e8 with SMTP id
- jb11-20020a170903258b00b001b8550f09e8mr1723833plb.3.1688139359033; Fri, 30
- Jun 2023 08:35:59 -0700 (PDT)
-Date:   Fri, 30 Jun 2023 08:35:58 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d39fe305ff5a928f@google.com>
-Subject: [syzbot] [selinux?] [reiserfs?] KASAN: wild-memory-access Read in inode_doinit_with_dentry
-From:   syzbot <syzbot+4cdfeccf2cf6f8ab36a4@syzkaller.appspotmail.com>
-To:     bpf@vger.kernel.org, eparis@parisplace.org, gpiccoli@igalia.com,
-        keescook@chromium.org, linux-fsdevel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        paul@paul-moore.com, reiserfs-devel@vger.kernel.org,
-        selinux@vger.kernel.org, stephen.smalley.work@gmail.com,
-        syzkaller-bugs@googlegroups.com, tony.luck@intel.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+Content-Language: en-US
+To:     Rob Herring <robh+dt@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linus.walleij@linaro.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <2023062814-chance-flounder-f002@gregkh>
+ <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: xFGHRqPtPcAUiRgmUBFSReWrwDHZPxak
+X-Proofpoint-GUID: xFGHRqPtPcAUiRgmUBFSReWrwDHZPxak
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-30_05,2023-06-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 phishscore=0 bulkscore=0 adultscore=0 mlxlogscore=999
+ impostorscore=0 priorityscore=1501 spamscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306300137
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    6995e2de6891 Linux 6.4
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17d58757280000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9536c93ce7915e58
-dashboard link: https://syzkaller.appspot.com/bug?extid=4cdfeccf2cf6f8ab36a4
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13b33b57280000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-6995e2de.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/95b0ee5a267d/vmlinux-6995e2de.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0e7c613d4a73/bzImage-6995e2de.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/86bf2b608923/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4cdfeccf2cf6f8ab36a4@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: wild-memory-access in instrument_atomic_read include/linux/instrumented.h:68 [inline]
-BUG: KASAN: wild-memory-access in _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
-BUG: KASAN: wild-memory-access in __lock_acquire+0xf3d/0x5f30 kernel/locking/lockdep.c:5058
-Read of size 8 at addr 1fffffff86b9d550 by task syz-executor.2/5155
-
-CPU: 3 PID: 5155 Comm: syz-executor.2 Not tainted 6.4.0-syzkaller #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.14.0-2 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106
- print_report mm/kasan/report.c:465 [inline]
- kasan_report+0xec/0x130 mm/kasan/report.c:572
- check_region_inline mm/kasan/generic.c:181 [inline]
- kasan_check_range+0x141/0x190 mm/kasan/generic.c:187
- instrument_atomic_read include/linux/instrumented.h:68 [inline]
- _test_bit include/asm-generic/bitops/instrumented-non-atomic.h:141 [inline]
- __lock_acquire+0xf3d/0x5f30 kernel/locking/lockdep.c:5058
- lock_acquire kernel/locking/lockdep.c:5705 [inline]
- lock_acquire+0x1b1/0x520 kernel/locking/lockdep.c:5670
- __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
- _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
- spin_lock include/linux/spinlock.h:350 [inline]
- inode_doinit_with_dentry+0x1026/0x12d0 security/selinux/hooks.c:1510
- selinux_d_instantiate+0x27/0x30 security/selinux/hooks.c:6225
- security_d_instantiate+0x54/0xe0 security/security.c:3760
- d_instantiate fs/dcache.c:2034 [inline]
- d_instantiate+0x5e/0xa0 fs/dcache.c:2030
- __debugfs_create_file+0x20f/0x5e0 fs/debugfs/inode.c:445
- debugfs_hw_add+0x28b/0x370 net/mac80211/debugfs.c:670
- ieee80211_register_hw+0x23e3/0x40e0 net/mac80211/main.c:1395
- mac80211_hwsim_new_radio+0x26c1/0x4c10 drivers/net/wireless/virtual/mac80211_hwsim.c:5294
- hwsim_new_radio_nl+0xacf/0x1210 drivers/net/wireless/virtual/mac80211_hwsim.c:5974
- genl_family_rcv_msg_doit.isra.0+0x1e6/0x2d0 net/netlink/genetlink.c:968
- genl_family_rcv_msg net/netlink/genetlink.c:1048 [inline]
- genl_rcv_msg+0x4ff/0x7e0 net/netlink/genetlink.c:1065
- netlink_rcv_skb+0x165/0x440 net/netlink/af_netlink.c:2546
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1076
- netlink_unicast_kernel net/netlink/af_netlink.c:1339 [inline]
- netlink_unicast+0x547/0x7f0 net/netlink/af_netlink.c:1365
- netlink_sendmsg+0x925/0xe30 net/netlink/af_netlink.c:1913
- sock_sendmsg_nosec net/socket.c:724 [inline]
- sock_sendmsg+0xde/0x190 net/socket.c:747
- __sys_sendto+0x23a/0x340 net/socket.c:2144
- __do_sys_sendto net/socket.c:2156 [inline]
- __se_sys_sendto net/socket.c:2152 [inline]
- __x64_sys_sendto+0xe1/0x1b0 net/socket.c:2152
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
-RIP: 0033:0x7f717603e2ac
-Code: fa fa ff ff 44 8b 4c 24 2c 4c 8b 44 24 20 89 c5 44 8b 54 24 28 48 8b 54 24 18 b8 2c 00 00 00 48 8b 74 24 10 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 34 89 ef 48 89 44 24 08 e8 20 fb ff ff 48 8b
-RSP: 002b:00007ffe75814790 EFLAGS: 00000293 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00007f7176cd4620 RCX: 00007f717603e2ac
-RDX: 0000000000000024 RSI: 00007f7176cd4670 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 00007ffe758147e4 R09: 000000000000000c
-R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000000
-R13: 00007f7176cd4670 R14: 0000000000000003 R15: 0000000000000000
- </TASK>
-==================================================================
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+On 6/29/2023 4:42 AM, Rob Herring wrote:
+> On Wed, Jun 28, 2023 at 9:45 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>>
+>> On Wed, Jun 28, 2023 at 06:04:27PM +0530, Mukesh Ojha wrote:
+>>> Minidump is a best effort mechanism to collect useful and predefined data
+>>> for first level of debugging on end user devices running on Qualcomm SoCs.
+>>> It is built on the premise that System on Chip (SoC) or subsystem part of
+>>> SoC crashes, due to a range of hardware and software bugs. Hence, the
+>>> ability to collect accurate data is only a best-effort. The data collected
+>>> could be invalid or corrupted, data collection itself could fail, and so on.
+>>>
+>>> Qualcomm devices in engineering mode provides a mechanism for generating
+>>> full system ramdumps for post mortem debugging. But in some cases it's
+>>> however not feasible to capture the entire content of RAM. The minidump
+>>> mechanism provides the means for selecting which snippets should be
+>>> included in the ramdump.
+>>>
+>>> Minidump kernel driver implementation is divided into two parts for
+>>> simplicity, one is minidump core which can also be called minidump
+>>> frontend(As API gets exported from this driver for registration with
+>>> backend) and the other part is minidump backend i.e, where the underlying
+>>> implementation of minidump will be there. There could be different way
+>>> how the backend is implemented like Shared memory, Memory mapped IO
+>>> or Resource manager(gunyah) based where the guest region information is
+>>> passed to hypervisor via hypercalls.
+>>>
+>>>      Minidump Client-1     Client-2      Client-5    Client-n
+>>>               |               |              |             |
+>>>               |               |    ...       |   ...       |
+>>>               |               |              |             |
+>>>               |               |              |             |
+>>>               |               |              |             |
+>>>               |               |              |             |
+>>>               |               |              |             |
+>>>               |               |              |             |
+>>>               |           +---+--------------+----+        |
+>>>               +-----------+  qcom_minidump(core)  +--------+
+>>>                           |                       |
+>>>                           +------+-----+------+---+
+>>>                                  |     |      |
+>>>                                  |     |      |
+>>>                  +---------------+     |      +--------------------+
+>>>                  |                     |                           |
+>>>                  |                     |                           |
+>>>                  |                     |                           |
+>>>                  v                     v                           v
+>>>       +-------------------+      +-------------------+     +------------------+
+>>>       |qcom_minidump_smem |      |qcom_minidump_mmio |     | qcom_minidump_rm |
+>>>       |                   |      |                   |     |                  |
+>>>       +-------------------+      +-------------------+     +------------------+
+>>>         Shared memory              Memory mapped IO           Resource manager
+>>>          (backend)                   (backend)                   (backend)
+>>>
+>>>
+>>> Here, we will be giving all analogy of backend with SMEM as it is the
+>>> only implemented backend at present but general idea remains the same.
+>>
+>> If you only have one "backend" then you don't need the extra compexity
+>> here at all, just remove that whole middle layer please and make this
+>> much simpler and smaller and easier to review and possibly accept.
+> 
+> pstore already supports backends. Why aren't the above backends just
+> pstore backends rather than having an intermediate pstore backend in
+> RAM which then somehow gets moved into these minidump backends.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+It can't be another pstore backend since, pstore backend(ram) is for
+the system where there is a guarantees of fixed ram range content 
+persist across boot, but that is not true with minidump, there is no
+pstorefs kind of support with minidump.
 
-If the bug is already fixed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Instead, the whole idea of backend/front-end of minidump here, is
+entirely related to minidump and here minidump backend could be
+anything like could be Shared memory in DDR which is shared across
+multiple subsystem (CPUSS) is one of them or it could be something
+where you want to collect minidump for a guest vm which guest
+does not have access to backend instead it may be the hypervisor
+do the register the region for the guest.
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Pstore(ram) is one of the clients of minidump where, we want to collect
+the console/pmsg/ftrace/dmesg logs for production devices where
+DDR dump is difficult and the reason of doing this to not re-invent
+the wheel and it just need physical address/size .
 
-If you want to change bug's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+  +---------+     +---------+   +--------+     +---------+
+  | console |     | pmsg    |   | ftrace |     | dmesg   |
+  +---------+     +---------+   +--------+     +---------+
+        |             |             |              |
+        |             |             |              |
+        +------------------------------------------+
+                           |
+                          \ /
+                   +----------------+
+             (1)   |pstore frontends|
+                   +----------------+
+                           |
+                          \ /
+                  +------------------- +
+             (2)  | pstore backend(ram)|
+                  +--------------------+
+                           |
+                          \ /
+                  +--------------------+
+             (3)  |qcom_pstore_minidump|
+                  +--------------------+
 
-If the bug is a duplicate of another bug, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-Mukesh
+> 
+>> We don't add layers when they are not needed, and never when there is no
+>> actual user.  If you need the extra "complexity" later, then add it
+>> later when it is needed as who knows when that will ever be.
+>>
+>> Please redo this series based on that, thanks.
+> 
+> My bigger issue with this whole series is what would this all look
+> like if every SoC vendor upstreamed their own custom dumping
+> mechanism. That would be a mess. (I have similar opinions on the
+> $soc-vendor hypervisors.)
+> 
+> Rob
