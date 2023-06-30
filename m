@@ -2,160 +2,478 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E69EB64DA
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 06:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6966EB64DD
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 07:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbjF3Gqq (ORCPT
+        id S231777AbjF3HRO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Jun 2023 02:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
+        Fri, 30 Jun 2023 03:17:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbjF3Gqp (ORCPT
+        with ESMTP id S232314AbjF3HQb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Jun 2023 02:46:45 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12274E5B;
-        Thu, 29 Jun 2023 23:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1688107604; x=1719643604;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=48q1NTvqt0qgKBQfVueuQcWYPjiExBBEJFG3i8T9p1k=;
-  b=DuSEvhx/RLrQ2F0ptDXl1+IDZOBlaXVOcXyld+f+xbbHcf56553UJegP
-   XkartyRsWGSYVx0Vb4rsq+K0PBNPu3C9axQ+3xPc8xkdlRHVMNCxfQaOl
-   OEVpcFxqAZVea3FLfhtvpYgeDbD/D1tygknJ1gZhEySsjZVPDLgHQHuZk
-   Mr+5IfXkkmXCDj4H2uCBUBiSVFf+nYb3E2BanOMu8eckRrg0aaWTzoLpz
-   2Xhv0QUeXowWSrcks8G75Ub2JbQj4N6putknhiV78cxJml0wo87C5jvGf
-   BkYom5/Bq79A9VikqyqXH0TTzc/NEC+LpNxD58GkeDnfciz+pUMHSNZAy
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10756"; a="365814573"
-X-IronPort-AV: E=Sophos;i="6.01,170,1684825200"; 
-   d="scan'208";a="365814573"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2023 23:45:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10756"; a="717686999"
-X-IronPort-AV: E=Sophos;i="6.01,169,1684825200"; 
-   d="scan'208";a="717686999"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jun 2023 23:45:16 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qF7sa-000EmB-0I;
-        Fri, 30 Jun 2023 06:45:16 +0000
-Date:   Fri, 30 Jun 2023 14:44:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     jeffxu@chromium.org, skhan@linuxfoundation.org,
-        keescook@chromium.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, asmadeus@codewreck.org, hughd@google.com,
-        jeffxu@google.com, jorgelo@chromium.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, jannh@google.com,
-        linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] mm/memfd: sysctl: fix
- MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED
-Message-ID: <202306301413.VtwSCI1F-lkp@intel.com>
-References: <20230630031721.623955-2-jeffxu@google.com>
+        Fri, 30 Jun 2023 03:16:31 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62F5A1FFA;
+        Fri, 30 Jun 2023 00:16:06 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35U4nNd7019546;
+        Fri, 30 Jun 2023 07:15:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=jlsDVQG07LBzpudueespK8/VedKCgmtXBJ4ZsDafVl4=;
+ b=XDm6L/hNTlWkxmcvI+rJwUMMSGQ5SGv9NwT3FuTevtowhJEx2X8us5EdCYm0nwcZT6SP
+ RoVBdm4HO6nwJN5dM8O81yq9Ag42SnKLAr7SynHf+XOj/AeaOiWnH2YtmNYqmqchOtyR
+ pvSqpMJG1Ghl/TmJLAnPOjdO/xmXMQxqACokePyjto0kXTNOEXUnhznH5NrwLBvUGgGq
+ sbnC5cHzuor7Ce69lApf2voCzM57KAmGUqUPnpPax2vJaAz0L/z4/yJ1FMzJrXkoCMj+
+ dusS8Mq3T8Ed9WaatrM+UhAN+VeDh1dt7LoDusbCkSlmiFTkXgm4T0xzwLVNx6Fjnr6E Fg== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rha8e1yt7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Jun 2023 07:15:23 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35U7FMXx032517
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 30 Jun 2023 07:15:22 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Fri, 30 Jun
+ 2023 00:15:16 -0700
+Message-ID: <774b0432-a78f-1aec-a31a-51067e33154f@quicinc.com>
+Date:   Fri, 30 Jun 2023 12:45:13 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230630031721.623955-2-jeffxu@google.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 04/21] soc: qcom: Add Qualcomm APSS minidump (frontend)
+ feature support
+Content-Language: en-US
+To:     Pavan Kondeti <quic_pkondeti@quicinc.com>
+CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-5-git-send-email-quic_mojha@quicinc.com>
+ <8f00beed-f07b-43b6-820e-87af719598c6@quicinc.com>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <8f00beed-f07b-43b6-820e-87af719598c6@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Q165Un0IeiWc07YRWZv3lPd-sjb-uAGo
+X-Proofpoint-ORIG-GUID: Q165Un0IeiWc07YRWZv3lPd-sjb-uAGo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-30_03,2023-06-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 clxscore=1015 impostorscore=0 priorityscore=1501
+ spamscore=0 mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306300061
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on akpm-mm/mm-everything]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/jeffxu-chromium-org/mm-memfd-sysctl-fix-MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED/20230630-111827
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20230630031721.623955-2-jeffxu%40google.com
-patch subject: [PATCH v1 1/2] mm/memfd: sysctl: fix MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED
-config: riscv-randconfig-r042-20230630 (https://download.01.org/0day-ci/archive/20230630/202306301413.VtwSCI1F-lkp@intel.com/config)
-compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
-reproduce: (https://download.01.org/0day-ci/archive/20230630/202306301413.VtwSCI1F-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306301413.VtwSCI1F-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> mm/memfd.c:273:15: error: use of undeclared identifier 'MEMFD_NOEXEC_SCOPE_EXEC'
-     273 |         int sysctl = MEMFD_NOEXEC_SCOPE_EXEC;
-         |                      ^
->> mm/memfd.c:311:17: error: use of undeclared identifier 'MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL'
-     311 |                 if (sysctl == MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL)
-         |                               ^
->> mm/memfd.c:321:36: error: use of undeclared identifier 'MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED'
-     321 |         if (flags & MFD_EXEC && sysctl >= MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED) {
-         |                                           ^
-   3 errors generated.
 
 
-vim +/MEMFD_NOEXEC_SCOPE_EXEC +273 mm/memfd.c
+On 6/29/2023 8:03 AM, Pavan Kondeti wrote:
+> On Wed, Jun 28, 2023 at 06:04:31PM +0530, Mukesh Ojha wrote:
+>> Minidump is a best effort mechanism to collect useful and predefined
+>> data for first level of debugging on end user devices running on
+>> Qualcomm SoCs. It is built on the premise that System on Chip (SoC)
+>> or subsystem part of SoC crashes, due to a range of hardware and
+>> software bugs. Hence, the ability to collect accurate data is only
+>> a best-effort. The data collected could be invalid or corrupted,
+>> data collection itself could fail, and so on.
+>>
+>> Qualcomm devices in engineering mode provides a mechanism for
+>> generating full system ramdumps for post mortem debugging. But in some
+>> cases it's however not feasible to capture the entire content of RAM.
+>> The minidump mechanism provides the means for selecting region should
+>> be included in the ramdump. The solution supports extracting the
+>> ramdump/minidump produced either over USB or stored to an attached
+>> storage device.
+>>
+>> Minidump kernel driver implementation is divided into two parts for
+>> simplicity, one is minidump core which can also be called minidump
+>> frontend(As API gets exported from this driver for registration with
+>> backend) and the other part is minidump backend i.e, where the underlying
+>> implementation of minidump will be there. There could be different way
+>> how the backend is implemented like Shared memory, Memory mapped IO
+>> or Resource manager based where the guest region information is passed
+>> to hypervisor via hypercalls.
+>>
+>> Minidump Client-1     Client-2      Client-5    Client-n
+>>           |               |              |             |
+>>           |               |    ...       |   ...       |
+>>           |               |              |             |
+>>           |               |              |             |
+>>           |               |              |             |
+>>           |               |              |             |
+>>           |               |              |             |
+>>           |               |              |             |
+>>           |           +---+--------------+----+        |
+>>           +-----------+  qcom_minidump(core)  +--------+
+>>                       |                       |
+>>                       +------+-----+------+---+
+>>                              |     |      |
+>>                              |     |      |
+>>              +---------------+     |      +--------------------+
+>>              |                     |                           |
+>>              |                     |                           |
+>>              |                     |                           |
+>>              v                     v                           v
+>>   +-------------------+      +-------------------+     +------------------+
+>>   |qcom_minidump_smem |      |qcom_minidump_mmio |     | qcom_minidump_rm |
+>>   |                   |      |                   |     |                  |
+>>   +-------------------+      +-------------------+     +------------------+
+>>     Shared memory              Memory mapped IO           Resource manager
+>>      (backend)                   (backend)                   (backend)
+>>
+>> Here, we will be giving all analogy of backend with SMEM as it is the
+>> only implemented backend at present but general idea remains the same.
+>>
+>> The core of minidump feature is part of Qualcomm's boot firmware code.
+>> It initializes shared memory (SMEM), which is a part of DDR and
+>> allocates a small section of it to minidump table i.e also called
+>> global table of content (G-ToC). Each subsystem (APSS, ADSP, ...) has
+>> their own table of segments to be included in the minidump, all
+>> references from a descriptor in SMEM (G-ToC). Each segment/region has
+>> some details like name, physical address and it's size etc. and it
+>> could be anywhere scattered in the DDR.
+>>
+>> qcom_minidump(core or frontend) driver adds the capability to add APSS
+>> region to be dumped as part of ram dump collection. It provides
+>> appropriate symbol register/unregister client regions.
+>>
+>> To simplify post mortem debugging, it creates and maintain an ELF
+>> header as first region that gets updated upon registration
+>> of a new region.
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   drivers/soc/qcom/Kconfig                  |  15 +
+>>   drivers/soc/qcom/Makefile                 |   2 +
+>>   drivers/soc/qcom/qcom_minidump.c          | 456 ++++++++++++++++++++++++++++++
+>>   drivers/soc/qcom/qcom_minidump_internal.h |  75 +++++
+>>   include/soc/qcom/qcom_minidump.h          |  35 +++
+>>   5 files changed, 583 insertions(+)
+>>   create mode 100644 drivers/soc/qcom/qcom_minidump.c
+>>   create mode 100644 drivers/soc/qcom/qcom_minidump_internal.h
+>>
+>> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+>> index 982310b5a1cb..874ee8c3efe0 100644
+>> --- a/drivers/soc/qcom/Kconfig
+>> +++ b/drivers/soc/qcom/Kconfig
+>> @@ -279,6 +279,21 @@ config QCOM_INLINE_CRYPTO_ENGINE
+>>   	tristate
+>>   	select QCOM_SCM
+>>   
+>> +config QCOM_MINIDUMP
+>> +	tristate "QCOM Minidump APSS Core Infrastructure"
+>> +	depends on ARCH_QCOM
+>> +	help
+>> +	  This config allow linux core infrastructure for APSS minidump for
+>> +	  underlying backend(smem etc.) which can hook themselves to this and
+>> +	  work as one unit. So, this config should be selected in combination
+>> +	  with its backend.
+>> +
+>> +	  After this Linux clients driver can register their internal data
+>> +	  structures and debug messages as part of the apss minidump region
+>> +	  and when the SoC is crashed, and these selective regions will be
+>> +	  dumped instead of the entire DDR. This saves significant amount
+>> +	  of time and/or storage space.
+>> +
+>>   config QCOM_MINIDUMP_SMEM
+>>   	tristate "QCOM Minidump SMEM (as backend) Support"
+>>   	depends on ARCH_QCOM
+>> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+>> index 89b775512bef..737d868757ac 100644
+>> --- a/drivers/soc/qcom/Makefile
+>> +++ b/drivers/soc/qcom/Makefile
+>> @@ -34,3 +34,5 @@ obj-$(CONFIG_QCOM_KRYO_L2_ACCESSORS) +=	kryo-l2-accessors.o
+>>   obj-$(CONFIG_QCOM_ICC_BWMON)	+= icc-bwmon.o
+>>   qcom_ice-objs			+= ice.o
+>>   obj-$(CONFIG_QCOM_INLINE_CRYPTO_ENGINE)	+= qcom_ice.o
+>> +obj-$(CONFIG_QCOM_MINIDUMP) += qcom_minidump.o
+>> +obj-$(CONFIG_QCOM_MINIDUMP_SMEM) += qcom_minidump_smem.o
+>> diff --git a/drivers/soc/qcom/qcom_minidump.c b/drivers/soc/qcom/qcom_minidump.c
+>> new file mode 100644
+>> index 000000000000..7744e57843ab
+>> --- /dev/null
+>> +++ b/drivers/soc/qcom/qcom_minidump.c
+>> @@ -0,0 +1,456 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/export.h>
+>> +#include <linux/kallsyms.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/printk.h>
+>> +#include <linux/string.h>
+>> +
+>> +#include "qcom_minidump_internal.h"
+>> +
+>> +/*
+>> + * In some of the Old Qualcomm devices, boot firmware statically allocates 300
+>> + * as total number of supported region (including all co-processors) in
+>> + * minidump table out of which linux was using 201. In future, this limitation
+>> + * from boot firmware might get removed by allocating the region dynamically.
+>> + * So, keep it compatible with older devices, we can keep the current limit for
+>> + * Linux to 201.
+>> + */
+>> +#define MAX_NUM_ENTRIES	  201
+>> +#define MAX_STRTBL_SIZE	  (MAX_NUM_ENTRIES * MAX_REGION_NAME_LENGTH)
+>> +
+> 
+> Should not we receive these constraints from backend?
+> 
+>> +/*
+>> + * md_lock protects "md" during calls to qcom_minidump_backend_register(),
+>> + * qcom_minidump_backend_unregister().
+>> + */
+>> +static DEFINE_MUTEX(md_lock);
+>> +
+>> +/* Only one front end will be attached to one back-end */
+>> +static struct minidump *md;
+>> +static char *md_backend;
+>> +
+> 
+> Can you explain this a bit more? There is just one fronend, correct?
+> Multiple possibilites of backend.
 
-   270	
-   271	static int sysctl_memfd_noexec(void)
-   272	{
- > 273		int sysctl = MEMFD_NOEXEC_SCOPE_EXEC;
-   274	#ifdef CONFIG_SYSCTL
-   275		struct pid_namespace *ns;
-   276	
-   277		ns = task_active_pid_ns(current);
-   278		if (ns)
-   279			sysctl = ns->memfd_noexec_scope;
-   280	#endif
-   281		return sysctl;
-   282	}
-   283	
-   284	SYSCALL_DEFINE2(memfd_create,
-   285			const char __user *, uname,
-   286			unsigned int, flags)
-   287	{
-   288		char comm[TASK_COMM_LEN];
-   289		unsigned int *file_seals;
-   290		struct file *file;
-   291		int fd, error;
-   292		char *name;
-   293		long len;
-   294		int sysctl = sysctl_memfd_noexec();
-   295	
-   296		if (!(flags & MFD_HUGETLB)) {
-   297			if (flags & ~(unsigned int)MFD_ALL_FLAGS)
-   298				return -EINVAL;
-   299		} else {
-   300			/* Allow huge page size encoding in flags. */
-   301			if (flags & ~(unsigned int)(MFD_ALL_FLAGS |
-   302					(MFD_HUGE_MASK << MFD_HUGE_SHIFT)))
-   303				return -EINVAL;
-   304		}
-   305	
-   306		/* Invalid if both EXEC and NOEXEC_SEAL are set.*/
-   307		if ((flags & MFD_EXEC) && (flags & MFD_NOEXEC_SEAL))
-   308			return -EINVAL;
-   309	
-   310		if (!(flags & (MFD_EXEC | MFD_NOEXEC_SEAL))) {
- > 311			if (sysctl == MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL)
-   312				flags |= MFD_NOEXEC_SEAL;
-   313			else
-   314				flags |= MFD_EXEC;
-   315	
-   316			pr_warn_once(
-   317				"memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=%d '%s'\n",
-   318				task_pid_nr(current), get_task_comm(comm, current));
-   319		}
-   320	
- > 321		if (flags & MFD_EXEC && sysctl >= MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED) {
+Sorry, for misleading with the comment.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Was trying to be explicit here that only one backend can be attached to
+the front end ..
+
+Will fix the confusion.
+
+> 
+> Is it a limitation at the moment that we support only one backend or
+> plan to support more backends later for the same frontend. Pls clarify.
+> 
+>> +static struct elf_shdr *elf_shdr_entry_addr(struct elfhdr *ehdr, int idx)
+>> +{
+>> +	struct elf_shdr *eshdr = (struct elf_shdr *)((size_t)ehdr + ehdr->e_shoff);
+>> +
+>> +	return &eshdr[idx];
+>> +}
+>> +
+> 
+> [...]
+> 
+>> +/**
+>> + * qcom_minidump_region_register() - Register region in APSS Minidump table.
+>> + * @region: minidump region.
+>> + *
+>> + * Return: On success, it returns 0 and negative error value on failure.
+>> + */
+> 
+> Are we not going to return any cookie upon success which can be passed
+> to us during unregistration?
+
+e.g, Let's just say if we return the region number as an cookies, the
+problem i see that, we multiple unregistration is happening we will
+be shifting the array upwards and that results in the index/cookies does
+not retain the same for the shifted regions.
+
+So, at the moment, client need to pass the same region for 
+un-registration as they have passed for registration..
+
+> 
+>> +int qcom_minidump_region_register(const struct qcom_minidump_region *region)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!qcom_minidump_valid_region(region))
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&md_lock);
+>> +	if (!md) {
+>> +		mutex_unlock(&md_lock);
+>> +		pr_err("No backend registered yet, try again..");
+>> +		return -EPROBE_DEFER;
+>> +	}
+>> +
+>> +	ret = md->ops->md_region_register(md, region);
+>> +	if (ret)
+>> +		goto unlock;
+>> +
+> 
+> The md_lock description in the beginning does not seems to be correct.
+> It is not limited to backend registration. It has much wider usage.
+> 
+> You are holding the lock while calling into backend. Basically the
+> synchronization is done in the front end.
+
+Initially, the thought was to have the backend their own lock but that
+is irrelevant as all the contention is there in the front end.
+
+So, used the same lock for synchronization as i moved in developement
+and the later that comment became obsolete.
+
+Thanks for catching this.
+will fix the comment.
+
+> 
+>> +	qcom_md_update_elf_header(region);
+>> +unlock:
+>> +	mutex_unlock(&md_lock);
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(qcom_minidump_region_register);
+>> +
+>> +/**
+>> + * qcom_minidump_region_unregister() - Unregister region from APSS Minidump table.
+>> + * @region: minidump region.
+>> + *
+>> + * Return: On success, it returns 0 and negative error value on failure.
+>> + */
+>> +int qcom_minidump_region_unregister(const struct qcom_minidump_region *region)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!qcom_minidump_valid_region(region))
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&md_lock);
+>> +	if (!md) {
+>> +		mutex_unlock(&md_lock);
+>> +		pr_err("No backend registered yet, try again..");
+>> +		return -EPROBE_DEFER;
+>> +	}
+>> +
+>> +	ret = md->ops->md_region_unregister(md, region);
+>> +	if (ret)
+>> +		goto unlock;
+>> +
+> 
+> The frontend is not validing that it is actually a registered client, it
+> is left to backend. Seems that is more duplication in the backend(s).
+
+For that front-end need to cache each registered entry and that is exact 
+copy at the backend, will need extra memory for copied data, so, that's
+the reason of this behavior.
+
+> 
+>> +	ret = qcom_minidump_clear_header(region);
+>> +unlock:
+>> +	mutex_unlock(&md_lock);
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(qcom_minidump_region_unregister);
+> 
+> can we create a namespace for exporting these symbols?
+
+Any specific reason, you are suggesting this ?
+
+> 
+>> +
+>> +static int qcom_minidump_add_elf_header(struct minidump *md_data)
+>> +{
+> 
+> [...]
+> 
+>> +
+>> +/**
+>> + * qcom_minidump_backend_register() - Register backend minidump device.
+>> + * @md_data: minidump backend driver data
+>> + *
+>> + * Return: On success, it returns 0 and negative error value on failure.
+>> + */
+>> +int qcom_minidump_backend_register(struct minidump *md_data)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (!md_data->name || !md_data->dev ||
+>> +	    !md_data->ops ||
+>> +	    !md_data->ops->md_table_init ||
+>> +	    !md_data->ops->md_region_register ||
+>> +	    !md_data->ops->md_region_unregister ||
+>> +	    !md_data->ops->md_table_exit) {
+>> +		pr_warn("backend '%s' must fill/implement necessary fields\n", md->name);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (md_backend && strcmp(md_backend, md_data->name)) {
+>> +		pr_warn("backend '%s' already in use: ignoring '%s'\n",
+>> +			 md_backend, md_data->name);
+>> +		return -EBUSY;
+>> +	}
+>> +
+>> +	mutex_lock(&md_lock);
+>> +	if (md) {
+>> +		dev_warn(md->dev, "backend '%s' already loaded: ignoring '%s'\n",
+>> +			 md->name, md_data->name);
+>> +		ret = -EBUSY;
+>> +		goto unlock;
+>> +	}
+>> +
+>> +	if (!md_data->max_region_limit || md_data->max_region_limit > MAX_NUM_ENTRIES)
+>> +		md_data->max_region_limit = MAX_NUM_ENTRIES;
+>> +
+>> +	ret = md_data->ops->md_table_init(md_data);
+>> +	if (ret) {
+>> +		dev_err(md_data->dev, "minidump backend initialization failed: %d\n", ret);
+>> +		goto unlock;
+>> +	}
+>> +
+>> +	/* First entry would be ELF header */
+>> +	ret = qcom_minidump_add_elf_header(md_data);
+>> +	if (ret) {
+>> +		dev_err(md_data->dev, "Failed to add elf header: %d\n", ret);
+>> +		md_data->ops->md_table_exit(md_data);
+>> +		goto unlock;
+>> +	}
+>> +
+>> +	md = md_data;
+>> +	md_backend = kstrdup(md->name, GFP_KERNEL);
+>> +	dev_info(md->dev, "Registered minidump backend : %s\n", md->name);
+>> +
+> 
+> What is the need for keeping md_backend separately? md::name is already
+> present.
+
+It looks redundant, this is one of cleanup, missed, thanks..
+
+> 
+> Also, how do we prevent backend module unloading while it is inuse? or
+> we don't need that constraint?
+
+md_lock is there for that..
+
+In next patch series, i am going to make all of this as static driver,
+so that constraints will not be there ?
+
+-Mukesh
+
+> 
+>> +unlock:
+>> +	mutex_unlock(&md_lock);
+>> +	return ret;
+>> +}
+>> +EXPORT_SYMBOL_GPL(qcom_minidump_backend_register);
+> 
+> Thanks,
+> Pavan
