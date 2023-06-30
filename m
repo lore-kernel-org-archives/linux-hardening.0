@@ -2,222 +2,161 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A7CEB64DA
-	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 05:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2340EB64DA
+	for <linux-hardening@archiver.kernel.org>; Fri, 30 Jun 2023 05:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232037AbjF3F0Q (ORCPT
+        id S230327AbjF3FdW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 30 Jun 2023 01:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40336 "EHLO
+        Fri, 30 Jun 2023 01:33:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231927AbjF3F0P (ORCPT
+        with ESMTP id S229991AbjF3FdU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 30 Jun 2023 01:26:15 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 522AC3583;
-        Thu, 29 Jun 2023 22:26:14 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35U5O1Zr014109;
-        Fri, 30 Jun 2023 05:25:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=qcppdkim1; bh=HFQXNzIcvaGV8VLNOglVGjxnRqTQMHy3qp9WNXgE8fw=;
- b=IsyOnS5raZ1GJglVGuGBhJhzEUxls0AnM50+kxJeEromMzlxvzuNznVo+qxLkLTgOB0u
- JQ/KYM7IGrvrZ5x1k4ixfXrguYSoDn+afoImKvhXznwj0PPU21ozwHD7nFxlCt4XwWME
- cRC/jC4UsisD+BVjt1j9a635fg5rR99/vmJtLNF6MVY3pjsbIZqtACkQAdA9Mr7ZynmL
- 0w0wtoWmAqmTFWhQEoz7ZH4gT/JbHWzcHh3u3aqg2dj1LQH7p33YsBLKgKw4b+sZl6yA
- pBC6qVjkvwbBStQIya0P0AzL0TjI81aVouqyECFzJnLCEws9dzk75patM2WTMIKvo4me 1w== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rh2ks2kj4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Jun 2023 05:25:54 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35U5PrmQ009221
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 30 Jun 2023 05:25:53 GMT
-Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.7; Thu, 29 Jun 2023 22:25:46 -0700
-Date:   Fri, 30 Jun 2023 10:55:39 +0530
-From:   Pavan Kondeti <quic_pkondeti@quicinc.com>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v4 20/21] firmware: qcom_scm: Refactor code to support
- multiple download mode
-Message-ID: <0ac3e4cd-485e-43a4-ae76-4c462a8145ed@quicinc.com>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-21-git-send-email-quic_mojha@quicinc.com>
+        Fri, 30 Jun 2023 01:33:20 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33AE510F8;
+        Thu, 29 Jun 2023 22:33:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688103199; x=1719639199;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dsdYNUX+gcDM37G8FPUcCZXTwbW6arF/jZi6JvzXNfw=;
+  b=Ekm4oU+VPR4sU3SlUGECJUS7qze0yyqf2qYZYNpSsFr16u/lw5WjsdUG
+   2IF9cLJ/BqTGO9KcaogxErdq7AoEaR3dpPZ74zolD/sS4T4fG72+tZ7o1
+   dJNJMvlfDRHK8TQpZPu7pGlF65XC9hZySJK819+0IP9D4uX+m7RDwr/WL
+   m0WD/QNs6+Md9gf07i5ilNQazMm4FmDEBJQJBJeefViyoufoEImgqcA0z
+   pktw6Rps6IRce7JXApoHymu/9y7XdUuD0t6J8t04CKkqqbOlK3Opf84H7
+   QOIAe1bQ7NlUQ0qoBKx8xJNoMVj87h4n1feDWH7/4LQ1mp8XbR7rkjTbQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10756"; a="365802562"
+X-IronPort-AV: E=Sophos;i="6.01,169,1684825200"; 
+   d="scan'208";a="365802562"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2023 22:33:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10756"; a="807633037"
+X-IronPort-AV: E=Sophos;i="6.01,169,1684825200"; 
+   d="scan'208";a="807633037"
+Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 29 Jun 2023 22:33:14 -0700
+Received: from kbuild by 783282924a45 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qF6kr-000EkP-2v;
+        Fri, 30 Jun 2023 05:33:13 +0000
+Date:   Fri, 30 Jun 2023 13:32:17 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     jeffxu@chromium.org, skhan@linuxfoundation.org,
+        keescook@chromium.org
+Cc:     oe-kbuild-all@lists.linux.dev, akpm@linux-foundation.org,
+        dmitry.torokhov@gmail.com, dverkamp@chromium.org,
+        asmadeus@codewreck.org, hughd@google.com, jeffxu@google.com,
+        jorgelo@chromium.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        jannh@google.com, linux-hardening@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH v1 1/2] mm/memfd: sysctl: fix
+ MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED
+Message-ID: <202306301351.kkbSegQW-lkp@intel.com>
+References: <20230630031721.623955-2-jeffxu@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1687955688-20809-21-git-send-email-quic_mojha@quicinc.com>
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: aNMQl7VkIbhpDKzXPC8P1qvAgPDdSJEs
-X-Proofpoint-ORIG-GUID: aNMQl7VkIbhpDKzXPC8P1qvAgPDdSJEs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-30_02,2023-06-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- adultscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
- mlxlogscore=999 clxscore=1015 spamscore=0 lowpriorityscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306300046
+In-Reply-To: <20230630031721.623955-2-jeffxu@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 06:04:47PM +0530, Mukesh Ojha wrote:
-> Currently on Qualcomm SoC, download_mode is enabled if
-> CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT is selected.
-> 
-> Refactor the code such that it supports multiple download
-> modes and drop CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT config
-> instead, give interface to set the download mode from
-> module parameter.
-> 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
->  drivers/firmware/Kconfig    | 11 ---------
->  drivers/firmware/qcom_scm.c | 56 +++++++++++++++++++++++++++++++++++++++------
->  2 files changed, 49 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index b59e3041fd62..ff7e9f330559 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -215,17 +215,6 @@ config MTK_ADSP_IPC
->  config QCOM_SCM
->  	tristate
->  
-> -config QCOM_SCM_DOWNLOAD_MODE_DEFAULT
-> -	bool "Qualcomm download mode enabled by default"
-> -	depends on QCOM_SCM
-> -	help
-> -	  A device with "download mode" enabled will upon an unexpected
-> -	  warm-restart enter a special debug mode that allows the user to
-> -	  "download" memory content over USB for offline postmortem analysis.
-> -	  The feature can be enabled/disabled on the kernel command line.
-> -
-> -	  Say Y here to enable "download mode" by default.
-> -
->  config SYSFB
->  	bool
->  	select BOOT_VESA_SUPPORT
-> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index a9ff77d16c42..946cb0f76a17 100644
-> --- a/drivers/firmware/qcom_scm.c
-> +++ b/drivers/firmware/qcom_scm.c
-> @@ -18,13 +18,13 @@
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/clk.h>
-> +#include <linux/kstrtox.h>
->  #include <linux/reset-controller.h>
->  #include <linux/arm-smccc.h>
->  
->  #include "qcom_scm.h"
->  
-> -static bool download_mode = IS_ENABLED(CONFIG_QCOM_SCM_DOWNLOAD_MODE_DEFAULT);
-> -module_param(download_mode, bool, 0);
-> +static u32 download_mode;
->  
->  #define SCM_HAS_CORE_CLK	BIT(0)
->  #define SCM_HAS_IFACE_CLK	BIT(1)
-> @@ -82,6 +82,11 @@ static const char * const qcom_scm_convention_names[] = {
->  	[SMC_CONVENTION_LEGACY] = "smc legacy",
->  };
->  
-> +static const char * const download_mode_name[] = {
-> +	[QCOM_DOWNLOAD_NODUMP]	 = "off",
-> +	[QCOM_DOWNLOAD_FULLDUMP] = "full",
-> +};
-> +
->  static struct qcom_scm *__scm;
->  
->  static int qcom_scm_clk_enable(void)
-> @@ -442,8 +447,9 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
->  	return qcom_scm_call_atomic(__scm->dev, &desc, NULL);
->  }
->  
-> -static void qcom_scm_set_download_mode(bool enable)
-> +static void qcom_scm_set_download_mode(u32 download_mode)
->  {
-> +	bool enable = !!download_mode;
->  	bool avail;
->  	int val;
->  	int ret = 0;
-> @@ -454,7 +460,7 @@ static void qcom_scm_set_download_mode(bool enable)
->  	if (avail) {
->  		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
->  	} else if (__scm->dload_mode_addr) {
-> -		val = (enable ? QCOM_DOWNLOAD_FULLDUMP : QCOM_DOWNLOAD_NODUMP);
-> +		val = download_mode;
->  		val <<= QCOM_DOWNLOAD_MODE_SHIFT;
->  		ret = qcom_scm_io_update_field(__scm->dload_mode_addr,
->  				QCOM_DOWNLOAD_MODE_MASK, val);
-> @@ -1425,6 +1431,42 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
->  	return IRQ_HANDLED;
->  }
->  
-> +static int get_download_mode(char *buffer, const struct kernel_param *kp)
-> +{
-> +	if (download_mode >= ARRAY_SIZE(download_mode_name))
-> +		return sysfs_emit(buffer, "unknown mode\n");
-> +
-> +	return sysfs_emit(buffer, "%s\n", download_mode_name[download_mode]);
-> +}
-> +
-> +static int set_download_mode(const char *val, const struct kernel_param *kp)
-> +{
-> +	u32 old = download_mode;
-> +	int ret;
-> +
-> +	ret = sysfs_match_string(download_mode_name, val);
-> +	if (ret < 0) {
-> +		download_mode = old;
-> +		pr_err("qcom_scm: unknown download mode: %s\n", val);
-> +		return -EINVAL;
-> +	}
+Hi,
 
-minor nit: %s/-EINVAL/ret 
+kernel test robot noticed the following build errors:
 
-> +
-> +	download_mode = ret;
-> +	if (__scm)
-> +		qcom_scm_set_download_mode(download_mode);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct kernel_param_ops download_mode_param_ops = {
-> +	.get = get_download_mode,
-> +	.set = set_download_mode,
-> +};
-> +
-> +module_param_cb(download_mode, &download_mode_param_ops, NULL, 0644);
-> +MODULE_PARM_DESC(download_mode,
-> +		"download mode: off/full are acceptable values");
-> +
+[auto build test ERROR on akpm-mm/mm-everything]
 
-Since we are adding a sysfs file under /sys/module/qcom_scm/ , does it
-need to be documented under ABI?
+url:    https://github.com/intel-lab-lkp/linux/commits/jeffxu-chromium-org/mm-memfd-sysctl-fix-MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED/20230630-111827
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20230630031721.623955-2-jeffxu%40google.com
+patch subject: [PATCH v1 1/2] mm/memfd: sysctl: fix MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED
+config: microblaze-randconfig-r003-20230630 (https://download.01.org/0day-ci/archive/20230630/202306301351.kkbSegQW-lkp@intel.com/config)
+compiler: microblaze-linux-gcc (GCC) 12.3.0
+reproduce: (https://download.01.org/0day-ci/archive/20230630/202306301351.kkbSegQW-lkp@intel.com/reproduce)
 
-Thanks,
-Pavan
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306301351.kkbSegQW-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   mm/memfd.c: In function 'sysctl_memfd_noexec':
+>> mm/memfd.c:273:22: error: 'MEMFD_NOEXEC_SCOPE_EXEC' undeclared (first use in this function)
+     273 |         int sysctl = MEMFD_NOEXEC_SCOPE_EXEC;
+         |                      ^~~~~~~~~~~~~~~~~~~~~~~
+   mm/memfd.c:273:22: note: each undeclared identifier is reported only once for each function it appears in
+   mm/memfd.c: In function '__do_sys_memfd_create':
+>> mm/memfd.c:311:31: error: 'MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL' undeclared (first use in this function)
+     311 |                 if (sysctl == MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL)
+         |                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> mm/memfd.c:321:43: error: 'MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED' undeclared (first use in this function)
+     321 |         if (flags & MFD_EXEC && sysctl >= MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED) {
+         |                                           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/MEMFD_NOEXEC_SCOPE_EXEC +273 mm/memfd.c
+
+   270	
+   271	static int sysctl_memfd_noexec(void)
+   272	{
+ > 273		int sysctl = MEMFD_NOEXEC_SCOPE_EXEC;
+   274	#ifdef CONFIG_SYSCTL
+   275		struct pid_namespace *ns;
+   276	
+   277		ns = task_active_pid_ns(current);
+   278		if (ns)
+   279			sysctl = ns->memfd_noexec_scope;
+   280	#endif
+   281		return sysctl;
+   282	}
+   283	
+   284	SYSCALL_DEFINE2(memfd_create,
+   285			const char __user *, uname,
+   286			unsigned int, flags)
+   287	{
+   288		char comm[TASK_COMM_LEN];
+   289		unsigned int *file_seals;
+   290		struct file *file;
+   291		int fd, error;
+   292		char *name;
+   293		long len;
+   294		int sysctl = sysctl_memfd_noexec();
+   295	
+   296		if (!(flags & MFD_HUGETLB)) {
+   297			if (flags & ~(unsigned int)MFD_ALL_FLAGS)
+   298				return -EINVAL;
+   299		} else {
+   300			/* Allow huge page size encoding in flags. */
+   301			if (flags & ~(unsigned int)(MFD_ALL_FLAGS |
+   302					(MFD_HUGE_MASK << MFD_HUGE_SHIFT)))
+   303				return -EINVAL;
+   304		}
+   305	
+   306		/* Invalid if both EXEC and NOEXEC_SEAL are set.*/
+   307		if ((flags & MFD_EXEC) && (flags & MFD_NOEXEC_SEAL))
+   308			return -EINVAL;
+   309	
+   310		if (!(flags & (MFD_EXEC | MFD_NOEXEC_SEAL))) {
+ > 311			if (sysctl == MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL)
+   312				flags |= MFD_NOEXEC_SEAL;
+   313			else
+   314				flags |= MFD_EXEC;
+   315	
+   316			pr_warn_once(
+   317				"memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL, pid=%d '%s'\n",
+   318				task_pid_nr(current), get_task_comm(comm, current));
+   319		}
+   320	
+ > 321		if (flags & MFD_EXEC && sysctl >= MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED) {
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
