@@ -2,259 +2,136 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1315BEB64DD
-	for <linux-hardening@archiver.kernel.org>; Sun,  2 Jul 2023 19:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD964EB64D9
+	for <linux-hardening@archiver.kernel.org>; Sun,  2 Jul 2023 23:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230245AbjGBTgJ (ORCPT
+        id S229876AbjGBX6i (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 2 Jul 2023 15:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50458 "EHLO
+        Sun, 2 Jul 2023 19:58:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbjGBTgI (ORCPT
+        with ESMTP id S229795AbjGBX6h (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 2 Jul 2023 15:36:08 -0400
-X-Greylist: delayed 1800 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 02 Jul 2023 12:36:05 PDT
-Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6252BA6;
-        Sun,  2 Jul 2023 12:36:05 -0700 (PDT)
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 362Hti7l025943;
-        Sun, 2 Jul 2023 12:55:44 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 362HtgD4025942;
-        Sun, 2 Jul 2023 12:55:42 -0500
-Date:   Sun, 2 Jul 2023 12:55:42 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Roberto Sassu <roberto.sassu@huaweicloud.com>
-Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        LuisChamberlain <mcgrof@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Petr Tesarik <petrtesarik@huaweicloud.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [QUESTION] Full user space process isolation?
-Message-ID: <20230702175542.GA25867@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <eb31920bd00e2c921b0aa6ebed8745cb0130b0e1.camel@huaweicloud.com> <20230629021000.GA368825@mail.hallyn.com> <14599d8216f1b7520ff5f6cfb27377fa79709f13.camel@huaweicloud.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14599d8216f1b7520ff5f6cfb27377fa79709f13.camel@huaweicloud.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sun, 02 Jul 2023 12:55:44 -0500 (CDT)
+        Sun, 2 Jul 2023 19:58:37 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7808E45
+        for <linux-hardening@vger.kernel.org>; Sun,  2 Jul 2023 16:58:35 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1b88f151d8eso114065ad.0
+        for <linux-hardening@vger.kernel.org>; Sun, 02 Jul 2023 16:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1688342315; x=1690934315;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lWnMPQFBusztmkgKaUES3szXF6Iacc01LX/0q3rq/lM=;
+        b=krB0ZPVH0yXPp1f8gp+inqaoGKas63QNUcaTPlLAWoYl0M8qRtD6CqXQqpOw08AlNB
+         FM2FVIH+pzTJRFvFcSKbSCO9IQpU1RBInDJkeWrD5A2JA1gr4Rfx4OvyINOrc4FY5YHJ
+         FYKNyS11vuEQ0ytJp/1RSI0y6SJ4Vj8M/RoSutwymvzMeGyhPTOYHwCEYX8FVKZTXNDr
+         yWDsSCWmGMgKLvPmJismvKx4/pAhzKnwu/khgPcIwSPfhk833L8KJDYIGVzqravxYuFa
+         JS/KC0U1ZDDAw5WzBdkA6/+P/vOKYu+ni6H3Qu+Qvn4dyw1yZphut2rWRPV/8s78/feV
+         QTqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688342315; x=1690934315;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lWnMPQFBusztmkgKaUES3szXF6Iacc01LX/0q3rq/lM=;
+        b=eLycejnI5dhHHVRtZVW9BA58QWgNk1k3pUd4OrdTLJAYagyWMfqDiRYULui+yQb3av
+         tK9ZWqrsw9xdNSoSP14umzimUEFLRkvOrZHHi19Wnf3wqXujWTEG8HatKKjfAsoUuADZ
+         YMNqOKC+0PBcQcXZI5AG8nVUKpTprUJQv5u7tIzq9BUrcrypvs54dFJZ9cTZtSC2PvAl
+         hdyHBXbf8m1hHoyj6Y9wF20VglIQMsSi7NvhbrgOGNwt5cvg7kT5ErzpigPDPI7yaFB3
+         K/4oIfxgeHME9X3ISHDNxgH3rLARRVK/kGyYATm7K42hO+vPIaPpOZmn/YYQYI4lTjpb
+         FfNQ==
+X-Gm-Message-State: ABy/qLY2fgir0NKzLGZQ0XFBZX5oKJTOz7bhSwfbTMMVlQ+yVOi6WAUE
+        i6/QHPr+YuQElTnLYaZ4xQ+XmQ==
+X-Google-Smtp-Source: APBJJlErDsJbZ3q3RStcfVbMiFG++lkuYVeigX0nYK2H9tYr2UfXpjwbCeKSIC2Ce0DGR3hR7bDipQ==
+X-Received: by 2002:a17:903:41c7:b0:1b3:c62d:71c7 with SMTP id u7-20020a17090341c700b001b3c62d71c7mr287654ple.23.1688342314741;
+        Sun, 02 Jul 2023 16:58:34 -0700 (PDT)
+Received: from [2620:0:1008:15:f9d4:d371:9d50:fcd6] ([2620:0:1008:15:f9d4:d371:9d50:fcd6])
+        by smtp.gmail.com with ESMTPSA id k2-20020a17090a4c8200b002609cadc56esm15172172pjh.11.2023.07.02.16.58.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Jul 2023 16:58:34 -0700 (PDT)
+Date:   Sun, 2 Jul 2023 16:58:33 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+To:     syzbot <syzbot+cf0693aee9ea61dda749@syzkaller.appspotmail.com>
+cc:     42.hyeyoo@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        cl@linux.com, iamjoonsoo.kim@lge.com, keescook@chromium.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        penberg@kernel.org, reiserfs-devel@vger.kernel.org,
+        roman.gushchin@linux.dev, syzkaller-bugs@googlegroups.com,
+        Vlastimil Babka <vbabka@suse.cz>, Jan Kara <jack@suse.cz>
+Subject: Re: [syzbot] [mm?] [reiserfs?] kernel panic: stack is corrupted in
+ ___slab_alloc
+In-Reply-To: <0000000000002373f005ff843b58@google.com>
+Message-ID: <1bb83e9d-6d7e-3c80-12f6-847bf2dc865e@google.com>
+References: <0000000000002373f005ff843b58@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Jun 29, 2023 at 10:11:26AM +0200, Roberto Sassu wrote:
+On Sun, 2 Jul 2023, syzbot wrote:
 
-Good morning, I hope the weekend is going well for everyone, greetings
-to Roberto and everyone copied.
-
-> On Wed, 2023-06-28 at 21:10 -0500, Serge E. Hallyn wrote:
-> > On Thu, Jun 22, 2023 at 04:42:37PM +0200, Roberto Sassu wrote:
-> > > Hi everyone
-> > > 
-> > > I briefly discussed this topic at LSS NA 2023, but I wanted to have an
-> > > opinion from a broader audience.
-> > > 
-> > > In short:
-> > > 
-> > > I wanted to execute some kernel workloads in a fully isolated user
-> > > space process, started from a binary statically linked with klibc,
-> > > connected to the kernel only through a pipe.
-> > > 
-> > > I also wanted that, for the root user, tampering with that process is
-> > > as hard as if the same code runs in kernel space.
-> > > 
-> > > I would use the fully isolated process to parse and convert unsupported
-> > > data formats to a supported one, after the kernel verified the
-> > 
-> > Can you give some examples here of supported and unsupported data
-> > formats?  ext2 is supported, but we sadly don't trust the sb parser
-> > to read a an ext2fs coming from unknown source.  So I'm not quite
-> > clear what problem you're trying to solve.
+> Hello,
 > 
-> + eBPF guys (as I'm talking about eBPF)
-
-If the week goes well, we will be submitting the second version of our
-TSEM LSM for review.  It incorporates a significant number of changes
-and enhancements, based on both initial review comments, and
-importantly, feedback from our collaborators in the critical
-infrastructure community.
-
-Just as a levelset.  TSEM provides kernel infrastructure to implement
-security controls based on either deterministic or machine learning
-models.  Quixote is the userspace infrastructure that enables use of
-the TSEM kernel infrastructure.
-
-Based on your description Roberto, TSEM may be of assistance in
-addressesing your issues at two different levels.
-
-First with respect to protection of an isolated workload.
-
-TSEM is inherently workload based, given that it is based on an
-architecture that implements security modeling namespaces that a
-process heirarchy can be placed into.  This reduces model complexity
-and provides the implementation of very specific and targeted security
-controls based on the needs of a proposed workload.
-
-The security controls are prospective rather than retrospective,
-ie. TSEM will pro-actively block any security behaviors that are not
-in a security model that has been defined for the workload.
-
-For example, with respect to the concerns you had previously mentioned
-about ptrace.  If the security model definition does not include a
-security state coefficient for a ptrace_traceme security event, it
-will be disallowed, regardless of what goes on with respect to kernel
-development, modulo of course the ptrace_traceme LSM hook being
-discontinued.
-
-Cross-model signaling is blocked by default, which further restricts
-what can happen in a workload to the workload itself.  The security
-event coefficients are generated based on a concept known as a 'task
-identity'.  The documentation has extensive details on this, but the
-effect is to make the security behaviors specific to the identity of
-the executable code that requests modeling of security events.
-
-So what one ends up with are security controls that contrains the
-behavior of the workload to be as consistent as possible to what the
-workload has been unit tested to.
-
-Decision making for the security behavior is embodied in an entity
-known as a Trust Modeling Agent (TMA).  The architecture is designed
-to be flexible with respect to where the TMA is run.  The sample
-userspace provides TMA's that run in the kernel, a userspace process,
-an SGX enclave, a Xen based stubdomain and several micro-controller
-implementations.
-
-Lots more details, but I will not drone on further, the TSEM
-implementation comes with about 25 pages of documentation discussing
-the architecture.
-
-> File digests are distributed in a multitude of formats: RPM packages
-> provide them in RPMTAG_FILEDIGESTS, DEB packages in md5sum (now
-> sha256sum), containers I guess they have a manifest.
+> syzbot found the following issue on:
 > 
-> File digests would be used as reference values for IMA Appraisal and
-> IMA Measurement (to have a predictable PCR).
+> HEAD commit:    e8f75c0270d9 Merge tag 'x86_sgx_for_v6.5' of git://git.ker..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=168b84fb280000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=a98ec7f738e43bd4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cf0693aee9ea61dda749
+> compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10310670a80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1220c777280000
 > 
-> If we manage to write a tiny parser for RPM headers (I'm talking about
-> something like 200 lines) to extract the file digests, basically we
-> have all the information we need to do IMA Appraisal on current, past
-> and future RPM-based Linux distributions.
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/f27c1d41217a/disk-e8f75c02.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/843ae5d5c810/vmlinux-e8f75c02.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/da48bc4c0ec1/bzImage-e8f75c02.xz
+> mounted in repro: https://storage.googleapis.com/syzbot-assets/658601e354e4/mount_0.gz
 > 
-> If we do the same for DEB (ok, well, when they switch from MD5 to
-> SHA256), we can support all DEB-based Linux distributions too.
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+cf0693aee9ea61dda749@syzkaller.appspotmail.com
 > 
-> On the opposite side, yes, we can change the RPM format, ask the
-> distributions to sign per-file. If it was that easy, we would not be
-> (still) waiting for the first distribution (Fedora 38) to support file
-> signatures since 2016, when the feature was proposed (sorry if it looks
-> like diminishing what Mimi and IBM proposed, I'm trying to convey the
-> idea of how difficult is to realize that architecture).
+> Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: ___slab_alloc+0x12c3/0x1400 mm/slub.c:3270
+> CPU: 0 PID: 5009 Comm: syz-executor248 Not tainted 6.4.0-syzkaller-01406-ge8f75c0270d9 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/27/2023
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:88 [inline]
+>  dump_stack_lvl+0xd9/0x150 lib/dump_stack.c:106
+>  panic+0x686/0x730 kernel/panic.c:340
+>  __stack_chk_fail+0x19/0x20 kernel/panic.c:759
+>  ___slab_alloc+0x12c3/0x1400 mm/slub.c:3270
 > 
-> What about other formats? How long it could take for them to be adapted
-> to store file signatures?
+
+This is happening during while mounting reiserfs, so I'm inclined to think 
+it's more of a reisterfs issue than a slab allocator issue :/
+
 > 
-> Immediate support for IMA Appraisal is as far as looping into the RPM
-> header sections to obtain the data offset of RPMTAG_FILEDIGESTS and
-> converting the digests at that offset from hex to bin (we need also to
-> verify the PGP signature of the RPM header, but I would leave it for
-> later).
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
 > 
-> You probably also see how close we are to accomplish the goal. I'm open
-> to suggestions: if this idea of an isolated process doing the parsing
-> is not suitable, I could implement it in a different way.
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 > 
-> So far I proposed:
+> If the bug is already fixed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
 > 
-> - In-kernel parser (dangerous, not scalable)
-> https://lore.kernel.org/linux-integrity/20210914163401.864635-1-roberto.sassu@huawei.com/
-> - eBPF (no program signatures, not compliant with the LSM conventions,
->   unsolved security issues)
-> https://github.com/robertosassu/diglim-ebpf/commit/693745cb388bca7354233cadae1fe2d23d47ff9d
-> - Isolated user space process (not enough isolation guarantees)
-> https://lore.kernel.org/linux-kernel//20230317145240.363908-1-roberto.sassu@huaweicloud.com/
-> https://lore.kernel.org/linux-kernel//20230425173557.724688-1-roberto.sassu@huaweicloud.com/
-
-Quixote/TSEM is the product of a number of years of our team building
-secure systems based on IMA, TPM's, TBOOT and SGX.  Its design was
-largely driven by the challenges that we ran into when trying to put
-these implementations into field operation.
-
-If you want to look at options beyond classic IMA and appraisal,
-Quixote/TSEM may be of utility beyond just the protection of your
-proposed single-purpose parsing process.
-
-Given the issues posed, in particular by SMP systems, we designed
-Quixote/TSEM from the ground up to deal with the challenges of time
-dependent linear extension measurements, ie. the TPM PCR model.  The
-Quixote deterministic and quasi-deterministic models are designed to
-provide an invariant functional 'state' value for the security status
-of a workload, a value that is scheduling independent.
-
-One of the basis parameters for TSEM modeling is the digest value of
-either an executable file or memory that has been marked as
-executable, the same model used by IMA.  In essence you get file
-appraisal for 'free', as a result of modeling the security behavior of
-a workload.
-
-The bearers token for the security of a workload is a signed security
-model generated by unit testing of the workload.  If the file digests
-generated by workload execution are inconsistent with what has been
-unit tested for the workload, the security state goes out of model
-definition and is detected and/or blocked.
-
-The only thing that needs to know about keys and signatures is the
-Quixote trust orchestrator and the security model definition, all of
-which further reduces the distribution complexity of the model.
-
-So Quixote/TSEM provides an alternate architecture where the desired
-security state of a workload is provided in some type of workload or
-container manifest, not just in the form of file digests.  This
-architecture should be of interest to Lennart and the systemd group as
-well as the container people.
-
-One of the open questions is the notion of establishing a definition
-for trust.  For example, the 'BPF token' thread, has talked about the
-notion of what is a 'trusted' process, discussions on the lockdown LSM
-focused on that as well.  In TSEM, a workload is 'trusted' by virtue
-of not having generating a security state coefficient outside the
-bounds of a pre-defined model for a workload.  Once it does so, it
-will be treated as untrustworthy.
-
-Lots and lots of additional details that I can speak to but this has
-grown long already and I want to get out fishing.  I can speak in
-probably boring detail on any additional questions that you may
-have... :-)
-
-> Thanks
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
 > 
-> Roberto
-
-Have a good week.
-
-As always,
-Dr. Greg
-
-The Quixote Project - Flailing at the Travails of Cybersecurity
+> If you want to change bug's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the bug is a duplicate of another bug, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
+> 
