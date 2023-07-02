@@ -2,130 +2,127 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6AFC001DD
-	for <linux-hardening@archiver.kernel.org>; Sun,  2 Jul 2023 08:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55F7C001DD
+	for <linux-hardening@archiver.kernel.org>; Sun,  2 Jul 2023 08:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbjGBIIe (ORCPT
+        id S229751AbjGBIMc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 2 Jul 2023 04:08:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
+        Sun, 2 Jul 2023 04:12:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjGBIIe (ORCPT
+        with ESMTP id S229764AbjGBIMb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 2 Jul 2023 04:08:34 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D67710EA
-        for <linux-hardening@vger.kernel.org>; Sun,  2 Jul 2023 01:08:31 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-51bece5d935so4274590a12.1
-        for <linux-hardening@vger.kernel.org>; Sun, 02 Jul 2023 01:08:31 -0700 (PDT)
+        Sun, 2 Jul 2023 04:12:31 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4D610EB
+        for <linux-hardening@vger.kernel.org>; Sun,  2 Jul 2023 01:12:28 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-51d9c71fb4bso3080828a12.2
+        for <linux-hardening@vger.kernel.org>; Sun, 02 Jul 2023 01:12:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688285309; x=1690877309;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1688285547; x=1690877547;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=yiK+2U/avbBAV4omOI54stBTDSJ/EAt/1elJuMeHDBs=;
-        b=D27UANjuA9z6gLhLpwAe48KhiEYD4n5pXWQ7+9ojjv8yilwmsUdPdVuqPO4uqYzD3J
-         iimWh2D/nRnPv6A9lMOnUH/rb9RagafErmURJTDOfeF0RAGV1MLXlc3bXWfPjt6doBnt
-         mS9kNXFGT/w1mhUDK2zuKzFLGKgKG0McLTMc1swIrRIlNDAHU0uMMfoCU0TblbyY7taJ
-         J6MCDrvwviDWxkYpgjxsAk0jcftFlCffJeVfKfS98fbX3oGlxPTBXXGaMSiLv3BuiFpC
-         ane1tLbuD0VThkJkNnj61o6cuZTBShdpqVJfjaSEMETcKA+aUAS+bWT1K8GXCt/Vuf74
-         lZ5A==
+        bh=AQhWpYL9hEZIUpMtAIawe0pmPnv0SY03GJaWnN0onTA=;
+        b=xC51ZzzM4ZKoBMI4V8NMMtadmxxxemrNka3FteTPT7S80w9jo771KZxMwoCSxXnHVq
+         mQ/Ct8hPihzooSonqa0IwxYHmKNrlItug0o22lRahVLPGJc1i55rQSPq2fN7K1quMuZm
+         MOCR6eeodx9vxyhmr9XCuHDKgC/1DzM7KvWBbB8llOnnaM9+leerRAYvBAO6YOv0nFK0
+         7o46635deoSiuDR0sB0z1qogjbx3AreMLxxqTa8e11rEptZpS7koADwxBvHAhUPNcB3W
+         ICnzlnLQ7sHXvp5fLTlxXJAhkksI+Roh13Sp/hK7eKrPoIo0ltY/2eR0NZOuHZxTm9H8
+         0Hew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688285310; x=1690877310;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1688285547; x=1690877547;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yiK+2U/avbBAV4omOI54stBTDSJ/EAt/1elJuMeHDBs=;
-        b=I9jiNIkDHgTrzGpWidcmPCi2PGVa4ZjLmlIPQR8YvDds7DyrSGDXUOiMNZrQioo6o/
-         bH1x0aa/EENTRzl4nORe7mRu02ylseU41cqOmJKiCwwttTqHMskwbUMQoxkazvsIg/wB
-         Yd/Y7AgWlNdePdNITyC00eY1vAmoCsjfKyJSGvx7TC0hIKbBhbtJVU4BAUxBg8bQtakD
-         MeYwSXumu4Ovr8SDy1dfH7fjZXJsLs8s5KjtoOSiKQTrW6lqzUo/dMW9RnJB8JBhocIZ
-         B6oeOIl+Dj6xst6vezZZZ3yebNHh/7IA8QMEqlYCG7NoiLyQXhIG2Vfw8/iFJ5suiRc3
-         +VGw==
-X-Gm-Message-State: ABy/qLblFeTzXwjb+pab1WaEvkdF0v3GMp1OVCccb6ZD8Faf+7PiH/zT
-        cwQGdc8ibLdvs6UpraCrgmgOCg==
-X-Google-Smtp-Source: APBJJlGWpB4p3HPFjgY/jo67bYOd3wrJxfJT99DmTEqvpdH/XPSeieNy/NxOiaIgYpFFRTESnRHoaA==
-X-Received: by 2002:aa7:d911:0:b0:51e:677:603f with SMTP id a17-20020aa7d911000000b0051e0677603fmr1212016edr.38.1688285309609;
-        Sun, 02 Jul 2023 01:08:29 -0700 (PDT)
+        bh=AQhWpYL9hEZIUpMtAIawe0pmPnv0SY03GJaWnN0onTA=;
+        b=JWwaprTq/Zg5m6OdN3Bn4eoJd/qWRbdyN9GVUxrVPPUTr2QXYIZATpfpUsJHyMvKRL
+         pNVLU0SXISxvMealxBG/2CuQTzh6OiMhTi8PS9ZlFeS2Ahy4Qqlc6kfs6M8RE5RfMsOE
+         21iNvzlPu6Y/mJ0S540hi11vXaMFV7WSPFUDFe/34RkLYBf9Kc0DqeHmAGTRz317HHgW
+         XrvoDgeiFVh2rE1J06yGLk+q1FO+xpbVfeQLIbh/hm4L91g+5Skc9ZqCRI13FZ2QH4x3
+         ZsmjRBKqn3BEXNtqDll89oC3AxctZSRlG7ghAGrWICMXPmpTz6Rr08op0e7cjgn60z49
+         pnGg==
+X-Gm-Message-State: ABy/qLb7nzipIk1atVLExLtTw62KUH1y2iyb8PHiVlFN7sn8eX1ASjEr
+        3O4W7DxCvOdACmCE8GNFqVPTQcA6FikYota0QMXDlQ==
+X-Google-Smtp-Source: APBJJlHReryiI//h1VlOhpsruyExVn57irLSs+XOEUnGWSBEjP9I8qHbI0tF2FJsXM3COMPNyHY4aQ==
+X-Received: by 2002:aa7:d7c5:0:b0:51d:9664:e84 with SMTP id e5-20020aa7d7c5000000b0051d96640e84mr4610483eds.9.1688285547047;
+        Sun, 02 Jul 2023 01:12:27 -0700 (PDT)
 Received: from [192.168.10.214] ([217.169.179.6])
-        by smtp.gmail.com with ESMTPSA id z2-20020a50eb42000000b0051bf17d7710sm8772590edp.57.2023.07.02.01.08.28
+        by smtp.gmail.com with ESMTPSA id n15-20020a05640204cf00b0050bc4600d38sm8804565edw.79.2023.07.02.01.12.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Jul 2023 01:08:28 -0700 (PDT)
-Message-ID: <6c5879dc-bc5c-0b02-0f1a-39b5b5cd5c20@linaro.org>
-Date:   Sun, 2 Jul 2023 10:08:27 +0200
+        Sun, 02 Jul 2023 01:12:26 -0700 (PDT)
+Message-ID: <58a26b9e-a48d-d567-c310-193a2c52521e@linaro.org>
+Date:   Sun, 2 Jul 2023 10:12:25 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
- support
-Content-Language: en-US
-To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+Subject: Re: [PATCH v4 08/21] dt-bindings: reserved-memory: Add qcom,ramoops
+ binding
+To:     Mukesh Ojha <quic_mojha@quicinc.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     corbet@lwn.net, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, krzysztof.kozlowski+dt@linaro.org,
         conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
         gpiccoli@igalia.com, mathieu.poirier@linaro.org,
         catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        andy.shevchenko@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <1687955688-20809-9-git-send-email-quic_mojha@quicinc.com>
+ <CAL_JsqJ_TTnGjjB2d8_FKHpWBRG5GHLoWnabCKjsdeZ4QFdNEg@mail.gmail.com>
+ <cacbbb02-732e-076e-50bf-292d20a4d722@quicinc.com>
+Content-Language: en-US
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+In-Reply-To: <cacbbb02-732e-076e-50bf-292d20a4d722@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 28/06/2023 14:34, Mukesh Ojha wrote:
-> Minidump is a best effort mechanism to collect useful and predefined data
-> for first level of debugging on end user devices running on Qualcomm SoCs.
-> It is built on the premise that System on Chip (SoC) or subsystem part of
-> SoC crashes, due to a range of hardware and software bugs. Hence, the
-> ability to collect accurate data is only a best-effort. The data collected
-> could be invalid or corrupted, data collection itself could fail, and so on.
-> 
-
-...hundred of unrelated lines...
-
->  #define PANIC_PRINT_TASK_INFO          0x00000001
->  #define PANIC_PRINT_MEM_INFO           0x00000002
-> @@ -261,6 +263,7 @@ void panic(const char *fmt, ...)
->         int old_cpu, this_cpu;
->         bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
-> 
-> +       in_panic = true;
->         if (panic_on_warn) {
->                 /*
->                  * This thread may hit another WARN() in the panic path.
-> --------------------------------------------------------------------------
-> 
-> Changes in v4:
-
-Putting changelog at the end of very long cover letter does no help us
-to find it.
-
->  - Redesigned the driver and divided the driver into front end and backend (smem) so
->    that any new backend can be attached easily to avoid code duplication.
->  - Patch reordering as per the driver and subsystem to easier review of the code.
->  - Removed minidump specific code from remoteproc to minidump smem based driver.
->  - Enabled the all the driver as modules.
->  - Address comments made on documentation and yaml and Device tree file [Krzysztof/Konrad]
-
-That's not enough. Your binding changed a lot and I doubt we proposed
-such changes. You need to be specific.
-
->  - Address comments made qcom_pstore_minidump driver and given its Device tree
->    same set of properties as ramoops. [Luca/Kees]
->  - Added patch for MAINTAINER file.
->  - Include defconfig change as one patch as per [Krzysztof] suggestion.
->  - Tried to remove the redundant file scope variables from the module as per [Krzysztof] suggestion.
->  - Addressed comments made on dload mode patch v6 version 
->    https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+On 28/06/2023 17:01, Mukesh Ojha wrote:
 > 
 > 
+> On 6/28/2023 8:17 PM, Rob Herring wrote:
+>> On Wed, Jun 28, 2023 at 6:36 AM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+>>>
+>>> Qualcomm ramoops minidump logger provide a means of storing
+>>> the ramoops data to some dynamically reserved memory instead
+>>> of traditionally implemented ramoops where the region should
+>>> be statically fixed ram region. Its device tree binding
+>>> would be exactly same as ramoops device tree binding and is
+>>> going to contain traditional ramoops frontend data and this
+>>> content will be collected via Qualcomm minidump infrastructure
+>>> provided from the boot firmware.
+>>
+>> The big difference is if firmware is not deciding where this log
+>> lives, then it doesn't need to be in DT. How does anything except the
+>> kernel that allocates the log find the logs?
+> 
+> Yes, you are correct, firmware is not deciding where the logs lives
+> instead here, Kernel has reserved the region where the ramoops region
+> lives and later with the minidump registration where, physical
+> address/size/virtual address(for parsing) are passed and that is how
+> firmware is able to know and dump those region before triggering system
+> reset.
+
+Your explanation does not justify storing all this in DT. Kernel can
+allocate any memory it wishes, store there logs and pass the address to
+the firmware. That's it, no need for DT.
+
+> 
+> A part of this registration code you can find in 11/21
+> 
+>> I'm pretty sure I already said all this before.
+> 
+> Yes, you said this before but that's the reason i came up with vendor
+> ramoops instead of changing traditional ramoops binding.
+
+That's unexpected conclusion. Adding more bindings is not the answer to
+comment that it should not be in the DTS in the first place.
 
 Best regards,
 Krzysztof
