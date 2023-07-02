@@ -2,86 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C73EB64DC
-	for <linux-hardening@archiver.kernel.org>; Sun,  2 Jul 2023 00:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6AFC001DD
+	for <linux-hardening@archiver.kernel.org>; Sun,  2 Jul 2023 08:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbjGBAA1 (ORCPT
+        id S229725AbjGBIIe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 1 Jul 2023 20:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
+        Sun, 2 Jul 2023 04:08:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjGBAA0 (ORCPT
+        with ESMTP id S229712AbjGBIIe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 1 Jul 2023 20:00:26 -0400
-Received: from sonata.ens-lyon.org (domu-toccata.ens-lyon.fr [140.77.166.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF0561725;
-        Sat,  1 Jul 2023 17:00:25 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by sonata.ens-lyon.org (Postfix) with ESMTP id 94F2620152;
-        Sun,  2 Jul 2023 02:00:23 +0200 (CEST)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0-p4yNMqCa8e; Sun,  2 Jul 2023 02:00:23 +0200 (CEST)
-Received: from begin (lfbn-bor-1-1163-184.w92-158.abo.wanadoo.fr [92.158.138.184])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by sonata.ens-lyon.org (Postfix) with ESMTPSA id 6F70C20151;
-        Sun,  2 Jul 2023 02:00:23 +0200 (CEST)
-Received: from samy by begin with local (Exim 4.96)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1qFkVr-003nZe-0E;
-        Sun, 02 Jul 2023 02:00:23 +0200
-Date:   Sun, 2 Jul 2023 02:00:23 +0200
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kees Cook <kees@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Dave@mielke.cc
-Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
-Message-ID: <20230702000022.iozn7lmvy2ihygdc@begin>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Kees Cook <keescook@chromium.org>, Kees Cook <kees@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Simon Brand <simon.brand@postadigitale.de>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Dave@mielke.cc
-References: <20221022182828.give.717-kees@kernel.org>
- <20221022182949.2684794-2-keescook@chromium.org>
- <20221227234000.jgosvixx7eahqb3z@begin>
- <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
- <20221228205726.rfevry7ud6gmttg5@begin>
- <20230625155625.s4kvy7m2vw74ow4i@begin>
- <202306271944.E80E1D0@keescook>
- <20230628060716.vvgtlgbushyjh6km@begin>
- <202306280930.8CBBB9B@keescook>
+        Sun, 2 Jul 2023 04:08:34 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D67710EA
+        for <linux-hardening@vger.kernel.org>; Sun,  2 Jul 2023 01:08:31 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-51bece5d935so4274590a12.1
+        for <linux-hardening@vger.kernel.org>; Sun, 02 Jul 2023 01:08:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688285309; x=1690877309;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yiK+2U/avbBAV4omOI54stBTDSJ/EAt/1elJuMeHDBs=;
+        b=D27UANjuA9z6gLhLpwAe48KhiEYD4n5pXWQ7+9ojjv8yilwmsUdPdVuqPO4uqYzD3J
+         iimWh2D/nRnPv6A9lMOnUH/rb9RagafErmURJTDOfeF0RAGV1MLXlc3bXWfPjt6doBnt
+         mS9kNXFGT/w1mhUDK2zuKzFLGKgKG0McLTMc1swIrRIlNDAHU0uMMfoCU0TblbyY7taJ
+         J6MCDrvwviDWxkYpgjxsAk0jcftFlCffJeVfKfS98fbX3oGlxPTBXXGaMSiLv3BuiFpC
+         ane1tLbuD0VThkJkNnj61o6cuZTBShdpqVJfjaSEMETcKA+aUAS+bWT1K8GXCt/Vuf74
+         lZ5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688285310; x=1690877310;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yiK+2U/avbBAV4omOI54stBTDSJ/EAt/1elJuMeHDBs=;
+        b=I9jiNIkDHgTrzGpWidcmPCi2PGVa4ZjLmlIPQR8YvDds7DyrSGDXUOiMNZrQioo6o/
+         bH1x0aa/EENTRzl4nORe7mRu02ylseU41cqOmJKiCwwttTqHMskwbUMQoxkazvsIg/wB
+         Yd/Y7AgWlNdePdNITyC00eY1vAmoCsjfKyJSGvx7TC0hIKbBhbtJVU4BAUxBg8bQtakD
+         MeYwSXumu4Ovr8SDy1dfH7fjZXJsLs8s5KjtoOSiKQTrW6lqzUo/dMW9RnJB8JBhocIZ
+         B6oeOIl+Dj6xst6vezZZZ3yebNHh/7IA8QMEqlYCG7NoiLyQXhIG2Vfw8/iFJ5suiRc3
+         +VGw==
+X-Gm-Message-State: ABy/qLblFeTzXwjb+pab1WaEvkdF0v3GMp1OVCccb6ZD8Faf+7PiH/zT
+        cwQGdc8ibLdvs6UpraCrgmgOCg==
+X-Google-Smtp-Source: APBJJlGWpB4p3HPFjgY/jo67bYOd3wrJxfJT99DmTEqvpdH/XPSeieNy/NxOiaIgYpFFRTESnRHoaA==
+X-Received: by 2002:aa7:d911:0:b0:51e:677:603f with SMTP id a17-20020aa7d911000000b0051e0677603fmr1212016edr.38.1688285309609;
+        Sun, 02 Jul 2023 01:08:29 -0700 (PDT)
+Received: from [192.168.10.214] ([217.169.179.6])
+        by smtp.gmail.com with ESMTPSA id z2-20020a50eb42000000b0051bf17d7710sm8772590edp.57.2023.07.02.01.08.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 02 Jul 2023 01:08:28 -0700 (PDT)
+Message-ID: <6c5879dc-bc5c-0b02-0f1a-39b5b5cd5c20@linaro.org>
+Date:   Sun, 2 Jul 2023 10:08:27 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202306280930.8CBBB9B@keescook>
-Organization: I am not organized
-User-Agent: NeoMutt/20170609 (1.8.3)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+Content-Language: en-US
+To:     Mukesh Ojha <quic_mojha@quicinc.com>, corbet@lwn.net,
+        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
+        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
+        andy.shevchenko@gmail.com
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook, le mer. 28 juin 2023 09:32:20 -0700, a ecrit:
-> On Wed, Jun 28, 2023 at 08:07:16AM +0200, Samuel Thibault wrote:
-> > Kees Cook, le mar. 27 juin 2023 19:48:45 -0700, a ecrit:
-> > > > Really, this a serious regression for the people affected by this.
-> > > 
-> > > Can you send a patch adding a CAP_SYS_ADMIN exception?
-> > 
-> > Sure!
+On 28/06/2023 14:34, Mukesh Ojha wrote:
+> Minidump is a best effort mechanism to collect useful and predefined data
+> for first level of debugging on end user devices running on Qualcomm SoCs.
+> It is built on the premise that System on Chip (SoC) or subsystem part of
+> SoC crashes, due to a range of hardware and software bugs. Hence, the
+> ability to collect accurate data is only a best-effort. The data collected
+> could be invalid or corrupted, data collection itself could fail, and so on.
 > 
-> Thanks! (And be sure to use file->f_cred for the check[1], not "current",
-> that way brltty can open the tty and drop caps and still do the ioctl.)
 
-Actually brltty re-opens the various tty[1-6] consoles when the users
-switches, so I kept just testing capable(CAP_SYS_ADMIN).
+...hundred of unrelated lines...
 
-Samuel
+>  #define PANIC_PRINT_TASK_INFO          0x00000001
+>  #define PANIC_PRINT_MEM_INFO           0x00000002
+> @@ -261,6 +263,7 @@ void panic(const char *fmt, ...)
+>         int old_cpu, this_cpu;
+>         bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+> 
+> +       in_panic = true;
+>         if (panic_on_warn) {
+>                 /*
+>                  * This thread may hit another WARN() in the panic path.
+> --------------------------------------------------------------------------
+> 
+> Changes in v4:
+
+Putting changelog at the end of very long cover letter does no help us
+to find it.
+
+>  - Redesigned the driver and divided the driver into front end and backend (smem) so
+>    that any new backend can be attached easily to avoid code duplication.
+>  - Patch reordering as per the driver and subsystem to easier review of the code.
+>  - Removed minidump specific code from remoteproc to minidump smem based driver.
+>  - Enabled the all the driver as modules.
+>  - Address comments made on documentation and yaml and Device tree file [Krzysztof/Konrad]
+
+That's not enough. Your binding changed a lot and I doubt we proposed
+such changes. You need to be specific.
+
+>  - Address comments made qcom_pstore_minidump driver and given its Device tree
+>    same set of properties as ramoops. [Luca/Kees]
+>  - Added patch for MAINTAINER file.
+>  - Include defconfig change as one patch as per [Krzysztof] suggestion.
+>  - Tried to remove the redundant file scope variables from the module as per [Krzysztof] suggestion.
+>  - Addressed comments made on dload mode patch v6 version 
+>    https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+> 
+> 
+
+Best regards,
+Krzysztof
+
