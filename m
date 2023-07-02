@@ -2,84 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF5FEB64DC
-	for <linux-hardening@archiver.kernel.org>; Sat,  1 Jul 2023 17:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C73EB64DC
+	for <linux-hardening@archiver.kernel.org>; Sun,  2 Jul 2023 00:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbjGARQb (ORCPT
+        id S229530AbjGBAA1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 1 Jul 2023 13:16:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60494 "EHLO
+        Sat, 1 Jul 2023 20:00:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjGARQa (ORCPT
+        with ESMTP id S229502AbjGBAA0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 1 Jul 2023 13:16:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9961FE8;
-        Sat,  1 Jul 2023 10:16:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Sat, 1 Jul 2023 20:00:26 -0400
+Received: from sonata.ens-lyon.org (domu-toccata.ens-lyon.fr [140.77.166.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF0561725;
+        Sat,  1 Jul 2023 17:00:25 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by sonata.ens-lyon.org (Postfix) with ESMTP id 94F2620152;
+        Sun,  2 Jul 2023 02:00:23 +0200 (CEST)
+Received: from sonata.ens-lyon.org ([127.0.0.1])
+        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0-p4yNMqCa8e; Sun,  2 Jul 2023 02:00:23 +0200 (CEST)
+Received: from begin (lfbn-bor-1-1163-184.w92-158.abo.wanadoo.fr [92.158.138.184])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 618EB60B61;
-        Sat,  1 Jul 2023 17:16:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B676C433C7;
-        Sat,  1 Jul 2023 17:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688231788;
-        bh=iuoEM5TLrGLiGT/miHKKQ7Yf7kCvrkAytDld5d1Z1KU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=M7Iw+flUPp5hBxYi22CSg15Dxk6sCTfNhi1Ns6UslhVnTxV4UJfAMk31AKcEHYV+W
-         gXP9A2EBaHyUNyEct6lAIu6NHMAqA0CTnWGdGlLciu+G3AEVzqsfWknSCFzYlfx1YH
-         iDIeM+4DxecrcPM/L+6eBNJd38syWpf0dQm6ELaupvuY5Hc/SmLl6Q0pDpA5/TyUlT
-         ZoULBheBxc/Od+xgkwuKkFv5XXeQwVlMu8ZcT7emKCbK+lkC0a/KIhlCd2go1MUVAN
-         okDt0+zkNRAxxw4lXiaLKvNPPp7OjEyMtIt5CAm7Ij4Thqdwa9adScgjEqk8bh7S+z
-         fxiVbjJvQFn2Q==
-Date:   Sat, 1 Jul 2023 11:17:22 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] media: venus: Use struct_size_t() helper in
- pkt_session_unset_buffers()
-Message-ID: <ZKBfoqSl61jfpO2r@work>
+        by sonata.ens-lyon.org (Postfix) with ESMTPSA id 6F70C20151;
+        Sun,  2 Jul 2023 02:00:23 +0200 (CEST)
+Received: from samy by begin with local (Exim 4.96)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1qFkVr-003nZe-0E;
+        Sun, 02 Jul 2023 02:00:23 +0200
+Date:   Sun, 2 Jul 2023 02:00:23 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kees Cook <kees@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+Subject: Re: [PATCH v3 2/2] tty: Allow TIOCSTI to be disabled
+Message-ID: <20230702000022.iozn7lmvy2ihygdc@begin>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Kees Cook <keescook@chromium.org>, Kees Cook <kees@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Simon Brand <simon.brand@postadigitale.de>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Dave@mielke.cc
+References: <20221022182828.give.717-kees@kernel.org>
+ <20221022182949.2684794-2-keescook@chromium.org>
+ <20221227234000.jgosvixx7eahqb3z@begin>
+ <C95AF535-7A95-48BA-8921-1932C15A1931@kernel.org>
+ <20221228205726.rfevry7ud6gmttg5@begin>
+ <20230625155625.s4kvy7m2vw74ow4i@begin>
+ <202306271944.E80E1D0@keescook>
+ <20230628060716.vvgtlgbushyjh6km@begin>
+ <202306280930.8CBBB9B@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <202306280930.8CBBB9B@keescook>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Prefer struct_size_t() over struct_size() when no pointer instance
-of the structure type is present.
+Kees Cook, le mer. 28 juin 2023 09:32:20 -0700, a ecrit:
+> On Wed, Jun 28, 2023 at 08:07:16AM +0200, Samuel Thibault wrote:
+> > Kees Cook, le mar. 27 juin 2023 19:48:45 -0700, a ecrit:
+> > > > Really, this a serious regression for the people affected by this.
+> > > 
+> > > Can you send a patch adding a CAP_SYS_ADMIN exception?
+> > 
+> > Sure!
+> 
+> Thanks! (And be sure to use file->f_cred for the check[1], not "current",
+> that way brltty can open the tty and drop caps and still do the ioctl.)
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/media/platform/qcom/venus/hfi_cmds.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Actually brltty re-opens the various tty[1-6] consoles when the users
+switches, so I kept just testing capable(CAP_SYS_ADMIN).
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.c b/drivers/media/platform/qcom/venus/hfi_cmds.c
-index 7f0802a5518c..3418d2dd9371 100644
---- a/drivers/media/platform/qcom/venus/hfi_cmds.c
-+++ b/drivers/media/platform/qcom/venus/hfi_cmds.c
-@@ -251,8 +251,8 @@ int pkt_session_unset_buffers(struct hfi_session_release_buffer_pkt *pkt,
- 
- 		pkt->extradata_size = 0;
- 		pkt->shdr.hdr.size =
--			struct_size((struct hfi_session_set_buffers_pkt *)0,
--				    buffer_info, bd->num_buffers);
-+			struct_size_t(struct hfi_session_set_buffers_pkt,
-+				      buffer_info, bd->num_buffers);
- 	}
- 
- 	pkt->response_req = bd->response_required;
--- 
-2.34.1
-
+Samuel
