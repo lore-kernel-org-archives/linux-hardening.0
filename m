@@ -2,156 +2,122 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33813C001B3
-	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 19:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C693FC001B0
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 21:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229585AbjGCTrQ (ORCPT
+        id S229980AbjGCVG2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 3 Jul 2023 15:47:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
+        Mon, 3 Jul 2023 17:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230167AbjGCTrP (ORCPT
+        with ESMTP id S229517AbjGCVG1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 3 Jul 2023 15:47:15 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA25DE6E
-        for <linux-hardening@vger.kernel.org>; Mon,  3 Jul 2023 12:47:08 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-6687466137bso2885368b3a.0
-        for <linux-hardening@vger.kernel.org>; Mon, 03 Jul 2023 12:47:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688413628; x=1691005628;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=3tIZB00K/5DyFOSj72DNhfsbX4trIet39LY1NrmW8Vw=;
-        b=AkpyuutSLbeUjtbZF+QmadDfTbhq/EuiSh//1Up5pIfPVr+I8c84RSjjKLRl4P5kT5
-         bs3Lu14sC+zBkSYbKvj6g1LHxz1HuoYxTXJnov78sDj1v05OZb1t985LBXDNVKvZx0vI
-         bV1VSjEA8t3K4oPX6WdVI7c5C785+5UIkUMBQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688413628; x=1691005628;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3tIZB00K/5DyFOSj72DNhfsbX4trIet39LY1NrmW8Vw=;
-        b=DImh+2bsn82QBOXBswa8PtosZXmJ0nirLlCoFQcAYA4zBFz9UGyxMil67f3NFBRI+i
-         c6K6AHyT7VsDedEirjaMr9SaQYR/PuLTjBM+2w1OSJhKleWorKoT5WAunP9k6k0KwvpP
-         F622xrt0sfFNAe9L3JeRVa4LcQ1qP+jivkF4WXLpkCPkVPJUgprrB7/2S7XND/OLx6LP
-         gaj9D6eHU8pDdLZaw6M4xUajY/eNaNlPp0HDKm7WdYRp2I97z4UZ8e49rRn0StnPCBsY
-         F3uX1YEOxXbHtDKgutWF7aFK47a9o6sHuUjTmGQJTu+GbA4aFjhPrsuWJpl/nwKbDdmo
-         yeXw==
-X-Gm-Message-State: ABy/qLafmI1qVfGQr4PdqGSpxOXyZ6KYQch70sLINI7mterqHSRgQf70
-        zr7SWccbNYRN13fIOsSkBJcEuA==
-X-Google-Smtp-Source: APBJJlHGlNpbJK0poTpyCHoYeLlS3DXyJ5HsjBSAz+GG6ulUW2Bv0vD8SynkqOmIk2lbOaMMDEHcoQ==
-X-Received: by 2002:a05:6a00:228b:b0:682:4edf:b9b4 with SMTP id f11-20020a056a00228b00b006824edfb9b4mr8627237pfe.23.1688413628287;
-        Mon, 03 Jul 2023 12:47:08 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h21-20020aa786d5000000b00678cb336f3csm12269834pfo.142.2023.07.03.12.47.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 12:47:07 -0700 (PDT)
-Date:   Mon, 3 Jul 2023 12:47:07 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-hardening@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Puyou Lu <puyou.lu@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Sander Vanheule <sander@svanheule.net>,
-        Eric Biggers <ebiggers@google.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com
-Subject: Re: [PATCH v2 02/10] fortify: Allow KUnit test to build without
- FORTIFY
-Message-ID: <202307031245.D3DDB0E@keescook>
-References: <20230407191904.gonna.522-kees@kernel.org>
- <20230407192717.636137-2-keescook@chromium.org>
- <CAMuHMdUrxOEroHVUt7-mAnKSBjY=a-D3jr+XiAifuwv06Ob9Pw@mail.gmail.com>
+        Mon, 3 Jul 2023 17:06:27 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C28FAE59;
+        Mon,  3 Jul 2023 14:06:26 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 363KkklH015899;
+        Mon, 3 Jul 2023 21:06:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=Kf6a8f2zayKx9LTfaLSkoGTGTiIxgMuV5IPvELMWJQ4=;
+ b=Y32lhCdsHualNtkQYtskbVgQ8iR34tiZd70U/wTcVT15B6fbh+jzd/7FdEP63oLabR9s
+ RTIUm8NjzabsOQP7Hp2SgiQkLuH43Y91sx5PhaASmCImp3OYtjC2CfTf15Z2aqguH/s2
+ NpQeR4i0p+YJ5xzqFviKXBht4UNWd1zv6nUL/tY4IUDFIpoMtx/vGje0f2FdH6NTfj4k
+ YH0j5ilYCVcvp0YEcs1I3Sx5iplHPRln3Fia3HB1PwKtzGN5NcWzU5UaB5YtCy3zVsS/
+ YEDyJ/o/ypB+smeQJh3BKywwshPmUkoyLwppD/AXw2gfDPq9pl/ixzgBj90/sDe8kHFG xw== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rkwyfh0ss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 03 Jul 2023 21:06:00 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 363L5xAY020569
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 3 Jul 2023 21:05:59 GMT
+Received: from [10.110.23.29] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.7; Mon, 3 Jul 2023
+ 14:05:58 -0700
+Message-ID: <957a3cdb-6091-8679-ddb0-296db2347291@quicinc.com>
+Date:   Mon, 3 Jul 2023 14:05:58 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdUrxOEroHVUt7-mAnKSBjY=a-D3jr+XiAifuwv06Ob9Pw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Mukesh Ojha <quic_mojha@quicinc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+CC:     <corbet@lwn.net>, <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <mathieu.poirier@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <linus.walleij@linaro.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, Alex Elder <elder@linaro.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <2023062814-chance-flounder-f002@gregkh>
+ <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
+ <cc30660f-dd72-aade-6346-a93c6ad4b695@quicinc.com>
+ <29af84dc-7db8-0c43-07b6-eb743cf25e57@linaro.org>
+From:   Trilok Soni <quic_tsoni@quicinc.com>
+In-Reply-To: <29af84dc-7db8-0c43-07b6-eb743cf25e57@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: xPPByBNK4qpXUqaj3eMFPyXF3yEyeyp0
+X-Proofpoint-GUID: xPPByBNK4qpXUqaj3eMFPyXF3yEyeyp0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-03_15,2023-06-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=802
+ lowpriorityscore=0 clxscore=1011 priorityscore=1501 impostorscore=0
+ spamscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307030193
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Jul 02, 2023 at 05:07:05PM +0200, Geert Uytterhoeven wrote:
-> Hi Kees,
+On 7/2/2023 1:29 AM, Krzysztof Kozlowski wrote:
+> On 30/06/2023 18:04, Mukesh Ojha wrote:
+>>>
+>>>> We don't add layers when they are not needed, and never when there is no
+>>>> actual user.  If you need the extra "complexity" later, then add it
+>>>> later when it is needed as who knows when that will ever be.
+>>>>
+>>>> Please redo this series based on that, thanks.
+>>>
+>>> My bigger issue with this whole series is what would this all look
+>>> like if every SoC vendor upstreamed their own custom dumping
+>>> mechanism. That would be a mess. (I have similar opinions on the
+>>> $soc-vendor hypervisors.)
 > 
-> On Fri, Apr 7, 2023 at 9:27 PM Kees Cook <keescook@chromium.org> wrote:
-> > In order for CI systems to notice all the skipped tests related to
-> > CONFIG_FORTIFY_SOURCE, allow the FORTIFY_SOURCE KUnit tests to build
-> > with or without CONFIG_FORTIFY_SOURCE.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> Mukesh,
 > 
-> Thanks for your patch, which is now commit a9dc8d0442294b42
-> ("fortify: Allow KUnit test to build without FORTIFY") upstream.
-> 
-> > --- a/lib/Kconfig.debug
-> > +++ b/lib/Kconfig.debug
-> > @@ -2614,7 +2614,7 @@ config STACKINIT_KUNIT_TEST
-> >
-> >  config FORTIFY_KUNIT_TEST
-> >         tristate "Test fortified str*() and mem*() function internals at runtime" if !KUNIT_ALL_TESTS
-> > -       depends on KUNIT && FORTIFY_SOURCE
-> > +       depends on KUNIT
-> 
-> All other tests depend on the functionality they test.
-> Which makes sense, as you only want to test the functionality that is
-> available in the kernel you want to run.
+> LPC CFP is still open. There will be also Android and Kernel Debugging
+> LPC microconference tracks. Coming with a unified solution could be a
+> great topic for LPC. Solutions targeting only one user are quite often
+> frowned upon.
 
-Yeah, that is true for KUnit.
+LPC is far out and in November. Can we not have others speak up if they 
+have the similar solution now? We can expand this to linux-kernel and 
+ask for the other SOC vendors to chime in. I am sure that we may have 
+existing solutions which came in for the one user first like Intel RDT 
+if I remember. I am sure ARM MPAM usecase was present at that time but 
+Intel RDT based solution which was x86 specific but accepted.
 
-> 
-> >         default KUNIT_ALL_TESTS
-> >         help
-> >           Builds unit tests for checking internals of FORTIFY_SOURCE as used
-> > diff --git a/lib/fortify_kunit.c b/lib/fortify_kunit.c
-> > index c8c33cbaae9e..524132f33cf0 100644
-> > --- a/lib/fortify_kunit.c
-> > +++ b/lib/fortify_kunit.c
-> 
-> > @@ -307,6 +312,14 @@ DEFINE_ALLOC_SIZE_TEST_PAIR(kvmalloc)
-> >  } while (0)
-> >  DEFINE_ALLOC_SIZE_TEST_PAIR(devm_kmalloc)
-> >
-> > +static int fortify_test_init(struct kunit *test)
-> > +{
-> > +       if (!IS_ENABLED(CONFIG_FORTIFY_SOURCE))
-> > +               kunit_skip(test, "Not built with CONFIG_FORTIFY_SOURCE=y");
-> 
-> I was greeted by this message, which wasn't that helpful, as
-> CONFIG_FORTIFY_SOURCE depends on CONFIG_ARCH_HAS_FORTIFY_SOURCE,
-> which is not available yet on all architectures.
-> 
-> So I think the proper thing to do is to revert this patch.
-> Thanks!
-
-I created this patch so that I could add CONFIG_FORTIFY_SOURCE support
-to UML, but you have a good point about other archs. I'll prepare a
-revert.
-
--- 
-Kees Cook
+---Trilok Soni
