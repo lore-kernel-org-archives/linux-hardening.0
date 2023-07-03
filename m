@@ -2,108 +2,148 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C45C001DD
-	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 18:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45C9C001B0
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 19:03:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230189AbjGCSre (ORCPT
+        id S230224AbjGCTD1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 3 Jul 2023 14:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59178 "EHLO
+        Mon, 3 Jul 2023 15:03:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbjGCSre (ORCPT
+        with ESMTP id S229895AbjGCTD0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 3 Jul 2023 14:47:34 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4689FE70
-        for <linux-hardening@vger.kernel.org>; Mon,  3 Jul 2023 11:47:32 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-55b12286476so2367106a12.1
-        for <linux-hardening@vger.kernel.org>; Mon, 03 Jul 2023 11:47:32 -0700 (PDT)
+        Mon, 3 Jul 2023 15:03:26 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023C7AF
+        for <linux-hardening@vger.kernel.org>; Mon,  3 Jul 2023 12:03:25 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-6689430d803so2498219b3a.0
+        for <linux-hardening@vger.kernel.org>; Mon, 03 Jul 2023 12:03:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688410052; x=1691002052;
+        d=chromium.org; s=google; t=1688411004; x=1691003004;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kN9o72g+S+fr453o45UGKHe2553NpYDOTlk2hs27c8U=;
-        b=b9iCvxxHye8HsmgiBQdPV5wB3f1FHMfAOiUqp/E9CmOP7x6AhyW5/oynel97W2sEmn
-         FvScJKeTY17iuoxKWd3fJHBDoV3jQ5VhDZhAiDH7gJxV6cBYtNcXXCFvQiJuShNtQGJA
-         4z03TR4FvqYVUbHwqT8AyLfVintdaAK9d5apw=
+        bh=e2RYZRLdkNoiixgGGXsCAsn40wE9t2aXAfVNzXokwOc=;
+        b=YRPxXzGc4UuYzbUAXbPHrASt5qkMMnE+qv577e9xoiY0qIQ7l7/oStaFPnopW0oxCG
+         AiMz0AKa25o4ThiYM9wkdLrVxFOwAPhvifaGRw8kbuk8uVl7dBiKjQXarb5rYmbfnA5T
+         IQdEBHnH5pwK+Uopjec2Mgd0ZJHfOnt6eNkLs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688410052; x=1691002052;
+        d=1e100.net; s=20221208; t=1688411004; x=1691003004;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kN9o72g+S+fr453o45UGKHe2553NpYDOTlk2hs27c8U=;
-        b=SLnqd4lorelrTp/UEnfmqvJ6KEQ4jVbWPjT2oDmv+YOQybxKn6L4yLwLHn1CBUt3K9
-         o6Wc5mdc7a+2LMnsIEdajpGMDy6rj9abN+gAKtjkSZKi5NRtV5reF79DT8wnC0HPif3m
-         lbt451k6bHoDpDj3G6FDsv/9iIygCl1NHKxMkbuJplRWVLLwBYwsuzWkZyhGkfGcSbXv
-         +9v7ImrvkHqN92XD7hhiUOd0n2bq5jsD1/W2LUBo+1Axk3ABncxnufFDyUrsM5aD9yXB
-         4+g2TXWYcyDEPPQ+W/y/psPoBZrox2/mzWub3gSiAsCk6dqxzYOE4DdmwawzKOj/921O
-         38bA==
-X-Gm-Message-State: AC+VfDwOqqr1rKkOSUvp09palnrpOPIWlCe12y7gXB34H4w0hlezuQA2
-        Xg4JpB5flSHz+OmjtumRadc/yw==
-X-Google-Smtp-Source: ACHHUZ7Uw6JIzie0IqBbLm1Jpta+I6oauYqzRMNr4YquzVcV9CbMBRcoIqPoHfkBX5hGG4i8DnEZeA==
-X-Received: by 2002:a05:6a20:6a0f:b0:126:f64b:668e with SMTP id p15-20020a056a206a0f00b00126f64b668emr11925154pzk.5.1688410051738;
-        Mon, 03 Jul 2023 11:47:31 -0700 (PDT)
+        bh=e2RYZRLdkNoiixgGGXsCAsn40wE9t2aXAfVNzXokwOc=;
+        b=PGOfEZUomZPzxAxkTyk18qb4i9Ze0Jepz0cACiVg4C/3G3rfJDSvjfnXw5lVsBXPXG
+         rr7shXrj3vUfLXw2OvUr7mF6ZWITOjUF2INgpFWVOWq/WkgcJ2FE4GqEbWfGCNJe2wQa
+         TrRCYqe4Rr3juhXmsZ8cHVoGNZYZFUlEBzZ20jR44ckoTwUZezOfx93nA29BmVZ51/Or
+         6uAPsU9bYXLXpvQ6GGhdATn9YNG2ROEAAScnfsuZHVo+VVd7VtvJP/UmlBtTN7hym8Al
+         8XBtqHPjM0pmrVJ474gZP6NkIiGrnYMjCpIq4/suuKiK3234reoCoqd6jO2ymRmf73DU
+         ChBQ==
+X-Gm-Message-State: AC+VfDw+RhTvj2buIUG5D++kUD0YzlnuP0iOd0nEdqYE8AvtqJqcrLuf
+        YCATeerxECuvsigUFhniKNIfeQ==
+X-Google-Smtp-Source: ACHHUZ6IXmGjtNBPTn5F9tKfIIbMruqpzIVIdDTQJTrxxqTXR2sQw4qGgV7Jdg1/hPAZMZHNu2YuRg==
+X-Received: by 2002:a05:6a20:1013:b0:128:ffb7:dcff with SMTP id gs19-20020a056a20101300b00128ffb7dcffmr10025060pzc.11.1688411004501;
+        Mon, 03 Jul 2023 12:03:24 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jf5-20020a170903268500b001b7eeffbdbfsm14742165plb.261.2023.07.03.11.47.31
+        by smtp.gmail.com with ESMTPSA id x16-20020a056a00271000b0067459e92801sm12973915pfv.64.2023.07.03.12.03.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 11:47:31 -0700 (PDT)
-Date:   Mon, 3 Jul 2023 11:47:30 -0700
+        Mon, 03 Jul 2023 12:03:23 -0700 (PDT)
+Date:   Mon, 3 Jul 2023 12:03:23 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        LuisChamberlain <mcgrof@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Petr Tesarik <petrtesarik@huaweicloud.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [QUESTION] Full user space process isolation?
-Message-ID: <202307031140.D52C63D46@keescook>
-References: <eb31920bd00e2c921b0aa6ebed8745cb0130b0e1.camel@huaweicloud.com>
- <CAG48ez2oRPBdbfoNxGcV85CXFx1Su+dmhoWXE6rWsXui6_OTPg@mail.gmail.com>
+To:     Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LLVM <llvm@lists.linux.dev>,
+        linux-kbuild@vger.kernel.org,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
+Message-ID: <202307031149.823F9A3@keescook>
+References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr>
+ <ZKIoBVzrjZ+Ybxy9@debian.me>
+ <202307022018.B26F5795@keescook>
+ <625e951e-9922-d15d-5520-e8cd5eba1995@roeck-us.net>
+ <4fa56264-f188-46f9-cc77-117b469b3328@roeck-us.net>
+ <2b1a4f49-ba18-0246-af09-4e4133814411@alu.unizg.hr>
+ <202307022230.6121D6896@keescook>
+ <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG48ez2oRPBdbfoNxGcV85CXFx1Su+dmhoWXE6rWsXui6_OTPg@mail.gmail.com>
+In-Reply-To: <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jul 03, 2023 at 05:06:42PM +0200, Jann Horn wrote:
-> But I'm not convinced that it makes sense to try to draw a security
-> boundary between fully-privileged root (with the ability to mount
-> things and configure swap and so on) and the kernel - my understanding
-> is that some kernel subsystems don't treat root-to-kernel privilege
-> escalation issues as security bugs that have to be fixed.
+On Mon, Jul 03, 2023 at 09:03:38AM +0200, Mirsad Goran Todorovac wrote:
+> On 3.7.2023. 7:41, Kees Cook wrote:
+> > On Mon, Jul 03, 2023 at 07:18:57AM +0200, Mirsad Goran Todorovac wrote:
+> > > I apologise for confusion. In fact, I have cloned the Torvalds tree after
+> > > 6.4.1 was released, but I actually cloned the Torvalds tree, not the 6.4.1
+> > > from the stable branch as the Subject line might have misled.
+> > 
+> > Thanks, no worries! I got myself confused too. :)
+> > 
+> > The config you sent looks like I'd expect now too. Questions for you, if
+> > you have time to diagnose further:
+> > 
+> > - Are you able to catch the very beginning of the crash, where the Oops
+> >    starts?
+> 
+> It scrolls up very quickly. Couldn't catch that with the camera.
+> 
+> > - Does pstore work for you to catch the crash?
+> 
+> Haven't tried that yet. I will have to do some homework.
 
-There are certainly arguments to be made about this, but efforts continue
-to provide a separation between full-cap uid 0 and kernel memory. LSMs
-like Lockdown, IMA, and LoadPin, for example, seek to close these gaps,
-and systems are designed with this bright line existing between kernel
-and root (e.g. Chrome OS). I'm sure there are gaps in attack surface
-coverage, but since work continues on this kind of hardening, I'd hate
-to knowingly create new attack surface. Providing uid 0 with kernel
-memory access should continue to be mediated by at least Lockdown, and
-if there are gaps in coverage, let's get them recorded[1] to be fixed.
+Try adding this to the .config:
+
+# Enable PSTORE support
+CONFIG_PSTORE=y
+CONFIG_PSTORE_DEFAULT_KMSG_BYTES=10240
+CONFIG_PSTORE_COMPRESS=y
+CONFIG_PSTORE_DEFLATE_COMPRESS=y
+# Enable UEFI pstore backend
+CONFIG_EFI_VARS_PSTORE=y
+# CONFIG_EFI_VARS_PSTORE_DEFAULT_DISABLE is not set
+# Enable ACPI ERST pstore backend
+CONFIG_ACPI=y
+CONFIG_ACPI_APEI=y
+
+A go write-up about using it is here:
+https://blogs.oracle.com/linux/post/pstore-linux-kernel-persistent-storage-file-system
+and covers the systemd-pstore details too. Note that in the config I
+suggested, I've enabled the efi backend by default.
+
+> > - Can you try booting with this patch applied?
+> >    https://lore.kernel.org/lkml/20230629190900.never.787-kees@kernel.org/
+> 
+> Sure, but after 4 PM UTC+02 I suppose.
+
+Cool. xhci-hub is in your backtrace, and the above patch was made for
+something very similar (though, again, I don't see why you're getting a
+_crash_, it should _warn_ and continue normally). And, actually, also
+include this patch:
+https://lore.kernel.org/lkml/20230614181307.gonna.256-kees@kernel.org/
+
+> > I'll try to see if I can figure out anything more from the images you
+> > posted.
+
+Yeah, the xhci-hub bit is the only clue I can see here. It's also in the
+IRQ handler, which reminds me of this bug that we still don't have a
+root-cause for the _crash_ during the warning here:
+https://lore.kernel.org/oe-lkp/202306131354.A499DE60@keescook/
+but I the new patch I linked to above fixes the source of the warning.
+
+> I really couldn't figure out myself what went wrong with this one?
+
+Having the crash scroll off the page is pretty frustrating. I wonder if
+the kernel crash handler could changed to repeat the RIP at the end of
+the crash...
 
 -Kees
-
-[1] https://github.com/KSPP/linux/issues
 
 -- 
 Kees Cook
