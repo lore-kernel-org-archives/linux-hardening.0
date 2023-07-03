@@ -2,70 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD606C001B0
-	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 16:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D230C30654
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 17:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbjGCQ6m (ORCPT
+        id S230298AbjGCRWa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 3 Jul 2023 12:58:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33644 "EHLO
+        Mon, 3 Jul 2023 13:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbjGCQ6l (ORCPT
+        with ESMTP id S229709AbjGCRWa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 3 Jul 2023 12:58:41 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AE3E58;
-        Mon,  3 Jul 2023 09:58:40 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-3458a08310aso21144185ab.3;
-        Mon, 03 Jul 2023 09:58:40 -0700 (PDT)
+        Mon, 3 Jul 2023 13:22:30 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82722E5D;
+        Mon,  3 Jul 2023 10:22:29 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-34570ed4cb8so19598995ab.1;
+        Mon, 03 Jul 2023 10:22:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688403520; x=1690995520;
+        d=gmail.com; s=20221208; t=1688404949; x=1690996949;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=m1gGSJ/PiSm4A8FwJkg4VqG00mespObQU5IonWWaF9g=;
-        b=QNZQrObPBCtp+tU5MHKcTh+qpIMP3vzmk6S9GmJmVXTQxWjwzmpKPrmHMR5vtDFyy3
-         mOuxxon0KoZMts8WAWOhZKXPspHs2qkLYGURMzbMmjmC9uLojgaWxJ4A8wnvF+ukYLbH
-         KJ9qF9SyjepD4AUQ+fvMqrizZtBHWnGh0v3YN68/v8TvFjpmZakB0Giw9u4Q4rTtfCvk
-         HTbXmIkejDe2nbCk4hF4t+KkTwSKY1eUKC9B4kOnPf38rdhUVYTH10GLB7OSXhCS8scM
-         Mph7mosXnf8jKkrnTC9N/8jK7sE69TknnZp5UoYC2Y0AEM34RQDqo3B+UWhEFkjuVBcF
-         ZBvw==
+        bh=n+ZjGjSll49/jZeLYkpeh0rYqtB4VgUifEJvJI0PHuY=;
+        b=sG82R9IIfRC+r7VHJWyoYwzrsjdOAeHozBdMICRaGv4fPNi1oXuSy18AOsm2hqYjpK
+         jg1bnoDRgNSXA1hszhHWemoLtyfE4QZU3N688i5ClRS6es18D6LKso844bUiPPs9662Q
+         /21eCy3gHHQAM4KbaeyNrE+aZPxFLO9wC6MiE3TrXtgOP3Evlu1TxzkYAIjO6gSrb2PX
+         P0vZyP00cXJutjWBgyFY0d05IoTWpgU3QGGGGLRlLNtNAO19UxTwX7hZxCy7pWa2cZRu
+         EgWxXgO/8INyP1NHXgwcIXGrAFauDELaaOa3W7zSvYTZTBsmOJvd515kSMCPEzd0Cwi3
+         knQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688403520; x=1690995520;
+        d=1e100.net; s=20221208; t=1688404949; x=1690996949;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=m1gGSJ/PiSm4A8FwJkg4VqG00mespObQU5IonWWaF9g=;
-        b=GR/RGMkOlWaE+aIcqpORwKkuibK+s7ZA0BZtx1MxYv4o6jhlJgoxmGSzg1Yqu9j2Fc
-         /GC9zWPyxdBJBnPa1aV7m3fCzy3COom48WtCmcfwYqCZ0wX8lhRM74JpvQ2X6WMCEatI
-         L+UEzWKTPtC7k1e2awk7GPuL6B5lagrD+6gWUGsEnuEJBKWSXnIqsQFGpv6CF0okyw7+
-         ZizD8bFvp6bRToWfYLZnvLMX8o7XeWB8GBSFqNAx2FaJ+FND7NRsOyiKrQ7lWybN0VkK
-         J4IfO7kzzitDzzricqSx7SegzlYQ52UNXtsADB6qHKQNnURtaQfnxH7JPyBa+SMvm/si
-         c8Wg==
-X-Gm-Message-State: ABy/qLY8YV0I8E2vwKRk95Ej3MyRfVepNFuja5ge4MJoEn1R2syD2E8Z
-        3pXo24Yydny5VF94n0jRbOc=
-X-Google-Smtp-Source: APBJJlHa5vJLvAEYbpRNrOoLf2BjlUjeDhQGrJYzACaFmghuRs0GfggMClE9APrML1QXzaijwQhFng==
-X-Received: by 2002:a92:c912:0:b0:345:6c70:a7cd with SMTP id t18-20020a92c912000000b003456c70a7cdmr11077327ilp.1.1688403519855;
-        Mon, 03 Jul 2023 09:58:39 -0700 (PDT)
+        bh=n+ZjGjSll49/jZeLYkpeh0rYqtB4VgUifEJvJI0PHuY=;
+        b=Ap6dovoUOx7d7EqCw1BgfY6SgOQziUmljp0QRsy5JpkOwg5uzQbr8ntUmb0V5EQOua
+         RysO4W0/dmVSxVK6cwl2DIsfErfrc0pRIgEPTYHucDh1duLUoRZIIaRSZYUASJYMo6Sf
+         dI4IiKq/H6oLCz8F2xQypsdt6xuxVkTPj1UKJZ/ZTE7DChyRsIaIRjOYE9RlfJ/Gn8tr
+         EizV7fs2COT+lNCNRSqunGJanulEWe8vcv4PWWTY7FTw0BdnPvs56XIAVPXnzN2IxLVF
+         iaHqjW+QqmX7k/CqWa+4Nbd/rJaL83F8XGtxyTGQ614S0vfhEowFodxRqeYb+nCeBVdZ
+         CwzA==
+X-Gm-Message-State: AC+VfDytqQxd7wtV95LNq17/+HyKN/cXzhv4L/x+5uTVtQyosZ34uLSO
+        /yzzlkNbUf0lhQ9gXIqFnzI=
+X-Google-Smtp-Source: ACHHUZ781J9cXqGVW9tjuylQx29kjih2s55K6UlGRS5TLBvfDm9HBUYQF3weel+frtIdPTko2fo0Aw==
+X-Received: by 2002:a05:6602:5a:b0:783:72b9:ed67 with SMTP id z26-20020a056602005a00b0078372b9ed67mr11193837ioz.10.1688404948785;
+        Mon, 03 Jul 2023 10:22:28 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id r5-20020a056638100500b0042319c38763sm6627058jab.15.2023.07.03.09.58.39
+        by smtp.gmail.com with ESMTPSA id ed22-20020a056638291600b0042b3e2e5ca1sm1033860jab.122.2023.07.03.10.22.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 09:58:39 -0700 (PDT)
+        Mon, 03 Jul 2023 10:22:28 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf: Replace strlcpy with strscpy
-Date:   Mon,  3 Jul 2023 16:58:16 +0000
-Message-ID: <20230703165817.2840457-1-azeemshaikh38@gmail.com>
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 0/2] kyber, blk-wbt: Replace strlcpy with strscpy
+Date:   Mon,  3 Jul 2023 17:21:57 +0000
+Message-ID: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,54 +66,23 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
-No return values were used, so direct replacement is safe.
+This patch series replaces strlcpy in the kyber and blk-wbt tracing subsystems wherever trivial
+replacement is possible, i.e return value from strlcpy is unused. The patches
+themselves are independent of each other and are applied to different subsystems. They are
+included as a series for ease of review.
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
+Note to reviewers: MAINTAINERS file does not specify clear ownership of
+these files so I have addressed these to the latest committer for these
+files: Jens Axboe <axboe@kernel.dk>.
 
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- kernel/events/core.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Azeem Shaikh (2):
+  kyber: Replace strlcpy with strscpy
+  blk-wbt: Replace strlcpy with strscpy
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 78ae7b6f90fd..2554f5fc70dc 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8249,7 +8249,7 @@ static void perf_event_comm_event(struct perf_comm_event *comm_event)
- 	unsigned int size;
- 
- 	memset(comm, 0, sizeof(comm));
--	strlcpy(comm, comm_event->task->comm, sizeof(comm));
-+	strscpy(comm, comm_event->task->comm, sizeof(comm));
- 	size = ALIGN(strlen(comm)+1, sizeof(u64));
- 
- 	comm_event->comm = comm;
-@@ -8704,7 +8704,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 	}
- 
- cpy_name:
--	strlcpy(tmp, name, sizeof(tmp));
-+	strscpy(tmp, name, sizeof(tmp));
- 	name = tmp;
- got_name:
- 	/*
-@@ -9128,7 +9128,7 @@ void perf_event_ksymbol(u16 ksym_type, u64 addr, u32 len, bool unregister,
- 	    ksym_type == PERF_RECORD_KSYMBOL_TYPE_UNKNOWN)
- 		goto err;
- 
--	strlcpy(name, sym, KSYM_NAME_LEN);
-+	strscpy(name, sym, KSYM_NAME_LEN);
- 	name_len = strlen(name) + 1;
- 	while (!IS_ALIGNED(name_len, sizeof(u64)))
- 		name[name_len++] = '\0';
+ include/trace/events/kyber.h | 8 ++++----
+ include/trace/events/wbt.h   | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
 -- 
 2.41.0.255.g8b1d071c50-goog
-
 
