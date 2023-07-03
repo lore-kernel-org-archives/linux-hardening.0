@@ -2,132 +2,179 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B1BC001B3
-	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 07:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C462EB64DD
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 07:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230257AbjGCHUu (ORCPT
+        id S229819AbjGCH6s convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 3 Jul 2023 03:20:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57124 "EHLO
+        Mon, 3 Jul 2023 03:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230063AbjGCHUt (ORCPT
+        with ESMTP id S229597AbjGCH6r (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 3 Jul 2023 03:20:49 -0400
-Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F7C9E44
-        for <linux-hardening@vger.kernel.org>; Mon,  3 Jul 2023 00:20:48 -0700 (PDT)
-Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-1b3a8635d80so394660fac.0
-        for <linux-hardening@vger.kernel.org>; Mon, 03 Jul 2023 00:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688368847; x=1690960847;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5wOEeEqZxs/53QPFBAeYmLrF3X4waeqXDqE1Qr5s1oo=;
-        b=K4Fk0wgl41urJ973GedutT6AJySQVRpM7IEAeH1DL3A0K5cftuzCamKRTB9DPS99mD
-         nA2nj+JvCX7ToqPkiXrqneN0AFk6tdTwfutFdtsVKkSIPottw7M/tR3AATLz4IgyfIl5
-         3uIT+BmwDiCixsnU59nodSwDjHwYO1qhwePVV9/5uIAGIE8HgjGzSORacDRfTQN9o+A4
-         RK189ThZg7KIFV/i1sqW4r2TYZBTb/6fmGM/KM32273ABzhuloTOaX+mqNyy/elVoy8H
-         x0NV4f9dVSDnPrOCSmBeOuSYdtx92ccMK5jyz2fExYMyn5NXHnQPrd9uQwVYLUOJFjPO
-         p98w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688368847; x=1690960847;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5wOEeEqZxs/53QPFBAeYmLrF3X4waeqXDqE1Qr5s1oo=;
-        b=gJ/OkvKWHe2dkn7fOYm14fuLhJGdiQEzs8mFxVuRSVui9bff0t1FN5Bk9w2GKxKnwQ
-         SRCA8pps3/y9vjfkcZ15Zh6l3mymzWn1WmUpFhcRBHiAI0cMUjQdbggYu0ORsizrAw6K
-         sSh2Wo3wTq6cpqJtP5PDsvcU/UEXYD4d1XrID6RntpDjDeA2eOwEESoCRJxwxFn2oDoJ
-         A3EVUURf7B3mQ7Duy9o9HT++2Bh9e/WxRi+AwIr2K6DX6xxMvhvAC+8ds3Y4vM6NwyOf
-         8j+6xDgM/SdTHEbmRxLjnMhP5KTZcNh7YBnSqMD4CvRws+lFDsEQpf26Ra6kxBgzBqTN
-         nYPA==
-X-Gm-Message-State: ABy/qLbz6wMktefSvCxztLOsi2Rq4fGhS3UKb86f+B5nO7S4H/Vv8rZQ
-        lsphPRDAkVjsM6FwYxk46zh807oxYpo4qFahVVwuNw==
-X-Google-Smtp-Source: APBJJlEb+AJ0CavHV/EY5o02uXm03FgkhsSGBahp5rgVjQwn4oDUf2oZLdvfrUiaO5BwJCpHYi9SurP9PwIS6yl4hW0=
-X-Received: by 2002:a05:6870:f150:b0:1b0:3771:736c with SMTP id
- l16-20020a056870f15000b001b03771736cmr12943732oac.41.1688368847232; Mon, 03
- Jul 2023 00:20:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <1687955688-20809-9-git-send-email-quic_mojha@quicinc.com>
- <CAL_JsqJ_TTnGjjB2d8_FKHpWBRG5GHLoWnabCKjsdeZ4QFdNEg@mail.gmail.com>
- <cacbbb02-732e-076e-50bf-292d20a4d722@quicinc.com> <58a26b9e-a48d-d567-c310-193a2c52521e@linaro.org>
- <5447f9f8-55b4-8bed-66a6-1c9d62b02c79@quicinc.com>
-In-Reply-To: <5447f9f8-55b4-8bed-66a6-1c9d62b02c79@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date:   Mon, 3 Jul 2023 09:20:35 +0200
-Message-ID: <CAGE=qrq0CuO4J-6yC=YZ4xjL67o9QTqpei0ovX-X_8MLVeEH6g@mail.gmail.com>
-Subject: Re: [PATCH v4 08/21] dt-bindings: reserved-memory: Add qcom,ramoops binding
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, corbet@lwn.net,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        conor+dt@kernel.org, keescook@chromium.org, tony.luck@intel.com,
-        gpiccoli@igalia.com, mathieu.poirier@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+        Mon, 3 Jul 2023 03:58:47 -0400
+Received: from frasgout11.his.huawei.com (unknown [14.137.139.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E495FC5;
+        Mon,  3 Jul 2023 00:58:45 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.229])
+        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4QvdLq4WnHz9v7fY;
+        Mon,  3 Jul 2023 15:47:47 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+        by APP2 (Coremail) with SMTP id GxC2BwAn40mEf6JkCswABA--.50195S2;
+        Mon, 03 Jul 2023 08:58:11 +0100 (CET)
+Message-ID: <0870d82571d1075433a2b81b2953cf8b4afcd415.camel@huaweicloud.com>
+Subject: Re: [QUESTION] Full user space process isolation?
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     "Dr. Greg" <greg@enjellic.com>
+Cc:     "Serge E. Hallyn" <serge@hallyn.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        LuisChamberlain <mcgrof@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Petr Tesarik <petrtesarik@huaweicloud.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Date:   Mon, 03 Jul 2023 09:57:53 +0200
+In-Reply-To: <20230702175542.GA25867@wind.enjellic.com>
+References: <eb31920bd00e2c921b0aa6ebed8745cb0130b0e1.camel@huaweicloud.com>
+         <20230629021000.GA368825@mail.hallyn.com>
+         <14599d8216f1b7520ff5f6cfb27377fa79709f13.camel@huaweicloud.com>
+         <20230702175542.GA25867@wind.enjellic.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4-0ubuntu1 
+MIME-Version: 1.0
+X-CM-TRANSID: GxC2BwAn40mEf6JkCswABA--.50195S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxuFy5GF17Wryxtr15XFWrXwb_yoWrJF43pF
+        W3tFW3Gr4ktF13Ar4vqw48WFWft395JFy7Xrnaq34rJwn0vr1kCr1Iy3WruFyUGrWftw1j
+        vayjy343Jr1DZFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+        c2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+        v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
+        c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
+        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbJ73D
+        UUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAHBF1jj4uvGgACsM
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, 3 Jul 2023 at 08:22, Mukesh Ojha <quic_mojha@quicinc.com> wrote:
-> On 7/2/2023 1:42 PM, Krzysztof Kozlowski wrote:
-> >>> The big difference is if firmware is not deciding where this log
-> >>> lives, then it doesn't need to be in DT. How does anything except the
-> >>> kernel that allocates the log find the logs?
-> >>
-> >> Yes, you are correct, firmware is not deciding where the logs lives
-> >> instead here, Kernel has reserved the region where the ramoops region
-> >> lives and later with the minidump registration where, physical
-> >> address/size/virtual address(for parsing) are passed and that is how
-> >> firmware is able to know and dump those region before triggering system
-> >> reset.
-> >
-> > Your explanation does not justify storing all this in DT. Kernel can
-> > allocate any memory it wishes, store there logs and pass the address to
-> > the firmware. That's it, no need for DT.
->
-> If you go through the driver, you will know that what it does, is
+On Sun, 2023-07-02 at 12:55 -0500, Dr. Greg wrote:
+> On Thu, Jun 29, 2023 at 10:11:26AM +0200, Roberto Sassu wrote:
+> 
+> Good morning, I hope the weekend is going well for everyone, greetings
+> to Roberto and everyone copied.
+> 
+> > On Wed, 2023-06-28 at 21:10 -0500, Serge E. Hallyn wrote:
+> > > On Thu, Jun 22, 2023 at 04:42:37PM +0200, Roberto Sassu wrote:
+> > > > Hi everyone
+> > > > 
+> > > > I briefly discussed this topic at LSS NA 2023, but I wanted to have an
+> > > > opinion from a broader audience.
+> > > > 
+> > > > In short:
+> > > > 
+> > > > I wanted to execute some kernel workloads in a fully isolated user
+> > > > space process, started from a binary statically linked with klibc,
+> > > > connected to the kernel only through a pipe.
+> > > > 
+> > > > I also wanted that, for the root user, tampering with that process is
+> > > > as hard as if the same code runs in kernel space.
+> > > > 
+> > > > I would use the fully isolated process to parse and convert unsupported
+> > > > data formats to a supported one, after the kernel verified the
+> > > 
+> > > Can you give some examples here of supported and unsupported data
+> > > formats?  ext2 is supported, but we sadly don't trust the sb parser
+> > > to read a an ext2fs coming from unknown source.  So I'm not quite
+> > > clear what problem you're trying to solve.
+> > 
+> > + eBPF guys (as I'm talking about eBPF)
+> 
+> If the week goes well, we will be submitting the second version of our
+> TSEM LSM for review.  It incorporates a significant number of changes
+> and enhancements, based on both initial review comments, and
+> importantly, feedback from our collaborators in the critical
+> infrastructure community.
+> 
+> Just as a levelset.  TSEM provides kernel infrastructure to implement
+> security controls based on either deterministic or machine learning
+> models.  Quixote is the userspace infrastructure that enables use of
+> the TSEM kernel infrastructure.
+> 
+> Based on your description Roberto, TSEM may be of assistance in
+> addressesing your issues at two different levels.
+> 
+> First with respect to protection of an isolated workload.
+> 
+> TSEM is inherently workload based, given that it is based on an
+> architecture that implements security modeling namespaces that a
+> process heirarchy can be placed into.  This reduces model complexity
+> and provides the implementation of very specific and targeted security
+> controls based on the needs of a proposed workload.
+> 
+> The security controls are prospective rather than retrospective,
+> ie. TSEM will pro-actively block any security behaviors that are not
+> in a security model that has been defined for the workload.
+> 
+> For example, with respect to the concerns you had previously mentioned
+> about ptrace.  If the security model definition does not include a
+> security state coefficient for a ptrace_traceme security event, it
+> will be disallowed, regardless of what goes on with respect to kernel
+> development, modulo of course the ptrace_traceme LSM hook being
+> discontinued.
 
-We talk about bindings and I should not be forced to look at the
-driver to be able to understand them. Bindings should stand on their
-own.
+Hi Greg
 
-> just create platform device for actual ramoops driver to probe and to
+thanks for your insights.
 
-Not really justification for Devicetree anyway. Whatever your driver
-is doing, is driver's business, not bindings.
+The policy is quite simple:
 
-> provide this it needs exact set of parameters of input what original
-> ramoops DT provides, we need to keep it in DT as maintaining this in
-> driver will not scale well with different size/parameter size
-> requirement for different targets.
 
-Really? Why? I don't see a problem in scaling. At all.
+     r/w  ^                             kernel space
+----------|-----------------------------------------
+          v (pipe)                        user space
+ +-----------------+       +-----------------------+
+ | trustworthy UMD |---X---| rest of the processes |
+ +-----------------+       +-----------------------+
 
->
-> >
-> >>
-> >> A part of this registration code you can find in 11/21
-> >>
-> >>> I'm pretty sure I already said all this before.
-> >>
-> >> Yes, you said this before but that's the reason i came up with vendor
-> >> ramoops instead of changing traditional ramoops binding.
-> >
-> > That's unexpected conclusion. Adding more bindings is not the answer to
-> > comment that it should not be in the DTS in the first place.
->
-> Please suggest, what is the other way being above text as requirement..
+The question was more, is the LSM infrastructure complete enough that
+the X can be really enforced?
 
-I do not see any requirement for us there. Forcing me to figure out
-how to add non-hardware property to DT is not the way to convince
-reviewers. But if you insist - we have ABI for this, called sysfs. If
-it is debugging feature, then debugfs.
+Could there be other implicit information flows that the LSM
+infrastructure is not able/does not yet mediate, that could break the
+policy above?
 
-Best regards,
-Krzysztof
+I guess TSEM could be for more elaborated security models, but in this
+case the policy is quite straithforward. Also, your TSEM would be as
+limited as mine by the LSM hooks available.
+
+Thanks
+
+Roberto
+
