@@ -2,63 +2,72 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF22AC001B0
-	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 18:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A64D4C001B0
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 18:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjGCSFm (ORCPT
+        id S229680AbjGCSNO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 3 Jul 2023 14:05:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        Mon, 3 Jul 2023 14:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbjGCSFl (ORCPT
+        with ESMTP id S230258AbjGCSNK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 3 Jul 2023 14:05:41 -0400
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5B84B3;
-        Mon,  3 Jul 2023 11:05:40 -0700 (PDT)
-Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-345a76c3a2eso19728145ab.2;
-        Mon, 03 Jul 2023 11:05:40 -0700 (PDT)
+        Mon, 3 Jul 2023 14:13:10 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CB35E5B;
+        Mon,  3 Jul 2023 11:13:09 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-345c1ed760aso26111565ab.1;
+        Mon, 03 Jul 2023 11:13:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688407540; x=1690999540;
+        d=gmail.com; s=20221208; t=1688407988; x=1690999988;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=xc58Ur2dGlcRpxmurRMRf+D6DXpC7t63Ku8gr49XadE=;
-        b=f4wKtFMUv6J14dYTXrMSx0k6E7jglxt1xK14WAUWV0b766oNc+aKi21PdDxpQyIdTC
-         XQfOAupMbERsYSknauHVLAiX/TL2AvSrVaBVhbahw1zF2Rzbqt1xyAUe4D+eBzSzzBsg
-         a2QrwJhpHUnezr1uheh08eT5Q0rEBk7fVNW2VMeUIqPPfQdNUd4rUvfJBzR60zTnvhX+
-         BsawhnL9a/3RudGMp4bM9bjibdQKHTTjdrbIEaKoxTcdw9PYQtvdrkeQIfQUAzIvw4tp
-         yTIoRC5EUgwO9jERqZrPG2gXH7cDgkiMu4v9fsWBHxs6C+NK0nEXF5Az5ibbTMcV9Ppy
-         DYHA==
+        bh=tmRRo6z0XJwtogTJmOfSjBRBDz+vO2d86DnPaoTj2os=;
+        b=N7LftLLzwG4FVV8gMviY4BSuVmH2NBnGjrtgBbKWD7zYoAWyMb7QwJslEfKQUQLbu9
+         iniHAJ0Zk22a9thimxyXsSBxGXNjg65+6NGwNR1u1c9UNtBtSfDMBWdHnznK/D5XEWnu
+         7+ZdqdQTRMiqHfMUR4L3Yp2glX5KEwWrZ9NaiH4gdJ0Hg4aG3tjVp0VPorbiGX5wP5aF
+         NdF/cSK/wT3uwDsgeSm+T3IKtjzdRXENsygoZnWLO/hKPqWhWZZ5SbCwbulWSbipepqD
+         gfdZivKdwSJsRr81JE80w+x7ImxLr2iyPXG5ul/IpdIVO5v7iwR8ihrS2ki5/weLD3j/
+         8VTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688407540; x=1690999540;
+        d=1e100.net; s=20221208; t=1688407988; x=1690999988;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xc58Ur2dGlcRpxmurRMRf+D6DXpC7t63Ku8gr49XadE=;
-        b=ZKLfD0hAqASVnTdmNV2B63B+BlfK3WCSdOiMSeXvBrkp6U7x54Q0cKD5a6z8obl/Pp
-         4wS/VFmvB5lyIVGw4M8KKr25+y1wl855oiPIC232zdM0R6A0nX+x17aqto5O6Ko26USz
-         c1SpJcpRcnQEriZALZXogrQRkwF9DJne9UofgnOykt02WIoxdBQFY9sS2+BRuUdO9OcS
-         PkBj40ZwNlsWI6mhAiKI3h0fvvzJHhP4ZfpQPo6ElMVbxP8AnLJwPFWiTrXxikquQa2E
-         vi54t2f5egADPfLQijXTG6/dlq7x0YH2YEhmhsqR8AKf47m7IOtBC+oIqeNWXN+K14PG
-         z6Ag==
-X-Gm-Message-State: ABy/qLY5MpxDbmVF6XtZaXkqHWsOQnzPgI05JPInKjM8l3jzN9QU7fmn
-        h3ihIZ3erbpady5ADDerJfXF9Rsolr2HsizB
-X-Google-Smtp-Source: APBJJlG26HFbuy6WLJJH3/OP3LWrbSl1RRU6w5AVIoR4xY3vw00eAhSCy/nKt20FFKarLU2DB9SjqQ==
-X-Received: by 2002:a92:d9d0:0:b0:345:aee1:eaeb with SMTP id n16-20020a92d9d0000000b00345aee1eaebmr9743039ilq.11.1688407539649;
-        Mon, 03 Jul 2023 11:05:39 -0700 (PDT)
+        bh=tmRRo6z0XJwtogTJmOfSjBRBDz+vO2d86DnPaoTj2os=;
+        b=UGIanFBKzXzymUTL52zmHbr7o71M/w+tR8aD5FhxnJCTA0ndjqfCuo6n+DUAbPsnZc
+         tLXcQeHNKadOBzFVzk6FQfB8OnnMcSPOa0azGt0PzEd5P1my0IkYOp6OnuSoG3c+E4VU
+         euISvDi5v0yy2L6PaH5cv/5HCy2a9rfeTy2nDxGcKdNoMRPhhSmainh1eJ/euZUz9e82
+         f2ApXccKBt5g9NiXasPNuWe1e81thOzQWN9AFKV6yMVt9H/kPcsd7cADanNLCxKrRHYH
+         X/L289io4ZyxPiMQ74gbaIaTPmt12Vxn014U0fD85gFfz2QpjlDWHtqfEqbegDXkWWkU
+         y0kQ==
+X-Gm-Message-State: ABy/qLZpHyqDly/xzdU9IK9oVoyPZzYOwzS6MJw7TlKNxErXJHnUjstp
+        nxmw9hb3UaWoOpeewwbN+x0=
+X-Google-Smtp-Source: APBJJlGlnasrPWopRlCXCRRfFTTSXyyifBfokHy4PV4SWPr4ghDQfwib3FELtUGie/MRK29F5WunCw==
+X-Received: by 2002:a92:d7cc:0:b0:345:c1cb:864d with SMTP id g12-20020a92d7cc000000b00345c1cb864dmr10631401ilq.23.1688407988396;
+        Mon, 03 Jul 2023 11:13:08 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id u16-20020a02c050000000b0042b35c7b8c5sm1419054jam.61.2023.07.03.11.05.39
+        by smtp.gmail.com with ESMTPSA id h2-20020a02c4c2000000b00411bdcdc488sm6276548jaj.173.2023.07.03.11.13.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 11:05:39 -0700 (PDT)
+        Mon, 03 Jul 2023 11:13:08 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kobject: Replace strlcpy with strscpy
-Date:   Mon,  3 Jul 2023 18:05:28 +0000
-Message-ID: <20230703180528.3709258-1-azeemshaikh38@gmail.com>
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kalle Valo <kvalo@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH] wifi: mt76: Replace strlcpy with strscpy
+Date:   Mon,  3 Jul 2023 18:12:56 +0000
+Message-ID: <20230703181256.3712079-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -73,33 +82,86 @@ overflows if a source string is not NUL-terminated [1].
 In an effort to remove strlcpy() completely [2], replace
 strlcpy() here with strscpy().
 
-Direct replacement is safe here since return value of -errno
-is used to check for truncation instead of sizeof(dest).
+Direct replacement is safe here since DEV_ASSIGN is only used by
+TRACE macros and the return values are ignored.
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
 [2] https://github.com/KSPP/linux/issues/89
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- lib/kobject_uevent.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/mediatek/mt76/mt7615/mt7615_trace.h | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x02_trace.h       | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7921/mt7921_trace.h | 2 +-
+ drivers/net/wireless/mediatek/mt76/trace.h               | 2 +-
+ drivers/net/wireless/mediatek/mt76/usb_trace.h           | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
-index 7c44b7ae4c5c..e5497fa0a2d2 100644
---- a/lib/kobject_uevent.c
-+++ b/lib/kobject_uevent.c
-@@ -254,8 +254,8 @@ static int init_uevent_argv(struct kobj_uevent_env *env, const char *subsystem)
- 	int buffer_size = sizeof(env->buf) - env->buflen;
- 	int len;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mt7615_trace.h b/drivers/net/wireless/mediatek/mt76/mt7615/mt7615_trace.h
+index d3eb49d83b98..9be5a58a4e6d 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mt7615_trace.h
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mt7615_trace.h
+@@ -14,7 +14,7 @@
  
--	len = strlcpy(&env->buf[env->buflen], subsystem, buffer_size);
--	if (len >= buffer_size) {
-+	len = strscpy(&env->buf[env->buflen], subsystem, buffer_size);
-+	if (len < 0) {
- 		pr_warn("init_uevent_argv: buffer size of %d too small, needed %d\n",
- 			buffer_size, len);
- 		return -ENOMEM;
+ #define MAXNAME		32
+ #define DEV_ENTRY	__array(char, wiphy_name, 32)
+-#define DEV_ASSIGN	strlcpy(__entry->wiphy_name,	\
++#define DEV_ASSIGN	strscpy(__entry->wiphy_name,	\
+ 				wiphy_name(mt76_hw(dev)->wiphy), MAXNAME)
+ #define DEV_PR_FMT	"%s"
+ #define DEV_PR_ARG	__entry->wiphy_name
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_trace.h b/drivers/net/wireless/mediatek/mt76/mt76x02_trace.h
+index 6a98092e996b..11d119cd0f6f 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_trace.h
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_trace.h
+@@ -14,7 +14,7 @@
+ 
+ #define MAXNAME		32
+ #define DEV_ENTRY	__array(char, wiphy_name, 32)
+-#define DEV_ASSIGN	strlcpy(__entry->wiphy_name,	\
++#define DEV_ASSIGN	strscpy(__entry->wiphy_name,	\
+ 				wiphy_name(mt76_hw(dev)->wiphy), MAXNAME)
+ #define DEV_PR_FMT	"%s"
+ #define DEV_PR_ARG	__entry->wiphy_name
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7921/mt7921_trace.h b/drivers/net/wireless/mediatek/mt76/mt7921/mt7921_trace.h
+index 9bc4db67f352..887d5cfddd01 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7921/mt7921_trace.h
++++ b/drivers/net/wireless/mediatek/mt76/mt7921/mt7921_trace.h
+@@ -14,7 +14,7 @@
+ 
+ #define MAXNAME		32
+ #define DEV_ENTRY	__array(char, wiphy_name, 32)
+-#define DEV_ASSIGN	strlcpy(__entry->wiphy_name,	\
++#define DEV_ASSIGN	strscpy(__entry->wiphy_name,	\
+ 				wiphy_name(mt76_hw(dev)->wiphy), MAXNAME)
+ #define DEV_PR_FMT	"%s"
+ #define DEV_PR_ARG	__entry->wiphy_name
+diff --git a/drivers/net/wireless/mediatek/mt76/trace.h b/drivers/net/wireless/mediatek/mt76/trace.h
+index c3d0ef8e2890..109a07f9733a 100644
+--- a/drivers/net/wireless/mediatek/mt76/trace.h
++++ b/drivers/net/wireless/mediatek/mt76/trace.h
+@@ -14,7 +14,7 @@
+ 
+ #define MAXNAME		32
+ #define DEV_ENTRY	__array(char, wiphy_name, 32)
+-#define DEVICE_ASSIGN	strlcpy(__entry->wiphy_name,	\
++#define DEVICE_ASSIGN	strscpy(__entry->wiphy_name,	\
+ 				wiphy_name(dev->hw->wiphy), MAXNAME)
+ #define DEV_PR_FMT	"%s"
+ #define DEV_PR_ARG	__entry->wiphy_name
+diff --git a/drivers/net/wireless/mediatek/mt76/usb_trace.h b/drivers/net/wireless/mediatek/mt76/usb_trace.h
+index f5ab3215af80..7b261ddb2ac6 100644
+--- a/drivers/net/wireless/mediatek/mt76/usb_trace.h
++++ b/drivers/net/wireless/mediatek/mt76/usb_trace.h
+@@ -14,7 +14,7 @@
+ 
+ #define MAXNAME		32
+ #define DEV_ENTRY	__array(char, wiphy_name, 32)
+-#define DEV_ASSIGN	strlcpy(__entry->wiphy_name,	\
++#define DEV_ASSIGN	strscpy(__entry->wiphy_name,	\
+ 				wiphy_name(dev->hw->wiphy), MAXNAME)
+ #define DEV_PR_FMT	"%s "
+ #define DEV_PR_ARG	__entry->wiphy_name
 -- 
 2.41.0.255.g8b1d071c50-goog
-
 
