@@ -2,65 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C92C30654
-	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 17:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF22AC001B0
+	for <linux-hardening@archiver.kernel.org>; Mon,  3 Jul 2023 18:05:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbjGCR7B (ORCPT
+        id S229960AbjGCSFm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 3 Jul 2023 13:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59428 "EHLO
+        Mon, 3 Jul 2023 14:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbjGCR7A (ORCPT
+        with ESMTP id S229763AbjGCSFl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 3 Jul 2023 13:59:00 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BF0E66;
-        Mon,  3 Jul 2023 10:58:53 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-345a31bda6cso25663825ab.1;
-        Mon, 03 Jul 2023 10:58:53 -0700 (PDT)
+        Mon, 3 Jul 2023 14:05:41 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5B84B3;
+        Mon,  3 Jul 2023 11:05:40 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-345a76c3a2eso19728145ab.2;
+        Mon, 03 Jul 2023 11:05:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688407133; x=1690999133;
+        d=gmail.com; s=20221208; t=1688407540; x=1690999540;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dLDpvUuDt1pSQ6XZf1EhYr02Va2+zEjOqRg+3qDMtro=;
-        b=hDaAixqAKj4dk/htPLAEJ9KdQiPhKmUvD0Hp88xsn8w62ORQttwJNDpAwL2akcx256
-         TdMTM8A9KAdpHCrqLkqJnmh0bKaXw2k1YSR28Jllu6HTZKBRT2tsCfIOdpwmRfJkL3nK
-         7h8lCVboOp8QxR5DeBBVLyPQ0aUt0LUNhy6LM5DuwU9RTyLkwAOrMUu8xPfX0rs8soeN
-         DJgcgAj7DCX5iIANJmD4NJgv7lJSU1VD4u/8zgTji2fGy5YhnKx3g6f1N0MDZLg+Nl6L
-         jnFYLbLCs9M9PUT7wGm/qEvuxpNGTL/DZRT49qinLaFulfQfgvV/E9jiz9Rbz15P7VYY
-         S/pw==
+        bh=xc58Ur2dGlcRpxmurRMRf+D6DXpC7t63Ku8gr49XadE=;
+        b=f4wKtFMUv6J14dYTXrMSx0k6E7jglxt1xK14WAUWV0b766oNc+aKi21PdDxpQyIdTC
+         XQfOAupMbERsYSknauHVLAiX/TL2AvSrVaBVhbahw1zF2Rzbqt1xyAUe4D+eBzSzzBsg
+         a2QrwJhpHUnezr1uheh08eT5Q0rEBk7fVNW2VMeUIqPPfQdNUd4rUvfJBzR60zTnvhX+
+         BsawhnL9a/3RudGMp4bM9bjibdQKHTTjdrbIEaKoxTcdw9PYQtvdrkeQIfQUAzIvw4tp
+         yTIoRC5EUgwO9jERqZrPG2gXH7cDgkiMu4v9fsWBHxs6C+NK0nEXF5Az5ibbTMcV9Ppy
+         DYHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688407133; x=1690999133;
+        d=1e100.net; s=20221208; t=1688407540; x=1690999540;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dLDpvUuDt1pSQ6XZf1EhYr02Va2+zEjOqRg+3qDMtro=;
-        b=fWFA5AwswwCr5mlrROs4549r10VUO/sdry4oap4rSPu0ZiI5K2wZUOewO7uxcMMK4e
-         Vbw29xeLf7pF4yDHLVfReAk1gLL27ipLlrqp0/E0T36B9sMZ3yktJJmfg4biq0hvBMrt
-         EX6I7nUlfYlCKB4Pxhy4XBIq4tyZyCg7KeoVteMZzVI1Khtec74sf03yVeBLi99nIZ7g
-         BtvtYnTHNPg2C5cOxiGwYig5bFLHmqbQ91piSufCTQEBorkw77Lx3OXg0nFxUESYvsAK
-         mZJ5kbJtx/W/lVfCM35Jbn9fivsN1/h1iLoudyIWw4AqyCm488KP2a/4lfwc2AAUBonx
-         a4xA==
-X-Gm-Message-State: ABy/qLbQo6ZIxIKQLhR8H9C9pvoIqsajswSLBqdrLjYXvy/sd5JxBuwE
-        0DQktMHLmZ3OBP2oJWb/aXo=
-X-Google-Smtp-Source: APBJJlFfacAGKjTvY0YAohkxmzRehPWyKSU/NiK6UBBNJFnogIMmYKWfcRujyiXL1/QU+n/0RG/A1g==
-X-Received: by 2002:a92:d4c4:0:b0:340:b569:aec1 with SMTP id o4-20020a92d4c4000000b00340b569aec1mr10747253ilm.28.1688407132993;
-        Mon, 03 Jul 2023 10:58:52 -0700 (PDT)
+        bh=xc58Ur2dGlcRpxmurRMRf+D6DXpC7t63Ku8gr49XadE=;
+        b=ZKLfD0hAqASVnTdmNV2B63B+BlfK3WCSdOiMSeXvBrkp6U7x54Q0cKD5a6z8obl/Pp
+         4wS/VFmvB5lyIVGw4M8KKr25+y1wl855oiPIC232zdM0R6A0nX+x17aqto5O6Ko26USz
+         c1SpJcpRcnQEriZALZXogrQRkwF9DJne9UofgnOykt02WIoxdBQFY9sS2+BRuUdO9OcS
+         PkBj40ZwNlsWI6mhAiKI3h0fvvzJHhP4ZfpQPo6ElMVbxP8AnLJwPFWiTrXxikquQa2E
+         vi54t2f5egADPfLQijXTG6/dlq7x0YH2YEhmhsqR8AKf47m7IOtBC+oIqeNWXN+K14PG
+         z6Ag==
+X-Gm-Message-State: ABy/qLY5MpxDbmVF6XtZaXkqHWsOQnzPgI05JPInKjM8l3jzN9QU7fmn
+        h3ihIZ3erbpady5ADDerJfXF9Rsolr2HsizB
+X-Google-Smtp-Source: APBJJlG26HFbuy6WLJJH3/OP3LWrbSl1RRU6w5AVIoR4xY3vw00eAhSCy/nKt20FFKarLU2DB9SjqQ==
+X-Received: by 2002:a92:d9d0:0:b0:345:aee1:eaeb with SMTP id n16-20020a92d9d0000000b00345aee1eaebmr9743039ilq.11.1688407539649;
+        Mon, 03 Jul 2023 11:05:39 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id e5-20020a92d745000000b003424b3d6d37sm7004198ilq.24.2023.07.03.10.58.52
+        by smtp.gmail.com with ESMTPSA id u16-20020a02c050000000b0042b35c7b8c5sm1419054jam.61.2023.07.03.11.05.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 10:58:52 -0700 (PDT)
+        Mon, 03 Jul 2023 11:05:39 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Ahern <dsahern@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org
-Subject: [PATCH] net: Replace strlcpy with strscpy
-Date:   Mon,  3 Jul 2023 17:58:40 +0000
-Message-ID: <20230703175840.3706231-1-azeemshaikh38@gmail.com>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kobject: Replace strlcpy with strscpy
+Date:   Mon,  3 Jul 2023 18:05:28 +0000
+Message-ID: <20230703180528.3709258-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -74,43 +72,33 @@ This is both inefficient and can lead to linear read
 overflows if a source string is not NUL-terminated [1].
 In an effort to remove strlcpy() completely [2], replace
 strlcpy() here with strscpy().
-No return values were used, so direct replacement is safe.
+
+Direct replacement is safe here since return value of -errno
+is used to check for truncation instead of sizeof(dest).
 
 [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
 [2] https://github.com/KSPP/linux/issues/89
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- include/trace/events/fib.h  |    2 +-
- include/trace/events/fib6.h |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ lib/kobject_uevent.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/fib.h b/include/trace/events/fib.h
-index 76297ecd4935..20b914250ce9 100644
---- a/include/trace/events/fib.h
-+++ b/include/trace/events/fib.h
-@@ -65,7 +65,7 @@ TRACE_EVENT(fib_table_lookup,
- 		}
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index 7c44b7ae4c5c..e5497fa0a2d2 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -254,8 +254,8 @@ static int init_uevent_argv(struct kobj_uevent_env *env, const char *subsystem)
+ 	int buffer_size = sizeof(env->buf) - env->buflen;
+ 	int len;
  
- 		dev = nhc ? nhc->nhc_dev : NULL;
--		strlcpy(__entry->name, dev ? dev->name : "-", IFNAMSIZ);
-+		strscpy(__entry->name, dev ? dev->name : "-", IFNAMSIZ);
- 
- 		if (nhc) {
- 			if (nhc->nhc_gw_family == AF_INET) {
-diff --git a/include/trace/events/fib6.h b/include/trace/events/fib6.h
-index 4d3e607b3cde..5d7ee2610728 100644
---- a/include/trace/events/fib6.h
-+++ b/include/trace/events/fib6.h
-@@ -63,7 +63,7 @@ TRACE_EVENT(fib6_table_lookup,
- 		}
- 
- 		if (res->nh && res->nh->fib_nh_dev) {
--			strlcpy(__entry->name, res->nh->fib_nh_dev->name, IFNAMSIZ);
-+			strscpy(__entry->name, res->nh->fib_nh_dev->name, IFNAMSIZ);
- 		} else {
- 			strcpy(__entry->name, "-");
- 		}
+-	len = strlcpy(&env->buf[env->buflen], subsystem, buffer_size);
+-	if (len >= buffer_size) {
++	len = strscpy(&env->buf[env->buflen], subsystem, buffer_size);
++	if (len < 0) {
+ 		pr_warn("init_uevent_argv: buffer size of %d too small, needed %d\n",
+ 			buffer_size, len);
+ 		return -ENOMEM;
 -- 
 2.41.0.255.g8b1d071c50-goog
 
