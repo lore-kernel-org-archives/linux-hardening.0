@@ -2,75 +2,163 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E6BEB64D9
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 18:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1646DEB64DA
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 18:31:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229639AbjGDSaj (ORCPT
+        id S230200AbjGDSbe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Jul 2023 14:30:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55128 "EHLO
+        Tue, 4 Jul 2023 14:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjGDSaj (ORCPT
+        with ESMTP id S229451AbjGDSbd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Jul 2023 14:30:39 -0400
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D544010CA
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 11:30:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Dbugfi/kBFY/gFWCmpuNINGvrJ8ajP8rNSYYi9L8gvA=; b=iA+g3F+YoQQnFjMEEXvuQX/R7X
-        8ZNTTB1X69QG7jQY+sH1If3s5LngsQrLDwGwvZYylPu7wuF5l0Rtn3zQUjzwfl+5Whi8h4SBLUTyB
-        6kGZ0OXRyKt5J4MeO/hLQUnu+VP2TZq3d3mk1vhUa5kAdR/XkJZuJXGHGprnjORhuOUbiVctcstst
-        GOvSllM0xmO8nTGoV2IyBE12cisMW4F6nGZqL5xvVNOTpHwNTo73Vj2urGYDQiW+A/XpQmknQmWY6
-        vQ3lm+0ogTbmgMY59KwEmufrhX0eLrZnmFpcVE+1M41aen8/YV9BlWFiecdCL/3TXsuX5B8IU4Djo
-        8ZdaYOow==;
-Received: from [191.205.188.225] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1qGknI-008LaM-Qq; Tue, 04 Jul 2023 20:30:33 +0200
-Message-ID: <562d104e-a86b-b668-2d2c-06687304f705@igalia.com>
-Date:   Tue, 4 Jul 2023 15:30:28 -0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 0/2] pstore: Replace crypto API compression with zlib
- calls
-Content-Language: en-US
+        Tue, 4 Jul 2023 14:31:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E96E72
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 11:31:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 972DC6132F
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 18:31:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9AD9C433C7;
+        Tue,  4 Jul 2023 18:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688495491;
+        bh=+63LsQiQSe9u1SOemu9SyzoI0INUNhd/lRwFZR+MCqY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ljSAEZ1bIs0K9mJ/WL4/PWiLq4Kb+PYwpEF7HvAOHOLR5gKkkfjI9lHz3NyrVQ+en
+         q245LBlECwt1REGvmqwp6rovtWowznOZMA7t6yGGojDAFVjCRxfHSZmrn+ftFIPibN
+         puehUgv1cL1dvlSGj3QbDeZyg/a9YCNIjK2/MmEL9+1943CZicGEuMvgkg2lQ0zrtS
+         mlkwfsrxoqX8sBMD6J13aDOcE74RGcP7iC2MbMWPE+o5e5qbp7BXRC9MI0X/VOwQKz
+         FPa8GqwFOxDaguRh/rRgIfs28xRCTHRAchPJ3XG/omkE3hI+YVc9d5LUDYdrgz9YF3
+         Cl/YISYj59fNw==
+Date:   Tue, 4 Jul 2023 11:31:28 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
 To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: Re: [PATCH 2/2] pstore: Replace crypto API compression with
+ zlib_deflate library calls
+Message-ID: <20230704183128.GD1851@sol.localdomain>
 References: <20230704135211.2471371-1-ardb@kernel.org>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20230704135211.2471371-1-ardb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <20230704135211.2471371-3-ardb@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230704135211.2471371-3-ardb@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 04/07/2023 10:52, Ard Biesheuvel wrote:
-> The pstore layer implements support for compression of kernel log
-> output, using a variety of compressions algorithms provided by the
-> [deprecated] crypto API 'comp' interface.
+On Tue, Jul 04, 2023 at 03:52:11PM +0200, Ard Biesheuvel wrote:
+> Pstore supports compression using a variety of algorithms exposed by the
+> crypto API. This uses the deprecated comp (as opposed to scomp/acomp)
+> API, and so we should stop using that, and either move to the new API,
+> or switch to a different approach entirely.
 > 
-> This appears to have been somebody's pet project rather than a solution
-> to a real problem: the original deflate compression is reasonably fast,
-> compressed well and is comparatively small in terms of code footprint,
-> and so the flexibility that the crypto API integration provides does
-> little more than complicate the code for no reason.
+> Given that we only compress ASCII text in pstore, and considering that
+> this happens when the system is likely to be in a highly fragile state,
+> the flexibility that the complex crypto API provides does not outweigh
+> its impact on the risk that we might encounter additional problems when
+> trying to commit the kernel log contents to the pstore backend.
 > 
-> So let's get rid of this complexity, and switch back to zlib deflate
-> using the library interface.
+> So let's switch [back] to the zlib deflate library API, and remove all
+> the complexity that really has no place in a low-level diagnostic
+> facility. Note that, while more modern compression algorithms have been
+> added to the kernel in recent years, the code size of zlib deflate is
+> substantially smaller, while its performance in terms of compression
+> ratio is perfectly acceptable, and speed is irrelevant in this context
+> (unless panic() is a performance bottleneck in your workload).
+> 
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-Thanks Ard, very nice stuff - makes total sense for me!
+Actually, LZ4 and LZO both have slightly smaller code size than zlib.
 
-I'll test it in the Steam Deck - waiting a V2 (since there are some code
-comments from Eric and Kees).
+Though, they are really intended for use cases that need high performance, which
+as you mention is not important for the pstore use case.
 
-Cheers,
+So I think zlib is still fine here.  Just the above argument is a bit
+misleading.
 
+In any case, can the rationale for the choice of compression algorithm and API
+be documented in the source code itself?  Otherwise I worry that someone will
+want to "improve" this code again.
 
-Guilherme
+> @@ -157,37 +152,46 @@ static bool pstore_cannot_block_path(enum kmsg_dump_reason reason)
+>  static int pstore_compress(const void *in, void *out,
+>  			   unsigned int inlen, unsigned int outlen)
+>  {
+> +	struct z_stream_s zstream = {
+> +		.next_in	= in,
+> +		.avail_in	= inlen,
+> +		.next_out	= out,
+> +		.avail_out	= outlen,
+> +		.workspace	= compress_workspace,
+> +	};
+>  	int ret;
+>  
+>  	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS))
+>  		return -EINVAL;
+>  
+> -	ret = crypto_comp_compress(tfm, in, inlen, out, &outlen);
+> -	if (ret) {
+> -		pr_err("crypto_comp_compress failed, ret = %d!\n", ret);
+> -		return ret;
+> -	}
+> +	ret = zlib_deflateInit2(&zstream, Z_DEFAULT_COMPRESSION, Z_DEFLATED,
+> +				-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
+> +	if (ret != Z_OK)
+> +		return -EINVAL;
+>  
+> -	return outlen;
+> +	ret = zlib_deflate(&zstream, Z_FINISH);
+> +	if (ret != Z_STREAM_END)
+> +		return -EINVAL;
+> +
+> +	return zstream.total_out;
+>  }
+
+The above code looks weird to anyone familiar with the zlib API, since it is
+missing the call to zlib_deflateEnd().  It looks like the in-kernel zlib doesn't
+really need it, since the in-kernel zlib has been customized to manage memory
+differently from the real zlib.  But I recommend including it.
+
+> @@ -629,10 +640,17 @@ void pstore_get_backend_records(struct pstore_info *psi,
+>  {
+>  	int failed = 0;
+>  	unsigned int stop_loop = 65536;
+> +	struct z_stream_s zstream;
+>  
+>  	if (!psi || !root)
+>  		return;
+>  
+> +	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && compress) {
+> +		zstream.workspace = kvmalloc(zlib_inflate_workspacesize(),
+> +					     GFP_KERNEL);
+> +		zlib_inflateInit2(&zstream, -DEF_WBITS);
+> +	}
+> +
+>  	mutex_lock(&psi->read_mutex);
+>  	if (psi->open && psi->open(psi))
+>  		goto out;
+> @@ -661,7 +679,7 @@ void pstore_get_backend_records(struct pstore_info *psi,
+>  			break;
+>  		}
+>  
+> -		decompress_record(record);
+> +		decompress_record(record, &zstream);
+>  		rc = pstore_mkfile(root, record);
+>  		if (rc) {
+>  			/* pstore_mkfile() did not take record, so free it. */
+> @@ -676,6 +694,7 @@ void pstore_get_backend_records(struct pstore_info *psi,
+>  		psi->close(psi);
+>  out:
+>  	mutex_unlock(&psi->read_mutex);
+> +	kvfree(zstream.workspace);
+
+Similarly above: zlib_inflateEnd() isn't being called.  It should happen
+alongside freeing 'zstream.workspace'.
+
+- Eric
