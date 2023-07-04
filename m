@@ -2,299 +2,440 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB03EB64DD
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 13:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A13CEB64D9
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 13:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230469AbjGDNw3 (ORCPT
+        id S230486AbjGDNwb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Jul 2023 09:52:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59806 "EHLO
+        Tue, 4 Jul 2023 09:52:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjGDNw3 (ORCPT
+        with ESMTP id S229645AbjGDNwb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Jul 2023 09:52:29 -0400
+        Tue, 4 Jul 2023 09:52:31 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671A4BE
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 06:52:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED5FBE
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 06:52:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 015B06123A
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 13:52:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 637BEC433CA;
-        Tue,  4 Jul 2023 13:52:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 79E5161269
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 13:52:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D87A1C433C9;
+        Tue,  4 Jul 2023 13:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688478747;
-        bh=Q7WXn/9ScDpp+9OtWuC/H3KaPEup8gUb/dUDS2VbtJY=;
+        s=k20201202; t=1688478748;
+        bh=8StsOH1YSM6B1lDNSUCgh4bFfo6Z0UgatasdO2r0Z4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W0qLd+xdIJ1ZMr35lCFcSKhsJqDz2+7h1XAUKGHzbBQDW8V/aUoltf3b6H5P+6a+w
-         xsBLrfnKhC8Qk4A/8XHSNH+1NWhFusM/V9ueUduSE2jnWplmYeKZCkMWOBhlJJbaZ3
-         bi+CP23NF+k9lWd3lO/rwcd3Z9248S6o1ui1q+C1SOYJaweRIzLLzK6CC3IMVjhci3
-         F92mYTE06kAfko79hc3+dnO3oKh/Gs+wSLZYIQZwnPWxa9izAd/l1C/1/MPMWngcCM
-         AObIMuhK3oqYQUSxsNFxbhmKcbrF2B5PctmfYNHfCNxMwWYkKWemjoRsUo2J1+4V16
-         4ZrwFgJ23e1og==
+        b=sKLiLoiKU/IwjZgf60vNz3d/0+uKEfX/lX3AbftRs5JPRaV8NVR7PbUi0ZtZfnUBk
+         l+/PaKiKT+uJ4ViNPRrbfCdbotpr0lnNTDMHbgvFnD6VWPr13pGX7HYU002mazakXT
+         0jucoSuVde4+DOXT/7VAC2bNTwMUe5J6yMj/4cw7JOYS/5+YIfYqRfmnUrVTMNKdVk
+         vfZYhYvr6+vLIlsdzk/zbJqYk30uFb+223ZoJEgsXeeMUsPUt9+5sSV256OTbDYDRH
+         KM74EuP66tK7kVjVwBllyIORUwPQCXiKno7RGJo7OPs8xXX8PaG2T5so4BTk55wK3D
+         fm6yJqb6kymSQ==
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-hardening@vger.kernel.org
 Cc:     Ard Biesheuvel <ardb@kernel.org>,
         Kees Cook <keescook@chromium.org>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Subject: [PATCH 1/2] pstore: Remove worst-case compression size logic
-Date:   Tue,  4 Jul 2023 15:52:10 +0200
-Message-Id: <20230704135211.2471371-2-ardb@kernel.org>
+Subject: [PATCH 2/2] pstore: Replace crypto API compression with zlib_deflate library calls
+Date:   Tue,  4 Jul 2023 15:52:11 +0200
+Message-Id: <20230704135211.2471371-3-ardb@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230704135211.2471371-1-ardb@kernel.org>
 References: <20230704135211.2471371-1-ardb@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6268; i=ardb@kernel.org; h=from:subject; bh=QmbLBa3x9rokegsWHpcbRv3J3rZorVO5B3xqQCg4liw=; b=owGbwMvMwCFmkMcZplerG8N4Wi2JIWWJCud9+ev6G71VBSxDVRk7zy3Yquw3UeR9SntXo4Znf muwUG9HKQuDGAeDrJgii8Dsv+92np4oVes8SxZmDisTyBAGLk4BmEhCDSPDJ/G0fEPzJdFS/w79 67jWN2dF8JZ7eyujLtj2Gk+d6Hj0IcNfSa/EH/52f1YGHNPSYdc/aVJw8m/GmxkGq9k+q+VMC9V jBQA=
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12053; i=ardb@kernel.org; h=from:subject; bh=8StsOH1YSM6B1lDNSUCgh4bFfo6Z0UgatasdO2r0Z4I=; b=owGbwMvMwCFmkMcZplerG8N4Wi2JIWWJCteUi2xLZzpzu93euSouS3gNwyzPS2evyy76otm85 YvapVNnOkpZGMQ4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBEfiYz/K+rWz9hR6h0YLfg h0iOLBXjKTur4hXrPD0ilb4kTLV5yMbI0Gev4OL89bjcpant0x8xS9y5t+3G1N38r1pSV4spbjC M4wcA
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+Pstore supports compression using a variety of algorithms exposed by the
+crypto API. This uses the deprecated comp (as opposed to scomp/acomp)
+API, and so we should stop using that, and either move to the new API,
+or switch to a different approach entirely.
 
-The worst case compression size gives an upper bound for how much the
-data might inadvertently *grow* due to encapsulation overhead if the
-input is not compressible at all.
+Given that we only compress ASCII text in pstore, and considering that
+this happens when the system is likely to be in a highly fragile state,
+the flexibility that the complex crypto API provides does not outweigh
+its impact on the risk that we might encounter additional problems when
+trying to commit the kernel log contents to the pstore backend.
 
-The kernel log is ASCII text so it should generally compress rather
-well. This means that the probability that the kernel log grows beyond
-the uncompressed size after compression is astronomically low, and in
-such cases (i.e., dmesg filled with perfect entropy) we won't be able to
-make sense of it anyway.
+So let's switch [back] to the zlib deflate library API, and remove all
+the complexity that really has no place in a low-level diagnostic
+facility. Note that, while more modern compression algorithms have been
+added to the kernel in recent years, the code size of zlib deflate is
+substantially smaller, while its performance in terms of compression
+ratio is perfectly acceptable, and speed is irrelevant in this context
+(unless panic() is a performance bottleneck in your workload).
 
-So let's just drop this logic, and use the uncompressed size as the
-worst case instead.
-
-Co-developed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- fs/pstore/platform.c | 153 ++------------------
- 1 file changed, 9 insertions(+), 144 deletions(-)
+ fs/pstore/Kconfig    | 100 ++----------------
+ fs/pstore/platform.c | 108 +++++++++++---------
+ 2 files changed, 69 insertions(+), 139 deletions(-)
 
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index c49d554cc9ae9f80..3acc38600cd1a2d0 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -1,7 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config PSTORE
+ 	tristate "Persistent store support"
+-	select CRYPTO if PSTORE_COMPRESS
+ 	default n
+ 	help
+ 	   This option enables generic access to platform level
+@@ -22,99 +21,18 @@ config PSTORE_DEFAULT_KMSG_BYTES
+ 	  Defines default size of pstore kernel log storage.
+ 	  Can be enlarged if needed, not recommended to shrink it.
+ 
+-config PSTORE_DEFLATE_COMPRESS
+-	tristate "DEFLATE (ZLIB) compression"
+-	default y
+-	depends on PSTORE
+-	select CRYPTO_DEFLATE
+-	help
+-	  This option enables DEFLATE (also known as ZLIB) compression
+-	  algorithm support.
+-
+-config PSTORE_LZO_COMPRESS
+-	tristate "LZO compression"
+-	depends on PSTORE
+-	select CRYPTO_LZO
+-	help
+-	  This option enables LZO compression algorithm support.
+-
+-config PSTORE_LZ4_COMPRESS
+-	tristate "LZ4 compression"
+-	depends on PSTORE
+-	select CRYPTO_LZ4
+-	help
+-	  This option enables LZ4 compression algorithm support.
+-
+-config PSTORE_LZ4HC_COMPRESS
+-	tristate "LZ4HC compression"
+-	depends on PSTORE
+-	select CRYPTO_LZ4HC
+-	help
+-	  This option enables LZ4HC (high compression) mode algorithm.
+-
+-config PSTORE_842_COMPRESS
+-	bool "842 compression"
+-	depends on PSTORE
+-	select CRYPTO_842
+-	help
+-	  This option enables 842 compression algorithm support.
+-
+-config PSTORE_ZSTD_COMPRESS
+-	bool "zstd compression"
+-	depends on PSTORE
+-	select CRYPTO_ZSTD
+-	help
+-	  This option enables zstd compression algorithm support.
+-
+ config PSTORE_COMPRESS
+-	def_bool y
++	bool "Pstore compression (deflate)"
+ 	depends on PSTORE
+-	depends on PSTORE_DEFLATE_COMPRESS || PSTORE_LZO_COMPRESS ||	\
+-		   PSTORE_LZ4_COMPRESS || PSTORE_LZ4HC_COMPRESS ||	\
+-		   PSTORE_842_COMPRESS || PSTORE_ZSTD_COMPRESS
+-
+-choice
+-	prompt "Default pstore compression algorithm"
+-	depends on PSTORE_COMPRESS
++	select ZLIB_INFLATE
++	select ZLIB_DEFLATE
++	default y
+ 	help
+-	  This option chooses the default active compression algorithm.
+-	  This change be changed at boot with "pstore.compress=..." on
+-	  the kernel command line.
+-
+-	  Currently, pstore has support for 6 compression algorithms:
+-	  deflate, lzo, lz4, lz4hc, 842 and zstd.
+-
+-	  The default compression algorithm is deflate.
+-
+-	config PSTORE_DEFLATE_COMPRESS_DEFAULT
+-		bool "deflate" if PSTORE_DEFLATE_COMPRESS
+-
+-	config PSTORE_LZO_COMPRESS_DEFAULT
+-		bool "lzo" if PSTORE_LZO_COMPRESS
+-
+-	config PSTORE_LZ4_COMPRESS_DEFAULT
+-		bool "lz4" if PSTORE_LZ4_COMPRESS
+-
+-	config PSTORE_LZ4HC_COMPRESS_DEFAULT
+-		bool "lz4hc" if PSTORE_LZ4HC_COMPRESS
+-
+-	config PSTORE_842_COMPRESS_DEFAULT
+-		bool "842" if PSTORE_842_COMPRESS
+-
+-	config PSTORE_ZSTD_COMPRESS_DEFAULT
+-		bool "zstd" if PSTORE_ZSTD_COMPRESS
+-
+-endchoice
+-
+-config PSTORE_COMPRESS_DEFAULT
+-	string
+-	depends on PSTORE_COMPRESS
+-	default "deflate" if PSTORE_DEFLATE_COMPRESS_DEFAULT
+-	default "lzo" if PSTORE_LZO_COMPRESS_DEFAULT
+-	default "lz4" if PSTORE_LZ4_COMPRESS_DEFAULT
+-	default "lz4hc" if PSTORE_LZ4HC_COMPRESS_DEFAULT
+-	default "842" if PSTORE_842_COMPRESS_DEFAULT
+-	default "zstd" if PSTORE_ZSTD_COMPRESS_DEFAULT
++	  Whether pstore records should be compressed before being written to
++	  the backing store. This is implemented using the zlib 'deflate'
++	  algorithm, using the library implementation instead of using the full
++	  blown crypto API. This reduces the risk of secondary oopses or other
++	  problems while pstore is recording panic metadata.
+ 
+ config PSTORE_CONSOLE
+ 	bool "Log kernel console messages"
 diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index cbc0b468c1ab6ca1..6741ec4347a3eea9 100644
+index 6741ec4347a3eea9..27a045b730eaf1c4 100644
 --- a/fs/pstore/platform.c
 +++ b/fs/pstore/platform.c
-@@ -16,15 +16,6 @@
+@@ -16,13 +16,14 @@
  #include <linux/console.h>
  #include <linux/module.h>
  #include <linux/pstore.h>
--#if IS_ENABLED(CONFIG_PSTORE_LZO_COMPRESS)
--#include <linux/lzo.h>
--#endif
--#if IS_ENABLED(CONFIG_PSTORE_LZ4_COMPRESS) || IS_ENABLED(CONFIG_PSTORE_LZ4HC_COMPRESS)
--#include <linux/lz4.h>
--#endif
--#if IS_ENABLED(CONFIG_PSTORE_ZSTD_COMPRESS)
--#include <linux/zstd.h>
--#endif
- #include <linux/crypto.h>
+-#include <linux/crypto.h>
  #include <linux/string.h>
  #include <linux/timer.h>
-@@ -97,11 +88,6 @@ MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
- /* Compression parameters */
- static struct crypto_comp *tfm;
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ #include <linux/jiffies.h>
++#include <linux/vmalloc.h>
+ #include <linux/workqueue.h>
++#include <linux/zlib.h>
  
--struct pstore_zbackend {
--	int (*zbufsize)(size_t size);
--	const char *name;
--};
--
+ #include "internal.h"
+ 
+@@ -71,12 +72,7 @@ static char *backend;
+ module_param(backend, charp, 0444);
+ MODULE_PARM_DESC(backend, "specific backend to use");
+ 
+-static char *compress =
+-#ifdef CONFIG_PSTORE_COMPRESS_DEFAULT
+-		CONFIG_PSTORE_COMPRESS_DEFAULT;
+-#else
+-		NULL;
+-#endif
++static char *compress = "deflate";
+ module_param(compress, charp, 0444);
+ MODULE_PARM_DESC(compress, "compression to use");
+ 
+@@ -85,8 +81,7 @@ unsigned long kmsg_bytes = CONFIG_PSTORE_DEFAULT_KMSG_BYTES;
+ module_param(kmsg_bytes, ulong, 0444);
+ MODULE_PARM_DESC(kmsg_bytes, "amount of kernel log to snapshot (in bytes)");
+ 
+-/* Compression parameters */
+-static struct crypto_comp *tfm;
++static void *compress_workspace;
+ 
  static char *big_oops_buf;
  static size_t big_oops_buf_sz;
- 
-@@ -168,105 +154,6 @@ static bool pstore_cannot_block_path(enum kmsg_dump_reason reason)
- 	}
- }
- 
--#if IS_ENABLED(CONFIG_PSTORE_DEFLATE_COMPRESS)
--static int zbufsize_deflate(size_t size)
--{
--	size_t cmpr;
--
--	switch (size) {
--	/* buffer range for efivars */
--	case 1000 ... 2000:
--		cmpr = 56;
--		break;
--	case 2001 ... 3000:
--		cmpr = 54;
--		break;
--	case 3001 ... 3999:
--		cmpr = 52;
--		break;
--	/* buffer range for nvram, erst */
--	case 4000 ... 10000:
--		cmpr = 45;
--		break;
--	default:
--		cmpr = 60;
--		break;
--	}
--
--	return (size * 100) / cmpr;
--}
--#endif
--
--#if IS_ENABLED(CONFIG_PSTORE_LZO_COMPRESS)
--static int zbufsize_lzo(size_t size)
--{
--	return lzo1x_worst_compress(size);
--}
--#endif
--
--#if IS_ENABLED(CONFIG_PSTORE_LZ4_COMPRESS) || IS_ENABLED(CONFIG_PSTORE_LZ4HC_COMPRESS)
--static int zbufsize_lz4(size_t size)
--{
--	return LZ4_compressBound(size);
--}
--#endif
--
--#if IS_ENABLED(CONFIG_PSTORE_842_COMPRESS)
--static int zbufsize_842(size_t size)
--{
--	return size;
--}
--#endif
--
--#if IS_ENABLED(CONFIG_PSTORE_ZSTD_COMPRESS)
--static int zbufsize_zstd(size_t size)
--{
--	return zstd_compress_bound(size);
--}
--#endif
--
--static const struct pstore_zbackend *zbackend __ro_after_init;
--
--static const struct pstore_zbackend zbackends[] = {
--#if IS_ENABLED(CONFIG_PSTORE_DEFLATE_COMPRESS)
--	{
--		.zbufsize	= zbufsize_deflate,
--		.name		= "deflate",
--	},
--#endif
--#if IS_ENABLED(CONFIG_PSTORE_LZO_COMPRESS)
--	{
--		.zbufsize	= zbufsize_lzo,
--		.name		= "lzo",
--	},
--#endif
--#if IS_ENABLED(CONFIG_PSTORE_LZ4_COMPRESS)
--	{
--		.zbufsize	= zbufsize_lz4,
--		.name		= "lz4",
--	},
--#endif
--#if IS_ENABLED(CONFIG_PSTORE_LZ4HC_COMPRESS)
--	{
--		.zbufsize	= zbufsize_lz4,
--		.name		= "lz4hc",
--	},
--#endif
--#if IS_ENABLED(CONFIG_PSTORE_842_COMPRESS)
--	{
--		.zbufsize	= zbufsize_842,
--		.name		= "842",
--	},
--#endif
--#if IS_ENABLED(CONFIG_PSTORE_ZSTD_COMPRESS)
--	{
--		.zbufsize	= zbufsize_zstd,
--		.name		= "zstd",
--	},
--#endif
--	{ }
--};
--
+@@ -157,37 +152,46 @@ static bool pstore_cannot_block_path(enum kmsg_dump_reason reason)
  static int pstore_compress(const void *in, void *out,
  			   unsigned int inlen, unsigned int outlen)
  {
-@@ -291,36 +178,31 @@ static void allocate_buf_for_compression(void)
++	struct z_stream_s zstream = {
++		.next_in	= in,
++		.avail_in	= inlen,
++		.next_out	= out,
++		.avail_out	= outlen,
++		.workspace	= compress_workspace,
++	};
+ 	int ret;
+ 
+ 	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS))
+ 		return -EINVAL;
+ 
+-	ret = crypto_comp_compress(tfm, in, inlen, out, &outlen);
+-	if (ret) {
+-		pr_err("crypto_comp_compress failed, ret = %d!\n", ret);
+-		return ret;
+-	}
++	ret = zlib_deflateInit2(&zstream, Z_DEFAULT_COMPRESSION, Z_DEFLATED,
++				-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
++	if (ret != Z_OK)
++		return -EINVAL;
+ 
+-	return outlen;
++	ret = zlib_deflate(&zstream, Z_FINISH);
++	if (ret != Z_STREAM_END)
++		return -EINVAL;
++
++	return zstream.total_out;
+ }
+ 
+ static void allocate_buf_for_compression(void)
+ {
+-	struct crypto_comp *ctx;
+ 	int size;
  	char *buf;
  
- 	/* Skip if not built-in or compression backend not selected yet. */
--	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !zbackend)
-+	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !compress)
+-	/* Skip if not built-in or compression backend not selected yet. */
+-	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !compress)
++	/* Skip if not built-in or compression disabled. */
++	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !compress ||
++	    !strcmp(compress, "none")) {
++		compress = NULL;
  		return;
++	}
  
- 	/* Skip if no pstore backend yet or compression init already done. */
- 	if (!psinfo || tfm)
- 		return;
- 
--	if (!crypto_has_comp(zbackend->name, 0, 0)) {
--		pr_err("Unknown compression: %s\n", zbackend->name);
+-	/* Skip if no pstore backend yet or compression init already done. */
+-	if (!psinfo || tfm)
 -		return;
--	}
 -
--	size = zbackend->zbufsize(psinfo->bufsize);
--	if (size <= 0) {
--		pr_err("Invalid compression size for %s: %d\n",
--		       zbackend->name, size);
-+	if (!crypto_has_comp(compress, 0, 0)) {
-+		pr_err("Unknown compression: %s\n", compress);
+-	if (!crypto_has_comp(compress, 0, 0)) {
+-		pr_err("Unknown compression: %s\n", compress);
+-		return;
++	if (strcmp(compress, "deflate")) {
++		pr_err("Unsupported compression '%s', falling back to deflate\n",
++		       compress);
++		compress = "deflate";
+ 	}
+ 
+ 	/* Worst-case compression should never be more than uncompressed. */
+@@ -199,16 +203,15 @@ static void allocate_buf_for_compression(void)
  		return;
  	}
  
-+	/* Worst-case compression should never be more than uncompressed. */
-+	size = psinfo->bufsize;
- 	buf = kmalloc(size, GFP_KERNEL);
- 	if (!buf) {
- 		pr_err("Failed %d byte compression buffer allocation for: %s\n",
--		       size, zbackend->name);
-+		       size, compress);
- 		return;
- 	}
- 
--	ctx = crypto_alloc_comp(zbackend->name, 0, 0);
-+	ctx = crypto_alloc_comp(compress, 0, 0);
- 	if (IS_ERR_OR_NULL(ctx)) {
+-	ctx = crypto_alloc_comp(compress, 0, 0);
+-	if (IS_ERR_OR_NULL(ctx)) {
++	compress_workspace =
++		vmalloc(zlib_deflate_workspacesize(MAX_WBITS, DEF_MEM_LEVEL));
++	if (!compress_workspace) {
++		pr_err("Failed to allocate zlib deflate workspace\n");
  		kfree(buf);
--		pr_err("crypto_alloc_comp('%s') failed: %ld\n", zbackend->name,
-+		pr_err("crypto_alloc_comp('%s') failed: %ld\n", compress,
- 		       PTR_ERR(ctx));
+-		pr_err("crypto_alloc_comp('%s') failed: %ld\n", compress,
+-		       PTR_ERR(ctx));
  		return;
  	}
-@@ -330,7 +212,7 @@ static void allocate_buf_for_compression(void)
+ 
+ 	/* A non-NULL big_oops_buf indicates compression is available. */
+-	tfm = ctx;
  	big_oops_buf_sz = size;
  	big_oops_buf = buf;
  
--	pr_info("Using crash dump compression: %s\n", zbackend->name);
-+	pr_info("Using crash dump compression: %s\n", compress);
- }
+@@ -217,10 +220,6 @@ static void allocate_buf_for_compression(void)
  
  static void free_buf_for_compression(void)
-@@ -818,27 +700,10 @@ static void pstore_timefunc(struct timer_list *unused)
- 	pstore_timer_kick();
- }
- 
--static void __init pstore_choose_compression(void)
--{
--	const struct pstore_zbackend *step;
--
--	if (!compress)
--		return;
--
--	for (step = zbackends; step->name; step++) {
--		if (!strcmp(compress, step->name)) {
--			zbackend = step;
--			return;
--		}
+ {
+-	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm) {
+-		crypto_free_comp(tfm);
+-		tfm = NULL;
 -	}
--}
--
- static int __init pstore_init(void)
+ 	kfree(big_oops_buf);
+ 	big_oops_buf = NULL;
+ 	big_oops_buf_sz = 0;
+@@ -563,7 +562,8 @@ void pstore_unregister(struct pstore_info *psi)
+ }
+ EXPORT_SYMBOL_GPL(pstore_unregister);
+ 
+-static void decompress_record(struct pstore_record *record)
++static void decompress_record(struct pstore_record *record,
++			      struct z_stream_s *zstream)
+ {
+ 	int ret;
+ 	int unzipped_len;
+@@ -584,6 +584,12 @@ static void decompress_record(struct pstore_record *record)
+ 		return;
+ 	}
+ 
++	ret = zlib_inflateReset(zstream);
++	if (ret != Z_OK) {
++		pr_err("zlib_inflateReset() failed, ret = %d!\n", ret);
++		return;
++	}
++
+ 	/* Allocate enough space to hold max decompression and ECC. */
+ 	unzipped_len = big_oops_buf_sz;
+ 	workspace = kmalloc(unzipped_len + record->ecc_notice_size,
+@@ -591,15 +597,20 @@ static void decompress_record(struct pstore_record *record)
+ 	if (!workspace)
+ 		return;
+ 
+-	/* After decompression "unzipped_len" is almost certainly smaller. */
+-	ret = crypto_comp_decompress(tfm, record->buf, record->size,
+-					  workspace, &unzipped_len);
+-	if (ret) {
+-		pr_err("crypto_comp_decompress failed, ret = %d!\n", ret);
++	zstream->next_in	= record->buf;
++	zstream->avail_in	= record->size;
++	zstream->next_out	= workspace;
++	zstream->avail_out	= unzipped_len;
++
++	ret = zlib_inflate(zstream, Z_SYNC_FLUSH);
++	if (ret != Z_STREAM_END) {
++		pr_err("zlib_inflate() failed, ret = %d!\n", ret);
+ 		kfree(workspace);
+ 		return;
+ 	}
+ 
++	unzipped_len = zstream->total_out;
++
+ 	/* Append ECC notice to decompressed buffer. */
+ 	memcpy(workspace + unzipped_len, record->buf + record->size,
+ 	       record->ecc_notice_size);
+@@ -629,10 +640,17 @@ void pstore_get_backend_records(struct pstore_info *psi,
+ {
+ 	int failed = 0;
+ 	unsigned int stop_loop = 65536;
++	struct z_stream_s zstream;
+ 
+ 	if (!psi || !root)
+ 		return;
+ 
++	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && compress) {
++		zstream.workspace = kvmalloc(zlib_inflate_workspacesize(),
++					     GFP_KERNEL);
++		zlib_inflateInit2(&zstream, -DEF_WBITS);
++	}
++
+ 	mutex_lock(&psi->read_mutex);
+ 	if (psi->open && psi->open(psi))
+ 		goto out;
+@@ -661,7 +679,7 @@ void pstore_get_backend_records(struct pstore_info *psi,
+ 			break;
+ 		}
+ 
+-		decompress_record(record);
++		decompress_record(record, &zstream);
+ 		rc = pstore_mkfile(root, record);
+ 		if (rc) {
+ 			/* pstore_mkfile() did not take record, so free it. */
+@@ -676,6 +694,7 @@ void pstore_get_backend_records(struct pstore_info *psi,
+ 		psi->close(psi);
+ out:
+ 	mutex_unlock(&psi->read_mutex);
++	kvfree(zstream.workspace);
+ 
+ 	if (failed)
+ 		pr_warn("failed to create %d record(s) from '%s'\n",
+@@ -704,13 +723,6 @@ static int __init pstore_init(void)
  {
  	int ret;
  
--	pstore_choose_compression();
+-	/*
+-	 * Check if any pstore backends registered earlier but did not
+-	 * initialize compression because crypto was not ready. If so,
+-	 * initialize compression now.
+-	 */
+-	allocate_buf_for_compression();
 -
- 	/*
- 	 * Check if any pstore backends registered earlier but did not
- 	 * initialize compression because crypto was not ready. If so,
+ 	ret = pstore_init_fs();
+ 	if (ret)
+ 		free_buf_for_compression();
 -- 
 2.39.2
 
