@@ -2,82 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98DFEB64DA
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 18:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8609EB64D9
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 21:36:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbjGDSuZ (ORCPT
+        id S230335AbjGDVg6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Jul 2023 14:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60770 "EHLO
+        Tue, 4 Jul 2023 17:36:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231309AbjGDSuY (ORCPT
+        with ESMTP id S229903AbjGDVg5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Jul 2023 14:50:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27DE0E76;
-        Tue,  4 Jul 2023 11:50:23 -0700 (PDT)
+        Tue, 4 Jul 2023 17:36:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A37DE59;
+        Tue,  4 Jul 2023 14:36:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A161D61362;
-        Tue,  4 Jul 2023 18:50:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 01CF3C433CA;
-        Tue,  4 Jul 2023 18:50:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E749161381;
+        Tue,  4 Jul 2023 21:36:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1F9C433C7;
+        Tue,  4 Jul 2023 21:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688496622;
-        bh=10gurLQ8aEgGE0CIExcSlH/8KjmglWm/++axqieklak=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=GAwrv0TPtnKjMEgMNxjeqJ9tPkVICgI15f20rtJz+CHqN95H+a5fOLy7Oqhz8HAqf
-         sts0uSzyyiai98d129urQyOaew9a7+SR2SqzZ/0FBjEXNaYXc5zedU/lUv5Pm+v1tn
-         BJsWmpRKh+lZ626wYA0RpUdoP8Gt3/uYdyLjG5Xgw9mLrU+nDRKBh5lmXnzusxiVo2
-         bkh5Vqf3+j66ZLBDCVSXBlB1j73X+SMwQ6Dy1tspKo55UzCT8v+vvKmHrUw3RRma1H
-         PQdVMgwa8io7YE1SVO4Xywbn9gqr+K79s1hffpF4gEOAzjlJarMLzidoyImpve7GsN
-         pRGnmLoeFNy5w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D54DCC691EF;
-        Tue,  4 Jul 2023 18:50:21 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        s=k20201202; t=1688506614;
+        bh=eKyZ9PkJ+ke344sHii+bCX3P4/oDphlbXbihKHuI0wc=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=KbyZEpz7LvuMZPUZ+VDakZRe1vQSYrRAkkHStQga6b9oeMtoBkNCgunC864yhA5lO
+         NrrRbVrBbsrq2SCSESAQjQtGu9y56YMwKa5cleuC1UbKT4h68/vEl7/L54aBckiYb1
+         Iy4TyoOW9Loq0nnh0NyFEPTe79+ee65BGcRGn9EGtaWpqGjxNUtmjUITBGrShJtVjE
+         i0Qyjjx9XtP4sHAB/K5OHDYyczO0nQlDIziJLgcpRQXUmTWwVNqDqsnXSA7+5rZdtP
+         lM8HgFiGDSkEsY3JVKafmZqkYGV3KDqLW52mbn8ypfUeIJJPvHj8T3TKvNxmc/SC4P
+         NONZUDeTMYycA==
+Date:   Tue, 04 Jul 2023 14:36:51 -0700
+From:   Kees Cook <kees@kernel.org>
+To:     Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+        Kees Cook <keescook@chromium.org>
+CC:     Guenter Roeck <linux@roeck-us.net>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LLVM <llvm@lists.linux.dev>,
+        linux-kbuild@vger.kernel.org,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
+User-Agent: K-9 Mail for Android
+In-Reply-To: <fbf4103b-6471-1f06-34a8-4aa227f5e091@alu.unizg.hr>
+References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr> <ZKIoBVzrjZ+Ybxy9@debian.me> <202307022018.B26F5795@keescook> <625e951e-9922-d15d-5520-e8cd5eba1995@roeck-us.net> <4fa56264-f188-46f9-cc77-117b469b3328@roeck-us.net> <2b1a4f49-ba18-0246-af09-4e4133814411@alu.unizg.hr> <202307022230.6121D6896@keescook> <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr> <202307031149.823F9A3@keescook> <202307031606.3FD9D0D@keescook> <fbf4103b-6471-1f06-34a8-4aa227f5e091@alu.unizg.hr>
+Message-ID: <3CDD1188-7B2A-4D53-9B8F-C07BC39844E9@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: Replace strlcpy with strscpy
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <168849662186.30545.14650541055140387280.git-patchwork-notify@kernel.org>
-Date:   Tue, 04 Jul 2023 18:50:21 +0000
-References: <20230703175840.3706231-1-azeemshaikh38@gmail.com>
-In-Reply-To: <20230703175840.3706231-1-azeemshaikh38@gmail.com>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     davem@davemloft.net, linux-hardening@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dsahern@kernel.org, rostedt@goodmis.org, keescook@chromium.org,
-        netdev@vger.kernel.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello:
+On July 4, 2023 10:20:11 AM PDT, Mirsad Todorovac <mirsad=2Etodorovac@alu=
+=2Eunizg=2Ehr> wrote:
+>On 7/4/23 01:09, Kees Cook wrote:> On Mon, Jul 03, 2023 at 12:03:23PM -07=
+00, Kees Cook wrote:
+>>> Cool=2E xhci-hub is in your backtrace, and the above patch was made fo=
+r
+>>> something very similar (though, again, I don't see why you're getting =
+a
+>>> _crash_, it should _warn_ and continue normally)=2E And, actually, als=
+o
+>>> include this patch:
+>>> https://lore=2Ekernel=2Eorg/lkml/20230614181307=2Egonna=2E256-kees@ker=
+nel=2Eorg/
+>>=20
+>> This is now in Linus's tree:
+>> 09b69dd4378b ("usb: ch9: Replace 1-element array with flexible array")
+>>=20
+>> Please also still try with the first patch I mentioned, which is very s=
+imilar:
+>> https://lore=2Ekernel=2Eorg/lkml/20230629190900=2Enever=2E787-kees@kern=
+el=2Eorg/
+>
+>Hi,
+>
+>I have finally built w both patches (and recommended PSTORE settings were
+>default already)=2E
 
-This patch was applied to netdev/net.git (main)
-by David S. Miller <davem@davemloft.net>:
+Were you able to find the crashes saved by pstore?
 
-On Mon,  3 Jul 2023 17:58:40 +0000 you wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
-> 
-> [...]
+>
+>This second patch fixes the booting problem, but alas there is still a pr=
+oblem -
 
-Here is the summary with links:
-  - net: Replace strlcpy with strscpy
-    https://git.kernel.org/netdev/net/c/ba7bdec3cbec
+Ah! That's great! They're is still an unexpected crash source, but the tri=
+gger is fixed=2E
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+>all Wayland and X11=2Eorg GUI applications fail to start, with errors lik=
+e this one:
+>
+>Jul  4 19:09:07 defiant kernel: [   40=2E529719] invalid opcode: 0000 [#1=
+] PREEMPT SMP NOPTI
+
+Hmm, is CONFIG_UBSAN_TRAP set?
+
+>Jul  4 19:09:07 defiant kernel: [   40=2E529726] RIP: 0010:alloc_pid+0x46=
+c/0x480
+
+Hmm, is this patch in your kernel?
+https://git=2Ekernel=2Eorg/linus/b69f0aeb068980af983d399deafc7477cec8bc04
 
 
+--=20
+Kees Cook
