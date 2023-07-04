@@ -2,67 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC41EB64DA
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 13:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E6DEB64D9
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 13:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231573AbjGDNnI (ORCPT
+        id S230389AbjGDNw2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Jul 2023 09:43:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53566 "EHLO
+        Tue, 4 Jul 2023 09:52:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229994AbjGDNnG (ORCPT
+        with ESMTP id S229645AbjGDNw1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Jul 2023 09:43:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D90511D;
-        Tue,  4 Jul 2023 06:43:02 -0700 (PDT)
+        Tue, 4 Jul 2023 09:52:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC36FBE
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 06:52:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C50276123A;
-        Tue,  4 Jul 2023 13:43:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62808C433C7;
-        Tue,  4 Jul 2023 13:42:58 +0000 (UTC)
-Date:   Tue, 4 Jul 2023 09:42:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     mhiramat@kernel.org, ebiggers@kernel.org, azeemshaikh38@gmail.com,
-        linux-trace-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/boot: Replace strlcpy with strscpy
-Message-ID: <20230704094248.1b36c3e7@rorschach.local.home>
-In-Reply-To: <202306201335.D6D772A@keescook>
-References: <20230615180420.400769-1-azeemshaikh38@gmail.com>
-        <168729290245.455922.11993639418267016143.b4-ty@chromium.org>
-        <20230620163325.35c9203c@gandalf.local.home>
-        <202306201335.D6D772A@keescook>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A0716123C
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 13:52:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC717C433C8;
+        Tue,  4 Jul 2023 13:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688478745;
+        bh=ym66uhLczvnzychJy9bNcQL6WUWzycdJ5ZeI6bTwjUY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=t4T+uYnZs/F+YvJb28b907tfS07+mkMHYFSz8HcWZg8V58WChmwzYDyghqH7uf7Gc
+         19l/qy3RVjyRf0M3oX3O2YTnnPAlO8aaKlBTmTfi3ckn4iWPaRr0RhvZoPnsrKtUir
+         GvuDZH6sbyb2bDCjuT0b59zAUo5Pk3ejDfbwm4M1XILhU1NJphZ6zTOb9QkXQsYYZr
+         98yvjn7BJ5ZeaLS0gmzSCB0MxQtKu8om2hP03zGNKgYktu+JloGeqh7YnmR2LCJZwB
+         pX8wteYZrUwjiyj14tTO/BuLmn1tDfSF3XV232rZCe4HW6XTptdWhz/D91fh8BTOOh
+         LvLKu55mxMGog==
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH 0/2] pstore: Replace crypto API compression with zlib calls
+Date:   Tue,  4 Jul 2023 15:52:09 +0200
+Message-Id: <20230704135211.2471371-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1040; i=ardb@kernel.org; h=from:subject; bh=ym66uhLczvnzychJy9bNcQL6WUWzycdJ5ZeI6bTwjUY=; b=owGbwMvMwCFmkMcZplerG8N4Wi2JIWWJCoe05ZktJ1ffuHG688mBR5urntk9SXOwNNQ7E/Qpd CaP4R/djlIWBjEOBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjAR/TxGho5fc/Z73urMEtns sOR5c6OaaUQzzzNG3b1zo28t9Ps50Z7hr2wnm/wO63Uhb/e7PzwcxLQut3cNr8buZW4Ht2k0Rl4 JYgUA
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 20 Jun 2023 13:35:14 -0700
-Kees Cook <keescook@chromium.org> wrote:
+The pstore layer implements support for compression of kernel log
+output, using a variety of compressions algorithms provided by the
+[deprecated] crypto API 'comp' interface.
 
-> > > Applied to for-next/hardening, thanks!
-> > > 
-> > > [1/1] tracing/boot: Replace strlcpy with strscpy
-> > >       https://git.kernel.org/kees/c/b1c38314f756
-> > >   
-> > 
-> > I was going to add this to my queue.  
-> 
-> Ah, okay, no worries. I will drop it from mine.
+This appears to have been somebody's pet project rather than a solution
+to a real problem: the original deflate compression is reasonably fast,
+compressed well and is comparatively small in terms of code footprint,
+and so the flexibility that the crypto API integration provides does
+little more than complicate the code for no reason.
 
-Maybe I should have let you take it. I had v1 in my queue, and pushed
-that one :-p
+So let's get rid of this complexity, and switch back to zlib deflate
+using the library interface.
 
-I'll fix it later.
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
 
-Thanks,
+Ard Biesheuvel (1):
+  pstore: Replace crypto API compression with zlib_deflate library calls
 
--- Steve
+Kees Cook (1):
+  pstore: Remove worst-case compression size logic
+
+ fs/pstore/Kconfig    | 100 +-------
+ fs/pstore/platform.c | 249 +++++---------------
+ 2 files changed, 72 insertions(+), 277 deletions(-)
+
+-- 
+2.39.2
+
