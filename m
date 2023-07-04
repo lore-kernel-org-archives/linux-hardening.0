@@ -2,144 +2,130 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE89CEB64D9
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 14:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E8FEB64DA
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 14:22:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231678AbjGDOB7 (ORCPT
+        id S230338AbjGDOW3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Jul 2023 10:01:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35780 "EHLO
+        Tue, 4 Jul 2023 10:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbjGDOBi (ORCPT
+        with ESMTP id S230004AbjGDOW3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Jul 2023 10:01:38 -0400
-Received: from mail-pg1-f206.google.com (mail-pg1-f206.google.com [209.85.215.206])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D54FB1727
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 07:01:17 -0700 (PDT)
-Received: by mail-pg1-f206.google.com with SMTP id 41be03b00d2f7-55ac8f85360so5317785a12.0
-        for <linux-hardening@vger.kernel.org>; Tue, 04 Jul 2023 07:01:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688479275; x=1691071275;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OAJrIpPYsWuzkKicppsd7MNNDIGXlm7pXpjIQFZBeio=;
-        b=C5BsoSgZlfA9bk/1tYF+rsWfT/pncfQH65YEUVF1RZabg8iwj27fFDPR8G4TFxCZ5Q
-         j6iGGc22f4CH1b1+AXjc27CImEI3Hh+heKj2Y8kQ1eEpPVDVj367Zx3iIaD7Nqs15+X3
-         aAAVnn/AWIEUgRlNaltvHqs3svO/VxedaeDkGtHPDmjt6rcJ0bsXAA3gI9jRDpDZuuPy
-         v7dr/cP32kV9EVvP9BJ/lnBQjYLeX1S1zwF08hAEQi+FllBb6O6awjspV5YkbqN04uSS
-         3yDB6A5oELiO/6iX6QD5LHs4Y3zLJf+OYBGiDS1O5jiy+9cUkun8n0vnfpBIDHdDlFFa
-         QZGw==
-X-Gm-Message-State: ABy/qLYjoIceexqlHsVDy4GZHa7llf5FP7UXXJ+eV29X+Q4eHoW3Ln9E
-        xVaeoQ4zR1nMxdjCv4pJ6EkQGzOd7KKE2zIRSIpnFit+CQE/
-X-Google-Smtp-Source: APBJJlGX4eLqwacKHZtmGRo7GlT1QTl55Rjvwfiq4SMYYmeIA3CYU2tiLQdewQDtU+lFVqZ/KMRTt3ByDYq2La4t9QO2UdnWjMpr
+        Tue, 4 Jul 2023 10:22:29 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2130.outbound.protection.outlook.com [40.107.93.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A7AE47;
+        Tue,  4 Jul 2023 07:22:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bCF0tumN3BXbr9W0EBTjiQHadxWtpFheadi5lFyMhTfcHzi6n+T8WUt06CjsaXmRDcaptqb36w7dUaMhzQlKTYzo7qtK/vOr1mUa5U3l7YygmGRUGRehcKUTw9HCDir7La7QtiAPlRPQtRYwQMRcFraiBfpgSIpBYFlDmzK0KPM9xRsU9jJrIhRb3BSEO3DrLIt4b/q1YN3wqfvh6ix5HuAQLJz16jCtCWKmbK6lOfx24363pSvo+jIngOJktyJKDAGuv7vYnLh4QollS63ZGtFnekNXJo0NBs8p10z52Ev9OdC7I806X5sBvmv0WSR8ohM6te7oMGHuTCnHD6+znQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Rb30hVl/dNImswCjkUfGBIYuD3068l7cChJS2aeUkAA=;
+ b=U1kFNevJMD5PkenE4nR236mw7SLw4uSJVvoAIheAZVObYrkZl2iO18bb5UUbn1yg+6LlXWlLU8+Gb5bl4Baf/MPy7paNixNXArceVTPG76uoZkGYvmvYHGlQTjBWRgVIzMi4AabIuVQxwmHigihHFrdsK/4f8A54a6piCpDxQqs9QFhVNpC49R8tAGCXPcXSxP2cgtJH7gmEyhSQSfu7RgkNixb5I7VWoHvHNV45MEtd3ds4/cIy2XEPKWE6wpXeaBCwfz/6UA77JFv2IBmJqoActL5dX2fsfbQMPWsp0FPvPXRbecowe+Ehm1CvPTJjOT7BTGKkwMK+UAkkAQIr5g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Rb30hVl/dNImswCjkUfGBIYuD3068l7cChJS2aeUkAA=;
+ b=MlTF5p19ZEyv6XG1cmqR139I77MdQ6KZHLY9GeZedlPCe9UNOiBjWgcFNUtoBC8N6FsduDIUVtNjfK3boROyVbOOGMAc5T0FGFXoIfu7xTASvlBFO5yIZh0TZF6Q9+mLI0jvJX90hF7+/rDcbrjcI5zijuSnzJVmVNVqkGP6E0I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by CH0PR13MB5113.namprd13.prod.outlook.com (2603:10b6:610:112::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Tue, 4 Jul
+ 2023 14:22:24 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::eb8f:e482:76e0:fe6e]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::eb8f:e482:76e0:fe6e%5]) with mapi id 15.20.6544.024; Tue, 4 Jul 2023
+ 14:22:23 +0000
+Date:   Tue, 4 Jul 2023 15:22:17 +0100
+From:   Simon Horman <simon.horman@corigine.com>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-hardening@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Ahern <dsahern@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org
+Subject: Re: [PATCH] net: Replace strlcpy with strscpy
+Message-ID: <ZKQrGaJzNlLse+js@corigine.com>
+References: <20230703175840.3706231-1-azeemshaikh38@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230703175840.3706231-1-azeemshaikh38@gmail.com>
+X-ClientProxiedBy: LO4P123CA0538.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:319::8) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
 MIME-Version: 1.0
-X-Received: by 2002:a63:5c02:0:b0:553:b2a0:4ddd with SMTP id
- q2-20020a635c02000000b00553b2a04dddmr7882265pgb.2.1688479275716; Tue, 04 Jul
- 2023 07:01:15 -0700 (PDT)
-Date:   Tue, 04 Jul 2023 07:01:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007096ce05ffa9b7aa@google.com>
-Subject: [syzbot] [arm?] BUG: unable to handle kernel paging request in invoke_syscall
-From:   syzbot <syzbot+a5638594f1bc152f1200@syzkaller.appspotmail.com>
-To:     catalin.marinas@arm.com, keescook@chromium.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, will@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|CH0PR13MB5113:EE_
+X-MS-Office365-Filtering-Correlation-Id: 85a5cc31-cf53-40b4-f575-08db7c9a15d6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yXOtKNTgS6flqINEsQii/S5UGes310CTQLUrDjd7OXU5is5bptBqxFyQvvRoOYwnNo6fTUFIurZUedgP3VDJxzLVr0P3smgfAn6DZ6NBGk/vhWtTW0q5+po/a7a7jWfCJZyW5lhEWpAkHpzGDc0Ufrqq+IBV93YTAhEFUtZa9eyzPATKmjHE+FYe0eUcYb8PfdSlUNrl2DXYmbtstUy2bxvMbLtJY4F8+eVWyI1cgQiFIGI4go6tCrF+vUxOPuLtxw8iK/aVoZcXpyrAZa44rFSXfUTglrU1ZiS7xp1rfj+B1kZlZLJ/f1AEKiF/Cch+qNW2+Mg/3hbP6dKgYrtNm/tzpMX7QYgO0l+NmRA/wdLmiTh3nO0eEoTIzg0eJbIf+z+wvjte7/sAMg0SnaWqbh0rTF168nF7H/+x17qKV7v/qCSKtFQP4l8sLkhl108+XiUAaSgAvE/SlQznfbQamCE0MY3g8O1YNyB6MwI2XqEg5eq6rG4JRZ8en8NeFOoQx6QRoGLW2xmxgq1lZsNwBA+4UnjjzNPgTqVHFNAMJconQBcrHeNWiWhTaj88CHmKskyv3/hvi2jfjIdWUP5EtFB/6ixD0QZstu09muN2LZggoZ8AU1Mxh0MULKuPcOw1Ks3eusRvml5ZRB/Rgodf+bdmyCCgcj4qiE5KE3l5Wdo=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(366004)(346002)(396003)(39830400003)(451199021)(6512007)(6506007)(66476007)(316002)(38100700002)(4326008)(66946007)(66556008)(6916009)(2616005)(83380400001)(186003)(26005)(478600001)(54906003)(4744005)(2906002)(8936002)(8676002)(44832011)(36756003)(5660300002)(86362001)(966005)(6486002)(6666004)(41300700001)(156123004)(67856001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?bhy/uz2OI0hEVhfil6kn+VOvNq6b774DEnj+uBEGb2KOHnlGLxmzCBVCiPPc?=
+ =?us-ascii?Q?/i8IEaBlF/nxyuE9zaBrkPdQASIfIFQA+1hmQH9wiJhOiFxbPmELKil0JbMQ?=
+ =?us-ascii?Q?b2Rz20oxvsHBsajUwODyrsAR2pftD1tIjp7hNsdDLprThATtZKh0qeOlMA0w?=
+ =?us-ascii?Q?imkUuIRyOIk4sd/nWg0hL66RNFDmUzHQ/MM7kXcUx9rkH8X0fY7Ptci7kJhs?=
+ =?us-ascii?Q?hS1fK+cp7clUJ/eMiqZGYgMj71lINHdlSohwEphOXULmpHXgZJ+h0BOrFfHr?=
+ =?us-ascii?Q?veoH0szuegkv8o7WOkvyoXYprh2HlwmIyk6TsIVa0xZYfmFKOtkAUpUNEo0c?=
+ =?us-ascii?Q?SpkLh9LVFv98VqNV3IQXAys0BbAA97+KaLQodQ/LTrhLvL6EXbl0zzvJo5zO?=
+ =?us-ascii?Q?pI0JN+opipniY8Wfc5mEuVgoZunq7DOC0x5B67j5Uj69pp2ygaSknxTEqVbQ?=
+ =?us-ascii?Q?zoT0P9/yTzw71ZRWw45dnY3zhC2MX0UBwMmV0yp+GoSDT88tUlPM+2CLxzKe?=
+ =?us-ascii?Q?Va1Q66XoVghVYXsl0kUtLM0OUhZa57jZoUmIJTMjVhlNrS2Mn7y008xn2Mjn?=
+ =?us-ascii?Q?qJPNSWQTRy6YOV3I7EXul/+nif4DW9GXUSyp2jUJuZfwbgf4CzxIPHig2Av5?=
+ =?us-ascii?Q?CkyvpfS7vlH+JaL+QEzkIOjpvQ39Q46U0jHbWkgSb3DHEyXc2fjJCG+cskeK?=
+ =?us-ascii?Q?FPJehLw7jD04IuGu9oMTts5nHFveDZlQtYLif5pzENaeJKPOPwuAiYohZL90?=
+ =?us-ascii?Q?uWCnjVA/E9bvTQV2tPM9NbxmAh76GmMMqC2HdKMfqA/92/zYLauqVFtwQlU+?=
+ =?us-ascii?Q?816uMAmYzcQQTCZZmkPQM0C/zDuL8rpvweuu1P+YZxKwCr3hKncVr8DO1CW3?=
+ =?us-ascii?Q?PxAqF0UgLrL94meDKIUg6GfRA6XWvntGe2NleDjlN6R+nVgKALraPuVTNtdm?=
+ =?us-ascii?Q?3lT0kzBQiYKU78igwC7J0PvT1dZyTHOHFIIZH/4T48404KXvR9CDNs2IiMnf?=
+ =?us-ascii?Q?Ytl57nCK9I+7v21rL3z3aHhpF3cb3dWpO8L+V1bQmGS6t/YB7CQRtmV2BizL?=
+ =?us-ascii?Q?oq/tOsCYgq6C9f5nZLJa+/88sHP0FHMIJUxLWizI2ZNyd5Knb1yvBo9TbJYV?=
+ =?us-ascii?Q?ARkY24hO5hwrPr3n3eczKdDx9cic+7pv9DCGM3jP/qqYcRxsTBmKV942Bul4?=
+ =?us-ascii?Q?/+pvPe9VGEf4Lotjn9xYybTaHfLNILk19x/m6RYLeEGnbGagf7sghxRxvj5N?=
+ =?us-ascii?Q?YhQvr2bfWwW8s9t7joL4HakQBK0jlgIjH8Q+zVtsRpJ0ac1/Zl4aDQkRHzAb?=
+ =?us-ascii?Q?DXS39Bu4bf8AApLZWhy60L1peYCq9za/sKnJ7PkJ259LwtAt6iuT7er1z9ts?=
+ =?us-ascii?Q?RPgrOE5T8jyskBLj2JRqU5zv3n4Wh9FuX9J6B+I9Ygo53BDEjBC/LcCzILYK?=
+ =?us-ascii?Q?LAu1oUUqamaQspW/Rg4Bp66Jjg30x6jk0RK1ZX19EDpA1+SEwu3Q/Hg5fhBo?=
+ =?us-ascii?Q?JhrF5jXldK0Rh+LxcQpEAkPU1XlNLsIF2QNQVGQIF0KDD+QnDd2HAui5HHro?=
+ =?us-ascii?Q?DE3HREY14kfwnks810RSWut3T7GsK2zn/ZHC75oAaNpqBchALYgIlH14lXep?=
+ =?us-ascii?Q?nQ=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85a5cc31-cf53-40b4-f575-08db7c9a15d6
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2023 14:22:23.7649
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: sxx2Rbyk10cvuRcLWrQz7aahoglUVq8hOMGf2OIG6Vjnh8AXpik3MYFRdo1Zs+d9HLASB1zbpqD2eQVTm8YA+7rpYO7W81Glbe7S5AZjK08=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR13MB5113
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hello,
+On Mon, Jul 03, 2023 at 05:58:40PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-syzbot found the following issue on:
+Reviewed-by: Simon Horman <simon.horman@corigine.com>
 
-HEAD commit:    3a8a670eeeaa Merge tag 'net-next-6.5' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1652699f280000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ce7f4ca96cdf82c7
-dashboard link: https://syzkaller.appspot.com/bug?extid=a5638594f1bc152f1200
-compiler:       aarch64-linux-gnu-gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1645c714a80000
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-3a8a670e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a940531a9b86/vmlinux-3a8a670e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4f3cbae5be61/Image-3a8a670e.gz.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a5638594f1bc152f1200@syzkaller.appspotmail.com
-
-Unable to handle kernel paging request at virtual address bfff800082cebd10
-Mem abort info:
-  ESR = 0x0000000086000004
-  EC = 0x21: IABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-  FSC = 0x04: level 0 translation fault
-swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000042480000
-[bfff800082cebd10] pgd=10000000bffff803, p4d=10000000bffff803, pud=10000000bfffe803, pmd=1000000043834003, pte=0068000048f30f07
-Internal error: Oops: 0000000086000004 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 1 PID: 3234 Comm: udevd Not tainted 6.4.0-syzkaller-04247-g3a8a670eeeaa #0
-Hardware name: linux,dummy-virt (DT)
-pstate: 60400009 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : 0xbfff800082cebd10
-lr : 0xffff800082cebd10
-sp : ffff800082cf3df0
-x29: ffff800082cf3df0 x28: f9ff00000705af40 x27: 0000000000000000
-x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
-x23: 0000000060000000 x22: 0000ffffa736068c x21: 00000000ffffffff
-x20: f9ff00000705af40 x19: ffff800082cf3eb0 x18: 0000000000000000
-x17: 0000000000000000 x16: 0000000000000000 x15: ffff800082cf3c88
-x14: 0000000000000000 x13: 0000000000001000 x12: 0000000000000000
-x11: 0000000000000000 x10: 0000000000000701 x9 : 0000000600000000
-x8 : 000000001dcd6500 x7 : 0000000000000027 x6 : 0000ffffef8c1df8
-x5 : 0000ffffef8c1df8 x4 : 0000000000000008 x3 : 0000000000000000
-x2 : 0000000000000000 x1 : f9ff00000705af40 x0 : 0000000000000000
-Call trace:
- 0xbfff800082cebd10
- __invoke_syscall arch/arm64/kernel/syscall.c:38 [inline]
- invoke_syscall+0x48/0x114 arch/arm64/kernel/syscall.c:52
- el0_svc_common.constprop.0+0x44/0xe4 arch/arm64/kernel/syscall.c:142
- do_el0_svc+0x38/0xa4 arch/arm64/kernel/syscall.c:191
- el0_svc+0x2c/0xb0 arch/arm64/kernel/entry-common.c:647
- el0t_64_sync_handler+0xc0/0xc4 arch/arm64/kernel/entry-common.c:665
- el0t_64_sync+0x19c/0x1a0 arch/arm64/kernel/entry.S:591
-Code: 00000002 00000000 eed50f00 041d12ac (82cebd30) 
----[ end trace 0000000000000000 ]---
-----------------
-Code disassembly (best guess):
-   0:	00000002 	udf	#2
-   4:	00000000 	udf	#0
-   8:	eed50f00 	.inst	0xeed50f00 ; undefined
-   c:	041d12ac 	.inst	0x041d12ac ; undefined
-* 10:	82cebd30 	.inst	0x82cebd30 ; undefined <-- trapping instruction
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the bug is already fixed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to change bug's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the bug is a duplicate of another bug, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
