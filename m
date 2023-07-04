@@ -2,198 +2,75 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238AEEB64D9
-	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 18:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E6BEB64D9
+	for <linux-hardening@archiver.kernel.org>; Tue,  4 Jul 2023 18:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbjGDSHW (ORCPT
+        id S229639AbjGDSaj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 4 Jul 2023 14:07:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50370 "EHLO
+        Tue, 4 Jul 2023 14:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231522AbjGDSHR (ORCPT
+        with ESMTP id S229451AbjGDSaj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 4 Jul 2023 14:07:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0AEE10E3
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 11:07:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3219161343
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 18:07:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 726C6C433C7;
-        Tue,  4 Jul 2023 18:07:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688494033;
-        bh=Ee51Qdqp0cFGfMo8JSxAHISfd6AjKPeiRo20PMye68E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rDcnDWAzrfl/797AjQ69sdHVncDUyAmW1BAZpHS3q5CEUipq2hRHf0KOUdlnT7Oep
-         48XYLe0t+iJlO+W6hohoFrOF8e5JGRydCIf41hfwRHmzy7uR7WGd21Fx4gkx/His3z
-         voM/YLJIUvnMfizOAFC6PVjz51bmijEVCCebB2VRG7rKPkcHlmItiS28PUssm97FYq
-         K8+aoqYepninhjBRiQ0qmmDRYH3QMf4e6BKdO/N2ovqTuWL22vza1KSDBqhksVRBhP
-         mWEAzs7+VJxpAAQwIHluqqoQ4fh+dFJ82ckf3wgvTYb54+lss7lTDZUx5d1w9F7cT4
-         Wpepx+3uE2mIA==
-Date:   Tue, 4 Jul 2023 11:07:11 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Subject: Re: [PATCH 1/2] pstore: Remove worst-case compression size logic
-Message-ID: <20230704180711.GC1851@sol.localdomain>
-References: <20230704135211.2471371-1-ardb@kernel.org>
- <20230704135211.2471371-2-ardb@kernel.org>
+        Tue, 4 Jul 2023 14:30:39 -0400
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D544010CA
+        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 11:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Dbugfi/kBFY/gFWCmpuNINGvrJ8ajP8rNSYYi9L8gvA=; b=iA+g3F+YoQQnFjMEEXvuQX/R7X
+        8ZNTTB1X69QG7jQY+sH1If3s5LngsQrLDwGwvZYylPu7wuF5l0Rtn3zQUjzwfl+5Whi8h4SBLUTyB
+        6kGZ0OXRyKt5J4MeO/hLQUnu+VP2TZq3d3mk1vhUa5kAdR/XkJZuJXGHGprnjORhuOUbiVctcstst
+        GOvSllM0xmO8nTGoV2IyBE12cisMW4F6nGZqL5xvVNOTpHwNTo73Vj2urGYDQiW+A/XpQmknQmWY6
+        vQ3lm+0ogTbmgMY59KwEmufrhX0eLrZnmFpcVE+1M41aen8/YV9BlWFiecdCL/3TXsuX5B8IU4Djo
+        8ZdaYOow==;
+Received: from [191.205.188.225] (helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1qGknI-008LaM-Qq; Tue, 04 Jul 2023 20:30:33 +0200
+Message-ID: <562d104e-a86b-b668-2d2c-06687304f705@igalia.com>
+Date:   Tue, 4 Jul 2023 15:30:28 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230704135211.2471371-2-ardb@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 0/2] pstore: Replace crypto API compression with zlib
+ calls
+Content-Language: en-US
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+References: <20230704135211.2471371-1-ardb@kernel.org>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20230704135211.2471371-1-ardb@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jul 04, 2023 at 03:52:10PM +0200, Ard Biesheuvel wrote:
-> From: Kees Cook <keescook@chromium.org>
+On 04/07/2023 10:52, Ard Biesheuvel wrote:
+> The pstore layer implements support for compression of kernel log
+> output, using a variety of compressions algorithms provided by the
+> [deprecated] crypto API 'comp' interface.
 > 
-> The worst case compression size gives an upper bound for how much the
-> data might inadvertently *grow* due to encapsulation overhead if the
-> input is not compressible at all.
+> This appears to have been somebody's pet project rather than a solution
+> to a real problem: the original deflate compression is reasonably fast,
+> compressed well and is comparatively small in terms of code footprint,
+> and so the flexibility that the crypto API integration provides does
+> little more than complicate the code for no reason.
 > 
-> The kernel log is ASCII text so it should generally compress rather
-> well. This means that the probability that the kernel log grows beyond
-> the uncompressed size after compression is astronomically low, and in
-> such cases (i.e., dmesg filled with perfect entropy) we won't be able to
-> make sense of it anyway.
-> 
-> So let's just drop this logic, and use the uncompressed size as the
-> worst case instead.
-> 
-> Co-developed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> So let's get rid of this complexity, and switch back to zlib deflate
+> using the library interface.
 
-I think the reasoning about the kernel log being low-entropy, which is a bit
-hand-wavy, is entirely unnecessary.  pstore records include a flag that
-indicates whether they are compressed or not.  Therefore, any record that would
-compress to more than its original size can and should be stored uncompressed.
-There's nothing more to it than that.
+Thanks Ard, very nice stuff - makes total sense for me!
 
->  static int pstore_compress(const void *in, void *out,
->  			   unsigned int inlen, unsigned int outlen)
->  {
-> @@ -291,36 +178,31 @@ static void allocate_buf_for_compression(void)
->  	char *buf;
->  
->  	/* Skip if not built-in or compression backend not selected yet. */
-> -	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !zbackend)
-> +	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !compress)
->  		return;
->  
->  	/* Skip if no pstore backend yet or compression init already done. */
->  	if (!psinfo || tfm)
->  		return;
->  
-> -	if (!crypto_has_comp(zbackend->name, 0, 0)) {
-> -		pr_err("Unknown compression: %s\n", zbackend->name);
-> -		return;
-> -	}
-> -
-> -	size = zbackend->zbufsize(psinfo->bufsize);
-> -	if (size <= 0) {
-> -		pr_err("Invalid compression size for %s: %d\n",
-> -		       zbackend->name, size);
-> +	if (!crypto_has_comp(compress, 0, 0)) {
-> +		pr_err("Unknown compression: %s\n", compress);
->  		return;
->  	}
->  
-> +	/* Worst-case compression should never be more than uncompressed. */
-> +	size = psinfo->bufsize;
->  	buf = kmalloc(size, GFP_KERNEL);
->  	if (!buf) {
->  		pr_err("Failed %d byte compression buffer allocation for: %s\n",
-> -		       size, zbackend->name);
-> +		       size, compress);
->  		return;
->  	}
+I'll test it in the Steam Deck - waiting a V2 (since there are some code
+comments from Eric and Kees).
 
-The local variable 'size' should be removed, and psinfo->bufsize used directly.
-
-> @@ -330,7 +212,7 @@ static void allocate_buf_for_compression(void)
->  	big_oops_buf_sz = size;
-
-The static variable 'big_oops_buf_sz' should be removed, as it is redundant with
-psinfo->bufsize.
-
->		if (big_oops_buf) {
->			dst = big_oops_buf;
->			dst_size = big_oops_buf_sz;
->		} else {
->			dst = psinfo->buf;
->			dst_size = psinfo->bufsize;
->		}
-
-This can be simplified to:
-
-		if (big_oops_buf)
-			dst = big_oops_buf;
-		else
-			dst = psinfo->buf;
-		dst_size = psinfo->bufsize;
-
->	unzipped_len = big_oops_buf_sz;
->	workspace = kmalloc(unzipped_len + record->ecc_notice_size,
->			    GFP_KERNEL);
->	if (!workspace)
->		return;
-
-This can be simplified to:
-
-	workspace = kmalloc(psinfo->bufsize + record->ecc_notice_size,
-			    GFP_KERNEL);
-	if (!workspace)
-		return;
-
-> /*
->  * Called when compression fails, since the printk buffer
->  * would be fetched for compression calling it again when
->  * compression fails would have moved the iterator of
->  * printk buffer which results in fetching old contents.
->  * Copy the recent messages from big_oops_buf to psinfo->buf
->  */
-> static size_t copy_kmsg_to_buffer(int hsize, size_t len)
-> {
-> 	size_t total_len;
-> 	size_t diff;
-> 
-> 	total_len = hsize + len;
-> 
-> 	if (total_len > psinfo->bufsize) {
-> 		diff = total_len - psinfo->bufsize + hsize;
-> 		memcpy(psinfo->buf, big_oops_buf, hsize);
-> 		memcpy(psinfo->buf + hsize, big_oops_buf + diff,
-> 					psinfo->bufsize - hsize);
-> 		total_len = psinfo->bufsize;
-> 	} else
-> 		memcpy(psinfo->buf, big_oops_buf, total_len);
-> 
-> 	return total_len;
-> }
-
-This patch makes the 'total_len > psinfo->bufsize' case in the above function
-unreachable.  That function should be removed, and its caller should just do:
-
-			zipped_len = pstore_compress(dst, psinfo->buf,
-						header_size + dump_size,
-						psinfo->bufsize);
-
-			if (zipped_len > 0) {
-				record.compressed = true;
-				record.size = zipped_len;
-			} else {
-				memcpy(psinfo->buf, dst,
-				       header_size + dump_size);
-				record.size = header_size + dump_size;
-			}
+Cheers,
 
 
-- Eric
+Guilherme
