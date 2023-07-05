@@ -2,103 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 054BFEB64DD
-	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jul 2023 06:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D4FC04A94
+	for <linux-hardening@archiver.kernel.org>; Wed,  5 Jul 2023 17:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231696AbjGEGdi (ORCPT
+        id S232876AbjGERcJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Jul 2023 02:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44632 "EHLO
+        Wed, 5 Jul 2023 13:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231562AbjGEGdf (ORCPT
+        with ESMTP id S232757AbjGERcG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Jul 2023 02:33:35 -0400
-Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 029731709
-        for <linux-hardening@vger.kernel.org>; Tue,  4 Jul 2023 23:33:22 -0700 (PDT)
-Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-19fa4346498so5565386fac.1
-        for <linux-hardening@vger.kernel.org>; Tue, 04 Jul 2023 23:33:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1688538801; x=1691130801;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OtlHSYlk61uE8OQ84nuywDVrRHfSI4oOT81ysMvjyFA=;
-        b=YwXhEKM0bu8FLh1wIz59SqsCgWkobp8aMDaj1CHNsuATyIC4RfmsCuv+E2a0nBcO3E
-         WDTMK08X82N1aLjr5w800Rmi5KkdfuSXoG5l/ZsyDV8RgeW0Y9gk8RsRABpvUrPPItNC
-         oAJPB8tv5xMpX8RQvRgMYbfppt/cgVN4dJ6u4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688538801; x=1691130801;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OtlHSYlk61uE8OQ84nuywDVrRHfSI4oOT81ysMvjyFA=;
-        b=B8l0ZDVrtArMGeTKWnk9w5zoXVKEhy6kuSv/jitySghnZA1MQGWV60lIVFsosPcnuh
-         WMGplh1UNifcwnNVjsvB869euJ5x7SgOwWe+9q8wnPWd4G0ofKFVC+oJzG0DtX8ZLfZV
-         nP/ggX9K0Ci52dpZKII42HaMkIKhcXMYODKGsPpH4+ByWEZmNwy8FaxnJ57gbHJBY8kz
-         7/h+cHiylZMoEJXBtDztRUzBa2TJwrBYoaslpne95LEjoJbEpiiP9HbvvogYp0gJGkN6
-         EPEgn+x7waA1UQtGi/rrzIe3glhLa5/J8ls1ZCBeqfXtx3A8VROfN63OmHr8NtAAM61R
-         immg==
-X-Gm-Message-State: ABy/qLYwHLjmf77QGRaQaVmw+jGU4HLvCuJ8551xGsTKfn8GmwBefjPF
-        Ml3Mav+IL4upVeqsOao973TD3g==
-X-Google-Smtp-Source: APBJJlGWMaUVY0TTBQBklTknGLh3stDvEgk0pSskAi32YTtDZEDoFGMo+Ddm6TezqBzUtzqDD1VujQ==
-X-Received: by 2002:a05:6870:ac9a:b0:1ad:4d4:34c5 with SMTP id ns26-20020a056870ac9a00b001ad04d434c5mr17360781oab.39.1688538801499;
-        Tue, 04 Jul 2023 23:33:21 -0700 (PDT)
-Received: from localhost (183.43.230.35.bc.googleusercontent.com. [35.230.43.183])
-        by smtp.gmail.com with UTF8SMTPSA id h18-20020a63f912000000b0051b36aee4f6sm17145711pgi.83.2023.07.04.23.33.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jul 2023 23:33:20 -0700 (PDT)
-From:   jeffxu@chromium.org
-To:     skhan@linuxfoundation.org, keescook@chromium.org
-Cc:     akpm@linux-foundation.org, dmitry.torokhov@gmail.com,
-        dverkamp@chromium.org, asmadeus@codewreck.org, hughd@google.com,
-        jeffxu@google.com, jorgelo@chromium.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, jannh@google.com,
-        linux-hardening@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH v2 2/2] selftests/memfd: sysctl: fix MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED
-Date:   Wed,  5 Jul 2023 06:33:15 +0000
-Message-ID: <20230705063315.3680666-3-jeffxu@google.com>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-In-Reply-To: <20230705063315.3680666-1-jeffxu@google.com>
-References: <20230705063315.3680666-1-jeffxu@google.com>
+        Wed, 5 Jul 2023 13:32:06 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25D4199D;
+        Wed,  5 Jul 2023 10:31:29 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3658VZdo020618;
+        Wed, 5 Jul 2023 17:29:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=MlX/UZ0ZXE/72U2AV0V88Yyf3NKh+5tvQkq5oSMpx9E=;
+ b=oEsYD/vvDJx9I16U5GmklPgKbnTHKeZMkb2tJer354sH217R0zTqquJ53M+OqPzsf2JZ
+ 26hjQhgAyVBxQ+kkGociceDG2sxd+2HdTMFPf3apSBaqmmHMRnaikxoYD58y/QY0byrt
+ rr2dPVHfrckS93szwrh9M0av/93juQes52/Liqj6XVTFZAMt0+Pb0WR5kaeJaNJglwJK
+ DdOa6n07F73z9fH2EeRNH0o0yeUIWOdtQnp1KIzaiQlPFSR9VmjvZOD6UDECrACP896y
+ e2Fypy4iSXxGMA6sPbidN8TOJjpYVtXUqFulpihlHX7qiExvdB50F/hNAjwUCgMw8PLZ lw== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rmhf13myy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Jul 2023 17:29:57 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 365HTu6b015191
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 5 Jul 2023 17:29:56 GMT
+Received: from [10.110.49.233] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Wed, 5 Jul
+ 2023 10:29:55 -0700
+Message-ID: <355de4c7-180d-4edd-b6fd-9c8e29e40e42@quicinc.com>
+Date:   Wed, 5 Jul 2023 10:29:54 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <2023062814-chance-flounder-f002@gregkh>
+ <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
+ <CACRpkda3CJ7G4-wDPkWmzg6nyCoEfG+u2cQH6KXWNjbftd90ow@mail.gmail.com>
+From:   Trilok Soni <quic_tsoni@quicinc.com>
+In-Reply-To: <CACRpkda3CJ7G4-wDPkWmzg6nyCoEfG+u2cQH6KXWNjbftd90ow@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: VZW6qNveH1EguEh4PjOv0RhaMztUvQ2V
+X-Proofpoint-ORIG-GUID: VZW6qNveH1EguEh4PjOv0RhaMztUvQ2V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-05_09,2023-07-05_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1011 impostorscore=0 adultscore=0
+ suspectscore=0 mlxscore=0 phishscore=0 mlxlogscore=999 spamscore=0
+ bulkscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2305260000 definitions=main-2307050159
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Jeff Xu <jeffxu@google.com>
+On 7/4/2023 2:27 AM, Linus Walleij wrote:
+> On Thu, Jun 29, 2023 at 1:12 AM Rob Herring <robh+dt@kernel.org> wrote:
+> 
+>> My bigger issue with this whole series is what would this all look
+>> like if every SoC vendor upstreamed their own custom dumping
+>> mechanism. That would be a mess. (I have similar opinions on the
+>> $soc-vendor hypervisors.)
+> 
+> I agree with Rob's stance.
+> 
+> I think it would be useful to get input from the hwtracing developers
+> (Alexander and Mathieu) who faced this "necessarily different" issue
+> with all the hwtrace mechanisms and found a way out of it. I suspect
+> they can have an idea of how this should be abstracted.
 
-Add selftest for sysctl vm.memfd_noexec is 2
-(MEMFD_NOEXEC_SCOPE_NOEXEC_ENFORCED)
+Any mailing list you suggest we expand to so that we get inputs from the 
+hwtracing developers and maintainers or just look into the MAINTAINERS 
+file and start an email thread?
 
-memfd_create(.., MFD_EXEC) should fail in this case.
+We are fine to submit the abstract for the LPC in next two weeks, but 
+prefer to have lot of good discussion before it on the mailing list, so 
+that we have code to talk about in LPC.
 
-Reported-by: Dominique Martinet <asmadeus@codewreck.org>
-Closes: https://lore.kernel.org/linux-mm/CABi2SkXUX_QqTQ10Yx9bBUGpN1wByOi_=gZU6WEy5a8MaQY3Jw@mail.gmail.com/T/
-Signed-off-by: Jeff Xu <jeffxu@google.com>
----
- tools/testing/selftests/memfd/memfd_test.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/tools/testing/selftests/memfd/memfd_test.c b/tools/testing/selftests/memfd/memfd_test.c
-index dba0e8ba002f..dbdd9ec5e397 100644
---- a/tools/testing/selftests/memfd/memfd_test.c
-+++ b/tools/testing/selftests/memfd/memfd_test.c
-@@ -1147,6 +1147,11 @@ static void test_sysctl_child(void)
- 	sysctl_assert_write("2");
- 	mfd_fail_new("kern_memfd_sysctl_2",
- 		MFD_CLOEXEC | MFD_ALLOW_SEALING);
-+	mfd_fail_new("kern_memfd_sysctl_2_MFD_EXEC",
-+		MFD_CLOEXEC | MFD_EXEC);
-+	fd = mfd_assert_new("", 0, MFD_NOEXEC_SEAL);
-+	close(fd);
-+
- 	sysctl_fail_write("0");
- 	sysctl_fail_write("1");
- }
--- 
-2.41.0.255.g8b1d071c50-goog
-
+---Trilok Soni
