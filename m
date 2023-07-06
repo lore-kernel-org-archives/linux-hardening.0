@@ -2,102 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B1EB64D9
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jul 2023 05:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD71EB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jul 2023 07:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231753AbjGFFCv (ORCPT
+        id S233448AbjGFHrX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Jul 2023 01:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48838 "EHLO
+        Thu, 6 Jul 2023 03:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbjGFFCu (ORCPT
+        with ESMTP id S232576AbjGFHrX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Jul 2023 01:02:50 -0400
-Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774991BD9;
-        Wed,  5 Jul 2023 22:02:48 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by domac.alu.hr (Postfix) with ESMTP id 2D58C60171;
-        Thu,  6 Jul 2023 07:02:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1688619755; bh=x+TliPLqS2k/24Fs2irqgh/j+t+Qk21Wb7pLn+QCGj4=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=1tscRhauMmSuk4ljitKrOhDn1XJXmMU4sdOn4Heu8jYvATLNW1n29UvEsuDduYMLr
-         rMuLAjWisOVw/9dx+p4+aQZ628rxU4dBBx39MNPDJ87XG/lH3kFtVzJjU+WDxXSXjr
-         fBaGOKWqk31dgt21db5jAG8Lbs2/MlAUtP++1ZCrKghqQf1U9WAe/EkxdfcoyRTaR1
-         TBtfXuTl6vhiU1pLGi/xawCxCV9H30NmW4CdgSagkmE93N7OfI22SHq7i7+IVTTF+h
-         1ZDqZ6XGbdSh4uOWjZIOY8y92btNGTwQTBAw7S5rLVPyAiFCP6A9aYZuUHuG9z5Ur9
-         QKZlBA8EVQK1w==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 9kGYQNc82_0p; Thu,  6 Jul 2023 07:02:33 +0200 (CEST)
-Received: from [192.168.1.6] (unknown [94.250.191.183])
-        by domac.alu.hr (Postfix) with ESMTPSA id E61326016E;
-        Thu,  6 Jul 2023 07:02:18 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1688619753; bh=x+TliPLqS2k/24Fs2irqgh/j+t+Qk21Wb7pLn+QCGj4=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=B9/8kyiw6ezkyKM+F9IPFO898PSbHHlSWE0n2B6RqWo1Ot/OZvqcKrwyR4yriMElg
-         UbrYZRCeOBz+bQ+1qiZ2juhWI+AI5CA2AaxcvsXm01kJU09iRF2X2NnRv2wVkwJ6KX
-         wYNUiBlhXF6z25hrmAbYEoEA5yDsGCbYaYWPoPXrDgK9YVS9+jFZqTLAolJZ5DNJbC
-         Vq4ssmnysgU9mb1wH15pLKWO1Wo+G+51KOT9demKQQxk5zVjGIwAI57G4SsKbPtpnL
-         vlaQMrcBEB4IgE1c8qYdjW5yL0pc2zrRMlxiASuzxFRDv+DMP2aa1amIiSxXviT6ky
-         682ZxRHfegnrw==
-Message-ID: <f189719f-c7b9-e247-9251-8a336e41141d@alu.unizg.hr>
-Date:   Thu, 6 Jul 2023 07:02:11 +0200
+        Thu, 6 Jul 2023 03:47:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82EE61BD2;
+        Thu,  6 Jul 2023 00:47:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B81E618A8;
+        Thu,  6 Jul 2023 07:47:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7AD0C433C7;
+        Thu,  6 Jul 2023 07:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1688629641;
+        bh=/17w0SovEe1kBtPNU4fHwbUfm3kdD1YiuvUkvWUzO9o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b9UAhfxGEUdLzhhtlpVKH4g5wIpqrbaDhQhMux/6EZXgYeXS0a3aCq7nw/XUk8BRf
+         ULXjj8pTJ2IvrYr//MHSDLZyfF9ZvRYwWO/2uS1ncH3U1PtTK1htaPeMZKO41JjaRq
+         oiS5+J8njsZJ5iNch0vbkCBYZ8T6RgVQtwIDGp/I=
+Date:   Thu, 6 Jul 2023 08:47:18 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        =?iso-8859-1?Q?J=F3_=C1gila?= Bitsch <jgilab@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] usb: ch9: Replace bmSublinkSpeedAttr 1-element array
+ with flexible array
+Message-ID: <2023070609-taco-deviation-3b4b@gregkh>
+References: <20230629190900.never.787-kees@kernel.org>
+ <2023062950-landowner-goofiness-d5d2@gregkh>
+ <202307051408.E16A95E@keescook>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
-To:     Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux LLVM <llvm@lists.linux.dev>,
-        linux-kbuild@vger.kernel.org,
-        Linux Regressions <regressions@lists.linux.dev>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org
-References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr>
- <ZKIoBVzrjZ+Ybxy9@debian.me> <202307022018.B26F5795@keescook>
- <625e951e-9922-d15d-5520-e8cd5eba1995@roeck-us.net>
- <4fa56264-f188-46f9-cc77-117b469b3328@roeck-us.net>
- <2b1a4f49-ba18-0246-af09-4e4133814411@alu.unizg.hr>
- <202307022230.6121D6896@keescook>
- <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr>
- <202307031149.823F9A3@keescook> <202307031606.3FD9D0D@keescook>
- <fbf4103b-6471-1f06-34a8-4aa227f5e091@alu.unizg.hr>
- <3CDD1188-7B2A-4D53-9B8F-C07BC39844E9@kernel.org>
- <19d0e63c-db47-8f02-2f79-0923f675898c@alu.unizg.hr>
- <DA3FEB08-DF39-406B-89CC-9076CFCF597A@kernel.org>
-Content-Language: en-US
-From:   Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <DA3FEB08-DF39-406B-89CC-9076CFCF597A@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202307051408.E16A95E@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 7/5/23 04:09, Kees Cook wrote:
->>>
->>> Hmm, is CONFIG_UBSAN_TRAP set?
->>
->> marvin@defiant:~/linux/kernel/linux_torvalds$ grep CONFIG_UBSAN_TRAP .config
->> CONFIG_UBSAN_TRAP=y
+On Wed, Jul 05, 2023 at 02:11:03PM -0700, Kees Cook wrote:
+> On Thu, Jun 29, 2023 at 09:17:23PM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Jun 29, 2023 at 12:09:00PM -0700, Kees Cook wrote:
+> > > Since commit df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3"),
+> > > UBSAN_BOUNDS no longer pretends 1-element arrays are unbounded. Walking
+> > > bmSublinkSpeedAttr will trigger a warning, so make it a proper flexible
+> > > array. Add a union to keep the struct size identical for userspace in
+> > > case anything was depending on the old size.
+> > > 
+> > > False positive warning was:
+> > > 
+> > > UBSAN: array-index-out-of-bounds in drivers/usb/host/xhci-hub.c:231:31 index 1 is out of range for type '__le32 [1]'
+> > > 
+> > > for this line of code:
+> > > 
+> > > 	ssp_cap->bmSublinkSpeedAttr[offset++] = cpu_to_le32(attr);
+> > > 
+> > > Reported-by: Borislav Petkov <bp@alien8.de>
+> > > Closes: https://lore.kernel.org/lkml/2023062945-fencing-pebble-0411@gregkh/
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  include/uapi/linux/usb/ch9.h | 6 +++++-
+> > >  1 file changed, 5 insertions(+), 1 deletion(-)
+> > 
+> > Thanks for the quick response, I'll queue it up after 6.5-rc1 is out.
 > 
-> Ah-ha! Turn that off please. With it off you will get much more useful reports from USBAN.
+> I'm going to send this before -rc1, since we've had another report[1] that
+> was fixed by this. Given the verification there and Boris's testing, I
+> think this is good to land. I'll toss it in -next now and send it to
+> Linus on Friday after making sure there are no more surprises.
+> 
+> -Kees
+> 
+> [1] https://lore.kernel.org/lkml/DA3FEB08-DF39-406B-89CC-9076CFCF597A@kernel.org/
 
-Done that. And it appears to work.
+No problem:
 
-Great job.
-
-There should be a way to store the earliest kernel messages while in the initrd phase, but
-I can't think of any either ...
-
-Have a nice day!
-
-Best regards,
-Mirsad Todorovac
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
