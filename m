@@ -2,117 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84364EB64D9
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jul 2023 17:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A75EB64DC
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jul 2023 17:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231431AbjGFRkj (ORCPT
+        id S232202AbjGFR6U (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Jul 2023 13:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41182 "EHLO
+        Thu, 6 Jul 2023 13:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229735AbjGFRki (ORCPT
+        with ESMTP id S232163AbjGFR6S (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Jul 2023 13:40:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C93211E;
-        Thu,  6 Jul 2023 10:40:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7BE64610A4;
-        Thu,  6 Jul 2023 17:40:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC02C433CC;
-        Thu,  6 Jul 2023 17:40:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688665219;
-        bh=OafE7RfQPhCn8tz1LRoCXIwPX8fW355ojJh3GXDoLxg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vKaOglrQuoab84EHenMv3upxX9VjaL2ESZ5qhceANzLE9Dib+Fw2fJmKKyBW5viGp
-         xl3DY5S18g0EzXYOSHXeupXBotaUOw2gwrd5odDeIw8lTRM1XcBKLtFs9P9Z49kjt6
-         rdy+GnSvj80wAljeJscpKhnBogmq16beIU94wbHueiQNwQl1mrAZ/6tpMjXIoRXrzv
-         r51VOY1e+2swB3HPcjKhlUoo29LfX+l2tX2BRIXWisaewYbIZ5q01tA97PAF563zxU
-         Uh7w8cH0fucVFYJhnD96sZ8dDN0x+Roiywe7uxUOZv/KPkx+9RLRzB0RNl3IdBcvGt
-         B+3OJEagOFUOA==
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2b703cbfaf5so15491041fa.1;
-        Thu, 06 Jul 2023 10:40:19 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZJymvt6CmIlHrasR5RAbmeclR2RS4UGb+/za1yWFZysGiwsrRk
-        0ViID54TPsVas1gW8ds4y4TMfbHG28Ne/za6Ug==
-X-Google-Smtp-Source: APBJJlFLFNiNJigyFmziwL1wFkrKwaYKPPN5OlsHTXZ5q/hFDchpxmkQpAARprOA+JxtkSg2vaCjxysk/E9zGT8Ut40=
-X-Received: by 2002:a2e:8885:0:b0:2b6:e9e1:f62f with SMTP id
- k5-20020a2e8885000000b002b6e9e1f62fmr1875581lji.5.1688665217743; Thu, 06 Jul
- 2023 10:40:17 -0700 (PDT)
+        Thu, 6 Jul 2023 13:58:18 -0400
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44CB91BEC;
+        Thu,  6 Jul 2023 10:58:16 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id ca18e2360f4ac-7835bad99fbso35990739f.1;
+        Thu, 06 Jul 2023 10:58:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688666295; x=1691258295;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JxZ6vfHvXf39QbafRxcNDYjeiJshVCIJaiyxL7XtpQA=;
+        b=OWnTn31nuWCSI4rU2SYwsjX+Om77s/G6+5jLKR2h/bHP1HEeXMy0wlsg/GMmh3ZtJU
+         rnuuz6LKJnu3BErQc6QkZUnPbi2G5p2EaXFVRa2XUoq8oRN3BWsbyhM8c/wUxM4KK/N9
+         65DQLGILGfvKFi6Z1/+V7LYc/9bgwXS4W+rnXc7pQLdPduqKQFsEU+YlZNeFXp5Rb/dA
+         sQ/iNsuYlgrldPQe0tWe31Bjl6pP/ulALdEqK/71IFGEm8HXiCsks4XR/05WTZc9Ftz+
+         sVyiQxhhx67Fruy6ppOeUIXcsrnTrK+nlLxJaHXIs53Fi3s3u8CkNPwiRaMl/qBqihQ6
+         9NbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688666295; x=1691258295;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JxZ6vfHvXf39QbafRxcNDYjeiJshVCIJaiyxL7XtpQA=;
+        b=IRKEZ9XnGJ55aoF0/k57s2aGhWX7w29pxXpdDpBs9AQ9QMQbHPOyJI4KcA+iFPhlxQ
+         vTVnE0pteLPfUeUPRsUapq9BhSdTMHhANLXVMyERlOvqNed83CIv3OZRh/bNxXm/bBMH
+         0hEUvSKe4xvaOfYS8yZzuoB7WIlx5xBSfsA/cCKS7pVMsbrAKIgEI3oJbyovUmqlkrmw
+         z0XOIdskaS4vwPB3jn/9g1pHIzrqjP9IsQe9inBG2JviQM2xH2UVuxxa3BS44ncNnuN9
+         KWIS8+NgTxSvM/nQLHZbTXiqBgmw0bcmOfVSuwHYK4jqHCnk3ve3YmBmJgeg9zjoGW/Y
+         yJOA==
+X-Gm-Message-State: ABy/qLYLi5mDegWEPuBzXGNiTmlK0f5V5OgmnxAKboKIkEPlDHfKVYqe
+        6NF5f8//S3aQ3TYUxVbXihQ=
+X-Google-Smtp-Source: APBJJlHg8HsoyIl8oK8bHyAx8asRYDBps+i8gOope6rvLtEddzu1qCT9IPPHraJFmnKu0jHfpwl6/A==
+X-Received: by 2002:a5d:9bd0:0:b0:786:cd9b:1ccd with SMTP id d16-20020a5d9bd0000000b00786cd9b1ccdmr3168930ion.0.1688666295453;
+        Thu, 06 Jul 2023 10:58:15 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id s24-20020a02ad18000000b004249d9e81besm633683jan.131.2023.07.06.10.58.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jul 2023 10:58:14 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] EISA: Replace all non-returning strlcpy with strscpy
+Date:   Thu,  6 Jul 2023 17:58:04 +0000
+Message-ID: <20230706175804.2249018-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
 MIME-Version: 1.0
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <2023062814-chance-flounder-f002@gregkh> <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
- <cc30660f-dd72-aade-6346-a93c6ad4b695@quicinc.com> <29af84dc-7db8-0c43-07b6-eb743cf25e57@linaro.org>
- <957a3cdb-6091-8679-ddb0-296db2347291@quicinc.com>
-In-Reply-To: <957a3cdb-6091-8679-ddb0-296db2347291@quicinc.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 6 Jul 2023 11:40:05 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK7MHR09U5h01=Gf1ZLeDVCgZdN-W1hQRH3AX+E94_uUg@mail.gmail.com>
-Message-ID: <CAL_JsqK7MHR09U5h01=Gf1ZLeDVCgZdN-W1hQRH3AX+E94_uUg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related support
-To:     Trilok Soni <quic_tsoni@quicinc.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Mukesh Ojha <quic_mojha@quicinc.com>,
-        Greg KH <gregkh@linuxfoundation.org>, corbet@lwn.net,
-        agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
-        mathieu.poirier@linaro.org, catalin.marinas@arm.com,
-        will@kernel.org, linus.walleij@linaro.org,
-        andy.shevchenko@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Alex Elder <elder@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jul 3, 2023 at 3:06=E2=80=AFPM Trilok Soni <quic_tsoni@quicinc.com>=
- wrote:
->
-> On 7/2/2023 1:29 AM, Krzysztof Kozlowski wrote:
-> > On 30/06/2023 18:04, Mukesh Ojha wrote:
-> >>>
-> >>>> We don't add layers when they are not needed, and never when there i=
-s no
-> >>>> actual user.  If you need the extra "complexity" later, then add it
-> >>>> later when it is needed as who knows when that will ever be.
-> >>>>
-> >>>> Please redo this series based on that, thanks.
-> >>>
-> >>> My bigger issue with this whole series is what would this all look
-> >>> like if every SoC vendor upstreamed their own custom dumping
-> >>> mechanism. That would be a mess. (I have similar opinions on the
-> >>> $soc-vendor hypervisors.)
-> >
-> > Mukesh,
-> >
-> > LPC CFP is still open. There will be also Android and Kernel Debugging
-> > LPC microconference tracks. Coming with a unified solution could be a
-> > great topic for LPC. Solutions targeting only one user are quite often
-> > frowned upon.
->
-> LPC is far out and in November. Can we not have others speak up if they
-> have the similar solution now? We can expand this to linux-kernel and
-> ask for the other SOC vendors to chime in. I am sure that we may have
-> existing solutions which came in for the one user first like Intel RDT
-> if I remember. I am sure ARM MPAM usecase was present at that time but
-> Intel RDT based solution which was x86 specific but accepted.
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
 
-RDT predated MPAM. resctrl is the kernel feature, and it supports
-Intel and AMD which are not identical. resctrl is being (extensively)
-refactored to add in MPAM support.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-You are not the first here like Intel RDT, so I fail to see the
-parallel with minidump. We have an existing logging to persistent
-storage mechanism which is pstore. You should integrate into that
-rather than grafting something on to the side or underneath.
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ drivers/eisa/eisa-bus.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Rob
+diff --git a/drivers/eisa/eisa-bus.c b/drivers/eisa/eisa-bus.c
+index 713582cc27d1..33f0ba11c6ad 100644
+--- a/drivers/eisa/eisa-bus.c
++++ b/drivers/eisa/eisa-bus.c
+@@ -60,7 +60,7 @@ static void __init eisa_name_device(struct eisa_device *edev)
+ 	int i;
+ 	for (i = 0; i < EISA_INFOS; i++) {
+ 		if (!strcmp(edev->id.sig, eisa_table[i].id.sig)) {
+-			strlcpy(edev->pretty_name,
++			strscpy(edev->pretty_name,
+ 				eisa_table[i].name,
+ 				sizeof(edev->pretty_name));
+ 			return;
+-- 
+2.41.0.255.g8b1d071c50-goog
+
+
