@@ -2,293 +2,102 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A20C00528
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jul 2023 00:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B1EB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jul 2023 05:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232542AbjGFAFF (ORCPT
+        id S231753AbjGFFCv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 5 Jul 2023 20:05:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
+        Thu, 6 Jul 2023 01:02:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbjGFAFD (ORCPT
+        with ESMTP id S229793AbjGFFCu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 5 Jul 2023 20:05:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EC06199E;
-        Wed,  5 Jul 2023 17:05:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C927961780;
-        Thu,  6 Jul 2023 00:05:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77F7BC433C8;
-        Thu,  6 Jul 2023 00:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688601900;
-        bh=GKAf3Connag2H1A96+MWJO2m2+AGoi4e2L0TCmV0twI=;
-        h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=nET3i8K9cAN9JzAYu5D5DtIfnZyBNqxFT5kCHd94dYOZfZeH8zavR0WF9u4ITY0NE
-         D66ZLzqp4+stDYQ/wxgM6SsxM/mS2+y3IUBNv7xe18KIH1uVzQrdLce3r3dWIKwzol
-         tzsq2RPKrA+bg24p5zLD3xKS/7A/1zvUDDnXMEpHEaKwvlUXOn9bI/FS6RRj0UTu+c
-         vTGpq6dtXG1Xauh+ol1hFuB35FDh/rjrnsJWBkr2MVf6wx5gZoGZefJEl0qBVioA6j
-         WnKwlad8ofPwwEPXaYXs/neOdGw/YH9YOfEVdEl8lvP9rCQ6lvqx2NeiiLr9bjccc4
-         eOxUKsWaspoTQ==
-Message-ID: <7c783969641b67d6ffdfb10e509f382d083c5291.camel@kernel.org>
-Subject: Re: [PATCH v2 08/92] fs: new helper: simple_rename_timestamp
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Damien Le Moal <dlemoal@kernel.org>, jk@ozlabs.org, arnd@arndb.de,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
-        maco@android.com, joel@joelfernandes.org, brauner@kernel.org,
-        cmllamas@google.com, surenb@google.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        leon@kernel.org, bwarrum@linux.ibm.com, rituagar@linux.ibm.com,
-        ericvh@kernel.org, lucho@ionkov.net, asmadeus@codewreck.org,
-        linux_oss@crudebyte.com, dsterba@suse.com, dhowells@redhat.com,
-        marc.dionne@auristor.com, viro@zeniv.linux.org.uk,
-        raven@themaw.net, luisbg@kernel.org, salah.triki@gmail.com,
-        aivazian.tigran@gmail.com, ebiederm@xmission.com,
-        keescook@chromium.org, clm@fb.com, josef@toxicpanda.com,
-        xiubli@redhat.com, idryomov@gmail.com, jaharkes@cs.cmu.edu,
-        coda@cs.cmu.edu, jlbec@evilplan.org, hch@lst.de, nico@fluxnic.net,
-        rafael@kernel.org, code@tyhicks.com, ardb@kernel.org,
-        xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
-        jefflexu@linux.alibaba.com, linkinjeon@kernel.org,
-        sj1557.seo@samsung.com, jack@suse.com, tytso@mit.edu,
-        adilger.kernel@dilger.ca, jaegeuk@kernel.org,
-        hirofumi@mail.parknet.co.jp, miklos@szeredi.hu,
-        rpeterso@redhat.com, agruenba@redhat.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        mikulas@artax.karlin.mff.cuni.cz, mike.kravetz@oracle.com,
-        muchun.song@linux.dev, dwmw2@infradead.org, shaggy@kernel.org,
-        tj@kernel.org, trond.myklebust@hammerspace.com, anna@kernel.org,
-        chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com,
-        Dai.Ngo@oracle.com, tom@talpey.com, konishi.ryusuke@gmail.com,
-        anton@tuxera.com, almaz.alexandrovich@paragon-software.com,
-        mark@fasheh.com, joseph.qi@linux.alibaba.com, me@bobcopeland.com,
-        hubcap@omnibond.com, martin@omnibond.com, amir73il@gmail.com,
-        mcgrof@kernel.org, yzaikin@google.com, tony.luck@intel.com,
-        gpiccoli@igalia.com, al@alarsen.net, sfrench@samba.org,
-        pc@manguebit.com, lsahlber@redhat.com, sprasad@microsoft.com,
-        senozhatsky@chromium.org, phillip@squashfs.org.uk,
-        rostedt@goodmis.org, mhiramat@kernel.org, dushistov@mail.ru,
-        hdegoede@redhat.com, djwong@kernel.org, naohiro.aota@wdc.com,
-        jth@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, john.fastabend@gmail.com, kpsingh@kernel.org,
-        sdf@google.com, haoluo@google.com, jolsa@kernel.org,
-        hughd@google.com, akpm@linux-foundation.org, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        jgross@suse.com, stern@rowland.harvard.edu, lrh2000@pku.edu.cn,
-        sebastian.reichel@collabora.com, wsa+renesas@sang-engineering.com,
-        quic_ugoswami@quicinc.com, quic_linyyuan@quicinc.com,
-        john@keeping.me.uk, error27@gmail.com, quic_uaggarwa@quicinc.com,
-        hayama@lineo.co.jp, jomajm@gmail.com, axboe@kernel.dk,
-        dhavale@google.com, dchinner@redhat.com, hannes@cmpxchg.org,
-        zhangpeng362@huawei.com, slava@dubeyko.com, gargaditya08@live.com,
-        penguin-kernel@I-love.SAKURA.ne.jp, yifeliu@cs.stonybrook.edu,
-        madkar@cs.stonybrook.edu, ezk@cs.stonybrook.edu,
-        yuzhe@nfschina.com, willy@infradead.org, okanatov@gmail.com,
-        jeffxu@chromium.org, linux@treblig.org, mirimmad17@gmail.com,
-        yijiangshan@kylinos.cn, yang.yang29@zte.com.cn,
-        xu.xin16@zte.com.cn, chengzhihao1@huawei.com, shr@devkernel.io,
-        Liam.Howlett@Oracle.com, adobriyan@gmail.com,
-        chi.minghao@zte.com.cn, roberto.sassu@huawei.com,
-        linuszeng@tencent.com, bvanassche@acm.org, zohar@linux.ibm.com,
-        yi.zhang@huawei.com, trix@redhat.com, fmdefrancesco@gmail.com,
-        ebiggers@google.com, princekumarmaurya06@gmail.com,
-        chenzhongjin@huawei.com, riel@surriel.com,
-        shaozhengchao@huawei.com, jingyuwang_vip@163.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-usb@vger.kernel.org, v9fs@lists.linux.dev,
-        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
-        autofs@vger.kernel.org, linux-mm@kvack.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-um@lists.infradead.org,
-        linux-mtd@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org,
-        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Date:   Wed, 05 Jul 2023 20:04:41 -0400
-In-Reply-To: <3b403ef1-22e6-0220-6c9c-435e3444b4d3@kernel.org>
-References: <20230705185812.579118-1-jlayton@kernel.org>
-         <20230705185812.579118-3-jlayton@kernel.org>
-         <3b403ef1-22e6-0220-6c9c-435e3444b4d3@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        Thu, 6 Jul 2023 01:02:50 -0400
+Received: from domac.alu.hr (domac.alu.unizg.hr [IPv6:2001:b68:2:2800::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 774991BD9;
+        Wed,  5 Jul 2023 22:02:48 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by domac.alu.hr (Postfix) with ESMTP id 2D58C60171;
+        Thu,  6 Jul 2023 07:02:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1688619755; bh=x+TliPLqS2k/24Fs2irqgh/j+t+Qk21Wb7pLn+QCGj4=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=1tscRhauMmSuk4ljitKrOhDn1XJXmMU4sdOn4Heu8jYvATLNW1n29UvEsuDduYMLr
+         rMuLAjWisOVw/9dx+p4+aQZ628rxU4dBBx39MNPDJ87XG/lH3kFtVzJjU+WDxXSXjr
+         fBaGOKWqk31dgt21db5jAG8Lbs2/MlAUtP++1ZCrKghqQf1U9WAe/EkxdfcoyRTaR1
+         TBtfXuTl6vhiU1pLGi/xawCxCV9H30NmW4CdgSagkmE93N7OfI22SHq7i7+IVTTF+h
+         1ZDqZ6XGbdSh4uOWjZIOY8y92btNGTwQTBAw7S5rLVPyAiFCP6A9aYZuUHuG9z5Ur9
+         QKZlBA8EVQK1w==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 9kGYQNc82_0p; Thu,  6 Jul 2023 07:02:33 +0200 (CEST)
+Received: from [192.168.1.6] (unknown [94.250.191.183])
+        by domac.alu.hr (Postfix) with ESMTPSA id E61326016E;
+        Thu,  6 Jul 2023 07:02:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+        t=1688619753; bh=x+TliPLqS2k/24Fs2irqgh/j+t+Qk21Wb7pLn+QCGj4=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=B9/8kyiw6ezkyKM+F9IPFO898PSbHHlSWE0n2B6RqWo1Ot/OZvqcKrwyR4yriMElg
+         UbrYZRCeOBz+bQ+1qiZ2juhWI+AI5CA2AaxcvsXm01kJU09iRF2X2NnRv2wVkwJ6KX
+         wYNUiBlhXF6z25hrmAbYEoEA5yDsGCbYaYWPoPXrDgK9YVS9+jFZqTLAolJZ5DNJbC
+         Vq4ssmnysgU9mb1wH15pLKWO1Wo+G+51KOT9demKQQxk5zVjGIwAI57G4SsKbPtpnL
+         vlaQMrcBEB4IgE1c8qYdjW5yL0pc2zrRMlxiASuzxFRDv+DMP2aa1amIiSxXviT6ky
+         682ZxRHfegnrw==
+Message-ID: <f189719f-c7b9-e247-9251-8a336e41141d@alu.unizg.hr>
+Date:   Thu, 6 Jul 2023 07:02:11 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [CRASH][BISECTED] 6.4.1 crash in boot
+To:     Kees Cook <kees@kernel.org>, Kees Cook <keescook@chromium.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux LLVM <llvm@lists.linux.dev>,
+        linux-kbuild@vger.kernel.org,
+        Linux Regressions <regressions@lists.linux.dev>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org
+References: <9a8e34ad-8a8b-3830-4878-3c2c82e69dd9@alu.unizg.hr>
+ <ZKIoBVzrjZ+Ybxy9@debian.me> <202307022018.B26F5795@keescook>
+ <625e951e-9922-d15d-5520-e8cd5eba1995@roeck-us.net>
+ <4fa56264-f188-46f9-cc77-117b469b3328@roeck-us.net>
+ <2b1a4f49-ba18-0246-af09-4e4133814411@alu.unizg.hr>
+ <202307022230.6121D6896@keescook>
+ <ed3e4315-b149-2f9e-70d4-45d7f83b9922@alu.unizg.hr>
+ <202307031149.823F9A3@keescook> <202307031606.3FD9D0D@keescook>
+ <fbf4103b-6471-1f06-34a8-4aa227f5e091@alu.unizg.hr>
+ <3CDD1188-7B2A-4D53-9B8F-C07BC39844E9@kernel.org>
+ <19d0e63c-db47-8f02-2f79-0923f675898c@alu.unizg.hr>
+ <DA3FEB08-DF39-406B-89CC-9076CFCF597A@kernel.org>
+Content-Language: en-US
+From:   Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <DA3FEB08-DF39-406B-89CC-9076CFCF597A@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2023-07-06 at 08:19 +0900, Damien Le Moal wrote:
-> On 7/6/23 03:58, Jeff Layton wrote:
-> > A rename potentially involves updating 4 different inode timestamps. Ad=
-d
-> > a function that handles the details sanely, and convert the libfs.c
-> > callers to use it.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/libfs.c         | 36 +++++++++++++++++++++++++++---------
-> >  include/linux/fs.h |  2 ++
-> >  2 files changed, 29 insertions(+), 9 deletions(-)
-> >=20
-> > diff --git a/fs/libfs.c b/fs/libfs.c
-> > index a7e56baf8bbd..9ee79668c909 100644
-> > --- a/fs/libfs.c
-> > +++ b/fs/libfs.c
-> > @@ -692,6 +692,31 @@ int simple_rmdir(struct inode *dir, struct dentry =
-*dentry)
-> >  }
-> >  EXPORT_SYMBOL(simple_rmdir);
-> > =20
-> > +/**
-> > + * simple_rename_timestamp - update the various inode timestamps for r=
-ename
-> > + * @old_dir: old parent directory
-> > + * @old_dentry: dentry that is being renamed
-> > + * @new_dir: new parent directory
-> > + * @new_dentry: target for rename
-> > + *
-> > + * POSIX mandates that the old and new parent directories have their c=
-time and
-> > + * mtime updated, and that inodes of @old_dentry and @new_dentry (if a=
-ny), have
-> > + * their ctime updated.
-> > + */
-> > +void simple_rename_timestamp(struct inode *old_dir, struct dentry *old=
-_dentry,
-> > +			     struct inode *new_dir, struct dentry *new_dentry)
-> > +{
-> > +	struct inode *newino =3D d_inode(new_dentry);
-> > +
-> > +	old_dir->i_mtime =3D inode_set_ctime_current(old_dir);
-> > +	if (new_dir !=3D old_dir)
-> > +		new_dir->i_mtime =3D inode_set_ctime_current(new_dir);
-> > +	inode_set_ctime_current(d_inode(old_dentry));
-> > +	if (newino)
-> > +		inode_set_ctime_current(newino);
-> > +}
-> > +EXPORT_SYMBOL_GPL(simple_rename_timestamp);
-> > +
-> >  int simple_rename_exchange(struct inode *old_dir, struct dentry *old_d=
-entry,
-> >  			   struct inode *new_dir, struct dentry *new_dentry)
-> >  {
-> > @@ -707,11 +732,7 @@ int simple_rename_exchange(struct inode *old_dir, =
-struct dentry *old_dentry,
-> >  			inc_nlink(old_dir);
-> >  		}
-> >  	}
-> > -	old_dir->i_ctime =3D old_dir->i_mtime =3D
-> > -	new_dir->i_ctime =3D new_dir->i_mtime =3D
-> > -	d_inode(old_dentry)->i_ctime =3D
-> > -	d_inode(new_dentry)->i_ctime =3D current_time(old_dir);
-> > -
-> > +	simple_rename_timestamp(old_dir, old_dentry, new_dir, new_dentry);
->=20
-> This is somewhat changing the current behavior: before the patch, the mti=
-me and
-> ctime of old_dir, new_dir and the inodes associated with the dentries are=
- always
-> equal. But given that simple_rename_timestamp() calls inode_set_ctime_cur=
-rent()
-> 4 times, the times could potentially be different.
->=20
-> I am not sure if that is an issue, but it seems that calling
-> inode_set_ctime_current() once, recording the "now" time it sets and usin=
-g that
-> value to set all times may be more efficient and preserve the existing be=
-havior.
->=20
+On 7/5/23 04:09, Kees Cook wrote:
+>>>
+>>> Hmm, is CONFIG_UBSAN_TRAP set?
+>>
+>> marvin@defiant:~/linux/kernel/linux_torvalds$ grep CONFIG_UBSAN_TRAP .config
+>> CONFIG_UBSAN_TRAP=y
+> 
+> Ah-ha! Turn that off please. With it off you will get much more useful reports from USBAN.
 
-I don't believe it's an issue. I've seen nothing in the POSIX spec that
-mandates that timestamp updates to different inodes involved in an
-operation be set to the _same_ value. It just says they must be updated.
+Done that. And it appears to work.
 
-It's also hard to believe that any software would depend on this either,
-given that it's very inconsistent across filesystems today. AFAICT, this
-was mostly done in the past just as a matter of convenience.
+Great job.
 
-The other problem with doing it that way is that it assumes that
-current_time(inode) should always return the same value when given
-different inodes. Is it really correct to do this?
+There should be a way to store the earliest kernel messages while in the initrd phase, but
+I can't think of any either ...
 
-	inode_set_ctime(dir, inode_set_ctime_current(inode));
+Have a nice day!
 
-"dir" and "inode" are different inodes, after all, and you're setting
-dir's timestamp to "inode"'s value. It's not a big deal today since
-they're always on the same sb, but the ultimate goal of these changes is
-to implement multigrain timestamps. That will mean that fetching a fine-
-grained timestamp for an update when the existing mtime or ctime value
-has been queried via getattr.
-
-With that change, I think it's best that we treat updates to different
-inodes individually, as some of them may require updating with a fine-
-grained timestamp and some may not.
-
-> >  	return 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(simple_rename_exchange);
-> > @@ -720,7 +741,6 @@ int simple_rename(struct mnt_idmap *idmap, struct i=
-node *old_dir,
-> >  		  struct dentry *old_dentry, struct inode *new_dir,
-> >  		  struct dentry *new_dentry, unsigned int flags)
-> >  {
-> > -	struct inode *inode =3D d_inode(old_dentry);
-> >  	int they_are_dirs =3D d_is_dir(old_dentry);
-> > =20
-> >  	if (flags & ~(RENAME_NOREPLACE | RENAME_EXCHANGE))
-> > @@ -743,9 +763,7 @@ int simple_rename(struct mnt_idmap *idmap, struct i=
-node *old_dir,
-> >  		inc_nlink(new_dir);
-> >  	}
-> > =20
-> > -	old_dir->i_ctime =3D old_dir->i_mtime =3D new_dir->i_ctime =3D
-> > -		new_dir->i_mtime =3D inode->i_ctime =3D current_time(old_dir);
-> > -
-> > +	simple_rename_timestamp(old_dir, old_dentry, new_dir, new_dentry);
-> >  	return 0;
-> >  }
-> >  EXPORT_SYMBOL(simple_rename);
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index bdfbd11a5811..14e38bd900f1 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -2979,6 +2979,8 @@ extern int simple_open(struct inode *inode, struc=
-t file *file);
-> >  extern int simple_link(struct dentry *, struct inode *, struct dentry =
-*);
-> >  extern int simple_unlink(struct inode *, struct dentry *);
-> >  extern int simple_rmdir(struct inode *, struct dentry *);
-> > +void simple_rename_timestamp(struct inode *old_dir, struct dentry *old=
-_dentry,
-> > +			     struct inode *new_dir, struct dentry *new_dentry);
-> >  extern int simple_rename_exchange(struct inode *old_dir, struct dentry=
- *old_dentry,
-> >  				  struct inode *new_dir, struct dentry *new_dentry);
-> >  extern int simple_rename(struct mnt_idmap *, struct inode *,
->=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Best regards,
+Mirsad Todorovac
