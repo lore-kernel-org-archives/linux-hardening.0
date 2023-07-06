@@ -2,245 +2,135 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A906C001B0
-	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jul 2023 15:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 338B4EB64D9
+	for <linux-hardening@archiver.kernel.org>; Thu,  6 Jul 2023 16:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231989AbjGFPF1 convert rfc822-to-8bit (ORCPT
+        id S233128AbjGFQB7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 6 Jul 2023 11:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51202 "EHLO
+        Thu, 6 Jul 2023 12:01:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231269AbjGFPF0 (ORCPT
+        with ESMTP id S229721AbjGFQB5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 6 Jul 2023 11:05:26 -0400
-Received: from frasgout13.his.huawei.com (unknown [14.137.139.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D10D010F5;
-        Thu,  6 Jul 2023 08:05:24 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.229])
-        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Qxfgh6qf8z9xFGj;
-        Thu,  6 Jul 2023 22:54:24 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwB37fj_16Zk1UMwBA--.58227S2;
-        Thu, 06 Jul 2023 16:04:49 +0100 (CET)
-Message-ID: <b497e9af87064089409f5013eef01b40e91618b6.camel@huaweicloud.com>
-Subject: Re: [QUESTION] Full user space process isolation?
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     "Dr. Greg" <greg@enjellic.com>,
-        Petr Tesarik <petr.tesarik.ext@huawei.com>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        LuisChamberlain <mcgrof@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, linux-mm@kvack.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-hardening@vger.kernel.org
-Date:   Thu, 06 Jul 2023 17:04:28 +0200
-In-Reply-To: <932ace044d3e0230cd21b8ded1d024889a94c405.camel@huaweicloud.com>
-References: <eb31920bd00e2c921b0aa6ebed8745cb0130b0e1.camel@huaweicloud.com>
-         <CAG48ez2oRPBdbfoNxGcV85CXFx1Su+dmhoWXE6rWsXui6_OTPg@mail.gmail.com>
-         <ab8e68962feba9f16ed0a715d46ed003da61cfe8.camel@huaweicloud.com>
-         <17702e7f-479a-22b8-70d9-56e418c8120b@huawei.com>
-         <20230706105304.GA26175@wind.enjellic.com>
-         <932ace044d3e0230cd21b8ded1d024889a94c405.camel@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        Thu, 6 Jul 2023 12:01:57 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3537C9D;
+        Thu,  6 Jul 2023 09:01:56 -0700 (PDT)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 366AsPgD018900;
+        Thu, 6 Jul 2023 16:01:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=PO4XAjnVnY6u8UJqSeV5G6bMGD02iTtM1xaKKvOeQ00=;
+ b=lcR9dWjSJ6e8+6vDWtky95INhimGNZXLTRU/CbUjuHFoKAOocYRZvpazSlw4Rls4WqP7
+ Eepp1OiQNzw0dGgTSfkSOJOSQjnMpBYi6ArZ4rlk0Uiza55l9CFe1sQPBPm8KUVeFJfX
+ lPoTPTq2buQHtf1xRypKTwOQfaJfeOAhe5EI4exMQfSFaxYa9Fw90p3kIuzJG97b7D0i
+ ozXX6mrO8GFtrhF8I1Qgw7cOdlRL+keduomKAEU+6/vkCOkvmOOHtJPZHGkVDdQUsnoZ
+ k5fg3oA2+FTZa6ccy5Cf8DIuuAjKRBC1AxxFffIRCclLbK/Oqdw27MnuhRzNU/HIebhz ZA== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rn5ht3mhv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Jul 2023 16:01:37 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 366G1Iwv031539
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 6 Jul 2023 16:01:18 GMT
+Received: from [10.216.23.31] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Thu, 6 Jul
+ 2023 09:01:13 -0700
+Message-ID: <ca0a98a2-1d3c-c02b-914e-3fc577c2d678@quicinc.com>
+Date:   Thu, 6 Jul 2023 21:30:58 +0530
 MIME-Version: 1.0
-X-CM-TRANSID: LxC2BwB37fj_16Zk1UMwBA--.58227S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Ww13WFy8ZFWkuryDCFWrAFb_yoW3GFW3pF
-        W5Kay5KF1ktw1SyryIqw4fZa4Sy397J3W3WrnxGryfAwn09F1I9F12gr1a9F9FqrsYgw1Y
-        qr45try293WDZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I
-        0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-        7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280
-        aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7IU1c4S7UUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAKBF1jj4vaEQABs8
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] pstore/ram: Add support for dynamically allocated ramoops
+ memory regions
+To:     Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Elliot Berman <quic_eberman@quicinc.com>,
+        Kees Cook <kees@kernel.org>,
+        Isaac Manjarres <isaacmanjarres@google.com>,
+        John Stultz <jstultz@google.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        <kernel-team@android.com>, <linux-hardening@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Trilok Soni" <quic_tsoni@quicinc.com>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>
+References: <20230622005213.458236-1-isaacmanjarres@google.com>
+ <CANDhNCrEhx4LUPaz-FHZZJMG2yX670hk-vGTZs=HxiGR18zm5A@mail.gmail.com>
+ <202306212212.5E53607@keescook> <ZJSES98P+zzrhBI5@google.com>
+ <3A2CFB4D-27D0-4FEB-93B4-2F888305DE5A@kernel.org>
+ <a2c9417b-3a50-bea4-dd39-2f021c196fa1@quicinc.com>
+ <696269e1-8b97-66ed-c9b0-ce1b8d637d24@quicinc.com>
+ <bd531778-a587-e4d0-e360-432208f064ea@kernel.org>
+ <202307051516.AE6080BF@keescook>
+Content-Language: en-US
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <202307051516.AE6080BF@keescook>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: eM7zti1K-13OwIqSe2DdXzwAz2ie5HEa
+X-Proofpoint-GUID: eM7zti1K-13OwIqSe2DdXzwAz2ie5HEa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-06_11,2023-07-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ suspectscore=0 mlxscore=0 mlxlogscore=912 bulkscore=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2307060144
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2023-07-06 at 13:35 +0200, Roberto Sassu wrote:
-> On Thu, 2023-07-06 at 05:53 -0500, Dr. Greg wrote:
-> > On Tue, Jul 04, 2023 at 05:18:43PM +0200, Petr Tesarik wrote:
-> > 
-> > Good morning, I hope the week is going well for everyone.
-> > 
-> > > On 7/3/2023 5:28 PM, Roberto Sassu wrote:
-> > > > On Mon, 2023-07-03 at 17:06 +0200, Jann Horn wrote:
-> > > > > On Thu, Jun 22, 2023 at 4:45???PM Roberto Sassu
-> > > > > <roberto.sassu@huaweicloud.com> wrote:
-> > > > > > I wanted to execute some kernel workloads in a fully isolated user
-> > > > > > space process, started from a binary statically linked with klibc,
-> > > > > > connected to the kernel only through a pipe.
-> > > > > 
-> > > > > FWIW, the kernel has some infrastructure for this already, see
-> > > > > CONFIG_USERMODE_DRIVER and kernel/usermode_driver.c, with a usage
-> > > > > example in net/bpfilter/.
-> > > > 
-> > > > Thanks, I actually took that code to make a generic UMD management
-> > > > library, that can be used by all use cases:
-> > > > 
-> > > > https://lore.kernel.org/linux-kernel/20230317145240.363908-1-roberto.sassu@huaweicloud.com/
-> > > > 
-> > > > > > I also wanted that, for the root user, tampering with that process is
-> > > > > > as hard as if the same code runs in kernel space.
-> > > > > 
-> > > > > I believe that actually making it that hard would probably mean that
-> > > > > you'd have to ensure that the process doesn't use swap (in other
-> > > > > words, it would have to run with all memory locked), because root can
-> > > > > choose where swapped pages are stored. Other than that, if you mark it
-> > > > > as a kthread so that no ptrace access is allowed, you can probably get
-> > > > > pretty close. But if you do anything like that, please leave some way
-> > > > > (like a kernel build config option or such) to enable debugging for
-> > > > > these processes.
-> > > > 
-> > > > I didn't think about the swapping part... thanks!
-> > > > 
-> > > > Ok to enable debugging with a config option.
-> > > > 
-> > > > > But I'm not convinced that it makes sense to try to draw a security
-> > > > > boundary between fully-privileged root (with the ability to mount
-> > > > > things and configure swap and so on) and the kernel - my understanding
-> > > > > is that some kernel subsystems don't treat root-to-kernel privilege
-> > > > > escalation issues as security bugs that have to be fixed.
-> > > > 
-> > > > Yes, that is unfortunately true, and in that case the trustworthy UMD
-> > > > would not make things worse. On the other hand, on systems where that
-> > > > separation is defined, the advantage would be to run more exploitable
-> > > > code in user space, leaving the kernel safe.
-> > > > 
-> > > > I'm thinking about all the cases where the code had to be included in
-> > > > the kernel to run at the same privilege level, but would not use any of
-> > > > the kernel facilities (e.g. parsers).
-> > > 
-> > > Thanks for reminding me of kexec-tools. The complete image for booting a
-> > > new kernel was originally prepared in user space. With kernel lockdown,
-> > > all this code had to move into the kernel, adding a new syscall and lots
-> > > of complexity to build purgatory code, etc. Yet, this new implementation
-> > > in the kernel does not offer all features of kexec-tools, so both code
-> > > bases continue to exist and are happily diverging...
-> > > 
-> > > > If the boundary is extended to user space, some of these components
-> > > > could be moved away from the kernel, and the functionality would be the
-> > > > same without decreasing the security.
-> > 
-> > > All right, AFAICS your idea is limited to relatively simple cases
-> > > for now. I mean, allowing kexec-tools to run in user space is not
-> > > easily possible when UID 0 is not trusted, because kexec needs to
-> > > open various files and make various other syscalls, which would
-> > > require a complex LSM policy. It looks technically possible to write
-> > > one, but then the big question is if it would be simpler to review
-> > > and maintain than adding more kexec-tools features to the kernel.
-> > 
-> > You either need to develop and maintain a complex system-wide LSM
-> > policy or you need a security model that is specifically tuned and
-> > then scoped to the needs of the workload running on behalf of the
-> > kernel as a UID=0 userspace process.
-> > 
-> > As I noted in my e-mail to Roberto, our TSEM LSM brings forward the
-> > ability to do both, as a useful side effect of the need to limit model
-> > complexity when the objective is to have a single functional
-> > description of the security state of a system.
-> > 
-> > > Anyway, I can sense a general desire to run less code in the most
-> > > privileged system environment. Robert's proposal is one of few that
-> > > go in this direction. What are the alternatives?
-> > 
-> > As I noted above, TSEM brings the ability to provide highly specific
-> > and narrowly scoped security policy to a process heirarchy
-> > ie. workload.
-> > 
-> > However, regardless of the technology applied, in order to pursue
-> > Roberto's UMD model of having a uid=0 process run tasks on behalf of
-> > the kernel, there would seem to be a need to define what the security
-> > objectives are.
-> > 
-> > From the outside looking in, there would seem to be a need to address
-> > two primary issues:
-> > 
-> > 1: Trust/constrain what the UMD process can do.
-> 
-> Very simple:
-> 
-> read from a kernel-opened fd, write to another kernel-opened fd, close
-> the fds and exit.
-> 
-> With the seccomp strict profile, a process cannot call any other system
-> call, and it gets killed if it does.
-> 
-> I tried to write a BPF filter, to see how far I can go, and that seems
-> sufficient to constrain what the UMD process can do.
-> 
-> Please note that the UMD process setup is done by the kernel, before
-> any user space code has the chance to run. The kernel is responsible to
-> properly establish the communication with the UMD process.
-> 
-> > 2: Constrain what the system at large can do to the UMD process.
-> 
-> If someone outside can influence the behavior of the UMD process,
-> meaning altering the result, that would be unacceptable.
-> 
-> I found that denying ptrace on the UMD process as target, more or less
-> covers everything, even trying to read or write /proc/<pid>/fd/<N>.
-> 
-> There might be something more subtle, like what Iann pointed out, avoid
-> swapping of the UMD process, as there is no integrity check when the
-> page comes back.
-> 
-> Other than that, I was limiting the kill, maybe we have to do something
-> similar with io_uring (but we would know if the UMD process uses it).
-> With that in place, the UMD process seems pretty much isolated.
-> 
-> I would definitely not complicate things more than that, seems that
-> this problem is already difficult enough to solve.
-> 
-> Since the goal is very specific, I think writing a very small LSM would
-> make sense. With SELinux or Smack, you could also do it, but you have
-> to care about loading a policy, enforcing, etc..
-> 
-> The main question is if the kernel is able to enforce isolation on the
-> UMD process as it would do for itself.
 
-For those who didn't receive the patch set I just sent, I worked around
-the first problem of supporting PGP for verifying the authenticity of
-RPM headers and use them with IMA Appraisal.
 
-I introduced in the kernel a new key format, TLV-based, and plan to let
-Linux distribution vendors convert PGP keys to this new format in their
-building infrastructure (trusted). The converted keys are embedded in
-the kernel image.
+On 7/6/2023 3:51 AM, Kees Cook wrote:
+> On Tue, Jul 04, 2023 at 08:07:09AM +0200, Krzysztof Kozlowski wrote:
+>> On 26/06/2023 19:34, Mukesh Ojha wrote:
+>>> I have tried multiple attempt already to get this patch in
+>>>
+>>> https://lore.kernel.org/lkml/1675330081-15029-2-git-send-email-quic_mojha@quicinc.com/
+>>>
+>>> later tried the approach of patch #9 along with minidump series..
+>>
+>> For all dynamic reserved-memory-ramoops thingy, I think Rob made clear
+>> statement:
+>>
+>> "I don't think dynamic ramoops location should be defined in DT."
+>>
+>> https://lore.kernel.org/lkml/CAL_JsqKV6EEpsDNdj1BTN6nODb=hsHkzsdkCzzWwnTrygn0K-A@mail.gmail.com/
+>>
+>> Please do not send three versions of the same patch hoping one will
+>> sneak in.
+> 
+> If I understand correctly, the driving issue here is that minidump wants
+> to be able to find the crash report "externally". Perhaps pstore could
+> provide either a known symbol that contains the address that was used,
+> or could add something to the kernel crash image (like is done for
+> KASLR), so that an external consumer of the kernel crash image could
+> find it?
+> 
+> And then the RAM backend for pstore could gain an option for "just
+> allocate regular RAM" for holding the dump? In other words, the address
+> is chosen by pstore, but an external consumer could still locate it.
 
-Signatures can be converted in user space at run-time, since altering
-them would make signature verification fail.
+Yes, in-short, it wants RAM backend (fs/pstore/ram.c) to use regular ram
+instead of fixed ram address range and at the same time it should be
+able to query the address used.
 
-You can find the patch set here:
+So, registering with minidump is what telling upfront what address range
+content would we be getting in final crash dump.
 
-https://lore.kernel.org/linux-integrity/20230706144225.1046544-1-roberto.sassu@huaweicloud.com/
+-Mukesh
 
-Thanks
-
-Roberto
-
+> 
+> -Kees
+> 
