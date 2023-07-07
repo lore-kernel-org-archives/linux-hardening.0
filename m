@@ -2,71 +2,138 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D57EEB64D9
-	for <linux-hardening@archiver.kernel.org>; Fri,  7 Jul 2023 20:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DB5C001B0
+	for <linux-hardening@archiver.kernel.org>; Fri,  7 Jul 2023 21:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229904AbjGGU5h (ORCPT
+        id S229800AbjGGVJy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Jul 2023 16:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
+        Fri, 7 Jul 2023 17:09:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjGGU5h (ORCPT
+        with ESMTP id S229515AbjGGVJy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Jul 2023 16:57:37 -0400
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698602127
-        for <linux-hardening@vger.kernel.org>; Fri,  7 Jul 2023 13:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=6EmAQN8q5hYhEO3ayCEwrNvINTEM/qm89qIj7Pkbmf8=; b=RHyMtGutU4VJn6MRXXv+9opqz5
-        gST7RCaPWq41ssdwgSkYEb7419N4rycwsiHJERjQnSOzTLlfYQt3VIw+syzWuHZ3Lmnuq+y07n52h
-        T5DSbNW+FCON91PSmkqbx9Om9KV61662947zCJj3jKafH/GwlAdSaf1ZOp+pDA+54Hw+8kY3RMCGy
-        BUzR+FSWDYYCtjQhsT0kpEMYsQQD8i124GqCRU9rMlUb+5nD2pzLZKxjo8jefAJ9EMcIRPoaZIVcI
-        vh7a4z9e8KzfCVfpI8/t1T5ODJZ2lL3WcaYoRYLbAZytnyjlVz41x3mxJU0Gk5diMoW8NDKrCvsFt
-        lkPzSZ6Q==;
-Received: from [191.205.188.225] (helo=[192.168.1.60])
-        by fanzine2.igalia.com with esmtpsa 
-        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-        id 1qHsWE-00AMLs-8U; Fri, 07 Jul 2023 22:57:34 +0200
-Message-ID: <b610a5a3-5ae7-ae33-5501-b6748c1ac1ad@igalia.com>
-Date:   Fri, 7 Jul 2023 17:57:29 -0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 1/2] pstore: Remove worst-case compression size logic
-Content-Language: en-US
-To:     Ard Biesheuvel <ardb@kernel.org>, linux-hardening@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@kernel.org>
-References: <20230707083456.2501913-1-ardb@kernel.org>
- <20230707083456.2501913-2-ardb@kernel.org>
-From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20230707083456.2501913-2-ardb@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Jul 2023 17:09:54 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58991BE8
+        for <linux-hardening@vger.kernel.org>; Fri,  7 Jul 2023 14:09:52 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-c4e77129acfso2623004276.3
+        for <linux-hardening@vger.kernel.org>; Fri, 07 Jul 2023 14:09:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1688764192; x=1691356192;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZTrWAIUayaBHwDRCQHgGm0qH9ucv7JkIRMB8GVQtyc8=;
+        b=pmsOikxbpPPKi6SHT/ZT9CcQCmKqH1TPbAL1YPRN+/EvfSYqZWCf7863xGKzcQw3sc
+         nGY1ZvpN6V73iMT5yLIJSRHdqLgxPw7aJYWkMGrfhzlOyvibq/HcsR9w/z4z/VyaZgfp
+         n91L4Uj89hsFLFnir4XCaN/Z43f4e72guBYeLJrmAbIU1n4ebxgu/frUIpm4/JM2GMSR
+         ac/7WzQi4sFjz0Kq6KC8XUhUlg+jcGnjcx5QuqG/cGR+5WgczLyULdXlRnx//5JSW+Hl
+         ZEmlEvSZcKJg4Loxr8JjWRoh0Iz1sAtEdqzc6s3cCGH4jMGc1xAdc2VL8/SEYbnBCp8K
+         Rppw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688764192; x=1691356192;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZTrWAIUayaBHwDRCQHgGm0qH9ucv7JkIRMB8GVQtyc8=;
+        b=PeSB7yhdaDU+VBUzPo+fZ1F/Yh6/S9Z6GQmUUujgSPIeyeHfcSQdaF7zjjv2jjYd5q
+         EmQDpH9W+K0bk8ArDiRI6c3cdldQJwAVIp3pdnpQQZJZNBXo9rJblL9Tm2ZKs2TYsN2R
+         WrTWNkYzWposYVRvTC7S0ht78toJDoQX+R/HlewdnSIDV5gCsJpj3yZ2Z2y3aYU9WPEN
+         +buORxqdx8LT7bv3UQ+9IFogLMTPdVKhXvDWM55D50WjAay+qX7gVnngtH7j6Wg7IWnF
+         1PVsRMhRKvrIQC0oUX3Q1bK1MBBiHYQvsCFJp+U0pwcaglONKy3xHoB5oeMKQJ3/NVg2
+         r7zA==
+X-Gm-Message-State: ABy/qLai/E+WMMH8/JAf6p4B7Ti1uYc8T7FGUVAFmKeUWDGt8WiXHi4J
+        5CzWaHOm+xI3u5BsUFk0tk8M2eYouA==
+X-Google-Smtp-Source: APBJJlEPnJyZGvM2uGKYUD1nOk5qT6VODaXbHCvI2N2eVZ52/OvsSLtf0T7C4cYLKR9etuF/AgRHl9cpLA==
+X-Received: from rmoar-specialist.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:45d3])
+ (user=rmoar job=sendgmr) by 2002:a25:ae8a:0:b0:c5f:85f5:a0e5 with SMTP id
+ b10-20020a25ae8a000000b00c5f85f5a0e5mr56453ybj.5.1688764192066; Fri, 07 Jul
+ 2023 14:09:52 -0700 (PDT)
+Date:   Fri,  7 Jul 2023 21:09:38 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+Message-ID: <20230707210947.1208717-1-rmoar@google.com>
+Subject: [RFC v2 0/9] kunit: Add test attributes API
+From:   Rae Moar <rmoar@google.com>
+To:     shuah@kernel.org, davidgow@google.com, dlatypov@google.com,
+        brendan.higgins@linux.dev
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, jstultz@google.com,
+        tglx@linutronix.de, sboyd@kernel.org, Rae Moar <rmoar@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 07/07/2023 05:34, Ard Biesheuvel wrote:
-> From: Kees Cook <keescook@chromium.org>
-> [...] 
-> 
-> Co-developed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> [...]
+Hello everyone,
+
+This is an RFC patch series to propose the addition of a test attributes
+framework to KUnit.
+
+There has been interest in filtering out "slow" KUnit tests. Most notably,
+a new config, CONFIG_MEMCPY_SLOW_KUNIT_TEST, has been added to exclude a
+particularly slow memcpy test
+(https://lore.kernel.org/all/20230118200653.give.574-kees@kernel.org/).
+
+This proposed attributes framework would be used to save and access test
+associated data, including whether a test is slow. These attributes would
+be reportable (via KTAP and command line output) and some will be
+filterable.
+
+This framework is designed to allow for the addition of other attributes in
+the future. These attributes could include whether the test is flaky,
+associated test files, etc.
+
+This is the second version of the RFC I have added a few big changes:
+- Change method for inputting filters to allow for spaces in filtering
+  values
+- Add option to skip filtered tests instead of not run or show them with
+  the --filter_skip flag
+- Separate the new feature to list tests and their attributes into both
+  --list_tests (lists just tests) and --list_tests_attr (lists all)
+- Add new attribute to store module name associated with test
+- Add Tests to executor_test.c
+- Add Documentation
+- A few small changes to code commented on previously
+
+I would love to hear about the new features. If the series seems overall
+good I will send out the next version as an official patch series.
+
+Thanks!
+Rae
+
+Rae Moar (9):
+  kunit: Add test attributes API structure
+  kunit: Add speed attribute
+  kunit: Add module attribute
+  kunit: Add ability to filter attributes
+  kunit: tool: Add command line interface to filter and report
+    attributes
+  kunit: memcpy: Mark tests as slow using test attributes
+  kunit: time: Mark test as slow using test attributes
+  kunit: add tests for filtering attributes
+  kunit: Add documentation of KUnit test attributes
+
+ .../dev-tools/kunit/running_tips.rst          | 163 +++++++
+ include/kunit/attributes.h                    |  50 +++
+ include/kunit/test.h                          |  68 ++-
+ kernel/time/time_test.c                       |   2 +-
+ lib/Kconfig.debug                             |   3 +
+ lib/kunit/Makefile                            |   3 +-
+ lib/kunit/attributes.c                        | 406 ++++++++++++++++++
+ lib/kunit/executor.c                          | 115 ++++-
+ lib/kunit/executor_test.c                     | 119 ++++-
+ lib/kunit/kunit-example-test.c                |   9 +
+ lib/kunit/test.c                              |  27 +-
+ lib/memcpy_kunit.c                            |   8 +-
+ tools/testing/kunit/kunit.py                  |  80 +++-
+ tools/testing/kunit/kunit_kernel.py           |   6 +-
+ tools/testing/kunit/kunit_tool_test.py        |  39 +-
+ 15 files changed, 1022 insertions(+), 76 deletions(-)
+ create mode 100644 include/kunit/attributes.h
+ create mode 100644 lib/kunit/attributes.c
 
 
-Out of curiosity, why Kees is author but at the same time, he is a
-co-developer? heh
+base-commit: 2e66833579ed759d7b7da1a8f07eb727ec6e80db
+-- 
+2.41.0.255.g8b1d071c50-goog
 
-Maybe it was Ard as either author or co-developer?
-Cheers,
-
-
-Guilherme
