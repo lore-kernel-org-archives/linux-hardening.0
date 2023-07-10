@@ -2,95 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DDE3C0015E
-	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jul 2023 02:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB35EB64DC
+	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jul 2023 03:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230115AbjGJCg5 (ORCPT
+        id S230205AbjGJDGf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 9 Jul 2023 22:36:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41598 "EHLO
+        Sun, 9 Jul 2023 23:06:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbjGJCg4 (ORCPT
+        with ESMTP id S229680AbjGJDGe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 9 Jul 2023 22:36:56 -0400
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FC0E0;
-        Sun,  9 Jul 2023 19:36:55 -0700 (PDT)
-Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-c5f98fc4237so3773307276.2;
-        Sun, 09 Jul 2023 19:36:55 -0700 (PDT)
+        Sun, 9 Jul 2023 23:06:34 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A97B2F4;
+        Sun,  9 Jul 2023 20:06:30 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-78654448524so106913639f.2;
+        Sun, 09 Jul 2023 20:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688956615; x=1691548615;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W3XEg4q7KHiIFxw+vZ9TCJt73U1Opkr0tChPrvQjUrw=;
-        b=piUG3eNNngUZ5OivMBd56VnDb7ZVpVgDcp5zmA3oWTAjtGTSEVzmBrFnmNJ7f75aKc
-         GFieFnE58F29a7GgRRkVRTsEuczvcBvg7MegkvgjSXbWtZxGq5b+2XpssKUEbfgJ9NhA
-         tOcQ+j99cxSR0PYV6tHQ9wZ2Ja8k/q8vuHK+myhKSKWZLVbOnqPVmR+ahvyHSaOhjRKm
-         IwMGPV2HzLNHsISosPCgAnYb1mUTgIxyWAspy/3A1331Xv/VzwFTRdXndsbeNMq+1Ov6
-         OUW/kw9+QCeq3teFHV+EoYMgokRoHYPjJU3ornzKXdM9Q7v+LKFee2r2060CJDi7ib8C
-         EpIg==
+        d=gmail.com; s=20221208; t=1688958390; x=1691550390;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tzyqXosdnDO68LtdH9MXWVaSATpoziQrNIP/nKesUIU=;
+        b=ZgjBUwWkJkWTLTgZjnUl36bz4hxN+A/JDp2vGU5E8dlQ/+FtHwSQ4j5JH9bVccfcQx
+         u/PQyu6P3cwxEXMM5oGk/aLjfuPLPTzvekiafWvtjc3mEpZW7Zppqrab3eslKKDccOlL
+         b+xn9eO7dXiVFL6jpvp3S96xBPsrPU2fK/7qNE0+gK4Yr5osxV/R5pxBzyXnDlZ+BZvd
+         tfmSVqcutKhiici1jMwMD4RmZik4S11EOfxtYlzBDKfjDpHy0Es4QygPcUi8+ayZoFX5
+         ULk6pjSUo36zNQphYyUAKZOMZ/9H/gzUMJyTjvred3eAhUfqPQ6n8ghcYf81hSkjGjbI
+         4awg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688956615; x=1691548615;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W3XEg4q7KHiIFxw+vZ9TCJt73U1Opkr0tChPrvQjUrw=;
-        b=DUjldnsaAqpwn5B+HnQL6BgFJGo0srBJESFgKvHZFbODEzcL8ywcCBEAndLxwauJW7
-         T90HveAdTruUyGqk57Wnc2mphxfSWCV4VOOREaOqSDZ9E+o//yT5S0FYUpjtAFoFB+Tn
-         8SxlzeqBpbpnBR1eey/Ce+amESv/owNCE2g0k3/8OUgr5ishlfRdjnEdcVtJMpf6hpLW
-         Pxyn8CxAFVcaOw4ROqaSITgH5JczIL9EnpQOswWD985C12Oc533bR7D8lEdgvMWJEEWF
-         C8MI19akGqaNEPHo6ONImJ/rsHu58jyCiwfdSM7+c8CE5higkDp4csPNzYPyjHcBWi3a
-         QUTQ==
-X-Gm-Message-State: ABy/qLYRttZBWsGnTyuoUmbeh+qELyR/0pND6dH0U7E0JyhftqmQBLoL
-        yZDyZQjxDmTmVPJ/x4zQvo4JaM7QGW4rseSsKeY=
-X-Google-Smtp-Source: APBJJlGmgkn41KVGmJK6jmsL7u3NDJiDfMPK2soV0sGV2ONvwwz/30etSudifomZNq+dEI80vgCg58Empf256F4zsM4=
-X-Received: by 2002:a05:6902:87:b0:c5d:d6cd:fade with SMTP id
- h7-20020a056902008700b00c5dd6cdfademr5535414ybs.50.1688956614808; Sun, 09 Jul
- 2023 19:36:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230620200832.3379741-1-azeemshaikh38@gmail.com> <202306201311.862B05981F@keescook>
-In-Reply-To: <202306201311.862B05981F@keescook>
+        d=1e100.net; s=20221208; t=1688958390; x=1691550390;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tzyqXosdnDO68LtdH9MXWVaSATpoziQrNIP/nKesUIU=;
+        b=LHXy7eeEShiu9tJnGvFWNMNPdSQRRh+KRkbOSaQnN5/e1HrT51Ge7sN0Eb3h5wcsLx
+         GzyjiCS/pLk+aJU598OOw3YlsnuBEhuL4W93SjVp3bU986mC13LrF9B022Vms+bDq93n
+         y/L1IUsL8FAJdvtzVApJVLEgkK2MOa7hFDULncQBeuBS1oDS2D35MUckCT7enl4uynlM
+         L6SLoRg/3wwHnwYpgLXyp2kRucxcpQFPaRwjOoH+UWOfzw6cvDuGu5+tOneiCMUntkvA
+         iP11sszoZAdfuCsU5qF3U6f9c5z3c88pEFw2qLZZg1yj6ccqOhhbm2qz1vWNmV/XcGWu
+         cE7g==
+X-Gm-Message-State: ABy/qLYvlGZvNvuhH83fMcsHF3LSjlmw3H8v8KkUgdNkWtuxaz4JtEPs
+        FeocMIK43IMQ/Kbcg7Urqd8=
+X-Google-Smtp-Source: APBJJlE8CT21Yy9HxFydGW3qQDl6rJ1NBWg0JbeZFSqKmqU4woX9tlMfu/gL47Aw5RG60sJwrhDwNw==
+X-Received: by 2002:a6b:7b49:0:b0:780:bf50:32ce with SMTP id m9-20020a6b7b49000000b00780bf5032cemr11185666iop.19.1688958389884;
+        Sun, 09 Jul 2023 20:06:29 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id s11-20020a5eaa0b000000b00785cd25010esm3318732ioe.11.2023.07.09.20.06.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jul 2023 20:06:29 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Sun, 9 Jul 2023 22:36:44 -0400
-Message-ID: <CADmuW3XKZkYB4dKPa2Bsoj96CK4hT_8cwV++7rEFP=Wxw7hGvQ@mail.gmail.com>
-Subject: Re: [PATCH v2] crypto: Replace strlcpy with strscpy
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi017@gmail.com>,
+        Sharvari Harisangam <sharvari.harisangam@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kalle Valo <kvalo@kernel.org>
+Subject: [PATCH] wifi: mwifiex: Replace strlcpy with strscpy
+Date:   Mon, 10 Jul 2023 03:06:25 +0000
+Message-ID: <20230710030625.812707-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 4:12=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Tue, Jun 20, 2023 at 08:08:32PM +0000, Azeem Shaikh wrote:
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read
-> > overflows if a source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> >
-> > Direct replacement is safe here since return value of -errno
-> > is used to check for truncation instead of sizeof(dest).
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
-cpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> >
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
->
-> Thanks for fixing up the variable type. (And thank you Eric for catching
-> the signedness problem!)
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
 
-Friendly ping on this.
+Direct replacement is safe here since return value of -errno
+is used to check for truncation instead of sizeof(dest).
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
+
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ drivers/net/wireless/marvell/mwifiex/main.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
+index 1cd9d20cca16..8d3c4bcf9c89 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.c
++++ b/drivers/net/wireless/marvell/mwifiex/main.c
+@@ -725,9 +725,8 @@ static int mwifiex_init_hw_fw(struct mwifiex_adapter *adapter,
+ 	 * manufacturing mode is enabled
+ 	 */
+ 	if (mfg_mode) {
+-		if (strlcpy(adapter->fw_name, MFG_FIRMWARE,
+-			    sizeof(adapter->fw_name)) >=
+-			    sizeof(adapter->fw_name)) {
++		if (strscpy(adapter->fw_name, MFG_FIRMWARE,
++			    sizeof(adapter->fw_name)) < 0) {
+ 			pr_err("%s: fw_name too long!\n", __func__);
+ 			return -1;
+ 		}
+-- 
+2.41.0.255.g8b1d071c50-goog
+
+
