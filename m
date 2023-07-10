@@ -2,311 +2,65 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AABEB64DA
-	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jul 2023 18:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40457EB64DA
+	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jul 2023 20:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233137AbjGJSHd (ORCPT
+        id S230465AbjGJUea (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 10 Jul 2023 14:07:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37426 "EHLO
+        Mon, 10 Jul 2023 16:34:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232937AbjGJSHc (ORCPT
+        with ESMTP id S230155AbjGJUea (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 10 Jul 2023 14:07:32 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3809F128
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Jul 2023 11:07:30 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-401d1d967beso39681cf.0
-        for <linux-hardening@vger.kernel.org>; Mon, 10 Jul 2023 11:07:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689012449; x=1691604449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3vcZqySAK77JDIKXSlaeSBenWZVW7mTWYU6gz+aOzWM=;
-        b=BdM5ipce4ckFapSzvFsz/mz1MFVElMxrIigDKXUC2NAwgySxYK6inciZng1i9V0AcO
-         IsBaevYgEA7T5JVFS9OThSicQkIIdRVrZ59Duny7KESaWyiwFT3fPkb9xxDEL3f5hnrc
-         KABebBFkRqD6nVaxY4ilKQ2q4CUfVKLIlfMrZIQQDVT0UnyncpRW4tefeh3PSHVWW8V/
-         KoohETs+R+TES9Ytbz7qVHNT09mH8NJSCSSDTBP5Xxd73DwtYOSfQMBKWJGAK5jOu3Ay
-         W/0LrgFtc+QNrtVoDb0xPG/l+TuAEmfivhiYO3zP6MwYc0dxwo46+I3yIpmOJeh8DiJG
-         3sUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689012449; x=1691604449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3vcZqySAK77JDIKXSlaeSBenWZVW7mTWYU6gz+aOzWM=;
-        b=ZK2UrbasqnGVBVbLh0DUPV/DsrJFj2GyV6VJVmhGXmHQOMeU0775f0gjeWg6kdwnZh
-         WdK5PFzms7dY1ARgRg4Lgqc/4dCXjl+t7bWTmoxAn9pIWDtzhhR76RRpBCJSQd4BDatV
-         QjzijGcjP+C8YMa01YDf5nQ9aYZO5fjuvSVOUF7ldhcc7CsJEl/JPW+saVpTiRbmZHws
-         zzKgPLgbjrFxSmMmFKJig6+XF31M5Z0GFnxvC4HfnX7q3wLP81L9mbhJO1yEnledHWcj
-         kzli73MaigCco8QVoI/hpj5hfcoTpGC0uEWCHbTElbhLR7VPqhvRXG3p+G6gA+UKFGzX
-         4IsA==
-X-Gm-Message-State: ABy/qLY7+9sB06xWPhrX0iNQOp2z4fV82LjNy+FjzEL2e7aQCcxS+KNj
-        IFik2PMXEymvlvJbblndnKGTQ/r/gpLfKeoDHSzDkg==
-X-Google-Smtp-Source: APBJJlH34radkf2MwC7ks4EaK+O1likCeOf3VRsMqP8wBCilOVINpD/goU0ECl/wscdW8b9gvJYjciS+5Fg7aB09eF0=
-X-Received: by 2002:a05:622a:4d0:b0:403:96e3:4745 with SMTP id
- q16-20020a05622a04d000b0040396e34745mr18230qtx.20.1689012449156; Mon, 10 Jul
- 2023 11:07:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230707210947.1208717-1-rmoar@google.com> <20230707210947.1208717-9-rmoar@google.com>
-In-Reply-To: <20230707210947.1208717-9-rmoar@google.com>
-From:   Daniel Latypov <dlatypov@google.com>
-Date:   Mon, 10 Jul 2023 11:07:18 -0700
-Message-ID: <CAGS_qxpyWAO4567m9uF1ksDiO0zUBQDJ0pAUJRvKxg1PYhrtEA@mail.gmail.com>
-Subject: Re: [RFC v2 8/9] kunit: add tests for filtering attributes
-To:     Rae Moar <rmoar@google.com>
-Cc:     shuah@kernel.org, davidgow@google.com, brendan.higgins@linux.dev,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        linux-hardening@vger.kernel.org, jstultz@google.com,
-        tglx@linutronix.de, sboyd@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 10 Jul 2023 16:34:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71F75198;
+        Mon, 10 Jul 2023 13:34:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FFA0611C1;
+        Mon, 10 Jul 2023 20:34:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DD2FC433C8;
+        Mon, 10 Jul 2023 20:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1689021268;
+        bh=zJ3p+SsxMLL/Jwj+c7UAX3pG24wyxVfvqFt+2DIfZk0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lic5Hyov8Ppi0+Nye6nE9GqVVHKAUHZqbLMIuYnt6E+w/ix7LWhr2j7NzM1ty3x0j
+         wZeTqokM56okDa5H4i488obKpHPaFCQH8aw8kNc6udLjsqkl+lJlO+tYm0cM4zDrOC
+         /4QRehpUqfhhjSAjYMfaefWepYF1fFe7gEPDNFxs=
+Date:   Mon, 10 Jul 2023 13:34:27 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Zheng Zhang <zheng.zhang@email.ucr.edu>
+Cc:     keescook@chromium.org, linux-hardening@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [BUG]: bad usercopy in kvm_stats_read in mm/usercopy.c
+Message-Id: <20230710133427.fb599ef486c7b764d9ca2cc3@linux-foundation.org>
+In-Reply-To: <CAC_GQSr3xzZaeZt85k_RCBd5kfiOve8qXo7a81Cq53LuVQ5r=Q@mail.gmail.com>
+References: <CAC_GQSr3xzZaeZt85k_RCBd5kfiOve8qXo7a81Cq53LuVQ5r=Q@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 7, 2023 at 2:10=E2=80=AFPM Rae Moar <rmoar@google.com> wrote:
->
-> Add four tests to executor_test.c to test behavior of filtering attribute=
-s.
->
-> - parse_filter_attr_test - to test the parsing of inputted filters
->
-> - filter_attr_test - to test the filtering procedure on attributes
->
-> - filter_attr_empty_test - to test the behavior when all tests are filter=
-ed
->   out
->
-> - filter_attr_skip_test - to test the configurable filter_skip option
->
-> Signed-off-by: Rae Moar <rmoar@google.com>
+On Sun, 9 Jul 2023 14:32:09 -0700 Zheng Zhang <zheng.zhang@email.ucr.edu> wrote:
 
-I love that I'm able to read this patch first and get a feel for what
-exactly the patch series is doing overall.
+> Kees, Andrew, and  to whom it may concern:
+> 
+> Hello! We have found a bug in the Linux kernel version 6.2.0 by syzkaller
+> with our own templates. It also produces a POC.
+> Attached is the report, log, and reproducers generated by syzkaller
+> Please let me know if there is any additional information that I can
+> provide to help debug this issue.
+> Thanks!
 
-Some nits and suggestions below.
+Let's cc the kvm mailing list.
 
-> ---
->
-> Changes since v1:
-> - This is a new patch
->
->  lib/kunit/executor_test.c | 107 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 107 insertions(+)
->
-> diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
-> index d7ab069324b5..145a78ade33d 100644
-> --- a/lib/kunit/executor_test.c
-> +++ b/lib/kunit/executor_test.c
-> @@ -7,6 +7,7 @@
->   */
->
->  #include <kunit/test.h>
-> +#include <kunit/attributes.h>
->
->  static void kfree_at_end(struct kunit *test, const void *to_free);
->  static struct kunit_suite *alloc_fake_suite(struct kunit *test,
-> @@ -22,6 +23,14 @@ static struct kunit_case dummy_test_cases[] =3D {
->         {},
->  };
->
-> +static struct kunit_case dummy_attr_test_cases[] =3D {
-> +       /* .run_case is not important, just needs to be non-NULL */
-> +       { .name =3D "test1", .run_case =3D dummy_test, .module_name =3D "=
-dummy",
-> +         .attr.speed =3D KUNIT_SPEED_SLOW },
-> +       { .name =3D "test2", .run_case =3D dummy_test, .module_name =3D "=
-dummy" },
-> +       {},
-> +};
-
-1) can we move this array to be just above parse_filter_attr_test so
-it's next to where it's used?
-
-2) How about renaming "test1" to "slow" to make the assertions in the
-test case a bit easier to follow?
-Right now readers need to remember which test case was supposed to be
-filtered out.
-
-
-> +
->  static void parse_filter_test(struct kunit *test)
->  {
->         struct kunit_glob_filter filter =3D {NULL, NULL};
-> @@ -108,11 +117,109 @@ static void filter_suites_to_empty_test(struct kun=
-it *test)
->                                 "should be empty to indicate no match");
->  }
->
-> +static void parse_filter_attr_test(struct kunit *test)
-> +{
-> +       int j, filter_count;
-> +       struct kunit_attr_filter *parsed_filters;
-> +       char *filters =3D "speed>slow, module!=3Dexample";
-> +       int err =3D 0;
-> +
-> +       filter_count =3D kunit_get_filter_count(filters);
-> +       KUNIT_EXPECT_EQ(test, filter_count, 2);
-> +
-> +       parsed_filters =3D kcalloc(filter_count + 1, sizeof(*parsed_filte=
-rs), GFP_KERNEL);
-
-nit: kunit_kcalloc() instead?
-
-> +       for (j =3D 0; j < filter_count; j++)
-> +               parsed_filters[j] =3D kunit_next_attr_filter(&filters, &e=
-rr);
-
-then here we probably want to check err, i.e.
-  KUNIT_ASSERT_EQ_MSG(test, err, 0, "failed to parse filter '%s'", filters[=
-i]);
-
-
-> +
-> +       KUNIT_EXPECT_STREQ(test, kunit_attr_filter_name(parsed_filters[0]=
-), "speed");
-> +       KUNIT_EXPECT_STREQ(test, parsed_filters[0].input, ">slow");
-> +
-> +       KUNIT_EXPECT_STREQ(test, kunit_attr_filter_name(parsed_filters[1]=
-), "module");
-> +       KUNIT_EXPECT_STREQ(test, parsed_filters[1].input, "!=3Dexample");
-> +
-> +       kfree(parsed_filters);
-> +}
-> +
-> +static void filter_attr_test(struct kunit *test)
-> +{
-> +       struct kunit_suite *subsuite[3] =3D {NULL, NULL};
-> +       struct suite_set suite_set =3D {.start =3D subsuite, .end =3D &su=
-bsuite[2]};
-> +       struct suite_set got;
-> +       int err =3D 0;
-> +
-> +       subsuite[0] =3D alloc_fake_suite(test, "suite1", dummy_attr_test_=
-cases);
-> +       subsuite[1] =3D alloc_fake_suite(test, "suite2", dummy_attr_test_=
-cases);
-> +       subsuite[1]->attr.speed =3D KUNIT_SPEED_SLOW; // Set suite attrib=
-ute
-
-Similarly, perhaps we can rename suite2 to "slow_suite"?
-That would cause this line to go over 80 characters wide, but since
-that's no longer a hard limit, I think this would be a decent place to
-go past it.
-
-> +
-> +       /* Want: suite1(test1, test2), suite2(test1, test2), NULL -> suit=
-e1(test2), NULL */
-> +       got =3D kunit_filter_suites(&suite_set, NULL, "speed>slow", NULL,=
- &err);
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start);
-> +       KUNIT_ASSERT_EQ(test, err, 0);
-> +       kfree_at_end(test, got.start);
-> +
-> +       /* Validate we just have suite1 */
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start[0]);
-> +       KUNIT_EXPECT_STREQ(test, (const char *)got.start[0]->name, "suite=
-1");
-> +       KUNIT_ASSERT_EQ(test, got.end - got.start, 1);
-> +
-> +       /* Now validate we just have test2 */
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start[0]->test_cases);
-> +       KUNIT_EXPECT_STREQ(test, (const char *)got.start[0]->test_cases[0=
-].name, "test2");
-> +       KUNIT_EXPECT_FALSE(test, got.start[0]->test_cases[1].name);
-> +}
-> +
-> +static void filter_attr_empty_test(struct kunit *test)
-> +{
-> +       struct kunit_suite *subsuite[3] =3D {NULL, NULL};
-> +       struct suite_set suite_set =3D {.start =3D subsuite, .end =3D &su=
-bsuite[2]};
-> +       struct suite_set got;
-> +       int err =3D 0;
-> +
-> +       subsuite[0] =3D alloc_fake_suite(test, "suite1", dummy_attr_test_=
-cases);
-> +       subsuite[1] =3D alloc_fake_suite(test, "suite2", dummy_attr_test_=
-cases);
-> +
-> +       got =3D kunit_filter_suites(&suite_set, NULL, "module!=3Ddummy", =
-NULL, &err);
-> +       KUNIT_ASSERT_EQ(test, err, 0);
-> +       kfree_at_end(test, got.start); /* just in case */
-> +
-> +       KUNIT_EXPECT_PTR_EQ_MSG(test, got.start, got.end,
-> +                               "should be empty to indicate no match");
-> +}
-> +
-> +static void filter_attr_skip_test(struct kunit *test)
-> +{
-> +       struct kunit_suite *subsuite[2] =3D {NULL};
-> +       struct suite_set suite_set =3D {.start =3D subsuite, .end =3D &su=
-bsuite[1]};
-> +       struct suite_set got;
-> +       int err =3D 0;
-> +
-> +       subsuite[0] =3D alloc_fake_suite(test, "suite1", dummy_attr_test_=
-cases);
-> +
-> +       /* Want: suite1(test1, test2), NULL -> suite1(test1 with SKIP, te=
-st2), NULL */
-> +       got =3D kunit_filter_suites(&suite_set, NULL, "speed>slow", "skip=
-", &err);
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start);
-> +       KUNIT_ASSERT_EQ(test, err, 0);
-> +       kfree_at_end(test, got.start);
-> +
-> +       /* Validate we have both test1 and test2 */
-> +       KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start[0]->test_cases);
-
-Should we assert that we have 2 test cases before we dereference the second=
- one?
-The other code in this file (that I wrote) is being a bit sloppy and
-deref'ing test_cases[0] without checking. It's doing that since I was
-relying on the fact that the filtering code drops suites with no test
-cases, so we don't necessarily need to check len(test_cases) >=3D 1.
-(In terms of best practices, we should be defensive and checking that, thou=
-gh).
-
-But in this case, we have no such guarantee about the second element.
-
-> +       KUNIT_EXPECT_STREQ(test, (const char *)got.start[0]->test_cases[0=
-].name, "test1");
-> +       KUNIT_EXPECT_STREQ(test, (const char *)got.start[0]->test_cases[1=
-].name, "test2");
-
-Trying to remember, I think the cast to `const char *` is no longer
-necessary after one of David's changes...
-I think we might just never have gotten around to cleaning that up due
-to the ordering in which the patches went in...
-
-> +
-> +       /* Now ensure test1 is skipped and test2 is not */
-> +       KUNIT_EXPECT_EQ(test, got.start[0]->test_cases[0].status, KUNIT_S=
-KIPPED);
-> +       KUNIT_EXPECT_FALSE(test, got.start[0]->test_cases[1].status);
-
-Should we check that it's equal to KUNIT_SUCCESS instead?
-
-
-> +}
-> +
->  static struct kunit_case executor_test_cases[] =3D {
->         KUNIT_CASE(parse_filter_test),
->         KUNIT_CASE(filter_suites_test),
->         KUNIT_CASE(filter_suites_test_glob_test),
->         KUNIT_CASE(filter_suites_to_empty_test),
-> +       KUNIT_CASE(parse_filter_attr_test),
-> +       KUNIT_CASE(filter_attr_test),
-> +       KUNIT_CASE(filter_attr_empty_test),
-> +       KUNIT_CASE(filter_attr_skip_test),
->         {}
->  };
->
-> --
-> 2.41.0.255.g8b1d071c50-goog
->
+Original email is at
+https://lkml.kernel.org/r/CAC_GQSr3xzZaeZt85k_RCBd5kfiOve8qXo7a81Cq53LuVQ5r=Q@mail.gmail.com
