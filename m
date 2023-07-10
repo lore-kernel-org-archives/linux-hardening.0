@@ -2,138 +2,100 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E9FEB64DA
-	for <linux-hardening@archiver.kernel.org>; Sat,  8 Jul 2023 02:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 249E8EB64DC
+	for <linux-hardening@archiver.kernel.org>; Mon, 10 Jul 2023 01:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230036AbjGHCrN (ORCPT
+        id S229441AbjGJBSE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 7 Jul 2023 22:47:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51664 "EHLO
+        Sun, 9 Jul 2023 21:18:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbjGHCrN (ORCPT
+        with ESMTP id S230245AbjGJBSD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 7 Jul 2023 22:47:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C7E4C9
-        for <linux-hardening@vger.kernel.org>; Fri,  7 Jul 2023 19:47:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 841E061A94
-        for <linux-hardening@vger.kernel.org>; Sat,  8 Jul 2023 02:47:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE46C433C7;
-        Sat,  8 Jul 2023 02:47:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688784430;
-        bh=0arfoHoQe9kngWQ5BInR7qnXyopf7dxUCosuf53ZJ+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mK0eyUX/rsfTzt5kBhdZL8asCFRdgqLSeEIew84zdpFfo2vwcWwKG6QA9bP+2wJ6V
-         SPbQRoFOcszHzTp4qIm8Xk1hOw/xkMMuKvTylT3U7lFPTr01aWncZO8+faf6Qw/OM6
-         EM6k/GE5kLDXdk0m75AD5fNtzcQGLqO/Fs5/Edyr4/uUNqEI3UgjwiAnwAiIcs4SSV
-         3dlkkamZdbbx0SfdIET23DIaJjkDev8p/V5ma2orXv/oJERN76bgpz9NNTzMx0iGGf
-         2kKuSmDdVTh8IKUagnNmyAm390/dfYZ2jjTKkSmlQAETR1mW7j66ai5dYZDm9FumyC
-         PYH4Tas7lB4Sg==
-Date:   Fri, 7 Jul 2023 19:47:09 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Subject: Re: [PATCH v2 2/2] pstore: Replace crypto API compression with
- zlib_deflate library calls
-Message-ID: <20230708024709.GC1731@sol.localdomain>
-References: <20230707083456.2501913-1-ardb@kernel.org>
- <20230707083456.2501913-3-ardb@kernel.org>
+        Sun, 9 Jul 2023 21:18:03 -0400
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D58B7D1;
+        Sun,  9 Jul 2023 18:18:00 -0700 (PDT)
+Received: by mail-io1-xd34.google.com with SMTP id ca18e2360f4ac-78372625badso193555039f.3;
+        Sun, 09 Jul 2023 18:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688951880; x=1691543880;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z39fKcUZ3p7FqsICJneeQrJdxjKRWVhH52o8nOiwBmc=;
+        b=amMAIt/tzCRrvnPhWSS3PzD56mlvGeyo5GpP9ja1gFd3LRhRqME48VZDOQlxCuTn+M
+         TPGFQHwXMbJHl22cYSApT5gscedlbg9h/WAeM72tAeDnnFg+q2/wDOstmSnG/8Fx/uPi
+         4tVee6NnJGaEv/mF51DvHR0mwcsip6f9KG7hF1kfwzSbsMIY02rLB2pX6cn5TZ2jCoc8
+         KbHOESiLjv0/QZFqbISEZJBWUnDRu48mBTUXD4wQG6d2XzNQwCjgw2VoyQybGXEiQL2h
+         ViY00RQ/Da/0awy/gW6GdIcg+QIDBFp8Cy2mu84dQkWHAM/3nybgBEc66octnenKxsO6
+         GJtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688951880; x=1691543880;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z39fKcUZ3p7FqsICJneeQrJdxjKRWVhH52o8nOiwBmc=;
+        b=AgVwsPpLl5xI5+JLE3KKnvAZlSQvaVnTIUFv+2WwMvr+UauAGGVGk5GYq3B1K34kP7
+         cY9uk7HXN3AQrBl9cy9nBkOw8ZPS8M0X09kgS7gJBXzJlF4pStOxKktK2hLRtZ2PpDDU
+         BEUWn3z46aPIVkxO3ufEpWUiQGV+p3wcLtfCrOaLV1v/GZ89c1VGNGKA7IiXffL5H54R
+         ZT0SiauKCMNfbCDourgu9r12Pm7lA1BIrTGJyeaGKfRkFOvy99boriJLxnVk7QCVOeah
+         0UN7CPo5hHgSnm6R77Yj5f8yLu/i9tkfQAEOKCa1Y1lYLn1xB1U+BurWcbbI3vo7DT2x
+         V0BA==
+X-Gm-Message-State: ABy/qLbwIAF8vF1EBbO3Yfn98oNAVqQQU1PiI1ZuD/xHIv4io/pg0RYi
+        pw+Ek4/UquDcfrsOJfQ490w=
+X-Google-Smtp-Source: APBJJlHtL8raLHVkNlBEDHdfjSGTMCIMX/n3Ax8OS0SP4nQMawtvLiMZ3XUzbhsR8yxbHo54KUT/zA==
+X-Received: by 2002:a6b:5916:0:b0:787:169a:927 with SMTP id n22-20020a6b5916000000b00787169a0927mr630834iob.20.1688951879821;
+        Sun, 09 Jul 2023 18:17:59 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id j27-20020a02cb1b000000b0042b6a760c31sm3068714jap.28.2023.07.09.18.17.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Jul 2023 18:17:59 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] acct: Replace all non-returning strlcpy with strscpy
+Date:   Mon, 10 Jul 2023 01:17:48 +0000
+Message-ID: <20230710011748.3538624-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230707083456.2501913-3-ardb@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 07, 2023 at 10:34:56AM +0200, Ard Biesheuvel wrote:
-> +/*
-> + * pstore no longer implements compression via the crypto API, and only
-> + * supports zlib deflate compression implemented using the zlib library
-> + * interface. This removes additional complexity which is hard to justify for a
-> + * diagnostic facility that has to operate in conditions where the system may
-> + * have become unstable. Zlib deflate is comparatively small in terms of code
-> + * size, and compresses ASCII text as well as any other compression algorithm
-> + * available in the kernel. In terms of compression speed, deflate is not the
-> + * best performer but for recording the log output on a kernel panic, this is
-> + * not considered critical.
-> + *
-> + * The only remaining arguments supported by the compress= module parameter are
-> + * 'deflate' and 'none'. To retain compatibility with existing installations,
-> + * all other values are logged and replaced with 'deflate'.
-> + */
-> +static char *compress = "deflate";
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
 
-I would soften the claim "compresses ASCII text as well as any other compression
-algorithm available in the kernel" to something like "compresses ASCII text
-comparatively well".  This is because zstd can indeed compress ASCII text
-slightly more than deflate.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-> static void free_buf_for_compression(void)
-> {
-> -       if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm) {
-> -               crypto_free_comp(tfm);
-> -               tfm = NULL;
-> -       }
-> +       vfree(compress_workspace);
->         kfree(big_oops_buf);
->         big_oops_buf = NULL;
->  }
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ kernel/acct.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Maybe set compress_workspace to NULL after it is freed.
+diff --git a/kernel/acct.c b/kernel/acct.c
+index 010667ce6080..10f769e13f72 100644
+--- a/kernel/acct.c
++++ b/kernel/acct.c
+@@ -445,7 +445,7 @@ static void fill_ac(acct_t *ac)
+ 	memset(ac, 0, sizeof(acct_t));
 
-> @@ -592,10 +623,17 @@ void pstore_get_backend_records(struct pstore_info *psi,
->  {
->  	int failed = 0;
->  	unsigned int stop_loop = 65536;
-> +	struct z_stream_s zstream;
->  
->  	if (!psi || !root)
->  		return;
->  
-> +	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && compress) {
-> +		zstream.workspace = kvmalloc(zlib_inflate_workspacesize(),
-> +					     GFP_KERNEL);
-> +		zlib_inflateInit2(&zstream, -DEF_WBITS);
-> +	}
-> +
+ 	ac->ac_version = ACCT_VERSION | ACCT_BYTEORDER;
+-	strlcpy(ac->ac_comm, current->comm, sizeof(ac->ac_comm));
++	strscpy(ac->ac_comm, current->comm, sizeof(ac->ac_comm));
 
-zstream.workspace is never checked for NULL.  Maybe do:
-
-	struct z_stream_s zstream = {};
-
-and have decompress_record() check it.  Also I think it should replace the check
-for big_oops_buf, as big_oops_buf is really for compression, not decompression.
+ 	/* calculate run_time in nsec*/
+ 	run_time = ktime_get_ns();
+--
+2.41.0.255.g8b1d071c50-goog
 
 
->  	mutex_lock(&psi->read_mutex);
->  	if (psi->open && psi->open(psi))
->  		goto out;
-> @@ -624,7 +662,7 @@ void pstore_get_backend_records(struct pstore_info *psi,
->  			break;
->  		}
->  
-> -		decompress_record(record);
-> +		decompress_record(record, &zstream);
->  		rc = pstore_mkfile(root, record);
->  		if (rc) {
->  			/* pstore_mkfile() did not take record, so free it. */
-> @@ -639,6 +677,10 @@ void pstore_get_backend_records(struct pstore_info *psi,
->  		psi->close(psi);
->  out:
->  	mutex_unlock(&psi->read_mutex);
-> +	kvfree(zstream.workspace);
-> +
-> +	if (zlib_inflateEnd(&zstream) != Z_OK)
-> +		pr_warn("zlib_inflateEnd() failed\n");
-
-The destruction code above needs to be guarded by the same condition as the
-initialization code ('IS_ENABLED(CONFIG_PSTORE_COMPRESS) && compress').
-
-- Eric
