@@ -2,82 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AC2EB64DC
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jul 2023 08:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F696C0015E
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jul 2023 13:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbjGKIOg (ORCPT
+        id S230021AbjGKNqm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Jul 2023 04:14:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38972 "EHLO
+        Tue, 11 Jul 2023 09:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230078AbjGKIOf (ORCPT
+        with ESMTP id S232487AbjGKNqj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Jul 2023 04:14:35 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0409A9C
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Jul 2023 01:14:33 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-185-M_PXxWRcOzG00qjvR3g-fg-1; Tue, 11 Jul 2023 09:14:31 +0100
-X-MC-Unique: M_PXxWRcOzG00qjvR3g-fg-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 11 Jul
- 2023 09:14:30 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Tue, 11 Jul 2023 09:14:30 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Azeem Shaikh' <azeemshaikh38@gmail.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] kobject: Replace strlcpy with strscpy
-Thread-Topic: [PATCH] kobject: Replace strlcpy with strscpy
-Thread-Index: AQHZrdj8Qo2zsxXODk+YaMEZxqXK9K+zA4WggABClwCAAP0w0A==
-Date:   Tue, 11 Jul 2023 08:14:30 +0000
-Message-ID: <0aaa9355aa714e608091af2a5fca1373@AcuMS.aculab.com>
-References: <20230703180528.3709258-1-azeemshaikh38@gmail.com>
- <ad25bb8552704028860cf7a419c54fa3@AcuMS.aculab.com>
- <CADmuW3XOcGDBszYw80Dy03DXk3T25k8FNUrJWLKU9tL2znzanw@mail.gmail.com>
-In-Reply-To: <CADmuW3XOcGDBszYw80Dy03DXk3T25k8FNUrJWLKU9tL2znzanw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 11 Jul 2023 09:46:39 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C6610C7;
+        Tue, 11 Jul 2023 06:46:36 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 4C55622194;
+        Tue, 11 Jul 2023 13:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1689083195; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tmUBux5e1ki7qsINZJpfH2z48bDyzUotuR1CpySUCaQ=;
+        b=acou4bQDVy0hM/ezQGCbnhuyyCV9OLbnLgbSiZoPMwqDjzfAzSHDOEQJjm6aYd3JfDHlVj
+        r0Fjy37Mqysf4/J2PoT1S7cvQ9QWZfg748Z2/30rFo/RHgBkBJZci40fZkmnVpjUCqi2ny
+        KmklcGac+XrfSY+ck1hbZkSPX3VBgyY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1689083195;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tmUBux5e1ki7qsINZJpfH2z48bDyzUotuR1CpySUCaQ=;
+        b=Zi00M2H/+Fsp5apSaRxx6+D9RGOqEN/LSG9K6C5JqftooNT+gO4g1U1LZpCEJeqiKToo7C
+        UbXejMpQOCshQ7Cw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 10FBB13A63;
+        Tue, 11 Jul 2023 13:46:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id iPqDAztdrWTSYwAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Tue, 11 Jul 2023 13:46:35 +0000
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc:     Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
+        patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Matteo Rizzo <matteorizzo@google.com>,
+        Jann Horn <jannh@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Marco Elver <elver@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev@googlegroups.com, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH 2/2] mm/slub: remove freelist_dereference()
+Date:   Tue, 11 Jul 2023 15:46:25 +0200
+Message-ID: <20230711134623.12695-4-vbabka@suse.cz>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230711134623.12695-3-vbabka@suse.cz>
+References: <20230711134623.12695-3-vbabka@suse.cz>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogQXplZW0gU2hhaWtoDQo+IFNlbnQ6IDEwIEp1bHkgMjAyMyAxOTowNw0KPiANCj4gT24g
-TW9uLCBKdWwgMTAsIDIwMjMgYXQgOToxM+KAr0FNIERhdmlkIExhaWdodCA8RGF2aWQuTGFpZ2h0
-QGFjdWxhYi5jb20+IHdyb3RlOg0KPiA+DQo+ID4gPiAgICAgICBpbnQgbGVuOw0KPiA+ID4NCj4g
-PiA+IC0gICAgIGxlbiA9IHN0cmxjcHkoJmVudi0+YnVmW2Vudi0+YnVmbGVuXSwgc3Vic3lzdGVt
-LCBidWZmZXJfc2l6ZSk7DQo+ID4gPiAtICAgICBpZiAobGVuID49IGJ1ZmZlcl9zaXplKSB7DQo+
-ID4gPiArICAgICBsZW4gPSBzdHJzY3B5KCZlbnYtPmJ1ZltlbnYtPmJ1Zmxlbl0sIHN1YnN5c3Rl
-bSwgYnVmZmVyX3NpemUpOw0KPiA+ID4gKyAgICAgaWYgKGxlbiA8IDApIHsNCj4gPiA+ICAgICAg
-ICAgICAgICAgcHJfd2FybigiaW5pdF91ZXZlbnRfYXJndjogYnVmZmVyIHNpemUgb2YgJWQgdG9v
-IHNtYWxsLCBuZWVkZWQgJWRcbiIsDQo+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgYnVmZmVy
-X3NpemUsIGxlbik7DQo+ID4gPiAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiA+DQo+
-ID4gVGhlIHNpemUgaW4gdGhlIGVycm9yIG1lc3NhZ2UgaXMgbm93IHdyb25nLg0KPiANCj4gVGhh
-bmtzIGZvciBjYXRjaGluZyB0aGlzLg0KPiANCj4gPiBJdCBoYXMgdG8gYmUgc2FpZCB0aGF0IG1v
-c3RseSBhbGwgdGhlIHN0cmluZ3MgdGhhdCBnZXQgY29waWVkDQo+ID4gaW4gdGhlIGtlcm5lbCBh
-cmUgJ1wwJyB0ZXJtaW5hdGVkIC0gc28gbWF5YmUgaXQgaXMgYWxsIG1vb3QuDQo+ID4gT1RPSCBw
-cmludGluZyAoYXQgbGVhc3Qgc29tZSBvZikgdGhlIHN0cmluZyB0aGF0IGRpZG4ndCBmaXQNCj4g
-PiBpcyBhIGxvdCBtb3JlIHVzZWZ1bCB0aGFuIGl0cyBsZW5ndGguDQo+IA0KPiBIb3cgYWJvdXQg
-cHJpbnRpbmcgb3V0IHN0cmxlbihzdWJzeXN0ZW0pIGFsb25nIHdpdGggdGhlIGVudGlyZSB2YWx1
-ZQ0KPiBvZiBAc3Vic3lzdGVtPyBTbyB0aGF0IHRoZSB3YXJuIHJlYWRzOg0KPiANCj4gcHJfd2Fy
-bigiaW5pdF91ZXZlbnRfYXJndjogYnVmZmVyIHNpemUgb2YgJWQgdG9vIHNtYWxsIGZvciAlcywg
-bmVlZGVkDQo+ICVkXG4iLCBidWZmZXJfc2l6ZSwgc3Vic3lzdGVtLCBzdHJsZW4oc3Vic3lzdGVt
-KSk7DQo+IA0KPiBEb2VzIHRoYXQgc2VlbSBiZXR0ZXI/DQoNCk5vdCB3aXRoIHRoZSBqdXN0aWZp
-Y2F0aW9uIGZvciBub3QgdXNpbmcgc3RybGNweSgpIDotKQ0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0
-ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBL
-ZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+freelist_dereference() is a one-liner only used from get_freepointer().
+Remove it and make get_freepointer() call freelist_ptr_decode()
+directly to make the code easier to follow.
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/slub.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/mm/slub.c b/mm/slub.c
+index 07edad305512..c4556a5dab4b 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -397,18 +397,14 @@ static inline void *freelist_ptr_decode(const struct kmem_cache *s,
+ 	return decoded;
+ }
+ 
+-/* Returns the freelist pointer recorded at location ptr_addr. */
+-static inline void *freelist_dereference(const struct kmem_cache *s,
+-					 void *ptr_addr)
+-{
+-	return freelist_ptr_decode(s, *(freeptr_t *)(ptr_addr),
+-			    (unsigned long)ptr_addr);
+-}
+-
+ static inline void *get_freepointer(struct kmem_cache *s, void *object)
+ {
+-	object = kasan_reset_tag(object);
+-	return freelist_dereference(s, (freeptr_t *)(object + s->offset));
++	unsigned long ptr_addr;
++	freeptr_t p;
++
++	ptr_addr = ((unsigned long)kasan_reset_tag(object)) + s->offset;
++	p = *(freeptr_t *)(ptr_addr);
++	return freelist_ptr_decode(s, p, ptr_addr);
+ }
+ 
+ #ifndef CONFIG_SLUB_TINY
+-- 
+2.41.0
 
