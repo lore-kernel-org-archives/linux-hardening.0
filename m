@@ -2,127 +2,74 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C999DEB64DD
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jul 2023 23:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B11EB64DC
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jul 2023 23:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229961AbjGKXLn (ORCPT
+        id S230419AbjGKXzW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Jul 2023 19:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48500 "EHLO
+        Tue, 11 Jul 2023 19:55:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjGKXLm (ORCPT
+        with ESMTP id S229538AbjGKXzW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Jul 2023 19:11:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA39CF;
-        Tue, 11 Jul 2023 16:11:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CA5D06163E;
-        Tue, 11 Jul 2023 23:11:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F464C433C7;
-        Tue, 11 Jul 2023 23:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689117100;
-        bh=KIRd8DUSyWk0AEQuhquMChREFws8OSd5E3EodjVZs84=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Vijf9kHawoUsAHCRdUShMMlww1WeNa5kLeyDy0vtDHn0UjBXtNB8CR0H3FUIrFBNe
-         mniSZT6qLl4SVqtfIxZYqoEOvqi/XfOd6mS/ybTEDklNwFaDCgxdsNpzoUo8dhJvwT
-         WgQ+1gs3sJDvs6yKrJbCfMr6j4RiW1DFsNpx+8DAtmzFcYzVy3GbLtOrfqNja0jF5I
-         UHDS583jjfRisY18i3bzpE8eFM4I7bT944Werl1J2EwM18JsHLE4LboOpgje3x4H22
-         3/xoHmBUqCBtM6ZefMrE6ywlWiuBdcqlSE7aYnqNrCWgRyiDpSr/FNebscYSboQbPH
-         EpryJqUsX/ehw==
-Date:   Tue, 11 Jul 2023 17:12:31 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Christian Brauner <brauner@kernel.org>
-Cc:     linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] smb: client: Fix -Wstringop-overflow issues
-Message-ID: <ZK3h3+dHBGONHt+S@work>
+        Tue, 11 Jul 2023 19:55:22 -0400
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D35DE170F;
+        Tue, 11 Jul 2023 16:55:20 -0700 (PDT)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-5700b15c12fso72300627b3.1;
+        Tue, 11 Jul 2023 16:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689119719; x=1691711719;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=l0eHGvYiAjOvtyvlgCffZ7LMt7sWot3qzaN4MmhWSwE=;
+        b=MSfjWEV84b6m+wWASrmm8K6FRsBtMeZS3FlTe9y4uvc1YIBJjTuCZP3KFHss/DtA5c
+         LvcUBDcq/TBFSzX8SXKmDnKdOA0r0iq17ka12owKtEE2Je3WwoUvP0GJqqB5KKFge0Zq
+         ucmcyjo/BjsGAzLRCkbw4sZksSw8IDXbSI/sEIqzKXOqgqLfHpgdEx47ytYuTJIQXerO
+         dffN1kB3r4kLLai3L2D8IFO3RDR2j8os0AqoEKX4TUO2sVAoEJvD3JGzBm5rQdnw7R83
+         FmiWA/NzH6BntazM+8i+lFYtbIEsmt0DBlWs6dO/dZ3o7RKinmYo6qCh5AQgFf5Dbh3D
+         IjUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689119719; x=1691711719;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l0eHGvYiAjOvtyvlgCffZ7LMt7sWot3qzaN4MmhWSwE=;
+        b=ekt+dF9JXC428ZO8HKqLPsHSkwS9nguu+FirvmoHFIQPBRKvq20FgvsEcmdDzdUUcg
+         /LK6+rhI8tSpgCyfBqQXOhCzap9OjoXqhTx+BkErv4kDl6/uABLiefpBHQvATU4EHVUW
+         i/osEiYmUs18pQ/NF20iT8Nepef4CmX9CgsOkjE8KHNJP5dDtun1pxpXyLXbl5mRi3Ad
+         grfiyrKj5tUS8SPXD26/YpcU55lRtvL4UX8v/8QfzhUnHNqgnU3A88bI2lvHnG/sOen9
+         sdNLOyiFTK4kGaiDOGC5l5Q58jyQj4K7A6CIHkoe1kYxxY1yS9ZGF5DBb2fl2IPrGVSG
+         fD1w==
+X-Gm-Message-State: ABy/qLbnNiw6OgbkM5DnoE7vk6FrUxdPmJ4Be8989VY7RtcsJB0b8EM9
+        XnsAvx9PRdWTCMeY7zARX5ENr1eBH+xrANHnLD0FICapKNY=
+X-Google-Smtp-Source: APBJJlHO7JQH+4wLoUl6AYA0Mh0njxShJB6/nHwg1DNX32M6H9lyeiBsJcVDVsV5Gf28FRFr1PQL1GcRjUrWma+QFkc=
+X-Received: by 2002:a0d:cec3:0:b0:57a:4719:859e with SMTP id
+ q186-20020a0dcec3000000b0057a4719859emr14085154ywd.50.1689119719362; Tue, 11
+ Jul 2023 16:55:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20230523021425.2406309-1-azeemshaikh38@gmail.com>
+ <202305231020.37C95FD@keescook> <CADmuW3UAHODqC5YAmjK1sOuo3C56noOa6hsHA+2Es2R9MT36_g@mail.gmail.com>
+ <AM0PR04MB62891F29BB182FA2B24A37098F30A@AM0PR04MB6289.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB62891F29BB182FA2B24A37098F30A@AM0PR04MB6289.eurprd04.prod.outlook.com>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Tue, 11 Jul 2023 19:55:08 -0400
+Message-ID: <CADmuW3VO5nrpkYuRDur74w0DZFPWJP1ErXzCgxOCS+Z0DjFbzA@mail.gmail.com>
+Subject: Re: [PATCH] soc: fsl: qe: Replace all non-returning strlcpy with strscpy
+To:     Leo Li <leoyang.li@nxp.com>, Kees Cook <keescook@chromium.org>
+Cc:     Qiang Zhao <qiang.zhao@nxp.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-pSMB->hdr.Protocol is an array of size 4 bytes, hence when the compiler
-analyzes this line of code
+> Sorry for the late response.  But I found some old discussions with the conclusion to be not converting old users.  Has this been changed later on?
+> https://lwn.net/Articles/659214/
+>
 
-	parm_data = ((char *) &pSMB->hdr.Protocol) + offset;
-
-it legitimately complains about the fact that offset points outside the
-bounds of the array. Notice that the compiler gives priority to the object
-as an array, rather than merely the address of one more byte in a structure
-to wich offset should be added (which seems to be the actual intention of
-the original implementation).
-
-Fix this by explicitly instructing the compiler to treat the code as a
-sequence of bytes in struct smb_com_transaction2_spi_req, and not as an
-array accessed through pointer notation.
-
-Notice that ((char *)pSMB) + sizeof(pSMB->hdr.smb_buf_length) points to
-the same address as ((char *) &pSMB->hdr.Protocol), therefore this results
-in no differences in binary output.
-
-Fixes the following -Wstringop-overflow warnings when built s390
-architecture with defconfig (GCC 13):
-  CC [M]  fs/smb/client/cifssmb.o
-In function 'cifs_init_ace',
-    inlined from 'posix_acl_to_cifs' at fs/smb/client/cifssmb.c:3046:3,
-    inlined from 'cifs_do_set_acl' at fs/smb/client/cifssmb.c:3191:15:
-fs/smb/client/cifssmb.c:2987:31: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
- 2987 |         cifs_ace->cifs_e_perm = local_ace->e_perm;
-      |         ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
-In file included from fs/smb/client/cifssmb.c:27:
-fs/smb/client/cifspdu.h: In function 'cifs_do_set_acl':
-fs/smb/client/cifspdu.h:384:14: note: at offset [7, 11] into destination object 'Protocol' of size 4
-  384 |         __u8 Protocol[4];
-      |              ^~~~~~~~
-In function 'cifs_init_ace',
-    inlined from 'posix_acl_to_cifs' at fs/smb/client/cifssmb.c:3046:3,
-    inlined from 'cifs_do_set_acl' at fs/smb/client/cifssmb.c:3191:15:
-fs/smb/client/cifssmb.c:2988:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
- 2988 |         cifs_ace->cifs_e_tag =  local_ace->e_tag;
-      |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
-fs/smb/client/cifspdu.h: In function 'cifs_do_set_acl':
-fs/smb/client/cifspdu.h:384:14: note: at offset [6, 10] into destination object 'Protocol' of size 4
-  384 |         __u8 Protocol[4];
-      |              ^~~~~~~~
-
-This helps with the ongoing efforts to globally enable
--Wstringop-overflow.
-
-Link: https://github.com/KSPP/linux/issues/310
-Fixes: dc1af4c4b472 ("cifs: implement set acl method")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/smb/client/cifssmb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
-index 19f7385abeec..9dee267f1893 100644
---- a/fs/smb/client/cifssmb.c
-+++ b/fs/smb/client/cifssmb.c
-@@ -3184,7 +3184,7 @@ int cifs_do_set_acl(const unsigned int xid, struct cifs_tcon *tcon,
- 	param_offset = offsetof(struct smb_com_transaction2_spi_req,
- 				InformationLevel) - 4;
- 	offset = param_offset + params;
--	parm_data = ((char *) &pSMB->hdr.Protocol) + offset;
-+	parm_data = ((char *)pSMB) + sizeof(pSMB->hdr.smb_buf_length) + offset;
- 	pSMB->ParameterOffset = cpu_to_le16(param_offset);
- 
- 	/* convert to on the wire format for POSIX ACL */
--- 
-2.34.1
-
+@Kees Cook what's your advice here?
