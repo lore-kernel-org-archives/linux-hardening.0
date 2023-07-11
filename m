@@ -2,136 +2,96 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67992EB64DD
-	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jul 2023 16:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB3CC001DF
+	for <linux-hardening@archiver.kernel.org>; Tue, 11 Jul 2023 16:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231458AbjGKQVu (ORCPT
+        id S231439AbjGKQ0m (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 11 Jul 2023 12:21:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
+        Tue, 11 Jul 2023 12:26:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231228AbjGKQVj (ORCPT
+        with ESMTP id S230398AbjGKQ0l (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 11 Jul 2023 12:21:39 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D225010F2
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Jul 2023 09:21:37 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-66f3fc56ef4so4490765b3a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 11 Jul 2023 09:21:37 -0700 (PDT)
+        Tue, 11 Jul 2023 12:26:41 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422DBCA
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Jul 2023 09:26:40 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-666e6541c98so5305899b3a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 11 Jul 2023 09:26:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1689092497; x=1691684497;
+        d=chromium.org; s=google; t=1689092800; x=1691684800;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FRd6MSnrDwuyQ7znWMqv6yCTnL1/DCJOC7bU8PD4YHA=;
-        b=gpWbxLEJAvmtMRm+FhOebdn8dZhw/8ODnpNfzpB0MQM3pSJXTeWlGHA4rduGWhj+cX
-         Ro43D8BRredizt+GPW75K5Q3Y+Dr3QH6caOSAfHsa+RWAxkbmzOtytqAsA0nIQKnhMse
-         Bhf/WZN5knflEGP6D2uaxg9geafaqTw2FfFRY=
+        bh=FnogQ7HLpRF5+op/EYR0WRYtuefnaYhu4nhQsCtg9DI=;
+        b=nYXGo198BbM03RIP7UU0985bq/mKFrMAZ8QCvoEU4vxnvQjVmDh6w8bxrebH1kiVMq
+         PQcNyVMFfAV1nbaAlu8bOMRieTT7CGsuiLLQeHGEWH64OnH1dNkXSKZy2yAPeY5wfUYx
+         lhkX6B3dh8M7Ad8XpfWKjutJ7uQK7QnTyvDzA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689092497; x=1691684497;
+        d=1e100.net; s=20221208; t=1689092800; x=1691684800;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FRd6MSnrDwuyQ7znWMqv6yCTnL1/DCJOC7bU8PD4YHA=;
-        b=TW+bpfHPsCJFSBeVvWlzSK3odincPM65BWVGDSL8CurWW927/E7kAKAqSNx7nh+mJ5
-         T04jHfunxhKrNQM7Nckh+xsdFwkX0h90sDvHCOm94txwk0GrmVU9CK2lX7sFXGJPO4sL
-         Ap3b57aToonbj7w1n/lkY795I6Z3Y8e+eh5oWVFPInSkI0mP7mrywd3xRxU23wEjXqz1
-         HyKvin3OaS5rT+MyN5BOFGf4oXfxiyS7dsm2L0MW4ktEck0AvDxn07A0H0aMpWGv6s4l
-         stVSXZLSXlmgVPpvBSQKWPmPUEhvhgZndBQiteANLTs82iuQs5LQBcnUmReOeXMTQBLw
-         k8qA==
-X-Gm-Message-State: ABy/qLas0CaGC1f//uk+uUrG04ZICMPx2BCc4Pn3b3g988QZS5tnuM7z
-        uXbOffRFbqoOe2UpPCVhwzecUA==
-X-Google-Smtp-Source: APBJJlGmfygMjusEhLAateZabdJC+NgJo425Y8P55gtNUAQan1lVCm6MeEIhr+Us9T17E8ZvkbTgag==
-X-Received: by 2002:a17:90b:1d02:b0:263:114c:52fc with SMTP id on2-20020a17090b1d0200b00263114c52fcmr23830843pjb.12.1689092497290;
-        Tue, 11 Jul 2023 09:21:37 -0700 (PDT)
+        bh=FnogQ7HLpRF5+op/EYR0WRYtuefnaYhu4nhQsCtg9DI=;
+        b=B0y/VI2kUamA4SJW37R8BEasf54yaoJfe1XYcK9TqmOfGcSwa92FKmoYmrRfyWf28d
+         h0ID7RIZGLlmJr0SadIBSAtrFpMydGrBkmwkcnH3zDSikqLzI7yFfUKFjL2+AL8OaU1Y
+         5Rvc0X6o00ATw+K9aFGhhyXJqz29tqLfv8jaF/x3x6KcacleYWgewjgeqlDnwS6eikvq
+         oeBniybLU5XS61WNIPTCg8wTJMyD6ebiG3kRrBPK+++FdCvQ95jrrq7ljnfXAhRcl7sn
+         X63snF3LIhvAE8Z63UhobKEUYQ+u9SELXahtFJ4CzmVUbxvntq9NEIqH+QJjAGzSvQgJ
+         wYtw==
+X-Gm-Message-State: ABy/qLYn3ZkYv0Rd5xjsyDmICY76GG88RPvCv2IvDs6DUjZeiXW/YbgB
+        QrTAH6LwSS+mvg0a/syEUug1i/sxx7Kk2XWpWaM=
+X-Google-Smtp-Source: APBJJlHPT8zxb8dffvFxjIXVZsxroWt6k1sP9UuWClw8e3VLZG1MIqrloCoxrh09rhTflME/mNoIww==
+X-Received: by 2002:a05:6a20:60b:b0:122:92d0:452a with SMTP id 11-20020a056a20060b00b0012292d0452amr16544394pzl.37.1689092799583;
+        Tue, 11 Jul 2023 09:26:39 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id dw16-20020a17090b095000b00260cce91d20sm2026175pjb.33.2023.07.11.09.21.36
+        by smtp.gmail.com with ESMTPSA id d20-20020aa78154000000b0066f37665a6asm1916962pfn.117.2023.07.11.09.26.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 09:21:36 -0700 (PDT)
-Date:   Tue, 11 Jul 2023 09:21:36 -0700
+        Tue, 11 Jul 2023 09:26:39 -0700 (PDT)
+Date:   Tue, 11 Jul 2023 09:26:38 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
-        patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Matteo Rizzo <matteorizzo@google.com>,
-        Jann Horn <jannh@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Marco Elver <elver@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm/slub: remove freelist_dereference()
-Message-ID: <202307110917.DEED145F0@keescook>
-References: <20230711134623.12695-3-vbabka@suse.cz>
- <20230711134623.12695-4-vbabka@suse.cz>
+To:     Sean Christopherson <seanjc@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Zheng Zhang <zheng.zhang@email.ucr.edu>,
+        linux-hardening@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [BUG]: bad usercopy in kvm_stats_read in mm/usercopy.c
+Message-ID: <202307110925.CBAF286C0A@keescook>
+References: <CAC_GQSr3xzZaeZt85k_RCBd5kfiOve8qXo7a81Cq53LuVQ5r=Q@mail.gmail.com>
+ <20230710133427.fb599ef486c7b764d9ca2cc3@linux-foundation.org>
+ <ZK2ABPwCke32Kh0q@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230711134623.12695-4-vbabka@suse.cz>
+In-Reply-To: <ZK2ABPwCke32Kh0q@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 03:46:25PM +0200, Vlastimil Babka wrote:
-> freelist_dereference() is a one-liner only used from get_freepointer().
-> Remove it and make get_freepointer() call freelist_ptr_decode()
-> directly to make the code easier to follow.
+On Tue, Jul 11, 2023 at 09:15:00AM -0700, Sean Christopherson wrote:
+> On Mon, Jul 10, 2023, Andrew Morton wrote:
+> > On Sun, 9 Jul 2023 14:32:09 -0700 Zheng Zhang <zheng.zhang@email.ucr.edu> wrote:
+> > 
+> > > Kees, Andrew, and  to whom it may concern:
+> > > 
+> > > Hello! We have found a bug in the Linux kernel version 6.2.0 by syzkaller
+> > > with our own templates. It also produces a POC.
+> > > Attached is the report, log, and reproducers generated by syzkaller
+> > > Please let me know if there is any additional information that I can
+> > > provide to help debug this issue.
+> > > Thanks!
+> > 
+> > Let's cc the kvm mailing list.
+> > 
+> > Original email is at
+> > https://lkml.kernel.org/r/CAC_GQSr3xzZaeZt85k_RCBd5kfiOve8qXo7a81Cq53LuVQ5r=Q@mail.gmail.com
 > 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/slub.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
-> 
-> diff --git a/mm/slub.c b/mm/slub.c
-> index 07edad305512..c4556a5dab4b 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -397,18 +397,14 @@ static inline void *freelist_ptr_decode(const struct kmem_cache *s,
->  	return decoded;
->  }
->  
-> -/* Returns the freelist pointer recorded at location ptr_addr. */
-> -static inline void *freelist_dereference(const struct kmem_cache *s,
-> -					 void *ptr_addr)
-> -{
-> -	return freelist_ptr_decode(s, *(freeptr_t *)(ptr_addr),
-> -			    (unsigned long)ptr_addr);
-> -}
-> -
->  static inline void *get_freepointer(struct kmem_cache *s, void *object)
->  {
-> -	object = kasan_reset_tag(object);
-> -	return freelist_dereference(s, (freeptr_t *)(object + s->offset));
-> +	unsigned long ptr_addr;
-> +	freeptr_t p;
-> +
-> +	ptr_addr = ((unsigned long)kasan_reset_tag(object)) + s->offset;
-> +	p = *(freeptr_t *)(ptr_addr);
-> +	return freelist_ptr_decode(s, p, ptr_addr);
->  }
->  
->  #ifndef CONFIG_SLUB_TINY
-> -- 
-> 2.41.0
-> 
+> Yeaaaah.  We failed kernel programming 101.  KVM installs file descriptors to
+> let userspace read VM and vCPU stats, but doesn't grab a reference to the VM to
+> ensure the VM and its vCPUs are kept alive until the stats fds are closed.  I'll
+> send a patch.
 
-I like reducing the complexity here, but I find dropping the "object"
-reassignment makes this a bit harder to read. What about:
-
-	object = kasan_reset_tag(object);
-	unsigned long ptr_addr = (unsigned long)object + s->offset;
-	freeptr_t p = *(freeptr_t *)(ptr_addr);
-
-	return freelist_ptr_decode(s, p, ptr_addr);
-
-?
-
-They're the same result, so either way:
-
-Acked-by: Kees Cook <keescook@chromium.org>
+Thanks! Another victory for hardened usercopy. :)
 
 -- 
 Kees Cook
