@@ -2,168 +2,94 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50431C001DC
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 16:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8A9EB64DD
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 16:24:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232890AbjGLQYJ (ORCPT
+        id S233311AbjGLQYf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jul 2023 12:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53456 "EHLO
+        Wed, 12 Jul 2023 12:24:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232767AbjGLQX4 (ORCPT
+        with ESMTP id S233446AbjGLQYG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jul 2023 12:23:56 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D752D65;
-        Wed, 12 Jul 2023 09:23:21 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-262fa79e97fso3585205a91.2;
-        Wed, 12 Jul 2023 09:23:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689179000; x=1691771000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/mvKlKHSg/A3EuJ2PFCJvzfOkyyunP0cNJw9XZ1YoG4=;
-        b=VHnuNATviqOgKPuyo3fuh1fXRy2OtRR/omFx+1Sa0YyCS83h8RtoeVoirEmi33KxVj
-         g1K4O/CD8L6aR7SXF02veyJT2HS+FHZLswYIM+kpjJKG4qXi54M6HzSgrgccjBhdZM16
-         7dkoE6XTRFpoldjZiEjKPk2sndtlxAE3IeSKB9XknsPXks/RyD6ePGFqztpdC2CocYgR
-         XSByCC97A4XUlkhuinayUvwLt2+JXyvZ3iH8fN7QKSbCBuUKmzt4gro0OCSm83GQHUDj
-         kLUajaa9ldIx42KMzNTTWuIe/PA2h/G1AZULj6qVniKflEdR/S8tU49+KDbfde7ePfir
-         EnCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689179000; x=1691771000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/mvKlKHSg/A3EuJ2PFCJvzfOkyyunP0cNJw9XZ1YoG4=;
-        b=fXFKqAKnSPN5qsjKFhXcAnI8995UBvQ9+vd3FxmZXgbuVryXeMibPmxVW0McPqAC0D
-         fT/F0bUBXcaDE/24sWhqEUsOKEFCYWSpz0LNsebVxfswyRsI5dyh3ncTJG415nMfULHt
-         zxfYML0bY5ZTW6bSkSIuCCwM+AzHszj8326eMs5krLbUWaETAPFbWPaqmZ4Fe/uu1PII
-         ehBBtvgs9TY73DHdLofzdxJMU0lAQBS2nLaupesF+yrTG2zfspk/W3NQ8ODOhT06IRcx
-         JihLIo3vBqE1gRbVccg075UnPmvQFyuqbKrjhHZfv83rPfaNS1JzK6zk5N+GeAjlL5XZ
-         foRA==
-X-Gm-Message-State: ABy/qLYOAaa528rAYddhgUbvse0QNtKqyL6FghNtq/eomrM4Q6RKm2mr
-        RvyzJGhb8Myq3CC0gJe/QSNSkqDsPOc8UOMfcvw=
-X-Google-Smtp-Source: APBJJlF3rf+aZ7Dic0YZaGil/jwvb4h4itZZ9wPU2RvqES1B/ZcPeLeQYICZfi8bU6WCHwKtU9BfGohX9VYGxKiHV3U=
-X-Received: by 2002:a17:90b:400a:b0:263:f5a5:fb98 with SMTP id
- ie10-20020a17090b400a00b00263f5a5fb98mr15776385pjb.28.1689178999981; Wed, 12
- Jul 2023 09:23:19 -0700 (PDT)
+        Wed, 12 Jul 2023 12:24:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712081FDE
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 09:23:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CAF0F6183B
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:23:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF741C433C8;
+        Wed, 12 Jul 2023 16:23:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689179020;
+        bh=xN+Ptodba6sw5zR9RG++Zd/Hx+r1BWcWHPr1uq59BoI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uxqAsOKcNNNwKSvZGisd8tvx67IyEM6ref7rOpp2ceg5eeZu5SDI0DJ7zeV8Pzqx6
+         E+l+ZyNev5ok65ntbTetgiTgK1g+bpMOosDSlW17AfDdcrps5fBhhvHIw8rui5p3K4
+         wU8TuksV1vNElG2mTg7WYfO19zMU3OWWHtfrbvwE8nSEgU3HQpnv83iffB4AJfbihG
+         jimcvwsCAQKtoFPwspJdZuaJeWUZjMUrUKK4ouMIMkVTil/x+L5JzkuYj1lTe2LLLZ
+         gI8gS9+n9lTIYSZi+Cbqf6WMEsvO43vSu9rXUgQxnf3a3SRkNJPkvDGXIlRI+uUdQT
+         qrE7dSPawCWHw==
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH v3 0/2] pstore: Replace crypto API compression with zlib calls
+Date:   Wed, 12 Jul 2023 18:23:30 +0200
+Message-Id: <20230712162332.2670437-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230711134623.12695-3-vbabka@suse.cz>
-In-Reply-To: <20230711134623.12695-3-vbabka@suse.cz>
-From:   Andrey Konovalov <andreyknvl@gmail.com>
-Date:   Wed, 12 Jul 2023 18:23:09 +0200
-Message-ID: <CA+fCnZci9E8Snjuc-rJqSeX+Gn84_AVO5OjQwyFT=vL+pw22HQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm/slub: remove redundant kasan_reset_tag() from
- freelist_ptr calculations
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
-        patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Matteo Rizzo <matteorizzo@google.com>,
-        Jann Horn <jannh@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Marco Elver <elver@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev@googlegroups.com, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1542; i=ardb@kernel.org; h=from:subject; bh=xN+Ptodba6sw5zR9RG++Zd/Hx+r1BWcWHPr1uq59BoI=; b=owGbwMvMwCFmkMcZplerG8N4Wi2JIWXd5cbJW9sXr+ldt/dB7067ib9O/JL1W9TE4/riSlb7y RVp3soHOkpZGMQ4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBEvsxh+MNluPjmwtaDh/z2 OUofm7a+POustYXtlilBj7+Jzm5rZNrByPBa9NbzJzOLzl+NFDu05kSpaHN6/MUfcQ/3d+9+yXW FiYcPAA==
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 3:46=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> Commit d36a63a943e3 ("kasan, slub: fix more conflicts with
-> CONFIG_SLAB_FREELIST_HARDENED") has introduced kasan_reset_tags() to
-> freelist_ptr() encoding/decoding when CONFIG_SLAB_FREELIST_HARDENED is
-> enabled to resolve issues when passing tagged or untagged pointers
-> inconsistently would lead to incorrect calculations.
->
-> Later, commit aa1ef4d7b3f6 ("kasan, mm: reset tags when accessing
-> metadata") made sure all pointers have tags reset regardless of
-> CONFIG_SLAB_FREELIST_HARDENED, because there was no other way to access
-> the freepointer metadata safely with hw tag-based KASAN.
->
-> Therefore the kasan_reset_tag() usage in freelist_ptr_encode()/decode()
-> is now redundant, as all callers use kasan_reset_tag() unconditionally
-> when constructing ptr_addr. Remove the redundant calls and simplify the
-> code and remove obsolete comments.
->
-> Also in freelist_ptr_encode() introduce an 'encoded' variable to make
-> the lines shorter and make it similar to the _decode() one.
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
-> These 2 patches build on top of:
-> https://lore.kernel.org/all/20230704135834.3884421-1-matteorizzo@google.c=
-om/
->
->  mm/slub.c | 22 ++++++----------------
->  1 file changed, 6 insertions(+), 16 deletions(-)
->
-> diff --git a/mm/slub.c b/mm/slub.c
-> index f8cc47eff742..07edad305512 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -374,22 +374,14 @@ typedef struct { unsigned long v; } freeptr_t;
->  static inline freeptr_t freelist_ptr_encode(const struct kmem_cache *s,
->                                             void *ptr, unsigned long ptr_=
-addr)
->  {
-> +       unsigned long encoded;
-> +
->  #ifdef CONFIG_SLAB_FREELIST_HARDENED
-> -       /*
-> -        * When CONFIG_KASAN_SW/HW_TAGS is enabled, ptr_addr might be tag=
-ged.
-> -        * Normally, this doesn't cause any issues, as both set_freepoint=
-er()
-> -        * and get_freepointer() are called with a pointer with the same =
-tag.
-> -        * However, there are some issues with CONFIG_SLUB_DEBUG code. Fo=
-r
-> -        * example, when __free_slub() iterates over objects in a cache, =
-it
-> -        * passes untagged pointers to check_object(). check_object() in =
-turns
-> -        * calls get_freepointer() with an untagged pointer, which causes=
- the
-> -        * freepointer to be restored incorrectly.
-> -        */
-> -       return (freeptr_t){.v =3D (unsigned long)ptr ^ s->random ^
-> -                       swab((unsigned long)kasan_reset_tag((void *)ptr_a=
-ddr))};
-> +       encoded =3D (unsigned long)ptr ^ s->random ^ swab(ptr_addr);
->  #else
-> -       return (freeptr_t){.v =3D (unsigned long)ptr};
-> +       encoded =3D (unsigned long)ptr;
->  #endif
-> +       return (freeptr_t){.v =3D encoded};
->  }
->
->  static inline void *freelist_ptr_decode(const struct kmem_cache *s,
-> @@ -398,9 +390,7 @@ static inline void *freelist_ptr_decode(const struct =
-kmem_cache *s,
->         void *decoded;
->
->  #ifdef CONFIG_SLAB_FREELIST_HARDENED
-> -       /* See the comment in freelist_ptr_encode */
-> -       decoded =3D (void *)(ptr.v ^ s->random ^
-> -               swab((unsigned long)kasan_reset_tag((void *)ptr_addr)));
-> +       decoded =3D (void *)(ptr.v ^ s->random ^ swab(ptr_addr));
->  #else
->         decoded =3D (void *)ptr.v;
->  #endif
-> --
-> 2.41.0
+The pstore layer implements support for compression of kernel log
+output, using a variety of compression algorithms provided by the
+[deprecated] crypto API 'comp' interface.
 
-Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
+This appears to have been somebody's pet project rather than a solution
+to a real problem: the original deflate compression is reasonably fast,
+compresses well and is comparatively small in terms of code footprint,
+and so the flexibility that the crypto API integration provides does
+little more than complicate the code for no reason.
 
-Thanks!
+So let's get rid of this complexity, and switch back to zlib deflate
+using the library interface.
+
+Changes since v2:
+- some more prose improvements and NULL checks/assignments suggested by
+  Eric
+- reset author on patch #1
+- add Guilherme's Tested-by
+
+Changes since v1:
+- add missing vfree() of zlib compression workspace
+- implement improvements and simplifications suggested by Eric
+- add missing zlib_in/deflateEnd() calls
+- add code comment to document that the use of a library interface is
+  deliberate, and doesn't require a future 'upgrade' to the crypto API
+
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Eric Biggers <ebiggers@kernel.org>
+
+Ard Biesheuvel (2):
+  pstore: Remove worst-case compression size logic
+  pstore: Replace crypto API compression with zlib_deflate library calls
+
+ fs/pstore/Kconfig    | 100 +-----
+ fs/pstore/platform.c | 330 ++++++--------------
+ 2 files changed, 110 insertions(+), 320 deletions(-)
+
+-- 
+2.39.2
+
