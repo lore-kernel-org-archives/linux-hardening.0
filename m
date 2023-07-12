@@ -2,182 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5185C0015E
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 23:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73E5EB64DD
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 23:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbjGLXgf (ORCPT
+        id S232927AbjGLXhe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jul 2023 19:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45900 "EHLO
+        Wed, 12 Jul 2023 19:37:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232547AbjGLXge (ORCPT
+        with ESMTP id S232797AbjGLXha (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jul 2023 19:36:34 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E13819B4
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:36:32 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1b89114266dso1309655ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:36:32 -0700 (PDT)
+        Wed, 12 Jul 2023 19:37:30 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FD14E5C
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:37:29 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-55c85b53219so153621a12.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:37:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1689204992; x=1691796992;
+        d=chromium.org; s=google; t=1689205049; x=1691797049;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ll6Egkvdw2XyI4so+MOhb7XgcVZS6w6LMYmZVyMYbQM=;
-        b=EvWAqBuAjMo2D/p0FfsOP7AkCPpRCE2ExmAlSk2HcUMyIM+qDEQh7UbCh0pcmmQ9sA
-         4gKF6uACA1jK1lvqgzQlWb8dWAs3G5Q2xMel5fec6/BK8DHHQ3yoCH5K5ptWZhsnW2ZT
-         VMkkTsPOxWYa5iGyEMc77CzpB8gD+WFiVHl/w=
+        bh=2MJhlCCo0nBuKwoH3lOtwuzRsq3KnF0aXQAOXaQiEk0=;
+        b=Ad3IgX8TsrFK9VXenjB6zUxxThDksIJWRbPMMX5M7ri99x96lFJ0HCQv9ymdH2k7Wj
+         nVnXq+BDRfQuKkQDLKbi/GOqnEg9H+FOKuUYlOq8301AZ2jdKnxyVBcLd808ygRp6ZIf
+         8ZvnPVl4STi4HNWXM7N30sB0LYx1Kgg2D/GKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689204992; x=1691796992;
+        d=1e100.net; s=20221208; t=1689205049; x=1691797049;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ll6Egkvdw2XyI4so+MOhb7XgcVZS6w6LMYmZVyMYbQM=;
-        b=Lj4A8AuGkPVa0C9rcV50VLQW3KAysKyMRTEjdTK4AEeKXgaDIVd2hIyId3mY//LU4G
-         bdHi7M0taOnZrMygW9Xf2yacJOtnyJ7cTY+syH8Z1gXUkrsNKq6dIg7t1nM56aqLgOaC
-         3zGJfICn69uP/cYixTAxeUb1LZel16r73t5RRBtxOejifrUgdZ2iwY63OGpqZDwnKa3T
-         CDPwgnbsWgITqfbQAD1VmhQ4wLmRrrnlKoyvdEbUIrQ4tgxPGWVjLb4Xget4vDSCEyLY
-         GMxm12WpWo1pZmCzKDJSm9VeO9c06E0cCGFg8U5Eaff3m6wUzdNQO2i5QCeHwZttNw0s
-         xKmQ==
-X-Gm-Message-State: ABy/qLaM5f8YID8j07zLqyReEr/I0Hb5CtLj1OrC5YLGdXkPgXoilxgl
-        xK9zzxmNWmri/2fiHBZCbO0gKg==
-X-Google-Smtp-Source: APBJJlEg26bT/ZreZ3OjixGX6J28q0p1B3HYJDHPD3+vFlnQueXm3novf7lQJltaKSGxuvJM5xp8eg==
-X-Received: by 2002:a17:903:11cc:b0:1b3:c4c1:ec4f with SMTP id q12-20020a17090311cc00b001b3c4c1ec4fmr106374plh.37.1689204991746;
-        Wed, 12 Jul 2023 16:36:31 -0700 (PDT)
+        bh=2MJhlCCo0nBuKwoH3lOtwuzRsq3KnF0aXQAOXaQiEk0=;
+        b=FcmbNnndPRoA41ZBdLTAlp/WxkSkfAv9zoUbjKibc34GzFsiIffGMkh835N2YX98x/
+         whbALbGd8QnA7ZJOZASfkgN/nhk6XSgEPb+MMLxQBnyTGNVP9cl4xmCAYTj0TLyq140H
+         vKF9cGmOpx+gt4wdzF9vSYz8sS4YMVmOAkDj+wMjKZOGTSlRItfXlFx/axBI6nxrVQPG
+         XboRHK05xn5XVzPNOrzCO5ge6eY3I3bMqkHPWOFPUZXifZbbVS8MaGWto+v3SuNbYmKR
+         xyedwGDUpZVnkfPQ+v/kcj+qKcWJY2VBkSXIwhLT/EON4LrUf7OKxBtywAnUTHnA2zeT
+         3puw==
+X-Gm-Message-State: ABy/qLbVCfCskG8EGrUVTCTzOeVU90xCpmILUY5VoELXl5EXPiSaSKSQ
+        rGVNVUrCTQlZ/oi5YW/OYFooKQ==
+X-Google-Smtp-Source: APBJJlFKuVyIJ2dqf3PmBW0kmllPn7ODpA6BH6gvye81w1ha0sM5OKGcmDzJSc9wTyvjKq11vposcg==
+X-Received: by 2002:a05:6a20:841a:b0:12f:f9af:3a2a with SMTP id c26-20020a056a20841a00b0012ff9af3a2amr21083174pzd.54.1689205048989;
+        Wed, 12 Jul 2023 16:37:28 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ja22-20020a170902efd600b001b8c6662094sm4509001plb.188.2023.07.12.16.36.30
+        by smtp.gmail.com with ESMTPSA id u5-20020a62ed05000000b00668821499c3sm4106048pfh.156.2023.07.12.16.37.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 16:36:30 -0700 (PDT)
-Date:   Wed, 12 Jul 2023 16:36:30 -0700
+        Wed, 12 Jul 2023 16:37:28 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 16:37:27 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] tracing: Stop FORTIFY_SOURCE complaining about stack
- trace caller
-Message-ID: <202307121618.17C50DA9A@keescook>
-References: <20230712105235.5fc441aa@gandalf.local.home>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        linux-hardening@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.com>
+Subject: Re: [PATCH v2] hwmon: (pmbus/max20730) Remove strlcpy occurences
+Message-ID: <202307121637.05F0B4C1@keescook>
+References: <20230712214307.2424810-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230712105235.5fc441aa@gandalf.local.home>
+In-Reply-To: <20230712214307.2424810-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 10:52:35AM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wed, Jul 12, 2023 at 09:43:07PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with direct assignment.
 > 
-> The stack_trace event is an event created by the tracing subsystem to
-> store stack traces. It originally just contained a hard coded array of 8
-> words to hold the stack, and a "size" to know how many entries are there.
-> This is exported to user space as:
+> strlcpy in this file is used to copy fixed-length strings which can be
+> completely avoided by direct assignment and is safe to do so. strlen()
+> is used to return the length of @tbuf.
 > 
-> name: kernel_stack
-> ID: 4
-> format:
-> 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-> 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-> 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-> 	field:int common_pid;	offset:4;	size:4;	signed:1;
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
 > 
-> 	field:int size;	offset:8;	size:4;	signed:1;
-> 	field:unsigned long caller[8];	offset:16;	size:64;	signed:0;
-> 
-> print fmt: "\t=> %ps\n\t=> %ps\n\t=> %ps\n" "\t=> %ps\n\t=> %ps\n\t=> %ps\n" "\t=> %ps\n\t=> %ps\n",i
->  (void *)REC->caller[0], (void *)REC->caller[1], (void *)REC->caller[2],
->  (void *)REC->caller[3], (void *)REC->caller[4], (void *)REC->caller[5],
->  (void *)REC->caller[6], (void *)REC->caller[7]
-> 
-> Where the user space tracers could parse the stack. The library was
-> updated for this specific event to only look at the size, and not the
-> array. But some older users still look at the array (note, the older code
-> still checks to make sure the array fits inside the event that it read.
-> That is, if only 4 words were saved, the parser would not read the fifth
-> word because it will see that it was outside of the event size).
-> 
-> This event was changed a while ago to be more dynamic, and would save a
-> full stack even if it was greater than 8 words. It does this by simply
-> allocating more ring buffer to hold the extra words. Then it copies in the
-> stack via:
-> 
-> 	memcpy(&entry->caller, fstack->calls, size);
-> 
-> As the entry is struct stack_entry, that is created by a macro to both
-> create the structure and export this to user space, it still had the caller
-> field of entry defined as: unsigned long caller[8].
-> 
-> When the stack is greater than 8, the FORTIFY_SOURCE code notices that the
-> amount being copied is greater than the source array and complains about
-> it. It has no idea that the source is pointing to the ring buffer with the
-> required allocation.
-> 
-> To hide this from the FORTIFY_SOURCE logic, pointer arithmetic is used:
-> 
-> 	ptr = ring_buffer_event_data(event);
-> 	entry = ptr;
-> 	ptr += offsetof(typeof(*entry), caller);
-> 	memcpy(ptr, fstack->calls, size);
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-But... Why are you lying to the compiler? Why not just make this
-dynamically sized for real? It's not a "struct stack_entry" if it might
-be bigger.
-
-Just create a new struct that isn't lying? (Dealing with the "minimum
-size" issue for a dynamic array is usually done with unions, but
-ftrace's structs are ... different. As such, I just added a one-off
-union.) Here, and you can be the first user of __counted_by too:
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4529e264cb86..40935578c365 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3108,6 +3108,14 @@ struct ftrace_stacks {
- static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
- static DEFINE_PER_CPU(int, ftrace_stack_reserve);
- 
-+union stack_entry_dynamic {
-+	struct stack_entry entry;
-+	struct {
-+		int size;
-+		unsigned long caller[] __counted_by(size);
-+	};
-+};
-+
- static void __ftrace_trace_stack(struct trace_buffer *buffer,
- 				 unsigned int trace_ctx,
- 				 int skip, struct pt_regs *regs)
-@@ -3116,7 +3124,7 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
- 	struct ring_buffer_event *event;
- 	unsigned int size, nr_entries;
- 	struct ftrace_stack *fstack;
--	struct stack_entry *entry;
-+	union stack_entry_dynamic *entry;
- 	int stackidx;
- 
- 	/*
-@@ -3155,16 +3163,15 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
- 		nr_entries = stack_trace_save(fstack->calls, size, skip);
- 	}
- 
--	size = nr_entries * sizeof(unsigned long);
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
--				    (sizeof(*entry) - sizeof(entry->caller)) + size,
-+				    struct_size(entry, caller, nr_entries),
- 				    trace_ctx);
- 	if (!event)
- 		goto out;
- 	entry = ring_buffer_event_data(event);
- 
--	memcpy(&entry->caller, fstack->calls, size);
- 	entry->size = nr_entries;
-+	memcpy(entry->caller, fstack->calls, flex_array_size(entry, caller, nr_entries));
- 
- 	if (!call_filter_check_discard(call, entry, buffer, event))
- 		__buffer_unlock_commit(buffer, event);
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -- 
 Kees Cook
