@@ -2,85 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A76FCEB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 19:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBD8C0015E
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 19:46:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231252AbjGLT0G (ORCPT
+        id S232124AbjGLTqj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jul 2023 15:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56100 "EHLO
+        Wed, 12 Jul 2023 15:46:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231144AbjGLT0G (ORCPT
+        with ESMTP id S232630AbjGLTqi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jul 2023 15:26:06 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FEE61FC1;
-        Wed, 12 Jul 2023 12:26:05 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-57764a6bf8cso84174327b3.3;
-        Wed, 12 Jul 2023 12:26:05 -0700 (PDT)
+        Wed, 12 Jul 2023 15:46:38 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C91C1FE4
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 12:46:34 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-6682909acadso4252963b3a.3
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 12:46:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689189964; x=1691781964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k3NLC7atfJJsYoIzJOjRPYIOxthVMt03n8zToq5Ub4E=;
-        b=jIla5nm+kACeRc+UraotMgVfcbmtdX9GwY5VRaIBkEkWPY3pt3FzaVQHXs9YMLQxZI
-         GarJgLxvGDjevNEr7RLpxGvpJ5+ltqEDgegwPmlo6T3oFU61s+pR30IZkdDieosK9wdS
-         iiSmlXsAq/V7C8Fqb6PDpSK+24NXqIZOIjodYagtAlZPBDEVSkAoQO7lIVtGic2MIhQ4
-         yrrNUEsElywTo8MtMkPXzr7VK/LKV9CZQSbZgk82qoF3V5eFOoXIhc1pPkjCUDFa0sNf
-         QomTc1hb1mkbau105cZ1AeRKMUKcrMVnqruOMu5x7Ucqz0WbnWb4tmy11LkICwqnKDiT
-         /dkg==
+        d=chromium.org; s=google; t=1689191194; x=1691783194;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=klYbycvplGJ1ytkS4a6ghIwucAHaphSST8O3II0SxfE=;
+        b=SF0LZwHlIBt0vqg2YFHKZnZdPEL2qnJzclU3byf+jX1jPF6H3Q9mB4oUsPJTkPybX4
+         vAMh5JPh/MvbcrsFoWms9c7vZ+coAOwUjdI7/n0TtcsKm+vlQgl4+3o4a4+VTeW+QKYx
+         2Qz/Zhw8GEQBoFkrNZTwdckz2H1PkB29hYJt0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689189964; x=1691781964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k3NLC7atfJJsYoIzJOjRPYIOxthVMt03n8zToq5Ub4E=;
-        b=aFHtQ0IA+gNXlDni6VmaRHVmYNr2Z2KomIZPcEPMZhRnlM5rf8JYBZ0XKjDGSYRQIv
-         B4018iKdj/OsfjuaFw5D3NPxoI7uC9LKc7iDIxc1l+HA+l2TMw2YQVsOuAxRJrfgJ0JD
-         w8Jj3QLQvXsDNQOaMqkDTUj5WprMLVwrQbhYFmW17a0u09NQNVxgJwRRxVvFPuo7Q4D+
-         Fkkjw37U/1pj6Q2yyrmsO1eqygIGQYmZp7n36h9BrpaiCBvxfUnUnRET54RgbWWcWpXK
-         QFPKOJHy82VNtx3FpB3xFRSXaT+Hl4tIVdcuENQVqir7+h3d8OkuQEnkiQg08H6ygH41
-         fwKw==
-X-Gm-Message-State: ABy/qLYBfe5RIgpP7FsCJYXLX45MU4h4mbozifs54pCyu7lGM3VSffCz
-        89BAASVIqsl3qt1Fxbrh6HjD781opxam2mN09pPQOh8XaZozng==
-X-Google-Smtp-Source: APBJJlGvTEroD7+OVZ6alFtQq/nLKt30xH0xv5++6k9See/OnfymBucoDonuQ4Oy8u8/k1Fl4JwVSz1K1S50lY8gG+A=
-X-Received: by 2002:a0d:e8d3:0:b0:570:8856:5dbc with SMTP id
- r202-20020a0de8d3000000b0057088565dbcmr20120192ywe.41.1689189964551; Wed, 12
- Jul 2023 12:26:04 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689191194; x=1691783194;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=klYbycvplGJ1ytkS4a6ghIwucAHaphSST8O3II0SxfE=;
+        b=EB5r/CPfQMXeOeH5YUSV8NJMIE8OPOiVy25DqYMP4W03UbML7kyD2cbZIbBddYoAL6
+         zG+1L4iL4RPf5bjDqiC5ColNwFMq0C2yc2nH0ZTJPhVE7tsvN5I1KT8FwVJsIz0s5cPc
+         aRxQqmDuUqbtoMXOkSRnb/6pml1BssyEzdZmW4rkuSWI1SzdZ9D6/pTuCV1tN56uL2KR
+         cuxyPrzDhkpim+n6A8IZQZjL5aM+j0EXsPC8njRjBYYtR34qwfHeoY5HGKUUIFsoFJkU
+         GIQpD5k2caucVWSue5tZyom34Wud4tGR6OLHpFwnvoISNNpFhnvwUP7uvXhUrsPKPFLL
+         5I/A==
+X-Gm-Message-State: ABy/qLZftP0xITKC0YVjBcOrfmZLT09XdiWEVYoKokaylIi+vr8tZfQX
+        PjPo6EVNA6pM+gyM1O+rtSNt6g8GxP03IqR1d8A=
+X-Google-Smtp-Source: APBJJlE8PzaPsG36V1KguOraP6XGsTq/gkvisldTxFDpG16GYfzF90jDF3mpcjO4jm82e5W3NEhxGQ==
+X-Received: by 2002:a05:6a00:856:b0:682:759c:644d with SMTP id q22-20020a056a00085600b00682759c644dmr19272948pfk.27.1689191193907;
+        Wed, 12 Jul 2023 12:46:33 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j5-20020a62e905000000b0068338b6667asm1173687pfh.212.2023.07.12.12.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jul 2023 12:46:33 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Foolishly claim maintainership of string routines
+Date:   Wed, 12 Jul 2023 12:46:29 -0700
+Message-Id: <20230712194625.never.252-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230712144429.2845940-1-azeemshaikh38@gmail.com>
- <3034082b-4ec8-2a8d-35a2-2551e9feef34@roeck-us.net> <202307121100.A6E650B@keescook>
-In-Reply-To: <202307121100.A6E650B@keescook>
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Wed, 12 Jul 2023 15:25:53 -0400
-Message-ID: <CADmuW3WfOwAD2MLmNkua5d3Tzjh3RWDSjZomQ_Tu6ucJ+B+bqA@mail.gmail.com>
-Subject: Re: [PATCH] hwmon: Remove strlcpy occurences
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        linux-hardening@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=910; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=oRDbPOiITIWo0E4ckhRol5nzE7VgmQjMV1y8KYTho0o=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkrwMV4Y4d4oGGuW8WNHhsUrlk6bUkoWNQHLLfk
+ 9tN6hMoZxaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZK8DFQAKCRCJcvTf3G3A
+ Jk+aEACOLRAnc7Jsi9PcMFldWEo+qh0n2f6Btz2DIOEcu1HKKDpG8LfFti1reP7orag5vNwuCBr
+ rQ591NJ3We5LGxUzhgiHXU7l7FWBMMQLFsrJdDpTKUwFXvUhyvjm/tohghFt+IBwcZiQTH4vHDM
+ 8Qia8sVLbkjC9t2V5srd3O5Rbn1DwVr2k/Kz+wDwNZEvAC6mM5aKM4MAWjgCwsp/xCfZfMK3hFC
+ lc+XLoq1fQGk5S5EzmKhDBYvhoUM0GDho4DuBNIL0NLqVUt/QR3jX1jMWQzAR2CSgqZ0TKQbux7
+ /5zcwna8LshNhXCRGlWBi3eFJgMUQ72BZyAq/BY5pbI7D+88KErb+d2JhJprvV2dsltxhRjLJLD
+ koNf7Q8f8sAb+S1bA5yqYgBOrTdMywI+qbuPU1X6zYuWD0TA0U3YDVXUtLjEB7Qpj9h1UtHb7oN
+ pg73NJmyyW+CYHk5e08oEoKWkLuiUM+K6Gy67RHzR7y29moqPxWTdjWERbMbbkfWvLfe7nO75Hv
+ tPQQ/lmB9/8+hvnlj72018PmbsvP1HcEW9VZtuXYlhgvCojmLNSmfPYnUW+bpkCuVfS4Z0DBEJm
+ Fwqe5e/SHYnfn/V3duGpc4YgylsH+c//mpPRyxVx1ihCIiJuJJEZjbIXgevebT6nIyXhaOe4M/U
+ su+QIfZL hV1uDpg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 2:04=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> On Wed, Jul 12, 2023 at 08:16:39AM -0700, Guenter Roeck wrote:
-> > On 7/12/23 07:44, Azeem Shaikh wrote:
-> > > [...]
-> > > +   len =3D strlen(result);
-> > >     return simple_read_from_buffer(buf, count, ppos, tbuf, len);
-> >
-> > This still copies tbuf, meaning all those constant strings won't actual=
-ly
-> > be reported.
->
-> Ah dang, thanks for catching that. Yeah, "tbuf" should be replaced by
-> "result" in the simple_read_from_buffer().
->
+Since the string API is tightly coupled with FORTIFY_SOURCE, I am
+offering myself up as maintainer for it. Thankfully Andy is already a
+reviewer and can keep me on the straight and narrow.
 
-Thanks for review folks, will send out a v2 shortly.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ MAINTAINERS | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3be1bdfe8ecc..b639d6123856 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8672,8 +8672,11 @@ S:	Maintained
+ F:	drivers/input/touchscreen/resistive-adc-touch.c
+ 
+ GENERIC STRING LIBRARY
++M:	Kees Cook <keescook@chromium.org>
+ R:	Andy Shevchenko <andy@kernel.org>
+-S:	Maintained
++L:	linux-hardening@vger.kernel.org
++S:	Supported
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+ F:	include/linux/string.h
+ F:	include/linux/string_choices.h
+ F:	include/linux/string_helpers.h
+-- 
+2.34.1
+
