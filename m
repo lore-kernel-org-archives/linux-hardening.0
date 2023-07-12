@@ -2,95 +2,168 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1649FEB64DD
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 15:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50431C001DC
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 16:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233750AbjGLPjz (ORCPT
+        id S232890AbjGLQYJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jul 2023 11:39:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
+        Wed, 12 Jul 2023 12:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233745AbjGLPjy (ORCPT
+        with ESMTP id S232767AbjGLQX4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jul 2023 11:39:54 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBAC91BB;
-        Wed, 12 Jul 2023 08:39:53 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-3457a3ada84so34973165ab.1;
-        Wed, 12 Jul 2023 08:39:53 -0700 (PDT)
+        Wed, 12 Jul 2023 12:23:56 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D752D65;
+        Wed, 12 Jul 2023 09:23:21 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-262fa79e97fso3585205a91.2;
+        Wed, 12 Jul 2023 09:23:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689176393; x=1691768393;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=RXSEQ1Ax3lLiaU8Cvc5wJKaD5LmTRVbKNFbrw0OwUak=;
-        b=ijqvScl94mBWA87jtsL4wo/9Re066jPs/yFoEzTqJoKy2mCMUxTpaqLsJne6TkCO4c
-         jYg52RrAKMuk7UvhWswsaPl+X9P0W6rJPVFRYFXN/H2Sk9JB8XN1czobE/UHTMhuaHdU
-         nf3I0plmoMgqJh724TId3YonlJ7bu9018WC3cvWwS5Le6TUdwzzhUGvB6lef9axRlNHm
-         6EazD3DEWPgP7OxT0TX71AcIksbNtPwjkIQ+SkVrKsnkKOvzEuq2BuF5RACBOlcnMh6P
-         AlF5ayxPUh/0kHHRyIKF5Kin4LbJfL9Z6KXaaLkXu2v3m1ngItAmOkjl37Z8R8IQjjF+
-         sK+Q==
+        d=gmail.com; s=20221208; t=1689179000; x=1691771000;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/mvKlKHSg/A3EuJ2PFCJvzfOkyyunP0cNJw9XZ1YoG4=;
+        b=VHnuNATviqOgKPuyo3fuh1fXRy2OtRR/omFx+1Sa0YyCS83h8RtoeVoirEmi33KxVj
+         g1K4O/CD8L6aR7SXF02veyJT2HS+FHZLswYIM+kpjJKG4qXi54M6HzSgrgccjBhdZM16
+         7dkoE6XTRFpoldjZiEjKPk2sndtlxAE3IeSKB9XknsPXks/RyD6ePGFqztpdC2CocYgR
+         XSByCC97A4XUlkhuinayUvwLt2+JXyvZ3iH8fN7QKSbCBuUKmzt4gro0OCSm83GQHUDj
+         kLUajaa9ldIx42KMzNTTWuIe/PA2h/G1AZULj6qVniKflEdR/S8tU49+KDbfde7ePfir
+         EnCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689176393; x=1691768393;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RXSEQ1Ax3lLiaU8Cvc5wJKaD5LmTRVbKNFbrw0OwUak=;
-        b=hFPlkhUU73UTjafYmT3utt6rz7FA3K63K2HTJqsY4Yu5ntLozyEXUY+zpKDEdYydfH
-         Oweh53pNsan3a2JZsGFpmakDNvUkU0K49QKxa2ODMW7X23O54WLIZDMKnpTHvFGS3J/m
-         Lh9sMXHtpkpfOCnZrrKD3s9f/QAB4+W/KxDwfuKiCtHqeWP+FQcJAg2tFb9HikgogN+H
-         MIRB1Cyp+T2os0l70jLrL174TK5Y3q4b5fLu2fmBRJlXCgrxWsIOkZE8kIWTm9j04dg5
-         t9Hd02wjavnnMzkfacwDvi+EbLDVqNrskt8nlPoqnvc/VijJKH+RbArcCg7IiGl1yUbT
-         93yg==
-X-Gm-Message-State: ABy/qLYZlTsEZvWiDEiV4Qon2WxomALTP/3+rZY+pnjJ9WVU5s+qUHPy
-        pmmcdvSeOhM/f/wfqt5Vbbw=
-X-Google-Smtp-Source: APBJJlHM/Zzpxdoy055jByMJt5n+bzNUJakOLXKzjBCmJR6NzYt+skF/bKWCORcFSYmSoucalyqnNw==
-X-Received: by 2002:a92:cd09:0:b0:345:a201:82c0 with SMTP id z9-20020a92cd09000000b00345a20182c0mr16121504iln.32.1689176393185;
-        Wed, 12 Jul 2023 08:39:53 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y11-20020a637d0b000000b0055b149a6db5sm3729891pgc.43.2023.07.12.08.39.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jul 2023 08:39:52 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <4f520327-4867-8f2c-050f-48eb52d3deed@roeck-us.net>
-Date:   Wed, 12 Jul 2023 08:39:51 -0700
+        d=1e100.net; s=20221208; t=1689179000; x=1691771000;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/mvKlKHSg/A3EuJ2PFCJvzfOkyyunP0cNJw9XZ1YoG4=;
+        b=fXFKqAKnSPN5qsjKFhXcAnI8995UBvQ9+vd3FxmZXgbuVryXeMibPmxVW0McPqAC0D
+         fT/F0bUBXcaDE/24sWhqEUsOKEFCYWSpz0LNsebVxfswyRsI5dyh3ncTJG415nMfULHt
+         zxfYML0bY5ZTW6bSkSIuCCwM+AzHszj8326eMs5krLbUWaETAPFbWPaqmZ4Fe/uu1PII
+         ehBBtvgs9TY73DHdLofzdxJMU0lAQBS2nLaupesF+yrTG2zfspk/W3NQ8ODOhT06IRcx
+         JihLIo3vBqE1gRbVccg075UnPmvQFyuqbKrjhHZfv83rPfaNS1JzK6zk5N+GeAjlL5XZ
+         foRA==
+X-Gm-Message-State: ABy/qLYOAaa528rAYddhgUbvse0QNtKqyL6FghNtq/eomrM4Q6RKm2mr
+        RvyzJGhb8Myq3CC0gJe/QSNSkqDsPOc8UOMfcvw=
+X-Google-Smtp-Source: APBJJlF3rf+aZ7Dic0YZaGil/jwvb4h4itZZ9wPU2RvqES1B/ZcPeLeQYICZfi8bU6WCHwKtU9BfGohX9VYGxKiHV3U=
+X-Received: by 2002:a17:90b:400a:b0:263:f5a5:fb98 with SMTP id
+ ie10-20020a17090b400a00b00263f5a5fb98mr15776385pjb.28.1689178999981; Wed, 12
+ Jul 2023 09:23:19 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] hwmon: Remove strlcpy occurences
-Content-Language: en-US
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     linux-hardening@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Kees Cook <keescook@chromium.org>
-References: <20230712144429.2845940-1-azeemshaikh38@gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <20230712144429.2845940-1-azeemshaikh38@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230711134623.12695-3-vbabka@suse.cz>
+In-Reply-To: <20230711134623.12695-3-vbabka@suse.cz>
+From:   Andrey Konovalov <andreyknvl@gmail.com>
+Date:   Wed, 12 Jul 2023 18:23:09 +0200
+Message-ID: <CA+fCnZci9E8Snjuc-rJqSeX+Gn84_AVO5OjQwyFT=vL+pw22HQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] mm/slub: remove redundant kasan_reset_tag() from
+ freelist_ptr calculations
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
+        patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Matteo Rizzo <matteorizzo@google.com>,
+        Jann Horn <jannh@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Marco Elver <elver@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kasan-dev@googlegroups.com, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 7/12/23 07:44, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with direct assignment.
-> 
-> strlcpy in this file is used to copy fixed-length strings which can be
-> completely avoided by direct assignment and is safe to do so. strlen()
-> is used to return the length of @tbuf.
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+On Tue, Jul 11, 2023 at 3:46=E2=80=AFPM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+> Commit d36a63a943e3 ("kasan, slub: fix more conflicts with
+> CONFIG_SLAB_FREELIST_HARDENED") has introduced kasan_reset_tags() to
+> freelist_ptr() encoding/decoding when CONFIG_SLAB_FREELIST_HARDENED is
+> enabled to resolve issues when passing tagged or untagged pointers
+> inconsistently would lead to incorrect calculations.
+>
+> Later, commit aa1ef4d7b3f6 ("kasan, mm: reset tags when accessing
+> metadata") made sure all pointers have tags reset regardless of
+> CONFIG_SLAB_FREELIST_HARDENED, because there was no other way to access
+> the freepointer metadata safely with hw tag-based KASAN.
+>
+> Therefore the kasan_reset_tag() usage in freelist_ptr_encode()/decode()
+> is now redundant, as all callers use kasan_reset_tag() unconditionally
+> when constructing ptr_addr. Remove the redundant calls and simplify the
+> code and remove obsolete comments.
+>
+> Also in freelist_ptr_encode() introduce an 'encoded' variable to make
+> the lines shorter and make it similar to the _decode() one.
+>
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+> These 2 patches build on top of:
+> https://lore.kernel.org/all/20230704135834.3884421-1-matteorizzo@google.c=
+om/
+>
+>  mm/slub.c | 22 ++++++----------------
+>  1 file changed, 6 insertions(+), 16 deletions(-)
+>
+> diff --git a/mm/slub.c b/mm/slub.c
+> index f8cc47eff742..07edad305512 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -374,22 +374,14 @@ typedef struct { unsigned long v; } freeptr_t;
+>  static inline freeptr_t freelist_ptr_encode(const struct kmem_cache *s,
+>                                             void *ptr, unsigned long ptr_=
+addr)
+>  {
+> +       unsigned long encoded;
+> +
+>  #ifdef CONFIG_SLAB_FREELIST_HARDENED
+> -       /*
+> -        * When CONFIG_KASAN_SW/HW_TAGS is enabled, ptr_addr might be tag=
+ged.
+> -        * Normally, this doesn't cause any issues, as both set_freepoint=
+er()
+> -        * and get_freepointer() are called with a pointer with the same =
+tag.
+> -        * However, there are some issues with CONFIG_SLUB_DEBUG code. Fo=
+r
+> -        * example, when __free_slub() iterates over objects in a cache, =
+it
+> -        * passes untagged pointers to check_object(). check_object() in =
+turns
+> -        * calls get_freepointer() with an untagged pointer, which causes=
+ the
+> -        * freepointer to be restored incorrectly.
+> -        */
+> -       return (freeptr_t){.v =3D (unsigned long)ptr ^ s->random ^
+> -                       swab((unsigned long)kasan_reset_tag((void *)ptr_a=
+ddr))};
+> +       encoded =3D (unsigned long)ptr ^ s->random ^ swab(ptr_addr);
+>  #else
+> -       return (freeptr_t){.v =3D (unsigned long)ptr};
+> +       encoded =3D (unsigned long)ptr;
+>  #endif
+> +       return (freeptr_t){.v =3D encoded};
+>  }
+>
+>  static inline void *freelist_ptr_decode(const struct kmem_cache *s,
+> @@ -398,9 +390,7 @@ static inline void *freelist_ptr_decode(const struct =
+kmem_cache *s,
+>         void *decoded;
+>
+>  #ifdef CONFIG_SLAB_FREELIST_HARDENED
+> -       /* See the comment in freelist_ptr_encode */
+> -       decoded =3D (void *)(ptr.v ^ s->random ^
+> -               swab((unsigned long)kasan_reset_tag((void *)ptr_addr)));
+> +       decoded =3D (void *)(ptr.v ^ s->random ^ swab(ptr_addr));
+>  #else
+>         decoded =3D (void *)ptr.v;
+>  #endif
+> --
+> 2.41.0
 
-Also, $subject should include the affected driver.
+Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
 
-Guenter
-
+Thanks!
