@@ -2,82 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A821EB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 23:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01C5EB64DA
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 23:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231989AbjGLXxw (ORCPT
+        id S232259AbjGLXy3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jul 2023 19:53:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55190 "EHLO
+        Wed, 12 Jul 2023 19:54:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231758AbjGLXxw (ORCPT
+        with ESMTP id S232196AbjGLXy2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jul 2023 19:53:52 -0400
-Received: from out-63.mta1.migadu.com (out-63.mta1.migadu.com [95.215.58.63])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3AB21BF6
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:53:50 -0700 (PDT)
-Date:   Wed, 12 Jul 2023 19:53:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1689206027;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yBbiZPgu2/j2Fa+PQjjTa+JWWHeCQ+gb4zvd8fQ/O2U=;
-        b=X4/F4DWKUS7YK0Qkv05Gy9bs8fZ3ey/D5SMQwRXeN/aPm7A2jz+s0lPZtdOHgg6ajtCHRd
-        hkyFyZ84fnVDDijHzp73tdR8QNsIpthNS+C1DwKth71R002qNzsSMVjGXlXDtNtMDweWHu
-        jmWBbBEgnYcx3tPWNep+nNzI7CI4uuI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-bcachefs@vger.kernel.org,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 29/32] lib/string_helpers: string_get_size() now returns
- characters wrote
-Message-ID: <20230712235343.wi5fryoqmqj333qo@moria.home.lan>
-References: <20230509165657.1735798-1-kent.overstreet@linux.dev>
- <20230509165657.1735798-30-kent.overstreet@linux.dev>
- <202307121248.36919B223@keescook>
- <20230712201931.kuksw5zmuwah7tqs@moria.home.lan>
- <202307121525.B3B6153D8@keescook>
+        Wed, 12 Jul 2023 19:54:28 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E8ED1FC0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:54:27 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b89114266dso1423525ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1689206067; x=1691798067;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WvkFiyqULDxpTvgtRj4icSA9iUWkpiYfk5PF0EtUrTI=;
+        b=bmOM344cC3FsZrp85zCEuMvefaKXvyZ29nJcNSM2VxsVpaPyDIQO7SUmFD0FD1faQs
+         avgbhXIemaecM59GyeF5bWuv1hkRIGlIkVgycsHrD+BKt4lifLjLBZl9hnhXrkL/Fvhc
+         izik/yu9ygd36Ra8QwopPBqHdRTovzG3L8yrc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689206067; x=1691798067;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WvkFiyqULDxpTvgtRj4icSA9iUWkpiYfk5PF0EtUrTI=;
+        b=aGe4qHh7UWgZL5GnvHgNBW+r0z2QQmX7lxcfo7NoYdXWnjtog775N3rAIkVm11rGJ3
+         Ya4JWov+gpD0hEf3OqmLFdTSjs7qvMXV1BU9qgskZrc2I/D7mXMTGonC0VF073BmPjP2
+         o3Qlj85ASfA1mKWHS3gtM3530XVyatFAlQp/kywVhF9npwI6v/mTkx3ZnMtbshYkgyEn
+         0/wTW2kS6dlRvvxBljqODZ13L9MUQ86xXO/82VI5URdwrgr0lC/iSoOY5iijQsxlGhoy
+         d/NtIE3MCr+Oyc2MvdtXGzXEdS9xfy2ZPvF3xzM7Hu7Ss8f35KdcHjQhokWzIK/gSDTq
+         GqOg==
+X-Gm-Message-State: ABy/qLanw/3hq0wtkKeMwhM1MmS39Ptg5GFYopYk7SbmvUjJDaFsjHJ/
+        wkrAVCjeJ6HzEqpG1T3RmwIkKg==
+X-Google-Smtp-Source: APBJJlEQsAuK2FjOXsLLwedVTL2+xDqUAFVigL9HsD7VrSvCaYnqXJH1eTzZvJK9JyPR+/lZAQjrlw==
+X-Received: by 2002:a17:903:246:b0:1b7:f73d:524 with SMTP id j6-20020a170903024600b001b7f73d0524mr98592plh.43.1689206066921;
+        Wed, 12 Jul 2023 16:54:26 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c11-20020a170902724b00b001b53d3d8f3dsm4493451pll.299.2023.07.12.16.54.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jul 2023 16:54:26 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 16:54:26 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        linux-hardening@vger.kernel.org,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kalle Valo <kvalo@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] wifi: mt76: Replace strlcpy with strscpy
+Message-ID: <202307121653.4A9C69C655@keescook>
+References: <20230703181256.3712079-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202307121525.B3B6153D8@keescook>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20230703181256.3712079-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 03:38:44PM -0700, Kees Cook wrote:
-> Heh, yeah, I've been trying to aim people at using seq_buf instead of
-> a long series of snprintf/strlcat/etc calls. Where can I look at how
-> you wired this up to seq_buf/printbuf? I had trouble finding it when I
-> looked before. I'd really like to find a way to do it without leaving
-> around foot-guns for future callers of string_get_size(). :)
+On Mon, Jul 03, 2023 at 06:12:56PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
 > 
-> I found the printbuf series:
-> https://lore.kernel.org/lkml/20220808024128.3219082-1-willy@infradead.org/
-> It seems there are some nice improvements in there. It'd be really nice
-> if seq_buf could just grow those changes. Adding a static version of
-> seq_buf_init to be used like you have PRINTBUF_EXTERN would be nice
-> (or even a statically sized initializer). And much of the conversions
-> is just changing types and functions. If we can leave all that alone,
-> things become MUCH easier to review, etc, etc. I'd *love* to see an
-> incremental improvement for seq_buf, especially the heap-allocation
-> part.
+> Direct replacement is safe here since DEV_ASSIGN is only used by
+> TRACE macros and the return values are ignored.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-Well, I raised that with Steve way back when I was starting on the
-conversions of existing code, and I couldn't get any communication out
-him regarding making those changes to seq_buf.
+Looks good -- thing is using return values from the macros.
 
-So, I'd _love_ to resurrect that patch series and get it in after the
-bcachefs merger, but don't expect me to go back and redo everything :)
-the amount of code in existing seq_buf users is fairly small compared to
-bcachef's printbuf usage, and what that patch series does in the rest of
-the kernel anyways.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-I'd rather save that energy for ditching the seq_file interface and
-making that just use a printbuf - clean up that bit of API
-fragmentation.
+-- 
+Kees Cook
