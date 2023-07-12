@@ -2,80 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A170C001DD
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 18:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FE7EB64DA
+	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 18:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232839AbjGLSEJ (ORCPT
+        id S230393AbjGLSY5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jul 2023 14:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56586 "EHLO
+        Wed, 12 Jul 2023 14:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231775AbjGLSEI (ORCPT
+        with ESMTP id S229649AbjGLSY4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jul 2023 14:04:08 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F1F91FD2
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 11:04:07 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b89bc52cd1so34189275ad.1
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 11:04:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1689185047; x=1691777047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5DPqQvrqEcuM8QfMK2D4w0RCKWDpgX6iSDHJktjRFe4=;
-        b=CrUIJ2s7hBFpEhiEyQkj4m8810Y6ZbMHKQwSlkM864oZPBGY6CgroF8QM60cAaxc73
-         eoq2Vp6DjLRlMAKlpnLaGvnCzwxY6BH5UvjZOy+sIkxWN0zlbDG+tPlV9CDB2uLFWh38
-         penysPKf1wJJWYaoUD+7pmHuSmD/cNmFY0RKE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689185047; x=1691777047;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5DPqQvrqEcuM8QfMK2D4w0RCKWDpgX6iSDHJktjRFe4=;
-        b=VmplGwn8bKM7WPmv9gNfDT3pSPU8t444Y3TZr3PDDOTemdZmiNf/+3mqP9Q/Lsps5j
-         Wkfox5WTo0Sa7Jq4qYxorDp2jr8Qjmp4+GD8N5iy/d9jFg3f7dVKMLBiKTNryxnDnCVU
-         YgeKSICHguPOrhwXg8AT/52mUH9EFVmJs1mju/C76xaogaFVuKtl4u8hdm57ij/MBztW
-         OW/bv+xPWk2son2QiD96M9LsJg9uaLRrUSbDUZn0NUNhqp8tWAH3wzO8aRHRLAlvgP9B
-         D1xY4IERHYrVuTweBdUDAko2vSIzZ2dmva+h/vhDmA3DCnlRlZpBfySipcec6OD6OW8w
-         MFGA==
-X-Gm-Message-State: ABy/qLaPFIIu65J+MScSPAwqe372YZzUww5klcA8z95c8fWMI3jW3yoy
-        RexvNWUWLMjzMwMvWZbBKH/iZA==
-X-Google-Smtp-Source: APBJJlGiYUJifT1keXdZg9+4cHh4iEQYO+9aEAZ/+ymxyR4AFfMgTGdOVTMfY6nLSwvJbQFsDkZW2w==
-X-Received: by 2002:a17:902:b691:b0:1b8:c1f:fd2c with SMTP id c17-20020a170902b69100b001b80c1ffd2cmr13628055pls.33.1689185046857;
-        Wed, 12 Jul 2023 11:04:06 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 21-20020a170902c21500b001b9d88a4d1asm4246172pll.289.2023.07.12.11.04.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 11:04:06 -0700 (PDT)
-Date:   Wed, 12 Jul 2023 11:04:05 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-hardening@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jean Delvare <jdelvare@suse.com>
-Subject: Re: [PATCH] hwmon: Remove strlcpy occurences
-Message-ID: <202307121100.A6E650B@keescook>
-References: <20230712144429.2845940-1-azeemshaikh38@gmail.com>
- <3034082b-4ec8-2a8d-35a2-2551e9feef34@roeck-us.net>
+        Wed, 12 Jul 2023 14:24:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64FEE1BE3;
+        Wed, 12 Jul 2023 11:24:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EAADE6189F;
+        Wed, 12 Jul 2023 18:24:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6E98C433C8;
+        Wed, 12 Jul 2023 18:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689186294;
+        bh=oiL8B5T0SF7z89hecNy7VIEQawHKk0jVhieQ+mQfndw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BDqP0+ogAMJEpRGdPK3N+vTGpYBYsDyQIiifRNqv1xyWIUnXS3Whnp/ZJcxMD2PzU
+         vcnya0Umb/RBkCNhcsI3/lriYJj1y6EGBvV5eX2jPXEIOkzioX0cNlCIN0euhDdDaE
+         b2YxwZstHOlImIXjFY4e4F21Lar4uil/Z7OADLfv/z9ijlutaAr8203dJOk3nuB6iR
+         w6+P6iDVfAWyy80OnY//7/8FR/CaJ6DLY05pnt9FizZSo/4BPZnJphQ6FZkugVA0bE
+         +dWjugeNq6++3Boy/w1UrlQ+9hi0z7+vOVo3teNTLZksBtxctr7D8Di8S6bHl1i+HW
+         Alz75aGcJBmPg==
+Date:   Wed, 12 Jul 2023 12:25:45 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jan Kara <jack@suse.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] udf: Fix -Wstringop-overflow warnings
+Message-ID: <ZK7wKS0NgZPfqrZu@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3034082b-4ec8-2a8d-35a2-2551e9feef34@roeck-us.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 08:16:39AM -0700, Guenter Roeck wrote:
-> On 7/12/23 07:44, Azeem Shaikh wrote:
-> > [...]
-> > +	len = strlen(result);
-> >   	return simple_read_from_buffer(buf, count, ppos, tbuf, len);
-> 
-> This still copies tbuf, meaning all those constant strings won't actually
-> be reported.
+Use unsigned type in call to macro mint_t(). This avoids confusing the
+compiler about possible negative values that would cause the value in
+_len_ to wrap around.
 
-Ah dang, thanks for catching that. Yeah, "tbuf" should be replaced by
-"result" in the simple_read_from_buffer().
+Fixes the following -Wstringop-warnings seen when building ARM
+architecture with allyesconfig (GCC 13):
+fs/udf/directory.c: In function 'udf_copy_fi':
+include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' specified bound between 2147483648 and 4294967295 exceeds maximum object size 2147483647 [-Wstringop-overflow=]
+   57 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
+  648 |         __underlying_##op(p, q, __fortify_size);                        \
+      |         ^~~~~~~~~~~~~
+include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
+  693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+fs/udf/directory.c:99:9: note: in expansion of macro 'memcpy'
+   99 |         memcpy(&iter->fi, iter->bh[0]->b_data + off, len);
+      |         ^~~~~~
+include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' specified bound between 2147483648 and 4294967295 exceeds maximum object size 2147483647 [-Wstringop-overflow=]
+   57 | #define __underlying_memcpy     __builtin_memcpy
+      |                                 ^
+include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
+  648 |         __underlying_##op(p, q, __fortify_size);                        \
+      |         ^~~~~~~~~~~~~
+include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
+  693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
+      |                          ^~~~~~~~~~~~~~~~~~~~
+fs/udf/directory.c:99:9: note: in expansion of macro 'memcpy'
+   99 |         memcpy(&iter->fi, iter->bh[0]->b_data + off, len);
+      |         ^~~~~~
+  AR      fs/udf/built-in.a
 
+This helps with the ongoing efforts to globally enable
+-Wstringop-overflow.
+
+Link: https://github.com/KSPP/linux/issues/329
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ fs/udf/directory.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/udf/directory.c b/fs/udf/directory.c
+index 1c775e072b2f..93153665eb37 100644
+--- a/fs/udf/directory.c
++++ b/fs/udf/directory.c
+@@ -95,7 +95,7 @@ static int udf_copy_fi(struct udf_fileident_iter *iter)
+ 	}
+ 
+ 	off = iter->pos & (blksize - 1);
+-	len = min_t(int, sizeof(struct fileIdentDesc), blksize - off);
++	len = min_t(u32, sizeof(struct fileIdentDesc), blksize - off);
+ 	memcpy(&iter->fi, iter->bh[0]->b_data + off, len);
+ 	if (len < sizeof(struct fileIdentDesc))
+ 		memcpy((char *)(&iter->fi) + len, iter->bh[1]->b_data,
 -- 
-Kees Cook
+2.34.1
+
