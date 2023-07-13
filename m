@@ -2,227 +2,496 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59A8C001B0
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 13:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE37AC001B0
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 14:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235336AbjGMN05 (ORCPT
+        id S233747AbjGMOIR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Jul 2023 09:26:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59806 "EHLO
+        Thu, 13 Jul 2023 10:08:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235314AbjGMN0j (ORCPT
+        with ESMTP id S232880AbjGMOIQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Jul 2023 09:26:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F68359E;
-        Thu, 13 Jul 2023 06:26:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CEACA61087;
-        Thu, 13 Jul 2023 13:26:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45409C433C7;
-        Thu, 13 Jul 2023 13:26:10 +0000 (UTC)
-Date:   Thu, 13 Jul 2023 09:26:05 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH] tracing: Add back FORTIFY_SOURCE logic to kernel_stack
- event structure
-Message-ID: <20230713092605.2ddb9788@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 13 Jul 2023 10:08:16 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649361998;
+        Thu, 13 Jul 2023 07:08:11 -0700 (PDT)
+Received: from dggpeml100024.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R1xFF3XZBzNm63;
+        Thu, 13 Jul 2023 22:04:49 +0800 (CST)
+Received: from [10.67.110.112] (10.67.110.112) by
+ dggpeml100024.china.huawei.com (7.185.36.115) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Thu, 13 Jul 2023 22:08:06 +0800
+Message-ID: <45239723-3edd-cd89-7731-bc18edfcd3d9@huawei.com>
+Date:   Thu, 13 Jul 2023 22:08:06 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v4] Randomized slab caches for kmalloc()
+Content-Language: en-US
+To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Christoph Lameter <cl@linux.com>, Tejun Heo <tj@kernel.org>,
+        Dennis Zhou <dennis@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
+CC:     Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Pedro Falcato <pedro.falcato@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Wang Weiyang <wangweiyang2@huawei.com>, <linux-mm@kvack.org>,
+        <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <gongruiqi1@huawei.com>
+References: <20230626031835.2279738-1-gongruiqi@huaweicloud.com>
+From:   xiujianfeng <xiujianfeng@huawei.com>
+In-Reply-To: <20230626031835.2279738-1-gongruiqi@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.112]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml100024.china.huawei.com (7.185.36.115)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-For backward compatibility, older tooling expects to see the kernel_stack
-event with a "caller" field that is a fixed size array of 8 addresses. The
-code now supports more than 8 with an added "size" field that states the
-real number of entries. But the "caller" field still just looks like a
-fixed size to user space.
 
-Since the tracing macros that create the user space format files also
-creates the structures that those files represent, the kernel_stack event
-structure had its "caller" field a fixed size of 8, but in reality, when
-it is allocated on the ring buffer, it can hold more if the stack trace is
-bigger that 8 functions. The copying of these entries was simply done with
-a memcpy():
+On 2023/6/26 11:18, GONG, Ruiqi wrote:
+> When exploiting memory vulnerabilities, "heap spraying" is a common
+> technique targeting those related to dynamic memory allocation (i.e. the
+> "heap"), and it plays an important role in a successful exploitation.
+> Basically, it is to overwrite the memory area of vulnerable object by
+> triggering allocation in other subsystems or modules and therefore
+> getting a reference to the targeted memory location. It's usable on
+> various types of vulnerablity including use after free (UAF), heap out-
+> of-bound write and etc.
+> 
+> There are (at least) two reasons why the heap can be sprayed: 1) generic
+> slab caches are shared among different subsystems and modules, and
+> 2) dedicated slab caches could be merged with the generic ones.
+> Currently these two factors cannot be prevented at a low cost: the first
+> one is a widely used memory allocation mechanism, and shutting down slab
+> merging completely via `slub_nomerge` would be overkill.
+> 
+> To efficiently prevent heap spraying, we propose the following approach:
+> to create multiple copies of generic slab caches that will never be
+> merged, and random one of them will be used at allocation. The random
+> selection is based on the address of code that calls `kmalloc()`, which
+> means it is static at runtime (rather than dynamically determined at
+> each time of allocation, which could be bypassed by repeatedly spraying
+> in brute force). In other words, the randomness of cache selection will
+> be with respect to the code address rather than time, i.e. allocations
+> in different code paths would most likely pick different caches,
+> although kmalloc() at each place would use the same cache copy whenever
+> it is executed. In this way, the vulnerable object and memory allocated
+> in other subsystems and modules will (most probably) be on different
+> slab caches, which prevents the object from being sprayed.
+> 
+> Meanwhile, the static random selection is further enhanced with a
+> per-boot random seed, which prevents the attacker from finding a usable
+> kmalloc that happens to pick the same cache with the vulnerable
+> subsystem/module by analyzing the open source code. In other words, with
+> the per-boot seed, the random selection is static during each time the
+> system starts and runs, but not across different system startups.
+> 
+> The overhead of performance has been tested on a 40-core x86 server by
+> comparing the results of `perf bench all` between the kernels with and
+> without this patch based on the latest linux-next kernel, which shows
+> minor difference. A subset of benchmarks are listed below:
+> 
+>                 sched/  sched/  syscall/       mem/       mem/
+>              messaging    pipe     basic     memcpy     memset
+>                  (sec)   (sec)     (sec)   (GB/sec)   (GB/sec)
+> 
+> control1         0.019   5.459     0.733  15.258789  51.398026
+> control2         0.019   5.439     0.730  16.009221  48.828125
+> control3         0.019   5.282     0.735  16.009221  48.828125
+> control_avg      0.019   5.393     0.733  15.759077  49.684759
+> 
+> experiment1      0.019   5.374     0.741  15.500992  46.502976
+> experiment2      0.019   5.440     0.746  16.276042  51.398026
+> experiment3      0.019   5.242     0.752  15.258789  51.398026
+> experiment_avg   0.019   5.352     0.746  15.678608  49.766343
+> 
+> The overhead of memory usage was measured by executing `free` after boot
+> on a QEMU VM with 1GB total memory, and as expected, it's positively
+> correlated with # of cache copies:
+> 
+>            control  4 copies  8 copies  16 copies
+> 
+> total       969.8M    968.2M    968.2M     968.2M
+> used         20.0M     21.9M     24.1M      26.7M
+> free        936.9M    933.6M    931.4M     928.6M
+> available   932.2M    928.8M    926.6M     923.9M
+> 
+> Co-developed-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+> Signed-off-by: GONG, Ruiqi <gongruiqi@huaweicloud.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
+> 
+> v4:
+>   - Set # of cache copies to 16 and remove config selection.
+>   - Shorten "kmalloc-random-" to "kmalloc-rnd-".
+>   - Update commit log and config's help paragraph.
+>   - Fine-tune PERCPU_DYNAMIC_SIZE_SHIFT to 12 instead of 13 (enough to
+>     pass compilation with allmodconfig and CONFIG_SLUB_TINY=n).
+>   - Some cleanup and typo fixing.
+> 
+> v3:
+>   - Replace SLAB_RANDOMSLAB with the new existing SLAB_NO_MERGE flag.
+>   - Shorten long code lines by wrapping and renaming.
+>   - Update commit message with latest perf benchmark and additional
+>     theorectical explanation.
+>   - Remove "RFC" from patch title and make it a formal patch
+>   - Link: https://lore.kernel.org/all/20230616111843.3677378-1-gongruiqi@huaweicloud.com/
+> 
+> v2:
+>   - Use hash_64() and a per-boot random seed to select kmalloc() caches.
+>   - Change acceptable # of caches from [4,16] to {2,4,8,16}, which is
+>     more compatible with hashing.
+>   - Supplement results of performance and memory overhead tests.
+>   - Link: https://lore.kernel.org/all/20230508075507.1720950-1-gongruiqi1@huawei.com/
+> 
+> v1:
+>   - Link: https://lore.kernel.org/all/20230315095459.186113-1-gongruiqi1@huawei.com/
+> 
+>  include/linux/percpu.h  | 12 ++++++++---
+>  include/linux/slab.h    | 25 ++++++++++++++++++----
+>  mm/Kconfig              | 16 ++++++++++++++
+>  mm/kfence/kfence_test.c |  6 ++++--
+>  mm/slab.c               |  2 +-
+>  mm/slab.h               |  2 +-
+>  mm/slab_common.c        | 47 ++++++++++++++++++++++++++++++++++++-----
+>  7 files changed, 94 insertions(+), 16 deletions(-)
+> 
+> diff --git a/include/linux/percpu.h b/include/linux/percpu.h
+> index 42125cf9c506..7692b5559098 100644
+> --- a/include/linux/percpu.h
+> +++ b/include/linux/percpu.h
+> @@ -34,6 +34,12 @@
+>  #define PCPU_BITMAP_BLOCK_BITS		(PCPU_BITMAP_BLOCK_SIZE >>	\
+>  					 PCPU_MIN_ALLOC_SHIFT)
+>  
+> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> +#define PERCPU_DYNAMIC_SIZE_SHIFT      12
+> +#else
+> +#define PERCPU_DYNAMIC_SIZE_SHIFT      10
+> +#endif
+> +
+>  /*
+>   * Percpu allocator can serve percpu allocations before slab is
+>   * initialized which allows slab to depend on the percpu allocator.
+> @@ -41,7 +47,7 @@
+>   * for this.  Keep PERCPU_DYNAMIC_RESERVE equal to or larger than
+>   * PERCPU_DYNAMIC_EARLY_SIZE.
+>   */
+> -#define PERCPU_DYNAMIC_EARLY_SIZE	(20 << 10)
+> +#define PERCPU_DYNAMIC_EARLY_SIZE	(20 << PERCPU_DYNAMIC_SIZE_SHIFT)
+>  
+>  /*
+>   * PERCPU_DYNAMIC_RESERVE indicates the amount of free area to piggy
+> @@ -55,9 +61,9 @@
+>   * intelligent way to determine this would be nice.
+>   */
+>  #if BITS_PER_LONG > 32
+> -#define PERCPU_DYNAMIC_RESERVE		(28 << 10)
+> +#define PERCPU_DYNAMIC_RESERVE		(28 << PERCPU_DYNAMIC_SIZE_SHIFT)
+>  #else
+> -#define PERCPU_DYNAMIC_RESERVE		(20 << 10)
+> +#define PERCPU_DYNAMIC_RESERVE		(20 << PERCPU_DYNAMIC_SIZE_SHIFT)
+>  #endif
+>  
+>  extern void *pcpu_base_addr;
+> diff --git a/include/linux/slab.h b/include/linux/slab.h
+> index 791f7453a04f..747fc2587b56 100644
+> --- a/include/linux/slab.h
+> +++ b/include/linux/slab.h
+> @@ -18,6 +18,7 @@
+>  #include <linux/types.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/percpu-refcount.h>
+> +#include <linux/hash.h>
+>  
+>  
+>  /*
+> @@ -342,6 +343,13 @@ static inline unsigned int arch_slab_minalign(void)
+>  #define SLAB_OBJ_MIN_SIZE      (KMALLOC_MIN_SIZE < 16 ? \
+>                                 (KMALLOC_MIN_SIZE) : 16)
+>  
+> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> +#define RANDOM_KMALLOC_CACHES_NR	16 // # of cache copies
+> +#define RANDOM_KMALLOC_CACHES_BITS	4  // =log2(_NR), for hashing
 
-  size = nr_entries * sizeof(unsigned long);
-  memcpy(entry->caller, fstack->calls, size);
+It's unnecessary to define RANDOM_KMALLOC_CACHES_BITS, use
+ilog2(RANDOM_KMALLOC_CACHES_NR) directly in kmalloc_type().
 
-The FORTIFY_SOURCE logic noticed at runtime that when the nr_entries was
-larger than 8, that the memcpy() was writing more than what the structure
-stated it can hold and it complained about it. This is because the
-FORTIFY_SOURCE code is unaware that the amount allocated is actually
-enough to hold the size. It does not expect that a fixed size field will
-hold more than the fixed size.
-
-This was originally solved by hiding the caller assignment with some
-pointer arithmetic.
-
-  ptr = ring_buffer_data();
-  entry = ptr;
-
-  ptr += offsetof(typeof(*entry), caller);
-  memcpy(ptr, fstack->calls, size);
-
-But it is considered bad form to hide from kernel hardening. Instead, make
-it work nicely with FORTIFY_SOURCE by adding a new __stack_array() macro
-that is specific for this one special use case. The macro will take 4
-arguments: type, item, len, field (whereas the __array() macro takes just
-the first three). This macro will act just like the __array() macro when
-creating the code to deal with the format file that is exposed to user
-space. But for the kernel, it will turn the caller field into:
-
-  type item[] __counted_by(field);
-
-or for this instance:
-
-  unsigned long caller[] __counted_by(size);
-
-Now the kernel code can expose the assignment of the caller to the
-FORTIFY_SOURCE and everyone is happy!
-
-Link: https://lore.kernel.org/linux-trace-kernel/20230712105235.5fc441aa@gandalf.local.home/
-
-Suggested-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c         | 25 ++++---------------------
- kernel/trace/trace.h         | 10 ++++++++++
- kernel/trace/trace_entries.h |  2 +-
- kernel/trace/trace_export.c  |  9 +++++++++
- 4 files changed, 24 insertions(+), 22 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 20122eeccf97..ca8d3aa1058a 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -3118,7 +3118,6 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
- 	struct ftrace_stack *fstack;
- 	struct stack_entry *entry;
- 	int stackidx;
--	void *ptr;
- 
- 	/*
- 	 * Add one, for this function and the call to save_stack_trace()
-@@ -3156,32 +3155,16 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
- 		nr_entries = stack_trace_save(fstack->calls, size, skip);
- 	}
- 
--	size = nr_entries * sizeof(unsigned long);
- 	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
--				    (sizeof(*entry) - sizeof(entry->caller)) + size,
-+				    struct_size(entry, caller, nr_entries),
- 				    trace_ctx);
- 	if (!event)
- 		goto out;
--	ptr = ring_buffer_event_data(event);
--	entry = ptr;
--
--	/*
--	 * For backward compatibility reasons, the entry->caller is an
--	 * array of 8 slots to store the stack. This is also exported
--	 * to user space. The amount allocated on the ring buffer actually
--	 * holds enough for the stack specified by nr_entries. This will
--	 * go into the location of entry->caller. Due to string fortifiers
--	 * checking the size of the destination of memcpy() it triggers
--	 * when it detects that size is greater than 8. To hide this from
--	 * the fortifiers, we use "ptr" and pointer arithmetic to assign caller.
--	 *
--	 * The below is really just:
--	 *   memcpy(&entry->caller, fstack->calls, size);
--	 */
--	ptr += offsetof(typeof(*entry), caller);
--	memcpy(ptr, fstack->calls, size);
-+	entry = ring_buffer_event_data(event);
- 
- 	entry->size = nr_entries;
-+	memcpy(&entry->caller, fstack->calls,
-+	       flex_array_size(entry, caller, nr_entries));
- 
- 	if (!call_filter_check_discard(call, entry, buffer, event))
- 		__buffer_unlock_commit(buffer, event);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index ed7906b13f09..f0bf0467bc0e 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -77,6 +77,16 @@ enum trace_type {
- #undef __array
- #define __array(type, item, size)	type	item[size];
- 
-+/*
-+ * For backward compatibility, older user space expects to see the
-+ * kernel_stack event with a fixed size caller field. But today the fix
-+ * size is ignored by the kernel, and the real structure is dynamic.
-+ * Expose to user space: "unsigned long caller[8];" but the real structure
-+ * will be "unsigned long caller[] __counted_by(size)"
-+ */
-+#undef __stack_array
-+#define __stack_array(type, item, size, field)		type item[] __counted_by(field);
-+
- #undef __array_desc
- #define __array_desc(type, container, item, size)
- 
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index 340b2fa98218..c47422b20908 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -190,7 +190,7 @@ FTRACE_ENTRY(kernel_stack, stack_entry,
- 
- 	F_STRUCT(
- 		__field(	int,		size	)
--		__array(	unsigned long,	caller,	FTRACE_STACK_ENTRIES	)
-+		__stack_array(	unsigned long,	caller,	FTRACE_STACK_ENTRIES, size)
- 	),
- 
- 	F_printk("\t=> %ps\n\t=> %ps\n\t=> %ps\n"
-diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
-index 58f3946081e2..1698fc22afa0 100644
---- a/kernel/trace/trace_export.c
-+++ b/kernel/trace/trace_export.c
-@@ -51,6 +51,9 @@ static int ftrace_event_register(struct trace_event_call *call,
- #undef __array
- #define __array(type, item, size)			type item[size];
- 
-+#undef __stack_array
-+#define __stack_array(type, item, size, field)		__array(type, item, size)
-+
- #undef __array_desc
- #define __array_desc(type, container, item, size)	type item[size];
- 
-@@ -114,6 +117,9 @@ static void __always_unused ____ftrace_check_##name(void)		\
- 	is_signed_type(_type), .filter_type = FILTER_OTHER,			\
- 	.len = _len },
- 
-+#undef __stack_array
-+#define __stack_array(_type, _item, _len, _field) __array(_type, _item, _len)
-+
- #undef __array_desc
- #define __array_desc(_type, _container, _item, _len) __array(_type, _item, _len)
- 
-@@ -149,6 +155,9 @@ static struct trace_event_fields ftrace_event_fields_##name[] = {	\
- #undef __array
- #define __array(type, item, len)
- 
-+#undef __stack_array
-+#define __stack_array(type, item, len, field)
-+
- #undef __array_desc
- #define __array_desc(type, container, item, len)
- 
--- 
-2.40.1
-
+> +#else
+> +#define RANDOM_KMALLOC_CACHES_NR	1
+> +#endif
+> +
+>  /*
+>   * Whenever changing this, take care of that kmalloc_type() and
+>   * create_kmalloc_caches() still work as intended.
+> @@ -351,7 +359,9 @@ static inline unsigned int arch_slab_minalign(void)
+>   * kmem caches can have both accounted and unaccounted objects.
+>   */
+>  enum kmalloc_cache_type {
+> -	KMALLOC_NORMAL = 0,
+> +	KMALLOC_RANDOM_START = 0,
+> +	KMALLOC_RANDOM_END = KMALLOC_RANDOM_START + RANDOM_KMALLOC_CACHES_NR - 1,
+> +	KMALLOC_NORMAL = KMALLOC_RANDOM_END,
+>  #ifndef CONFIG_ZONE_DMA
+>  	KMALLOC_DMA = KMALLOC_NORMAL,
+>  #endif
+> @@ -383,14 +393,21 @@ kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
+>  	(IS_ENABLED(CONFIG_ZONE_DMA)   ? __GFP_DMA : 0) |	\
+>  	(IS_ENABLED(CONFIG_MEMCG_KMEM) ? __GFP_ACCOUNT : 0))
+>  
+> -static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags)
+> +extern unsigned long random_kmalloc_seed;
+> +
+> +static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags, unsigned long caller)
+>  {
+>  	/*
+>  	 * The most common case is KMALLOC_NORMAL, so test for it
+>  	 * with a single branch for all the relevant flags.
+>  	 */
+>  	if (likely((flags & KMALLOC_NOT_NORMAL_BITS) == 0))
+> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> +		return KMALLOC_RANDOM_START + hash_64(caller ^ random_kmalloc_seed,
+> +						      RANDOM_KMALLOC_CACHES_BITS);
+> +#else
+>  		return KMALLOC_NORMAL;
+> +#endif
+>  
+>  	/*
+>  	 * At least one of the flags has to be set. Their priorities in
+> @@ -577,7 +594,7 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+>  
+>  		index = kmalloc_index(size);
+>  		return kmalloc_trace(
+> -				kmalloc_caches[kmalloc_type(flags)][index],
+> +				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+>  				flags, size);
+>  	}
+>  	return __kmalloc(size, flags);
+> @@ -593,7 +610,7 @@ static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t fla
+>  
+>  		index = kmalloc_index(size);
+>  		return kmalloc_node_trace(
+> -				kmalloc_caches[kmalloc_type(flags)][index],
+> +				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+>  				flags, node, size);
+>  	}
+>  	return __kmalloc_node(size, flags, node);
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index a3c95338cd3a..e9dc606c9317 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -337,6 +337,22 @@ config SLUB_CPU_PARTIAL
+>  	  which requires the taking of locks that may cause latency spikes.
+>  	  Typically one would choose no for a realtime system.
+>  
+> +config RANDOM_KMALLOC_CACHES
+> +	default n
+> +	depends on SLUB
+> +	bool "Random slab caches for normal kmalloc"
+> +	help
+> +	  A hardening feature that creates multiple copies of slab caches for
+> +	  normal kmalloc allocation and makes kmalloc randomly pick one based
+> +	  on code address, which makes the attackers unable to spray vulnerable
+> +	  memory objects on the heap for the purpose of exploiting memory
+> +	  vulnerabilities.
+> +
+> +	  Currently the number of copies is set to 16, a reasonably large value
+> +	  that effectively diverges the memory objects allocated for different
+> +	  subsystems or modules into different caches, at the expense of about
+> +	  7 MB of memory overhead.
+> +
+>  endmenu # SLAB allocator options
+>  
+>  config SHUFFLE_PAGE_ALLOCATOR
+> diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
+> index 9e008a336d9f..7f5ffb490328 100644
+> --- a/mm/kfence/kfence_test.c
+> +++ b/mm/kfence/kfence_test.c
+> @@ -212,7 +212,8 @@ static void test_cache_destroy(void)
+>  
+>  static inline size_t kmalloc_cache_alignment(size_t size)
+>  {
+> -	return kmalloc_caches[kmalloc_type(GFP_KERNEL)][__kmalloc_index(size, false)]->align;
+> +	enum kmalloc_cache_type type = kmalloc_type(GFP_KERNEL, _RET_IP_);
+> +	return kmalloc_caches[type][__kmalloc_index(size, false)]->align;
+>  }
+>  
+>  /* Must always inline to match stack trace against caller. */
+> @@ -282,8 +283,9 @@ static void *test_alloc(struct kunit *test, size_t size, gfp_t gfp, enum allocat
+>  
+>  		if (is_kfence_address(alloc)) {
+>  			struct slab *slab = virt_to_slab(alloc);
+> +			enum kmalloc_cache_type type = kmalloc_type(GFP_KERNEL, _RET_IP_);
+>  			struct kmem_cache *s = test_cache ?:
+> -					kmalloc_caches[kmalloc_type(GFP_KERNEL)][__kmalloc_index(size, false)];
+> +				kmalloc_caches[type][__kmalloc_index(size, false)];
+>  
+>  			/*
+>  			 * Verify that various helpers return the right values
+> diff --git a/mm/slab.c b/mm/slab.c
+> index 88194391d553..9ad3d0f2d1a5 100644
+> --- a/mm/slab.c
+> +++ b/mm/slab.c
+> @@ -1670,7 +1670,7 @@ static size_t calculate_slab_order(struct kmem_cache *cachep,
+>  			if (freelist_size > KMALLOC_MAX_CACHE_SIZE) {
+>  				freelist_cache_size = PAGE_SIZE << get_order(freelist_size);
+>  			} else {
+> -				freelist_cache = kmalloc_slab(freelist_size, 0u);
+> +				freelist_cache = kmalloc_slab(freelist_size, 0u, _RET_IP_);
+>  				if (!freelist_cache)
+>  					continue;
+>  				freelist_cache_size = freelist_cache->size;
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 6a5633b25eb5..4ebe3bdfc17c 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -282,7 +282,7 @@ void setup_kmalloc_cache_index_table(void);
+>  void create_kmalloc_caches(slab_flags_t);
+>  
+>  /* Find the kmalloc slab corresponding for a certain size */
+> -struct kmem_cache *kmalloc_slab(size_t, gfp_t);
+> +struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags, unsigned long caller);
+>  
+>  void *__kmem_cache_alloc_node(struct kmem_cache *s, gfp_t gfpflags,
+>  			      int node, size_t orig_size,
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index fe436d35f333..6f385956ef07 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -678,6 +678,11 @@ kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
+>  { /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
+>  EXPORT_SYMBOL(kmalloc_caches);
+>  
+> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> +unsigned long random_kmalloc_seed __ro_after_init;
+> +EXPORT_SYMBOL(random_kmalloc_seed);
+> +#endif
+> +
+>  /*
+>   * Conversion table for small slabs sizes / 8 to the index in the
+>   * kmalloc array. This is necessary for slabs < 192 since we have non power
+> @@ -720,7 +725,7 @@ static inline unsigned int size_index_elem(unsigned int bytes)
+>   * Find the kmem_cache structure that serves a given size of
+>   * allocation
+>   */
+> -struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
+> +struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags, unsigned long caller)
+>  {
+>  	unsigned int index;
+>  
+> @@ -735,7 +740,7 @@ struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
+>  		index = fls(size - 1);
+>  	}
+>  
+> -	return kmalloc_caches[kmalloc_type(flags)][index];
+> +	return kmalloc_caches[kmalloc_type(flags, caller)][index];
+>  }
+>  
+>  size_t kmalloc_size_roundup(size_t size)
+> @@ -753,7 +758,7 @@ size_t kmalloc_size_roundup(size_t size)
+>  		return PAGE_SIZE << get_order(size);
+>  
+>  	/* The flags don't matter since size_index is common to all. */
+> -	c = kmalloc_slab(size, GFP_KERNEL);
+> +	c = kmalloc_slab(size, GFP_KERNEL, _RET_IP_);
+>  	return c ? c->object_size : 0;
+>  }
+>  EXPORT_SYMBOL(kmalloc_size_roundup);
+> @@ -776,12 +781,36 @@ EXPORT_SYMBOL(kmalloc_size_roundup);
+>  #define KMALLOC_RCL_NAME(sz)
+>  #endif
+>  
+> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> +#define __KMALLOC_RANDOM_CONCAT(a, b) a ## b
+> +#define KMALLOC_RANDOM_NAME(N, sz) __KMALLOC_RANDOM_CONCAT(KMA_RAND_, N)(sz)
+> +#define KMA_RAND_1(sz)                  .name[KMALLOC_RANDOM_START +  0] = "kmalloc-rnd-01-" #sz,
+> +#define KMA_RAND_2(sz)  KMA_RAND_1(sz)  .name[KMALLOC_RANDOM_START +  1] = "kmalloc-rnd-02-" #sz,
+> +#define KMA_RAND_3(sz)  KMA_RAND_2(sz)  .name[KMALLOC_RANDOM_START +  2] = "kmalloc-rnd-03-" #sz,
+> +#define KMA_RAND_4(sz)  KMA_RAND_3(sz)  .name[KMALLOC_RANDOM_START +  3] = "kmalloc-rnd-04-" #sz,
+> +#define KMA_RAND_5(sz)  KMA_RAND_4(sz)  .name[KMALLOC_RANDOM_START +  4] = "kmalloc-rnd-05-" #sz,
+> +#define KMA_RAND_6(sz)  KMA_RAND_5(sz)  .name[KMALLOC_RANDOM_START +  5] = "kmalloc-rnd-06-" #sz,
+> +#define KMA_RAND_7(sz)  KMA_RAND_6(sz)  .name[KMALLOC_RANDOM_START +  6] = "kmalloc-rnd-07-" #sz,
+> +#define KMA_RAND_8(sz)  KMA_RAND_7(sz)  .name[KMALLOC_RANDOM_START +  7] = "kmalloc-rnd-08-" #sz,
+> +#define KMA_RAND_9(sz)  KMA_RAND_8(sz)  .name[KMALLOC_RANDOM_START +  8] = "kmalloc-rnd-09-" #sz,
+> +#define KMA_RAND_10(sz) KMA_RAND_9(sz)  .name[KMALLOC_RANDOM_START +  9] = "kmalloc-rnd-10-" #sz,
+> +#define KMA_RAND_11(sz) KMA_RAND_10(sz) .name[KMALLOC_RANDOM_START + 10] = "kmalloc-rnd-11-" #sz,
+> +#define KMA_RAND_12(sz) KMA_RAND_11(sz) .name[KMALLOC_RANDOM_START + 11] = "kmalloc-rnd-12-" #sz,
+> +#define KMA_RAND_13(sz) KMA_RAND_12(sz) .name[KMALLOC_RANDOM_START + 12] = "kmalloc-rnd-13-" #sz,
+> +#define KMA_RAND_14(sz) KMA_RAND_13(sz) .name[KMALLOC_RANDOM_START + 13] = "kmalloc-rnd-14-" #sz,
+> +#define KMA_RAND_15(sz) KMA_RAND_14(sz) .name[KMALLOC_RANDOM_START + 14] = "kmalloc-rnd-15-" #sz,
+> +#define KMA_RAND_16(sz) KMA_RAND_15(sz) .name[KMALLOC_RANDOM_START + 15] = "kmalloc-rnd-16-" #sz,
+> +#else // CONFIG_RANDOM_KMALLOC_CACHES
+> +#define KMALLOC_RANDOM_NAME(N, sz)
+> +#endif
+> +
+>  #define INIT_KMALLOC_INFO(__size, __short_size)			\
+>  {								\
+>  	.name[KMALLOC_NORMAL]  = "kmalloc-" #__short_size,	\
+>  	KMALLOC_RCL_NAME(__short_size)				\
+>  	KMALLOC_CGROUP_NAME(__short_size)			\
+>  	KMALLOC_DMA_NAME(__short_size)				\
+> +	KMALLOC_RANDOM_NAME(RANDOM_KMALLOC_CACHES_NR, __short_size)	\
+>  	.size = __size,						\
+>  }
+>  
+> @@ -890,6 +919,11 @@ new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
+>  		flags |= SLAB_CACHE_DMA;
+>  	}
+>  
+> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> +	if (type >= KMALLOC_RANDOM_START && type <= KMALLOC_RANDOM_END)
+> +		flags |= SLAB_NO_MERGE;
+> +#endif
+> +
+>  	if (minalign > ARCH_KMALLOC_MINALIGN) {
+>  		aligned_size = ALIGN(aligned_size, minalign);
+>  		aligned_idx = __kmalloc_index(aligned_size, false);
+> @@ -923,7 +957,7 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+>  	/*
+>  	 * Including KMALLOC_CGROUP if CONFIG_MEMCG_KMEM defined
+>  	 */
+> -	for (type = KMALLOC_NORMAL; type < NR_KMALLOC_TYPES; type++) {
+> +	for (type = KMALLOC_RANDOM_START; type < NR_KMALLOC_TYPES; type++) {
+>  		for (i = KMALLOC_SHIFT_LOW; i <= KMALLOC_SHIFT_HIGH; i++) {
+>  			if (!kmalloc_caches[type][i])
+>  				new_kmalloc_cache(i, type, flags);
+> @@ -941,6 +975,9 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+>  				new_kmalloc_cache(2, type, flags);
+>  		}
+>  	}
+> +#ifdef CONFIG_RANDOM_KMALLOC_CACHES
+> +	random_kmalloc_seed = get_random_u64();
+> +#endif
+>  
+>  	/* Kmalloc array is now usable */
+>  	slab_state = UP;
+> @@ -976,7 +1013,7 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node, unsigned long caller
+>  		return ret;
+>  	}
+>  
+> -	s = kmalloc_slab(size, flags);
+> +	s = kmalloc_slab(size, flags, caller);
+>  
+>  	if (unlikely(ZERO_OR_NULL_PTR(s)))
+>  		return s;
