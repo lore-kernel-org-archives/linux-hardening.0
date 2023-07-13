@@ -2,82 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E66EEB64DD
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 08:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BDEEB64DD
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 11:28:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231765AbjGMIiX (ORCPT
+        id S232806AbjGML2R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Jul 2023 04:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
+        Thu, 13 Jul 2023 07:28:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233398AbjGMIhy (ORCPT
+        with ESMTP id S234264AbjGML2I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Jul 2023 04:37:54 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AFF14EF5
-        for <linux-hardening@vger.kernel.org>; Thu, 13 Jul 2023 01:32:04 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-201-C7sYW67KNPG6e6sJsnGWqw-1; Thu, 13 Jul 2023 09:18:47 +0100
-X-MC-Unique: C7sYW67KNPG6e6sJsnGWqw-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 13 Jul
- 2023 09:18:45 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 13 Jul 2023 09:18:45 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>
-CC:     'Azeem Shaikh' <azeemshaikh38@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] kobject: Replace strlcpy with strscpy
-Thread-Topic: [PATCH] kobject: Replace strlcpy with strscpy
-Thread-Index: AQHZrdj8Qo2zsxXODk+YaMEZxqXK9K+zA4WggABClwCAAP0w0IACiCMAgACbHnA=
-Date:   Thu, 13 Jul 2023 08:18:45 +0000
-Message-ID: <24ccdb40832c4dc0a5376d76a9ea9ae2@AcuMS.aculab.com>
-References: <20230703180528.3709258-1-azeemshaikh38@gmail.com>
- <ad25bb8552704028860cf7a419c54fa3@AcuMS.aculab.com>
- <CADmuW3XOcGDBszYw80Dy03DXk3T25k8FNUrJWLKU9tL2znzanw@mail.gmail.com>
- <0aaa9355aa714e608091af2a5fca1373@AcuMS.aculab.com>
- <202307121651.04D1758@keescook>
-In-Reply-To: <202307121651.04D1758@keescook>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 13 Jul 2023 07:28:08 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C6918E;
+        Thu, 13 Jul 2023 04:28:07 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-51e5d9e20ecso713938a12.1;
+        Thu, 13 Jul 2023 04:28:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1689247686; x=1691839686;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KqGooZ9sePUQXEjYto5Vlnx9X4OCC5Lb+CkMJuu3W4w=;
+        b=Ib9fT9L1CHJhvYQOkATILlBpEjunv7kugRxcfoh2bAxHcAB1XxT3XfxFI7kYxJ97oR
+         lzD3o160L99zYAHqirdY4deywfV73bqS+SQBbI+J56wPTFd3X1ctecEsbgJcD/lt9+Zk
+         Uo7jv7uBgOuBGnPAaeQ4+8FwNdLT4m5UwybYAHKiPuh1W4uoeQeIHaj/yY2BeY0niXA2
+         wobmb+jL6YRSnjkoQZYXMPbQD4dEh0KqN+1vRtTmNCsGxSSZ74E2hpNgTu+46nIsUg1m
+         KOmEUjDLRe/0LpdwvKvTXEcCE90ZQyYkNRT+DDIlbcjurYXhI5cuj5MRjjUgo1TEtVUm
+         EJ1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689247686; x=1691839686;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KqGooZ9sePUQXEjYto5Vlnx9X4OCC5Lb+CkMJuu3W4w=;
+        b=jgmb1zL/K33ACQhx415Rbqx7mxT4iAtqWuMFe/s69pIvhYIIY67EiUb6dVW3eqvYkj
+         YqPI/3NkASVUzbK1O6z/a1t12KzihC85K3jptgkiL5NeNT6oPiAhNzboHKaplojYECkB
+         Loo91V/IYlYew7PSj+F5uKHDnFAg4JtZnxvoNbmJIaygyMzufmRrGIAr57gHBVVPpaC1
+         gt2sEHCVkNjuFAc6VZ0tfyRDLk88ze0RWCAgLmDSWDHQU1RlWo9srPAPi6B5pV11JHVf
+         Y2FaUAQKKaGR0yOLjOa8qWCKskyPVr2L/9+RSTDnj9AGiaCQe8cxWl/8bWgUiPJRybRa
+         8y9g==
+X-Gm-Message-State: ABy/qLa3FLl9vSTZpCUWsivhSw82/l7BRli5nDsCHNA5q7RaYoCkOBwX
+        Rzb0CkXnskq4/Foh0RnQJiLd99HJ7NSG72lmc/M=
+X-Google-Smtp-Source: APBJJlEPnNOZlGzLpNRTo6ErSuKGOdnoT9/D+9tpLpZIg3Bd8YbgZ6mMMEmppQtq0Y8UUje7ePrQ0KNtnfQ6thOFquc=
+X-Received: by 2002:aa7:d507:0:b0:51e:1a5d:bc8c with SMTP id
+ y7-20020aa7d507000000b0051e1a5dbc8cmr1393680edq.42.1689247685814; Thu, 13 Jul
+ 2023 04:28:05 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20230712194625.never.252-kees@kernel.org>
+In-Reply-To: <20230712194625.never.252-kees@kernel.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 13 Jul 2023 14:27:29 +0300
+Message-ID: <CAHp75VcUL+pchLdDk6VJgUrQYemD6pu-Pp3+nyrAr8yt6L+kuA@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Foolishly claim maintainership of string routines
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogS2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5vcmc+DQo+IFNlbnQ6IDEzIEp1bHkg
-MjAyMyAwMDo1Mw0KLi4uLg0KPiA+ID4gcHJfd2FybigiaW5pdF91ZXZlbnRfYXJndjogYnVmZmVy
-IHNpemUgb2YgJWQgdG9vIHNtYWxsIGZvciAlcywgbmVlZGVkDQo+ID4gPiAlZFxuIiwgYnVmZmVy
-X3NpemUsIHN1YnN5c3RlbSwgc3RybGVuKHN1YnN5c3RlbSkpOw0KPiA+ID4NCj4gPiA+IERvZXMg
-dGhhdCBzZWVtIGJldHRlcj8NCj4gDQo+IFllYWgsIHRoYXQnbGwgcmV0YWluIHRoZSBpbnRlbnRp
-b24gb2YgdGhlIHdhcm5pbmcuIEl0IHNob3VsZG4ndCByZWFsbHkNCj4gZXZlbiBiZSBwb3NzaWJs
-ZSB0byBoaXQgdGhhdCB3YXJuaW5nLCBzbyBJIGRvbid0IHRoaW5rIHdlIG5lZWQgdG8gd29ycnkN
-Cj4gYWJvdXQgdGhlICJleHRyYSIgY2FsbCB0byBzdHJsZW4oKS4NCj4gDQo+ID4gTm90IHdpdGgg
-dGhlIGp1c3RpZmljYXRpb24gZm9yIG5vdCB1c2luZyBzdHJsY3B5KCkgOi0pDQo+IA0KPiBXaGF0
-Pw0KDQpUaGUgY29tbWl0IG1lc3NhZ2Ugc2F5cyB0aGF0IHN0cmxjcHkoKSBpc24ndCB1c2VkIGJl
-Y2F1c2UNCm9mIHBvc3NpYmxlICdyZWFkIGJleW9uZCBidWZmZXIgZW5kJyAoZXRjKSBpZiBpdCBp
-c24ndA0KJ1wwJyB0ZXJtaW5hdGVkLg0KDQpCdXQgaGVyZSBpZiAoZXh0cmVtZWx5IHVubGlrZWx5
-KSB0aGUgc291cmNlIGlzbid0IHRlcm1pbmF0ZWQNCnRoZW4gdGhlIGV4dHJhIHJlYWRzIGdldCBk
-b25lIGFueXdheS4NClNvIHRoZSBjb21taXQgbWVzc2FnZSBqdXN0IGRvZXNuJ3QgbWF0Y2ggdGhl
-IGNoYW5nZS4NCg0KSSdkIGd1ZXNzIHRoYXQgaXQgaXMgcG9zc2libGUgZm9yIHRoZXJlIHRvIGJl
-IGluc3VmZmljaWVudCBzcGFjZS4NClByb2JhYmx5IGJlY2F1c2Ugb3RoZXIgc3RyaW5ncyBoYXZl
-IGZpbGxlZCB0aGUgYnVmZmVyLg0KVGhlIGVycm9yIG1lc3NhZ2UgbWlnaHQgYmUgYmV0dGVyIGFz
-Og0KCSJpbnN1ZmZpY2llbnQgYnVmZmVyIHNwYWNlICgldSBsZWZ0KSBmb3IgJXNcbiIsDQoJCWJ1
-ZmZlcl9zaXplLCBzdWJzeXN0ZW0pOw0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
-IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
-UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+On Wed, Jul 12, 2023 at 10:46=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
+>
+> Since the string API is tightly coupled with FORTIFY_SOURCE, I am
+> offering myself up as maintainer for it. Thankfully Andy is already a
+> reviewer and can keep me on the straight and narrow.
 
+Makes sense to me!
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  MAINTAINERS | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3be1bdfe8ecc..b639d6123856 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8672,8 +8672,11 @@ S:       Maintained
+>  F:     drivers/input/touchscreen/resistive-adc-touch.c
+>
+>  GENERIC STRING LIBRARY
+> +M:     Kees Cook <keescook@chromium.org>
+>  R:     Andy Shevchenko <andy@kernel.org>
+> -S:     Maintained
+> +L:     linux-hardening@vger.kernel.org
+> +S:     Supported
+> +T:     git git://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git =
+for-next/hardening
+>  F:     include/linux/string.h
+>  F:     include/linux/string_choices.h
+>  F:     include/linux/string_helpers.h
+> --
+> 2.34.1
+>
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
