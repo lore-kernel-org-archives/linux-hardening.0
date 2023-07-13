@@ -2,85 +2,152 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A693DEB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 12 Jul 2023 23:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D596EB64DA
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 00:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231309AbjGLX5G (ORCPT
+        id S232721AbjGMAB2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jul 2023 19:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
+        Wed, 12 Jul 2023 20:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232125AbjGLX5F (ORCPT
+        with ESMTP id S232699AbjGMAB1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jul 2023 19:57:05 -0400
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F741FCC
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:57:04 -0700 (PDT)
-Received: by mail-oi1-x232.google.com with SMTP id 5614622812f47-3a1ebb79579so120084b6e.3
-        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 16:57:04 -0700 (PDT)
+        Wed, 12 Jul 2023 20:01:27 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027991720
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 17:01:26 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b8ad356f03so997455ad.1
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 17:01:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1689206224; x=1691798224;
+        d=chromium.org; s=google; t=1689206485; x=1691798485;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYROqSK0oGJBA8nxTpmL+2rtwtyb8ppjHpWlTiycuKo=;
-        b=AZTKaFYYXON4rgsnRbf3f/htNSktLIa7GziRaeoZhHru0aYHY04rcSunBeh8mzMsgm
-         eu7l9CedpWX3IP0/3g0x/1pegm3t7l8KywxFZiQFuffX6Dh6/e+JZCzwvgtTTKBFlBoG
-         fIwMbca317JWpsuBHvDBG/TdYvbf+VF72ppTA=
+        bh=0qLBx3uxcrHWU+4CKXWElnfWUqgK44NqsxabxSLOECE=;
+        b=B1B/eZfn9bNWsWlbBOJfPEXF0cv3PHdoFj6/puu75yRYQ6hR/FMvn7hMAyf3uRG951
+         ogAXhnjBYo7WIVtVE3X6PnlKeO6Ma10TIBaZvHmtkbkNGpd0q4Zfe8QxUrJezhpNtI0x
+         wdpF9CrzuIOZo/vKt/JFUsdFEYzgHXTzjsaOY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689206224; x=1691798224;
+        d=1e100.net; s=20221208; t=1689206485; x=1691798485;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aYROqSK0oGJBA8nxTpmL+2rtwtyb8ppjHpWlTiycuKo=;
-        b=fzfD1pBUaT/zqDfMiWmm8Ki6GycETC1eHpIxA1sPD5tQJ05MTEYzhstFMyLpnAawJE
-         /lbMJsIcFMim+tMx4FNPSeqAtellx1Prpy+tNxReMNN8tZDNGAty33t+uVDQAvvK2oPr
-         8cxuKjS9TtAaupXyXcja4JI42AKo5hlRnl8tV2hz5ofHMskR2Z7MSR0Jw6qDh/KPrMoh
-         NCQDaPwKWouhuj8Pcceuja+nz90D4ktGcIyjwCA1MS2rJqlB358nDC3u3Grmap1usxW8
-         RIobggsvip4XxAoze3XNmyjphn+tVfFx4Gm4aNiRKrHaHLfOHS7NrC5AjGVEKnkItml9
-         uRrA==
-X-Gm-Message-State: ABy/qLamvFjvpdnWAu+6FcejN17NFzkQGWJlMs/ymHavTH8DajOGf+04
-        sBhND1x66Mq103V1rMknZKwn1g==
-X-Google-Smtp-Source: APBJJlGkuv3xzrFZa1CbUFIQB39M3wGoMPlRAgtPPH6QwfuF1YKCuvoHZyltzxMVwxohnGxyvw0gqA==
-X-Received: by 2002:a05:6808:130e:b0:3a4:2460:2b9a with SMTP id y14-20020a056808130e00b003a424602b9amr5257820oiv.34.1689206223773;
-        Wed, 12 Jul 2023 16:57:03 -0700 (PDT)
+        bh=0qLBx3uxcrHWU+4CKXWElnfWUqgK44NqsxabxSLOECE=;
+        b=EP2kfpb2u0KnD5a432MYHDSlSd/9mONXLYlwrpvvif8ap4NYyr0cNDk/+M8ODJuWPg
+         fVhBN95HkPJvuRuzY6sszbLklB0uFDhIhq4NHNXGXBIuWILvnN3scib8RbJFd6sHUxhG
+         Lpv/kvvOHrKlsEV3G5MmfPmw57KCMnTn3PNvS4OAjSAhrVIxGYquzoeJ3qawoLScgS+h
+         9hSfHT2nAJvAAJ3CXKy70iTdCnk4WDYRpT3dlKZ9+kikx/FxRrp22VtUycbGy9BUUzgB
+         57WOLYMFjdosPcQbcE1PsV5g6Vh7sN5FW2ZLMoeYDxLIFFNAM952i90mO6cD03QP4bsP
+         M7Dg==
+X-Gm-Message-State: ABy/qLa4a0tYB6TzN/bHBVa/jkmH5MavarWQRG37QhytgTKcQn038hlc
+        O3XvqHYrBEdqndsPVtL1wuHqxw==
+X-Google-Smtp-Source: APBJJlHRc+Ar5BpR3UE05A6vqdWxvJAvJzqLldCXNFVS9NCNFm2N1m+vrmR8WZ2BLRqBd0gJI6Nvbw==
+X-Received: by 2002:a17:903:26c9:b0:1b8:6850:c3c4 with SMTP id jg9-20020a17090326c900b001b86850c3c4mr106520plb.22.1689206484013;
+        Wed, 12 Jul 2023 17:01:24 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g19-20020aa78753000000b00663b712bfbdsm4163550pfo.57.2023.07.12.16.57.03
+        by smtp.gmail.com with ESMTPSA id b18-20020a170902d51200b001b895a18472sm4519165plg.117.2023.07.12.17.01.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 16:57:03 -0700 (PDT)
-Date:   Wed, 12 Jul 2023 16:57:02 -0700
+        Wed, 12 Jul 2023 17:01:23 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 17:01:23 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-hardening@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Haowen Bai <baihaowen@meizu.com>
-Subject: Re: [PATCH] um: Remove strlcpy declaration
-Message-ID: <202307121657.9B32681D6@keescook>
-References: <20230703160641.1790935-1-azeemshaikh38@gmail.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Steve French <sfrench@samba.org>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Christian Brauner <brauner@kernel.org>,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] smb: client: Fix -Wstringop-overflow issues
+Message-ID: <202307121658.1C4E9C928D@keescook>
+References: <ZK3h3+dHBGONHt+S@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230703160641.1790935-1-azeemshaikh38@gmail.com>
+In-Reply-To: <ZK3h3+dHBGONHt+S@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Jul 03, 2023 at 04:06:41PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
+On Tue, Jul 11, 2023 at 05:12:31PM -0600, Gustavo A. R. Silva wrote:
+> pSMB->hdr.Protocol is an array of size 4 bytes, hence when the compiler
+> analyzes this line of code
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
+> 	parm_data = ((char *) &pSMB->hdr.Protocol) + offset;
 > 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> it legitimately complains about the fact that offset points outside the
+> bounds of the array. Notice that the compiler gives priority to the object
+> as an array, rather than merely the address of one more byte in a structure
+> to wich offset should be added (which seems to be the actual intention of
+> the original implementation).
+> 
+> Fix this by explicitly instructing the compiler to treat the code as a
+> sequence of bytes in struct smb_com_transaction2_spi_req, and not as an
+> array accessed through pointer notation.
+> 
+> Notice that ((char *)pSMB) + sizeof(pSMB->hdr.smb_buf_length) points to
+> the same address as ((char *) &pSMB->hdr.Protocol), therefore this results
+> in no differences in binary output.
+> 
+> Fixes the following -Wstringop-overflow warnings when built s390
+> architecture with defconfig (GCC 13):
+>   CC [M]  fs/smb/client/cifssmb.o
+> In function 'cifs_init_ace',
+>     inlined from 'posix_acl_to_cifs' at fs/smb/client/cifssmb.c:3046:3,
+>     inlined from 'cifs_do_set_acl' at fs/smb/client/cifssmb.c:3191:15:
+> fs/smb/client/cifssmb.c:2987:31: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+>  2987 |         cifs_ace->cifs_e_perm = local_ace->e_perm;
+>       |         ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+> In file included from fs/smb/client/cifssmb.c:27:
+> fs/smb/client/cifspdu.h: In function 'cifs_do_set_acl':
+> fs/smb/client/cifspdu.h:384:14: note: at offset [7, 11] into destination object 'Protocol' of size 4
+>   384 |         __u8 Protocol[4];
+>       |              ^~~~~~~~
+> In function 'cifs_init_ace',
+>     inlined from 'posix_acl_to_cifs' at fs/smb/client/cifssmb.c:3046:3,
+>     inlined from 'cifs_do_set_acl' at fs/smb/client/cifssmb.c:3191:15:
+> fs/smb/client/cifssmb.c:2988:30: warning: writing 1 byte into a region of size 0 [-Wstringop-overflow=]
+>  2988 |         cifs_ace->cifs_e_tag =  local_ace->e_tag;
+>       |         ~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+> fs/smb/client/cifspdu.h: In function 'cifs_do_set_acl':
+> fs/smb/client/cifspdu.h:384:14: note: at offset [6, 10] into destination object 'Protocol' of size 4
+>   384 |         __u8 Protocol[4];
+>       |              ^~~~~~~~
+> 
+> This helps with the ongoing efforts to globally enable
+> -Wstringop-overflow.
+> 
+> Link: https://github.com/KSPP/linux/issues/310
+> Fixes: dc1af4c4b472 ("cifs: implement set acl method")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  fs/smb/client/cifssmb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/smb/client/cifssmb.c b/fs/smb/client/cifssmb.c
+> index 19f7385abeec..9dee267f1893 100644
+> --- a/fs/smb/client/cifssmb.c
+> +++ b/fs/smb/client/cifssmb.c
+> @@ -3184,7 +3184,7 @@ int cifs_do_set_acl(const unsigned int xid, struct cifs_tcon *tcon,
+>  	param_offset = offsetof(struct smb_com_transaction2_spi_req,
+>  				InformationLevel) - 4;
+>  	offset = param_offset + params;
+> -	parm_data = ((char *) &pSMB->hdr.Protocol) + offset;
+> +	parm_data = ((char *)pSMB) + sizeof(pSMB->hdr.smb_buf_length) + offset;
+>  	pSMB->ParameterOffset = cpu_to_le16(param_offset);
+>  
+>  	/* convert to on the wire format for POSIX ACL */
+
+This looks correct, though looking at this code I think some serious
+comments are needed to describe _why_ these offsets are calculated the
+way the are. The only dynamic part of parm_data is name_len, and could
+just as easily be calculated as:
+
+	parm_data = pSMB->FileName + name_len;
+
+which is MUCH more readable. But, yes, the above patch does result in
+the same binary code.
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
