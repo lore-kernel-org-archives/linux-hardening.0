@@ -2,86 +2,167 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41B9FEB64DD
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 05:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D234C001DD
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 06:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233743AbjGMFyg (ORCPT
+        id S229573AbjGMGIo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Jul 2023 01:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34982 "EHLO
+        Thu, 13 Jul 2023 02:08:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233707AbjGMFyg (ORCPT
+        with ESMTP id S230525AbjGMGIn (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Jul 2023 01:54:36 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15B521BF0;
-        Wed, 12 Jul 2023 22:54:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cx451C8YKqMMcpXJiANmMAvSZURBkWx0tS8TcO3/I+M=; b=Dp9FtIjSOTeyEFMliyUwDNDzYH
-        iSCC8B/CdOVuQKpLswEBq7YIe1fgPJA4bCJQX31xgK/WAXU1UaMWeX71MrD1R0HMFV6UCAXGox7Ee
-        q7ZZOZ3mEaAPIc3QLgtqqQgWolhfCokYOw89lBsoErV7n4LHfIhNO4VnrR48lWENCuAAnan9KcRAy
-        dfmXEZMpKHAS4rB15OgZfRgyW8UwdR7bMRgJ/FCh9WuFf3dFQBX7VTOOKzq6hTifqWyDF2NVOTh5f
-        IDqs/MJzxwsycqj7taqWQbfghoDCzUYRK+HcQpsPLso1ZSaRyVY5FPIL6/LNxqTqXe/E2lnzmnPef
-        rKg4pSqg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qJpHd-00230M-1k;
-        Thu, 13 Jul 2023 05:54:33 +0000
-Date:   Wed, 12 Jul 2023 22:54:33 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Carlos Maiolino <cem@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-xfs@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] libxfs: Redefine 1-element arrays as flexible arrays
-Message-ID: <ZK+Rmc0fBpJ3tVRN@infradead.org>
-References: <20230711222025.never.220-kees@kernel.org>
- <20230712053738.GD108251@frogsfrogsfrogs>
- <ZK6mC1npjONMoGMD@infradead.org>
- <20230713054450.GQ108251@frogsfrogsfrogs>
+        Thu, 13 Jul 2023 02:08:43 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02E32116
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 23:08:40 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6b9aadde448so318019a34.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 23:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1689228519; x=1691820519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pj7DUmpLML6yNU1NjHCziNlXmSGScXnxQvY9KIP6tNQ=;
+        b=isWCAc3ZbnpsJfYZOTsB8HP5BC/8HTzQLCz0SLgEytqbXNa8lbxlhifbot3YkISyrA
+         qPhDjPL0IZeHGAzZrliEueEKEq6BmOqOOXYM9j8VoWgBYObzjTbVtTsznq1GxQHyM8oy
+         tmi5m5ZrHIHWk21bYXm/EpP5grnJpZOkHvUWs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689228519; x=1691820519;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pj7DUmpLML6yNU1NjHCziNlXmSGScXnxQvY9KIP6tNQ=;
+        b=XjDbRkBpDYRe38UFLIHY4WPMdcXMtle2/NAp+2SyMruC6UIIqAmjuolaV67CkrY9mc
+         CK5v/XMO2dHwO99Gza1Fek5UXcywtkdcOg1C7gdroPErLtIdt0GuPMa7ExmRvZX+SPoR
+         Jn6Mjuvtl9jWixvqBRQVxCTniGou94oF5gmbI/5B+tkamccTzWb4vkmxaZnHrQwPaslb
+         RPath/UqrrXD6Dw/qfpJLWEEb9P1nSZ7z4Wf19LpkKMuIDWub0qK/KRg+n9sfoG3xVOk
+         gi261vefbkHfXoGdEUzkLvp1n8T6qzhNJvZTBXaGNTihvBOT3cO4v/021Q+TOnFcOctF
+         TfPA==
+X-Gm-Message-State: ABy/qLY8jUJmW6yVAs+zDNg9q2fWj41op9X+qqtBLEVZ6XzoYeYX5bHD
+        fMUotRN0sFqaD6d3bsk6AlPKEtRP5n0ZMomvs6Y=
+X-Google-Smtp-Source: APBJJlEGbC8LCr2vG4gHXAU03Ecw+Q5BoCed5yb16HPqkfl2cN68fXlNjzhAoQKHsIKEr4Yg4eP5sg==
+X-Received: by 2002:a9d:74cf:0:b0:6b8:dcd2:8b9e with SMTP id a15-20020a9d74cf000000b006b8dcd28b9emr828192otl.7.1689228519264;
+        Wed, 12 Jul 2023 23:08:39 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id z22-20020a1709028f9600b001b8b2a6c4a4sm5004848plo.172.2023.07.12.23.08.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jul 2023 23:08:38 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 23:08:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] tracing: Stop FORTIFY_SOURCE complaining about stack
+ trace caller
+Message-ID: <202307122305.029E76A@keescook>
+References: <20230712105235.5fc441aa@gandalf.local.home>
+ <202307121618.17C50DA9A@keescook>
+ <20230712204358.756d0018@gandalf.local.home>
+ <202307122118.F4DD6200@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230713054450.GQ108251@frogsfrogsfrogs>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <202307122118.F4DD6200@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 12, 2023 at 10:44:50PM -0700, Darrick J. Wong wrote:
-> /*
->  * List the names and sizes of the values of all the attributes of an object.
->  * "Cursor" must be allocated and zeroed before the first call, it is used
->  * to maintain context between system calls if all the attribute names won't
->  * fit into the buffer on the first system call.
->  * The return value is -1 on error (w/errno set appropriately), 0 on success.
->  */
-> extern int attr_list(const char *__path, char *__buffer, const int __buffersize,
-> 		int __flags, attrlist_cursor_t *__cursor)
-> 	__attribute__ ((deprecated ("Use listxattr or llistxattr instead")));
-> extern int attr_listf(int __fd, char *__buffer, const int __buffersize,
-> 		int __flags, attrlist_cursor_t *__cursor)
-> 	__attribute__ ((deprecated ("Use flistxattr instead")));
-> 
-> I take that as a sign that they could drop all these xfs-specific APIs
-> one day, which means we ought to keep them in xfs_fs.h.
+On Wed, Jul 12, 2023 at 10:22:35PM -0700, Kees Cook wrote:
+> But anyway, I think we can still do better. :)
 
-Well...
+Okay, what about this? I'm really not sure how to test this
+appropriately, but it does appear to build. (famous last words)
 
-These APIs you quoted are in fact internally mapped to the normal
-xattr syscalls by libattr, and have been since the Linux xattr syscalls
-were created.  The only thing that actually uses the definitions in
-Linux is the magic attrlist by handle ioctl that exists only in
-XFS and which is exported through libhandle in xfsprogs.  But the
-libhandle API is based on the attrlist_cursor from libattr and
-doesn't use the xfs_ kernel definitions.
+This creates the union, but I think it ends up only being visible for
+trace.c; everything else thinks it's just __array.
 
-(that struct attrlist/attrlist_ent in libattr have the same 1-sized
-array problem, but fortunately we don't need to solve that here..)
+Anyway, maybe I'm closer, but trace internals are hurting my head right
+now...
+
+-Kees
+
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 4529e264cb86..fba49d6c590c 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3157,7 +3157,7 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
+ 
+ 	size = nr_entries * sizeof(unsigned long);
+ 	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
+-				    (sizeof(*entry) - sizeof(entry->caller)) + size,
++				    (sizeof(*entry) - sizeof(entry->__legacy_caller)) + size,
+ 				    trace_ctx);
+ 	if (!event)
+ 		goto out;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index ed7906b13f09..29be88ad6227 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -83,6 +83,12 @@ enum trace_type {
+ #undef __dynamic_array
+ #define __dynamic_array(type, item)	type	item[];
+ 
++#define __min_array(type, item, size)		\
++	union {					\
++		type __legacy_ ## item[size];	\
++		DECLARE_FLEX_ARRAY(type, item);	\
++	};
++
+ #undef __rel_dynamic_array
+ #define __rel_dynamic_array(type, item)	type	item[];
+ 
+diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
+index 340b2fa98218..311a6c338385 100644
+--- a/kernel/trace/trace_entries.h
++++ b/kernel/trace/trace_entries.h
+@@ -190,7 +190,7 @@ FTRACE_ENTRY(kernel_stack, stack_entry,
+ 
+ 	F_STRUCT(
+ 		__field(	int,		size	)
+-		__array(	unsigned long,	caller,	FTRACE_STACK_ENTRIES	)
++		__min_array(	unsigned long,	caller,	FTRACE_STACK_ENTRIES	)
+ 	),
+ 
+ 	F_printk("\t=> %ps\n\t=> %ps\n\t=> %ps\n"
+diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
+index 58f3946081e2..8f6dcd616d85 100644
+--- a/kernel/trace/trace_export.c
++++ b/kernel/trace/trace_export.c
+@@ -57,6 +57,9 @@ static int ftrace_event_register(struct trace_event_call *call,
+ #undef __dynamic_array
+ #define __dynamic_array(type, item)			type item[];
+ 
++#undef __min_array
++#define __min_array(type, item, size)			type item[size];
++
+ #undef F_STRUCT
+ #define F_STRUCT(args...)				args
+ 
+@@ -123,6 +126,9 @@ static void __always_unused ____ftrace_check_##name(void)		\
+ 	.size = 0, .align = __alignof__(_type),				\
+ 	is_signed_type(_type), .filter_type = FILTER_OTHER },
+ 
++#undef __min_array
++#define __min_array(_type, _item, _len) __array(_type, _item, _len)
++
+ #undef FTRACE_ENTRY
+ #define FTRACE_ENTRY(name, struct_name, id, tstruct, print)		\
+ static struct trace_event_fields ftrace_event_fields_##name[] = {	\
+@@ -155,6 +161,9 @@ static struct trace_event_fields ftrace_event_fields_##name[] = {	\
+ #undef __dynamic_array
+ #define __dynamic_array(type, item)
+ 
++#undef __min_array
++#define __min_array(type, item, len)
++
+ #undef F_printk
+ #define F_printk(fmt, args...) __stringify(fmt) ", "  __stringify(args)
+ 
+
+-- 
+Kees Cook
