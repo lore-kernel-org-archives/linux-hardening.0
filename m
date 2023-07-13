@@ -2,89 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2663EEB64DD
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 01:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF693EB64DD
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 01:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232281AbjGMB2K (ORCPT
+        id S233205AbjGMBnP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 12 Jul 2023 21:28:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59782 "EHLO
+        Wed, 12 Jul 2023 21:43:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231791AbjGMB2J (ORCPT
+        with ESMTP id S232537AbjGMBnP (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 12 Jul 2023 21:28:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF33B7;
-        Wed, 12 Jul 2023 18:28:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C32C7619C2;
-        Thu, 13 Jul 2023 01:28:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B477C433C8;
-        Thu, 13 Jul 2023 01:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689211688;
-        bh=zdxPwQfi0XD7irleV1pf+Dqh86logNUB0AcfSBb9HC0=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=mUmzXUZEmo+Fj67AB64/KR1eorBxpsFJEiFkmfmHHbVgLQCbTPEafWrKeJTRE5y2r
-         Pwc9VTJ8CQzf5j7s/FyicP2G2ip/ApbGqJYP/6c13cOr6BK3/u3CYcIbkP0+pkd5Eo
-         sLEDUtjm/7MvVtwm9jfKAlYG38y7glvvr4sZNu5n+V57YiNJ70O4Y+So14a4knV27q
-         l1yZeRK86744zLtwFurdFjaFksJgZeHZLVur0EGADPCGZ7/Dop2W0UcUJNkfIde5UN
-         G6nFt5yBlijoV43ae6759ZcDOjcAwv3QcLs+IqTQMUKwta4ckBVn7kUOyjPCD5SZNZ
-         s0BYsaWLn8ROg==
-Date:   Wed, 12 Jul 2023 18:28:00 -0700
-From:   Kees Cook <kees@kernel.org>
-To:     Rae Moar <rmoar@google.com>, shuah@kernel.org, davidgow@google.com,
-        dlatypov@google.com, brendan.higgins@linux.dev
-CC:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        linux-hardening@vger.kernel.org, jstultz@google.com,
-        tglx@linutronix.de, sboyd@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_v2_6/9=5D_kunit=3A_memcpy=3A_Mark?= =?US-ASCII?Q?_tests_as_slow_using_test_attributes?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20230707210947.1208717-7-rmoar@google.com>
-References: <20230707210947.1208717-1-rmoar@google.com> <20230707210947.1208717-7-rmoar@google.com>
-Message-ID: <7C099325-C959-4FC2-82B3-C36BB87D94FC@kernel.org>
+        Wed, 12 Jul 2023 21:43:15 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9791FCD
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 18:43:14 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b89c09521dso317855ad.0
+        for <linux-hardening@vger.kernel.org>; Wed, 12 Jul 2023 18:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1689212594; x=1689817394;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5RQRuIqZ5NVi7QJufPT6Q4wx/18CXySRzZCJ6Iw5j0s=;
+        b=dMQUrbfnmydZo0MkmBFR1PAx8JTnYgHAc3yLB/K29hYjM8mQeTLhmB4Jpi5P4hofXS
+         eOh6lRBcoWgKh07yvb3rmf9GjwaTk48kvmT/KwJ2Y6a3mY0tiPFQfrx5D9nNrvwiZr4O
+         UfxbgstG8oX5Qo+pKb/crnPWDwvlrizdPBIfxha5Rg8xcaIt6+ODVB0ysHe8YYALamx6
+         3oyY3r/0k0UQ9BDsfT2ZaW68nqxTeJWJ4XCBtLi6DgjuoLx6Cg/sGsTjt2iX7W6wm0KV
+         I31ojrFVAATSZIoSA3jPYavxQymIpOIzJxoqtpObhIPVoJOEQUdfZQLTNPwF7DVULv9z
+         kayA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689212594; x=1689817394;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5RQRuIqZ5NVi7QJufPT6Q4wx/18CXySRzZCJ6Iw5j0s=;
+        b=lJcqZa5G2nh0ERI5unI5+87oK9/HY0qDZLuczfRKznVH0NzrxSvTJx3CKLYXXJtBnk
+         HNEa6rRFCQuxDpjOIl7hz6NKbHRofZzDOqRmxCAEJcHKdp9+lZdDB/3Tv+aCsiDjrs9D
+         aj5YdmOn9NHuXe3S4FfoZVwBFKgzF2ZRqhVuId27laQIrTOFvy1Gmj0Ozynb6KXK6t7U
+         Q/B8h4n4Hh9rAlQxRlYCH9sYgvSyRyPXBGYcKof15K3XY9VBJ/DjeBY1NwMenPRtMP3a
+         E/XSYPi3vxO+ruKMzy7dDhjR6u7j1sCi/Col1Qhbc64iIbz4BDqj8lNPUT8ENzUsPABF
+         ekow==
+X-Gm-Message-State: ABy/qLZDOrfIAUHe7lEamhYhij8GsTKqS6wF9tyYUKPAJOdBJQM932KI
+        ljMEt7i0GA3YkrnrTmSpAeaddg==
+X-Google-Smtp-Source: APBJJlH3eINFi58kLpyTeLA96uAiPaoKtgYsKnAKwx9PMsu+CNcnyU7BB3Ze66LtdWTzZif9wQN+OQ==
+X-Received: by 2002:a17:902:e752:b0:1b8:bb6c:9ecb with SMTP id p18-20020a170902e75200b001b8bb6c9ecbmr403479plf.4.1689212593740;
+        Wed, 12 Jul 2023 18:43:13 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id p16-20020a170902b09000b001b8422f1000sm4617080plr.201.2023.07.12.18.43.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jul 2023 18:43:12 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Kees Cook <keescook@chromium.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+In-Reply-To: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
+References: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
+Subject: Re: [PATCH 0/2] kyber, blk-wbt: Replace strlcpy with strscpy
+Message-Id: <168921259242.435341.16221170585643217037.b4-ty@kernel.dk>
+Date:   Wed, 12 Jul 2023 19:43:12 -0600
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-099c9
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On July 7, 2023 2:09:44 PM PDT, Rae Moar <rmoar@google=2Ecom> wrote:
->Mark slow memcpy KUnit tests using test attributes=2E
->
->Tests marked as slow are as follows: memcpy_large_test, memmove_test,
->memmove_large_test, and memmove_overlap_test=2E These tests were the slow=
-est
->of the memcpy tests and relatively slower to most other KUnit tests=2E Mo=
-st
->of these tests are already skipped when CONFIG_MEMCPY_SLOW_KUNIT_TEST is
->not enabled=2E
->
->These tests can now be filtered using the KUnit test attribute filtering
->feature=2E Example: --filter "speed>slow"=2E This will run only the tests=
- that
->have speeds faster than slow=2E The slow attribute will also be outputted=
- in
->KTAP=2E
->
->Note: This patch is intended to replace the use of
->CONFIG_MEMCPY_SLOW_KUNIT_TEST and to potentially deprecate this feature=
-=2E
->This patch does not remove the config option but does add a note to the
->config definition commenting on this future shift=2E
->
->Signed-off-by: Rae Moar <rmoar@google=2Ecom>
 
-I remain excited about this series=2E :)
+On Mon, 03 Jul 2023 17:21:57 +0000, Azeem Shaikh wrote:
+> This patch series replaces strlcpy in the kyber and blk-wbt tracing subsystems wherever trivial
+> replacement is possible, i.e return value from strlcpy is unused. The patches
+> themselves are independent of each other and are applied to different subsystems. They are
+> included as a series for ease of review.
+> 
+> Note to reviewers: MAINTAINERS file does not specify clear ownership of
+> these files so I have addressed these to the latest committer for these
+> files: Jens Axboe <axboe@kernel.dk>.
+> 
+> [...]
 
-Acked-by: Kees Cook <keescook@chromium=2Eorg>
+Applied, thanks!
+
+[1/2] kyber: Replace strlcpy with strscpy
+      commit: 150b5f497df6bdb4730cae1eb98f13017b2eef6c
+[2/2] blk-wbt: Replace strlcpy with strscpy
+      commit: 3abf6029341f2fd2ea6e48289662e8e4e3e96945
+
+Best regards,
+-- 
+Jens Axboe
 
 
---=20
-Kees Cook
+
