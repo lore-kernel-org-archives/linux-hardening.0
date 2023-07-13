@@ -2,110 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B3CEB64DD
-	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 07:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E66EEB64DD
+	for <linux-hardening@archiver.kernel.org>; Thu, 13 Jul 2023 08:38:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232444AbjGMHpC (ORCPT
+        id S231765AbjGMIiX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 13 Jul 2023 03:45:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
+        Thu, 13 Jul 2023 04:38:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232314AbjGMHo4 (ORCPT
+        with ESMTP id S233398AbjGMIhy (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 13 Jul 2023 03:44:56 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E3772108;
-        Thu, 13 Jul 2023 00:44:54 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id D125721E4E;
-        Thu, 13 Jul 2023 07:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1689234292; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DKzxp2+bTU0RvBuftCWUrTE4tMrCxaPuXQY51bUYZiM=;
-        b=zBJPqBqyxXjNscb7x/Yf/G4VtsLZ2NVhZG6IOxIVFS2DV/CkumU6+dj1ybx+k18ptW/r0h
-        3wdAvlJ756/G9Ttcd7jXZWm/faXYgWkwvM5IACm8g3Q/t246HeEn1sXUpyCrRa8DRTwQYa
-        q+FyXURvjRvUhRXVGzxSaTv/ymYx9yU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1689234292;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DKzxp2+bTU0RvBuftCWUrTE4tMrCxaPuXQY51bUYZiM=;
-        b=q44zqzJx+W+qYfd2okwpXCikpwguziJByksUibC8w5/+2ZQX8A1uC0ue1FNPt7jspHm0/4
-        YKLWP+UZHuD8x2Bg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8C6BA133D6;
-        Thu, 13 Jul 2023 07:44:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 9qF4IXSrr2QVFgAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Thu, 13 Jul 2023 07:44:52 +0000
-Message-ID: <b18ca2ce-5ebc-1a38-bb9d-a8bb9070cdb1@suse.cz>
-Date:   Thu, 13 Jul 2023 09:44:52 +0200
+        Thu, 13 Jul 2023 04:37:54 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AFF14EF5
+        for <linux-hardening@vger.kernel.org>; Thu, 13 Jul 2023 01:32:04 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-201-C7sYW67KNPG6e6sJsnGWqw-1; Thu, 13 Jul 2023 09:18:47 +0100
+X-MC-Unique: C7sYW67KNPG6e6sJsnGWqw-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 13 Jul
+ 2023 09:18:45 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Thu, 13 Jul 2023 09:18:45 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>
+CC:     'Azeem Shaikh' <azeemshaikh38@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] kobject: Replace strlcpy with strscpy
+Thread-Topic: [PATCH] kobject: Replace strlcpy with strscpy
+Thread-Index: AQHZrdj8Qo2zsxXODk+YaMEZxqXK9K+zA4WggABClwCAAP0w0IACiCMAgACbHnA=
+Date:   Thu, 13 Jul 2023 08:18:45 +0000
+Message-ID: <24ccdb40832c4dc0a5376d76a9ea9ae2@AcuMS.aculab.com>
+References: <20230703180528.3709258-1-azeemshaikh38@gmail.com>
+ <ad25bb8552704028860cf7a419c54fa3@AcuMS.aculab.com>
+ <CADmuW3XOcGDBszYw80Dy03DXk3T25k8FNUrJWLKU9tL2znzanw@mail.gmail.com>
+ <0aaa9355aa714e608091af2a5fca1373@AcuMS.aculab.com>
+ <202307121651.04D1758@keescook>
+In-Reply-To: <202307121651.04D1758@keescook>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 2/2] mm/slub: remove freelist_dereference()
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        Roman Gushchin <roman.gushchin@linux.dev>, linux-mm@kvack.org,
-        patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Matteo Rizzo <matteorizzo@google.com>,
-        Jann Horn <jannh@google.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Marco Elver <elver@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org
-References: <20230711134623.12695-3-vbabka@suse.cz>
- <20230711134623.12695-4-vbabka@suse.cz> <202307110917.DEED145F0@keescook>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <202307110917.DEED145F0@keescook>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 7/11/23 18:21, Kees Cook wrote:
-> On Tue, Jul 11, 2023 at 03:46:25PM +0200, Vlastimil Babka wrote:
->>  
->>  #ifndef CONFIG_SLUB_TINY
->> -- 
->> 2.41.0
->> 
-> 
-> I like reducing the complexity here, but I find dropping the "object"
-> reassignment makes this a bit harder to read. What about:
-
-Alright.
-
-> 	object = kasan_reset_tag(object);
-> 	unsigned long ptr_addr = (unsigned long)object + s->offset;
-> 	freeptr_t p = *(freeptr_t *)(ptr_addr);
-
-Are we really so benevolent with declaration-after-statement now? :)
-
-> 	return freelist_ptr_decode(s, p, ptr_addr);
-> 
-> ?
-> 
-> They're the same result, so either way:
-> 
-> Acked-by: Kees Cook <keescook@chromium.org>
-> 
+RnJvbTogS2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5vcmc+DQo+IFNlbnQ6IDEzIEp1bHkg
+MjAyMyAwMDo1Mw0KLi4uLg0KPiA+ID4gcHJfd2FybigiaW5pdF91ZXZlbnRfYXJndjogYnVmZmVy
+IHNpemUgb2YgJWQgdG9vIHNtYWxsIGZvciAlcywgbmVlZGVkDQo+ID4gPiAlZFxuIiwgYnVmZmVy
+X3NpemUsIHN1YnN5c3RlbSwgc3RybGVuKHN1YnN5c3RlbSkpOw0KPiA+ID4NCj4gPiA+IERvZXMg
+dGhhdCBzZWVtIGJldHRlcj8NCj4gDQo+IFllYWgsIHRoYXQnbGwgcmV0YWluIHRoZSBpbnRlbnRp
+b24gb2YgdGhlIHdhcm5pbmcuIEl0IHNob3VsZG4ndCByZWFsbHkNCj4gZXZlbiBiZSBwb3NzaWJs
+ZSB0byBoaXQgdGhhdCB3YXJuaW5nLCBzbyBJIGRvbid0IHRoaW5rIHdlIG5lZWQgdG8gd29ycnkN
+Cj4gYWJvdXQgdGhlICJleHRyYSIgY2FsbCB0byBzdHJsZW4oKS4NCj4gDQo+ID4gTm90IHdpdGgg
+dGhlIGp1c3RpZmljYXRpb24gZm9yIG5vdCB1c2luZyBzdHJsY3B5KCkgOi0pDQo+IA0KPiBXaGF0
+Pw0KDQpUaGUgY29tbWl0IG1lc3NhZ2Ugc2F5cyB0aGF0IHN0cmxjcHkoKSBpc24ndCB1c2VkIGJl
+Y2F1c2UNCm9mIHBvc3NpYmxlICdyZWFkIGJleW9uZCBidWZmZXIgZW5kJyAoZXRjKSBpZiBpdCBp
+c24ndA0KJ1wwJyB0ZXJtaW5hdGVkLg0KDQpCdXQgaGVyZSBpZiAoZXh0cmVtZWx5IHVubGlrZWx5
+KSB0aGUgc291cmNlIGlzbid0IHRlcm1pbmF0ZWQNCnRoZW4gdGhlIGV4dHJhIHJlYWRzIGdldCBk
+b25lIGFueXdheS4NClNvIHRoZSBjb21taXQgbWVzc2FnZSBqdXN0IGRvZXNuJ3QgbWF0Y2ggdGhl
+IGNoYW5nZS4NCg0KSSdkIGd1ZXNzIHRoYXQgaXQgaXMgcG9zc2libGUgZm9yIHRoZXJlIHRvIGJl
+IGluc3VmZmljaWVudCBzcGFjZS4NClByb2JhYmx5IGJlY2F1c2Ugb3RoZXIgc3RyaW5ncyBoYXZl
+IGZpbGxlZCB0aGUgYnVmZmVyLg0KVGhlIGVycm9yIG1lc3NhZ2UgbWlnaHQgYmUgYmV0dGVyIGFz
+Og0KCSJpbnN1ZmZpY2llbnQgYnVmZmVyIHNwYWNlICgldSBsZWZ0KSBmb3IgJXNcbiIsDQoJCWJ1
+ZmZlcl9zaXplLCBzdWJzeXN0ZW0pOw0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNz
+IExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAx
+UFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
