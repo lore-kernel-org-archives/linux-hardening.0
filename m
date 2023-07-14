@@ -2,272 +2,505 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFC6EB64DA
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 05:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03C02EB64DC
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 06:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234438AbjGNFGg (ORCPT
+        id S232853AbjGNGkb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Jul 2023 01:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47338 "EHLO
+        Fri, 14 Jul 2023 02:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232666AbjGNFGf (ORCPT
+        with ESMTP id S232577AbjGNGk0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Jul 2023 01:06:35 -0400
-Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41C22D40;
-        Thu, 13 Jul 2023 22:06:33 -0700 (PDT)
-Received: from localhost.localdomain (unknown [10.101.196.174])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id A192A41FA6;
-        Fri, 14 Jul 2023 05:06:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1689311192;
-        bh=543VXLNDHewMkAW8Fxh7NJPOOuaXB9yB33hQ8fq+X6M=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=hO+kNiwYmKr5h8NUwKnDxVEWXflOE2xSUUVTHpVe0MKbJwuGSxXj/8UQaRTQxHvNx
-         xP6knJI/UXUst1C1Z0y6saJ/F5btenhxAC0bkBlZ/resxoVeb08et+UNSJowZpQYW0
-         EbKXYMS0o3FcIRq5BymTmVLSLE6Sb538dzg2lseGecy16Zax8t3UoszhDUHMjSwyGY
-         3UzdIDeNqqGexTL+sgvnEWe7iO3oe2QFF1VYKNhTdvi01ucm4wCTDwxTBdX4kbdjRE
-         5kW+/Gk9m8TT8mLPL4A4QbsyN1XCI8P2P29S6yqBy4TIMGZAuPaK0BlqmdTXX8SqIV
-         eMFJX8GfSZK9g==
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com
-Cc:     linux-pci@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2] igc: Ignore AER reset when device is suspended
-Date:   Fri, 14 Jul 2023 13:05:41 +0800
-Message-Id: <20230714050541.2765246-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 14 Jul 2023 02:40:26 -0400
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0054A2694;
+        Thu, 13 Jul 2023 23:40:20 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.153])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4R2MKr1sy8z4f491k;
+        Fri, 14 Jul 2023 14:40:16 +0800 (CST)
+Received: from ubuntu20.huawei.com (unknown [10.67.174.33])
+        by APP4 (Coremail) with SMTP id gCh0CgBnEqbE7bBkdMS9Nw--.52012S2;
+        Fri, 14 Jul 2023 14:40:12 +0800 (CST)
+From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+To:     Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        Christoph Lameter <cl@linux.com>, Tejun Heo <tj@kernel.org>,
+        Dennis Zhou <dennis@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
+Cc:     Roman Gushchin <roman.gushchin@linux.dev>,
+        Hyeonggon Yoo <42.hyeyoo@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        Pedro Falcato <pedro.falcato@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>, linux-mm@kvack.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gongruiqi1@huawei.com
+Subject: [PATCH v5] Randomized slab caches for kmalloc()
+Date:   Fri, 14 Jul 2023 14:44:22 +0800
+Message-Id: <20230714064422.3305234-1-gongruiqi@huaweicloud.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: gCh0CgBnEqbE7bBkdMS9Nw--.52012S2
+X-Coremail-Antispam: 1UD129KBjvAXoW3uw4ktw13XFWDGw4DKF1xXwb_yoW8Aw17Xo
+        WfCF1UAw1ftry3AF4Uuan3GrWDuFyvgrnxZFn8ZrZ5GFyUX34DG3y5trWfWFy5GF1IqFsx
+        Ar12ga1UK390vr95n29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+        AaLaJ3UjIYCTnIWjp_UUUY87kC6x804xWl14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK
+        8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
+        AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF
+        7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7
+        CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
+        rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
+        IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k2
+        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
+        AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU13rcDUUUUU==
+X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-When a system that connects to a Thunderbolt dock equipped with I225,
-like HP Thunderbolt Dock G4, I225 stops working after S3 resume:
+When exploiting memory vulnerabilities, "heap spraying" is a common
+technique targeting those related to dynamic memory allocation (i.e. the
+"heap"), and it plays an important role in a successful exploitation.
+Basically, it is to overwrite the memory area of vulnerable object by
+triggering allocation in other subsystems or modules and therefore
+getting a reference to the targeted memory location. It's usable on
+various types of vulnerablity including use after free (UAF), heap out-
+of-bound write and etc.
 
-[  606.527643] pcieport 0000:00:1d.0: AER: Multiple Corrected error receive=
-d: 0000:00:1d.0
-[  606.527791] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DCorrected,=
- type=3DTransaction Layer, (Receiver ID)
-[  606.527795] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mas=
-k=3D00008000/00002000
-[  606.527800] pcieport 0000:00:1d.0:    [15] HeaderOF
-[  606.527806] pcieport 0000:00:1d.0: AER:   Error of this Agent is reporte=
-d first
-[  606.527853] pcieport 0000:07:04.0: PCIe Bus Error: severity=3DCorrected,=
- type=3DData Link Layer, (Receiver ID)
-[  606.527856] pcieport 0000:07:04.0:   device [8086:0b26] error status/mas=
-k=3D00000080/00002000
-[  606.527861] pcieport 0000:07:04.0:    [ 7] BadDLLP
-[  606.527931] pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non-Fatal)=
- error received: 0000:00:1d.0
-[  606.528064] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DUncorrecte=
-d (Non-Fatal), type=3DTransaction Layer, (Requester ID)
-[  606.528068] pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mas=
-k=3D00100000/00004000
-[  606.528072] pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
-[  606.528075] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a000052 =
-00000000 00000000
-[  606.528079] pcieport 0000:00:1d.0: AER:   Error of this Agent is reporte=
-d first
-[  606.528098] pcieport 0000:04:01.0: PCIe Bus Error: severity=3DUncorrecte=
-d (Non-Fatal), type=3DTransaction Layer, (Requester ID)
-[  606.528101] pcieport 0000:04:01.0:   device [8086:1136] error status/mas=
-k=3D00300000/00000000
-[  606.528105] pcieport 0000:04:01.0:    [20] UnsupReq               (First)
-[  606.528107] pcieport 0000:04:01.0:    [21] ACSViol
-[  606.528110] pcieport 0000:04:01.0: AER:   TLP Header: 34000000 04000052 =
-00000000 00000000
-[  606.528187] thunderbolt 0000:05:00.0: AER: can't recover (no error_detec=
-ted callback)
-[  606.558729] ------------[ cut here ]------------
-[  606.558729] igc 0000:38:00.0: disabling already-disabled device
-[  606.558738] WARNING: CPU: 0 PID: 209 at drivers/pci/pci.c:2248 pci_disab=
-le_device+0xf6/0x150
-[  606.558743] Modules linked in: rfcomm ccm cmac algif_hash algif_skcipher=
- af_alg usbhid bnep snd_hda_codec_hdmi snd_ctl_led snd_hda_codec_realtek jo=
-ydev snd_hda_codec_generic ledtrig_audio binfmt_misc snd_sof_pci_intel_tgl =
-snd_sof_intel_hda_common snd_soc_acpi_intel_match snd_soc_acpi snd_soc_hdac=
-_hda snd_sof_pci snd_sof_xtensa_dsp x86_pkg_temp_thermal snd_sof_intel_hda_=
-mlink intel_powerclamp snd_sof_intel_hda snd_sof snd_sof_utils snd_hda_ext_=
-core snd_soc_core snd_compress snd_hda_intel coretemp snd_intel_dspcfg snd_=
-hda_codec snd_hwdep kvm_intel snd_hda_core iwlmvm nls_iso8859_1 i915 snd_pc=
-m kvm mac80211 crct10dif_pclmul crc32_pclmul i2c_algo_bit uvcvideo ghash_cl=
-mulni_intel snd_seq mei_pxp drm_buddy videobuf2_vmalloc sch_fq_codel sha512=
-_ssse3 libarc4 aesni_intel mei_hdcp videobuf2_memops btusb uvc crypto_simd =
-drm_display_helper snd_seq_device btrtl videobuf2_v4l2 cryptd snd_timer int=
-el_rapl_msr btbcm drm_kms_helper videodev iwlwifi snd btintel rapl input_le=
-ds wmi_bmof hid_sensor_rotation btmtk hid_sensor_accel_3d
-[  606.558778]  hid_sensor_gyro_3d hid_sensor_als syscopyarea videobuf2_com=
-mon intel_cstate serio_raw soundcore bluetooth hid_sensor_trigger thunderbo=
-lt sysfillrect cfg80211 mc mei_me industrialio_triggered_buffer sysimgblt p=
-rocessor_thermal_device_pci hid_sensor_iio_common hid_multitouch ecdh_gener=
-ic processor_thermal_device kfifo_buf cec 8250_dw mei ecc processor_thermal=
-_rfim industrialio rc_core processor_thermal_mbox ucsi_acpi processor_therm=
-al_rapl ttm typec_ucsi intel_rapl_common msr typec video int3403_thermal in=
-t340x_thermal_zone int3400_thermal intel_hid wmi acpi_pad acpi_thermal_rel =
-sparse_keymap acpi_tad mac_hid parport_pc ppdev lp parport drm ramoops reed=
-_solomon efi_pstore ip_tables x_tables autofs4 hid_sensor_custom hid_sensor=
-_hub intel_ishtp_hid spi_pxa2xx_platform hid_generic dw_dmac dw_dmac_core r=
-tsx_pci_sdmmc e1000e i2c_i801 igc nvme i2c_smbus intel_lpss_pci rtsx_pci in=
-tel_ish_ipc nvme_core intel_lpss xhci_pci i2c_hid_acpi intel_ishtp idma64 x=
-hci_pci_renesas i2c_hid hid pinctrl_alderlake
-[  606.558809] CPU: 0 PID: 209 Comm: irq/124-aerdrv Not tainted 6.4.0-rc7+ =
-#119
-[  606.558811] Hardware name: HP HP ZBook Fury 16 G9 Mobile Workstation PC/=
-89C6, BIOS U96 Ver. 01.07.01 04/06/2023
-[  606.558812] RIP: 0010:pci_disable_device+0xf6/0x150
-[  606.558814] Code: 4d 85 e4 75 07 4c 8b a3 d0 00 00 00 48 8d bb d0 00 00 =
-00 e8 5c f5 1f 00 4c 89 e2 48 c7 c7 f8 e6 37 ae 48 89 c6 e8 9a 3e 86 ff <0f=
-> 0b e9 3c ff ff ff 48 8d 55 e6 be 04 00 00 00 48 89 df e8 62 0b
-[  606.558815] RSP: 0018:ffffa70040a4fca0 EFLAGS: 00010246
-[  606.558816] RAX: 0000000000000000 RBX: ffff8ac8434b2000 RCX: 00000000000=
-00000
-[  606.558817] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000=
-00000
-[  606.558818] RBP: ffffa70040a4fcc0 R08: 0000000000000000 R09: 00000000000=
-00000
-[  606.558818] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8ac8434=
-35dd0
-[  606.558818] R13: ffff8ac84277c000 R14: 0000000000000001 R15: ffff8ac8434=
-b2150
-[  606.558819] FS:  0000000000000000(0000) GS:ffff8acbd6a00000(0000) knlGS:=
-0000000000000000
-[  606.558820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  606.558821] CR2: 00007f9740ba28e8 CR3: 00000001eb43a000 CR4: 0000000000f=
-50ef0
-[  606.558822] PKRU: 55555554
-[  606.558822] Call Trace:
-[  606.558823]  <TASK>
-[  606.558825]  ? show_regs+0x76/0x90
-[  606.558828]  ? pci_disable_device+0xf6/0x150
-[  606.558830]  ? __warn+0x91/0x160
-[  606.558832]  ? pci_disable_device+0xf6/0x150
-[  606.558834]  ? report_bug+0x1bf/0x1d0
-[  606.558838] nvme nvme0: 24/0/0 default/read/poll queues
-[  606.558837]  ? handle_bug+0x46/0x90
-[  606.558841]  ? exc_invalid_op+0x1d/0x90
-[  606.558843]  ? asm_exc_invalid_op+0x1f/0x30
-[  606.558846]  ? pci_disable_device+0xf6/0x150
-[  606.558849]  igc_io_error_detected+0x40/0x70 [igc]
-[  606.558857]  report_error_detected+0xdb/0x1d0
-[  606.558860]  ? __pfx_report_normal_detected+0x10/0x10
-[  606.558862]  report_normal_detected+0x1a/0x30
-[  606.558864]  pci_walk_bus+0x78/0xb0
-[  606.558866]  pcie_do_recovery+0xba/0x340
-[  606.558868]  ? __pfx_aer_root_reset+0x10/0x10
-[  606.558870]  aer_process_err_devices+0x168/0x220
-[  606.558871]  aer_isr+0x1d3/0x1f0
-[  606.558874]  ? __pfx_irq_thread_fn+0x10/0x10
-[  606.558876]  irq_thread_fn+0x29/0x70
-[  606.558877]  irq_thread+0xee/0x1c0
-[  606.558878]  ? __pfx_irq_thread_dtor+0x10/0x10
-[  606.558879]  ? __pfx_irq_thread+0x10/0x10
-[  606.558880]  kthread+0xf8/0x130
-[  606.558882]  ? __pfx_kthread+0x10/0x10
-[  606.558884]  ret_from_fork+0x29/0x50
-[  606.558887]  </TASK>
-[  606.558887] ---[ end trace 0000000000000000 ]---
-[  606.570223] i915 0000:00:02.0: [drm] GT0: HuC: authenticated!
-[  606.570228] i915 0000:00:02.0: [drm] GT0: GUC: submission disabled
-[  606.570231] i915 0000:00:02.0: [drm] GT0: GUC: SLPC disabled
-[  606.663042] xhci_hcd 0000:39:00.0: AER: can't recover (no error_detected=
- callback)
-[  606.663111] pcieport 0000:00:1d.0: AER: device recovery failed
-[  606.721642] iwlwifi 0000:00:14.3: WFPM_UMAC_PD_NOTIFICATION: 0x1f
-[  606.721677] iwlwifi 0000:00:14.3: WFPM_LMAC2_PD_NOTIFICATION: 0x1f
-[  606.721687] iwlwifi 0000:00:14.3: WFPM_AUTH_KEY_0: 0x90
-[  606.721698] iwlwifi 0000:00:14.3: CNVI_SCU_SEQ_DATA_DW9: 0x0
-[  606.842877] usb 1-8: reset high-speed USB device number 3 using xhci_hcd
-[  607.048340] genirq: Flags mismatch irq 164. 00000000 (enp56s0) vs. 00000=
-000 (enp56s0)
-[  607.050313] ------------[ cut here ]------------
-...
-[  609.064160] igc 0000:38:00.0 enp56s0: Register Dump
-[  609.064167] igc 0000:38:00.0 enp56s0: Register Name   Value
-[  609.064181] igc 0000:38:00.0 enp56s0: CTRL            081c0641
-[  609.064188] igc 0000:38:00.0 enp56s0: STATUS          40280401
-[  609.064195] igc 0000:38:00.0 enp56s0: CTRL_EXT        100000c0
-[  609.064202] igc 0000:38:00.0 enp56s0: MDIC            18017949
-[  609.064208] igc 0000:38:00.0 enp56s0: ICR             80000010
-[  609.064214] igc 0000:38:00.0 enp56s0: RCTL            04408022
-[  609.064232] igc 0000:38:00.0 enp56s0: RDLEN[0-3]      00001000 00001000 =
-00001000 00001000
-[  609.064251] igc 0000:38:00.0 enp56s0: RDH[0-3]        00000000 00000000 =
-00000000 00000000
-[  609.064270] igc 0000:38:00.0 enp56s0: RDT[0-3]        000000ff 000000ff =
-000000ff 000000ff
-[  609.064289] igc 0000:38:00.0 enp56s0: RXDCTL[0-3]     00040808 00040808 =
-00040808 00040808
-[  609.064308] igc 0000:38:00.0 enp56s0: RDBAL[0-3]      ffc62000 fff6b000 =
-fff6c000 fff6d000
-[  609.064326] igc 0000:38:00.0 enp56s0: RDBAH[0-3]      00000000 00000000 =
-00000000 00000000
-[  609.064333] igc 0000:38:00.0 enp56s0: TCTL            a50400fa
-[  609.064351] igc 0000:38:00.0 enp56s0: TDBAL[0-3]      fff6d000 ffcdf000 =
-ffce0000 ffce1000
-[  609.064369] igc 0000:38:00.0 enp56s0: TDBAH[0-3]      00000000 00000000 =
-00000000 00000000
-[  609.064387] igc 0000:38:00.0 enp56s0: TDLEN[0-3]      00001000 00001000 =
-00001000 00001000
-[  609.064405] igc 0000:38:00.0 enp56s0: TDH[0-3]        00000000 00000000 =
-00000000 00000000
-[  609.064423] igc 0000:38:00.0 enp56s0: TDT[0-3]        00000004 00000000 =
-00000000 00000000
-[  609.064441] igc 0000:38:00.0 enp56s0: TXDCTL[0-3]     00100108 00100108 =
-00100108 00100108
-[  609.064445] igc 0000:38:00.0 enp56s0: Reset adapter
+There are (at least) two reasons why the heap can be sprayed: 1) generic
+slab caches are shared among different subsystems and modules, and
+2) dedicated slab caches could be merged with the generic ones.
+Currently these two factors cannot be prevented at a low cost: the first
+one is a widely used memory allocation mechanism, and shutting down slab
+merging completely via `slub_nomerge` would be overkill.
 
-The issue is that the PTM requests are sending before driver resumes the
-device. Since the issue can also be observed on Windows, it's quite
-likely a firmware/hardware limitation.
+To efficiently prevent heap spraying, we propose the following approach:
+to create multiple copies of generic slab caches that will never be
+merged, and random one of them will be used at allocation. The random
+selection is based on the address of code that calls `kmalloc()`, which
+means it is static at runtime (rather than dynamically determined at
+each time of allocation, which could be bypassed by repeatedly spraying
+in brute force). In other words, the randomness of cache selection will
+be with respect to the code address rather than time, i.e. allocations
+in different code paths would most likely pick different caches,
+although kmalloc() at each place would use the same cache copy whenever
+it is executed. In this way, the vulnerable object and memory allocated
+in other subsystems and modules will (most probably) be on different
+slab caches, which prevents the object from being sprayed.
 
-So avoid resetting the device if it's not resumed. Once the device is
-fully resumed, the device can work normally.
+Meanwhile, the static random selection is further enhanced with a
+per-boot random seed, which prevents the attacker from finding a usable
+kmalloc that happens to pick the same cache with the vulnerable
+subsystem/module by analyzing the open source code. In other words, with
+the per-boot seed, the random selection is static during each time the
+system starts and runs, but not across different system startups.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216850
-Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+The overhead of performance has been tested on a 40-core x86 server by
+comparing the results of `perf bench all` between the kernels with and
+without this patch based on the latest linux-next kernel, which shows
+minor difference. A subset of benchmarks are listed below:
 
+                sched/  sched/  syscall/       mem/       mem/
+             messaging    pipe     basic     memcpy     memset
+                 (sec)   (sec)     (sec)   (GB/sec)   (GB/sec)
+
+control1         0.019   5.459     0.733  15.258789  51.398026
+control2         0.019   5.439     0.730  16.009221  48.828125
+control3         0.019   5.282     0.735  16.009221  48.828125
+control_avg      0.019   5.393     0.733  15.759077  49.684759
+
+experiment1      0.019   5.374     0.741  15.500992  46.502976
+experiment2      0.019   5.440     0.746  16.276042  51.398026
+experiment3      0.019   5.242     0.752  15.258789  51.398026
+experiment_avg   0.019   5.352     0.746  15.678608  49.766343
+
+The overhead of memory usage was measured by executing `free` after boot
+on a QEMU VM with 1GB total memory, and as expected, it's positively
+correlated with # of cache copies:
+
+           control  4 copies  8 copies  16 copies
+
+total       969.8M    968.2M    968.2M     968.2M
+used         20.0M     21.9M     24.1M      26.7M
+free        936.9M    933.6M    931.4M     928.6M
+available   932.2M    928.8M    926.6M     923.9M
+
+Co-developed-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+Signed-off-by: GONG, Ruiqi <gongruiqi@huaweicloud.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
+
+v5:
+  - Rebase to the latest linux-next.
+  - Make CONFIG_RANDOM_KMALLOC_CACHES depends on !SLUB_TINY.
+  - Rephrase parts of CONFIG_RANDOM_KMALLOC_CACHES's help paragraph.
+  - Pass 0 as caller at places where the real caller is not needed.
+  - Restore KMALLOC_NORMAL to 0, and move KMALLOC_RANDOM_* after it.
+  - Change RANDOM_KMALLOC_CACHES_NR to 15, and adjust the kmalloc rnd
+    name accordingly.
+  - Replace RANDOM_KMALLOC_CACHES_BITS via ilog2(..._NR + 1).
+
+v4:
+  - Set # of caches to 16 and remove config selection.
+  - Shorten "kmalloc-random-" to "kmalloc-rnd-".
+  - Update commit log and config's help paragraph.
+  - Fine-tune PERCPU_DYNAMIC_SIZE_SHIFT to 12 instead of 13 (enough to
+    pass compilation with allmodconfig and CONFIG_SLUB_TINY=n).
+  - Some cleanup and typo fixing.
+  - Link: https://lore.kernel.org/all/20230626031835.2279738-1-gongruiqi@huaweicloud.com/
+
+v3:
+  - Replace SLAB_RANDOMSLAB with the new existing SLAB_NO_MERGE flag.
+  - Shorten long code lines by wrapping and renaming.
+  - Update commit message with latest perf benchmark and additional
+    theorectical explanation.
+  - Remove "RFC" from patch title and make it a formal patch
+  - Link: https://lore.kernel.org/all/20230616111843.3677378-1-gongruiqi@huaweicloud.com/
+
 v2:
- - Fix typo.
- - Mention the product name.
+  - Use hash_64() and a per-boot random seed to select kmalloc() caches.
+  - Change acceptable # of caches from [4,16] to {2,4,8,16}, which is
+    more compatible with hashing.
+  - Supplement results of performance and memory overhead tests.
+  - Link: https://lore.kernel.org/all/20230508075507.1720950-1-gongruiqi1@huawei.com/
 
- drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+v1:
+  - Link: https://lore.kernel.org/all/20230315095459.186113-1-gongruiqi1@huawei.com/
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethern=
-et/intel/igc/igc_main.c
-index 9f93f0f4f752..8c36bbe5e428 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -7115,6 +7115,9 @@ static pci_ers_result_t igc_io_error_detected(struct =
-pci_dev *pdev,
- 	struct net_device *netdev =3D pci_get_drvdata(pdev);
- 	struct igc_adapter *adapter =3D netdev_priv(netdev);
-=20
-+	if (!pci_is_enabled(pdev))
-+		return 0;
+ include/linux/percpu.h  | 12 +++++++---
+ include/linux/slab.h    | 23 ++++++++++++++++---
+ mm/Kconfig              | 17 ++++++++++++++
+ mm/kfence/kfence_test.c |  7 ++++--
+ mm/slab.c               |  2 +-
+ mm/slab.h               |  2 +-
+ mm/slab_common.c        | 49 ++++++++++++++++++++++++++++++++++++-----
+ 7 files changed, 97 insertions(+), 15 deletions(-)
+
+diff --git a/include/linux/percpu.h b/include/linux/percpu.h
+index b3b458442330..68fac2e7cbe6 100644
+--- a/include/linux/percpu.h
++++ b/include/linux/percpu.h
+@@ -35,6 +35,12 @@
+ #define PCPU_BITMAP_BLOCK_BITS		(PCPU_BITMAP_BLOCK_SIZE >>	\
+ 					 PCPU_MIN_ALLOC_SHIFT)
+ 
++#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++#define PERCPU_DYNAMIC_SIZE_SHIFT      12
++#else
++#define PERCPU_DYNAMIC_SIZE_SHIFT      10
++#endif
 +
- 	netif_device_detach(netdev);
-=20
- 	if (state =3D=3D pci_channel_io_perm_failure)
---=20
-2.34.1
+ /*
+  * Percpu allocator can serve percpu allocations before slab is
+  * initialized which allows slab to depend on the percpu allocator.
+@@ -42,7 +48,7 @@
+  * for this.  Keep PERCPU_DYNAMIC_RESERVE equal to or larger than
+  * PERCPU_DYNAMIC_EARLY_SIZE.
+  */
+-#define PERCPU_DYNAMIC_EARLY_SIZE	(20 << 10)
++#define PERCPU_DYNAMIC_EARLY_SIZE	(20 << PERCPU_DYNAMIC_SIZE_SHIFT)
+ 
+ /*
+  * PERCPU_DYNAMIC_RESERVE indicates the amount of free area to piggy
+@@ -56,9 +62,9 @@
+  * intelligent way to determine this would be nice.
+  */
+ #if BITS_PER_LONG > 32
+-#define PERCPU_DYNAMIC_RESERVE		(28 << 10)
++#define PERCPU_DYNAMIC_RESERVE		(28 << PERCPU_DYNAMIC_SIZE_SHIFT)
+ #else
+-#define PERCPU_DYNAMIC_RESERVE		(20 << 10)
++#define PERCPU_DYNAMIC_RESERVE		(20 << PERCPU_DYNAMIC_SIZE_SHIFT)
+ #endif
+ 
+ extern void *pcpu_base_addr;
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 848c7c82ad5a..8228d1276a2f 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -19,6 +19,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/percpu-refcount.h>
+ #include <linux/cleanup.h>
++#include <linux/hash.h>
+ 
+ 
+ /*
+@@ -345,6 +346,12 @@ static inline unsigned int arch_slab_minalign(void)
+ #define SLAB_OBJ_MIN_SIZE      (KMALLOC_MIN_SIZE < 16 ? \
+                                (KMALLOC_MIN_SIZE) : 16)
+ 
++#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++#define RANDOM_KMALLOC_CACHES_NR	15 // # of cache copies
++#else
++#define RANDOM_KMALLOC_CACHES_NR	0
++#endif
++
+ /*
+  * Whenever changing this, take care of that kmalloc_type() and
+  * create_kmalloc_caches() still work as intended.
+@@ -361,6 +368,8 @@ enum kmalloc_cache_type {
+ #ifndef CONFIG_MEMCG_KMEM
+ 	KMALLOC_CGROUP = KMALLOC_NORMAL,
+ #endif
++	KMALLOC_RANDOM_START = KMALLOC_NORMAL,
++	KMALLOC_RANDOM_END = KMALLOC_RANDOM_START + RANDOM_KMALLOC_CACHES_NR,
+ #ifdef CONFIG_SLUB_TINY
+ 	KMALLOC_RECLAIM = KMALLOC_NORMAL,
+ #else
+@@ -386,14 +395,22 @@ kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
+ 	(IS_ENABLED(CONFIG_ZONE_DMA)   ? __GFP_DMA : 0) |	\
+ 	(IS_ENABLED(CONFIG_MEMCG_KMEM) ? __GFP_ACCOUNT : 0))
+ 
+-static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags)
++extern unsigned long random_kmalloc_seed;
++
++static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags, unsigned long caller)
+ {
+ 	/*
+ 	 * The most common case is KMALLOC_NORMAL, so test for it
+ 	 * with a single branch for all the relevant flags.
+ 	 */
+ 	if (likely((flags & KMALLOC_NOT_NORMAL_BITS) == 0))
++#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++		/* RANDOM_KMALLOC_CACHES_NR (=15) copies + the KMALLOC_NORMAL */
++		return KMALLOC_RANDOM_START + hash_64(caller ^ random_kmalloc_seed,
++						      ilog2(RANDOM_KMALLOC_CACHES_NR + 1));
++#else
+ 		return KMALLOC_NORMAL;
++#endif
+ 
+ 	/*
+ 	 * At least one of the flags has to be set. Their priorities in
+@@ -580,7 +597,7 @@ static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
+ 
+ 		index = kmalloc_index(size);
+ 		return kmalloc_trace(
+-				kmalloc_caches[kmalloc_type(flags)][index],
++				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+ 				flags, size);
+ 	}
+ 	return __kmalloc(size, flags);
+@@ -596,7 +613,7 @@ static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t fla
+ 
+ 		index = kmalloc_index(size);
+ 		return kmalloc_node_trace(
+-				kmalloc_caches[kmalloc_type(flags)][index],
++				kmalloc_caches[kmalloc_type(flags, _RET_IP_)][index],
+ 				flags, node, size);
+ 	}
+ 	return __kmalloc_node(size, flags, node);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 22acffd9009d..989ab72bbecc 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -337,6 +337,23 @@ config SLUB_CPU_PARTIAL
+ 	  which requires the taking of locks that may cause latency spikes.
+ 	  Typically one would choose no for a realtime system.
+ 
++config RANDOM_KMALLOC_CACHES
++	default n
++	depends on SLUB && !SLUB_TINY
++	bool "Randomize slab caches for normal kmalloc"
++	help
++	  A hardening feature that creates multiple copies of slab caches for
++	  normal kmalloc allocation and makes kmalloc randomly pick one based
++	  on code address, which makes the attackers more difficult to spray
++	  vulnerable memory objects on the heap for the purpose of exploiting
++	  memory vulnerabilities.
++
++	  Currently the number of copies is set to 16, a reasonably large value
++	  that effectively diverges the memory objects allocated for different
++	  subsystems or modules into different caches, at the expense of a
++	  limited degree of memory and CPU overhead that relates to hardware and
++	  system workload.
++
+ endmenu # SLAB allocator options
+ 
+ config SHUFFLE_PAGE_ALLOCATOR
+diff --git a/mm/kfence/kfence_test.c b/mm/kfence/kfence_test.c
+index 9e008a336d9f..95b2b84c296d 100644
+--- a/mm/kfence/kfence_test.c
++++ b/mm/kfence/kfence_test.c
+@@ -212,7 +212,9 @@ static void test_cache_destroy(void)
+ 
+ static inline size_t kmalloc_cache_alignment(size_t size)
+ {
+-	return kmalloc_caches[kmalloc_type(GFP_KERNEL)][__kmalloc_index(size, false)]->align;
++	/* just to get ->align so no need to pass in the real caller */
++	enum kmalloc_cache_type type = kmalloc_type(GFP_KERNEL, 0);
++	return kmalloc_caches[type][__kmalloc_index(size, false)]->align;
+ }
+ 
+ /* Must always inline to match stack trace against caller. */
+@@ -282,8 +284,9 @@ static void *test_alloc(struct kunit *test, size_t size, gfp_t gfp, enum allocat
+ 
+ 		if (is_kfence_address(alloc)) {
+ 			struct slab *slab = virt_to_slab(alloc);
++			enum kmalloc_cache_type type = kmalloc_type(GFP_KERNEL, _RET_IP_);
+ 			struct kmem_cache *s = test_cache ?:
+-					kmalloc_caches[kmalloc_type(GFP_KERNEL)][__kmalloc_index(size, false)];
++					kmalloc_caches[type][__kmalloc_index(size, false)];
+ 
+ 			/*
+ 			 * Verify that various helpers return the right values
+diff --git a/mm/slab.c b/mm/slab.c
+index 88194391d553..9ad3d0f2d1a5 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -1670,7 +1670,7 @@ static size_t calculate_slab_order(struct kmem_cache *cachep,
+ 			if (freelist_size > KMALLOC_MAX_CACHE_SIZE) {
+ 				freelist_cache_size = PAGE_SIZE << get_order(freelist_size);
+ 			} else {
+-				freelist_cache = kmalloc_slab(freelist_size, 0u);
++				freelist_cache = kmalloc_slab(freelist_size, 0u, _RET_IP_);
+ 				if (!freelist_cache)
+ 					continue;
+ 				freelist_cache_size = freelist_cache->size;
+diff --git a/mm/slab.h b/mm/slab.h
+index 9c0e09d0f81f..799a315695c6 100644
+--- a/mm/slab.h
++++ b/mm/slab.h
+@@ -282,7 +282,7 @@ void setup_kmalloc_cache_index_table(void);
+ void create_kmalloc_caches(slab_flags_t);
+ 
+ /* Find the kmalloc slab corresponding for a certain size */
+-struct kmem_cache *kmalloc_slab(size_t, gfp_t);
++struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags, unsigned long caller);
+ 
+ void *__kmem_cache_alloc_node(struct kmem_cache *s, gfp_t gfpflags,
+ 			      int node, size_t orig_size,
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index d1555ea2981a..01cdbf122463 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -678,6 +678,11 @@ kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
+ { /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
+ EXPORT_SYMBOL(kmalloc_caches);
+ 
++#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++unsigned long random_kmalloc_seed __ro_after_init;
++EXPORT_SYMBOL(random_kmalloc_seed);
++#endif
++
+ /*
+  * Conversion table for small slabs sizes / 8 to the index in the
+  * kmalloc array. This is necessary for slabs < 192 since we have non power
+@@ -720,7 +725,7 @@ static inline unsigned int size_index_elem(unsigned int bytes)
+  * Find the kmem_cache structure that serves a given size of
+  * allocation
+  */
+-struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
++struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags, unsigned long caller)
+ {
+ 	unsigned int index;
+ 
+@@ -735,7 +740,7 @@ struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
+ 		index = fls(size - 1);
+ 	}
+ 
+-	return kmalloc_caches[kmalloc_type(flags)][index];
++	return kmalloc_caches[kmalloc_type(flags, caller)][index];
+ }
+ 
+ size_t kmalloc_size_roundup(size_t size)
+@@ -752,8 +757,11 @@ size_t kmalloc_size_roundup(size_t size)
+ 	if (size > KMALLOC_MAX_CACHE_SIZE)
+ 		return PAGE_SIZE << get_order(size);
+ 
+-	/* The flags don't matter since size_index is common to all. */
+-	c = kmalloc_slab(size, GFP_KERNEL);
++	/*
++	 * The flags don't matter since size_index is common to all.
++	 * Neither does the caller for just getting ->object_size.
++	 */
++	c = kmalloc_slab(size, GFP_KERNEL, 0);
+ 	return c ? c->object_size : 0;
+ }
+ EXPORT_SYMBOL(kmalloc_size_roundup);
+@@ -776,12 +784,35 @@ EXPORT_SYMBOL(kmalloc_size_roundup);
+ #define KMALLOC_RCL_NAME(sz)
+ #endif
+ 
++#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++#define __KMALLOC_RANDOM_CONCAT(a, b) a ## b
++#define KMALLOC_RANDOM_NAME(N, sz) __KMALLOC_RANDOM_CONCAT(KMA_RAND_, N)(sz)
++#define KMA_RAND_1(sz)                  .name[KMALLOC_RANDOM_START +  1] = "kmalloc-rnd-01-" #sz,
++#define KMA_RAND_2(sz)  KMA_RAND_1(sz)  .name[KMALLOC_RANDOM_START +  2] = "kmalloc-rnd-02-" #sz,
++#define KMA_RAND_3(sz)  KMA_RAND_2(sz)  .name[KMALLOC_RANDOM_START +  3] = "kmalloc-rnd-03-" #sz,
++#define KMA_RAND_4(sz)  KMA_RAND_3(sz)  .name[KMALLOC_RANDOM_START +  4] = "kmalloc-rnd-04-" #sz,
++#define KMA_RAND_5(sz)  KMA_RAND_4(sz)  .name[KMALLOC_RANDOM_START +  5] = "kmalloc-rnd-05-" #sz,
++#define KMA_RAND_6(sz)  KMA_RAND_5(sz)  .name[KMALLOC_RANDOM_START +  6] = "kmalloc-rnd-06-" #sz,
++#define KMA_RAND_7(sz)  KMA_RAND_6(sz)  .name[KMALLOC_RANDOM_START +  7] = "kmalloc-rnd-07-" #sz,
++#define KMA_RAND_8(sz)  KMA_RAND_7(sz)  .name[KMALLOC_RANDOM_START +  8] = "kmalloc-rnd-08-" #sz,
++#define KMA_RAND_9(sz)  KMA_RAND_8(sz)  .name[KMALLOC_RANDOM_START +  9] = "kmalloc-rnd-09-" #sz,
++#define KMA_RAND_10(sz) KMA_RAND_9(sz)  .name[KMALLOC_RANDOM_START + 10] = "kmalloc-rnd-10-" #sz,
++#define KMA_RAND_11(sz) KMA_RAND_10(sz) .name[KMALLOC_RANDOM_START + 11] = "kmalloc-rnd-11-" #sz,
++#define KMA_RAND_12(sz) KMA_RAND_11(sz) .name[KMALLOC_RANDOM_START + 12] = "kmalloc-rnd-12-" #sz,
++#define KMA_RAND_13(sz) KMA_RAND_12(sz) .name[KMALLOC_RANDOM_START + 13] = "kmalloc-rnd-13-" #sz,
++#define KMA_RAND_14(sz) KMA_RAND_13(sz) .name[KMALLOC_RANDOM_START + 14] = "kmalloc-rnd-14-" #sz,
++#define KMA_RAND_15(sz) KMA_RAND_14(sz) .name[KMALLOC_RANDOM_START + 15] = "kmalloc-rnd-15-" #sz,
++#else // CONFIG_RANDOM_KMALLOC_CACHES
++#define KMALLOC_RANDOM_NAME(N, sz)
++#endif
++
+ #define INIT_KMALLOC_INFO(__size, __short_size)			\
+ {								\
+ 	.name[KMALLOC_NORMAL]  = "kmalloc-" #__short_size,	\
+ 	KMALLOC_RCL_NAME(__short_size)				\
+ 	KMALLOC_CGROUP_NAME(__short_size)			\
+ 	KMALLOC_DMA_NAME(__short_size)				\
++	KMALLOC_RANDOM_NAME(RANDOM_KMALLOC_CACHES_NR, __short_size)	\
+ 	.size = __size,						\
+ }
+ 
+@@ -890,6 +921,11 @@ new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
+ 		flags |= SLAB_CACHE_DMA;
+ 	}
+ 
++#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++	if (type >= KMALLOC_RANDOM_START && type <= KMALLOC_RANDOM_END)
++		flags |= SLAB_NO_MERGE;
++#endif
++
+ 	/*
+ 	 * If CONFIG_MEMCG_KMEM is enabled, disable cache merging for
+ 	 * KMALLOC_NORMAL caches.
+@@ -941,6 +977,9 @@ void __init create_kmalloc_caches(slab_flags_t flags)
+ 				new_kmalloc_cache(2, type, flags);
+ 		}
+ 	}
++#ifdef CONFIG_RANDOM_KMALLOC_CACHES
++	random_kmalloc_seed = get_random_u64();
++#endif
+ 
+ 	/* Kmalloc array is now usable */
+ 	slab_state = UP;
+@@ -976,7 +1015,7 @@ void *__do_kmalloc_node(size_t size, gfp_t flags, int node, unsigned long caller
+ 		return ret;
+ 	}
+ 
+-	s = kmalloc_slab(size, flags);
++	s = kmalloc_slab(size, flags, caller);
+ 
+ 	if (unlikely(ZERO_OR_NULL_PTR(s)))
+ 		return s;
+-- 
+2.25.1
 
