@@ -2,97 +2,128 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84566C001B0
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 21:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BF9C00528
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 23:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235900AbjGNVMC (ORCPT
+        id S229914AbjGNXq3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Jul 2023 17:12:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42958 "EHLO
+        Fri, 14 Jul 2023 19:46:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236054AbjGNVMC (ORCPT
+        with ESMTP id S229502AbjGNXq2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Jul 2023 17:12:02 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E23403AA4
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jul 2023 14:11:50 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-3456fda4ed1so11442535ab.0
-        for <linux-hardening@vger.kernel.org>; Fri, 14 Jul 2023 14:11:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1689369110; x=1691961110;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ayfaCfucf1IxZUJIkcDY5SpP36oc4XZNJ0S0NWpHZbA=;
-        b=gbL6jOhY8wQrE5tNWK7ZqXAvNgNEDetCdx6j7RORAWM+MFpnc9WIF3Rsed5eRscK+k
-         hhdfcYcotYpMWpCVC3HTlT/WWVRLA9Jzp+FRTU4fNJ8TUp5MCw8CK486wa4n/8dfW342
-         6QNwDJbbfkikENKSdRLChwyBTyvAGgj3UEt6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689369110; x=1691961110;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ayfaCfucf1IxZUJIkcDY5SpP36oc4XZNJ0S0NWpHZbA=;
-        b=cjf8lKrMDRxx/RlYP/+0OO49MIS+7BdnFooes5K0SCUqaghng5W0XGCnpckG1S0r0U
-         Fiovp4t8Wz/LBtKvaW/DcgjhTwSOcFjgC2w6bHkceRB7kMYuu4YgNsPBzFmUbBGNgiqi
-         yk7B1K7Ayl9i5PX01VhZoF7gbtAMbfSGx7dKCOmp4AGrCM3cpxG1iv/ZJTzbbvP4q4YD
-         G7nXxiI6tCKE/sQQ0a1tP0lQ+mzHbJtGwGQPhMMmm/NJlP3j/0dkbvsNUupeFTG2JzTE
-         52Qbg6JPk5O2uvaL9wWRC77dswYpI6gJrmPZdlDDByfDC//PLd7ZamWtUUGSEunUq54P
-         QhUg==
-X-Gm-Message-State: ABy/qLbrf2XFrMdvEDoDEbUJLPEYmWfI1auaPHNir7IDGrnlR5n0uwB6
-        zOmCXTlKgYLCKsuTiAVdFCU+uQ==
-X-Google-Smtp-Source: APBJJlGr8Oc2LLG74ZdvrDP4YE1fyKijec/+1/PGHs+L6u3AygyUEBjOvCXGAnLJKXEMHDgzS0szEQ==
-X-Received: by 2002:a92:cd47:0:b0:345:7497:3cb7 with SMTP id v7-20020a92cd47000000b0034574973cb7mr5051138ilq.10.1689369110274;
-        Fri, 14 Jul 2023 14:11:50 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id c12-20020a17090a674c00b00265b0268382sm1418656pjm.37.2023.07.14.14.11.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jul 2023 14:11:49 -0700 (PDT)
-Date:   Fri, 14 Jul 2023 14:11:48 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     david@fromorbit.com, linux-xfs@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCHSET 0/3] xfs: ubsan fixes for 6.5-rc2
-Message-ID: <202307141410.A83FB7167@keescook>
-References: <168934573961.3353217.18139786322840965874.stgit@frogsfrogsfrogs>
+        Fri, 14 Jul 2023 19:46:28 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24813A93;
+        Fri, 14 Jul 2023 16:46:27 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ELlPJL013025;
+        Fri, 14 Jul 2023 23:45:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : from : to : cc : references : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=wUjJXOLQQaP2ZEAprH4fQWl8uZ95OgFaQHeNSlopaBw=;
+ b=jC/Ci3XaraVH2SUoMHwH/1LRum615P+g1b1DbzCpu8GEeJWjXs/J8ix+SyPJ2TplrYxC
+ MhVHOcWoa5KRwaRsgcB3YLcQNUyHB1qRE1PW7rwWnedwQrZ/YnHEt8SmlKXYJKE/BQnz
+ GtWuHs99WiWILPkSZYGoj2HMS2YqeeEv1n7rJvqwwN3qZ6PkKbMkVwRafw99JmYaLzbb
+ 9Ha6B7t1CvrCkQuBBECDi1K7XCRId7y8rNU4peMiSr02JsRtxlFR0WvkdGVvQZjP+Ocn
+ XQlqFxjV1CzVmAETG9Z39Cni9dOcsZVJzSQTzR9sF8RAWee+nT4BfNwcBq6SXXRGGHud Kg== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rtpubb1qu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 23:45:33 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36ENjW4e001624
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 23:45:32 GMT
+Received: from [10.110.114.79] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 14 Jul
+ 2023 16:45:31 -0700
+Message-ID: <52650970-de78-764f-28e2-ee0115b7d5c6@quicinc.com>
+Date:   Fri, 14 Jul 2023 16:45:28 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168934573961.3353217.18139786322840965874.stgit@frogsfrogsfrogs>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+From:   Trilok Soni <quic_tsoni@quicinc.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Mukesh Ojha <quic_mojha@quicinc.com>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>, <keescook@chromium.org>,
+        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <2023062814-chance-flounder-f002@gregkh>
+ <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
+ <CACRpkda3CJ7G4-wDPkWmzg6nyCoEfG+u2cQH6KXWNjbftd90ow@mail.gmail.com>
+ <355de4c7-180d-4edd-b6fd-9c8e29e40e42@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <355de4c7-180d-4edd-b6fd-9c8e29e40e42@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: jXG6FgGFtb_gNPqZH6g1IhhZEKBI1bZD
+X-Proofpoint-GUID: jXG6FgGFtb_gNPqZH6g1IhhZEKBI1bZD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-14_11,2023-07-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ priorityscore=1501 spamscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ suspectscore=0 adultscore=0 malwarescore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307140216
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 14, 2023 at 07:42:19AM -0700, Darrick J. Wong wrote:
-> Hi all,
+On 7/5/2023 10:29 AM, Trilok Soni wrote:
+> On 7/4/2023 2:27 AM, Linus Walleij wrote:
+>> On Thu, Jun 29, 2023 at 1:12 AM Rob Herring <robh+dt@kernel.org> wrote:
+>>
+>>> My bigger issue with this whole series is what would this all look
+>>> like if every SoC vendor upstreamed their own custom dumping
+>>> mechanism. That would be a mess. (I have similar opinions on the
+>>> $soc-vendor hypervisors.)
+>>
+>> I agree with Rob's stance.
+>>
+>> I think it would be useful to get input from the hwtracing developers
+>> (Alexander and Mathieu) who faced this "necessarily different" issue
+>> with all the hwtrace mechanisms and found a way out of it. I suspect
+>> they can have an idea of how this should be abstracted.
 > 
-> Fix some UBSAN complaints, since apparently they don't allow flex array
-> declarations with array[1] anymore.
+> Any mailing list you suggest we expand to so that we get inputs from the 
+> hwtracing developers and maintainers or just look into the MAINTAINERS 
+> file and start an email thread?
+> 
+> We are fine to submit the abstract for the LPC in next two weeks, but 
+> prefer to have lot of good discussion before it on the mailing list, so 
+> that we have code to talk about in LPC.
 
-Thanks for finding the best way to do this! Everything looks sane to me,
-and the changes in sizes look correctly identified/checked.
+We have submitted abstract at LPC MC. Let's continue the discussion here 
+though.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Mukesh, do you want to expand the lists as necessary to see if other 
+soc-vendors are having any inputs here? May be add Exynos or MTK kernel 
+mailing lists + linux-kernel? I don't know if anyone will respond or 
+not, but let's try.
 
--Kees
+---Trilok Soni
 
-> 
-> If you're going to start using this mess, you probably ought to just
-> pull from my git trees, which are linked below.
-> 
-> This is an extraordinary way to destroy everything.  Enjoy!
-> Comments and questions are, as always, welcome.
-> 
-> --D
-> 
-> kernel git tree:
-> https://git.kernel.org/cgit/linux/kernel/git/djwong/xfs-linux.git/log/?h=ubsan-fixes-6.5
-> ---
->  fs/xfs/libxfs/xfs_da_format.h |   75 ++++++++++++++++++++++++++++++++++++-----
->  fs/xfs/libxfs/xfs_fs.h        |    4 +-
->  fs/xfs/xfs_ondisk.h           |    5 ++-
->  3 files changed, 71 insertions(+), 13 deletions(-)
-> 
-
--- 
-Kees Cook
