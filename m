@@ -2,163 +2,141 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C5DEB64DC
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 19:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C496EEB64DC
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 20:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235821AbjGNTzt (ORCPT
+        id S235481AbjGNUgA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Jul 2023 15:55:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48882 "EHLO
+        Fri, 14 Jul 2023 16:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229915AbjGNTzs (ORCPT
+        with ESMTP id S233301AbjGNUf7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Jul 2023 15:55:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857632D57;
-        Fri, 14 Jul 2023 12:55:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 22F7A61DD5;
-        Fri, 14 Jul 2023 19:55:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6458C433C8;
-        Fri, 14 Jul 2023 19:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689364546;
-        bh=4eYy/RPZgv0m+5eHPp+58x2nFqjssKzUOUyMAbEfScE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tCBNcnwoV548sdT0f8HZLQhORDA5TZLjjEBAKisdwOskMPLt52VVFHvYNfrY3K7eO
-         PZbwa3r9Dcvs4Gr2ywmFdREIinQ6NehbJsM/pNeZf/vKgxXfJ2af3PaqRrE/N/qbtv
-         nDFBOVhg9V5RbvhbwWI+AXkclXKA8BX9W1cBTJtkQtGv+nrrqF/Bt3d9Qv+C1fYDXB
-         NhUYnz2/NT41gaOWvJdzh+3h4UX8VXZ5dNuI5R0B6hbcfb5DkqjJnFKCNm4FRuesHf
-         ofvIVefVak++dRHk037OuQeX+rrMVVfhwl6qMJQ/kWwvv2iw2ACpbcynp0xqwcGmjr
-         wsHUo6ZjnObPQ==
-Date:   Fri, 14 Jul 2023 13:56:37 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Bob Copeland <me@bobcopeland.com>
-Cc:     linux-karma-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] fs: omfs: Use flexible-array member in struct
- omfs_extent
-Message-ID: <ZLGodUeD307GlINN@work>
+        Fri, 14 Jul 2023 16:35:59 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D7235AD;
+        Fri, 14 Jul 2023 13:35:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689366958; x=1720902958;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=zDj72u9E9a3wZCG32UrWexGXSZP8EqG3M+2b/gTOMaY=;
+  b=d4zUPIa6tE0doq0jVFhKGkM+fa86i7T8mQecal3NgcL7bBmPgd9xovmU
+   ZL8MoUEKkCkZP0dyHyjZIYl7IbFtPRpX5huyrclMBK0Ublg8XfqKbMHCg
+   aCf0nzPQaS5K6nGjRX6GxXqXW8xzFYh5Z/uksVgPacXlnCthKsRjI7eLj
+   U2RNylrq6tYAAhuHTdguqgVgfTb21rcz5wFE9Wbg54nOLBB6NFI+E/qq3
+   bbhx+xRiq+EAX8ta1Q5SSUUZegEyIwkfX3bzt4EMEia39DMdh8OkpSp1i
+   Ur8xU3FekS0d77Vx+0O192ldrvGPG6pW5f7BGKpmBLjgQqbiLnnP6FyGm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="431749280"
+X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
+   d="scan'208";a="431749280"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 13:35:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="1053197010"
+X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
+   d="scan'208";a="1053197010"
+Received: from jkchitra-mobl1.amr.corp.intel.com (HELO vcostago-mobl3) ([10.209.5.179])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 13:35:56 -0700
+From:   Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        linux-pci@vger.kernel.org,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] igc: Ignore AER reset when device is suspended
+In-Reply-To: <20230714145445.GA354014@bhelgaas>
+References: <20230714145445.GA354014@bhelgaas>
+Date:   Fri, 14 Jul 2023 13:35:55 -0700
+Message-ID: <874jm6nsd0.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Memory for 'struct omfs_extent' and a 'e_extent_count' number of extent
-entries is indirectly allocated through 'bh->b_data', which is a pointer
-to data within the page. This implies that the member 'e_entry'
-(which is the start of extent entries) functions more like an array than
-a single object of type 'struct omfs_extent_entry'.
+Bjorn Helgaas <helgaas@kernel.org> writes:
 
-So we better turn this object into a proper array, in this case a
-flexible-array member, and with that, fix the following
--Wstringop-overflow warning seen after building s390 architecture with
-allyesconfig (GCC 13):
+> On Fri, Jul 14, 2023 at 01:05:41PM +0800, Kai-Heng Feng wrote:
+>> When a system that connects to a Thunderbolt dock equipped with I225,
+>> like HP Thunderbolt Dock G4, I225 stops working after S3 resume:
+>> ...
+>
+>> The issue is that the PTM requests are sending before driver resumes the
+>> device. Since the issue can also be observed on Windows, it's quite
+>> likely a firmware/hardware limitation.
+>
+> Does this mean we didn't disable PTM correctly on suspend?  Or is the
+> device defective and sending PTM requests even though PTM is disabled?
+>
 
-fs/omfs/file.c: In function 'omfs_grow_extent':
-include/linux/fortify-string.h:57:33: warning: writing 16 bytes into a region of size 0 [-Wstringop-overflow=]
-   57 | #define __underlying_memcpy     __builtin_memcpy
-      |                                 ^
-include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
-  648 |         __underlying_##op(p, q, __fortify_size);                        \
-      |         ^~~~~~~~~~~~~
-include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
-  693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-      |                          ^~~~~~~~~~~~~~~~~~~~
-fs/omfs/file.c:170:9: note: in expansion of macro 'memcpy'
-  170 |         memcpy(terminator, entry, sizeof(struct omfs_extent_entry));
-      |         ^~~~~~
-In file included from fs/omfs/omfs.h:8,
-                 from fs/omfs/file.c:11:
-fs/omfs/omfs_fs.h:80:34: note: at offset 16 into destination object 'e_entry' of size 16
-   80 |         struct omfs_extent_entry e_entry;       /* start of extent entries */
-      |                                  ^~~~~~~
+The way I understand the hardware bug, the device is defective, as you
+said, the device sends PTM messages when "busmastering" is disabled.
 
-There are some binary differences before and after changes, but this are
-expected due to the change in the size of 'struct omfs_extent' and the
-necessary adjusments.
+> If the latter, I vote for a quirk that just disables PTM completely
+> for this device.
+>
 
-This helps with the ongoing efforts to globally enable
--Wstringop-overflow.
+My suggestion is that adding this quirk would be a last resort kind of
+thing. There are users/customers that depend on the increased time
+synchronization accuracy that PTM provides.
 
-Link: https://github.com/KSPP/linux/issues/330
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- fs/omfs/file.c    | 12 ++++++------
- fs/omfs/omfs_fs.h |  2 +-
- 2 files changed, 7 insertions(+), 7 deletions(-)
+> This check in .error_detected() looks out of place to me because
+> there's no connection between AER and PTM, there's no connection
+> between PTM and the device being enabled, and the connection between
+> the device being enabled and being fully resumed is a little tenuous.
+>
+> If we must do it this way, maybe add a comment about *why* we're
+> checking pci_is_enabled().  Otherwise this will be copied to other
+> drivers that don't need it.
 
-diff --git a/fs/omfs/file.c b/fs/omfs/file.c
-index de8f57ee39ec..6b580b9da8e3 100644
---- a/fs/omfs/file.c
-+++ b/fs/omfs/file.c
-@@ -14,7 +14,7 @@ static u32 omfs_max_extents(struct omfs_sb_info *sbi, int offset)
- {
- 	return (sbi->s_sys_blocksize - offset -
- 		sizeof(struct omfs_extent)) /
--		sizeof(struct omfs_extent_entry) + 1;
-+		sizeof(struct omfs_extent_entry);
- }
- 
- void omfs_make_empty_table(struct buffer_head *bh, int offset)
-@@ -24,8 +24,8 @@ void omfs_make_empty_table(struct buffer_head *bh, int offset)
- 	oe->e_next = ~cpu_to_be64(0ULL);
- 	oe->e_extent_count = cpu_to_be32(1),
- 	oe->e_fill = cpu_to_be32(0x22),
--	oe->e_entry.e_cluster = ~cpu_to_be64(0ULL);
--	oe->e_entry.e_blocks = ~cpu_to_be64(0ULL);
-+	oe->e_entry[0].e_cluster = ~cpu_to_be64(0ULL);
-+	oe->e_entry[0].e_blocks = ~cpu_to_be64(0ULL);
- }
- 
- int omfs_shrink_inode(struct inode *inode)
-@@ -68,7 +68,7 @@ int omfs_shrink_inode(struct inode *inode)
- 
- 		last = next;
- 		next = be64_to_cpu(oe->e_next);
--		entry = &oe->e_entry;
-+		entry = oe->e_entry;
- 
- 		/* ignore last entry as it is the terminator */
- 		for (; extent_count > 1; extent_count--) {
-@@ -117,7 +117,7 @@ static int omfs_grow_extent(struct inode *inode, struct omfs_extent *oe,
- 			u64 *ret_block)
- {
- 	struct omfs_extent_entry *terminator;
--	struct omfs_extent_entry *entry = &oe->e_entry;
-+	struct omfs_extent_entry *entry = oe->e_entry;
- 	struct omfs_sb_info *sbi = OMFS_SB(inode->i_sb);
- 	u32 extent_count = be32_to_cpu(oe->e_extent_count);
- 	u64 new_block = 0;
-@@ -245,7 +245,7 @@ static int omfs_get_block(struct inode *inode, sector_t block,
- 
- 		extent_count = be32_to_cpu(oe->e_extent_count);
- 		next = be64_to_cpu(oe->e_next);
--		entry = &oe->e_entry;
-+		entry = oe->e_entry;
- 
- 		if (extent_count > max_extents)
- 			goto out_brelse;
-diff --git a/fs/omfs/omfs_fs.h b/fs/omfs/omfs_fs.h
-index caecb3d5a344..1ff6b9e41297 100644
---- a/fs/omfs/omfs_fs.h
-+++ b/fs/omfs/omfs_fs.h
-@@ -77,7 +77,7 @@ struct omfs_extent {
- 	__be64 e_next;			/* next extent table location */
- 	__be32 e_extent_count;		/* total # extents in this table */
- 	__be32 e_fill;
--	struct omfs_extent_entry e_entry;	/* start of extent entries */
-+	struct omfs_extent_entry e_entry[];	/* start of extent entries */
- };
- 
- #endif
+Makes total sense, from my side.
+
+>
+>> So avoid resetting the device if it's not resumed. Once the device is
+>> fully resumed, the device can work normally.
+>> 
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216850
+>> Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+>> Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> 
+>> ---
+>> v2:
+>>  - Fix typo.
+>>  - Mention the product name.
+>> 
+>>  drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
+>>  1 file changed, 3 insertions(+)
+>> 
+>> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+>> index 9f93f0f4f752..8c36bbe5e428 100644
+>> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+>> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+>> @@ -7115,6 +7115,9 @@ static pci_ers_result_t igc_io_error_detected(struct pci_dev *pdev,
+>>  	struct net_device *netdev = pci_get_drvdata(pdev);
+>>  	struct igc_adapter *adapter = netdev_priv(netdev);
+>>  
+>> +	if (!pci_is_enabled(pdev))
+>> +		return 0;
+>> +
+>>  	netif_device_detach(netdev);
+>>  
+>>  	if (state == pci_channel_io_perm_failure)
+>> -- 
+>> 2.34.1
+>> 
+>
+
 -- 
-2.34.1
-
+Vinicius
