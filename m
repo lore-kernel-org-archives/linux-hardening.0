@@ -2,66 +2,117 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13A7EB64DA
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 12:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C27EB64DC
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 14:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231234AbjGNMUs (ORCPT
+        id S235574AbjGNOzD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Jul 2023 08:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33788 "EHLO
+        Fri, 14 Jul 2023 10:55:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbjGNMUs (ORCPT
+        with ESMTP id S236170AbjGNOzC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Jul 2023 08:20:48 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498901FD6;
-        Fri, 14 Jul 2023 05:20:43 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a0c:5a83:9100:a000:f3b4:c45b:fd64:e7b9])
+        Fri, 14 Jul 2023 10:55:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E1FC30C0;
+        Fri, 14 Jul 2023 07:54:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        (Authenticated sender: rcn)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 7574E6605954;
-        Fri, 14 Jul 2023 13:20:41 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1689337241;
-        bh=/QK1CvoIj4sPYbE24wl2osdOcD4Lks2qAy78j0SBdy4=;
-        h=From:To:Cc:Subject:References:In-reply-to:Date:From;
-        b=KI+v8ICaXYe0qBHunUu7ifXsoZFh1r1SckVzT9hMQMwjecy5kF+NRZAAbS9gav9y/
-         SCbi8kn9r/2R+/4Nc1wjt6JANiMyAPLZgZy7XOu20jzoCeZ8wl59PvmfU6YevsO3SX
-         ofYQUvoaGD68Qz1iUEkO1pUHV3petdAOlvQKBcVR5vLwDYTwwewTAmEdH7YjUdmIHd
-         ZYoG/MHdayycywJpSlPyA74BCC17CNdrcYHjd+jRMiSOy2By4PizahiOktBb9xo/k2
-         xIWtuP1b2++ufZgcQnS5yOHfFvKwQvRMnCnhCpFl8Fxkro45hbT7oFk3MI/g2DbHha
-         1pkEmWD0Xss8g==
-From:   Ricardo =?utf-8?Q?Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>
-To:     Paulo Miguel Almeida <paulo.miguel.almeida.rodenas@gmail.com>,
-        Alex Deucher <alexdeucher@gmail.com>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        alexander.deucher@amd.com, kernel@collabora.com,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/amdgpu: replace 1-element arrays with flexible arrays
-References: <20230712083137.1080883-1-ricardo.canuelo@collabora.com> <CADnq5_OUS=JDfCdrCsuzTB0xD5yeX7piEDEqkRO-ffPTFVYs3g@mail.gmail.com> <ZLEmDBfklhfGCLGa@mail.google.com>
-In-reply-to: <ZLEmDBfklhfGCLGa@mail.google.com>
-Date:   Fri, 14 Jul 2023 14:20:38 +0200
-Message-ID: <87ilamit0p.fsf@rcn-XPS-13-9305.i-did-not-set--mail-host-address--so-tickle-me>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3355F61D43;
+        Fri, 14 Jul 2023 14:54:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F67C433C8;
+        Fri, 14 Jul 2023 14:54:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689346488;
+        bh=ZH/581wIsvRkjbT1Km2WPpK9yxOv+wJEG0gq+KRNxmI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=pcmyzOgVvkq/IxwsTWZTza8vFkLmG5W/a9dZ9FgjbnfWJ7S6yTx7gJZ3kI7vu1vLi
+         Bqaqf5q6cz69MjQEi0UvzrSdIltmkWwyyYOOtRLZiCuxTl1agCBk0vN7OGtRVrYwLZ
+         sJK5Ke3IikttOGmJomu3a9F1zmWL24NVy9WGCTwBjtsmssnEZ8BwJboKSHc4ucEWIe
+         2AovQVoXJmCD/WKCP6T730m1rrOrto0Fhq0DidlFamqKZRvQfqDU2MSxpr/SQaQ91j
+         /mruCsdztAW6pP1z9FUw2fvRt663SNxsGnCi6rUJsKeEZ5DvKcLL/WgcaK4gIXzEK1
+         8zcDi3f1H3biA==
+Date:   Fri, 14 Jul 2023 09:54:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+        linux-pci@vger.kernel.org,
+        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] igc: Ignore AER reset when device is suspended
+Message-ID: <20230714145445.GA354014@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230714050541.2765246-1-kai.heng.feng@canonical.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Paulo,
+On Fri, Jul 14, 2023 at 01:05:41PM +0800, Kai-Heng Feng wrote:
+> When a system that connects to a Thunderbolt dock equipped with I225,
+> like HP Thunderbolt Dock G4, I225 stops working after S3 resume:
+> ...
 
-> I didn't review all struct changes but I reckon that you got the train
-> of thought to be followed by now. Please count on me for reviewing those
-> changes :-)
+> The issue is that the PTM requests are sending before driver resumes the
+> device. Since the issue can also be observed on Windows, it's quite
+> likely a firmware/hardware limitation.
 
-Thanks for reviewing the patch. It turned out that making these changes
-properly isn't so trivial as I thought and I'll need to spend more time
-working on it. Unfortunately I can't right now and I'll be away next
-week. Since this isn't really urgent I guess I can keep working on it
-after I come back. I'll take your suggestions into consideration for v2.
+Does this mean we didn't disable PTM correctly on suspend?  Or is the
+device defective and sending PTM requests even though PTM is disabled?
 
-Cheers,
-Ricardo
+If the latter, I vote for a quirk that just disables PTM completely
+for this device.
+
+This check in .error_detected() looks out of place to me because
+there's no connection between AER and PTM, there's no connection
+between PTM and the device being enabled, and the connection between
+the device being enabled and being fully resumed is a little tenuous.
+
+If we must do it this way, maybe add a comment about *why* we're
+checking pci_is_enabled().  Otherwise this will be copied to other
+drivers that don't need it.
+
+> So avoid resetting the device if it's not resumed. Once the device is
+> fully resumed, the device can work normally.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216850
+> Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> 
+> ---
+> v2:
+>  - Fix typo.
+>  - Mention the product name.
+> 
+>  drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+> index 9f93f0f4f752..8c36bbe5e428 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> @@ -7115,6 +7115,9 @@ static pci_ers_result_t igc_io_error_detected(struct pci_dev *pdev,
+>  	struct net_device *netdev = pci_get_drvdata(pdev);
+>  	struct igc_adapter *adapter = netdev_priv(netdev);
+>  
+> +	if (!pci_is_enabled(pdev))
+> +		return 0;
+> +
+>  	netif_device_detach(netdev);
+>  
+>  	if (state == pci_channel_io_perm_failure)
+> -- 
+> 2.34.1
+> 
