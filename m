@@ -2,117 +2,145 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C27EB64DC
-	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 14:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35824C0015E
+	for <linux-hardening@archiver.kernel.org>; Fri, 14 Jul 2023 15:26:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235574AbjGNOzD (ORCPT
+        id S236062AbjGNP0g (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 14 Jul 2023 10:55:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60202 "EHLO
+        Fri, 14 Jul 2023 11:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236170AbjGNOzC (ORCPT
+        with ESMTP id S236019AbjGNP0f (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 14 Jul 2023 10:55:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E1FC30C0;
-        Fri, 14 Jul 2023 07:54:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3355F61D43;
-        Fri, 14 Jul 2023 14:54:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F67C433C8;
-        Fri, 14 Jul 2023 14:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689346488;
-        bh=ZH/581wIsvRkjbT1Km2WPpK9yxOv+wJEG0gq+KRNxmI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pcmyzOgVvkq/IxwsTWZTza8vFkLmG5W/a9dZ9FgjbnfWJ7S6yTx7gJZ3kI7vu1vLi
-         Bqaqf5q6cz69MjQEi0UvzrSdIltmkWwyyYOOtRLZiCuxTl1agCBk0vN7OGtRVrYwLZ
-         sJK5Ke3IikttOGmJomu3a9F1zmWL24NVy9WGCTwBjtsmssnEZ8BwJboKSHc4ucEWIe
-         2AovQVoXJmCD/WKCP6T730m1rrOrto0Fhq0DidlFamqKZRvQfqDU2MSxpr/SQaQ91j
-         /mruCsdztAW6pP1z9FUw2fvRt663SNxsGnCi6rUJsKeEZ5DvKcLL/WgcaK4gIXzEK1
-         8zcDi3f1H3biA==
-Date:   Fri, 14 Jul 2023 09:54:45 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        linux-pci@vger.kernel.org,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] igc: Ignore AER reset when device is suspended
-Message-ID: <20230714145445.GA354014@bhelgaas>
+        Fri, 14 Jul 2023 11:26:35 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC42E30C0;
+        Fri, 14 Jul 2023 08:26:34 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ECbstq019424;
+        Fri, 14 Jul 2023 15:26:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=KlTyfug7EZTBZKaQpxZzWcVPGIFRszohTvpxdR5Kc6k=;
+ b=ixhfhWtHAH5MMBtVuvcB7T+CAwWuyvrqrit2WO+RxmSM4gZFUohL3Dt+SYWt6TAJbDsv
+ UqNrJNSDvfOrEPizTj27/tMO1j/KiWGurbjxu4kiCQyewmL0rHY9VQAZFe/riA9QwqJx
+ ZODC1f0JfTBrmnpyoqyh2DrjA45KDwymCTZtpl+TQ5fgLQW11OeXc+CC/l+ozDQJ0Uu6
+ oAz7PziZ5lt2fqTKTHi6GMJcq08Si80VrKvqWyrMbBOb/ynoZNJdnLpDLQvnnveZfnUv
+ glFvbv2Bf6gokOfQnvxVMNzTKK/ADJJDDfdkzsYpfQQDQWYLook+8liu+lL5Nc0NclSr TQ== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rtpts23jr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 15:26:12 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36EFQBK1031783
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Jul 2023 15:26:11 GMT
+Received: from [10.216.56.39] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Fri, 14 Jul
+ 2023 08:25:59 -0700
+Message-ID: <d77f5601-2b08-a7c7-1400-7ab68b8add3a@quicinc.com>
+Date:   Fri, 14 Jul 2023 20:55:26 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230714050541.2765246-1-kai.heng.feng@canonical.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
+ support
+To:     Kathiravan T <quic_kathirav@quicinc.com>, <corbet@lwn.net>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <keescook@chromium.org>, <tony.luck@intel.com>,
+        <gpiccoli@igalia.com>, <mathieu.poirier@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>
+CC:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>
+References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
+ <c712597e-f870-f224-fc1b-90c6f8f19710@quicinc.com>
+Content-Language: en-US
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <c712597e-f870-f224-fc1b-90c6f8f19710@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: k6kW04K-HSKuFwXlBT09sQYlyELKk4zM
+X-Proofpoint-ORIG-GUID: k6kW04K-HSKuFwXlBT09sQYlyELKk4zM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-14_06,2023-07-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 phishscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999
+ clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307140140
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 14, 2023 at 01:05:41PM +0800, Kai-Heng Feng wrote:
-> When a system that connects to a Thunderbolt dock equipped with I225,
-> like HP Thunderbolt Dock G4, I225 stops working after S3 resume:
-> ...
 
-> The issue is that the PTM requests are sending before driver resumes the
-> device. Since the issue can also be observed on Windows, it's quite
-> likely a firmware/hardware limitation.
-
-Does this mean we didn't disable PTM correctly on suspend?  Or is the
-device defective and sending PTM requests even though PTM is disabled?
-
-If the latter, I vote for a quirk that just disables PTM completely
-for this device.
-
-This check in .error_detected() looks out of place to me because
-there's no connection between AER and PTM, there's no connection
-between PTM and the device being enabled, and the connection between
-the device being enabled and being fully resumed is a little tenuous.
-
-If we must do it this way, maybe add a comment about *why* we're
-checking pci_is_enabled().  Otherwise this will be copied to other
-drivers that don't need it.
-
-> So avoid resetting the device if it's not resumed. Once the device is
-> fully resumed, the device can work normally.
 > 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216850
-> Reviewed-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> Acked-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Hi Mukesh,
 > 
-> ---
-> v2:
->  - Fix typo.
->  - Mention the product name.
+> For IPQ chipsets, for the crashdump to work, we need the below patch
 > 
->  drivers/net/ethernet/intel/igc/igc_main.c | 3 +++
->  1 file changed, 3 insertions(+)
+> firmware: scm: Modify only the download bits in TCSR register
 > 
-> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-> index 9f93f0f4f752..8c36bbe5e428 100644
-> --- a/drivers/net/ethernet/intel/igc/igc_main.c
-> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
-> @@ -7115,6 +7115,9 @@ static pci_ers_result_t igc_io_error_detected(struct pci_dev *pdev,
->  	struct net_device *netdev = pci_get_drvdata(pdev);
->  	struct igc_adapter *adapter = netdev_priv(netdev);
->  
-> +	if (!pci_is_enabled(pdev))
-> +		return 0;
-> +
->  	netif_device_detach(netdev);
->  
->  	if (state == pci_channel_io_perm_failure)
-> -- 
-> 2.34.1
+> can you post the below patches separately? Looks like minidump will take 
+> some time and also I don't see any dependencies for these to go along 
+> with the minidump. Given that, will it be possible to post the below 
+> patches separately?
 > 
+>    firmware: qcom_scm: provide a read-modify-write function
+>    pinctrl: qcom: Use qcom_scm_io_update_field()
+>    firmware: scm: Modify only the download bits in TCSR register
+> 
+> Do let us know if we can take these patches and post it separately.
+
+Yes, we can post this separately.
+
+-Mukesh
+> 
+>>
+>>   Documentation/admin-guide/index.rst                |   1 +
+>>   Documentation/admin-guide/qcom_minidump.rst        | 293 +++++++++++
+>>   .../devicetree/bindings/soc/qcom/qcom,ramoops.yaml | 126 +++++
+>>   MAINTAINERS                                        |  15 +
+>>   arch/arm64/boot/dts/qcom/sm8450.dtsi               |  12 +
+>>   arch/arm64/configs/defconfig                       |   4 +
+>>   drivers/firmware/Kconfig                           |  11 -
+>>   drivers/firmware/qcom_scm.c                        |  85 ++-
+>>   drivers/pinctrl/qcom/pinctrl-msm.c                 |  12 +-
+>>   drivers/remoteproc/qcom_common.c                   | 142 +----
+>>   drivers/soc/qcom/Kconfig                           |  39 ++
+>>   drivers/soc/qcom/Makefile                          |   3 +
+>>   drivers/soc/qcom/qcom_minidump.c                   | 582 
+>> +++++++++++++++++++++
+>>   drivers/soc/qcom/qcom_minidump_internal.h          |  98 ++++
+>>   drivers/soc/qcom/qcom_minidump_smem.c              | 387 ++++++++++++++
+>>   drivers/soc/qcom/qcom_pstore_minidump.c            | 210 ++++++++
+>>   drivers/soc/qcom/smem.c                            |   9 +
+>>   fs/pstore/ram.c                                    |  26 +-
+>>   include/linux/firmware/qcom/qcom_scm.h             |   2 +
+>>   include/linux/pstore_ram.h                         |   2 +
+>>   include/soc/qcom/qcom_minidump.h                   |  64 +++
+>>   kernel/kallsyms.c                                  |   2 +-
+>>   22 files changed, 1973 insertions(+), 152 deletions(-)
+>>   create mode 100644 Documentation/admin-guide/qcom_minidump.rst
+>>   create mode 100644 
+>> Documentation/devicetree/bindings/soc/qcom/qcom,ramoops.yaml
+>>   create mode 100644 drivers/soc/qcom/qcom_minidump.c
+>>   create mode 100644 drivers/soc/qcom/qcom_minidump_internal.h
+>>   create mode 100644 drivers/soc/qcom/qcom_minidump_smem.c
+>>   create mode 100644 drivers/soc/qcom/qcom_pstore_minidump.c
+>>   create mode 100644 include/soc/qcom/qcom_minidump.h
+>>
