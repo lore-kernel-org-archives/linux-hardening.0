@@ -2,161 +2,109 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E5CEB64DC
-	for <linux-hardening@archiver.kernel.org>; Mon, 17 Jul 2023 07:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4B4C00528
+	for <linux-hardening@archiver.kernel.org>; Mon, 17 Jul 2023 08:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbjGQHrl (ORCPT
+        id S231194AbjGQICX (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 17 Jul 2023 03:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49088 "EHLO
+        Mon, 17 Jul 2023 04:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230252AbjGQHrj (ORCPT
+        with ESMTP id S231199AbjGQICW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 17 Jul 2023 03:47:39 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEF5C7
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Jul 2023 00:47:19 -0700 (PDT)
-Received: from mail-oo1-f69.google.com (mail-oo1-f69.google.com [209.85.161.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B0F983F1A5
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Jul 2023 07:47:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1689580037;
-        bh=3gAfaAKrcJgIAcFAT2kE7R0UfBXH+B9pPbdV57Y5Wuk=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=K8hR62ljMn1m6vkLxvCo/yL3vl/+mlbkYKaEUz7x//DxzXcJ53tsDHtnz7/WzXEK0
-         GVtfiVuV3wW27uFz5mmaw66hHA6d5guZwWVwh/M7zsm/Cw7DRx2wKOdoJGVf/9xwAy
-         UZLlXZJDCBa8YMqCsaaC4Um7vmdjpQTUsYiT1zDU1bJXxBghYBwpHu+C9zXLlxjAIA
-         qva0I7CpWNnOYjQhv5mIZagueTo4Lndrjx7o063Xk190RS7Ih9w9fzLGur2+J0l/b1
-         tKthC7pPVpz11EgCcgnTBwMfTbAbhGHlu0JSCkVr3YDviX2oNTfQtFl7TmrQVOJoKa
-         FU19Vu/7NNIcQ==
-Received: by mail-oo1-f69.google.com with SMTP id 006d021491bc7-5634c4df8c4so5545199eaf.1
-        for <linux-hardening@vger.kernel.org>; Mon, 17 Jul 2023 00:47:17 -0700 (PDT)
+        Mon, 17 Jul 2023 04:02:22 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0BFD120
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Jul 2023 01:02:19 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4fc8049fd8bso6332376e87.2
+        for <linux-hardening@vger.kernel.org>; Mon, 17 Jul 2023 01:02:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1689580938; x=1692172938;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ybDWeGYh7QkWqKSuqnHy7+o3sCCASBcWk0Zen0RPF2c=;
+        b=oQS7I5usrfXc9q0gkIN9Y65z8MX729Uvxqkggz/yHgR5zI/SEHh5DYqV2rdAXHZz6S
+         xrXBD9MLtRN+12vp9l0UM+LnEfi6o3Pi+51jaJoKcnUt8mckvAdye4NiO4QMUPytFTk8
+         5VN9v1rLHdxhj1u1Gk82EsVI2IRVURW7KldC3dBbuOsVBCk8nBIV3qqIvLHSJIiH4eH+
+         Y2lOsr+kTeyQdF6QUXGRFSz6/nkz3mBMy5Xn5+uLI8OG2beLLYHveAtf0TC5lx5fuctf
+         mGhsHS38S22KiPxT4CmPMHzmrrVDQUc6snqRe0pDy8L8YgdXFDILzekGXsgw3MNM7uzn
+         eSEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689580035; x=1692172035;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3gAfaAKrcJgIAcFAT2kE7R0UfBXH+B9pPbdV57Y5Wuk=;
-        b=hlKhYCujpLwksA7yFGjAmo6mxJt5MDqNgS7FqiGrvVkpQDKssc8jPgDV0H4G4RpAL7
-         YE7eieFk4FOlt0M3lfdGy1uEKJYv49NUiE6Jci0HWw4joFzmch0pMMSnSc47C/oCNTKi
-         CHyFYmdlvGtj0vwSOJydgRZzAeWabao6HIIE8Y09HamNDlul2BT1e/WUhLFs/d7KvwAA
-         c8u/o+0NDTcIeXQIeLYGlM9UOinsdEeQZ+ulyhue15arvbrCVMq36PXB8jYkdYS/AuOy
-         CMenISZ+QEF3wFObXQrfVhLRFyhCmDz8Nnyp9795mMKc4xVqQGqoc9KXboWyb0V2mqnZ
-         VPkw==
-X-Gm-Message-State: ABy/qLb/AaN06Fi+bO/yBmndCz6wAiQH29dAX3W2C+N/cjbvdOS+iT/G
-        zuEyhBepom5rdqjQuI7dMkNyGzvrIxJLOEPciH53P5TGGjFkvxfacsPkxaSB9BQSviV9aeLFQvW
-        3msn9MPAvZ/1AvPHUmzCj8GSKfER9nkEVljo7Ym5Mmv6+7iZ6qTep7xPDw6Ef0g==
-X-Received: by 2002:a05:6358:4291:b0:133:291:f9ac with SMTP id s17-20020a056358429100b001330291f9acmr8421581rwc.25.1689580035726;
-        Mon, 17 Jul 2023 00:47:15 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlG9DoONFKdmsKqUh/LuGSuwifc1GAuZNV44ZqW0/u5tIfGEjz1hRCf3IVbFGKMGLXWKhFrokqQ0Xv8dAN/JWlM=
-X-Received: by 2002:a05:6358:4291:b0:133:291:f9ac with SMTP id
- s17-20020a056358429100b001330291f9acmr8421558rwc.25.1689580035356; Mon, 17
- Jul 2023 00:47:15 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1689580938; x=1692172938;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ybDWeGYh7QkWqKSuqnHy7+o3sCCASBcWk0Zen0RPF2c=;
+        b=e1XoE4n+8PAdIVlzTmNKUva4+DWZJebZPlDGwz2BijweTsEXxu0GDI0oAjrf4iBsSz
+         MPi4MM1tu3OnNypeIBl7OiLbz5OOvJojodqtMDmdTsfcPpI3G7KPqL75vxyivmhjD9nD
+         EISIdIXfA8p2T6WSsJB5AL6uWrL5LponvusFii63sg1R7PbZWoq70kpoVP7s8G0+3bF9
+         GKVQ/PwUU2+aWWkCQzH+9CeZfH+BaB+IslL50XQPHXHwyyJGt0jE1pcAmR0gV36Nvxhg
+         KpuLO3NJ6S/k/dIbYClLt8R5JmfEmQyUGAA4TPu4kzzaUDJVooFfFUQrZT/sGDyZGYiB
+         e9FA==
+X-Gm-Message-State: ABy/qLZuaJwfCfw7ZzBokQ60UEDPQXkU/jaOX9mIV0OZ/e/JIKuahosZ
+        Y+2hFtQoJzguJQpEjx24zJx1cQ==
+X-Google-Smtp-Source: APBJJlGaWSnDlZyb6JY1n2wdxR3Lgs52I2miQt9O/go6p3/cQ8xCwjp0Gz89lXxwN9nZK8HZKTWn2w==
+X-Received: by 2002:a05:6512:3c92:b0:4fa:5e76:7ad4 with SMTP id h18-20020a0565123c9200b004fa5e767ad4mr9100751lfv.10.1689580937881;
+        Mon, 17 Jul 2023 01:02:17 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.104])
+        by smtp.gmail.com with ESMTPSA id n16-20020a05640206d000b0051e0bf5807bsm9518544edy.49.2023.07.17.01.02.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Jul 2023 01:02:17 -0700 (PDT)
+Message-ID: <128bcf0e-9b74-0df1-6366-d553475fbad7@linaro.org>
+Date:   Mon, 17 Jul 2023 10:02:14 +0200
 MIME-Version: 1.0
-References: <874jm6nsd0.fsf@intel.com> <20230715191216.GA364070@bhelgaas>
-In-Reply-To: <20230715191216.GA364070@bhelgaas>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Mon, 17 Jul 2023 15:47:04 +0800
-Message-ID: <CAAd53p6SiQrmjWA3=4CE0tw15-ZfmkcqTNoheXzkkkargfGtCw@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH v2] igc: Ignore AER reset when device is suspended
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Kees Cook <keescook@chromium.org>, linux-pci@vger.kernel.org,
-        jesse.brandeburg@intel.com, linux-kernel@vger.kernel.org,
-        "Guilherme G . Piccoli" <gpiccoli@igalia.com>,
-        Eric Dumazet <edumazet@google.com>, netdev@vger.kernel.org,
-        anthony.l.nguyen@intel.com, linux-hardening@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: (subset) [PATCH v3 00/18] Add basic Minidump kernel driver
+ support
+Content-Language: en-US
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc:     agross@kernel.org, konrad.dybcio@linaro.org, corbet@lwn.net,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        srinivas.kandagatla@linaro.org,
+        Mukesh Ojha <quic_mojha@quicinc.com>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+References: <1683133352-10046-1-git-send-email-quic_mojha@quicinc.com>
+ <168945921478.1805013.7211960599963339759.b4-ty@kernel.org>
+ <ZLSWTaMtr9UGmrDy@p14s>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <ZLSWTaMtr9UGmrDy@p14s>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sun, Jul 16, 2023 at 3:12=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Fri, Jul 14, 2023 at 01:35:55PM -0700, Vinicius Costa Gomes wrote:
-> > Bjorn Helgaas <helgaas@kernel.org> writes:
-> > > On Fri, Jul 14, 2023 at 01:05:41PM +0800, Kai-Heng Feng wrote:
-> > >> When a system that connects to a Thunderbolt dock equipped with I225=
-,
-> > >> like HP Thunderbolt Dock G4, I225 stops working after S3 resume:
-> > >> ...
-> > >
-> > >> The issue is that the PTM requests are sending before driver resumes=
- the
-> > >> device. Since the issue can also be observed on Windows, it's quite
-> > >> likely a firmware/hardware limitation.
-> > >
-> > > Does this mean we didn't disable PTM correctly on suspend?  Or is the
-> > > device defective and sending PTM requests even though PTM is disabled=
-?
-> >
-> > The way I understand the hardware bug, the device is defective, as you
-> > said, the device sends PTM messages when "busmastering" is disabled.
->
-> Bus Master Enable controls the ability of a Function to issue Memory
-> and I/O Read/Write Requests (PCIe r6.0, sec 7.5.1.1.3).  PTM uses
-> Messages, and I don't think they should be affected by Bus Master
-> Enable.
->
-> I also don't understand the I225 connection.  We have these
-> Uncorrected Non-Fatal errors:
->
-> > >> [  606.527931] pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non=
--Fatal) error received: 0000:00:1d.0
-> > >> [  606.528064] pcieport 0000:00:1d.0: PCIe Bus Error: severity=3DUnc=
-orrected (Non-Fatal), type=3DTransaction Layer, (Requester ID)
-> > >> [  606.528068] pcieport 0000:00:1d.0:   device [8086:7ab0] error sta=
-tus/mask=3D00100000/00004000
-> > >> [  606.528072] pcieport 0000:00:1d.0:    [20] UnsupReq              =
- (First)
-> > >> [  606.528075] pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a=
-000052 00000000 00000000
-> > >> [  606.528079] pcieport 0000:00:1d.0: AER:   Error of this Agent is =
-reported first
-> > >> [  606.528098] pcieport 0000:04:01.0: PCIe Bus Error: severity=3DUnc=
-orrected (Non-Fatal), type=3DTransaction Layer, (Requester ID)
-> > >> [  606.528101] pcieport 0000:04:01.0:   device [8086:1136] error sta=
-tus/mask=3D00300000/00000000
-> > >> [  606.528105] pcieport 0000:04:01.0:    [20] UnsupReq              =
- (First)
-> > >> [  606.528107] pcieport 0000:04:01.0:    [21] ACSViol
-> > >> [  606.528110] pcieport 0000:04:01.0: AER:   TLP Header: 34000000 04=
-000052 00000000 00000000
->
-> They are clearly Unsupported Request errors caused by PTM Requests
-> (decoding at https://bugzilla.kernel.org/show_bug.cgi?id=3D216850#c9),
-> but they were logged by 00:1d.0 and 04:01.0.
->
-> The hierarchy is this:
->
->   00:1d.0 Root Port to [bus 03-6c]
->   03:00.0 Switch Upstream Port to [bus 04-6c]
->   04:01.0 Switch Downstream Port to [bus 06-38]
->   06:00.0 Switch Upstream Port to [bus 07-38]
->   07:04.0 Switch Downstream Port to [bus 38]
->   38:00.0 igc I225 NIC
->
-> If I225 sent a PTM request when it shouldn't have, i.e., when 07:04.0
-> didn't have PTM enabled, the error would have been logged by 07:04.0.
->
-> The fact that the errors were logged by 00:1d.0 and 04:01.0 means that
-> they were caused by PTM requests from 03:00.0 and 06:00.0.
+On 17/07/2023 03:15, Mathieu Poirier wrote:
+> On Sat, Jul 15, 2023 at 03:13:34PM -0700, Bjorn Andersson wrote:
+>>
+>> On Wed, 03 May 2023 22:32:14 +0530, Mukesh Ojha wrote:
+>>> Minidump is a best effort mechanism to collect useful and predefined data
+>>> for first level of debugging on end user devices running on Qualcomm SoCs.
+>>> It is built on the premise that System on Chip (SoC) or subsystem part of
+>>> SoC crashes, due to a range of hardware and software bugs. Hence, the
+>>> ability to collect accurate data is only a best-effort. The data collected
+>>> could be invalid or corrupted, data collection itself could fail, and so on.
+>>>
+>>> [...]
+>>
+>> Applied, thanks!
+>>
+>> [01/18] remoteproc: qcom: Expand MD_* as MINIDUMP_*
+>>         commit: 318da1371246fdc1806011a27138175cfb078687
+>>
+> 
+> Krzysztof asked for modifications on this patch.
 
-OK, so the PTM is actually fired by the Thunderbolt switch.
-That means the I225 reset is collateral damage.
-Let me see if I can reproduce the UR PTM with other devices.
+I guess it is fine, no big issue.
 
-Kai-Heng
+Best regards,
+Krzysztof
 
->
-> Bjorn
