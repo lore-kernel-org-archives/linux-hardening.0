@@ -2,130 +2,285 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A46BEB64DD
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jul 2023 16:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C023FEB64DC
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jul 2023 18:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232757AbjGRQXj (ORCPT
+        id S229728AbjGRSbv (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Jul 2023 12:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40772 "EHLO
+        Tue, 18 Jul 2023 14:31:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231511AbjGRQXf (ORCPT
+        with ESMTP id S229679AbjGRSbu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Jul 2023 12:23:35 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148A1139;
-        Tue, 18 Jul 2023 09:23:34 -0700 (PDT)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36IFsRTa015227;
-        Tue, 18 Jul 2023 16:22:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=9PudKBtLRGdIrG6woA6cD0ablmWghbSuQeHqb7JxJpo=;
- b=V3hWrUBHM+woS1my6mR7GJ8l5RToeNqfgquoQjxX6hkw1KKaAanxIf6/jPFsF7ifNAvS
- 1vHTPwrwUqCvEGemIWxR4BS+5Vgy8EgWyM/aEFM2j6GYDfZsLCOa/wC062IsQQ8e60YO
- nY58M9LYuLrwkKYy0QwMyC9lr7E32TGVd5OZeWel5uipmEyukWZU+8ioEcyi8yf6S4Lm
- FxLgw8WEfd2SFVdakSH3aKbFwmvmMX3H01gcOa4HzXuzGDK94uxnJqTL9ji9msXIuUZC
- y5hMjcWR+DrEBvFl6znN3TEk8Zq+auOevV4dC/mJErlQcTEDSGAfWi1sGSjx/INajtzm Tg== 
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3rwqqg92xe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jul 2023 16:22:04 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 36IGM3IM002800
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jul 2023 16:22:03 GMT
-Received: from [10.110.1.206] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Tue, 18 Jul
- 2023 09:22:02 -0700
-Message-ID: <38716e0a-fb99-bb71-23f4-7952a4f6e04e@quicinc.com>
-Date:   Tue, 18 Jul 2023 09:22:01 -0700
+        Tue, 18 Jul 2023 14:31:50 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CD8DA
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 11:31:49 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-51e55517de3so14919a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 11:31:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1689705108; x=1692297108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OJRfS2iQxUWH+byKp3jNigM7HLEQCRK1+MsC766nIxg=;
+        b=VK3F1CCmO1RTo+Kf7Jb50AL8WhJi1OWC3MufV3fw9hjO+tfsdxy7hGFHK0FaRcx+n6
+         MaRDv6DguXyvDuAlndnTBKoMnltFmqHIq+H7yexvaKRvhxr8esLudAhH9eqQV+0VW0Zx
+         L6BOB85oJyZibh+iSelSeniCE38iT1wZZWyw/dZD2c+W+HTwH7e+9uoH2z1oFyz0oU6T
+         tUbfY9l8iDUy2Ofw1s7u11N/2Og3cg34JxQV1FbFy0uyWRq8o7bqNgB8XbP9v9/Dp4v6
+         e8JxXFzZfR1VdPcc7QdYEZkkzZsftK4a6ljNnMU7qpJXLW1dqucxdG7iFKmo9u9CcbwD
+         pSAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689705108; x=1692297108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OJRfS2iQxUWH+byKp3jNigM7HLEQCRK1+MsC766nIxg=;
+        b=k2F2tbgwc9paLe+M++v5gPvKfczUkalP4uj9ebm4G0OId2MXhRO2kL1QvLc7qCY7u/
+         GZ+5Mj7MDVNfAmg2XgzEbl3h4QCz7K0EEqPouwkTmgKhn1YXlS8W/fO6tJAzqle1m9rG
+         Skv/bdcRiSB85xXqce7Q6qmGMLanj2OkageAiEMViZqsXTRrSflZ0e5SzWlQ6KsVD1ui
+         BZ5zZIYloRwt3avHEnqVTaLy0jWl2kd1pb/qIWvX6FzKHxMySZRkBvrN1MEHVlFEXLrY
+         /gROiDldNEhQD6sbUr/0n9M37E5KxMah8hNHwcm/hEPM8AaknkSKYJ65pI6YhIgM4xhx
+         uIdA==
+X-Gm-Message-State: ABy/qLaddYBe6qtqq1oqfq5ihJjoPjIOND7l3hm0DOjKAWm0H2SCizhb
+        ACXKwfUj76XW87N0LCWsPIndSFMWveldue5gaEzBIg==
+X-Google-Smtp-Source: APBJJlHVNVX4lMT4yqXasU4j9zkQHNPFeqEDpi2W7xK5jJyVyePMS9TC3zw0WklS4fCsBfR/dDebogwQVATMujTXuRY=
+X-Received: by 2002:a50:bae1:0:b0:51e:5e41:a0b2 with SMTP id
+ x88-20020a50bae1000000b0051e5e41a0b2mr181591ede.2.1689705107580; Tue, 18 Jul
+ 2023 11:31:47 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
- support
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Mukesh Ojha <quic_mojha@quicinc.com>
-CC:     <linux-samsung-soc@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <keescook@chromium.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <andy.shevchenko@gmail.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <2023062814-chance-flounder-f002@gregkh>
- <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
- <CACRpkda3CJ7G4-wDPkWmzg6nyCoEfG+u2cQH6KXWNjbftd90ow@mail.gmail.com>
- <355de4c7-180d-4edd-b6fd-9c8e29e40e42@quicinc.com>
- <52650970-de78-764f-28e2-ee0115b7d5c6@quicinc.com>
- <e4784d1c-73da-9cda-6aef-d02625e8efd2@quicinc.com>
- <2023071833-clamshell-drinking-188c@gregkh>
- <c8064592-bfac-67b4-1d7e-e173355c43f8@quicinc.com>
- <2023071844-promptly-swimwear-f6f9@gregkh>
-Content-Language: en-US
-From:   Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <2023071844-promptly-swimwear-f6f9@gregkh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: e8N4s61eNav6K3VmUuYrrBLypPGDxsor
-X-Proofpoint-ORIG-GUID: e8N4s61eNav6K3VmUuYrrBLypPGDxsor
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-18_12,2023-07-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- mlxlogscore=999 phishscore=0 malwarescore=0 adultscore=0
- lowpriorityscore=0 clxscore=1011 impostorscore=0 bulkscore=0
- priorityscore=1501 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2306200000 definitions=main-2307180150
+References: <20230707210947.1208717-1-rmoar@google.com> <20230707210947.1208717-3-rmoar@google.com>
+ <CABVgOS=ttFomNVdsKAY1FZCuzi46vii=ESdGU3VeYs-pRfoPNA@mail.gmail.com>
+In-Reply-To: <CABVgOS=ttFomNVdsKAY1FZCuzi46vii=ESdGU3VeYs-pRfoPNA@mail.gmail.com>
+From:   Rae Moar <rmoar@google.com>
+Date:   Tue, 18 Jul 2023 14:31:31 -0400
+Message-ID: <CA+GJov7qG9VVp7EhnVKKBe-X1rh4QZ2u3w8WOFVdsaFp=vYpLA@mail.gmail.com>
+Subject: Re: [RFC v2 2/9] kunit: Add speed attribute
+To:     David Gow <davidgow@google.com>
+Cc:     shuah@kernel.org, dlatypov@google.com, brendan.higgins@linux.dev,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, jstultz@google.com,
+        tglx@linutronix.de, sboyd@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 7/18/2023 7:41 AM, Greg KH wrote:
-> On Tue, Jul 18, 2023 at 07:25:15PM +0530, Mukesh Ojha wrote:
->>
->>
->> On 7/18/2023 7:05 PM, Greg KH wrote:
->>> On Tue, Jul 18, 2023 at 11:17:12AM +0530, Mukesh Ojha wrote:
->>>> + linux-samsung-soc@vger.kernel.org
->>>> + linux-mediatek@lists.infradead.org
->>>
->>> What does that do?
->>
->> This is to seek their feedback, if they have something similar requirement
->> to debug end user device crashes.
-> 
-> Feedback to what?  There is no context here and no content either at
-> all.
-> 
-> Just adding a mailing list to the top of a message doesn't actually send
-> the thread there.
-> 
-> confused,
+On Tue, Jul 18, 2023 at 3:39=E2=80=AFAM David Gow <davidgow@google.com> wro=
+te:
+>
+> On Sat, 8 Jul 2023 at 05:09, Rae Moar <rmoar@google.com> wrote:
+> >
+> > Add speed attribute to the test attribute API. This attribute will allo=
+w
+> > users to mark tests with a category of speed.
+> >
+> > Currently the categories of speed proposed are: normal, slow, and very_=
+slow
+> > (outlined in enum kunit_speed). These are outlined in the enum kunit_sp=
+eed.
+> >
+> > The assumed default speed for tests is "normal". This indicates that th=
+e
+> > test takes a relatively trivial amount of time (less than 1 second),
+> > regardless of the machine it is running on. Any test slower than this c=
+ould
+> > be marked as "slow" or "very_slow".
+> >
+> > Add the macro KUNIT_CASE_SLOW to set a test as slow, as this is likely =
+a
+> > common use of the attributes API.
+> >
+> > Add an example of marking a slow test to kunit-example-test.c.
+> >
+> > Signed-off-by: Rae Moar <rmoar@google.com>
+> > ---
+>
+> Looks good.
+>
+> Reviewed-by: David Gow <davidgow@google.com>
+>
 
-Mukesh, instead of adding the mailing lists here, we should send either 
-the refreshed revision of this patchset (if there are enough changes) w/ 
-MLs CCed or start a new discussion with these mailing list with the 
-context of the minidump and refer these patches from the mailing list 
-archives.
+Thanks!
 
----Trilok Soni
+> >
+> > Changes since v1:
+> > - Remove the "fast" category of speed.
+> >
+> >  include/kunit/test.h           | 30 +++++++++++++++++++++-
+> >  lib/kunit/attributes.c         | 46 +++++++++++++++++++++++++++++++++-
+> >  lib/kunit/kunit-example-test.c |  9 +++++++
+> >  3 files changed, 83 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index 1fc9155988e9..c255c98a58f7 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -63,8 +63,25 @@ enum kunit_status {
+> >         KUNIT_SKIPPED,
+> >  };
+> >
+> > +/* Attribute struct/enum definitions */
+> > +
+> > +/*
+> > + * Speed Attribute is stored as an enum and separated into categories =
+of
+> > + * speed: very_slowm, slow, normal, and fast. These speeds are relativ=
+e
+>
+> Nit: we only have very_slow, slow & normal now.
+>
+
+Oops thanks for catching this. Will fix this before I send out the
+official patch set.
+
+> > + * to other KUnit tests.
+> > + */
+> > +enum kunit_speed {
+> > +       KUNIT_SPEED_UNSET,
+> > +       KUNIT_SPEED_VERY_SLOW,
+> > +       KUNIT_SPEED_SLOW,
+> > +       KUNIT_SPEED_NORMAL,
+> > +       KUNIT_SPEED_MAX =3D KUNIT_SPEED_NORMAL,
+> > +};
+>
+> A part of me feels that we could get away with reversing the order of
+> this and having KUNIT_SPEED_NORMAL =3D=3D 0. (Possibly reversing the
+> comparisons in the filtering, too.)
+>
+> That's probably not worth the added complexity though. Either way,
+> maybe add a note that "UNSET" =3D=3D "NORMAL".
+>
+>
+
+Yes, I definitely have been debating this order myself as well. This
+order makes slightly more sense to me so I will likely keep this for
+the next version but I will add that note. If there are more comments
+on this, I am definitely open to reversing the order.
+
+> > +
+> >  /* Holds attributes for each test case and suite */
+> > -struct kunit_attributes {};
+> > +struct kunit_attributes {
+> > +       enum kunit_speed speed;
+> > +};
+> >
+> >  /**
+> >   * struct kunit_case - represents an individual test case.
+> > @@ -150,6 +167,17 @@ static inline char *kunit_status_to_ok_not_ok(enum=
+ kunit_status status)
+> >                 { .run_case =3D test_name, .name =3D #test_name,    \
+> >                   .attr =3D attributes }
+> >
+> > +/**
+> > + * KUNIT_CASE_SLOW - A helper for creating a &struct kunit_case
+> > + * with the slow attribute
+> > + *
+> > + * @test_name: a reference to a test case function.
+> > + */
+> > +
+> > +#define KUNIT_CASE_SLOW(test_name)                     \
+> > +               { .run_case =3D test_name, .name =3D #test_name,    \
+> > +                 .attr.speed =3D KUNIT_SPEED_SLOW }
+> > +
+> >  /**
+> >   * KUNIT_CASE_PARAM - A helper for creation a parameterized &struct ku=
+nit_case
+> >   *
+> > diff --git a/lib/kunit/attributes.c b/lib/kunit/attributes.c
+> > index 9bda5a5f4030..e97096dbb3b1 100644
+> > --- a/lib/kunit/attributes.c
+> > +++ b/lib/kunit/attributes.c
+> > @@ -40,9 +40,53 @@ struct kunit_attr {
+> >         enum print_ops print;
+> >  };
+> >
+> > +/* String Lists for enum Attributes */
+> > +
+> > +static const char * const speed_str_list[] =3D {"unset", "very_slow", =
+"slow", "normal"};
+> > +
+> > +/* To String Methods */
+> > +
+> > +static const char *attr_enum_to_string(void *attr, const char * const =
+str_list[], bool *to_free)
+> > +{
+> > +       long val =3D (long)attr;
+> > +
+> > +       *to_free =3D false;
+> > +       if (!val)
+> > +               return NULL;
+> > +       return str_list[val];
+> > +}
+> > +
+> > +static const char *attr_speed_to_string(void *attr, bool *to_free)
+> > +{
+> > +       return attr_enum_to_string(attr, speed_str_list, to_free);
+> > +}
+> > +
+> > +/* Get Attribute Methods */
+> > +
+> > +static void *attr_speed_get(void *test_or_suite, bool is_test)
+> > +{
+> > +       struct kunit_suite *suite =3D is_test ? NULL : test_or_suite;
+> > +       struct kunit_case *test =3D is_test ? test_or_suite : NULL;
+> > +
+> > +       if (test)
+> > +               return ((void *) test->attr.speed);
+> > +       else
+> > +               return ((void *) suite->attr.speed);
+> > +}
+> > +
+> > +/* Attribute Struct Definitions */
+> > +
+> > +static const struct kunit_attr speed_attr =3D {
+> > +       .name =3D "speed",
+> > +       .get_attr =3D attr_speed_get,
+> > +       .to_string =3D attr_speed_to_string,
+> > +       .attr_default =3D (void *)KUNIT_SPEED_NORMAL,
+> > +       .print =3D PRINT_ALWAYS,
+> > +};
+> > +
+> >  /* List of all Test Attributes */
+> >
+> > -static struct kunit_attr kunit_attr_list[] =3D {};
+> > +static struct kunit_attr kunit_attr_list[] =3D {speed_attr};
+> >
+> >  /* Helper Functions to Access Attributes */
+> >
+> > diff --git a/lib/kunit/kunit-example-test.c b/lib/kunit/kunit-example-t=
+est.c
+> > index b69b689ea850..01a769f35e1d 100644
+> > --- a/lib/kunit/kunit-example-test.c
+> > +++ b/lib/kunit/kunit-example-test.c
+> > @@ -220,6 +220,14 @@ static void example_params_test(struct kunit *test=
+)
+> >         KUNIT_EXPECT_EQ(test, param->value % param->value, 0);
+> >  }
+> >
+> > +/*
+> > + * This test should always pass. Can be used to practice filtering att=
+ributes.
+> > + */
+> > +static void example_slow_test(struct kunit *test)
+> > +{
+> > +       KUNIT_EXPECT_EQ(test, 1 + 1, 2);
+> > +}
+> > +
+> >  /*
+> >   * Here we make a list of all the test cases we want to add to the tes=
+t suite
+> >   * below.
+> > @@ -237,6 +245,7 @@ static struct kunit_case example_test_cases[] =3D {
+> >         KUNIT_CASE(example_all_expect_macros_test),
+> >         KUNIT_CASE(example_static_stub_test),
+> >         KUNIT_CASE_PARAM(example_params_test, example_gen_params),
+> > +       KUNIT_CASE_SLOW(example_slow_test),
+> >         {}
+> >  };
+> >
+> > --
+> > 2.41.0.255.g8b1d071c50-goog
+> >
