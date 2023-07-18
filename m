@@ -2,68 +2,228 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1194EB64DC
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jul 2023 20:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC55C001DE
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jul 2023 20:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbjGRUXv (ORCPT
+        id S230203AbjGRUkh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Jul 2023 16:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42466 "EHLO
+        Tue, 18 Jul 2023 16:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjGRUXu (ORCPT
+        with ESMTP id S230451AbjGRUkg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Jul 2023 16:23:50 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68EE4F9
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 13:23:49 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bd69bb4507eso5937728276.2
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 13:23:49 -0700 (PDT)
+        Tue, 18 Jul 2023 16:40:36 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 408B5C0
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 13:40:35 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-516500163b2so16907a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 13:40:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689711828; x=1692303828;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kaUDO+XAvGDEDxeBgdROw79oqHKS8ZVfSnHPWOLh4Ps=;
-        b=sDhQPD6HRuU5a8LfR9o8IZ5FbsbSMdxLx3xiLb3amEp1fzUMS/hoUxUOOYP/YpYGSr
-         u3AK/EBrpexE3IEu1DNoSqYfnD5gRdx5fIA8xItGURPEYR9JXu0gSePRPIpsfYUeLhbI
-         gGbkdsIRD4oMocDTh1xEAxtZHjFOqLxdgevBunTBwC44ouraGQn+S8eL07qr7ANi6zZf
-         cxmBaBl42pWpTVzoTuGqbCJ6x1At/eelI4NXzl4Q/by3Vi+JoGYU9gHfTyTPg7NYF9QE
-         BfuHT/ri5lKAhenerLYMyobEAj/Vbc8Hkrat6xDxY0k556UjO0QU7N7TnXKhR89kskBu
-         2+9g==
+        d=google.com; s=20221208; t=1689712834; x=1692304834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GqVfsPSqh0LbeBvoORwyyBidJKmm58T1GcZQwn4bT3I=;
+        b=fmdNRvXS3fpla427GqCxknVcPn9s5GjEteFKVdiXaD9jKMdiysLLQTIF4PEJG+HTf0
+         x0hc1Do7yqnxVEGeaxl7Y8qKeL23eRc7dY+Z/wO5EBE6mb94jPTinu9sUdhzZ8Clif5K
+         jZeFhcixJbbBo8v9KO5gpnyfUFUfkltyHEru089t0eFdsPHQlAX65IT6187OSoAsd8Tn
+         84jUFel0vkCD620mq3Y4MLuznQOS02XXLSzfJUaLw0ygrPctOOa2rckXtYHfMjbNfbuY
+         Wny7J606C/nRs3m/9wbDT7tlLQChJBcYn2tpVpdfqpOA5cL8T7mkppVgJeneCaC2bzl5
+         MOPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689711828; x=1692303828;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kaUDO+XAvGDEDxeBgdROw79oqHKS8ZVfSnHPWOLh4Ps=;
-        b=Gx8z4wPof1dQ/csx5RIKNWiV0mvdgfQaMVYsOAhPmaHT71RsGk/OZXxM9il+iVOVrK
-         SxE6IYX/A5hLmfRpoQpYwEcOL5YrMkgCp6gQKs3RAcBc98rMiINxSHFLSOTtYbcN+Koy
-         4hpLkYrTjZoL8LCM8xRDIsjLUVTWoAa8bksGgTq2Gu8k3tFSi2/oGDMXqfIRGOrKuQGA
-         uxCy0TAIwK3JMYp/beJMLgCqC8AMG0zQF+MCKlIeygRTagI03dAB2Ma2AUKAWzew6Uns
-         u5iQ8yz0a82BkTDJSTzH7121p1+X/tXdyZLs/1TO5H/jB+2WPSjOobpQSEXKYN35t/nB
-         hkTg==
-X-Gm-Message-State: ABy/qLawmjsiubCRc0xagQuu/b1zAJ0a0w0wZsGJHlAMLLZfcxeH8ad/
-        tMVEIMaBPZAFujrKkLKIr+VX7kJLomIqErnB5w==
-X-Google-Smtp-Source: APBJJlFinVBlcCNroNPQAxsRWi6jlqX7JL4P4fZ1IpZxMBCLntEGWwQT1Qj2LwDDdPVantfjIQzbLLzphPqfFVFdSw==
-X-Received: from yuxiao.svl.corp.google.com ([2620:15c:2a3:200:92bf:e2fa:ba2d:585f])
- (user=yuxiaozhang job=sendgmr) by 2002:a25:bfcd:0:b0:c00:3434:f639 with SMTP
- id q13-20020a25bfcd000000b00c003434f639mr6701ybm.1.1689711828713; Tue, 18 Jul
- 2023 13:23:48 -0700 (PDT)
-Date:   Tue, 18 Jul 2023 13:23:47 -0700
-In-Reply-To: <20230630205358.3601280-1-yuxiaozhang@google.com>
-Mime-Version: 1.0
-References: <20230630205358.3601280-1-yuxiaozhang@google.com>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-Message-ID: <20230718202347.3320812-1-yuxiaozhang@google.com>
-Subject: Re: [PATCH] pstore: ramoops: support pmsg size larger than kmalloc limitation
-From:   Yuxiao Zhang <yuxiaozhang@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        "'Guilherme G . Piccoli'" <gpiccoli@igalia.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wak@google.com
+        d=1e100.net; s=20221208; t=1689712834; x=1692304834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GqVfsPSqh0LbeBvoORwyyBidJKmm58T1GcZQwn4bT3I=;
+        b=IgW0wYduEZnNxBZ3QMGJKx8aJG1wVSOpja+xw7dyhuZ6pMIfYJuZ7QSF1XHq20ShK/
+         js9RRkoNmsld5BRoMiSLXcaZOtC5AyMag2k4byltlKN4PEadXwfU+p+qWxowLYIW2h8s
+         MVPEkpsLOq3gFxuyhj8lmQwlWoqKEeNCOrNjfZPilHkeOng4vBa4IpjXDCeuPqoMiVi8
+         Wv768HYbCr53DuG/VIz1+C9aFt0Oo4nGkJ40aeNk2piUslrSug9XuK4dOtV/txzsJIm4
+         4RSS0zFCmanfvAMRal7mrC0zTGU8poVAz2VVl8YbyLf1COjdZxax2p6o+/hlKGJcnWr8
+         sOMA==
+X-Gm-Message-State: ABy/qLYyZ4FfG4hOoY+z4lv+eXyLnJ3cEwdEHkNe3ZChTdu5G5RUivrk
+        xINmg5y8MG6wAuTkW6xQ4g/1kIaSpfv6cCOkBakWuQ==
+X-Google-Smtp-Source: APBJJlG3lBEsP1lXxKlwOpB3mxCqVoH3SOp32VQ+QEWcVWOuWzsdT00p7z44Z0CxjIrB2aM1IlaYZN88J+q5xjbRbp4=
+X-Received: by 2002:a50:9fae:0:b0:51e:295f:4ef0 with SMTP id
+ c43-20020a509fae000000b0051e295f4ef0mr160300edf.5.1689712833559; Tue, 18 Jul
+ 2023 13:40:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230707210947.1208717-1-rmoar@google.com> <20230707210947.1208717-5-rmoar@google.com>
+ <CABVgOS=X+C2g6_q-=3qdzp1YMPjazq8F2C5ZqvFhub+t3_sUdQ@mail.gmail.com>
+In-Reply-To: <CABVgOS=X+C2g6_q-=3qdzp1YMPjazq8F2C5ZqvFhub+t3_sUdQ@mail.gmail.com>
+From:   Rae Moar <rmoar@google.com>
+Date:   Tue, 18 Jul 2023 16:40:19 -0400
+Message-ID: <CA+GJov4=9T0io-7a=zO=gmabS+93=4EOtABYosz=Aq2Nj-riRw@mail.gmail.com>
+Subject: Re: [RFC v2 4/9] kunit: Add ability to filter attributes
+To:     David Gow <davidgow@google.com>
+Cc:     shuah@kernel.org, dlatypov@google.com, brendan.higgins@linux.dev,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, jstultz@google.com,
+        tglx@linutronix.de, sboyd@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Friendly ping, any update on this?
+On Tue, Jul 18, 2023 at 3:39=E2=80=AFAM David Gow <davidgow@google.com> wro=
+te:
+>
+> On Sat, 8 Jul 2023 at 05:10, Rae Moar <rmoar@google.com> wrote:
+> >
+> > Add filtering of test attributes. Users can filter tests using the
+> > module_param called "filter".
+> >
+> > Filters are imputed in the format: <attribute_name><operation><value>
+> >
+> > Example: kunit.filter=3D"speed>slow"
+> >
+> > Operations include: >, <, >=3D, <=3D, !=3D, and =3D. These operations w=
+ill act the
+> > same for attributes of the same type but may not between types.
+> >
+> > Note multiple filters can be inputted by separating them with a comma.
+> > Example: kunit.filter=3D"speed=3Dslow, module!=3Dexample"
+> >
+> > Since both suites and test cases can have attributes, there may be
+> > conflicts. The process of filtering follows these rules:
+> > - Filtering always operates at a per-test level.
+> > - If a test has an attribute set, then the test's value is filtered on.
+> > - Otherwise, the value falls back to the suite's value.
+> > - If neither are set, the attribute has a global "default" value, which
+> >   is used.
+> >
+> > Filtered tests will not be run or show in output. The tests can instead=
+ be
+> > skipped using the configurable option "kunit.filter_action=3Dskip".
+> >
+> > Note the default settings for running tests remains unfiltered.
+> >
+> > Finally, add "filter" methods for the speed and module attributes to pa=
+rse
+> > and compare attribute values.
+> >
+> > Note this filtering functionality will be added to kunit.py in the next
+> > patch.
+> >
+> > Signed-off-by: Rae Moar <rmoar@google.com>
+> > ---
+> >
+> > Changes since v1:
+> > - Change method for inputting filters to allow for spaces in filtering
+> >   values
+> > - Add option to skip filtered tests instead of not run or show them wit=
+h
+> >   the --filter_skip flag
+> >
+> >  include/kunit/attributes.h |  31 +++++
+> >  lib/kunit/attributes.c     | 256 +++++++++++++++++++++++++++++++++++++
+> >  lib/kunit/executor.c       |  94 +++++++++++---
+> >  lib/kunit/executor_test.c  |  12 +-
+> >  lib/kunit/test.c           |  10 +-
+> >  5 files changed, 375 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/include/kunit/attributes.h b/include/kunit/attributes.h
+> > index 9fcd184cce36..bc76a0b786d2 100644
+> > --- a/include/kunit/attributes.h
+> > +++ b/include/kunit/attributes.h
+> > @@ -9,6 +9,20 @@
+> >  #ifndef _KUNIT_ATTRIBUTES_H
+> >  #define _KUNIT_ATTRIBUTES_H
+> >
+> > +/*
+> > + * struct kunit_attr_filter - representation of attributes filter with=
+ the
+> > + * attribute object and string input
+> > + */
+> > +struct kunit_attr_filter {
+> > +       struct kunit_attr *attr;
+> > +       char *input;
+> > +};
+> > +
+> > +/*
+> > + * Returns the name of the filter's attribute.
+> > + */
+> > +const char *kunit_attr_filter_name(struct kunit_attr_filter filter);
+> > +
+> >  /*
+> >   * Print all test attributes for a test case or suite.
+> >   * Output format for test cases: "# <test_name>.<attribute>: <value>"
+> > @@ -16,4 +30,21 @@
+> >   */
+> >  void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int =
+test_level);
+> >
+> > +/*
+> > + * Returns the number of fitlers in input.
+> > + */
+> > +int kunit_get_filter_count(char *input);
+> > +
+> > +/*
+> > + * Parse attributes filter input and return an objects containing the
+> > + * attribute object and the string input of the next filter.
+> > + */
+> > +struct kunit_attr_filter kunit_next_attr_filter(char **filters, int *e=
+rr);
+> > +
+> > +/*
+> > + * Returns a copy of the suite containing only tests that pass the fil=
+ter.
+> > + */
+> > +struct kunit_suite *kunit_filter_attr_tests(const struct kunit_suite *=
+const suite,
+> > +               struct kunit_attr_filter filter, char *action, int *err=
+);
+> > +
+> >  #endif /* _KUNIT_ATTRIBUTES_H */
+> > diff --git a/lib/kunit/attributes.c b/lib/kunit/attributes.c
+> > index 43dcb5de8b8f..91cbcacafba9 100644
+> > --- a/lib/kunit/attributes.c
+> > +++ b/lib/kunit/attributes.c
+> > @@ -67,6 +67,104 @@ static const char *attr_string_to_string(void *attr=
+, bool *to_free)
+> >         return (char *) attr;
+> >  }
+> >
+> > +/* Filter Methods */
+> > +
+> > +static const char op_list[] =3D "<>!=3D";
+> > +
+> > +/*
+> > + * Returns whether the inputted integer value matches the filter given
+> > + * by the operation string and inputted integer.
+> > + */
+> > +static int int_filter(long val, const char *op, int input, int *err)
+> > +{
+> > +       if (!strncmp(op, "<=3D", 2))
+> > +               return (val <=3D input);
+> > +       else if (!strncmp(op, ">=3D", 2))
+> > +               return (val >=3D input);
+> > +       else if (!strncmp(op, "!=3D", 2))
+> > +               return (val !=3D input);
+> > +       else if (!strncmp(op, ">", 1))
+> > +               return (val > input);
+> > +       else if (!strncmp(op, "<", 1))
+> > +               return (val < input);
+> > +       else if (!strncmp(op, "=3D", 1))
+> > +               return (val =3D=3D input);
+> > +       *err =3D -EINVAL;
+> > +       pr_err("kunit executor: invalid filter operation: %s\n", op);
+>
+> More a nitpick for the kunit.py patch, but I'd love to have this shown
+> to the user as an error when run under kunit.py. It's very annoying to
+> miss this and only get a "no tests run" error (or worse, unfiltered
+> results) back.
+>
+
+I agree. I would love to change this. I am currently looking into how
+easy this is to change.
+
+It would be nice to at least see a general KUnit executor error in the
+output instead of the "no tests run!" error.
+
+>
+> > +       return false;
+> > +}
