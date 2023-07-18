@@ -2,285 +2,264 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C023FEB64DC
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jul 2023 18:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2302EB64DC
+	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jul 2023 19:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbjGRSbv (ORCPT
+        id S231139AbjGRTEh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Jul 2023 14:31:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34022 "EHLO
+        Tue, 18 Jul 2023 15:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjGRSbu (ORCPT
+        with ESMTP id S229875AbjGRTEg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Jul 2023 14:31:50 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45CD8DA
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 11:31:49 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-51e55517de3so14919a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 11:31:49 -0700 (PDT)
+        Tue, 18 Jul 2023 15:04:36 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8259CFD
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 12:04:34 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-403f21d3c2dso365061cf.1
+        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 12:04:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689705108; x=1692297108;
+        d=google.com; s=20221208; t=1689707073; x=1692299073;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OJRfS2iQxUWH+byKp3jNigM7HLEQCRK1+MsC766nIxg=;
-        b=VK3F1CCmO1RTo+Kf7Jb50AL8WhJi1OWC3MufV3fw9hjO+tfsdxy7hGFHK0FaRcx+n6
-         MaRDv6DguXyvDuAlndnTBKoMnltFmqHIq+H7yexvaKRvhxr8esLudAhH9eqQV+0VW0Zx
-         L6BOB85oJyZibh+iSelSeniCE38iT1wZZWyw/dZD2c+W+HTwH7e+9uoH2z1oFyz0oU6T
-         tUbfY9l8iDUy2Ofw1s7u11N/2Og3cg34JxQV1FbFy0uyWRq8o7bqNgB8XbP9v9/Dp4v6
-         e8JxXFzZfR1VdPcc7QdYEZkkzZsftK4a6ljNnMU7qpJXLW1dqucxdG7iFKmo9u9CcbwD
-         pSAg==
+        bh=UP4E+krXJUqcP/XL8AvesdP7FQu4JyJQ3RJDPmgOZF8=;
+        b=21v6dXrULsCH8KDeCheN7Pz5gu95bHxPXaU2t1wV8WDWMJA77Iz6q0xb8xHeB8eBNK
+         zBajR7tCwfn41oLjzTQRqjX4Hxyfa3QqUZKBAGEuS24b0VN+RcHrf+aNZjohziD/rmKw
+         9vJBch+0p3qJNDmsj+Twj5JT7Y/zjc5mpzoknWLforM903oigoaouaveKT4ZgDFuBtGl
+         MsyxmPg4xZberTUdczm/quU9iQabGH6LJ4h5gtlztS2pkC/5JC3xJmGf79W1tVmrpxJG
+         qNt+YDelDSvg7wVBL2a4tJ6l6o3+BAKSN8yEWd7GUIcw/UQtBVFPNsS53HB5hg/1z/u2
+         qomQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689705108; x=1692297108;
+        d=1e100.net; s=20221208; t=1689707073; x=1692299073;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OJRfS2iQxUWH+byKp3jNigM7HLEQCRK1+MsC766nIxg=;
-        b=k2F2tbgwc9paLe+M++v5gPvKfczUkalP4uj9ebm4G0OId2MXhRO2kL1QvLc7qCY7u/
-         GZ+5Mj7MDVNfAmg2XgzEbl3h4QCz7K0EEqPouwkTmgKhn1YXlS8W/fO6tJAzqle1m9rG
-         Skv/bdcRiSB85xXqce7Q6qmGMLanj2OkageAiEMViZqsXTRrSflZ0e5SzWlQ6KsVD1ui
-         BZ5zZIYloRwt3avHEnqVTaLy0jWl2kd1pb/qIWvX6FzKHxMySZRkBvrN1MEHVlFEXLrY
-         /gROiDldNEhQD6sbUr/0n9M37E5KxMah8hNHwcm/hEPM8AaknkSKYJ65pI6YhIgM4xhx
-         uIdA==
-X-Gm-Message-State: ABy/qLaddYBe6qtqq1oqfq5ihJjoPjIOND7l3hm0DOjKAWm0H2SCizhb
-        ACXKwfUj76XW87N0LCWsPIndSFMWveldue5gaEzBIg==
-X-Google-Smtp-Source: APBJJlHVNVX4lMT4yqXasU4j9zkQHNPFeqEDpi2W7xK5jJyVyePMS9TC3zw0WklS4fCsBfR/dDebogwQVATMujTXuRY=
-X-Received: by 2002:a50:bae1:0:b0:51e:5e41:a0b2 with SMTP id
- x88-20020a50bae1000000b0051e5e41a0b2mr181591ede.2.1689705107580; Tue, 18 Jul
- 2023 11:31:47 -0700 (PDT)
+        bh=UP4E+krXJUqcP/XL8AvesdP7FQu4JyJQ3RJDPmgOZF8=;
+        b=PJKbxE4X3SG0w4I/yiinuQJ+y2LI+7dMC7s2aNvzlNkqJtrVJ/rGIbL7wYytEFrB4U
+         Ln+S4C2sc18gvQQYSrl/gXVWQfUkPil02xjSy+kK+eCqVoNux6fSeKMoS8CzJzmWH0wt
+         NwMwVb8Df01/eut3ZzrxpQarAJKLiTQ9D/1HqTBhsW4r7Qy2M8TaXyWh587exp/VGQLp
+         y1VS+CqqY+RaboiqvNr3RclbTxm9ZumSgDbnd4L6oLVy4wgokN/AvFBop1qwUOZZKja5
+         W1GS0+knu9LSMVJ5jsSdvO+sO8bmTeI9EE/Oc/oVVgH5kpvcDCZ9eXuNiSagg8KdGYXD
+         lqCw==
+X-Gm-Message-State: ABy/qLYJ+supAJ3WWMdZLJbHlaLLtSUs6I67a/gtTHBGAEODT7GpQWCo
+        2iyFhXk4ODInsRfateGWnV4xwlmLmg86u3IDobSxQQ==
+X-Google-Smtp-Source: APBJJlEqTCm929lAwWSFDX8sdYEaCp3/sAVGWtRDWQbwohxt/YNaKGxUn5vTLiOLRpmy5hemXBjhYQqtkuV9q1y42Xc=
+X-Received: by 2002:a05:622a:1882:b0:3f2:2c89:f1ef with SMTP id
+ v2-20020a05622a188200b003f22c89f1efmr288088qtc.5.1689707073502; Tue, 18 Jul
+ 2023 12:04:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230707210947.1208717-1-rmoar@google.com> <20230707210947.1208717-3-rmoar@google.com>
- <CABVgOS=ttFomNVdsKAY1FZCuzi46vii=ESdGU3VeYs-pRfoPNA@mail.gmail.com>
-In-Reply-To: <CABVgOS=ttFomNVdsKAY1FZCuzi46vii=ESdGU3VeYs-pRfoPNA@mail.gmail.com>
-From:   Rae Moar <rmoar@google.com>
-Date:   Tue, 18 Jul 2023 14:31:31 -0400
-Message-ID: <CA+GJov7qG9VVp7EhnVKKBe-X1rh4QZ2u3w8WOFVdsaFp=vYpLA@mail.gmail.com>
-Subject: Re: [RFC v2 2/9] kunit: Add speed attribute
-To:     David Gow <davidgow@google.com>
-Cc:     shuah@kernel.org, dlatypov@google.com, brendan.higgins@linux.dev,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        linux-hardening@vger.kernel.org, jstultz@google.com,
-        tglx@linutronix.de, sboyd@kernel.org
+References: <20230714114753.170814-1-david@readahead.eu>
+In-Reply-To: <20230714114753.170814-1-david@readahead.eu>
+From:   Jeff Xu <jeffxu@google.com>
+Date:   Tue, 18 Jul 2023 12:03:57 -0700
+Message-ID: <CALmYWFsjy2jOfKyM3Gd3Ag+p6u5ejDoBp6RhqcXkcAkMiby4SA@mail.gmail.com>
+Subject: Re: [PATCH] memfd: support MFD_NOEXEC alongside MFD_EXEC
+To:     David Rheinsberg <david@readahead.eu>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Verkamp <dverkamp@chromium.org>, linux-mm@kvack.org,
+        Peter Xu <peterx@redhat.com>, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jul 18, 2023 at 3:39=E2=80=AFAM David Gow <davidgow@google.com> wro=
-te:
+Hi David
+
+Thanks email and patch for discussion.
+
+On Fri, Jul 14, 2023 at 4:48=E2=80=AFAM David Rheinsberg <david@readahead.e=
+u> wrote:
 >
-> On Sat, 8 Jul 2023 at 05:09, Rae Moar <rmoar@google.com> wrote:
-> >
-> > Add speed attribute to the test attribute API. This attribute will allo=
-w
-> > users to mark tests with a category of speed.
-> >
-> > Currently the categories of speed proposed are: normal, slow, and very_=
-slow
-> > (outlined in enum kunit_speed). These are outlined in the enum kunit_sp=
-eed.
-> >
-> > The assumed default speed for tests is "normal". This indicates that th=
-e
-> > test takes a relatively trivial amount of time (less than 1 second),
-> > regardless of the machine it is running on. Any test slower than this c=
-ould
-> > be marked as "slow" or "very_slow".
-> >
-> > Add the macro KUNIT_CASE_SLOW to set a test as slow, as this is likely =
-a
-> > common use of the attributes API.
-> >
-> > Add an example of marking a slow test to kunit-example-test.c.
-> >
-> > Signed-off-by: Rae Moar <rmoar@google.com>
-> > ---
+> Add a new flag for memfd_create() called MFD_NOEXEC, which has the
+> opposite effect as MFD_EXEC (i.e., it strips the executable bits from
+> the inode file mode).
 >
-> Looks good.
+I previously thought about having the symmetric flags, such as
+MFD_NOEXEC/MFD_EXEC/MFD_NOEXEC_SEAL/MFD_EXEC_SEAL, but decided against
+it. The app shall decide beforehand what the memfd is created for, if
+it is no-executable, then it should be sealed, such that it can't be
+chmod to enable "X" bit.
+
+> The default mode for memfd_create() has historically been to use 0777 as
+> file modes. The new `MFD_EXEC` flag has now made this explicit, paving
+> the way to reduce the default to 0666 and thus dropping the executable
+> bits for security reasons. Additionally, the `MFD_NOEXEC_SEAL` flag has
+> been added which allows this without changing the default right now.
 >
-> Reviewed-by: David Gow <davidgow@google.com>
+> Unfortunately, `MFD_NOEXEC_SEAL` enforces `MFD_ALLOW_SEALING` and
+> `F_SEAL_EXEC`, with no alternatives available. This leads to multiple
+> issues:
 >
+>  * Applications that do not want to allow sealing either have to use
+>    `MFD_EXEC` (which we don't want, unless they actually need the
+>    executable bits), or they must add `F_SEAL_SEAL` immediately on
+>    return of memfd_create(2) with `MFD_NOEXEC_SEAL`, since this
+>    implicitly enables sealing.
+>
+>    Note that we explicitly added `MFD_ALLOW_SEALING` when creating
+>    memfd_create(2), because enabling seals on existing users of shmem
+>    without them knowing about it can easily introduce DoS scenarios.
+
+The application that doesn't want MFD_NOEXEC_SEAL can use MFD_EXEC,
+the kernel won't add MFD_ALLOW_SEALING implicitly. MFD_EXEC makes the
+kernel behave the same as before, this is also  why sysctl
+vm.memfd_noexec=3D0 can work seamlessly.
+
+>   It
+>    is unclear why `MFD_NOEXEC_SEAL` was designed to enable seals, and
+>    this is especially dangerous with `MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL`
+>    set via sysctl, since it will silently enable sealing on every memfd
+>    created.
+>
+Without sealing, chmod(2) can modify the mfd to be executable, that is
+the consideration that MFD_NOEXEC is not provided as an option.
+Indeed, current design is "biased" towards promoting MFD_NOEXEC_SEAL
+as the safest approach, and try to avoid the pitfall that dev
+accidently uses "MFD_NOEXEC" without realizing it can still be
+chmod().
+
+
+>  * Applications that do not want `MFD_EXEC`, but rely on
+>    `F_GET_SEALS` to *NOT* return `F_SEAL_EXEC` have no way of achieving
+>    this other than using `MFD_EXEC` and clearing the executable bits
+>    manually via fchmod(2). Using `MFD_NOEXEC_SEAL` will set
+>    `F_SEAL_EXEC` and thus break existing code that hard-codes the
+>    seal-set.
+>
+>    This is already an issue when sending log-memfds to systemd-journald
+>    today, which verifies the seal-set of the received FD and fails if
+>    unknown seals are set. Hence, you have to use `MFD_EXEC` when
+>    creating memfds for this purpose, even though you really do not need
+>    the executable bits set.
+>
+>  * Applications that want to enable the executable bit later on,
+>    currently have no way to create the memfd without it. They have to
+>    clear the bits immediately after creating it via fchmod(2), or just
+>    leave them set.
+>
+Is it OK to do what you want in two steps ? What is the concern there ? i.e=
+.
+memfd_create(MFD_EXEC), then chmod to remove the "X" bit.
+
+I imagine this is probably already what the application does for
+creating no-executable mfd before my patch, i.e.:
+memfd_create(), then chmod() to remove "X" to remove "X" bit.
 
 Thanks!
+-Jeff
 
-> >
-> > Changes since v1:
-> > - Remove the "fast" category of speed.
-> >
-> >  include/kunit/test.h           | 30 +++++++++++++++++++++-
-> >  lib/kunit/attributes.c         | 46 +++++++++++++++++++++++++++++++++-
-> >  lib/kunit/kunit-example-test.c |  9 +++++++
-> >  3 files changed, 83 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index 1fc9155988e9..c255c98a58f7 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -63,8 +63,25 @@ enum kunit_status {
-> >         KUNIT_SKIPPED,
-> >  };
-> >
-> > +/* Attribute struct/enum definitions */
-> > +
-> > +/*
-> > + * Speed Attribute is stored as an enum and separated into categories =
-of
-> > + * speed: very_slowm, slow, normal, and fast. These speeds are relativ=
+
+
+-Jeff
+
+> By adding MFD_NOEXEC, user-space is now able to clear the executable
+> bits on all memfds immediately, clearly stating their intention, without
+> requiring fixups after creating the memfd. In particular, it is highly
+> useful for existing use-cases that cannot allow new seals to appear on
+> memfds.
+>
+> Signed-off-by: David Rheinsberg <david@readahead.eu>
+> ---
+>  include/linux/pid_namespace.h |  4 ++--
+>  include/uapi/linux/memfd.h    |  1 +
+>  mm/memfd.c                    | 29 ++++++++++++++---------------
+>  3 files changed, 17 insertions(+), 17 deletions(-)
+>
+> diff --git a/include/linux/pid_namespace.h b/include/linux/pid_namespace.=
+h
+> index c758809d5bcf..02f8acf94512 100644
+> --- a/include/linux/pid_namespace.h
+> +++ b/include/linux/pid_namespace.h
+> @@ -19,9 +19,9 @@ struct fs_pin;
+>  #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
+>  /*
+>   * sysctl for vm.memfd_noexec
+> - * 0: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL
+> + * 0: memfd_create() without MFD_EXEC nor MFD_NOEXEC
+>   *     acts like MFD_EXEC was set.
+> - * 1: memfd_create() without MFD_EXEC nor MFD_NOEXEC_SEAL
+> + * 1: memfd_create() without MFD_EXEC nor MFD_NOEXEC
+>   *     acts like MFD_NOEXEC_SEAL was set.
+>   * 2: memfd_create() without MFD_NOEXEC_SEAL will be
+>   *     rejected.
+> diff --git a/include/uapi/linux/memfd.h b/include/uapi/linux/memfd.h
+> index 273a4e15dfcf..b9e13bd65817 100644
+> --- a/include/uapi/linux/memfd.h
+> +++ b/include/uapi/linux/memfd.h
+> @@ -12,6 +12,7 @@
+>  #define MFD_NOEXEC_SEAL                0x0008U
+>  /* executable */
+>  #define MFD_EXEC               0x0010U
+> +#define MFD_NOEXEC             0x0020U
+>
+>  /*
+>   * Huge page size encoding when MFD_HUGETLB is specified, and a huge pag=
 e
+> diff --git a/mm/memfd.c b/mm/memfd.c
+> index e763e76f1106..2afe49368fc5 100644
+> --- a/mm/memfd.c
+> +++ b/mm/memfd.c
+> @@ -266,7 +266,9 @@ long memfd_fcntl(struct file *file, unsigned int cmd,=
+ unsigned int arg)
+>  #define MFD_NAME_PREFIX_LEN (sizeof(MFD_NAME_PREFIX) - 1)
+>  #define MFD_NAME_MAX_LEN (NAME_MAX - MFD_NAME_PREFIX_LEN)
 >
-> Nit: we only have very_slow, slow & normal now.
+> -#define MFD_ALL_FLAGS (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB | M=
+FD_NOEXEC_SEAL | MFD_EXEC)
+> +#define MFD_ALL_FLAGS \
+> +       (MFD_CLOEXEC | MFD_ALLOW_SEALING | MFD_HUGETLB | \
+> +        MFD_NOEXEC_SEAL | MFD_EXEC | MFD_NOEXEC)
 >
-
-Oops thanks for catching this. Will fix this before I send out the
-official patch set.
-
-> > + * to other KUnit tests.
-> > + */
-> > +enum kunit_speed {
-> > +       KUNIT_SPEED_UNSET,
-> > +       KUNIT_SPEED_VERY_SLOW,
-> > +       KUNIT_SPEED_SLOW,
-> > +       KUNIT_SPEED_NORMAL,
-> > +       KUNIT_SPEED_MAX =3D KUNIT_SPEED_NORMAL,
-> > +};
+>  SYSCALL_DEFINE2(memfd_create,
+>                 const char __user *, uname,
+> @@ -289,11 +291,13 @@ SYSCALL_DEFINE2(memfd_create,
+>                         return -EINVAL;
+>         }
 >
-> A part of me feels that we could get away with reversing the order of
-> this and having KUNIT_SPEED_NORMAL =3D=3D 0. (Possibly reversing the
-> comparisons in the filtering, too.)
+> -       /* Invalid if both EXEC and NOEXEC_SEAL are set.*/
+> -       if ((flags & MFD_EXEC) && (flags & MFD_NOEXEC_SEAL))
+> +       if (flags & MFD_NOEXEC_SEAL)
+> +               flags |=3D MFD_ALLOW_SEALING | MFD_NOEXEC;
+> +
+> +       if ((flags & MFD_EXEC) && (flags & MFD_NOEXEC))
+>                 return -EINVAL;
 >
-> That's probably not worth the added complexity though. Either way,
-> maybe add a note that "UNSET" =3D=3D "NORMAL".
+> -       if (!(flags & (MFD_EXEC | MFD_NOEXEC_SEAL))) {
+> +       if (!(flags & (MFD_EXEC | MFD_NOEXEC))) {
+>  #ifdef CONFIG_SYSCTL
+>                 int sysctl =3D MEMFD_NOEXEC_SCOPE_EXEC;
+>                 struct pid_namespace *ns;
+> @@ -366,20 +370,15 @@ SYSCALL_DEFINE2(memfd_create,
+>         file->f_mode |=3D FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
+>         file->f_flags |=3D O_LARGEFILE;
 >
+> -       if (flags & MFD_NOEXEC_SEAL) {
+> -               struct inode *inode =3D file_inode(file);
+> +       if (flags & MFD_NOEXEC)
+> +               file_inode(file)->i_mode &=3D ~0111;
 >
-
-Yes, I definitely have been debating this order myself as well. This
-order makes slightly more sense to me so I will likely keep this for
-the next version but I will add that note. If there are more comments
-on this, I am definitely open to reversing the order.
-
-> > +
-> >  /* Holds attributes for each test case and suite */
-> > -struct kunit_attributes {};
-> > +struct kunit_attributes {
-> > +       enum kunit_speed speed;
-> > +};
-> >
-> >  /**
-> >   * struct kunit_case - represents an individual test case.
-> > @@ -150,6 +167,17 @@ static inline char *kunit_status_to_ok_not_ok(enum=
- kunit_status status)
-> >                 { .run_case =3D test_name, .name =3D #test_name,    \
-> >                   .attr =3D attributes }
-> >
-> > +/**
-> > + * KUNIT_CASE_SLOW - A helper for creating a &struct kunit_case
-> > + * with the slow attribute
-> > + *
-> > + * @test_name: a reference to a test case function.
-> > + */
-> > +
-> > +#define KUNIT_CASE_SLOW(test_name)                     \
-> > +               { .run_case =3D test_name, .name =3D #test_name,    \
-> > +                 .attr.speed =3D KUNIT_SPEED_SLOW }
-> > +
-> >  /**
-> >   * KUNIT_CASE_PARAM - A helper for creation a parameterized &struct ku=
-nit_case
-> >   *
-> > diff --git a/lib/kunit/attributes.c b/lib/kunit/attributes.c
-> > index 9bda5a5f4030..e97096dbb3b1 100644
-> > --- a/lib/kunit/attributes.c
-> > +++ b/lib/kunit/attributes.c
-> > @@ -40,9 +40,53 @@ struct kunit_attr {
-> >         enum print_ops print;
-> >  };
-> >
-> > +/* String Lists for enum Attributes */
-> > +
-> > +static const char * const speed_str_list[] =3D {"unset", "very_slow", =
-"slow", "normal"};
-> > +
-> > +/* To String Methods */
-> > +
-> > +static const char *attr_enum_to_string(void *attr, const char * const =
-str_list[], bool *to_free)
-> > +{
-> > +       long val =3D (long)attr;
-> > +
-> > +       *to_free =3D false;
-> > +       if (!val)
-> > +               return NULL;
-> > +       return str_list[val];
-> > +}
-> > +
-> > +static const char *attr_speed_to_string(void *attr, bool *to_free)
-> > +{
-> > +       return attr_enum_to_string(attr, speed_str_list, to_free);
-> > +}
-> > +
-> > +/* Get Attribute Methods */
-> > +
-> > +static void *attr_speed_get(void *test_or_suite, bool is_test)
-> > +{
-> > +       struct kunit_suite *suite =3D is_test ? NULL : test_or_suite;
-> > +       struct kunit_case *test =3D is_test ? test_or_suite : NULL;
-> > +
-> > +       if (test)
-> > +               return ((void *) test->attr.speed);
-> > +       else
-> > +               return ((void *) suite->attr.speed);
-> > +}
-> > +
-> > +/* Attribute Struct Definitions */
-> > +
-> > +static const struct kunit_attr speed_attr =3D {
-> > +       .name =3D "speed",
-> > +       .get_attr =3D attr_speed_get,
-> > +       .to_string =3D attr_speed_to_string,
-> > +       .attr_default =3D (void *)KUNIT_SPEED_NORMAL,
-> > +       .print =3D PRINT_ALWAYS,
-> > +};
-> > +
-> >  /* List of all Test Attributes */
-> >
-> > -static struct kunit_attr kunit_attr_list[] =3D {};
-> > +static struct kunit_attr kunit_attr_list[] =3D {speed_attr};
-> >
-> >  /* Helper Functions to Access Attributes */
-> >
-> > diff --git a/lib/kunit/kunit-example-test.c b/lib/kunit/kunit-example-t=
-est.c
-> > index b69b689ea850..01a769f35e1d 100644
-> > --- a/lib/kunit/kunit-example-test.c
-> > +++ b/lib/kunit/kunit-example-test.c
-> > @@ -220,6 +220,14 @@ static void example_params_test(struct kunit *test=
-)
-> >         KUNIT_EXPECT_EQ(test, param->value % param->value, 0);
-> >  }
-> >
-> > +/*
-> > + * This test should always pass. Can be used to practice filtering att=
-ributes.
-> > + */
-> > +static void example_slow_test(struct kunit *test)
-> > +{
-> > +       KUNIT_EXPECT_EQ(test, 1 + 1, 2);
-> > +}
-> > +
-> >  /*
-> >   * Here we make a list of all the test cases we want to add to the tes=
-t suite
-> >   * below.
-> > @@ -237,6 +245,7 @@ static struct kunit_case example_test_cases[] =3D {
-> >         KUNIT_CASE(example_all_expect_macros_test),
-> >         KUNIT_CASE(example_static_stub_test),
-> >         KUNIT_CASE_PARAM(example_params_test, example_gen_params),
-> > +       KUNIT_CASE_SLOW(example_slow_test),
-> >         {}
-> >  };
-> >
-> > --
-> > 2.41.0.255.g8b1d071c50-goog
-> >
+> -               inode->i_mode &=3D ~0111;
+> -               file_seals =3D memfd_file_seals_ptr(file);
+> -               if (file_seals) {
+> +       file_seals =3D memfd_file_seals_ptr(file);
+> +       if (file_seals) {
+> +               if (flags & MFD_ALLOW_SEALING)
+>                         *file_seals &=3D ~F_SEAL_SEAL;
+> +               if (flags & MFD_NOEXEC_SEAL)
+>                         *file_seals |=3D F_SEAL_EXEC;
+> -               }
+> -       } else if (flags & MFD_ALLOW_SEALING) {
+> -               /* MFD_EXEC and MFD_ALLOW_SEALING are set */
+> -               file_seals =3D memfd_file_seals_ptr(file);
+> -               if (file_seals)
+> -                       *file_seals &=3D ~F_SEAL_SEAL;
+>         }
+>
+>         fd_install(fd, file);
+> --
+> 2.41.0
+>
