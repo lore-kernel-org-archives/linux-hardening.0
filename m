@@ -2,52 +2,52 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB3CEB64DA
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jul 2023 15:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36F9EB64DA
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jul 2023 15:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231455AbjGSPek (ORCPT
+        id S229800AbjGSPhA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Jul 2023 11:34:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41686 "EHLO
+        Wed, 19 Jul 2023 11:37:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231190AbjGSPej (ORCPT
+        with ESMTP id S230127AbjGSPg7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Jul 2023 11:34:39 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32792B7
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Jul 2023 08:34:39 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-2637ab3d8efso4251158a91.3
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Jul 2023 08:34:39 -0700 (PDT)
+        Wed, 19 Jul 2023 11:36:59 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB25110F3
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Jul 2023 08:36:54 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-668711086f4so673111b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Jul 2023 08:36:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1689780878; x=1690385678;
+        d=chromium.org; s=google; t=1689781014; x=1690385814;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MPV1Re/rd+Z6hMWojzSFE+4Xhg9XuKRfthuNZEOiK90=;
-        b=TGbv0QD5+whT+mL5B2Nq0B4wjifL4ohScRMftR/EWRiiSJgbBwxiti7XaE9aaTnRQh
-         VFvPNZejyBYo/tl0a9HSpS8mriI4Qyv1IJCWhqcUbDqwp3EDTYmk6BS3Xxc1UrZ9tb7n
-         tyYAMeU5jH5PtX99eGTpSddN8cOnzFd6K5M1k=
+        bh=K38BxEYH26DFGpPyiTmHTMf3gy9MqzicLBbnOKCteTM=;
+        b=M31KYUXdWst2TaY1F5jpsUdD4iaP74nNegJ7paY/HMXCBJrbgEohOPoyPhg0NjvTTF
+         ZL1bbUaG1BYU4RWYHW3ZzhJaBZRzzB3zcSFsrJUy4zMYMZLN4ilfrMUMcXmvSRnx/t9f
+         7LfMVIkncXDARpJfnBf5+vmvQgYgDJrih18Xc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689780878; x=1690385678;
+        d=1e100.net; s=20221208; t=1689781014; x=1690385814;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MPV1Re/rd+Z6hMWojzSFE+4Xhg9XuKRfthuNZEOiK90=;
-        b=IUYXchRNKkOHw9k7w64+CLqqFqf674b3BJV2gN+wpYNTNyo2JdDsUtnZoXwyukoQ27
-         14xueOJj7EpiH9zbwKvPVJc3uWXFUKZkkbYUBGiOudtXYvD9LeVWVZYmy5ZQZIVM/Ugc
-         rT1I2rW5FJXYcbQPgNm3kE4Dfx2kbrHKwN6MaYVTBTtx/2iSL2ThGX9jO9WugYCwbqG6
-         LkwZCBQ0s/0wyoiuAJwCwl8Uq68DmtMvzFSPzAVHjGcMVTB1z5HddcRUSDlgE1IkjgQ9
-         wjK7L/o8ue55goqyB1uGuWV9mG8PtQS7lKNEcjCcL6EIY0ju88qwrSdNng1S/fH4OPj7
-         iBdg==
-X-Gm-Message-State: ABy/qLa9Edc6DAGoOK6wm7mVHmzjO7dKUfHaQfBKzKfNB4+n8ECZjsnU
-        NSe563Knt/7yTRkCJxw0q0bO5w==
-X-Google-Smtp-Source: APBJJlFicfLDTRxX6ghLisFBMbLwtjTFYkuzm3r762d83vl48bjh0KRW/3bGg7458XSr7TcQHvyzaA==
-X-Received: by 2002:a17:90a:fa85:b0:267:a31b:d9dc with SMTP id cu5-20020a17090afa8500b00267a31bd9dcmr3865315pjb.35.1689780878535;
-        Wed, 19 Jul 2023 08:34:38 -0700 (PDT)
+        bh=K38BxEYH26DFGpPyiTmHTMf3gy9MqzicLBbnOKCteTM=;
+        b=VVst6EWCZCiAQPrLfZYLrMYEN+/2/DS5Kxbz/qpjH57kxmMK8mIOTs6lRZnuWJ8n8S
+         gKO+DyvJ4ele2kbFj4SMrpV3hajBVnlNXPyM1dDDGsh2WxLQd35Uuul2N1vrlKYvLWfO
+         ekFdbME7EzdfOSHMJimtAWvi4s+PNHWDxhD6+/w1l9qgIfyws4ToD6r0qwkh3OXnU1v+
+         5Gx4od3hg3Rw6EecwYC9rzyo2cGLd6ESl8xLaMR2xhSnIJNQOR0byb4tK5dF5lTP4Wrx
+         cv4SnRLwjTpKPj/2EZwblGSYs+ZPkEpdR28fuuTIzaHVumi7DX9wpclMyDc79k5ggogP
+         4Yqg==
+X-Gm-Message-State: ABy/qLaPdqPWjDBdfsIZ1AKMORbtLIgzkH66Y5P86pVHBMIkoCc6NySY
+        pf30fVL6oriPm1T+Gi0BvB8sDw==
+X-Google-Smtp-Source: APBJJlH8qqAz5d6W7EDAD66e1X4MvOuGTuqq1LdVO/pyvNFME1BCH5jDHUK+QmS1hD0xqeuMV5+gjQ==
+X-Received: by 2002:a05:6a00:cc2:b0:678:11d6:2ad6 with SMTP id b2-20020a056a000cc200b0067811d62ad6mr4173575pfv.9.1689781014193;
+        Wed, 19 Jul 2023 08:36:54 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x1-20020a17090aa38100b00263f5ac814esm1289522pjp.38.2023.07.19.08.34.37
+        by smtp.gmail.com with ESMTPSA id x3-20020a056a00270300b0065a1b05193asm3415022pfv.185.2023.07.19.08.36.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jul 2023 08:34:38 -0700 (PDT)
-Date:   Wed, 19 Jul 2023 08:34:37 -0700
+        Wed, 19 Jul 2023 08:36:53 -0700 (PDT)
+Date:   Wed, 19 Jul 2023 08:36:53 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Larry Finger <Larry.Finger@lwfinger.net>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
@@ -56,7 +56,7 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         linux-hardening@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>
 Subject: Re: Crash in VirtualBox virtual machines running kernel 6.5
-Message-ID: <202307190834.A7189ED0@keescook>
+Message-ID: <202307190835.752D710D@keescook>
 References: <ab3a70e9-60ed-0f13-e3d4-8866eaccc8c1@lwfinger.net>
  <202307190823.086EFD42D9@keescook>
 MIME-Version: 1.0
@@ -67,25 +67,32 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Jul 19, 2023 at 08:31:08AM -0700, Kees Cook wrote:
-> diff --git a/fs/vboxsf/shfl_hostintf.h b/fs/vboxsf/shfl_hostintf.h
-> index aca829062c12..243d1b91bb45 100644
-> --- a/fs/vboxsf/shfl_hostintf.h
-> +++ b/fs/vboxsf/shfl_hostintf.h
-> @@ -68,9 +68,8 @@ struct shfl_string {
->  
->  	/** UTF-8 or UTF-16 string. Nul terminated. */
->  	union {
-> -		u8 utf8[2];
-> -		u16 utf16[1];
-> -		u16 ucs2[1]; /* misnomer, use utf16. */
-> +		DECLARE_FLEX_ARRAY(u8, utf8);
-> +		DECLARE_FLEX_ARRAY(u16, utf16);
->  	} string;
->  };
->  VMMDEV_ASSERT_SIZE(shfl_string, 6);
+Okay, please try:
 
-Oops, this doesn't even compile. Let me get that fixed...
+diff --git a/fs/vboxsf/shfl_hostintf.h b/fs/vboxsf/shfl_hostintf.h
+index aca829062c12..902fe3224453 100644
+--- a/fs/vboxsf/shfl_hostintf.h
++++ b/fs/vboxsf/shfl_hostintf.h
+@@ -68,12 +68,11 @@ struct shfl_string {
+ 
+ 	/** UTF-8 or UTF-16 string. Nul terminated. */
+ 	union {
+-		u8 utf8[2];
+-		u16 utf16[1];
+-		u16 ucs2[1]; /* misnomer, use utf16. */
++		DECLARE_FLEX_ARRAY(u8, utf8);
++		DECLARE_FLEX_ARRAY(u16, utf16);
+ 	} string;
+ };
+-VMMDEV_ASSERT_SIZE(shfl_string, 6);
++VMMDEV_ASSERT_SIZE(shfl_string, 4);
+ 
+ /* The size of shfl_string w/o the string part. */
+ #define SHFLSTRING_HEADER_SIZE  4
+
+
+The size assert doesn't seem to be used anywhere else, but I can do a
+more careful binary analysis later today...
 
 -- 
 Kees Cook
