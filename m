@@ -2,573 +2,236 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35782C0015E
-	for <linux-hardening@archiver.kernel.org>; Tue, 18 Jul 2023 21:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA400C0015E
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jul 2023 03:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231162AbjGRVBu (ORCPT
+        id S229506AbjGSDLA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 18 Jul 2023 17:01:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57976 "EHLO
+        Tue, 18 Jul 2023 23:11:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230057AbjGRVBt (ORCPT
+        with ESMTP id S230318AbjGSDK7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 18 Jul 2023 17:01:49 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE286198D
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 14:01:45 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4f14865fcc0so5550e87.0
-        for <linux-hardening@vger.kernel.org>; Tue, 18 Jul 2023 14:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689714104; x=1692306104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YSeAtmxK2ozxMkX1W97pDOi5lgnNWrQJB78BEx5wwuo=;
-        b=IjRvNmFtlPn0r3sT+H04vStVCoPlDKQl53ex466GeRQYr+dQIc0x+rwk7noiEB3Jwr
-         qZVi8XjAzjA8RtIYeZgVYQVGn2QFog+bPJtVIuI+DNc/uQ4DeS/7sFy370xX/si2+X1Q
-         1IrPEBRrTHHyf9vaE+Zo7cHxWi43YUVHDpw7KfxASYnBe9FV9lVT+CbJuceRcMajQpdP
-         cTGdjZ8zk/JFYoexzFtZzQaqP2CJWxmU8r8XvosafECB0KRx4sMCIC0775gOiQydn+/m
-         aMpOyfj6r1e9W2aTCRpRPIHUcy+3gU8/7TYFhxhdSnwi5xSDoUL6Jj4LI79IVBb3DAHT
-         B1OQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689714104; x=1692306104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YSeAtmxK2ozxMkX1W97pDOi5lgnNWrQJB78BEx5wwuo=;
-        b=bR22wTs9yXS5FDfciUmdJ9BWmkozircnVWlBFnLjWd2q/wWHjWCLC9KTSraJUH0Cvl
-         fbpSussJCF4q7rbXdSGfG2rxNvXl5W9oLTKeGKo4HwKsnaYYZpSKADXYPu6cC0lrehOT
-         tBeAB8go9WCwV8aNKkvN0X5OSmlgVYFHAzk7LUOWWFc+oUQLS9XbPLc9pTd1OxEHAn/8
-         nlW2OCMTWb/tQMCTQvj5nQpy01QO/bw7yGva89OZ73XTbBa4osttOovowRGM2mRRwYEs
-         YoB06uE5w3CeSD8UMpknxRjzMkCDw5lR+h7+vmsOdiTtJ0dp7NacRvjXY8k8LxTTWMSd
-         6i+g==
-X-Gm-Message-State: ABy/qLZi19kQ+EkBuwMGXcPmmSu4c0h5+fs7Ko+/OgsUlPGMO8OyUc2I
-        7Hrxl4dpaeh/PFHqylBCTLxfOetCW5QTd4ws7l1i6A==
-X-Google-Smtp-Source: APBJJlFlVPDF78BNASzD1gAKNvUNQb81r0wEFJnwAIB3I7LO8xrJ5ZkLREIX06Bp7nhPyq3xMX3SU743LX/3XBmJ1iM=
-X-Received: by 2002:ac2:4c14:0:b0:4f2:5b90:7ca9 with SMTP id
- t20-20020ac24c14000000b004f25b907ca9mr125185lfq.4.1689714103902; Tue, 18 Jul
- 2023 14:01:43 -0700 (PDT)
+        Tue, 18 Jul 2023 23:10:59 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050:0:465::201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5066A1FC8;
+        Tue, 18 Jul 2023 20:10:48 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4R5LRj5npSz9skf;
+        Wed, 19 Jul 2023 05:10:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+        t=1689736241;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=kVkTgFNs+1TvHl3f5WurRNNk4V4kr7WQcIrEp2Yd87E=;
+        b=A5/P2eNBFoekIOp0cqRhmy/HH6n4XAE/+4CSUG8wQPQeEFPXgxkFSUip1vZXk7/Ax3f3kd
+        hwunbyydpz9p9x/dj8E76DfTT2qkx4ztlMSpNif0zuzSq9BOzVa6Ta6KtMHllAXcCkePax
+        JvsmYwgPPQfRKwcjBwMwaHaodPYZovjc0OkHN881QjEZr5quBkmssSIb9VddBEZfBY/TQT
+        FyV6ZCnAN1YIB9l2L3p+3PyYv3uLVXMYLAC5J/Wl4AvTBmEUj1WL6eRruKERCMBHeSvE/v
+        lrU1E2cdDK4FEO6QOgIUH05/tUQP8cFvhcMVTYSGEymSCTT0bPHNax1n2oiH+g==
+Date:   Wed, 19 Jul 2023 13:10:28 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Jeff Xu <jeffxu@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, Jeff Xu <jeffxu@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Verkamp <dverkamp@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [RFC PATCH 0/3] memfd: cleanups for vm.memfd_noexec
+Message-ID: <o2tz56m3y2pbbj2sezyqvtw3caqwcqtqqkkfrq632ofpyj4enp@znkxadzn5lmj>
+References: <20230713143406.14342-1-cyphar@cyphar.com>
+ <CABi2SkVCp_MDh9MgD-UJ_hgJ58ynm22XJ53zE+ZCBSsWFBxiOw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230707210947.1208717-1-rmoar@google.com> <20230707210947.1208717-2-rmoar@google.com>
- <CABVgOSkoKUVHE8=Z0gwsn-SfhgVy8rO62s5mHbfu6GXB54OfWA@mail.gmail.com>
-In-Reply-To: <CABVgOSkoKUVHE8=Z0gwsn-SfhgVy8rO62s5mHbfu6GXB54OfWA@mail.gmail.com>
-From:   Rae Moar <rmoar@google.com>
-Date:   Tue, 18 Jul 2023 17:01:30 -0400
-Message-ID: <CA+GJov73sM+rfYXopfdwBtVcwNJhmqAB3b7dOe6NBh47Mxukgg@mail.gmail.com>
-Subject: Re: [RFC v2 1/9] kunit: Add test attributes API structure
-To:     David Gow <davidgow@google.com>
-Cc:     shuah@kernel.org, dlatypov@google.com, brendan.higgins@linux.dev,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        linux-hardening@vger.kernel.org, jstultz@google.com,
-        tglx@linutronix.de, sboyd@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lbrl6e2i4nsxdaxl"
+Content-Disposition: inline
+In-Reply-To: <CABi2SkVCp_MDh9MgD-UJ_hgJ58ynm22XJ53zE+ZCBSsWFBxiOw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jul 18, 2023 at 3:39=E2=80=AFAM David Gow <davidgow@google.com> wro=
-te:
->
-> On Sat, 8 Jul 2023 at 05:09, Rae Moar <rmoar@google.com> wrote:
-> >
-> > Add the basic structure of the test attribute API to KUnit, which can b=
-e
-> > used to save and access test associated data.
-> >
-> > Add attributes.c and attributes.h to hold associated structs and functi=
-ons
-> > for the API.
-> >
-> > Create a struct that holds a variety of associated helper functions for
-> > each test attribute. These helper functions will be used to get the
-> > attribute value, convert the value to a string, and filter based on the
-> > value. This struct is flexible by design to allow for attributes of
-> > numerous types and contexts.
-> >
-> > Add a method to print test attributes in the format of "# [<test_name i=
-f
-> > not suite>.]<attribute_name>: <attribute_value>".
-> >
-> > Example for a suite: "# speed: slow"
-> >
-> > Example for a test case: "# test_case.speed: very_slow"
->
-> So, this is the one thing I'm a little unsure about here, and it's
-> really more of a problem with test names overall.
->
-> As noted in the KTAPv2 attributes and test name proposals, the names
-> and attributes are only really defined for "suites", hence the need to
-> have a different output format for test cases.
->
-> Personally, I'd prefer to keep the formats the same if we can (at
-> least for the actual KTAP output; I'm less concerned with the
-> list_attr option). That might make things a bit more difficult to
-> parse, though.
->
-> One possibility would be to combine the KTAP attributes and test name
-> specs and suggest that every test has a "test name" attribute, which
-> must be the first attribute output.
->
-> The output would then look something like:
-> KTAP version 2
-> # Name: my_suite
-> # Other-Attr: value
-> 1..2
->   KTAP version 2
->   # Name: test_1
->   # Other-Attr: value
->   ok 1 test_1
->   # Name: test_2
->   # Other-Attr: value
->   not ok 2 test_2
-> ok 1 my_suite
->
-> Would there be any problems with something like that?
->
-> I'm less concerned with the list_attr option, as that's not something
-> totally standardised in the way KTAP is.
->
 
-This is a really interesting idea. I like that this standardizes the
-concept of KTAP test metadata for both test suites and test cases. I
-would love to discuss this concept further as KTAP v2 is developed.
+--lbrl6e2i4nsxdaxl
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My main concern would be that there is push back on stating the test
-name when it is already present in the result line. This adds
-potentially unnecessary lines to the output. However, one positive to
-this is that diagnostic data could be printed under this header which
-would reduce any confusion for which test the diagnostic data refers
-to.
+On 2023-07-17, Jeff Xu <jeffxu@chromium.org> wrote:
+> Hello Aleksa,
+>=20
+> Thanks for your email and patches for discussion.
+>=20
+> On Thu, Jul 13, 2023 at 7:34=E2=80=AFAM Aleksa Sarai <cyphar@cyphar.com> =
+wrote:
+> >
+> > It seems that the most critical issue with vm.memfd_noexec=3D2 (the fact
+> > that passing MFD_EXEC would bypass it entirely[1]) has been fixed in
+> > Andrew's tree[2], but there are still some outstanding issues that need
+> > to be addressed:
+> >
+> >  * The dmesg warnings are pr_warn_once, which on most systems means that
+> >    they will be used up by systemd or some other boot process and
+> >    userspace developers will never see it. The original patch posted to
+> >    the ML used pr_warn_ratelimited but the merged patch had it changed
+> >    (with a comment about it being "per review"), but given that the
+> >    current warnings are useless, pr_warn_ratelimited makes far more
+> >    sense.
+> >
+> Ya, This was discussed in [1]
+> Replacing pr_warn_once with pr_warn_ratelimited won't address Peter
+> Xu's observation that "ratelimited" will fill syslog [2],  I'm not
+> sure it is acceptable to ones who is not interested in memfd, I will
+> defer this to maintainers.
+>=20
+> [1] https://lore.kernel.org/lkml/202212161233.85C9783FB@keescook/
+> [2] https://lwn.net/ml/linux-kernel/Y5yS8wCnuYGLHMj4@x1n/
 
-I would be interested if anyone else has any opinions on this.
+I see Kees's point, but in that case the logging should be tied to the
+sysctl being the non-default value (I can post this version next if you
+prefer). The current logging setup doesn't make sense.
 
+> >  * vm.memfd_noexec=3D2 shouldn't reject old-style memfd_create(2) sysca=
+lls
+> >    because it will make it far to difficult to ever migrate. Instead it
+> >    should imply MFD_EXEC.
 > >
-> > Use this method to report attributes in the KTAP output (KTAP spec:
-> > https://docs.kernel.org/dev-tools/ktap.html) and _list_tests output whe=
-n
-> > kernel's new kunit.action=3Dlist_attr option is used. Note this is deri=
-vative
-> > of the kunit.action=3Dlist option.
-> >
-> > In test.h, add fields and associated helper functions to test cases and
-> > suites to hold user-inputted test attributes.
-> >
-> > Signed-off-by: Rae Moar <rmoar@google.com>
-> > ---
->
-> The only other thing I'd really like to support one day is having
-> attributes for individual parameters in parameterised tests. I think
-> it makes sense as a follow-up, though.
->
+> Though the purpose of memfd_noexec=3D2 is not to help with migration  -
+> but to disable creation of executable memfd for the current system/pid
+> namespace.
+> During the migration,  vm.memfd_noexe =3D 1 helps overwriting for
+> unmigrated user code as a temporary measure.
 
-That is an exciting idea! I think that would be ideal as a follow-up.
+My point is that the current behaviour for =3D2 means that nobody other
+than *maybe* ChromeOS will ever be able to use it because it requires
+auditing every program on the system. In fact, it's possible even
+ChromeOS will run into issues given that one of the arguments made for
+the nosymfollow mount option was that auditing all of ChromeOS to
+replace every open with RESOLVE_NO_SYMLINKS would be too much effort[1]
+(which I agreed with). Maybe this is less of an issue with
+memfd_create(2) (which is much newer than open(2)) but it still seems
+like a lot of busy work when the =3D1 behaviour is entirely sane even in
+the strict threat model that =3D2 is trying to protect against.
 
-> >
-> > Changes since v1:
-> > - Add list_attr option to only include attribute in the _list_tests out=
-put
-> >   when this module param is set
-> > - Add printing options for attributes to print always, print only for
-> >   suites, or print never.
-> >
-> >  include/kunit/attributes.h | 19 +++++++++
-> >  include/kunit/test.h       | 33 ++++++++++++++++
-> >  lib/kunit/Makefile         |  3 +-
-> >  lib/kunit/attributes.c     | 80 ++++++++++++++++++++++++++++++++++++++
-> >  lib/kunit/executor.c       | 21 ++++++++--
-> >  lib/kunit/test.c           | 17 ++++----
-> >  6 files changed, 161 insertions(+), 12 deletions(-)
-> >  create mode 100644 include/kunit/attributes.h
-> >  create mode 100644 lib/kunit/attributes.c
-> >
-> > diff --git a/include/kunit/attributes.h b/include/kunit/attributes.h
-> > new file mode 100644
-> > index 000000000000..9fcd184cce36
-> > --- /dev/null
-> > +++ b/include/kunit/attributes.h
-> > @@ -0,0 +1,19 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * KUnit API to save and access test attributes
-> > + *
-> > + * Copyright (C) 2023, Google LLC.
-> > + * Author: Rae Moar <rmoar@google.com>
-> > + */
-> > +
-> > +#ifndef _KUNIT_ATTRIBUTES_H
-> > +#define _KUNIT_ATTRIBUTES_H
-> > +
-> > +/*
-> > + * Print all test attributes for a test case or suite.
-> > + * Output format for test cases: "# <test_name>.<attribute>: <value>"
-> > + * Output format for test suites: "# <attribute>: <value>"
-> > + */
-> > +void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int =
-test_level);
-> > +
-> > +#endif /* _KUNIT_ATTRIBUTES_H */
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index 23120d50499e..1fc9155988e9 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -63,12 +63,16 @@ enum kunit_status {
-> >         KUNIT_SKIPPED,
-> >  };
-> >
-> > +/* Holds attributes for each test case and suite */
-> > +struct kunit_attributes {};
->
-> Do we want a separate set of attributes for test cases and suites?
-> (I think probably not, but it's worth making sure.)
->
+To me, using =3D1 as a migration path (and in fact, calling =3D1 a migration
+path further argues that the warning for not setting _EXEC or
+_NOEXEC_SEAL should be tied to =3D1) would mean finding every program that
+uses executable memfds and changing it to stop doing that. Not that you
+use =3D1 to go and rewrite every userspace program that uses
+memfd_create(2) at all, without using executable memfds (rebooting each
+time to test the behaviour because we use pr_warn_once).
 
-I'm thinking if our goal is to eventually move to arbitrary nesting
-for tests it would be easiest to try to keep this list the same. But I
-agree. There may definitely be attributes that are more applicable for
-test cases or suites. I'm inclined to keep it this way.
+If you want to block syscalls that don't explicitly pass NOEXEC_SEAL,
+there are several tools for doing this (both seccomp and LSM hooks).
 
-> > +
-> >  /**
-> >   * struct kunit_case - represents an individual test case.
-> >   *
-> >   * @run_case: the function representing the actual test case.
-> >   * @name:     the name of the test case.
-> >   * @generate_params: the generator function for parameterized tests.
-> > + * @attr:     the attributes associated with the test
-> >   *
-> >   * A test case is a function with the signature,
-> >   * ``void (*)(struct kunit *)``
-> > @@ -104,6 +108,7 @@ struct kunit_case {
-> >         void (*run_case)(struct kunit *test);
-> >         const char *name;
-> >         const void* (*generate_params)(const void *prev, char *desc);
-> > +       struct kunit_attributes attr;
-> >
-> >         /* private: internal use only. */
-> >         enum kunit_status status;
-> > @@ -133,6 +138,18 @@ static inline char *kunit_status_to_ok_not_ok(enum=
- kunit_status status)
-> >   */
-> >  #define KUNIT_CASE(test_name) { .run_case =3D test_name, .name =3D #te=
-st_name }
-> >
-> > +/**
-> > + * KUNIT_CASE_ATTR - A helper for creating a &struct kunit_case
-> > + * with attributes
-> > + *
-> > + * @test_name: a reference to a test case function.
-> > + * @attributes: a reference to a struct kunit_attributes object contai=
-ning
-> > + * test attributes
-> > + */
-> > +#define KUNIT_CASE_ATTR(test_name, attributes)                 \
-> > +               { .run_case =3D test_name, .name =3D #test_name,    \
-> > +                 .attr =3D attributes }
-> > +
-> >  /**
-> >   * KUNIT_CASE_PARAM - A helper for creation a parameterized &struct ku=
-nit_case
-> >   *
-> > @@ -154,6 +171,20 @@ static inline char *kunit_status_to_ok_not_ok(enum=
- kunit_status status)
-> >                 { .run_case =3D test_name, .name =3D #test_name,    \
-> >                   .generate_params =3D gen_params }
-> >
-> > +/**
-> > + * KUNIT_CASE_PARAM_ATTR - A helper for creating a parameterized &stru=
-ct
-> > + * kunit_case with attributes
-> > + *
-> > + * @test_name: a reference to a test case function.
-> > + * @gen_params: a reference to a parameter generator function.
-> > + * @attributes: a reference to a struct kunit_attributes object contai=
-ning
-> > + * test attributes
-> > + */
-> > +#define KUNIT_CASE_PARAM_ATTR(test_name, gen_params, attributes)      =
- \
-> > +               { .run_case =3D test_name, .name =3D #test_name,    \
-> > +                 .generate_params =3D gen_params,                     =
-           \
-> > +                 .attr =3D attributes }
-> > +
->
-> I do worry a bit that we'll end up with a huge list of variants of the
-> KUNIT_CASE_* macros if we start adding more things here. I can't think
-> of a better way to handle it at the moment, though.
->
->
+[1]: https://lore.kernel.org/linux-fsdevel/20200131212021.GA108613@google.c=
+om/
 
-I agree. If this becomes an issue, this could be a follow up change?
+> Additional functionality/features should be implemented through
+> security hook and LSM, not sysctl, I think.
 
->
-> >  /**
-> >   * struct kunit_suite - describes a related collection of &struct kuni=
-t_case
-> >   *
-> > @@ -163,6 +194,7 @@ static inline char *kunit_status_to_ok_not_ok(enum =
-kunit_status status)
-> >   * @init:      called before every test case.
-> >   * @exit:      called after every test case.
-> >   * @test_cases:        a null terminated array of test cases.
-> > + * @attr:      the attributes associated with the test suite
-> >   *
-> >   * A kunit_suite is a collection of related &struct kunit_case s, such=
- that
-> >   * @init is called before every test case and @exit is called after ev=
-ery
-> > @@ -182,6 +214,7 @@ struct kunit_suite {
-> >         int (*init)(struct kunit *test);
-> >         void (*exit)(struct kunit *test);
-> >         struct kunit_case *test_cases;
-> > +       struct kunit_attributes attr;
+This issue with =3D2 cannot be fixed in an LSM. (On the other hand, you
+could implement either =3D2 behaviour with an LSM using =3D1, and the
+current strict =3D2 behaviour could be implemented purely with seccomp.)
+
+> >  * The ratcheting mechanism for vm.memfd_noexec doesn't make sense as a
+> >    security mechanism because a CAP_SYS_ADMIN capable user can create
+> >    executable binaries in a hidden tmpfs very easily, not to mention the
+> >    many other things they can do.
 > >
-> >         /* private: internal use only */
-> >         char status_comment[KUNIT_STATUS_COMMENT_SIZE];
-> > diff --git a/lib/kunit/Makefile b/lib/kunit/Makefile
-> > index cb417f504996..46f75f23dfe4 100644
-> > --- a/lib/kunit/Makefile
-> > +++ b/lib/kunit/Makefile
-> > @@ -6,7 +6,8 @@ kunit-objs +=3D                           test.o \
-> >                                         string-stream.o \
-> >                                         assert.o \
-> >                                         try-catch.o \
-> > -                                       executor.o
-> > +                                       executor.o \
-> > +                                       attributes.o
+> By further limiting CAP_SYS_ADMIN, an attacker can't modify this
+> sysctl even after compromising some system service with high
+> privilege, YAMA has the same approach for ptrace_scope=3D3
+
+Personally, I also think this behaviour from YAMA is a little goofy too,
+but given that it only locks the most extreme setting and there is no
+way to get around the most extreme setting, I guess it makes some sense
+(not to mention it's an LSM and so there is an argument that it should
+be possible to lock out privileged users from modifying it).
+There are many other security sysctls, and very few have this behaviour
+because it doesn't make much sense in most cases.
+
+> In addition, this sysctl is pid_name spaced, this means child
+> pid_namespace will alway have the same or stricter security setting
+> than its parent, this allows admin to maintain a tree like view. If we
+> allow the child pid namespace to elevate its setting, then the
+> system-wide setting is no longer meaningful.
+
+"no longer meaningful" is too strong of a statement imho. It is still
+useful for constraining non-root processes and presumably ChromeOS
+disallows random processes to do CLONE_NEWUSER (otherwise the protection
+of this sysctl is pointless) so in practice for ChromeOS there is no
+change in the attack surface.
+
+(FWIW, I think tying this to the user namespace would've made more sense
+since this is about privilege restrictions, but that ship has sailed.)
+
+> The code sample shared in this patch set indicates that the attacker
+> already has the ability of creating tmpfs and executing complex steps,
+> at that point, it doesn't matter if the code execution is from memfd
+> or not. For a safe by default system such as ChromeOS, attackers won't
+> easily run arbitrary code, memfd is one of the open doors for that, so
+> we are disabling executable memfd in ChromeOS. In other words:  if an
+> attacker can already execute the arbitrary code as sample given in
+> ChromeOS, without using executable memfd,  then memfd is no longer the
+> thing we need to worry about, the arbitrary code execution is already
+> achieved by the attacker. Even though I use ChromeOS as an example, I
+> think the same type of threat model applies to any system that wants
+> to disable executable memfd entirely.
+
+I understand the threat model this sysctl is blocking, my point is that
+blocking CAP_SYS_ADMIN from modifying the setting doesn't make sense
+=66rom that threat model. An attacker that manages to trick some process
+into creating a memfd with an executable payload is not going to be able
+to change the sysctl setting (unless there's a confused deputy with
+CAP_SYS_ADMIN, in which case you have much bigger issues).
+
+If a CAP_SYS_ADMIN-capable user wants to change the sysctl, blocking it
+doesn't add any security because that process could create a memfd-like
+fd to execute without issues. What practical attack does this ratcheting
+mechanism protect against? (This is a question you can answer with the
+YAMA sysctl, but not this one AFAICS.)
+
+But even if you feel that allowing this in child user namespaces is
+unsafe or undesirable, it's absolutely necessary that
+capable(CAP_SYS_ADMIN) should be able to un-brick the running system by
+changing the sysctl. The alternative is that you need to reboot your
+server in order to un-set a sysctl that broke some application you run.
+
+Also, by the same token, this ratcheting mechanism doesn't make sense
+with =3D1 *at all* because it could break programs in a way that would
+require a reboot but it's not a "security setting" (and the YAMA sysctl
+mentioned only locks the sysctl at the highest setting).
+
+> >  * The memfd selftests would not exit with a non-zero error code when
+> >    certain tests that ran in a forked process (specifically the ones
+> >    related to MFD_EXEC and MFD_NOEXEC_SEAL) failed.
 > >
-> >  ifeq ($(CONFIG_KUNIT_DEBUGFS),y)
-> >  kunit-objs +=3D                          debugfs.o
-> > diff --git a/lib/kunit/attributes.c b/lib/kunit/attributes.c
-> > new file mode 100644
-> > index 000000000000..9bda5a5f4030
-> > --- /dev/null
-> > +++ b/lib/kunit/attributes.c
-> > @@ -0,0 +1,80 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * KUnit API to save and access test attributes
-> > + *
-> > + * Copyright (C) 2023, Google LLC.
-> > + * Author: Rae Moar <rmoar@google.com>
-> > + */
-> > +
-> > +#include <kunit/test.h>
-> > +#include <kunit/attributes.h>
-> > +
-> > +/* Options for printing attributes:
-> > + * PRINT_ALWAYS - attribute is printed for every test case and suite i=
-f set
-> > + * PRINT_SUITE - attribute is printed for every suite if set but not f=
-or test cases
-> > + * PRINT_NEVER - attribute is never printed
-> > + */
-> > +enum print_ops {
-> > +       PRINT_ALWAYS,
-> > +       PRINT_SUITE,
-> > +       PRINT_NEVER,
-> > +};
-> > +
-> > +/**
-> > + * struct kunit_attr - represents a test attribute and holds flexible
-> > + * helper functions to interact with attribute.
-> > + *
-> > + * @name: name of test attribute, eg. speed
-> > + * @get_attr: function to return attribute value given a test
-> > + * @to_string: function to return string representation of given
-> > + * attribute value
-> > + * @filter: function to indicate whether a given attribute value passe=
-s a
-> > + * filter
-> > + */
-> > +struct kunit_attr {
-> > +       const char *name;
-> > +       void *(*get_attr)(void *test_or_suite, bool is_test);
-> > +       const char *(*to_string)(void *attr, bool *to_free);
-> > +       int (*filter)(void *attr, const char *input, int *err);
-> > +       void *attr_default;
-> > +       enum print_ops print;
-> > +};
-> > +
-> > +/* List of all Test Attributes */
-> > +
-> > +static struct kunit_attr kunit_attr_list[] =3D {};
-> > +
-> > +/* Helper Functions to Access Attributes */
-> > +
-> > +void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int =
-test_level)
-> > +{
-> > +       int i;
-> > +       bool to_free;
-> > +       void *attr;
-> > +       const char *attr_name, *attr_str;
-> > +       struct kunit_suite *suite =3D is_test ? NULL : test_or_suite;
-> > +       struct kunit_case *test =3D is_test ? test_or_suite : NULL;
-> > +
-> > +       for (i =3D 0; i < ARRAY_SIZE(kunit_attr_list); i++) {
-> > +               if (kunit_attr_list[i].print =3D=3D PRINT_NEVER ||
-> > +                               (test && kunit_attr_list[i].print =3D=
-=3D PRINT_SUITE))
-> > +                       continue;
-> > +               attr =3D kunit_attr_list[i].get_attr(test_or_suite, is_=
-test);
-> > +               if (attr) {
-> > +                       attr_name =3D kunit_attr_list[i].name;
-> > +                       attr_str =3D kunit_attr_list[i].to_string(attr,=
- &to_free);
-> > +                       if (test) {
-> > +                               kunit_log(KERN_INFO, test, "%*s# %s.%s:=
- %s",
-> > +                                       KUNIT_INDENT_LEN * test_level, =
-"", test->name,
-> > +                                       attr_name, attr_str);
-> > +                       } else {
-> > +                               kunit_log(KERN_INFO, suite, "%*s# %s: %=
-s",
-> > +                                       KUNIT_INDENT_LEN * test_level, =
-"", attr_name, attr_str);
-> > +                       }
-> > +
-> > +                       /* Free to_string of attribute if needed */
-> > +                       if (to_free)
-> > +                               kfree(attr_str);
-> > +               }
-> > +       }
-> > +}
-> > diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-> > index 74982b83707c..12e38a48a5cc 100644
-> > --- a/lib/kunit/executor.c
-> > +++ b/lib/kunit/executor.c
-> > @@ -2,6 +2,7 @@
-> >
-> >  #include <linux/reboot.h>
-> >  #include <kunit/test.h>
-> > +#include <kunit/attributes.h>
-> >  #include <linux/glob.h>
-> >  #include <linux/moduleparam.h>
-> >
-> > @@ -24,7 +25,8 @@ module_param_named(action, action_param, charp, 0);
-> >  MODULE_PARM_DESC(action,
-> >                  "Changes KUnit executor behavior, valid values are:\n"
-> >                  "<none>: run the tests like normal\n"
-> > -                "'list' to list test names instead of running them.\n"=
-);
-> > +                "'list' to list test names instead of running them.\n"
-> > +                "'list_attr' to list test names and attributes instead=
- of running them.\n");
-> >
-> >  /* glob_match() needs NULL terminated strings, so we need a copy of fi=
-lter_glob_param. */
-> >  struct kunit_test_filter {
-> > @@ -172,7 +174,7 @@ static void kunit_exec_run_tests(struct suite_set *=
-suite_set)
-> >         __kunit_test_suites_init(suite_set->start, num_suites);
-> >  }
-> >
-> > -static void kunit_exec_list_tests(struct suite_set *suite_set)
-> > +static void kunit_exec_list_tests(struct suite_set *suite_set, bool in=
-clude_attr)
-> >  {
-> >         struct kunit_suite * const *suites;
-> >         struct kunit_case *test_case;
-> > @@ -180,10 +182,19 @@ static void kunit_exec_list_tests(struct suite_se=
-t *suite_set)
-> >         /* Hack: print a ktap header so kunit.py can find the start of =
-KUnit output. */
-> >         pr_info("KTAP version 1\n");
-> >
-> > -       for (suites =3D suite_set->start; suites < suite_set->end; suit=
-es++)
-> > +       for (suites =3D suite_set->start; suites < suite_set->end; suit=
-es++) {
-> > +               /* Print suite name and suite attributes */
-> > +               pr_info("%s\n", (*suites)->name);
-> > +               if (include_attr)
-> > +                       kunit_print_attr((void *)(*suites), false, 0);
-> > +
-> > +               /* Print test case name and attributes in suite */
-> >                 kunit_suite_for_each_test_case((*suites), test_case) {
-> >                         pr_info("%s.%s\n", (*suites)->name, test_case->=
-name);
-> > +                       if (include_attr)
-> > +                               kunit_print_attr((void *)test_case, tru=
-e, 0);
-> >                 }
-> > +       }
-> >  }
-> >
-> >  int kunit_run_all_tests(void)
-> > @@ -206,7 +217,9 @@ int kunit_run_all_tests(void)
-> >         if (!action_param)
-> >                 kunit_exec_run_tests(&suite_set);
-> >         else if (strcmp(action_param, "list") =3D=3D 0)
-> > -               kunit_exec_list_tests(&suite_set);
-> > +               kunit_exec_list_tests(&suite_set, false);
-> > +       else if (strcmp(action_param, "list_attr") =3D=3D 0)
-> > +               kunit_exec_list_tests(&suite_set, true);
-> >         else
-> >                 pr_err("kunit executor: unknown action '%s'\n", action_=
-param);
-> >
-> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > index 84e4666555c9..9ee55139ecd1 100644
-> > --- a/lib/kunit/test.c
-> > +++ b/lib/kunit/test.c
-> > @@ -9,6 +9,7 @@
-> >  #include <kunit/resource.h>
-> >  #include <kunit/test.h>
-> >  #include <kunit/test-bug.h>
-> > +#include <kunit/attributes.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> >  #include <linux/moduleparam.h>
-> > @@ -168,6 +169,13 @@ size_t kunit_suite_num_test_cases(struct kunit_sui=
-te *suite)
-> >  }
-> >  EXPORT_SYMBOL_GPL(kunit_suite_num_test_cases);
-> >
-> > +/* Currently supported test levels */
-> > +enum {
-> > +       KUNIT_LEVEL_SUITE =3D 0,
-> > +       KUNIT_LEVEL_CASE,
-> > +       KUNIT_LEVEL_CASE_PARAM,
-> > +};
-> > +
-> >  static void kunit_print_suite_start(struct kunit_suite *suite)
-> >  {
-> >         /*
-> > @@ -181,17 +189,11 @@ static void kunit_print_suite_start(struct kunit_=
-suite *suite)
-> >         pr_info(KUNIT_SUBTEST_INDENT "KTAP version 1\n");
-> >         pr_info(KUNIT_SUBTEST_INDENT "# Subtest: %s\n",
-> >                   suite->name);
-> > +       kunit_print_attr((void *)suite, false, KUNIT_LEVEL_CASE);
-> >         pr_info(KUNIT_SUBTEST_INDENT "1..%zd\n",
-> >                   kunit_suite_num_test_cases(suite));
-> >  }
-> >
-> > -/* Currently supported test levels */
-> > -enum {
-> > -       KUNIT_LEVEL_SUITE =3D 0,
-> > -       KUNIT_LEVEL_CASE,
-> > -       KUNIT_LEVEL_CASE_PARAM,
-> > -};
-> > -
-> >  static void kunit_print_ok_not_ok(struct kunit *test,
-> >                                   unsigned int test_level,
-> >                                   enum kunit_status status,
-> > @@ -651,6 +653,7 @@ int kunit_run_tests(struct kunit_suite *suite)
-> >                         }
-> >                 }
-> >
-> > +               kunit_print_attr((void *)test_case, true, KUNIT_LEVEL_C=
-ASE);
-> >
-> >                 kunit_print_test_stats(&test, param_stats);
-> >
-> > --
-> > 2.41.0.255.g8b1d071c50-goog
-> >
+> I will test this code and follow up.
+
+Thanks!
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--lbrl6e2i4nsxdaxl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZLdUIwAKCRAol/rSt+lE
+b0DsAP4r143pePDRUZUnqh8oHdDRDRbBWcyU3kwybr6tiVlwqQEA2m9TV/qcQHxq
+V5fKtMl112yZem0gWzT9TTVHK9bBUgI=
+=SQH/
+-----END PGP SIGNATURE-----
+
+--lbrl6e2i4nsxdaxl--
