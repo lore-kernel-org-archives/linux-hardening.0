@@ -2,266 +2,111 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0A9C001DE
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jul 2023 22:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED405C04A94
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jul 2023 22:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230265AbjGSWYy (ORCPT
+        id S229480AbjGSWoy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Jul 2023 18:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56072 "EHLO
+        Wed, 19 Jul 2023 18:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbjGSWYs (ORCPT
+        with ESMTP id S230253AbjGSWox (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Jul 2023 18:24:48 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CF841FDC
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Jul 2023 15:24:17 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-c4f27858e4eso116533276.1
-        for <linux-hardening@vger.kernel.org>; Wed, 19 Jul 2023 15:24:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689805449; x=1692397449;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NHegRKijxtllrUHzL1SgBpkoHu+y+n5qaq++K8WyWmA=;
-        b=fdqBQx83SLumVnseBEBGY8wv1JHLRmHCegfbTKpsqZwmsnq3Dm9xmh64SvghtVFTxA
-         wHDeybiDWo9RRB9Btl/nyr8aI0jF8V56ADHIVUGP4UOVNQE9HEwaH62CkVlLzWsWdEY7
-         /ipNN+nLRrWA38Ov0mBVaaORiD0LU/oRw+o2FOjrIvwYfaqhXiiv35+isDfRE0vqyxJg
-         xyLpa4ck/n4pl9RupD+kPhZ8ot8uhEK30tTJALzry75zdcVvQiiEIgtm3DvteNF/roGS
-         ZnV9KjTtZFooTBiwo8z8fEbjtp9qYRnkT6YWvzto1xA/uyuQzoedsmwY2VUORG84r/ya
-         XX6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689805449; x=1692397449;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NHegRKijxtllrUHzL1SgBpkoHu+y+n5qaq++K8WyWmA=;
-        b=YSQ5UId8KMbnUwOex2nY3TJSJaSP5m05dJyIA3+l7DUYqrUJlSRIkG+qAiDOdHsRva
-         ZeURQNEHv2+qAqJ+BiWleIQTXb6ig7hxPSPAOoGe5PnIntk4d30RKdy4K3VcT0Id9vOE
-         03STy+sLUlQ9tNM/qx4IBMUfR7M8NPwWkZ/n7jVdkSqL09TbG1D/aHHLORW4w/8qyD0g
-         6kwbsU9H6g6zsACpEEBXkWel0u0x68KxbvMEuv/TnjRXkTcnRWhQH3KEaJRhUAJjXnge
-         6zgDtuVS95zd+xPWn+WfW4alULP3jUUYtSNHHp4z1LUJ0/ngeFsdiOMvJDZ+ee/1GkGi
-         Rj7w==
-X-Gm-Message-State: ABy/qLa6MtllQHXMRyUJENhUQBznpVbYHsV5wtJ2YapjQcdoRj7kJg/6
-        87uX+0arQA5UPdwtqJAKRSpSRQEsYQ==
-X-Google-Smtp-Source: APBJJlE8YL/XYJLuvTEOkCulIsrvD7y2CHXTDLudsi1AezvQ7W5NJYo+J0HPPSfJWCFexPio++2FX+ebfg==
-X-Received: from rmoar-specialist.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:45d3])
- (user=rmoar job=sendgmr) by 2002:a25:ab0e:0:b0:cc5:c7d6:ae13 with SMTP id
- u14-20020a25ab0e000000b00cc5c7d6ae13mr31839ybi.5.1689805449595; Wed, 19 Jul
- 2023 15:24:09 -0700 (PDT)
-Date:   Wed, 19 Jul 2023 22:23:36 +0000
-In-Reply-To: <20230719222338.259684-1-rmoar@google.com>
-Mime-Version: 1.0
-References: <20230719222338.259684-1-rmoar@google.com>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-Message-ID: <20230719222338.259684-10-rmoar@google.com>
-Subject: [PATCH v1 9/9] kunit: Add documentation of KUnit test attributes
-From:   Rae Moar <rmoar@google.com>
-To:     shuah@kernel.org, davidgow@google.com, dlatypov@google.com,
-        brendan.higgins@linux.dev
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        linux-hardening@vger.kernel.org, jstultz@google.com,
-        tglx@linutronix.de, sboyd@kernel.org, Rae Moar <rmoar@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Jul 2023 18:44:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10CEC1FE6;
+        Wed, 19 Jul 2023 15:44:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 999BF61840;
+        Wed, 19 Jul 2023 22:44:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E474FC433CA;
+        Wed, 19 Jul 2023 22:44:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689806692;
+        bh=KpGFKEUuiIitS8UfirDt+cuq2SuWxsDx+OdYFcxFU7M=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=JpRakYUuJVAkIJR5HXblpzkI9PdUqU4i6XmbSMiTmtzfemV4WD1akHLy5SRrSFQpN
+         un+aQppiWBaKop97bHOHt21+1n5Lni5eMuEOpIRbNOIQw+sidPK0D5Pg+bixMmM/iT
+         5x+yJ277k0CF6zsE7cPVFO/voXF/CTgmkLAMhiOiddjfli33xDNSUhJZVyNPVcWVMe
+         /N7mjpOjsORLyfseS1M97Cx+eWLMUz5gcr35FhKsYEKzfkvyhrCKdrQjUpIFLkHSCx
+         rHSKNa1leBY7DM/IVkwNmgKkCvpnnBeCpNNjaU+nXSyos4fD53d+gJSxubvCXqzjo2
+         SL/39Pi2aAirg==
+Date:   Wed, 19 Jul 2023 15:37:02 -0700
+From:   Kees Cook <kees@kernel.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Kees Cook <keescook@chromium.org>
+CC:     Hans de Goede <hdegoede@redhat.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: Re: Crash in VirtualBox virtual machines running kernel 6.5
+User-Agent: K-9 Mail for Android
+In-Reply-To: <d29c7e51-deff-c82f-81d4-8322b0c28d22@lwfinger.net>
+References: <ab3a70e9-60ed-0f13-e3d4-8866eaccc8c1@lwfinger.net> <202307190823.086EFD42D9@keescook> <202307190835.752D710D@keescook> <d29c7e51-deff-c82f-81d4-8322b0c28d22@lwfinger.net>
+Message-ID: <DC28E9B9-0F7A-4CA5-9FA9-6A4AB5DCD9D5@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add documentation on the use of test attributes under the section "Tips for
-Running KUnit Tests" in the KUnit docs.
+On July 19, 2023 2:24:52 PM PDT, Larry Finger <Larry=2EFinger@lwfinger=2Ene=
+t> wrote:
+>On 7/19/23 10:36, Kees Cook wrote:
+>> Okay, please try:
+>>=20
+>> diff --git a/fs/vboxsf/shfl_hostintf=2Eh b/fs/vboxsf/shfl_hostintf=2Eh
+>> index aca829062c12=2E=2E902fe3224453 100644
+>> --- a/fs/vboxsf/shfl_hostintf=2Eh
+>> +++ b/fs/vboxsf/shfl_hostintf=2Eh
+>> @@ -68,12 +68,11 @@ struct shfl_string {
+>>     	/** UTF-8 or UTF-16 string=2E Nul terminated=2E */
+>>   	union {
+>> -		u8 utf8[2];
+>> -		u16 utf16[1];
+>> -		u16 ucs2[1]; /* misnomer, use utf16=2E */
+>> +		DECLARE_FLEX_ARRAY(u8, utf8);
+>> +		DECLARE_FLEX_ARRAY(u16, utf16);
+>>   	} string;
+>>   };
+>> -VMMDEV_ASSERT_SIZE(shfl_string, 6);
+>> +VMMDEV_ASSERT_SIZE(shfl_string, 4);
+>>     /* The size of shfl_string w/o the string part=2E */
+>>   #define SHFLSTRING_HEADER_SIZE  4
+>>=20
+>>=20
+>> The size assert doesn't seem to be used anywhere else, but I can do a
+>> more careful binary analysis later today=2E=2E=2E''
+>
+>Kees,
+>
+>The testing was harder than I expected=2E My standard kernel would not lo=
+ad the system disk on the VM, thus I had to build one using my distros conf=
+iguration=2E It is really painful to wait for all those drivers to build, b=
+ut I figured that might be faster than trying to find the incorrect paramet=
+er=2E
+>
+>I can finally report that vboxsf no longer generated a BUG=2E It is getti=
+ng farther, but I am not done yet=2E It now generates a line that says "Unk=
+nown parameter tag" and then hangs=2E I have not tracked that down yet=2E
+>
+>I was not aware of the DECLARE_FLEX_ARRAY() macro=2E I had considered rem=
+oving the union and creating a simple string[] declaration, but I do not me=
+ss with file systems, and decided to let the experts handle it=2E
+>
+>I will let you know what I find about that unknown parameter=2E It probab=
+ly is coming from VirtualBox=2E
 
-Documentation includes three sections on how to mark tests with attributes,
-how attributes are reported, and how the user can filter tests using test
-attributes.
+It's possible the size really needs to stay 6 bytes=2E In that case, try a=
+dding a "u8 legacy_padding[2]" to the union and restore the VMMDEV_ASSERT_S=
+IZE?
 
-Reviewed-by: David Gow <davidgow@google.com>
-Signed-off-by: Rae Moar <rmoar@google.com>
----
 
-Changes since RFC v2:
-- Add comment on KUNIT_CASE_SLOW() to documentation.
-- Add comment on how to expose raw kernel output.
-- Remove an extra line at the end of file.
-
-Changes since RFC v1:
-- This is a new patch
-
- .../dev-tools/kunit/running_tips.rst          | 166 ++++++++++++++++++
- 1 file changed, 166 insertions(+)
-
-diff --git a/Documentation/dev-tools/kunit/running_tips.rst b/Documentation/dev-tools/kunit/running_tips.rst
-index 8e8c493f17d1..766f9cdea0fa 100644
---- a/Documentation/dev-tools/kunit/running_tips.rst
-+++ b/Documentation/dev-tools/kunit/running_tips.rst
-@@ -262,3 +262,169 @@ other code executed during boot, e.g.
- 	# Reset coverage counters before running the test.
- 	$ echo 0 > /sys/kernel/debug/gcov/reset
- 	$ modprobe kunit-example-test
-+
-+
-+Test Attributes and Filtering
-+=============================
-+
-+Test suites and cases can be marked with test attributes, such as speed of
-+test. These attributes will later be printed in test output and can be used to
-+filter test execution.
-+
-+Marking Test Attributes
-+-----------------------
-+
-+Tests are marked with an attribute by including a ``kunit_attributes`` object
-+in the test definition.
-+
-+Test cases can be marked using the ``KUNIT_CASE_ATTR(test_name, attributes)``
-+macro to define the test case instead of ``KUNIT_CASE(test_name)``.
-+
-+.. code-block:: c
-+
-+	static const struct kunit_attributes example_attr = {
-+		.speed = KUNIT_VERY_SLOW,
-+	};
-+
-+	static struct kunit_case example_test_cases[] = {
-+		KUNIT_CASE_ATTR(example_test, example_attr),
-+	};
-+
-+.. note::
-+	To mark a test case as slow, you can also use ``KUNIT_CASE_SLOW(test_name)``.
-+	This is a helpful macro as the slow attribute is the most commonly used.
-+
-+Test suites can be marked with an attribute by setting the "attr" field in the
-+suite definition.
-+
-+.. code-block:: c
-+
-+	static const struct kunit_attributes example_attr = {
-+		.speed = KUNIT_VERY_SLOW,
-+	};
-+
-+	static struct kunit_suite example_test_suite = {
-+		...,
-+		.attr = example_attr,
-+	};
-+
-+.. note::
-+	Not all attributes need to be set in a ``kunit_attributes`` object. Unset
-+	attributes will remain uninitialized and act as though the attribute is set
-+	to 0 or NULL. Thus, if an attribute is set to 0, it is treated as unset.
-+	These unset attributes will not be reported and may act as a default value
-+	for filtering purposes.
-+
-+Reporting Attributes
-+--------------------
-+
-+When a user runs tests, attributes will be present in the raw kernel output (in
-+KTAP format). Note that attributes will be hidden by default in kunit.py output
-+for all passing tests but the raw kernel output can be accessed using the
-+``--raw_output`` flag. This is an example of how test attributes for test cases
-+will be formatted in kernel output:
-+
-+.. code-block:: none
-+
-+	# example_test.speed: slow
-+	ok 1 example_test
-+
-+This is an example of how test attributes for test suites will be formatted in
-+kernel output:
-+
-+.. code-block:: none
-+
-+	  KTAP version 2
-+	  # Subtest: example_suite
-+	  # module: kunit_example_test
-+	  1..3
-+	  ...
-+	ok 1 example_suite
-+
-+Additionally, users can output a full attribute report of tests with their
-+attributes, using the command line flag ``--list_tests_attr``:
-+
-+.. code-block:: bash
-+
-+	kunit.py run "example" --list_tests_attr
-+
-+.. note::
-+	This report can be accessed when running KUnit manually by passing in the
-+	module_param ``kunit.action=list_attr``.
-+
-+Filtering
-+---------
-+
-+Users can filter tests using the ``--filter`` command line flag when running
-+tests. As an example:
-+
-+.. code-block:: bash
-+
-+	kunit.py run --filter speed=slow
-+
-+
-+You can also use the following operations on filters: "<", ">", "<=", ">=",
-+"!=", and "=". Example:
-+
-+.. code-block:: bash
-+
-+	kunit.py run --filter "speed>slow"
-+
-+This example will run all tests with speeds faster than slow. Note that the
-+characters < and > are often interpreted by the shell, so they may need to be
-+quoted or escaped, as above.
-+
-+Additionally, you can use multiple filters at once. Simply separate filters
-+using commas. Example:
-+
-+.. code-block:: bash
-+
-+	kunit.py run --filter "speed>slow, module=kunit_example_test"
-+
-+.. note::
-+	You can use this filtering feature when running KUnit manually by passing
-+	the filter as a module param: ``kunit.filter="speed>slow, speed<=normal"``.
-+
-+Filtered tests will not run or show up in the test output. You can use the
-+``--filter_action=skip`` flag to skip filtered tests instead. These tests will be
-+shown in the test output in the test but will not run. To use this feature when
-+running KUnit manually, use the module param ``kunit.filter_action=skip``.
-+
-+Rules of Filtering Procedure
-+----------------------------
-+
-+Since both suites and test cases can have attributes, there may be conflicts
-+between attributes during filtering. The process of filtering follows these
-+rules:
-+
-+- Filtering always operates at a per-test level.
-+
-+- If a test has an attribute set, then the test's value is filtered on.
-+
-+- Otherwise, the value falls back to the suite's value.
-+
-+- If neither are set, the attribute has a global "default" value, which is used.
-+
-+List of Current Attributes
-+--------------------------
-+
-+``speed``
-+
-+This attribute indicates the speed of a test's execution (how slow or fast the
-+test is).
-+
-+This attribute is saved as an enum with the following categories: "normal",
-+"slow", or "very_slow". The assumed default speed for tests is "normal". This
-+indicates that the test takes a relatively trivial amount of time (less than
-+1 second), regardless of the machine it is running on. Any test slower than
-+this could be marked as "slow" or "very_slow".
-+
-+The macro ``KUNIT_CASE_SLOW(test_name)`` can be easily used to set the speed
-+of a test case to "slow".
-+
-+``module``
-+
-+This attribute indicates the name of the module associated with the test.
-+
-+This attribute is automatically saved as a string and is printed for each suite.
-+Tests can also be filtered using this attribute.
--- 
-2.41.0.255.g8b1d071c50-goog
-
+--=20
+Kees Cook
