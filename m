@@ -2,126 +2,129 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 495B4C0015E
-	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jul 2023 21:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1E3C001B0
+	for <linux-hardening@archiver.kernel.org>; Wed, 19 Jul 2023 22:23:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230407AbjGSVY5 (ORCPT
+        id S229807AbjGSWXu (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 19 Jul 2023 17:24:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60642 "EHLO
+        Wed, 19 Jul 2023 18:23:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbjGSVY4 (ORCPT
+        with ESMTP id S229813AbjGSWXt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 19 Jul 2023 17:24:56 -0400
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F96A1FC1;
-        Wed, 19 Jul 2023 14:24:55 -0700 (PDT)
-Received: by mail-ot1-x32c.google.com with SMTP id 46e09a7af769-6b9ee68396fso87275a34.1;
-        Wed, 19 Jul 2023 14:24:55 -0700 (PDT)
+        Wed, 19 Jul 2023 18:23:49 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 863121FE8
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Jul 2023 15:23:48 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5618857518dso1888557b3.2
+        for <linux-hardening@vger.kernel.org>; Wed, 19 Jul 2023 15:23:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689801894; x=1692393894;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=OC9W/ru4ocR8OvYAbG2O3wH3VOR2zqO7MLlyAgcM980=;
-        b=eD7b5CxrRZkV5OXvF04u31ymhFVj3gEF8Oljj+1gr7TQ5H41M6um3Eqk6dCZ2pDh01
-         GD4w6OfiAsEn8HA3NoiWlm8hwTSgBkMaMApv4MwHj45a0a7+Cd6yt1kg41kvmm/wv3+7
-         42HlVjNTgOTOvJrXjgtdkH8bnIfTXgX/zYNgICO+DvqzC+CwkGUNtKcs/7q8aIlHfp8D
-         Am8PHZI2eR8FMfEbJhRwyTfOxeZLxLRzz0gpDboMlPnNex8pg6I5eZ6bSfu2ou5XQQFc
-         8HUUwPy5srfiwx1mEWJFmcnv9mKDb0/ybcPepKihAxalrgt7wEF3NprlhHXkddxfKmAj
-         jC3Q==
+        d=google.com; s=20221208; t=1689805428; x=1692397428;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wQ30uDB639VGNW+T7EeVAUkSIhG2Jevrm/2Jy436reA=;
+        b=jGBW4v5uLMfOolbkZxtwRaLLhDb+BMh1OFRzrhGuOBXni+46bSXTF9cgl+VZEDO8Zi
+         TrLvdFk/cyvWRxefzpSNGAOjgf6RjvfmnAO/RNmU2XbF19LVe4549pnH4RDAy4354SDL
+         9gr3n8hzyoRQqFH0nUeXAmfAl3J0bzU9aVdfrmQrYG6FjniIUtREGJUpiN+akhOB2Yfs
+         8V8GW9tAbO8kT0Xitj+p3G9GwiWPi4wxSsvL1f9o2OLllrYDR/o3RxkAJTNZKOIYoLhv
+         7/LJk9tRrF9kMjmXactWkHW9l1NDolQBeLzictRKTBB/5LojaVtXTRImzGTMfPsV1e7d
+         htxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689801894; x=1692393894;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OC9W/ru4ocR8OvYAbG2O3wH3VOR2zqO7MLlyAgcM980=;
-        b=Y7k6QVByPAqqbfF0EOPDjtv1Z1TC9PBtxIIdlzLc0GFfGdNytqw5BB0/XicNZYn42z
-         cyYFf72uzbY2lc3md7daoldP/TODm8bGiT/jPfyVUYg05ONh0kbIo+MCamVxMkhqT1fu
-         7sJHwM+xuW4pVNPrxAYq/1TIxpNR5Kw6GEf2hyBzDJCrjSwXF1LJb5MVKl5N/CBlTTCo
-         R08JKqUIQfP1jAcQEi2yWqQsn6L95NWBySM2axori3YkI9aHu/Qfbe85aEy5vaD+3p+Y
-         eGu9ZGBLdZ749UD3wSALOkt4dAa13jX6OtvEwVw8baaopHQGaFjuBCnWSPDgDZbsqxhw
-         GE4g==
-X-Gm-Message-State: ABy/qLb6BDMLb6AXb8HtIrDUbtb+xsniqIoD1Twkq6Zd0sc+vcs6VZ9D
-        6K8HZ7GCabdcWSYJ42RFpfdFDPIBnWs=
-X-Google-Smtp-Source: APBJJlEfQbxbs2VPpvjhzCs0W0/1n62SCeVFO3BsnpwT2bdxEdZxIco5qwQIAqxW1av8u8C5GqbaqQ==
-X-Received: by 2002:a9d:7b4c:0:b0:6b9:5b04:8cb0 with SMTP id f12-20020a9d7b4c000000b006b95b048cb0mr970558oto.9.1689801894113;
-        Wed, 19 Jul 2023 14:24:54 -0700 (PDT)
-Received: from [192.168.1.119] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id q18-20020a9d6652000000b006b9b0a08fdasm2106327otm.59.2023.07.19.14.24.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Jul 2023 14:24:53 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <d29c7e51-deff-c82f-81d4-8322b0c28d22@lwfinger.net>
-Date:   Wed, 19 Jul 2023 16:24:52 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: Crash in VirtualBox virtual machines running kernel 6.5
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-References: <ab3a70e9-60ed-0f13-e3d4-8866eaccc8c1@lwfinger.net>
- <202307190823.086EFD42D9@keescook> <202307190835.752D710D@keescook>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <202307190835.752D710D@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        d=1e100.net; s=20221208; t=1689805428; x=1692397428;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wQ30uDB639VGNW+T7EeVAUkSIhG2Jevrm/2Jy436reA=;
+        b=iSZUUxXi6GPBP92hRwGZsZe6/tIQAtrwk3x3Bk2AhFX640viCNvzbjpctCKkjb6Ck7
+         7mxk2jy4aCpbFalLwJMmBmzWIzffEd9HboQMRwKAI/YznPQStUvNTxo/+dOA9QJDn51i
+         wcQN2Q1axXDe5LoXO5ZRoBUvYZidbvjp8xBfD9jCx+Gc4fZOopaUY2ooeQtQCt4BoDyG
+         yC1rmUjAFus9/fiGX/vektgE6wm9a8rT7g3IFct5xvZsEXYwWFInlCtQpm/Eg55bzsh1
+         t/mNlg7rsuIYywFh1kL3L3TFNiNTibhiZd9KpDnTMeSX5va4fB3U8icDnJWPjkjNPOrc
+         qtwA==
+X-Gm-Message-State: ABy/qLYQ0fEdM/buh05efasRifTp8ONXNDwrB5voLNvY97tqeYXGL6UW
+        acQ+ab668y9zyKxmpv749kJfOTdkKQ==
+X-Google-Smtp-Source: APBJJlFrNajcvUKs2zJQGw2iGbgoAs6cobJeNjOkOO+vtQ7UQaL9jkZXJPWY6CCIfr6/5UEwBDIrwYfWSA==
+X-Received: from rmoar-specialist.c.googlers.com ([fda3:e722:ac3:cc00:2b:7d90:c0a8:45d3])
+ (user=rmoar job=sendgmr) by 2002:a05:6902:1709:b0:cab:e42c:876b with SMTP id
+ by9-20020a056902170900b00cabe42c876bmr34333ybb.3.1689805427820; Wed, 19 Jul
+ 2023 15:23:47 -0700 (PDT)
+Date:   Wed, 19 Jul 2023 22:23:27 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+Message-ID: <20230719222338.259684-1-rmoar@google.com>
+Subject: [PATCH v1 0/9] kunit: Add test attributes API
+From:   Rae Moar <rmoar@google.com>
+To:     shuah@kernel.org, davidgow@google.com, dlatypov@google.com,
+        brendan.higgins@linux.dev
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, keescook@chromium.org,
+        linux-hardening@vger.kernel.org, jstultz@google.com,
+        tglx@linutronix.de, sboyd@kernel.org, Rae Moar <rmoar@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 7/19/23 10:36, Kees Cook wrote:
-> Okay, please try:
-> 
-> diff --git a/fs/vboxsf/shfl_hostintf.h b/fs/vboxsf/shfl_hostintf.h
-> index aca829062c12..902fe3224453 100644
-> --- a/fs/vboxsf/shfl_hostintf.h
-> +++ b/fs/vboxsf/shfl_hostintf.h
-> @@ -68,12 +68,11 @@ struct shfl_string {
->   
->   	/** UTF-8 or UTF-16 string. Nul terminated. */
->   	union {
-> -		u8 utf8[2];
-> -		u16 utf16[1];
-> -		u16 ucs2[1]; /* misnomer, use utf16. */
-> +		DECLARE_FLEX_ARRAY(u8, utf8);
-> +		DECLARE_FLEX_ARRAY(u16, utf16);
->   	} string;
->   };
-> -VMMDEV_ASSERT_SIZE(shfl_string, 6);
-> +VMMDEV_ASSERT_SIZE(shfl_string, 4);
->   
->   /* The size of shfl_string w/o the string part. */
->   #define SHFLSTRING_HEADER_SIZE  4
-> 
-> 
-> The size assert doesn't seem to be used anywhere else, but I can do a
-> more careful binary analysis later today...''
+Hello everyone,
 
-Kees,
+This patch series adds a test attributes framework to KUnit.
 
-The testing was harder than I expected. My standard kernel would not load the 
-system disk on the VM, thus I had to build one using my distros configuration. 
-It is really painful to wait for all those drivers to build, but I figured that 
-might be faster than trying to find the incorrect parameter.
+There has been interest in filtering out "slow" KUnit tests. Most notably,
+a new config, CONFIG_MEMCPY_SLOW_KUNIT_TEST, has been added to exclude a
+particularly slow memcpy test
+(https://lore.kernel.org/all/20230118200653.give.574-kees@kernel.org/).
 
-I can finally report that vboxsf no longer generated a BUG. It is getting 
-farther, but I am not done yet. It now generates a line that says "Unknown 
-parameter tag" and then hangs. I have not tracked that down yet.
+This attributes framework can be used to save and access test associated
+data, including whether a test is slow. These attributes are reportable
+(via KTAP and command line output) and are also filterable.
 
-I was not aware of the DECLARE_FLEX_ARRAY() macro. I had considered removing the 
-union and creating a simple string[] declaration, but I do not mess with file 
-systems, and decided to let the experts handle it.
+This framework is designed to allow for the addition of other attributes in
+the future. These attributes could include whether the test can be run
+concurrently, test file path, etc.
 
-I will let you know what I find about that unknown parameter. It probably is 
-coming from VirtualBox.
+To try out the framework I suggest running:
+"./tools/testing/kunit/kunit.py run --filter speed!=slow"
 
-Thanks,
+This patch series was originally sent out as an RFC. Here is a link to the
+RFC v2:
+https://lore.kernel.org/all/20230707210947.1208717-1-rmoar@google.com/
 
-Larry
+Thanks!
+Rae
+
+Rae Moar (9):
+  kunit: Add test attributes API structure
+  kunit: Add speed attribute
+  kunit: Add module attribute
+  kunit: Add ability to filter attributes
+  kunit: tool: Add command line interface to filter and report
+    attributes
+  kunit: memcpy: Mark tests as slow using test attributes
+  kunit: time: Mark test as slow using test attributes
+  kunit: add tests for filtering attributes
+  kunit: Add documentation of KUnit test attributes
+
+ .../dev-tools/kunit/running_tips.rst          | 166 +++++++
+ include/kunit/attributes.h                    |  50 +++
+ include/kunit/test.h                          |  70 ++-
+ kernel/time/time_test.c                       |   2 +-
+ lib/Kconfig.debug                             |   3 +
+ lib/kunit/Makefile                            |   3 +-
+ lib/kunit/attributes.c                        | 421 ++++++++++++++++++
+ lib/kunit/executor.c                          | 115 ++++-
+ lib/kunit/executor_test.c                     | 128 +++++-
+ lib/kunit/kunit-example-test.c                |   9 +
+ lib/kunit/test.c                              |  27 +-
+ lib/memcpy_kunit.c                            |   8 +-
+ tools/testing/kunit/kunit.py                  |  70 ++-
+ tools/testing/kunit/kunit_kernel.py           |   8 +-
+ tools/testing/kunit/kunit_parser.py           |  11 +-
+ tools/testing/kunit/kunit_tool_test.py        |  39 +-
+ 16 files changed, 1054 insertions(+), 76 deletions(-)
+ create mode 100644 include/kunit/attributes.h
+ create mode 100644 lib/kunit/attributes.c
+
+
+base-commit: 64bd4641310c41a1ecf07c13c67bc0ed61045dfd
+-- 
+2.41.0.255.g8b1d071c50-goog
+
