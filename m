@@ -2,101 +2,91 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E5EEB64DD
-	for <linux-hardening@archiver.kernel.org>; Fri, 21 Jul 2023 04:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C911C001DF
+	for <linux-hardening@archiver.kernel.org>; Fri, 21 Jul 2023 14:24:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230058AbjGUEcG (ORCPT
+        id S230281AbjGUOYn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 21 Jul 2023 00:32:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44110 "EHLO
+        Fri, 21 Jul 2023 10:24:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229863AbjGUEcF (ORCPT
+        with ESMTP id S230249AbjGUOYm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 21 Jul 2023 00:32:05 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B770C268E;
-        Thu, 20 Jul 2023 21:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689913923; x=1721449923;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6GVU4NtSBfHGIA+db9VVes1wkK8Q3Ya1oLA7sHzSrXM=;
-  b=F5pji8Vu6vJcyPzDR/Fed80so5doKRh0OoKwDyJDzYgNitbprKUN91Fm
-   h3SXNCGLSOa3CJPuYdeEPpRPkin/40Y6Z898ON3Qp4b96od+JXHAuO0ii
-   XsP0woe6BBoED+2WoGpG6/hC8XSKUalRcN/hyHe6UrOOD4+XPOgYUzEcB
-   DU5ji/wrf1TyFQgJibbLD9NH5QtzAzhVZXn+QPuTfvg3Va/wPV0Tw1oy6
-   ZqeRa/0mFFKoDhfnL/ZuT2EviAjnchQ0h+S+y4pOB4WlxjdvTzIZi3yG5
-   LHBgPr5Awi6PRIXLOcvHhwN4pTgtShfx+A4nx5/ZP5cOWBIe6laiTjQSX
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="370533071"
-X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
-   d="scan'208";a="370533071"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jul 2023 21:32:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10777"; a="674910112"
-X-IronPort-AV: E=Sophos;i="6.01,220,1684825200"; 
-   d="scan'208";a="674910112"
-Received: from lkp-server02.sh.intel.com (HELO 36946fcf73d7) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 20 Jul 2023 21:31:59 -0700
-Received: from kbuild by 36946fcf73d7 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qMho1-0006sZ-2n;
-        Fri, 21 Jul 2023 04:31:55 +0000
-Date:   Fri, 21 Jul 2023 12:31:45 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Rae Moar <rmoar@google.com>, shuah@kernel.org, davidgow@google.com,
-        dlatypov@google.com, brendan.higgins@linux.dev
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        linux-hardening@vger.kernel.org, jstultz@google.com,
-        tglx@linutronix.de, sboyd@kernel.org, Rae Moar <rmoar@google.com>
-Subject: Re: [PATCH v1 2/9] kunit: Add speed attribute
-Message-ID: <202307211202.hZ3gtW5S-lkp@intel.com>
-References: <20230719222338.259684-3-rmoar@google.com>
+        Fri, 21 Jul 2023 10:24:42 -0400
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F1F2D79
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Jul 2023 07:24:38 -0700 (PDT)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-57688a146ecso22576517b3.2
+        for <linux-hardening@vger.kernel.org>; Fri, 21 Jul 2023 07:24:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1689949478; x=1690554278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z8ztgMvA+efivb3zvfwoxg39ThpiIM2mYSu5oGv5kHQ=;
+        b=cP8k+YLz02K0HGvAlXEo84L+RFE1hAHgDU85TQL6prNb2Z1x9Kj092DtJQ+5Z2Gnt4
+         hX/jQxXF1ZzmY02zOJRUhRX0m8vv8y11XVCAloo/etTo/xIhUNLekzvEpswheDzTvKDq
+         fLiAYPbzMigSmG5ENKuoiA3fFM/cctYg3titn8JI/6g9lYQVhSsqkb8ZijuwxRuAL0dy
+         r4CqMG1BsTjbP0KyvGOtg12OZIIw8MwesZku+d6/GGIb/qTug06+GGpkGPqCFHvAmiRE
+         niRsOFymcfOzvCEF2rT0OcQuzfdz5GiRy6xFtStUT9kUVw9nDcsTZk8fmcnYi/bNS0Jk
+         UdZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689949478; x=1690554278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z8ztgMvA+efivb3zvfwoxg39ThpiIM2mYSu5oGv5kHQ=;
+        b=OXvFyEt9wkYlvwvbZzCF8jLkqCULozZiN2eeWduFhaH0+sy4MPdKqW1Pz/W6hDa9Tc
+         POuvjFcLTSMqK44JqF5aGser+PGTW0bvnWEQEG+uS6RphafNvVhIteAFjxkEKuMhNPvp
+         CSXBA7QL6R2JNag6YrAHnByMByyYF18j0V8O77CJAB5wqbDkGiAktTgyNX1FMbqMw9HE
+         0vehg73IBY2PS5NGv6LrZL3lMDEPNalW1EoT/RC/mqe4gG5dnYQGabR28FYUHuIrW0C5
+         1LwbA03RVhOgUkzx4H9IlL5G/WCUayedOGcbgQ5rtJcaFroXe59P3LL/DRK5MR1UFVEB
+         5sPA==
+X-Gm-Message-State: ABy/qLbDpA7aiRFIQGX1437m32Sv4YXq6HpHzVLiCejJEHl2i4beLenx
+        AUqr5nnmCoYTMI5yttmQKGCOANMyrt8MxwjnCczY
+X-Google-Smtp-Source: APBJJlGkctnRWeYQSNR/Xwb+OMnSG51UHGgmnhj0crFYLZf3uLEvqoDrwlYGU+rZRaE9jZgtAqzvJN1Wd16AeboXQtE=
+X-Received: by 2002:a0d:de84:0:b0:576:777f:28bc with SMTP id
+ h126-20020a0dde84000000b00576777f28bcmr209789ywe.21.1689949477988; Fri, 21
+ Jul 2023 07:24:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230719222338.259684-3-rmoar@google.com>
+References: <20230721033236.42689-1-jiapeng.chong@linux.alibaba.com>
+In-Reply-To: <20230721033236.42689-1-jiapeng.chong@linux.alibaba.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 21 Jul 2023 10:24:27 -0400
+Message-ID: <CAHC9VhT3pA12ndrPE_VzgA7_tr2cWVz1jn3QLch+CW9P+B37uw@mail.gmail.com>
+Subject: Re: [PATCH] selinux: Use NULL for pointers
+To:     Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc:     stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        keescook@chromium.org, tony.luck@intel.com, gpiccoli@igalia.com,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, bpf@vger.kernel.org,
+        Abaci Robot <abaci@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Rae,
+On Thu, Jul 20, 2023 at 11:32=E2=80=AFPM Jiapeng Chong
+<jiapeng.chong@linux.alibaba.com> wrote:
+>
+> Replace integer constants with NULL.
+>
+> security/selinux/hooks.c:251:41: warning: Using plain integer as NULL poi=
+nter.
+>
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D5958
+> Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+> ---
+>  security/selinux/hooks.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-kernel test robot noticed the following build errors:
+Thank you for your patch, but a patch to address this problem has
+already been posted to the list.
 
-[auto build test ERROR on 64bd4641310c41a1ecf07c13c67bc0ed61045dfd]
+https://lore.kernel.org/selinux/20230720203116.316250-2-paul@paul-moore.com=
+/
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rae-Moar/kunit-Add-test-attributes-API-structure/20230720-062623
-base:   64bd4641310c41a1ecf07c13c67bc0ed61045dfd
-patch link:    https://lore.kernel.org/r/20230719222338.259684-3-rmoar%40google.com
-patch subject: [PATCH v1 2/9] kunit: Add speed attribute
-config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20230721/202307211202.hZ3gtW5S-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce: (https://download.01.org/0day-ci/archive/20230721/202307211202.hZ3gtW5S-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202307211202.hZ3gtW5S-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> lib/kunit/attributes.c:89:47: error: initializer element is not a compile-time constant
-   static struct kunit_attr kunit_attr_list[] = {speed_attr};
-                                                 ^~~~~~~~~~
-   1 error generated.
-
-
-vim +89 lib/kunit/attributes.c
-
-    88	
-  > 89	static struct kunit_attr kunit_attr_list[] = {speed_attr};
-    90	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+paul-moore.com
