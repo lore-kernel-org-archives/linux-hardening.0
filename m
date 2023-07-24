@@ -2,118 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294EFC41513
-	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jul 2023 21:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5CB3EB64DD
+	for <linux-hardening@archiver.kernel.org>; Mon, 24 Jul 2023 23:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbjGXVfe (ORCPT
+        id S229726AbjGXXIB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 24 Jul 2023 17:35:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59490 "EHLO
+        Mon, 24 Jul 2023 19:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjGXVfc (ORCPT
+        with ESMTP id S230330AbjGXXH7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 24 Jul 2023 17:35:32 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B27F126;
-        Mon, 24 Jul 2023 14:35:31 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-4fb7dc16ff0so7134864e87.2;
-        Mon, 24 Jul 2023 14:35:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690234529; x=1690839329;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PGqd0Dpk0QJClHF7xv6N5WpusRf7KZmTiJZbeW3YVpA=;
-        b=bSo1bzBSvbXk9nqAD97BGglxykvznOQ1gf/1zYxmZeCE8L1R/RYrEUc23gkSoQG5b8
-         OiGVU3nLrwYUzG3piGFUzrlD4ZLGf5m7vmiXzV8j9YdW/J60doQdsXBm7X6es4kGhpAP
-         mfYubkIN6x9wEBtPmx3fLSNAT6FEBnrzej2RGRjG2dXe+BWflZTTbYaBA7mm+IJ0+ecJ
-         +1pa1LkyANOg23vHe9P4hN1azoy4vCW56+Bhbis14qz84AUYZToVQeoOpW7pBkBJ/dUe
-         Wm7X5+DZdKg5OF22X5KvFlgnRgfkpG+3ub3dEa8xr8FK7kZ/s9Soqj8dqBVUR29zhyN3
-         kSpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690234529; x=1690839329;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PGqd0Dpk0QJClHF7xv6N5WpusRf7KZmTiJZbeW3YVpA=;
-        b=CJtmJuobxtHUjSdBj0AOrpGYjoBBrdixUbWzR+oytteH2mCb87zvUHqYuarZ2xW2wt
-         pmM6JJ0U6cCvtS3X2ONvx3HGuItgwYqvBGOrOKWBvNsC/VSf/xemrcby03ILkhzvvWaB
-         OfYl5PNXeMxE9DK9kcPvTw4+BGHSnSuIXMYcwowddB0G5V1Bs+47vNPgaCQ+UnxWxu2l
-         Hc5Cb0MPSLTKtrc+8lPo2nLQ4LVZtIraQlDJd6RFJ1JVN66L/7KoEfElxYPAtqInfh6h
-         33sw+2irRL4NR2nrFLoV3DoIZY9ox04dy7koj5na+V+kWPPjuAApMqphV/QvLNBDg6qE
-         kN+Q==
-X-Gm-Message-State: ABy/qLbLOdY6h3z3yE3gXP8hpCyn+y2BX6qJAd9Lr+yyHry8dvmK0zjg
-        PFNyzMVBXkRQpcawbraHV2w=
-X-Google-Smtp-Source: APBJJlGlS0ny6UsHvHlYOypOEI7Ao8qoTKmL9cK2lJ/LoBv1hnPDT+AUsLfEL5/cbRhNbMkryxxkDQ==
-X-Received: by 2002:a05:6512:480d:b0:4fb:9129:705b with SMTP id eo13-20020a056512480d00b004fb9129705bmr5710559lfb.6.1690234529045;
-        Mon, 24 Jul 2023 14:35:29 -0700 (PDT)
-Received: from new-nest.cgt.local ([2a05:3580:f312:6c00:826c:ae47:61a7:8af8])
-        by smtp.gmail.com with ESMTPSA id m26-20020a056512015a00b004fb745fd22fsm2406675lfo.32.2023.07.24.14.35.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jul 2023 14:35:28 -0700 (PDT)
-From:   Andrey Skvortsov <andrej.skvortzov@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Jarrah Gosbell <kernel@undef.tools>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Cc:     Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Subject: [PATCH] arm64: dts: pinephone: Add pstore support for PinePhone A64
-Date:   Tue, 25 Jul 2023 00:34:57 +0300
-Message-Id: <20230724213457.24593-1-andrej.skvortzov@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        Mon, 24 Jul 2023 19:07:59 -0400
+X-Greylist: delayed 599 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 24 Jul 2023 16:07:57 PDT
+Received: from tilde.club (tilde.club [IPv6:2607:5300:204:4340::114])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B82441700;
+        Mon, 24 Jul 2023 16:07:57 -0700 (PDT)
+Received: by tilde.club (Postfix, from userid 5616)
+        id 443962232AA89; Mon, 24 Jul 2023 22:49:02 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 tilde.club 443962232AA89
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tilde.club; s=mail;
+        t=1690238942; bh=QtqSfd3Czt7+G3Jl4KW7N8PcQYi7h4YI/wJv8N7kNV4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p+2hBvkKZ4PMtjW8+7HZUTVNNYd0tS442Hc1vqsImYc2aWtNKojZjXz8uJ2I3gzg9
+         gEO4JDHmZcq/23qFhXX8KkWgCfe1bTUjLfVMZlEp/BgIIP14UbrMcdAKpU3rhqyEvk
+         Fe0UkOWAOEU2YknoFcwPdfJ3y68UgdGn819df4CA=
+From:   sel4@tilde.club
+To:     kees@kernel.org
+Cc:     keescook@chromium.org, Brandon Luo <sel4@tilde.club>,
+        syzbot+98d3ceb7e01269e7bf4f@syzkaller.appspotmail.com,
+        syzbot+155274e882dcbf9885df@syzkaller.appspotmail.com,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fortify: strnlen: Call fortify_panic() only if the number of bytes read is greater than maxlen
+Date:   Mon, 24 Jul 2023 22:48:57 +0000
+Message-ID: <20230724224857.2049906-1-sel4@tilde.club>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <4F5F9CC2-803C-4E18-968C-A46B32528F1F@kernel.org>
+References: <4F5F9CC2-803C-4E18-968C-A46B32528F1F@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This patch reserves some memory in the DTS and sets up a
-pstore device tree node to enable pstore support.
+From: Brandon Luo <sel4@tilde.club>
 
-Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+If the number of bytes read is p_size and p_size is less than maxlen,
+fortify_panic() will be called incorrectly. Only panic if the number of
+bytes read is greater than the minimum of p_size and maxlen since that is
+ the argument to __real_strnlen().
 
-Gbp-Pq: Topic pinephone
-Gbp-Pq: Name 0161-arm64-dts-pinephone-Add-pstore-support-for-PinePhone.patch
+Reported-by: syzbot+98d3ceb7e01269e7bf4f@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/000000000000d8352e0600c0c804@google.com/
+
+Reported-by: syzbot+155274e882dcbf9885df@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/all/000000000000de4c2c0600c02b28@google.com/
+
+Signed-off-by: Brandon Luo <sel4@tilde.club>
 ---
- .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ include/linux/fortify-string.h | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index 87847116ab6d..84f9410b0b70 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -19,6 +19,22 @@ aliases {
- 		serial0 = &uart0;
- 	};
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index da51a83b2829..cde637f735fe 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -176,8 +176,9 @@ __FORTIFY_INLINE __kernel_size_t strnlen(const char * const POS p, __kernel_size
+ 	}
  
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		pstore_mem: ramoops@61000000 {
-+			compatible = "ramoops";
-+			reg = <0x61000000 0x100000>;
-+			record-size = <0x20000>;
-+			console-size = <0x20000>;
-+			ftrace-size = <0x20000>;
-+			pmsg-size = <0x20000>;
-+			ecc-size = <16>;
-+		};
-+	};
-+
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
+ 	/* Do not check characters beyond the end of p. */
+-	ret = __real_strnlen(p, maxlen < p_size ? maxlen : p_size);
+-	if (p_size <= ret && maxlen != ret)
++	maxlen = (maxlen < p_size) ? maxlen : p_size;
++	ret = __real_strnlen(p, maxlen);
++	if (maxlen < ret)
+ 		fortify_panic(__func__);
+ 	return ret;
+ }
 -- 
-2.39.2
+2.41.0
 
