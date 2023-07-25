@@ -2,58 +2,58 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1FBC001E0
-	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jul 2023 08:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD94C04FE1
+	for <linux-hardening@archiver.kernel.org>; Tue, 25 Jul 2023 08:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230088AbjGYIoB (ORCPT
+        id S231400AbjGYIoD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 25 Jul 2023 04:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59462 "EHLO
+        Tue, 25 Jul 2023 04:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233092AbjGYInf (ORCPT
+        with ESMTP id S233139AbjGYInp (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 25 Jul 2023 04:43:35 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D37213C
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jul 2023 01:42:32 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-521e046f6c7so5889a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 25 Jul 2023 01:42:31 -0700 (PDT)
+        Tue, 25 Jul 2023 04:43:45 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 386832684
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jul 2023 01:42:45 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fc075d9994so58325e9.0
+        for <linux-hardening@vger.kernel.org>; Tue, 25 Jul 2023 01:42:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690274550; x=1690879350;
+        d=google.com; s=20221208; t=1690274564; x=1690879364;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8LDwcYNYLdxZiJrhE4jawGOGj261Y331939PLHqaeA8=;
-        b=tA2O2c1tJzrbVAj7edQ9maFoKhwr4JhAQqLydh4MuV5R9+DgxRKt+AImkDZ/DktOPG
-         mm0j8PkzHxe7ozTxzHs5/BZYu1VLu5sgM+VTrSFrxqJy3dl11sq87QRAGYt7R2SokbMo
-         24pMBDQ4miZXXkx+5Yo65USh7zw3UAmwiGmMFKmmayDeiE9dXh40luuzBmEapf7oprr8
-         HDc7TrgCiM7qR9T1PLUpP/oh7noD9MwP9WI8ma+MM1F/veHWzMoXdg2EM0oI/qCHq7Ta
-         vcD7WKAXBb+IgWNY3CT/OJ2vIGDqKyx7+Xr3D1zYCluPsnPkH/oGN6Ox3PwVLgnAHDpP
-         m+Sw==
+        bh=kS+htF32a8NZCKOzEYudDbjXKwcdpjP+RDYOso3wVm4=;
+        b=a0PjgA8ADO5Eaacu4ANacL32HgUEcokR+hxHq2IuI6TYxZc5LiCKdCTC1yTkBpY98i
+         +5Oc5Nt/2qFB+FVsHHCynjzBBNVB0WMeBbTjTAVEvJKgen9vuZWQdwM3yJVK4qk6sBQb
+         0C88miLAzFjfIczQKnTQccASkfuzGZ/q4I71Nz3IRF4q1uxwPQugX7ZNZhLXdIC5UeIk
+         8gCQT6YloYta8YUEp8SBozknuTAs6+QogmDnAOsW7h6yk/WuWb8KOmw2Xb+sZTJEv8Z5
+         ZGcgVVn1f9fn3byScSo7q30vcShJKiNbnMloVrMOnusUoGRiI99zZHfnI5fu92pVxT6t
+         voYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690274550; x=1690879350;
+        d=1e100.net; s=20221208; t=1690274564; x=1690879364;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8LDwcYNYLdxZiJrhE4jawGOGj261Y331939PLHqaeA8=;
-        b=DjcqSezGxoQn++T1DxU3phQA14az5ljOWks91fOwwJ9fSfeOM2yh9B7l8kmrNsyZUv
-         BoqVoF7YsP7+AvmICXocSbvR95A14gtLF1cpWAyR/ZwJYCtNrH7rO+DkvTZn6w8XhWBX
-         LID7FH3yPBiE+M2tEZf8EPcrj3PJNhkkefQH1lCQX7OAbyhLD0Xxo6tr7+cHFWDCHfzX
-         alQ+iouU0ePaCaST/u0DkvdCrZdOeiu64Rvlr0yUEswy1JyAulrnx4Uo4WuSHpMRu10C
-         QbnXonVwmfrHgo8fOhJ1KVeDQd1X1qfce2vVxZZfnwEjyx5OpuHL0KYjjbkbYZqDS6e2
-         80LQ==
-X-Gm-Message-State: ABy/qLZp+LbF5LM1VSmcLcVL9/6Ozb2eOIUHn1tkaTfMPdYIqIQwXxoP
-        SVaXLFGUWjq8NuVV1V2zgGq7qnsgnOJKJU26ad4tXg==
-X-Google-Smtp-Source: APBJJlE2yV866xSiPQ/yZYsxyCRjYxi7I32kb+OPCtIGERJPDFR8UUAzStoM1WBz7yjF3IYxWlKq5ts6Bbnag7I6Y3E=
-X-Received: by 2002:a50:cd93:0:b0:522:3ead:377 with SMTP id
- p19-20020a50cd93000000b005223ead0377mr46087edi.7.1690274550299; Tue, 25 Jul
- 2023 01:42:30 -0700 (PDT)
+        bh=kS+htF32a8NZCKOzEYudDbjXKwcdpjP+RDYOso3wVm4=;
+        b=CxePLuDv4GoOOGiU3f5sacppr/pg7HeKUmHjr9/WJnw2k5ha364d/mvPMMWZNk1IJ3
+         NwH1C2MAiFFzXfw86QFYnBvEE6rrt/4SQGONEGcx3NcBS9BCQAIWssvrfwS1y6QWhyhC
+         YvHVJGkTDbnZdyyz7YUUarCfuup9Rdy6+DW01Wjbhp3u300cY0a6T1fGfSVi+SoI7gXx
+         DpSWLcP4kbdvohcpg7fI6y1r5M5XleLKM49dnmuj5LDLWYXhGRk+9KOFtMcORVWom9Jj
+         bFzlmHLnslRRUFGyzOG53USpMZgVpKEPZ65ILT4LP2JUPO0LWY47K+4JHt0YULp68N8/
+         ifyw==
+X-Gm-Message-State: ABy/qLZu4FQrdLwoUu4NvHAw4C5vumaXjKODCaPS3zzMSbLL8PfdbVF6
+        VQQ3jXQo34qlf0NWrt9qbFDlOBWGN7Z/jMdY7onCLQ==
+X-Google-Smtp-Source: APBJJlFWi3uSj4qBxNiNlxstKaMd84At700nIYnvwJMh6xXo0PwfmpiCAkUkqZMrFfm7wtQ/VM7WudEiaFj6pxWnk2w=
+X-Received: by 2002:a05:600c:1d21:b0:3fd:e15:41e3 with SMTP id
+ l33-20020a05600c1d2100b003fd0e1541e3mr52820wms.2.1690274563692; Tue, 25 Jul
+ 2023 01:42:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230724162834.1354164-1-rmoar@google.com> <20230724162834.1354164-5-rmoar@google.com>
-In-Reply-To: <20230724162834.1354164-5-rmoar@google.com>
+References: <20230724162834.1354164-1-rmoar@google.com> <20230724162834.1354164-7-rmoar@google.com>
+In-Reply-To: <20230724162834.1354164-7-rmoar@google.com>
 From:   David Gow <davidgow@google.com>
-Date:   Tue, 25 Jul 2023 16:42:16 +0800
-Message-ID: <CABVgOS=NCNnmDFAYC9P-bDv9N1eVu59rX85p5oruAB=v5Chkgg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/9] kunit: Add ability to filter attributes
+Date:   Tue, 25 Jul 2023 16:42:30 +0800
+Message-ID: <CABVgOSkQRSCX1yKeSnpdoWxbNu36oU7Ex1aPZRbbS4LQO8093A@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] kunit: memcpy: Mark tests as slow using test attributes
 To:     Rae Moar <rmoar@google.com>
 Cc:     shuah@kernel.org, dlatypov@google.com, brendan.higgins@linux.dev,
         linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
@@ -61,688 +61,93 @@ Cc:     shuah@kernel.org, dlatypov@google.com, brendan.higgins@linux.dev,
         linux-hardening@vger.kernel.org, jstultz@google.com,
         tglx@linutronix.de, sboyd@kernel.org
 Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000002c332406014bb6be"
+        boundary="000000000000f5c75d06014bb6d6"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---0000000000002c332406014bb6be
+--000000000000f5c75d06014bb6d6
 Content-Type: text/plain; charset="UTF-8"
 
 On Tue, 25 Jul 2023 at 00:30, Rae Moar <rmoar@google.com> wrote:
 >
-> Add filtering of test attributes. Users can filter tests using the
-> module_param called "filter".
+> Mark slow memcpy KUnit tests using test attributes.
 >
-> Filters are imputed in the format: <attribute_name><operation><value>
+> Tests marked as slow are as follows: memcpy_large_test, memmove_test,
+> memmove_large_test, and memmove_overlap_test. These tests were the slowest
+> of the memcpy tests and relatively slower to most other KUnit tests. Most
+> of these tests are already skipped when CONFIG_MEMCPY_SLOW_KUNIT_TEST is
+> not enabled.
 >
-> Example: kunit.filter="speed>slow"
+> These tests can now be filtered using the KUnit test attribute filtering
+> feature. Example: --filter "speed>slow". This will run only the tests that
+> have speeds faster than slow. The slow attribute will also be outputted in
+> KTAP.
 >
-> Operations include: >, <, >=, <=, !=, and =. These operations will act the
-> same for attributes of the same type but may not between types.
+> Note: This patch is intended to replace the use of
+> CONFIG_MEMCPY_SLOW_KUNIT_TEST and to potentially deprecate this feature.
+> This patch does not remove the config option but does add a note to the
+> config definition commenting on this future shift.
 >
-> Note multiple filters can be inputted by separating them with a comma.
-> Example: kunit.filter="speed=slow, module!=example"
->
-> Since both suites and test cases can have attributes, there may be
-> conflicts. The process of filtering follows these rules:
-> - Filtering always operates at a per-test level.
-> - If a test has an attribute set, then the test's value is filtered on.
-> - Otherwise, the value falls back to the suite's value.
-> - If neither are set, the attribute has a global "default" value, which
->   is used.
->
-> Filtered tests will not be run or show in output. The tests can instead be
-> skipped using the configurable option "kunit.filter_action=skip".
->
-> Note the default settings for running tests remains unfiltered.
->
-> Finally, add "filter" methods for the speed and module attributes to parse
-> and compare attribute values.
->
-> Note this filtering functionality will be added to kunit.py in the next
-> patch.
->
+> Acked-by: Kees Cook <keescook@chromium.org>
 > Signed-off-by: Rae Moar <rmoar@google.com>
 > ---
 
-Looks good. One super-minor formatting nitpick below.
-
 Reviewed-by: David Gow <davidgow@google.com>
 
-Cheers,
+Thanks,
 -- David
 
 >
 > Changes since v1:
-> - Fix compile warning of use of uninitialized variable
->
+> - No changes.
 > Changes since RFC v2:
-> - Change to output only one error before exiting.
->
+> - No changes.
 > Changes since RFC v1:
-> - Change method for inputting filters to allow for spaces in filtering
->   values
-> - Add option to skip filtered tests instead of not run or show them with
->   the filter_action=skip flag
+> - Added note under CONFIG_MEMCPY_SLOW_KUNIT_TEST.
 >
->  include/kunit/attributes.h |  31 +++++
->  lib/kunit/attributes.c     | 271 +++++++++++++++++++++++++++++++++++++
->  lib/kunit/executor.c       |  94 ++++++++++---
->  lib/kunit/executor_test.c  |  12 +-
->  lib/kunit/test.c           |  10 +-
->  5 files changed, 390 insertions(+), 28 deletions(-)
+>  lib/Kconfig.debug  | 3 +++
+>  lib/memcpy_kunit.c | 8 ++++----
+>  2 files changed, 7 insertions(+), 4 deletions(-)
 >
-> diff --git a/include/kunit/attributes.h b/include/kunit/attributes.h
-> index 9fcd184cce36..bc76a0b786d2 100644
-> --- a/include/kunit/attributes.h
-> +++ b/include/kunit/attributes.h
-> @@ -9,6 +9,20 @@
->  #ifndef _KUNIT_ATTRIBUTES_H
->  #define _KUNIT_ATTRIBUTES_H
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 550cb967b668..1b3894e861f2 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -2701,6 +2701,9 @@ config MEMCPY_SLOW_KUNIT_TEST
+>           and bit ranges. These can be very slow, so they are split out
+>           as a separate config, in case they need to be disabled.
 >
-> +/*
-> + * struct kunit_attr_filter - representation of attributes filter with the
-> + * attribute object and string input
-> + */
-> +struct kunit_attr_filter {
-> +       struct kunit_attr *attr;
-> +       char *input;
-> +};
+> +         Note this config option will be replaced by the use of KUnit test
+> +         attributes.
 > +
-> +/*
-> + * Returns the name of the filter's attribute.
-> + */
-> +const char *kunit_attr_filter_name(struct kunit_attr_filter filter);
-> +
->  /*
->   * Print all test attributes for a test case or suite.
->   * Output format for test cases: "# <test_name>.<attribute>: <value>"
-> @@ -16,4 +30,21 @@
->   */
->  void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int test_level);
->
-> +/*
-> + * Returns the number of fitlers in input.
-> + */
-> +int kunit_get_filter_count(char *input);
-> +
-> +/*
-> + * Parse attributes filter input and return an objects containing the
-> + * attribute object and the string input of the next filter.
-> + */
-> +struct kunit_attr_filter kunit_next_attr_filter(char **filters, int *err);
-> +
-> +/*
-> + * Returns a copy of the suite containing only tests that pass the filter.
-> + */
-> +struct kunit_suite *kunit_filter_attr_tests(const struct kunit_suite *const suite,
-> +               struct kunit_attr_filter filter, char *action, int *err);
-> +
->  #endif /* _KUNIT_ATTRIBUTES_H */
-> diff --git a/lib/kunit/attributes.c b/lib/kunit/attributes.c
-> index 9dce4f4d726c..d37c40c0ce4f 100644
-> --- a/lib/kunit/attributes.c
-> +++ b/lib/kunit/attributes.c
-> @@ -67,6 +67,104 @@ static const char *attr_string_to_string(void *attr, bool *to_free)
->         return (char *) attr;
->  }
->
-> +/* Filter Methods */
-> +
-> +static const char op_list[] = "<>!=";
-> +
-> +/*
-> + * Returns whether the inputted integer value matches the filter given
-> + * by the operation string and inputted integer.
-> + */
-> +static int int_filter(long val, const char *op, int input, int *err)
-> +{
-> +       if (!strncmp(op, "<=", 2))
-> +               return (val <= input);
-> +       else if (!strncmp(op, ">=", 2))
-> +               return (val >= input);
-> +       else if (!strncmp(op, "!=", 2))
-> +               return (val != input);
-> +       else if (!strncmp(op, ">", 1))
-> +               return (val > input);
-> +       else if (!strncmp(op, "<", 1))
-> +               return (val < input);
-> +       else if (!strncmp(op, "=", 1))
-> +               return (val == input);
-> +       *err = -EINVAL;
-> +       pr_err("kunit executor: invalid filter operation: %s\n", op);
-> +       return false;
-> +}
-> +
-> +/*
-> + * Returns whether the inputted enum value "attr" matches the filter given
-> + * by the input string. Note: the str_list includes the corresponding string
-> + * list to the enum values.
-> + */
-> +static int attr_enum_filter(void *attr, const char *input, int *err,
-> +               const char * const str_list[], int max)
-> +{
-> +       int i, j, input_int;
-> +       long test_val = (long)attr;
-> +       const char *input_val = NULL;
-> +
-> +       for (i = 0; input[i]; i++) {
-> +               if (!strchr(op_list, input[i])) {
-> +                       input_val = input + i;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       if (!input_val) {
-> +               *err = -EINVAL;
-> +               pr_err("kunit executor: filter value not found: %s\n", input);
-> +               return false;
-> +       }
-> +
-> +       for (j = 0; j <= max; j++) {
-> +               if (!strcmp(input_val, str_list[j]))
-> +                       input_int = j;
-> +       }
-> +
-> +       if (!input_int) {
-> +               *err = -EINVAL;
-> +               pr_err("kunit executor: invalid filter input: %s\n", input);
-> +               return false;
-> +       }
-> +
-> +       return int_filter(test_val, input, input_int, err);
-> +}
-> +
-> +static int attr_speed_filter(void *attr, const char *input, int *err)
-> +{
-> +       return attr_enum_filter(attr, input, err, speed_str_list, KUNIT_SPEED_MAX);
-> +}
-> +
-> +/*
-> + * Returns whether the inputted string value (attr) matches the filter given
-> + * by the input string.
-> + */
-> +static int attr_string_filter(void *attr, const char *input, int *err)
-> +{
-> +       char *str = attr;
-> +
-> +       if (!strncmp(input, "<", 1)) {
-> +               *err = -EINVAL;
-> +               pr_err("kunit executor: invalid filter input: %s\n", input);
-> +               return false;
-> +       } else if (!strncmp(input, ">", 1)) {
-> +               *err = -EINVAL;
-> +               pr_err("kunit executor: invalid filter input: %s\n", input);
-> +               return false;
-> +       } else if (!strncmp(input, "!=", 2)) {
-> +               return (strcmp(input + 2, str) != 0);
-> +       } else if (!strncmp(input, "=", 1)) {
-> +               return (strcmp(input + 1, str) == 0);
-> +       }
-> +       *err = -EINVAL;
-> +       pr_err("kunit executor: invalid filter operation: %s\n", input);
-> +       return false;
-> +}
-> +
-> +
->  /* Get Attribute Methods */
->
->  static void *attr_speed_get(void *test_or_suite, bool is_test)
-> @@ -99,6 +197,7 @@ static struct kunit_attr kunit_attr_list[] = {
->                 .name = "speed",
->                 .get_attr = attr_speed_get,
->                 .to_string = attr_speed_to_string,
-> +               .filter = attr_speed_filter,
->                 .attr_default = (void *)KUNIT_SPEED_NORMAL,
->                 .print = PRINT_ALWAYS,
->         },
-> @@ -106,6 +205,7 @@ static struct kunit_attr kunit_attr_list[] = {
->                 .name = "module",
->                 .get_attr = attr_module_get,
->                 .to_string = attr_string_to_string,
-> +               .filter = attr_string_filter,
->                 .attr_default = (void *)"",
->                 .print = PRINT_SUITE,
->         }
-> @@ -113,6 +213,11 @@ static struct kunit_attr kunit_attr_list[] = {
->
->  /* Helper Functions to Access Attributes */
->
-> +const char *kunit_attr_filter_name(struct kunit_attr_filter filter)
-> +{
-> +       return filter.attr->name;
-> +}
-> +
->  void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int test_level)
->  {
->         int i;
-> @@ -145,3 +250,169 @@ void kunit_print_attr(void *test_or_suite, bool is_test, unsigned int test_level
->                 }
->         }
->  }
-> +
-> +/* Helper Functions to Filter Attributes */
-> +
-> +int kunit_get_filter_count(char *input)
-> +{
-> +       int i, comma_index, count = 0;
-> +
-> +       for (i = 0; input[i]; i++) {
-> +               if (input[i] == ',') {
-> +                       if ((i - comma_index) > 1)
-> +                               count++;
-> +                       comma_index = i;
-> +               }
-> +       }
-> +       if ((i - comma_index) > 0)
-> +               count++;
-> +       return count;
-> +}
-> +
-> +struct kunit_attr_filter kunit_next_attr_filter(char **filters, int *err)
-> +{
-> +       struct kunit_attr_filter filter = {};
-> +       int i, j, comma_index, new_start_index;
-> +       int op_index = -1, attr_index = -1;
-> +       char op;
-> +       char *input = *filters;
-> +
-> +       /* Parse input until operation */
-> +       for (i = 0; input[i]; i++) {
-> +               if (op_index < 0 && strchr(op_list, input[i])) {
-> +                       op_index = i;
-> +               } else if (!comma_index && input[i] == ',') {
-> +                       comma_index = i;
-> +               } else if (comma_index && input[i] != ' ') {
-> +                       new_start_index = i;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       if (op_index <= 0) {
-> +               *err = -EINVAL;
-> +               pr_err("kunit executor: filter operation not found: %s\n", input);
-> +               return filter;
-> +       }
-> +
-> +       /* Temporarily set operator to \0 character. */
-> +       op = input[op_index];
-> +       input[op_index] = '\0';
-> +
-> +       /* Find associated kunit_attr object */
-> +       for (j = 0; j < ARRAY_SIZE(kunit_attr_list); j++) {
-> +               if (!strcmp(input, kunit_attr_list[j].name)) {
-> +                       attr_index = j;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       input[op_index] = op;
-> +
-> +       if (attr_index < 0) {
-> +               *err = -EINVAL;
-> +               pr_err("kunit executor: attribute not found: %s\n", input);
-> +       } else {
-> +               filter.attr = &kunit_attr_list[attr_index];
-> +       }
-> +
-> +       if (comma_index) {
-> +               input[comma_index] = '\0';
-> +               filter.input = input + op_index;
-> +               input = input + new_start_index;
-> +       } else {
-> +               filter.input = input + op_index;
-> +               input = NULL;
-> +       }
-> +
-> +       *filters = input;
-> +
-> +       return filter;
-> +}
-> +
-> +struct kunit_suite *kunit_filter_attr_tests(const struct kunit_suite *const suite,
-> +               struct kunit_attr_filter filter, char *action, int *err)
-> +{
-> +       int n = 0;
-> +       struct kunit_case *filtered, *test_case;
-> +       struct kunit_suite *copy;
-> +       void *suite_val, *test_val;
-> +       bool suite_result, test_result, default_result, result;
-> +
-> +       /* Allocate memory for new copy of suite and list of test cases */
-> +       copy = kmemdup(suite, sizeof(*copy), GFP_KERNEL);
-> +       if (!copy)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       kunit_suite_for_each_test_case(suite, test_case) { n++; }
-> +
-> +       filtered = kcalloc(n + 1, sizeof(*filtered), GFP_KERNEL);
-> +       if (!filtered) {
-> +               kfree(copy);
-> +               return ERR_PTR(-ENOMEM);
-> +       }
-> +
-> +       n = 0;
-> +
-> +       /* Save filtering result on default value */
-> +       default_result = filter.attr->filter(filter.attr->attr_default, filter.input, err);
-> +       if (*err) {
-> +               kfree(copy);
-> +               kfree(filtered);
-> +               return NULL;
-> +       }
-> +
-> +       /* Save suite attribute value and filtering result on that value */
-> +       suite_val = filter.attr->get_attr((void *)suite, false);
-> +       suite_result = filter.attr->filter(suite_val, filter.input, err);
-> +       if (*err) {
-> +               kfree(copy);
-> +               kfree(filtered);
-> +               return NULL;
-> +       }
-> +
-> +       /* For each test case, save test case if passes filtering. */
-> +       kunit_suite_for_each_test_case(suite, test_case) {
-> +               test_val = filter.attr->get_attr((void *) test_case, true);
-> +               test_result = filter.attr->filter(filter.attr->get_attr(test_case, true),
-> +                               filter.input, err);
-> +               if (*err) {
-> +                       kfree(copy);
-> +                       kfree(filtered);
-> +                       return NULL;
-> +               }
-> +
-> +               /*
-> +                * If attribute value of test case is set, filter on that value.
-> +                * If not, filter on suite value if set. If not, filter on
-> +                * default value.
-> +                */
-> +               result = false;
-> +               if (test_val) {
-> +                       if (test_result)
-> +                               result = true;
-> +               } else if (suite_val) {
-> +                       if (suite_result)
-> +                               result = true;
-> +               } else if (default_result) {
-> +                       result = true;
-> +               }
-> +
-> +               if (result) {
-> +                       filtered[n++] = *test_case;
-> +               } else if (action && strcmp(action, "skip") == 0) {
-> +                       test_case->status = KUNIT_SKIPPED;
-> +                       filtered[n++] = *test_case;
-> +               }
-> +       }
-> +
-> +       if (n == 0) {
-> +               kfree(copy);
-> +               kfree(filtered);
-> +               return NULL;
-> +       }
-> +
-> +       copy->test_cases = filtered;
-> +
-> +       return copy;
-> +}
-> diff --git a/lib/kunit/executor.c b/lib/kunit/executor.c
-> index 12e38a48a5cc..c286ae47435a 100644
-> --- a/lib/kunit/executor.c
-> +++ b/lib/kunit/executor.c
-> @@ -17,6 +17,9 @@ extern struct kunit_suite * const __kunit_suites_end[];
->
->  static char *filter_glob_param;
->  static char *action_param;
-> +static char *filter_param;
-> +static char *filter_action_param;
-> +
-
-Nit: do we need this extra newline here?
-
-
->
->  module_param_named(filter_glob, filter_glob_param, charp, 0);
->  MODULE_PARM_DESC(filter_glob,
-> @@ -27,15 +30,23 @@ MODULE_PARM_DESC(action,
->                  "<none>: run the tests like normal\n"
->                  "'list' to list test names instead of running them.\n"
->                  "'list_attr' to list test names and attributes instead of running them.\n");
-> +module_param_named(filter, filter_param, charp, 0);
-> +MODULE_PARM_DESC(filter,
-> +               "Filter which KUnit test suites/tests run at boot-time using attributes, e.g. speed>slow");
-> +module_param_named(filter_action, filter_action_param, charp, 0);
-> +MODULE_PARM_DESC(filter_action,
-> +               "Changes behavior of filtered tests using attributes, valid values are:\n"
-> +               "<none>: do not run filtered tests as normal\n"
-> +               "'skip': skip all filtered tests instead so tests will appear in output\n");
->
->  /* glob_match() needs NULL terminated strings, so we need a copy of filter_glob_param. */
-> -struct kunit_test_filter {
-> +struct kunit_glob_filter {
->         char *suite_glob;
->         char *test_glob;
+>  config IS_SIGNED_TYPE_KUNIT_TEST
+>         tristate "Test is_signed_type() macro" if !KUNIT_ALL_TESTS
+>         depends on KUNIT
+> diff --git a/lib/memcpy_kunit.c b/lib/memcpy_kunit.c
+> index 887926f04731..440aee705ccc 100644
+> --- a/lib/memcpy_kunit.c
+> +++ b/lib/memcpy_kunit.c
+> @@ -551,10 +551,10 @@ static void strtomem_test(struct kunit *test)
+>  static struct kunit_case memcpy_test_cases[] = {
+>         KUNIT_CASE(memset_test),
+>         KUNIT_CASE(memcpy_test),
+> -       KUNIT_CASE(memcpy_large_test),
+> -       KUNIT_CASE(memmove_test),
+> -       KUNIT_CASE(memmove_large_test),
+> -       KUNIT_CASE(memmove_overlap_test),
+> +       KUNIT_CASE_SLOW(memcpy_large_test),
+> +       KUNIT_CASE_SLOW(memmove_test),
+> +       KUNIT_CASE_SLOW(memmove_large_test),
+> +       KUNIT_CASE_SLOW(memmove_overlap_test),
+>         KUNIT_CASE(strtomem_test),
+>         {}
 >  };
->
->  /* Split "suite_glob.test_glob" into two. Assumes filter_glob is not empty. */
-> -static void kunit_parse_filter_glob(struct kunit_test_filter *parsed,
-> +static void kunit_parse_glob_filter(struct kunit_glob_filter *parsed,
->                                     const char *filter_glob)
->  {
->         const int len = strlen(filter_glob);
-> @@ -57,7 +68,7 @@ static void kunit_parse_filter_glob(struct kunit_test_filter *parsed,
->
->  /* Create a copy of suite with only tests that match test_glob. */
->  static struct kunit_suite *
-> -kunit_filter_tests(const struct kunit_suite *const suite, const char *test_glob)
-> +kunit_filter_glob_tests(const struct kunit_suite *const suite, const char *test_glob)
->  {
->         int n = 0;
->         struct kunit_case *filtered, *test_case;
-> @@ -111,12 +122,15 @@ static void kunit_free_suite_set(struct suite_set suite_set)
->
->  static struct suite_set kunit_filter_suites(const struct suite_set *suite_set,
->                                             const char *filter_glob,
-> +                                               char *filters,
-> +                                               char *filter_action,
->                                             int *err)
->  {
-> -       int i;
-> -       struct kunit_suite **copy, *filtered_suite;
-> +       int i, j, k, filter_count;
-> +       struct kunit_suite **copy, *filtered_suite, *new_filtered_suite;
->         struct suite_set filtered;
-> -       struct kunit_test_filter filter;
-> +       struct kunit_glob_filter parsed_glob;
-> +       struct kunit_attr_filter *parsed_filters;
->
->         const size_t max = suite_set->end - suite_set->start;
->
-> @@ -127,17 +141,52 @@ static struct suite_set kunit_filter_suites(const struct suite_set *suite_set,
->                 return filtered;
->         }
->
-> -       kunit_parse_filter_glob(&filter, filter_glob);
-> -
-> -       for (i = 0; &suite_set->start[i] != suite_set->end; i++) {
-> -               if (!glob_match(filter.suite_glob, suite_set->start[i]->name))
-> -                       continue;
-> +       if (filter_glob)
-> +               kunit_parse_glob_filter(&parsed_glob, filter_glob);
->
-> -               filtered_suite = kunit_filter_tests(suite_set->start[i], filter.test_glob);
-> -               if (IS_ERR(filtered_suite)) {
-> -                       *err = PTR_ERR(filtered_suite);
-> +       /* Parse attribute filters */
-> +       if (filters) {
-> +               filter_count = kunit_get_filter_count(filters);
-> +               parsed_filters = kcalloc(filter_count + 1, sizeof(*parsed_filters), GFP_KERNEL);
-> +               for (j = 0; j < filter_count; j++)
-> +                       parsed_filters[j] = kunit_next_attr_filter(&filters, err);
-> +               if (*err)
->                         return filtered;
-> +       }
-> +
-> +       for (i = 0; &suite_set->start[i] != suite_set->end; i++) {
-> +               filtered_suite = suite_set->start[i];
-> +               if (filter_glob) {
-> +                       if (!glob_match(parsed_glob.suite_glob, filtered_suite->name))
-> +                               continue;
-> +                       filtered_suite = kunit_filter_glob_tests(filtered_suite,
-> +                                       parsed_glob.test_glob);
-> +                       if (IS_ERR(filtered_suite)) {
-> +                               *err = PTR_ERR(filtered_suite);
-> +                               return filtered;
-> +                       }
-> +               }
-> +               if (filter_count) {
-> +                       for (k = 0; k < filter_count; k++) {
-> +                               new_filtered_suite = kunit_filter_attr_tests(filtered_suite,
-> +                                               parsed_filters[k], filter_action, err);
-> +
-> +                               /* Free previous copy of suite */
-> +                               if (k > 0 || filter_glob)
-> +                                       kfree(filtered_suite);
-> +                               filtered_suite = new_filtered_suite;
-> +
-> +                               if (*err)
-> +                                       return filtered;
-> +                               if (IS_ERR(filtered_suite)) {
-> +                                       *err = PTR_ERR(filtered_suite);
-> +                                       return filtered;
-> +                               }
-> +                               if (!filtered_suite)
-> +                                       break;
-> +                       }
->                 }
-> +
->                 if (!filtered_suite)
->                         continue;
->
-> @@ -145,8 +194,14 @@ static struct suite_set kunit_filter_suites(const struct suite_set *suite_set,
->         }
->         filtered.end = copy;
->
-> -       kfree(filter.suite_glob);
-> -       kfree(filter.test_glob);
-> +       if (filter_glob) {
-> +               kfree(parsed_glob.suite_glob);
-> +               kfree(parsed_glob.test_glob);
-> +       }
-> +
-> +       if (filter_count)
-> +               kfree(parsed_filters);
-> +
->         return filtered;
->  }
->
-> @@ -206,8 +261,9 @@ int kunit_run_all_tests(void)
->                 goto out;
->         }
->
-> -       if (filter_glob_param) {
-> -               suite_set = kunit_filter_suites(&suite_set, filter_glob_param, &err);
-> +       if (filter_glob_param || filter_param) {
-> +               suite_set = kunit_filter_suites(&suite_set, filter_glob_param,
-> +                               filter_param, filter_action_param, &err);
->                 if (err) {
->                         pr_err("kunit executor: error filtering suites: %d\n", err);
->                         goto out;
-> @@ -223,7 +279,7 @@ int kunit_run_all_tests(void)
->         else
->                 pr_err("kunit executor: unknown action '%s'\n", action_param);
->
-> -       if (filter_glob_param) { /* a copy was made of each suite */
-> +       if (filter_glob_param || filter_param) { /* a copy was made of each suite */
->                 kunit_free_suite_set(suite_set);
->         }
->
-> diff --git a/lib/kunit/executor_test.c b/lib/kunit/executor_test.c
-> index ce6749af374d..d7ab069324b5 100644
-> --- a/lib/kunit/executor_test.c
-> +++ b/lib/kunit/executor_test.c
-> @@ -24,15 +24,15 @@ static struct kunit_case dummy_test_cases[] = {
->
->  static void parse_filter_test(struct kunit *test)
->  {
-> -       struct kunit_test_filter filter = {NULL, NULL};
-> +       struct kunit_glob_filter filter = {NULL, NULL};
->
-> -       kunit_parse_filter_glob(&filter, "suite");
-> +       kunit_parse_glob_filter(&filter, "suite");
->         KUNIT_EXPECT_STREQ(test, filter.suite_glob, "suite");
->         KUNIT_EXPECT_FALSE(test, filter.test_glob);
->         kfree(filter.suite_glob);
->         kfree(filter.test_glob);
->
-> -       kunit_parse_filter_glob(&filter, "suite.test");
-> +       kunit_parse_glob_filter(&filter, "suite.test");
->         KUNIT_EXPECT_STREQ(test, filter.suite_glob, "suite");
->         KUNIT_EXPECT_STREQ(test, filter.test_glob, "test");
->         kfree(filter.suite_glob);
-> @@ -50,7 +50,7 @@ static void filter_suites_test(struct kunit *test)
->         subsuite[1] = alloc_fake_suite(test, "suite2", dummy_test_cases);
->
->         /* Want: suite1, suite2, NULL -> suite2, NULL */
-> -       got = kunit_filter_suites(&suite_set, "suite2", &err);
-> +       got = kunit_filter_suites(&suite_set, "suite2", NULL, NULL, &err);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start);
->         KUNIT_ASSERT_EQ(test, err, 0);
->         kfree_at_end(test, got.start);
-> @@ -74,7 +74,7 @@ static void filter_suites_test_glob_test(struct kunit *test)
->         subsuite[1] = alloc_fake_suite(test, "suite2", dummy_test_cases);
->
->         /* Want: suite1, suite2, NULL -> suite2 (just test1), NULL */
-> -       got = kunit_filter_suites(&suite_set, "suite2.test2", &err);
-> +       got = kunit_filter_suites(&suite_set, "suite2.test2", NULL, NULL, &err);
->         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, got.start);
->         KUNIT_ASSERT_EQ(test, err, 0);
->         kfree_at_end(test, got.start);
-> @@ -100,7 +100,7 @@ static void filter_suites_to_empty_test(struct kunit *test)
->         subsuite[0] = alloc_fake_suite(test, "suite1", dummy_test_cases);
->         subsuite[1] = alloc_fake_suite(test, "suite2", dummy_test_cases);
->
-> -       got = kunit_filter_suites(&suite_set, "not_found", &err);
-> +       got = kunit_filter_suites(&suite_set, "not_found", NULL, NULL, &err);
->         KUNIT_ASSERT_EQ(test, err, 0);
->         kfree_at_end(test, got.start); /* just in case */
->
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 9ee55139ecd1..cb9797fa6303 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -613,18 +613,22 @@ int kunit_run_tests(struct kunit_suite *suite)
->         kunit_suite_for_each_test_case(suite, test_case) {
->                 struct kunit test = { .param_value = NULL, .param_index = 0 };
->                 struct kunit_result_stats param_stats = { 0 };
-> -               test_case->status = KUNIT_SKIPPED;
->
->                 kunit_init_test(&test, test_case->name, test_case->log);
-> -
-> -               if (!test_case->generate_params) {
-> +               if (test_case->status == KUNIT_SKIPPED) {
-> +                       /* Test marked as skip */
-> +                       test.status = KUNIT_SKIPPED;
-> +                       kunit_update_stats(&param_stats, test.status);
-> +               } else if (!test_case->generate_params) {
->                         /* Non-parameterised test. */
-> +                       test_case->status = KUNIT_SKIPPED;
->                         kunit_run_case_catch_errors(suite, test_case, &test);
->                         kunit_update_stats(&param_stats, test.status);
->                 } else {
->                         /* Get initial param. */
->                         param_desc[0] = '\0';
->                         test.param_value = test_case->generate_params(NULL, param_desc);
-> +                       test_case->status = KUNIT_SKIPPED;
->                         kunit_log(KERN_INFO, &test, KUNIT_SUBTEST_INDENT KUNIT_SUBTEST_INDENT
->                                   "KTAP version 1\n");
->                         kunit_log(KERN_INFO, &test, KUNIT_SUBTEST_INDENT KUNIT_SUBTEST_INDENT
 > --
 > 2.41.0.487.g6d72f3e995-goog
 >
 
---0000000000002c332406014bb6be
+--000000000000f5c75d06014bb6d6
 Content-Type: application/pkcs7-signature; name="smime.p7s"
 Content-Transfer-Encoding: base64
 Content-Disposition: attachment; filename="smime.p7s"
@@ -809,14 +214,14 @@ jyzYFOHYQyv5IfML/3IBFKlON5OZa+V8EZYULYcNkp03DdWglafj7SXZ1/XgAbVYrC381UvrsYN8
 jndVvoa1GWwe+NVlIIK7Q3uAjV3qLEDQpaNPg1rr0oAn6YmvTccjVMqj2YNwN+RHhKNzgRGxY5ct
 FaN+8fXZhRhpv3bVbAWuPZXoMYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
 R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
-MDIwAhABAz5xDls09r2CKyYRqnNbMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCB7
-8SYg+ENEZwxmYk318iaLaOV55m1Igh1DLqulc70mSzAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMzA3MjUwODQyMzBaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
+MDIwAhABAz5xDls09r2CKyYRqnNbMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCD5
+9NX+J0SBxf7njXT7fCfO4ac4Tb4MsEC6/WwfSlkxJDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
+MBwGCSqGSIb3DQEJBTEPFw0yMzA3MjUwODQyNDRaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
 BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
-CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAfMcjdKtfzJKTtn4t2vGx
-MJ3Zbdj1EReL08HWgmjKlUWsC2DCMVkgoGQS5H0WX8k1VzsxOR8mLSEISpQhomdZjuqxLK3adGhs
-hi6Fo/ifbevRC8gW0JLVvf/5MJSEta4nyX3hQUb7btJBUCoFSjrLLpFgSk8KvGiX5fdG+D5/G8u5
-x4c3P2+k/Sqn4jolda+AQWjU5TcWwnay1l7AYr0nIsTCzRtav409eBkt4S9N4iMPACC7B7/7pWdN
-pAnzOoP88QI1zA1GKPQmSnjaH2ukcviHKLbBjzYRS8eYxwCv1aetElao1/KvunaHPD4I6zNZ4xze
-vlweuYFWsZeZ93fD9w==
---0000000000002c332406014bb6be--
+CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAIpRgNPRKmTViOZniB5FP
+QG0IDSSoDbKaw5kze0ExU6QTcn2lJIAmVrPGT6ezUtxbWx0NjIrQDngS5XbCJ75/s2+gJQTdSEMS
+Uo4/SLSmZiLL3Cu4F9lyOxFIYwARLx+dC3kajmU8WJ/vONvk6N2KsLW1F5zqxaxVDLn1SUz2Z/A2
+9vQIWdQJt7E5touPB8fwa4iRbwQXO54jIbadOmjFxEUZMbqeBqPPIFSlMsRikF4bTodcusvl3tzI
+9iHEHeRTBQzLiTd6bJVNeZhilklKIRsjwnrxr8bHbxJDTW1off4pXiyqfUWS5R52NXoE8lgrIxOl
+BzeT4LBXlEOF8UtojQ==
+--000000000000f5c75d06014bb6d6--
