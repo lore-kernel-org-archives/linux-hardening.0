@@ -2,129 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E557C0015E
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jul 2023 14:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2240AC0015E
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jul 2023 21:53:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234184AbjGZO5c (ORCPT
+        id S229926AbjGZVx0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Jul 2023 10:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41628 "EHLO
+        Wed, 26 Jul 2023 17:53:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234187AbjGZO50 (ORCPT
+        with ESMTP id S229821AbjGZVxZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Jul 2023 10:57:26 -0400
-Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9887E2135;
-        Wed, 26 Jul 2023 07:57:25 -0700 (PDT)
-Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-         client-signature RSA-PSS (2048 bits) client-digest SHA256)
-        (Client CN "mail.riseup.net", Issuer "R3" (not verified))
-        by mx0.riseup.net (Postfix) with ESMTPS id 4R9xnw6mN0z9sp2;
-        Wed, 26 Jul 2023 14:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-        t=1690383445; bh=SRkpeWDGsQ784tK+v68bqnUs+FhdczWP/bjri3n67bo=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=sNVeMPF9guconmmPZdlmFRyoHTgCJpHYzx6J7IyxcBUvQpZedPDCo1UdSH/IUxmxx
-         lq6m9KeBsAMMxay2kAniYTHl4nr1YOuFuXhE2re9ye/JKLAY8KnmNQ7e9Ht39k6JPg
-         6S/Q+bJMcT9b1eJzD0poW8oPU/X2gvNeGwYG5Kf0=
-X-Riseup-User-ID: 5AD1C4D2966B104ABA09EAD525D21483029186B6F508999D2097E4A938347020
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-         by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4R9xnr6ZhkzJntF;
-        Wed, 26 Jul 2023 14:57:20 +0000 (UTC)
-Message-ID: <1dd25d94-a714-5996-dd33-dfa9d1a95307@riseup.net>
-Date:   Wed, 26 Jul 2023 11:57:19 -0300
+        Wed, 26 Jul 2023 17:53:25 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33B1F26BB
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Jul 2023 14:53:24 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-686e0213c0bso275744b3a.1
+        for <linux-hardening@vger.kernel.org>; Wed, 26 Jul 2023 14:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1690408403; x=1691013203;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7o3CN+su3di7WaA9bWuG9cZg9fmgR34kXAM5LCkUKN0=;
+        b=RBiICJQzenyR3+D4KJZHLpmaQiqoWkKDAQ3LssNG4zdPxb5jhUUj0L6CQFhsgam7vg
+         H+zqZacAXrPed3+5TdMOZxPocLkXrVM+FkX/MgCbp9E/kRSRfQ27NA9MPC9Rbu7GxcaK
+         o32dURpNXqUP7bKtXqJ+6vcXTllE/LtWrn89Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690408403; x=1691013203;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7o3CN+su3di7WaA9bWuG9cZg9fmgR34kXAM5LCkUKN0=;
+        b=N5hi8mTLO+iigiGaO1uPWxOoNiIHxFtoY/E4cIcb2kYdFjoJS8X3E/k1MkSgmb3Qdx
+         l+PIac60yhhkMqQyA29XmHAvdfViQrmKLebi7+rqaLwpgEbXjO8DQkUBBVsxh0iCFHaE
+         eVzoQoFBBaV7W31vjn+6FvXZnRxisfocWenlYvu3wjiaw9iX+6AwAbnFFZBYReBqgZJl
+         4GpXBuUxB3XrWnFQjPaVR7Uw87xzSDgpStH8II/y1S32w9otGnw6sqADUzSmMTBUXNFm
+         2XhoRi7CwZA9zv/UmkBjmQGxVdBUgydmQFjhym77CXTdXTGT0xur0qovmlW9hJDVkp3B
+         s0EA==
+X-Gm-Message-State: ABy/qLbTBg6AhEm8HqTvKEyGMthI8c6yf1mp0d7NHj2GP+ToiJnfC1w0
+        1SyP0v+VNQvOFJXjltbVEP59sg==
+X-Google-Smtp-Source: APBJJlHxmqHoJCbHhpHOLxLueAFUER7U20Jsnko71nzWTdplk4lISZJmwPL6ZD+DateuphlGdXMrCg==
+X-Received: by 2002:a05:6a20:13d2:b0:13b:77e6:4fad with SMTP id ho18-20020a056a2013d200b0013b77e64fadmr2492621pzc.59.1690408403634;
+        Wed, 26 Jul 2023 14:53:23 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c20-20020aa78e14000000b0064aea45b040sm64996pfr.168.2023.07.26.14.53.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 14:53:23 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Qiang Zhao <qiang.zhao@nxp.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Li Yang <leoyang.li@nxp.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] soc: fsl: qe: Replace all non-returning strlcpy with strscpy
+Date:   Wed, 26 Jul 2023 14:53:12 -0700
+Message-Id: <169040838888.1782149.4842834187896840611.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230523021425.2406309-1-azeemshaikh38@gmail.com>
+References: <20230523021425.2406309-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 0/9] kunit: Add test attributes API
-Content-Language: en-US
-To:     Rae Moar <rmoar@google.com>, shuah@kernel.org, davidgow@google.com,
-        dlatypov@google.com, brendan.higgins@linux.dev
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, keescook@chromium.org,
-        linux-hardening@vger.kernel.org, jstultz@google.com,
-        tglx@linutronix.de, sboyd@kernel.org
-References: <20230725212522.1622716-1-rmoar@google.com>
-From:   Arthur Grillo Queiroz Cabral <arthurgrillo@riseup.net>
-In-Reply-To: <20230725212522.1622716-1-rmoar@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
+On Tue, 23 May 2023 02:14:25 +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
+> 
+> [...]
 
-On 25/07/23 18:25, 'Rae Moar' via KUnit Development wrote:
-> Hello everyone,
-> 
-> This patch series adds a test attributes framework to KUnit.
-> 
-> There has been interest in filtering out "slow" KUnit tests. Most notably,
-> a new config, CONFIG_MEMCPY_SLOW_KUNIT_TEST, has been added to exclude a
-> particularly slow memcpy test
-> (https://lore.kernel.org/all/20230118200653.give.574-kees@kernel.org/).
-> 
-> This attributes framework can be used to save and access test associated
-> data, including whether a test is slow. These attributes are reportable
-> (via KTAP and command line output) and are also filterable.
-> 
-> This framework is designed to allow for the addition of other attributes in
-> the future. These attributes could include whether the test can be run
-> concurrently, test file path, etc.
-> 
-> To try out the framework I suggest running:
-> "./tools/testing/kunit/kunit.py run --filter speed!=slow"
-> 
-> This patch series was originally sent out as an RFC. Here is a link to the
-> RFC v2:
-> https://lore.kernel.org/all/20230707210947.1208717-1-rmoar@google.com/
-> 
-> Thanks!
-> Rae
-> 
+Applied, thanks!
 
-Great addition to the KUnit framework!
+[1/1] soc: fsl: qe: Replace all non-returning strlcpy with strscpy
+      (no commit info)
 
-On all the patch set
+Best regards,
+-- 
+Kees Cook
 
-Reviewed-by: Arthur Grillo <arthurgrillo@riseup.net>
-
-Best Regards,
-~Arthur Grillo
-
-> Rae Moar (9):
->   kunit: Add test attributes API structure
->   kunit: Add speed attribute
->   kunit: Add module attribute
->   kunit: Add ability to filter attributes
->   kunit: tool: Add command line interface to filter and report
->     attributes
->   kunit: memcpy: Mark tests as slow using test attributes
->   kunit: time: Mark test as slow using test attributes
->   kunit: add tests for filtering attributes
->   kunit: Add documentation of KUnit test attributes
-> 
->  Documentation/dev-tools/kunit/run_wrapper.rst |  12 +
->  .../dev-tools/kunit/running_tips.rst          | 166 +++++++
->  include/kunit/attributes.h                    |  50 +++
->  include/kunit/test.h                          |  70 ++-
->  kernel/time/time_test.c                       |   2 +-
->  lib/Kconfig.debug                             |   3 +
->  lib/kunit/Makefile                            |   3 +-
->  lib/kunit/attributes.c                        | 418 ++++++++++++++++++
->  lib/kunit/executor.c                          | 114 ++++-
->  lib/kunit/executor_test.c                     | 128 +++++-
->  lib/kunit/kunit-example-test.c                |   9 +
->  lib/kunit/test.c                              |  27 +-
->  lib/memcpy_kunit.c                            |   8 +-
->  tools/testing/kunit/kunit.py                  |  70 ++-
->  tools/testing/kunit/kunit_kernel.py           |   8 +-
->  tools/testing/kunit/kunit_parser.py           |  11 +-
->  tools/testing/kunit/kunit_tool_test.py        |  39 +-
->  17 files changed, 1062 insertions(+), 76 deletions(-)
->  create mode 100644 include/kunit/attributes.h
->  create mode 100644 lib/kunit/attributes.c
-> 
-> 
-> base-commit: 64bd4641310c41a1ecf07c13c67bc0ed61045dfd
