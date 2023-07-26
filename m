@@ -2,38 +2,39 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AEBC41513
-	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jul 2023 14:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E557C0015E
+	for <linux-hardening@archiver.kernel.org>; Wed, 26 Jul 2023 14:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231990AbjGZO5R (ORCPT
+        id S234184AbjGZO5c (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 26 Jul 2023 10:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41584 "EHLO
+        Wed, 26 Jul 2023 10:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229822AbjGZO5R (ORCPT
+        with ESMTP id S234187AbjGZO50 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 26 Jul 2023 10:57:17 -0400
-Received: from mx1.riseup.net (mx1.riseup.net [198.252.153.129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E885C10F3;
-        Wed, 26 Jul 2023 07:57:15 -0700 (PDT)
+        Wed, 26 Jul 2023 10:57:26 -0400
+Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9887E2135;
+        Wed, 26 Jul 2023 07:57:25 -0700 (PDT)
 Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mx1.riseup.net (Postfix) with ESMTPS id 4R9xnl0nqPzDqV4;
-        Wed, 26 Jul 2023 14:57:15 +0000 (UTC)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
+         client-signature RSA-PSS (2048 bits) client-digest SHA256)
+        (Client CN "mail.riseup.net", Issuer "R3" (not verified))
+        by mx0.riseup.net (Postfix) with ESMTPS id 4R9xnw6mN0z9sp2;
+        Wed, 26 Jul 2023 14:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-        t=1690383435; bh=SRkpeWDGsQ784tK+v68bqnUs+FhdczWP/bjri3n67bo=;
+        t=1690383445; bh=SRkpeWDGsQ784tK+v68bqnUs+FhdczWP/bjri3n67bo=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=HLkmwiM7AO+/n1QnhDJJfGifHL72pMrSDKMTnbSJnWI963AlWF6O+XmT2fdt79Mp/
-         InqSRNsj3t5eNPi0FGwFD4hsSjmo5KRAbnWQW3VVr1swhTnZYtd/p2UI13wXxngi4Q
-         D9VWWfiPZoY0Kbq5kzN+sjwSCmEVt239w6YIBl7c=
-X-Riseup-User-ID: A81ECEBE9F46214717655E92076DA51CF4E93B488B8BFF314C990EAF99F8AEB8
+        b=sNVeMPF9guconmmPZdlmFRyoHTgCJpHYzx6J7IyxcBUvQpZedPDCo1UdSH/IUxmxx
+         lq6m9KeBsAMMxay2kAniYTHl4nr1YOuFuXhE2re9ye/JKLAY8KnmNQ7e9Ht39k6JPg
+         6S/Q+bJMcT9b1eJzD0poW8oPU/X2gvNeGwYG5Kf0=
+X-Riseup-User-ID: 5AD1C4D2966B104ABA09EAD525D21483029186B6F508999D2097E4A938347020
 Received: from [127.0.0.1] (localhost [127.0.0.1])
-         by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4R9xnS16fNzJq9P;
-        Wed, 26 Jul 2023 14:56:59 +0000 (UTC)
-Message-ID: <e87a70f7-9b7e-e5dc-bc00-8f8ba76f0476@riseup.net>
-Date:   Wed, 26 Jul 2023 11:56:57 -0300
+         by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4R9xnr6ZhkzJntF;
+        Wed, 26 Jul 2023 14:57:20 +0000 (UTC)
+Message-ID: <1dd25d94-a714-5996-dd33-dfa9d1a95307@riseup.net>
+Date:   Wed, 26 Jul 2023 11:57:19 -0300
 MIME-Version: 1.0
 Subject: Re: [PATCH v3 0/9] kunit: Add test attributes API
 Content-Language: en-US
