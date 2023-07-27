@@ -2,65 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0858C001DC
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Jul 2023 15:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D452C001DC
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Jul 2023 15:53:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233568AbjG0Ptr (ORCPT
+        id S233705AbjG0PxC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Jul 2023 11:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
+        Thu, 27 Jul 2023 11:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233486AbjG0Ptq (ORCPT
+        with ESMTP id S229580AbjG0PxB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Jul 2023 11:49:46 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 460D52686
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:49:45 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1bb2468257fso6535355ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:49:45 -0700 (PDT)
+        Thu, 27 Jul 2023 11:53:01 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC8D2719
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bb119be881so8967525ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690472985; x=1691077785;
+        d=chromium.org; s=google; t=1690473180; x=1691077980;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Iec1tA2tN7YsHL2UtT5qbnottO1zoJA2OGnLpMcZvuU=;
-        b=h8VbzFc8i5VWugtjre7Ih13tJEfBEMty2anZABmcmRbo/oRcHNuSjG/3oGALwViEa8
-         PDFP9Km4TYg/CIAM/r6EKDUNMJwllaY5XlvUaaVJTq2xFBg5tbWXCovxB1+s1ryA+oeQ
-         AEiR4Yh+4RPUs8tJW5E3cp2BFeanu76gR22Io=
+        bh=/7byZLLYnwmmWu9vINkUL47woFRKOyjYp5fOTgP+wEo=;
+        b=igS0GQcrQIveAPQFzyQwhP4qE9bKKyyOHUNPTtX8kf0mYPpW5hcxXhyoW6aFVLRAGK
+         PnIJFSi7wAS7PKPxFW52a9A+h3cJAwD9Y3T+/L4Y4HCiSpT38oVotAX+twD/kWsslIts
+         U4ldXwQ68/ypzcQdIQzU0lWkdo+eBC28AXxMU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690472985; x=1691077785;
+        d=1e100.net; s=20221208; t=1690473180; x=1691077980;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Iec1tA2tN7YsHL2UtT5qbnottO1zoJA2OGnLpMcZvuU=;
-        b=CTFnXQuHUUjmXLXaenID003dB8Gq5Q/fh/yHvAqpWDAuP0dVchmzrR9hBl/jJbjMgq
-         xUm84+0opQsJi3RAdukPfldhnRYehZXutnGnMeVOZJtazyIzx5CZqRCAgExCum+K9nOO
-         Hspg4FoFpjLh/7rarXZu6AQiwC/CXdHEV7PVTRZ5g1otFVa0ZLUeGKPjhwkKayYT/Q6a
-         3QNwlnTSzS9zx20g40rGMpJQZfGY0TksRmGktMVm3VRwMxSVKlksCJI9Hn9r+jsKuEUi
-         gLgJARN/EnJRjUnZpxZZnUjC60nOc+JLzq5XqZy3WcZWT9wKF+IPPSsFm7bIcHEquSKW
-         tPrw==
-X-Gm-Message-State: ABy/qLZyD/wpvll7smYY/syoNKyedibC0FILyPH9/2ojS3lPEe/MMztE
-        BSTMbOxyMNZ3X7SXIX1siLZYUw==
-X-Google-Smtp-Source: APBJJlEC3hFx8gs1VX29byCH65cvp+gxprSd7zK8+7DV5lzZGnByPLi/GGw56Wh11/4pCJ9VD+nB4g==
-X-Received: by 2002:a17:903:181:b0:1b8:a389:4410 with SMTP id z1-20020a170903018100b001b8a3894410mr4900514plg.0.1690472984731;
-        Thu, 27 Jul 2023 08:49:44 -0700 (PDT)
+        bh=/7byZLLYnwmmWu9vINkUL47woFRKOyjYp5fOTgP+wEo=;
+        b=UZdqhiLP2Mgok7ihctwcvjzYspRTdJiRhLsvuSDb6SDd8/yNlmXCdLEZR4YP0xmspq
+         StkqIKKUxJSQRRWuACQrPlUV5qWMehEco8z/GvYdjW6MI4+00ZoV1JLTJsf1U3oUmqh1
+         0yl/UKDpNN+88/UFnSwh7K5joH3fcED4j7YdKrVxQufHFPIuauPV0Xqn0jRsnjUj6ttm
+         SNSiVlPqS43eM05U9nSrtAzZCJ8AjKeR262he8PcTb0lPt8tzYLSGr832tnxBudvApiL
+         PD3BUlenv/IoV7arO8GqmaHzHPsaIcw91KQbM8yE75h65MjqrcI+CwGSBQA47eoL5soH
+         hXPg==
+X-Gm-Message-State: ABy/qLYbFKwVl8oSZh8dnD4VliETeTx7xHIFEcpn55U9IN/k3KqSn9QT
+        C93XAN0a19yc/mcajhp1Ht06bkMEewpYJv8tfmE=
+X-Google-Smtp-Source: APBJJlFUaN7BXHfPCVb/0lPtSKuhDsKAgK0qZmTjLK5grvf3IvKfatUQ9D7onj/9Lo5gYiBXKBRSgQ==
+X-Received: by 2002:a17:902:d2c4:b0:1bb:14e7:4fdf with SMTP id n4-20020a170902d2c400b001bb14e74fdfmr6994875plc.22.1690473179794;
+        Thu, 27 Jul 2023 08:52:59 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n3-20020a170902e54300b001bb892a7a67sm1830680plf.1.2023.07.27.08.49.44
+        by smtp.gmail.com with ESMTPSA id l16-20020a170903121000b001bb54b6c4e4sm1803002plh.147.2023.07.27.08.52.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 08:49:44 -0700 (PDT)
+        Thu, 27 Jul 2023 08:52:59 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Muchun Song <muchun.song@linux.dev>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] seq_file: seq_show_option_n() is used for precise sizes
-Date:   Thu, 27 Jul 2023 08:49:40 -0700
-Message-Id: <169047297893.2399768.3235005834445433615.b4-ty@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] EISA: Replace all non-returning strlcpy with strscpy
+Date:   Thu, 27 Jul 2023 08:52:52 -0700
+Message-Id: <169047317160.2400214.17169594909094600573.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230726215957.never.619-kees@kernel.org>
-References: <20230726215957.never.619-kees@kernel.org>
+In-Reply-To: <20230706175804.2249018-1-azeemshaikh38@gmail.com>
+References: <20230706175804.2249018-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -69,17 +67,21 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-On Wed, 26 Jul 2023 14:59:57 -0700, Kees Cook wrote:
-> When seq_show_option_n() is used, it is for non-string memory that
-> happens to be printable bytes. As such, we must use memcpy() to copy the
-> bytes and then explicitly NUL-terminate the result.
+On Thu, 06 Jul 2023 17:58:04 +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
 > 
-> 
+> [...]
 
 Applied, thanks!
 
-[1/1] seq_file: seq_show_option_n() is used for precise sizes
-      https://git.kernel.org/kees/c/630fdd592912
+[1/1] EISA: Replace all non-returning strlcpy with strscpy
+      https://git.kernel.org/kees/c/f2ccf8d13625
 
 Best regards,
 -- 
