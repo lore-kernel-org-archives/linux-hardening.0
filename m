@@ -2,97 +2,88 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E4AC001E0
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Jul 2023 15:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1FBC0015E
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Jul 2023 16:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233867AbjG0PxG (ORCPT
+        id S232274AbjG0QA3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Jul 2023 11:53:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
+        Thu, 27 Jul 2023 12:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233794AbjG0PxD (ORCPT
+        with ESMTP id S231276AbjG0QA2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 27 Jul 2023 11:53:03 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 418482D45
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:53:02 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1bbd03cb7c1so7063945ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:53:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690473182; x=1691077982;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B+9U4Beprb9pu1uU4Mx83trCWS4lhvPi+RBhwLYwj+g=;
-        b=WlWFNqNPyREpMe5W8ha9YLRAYUAVHVCcv9Lk68+jM9LBf9M5bKGSw3Lou098CcfPkB
-         mhNx9ShsdckTOhyZT5le4i6VwwwKJol7ks+8eXPXVkc3SdtHXMeObhwrB5YSeboQNYhf
-         T/+whbs3KyR6OmlvUUZnuSxVVvxBaOv0hlMwY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690473182; x=1691077982;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B+9U4Beprb9pu1uU4Mx83trCWS4lhvPi+RBhwLYwj+g=;
-        b=GHxeeoD51jhet6aZrk9MD2gBHZk5IruIPMP2+FHUyqzLjLr2VxIAT7ViinYX18lDAq
-         PXiNZkmI0VKp4zlMfygIGibTmXLZAGSNN0/vyz8SkfRTasiSKaf0pI+zASwlaQE8r+NL
-         3i9QPUfbrbm3/iXO+6NI4sG+Le7TJhN9Iz0PUL9tKuMSe7RemcTwDLWxCTHDIGxOHq3e
-         /1qxdu/xzm7e7HoVKOne0ErlhXl4Nsm17sNbClH5LTNKhZxHQ76Eq+PNXz1TuXvIyrn3
-         luSVUgbwKvpS1uzk6oU41RP/4jLZRxpSM7Um49jwbPp6+a+f0RnR+6oqas1OLMJUsQNT
-         jgMA==
-X-Gm-Message-State: ABy/qLYBu6MwzmRinp855Xtqzeas2cXxXqwBO0/yGuEvwdCKjTdg+vi7
-        KN+WkQ7eNecPrOGHi9+1+NN5Rg==
-X-Google-Smtp-Source: APBJJlEbz+18hZOehpOx2Lg90Kn5OMIjVJqD6tiWpkUMlrFwOey76fAAMQaSy+GlhuNZNkNRKASRhA==
-X-Received: by 2002:a17:902:e885:b0:1bb:83cd:ad8b with SMTP id w5-20020a170902e88500b001bb83cdad8bmr5009270plg.30.1690473181766;
-        Thu, 27 Jul 2023 08:53:01 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t8-20020a170902bc4800b001a6a6169d45sm1802462plz.168.2023.07.27.08.52.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 08:52:59 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Felix Fietkau <nbd@nbd.name>,
+        Thu, 27 Jul 2023 12:00:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFCB8BC;
+        Thu, 27 Jul 2023 09:00:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 51DCF61E06;
+        Thu, 27 Jul 2023 16:00:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F90CC433C8;
+        Thu, 27 Jul 2023 16:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690473626;
+        bh=f5m8BGhtN6zBxnVwJ+ho2scIqcjIJySmiEoYp/0u46I=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Zx+nPrzkjVwYmOzLqBoOHudWiVte0aG41ndPOdr+LiYIMiXAAXXEKSP9pDuEG2y5L
+         nmN8Kpd+cv43df4ijqgds7+65i0cNIIyPsv3E8Xo9vPPe1uFXsHSRtGd3wD9t9PwxS
+         Q/Ym0Z8LxRYzEe1vvAUsmrl5tqV8dsf+KqVh05H9dFZ2tHUSToEOrh3mI5o9VW6RZx
+         2X324IRq6rXWvu5t4cgcR1uLxO+IYzawNauV2VddPtVPq8NATjY20WdsCzogEkewHP
+         bvEpJvlQpy7iEQ+VtKQt8RcZLTpbG0YKfcbSjSj30R20IT802X/OWcGrK7HT6sZvT9
+         Wic+BgtEgdKYw==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Felix Fietkau <nbd@nbd.name>,
         Lorenzo Bianconi <lorenzo@kernel.org>,
         Ryder Lee <ryder.lee@mediatek.com>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-hardening@vger.kernel.org,
         Shayne Chen <shayne.chen@mediatek.com>,
         Sean Wang <sean.wang@mediatek.com>,
         linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kalle Valo <kvalo@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
 Subject: Re: [PATCH] wifi: mt76: Replace strlcpy with strscpy
-Date:   Thu, 27 Jul 2023 08:52:55 -0700
-Message-Id: <169047317159.2400214.7882697833368890001.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230703181256.3712079-1-azeemshaikh38@gmail.com>
 References: <20230703181256.3712079-1-azeemshaikh38@gmail.com>
+        <169047317159.2400214.7882697833368890001.b4-ty@chromium.org>
+Date:   Thu, 27 Jul 2023 19:00:21 +0300
+In-Reply-To: <169047317159.2400214.7882697833368890001.b4-ty@chromium.org>
+        (Kees Cook's message of "Thu, 27 Jul 2023 08:52:55 -0700")
+Message-ID: <87tttpz6ne.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Kees Cook <keescook@chromium.org> writes:
 
-On Mon, 03 Jul 2023 18:12:56 +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> 
-> [...]
+> On Mon, 03 Jul 2023 18:12:56 +0000, Azeem Shaikh wrote:
+>> strlcpy() reads the entire source buffer first.
+>> This read may exceed the destination size limit.
+>> This is both inefficient and can lead to linear read
+>> overflows if a source string is not NUL-terminated [1].
+>> In an effort to remove strlcpy() completely [2], replace
+>> strlcpy() here with strscpy().
+>> 
+>> [...]
+>
+> Applied, thanks!
+>
+> [1/1] wifi: mt76: Replace strlcpy with strscpy
+>       https://git.kernel.org/kees/c/535c78cbc0c4
 
-Applied, thanks!
+Why did you take this? mt76 is in active development so risk of
+conflicts is high.
 
-[1/1] wifi: mt76: Replace strlcpy with strscpy
-      https://git.kernel.org/kees/c/535c78cbc0c4
-
-Best regards,
 -- 
-Kees Cook
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
