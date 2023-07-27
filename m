@@ -2,71 +2,67 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC6CC41513
-	for <linux-hardening@archiver.kernel.org>; Thu, 27 Jul 2023 15:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEC9C04A94
+	for <linux-hardening@archiver.kernel.org>; Thu, 27 Jul 2023 15:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233776AbjG0PxD (ORCPT
+        id S233809AbjG0PxE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 27 Jul 2023 11:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52368 "EHLO
+        Thu, 27 Jul 2023 11:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233707AbjG0PxC (ORCPT
+        with ESMTP id S233719AbjG0PxC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 27 Jul 2023 11:53:02 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8F9271D
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b8ad356fe4so6955225ad.2
-        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53F32723
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:53:01 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1bbbbb77b38so6411635ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 27 Jul 2023 08:53:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690473180; x=1691077980;
+        d=chromium.org; s=google; t=1690473181; x=1691077981;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Tsln9vKd77VrKuSCt5b74Dm8nHR1wAeieAig4NB5efM=;
-        b=nXJUOUbb//dCVbV2sNfuul/Inn6960O/kVZTCj/H6sx1GdOxxNK6slNWvKKjY+iP61
-         GAzYNIFfZK77JXKjmzOAxURrTGpZE7SQkmwqETn1oPudri7QL5DTL3n2+JNk5OoH6rQa
-         peDFusmEllNIHZfnhbZyCrIZtwkTDrKl0K/nQ=
+        bh=eKtgqp1u2xh8Lnzw63ydJQR4zWouaxM7EYEQJ/Gqtx8=;
+        b=Ys0TU5LF97kp5pUBJu1vJUOHVdfiuMEiEWvnozXPP8CbclNLX8ADuMxnV7t5C4K1yK
+         D8Joi0BZrq76t8TP/CbbK4zREwfVSJBylrOQgzGv+ocsE7bBRfar+iy02IEupLjZ6qDn
+         Ui7F4LgDa5xzdF161819L7flP4kCFpn5B53KQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690473180; x=1691077980;
+        d=1e100.net; s=20221208; t=1690473181; x=1691077981;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tsln9vKd77VrKuSCt5b74Dm8nHR1wAeieAig4NB5efM=;
-        b=BLDVuOInb7oOx2WDsX5faGb3rG0GWaxYqpoKWG+kRZyQ1KQk5C0VvBqldo5GZriDaG
-         yniBWmufPdPJ/HAYCHx8o25WYvleauZND1qzJIEbVSgdSHUOP3PaX5Oe0QtIBLz4FoXx
-         tiw0gQsdsK0w/baKgMmJu+hLc2E5bYCom2LVnmeukXKAI/tmeYsyUgXlfZJzKJySdFgP
-         chq0prVYYQyi3TN6Swsznu15O6UHMadj8iXV1rj/LNRTOk7OiXEeC3fNEybjx5aC/swk
-         4kwS6pu89Hc9rgsdXC+GAxXdBbES/vri3bxZ93xpS/eAieGf9IPNR5Ee8FYXj49yBQLS
-         dL2A==
-X-Gm-Message-State: ABy/qLbcPH9maWuBUxllkcQKBBo7z2VhqH07rDZhydeNzVTKDbFLQ/SX
-        OUf1AESwnMP/GRXbgLjq3eXbUg==
-X-Google-Smtp-Source: APBJJlFOaM/OFa4DX6l2QCKWulPgwcxSJTXbEbkawxaDeRErqsLH0YJUo8GTRiLZLV6zU5t99voBfQ==
-X-Received: by 2002:a17:903:24d:b0:1b8:9044:b8ae with SMTP id j13-20020a170903024d00b001b89044b8aemr4985631plh.11.1690473180185;
-        Thu, 27 Jul 2023 08:53:00 -0700 (PDT)
+        bh=eKtgqp1u2xh8Lnzw63ydJQR4zWouaxM7EYEQJ/Gqtx8=;
+        b=O+QkMUbt41efZh7A3z+Ja9OfLwI1hrnccYDc1aR9RGOJjDNT8OR0apUiqL7/FVHMjG
+         iG2w0MVOQh+81ZMGAsxkpj8I1j+rbQLUJzUb/l7rxsJmMQTkqdnw+IY5WKBpvvL17Ywa
+         Bo8CxkE2JOuOSQzI5jW3gz/MM6y7MqIRQ3TJHsfaLlrIbo6GfNgxzEPrH/akAVH27x9W
+         0hpFYLZ2OjlfYZtRKcvvxJs9UaFB6S4cjCVVUErx8wQTuK0QVNeJjCDjnNoGWnxZmPrr
+         aWGrDt3SUBXRR3uq6HzDG3CBFD4i+6b6ed6+fm5YzBibcFlvdU03OFsobM+TU1OUIMdY
+         ZW/w==
+X-Gm-Message-State: ABy/qLbQPJpR97BgqU7masrfku+gvphonkjsK/00i8BBxbr26kbMn7wm
+        FBHek1SDiP8vcw90C3i9WHR1D8gbZRNdr6zJdmo=
+X-Google-Smtp-Source: APBJJlHQu3CTwASavzZKIq52nhmrqYf20V0hkWuKka0SpYId/y4TdpNecTBvy3SyWaDDMBHHR3OOLQ==
+X-Received: by 2002:a17:902:f545:b0:1bb:a367:a70 with SMTP id h5-20020a170902f54500b001bba3670a70mr4328734plf.17.1690473181183;
+        Thu, 27 Jul 2023 08:53:01 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id jl21-20020a170903135500b001bbab888ba0sm1803506plb.138.2023.07.27.08.52.59
+        by smtp.gmail.com with ESMTPSA id e21-20020a170902d39500b001b8959fb293sm1820901pld.125.2023.07.27.08.52.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 27 Jul 2023 08:52:59 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
         Azeem Shaikh <azeemshaikh38@gmail.com>
 Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: Replace strlcpy with strscpy
-Date:   Thu, 27 Jul 2023 08:52:53 -0700
-Message-Id: <169047317156.2400214.7935379824991435172.b4-ty@chromium.org>
+        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Haowen Bai <baihaowen@meizu.com>
+Subject: Re: [PATCH] um: Remove strlcpy declaration
+Date:   Thu, 27 Jul 2023 08:52:54 -0700
+Message-Id: <169047317154.2400214.3532264877542326061.b4-ty@chromium.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230703165817.2840457-1-azeemshaikh38@gmail.com>
-References: <20230703165817.2840457-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230703160641.1790935-1-azeemshaikh38@gmail.com>
+References: <20230703160641.1790935-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -75,7 +71,7 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-On Mon, 03 Jul 2023 16:58:16 +0000, Azeem Shaikh wrote:
+On Mon, 03 Jul 2023 16:06:41 +0000, Azeem Shaikh wrote:
 > strlcpy() reads the entire source buffer first.
 > This read may exceed the destination size limit.
 > This is both inefficient and can lead to linear read
@@ -88,8 +84,8 @@ On Mon, 03 Jul 2023 16:58:16 +0000, Azeem Shaikh wrote:
 
 Applied, thanks!
 
-[1/1] perf: Replace strlcpy with strscpy
-      https://git.kernel.org/kees/c/c9732f1461f9
+[1/1] um: Remove strlcpy declaration
+      https://git.kernel.org/kees/c/61ce78f29a69
 
 Best regards,
 -- 
