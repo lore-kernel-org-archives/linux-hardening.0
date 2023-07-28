@@ -2,110 +2,111 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9E4C001DF
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jul 2023 22:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BF6C001DF
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jul 2023 22:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234226AbjG1Wnd (ORCPT
+        id S235344AbjG1W5u (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 Jul 2023 18:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51330 "EHLO
+        Fri, 28 Jul 2023 18:57:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233968AbjG1Wnc (ORCPT
+        with ESMTP id S229765AbjG1W5t (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 Jul 2023 18:43:32 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F9F449E
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jul 2023 15:43:28 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-686b879f605so1847956b3a.1
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jul 2023 15:43:28 -0700 (PDT)
+        Fri, 28 Jul 2023 18:57:49 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1560189
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Jul 2023 15:57:47 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bbf8cb61aeso1591335ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 28 Jul 2023 15:57:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690584208; x=1691189008;
+        d=chromium.org; s=google; t=1690585067; x=1691189867;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GqnEWXGBr+qgq+fw45Hld4bEOObqJbZc782zVcwCLuo=;
-        b=d7wBzlZ64gFtXkNExZkAf2L2TcCyfy5/7eWx6u6tzjV0OTM9I4iTra1tb8g18fz1tm
-         zjnf/3/RfFUj7Y1+OWcrLozJbIZ//yanLc+UeESbFh7sDGEufAtXK5yIIyWWJctPGV6f
-         JcvWOOS6ij4NmpSmEFiFReD739b975jhkp6GQ=
+        bh=OqGEzOR5r6kH79o9SwA25U8njOcawYVrofop3YQ6YUY=;
+        b=fiGthZSlKO+TzVRMFQ/lllIkD1Hxo0n//085ngVGHX+MFVacNMT3jIfwGlotRfqjgi
+         7/P2vA/h8L+veUta3UBM+pWIrJvHr/5k6/Rjn4abuIqxwd7smLlUVI8+sxAVHHkqY9Dm
+         ClG4EhRzY0307ShUnA4g6h5b+AA+GZOvaUXcc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690584208; x=1691189008;
+        d=1e100.net; s=20221208; t=1690585067; x=1691189867;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GqnEWXGBr+qgq+fw45Hld4bEOObqJbZc782zVcwCLuo=;
-        b=aASRGmwQTN23MSwsLRITA321BeLDZEj+vyT/a116NwRbfzVM1MPP6h7y1wLhBLRxPh
-         sfBU/aJ7wI59SO5jOh2rJGqK//oumj6pl9cc0qCFMw2zB97uWFtPDGK2f6/aO/6jM+D9
-         aYBXCTpgO7OmGwQVdcgCR/ejaqxcMBHJHGzadfI8Xw+4HfBe4WGnd1TJsbMtI3Bs4xcB
-         QMtjQPJQTSicyAZbgv2f6+tt+HXFjdr9RkZk+yyhaJ60CEpX+4hC4353SuD5bEwBpg5s
-         TABMCJud2+WuX9cnxVH0Wf1vaHQZLfmiVT5qYUoIDjZvkGd+QqSvYDCn9mujEGCK/Pr4
-         /ReA==
-X-Gm-Message-State: ABy/qLZNZa3P5fUjVNc0TUioaobGsqZridRthIxKYCQV/w1424NpMmdV
-        AvlZ+5DNs+fY2XFLDwW03BsxbQ==
-X-Google-Smtp-Source: APBJJlEFOXYQokilR8cdjkWektv3laYms1B2ykj0+cKlup9KWlpd1V1VaF3ZUmqBbDxlUB7w2HGN7A==
-X-Received: by 2002:a05:6a20:3251:b0:133:bbe0:30bf with SMTP id hm17-20020a056a20325100b00133bbe030bfmr2705280pzc.13.1690584207864;
-        Fri, 28 Jul 2023 15:43:27 -0700 (PDT)
+        bh=OqGEzOR5r6kH79o9SwA25U8njOcawYVrofop3YQ6YUY=;
+        b=VzomUfy5EjBYgBxZvzbFz6DXuTWqb2cDgjuAvTpo2r2H3oRH/aLNapzDORzaVmQMfY
+         I4VqY/V9JDeNosiDHiKvhFFGxQs2QPuIBYVNFzjgULsgQ/z4xTOxbpOslF6w56avZZmN
+         /00pNPr0jGcNbmFjlQSArFJWaj89V2U/w+d59f3bNc2tKnK9HYfnsh33SvE+P1vAd2jO
+         9lfOYTFZG/H2lHzsykjcdkSZ+dCw0rMJM1IMo8v2JJ93Z10uhZQMNE0MCuU9dD/jycDU
+         Ex7YFRega+KlsoED7BSvFf22sgWDghfzLWDedVar4eTHmGSmqP+NtqSi8DgwFp8IN3W8
+         3Weg==
+X-Gm-Message-State: ABy/qLbmhVQ1GA/p20xFejB61OUnYbpx6wU8i3/hvAGzlrhZL9fIrN8G
+        s08G4h0g0OGApk54A5HCoBcxKA==
+X-Google-Smtp-Source: APBJJlFOw6OVfT4p2CaNm9atJ1j4OmKSy9hELnlIdDyAntpjKQSdNnE2D3nHAe//JnmbkZEc3Ervlw==
+X-Received: by 2002:a17:902:c405:b0:1bb:a85f:4645 with SMTP id k5-20020a170902c40500b001bba85f4645mr3324239plk.15.1690585067446;
+        Fri, 28 Jul 2023 15:57:47 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id w24-20020a170902d71800b001b8052d58a0sm4053824ply.305.2023.07.28.15.43.27
+        by smtp.gmail.com with ESMTPSA id p4-20020a170902eac400b001bb9b87ac95sm4082927pld.103.2023.07.28.15.57.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jul 2023 15:43:27 -0700 (PDT)
-Date:   Fri, 28 Jul 2023 15:43:26 -0700
+        Fri, 28 Jul 2023 15:57:46 -0700 (PDT)
+Date:   Fri, 28 Jul 2023 15:57:45 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Larysa Zaremba <larysa.zaremba@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 1/3] virtchnl: fix fake 1-elem arrays in structs
- allocated as `nents + 1` - 1
-Message-ID: <202307281537.AC1ED9CA@keescook>
-References: <20230728155207.10042-1-aleksander.lobakin@intel.com>
- <20230728155207.10042-2-aleksander.lobakin@intel.com>
+        linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org
+Subject: Re: Build regressions/improvements in v6.5-rc3
+Message-ID: <202307281551.D894AA39@keescook>
+References: <CAHk-=wi4Yau-3Bsv2rXYmtXMTLaj3=Wyf4cdM6d89czFvkVsRQ@mail.gmail.com>
+ <20230724122626.1701631-1-geert@linux-m68k.org>
+ <88f83d73-781d-bdc-126-aa629cb368c@linux-m68k.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230728155207.10042-2-aleksander.lobakin@intel.com>
+In-Reply-To: <88f83d73-781d-bdc-126-aa629cb368c@linux-m68k.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 28, 2023 at 05:52:05PM +0200, Alexander Lobakin wrote:
-> The two most problematic virtchnl structures are virtchnl_rss_key and
-> virtchnl_rss_lut. Their "flex" arrays have the type of u8, thus, when
-> allocating / checking, the actual size is calculated as `sizeof +
-> nents - 1 byte`. But their sizeof() is not 1 byte larger than the size
-> of such structure with proper flex array, it's two bytes larger due to
-> the padding. That said, their size is always 1 byte larger unless
-> there are no tail elements -- then it's +2 bytes.
-> Add virtchnl_struct_size() macro which will handle this case (and later
-> other cases as well). Make its calling conv the same as we call
-> struct_size() to allow it to be drop-in, even though it's unlikely to
-> become possible to switch to generic API. The macro will calculate a
-> proper size of a structure with a flex array at the end, so that it
-> becomes transparent for the compilers, but add the difference from the
-> old values, so that the real size of sorta-ABI-messages doesn't change.
-> Use it on the allocation side in IAVF and the receiving side (defined
-> as static inline in virtchnl.h) for the mentioned two structures.
+On Mon, Jul 24, 2023 at 02:43:02PM +0200, Geert Uytterhoeven wrote:
+> On Mon, 24 Jul 2023, Geert Uytterhoeven wrote:
+> > JFYI, when comparing v6.5-rc3[1] to v6.5-rc2[3], the summaries are:
+> >  - build errors: +5/-0
+> 
+>   + /kisskb/src/include/linux/fortify-string.h: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]:  => 583:25, 493:25
+> 
+> mips-gcc13/mips-allmodconfig
+> 
+> Full context:
+> 
+>     In function 'fortify_memset_chk',
+> 	inlined from 'memset_io' at /kisskb/src/arch/mips/include/asm/io.h:486:2,
+> 	inlined from 'build_auth_frame' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:2697:2:
+>     /kisskb/src/include/linux/fortify-string.h:493:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>       493 |                         __write_overflow_field(p_size_field, size);
+> 	  |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>     In function 'fortify_memcpy_chk',
+> 	inlined from 'memcpy_toio' at /kisskb/src/arch/mips/include/asm/io.h:494:2,
+> 	inlined from 'translate_frame' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:955:3,
+> 	inlined from 'ray_hw_xmit.constprop' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:912:12:
+>     /kisskb/src/include/linux/fortify-string.h:583:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+>       583 |                         __write_overflow_field(p_size_field, size);
+> 	  |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Single-element flexible array abuse in drivers/net/wireless/legacy/rayctl.h:tx_msg.var
 
-This all looks workable, but it's a unique solution in the kernel. That
-is fine, of course, but would it be easier to maintain/test if it went
-with the union style solutions?
+^^^^
+is this line from you or is there a tool outputting this? Because, yes,
+very true:
 
-struct foo {
-	...
-	union {
-		type legacy_padding;
-		DECLARE_FLEX_ARRAY(type, member);
-	};
+struct tx_msg {
+    struct tib_structure tib;
+    struct phy_header phy;
+    struct mac_header mac;
+    UCHAR  var[1];
 };
 
-Then the size doesn't change and "member" can still be used. (i.e. no
-collateral changes needed.)
-
--Kees
+I'll send a patch.
 
 -- 
 Kees Cook
