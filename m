@@ -2,222 +2,150 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43316C0015E
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jul 2023 07:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B85C001E0
+	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jul 2023 10:40:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233634AbjG1Hz1 (ORCPT
+        id S235990AbjG1KkS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 Jul 2023 03:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39814 "EHLO
+        Fri, 28 Jul 2023 06:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230128AbjG1Hz1 (ORCPT
+        with ESMTP id S236033AbjG1KkD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 Jul 2023 03:55:27 -0400
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987E2173F;
-        Fri, 28 Jul 2023 00:55:22 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 810B05C00AF;
-        Fri, 28 Jul 2023 03:55:19 -0400 (EDT)
-Received: from imap50 ([10.202.2.100])
-  by compute6.internal (MEProxy); Fri, 28 Jul 2023 03:55:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=readahead.eu; h=
-        cc:cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-        1690530919; x=1690617319; bh=XVoKzIZsKS3ZCP8rUUytIx3YBhBabFVdsfQ
-        LR4c+1Us=; b=ZwgwJ+BxR5QMmxbkfmsXE5rzJHGLOUN73LJwpukRXw4W7jWzVdk
-        MCAZcTiDk5OnV3OaiQAx5lHhDUPdl6yHDHlz4O1vmy7prHo3KnppZ3x4aTTE5SIy
-        jA+UFZKZwfukWEN5iAMKMDgmaYK6j8so/delo6E5SbAwMfenNwVNLsl0IrR615Eh
-        Mw2uP4OGpHlO+bdcBJ9VlP6D6PgElYTKccAUQe87r8EzeRR77PPqlQhq+6mSULBn
-        pEGNWE9svcYY+ykdn7Vr/63MmmD5gp67NsHE7HJPbT14AIGF2rp+mdkPbvsw/OVm
-        zMHkcAw1FrUi2QA/3K7i/AKDAT5W5k7AfDg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1690530919; x=1690617319; bh=XVoKzIZsKS3ZCP8rUUytIx3YBhBabFVdsfQ
-        LR4c+1Us=; b=ohOYPS3kWkf/3ikd4qcOvqZgIwrcayBI4xEtM66/VY1OuJuIrm1
-        95rjTz+hySiLj1QotTNFzuUwvnH5QoLh2h9LViYJOWN+ATMpy/IU5aGxTtceBwDm
-        nfR1z179oBC+hKJjEtvF9KezlU5TJMCIRlCqT1YOlO8A/aE0M6obznfF5FE1CGaB
-        ieud7VpLjGe+ZksRsaaoCPYR8u6uZ6Ep9DKqZfBdktyXkbZTBnE2G1ZPFs7AmREI
-        cEuPV2BVFkH0ddCnpBjWLejP7IjqrQwO9q9X1jS6ZyL0VcF4EOQMNP39FLjOSooa
-        0T8WCd20iq1IOhEfWUc2kLEZoztTg49CaJQ==
-X-ME-Sender: <xms:Z3TDZNEIPgKFOrprLtEZB-UU3Ea6dGK0BzszKSsJSy4fOTgo_Zl8Ag>
-    <xme:Z3TDZCWj91Z2iTRF7HBWfyCfA0zumGqzTzVeZ8quplnaKBXG7EqrAzOz5U5rmt7GS
-    yqRRcF9vgmmHyR7H80>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrieehgdduvddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdff
-    rghvihguucfthhgvihhnshgsvghrghdfuceouggrvhhiugesrhgvrggurghhvggrugdrvg
-    huqeenucggtffrrghtthgvrhhnpeejgeeutdeufedtjeffvdfghfdvvdetteejfedtieff
-    keduffeiheeijeehvdekteenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpegurghvihgusehrvggruggrhhgvrggurdgvuh
-X-ME-Proxy: <xmx:Z3TDZPIMgPdkJQRW67ZAX9_05wDRPcyBPuFAhX9ep19GvLcMs43IFg>
-    <xmx:Z3TDZDFbIn0Dafsel2URN60upAIhrBKX07ZWcWunSzHLsiVeEqQj_w>
-    <xmx:Z3TDZDWe_vBaICHWY674A1cOnc6Oni5doZpGotE8I3Z5eWZO1n8QXQ>
-    <xmx:Z3TDZJe1-oFCoerzhx8cIi3vMNFlyf4FARLtfUTvS72kIaPnkzktEA>
-Feedback-ID: id2994666:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 28A0C1700089; Fri, 28 Jul 2023 03:55:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-592-ga9d4a09b4b-fm-defalarms-20230725.001-ga9d4a09b
-Mime-Version: 1.0
-Message-Id: <fb464cbf-04c4-4346-a96b-e0b2ab804e16@app.fastmail.com>
-In-Reply-To: <CALmYWFsjy2jOfKyM3Gd3Ag+p6u5ejDoBp6RhqcXkcAkMiby4SA@mail.gmail.com>
-References: <20230714114753.170814-1-david@readahead.eu>
- <CALmYWFsjy2jOfKyM3Gd3Ag+p6u5ejDoBp6RhqcXkcAkMiby4SA@mail.gmail.com>
-Date:   Fri, 28 Jul 2023 09:54:57 +0200
-From:   "David Rheinsberg" <david@readahead.eu>
-To:     "Jeff Xu" <jeffxu@google.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Daniel Verkamp" <dverkamp@chromium.org>, linux-mm@kvack.org,
-        "Peter Xu" <peterx@redhat.com>, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] memfd: support MFD_NOEXEC alongside MFD_EXEC
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Fri, 28 Jul 2023 06:40:03 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82FA744B0;
+        Fri, 28 Jul 2023 03:38:12 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bbd2761f1bso15495975ad.2;
+        Fri, 28 Jul 2023 03:38:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690540692; x=1691145492;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hjdkmAB6b44rcAISRtqp3WiFnsO1zZS32bCrIGKi8kI=;
+        b=sLutBpgqb13P2OpL8NpxevoNZm7/vZglywJ50TImuLPW0CHCK/qYvNjStvfzWqQlYM
+         ZH4Z7MhWUIktdBee01sc77PFDV05vYrsc4Yoqdh8QMuWCxXGfKSq+ceTMwvaIo4qBRP0
+         qgDy4zFU9WS0v4YKo2QmlMZlQ817ugFBY9OiDW+jJSafzq+bKAu6VLfSh/6AMELTM/Yq
+         TrpjtH/lhfpuvCkFS4R2ZVtvGxyzDWZdcLkuhEvSc0R+CR3IRSBLR6phvDXO4DMgj7It
+         FdgACdWZOORd6dE1ar+VFZkr618dECiySx0qFQAZZD1bIRF5alxm5M+x5CqCkJ2jaoFk
+         lvCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690540692; x=1691145492;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hjdkmAB6b44rcAISRtqp3WiFnsO1zZS32bCrIGKi8kI=;
+        b=FEW/41ulpMHSOQGaEvw5JqmJ9frHhnAsSrYvg+/89ubVdRzfC3o5UsiPdB64RbwDH0
+         bIxIAscL4B+9888pwvSrBwEJ5AyTenz1f97Xtz9xliQH4ZkE6Xl7CAcXZlM9giJXrE9s
+         aAbV0oqFERBdTMDvDCSKK8GLn+iCPzCRE+G2mvCkK2/GojHD92C/WVJglxXQhVUQEiDq
+         urjBdP4eyk4MiXwQkoHHABZbcxmASiqy54uBy8rTqx1BFpPJ0W9q8tSHrjzzoj/c/M+/
+         CtVpM+jM4dONBJaOWYt766SGHKM5kj0Z7lG1L423OSGkS2yUK7eux0MQW1sivkGcatXe
+         AICg==
+X-Gm-Message-State: ABy/qLZanzbGRLIBaf3EpE7H6Hv5sMBfoGZGCj51wdjafjrytv7VkNmj
+        aC93+TET5mqvA6ecdQy2hgs=
+X-Google-Smtp-Source: APBJJlGnRgVp+lpVXVYVBNXG47DEcvDlrcQ1s5eKZjviY/ycCTlCRMzMEcXI2WH17gtvYpjVlpfn3g==
+X-Received: by 2002:a17:902:7b85:b0:1b8:33d4:77f8 with SMTP id w5-20020a1709027b8500b001b833d477f8mr1323162pll.23.1690540691923;
+        Fri, 28 Jul 2023 03:38:11 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b21-20020a170902d31500b001b552309aedsm3233065plc.192.2023.07.28.03.38.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Jul 2023 03:38:11 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Fri, 28 Jul 2023 03:38:10 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Rae Moar <rmoar@google.com>
+Cc:     shuah@kernel.org, davidgow@google.com, dlatypov@google.com,
+        brendan.higgins@linux.dev, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        keescook@chromium.org, linux-hardening@vger.kernel.org,
+        jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org
+Subject: Re: [PATCH v3 0/9] kunit: Add test attributes API
+Message-ID: <59dc28b1-298c-4e7b-b35f-0b94071f4cb5@roeck-us.net>
+References: <20230725212522.1622716-1-rmoar@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230725212522.1622716-1-rmoar@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi
+On Tue, Jul 25, 2023 at 09:25:11PM +0000, Rae Moar wrote:
+> Hello everyone,
+> 
+> This patch series adds a test attributes framework to KUnit.
+> 
 
-On Tue, Jul 18, 2023, at 9:03 PM, Jeff Xu wrote:
-> Hi David
->
-> Thanks email and patch for discussion.
->
-> On Fri, Jul 14, 2023 at 4:48=E2=80=AFAM David Rheinsberg <david@readah=
-ead.eu> wrote:
->>
->> Add a new flag for memfd_create() called MFD_NOEXEC, which has the
->> opposite effect as MFD_EXEC (i.e., it strips the executable bits from
->> the inode file mode).
->>
-> I previously thought about having the symmetric flags, such as
-> MFD_NOEXEC/MFD_EXEC/MFD_NOEXEC_SEAL/MFD_EXEC_SEAL, but decided against
-> it. The app shall decide beforehand what the memfd is created for, if
-> it is no-executable, then it should be sealed, such that it can't be
-> chmod to enable "X" bit.
+With this series in linux-next, almost 50% of my boot tests crash,
+and many others show warnings tracebacks.
 
-My point is, an application might decide to *not* seal a property, becau=
-se it knows it has to change it later on. But it might still want to dis=
-able the executable bit initially, so to avoid having executable pages a=
-round that can be exploited.
+Example crash from x86_64 boot attempt attached.
 
->> The default mode for memfd_create() has historically been to use 0777=
- as
->> file modes. The new `MFD_EXEC` flag has now made this explicit, paving
->> the way to reduce the default to 0666 and thus dropping the executable
->> bits for security reasons. Additionally, the `MFD_NOEXEC_SEAL` flag h=
-as
->> been added which allows this without changing the default right now.
->>
->> Unfortunately, `MFD_NOEXEC_SEAL` enforces `MFD_ALLOW_SEALING` and
->> `F_SEAL_EXEC`, with no alternatives available. This leads to multiple
->> issues:
->>
->>  * Applications that do not want to allow sealing either have to use
->>    `MFD_EXEC` (which we don't want, unless they actually need the
->>    executable bits), or they must add `F_SEAL_SEAL` immediately on
->>    return of memfd_create(2) with `MFD_NOEXEC_SEAL`, since this
->>    implicitly enables sealing.
->>
->>    Note that we explicitly added `MFD_ALLOW_SEALING` when creating
->>    memfd_create(2), because enabling seals on existing users of shmem
->>    without them knowing about it can easily introduce DoS scenarios.
->
-> The application that doesn't want MFD_NOEXEC_SEAL can use MFD_EXEC,
-> the kernel won't add MFD_ALLOW_SEALING implicitly. MFD_EXEC makes the
-> kernel behave the same as before, this is also  why sysctl
-> vm.memfd_noexec=3D0 can work seamlessly.
->
->>   It
->>    is unclear why `MFD_NOEXEC_SEAL` was designed to enable seals, and
->>    this is especially dangerous with `MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL`
->>    set via sysctl, since it will silently enable sealing on every mem=
-fd
->>    created.
->>
-> Without sealing, chmod(2) can modify the mfd to be executable, that is
-> the consideration that MFD_NOEXEC is not provided as an option.
-> Indeed, current design is "biased" towards promoting MFD_NOEXEC_SEAL
-> as the safest approach, and try to avoid the pitfall that dev
-> accidently uses "MFD_NOEXEC" without realizing it can still be
-> chmod().
+Guenter
 
-I think I didn't get my point across. Imagine an application that does *=
-NOT* use sealing, but uses memfds. This application shares memfds with u=
-ntrusted clients, and does this in a safe way (SIGBUS protected). Everyt=
-hing works fine, unless someone decides to enable `vm.memfd_noexec=3D2`.=
- Suddenly, the memfd will have sealing enabled *without* the application=
- ever requesting this. Now any untrusted client that got the memfd can a=
-dd seals to the memfd, even though the creator of the memfd did not enab=
-le sealing. This client can now seal WRITES on the memfd, even though it=
- really should not be able to do that.
+---
+[    6.165419] ok 6 lib_sort
+[    6.166044]     KTAP version 1
+[    6.166139]     # Subtest: kunit_executor_test
+[    6.166247]     # module: kunit
+[    6.166261]     1..8
+[    6.168252]     ok 1 parse_filter_test
+[    6.169579] BUG: unable to handle page fault for address: ffffd757e80004c8
+[    6.169872] #PF: supervisor read access in kernel mode
+[    6.169990] #PF: error_code(0x0000) - not-present page
+[    6.170142] PGD ffd4067 P4D ffd4067 PUD 0
+[    6.170346] Oops: 0000 [#1] PREEMPT SMP PTI
+[    6.170521] CPU: 0 PID: 182 Comm: kunit_try_catch Tainted: G                 N 6.5.0-rc3-next-20230728 #1
+[    6.170735] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
+[    6.171024] RIP: 0010:kfree+0x61/0x140
+[    6.171313] Code: 80 48 01 e8 0f 82 ec 00 00 00 48 c7 c2 00 00 00 80 48 2b 15 29 bf aa 01 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 03 05 07 bf aa 01 <48> 8b 50 08 48 89 c7 f6 c2 01 0f 85 b3 00 00 00 66 90 48 8b 07 f6
+[    6.171715] RSP: 0000:ffffb48f80267dc8 EFLAGS: 00000286
+[    6.171847] RAX: ffffd757e80004c0 RBX: ffffa34583aef5d0 RCX: 0000000000000000
+[    6.171998] RDX: 00005cba00000000 RSI: ffffffff95cb1ad5 RDI: ffffb48f80013cd0
+[    6.172146] RBP: ffffb48f80013cd0 R08: 0000000000000001 R09: 0000000000000001
+[    6.172293] R10: 0000000000000001 R11: 0000000000000001 R12: ffffb48f80267e74
+[    6.172445] R13: 0000000000000000 R14: ffffa34583bf4000 R15: 0000000000000002
+[    6.172620] FS:  0000000000000000(0000) GS:ffffa3458f800000(0000) knlGS:0000000000000000
+[    6.172793] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    6.172917] CR2: ffffd757e80004c8 CR3: 0000000009048000 CR4: 00000000007506f0
+[    6.173089] PKRU: 55555554
+[    6.173177] Call Trace:
+[    6.173313]  <TASK>
+[    6.173494]  ? __die+0x1f/0x70
+[    6.173600]  ? page_fault_oops+0x14a/0x460
+[    6.173693]  ? search_exception_tables+0x37/0x50
+[    6.173793]  ? fixup_exception+0x21/0x310
+[    6.173887]  ? exc_page_fault+0xee/0x1c0
+[    6.173977]  ? asm_exc_page_fault+0x26/0x30
+[    6.174076]  ? kunit_filter_suites+0x3a5/0x460
+[    6.174192]  ? kfree+0x61/0x140
+[    6.174271]  ? kfree+0x106/0x140
+[    6.174353]  kunit_filter_suites+0x3a5/0x460
+[    6.174473]  ? __pfx_kunit_generic_run_threadfn_adapter+0x10/0x10
+[    6.174604]  filter_suites_test+0xea/0x2c0
+[    6.174702]  ? __pfx_kunit_generic_run_threadfn_adapter+0x10/0x10
+[    6.174828]  kunit_generic_run_threadfn_adapter+0x15/0x20
+[    6.174941]  kthread+0xef/0x120
+[    6.175012]  ? __pfx_kthread+0x10/0x10
+[    6.175098]  ret_from_fork+0x2f/0x50
+[    6.175177]  ? __pfx_kthread+0x10/0x10
+[    6.175260]  ret_from_fork_asm+0x1b/0x30
+[    6.175387]  </TASK>
+[    6.175466] Modules linked in:
+[    6.175640] CR2: ffffd757e80004c8
+[    6.175887] ---[ end trace 0000000000000000 ]---
+[    6.176029] RIP: 0010:kfree+0x61/0x140
+[    6.176119] Code: 80 48 01 e8 0f 82 ec 00 00 00 48 c7 c2 00 00 00 80 48 2b 15 29 bf aa 01 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 03 05 07 bf aa 01 <48> 8b 50 08 48 89 c7 f6 c2 01 0f 85 b3 00 00 00 66 90 48 8b 07 f6
+[    6.176478] RSP: 0000:ffffb48f80267dc8 EFLAGS: 00000286
+[    6.176589] RAX: ffffd757e80004c0 RBX: ffffa34583aef5d0 RCX: 0000000000000000
+[    6.176729] RDX: 00005cba00000000 RSI: ffffffff95cb1ad5 RDI: ffffb48f80013cd0
+[    6.176869] RBP: ffffb48f80013cd0 R08: 0000000000000001 R09: 0000000000000001
+[    6.177008] R10: 0000000000000001 R11: 0000000000000001 R12: ffffb48f80267e74
+[    6.177150] R13: 0000000000000000 R14: ffffa34583bf4000 R15: 0000000000000002
+[    6.177290] FS:  0000000000000000(0000) GS:ffffa3458f800000(0000) knlGS:0000000000000000
+[    6.177448] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    6.177564] CR2: ffffd757e80004c8 CR3: 0000000009048000 CR4: 00000000007506f0
+[    6.177704] PKRU: 55555554
+[    6.177807] note: kunit_try_catch[182] exited with irqs disabled
 
-(This is not an hypothetical setup, we have such setups for data sharing=
- already)
-
-Thus, setting the security-option `memfd_noexec` *breaks* applications, =
-because it enables sealing. If `MFD_NOEXEC_SEAL` would *not* imply `MFD_=
-ALLOW_SEALING`, this would not be an issue. IOW, why does =C2=B4MFD_NOEX=
-EC_SEAL` clear `F_SEAL_SEAL` even if `MFD_ALLOW_SEALING` is not set?
-
->>  * Applications that do not want `MFD_EXEC`, but rely on
->>    `F_GET_SEALS` to *NOT* return `F_SEAL_EXEC` have no way of achievi=
-ng
->>    this other than using `MFD_EXEC` and clearing the executable bits
->>    manually via fchmod(2). Using `MFD_NOEXEC_SEAL` will set
->>    `F_SEAL_EXEC` and thus break existing code that hard-codes the
->>    seal-set.
->>
->>    This is already an issue when sending log-memfds to systemd-journa=
-ld
->>    today, which verifies the seal-set of the received FD and fails if
->>    unknown seals are set. Hence, you have to use `MFD_EXEC` when
->>    creating memfds for this purpose, even though you really do not ne=
-ed
->>    the executable bits set.
->>
->>  * Applications that want to enable the executable bit later on,
->>    currently have no way to create the memfd without it. They have to
->>    clear the bits immediately after creating it via fchmod(2), or just
->>    leave them set.
->>
-> Is it OK to do what you want in two steps ? What is the concern there =
-? i.e.
-> memfd_create(MFD_EXEC), then chmod to remove the "X" bit.
->
-> I imagine this is probably already what the application does for
-> creating no-executable mfd before my patch, i.e.:
-> memfd_create(), then chmod() to remove "X" to remove "X" bit.
-
-Yes, correct, this is not a technical issue, but rather an API issue. I =
-don't think most memfd-users are aware that their inode has the executab=
-le bit set, and they likely don't want it. But for backwards-compatibili=
-ty reasons (as noted above), they cannot use `MFD_NOEXEC_SEAL`. Hence, w=
-e have to make them explicitly request an executable memfd via `MFD_EXEC=
-` now, even though they clearly do not want this. And then we have to ad=
-d code to drop the executable immediately afterwards.
-
-It don't understand why we don't add out `MFD_NOEXEC` and thus make it a=
- lot easier to patch existing applications? And we make it explicit that=
- these applications don't care for the executable-bit, rather than forci=
-ng them to request the executable bit just to drop it immediately.
-
-The downside of `MFD_NOEXEC` is that it might be picked over `MFD_NOEXEC=
-_SEAL` by uneducated users, thus reduce security. But right now, the alt=
-ernative is that existing code picks `MFD_EXEC` instead and never clears=
- the executable bit, because it is a hassle to do so.
-
-Or is there another reason *not* to include `MFD_NOEXEC`? I am not sure =
-I understand fully why you fight it so vehemently?
-
-Thanks
-David
