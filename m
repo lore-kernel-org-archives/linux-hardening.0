@@ -2,134 +2,158 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACE4EB64DD
-	for <linux-hardening@archiver.kernel.org>; Fri, 28 Jul 2023 23:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717B8C04A6A
+	for <linux-hardening@archiver.kernel.org>; Sat, 29 Jul 2023 07:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235148AbjG1XNJ (ORCPT
+        id S230234AbjG2Hxk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 28 Jul 2023 19:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32904 "EHLO
+        Sat, 29 Jul 2023 03:53:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232470AbjG1XNI (ORCPT
+        with ESMTP id S230191AbjG2Hxi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 28 Jul 2023 19:13:08 -0400
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3595930CF
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jul 2023 16:13:07 -0700 (PDT)
-Received: by mail-il1-x12d.google.com with SMTP id e9e14a558f8ab-3487d75e4c5so11107445ab.0
-        for <linux-hardening@vger.kernel.org>; Fri, 28 Jul 2023 16:13:07 -0700 (PDT)
+        Sat, 29 Jul 2023 03:53:38 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0570035B6
+        for <linux-hardening@vger.kernel.org>; Sat, 29 Jul 2023 00:53:23 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3fbd33a1819so22305e9.1
+        for <linux-hardening@vger.kernel.org>; Sat, 29 Jul 2023 00:53:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690585986; x=1691190786;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0kzrIJ251du81UfGiykQe5BbFvGz2DnLNtmPFif5pQc=;
-        b=F5JhxuOg0t6nSaWRZ0Qoxa1+19UT+pU1GVEWloFYpPLgkZCMFw4ZFWqg3RGKAtu0Uh
-         cZSe6Xpa4gXqg91l3BwK0+IgJSbG4BmM2mXGafIeiZ8jJd64uow6RjqQGErsbTwWQIqz
-         1F+PIyRqmrE3J8iEOrwo4f+vKXsYb5DjElYko=
+        d=google.com; s=20221208; t=1690617201; x=1691222001;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=nS8MFufSLLMtZClBqbViwdVqq5Wj26o1tp0u8UhZNO4=;
+        b=YFPjgdEvu1Q8F++dExxac0T4CZftI/fGtmD1BUuUWeJR1nEfnknBwFFPthGWMXAoXH
+         0xHzCvNd7g+PdMGSVlBsEwNUPaP8Yx3/e3OmDPJ1UMidaxvX8kh0BlpWiIbnV9XTo2pS
+         AWrvcLHjlpcBHYSPJrEkIIzn7R6JC9m0ri1+yfYqRcIMMbHltMMc65LTJj4YH4wW52qR
+         GXJSFRJHKNnEmlKUzajPEDgJzuzyvkkXm+OUYiasVE4ej5+xhnq8AepEcVAveEZkhG5f
+         3VM5CSEn+oS3MujG5ziOLf7ygySK9h3DKYqeVMVScyb517a1fjKtWD2LuKtsac8pDw06
+         wRrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690585986; x=1691190786;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20221208; t=1690617201; x=1691222001;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0kzrIJ251du81UfGiykQe5BbFvGz2DnLNtmPFif5pQc=;
-        b=JLKtnUWLqArXtTqw+/LZ5R121qUKn3MctKf/zi2at/uubIdiLaSoAkq3pJCMXjXXTT
-         B+YbSVRFpIanU5oCDzPnzezxsuQHIIMqG0v3xgQ4aQFk72xehuKOxjAGWVpxkc3zpMqc
-         8kguRqfT/PHc+CynKojKoZ8gLOd8C0RRnpNCRFaH3q+EipQxcReVyuDkOA645RBlFZsL
-         Rm8frfM13O/naQ6/rG4loR8kVHM7j/5zFC+bQMbVKZ3lZaptsLk6Cp/QWgWzRbXOSUN5
-         xzJTZBZdmmrP0E5wmPCsqkKIzqxrUORub3mIZn9K6cx4knwqIb16d893yDwAqsPrFDOo
-         xfEQ==
-X-Gm-Message-State: ABy/qLZX4QqDYBmCIQxv9Ke3k8DCqbmOUv9OXpqZVxyzlcLa0exMs/Zx
-        s580a9NY3s9S327cLC0wb1PRdA==
-X-Google-Smtp-Source: APBJJlGp+VAU42/jjtVrG/JebIxQW4FqEwxLhz2/RKZYxoJFCuMA+G4uVC0b6L5NeOC00BTpY7H0Rw==
-X-Received: by 2002:a05:6e02:1aa4:b0:345:a319:ba83 with SMTP id l4-20020a056e021aa400b00345a319ba83mr1123261ilv.29.1690585986517;
-        Fri, 28 Jul 2023 16:13:06 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e14-20020a17090301ce00b001bba373919bsm4082542plh.261.2023.07.28.16.13.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jul 2023 16:13:06 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] wifi: ray_cs: Replace 1-element array with flexible array
-Date:   Fri, 28 Jul 2023 16:13:02 -0700
-Message-Id: <20230728231245.never.309-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        bh=nS8MFufSLLMtZClBqbViwdVqq5Wj26o1tp0u8UhZNO4=;
+        b=OqY7D9xnHbn07g2WNadUarx5EEClDSIccpp2UkpxfLGIAew8kOCnzFlJ44Wi9b18f1
+         UPwoyqlhMBllTh+xX6GMbGBG1Jw9Fyn7V1Mm6XZbB0/cpVMBOsMAc0GbIhNvlpP7LFLJ
+         Hjbhv5nbZQuCCPsDMo/Bj1Um8oKgT3aAPtZxNATbiciDoVAburuVetpdqrO2yN5Se+6n
+         9Epy2+M+MMMsOmpeCQGlx3GXCet/FBBw0rLfD8ibXzrQbS8Kjpp8oNTBmihPCXrSYxJo
+         53Yl6cu/eKIxc+p+1+AoBrz2+UvcQghTvUw7p74dMCG3nc+F+FceqGefe9fwZGtOOnG+
+         s2cg==
+X-Gm-Message-State: ABy/qLY+tY0Gn7wjnCy4dNC5RoFB6yG+3Kt7uPW8pv6oz41aZQoohlAd
+        VhQkPBB0Uo7EcbY6gR2Hw1hQ3oZI8bp7g7WeyJtwVA==
+X-Google-Smtp-Source: APBJJlF5F7B8gWeRzBo8RDFVrolQzxUBd8VXQ2E9W1UUdW2SgRwlk7ctqfsAlh3mmrYhvxidyRiclT0BbqeRAyYzCbw=
+X-Received: by 2002:a05:600c:1c90:b0:3f1:6fe9:4a95 with SMTP id
+ k16-20020a05600c1c9000b003f16fe94a95mr56614wms.4.1690617201430; Sat, 29 Jul
+ 2023 00:53:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2098; i=keescook@chromium.org;
- h=from:subject:message-id; bh=D2CtAwl6CXqSqxRaLIFkwjFO+IpDh8k7U4uCnRppIQc=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBkxEt+LTcBY3bSQZBCTXAzRH9AadW88Qvphq0+C
- YXJpdqK4H2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZMRLfgAKCRCJcvTf3G3A
- JnEYEACV0z75qof/EEz1U0UD95mEszMnH2IuR2rQZ74usHlFt6IzIwRFnZ2cM6UL4WJdNADtOKa
- 3uhcp9GFb1pJ1QC0ZBpTanzH5aOAUD3Lj/kFBC+sVjJTKwug0ScKCYAdL7wb7mTLePi6FXR68rE
- RTx7NwZ0yc2pSYva8LAIQrtyKgKXNPPuf+egh0Yv121pj0icfN1lcDMYYBsFwwtz4pymN7aaGzH
- 5d8JGzbBHfyBRoSdl3FRG9m6c4BrG2IpSZj2i5T4DgHKofDg1K60fyD1h/V8B2Sqhhx05qXpvVN
- krkuxUvUqLtdfznPDrO4Eq9oUsuTVYTlTxfxibcmrfdwsbTwfioD2yeQjRaLRIzPJwc1IXB4Va9
- 4jH2wxpEayWDxJH0yunsKc8K6BWflAYl9qNVdse9qcsqk77Ph9d++zPXvbM+45OzuTePPzbLQvo
- gY3IcAh52lnpuuogdAJPXKo/NVZwN/Au21r1AsRHkTDeqMLWoqK01DY/nVFUTi0QnXTI/R3zRet
- qed7hsUR9BxF7ToL2Qv/G6pgAaJwEDpM5xGaBaCW/Qch25fj4niq+cr9r881bRP3siG3G74x2GV
- 9YIkpt/vlqsKvs8NLuaeJmZC0AxntJ9bkwc9dwq1W6Tbh3iD/IWdT8/zv7qs2wcDulW3Ro/Cw1u
- demr381 Bj7egpAw==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20230725212522.1622716-1-rmoar@google.com> <59dc28b1-298c-4e7b-b35f-0b94071f4cb5@roeck-us.net>
+In-Reply-To: <59dc28b1-298c-4e7b-b35f-0b94071f4cb5@roeck-us.net>
+From:   David Gow <davidgow@google.com>
+Date:   Sat, 29 Jul 2023 15:53:07 +0800
+Message-ID: <CABVgOS=wfUS929nKGvnRpBdEjQCHD1d5tbmGtKCBNFh2bKWO-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/9] kunit: Add test attributes API
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Rae Moar <rmoar@google.com>, shuah@kernel.org, dlatypov@google.com,
+        brendan.higgins@linux.dev, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        keescook@chromium.org, linux-hardening@vger.kernel.org,
+        jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The trailing array member of struct tx_buf was defined as a 1-element
-array, but used as a flexible array. This was resulting in build warnings:
+On Fri, 28 Jul 2023 at 18:38, Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Tue, Jul 25, 2023 at 09:25:11PM +0000, Rae Moar wrote:
+> > Hello everyone,
+> >
+> > This patch series adds a test attributes framework to KUnit.
+> >
+>
+> With this series in linux-next, almost 50% of my boot tests crash,
+> and many others show warnings tracebacks.
+>
+> Example crash from x86_64 boot attempt attached.
+>
+> Guenter
+>
+> ---
 
-    In function 'fortify_memset_chk',
-        inlined from 'memset_io' at /kisskb/src/arch/mips/include/asm/io.h:486:2,
-        inlined from 'build_auth_frame' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:2697:2:
-    /kisskb/src/include/linux/fortify-string.h:493:25: error: call to '__write_overflow_field' declared with attribute warning:
-detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
-      493 |                         __write_overflow_field(p_size_field, size);
-          |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Hmm... It's not reproducing here (even with KASAN), which is strange.
 
-Replace it with an actual flexible array. Binary difference comparison
-shows a single change in output:
+Does the patch here help?
+https://lore.kernel.org/linux-kselftest/20230729010003.4058582-1-ruanjinjie@huawei.com/
 
-│  drivers/net/wireless/legacy/ray_cs.c:883
-│       lea    0x1c(%rbp),%r13d
-│ -     cmp    $0x7c3,%r13d
-│ +     cmp    $0x7c4,%r13d
+-- David
 
-This is from:
-
-        if (len + TX_HEADER_LENGTH > TX_BUF_SIZE) {
-
-specifically:
-
- #define TX_BUF_SIZE (2048 - sizeof(struct tx_msg))
-
-This appears to have been originally buggy, so the change is correct.
-
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Closes: https://lore.kernel.org/all/88f83d73-781d-bdc-126-aa629cb368c@linux-m68k.org
-Cc: Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/net/wireless/legacy/rayctl.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/legacy/rayctl.h b/drivers/net/wireless/legacy/rayctl.h
-index 2b0f332043d7..1f3bde8ac73d 100644
---- a/drivers/net/wireless/legacy/rayctl.h
-+++ b/drivers/net/wireless/legacy/rayctl.h
-@@ -577,7 +577,7 @@ struct tx_msg {
-     struct tib_structure tib;
-     struct phy_header phy;
-     struct mac_header mac;
--    UCHAR  var[1];
-+    UCHAR  var[];
- };
- 
- /****** ECF Receive Control Structure (RCS) Area at Shared RAM offset 0x0800  */
--- 
-2.34.1
-
+> [    6.165419] ok 6 lib_sort
+> [    6.166044]     KTAP version 1
+> [    6.166139]     # Subtest: kunit_executor_test
+> [    6.166247]     # module: kunit
+> [    6.166261]     1..8
+> [    6.168252]     ok 1 parse_filter_test
+> [    6.169579] BUG: unable to handle page fault for address: ffffd757e80004c8
+> [    6.169872] #PF: supervisor read access in kernel mode
+> [    6.169990] #PF: error_code(0x0000) - not-present page
+> [    6.170142] PGD ffd4067 P4D ffd4067 PUD 0
+> [    6.170346] Oops: 0000 [#1] PREEMPT SMP PTI
+> [    6.170521] CPU: 0 PID: 182 Comm: kunit_try_catch Tainted: G                 N 6.5.0-rc3-next-20230728 #1
+> [    6.170735] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
+> [    6.171024] RIP: 0010:kfree+0x61/0x140
+> [    6.171313] Code: 80 48 01 e8 0f 82 ec 00 00 00 48 c7 c2 00 00 00 80 48 2b 15 29 bf aa 01 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 03 05 07 bf aa 01 <48> 8b 50 08 48 89 c7 f6 c2 01 0f 85 b3 00 00 00 66 90 48 8b 07 f6
+> [    6.171715] RSP: 0000:ffffb48f80267dc8 EFLAGS: 00000286
+> [    6.171847] RAX: ffffd757e80004c0 RBX: ffffa34583aef5d0 RCX: 0000000000000000
+> [    6.171998] RDX: 00005cba00000000 RSI: ffffffff95cb1ad5 RDI: ffffb48f80013cd0
+> [    6.172146] RBP: ffffb48f80013cd0 R08: 0000000000000001 R09: 0000000000000001
+> [    6.172293] R10: 0000000000000001 R11: 0000000000000001 R12: ffffb48f80267e74
+> [    6.172445] R13: 0000000000000000 R14: ffffa34583bf4000 R15: 0000000000000002
+> [    6.172620] FS:  0000000000000000(0000) GS:ffffa3458f800000(0000) knlGS:0000000000000000
+> [    6.172793] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    6.172917] CR2: ffffd757e80004c8 CR3: 0000000009048000 CR4: 00000000007506f0
+> [    6.173089] PKRU: 55555554
+> [    6.173177] Call Trace:
+> [    6.173313]  <TASK>
+> [    6.173494]  ? __die+0x1f/0x70
+> [    6.173600]  ? page_fault_oops+0x14a/0x460
+> [    6.173693]  ? search_exception_tables+0x37/0x50
+> [    6.173793]  ? fixup_exception+0x21/0x310
+> [    6.173887]  ? exc_page_fault+0xee/0x1c0
+> [    6.173977]  ? asm_exc_page_fault+0x26/0x30
+> [    6.174076]  ? kunit_filter_suites+0x3a5/0x460
+> [    6.174192]  ? kfree+0x61/0x140
+> [    6.174271]  ? kfree+0x106/0x140
+> [    6.174353]  kunit_filter_suites+0x3a5/0x460
+> [    6.174473]  ? __pfx_kunit_generic_run_threadfn_adapter+0x10/0x10
+> [    6.174604]  filter_suites_test+0xea/0x2c0
+> [    6.174702]  ? __pfx_kunit_generic_run_threadfn_adapter+0x10/0x10
+> [    6.174828]  kunit_generic_run_threadfn_adapter+0x15/0x20
+> [    6.174941]  kthread+0xef/0x120
+> [    6.175012]  ? __pfx_kthread+0x10/0x10
+> [    6.175098]  ret_from_fork+0x2f/0x50
+> [    6.175177]  ? __pfx_kthread+0x10/0x10
+> [    6.175260]  ret_from_fork_asm+0x1b/0x30
+> [    6.175387]  </TASK>
+> [    6.175466] Modules linked in:
+> [    6.175640] CR2: ffffd757e80004c8
+> [    6.175887] ---[ end trace 0000000000000000 ]---
+> [    6.176029] RIP: 0010:kfree+0x61/0x140
+> [    6.176119] Code: 80 48 01 e8 0f 82 ec 00 00 00 48 c7 c2 00 00 00 80 48 2b 15 29 bf aa 01 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 03 05 07 bf aa 01 <48> 8b 50 08 48 89 c7 f6 c2 01 0f 85 b3 00 00 00 66 90 48 8b 07 f6
+> [    6.176478] RSP: 0000:ffffb48f80267dc8 EFLAGS: 00000286
+> [    6.176589] RAX: ffffd757e80004c0 RBX: ffffa34583aef5d0 RCX: 0000000000000000
+> [    6.176729] RDX: 00005cba00000000 RSI: ffffffff95cb1ad5 RDI: ffffb48f80013cd0
+> [    6.176869] RBP: ffffb48f80013cd0 R08: 0000000000000001 R09: 0000000000000001
+> [    6.177008] R10: 0000000000000001 R11: 0000000000000001 R12: ffffb48f80267e74
+> [    6.177150] R13: 0000000000000000 R14: ffffa34583bf4000 R15: 0000000000000002
+> [    6.177290] FS:  0000000000000000(0000) GS:ffffa3458f800000(0000) knlGS:0000000000000000
+> [    6.177448] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    6.177564] CR2: ffffd757e80004c8 CR3: 0000000009048000 CR4: 00000000007506f0
+> [    6.177704] PKRU: 55555554
+> [    6.177807] note: kunit_try_catch[182] exited with irqs disabled
+>
+> --
+> You received this message because you are subscribed to the Google Groups "KUnit Development" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to kunit-dev+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kunit-dev/59dc28b1-298c-4e7b-b35f-0b94071f4cb5%40roeck-us.net.
