@@ -2,138 +2,105 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A1B2C001DF
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jul 2023 14:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B555AC00528
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jul 2023 20:52:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232388AbjGaOf2 (ORCPT
+        id S230337AbjGaUw6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Jul 2023 10:35:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44700 "EHLO
+        Mon, 31 Jul 2023 16:52:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232416AbjGaOf0 (ORCPT
+        with ESMTP id S230441AbjGaUwu (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Jul 2023 10:35:26 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C5F123;
-        Mon, 31 Jul 2023 07:35:24 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        Mon, 31 Jul 2023 16:52:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D23D198B;
+        Mon, 31 Jul 2023 13:52:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 92780221E0;
-        Mon, 31 Jul 2023 14:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1690814123; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WNe4swavizqdV55R6wwaZgkXoPj5RhX8v6uZ3GcEnc4=;
-        b=DgzSTM0L1Ufxl+X74lXeV446U7HWIvlC5HrpOOkSrLPEq6yoJqFzeNBzwyyC4j8F+JfGnL
-        9l5HgKEtMgHGobGOIxmg/SoY2hKDfUWxMj6WAteoULKpdgMvR8Xyjuz0ZG8j9oVctDs9vd
-        sJgPpVdr1XlAV7hrS6UA3MKoqcXUl9A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1690814123;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WNe4swavizqdV55R6wwaZgkXoPj5RhX8v6uZ3GcEnc4=;
-        b=MlhMg9D8BuVbmKp+JlGPDMdK7QZv0idojdX4TldvRofjkbYbd59BXMX3U/T8cyemuyu33N
-        HKAef52Q6qNL/zCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 84A61133F7;
-        Mon, 31 Jul 2023 14:35:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id YJ5XIKvGx2QzWwAAMHmgww
-        (envelope-from <jack@suse.cz>); Mon, 31 Jul 2023 14:35:23 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 11108A069C; Mon, 31 Jul 2023 16:35:23 +0200 (CEST)
-Date:   Mon, 31 Jul 2023 16:35:23 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Jan Kara <jack@suse.com>, linux-kernel@vger.kernel.org,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9521C612CC;
+        Mon, 31 Jul 2023 20:52:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1664C433C8;
+        Mon, 31 Jul 2023 20:52:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690836760;
+        bh=4bc7n+F7Mq8FK6H3ud6CK8gDj85KBAh5RyJs5hitlVE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=eY+wxcw6USz4xRYOjCO77U7nKEkA27D/Zyuj2zPsNqNtlV7JBnJPKdelD6sJYj/Yu
+         HEmCgiW2eBi8t8hR2GBe6I7+rRu781RkvhmZ8wQkMr4sQpnVDDm3x9wi+3Ia+CIvOl
+         Yyz8uxIVBuVESYD9GlfwIt7QDp0KSFpgh0uonfpC9bhDwYrrkhNa1/V0/iA70+GDCc
+         2Unsh5RZjyRXK4AwSs90QRSp7SBCHqS56k0J5LUW18dbsNVknT9wqMkV4fseaNDzwv
+         PCl2uCrk7VkJJQCGffugV3PE3RWJXQ1lYtsAoXVgB2JiT8M673AMqIZgAAXGHCCGO5
+         8CNNqoweA9foQ==
+Date:   Mon, 31 Jul 2023 14:53:44 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Markus Mayer <mmayer@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] udf: Fix -Wstringop-overflow warnings
-Message-ID: <20230731143523.rfmn6oqob7pofyan@quack3>
-References: <ZK7wKS0NgZPfqrZu@work>
- <202307121204.36EF4C1@keescook>
+Subject: [PATCH] cpufreq: brcmstb-avs-cpufreq: Fix -Warray-bounds bug
+Message-ID: <ZMgfWEA0GAN/Rog8@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202307121204.36EF4C1@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed 12-07-23 12:05:34, Kees Cook wrote:
-> On Wed, Jul 12, 2023 at 12:25:45PM -0600, Gustavo A. R. Silva wrote:
-> > Use unsigned type in call to macro mint_t(). This avoids confusing the
-> > compiler about possible negative values that would cause the value in
-> > _len_ to wrap around.
-> > 
-> > Fixes the following -Wstringop-warnings seen when building ARM
-> > architecture with allyesconfig (GCC 13):
-> > fs/udf/directory.c: In function 'udf_copy_fi':
-> > include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' specified bound between 2147483648 and 4294967295 exceeds maximum object size 2147483647 [-Wstringop-overflow=]
-> >    57 | #define __underlying_memcpy     __builtin_memcpy
-> >       |                                 ^
-> > include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
-> >   648 |         __underlying_##op(p, q, __fortify_size);                        \
-> >       |         ^~~~~~~~~~~~~
-> > include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
-> >   693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-> >       |                          ^~~~~~~~~~~~~~~~~~~~
-> > fs/udf/directory.c:99:9: note: in expansion of macro 'memcpy'
-> >    99 |         memcpy(&iter->fi, iter->bh[0]->b_data + off, len);
-> >       |         ^~~~~~
-> > include/linux/fortify-string.h:57:33: warning: '__builtin_memcpy' specified bound between 2147483648 and 4294967295 exceeds maximum object size 2147483647 [-Wstringop-overflow=]
-> >    57 | #define __underlying_memcpy     __builtin_memcpy
-> >       |                                 ^
-> > include/linux/fortify-string.h:648:9: note: in expansion of macro '__underlying_memcpy'
-> >   648 |         __underlying_##op(p, q, __fortify_size);                        \
-> >       |         ^~~~~~~~~~~~~
-> > include/linux/fortify-string.h:693:26: note: in expansion of macro '__fortify_memcpy_chk'
-> >   693 | #define memcpy(p, q, s)  __fortify_memcpy_chk(p, q, s,                  \
-> >       |                          ^~~~~~~~~~~~~~~~~~~~
-> > fs/udf/directory.c:99:9: note: in expansion of macro 'memcpy'
-> >    99 |         memcpy(&iter->fi, iter->bh[0]->b_data + off, len);
-> >       |         ^~~~~~
-> >   AR      fs/udf/built-in.a
-> > 
-> > This helps with the ongoing efforts to globally enable
-> > -Wstringop-overflow.
-> > 
-> > Link: https://github.com/KSPP/linux/issues/329
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  fs/udf/directory.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/udf/directory.c b/fs/udf/directory.c
-> > index 1c775e072b2f..93153665eb37 100644
-> > --- a/fs/udf/directory.c
-> > +++ b/fs/udf/directory.c
-> > @@ -95,7 +95,7 @@ static int udf_copy_fi(struct udf_fileident_iter *iter)
-> >  	}
-> >  
-> >  	off = iter->pos & (blksize - 1);
-> > -	len = min_t(int, sizeof(struct fileIdentDesc), blksize - off);
-> > +	len = min_t(u32, sizeof(struct fileIdentDesc), blksize - off);
-> >  	memcpy(&iter->fi, iter->bh[0]->b_data + off, len);
-> >  	if (len < sizeof(struct fileIdentDesc))
-> >  		memcpy((char *)(&iter->fi) + len, iter->bh[1]->b_data,
-> 
-> len is u32, "off" can't be less than blksize, so this all looks correct
-> to me. Thanks!
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+Update the iteration conditions in the for() loop to avoid writing in
+array `table` beyond its allocated size.
 
-Thanks! I've merged the patch to my tree.
+This fixes the following -Warray-bounds warning seen after building
+ARM with multi_v7_defconfig (GCC 13):
+In function 'brcm_avs_get_freq_table',
+    inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
+drivers/cpufreq/brcmstb-avs-cpufreq.c:449:28: warning: array subscript 5 is outside array bounds of 'void[60]' [-Warray-bounds=]
+  449 |         table[i].frequency = CPUFREQ_TABLE_END;
+In file included from include/linux/node.h:18,
+                 from include/linux/cpu.h:17,
+                 from include/linux/cpufreq.h:12,
+                 from drivers/cpufreq/brcmstb-avs-cpufreq.c:44:
+In function 'devm_kmalloc_array',
+    inlined from 'devm_kcalloc' at include/linux/device.h:328:9,
+    inlined from 'brcm_avs_get_freq_table' at drivers/cpufreq/brcmstb-avs-cpufreq.c:437:10,
+    inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
+include/linux/device.h:323:16: note: at offset 60 into object of size 60 allocated by 'devm_kmalloc'
+  323 |         return devm_kmalloc(dev, bytes, flags);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-								Honza
+This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+routines on memcpy() and help us make progress towards globally
+enabling -Warray-bounds.
+
+Link: https://github.com/KSPP/linux/issues/324
+Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+index 1bdd513bcd19..99ba2d707eff 100644
+--- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
++++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
+@@ -439,7 +439,7 @@ brcm_avs_get_freq_table(struct device *dev, struct private_data *priv)
+ 	if (!table)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	for (i = AVS_PSTATE_P0; i <= AVS_PSTATE_MAX; i++) {
++	for (i = AVS_PSTATE_P0; i < AVS_PSTATE_MAX; i++) {
+ 		ret = brcm_avs_set_pstate(priv, i);
+ 		if (ret)
+ 			return ERR_PTR(ret);
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.34.1
+
