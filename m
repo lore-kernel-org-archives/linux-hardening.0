@@ -2,114 +2,115 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04C2C00528
-	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jul 2023 21:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE96BC001E0
+	for <linux-hardening@archiver.kernel.org>; Mon, 31 Jul 2023 23:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbjGaVGS (ORCPT
+        id S229533AbjGaXRG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 31 Jul 2023 17:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37548 "EHLO
+        Mon, 31 Jul 2023 19:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbjGaVGR (ORCPT
+        with ESMTP id S231187AbjGaXRF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 31 Jul 2023 17:06:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB2F4194;
-        Mon, 31 Jul 2023 14:06:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 65687612DD;
-        Mon, 31 Jul 2023 21:06:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE2DDC433C8;
-        Mon, 31 Jul 2023 21:06:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690837575;
-        bh=uFmV+Z9IEZrlWvkA9y0SJYB4T9OHFEmD0Fdew8OiXcs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=mrH744iQrz7H9/m2jMOkpp+sRDM/1X4YqksMXBA8LCgMQY5YbV4fybbNg3IaYLGKM
-         5+A1YzHtc3n4Kf6PbHETyDFT5o6x7m2JVuKlSqq0+272oHJ7Ir4Jp72rx8ElT2GWxd
-         Yo41hVxoS6xL+TGS1WDKtj+TYqWE/VYIrbRLLN6hmWbOEfxV8Uzn2/8fuTxx6vCXVN
-         Xg/8stS3DgMQ0rbmzutxZv4FCO5An08+w9GTNWiTWIbKaZapx8qD6rxBjG8eM7sQVm
-         YfKr9aVn2BIzRwMN6b9wNdUVPI7zF1tZpXABmwJKGTHQTOaZ8raJURDgTEL78B/pi/
-         xzGk2wffY3U5w==
-Date:   Mon, 31 Jul 2023 15:07:20 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Markus Mayer <mmayer@broadcom.com>,
+        Mon, 31 Jul 2023 19:17:05 -0400
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FDD61725
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jul 2023 16:17:00 -0700 (PDT)
+Received: by mail-ot1-x32f.google.com with SMTP id 46e09a7af769-6bc93523162so2122534a34.2
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jul 2023 16:16:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1690845419; x=1691450219;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F8ua9oJZuaplLKApOoOkZO4imSzRRPEkrxgh9MzX6eQ=;
+        b=MRoUyK3tDM70iZUtX070fFz+firyj2lfTJ1XnXANIO+ivnv8m8bTICXQgqrH8gx49f
+         526lqY3qDTC6OXQpTVm6V9nlEyOnznV/7rw5cWJCQdvnqQtJnECaLtFS2qKcrZrj3pRZ
+         K2wPcUMxIn2jEisqWgZuO7jL+1dK69RjZY2jU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690845419; x=1691450219;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F8ua9oJZuaplLKApOoOkZO4imSzRRPEkrxgh9MzX6eQ=;
+        b=IR5ut3UBFsndk/DfKAiVOctrfb6iJMNmKWX4t062ab88G0lAskX8Za7MS9y3N2WuNq
+         7YmpBtz+BDQX+7UJIOuE6eRotEDBz5MOYysogR/+azSB/LASvBC1492OZ1Np54jBnj3V
+         g/hpqnXWkyFH52nGEo5NKx1yi2fwk1iJADuCBHwYuoGLTIiexmC6zB873XF+RBb1yvmG
+         jLL8aEQQ9S4puy8jzx/Ay+e9Ssx1l7oIvBpkC8prcIKxkMNmF1c92rmtMmHwRCibINWT
+         bsCyefLqCsxP/aHCTqf2807ILCeiqsDDLQkWqPgur8O9UPLf1/EY2VFT/4K5lbe7wu+q
+         pZCA==
+X-Gm-Message-State: ABy/qLbq/z7qHbGI7X0a8v8zjaHnmng4dGB4OAfiXycXGGLOJKfdZ+ga
+        Niq7n9V2/8GQVp7gT3F264K6/g==
+X-Google-Smtp-Source: APBJJlHW6hb0A5gM3w1lWC0L6AnstuIDB765N0cHvSxfZb4GZ25ntHbzjG+bjp5400aNwHH7nIm3BQ==
+X-Received: by 2002:a54:4390:0:b0:3a7:2d21:2916 with SMTP id u16-20020a544390000000b003a72d212916mr4865294oiv.9.1690845419333;
+        Mon, 31 Jul 2023 16:16:59 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c29-20020a63725d000000b005348af1b84csm8663037pgn.74.2023.07.31.16.16.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Jul 2023 16:16:58 -0700 (PDT)
+Date:   Mon, 31 Jul 2023 16:16:58 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Markus Mayer <mmayer@broadcom.com>,
         Broadcom internal kernel review list 
         <bcm-kernel-feedback-list@broadcom.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2] cpufreq: brcmstb-avs-cpufreq: Fix -Warray-bounds bug
-Message-ID: <ZMgiiEmBORZRaobc@work>
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] cpufreq: brcmstb-avs-cpufreq: Fix -Warray-bounds bug
+Message-ID: <202307311610.B1EB796684@keescook>
+References: <ZMgiiEmBORZRaobc@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <ZMgiiEmBORZRaobc@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Update the iteration conditions in the for() loop to avoid writing in
-array `table` beyond its allocated size at:
+On Mon, Jul 31, 2023 at 03:07:20PM -0600, Gustavo A. R. Silva wrote:
+> Update the iteration conditions in the for() loop to avoid writing in
+> array `table` beyond its allocated size at:
+> 
+> drivers/cpufreq/brcmstb-avs-cpufreq.c:
+> 449         table[i].frequency = CPUFREQ_TABLE_END;
+> 
+> This fixes the following -Warray-bounds warning seen after building
+> ARM with multi_v7_defconfig (GCC 13):
+> In function 'brcm_avs_get_freq_table',
+>     inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
+> drivers/cpufreq/brcmstb-avs-cpufreq.c:449:28: warning: array subscript 5 is outside array bounds of 'void[60]' [-Warray-bounds=]
+>   449 |         table[i].frequency = CPUFREQ_TABLE_END;
 
-drivers/cpufreq/brcmstb-avs-cpufreq.c:
-449         table[i].frequency = CPUFREQ_TABLE_END;
+#define AVS_PSTATE_P0           0x0
+#define AVS_PSTATE_P1           0x1
+#define AVS_PSTATE_P2           0x2
+#define AVS_PSTATE_P3           0x3
+#define AVS_PSTATE_P4           0x4
+#define AVS_PSTATE_MAX          AVS_PSTATE_P4
 
-This fixes the following -Warray-bounds warning seen after building
-ARM with multi_v7_defconfig (GCC 13):
-In function 'brcm_avs_get_freq_table',
-    inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
-drivers/cpufreq/brcmstb-avs-cpufreq.c:449:28: warning: array subscript 5 is outside array bounds of 'void[60]' [-Warray-bounds=]
-  449 |         table[i].frequency = CPUFREQ_TABLE_END;
-In file included from include/linux/node.h:18,
-                 from include/linux/cpu.h:17,
-                 from include/linux/cpufreq.h:12,
-                 from drivers/cpufreq/brcmstb-avs-cpufreq.c:44:
-In function 'devm_kmalloc_array',
-    inlined from 'devm_kcalloc' at include/linux/device.h:328:9,
-    inlined from 'brcm_avs_get_freq_table' at drivers/cpufreq/brcmstb-avs-cpufreq.c:437:10,
-    inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
-include/linux/device.h:323:16: note: at offset 60 into object of size 60 allocated by 'devm_kmalloc'
-  323 |         return devm_kmalloc(dev, bytes, flags);
-      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        table = devm_kcalloc(dev, AVS_PSTATE_MAX + 1, sizeof(*table),
+                             GFP_KERNEL);
+	...
+        for (i = AVS_PSTATE_P0; i <= AVS_PSTATE_MAX; i++) {
+		...
+	}
+        table[i].frequency = CPUFREQ_TABLE_END;
 
-This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-routines on memcpy() and help us make progress towards globally
-enabling -Warray-bounds.
+I see "AVS_PSTATE_MAX + 1" being used for the allocation, and so the
+loop is likely correctly doing P0 through P4. If there is supposed to be
+a terminating element in the table, I think the correct fix would be to
+allocate an additional element, not stop the loop from processing P4.
 
-Link: https://github.com/KSPP/linux/issues/324
-Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Update changelog text. Add more details.
+> [...]
+> -	for (i = AVS_PSTATE_P0; i <= AVS_PSTATE_MAX; i++) {
+> +	for (i = AVS_PSTATE_P0; i < AVS_PSTATE_MAX; i++) {
+>  		ret = brcm_avs_set_pstate(priv, i);
+>  		if (ret)
+>  			return ERR_PTR(ret);
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZMgfWEA0GAN%2FRog8@work/
+-Kees
 
- drivers/cpufreq/brcmstb-avs-cpufreq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cpufreq/brcmstb-avs-cpufreq.c b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-index 1bdd513bcd19..99ba2d707eff 100644
---- a/drivers/cpufreq/brcmstb-avs-cpufreq.c
-+++ b/drivers/cpufreq/brcmstb-avs-cpufreq.c
-@@ -439,7 +439,7 @@ brcm_avs_get_freq_table(struct device *dev, struct private_data *priv)
- 	if (!table)
- 		return ERR_PTR(-ENOMEM);
- 
--	for (i = AVS_PSTATE_P0; i <= AVS_PSTATE_MAX; i++) {
-+	for (i = AVS_PSTATE_P0; i < AVS_PSTATE_MAX; i++) {
- 		ret = brcm_avs_set_pstate(priv, i);
- 		if (ret)
- 			return ERR_PTR(ret);
 -- 
-2.34.1
-
+Kees Cook
