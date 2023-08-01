@@ -2,184 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860BCC0015E
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 21:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2BCC0015E
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 21:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbjHAV12 (ORCPT
+        id S230268AbjHAVxr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 17:27:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46700 "EHLO
+        Tue, 1 Aug 2023 17:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229738AbjHAV11 (ORCPT
+        with ESMTP id S232231AbjHAVxq (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 17:27:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 302532D76;
-        Tue,  1 Aug 2023 14:26:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 030CA61725;
-        Tue,  1 Aug 2023 21:26:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858F0C433C7;
-        Tue,  1 Aug 2023 21:26:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690925215;
-        bh=U7dgv/gPFnq41YcNLCjZJ9Dek6jtsS7j5lqt4+JbTiI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sYVMYqI8ku7coxbeBTKK7hRfA49OR3QLOgz6i72/RP6nrl7MfBnFv6cjkTK7/dIRx
-         lpHMfk9kxqV/4xq2+UakllZn2qdNG5ahkPcfwgRQAoBX60hsfahMPAIALjrvKLQ340
-         jxNlBjsxcB3B33nfe5QPyf+n+bOJY/ub1Rfg+CHeFCPRFnRDo5UsfSgkIbcy6mGJHI
-         9ffkJGjiwTP0hmX/0pJqSWstflSzihGHj/J5XiOgNgHMdV5ZSYSIonOAyRVYjIqKc2
-         bRh8TL824Wr5qQhYEH6G+jYsUnV6T5pMWxLZQnAOdgcH/aIPyi1l3VozOx2GV8z9HG
-         nWooAjahUjFEg==
-Date:   Tue, 1 Aug 2023 22:26:51 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tue, 1 Aug 2023 17:53:46 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D352134
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 14:53:44 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d3ae42d146cso329920276.0
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 14:53:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1690926824; x=1691531624;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0s9Ij9vBA+8Dxn+A8h2tCJt9Mf1v/5GkMWT8RzF9uak=;
+        b=c4Rdjt9h37wWUjU3aTzC1zIQA1StqtAUF+DknKtfESVPoN0s2oyoxUv6TVaFQFNJzZ
+         rES9RGuIUJoQ5lvOAUwhANYn/0TFahVdDwikuos4m4wZWQw2e6Vo4y9ODAhiCpQbUI76
+         muhMT50oXqA6sN/Z9+iEdcaP6zwUBeKCwap/z2xQmFNlMSgMdO/BGM5ChB9Hu28koRNi
+         gRHyb1rPRAp1AdFbIoFcXYsZsenVvQDGDxFIGivsHUe/bGC9wKYSaAxgDB6TspJqbYIh
+         yMwZ1Da2drE2SR8eAAi6drYZZ/RjOt5AQ1orl+HWBF22YTPwu1L7enFcbBzXTxJ0UzPY
+         cHXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690926824; x=1691531624;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0s9Ij9vBA+8Dxn+A8h2tCJt9Mf1v/5GkMWT8RzF9uak=;
+        b=DwS/FYtc56mrn/HS25yv6gTc6UVBUYo/tkCcgbqcEG4HyKWyCl2tWRcsim8mZvio0J
+         pOV5iR/8bdyI9XPxLC+uEpk/drkiJCIo+TSYgt4YnO0ThMQhCU7zqHIzX0yvUUYH552T
+         fh72QZe96NQBCGM7UJVxEy+lOwvAsImHMCI8Eg1BHigOzjG5b7nYJllBRoQT/btbDN7V
+         ofzW05A5edtSS4q8+IznP9SlGfMNK0xweB6DBo/VSpFt0oY2uBhMd4LRELA/Mh2JfC7e
+         Np9S6M+/SeNN2ANZQ+0btIsxaqpTk7j3wKiMg14MfJ93hsXnKyR6GExq2xYToKQgrujb
+         pIOQ==
+X-Gm-Message-State: ABy/qLYXntK99J1HbxVTuAXuJOYw61EgMolp+yGZnFPazI4WwwS8Fjsa
+        OG91Z1ZxdIAzgayvqTTrRbxlha6MXPX+8s9CqA==
+X-Google-Smtp-Source: APBJJlHjR+QqYsFFxi0BqybEHISyS5oTupXYpcQVQD9NnHionwHqGL30J/BHp2LZvr3lgY/z7d6TefUBLOOV5rckWw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:70b:b0:d0f:15a4:5a50 with
+ SMTP id k11-20020a056902070b00b00d0f15a45a50mr121648ybt.9.1690926824002; Tue,
+ 01 Aug 2023 14:53:44 -0700 (PDT)
+Date:   Tue, 01 Aug 2023 21:53:36 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAN9+yWQC/x3NQQrCQAxG4auUrA1k0kXFq4gLMb8aKGNJSlsov
+ XsHl9/mvZ0S4Ui6dTsFFk//1YZy6ej1fdYP2K2ZVLSXqxS28AWRXDHz6oERmex1xsg+rbqJsA2 AmpVBeqUWmgJv3/6T++M4Tpg2XF10AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1690926823; l=1991;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=6A+GJOrwYihb5Nlog/fMcMKwBjFRuYI+dUgwDlopuWg=; b=slqeS/TZUMd+Q0Atno0SF7YjZvgtRWbIWVp/GIfLhcim4px+zeKjRfBmJ9hX8B1cs7iyVJ34l
+ 9c6U5ai2U4FCmzfbthB8H46kf7IoAksUa+S8WnxZKfFlXvy4rlMAQMU
+X-Mailer: b4 0.12.3
+Message-ID: <20230801-drivers-net-wireless-intel-ipw2x00-v1-1-ffd185c91292@google.com>
+Subject: [PATCH] wifi: ipw2x00: replace deprecated strncpy with strscpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Kalle Valo <kvalo@kernel.org>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] RISC-V: cpu: refactor deprecated strncpy
-Message-ID: <20230801-tinsel-parcel-aa034d07aeb6@spud>
-References: <20230801-arch-riscv-kernel-v1-1-2b3f2dc0bc61@google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YnHqtxQiKmZEKon/"
-Content-Disposition: inline
-In-Reply-To: <20230801-arch-riscv-kernel-v1-1-2b3f2dc0bc61@google.com>
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
---YnHqtxQiKmZEKon/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We can massively simplify the implementation by removing the ternary
+check for the smaller of `count` and `sizeof(buffer) - 1` as `strscpy`
+guarantees NUL-termination of its destination buffer [2]. This also
+means we do not need to explicity set the one past-the-last index to
+zero as `strscpy` handles this.
 
-Hey Justin,
+Furthermore, we can also utilize `strscpy`'s return value to populate
+`len` and simply pass in `sizeof(buffer)` to the `strscpy` invocation
+itself.
 
-On Tue, Aug 01, 2023 at 09:14:56PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
->=20
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on its destination buffer argument which is
-> _not_ the case for `strncpy`!
->=20
-> The `sv_type` buffer is declared with a size of 16 which is then
-> followed by some `strncpy` calls to populate the buffer with one of:
-> "sv32", "sv57", "sv48", "sv39" or "none". Hard-coding the max length as 5=
- is
-> error-prone and involves counting the number of characters (and
-> hopefully not forgetting to count the NUL-byte) in the raw string.
+[1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+[2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
 
-What is error prone about it when there are only 4 characters possible?
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+ drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-> Using a pre-determined max length in combination with `strscpy` provides
-> a cleaner, less error-prone as well as a less ambiguous implementation.
-> `strscpy` guarantees that it's destination buffer is NUL-terminated even
-> if it's source argument exceeds the max length as defined by the third
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+index dfe0f74369e6..8f2a834dbe04 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
+@@ -1462,15 +1462,12 @@ static ssize_t scan_age_store(struct device *d, struct device_attribute *attr,
+ 	struct ipw_priv *priv = dev_get_drvdata(d);
+ 	struct net_device *dev = priv->net_dev;
+ 	char buffer[] = "00000000";
+-	unsigned long len =
+-	    (sizeof(buffer) - 1) > count ? count : sizeof(buffer) - 1;
+ 	unsigned long val;
+ 	char *p = buffer;
+ 
+ 	IPW_DEBUG_INFO("enter\n");
+ 
+-	strncpy(buffer, buf, len);
+-	buffer[len] = 0;
++	ssize_t len = strscpy(buffer, buf, sizeof(buffer));
+ 
+ 	if (p[1] == 'x' || p[1] == 'X' || p[0] == 'x' || p[0] == 'X') {
+ 		p++;
 
-Wrong its ;)
+---
+base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+change-id: 20230801-drivers-net-wireless-intel-ipw2x00-d7ee2dd17032
 
-> argument.
->=20
-> To be clear, there is no bug (i think?) in the current implementation
-> but the current hard-coded values in combination with using a deprecated
-> interface make this a worthwhile change, IMO.
->=20
-> [1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nu=
-l-terminated-strings
-> [2]: manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
-This link is broken, it should be
-https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
-
-Also, in the future, please use the form
-
-Link: <url> [ref]
-
-so
-
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.htm=
-l [1]
-
-and so on.
-
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
->  arch/riscv/kernel/cpu.c | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
->=20
-> diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
-> index a2fc952318e9..1c576e4ec171 100644
-> --- a/arch/riscv/kernel/cpu.c
-> +++ b/arch/riscv/kernel/cpu.c
-> @@ -17,6 +17,8 @@
->  #include <asm/smp.h>
->  #include <asm/pgtable.h>
-> =20
-> +#define SV_TYPE_MAX_LENGTH 16
-> +
->  /*
->   * Returns the hart ID of the given device tree node, or -ENODEV if the =
-node
->   * isn't an enabled and valid RISC-V hart node.
-> @@ -271,21 +273,21 @@ static void print_isa(struct seq_file *f, const cha=
-r *isa)
-> =20
->  static void print_mmu(struct seq_file *f)
->  {
-> -	char sv_type[16];
-> +	char sv_type[SV_TYPE_MAX_LENGTH];
-> =20
->  #ifdef CONFIG_MMU
->  #if defined(CONFIG_32BIT)
-> -	strncpy(sv_type, "sv32", 5);
-> +	strscpy(sv_type, "sv32", SV_TYPE_MAX_LENGTH);
->  #elif defined(CONFIG_64BIT)
->  	if (pgtable_l5_enabled)
-> -		strncpy(sv_type, "sv57", 5);
-> +		strscpy(sv_type, "sv57", SV_TYPE_MAX_LENGTH);
->  	else if (pgtable_l4_enabled)
-> -		strncpy(sv_type, "sv48", 5);
-> +		strscpy(sv_type, "sv48", SV_TYPE_MAX_LENGTH);
->  	else
-> -		strncpy(sv_type, "sv39", 5);
-> +		strscpy(sv_type, "sv39", SV_TYPE_MAX_LENGTH);
->  #endif
->  #else
-> -	strncpy(sv_type, "none", 5);
-> +	strscpy(sv_type, "none", SV_TYPE_MAX_LENGTH);
->  #endif /* CONFIG_MMU */
->  	seq_printf(f, "mmu\t\t: %s\n", sv_type);
->  }
-
-This all seems rather horrible, we should probably clean it up, but that
-is nothing to do with your patch. To be clear, I am also not requesting a
-resubmission for the commit message nitpickery.
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Thanks,
-Conor.
-
---YnHqtxQiKmZEKon/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZMl4mwAKCRB4tDGHoIJi
-0pVoAQDmQjneDXMF/O2Z8naa/wVqe4BsEZNuH50zc6EEaEGVugEAoYPeFRvmv4Sk
-/xr+fzJ+L6ng3taifnrp/hJz1yzc+wI=
-=S5Oo
------END PGP SIGNATURE-----
-
---YnHqtxQiKmZEKon/--
