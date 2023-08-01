@@ -2,157 +2,156 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E69FC0015E
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 20:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4E8C00528
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 21:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231769AbjHAUnO (ORCPT
+        id S230255AbjHAVPF (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 16:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55652 "EHLO
+        Tue, 1 Aug 2023 17:15:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbjHAUnN (ORCPT
+        with ESMTP id S229727AbjHAVPD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 16:43:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D784B1722;
-        Tue,  1 Aug 2023 13:43:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 73AFC616EA;
-        Tue,  1 Aug 2023 20:43:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D34EBC433C8;
-        Tue,  1 Aug 2023 20:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690922591;
-        bh=C0I3Ru7GOW95oqbdSWRCdIV1RALO1IK4Jpy3kgeDRGU=;
-        h=From:Date:Subject:To:Cc:Reply-To:From;
-        b=Lqve3I6cH3czggt0HoV5slmlN4T4zTo9Icns7Xl/n5Hf0BwWRBmKUmXc8IrXuMTmJ
-         iC3WgV92E70Va2qNju4RBhgduQRPFIT5DKTkV/ykL8MEa9v/copUXYI07zn9MvvnoD
-         SBgBNeGcIBa/P9MPU96pgWOzyn9aC6E8lhqWLv54VtW7n1xbAnu9EqS0JBngXM9onB
-         Ix4FsYogjfmgVbHi98Thcjwa6cOT8xzgwnG5JiSowJV0dqAwP+iSguj39MHQpj+nnm
-         CrpZ1CQS90MM06x9SeJzYSiYb+YnAhPZvAs8SJKIphA+2u2l7KHg8+2hk0YCMJ5WiW
-         Sla5mU9sJyQfQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.lore.kernel.org (Postfix) with ESMTP id BAB58C0015E;
-        Tue,  1 Aug 2023 20:43:11 +0000 (UTC)
-From:   Nathan Lynch via B4 Relay 
-        <devnull+nathanl.linux.ibm.com@kernel.org>
-Date:   Tue, 01 Aug 2023 15:43:07 -0500
-Subject: [PATCH] powerpc/rtas_flash: allow user copy to flash block cache
- objects
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230801-rtas-flash-vs-hardened-usercopy-v1-1-2e99cf9e2bed@linux.ibm.com>
-X-B4-Tracking: v=1; b=H4sIAFpuyWQC/x3NTQqDQAxA4atI1g3MD1jaqxQX0YmdQBklsaKId
- 3dw+TbfO8BYhQ3ezQHKq5hMpYZ/NDBkKl9GSbUhuBDdM3rUhQzHH1nG1TCTJi6c8F+dYZp3dC9
- qU4ht77yHqszKo2z34dOd5wWga1b/cQAAAA==
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Nathan Lynch <nathanl@linux.ibm.com>
+        Tue, 1 Aug 2023 17:15:03 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C98912B
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 14:15:02 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5843fed1e88so75655897b3.0
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 14:15:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1690924501; x=1691529301;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cvCPvXEXJi+AWuMnKm+64/X3uAVVE34xKMNOfWT1BRs=;
+        b=PR7tMSy5f4UYTvY4LrTeHg5FaPYcYdynCZ7BdMeTUjCGQFv3V9+d2wyZpspcsT2Lk2
+         lwZLurzuBUx24t7W9okeaEOLhZWGzAN+Ac9k9MR3EsSKBEA3pv66qqM7dL744LXA4fwu
+         98yACZNsKu3Be7cHWDnwKZa6JnGb6wZslBqVSc4zOgR/35FFx2Lr92lR6rI6tuOmKzs5
+         0qBsLA2GF9pI0XIWbCabH3dB04lZqx9ULoUWh0+i1GQGSmAxEwa2r89230sMVJ1hBbpR
+         6pQPp3LFMFfmtB4oeDv3kVOgapuenW7gLqDSM8eN9Qz6klCRAhk8qyicxnIJN+aH651H
+         tC7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690924501; x=1691529301;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cvCPvXEXJi+AWuMnKm+64/X3uAVVE34xKMNOfWT1BRs=;
+        b=EFqxm16vdtnzSzFfuLyGVv4tLmE125+EcUy/7jGnLepBnGbsbXE/byqxNd+tjYYlwk
+         ro7nFhm5hNVzO2GSJuT3u9R1+T102P6htcUuF+XrJ2ZVRBNQPtPr9UY4RtRh7WCCfLs/
+         7RN10lCkNupJL3ac1gl1iwH22Ptcu1WgNhrGwKbIKEAabyhMiCoXU/dmHQPjZsjqq934
+         hMyswQetajyFSWVBjPX17L0gxfoi9JTSvwXfFJkwMOFvJFuzZ8veYORdSuL0G+nBnK6V
+         eTLY4u86ZEgwfmJfsDLOxpAsTfsfeHMlylI2rLuJIhE/Xze6xy15pcCc5syUCIqFudXH
+         B6sQ==
+X-Gm-Message-State: ABy/qLajrUU+SnFxRD7LLcDBpRV4sBSn8iiRLutgKnUCkS4kYFQjdN28
+        w+AdAJ0dYrJGf2Vs0v8b17PtMVEjiwymp268MQ==
+X-Google-Smtp-Source: APBJJlH6aRZtqfR1X4T8qWnxez8AGlbXuy2EkOO9dyhBk5KJPlduqXXSo2+gRcBiY1QYA4mWnF6JSgOt/rTMp+KuJQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:dbcc:0:b0:c4d:9831:9712 with SMTP
+ id g195-20020a25dbcc000000b00c4d98319712mr91040ybf.0.1690924501488; Tue, 01
+ Aug 2023 14:15:01 -0700 (PDT)
+Date:   Tue, 01 Aug 2023 21:14:56 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAM91yWQC/x3MMQqAMAxA0atIZgOtFi1eRRxKjBqUKimIULy7x
+ fEN/2dIrMIJhiqD8i1Jzlhg6wpoC3FllLkYGtO0xhuLQWlDlUQ37qyRD7QuGOeJOtf1ULpLeZH nf47T+34o9Y8zYwAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1690924500; l=2927;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=s3m7CWALnl/nC1KMRD2GMsw7JbTdQy5wYGZxtQUQlGM=; b=7eJSjj6jI+aQ7sQWqwG3t2xsmy39xyn26rfVvRq1stqWx/hW8lh8ZtyNbqdNOhiBoBHEvbHbd
+ dtYNXKXBITPC026HWfdakwEnyjQW2KzToCm+rBDZJ3IalP45DI9fCa2
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1690922591; l=3523;
- i=nathanl@linux.ibm.com; s=20230206; h=from:subject:message-id;
- bh=7SUjRaAqad/a9pJchkB3VHzS+si/gdmTstqU0MaHrlA=;
- b=u2yXJ1USIHBZnDyFxJ/BYcgYZAEArFBRYWN27AoxZ2K5TbQo/YNf74+f1y6Tez0VodPXdoRKj
- fIJeLfXp44uAkqunq4GulH6Q0kEhdoRZn6sszqffJyKSH/FUInksig5
-X-Developer-Key: i=nathanl@linux.ibm.com; a=ed25519;
- pk=6daubz/ymoaMF+8voz7UHwnhluEsmDZuqygIIMWpQQY=
-X-Endpoint-Received: by B4 Relay for nathanl@linux.ibm.com/20230206 with auth_id=27
-X-Original-From: Nathan Lynch <nathanl@linux.ibm.com>
-Reply-To: <nathanl@linux.ibm.com>
+Message-ID: <20230801-arch-riscv-kernel-v1-1-2b3f2dc0bc61@google.com>
+Subject: [PATCH] RISC-V: cpu: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-With hardened usercopy enabled (CONFIG_HARDENED_USERCOPY=y), using the
-/proc/powerpc/rtas/firmware_update interface to prepare a system
-firmware update yields a BUG():
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on its destination buffer argument which is
+_not_ the case for `strncpy`!
 
-kernel BUG at mm/usercopy.c:102!
-Oops: Exception in kernel mode, sig: 5 [#1]
-LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-Modules linked in:
-CPU: 0 PID: 2232 Comm: dd Not tainted 6.5.0-rc3+ #2
-Hardware name: IBM,8408-E8E POWER8E (raw) 0x4b0201 0xf000004 of:IBM,FW860.50 (SV860_146) hv:phyp pSeries
-NIP:  c0000000005991d0 LR: c0000000005991cc CTR: 0000000000000000
-REGS: c0000000148c76a0 TRAP: 0700   Not tainted  (6.5.0-rc3+)
-MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24002242  XER: 0000000c
-CFAR: c0000000001fbd34 IRQMASK: 0
-[ ... GPRs omitted ... ]
-NIP [c0000000005991d0] usercopy_abort+0xa0/0xb0
-LR [c0000000005991cc] usercopy_abort+0x9c/0xb0
-Call Trace:
-[c0000000148c7940] [c0000000005991cc] usercopy_abort+0x9c/0xb0 (unreliable)
-[c0000000148c79b0] [c000000000536814] __check_heap_object+0x1b4/0x1d0
-[c0000000148c79f0] [c000000000599080] __check_object_size+0x2d0/0x380
-[c0000000148c7a30] [c000000000045ed4] rtas_flash_write+0xe4/0x250
-[c0000000148c7a80] [c00000000068a0fc] proc_reg_write+0xfc/0x160
-[c0000000148c7ab0] [c0000000005a381c] vfs_write+0xfc/0x4e0
-[c0000000148c7b70] [c0000000005a3e10] ksys_write+0x90/0x160
-[c0000000148c7bc0] [c00000000002f2c8] system_call_exception+0x178/0x320
-[c0000000148c7e50] [c00000000000d520] system_call_common+0x160/0x2c4
---- interrupt: c00 at 0x7fff9f17e5e4
+The `sv_type` buffer is declared with a size of 16 which is then
+followed by some `strncpy` calls to populate the buffer with one of:
+"sv32", "sv57", "sv48", "sv39" or "none". Hard-coding the max length as 5 is
+error-prone and involves counting the number of characters (and
+hopefully not forgetting to count the NUL-byte) in the raw string.
 
-The blocks of the firmware image are copied directly from user memory
-to objects allocated from flash_block_cache, so flash_block_cache must
-be created using kmem_cache_create_usercopy() to mark it safe for user
-access.
+Using a pre-determined max length in combination with `strscpy` provides
+a cleaner, less error-prone as well as a less ambiguous implementation.
+`strscpy` guarantees that it's destination buffer is NUL-terminated even
+if it's source argument exceeds the max length as defined by the third
+argument.
 
-Fixes: 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+To be clear, there is no bug (i think?) in the current implementation
+but the current hard-coded values in combination with using a deprecated
+interface make this a worthwhile change, IMO.
+
+[1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+[2]: manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
-I believe it's much more common to update Power system firmware
-without involving a Linux partition, which may explain why this has
-gone unreported for so long.
----
- arch/powerpc/kernel/rtas_flash.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/riscv/kernel/cpu.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kernel/rtas_flash.c b/arch/powerpc/kernel/rtas_flash.c
-index 4caf5e3079eb..6a837264a196 100644
---- a/arch/powerpc/kernel/rtas_flash.c
-+++ b/arch/powerpc/kernel/rtas_flash.c
-@@ -698,6 +698,12 @@ static const struct rtas_flash_file rtas_flash_files[] = {
+diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
+index a2fc952318e9..1c576e4ec171 100644
+--- a/arch/riscv/kernel/cpu.c
++++ b/arch/riscv/kernel/cpu.c
+@@ -17,6 +17,8 @@
+ #include <asm/smp.h>
+ #include <asm/pgtable.h>
  
- static int __init rtas_flash_init(void)
++#define SV_TYPE_MAX_LENGTH 16
++
+ /*
+  * Returns the hart ID of the given device tree node, or -ENODEV if the node
+  * isn't an enabled and valid RISC-V hart node.
+@@ -271,21 +273,21 @@ static void print_isa(struct seq_file *f, const char *isa)
+ 
+ static void print_mmu(struct seq_file *f)
  {
-+	const unsigned int objsize = RTAS_BLK_SIZE;
-+	const unsigned int usersize = objsize;
-+	const unsigned int align = objsize;
-+	void (* const ctor)(void *) = NULL;
-+	const unsigned int useroffset = 0;
-+	const slab_flags_t flags = 0;
- 	int i;
+-	char sv_type[16];
++	char sv_type[SV_TYPE_MAX_LENGTH];
  
- 	if (rtas_function_token(RTAS_FN_IBM_UPDATE_FLASH_64_AND_REBOOT) == RTAS_UNKNOWN_SERVICE) {
-@@ -709,9 +715,9 @@ static int __init rtas_flash_init(void)
- 	if (!rtas_validate_flash_data.buf)
- 		return -ENOMEM;
- 
--	flash_block_cache = kmem_cache_create("rtas_flash_cache",
--					      RTAS_BLK_SIZE, RTAS_BLK_SIZE, 0,
--					      NULL);
-+	flash_block_cache = kmem_cache_create_usercopy("rtas_flash_cache",
-+						       objsize, align, flags,
-+						       useroffset, usersize, ctor);
- 	if (!flash_block_cache) {
- 		printk(KERN_ERR "%s: failed to create block cache\n",
- 				__func__);
+ #ifdef CONFIG_MMU
+ #if defined(CONFIG_32BIT)
+-	strncpy(sv_type, "sv32", 5);
++	strscpy(sv_type, "sv32", SV_TYPE_MAX_LENGTH);
+ #elif defined(CONFIG_64BIT)
+ 	if (pgtable_l5_enabled)
+-		strncpy(sv_type, "sv57", 5);
++		strscpy(sv_type, "sv57", SV_TYPE_MAX_LENGTH);
+ 	else if (pgtable_l4_enabled)
+-		strncpy(sv_type, "sv48", 5);
++		strscpy(sv_type, "sv48", SV_TYPE_MAX_LENGTH);
+ 	else
+-		strncpy(sv_type, "sv39", 5);
++		strscpy(sv_type, "sv39", SV_TYPE_MAX_LENGTH);
+ #endif
+ #else
+-	strncpy(sv_type, "none", 5);
++	strscpy(sv_type, "none", SV_TYPE_MAX_LENGTH);
+ #endif /* CONFIG_MMU */
+ 	seq_printf(f, "mmu\t\t: %s\n", sv_type);
+ }
 
 ---
-base-commit: c3cad890877f59aeeaf5a638aa7a7c0612c16fa1
-change-id: 20230731-rtas-flash-vs-hardened-usercopy-09a6d236b011
+base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+change-id: 20230801-arch-riscv-kernel-14a048cc6467
 
 Best regards,
--- 
-Nathan Lynch <nathanl@linux.ibm.com>
+--
+Justin Stitt <justinstitt@google.com>
 
