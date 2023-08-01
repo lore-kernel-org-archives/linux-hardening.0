@@ -2,125 +2,204 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2BCC0015E
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 21:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C4DC00528
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 22:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230268AbjHAVxr (ORCPT
+        id S231939AbjHAWW3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 17:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56686 "EHLO
+        Tue, 1 Aug 2023 18:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232231AbjHAVxq (ORCPT
+        with ESMTP id S231220AbjHAWW1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 17:53:46 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D352134
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 14:53:44 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d3ae42d146cso329920276.0
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 14:53:44 -0700 (PDT)
+        Tue, 1 Aug 2023 18:22:27 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D4926AA
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 15:22:22 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-99bcfe28909so852937666b.3
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 15:22:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690926824; x=1691531624;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0s9Ij9vBA+8Dxn+A8h2tCJt9Mf1v/5GkMWT8RzF9uak=;
-        b=c4Rdjt9h37wWUjU3aTzC1zIQA1StqtAUF+DknKtfESVPoN0s2oyoxUv6TVaFQFNJzZ
-         rES9RGuIUJoQ5lvOAUwhANYn/0TFahVdDwikuos4m4wZWQw2e6Vo4y9ODAhiCpQbUI76
-         muhMT50oXqA6sN/Z9+iEdcaP6zwUBeKCwap/z2xQmFNlMSgMdO/BGM5ChB9Hu28koRNi
-         gRHyb1rPRAp1AdFbIoFcXYsZsenVvQDGDxFIGivsHUe/bGC9wKYSaAxgDB6TspJqbYIh
-         yMwZ1Da2drE2SR8eAAi6drYZZ/RjOt5AQ1orl+HWBF22YTPwu1L7enFcbBzXTxJ0UzPY
-         cHXA==
+        d=google.com; s=20221208; t=1690928541; x=1691533341;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yIdAXVeCX023CXL0dIkcMbpnpUwf/1Zbz+CDE0MYpdA=;
+        b=zGUTQBqADKJI0542k8Xf15503QgzkM457a2OErcRTosiK6bvEFow9m7Sr7TZudLD+d
+         nX3StfOcbjXKfqr3JqP6eyP7r/oOTpgmw9B1ggw+P0bEq2fu9am+TKJ3p8YvKtzZQe1c
+         5Xw4CeLJHZyiGvmmWk4G8q6WFAfulgLVE6BA2vVpuKeQJK0QUmixCaaW2xm1zBQ6wTOD
+         xInmIcL6Us5aCyV+376xag9hDt9UtAkfmXnz+5wMln63QsLlgWx+6lZu2n/WJptfD0n5
+         H98bAM3uLuPmn0HftnR3bUIedI0IO5Wq+PS17LMMuCVD0I/IzEB/psoG+ja5ImRAhV5P
+         BV0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690926824; x=1691531624;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0s9Ij9vBA+8Dxn+A8h2tCJt9Mf1v/5GkMWT8RzF9uak=;
-        b=DwS/FYtc56mrn/HS25yv6gTc6UVBUYo/tkCcgbqcEG4HyKWyCl2tWRcsim8mZvio0J
-         pOV5iR/8bdyI9XPxLC+uEpk/drkiJCIo+TSYgt4YnO0ThMQhCU7zqHIzX0yvUUYH552T
-         fh72QZe96NQBCGM7UJVxEy+lOwvAsImHMCI8Eg1BHigOzjG5b7nYJllBRoQT/btbDN7V
-         ofzW05A5edtSS4q8+IznP9SlGfMNK0xweB6DBo/VSpFt0oY2uBhMd4LRELA/Mh2JfC7e
-         Np9S6M+/SeNN2ANZQ+0btIsxaqpTk7j3wKiMg14MfJ93hsXnKyR6GExq2xYToKQgrujb
-         pIOQ==
-X-Gm-Message-State: ABy/qLYXntK99J1HbxVTuAXuJOYw61EgMolp+yGZnFPazI4WwwS8Fjsa
-        OG91Z1ZxdIAzgayvqTTrRbxlha6MXPX+8s9CqA==
-X-Google-Smtp-Source: APBJJlHjR+QqYsFFxi0BqybEHISyS5oTupXYpcQVQD9NnHionwHqGL30J/BHp2LZvr3lgY/z7d6TefUBLOOV5rckWw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:70b:b0:d0f:15a4:5a50 with
- SMTP id k11-20020a056902070b00b00d0f15a45a50mr121648ybt.9.1690926824002; Tue,
- 01 Aug 2023 14:53:44 -0700 (PDT)
-Date:   Tue, 01 Aug 2023 21:53:36 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAN9+yWQC/x3NQQrCQAxG4auUrA1k0kXFq4gLMb8aKGNJSlsov
- XsHl9/mvZ0S4Ui6dTsFFk//1YZy6ej1fdYP2K2ZVLSXqxS28AWRXDHz6oERmex1xsg+rbqJsA2 AmpVBeqUWmgJv3/6T++M4Tpg2XF10AAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1690926823; l=1991;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=6A+GJOrwYihb5Nlog/fMcMKwBjFRuYI+dUgwDlopuWg=; b=slqeS/TZUMd+Q0Atno0SF7YjZvgtRWbIWVp/GIfLhcim4px+zeKjRfBmJ9hX8B1cs7iyVJ34l
- 9c6U5ai2U4FCmzfbthB8H46kf7IoAksUa+S8WnxZKfFlXvy4rlMAQMU
-X-Mailer: b4 0.12.3
-Message-ID: <20230801-drivers-net-wireless-intel-ipw2x00-v1-1-ffd185c91292@google.com>
-Subject: [PATCH] wifi: ipw2x00: replace deprecated strncpy with strscpy
+        d=1e100.net; s=20221208; t=1690928541; x=1691533341;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yIdAXVeCX023CXL0dIkcMbpnpUwf/1Zbz+CDE0MYpdA=;
+        b=MrcH7f9s6WM3UpMp5YLjJrMFKZq5JGcjUQ7lgIuhug0ds5jRCjwpHh28myhFXmlYqf
+         RPkH8pKvUo7VFI8Nlwtx/eITvIpCK5awnRnxPM2P5aQ2mTNeI5NqIOoCcu8SPWzh2tuU
+         oPEN14NazgicpfWCHVow64DryOaRrTlhtuj+eB7OjbCHFiRdwTlCSwJwcjk/nuF8HM5T
+         LOTYrxc0kSjpSY5/i+NjQQR/w0XSYgn761zYQbTTWSK+9s8GVuwBStL+HzhcRS1Uorm2
+         6k7QsoDs+J2UZsLD8rqzUAhDOv8fnr5VrpxryXAlps/dfMP/QesmCLktel+sul7jd78v
+         NOvQ==
+X-Gm-Message-State: ABy/qLYc0Xswc2+Ph/RoHUGhmWVkB7P++iQCkyImFQ0ma0TeDT34bMTl
+        /bmFNWBpKh2FNBzHDxGsKpL0v+wYCA3goLvUMvNRgA==
+X-Google-Smtp-Source: APBJJlG198u3S8vlo+W7HOZPH8S9UFWg5AyX+Zc1gJMMdC04QfJg+j+PVN5g40HMzK3BY1igKJGAvns6JeFwNkx9f58=
+X-Received: by 2002:aa7:d748:0:b0:518:6a99:cac3 with SMTP id
+ a8-20020aa7d748000000b005186a99cac3mr3830626eds.31.1690928540799; Tue, 01 Aug
+ 2023 15:22:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230801-arch-riscv-kernel-v1-1-2b3f2dc0bc61@google.com> <20230801-tinsel-parcel-aa034d07aeb6@spud>
+In-Reply-To: <20230801-tinsel-parcel-aa034d07aeb6@spud>
 From:   Justin Stitt <justinstitt@google.com>
-To:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@kernel.org>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+Date:   Tue, 1 Aug 2023 15:22:07 -0700
+Message-ID: <CAFhGd8pCf5Ose-AVH2k-3fP=7AkHsX5eDsd82Z0F5qEdUFT0qQ@mail.gmail.com>
+Subject: Re: [PATCH] RISC-V: cpu: refactor deprecated strncpy
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Tue, Aug 1, 2023 at 2:26=E2=80=AFPM Conor Dooley <conor@kernel.org> wrot=
+e:
+>
+> Hey Justin,
+>
+> On Tue, Aug 01, 2023 at 09:14:56PM +0000, Justin Stitt wrote:
+> > `strncpy` is deprecated for use on NUL-terminated destination strings [=
+1].
+> >
+> > A suitable replacement is `strscpy` [2] due to the fact that it
+> > guarantees NUL-termination on its destination buffer argument which is
+> > _not_ the case for `strncpy`!
+> >
+> > The `sv_type` buffer is declared with a size of 16 which is then
+> > followed by some `strncpy` calls to populate the buffer with one of:
+> > "sv32", "sv57", "sv48", "sv39" or "none". Hard-coding the max length as=
+ 5 is
+> > error-prone and involves counting the number of characters (and
+> > hopefully not forgetting to count the NUL-byte) in the raw string.
+>
+> What is error prone about it when there are only 4 characters possible?
 
-We can massively simplify the implementation by removing the ternary
-check for the smaller of `count` and `sizeof(buffer) - 1` as `strscpy`
-guarantees NUL-termination of its destination buffer [2]. This also
-means we do not need to explicity set the one past-the-last index to
-zero as `strscpy` handles this.
+To clarify, I don't believe there is a bug in the current
+implementation. However, what I believe to be
+error prone is that simply miscounting the length of the raw string
+would result in a buffer overread.
 
-Furthermore, we can also utilize `strscpy`'s return value to populate
-`len` and simply pass in `sizeof(buffer)` to the `strscpy` invocation
-itself.
+See here: https://godbolt.org/z/5reW7a1sz
 
-[1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-[2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+>
+> > Using a pre-determined max length in combination with `strscpy` provide=
+s
+> > a cleaner, less error-prone as well as a less ambiguous implementation.
+> > `strscpy` guarantees that it's destination buffer is NUL-terminated eve=
+n
+> > if it's source argument exceeds the max length as defined by the third
+>
+> Wrong its ;)
 
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Oops, English is hard ;(
 
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-index dfe0f74369e6..8f2a834dbe04 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-@@ -1462,15 +1462,12 @@ static ssize_t scan_age_store(struct device *d, struct device_attribute *attr,
- 	struct ipw_priv *priv = dev_get_drvdata(d);
- 	struct net_device *dev = priv->net_dev;
- 	char buffer[] = "00000000";
--	unsigned long len =
--	    (sizeof(buffer) - 1) > count ? count : sizeof(buffer) - 1;
- 	unsigned long val;
- 	char *p = buffer;
- 
- 	IPW_DEBUG_INFO("enter\n");
- 
--	strncpy(buffer, buf, len);
--	buffer[len] = 0;
-+	ssize_t len = strscpy(buffer, buf, sizeof(buffer));
- 
- 	if (p[1] == 'x' || p[1] == 'X' || p[0] == 'x' || p[0] == 'X') {
- 		p++;
+>
+> > argument.
+> >
+> > To be clear, there is no bug (i think?) in the current implementation
+> > but the current hard-coded values in combination with using a deprecate=
+d
+> > interface make this a worthwhile change, IMO.
+> >
+> > [1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-=
+nul-terminated-strings
+> > [2]: manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+>
+> This link is broken, it should be
+> https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
 
----
-base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
-change-id: 20230801-drivers-net-wireless-intel-ipw2x00-d7ee2dd17032
+Noted, will fix in future patches.
 
-Best regards,
+>
+> Also, in the future, please use the form
+>
+> Link: <url> [ref]
+>
+> so
+>
+> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.h=
+tml [1]
+>
+> and so on.
+Got it. Thanks!
+
+>
+> > Link: https://github.com/KSPP/linux/issues/90
+> > Cc: linux-hardening@vger.kernel.org
+> > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > ---
+> >  arch/riscv/kernel/cpu.c | 14 ++++++++------
+> >  1 file changed, 8 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/riscv/kernel/cpu.c b/arch/riscv/kernel/cpu.c
+> > index a2fc952318e9..1c576e4ec171 100644
+> > --- a/arch/riscv/kernel/cpu.c
+> > +++ b/arch/riscv/kernel/cpu.c
+> > @@ -17,6 +17,8 @@
+> >  #include <asm/smp.h>
+> >  #include <asm/pgtable.h>
+> >
+> > +#define SV_TYPE_MAX_LENGTH 16
+> > +
+> >  /*
+> >   * Returns the hart ID of the given device tree node, or -ENODEV if th=
+e node
+> >   * isn't an enabled and valid RISC-V hart node.
+> > @@ -271,21 +273,21 @@ static void print_isa(struct seq_file *f, const c=
+har *isa)
+> >
+> >  static void print_mmu(struct seq_file *f)
+> >  {
+> > -     char sv_type[16];
+> > +     char sv_type[SV_TYPE_MAX_LENGTH];
+> >
+> >  #ifdef CONFIG_MMU
+> >  #if defined(CONFIG_32BIT)
+> > -     strncpy(sv_type, "sv32", 5);
+> > +     strscpy(sv_type, "sv32", SV_TYPE_MAX_LENGTH);
+> >  #elif defined(CONFIG_64BIT)
+> >       if (pgtable_l5_enabled)
+> > -             strncpy(sv_type, "sv57", 5);
+> > +             strscpy(sv_type, "sv57", SV_TYPE_MAX_LENGTH);
+> >       else if (pgtable_l4_enabled)
+> > -             strncpy(sv_type, "sv48", 5);
+> > +             strscpy(sv_type, "sv48", SV_TYPE_MAX_LENGTH);
+> >       else
+> > -             strncpy(sv_type, "sv39", 5);
+> > +             strscpy(sv_type, "sv39", SV_TYPE_MAX_LENGTH);
+> >  #endif
+> >  #else
+> > -     strncpy(sv_type, "none", 5);
+> > +     strscpy(sv_type, "none", SV_TYPE_MAX_LENGTH);
+> >  #endif /* CONFIG_MMU */
+> >       seq_printf(f, "mmu\t\t: %s\n", sv_type);
+> >  }
+>
+> This all seems rather horrible, we should probably clean it up, but that
+> is nothing to do with your patch. To be clear, I am also not requesting a
+> resubmission for the commit message nitpickery.
+>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>
+> Thanks,
+> Conor.
+
 --
-Justin Stitt <justinstitt@google.com>
-
+Justin
