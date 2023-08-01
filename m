@@ -2,273 +2,157 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FCCC00528
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 19:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E69FC0015E
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 20:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbjHATZ0 (ORCPT
+        id S231769AbjHAUnO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 15:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52650 "EHLO
+        Tue, 1 Aug 2023 16:43:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232087AbjHATZO (ORCPT
+        with ESMTP id S229669AbjHAUnN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 15:25:14 -0400
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66853581
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 12:25:02 -0700 (PDT)
-Received: by mail-oi1-x22d.google.com with SMTP id 5614622812f47-38c35975545so4731490b6e.1
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 12:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690917902; x=1691522702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JVStSKOXHuVNjupka5b4LgzYs1g1E9EjO7OugsAUVZI=;
-        b=nGSW7hG5U6v+anh6x7l3AKx2jw08rqRM3ja6Ha8kC7KMTzWTZ5rUtjnL++PlStVEq+
-         fKC8pOprYrVNOzRsg4dU36ZFw1Rh0JxaU+UnOYtEoY/HFJ6hi8IzIPXvz8ZWgsAhiqgK
-         WKckw3N4DBhTwJS8elwpYPNTSpflqW9PhVFwc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690917902; x=1691522702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JVStSKOXHuVNjupka5b4LgzYs1g1E9EjO7OugsAUVZI=;
-        b=TWIjY78nM2CIlE5rgBJnVZwNsGDlTb2DRfHLTeUzUuY+0OfBSZl9XnU0YDQ5XqMINe
-         KsBafImAMXnuAR0+x/kpEDVqqCrCcfPM8YR9yAeZ0EmjMaVcrqjYeNyiusYq3MAw7eOI
-         vpSx+ETAfBjjhGFxVkqC2aYD7b8iXS/+ujtNXYtU41hrpfs3RS1PaqgbO/gGObsEn4aT
-         7xgLKksoHAoqwn16g2Ln9bpkkA2rNOEaAhO1UE3Met9kmJd47/t5FsLlO74ex3YQiez+
-         7LWlnRvCrg5WKBzEXkjsWKZC3c6vwRYa4m0c3BIc6yjrT1shwq9VTn8Eeyh1RsZgxafS
-         0raQ==
-X-Gm-Message-State: ABy/qLa2yecGrz7BIwzJPjn8i3a/kQs9TRLUHFfotomJcjQGpPLPWBZ7
-        ZO1WvzTtNcvyrsh5oth/3JlknHt5LN+rUAmrpIROhQ==
-X-Google-Smtp-Source: APBJJlEm1J3KL2r3HOetAysmO5T/aleeOed9lahwvrPBY5QHmqz8ldc8jZwRYKGHDPE1BPooGl5UYxsFN0u2uyZ3+58=
-X-Received: by 2002:a05:6808:219a:b0:3a2:a96d:19c3 with SMTP id
- be26-20020a056808219a00b003a2a96d19c3mr16886646oib.41.1690917902045; Tue, 01
- Aug 2023 12:25:02 -0700 (PDT)
+        Tue, 1 Aug 2023 16:43:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D784B1722;
+        Tue,  1 Aug 2023 13:43:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 73AFC616EA;
+        Tue,  1 Aug 2023 20:43:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D34EBC433C8;
+        Tue,  1 Aug 2023 20:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690922591;
+        bh=C0I3Ru7GOW95oqbdSWRCdIV1RALO1IK4Jpy3kgeDRGU=;
+        h=From:Date:Subject:To:Cc:Reply-To:From;
+        b=Lqve3I6cH3czggt0HoV5slmlN4T4zTo9Icns7Xl/n5Hf0BwWRBmKUmXc8IrXuMTmJ
+         iC3WgV92E70Va2qNju4RBhgduQRPFIT5DKTkV/ykL8MEa9v/copUXYI07zn9MvvnoD
+         SBgBNeGcIBa/P9MPU96pgWOzyn9aC6E8lhqWLv54VtW7n1xbAnu9EqS0JBngXM9onB
+         Ix4FsYogjfmgVbHi98Thcjwa6cOT8xzgwnG5JiSowJV0dqAwP+iSguj39MHQpj+nnm
+         CrpZ1CQS90MM06x9SeJzYSiYb+YnAhPZvAs8SJKIphA+2u2l7KHg8+2hk0YCMJ5WiW
+         Sla5mU9sJyQfQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.lore.kernel.org (Postfix) with ESMTP id BAB58C0015E;
+        Tue,  1 Aug 2023 20:43:11 +0000 (UTC)
+From:   Nathan Lynch via B4 Relay 
+        <devnull+nathanl.linux.ibm.com@kernel.org>
+Date:   Tue, 01 Aug 2023 15:43:07 -0500
+Subject: [PATCH] powerpc/rtas_flash: allow user copy to flash block cache
+ objects
 MIME-Version: 1.0
-References: <20230714114753.170814-1-david@readahead.eu> <CALmYWFsjy2jOfKyM3Gd3Ag+p6u5ejDoBp6RhqcXkcAkMiby4SA@mail.gmail.com>
- <fb464cbf-04c4-4346-a96b-e0b2ab804e16@app.fastmail.com>
-In-Reply-To: <fb464cbf-04c4-4346-a96b-e0b2ab804e16@app.fastmail.com>
-From:   Jeff Xu <jeffxu@chromium.org>
-Date:   Tue, 1 Aug 2023 12:24:51 -0700
-Message-ID: <CABi2SkUOxngcDwRDtFFD2Uef=BUXVN08dMYhmpuS_b1xC39L7g@mail.gmail.com>
-Subject: Re: [PATCH] memfd: support MFD_NOEXEC alongside MFD_EXEC
-To:     David Rheinsberg <david@readahead.eu>
-Cc:     Jeff Xu <jeffxu@google.com>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Daniel Verkamp <dverkamp@chromium.org>, linux-mm@kvack.org,
-        Peter Xu <peterx@redhat.com>, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230801-rtas-flash-vs-hardened-usercopy-v1-1-2e99cf9e2bed@linux.ibm.com>
+X-B4-Tracking: v=1; b=H4sIAFpuyWQC/x3NTQqDQAxA4atI1g3MD1jaqxQX0YmdQBklsaKId
+ 3dw+TbfO8BYhQ3ezQHKq5hMpYZ/NDBkKl9GSbUhuBDdM3rUhQzHH1nG1TCTJi6c8F+dYZp3dC9
+ qU4ht77yHqszKo2z34dOd5wWga1b/cQAAAA==
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Nathan Lynch <nathanl@linux.ibm.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1690922591; l=3523;
+ i=nathanl@linux.ibm.com; s=20230206; h=from:subject:message-id;
+ bh=7SUjRaAqad/a9pJchkB3VHzS+si/gdmTstqU0MaHrlA=;
+ b=u2yXJ1USIHBZnDyFxJ/BYcgYZAEArFBRYWN27AoxZ2K5TbQo/YNf74+f1y6Tez0VodPXdoRKj
+ fIJeLfXp44uAkqunq4GulH6Q0kEhdoRZn6sszqffJyKSH/FUInksig5
+X-Developer-Key: i=nathanl@linux.ibm.com; a=ed25519;
+ pk=6daubz/ymoaMF+8voz7UHwnhluEsmDZuqygIIMWpQQY=
+X-Endpoint-Received: by B4 Relay for nathanl@linux.ibm.com/20230206 with auth_id=27
+X-Original-From: Nathan Lynch <nathanl@linux.ibm.com>
+Reply-To: <nathanl@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi David,
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-On Fri, Jul 28, 2023 at 12:55=E2=80=AFAM David Rheinsberg <david@readahead.=
-eu> wrote:
->
-> Hi
->
-> On Tue, Jul 18, 2023, at 9:03 PM, Jeff Xu wrote:
-> > Hi David
-> >
-> > Thanks email and patch for discussion.
-> >
-> > On Fri, Jul 14, 2023 at 4:48=E2=80=AFAM David Rheinsberg <david@readahe=
-ad.eu> wrote:
-> >>
-> >> Add a new flag for memfd_create() called MFD_NOEXEC, which has the
-> >> opposite effect as MFD_EXEC (i.e., it strips the executable bits from
-> >> the inode file mode).
-> >>
-> > I previously thought about having the symmetric flags, such as
-> > MFD_NOEXEC/MFD_EXEC/MFD_NOEXEC_SEAL/MFD_EXEC_SEAL, but decided against
-> > it. The app shall decide beforehand what the memfd is created for, if
-> > it is no-executable, then it should be sealed, such that it can't be
-> > chmod to enable "X" bit.
->
-> My point is, an application might decide to *not* seal a property, becaus=
-e it knows it has to change it later on. But it might still want to disable=
- the executable bit initially, so to avoid having executable pages around t=
-hat can be exploited.
->
+With hardened usercopy enabled (CONFIG_HARDENED_USERCOPY=y), using the
+/proc/powerpc/rtas/firmware_update interface to prepare a system
+firmware update yields a BUG():
 
-I understand that.
-My argument was this application can do this in two steps, as in my
-previous email:
-1> memfd_create(MFD_EXEC)
-2> chmod
+kernel BUG at mm/usercopy.c:102!
+Oops: Exception in kernel mode, sig: 5 [#1]
+LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+Modules linked in:
+CPU: 0 PID: 2232 Comm: dd Not tainted 6.5.0-rc3+ #2
+Hardware name: IBM,8408-E8E POWER8E (raw) 0x4b0201 0xf000004 of:IBM,FW860.50 (SV860_146) hv:phyp pSeries
+NIP:  c0000000005991d0 LR: c0000000005991cc CTR: 0000000000000000
+REGS: c0000000148c76a0 TRAP: 0700   Not tainted  (6.5.0-rc3+)
+MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24002242  XER: 0000000c
+CFAR: c0000000001fbd34 IRQMASK: 0
+[ ... GPRs omitted ... ]
+NIP [c0000000005991d0] usercopy_abort+0xa0/0xb0
+LR [c0000000005991cc] usercopy_abort+0x9c/0xb0
+Call Trace:
+[c0000000148c7940] [c0000000005991cc] usercopy_abort+0x9c/0xb0 (unreliable)
+[c0000000148c79b0] [c000000000536814] __check_heap_object+0x1b4/0x1d0
+[c0000000148c79f0] [c000000000599080] __check_object_size+0x2d0/0x380
+[c0000000148c7a30] [c000000000045ed4] rtas_flash_write+0xe4/0x250
+[c0000000148c7a80] [c00000000068a0fc] proc_reg_write+0xfc/0x160
+[c0000000148c7ab0] [c0000000005a381c] vfs_write+0xfc/0x4e0
+[c0000000148c7b70] [c0000000005a3e10] ksys_write+0x90/0x160
+[c0000000148c7bc0] [c00000000002f2c8] system_call_exception+0x178/0x320
+[c0000000148c7e50] [c00000000000d520] system_call_common+0x160/0x2c4
+--- interrupt: c00 at 0x7fff9f17e5e4
 
-Two system calls back to back isn't too terrible,  and I know this
-might seem to be not optimized for your user case, I will explain it
-later, please read on.
+The blocks of the firmware image are copied directly from user memory
+to objects allocated from flash_block_cache, so flash_block_cache must
+be created using kmem_cache_create_usercopy() to mark it safe for user
+access.
 
-> >> The default mode for memfd_create() has historically been to use 0777 =
-as
-> >> file modes. The new `MFD_EXEC` flag has now made this explicit, paving
-> >> the way to reduce the default to 0666 and thus dropping the executable
-> >> bits for security reasons. Additionally, the `MFD_NOEXEC_SEAL` flag ha=
-s
-> >> been added which allows this without changing the default right now.
-> >>
-> >> Unfortunately, `MFD_NOEXEC_SEAL` enforces `MFD_ALLOW_SEALING` and
-> >> `F_SEAL_EXEC`, with no alternatives available. This leads to multiple
-> >> issues:
-> >>
-> >>  * Applications that do not want to allow sealing either have to use
-> >>    `MFD_EXEC` (which we don't want, unless they actually need the
-> >>    executable bits), or they must add `F_SEAL_SEAL` immediately on
-> >>    return of memfd_create(2) with `MFD_NOEXEC_SEAL`, since this
-> >>    implicitly enables sealing.
-> >>
-> >>    Note that we explicitly added `MFD_ALLOW_SEALING` when creating
-> >>    memfd_create(2), because enabling seals on existing users of shmem
-> >>    without them knowing about it can easily introduce DoS scenarios.
-> >
-> > The application that doesn't want MFD_NOEXEC_SEAL can use MFD_EXEC,
-> > the kernel won't add MFD_ALLOW_SEALING implicitly. MFD_EXEC makes the
-> > kernel behave the same as before, this is also  why sysctl
-> > vm.memfd_noexec=3D0 can work seamlessly.
-> >
-> >>   It
-> >>    is unclear why `MFD_NOEXEC_SEAL` was designed to enable seals, and
-> >>    this is especially dangerous with `MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL`
-> >>    set via sysctl, since it will silently enable sealing on every memf=
-d
-> >>    created.
-> >>
-> > Without sealing, chmod(2) can modify the mfd to be executable, that is
-> > the consideration that MFD_NOEXEC is not provided as an option.
-> > Indeed, current design is "biased" towards promoting MFD_NOEXEC_SEAL
-> > as the safest approach, and try to avoid the pitfall that dev
-> > accidently uses "MFD_NOEXEC" without realizing it can still be
-> > chmod().
->
-> I think I didn't get my point across. Imagine an application that does *N=
-OT* use sealing, but uses memfds. This application shares memfds with untru=
-sted clients, and does this in a safe way (SIGBUS protected). Everything wo=
-rks fine, unless someone decides to enable `vm.memfd_noexec=3D2`. Suddenly,=
- the memfd will have sealing enabled *without* the application ever request=
-ing this. Now any untrusted client that got the memfd can add seals to the =
-memfd, even though the creator of the memfd did not enable sealing. This cl=
-ient can now seal WRITES on the memfd, even though it really should not be =
-able to do that.
->
-> (This is not an hypothetical setup, we have such setups for data sharing =
-already)
+Fixes: 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+---
+I believe it's much more common to update Power system firmware
+without involving a Linux partition, which may explain why this has
+gone unreported for so long.
+---
+ arch/powerpc/kernel/rtas_flash.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Thanks, this helps me understand your point better.
+diff --git a/arch/powerpc/kernel/rtas_flash.c b/arch/powerpc/kernel/rtas_flash.c
+index 4caf5e3079eb..6a837264a196 100644
+--- a/arch/powerpc/kernel/rtas_flash.c
++++ b/arch/powerpc/kernel/rtas_flash.c
+@@ -698,6 +698,12 @@ static const struct rtas_flash_file rtas_flash_files[] = {
+ 
+ static int __init rtas_flash_init(void)
+ {
++	const unsigned int objsize = RTAS_BLK_SIZE;
++	const unsigned int usersize = objsize;
++	const unsigned int align = objsize;
++	void (* const ctor)(void *) = NULL;
++	const unsigned int useroffset = 0;
++	const slab_flags_t flags = 0;
+ 	int i;
+ 
+ 	if (rtas_function_token(RTAS_FN_IBM_UPDATE_FLASH_64_AND_REBOOT) == RTAS_UNKNOWN_SERVICE) {
+@@ -709,9 +715,9 @@ static int __init rtas_flash_init(void)
+ 	if (!rtas_validate_flash_data.buf)
+ 		return -ENOMEM;
+ 
+-	flash_block_cache = kmem_cache_create("rtas_flash_cache",
+-					      RTAS_BLK_SIZE, RTAS_BLK_SIZE, 0,
+-					      NULL);
++	flash_block_cache = kmem_cache_create_usercopy("rtas_flash_cache",
++						       objsize, align, flags,
++						       useroffset, usersize, ctor);
+ 	if (!flash_block_cache) {
+ 		printk(KERN_ERR "%s: failed to create block cache\n",
+ 				__func__);
 
-I'm not convinced that sysctl needs to consider the threat model of
-"someone" changing and breaking an application.  If we follow that
-threat model, there are a lot of other sysctls to worry about.
+---
+base-commit: c3cad890877f59aeeaf5a638aa7a7c0612c16fa1
+change-id: 20230731-rtas-flash-vs-hardened-usercopy-09a6d236b011
 
-Also, in the system that you described, if memfd is handled to an
-untrusted process, not only "sealing"  can cause damage, but also
-chmod, arbitrary rw,  imo the right approach is to harden the process
-or mechanism of passing the memfd.
-
->
-> Thus, setting the security-option `memfd_noexec` *breaks* applications, b=
-ecause it enables sealing. If `MFD_NOEXEC_SEAL` would *not* imply `MFD_ALLO=
-W_SEALING`, this would not be an issue. IOW, why does =C2=B4MFD_NOEXEC_SEAL=
-` clear `F_SEAL_SEAL` even if `MFD_ALLOW_SEALING` is not set?
->
-
-If MFD_NOEXEC_SEAL is not desired, then it should not be used to
-overwrite memfd_create() in this system.
-
-For the question of why the sysctl adding a seal without application
-setting it , the rationale here is, as summary of previous/this
-emails:
-1> The sysctl helps a system (or container in pid name) to migrate out
-of old API, e.g, a container can update only the  applications that
-need executable memfd, change the sysctl to MFD_NOEXEC_SEAL overwrite,
-thus secure the usage of executable memfd to only those need to. This
-is faster than updating all of the applications.
-2> Since the sysctl does overwrite, it has potential to break an
-application's intent, i.e.  an unmigrated application which expects
-executable memfd, and kernel uses MFD_NOEXEC_SEAL overwrite. It is
-important to use this with caution and abundant tests before turning
-it on.
-3> The seal is added because the majority of users should just care
-about MFD_NOEXEC_SEAL, this prevents changing the memfd to executable
-through chmod at runtime.
-
-> >>  * Applications that do not want `MFD_EXEC`, but rely on
-> >>    `F_GET_SEALS` to *NOT* return `F_SEAL_EXEC` have no way of achievin=
-g
-> >>    this other than using `MFD_EXEC` and clearing the executable bits
-> >>    manually via fchmod(2). Using `MFD_NOEXEC_SEAL` will set
-> >>    `F_SEAL_EXEC` and thus break existing code that hard-codes the
-> >>    seal-set.
-> >>
-> >>    This is already an issue when sending log-memfds to systemd-journal=
-d
-> >>    today, which verifies the seal-set of the received FD and fails if
-> >>    unknown seals are set. Hence, you have to use `MFD_EXEC` when
-> >>    creating memfds for this purpose, even though you really do not nee=
-d
-> >>    the executable bits set.
-> >>
-> >>  * Applications that want to enable the executable bit later on,
-> >>    currently have no way to create the memfd without it. They have to
-> >>    clear the bits immediately after creating it via fchmod(2), or just
-> >>    leave them set.
-> >>
-> > Is it OK to do what you want in two steps ? What is the concern there ?=
- i.e.
-> > memfd_create(MFD_EXEC), then chmod to remove the "X" bit.
-> >
-> > I imagine this is probably already what the application does for
-> > creating no-executable mfd before my patch, i.e.:
-> > memfd_create(), then chmod() to remove "X" to remove "X" bit.
->
-> Yes, correct, this is not a technical issue, but rather an API issue. I d=
-on't think most memfd-users are aware that their inode has the executable b=
-it set, and they likely don't want it. But for backwards-compatibility reas=
-ons (as noted above), they cannot use `MFD_NOEXEC_SEAL`. Hence, we have to =
-make them explicitly request an executable memfd via `MFD_EXEC` now, even t=
-hough they clearly do not want this. And then we have to add code to drop t=
-he executable immediately afterwards.
->
-> It don't understand why we don't add out `MFD_NOEXEC` and thus make it a =
-lot easier to patch existing applications? And we make it explicit that the=
-se applications don't care for the executable-bit, rather than forcing them=
- to request the executable bit just to drop it immediately.
->
-> The downside of `MFD_NOEXEC` is that it might be picked over `MFD_NOEXEC_=
-SEAL` by uneducated users, thus reducing security. But right now, the alter=
-native is that existing code picks `MFD_EXEC` instead and never clears the =
-executable bit, because it is a hassle to do so.
->
-
-Yes. This is the downside I was thinking about.
-
-I lean to believe the kernel API shouldn't be feature rich, it could
-be simple, optimized towards the majority of user cases, and ideally,
-is self-explained without devs to look through documentation. For
-example, if I had to choose one to implement between MFD_NOEXEC and
-MFD_NOEXEC_SEAL, I would choose MFD_NOEXEC_SEAL because it should be
-what most users care about.
-
-> Or is there another reason *not* to include `MFD_NOEXEC`? I am not sure I=
- understand fully why you fight it so vehemently?
->
-
-I wouldn't add it myself, I hope to convince you not to :-).
-If you still think it is beneficial to add MFD_NOEXEC (saving one
-chmod call and making it easy to use), I wouldn't feel bad about that.
-I would suggest going with documentation to help devs to choose
-between those two, i.e. recommend MFD_NOEXEC_SEAL in most cases.
-
-Thanks
 Best regards,
--Jeff
+-- 
+Nathan Lynch <nathanl@linux.ibm.com>
 
-> Thanks
-> David
->
