@@ -2,148 +2,115 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1955EB64DD
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 06:43:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4FAC001DF
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 09:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230296AbjHAGnO (ORCPT
+        id S232679AbjHAJM0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 02:43:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53354 "EHLO
+        Tue, 1 Aug 2023 05:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231986AbjHAGm6 (ORCPT
+        with ESMTP id S232711AbjHAJMI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 02:42:58 -0400
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501CA2D79
-        for <linux-hardening@vger.kernel.org>; Mon, 31 Jul 2023 23:42:33 -0700 (PDT)
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
-        by cmsmtp with ESMTP
-        id Qbdrqh0Qcez0CQj5Iq1spn; Tue, 01 Aug 2023 06:42:20 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id Qj5RqhwzvPvgaQj5RqpBPw; Tue, 01 Aug 2023 06:42:29 +0000
-X-Authority-Analysis: v=2.4 cv=ZZcOi+ZA c=1 sm=1 tr=0 ts=64c8a955
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=ws7JD89P4LkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=IsyNV7-RnDjwaFrxwpMA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=q8xDoc0e3lwDSHDguSa5+mR825k++nOURzgRi1L1QjM=; b=w0vRXLpPlYdxEw939A2MVixiqw
-        osSgoVZQAZPQEm7lqCh5b0Tyh6FNxMmL0lx10kA0X/tRQkrzVaUQ51vWgqvLep0h+6yE14lc36Pa4
-        p6oaFQCebqtJc5egOX6KOxqWRZgnWQQf8tghftegCMdYYnft19+qi4hM0gFtD17aEMb6owVSdPdYy
-        ilJWqff/aqNeXpdTzlX+AicmuLRUL+aTLci81Swb92upaukSQuY/sWwXRyUeARI1tipgDa1xI0Ux6
-        iHfk0fAhUgxt590w/aC7CJP4O6x+kh5XaA89JYH7pMUsYuSFMuK+Qi9HmkoxtSWGVKllrSB09qw1U
-        bBkTnRbQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60426 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qQfv0-000Kd9-1K;
-        Mon, 31 Jul 2023 22:19:31 -0500
-Message-ID: <8d83bd2e-9e66-c5fc-e351-1d57f710296c@embeddedor.com>
-Date:   Mon, 31 Jul 2023 21:20:17 -0600
+        Tue, 1 Aug 2023 05:12:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B31F659F;
+        Tue,  1 Aug 2023 02:09:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1367B614DC;
+        Tue,  1 Aug 2023 09:07:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D507C433CB;
+        Tue,  1 Aug 2023 09:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690880875;
+        bh=JXpCu7p/CWKp6jZPKSaMbWukxpZFXpkVBsqC2SBekyA=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=mCPPWfmGfXdKrezEfgf+KOFfVTcNZx0K/TebxxhKsXMzcwSfJxxCb2eJvgc9jx2dh
+         dLZqYaBonuGMqrlq+8DChi8+bStP7esX3VEHg1jTRvK4807qAiMV0MLkczC5FAOrIH
+         +RvIexjcALqhHlm/05+s6E2xowislWYJ7QN+iLKCtARlf0B6ntuQWj9X/otVtMIAVB
+         oBdkXvYMcvFEwAVPdKGVm0pERWFzHLni9h45fkrUdXlBs/Wc2psG98zEEEuew0yywf
+         0En+3hmm6ydDGSWBegsOyUE69SQGYz+vE7Yk7Aj5glDuoxbkbWeG1lOR33oNkretGz
+         hXKpAN9fiN3SQ==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-hardening@vger.kernel.org,
+        Shayne Chen <shayne.chen@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] wifi: mt76: Replace strlcpy with strscpy
+References: <20230703181256.3712079-1-azeemshaikh38@gmail.com>
+        <169047317159.2400214.7882697833368890001.b4-ty@chromium.org>
+        <87tttpz6ne.fsf@kernel.org> <202307270959.900E3A345E@keescook>
+Date:   Tue, 01 Aug 2023 12:07:50 +0300
+In-Reply-To: <202307270959.900E3A345E@keescook> (Kees Cook's message of "Thu,
+        27 Jul 2023 10:01:37 -0700")
+Message-ID: <87zg3bxh95.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2] cpufreq: brcmstb-avs-cpufreq: Fix -Warray-bounds bug
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Markus Mayer <mmayer@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>,
-        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <ZMgiiEmBORZRaobc@work> <202307311610.B1EB796684@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202307311610.B1EB796684@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qQfv0-000Kd9-1K
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:60426
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfGX5vYllYl5OrCzGr7zwU+dgGftl/OhWlbEg72pbmywopygSCsX+pCCHXJ20j6q9fJZvZgO80LUs8QOQhqwpraqJzofoldvg7VvG4v9mg5ibW+hzXivM
- XFbfIRczJQw1+YGlhH5k19tIr4RY6XU91eOnexgII1PHQBK+JhPoapOCQUAYYdlhfcAug7B/7nGmzKU1a3dfOugOlTCs7FNXu2rNu10v49ultFAeuOiPcjUs
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Kees Cook <keescook@chromium.org> writes:
 
+> On Thu, Jul 27, 2023 at 07:00:21PM +0300, Kalle Valo wrote:
+>> Kees Cook <keescook@chromium.org> writes:
+>> 
+>> > On Mon, 03 Jul 2023 18:12:56 +0000, Azeem Shaikh wrote:
+>> >> strlcpy() reads the entire source buffer first.
+>> >> This read may exceed the destination size limit.
+>> >> This is both inefficient and can lead to linear read
+>> >> overflows if a source string is not NUL-terminated [1].
+>> >> In an effort to remove strlcpy() completely [2], replace
+>> >> strlcpy() here with strscpy().
+>> >> 
+>> >> [...]
+>> >
+>> > Applied, thanks!
+>> >
+>> > [1/1] wifi: mt76: Replace strlcpy with strscpy
+>> >       https://git.kernel.org/kees/c/535c78cbc0c4
+>> 
+>> Why did you take this? mt76 is in active development so risk of
+>> conflicts is high.
+>
+> There didn't seem to be any further activity for 3 weeks, and it was a
+> relatively mechanical change.
 
-On 7/31/23 17:16, Kees Cook wrote:
-> On Mon, Jul 31, 2023 at 03:07:20PM -0600, Gustavo A. R. Silva wrote:
->> Update the iteration conditions in the for() loop to avoid writing in
->> array `table` beyond its allocated size at:
->>
->> drivers/cpufreq/brcmstb-avs-cpufreq.c:
->> 449         table[i].frequency = CPUFREQ_TABLE_END;
->>
->> This fixes the following -Warray-bounds warning seen after building
->> ARM with multi_v7_defconfig (GCC 13):
->> In function 'brcm_avs_get_freq_table',
->>      inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
->> drivers/cpufreq/brcmstb-avs-cpufreq.c:449:28: warning: array subscript 5 is outside array bounds of 'void[60]' [-Warray-bounds=]
->>    449 |         table[i].frequency = CPUFREQ_TABLE_END;
-> 
-> #define AVS_PSTATE_P0           0x0
-> #define AVS_PSTATE_P1           0x1
-> #define AVS_PSTATE_P2           0x2
-> #define AVS_PSTATE_P3           0x3
-> #define AVS_PSTATE_P4           0x4
-> #define AVS_PSTATE_MAX          AVS_PSTATE_P4
-> 
->          table = devm_kcalloc(dev, AVS_PSTATE_MAX + 1, sizeof(*table),
->                               GFP_KERNEL);
-> 	...
->          for (i = AVS_PSTATE_P0; i <= AVS_PSTATE_MAX; i++) {
-> 		...
-> 	}
->          table[i].frequency = CPUFREQ_TABLE_END;
-> 
-> I see "AVS_PSTATE_MAX + 1" being used for the allocation, and so the
-> loop is likely correctly doing P0 through P4. If there is supposed to be
-> a terminating element in the table, I think the correct fix would be to
-> allocate an additional element, not stop the loop from processing P4.
+That's because the wireless trees were on a summer break:
 
-Yeah; I think you're right. And it seems that this function header makes it
-clear, too:
+https://lore.kernel.org/all/87y1kncuh4.fsf@kernel.org/
 
-drivers/cpufreq/brcmstb-avs-cpufreq.c:
-421 /*
-422  * We determine which frequencies are supported by cycling through all P-states
-423  * and reading back what frequency we are running at for each P-state.
-424  */
-425 static struct cpufreq_frequency_table *
-426 brcm_avs_get_freq_table(struct device *dev, struct private_data *priv)
+> I can drop it from my tree.
 
-I just sent v3:
-https://lore.kernel.org/linux-hardening/ZMh45KH2iPIpNktr@work/
+Yes, please drop this. And in the future don't take any wireless patches
+unless acked by Johannes or me, I want to minimize the risk of conflicts
+between the trees. If a patch is missed for whatever reason please let
+me know, do not take it to your tree.
 
-Let's see what the maintainers say.
+> What's needed for it to be picked up through wireless?
 
-Thanks for the feedback!
---
-Gustavo
+I don't know why Felix didn't take this patch but now I assigned it to
+me on patchwork:
+
+https://patchwork.kernel.org/project/linux-wireless/patch/20230703181256.3712079-1-azeemshaikh38@gmail.com/
+
+It should be in wireless-next this week.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
