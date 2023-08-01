@@ -2,83 +2,148 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CD1C001E0
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 06:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1955EB64DD
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 06:43:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231272AbjHAGFg (ORCPT
+        id S230296AbjHAGnO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 02:05:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59630 "EHLO
+        Tue, 1 Aug 2023 02:43:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231213AbjHAGFf (ORCPT
+        with ESMTP id S231986AbjHAGm6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 02:05:35 -0400
-Received: from SHSQR01.spreadtrum.com (unknown [222.66.158.135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46842127;
-        Mon, 31 Jul 2023 23:05:32 -0700 (PDT)
-Received: from dlp.unisoc.com ([10.29.3.86])
-        by SHSQR01.spreadtrum.com with ESMTP id 37164afZ001233;
-        Tue, 1 Aug 2023 14:04:36 +0800 (+08)
-        (envelope-from Yunlong.Xing@unisoc.com)
-Received: from SHDLP.spreadtrum.com (bjmbx02.spreadtrum.com [10.0.64.8])
-        by dlp.unisoc.com (SkyGuard) with ESMTPS id 4RFPfR6L1pz2K1r9S;
-        Tue,  1 Aug 2023 14:02:55 +0800 (CST)
-Received: from tj10379pcu.spreadtrum.com (10.5.32.15) by
- BJMBX02.spreadtrum.com (10.0.64.8) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Tue, 1 Aug 2023 14:04:33 +0800
-From:   Yunlong Xing <yunlong.xing@unisoc.com>
-To:     <keescook@chromium.org>, <tony.luck@intel.com>,
-        <gpiccoli@igalia.com>, <joel@joelfernandes.org>,
-        <enlin.mu@unisoc.com>
-CC:     <linux-hardening@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <enlinmu@gmail.com>, <yunlong.xing23@gmail.com>
-Subject: [PATCH 1/1] pstore/ram: Check member of buffers during the initialization phase of the pstore
-Date:   Tue, 1 Aug 2023 14:04:32 +0800
-Message-ID: <20230801060432.1307717-1-yunlong.xing@unisoc.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 1 Aug 2023 02:42:58 -0400
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501CA2D79
+        for <linux-hardening@vger.kernel.org>; Mon, 31 Jul 2023 23:42:33 -0700 (PDT)
+Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+        by cmsmtp with ESMTP
+        id Qbdrqh0Qcez0CQj5Iq1spn; Tue, 01 Aug 2023 06:42:20 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id Qj5RqhwzvPvgaQj5RqpBPw; Tue, 01 Aug 2023 06:42:29 +0000
+X-Authority-Analysis: v=2.4 cv=ZZcOi+ZA c=1 sm=1 tr=0 ts=64c8a955
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=ws7JD89P4LkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=IsyNV7-RnDjwaFrxwpMA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=q8xDoc0e3lwDSHDguSa5+mR825k++nOURzgRi1L1QjM=; b=w0vRXLpPlYdxEw939A2MVixiqw
+        osSgoVZQAZPQEm7lqCh5b0Tyh6FNxMmL0lx10kA0X/tRQkrzVaUQ51vWgqvLep0h+6yE14lc36Pa4
+        p6oaFQCebqtJc5egOX6KOxqWRZgnWQQf8tghftegCMdYYnft19+qi4hM0gFtD17aEMb6owVSdPdYy
+        ilJWqff/aqNeXpdTzlX+AicmuLRUL+aTLci81Swb92upaukSQuY/sWwXRyUeARI1tipgDa1xI0Ux6
+        iHfk0fAhUgxt590w/aC7CJP4O6x+kh5XaA89JYH7pMUsYuSFMuK+Qi9HmkoxtSWGVKllrSB09qw1U
+        bBkTnRbQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60426 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qQfv0-000Kd9-1K;
+        Mon, 31 Jul 2023 22:19:31 -0500
+Message-ID: <8d83bd2e-9e66-c5fc-e351-1d57f710296c@embeddedor.com>
+Date:   Mon, 31 Jul 2023 21:20:17 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.5.32.15]
-X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
- BJMBX02.spreadtrum.com (10.0.64.8)
-X-MAIL: SHSQR01.spreadtrum.com 37164afZ001233
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2] cpufreq: brcmstb-avs-cpufreq: Fix -Warray-bounds bug
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Markus Mayer <mmayer@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <ZMgiiEmBORZRaobc@work> <202307311610.B1EB796684@keescook>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <202307311610.B1EB796684@keescook>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qQfv0-000Kd9-1K
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:60426
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGX5vYllYl5OrCzGr7zwU+dgGftl/OhWlbEg72pbmywopygSCsX+pCCHXJ20j6q9fJZvZgO80LUs8QOQhqwpraqJzofoldvg7VvG4v9mg5ibW+hzXivM
+ XFbfIRczJQw1+YGlhH5k19tIr4RY6XU91eOnexgII1PHQBK+JhPoapOCQUAYYdlhfcAug7B/7nGmzKU1a3dfOugOlTCs7FNXu2rNu10v49ultFAeuOiPcjUs
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Enlin Mu <enlin.mu@unisoc.com>
 
-The commit 30696378f68a("pstore/ram: Do not treat empty buffers as valid")
-would introduce the following issue:
 
-When finding the buffer_size is zero, it would return directly.However, at
-the same time, if the buffer's start is a illegal value, the others would
-panic if access the buffer.
+On 7/31/23 17:16, Kees Cook wrote:
+> On Mon, Jul 31, 2023 at 03:07:20PM -0600, Gustavo A. R. Silva wrote:
+>> Update the iteration conditions in the for() loop to avoid writing in
+>> array `table` beyond its allocated size at:
+>>
+>> drivers/cpufreq/brcmstb-avs-cpufreq.c:
+>> 449         table[i].frequency = CPUFREQ_TABLE_END;
+>>
+>> This fixes the following -Warray-bounds warning seen after building
+>> ARM with multi_v7_defconfig (GCC 13):
+>> In function 'brcm_avs_get_freq_table',
+>>      inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
+>> drivers/cpufreq/brcmstb-avs-cpufreq.c:449:28: warning: array subscript 5 is outside array bounds of 'void[60]' [-Warray-bounds=]
+>>    449 |         table[i].frequency = CPUFREQ_TABLE_END;
+> 
+> #define AVS_PSTATE_P0           0x0
+> #define AVS_PSTATE_P1           0x1
+> #define AVS_PSTATE_P2           0x2
+> #define AVS_PSTATE_P3           0x3
+> #define AVS_PSTATE_P4           0x4
+> #define AVS_PSTATE_MAX          AVS_PSTATE_P4
+> 
+>          table = devm_kcalloc(dev, AVS_PSTATE_MAX + 1, sizeof(*table),
+>                               GFP_KERNEL);
+> 	...
+>          for (i = AVS_PSTATE_P0; i <= AVS_PSTATE_MAX; i++) {
+> 		...
+> 	}
+>          table[i].frequency = CPUFREQ_TABLE_END;
+> 
+> I see "AVS_PSTATE_MAX + 1" being used for the allocation, and so the
+> loop is likely correctly doing P0 through P4. If there is supposed to be
+> a terminating element in the table, I think the correct fix would be to
+> allocate an additional element, not stop the loop from processing P4.
 
-To avoid these happenning, check if the members are legal during the
-initialization phase of the pstore.
+Yeah; I think you're right. And it seems that this function header makes it
+clear, too:
 
-Fixes: 30696378f68a ("pstore/ram: Do not treat empty buffers as valid")
-Cc: stable@vger.kernel.org
-Signed-off-by: Enlin Mu <enlin.mu@unisoc.com>
----
- fs/pstore/ram_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+drivers/cpufreq/brcmstb-avs-cpufreq.c:
+421 /*
+422  * We determine which frequencies are supported by cycling through all P-states
+423  * and reading back what frequency we are running at for each P-state.
+424  */
+425 static struct cpufreq_frequency_table *
+426 brcm_avs_get_freq_table(struct device *dev, struct private_data *priv)
 
-diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
-index 85aaf0fc6d7d..eb6df190d752 100644
---- a/fs/pstore/ram_core.c
-+++ b/fs/pstore/ram_core.c
-@@ -519,7 +519,7 @@ static int persistent_ram_post_init(struct persistent_ram_zone *prz, u32 sig,
- 	sig ^= PERSISTENT_RAM_SIG;
- 
- 	if (prz->buffer->sig == sig) {
--		if (buffer_size(prz) == 0) {
-+		if (buffer_size(prz) == 0 && buffer_start(prz) == 0) {
- 			pr_debug("found existing empty buffer\n");
- 			return 0;
- 		}
--- 
-2.25.1
+I just sent v3:
+https://lore.kernel.org/linux-hardening/ZMh45KH2iPIpNktr@work/
 
+Let's see what the maintainers say.
+
+Thanks for the feedback!
+--
+Gustavo
