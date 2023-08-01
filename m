@@ -2,185 +2,107 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69001EB64DD
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 23:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E36FC0015E
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 23:30:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230141AbjHAXZG (ORCPT
+        id S230305AbjHAXaz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 19:25:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58520 "EHLO
+        Tue, 1 Aug 2023 19:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230000AbjHAXZF (ORCPT
+        with ESMTP id S229510AbjHAXay (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 19:25:05 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD201B4
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 16:25:03 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-686ba29ccb1so226870b3a.1
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 16:25:03 -0700 (PDT)
+        Tue, 1 Aug 2023 19:30:54 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CD9C26A3
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 16:30:50 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bb775625e2so2356155ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 16:30:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690932303; x=1691537103;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8DB7NbDsAn8EUrVtRgWQWKrnvDzR5ULizdCe1TRVecI=;
-        b=eSuXH06fGHPWanB/YZ+J2QKDAVJRQkq2fZbLn8T9TVWSkFpCr0Q0uINw6ckgd0a1ec
-         JOnnHLRHaXYOhw/f2OYfBG+9VCIXHlmnSyYbI86SGyBNx1i/L7f/LiIoK743mbr5qgv5
-         0Tbh1FmonkuZeJpnc1Ks81So271DhDQXbfVAI=
+        d=chromium.org; s=google; t=1690932650; x=1691537450;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=86m4GR9B2OpRjtzGq0slUUGfFWMp1qBl7r1sdnV44Zs=;
+        b=oXOhuADoyGWQ0CpVMkCDvFuSa4MXFW5gBBca+inDX7DNEkDMKdcSKpP8pXSZcsbbO+
+         EIOlo1oFFw1605QRbVWA9tfP9iBqWxz3Xu+rhDQw5/MNdKajZBtt3x5na7aGFaHYwOC5
+         wrb8HxEp7OxMNzzJzwG4X/qfizVI2QJMmqjSI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690932303; x=1691537103;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8DB7NbDsAn8EUrVtRgWQWKrnvDzR5ULizdCe1TRVecI=;
-        b=a+hhQEXhadifV1LZWuyYbNqRFMa+sPPQly1xO0FTY/s3Zp8klLw0j3/+lNjAzZlaz5
-         qux55g7n0IMV8z2/P0cl2t0xDdk32OfdEN4Q27XEE0ZnpLcz+vGoaUphZmKwf+o/BTRp
-         4W2qBWEC3QawpqQWpHoQlaym+6wcqABw2+Ur27Ar7Z5jumloTbCDgcn5sAbr21KmY/Uv
-         mNRKPwyzagyROnXpfPJc8ap8/+j7dlVclTYIBiIVBYL/46cX9NwLvstvkRleePdq9M1X
-         SyO8qTBfFCZHR+G03aonfa703ZVZ/hTA2y2jBuQBBUd6qWvfUZTYOv01YsM9nL+Xe8SR
-         C2Bg==
-X-Gm-Message-State: ABy/qLbMXNRo0hC7a7kEpn5sB9WLYUqf5ZMfFxtyFc8CAYPXrkVBwPZd
-        iIbaLs1xXHFvE5vzdwVal0YtvA==
-X-Google-Smtp-Source: APBJJlHjQCrnLHz6V1HJoI3U0b00CuliXO6jJnknLdcBbfdeomZRMK4TWzo0biJIxq7OC2cGy15wSQ==
-X-Received: by 2002:a05:6a00:4193:b0:678:11d6:2ad6 with SMTP id ca19-20020a056a00419300b0067811d62ad6mr14678959pfb.9.1690932303240;
-        Tue, 01 Aug 2023 16:25:03 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1690932650; x=1691537450;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=86m4GR9B2OpRjtzGq0slUUGfFWMp1qBl7r1sdnV44Zs=;
+        b=FxXCqhH79dGG9C+4dFFOiQ+C0tWkFW/FsTmH/BAjBiiEcqv/0XHQUX8bysAdlhCokk
+         0yKhkoGH35FkRuuE61L/blvJdO7xh9bfKFwdjumwoHy9fwnDo00DNG7KPEltwDcjSCyc
+         Nby321y3vxKR8d6qmm+omjJMHj/riLYmLXsGx3uZYp39IRmzsHhZWje1DSMxih3VMiRD
+         0wFdNTlQiFizVyFs70nYWSoAlHbE4UOyTK+tpGxCpgk6ZzJ2/RgTN1nHbrVg57uW9uUT
+         a9m8olcMiRB+w3AVIZ1NXj5czxwsCna45vwiUL27RvXNIcRJ0T7ACuBjwY5cfAq4iC5w
+         pwvw==
+X-Gm-Message-State: ABy/qLaIEu5hxlBW/d+SHNXm48y042Se8oCcKxC9+AhBw4MqfkJe1bHp
+        cXjB240bMy3ROdO9/iTDfBL/PQ==
+X-Google-Smtp-Source: APBJJlF+gVNSruf2vthO1DrYzubB+mB7El3VzV9i7PDZy0XViadbu4f6RZq+Mn8fxhqwRga5R1HwMQ==
+X-Received: by 2002:a17:902:d4c3:b0:1b8:a936:1915 with SMTP id o3-20020a170902d4c300b001b8a9361915mr15677302plg.22.1690932649870;
+        Tue, 01 Aug 2023 16:30:49 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v26-20020a62a51a000000b006873aa079a8sm4117645pfm.210.2023.08.01.16.25.02
+        by smtp.gmail.com with ESMTPSA id jh3-20020a170903328300b001b8b6a19bd6sm11021366plb.63.2023.08.01.16.30.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Aug 2023 16:25:02 -0700 (PDT)
-Date:   Tue, 1 Aug 2023 16:25:01 -0700
+        Tue, 01 Aug 2023 16:30:49 -0700 (PDT)
+Date:   Tue, 1 Aug 2023 16:30:48 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+To:     Jessica Clarke <jrtc27@jrtc27.com>
+Cc:     Justin Stitt <justinstitt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] wifi: ipw2x00: replace deprecated strncpy with strscpy
-Message-ID: <202308011602.3CC1C0244C@keescook>
-References: <20230801-drivers-net-wireless-intel-ipw2x00-v1-1-ffd185c91292@google.com>
+Subject: Re: [PATCH] RISC-V: cpu: refactor deprecated strncpy
+Message-ID: <202308011630.913CE919@keescook>
+References: <20230801-arch-riscv-kernel-v1-1-2b3f2dc0bc61@google.com>
+ <61DD603A-3D86-462F-B795-7EDE3A59ABBE@jrtc27.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230801-drivers-net-wireless-intel-ipw2x00-v1-1-ffd185c91292@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <61DD603A-3D86-462F-B795-7EDE3A59ABBE@jrtc27.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 09:53:36PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Wed, Aug 02, 2023 at 12:02:11AM +0100, Jessica Clarke wrote:
+> On 1 Aug 2023, at 22:14, Justin Stitt <justinstitt@google.com> wrote:
+> > 
+> > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> > 
+> > A suitable replacement is `strscpy` [2] due to the fact that it
+> > guarantees NUL-termination on its destination buffer argument which is
+> > _not_ the case for `strncpy`!
+> > 
+> > The `sv_type` buffer is declared with a size of 16 which is then
+> > followed by some `strncpy` calls to populate the buffer with one of:
+> > "sv32", "sv57", "sv48", "sv39" or "none". Hard-coding the max length as 5 is
+> > error-prone and involves counting the number of characters (and
+> > hopefully not forgetting to count the NUL-byte) in the raw string.
+> > 
+> > Using a pre-determined max length in combination with `strscpy` provides
+> > a cleaner, less error-prone as well as a less ambiguous implementation.
+> > `strscpy` guarantees that it's destination buffer is NUL-terminated even
+> > if it's source argument exceeds the max length as defined by the third
+> > argument.
 > 
-> We can massively simplify the implementation by removing the ternary
-> check for the smaller of `count` and `sizeof(buffer) - 1` as `strscpy`
-> guarantees NUL-termination of its destination buffer [2]. This also
-> means we do not need to explicity set the one past-the-last index to
-> zero as `strscpy` handles this.
+> I would imagine you’d want a BUG_ON() rather than silent truncation if
+> that ever happened (well, silent if you ignore it then printing the
+> truncated string).
 > 
-> Furthermore, we can also utilize `strscpy`'s return value to populate
-> `len` and simply pass in `sizeof(buffer)` to the `strscpy` invocation
-> itself.
-> 
-> [1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-> [2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
->  drivers/net/wireless/intel/ipw2x00/ipw2200.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> index dfe0f74369e6..8f2a834dbe04 100644
-> --- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> +++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-> @@ -1462,15 +1462,12 @@ static ssize_t scan_age_store(struct device *d, struct device_attribute *attr,
->  	struct ipw_priv *priv = dev_get_drvdata(d);
->  	struct net_device *dev = priv->net_dev;
->  	char buffer[] = "00000000";
-> -	unsigned long len =
-> -	    (sizeof(buffer) - 1) > count ? count : sizeof(buffer) - 1;
->  	unsigned long val;
->  	char *p = buffer;
->  
->  	IPW_DEBUG_INFO("enter\n");
->  
-> -	strncpy(buffer, buf, len);
-> -	buffer[len] = 0;
-> +	ssize_t len = strscpy(buffer, buf, sizeof(buffer));
+> Though really you just want a static_strcpy that looks at sizeof* for
+> source and destination and fails to build if it doesn’t fit; there’s no
+> reason this needs to be found at run time.
 
-This means "len" could become -E2BIG, which changes the behavior of this
-function. The earlier manipulation of "len" seems to be trying to
-explicitly allow for truncation, though. (if buffer could hold more than
-"count", copy "count", otherwise copy less)
-
-So it looks like -E2BIG should be ignored here? But since this is a
-sysfs node (static DEVICE_ATTR_RW(scan_age)), I actually think the
-original code may be bugged: it should return how much was read from
-the input... and technically this was true, but it seems the intent
-is to consume the entire buffer and set a result. It's possible "len"
-is entirely unneeded and this should just return "count"?
-
-And, honestly, I think it's likely that most of this entire routine should
-be thrown out in favor of just using kstrtoul() with base 0, as sysfs
-input buffers are always NUL-terminated. (See kernfs_fop_write_iter().)
-
-
-diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2200.c b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-index dfe0f74369e6..780f5613e279 100644
---- a/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-+++ b/drivers/net/wireless/intel/ipw2x00/ipw2200.c
-@@ -1461,25 +1461,11 @@ static ssize_t scan_age_store(struct device *d, struct device_attribute *attr,
- {
- 	struct ipw_priv *priv = dev_get_drvdata(d);
- 	struct net_device *dev = priv->net_dev;
--	char buffer[] = "00000000";
--	unsigned long len =
--	    (sizeof(buffer) - 1) > count ? count : sizeof(buffer) - 1;
- 	unsigned long val;
--	char *p = buffer;
- 
- 	IPW_DEBUG_INFO("enter\n");
- 
--	strncpy(buffer, buf, len);
--	buffer[len] = 0;
--
--	if (p[1] == 'x' || p[1] == 'X' || p[0] == 'x' || p[0] == 'X') {
--		p++;
--		if (p[0] == 'x' || p[0] == 'X')
--			p++;
--		val = simple_strtoul(p, &p, 16);
--	} else
--		val = simple_strtoul(p, &p, 10);
--	if (p == buffer) {
-+	if (kstrtoul(buf, 0, &val)) {
- 		IPW_DEBUG_INFO("%s: user supplied invalid value.\n", dev->name);
- 	} else {
- 		priv->ieee->scan_age = val;
-@@ -1487,7 +1473,7 @@ static ssize_t scan_age_store(struct device *d, struct device_attribute *attr,
- 	}
- 
- 	IPW_DEBUG_INFO("exit\n");
--	return len;
-+	return count;
- }
- 
- static DEVICE_ATTR_RW(scan_age);
-
-
--Kees
-
->  
->  	if (p[1] == 'x' || p[1] == 'X' || p[0] == 'x' || p[0] == 'X') {
->  		p++;
-> 
-> ---
-> base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
-> change-id: 20230801-drivers-net-wireless-intel-ipw2x00-d7ee2dd17032
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+FWIW, under CONFIG_FORTIFY_SOURCE, strscpy() does try to just fold away
+to a static strcpy when sizes are provably safe, etc.
 
 -- 
 Kees Cook
