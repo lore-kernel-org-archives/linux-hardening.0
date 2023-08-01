@@ -2,200 +2,273 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C200C00528
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 17:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FCCC00528
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 19:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234860AbjHARHM (ORCPT
+        id S229622AbjHATZ0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 13:07:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46724 "EHLO
+        Tue, 1 Aug 2023 15:25:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234277AbjHARGz (ORCPT
+        with ESMTP id S232087AbjHATZO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 13:06:55 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E76F330F8
-        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 10:06:10 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-76595a7b111so414337085a.2
-        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 10:06:10 -0700 (PDT)
+        Tue, 1 Aug 2023 15:25:14 -0400
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66853581
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 12:25:02 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id 5614622812f47-38c35975545so4731490b6e.1
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 12:25:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1690909516; x=1691514316;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=zAgBUUeE4FP2QrYKGOT6RyZ/IiEStMEfuVTTDqZ4iW4=;
-        b=JPESZLiLZ5QEgLJYW4KiBIX9rpAFOMSftbHHqlhEq9597Ja5Ow0DNswSZpi6a/f2Gd
-         RGVoK7mSiUxrEIjBTgncmazkL4PEQkxeGnjJdYlgoktT9xGGijHju0y3m73t7wy9HJXW
-         r8eA9Vq6FElGF6vIb4dD3PXXU0/eg47+QdXuQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690909516; x=1691514316;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1690917902; x=1691522702;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zAgBUUeE4FP2QrYKGOT6RyZ/IiEStMEfuVTTDqZ4iW4=;
-        b=GWFxIVW8XnzvNg7gol5dRUlNQzH5pxjPJLkEKnx/jvn+rlZgzJ5jQZotxFUp3qtxRz
-         t0uepUtGsyT/vQUgX5P4TwwKPN3ZN4XiyeikJm33JCn9OpUYqlmDkE88tKymHzcZhtOH
-         Tzw9fx/XTxnVXaRmK9WpZ5cHTphaPzTZpmkzDhrlOKsnfqjl/5QdJmJsHR4zriYRkScY
-         L9rwubEEjc873Gav5RX5m2ixx+JbZvP96s3QPOrEeX1Zq67kOh4UHDBhxZ2LPtWphyC1
-         Hl0+IxgpNx/FaZU9/Y0bLYSiMuUA2AITbxuqnHZi7nAbhrOPwrlKPKezEk+9+YTahZXz
-         H8zA==
-X-Gm-Message-State: ABy/qLZrOf6Fen52LhKjxCqSKVdNgmh9tFF876Wg1y8wlITIxvJHiQ8I
-        Ei7Q9rqkUVB010T7U/xePi40uw==
-X-Google-Smtp-Source: APBJJlE4ziY46RD3mKzpEtHqnKuP6HtsyVQ9RR3cavBiUZbXExs3chH8vDfVFtMY1jMvJXvzlhl66w==
-X-Received: by 2002:a05:620a:2802:b0:765:a496:8a63 with SMTP id f2-20020a05620a280200b00765a4968a63mr19144061qkp.4.1690909516510;
-        Tue, 01 Aug 2023 10:05:16 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id oo14-20020a05620a530e00b0075772c756e0sm4281213qkn.101.2023.08.01.10.05.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Aug 2023 10:05:15 -0700 (PDT)
-Message-ID: <66e19ae3-253d-5377-5cc2-566ec3cfed49@broadcom.com>
-Date:   Tue, 1 Aug 2023 10:05:11 -0700
+        bh=JVStSKOXHuVNjupka5b4LgzYs1g1E9EjO7OugsAUVZI=;
+        b=nGSW7hG5U6v+anh6x7l3AKx2jw08rqRM3ja6Ha8kC7KMTzWTZ5rUtjnL++PlStVEq+
+         fKC8pOprYrVNOzRsg4dU36ZFw1Rh0JxaU+UnOYtEoY/HFJ6hi8IzIPXvz8ZWgsAhiqgK
+         WKckw3N4DBhTwJS8elwpYPNTSpflqW9PhVFwc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690917902; x=1691522702;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JVStSKOXHuVNjupka5b4LgzYs1g1E9EjO7OugsAUVZI=;
+        b=TWIjY78nM2CIlE5rgBJnVZwNsGDlTb2DRfHLTeUzUuY+0OfBSZl9XnU0YDQ5XqMINe
+         KsBafImAMXnuAR0+x/kpEDVqqCrCcfPM8YR9yAeZ0EmjMaVcrqjYeNyiusYq3MAw7eOI
+         vpSx+ETAfBjjhGFxVkqC2aYD7b8iXS/+ujtNXYtU41hrpfs3RS1PaqgbO/gGObsEn4aT
+         7xgLKksoHAoqwn16g2Ln9bpkkA2rNOEaAhO1UE3Met9kmJd47/t5FsLlO74ex3YQiez+
+         7LWlnRvCrg5WKBzEXkjsWKZC3c6vwRYa4m0c3BIc6yjrT1shwq9VTn8Eeyh1RsZgxafS
+         0raQ==
+X-Gm-Message-State: ABy/qLa2yecGrz7BIwzJPjn8i3a/kQs9TRLUHFfotomJcjQGpPLPWBZ7
+        ZO1WvzTtNcvyrsh5oth/3JlknHt5LN+rUAmrpIROhQ==
+X-Google-Smtp-Source: APBJJlEm1J3KL2r3HOetAysmO5T/aleeOed9lahwvrPBY5QHmqz8ldc8jZwRYKGHDPE1BPooGl5UYxsFN0u2uyZ3+58=
+X-Received: by 2002:a05:6808:219a:b0:3a2:a96d:19c3 with SMTP id
+ be26-20020a056808219a00b003a2a96d19c3mr16886646oib.41.1690917902045; Tue, 01
+ Aug 2023 12:25:02 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3] cpufreq: brcmstb-avs-cpufreq: Fix -Warray-bounds bug
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Florian Fainelli <florian.fainelli@broadcom.com>
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-References: <ZMh45KH2iPIpNktr@work>
-From:   Florian Fainelli <florian.fainelli@broadcom.com>
-In-Reply-To: <ZMh45KH2iPIpNktr@work>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000001903450601df8d03"
+References: <20230714114753.170814-1-david@readahead.eu> <CALmYWFsjy2jOfKyM3Gd3Ag+p6u5ejDoBp6RhqcXkcAkMiby4SA@mail.gmail.com>
+ <fb464cbf-04c4-4346-a96b-e0b2ab804e16@app.fastmail.com>
+In-Reply-To: <fb464cbf-04c4-4346-a96b-e0b2ab804e16@app.fastmail.com>
+From:   Jeff Xu <jeffxu@chromium.org>
+Date:   Tue, 1 Aug 2023 12:24:51 -0700
+Message-ID: <CABi2SkUOxngcDwRDtFFD2Uef=BUXVN08dMYhmpuS_b1xC39L7g@mail.gmail.com>
+Subject: Re: [PATCH] memfd: support MFD_NOEXEC alongside MFD_EXEC
+To:     David Rheinsberg <david@readahead.eu>
+Cc:     Jeff Xu <jeffxu@google.com>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel Verkamp <dverkamp@chromium.org>, linux-mm@kvack.org,
+        Peter Xu <peterx@redhat.com>, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---0000000000001903450601df8d03
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi David,
 
-On 7/31/23 20:15, Gustavo A. R. Silva wrote:
-> Allocate extra space for terminating element at:
-> 
-> drivers/cpufreq/brcmstb-avs-cpufreq.c:
-> 449         table[i].frequency = CPUFREQ_TABLE_END;
-> 
-> and add code comment to make this clear.
-> 
-> This fixes the following -Warray-bounds warning seen after building
-> ARM with multi_v7_defconfig (GCC 13):
-> In function 'brcm_avs_get_freq_table',
->      inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
-> drivers/cpufreq/brcmstb-avs-cpufreq.c:449:28: warning: array subscript 5 is outside array bounds of 'void[60]' [-Warray-bounds=]
->    449 |         table[i].frequency = CPUFREQ_TABLE_END;
-> In file included from include/linux/node.h:18,
->                   from include/linux/cpu.h:17,
->                   from include/linux/cpufreq.h:12,
->                   from drivers/cpufreq/brcmstb-avs-cpufreq.c:44:
-> In function 'devm_kmalloc_array',
->      inlined from 'devm_kcalloc' at include/linux/device.h:328:9,
->      inlined from 'brcm_avs_get_freq_table' at drivers/cpufreq/brcmstb-avs-cpufreq.c:437:10,
->      inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
-> include/linux/device.h:323:16: note: at offset 60 into object of size 60 allocated by 'devm_kmalloc'
->    323 |         return devm_kmalloc(dev, bytes, flags);
->        |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
-> routines on memcpy() and help us make progress towards globally
-> enabling -Warray-bounds.
-> 
-> Link: https://github.com/KSPP/linux/issues/324
-> Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On Fri, Jul 28, 2023 at 12:55=E2=80=AFAM David Rheinsberg <david@readahead.=
+eu> wrote:
+>
+> Hi
+>
+> On Tue, Jul 18, 2023, at 9:03 PM, Jeff Xu wrote:
+> > Hi David
+> >
+> > Thanks email and patch for discussion.
+> >
+> > On Fri, Jul 14, 2023 at 4:48=E2=80=AFAM David Rheinsberg <david@readahe=
+ad.eu> wrote:
+> >>
+> >> Add a new flag for memfd_create() called MFD_NOEXEC, which has the
+> >> opposite effect as MFD_EXEC (i.e., it strips the executable bits from
+> >> the inode file mode).
+> >>
+> > I previously thought about having the symmetric flags, such as
+> > MFD_NOEXEC/MFD_EXEC/MFD_NOEXEC_SEAL/MFD_EXEC_SEAL, but decided against
+> > it. The app shall decide beforehand what the memfd is created for, if
+> > it is no-executable, then it should be sealed, such that it can't be
+> > chmod to enable "X" bit.
+>
+> My point is, an application might decide to *not* seal a property, becaus=
+e it knows it has to change it later on. But it might still want to disable=
+ the executable bit initially, so to avoid having executable pages around t=
+hat can be exploited.
+>
 
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+I understand that.
+My argument was this application can do this in two steps, as in my
+previous email:
+1> memfd_create(MFD_EXEC)
+2> chmod
 
+Two system calls back to back isn't too terrible,  and I know this
+might seem to be not optimized for your user case, I will explain it
+later, please read on.
 
---0000000000001903450601df8d03
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+> >> The default mode for memfd_create() has historically been to use 0777 =
+as
+> >> file modes. The new `MFD_EXEC` flag has now made this explicit, paving
+> >> the way to reduce the default to 0666 and thus dropping the executable
+> >> bits for security reasons. Additionally, the `MFD_NOEXEC_SEAL` flag ha=
+s
+> >> been added which allows this without changing the default right now.
+> >>
+> >> Unfortunately, `MFD_NOEXEC_SEAL` enforces `MFD_ALLOW_SEALING` and
+> >> `F_SEAL_EXEC`, with no alternatives available. This leads to multiple
+> >> issues:
+> >>
+> >>  * Applications that do not want to allow sealing either have to use
+> >>    `MFD_EXEC` (which we don't want, unless they actually need the
+> >>    executable bits), or they must add `F_SEAL_SEAL` immediately on
+> >>    return of memfd_create(2) with `MFD_NOEXEC_SEAL`, since this
+> >>    implicitly enables sealing.
+> >>
+> >>    Note that we explicitly added `MFD_ALLOW_SEALING` when creating
+> >>    memfd_create(2), because enabling seals on existing users of shmem
+> >>    without them knowing about it can easily introduce DoS scenarios.
+> >
+> > The application that doesn't want MFD_NOEXEC_SEAL can use MFD_EXEC,
+> > the kernel won't add MFD_ALLOW_SEALING implicitly. MFD_EXEC makes the
+> > kernel behave the same as before, this is also  why sysctl
+> > vm.memfd_noexec=3D0 can work seamlessly.
+> >
+> >>   It
+> >>    is unclear why `MFD_NOEXEC_SEAL` was designed to enable seals, and
+> >>    this is especially dangerous with `MEMFD_NOEXEC_SCOPE_NOEXEC_SEAL`
+> >>    set via sysctl, since it will silently enable sealing on every memf=
+d
+> >>    created.
+> >>
+> > Without sealing, chmod(2) can modify the mfd to be executable, that is
+> > the consideration that MFD_NOEXEC is not provided as an option.
+> > Indeed, current design is "biased" towards promoting MFD_NOEXEC_SEAL
+> > as the safest approach, and try to avoid the pitfall that dev
+> > accidently uses "MFD_NOEXEC" without realizing it can still be
+> > chmod().
+>
+> I think I didn't get my point across. Imagine an application that does *N=
+OT* use sealing, but uses memfds. This application shares memfds with untru=
+sted clients, and does this in a safe way (SIGBUS protected). Everything wo=
+rks fine, unless someone decides to enable `vm.memfd_noexec=3D2`. Suddenly,=
+ the memfd will have sealing enabled *without* the application ever request=
+ing this. Now any untrusted client that got the memfd can add seals to the =
+memfd, even though the creator of the memfd did not enable sealing. This cl=
+ient can now seal WRITES on the memfd, even though it really should not be =
+able to do that.
+>
+> (This is not an hypothetical setup, we have such setups for data sharing =
+already)
 
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIL22l6Rge4QOmUVN
-QW9iTUPAq+0Gn5bVF8AEySkexba+MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTIzMDgwMTE3MDUxNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAkzrd/g0fRawV5GF0SQKd3pNP/ITkAZ+Yq
-AjyjTPxTajjlZTMgNcnRlhOy3+pkt764whuZetwVZghx/bTHJ/SjjzmCdW3MESnFBJ6vk8guzLjg
-hpEwfwtxPDVSxhL+tpxV6cs9g5/JaEJD+xvXmuVH9P94m6/eiDOQ/MmrHbhMfWIC0MjiF7/UnkZj
-siLTHyxoDIclYMGSyie+ygs+klikUiRYWLkU8/OACYGF3EZ8B0cs6o5Tj5IA1NUl4in6j/7+kRWe
-d3ikGvzJ0TPAkgjpP1K50Yp35IHtQY/W79tR3zUaqbPsZeW/bFa1LPF+pjVc8S4qiE6rCjggLbXi
-upN+
---0000000000001903450601df8d03--
+Thanks, this helps me understand your point better.
+
+I'm not convinced that sysctl needs to consider the threat model of
+"someone" changing and breaking an application.  If we follow that
+threat model, there are a lot of other sysctls to worry about.
+
+Also, in the system that you described, if memfd is handled to an
+untrusted process, not only "sealing"  can cause damage, but also
+chmod, arbitrary rw,  imo the right approach is to harden the process
+or mechanism of passing the memfd.
+
+>
+> Thus, setting the security-option `memfd_noexec` *breaks* applications, b=
+ecause it enables sealing. If `MFD_NOEXEC_SEAL` would *not* imply `MFD_ALLO=
+W_SEALING`, this would not be an issue. IOW, why does =C2=B4MFD_NOEXEC_SEAL=
+` clear `F_SEAL_SEAL` even if `MFD_ALLOW_SEALING` is not set?
+>
+
+If MFD_NOEXEC_SEAL is not desired, then it should not be used to
+overwrite memfd_create() in this system.
+
+For the question of why the sysctl adding a seal without application
+setting it , the rationale here is, as summary of previous/this
+emails:
+1> The sysctl helps a system (or container in pid name) to migrate out
+of old API, e.g, a container can update only the  applications that
+need executable memfd, change the sysctl to MFD_NOEXEC_SEAL overwrite,
+thus secure the usage of executable memfd to only those need to. This
+is faster than updating all of the applications.
+2> Since the sysctl does overwrite, it has potential to break an
+application's intent, i.e.  an unmigrated application which expects
+executable memfd, and kernel uses MFD_NOEXEC_SEAL overwrite. It is
+important to use this with caution and abundant tests before turning
+it on.
+3> The seal is added because the majority of users should just care
+about MFD_NOEXEC_SEAL, this prevents changing the memfd to executable
+through chmod at runtime.
+
+> >>  * Applications that do not want `MFD_EXEC`, but rely on
+> >>    `F_GET_SEALS` to *NOT* return `F_SEAL_EXEC` have no way of achievin=
+g
+> >>    this other than using `MFD_EXEC` and clearing the executable bits
+> >>    manually via fchmod(2). Using `MFD_NOEXEC_SEAL` will set
+> >>    `F_SEAL_EXEC` and thus break existing code that hard-codes the
+> >>    seal-set.
+> >>
+> >>    This is already an issue when sending log-memfds to systemd-journal=
+d
+> >>    today, which verifies the seal-set of the received FD and fails if
+> >>    unknown seals are set. Hence, you have to use `MFD_EXEC` when
+> >>    creating memfds for this purpose, even though you really do not nee=
+d
+> >>    the executable bits set.
+> >>
+> >>  * Applications that want to enable the executable bit later on,
+> >>    currently have no way to create the memfd without it. They have to
+> >>    clear the bits immediately after creating it via fchmod(2), or just
+> >>    leave them set.
+> >>
+> > Is it OK to do what you want in two steps ? What is the concern there ?=
+ i.e.
+> > memfd_create(MFD_EXEC), then chmod to remove the "X" bit.
+> >
+> > I imagine this is probably already what the application does for
+> > creating no-executable mfd before my patch, i.e.:
+> > memfd_create(), then chmod() to remove "X" to remove "X" bit.
+>
+> Yes, correct, this is not a technical issue, but rather an API issue. I d=
+on't think most memfd-users are aware that their inode has the executable b=
+it set, and they likely don't want it. But for backwards-compatibility reas=
+ons (as noted above), they cannot use `MFD_NOEXEC_SEAL`. Hence, we have to =
+make them explicitly request an executable memfd via `MFD_EXEC` now, even t=
+hough they clearly do not want this. And then we have to add code to drop t=
+he executable immediately afterwards.
+>
+> It don't understand why we don't add out `MFD_NOEXEC` and thus make it a =
+lot easier to patch existing applications? And we make it explicit that the=
+se applications don't care for the executable-bit, rather than forcing them=
+ to request the executable bit just to drop it immediately.
+>
+> The downside of `MFD_NOEXEC` is that it might be picked over `MFD_NOEXEC_=
+SEAL` by uneducated users, thus reducing security. But right now, the alter=
+native is that existing code picks `MFD_EXEC` instead and never clears the =
+executable bit, because it is a hassle to do so.
+>
+
+Yes. This is the downside I was thinking about.
+
+I lean to believe the kernel API shouldn't be feature rich, it could
+be simple, optimized towards the majority of user cases, and ideally,
+is self-explained without devs to look through documentation. For
+example, if I had to choose one to implement between MFD_NOEXEC and
+MFD_NOEXEC_SEAL, I would choose MFD_NOEXEC_SEAL because it should be
+what most users care about.
+
+> Or is there another reason *not* to include `MFD_NOEXEC`? I am not sure I=
+ understand fully why you fight it so vehemently?
+>
+
+I wouldn't add it myself, I hope to convince you not to :-).
+If you still think it is beneficial to add MFD_NOEXEC (saving one
+chmod call and making it easy to use), I wouldn't feel bad about that.
+I would suggest going with documentation to help devs to choose
+between those two, i.e. recommend MFD_NOEXEC_SEAL in most cases.
+
+Thanks
+Best regards,
+-Jeff
+
+> Thanks
+> David
+>
