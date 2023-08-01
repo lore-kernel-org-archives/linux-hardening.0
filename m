@@ -2,100 +2,200 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBB5C001DF
-	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 13:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C200C00528
+	for <linux-hardening@archiver.kernel.org>; Tue,  1 Aug 2023 17:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232201AbjHANlW (ORCPT
+        id S234860AbjHARHM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 1 Aug 2023 09:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46248 "EHLO
+        Tue, 1 Aug 2023 13:07:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbjHANlV (ORCPT
+        with ESMTP id S234277AbjHARGz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 1 Aug 2023 09:41:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1098139;
-        Tue,  1 Aug 2023 06:41:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 72F5F6158A;
-        Tue,  1 Aug 2023 13:41:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 926FBC433C8;
-        Tue,  1 Aug 2023 13:41:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690897279;
-        bh=NmSicqSVm0Cbv7rIqQBEiDWdhVa0cRCuHmqzlIkqnr4=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=AopW2+aT1idkMZZqRRdvYlZTCLEGIc8mNt9tOFiWpEGAMFna3I4tnErNQOLnO8Gvp
-         g4Mgf3weSS9IOwJNoZvQBhZgg/GUhb+Ea+l9Ztm0HHscEObyBLDaNOT+tdGSbGCVOc
-         IPc5PQprhGdw8tm2Nw07m4Z8lJ2fCkUH92wQ5l9336KHFFbdsSgDH9vfUjoujW9N8I
-         lKJUTpZF8z3FViNtoii8EZ8z6V4WQoUzsiaFItu5jlsoJg071jeRGGZhnucmd2Vj8V
-         1FoRcEWxCvdYNGBxnUuSJcDPeGDZI+xgjVpeJ/zeQsJ+zrfW6ctHZATV12qKa2Q3/Q
-         pVltMQPOJHB8g==
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Aug 2023 13:06:55 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E76F330F8
+        for <linux-hardening@vger.kernel.org>; Tue,  1 Aug 2023 10:06:10 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-76595a7b111so414337085a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 01 Aug 2023 10:06:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1690909516; x=1691514316;
+        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zAgBUUeE4FP2QrYKGOT6RyZ/IiEStMEfuVTTDqZ4iW4=;
+        b=JPESZLiLZ5QEgLJYW4KiBIX9rpAFOMSftbHHqlhEq9597Ja5Ow0DNswSZpi6a/f2Gd
+         RGVoK7mSiUxrEIjBTgncmazkL4PEQkxeGnjJdYlgoktT9xGGijHju0y3m73t7wy9HJXW
+         r8eA9Vq6FElGF6vIb4dD3PXXU0/eg47+QdXuQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690909516; x=1691514316;
+        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zAgBUUeE4FP2QrYKGOT6RyZ/IiEStMEfuVTTDqZ4iW4=;
+        b=GWFxIVW8XnzvNg7gol5dRUlNQzH5pxjPJLkEKnx/jvn+rlZgzJ5jQZotxFUp3qtxRz
+         t0uepUtGsyT/vQUgX5P4TwwKPN3ZN4XiyeikJm33JCn9OpUYqlmDkE88tKymHzcZhtOH
+         Tzw9fx/XTxnVXaRmK9WpZ5cHTphaPzTZpmkzDhrlOKsnfqjl/5QdJmJsHR4zriYRkScY
+         L9rwubEEjc873Gav5RX5m2ixx+JbZvP96s3QPOrEeX1Zq67kOh4UHDBhxZ2LPtWphyC1
+         Hl0+IxgpNx/FaZU9/Y0bLYSiMuUA2AITbxuqnHZi7nAbhrOPwrlKPKezEk+9+YTahZXz
+         H8zA==
+X-Gm-Message-State: ABy/qLZrOf6Fen52LhKjxCqSKVdNgmh9tFF876Wg1y8wlITIxvJHiQ8I
+        Ei7Q9rqkUVB010T7U/xePi40uw==
+X-Google-Smtp-Source: APBJJlE4ziY46RD3mKzpEtHqnKuP6HtsyVQ9RR3cavBiUZbXExs3chH8vDfVFtMY1jMvJXvzlhl66w==
+X-Received: by 2002:a05:620a:2802:b0:765:a496:8a63 with SMTP id f2-20020a05620a280200b00765a4968a63mr19144061qkp.4.1690909516510;
+        Tue, 01 Aug 2023 10:05:16 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id oo14-20020a05620a530e00b0075772c756e0sm4281213qkn.101.2023.08.01.10.05.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Aug 2023 10:05:15 -0700 (PDT)
+Message-ID: <66e19ae3-253d-5377-5cc2-566ec3cfed49@broadcom.com>
+Date:   Tue, 1 Aug 2023 10:05:11 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] wifi: ray_cs: Replace 1-element array with flexible array
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20230728231245.never.309-kees@kernel.org>
-References: <20230728231245.never.309-kees@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <169089727636.39272.16037953063224759518.kvalo@kernel.org>
-Date:   Tue,  1 Aug 2023 13:41:18 +0000 (UTC)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v3] cpufreq: brcmstb-avs-cpufreq: Fix -Warray-bounds bug
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Florian Fainelli <florian.fainelli@broadcom.com>
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <ZMh45KH2iPIpNktr@work>
+From:   Florian Fainelli <florian.fainelli@broadcom.com>
+In-Reply-To: <ZMh45KH2iPIpNktr@work>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+        boundary="0000000000001903450601df8d03"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
+--0000000000001903450601df8d03
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> The trailing array member of struct tx_buf was defined as a 1-element
-> array, but used as a flexible array. This was resulting in build warnings:
+On 7/31/23 20:15, Gustavo A. R. Silva wrote:
+> Allocate extra space for terminating element at:
 > 
->     In function 'fortify_memset_chk',
->         inlined from 'memset_io' at /kisskb/src/arch/mips/include/asm/io.h:486:2,
->         inlined from 'build_auth_frame' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:2697:2:
->     /kisskb/src/include/linux/fortify-string.h:493:25: error: call to '__write_overflow_field' declared with attribute warning:
-> detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->       493 |                         __write_overflow_field(p_size_field, size);
->           |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/cpufreq/brcmstb-avs-cpufreq.c:
+> 449         table[i].frequency = CPUFREQ_TABLE_END;
 > 
-> Replace it with an actual flexible array. Binary difference comparison
-> shows a single change in output:
+> and add code comment to make this clear.
 > 
-> │  drivers/net/wireless/legacy/ray_cs.c:883
-> │       lea    0x1c(%rbp),%r13d
-> │ -     cmp    $0x7c3,%r13d
-> │ +     cmp    $0x7c4,%r13d
+> This fixes the following -Warray-bounds warning seen after building
+> ARM with multi_v7_defconfig (GCC 13):
+> In function 'brcm_avs_get_freq_table',
+>      inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
+> drivers/cpufreq/brcmstb-avs-cpufreq.c:449:28: warning: array subscript 5 is outside array bounds of 'void[60]' [-Warray-bounds=]
+>    449 |         table[i].frequency = CPUFREQ_TABLE_END;
+> In file included from include/linux/node.h:18,
+>                   from include/linux/cpu.h:17,
+>                   from include/linux/cpufreq.h:12,
+>                   from drivers/cpufreq/brcmstb-avs-cpufreq.c:44:
+> In function 'devm_kmalloc_array',
+>      inlined from 'devm_kcalloc' at include/linux/device.h:328:9,
+>      inlined from 'brcm_avs_get_freq_table' at drivers/cpufreq/brcmstb-avs-cpufreq.c:437:10,
+>      inlined from 'brcm_avs_cpufreq_init' at drivers/cpufreq/brcmstb-avs-cpufreq.c:623:15:
+> include/linux/device.h:323:16: note: at offset 60 into object of size 60 allocated by 'devm_kmalloc'
+>    323 |         return devm_kmalloc(dev, bytes, flags);
+>        |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 > 
-> This is from:
+> This helps with the ongoing efforts to tighten the FORTIFY_SOURCE
+> routines on memcpy() and help us make progress towards globally
+> enabling -Warray-bounds.
 > 
->         if (len + TX_HEADER_LENGTH > TX_BUF_SIZE) {
-> 
-> specifically:
-> 
->  #define TX_BUF_SIZE (2048 - sizeof(struct tx_msg))
-> 
-> This appears to have been originally buggy, so the change is correct.
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Closes: https://lore.kernel.org/all/88f83d73-781d-bdc-126-aa629cb368c@linux-m68k.org
-> Cc: Kalle Valo <kvalo@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Link: https://github.com/KSPP/linux/issues/324
+> Fixes: de322e085995 ("cpufreq: brcmstb-avs-cpufreq: AVS CPUfreq driver for Broadcom STB SoCs")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Patch applied to wireless.git, thanks.
-
-1d7dd5aa3547 wifi: ray_cs: Replace 1-element array with flexible array
-
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20230728231245.never.309-kees@kernel.org/
+Florian
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
+--0000000000001903450601df8d03
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIQeQYJKoZIhvcNAQcCoIIQajCCEGYCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+gg3QMIIFDTCCA/WgAwIBAgIQeEqpED+lv77edQixNJMdADANBgkqhkiG9w0BAQsFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMDA5MTYwMDAwMDBaFw0yODA5MTYwMDAwMDBaMFsxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBS
+MyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+vbCmXCcsbZ/a0fRIQMBxp4gJnnyeneFYpEtNydrZZ+GeKSMdHiDgXD1UnRSIudKo+moQ6YlCOu4t
+rVWO/EiXfYnK7zeop26ry1RpKtogB7/O115zultAz64ydQYLe+a1e/czkALg3sgTcOOcFZTXk38e
+aqsXsipoX1vsNurqPtnC27TWsA7pk4uKXscFjkeUE8JZu9BDKaswZygxBOPBQBwrA5+20Wxlk6k1
+e6EKaaNaNZUy30q3ArEf30ZDpXyfCtiXnupjSK8WU2cK4qsEtj09JS4+mhi0CTCrCnXAzum3tgcH
+cHRg0prcSzzEUDQWoFxyuqwiwhHu3sPQNmFOMwIDAQABo4IB2jCCAdYwDgYDVR0PAQH/BAQDAgGG
+MGAGA1UdJQRZMFcGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQCAgYKKwYBBAGCNwoDBAYJ
+KwYBBAGCNxUGBgorBgEEAYI3CgMMBggrBgEFBQcDBwYIKwYBBQUHAxEwEgYDVR0TAQH/BAgwBgEB
+/wIBADAdBgNVHQ4EFgQUljPR5lgXWzR1ioFWZNW+SN6hj88wHwYDVR0jBBgwFoAUj/BLf6guRSSu
+TVD6Y5qL3uLdG7wwegYIKwYBBQUHAQEEbjBsMC0GCCsGAQUFBzABhiFodHRwOi8vb2NzcC5nbG9i
+YWxzaWduLmNvbS9yb290cjMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5j
+b20vY2FjZXJ0L3Jvb3QtcjMuY3J0MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vcm9vdC1yMy5jcmwwWgYDVR0gBFMwUTALBgkrBgEEAaAyASgwQgYKKwYBBAGgMgEo
+CjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzAN
+BgkqhkiG9w0BAQsFAAOCAQEAdAXk/XCnDeAOd9nNEUvWPxblOQ/5o/q6OIeTYvoEvUUi2qHUOtbf
+jBGdTptFsXXe4RgjVF9b6DuizgYfy+cILmvi5hfk3Iq8MAZsgtW+A/otQsJvK2wRatLE61RbzkX8
+9/OXEZ1zT7t/q2RiJqzpvV8NChxIj+P7WTtepPm9AIj0Keue+gS2qvzAZAY34ZZeRHgA7g5O4TPJ
+/oTd+4rgiU++wLDlcZYd/slFkaT3xg4qWDepEMjT4T1qFOQIL+ijUArYS4owpPg9NISTKa1qqKWJ
+jFoyms0d0GwOniIIbBvhI2MJ7BSY9MYtWVT5jJO3tsVHwj4cp92CSFuGwunFMzCCA18wggJHoAMC
+AQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUAMEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9v
+dCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWduMRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5
+MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEgMB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENB
+IC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzARBgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqG
+SIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0E
+XyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuul9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+J
+J5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJpij2aTv2y8gokeWdimFXN6x0FNx04Druci8u
+nPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTv
+riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
+QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
+UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
+M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
+Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
+14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
+a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
+XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
+RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
+UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
+MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
+BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
+9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
+AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
+UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
+KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
+nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
+Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
+VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
+ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
+CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
+MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
+d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
+hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
+bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
+BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
+KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
+kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
+2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
+3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
+NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
+AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
+LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
+/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIL22l6Rge4QOmUVN
+QW9iTUPAq+0Gn5bVF8AEySkexba+MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
+AQkFMQ8XDTIzMDgwMTE3MDUxNlowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
+AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
+MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQAkzrd/g0fRawV5GF0SQKd3pNP/ITkAZ+Yq
+AjyjTPxTajjlZTMgNcnRlhOy3+pkt764whuZetwVZghx/bTHJ/SjjzmCdW3MESnFBJ6vk8guzLjg
+hpEwfwtxPDVSxhL+tpxV6cs9g5/JaEJD+xvXmuVH9P94m6/eiDOQ/MmrHbhMfWIC0MjiF7/UnkZj
+siLTHyxoDIclYMGSyie+ygs+klikUiRYWLkU8/OACYGF3EZ8B0cs6o5Tj5IA1NUl4in6j/7+kRWe
+d3ikGvzJ0TPAkgjpP1K50Yp35IHtQY/W79tR3zUaqbPsZeW/bFa1LPF+pjVc8S4qiE6rCjggLbXi
+upN+
+--0000000000001903450601df8d03--
