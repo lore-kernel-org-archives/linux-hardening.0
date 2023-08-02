@@ -2,39 +2,38 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03511C04A94
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 21:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD192C00528
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 21:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231690AbjHBVjR (ORCPT
+        id S230428AbjHBVtL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Aug 2023 17:39:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41008 "EHLO
+        Wed, 2 Aug 2023 17:49:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230007AbjHBVjQ (ORCPT
+        with ESMTP id S230031AbjHBVtJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Aug 2023 17:39:16 -0400
-X-Greylist: delayed 74045 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 02 Aug 2023 14:39:14 PDT
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050:0:465::202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB4A1BC7;
-        Wed,  2 Aug 2023 14:39:14 -0700 (PDT)
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
+        Wed, 2 Aug 2023 17:49:09 -0400
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050:0:465::103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456DF2129;
+        Wed,  2 Aug 2023 14:49:06 -0700 (PDT)
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4RGQNG47cSz9srr;
-        Wed,  2 Aug 2023 23:39:10 +0200 (CEST)
+        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4RGQbc1BCmz9sTD;
+        Wed,  2 Aug 2023 23:49:00 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-        t=1691012350;
+        t=1691012940;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=J6LlYeH6oWwaePHcKa4pV249iEzg4bTxNZKZ65XojGc=;
-        b=GtIK/wlJqs3LYKhGsQd8aSM1vwWqKc2t+LFr++L9LhIbnCLoxkkW6wBznMq2lUNskgdeNR
-        E1FtaKINIxjjlesv7D0INLHE4xtrc7RTUoy1PG+cqsBW/JnpoNhzhNpNHASa1vRdYTeo3Y
-        y7j+/FrKQjG+T9+1tQw0RPEqltSM8punLhmiLivqJ2DBC8Xi8ptwnyCk6mysuN7W6AQc7x
-        asxe76m4psJ7fCnmLA/l/LYFQ1i/Kr+hEY9Gt+LuauiqkS+Rulr5ByRP3uxS7To12tv6+6
-        zGR7gjkH6XicFchQOiLA3RW7szPDuuIrWlD8oXS/AhC7JN7dwRnDAwzOTvceiQ==
-Date:   Thu, 3 Aug 2023 07:38:50 +1000
+        bh=i04Z8bgkzw2aMO36HReNQAuyWQgn5tBl6lRpl7bgpMs=;
+        b=L3qQ4uJsloDWhmez7dk0vWebPtjr0CPjKjzFCrqJT8HZYhxvWTE4Phy919tGtYat8G3va7
+        9JFNqoJltD21NQtO6XUICSW96NSisGfmx66IFzdt1hInJj2/ZGEK5DwPzNDGoHpNpgbN71
+        BsaAtzQ4q1POirg4djVe2zypnQD8KEJKJDU3Mp/LkWD0w+W6Vm9aQKBuyzfx6PNM+cnD5C
+        AnOiznEsYiqeWXTkk5mG68xUkHzP2KvdyU3PoTf7/5F+tnm4KnpCGLjZ16B5MEWrUeFOyv
+        Wthc40romOk0aGW6wYZ1DGvj8UGfP1kive5M18gFNPollkH9FG2AXZhbJjVA8w==
+Date:   Thu, 3 Aug 2023 07:48:48 +1000
 From:   Aleksa Sarai <cyphar@cyphar.com>
 To:     Jeff Xu <jeffxu@chromium.org>
 Cc:     Jeff Xu <jeffxu@google.com>,
@@ -43,266 +42,179 @@ Cc:     Jeff Xu <jeffxu@google.com>,
         Kees Cook <keescook@chromium.org>,
         Daniel Verkamp <dverkamp@chromium.org>,
         Luis Chamberlain <mcgrof@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
+        YueHaibing <yuehaibing@huawei.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
         linux-hardening@vger.kernel.org
 Subject: Re: [RFC PATCH 0/3] memfd: cleanups for vm.memfd_noexec
-Message-ID: <20230802.211829-obedient.verb.pointed.walk-inxghgNcxn@cyphar.com>
+Message-ID: <20230802.213938-adept.raisins.dental.revival-IIlYKYPmegSa@cyphar.com>
 References: <20230713143406.14342-1-cyphar@cyphar.com>
  <CABi2SkVCp_MDh9MgD-UJ_hgJ58ynm22XJ53zE+ZCBSsWFBxiOw@mail.gmail.com>
  <o2tz56m3y2pbbj2sezyqvtw3caqwcqtqqkkfrq632ofpyj4enp@znkxadzn5lmj>
  <CALmYWFs_dNCzw_pW1yRAo4bGCPEtykroEQaowNULp7svwMLjOg@mail.gmail.com>
  <20230801.032503-medium.noises.extinct.omen-CStYZUqcNLCS@cyphar.com>
- <CABi2SkXWfup2_UeKqm7C-xkjF5gnhKuxOP7TsRVa5MLbxabFQg@mail.gmail.com>
+ <CABi2SkUnJ4NiRMtSXdLtHXWrY23iKLdGiUuTgc0Yrtq16-KkeA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nd5bu6leykkydsju"
+        protocol="application/pgp-signature"; boundary="w2o6q6aerims2enk"
 Content-Disposition: inline
-In-Reply-To: <CABi2SkXWfup2_UeKqm7C-xkjF5gnhKuxOP7TsRVa5MLbxabFQg@mail.gmail.com>
+In-Reply-To: <CABi2SkUnJ4NiRMtSXdLtHXWrY23iKLdGiUuTgc0Yrtq16-KkeA@mail.gmail.com>
+X-Rspamd-Queue-Id: 4RGQbc1BCmz9sTD
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
---nd5bu6leykkydsju
-Content-Type: text/plain; charset=utf-8
+--w2o6q6aerims2enk
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 On 2023-08-02, Jeff Xu <jeffxu@chromium.org> wrote:
-> On Tue, Aug 1, 2023 at 6:05=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
-rote:
-> >
-> This thread is getting longer with different topics, I will try to
-> respond with trimmed interleaved replies [1]
-> There are 3 topics (logging/'migration/ratcheting), this response will
-> be regarding ratcheting.
-
-The migration and ratcheting topics are interconnected because the
-migration issue makes ratcheting an even more severe issue. But I'll
-respond to each thread separately.
-
-> [1] https://www.kernel.org/doc/html/latest/process/submitting-patches.htm=
-l?highlight=3Dsigned%20off#use-trimmed-interleaved-replies-in-email-discuss=
-ions
->=20
-> >
-> > > > > >  * The ratcheting mechanism for vm.memfd_noexec doesn't make se=
-nse as a
-> > > > > >    security mechanism because a CAP_SYS_ADMIN capable user can =
-create
-> > > > > >    executable binaries in a hidden tmpfs very easily, not to me=
-ntion the
-> > > > > >    many other things they can do.
+> > > > > >  * vm.memfd_noexec=3D2 shouldn't reject old-style memfd_create(=
+2) syscalls
+> > > > > >    because it will make it far to difficult to ever migrate. In=
+stead it
+> > > > > >    should imply MFD_EXEC.
 > > > > > >
-> > > > > By further limiting CAP_SYS_ADMIN, an attacker can't modify this
-> > > > > sysctl even after compromising some system service with high
-> > > > > privilege, YAMA has the same approach for ptrace_scope=3D3
+> > > > > Though the purpose of memfd_noexec=3D2 is not to help with migrat=
+ion  -
+> > > > > but to disable creation of executable memfd for the current syste=
+m/pid
+> > > > > namespace.
+> > > > > During the migration,  vm.memfd_noexe =3D 1 helps overwriting for
+> > > > > unmigrated user code as a temporary measure.
 > > > >
-> > > > Personally, I also think this behaviour from YAMA is a little goofy=
- too,
-> > > > but given that it only locks the most extreme setting and there is =
-no
-> > > > way to get around the most extreme setting, I guess it makes some s=
-ense
-> > > > (not to mention it's an LSM and so there is an argument that it sho=
-uld
-> > > > be possible to lock out privileged users from modifying it).
-> > > > There are many other security sysctls, and very few have this behav=
-iour
-> > > > because it doesn't make much sense in most cases.
+> > > > My point is that the current behaviour for =3D2 means that nobody o=
+ther
+> > > > than *maybe* ChromeOS will ever be able to use it because it requir=
+es
+> > > > auditing every program on the system. In fact, it's possible even
+> > > > ChromeOS will run into issues given that one of the arguments made =
+for
+> > > > the nosymfollow mount option was that auditing all of ChromeOS to
+> > > > replace every open with RESOLVE_NO_SYMLINKS would be too much effor=
+t[1]
+> > > > (which I agreed with). Maybe this is less of an issue with
+> > > > memfd_create(2) (which is much newer than open(2)) but it still see=
+ms
+> > > > like a lot of busy work when the =3D1 behaviour is entirely sane ev=
+en in
+> > > > the strict threat model that =3D2 is trying to protect against.
 > > > >
-> > > > > In addition, this sysctl is pid_name spaced, this means child
-> > > > > pid_namespace will alway have the same or stricter security setti=
-ng
-> > > > > than its parent, this allows admin to maintain a tree like view. =
-If we
-> > > > > allow the child pid namespace to elevate its setting, then the
-> > > > > system-wide setting is no longer meaningful.
-> > > >
-> > > > "no longer meaningful" is too strong of a statement imho. It is sti=
-ll
-> > > > useful for constraining non-root processes and presumably ChromeOS
-> > > > disallows random processes to do CLONE_NEWUSER (otherwise the prote=
-ction
-> > > > of this sysctl is pointless) so in practice for ChromeOS there is no
-> > > > change in the attack surface.
-> > > >
-> > > > (FWIW, I think tying this to the user namespace would've made more =
-sense
-> > > > since this is about privilege restrictions, but that ship has saile=
-d.)
-> > > >
-> > > The reason that this sysctl is a PID namespace is that I hope a
-> > > container and host can have different sysctl values, e.g. host will
-> > > allow runc's use of X mfd, while a container  doesn't want X mfd. .
-> > > To clarify what you meant, do you mean this: when a container is in
-> > > its own pid_namespace, and has "=3D2", the programs inside the contai=
-ner
-> > > can still use CLONE_NEWUSER to break out "=3D2" ?
+> > > It can also be a container (that have all memfd_create migrated to ne=
+w API)
 > >
-> > With the current implementation, this is not possible. My point was that
-> > even if it were possible to lower the sysctl, ChromeOS presumably
-> > already blocks the operations that a user would be able to use to create
-> > a memfd (an unprivileged user cannot CLONE_NEWPID to modify the sysctl
-> > without CLONE_NEWUSER, which is presumably blocked on ChromeOS due to
-> > the other security concerns).
+> > If ChromeOS would struggle to rewrite all of the libraries they use,
+> > containers are in even worse shape -- most container users don't have a
+> > complete list of every package installed in a container, let alone the
+> > ability to audit whether they pass a (no-op) flag to memfd_create(2) in
+> > every codepath.
+> >
+> > > One option I considered previously was "=3D2" would do overwrite+bloc=
+k ,
+> > > and "=3D3" just block. But then I worry that applications won't have
+> > > motivation to ever change their existing code, the setting will
+> > > forever stay at "=3D2", making "=3D3" even more impossible to ever be=
+ used
+> > >  system side.
+> >
+> > What is the downside of overwriting? Backwards-compatibility is a very
+> > important part of Linux -- being able to use old programs without having
+> > to modify them is incredibly important. Yes, this behaviour is opt-in --
+> > but I don't see the point of making opting in more difficult than
+> > necessary. Surely overwite+block provides the security guarantee you
+> > need from the threat model -- othewise nobody will be able to use block
+> > because you never know if one library will call memfd_create()
+> > "incorrectly" without the new flags.
 > >
 > >
-> > > > > The code sample shared in this patch set indicates that the attac=
-ker
-> > > > > already has the ability of creating tmpfs and executing complex s=
-teps,
-> > > > > at that point, it doesn't matter if the code execution is from me=
-mfd
-> > > > > or not. For a safe by default system such as ChromeOS, attackers =
-won't
-> > > > > easily run arbitrary code, memfd is one of the open doors for tha=
-t, so
-> > > > > we are disabling executable memfd in ChromeOS. In other words:  i=
-f an
-> > > > > attacker can already execute the arbitrary code as sample given in
-> > > > > ChromeOS, without using executable memfd,  then memfd is no longe=
-r the
-> > > > > thing we need to worry about, the arbitrary code execution is alr=
-eady
-> > > > > achieved by the attacker. Even though I use ChromeOS as an exampl=
-e, I
-> > > > > think the same type of threat model applies to any system that wa=
-nts
-> > > > > to disable executable memfd entirely.
+> > > > If you want to block syscalls that don't explicitly pass NOEXEC_SEA=
+L,
+> > > > there are several tools for doing this (both seccomp and LSM hooks).
 > > > >
-> > > > I understand the threat model this sysctl is blocking, my point is =
-that
-> > > > blocking CAP_SYS_ADMIN from modifying the setting doesn't make sense
-> > > > from that threat model. An attacker that manages to trick some proc=
-ess
-> > > > into creating a memfd with an executable payload is not going to be=
- able
-> > > > to change the sysctl setting (unless there's a confused deputy with
-> > > > CAP_SYS_ADMIN, in which case you have much bigger issues).
+> > > > [1]: https://lore.kernel.org/linux-fsdevel/20200131212021.GA108613@=
+google.com/
 > > > >
-> > > It is the reverse.  An attacker that manages to trick some
-> > > CAP_SYSADMIN processes into changing this sysctl value (i.e. lower the
-> > > setting to 0 if no ratcheting), will be able to continue to use mfd as
-> > > part of the attack chain.
-> > >  In chromeOS, an attacker that can change sysctl might not necessarily
-> > > gain full arbitrary code execution already. As I mentioned previously,
-> > > the main threat model here is to prevent  arbitrary code execution
-> > > through mfd.  If an attacker already gains arbitrary code execution,
-> > > at that point, we no longer worry about mfd.
-> >
-> > If an attacker can trick a privileged process into writing to arbitrary
-> > sysctls, the system has much bigger issues than arbitrary (presumably
-> > unprivileged) code execution. On the other hand, requiring you to reboot
-> > a server due to a misconfigured sysctl *is* broken.
-> >
-> > Again, at the very least, not even allowing capable(CAP_SYS_ADMIN) to
-> > change the setting is actually broken.
-> >
-> > > > If a CAP_SYS_ADMIN-capable user wants to change the sysctl, blockin=
-g it
-> > > > doesn't add any security because that process could create a memfd-=
-like
-> > > > fd to execute without issues.
-> > > >What practical attack does this ratcheting
-> > > > mechanism protect against? (This is a question you can answer with =
-the
-> > > > YAMA sysctl, but not this one AFAICS.)
+> > > > > Additional functionality/features should be implemented through
+> > > > > security hook and LSM, not sysctl, I think.
 > > > >
-> > > > But even if you feel that allowing this in child user namespaces is
-> > > > unsafe or undesirable, it's absolutely necessary that
-> > > > capable(CAP_SYS_ADMIN) should be able to un-brick the running syste=
-m by
-> > > > changing the sysctl. The alternative is that you need to reboot your
-> > > > server in order to un-set a sysctl that broke some application you =
-run.
+> > > > This issue with =3D2 cannot be fixed in an LSM. (On the other hand,=
+ you
+> > > > could implement either =3D2 behaviour with an LSM using =3D1, and t=
+he
+> > > > current strict =3D2 behaviour could be implemented purely with secc=
+omp.)
 > > > >
-> > >
-> > > > Also, by the same token, this ratcheting mechanism doesn't make sen=
-se
-> > > > with =3D1 *at all* because it could break programs in a way that wo=
-uld
-> > > > require a reboot but it's not a "security setting" (and the YAMA sy=
-sctl
-> > > > mentioned only locks the sysctl at the highest setting).
-> > > >
-> > > I think a system should use "=3D0" when it is unsure about its progra=
-m's
-> > > need or not need executable memfd. Technically, it is not that this
-> > > sysctl breaks the user, but the admin  made the mistake to set the
-> > > wrong sysctl value, and an admin should know what they are doing for a
-> > > sysctl. Yes. rebooting increases the steps to undo the mistake, but
-> > > that could be an incentive for the admin to fully test its programs
-> > > before turning on this sysctl - and avoid unexpected runtime errors.
+> > > By migration, I mean  a system that is not fully migrated, such a
+> > > system should just use "=3D0" or "=3D1". Additional features can be
+> > > implemented in SELinux/Landlock/other LSM by a motivated dev.  e.g. if
+> > > a system wants to limit executable memfd to specific programs or fully
+> > > disable it.
+> > > "=3D2" is for a system/container that is fully migrated, in that case,
+> > > SELinux/Landlock/LSM can do the same, but sysctl provides a convenient
+> > >  alternative.
+> > > Yes, seccomp provides a similar mechanism. Indeed, combining "=3D1" a=
+nd
+> > > seccomp (block MFD_EXEC), it will overwrite + block X mfd, which is
+> > > essentially what you want, iiuc.However, I do not wish to have this
+> > > implemented in kernel, due to the thinking that I want kernel to get
+> > > out of business of "overwriting" eventually.
 > >
-> > I don't think this stance is really acceptable -- if an admin that has
-> > privileges to load kernel modules is not able to disable a sysctl that
-> > can break working programs without rebooting there is
+> > See my above comments -- "overwriting" is perfectly acceptable to me.
+> > There's also no way to "get out of the business of overwriting" -- Linux
+> > has strict backwards compatibility requirements.
 > >
-> > When this sysctl was first proposed a few years ago (when kernel folks
-> > found out that runc was using executable memfds), my understanding is
-> > that the long-term goal was to switch programs to have
-> > non-executable-memfds by default on most distributions. Making it
-> > impossible for an admin to lower the sysctl value flies in the face of
-> > this goal.
-> >
-> > At the very least, being unable to lower the sysctl from =3D1 to =3D0 is
-> > just broken (even if you use the yama example -- yama only locks the
-> > sysctl at highest possible setting, not on lower settings). But in my
-> > view, having this sysctl ratchet at all doesn't make sense.
-> >
-> To reiterate/summarize the current mechanism for vm.memfd_noexec
 >=20
-> 1> It is a pid namespace sysctl,  init ns and child pid ns can have
-> different setting values.
-> 2> child pid ns inherits parent's pid ns's sysctl at the time of fork.
-> 3> There are  3 values for the sysctl, each higher value is more
-> restrictive than the lower one. Once set, doesn't allow downgrading.
->=20
-> It can be used as  following:
-> 1>
-> init ns: vm.memfd_noexec =3D 2 (at boot time)
-> Not allow executable memfd for the entire system, including its container=
-s.
->=20
-> 2>
-> init ns: vm.memfd_noexec =3D 0 or 1
-> container (child init namespace) vm.memfd_noexec =3D 2.
-> The host allows runc's usage of executable memfd during container
-> creation. Inside the container, executable memfd is not allowed.
->=20
-> The inherence + not allow downgrading is to reason with how
-> vm.memfd_noexec is applied in the process tree.
-> Without it, essentially we are losing the hierarchy view across the
-> process tree and  a process can evaluate its capability by modifying
-> the setting. I think that is a less secure approach I would not
-> prefer.
+> I agree, if we weigh on the short term goal of letting the user space
+> applications to do minimum, then having 4 state sysctl (or 2 sysctl,
+> one controls overwrite, one disable/enable executable memfd) will do.
+> But with that approach, I'm afraid a version of the future (say in 20
+> years), most applications stays with memfd_create with the old API
+> style, not setting the NX bit. With the current approach, it might seem
+> to be less convenient, but I hope it offers a bit of incentive to make
+> applications migrating their code towards the new API, explicitly
+> setting the NX bit.  I understand this hope is questionable, we might
+> still end up the same in 20 years, but at least I tried :-). I will
+> leave this decision to maintainers when you supply patches for that,
+> and I wouldn't feel bad either way, there is a valid reason on both sides.
 
-If you really want the hierarchical aspect, we can implement it so that
-it's _actually_ hierarchical like so:
+People will not switch =3D2 on if it has the possibility of breaking
+existing programs that are doing nothing wrong by not passing a noop
+flag.
 
- * By default, your setting is the same as your parent (this is checked
-   by going up the pidns tree -- a-la cgroups). This is less efficient
-   but you want a hierarchy, so we can do it this way instead.
- * If you set a specific setting, that takes precedence but only if it's
-   a greater or equal setting to your parent.
- * Trying to set a lower setting than your parent fails regardless of
-   privileges.
+In 20 years at best you would have =3D1 in widespread use because the
+rewriting behaviour is what users expect of kernel uAPIs. They expect
+old programs to work without modifying them if they aren't doing
+anything wrong. A uAPI knob that requires every userspace program to
+change before you can safely enable it (especially because it ratchets
+in a way that makes it dangerous to enable on production machines) will
+simply not be used.
 
-This will allow *privileged users* to lower the setting, but only if
-the parent pidns also has a lower setting. This allows a system admin to
-enforce the setting. It seems to me that this fulfils all the
-requirements you have.
+If the goal is to get programs to update (which it seems it is), having
+a knob that nobody will turn on doesn't help. Doing proper warning
+logging is the way to get userspace to switch -- userspace usually
+notices when their programs trigger warnings in dmesg.
 
-Most importantly, this would allow for a hierarchical view without
-having a sysctl that will break systems and nobody will use. I need to
-re-iterate this point -- nobody is going to use this sysctl as it
-currently works because it ratchets in a way that admins cannot undo. In
-practice this would mean you would need to reboot your whole datacenter
-if you didn't catch that an update to one of you dependencies didn't
-pass a required *noop* flag to memfd_create().
+> To supplement, there are  two other ways for what you want:
+> 1> seccomp to block MFD_EXEC, and leaving the setting to 1.
+
+I made this point in an earlier mail.
+
+However my point is that =3D2 is not an acceptable uAPI and if you want
+something that looks like =3D2 you can also implement that with seccomp
+too!
+
+In fact, the key difference is that you cannot implement the
+rewriting easily in seccomp -- you would need to install a
+seccomp_notify monitor that does nothing but rewrite syscall arguments.
+This would be equivalent to running the entire system under GDB to work
+around a uAPI flaw.
+
+> 2> implement the blocking using a security hook and LSM, imo, which is
+> probably the most common way to deal with this type of request (block
+> something).
+
+The issue is not the blocking, it's the rewriting.
 
 --=20
 Aleksa Sarai
@@ -310,15 +222,15 @@ Senior Software Engineer (Containers)
 SUSE Linux GmbH
 <https://www.cyphar.com/>
 
---nd5bu6leykkydsju
+--w2o6q6aerims2enk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZMrM6gAKCRAol/rSt+lE
-b5iBAQCCAKCZLBiPuS0RZ9+pUw3/4zLkEUllHNcoPPEkDKL8ogD/VNqrHoAs0PG1
-tbRBIlj/TvEEoj5to4IRVurRcwns/wo=
-=8bPm
+iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZMrPQAAKCRAol/rSt+lE
+b4ZmAP4j1QzOrrlorZ9dFzAjKiWri6UkXw3KrM473BItd9lriAEA0JKOcWehL+c/
+34o/eX/AOXwrJ9p80VBoPFsIqPj6TwY=
+=I+84
 -----END PGP SIGNATURE-----
 
---nd5bu6leykkydsju--
+--w2o6q6aerims2enk--
