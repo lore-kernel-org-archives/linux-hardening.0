@@ -2,71 +2,75 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0CCC001E0
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 15:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9911BC04A6A
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 15:47:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233906AbjHBP1R (ORCPT
+        id S233955AbjHBPrT (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Aug 2023 11:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48724 "EHLO
+        Wed, 2 Aug 2023 11:47:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234964AbjHBP1A (ORCPT
+        with ESMTP id S232505AbjHBPrT (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Aug 2023 11:27:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F2E34EF5;
-        Wed,  2 Aug 2023 08:24:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0779561A1E;
-        Wed,  2 Aug 2023 15:24:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CC64C433C7;
-        Wed,  2 Aug 2023 15:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690989870;
-        bh=AsAwCL7YysIyiApwU0DEZ4rat1nzt2aX13d1nS4nuDM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bjlME2upSvXRAf/m/cuZiwmo5VnVspD8x1KGckoVYQHKmQplffbUWB1H7uK4qoUbt
-         PK8ca8wW+aNrIfdVEofOBhya1CiO7YkGKnDgOYBX8Y/96WuTNBDXaCdKIVoneZ4neu
-         4ET1Zs5R64PtWXwfAcZNi/3Xcuwrd8WrG6SGevC3Zrz40MzstmH8cJLFfny/MreVL/
-         6r2Vn0UxD1V2B89tmD8j7KnRXqaf/u34yVV8tTxPgCTeQKo6xSeB4QngdPUZt8tsxy
-         pbStjBW31lQFPs2Pi74aEJTB+8r0w9LYtn80AZx14nr2St7H1sjMHpiIHUBOBMyhZ4
-         Aib0mqDq/8UwQ==
-Date:   Wed, 2 Aug 2023 17:24:25 +0200
-From:   Simon Horman <horms@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 4/4][next] i40e: Replace one-element array with
- flex-array member in struct i40e_profile_aq_section
-Message-ID: <ZMp1KUZIEli6WL0H@kernel.org>
-References: <cover.1690938732.git.gustavoars@kernel.org>
- <8b945fa3afeb26b954c400c5b880c0ae175091ac.1690938732.git.gustavoars@kernel.org>
+        Wed, 2 Aug 2023 11:47:19 -0400
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A123D9B;
+        Wed,  2 Aug 2023 08:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+        s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=u+eTVzDBOj1InyZSduxL/CRo1hb2JHwGid0R+96a+4A=; b=R8nVVThaPu37mhmrjlsqLt5r/F
+        wT4rNJt2iafYVQYZ1qEZJ0ZdTF213lPo3aB9cVKEp+z+oSYkJygZRzkSEX9cR7bIQZGAyDe7B0mss
+        31dGjJ51OjjKDbanIkl6EZdvJAV4sw6SWUBJb7up8WumIHIFNVpfSjEpUv2Chwp2gsLRgBS88egUW
+        rJQ/1LYYgZg9mznMj/11RVNJLZxfertQ1Ck2Abj7M25RQUd6KMbdtpQOi4ylg1MWajbPVIlYkDotf
+        Ms6DAVKu+Gb/9AkNKMwD9ozYjlP5gnkBs8koBNOp4bhGsFOymBrUnZaJgYd9YbfeXAcexK1lPFcZQ
+        qMrHaUlw==;
+Received: from 201-92-22-215.dsl.telesp.net.br ([201.92.22.215] helo=[192.168.1.60])
+        by fanzine2.igalia.com with esmtpsa 
+        (Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+        id 1qRE3s-00BGGs-8w; Wed, 02 Aug 2023 17:46:56 +0200
+Message-ID: <f0cc1d69-71a2-e50d-07ea-b17ab26d6cf4@igalia.com>
+Date:   Wed, 2 Aug 2023 12:46:49 -0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8b945fa3afeb26b954c400c5b880c0ae175091ac.1690938732.git.gustavoars@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 1/1] pstore/ram: Check member of buffers during the
+ initialization phase of the pstore
+Content-Language: en-US
+To:     Yunlong Xing <yunlong.xing@unisoc.com>, keescook@chromium.org,
+        tony.luck@intel.com, joel@joelfernandes.org, enlin.mu@unisoc.com
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        enlinmu@gmail.com, yunlong.xing23@gmail.com
+References: <20230801060432.1307717-1-yunlong.xing@unisoc.com>
+From:   "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <20230801060432.1307717-1-yunlong.xing@unisoc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 11:07:06PM -0600, Gustavo A. R. Silva wrote:
-> One-element and zero-length arrays are deprecated. So, replace
-> one-element array in struct i40e_profile_aq_section with
-> flexible-array member.
-> 
-> This results in no differences in binary output.
-> 
-> Link: https://github.com/KSPP/linux/issues/335
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+On 01/08/2023 03:04, Yunlong Xing wrote:
+> [...]
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+> diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+> index 85aaf0fc6d7d..eb6df190d752 100644
+> --- a/fs/pstore/ram_core.c
+> +++ b/fs/pstore/ram_core.c
+> @@ -519,7 +519,7 @@ static int persistent_ram_post_init(struct persistent_ram_zone *prz, u32 sig,
+>  	sig ^= PERSISTENT_RAM_SIG;
+>  
+>  	if (prz->buffer->sig == sig) {
+> -		if (buffer_size(prz) == 0) {
+> +		if (buffer_size(prz) == 0 && buffer_start(prz) == 0) {
+>  			pr_debug("found existing empty buffer\n");
 
+Thanks for the patch! I'd also adjust the above print statement to
+reflect the different paths (empty buffers vs illegal one) and maybe
+bump it to pr_info, or even pr_warn(_once?).
+
+What do you all think, makes sense or could we pollute dmesg too much?
+Cheers!
