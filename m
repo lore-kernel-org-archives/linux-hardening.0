@@ -2,117 +2,118 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A765BC04E69
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 14:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C97C41513
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 15:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234374AbjHBOpZ (ORCPT
+        id S232729AbjHBPYB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Aug 2023 10:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43450 "EHLO
+        Wed, 2 Aug 2023 11:24:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234343AbjHBOpY (ORCPT
+        with ESMTP id S235499AbjHBPXb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Aug 2023 10:45:24 -0400
+        Wed, 2 Aug 2023 11:23:31 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8091FF3;
-        Wed,  2 Aug 2023 07:45:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A68182122;
+        Wed,  2 Aug 2023 08:20:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 183D761935;
-        Wed,  2 Aug 2023 14:45:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4C1C433C8;
-        Wed,  2 Aug 2023 14:45:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 53CC4619F4;
+        Wed,  2 Aug 2023 15:18:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5061C433C8;
+        Wed,  2 Aug 2023 15:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690987522;
-        bh=MoMUpb0Ss3thYLsphFCCaQgq68tYvFO+u3uZ4M9Dy5I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jgjaj4FwqBc7wTc9bYPMguqpKlMXlSWf/QhAxjpeNESH/Zfj+v3pky5NH8khA3Vrp
-         Cu2Da+UFFnbQR2n2x0y5QmegpPGudZ6sLdS6qvGQrTdPdEdPRP67Lie96yj6y8AlfL
-         E7h/RvQWUkKo0SmfjA+yVnN42o0UndbmE+8Gep6IHFVV79jjF0pL/2s3UIJhzRJY2V
-         ay3sWw1gEogD4PPxEM0Ts4SRZ8bAM0vt1J9yjWKdqWS0C/0k5idlKAx/hJgJEDDm1j
-         vQRR9Xo7p6KpbotDXIifxda0/idPl7zjbdMovQ86mhUm/NmgjkqZtiLsks7al8k5Jd
-         16ozUiwvbn8mA==
-Date:   Wed, 2 Aug 2023 08:46:26 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Mustafa Ismail <mustafa.ismail@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        s=k20201202; t=1690989538;
+        bh=MpJddWF59Y3r4C5rdMlYJbaG4nJtsvWkijQnPbA5m0M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jKbDOd95vbAuoKLM9gIV+Ydy+T7t+w4aZttd+5ACEgtOVn8oXIQ9aIyq3Zdy9jkox
+         nLfQpbtiRyULUYFp93OcLWKzpTUfWTgZNZpOfjCVAbZ47ccxRwCbXsQ3HZtAlcEF4q
+         Ewv46l78pDi2bLYuxCehVV542hX1VDjUwpobgK0d69Ar4+OyLU0mogxf4slCutbHDg
+         LlZWlZIR/OwONvKJJJ4HX/5GpRxfQs0UeuCyHvj9U1DUzJo+tfyDw0v40Zw8FINGIa
+         mMDCrqYbO2CqB5N5/YCODYb9jXHYECCcdPzn8t37faCcZdKixaaxgwLmmn4FLXg6y2
+         uenMUm+byM7kQ==
+Date:   Wed, 2 Aug 2023 17:18:54 +0200
+From:   Simon Horman <horms@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH][next] RDMA/irdma: Replace one-element array with
- flexible-array member
-Message-ID: <ZMpsQrZadBaJGkt4@work>
+Subject: Re: [PATCH 1/4][next] i40e: Replace one-element array with
+ flex-array member in struct i40e_package_header
+Message-ID: <ZMpz3re48diGmG/Z@kernel.org>
+References: <cover.1690938732.git.gustavoars@kernel.org>
+ <768db2c3764a490118f6850d24f6e49998494b6c.1690938732.git.gustavoars@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <768db2c3764a490118f6850d24f6e49998494b6c.1690938732.git.gustavoars@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element and zero-length arrays are deprecated. So, replace
-one-element array in struct irdma_qvlist_info with flexible-array
-member.
+On Tue, Aug 01, 2023 at 11:05:31PM -0600, Gustavo A. R. Silva wrote:
+> One-element and zero-length arrays are deprecated. So, replace
+> one-element array in struct i40e_package_header with flexible-array
+> member.
+> 
+> The `+ sizeof(u32)` adjustments ensure that there are no differences
+> in binary output.
+> 
+> Link: https://github.com/KSPP/linux/issues/335
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  drivers/net/ethernet/intel/i40e/i40e_ddp.c  | 4 ++--
+>  drivers/net/ethernet/intel/i40e/i40e_type.h | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_ddp.c b/drivers/net/ethernet/intel/i40e/i40e_ddp.c
+> index 7e8183762fd9..0db6f5e3cfcc 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_ddp.c
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_ddp.c
+> @@ -220,7 +220,7 @@ static bool i40e_ddp_is_pkg_hdr_valid(struct net_device *netdev,
+>  		netdev_err(netdev, "Invalid DDP profile - size is bigger than 4G");
+>  		return false;
+>  	}
+> -	if (size < (sizeof(struct i40e_package_header) +
+> +	if (size < (sizeof(struct i40e_package_header) + sizeof(u32) +
 
-A patch for this was sent a while ago[1]. However, it seems that, at
-the time, the changes were partially folded[2][3], and the actual
-flexible-array transformation was omitted. This patch fixes that.
+Hi Gustavo,
 
-The only binary difference seen before/after changes is shown below:
+would it make more sense to use struct_size() here?
 
-|  drivers/infiniband/hw/irdma/hw.o
-| @@ -868,7 +868,7 @@
-| drivers/infiniband/hw/irdma/hw.c:484 (discriminator 2)
-|	size += struct_size(iw_qvlist, qv_info, rf->msix_count);
-|      55b:      imul   $0x45c,%rdi,%rdi
-|-     562:      add    $0x10,%rdi
-|+     562:      add    $0x4,%rdi
-
-which is, of course, expected as it reflects the mistake made
-while folding the patch I've mentioned above.
-
-Worth mentioning is the fact that with this change we save 12 bytes
-of memory, as can be inferred from the diff snapshot above. Notice
-that:
-
-$ pahole -C rdma_qv_info idrivers/infiniband/hw/irdma/hw.o
-struct irdma_qv_info {
-	u32                        v_idx;                /*     0     4 */
-	u16                        ceq_idx;              /*     4     2 */
-	u16                        aeq_idx;              /*     6     2 */
-	u8                         itr_idx;              /*     8     1 */
-
-	/* size: 12, cachelines: 1, members: 4 */
-	/* padding: 3 */
-	/* last cacheline: 12 bytes */
-};
-
-Link: https://lore.kernel.org/linux-hardening/20210525230038.GA175516@embeddedor/ [1]
-Link: https://lore.kernel.org/linux-hardening/bf46b428deef4e9e89b0ea1704b1f0e5@intel.com/ [2]
-Link: https://lore.kernel.org/linux-rdma/20210520143809.819-1-shiraz.saleem@intel.com/T/#u [3]
-Fixes: 44d9e52977a1 ("RDMA/irdma: Implement device initialization definitions")
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/infiniband/hw/irdma/main.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/infiniband/hw/irdma/main.h b/drivers/infiniband/hw/irdma/main.h
-index 5483684a534c..82fc5f5b002c 100644
---- a/drivers/infiniband/hw/irdma/main.h
-+++ b/drivers/infiniband/hw/irdma/main.h
-@@ -239,7 +239,7 @@ struct irdma_qv_info {
- 
- struct irdma_qvlist_info {
- 	u32 num_vectors;
--	struct irdma_qv_info qv_info[1];
-+	struct irdma_qv_info qv_info[];
- };
- 
- struct irdma_gen_ops {
--- 
-2.34.1
-
+>  		sizeof(struct i40e_metadata_segment) + sizeof(u32) * 2)) {
+>  		netdev_err(netdev, "Invalid DDP profile - size is too small.");
+>  		return false;
+> @@ -281,7 +281,7 @@ int i40e_ddp_load(struct net_device *netdev, const u8 *data, size_t size,
+>  	if (!i40e_ddp_is_pkg_hdr_valid(netdev, pkg_hdr, size))
+>  		return -EINVAL;
+>  
+> -	if (size < (sizeof(struct i40e_package_header) +
+> +	if (size < (sizeof(struct i40e_package_header) + sizeof(u32) +
+>  		    sizeof(struct i40e_metadata_segment) + sizeof(u32) * 2)) {
+>  		netdev_err(netdev, "Invalid DDP recipe size.");
+>  		return -EINVAL;
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_type.h b/drivers/net/ethernet/intel/i40e/i40e_type.h
+> index 388c3d36d96a..c3d5fe12059a 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_type.h
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_type.h
+> @@ -1456,7 +1456,7 @@ struct i40e_ddp_version {
+>  struct i40e_package_header {
+>  	struct i40e_ddp_version version;
+>  	u32 segment_count;
+> -	u32 segment_offset[1];
+> +	u32 segment_offset[];
+>  };
+>  
+>  /* Generic segment header */
+> -- 
+> 2.34.1
+> 
+> 
