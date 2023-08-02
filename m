@@ -2,48 +2,51 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087AAC00528
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 13:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A765BC04E69
+	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 14:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233666AbjHBNYy (ORCPT
+        id S234374AbjHBOpZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Aug 2023 09:24:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56958 "EHLO
+        Wed, 2 Aug 2023 10:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230239AbjHBNYx (ORCPT
+        with ESMTP id S234343AbjHBOpY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Aug 2023 09:24:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08DADDA;
-        Wed,  2 Aug 2023 06:24:53 -0700 (PDT)
+        Wed, 2 Aug 2023 10:45:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8091FF3;
+        Wed,  2 Aug 2023 07:45:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 92CA861994;
-        Wed,  2 Aug 2023 13:24:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4CCC433C8;
-        Wed,  2 Aug 2023 13:24:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 183D761935;
+        Wed,  2 Aug 2023 14:45:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4C1C433C8;
+        Wed,  2 Aug 2023 14:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690982692;
-        bh=DDm1LEyHVrqgVPbORsJTPU+hVDJwprYsNNL9IHeL+5k=;
+        s=k20201202; t=1690987522;
+        bh=MoMUpb0Ss3thYLsphFCCaQgq68tYvFO+u3uZ4M9Dy5I=;
         h=Date:From:To:Cc:Subject:From;
-        b=nWjglhibGmIAoJ0wRJHiguhdY/s9FGgXJNwpF0vJi9mJ8pofv2p7JYopQP/LkiAo2
-         SrzWDgQqEqxd+zUR8u/m4gwZH4DMVKXhPwjATpsaMIbE/csJS8XoMj36otYrK9WRIZ
-         qkcP3LbpzDOaGSitQOh2VAH/jqg5vdA9FTa1T49wj7DhBvRU4R9pG/WD/ME722baiR
-         VjIJVMlWetVgQP/RUfMmdqwZtvoQx6CspYJwak8pPv9rAzbhxdlDfWtqR8eMKU/7cm
-         Uc10RjfRmaThlihTV+AUKeNc6/c9NyFrzIGGSpUVo7Ij1DbCVdZbl8EWMeW342sz+c
-         psQ4JFmi/JWiQ==
-Date:   Wed, 2 Aug 2023 07:25:56 -0600
+        b=jgjaj4FwqBc7wTc9bYPMguqpKlMXlSWf/QhAxjpeNESH/Zfj+v3pky5NH8khA3Vrp
+         Cu2Da+UFFnbQR2n2x0y5QmegpPGudZ6sLdS6qvGQrTdPdEdPRP67Lie96yj6y8AlfL
+         E7h/RvQWUkKo0SmfjA+yVnN42o0UndbmE+8Gep6IHFVV79jjF0pL/2s3UIJhzRJY2V
+         ay3sWw1gEogD4PPxEM0Ts4SRZ8bAM0vt1J9yjWKdqWS0C/0k5idlKAx/hJgJEDDm1j
+         vQRR9Xo7p6KpbotDXIifxda0/idPl7zjbdMovQ86mhUm/NmgjkqZtiLsks7al8k5Jd
+         16ozUiwvbn8mA==
+Date:   Wed, 2 Aug 2023 08:46:26 -0600
 From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>
-Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Mustafa Ismail <mustafa.ismail@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: [PATCH] alpha: Replace one-element array with flexible-array member
-Message-ID: <ZMpZZBShlLqyD3ax@work>
+Subject: [PATCH][next] RDMA/irdma: Replace one-element array with
+ flexible-array member
+Message-ID: <ZMpsQrZadBaJGkt4@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -52,29 +55,64 @@ List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 One-element and zero-length arrays are deprecated. So, replace
-one-element array in struct osf_dirent with flexible-array
+one-element array in struct irdma_qvlist_info with flexible-array
 member.
 
-This results in no differences in binary output.
+A patch for this was sent a while ago[1]. However, it seems that, at
+the time, the changes were partially folded[2][3], and the actual
+flexible-array transformation was omitted. This patch fixes that.
 
+The only binary difference seen before/after changes is shown below:
+
+|  drivers/infiniband/hw/irdma/hw.o
+| @@ -868,7 +868,7 @@
+| drivers/infiniband/hw/irdma/hw.c:484 (discriminator 2)
+|	size += struct_size(iw_qvlist, qv_info, rf->msix_count);
+|      55b:      imul   $0x45c,%rdi,%rdi
+|-     562:      add    $0x10,%rdi
+|+     562:      add    $0x4,%rdi
+
+which is, of course, expected as it reflects the mistake made
+while folding the patch I've mentioned above.
+
+Worth mentioning is the fact that with this change we save 12 bytes
+of memory, as can be inferred from the diff snapshot above. Notice
+that:
+
+$ pahole -C rdma_qv_info idrivers/infiniband/hw/irdma/hw.o
+struct irdma_qv_info {
+	u32                        v_idx;                /*     0     4 */
+	u16                        ceq_idx;              /*     4     2 */
+	u16                        aeq_idx;              /*     6     2 */
+	u8                         itr_idx;              /*     8     1 */
+
+	/* size: 12, cachelines: 1, members: 4 */
+	/* padding: 3 */
+	/* last cacheline: 12 bytes */
+};
+
+Link: https://lore.kernel.org/linux-hardening/20210525230038.GA175516@embeddedor/ [1]
+Link: https://lore.kernel.org/linux-hardening/bf46b428deef4e9e89b0ea1704b1f0e5@intel.com/ [2]
+Link: https://lore.kernel.org/linux-rdma/20210520143809.819-1-shiraz.saleem@intel.com/T/#u [3]
+Fixes: 44d9e52977a1 ("RDMA/irdma: Implement device initialization definitions")
 Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 ---
- arch/alpha/kernel/osf_sys.c | 2 +-
+ drivers/infiniband/hw/irdma/main.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
-index d98701ee36c6..5db88b627439 100644
---- a/arch/alpha/kernel/osf_sys.c
-+++ b/arch/alpha/kernel/osf_sys.c
-@@ -97,7 +97,7 @@ struct osf_dirent {
- 	unsigned int d_ino;
- 	unsigned short d_reclen;
- 	unsigned short d_namlen;
--	char d_name[1];
-+	char d_name[];
+diff --git a/drivers/infiniband/hw/irdma/main.h b/drivers/infiniband/hw/irdma/main.h
+index 5483684a534c..82fc5f5b002c 100644
+--- a/drivers/infiniband/hw/irdma/main.h
++++ b/drivers/infiniband/hw/irdma/main.h
+@@ -239,7 +239,7 @@ struct irdma_qv_info {
+ 
+ struct irdma_qvlist_info {
+ 	u32 num_vectors;
+-	struct irdma_qv_info qv_info[1];
++	struct irdma_qv_info qv_info[];
  };
  
- struct osf_dirent_callback {
+ struct irdma_gen_ops {
 -- 
 2.34.1
 
