@@ -2,120 +2,138 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1350C001DF
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 23:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC81C41513
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 23:17:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjHCXNj (ORCPT
+        id S229446AbjHCXRa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Aug 2023 19:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49626 "EHLO
+        Thu, 3 Aug 2023 19:17:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjHCXNh (ORCPT
+        with ESMTP id S229841AbjHCXR3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Aug 2023 19:13:37 -0400
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC1030C2;
-        Thu,  3 Aug 2023 16:13:36 -0700 (PDT)
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-        by cmsmtp with ESMTP
-        id Rfjpq3SjmfaVXRhVfqcha8; Thu, 03 Aug 2023 23:13:35 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id RhVeq4yE3s12sRhVeqGTLw; Thu, 03 Aug 2023 23:13:35 +0000
-X-Authority-Analysis: v=2.4 cv=Jt3iEe0C c=1 sm=1 tr=0 ts=64cc349f
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=8y0NZTZfdASZg88ec6MA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=TPDYq/13b+187Q0SS/vTNVpKl0QGMUe23edKdHdTGg4=; b=lW4POMbZZz8pdEiKWDgfiN+/9G
-        FFTf8XTZRaPbjuVyDp9s3tDARPMd8d80llkfksYznfqBS2D2vEroKNJPX+tqdymbRdh7tTVBTkkjP
-        zFj2RLi0w+OQqoANkn5lhj75zaheouGr7u7TMfYX/KFpYRuiEawzTJVGeLcxs4ckYmvU8eGU5Na5i
-        Nace+k1AnA78H3qOBesKrDdqR7Nr3Z+5yo1gw2YoJ2FT60oFQ+jnuo+qFyMwa8FS18tC97xYebAOi
-        if+uyf10osJrXShxk+Ue12tb3mQec1+EO39g5Lf/+HB1Im0CErSXFR4w5ICfEpTszM1Vi6YRuhZt2
-        ULk6K+ew==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60340 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qReTt-001xR4-2u;
-        Thu, 03 Aug 2023 14:59:33 -0500
-Message-ID: <5979a609-beb9-d622-d8ed-8d01afb56ff4@embeddedor.com>
-Date:   Thu, 3 Aug 2023 14:00:39 -0600
+        Thu, 3 Aug 2023 19:17:29 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B2B30C2
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Aug 2023 16:17:27 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-686b9920362so1081667b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Aug 2023 16:17:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1691104646; x=1691709446;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uAX8/BAoKRR9bpEyT2pUxkYfnwIbAbYh0zgu7kZ+rdo=;
+        b=M3JW4qbzHMtiBaVV+XfFBn1fsvKda9lPpptkVIw8hZm/FUU95/wvAXWV+n7Bo0xrSN
+         XpQeyyNevHkjeS8VMIGwQK+EdGDhSk/5ZTxmG6HHRdjV3/sPQ5JPcl3IQlrdDxc145c7
+         ZTaNF/CEIIPTHkwJu1goZt4kjifTLnNJR9x+k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691104646; x=1691709446;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uAX8/BAoKRR9bpEyT2pUxkYfnwIbAbYh0zgu7kZ+rdo=;
+        b=fTaR9AHYNo3DCkuAA0Flz7yZHmiyzgFolPy8nytkhXMM7VSYLoFFdGG3JqOwhURHbr
+         HlB9t9P7nYgI00A7aWmArYPjsAtQnTAwevNUakxroecoCE+C2MivmYQAmODzq6nGroeZ
+         lxqhvMLx1fzSUx5aMgAtoUogWS8wbVGrKJwOaXTz6RWGF+RZFqay5XIl86YLOB2phUNu
+         nCkDBmgn/P0aXoVqOjiiE6L6qEZbzhn1XPfLzBmbe3JOBXCnnf3ROlyZRAd14KHVR94g
+         IwsTuaDZGqAmPaAoPpoV6kl6eYUP0nzoHUh5S1J/rCEkuolG/PlNWpcDEcuJngYnl0IU
+         mviw==
+X-Gm-Message-State: AOJu0YzhVCMy9Quze7+obQVEqANvOFYb/jn0aQMZh5Zos3AOx6e3SjY1
+        5FuYz2EgHE30HNuqFgtZ6xONzA==
+X-Google-Smtp-Source: AGHT+IEj4C/z2qsGxkJgyRwpjg3NqlxZEdhHZ0f66XagZ0cXhYhmwUvu1RZI32U+pelJi/n6ndb3KA==
+X-Received: by 2002:a05:6a00:150d:b0:686:254c:9d4e with SMTP id q13-20020a056a00150d00b00686254c9d4emr108098pfu.14.1691104646559;
+        Thu, 03 Aug 2023 16:17:26 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u19-20020a62ed13000000b00653fe2d527esm360174pfh.32.2023.08.03.16.17.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Aug 2023 16:17:25 -0700 (PDT)
+Date:   Thu, 3 Aug 2023 16:17:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arnd Bergmann <arnd@kernel.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        yj.chiang@mediatek.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 04/10] ARM: syscall: always store
+ thread_info->abi_syscall
+Message-ID: <202308031551.034F346@keescook>
+References: <20210726141141.2839385-1-arnd@kernel.org>
+ <20210726141141.2839385-5-arnd@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH][next] RDMA/irdma: Replace one-element array with
- flexible-array member
-Content-Language: en-US
-To:     Leon Romanovsky <leon@kernel.org>,
-        Mustafa Ismail <mustafa.ismail@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <ZMpsQrZadBaJGkt4@work>
- <169108630160.1408615.8996122913079845353.b4-ty@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <169108630160.1408615.8996122913079845353.b4-ty@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qReTt-001xR4-2u
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:60340
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKjlMT4GktZ4hGLzk2QkEhdDpT9wO68m7uHEhCJ3tMOz+ImM125GTz0+aAE/wPrMsgnl0IQv6Wv2W3vzGF4vlcSGyJvdSAgtQ8v23bLBo4cCMoJggdaK
- VZAThFxVhSE8L88A/KJLWY+emcuiUsuSwpqCXFSc/XFLOuOcI1v13hQnsCwN7S4mbk/iIE3OvkA5aAXXPH0kYT4+Bg2UHCQLpxsWQP4mHSCUzfxhi1BfkFPk
- yz6a26PXzhkyoaaCMoODqmHcQ03DlRiOa00aUUqKsL0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210726141141.2839385-5-arnd@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 8/3/23 12:11, Leon Romanovsky wrote:
+On Mon, Jul 26, 2021 at 04:11:35PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> On Wed, 02 Aug 2023 08:46:26 -0600, Gustavo A. R. Silva wrote:
->> One-element and zero-length arrays are deprecated. So, replace
->> one-element array in struct irdma_qvlist_info with flexible-array
->> member.
->>
->> A patch for this was sent a while ago[1]. However, it seems that, at
->> the time, the changes were partially folded[2][3], and the actual
->> flexible-array transformation was omitted. This patch fixes that.
->>
->> [...]
-> 
-> Applied, thanks!
+> The system call number is used in a a couple of places, in particular
+> ptrace, seccomp and /proc/<pid>/syscall.
 
-Awesome. :)
+*thread necromancy*
 
-Thank you!
---
-Gustavo
+Hi!
 
+So, it seems like the seccomp selftests broke in a few places due to
+this change (back in v5.15). I really thought kernelci.org was running
+the seccomp tests, but it seems like the coverage is spotty.
+
+Specifically, the syscall_restart selftest fails, as well as syscall_errno
+and syscall_faked (both via seccomp and PTRACE), starting with this patch.
+
+> The last one apparently never worked reliably on ARM for tasks that are
+> not currently getting traced.
 > 
-> [1/1] RDMA/irdma: Replace one-element array with flexible-array member
->        https://git.kernel.org/rdma/rdma/c/38313c6d2a02c2
+> Storing the syscall number in the normal entry path makes it work,
+> as well as allowing us to see if the current system call is for OABI
+> compat mode, which is the next thing I want to hook into.
 > 
-> Best regards,
+> Since the thread_info->syscall field is not just the number any more, it
+> is now renamed to abi_syscall. In kernels that enable both OABI and EABI,
+> the upper bits of this field encode 0x900000 (__NR_OABI_SYSCALL_BASE)
+> for OABI tasks, while normal EABI tasks do not set the upper bits. This
+> makes it possible to implement the in_oabi_syscall() helper later.
+> 
+> All other users of thread_info->syscall go through the syscall_get_nr()
+> helper, which in turn filters out the ABI bits.
+
+While I've reproducing the bisect done by mediatek, I'm still poking
+around in here to figure out what's gone wrong. There was a recent patch
+to fix this, but it looks like it's not complete:
+https://lore.kernel.org/all/20230724121655.7894-1-lecopzer.chen@mediatek.com/
+
+With the above applied, syscall_errno and syscall_faked start working
+again, but not the syscall_restart test.
+
+> Note that the ABI information is lost with PTRACE_SET_SYSCALL, so one
+> cannot set the internal number to a particular version, but this was
+> already the case. We could change it to let gdb encode the ABI type along
+> with the syscall in a CONFIG_OABI_COMPAT-enabled kernel, but that itself
+> would be a (backwards-compatible) ABI change, so I don't do it here.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Another issue of note, which may just be "by design" for arm32, is that
+an invalid syscall (or, at least, a negative syscall) results in SIGILL,
+rather than a errno=ENOSYS failure. This seems to have been true at least
+as far back as v5.8 (where this was cleaned up for at least arm64 and
+s390). There was a seccomp test added for it in v5.9, but it has been
+failing for arm32 since then. :(
+
+I mention this because the behavior of the syscall_restart test looks
+like an invalid syscall: on restart a SIGILL is caught instead of the
+syscall correctly continuing.
+
+Anyway, I'll keep debugging this, but figured I'd mention it in case
+anyone else had been seeing issues in here.
+
+-Kees
+
+-- 
+Kees Cook
