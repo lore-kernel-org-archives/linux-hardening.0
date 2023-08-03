@@ -2,350 +2,201 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980A0C001DF
-	for <linux-hardening@archiver.kernel.org>; Wed,  2 Aug 2023 23:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3573C001DF
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 00:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbjHBXMm (ORCPT
+        id S232244AbjHCAHL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 2 Aug 2023 19:12:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
+        Wed, 2 Aug 2023 20:07:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbjHBXMj (ORCPT
+        with ESMTP id S233436AbjHCAGz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 2 Aug 2023 19:12:39 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9F11728
-        for <linux-hardening@vger.kernel.org>; Wed,  2 Aug 2023 16:12:35 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-40a47e8e38dso59061cf.1
-        for <linux-hardening@vger.kernel.org>; Wed, 02 Aug 2023 16:12:35 -0700 (PDT)
+        Wed, 2 Aug 2023 20:06:55 -0400
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32ED430FA
+        for <linux-hardening@vger.kernel.org>; Wed,  2 Aug 2023 17:06:30 -0700 (PDT)
+Received: by mail-ot1-x32d.google.com with SMTP id 46e09a7af769-6bb140cd5a5so392006a34.3
+        for <linux-hardening@vger.kernel.org>; Wed, 02 Aug 2023 17:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691017955; x=1691622755;
+        d=chromium.org; s=google; t=1691021189; x=1691625989;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3RSc2mv52VJAw0IWJVMgPvl170FHZjlXhjTzAhGmjS8=;
-        b=TxnUEgwM/Aq99m5DWV/8HhG1NHZt/kCAIFL0bKffotQ6QI9eGPgvoQnlM9bpI3qX56
-         BHt9zKEEM/Mn59Sgc6kf09fKcYGIRNELRpQP7zHfoxqa6XMYnHAVgTRB6/8pC27RZQzB
-         3GvNhRArFHBh6yBSjFYDZob88QNW6a7cZTjZi3YbUWFqgTW7+zHDmTvMUVvhI0MIUm7e
-         EYsGMgeoS9eJc2l3SRPpVvt/L8u8GjPUppsjx+C0BXVuvHRMW9rcuYhkNzoJi7Zb9Oh5
-         Am4alu9VUUQRuA+zESCkma02lzf5Qi2E78hgyvbypltbXiFTw9Wo3ltujyxR30FghEjs
-         w1BQ==
+        bh=C5bV8lUVCZT9FHeRYVjRrJMMVO8kdf2AYYmYfyHoLRc=;
+        b=Q43jhR9FPq4V4QC4bkK60Vp0Apj3fPeT3tJVRErdVrxxqmGP7j8AlgpeIN4vns2sU0
+         tqdIeChLPqzv02ps+kk8oeDO/zymqpAk8uWAdU66q36Oa8hGAF/n+zUkjCAgs8Ohl25w
+         LP5y+j88CgWQDq42U0pMLOE8HrtCd30+O9//8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691017955; x=1691622755;
+        d=1e100.net; s=20221208; t=1691021189; x=1691625989;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3RSc2mv52VJAw0IWJVMgPvl170FHZjlXhjTzAhGmjS8=;
-        b=V2xRoU2BFd42Fn4Ha9u0/jdVFzImGK6oUDuSLGJyOj5M9Gal3OKz4wHcDg+m1TpAvQ
-         43CglSW8JcZMcNyVTh6DUqyykzrCDgNiKvYiY/tthc7U3MW4B1kuT/KIN5207WlCpE96
-         +ah7DhMkFRPwsHLfdHHAah/iIbprG6WIO4jDO5bamAONTLJ+jjOcNJ8Qej7NH8RcR25N
-         sMJl/pVdoMz52TJsqqKl6DLzPMGJhczaggQJx6aaOJqA7z+gr8cYFtSeGjBv44f0Cv96
-         NjhQHd0dD51nEHAQwJLtO40g2T6crU5vQOV35UuNgwsro5bHPlMGGjLCswJSyj+VT81L
-         IP7w==
-X-Gm-Message-State: ABy/qLaEuj/a1lzlQ5kk7Y0QSGcgec9b2GA87pHkdm15af6P/Weg5Crr
-        hdKNdZf7kjjfE5JfmA8KaWPlw517G5XG05Jg4xVn9Q==
-X-Google-Smtp-Source: APBJJlE+QhHFJEBtiL0WPJlY+j+UBoOoAIoJn6AFQ8PeAUlwaZyEmJnC5Mwlj9SQvLZjeXlaBsol3Dv3OWqnXOf5rEI=
-X-Received: by 2002:a05:622a:28e:b0:405:432b:9973 with SMTP id
- z14-20020a05622a028e00b00405432b9973mr1176243qtw.0.1691017954844; Wed, 02 Aug
- 2023 16:12:34 -0700 (PDT)
+        bh=C5bV8lUVCZT9FHeRYVjRrJMMVO8kdf2AYYmYfyHoLRc=;
+        b=a9v6+Tk1FcFdAeK5MMDouRXsmBK2n5ZTlwbBsClHg46olg04qYAjz8iLK9J07MwsSf
+         Of1Lweb4C5Tfx8yIofzNtdwu/JGecENhah4s5Yt07TUCJGPGBvYKgNJDFquqMTgpEFv/
+         Py+1QKQbV1vUDUD/oF+XVEEKZHNqWtS86CFQ1U1sKNfBskTfn0xgLldOxSanWZH/lfMA
+         DH/q6avdwayX1B+BQNrenGr9p3yU4fXHhK0FmLjTpyIbXtUlYE+GamkV229o9Tsolekf
+         RTLbo0Az3jnQ+8NjDnl0YbYaFnacB98cb/qOKTh0On30QLPwSpcxPgtqNYzIEL4z1tQX
+         YJMA==
+X-Gm-Message-State: ABy/qLarOt4zLaS1ECO3CqqjXTlA5lOltx86Yxx98SEjOPFXfFYC6qlK
+        MF80IjM40TT8XCB5jgXGDY/H9jCS+x46gsKCWOzeWA==
+X-Google-Smtp-Source: APBJJlHULcxpHCqbXXv011nCfdvIzK7LvTT08X/UtG0LktiOwZGcV63sf1mW3qYe23ClG3POXFIKjL7Zxpyd3M8n7zw=
+X-Received: by 2002:a05:6871:1c6:b0:1ba:53ed:18c9 with SMTP id
+ q6-20020a05687101c600b001ba53ed18c9mr18741812oad.37.1691021189390; Wed, 02
+ Aug 2023 17:06:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230713143406.14342-1-cyphar@cyphar.com> <CABi2SkVCp_MDh9MgD-UJ_hgJ58ynm22XJ53zE+ZCBSsWFBxiOw@mail.gmail.com>
- <o2tz56m3y2pbbj2sezyqvtw3caqwcqtqqkkfrq632ofpyj4enp@znkxadzn5lmj>
- <CALmYWFs_dNCzw_pW1yRAo4bGCPEtykroEQaowNULp7svwMLjOg@mail.gmail.com>
- <20230801.032503-medium.noises.extinct.omen-CStYZUqcNLCS@cyphar.com>
- <CABi2SkXWfup2_UeKqm7C-xkjF5gnhKuxOP7TsRVa5MLbxabFQg@mail.gmail.com> <20230802.211829-obedient.verb.pointed.walk-inxghgNcxn@cyphar.com>
-In-Reply-To: <20230802.211829-obedient.verb.pointed.walk-inxghgNcxn@cyphar.com>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Wed, 2 Aug 2023 16:11:57 -0700
-Message-ID: <CALmYWFuahdUF7cT4cm7_TGLqPanuHXJ-hVSfZt7vpTnc18DPrw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] memfd: cleanups for vm.memfd_noexec
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Xu <jeffxu@chromium.org>,
+References: <20230714114753.170814-1-david@readahead.eu> <CALmYWFsjy2jOfKyM3Gd3Ag+p6u5ejDoBp6RhqcXkcAkMiby4SA@mail.gmail.com>
+ <fb464cbf-04c4-4346-a96b-e0b2ab804e16@app.fastmail.com> <CABi2SkUOxngcDwRDtFFD2Uef=BUXVN08dMYhmpuS_b1xC39L7g@mail.gmail.com>
+ <dadfd8d3-fe83-4aee-b8aa-3b31d4408f66@app.fastmail.com>
+In-Reply-To: <dadfd8d3-fe83-4aee-b8aa-3b31d4408f66@app.fastmail.com>
+From:   Jeff Xu <jeffxu@chromium.org>
+Date:   Wed, 2 Aug 2023 17:06:17 -0700
+Message-ID: <CABi2SkU1Cf4a99YCyyAie=NQXC7aXvroSTRrzruiXVxupTZrpA@mail.gmail.com>
+Subject: Re: [PATCH] memfd: support MFD_NOEXEC alongside MFD_EXEC
+To:     David Rheinsberg <david@readahead.eu>
+Cc:     Jeff Xu <jeffxu@google.com>, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        Daniel Verkamp <dverkamp@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+        Daniel Verkamp <dverkamp@chromium.org>, linux-mm@kvack.org,
+        Peter Xu <peterx@redhat.com>, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 2, 2023 at 2:39=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> wro=
-te:
->
-> On 2023-08-02, Jeff Xu <jeffxu@chromium.org> wrote:
-> > On Tue, Aug 1, 2023 at 6:05=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com>=
- wrote:
-> > >
-> > This thread is getting longer with different topics, I will try to
-> > respond with trimmed interleaved replies [1]
-> > There are 3 topics (logging/'migration/ratcheting), this response will
-> > be regarding ratcheting.
->
-> The migration and ratcheting topics are interconnected because the
-> migration issue makes ratcheting an even more severe issue. But I'll
-> respond to each thread separately.
->
-> > [1] https://www.kernel.org/doc/html/latest/process/submitting-patches.h=
-tml?highlight=3Dsigned%20off#use-trimmed-interleaved-replies-in-email-discu=
-ssions
+On Wed, Aug 2, 2023 at 12:58=E2=80=AFAM David Rheinsberg <david@readahead.e=
+u> wrote:
+> >> I think I didn't get my point across. Imagine an application that does=
+ *NOT* use sealing, but uses memfds. This application shares memfds with un=
+trusted clients, and does this in a safe way (SIGBUS protected). Everything=
+ works fine, unless someone decides to enable `vm.memfd_noexec=3D2`. Sudden=
+ly, the memfd will have sealing enabled *without* the application ever requ=
+esting this. Now any untrusted client that got the memfd can add seals to t=
+he memfd, even though the creator of the memfd did not enable sealing. This=
+ client can now seal WRITES on the memfd, even though it really should not =
+be able to do that.
+> >>
+> >> (This is not an hypothetical setup, we have such setups for data shari=
+ng already)
 > >
-> > >
-> > > > > > >  * The ratcheting mechanism for vm.memfd_noexec doesn't make =
-sense as a
-> > > > > > >    security mechanism because a CAP_SYS_ADMIN capable user ca=
-n create
-> > > > > > >    executable binaries in a hidden tmpfs very easily, not to =
-mention the
-> > > > > > >    many other things they can do.
-> > > > > > >
-> > > > > > By further limiting CAP_SYS_ADMIN, an attacker can't modify thi=
-s
-> > > > > > sysctl even after compromising some system service with high
-> > > > > > privilege, YAMA has the same approach for ptrace_scope=3D3
-> > > > >
-> > > > > Personally, I also think this behaviour from YAMA is a little goo=
-fy too,
-> > > > > but given that it only locks the most extreme setting and there i=
-s no
-> > > > > way to get around the most extreme setting, I guess it makes some=
- sense
-> > > > > (not to mention it's an LSM and so there is an argument that it s=
-hould
-> > > > > be possible to lock out privileged users from modifying it).
-> > > > > There are many other security sysctls, and very few have this beh=
-aviour
-> > > > > because it doesn't make much sense in most cases.
-> > > > >
-> > > > > > In addition, this sysctl is pid_name spaced, this means child
-> > > > > > pid_namespace will alway have the same or stricter security set=
-ting
-> > > > > > than its parent, this allows admin to maintain a tree like view=
-. If we
-> > > > > > allow the child pid namespace to elevate its setting, then the
-> > > > > > system-wide setting is no longer meaningful.
-> > > > >
-> > > > > "no longer meaningful" is too strong of a statement imho. It is s=
-till
-> > > > > useful for constraining non-root processes and presumably ChromeO=
-S
-> > > > > disallows random processes to do CLONE_NEWUSER (otherwise the pro=
-tection
-> > > > > of this sysctl is pointless) so in practice for ChromeOS there is=
- no
-> > > > > change in the attack surface.
-> > > > >
-> > > > > (FWIW, I think tying this to the user namespace would've made mor=
-e sense
-> > > > > since this is about privilege restrictions, but that ship has sai=
-led.)
-> > > > >
-> > > > The reason that this sysctl is a PID namespace is that I hope a
-> > > > container and host can have different sysctl values, e.g. host will
-> > > > allow runc's use of X mfd, while a container  doesn't want X mfd. .
-> > > > To clarify what you meant, do you mean this: when a container is in
-> > > > its own pid_namespace, and has "=3D2", the programs inside the cont=
-ainer
-> > > > can still use CLONE_NEWUSER to break out "=3D2" ?
-> > >
-> > > With the current implementation, this is not possible. My point was t=
-hat
-> > > even if it were possible to lower the sysctl, ChromeOS presumably
-> > > already blocks the operations that a user would be able to use to cre=
-ate
-> > > a memfd (an unprivileged user cannot CLONE_NEWPID to modify the sysct=
-l
-> > > without CLONE_NEWUSER, which is presumably blocked on ChromeOS due to
-> > > the other security concerns).
-> > >
-> > >
-> > > > > > The code sample shared in this patch set indicates that the att=
-acker
-> > > > > > already has the ability of creating tmpfs and executing complex=
- steps,
-> > > > > > at that point, it doesn't matter if the code execution is from =
-memfd
-> > > > > > or not. For a safe by default system such as ChromeOS, attacker=
-s won't
-> > > > > > easily run arbitrary code, memfd is one of the open doors for t=
-hat, so
-> > > > > > we are disabling executable memfd in ChromeOS. In other words: =
- if an
-> > > > > > attacker can already execute the arbitrary code as sample given=
- in
-> > > > > > ChromeOS, without using executable memfd,  then memfd is no lon=
-ger the
-> > > > > > thing we need to worry about, the arbitrary code execution is a=
-lready
-> > > > > > achieved by the attacker. Even though I use ChromeOS as an exam=
-ple, I
-> > > > > > think the same type of threat model applies to any system that =
-wants
-> > > > > > to disable executable memfd entirely.
-> > > > >
-> > > > > I understand the threat model this sysctl is blocking, my point i=
-s that
-> > > > > blocking CAP_SYS_ADMIN from modifying the setting doesn't make se=
-nse
-> > > > > from that threat model. An attacker that manages to trick some pr=
-ocess
-> > > > > into creating a memfd with an executable payload is not going to =
-be able
-> > > > > to change the sysctl setting (unless there's a confused deputy wi=
-th
-> > > > > CAP_SYS_ADMIN, in which case you have much bigger issues).
-> > > > >
-> > > > It is the reverse.  An attacker that manages to trick some
-> > > > CAP_SYSADMIN processes into changing this sysctl value (i.e. lower =
-the
-> > > > setting to 0 if no ratcheting), will be able to continue to use mfd=
- as
-> > > > part of the attack chain.
-> > > >  In chromeOS, an attacker that can change sysctl might not necessar=
-ily
-> > > > gain full arbitrary code execution already. As I mentioned previous=
-ly,
-> > > > the main threat model here is to prevent  arbitrary code execution
-> > > > through mfd.  If an attacker already gains arbitrary code execution=
-,
-> > > > at that point, we no longer worry about mfd.
-> > >
-> > > If an attacker can trick a privileged process into writing to arbitra=
-ry
-> > > sysctls, the system has much bigger issues than arbitrary (presumably
-> > > unprivileged) code execution. On the other hand, requiring you to reb=
-oot
-> > > a server due to a misconfigured sysctl *is* broken.
-> > >
-> > > Again, at the very least, not even allowing capable(CAP_SYS_ADMIN) to
-> > > change the setting is actually broken.
-> > >
-> > > > > If a CAP_SYS_ADMIN-capable user wants to change the sysctl, block=
-ing it
-> > > > > doesn't add any security because that process could create a memf=
-d-like
-> > > > > fd to execute without issues.
-> > > > >What practical attack does this ratcheting
-> > > > > mechanism protect against? (This is a question you can answer wit=
-h the
-> > > > > YAMA sysctl, but not this one AFAICS.)
-> > > > >
-> > > > > But even if you feel that allowing this in child user namespaces =
-is
-> > > > > unsafe or undesirable, it's absolutely necessary that
-> > > > > capable(CAP_SYS_ADMIN) should be able to un-brick the running sys=
-tem by
-> > > > > changing the sysctl. The alternative is that you need to reboot y=
-our
-> > > > > server in order to un-set a sysctl that broke some application yo=
-u run.
-> > > > >
-> > > >
-> > > > > Also, by the same token, this ratcheting mechanism doesn't make s=
-ense
-> > > > > with =3D1 *at all* because it could break programs in a way that =
-would
-> > > > > require a reboot but it's not a "security setting" (and the YAMA =
-sysctl
-> > > > > mentioned only locks the sysctl at the highest setting).
-> > > > >
-> > > > I think a system should use "=3D0" when it is unsure about its prog=
-ram's
-> > > > need or not need executable memfd. Technically, it is not that this
-> > > > sysctl breaks the user, but the admin  made the mistake to set the
-> > > > wrong sysctl value, and an admin should know what they are doing fo=
-r a
-> > > > sysctl. Yes. rebooting increases the steps to undo the mistake, but
-> > > > that could be an incentive for the admin to fully test its programs
-> > > > before turning on this sysctl - and avoid unexpected runtime errors=
-.
-> > >
-> > > I don't think this stance is really acceptable -- if an admin that ha=
-s
-> > > privileges to load kernel modules is not able to disable a sysctl tha=
-t
-> > > can break working programs without rebooting there is
-> > >
-> > > When this sysctl was first proposed a few years ago (when kernel folk=
-s
-> > > found out that runc was using executable memfds), my understanding is
-> > > that the long-term goal was to switch programs to have
-> > > non-executable-memfds by default on most distributions. Making it
-> > > impossible for an admin to lower the sysctl value flies in the face o=
-f
-> > > this goal.
-> > >
-> > > At the very least, being unable to lower the sysctl from =3D1 to =3D0=
- is
-> > > just broken (even if you use the yama example -- yama only locks the
-> > > sysctl at highest possible setting, not on lower settings). But in my
-> > > view, having this sysctl ratchet at all doesn't make sense.
-> > >
-> > To reiterate/summarize the current mechanism for vm.memfd_noexec
+> > Thanks, this helps me understand your point better.
 > >
-> > 1> It is a pid namespace sysctl,  init ns and child pid ns can have
-> > different setting values.
-> > 2> child pid ns inherits parent's pid ns's sysctl at the time of fork.
-> > 3> There are  3 values for the sysctl, each higher value is more
-> > restrictive than the lower one. Once set, doesn't allow downgrading.
+> > I'm not convinced that sysctl needs to consider the threat model of
+> > "someone" changing and breaking an application.  If we follow that
+> > threat model, there are a lot of other sysctls to worry about.
 > >
-> > It can be used as  following:
-> > 1>
-> > init ns: vm.memfd_noexec =3D 2 (at boot time)
-> > Not allow executable memfd for the entire system, including its contain=
-ers.
+> > Also, in the system that you described, if memfd is handled to an
+> > untrusted process, not only "sealing"  can cause damage, but also
+> > chmod, arbitrary rw,  imo the right approach is to harden the process
+> > or mechanism of passing the memfd.
+>
+> No. The model I describe is carefully designed to hand out file-descripto=
+rs to inodes that the clients have *no* access to. They cannot run fchmod(2=
+), unlink(2), etc. All they can do is operate on the open file. And all acc=
+ess to this shared file is properly guarded against possible damage the oth=
+er concurrent clients can do. The entire model is already hardened against =
+malicious actors.
+>
+> With the new sysctl, a new attack-vector is introduced, which was not pos=
+sible before.
+>
+> I was *explicitly* told to add `MFD_ALLOW_SEALING` for that exact reason =
+when introducing memfd_create(2). So I am a bit baffled why it is now ok to=
+ enable sealing behind the users back.
+>
+> I agree that the new sysctl is a root-only option. But I fail to see *why=
+* it implies `MFD_ALLOW_SEALING`? This behavior is not documented nor is it=
+ explained in the original commit-messages, nor mentioned *anywhere*.
+>
+> >> Thus, setting the security-option `memfd_noexec` *breaks* applications=
+, because it enables sealing. If `MFD_NOEXEC_SEAL` would *not* imply `MFD_A=
+LLOW_SEALING`, this would not be an issue. IOW, why does =C2=B4MFD_NOEXEC_S=
+EAL` clear `F_SEAL_SEAL` even if `MFD_ALLOW_SEALING` is not set?
+> >>
 > >
-> > 2>
-> > init ns: vm.memfd_noexec =3D 0 or 1
-> > container (child init namespace) vm.memfd_noexec =3D 2.
-> > The host allows runc's usage of executable memfd during container
-> > creation. Inside the container, executable memfd is not allowed.
+> > If MFD_NOEXEC_SEAL is not desired, then it should not be used to
+> > overwrite memfd_create() in this system.
 > >
-> > The inherence + not allow downgrading is to reason with how
-> > vm.memfd_noexec is applied in the process tree.
-> > Without it, essentially we are losing the hierarchy view across the
-> > process tree and  a process can evaluate its capability by modifying
-> > the setting. I think that is a less secure approach I would not
-> > prefer.
+> > For the question of why the sysctl adding a seal without application
+> > setting it , the rationale here is, as summary of previous/this
+> > emails:
 >
-> If you really want the hierarchical aspect, we can implement it so that
-> it's _actually_ hierarchical like so:
+> I still think we are not talking about the same thing. I completely under=
+stand why you add the seal! I am just questioning why you *CLEAR* `F_SEAL_S=
+EAL`? That is, why do you enable `MFD_ALLOW_SEALING` without the user reque=
+sting it? You could just set `F_SEAL_EXEC` without clearing `F_SEAL_SEAL`. =
+And then require `MFD_ALLOW_SEALING` on top to clear `F_SEAL_SEAL`.
 >
->  * By default, your setting is the same as your parent (this is checked
->    by going up the pidns tree -- a-la cgroups). This is less efficient
->    but you want a hierarchy, so we can do it this way instead.
->  * If you set a specific setting, that takes precedence but only if it's
->    a greater or equal setting to your parent.
->  * Trying to set a lower setting than your parent fails regardless of
->    privileges.
->
-> This will allow *privileged users* to lower the setting, but only if
-> the parent pidns also has a lower setting. This allows a system admin to
-> enforce the setting. It seems to me that this fulfils all the
-> requirements you have.
->
-> Most importantly, this would allow for a hierarchical view without
-> having a sysctl that will break systems and nobody will use. I need to
-> re-iterate this point -- nobody is going to use this sysctl as it
-> currently works because it ratchets in a way that admins cannot undo. In
-> practice this would mean you would need to reboot your whole datacenter
-> if you didn't catch that an update to one of you dependencies didn't
-> pass a required *noop* flag to memfd_create().
->
-Yes. I agree this is another way to implement a hierarchical view,
-which is a little more costly,  because it goes up the process tree.
-I respectfully disagree that nobody will use the current sysctl
-though, I can still see that a container might want this,  e.g. a
-small container that doesn't require a lot of refactoring to add NX,
-and restarting container usually isn't a problem, and container might
-like the fact that downgrade is denied at run time.
+Ah, I apologize. I didn't read it carefully enough and misunderstood
+you, thanks for clarification.
 
-Thanks
-Best regards,
+The reason that F_SEAL_SEAL is cleared, is that MFD_NOEXEC_SEAL
+implies MFD_ALLOW_SEALING, and it seems to be reasonable that
+application might want to use sealing  e.g I image application write
+the content to memfd then adding F_SEAL_WRITE.
+
+Your point is that MFD_ALLOW_SEALING should not be implied by
+MFD_NOEXEC_SEAL. An application should still explicitly set
+MFD_ALLOW_SEALING.
+
+To me, MFD_NOEXEC_SEAL, the _SEAL part implies to allow sealing, but
+of course, this might not be so clear to anyone other than me :-) ,
+documentation is indeed necessary.
+
+And with the context you described,  now I think your approach is better:
+1> application set MFD_NOEXEC_SEAL, with MFD_ALLOW_SEALING
+    F_SEAL_EXEC is set, F_SEAL_SEAL is clear.
+2> Application set MFD_NOEXEC_SEAL, without MFD_ALLOW_SEALING
+    F_SEAL_EXEC and F_SEAL_SEAL are set.
+
+> [...]
+> >> The downside of `MFD_NOEXEC` is that it might be picked over `MFD_NOEX=
+EC_SEAL` by uneducated users, thus reducing security. But right now, the al=
+ternative is that existing code picks `MFD_EXEC` instead and never clears t=
+he executable bit, because it is a hassle to do so.
+> >>
+> >
+> > Yes. This is the downside I was thinking about.
+> >
+> > I lean to believe the kernel API shouldn't be feature rich, it could
+> > be simple, optimized towards the majority of user cases, and ideally,
+> > is self-explained without devs to look through documentation. For
+> > example, if I had to choose one to implement between MFD_NOEXEC and
+> > MFD_NOEXEC_SEAL, I would choose MFD_NOEXEC_SEAL because it should be
+> > what most users care about.
+>
+> Well, if we were to go back, we would make MFD_NOEXEC(_SEAL) the default =
+and just add `MFD_EXEC` :)
+>
+> >> Or is there another reason *not* to include `MFD_NOEXEC`? I am not sur=
+e I understand fully why you fight it so vehemently?
+> >>
+> >
+> > I wouldn't add it myself, I hope to convince you not to :-).
+> > If you still think it is beneficial to add MFD_NOEXEC (saving one
+> > chmod call and making it easy to use), I wouldn't feel bad about that.
+> > I would suggest going with documentation to help devs to choose
+> > between those two, i.e. recommend MFD_NOEXEC_SEAL in most cases.
+>
+> Any application that cannot use `F_SEAL_EXEC` (e.g., because its peers ve=
+rify for historic reasons that the seal is not set) now has to do an extra =
+dance to get the "safer" behavior, rather than getting the "safer" behavior=
+ by default. That is, we make it easier to get the unsafe behavior than to =
+get the safe behavior (in this particular scenario).
+> Without `MFD_NOEXEC`, it is easier to end up with a 0777 memfd than not. =
+I want the application that desires `S_IXUSR` to jump through hoops, not th=
+e application that does *not* require it.
+>
+I see your points now, i.e.  the "disallow sealing entirely" is at
+least as important as "not able to chmod to add X".
+I think the reasonable mid-ground is perhaps adding MFD_NOEXEC
+support, with some documentation to help dev to choose between
+MFD_NOEXEC and MFD_NOEXEC_SEAL
+
+Would you like to update your patch to the last version on Andrew's
+branch, adding selftest, and perhaps help for documentation ?
+
+Thanks!
 -Jeff
