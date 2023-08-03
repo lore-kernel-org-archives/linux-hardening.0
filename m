@@ -2,76 +2,127 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D0AEB64DD
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 18:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCC7C001DF
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 21:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbjHCSLy (ORCPT
+        id S231868AbjHCVdy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Aug 2023 14:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41060 "EHLO
+        Thu, 3 Aug 2023 17:33:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjHCSLs (ORCPT
+        with ESMTP id S231765AbjHCVdx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Aug 2023 14:11:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A6F2719;
-        Thu,  3 Aug 2023 11:11:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D92E361E56;
-        Thu,  3 Aug 2023 18:11:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AB8C433C9;
-        Thu,  3 Aug 2023 18:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691086306;
-        bh=IsRDMEurSgruTHOOmrV+hF8ghyu+Q4Im5/V0AR7Pg8k=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=tPaZ82qS+DmKYBtpNtOY9TBL+32QrKH86QT1GUPcvS2+gBk81tVkqhSMS+5ej02Qg
-         KmHQPhzf4qlkBDokqwHNO3wGz+JfaXKlTi20MCzbkpaNJb9ONyEI20hSRdUDWWC3cd
-         sHgvBd4/R92GnM1uX+/xClBebg/8dptFU03ExrnqgOJNF3iBJxfrESAKtjx/HNK8Zs
-         uBy7p2w5+VHN55wNZlYZdvpPf5lhyJcDGMJ2dEHlrdgSg9oVr2gDM7LpNPSNdiZjRa
-         5iv6JtXKHtEF7QTXULWYamED7LCWwELohT+jcqf3DEvnPPUGpzkBdzFETVik3z3abv
-         tS3DG2Az3DQhA==
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Mustafa Ismail <mustafa.ismail@intel.com>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-In-Reply-To: <ZMpsQrZadBaJGkt4@work>
-References: <ZMpsQrZadBaJGkt4@work>
-Subject: Re: [PATCH][next] RDMA/irdma: Replace one-element array with
- flexible-array member
-Message-Id: <169108630160.1408615.8996122913079845353.b4-ty@kernel.org>
-Date:   Thu, 03 Aug 2023 21:11:41 +0300
-MIME-Version: 1.0
+        Thu, 3 Aug 2023 17:33:53 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C56E30F6
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Aug 2023 14:33:52 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-c5a479bc2d4so1505274276.1
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Aug 2023 14:33:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1691098431; x=1691703231;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9a1CX278YGq0zGZWP+f0LaA5pxcSpZKfqzUpq5J0Xvg=;
+        b=IR5xzMKe8szTmxl4p2ho1ObEqwy8naF4E4qnmDtBq7lAxEtsU16tQj/R4R5qESegez
+         PkrsM289xscbVMOJUdfqB4yLgjio6Z6UyTQ5akbsqRMVo/0CI6G846MYZvRY5SnSnkmz
+         tLPxmo4niw2nNfzxnBiONXV83evUYWw26lriJf75L9atmgvwAuNI5FQTSgUw4k4iWQrK
+         UI9t5ZYCmE3/x2kIcQyQMLaEOC8LoQHmUO9+YULFdo01f+mC99FiBoEx3M4fWkTeeb98
+         lRZqa6RGf+ZJ9wu3iOqQHRY2Gzg59Ca7BS8kxvbQPHU1PAbEiHR33FOvMQ5ucfGAtJAx
+         QPfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691098431; x=1691703231;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9a1CX278YGq0zGZWP+f0LaA5pxcSpZKfqzUpq5J0Xvg=;
+        b=JW6gIo5W0YyNNu05+T75oZFf1xFcFasyGTOZcRcwcFClahsHDzxc19UpBMzZ8kO+uV
+         agvbrkhF2VQ0ViGbw3H02xprxxIwoBVsrCGs8lAfj5YVH+/QWJ+JCym4NoeVHFoOAkQl
+         YHZ84O98wsSRALYrhgx7PqRFS6PN/YoHIdIK/GvdQtjcTxinvDVtYsojBimaZO1N1uNM
+         ewV3G/yaIv3ar8HtXbYzY08lrewAyvDjmXzE5EVOE43sCmct3uvnjIwZ0VIejwAyUJYr
+         ZAH6+NBcb5NDbWLHCAPvIf3eCm/UD10d9QzRcdhTdWxZ9Jv6euMK1od7H+7iqbVpu1vc
+         qhvQ==
+X-Gm-Message-State: ABy/qLZGqZlbd0xQpKze1gxersGPmxdqYuVlrrnUnTJ1yak0NcKZMBk6
+        PjM6EQUIXTewlJCCPfXt4+0hnajcvpQRLLdELA==
+X-Google-Smtp-Source: APBJJlEW3o5TROn1f+epZr1wpavKrHKIJTzw/zt8fdpICa5F0hhCkgMlH8XVXr9P//1ALSRc4iTaSp9JZuKiANeApg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:d24d:0:b0:d08:ea77:52d4 with SMTP
+ id j74-20020a25d24d000000b00d08ea7752d4mr138360ybg.12.1691098431718; Thu, 03
+ Aug 2023 14:33:51 -0700 (PDT)
+Date:   Thu, 03 Aug 2023 21:33:44 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIADcdzGQC/x3MQQqAIBBA0avIrBNMsaKrRAvJsWaRhlok0d2Tl
+ m/x/wMJI2GCkT0Q8aJEwVe0DYNlM35FTrYapJBKDELxhMsZKReewx5K4L3Vg9PKKm06qNUR0dH 9H6f5fT/e0nA8YQAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691098430; l=1987;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=2evVcZK0WP6ax5yAm7AbIZ6ZeQaKrhdt6vD9tIcclH0=; b=ypFgRW0czPyi/GHwpauG42Y9gan08GzQKInJtaElHrzDHwEl74ITApi9Gu8Ptkoi/fv6MXJxT
+ Z/witMGLrcwALUkSIWGhNs1KlNn/ZXVqD3fHBSWZbY0yYDhlgIV5Rxe
+X-Mailer: b4 0.12.3
+Message-ID: <20230803-security-tomoyo-v1-1-c53a17908d2f@google.com>
+Subject: [PATCH] tomoyo: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12-dev-a055d
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-On Wed, 02 Aug 2023 08:46:26 -0600, Gustavo A. R. Silva wrote:
-> One-element and zero-length arrays are deprecated. So, replace
-> one-element array in struct irdma_qvlist_info with flexible-array
-> member.
-> 
-> A patch for this was sent a while ago[1]. However, it seems that, at
-> the time, the changes were partially folded[2][3], and the actual
-> flexible-array transformation was omitted. This patch fixes that.
-> 
-> [...]
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on its destination buffer argument which is
+_not_ the case for `strncpy`!
 
-Applied, thanks!
+It should be noted that the destination buffer is zero-initialized and
+had a max length of `sizeof(dest) - 1`. There is likely _not_ a bug
+present in the current implementation. However, by switching to
+`strscpy` we get the benefit of no longer needing the `- 1`'s from the
+string copy invocations on top of `strscpy` being a safer interface all
+together.
 
-[1/1] RDMA/irdma: Replace one-element array with flexible-array member
-      https://git.kernel.org/rdma/rdma/c/38313c6d2a02c2
+[1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+[2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+ security/tomoyo/domain.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/security/tomoyo/domain.c b/security/tomoyo/domain.c
+index ac20c0bdff9d..90b53500a236 100644
+--- a/security/tomoyo/domain.c
++++ b/security/tomoyo/domain.c
+@@ -784,13 +784,12 @@ int tomoyo_find_next_domain(struct linux_binprm *bprm)
+ 		if (!strcmp(domainname, "parent")) {
+ 			char *cp;
+ 
+-			strncpy(ee->tmp, old_domain->domainname->name,
+-				TOMOYO_EXEC_TMPSIZE - 1);
++			strscpy(ee->tmp, old_domain->domainname->name, TOMOYO_EXEC_TMPSIZE);
+ 			cp = strrchr(ee->tmp, ' ');
+ 			if (cp)
+ 				*cp = '\0';
+ 		} else if (*domainname == '<')
+-			strncpy(ee->tmp, domainname, TOMOYO_EXEC_TMPSIZE - 1);
++			strscpy(ee->tmp, domainname, TOMOYO_EXEC_TMPSIZE);
+ 		else
+ 			snprintf(ee->tmp, TOMOYO_EXEC_TMPSIZE - 1, "%s %s",
+ 				 old_domain->domainname->name, domainname);
+
+---
+base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
+change-id: 20230803-security-tomoyo-7d58f53d35a6
 
 Best regards,
--- 
-Leon Romanovsky <leon@kernel.org>
+--
+Justin Stitt <justinstitt@google.com>
+
