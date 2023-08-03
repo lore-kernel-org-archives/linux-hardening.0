@@ -2,421 +2,180 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2F6EB64DD
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 14:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7AD6C04A6A
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 15:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236080AbjHCOmh (ORCPT
+        id S237262AbjHCP4K (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Aug 2023 10:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50544 "EHLO
+        Thu, 3 Aug 2023 11:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236610AbjHCOmX (ORCPT
+        with ESMTP id S237256AbjHCP4G (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Aug 2023 10:42:23 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D9B6359E
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Aug 2023 07:41:26 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-40a47e8e38dso260321cf.1
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Aug 2023 07:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691073685; x=1691678485;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+ShBENNpfd+ej/Z7XuAdwo6IW6qOMuqNvx/9JpslxY4=;
-        b=s5ZpE5m0z9BXLeriOh+7nPRPLhqXRRKn5iZFATBCfTAXWocOgUXQ62NUWrmwKzv9wF
-         gVKc9xwOyq3UcexbeqzDlKJkPBkzs3Mw8AjS/rnCiEX8LvG+6c1g5tSIg/tdmjWWLqdW
-         JtmhyMiw4nKfk7X0mD4bW2Z3VAxPJnfgAKY3z+3k9G2rwedwUCr60fRzqUYemQ4i9vnr
-         htnfaMq1gC5ffcNGo/SQpST/Yr5ZnGV5J983X+fTGOabESW85OgdU8oSxIaWvAtM4TR+
-         VkiA0zPvsx2yS1NGio0nsvfkttySjR03SmbwQl6NTkn3M/MQhTi4j8zhiOWBVMAq1Edl
-         Uz/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691073685; x=1691678485;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+ShBENNpfd+ej/Z7XuAdwo6IW6qOMuqNvx/9JpslxY4=;
-        b=gbOVmNt6fFhGCo6zPeCVdMjW9kj0Disr2AofdyWxBZ3jvauuJxstfa8c+hdbQ/t3Na
-         o12kCEIZOpjxHBAjKk/w2y80UP+vrq1y+8kdYvWhi0UdmVB3S+FTaiwwW3w+ijr9FpmD
-         +snKy6yMz/pkA12zQNk0pI4BxVV4lrAxuJaCncSDDmSGHW/vWsc51zhjBPKSkyJLJ1Sp
-         uzyJXXJKaj0M67m58PW/4c4flHEUfi/NF7BsFmNZ3U01jZyjFNsgue0ViSIsFncN2bX/
-         zOeXJxXg4HTBYK3Cm+UVbO75oKGlWaVBn/kW1XBFE+ZD+Mhd8I5uw8nRVQMSZ7UUMolc
-         HjPg==
-X-Gm-Message-State: ABy/qLZ2qw7CS1PcYov+Q4q3V5msOH8SGJPxWV8Am/5vIwN/S1qPahJd
-        iSlsKJoxui65jGVMkhlGSHEzZN6ZIOBxLVXg/kytsHDk1x78kCJE8GOqXgIEl84=
-X-Google-Smtp-Source: APBJJlGuNWoix/N0KU1hBW0OxkHI1UWTpOUCR1dXG41QDMR7tEB/2x44GxuWEnxTbceRyOmzYsfUY8dqAt9909stuko=
-X-Received: by 2002:a05:622a:5cb:b0:403:f5b8:2bd2 with SMTP id
- d11-20020a05622a05cb00b00403f5b82bd2mr1210807qtb.9.1691073684458; Thu, 03 Aug
- 2023 07:41:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230713143406.14342-1-cyphar@cyphar.com> <CABi2SkVCp_MDh9MgD-UJ_hgJ58ynm22XJ53zE+ZCBSsWFBxiOw@mail.gmail.com>
- <o2tz56m3y2pbbj2sezyqvtw3caqwcqtqqkkfrq632ofpyj4enp@znkxadzn5lmj>
- <CALmYWFs_dNCzw_pW1yRAo4bGCPEtykroEQaowNULp7svwMLjOg@mail.gmail.com>
- <20230801.032503-medium.noises.extinct.omen-CStYZUqcNLCS@cyphar.com>
- <CABi2SkXWfup2_UeKqm7C-xkjF5gnhKuxOP7TsRVa5MLbxabFQg@mail.gmail.com>
- <20230802.211829-obedient.verb.pointed.walk-inxghgNcxn@cyphar.com>
- <CALmYWFuahdUF7cT4cm7_TGLqPanuHXJ-hVSfZt7vpTnc18DPrw@mail.gmail.com> <20230803.043622-chrome.spruce.spotty.wine-lWgM90I146nT@cyphar.com>
-In-Reply-To: <20230803.043622-chrome.spruce.spotty.wine-lWgM90I146nT@cyphar.com>
-From:   Jeff Xu <jeffxu@google.com>
-Date:   Thu, 3 Aug 2023 07:40:48 -0700
-Message-ID: <CALmYWFs6H+TnosKpedP7aF0pBLfBj2DCfcVPAuKaZPx7kKbO4g@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/3] memfd: cleanups for vm.memfd_noexec
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Xu <jeffxu@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Daniel Verkamp <dverkamp@chromium.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-hardening@vger.kernel.org
+        Thu, 3 Aug 2023 11:56:06 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5465D3C28;
+        Thu,  3 Aug 2023 08:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691078162; x=1722614162;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=2f/4sdsnh3ve4v5VHXytdwoRd3Khg3eL3Y5kvvdVElw=;
+  b=hwdSzlXyM/ggbKzYqYah/iSS+XDeXb1hlMwKJPjSowndb0dptCztNlzG
+   FS6scPZkdmC9do+zIoK9cN3s24+jmtmYeQNM9/eVvJNavo3Myyt3si703
+   kIPEVwR/axPZ/dfOCvDhHjSCvocc0brxgdZBzdB/xoRkYh//qClEr6MEx
+   J5H8FXSuimDqmCFhDB/69QR4eoulybXvCM2qPCe1RXdWY7KQSU0F3UD9k
+   Dl7R1L5YrSsoOPNhlUUcTmWRSEyHgasc7uZ5V1524QaoR+6z8ljZY8mcV
+   BxF6UuB0dH5OFJdSiYImAZ+d/MVGVfumL47T3cJE9Ch5lEViSamqSAcsw
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="400867534"
+X-IronPort-AV: E=Sophos;i="6.01,252,1684825200"; 
+   d="scan'208";a="400867534"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2023 08:55:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10791"; a="843635519"
+X-IronPort-AV: E=Sophos;i="6.01,252,1684825200"; 
+   d="scan'208";a="843635519"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Aug 2023 08:55:53 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Thu, 3 Aug 2023 08:55:52 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Thu, 3 Aug 2023 08:55:52 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Thu, 3 Aug 2023 08:55:52 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Thu, 3 Aug 2023 08:55:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JJWLdfbpfcVv2Q6bJbiBp/zW3FoIZYxeHGSWFkDyfUQYltGts2I9Q61EQ7xZqa6ccLWudyciaYTfHVK2NqYluB1CTAH1y4OMYWmbZ3Ou50hV12bolXCPw/uPqODpPbg9hyn0g4WkXhlrpUFu3LC/+xF1LBCyySHpPZstKLuknaPiL/AamcnAtfW6F1IlhBzSrO/1/Dg5GOeGjjZlYJS3jEhNnfCkuevEIOp3KiuL2U63KrKo5LOplT9qZsjcWTcB5qvrXhbyuSCOXYOTVoKoEwNu30UE7w3miRJh9kgcCIn69HTpFf2JI00wrSXoS33Ep5g3rQ3UrESnz5L83z4nqA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N2M2lGosce78zmFcwqsAud0jYL71Puo/NE9jh3uU46o=;
+ b=ftH1NRl+pRFpGG1PmbyxilnSYVgpEWjW54xf4GL+f4eLvA1/9Xl2OwXXPKEn59M9p4aYeAGtpzEX+G2liI9BsrpgWC1OsPfSHP+fL4amZNYk8XNtAbj8BL3ltgmq1AyDw1T5PCyCP6GSLf5QL93azBZq/O53croYqJyz/il38PX/avN64RZYwCLhchc5IYFglhqiEd62E9i/FtcnC4fTQ5XeCgqDT7fdF62tcEQEcOQRiKxrmZi1dOIbgdFvhZtiYda9X/aUs+P50qNt3trUTDFS16TUN6L4S6exDzGenbjGih/vOy8VCDZGaTvdjydN3jQK2twBJE5zKhhesFoXPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM6PR11MB3625.namprd11.prod.outlook.com (2603:10b6:5:13a::21)
+ by DM6PR11MB4577.namprd11.prod.outlook.com (2603:10b6:5:2a1::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.19; Thu, 3 Aug
+ 2023 15:55:50 +0000
+Received: from DM6PR11MB3625.namprd11.prod.outlook.com
+ ([fe80::44ff:6a5:9aa4:124a]) by DM6PR11MB3625.namprd11.prod.outlook.com
+ ([fe80::44ff:6a5:9aa4:124a%7]) with mapi id 15.20.6631.046; Thu, 3 Aug 2023
+ 15:55:50 +0000
+Message-ID: <a8466f4b-f773-4d0a-f22b-34c83a7aa942@intel.com>
+Date:   Thu, 3 Aug 2023 17:55:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH net-next 0/3] virtchnl: fix fake 1-elem arrays
+Content-Language: en-US
+To:     "David S. Miller" <davem@davemloft.net>
+CC:     Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Larysa Zaremba <larysa.zaremba@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>, <netdev@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>,
+        <intel-wired-lan@lists.osuosl.org>, <linux-kernel@vger.kernel.org>
+References: <20230728155207.10042-1-aleksander.lobakin@intel.com>
+From:   Alexander Lobakin <aleksander.lobakin@intel.com>
+In-Reply-To: <20230728155207.10042-1-aleksander.lobakin@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BE1P281CA0399.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:80::6) To DM6PR11MB3625.namprd11.prod.outlook.com
+ (2603:10b6:5:13a::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3625:EE_|DM6PR11MB4577:EE_
+X-MS-Office365-Filtering-Correlation-Id: c12ce2e9-785b-4edf-fcd5-08db943a1bf5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: niJ2+lMd1z2wt/PEwqghPGGHwk9hPWMY7SBPOC5tNjeMw4Xqm3ym79fzZ7eRIJvbTdc/f9OZJEtiTAl932An2pUReciVzsLvyvrb3V0HH274kB22O0E2/x8YGVnboHl3wo/8CiBWbublpj6BgXpTmhzkwuK79HeL+N7FNGtv0p8x1IkaT+KMjoYc7v0h4Y6+FHgmeuh5VJnr60njAYj6z33m9iP/wLC09YJiFI439pIhUKBB+dmIFvG2TNwplVR0GIDra1QiZhXEKJ2GpzmlVkNRLg3y21hqcoCZd2JBCgkq7uZlm/2eBFJmBiPWdT3LXHVazCfssWgXpXumdVsENfFfkyVOr1IizHOA78i3BY0lQmeh5lJyeQLjAPGlaUYE2cCUCbB7c6v+FYyX9Imct/5F2gkZyYzvnLKLEp4VEm8MIHsir2sFKc16b5Kh1p82mZDMPyQv9ZsAjwDXhQlYyuck8kaI1f2CYlre71GbWr6rs7ieFA5EU5VnkijDLoJv474vw6Y0Ozn5CvoTf1JsVXWYuuer52v5PhXRFzQ3Tsih+nCmw/c5H2rvrxUK84U45a7mCA9Z6ov8PuZWJ1yATWBFP4iq3EGtpoI/9+D1hnjEWelB8KpXVMDf9pB4/AST731mw6VBpPGzGamNiebILw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3625.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(396003)(376002)(39860400002)(346002)(366004)(451199021)(6916009)(66556008)(4326008)(66476007)(66946007)(38100700002)(186003)(2616005)(82960400001)(2906002)(6506007)(26005)(7416002)(83380400001)(54906003)(31696002)(478600001)(86362001)(36756003)(6512007)(6666004)(6486002)(4744005)(41300700001)(8676002)(8936002)(31686004)(5660300002)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N09OMDA5YmdUc3E1V3dIMWd1eTAvVDlaM2FWN1hxQWRncnVvSjRuNjZUU2Zq?=
+ =?utf-8?B?SmNlS1UvVVc0N3VmVEo0VjVKZFMxc0djeWkvLzM3VnNjdDNhdnJDRWdUSndo?=
+ =?utf-8?B?Z3MvL1lDa1FNNjByR25nMHdOTFJwTTNFbERBNkdKK2FyNTcrdExTY3JPMGNv?=
+ =?utf-8?B?V3diRk8zUUJVNGpCTi80TnVWSHg4bTF6T3BDK0d2UTJra0ZmUXZBV1BUZU02?=
+ =?utf-8?B?NUoxaHlPZXIrbVpNK0xvMFZKOG1EWnFjZEN6bFlUditrR0dnaEJoRmVrbDdl?=
+ =?utf-8?B?UnpnNzZKTVE5OGJMb2xzM2pyQjNPZ0JEMVkzT2d3UTZFaVNzeit0d3J6SlZL?=
+ =?utf-8?B?MVl2VmNGVHBvWm02RU1YSWVDVHhKZFBrZlB6OUNKRmdzYnAvZG9rOUdsTjlZ?=
+ =?utf-8?B?Zityb01kUkNMZFQ5YytIQXJ5Umg4RHAranQyZ0VOeWF5YlR3TjNUMVlKL2g5?=
+ =?utf-8?B?M2EvVmhvNFpJSzdsMWFjV3JmUER0aWxIYkNJTDZSemtzWnA4bk9adEZMMEQz?=
+ =?utf-8?B?dlFNdHZ0VTc1ZjFwcy9ackIyamFNZFpUcXBPVW83cTJqbEsvc0lBa1dBc3FM?=
+ =?utf-8?B?akIwbDZPaXJjK2VJeWk0OU4xNHZvaFRmVXlCM2M0TDl2eEJTUG41WDRqS3Vz?=
+ =?utf-8?B?RkxBajZ2MXdXUm84cnNzNkR3SDNPZmJRZnBkL1N0amQrVWJpUTVRdC9uQU9w?=
+ =?utf-8?B?QlFDUFRhZzNXU1JWRWs0MnRGQWxBd1NhbStOK0hWdjNBb3V3WHFGZzBaaUNU?=
+ =?utf-8?B?Kzg3MUEwY0VFNWVlVGRMRWUxdVlKQVVTSW1CMmU3RmN0OElGR0NqTktXZFRX?=
+ =?utf-8?B?Rm56L2taNlBDbmRRTmhrY0tGRVdvMlBSbGZjNHYrT25IaVdWUGFWRnhqU0Mz?=
+ =?utf-8?B?N2FLSEVEQWllNHFvV2RpMS9PNXVrcjZsa3I2SGlmcVlsQVhoUjZ6Q3Nxd3FK?=
+ =?utf-8?B?V3UzRlIwVk1NU0U3T3FtRDdGSExJV0hGM1hvMFJMTGhFd1M4SzROSFRQLzNy?=
+ =?utf-8?B?OEphTC85WGpsYXRjN3ArQ2hsWmFxQXd2MmhaVjRLODdFbzgxc2lIYVpHU3Yz?=
+ =?utf-8?B?alp1eC8wLzVweDJvQWJUcmE2MjFUZ0hqblg0b3g2SHVlV2ZWUUJvOHdFemRM?=
+ =?utf-8?B?WTlyT3JqNHU5ZHB5SlhtMldVL3l4V3lZMExxdmt2RTNvU00zREoxSDZDMXpX?=
+ =?utf-8?B?Y04ra25qazlzZ043aXB4WHNYMU4vVTB1VWtaQjlZeDhQTlluMzB2bDdsajdw?=
+ =?utf-8?B?dWs2VkJoUUVOTHpFbDk4dFQvTWZ3b0QyTDdKQmI1ZHZCdVFINGRrVzRKcWVN?=
+ =?utf-8?B?TEMyL01xS2t0dlllVnlYRFMrM3ZSS1lHNnZDMlk2ak81eFJ5d05IRmp3bkl1?=
+ =?utf-8?B?Y3RRaUduQlBGd0YwYWR5akxlbXV3SkNoSER3RDlzOUUrRHRJZ1YvVkNnT3Bk?=
+ =?utf-8?B?ZUVaaTFDTjZlaU9rUThHWEhlMEJmOUk3b1BscVZvdThNZ1ZucndHMXJObUVW?=
+ =?utf-8?B?OWtUZnJSK1FkZFJFRFNwWWluVEpCVDVwMHViNy9ldlBvMFNVWG9BQ21STTVK?=
+ =?utf-8?B?dCtPOHZrSXJ5c0E3QkY4Z2ZpRWRycUhjVFZXT0lSM01uZVk5T0xUTm4rK09B?=
+ =?utf-8?B?SXNYNDdiNWZRM3NnNG5FV3NDU2JneWQ3RHh3Mk5VNjMyK29SZVRVTDZFQzBs?=
+ =?utf-8?B?d2VHajBkeEViNmFoMXZqL3I5aWp4T3R5VzhGTVVrd25XTFhhcjVFWkpoSTVX?=
+ =?utf-8?B?UUI0Z3QrU0FBQUgvMktWVEV1SU5PQnVDVGFWZVN4Njkvekx4RWE4Z2xPdSs4?=
+ =?utf-8?B?TkpGMUxraStxb25RT2FOTWxTbDNZWkFkTTFiV3RFNEdHUmJUSmFYTk1PNE9E?=
+ =?utf-8?B?TU8xcDdRUVBhZmMzZDczYWxSdGl2SFBsOU9TZS9Wdm9XVU9QbGRoRkhUWnRr?=
+ =?utf-8?B?bmx2NFBjL3hCK0FKZzZwYlFPQzBZY0dQWXBYQ3VtSHZkcWVIN0JuVy9FU2Zz?=
+ =?utf-8?B?N2xmYUQrRVVFSncwa0Y5R1BUN1JkdzhmNGdvZnk1VUYzdXoxK2xhTU1zRjhD?=
+ =?utf-8?B?U3ZIZlJuUmlIWlVEMzVoa2NteHUrWGZMbWU0WEdxVFFSY01sNjZKV0x5TkRF?=
+ =?utf-8?B?QmhxSDBadW8xb3Q4MlVSZFdiS1pKOGJPaTZUS2pTWHRqYXVvdlB6VzlUNzZp?=
+ =?utf-8?B?TEE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: c12ce2e9-785b-4edf-fcd5-08db943a1bf5
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3625.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2023 15:55:50.3922
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pR64vSqbKQgPxNbEK94aWOJwGlp2bgyh8Orgv/dLJILC3jOHQGhj0dd7j1yqKRN2MAZcX66h3kFVA2fSRd+H0Cergsd0RJYR4FEmUS/2/5w=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4577
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 2, 2023 at 9:40=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> wro=
-te:
->
-> On 2023-08-02, Jeff Xu <jeffxu@google.com> wrote:
-> > On Wed, Aug 2, 2023 at 2:39=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com>=
- wrote:
-> > >
-> > > On 2023-08-02, Jeff Xu <jeffxu@chromium.org> wrote:
-> > > > On Tue, Aug 1, 2023 at 6:05=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.=
-com> wrote:
-> > > > >
-> > > > This thread is getting longer with different topics, I will try to
-> > > > respond with trimmed interleaved replies [1]
-> > > > There are 3 topics (logging/'migration/ratcheting), this response w=
-ill
-> > > > be regarding ratcheting.
-> > >
-> > > The migration and ratcheting topics are interconnected because the
-> > > migration issue makes ratcheting an even more severe issue. But I'll
-> > > respond to each thread separately.
-> > >
-> > > > [1] https://www.kernel.org/doc/html/latest/process/submitting-patch=
-es.html?highlight=3Dsigned%20off#use-trimmed-interleaved-replies-in-email-d=
-iscussions
-> > > >
-> > > > >
-> > > > > > > > >  * The ratcheting mechanism for vm.memfd_noexec doesn't m=
-ake sense as a
-> > > > > > > > >    security mechanism because a CAP_SYS_ADMIN capable use=
-r can create
-> > > > > > > > >    executable binaries in a hidden tmpfs very easily, not=
- to mention the
-> > > > > > > > >    many other things they can do.
-> > > > > > > > >
-> > > > > > > > By further limiting CAP_SYS_ADMIN, an attacker can't modify=
- this
-> > > > > > > > sysctl even after compromising some system service with hig=
-h
-> > > > > > > > privilege, YAMA has the same approach for ptrace_scope=3D3
-> > > > > > >
-> > > > > > > Personally, I also think this behaviour from YAMA is a little=
- goofy too,
-> > > > > > > but given that it only locks the most extreme setting and the=
-re is no
-> > > > > > > way to get around the most extreme setting, I guess it makes =
-some sense
-> > > > > > > (not to mention it's an LSM and so there is an argument that =
-it should
-> > > > > > > be possible to lock out privileged users from modifying it).
-> > > > > > > There are many other security sysctls, and very few have this=
- behaviour
-> > > > > > > because it doesn't make much sense in most cases.
-> > > > > > >
-> > > > > > > > In addition, this sysctl is pid_name spaced, this means chi=
-ld
-> > > > > > > > pid_namespace will alway have the same or stricter security=
- setting
-> > > > > > > > than its parent, this allows admin to maintain a tree like =
-view. If we
-> > > > > > > > allow the child pid namespace to elevate its setting, then =
-the
-> > > > > > > > system-wide setting is no longer meaningful.
-> > > > > > >
-> > > > > > > "no longer meaningful" is too strong of a statement imho. It =
-is still
-> > > > > > > useful for constraining non-root processes and presumably Chr=
-omeOS
-> > > > > > > disallows random processes to do CLONE_NEWUSER (otherwise the=
- protection
-> > > > > > > of this sysctl is pointless) so in practice for ChromeOS ther=
-e is no
-> > > > > > > change in the attack surface.
-> > > > > > >
-> > > > > > > (FWIW, I think tying this to the user namespace would've made=
- more sense
-> > > > > > > since this is about privilege restrictions, but that ship has=
- sailed.)
-> > > > > > >
-> > > > > > The reason that this sysctl is a PID namespace is that I hope a
-> > > > > > container and host can have different sysctl values, e.g. host =
-will
-> > > > > > allow runc's use of X mfd, while a container  doesn't want X mf=
-d. .
-> > > > > > To clarify what you meant, do you mean this: when a container i=
-s in
-> > > > > > its own pid_namespace, and has "=3D2", the programs inside the =
-container
-> > > > > > can still use CLONE_NEWUSER to break out "=3D2" ?
-> > > > >
-> > > > > With the current implementation, this is not possible. My point w=
-as that
-> > > > > even if it were possible to lower the sysctl, ChromeOS presumably
-> > > > > already blocks the operations that a user would be able to use to=
- create
-> > > > > a memfd (an unprivileged user cannot CLONE_NEWPID to modify the s=
-ysctl
-> > > > > without CLONE_NEWUSER, which is presumably blocked on ChromeOS du=
-e to
-> > > > > the other security concerns).
-> > > > >
-> > > > >
-> > > > > > > > The code sample shared in this patch set indicates that the=
- attacker
-> > > > > > > > already has the ability of creating tmpfs and executing com=
-plex steps,
-> > > > > > > > at that point, it doesn't matter if the code execution is f=
-rom memfd
-> > > > > > > > or not. For a safe by default system such as ChromeOS, atta=
-ckers won't
-> > > > > > > > easily run arbitrary code, memfd is one of the open doors f=
-or that, so
-> > > > > > > > we are disabling executable memfd in ChromeOS. In other wor=
-ds:  if an
-> > > > > > > > attacker can already execute the arbitrary code as sample g=
-iven in
-> > > > > > > > ChromeOS, without using executable memfd,  then memfd is no=
- longer the
-> > > > > > > > thing we need to worry about, the arbitrary code execution =
-is already
-> > > > > > > > achieved by the attacker. Even though I use ChromeOS as an =
-example, I
-> > > > > > > > think the same type of threat model applies to any system t=
-hat wants
-> > > > > > > > to disable executable memfd entirely.
-> > > > > > >
-> > > > > > > I understand the threat model this sysctl is blocking, my poi=
-nt is that
-> > > > > > > blocking CAP_SYS_ADMIN from modifying the setting doesn't mak=
-e sense
-> > > > > > > from that threat model. An attacker that manages to trick som=
-e process
-> > > > > > > into creating a memfd with an executable payload is not going=
- to be able
-> > > > > > > to change the sysctl setting (unless there's a confused deput=
-y with
-> > > > > > > CAP_SYS_ADMIN, in which case you have much bigger issues).
-> > > > > > >
-> > > > > > It is the reverse.  An attacker that manages to trick some
-> > > > > > CAP_SYSADMIN processes into changing this sysctl value (i.e. lo=
-wer the
-> > > > > > setting to 0 if no ratcheting), will be able to continue to use=
- mfd as
-> > > > > > part of the attack chain.
-> > > > > >  In chromeOS, an attacker that can change sysctl might not nece=
-ssarily
-> > > > > > gain full arbitrary code execution already. As I mentioned prev=
-iously,
-> > > > > > the main threat model here is to prevent  arbitrary code execut=
-ion
-> > > > > > through mfd.  If an attacker already gains arbitrary code execu=
-tion,
-> > > > > > at that point, we no longer worry about mfd.
-> > > > >
-> > > > > If an attacker can trick a privileged process into writing to arb=
-itrary
-> > > > > sysctls, the system has much bigger issues than arbitrary (presum=
-ably
-> > > > > unprivileged) code execution. On the other hand, requiring you to=
- reboot
-> > > > > a server due to a misconfigured sysctl *is* broken.
-> > > > >
-> > > > > Again, at the very least, not even allowing capable(CAP_SYS_ADMIN=
-) to
-> > > > > change the setting is actually broken.
-> > > > >
-> > > > > > > If a CAP_SYS_ADMIN-capable user wants to change the sysctl, b=
-locking it
-> > > > > > > doesn't add any security because that process could create a =
-memfd-like
-> > > > > > > fd to execute without issues.
-> > > > > > >What practical attack does this ratcheting
-> > > > > > > mechanism protect against? (This is a question you can answer=
- with the
-> > > > > > > YAMA sysctl, but not this one AFAICS.)
-> > > > > > >
-> > > > > > > But even if you feel that allowing this in child user namespa=
-ces is
-> > > > > > > unsafe or undesirable, it's absolutely necessary that
-> > > > > > > capable(CAP_SYS_ADMIN) should be able to un-brick the running=
- system by
-> > > > > > > changing the sysctl. The alternative is that you need to rebo=
-ot your
-> > > > > > > server in order to un-set a sysctl that broke some applicatio=
-n you run.
-> > > > > > >
-> > > > > >
-> > > > > > > Also, by the same token, this ratcheting mechanism doesn't ma=
-ke sense
-> > > > > > > with =3D1 *at all* because it could break programs in a way t=
-hat would
-> > > > > > > require a reboot but it's not a "security setting" (and the Y=
-AMA sysctl
-> > > > > > > mentioned only locks the sysctl at the highest setting).
-> > > > > > >
-> > > > > > I think a system should use "=3D0" when it is unsure about its =
-program's
-> > > > > > need or not need executable memfd. Technically, it is not that =
-this
-> > > > > > sysctl breaks the user, but the admin  made the mistake to set =
-the
-> > > > > > wrong sysctl value, and an admin should know what they are doin=
-g for a
-> > > > > > sysctl. Yes. rebooting increases the steps to undo the mistake,=
- but
-> > > > > > that could be an incentive for the admin to fully test its prog=
-rams
-> > > > > > before turning on this sysctl - and avoid unexpected runtime er=
-rors.
-> > > > >
-> > > > > I don't think this stance is really acceptable -- if an admin tha=
-t has
-> > > > > privileges to load kernel modules is not able to disable a sysctl=
- that
-> > > > > can break working programs without rebooting there is
-> > > > >
-> > > > > When this sysctl was first proposed a few years ago (when kernel =
-folks
-> > > > > found out that runc was using executable memfds), my understandin=
-g is
-> > > > > that the long-term goal was to switch programs to have
-> > > > > non-executable-memfds by default on most distributions. Making it
-> > > > > impossible for an admin to lower the sysctl value flies in the fa=
-ce of
-> > > > > this goal.
-> > > > >
-> > > > > At the very least, being unable to lower the sysctl from =3D1 to =
-=3D0 is
-> > > > > just broken (even if you use the yama example -- yama only locks =
-the
-> > > > > sysctl at highest possible setting, not on lower settings). But i=
-n my
-> > > > > view, having this sysctl ratchet at all doesn't make sense.
-> > > > >
-> > > > To reiterate/summarize the current mechanism for vm.memfd_noexec
-> > > >
-> > > > 1> It is a pid namespace sysctl,  init ns and child pid ns can have
-> > > > different setting values.
-> > > > 2> child pid ns inherits parent's pid ns's sysctl at the time of fo=
-rk.
-> > > > 3> There are  3 values for the sysctl, each higher value is more
-> > > > restrictive than the lower one. Once set, doesn't allow downgrading=
-.
-> > > >
-> > > > It can be used as  following:
-> > > > 1>
-> > > > init ns: vm.memfd_noexec =3D 2 (at boot time)
-> > > > Not allow executable memfd for the entire system, including its con=
-tainers.
-> > > >
-> > > > 2>
-> > > > init ns: vm.memfd_noexec =3D 0 or 1
-> > > > container (child init namespace) vm.memfd_noexec =3D 2.
-> > > > The host allows runc's usage of executable memfd during container
-> > > > creation. Inside the container, executable memfd is not allowed.
-> > > >
-> > > > The inherence + not allow downgrading is to reason with how
-> > > > vm.memfd_noexec is applied in the process tree.
-> > > > Without it, essentially we are losing the hierarchy view across the
-> > > > process tree and  a process can evaluate its capability by modifyin=
-g
-> > > > the setting. I think that is a less secure approach I would not
-> > > > prefer.
-> > >
-> > > If you really want the hierarchical aspect, we can implement it so th=
-at
-> > > it's _actually_ hierarchical like so:
-> > >
-> > >  * By default, your setting is the same as your parent (this is check=
-ed
-> > >    by going up the pidns tree -- a-la cgroups). This is less efficien=
-t
-> > >    but you want a hierarchy, so we can do it this way instead.
-> > >  * If you set a specific setting, that takes precedence but only if i=
-t's
-> > >    a greater or equal setting to your parent.
-> > >  * Trying to set a lower setting than your parent fails regardless of
-> > >    privileges.
-> > >
-> > > This will allow *privileged users* to lower the setting, but only if
-> > > the parent pidns also has a lower setting. This allows a system admin=
- to
-> > > enforce the setting. It seems to me that this fulfils all the
-> > > requirements you have.
-> > >
-> > > Most importantly, this would allow for a hierarchical view without
-> > > having a sysctl that will break systems and nobody will use. I need t=
-o
-> > > re-iterate this point -- nobody is going to use this sysctl as it
-> > > currently works because it ratchets in a way that admins cannot undo.=
- In
-> > > practice this would mean you would need to reboot your whole datacent=
-er
-> > > if you didn't catch that an update to one of you dependencies didn't
-> > > pass a required *noop* flag to memfd_create().
-> > >
-> > Yes. I agree this is another way to implement a hierarchical view,
-> > which is a little more costly,  because it goes up the process tree.
->
-> The maximum height is 32 namespaces, it's not that bad. I'm working on a
-> v2 that implements it this way instead.
->
-> I also just figured out that there is a flaw with the current
-> implementation's "hierarchy" -- if you create a pid namespace and then
-> change vm.memfd_noexec, the limit doesn't apply to the child pidns. This
-> makes sense given the implementation, but it means that the "tree view"
-> you talked about doesn't actually apply to your implementation.
->
-That is by design.
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Date: Fri, 28 Jul 2023 17:52:04 +0200
 
-The return on investment of implementing dynamic propagation isn't
-high, i.e. vm.memfd_noexec  is  something that needs to be fully
-tested before set and changing it at runtime is not recommended in
-production,  downgrade requires reboot/restart.  On the host side, the
-kernel cmd line now supports setting sysctl, and it can be applied
-from boot time. These combined factors make me choose the current
-implementation.
-Simplicity is something I value greatly. feature richness can be
-achieved, but sometimes with the cost of complexity.
+> 6.5-rc1 started spitting warning splats when composing virtchnl
+> messages, precisely on virtchnl_rss_key and virtchnl_lut:
+> 
+> [   84.167709] memcpy: detected field-spanning write (size 52) of single
+> field "vrk->key" at drivers/net/ethernet/intel/iavf/iavf_virtchnl.c:1095
+> (size 1)
+> [   84.169915] WARNING: CPU: 3 PID: 11 at drivers/net/ethernet/intel/
+> iavf/iavf_virtchnl.c:1095 iavf_set_rss_key+0x123/0x140 [iavf]
 
-> > I respectfully disagree that nobody will use the current sysctl
-> > though, I can still see that a container might want this,  e.g. a
-> > small container that doesn't require a lot of refactoring to add NX,
-> > and restarting container usually isn't a problem, and container might
-> > like the fact that downgrade is denied at run time.
->
-> I should've specified that I was talking about using the setting on the
-> host (which is presumably the goal -- at the very least I presume the
-> goal is to get distributions to use =3D1 at some point).
->
-> Also, funnily enough, container runtimes use executable memfds. :P
->
-Yes. runc uses executable memfd.
-Current implementation considered runc's case at host. As I said,
-containers that don't require executable memfd can migrate their code
-and set "vm.memfd_noexec =3D 2", which I hope is easier to do than on
-host.
+(tender ping :D)
 
-> --
-> Aleksa Sarai
-> Senior Software Engineer (Containers)
-> SUSE Linux GmbH
-> <https://www.cyphar.com/>
+Thanks,
+Olek
