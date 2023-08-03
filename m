@@ -2,127 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCC7C001DF
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 21:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C0DC04A6A
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 22:43:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231868AbjHCVdy (ORCPT
+        id S231915AbjHCWnC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Aug 2023 17:33:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
+        Thu, 3 Aug 2023 18:43:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231765AbjHCVdx (ORCPT
+        with ESMTP id S231260AbjHCWnB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Aug 2023 17:33:53 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C56E30F6
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Aug 2023 14:33:52 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-c5a479bc2d4so1505274276.1
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Aug 2023 14:33:52 -0700 (PDT)
+        Thu, 3 Aug 2023 18:43:01 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4BE10C1
+        for <linux-hardening@vger.kernel.org>; Thu,  3 Aug 2023 15:43:00 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1b8b4749013so12669165ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 03 Aug 2023 15:43:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691098431; x=1691703231;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9a1CX278YGq0zGZWP+f0LaA5pxcSpZKfqzUpq5J0Xvg=;
-        b=IR5xzMKe8szTmxl4p2ho1ObEqwy8naF4E4qnmDtBq7lAxEtsU16tQj/R4R5qESegez
-         PkrsM289xscbVMOJUdfqB4yLgjio6Z6UyTQ5akbsqRMVo/0CI6G846MYZvRY5SnSnkmz
-         tLPxmo4niw2nNfzxnBiONXV83evUYWw26lriJf75L9atmgvwAuNI5FQTSgUw4k4iWQrK
-         UI9t5ZYCmE3/x2kIcQyQMLaEOC8LoQHmUO9+YULFdo01f+mC99FiBoEx3M4fWkTeeb98
-         lRZqa6RGf+ZJ9wu3iOqQHRY2Gzg59Ca7BS8kxvbQPHU1PAbEiHR33FOvMQ5ucfGAtJAx
-         QPfA==
+        d=chromium.org; s=google; t=1691102580; x=1691707380;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=INe5iUN8OqFkxldA5UUSZCvoiHbOkh93tbzwvbZM2yg=;
+        b=AdrcoKcYKsDTC2sk5II1JfGBSGWxn+Mf/Sxnutk3q1l506vOr49iIj/50hD798HN7F
+         b0OZc7JKWeDh12FhSjL1Xl4BHhP+B9RobN0klmBuKMhnefOK9+UFoMYitJo0B22Um2dY
+         eJvU1iwgwiD/b9pJcn2WLq9Pd4MHq6mJciEdg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691098431; x=1691703231;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9a1CX278YGq0zGZWP+f0LaA5pxcSpZKfqzUpq5J0Xvg=;
-        b=JW6gIo5W0YyNNu05+T75oZFf1xFcFasyGTOZcRcwcFClahsHDzxc19UpBMzZ8kO+uV
-         agvbrkhF2VQ0ViGbw3H02xprxxIwoBVsrCGs8lAfj5YVH+/QWJ+JCym4NoeVHFoOAkQl
-         YHZ84O98wsSRALYrhgx7PqRFS6PN/YoHIdIK/GvdQtjcTxinvDVtYsojBimaZO1N1uNM
-         ewV3G/yaIv3ar8HtXbYzY08lrewAyvDjmXzE5EVOE43sCmct3uvnjIwZ0VIejwAyUJYr
-         ZAH6+NBcb5NDbWLHCAPvIf3eCm/UD10d9QzRcdhTdWxZ9Jv6euMK1od7H+7iqbVpu1vc
-         qhvQ==
-X-Gm-Message-State: ABy/qLZGqZlbd0xQpKze1gxersGPmxdqYuVlrrnUnTJ1yak0NcKZMBk6
-        PjM6EQUIXTewlJCCPfXt4+0hnajcvpQRLLdELA==
-X-Google-Smtp-Source: APBJJlEW3o5TROn1f+epZr1wpavKrHKIJTzw/zt8fdpICa5F0hhCkgMlH8XVXr9P//1ALSRc4iTaSp9JZuKiANeApg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:d24d:0:b0:d08:ea77:52d4 with SMTP
- id j74-20020a25d24d000000b00d08ea7752d4mr138360ybg.12.1691098431718; Thu, 03
- Aug 2023 14:33:51 -0700 (PDT)
-Date:   Thu, 03 Aug 2023 21:33:44 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIADcdzGQC/x3MQQqAIBBA0avIrBNMsaKrRAvJsWaRhlok0d2Tl
- m/x/wMJI2GCkT0Q8aJEwVe0DYNlM35FTrYapJBKDELxhMsZKReewx5K4L3Vg9PKKm06qNUR0dH 9H6f5fT/e0nA8YQAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691098430; l=1987;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=2evVcZK0WP6ax5yAm7AbIZ6ZeQaKrhdt6vD9tIcclH0=; b=ypFgRW0czPyi/GHwpauG42Y9gan08GzQKInJtaElHrzDHwEl74ITApi9Gu8Ptkoi/fv6MXJxT
- Z/witMGLrcwALUkSIWGhNs1KlNn/ZXVqD3fHBSWZbY0yYDhlgIV5Rxe
-X-Mailer: b4 0.12.3
-Message-ID: <20230803-security-tomoyo-v1-1-c53a17908d2f@google.com>
-Subject: [PATCH] tomoyo: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
+        d=1e100.net; s=20221208; t=1691102580; x=1691707380;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=INe5iUN8OqFkxldA5UUSZCvoiHbOkh93tbzwvbZM2yg=;
+        b=fwTXsjQQ4dImPmOCNr+YKNjUZqlsjq/Toy8HrP+W8e9VN+YJXZrrgj3igE+p/U4PH3
+         aL3PYQkN1VaBeGdeqSWNbSuk5Hn25yxHaSJn6g6dKU+k8QIMyecN6bY+UnWisgTBXURn
+         u3a5bJSJhsbHUvjXaKR2UBcOqDhPiwTxlFsUvA75l4XsO2A17onIxc4CEwYp5HCluQIo
+         BTfuQ1h33svAQ7LtG8P6xxfEwR18pUVH4UnrJu6ZhfM50IeNytjZtM1O5kbpQPN0pMdQ
+         IxyU8Mgsuj8/p97JdIjQcJMvAv6/aSKs5bVjQWfHpl58YUPVKnlAA0BXG4ajLQIs8ij7
+         8uBQ==
+X-Gm-Message-State: AOJu0YxTz0CnFLhkj0kQ8IAlLzaZktR1tDBirjikMHmenJtkkeX/vSYD
+        VtYX/xGu7PPrygLAK6ADMjOnaA==
+X-Google-Smtp-Source: AGHT+IFvgcDqbfRdpydPq4ink9vQ3N7ScSsxcZoM/8xiqyVFgUTfakh0jjBFWkrGAUhq6+xeRCxMNQ==
+X-Received: by 2002:a17:903:2351:b0:1bb:a85c:23cc with SMTP id c17-20020a170903235100b001bba85c23ccmr141262plh.15.1691102579859;
+        Thu, 03 Aug 2023 15:42:59 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p7-20020a170902bd0700b001bc2831e1a8sm355952pls.80.2023.08.03.15.42.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Aug 2023 15:42:59 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Ajay Kaher <akaher@vmware.com>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] x86/paravirt: Fix tlb_remove_table function callback prototype warning
+Date:   Thu,  3 Aug 2023 15:42:49 -0700
+Message-Id: <169110256709.2294259.13111562642254330671.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230726231139.never.601-kees@kernel.org>
+References: <20230726231139.never.601-kees@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Wed, 26 Jul 2023 16:11:43 -0700, Kees Cook wrote:
+> Under W=1, this warning is visible in Clang 16 and newer:
+> 
+> arch/x86/kernel/paravirt.c:337:4: warning: cast from 'void (*)(struct mmu_gather *, struct page *)' to 'void (*)(struct mmu_gather *, void *)' converts to incompatible function type [-Wcast-function-type-strict]
+>                            (void (*)(struct mmu_gather *, void *))tlb_remove_page,
+>                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> Add a direct wrapper instead, which will make this warning (and
+> potential KCFI failures) go away.
+> 
+> [...]
 
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on its destination buffer argument which is
-_not_ the case for `strncpy`!
+Applied to for-next/hardening, thanks!
 
-It should be noted that the destination buffer is zero-initialized and
-had a max length of `sizeof(dest) - 1`. There is likely _not_ a bug
-present in the current implementation. However, by switching to
-`strscpy` we get the benefit of no longer needing the `- 1`'s from the
-string copy invocations on top of `strscpy` being a safer interface all
-together.
+[1/1] x86/paravirt: Fix tlb_remove_table function callback prototype warning
+      https://git.kernel.org/kees/c/fcce1c6cb156
 
-[1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-[2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+Take care,
 
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- security/tomoyo/domain.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/security/tomoyo/domain.c b/security/tomoyo/domain.c
-index ac20c0bdff9d..90b53500a236 100644
---- a/security/tomoyo/domain.c
-+++ b/security/tomoyo/domain.c
-@@ -784,13 +784,12 @@ int tomoyo_find_next_domain(struct linux_binprm *bprm)
- 		if (!strcmp(domainname, "parent")) {
- 			char *cp;
- 
--			strncpy(ee->tmp, old_domain->domainname->name,
--				TOMOYO_EXEC_TMPSIZE - 1);
-+			strscpy(ee->tmp, old_domain->domainname->name, TOMOYO_EXEC_TMPSIZE);
- 			cp = strrchr(ee->tmp, ' ');
- 			if (cp)
- 				*cp = '\0';
- 		} else if (*domainname == '<')
--			strncpy(ee->tmp, domainname, TOMOYO_EXEC_TMPSIZE - 1);
-+			strscpy(ee->tmp, domainname, TOMOYO_EXEC_TMPSIZE);
- 		else
- 			snprintf(ee->tmp, TOMOYO_EXEC_TMPSIZE - 1, "%s %s",
- 				 old_domain->domainname->name, domainname);
-
----
-base-commit: 5d0c230f1de8c7515b6567d9afba1f196fb4e2f4
-change-id: 20230803-security-tomoyo-7d58f53d35a6
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+-- 
+Kees Cook
 
