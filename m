@@ -2,99 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C0DC04A6A
-	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 22:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1350C001DF
+	for <linux-hardening@archiver.kernel.org>; Thu,  3 Aug 2023 23:13:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231915AbjHCWnC (ORCPT
+        id S229457AbjHCXNj (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 3 Aug 2023 18:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39088 "EHLO
+        Thu, 3 Aug 2023 19:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231260AbjHCWnB (ORCPT
+        with ESMTP id S229446AbjHCXNh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 3 Aug 2023 18:43:01 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4BE10C1
-        for <linux-hardening@vger.kernel.org>; Thu,  3 Aug 2023 15:43:00 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1b8b4749013so12669165ad.2
-        for <linux-hardening@vger.kernel.org>; Thu, 03 Aug 2023 15:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691102580; x=1691707380;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=INe5iUN8OqFkxldA5UUSZCvoiHbOkh93tbzwvbZM2yg=;
-        b=AdrcoKcYKsDTC2sk5II1JfGBSGWxn+Mf/Sxnutk3q1l506vOr49iIj/50hD798HN7F
-         b0OZc7JKWeDh12FhSjL1Xl4BHhP+B9RobN0klmBuKMhnefOK9+UFoMYitJo0B22Um2dY
-         eJvU1iwgwiD/b9pJcn2WLq9Pd4MHq6mJciEdg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691102580; x=1691707380;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=INe5iUN8OqFkxldA5UUSZCvoiHbOkh93tbzwvbZM2yg=;
-        b=fwTXsjQQ4dImPmOCNr+YKNjUZqlsjq/Toy8HrP+W8e9VN+YJXZrrgj3igE+p/U4PH3
-         aL3PYQkN1VaBeGdeqSWNbSuk5Hn25yxHaSJn6g6dKU+k8QIMyecN6bY+UnWisgTBXURn
-         u3a5bJSJhsbHUvjXaKR2UBcOqDhPiwTxlFsUvA75l4XsO2A17onIxc4CEwYp5HCluQIo
-         BTfuQ1h33svAQ7LtG8P6xxfEwR18pUVH4UnrJu6ZhfM50IeNytjZtM1O5kbpQPN0pMdQ
-         IxyU8Mgsuj8/p97JdIjQcJMvAv6/aSKs5bVjQWfHpl58YUPVKnlAA0BXG4ajLQIs8ij7
-         8uBQ==
-X-Gm-Message-State: AOJu0YxTz0CnFLhkj0kQ8IAlLzaZktR1tDBirjikMHmenJtkkeX/vSYD
-        VtYX/xGu7PPrygLAK6ADMjOnaA==
-X-Google-Smtp-Source: AGHT+IFvgcDqbfRdpydPq4ink9vQ3N7ScSsxcZoM/8xiqyVFgUTfakh0jjBFWkrGAUhq6+xeRCxMNQ==
-X-Received: by 2002:a17:903:2351:b0:1bb:a85c:23cc with SMTP id c17-20020a170903235100b001bba85c23ccmr141262plh.15.1691102579859;
-        Thu, 03 Aug 2023 15:42:59 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p7-20020a170902bd0700b001bc2831e1a8sm355952pls.80.2023.08.03.15.42.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Aug 2023 15:42:59 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Ajay Kaher <akaher@vmware.com>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] x86/paravirt: Fix tlb_remove_table function callback prototype warning
-Date:   Thu,  3 Aug 2023 15:42:49 -0700
-Message-Id: <169110256709.2294259.13111562642254330671.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230726231139.never.601-kees@kernel.org>
-References: <20230726231139.never.601-kees@kernel.org>
+        Thu, 3 Aug 2023 19:13:37 -0400
+Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC1030C2;
+        Thu,  3 Aug 2023 16:13:36 -0700 (PDT)
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+        by cmsmtp with ESMTP
+        id Rfjpq3SjmfaVXRhVfqcha8; Thu, 03 Aug 2023 23:13:35 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id RhVeq4yE3s12sRhVeqGTLw; Thu, 03 Aug 2023 23:13:35 +0000
+X-Authority-Analysis: v=2.4 cv=Jt3iEe0C c=1 sm=1 tr=0 ts=64cc349f
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=8y0NZTZfdASZg88ec6MA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TPDYq/13b+187Q0SS/vTNVpKl0QGMUe23edKdHdTGg4=; b=lW4POMbZZz8pdEiKWDgfiN+/9G
+        FFTf8XTZRaPbjuVyDp9s3tDARPMd8d80llkfksYznfqBS2D2vEroKNJPX+tqdymbRdh7tTVBTkkjP
+        zFj2RLi0w+OQqoANkn5lhj75zaheouGr7u7TMfYX/KFpYRuiEawzTJVGeLcxs4ckYmvU8eGU5Na5i
+        Nace+k1AnA78H3qOBesKrDdqR7Nr3Z+5yo1gw2YoJ2FT60oFQ+jnuo+qFyMwa8FS18tC97xYebAOi
+        if+uyf10osJrXShxk+Ue12tb3mQec1+EO39g5Lf/+HB1Im0CErSXFR4w5ICfEpTszM1Vi6YRuhZt2
+        ULk6K+ew==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60340 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qReTt-001xR4-2u;
+        Thu, 03 Aug 2023 14:59:33 -0500
+Message-ID: <5979a609-beb9-d622-d8ed-8d01afb56ff4@embeddedor.com>
+Date:   Thu, 3 Aug 2023 14:00:39 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH][next] RDMA/irdma: Replace one-element array with
+ flexible-array member
+Content-Language: en-US
+To:     Leon Romanovsky <leon@kernel.org>,
+        Mustafa Ismail <mustafa.ismail@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <ZMpsQrZadBaJGkt4@work>
+ <169108630160.1408615.8996122913079845353.b4-ty@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <169108630160.1408615.8996122913079845353.b4-ty@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qReTt-001xR4-2u
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:60340
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKjlMT4GktZ4hGLzk2QkEhdDpT9wO68m7uHEhCJ3tMOz+ImM125GTz0+aAE/wPrMsgnl0IQv6Wv2W3vzGF4vlcSGyJvdSAgtQ8v23bLBo4cCMoJggdaK
+ VZAThFxVhSE8L88A/KJLWY+emcuiUsuSwpqCXFSc/XFLOuOcI1v13hQnsCwN7S4mbk/iIE3OvkA5aAXXPH0kYT4+Bg2UHCQLpxsWQP4mHSCUzfxhi1BfkFPk
+ yz6a26PXzhkyoaaCMoODqmHcQ03DlRiOa00aUUqKsL0=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 26 Jul 2023 16:11:43 -0700, Kees Cook wrote:
-> Under W=1, this warning is visible in Clang 16 and newer:
+
+
+On 8/3/23 12:11, Leon Romanovsky wrote:
 > 
-> arch/x86/kernel/paravirt.c:337:4: warning: cast from 'void (*)(struct mmu_gather *, struct page *)' to 'void (*)(struct mmu_gather *, void *)' converts to incompatible function type [-Wcast-function-type-strict]
->                            (void (*)(struct mmu_gather *, void *))tlb_remove_page,
->                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> On Wed, 02 Aug 2023 08:46:26 -0600, Gustavo A. R. Silva wrote:
+>> One-element and zero-length arrays are deprecated. So, replace
+>> one-element array in struct irdma_qvlist_info with flexible-array
+>> member.
+>>
+>> A patch for this was sent a while ago[1]. However, it seems that, at
+>> the time, the changes were partially folded[2][3], and the actual
+>> flexible-array transformation was omitted. This patch fixes that.
+>>
+>> [...]
 > 
-> Add a direct wrapper instead, which will make this warning (and
-> potential KCFI failures) go away.
+> Applied, thanks!
+
+Awesome. :)
+
+Thank you!
+--
+Gustavo
+
 > 
-> [...]
-
-Applied to for-next/hardening, thanks!
-
-[1/1] x86/paravirt: Fix tlb_remove_table function callback prototype warning
-      https://git.kernel.org/kees/c/fcce1c6cb156
-
-Take care,
-
--- 
-Kees Cook
-
+> [1/1] RDMA/irdma: Replace one-element array with flexible-array member
+>        https://git.kernel.org/rdma/rdma/c/38313c6d2a02c2
+> 
+> Best regards,
