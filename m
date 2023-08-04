@@ -2,106 +2,110 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86827C001DF
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 13:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC24C001DF
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 14:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230246AbjHDNfi (ORCPT
+        id S231253AbjHDOjO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Aug 2023 09:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48038 "EHLO
+        Fri, 4 Aug 2023 10:39:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231315AbjHDNfC (ORCPT
+        with ESMTP id S229448AbjHDOjN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Aug 2023 09:35:02 -0400
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CC281BF6;
-        Fri,  4 Aug 2023 06:34:58 -0700 (PDT)
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-        by mx.skole.hr (mx.skole.hr) with ESMTP id B3E3A83B60;
-        Fri,  4 Aug 2023 15:34:56 +0200 (CEST)
-From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date:   Fri, 04 Aug 2023 15:32:38 +0200
-Subject: [PATCH v3 8/8] MAINTAINERS: add myself as Marvell PXA1908
- maintainer
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20230804-pxa1908-lkml-v3-8-8e48fca37099@skole.hr>
-References: <20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr>
-In-Reply-To: <20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr>
-To:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+        Fri, 4 Aug 2023 10:39:13 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB24146B1;
+        Fri,  4 Aug 2023 07:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691159951; x=1722695951;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=treqQoCApe7X7F3bCvmb79fj9fFVPi/mHsyYWBfo0dA=;
+  b=HCVkTWEbOlR/t7wlztoYRtqzjQCzRTatZsL988vf3E3bTQAkW4ZJ8+DS
+   1EeQTzDB/KbjFdROgHxYZA1ZKz4sSfZO03QNtDzL5pO4JsrROFMKX+CDn
+   MxzexTaiF2tsZZ9BafU/hTzPB4PvI3T1b0WFLAvbXWQqJYYKrwMBmx6Oi
+   MEJY/Xu3mUvk2UqhEHrilQq9eX5T7tZO+tXvc8u8zlJ03neM1us44xqeG
+   z6dmtNhgJ59Cb0VL1Ww6BSu1U0pzLr4Ll8desPLZkXlojnTfQvc/hoDYJ
+   LgC2PNmxkohRbpzkPqFl8Bhwalf6T5CRT6q33fD00S7xp7OfFkP+xm1cS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="436487285"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="436487285"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Aug 2023 07:39:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10792"; a="795444753"
+X-IronPort-AV: E=Sophos;i="6.01,255,1684825200"; 
+   d="scan'208";a="795444753"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Aug 2023 07:39:03 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 8EC2BF12; Fri,  4 Aug 2023 17:39:14 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-hardening@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tero Kristo <kristo@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.de
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=908;
- i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=J+tkAfKG4/JapSnekYuI2msG8RQ0Bd8sAcsOrk80DCw=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBkzP494ox7VQ9VePX5RAWhcmNku78MtBJh/7etQ
- 3u87r3V1qSJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZMz+PQAKCRCaEZ6wQi2W
- 4V1UEACZuW/lQkkoP0g8ypElzs+P80P80czpq7/YSV+wseQsyQeKcX4Cbzr/Ixq8okXWUIA+CUm
- g7B9tINtYYKhkKr+oxSiIovZDctWeZE9L4naKiSMIHVeb/Qz9xKPlV0d3ZkpXpeur8ELs995czl
- QQLMabbJfXPTUWZfQkIZYJoxkBjZKPHoDRAr4PAr2GzMMhd7t7unnaPXGLQSxAPiVQRgT5OPRGs
- fHWodZE8B8aAa7gtxwykn6GbD+NOrq0bwUSzL4Yl8Vk7/cIrYy1ODO5Sv+43Pq5reepwgZXDAKc
- bodUVQ19J/rjoCoSsrdg3Xtp/mi4z6TM1Qa0eU1pVMqyofPHgcTAHhjtdR1C1+bhpsddkukPrKm
- CjqTt7gf47kJUB0bCwhSVLCnVvBpyPrpQme9UawWxeyZ2Dpd3qFQyH8UcmZjiFFs6aLsPgLHTWo
- 0na5MtW9YrGmV29cfbHyevcrKqbWMYJZwxuk4ZS8zzPk/zARMNsCblcfIx3k0LL6wV17QTBccMH
- XiYBsgE0VdLJmwLcRQ6BaIXXfCZnWPb38CGi6tRgcACw4Ny1XFa3D5jr9HlEaysEYkU/ja79Yhc
- 2hBVoQqIRHMQP96lWL7t7i0vqqK1LDd4e7HseRdA3bnIerOPgtMJBEARqOVdQqZS6WhLcyGhhrO
- 40f93ow9a4PbPTw==
-X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
- fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
+        Andy Shevchenko <andy@kernel.org>
+Subject: [PATCH v2 3/4] clk: tegra: Replace kstrdup() + strreplace() with kstrdup_and_replace()
+Date:   Fri,  4 Aug 2023 17:39:09 +0300
+Message-Id: <20230804143910.15504-4-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+In-Reply-To: <20230804143910.15504-1-andriy.shevchenko@linux.intel.com>
+References: <20230804143910.15504-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add myself as the maintainer for Marvell PXA1908 SoC support.
+Replace open coded functionality of kstrdup_and_replace() with a call.
 
-Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/clk/tegra/clk.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 53b7ca804465..79173056e5cc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2299,6 +2299,15 @@ F:	drivers/irqchip/irq-mvebu-*
- F:	drivers/pinctrl/mvebu/
- F:	drivers/rtc/rtc-armada38x.c
+diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
+index 333a3ff0db98..19037346f522 100644
+--- a/drivers/clk/tegra/clk.c
++++ b/drivers/clk/tegra/clk.c
+@@ -14,7 +14,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset-controller.h>
+-#include <linux/string.h>
++#include <linux/string_helpers.h>
  
-+ARM/Marvell PXA1908 SOC support
-+M:	Duje Mihanović <duje.mihanovic@skole.hr>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+T:	git https://gitlab.com/LegoLivesMatter/linux
-+F:	arch/arm64/boot/dts/marvell/pxa1908*
-+F:	drivers/clk/mmp/clk-of-pxa1908.c
-+F:	include/dt-bindings/clock/marvell,pxa1908.h
-+
- ARM/Mediatek RTC DRIVER
- M:	Eddie Huang <eddie.huang@mediatek.com>
- M:	Sean Wang <sean.wang@mediatek.com>
-
+ #include <soc/tegra/fuse.h>
+ 
+@@ -384,12 +384,10 @@ static struct device_node *tegra_clk_get_of_node(struct clk_hw *hw)
+ 	struct device_node *np;
+ 	char *node_name;
+ 
+-	node_name = kstrdup(hw->init->name, GFP_KERNEL);
++	node_name = kstrdup_and_replace(hw->init->name, '_', '-', GFP_KERNEL);
+ 	if (!node_name)
+ 		return NULL;
+ 
+-	strreplace(node_name, '_', '-');
+-
+ 	for_each_child_of_node(tegra_car_np, np) {
+ 		if (!strcmp(np->name, node_name))
+ 			break;
 -- 
-2.41.0
-
+2.40.0.1.gaa8946217a0b
 
