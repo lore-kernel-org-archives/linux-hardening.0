@@ -2,87 +2,173 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7868C001DF
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 08:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC65C001DB
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 09:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231657AbjHDIaw (ORCPT
+        id S230046AbjHDJD6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Aug 2023 04:30:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34214 "EHLO
+        Fri, 4 Aug 2023 05:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234565AbjHDIah (ORCPT
+        with ESMTP id S229767AbjHDJDd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Aug 2023 04:30:37 -0400
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 324F1E42
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Aug 2023 01:30:13 -0700 (PDT)
-Received: by mail-ot1-x32b.google.com with SMTP id 46e09a7af769-6bca5d6dcedso1575149a34.1
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Aug 2023 01:30:13 -0700 (PDT)
+        Fri, 4 Aug 2023 05:03:33 -0400
+Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0CE4C28;
+        Fri,  4 Aug 2023 01:59:19 -0700 (PDT)
+Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-56cc3453e31so1199888eaf.1;
+        Fri, 04 Aug 2023 01:59:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691137812; x=1691742612;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sTW4GcsIoC0wedeu0cP1p/SdzNq7SXqwMejU+XlRg/A=;
-        b=MvtJgYJPzaQQIT9hlilDCoYXW4oKr+21puhVNZnk9hWavc6zsfjb8FEqO4hz4fnG4K
-         g/FDP6rDwriWsdbhabPq8ziSYLV6NYvIh9aE+yQ7xItRqv+b8wd1KZA7erHvLJKxqK9L
-         nzkt9ue7WCYcXalaymwYDUPEpDYLeFaAWgaCY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691137812; x=1691742612;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1691139558; x=1691744358;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sTW4GcsIoC0wedeu0cP1p/SdzNq7SXqwMejU+XlRg/A=;
-        b=HLnHf9pNgBnhyLOdkhzsQjYoq3Ut1YRblboUZTnfDSwv26PorQoMjZTDHMWMgoY1zg
-         nMq5KW8XyCY+PeGn6EkxJupUJ385GXSC+zKwkoMLPsX7nAPyNm/v9AlTRAasJfuj2XCA
-         6U1pgwJ8RyopgodVcYXVjMj1O63kw8uROuIpBxJdmpd2G9Yy4KEwb3Kcri1Wab4fab+k
-         pq71xRBGaNKqFckfXjYixtZQc1vNdD7NdYlnY5ptxQm5UmBAn9eZlWT8uviDiV8DKQ9z
-         bBdqxykwHd1Vu7jvY02QQpaIz2Jy1MLZg30sa06tU0eYHRviU3zoZZ9D6FeJeQOk9H6H
-         D1/A==
-X-Gm-Message-State: AOJu0YwO81WkTYK2TIuNEAwHl0sbe1vwuoK4HCKGUClLTavQYCqSExhM
-        qv6t4+GkovYEGcnn2P4XF+ibYQ==
-X-Google-Smtp-Source: AGHT+IHh6wCyuLACZdpvHgsdR8UkOmQsmagdun+zvBpnhfZpwlQcNCElW7X7S0H00eHM1MYxpZV3NA==
-X-Received: by 2002:a9d:67d6:0:b0:6b9:68fb:5a28 with SMTP id c22-20020a9d67d6000000b006b968fb5a28mr931396otn.27.1691137810270;
-        Fri, 04 Aug 2023 01:30:10 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o14-20020a17090a4b4e00b00268b439a0cbsm1057998pjl.23.2023.08.04.01.30.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Aug 2023 01:30:09 -0700 (PDT)
-Date:   Fri, 4 Aug 2023 01:30:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Larysa Zaremba <larysa.zaremba@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 3/3] virtchnl: fix fake 1-elem arrays for
- structures allocated as `nents`
-Message-ID: <202308040130.E48094967E@keescook>
-References: <20230728155207.10042-1-aleksander.lobakin@intel.com>
- <20230728155207.10042-4-aleksander.lobakin@intel.com>
+        bh=7sTwnH4sXUXtcKXQVId2GYx+QeFJgqq/fjklOp/tKBE=;
+        b=mRMW2zm1R3UoTZXU+VKQTRQxtD3PPBxQkRCYagjaV1YoRq4Z+1p758Xoo4FcuHCSwU
+         i1p5ibt2wSBPE/texY/ooxsUU29II2nNLlmO4SmmFjz/8LNtPcxOa5Z9/vFDJb+wLmNq
+         YMnyfG2UWstxefSKe1oBoIAia/jTYzFVgdVz71VSvQwlbpLz6HATn1/44lpsl1hf4PVY
+         Tub53w3GDGj+mfJyJHkxkOVasIt45n2cI937s4PzYu/RVVY14AcX5bFK7AI7U3oXRLal
+         Mz7OkeDyjABmPZBusom4rdulnpVuGFhmGrs+usxq+jE4/3P0OriBEg3kwrV3SvgY89xh
+         UEPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691139558; x=1691744358;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7sTwnH4sXUXtcKXQVId2GYx+QeFJgqq/fjklOp/tKBE=;
+        b=GeBRJ90Bo2ClwJEuLNIEEJbjSuugNRXcMPrymrPiDab6EXfFDrWrcoh2qLf3OV2Ucz
+         yQXwZX/Pk1c8QwFs5OCWpnoMUA7V2BNFnaIXFeqmSZ0QhNtFPqi5JVVOgXa+cCeHc9Rv
+         Ukcp3gQkif8FWz6jDBf3heQRJEbKuUL6LPVhvRxeRJGaKke1i+gAOvHgTXqR1vPtSOgQ
+         g55C+DRyC3KotSfslyGI4JwjXfcWYxs+g4dkA7aMHCqCo/E+vMVCUjhBAziukvcylR5V
+         YW4X9jmYaZ4NNDie+5dj6dsOzyxVt1g8NX6/Z3iWwkwCPAw0E/lXl3cKkuO6Y02e8WPO
+         BSsA==
+X-Gm-Message-State: AOJu0Yyb9hkXR0bI4KrCf4O6jeb78cSPlC7H0qKGfdt+8ATCLvV5Svfm
+        A2d6M2qknOwtvacQtlQw5aM/GMPDsiHn9xY5R70=
+X-Google-Smtp-Source: AGHT+IFwZ3/hKq+/i6/QnY7q8SBrb5Npfu9TgiJnbkbiT0J+lslznP/X8zWN+IF5UO0mWdhVkceNpMjEhx8mbYRgXmA=
+X-Received: by 2002:a4a:9243:0:b0:56c:8c66:cea6 with SMTP id
+ g3-20020a4a9243000000b0056c8c66cea6mr1185978ooh.1.1691139558429; Fri, 04 Aug
+ 2023 01:59:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230728155207.10042-4-aleksander.lobakin@intel.com>
+References: <20230801060432.1307717-1-yunlong.xing@unisoc.com> <202308040103.1514A8C3CB@keescook>
+In-Reply-To: <202308040103.1514A8C3CB@keescook>
+From:   yunlong xing <yunlongxing23@gmail.com>
+Date:   Fri, 4 Aug 2023 16:59:07 +0800
+Message-ID: <CA+3AYtRYNQKuM9-99LvZYZqraLokKV4bjuvYKyEPB3MG7+VevA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pstore/ram: Check member of buffers during the
+ initialization phase of the pstore
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Yunlong Xing <yunlong.xing@unisoc.com>, tony.luck@intel.com,
+        gpiccoli@igalia.com, joel@joelfernandes.org, enlin.mu@unisoc.com,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        enlinmu@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Jul 28, 2023 at 05:52:07PM +0200, Alexander Lobakin wrote:
-> Finally, fix 3 structures which are allocated technically correctly,
-> i.e. the calculated size equals to the one that struct_size() would
-> return, except for sizeof(). For &virtchnl_vlan_filter_list_v2, use
-> the same approach when there are no enough space as taken previously
-> for &virtchnl_vlan_filter_list, i.e. let the maximum size be calculated
-> automatically instead of trying to guestimate it using maths.
-> 
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+On Fri, Aug 4, 2023 at 4:10=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
+ote:
+>
+> On Tue, Aug 01, 2023 at 02:04:32PM +0800, Yunlong Xing wrote:
+> > From: Enlin Mu <enlin.mu@unisoc.com>
+> >
+> > The commit 30696378f68a("pstore/ram: Do not treat empty buffers as vali=
+d")
+> > would introduce the following issue:
+> >
+> > When finding the buffer_size is zero, it would return directly.However,=
+ at
+> > the same time, if the buffer's start is a illegal value, the others wou=
+ld
+> > panic if access the buffer.
+>
+> Which "others" do you mean?
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
--- 
-Kees Cook
+About =E2=80=9Cothers", You can refer to the following panic call stack:
+ sysdump_panic_event+0x720/0xd38
+ atomic_notifier_call_chain+0x58/0xc0
+ panic+0x1c4/0x6e4
+ die+0x3c0/0x428
+ bug_handler+0x4c/0x9c
+ brk_handler+0x98/0x14c
+ do_debug_exception+0x114/0x2ec
+ el1_dbg+0x18/0xbc
+ usercopy_abort+0x90/0x94
+ __check_object_size+0x17c/0x2c4
+ persistent_ram_update_user+0x50/0x220
+ persistent_ram_write_user+0x354/0x428
+ ramoops_pstore_write_user+0x34/0x50
+ write_pmsg+0x14c/0x26c
+ do_iter_write+0x1cc/0x2cc
+ vfs_writev+0xf4/0x168
+ do_writev+0xa4/0x200
+ __arm64_sys_writev+0x20/0x2c
+ el0_svc_common+0xc8/0x22c
+ el0_svc_handler+0x1c/0x28
+ el0_svc+0x8/0x100
+>
+> > To avoid these happenning, check if the members are legal during the
+> > initialization phase of the pstore.
+> >
+> > Fixes: 30696378f68a ("pstore/ram: Do not treat empty buffers as valid")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Enlin Mu <enlin.mu@unisoc.com>
+> > ---
+> >  fs/pstore/ram_core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
+> > index 85aaf0fc6d7d..eb6df190d752 100644
+> > --- a/fs/pstore/ram_core.c
+> > +++ b/fs/pstore/ram_core.c
+> > @@ -519,7 +519,7 @@ static int persistent_ram_post_init(struct persiste=
+nt_ram_zone *prz, u32 sig,
+> >       sig ^=3D PERSISTENT_RAM_SIG;
+> >
+> >       if (prz->buffer->sig =3D=3D sig) {
+> > -             if (buffer_size(prz) =3D=3D 0) {
+> > +             if (buffer_size(prz) =3D=3D 0 && buffer_start(prz) =3D=3D=
+ 0) {
+> >                       pr_debug("found existing empty buffer\n");
+> >                       return 0;
+> >               }
+>
+> And in the case of "buffer_size(prz) =3D=3D 0" but "buffer_start(prz) !=
+=3D 0",
+> this will be caught by:
+>
+>                 if (buffer_size(prz) > prz->buffer_size ||
+>                     buffer_start(prz) > buffer_size(prz)) {
+>                         pr_info("found existing invalid buffer, size %zu,=
+ start %zu\n",
+>                                 buffer_size(prz), buffer_start(prz));
+>                         zap =3D true;
+>                 }
+>
+> i.e. it will be detected and zapped back to a sane state.
+No,This code has no chance of execution because there was a return 0 before=
+ it
+>
+> That sounds correct to me, though I wonder if reporting it as an
+> "invalid buffer" is inaccurate? Perhaps we should have a separate case:
+>
+>                 if (buffer_size(prz) =3D=3D 0) {
+>                         if (buffer_start(prz) =3D=3D 0)
+>                                 pr_debug("found existing empty buffer\n")=
+;
+>                         else {
+>                                 pr_debug("found existing empty buffer wit=
+h non-zero start\n");
+>                                 zap =3D true;
+>                         }
+>                 } else if ...
+>
+> What do you think?
+Good, I gree it. For me, it should not return directly while finding
+the buffer_size is zero, We need Check others case.
+So does the modification method you mentioned require me to resubmit a
+patch or do you need to modify and merge it
+>
+> --
+> Kees Cook
