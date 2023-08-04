@@ -2,90 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB080C001DE
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 08:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BF9C001DB
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 08:28:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232403AbjHDIVL (ORCPT
+        id S234688AbjHDI2N (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Aug 2023 04:21:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
+        Fri, 4 Aug 2023 04:28:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231455AbjHDIVK (ORCPT
+        with ESMTP id S234621AbjHDI1u (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Aug 2023 04:21:10 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA9CAC
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Aug 2023 01:21:08 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b8ad8383faso16065215ad.0
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Aug 2023 01:21:08 -0700 (PDT)
+        Fri, 4 Aug 2023 04:27:50 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B925C4EE7
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Aug 2023 01:27:23 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-686c06b806cso1309425b3a.2
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Aug 2023 01:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691137268; x=1691742068;
+        d=chromium.org; s=google; t=1691137623; x=1691742423;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xSQz11o3ul0yNyVq0pFtGQung0CwKOFZmwNl8PJxv+Q=;
-        b=oBVOMrt4+1w1zDz9OfBIdQ+ZbW3KAVLf/anefxKNO2eHmC4q38EUevTtWu2e22kSrF
-         VZHd6G8nwCuKTK0yXoCVWhIylifzK96pEGW2UDfzliIQe1Bv3oj41TkXX+MWRUizb1m3
-         YwJF8o9P6g0JOvBWpytfxl/9hsl1K47r3/JOQ=
+        bh=PUS4uE91dvG7NiA03WNNZdSwC3Poo9mFt4/nET0m0dg=;
+        b=S89d4M3DnOXOCpVn6+SsXsaln+b1CDkwN+Wc8iZfQIJp/5Mg31YkipDnIpZFJ8WT22
+         6KDDkE6N/Q9+Z1OSckAI2AGnB0jNWeeiAnARi+3bxQCjA0MVKMlkSTzRdpiegjDdjzs9
+         alwHeWzqeeo6oSaTxIIaxPIaZMlivjqD7xdio=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691137268; x=1691742068;
+        d=1e100.net; s=20221208; t=1691137623; x=1691742423;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xSQz11o3ul0yNyVq0pFtGQung0CwKOFZmwNl8PJxv+Q=;
-        b=YnxMGqscT+Dq2y4DMOBEeyO1BHCbxkwEVHsi/v6eZOGYiAoU+CUreFxFedjukbZlZC
-         LZzxTH7E3pBVeXPq5faTf7NPWV8w6OQnzw4lRHd5qc6fXo65s6ny5HM+mokVffGnsIsI
-         KbOjxYsnxSt3USZuSLf/Pq+opBMLn9DnDrfzZW42xwmbhRk7vdL3YR6qLgfRRPm9QXtd
-         vkVaKPmEiIEPbrpza39k+1RGycm4tAaO+HnA5FJskS8CmS47w3PKga8uF2Uytgg60LB3
-         LmuQ7E2hH7QmnDWEbc9bHy+4dAgH1Lg4YtDh4U5wqo10F4C/c5ZwC6EEJEzpKsJ3bGri
-         xvxQ==
-X-Gm-Message-State: AOJu0Yzdvm7WwdYJyPiYgqzmw3YXfLk5MvNCPnfGDyRxtdXKn6QU+WHv
-        DeJrcXJc90U1x57sBsP4E8oq6XNjxzBeEp1dcy8=
-X-Google-Smtp-Source: AGHT+IGJZB0215YHu30q3ARos/W+RSG09nTjMIKs8Qq2qlMv9bvhWlg0eKZX7tJXcm8qtw+8Dm1UVQ==
-X-Received: by 2002:a17:902:f809:b0:1b8:76fc:5bf6 with SMTP id ix9-20020a170902f80900b001b876fc5bf6mr978656plb.43.1691137268446;
-        Fri, 04 Aug 2023 01:21:08 -0700 (PDT)
+        bh=PUS4uE91dvG7NiA03WNNZdSwC3Poo9mFt4/nET0m0dg=;
+        b=FndYHAcgW9JpPxh/+eei0eiwx10gb3qOCuxjBLgKj/doQrpnc+xsjxJ6By57yWiQVi
+         5cpNpaOoVi+m077uVibzCxfTDwPbwrWcj8u1GDCL9ADO2IOWm3ma1mGGXxp2FuS1eXuY
+         0Qu08jgskat6sDffSxaqkrhQa7LayQGir6o7io4w/fceXOqNBlrLiUAyjWApG68eTKOJ
+         EhkjRhIjpps8A747bTE8VZwfdKS5bR1jQ+5s6w4LAXkpU54Ty086lSvMkCDmcw+8xORV
+         Z5TEYxugChpZzIs8edZD8WuT+l04rf5hMDX3h/MCcIzmI0OKgQ7x/5DJtCA2NGz6pT3g
+         P9+w==
+X-Gm-Message-State: AOJu0YzRmtcWtp3w8DvjL9Hwhe/5qEBOIokMcs/j/zBo0GwT7njMMNM/
+        DmDKoX5vu0R2zICza2jPyzgK8g==
+X-Google-Smtp-Source: AGHT+IEMVAqP/UVb3WrkT6mDnbU4Pw1rjYqa7tcZY9aFwv2xDvN5rJf3YMidsLXa7DBayiqLPkiTZQ==
+X-Received: by 2002:a05:6a20:8f02:b0:13f:8855:d5a0 with SMTP id b2-20020a056a208f0200b0013f8855d5a0mr1071535pzk.50.1691137623268;
+        Fri, 04 Aug 2023 01:27:03 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q9-20020a170902b10900b001b8622c1ad2sm1138143plr.130.2023.08.04.01.21.07
+        by smtp.gmail.com with ESMTPSA id t14-20020a1709028c8e00b0019ee045a2b3sm1138162plo.308.2023.08.04.01.27.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Aug 2023 01:21:07 -0700 (PDT)
-Date:   Fri, 4 Aug 2023 01:21:07 -0700
+        Fri, 04 Aug 2023 01:27:02 -0700 (PDT)
+Date:   Fri, 4 Aug 2023 01:27:02 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] wifi: ipw2x00: refactor to use kstrtoul
-Message-ID: <202308040120.183400A04@keescook>
-References: <20230802-wifi-ipw2x00-refactor-v2-1-d33f765e9cd5@google.com>
+To:     Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Larysa Zaremba <larysa.zaremba@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/3] virtchnl: fix fake 1-elem arrays in structs
+ allocated as `nents + 1` - 1
+Message-ID: <202308040126.ADDA993@keescook>
+References: <20230728155207.10042-1-aleksander.lobakin@intel.com>
+ <20230728155207.10042-2-aleksander.lobakin@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230802-wifi-ipw2x00-refactor-v2-1-d33f765e9cd5@google.com>
+In-Reply-To: <20230728155207.10042-2-aleksander.lobakin@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 01:23:06AM +0000, Justin Stitt wrote:
-> The current implementation seems to reinvent what `kstrtoul` already does
-> in terms of functionality and error handling. Remove uses of `simple_strtoul()`
-> in favor of `kstrtoul()`.
+On Fri, Jul 28, 2023 at 05:52:05PM +0200, Alexander Lobakin wrote:
+> The two most problematic virtchnl structures are virtchnl_rss_key and
+> virtchnl_rss_lut. Their "flex" arrays have the type of u8, thus, when
+> allocating / checking, the actual size is calculated as `sizeof +
+> nents - 1 byte`. But their sizeof() is not 1 byte larger than the size
+> of such structure with proper flex array, it's two bytes larger due to
+> the padding. That said, their size is always 1 byte larger unless
+> there are no tail elements -- then it's +2 bytes.
+> Add virtchnl_struct_size() macro which will handle this case (and later
+> other cases as well). Make its calling conv the same as we call
+> struct_size() to allow it to be drop-in, even though it's unlikely to
+> become possible to switch to generic API. The macro will calculate a
+> proper size of a structure with a flex array at the end, so that it
+> becomes transparent for the compilers, but add the difference from the
+> old values, so that the real size of sorta-ABI-messages doesn't change.
+> Use it on the allocation side in IAVF and the receiving side (defined
+> as static inline in virtchnl.h) for the mentioned two structures.
 > 
-> There is the following note at `lib/vsprintf.c:simple_strtoull()` which
-> further backs this change:
-> | * This function has caveats. Please use kstrtoull (or kstrtoul) instead.
-> 
-> And here, simple_str* are explicitly deprecated [3].
-> 
-> This patch also removes an instance of the deprecated `strncpy` which helps [2].
-> 
-> Link: https://lore.kernel.org/all/202308011602.3CC1C0244C@keescook/ [1]
-> Link: https://github.com/KSPP/linux/issues/90 [2]
-> Link: https://docs.kernel.org/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull [3]
-> Cc: linux-hardening@vger.kernel.org
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 
-This looks correct to me. I would be curious to hear back from the intel
-folks if the interface continues to work correctly with real hardware.
+This is a novel approach to solving the ABI issues for a 1-elem
+conversion, but I have been convinced it's a workable approach here. :)
+Thanks for doing this conversion!
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
