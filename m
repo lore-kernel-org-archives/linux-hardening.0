@@ -2,31 +2,31 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD93C07E8A
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 13:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6573AC0729B
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 13:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231213AbjHDNfI (ORCPT
+        id S231336AbjHDNfP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Aug 2023 09:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48080 "EHLO
+        Fri, 4 Aug 2023 09:35:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231211AbjHDNey (ORCPT
+        with ESMTP id S231137AbjHDNe4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Aug 2023 09:34:54 -0400
+        Fri, 4 Aug 2023 09:34:56 -0400
 Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E78F0D1;
-        Fri,  4 Aug 2023 06:34:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15D41BF9;
+        Fri,  4 Aug 2023 06:34:48 -0700 (PDT)
 Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-        by mx.skole.hr (mx.skole.hr) with ESMTP id 4E98583BEE;
-        Fri,  4 Aug 2023 15:34:45 +0200 (CEST)
+        by mx.skole.hr (mx.skole.hr) with ESMTP id 6E9DE83BBD;
+        Fri,  4 Aug 2023 15:34:47 +0200 (CEST)
 From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Date:   Fri, 04 Aug 2023 15:32:33 +0200
-Subject: [PATCH v3 3/8] dt-bindings: clock: Add Marvell PXA1908 clock
- bindings
+Date:   Fri, 04 Aug 2023 15:32:37 +0200
+Subject: [PATCH v3 7/8] arm64: dts: Add DTS for Marvell PXA1908 and
+ samsung,coreprimevelte
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20230804-pxa1908-lkml-v3-3-8e48fca37099@skole.hr>
+Message-Id: <20230804-pxa1908-lkml-v3-7-8e48fca37099@skole.hr>
 References: <20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr>
 In-Reply-To: <20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr>
 To:     Robert Jarzmik <robert.jarzmik@free.fr>,
@@ -52,188 +52,684 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
         afaerber@suse.de
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5011;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=16489;
  i=duje.mihanovic@skole.hr; h=from:subject:message-id;
- bh=bvGyZPHsdhuC2IA5ya4ZPRAgBo0cHNxoqnND9HvsWdo=;
- b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBkzP48fJJt2ZRP9BeTpweOZ0vIKbQepsGl5OOS/
- LSN9ejCSM6JAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZMz+PAAKCRCaEZ6wQi2W
- 4Y6GD/44GWMmWhqZhcpCI75MTPkcWd6sHx+5ODkCsXrMtoChEOqM6fxpTVIAgAEfRY2Siuzeq8s
- DMfBsAIXHHZxzMiqIzprHZP+9ye6iuWLGbdvT72TmLmhJpr/KPBut+FYDW6qSaCXtATXvce1QHr
- QjnH498nGNqmTR2mGnZqRhZzLiJp+VXuEovFECOZlkC6OpSYJayEXAFHblhPkr80ThuKW1C9RPb
- 6+RQKuR6aGmirgZ4cpSCvmVjH8zaUIc+Ij9Di6VIu2cRZsNygaNR3RbMG8LcIZyfN8b/DSsF9AO
- vfUIcVgwzJa2tv9aHaEk47/2uSGfswOcuwfamFcS8a0Ent60RBIpi+MeFOPn5Tka0kiEMohTkHP
- Ux8uzNfwglbCRXALO77Gs8Ofnd+eda5pITUERNcZvyQUyVXfVxm8wqtxac8yKl3pHcwksU0/9Pq
- LMhrH6E8V2ZOFcl2FuiZ5L/lm6kdgVN45SVGpXdlhCAxFtZvhtpSk1Xuk3zboLeLvRQax3yfiaW
- WojKTj2vbLQX35SNGWaR38pjCi1VaJVmETGcyp//9OcA/PNQh6TuU/4cpRDNB1UIgvHzPeob8nH
- CHvps/YzFioOZH6V6hH8gS5npO5dsyJ5tW3b5xyGfXqDydOeo86g+waltUANKvKfqsPPrYaBYAm
- Fdwu/KYfyNz+teg==
+ bh=oUufXt0MP5S0TNaPjNqmOb2jja41pWx66XehgjkskYk=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBkzP48qfzhsULMm2kQizPNcEO/eLvN+QM2jfE0U
+ mER6fowX0iJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZMz+PAAKCRCaEZ6wQi2W
+ 4RvED/4r/cOCutLHri3V/jL2kJk63qTV3Wwwbh1RKi4LgM7CFrmqtJlkP6X4asyUvnf/pCiGKyZ
+ VejT043ewPFlrZH57pi3aNFHwIWvyGJVjECGXX+BqTu8c9dByM6aLmXJzeXbJmQDO0BCGBDeBPF
+ HHNt0mBeaUMGbE7s/AbBk4omcCF9+DyeSRFkm281D+wKPQrR9xchosqk7uSvrNPyCsUcjvPQJHn
+ PyTvlNfMVmhpTWOJDkjOz7ykKEvzaUKjDspQNhWevo153UznvfAOTeNN6jPu9Op3wntsA68wDMD
+ kp3OE0t0sR2TrPalsZ6u6ch1rbfv5zmmWV0r97VJkrTRgjVmMXxWe67ENVyy4Evx4/jgxT3MAks
+ SLTiAT33syiAUpo0nGbHOR7YLtPMd2Bb5c+0K6YaiRZoi3GkZoW4/TdzVSFyeIA2Lq15S07uATA
+ PvVYIm5SNU++oqrnFWH3sr2rgHt1x1ODMIwehPdmnDtPsU6tlrpr4GahHJmcIw0sOMZhxTfNsDO
+ 7mEGoArSyqHZVPRdd+PWUC7QDUQXlGiB6SVJwbdeYAlLkVuCQnfVEcRTmdNowwzkJZJ1qmyBC2f
+ IeKC3RuiMH2ecz5XOnJpj0h5qb8XM7bhXrVHJtLO7MVCkZXQs3xxbc6/Hpr+7vgj5+tBykVzRDv
+ vmaXfleYqr6DG1A==
 X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
  fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add dt bindings and documentation for the Marvell PXA1908 clock
-controller.
+Add DTS for Marvell PXA1908 SoC and Samsung Galaxy Core Prime Value
+Edition LTE, a smartphone based on said SoC.
 
 Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
 ---
- .../devicetree/bindings/clock/marvell,pxa1908.yaml | 48 +++++++++++
- include/dt-bindings/clock/marvell,pxa1908.h        | 92 ++++++++++++++++++++++
- 2 files changed, 140 insertions(+)
+ arch/arm64/boot/dts/marvell/Makefile               |   3 +
+ .../dts/marvell/pxa1908-samsung-coreprimevelte.dts | 332 +++++++++++++++++++++
+ arch/arm64/boot/dts/marvell/pxa1908.dtsi           | 292 ++++++++++++++++++
+ 3 files changed, 627 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+index 79ac09b58a89..263be6ec7567 100644
+--- a/arch/arm64/boot/dts/marvell/Makefile
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -27,3 +27,6 @@ dtb-$(CONFIG_ARCH_MVEBU) += cn9132-db-B.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-A.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-B.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += ac5-98dx35xx-rd.dtb
++
++# MMP SoC Family
++dtb-$(CONFIG_ARCH_MMP) += pxa1908-samsung-coreprimevelte.dtb
+diff --git a/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts b/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
 new file mode 100644
-index 000000000000..4e78933232b6
+index 000000000000..59e5d6f15dd2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/marvell,pxa1908.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/marvell,pxa1908.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/arch/arm64/boot/dts/marvell/pxa1908-samsung-coreprimevelte.dts
+@@ -0,0 +1,332 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include "pxa1908.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/linux-event-codes.h>
 +
-+title: Marvell PXA1908 Clock Controllers
++/ {
++	model = "Samsung Galaxy Core Prime VE LTE";
++	compatible = "samsung,coreprimevelte", "marvell,pxa1908";
 +
-+maintainers:
-+  - Duje Mihanović <duje.mihanovic@skole.hr>
++	aliases {
++		mmc0 = &sdh2; /* eMMC */
++		mmc1 = &sdh0; /* SD card */
++		serial0 = &uart0;
++	};
 +
-+description: |
-+  The PXA1908 clock subsystem generates and supplies clock to various
-+  controllers within the PXA1908 SoC. The PXA1908 contains numerous clock
-+  controller blocks, with the ones currently supported being APBC, APBCP, MPMU
-+  and APMU roughly corresponding to internal buses.
++	chosen {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
-+  All these clock identifiers could be found in <include/dt-bindings/marvell,pxa1908.h>.
++		stdout-path = "serial0:115200n8";
 +
-+properties:
-+  compatible:
-+    enum:
-+      - marvell,pxa1908-apbc
-+      - marvell,pxa1908-apbcp
-+      - marvell,pxa1908-mpmu
-+      - marvell,pxa1908-apmu
++		fb0: framebuffer@17177000 {
++			compatible = "simple-framebuffer";
++			reg = <0 0x17177000 0 (480 * 800 * 4)>;
++			width = <480>;
++			height = <800>;
++			stride = <(480 * 4)>;
++			format = "a8r8g8b8";
++		};
++	};
 +
-+  reg:
-+    maxItems: 1
++	/* Bootloader fills this in */
++	memory {
++		device_type = "memory";
++		reg = <0 0 0 0>;
++	};
 +
-+  '#clock-cells':
-+    const: 1
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
 +
-+required:
-+  - compatible
-+  - reg
-+  - '#clock-cells'
++		framebuffer@17000000 {
++			reg = <0 0x17000000 0 0x1800000>;
++			no-map;
++		};
 +
-+additionalProperties: false
++		gpu@9000000 {
++			reg = <0 0x9000000 0 0x1000000>;
++		};
 +
-+examples:
-+  # APMU block:
-+  - |
-+    clock-controller@d4282800 {
-+      compatible = "marvell,pxa1908-apmu";
-+      reg = <0xd4282800 0x400>;
-+      #clock-cells = <1>;
-+    };
-diff --git a/include/dt-bindings/clock/marvell,pxa1908.h b/include/dt-bindings/clock/marvell,pxa1908.h
++		/* Communications processor, aka modem */
++		cp@3000000 {
++			reg = <0 0x3000000 0 0x5000000>;
++		};
++
++		cm3@a000000 {
++			reg = <0 0xa000000 0 0x80000>;
++		};
++
++		seclog@8000000 {
++			reg = <0 0x8000000 0 0x100000>;
++		};
++
++		ramoops@8100000 {
++			compatible = "ramoops";
++			reg = <0 0x8100000 0 0x40000>;
++			record-size = <0x8000>;
++			console-size = <0x20000>;
++			max-reason = <5>;
++		};
++	};
++
++
++	i2c-muic {
++		compatible = "i2c-gpio";
++		sda-gpios = <&gpio 30 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++		scl-gpios = <&gpio 29 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
++		i2c-gpio,delay-us = <3>;
++		i2c-gpio,timeout-ms = <100>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c_muic_pins>;
++
++		muic: extcon@14 {
++			compatible = "siliconmitus,sm5504-muic";
++			reg = <0x14>;
++			interrupt-parent = <&gpio>;
++			interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_keys_pins>;
++		autorepeat;
++
++		key-home {
++			label = "Home";
++			linux,code = <KEY_HOME>;
++			gpios = <&gpio 50 GPIO_ACTIVE_LOW>;
++		};
++
++		key-volup {
++			label = "Volume Up";
++			linux,code = <KEY_VOLUMEUP>;
++			gpios = <&gpio 16 GPIO_ACTIVE_LOW>;
++		};
++
++		key-voldown {
++			label = "Volume Down";
++			linux,code = <KEY_VOLUMEDOWN>;
++			gpios = <&gpio 17 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&smmu {
++	status = "okay";
++};
++
++&pmx {
++	pinctrl-single,gpio-range = <&range 55 55 0>,
++				    <&range 110 32 0>,
++				    <&range 52 1 0>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&board_pins_1 &board_pins_2 &board_pins_3>;
++
++	board_pins_1: pinmux-board-1 {
++		pinctrl-single,pins = <
++			0x160 0
++			0x164 0
++			0x168 0
++			0x16c 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0x8000 0x8000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0x8000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0x288 0x388>;
++	};
++
++	board_pins_2: pinmux-board-2 {
++		pinctrl-single,pins = <
++			0x44 1
++			0x48 1
++			0x20 1
++			0x18 1
++			0x14 1
++			0x10 1
++			0xc 1
++			0x8 1
++			0x68 1
++			0x58 0
++			0x54 0
++			0x7c 0
++			0x6c 0
++			0x70 0
++			0x4c 1
++			0x50 1
++			0xac 0
++			0x90 0
++			0x8c 0
++			0x88 0
++			0x84 0
++			0xc8 0
++			0x128 0
++			0x190 0
++			0x194 0
++			0x1a0 0
++			0x114 0
++			0x118 0
++			0x1d8 0
++			0x1e4 0
++			0xe8 0
++			0x100 0
++			0x204 0
++			0x210 0
++			0x218 0
++		>;
++		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xc000>;
++		pinctrl-single,low-power-mode = <0x288 0x388>;
++	};
++
++	board_pins_3: pinmux-board-3 {
++		pinctrl-single,pins = <
++			0x260 0
++			0x264 0
++			0x268 0
++			0x26c 0
++			0x270 0
++			0x274 0
++			0x78 0
++			0x74 0
++			0xb0 1
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	uart0_pins: pinmux-uart0 {
++		pinctrl-single,pins = <
++			0x198 6
++			0x19c 6
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	gpio_keys_pins: pinmux-gpio-keys {
++		pinctrl-single,pins = <
++			0x11c 0
++			0x120 0
++			0x1a4 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0xa0000 0x8000 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	i2c_muic_pins: pinmux-i2c-muic {
++		pinctrl-single,pins = <
++			0x154 0
++			0x150 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0x288 0x388>;
++	};
++
++	sdh0_pins_1: pinmux-sdh0-1 {
++		pinctrl-single,pins = <
++			0x108 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	sdh0_pins_2: pinmux-sdh0-2 {
++		pinctrl-single,pins = <
++			0x94 0
++			0x98 0
++			0x9c 0
++			0xa0 0
++			0xa4 0
++		>;
++		pinctrl-single,drive-strength = <0x800 0x1800>;
++		pinctrl-single,bias-pullup = <0xc000 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0x8000 0xa000 0x8000 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0 0x388>;
++	};
++
++	sdh0_pins_3: pinmux-sdh0-3 {
++		pinctrl-single,pins = <
++			0xa8 0
++		>;
++		pinctrl-single,drive-strength = <0x1000 0x1800>;
++		pinctrl-single,bias-pullup = <0 0xc000 0 0xc000>;
++		pinctrl-single,bias-pulldown = <0 0xa000 0 0xa000>;
++		pinctrl-single,input-schmitt = <0 0x30>;
++		pinctrl-single,input-schmitt-enable = <0x40 0 0x40 0x40>;
++		pinctrl-single,low-power-mode = <0x208 0x388>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins>;
++};
++
++&twsi0 {
++	status = "okay";
++};
++
++&twsi1 {
++	status = "okay";
++};
++
++&twsi2 {
++	status = "okay";
++};
++
++&twsi3 {
++	status = "okay";
++};
++
++&usb {
++	extcon = <&muic>, <&muic>;
++};
++
++&sdh2 {
++	/* Disabled for now because initialization fails with -ETIMEDOUT. */
++	status = "disabled";
++	bus-width = <8>;
++	non-removable;
++	broken-cd;
++	mmc-ddr-1_8v;
++};
++
++&sdh0 {
++	pinctrl-0 = <&sdh0_pins_1 &sdh0_pins_2 &sdh0_pins_3>;
++	cd-gpios = <&gpio 11 0>;
++	cd-inverted;
++	bus-width = <4>;
++	wp-inverted;
++};
+diff --git a/arch/arm64/boot/dts/marvell/pxa1908.dtsi b/arch/arm64/boot/dts/marvell/pxa1908.dtsi
 new file mode 100644
-index 000000000000..1fff3bcefd21
+index 000000000000..59b3e609bb24
 --- /dev/null
-+++ b/include/dt-bindings/clock/marvell,pxa1908.h
-@@ -0,0 +1,92 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause */
-+#ifndef __DTS_MARVELL_PXA1908_CLOCK_H
-+#define __DTS_MARVELL_PXA1908_CLOCK_H
++++ b/arch/arm64/boot/dts/marvell/pxa1908.dtsi
+@@ -0,0 +1,292 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/dts-v1/;
 +
-+/* plls */
-+#define PXA1908_CLK_CLK32		1
-+#define PXA1908_CLK_VCTCXO		2
-+#define PXA1908_CLK_PLL1_624		3
-+#define PXA1908_CLK_PLL1_416		4
-+#define PXA1908_CLK_PLL1_499		5
-+#define PXA1908_CLK_PLL1_832		6
-+#define PXA1908_CLK_PLL1_1248		7
-+#define PXA1908_CLK_PLL1_D2		8
-+#define PXA1908_CLK_PLL1_D4		9
-+#define PXA1908_CLK_PLL1_D8		10
-+#define PXA1908_CLK_PLL1_D16		11
-+#define PXA1908_CLK_PLL1_D6		12
-+#define PXA1908_CLK_PLL1_D12		13
-+#define PXA1908_CLK_PLL1_D24		14
-+#define PXA1908_CLK_PLL1_D48		15
-+#define PXA1908_CLK_PLL1_D96		16
-+#define PXA1908_CLK_PLL1_D13		17
-+#define PXA1908_CLK_PLL1_32		18
-+#define PXA1908_CLK_PLL1_208		19
-+#define PXA1908_CLK_PLL1_117		20
-+#define PXA1908_CLK_PLL1_416_GATE	21
-+#define PXA1908_CLK_PLL1_624_GATE	22
-+#define PXA1908_CLK_PLL1_832_GATE	23
-+#define PXA1908_CLK_PLL1_1248_GATE	24
-+#define PXA1908_CLK_PLL1_D2_GATE	25
-+#define PXA1908_CLK_PLL1_499_EN		26
-+#define PXA1908_CLK_PLL2VCO		27
-+#define PXA1908_CLK_PLL2		28
-+#define PXA1908_CLK_PLL2P		29
-+#define PXA1908_CLK_PLL2VCODIV3		30
-+#define PXA1908_CLK_PLL3VCO		31
-+#define PXA1908_CLK_PLL3		32
-+#define PXA1908_CLK_PLL3P		33
-+#define PXA1908_CLK_PLL3VCODIV3		34
-+#define PXA1908_CLK_PLL4VCO		35
-+#define PXA1908_CLK_PLL4		36
-+#define PXA1908_CLK_PLL4P		37
-+#define PXA1908_CLK_PLL4VCODIV3		38
-+#define PXA1908_MPMU_NR_CLKS		38
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/marvell,pxa1908.h>
 +
-+/* apb (apbc) peripherals */
-+#define PXA1908_CLK_UART0		1
-+#define PXA1908_CLK_UART1		2
-+#define PXA1908_CLK_GPIO		3
-+#define PXA1908_CLK_PWM0		4
-+#define PXA1908_CLK_PWM1		5
-+#define PXA1908_CLK_PWM2		6
-+#define PXA1908_CLK_PWM3		7
-+#define PXA1908_CLK_SSP0		8
-+#define PXA1908_CLK_SSP1		9
-+#define PXA1908_CLK_IPC_RST		10
-+#define PXA1908_CLK_RTC			11
-+#define PXA1908_CLK_TWSI0		12
-+#define PXA1908_CLK_KPC			13
-+#define PXA1908_CLK_SWJTAG		14
-+#define PXA1908_CLK_SSP2		15
-+#define PXA1908_CLK_TWSI1		16
-+#define PXA1908_CLK_THERMAL		17
-+#define PXA1908_CLK_TWSI3		18
-+#define PXA1908_APBC_NR_CLKS		50
++/ {
++	model = "Marvell Armada PXA1908";
++	compatible = "marvell,pxa1908";
++	#address-cells = <2>;
++	#size-cells = <2>;
++	interrupt-parent = <&gic>;
 +
-+/* apb (apbcp) peripherals */
-+#define PXA1908_CLK_UART2		1
-+#define PXA1908_CLK_TWSI2		2
-+#define PXA1908_CLK_AICER		3
-+#define PXA1908_APBCP_NR_CLKS		50
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
 +
-+/* axi (apmu) peripherals */
-+#define PXA1908_CLK_CCIC1		1
-+#define PXA1908_CLK_ISP			2
-+#define PXA1908_CLK_DSI1		3
-+#define PXA1908_CLK_DISP1		4
-+#define PXA1908_CLK_CCIC0		5
-+#define PXA1908_CLK_SDH0		6
-+#define PXA1908_CLK_SDH1		7
-+#define PXA1908_CLK_USB			8
-+#define PXA1908_CLK_NF			9
-+#define PXA1908_CLK_CORE_DEBUG		10
-+#define PXA1908_CLK_VPU			11
-+#define PXA1908_CLK_GC			12
-+#define PXA1908_CLK_SDH2		13
-+#define PXA1908_CLK_GC2D		14
-+#define PXA1908_CLK_TRACE		15
-+#define PXA1908_CLK_DVC_DFC_DEBUG	16
-+#define PXA1908_APMU_NR_CLKS		50
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0 0>;
++			enable-method = "psci";
++		};
 +
-+#endif
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0 1>;
++			enable-method = "psci";
++		};
++
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0 2>;
++			enable-method = "psci";
++		};
++
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0 3>;
++			enable-method = "psci";
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			<GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			<GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
++			<GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		smmu: iommu@c0010000 {
++			compatible = "arm,mmu-400";
++			reg = <0 0xc0010000 0 0x10000>;
++			#global-interrupts = <1>;
++			#iommu-cells = <1>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>,
++				<GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		gic: interrupt-controller@d1df9000 {
++			compatible = "arm,gic-400";
++			reg = <0 0xd1df9000 0 0x1000>,
++				<0 0xd1dfa000 0 0x2000>;
++			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++
++		apb@d4000000 {
++			compatible = "simple-bus";
++			reg = <0 0xd4000000 0 0x200000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0xd4000000 0x200000>;
++
++			pdma: dma-controller@0 {
++				compatible = "marvell,pdma-1.0";
++				reg = <0 0x10000>;
++				interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
++				dma-channels = <30>;
++				#dma-cells = <2>;
++			};
++
++			twsi1: i2c@10800 {
++				compatible = "mrvl,mmp-twsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x10800 0x64>;
++				interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_TWSI1>;
++				mrvl,i2c-fast-mode;
++				status = "disabled";
++			};
++
++			twsi0: i2c@11000 {
++				compatible = "mrvl,mmp-twsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x11000 0x64>;
++				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_TWSI0>;
++				mrvl,i2c-fast-mode;
++				status = "disabled";
++			};
++
++			twsi3: i2c@13800 {
++				compatible = "mrvl,mmp-twsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x13800 0x64>;
++				interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_TWSI3>;
++				mrvl,i2c-fast-mode;
++				status = "disabled";
++			};
++
++			apbc: clock-controller@15000 {
++				compatible = "marvell,pxa1908-apbc";
++				reg = <0x15000 0x1000>;
++				#clock-cells = <1>;
++			};
++
++			uart0: serial@17000 {
++				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
++				reg = <0x17000 0x1000>;
++				interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_UART0>;
++				reg-shift = <2>;
++			};
++
++			uart1: serial@18000 {
++				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
++				reg = <0x18000 0x1000>;
++				interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbc PXA1908_CLK_UART1>;
++				reg-shift = <2>;
++			};
++
++			gpio: gpio@19000 {
++				compatible = "marvell,mmp-gpio";
++				reg = <0x19000 0x800>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				clocks = <&apbc PXA1908_CLK_GPIO>;
++				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "gpio_mux";
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				ranges = <0 0x19000 0x800>;
++
++				gpio@0 {
++					reg = <0x0 0x4>;
++				};
++
++				gpio@4 {
++					reg = <0x4 0x4>;
++				};
++
++				gpio@8 {
++					reg = <0x8 0x4>;
++				};
++
++				gpio@100 {
++					reg = <0x100 0x4>;
++				};
++			};
++
++			pmx: pinmux@1e000 {
++				compatible = "pinconf-single";
++				reg = <0x1e000 0x330>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				#gpio-range-cells = <3>;
++				ranges;
++
++				#pinctrl-cells = <1>;
++				pinctrl-single,register-width = <32>;
++				pinctrl-single,function-mask = <7>;
++
++				range: gpio-range {
++					#pinctrl-single,gpio-range-cells = <3>;
++				};
++			};
++
++			uart2: serial@36000 {
++				compatible = "mrvl,mmp-uart", "intel,xscale-uart";
++				reg = <0x36000 0x1000>;
++				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbcp PXA1908_CLK_UART2>;
++				reg-shift = <2>;
++			};
++
++			twsi2: i2c@37000 {
++				compatible = "mrvl,mmp-twsi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x37000 0x64>;
++				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apbcp PXA1908_CLK_TWSI2>;
++				mrvl,i2c-fast-mode;
++				status = "disabled";
++			};
++
++			apbcp: clock-controller@3b000 {
++				compatible = "marvell,pxa1908-apbcp";
++				reg = <0x3b000 0x1000>;
++				#clock-cells = <1>;
++			};
++
++			mpmu: clock-controller@50000 {
++				compatible = "marvell,pxa1908-mpmu";
++				reg = <0x50000 0x1000>;
++				#clock-cells = <1>;
++			};
++		};
++
++		axi@d4200000 {
++			compatible = "simple-bus";
++			reg = <0 0xd4200000 0 0x200000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0xd4200000 0x200000>;
++
++			usbphy: phy@7000 {
++				compatible = "marvell,pxa1928-usb-phy";
++				reg = <0x7000 0x200>;
++				clocks = <&apmu PXA1908_CLK_USB>;
++				#phy-cells = <0>;
++			};
++
++			usb: usb@8000 {
++				compatible = "chipidea,usb2";
++				reg = <0x8000 0x200>;
++				interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apmu PXA1908_CLK_USB>;
++				phys = <&usbphy>;
++				phy-names = "usb-phy";
++			};
++
++			sdh0: mmc@80000 {
++				compatible = "mrvl,pxav3-mmc";
++				reg = <0x80000 0x120>;
++				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apmu PXA1908_CLK_SDH0>;
++				clock-names = "io";
++				mrvl,clk-delay-cycles = <31>;
++			};
++
++			sdh1: mmc@80800 {
++				compatible = "mrvl,pxav3-mmc";
++				reg = <0x80800 0x120>;
++				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apmu PXA1908_CLK_SDH1>;
++				clock-names = "io";
++				mrvl,clk-delay-cycles = <31>;
++			};
++
++			sdh2: mmc@81000 {
++				compatible = "mrvl,pxav3-mmc";
++				reg = <0x81000 0x120>;
++				interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&apmu PXA1908_CLK_SDH2>;
++				clock-names = "io";
++				mrvl,clk-delay-cycles = <31>;
++			};
++
++			apmu: clock-controller@82800 {
++				compatible = "marvell,pxa1908-apmu";
++				reg = <0x82800 0x400>;
++				#clock-cells = <1>;
++			};
++		};
++	};
++};
 
 -- 
 2.41.0
