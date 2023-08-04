@@ -2,131 +2,81 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A377C04E69
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 08:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04451C41513
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 08:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234423AbjHDIKZ (ORCPT
+        id S233109AbjHDINf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Aug 2023 04:10:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50778 "EHLO
+        Fri, 4 Aug 2023 04:13:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230481AbjHDIKY (ORCPT
+        with ESMTP id S231545AbjHDINd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Aug 2023 04:10:24 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7CA4689
-        for <linux-hardening@vger.kernel.org>; Fri,  4 Aug 2023 01:10:23 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-686d8c8fc65so1377115b3a.0
-        for <linux-hardening@vger.kernel.org>; Fri, 04 Aug 2023 01:10:23 -0700 (PDT)
+        Fri, 4 Aug 2023 04:13:33 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74AF4684
+        for <linux-hardening@vger.kernel.org>; Fri,  4 Aug 2023 01:13:30 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1b8b4749013so15525185ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 04 Aug 2023 01:13:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691136623; x=1691741423;
+        d=chromium.org; s=google; t=1691136810; x=1691741610;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FPclhZ1vg5BDdpiOr1u3K1Ic3Xgw+vDCd6qqGZUuLuY=;
-        b=Xg1YSkUWTEELpuPN48acofrZk3+QrBO6d0XcLgYJA/tkuU/LF+8yZ1sqBBB3tLKMxL
-         OMDCpGK/CzI/Xrz/h7eFc5BxRXxREm8GZvJ/CimkLqKEMExr/0uoK+TOV94iUHezdWr+
-         elU3NLstZDNTu3TO9p3r34hqo8Px+VBt0SJCU=
+        bh=VL7MGYaWLHKrafJNpDNrQV+kq/3HdTXOCqcOC2etLW4=;
+        b=CJLYGjD0bhLHh1OXkkRsreZPkeVsxE7+g11O/hc8izookwuSJgZi9I/8JSNHysqXmK
+         9eIDgpbjmiXH+IZ9+bUuoPUZagmJcvLEUULJN0R5fE/lmyhtXs8CDzi3T152BXMjoxcN
+         7kaoXRTCpVWYZnWuspUM74X52V0EsOSSPhB/Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691136623; x=1691741423;
+        d=1e100.net; s=20221208; t=1691136810; x=1691741610;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FPclhZ1vg5BDdpiOr1u3K1Ic3Xgw+vDCd6qqGZUuLuY=;
-        b=Hf6i9b+vy6Qm+j5yMFtMw0ddNQ8zMUOO8jl4u9gluc+lyqILqaenPkkV7A0vJYOfAS
-         +D9MyrpZRf1NIRCT0ZLN3MmQ0bEGiFu4mu3YYgl1pnYx/dlbK4V0XB2bTgjjAFmz/l16
-         YMkFs12qRtW0Xr1nItsVSUNz/WEZJYDCvBrRS3Qvesirz6EY3EE7jhaTfdC9OAqsw1qo
-         KZYkgqiTXMA6ZuC0ebTZtR6788FaXYbQa49yqjXfWPePqppkx31Np6r3PcePkcgT+tez
-         sk0ZqIEDGb4aS3T5BeckZ9cjwQFpKDm9H7I8tDYwV8WXt4kuVrh+t9SEZi2dOKnY40F6
-         uTcg==
-X-Gm-Message-State: AOJu0Yz+bHTdzAEPq74efbU/bWJloiVz1VN6WzdviomcdM4w6O415Zh7
-        I2kja2aBCb9sMdB/coK2ilGAOg==
-X-Google-Smtp-Source: AGHT+IFTdKyk64Z+Qw1u/ZR/fMoekXZZGwOXD7Xzt9eNMul5kG2LNkUw/0hRs7IBbPRxJEUNSPTXxA==
-X-Received: by 2002:a05:6a20:158e:b0:127:796d:b70d with SMTP id h14-20020a056a20158e00b00127796db70dmr1002485pzj.61.1691136622890;
-        Fri, 04 Aug 2023 01:10:22 -0700 (PDT)
+        bh=VL7MGYaWLHKrafJNpDNrQV+kq/3HdTXOCqcOC2etLW4=;
+        b=MmvMz86Taassrvnu6y2a5BwJpNk+TzjltQrWlnVrAAMtysYu3sbThlTKtzDAJ9vv4r
+         3qyVowu17BLwsqbQPsAnFfyqIUzPRR651ZKCeadU2eElXh5ntAruLTdMEBcfQVqctNNA
+         vdg7hMjR05WnFOfnCXj4R2DjA4rMO+ZVBNr29NLaPVfrIV8Lwy5ecw3vm1FFGG3+zH+5
+         4SG198pFN6gZCAGssiLgy4M/kGlnQdt1Cc9wLDa18IGb+MYbzU79yxbnNPNqs2zUbbbp
+         Ak93EBbQ8DbsgrdnCKjqpeWJfvYo1VJiKY/Kb4j5tehLw/4i/FPYHMzK2dbdHiS2sEpj
+         aEOg==
+X-Gm-Message-State: AOJu0YyKq0GAW5j5sB+BpKUH6+5gcVNcEe8lnIkqr4O8ca6tcqzJVpcK
+        VmT1PJZjVrL1XuYeHY+P9LVZqQ==
+X-Google-Smtp-Source: AGHT+IE83P9NE4z3R7foSEJsWYLcP/0QXiKnenMC8MJ7cfoR2ZxY4Mv/zhfiFYz+DdY0Sn/WVJ3P5g==
+X-Received: by 2002:a17:902:bb82:b0:1bc:4030:1fb6 with SMTP id m2-20020a170902bb8200b001bc40301fb6mr1099637pls.21.1691136810155;
+        Fri, 04 Aug 2023 01:13:30 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t17-20020aa79391000000b006827d86ca0csm1046038pfe.55.2023.08.04.01.10.22
+        by smtp.gmail.com with ESMTPSA id ji5-20020a170903324500b001bc445e249asm1128036plb.124.2023.08.04.01.13.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Aug 2023 01:10:22 -0700 (PDT)
-Date:   Fri, 4 Aug 2023 01:10:21 -0700
+        Fri, 04 Aug 2023 01:13:29 -0700 (PDT)
+Date:   Fri, 4 Aug 2023 01:13:29 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Yunlong Xing <yunlong.xing@unisoc.com>
-Cc:     tony.luck@intel.com, gpiccoli@igalia.com, joel@joelfernandes.org,
-        enlin.mu@unisoc.com, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org, enlinmu@gmail.com,
-        yunlong.xing23@gmail.com
-Subject: Re: [PATCH 1/1] pstore/ram: Check member of buffers during the
- initialization phase of the pstore
-Message-ID: <202308040103.1514A8C3CB@keescook>
-References: <20230801060432.1307717-1-yunlong.xing@unisoc.com>
+To:     Arnd Bergmann <arnd@kernel.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        yj.chiang@mediatek.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 04/10] ARM: syscall: always store
+ thread_info->abi_syscall
+Message-ID: <202308040113.5A35E32B4B@keescook>
+References: <20210726141141.2839385-1-arnd@kernel.org>
+ <20210726141141.2839385-5-arnd@kernel.org>
+ <202308031551.034F346@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230801060432.1307717-1-yunlong.xing@unisoc.com>
+In-Reply-To: <202308031551.034F346@keescook>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 01, 2023 at 02:04:32PM +0800, Yunlong Xing wrote:
-> From: Enlin Mu <enlin.mu@unisoc.com>
-> 
-> The commit 30696378f68a("pstore/ram: Do not treat empty buffers as valid")
-> would introduce the following issue:
-> 
-> When finding the buffer_size is zero, it would return directly.However, at
-> the same time, if the buffer's start is a illegal value, the others would
-> panic if access the buffer.
+On Thu, Aug 03, 2023 at 04:17:24PM -0700, Kees Cook wrote:
+> Anyway, I'll keep debugging this, but figured I'd mention it in case
+> anyone else had been seeing issues in here.
 
-Which "others" do you mean?
-
-> To avoid these happenning, check if the members are legal during the
-> initialization phase of the pstore.
-> 
-> Fixes: 30696378f68a ("pstore/ram: Do not treat empty buffers as valid")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Enlin Mu <enlin.mu@unisoc.com>
-> ---
->  fs/pstore/ram_core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
-> index 85aaf0fc6d7d..eb6df190d752 100644
-> --- a/fs/pstore/ram_core.c
-> +++ b/fs/pstore/ram_core.c
-> @@ -519,7 +519,7 @@ static int persistent_ram_post_init(struct persistent_ram_zone *prz, u32 sig,
->  	sig ^= PERSISTENT_RAM_SIG;
->  
->  	if (prz->buffer->sig == sig) {
-> -		if (buffer_size(prz) == 0) {
-> +		if (buffer_size(prz) == 0 && buffer_start(prz) == 0) {
->  			pr_debug("found existing empty buffer\n");
->  			return 0;
->  		}
-
-And in the case of "buffer_size(prz) == 0" but "buffer_start(prz) != 0",
-this will be caught by:
-
-                if (buffer_size(prz) > prz->buffer_size ||
-                    buffer_start(prz) > buffer_size(prz)) {
-                        pr_info("found existing invalid buffer, size %zu, start %zu\n",
-                                buffer_size(prz), buffer_start(prz));
-                        zap = true;
-                }
-
-i.e. it will be detected and zapped back to a sane state.
-
-That sounds correct to me, though I wonder if reporting it as an
-"invalid buffer" is inaccurate? Perhaps we should have a separate case:
-
-		if (buffer_size(prz) == 0) {
-			if (buffer_start(prz) == 0)
-				pr_debug("found existing empty buffer\n");
-			else {
-				pr_debug("found existing empty buffer with non-zero start\n");
-				zap = true;
-			}
-		} else if ...
-
-What do you think?
+Okay, I think I have a working patch now. Sent here:
+https://lore.kernel.org/lkml/20230804071045.never.134-kees@kernel.org/
 
 -- 
 Kees Cook
