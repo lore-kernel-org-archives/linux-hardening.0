@@ -2,173 +2,92 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC65C001DB
-	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 09:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8346C001DB
+	for <linux-hardening@archiver.kernel.org>; Fri,  4 Aug 2023 09:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbjHDJD6 (ORCPT
+        id S230056AbjHDJIt (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 4 Aug 2023 05:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
+        Fri, 4 Aug 2023 05:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjHDJDd (ORCPT
+        with ESMTP id S230060AbjHDJI1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 4 Aug 2023 05:03:33 -0400
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0CE4C28;
-        Fri,  4 Aug 2023 01:59:19 -0700 (PDT)
-Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-56cc3453e31so1199888eaf.1;
-        Fri, 04 Aug 2023 01:59:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691139558; x=1691744358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7sTwnH4sXUXtcKXQVId2GYx+QeFJgqq/fjklOp/tKBE=;
-        b=mRMW2zm1R3UoTZXU+VKQTRQxtD3PPBxQkRCYagjaV1YoRq4Z+1p758Xoo4FcuHCSwU
-         i1p5ibt2wSBPE/texY/ooxsUU29II2nNLlmO4SmmFjz/8LNtPcxOa5Z9/vFDJb+wLmNq
-         YMnyfG2UWstxefSKe1oBoIAia/jTYzFVgdVz71VSvQwlbpLz6HATn1/44lpsl1hf4PVY
-         Tub53w3GDGj+mfJyJHkxkOVasIt45n2cI937s4PzYu/RVVY14AcX5bFK7AI7U3oXRLal
-         Mz7OkeDyjABmPZBusom4rdulnpVuGFhmGrs+usxq+jE4/3P0OriBEg3kwrV3SvgY89xh
-         UEPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691139558; x=1691744358;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7sTwnH4sXUXtcKXQVId2GYx+QeFJgqq/fjklOp/tKBE=;
-        b=GeBRJ90Bo2ClwJEuLNIEEJbjSuugNRXcMPrymrPiDab6EXfFDrWrcoh2qLf3OV2Ucz
-         yQXwZX/Pk1c8QwFs5OCWpnoMUA7V2BNFnaIXFeqmSZ0QhNtFPqi5JVVOgXa+cCeHc9Rv
-         Ukcp3gQkif8FWz6jDBf3heQRJEbKuUL6LPVhvRxeRJGaKke1i+gAOvHgTXqR1vPtSOgQ
-         g55C+DRyC3KotSfslyGI4JwjXfcWYxs+g4dkA7aMHCqCo/E+vMVCUjhBAziukvcylR5V
-         YW4X9jmYaZ4NNDie+5dj6dsOzyxVt1g8NX6/Z3iWwkwCPAw0E/lXl3cKkuO6Y02e8WPO
-         BSsA==
-X-Gm-Message-State: AOJu0Yyb9hkXR0bI4KrCf4O6jeb78cSPlC7H0qKGfdt+8ATCLvV5Svfm
-        A2d6M2qknOwtvacQtlQw5aM/GMPDsiHn9xY5R70=
-X-Google-Smtp-Source: AGHT+IFwZ3/hKq+/i6/QnY7q8SBrb5Npfu9TgiJnbkbiT0J+lslznP/X8zWN+IF5UO0mWdhVkceNpMjEhx8mbYRgXmA=
-X-Received: by 2002:a4a:9243:0:b0:56c:8c66:cea6 with SMTP id
- g3-20020a4a9243000000b0056c8c66cea6mr1185978ooh.1.1691139558429; Fri, 04 Aug
- 2023 01:59:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230801060432.1307717-1-yunlong.xing@unisoc.com> <202308040103.1514A8C3CB@keescook>
-In-Reply-To: <202308040103.1514A8C3CB@keescook>
-From:   yunlong xing <yunlongxing23@gmail.com>
-Date:   Fri, 4 Aug 2023 16:59:07 +0800
-Message-ID: <CA+3AYtRYNQKuM9-99LvZYZqraLokKV4bjuvYKyEPB3MG7+VevA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] pstore/ram: Check member of buffers during the
- initialization phase of the pstore
+        Fri, 4 Aug 2023 05:08:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70BB94C1E;
+        Fri,  4 Aug 2023 02:05:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 044C861F5E;
+        Fri,  4 Aug 2023 09:05:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05452C433C7;
+        Fri,  4 Aug 2023 09:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691139930;
+        bh=7/6eO2Rml4YZRJjhU12Ck6c16ZTJ/v83KfoE/2x3bok=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=k3ke/QYCAF7/+ouNtfRkVTgVqA5RpJfioTMUyZao8zw45IBxTyBNUTPH91CKChlJv
+         HThEOvQMyFKNn8heQwfgN2VTVoYU/Dkcwftrf2XAa+1DTzVshrUp6pRGgiTsMwePtV
+         ro5bKDKNUc+hfkDAVRTn9VwqAypXgdfpCKHAvkcje7loENprMrbMytaeHLoqO9gd5x
+         eBONpZhKrMex35qSXiwVTvXvhAeSa+GRpnAeQ5fbWsjGZ3AFnjYd5KRWaNV4+vrvCf
+         5aIENEe9tfYxQbmzKJamPApHoWt1W+mdxMg/HteY0MrImAbPv96lPffh5dW87Lzv4V
+         x2m9vw17wZVog==
+From:   Kalle Valo <kvalo@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Yunlong Xing <yunlong.xing@unisoc.com>, tony.luck@intel.com,
-        gpiccoli@igalia.com, joel@joelfernandes.org, enlin.mu@unisoc.com,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        enlinmu@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Justin Stitt <justinstitt@google.com>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] wifi: ipw2x00: refactor to use kstrtoul
+In-Reply-To: <202308040120.183400A04@keescook> (Kees Cook's message of "Fri, 4
+        Aug 2023 01:21:07 -0700")
+References: <20230802-wifi-ipw2x00-refactor-v2-1-d33f765e9cd5@google.com>
+        <202308040120.183400A04@keescook>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+Date:   Fri, 04 Aug 2023 12:05:26 +0300
+Message-ID: <87wmybjhyh.fsf@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 4, 2023 at 4:10=E2=80=AFPM Kees Cook <keescook@chromium.org> wr=
-ote:
->
-> On Tue, Aug 01, 2023 at 02:04:32PM +0800, Yunlong Xing wrote:
-> > From: Enlin Mu <enlin.mu@unisoc.com>
-> >
-> > The commit 30696378f68a("pstore/ram: Do not treat empty buffers as vali=
-d")
-> > would introduce the following issue:
-> >
-> > When finding the buffer_size is zero, it would return directly.However,=
- at
-> > the same time, if the buffer's start is a illegal value, the others wou=
-ld
-> > panic if access the buffer.
->
-> Which "others" do you mean?
+Kees Cook <keescook@chromium.org> writes:
 
-About =E2=80=9Cothers", You can refer to the following panic call stack:
- sysdump_panic_event+0x720/0xd38
- atomic_notifier_call_chain+0x58/0xc0
- panic+0x1c4/0x6e4
- die+0x3c0/0x428
- bug_handler+0x4c/0x9c
- brk_handler+0x98/0x14c
- do_debug_exception+0x114/0x2ec
- el1_dbg+0x18/0xbc
- usercopy_abort+0x90/0x94
- __check_object_size+0x17c/0x2c4
- persistent_ram_update_user+0x50/0x220
- persistent_ram_write_user+0x354/0x428
- ramoops_pstore_write_user+0x34/0x50
- write_pmsg+0x14c/0x26c
- do_iter_write+0x1cc/0x2cc
- vfs_writev+0xf4/0x168
- do_writev+0xa4/0x200
- __arm64_sys_writev+0x20/0x2c
- el0_svc_common+0xc8/0x22c
- el0_svc_handler+0x1c/0x28
- el0_svc+0x8/0x100
+> On Wed, Aug 02, 2023 at 01:23:06AM +0000, Justin Stitt wrote:
+>> The current implementation seems to reinvent what `kstrtoul` already does
+>> in terms of functionality and error handling. Remove uses of `simple_strtoul()`
+>> in favor of `kstrtoul()`.
+>> 
+>> There is the following note at `lib/vsprintf.c:simple_strtoull()` which
+>> further backs this change:
+>> | * This function has caveats. Please use kstrtoull (or kstrtoul) instead.
+>> 
+>> And here, simple_str* are explicitly deprecated [3].
+>> 
+>> This patch also removes an instance of the deprecated `strncpy` which helps [2].
+>> 
+>> Link: https://lore.kernel.org/all/202308011602.3CC1C0244C@keescook/ [1]
+>> Link: https://github.com/KSPP/linux/issues/90 [2]
+>> Link:
+>> https://docs.kernel.org/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull
+>> [3]
+>> Cc: linux-hardening@vger.kernel.org
+>> Suggested-by: Kees Cook <keescook@chromium.org>
+>> Signed-off-by: Justin Stitt <justinstitt@google.com>
 >
-> > To avoid these happenning, check if the members are legal during the
-> > initialization phase of the pstore.
-> >
-> > Fixes: 30696378f68a ("pstore/ram: Do not treat empty buffers as valid")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Enlin Mu <enlin.mu@unisoc.com>
-> > ---
-> >  fs/pstore/ram_core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/fs/pstore/ram_core.c b/fs/pstore/ram_core.c
-> > index 85aaf0fc6d7d..eb6df190d752 100644
-> > --- a/fs/pstore/ram_core.c
-> > +++ b/fs/pstore/ram_core.c
-> > @@ -519,7 +519,7 @@ static int persistent_ram_post_init(struct persiste=
-nt_ram_zone *prz, u32 sig,
-> >       sig ^=3D PERSISTENT_RAM_SIG;
-> >
-> >       if (prz->buffer->sig =3D=3D sig) {
-> > -             if (buffer_size(prz) =3D=3D 0) {
-> > +             if (buffer_size(prz) =3D=3D 0 && buffer_start(prz) =3D=3D=
- 0) {
-> >                       pr_debug("found existing empty buffer\n");
-> >                       return 0;
-> >               }
+> This looks correct to me. I would be curious to hear back from the intel
+> folks if the interface continues to work correctly with real hardware.
 >
-> And in the case of "buffer_size(prz) =3D=3D 0" but "buffer_start(prz) !=
-=3D 0",
-> this will be caught by:
->
->                 if (buffer_size(prz) > prz->buffer_size ||
->                     buffer_start(prz) > buffer_size(prz)) {
->                         pr_info("found existing invalid buffer, size %zu,=
- start %zu\n",
->                                 buffer_size(prz), buffer_start(prz));
->                         zap =3D true;
->                 }
->
-> i.e. it will be detected and zapped back to a sane state.
-No,This code has no chance of execution because there was a return 0 before=
- it
->
-> That sounds correct to me, though I wonder if reporting it as an
-> "invalid buffer" is inaccurate? Perhaps we should have a separate case:
->
->                 if (buffer_size(prz) =3D=3D 0) {
->                         if (buffer_start(prz) =3D=3D 0)
->                                 pr_debug("found existing empty buffer\n")=
-;
->                         else {
->                                 pr_debug("found existing empty buffer wit=
-h non-zero start\n");
->                                 zap =3D true;
->                         }
->                 } else if ...
->
-> What do you think?
-Good, I gree it. For me, it should not return directly while finding
-the buffer_size is zero, We need Check others case.
-So does the modification method you mentioned require me to resubmit a
-patch or do you need to modify and merge it
->
-> --
-> Kees Cook
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+
+This is ancient hardware, not sure if anyone even have a working setup.
+And even if they would have one I doubt anyone uses this sysfs interface
+for anything.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
