@@ -2,61 +2,62 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23590C04E69
-	for <linux-hardening@archiver.kernel.org>; Sat,  5 Aug 2023 20:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE980C00528
+	for <linux-hardening@archiver.kernel.org>; Sat,  5 Aug 2023 20:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230126AbjHEUL7 (ORCPT
+        id S230185AbjHEURb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 5 Aug 2023 16:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34392 "EHLO
+        Sat, 5 Aug 2023 16:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230091AbjHEUL6 (ORCPT
+        with ESMTP id S230108AbjHEURa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 5 Aug 2023 16:11:58 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A377619AA
-        for <linux-hardening@vger.kernel.org>; Sat,  5 Aug 2023 13:11:57 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2b9c55e0fbeso49855981fa.2
-        for <linux-hardening@vger.kernel.org>; Sat, 05 Aug 2023 13:11:57 -0700 (PDT)
+        Sat, 5 Aug 2023 16:17:30 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C877019AA
+        for <linux-hardening@vger.kernel.org>; Sat,  5 Aug 2023 13:17:27 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3fe1a17f983so28641805e9.3
+        for <linux-hardening@vger.kernel.org>; Sat, 05 Aug 2023 13:17:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691266316; x=1691871116;
+        d=linaro.org; s=google; t=1691266646; x=1691871446;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=e2ABq7soEfcbzHdPT9arw7cMpjAK4IN+Eyp4A0dUI/U=;
-        b=HoR/nLDavuW0gB2idqwPMUgM1t1WzAMxrioNKmwuSyRcrmKwW9PNfnSJwGv3nyJnx7
-         eZszcQTK/CRPTEkZr9PmqrZbJYmLsk08GE+1nouEDvOUruwvRAqikZTZswkfiQ0t+DTg
-         i0D2VAPVMTw+5v6ZPztCJfyg3BAErRDV530yziAZNgzh4K5kbdjUaofQyRJr6Z3+oExs
-         yctGRioQ5pvXfPZrpJtzeR2zxSdmhf6EOVvA3qcFSFsBpqyB5kWAacXpLYaKT+TwUPbv
-         il8WIxY8pWIHaBxkQYq9l3XbS9myQd0eqJMUYheP72XHlDLUElHAJLrOhzFBBdZ39Aeg
-         fjrQ==
+        bh=FWa1AmIUGQBjLAqU0BZ+XNgYlFPjyI+9N5RjbJHnaYE=;
+        b=PvE39rwqdXYdchIxFFtJRWfvmhg/bkGMKXoBtvnb33wwtca5SjHtuvod+dHqcuMCqO
+         2oeNXo6Vh/ahd83U/iA5Vxahg9/wEP0gEONMof1QaT/VzX2Q4BfpDnfcQQUUXwhn7sdi
+         y3hUMrq4LHbj+lIfcplrblhcDLUM8iaulajDTHTDz4zoUlXqTfzds4spQxS8Mlm37ltA
+         nRSa2vLQUdsGI4Z0Qohh1qnLnYNnuOUUMJ/hStFdhzkY9hCcz34i65Wdpyir5EsXX+Vc
+         I0Kqg4hkMs8+8QPlQjHNo6bRj2e7esB7L0OqDepF1iPemU7nQPecVTlKCsJEpTNC1QFh
+         5RsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691266316; x=1691871116;
+        d=1e100.net; s=20221208; t=1691266646; x=1691871446;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e2ABq7soEfcbzHdPT9arw7cMpjAK4IN+Eyp4A0dUI/U=;
-        b=dmCslKr/XSc1DwEFxMkcxhzgLy1GcaV/sPQwpxc8QVSK6Jjec9EziRYVGfXa6zA2Nw
-         6mnJ2MBRkSe9tOokTfF1AnA9NgsAUoXUO2ALFUwvhNvQUZirMauVQYA/YTZwoGxCzF/W
-         D6mC2AE/88OvXOmSvvscaFeEuI2NeCti06aJcZuheD3OuuxBAXqchjaNGdSb4upkqTZJ
-         c66sEBIrTwOVHJz2iZzzeT+OEQjQTTkGvIybDLtjzSfL4DVHQADVZJvhOwztqwNiVFL5
-         KTi9fNVX6AlfbzIA1nk7Ma/XdPaxgvO2SWQdGyDSsD5fiYKHC+rNyOTW60wiCYVqz2/7
-         wvIQ==
-X-Gm-Message-State: AOJu0YzomN72nII/Xdold5duUt2z0eyEoCnsWlRj6iZa9gryqOrIkpgJ
-        owEPhFklz/dND8JhqXU2tCWbbA==
-X-Google-Smtp-Source: AGHT+IGZBQamrq2g/vboZDdDwmt/aYwpvvbRQcmvT4wHhuH2EcX3D/i/qjrkbMJp+e/RZiMFgnA+LA==
-X-Received: by 2002:a2e:7c15:0:b0:2b9:aa4d:3719 with SMTP id x21-20020a2e7c15000000b002b9aa4d3719mr4280750ljc.12.1691266315928;
-        Sat, 05 Aug 2023 13:11:55 -0700 (PDT)
+        bh=FWa1AmIUGQBjLAqU0BZ+XNgYlFPjyI+9N5RjbJHnaYE=;
+        b=P2fTUBgaygbbhCG37Py76SeD1Dz5BAYaOoZqWC+hBZpgDcf2yEjdyLCtHF7PSv1Bt6
+         nXYFSlrQ6YqY/1vRLxddJVWPZ1FyDWSMUCaKGT2Zz22Pi75BvSpS8uW0Ki4WZcGXWDzu
+         i+wSpNeDuKqjSPzttQX/VmI6Jlg5cVwXoIlqHA/6Y/wSVtqClSXU/89DlbzdThXa9qDT
+         ek9y7bKEzdLVf50dfjbEroD5y2qkrXbaajnNrZv5ZeW8zHFDfdxoerpp4Bh3DalriDyz
+         +k8ac9ZH7ngAT6wQrDhtmDTS31HAWFZmsSCDiJdIyF+EmSoSju0DSYCAR9i6sbpxUGgv
+         jiSA==
+X-Gm-Message-State: AOJu0Yyc19LuP21J51eV6oD4AuXBfrfyumaOOJnny4pEQ04U01vBvLrA
+        OM/YpGAS1lpX1vbVe8U7bqyg1w==
+X-Google-Smtp-Source: AGHT+IHq8r5p1pNsI4R8XXhR2NKV/ym7X668soaNAjcQN4oEwd9a2WQ06kYC2CjjSKhc9yikXslxqA==
+X-Received: by 2002:a7b:ca57:0:b0:3fe:22a9:907 with SMTP id m23-20020a7bca57000000b003fe22a90907mr3875587wml.20.1691266646268;
+        Sat, 05 Aug 2023 13:17:26 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.245])
-        by smtp.gmail.com with ESMTPSA id l26-20020a1709061c5a00b0099bc5e5742asm3082024ejg.70.2023.08.05.13.11.53
+        by smtp.gmail.com with ESMTPSA id r15-20020adfdc8f000000b00317909f9985sm5870830wrj.113.2023.08.05.13.17.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Aug 2023 13:11:55 -0700 (PDT)
-Message-ID: <3f3f7d1b-d850-7d93-6f92-f16797f5b081@linaro.org>
-Date:   Sat, 5 Aug 2023 22:11:53 +0200
+        Sat, 05 Aug 2023 13:17:25 -0700 (PDT)
+Message-ID: <c32f0d5a-32c9-fd0b-822c-a8ed9238458c@linaro.org>
+Date:   Sat, 5 Aug 2023 22:17:23 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.14.0
-Subject: Re: [PATCH 2/3] dt-bindings: arm: qcom: Add Xiaomi Mi 11 Ultra
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add device tree for Xiaomi Mi 11
+ Ultra
 Content-Language: en-US
 To:     wuxilin123@gmail.com, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -70,9 +71,9 @@ To:     wuxilin123@gmail.com, Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-hardening@vger.kernel.org
 References: <20230806-xiaomi-star-v1-0-0c384e8b5737@gmail.com>
- <20230806-xiaomi-star-v1-2-0c384e8b5737@gmail.com>
+ <20230806-xiaomi-star-v1-3-0c384e8b5737@gmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230806-xiaomi-star-v1-2-0c384e8b5737@gmail.com>
+In-Reply-To: <20230806-xiaomi-star-v1-3-0c384e8b5737@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -82,13 +83,184 @@ X-Mailing-List: linux-hardening@vger.kernel.org
 On 05/08/2023 19:03, Xilin Wu via B4 Relay wrote:
 > From: Xilin Wu <wuxilin123@gmail.com>
 > 
-> Add a compatible for Xiaomi Mi 11 Ultra (xiaomi,star).
+> Add support for Xiaomi Mi 11 Ultra. This commit brings support for:
+> * Front and rear display panels (initialized by bootloader)
+> * USB
+> * UFS
+> * PCIe0
+> * Thermistor sensors
+> * ADSP/CDSP/Modem/SLPI
+> * IR Transmitter
+> * RTC provided by PMK8350
+> * Buttons
 > 
-> Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
-> ---
+
+...
 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> +/*
+> + * Delete following upstream (sm8350.dtsi) reserved
+> + * memory mappings which are different on this device.
+
+
+> + */
+> +/delete-node/ &pil_adsp_mem;
+> +/delete-node/ &pil_slpi_mem;
+> +/delete-node/ &pil_cdsp_mem;
+> +/delete-node/ &pil_ipa_fw_mem;
+> +/delete-node/ &pil_ipa_gsi_mem;
+> +/delete-node/ &pil_gpu_mem;
+> +/delete-node/ &pil_spss_mem;
+> +/delete-node/ &pil_modem_mem;
+> +/delete-node/ &rmtfs_mem;
+> +/delete-node/ &pil_trustedvm_mem;
+> +/delete-node/ &removed_mem;
+> +
+> +/ {
+> +	model = "Xiaomi Mi 11 Ultra";
+> +	compatible = "xiaomi,star", "qcom,sm8350";
+> +	chassis-type = "handset";
+> +
+> +	chosen {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		framebuffer0: framebuffer-front@ea600000 {
+
+framebuffer@
+
+> +			compatible = "simple-framebuffer";
+> +			reg = <0 0xea600000 0 (1440 * 3200 * 4)>;
+> +
+> +			width = <1440>;
+> +			height = <3200>;
+> +			stride = <(1440 * 4)>;
+> +			format = "a8r8g8b8";
+> +		};
+> +
+> +		framebuffer1: framebuffer-rear@eb79c000 {
+
+framebuffer@
+
+> +			compatible = "simple-framebuffer";
+> +			reg = <0 0xeb79c000 0 (126 * 294 * 4)>;
+> +
+> +			width = <126>;
+> +			height = <294>;
+> +			stride = <(126 * 4)>;
+> +			format = "a8r8g8b8";
+> +		};
+> +	};
+> +
+
+
+
+
+> +			reg = <0 0x86100000 0 0x3900000>;
+> +			no-map;
+> +		};
+> +
+> +		pil_slpi_mem: memory@89a00000 {
+> +			reg = <0 0x89a00000 0 0x2f00000>;
+> +			no-map;
+> +		};
+> +
+> +		pil_cdsp_mem: memory@8c900000 {
+> +			reg = <0 0x8c900000 0 0x1e00000>;
+> +			no-map;
+> +		};
+> +
+> +		pil_ipa_fw_mem: memory@8e700000 {
+> +			reg = <0 0x8e700000 0 0x10000>;
+> +			no-map;
+> +		};
+> +
+> +		pil_ipa_gsi_mem: memory@8e710000 {
+> +			reg = <0 0x8e710000 0 0xa000>;
+> +			no-map;
+> +		};
+> +
+
+...
+
+> +&pm8350c_gpios {
+> +	gpio-line-names = "VDD_BOOST_5V_EN",
+> +			  "NC",
+> +			  "OTG_OVP_EN",
+> +			  "WL_TXON",
+> +			  "NC",
+> +			  "NC",
+> +			  "NC",
+> +			  "NC",
+> +			  "NC";
+> +};
+> +
+> +&pmk8350_adc_tm {
+> +	status = "okay";
+> +
+> +	pm8350-skin-therm@0 {
+
+Hm, didn't we change the node names to generic "channel" and started
+using labels? At least in next or ongoing patches? Or was it only for VADC?
+
+
+> +		reg = <0>;
+> +		io-channels = <&pmk8350_vadc PM8350_ADC7_AMUX_THM1_100K_PU(1)>;
+> +		qcom,ratiometric;
+> +		qcom,hw-settle-time-us = <200>;
+> +	};
+
+...
+
+> +
+> +&ufs_mem_hc {
+> +	status = "okay";
+> +
+> +	reset-gpios = <&tlmm 203 GPIO_ACTIVE_LOW>;
+> +
+> +	vcc-supply = <&vreg_l7b_2p96>;
+> +	vcc-max-microamp = <800000>;
+> +	vccq-supply = <&vreg_l9b_1p2>;
+> +	vccq-max-microamp = <900000>;
+> +};
+> +
+> +&ufs_mem_phy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vreg_l5b_0p88>;
+> +	vdda-pll-supply = <&vreg_l6b_1p2>;
+> +};
+> +
+> +&usb_1 {
+> +	/* USB 2.0 only */
+> +	qcom,select-utmi-as-pipe-clk;
+> +	status = "okay";
+> +};
+> +
+> +&usb_1_dwc3 {
+> +	dr_mode = "otg";
+> +	usb-role-switch;
+> +	maximum-speed = "high-speed";
+> +	/* Remove USB3 phy */
+> +	phys = <&usb_1_hsphy>;
+> +	phy-names = "usb2-phy";
+> +};
+> +
+> +&usb_1_dwc3_hs {
+> +	remote-endpoint = <&pmic_glink_hs_in>;
+> +};
+> +
+> +&usb_1_hsphy {
+> +	status = "okay";
+> +
+> +	vdda-pll-supply = <&vreg_l5b_0p88>;
+> +	vdda18-supply = <&vreg_l1c_1p8>;
+> +	vdda33-supply = <&vreg_l2b_3p07>;
+> +};
+> +
+
+Looks like you have trailing blank line.
 
 Best regards,
 Krzysztof
