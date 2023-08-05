@@ -2,83 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5063C0015E
-	for <linux-hardening@archiver.kernel.org>; Sat,  5 Aug 2023 12:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD356C0015E
+	for <linux-hardening@archiver.kernel.org>; Sat,  5 Aug 2023 17:03:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229629AbjHEMtj (ORCPT
+        id S229771AbjHERDR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 5 Aug 2023 08:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36218 "EHLO
+        Sat, 5 Aug 2023 13:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjHEMti (ORCPT
+        with ESMTP id S229441AbjHERDQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 5 Aug 2023 08:49:38 -0400
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F18E68;
-        Sat,  5 Aug 2023 05:49:36 -0700 (PDT)
-Received: from fsav414.sakura.ne.jp (fsav414.sakura.ne.jp [133.242.250.113])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 375CnPNG060277;
-        Sat, 5 Aug 2023 21:49:26 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav414.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav414.sakura.ne.jp);
- Sat, 05 Aug 2023 21:49:25 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav414.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 375CnP1d060274
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Sat, 5 Aug 2023 21:49:25 +0900 (JST)
-        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <6e480cac-6273-01e7-e6b9-03ade2f25280@I-love.SAKURA.ne.jp>
-Date:   Sat, 5 Aug 2023 21:49:23 +0900
+        Sat, 5 Aug 2023 13:03:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3061AE51;
+        Sat,  5 Aug 2023 10:03:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B96C660C57;
+        Sat,  5 Aug 2023 17:03:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0EB17C433C7;
+        Sat,  5 Aug 2023 17:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691254995;
+        bh=h5eU9XX1o4OOf6S1Raai5CwCugmHSOAJ95Q+DWakPuw=;
+        h=From:Subject:Date:To:Cc:Reply-To:From;
+        b=Q4u2B3z0rmOLUsxCfRWXVEEU28ISgmLSi7UeFwI9EMwmURyLspZLH96RSzotRdnjU
+         c932vJVe7CKCunh1MADBKanP/2Ub6hotjYZOEx9moVY8C/fDGunBPjiGAHGy+sfXLI
+         aQbNuPCaG1+CR6c9X1h7O4f32zrageZzaZSwbvXU46rZLkOomsb/eH+yYTu1mfj+uh
+         KYr8+MZOvrBI/5kpXsgLXXcse9vhFpvDFfao3cG/Tj/86CsWJtgzILNbw6m0Sz5HXo
+         NySgAgNGcFMNDaVLyr7dihx4pvMO+FAMsk13GswEaofos885wMysgSUd5bRM3NSHtW
+         xlj//Gs0Bu0xA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.lore.kernel.org (Postfix) with ESMTP id EB55DC0015E;
+        Sat,  5 Aug 2023 17:03:14 +0000 (UTC)
+From:   Xilin Wu via B4 Relay <devnull+wuxilin123.gmail.com@kernel.org>
+Subject: [PATCH 0/3] Add initial support for Xiaomi Mi 11 Ultra
+Date:   Sun, 06 Aug 2023 01:03:09 +0800
+Message-Id: <20230806-xiaomi-star-v1-0-0c384e8b5737@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH] tomoyo: refactor deprecated strncpy
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Justin Stitt <justinstitt@google.com>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20230803-security-tomoyo-v1-1-c53a17908d2f@google.com>
- <202308040039.D9B575B3F@keescook>
-From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <202308040039.D9B575B3F@keescook>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM2AzmQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDCwMz3YrMxPzcTN3iksQi3VRT4xQLs0TjJFPLVCWgjoKi1LTMCrBp0bG
+ 1tQDLOwb7XQAAAA==
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Xilin Wu <wuxilin123@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691254992; l=698;
+ i=wuxilin123@gmail.com; s=20230805; h=from:subject:message-id;
+ bh=h5eU9XX1o4OOf6S1Raai5CwCugmHSOAJ95Q+DWakPuw=;
+ b=OQntiV/U7W7Rd3Y6oKVtP7h9tiC8jZyOIZJXVbI7q66nLcgekYC8dPLbkpz3+elHdgC+e5Emt
+ e05ygSe7qp7B1fzegauog7IlNEUxEgdJd564vM4/+wSoYzNbAfBcMbO
+X-Developer-Key: i=wuxilin123@gmail.com; a=ed25519;
+ pk=OZIrHT2qWm7yEdp5fsVR7GsFx1wxciIii20H06Ud088=
+X-Endpoint-Received: by B4 Relay for wuxilin123@gmail.com/20230805 with auth_id=73
+X-Original-From: Xilin Wu <wuxilin123@gmail.com>
+Reply-To: <wuxilin123@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Thank you.
+Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
+---
+Xilin Wu (3):
+      soc: qcom: pmic_glink: enable UCSI for SM8350
+      dt-bindings: arm: qcom: Add Xiaomi Mi 11 Ultra
+      arm64: dts: qcom: Add device tree for Xiaomi Mi 11 Ultra
 
-Applied to https://scm.osdn.net/gitroot/tomoyo/tomoyo-test1.git . 
+ Documentation/devicetree/bindings/arm/qcom.yaml |    1 +
+ arch/arm64/boot/dts/qcom/Makefile               |    1 +
+ arch/arm64/boot/dts/qcom/sm8350-xiaomi-star.dts | 1251 +++++++++++++++++++++++
+ drivers/soc/qcom/pmic_glink.c                   |    1 +
+ 4 files changed, 1254 insertions(+)
+---
+base-commit: d2aae0f5a3d5af50b13b13cb452745cd0428ce5e
+change-id: 20230806-xiaomi-star-e53d86a3b59e
 
-On 2023/08/04 16:40, Kees Cook wrote:
-> On Thu, Aug 03, 2023 at 09:33:44PM +0000, Justin Stitt wrote:
->> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
->>
->> A suitable replacement is `strscpy` [2] due to the fact that it
->> guarantees NUL-termination on its destination buffer argument which is
->> _not_ the case for `strncpy`!
->>
->> It should be noted that the destination buffer is zero-initialized and
->> had a max length of `sizeof(dest) - 1`. There is likely _not_ a bug
->> present in the current implementation. However, by switching to
->> `strscpy` we get the benefit of no longer needing the `- 1`'s from the
->> string copy invocations on top of `strscpy` being a safer interface all
->> together.
->>
->> [1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
->> [2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
->>
->> Link: https://github.com/KSPP/linux/issues/90
->> Cc: linux-hardening@vger.kernel.org
->> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> 
-> Thanks! This looks correct to me.
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
+Best regards,
+-- 
+Xilin Wu <wuxilin123@gmail.com>
 
