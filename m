@@ -2,51 +2,50 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD356C0015E
-	for <linux-hardening@archiver.kernel.org>; Sat,  5 Aug 2023 17:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90664C41513
+	for <linux-hardening@archiver.kernel.org>; Sat,  5 Aug 2023 17:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229771AbjHERDR (ORCPT
+        id S229910AbjHERDS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 5 Aug 2023 13:03:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46008 "EHLO
+        Sat, 5 Aug 2023 13:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjHERDQ (ORCPT
+        with ESMTP id S229456AbjHERDR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 5 Aug 2023 13:03:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3061AE51;
+        Sat, 5 Aug 2023 13:03:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 581ECE4A;
         Sat,  5 Aug 2023 10:03:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B96C660C57;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E5E6E60C59;
         Sat,  5 Aug 2023 17:03:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0EB17C433C7;
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3EEC4C433D9;
         Sat,  5 Aug 2023 17:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1691254995;
-        bh=h5eU9XX1o4OOf6S1Raai5CwCugmHSOAJ95Q+DWakPuw=;
-        h=From:Subject:Date:To:Cc:Reply-To:From;
-        b=Q4u2B3z0rmOLUsxCfRWXVEEU28ISgmLSi7UeFwI9EMwmURyLspZLH96RSzotRdnjU
-         c932vJVe7CKCunh1MADBKanP/2Ub6hotjYZOEx9moVY8C/fDGunBPjiGAHGy+sfXLI
-         aQbNuPCaG1+CR6c9X1h7O4f32zrageZzaZSwbvXU46rZLkOomsb/eH+yYTu1mfj+uh
-         KYr8+MZOvrBI/5kpXsgLXXcse9vhFpvDFfao3cG/Tj/86CsWJtgzILNbw6m0Sz5HXo
-         NySgAgNGcFMNDaVLyr7dihx4pvMO+FAMsk13GswEaofos885wMysgSUd5bRM3NSHtW
-         xlj//Gs0Bu0xA==
+        bh=JqJIqpKc34gZt4m//nBt+Kgl1X7w/QGNlDztlnsggRA=;
+        h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+        b=f3uHl0J1i7RPNNZYnks1/4K2g86NYfcVlDk8A8A1a6at+O65zGpRxug7SD1bEdC6D
+         ivjQp8VH5w7Xq9emYGxzO5RbUvCHmdsnk5rdu4rbi6iz/4sAAR9k1rE8/8U1EkEpkD
+         HDD7cmxn4VBpgZoONcoNldt1W6Rqpc0yv5oVptCn0L8svRYzVN1+G15Z8OOuCXreUk
+         swRGAoCIiXTkPPittwWRcME2TCzF+3p7tNMigedWmACTXDhW7Yk4tLQSxeyIrJUPYT
+         rjFqa3uIeUrIEdR8KBzlgMiLx7bj7TMIa2eTRIRpR5zZcwgHo53m8hyIOhqDGVwvh9
+         NrCrtS2IbN7lQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.lore.kernel.org (Postfix) with ESMTP id EB55DC0015E;
-        Sat,  5 Aug 2023 17:03:14 +0000 (UTC)
+        by smtp.lore.kernel.org (Postfix) with ESMTP id 1A14DC04E69;
+        Sat,  5 Aug 2023 17:03:15 +0000 (UTC)
 From:   Xilin Wu via B4 Relay <devnull+wuxilin123.gmail.com@kernel.org>
-Subject: [PATCH 0/3] Add initial support for Xiaomi Mi 11 Ultra
-Date:   Sun, 06 Aug 2023 01:03:09 +0800
-Message-Id: <20230806-xiaomi-star-v1-0-0c384e8b5737@gmail.com>
+Date:   Sun, 06 Aug 2023 01:03:11 +0800
+Subject: [PATCH 2/3] dt-bindings: arm: qcom: Add Xiaomi Mi 11 Ultra
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAM2AzmQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2MDCwMz3YrMxPzcTN3iksQi3VRT4xQLs0TjJFPLVCWgjoKi1LTMCrBp0bG
- 1tQDLOwb7XQAAAA==
+Message-Id: <20230806-xiaomi-star-v1-2-0c384e8b5737@gmail.com>
+References: <20230806-xiaomi-star-v1-0-0c384e8b5737@gmail.com>
+In-Reply-To: <20230806-xiaomi-star-v1-0-0c384e8b5737@gmail.com>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
@@ -60,11 +59,11 @@ Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, linux-hardening@vger.kernel.org,
         Xilin Wu <wuxilin123@gmail.com>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691254992; l=698;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691254992; l=706;
  i=wuxilin123@gmail.com; s=20230805; h=from:subject:message-id;
- bh=h5eU9XX1o4OOf6S1Raai5CwCugmHSOAJ95Q+DWakPuw=;
- b=OQntiV/U7W7Rd3Y6oKVtP7h9tiC8jZyOIZJXVbI7q66nLcgekYC8dPLbkpz3+elHdgC+e5Emt
- e05ygSe7qp7B1fzegauog7IlNEUxEgdJd564vM4/+wSoYzNbAfBcMbO
+ bh=QFpbR6ARnfYdwD0jylrDmivrBMUENp37HGfNRpLwt+M=;
+ b=5hqHLmqKu5bHc5YAFrMucQeSv18oFrlfAhYWIzNcpGsRFGE4pKXPEIq3CLu///C488gGYQX8N
+ o2XmhzVVBMRBROnGsJucAgtITjmmOklK4BKGl/8scJwcWy+DVPmkbiR
 X-Developer-Key: i=wuxilin123@gmail.com; a=ed25519;
  pk=OZIrHT2qWm7yEdp5fsVR7GsFx1wxciIii20H06Ud088=
 X-Endpoint-Received: by B4 Relay for wuxilin123@gmail.com/20230805 with auth_id=73
@@ -74,23 +73,28 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+From: Xilin Wu <wuxilin123@gmail.com>
+
+Add a compatible for Xiaomi Mi 11 Ultra (xiaomi,star).
+
 Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
 ---
-Xilin Wu (3):
-      soc: qcom: pmic_glink: enable UCSI for SM8350
-      dt-bindings: arm: qcom: Add Xiaomi Mi 11 Ultra
-      arm64: dts: qcom: Add device tree for Xiaomi Mi 11 Ultra
+ Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/arm/qcom.yaml |    1 +
- arch/arm64/boot/dts/qcom/Makefile               |    1 +
- arch/arm64/boot/dts/qcom/sm8350-xiaomi-star.dts | 1251 +++++++++++++++++++++++
- drivers/soc/qcom/pmic_glink.c                   |    1 +
- 4 files changed, 1254 insertions(+)
----
-base-commit: d2aae0f5a3d5af50b13b13cb452745cd0428ce5e
-change-id: 20230806-xiaomi-star-e53d86a3b59e
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+index 450f616774e0..af69d05ae44a 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -960,6 +960,7 @@ properties:
+               - qcom,sm8350-mtp
+               - sony,pdx214-generic
+               - sony,pdx215-generic
++              - xiaomi,star
+           - const: qcom,sm8350
+ 
+       - items:
 
-Best regards,
 -- 
-Xilin Wu <wuxilin123@gmail.com>
+2.41.0
 
