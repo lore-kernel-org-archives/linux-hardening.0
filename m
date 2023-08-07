@@ -2,206 +2,199 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81125C04A94
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Aug 2023 13:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C954DC001B0
+	for <linux-hardening@archiver.kernel.org>; Mon,  7 Aug 2023 15:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232570AbjHGNr0 (ORCPT
+        id S231152AbjHGPoq (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Aug 2023 09:47:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
+        Mon, 7 Aug 2023 11:44:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233434AbjHGNrW (ORCPT
+        with ESMTP id S229624AbjHGPop (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Aug 2023 09:47:22 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 633F110DB;
-        Mon,  7 Aug 2023 06:47:18 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3778a7wG025126;
-        Mon, 7 Aug 2023 13:46:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : from : to : cc : references : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=p+rpL5NjFVV5WSitXR2jia2C5Z06+rZ1kuNE5pQqw7w=;
- b=FmQeFFve0SO2ejC+Uz+TxribeYBOtp9llapgDeg5elVLua60KvNzqohuktnKXOn7GMSk
- rosPmXqoH16nJnPH1Pkg/Qn6I2JGpGzeoY/mO3hfVxsFsnhT86jGiVno5WnNUPpA6PAm
- mQCb0Q22LsDMGrNCRpo2gpBUCE+QiMGCMAPa0gyPjvQKd0LWERQ8oIyLPemwt5LmXcgl
- x9tS0YzvGmGtkmlZChZQ72JbGbbBg0kMl6S2GQgBxGKaYRATopqr2N9eyOOGJRNayQKe
- WBRhSoeS4bEoqqp9Kv5HoMq5XR2DLid/5rTTnYW1zZmnlrWNixT1yL6IdojLwa9YBFow ow== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3s9deekmn8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Aug 2023 13:46:56 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 377Dktnj018001
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 7 Aug 2023 13:46:55 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.30; Mon, 7 Aug
- 2023 06:46:48 -0700
-Message-ID: <632c5b97-4a91-c3e8-1e6c-33d6c4f6454f@quicinc.com>
-Date:   Mon, 7 Aug 2023 19:16:45 +0530
+        Mon, 7 Aug 2023 11:44:45 -0400
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65674BD;
+        Mon,  7 Aug 2023 08:44:43 -0700 (PDT)
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+        by mx.skole.hr (mx.skole.hr) with ESMTP id 12594839EF;
+        Mon,  7 Aug 2023 17:44:41 +0200 (CEST)
+From:   =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Subject: [PATCH v4 0/8] Initial Marvell PXA1908 support
+Date:   Mon, 07 Aug 2023 17:42:34 +0200
+Message-Id: <20230807-pxa1908-lkml-v4-0-cb387d73b452@skole.hr>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v4 00/21] Add Qualcomm Minidump kernel driver related
- support
-Content-Language: en-US
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Trilok Soni <quic_tsoni@quicinc.com>
-CC:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>, <corbet@lwn.net>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <keescook@chromium.org>,
-        <tony.luck@intel.com>, <gpiccoli@igalia.com>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, Alex Elder <elder@linaro.org>
-References: <1687955688-20809-1-git-send-email-quic_mojha@quicinc.com>
- <2023062814-chance-flounder-f002@gregkh>
- <CAL_JsqLO9yey2-4FcWsaGxijiS6hGL0SH9VoMuiyei-u9=Cv=w@mail.gmail.com>
- <cc30660f-dd72-aade-6346-a93c6ad4b695@quicinc.com>
- <29af84dc-7db8-0c43-07b6-eb743cf25e57@linaro.org>
- <957a3cdb-6091-8679-ddb0-296db2347291@quicinc.com> <ZKb3wz2eXS6h1yIW@p14s>
- <c0284d98-4cb2-cb78-9123-54d83fc31101@quicinc.com>
-In-Reply-To: <c0284d98-4cb2-cb78-9123-54d83fc31101@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: Luzsc6SdMQLdX7JpjvPFQ5f6xCkwCQ8m
-X-Proofpoint-ORIG-GUID: Luzsc6SdMQLdX7JpjvPFQ5f6xCkwCQ8m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-07_13,2023-08-03_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- malwarescore=0 impostorscore=0 spamscore=0 clxscore=1011 mlxlogscore=999
- mlxscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308070128
+X-B4-Tracking: v=1; b=H4sIAOoQ0WQC/32OyQ6CMBRFf8V0bcnrALSu/A/jgsBDKkNJqw2G8
+ O8WEuOwcHluck7uTDw6g54cdjNxGIw3dogg9ztSNsVwQWqqyIQDF6BA0HEqmAZFu7bvaKYEoKo
+ KmZY5icrosDbTljudIzfG36x7bPUg1vUVkt+hIChQhVLVZSFy0ProW9th0jiydgJ/uznPWcY16
+ CQDwSij1f2KSW/iWxtM+SOyT5FxBiB5wlkq0n/msixPDE0ZcxoBAAA=
+To:     Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        afaerber@suse.de,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5558;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=1EBQH+rSJaiRRzeOpOWQXCtK8UX9ffVXf/ZHzcbW8MI=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBk0REy+T93VQGSJh44hDsxiTGWufdoyXBh5bVhd
+ a4g3NmI0NWJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZNERMgAKCRCaEZ6wQi2W
+ 4YubEACMf6gprC/hPRD3kdrILJlAVpCrwQnvfsytWX+M/28x/T1OccVqupKSxt2N6rt6GPUXsIk
+ v2bwIzUXOjgvKOc5wUQbZB9pvX1HttNGNvWSlVwYuT7eFQnGA2kp/VuXe1YRXE2qM6qM84KXH8W
+ b5+RZNUqlg6EQE+3+AtIPQBLBIx5Qp5rnA/6jnMlyMYuOQ/lRZ77p7kPOL4o9dxmPKZILkPcSTY
+ 0BQ3N9iaQOViPmdTUtFry3vhGUtLfFjrwHtk1Is4kuzzjRU1/PW8Ke9DeEU33uXwgzUnrAgE5Ft
+ BTduYrSUl3YIp00OPH+THSxiVKaG9Fy/fx33Vw2X0sXTdTq6cH3P3YlhxnZqXcsrnhUAHCGymH2
+ YWZplHog/j1lhBSbse6ITRHcUlPzebq8NlhllBh97PTQah6vIV8JuDTLOcdmCukcLleWwepApY9
+ Ksc98gGsMGdaXSy91AneydycTFGtastRdGqy4SSExoVRlr5R5li2l59A7c3ixAIEgG03bSeFiZQ
+ ijgyQFj7SbRLeB+tVPDe9FSGDkF4u4AwWK4BKhUka36ERs/mfMD9BYk63CRJ6Cm+wbFzH0H8N15
+ A5jq20Bagl/vtam6WXcBkx5ZujKyV+eYwkSLcpQ2OzbrInE1mOCVNCUzS0P4Owjr+djqFceXqOO
+ yDD/47P2v0q2IUw==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Hello,
 
-On 7/18/2023 8:33 PM, Mukesh Ojha wrote:
-> 
-> 
-> On 7/6/2023 10:50 PM, Mathieu Poirier wrote:
->> On Mon, Jul 03, 2023 at 02:05:58PM -0700, Trilok Soni wrote:
->>> On 7/2/2023 1:29 AM, Krzysztof Kozlowski wrote:
->>>> On 30/06/2023 18:04, Mukesh Ojha wrote:
->>>>>>
->>>>>>> We don't add layers when they are not needed, and never when 
->>>>>>> there is no
->>>>>>> actual user.  If you need the extra "complexity" later, then add it
->>>>>>> later when it is needed as who knows when that will ever be.
->>>>>>>
->>>>>>> Please redo this series based on that, thanks.
->>>>>>
->>>>>> My bigger issue with this whole series is what would this all look
->>>>>> like if every SoC vendor upstreamed their own custom dumping
->>>>>> mechanism. That would be a mess. (I have similar opinions on the
->>>>>> $soc-vendor hypervisors.)
->>>>
->>>> Mukesh,
->>>>
->>>> LPC CFP is still open. There will be also Android and Kernel Debugging
->>>> LPC microconference tracks. Coming with a unified solution could be a
->>>> great topic for LPC. Solutions targeting only one user are quite often
->>>> frowned upon.
->>>
->>> LPC is far out and in November. Can we not have others speak up if 
->>> they have
->>> the similar solution now? We can expand this to linux-kernel and ask 
->>> for the
->>> other SOC vendors to chime in. I am sure that we may have existing 
->>> solutions
->>> which came in for the one user first like Intel RDT if I remember. I 
->>> am sure
->>> ARM MPAM usecase was present at that time but Intel RDT based 
->>> solution which
->>> was x86 specific but accepted.
->>
->> I am not familiar with Intel RDT and Arm MPAM but the community is always
->> improving on the way it does things.
->>
->> LPC is indeed far out in November but it is an opportunity to cover the
->> groundwork needed to have this discussion.  It is always best to 
->> improve on
->> something then introduce something new.  Even better if something 
->> specific such
->> as Intel RDT and Arm MPAM can be made more generic.  A perfect example is
->> hwtracing Linus referred to.  The perf framework wasn't a perfect fit 
->> but it was
->> enhanced to accommodate our requirements.  I suggest to look at what 
->> is currently
->> available and come up with a strategy to be presented at LPC - event 
->> better if
->> you have a prototype.  If you can't find anything or the drawbacks 
->> inherent to
->> each avenue outweigh the benefits then we can have that conversation 
->> at LPC.
-> 
-> I was checking hwtracing[1] and pmu interface introduction of
-> address filtering[3] from analogy point of view, which i think you
-> meant that perf framework was extended to accommodate this.
-> 
-> Minidump is quite different and simple in its way to address the problem
-> of debugging on end user devices with minimum data captured to debug 
-> crashes and this patch series is inline with similar (core + backend)
-> implementation done for stm patches[1] where stm core was developed
-> and intel trace hub get hooked into it and later it got reused in [2] by 
-> coresight-stm driver.
-> 
-> I am still exploring if something available we can reuse but it seems 
-> unlikely at the moment to already available something in the kernel with
-> similar use case.
+This series adds initial support for the Marvell PXA1908 SoC and
+"samsung,coreprimevelte", a smartphone using the SoC.
+
+USB works and the phone can boot a rootfs from an SD card, but there are
+some warnings in the dmesg:
+
+During SMP initialization:
+[    0.006519] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU1: 0x00000000000000
+[    0.006542] CPU features: Unsupported CPU feature variation detected.
+[    0.006589] CPU1: Booted secondary processor 0x0000000001 [0x410fd032]
+[    0.010710] Detected VIPT I-cache on CPU2
+[    0.010716] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU2: 0x00000000000000
+[    0.010758] CPU2: Booted secondary processor 0x0000000002 [0x410fd032]
+[    0.014849] Detected VIPT I-cache on CPU3
+[    0.014855] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU3: 0x00000000000000
+[    0.014895] CPU3: Booted secondary processor 0x0000000003 [0x410fd032]
+
+SMMU probing fails:
+[    0.101798] arm-smmu c0010000.iommu: probing hardware configuration...
+[    0.101809] arm-smmu c0010000.iommu: SMMUv1 with:
+[    0.101816] arm-smmu c0010000.iommu:         no translation support!
+
+On Samsung's PXA1908 phones, the bootloader does not start the ARM
+system timer, and my temporary solution (which isn't present in this
+series) was to put the code for starting the timer in the clock driver.
+Would this hack be accepted upstream in the form of a platform or
+clocksource driver such as drivers/clocksource/timer-mediatek-cpux.c?
+
+A 3.14 based Marvell tree is available on GitHub
+acorn-marvell/brillo_pxa_kernel, and a Samsung one on GitHub
+CoderCharmander/g361f-kernel.
+
+Andreas Färber attempted to upstream support for this SoC in 2017:
+https://lore.kernel.org/lkml/20170222022929.10540-1-afaerber@suse.de/
+
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+Changes in v4:
+- Address maintainer comments:
+  - Relicense clock binding file to BSD-2
+- Add pinctrl-names to SD card node
+- Add vgic registers to GIC node
+- Rebase on v6.5-rc5
+- Link to v3: https://lore.kernel.org/r/20230804-pxa1908-lkml-v3-0-8e48fca37099@skole.hr
+
+Changes in v3:
+- Address maintainer comments:
+  - Drop GPIO dynamic allocation patch
+  - Move clock register offsets into driver (instead of bindings file)
+  - Add missing Tested-by trailer to u32_fract patch
+  - Move SoC binding to arm/mrvl/mrvl.yaml
+- Add serial0 alias and stdout-path to board dts to enable UART
+  debugging
+- Rebase on v6.5-rc4
+- Link to v2: https://lore.kernel.org/r/20230727162909.6031-1-duje.mihanovic@skole.hr
+
+Changes in v2:
+- Remove earlycon patch as it's been merged into tty-next
+- Address maintainer comments:
+  - Clarify GPIO regressions on older PXA platforms
+  - Add Fixes tag to commit disabling GPIO pinctrl calls for this SoC
+  - Add missing includes to clock driver
+  - Clock driver uses HZ_PER_MHZ, u32_fract and GENMASK
+  - Dual license clock bindings
+  - Change clock IDs to decimal
+  - Fix underscores in dt node names
+  - Move chosen node to top of board dts
+  - Clean up documentation
+  - Reorder commits
+  - Drop pxa,rev-id
+- Rename muic-i2c to i2c-muic
+- Reword some commits
+- Move framebuffer node to chosen
+- Add aliases for mmc nodes
+- Rebase on v6.5-rc3
+- Link to v1: https://lore.kernel.org/r/20230721210042.21535-1-duje.mihanovic@skole.hr
+
+---
+Andy Shevchenko (1):
+      clk: mmp: Switch to use struct u32_fract instead of custom one
+
+Duje Mihanović (7):
+      gpio: pxa: disable pinctrl calls for MMP_GPIO
+      dt-bindings: clock: Add Marvell PXA1908 clock bindings
+      clk: mmp: Add Marvell PXA1908 clock driver
+      dt-bindings: marvell: Document PXA1908 SoC
+      arm64: Kconfig.platforms: Add config for Marvell PXA1908 platform
+      arm64: dts: Add DTS for Marvell PXA1908 and samsung,coreprimevelte
+      MAINTAINERS: add myself as Marvell PXA1908 maintainer
+
+ .../devicetree/bindings/arm/mrvl/mrvl.yaml         |   5 +
+ .../devicetree/bindings/clock/marvell,pxa1908.yaml |  48 +++
+ MAINTAINERS                                        |   9 +
+ arch/arm64/Kconfig.platforms                       |  11 +
+ arch/arm64/boot/dts/marvell/Makefile               |   3 +
+ .../dts/marvell/pxa1908-samsung-coreprimevelte.dts | 333 +++++++++++++++++++++
+ arch/arm64/boot/dts/marvell/pxa1908.dtsi           | 295 ++++++++++++++++++
+ drivers/clk/mmp/Makefile                           |   2 +-
+ drivers/clk/mmp/clk-frac.c                         |  57 ++--
+ drivers/clk/mmp/clk-mmp2.c                         |   6 +-
+ drivers/clk/mmp/clk-of-mmp2.c                      |  26 +-
+ drivers/clk/mmp/clk-of-pxa168.c                    |   4 +-
+ drivers/clk/mmp/clk-of-pxa1908.c                   | 323 ++++++++++++++++++++
+ drivers/clk/mmp/clk-of-pxa1928.c                   |   6 +-
+ drivers/clk/mmp/clk-of-pxa910.c                    |   4 +-
+ drivers/clk/mmp/clk-pxa168.c                       |   4 +-
+ drivers/clk/mmp/clk-pxa910.c                       |   4 +-
+ drivers/clk/mmp/clk.h                              |  10 +-
+ drivers/gpio/gpio-pxa.c                            |   1 +
+ include/dt-bindings/clock/marvell,pxa1908.h        |  92 ++++++
+ 20 files changed, 1179 insertions(+), 64 deletions(-)
+---
+base-commit: 52a93d39b17dc7eb98b6aa3edb93943248e03b2f
+change-id: 20230803-pxa1908-lkml-6830e8da45c7
+
+Best regards,
+-- 
+Duje Mihanović <duje.mihanovic@skole.hr>
 
 
-I explored about kdump and fadump(PPC) but they take another route to 
-boot capture kernel, FAdump is even optimized and do not even boot
-capture kernel instead reboot the same kernel with minimal
-memory and once the reading of crash kernel region is complete
-from user space it release the memories.
-
-Latency in booting another kernel may not acceptable to boot time
-sensitive devices like mobile, tablet etc., also to boot another
-kernel will have security implication with user data..
-
-So, Minidump is limited in its capability and uses firmware infra
-to dump registered entries and boot afresh. So, it need to be
-presented what need to be dumped via Minidump registration API.
-
-If there is no comments, would like to go ahead with the next
-revision of the patchset.
-
--Mukesh
-> 
-> -Mukesh
-> 
-> [1]
-> https://lwn.net/Articles/650245/
-> 
-> [2]
-> https://lwn.net/Articles/674201/
-> 
-> [3]
-> https://lore.kernel.org/lkml/1461771888-10409-1-git-send-email-alexander.shishkin@linux.intel.com/
-> 
-> 
->>
->>>
->>> ---Trilok Soni
