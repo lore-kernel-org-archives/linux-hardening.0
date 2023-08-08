@@ -2,129 +2,99 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02C2C04A94
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 21:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E27C001DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 21:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236543AbjHHVTI (ORCPT
+        id S236603AbjHHVUU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 17:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48918 "EHLO
+        Tue, 8 Aug 2023 17:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236579AbjHHVSw (ORCPT
+        with ESMTP id S236593AbjHHVUC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 17:18:52 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A94526F
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 14:17:38 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d1bcb99b518so6559111276.2
-        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 14:17:38 -0700 (PDT)
+        Tue, 8 Aug 2023 17:20:02 -0400
+Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B114084C;
+        Tue,  8 Aug 2023 12:20:11 -0700 (PDT)
+Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-1bb7d1f7aeaso4731067fac.1;
+        Tue, 08 Aug 2023 12:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691529458; x=1692134258;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3FDxtd5TTI0yB6OcEaflPtTwnfjpX0FPpXrLyaUzpnI=;
-        b=ym9wbg9V5cG40hCkLxqz65tC4ED2P5AeQdHne3t/UygEjzZr8/a5m8SwO/AKizXomx
-         u8fEjD+U7gQowx2Dzh3O8+5wk3+PNe7gLkjAJevXZ83D5L8qAAo1cTMY/xAm2FCva8Uo
-         lbE0sLMOv4JtHE0YJU0tm49XmoGTvbj9P5GejXYtzRdmdWTFMl8J4dkbFKPaogpQoiER
-         4M7ck4LYlq5wCT989oZGduI+9Gx1DkTpCRIQQwzp5P3YARB34JJpq8lPHe9TEaOgr2F/
-         xvcUIK3cM/5fqej6ththcBfzqr0IbuQZnZCPkRH12fbhzkri0s6VksUok8wtQMbszUG9
-         vFWw==
+        d=gmail.com; s=20221208; t=1691522408; x=1692127208;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=lo4mgIh/9nXIAz81CZMW5MI7/+F8GTcgLr96nVQtDgE=;
+        b=csn37X32wO1Au0l6vBQx2q5u4zXc0k/TrPFkYfdNkHlqb8/drEsmOuqi2csZBahR2C
+         9PWU7Qh8JQLTEXu2ZPj6v2zt8FgVz8U3iuFkJtIeFTPmgQmr5HrAdWvhh1JWDX+z9J0B
+         z12PX7uPVy6AsEA5GYnbtBbjjGTmL6e1ifaJIj+i+d1s+1KUgnF4Knchq7FVtYYfudtO
+         LJNQI4HdMAiwjUj0FJ3ud+Q+/zT26+u8kX8OsUuuKxVJvRqhbWTBpZ3mXqh4Yf3YBHMd
+         Gx8a2ZKhUur0mbCdLm8bTYgwGqgpqFdpambtjFRCAtf0/c1rcPfXUaBrIQJhQ99lNZy5
+         hHGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691529458; x=1692134258;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3FDxtd5TTI0yB6OcEaflPtTwnfjpX0FPpXrLyaUzpnI=;
-        b=BfTc+vEOwwTQk6yz6ZhtqMIc0lIgZoEBUp31ZxA+af+YcMrH6HiZaVQBleEXUoNSwc
-         U2Nj7nzwUOy6rJzHdNqDDKM/SJmRHHRmbMLqC+W9gQCZO6e5HgaFq7u/GhqyODno87SE
-         nsS9Gi9hRxR6ReHCC3iqAXRaZXPiTiDQkxBTAImPDzvJv+w8V2NEYQK59i9IeUXOSJBR
-         /SVJw+PjdCl35tsp2l7FzoD85UV83N4/T5K16KLZ3fFmxnxiASSAKUYGSR2keqohs+Fk
-         LbUjvgF9/6AsS9x0UfZpdkDYoSzfyWJBXw9YYukjNdKH2uuHq4sRNhd8QT2CkCrlZG3M
-         hHBQ==
-X-Gm-Message-State: AOJu0YyJhic+Os9wfqffvrTgO8LTw6RfTgcUYjhZLi8oH9ta6QEzYeWp
-        hMisRjPi5iwpqi0psyfm+m/KWmEsQhLSJK7Ttw==
-X-Google-Smtp-Source: AGHT+IHRpFBahWyCsqDq2Jymqy4KmoaI/LjbwJfXSlsnxSeNP0O276Z+TuKwYj/2pYJWPJENuDtYuJ/tH9GWqqAQXw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:e78e:0:b0:d0a:86fc:536c with SMTP
- id e136-20020a25e78e000000b00d0a86fc536cmr15189ybh.2.1691529457883; Tue, 08
- Aug 2023 14:17:37 -0700 (PDT)
-Date:   Tue, 08 Aug 2023 21:17:35 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAO6w0mQC/2XMSw7CIBSF4a00dyyGl9I6ch+mg0Ivj8QWA0o0D
- XsXO3X4n5x8G2RMATNcug0SlpBDXFvwQwfGT6tDEubWwCkXtKeKTMl48lqIQMulZEJyhdDej4Q 2vHfpNrb2IT9j+uxwYb/13yiMMNKfZ62tPg2KDlcXo7vj0cQFxlrrFxsjY9GfAAAA
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691529456; l=1882;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=tgWFws4763lrVU2WbDNesL8iVYR+q5vLBUC0Li+5Ak0=; b=vgzwPI9m0aHfamLtzCxThUgHXsLWmmm/NJ8qfrQFiLO/W00KK2zwHm+9PrMop2SNbVKZcF4s5
- FZtwZaG/Ic9CA3qj/qsfoXSdwko4/YOOl7N7PSyX01aDoDWnVNxCuru
-X-Mailer: b4 0.12.3
-Message-ID: <20230808-arch-um-v2-1-5fbe76eaf853@google.com>
-Subject: [PATCH v2] um: refactor deprecated strncpy to strtomem
-From:   Justin Stitt <justinstitt@google.com>
-To:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-hardening@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        d=1e100.net; s=20221208; t=1691522408; x=1692127208;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lo4mgIh/9nXIAz81CZMW5MI7/+F8GTcgLr96nVQtDgE=;
+        b=ktksGH12QFtnE5DMlC6U0o0KAjsoJ9RNHkXmcqcFpUhGbXKThiyVQHyNzd1hAyWyJM
+         eEavoUpyZsHmbtCXF7IvUh0hLxzG3tigWVXr+r5i4AiR+AP8SSxZ5m42mmc08kq/GrfR
+         QYb3le2CiVdM7HplbJFs6WbusPKPOaIqf5FalGVot+RDOcSjMOs/Ue1RGAbWBFG/uzLt
+         yeqFifq7PgEjhup48gOQSpAQD+ijYM/gqThmwv8OFYclHFNh0ABhlimJIH2QMSI+M0s0
+         Imlm4Rtihgb8M5SPqyfbVWotYYbrHFUCNC03GPjOBK0/33tlz84o4yAEqgRbAriynyD3
+         6CBA==
+X-Gm-Message-State: AOJu0Ywtsc5474bT97o3MWARenHKPI8fOxqHmtX8vqZFdaptLllKRFL1
+        +iw3f2GBD6vdKUoFKT75H2g=
+X-Google-Smtp-Source: AGHT+IHqOyan+5/7RWD1nJ8ax3s1SDYfKm888u41Ha2ElbdK8zMF5qKXrs1hOE5/fwe70xvMZWhCbQ==
+X-Received: by 2002:a05:6870:c18c:b0:1a9:af29:46eb with SMTP id h12-20020a056870c18c00b001a9af2946ebmr529285oad.59.1691522408303;
+        Tue, 08 Aug 2023 12:20:08 -0700 (PDT)
+Received: from [192.168.1.119] ([216.130.59.33])
+        by smtp.gmail.com with ESMTPSA id n27-20020a4ad63b000000b00565d41ba4d0sm5602140oon.35.2023.08.08.12.20.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Aug 2023 12:20:07 -0700 (PDT)
+Sender: Larry Finger <larry.finger@gmail.com>
+Message-ID: <20fc56ef-6240-e86e-6d38-9278592a3b25@lwfinger.net>
+Date:   Tue, 8 Aug 2023 14:20:06 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] vboxsf: Use flexible arrays for trailing string member
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <20230720151458.never.673-kees@kernel.org>
+ <169040854617.1782642.4557415464507636357.b4-ty@chromium.org>
+From:   Larry Finger <Larry.Finger@lwfinger.net>
+In-Reply-To: <169040854617.1782642.4557415464507636357.b4-ty@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Favor a more robust and less ambiguous interface over `strncpy`.
+On 7/26/23 16:55, Kees Cook wrote:
+> 
+> On Thu, 20 Jul 2023 08:15:06 -0700, Kees Cook wrote:
+>> The declaration of struct shfl_string used trailing fake flexible arrays
+>> for the string member. This was tripping FORTIFY_SOURCE since commit
+>> df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3"). Replace the
+>> utf8 and utf16 members with actual flexible arrays, drop the unused ucs2
+>> member, and retriain a 2 byte padding to keep the structure size the same.
+>>
+>>
+>> [...]
+> 
+> Applied to for-linus/hardening, thanks!
+> 
+> [1/1] vboxsf: Use flexible arrays for trailing string member
+>        https://git.kernel.org/kees/c/a8f014ec6a21
 
-Use `strtomem` here since `console_buf` is not expected to be
-NUL-terminated.
+Kees,
 
-Also mark char buffer as `__nonstring` as per Kees' suggestion here [1]
+This patch has not been applied to kernel 6.5-rc5. Is there some problem?
 
-Link: https://github.com/KSPP/linux/issues/90 [1]
-Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v2:
-- Keep usage of ARRAY_SIZE (thanks Bill)
-- Remove unnecessary import (thanks Kees and Bill)
-- Link to v1: https://lore.kernel.org/r/20230807-arch-um-v1-1-86dbbfb59709@google.com
----
-Notes:
-I only build tested this patch.
+Larry
 
-I am also making an assumption that `console_buf` need not be
-NUL-terminated. Am I right in believing this?
----
- arch/um/drivers/mconsole_kern.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/um/drivers/mconsole_kern.c b/arch/um/drivers/mconsole_kern.c
-index 5026e7b9adfe..d5fa9c8dcd18 100644
---- a/arch/um/drivers/mconsole_kern.c
-+++ b/arch/um/drivers/mconsole_kern.c
-@@ -554,7 +554,7 @@ struct mconsole_output {
- 
- static DEFINE_SPINLOCK(client_lock);
- static LIST_HEAD(clients);
--static char console_buf[MCONSOLE_MAX_DATA];
-+static char console_buf[MCONSOLE_MAX_DATA] __nonstring;
- 
- static void console_write(struct console *console, const char *string,
- 			  unsigned int len)
-@@ -567,7 +567,7 @@ static void console_write(struct console *console, const char *string,
- 
- 	while (len > 0) {
- 		n = min((size_t) len, ARRAY_SIZE(console_buf));
--		strncpy(console_buf, string, n);
-+		strtomem(console_buf, string);
- 		string += n;
- 		len -= n;
- 
-
----
-base-commit: c1a515d3c0270628df8ae5f5118ba859b85464a2
-change-id: 20230807-arch-um-3ef24413427e
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
 
