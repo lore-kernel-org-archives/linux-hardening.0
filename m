@@ -2,147 +2,104 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB386C001B0
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 19:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA87C001B0
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 19:11:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234226AbjHHTLB (ORCPT
+        id S231387AbjHHTLm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 15:11:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52608 "EHLO
+        Tue, 8 Aug 2023 15:11:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234429AbjHHTKl (ORCPT
+        with ESMTP id S230353AbjHHTL2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 15:10:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA5ADE9E6;
-        Tue,  8 Aug 2023 09:32:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 827D362456;
-        Tue,  8 Aug 2023 16:31:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFB7C433C7;
-        Tue,  8 Aug 2023 16:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691512307;
-        bh=i13P5MPqrTGWCc+X/5J6OL6JOdO6y17/4r5Ys53Uur0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sUMo/ilNQjbTst5YG3/9ijxPs5mOI9ZLOnEjxhzeCm7KVteaFEsYSUu5F6P5kCu+c
-         cDaMjxIKKwWidt/oceJJBCYnV4cFJKtfctLYSJ4ksPmAW/mb38/qSvKosaEX4A4AjN
-         CJHDCGGD7KwDVjPZfJb+G4cSKBX6ud/7sUKmGVrFJHLfmwsYj9VVWTHu9mNAOWjzdW
-         AKx8NFq+92kLHrAdr4HfDc3o4JkeKHf6cNUluVZhfJcInujueS73luI8vViMDUBWyO
-         mRE2WFQtt7XWsExLES5NjKAfQgypy4Ibl5O1/3olZO1Bx3mrMHCF1On6OrRysXMZRm
-         JHDn+8ZoDXNMw==
-Date:   Tue, 8 Aug 2023 10:32:50 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        Nikolay Aleksandrov <razor@blackwall.org>,
-        Kees Cook <keescook@chromium.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
-Subject: Re: [PATCH v2] netfilter: ebtables: fix fortify warnings
-Message-ID: <ZNJuMoe37L02TP20@work>
-References: <20230808133038.771316-1-gongruiqi@huaweicloud.com>
+        Tue, 8 Aug 2023 15:11:28 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF310E1A06
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 09:33:08 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-52328e96869so5054708a12.1
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 09:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691512355; x=1692117155;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=U/ENPbWDACTq/gT25pwElyGsToVBQemAbfEgTyGefM8=;
+        b=saVpxWK+jg8JEeJTicyZPo5k0grOVIyVSnfOsnMrYJPJN7AHNPu8YDwwz/khVRJH5L
+         jQclPIi1u0iT9RhlI+r07lgv/wfSyrO4ZhWEyaHmAHgZYfxs8g7+yVcJYrZbvWhilJnh
+         pu/gUl01R7NqPVDxnkY6ESka2hJexVVBDxysdOztu2LzN0dkczZ2LjNvzD+OG9Odav8u
+         IVweCpd/ND4l5UD0aNCpxGfJjP/1MEmN0+sEIEWTrXXXyzJlxnM1/h2vksbS2+txrfXH
+         O5r5jZMORrxbGxCy4lSTY4k9IJfttDxa+bR32+vgalLvr2OP56OJvejrqsyukJSslcb9
+         irkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691512355; x=1692117155;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U/ENPbWDACTq/gT25pwElyGsToVBQemAbfEgTyGefM8=;
+        b=NNXEFUll4vPLEWfjPDG9RJSwBQjak7Y+LYBOQ5z3R0YUuH4oHF60y2IuP7nzjdILSW
+         nwC0//cjs+hDuIvUbWIQJ4JCInmFUcjuUBDDrBBaTj6B6AxeLdsJNGhgun+kjF0UAbsx
+         k+/Ikj8eHAuqgYwh4iVbMAIOhSiP14XQ4f4HfF/1hQQqX4id5KEMMpZ00kfKJverqdtb
+         epcgMXxyx676dVeJ2yKtl8LNpQN2pq600sa0wYoyZ58OIVWXqfLlfQ+5ZZYLP14Gc6r9
+         a0MiMR3ZWv+WfhgwMHATFmWGCupkbNW1l1ewgdjQa4KqGBo/aPjyd7fHhzexN1spoO9V
+         Pu0A==
+X-Gm-Message-State: AOJu0YxZ+nPE9DlaYfAj7I5ubdlLHp10Wu/w0RKWeI/Tj5dDD/QGqnVC
+        32DE6VWDRrS0DjgAHQcvoW9Utqw6NdmC7Zk2Zo0=
+X-Google-Smtp-Source: AGHT+IH20o5oXu1MzFaME7Vqm8k1vG/h5IULgofIK8nWT0wfuYK0Ryctno9bzeuLujRtR/SQOzZBWA==
+X-Received: by 2002:a17:906:d8:b0:99b:ca5d:1466 with SMTP id 24-20020a17090600d800b0099bca5d1466mr11379531eji.66.1691474329221;
+        Mon, 07 Aug 2023 22:58:49 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.113])
+        by smtp.gmail.com with ESMTPSA id e4-20020a1709062c0400b00982d0563b11sm3463474ejh.197.2023.08.07.22.58.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Aug 2023 22:58:48 -0700 (PDT)
+Message-ID: <9e235de6-972a-84e5-3e09-f0b07b10e28d@linaro.org>
+Date:   Tue, 8 Aug 2023 07:58:46 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v4 0/8] Initial Marvell PXA1908 support
+Content-Language: en-US
+To:     =?UTF-8?Q?Duje_Mihanovi=c4=87?= <duje.mihanovic@skole.hr>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        afaerber@suse.de,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20230807-pxa1908-lkml-v4-0-cb387d73b452@skole.hr>
+ <5723818.DvuYhMxLoT@radijator>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <5723818.DvuYhMxLoT@radijator>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230808133038.771316-1-gongruiqi@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 09:30:38PM +0800, GONG, Ruiqi wrote:
-> From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+On 07/08/2023 23:02, Duje Mihanović wrote:
+> Patch 8/8 is missing because b4 lost connection to my SMTP server while 
+> sending it. Should I resend the whole series?
 > 
-> When compiling with gcc 13 and CONFIG_FORTIFY_SOURCE=y, the following
-> warning appears:
-> 
-> In function ‘fortify_memcpy_chk’,
->     inlined from ‘size_entry_mwt’ at net/bridge/netfilter/ebtables.c:2118:2:
-> ./include/linux/fortify-string.h:592:25: error: call to ‘__read_overflow2_field’
-> declared with attribute warning: detected read beyond size of field (2nd parameter);
-> maybe use struct_group()? [-Werror=attribute-warning]
->   592 |                         __read_overflow2_field(q_size_field, size);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> The compiler is complaining:
-> 
-> memcpy(&offsets[1], &entry->watchers_offset,
->                        sizeof(offsets) - sizeof(offsets[0]));
-> 
-> where memcpy reads beyong &entry->watchers_offset to copy
-> {watchers,target,next}_offset altogether into offsets[]. Silence the
-> warning by wrapping these three up via struct_group().
-> 
-> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
-> ---
-> 
-> v2: fix HDRTEST error by replacing struct_group() with __struct_group(),
-> since it's a uapi header.
-> 
->  include/uapi/linux/netfilter_bridge/ebtables.h | 14 ++++++++------
->  net/bridge/netfilter/ebtables.c                |  3 +--
->  2 files changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
-> index a494cf43a755..b0caad82b693 100644
-> --- a/include/uapi/linux/netfilter_bridge/ebtables.h
-> +++ b/include/uapi/linux/netfilter_bridge/ebtables.h
-> @@ -182,12 +182,14 @@ struct ebt_entry {
->  	unsigned char sourcemsk[ETH_ALEN];
->  	unsigned char destmac[ETH_ALEN];
->  	unsigned char destmsk[ETH_ALEN];
-> -	/* sizeof ebt_entry + matches */
-> -	unsigned int watchers_offset;
-> -	/* sizeof ebt_entry + matches + watchers */
-> -	unsigned int target_offset;
-> -	/* sizeof ebt_entry + matches + watchers + target */
-> -	unsigned int next_offset;
-> +	__struct_group(/* no tag */, offsets, /* no attrs */,
-> +		/* sizeof ebt_entry + matches */
-> +		unsigned int watchers_offset;
-> +		/* sizeof ebt_entry + matches + watchers */
-> +		unsigned int target_offset;
-> +		/* sizeof ebt_entry + matches + watchers + target */
-> +		unsigned int next_offset;
-> +	);
->  	unsigned char elems[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
->  };
->  
-> diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-> index 757ec46fc45a..5ec66b1ebb64 100644
-> --- a/net/bridge/netfilter/ebtables.c
-> +++ b/net/bridge/netfilter/ebtables.c
-> @@ -2115,8 +2115,7 @@ static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *ba
->  		return ret;
->  
->  	offsets[0] = sizeof(struct ebt_entry); /* matches come first */
-> -	memcpy(&offsets[1], &entry->watchers_offset,
-> -			sizeof(offsets) - sizeof(offsets[0]));
-> +	memcpy(&offsets[1], &entry->offsets, sizeof(offsets) - sizeof(offsets[0]));
-							^^^^^^^^^^^^
-You now can replace this ____________________________________|
-with just `sizeof(entry->offsets)`
+>
 
-With that change you can add my
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Just send patch 8 manually setting in-reply-to= argument to git
+send-email. b4 maybe also has this option, I don't know.
 
-Thank you
---
-Gustavo
+Best regards,
+Krzysztof
 
->  
->  	if (state->buf_kern_start) {
->  		buf_start = state->buf_kern_start + state->buf_kern_offset;
-> -- 
-> 2.41.0
-> 
