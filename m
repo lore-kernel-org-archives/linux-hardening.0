@@ -2,95 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E01C001B0
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 17:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9589C04A6A
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 17:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234450AbjHHRUi (ORCPT
+        id S234733AbjHHRgA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 13:20:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47394 "EHLO
+        Tue, 8 Aug 2023 13:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234172AbjHHRUN (ORCPT
+        with ESMTP id S234752AbjHHRff (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 13:20:13 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6259A77282
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 09:08:09 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-686f1240a22so5635299b3a.0
-        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 09:08:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691510875; x=1692115675;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=frvcjSHU9+qDHY4YZC4he2fEZsvOzbP34ouHk5d60vI=;
-        b=adSwNJODpxtCw9/7mAwJgSmxtH/uijEK5h6USSytejdZCjloRrErG0vEUfO++n1+kb
-         fCJ4hBMT7bTKglz+gc02W0KK+ntfweHcAX62dJClqx7n1ll6p1mKv8oQUiwrZ5L4BdR8
-         bqY/nNYvNgxywaJKejMBIl8uS2VHYlh/EqhJMDQeClskFm0jZHY+SJUEq2rv9MbW89dX
-         NwxZOtnWE2k2mJeSOb5KTXTrE87ZwqHwiLN4wLH4fcCzgnl83BDAUNEA6vRElewIwwLK
-         YYIbt2fG0pLauHlsNyhJsHSB4yVRoEOFBfrFvaUZd1OT1V0FEqnr5DzhWhenPLITthQe
-         Qsqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691510875; x=1692115675;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=frvcjSHU9+qDHY4YZC4he2fEZsvOzbP34ouHk5d60vI=;
-        b=izB+hkq1fHaBNw+aHluRftRe3UnMeTepBH7t6Wp6fbVYhgA9Doupc5DWHA45LjTDf8
-         RatYt5Q/T6FD8XK98KPT6cxaMhFnD6Mh21xb40R65AXO4h1Gp+TWxIEnYetIXGPMuINW
-         CBRsCd33+Yz9B2wiCs9nN+FIjtUEZ0nC7reeP63nddoKBnBJuOTD7Glv+C2iyBVmQIDr
-         evLh8T3khtGfQ0qRYCdiciz03YrGkHtBtbtwBMQt5vohE/caditDwI5PRMXWXuvynD/e
-         bTs4w6LpN2lBkdSB6AKXLz/i1+8IOUrgQIx641+W4MIc2MmWsVeJzd4BxV6vCewjWQ0x
-         ZQsA==
-X-Gm-Message-State: AOJu0YwaOLpocbFp4AVRV/1U1+BCTwDz6CbEKUOQZpOiOik9zEtcuZDe
-        ovHbMN1el7mVhUttWJFw+f2ZT1n+OCxka6o4CBZjBiRxhUGAaBvJG+I=
-X-Google-Smtp-Source: AGHT+IEmrwbdceoImr/R1pVLTPPsMVZl7KMGyvlgjYP7+OdE6wTnFjB1sGC91Ej10qjfVOUgq8HfN0LbTnuvsAMOdpw=
-X-Received: by 2002:a05:6102:3172:b0:445:202:d278 with SMTP id
- l18-20020a056102317200b004450202d278mr4303132vsm.32.1691472461928; Mon, 07
- Aug 2023 22:27:41 -0700 (PDT)
-MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 8 Aug 2023 10:57:30 +0530
-Message-ID: <CA+G9fYsf0jePDO3VPz0pb1sURdefpYCAYH-y+OdsAf3HuzbeRw@mail.gmail.com>
-Subject: stable-rc: 6.1: gcc-plugins: Reorganize gimple includes for GCC 13
-To:     linux-stable <stable@vger.kernel.org>, lkft-triage@lists.linaro.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
+        Tue, 8 Aug 2023 13:35:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206B397D61;
+        Tue,  8 Aug 2023 09:15:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9308D624CF;
+        Tue,  8 Aug 2023 11:23:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FA69C433C7;
+        Tue,  8 Aug 2023 11:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691493810;
+        bh=9dfaHkQsTbz6SSdb5UJdAoztmVevINLHKGS/qmJt5n4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pq4dqwphkPXIi18+0GXMV9gShAYkiZK/k4OcBM8SwOG1LdpZXNrapZgz5t5c2/2jZ
+         8QBNNMX0AHJIw+39UDpWf+ogaSuEHSA0gCK0uZZoa0qabWv7wCx0okIcUArS5U+AV/
+         QD5lfhc4yo97Sy1uDKyThSEyQuFUb1rNGTbbj1+hLhWSnaFVz8cHEFFLssFyPh000Q
+         whMw26ZEUo1F4M1Qk4eJDgNAVejOjccjXCcw7w5c8+xyD8XarjeG5oqspA6AqVKiqu
+         Kvu+JbOvQhUpEu4qDi0MpLsS2NK6OmtNXhxfiAECuYIvjxUQe5pW9vR1N6g9qc4gcZ
+         h3BGYGhFBK8/g==
+Date:   Tue, 8 Aug 2023 12:23:23 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc:     Conor Dooley <conor+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-hardening@vger.kernel.org,
-        Palmer Dabbelt <palmer@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        afaerber@suse.de
+Subject: Re: [PATCH v4 3/8] dt-bindings: clock: Add Marvell PXA1908 clock
+ bindings
+Message-ID: <20230808-produce-thievish-3ce1b86a114b@spud>
+References: <20230807-pxa1908-lkml-v4-0-cb387d73b452@skole.hr>
+ <2155917.irdbgypaU6@radijator>
+ <20230808-quizzical-footwork-4846d6461f74@spud>
+ <10320606.nUPlyArG6x@radijator>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PFsVVMVhVavFC5ld"
+Content-Disposition: inline
+In-Reply-To: <10320606.nUPlyArG6x@radijator>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-LKFT build plans updated with toolchain gcc-13 and here is the report.
 
-Stable rc 6.1 arm64 builds with gcc-13 failed and the bisection is pointing
-to this as first bad commit,
+--PFsVVMVhVavFC5ld
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-# first fixed commit: [e6a71160cc145e18ab45195abf89884112e02dfb]
-   gcc-plugins: Reorganize gimple includes for GCC 13
+On Tue, Aug 08, 2023 at 01:03:33PM +0200, Duje Mihanovi=C4=87 wrote:
+> On Tuesday, August 8, 2023 12:46:23 PM CEST Conor Dooley wrote:
+> > On Tue, Aug 08, 2023 at 12:41:22PM +0200, Duje Mihanovi=C4=87 wrote:
+> > > They are used by the clock driver when calling mmp_clk_init which the=
+n=20
+> uses
+> > > that as the size of a struct clk array it allocates. In retrospect, 5=
+0 for
+> > > each block may be too much as from what I can tell by reading the
+> > > mmp_register_* functions (number of clocks + 1) for each block should=
+ be
+> > > enough, anything less than that causes a null pointer dereference som=
+etime
+> > > during clock initialization.
+> >=20
+> > I think you might have misread my question, I'm not really interested in
+> > the implementation detail of the driver. If these are not used in
+> > devicetree, remove them - otherwise they are being needlessly added to
+> > the ABI.
+>=20
+> Should I also do this in the rest of the MMP clock drivers?
 
-Thanks Anders for bisecting this problem against Linux 6.2-rc6.
+Krzysztof has just done it for all of the Samsung ones! I think it
+wouldn't be a bad idea to get rid of them else where & new additions
+should definitely be avoided.
 
-Build errors:
----------------
-In file included from /builds/linux/scripts/gcc-plugins/gcc-common.h:75,
-                 from /builds/linux/scripts/gcc-plugins/stackleak_plugin.c:30:
-/usr/lib/gcc-cross/aarch64-linux-gnu/13/plugin/include/gimple-fold.h:72:32:
-error: use of enum 'gsi_iterator_update' without previous declaration
-   72 |                           enum gsi_iterator_update,
-      |                                ^~~~~~~~~~~~~~~~~~
+--PFsVVMVhVavFC5ld
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNIlqwAKCRB4tDGHoIJi
+0hb5AQDFHqBxeGJ5Pql2GZJHm+5OVEKHSGgnIdm0oWZdW4UkmAD8CiCkuPlCdNPe
+eY4hEyptsolQmpK08Yltu36YIg7G8gE=
+=WiyK
+-----END PGP SIGNATURE-----
 
-Links:
---------
- - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y-sanity/build/v6.1.43-111-g565bca90c30e/testrun/18861637/suite/build/test/gcc-13-lkftconfig-kselftest-kernel/details/
- -  https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y-sanity/build/v6.1.43-111-g565bca90c30e/testrun/18861637/suite/build/test/gcc-13-lkftconfig-kselftest-kernel/log
-  - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y-sanity/build/v6.1.43-111-g565bca90c30e/testrun/18861637/suite/build/test/gcc-13-lkftconfig-kselftest-kernel/history/
-
---
-Linaro LKFT
-https://lkft.linaro.org
+--PFsVVMVhVavFC5ld--
