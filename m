@@ -2,121 +2,131 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A29DC04A6A
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 20:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCC9C001B0
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 20:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229767AbjHHURa (ORCPT
+        id S233282AbjHHUbU (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 16:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50662 "EHLO
+        Tue, 8 Aug 2023 16:31:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235710AbjHHURN (ORCPT
+        with ESMTP id S231830AbjHHUbJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 16:17:13 -0400
-X-Greylist: delayed 5427 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 08 Aug 2023 12:20:57 PDT
-Received: from www.kot-begemot.co.uk (ns1.kot-begemot.co.uk [217.160.28.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2899D1657F
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 12:20:57 -0700 (PDT)
-Received: from 212-39-89-7.ip.btc-net.bg ([212.39.89.7] helo=[192.168.14.227])
-        by www.kot-begemot.co.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.94.2)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1qTFpV-000Srs-NP; Tue, 08 Aug 2023 06:04:32 +0000
-Message-ID: <0bdda692-25a3-227c-69ef-341f037e1dd7@cambridgegreys.com>
-Date:   Tue, 8 Aug 2023 07:04:29 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] um: vector: refactor deprecated strncpy
-To:     Justin Stitt <justinstitt@google.com>,
-        Richard Weinberger <richard@nod.at>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tue, 8 Aug 2023 16:31:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B67A59D5;
+        Tue,  8 Aug 2023 09:45:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E5F4624A8;
+        Tue,  8 Aug 2023 10:46:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2916DC433C7;
+        Tue,  8 Aug 2023 10:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691491590;
+        bh=5/vplBpZWRwEXtxAuo+0mchoMiagOLKKpHiTNDbEBww=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kssHiHS1t8J2pe2+B38xLRV3R7yKgOPAtYndtLmJ6DF9MGV8fP7DlzArGy22/5xe5
+         h60Xn8RnUAwTcHafxwo3aq9JrJLam+Xzdw25HRoelZd9QYjzsEl8oYaIyNvYNLJm3f
+         kK9L23khONgms8NuESWXwvCqrhIISx0lFw8qW3g9NtoJFQvICWnPwdFbbzkuRD7SGG
+         zMd0Eo+cmO5t8YQLWmHnmbT393YETR2YT5f1zK8BydSkV+gIJMz2KIqfmqmXULQrik
+         XCJcpCcGB24/rTcNFSv+dVy3i6VOobzzQZzUImxX6h+gO9ANJ3KXYHKXZ+p1yVLBZR
+         TacytRr2qkxDg==
+Date:   Tue, 8 Aug 2023 11:46:23 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc:     Conor Dooley <conor+dt@kernel.org>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org
-References: <20230807-arch-um-drivers-v1-1-10d602c5577a@google.com>
-Content-Language: en-US
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-In-Reply-To: <20230807-arch-um-drivers-v1-1-10d602c5577a@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hardening@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        afaerber@suse.de
+Subject: Re: [PATCH v4 3/8] dt-bindings: clock: Add Marvell PXA1908 clock
+ bindings
+Message-ID: <20230808-quizzical-footwork-4846d6461f74@spud>
+References: <20230807-pxa1908-lkml-v4-0-cb387d73b452@skole.hr>
+ <20230807-pxa1908-lkml-v4-3-cb387d73b452@skole.hr>
+ <20230808-equator-professor-fcc4564b4ef5@spud>
+ <2155917.irdbgypaU6@radijator>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="RztoMnfb+8mn952S"
+Content-Disposition: inline
+In-Reply-To: <2155917.irdbgypaU6@radijator>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
+--RztoMnfb+8mn952S
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 07/08/2023 19:22, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> 
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on its destination buffer argument which is
-> _not_ the case for `strncpy`!
-> 
-> In this case, we are able to drop the now superfluous `... - 1`
-> instances because `strscpy` will automatically truncate the last byte by
-> setting it to a NUL byte if the source size exceeds the destination size
-> or if the source string is not NUL-terminated.
-> 
-> I've also opted to remove the seemingly useless char* casts. I'm not
-> sure why they're present at all since (after expanding the `ifr_name`
-> macro) `ifr.ifr_ifrn.ifrn_name` is a char* already.
-> 
-> All in all, `strscpy` is a more robust and less ambiguous interface
-> while also letting us remove some `... -1`'s which cleans things up a
-> bit.
-> 
-> [1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-> [2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
-> 
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
->   arch/um/drivers/vector_user.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
-> index c650e428432b..c719e1ec4645 100644
-> --- a/arch/um/drivers/vector_user.c
-> +++ b/arch/um/drivers/vector_user.c
-> @@ -141,7 +141,7 @@ static int create_tap_fd(char *iface)
->   	}
->   	memset(&ifr, 0, sizeof(ifr));
->   	ifr.ifr_flags = IFF_TAP | IFF_NO_PI | IFF_VNET_HDR;
-> -	strncpy((char *)&ifr.ifr_name, iface, sizeof(ifr.ifr_name) - 1);
-> +	strscpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
->   
->   	err = ioctl(fd, TUNSETIFF, (void *) &ifr);
->   	if (err != 0) {
-> @@ -171,7 +171,7 @@ static int create_raw_fd(char *iface, int flags, int proto)
->   		goto raw_fd_cleanup;
->   	}
->   	memset(&ifr, 0, sizeof(ifr));
-> -	strncpy((char *)&ifr.ifr_name, iface, sizeof(ifr.ifr_name) - 1);
-> +	strscpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
->   	if (ioctl(fd, SIOCGIFINDEX, (void *) &ifr) < 0) {
->   		err = -errno;
->   		goto raw_fd_cleanup;
-> 
-> ---
-> base-commit: c1a515d3c0270628df8ae5f5118ba859b85464a2
-> change-id: 20230807-arch-um-drivers-ad44050885d0
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
-> 
-> _______________________________________________
-> linux-um mailing list
-> linux-um@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-um
-> 
-Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+On Tue, Aug 08, 2023 at 12:41:22PM +0200, Duje Mihanovi=C4=87 wrote:
+> On Tuesday, August 8, 2023 9:49:49 AM CEST Conor Dooley wrote:
+> > On Mon, Aug 07, 2023 at 05:42:37PM +0200, Duje Mihanovi=C4=87 wrote:
+> > > diff --git a/include/dt-bindings/clock/marvell,pxa1908.h
+> > > b/include/dt-bindings/clock/marvell,pxa1908.h new file mode 100644
+> > > index 000000000000..0c1f328bf534
+> > > --- /dev/null
+> > > +++ b/include/dt-bindings/clock/marvell,pxa1908.h
+> > > +#define PXA1908_CLK_PLL4VCODIV3		38
+> > > +#define PXA1908_MPMU_NR_CLKS		38
+> > >=20
+> > > +#define PXA1908_CLK_TWSI3		18
+> > > +#define PXA1908_APBC_NR_CLKS		50
+> > >=20
+> > > +#define PXA1908_CLK_AICER		3
+> > > +#define PXA1908_APBCP_NR_CLKS		50
+> > >=20
+> > > +#define PXA1908_CLK_DVC_DFC_DEBUG	16
+> > > +#define PXA1908_APMU_NR_CLKS		50
+> >=20
+> > How are these "NR_CLKS" things helpful to the binding?
+>=20
+> They are used by the clock driver when calling mmp_clk_init which then us=
+es=20
+> that as the size of a struct clk array it allocates. In retrospect, 50 fo=
+r=20
+> each block may be too much as from what I can tell by reading the=20
+> mmp_register_* functions (number of clocks + 1) for each block should be=
+=20
+> enough, anything less than that causes a null pointer dereference sometim=
+e=20
+> during clock initialization.
 
--- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+I think you might have misread my question, I'm not really interested in
+the implementation detail of the driver. If these are not used in
+devicetree, remove them - otherwise they are being needlessly added to
+the ABI.
+
+--RztoMnfb+8mn952S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNIc/wAKCRB4tDGHoIJi
+0vvfAQCUBVx+dfC3x4h3dtSQuScpZW8E7hwenEjgq15lYWMiRwEAqp39VWkBj/XW
+LQARrUdP4b6MTYsXWU2u/v2O1qsoigA=
+=ZFJc
+-----END PGP SIGNATURE-----
+
+--RztoMnfb+8mn952S--
