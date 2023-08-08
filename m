@@ -2,112 +2,147 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B857C04A6A
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 18:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB386C001B0
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 19:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235589AbjHHSSY (ORCPT
+        id S234226AbjHHTLB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 14:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47150 "EHLO
+        Tue, 8 Aug 2023 15:11:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235593AbjHHSRs (ORCPT
+        with ESMTP id S234429AbjHHTKl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 14:17:48 -0400
+        Tue, 8 Aug 2023 15:10:41 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9D7196A9;
-        Tue,  8 Aug 2023 10:25:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA5ADE9E6;
+        Tue,  8 Aug 2023 09:32:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F8D262428;
-        Tue,  8 Aug 2023 07:49:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1BBAC433C7;
-        Tue,  8 Aug 2023 07:49:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 827D362456;
+        Tue,  8 Aug 2023 16:31:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFB7C433C7;
+        Tue,  8 Aug 2023 16:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691480996;
-        bh=x1L13VddAI4iND15BaelnnmmeBPHY/Ut6c6CffPYejo=;
+        s=k20201202; t=1691512307;
+        bh=i13P5MPqrTGWCc+X/5J6OL6JOdO6y17/4r5Ys53Uur0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tV3hmWG/B0VINsfhJbi/OUjzXjGcKtG+i/5D8B04z3sfEmpOS/chk6SPInE+KOrf5
-         43c6v4OEPDA4EDB31bnTmMioFmC26aAP065HMEpce9lcV/vzbrjfywRWMjdOHWiFjD
-         a7moskD64pT3hF2VK/WxHFf344tQ6Xxi2V6qiSQ478BLNebYjY4j2zvvDzoHRKQcZc
-         IN2NVA9QEFDNy6hH3bVhZVhuwb/m+zDCMMO/uz3k/6r7eaiAhYhmhzfjxZRevsvYV9
-         DHnJ60gOoex7zvaM0smXDXfvuggoiWPqMyATXtIHUg++a/wkxntKcJqppP0ec9gW+g
-         smw5NYwFhcviQ==
-Date:   Tue, 8 Aug 2023 08:49:49 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        b=sUMo/ilNQjbTst5YG3/9ijxPs5mOI9ZLOnEjxhzeCm7KVteaFEsYSUu5F6P5kCu+c
+         cDaMjxIKKwWidt/oceJJBCYnV4cFJKtfctLYSJ4ksPmAW/mb38/qSvKosaEX4A4AjN
+         CJHDCGGD7KwDVjPZfJb+G4cSKBX6ud/7sUKmGVrFJHLfmwsYj9VVWTHu9mNAOWjzdW
+         AKx8NFq+92kLHrAdr4HfDc3o4JkeKHf6cNUluVZhfJcInujueS73luI8vViMDUBWyO
+         mRE2WFQtt7XWsExLES5NjKAfQgypy4Ibl5O1/3olZO1Bx3mrMHCF1On6OrRysXMZRm
+         JHDn+8ZoDXNMw==
+Date:   Tue, 8 Aug 2023 10:32:50 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <razor@blackwall.org>,
         Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.de
-Subject: Re: [PATCH v4 3/8] dt-bindings: clock: Add Marvell PXA1908 clock
- bindings
-Message-ID: <20230808-equator-professor-fcc4564b4ef5@spud>
-References: <20230807-pxa1908-lkml-v4-0-cb387d73b452@skole.hr>
- <20230807-pxa1908-lkml-v4-3-cb387d73b452@skole.hr>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
+Subject: Re: [PATCH v2] netfilter: ebtables: fix fortify warnings
+Message-ID: <ZNJuMoe37L02TP20@work>
+References: <20230808133038.771316-1-gongruiqi@huaweicloud.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DKM1rJC+2OjonCQb"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230807-pxa1908-lkml-v4-3-cb387d73b452@skole.hr>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230808133038.771316-1-gongruiqi@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On Tue, Aug 08, 2023 at 09:30:38PM +0800, GONG, Ruiqi wrote:
+> From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+> 
+> When compiling with gcc 13 and CONFIG_FORTIFY_SOURCE=y, the following
+> warning appears:
+> 
+> In function ‘fortify_memcpy_chk’,
+>     inlined from ‘size_entry_mwt’ at net/bridge/netfilter/ebtables.c:2118:2:
+> ./include/linux/fortify-string.h:592:25: error: call to ‘__read_overflow2_field’
+> declared with attribute warning: detected read beyond size of field (2nd parameter);
+> maybe use struct_group()? [-Werror=attribute-warning]
+>   592 |                         __read_overflow2_field(q_size_field, size);
+>       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
+> The compiler is complaining:
+> 
+> memcpy(&offsets[1], &entry->watchers_offset,
+>                        sizeof(offsets) - sizeof(offsets[0]));
+> 
+> where memcpy reads beyong &entry->watchers_offset to copy
+> {watchers,target,next}_offset altogether into offsets[]. Silence the
+> warning by wrapping these three up via struct_group().
+> 
+> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+> ---
+> 
+> v2: fix HDRTEST error by replacing struct_group() with __struct_group(),
+> since it's a uapi header.
+> 
+>  include/uapi/linux/netfilter_bridge/ebtables.h | 14 ++++++++------
+>  net/bridge/netfilter/ebtables.c                |  3 +--
+>  2 files changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
+> index a494cf43a755..b0caad82b693 100644
+> --- a/include/uapi/linux/netfilter_bridge/ebtables.h
+> +++ b/include/uapi/linux/netfilter_bridge/ebtables.h
+> @@ -182,12 +182,14 @@ struct ebt_entry {
+>  	unsigned char sourcemsk[ETH_ALEN];
+>  	unsigned char destmac[ETH_ALEN];
+>  	unsigned char destmsk[ETH_ALEN];
+> -	/* sizeof ebt_entry + matches */
+> -	unsigned int watchers_offset;
+> -	/* sizeof ebt_entry + matches + watchers */
+> -	unsigned int target_offset;
+> -	/* sizeof ebt_entry + matches + watchers + target */
+> -	unsigned int next_offset;
+> +	__struct_group(/* no tag */, offsets, /* no attrs */,
+> +		/* sizeof ebt_entry + matches */
+> +		unsigned int watchers_offset;
+> +		/* sizeof ebt_entry + matches + watchers */
+> +		unsigned int target_offset;
+> +		/* sizeof ebt_entry + matches + watchers + target */
+> +		unsigned int next_offset;
+> +	);
+>  	unsigned char elems[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+>  };
+>  
+> diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+> index 757ec46fc45a..5ec66b1ebb64 100644
+> --- a/net/bridge/netfilter/ebtables.c
+> +++ b/net/bridge/netfilter/ebtables.c
+> @@ -2115,8 +2115,7 @@ static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *ba
+>  		return ret;
+>  
+>  	offsets[0] = sizeof(struct ebt_entry); /* matches come first */
+> -	memcpy(&offsets[1], &entry->watchers_offset,
+> -			sizeof(offsets) - sizeof(offsets[0]));
+> +	memcpy(&offsets[1], &entry->offsets, sizeof(offsets) - sizeof(offsets[0]));
+							^^^^^^^^^^^^
+You now can replace this ____________________________________|
+with just `sizeof(entry->offsets)`
 
---DKM1rJC+2OjonCQb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With that change you can add my
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-On Mon, Aug 07, 2023 at 05:42:37PM +0200, Duje Mihanovi=C4=87 wrote:
-> diff --git a/include/dt-bindings/clock/marvell,pxa1908.h b/include/dt-bin=
-dings/clock/marvell,pxa1908.h
-> new file mode 100644
-> index 000000000000..0c1f328bf534
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/marvell,pxa1908.h
-> +#define PXA1908_CLK_PLL4VCODIV3		38
-> +#define PXA1908_MPMU_NR_CLKS		38
+Thank you
+--
+Gustavo
 
-> +#define PXA1908_CLK_TWSI3		18
-> +#define PXA1908_APBC_NR_CLKS		50
-
-> +#define PXA1908_CLK_AICER		3
-> +#define PXA1908_APBCP_NR_CLKS		50
-
-> +#define PXA1908_CLK_DVC_DFC_DEBUG	16
-> +#define PXA1908_APMU_NR_CLKS		50
-
-How are these "NR_CLKS" things helpful to the binding?
-
---DKM1rJC+2OjonCQb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZNHznQAKCRB4tDGHoIJi
-0tB0AP9WB00bkGFDXnoTipCneTMFFJkNGIcCMim70YGs/PIdNwEAgsNY8BDOP/Mj
-dOmMDYrhdbMiafUMA6dZgar9DVSQfww=
-=Oy5S
------END PGP SIGNATURE-----
-
---DKM1rJC+2OjonCQb--
+>  
+>  	if (state->buf_kern_start) {
+>  		buf_start = state->buf_kern_start + state->buf_kern_offset;
+> -- 
+> 2.41.0
+> 
