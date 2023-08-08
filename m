@@ -2,156 +2,136 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5C0C001DB
-	for <linux-hardening@archiver.kernel.org>; Mon,  7 Aug 2023 23:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B7DEB64DD
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 01:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbjHGXkA (ORCPT
+        id S229617AbjHHBuJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 7 Aug 2023 19:40:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34522 "EHLO
+        Mon, 7 Aug 2023 21:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230141AbjHGXj7 (ORCPT
+        with ESMTP id S229496AbjHHBuI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 7 Aug 2023 19:39:59 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CC91986
-        for <linux-hardening@vger.kernel.org>; Mon,  7 Aug 2023 16:39:58 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bba54f7eefso39963025ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 07 Aug 2023 16:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691451598; x=1692056398;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0l+sCpHwJioTYF/wfHRNJdNAUkK21XwVbEV3jke4+es=;
-        b=dXsftWzX5+Hu4twrL1n/Mo54tTI+wzGtnBu1CLPrmVntA19h9YdrWv34e6mRkH7DdU
-         1969sylXKdmjK0xJ4TqcjxyND+jT9oEGt+HDYRRKu/Cw3IOnJt/we8cjsnh3UH3SZGN1
-         5WfC0t1j0f5wDUm0oCa6ZXsUGiS5NcpQEHUu4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691451598; x=1692056398;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0l+sCpHwJioTYF/wfHRNJdNAUkK21XwVbEV3jke4+es=;
-        b=GRoHNk+RXtxNv2rRKZZKLz0MRbxEYlc6B+7Pz1If5R3K0EGQUiYFGHgr48j+zC0oEo
-         D/HmPhhzQEekAGVA8ec7qmdtiCalw0Pmb6yjQLNI4nvljgniEkagpDH9n5bUmzLfYsLc
-         wisU+H85uWlpEKSClVQRy2lCeR8+TjcMQRl4Q7DMju6SkHuqL4bDspxpZyvolwJ0F3II
-         RBnlHCpATs3aCWedFf+aUM+mTr6m02pHfx+HXdzZxMRvyfr3h4I5Ec8WY6ri99jI0wAR
-         9FMLihvqK33YSz5XpWbnrNjmS+fhmDPPpC5a4c8rixMJkG6fi9QbZQdPNb8LzxSgKETX
-         /bjw==
-X-Gm-Message-State: AOJu0YxpGDUHX3Y5/ZPh5Khin0klqpG05ZDf/lq20eAMnl8y+Pbe/x5Z
-        sTn1Zc0LhihYEzQThTJE93nOfg==
-X-Google-Smtp-Source: AGHT+IGdMQVeL0uHk5iGceyUJ4IMfMXBfpY5lj7Xb2/D1CXzdymvrVtvYnilTL43ah4FuOYOA8JvkQ==
-X-Received: by 2002:a17:902:ec8e:b0:1bb:cd5a:ba53 with SMTP id x14-20020a170902ec8e00b001bbcd5aba53mr10052640plg.14.1691451598065;
-        Mon, 07 Aug 2023 16:39:58 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id s17-20020a170902ea1100b001b552309aedsm7252666plg.192.2023.08.07.16.39.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Aug 2023 16:39:57 -0700 (PDT)
-Date:   Mon, 7 Aug 2023 16:39:56 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Bill Wendling <morbo@google.com>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-hardening@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] um: refactor deprecated strncpy to strtomem
-Message-ID: <202308071636.AF290F0@keescook>
-References: <20230807-arch-um-v1-1-86dbbfb59709@google.com>
- <CAGG=3QVUqVdkzBo-=vGWprPBUhuV8p3bRSx3Qsvtqx_LDct05w@mail.gmail.com>
+        Mon, 7 Aug 2023 21:50:08 -0400
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78229F1;
+        Mon,  7 Aug 2023 18:50:06 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.30.67.143])
+        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RKbjP5CKYz4f3k5k;
+        Tue,  8 Aug 2023 09:50:01 +0800 (CST)
+Received: from vm-fedora-38.huawei.com (unknown [10.67.174.164])
+        by APP4 (Coremail) with SMTP id gCh0CgD306ZIn9Fk9jvFAA--.36706S2;
+        Tue, 08 Aug 2023 09:50:02 +0800 (CST)
+From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <razor@blackwall.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        gongruiqi@huaweicloud.com
+Subject: [PATCH] netfilter: ebtables: fix fortify warnings
+Date:   Tue,  8 Aug 2023 09:48:21 +0800
+Message-ID: <20230808014821.241688-1-gongruiqi@huaweicloud.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGG=3QVUqVdkzBo-=vGWprPBUhuV8p3bRSx3Qsvtqx_LDct05w@mail.gmail.com>
+X-CM-TRANSID: gCh0CgD306ZIn9Fk9jvFAA--.36706S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxXF1xJw4UCw4xZw1DCw18Grg_yoW5Ww4kpF
+        1qka45trWrJ3yakw4fJw1vvr1ruw1kWa43ArW7C34rKFyjqFyDXa9akryjka4kJws09F43
+        tr90qFWfWrWDAaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+        JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+        Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+        xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+        MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+        0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+        6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+        Up6wZUUUUU=
+X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Aug 07, 2023 at 03:36:55PM -0700, Bill Wendling wrote:
-> On Mon, Aug 7, 2023 at 2:18 PM Justin Stitt <justinstitt@google.com> wrote:
-> >
-> > Use `strtomem` here since `console_buf` is not expected to be
-> > NUL-terminated. We should probably also just use `MCONSOLE_MAX_DATA`
+From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
 
-How is it known that console_buf is not a C-string?
+When compiling with gcc 13 and CONFIG_FORTIFY_SOURCE=y, the following
+warning appears:
 
-> > instead of using `ARRAY_SIZE()` for every iteration of the loop.
-> >
-> Is this change necessary? I have a general preference for ARRAY_SIZE,
-> because a change in size is less likely to be overlooked (unless that
-> goes against the coding standard).
+In function ‘fortify_memcpy_chk’,
+    inlined from ‘size_entry_mwt’ at net/bridge/netfilter/ebtables.c:2118:2:
+./include/linux/fortify-string.h:592:25: error: call to ‘__read_overflow2_field’
+declared with attribute warning: detected read beyond size of field (2nd parameter);
+maybe use struct_group()? [-Werror=attribute-warning]
+  592 |                         __read_overflow2_field(q_size_field, size);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-I would prefer this stay either ARRAY_SIZE or sizeof, as it keeps it
-tied to the variable in question.
+The compiler is complaining:
 
-> 
-> > Also mark char buffer as `__nonstring` as per Kees' suggestion here [1]
-> >
-> > Finally, follow checkpatch's recommendation of using `min_t` over `min`
-> >
-> > Link: https://github.com/KSPP/linux/issues/90 [1]
-> > Cc: linux-hardening@vger.kernel.org
-> > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > ---
-> > Notes:
-> > I only build tested this patch.
-> > ---
-> >  arch/um/drivers/mconsole_kern.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/um/drivers/mconsole_kern.c b/arch/um/drivers/mconsole_kern.c
-> > index 5026e7b9adfe..fd4c024202ae 100644
-> > --- a/arch/um/drivers/mconsole_kern.c
-> > +++ b/arch/um/drivers/mconsole_kern.c
-> > @@ -4,6 +4,7 @@
-> >   * Copyright (C) 2001 - 2008 Jeff Dike (jdike@{addtoit,linux.intel}.com)
-> >   */
-> >
-> > +#include "linux/compiler_attributes.h"
-> 
-> nit: Should this include be in angle brackets?
-> 
-> #include <linux/compiler_attributes.h>
+memcpy(&offsets[1], &entry->watchers_offset,
+                       sizeof(offsets) - sizeof(offsets[0]));
 
-True, though this shouldn't need to be included at all. What was
-missing?
+where memcpy reads beyong &entry->watchers_offset to copy
+{watchers,target,next}_offset altogether into offsets[]. Silence the
+warning by wrapping these three up via struct_group().
 
-> 
-> >  #include <linux/console.h>
-> >  #include <linux/ctype.h>
-> >  #include <linux/string.h>
-> > @@ -554,7 +555,7 @@ struct mconsole_output {
-> >
-> >  static DEFINE_SPINLOCK(client_lock);
-> >  static LIST_HEAD(clients);
-> > -static char console_buf[MCONSOLE_MAX_DATA];
-> > +static char console_buf[MCONSOLE_MAX_DATA] __nonstring;
-> >
-> >  static void console_write(struct console *console, const char *string,
-> >                           unsigned int len)
-> > @@ -566,8 +567,8 @@ static void console_write(struct console *console, const char *string,
-> >                 return;
-> >
-> >         while (len > 0) {
-> > -               n = min((size_t) len, ARRAY_SIZE(console_buf));
-> > -               strncpy(console_buf, string, n);
-> > +               n = min_t(size_t, len, MCONSOLE_MAX_DATA);
-> > +               strtomem(console_buf, string);
-> >                 string += n;
-> >                 len -= n;
-> >
-> >
-> > ---
-> > base-commit: c1a515d3c0270628df8ae5f5118ba859b85464a2
-> > change-id: 20230807-arch-um-3ef24413427e
-> >
-> > Best regards,
-> > --
-> > Justin Stitt <justinstitt@google.com>
-> >
+Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+---
+ include/uapi/linux/netfilter_bridge/ebtables.h | 14 ++++++++------
+ net/bridge/netfilter/ebtables.c                |  3 +--
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
+diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
+index a494cf43a755..e634da196d08 100644
+--- a/include/uapi/linux/netfilter_bridge/ebtables.h
++++ b/include/uapi/linux/netfilter_bridge/ebtables.h
+@@ -182,12 +182,14 @@ struct ebt_entry {
+ 	unsigned char sourcemsk[ETH_ALEN];
+ 	unsigned char destmac[ETH_ALEN];
+ 	unsigned char destmsk[ETH_ALEN];
+-	/* sizeof ebt_entry + matches */
+-	unsigned int watchers_offset;
+-	/* sizeof ebt_entry + matches + watchers */
+-	unsigned int target_offset;
+-	/* sizeof ebt_entry + matches + watchers + target */
+-	unsigned int next_offset;
++	struct_group(offsets,
++		/* sizeof ebt_entry + matches */
++		unsigned int watchers_offset;
++		/* sizeof ebt_entry + matches + watchers */
++		unsigned int target_offset;
++		/* sizeof ebt_entry + matches + watchers + target */
++		unsigned int next_offset;
++	);
+ 	unsigned char elems[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+ };
+ 
+diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
+index 757ec46fc45a..5ec66b1ebb64 100644
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2115,8 +2115,7 @@ static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *ba
+ 		return ret;
+ 
+ 	offsets[0] = sizeof(struct ebt_entry); /* matches come first */
+-	memcpy(&offsets[1], &entry->watchers_offset,
+-			sizeof(offsets) - sizeof(offsets[0]));
++	memcpy(&offsets[1], &entry->offsets, sizeof(offsets) - sizeof(offsets[0]));
+ 
+ 	if (state->buf_kern_start) {
+ 		buf_start = state->buf_kern_start + state->buf_kern_offset;
 -- 
-Kees Cook
+2.41.0
+
