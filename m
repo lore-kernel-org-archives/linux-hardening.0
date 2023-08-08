@@ -2,139 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2187FC04FE0
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 20:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B178C001DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 21:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235585AbjHHUyt (ORCPT
+        id S231669AbjHHVCL (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 16:54:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45482 "EHLO
+        Tue, 8 Aug 2023 17:02:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232950AbjHHUyi (ORCPT
+        with ESMTP id S235416AbjHHVB7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 16:54:38 -0400
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97CB11B508;
-        Tue,  8 Aug 2023 10:10:57 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4RKvHw44tyz4f3t7S;
-        Tue,  8 Aug 2023 21:32:28 +0800 (CST)
-Received: from vm-fedora-38.huawei.com (unknown [10.67.174.164])
-        by APP3 (Coremail) with SMTP id _Ch0CgDX+sLnQ9JkxaPeAA--.27925S2;
-        Tue, 08 Aug 2023 21:32:31 +0800 (CST)
-From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        Nikolay Aleksandrov <razor@blackwall.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
-Subject: [PATCH v2] netfilter: ebtables: fix fortify warnings
-Date:   Tue,  8 Aug 2023 21:30:38 +0800
-Message-ID: <20230808133038.771316-1-gongruiqi@huaweicloud.com>
-X-Mailer: git-send-email 2.41.0
+        Tue, 8 Aug 2023 17:01:59 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBEBA4ED0
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 14:01:56 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-686f19b6dd2so4297814b3a.2
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 14:01:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1691528516; x=1692133316;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=md5bxPWMzWtFYHeGnGMZwyZT+x0wexWDG9PTlIVjE/I=;
+        b=Fgug0W2a9pGm9mZr+L8vD1pYzq5E7GBToZcQO53iOOE0Hi2DzANaVG4Z41u2KN+OUY
+         gQ7HtJw/wTCmMRNZxpWcnasB6iFE4HS3PqW+ysbe02jd0wtPaYyU/GlZVRTlkJo6XMsK
+         xVqOvQPQOoO+6zXabNf3TaHTsQDQF6JQBW848=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691528516; x=1692133316;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=md5bxPWMzWtFYHeGnGMZwyZT+x0wexWDG9PTlIVjE/I=;
+        b=bD5DR/kfb51w6y060kxv5sFHPK30wA4OMk+xWGdRjhPAOM4atcjbZPFU7c70+f6kbt
+         Y/i7VXEGfXUTW+nyoFpRRkZnywOcK12+edHr00D26QZwUBPjO0o4DHnqPFb5cd40Y6J2
+         ZyDlQ4l5Jx/sSppSgTLzCJM/sfu8m1G7PJ441GcUuTBiqthgLWRh+yBnFyvoGu94XI+q
+         oUuj0Jdaztf7Jd+LNcYuPGYxYw3pPT5hgB1xhc40l/e0EiqA8L6CvIuRi+5RYXQf0yYE
+         Pc06z527uSuI732W27drqSWqzywGGwXStODMkhtd90ucWkXFz9+YnATh8JClGE21a8lX
+         eX6w==
+X-Gm-Message-State: AOJu0Yw7SL1jgOqZoWTIEvByDEZlHz3/1BcbWh9v35ZwAfaliwMZJRn5
+        VW674+pXO5YLpQquZyIVu9DdqQ==
+X-Google-Smtp-Source: AGHT+IHjDIGjlwfIIWXW8zPDw9oXg62J5upaCULmixQuLvDspSMI2wuW4rp2oL7qrabjsMNGaLrFIQ==
+X-Received: by 2002:a05:6a21:3e0c:b0:131:6464:217b with SMTP id bk12-20020a056a213e0c00b001316464217bmr623397pzc.16.1691528516351;
+        Tue, 08 Aug 2023 14:01:56 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id s21-20020a170902b19500b001a1b66af22fsm9452942plr.62.2023.08.08.14.01.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Aug 2023 14:01:55 -0700 (PDT)
+Date:   Tue, 8 Aug 2023 14:01:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] vboxsf: Use flexible arrays for trailing string member
+Message-ID: <202308081401.A9C03BBCF5@keescook>
+References: <20230720151458.never.673-kees@kernel.org>
+ <169040854617.1782642.4557415464507636357.b4-ty@chromium.org>
+ <20fc56ef-6240-e86e-6d38-9278592a3b25@lwfinger.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _Ch0CgDX+sLnQ9JkxaPeAA--.27925S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXF1xJw4UCw4xZw1DCF45KFg_yoW5Cr1DpF
-        1qka45trWrJ3yakw4rJw1vvr1ruw4kWa43ArW7C34FkFyjqFyDXa92kryjka4kJws09F13
-        trZ0qFWfGrWDAaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
-        j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
-        kEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
-        0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-        0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-        cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-        CF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-        aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
-X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20fc56ef-6240-e86e-6d38-9278592a3b25@lwfinger.net>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+On Tue, Aug 08, 2023 at 02:20:06PM -0500, Larry Finger wrote:
+> On 7/26/23 16:55, Kees Cook wrote:
+> > 
+> > On Thu, 20 Jul 2023 08:15:06 -0700, Kees Cook wrote:
+> > > The declaration of struct shfl_string used trailing fake flexible arrays
+> > > for the string member. This was tripping FORTIFY_SOURCE since commit
+> > > df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3"). Replace the
+> > > utf8 and utf16 members with actual flexible arrays, drop the unused ucs2
+> > > member, and retriain a 2 byte padding to keep the structure size the same.
+> > > 
+> > > 
+> > > [...]
+> > 
+> > Applied to for-linus/hardening, thanks!
+> > 
+> > [1/1] vboxsf: Use flexible arrays for trailing string member
+> >        https://git.kernel.org/kees/c/a8f014ec6a21
+> 
+> Kees,
+> 
+> This patch has not been applied to kernel 6.5-rc5. Is there some problem?
 
-When compiling with gcc 13 and CONFIG_FORTIFY_SOURCE=y, the following
-warning appears:
+Hi! Sorry, I was waiting for linux-next testing, and then got distracted
+on Friday. I will send the PR to Linus today.
 
-In function ‘fortify_memcpy_chk’,
-    inlined from ‘size_entry_mwt’ at net/bridge/netfilter/ebtables.c:2118:2:
-./include/linux/fortify-string.h:592:25: error: call to ‘__read_overflow2_field’
-declared with attribute warning: detected read beyond size of field (2nd parameter);
-maybe use struct_group()? [-Werror=attribute-warning]
-  592 |                         __read_overflow2_field(q_size_field, size);
-      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Thanks for the poke!
 
-The compiler is complaining:
+-Kees
 
-memcpy(&offsets[1], &entry->watchers_offset,
-                       sizeof(offsets) - sizeof(offsets[0]));
-
-where memcpy reads beyong &entry->watchers_offset to copy
-{watchers,target,next}_offset altogether into offsets[]. Silence the
-warning by wrapping these three up via struct_group().
-
-Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
----
-
-v2: fix HDRTEST error by replacing struct_group() with __struct_group(),
-since it's a uapi header.
-
- include/uapi/linux/netfilter_bridge/ebtables.h | 14 ++++++++------
- net/bridge/netfilter/ebtables.c                |  3 +--
- 2 files changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
-index a494cf43a755..b0caad82b693 100644
---- a/include/uapi/linux/netfilter_bridge/ebtables.h
-+++ b/include/uapi/linux/netfilter_bridge/ebtables.h
-@@ -182,12 +182,14 @@ struct ebt_entry {
- 	unsigned char sourcemsk[ETH_ALEN];
- 	unsigned char destmac[ETH_ALEN];
- 	unsigned char destmsk[ETH_ALEN];
--	/* sizeof ebt_entry + matches */
--	unsigned int watchers_offset;
--	/* sizeof ebt_entry + matches + watchers */
--	unsigned int target_offset;
--	/* sizeof ebt_entry + matches + watchers + target */
--	unsigned int next_offset;
-+	__struct_group(/* no tag */, offsets, /* no attrs */,
-+		/* sizeof ebt_entry + matches */
-+		unsigned int watchers_offset;
-+		/* sizeof ebt_entry + matches + watchers */
-+		unsigned int target_offset;
-+		/* sizeof ebt_entry + matches + watchers + target */
-+		unsigned int next_offset;
-+	);
- 	unsigned char elems[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
- };
- 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 757ec46fc45a..5ec66b1ebb64 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2115,8 +2115,7 @@ static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *ba
- 		return ret;
- 
- 	offsets[0] = sizeof(struct ebt_entry); /* matches come first */
--	memcpy(&offsets[1], &entry->watchers_offset,
--			sizeof(offsets) - sizeof(offsets[0]));
-+	memcpy(&offsets[1], &entry->offsets, sizeof(offsets) - sizeof(offsets[0]));
- 
- 	if (state->buf_kern_start) {
- 		buf_start = state->buf_kern_start + state->buf_kern_offset;
 -- 
-2.41.0
-
+Kees Cook
