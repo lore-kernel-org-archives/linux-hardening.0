@@ -2,99 +2,118 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E27C001DB
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 21:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B6C001B0
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 22:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236603AbjHHVUU (ORCPT
+        id S229824AbjHHWsf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 17:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33996 "EHLO
+        Tue, 8 Aug 2023 18:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236593AbjHHVUC (ORCPT
+        with ESMTP id S229714AbjHHWse (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 17:20:02 -0400
-Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B114084C;
-        Tue,  8 Aug 2023 12:20:11 -0700 (PDT)
-Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-1bb7d1f7aeaso4731067fac.1;
-        Tue, 08 Aug 2023 12:20:11 -0700 (PDT)
+        Tue, 8 Aug 2023 18:48:34 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B89109
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 15:48:34 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5843fed1e88so77594607b3.0
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 15:48:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691522408; x=1692127208;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=lo4mgIh/9nXIAz81CZMW5MI7/+F8GTcgLr96nVQtDgE=;
-        b=csn37X32wO1Au0l6vBQx2q5u4zXc0k/TrPFkYfdNkHlqb8/drEsmOuqi2csZBahR2C
-         9PWU7Qh8JQLTEXu2ZPj6v2zt8FgVz8U3iuFkJtIeFTPmgQmr5HrAdWvhh1JWDX+z9J0B
-         z12PX7uPVy6AsEA5GYnbtBbjjGTmL6e1ifaJIj+i+d1s+1KUgnF4Knchq7FVtYYfudtO
-         LJNQI4HdMAiwjUj0FJ3ud+Q+/zT26+u8kX8OsUuuKxVJvRqhbWTBpZ3mXqh4Yf3YBHMd
-         Gx8a2ZKhUur0mbCdLm8bTYgwGqgpqFdpambtjFRCAtf0/c1rcPfXUaBrIQJhQ99lNZy5
-         hHGA==
+        d=google.com; s=20221208; t=1691534913; x=1692139713;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w6IYf4nshxor0R0BfWz4JihwJzXUnsgpsQ8Bx+FCm50=;
+        b=v/F4rK8C1c6Y8YTaAeOsPAc5rlC8DfTsdhN2NcOQy8xZRaoS9cvitj9HgolcvWE5XN
+         ZCiP+oEC5RA+WP6fZlEU1CnM2RNWG7JAxRMbaAZFn9uJ6EZdyRVTLnMIFZmpJ0leHpqh
+         7spA+UxF93A8SpFyC9uM2L+GVmrc2Oz7NekmEKSBkf/D0u4FLjt9CTUbtd+8gtFhaZz7
+         k18znWmvXCXpii8KvsTYg2aJQtU0osYwWxLYMWbgCMw6nzwrDCkx//Fl2Uaf3ok/PA19
+         fBUF7829XdzW7mM47blfRSu0JxMy05t+IbWe2W6Sq0zG9sswyCnMVFGIHsZd252DX9zq
+         QYqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691522408; x=1692127208;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lo4mgIh/9nXIAz81CZMW5MI7/+F8GTcgLr96nVQtDgE=;
-        b=ktksGH12QFtnE5DMlC6U0o0KAjsoJ9RNHkXmcqcFpUhGbXKThiyVQHyNzd1hAyWyJM
-         eEavoUpyZsHmbtCXF7IvUh0hLxzG3tigWVXr+r5i4AiR+AP8SSxZ5m42mmc08kq/GrfR
-         QYb3le2CiVdM7HplbJFs6WbusPKPOaIqf5FalGVot+RDOcSjMOs/Ue1RGAbWBFG/uzLt
-         yeqFifq7PgEjhup48gOQSpAQD+ijYM/gqThmwv8OFYclHFNh0ABhlimJIH2QMSI+M0s0
-         Imlm4Rtihgb8M5SPqyfbVWotYYbrHFUCNC03GPjOBK0/33tlz84o4yAEqgRbAriynyD3
-         6CBA==
-X-Gm-Message-State: AOJu0Ywtsc5474bT97o3MWARenHKPI8fOxqHmtX8vqZFdaptLllKRFL1
-        +iw3f2GBD6vdKUoFKT75H2g=
-X-Google-Smtp-Source: AGHT+IHqOyan+5/7RWD1nJ8ax3s1SDYfKm888u41Ha2ElbdK8zMF5qKXrs1hOE5/fwe70xvMZWhCbQ==
-X-Received: by 2002:a05:6870:c18c:b0:1a9:af29:46eb with SMTP id h12-20020a056870c18c00b001a9af2946ebmr529285oad.59.1691522408303;
-        Tue, 08 Aug 2023 12:20:08 -0700 (PDT)
-Received: from [192.168.1.119] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id n27-20020a4ad63b000000b00565d41ba4d0sm5602140oon.35.2023.08.08.12.20.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Aug 2023 12:20:07 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <20fc56ef-6240-e86e-6d38-9278592a3b25@lwfinger.net>
-Date:   Tue, 8 Aug 2023 14:20:06 -0500
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH] vboxsf: Use flexible arrays for trailing string member
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-References: <20230720151458.never.673-kees@kernel.org>
- <169040854617.1782642.4557415464507636357.b4-ty@chromium.org>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <169040854617.1782642.4557415464507636357.b4-ty@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        d=1e100.net; s=20221208; t=1691534913; x=1692139713;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=w6IYf4nshxor0R0BfWz4JihwJzXUnsgpsQ8Bx+FCm50=;
+        b=ZIbRcKfYVx3Ii5C7Aq5O0BywQ6d9AQ81o2hmRJ57JA7+XRuv5axCuMKLzsBkxEI5Fr
+         NQ/A6155v1EnYjZI8EPkSFKtuELtP9m8I1pu4Z3LOzOS8x8mhGsvQEnpMujqZwXerpmB
+         iCPzFMBM87fXZ8S3OgV63m3Up6eR2EMYEcp+55HOQB8UYyWn/9LOC9EO/4fK0v/Zdl6m
+         8lwyf8bcCSDmCZWYTB0hk3qSCWNB6cQYH5Y9jZzsU+aKg7GJxNJLgq+VyjEWZlrFWd31
+         0mGvumLykJNC65lyP6FCBKh4NkpqU0BuBag26xHVWQsPINmJHV/iQ0B28vLNISKfzQBE
+         ACKA==
+X-Gm-Message-State: AOJu0YwK9QY+zZpzW1rAaT/hGTSPooovV6xo+oRM4NCcb6IP3CoPDTN1
+        L+mvsOmmXnJWGuGSvVeguI26Pl9TprBSSkw54A==
+X-Google-Smtp-Source: AGHT+IGCKCpjw+qQSDFPyaaHwnCmIRgOXWU0/CPaXzJcAH1H2D2px83oqOo3PmhmQlTBWJHjAd9H6SpIq9/Lr6ycUw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:aa0b:0:b0:586:4eae:b942 with SMTP
+ id i11-20020a81aa0b000000b005864eaeb942mr25570ywh.4.1691534913334; Tue, 08
+ Aug 2023 15:48:33 -0700 (PDT)
+Date:   Tue, 08 Aug 2023 22:48:05 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIACXG0mQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDCwNz3bzUEhBOy8wpSS3SNTEwMjcytExKMks1VwLqKShKTcusAJsXHVt bCwBxh7PoXwAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691534912; l=1704;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=ZOPiCy7w2pT1kz3c5DhiCZiV+zTmBFI8xyOrhaHPkq8=; b=35hLj7PJ6DP6/IdiB2Ylc5Y2G6xQ/3oI1SXKLWZ4BpDIns5/qOxf/7y6WjAKgN2o0Nv1hmmKZ
+ 7RXdFr4FcSnA1LghMYnhNj8402rOA1pYEJ9KZdZBr1W0Mso8AV+M+KL
+X-Mailer: b4 0.12.3
+Message-ID: <20230808-net-netfilter-v1-0-efbbe4ec60af@google.com>
+Subject: [PATCH 0/7] netfilter: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 7/26/23 16:55, Kees Cook wrote:
-> 
-> On Thu, 20 Jul 2023 08:15:06 -0700, Kees Cook wrote:
->> The declaration of struct shfl_string used trailing fake flexible arrays
->> for the string member. This was tripping FORTIFY_SOURCE since commit
->> df8fc4e934c1 ("kbuild: Enable -fstrict-flex-arrays=3"). Replace the
->> utf8 and utf16 members with actual flexible arrays, drop the unused ucs2
->> member, and retriain a 2 byte padding to keep the structure size the same.
->>
->>
->> [...]
-> 
-> Applied to for-linus/hardening, thanks!
-> 
-> [1/1] vboxsf: Use flexible arrays for trailing string member
->        https://git.kernel.org/kees/c/a8f014ec6a21
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-Kees,
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on its destination buffer argument which is
+_not_ the case for `strncpy`!
 
-This patch has not been applied to kernel 6.5-rc5. Is there some problem?
+This series of patches aims to swap out `strncpy` for more robust and
+less ambiguous interfaces like `strscpy` and `strtomem`. This patch
+series, if applied in its entirety, removes most if not all instances of
+`strncpy` in the `net/netfilter` directory.
 
-Larry
+[1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+[2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
 
+Link: https://github.com/KSPP/linux/issues/90
+---
+Justin Stitt (7):
+      netfilter: ipset: refactor deprecated strncpy
+      netfilter: nf_tables: refactor deprecated strncpy
+      netfilter: nf_tables: refactor deprecated strncpy
+      netfilter: nft_meta: refactor deprecated strncpy
+      netfilter: nft_osf: refactor deprecated strncpy to strscpy
+      netfilter: x_tables: refactor deprecated strncpy
+      netfilter: xtables: refactor deprecated strncpy
+
+ net/netfilter/ipset/ip_set_core.c | 10 +++++-----
+ net/netfilter/nft_ct.c            |  2 +-
+ net/netfilter/nft_fib.c           |  2 +-
+ net/netfilter/nft_meta.c          |  6 +++---
+ net/netfilter/nft_osf.c           |  6 +++---
+ net/netfilter/x_tables.c          |  5 ++---
+ net/netfilter/xt_repldata.h       |  2 +-
+ 7 files changed, 16 insertions(+), 17 deletions(-)
+---
+base-commit: 14f9643dc90adea074a0ffb7a17d337eafc6a5cc
+change-id: 20230807-net-netfilter-4027219bb6e7
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
