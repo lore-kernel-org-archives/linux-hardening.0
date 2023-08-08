@@ -2,63 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50B6C001B0
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 22:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DDEC001DB
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 22:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229824AbjHHWsf (ORCPT
+        id S231261AbjHHWsg (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 18:48:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47468 "EHLO
+        Tue, 8 Aug 2023 18:48:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbjHHWse (ORCPT
+        with ESMTP id S229714AbjHHWsf (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 18:48:34 -0400
+        Tue, 8 Aug 2023 18:48:35 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B89109
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5AF109
         for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 15:48:34 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5843fed1e88so77594607b3.0
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-583a89cccf6so61607537b3.1
         for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 15:48:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691534913; x=1692139713;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=w6IYf4nshxor0R0BfWz4JihwJzXUnsgpsQ8Bx+FCm50=;
-        b=v/F4rK8C1c6Y8YTaAeOsPAc5rlC8DfTsdhN2NcOQy8xZRaoS9cvitj9HgolcvWE5XN
-         ZCiP+oEC5RA+WP6fZlEU1CnM2RNWG7JAxRMbaAZFn9uJ6EZdyRVTLnMIFZmpJ0leHpqh
-         7spA+UxF93A8SpFyC9uM2L+GVmrc2Oz7NekmEKSBkf/D0u4FLjt9CTUbtd+8gtFhaZz7
-         k18znWmvXCXpii8KvsTYg2aJQtU0osYwWxLYMWbgCMw6nzwrDCkx//Fl2Uaf3ok/PA19
-         fBUF7829XdzW7mM47blfRSu0JxMy05t+IbWe2W6Sq0zG9sswyCnMVFGIHsZd252DX9zq
-         QYqg==
+        d=google.com; s=20221208; t=1691534914; x=1692139714;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TmxbnIjb/GqnmOwdg1rDIRZFSHSZsVM8YSAQMHLnbME=;
+        b=aIe42t0D+ftKfG+ClAKmcOJv9mfebYDaQmvdUgboDYiuG7ilotz/5nbttvtF9fDi1O
+         rDs+7df7Cjn2shLvTm3qNsiEBm8OAhAGyBYA8+AW/pofGiv6RHPapbcws6nbEk9HrPGS
+         jdpUQ2BCppjQpV6sMqGiCLG4WGKm2D7YKRlPEGM+eVzHKsUpnoDU0g025UZnAtmR5xKS
+         69kyYON2cNSaE9f11a+LbFMqSZNt4tUq/usnE638ystMj35JNiukiKDpxLr0+iFW4Iwk
+         J0bUrgboDjs3jAOSnOJyEJ65ZJ5Jx29Wa8GeSwiRYeXVg8OBaqUv/tSju9f+CoMdqa+d
+         o0+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691534913; x=1692139713;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w6IYf4nshxor0R0BfWz4JihwJzXUnsgpsQ8Bx+FCm50=;
-        b=ZIbRcKfYVx3Ii5C7Aq5O0BywQ6d9AQ81o2hmRJ57JA7+XRuv5axCuMKLzsBkxEI5Fr
-         NQ/A6155v1EnYjZI8EPkSFKtuELtP9m8I1pu4Z3LOzOS8x8mhGsvQEnpMujqZwXerpmB
-         iCPzFMBM87fXZ8S3OgV63m3Up6eR2EMYEcp+55HOQB8UYyWn/9LOC9EO/4fK0v/Zdl6m
-         8lwyf8bcCSDmCZWYTB0hk3qSCWNB6cQYH5Y9jZzsU+aKg7GJxNJLgq+VyjEWZlrFWd31
-         0mGvumLykJNC65lyP6FCBKh4NkpqU0BuBag26xHVWQsPINmJHV/iQ0B28vLNISKfzQBE
-         ACKA==
-X-Gm-Message-State: AOJu0YwK9QY+zZpzW1rAaT/hGTSPooovV6xo+oRM4NCcb6IP3CoPDTN1
-        L+mvsOmmXnJWGuGSvVeguI26Pl9TprBSSkw54A==
-X-Google-Smtp-Source: AGHT+IGCKCpjw+qQSDFPyaaHwnCmIRgOXWU0/CPaXzJcAH1H2D2px83oqOo3PmhmQlTBWJHjAd9H6SpIq9/Lr6ycUw==
+        d=1e100.net; s=20221208; t=1691534914; x=1692139714;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TmxbnIjb/GqnmOwdg1rDIRZFSHSZsVM8YSAQMHLnbME=;
+        b=XKGGm4xoQEKK2UaM37Gl93TmGLsESgEpcg8VD/M0t93MbbNcAJ0773GQbzBXhgkaqO
+         j0eHldfROBViPp0pIyvjzIu6vpktgWaoZzzFAb9E2Rnw6PI0oe0/tXpzEt4u+3ZBVIcA
+         MZNxBYPxcA43WnlXtwMvYkff1LfxEONDn4jYb20gXivZggSARbgNvej272F/uvzBPa0n
+         uiVy/Tva70LB7Wf4+Wpdm7XuqgXRs57FwetarlehPWfLsQrkz4kU24b17Y7IfYpCwxSk
+         EofoIhcjTACO0wbu+KnYu2aYuEMHHqNBXdYZXF1hy2+rlGJ/4aJ6VJzkpirLxaTQ6xzk
+         iweg==
+X-Gm-Message-State: AOJu0YypjJ0vhM1ZNy9VXcRnU3/z527m+jvY9GZjAeaElPwZOsCJ1OGz
+        4niOtIk5+/0UNG17NeftFvhTQCzinvT/X1mN8Q==
+X-Google-Smtp-Source: AGHT+IH1R6MtPcgGGYPgM2RykK/TeOvNqFtYstVlX2iypy2EipYIxRKnBXKcog/LYd4QF5rzW3sffHKNadArPUWkLg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:aa0b:0:b0:586:4eae:b942 with SMTP
- id i11-20020a81aa0b000000b005864eaeb942mr25570ywh.4.1691534913334; Tue, 08
- Aug 2023 15:48:33 -0700 (PDT)
-Date:   Tue, 08 Aug 2023 22:48:05 +0000
+ (user=justinstitt job=sendgmr) by 2002:a81:440f:0:b0:576:9519:7085 with SMTP
+ id r15-20020a81440f000000b0057695197085mr21593ywa.7.1691534914271; Tue, 08
+ Aug 2023 15:48:34 -0700 (PDT)
+Date:   Tue, 08 Aug 2023 22:48:06 +0000
+In-Reply-To: <20230808-net-netfilter-v1-0-efbbe4ec60af@google.com>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIACXG0mQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2MDCwNz3bzUEhBOy8wpSS3SNTEwMjcytExKMks1VwLqKShKTcusAJsXHVt bCwBxh7PoXwAAAA==
+References: <20230808-net-netfilter-v1-0-efbbe4ec60af@google.com>
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691534912; l=1704;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691534912; l=2289;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=ZOPiCy7w2pT1kz3c5DhiCZiV+zTmBFI8xyOrhaHPkq8=; b=35hLj7PJ6DP6/IdiB2Ylc5Y2G6xQ/3oI1SXKLWZ4BpDIns5/qOxf/7y6WjAKgN2o0Nv1hmmKZ
- 7RXdFr4FcSnA1LghMYnhNj8402rOA1pYEJ9KZdZBr1W0Mso8AV+M+KL
+ bh=DmlnBBnHsP5QeIGI++tEAn9BIzXi+bfjHimTMSaz/pg=; b=620tlRlsF6w/UUZG5WGZx2U4Mf2LH5YYLrf8rikieAPOtoORP/uUHedtmuqLWAwhLMG5oiohV
+ aRW3uUVCq+7BzN6wbjpH81lJbtdkmWqFFVPVtC/eGuYqCKR1vIDbvcj
 X-Mailer: b4 0.12.3
-Message-ID: <20230808-net-netfilter-v1-0-efbbe4ec60af@google.com>
-Subject: [PATCH 0/7] netfilter: refactor deprecated strncpy
+Message-ID: <20230808-net-netfilter-v1-1-efbbe4ec60af@google.com>
+Subject: [PATCH 1/7] netfilter: ipset: refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
 To:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Jozsef Kadlecsik <kadlec@netfilter.org>,
@@ -76,44 +76,69 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
-
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on its destination buffer argument which is
-_not_ the case for `strncpy`!
-
-This series of patches aims to swap out `strncpy` for more robust and
-less ambiguous interfaces like `strscpy` and `strtomem`. This patch
-series, if applied in its entirety, removes most if not all instances of
-`strncpy` in the `net/netfilter` directory.
-
-[1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-[2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+Fixes several buffer overread bugs present in `ip_set_core.c` by using
+`strscpy` over `strncpy`.
 
 Link: https://github.com/KSPP/linux/issues/90
----
-Justin Stitt (7):
-      netfilter: ipset: refactor deprecated strncpy
-      netfilter: nf_tables: refactor deprecated strncpy
-      netfilter: nf_tables: refactor deprecated strncpy
-      netfilter: nft_meta: refactor deprecated strncpy
-      netfilter: nft_osf: refactor deprecated strncpy to strscpy
-      netfilter: x_tables: refactor deprecated strncpy
-      netfilter: xtables: refactor deprecated strncpy
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
 
+---
+There exists several potential buffer overread bugs here. These bugs
+exist due to the fact that the destination and source strings may have
+the same length which is equal to the max length `IPSET_MAXNAMELEN`.
+
+Here's an example:
+|  #define MAXLEN 5
+|  char dest[MAXLEN];
+|  const char *src = "hello";
+|  strncpy(dest, src, MAXLEN); // -> should use strscpy()
+|  // dest is now not NUL-terminated
+
+Note:
+This patch means that truncation now happens silently (which is better
+than a silent bug) but perhaps we should have some assertions that
+fail when a truncation is imminent. Thoughts?
+---
  net/netfilter/ipset/ip_set_core.c | 10 +++++-----
- net/netfilter/nft_ct.c            |  2 +-
- net/netfilter/nft_fib.c           |  2 +-
- net/netfilter/nft_meta.c          |  6 +++---
- net/netfilter/nft_osf.c           |  6 +++---
- net/netfilter/x_tables.c          |  5 ++---
- net/netfilter/xt_repldata.h       |  2 +-
- 7 files changed, 16 insertions(+), 17 deletions(-)
----
-base-commit: 14f9643dc90adea074a0ffb7a17d337eafc6a5cc
-change-id: 20230807-net-netfilter-4027219bb6e7
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
+index 0b68e2e2824e..fc77080d41a2 100644
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -872,7 +872,7 @@ ip_set_name_byindex(struct net *net, ip_set_id_t index, char *name)
+ 	BUG_ON(!set);
+ 
+ 	read_lock_bh(&ip_set_ref_lock);
+-	strncpy(name, set->name, IPSET_MAXNAMELEN);
++	strscpy(name, set->name, IPSET_MAXNAMELEN);
+ 	read_unlock_bh(&ip_set_ref_lock);
+ }
+ EXPORT_SYMBOL_GPL(ip_set_name_byindex);
+@@ -1326,7 +1326,7 @@ static int ip_set_rename(struct sk_buff *skb, const struct nfnl_info *info,
+ 			goto out;
+ 		}
+ 	}
+-	strncpy(set->name, name2, IPSET_MAXNAMELEN);
++	strscpy(set->name, name2, IPSET_MAXNAMELEN);
+ 
+ out:
+ 	write_unlock_bh(&ip_set_ref_lock);
+@@ -1380,9 +1380,9 @@ static int ip_set_swap(struct sk_buff *skb, const struct nfnl_info *info,
+ 		return -EBUSY;
+ 	}
+ 
+-	strncpy(from_name, from->name, IPSET_MAXNAMELEN);
+-	strncpy(from->name, to->name, IPSET_MAXNAMELEN);
+-	strncpy(to->name, from_name, IPSET_MAXNAMELEN);
++	strscpy(from_name, from->name, IPSET_MAXNAMELEN);
++	strscpy(from->name, to->name, IPSET_MAXNAMELEN);
++	strscpy(to->name, from_name, IPSET_MAXNAMELEN);
+ 
+ 	swap(from->ref, to->ref);
+ 	ip_set(inst, from_id) = to;
+
+-- 
+2.41.0.640.ga95def55d0-goog
 
