@@ -2,104 +2,121 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA87C001B0
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 19:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A29DC04A6A
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 20:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231387AbjHHTLm (ORCPT
+        id S229767AbjHHURa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 15:11:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52212 "EHLO
+        Tue, 8 Aug 2023 16:17:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230353AbjHHTL2 (ORCPT
+        with ESMTP id S235710AbjHHURN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 15:11:28 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF310E1A06
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 09:33:08 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-52328e96869so5054708a12.1
-        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 09:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1691512355; x=1692117155;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U/ENPbWDACTq/gT25pwElyGsToVBQemAbfEgTyGefM8=;
-        b=saVpxWK+jg8JEeJTicyZPo5k0grOVIyVSnfOsnMrYJPJN7AHNPu8YDwwz/khVRJH5L
-         jQclPIi1u0iT9RhlI+r07lgv/wfSyrO4ZhWEyaHmAHgZYfxs8g7+yVcJYrZbvWhilJnh
-         pu/gUl01R7NqPVDxnkY6ESka2hJexVVBDxysdOztu2LzN0dkczZ2LjNvzD+OG9Odav8u
-         IVweCpd/ND4l5UD0aNCpxGfJjP/1MEmN0+sEIEWTrXXXyzJlxnM1/h2vksbS2+txrfXH
-         O5r5jZMORrxbGxCy4lSTY4k9IJfttDxa+bR32+vgalLvr2OP56OJvejrqsyukJSslcb9
-         irkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691512355; x=1692117155;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U/ENPbWDACTq/gT25pwElyGsToVBQemAbfEgTyGefM8=;
-        b=NNXEFUll4vPLEWfjPDG9RJSwBQjak7Y+LYBOQ5z3R0YUuH4oHF60y2IuP7nzjdILSW
-         nwC0//cjs+hDuIvUbWIQJ4JCInmFUcjuUBDDrBBaTj6B6AxeLdsJNGhgun+kjF0UAbsx
-         k+/Ikj8eHAuqgYwh4iVbMAIOhSiP14XQ4f4HfF/1hQQqX4id5KEMMpZ00kfKJverqdtb
-         epcgMXxyx676dVeJ2yKtl8LNpQN2pq600sa0wYoyZ58OIVWXqfLlfQ+5ZZYLP14Gc6r9
-         a0MiMR3ZWv+WfhgwMHATFmWGCupkbNW1l1ewgdjQa4KqGBo/aPjyd7fHhzexN1spoO9V
-         Pu0A==
-X-Gm-Message-State: AOJu0YxZ+nPE9DlaYfAj7I5ubdlLHp10Wu/w0RKWeI/Tj5dDD/QGqnVC
-        32DE6VWDRrS0DjgAHQcvoW9Utqw6NdmC7Zk2Zo0=
-X-Google-Smtp-Source: AGHT+IH20o5oXu1MzFaME7Vqm8k1vG/h5IULgofIK8nWT0wfuYK0Ryctno9bzeuLujRtR/SQOzZBWA==
-X-Received: by 2002:a17:906:d8:b0:99b:ca5d:1466 with SMTP id 24-20020a17090600d800b0099bca5d1466mr11379531eji.66.1691474329221;
-        Mon, 07 Aug 2023 22:58:49 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.113])
-        by smtp.gmail.com with ESMTPSA id e4-20020a1709062c0400b00982d0563b11sm3463474ejh.197.2023.08.07.22.58.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Aug 2023 22:58:48 -0700 (PDT)
-Message-ID: <9e235de6-972a-84e5-3e09-f0b07b10e28d@linaro.org>
-Date:   Tue, 8 Aug 2023 07:58:46 +0200
+        Tue, 8 Aug 2023 16:17:13 -0400
+X-Greylist: delayed 5427 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 08 Aug 2023 12:20:57 PDT
+Received: from www.kot-begemot.co.uk (ns1.kot-begemot.co.uk [217.160.28.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2899D1657F
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 12:20:57 -0700 (PDT)
+Received: from 212-39-89-7.ip.btc-net.bg ([212.39.89.7] helo=[192.168.14.227])
+        by www.kot-begemot.co.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1qTFpV-000Srs-NP; Tue, 08 Aug 2023 06:04:32 +0000
+Message-ID: <0bdda692-25a3-227c-69ef-341f037e1dd7@cambridgegreys.com>
+Date:   Tue, 8 Aug 2023 07:04:29 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v4 0/8] Initial Marvell PXA1908 support
-Content-Language: en-US
-To:     =?UTF-8?Q?Duje_Mihanovi=c4=87?= <duje.mihanovic@skole.hr>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] um: vector: refactor deprecated strncpy
+To:     Justin Stitt <justinstitt@google.com>,
+        Richard Weinberger <richard@nod.at>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.de,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20230807-pxa1908-lkml-v4-0-cb387d73b452@skole.hr>
- <5723818.DvuYhMxLoT@radijator>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <5723818.DvuYhMxLoT@radijator>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        linux-hardening@vger.kernel.org
+References: <20230807-arch-um-drivers-v1-1-10d602c5577a@google.com>
+Content-Language: en-US
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+In-Reply-To: <20230807-arch-um-drivers-v1-1-10d602c5577a@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 07/08/2023 23:02, Duje Mihanović wrote:
-> Patch 8/8 is missing because b4 lost connection to my SMTP server while 
-> sending it. Should I resend the whole series?
+
+
+On 07/08/2023 19:22, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
->
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on its destination buffer argument which is
+> _not_ the case for `strncpy`!
+> 
+> In this case, we are able to drop the now superfluous `... - 1`
+> instances because `strscpy` will automatically truncate the last byte by
+> setting it to a NUL byte if the source size exceeds the destination size
+> or if the source string is not NUL-terminated.
+> 
+> I've also opted to remove the seemingly useless char* casts. I'm not
+> sure why they're present at all since (after expanding the `ifr_name`
+> macro) `ifr.ifr_ifrn.ifrn_name` is a char* already.
+> 
+> All in all, `strscpy` is a more robust and less ambiguous interface
+> while also letting us remove some `... -1`'s which cleans things up a
+> bit.
+> 
+> [1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+> [2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
+> 
+> Link: https://github.com/KSPP/linux/issues/90
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+>   arch/um/drivers/vector_user.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/um/drivers/vector_user.c b/arch/um/drivers/vector_user.c
+> index c650e428432b..c719e1ec4645 100644
+> --- a/arch/um/drivers/vector_user.c
+> +++ b/arch/um/drivers/vector_user.c
+> @@ -141,7 +141,7 @@ static int create_tap_fd(char *iface)
+>   	}
+>   	memset(&ifr, 0, sizeof(ifr));
+>   	ifr.ifr_flags = IFF_TAP | IFF_NO_PI | IFF_VNET_HDR;
+> -	strncpy((char *)&ifr.ifr_name, iface, sizeof(ifr.ifr_name) - 1);
+> +	strscpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
+>   
+>   	err = ioctl(fd, TUNSETIFF, (void *) &ifr);
+>   	if (err != 0) {
+> @@ -171,7 +171,7 @@ static int create_raw_fd(char *iface, int flags, int proto)
+>   		goto raw_fd_cleanup;
+>   	}
+>   	memset(&ifr, 0, sizeof(ifr));
+> -	strncpy((char *)&ifr.ifr_name, iface, sizeof(ifr.ifr_name) - 1);
+> +	strscpy(ifr.ifr_name, iface, sizeof(ifr.ifr_name));
+>   	if (ioctl(fd, SIOCGIFINDEX, (void *) &ifr) < 0) {
+>   		err = -errno;
+>   		goto raw_fd_cleanup;
+> 
+> ---
+> base-commit: c1a515d3c0270628df8ae5f5118ba859b85464a2
+> change-id: 20230807-arch-um-drivers-ad44050885d0
+> 
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+> 
+> 
+> _______________________________________________
+> linux-um mailing list
+> linux-um@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-um
+> 
+Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
 
-Just send patch 8 manually setting in-reply-to= argument to git
-send-email. b4 maybe also has this option, I don't know.
-
-Best regards,
-Krzysztof
-
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
