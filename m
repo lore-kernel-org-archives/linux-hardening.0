@@ -2,119 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 002C5C04A6A
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 17:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B5DC001B0
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 17:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233756AbjHHRBl (ORCPT
+        id S234287AbjHHRSW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 13:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
+        Tue, 8 Aug 2023 13:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233754AbjHHRBC (ORCPT
+        with ESMTP id S234302AbjHHRRg (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 13:01:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 461628690;
-        Tue,  8 Aug 2023 09:00:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C2FD624C3;
-        Tue,  8 Aug 2023 11:09:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7956BC433C9;
-        Tue,  8 Aug 2023 11:09:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691492941;
-        bh=t5keYJaEqeaKp0mlDUXsYS276GlhxU47w2DsH4m0WSQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aGfhd3qPUfmNl6GWDoGyXHJhdpsdWij0VZ0SJo3PJM4CLiYU2Eux/iXMmmjm0/xS1
-         j3iCUOwr1aqrioS0wSPNIEEzGYgBy5UObE6GB7CHi+PCSTE/AV+OqEj8VLWe8swVMV
-         a2Si78opzwY+ceZMGZYHlu3LQOhop8JFQc4Y97dj7LjOsJAHGOzSNyEK0Fm9niPPM2
-         /AObOrFinhcL7QulHGNcASebLzL/qGZuWQuqzstnqpi2DhkIkjsupePHs1+K1TFoCJ
-         2f5dFA1g9xcZgRUdVbB0qr1WD+3EJKGzTFyVDE6MTt8c7QMTMGkjY4dEMTWTO5mLeb
-         pZgL3POCeFHlg==
-Date:   Tue, 8 Aug 2023 05:10:04 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Waqar Hameed <waqar.hameed@axis.com>,
-        Kees Cook <keescook@chromium.org>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Tue, 8 Aug 2023 13:17:36 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 787D81DC9A;
+        Tue,  8 Aug 2023 09:07:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1691510832; x=1723046832;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kJCDgp5sRmlWoO/VG7oNBaGSk6kyXjxy6z+c89DOgxk=;
+  b=gD01RJzfPQny10OtjNmvjHZHBggUGJjfKyYRpqP1mPEjGKZ/nd8W4r2b
+   141/s7F+sv/ohJdxAujuAmGBeZ/ahrk15eGsabW5F7458aWlknuPwtt3u
+   Sn5LjUwqXCWACdOhGFQx6xyR5ugLap//fTupiFo3NGoLVx0OYSwXzOQcf
+   Fb+KnHntHI/i+GI6EPKHxuPNdxJAdmBu4x+C4LxqE73Vc6D1TfcGlYzPl
+   Rgxwk7OLrV0kb8GANxx9kSikr5m8xrOcWfGhcgHkEgxdJ5qwKoW7pOqFl
+   xfeA48E+yyfpCbAw9U//t2AokylWa2YEAxMSKiZEN9p5vwc1U0UJ8/eKL
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="351084472"
+X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
+   d="scan'208";a="351084472"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2023 03:17:59 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10795"; a="977798345"
+X-IronPort-AV: E=Sophos;i="6.01,263,1684825200"; 
+   d="scan'208";a="977798345"
+Received: from lkp-server01.sh.intel.com (HELO d1ccc7e87e8f) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 08 Aug 2023 03:17:55 -0700
+Received: from kbuild by d1ccc7e87e8f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qTJml-0005Hm-0D;
+        Tue, 08 Aug 2023 10:17:55 +0000
+Date:   Tue, 8 Aug 2023 18:17:44 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <razor@blackwall.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     oe-kbuild-all@lists.linux.dev, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, netdev@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
         Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
-Subject: Re: [PATCH RFC] iio: irsd200: fix -Warray-bounds bug in
- irsd200_trigger_handler
-Message-ID: <ZNIijIoh/famqTDl@work>
-References: <20230808083719.280777-1-gongruiqi@huaweicloud.com>
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        gongruiqi@huaweicloud.com
+Subject: Re: [PATCH] netfilter: ebtables: fix fortify warnings
+Message-ID: <202308081840.VN5BvVWf-lkp@intel.com>
+References: <20230808014821.241688-1-gongruiqi@huaweicloud.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230808083719.280777-1-gongruiqi@huaweicloud.com>
+In-Reply-To: <20230808014821.241688-1-gongruiqi@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 04:37:19PM +0800, GONG, Ruiqi wrote:
-> From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
-> 
-> When compiling with gcc 13 with -Warray-bounds enabled:
-> 
-> In file included from drivers/iio/proximity/irsd200.c:15:
-> In function ‘iio_push_to_buffers_with_timestamp’,
->     inlined from ‘irsd200_trigger_handler’ at drivers/iio/proximity/irsd200.c:770:2:
-> ./include/linux/iio/buffer.h:42:46: error: array subscript ‘int64_t {aka long long int}[0]’
-> is partly outside array bounds of ‘s16[1]’ {aka ‘short int[1]’} [-Werror=array-bounds=]
->    42 |                 ((int64_t *)data)[ts_offset] = timestamp;
->       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-> drivers/iio/proximity/irsd200.c: In function ‘irsd200_trigger_handler’:
-> drivers/iio/proximity/irsd200.c:763:13: note: object ‘buf’ of size 2
->   763 |         s16 buf = 0;
->       |             ^~~
-> 
-> The problem seems to be that irsd200_trigger_handler() is taking a s16
-> variable as an int64_t buffer. Fix it by extending the buffer to 64 bits.
+Hi Ruiqi,
 
-Thanks for working on this!
+kernel test robot noticed the following build errors:
 
-> 
-> Link: https://github.com/KSPP/linux/issues/331
-> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+[auto build test ERROR on linus/master]
+[also build test ERROR on horms-ipvs/master v6.5-rc5 next-20230808]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+url:    https://github.com/intel-lab-lkp/linux/commits/GONG-Ruiqi/netfilter-ebtables-fix-fortify-warnings/20230808-095125
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20230808014821.241688-1-gongruiqi%40huaweicloud.com
+patch subject: [PATCH] netfilter: ebtables: fix fortify warnings
+config: i386-randconfig-r011-20230808 (https://download.01.org/0day-ci/archive/20230808/202308081840.VN5BvVWf-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230808/202308081840.VN5BvVWf-lkp@intel.com/reproduce)
 
---
-Gustavo
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308081840.VN5BvVWf-lkp@intel.com/
 
-> ---
-> 
-> RFC: It's a preliminary patch since I'm not familiar with this hardware.
-> Further comments/reviews are needed about whether this fix is correct,
-> or we should use iio_push_to_buffers() instead of the *_with_timestamp()
-> version.
-> 
->  drivers/iio/proximity/irsd200.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/proximity/irsd200.c b/drivers/iio/proximity/irsd200.c
-> index 5bd791b46d98..34c479881bdf 100644
-> --- a/drivers/iio/proximity/irsd200.c
-> +++ b/drivers/iio/proximity/irsd200.c
-> @@ -759,10 +759,10 @@ static irqreturn_t irsd200_trigger_handler(int irq, void *pollf)
->  {
->  	struct iio_dev *indio_dev = ((struct iio_poll_func *)pollf)->indio_dev;
->  	struct irsd200_data *data = iio_priv(indio_dev);
-> -	s16 buf = 0;
-> +	int64_t buf = 0;
->  	int ret;
->  
-> -	ret = irsd200_read_data(data, &buf);
-> +	ret = irsd200_read_data(data, (s16 *)&buf);
->  	if (ret)
->  		goto end;
->  
-> -- 
-> 2.41.0
-> 
+All errors (new ones prefixed by >>):
+
+   In file included from <command-line>:
+>> ./usr/include/linux/netfilter_bridge/ebtables.h:185:9: error: expected specifier-qualifier-list before 'struct_group'
+     185 |         struct_group(offsets,
+         |         ^~~~~~~~~~~~
+   ./usr/include/linux/netfilter_bridge/ebtables.h: In function 'ebt_get_target':
+>> ./usr/include/linux/netfilter_bridge/ebtables.h:199:57: error: 'struct ebt_entry' has no member named 'target_offset'
+     199 |         return (struct ebt_entry_target *)((char *)e + e->target_offset);
+         |                                                         ^~
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
