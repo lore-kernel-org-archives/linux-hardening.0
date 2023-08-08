@@ -2,63 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708BEC04FE0
-	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 22:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF7FC04FDF
+	for <linux-hardening@archiver.kernel.org>; Tue,  8 Aug 2023 22:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231594AbjHHWsn (ORCPT
+        id S231544AbjHHWsm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 18:48:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36834 "EHLO
+        Tue, 8 Aug 2023 18:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231476AbjHHWsk (ORCPT
+        with ESMTP id S231511AbjHHWsl (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 18:48:40 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ECF8137
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 15:48:39 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-d074da73c3eso5785902276.3
-        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 15:48:39 -0700 (PDT)
+        Tue, 8 Aug 2023 18:48:41 -0400
+Received: from mail-oo1-xc4a.google.com (mail-oo1-xc4a.google.com [IPv6:2607:f8b0:4864:20::c4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEFF106
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 15:48:40 -0700 (PDT)
+Received: by mail-oo1-xc4a.google.com with SMTP id 006d021491bc7-56d46f0ac4bso8549665eaf.1
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 15:48:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691534918; x=1692139718;
+        d=google.com; s=20221208; t=1691534920; x=1692139720;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FjrWn1fSMygYDZZgckHhk0mXRfqs5Nidx65ICO3A52I=;
-        b=gV4k4AQmJbNKxgLMYapJVIyO+9QcRPAfIhEdNQg0adenoyHWaTerujLmngfOXKcDvE
-         DH3nTqA0kwzcCzLf6rxttNAOaJi/l5pr5ZiQFaLGXpuby+Az24eT0gxFj9TXFKS/4OX5
-         VfWhqmlOIrgsoLOGFKr5LcIyQkoqKUdV2n+sWwqJ2G1B99tL7e3HTacu1x99c9fvCSZM
-         BJXaYkIwuqE+r7BOIKKIVjI8XEkaZbNeH2eYr148VmffSGU8/uWx9fjbing1ZRjq3vss
-         hg76ITGXmsQEVRX3T+Y1ADizkXb6H36uNS1m4cqUy9bQgz/myepQzF5SKC77aMhxtNaY
-         izGQ==
+        bh=Pvwje1x+fgK9E9IR7qsfn31Dc5XiXldAZ1Fo1xHQpAo=;
+        b=ZowPnFVAEOQu1o/+XzT8fcaX6DHlVccwrE7gGNHkAx3YDdV+D3o7fUpYyj/vi1Ct5Q
+         +QYJDWnAhftWiK8EgTciXmjxfJNfL1DHfcE3o+XOVVHbUUBr2oc33L84fXDKdg0spibe
+         GZ5bqdG9qrHx/UtSzbaBTMqp6lQxfoXnPa2UM0vLrI7Zb2YiefFjL0pSu/+rNaKy1wlN
+         XhfOQJjCKLo/y7i/PPyKhKK6HKjXtVSpBWc22UEpkQAx89z/FVCmSvgnGCxbk5FjWRbD
+         QKj317GKJBKiDYTXPzGM5v1TxwYmVWI7QXAAaldoX9Tx9r5cTrpz+UfvZC+saxnSr//L
+         67Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691534918; x=1692139718;
+        d=1e100.net; s=20221208; t=1691534920; x=1692139720;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FjrWn1fSMygYDZZgckHhk0mXRfqs5Nidx65ICO3A52I=;
-        b=Tzs5ZH9MP9Z8YBCMiN5cPgn8cZgc7yETHvICrIkvC0D3se0gtVgwdSPUVSIrS2Idc/
-         f8xsEEGVgoYsn+Vx/NZqcUonmmAff8XxxmQySbRf9po3mJUXQBSUhaMxr9hhaNz2t4N3
-         thD09Wmiu2Q8dmSjsCRHvMMO69M4PzUmBX+Djz08V/kO2gx3oLs3oMDMjHiW+kS4Osxe
-         aqPZxWgzLH2aO7A8geQQldpCsD8XPRj+lEIzewDrrGSPxtQff5TKq6+krTxjRKAwbB4s
-         0uXfs0cX3DJyx9Jg4i/bSCNM2AHkh5m0SEaRRh+6XdEMm/wCmGxs3bCjaRykbF6dksZA
-         HQnw==
-X-Gm-Message-State: AOJu0Yyc+tF3JLaKcQ1GLC2jlm5992aoPNVux1i3jlwGLun41iNBK6gE
-        Pw2M28XSBoPKJcBUa3g1a9PrHpPkyPw+tUQejw==
-X-Google-Smtp-Source: AGHT+IGmyferwFNnbxw0iCzx/r3zkBXWgrh+IPzWVl1hamVpmOKPWK2mKFogqArbcsqyWhuzHoHX0ySiHTOwsP9CQg==
+        bh=Pvwje1x+fgK9E9IR7qsfn31Dc5XiXldAZ1Fo1xHQpAo=;
+        b=SfL4aENpvq7nBEUZD+JfH/2ysCp/hmvxt5frw6XktBVpFEkOUbw2dfJOE+pfHXukS+
+         liYeCvzIdtYDghtmfC3EjqPkWodSuSbGcg+q357upEUGs0k/qUeOT6PEuAsO4moX2cIK
+         TmXsO3T4bgtdIZj15pOb2EKGiEEFp+pua0lgGqNe+Cob3izJ099GwsskdzD19k0as7k0
+         NmCuws2y5IgaXHThpgWOOyPURzLVt7UzTrWyQ4+4qGbh+CwzDrp/49+I6+inZ33gBqNF
+         0mSXmb4+9YwkUKyw58nGRfoX7osYf4dJUQJ3Gm8JDCYz3QdEiVETL1R15y4oJKbfgfOY
+         9dKA==
+X-Gm-Message-State: AOJu0YxYHN+aVjVBrc+ORw4qJ6C7VLrw+2Ce/lmEoR0bdrgmQCnTXciq
+        1FqEGuolJSlqh+clSB3mhpJauqq/jgJTBS8lRg==
+X-Google-Smtp-Source: AGHT+IFfTapulzyD7mF8uId+U6qhT9W1jzh/xLHutjoQ+baESmwt1nASohgDjGgqfc8DbSFYevzOUew1G7Fcn9bwfg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6902:690:b0:d46:45a1:b775 with
- SMTP id i16-20020a056902069000b00d4645a1b775mr21159ybt.3.1691534918649; Tue,
- 08 Aug 2023 15:48:38 -0700 (PDT)
-Date:   Tue, 08 Aug 2023 22:48:10 +0000
+ (user=justinstitt job=sendgmr) by 2002:a05:6870:5b03:b0:1bf:a06f:ce6f with
+ SMTP id ds3-20020a0568705b0300b001bfa06fce6fmr315997oab.9.1691534919982; Tue,
+ 08 Aug 2023 15:48:39 -0700 (PDT)
+Date:   Tue, 08 Aug 2023 22:48:11 +0000
 In-Reply-To: <20230808-net-netfilter-v1-0-efbbe4ec60af@google.com>
 Mime-Version: 1.0
 References: <20230808-net-netfilter-v1-0-efbbe4ec60af@google.com>
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691534912; l=1584;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691534912; l=1616;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=TYjOW+AvMsSrKx/9aDmBZSW/vTLjOkdZMrUIxM50vSU=; b=RGO1nAXLC7fjnapekTUAeCHeVncKTCYqVtHP5+QOVJP9VkBsqI4ExgD47xSB2HnII22YwkXMP
- Jzqi8qIzqKQBStS0NzWem8DN0iJX/MUqERbE9rWZLT517qZ1WczKGid
+ bh=epcsNlzjLL3K9DAOvrsRp37/1eZVu8TeiuJpMs34l/Q=; b=L1P2cQc3z99LSWR/qio44oxncmlWLIBSvxY6HOu5W2BRo4B41BhDGwuAbcow63n2hPhRjceUI
+ 9E5bGIoGP2nDYAORkqUToKLoCEdCN/nRopReeZhHhL/7pSX4tiOQrrn
 X-Mailer: b4 0.12.3
-Message-ID: <20230808-net-netfilter-v1-5-efbbe4ec60af@google.com>
-Subject: [PATCH 5/7] netfilter: nft_osf: refactor deprecated strncpy to strscpy
+Message-ID: <20230808-net-netfilter-v1-6-efbbe4ec60af@google.com>
+Subject: [PATCH 6/7] netfilter: x_tables: refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
 To:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Jozsef Kadlecsik <kadlec@netfilter.org>,
@@ -76,47 +76,52 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use `strscpy` over `strncpy` for NUL-terminated strings.
+Prefer `strscpy` to `strncpy` for use on NUL-terminated destination
+buffers.
 
-We can also drop the + 1 from `NFT_OSF_MAXGENRELEN + 1` since `strscpy`
-will guarantee NUL-termination.
+This fixes a potential bug due to the fact that both `t->u.user.name`
+and `name` share the same size.
 
 Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- net/netfilter/nft_osf.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nft_osf.c b/net/netfilter/nft_osf.c
-index 70820c66b591..4844e0109a58 100644
---- a/net/netfilter/nft_osf.c
-+++ b/net/netfilter/nft_osf.c
-@@ -23,7 +23,7 @@ static void nft_osf_eval(const struct nft_expr *expr, struct nft_regs *regs,
- 	struct nft_osf *priv = nft_expr_priv(expr);
- 	u32 *dest = &regs->data[priv->dreg];
- 	struct sk_buff *skb = pkt->skb;
--	char os_match[NFT_OSF_MAXGENRELEN + 1];
-+	char os_match[NFT_OSF_MAXGENRELEN];
- 	const struct tcphdr *tcp;
- 	struct nf_osf_data data;
- 	struct tcphdr _tcph;
-@@ -45,7 +45,7 @@ static void nft_osf_eval(const struct nft_expr *expr, struct nft_regs *regs,
- 	}
+---
+Here's an example of what happens when dest and src share same size:
+|  #define MAXLEN 5
+|  char dest[MAXLEN];
+|  const char *src = "hello";
+|  strncpy(dest, src, MAXLEN); // -> should use strscpy()
+|  // dest is now not NUL-terminated
+---
+ net/netfilter/x_tables.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
+index 470282cf3fae..714a38ec9055 100644
+--- a/net/netfilter/x_tables.c
++++ b/net/netfilter/x_tables.c
+@@ -768,7 +768,7 @@ void xt_compat_match_from_user(struct xt_entry_match *m, void **dstptr,
+ 	m->u.user.match_size = msize;
+ 	strscpy(name, match->name, sizeof(name));
+ 	module_put(match->me);
+-	strncpy(m->u.user.name, name, sizeof(m->u.user.name));
++	strscpy(m->u.user.name, name, sizeof(m->u.user.name));
  
- 	if (!nf_osf_find(skb, nf_osf_fingers, priv->ttl, &data)) {
--		strncpy((char *)dest, "unknown", NFT_OSF_MAXGENRELEN);
-+		strscpy((char *)dest, "unknown", NFT_OSF_MAXGENRELEN);
- 	} else {
- 		if (priv->flags & NFT_OSF_F_VERSION)
- 			snprintf(os_match, NFT_OSF_MAXGENRELEN, "%s:%s",
-@@ -53,7 +53,7 @@ static void nft_osf_eval(const struct nft_expr *expr, struct nft_regs *regs,
- 		else
- 			strscpy(os_match, data.genre, NFT_OSF_MAXGENRELEN);
+ 	*size += off;
+ 	*dstptr += msize;
+@@ -1148,7 +1148,7 @@ void xt_compat_target_from_user(struct xt_entry_target *t, void **dstptr,
+ 	t->u.user.target_size = tsize;
+ 	strscpy(name, target->name, sizeof(name));
+ 	module_put(target->me);
+-	strncpy(t->u.user.name, name, sizeof(t->u.user.name));
++	strscpy(t->u.user.name, name, sizeof(t->u.user.name));
  
--		strncpy((char *)dest, os_match, NFT_OSF_MAXGENRELEN);
-+		strscpy((char *)dest, os_match, NFT_OSF_MAXGENRELEN);
- 	}
- }
+ 	*size += off;
+ 	*dstptr += tsize;
+@@ -2014,4 +2014,3 @@ static void __exit xt_fini(void)
  
+ module_init(xt_init);
+ module_exit(xt_fini);
+-
 
 -- 
 2.41.0.640.ga95def55d0-goog
