@@ -2,133 +2,125 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0505C001B0
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 00:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CE3C001DE
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 01:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231158AbjHIAmv (ORCPT
+        id S231184AbjHIBHl (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 8 Aug 2023 20:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47920 "EHLO
+        Tue, 8 Aug 2023 21:07:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230382AbjHIAmu (ORCPT
+        with ESMTP id S230022AbjHIBHk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 8 Aug 2023 20:42:50 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424391995
-        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 17:42:50 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1bc7e65ea44so2989235ad.1
-        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 17:42:50 -0700 (PDT)
+        Tue, 8 Aug 2023 21:07:40 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D76F1BC1
+        for <linux-hardening@vger.kernel.org>; Tue,  8 Aug 2023 18:07:39 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d1ebc896bd7so7338224276.2
+        for <linux-hardening@vger.kernel.org>; Tue, 08 Aug 2023 18:07:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691541770; x=1692146570;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i01tCZPNe6L9U5Q4HebDp2m0Pk6TUjD+eZo+m4Fm8ns=;
-        b=gtcdoSyHJhxAjQa1WvyqmpaathCr/egiED4WO3SKFud6eIw5LPxYjENlnuN2v/8pP+
-         7JomdzFIf0P2WpawQxVK/R6ri5DnSGPw5O9u2GvuVV/9icqfaiRNoA8PW7mEvWUT59pq
-         3/wAgET0vY3axeGQ+MZMFdDDUt5UNEVOt19vE=
+        d=google.com; s=20221208; t=1691543258; x=1692148058;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=cYMuekBbj+9f4BIAzTUfsUU97y+973XUFTIbO36R3rA=;
+        b=YIMsp/gepK4kb1PZrGz/jrI1btP3/fBq0VS+Jtihn9KfhSn8ASHiORAJli9LUEFqQq
+         HoxnuyBFBTo8dB+4vGMJnI9dJSLhOl/0LOqk8+JXBkWgQ0YcMOBlBgBDWTd9ZQGfUb7v
+         v134eGbaCnhWJ6LlAN8bF4NJMexGDk2YjiUYpRwvqCcb+On066DYJ1u9PdLs/mhAWZdL
+         P1gjm7ryz172CjgpqGQWMkMzbxADrIQ8l3m6Sj95aHIH88NNhVuWYh6o6EDtv1MxMUfp
+         Z+g/P1Xrj3jChKB/JxAPZwQvvPTJAq11vzytlJrZk2L/TCIWjrIcFl3UwEkZphez2g1v
+         pb1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691541770; x=1692146570;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i01tCZPNe6L9U5Q4HebDp2m0Pk6TUjD+eZo+m4Fm8ns=;
-        b=efuiCIUe74Yt/Q3TvqrlN66TIj5nQyoZHAa21ZYia4OYfz7pzaFNSy3LCiKXFrrxlR
-         ZWq12JuQYMLI8dycLHIOc1U0UJnR4fQHx684pjaJXo3Z5z/yQfLePXnnzxKDH03XXegP
-         9+s6j4Yaoa8+XeZ5nBsFoA7iCaMcfuDE623DlAxKWF8OJ5j2XItl3KN6XJ/Ltj8uH8oD
-         B6yeQA03e3BwTReZetaXJzeI95HOIXzrylQUdCR5PK8nuFmKSqH/qGcEu3+9Q9ywIQK0
-         wavhFPGEjVbhqwDeQ0LyqALAoURs1cHbPtOxa3fCvFJlMYKiXh0+SLKkCdW7U+dr+//u
-         sSOw==
-X-Gm-Message-State: AOJu0YzrXFmy03UC62DD76860pHr2UODgT35XzblR28/RA1RVtJkXIiA
-        4OsyH3x1utEuEC1rDuZfzF6W/A==
-X-Google-Smtp-Source: AGHT+IHy3qTOPxKTcKRTqd3zRSKuJlFunxAWjvfw0+BfXbsWDF1K1YF+/1raLGejZ1cQHbGkVrHTUg==
-X-Received: by 2002:a17:902:ec8e:b0:1bb:cd5a:ba53 with SMTP id x14-20020a170902ec8e00b001bbcd5aba53mr14009044plg.14.1691541769687;
-        Tue, 08 Aug 2023 17:42:49 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h15-20020a170902f7cf00b001b890b3bbb1sm9631074plw.211.2023.08.08.17.42.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Aug 2023 17:42:49 -0700 (PDT)
-Date:   Tue, 8 Aug 2023 17:42:48 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-hardening@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] um: refactor deprecated strncpy to strtomem
-Message-ID: <202308081742.47A777CEF@keescook>
-References: <20230808-arch-um-v2-1-5fbe76eaf853@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230808-arch-um-v2-1-5fbe76eaf853@google.com>
+        d=1e100.net; s=20221208; t=1691543258; x=1692148058;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cYMuekBbj+9f4BIAzTUfsUU97y+973XUFTIbO36R3rA=;
+        b=V6B9/6HqgPlhfAKOu39bPsHS2gXHRb55FPNR7dviyr4772TuHJij4n/Efh2WOdUGpt
+         TY3Frck1z8PRp/SuGH+Fqb4jevueOBMGQXhHw9MkYNkbQ4QOjJPEp2ADR7rFCnc0YPeV
+         Z5IDrLdpIG2yXKJnaHCtXyL1h0Gm+01EqHPJW3wsQhXZWcn2Xj/YIA2XTe5lbkq/p0L4
+         uNLz/tmYwuph1GGF69QTTmNfFdoWUFGoODjGs9P+yBshII1a0gTR7FWS18Eck67g2Mt3
+         iXlciJ/425OjJngIi6xqpY8zlcRntcsEatOveo+dPgtqbZsE+UmA3vIe9ZbBWit/6JzK
+         mmIg==
+X-Gm-Message-State: AOJu0YziViHfDUaa2gHk74jMXeSavGyHrFsw1Zv0x2ALsoGPxBtZPINQ
+        encelak6cUkY2gsaEAqQHAtzeWzXgtDzMWs3Fg==
+X-Google-Smtp-Source: AGHT+IGd83ZX8ReCo4MMl2lJZKLr1ZI7hb1MShC/jpbSLkoqOwVElD6/rAY/fzNhyBCRDKlaKo7v5RwRnBDWeusQ7Q==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:860e:0:b0:d5d:511b:16da with SMTP
+ id y14-20020a25860e000000b00d5d511b16damr23286ybk.2.1691543258744; Tue, 08
+ Aug 2023 18:07:38 -0700 (PDT)
+Date:   Wed, 09 Aug 2023 01:06:03 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAHvm0mQC/13MQQrDIBCF4auEWddibIhpV71HySLa0QykGlSkJ
+ Xj3mkA3XcziH3jfBhEDYYRbs0HATJG8qyFODeh5chYZPWuD4OLCBy6Zw7SfoSVhYB0XUrRXpXq UUDdrQEPvw3uMtWeKyYfPwed2//6k4U/KLeMMjVLYoe75ZO7We7vgWfsXjKWUL1fUF26rAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691543257; l=2008;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=DjNoNzSyECOWj9GeXGlWOMxAjhA7ZpfNH4jo0ilcj8k=; b=eCNgnGJeu1Qv/WXO/mUtZaRocGNwb35CduUVrPmAFtVA5M7UN6+TZeUoZU4xYFxcchLexcVlB
+ GpJOw23FBD2Dy+A/fk64whbFgk/e9XmhwgV8fBND3vzMDG/7xrdupwr
+X-Mailer: b4 0.12.3
+Message-ID: <20230809-net-netfilter-v2-0-5847d707ec0a@google.com>
+Subject: [PATCH v2 0/7] netfilter: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 09:17:35PM +0000, Justin Stitt wrote:
-> Favor a more robust and less ambiguous interface over `strncpy`.
-> 
-> Use `strtomem` here since `console_buf` is not expected to be
-> NUL-terminated.
-> 
-> Also mark char buffer as `__nonstring` as per Kees' suggestion here [1]
-> 
-> Link: https://github.com/KSPP/linux/issues/90 [1]
-> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Changes in v2:
-> - Keep usage of ARRAY_SIZE (thanks Bill)
-> - Remove unnecessary import (thanks Kees and Bill)
-> - Link to v1: https://lore.kernel.org/r/20230807-arch-um-v1-1-86dbbfb59709@google.com
-> ---
-> Notes:
-> I only build tested this patch.
-> 
-> I am also making an assumption that `console_buf` need not be
-> NUL-terminated. Am I right in believing this?
-> ---
->  arch/um/drivers/mconsole_kern.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/um/drivers/mconsole_kern.c b/arch/um/drivers/mconsole_kern.c
-> index 5026e7b9adfe..d5fa9c8dcd18 100644
-> --- a/arch/um/drivers/mconsole_kern.c
-> +++ b/arch/um/drivers/mconsole_kern.c
-> @@ -554,7 +554,7 @@ struct mconsole_output {
->  
->  static DEFINE_SPINLOCK(client_lock);
->  static LIST_HEAD(clients);
-> -static char console_buf[MCONSOLE_MAX_DATA];
-> +static char console_buf[MCONSOLE_MAX_DATA] __nonstring;
->  
->  static void console_write(struct console *console, const char *string,
->  			  unsigned int len)
-> @@ -567,7 +567,7 @@ static void console_write(struct console *console, const char *string,
->  
->  	while (len > 0) {
->  		n = min((size_t) len, ARRAY_SIZE(console_buf));
-> -		strncpy(console_buf, string, n);
-> +		strtomem(console_buf, string);
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-See my reply to v1: I think this should just be memcpy(console_buf, string, n)
+A suitable replacement is `strscpy` or `strscpy_pad` [2] due to the fact
+that they guarantee NUL-termination on their destination buffer argument
+which is _not_ the case for `strncpy`!
 
--Kees
+This series of patches aims to swap out `strncpy` for more a robust and
+less ambiguous interface `strscpy_pad` . This patch series, if applied
+in its entirety, removes most if not all instances of `strncpy` in the
+`net/netfilter` directory.
 
->  		string += n;
->  		len -= n;
->  
-> 
-> ---
-> base-commit: c1a515d3c0270628df8ae5f5118ba859b85464a2
-> change-id: 20230807-arch-um-3ef24413427e
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+[1]: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
+[2]: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html
 
--- 
-Kees Cook
+Link: https://github.com/KSPP/linux/issues/90
+Related: commit 8556bceb9c40 ("netfilter: move from strlcpy with unused retval to strscpy")
+---
+Changes in v2:
+- use `strscpy_pad` instead of `strscpy` since zero-padding is needed
+  (thanks Florian and Kees)
+- Link to v1: https://lore.kernel.org/r/20230808-net-netfilter-v1-0-efbbe4ec60af@google.com
+
+---
+Justin Stitt (7):
+      netfilter: ipset: refactor deprecated strncpy
+      netfilter: nf_tables: refactor deprecated strncpy
+      netfilter: nf_tables: refactor deprecated strncpy
+      netfilter: nft_meta: refactor deprecated strncpy
+      netfilter: nft_osf: refactor deprecated strncpy
+      netfilter: x_tables: refactor deprecated strncpy
+      netfilter: xtables: refactor deprecated strncpy
+
+ net/netfilter/ipset/ip_set_core.c | 10 +++++-----
+ net/netfilter/nft_ct.c            |  2 +-
+ net/netfilter/nft_fib.c           |  2 +-
+ net/netfilter/nft_meta.c          |  6 +++---
+ net/netfilter/nft_osf.c           |  6 +++---
+ net/netfilter/x_tables.c          |  5 ++---
+ net/netfilter/xt_repldata.h       |  2 +-
+ 7 files changed, 16 insertions(+), 17 deletions(-)
+---
+base-commit: 14f9643dc90adea074a0ffb7a17d337eafc6a5cc
+change-id: 20230807-net-netfilter-4027219bb6e7
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
