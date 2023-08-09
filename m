@@ -2,28 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E312C001DE
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 21:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C310C001E0
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 22:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232640AbjHIV66 (ORCPT
+        id S233350AbjHIWrS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Aug 2023 17:58:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39228 "EHLO
+        Wed, 9 Aug 2023 18:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230375AbjHIV66 (ORCPT
+        with ESMTP id S233403AbjHIWrR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Aug 2023 17:58:58 -0400
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [IPv6:2a0a:51c0:0:237:300::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A6B22103;
-        Wed,  9 Aug 2023 14:58:56 -0700 (PDT)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1qTrCY-0002Gf-QW; Wed, 09 Aug 2023 23:58:46 +0200
-Date:   Wed, 9 Aug 2023 23:58:46 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Wed, 9 Aug 2023 18:47:17 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F3A1B6
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Aug 2023 15:47:15 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-5230a22cfd1so300972a12.1
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Aug 2023 15:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1691621234; x=1692226034;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tXDTEd22XEqIMZo661qqSWECrCERN1pJR45ox7HG1tQ=;
+        b=kTZCX1e5w9R2+jLRXd8Et3IBei6pd6I7sr/aC4lJuKhouUR+vCMJjm8dZ6/yiS5R7D
+         4xbQMT4zwW3pkfWU5au0PLLsw8pU0OvWmwq+bfjlvX2QjumO43Vx4VUvW1dKsqPHc2ZL
+         EaiIhoLbwRwn7mfxZUPZErCKjDv8LumWIc3gbtkk3sBEqKLOwqzw2wkkTXPGbEfEUKkD
+         L2OqUKYegZsusDqQOLl0OO352Vak0mP7yjBxoE5TXBuz/bP95XtNYB4EdtggB8rQWmw4
+         5NOCTozzWKDHM5jOa9yuKjA60NjG68D3knSTrYWy90mR9nJ6IwWxCXBC2Ix/PVqJvXOb
+         nzZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691621234; x=1692226034;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tXDTEd22XEqIMZo661qqSWECrCERN1pJR45ox7HG1tQ=;
+        b=DCLdn7ZXr3Okhq/RmzpVOWmX8EU9qyJy1Uxd6CdFiZdCEYDgxIEtIRZ+AE3zj3ZRQ7
+         zdveTKdd7OHNcnc8xK1HqFGPaApJQNGLnlOSXsqr2xXbAYLoPMT08H8t47fkSYEEnbfS
+         6DaV6O0LibERFJQSDG/RWQCmE+yxKisXQyYo6/kn60KNnWWTV3eOsTylJEGWzR9u2RDn
+         u3WPmb/+2l93ZNmXhw5Ib+kyap9uB//+RgC9K0OnW0j1t0BC2YcQ9uh6ZLhkIwAn6hqL
+         qAWzMjEAZVTQ3vUgQzNeMsVyxdFz8FGu0gJ1n4JsNyYASXO6sERPE8tks24yHGoVhoxq
+         G/gg==
+X-Gm-Message-State: AOJu0Yy2Q6sqyo0jZU29nk0Sac/WCyFs/aaD+lW7hOwQnaZOmMI+AU0u
+        x/4PT/eHF5+lfGVZqkY+rqGlNsfdpTn4VFBVnAqS+Q==
+X-Google-Smtp-Source: AGHT+IFIuo+MXyeoVh4pXrORyqAYRV4fSc2uKFtsz6XX14Xjj1TlLU4KZdw3MywV+/6iy0M23VJ3Vq8NEKB4qDR+zyo=
+X-Received: by 2002:a17:907:2713:b0:99c:53f:1dc7 with SMTP id
+ w19-20020a170907271300b0099c053f1dc7mr310500ejk.54.1691621234083; Wed, 09 Aug
+ 2023 15:47:14 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230809-net-netfilter-v2-0-5847d707ec0a@google.com>
+ <20230809-net-netfilter-v2-1-5847d707ec0a@google.com> <20230809201926.GA3325@breakpoint.cc>
+ <CAFhGd8oNsGEAmSYs4H3ppm1t2DrD8Br5wwg+VuNtwfoOA_-64A@mail.gmail.com> <20230809215846.GE3325@breakpoint.cc>
+In-Reply-To: <20230809215846.GE3325@breakpoint.cc>
+From:   Justin Stitt <justinstitt@google.com>
+Date:   Wed, 9 Aug 2023 15:47:02 -0700
+Message-ID: <CAFhGd8r4uCZHBgNG+Cws7GFZ511VEu8Q=KBiq7jU0PJHW6Z9ng@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] netfilter: ipset: refactor deprecated strncpy
+To:     Florian Westphal <fw@strlen.de>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Jozsef Kadlecsik <kadlec@netfilter.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
@@ -32,36 +67,32 @@ Cc:     Florian Westphal <fw@strlen.de>,
         linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] netfilter: ipset: refactor deprecated strncpy
-Message-ID: <20230809215846.GE3325@breakpoint.cc>
-References: <20230809-net-netfilter-v2-0-5847d707ec0a@google.com>
- <20230809-net-netfilter-v2-1-5847d707ec0a@google.com>
- <20230809201926.GA3325@breakpoint.cc>
- <CAFhGd8oNsGEAmSYs4H3ppm1t2DrD8Br5wwg+VuNtwfoOA_-64A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8oNsGEAmSYs4H3ppm1t2DrD8Br5wwg+VuNtwfoOA_-64A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Justin Stitt <justinstitt@google.com> wrote:
-> On Wed, Aug 9, 2023 at 1:19 PM Florian Westphal <fw@strlen.de> wrote:
+On Wed, Aug 9, 2023 at 2:58=E2=80=AFPM Florian Westphal <fw@strlen.de> wrot=
+e:
+>
+> Justin Stitt <justinstitt@google.com> wrote:
+> > On Wed, Aug 9, 2023 at 1:19=E2=80=AFPM Florian Westphal <fw@strlen.de> =
+wrote:
+> > >
+> > > Justin Stitt <justinstitt@google.com> wrote:
+> > > > Use `strscpy_pad` instead of `strncpy`.
+> > >
+> > > I don't think that any of these need zero-padding.
+> > It's a more consistent change with the rest of the series and I don't
+> > believe it has much different behavior to `strncpy` (other than
+> > NUL-termination) as that will continue to pad to `n` as well.
 > >
-> > Justin Stitt <justinstitt@google.com> wrote:
-> > > Use `strscpy_pad` instead of `strncpy`.
-> >
-> > I don't think that any of these need zero-padding.
-> It's a more consistent change with the rest of the series and I don't
-> believe it has much different behavior to `strncpy` (other than
-> NUL-termination) as that will continue to pad to `n` as well.
-> 
-> Do you think the `_pad` for 1/7, 6/7 and 7/7 should be changed back to
-> `strscpy` in a v3? I really am shooting in the dark as it is quite
-> hard to tell whether or not a buffer is expected to be NUL-padded or
-> not.
-
-No, you can keep it as-is.  Which tree are you targetting with this?
+> > Do you think the `_pad` for 1/7, 6/7 and 7/7 should be changed back to
+> > `strscpy` in a v3? I really am shooting in the dark as it is quite
+> > hard to tell whether or not a buffer is expected to be NUL-padded or
+> > not.
+>
+> No, you can keep it as-is.  Which tree are you targetting with this?
+Not sure, I let ./getmaintainer auto-add the mailing lists. Perhaps
+netdev or netfilter next trees?
