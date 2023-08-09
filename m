@@ -2,129 +2,140 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF0EEB64DD
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 07:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A364EB64DD
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 08:37:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230309AbjHIHxj (ORCPT
+        id S231249AbjHIIhh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Aug 2023 03:53:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32798 "EHLO
+        Wed, 9 Aug 2023 04:37:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbjHIHxj (ORCPT
+        with ESMTP id S229652AbjHIIhe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Aug 2023 03:53:39 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EE161736;
-        Wed,  9 Aug 2023 00:53:38 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4RLMkQ4Q7Nz4f3q3W;
-        Wed,  9 Aug 2023 15:53:34 +0800 (CST)
-Received: from vm-fedora-38.huawei.com (unknown [10.67.174.164])
-        by APP4 (Coremail) with SMTP id gCh0CgAX9Kb2RdNkvuInAQ--.27870S2;
-        Wed, 09 Aug 2023 15:53:33 +0800 (CST)
-From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        Nikolay Aleksandrov <razor@blackwall.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc:     netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        Wed, 9 Aug 2023 04:37:34 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC62C170B;
+        Wed,  9 Aug 2023 01:37:33 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RLNct5KHJz6J7mD;
+        Wed,  9 Aug 2023 16:33:50 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 9 Aug
+ 2023 09:37:30 +0100
+Date:   Wed, 9 Aug 2023 09:37:29 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Waqar Hameed <waqar.hameed@axis.com>,
+        Kees Cook <keescook@chromium.org>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
         Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
-Subject: [PATCH] netfilter: ebtables: replace zero-length array members
-Date:   Wed,  9 Aug 2023 15:51:36 +0800
-Message-ID: <20230809075136.1323302-1-gongruiqi@huaweicloud.com>
-X-Mailer: git-send-email 2.41.0
+        Xiu Jianfeng <xiujianfeng@huawei.com>, <gongruiqi1@huawei.com>
+Subject: Re: [PATCH RFC] iio: irsd200: fix -Warray-bounds bug in
+ irsd200_trigger_handler
+Message-ID: <20230809093729.00000a1d@Huawei.com>
+In-Reply-To: <ZNIijIoh/famqTDl@work>
+References: <20230808083719.280777-1-gongruiqi@huaweicloud.com>
+        <ZNIijIoh/famqTDl@work>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgAX9Kb2RdNkvuInAQ--.27870S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7trWxAw4DCF47uF1fZryfCrg_yoW5Jry5pF
-        yjka4qyrWUtay2grW7tay7ZF4avws8Gr17JrWxG34FyF90yay7WrWxKry5KFyqvrZ5uanx
-        ArWftry0gFZ7taUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28I
-        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
-        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42
-        IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
-        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUbPEf5UUUUU==
-X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+On Tue, 8 Aug 2023 05:10:04 -0600
+"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
 
-As suggested by Kees[1], replace the old-style 0-element array members
-of multiple structs in ebtables.h with modern C99 flexible array.
+> On Tue, Aug 08, 2023 at 04:37:19PM +0800, GONG, Ruiqi wrote:
+> > From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+> > 
+> > When compiling with gcc 13 with -Warray-bounds enabled:
+> > 
+> > In file included from drivers/iio/proximity/irsd200.c:15:
+> > In function ‘iio_push_to_buffers_with_timestamp’,
+> >     inlined from ‘irsd200_trigger_handler’ at drivers/iio/proximity/irsd200.c:770:2:
+> > ./include/linux/iio/buffer.h:42:46: error: array subscript ‘int64_t {aka long long int}[0]’
+> > is partly outside array bounds of ‘s16[1]’ {aka ‘short int[1]’} [-Werror=array-bounds=]
+> >    42 |                 ((int64_t *)data)[ts_offset] = timestamp;
+> >       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+> > drivers/iio/proximity/irsd200.c: In function ‘irsd200_trigger_handler’:
+> > drivers/iio/proximity/irsd200.c:763:13: note: object ‘buf’ of size 2
+> >   763 |         s16 buf = 0;
+> >       |             ^~~
+> > 
+> > The problem seems to be that irsd200_trigger_handler() is taking a s16
+> > variable as an int64_t buffer. Fix it by extending the buffer to 64 bits.  
+> 
+> Thanks for working on this!
+> 
+> > 
+> > Link: https://github.com/KSPP/linux/issues/331
+> > Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>  
+> 
+> Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-[1]: https://lore.kernel.org/all/5E8E0F9C-EE3F-4B0D-B827-DC47397E2A4A@kernel.org/
+Good find on the bug, but the fix is wrong even if it squashes the error.
 
-Link: https://github.com/KSPP/linux/issues/21
-Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
----
- include/uapi/linux/netfilter_bridge/ebtables.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> --
+> Gustavo
+> 
+> > ---
+> > 
+> > RFC: It's a preliminary patch since I'm not familiar with this hardware.
+> > Further comments/reviews are needed about whether this fix is correct,
+> > or we should use iio_push_to_buffers() instead of the *_with_timestamp()
+> > version.
+> > 
+> >  drivers/iio/proximity/irsd200.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/iio/proximity/irsd200.c b/drivers/iio/proximity/irsd200.c
+> > index 5bd791b46d98..34c479881bdf 100644
+> > --- a/drivers/iio/proximity/irsd200.c
+> > +++ b/drivers/iio/proximity/irsd200.c
+> > @@ -759,10 +759,10 @@ static irqreturn_t irsd200_trigger_handler(int irq, void *pollf)
+> >  {
+> >  	struct iio_dev *indio_dev = ((struct iio_poll_func *)pollf)->indio_dev;
+> >  	struct irsd200_data *data = iio_priv(indio_dev);
+> > -	s16 buf = 0;
+> > +	int64_t buf = 0;
 
-diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
-index b0caad82b693..673b00df162c 100644
---- a/include/uapi/linux/netfilter_bridge/ebtables.h
-+++ b/include/uapi/linux/netfilter_bridge/ebtables.h
-@@ -87,7 +87,7 @@ struct ebt_entries {
- 	/* nr. of entries */
- 	unsigned int nentries;
- 	/* entry list */
--	char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
-+	char data[] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
- };
- 
- /* used for the bitmask of struct ebt_entry */
-@@ -129,7 +129,7 @@ struct ebt_entry_match {
- 	} u;
- 	/* size of data */
- 	unsigned int match_size;
--	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
-+	unsigned char data[] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
- };
- 
- struct ebt_entry_watcher {
-@@ -142,7 +142,7 @@ struct ebt_entry_watcher {
- 	} u;
- 	/* size of data */
- 	unsigned int watcher_size;
--	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
-+	unsigned char data[] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
- };
- 
- struct ebt_entry_target {
-@@ -155,7 +155,7 @@ struct ebt_entry_target {
- 	} u;
- 	/* size of data */
- 	unsigned int target_size;
--	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
-+	unsigned char data[] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
- };
- 
- #define EBT_STANDARD_TARGET "standard"
-@@ -190,7 +190,7 @@ struct ebt_entry {
- 		/* sizeof ebt_entry + matches + watchers + target */
- 		unsigned int next_offset;
- 	);
--	unsigned char elems[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
-+	unsigned char elems[] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
- };
- 
- static __inline__ struct ebt_entry_target *
--- 
-2.41.0
+s64 as internal kernel type.
+More importantly needs to be at least s64 buf[2]; as the offset
+https://elixir.bootlin.com/linux/latest/source/include/linux/iio/buffer.h#L41
+will be 1 due to this filling the timestamp in at first 8 byte aligned location
+after the data that is already in the buffer.
+
+With hindsight was a bad decision a long time ago not to force people to also
+pass the size into this function so we could detect this at runtime at least.
+Hard to repair now give very large number of drivers using this and the fact
+that it's not always easy to work out that size.  Unfortunately occasionally
+one of these slips through review :(
+
+I suppose we could, in some cases check if the buffer was at least 16 bytes which
+would get us some of the way.
+
+Jonathan
+
+> >  	int ret;
+> >  
+> > -	ret = irsd200_read_data(data, &buf);
+> > +	ret = irsd200_read_data(data, (s16 *)&buf);
+> >  	if (ret)
+> >  		goto end;
+> >  
+> > -- 
+> > 2.41.0
+> >   
 
