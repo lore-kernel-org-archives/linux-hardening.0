@@ -2,29 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AD1C001B0
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 20:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A9FC04A94
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 21:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234228AbjHIUVz (ORCPT
+        id S232481AbjHIVkz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Aug 2023 16:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57822 "EHLO
+        Wed, 9 Aug 2023 17:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234212AbjHIUVy (ORCPT
+        with ESMTP id S232445AbjHIVky (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Aug 2023 16:21:54 -0400
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [IPv6:2a0a:51c0:0:237:300::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DFAD10F6;
-        Wed,  9 Aug 2023 13:21:54 -0700 (PDT)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1qTpgi-0001cx-A0; Wed, 09 Aug 2023 22:21:48 +0200
-Date:   Wed, 9 Aug 2023 22:21:48 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     Justin Stitt <justinstitt@google.com>
+        Wed, 9 Aug 2023 17:40:54 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C043D1FD2
+        for <linux-hardening@vger.kernel.org>; Wed,  9 Aug 2023 14:40:53 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-99c1f6f3884so44180566b.0
+        for <linux-hardening@vger.kernel.org>; Wed, 09 Aug 2023 14:40:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1691617252; x=1692222052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iDXCpn35Ad7J9f0GEXMuzOeFfEoO9YYwjjKca2hgV+s=;
+        b=1l6WWpjTsrbthqxhqFGUE8vjdistC/b68tPuqorgdfs9jwlQbok4bWgV5WSKec9y3j
+         4KZRPqOwBNt7ekYP8bPwGHCegv/pb40YWXzlPOQZL7SYPw+UB8TH8bc7AwjwOlTGWmTb
+         1k1y3vCIcXfIlcOcIfY9lvJsbvf0745T0vsVX0j4dOp2ChfqhSKVQhqQGY0AVGj45k1q
+         P49NZVxzeDswm3Cg3rGPuPlVfj6zIdq8uRCY3qDy9rjZJTb6VbDOnWz0llsfbErm/x0B
+         GcQsXjrob1op8XZkdMoGgrBV0Njc19OsCegP0BOkcYFsDSvlmmWfTnj1k0jHKNpjNzgC
+         LrSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691617252; x=1692222052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iDXCpn35Ad7J9f0GEXMuzOeFfEoO9YYwjjKca2hgV+s=;
+        b=GPNnljQC+2Cq5/ZMkmZFt3ibv3fFQFPifzqHk0RlLRGBNKthArO1MApfcvM2GaODyw
+         Ska6WdlArDfqTgy2l+xzgY3PVR49OSmy3l+rs30ZpgHIqTwBXtA4kopFP9wMXJTPxEP+
+         1lZDB7W1f5ADZ7ZfSJDYWGAGEbFV/sVhVlr6QnY731YNaIgHxtdYE1I8WeOLLKbTRL8i
+         CtI1EtWe6yE12U6DNY7MuWUa0N/4l9zti8DLQ3S1EenVKnjlN22Zo5xjXas0qQ2bzoWV
+         VWmv6KqLRpI/dn+2v7K3ZXtMvJzOLrrhja3UfNgF20+bdySpo+X5YFf1VWermWHbOMi+
+         GzHw==
+X-Gm-Message-State: AOJu0Yxc4m85KkTtsMfngOrcynbKCZOGkvldLz0QEpEzmRPvu9Z/Kv7t
+        tqHLkgF221+lTEzamlDJFcsjK3jT3+bTm9QQ30wIEA==
+X-Google-Smtp-Source: AGHT+IFZ3NZAFSyxJj8icElVTaEEzHs0mTmf5HaiCvahAmIMW6IV58Wp/pOQOKWT3GQpfjDAato2Bd0/2ySUKL6nrTc=
+X-Received: by 2002:a17:907:788c:b0:99b:bc51:8ca3 with SMTP id
+ ku12-20020a170907788c00b0099bbc518ca3mr323484ejc.1.1691617252270; Wed, 09 Aug
+ 2023 14:40:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230809-net-netfilter-v2-0-5847d707ec0a@google.com>
+ <20230809-net-netfilter-v2-1-5847d707ec0a@google.com> <20230809201926.GA3325@breakpoint.cc>
+In-Reply-To: <20230809201926.GA3325@breakpoint.cc>
+From:   Justin Stitt <justinstitt@google.com>
+Date:   Wed, 9 Aug 2023 14:40:39 -0700
+Message-ID: <CAFhGd8oNsGEAmSYs4H3ppm1t2DrD8Br5wwg+VuNtwfoOA_-64A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] netfilter: ipset: refactor deprecated strncpy
+To:     Florian Westphal <fw@strlen.de>
 Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -32,23 +66,24 @@ Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
         linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/7] netfilter: nft_osf: refactor deprecated strncpy
-Message-ID: <20230809202148.GD3325@breakpoint.cc>
-References: <20230809-net-netfilter-v2-0-5847d707ec0a@google.com>
- <20230809-net-netfilter-v2-5-5847d707ec0a@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230809-net-netfilter-v2-5-5847d707ec0a@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Justin Stitt <justinstitt@google.com> wrote:
- ---
-> Note: Should this usage @8556bceb9c409 also be changed to `strscpy_pad`
-> or is zero-padding not required here?
+On Wed, Aug 9, 2023 at 1:19=E2=80=AFPM Florian Westphal <fw@strlen.de> wrot=
+e:
+>
+> Justin Stitt <justinstitt@google.com> wrote:
+> > Use `strscpy_pad` instead of `strncpy`.
+>
+> I don't think that any of these need zero-padding.
+It's a more consistent change with the rest of the series and I don't
+believe it has much different behavior to `strncpy` (other than
+NUL-termination) as that will continue to pad to `n` as well.
 
-That commit converted strlcpy which doesn't do any zero-padding,
-I don't see anything wrong with that change.
+Do you think the `_pad` for 1/7, 6/7 and 7/7 should be changed back to
+`strscpy` in a v3? I really am shooting in the dark as it is quite
+hard to tell whether or not a buffer is expected to be NUL-padded or
+not.
