@@ -2,140 +2,78 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A364EB64DD
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 08:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BABEB64DD
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 11:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231249AbjHIIhh convert rfc822-to-8bit (ORCPT
+        id S233008AbjHILD4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Aug 2023 04:37:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54180 "EHLO
+        Wed, 9 Aug 2023 07:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229652AbjHIIhe (ORCPT
+        with ESMTP id S232989AbjHILDz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Aug 2023 04:37:34 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC62C170B;
-        Wed,  9 Aug 2023 01:37:33 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4RLNct5KHJz6J7mD;
-        Wed,  9 Aug 2023 16:33:50 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 9 Aug
- 2023 09:37:30 +0100
-Date:   Wed, 9 Aug 2023 09:37:29 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Waqar Hameed <waqar.hameed@axis.com>,
-        Kees Cook <keescook@chromium.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        Wed, 9 Aug 2023 07:03:55 -0400
+Received: from orbyte.nwl.cc (orbyte.nwl.cc [IPv6:2001:41d0:e:133a::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDEF410F3;
+        Wed,  9 Aug 2023 04:03:54 -0700 (PDT)
+Received: from n0-1 by orbyte.nwl.cc with local (Exim 4.94.2)
+        (envelope-from <n0-1@orbyte.nwl.cc>)
+        id 1qTgya-0001jV-So; Wed, 09 Aug 2023 13:03:41 +0200
+Date:   Wed, 9 Aug 2023 13:03:40 +0200
+From:   Phil Sutter <phil@nwl.cc>
+To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <razor@blackwall.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, <gongruiqi1@huawei.com>
-Subject: Re: [PATCH RFC] iio: irsd200: fix -Warray-bounds bug in
- irsd200_trigger_handler
-Message-ID: <20230809093729.00000a1d@Huawei.com>
-In-Reply-To: <ZNIijIoh/famqTDl@work>
-References: <20230808083719.280777-1-gongruiqi@huaweicloud.com>
-        <ZNIijIoh/famqTDl@work>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
+Subject: Re: [PATCH] netfilter: ebtables: replace zero-length array members
+Message-ID: <ZNNyjNDht6v84hvS@orbyte.nwl.cc>
+Mail-Followup-To: Phil Sutter <phil@nwl.cc>,
+        "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <razor@blackwall.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
+References: <20230809075136.1323302-1-gongruiqi@huaweicloud.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230809075136.1323302-1-gongruiqi@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, 8 Aug 2023 05:10:04 -0600
-"Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
-
-> On Tue, Aug 08, 2023 at 04:37:19PM +0800, GONG, Ruiqi wrote:
-> > From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
-> > 
-> > When compiling with gcc 13 with -Warray-bounds enabled:
-> > 
-> > In file included from drivers/iio/proximity/irsd200.c:15:
-> > In function ‘iio_push_to_buffers_with_timestamp’,
-> >     inlined from ‘irsd200_trigger_handler’ at drivers/iio/proximity/irsd200.c:770:2:
-> > ./include/linux/iio/buffer.h:42:46: error: array subscript ‘int64_t {aka long long int}[0]’
-> > is partly outside array bounds of ‘s16[1]’ {aka ‘short int[1]’} [-Werror=array-bounds=]
-> >    42 |                 ((int64_t *)data)[ts_offset] = timestamp;
-> >       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-> > drivers/iio/proximity/irsd200.c: In function ‘irsd200_trigger_handler’:
-> > drivers/iio/proximity/irsd200.c:763:13: note: object ‘buf’ of size 2
-> >   763 |         s16 buf = 0;
-> >       |             ^~~
-> > 
-> > The problem seems to be that irsd200_trigger_handler() is taking a s16
-> > variable as an int64_t buffer. Fix it by extending the buffer to 64 bits.  
+On Wed, Aug 09, 2023 at 03:51:36PM +0800, GONG, Ruiqi wrote:
+> From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
 > 
-> Thanks for working on this!
+> As suggested by Kees[1], replace the old-style 0-element array members
+> of multiple structs in ebtables.h with modern C99 flexible array.
 > 
-> > 
-> > Link: https://github.com/KSPP/linux/issues/331
-> > Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>  
+> [1]: https://lore.kernel.org/all/5E8E0F9C-EE3F-4B0D-B827-DC47397E2A4A@kernel.org/
 > 
-> Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Link: https://github.com/KSPP/linux/issues/21
+> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
 
-Good find on the bug, but the fix is wrong even if it squashes the error.
+I tried this once[1], but it was rejected pointing at a revert[2]. It
+seems gcc was improved since then: The warning is gone and I don't find
+-Wno-stringop-overflow flag in iptables sources.
 
-> 
-> --
-> Gustavo
-> 
-> > ---
-> > 
-> > RFC: It's a preliminary patch since I'm not familiar with this hardware.
-> > Further comments/reviews are needed about whether this fix is correct,
-> > or we should use iio_push_to_buffers() instead of the *_with_timestamp()
-> > version.
-> > 
-> >  drivers/iio/proximity/irsd200.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/iio/proximity/irsd200.c b/drivers/iio/proximity/irsd200.c
-> > index 5bd791b46d98..34c479881bdf 100644
-> > --- a/drivers/iio/proximity/irsd200.c
-> > +++ b/drivers/iio/proximity/irsd200.c
-> > @@ -759,10 +759,10 @@ static irqreturn_t irsd200_trigger_handler(int irq, void *pollf)
-> >  {
-> >  	struct iio_dev *indio_dev = ((struct iio_poll_func *)pollf)->indio_dev;
-> >  	struct irsd200_data *data = iio_priv(indio_dev);
-> > -	s16 buf = 0;
-> > +	int64_t buf = 0;
+Cheers, Phil
 
-s64 as internal kernel type.
-More importantly needs to be at least s64 buf[2]; as the offset
-https://elixir.bootlin.com/linux/latest/source/include/linux/iio/buffer.h#L41
-will be 1 due to this filling the timestamp in at first 8 byte aligned location
-after the data that is already in the buffer.
-
-With hindsight was a bad decision a long time ago not to force people to also
-pass the size into this function so we could detect this at runtime at least.
-Hard to repair now give very large number of drivers using this and the fact
-that it's not always easy to work out that size.  Unfortunately occasionally
-one of these slips through review :(
-
-I suppose we could, in some cases check if the buffer was at least 16 bytes which
-would get us some of the way.
-
-Jonathan
-
-> >  	int ret;
-> >  
-> > -	ret = irsd200_read_data(data, &buf);
-> > +	ret = irsd200_read_data(data, (s16 *)&buf);
-> >  	if (ret)
-> >  		goto end;
-> >  
-> > -- 
-> > 2.41.0
-> >   
-
+[1] https://lore.kernel.org/all/20200719100220.4666-1-phil@nwl.cc/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1e6e9d0f4859ec698d55381ea26f4136eff3afe1
