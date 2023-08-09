@@ -2,135 +2,161 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3287C0015E
-	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 18:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E734C0015E
+	for <linux-hardening@archiver.kernel.org>; Wed,  9 Aug 2023 19:43:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231327AbjHISTl (ORCPT
+        id S230026AbjHITnJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 9 Aug 2023 14:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49630 "EHLO
+        Wed, 9 Aug 2023 15:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231231AbjHISTk (ORCPT
+        with ESMTP id S229625AbjHITnJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 9 Aug 2023 14:19:40 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDE72106
-        for <linux-hardening@vger.kernel.org>; Wed,  9 Aug 2023 11:19:38 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5840614b13cso1670387b3.0
-        for <linux-hardening@vger.kernel.org>; Wed, 09 Aug 2023 11:19:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691605178; x=1692209978;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=r9+IWZmGOXJH6TQW7TrBTS32AvWqt6FCCDY8aKxFBjc=;
-        b=RH6NAR3HPdnAujcthLTNkfqMgMO/gZFXu3pAy247EtYZv7AEyeT6rW7a3dF7bt4t1K
-         Ns5gMTpuaZ0NzSKHwUP9D7wle6yt6iTpcCM8L0rXvYhcYC5qEocjnXhwI5qb4Aj+iJWl
-         j526OvzmzAb83YAkRWDy3Av3Fjt7vzl0O1W+Id2YO/7AUktjkzoS6ThAMaOvvFAFArSz
-         xbQ+kkaEGA49j8RS/1N2dEIzJ9m1nBTYKNo+S0/WE5oIbaCSG3iSPyI/q/H38rPT0hjF
-         l/iS9ZIzREp9evcoCEAAlfNbISIIW6lKjFv+SAEYcAEpNfWoZ6TMyo6HwgV/MKdhqR9z
-         vjIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691605178; x=1692209978;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r9+IWZmGOXJH6TQW7TrBTS32AvWqt6FCCDY8aKxFBjc=;
-        b=EI+LiAOlwVYUrP8sGw5bt/XtgKwy6nxkIRtBF7//aYBFx0TUMb8Pn9iB8qk9cNsfvA
-         f51bfimsvMQ6/7MJrYTDIdUn5wUwkBs4J9Bo0uyN0Q6XZmyWHow5+bO8cBzNMRG1i7Lj
-         bpH5eGRyOvwiX/v2lotXi/ixU4jxcPBNkJoLH5+d6z9pw15gEm1gzq9huXdMsuPi0cuG
-         ykZlo7nergiKOcC9lHgHLu3Je5YV1iDhnZx6PAwIeGoIdUAyCqFc7i/HWJJJD7ira1Be
-         A9gj05DnSwP3pKmJn3+ymHl2uXMWW+KQhKZmkndAPieA5Jtn91HktEgkOnQmSTzPkHcs
-         N66Q==
-X-Gm-Message-State: AOJu0YweWII5la8ilR+nr08VcwFS8Snbe8A+zB5JTRcHwf5zVw+WBAN5
-        Fq2COhMONirPQ/0Tmtt0HSfKrfFa+iI1Glseqw==
-X-Google-Smtp-Source: AGHT+IHnpy+/J/C+D4Q4JPgAzwlXMTPI+h6CwminUuHwP+Cql0xghqh2RomkGyS/8mpup5ykvjSMYLYD4xsftvGlAw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:690c:70a:b0:586:e2b5:f364 with
- SMTP id bs10-20020a05690c070a00b00586e2b5f364mr4614ywb.4.1691605178129; Wed,
- 09 Aug 2023 11:19:38 -0700 (PDT)
-Date:   Wed, 09 Aug 2023 18:19:32 +0000
+        Wed, 9 Aug 2023 15:43:09 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2747E10DA;
+        Wed,  9 Aug 2023 12:43:08 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 087FA5C0162;
+        Wed,  9 Aug 2023 15:43:05 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 09 Aug 2023 15:43:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1691610185; x=1691696585; bh=YE
+        cqCFxUYGUWqz2IlUXTkb/oxp7H5kGX1NNGYfEDwAs=; b=p7liFpTRJPzvF2BL27
+        OlPSzhK21VYRzNUOB0VVBTrnKUZhBazHP52H57yOOQd/W+3FdD3JS8bIHuxsDWbg
+        CF+L1lkaHCEORvwW5LUnEGWXoymXM4OMPCHjKrZS6wuOMHibomIrRWgzzXEv2Wzm
+        krVJVAEnL1SERZgeBJDXMmu+otenrkvdee8s1Rb+lBxS3CGsrQS0VOdHD7htb6gZ
+        Iq1azx08g+Y/lLywwt5xD4fiDxkT5fCXjparzlXkWhx5zLUOSoKrymZ62e+N8Eer
+        tu17nWp7GGnTdz0r9SoL0Cpa54frxDLqGIFZM+iOro9t1eZ6H4y2jwgqG9iq80em
+        pAHg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1691610185; x=1691696585; bh=YEcqCFxUYGUWq
+        z2IlUXTkb/oxp7H5kGX1NNGYfEDwAs=; b=m5Yc5lz4i6fwIMRmI5ZnP6GYL5Ysn
+        LkcO8LVeq+K96zVRDH493c0uZ7bKbWFhfU4yfpqashCrSJ3L33sYjdek6MVtI729
+        obyxAiqu6kd5DLMs4JIlJC2LCSSNLSZUPJ8aRnIWduzIMZ0Yo6vFs2cKpDcmjJcb
+        2ow4fZPidM0mUXH8LjN1pPv02dXAL+Y22J7TdolASeDD1Q//Hgj71qE3fuNGf5yi
+        MmDbzy2MZkVvARtlq8psjR96yxoOEEb+lRyAvFxgHB/zS4a6wt4ZhUAOkCMA/Plw
+        vsYGxh3NjNpirAIdfxrEdafzZ0HKjw+fASOY+USpGoLJUD4lwl5MV/xew==
+X-ME-Sender: <xms:SOzTZKc6uFlLfvp1ADRFGg4asBYDtGuCjvrB7GNGjGWENC0isHdSQg>
+    <xme:SOzTZEMfDeQccRxW5z8IRvyNB1R-SmM4hkFky05k4yKaajBmRgTe8dLFCvi6NZAqh
+    PevEozcJ4GS_xsAba8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrleeggddufeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepkeelfeefvddtkeffudegffffjeffjeeugefftddtteevffdvueetgfejjeel
+    tdfhnecuffhomhgrihhnpehkvghrnhgvlhgtihdrohhrghdpkhgvrhhnvghlrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgu
+    segrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:SOzTZLjZ0MZ6unn_rsVS2kRYZPJ9RHW_4tAxiljoqlN-9gH1ewxncg>
+    <xmx:SOzTZH9vC9WJS6a0Uc4dHsEks1mEpCMl1Fv-9BzlioEHO-zTNj1KWA>
+    <xmx:SOzTZGtXYiPyi3nGVg7xQ2Bs2SkRCPUVCA6uL88Qh2zh3dOB-WVePA>
+    <xmx:SezTZAJuZ3FACDh2GQioWN8yudaMQJOrWDT-R5nEI8qxf_t0PzMtWA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 3C093B6008D; Wed,  9 Aug 2023 15:43:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIALPY02QC/2WMyw6CMBQFf4XctTV9AC2u/A/jgpZbaCKUtNpoC
- P9uYaPG5ZycmQUiBocRTsUCAZOLzk8ZxKEAM7RTj8R1mYFTLqiikrTBDOQxEoGWlyUTJZcI+T0
- HtO65ly7XzIOLdx9eezixbf1vJEYYUXWntdVVI2lz7r3vb3g0foQtkvi3qD4iz2JlNcoaW6sq8 SOu6/oGENOyE9gAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691605177; l=2213;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=23IC5Bw+8KkKs09S0EaJWss3x1p4d4hD+7BkZ/ap4cg=; b=gfF6LynUr5OZNkVjBs6fVzSf9HY8BE2EsZGdMISI5wxTkkPFSBAPa8s8UwSGy9Awn7YZsIbB+
- XjEWts8XjrNAywzyWQ+e03kVuL94vwtZkqCoKKelbu2jA/dn9CwrB1e
-X-Mailer: b4 0.12.3
-Message-ID: <20230809-arch-um-v3-1-f63e1122d77e@google.com>
-Subject: [PATCH v3] um: refactor deprecated strncpy to memcpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     linux-hardening@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+Message-Id: <b0871ecb-a26b-4223-a4f5-28e1c8d468e4@app.fastmail.com>
+In-Reply-To: <202308031551.034F346@keescook>
+References: <20210726141141.2839385-1-arnd@kernel.org>
+ <20210726141141.2839385-5-arnd@kernel.org> <202308031551.034F346@keescook>
+Date:   Wed, 09 Aug 2023 21:42:43 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Kees Cook" <keescook@chromium.org>,
+        "Arnd Bergmann" <arnd@kernel.org>,
+        "Lecopzer Chen" <lecopzer.chen@mediatek.com>
+Cc:     "Russell King" <linux@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux-Arch <linux-arch@vger.kernel.org>, linux-mm@kvack.org,
+        "Alexander Viro" <viro@zeniv.linux.org.uk>,
+        "Linus Walleij" <linus.walleij@linaro.org>, yj.chiang@mediatek.com,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v5 04/10] ARM: syscall: always store thread_info->abi_syscall
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use `memcpy` since `console_buf` is not expected to be NUL-terminated
-and it more accurately describes what is happening with the buffers
-`console_buf` and `string` as per Kees' analysis [1].
+On Fri, Aug 4, 2023, at 01:17, Kees Cook wrote:
+> On Mon, Jul 26, 2021 at 04:11:35PM +0200, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>> 
+>> The system call number is used in a a couple of places, in particular
+>> ptrace, seccomp and /proc/<pid>/syscall.
+>
+> *thread necromancy*
+>
+> Hi!
+>
+> So, it seems like the seccomp selftests broke in a few places due to
+> this change (back in v5.15). I really thought kernelci.org was running
+> the seccomp tests, but it seems like the coverage is spotty.
+>
+> Specifically, the syscall_restart selftest fails, as well as syscall_errno
+> and syscall_faked (both via seccomp and PTRACE), starting with this patch.
 
-Also mark char buffer as `__nonstring` as per Kees' suggestion [2].
+Thanks for tracking this down!
 
-This change now makes it more clear what this code does and that
-`console_buf` is not expected to be NUL-terminated.
+>> The last one apparently never worked reliably on ARM for tasks that are
+>> not currently getting traced.
+>> 
+>> Storing the syscall number in the normal entry path makes it work,
+>> as well as allowing us to see if the current system call is for OABI
+>> compat mode, which is the next thing I want to hook into.
+>> 
+>> Since the thread_info->syscall field is not just the number any more, it
+>> is now renamed to abi_syscall. In kernels that enable both OABI and EABI,
+>> the upper bits of this field encode 0x900000 (__NR_OABI_SYSCALL_BASE)
+>> for OABI tasks, while normal EABI tasks do not set the upper bits. This
+>> makes it possible to implement the in_oabi_syscall() helper later.
+>> 
+>> All other users of thread_info->syscall go through the syscall_get_nr()
+>> helper, which in turn filters out the ABI bits.
+>
+> While I've reproducing the bisect done by mediatek, I'm still poking
+> around in here to figure out what's gone wrong. There was a recent patch
+> to fix this, but it looks like it's not complete:
+> https://lore.kernel.org/all/20230724121655.7894-1-lecopzer.chen@mediatek.com/
+>
+> With the above applied, syscall_errno and syscall_faked start working
+> again, but not the syscall_restart test.
 
-Link: https://lore.kernel.org/all/202308081708.D5ADC80F@keescook/ [1]
-Link: https://github.com/KSPP/linux/issues/90 [2]
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings
-Cc: linux-hardening@vger.kernel.org
-Suggested-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Changes in v3:
-- Swap `strtomem` to `memcpy` (thanks Kees)
-- Link to v2: https://lore.kernel.org/r/20230808-arch-um-v2-1-5fbe76eaf853@google.com
+Right, I also see you addressed this better in your follow-up patch,
+I'll comment there.
 
-Changes in v2:
-- Keep usage of ARRAY_SIZE (thanks Bill)
-- Remove unnecessary import (thanks Kees and Bill)
-- Link to v1: https://lore.kernel.org/r/20230807-arch-um-v1-1-86dbbfb59709@google.com
----
-Notes:
-I only build tested this patch.
----
- arch/um/drivers/mconsole_kern.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>> Note that the ABI information is lost with PTRACE_SET_SYSCALL, so one
+>> cannot set the internal number to a particular version, but this was
+>> already the case. We could change it to let gdb encode the ABI type along
+>> with the syscall in a CONFIG_OABI_COMPAT-enabled kernel, but that itself
+>> would be a (backwards-compatible) ABI change, so I don't do it here.
+>> 
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Another issue of note, which may just be "by design" for arm32, is that
+> an invalid syscall (or, at least, a negative syscall) results in SIGILL,
+> rather than a errno=ENOSYS failure. This seems to have been true at least
+> as far back as v5.8 (where this was cleaned up for at least arm64 and
+> s390). There was a seccomp test added for it in v5.9, but it has been
+> failing for arm32 since then. :(
+>
+> I mention this because the behavior of the syscall_restart test looks
+> like an invalid syscall: on restart a SIGILL is caught instead of the
+> syscall correctly continuing.
 
-diff --git a/arch/um/drivers/mconsole_kern.c b/arch/um/drivers/mconsole_kern.c
-index 5026e7b9adfe..ff4bda95b9c7 100644
---- a/arch/um/drivers/mconsole_kern.c
-+++ b/arch/um/drivers/mconsole_kern.c
-@@ -554,7 +554,7 @@ struct mconsole_output {
- 
- static DEFINE_SPINLOCK(client_lock);
- static LIST_HEAD(clients);
--static char console_buf[MCONSOLE_MAX_DATA];
-+static char console_buf[MCONSOLE_MAX_DATA] __nonstring;
- 
- static void console_write(struct console *console, const char *string,
- 			  unsigned int len)
-@@ -567,7 +567,7 @@ static void console_write(struct console *console, const char *string,
- 
- 	while (len > 0) {
- 		n = min((size_t) len, ARRAY_SIZE(console_buf));
--		strncpy(console_buf, string, n);
-+		memcpy(console_buf, string, n);
- 		string += n;
- 		len -= n;
- 
 
----
-base-commit: c1a515d3c0270628df8ae5f5118ba859b85464a2
-change-id: 20230807-arch-um-3ef24413427e
+The odd arm behavior came up on IRC recently, and I saw that this
+was what arm has always done, but I could not figure out why this
+is done. I tried to see where s390 and arm64 changed the behavior
+but can't find it. Do you have the commit IDs?
 
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+      Arnd
