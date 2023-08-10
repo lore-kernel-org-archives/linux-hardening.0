@@ -2,123 +2,143 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DDBC04E69
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 19:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEA1C001B0
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 19:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234239AbjHJTy0 (ORCPT
+        id S233030AbjHJT6I (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 15:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57332 "EHLO
+        Thu, 10 Aug 2023 15:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234181AbjHJTy0 (ORCPT
+        with ESMTP id S232383AbjHJT6I (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 15:54:26 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37ED2722
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:54:25 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-5650ec45a7cso880789a12.3
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:54:25 -0700 (PDT)
+        Thu, 10 Aug 2023 15:58:08 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF29CE7F
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:58:07 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1bba48b0bd2so9943255ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:58:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691697265; x=1692302065;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2AzFyigJ847Mx7E2oFBB8SMRyOnv8+4md/Rgc3rIkTY=;
-        b=EhymeSt9AwGdnLF38z1BWoMcYtzxxbOkqvwmhWp/GRcUvwylg9CoK26H1e3AGke8+B
-         RPety8gwpWVVuXWVCYQ3s1K3sd50189fikQk3mSOocuvNuuiO5MVVxnZBq2+8Iy3GSEr
-         GVH5i8CrUQaibx4+voYbDmJYrn6UTF1rIVDow=
+        d=chromium.org; s=google; t=1691697487; x=1692302287;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GrzpUIYsNReqF6Vjt7YeuyI+AzdvZwRKw+lBcbw3/VE=;
+        b=AIGXxuzPsRszEV5Gyhfusxvte6pg5BONip5dTyc5hhzjXpSNO57GWCQT96ebiABjYS
+         8/90fFkIVa2FauB47bAOXuu10ZTR9hxBnVQranwCf2+5kEWBpjY2oSyb6xRiXaeGQZ18
+         GgxdUjnPTWhQzCQjPexgwl6fmEz94SHJUcsVs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691697265; x=1692302065;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2AzFyigJ847Mx7E2oFBB8SMRyOnv8+4md/Rgc3rIkTY=;
-        b=aQD7Vex2d/e5y3gYtj+XfyWut3Pl0wFKw32t6VkNre7o7+EULxKSPVEG7OQV2TJ4xv
-         18zaLhGLehJbrrUGkKP6h2uuqnEfWTfuLFyNqbU9H2+F80G4AUtWg2Logqrd/dE0HE86
-         VeCvIM1JpRdsHeWSHiY61q+Btuv2pq/m6Np66AYICEavnc64G3Gz6Lwh2juRVFLKKrPM
-         KN9ue5hSwY++pm+4E2pwd8izHLc74g/3TKYMJoEJ6NHcOaqigh0jBzhWxMI/Egy6MjXt
-         +5ZtScg/mNr5IbegVj9icKFAC6jdDodhAyPp2y7TjSaM4/3+6VO05VjqZl74BsKV+sq9
-         C8ow==
-X-Gm-Message-State: AOJu0YzMmny2Ep6ReA30JrGSYal97OEENPdGE3QKdYXAQYu6G/DGLZAX
-        fj3nwE7Lt8vIpOPM/MAuIwp/OA==
-X-Google-Smtp-Source: AGHT+IHf7dBPbEfSl1xqIGQRGLihbjGL2keEOoa4x4FFnpIIuQxIh6x560I9zGOiV02ODZa7GkaZmQ==
-X-Received: by 2002:a05:6a20:4424:b0:140:54ab:7f43 with SMTP id ce36-20020a056a20442400b0014054ab7f43mr4680369pzb.52.1691697265119;
-        Thu, 10 Aug 2023 12:54:25 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691697487; x=1692302287;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GrzpUIYsNReqF6Vjt7YeuyI+AzdvZwRKw+lBcbw3/VE=;
+        b=cP0ES7h/IZUgabgGXm3dmXFa8UUVZu3lNsGUSYqdc4IjgleSxVaIkA2DBF0rGFg0dN
+         83NjH52JqgL5njv1687DeFY1BN5d8aHAaG/JJz1C2u5LCM0/caViJfHtkeJ1NQhhZk9s
+         pAv70mkdmEI3FqF+41ySY/Xg30hZ0fF0VKQcXofQ8BTVOEZhK65LLn+8btKyUtaXVnm6
+         rouqySDmnDkuKd7pIDwh64wJTFcTFUE/7edE6l4PzSTvTIeg5bIvTJrv2N1ZGVOLPAmJ
+         JWeX2iMaeSpiCEWHUiw35xSm9qH543jSNF9NdcF8V6mPF7uLrpVZIKykUw+moKyUU7PI
+         8dgQ==
+X-Gm-Message-State: AOJu0Yz2kbk7OHt5GYWitHwj31MT2fM4CK8LhN6VvDGogrdnKcfLs476
+        R7BIlJw3RFTNZ4Us15PjyGyVwQ==
+X-Google-Smtp-Source: AGHT+IFrQQ+KCWzwjasCjLqDeaFB7YOqF1dDdtbZZXKcKKDFCgxX4Wc6XAZFk5pk13f92S/nfnkDvQ==
+X-Received: by 2002:a17:903:247:b0:1bb:b86e:8d60 with SMTP id j7-20020a170903024700b001bbb86e8d60mr4103679plh.46.1691697487304;
+        Thu, 10 Aug 2023 12:58:07 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u9-20020a62ed09000000b00668652b020bsm1890241pfh.105.2023.08.10.12.54.22
+        by smtp.gmail.com with ESMTPSA id h5-20020a170902f54500b001a1b66af22fsm2166866plf.62.2023.08.10.12.58.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 12:54:22 -0700 (PDT)
+        Thu, 10 Aug 2023 12:58:06 -0700 (PDT)
+Date:   Thu, 10 Aug 2023 12:58:06 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@kernel.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH v2 1/2] ARM: ptrace: Restore syscall restart tracing
-Date:   Thu, 10 Aug 2023 12:54:18 -0700
-Message-Id: <20230810195422.2304827-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230810195141.never.338-kees@kernel.org>
-References: <20230810195141.never.338-kees@kernel.org>
+Subject: Re: [PATCH] arm64/sysreg: refactor deprecated strncpy
+Message-ID: <202308101257.47E6ACBD5@keescook>
+References: <20230810-strncpy-arch-arm64-v1-1-f67f3685cd64@google.com>
+ <202308101155.81497C5B@keescook>
+ <CAFhGd8rfKLY5KujEdvSnqv2MZFhTbEBo_bi7xVacY1pcBC1jRg@mail.gmail.com>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1376; i=keescook@chromium.org;
- h=from:subject; bh=PM9VbACsiruUm736SKU4lZ4ZDYtSsZTBmd3nctTMIWk=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk1UBrSDo2U2GotGsBMY+sQ1nnEqac9N2ubUHNK
- geMLpezF8yJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZNVAawAKCRCJcvTf3G3A
- JgEwD/4/PU3jZw0GGsDb1rhpeL2CWa374R86q0eGZC9bP7yNGHj2MZNotCIzG1ln7HnfvVYFEqj
- ImnJ1VEoF2kur2GameknXgNcAnswvPigS2VhmBQwdreCXLTctILVJ6xaNWv9zI7s/o8S2qRk3jx
- tLChRFwN5bYukIbOiCVJi0/ZlsEbrkv9KJ28UEoH+l52omPYycquPtuUAyyXjd/xqDSxNe8GHTg
- QPQTl40snYaEBVFrg4IYKAEqDn3MrTuaQh30+kT0is+AlcENKEFbC83w8dijgS+NDGYtqPW1Pum
- 9wi3XC+PwGwDRMC2GBeIx/DMCWEE70iElmjUXaljFYAS2/Qn59GFtgeFca3bYN5R9VPBhI1UrBv
- /guxuT6h9WK0dK80nUqcPeAJyfQt9pOUleFh3lRAEYjCPJF3/eM0JRLofpZ/eJrvoqypt5ON8Vp
- 90Qs6Yt1qvpF1b1kQqdrGNrG6NR1t1KmrcvoK/FvdJiLQh1uQ/P0sCJsv0sU8HL0XA3/KSORI7L
- vwl03qLaPkhHsbWxFWQKV+VGlVfniPDjLaDUiFEMiAkAXx3mla223m6DGkZex8RIy7IzHKQiLZ2
- 6kZsj36XGm95XXJXq84VUgZfPu0oxDYeq5c+v0dlZgj2Vz4UqwZB9lEef1mWbHm8S64fjs1a/g4 2hN+/trZF0WnbKA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFhGd8rfKLY5KujEdvSnqv2MZFhTbEBo_bi7xVacY1pcBC1jRg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Since commit 4e57a4ddf6b0 ("ARM: 9107/1: syscall: always store
-thread_info->abi_syscall"), the seccomp selftests "syscall_restart" has
-been broken. This was caused by the restart syscall not being stored to
-"abi_syscall" during restart setup before branching to the "local_restart"
-label. Tracers would see the wrong syscall, and scno would get overwritten
-while returning from the TIF_WORK path. Add the missing store.
+On Thu, Aug 10, 2023 at 12:25:37PM -0700, Justin Stitt wrote:
+> On Thu, Aug 10, 2023 at 12:00 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Thu, Aug 10, 2023 at 06:39:03PM +0000, Justin Stitt wrote:
+> > > `strncpy` is deprecated for use on NUL-terminated destination strings
+> > > [1]. Which seems to be the case here due to the forceful setting of `buf`'s
+> > > tail to 0.
+> >
+> > Another note to include in these evaluations would be "does the
+> > destination expect to be %NUL padded?". Here, it looks like no, as all
+> > the routines "buf" is passed to expect a regular C string (padding
+> > doesn't matter).
+> >
+> > >
+> > > A suitable replacement is `strscpy` [2] due to the fact that it
+> > > guarantees NUL-termination on its destination buffer argument which is
+> > > _not_ the case for `strncpy`!
+> > >
+> > > In this case, there is some behavior being used in conjunction with
+> > > `strncpy` that `strscpy` already implements. This means we can drop some
+> > > of the extra stuff like `... -1` and `buf[len] = 0`
+> > >
+> > > This should have no functional change and yet uses a more robust and
+> > > less ambiguous interface whilst reducing code complexity.
+> > >
+> > > Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+> > > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+> > > Link: https://github.com/KSPP/linux/issues/90
+> > > Cc: linux-hardening@vger.kernel.org
+> > >
+> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > > ---
+> > > For reference, see a part of `strscpy`'s implementation here:
+> > >
+> > > |     /* Hit buffer length without finding a NUL; force NUL-termination. */
+> > > |     if (res)
+> > > |             dest[res-1] = '\0';
+> > >
+> > > Note: compile tested
+> > > ---
+> > >  arch/arm64/kernel/idreg-override.c | 5 ++---
+> > >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/kernel/idreg-override.c b/arch/arm64/kernel/idreg-override.c
+> > > index 2fe2491b692c..482dc5c71e90 100644
+> > > --- a/arch/arm64/kernel/idreg-override.c
+> > > +++ b/arch/arm64/kernel/idreg-override.c
+> > > @@ -262,9 +262,8 @@ static __init void __parse_cmdline(const char *cmdline, bool parse_aliases)
+> > >               if (!len)
+> > >                       return;
+> > >
+> > > -             len = min(len, ARRAY_SIZE(buf) - 1);
+> > > -             strncpy(buf, cmdline, len);
+> > > -             buf[len] = 0;
+> > > +             len = min(len, ARRAY_SIZE(buf));
+> > > +             strscpy(buf, cmdline, len);
+> >
+> > This, however, isn't correct: "cmdline" will be incremented by "leN"
+> > later, and we want a count of the characters copied into "buf", even if
+> > they're truncated. I think this should be:
+> >
+> >                 strscpy(buf, cmdline, ARRAY_SIZE(buf));
+> >                 len = strlen(buf);
+> >
+> Thoughts on using the return value from `strscpy` here?
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Arnd Bergmann <arnd@kernel.org>
-Cc: Lecopzer Chen <lecopzer.chen@mediatek.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Fixes: 4e57a4ddf6b0 ("ARM: 9107/1: syscall: always store thread_info->abi_syscall")
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/arm/kernel/entry-common.S | 1 +
- 1 file changed, 1 insertion(+)
+This code seems to silently accept truncation, so -E2BIG will cause a
+problem if it only looks at the return value.
 
-diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-index bcc4c9ec3aa4..5c31e9de7a60 100644
---- a/arch/arm/kernel/entry-common.S
-+++ b/arch/arm/kernel/entry-common.S
-@@ -90,6 +90,7 @@ slow_work_pending:
- 	cmp	r0, #0
- 	beq	no_work_pending
- 	movlt	scno, #(__NR_restart_syscall - __NR_SYSCALL_BASE)
-+	str	scno, [tsk, #TI_ABI_SYSCALL]	@ make sure tracers see update
- 	ldmia	sp, {r0 - r6}			@ have to reload r0 - r6
- 	b	local_restart			@ ... and off we go
- ENDPROC(ret_fast_syscall)
+-Kees
+
 -- 
-2.34.1
-
+Kees Cook
