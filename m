@@ -2,158 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC35C001DE
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 19:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD83C41513
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 19:54:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234126AbjHJTcH (ORCPT
+        id S233665AbjHJTyZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 15:32:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33080 "EHLO
+        Thu, 10 Aug 2023 15:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236654AbjHJTcG (ORCPT
+        with ESMTP id S232212AbjHJTyY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 15:32:06 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1121A2717
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:32:06 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1bc3bec2c95so17216205ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:32:06 -0700 (PDT)
+        Thu, 10 Aug 2023 15:54:24 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DB12723
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:54:24 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1bc6535027aso11459915ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:54:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691695925; x=1692300725;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n5BUcp4rF73339tUbdxChTzYXicpDGHwoyiHDjbgdIQ=;
-        b=MUhRj4IulKry/rRZHaY3UgOWWMElBQrZl4hueG5jLdyTT2NIolBHKKjvU4Y0TzRsrV
-         +wxsVbj+iSIqkXPRzCoYDK57C46cw7kTcbKwyUpB76DazMVmyYYiSy6GhVq+Dhfl6HN/
-         vUgOY4RX1nzfdz3uoA+58xgi8C9eqv2Wdwhi8=
+        d=chromium.org; s=google; t=1691697264; x=1692302064;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+KSmMqqtvDIiHz4Ho0lGfwn8AtEPGP14LPDghXjLYrI=;
+        b=nrXbwl42fHl/TmgPZPbp4NYdzZS26suBRDTcs7Wk4VaUdbnJFtqlYuY2kVpZaOc7eE
+         ZlYyHSoOEqPr8lDHmmJ2KCFnyPADLw+V4jlJXFebMimObgbYQvVI4AV6ufI6GOAMe0O3
+         /cc+CErvpTqxvL+kqT8XL2a6TPPC7RrAj+ppE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691695925; x=1692300725;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n5BUcp4rF73339tUbdxChTzYXicpDGHwoyiHDjbgdIQ=;
-        b=bJn/wZns/cVsc3wrGx1VqxAdOnrdo84USACUqqSBKccnqf0u9tE6earhwEjqQ8b4oj
-         Pth1GoXBgYRSDmrPPtqU9iVkgLjsOs3qQ/XIolJiL41t6Nn4SjbHilgyCvysMyqLtB67
-         oYsl538dnVLv8HX/tIRng6hLnak9/qpVR91BO1xZRk0m2Kiiyn+kBNXWeLmq7rnRHZhn
-         BLxDUBVXybV3dQBmTNP2AU1hmvwG51In2DFCh25bphvYgXkWNqN6HweVrLzOkrXEKWlN
-         9lgqq2kfc0sBKcK+ovzTF3llEG/aAbT3NwouEFu5SFLzDLaOD1EplqnqxduWCJuZ0QKn
-         GRoQ==
-X-Gm-Message-State: AOJu0Yzd8r0cC1k2PBLuFTEHs3Efb6n4yvPgOzZ/4EeP9ylTXEBw1ldH
-        1cIUSPeQkHRE4E50PfGwGYbgcA==
-X-Google-Smtp-Source: AGHT+IEOUo5qUDRJcUued1hIUrxl+tnnYRC3515yaFsDbHi7mTOPBSy4Sn1t0M7Wa4EdXVSzgg3wqg==
-X-Received: by 2002:a05:6a20:431b:b0:13a:dd47:c31a with SMTP id h27-20020a056a20431b00b0013add47c31amr3971923pzk.20.1691695925514;
-        Thu, 10 Aug 2023 12:32:05 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691697264; x=1692302064;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+KSmMqqtvDIiHz4Ho0lGfwn8AtEPGP14LPDghXjLYrI=;
+        b=eoHFceuBd2b41G0AePTRPOVu9tmd+8ILJyudlYIczO7nA5GhYtqJv/pL5Zmwph7z0I
+         Izzez9BsnNk+4qjbcLEGgV9b21ErANLx89KYxU8bm9GKj4wsopPJYT+vrwcuNxM/7Nyp
+         kohep4z8cQG1qOpkb3IRcgtwqSa587YgeLvojPpCRWiApgg8NS8A3hEGmlnYilfw5WVu
+         t4J6wjRDynwvz0YyCqs6K8VemJTV6rWUoB+pPmuEtqfQL7fyJk3JWoOjpVIciVw9c30G
+         jjRxLmRPwPo7nLSLsvALevB32JCCs5H7GrmQl7jnZey0SfDu2Mm2zywx2IgXe6LEXruR
+         mxmA==
+X-Gm-Message-State: AOJu0Yzg7T189dLZSJZDzfCp+XPnI9KWFdQW3MEQj3SuKcoezbhFS37i
+        b34sbSCrhUOttfW+MMqthbMPCA==
+X-Google-Smtp-Source: AGHT+IHw2G+HNk0pb7rzPTFmiR+l4BrfXX5lv/VPOP/htPgz5DnJIC6tehMM+4QHARhcvvVVGb92Rg==
+X-Received: by 2002:a17:903:22d1:b0:1b5:219a:cbbd with SMTP id y17-20020a17090322d100b001b5219acbbdmr4340562plg.3.1691697263898;
+        Thu, 10 Aug 2023 12:54:23 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k17-20020a637b51000000b005639da5a8e2sm1896326pgn.2.2023.08.10.12.32.04
+        by smtp.gmail.com with ESMTPSA id o4-20020a170902d4c400b001bbf7fd354csm2158636plg.213.2023.08.10.12.54.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 12:32:04 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 12:32:04 -0700
+        Thu, 10 Aug 2023 12:54:22 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
+To:     Russell King <linux@armlinux.org.uk>
+Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@kernel.org>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
         Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ARM: ptrace: Restore syscall skipping and restart while
- tracing
-Message-ID: <202308101209.45CF7C6F80@keescook>
-References: <20230804071045.never.134-kees@kernel.org>
- <f34c11eb-89b5-48a5-bd24-c215083575a5@app.fastmail.com>
+        Wolfram Sang <wsa@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: [PATCH v2 0/2] ARM: ptrace: Restore syscall skipping and restart while tracing
+Date:   Thu, 10 Aug 2023 12:54:17 -0700
+Message-Id: <20230810195141.never.338-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f34c11eb-89b5-48a5-bd24-c215083575a5@app.fastmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=696; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=LCtgD+PkZR6hbDOPphiW7QCeCuo059Geg0rwEi/JXFY=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk1UBqGYdSbOqXERSHJr0Lg4TG85J053QilT3rx
+ 86gcS3SVtWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZNVAagAKCRCJcvTf3G3A
+ JiYID/4/t1FvGqMPIZTEFTDWaziXdqRsIgasib2VD3Jxm2l2wQZbrf4v5wkXyRD3N8pNt8bKWsP
+ hgXBdnAmaw0wVgFVOd4ndKxz3mPyf4uRjrGZ+ROt4tk8jcuIesbqpiZG6hmphvaj6k+afiwDz4+
+ rZsNZ4CSy01PD3/4xtg9DD3kQAMqcxL5DiOsysyu3r84yV2WDA9szFriGj1QZf136ah7QF3Aupm
+ AldTkpzllWT2PV43vXW41N+rSQOKTApFMu3Zqx2yKXBy5uN9Oyo77xCXZgsyJ86SYRQvC7A1jCr
+ eHc0NcFnR5cC2X5kexSm945JtTHCzDClECCewMFNJPnDr8jesTNw06UJEi+SM/xthFEeH7mcdhP
+ KgVz28hRWjzk4vMgN2xcXBNae5I6RvEsPPd8RRFRib1H8QZzinYH24fnxgraz9R7E3d+ZaWWR8x
+ nw1NCGg5UNWwTqfGmdoSl5KzS+WSnZAR/QM3TLGs5SdMfjgPsWAyZgCao60+nPHeiDmIsuB08uJ
+ Wfp+BavPWbToB/UEl0uj61Pj/O349RScCZwUxwXdTXJzpFBKNG6uD0njcUxBk6vq1rbOxNPVlw0
+ AXI1XTCDPJeyHMPgkipEVbyifWObQs6PoN1WsJA8zHa5BjgQlRGW6WZ6FlHuo84LJVxUKqgOzcr
+ U11nDG3L XieHU1w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 09, 2023 at 09:47:24PM +0200, Arnd Bergmann wrote:
-> On Fri, Aug 4, 2023, at 09:10, Kees Cook wrote:
-> > Since commit 4e57a4ddf6b0 ("ARM: 9107/1: syscall: always store
-> > thread_info->abi_syscall"), the seccomp selftests "syscall_errno",
-> > "syscall_faked", and "syscall_restart" have been broken. This was
-> > related to two issues:
-> 
-> While it looks like my patch introduced both problems, it might
-> be better to split your fix into two bits.
+Hi,
 
-Okay, sounds good.
+Fix tracing on arm since commit 4e57a4ddf6b0 ("ARM: 9107/1: syscall:
+always store thread_info->abi_syscall"). This was seen with the broken
+seccomp tests "syscall_errno", "syscall_faked", and "syscall_restart".
 
-> > - seccomp and PTRACE depend on using the special value of "-1" for
-> >   skipping syscalls. This value wasn't working because it was getting
-> >   masked by __NR_SYSCALL_MASK in both PTRACE_SET_SYSCALL and
-> >   get_syscall_nr().
-> 
-> > Explicitly test for -1 in PTRACE_SET_SYSCALL and get_syscall_nr(),
-> > leaving it exposed when present, allowing tracers to skip syscalls
-> > again.
-> 
-> This part looks good to me, at least it seems to be one of multiple
-> ways of doing this, depending on how we want to encode the
-> syscall skipping in the variable.
-> 
-> > - the syscall entry label "local_restart" is used for resuming syscalls
-> >   interrupted by signals, but the updated syscall number (in scno) was
-> >   not being stored in current_thread_info()->abi_syscall, causing traced
-> >   syscall restarting to fail.
-> >
-> > Move the AEABI-only assignment of current_thread_info()->abi_syscall
-> > after the "local_restart" label to allow tracers to survive syscall
-> > restarting.
-> 
-> I'm not following exactly what you are doing here yet, but I suspect
-> this part is wrong:
-> 
-> > diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
-> > index bcc4c9ec3aa4..08bd624e4c6f 100644
-> > --- a/arch/arm/kernel/entry-common.S
-> > +++ b/arch/arm/kernel/entry-common.S
-> > @@ -246,8 +246,6 @@ ENTRY(vector_swi)
-> >  	bic	scno, scno, #0xff000000		@ mask off SWI op-code
-> >  	str	scno, [tsk, #TI_ABI_SYSCALL]
-> >  	eor	scno, scno, #__NR_SYSCALL_BASE	@ check OS number
-> > -#else
-> > -	str	scno, [tsk, #TI_ABI_SYSCALL]
-> >  #endif
-> >  	/*
-> >  	 * Reload the registers that may have been corrupted on entry to
-> > @@ -256,6 +254,9 @@ ENTRY(vector_swi)
-> >   TRACE(	ldmia	sp, {r0 - r3}		)
-> > 
-> >  local_restart:
-> > +#if defined(CONFIG_AEABI) && !defined(CONFIG_OABI_COMPAT)
-> > +	str	scno, [tsk, #TI_ABI_SYSCALL]	@ store scno for syscall restart
-> > +#endif
-> >  	ldr	r10, [tsk, #TI_FLAGS]		@ check for syscall tracing
-> >  	stmdb	sp!, {r4, r5}			@ push fifth and sixth args
-> > 
-> 
-> If the local_restart code has to store the syscall number
-> for an EABI-only kernel, wouldn't it have to also do this
-> for a kernel with OABI-only or OABI_COMPAT support?
+Thanks!
 
-This is the part I wasn't sure about. Initially I was thinking it didn't
-matter because it's only a problem for a seccomp tracer, but I realize
-it might be exposed to a PTRACE tracer too. I was only able to test with
-EABI since seccomp is disabled for OABI_COMPAT.
+-Kees
 
-Anyway, syscall restart is done this way:
+v2:
+- split fixes
+- move scno store into the actual restart path
+v1: https://lore.kernel.org/lkml/20230804071045.never.134-kees@kernel.org
 
-        movlt   scno, #(__NR_restart_syscall - __NR_SYSCALL_BASE)
+Kees Cook (2):
+  ARM: ptrace: Restore syscall restart tracing
+  ARM: ptrace: Restore syscall skipping for tracers
 
-Can a EABI call restart an OABI syscall? I think so?
-
-So maybe we just need to add:
-
-	str     scno, [tsk, #TI_ABI_SYSCALL]    @ store scno for syscall restart
-
-after that instead of moving it like I did originally?
-
-Let me test that...
+ arch/arm/include/asm/syscall.h | 3 +++
+ arch/arm/kernel/entry-common.S | 1 +
+ arch/arm/kernel/ptrace.c       | 5 +++--
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
 -- 
-Kees Cook
+2.34.1
+
