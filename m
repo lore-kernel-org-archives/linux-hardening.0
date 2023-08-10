@@ -2,49 +2,50 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD83C41513
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 19:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2B9C001E0
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 19:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233665AbjHJTyZ (ORCPT
+        id S233590AbjHJTyZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Thu, 10 Aug 2023 15:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57304 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232212AbjHJTyY (ORCPT
+        with ESMTP id S229629AbjHJTyY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Thu, 10 Aug 2023 15:54:24 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DB12723
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 115C72720
         for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:54:24 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1bc6535027aso11459915ad.2
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bbf0f36ce4so10096195ad.0
         for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:54:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691697264; x=1692302064;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+KSmMqqtvDIiHz4Ho0lGfwn8AtEPGP14LPDghXjLYrI=;
-        b=nrXbwl42fHl/TmgPZPbp4NYdzZS26suBRDTcs7Wk4VaUdbnJFtqlYuY2kVpZaOc7eE
-         ZlYyHSoOEqPr8lDHmmJ2KCFnyPADLw+V4jlJXFebMimObgbYQvVI4AV6ufI6GOAMe0O3
-         /cc+CErvpTqxvL+kqT8XL2a6TPPC7RrAj+ppE=
+        d=chromium.org; s=google; t=1691697263; x=1692302063;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=48XwJVsA5wyW9PXqV/vWWiEsWR0pxxYch//gaCXqyTg=;
+        b=B600p5GdQ+dGJFK2CjlcbIfGxqznnTlkVKhTWG0lPs+GsB/Knzz/xcKEKi8/odxuZ0
+         Z1s80apT3MGBisC29BUKnZrCbQFOxaC5trZf0RmpRDr1Ggq004KPCg/JZYmPL7AAth0Y
+         L+NYoOHQ9W99krwLn2fkTiCj8SYvT6Q+YfJrg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691697264; x=1692302064;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+KSmMqqtvDIiHz4Ho0lGfwn8AtEPGP14LPDghXjLYrI=;
-        b=eoHFceuBd2b41G0AePTRPOVu9tmd+8ILJyudlYIczO7nA5GhYtqJv/pL5Zmwph7z0I
-         Izzez9BsnNk+4qjbcLEGgV9b21ErANLx89KYxU8bm9GKj4wsopPJYT+vrwcuNxM/7Nyp
-         kohep4z8cQG1qOpkb3IRcgtwqSa587YgeLvojPpCRWiApgg8NS8A3hEGmlnYilfw5WVu
-         t4J6wjRDynwvz0YyCqs6K8VemJTV6rWUoB+pPmuEtqfQL7fyJk3JWoOjpVIciVw9c30G
-         jjRxLmRPwPo7nLSLsvALevB32JCCs5H7GrmQl7jnZey0SfDu2Mm2zywx2IgXe6LEXruR
-         mxmA==
-X-Gm-Message-State: AOJu0Yzg7T189dLZSJZDzfCp+XPnI9KWFdQW3MEQj3SuKcoezbhFS37i
-        b34sbSCrhUOttfW+MMqthbMPCA==
-X-Google-Smtp-Source: AGHT+IHw2G+HNk0pb7rzPTFmiR+l4BrfXX5lv/VPOP/htPgz5DnJIC6tehMM+4QHARhcvvVVGb92Rg==
-X-Received: by 2002:a17:903:22d1:b0:1b5:219a:cbbd with SMTP id y17-20020a17090322d100b001b5219acbbdmr4340562plg.3.1691697263898;
+        d=1e100.net; s=20221208; t=1691697263; x=1692302063;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=48XwJVsA5wyW9PXqV/vWWiEsWR0pxxYch//gaCXqyTg=;
+        b=WXvv4gPjn7MGb11ltYcp7HEjHRAK7uURphPSa/wwYjBq3S+3FIVG+ToOJHsRlJ7Jno
+         x+PhmMFXyY7Qssx8FYsuRMjxNI1F3CiRu51ji+6i+Rj3pzKcJIhQqSON6Az334NYtXnW
+         GQv5Qc3ljkc3y92bNLLfrSHeqTr+76KqsuQ2e43PkiuXRxaoyTQsqgExy0WCLv0jBsRm
+         Ai7AztJh/70jfBR9TFHxVxeRaJkcBbS8YpOgB/LlY1kX73clPwIBxIsObYPYSsnwJ4/K
+         qcDA7EhsR1YQak+abV8MuCzKdg6Mam+0Exez9VrjrBhTsA9oas7nBTOYpmgLctO2BWrn
+         byDQ==
+X-Gm-Message-State: AOJu0Yw4kGfcECLXwoCeVfjA+0yLw6hJjzc/Zy00cVrMlYsUTbLGsObC
+        2GNGBYxQ+3I/y3JkSTZG97XSnQ==
+X-Google-Smtp-Source: AGHT+IE12uIfTTq88knRn0gncFdLQlCuaARRsIkO0Tck6br3otfYQy5pMeQhjo47X03xSvYmLAj4xQ==
+X-Received: by 2002:a17:902:c106:b0:1bc:4f04:1803 with SMTP id 6-20020a170902c10600b001bc4f041803mr2898883pli.29.1691697263554;
         Thu, 10 Aug 2023 12:54:23 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id o4-20020a170902d4c400b001bbf7fd354csm2158636plg.213.2023.08.10.12.54.22
+        by smtp.gmail.com with ESMTPSA id m7-20020a170902768700b001b9be79729csm2161055pll.165.2023.08.10.12.54.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 10 Aug 2023 12:54:22 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -52,6 +53,7 @@ To:     Russell King <linux@armlinux.org.uk>
 Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@kernel.org>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
         Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org,
         Matthias Brugger <matthias.bgg@gmail.com>,
         AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>,
@@ -59,57 +61,87 @@ Cc:     Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@kernel.org>,
         Wolfram Sang <wsa@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Dan Williams <dan.j.williams@intel.com>,
         "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
-Subject: [PATCH v2 0/2] ARM: ptrace: Restore syscall skipping and restart while tracing
-Date:   Thu, 10 Aug 2023 12:54:17 -0700
-Message-Id: <20230810195141.never.338-kees@kernel.org>
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH v2 2/2] ARM: ptrace: Restore syscall skipping for tracers
+Date:   Thu, 10 Aug 2023 12:54:19 -0700
+Message-Id: <20230810195422.2304827-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230810195141.never.338-kees@kernel.org>
+References: <20230810195141.never.338-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=696; i=keescook@chromium.org;
- h=from:subject:message-id; bh=LCtgD+PkZR6hbDOPphiW7QCeCuo059Geg0rwEi/JXFY=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk1UBqGYdSbOqXERSHJr0Lg4TG85J053QilT3rx
- 86gcS3SVtWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZNVAagAKCRCJcvTf3G3A
- JiYID/4/t1FvGqMPIZTEFTDWaziXdqRsIgasib2VD3Jxm2l2wQZbrf4v5wkXyRD3N8pNt8bKWsP
- hgXBdnAmaw0wVgFVOd4ndKxz3mPyf4uRjrGZ+ROt4tk8jcuIesbqpiZG6hmphvaj6k+afiwDz4+
- rZsNZ4CSy01PD3/4xtg9DD3kQAMqcxL5DiOsysyu3r84yV2WDA9szFriGj1QZf136ah7QF3Aupm
- AldTkpzllWT2PV43vXW41N+rSQOKTApFMu3Zqx2yKXBy5uN9Oyo77xCXZgsyJ86SYRQvC7A1jCr
- eHc0NcFnR5cC2X5kexSm945JtTHCzDClECCewMFNJPnDr8jesTNw06UJEi+SM/xthFEeH7mcdhP
- KgVz28hRWjzk4vMgN2xcXBNae5I6RvEsPPd8RRFRib1H8QZzinYH24fnxgraz9R7E3d+ZaWWR8x
- nw1NCGg5UNWwTqfGmdoSl5KzS+WSnZAR/QM3TLGs5SdMfjgPsWAyZgCao60+nPHeiDmIsuB08uJ
- Wfp+BavPWbToB/UEl0uj61Pj/O349RScCZwUxwXdTXJzpFBKNG6uD0njcUxBk6vq1rbOxNPVlw0
- AXI1XTCDPJeyHMPgkipEVbyifWObQs6PoN1WsJA8zHa5BjgQlRGW6WZ6FlHuo84LJVxUKqgOzcr
- U11nDG3L XieHU1w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2072; i=keescook@chromium.org;
+ h=from:subject; bh=oCWnlkmzbAIe4y4dp/g4gh1pykyxBgo3Lt1j/Yzh81Y=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk1UBroXLDSt36LBKBH3QD1hB/vWj2UTsr5QAof
+ 8bYgVNi7yaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZNVAawAKCRCJcvTf3G3A
+ JhOSD/9egw+u3pp34j8SsLGazqJO8pUmQ3eoesW1ZAnDfKQWK6+9+qROic8FR4oMNRdG3vBA167
+ Iete1wjq6L9dXIEP8cnmk9Y6p1X5OTt6lh8rFbMwphF0JngJLxGdOPRb+RItyGPse1e6zjUPJKt
+ sQTT7MSsl7k2U1J3JyYgTPsUvUG9+aJ+sqYnq3ExujVcRDJ0iyHc9MmkuHm/zcGLJicwv6UqcU/
+ U1ewaZUtURzBPCi6zAZVe2hIoVVpmZ5esGIz/OUAgbbg9xwqq/tWEQtbgdt44SPulMIfYhLrQsA
+ r8IrCKAuYvHj/tcr7uKPwAOKnEk2hXT0EN3RPnrv+CdFeNwFhuMVhJJMRWSXB0RukPOv4XTRyr/
+ v7pQl3eYKX0fimxJsTBEvxCulx05tA9aP0iXoQwzewliaMiN9oItXQ3JIHnFv5Y6YG0++qI7NXH
+ so8XY0O2jAP4bo/TC6demv4khUn6c+WKL+5IgoVLEk1vXu01rn3MYqCWQ3SyGpIEhu/1jfYJBHw
+ 4z3WoePObVEpi1bGfuJaDpdpwqbo7tlHTg5SIJPc8qE03fGCrSr0OoW64IAhrLmGcDGK4dquONs
+ qx3CT/hY8VcPETTijHzGMizxdZyUpkfg1hvilRLaY2tt1mOxw1QbdrF/umpiU4z4999RR63arEk QWzSNu0rNWdKkYA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi,
+Since commit 4e57a4ddf6b0 ("ARM: 9107/1: syscall: always store
+thread_info->abi_syscall"), the seccomp selftests "syscall_errno"
+and "syscall_faked" have been broken. Both seccomp and PTRACE depend
+on using the special value of "-1" for skipping syscalls. This value
+wasn't working because it was getting masked by __NR_SYSCALL_MASK in
+both PTRACE_SET_SYSCALL and get_syscall_nr().
 
-Fix tracing on arm since commit 4e57a4ddf6b0 ("ARM: 9107/1: syscall:
-always store thread_info->abi_syscall"). This was seen with the broken
-seccomp tests "syscall_errno", "syscall_faked", and "syscall_restart".
+Explicitly test for -1 in PTRACE_SET_SYSCALL and get_syscall_nr(),
+leaving it exposed when present, allowing tracers to skip syscalls
+again.
 
-Thanks!
-
--Kees
-
-v2:
-- split fixes
-- move scno store into the actual restart path
-v1: https://lore.kernel.org/lkml/20230804071045.never.134-kees@kernel.org
-
-Kees Cook (2):
-  ARM: ptrace: Restore syscall restart tracing
-  ARM: ptrace: Restore syscall skipping for tracers
-
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Arnd Bergmann <arnd@kernel.org>
+Cc: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Fixes: 4e57a4ddf6b0 ("ARM: 9107/1: syscall: always store thread_info->abi_syscall")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
  arch/arm/include/asm/syscall.h | 3 +++
- arch/arm/kernel/entry-common.S | 1 +
  arch/arm/kernel/ptrace.c       | 5 +++--
- 3 files changed, 7 insertions(+), 2 deletions(-)
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm/include/asm/syscall.h b/arch/arm/include/asm/syscall.h
+index dfeed440254a..fe4326d938c1 100644
+--- a/arch/arm/include/asm/syscall.h
++++ b/arch/arm/include/asm/syscall.h
+@@ -25,6 +25,9 @@ static inline int syscall_get_nr(struct task_struct *task,
+ 	if (IS_ENABLED(CONFIG_AEABI) && !IS_ENABLED(CONFIG_OABI_COMPAT))
+ 		return task_thread_info(task)->abi_syscall;
+ 
++	if (task_thread_info(task)->abi_syscall == -1)
++		return -1;
++
+ 	return task_thread_info(task)->abi_syscall & __NR_SYSCALL_MASK;
+ }
+ 
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index 2d8e2516906b..fef32d73f912 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -783,8 +783,9 @@ long arch_ptrace(struct task_struct *child, long request,
+ 			break;
+ 
+ 		case PTRACE_SET_SYSCALL:
+-			task_thread_info(child)->abi_syscall = data &
+-							__NR_SYSCALL_MASK;
++			if (data != -1)
++				data &= __NR_SYSCALL_MASK;
++			task_thread_info(child)->abi_syscall = data;
+ 			ret = 0;
+ 			break;
+ 
 -- 
 2.34.1
 
