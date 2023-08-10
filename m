@@ -2,114 +2,162 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0150BC001DE
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 20:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3166AC001B0
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 21:17:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235656AbjHJUt6 (ORCPT
+        id S229875AbjHJVR6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 16:49:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
+        Thu, 10 Aug 2023 17:17:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235653AbjHJUt5 (ORCPT
+        with ESMTP id S229896AbjHJVR4 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 16:49:57 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CFE270E
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 13:49:57 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id ca18e2360f4ac-7918997ad9fso20721039f.1
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 13:49:57 -0700 (PDT)
+        Thu, 10 Aug 2023 17:17:56 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577D8273D
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 14:17:55 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4fe8c3b5ca0so2078563e87.1
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 14:17:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691700597; x=1692305397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IrPtI7WuVK/oaLBJhxp0over27m1houzlRFCqoHRsZI=;
-        b=FefyM5boM+iZbD5HCFP6q7YdNjfhM4Crf149F1xn2YjT84k7yzbFnUm4EO4WcJBcZ+
-         aEq9gMUJrhGCPkZaVrruWI0GixWkHHRk0W1/MSLywlOf6fFJM1mBanu5xUpziUnJymb6
-         wyMDdWSPzAnOugSUbmiwqmUPrwD+Vxc4coHCD6T4B3h9E7dP/vncsfUtROT2l1kYs4Bj
-         HkVbnH6HdttJ4QgZB0j6943Pt0v6CrrXpVyV2ss+wRQ9mqjk5Vvo9SKj9Kok2GSWDeBT
-         kPTFXzES0QKtjF2Jz0+naAIStbwstX0nqX+vIjBACvmYnlYxgerfm5rQEcA5u63Q2KVm
-         qAZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691700597; x=1692305397;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1691702273; x=1692307073;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IrPtI7WuVK/oaLBJhxp0over27m1houzlRFCqoHRsZI=;
-        b=ccydrFpNyugxCtP32G6XTwbYvqdJBCqkMoUe7US88uSYyOuOnsQB/3jwfWprTmMBtz
-         Kq9ckDZxQZ6UlIaCtefW85GdngosJcbtaV6uufK6DzKc76IAekIjYGbbXDZfLZporgIW
-         eiFWyPQqbPXBvVg74hnRF5TavuPSvq4LxBd7G8CK8iQOI+56W1rf0QROpNCMD2fOF493
-         7mq810b3c3hOzmafWNzgcl1K3znC6Dxt2FVoUuRRFzgffTbeZN7QnvVbpCGx1Hh/iDlD
-         yae/KOjX0rfa9zAA1pIQ1a/bKI33YQUIk5nzRBWgZYbK8Djb8iyHzZ52IDf+9M18+285
-         0lJA==
-X-Gm-Message-State: AOJu0Yw0imSWx1vO5nR5BJOEV8srVGoeOm9AajRpevrM4oAGWPE1F+lj
-        u65subYWKXB8uAqgmNy4pBTr5g==
-X-Google-Smtp-Source: AGHT+IEwEFZIXKpAeifAuxh0Eqsxgobltmkf4dACqcHcGYNcVSpVavL7FAFg27OJnH28qQrTLzgHWA==
-X-Received: by 2002:a92:c54f:0:b0:348:b07e:fdac with SMTP id a15-20020a92c54f000000b00348b07efdacmr51572ilj.3.1691700596858;
-        Thu, 10 Aug 2023 13:49:56 -0700 (PDT)
-Received: from google.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
-        by smtp.gmail.com with ESMTPSA id u9-20020a92da89000000b003487840f1d3sm658566iln.50.2023.08.10.13.49.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 13:49:56 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 20:49:53 +0000
-From:   Justin Stitt <justinstitt@google.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 2/4][next] i40e: Replace one-element array with
- flex-array member in struct i40e_profile_segment
-Message-ID: <20230810204953.wwwvbl57m3cebf27@google.com>
-References: <cover.1690938732.git.gustavoars@kernel.org>
- <52da391229a45fe3dbd5c43167cdb0701a17a361.1690938732.git.gustavoars@kernel.org>
- <20230810173404.jjuvqo5tv57en7pg@google.com>
+        bh=mB5FHvaw40P9yBP+ozNkgvaUvFsznWaEsCNsx7UegGc=;
+        b=SipkOJu9CvcAS02mXC7GaemEiJBBqKhJmFyQFkYw943BmDUzmE7hk1WoIh4iJ5LJDO
+         5WKJMoRrgWYaf1hIsQTB1Kg0XrbHspHcJfySFlcFbmSComEuMjWmEE5cITAys2FdLwxO
+         NmvxPIuVWWClRGwPuuweVWsASSMUR3NCOnhy0ZNeN7FAOeKDlBzMnw/GckW7MnPfOGDz
+         PdjYtOz6cDwShSPinaze+oKFYA06doDu2J9pTmhPUDR6DLTmkVVZyrYS4maAwMWrsHTj
+         3deJGULAMRatIHVxcoNsHi0FOI/6YzMwc/+QujX7XcJaG4xpShRMX5KVd+jwL2x39Ttv
+         oMqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691702273; x=1692307073;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mB5FHvaw40P9yBP+ozNkgvaUvFsznWaEsCNsx7UegGc=;
+        b=WyViYDZaFLPIGdmEVvVkvF4HKF33RAfIV5i1132FSWqdIca0z8yAWEKuCfBv3E7kiH
+         sUAt1YmTsnyLSAxXIggpkpl0D7PXTBHwsk9kotArtHryKP/+xzFyA8WNhQlMyDPKnghC
+         DJZbpQBooFwPpmBq310fnFobPdOmlNwcyRbQ8kCXXIz709BC4bkzecUq0AERH0d6DTGZ
+         OnJJMDHyjhBzfEXmIOz87uuLoNpc8U3j0t0ydx7QwntoILahvduToY9X0Z7u8CGziuN3
+         Quu1f0E++3OV0YPmFqugODy34209oxp0a/hNSHgBu7Ra/BT2n8IT+oQxIfMHsDEwCvaP
+         aAgw==
+X-Gm-Message-State: AOJu0YxLIgCHeF70BS2oVMmh2UFn6tn+br8hTe3WjUx3kO4uUn/c5WVM
+        bm33Onn6vR97dRwDAJL6Y1sHQQWV0ZonhJD5kcnD7Q==
+X-Google-Smtp-Source: AGHT+IGe/kJwlOMqtTmyNhT0OGT4bd4sdq3krj53YNPiivHF3GSx2GIkfsMCEBjOuvuNK2tWeNiNC0hfyVzwhgTVkkI=
+X-Received: by 2002:a05:6512:3256:b0:4f3:b588:48d0 with SMTP id
+ c22-20020a056512325600b004f3b58848d0mr2615647lfr.14.1691702273438; Thu, 10
+ Aug 2023 14:17:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230810173404.jjuvqo5tv57en7pg@google.com>
+References: <20230810-strncpy-arch-arm64-v1-1-f67f3685cd64@google.com>
+ <202308101155.81497C5B@keescook> <CAFhGd8rfKLY5KujEdvSnqv2MZFhTbEBo_bi7xVacY1pcBC1jRg@mail.gmail.com>
+ <202308101257.47E6ACBD5@keescook>
+In-Reply-To: <202308101257.47E6ACBD5@keescook>
+From:   Justin Stitt <justinstitt@google.com>
+Date:   Thu, 10 Aug 2023 14:17:41 -0700
+Message-ID: <CAFhGd8pa0UFFG3M39YttrfSQj0aO-Xq70XVQpcLM0X6pD9wECQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64/sysreg: refactor deprecated strncpy
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 05:34:04PM +0000, Justin Stitt wrote:
-> On Tue, Aug 01, 2023 at 11:05:59PM -0600, Gustavo A. R. Silva wrote:
-> > One-element and zero-length arrays are deprecated. So, replace
-> > one-element array in struct i40e_profile_segment with flexible-array
-> > member.
-> >
-> > This results in no differences in binary output.
-> >
-> > Link: https://github.com/KSPP/linux/issues/335
-> > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > ---
-> >  drivers/net/ethernet/intel/i40e/i40e_type.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> Tested-by: Justin Stitt <justinstitt@google.com>
-Whoops, this should be:
-Reviewed-by: Justin Stitt <justinstitt@google.com>
-
-I did not test, I just verified there are no binary differences produced
-by this patch.
-
+On Thu, Aug 10, 2023 at 12:58=E2=80=AFPM Kees Cook <keescook@chromium.org> =
+wrote:
 >
-> >
-> > diff --git a/drivers/net/ethernet/intel/i40e/i40e_type.h b/drivers/net/ethernet/intel/i40e/i40e_type.h
-> > index c3d5fe12059a..f7a984304b65 100644
-> > --- a/drivers/net/ethernet/intel/i40e/i40e_type.h
-> > +++ b/drivers/net/ethernet/intel/i40e/i40e_type.h
-> > @@ -1487,7 +1487,7 @@ struct i40e_profile_segment {
-> >  	struct i40e_ddp_version version;
-> >  	char name[I40E_DDP_NAME_SIZE];
-> >  	u32 device_table_count;
-> > -	struct i40e_device_id_entry device_table[1];
-> > +	struct i40e_device_id_entry device_table[];
-> >  };
-> >
-> >  struct i40e_section_table {
-> > --
-> > 2.34.1
-> >
+> On Thu, Aug 10, 2023 at 12:25:37PM -0700, Justin Stitt wrote:
+> > On Thu, Aug 10, 2023 at 12:00=E2=80=AFPM Kees Cook <keescook@chromium.o=
+rg> wrote:
+> > >
+> > > On Thu, Aug 10, 2023 at 06:39:03PM +0000, Justin Stitt wrote:
+> > > > `strncpy` is deprecated for use on NUL-terminated destination strin=
+gs
+> > > > [1]. Which seems to be the case here due to the forceful setting of=
+ `buf`'s
+> > > > tail to 0.
+> > >
+> > > Another note to include in these evaluations would be "does the
+> > > destination expect to be %NUL padded?". Here, it looks like no, as al=
+l
+> > > the routines "buf" is passed to expect a regular C string (padding
+> > > doesn't matter).
+> > >
+> > > >
+> > > > A suitable replacement is `strscpy` [2] due to the fact that it
+> > > > guarantees NUL-termination on its destination buffer argument which=
+ is
+> > > > _not_ the case for `strncpy`!
+> > > >
+> > > > In this case, there is some behavior being used in conjunction with
+> > > > `strncpy` that `strscpy` already implements. This means we can drop=
+ some
+> > > > of the extra stuff like `... -1` and `buf[len] =3D 0`
+> > > >
+> > > > This should have no functional change and yet uses a more robust an=
+d
+> > > > less ambiguous interface whilst reducing code complexity.
+> > > >
+> > > > Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncp=
+y-on-nul-terminated-strings[1]
+> > > > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.=
+9.en.html [2]
+> > > > Link: https://github.com/KSPP/linux/issues/90
+> > > > Cc: linux-hardening@vger.kernel.org
+> > > >
+> > > > Signed-off-by: Justin Stitt <justinstitt@google.com>
+> > > > ---
+> > > > For reference, see a part of `strscpy`'s implementation here:
+> > > >
+> > > > |     /* Hit buffer length without finding a NUL; force NUL-termina=
+tion. */
+> > > > |     if (res)
+> > > > |             dest[res-1] =3D '\0';
+> > > >
+> > > > Note: compile tested
+> > > > ---
+> > > >  arch/arm64/kernel/idreg-override.c | 5 ++---
+> > > >  1 file changed, 2 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/arch/arm64/kernel/idreg-override.c b/arch/arm64/kernel=
+/idreg-override.c
+> > > > index 2fe2491b692c..482dc5c71e90 100644
+> > > > --- a/arch/arm64/kernel/idreg-override.c
+> > > > +++ b/arch/arm64/kernel/idreg-override.c
+> > > > @@ -262,9 +262,8 @@ static __init void __parse_cmdline(const char *=
+cmdline, bool parse_aliases)
+> > > >               if (!len)
+> > > >                       return;
+> > > >
+> > > > -             len =3D min(len, ARRAY_SIZE(buf) - 1);
+> > > > -             strncpy(buf, cmdline, len);
+> > > > -             buf[len] =3D 0;
+> > > > +             len =3D min(len, ARRAY_SIZE(buf));
+> > > > +             strscpy(buf, cmdline, len);
+Perhaps keeping the `...  - 1` is good because we then don't have to
+check strlen immediately after. This does still silently truncate but
+didn't the previous `strncpy` also do that?
+
+> > >
+> > > This, however, isn't correct: "cmdline" will be incremented by "leN"
+> > > later, and we want a count of the characters copied into "buf", even =
+if
+> > > they're truncated. I think this should be:
+> > >
+> > >                 strscpy(buf, cmdline, ARRAY_SIZE(buf));
+> > >                 len =3D strlen(buf);
+> > >
+> > Thoughts on using the return value from `strscpy` here?
+>
+> This code seems to silently accept truncation, so -E2BIG will cause a
+> problem if it only looks at the return value.
+>
+> -Kees
+>
+> --
+> Kees Cook
