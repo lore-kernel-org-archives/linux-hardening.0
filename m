@@ -2,140 +2,130 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FFBC001DE
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 18:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69720C001DE
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 18:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231822AbjHJSbs (ORCPT
+        id S236019AbjHJSkb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 14:31:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60330 "EHLO
+        Thu, 10 Aug 2023 14:40:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231402AbjHJSbs (ORCPT
+        with ESMTP id S235905AbjHJSkN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 14:31:48 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A31B626BA
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 11:31:47 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bdb08e9057so3635485ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 11:31:47 -0700 (PDT)
+        Thu, 10 Aug 2023 14:40:13 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 137AE421A
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 11:39:25 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-583c1903ad3so16166697b3.2
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 11:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691692306; x=1692297106;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NRu5f/aCaNR7Qpd/C7QF+nwdA4/ZGiMpJZ4g0pj/koI=;
-        b=exUC1YmUgaJK8xNE59qi6sgwc1o8df+FleF0y7jxgEHwbhiyyvm8Zhv3VcrEuZGxPY
-         jY9Bc2bZFTJOemXPLDAQWt5/ThKn3uUeS1rlrBzAgvfAM2H/opLXONw4vgGZz9ntcYps
-         rrdJnMvIsw+XBZcetaMgLhBoFIOCKq47ScnEQ=
+        d=google.com; s=20221208; t=1691692752; x=1692297552;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9s/VShouY5UecShKdRRU+6iUoUZRUswiXCe+DYQQHMc=;
+        b=iu3wIj0hrSChbkmbXE8YRK7qQMDFnxyfxL9xH4h5buWYXje/v9DExUqA4AGyVrqEQK
+         GEcz0VT6GDwvVqm/rLr5zRKeOiIzE5XzDl6byKRnCcrRAV26nllvHU/Y/B2zRvUHyQjX
+         pOywS2CTntHwjYSgM/5a1a1My+TepYis1+/gqp0nTAkppUPD8J6lMC7/qnVsG6/LfVwB
+         dvKS+/w2Y+2gvSNed2wlajBMBC3y3XLUj2NUgCtaxNMsx8LxNCuxu164jCdL+WFJ5rNj
+         5lSQ0eaIduXwSUxkONLhL9zf4mIuEO79oC6g3RyVhRsLeSklSR2VjyH5etCqZnzrHjN4
+         Usuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691692306; x=1692297106;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NRu5f/aCaNR7Qpd/C7QF+nwdA4/ZGiMpJZ4g0pj/koI=;
-        b=Fds69TCbr4glig7AdhVKRO1k3Ywn78NYFZ1CiUofZreAWiy3/51zTJBRZ4dB1siVTc
-         SrrbFKE/4uCNuxthW4T6wnxiQBKOreHi+qMhtaaK4cYn9H6Fhq+Gw5FgCc2QL4/AP6KD
-         2Wz7EEQoHBlM1PXjWgSeREVoDs2pVZoVvdB1ib4UCYhlLDCPfDFY2ORt+tpO0DellDea
-         JqpewfUTNH7kzxbmDi0cVP+oUby4N0mJlGoUS+fkqmKfNAQR0bXtP7dzekQWbEepYgOd
-         X4RazBlnxAe4duwtQ+Va337UYG6gvLvsyvyyalPMm+rQCLxhU28YcLTcXvx2SpgZU72B
-         CZpg==
-X-Gm-Message-State: AOJu0Yxpns3IacA+5kOJpYdY4+4Mnknqi/x7iS5mlueTW1PkfUrbbKP9
-        qpd+JWCvABTIVz1MTIM4CnBWDw==
-X-Google-Smtp-Source: AGHT+IHHObZZyY9Or/OTawwzOxroUBnHrJSBanqV1Yfo/0w0RduYz4qwgfpa6K1IKDxG+5xqeFlspQ==
-X-Received: by 2002:a17:902:da92:b0:1bb:1494:f7f7 with SMTP id j18-20020a170902da9200b001bb1494f7f7mr3698148plx.23.1691692306542;
-        Thu, 10 Aug 2023 11:31:46 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x20-20020a170902ea9400b001b9de67285dsm2103416plb.156.2023.08.10.11.31.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 11:31:45 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 11:31:45 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc:     Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-        netdev@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
-        intel-wired-lan@lists.osuosl.org, linux-hardening@vger.kernel.org,
-        Steven Zou <steven.zou@intel.com>
-Subject: Re: [PATCH net-next v1 1/7] overflow: add DEFINE_FLEX() for on-stack
- allocs
-Message-ID: <202308101128.C4F0FA235@keescook>
-References: <20230810103509.163225-1-przemyslaw.kitszel@intel.com>
- <20230810103509.163225-2-przemyslaw.kitszel@intel.com>
- <e6565705-4867-c07f-5cc7-4e9155b5a4e9@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e6565705-4867-c07f-5cc7-4e9155b5a4e9@intel.com>
+        d=1e100.net; s=20221208; t=1691692752; x=1692297552;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9s/VShouY5UecShKdRRU+6iUoUZRUswiXCe+DYQQHMc=;
+        b=I5uHTWq5km0XPP5R6jBxqDO1dGVvYBFgUK/vZpSgqjRTRLAc5WMgJ55JOvZJfzmW5A
+         TUi8KDOcgOKTLWsWF+eGYplnUwaQkMg+vVbOAeCXA3bctRAx+e5n0x81arge1A0HWfMz
+         gD+xPfh9dQvPAPD50r2Mo0ZimNPpfEQPfKleBgwaDXoMrkg8iySaypHwYRDE/08f/M6D
+         tGC7BMGpX85/ksEH3F2+pdOWbrqMNUOUbf7pDTxOfYTWMJik+JfXIscPJUIlSh30YhqF
+         Ih+Nb6DioBOgoIYbOlhZ6WiNosI2kI2xNff8nygwbmISU0LOiOCB7OEf2SyZQa3u7DsK
+         CPGw==
+X-Gm-Message-State: AOJu0YzoTFZtDHJQf/NebR8UobVKAeh6j4RHBXBQ7mCz6JPnvxEUIJL3
+        9j7Ch6ldfsJ03u760kS3yv/d0pBhVxjgv3NrMw==
+X-Google-Smtp-Source: AGHT+IFd/BetrjKTvc+2UKvsj3Xl2aqeBqnWIgCBibfJD2tswKguWZfZhsx1vj78xyqo4dnFURE7yVJC6tcvaqhFKw==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:b609:0:b0:583:5039:d4a0 with SMTP
+ id u9-20020a81b609000000b005835039d4a0mr55197ywh.0.1691692752000; Thu, 10 Aug
+ 2023 11:39:12 -0700 (PDT)
+Date:   Thu, 10 Aug 2023 18:39:03 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAMYu1WQC/x2MywqAIBAAfyX2nOAjwvqV6FC65R4yWSOK6N+TL
+ gNzmHkgIxNm6KsHGE/KtMciqq7AhSmuKMgXBy21kVZJkQ+OLt1iYhcKtrYRajHeaDv7brZQwsS 40PVPh/F9P858Y0xkAAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691692751; l=2010;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=aXS5AtkQbMqazJ7/YYIzdIPN5iWfiNdlNiBoDrKML1c=; b=4OnNBtGbw+0TcmcgHLZW3RtqHKsRbDxE7jZ+jEJGUYUpPJ/mIRl49NEwoSjr4tkFGdavlUEKT
+ 2ZUXdFZnghwCk7IMHYL2xzzS1o6VeUhjChRT4JvTADIQtj9TAeke/OP
+X-Mailer: b4 0.12.3
+Message-ID: <20230810-strncpy-arch-arm64-v1-1-f67f3685cd64@google.com>
+Subject: [PATCH] arm64/sysreg: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 06:24:47PM +0200, Alexander Lobakin wrote:
-> From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> Date: Thu, 10 Aug 2023 06:35:03 -0400
-> 
-> > Add DEFINE_FLEX() macro for on-stack allocations of structs with
-> > flexible array member.
-> > 
-> > Add also const_flex_size() macro, that reads size of structs
-> > allocated by DEFINE_FLEX().
-> > 
-> > Using underlying array for on-stack storage lets us to declare
-> > known-at-compile-time structures without kzalloc().
-> > 
-> > Actual usage for ice driver is in following patches of the series.
-> > 
-> > Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-> > ---
-> > v1: change macro name; add macro for size read;
-> >     accept struct type instead of ptr to it; change alignment;
-> > ---
-> >  include/linux/overflow.h | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> > 
-> > diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> > index f9b60313eaea..21a4410799eb 100644
-> > --- a/include/linux/overflow.h
-> > +++ b/include/linux/overflow.h
-> > @@ -309,4 +309,31 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
-> >  #define struct_size_t(type, member, count)					\
-> >  	struct_size((type *)NULL, member, count)
-> >  
-> > +/**
-> > + * DEFINE_FLEX() - Define a zeroed, on-stack, instance of @type structure with
-> > + * a trailing flexible array member.
-> > + *
-> > + * @type: structure type name, including "struct" keyword.
-> > + * @name: Name for a variable to define.
-> > + * @member: Name of the array member.
-> > + * @count: Number of elements in the array; must be compile-time const.
-> > + */
-> > +#define DEFINE_FLEX(type, name, member, count)					\
-> > +	union {									\
-> > +		u8 bytes[struct_size_t(type, member, count)];			\
-> > +		type obj;							\
-> > +	} name##_u __aligned(_Alignof(type)) = {};				\
-> 
-> Hmm. Should we always zero it? The onstack variables are not zeroed
-> automatically.
-> I realize the onstack structures declared via this macro can't be
-> initialized on the same line via = { }, but OTOH memset() with const len
-> and for onstack structs usually gets expanded into static initialization.
-> The main reason why I'm asking is that sometimes we don't need zeroing
-> at all, for example for small structures when we then manually set all
-> the fields either way. I don't think hiding static initialization inside
-> the macro is a good move.
+`strncpy` is deprecated for use on NUL-terminated destination strings
+[1]. Which seems to be the case here due to the forceful setting of `buf`'s
+tail to 0.
 
-I strongly think this should be always zeroed. In the case where all
-members are initialized, the zeroing will be elided by the compiler
-during Dead Store Elimination optimization passes.
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on its destination buffer argument which is
+_not_ the case for `strncpy`!
 
-Additionally, padding, if present, would not get zeroed even if all
-members got initialized separately, and if any memcpy() of the structure
-was made, it would contain leaked memory contents.
+In this case, there is some behavior being used in conjunction with
+`strncpy` that `strscpy` already implements. This means we can drop some
+of the extra stuff like `... -1` and `buf[len] = 0`
 
-Any redundant initializations will be avoided by the compiler, so let's
-be safe by default and init the whole thing to zero.
+This should have no functional change and yet uses a more robust and
+less ambiguous interface whilst reducing code complexity.
 
--Kees
+Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
 
--- 
-Kees Cook
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+For reference, see a part of `strscpy`'s implementation here:
+
+|	/* Hit buffer length without finding a NUL; force NUL-termination. */
+|	if (res)
+|		dest[res-1] = '\0';
+
+Note: compile tested
+---
+ arch/arm64/kernel/idreg-override.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/kernel/idreg-override.c b/arch/arm64/kernel/idreg-override.c
+index 2fe2491b692c..482dc5c71e90 100644
+--- a/arch/arm64/kernel/idreg-override.c
++++ b/arch/arm64/kernel/idreg-override.c
+@@ -262,9 +262,8 @@ static __init void __parse_cmdline(const char *cmdline, bool parse_aliases)
+ 		if (!len)
+ 			return;
+ 
+-		len = min(len, ARRAY_SIZE(buf) - 1);
+-		strncpy(buf, cmdline, len);
+-		buf[len] = 0;
++		len = min(len, ARRAY_SIZE(buf));
++		strscpy(buf, cmdline, len);
+ 
+ 		if (strcmp(buf, "--") == 0)
+ 			return;
+
+---
+base-commit: 52a93d39b17dc7eb98b6aa3edb93943248e03b2f
+change-id: 20230810-strncpy-arch-arm64-1f3d328bd9b8
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
