@@ -2,108 +2,144 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079AAC41513
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 20:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53F9C04A94
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 20:27:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230019AbjHJUV1 (ORCPT
+        id S233374AbjHJU1C (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 16:21:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44200 "EHLO
+        Thu, 10 Aug 2023 16:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234903AbjHJUV1 (ORCPT
+        with ESMTP id S235758AbjHJU07 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 16:21:27 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCBB42718
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 13:21:26 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-686e29b058cso1029723b3a.1
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 13:21:26 -0700 (PDT)
+        Thu, 10 Aug 2023 16:26:59 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6015C2136
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 13:26:59 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1bb893e6365so10150775ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 13:26:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691698886; x=1692303686;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=niZ+vrNDQ4GMStTL9kRLMxjukCY/VFRh2rGg2sfT98M=;
-        b=CA/+LIC3HH9ropBEzZi69+cyKgmDHdEThksaK6msMAFhGvl2Mfm7X9HAK0vbjKxE95
-         TmA846t5rsevs1uu52TwWWlPzCWbBqVYRHx7+imft5hL5eJH3YrFgq4/zcUnm3VaJC0Q
-         2+j1Be3W3YLcg3WUDICYJbn7LwvaGudzZ0KSs=
+        d=chromium.org; s=google; t=1691699219; x=1692304019;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7VqWk9TlJRT8ykwWsdvSnZzCfxI5F9cpgpLcByRA+sY=;
+        b=K6Xr+JpfP3xNnjYDhY0dK5WU16CS3QdsDehTrDhfKyWhlQr9Ju/mj540r6Y+bgal7r
+         Iu8tF0uh1VerGPWpO5/wmQxvZkh8iK1gyky0YbGqEnpkyPiNkPHdIw5lKML5Pok1+I7a
+         XPeKJAL5CSpLJAKuJCFlHYDzyBBWqVnVMzUfw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691698886; x=1692303686;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=niZ+vrNDQ4GMStTL9kRLMxjukCY/VFRh2rGg2sfT98M=;
-        b=MIsY74F7K3hWtTeNGp0kg5m7p2VR6HUWABs6n/27vzWeLH9BjvMtQY+i+AV2iz4LGM
-         vAEb1iDNRcY2SPF+x51tGefWFwQ9SiovR9wk80tQqfeRekMMnRGY4iwiJMyc8lVWwiDZ
-         oiDkNN3ntVpElPFB/M5jjQm2pw0yYlmCnLseZ+5XYyPNWM/PePWALYaAm17CHNhdsfF6
-         RkVMXmYelfNR8ZotjNdJ4OF0MVx3CkS5C4F333AfTe2acEOLvrxDjcy5zEY1qKkQlkss
-         6G/02xVoPFgQrYbtHvH4aOOdOOCQ3UhYygQhhnj2qn7uJtoiDwzxhl9CVDOW3SYq3d+g
-         KGAA==
-X-Gm-Message-State: AOJu0Yyti4pxuxTxicCF6/Gc6Ytppb5S0QePKSne7B+xdb4Ktz42S03m
-        swl9HgK7vcIV8YyyPaKRVhtjtw==
-X-Google-Smtp-Source: AGHT+IH+bWBYIE/hcCSfEGYoeswt2A5wZB8OQT2bN7ubfqIok10sb3G5WtjpwJDeHbU8icCF5iuJIA==
-X-Received: by 2002:a05:6a00:1acd:b0:687:4dd1:92f8 with SMTP id f13-20020a056a001acd00b006874dd192f8mr3900114pfv.10.1691698886324;
-        Thu, 10 Aug 2023 13:21:26 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691699219; x=1692304019;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7VqWk9TlJRT8ykwWsdvSnZzCfxI5F9cpgpLcByRA+sY=;
+        b=c0p6jyvDqYBtSOv09mJr3qg9CH48gSkTfoXMU1XCfT4RoUZntWpmAE9LsxkP7iLWNv
+         rDgaXecj+HvTsqMOUdtGaClpA63mr0YbWapO3jqXTU+dfIXeG/QAA0/gtmgtGCNWBxwF
+         eueptW7ISZzQRXMsTbmX/FLtxi/3teA/gDUMHP2xjsKrfSz9HEgfjNpEbEas3BoUdBu/
+         NiUdvBYTsjutNbl22e2n9T/QlPr3imW1rBZdEQRppSSLro4MKzBZPCFhPzlhQB9YHiiD
+         WYhFW5tPeGcDwjo3ilA5GQK0fe3u6ozxDm8p37OItG/ylXq074low/4CrHqs4yoWxomb
+         r8dw==
+X-Gm-Message-State: AOJu0YxNS7UOngl6+/0+y8st204wWolj3IzxPRHdX7uDwu2t+W3Dl5kT
+        oM5VpsV5uhjWFb2yxPA+Alar8N0CycSJNiaGxaw=
+X-Google-Smtp-Source: AGHT+IFgOcyEjd2Q4OTHrM/7gs8YLxs3o0idMAJRHLTXxcQ2zXZGYP1++8Hj+FJQ5dwHLcBJL9Zu0w==
+X-Received: by 2002:a17:902:d3cd:b0:1bb:5b88:73da with SMTP id w13-20020a170902d3cd00b001bb5b8873damr2990326plb.61.1691699218904;
+        Thu, 10 Aug 2023 13:26:58 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id x42-20020a056a000bea00b006661562429fsm1982331pfu.97.2023.08.10.13.21.25
+        by smtp.gmail.com with ESMTPSA id k3-20020a170902694300b001a98f844e60sm2183276plt.263.2023.08.10.13.26.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 13:21:25 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 13:21:25 -0700
+        Thu, 10 Aug 2023 13:26:58 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        Nikolay Aleksandrov <razor@blackwall.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
-Subject: Re: [PATCH v3] netfilter: ebtables: fix fortify warnings in
- size_entry_mwt()
-Message-ID: <202308101321.2FDE98DC57@keescook>
-References: <20230809074503.1323102-1-gongruiqi@huaweicloud.com>
+To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>, Shuah Khan <shuah@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] selftests/seccomp: Handle arm32 corner cases better
+Date:   Thu, 10 Aug 2023 13:26:56 -0700
+Message-Id: <20230810202653.never.932-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2014; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=CLpz6EOfRrbHfxs+DW+QOBPRQnZKfWBS9qhYDrihYZA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk1UgQGhY779bsGNZZQsbavTn3fuJhNl9tmHaJi
+ pe/oTK88q2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZNVIEAAKCRCJcvTf3G3A
+ JuJ/EACTcQ+/SL8NKJMeMFthsYqig1wZP1bL6BwiogHpMrhrE4JVzTccWGM8XLHbP63E9NyJdTG
+ CbifBfVw4Q2qw1VXKAvuSpkN6uSsMv4s3/BosmYE5yEu4i608R2SQMqm1ifN1U1ovAAYvXxVXY4
+ mEy+5TG5jPr/3XZrHHgf7ygankQSzS38Na8mfcmebpJfZweX8kDy8Zew6h2tSG09wMBoAlirQEt
+ K2TKbjN/dhB2e906M3h7tHIXjIH8gThBwY+4s6o+DI5vhpDjT/6ETxNgaAK9wmXNCyP2v+o3GBL
+ hscos8jzbMZ4QJ/+1PCtSgY7j2PzQmbNzr/wDgkA/LSuAVhL58isbFkaIrHmgXPHd6IDjiaEXR5
+ Vr7pR97vDB1V6HJ5lHg9kZShcr1TABvwit/h/O5anJXH2Aer12Ng1kHn9m+2buZI5tYjvB8gicC
+ JJg/zttnHUhUwzKUKUk3wlToFm9Czbj+vraJF+kexBjCW+DPUS0l6Oa6JPjElLKe5BrrUhTlyBN
+ 3LLd16WA4HhAwVyVlq6vm2gbEUUeXthpn3hm6b/JxOULzY/vOxkMGjjbKalbsRof+RKDJPz6vM5
+ cYVUoyL+rap+LF2B7gOhxuHz9zwF4EvwPoQ4wd4snZlGZ/T6NlRz3bHc8/4DkmejD6OCLSsBxS6
+ UCCv7P2 xUDMYFGA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230809074503.1323102-1-gongruiqi@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 09, 2023 at 03:45:03PM +0800, GONG, Ruiqi wrote:
-> From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
-> 
-> When compiling with gcc 13 and CONFIG_FORTIFY_SOURCE=y, the following
-> warning appears:
-> 
-> In function ‘fortify_memcpy_chk’,
->     inlined from ‘size_entry_mwt’ at net/bridge/netfilter/ebtables.c:2118:2:
-> ./include/linux/fortify-string.h:592:25: error: call to ‘__read_overflow2_field’
-> declared with attribute warning: detected read beyond size of field (2nd parameter);
-> maybe use struct_group()? [-Werror=attribute-warning]
->   592 |                         __read_overflow2_field(q_size_field, size);
->       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> The compiler is complaining:
-> 
-> memcpy(&offsets[1], &entry->watchers_offset,
->                        sizeof(offsets) - sizeof(offsets[0]));
-> 
-> where memcpy reads beyong &entry->watchers_offset to copy
-> {watchers,target,next}_offset altogether into offsets[]. Silence the
-> warning by wrapping these three up via struct_group().
-> 
-> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+It turns out arm32 doesn't handle syscall -1 gracefully, so skip testing
+for that. Additionally skip tests that depend on clone3 when it is not
+available (for example when building the seccomp selftests on an old arm
+image without clone3 headers). And improve error reporting for when
+nanosleep fails, as seen on arm32 since v5.15.
 
-If a v4 is sent, please fix the "beyong" typo that was pointed out.
-Otherwise, it looks okay to me:
+Cc: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index f6a04d88e02f..38f651469968 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -2184,6 +2184,9 @@ FIXTURE_TEARDOWN(TRACE_syscall)
+ 
+ TEST(negative_ENOSYS)
+ {
++#if defined(__arm__)
++	SKIP(return, "arm32 does not support calling syscall -1");
++#endif
+ 	/*
+ 	 * There should be no difference between an "internal" skip
+ 	 * and userspace asking for syscall "-1".
+@@ -3072,7 +3075,8 @@ TEST(syscall_restart)
+ 		timeout.tv_sec = 1;
+ 		errno = 0;
+ 		EXPECT_EQ(0, nanosleep(&timeout, NULL)) {
+-			TH_LOG("Call to nanosleep() failed (errno %d)", errno);
++			TH_LOG("Call to nanosleep() failed (errno %d: %s)",
++				errno, strerror(errno));
+ 		}
+ 
+ 		/* Read final sync from parent. */
+@@ -3908,6 +3912,9 @@ TEST(user_notification_filter_empty)
+ 		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
+ 	}
+ 
++	if (__NR_clone3 < 0)
++		SKIP(return, "Test not built with clone3 support");
++
+ 	pid = sys_clone3(&args, sizeof(args));
+ 	ASSERT_GE(pid, 0);
+ 
+@@ -3962,6 +3969,9 @@ TEST(user_notification_filter_empty_threaded)
+ 		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
+ 	}
+ 
++	if (__NR_clone3 < 0)
++		SKIP(return, "Test not built with clone3 support");
++
+ 	pid = sys_clone3(&args, sizeof(args));
+ 	ASSERT_GE(pid, 0);
+ 
 -- 
-Kees Cook
+2.34.1
+
