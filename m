@@ -2,137 +2,126 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A243FC001B0
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 20:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BE9C001B0
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 20:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234772AbjHJUPn (ORCPT
+        id S231978AbjHJUS3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 16:15:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45694 "EHLO
+        Thu, 10 Aug 2023 16:18:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234658AbjHJUPm (ORCPT
+        with ESMTP id S230172AbjHJUS3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 16:15:42 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92B02718
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 13:15:41 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bdb08e9057so4469465ad.0
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 13:15:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691698541; x=1692303341;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KMvbgtLm3o5PK9BxEA0pI7DAuLsjiB4F7y1PvOelLnY=;
-        b=RW37KCo80cM+P0Mbw74kT7T+WaIbB0/vXrToVyJUMkfjcINUtf/QA11X8JjOiReL/i
-         /nEwqJwmgfomIhtRdr+h4Nsg2rbUgfpz/rFV0NK3GpscFGF3B9v9weolkIBkV5gRrv3Y
-         eaGosJLsqTFEyUlypwRteNKCrwSUKMNkRgTZ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691698541; x=1692303341;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KMvbgtLm3o5PK9BxEA0pI7DAuLsjiB4F7y1PvOelLnY=;
-        b=chgiStuvazymo8Nvm3tJvIwLpyzQU/PfMCdjl8MpkS3s+b/opS73GfWuLqRkrWx59S
-         eF3FBZSl0QuXKKWFRZE5oNjqTW3S3swSqsGKNntpbexM/YQhNE8+YdBhX4JZuqgTdzHp
-         b7hObEjfhI5CwN3tzDrIonkd+po56SIS8XwiGlCtDDc8RNEszaRsz5vXh1K9jKD/PEfG
-         TS0iVtvppxLH6GvLwUjYdUcD8Qp7D7ECcaum0w4+DmlXFhFrs/0w7MmQ9VQ2tRUiRUr7
-         PjFSA32m45FECw4ZaohpzDEciIfun8nEKssw2QDgWKsRQBnG97Lekhc5amgbZRZGDET1
-         YM3g==
-X-Gm-Message-State: AOJu0YzvxHVc3sq+/bW9RtlTQu2z7M74rX4YjLm2g2AMbiZjxvMnCIPm
-        f2TIa3TGT+vtvNUHMvkZU7o28JsrJ11Pi2/a0tc=
-X-Google-Smtp-Source: AGHT+IGc8AdgH/YPAGqhTVton7wBhQe2kXpP36rX6A0KPMi035sdxnM7obZM3DacHYAXMWzb8lBUqA==
-X-Received: by 2002:a17:90a:1002:b0:262:f8b8:dba2 with SMTP id b2-20020a17090a100200b00262f8b8dba2mr2910831pja.35.1691698541096;
-        Thu, 10 Aug 2023 13:15:41 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n2-20020a17090ac68200b00263f8915aa3sm3780733pjt.31.2023.08.10.13.15.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 13:15:40 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 13:15:40 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Oleg Nesterov <oleg@redhat.com>,
+        Thu, 10 Aug 2023 16:18:29 -0400
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AEDBE56;
+        Thu, 10 Aug 2023 13:18:27 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 5AC85320091F;
+        Thu, 10 Aug 2023 16:18:23 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 10 Aug 2023 16:18:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1691698702; x=1691785102; bh=ED
+        nz6ewYniuiTfJGgcW46P4Frc6dZkTLoKG1gmNwu7U=; b=c702C99S6syZ1pNhmI
+        pKiD4p/eNvn8c49BkiV32bGMi2go9fB0/EKxUkSAJUY6a5PdWyqiQ/2eyaXc7aIh
+        tss2Sa6CAXR4Y9KtrpeveYo0MQ522FOGNblmSuZZyiXMAYP/6FXRPARLcxcFD+rZ
+        0/5ptEnqBtpeXmNApGn45sHzelu3Xea9b9yfwEQZuv8k0Qg69WzH1/SQkTmhESMp
+        +6UfU57ZGufOaT4N9rTaHQy6ViclK0NpLVbYwgofyk1lXE25rYZTjG9iIptfkJxD
+        w3b9ZKM+FGul7+7364N8z4CucPKKqY8RA561totB44ltbyqXW7shu/AkD1u7Z89M
+        93lw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1691698702; x=1691785102; bh=EDnz6ewYniuiT
+        fJGgcW46P4Frc6dZkTLoKG1gmNwu7U=; b=atOHadxzMRdeRXbrZq0t18TFQC7As
+        9bNedsTKz/HY3ZykIZAB0a6+gP0g+mNvqVpvSpc06bRItBCg38ZYUKiOCqhfEF+X
+        lgC0X7H7Al3hKSWmq9lNrx8KY/5zyyr/WdO8tjTkui/XSfsA89wp4QJBl8mAnSu1
+        6DNHGE9F2n0W6FHRXNXKbrIELHdnQGXrlIEdEyNhLyvvygMr/9BihUmVJE2HuvOX
+        mzfoxHtFaauHdShWnPVwHsFf+aXk7eydYNXKQkK6ArPnBVVsW/5Uz3mP6OrF0SIS
+        pmZ0LVl82dg+jpwK4978zUsKbDtC8v+lCSKvt8YOPSRGzu4daoXFASsEQ==
+X-ME-Sender: <xms:DkbVZPQFJighC0Pcgkk1mpvk4qDTtPioe4a9DQuB0mudTYGYygnj3w>
+    <xme:DkbVZAzdb55_DZZUe_DQeJ64r7SWkL-yymiTnbepyQmBNtYZ_F4YpiTVFO72pgEJx
+    Q5G190JYo3hQ-UYqvE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrleeigddugeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepudetfeekheffkeekfeelhedvgfetfeduveehuddtfeevtdevueefuedufeel
+    udegnecuffhomhgrihhnpegvnhhtrhihqdgtohhmmhhonhdrshgsnecuvehluhhsthgvrh
+    fuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdgu
+    vg
+X-ME-Proxy: <xmx:DkbVZE0-qhyq86qOIzMkL6T33PxL2FRfHgNEyWfhigTm6DG9qMz4Vw>
+    <xmx:DkbVZPAgVaKfSsHDwpuKhZY071V1hOPjcd8XnE98znnVplYnJ3FbMw>
+    <xmx:DkbVZIhqWlOXERHfvfksy9OzFCAdN25zeeJ9h3PVW9581VjWxl_9Hg>
+    <xmx:DkbVZJbMclNl59vZ8mzME_zLzckUbK1lVH-dt4yuqDArP8mnKaZItQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 5B823B60089; Thu, 10 Aug 2023 16:18:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+Mime-Version: 1.0
+Message-Id: <1190fd24-7d6a-4f6a-a3e3-ba3564c2303c@app.fastmail.com>
+In-Reply-To: <20230810195422.2304827-1-keescook@chromium.org>
+References: <20230810195141.never.338-kees@kernel.org>
+ <20230810195422.2304827-1-keescook@chromium.org>
+Date:   Thu, 10 Aug 2023 22:17:45 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Kees Cook" <keescook@chromium.org>,
+        "Russell King" <linux@armlinux.org.uk>
+Cc:     "Arnd Bergmann" <arnd@kernel.org>,
+        "Lecopzer Chen" <lecopzer.chen@mediatek.com>,
+        "Oleg Nesterov" <oleg@redhat.com>,
         linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        "AngeloGioacchino Del Regno" 
+        <angelogioacchino.delregno@collabora.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Wolfram Sang" <wsa@kernel.org>,
+        "Dan Williams" <dan.j.williams@intel.com>,
+        "Russell King" <rmk+kernel@armlinux.org.uk>,
         linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] ARM: ptrace: Restore syscall skipping and restart while
- tracing
-Message-ID: <202308101314.11A15CDF9@keescook>
-References: <20230804071045.never.134-kees@kernel.org>
- <f34c11eb-89b5-48a5-bd24-c215083575a5@app.fastmail.com>
- <202308101209.45CF7C6F80@keescook>
- <786b2d02-f649-4c5f-ae9a-ed2228e4a3fb@app.fastmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <786b2d02-f649-4c5f-ae9a-ed2228e4a3fb@app.fastmail.com>
+Subject: Re: [PATCH v2 1/2] ARM: ptrace: Restore syscall restart tracing
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 10:10:08PM +0200, Arnd Bergmann wrote:
-> On Thu, Aug 10, 2023, at 21:32, Kees Cook wrote:
-> > On Wed, Aug 09, 2023 at 09:47:24PM +0200, Arnd Bergmann wrote:
-> >
-> >> If the local_restart code has to store the syscall number
-> >> for an EABI-only kernel, wouldn't it have to also do this
-> >> for a kernel with OABI-only or OABI_COMPAT support?
-> >
-> > This is the part I wasn't sure about. Initially I was thinking it didn't
-> > matter because it's only a problem for a seccomp tracer, but I realize
-> > it might be exposed to a PTRACE tracer too. I was only able to test with
-> > EABI since seccomp is disabled for OABI_COMPAT.
-> >
-> > Anyway, syscall restart is done this way:
-> >
-> >         movlt   scno, #(__NR_restart_syscall - __NR_SYSCALL_BASE)
-> >
-> > Can a EABI call restart an OABI syscall? I think so?
-> 
-> There are very few differences between oabi and eabi syscalls, I
-> think it basically comes down to 
-> 
->  - the syscall number, and register in which it is passed to the kernel
->  - a few syscalls that exist for OABI backward compatibility and were
->    deprecated before EABI was added
->  - a few syscalls that pass a struct with different alignment rules
->  - epoll_wait() uses a runtime check for the output format
-> 
-> It also seems like the __NR_restart_syscall path is only relevant
-> for syscalls using restart_block for restarting, and that means
-> it's only poll(), futex(), nanosleep(), clock_nanosleep() and their
-> time64 counterparts. All of these are handled by the same entry
+On Thu, Aug 10, 2023, at 21:54, Kees Cook wrote:
+> Since commit 4e57a4ddf6b0 ("ARM: 9107/1: syscall: always store
+> thread_info->abi_syscall"), the seccomp selftests "syscall_restart" has
+> been broken. This was caused by the restart syscall not being stored to
+> "abi_syscall" during restart setup before branching to the "local_restart"
+> label. Tracers would see the wrong syscall, and scno would get overwritten
+> while returning from the TIF_WORK path. Add the missing store.
+>
 
-Right -- it's a tiny corner case I tripped over years ago while building
-seccomp filters, so it got added to the selftests. :)
+> diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
+> index bcc4c9ec3aa4..5c31e9de7a60 100644
+> --- a/arch/arm/kernel/entry-common.S
+> +++ b/arch/arm/kernel/entry-common.S
+> @@ -90,6 +90,7 @@ slow_work_pending:
+>  	cmp	r0, #0
+>  	beq	no_work_pending
+>  	movlt	scno, #(__NR_restart_syscall - __NR_SYSCALL_BASE)
+> +	str	scno, [tsk, #TI_ABI_SYSCALL]	@ make sure tracers see update
+>  	ldmia	sp, {r0 - r6}			@ have to reload r0 - r6
+>  	b	local_restart			@ ... and off we go
+>  ENDPROC(ret_fast_syscall)
 
-> points for OABI and EABI, i.e. there is no overlap with the
-> exceptions above. Crucially, epoll does not use restart_block,
-> unlike poll().
-> 
-> > So maybe we just need to add:
-> >
-> > 	str     scno, [tsk, #TI_ABI_SYSCALL]    @ store scno for syscall restart
-> >
-> > after that instead of moving it like I did originally?
-> 
-> Yes, I think that works!
-> 
-> For pure EABI and pure OABI kernels, this just does the right thing,
-> storing a plain __NR_restart_syscall in the field without an ABI
-> marker. For an OABI compat task running on an EABI kernel, it will
-> call the EABI version of restart_syscall(), but that is exactly
-> the same as the OABI version, as shown above.
+Looks good to me, as in my previous reply this is safe for all cases
+with the current restartable syscalls, though it would be wrong if
+we had a restartblock version of epoll_wait on an OABI_COMPAT task,
+which needs to look at the high bits of the number to tell which
+structure layout to use.
 
-Okay, excellent. I came to the same conclusion. Patch 1 in the v2
-addresses this and tested okay for me.
+I also looked at my original patch now and see what I did wrong
+there.
 
-Thanks for looking at this!
-
--Kees
-
--- 
-Kees Cook
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
