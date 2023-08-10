@@ -2,143 +2,135 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEA1C001B0
-	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 19:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE025C001B0
+	for <linux-hardening@archiver.kernel.org>; Thu, 10 Aug 2023 20:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233030AbjHJT6I (ORCPT
+        id S232701AbjHJUKe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 15:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44464 "EHLO
+        Thu, 10 Aug 2023 16:10:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232383AbjHJT6I (ORCPT
+        with ESMTP id S232555AbjHJUKe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 15:58:08 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF29CE7F
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:58:07 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1bba48b0bd2so9943255ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 12:58:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691697487; x=1692302287;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GrzpUIYsNReqF6Vjt7YeuyI+AzdvZwRKw+lBcbw3/VE=;
-        b=AIGXxuzPsRszEV5Gyhfusxvte6pg5BONip5dTyc5hhzjXpSNO57GWCQT96ebiABjYS
-         8/90fFkIVa2FauB47bAOXuu10ZTR9hxBnVQranwCf2+5kEWBpjY2oSyb6xRiXaeGQZ18
-         GgxdUjnPTWhQzCQjPexgwl6fmEz94SHJUcsVs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691697487; x=1692302287;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GrzpUIYsNReqF6Vjt7YeuyI+AzdvZwRKw+lBcbw3/VE=;
-        b=cP0ES7h/IZUgabgGXm3dmXFa8UUVZu3lNsGUSYqdc4IjgleSxVaIkA2DBF0rGFg0dN
-         83NjH52JqgL5njv1687DeFY1BN5d8aHAaG/JJz1C2u5LCM0/caViJfHtkeJ1NQhhZk9s
-         pAv70mkdmEI3FqF+41ySY/Xg30hZ0fF0VKQcXofQ8BTVOEZhK65LLn+8btKyUtaXVnm6
-         rouqySDmnDkuKd7pIDwh64wJTFcTFUE/7edE6l4PzSTvTIeg5bIvTJrv2N1ZGVOLPAmJ
-         JWeX2iMaeSpiCEWHUiw35xSm9qH543jSNF9NdcF8V6mPF7uLrpVZIKykUw+moKyUU7PI
-         8dgQ==
-X-Gm-Message-State: AOJu0Yz2kbk7OHt5GYWitHwj31MT2fM4CK8LhN6VvDGogrdnKcfLs476
-        R7BIlJw3RFTNZ4Us15PjyGyVwQ==
-X-Google-Smtp-Source: AGHT+IFrQQ+KCWzwjasCjLqDeaFB7YOqF1dDdtbZZXKcKKDFCgxX4Wc6XAZFk5pk13f92S/nfnkDvQ==
-X-Received: by 2002:a17:903:247:b0:1bb:b86e:8d60 with SMTP id j7-20020a170903024700b001bbb86e8d60mr4103679plh.46.1691697487304;
-        Thu, 10 Aug 2023 12:58:07 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id h5-20020a170902f54500b001a1b66af22fsm2166866plf.62.2023.08.10.12.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 12:58:06 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 12:58:06 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Thu, 10 Aug 2023 16:10:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6DD32706;
+        Thu, 10 Aug 2023 13:10:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5932E63D08;
+        Thu, 10 Aug 2023 20:10:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6027CC433C7;
+        Thu, 10 Aug 2023 20:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691698232;
+        bh=WRdoWe5wxBcJbkSsIlQzyIHKODWuaNuzM4NGwXznyvI=;
+        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
+        b=MmuCvwppqZhHVsoLkY6h+fnmdcPgrOteouLgDLQKC3o17bdbAIbivtkhpNdUIXDPQ
+         PnWPxc33LlUxrJjG1sKX4iYxQENI+JPBw1/lhomq3wYDbGdmRceQ2TDLcFViTSlTet
+         Ohs0P3rcVzPz1X7S6sEkMDi+gjtr4Bhw9JXsJO2K6vmL+sOs2/8iXtpA9jQl0wyF/7
+         N4y7izKu/+X3vT6igmWgzJsXM1IMFTgEVzvyYPrUU4RIx5I8EntUQ1dNtpIzk+bz6v
+         QJPsTwbTCjySlCDdGIRzq31Wxxr7L4U9vVTsD8fxD4zgNXjuRRFcoT3214mz2U21Ts
+         /57cvt5Uoy5RQ==
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 35FCA27C0054;
+        Thu, 10 Aug 2023 16:10:31 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 10 Aug 2023 16:10:31 -0400
+X-ME-Sender: <xms:NkTVZLnao9RAItPUu_GILgQ8k4OilXKsCkyOCv7QA5I2sVqKSwiDkA>
+    <xme:NkTVZO1yyBgzvsvahVOb6FWhsPtWflPC5CneFXrcIc1cPSym0RVQU9LLsx7ven7qA
+    iS0WyF6KWpoj-7JYu0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrleeigddugeegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnhgvlhdrohhrgheqnecuggftrf
+    grthhtvghrnhepvdeviefgtedugeevieelvdfgveeuvdfgteegfeeiieejjeffgeeghedu
+    gedtveehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdduvdekhedujedt
+    vdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvghlrdhorhhgsegrrhhnuggsrd
+    guvg
+X-ME-Proxy: <xmx:NkTVZBo1dhTla8-r3ANxR1R2h_xSmYHQcwYGthiHXp8rDdpv8AUw1w>
+    <xmx:NkTVZDlk5a7v0uEl1tG1JZgi6AOrM8eVTPoB8I486hVGUz66KsZENw>
+    <xmx:NkTVZJ2mhp6ob6-yZ43lk1pUBJLo_0E5pACi60PRDlrNIU2aTCj2_w>
+    <xmx:N0TVZGmSmMG4DdnQQa3PJGfnhvdEhBHprYtCBphWUFLa61dfKLKWVQ>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2E1CEB60089; Thu, 10 Aug 2023 16:10:30 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-624-g7714e4406d-fm-20230801.001-g7714e440
+Mime-Version: 1.0
+Message-Id: <786b2d02-f649-4c5f-ae9a-ed2228e4a3fb@app.fastmail.com>
+In-Reply-To: <202308101209.45CF7C6F80@keescook>
+References: <20230804071045.never.134-kees@kernel.org>
+ <f34c11eb-89b5-48a5-bd24-c215083575a5@app.fastmail.com>
+ <202308101209.45CF7C6F80@keescook>
+Date:   Thu, 10 Aug 2023 22:10:08 +0200
+From:   "Arnd Bergmann" <arnd@kernel.org>
+To:     "Kees Cook" <keescook@chromium.org>
+Cc:     "Russell King" <linux@armlinux.org.uk>,
+        "Lecopzer Chen" <lecopzer.chen@mediatek.com>,
+        "Oleg Nesterov" <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Russell King" <rmk+kernel@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] arm64/sysreg: refactor deprecated strncpy
-Message-ID: <202308101257.47E6ACBD5@keescook>
-References: <20230810-strncpy-arch-arm64-v1-1-f67f3685cd64@google.com>
- <202308101155.81497C5B@keescook>
- <CAFhGd8rfKLY5KujEdvSnqv2MZFhTbEBo_bi7xVacY1pcBC1jRg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFhGd8rfKLY5KujEdvSnqv2MZFhTbEBo_bi7xVacY1pcBC1jRg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: ptrace: Restore syscall skipping and restart while tracing
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 12:25:37PM -0700, Justin Stitt wrote:
-> On Thu, Aug 10, 2023 at 12:00 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Thu, Aug 10, 2023 at 06:39:03PM +0000, Justin Stitt wrote:
-> > > `strncpy` is deprecated for use on NUL-terminated destination strings
-> > > [1]. Which seems to be the case here due to the forceful setting of `buf`'s
-> > > tail to 0.
-> >
-> > Another note to include in these evaluations would be "does the
-> > destination expect to be %NUL padded?". Here, it looks like no, as all
-> > the routines "buf" is passed to expect a regular C string (padding
-> > doesn't matter).
-> >
-> > >
-> > > A suitable replacement is `strscpy` [2] due to the fact that it
-> > > guarantees NUL-termination on its destination buffer argument which is
-> > > _not_ the case for `strncpy`!
-> > >
-> > > In this case, there is some behavior being used in conjunction with
-> > > `strncpy` that `strscpy` already implements. This means we can drop some
-> > > of the extra stuff like `... -1` and `buf[len] = 0`
-> > >
-> > > This should have no functional change and yet uses a more robust and
-> > > less ambiguous interface whilst reducing code complexity.
-> > >
-> > > Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-> > > Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> > > Link: https://github.com/KSPP/linux/issues/90
-> > > Cc: linux-hardening@vger.kernel.org
-> > >
-> > > Signed-off-by: Justin Stitt <justinstitt@google.com>
-> > > ---
-> > > For reference, see a part of `strscpy`'s implementation here:
-> > >
-> > > |     /* Hit buffer length without finding a NUL; force NUL-termination. */
-> > > |     if (res)
-> > > |             dest[res-1] = '\0';
-> > >
-> > > Note: compile tested
-> > > ---
-> > >  arch/arm64/kernel/idreg-override.c | 5 ++---
-> > >  1 file changed, 2 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/kernel/idreg-override.c b/arch/arm64/kernel/idreg-override.c
-> > > index 2fe2491b692c..482dc5c71e90 100644
-> > > --- a/arch/arm64/kernel/idreg-override.c
-> > > +++ b/arch/arm64/kernel/idreg-override.c
-> > > @@ -262,9 +262,8 @@ static __init void __parse_cmdline(const char *cmdline, bool parse_aliases)
-> > >               if (!len)
-> > >                       return;
-> > >
-> > > -             len = min(len, ARRAY_SIZE(buf) - 1);
-> > > -             strncpy(buf, cmdline, len);
-> > > -             buf[len] = 0;
-> > > +             len = min(len, ARRAY_SIZE(buf));
-> > > +             strscpy(buf, cmdline, len);
-> >
-> > This, however, isn't correct: "cmdline" will be incremented by "leN"
-> > later, and we want a count of the characters copied into "buf", even if
-> > they're truncated. I think this should be:
-> >
-> >                 strscpy(buf, cmdline, ARRAY_SIZE(buf));
-> >                 len = strlen(buf);
-> >
-> Thoughts on using the return value from `strscpy` here?
+On Thu, Aug 10, 2023, at 21:32, Kees Cook wrote:
+> On Wed, Aug 09, 2023 at 09:47:24PM +0200, Arnd Bergmann wrote:
+>
+>> If the local_restart code has to store the syscall number
+>> for an EABI-only kernel, wouldn't it have to also do this
+>> for a kernel with OABI-only or OABI_COMPAT support?
+>
+> This is the part I wasn't sure about. Initially I was thinking it didn't
+> matter because it's only a problem for a seccomp tracer, but I realize
+> it might be exposed to a PTRACE tracer too. I was only able to test with
+> EABI since seccomp is disabled for OABI_COMPAT.
+>
+> Anyway, syscall restart is done this way:
+>
+>         movlt   scno, #(__NR_restart_syscall - __NR_SYSCALL_BASE)
+>
+> Can a EABI call restart an OABI syscall? I think so?
 
-This code seems to silently accept truncation, so -E2BIG will cause a
-problem if it only looks at the return value.
+There are very few differences between oabi and eabi syscalls, I
+think it basically comes down to 
 
--Kees
+ - the syscall number, and register in which it is passed to the kernel
+ - a few syscalls that exist for OABI backward compatibility and were
+   deprecated before EABI was added
+ - a few syscalls that pass a struct with different alignment rules
+ - epoll_wait() uses a runtime check for the output format
 
--- 
-Kees Cook
+It also seems like the __NR_restart_syscall path is only relevant
+for syscalls using restart_block for restarting, and that means
+it's only poll(), futex(), nanosleep(), clock_nanosleep() and their
+time64 counterparts. All of these are handled by the same entry
+points for OABI and EABI, i.e. there is no overlap with the
+exceptions above. Crucially, epoll does not use restart_block,
+unlike poll().
+
+> So maybe we just need to add:
+>
+> 	str     scno, [tsk, #TI_ABI_SYSCALL]    @ store scno for syscall restart
+>
+> after that instead of moving it like I did originally?
+
+Yes, I think that works!
+
+For pure EABI and pure OABI kernels, this just does the right thing,
+storing a plain __NR_restart_syscall in the field without an ABI
+marker. For an OABI compat task running on an EABI kernel, it will
+call the EABI version of restart_syscall(), but that is exactly
+the same as the OABI version, as shown above.
+
+    Arnd
