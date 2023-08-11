@@ -2,149 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CFFC001E0
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 03:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6D4EB64DD
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 05:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbjHKDiM (ORCPT
+        id S231338AbjHKFpi (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 23:38:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51110 "EHLO
+        Fri, 11 Aug 2023 01:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjHKDiL (ORCPT
+        with ESMTP id S229456AbjHKFph (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 23:38:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0CB26A0;
-        Thu, 10 Aug 2023 20:38:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A27264CCF;
-        Fri, 11 Aug 2023 03:38:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7CEFBC433C8;
-        Fri, 11 Aug 2023 03:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691725090;
-        bh=whhV6SkWkfSGuUqgawwieXdrPYWPSac+Odl5OgaklPE=;
-        h=From:Date:Subject:To:Cc:Reply-To:From;
-        b=DfDe0sLPiPncLsY2sbT70pZ0lDY1i41wPQVm/fwKmZ0U2fNXlG1fYIH+4AZj0qyln
-         1dEdQED/NP4pGRVef+jrI0UlYHKsadZJp4B+x4CfsOij5dIxYwUyJ7hsVc4jaZiY25
-         PbqaAHcl3uT5ijrOe23XaoQWLNAZ96dKrLtGov+j/5fGVGzTDZnbl2sXmNlUOydmB7
-         y+dwA1ogfv2uWJeP1o1C3UVnKxkaPur7KLMIr/hsssimMSvO5RbVoZsnA4qORKybg5
-         Wi7ItzfogLeAeqR3b+rMvtAusPlURfYicquZZUMfqmpzfbO8S7GgkrzclopjGPtExT
-         6CvvPCun/7zzg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.lore.kernel.org (Postfix) with ESMTP id 603D9C001DE;
-        Fri, 11 Aug 2023 03:38:10 +0000 (UTC)
-From:   Nathan Lynch via B4 Relay 
-        <devnull+nathanl.linux.ibm.com@kernel.org>
-Date:   Thu, 10 Aug 2023 22:37:55 -0500
-Subject: [PATCH v2] powerpc/rtas_flash: allow user copy to flash block
- cache objects
+        Fri, 11 Aug 2023 01:45:37 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDCA92D43
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 22:45:36 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5650ec45a7cso1094443a12.3
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 22:45:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1691732736; x=1692337536;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vTeKxa1864hX9Aw51WCVjkQ2Cm0F4fAMm4BvD1X8A/w=;
+        b=ZFniN104HNYjmigZFPtbzk4Zw6qS9pf+Et2Pd10K+5vMDpWBP3veR3Utp7cRCTxVye
+         GHR1TldZa+oirz7lT/KUkE55d3Tm0rbRSOjtDd0fdKfW47vFhrLw6f5uvH86KSCmWRuh
+         zpVojA9PpH9BiqcZXC6EnWZZ8IPEfHVp9CJVI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691732736; x=1692337536;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vTeKxa1864hX9Aw51WCVjkQ2Cm0F4fAMm4BvD1X8A/w=;
+        b=CO3BOevgqr+nyYxib+sOczuxleyYqf3mW51OHpsQLKJLj3uQH7j56WJkk3ajlTI0xs
+         2nMZTsExezsUfpHD2E2g9NZasCiL19/kIhgJBoxAV8zEU7KUOjpiIprnfUAmXg5ReKJ/
+         QK5fDnsU5XrrNwq0m1ASPo/Ovklu1IfdJTHfkmzm8/SiioeMdeoQnWekPRwnbiWBcYKI
+         Xn1vNmWeIJI0MzpY3AjbcbtdECJr4zHVgzx+teKJx8jF/fSJ/OUmYccbcr0KiSUIwNGm
+         HtVqtEV/i2GBRa8JtkPjN3u+kd45/3fpUO7Zx0SCtG6z9z4v+HtxUTMOmze4d4Y5KHgs
+         /Eqg==
+X-Gm-Message-State: AOJu0YwIv4GWN5A62g+KihlbCUAJZ72oVN17tZUzT/+Arr3DklbOZxHs
+        6tRSuY/3GOLXb5PqBuSG+D9Mhw==
+X-Google-Smtp-Source: AGHT+IF9+U8OjOK5KoXzKGySLXY1qbvcfQq3c2iovSWz7+fLk0IBTCzM5rt/V+M3MdKgKIjctublJA==
+X-Received: by 2002:a05:6a20:be1b:b0:133:3682:3cdf with SMTP id ge27-20020a056a20be1b00b0013336823cdfmr785320pzb.11.1691732736198;
+        Thu, 10 Aug 2023 22:45:36 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id c2-20020aa78802000000b00687087d8bc3sm2557075pfo.141.2023.08.10.22.45.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Aug 2023 22:45:35 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Vijay Balakrishna <vijayb@linux.microsoft.com>,
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t cast
+Date:   Thu, 10 Aug 2023 22:45:32 -0700
+Message-Id: <20230811054528.never.165-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230810-rtas-flash-vs-hardened-usercopy-v2-1-dcf63793a938@linux.ibm.com>
-X-B4-Tracking: v=1; b=H4sIABKt1WQC/4XNQQ6DIBCF4asY1h0DmNjSVe/RuEAYyyQKDSjRG
- O9eag/Q5f8W39tZwkiY2L3aWcRMiYIvIS8VM077FwLZ0kxy2fBrIyDOOsEw6uQgJ3A6WvRoYSm
- OCe8NuNKtlU3bcyFYUd4RB1rPh2dX2lGaQ9zOwyy+68++8f92FiBAolJmUCh7tI+R/LLW1E+1C
- RPrjuP4AOBsLJnSAAAA
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Nathan Lynch <nathanl@linux.ibm.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691725089; l=3245;
- i=nathanl@linux.ibm.com; s=20230206; h=from:subject:message-id;
- bh=mnxTyBgPfZp2EwTmjYzNjMI5jJcJ4qTWUk5dzWOmYlA=;
- b=x0ZNdmr3h+oB6GmQqV4qkH5z0Kn3pjHXJhNWw+wl5tKyWa6HZJ6Ppd1jwAMLXktRgXVkRrfzu
- MIoMmqKBswLBh9MUxfzfOgjHQJZkouOSveeH8oS+DXgkIHSpwdAynpi
-X-Developer-Key: i=nathanl@linux.ibm.com; a=ed25519;
- pk=6daubz/ymoaMF+8voz7UHwnhluEsmDZuqygIIMWpQQY=
-X-Endpoint-Received: by B4 Relay for nathanl@linux.ibm.com/20230206 with auth_id=27
-X-Original-From: Nathan Lynch <nathanl@linux.ibm.com>
-Reply-To: <nathanl@linux.ibm.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1390; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=LSsQlfVwJGANZC4BMOlstWxt7EAJ8V19cSaVUMG+hnA=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk1cr8i9Tw8GnNz3kTm1mkiIrZuI7bebooN5tFQ
+ YTs1cel/WeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZNXK/AAKCRCJcvTf3G3A
+ JqK9D/4hSDCX6PHtUGQaGrmuI0S5HitVkvLsSFBNe+yoYZStF8nq/g9woA7dMsmU3ypkEM+DRLO
+ l9dXpbwr6JTWsjkCECKWqZjA29PjXGG8bkgkQrpVWWQWuy0Rg4h8EnsfuuVJEGtbU8U4Vlmlv2w
+ DTytv5P8uyalfVbyF1UaEAt/PhCvZpu/UJo5xyYwO2IXSG68ouUHeN+8kCKCnlu/a3Sd66lR4Fp
+ PEYJAG9WkSVfQ8i4vM4c7I5eke7YNosDJ0umAuPgZ2oOQlABn0ZeDmjPVbYCqfzUseB9ycnmkBa
+ 7yVK8LPcupe+IcUA8sS0VBNN3pZQrb/2mE/PwX/0e+ZVTu/ROfugMBfGqNJwSqim44ROSFJeUek
+ gslo9slDbwJt5EixSB4xtPWfs3AHEG3GQkzp/sIBNMHHzjJRT5GFk65/qWpnQhzlG5IMe57xFHM
+ xOVdwl+VeevpJAAly9QrGDl7tR6xyC4Pia+sgvlIKATvpmPTziSBt/X32h8/vtOpbyvli9O/idy
+ LJzwBKtdr9dI2ynun4ZQHr5QvD2j9w0NGmojOIJ0OTXBCZ45ZDF32r/qqjXwd06jtK70FlApiUX
+ Wy9/1LA5N8VsjPT2HqFYXTpxS6BTHSD5VSvYhCEYhkeNcFHjkx5EzKdQyN/sv+vbDNh7MO0Nzjp
+ RpC5fZy dRA1n43A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Nathan Lynch <nathanl@linux.ibm.com>
+If an output buffer size exceeded U16_MAX, the min_t(u16, ...) cast in
+copy_data() was causing writes to truncate. This manifested as output
+bytes being skipped, seen as %NUL bytes in pstore dumps when the available
+record size was larger than 65536. Fix the cast to no longer truncate
+the calculation.
 
-With hardened usercopy enabled (CONFIG_HARDENED_USERCOPY=y), using the
-/proc/powerpc/rtas/firmware_update interface to prepare a system
-firmware update yields a BUG():
-
-kernel BUG at mm/usercopy.c:102!
-Oops: Exception in kernel mode, sig: 5 [#1]
-LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-Modules linked in:
-CPU: 0 PID: 2232 Comm: dd Not tainted 6.5.0-rc3+ #2
-Hardware name: IBM,8408-E8E POWER8E (raw) 0x4b0201 0xf000004 of:IBM,FW860.50 (SV860_146) hv:phyp pSeries
-NIP:  c0000000005991d0 LR: c0000000005991cc CTR: 0000000000000000
-REGS: c0000000148c76a0 TRAP: 0700   Not tainted  (6.5.0-rc3+)
-MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24002242  XER: 0000000c
-CFAR: c0000000001fbd34 IRQMASK: 0
-[ ... GPRs omitted ... ]
-NIP [c0000000005991d0] usercopy_abort+0xa0/0xb0
-LR [c0000000005991cc] usercopy_abort+0x9c/0xb0
-Call Trace:
-[c0000000148c7940] [c0000000005991cc] usercopy_abort+0x9c/0xb0 (unreliable)
-[c0000000148c79b0] [c000000000536814] __check_heap_object+0x1b4/0x1d0
-[c0000000148c79f0] [c000000000599080] __check_object_size+0x2d0/0x380
-[c0000000148c7a30] [c000000000045ed4] rtas_flash_write+0xe4/0x250
-[c0000000148c7a80] [c00000000068a0fc] proc_reg_write+0xfc/0x160
-[c0000000148c7ab0] [c0000000005a381c] vfs_write+0xfc/0x4e0
-[c0000000148c7b70] [c0000000005a3e10] ksys_write+0x90/0x160
-[c0000000148c7bc0] [c00000000002f2c8] system_call_exception+0x178/0x320
-[c0000000148c7e50] [c00000000000d520] system_call_common+0x160/0x2c4
---- interrupt: c00 at 0x7fff9f17e5e4
-
-The blocks of the firmware image are copied directly from user memory
-to objects allocated from flash_block_cache, so flash_block_cache must
-be created using kmem_cache_create_usercopy() to mark it safe for user
-access.
-
-Fixes: 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
-Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: John Ogness <john.ogness@linutronix.de>
+Reported-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+Closes: https://lore.kernel.org/lkml/d8bb1ec7-a4c5-43a2-9de0-9643a70b899f@linux.microsoft.com/
+Fixes: b6cf8b3f3312 ("printk: add lockless ringbuffer")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-I believe it's much more common to update Power system firmware
-without involving a Linux partition, which may explain why this has
-gone unreported for so long.
----
-Changes in v2:
-- Drop excessive local const variables. No functional change.
-- Link to v1: https://lore.kernel.org/r/20230801-rtas-flash-vs-hardened-usercopy-v1-1-2e99cf9e2bed@linux.ibm.com
----
- arch/powerpc/kernel/rtas_flash.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/printk/printk_ringbuffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/rtas_flash.c b/arch/powerpc/kernel/rtas_flash.c
-index 4caf5e3079eb..359577ec1680 100644
---- a/arch/powerpc/kernel/rtas_flash.c
-+++ b/arch/powerpc/kernel/rtas_flash.c
-@@ -709,9 +709,9 @@ static int __init rtas_flash_init(void)
- 	if (!rtas_validate_flash_data.buf)
- 		return -ENOMEM;
+diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+index 2dc4d5a1f1ff..fde338606ce8 100644
+--- a/kernel/printk/printk_ringbuffer.c
++++ b/kernel/printk/printk_ringbuffer.c
+@@ -1735,7 +1735,7 @@ static bool copy_data(struct prb_data_ring *data_ring,
+ 	if (!buf || !buf_size)
+ 		return true;
  
--	flash_block_cache = kmem_cache_create("rtas_flash_cache",
--					      RTAS_BLK_SIZE, RTAS_BLK_SIZE, 0,
--					      NULL);
-+	flash_block_cache = kmem_cache_create_usercopy("rtas_flash_cache",
-+						       RTAS_BLK_SIZE, RTAS_BLK_SIZE,
-+						       0, 0, RTAS_BLK_SIZE, NULL);
- 	if (!flash_block_cache) {
- 		printk(KERN_ERR "%s: failed to create block cache\n",
- 				__func__);
-
----
-base-commit: c3cad890877f59aeeaf5a638aa7a7c0612c16fa1
-change-id: 20230731-rtas-flash-vs-hardened-usercopy-09a6d236b011
-
-Best regards,
+-	data_size = min_t(u16, buf_size, len);
++	data_size = min_t(unsigned int, buf_size, len);
+ 
+ 	memcpy(&buf[0], data, data_size); /* LMM(copy_data:A) */
+ 	return true;
 -- 
-Nathan Lynch <nathanl@linux.ibm.com>
+2.34.1
 
