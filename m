@@ -2,90 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51920C04A6A
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 05:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F2AC001B0
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 06:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232388AbjHKFz5 (ORCPT
+        id S230038AbjHKGFx (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Aug 2023 01:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49508 "EHLO
+        Fri, 11 Aug 2023 02:05:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233276AbjHKFzz (ORCPT
+        with ESMTP id S229445AbjHKGFw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Aug 2023 01:55:55 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA2C42D6A
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 22:55:52 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-26b1adbd655so502045a91.1
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 22:55:52 -0700 (PDT)
+        Fri, 11 Aug 2023 02:05:52 -0400
+Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 616302722
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 23:05:52 -0700 (PDT)
+Received: by mail-oi1-x234.google.com with SMTP id 5614622812f47-3a7aedc57ffso1365498b6e.2
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 23:05:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1691733352; x=1692338152;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2OD5ZJXsW01Gkak3C9PDmNcxF6jiUQnE47JaTYXQ2XI=;
-        b=KmJ7vo2x2kgxcCOFYtH2hKSHu+0pY2VUNnZpCBbS25LCbKUtxA688X2pLRPq9USzib
-         SUIXyKe3IQrJtsvW1BW3eo5YJGPrXCSJVMzZDcXuk5jr83tmrf5PuCtCj2wpE4VcbgcK
-         T+S+T323/s0Qx0kVW3cGQ6hnilxAECCDhcmz0=
+        d=chromium.org; s=google; t=1691733951; x=1692338751;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E/+lBClPndqGoiitD3Opw+ILBbpFxp3xNzPARhwp7y4=;
+        b=aNoomnlcJZQhDUc4CoSqPPpkLjO5yDHnddYPjfDXHwKtGWUujpAk/hqbIa1UjBvO7n
+         hnaxR3ByDl0U5K7MkO0LbrJzwczrdfCZ9hOYgSzYSLDuIPL6hDBWXqQjRSTHQKvbQMF1
+         glxrGY036r+b8oWDrtzs4dalz9dsLoQ4rm7yU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691733352; x=1692338152;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2OD5ZJXsW01Gkak3C9PDmNcxF6jiUQnE47JaTYXQ2XI=;
-        b=HqC8IZ2ajtsIU3EZYsbYxh4wW6rAMJgxvcUzV/6Y/f7UzGEbP+n0Q72VcMP87mcbNS
-         Z1H9ch2B8cF3Z8/WDwefgCHOJee1fEp+s8ea6bH8PdktiLv4N+tnfZgmHJ4ppFF3FLZy
-         OByC1/cegvwTrtpfeumEUrTUewbwojm8gsa0R9XoLxpEItpzIwBVirGeJvHzOxLnxTA1
-         4nUiaxkG/vG6M6FGRLtQOgSvRSly74SV9Mwy7mMTe9fgCxjszoM5mOqVlZ65BG/a3Tx0
-         K1KbRbhrXVc3GnUwxTDPRx6CeN1zfigCJYSI05y0lNG4Frh2jxbbnAqiNut3+EP+67sv
-         JSeA==
-X-Gm-Message-State: AOJu0YxtEihbC8PcpVmYwNvVhB+ANrd3nq7VzHFQuK8mPOIu2ayYe22i
-        nXFg6SsKO/WZGjKV/G0yM6qwUQ==
-X-Google-Smtp-Source: AGHT+IG/KPGlnVMvs4ls738U22u+HBpqZA1zXRBdAtInf7cvftgHPpkb2CXU/kZ/s1PD0WUg+5/Ziw==
-X-Received: by 2002:a17:90b:1b04:b0:268:13e2:fc91 with SMTP id nu4-20020a17090b1b0400b0026813e2fc91mr449458pjb.31.1691733352385;
-        Thu, 10 Aug 2023 22:55:52 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1691733951; x=1692338751;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E/+lBClPndqGoiitD3Opw+ILBbpFxp3xNzPARhwp7y4=;
+        b=DdIFEgMZkIgD1TowgbvNIdz9e+SkxZfmj+o0/BZ8cr2hD0EplTGQxoAshAaQcIHIri
+         /1Hxt9dCC7roVIH6K+GjgWXdR/v3ObWHjKgjS1BDfPmAcFboYWRhlDnIylbXXrJEuIR/
+         jMDW/QBD3QhwTsesbgY6529icZk9S4aWh1EJ+H0+nTHZY+XfldB9eU1QkJNxV8Ofn3BZ
+         LA3AOJzHibtwNlINCVk6n0Pb4wJyue8UX24hMmdYVWonlRcDL52LU9Z2jwJ+lH97AxZ2
+         wh0D8jP2ml97yMWbRLfVLj/6+zXUuzeE38HJoGliDFLj2wA/cMF9QOViJBTFGoKAA+Lt
+         /Keg==
+X-Gm-Message-State: AOJu0YzJmUm7hN+KeT8hyFwvSXJI1UgRsbNdMfOeKVHLCcrmu6uK8hdQ
+        I6rFqJmwWAEtTwUhuJOVGHBb1g==
+X-Google-Smtp-Source: AGHT+IFe1I+Che/PlHxuUiTQoj+Iq8npyTZIcrhKMiNJXkOo7FYJ2hWe50wFm7az1tFP7WW6BcDjkg==
+X-Received: by 2002:a54:4192:0:b0:3a1:e5b1:f915 with SMTP id 18-20020a544192000000b003a1e5b1f915mr1093589oiy.55.1691733951693;
+        Thu, 10 Aug 2023 23:05:51 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v10-20020a17090a898a00b00263fc1ef1aasm4350298pjn.10.2023.08.10.22.55.51
+        by smtp.gmail.com with ESMTPSA id s82-20020a632c55000000b005579f12a238sm2548794pgs.86.2023.08.10.23.05.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 22:55:51 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 22:55:51 -0700
+        Thu, 10 Aug 2023 23:05:51 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@kernel.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] ARM: ptrace: Restore syscall skipping and restart
- while tracing
-Message-ID: <202308102254.689CB3F@keescook>
-References: <20230810195141.never.338-kees@kernel.org>
+To:     linux-hardening@vger.kernel.org
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] gcc-plugins: Rename last_stmt() for GCC 14+
+Date:   Thu, 10 Aug 2023 23:05:49 -0700
+Message-Id: <20230811060545.never.564-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230810195141.never.338-kees@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=746; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=8AaF7U4OBYvk4miZLHfIWW2jfVJVQ12iOH7qSgZtno4=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk1c+8hUNWDnUnX1OxcoKDqd2k/sQcGoENQHll1
+ 9OkpaBwTH6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZNXPvAAKCRCJcvTf3G3A
+ JqEkEAClG1uhinHy4kCqcqB7+ILmn5Vl7LJcvPUn6PWokfY3tayGSdu81p4TWz7vwl9mQtX1Sae
+ e/9sR+lbdp+bPqEBuiSZpdyw4iqu1GeCCGnqAXYhaUuKnSFtruHuxBSbbtd6PJIT7+7P8808ysv
+ fBNuWSv/+yDoIp0Syy0oxJgAzrIuIZ4NGmaA6ir5WF3AH6za+nNw/2vmCOvX0bi/G+fG0avH4xx
+ jovXiDIacuEHfoz6fWBDJnyX5WGZt7zUO5MBU2Ul8aqDy22kGvTfsQl9p+w9MduDKCeKMkU8vnD
+ TGaR72rtSATmazgBcvvob+QoqT8q6ex6HcWfV5b+zBHQSGoIJbxwiDIWhD7fgBCFbrQgxiOOncG
+ 1CYzVeXAfB4bh4KEnyErgjqwI+sUAAFGTr20KgTVjWDSQwPCLq7Vh5fO0Ur8V5eL1AKrrhq2ruA
+ kvfJ5c0/sF4JA/BU2bpakdbTDxeGgvi0EuwNCAfdevSPphQ7jpuk00820aQvxgqSUFPCocdN92v
+ EOdNxlfpRkaXayHULbeOtOVMdxgRGdj+3/l2D5kr7bavoZoYyqf8w8RMb0nD7oxu/EZE9pezlQI
+ yozKkBZ2hWcHHVwSoWHMwCSEKfDpW3AV6tXZD7vqZ8XZW/5c2UTplMQGR42cd/jWQkU1fXM1s1y
+ iLaT9QIH 7rRSnxw==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 12:54:17PM -0700, Kees Cook wrote:
-> Fix tracing on arm since commit 4e57a4ddf6b0 ("ARM: 9107/1: syscall:
-> always store thread_info->abi_syscall"). This was seen with the broken
-> seccomp tests "syscall_errno", "syscall_faked", and "syscall_restart".
+In GCC 14, last_stmt() was renamed to last_nondebug_stmt(). Add a helper
+macro to handle the renaming.
 
-I'd like to get this fixed in v6.5. Russell, do you have a fixes tree
-that you'll be sending Linus's way before the next -rc? I can send it
-via my seccomp-fixes tree if that'd be easier.
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ scripts/gcc-plugins/gcc-common.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Thanks!
-
--Kees
-
+diff --git a/scripts/gcc-plugins/gcc-common.h b/scripts/gcc-plugins/gcc-common.h
+index 84c730da36dd..1ae39b9f4a95 100644
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -440,4 +440,8 @@ static inline void debug_gimple_stmt(const_gimple s)
+ #define SET_DECL_MODE(decl, mode)	DECL_MODE(decl) = (mode)
+ #endif
+ 
++#if BUILDING_GCC_VERSION >= 14000
++#define last_stmt(x)			last_nondebug_stmt(x)
++#endif
++
+ #endif
 -- 
-Kees Cook
+2.34.1
+
