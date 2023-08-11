@@ -2,136 +2,104 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86881C001B0
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 16:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66521C41513
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 21:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232795AbjHKQxx (ORCPT
+        id S236393AbjHKVT3 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Aug 2023 12:53:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42430 "EHLO
+        Fri, 11 Aug 2023 17:19:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231928AbjHKQxx (ORCPT
+        with ESMTP id S235948AbjHKVT2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Aug 2023 12:53:53 -0400
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D5130C1;
-        Fri, 11 Aug 2023 09:53:52 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.west.internal (Postfix) with ESMTP id 5EDDE32001FF;
-        Fri, 11 Aug 2023 12:53:51 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 11 Aug 2023 12:53:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tyhicks.com; h=
-        cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1691772830; x=1691859230; bh=W3
-        QlfQPf/mhvsUrrEpuciPnw8YcCrut43G8ZIaPlOQ0=; b=rq1RlGScfenEom/BZ5
-        mh5DqdQFANtcENVmz1ZAe1+woYnjJlXGpi4QGvKSHV0CdWGUTvpf2StJsjr4qQDy
-        ZrA/NUhULu2Pr4fvOMPXieFrjfhN+wtCI3JvX7lPKvgT4Fyp7/Y8ijDSgiC9cY1W
-        sIBituV1M9VDfjLYRPUasZS/WNnCgZaDQRaV3aoepfvkowsjAtlZDScm44hXjnwR
-        XEtkzlQCH06mPWtAa3xo0QkzKS+H6DLZbDF6FjbF1oiJU+tIIfvZF29oZhIsLjzz
-        NGjLfr5EVh5r4oprdx9iWm6R+09s6yrIqc8vI7Ao+v1aM2PDSj+9lo949lZYFA7m
-        UUPw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1691772830; x=1691859230; bh=W3QlfQPf/mhvs
-        UrrEpuciPnw8YcCrut43G8ZIaPlOQ0=; b=qmNm5DWVpIG9SgcAJYhVSgVOFi0gJ
-        ShmFThzYAQY2nerhQPStN4DEK9Klef2gV7qOhe8pZIbMZmAEDKMFPp65BWW+TwqA
-        lmay1DrejRorvFGPP1jnFpCPkfGdjfhc8H9ZpJS3YKpUOtW7FIwJpEjoPKrVudV8
-        fwNizWihX07PcLVxEdFwOrzOzSfgpCXiBFdpNwhL6Hhq9A8EGgH+VH+DAauyM3gY
-        jhqeiNzKqzzVqd0OpJ3yrDU+BbH66hZsywDIoJ++o35KJ8nVS5g+JIAK8fL+avVK
-        tlm9IybVbnmo+y3mWvZc/VyPK8+kkDzyoZDv5Kv2gWbtd8EQESc70+4EA==
-X-ME-Sender: <xms:nmfWZF8iK3vuXAKFmEQz36vdzOXVZsMlVT8JisQNk0bm7R51qb1T7g>
-    <xme:nmfWZJsYyYvEZi8yH17GasH1EEzTsj9dCvbeDLI9W0FmFk7oHv58ZiByP1hpoDRFw
-    f7vJ17kaH2w4Rh39BU>
-X-ME-Received: <xmr:nmfWZDAU_0ABHVXasHGgFRF02xuqLC_UNpuQMCBP4rx27NZJsQxs9EAY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedviedrleekgddutdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfihlhgv
-    rhcujfhitghkshcuoegtohguvgesthihhhhitghkshdrtghomheqnecuggftrfgrthhtvg
-    hrnhepgfegkeeiffethefgteffudfhfeejhedvjefhjeekudelffdulefhfeekieeludej
-    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegtohguvgesthihhhhitghkshdrtghomh
-X-ME-Proxy: <xmx:nmfWZJck4ln2F7jxcVbJG6QURvQHknn9Xh1q7cej8zxPpb_SpgQOLw>
-    <xmx:nmfWZKMCoVtSMG68BUOndwBvE0RGbScyva5GfT2aVzBLC9lVgvZ2sw>
-    <xmx:nmfWZLktF_X2IYxq1MjH2dCti0xOO0x2reyhn08ONqHYHCPzovZUrQ>
-    <xmx:nmfWZLGDKWjsrGWc1qfphg8p0zz2jOTc7ZfN7gpDXcIDsF79wiRTxw>
-Feedback-ID: i78e14604:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 11 Aug 2023 12:53:48 -0400 (EDT)
-Date:   Fri, 11 Aug 2023 11:53:37 -0500
-From:   Tyler Hicks <code@tyhicks.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Vijay Balakrishna <vijayb@linux.microsoft.com>,
-        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t cast
-Message-ID: <ZNZcTQCDXfMA3v6O@sequoia>
-References: <20230811054528.never.165-kees@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230811054528.never.165-kees@kernel.org>
+        Fri, 11 Aug 2023 17:19:28 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436031FE1
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:19:26 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d6412374defso2172500276.0
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:19:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1691788765; x=1692393565;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RFrxluOoy6twC+BtLwdF7yyyJ9Z+VqsYDm8spFvMc3o=;
+        b=KEeT3bwgLFy9nncUtsA1DUMJ+lw/0tWaAcyjIIb1nTbBe9h5TbDkdkoFdWj0klLLdY
+         NjGjXqqFdce2YstjTQv4AXniOjzoMu28xyT5D4d0ahEoSsaQv2JPfHwpqA0NmS6hSaoj
+         Ks8ws9d3oxBF4ffFqKww/GZSfMSB6ylltuLMG9B8Zg6oRBC7xMlGlNK4jl0ZbhOlbG98
+         etWolJ0AzSzpyRaHQuKDNmGQpHcuo17dYYBylyaUCsXRYpGHnXKDfJYQCid8aAq7N5vB
+         /wlg08oiFa/ZVqNwZCHx7vqYFQ8UxrMpuYeUotCGkC4b8VLq5VoF7oCeCmmk9oSwMEZp
+         Ds4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691788765; x=1692393565;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RFrxluOoy6twC+BtLwdF7yyyJ9Z+VqsYDm8spFvMc3o=;
+        b=Vo5P1+aF1u12eVOJDOMyIPFsUCKy/UmJ0dpXddjzhfjx9W2qRaHwTbF3/yKAamBZ4W
+         YWC4dFjBklBMxGlIYGGOjeD7tnh1/N1wS9fHr0LuFRgA87gD49aweZPKkU0PaPO+G6lI
+         rOc896owVhereBeUE8ZitAXgBC8Q47yLOVv4JyzvHcN5ys4luYOXJ/ENPPNQTzQe5qkl
+         bE4S1gO3Dx8F6ec156kJwrJ5QkLsKljQyP7jepc4740WGLY/DM1r25T5++I5V7+q3epZ
+         tQvK2cAKrlzBpsWkdvP+YnxdhURsLnsi93hMhyJfcXU8lLSZdqlDNLXPO+WyQTR1zPW4
+         31Jw==
+X-Gm-Message-State: AOJu0YwXEIS2SZ/Lut0VMxVmYAAImGNiCSMQY64NZvWUPcnqU1utP8Po
+        gTEvjruOUrk8UhQ5gBDDRf6DWNqhGqLFWuVaMw==
+X-Google-Smtp-Source: AGHT+IF9Br69ecsKGahyXfFLxWcygWeL+6PwYxobiySkMHlx9q6Oc6i4K3Yd/3AjaZeOGXX0GHjRyimm9VjmKK5cbg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a25:ad55:0:b0:d4d:8ade:4dfa with SMTP
+ id l21-20020a25ad55000000b00d4d8ade4dfamr48994ybe.1.1691788765541; Fri, 11
+ Aug 2023 14:19:25 -0700 (PDT)
+Date:   Fri, 11 Aug 2023 21:19:18 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIANal1mQC/x3NTQrCMBBA4auUWTvQpIg/W8EDuJUu0mRqBzQZZ
+ opWSu9ucPlt3lvBSJkMzs0KSm82LrnC7RqIU8gPQk7V4FvftUfn0GbNUb4YNE4o5UMqEeUZ5rH oy1Csw/0huJgGH9JpgBoSpZGX/+QOt+sF+m37AXk5aSh5AAAA
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691788764; l=1075;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=UEYyh0BWz2Miih72wZBvRAC+rwc0jWuEQ2qNUTkM5XU=; b=Zlh1YTXz73wMqDpXUvsEhgcdl9DyMmUzchwKzmOb2URaBWyy4LBJQTuQT9BtWkgTvdP5uJxVy
+ 20A8c1diBa9BvaWKvZttQDKCDc7IH26PulJT/j+2/N0g1J73S5NClwP
+X-Mailer: b4 0.12.3
+Message-ID: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com>
+Subject: [PATCH RFC 0/3] powerpc/ps3: refactor strncpy usage
+From:   Justin Stitt <justinstitt@google.com>
+To:     Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-08-10 22:45:32, Kees Cook wrote:
-> If an output buffer size exceeded U16_MAX, the min_t(u16, ...) cast in
-> copy_data() was causing writes to truncate. This manifested as output
-> bytes being skipped, seen as %NUL bytes in pstore dumps when the available
-> record size was larger than 65536. Fix the cast to no longer truncate
-> the calculation.
-> 
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: John Ogness <john.ogness@linutronix.de>
-> Reported-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-> Closes: https://lore.kernel.org/lkml/d8bb1ec7-a4c5-43a2-9de0-9643a70b899f@linux.microsoft.com/
-> Fixes: b6cf8b3f3312 ("printk: add lockless ringbuffer")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Within this RFC-series I want to get some comments on two ideas that I
+have for refactoring the current `strncpy` usage in repository.c.
 
-Nice find!
+When looking at `make_first_field` we see a u64 is being used to store
+up to 8 bytes from a literal string. This is slightly suspect to me but
+it works? In regards to `strncpy` here, it makes the code needlessly
+complex imo.
 
-Reviewed-by: Tyler Hicks (Microsoft) <code@tyhicks.com>
-Tested-by: Tyler Hicks (Microsoft) <code@tyhicks.com>
+Please see my two ideas to change this and let me know if any other
+approaches are more reasonable.
 
-Verified the fix by applying it to an instrumented v6.5-rc5 kernel that
-allows userspace to execute kmsg_dump(), detects NULL bytes in data
-copied from the ring buffer, and warns about invalid truncation due to
-the min_t(u16, ...) casting bug. Everything looks good!
+Link: https://github.com/KSPP/linux/issues/90
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Justin Stitt (3):
+      [RFC] powerpc/ps3: refactor strncpy usage attempt 1
+      [RFC] powerpc/ps3: refactor strncpy usage attempt 2
+      [RFC] powerpc/ps3: refactor strncpy usage attempt 2.5
 
-Tyler
+ arch/powerpc/platforms/ps3/repository.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+---
+base-commit: 52a93d39b17dc7eb98b6aa3edb93943248e03b2f
+change-id: 20230811-strncpy-arch-powerpc-platforms-ps3-57a1cdb2ad9b
 
-> ---
->  kernel/printk/printk_ringbuffer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> index 2dc4d5a1f1ff..fde338606ce8 100644
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
-> @@ -1735,7 +1735,7 @@ static bool copy_data(struct prb_data_ring *data_ring,
->  	if (!buf || !buf_size)
->  		return true;
->  
-> -	data_size = min_t(u16, buf_size, len);
-> +	data_size = min_t(unsigned int, buf_size, len);
->  
->  	memcpy(&buf[0], data, data_size); /* LMM(copy_data:A) */
->  	return true;
-> -- 
-> 2.34.1
-> 
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
