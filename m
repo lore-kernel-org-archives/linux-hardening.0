@@ -2,147 +2,150 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4012DC001DE
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 00:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60394C001B0
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 03:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbjHKAmd (ORCPT
+        id S230525AbjHKDSN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 20:42:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42554 "EHLO
+        Thu, 10 Aug 2023 23:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229605AbjHKAmc (ORCPT
+        with ESMTP id S233024AbjHKDSK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 20:42:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4053926AB;
-        Thu, 10 Aug 2023 17:42:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A984E65BB7;
-        Fri, 11 Aug 2023 00:42:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA8E6C433C8;
-        Fri, 11 Aug 2023 00:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691714551;
-        bh=BLVBWqO0aRuEYlrB8Ztjvwvzg8thlHpFoerbknuafcs=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=r9jqh2h0KZZYZDtige5DCcjtRdrHmZkgGSr8rZMOFWKpJy1OdDEi7LOi2yZ3k5zxU
-         pX49HvM6qmrYYrktUFzgmf25B8sOQRcP2waURBl3xafOLof6sYReACF9Fj1+p9llRU
-         idlDYn4fyWUYJTfs9sSyEosdV28AaeeUrJhiYQXJ/Vxh6lRbPWP2sNoBs0fLLmQOgT
-         vk9/kSZHMH6u7WOrHm8UXq2xIjNeFdyC77dPnjWOQnOwOqlk4OvjpTUkLodqyVtzl5
-         83TkrtHmk+GprKipP+hWghNkre09QTCOZS3nR5X/OYsgCE9uVNrt4DfwMz7rwI9pMG
-         wSzsLl261S5PQ==
-Date:   Thu, 10 Aug 2023 17:42:26 -0700
-From:   Kees Cook <kees@kernel.org>
-To:     Justin Stitt <justinstitt@google.com>,
-        Kees Cook <keescook@chromium.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] arm64/sysreg: refactor deprecated strncpy
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAFhGd8pa0UFFG3M39YttrfSQj0aO-Xq70XVQpcLM0X6pD9wECQ@mail.gmail.com>
-References: <20230810-strncpy-arch-arm64-v1-1-f67f3685cd64@google.com> <202308101155.81497C5B@keescook> <CAFhGd8rfKLY5KujEdvSnqv2MZFhTbEBo_bi7xVacY1pcBC1jRg@mail.gmail.com> <202308101257.47E6ACBD5@keescook> <CAFhGd8pa0UFFG3M39YttrfSQj0aO-Xq70XVQpcLM0X6pD9wECQ@mail.gmail.com>
-Message-ID: <4EF40BD8-9FBA-4D01-B2F4-154D32A503EB@kernel.org>
+        Thu, 10 Aug 2023 23:18:10 -0400
+Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E362D7D
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 20:18:05 -0700 (PDT)
+Received: by mail-vk1-xa33.google.com with SMTP id 71dfb90a1353d-487442d5e49so630315e0c.2
+        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 20:18:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1691723884; x=1692328684;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NWa1OLkDORI1sFVlYnxo6RPV3TWv31BScuGRKjWt/R4=;
+        b=pVNQ7PD9BrEFTfSYVzq/2ZgPsbl2ALglT3PYDymOB7AODtOlUs1WU7GjuA/wGfULSO
+         7rTsCnogtjR/dY3u8s/mAOj5SlWvM36IXryiN4daD0SNULGjQv2gn6EDoY0/N/0ZxiGa
+         4s6tkhd0sr98EVg/4pZUg5IY9J3SxE1CzGOJeE2aeV7ysnLyc3WKn7nZpxLr+HSAPgDC
+         KDzismsv6v5MBwiLGKz3as0t5zID7JZo/bcJq4NWWRSexqUQjMUMW0MNvboVxMUw7zce
+         dvPqqW/xRmELqB/9s4IxsNZeavqzspje3rG75qht+krvmdLgrZXMyIvOIfeQnUdadS9i
+         MLbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691723884; x=1692328684;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NWa1OLkDORI1sFVlYnxo6RPV3TWv31BScuGRKjWt/R4=;
+        b=DCv31JyWgRZi3Ds0YfXy4tdxxFQHXNpC4l+3V3F9uXGrwoFeEcv4dZMM+3fBVvj6XG
+         vPZsa7BlZviN5grjHBCzu3o9qjoAxzYsXzlQTWwp9Z7Y+3nnjBksQ0ikj18AbZ2UFKm6
+         kj5DCdbqLNF/i97mfD6tk6vnGCCMqnOdc/vic3KSED0qdARL6MPDPfPRTAsq49h0JeQd
+         0jQjffKX4ML+hw7OOthVmvkO2jqDru//uiOYxvyvQ20E+VnttHVcPrwpG8xAOwO1Tv0p
+         LF/DfJJb5meErM/DO5MfvNAjWLH4GrNp2RwpX5J8/frrbYkBfD4twWvElwDUPqP2ac20
+         6jDQ==
+X-Gm-Message-State: AOJu0YxK1rsKy+5PSnW323E92FDmeLzId5jMlubSLZ2elmlLjEX7w9qb
+        uldottXrffynfZJe7wZi17ffSVPZd1TDdsPtwKuOJg==
+X-Google-Smtp-Source: AGHT+IFz7uTfy59964S+IdElKv3sTs60h9FhAFCrxlWi7+8GZ3QWKcfLauypG3jdBd+GQ4hKBvz4al5R0T+5oPk9Yl8=
+X-Received: by 2002:a67:f486:0:b0:444:57aa:571 with SMTP id
+ o6-20020a67f486000000b0044457aa0571mr550289vsn.15.1691723884366; Thu, 10 Aug
+ 2023 20:18:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <CA+G9fYsf0jePDO3VPz0pb1sURdefpYCAYH-y+OdsAf3HuzbeRw@mail.gmail.com>
+ <202308101328.40620220CB@keescook>
+In-Reply-To: <202308101328.40620220CB@keescook>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 11 Aug 2023 08:47:53 +0530
+Message-ID: <CA+G9fYugggRyxJFgxRwb0GvgXPerCE928S5vVW7ZnzfTJCRnZA@mail.gmail.com>
+Subject: Re: stable-rc: 6.1: gcc-plugins: Reorganize gimple includes for GCC 13
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-stable <stable@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-hardening@vger.kernel.org,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On August 10, 2023 2:17:41 PM PDT, Justin Stitt <justinstitt@google=2Ecom> =
-wrote:
->On Thu, Aug 10, 2023 at 12:58=E2=80=AFPM Kees Cook <keescook@chromium=2Eo=
-rg> wrote:
->>
->> On Thu, Aug 10, 2023 at 12:25:37PM -0700, Justin Stitt wrote:
->> > On Thu, Aug 10, 2023 at 12:00=E2=80=AFPM Kees Cook <keescook@chromium=
-=2Eorg> wrote:
->> > >
->> > > On Thu, Aug 10, 2023 at 06:39:03PM +0000, Justin Stitt wrote:
->> > > > `strncpy` is deprecated for use on NUL-terminated destination str=
-ings
->> > > > [1]=2E Which seems to be the case here due to the forceful settin=
-g of `buf`'s
->> > > > tail to 0=2E
->> > >
->> > > Another note to include in these evaluations would be "does the
->> > > destination expect to be %NUL padded?"=2E Here, it looks like no, a=
-s all
->> > > the routines "buf" is passed to expect a regular C string (padding
->> > > doesn't matter)=2E
->> > >
->> > > >
->> > > > A suitable replacement is `strscpy` [2] due to the fact that it
->> > > > guarantees NUL-termination on its destination buffer argument whi=
-ch is
->> > > > _not_ the case for `strncpy`!
->> > > >
->> > > > In this case, there is some behavior being used in conjunction wi=
-th
->> > > > `strncpy` that `strscpy` already implements=2E This means we can =
-drop some
->> > > > of the extra stuff like `=2E=2E=2E -1` and `buf[len] =3D 0`
->> > > >
->> > > > This should have no functional change and yet uses a more robust =
-and
->> > > > less ambiguous interface whilst reducing code complexity=2E
->> > > >
->> > > > Link: www=2Ekernel=2Eorg/doc/html/latest/process/deprecated=2Ehtm=
-l#strncpy-on-nul-terminated-strings[1]
->> > > > Link: https://manpages=2Edebian=2Eorg/testing/linux-manual-4=2E8/=
-strscpy=2E9=2Een=2Ehtml [2]
->> > > > Link: https://github=2Ecom/KSPP/linux/issues/90
->> > > > Cc: linux-hardening@vger=2Ekernel=2Eorg
->> > > >
->> > > > Signed-off-by: Justin Stitt <justinstitt@google=2Ecom>
->> > > > ---
->> > > > For reference, see a part of `strscpy`'s implementation here:
->> > > >
->> > > > |     /* Hit buffer length without finding a NUL; force NUL-termi=
-nation=2E */
->> > > > |     if (res)
->> > > > |             dest[res-1] =3D '\0';
->> > > >
->> > > > Note: compile tested
->> > > > ---
->> > > >  arch/arm64/kernel/idreg-override=2Ec | 5 ++---
->> > > >  1 file changed, 2 insertions(+), 3 deletions(-)
->> > > >
->> > > > diff --git a/arch/arm64/kernel/idreg-override=2Ec b/arch/arm64/ke=
-rnel/idreg-override=2Ec
->> > > > index 2fe2491b692c=2E=2E482dc5c71e90 100644
->> > > > --- a/arch/arm64/kernel/idreg-override=2Ec
->> > > > +++ b/arch/arm64/kernel/idreg-override=2Ec
->> > > > @@ -262,9 +262,8 @@ static __init void __parse_cmdline(const char=
- *cmdline, bool parse_aliases)
->> > > >               if (!len)
->> > > >                       return;
->> > > >
->> > > > -             len =3D min(len, ARRAY_SIZE(buf) - 1);
->> > > > -             strncpy(buf, cmdline, len);
->> > > > -             buf[len] =3D 0;
->> > > > +             len =3D min(len, ARRAY_SIZE(buf));
->> > > > +             strscpy(buf, cmdline, len);
->Perhaps keeping the `=2E=2E=2E  - 1` is good because we then don't have t=
-o
->check strlen immediately after=2E This does still silently truncate but
->didn't the previous `strncpy` also do that?
+On Fri, 11 Aug 2023 at 02:01, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, Aug 08, 2023 at 10:57:30AM +0530, Naresh Kamboju wrote:
+> > LKFT build plans updated with toolchain gcc-13 and here is the report.
+> >
+> > Stable rc 6.1 arm64 builds with gcc-13 failed and the bisection is pointing
+> > to this as first bad commit,
+> >
+> > # first fixed commit: [e6a71160cc145e18ab45195abf89884112e02dfb]
+> >    gcc-plugins: Reorganize gimple includes for GCC 13
+> >
+> > Thanks Anders for bisecting this problem against Linux 6.2-rc6.
+> >
+> > Build errors:
+> > ---------------
+> > In file included from /builds/linux/scripts/gcc-plugins/gcc-common.h:75,
+> >                  from /builds/linux/scripts/gcc-plugins/stackleak_plugin.c:30:
+> > /usr/lib/gcc-cross/aarch64-linux-gnu/13/plugin/include/gimple-fold.h:72:32:
+> > error: use of enum 'gsi_iterator_update' without previous declaration
+> >    72 |                           enum gsi_iterator_update,
+> >       |                                ^~~~~~~~~~~~~~~~~~
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> I'm slightly confused by this report.
 
-Ah, actually there's no need to get too tricky here=2E This should be beha=
-viorally identical:
+Sorry. I should have provided full details.
 
-len =3D strscpy(buf, cmdline, ARRAY_SIZE(buf));
-if (len =3D=3D -E2BIG)
-    len =3D ARRAY_SIZE(buf) - 1;
+> Is it the build of v6.1 that is failing?
 
--Kees
+Linux-stable-rc linux.6.1.y failing with gcc-13.
+
+> Commit e6a71160cc14 ("gcc-plugins: Reorganize gimple includes
+> for GCC 13") was added in v6.2.
+
+This commit is needed.
+
+>
+> I think you're saying you need it backported to the v6.1 stable tree?
+> ("First bad commit" is really the first good commit?)
+
+First good commit.
+We need to backport this patch for linux.6.1.y
+
+Bisect log:
+------
+# fixed: [6d796c50f84ca79f1722bb131799e5a5710c4700] Linux 6.2-rc6
+# unfixed: [2241ab53cbb5cdb08a6b2d4688feb13971058f65] Linux 6.2-rc5
+git bisect start '--term-new=fixed' '--term-old=unfixed' 'v6.2-rc6' 'v6.2-rc5'
+# unfixed: [9f4d0bd24e6b42555c02e137763f12c106572e63] Merge tag
+'linux-kselftest-fixes-6.2-rc6' of
+git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest
+git bisect unfixed 9f4d0bd24e6b42555c02e137763f12c106572e63
+# unfixed: [37d0be6a7d7d6fede952c439f8d8b9d1df5c756f] Merge tag
+'gpio-fixes-for-v6.2-rc6' of
+git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
+git bisect unfixed 37d0be6a7d7d6fede952c439f8d8b9d1df5c756f
+# fixed: [f851453bf19554a42eb480b65436b9500c3cf392] Merge tag
+'io_uring-6.2-2023-01-27' of git://git.kernel.dk/linux
+git bisect fixed f851453bf19554a42eb480b65436b9500c3cf392
+# unfixed: [78020233418518faa72fba11f40e1d53b9e88a2e] bootconfig:
+Update MAINTAINERS file to add tree and mailing list
+git bisect unfixed 78020233418518faa72fba11f40e1d53b9e88a2e
+# unfixed: [e6f2f6ac500c67164f6f6b47299aece579277c14] Merge tag
+'i2c-for-6.2-rc6' of
+git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux
+git bisect unfixed e6f2f6ac500c67164f6f6b47299aece579277c14
+# fixed: [be0d8f48ad97f5b775b0af3310343f676dbf318a] bcache: Silence
+memcpy() run-time false positive warnings
+git bisect fixed be0d8f48ad97f5b775b0af3310343f676dbf318a
+# fixed: [e6a71160cc145e18ab45195abf89884112e02dfb] gcc-plugins:
+Reorganize gimple includes for GCC 13
+git bisect fixed e6a71160cc145e18ab45195abf89884112e02dfb
+# unfixed: [4acf1de35f41549e60c3c02a8defa7cb95eabdf2] kunit: memcpy:
+Split slow memcpy tests into MEMCPY_SLOW_KUNIT_TEST
+git bisect unfixed 4acf1de35f41549e60c3c02a8defa7cb95eabdf2
+# first fixed commit: [e6a71160cc145e18ab45195abf89884112e02dfb]
+gcc-plugins: Reorganize gimple includes for GCC 13
 
 
---=20
-Kees Cook
+- Naresh
