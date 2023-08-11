@@ -2,64 +2,59 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265EC001DE
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 21:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1256C04A6A
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 21:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236866AbjHKVTc (ORCPT
+        id S229503AbjHKVZs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Aug 2023 17:19:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35606 "EHLO
+        Fri, 11 Aug 2023 17:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236875AbjHKVTa (ORCPT
+        with ESMTP id S232238AbjHKVZk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Aug 2023 17:19:30 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46F91FED
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:19:29 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-586b0ef17daso66479797b3.1
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:19:29 -0700 (PDT)
+        Fri, 11 Aug 2023 17:25:40 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E00D2129
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:25:40 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-52256241c66so4971423a12.1
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691788769; x=1692393569;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JiHGiTVfdz5CucudaZHkceNNqnAp127R9oXTgpxLmS0=;
-        b=69/W2KdBUbTfVSLt7H2R1qqS3DXKFqFlWpbGW7Cg3ECEi8vGGHJaho4vRdFup3fEeV
-         zVcU2qUDoBdNFmSOCqTHHDQHKg2IrdYm39Vt5gS5rz94OnIR7DEtN2lsAVmSb0Tqz0Ht
-         Z5l8peAOiEHZtJ2Gklp82OPAuiBTHojD7Pg5Q7iZZcREV+yEUuxSLNG0n8waPGLDRreo
-         a+NcGUKV8kMK8j8cMqGepg+/OizzIBECrGyezlwSfbYn9niSi09jOGbJhiGnOPkuEtJ8
-         YU/x8cXvc9erPDbri9oiyV6O0REpsuYGmemCP2W4ouJtR3u/tP7DEk/xn+Z9gKF0xqOQ
-         LNpg==
+        d=google.com; s=20221208; t=1691789138; x=1692393938;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=86JGYZ3ry5mveviksjcn/qEvMtmvc4Ix/xUvNeLXEDs=;
+        b=yp3x6i43BD8RlV322qJmJKCChEAV4UH5GzYm+QKTIbEfh7XUtrsq+1zAx0sNg+t1d+
+         5Wdx8+yD9PcpjFm6EwHkertYyul98NZdT7eMM1xpNAGQvsovbk+87Q0wdMIbXOqYfONq
+         6YuGbb337lL0MnSOZ+zkCGkXtOM0YWf5KDk6wCBq61CXXtdyV10ODW7oScEWFrfKV1Fb
+         gHshtevWMATpYNZmgU73KijInvpPplIazRtamhNz+s/hZNupYZjFG3dKpshD04LAQR3b
+         +hhD59qaxfiKGmC3EzhWXafo2eDdjNVkhYcLndoGmpPabWfR4zaRjXU/jERrCpyxvtNP
+         At1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691788769; x=1692393569;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JiHGiTVfdz5CucudaZHkceNNqnAp127R9oXTgpxLmS0=;
-        b=fLuaYT9UM3G9Iznox5ZfK/tTTDtlSbqnVxh0tJZrGbJ1wWetyGRtQ1RGYifTWRl6Mg
-         osxXGeQO2bwedcSx7cGJ/aX4pJJ5RkMm+uxymxh24SplcvXPCnRPE7qq/ph14bYvGIDN
-         clVW1xH+dVH04szZK7B6Aq7e0Cp2XxminLL8o18CmrPPIMuuFt+p6b/hNoo6EP2iDUeX
-         gFMeAiqeuL+VDr+05Nj8DrBjzoOzOEDjzQ3X4OP3MhLgqS/n0dtXATRYvCGwOy3v9z5C
-         P2lAo7fi3iodnYKW5ZE09QpWuE4oJ9Hd0VPF4xYI0If+jJpdF+Cm9BeKQtFSjvvVKsnP
-         Zbcw==
-X-Gm-Message-State: AOJu0Yy1TxGzxD/h18R6Pv2eZ/EbYIWXd+k1TC9H14pgs8h/dUvDkI+8
-        4UzDIPQlbVDa9Tt379uJALDpdbvqiBILQtk8zg==
-X-Google-Smtp-Source: AGHT+IHbwU50kF0vOvJsfl6xiGMeCABLjZMuvF4jlcuA/i0PNQczwluQDWHlLkKRUAyDj0PAcSup4QVhVi2nvA+/Lg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:af49:0:b0:589:a610:aef with SMTP
- id x9-20020a81af49000000b00589a6100aefmr76862ywj.2.1691788769080; Fri, 11 Aug
- 2023 14:19:29 -0700 (PDT)
-Date:   Fri, 11 Aug 2023 21:19:21 +0000
-In-Reply-To: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com>
-Mime-Version: 1.0
+        d=1e100.net; s=20221208; t=1691789138; x=1692393938;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=86JGYZ3ry5mveviksjcn/qEvMtmvc4Ix/xUvNeLXEDs=;
+        b=Squn3+fw2rMRKMI1FNyXkhnzLjoOFCU2zQqEuNGCrIAHw1tQkLoj+N09uwTPHFNivx
+         6Wjrr2KBe1s+IUGIk6taKYhHWl58PBHecIZKXlRdLIX2ybegqL/J9rUBd4F7zFIxhrrj
+         QMAypKP5+ZeY6zjqKYPjllf+BCquTPBW2PxQbnasgPdKRo13/YS+/2hg7eRgwqtcAUX4
+         nubnGo2QeOfKaZp0LtsALd4/lcHaJF5ydamBiDaTF/4K+C5jvDXuhKoZHJCIZb+UYenQ
+         6VxLk6GYS8voq9/JUZJlNc16bX0ThaA4TLcW0kROIpOGHX8lWXGQEIe2r694mvRbqX8+
+         xe7w==
+X-Gm-Message-State: AOJu0YwxZgVMXoV2ASKzjcr+L7vkA+ZlHdoxnzUqfIkkYCSZ5LYfr5TG
+        lRiTApjLReu7QMxL3AuQpUfMp25UTtNQqVt7kxj3yg==
+X-Google-Smtp-Source: AGHT+IHsxCBP/w9r5NRNaDnfZRytZV75kWryG4q6b+1hs+BKKLWWPj716c7QrOT8uP1DUmE3xa+OcLdt4WGWk5ajISA=
+X-Received: by 2002:a05:6402:268e:b0:523:72fe:a3c4 with SMTP id
+ w14-20020a056402268e00b0052372fea3c4mr7852202edd.0.1691789138513; Fri, 11 Aug
+ 2023 14:25:38 -0700 (PDT)
+MIME-Version: 1.0
 References: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com>
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691788764; l=2360;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=un5KrhEbUeSG5MIia1JYWEm7kQ5KlO4dof2rfH0SxB0=; b=3nGjJYu+m7uWyObArsWKunAcpSZnHjKe9mn5gkmY/yM21roqfaVuczXVmSVp0u0rKkq9+vbWf
- LjstrWwCo1OAJQJrgXlXQxNm1g4I4F9O5JB8O/Ope1+HZNTSmJBVJ/g
-X-Mailer: b4 0.12.3
-Message-ID: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-3-301052a5663e@google.com>
-Subject: [PATCH RFC 3/3] powerpc/ps3: refactor strncpy usage attempt 2.5
+In-Reply-To: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com>
 From:   Justin Stitt <justinstitt@google.com>
+Date:   Fri, 11 Aug 2023 14:25:26 -0700
+Message-ID: <CAFhGd8oZLTaFNg3pQSi=zX121HPfY9_v-H5e3_+27W3=1fXxmw@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/3] powerpc/ps3: refactor strncpy usage
 To:     Geoff Levand <geoff@infradead.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>,
@@ -67,80 +62,49 @@ To:     Geoff Levand <geoff@infradead.org>,
 Cc:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <nathan@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Forward declare `make_field` for a cleaner diff
+On Fri, Aug 11, 2023 at 2:19=E2=80=AFPM Justin Stitt <justinstitt@google.co=
+m> wrote:
+>
+> Within this RFC-series I want to get some comments on two ideas that I
+> have for refactoring the current `strncpy` usage in repository.c.
+>
+> When looking at `make_first_field` we see a u64 is being used to store
+> up to 8 bytes from a literal string. This is slightly suspect to me but
+> it works? In regards to `strncpy` here, it makes the code needlessly
+> complex imo.
+>
+> Please see my two ideas to change this and let me know if any other
+> approaches are more reasonable.
+>
+> Link: https://github.com/KSPP/linux/issues/90
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Justin Stitt (3):
+>       [RFC] powerpc/ps3: refactor strncpy usage attempt 1
+>       [RFC] powerpc/ps3: refactor strncpy usage attempt 2
+>       [RFC] powerpc/ps3: refactor strncpy usage attempt 2.5
+Errhm, It looks like the diffs after attempt 1 came out poorly and
+probably won't apply cleanly because they were inter-diffed with the
+first patch. Is there a way to let b4 know I wanted each patch diff'd
+against the same SHA and not each other sequentially?
 
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- arch/powerpc/platforms/ps3/repository.c | 26 ++++++++++++++------------
- 1 file changed, 14 insertions(+), 12 deletions(-)
+As it stands only attempt 1 is readable.
 
-diff --git a/arch/powerpc/platforms/ps3/repository.c b/arch/powerpc/platforms/ps3/repository.c
-index 6b731a5d4adc..6a08bb7704da 100644
---- a/arch/powerpc/platforms/ps3/repository.c
-+++ b/arch/powerpc/platforms/ps3/repository.c
-@@ -20,6 +20,8 @@ enum ps3_lpar_id {
- 	PS3_LPAR_ID_PME = 1,
- };
- 
-+static u64 make_field(const char *text, u64 index);
-+
- #define dump_field(_a, _b) _dump_field(_a, _b, __func__, __LINE__)
- static void _dump_field(const char *hdr, u64 n, const char *func, int line)
- {
-@@ -63,33 +65,33 @@ static void _dump_node(unsigned int lpar_id, u64 n1, u64 n2, u64 n3, u64 n4,
- }
- 
- /**
-- * make_field - Make subsequent fields of a repository node name.
-- * @text: Text portion of the field.  Use "" for 'don't care'.
-+ * make_first_field - Make the first field of a repository node name.
-+ * @text: Text portion of the field.
-  * @index: Numeric index portion of the field.  Use zero for 'don't care'.
-  *
-+ * This routine sets the vendor id to zero (non-vendor specific).
-  * Returns field value.
-  */
- 
--static u64 make_field(const char *text, u64 index)
-+static u64 make_first_field(const char *text, u64 index)
- {
--	u64 n = 0;
--
--	memcpy((char *)&n, text, strnlen(text, sizeof(n)));
--	return n + index;
-+	return PS3_VENDOR_ID_NONE + ((make_field(text, index) - index) >> 32) + index;
- }
- 
- /**
-- * make_first_field - Make the first field of a repository node name.
-- * @text: Text portion of the field.
-+ * make_field - Make subsequent fields of a repository node name.
-+ * @text: Text portion of the field.  Use "" for 'don't care'.
-  * @index: Numeric index portion of the field.  Use zero for 'don't care'.
-  *
-- * This routine sets the vendor id to zero (non-vendor specific).
-  * Returns field value.
-  */
- 
--static u64 make_first_field(const char *text, u64 index)
-+static u64 make_field(const char *text, u64 index)
- {
--	return PS3_VENDOR_ID_NONE + ((make_field(text, index) - index) >> 32) + index;
-+	u64 n = 0;
-+
-+	memcpy((char *)&n, text, strnlen(text, sizeof(n)));
-+	return n + index;
- }
- 
- /**
-
--- 
-2.41.0.640.ga95def55d0-goog
-
+>
+>  arch/powerpc/platforms/ps3/repository.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> ---
+> base-commit: 52a93d39b17dc7eb98b6aa3edb93943248e03b2f
+> change-id: 20230811-strncpy-arch-powerpc-platforms-ps3-57a1cdb2ad9b
+>
+> Best regards,
+> --
+> Justin Stitt <justinstitt@google.com>
+>
