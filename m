@@ -2,47 +2,47 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43962C41513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A99C0015E
 	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 12:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234118AbjHKMLP (ORCPT
+        id S231195AbjHKMLP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Fri, 11 Aug 2023 08:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45290 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231195AbjHKMLO (ORCPT
+        with ESMTP id S234000AbjHKMLO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Fri, 11 Aug 2023 08:11:14 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30060E55;
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA19E5C;
         Fri, 11 Aug 2023 05:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1691755874; x=1723291874;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5ICqtGaIKb34c4cygMFH/ekn4DHFgMuzIFwY2H+IcbU=;
-  b=lTxckpOkFW9oF+VMERbFkNlbsieY8/O9RmQhCy8hj9cCQz6GXIHqpera
-   uJy44RhP8QkqppDhtGFcqqKGqZK71qx2frEy0jvAQrhNRpr2bBDCl7y85
-   F/MnhUtQUvZFdosWtWo1cvqTvkr5HjrzkUmD5ax+wiDT547BddmGvG0fp
-   Ool8CifnhyLoP6ADzKh4bnVd4VF6PT+UPldysUWsUWOyFJ2Xtzm3ZGoGs
-   /kEyGB/BSZcYx+5iNidKH6nBD223hAlf1q8jXawYuyhgLH/rOg3jxyRKa
-   JRV8noWf/g/ccGvqvo7qM88XrWHzp/XwwboEhhi162/yrkT6c92z28Ki+
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="438002121"
+  bh=kHT5VLpFxnW3y3muRx8bN91BLrmj1DCbAt4Yfl0iWZw=;
+  b=P5QgasW9xjrq/3eeEYFwarmwWacaa8lD17gGtxPulReGrfcFl2Xbhejl
+   qRYtr0rer5e5zDyVDNsyxBtEw6If4gFhSQAFxDe3EOB5cNaa3WpOrP7Xa
+   WTubtP5h2SJQa1Piy1LjRMeZsdpUzvyYZbnbpJB0sNkxIDLdKyEdEeNjk
+   eL3yJCIRx8BDPyUgEenJxmH2EL/pBjd59Xu/ysP4T4wTRxSPcBfVdiiIq
+   nDNUCk+HxajU6K0WuXSE7KDKTjgxey48g1UhwrbcVKI8BbYVt3sJJ4hls
+   DOMHZulzybLqbNGU9WTNi+bQpzQaOHC+/2tLBBFh7aK/Zrqr8kLHtmejY
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="435557393"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="438002121"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 05:11:13 -0700
+   d="scan'208";a="435557393"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2023 05:11:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="906421890"
+X-IronPort-AV: E=McAfee;i="6600,9927,10798"; a="979222080"
 X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="906421890"
+   d="scan'208";a="979222080"
 Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by orsmga005.jf.intel.com with ESMTP; 11 Aug 2023 05:11:11 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 11 Aug 2023 05:11:11 -0700
 Received: from pelor.igk.intel.com (pelor.igk.intel.com [10.123.220.13])
-        by irvmail002.ir.intel.com (Postfix) with ESMTP id F3B41333E2;
-        Fri, 11 Aug 2023 13:11:09 +0100 (IST)
+        by irvmail002.ir.intel.com (Postfix) with ESMTP id 3094733BD0;
+        Fri, 11 Aug 2023 13:11:11 +0100 (IST)
 From:   Przemek Kitszel <przemyslaw.kitszel@intel.com>
 To:     Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org
 Cc:     Jacob Keller <jacob.e.keller@intel.com>,
@@ -50,9 +50,9 @@ Cc:     Jacob Keller <jacob.e.keller@intel.com>,
         Alexander Lobakin <aleksander.lobakin@intel.com>,
         linux-hardening@vger.kernel.org, Steven Zou <steven.zou@intel.com>,
         Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v2 4/7] ice: make use of DEFINE_FLEX() in ice_ddp.c
-Date:   Fri, 11 Aug 2023 08:08:11 -0400
-Message-Id: <20230811120814.169952-5-przemyslaw.kitszel@intel.com>
+Subject: [PATCH net-next v2 6/7] ice: make use of DEFINE_FLEX() for struct ice_aqc_dis_txq_item
+Date:   Fri, 11 Aug 2023 08:08:13 -0400
+Message-Id: <20230811120814.169952-7-przemyslaw.kitszel@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230811120814.169952-1-przemyslaw.kitszel@intel.com>
 References: <20230811120814.169952-1-przemyslaw.kitszel@intel.com>
@@ -62,97 +62,85 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use DEFINE_FLEX() macro for constant-num-of-elems (4)
-flex array members of ice_ddp.c
+Use DEFINE_FLEX() macro for 1-elem flex array use case
+of struct ice_aqc_dis_txq_item.
 
 Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
 ---
-add/remove: 4/0 grow/shrink: 0/1 up/down: 1195/-878 (317)
+add/remove: 0/0 grow/shrink: 1/1 up/down: 9/-18 (-9)
 ---
- drivers/net/ethernet/intel/ice/ice_ddp.c | 39 +++++++-----------------
- 1 file changed, 11 insertions(+), 28 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_common.c | 20 ++++----------------
+ 1 file changed, 4 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_ddp.c b/drivers/net/ethernet/intel/ice/ice_ddp.c
-index d71ed210f9c4..0e64ecd6f7c5 100644
---- a/drivers/net/ethernet/intel/ice/ice_ddp.c
-+++ b/drivers/net/ethernet/intel/ice/ice_ddp.c
-@@ -1558,21 +1558,14 @@ static enum ice_ddp_state ice_init_pkg_info(struct ice_hw *hw,
-  */
- static enum ice_ddp_state ice_get_pkg_info(struct ice_hw *hw)
+diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
+index a86255b529a0..158931424283 100644
+--- a/drivers/net/ethernet/intel/ice/ice_common.c
++++ b/drivers/net/ethernet/intel/ice/ice_common.c
+@@ -4734,11 +4734,11 @@ ice_dis_vsi_txq(struct ice_port_info *pi, u16 vsi_handle, u8 tc, u8 num_queues,
+ 		enum ice_disq_rst_src rst_src, u16 vmvf_num,
+ 		struct ice_sq_cd *cd)
  {
--	enum ice_ddp_state state = ICE_DDP_PKG_SUCCESS;
--	struct ice_aqc_get_pkg_info_resp *pkg_info;
--	u16 size;
-+	DEFINE_FLEX(struct ice_aqc_get_pkg_info_resp, pkg_info, pkg_info,
-+		    ICE_PKG_CNT);
-+	u16 size = __struct_size(pkg_info);
- 	u32 i;
+-	struct ice_aqc_dis_txq_item *qg_list;
++	DEFINE_FLEX(struct ice_aqc_dis_txq_item, qg_list, q_id, 1);
++	u16 i, buf_size = __struct_size(qg_list);
+ 	struct ice_q_ctx *q_ctx;
+ 	int status = -ENOENT;
+ 	struct ice_hw *hw;
+-	u16 i, buf_size;
  
--	size = struct_size(pkg_info, pkg_info, ICE_PKG_CNT);
--	pkg_info = kzalloc(size, GFP_KERNEL);
--	if (!pkg_info)
-+	if (ice_aq_get_pkg_info_list(hw, pkg_info, size, NULL))
- 		return ICE_DDP_PKG_ERR;
- 
--	if (ice_aq_get_pkg_info_list(hw, pkg_info, size, NULL)) {
--		state = ICE_DDP_PKG_ERR;
--		goto init_pkg_free_alloc;
--	}
--
- 	for (i = 0; i < le32_to_cpu(pkg_info->count); i++) {
- #define ICE_PKG_FLAG_COUNT 4
- 		char flags[ICE_PKG_FLAG_COUNT + 1] = { 0 };
-@@ -1602,10 +1595,7 @@ static enum ice_ddp_state ice_get_pkg_info(struct ice_hw *hw)
- 			  pkg_info->pkg_info[i].name, flags);
+ 	if (!pi || pi->port_state != ICE_SCHED_PORT_STATE_READY)
+ 		return -EIO;
+@@ -4756,11 +4756,6 @@ ice_dis_vsi_txq(struct ice_port_info *pi, u16 vsi_handle, u8 tc, u8 num_queues,
+ 		return -EIO;
  	}
  
--init_pkg_free_alloc:
--	kfree(pkg_info);
+-	buf_size = struct_size(qg_list, q_id, 1);
+-	qg_list = kzalloc(buf_size, GFP_KERNEL);
+-	if (!qg_list)
+-		return -ENOMEM;
 -
--	return state;
-+	return ICE_DDP_PKG_SUCCESS;
+ 	mutex_lock(&pi->sched_lock);
+ 
+ 	for (i = 0; i < num_queues; i++) {
+@@ -4793,7 +4788,6 @@ ice_dis_vsi_txq(struct ice_port_info *pi, u16 vsi_handle, u8 tc, u8 num_queues,
+ 		q_ctx->q_teid = ICE_INVAL_TEID;
+ 	}
+ 	mutex_unlock(&pi->sched_lock);
+-	kfree(qg_list);
+ 	return status;
  }
  
- /**
-@@ -1620,9 +1610,10 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
- 					     struct ice_pkg_hdr *ospkg,
- 					     struct ice_seg **seg)
+@@ -4962,22 +4956,17 @@ int
+ ice_dis_vsi_rdma_qset(struct ice_port_info *pi, u16 count, u32 *qset_teid,
+ 		      u16 *q_id)
  {
--	struct ice_aqc_get_pkg_info_resp *pkg;
-+	DEFINE_FLEX(struct ice_aqc_get_pkg_info_resp, pkg, pkg_info,
-+		    ICE_PKG_CNT);
-+	u16 size = __struct_size(pkg);
- 	enum ice_ddp_state state;
--	u16 size;
- 	u32 i;
+-	struct ice_aqc_dis_txq_item *qg_list;
++	DEFINE_FLEX(struct ice_aqc_dis_txq_item, qg_list, q_id, 1);
++	u16 qg_size = __struct_size(qg_list);
+ 	struct ice_hw *hw;
+ 	int status = 0;
+-	u16 qg_size;
+ 	int i;
  
- 	/* Check package version compatibility */
-@@ -1641,15 +1632,8 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
- 	}
+ 	if (!pi || pi->port_state != ICE_SCHED_PORT_STATE_READY)
+ 		return -EIO;
  
- 	/* Check if FW is compatible with the OS package */
--	size = struct_size(pkg, pkg_info, ICE_PKG_CNT);
--	pkg = kzalloc(size, GFP_KERNEL);
--	if (!pkg)
--		return ICE_DDP_PKG_ERR;
+ 	hw = pi->hw;
+ 
+-	qg_size = struct_size(qg_list, q_id, 1);
+-	qg_list = kzalloc(qg_size, GFP_KERNEL);
+-	if (!qg_list)
+-		return -ENOMEM;
 -
--	if (ice_aq_get_pkg_info_list(hw, pkg, size, NULL)) {
--		state = ICE_DDP_PKG_LOAD_ERROR;
--		goto fw_ddp_compat_free_alloc;
--	}
-+	if (ice_aq_get_pkg_info_list(hw, pkg, size, NULL))
-+		return ICE_DDP_PKG_LOAD_ERROR;
+ 	mutex_lock(&pi->sched_lock);
  
- 	for (i = 0; i < le32_to_cpu(pkg->count); i++) {
- 		/* loop till we find the NVM package */
-@@ -1666,8 +1650,7 @@ static enum ice_ddp_state ice_chk_pkg_compat(struct ice_hw *hw,
- 		/* done processing NVM package so break */
- 		break;
+ 	for (i = 0; i < count; i++) {
+@@ -5002,7 +4991,6 @@ ice_dis_vsi_rdma_qset(struct ice_port_info *pi, u16 count, u32 *qset_teid,
  	}
--fw_ddp_compat_free_alloc:
--	kfree(pkg);
-+
- 	return state;
+ 
+ 	mutex_unlock(&pi->sched_lock);
+-	kfree(qg_list);
+ 	return status;
  }
  
 -- 
