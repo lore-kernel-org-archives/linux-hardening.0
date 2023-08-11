@@ -2,63 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFE4C0015E
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 21:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3265EC001DE
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 21:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235948AbjHKVT3 (ORCPT
+        id S236866AbjHKVTc (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 11 Aug 2023 17:19:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50734 "EHLO
+        Fri, 11 Aug 2023 17:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235638AbjHKVT2 (ORCPT
+        with ESMTP id S236875AbjHKVTa (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 11 Aug 2023 17:19:28 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69F5F2108
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:19:27 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-d630af4038fso2483469276.0
-        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:19:27 -0700 (PDT)
+        Fri, 11 Aug 2023 17:19:30 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46F91FED
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:19:29 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-586b0ef17daso66479797b3.1
+        for <linux-hardening@vger.kernel.org>; Fri, 11 Aug 2023 14:19:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1691788766; x=1692393566;
+        d=google.com; s=20221208; t=1691788769; x=1692393569;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vokOFglu6CNVFlD6jFxpsLrBcNE5errPjKaL6LUnglg=;
-        b=tOsdQnkRdFPySXJ7aBEL+kY5112HthEEIawDywYABXxp9YXRYroZTrYNW87VUbeR6w
-         gnfsPvSydIxNPCx/RPtTkwb6RerMKsEuJIyl7U/C3waNbaU7wr0JImPoka2YzlVj0Ih8
-         6pjOc1L9fBFcSIVBUDCD8S6uX7hs8crgEnCNZot4mKk3eGHefKgu8OYgILc1VkUwX0Wl
-         H7pBqE0CQNiBloC4RhooFEGfnMWOFZzd60L6EAZXRDFhGV2IqF04UdrS/6MXav7kuvc8
-         66Sk1UukGjP11WxYjJFMcVJQXQF9NcICKPD23LYMz+JPCT1jjKnprYFqeweidJ1zEKsy
-         tNTA==
+        bh=JiHGiTVfdz5CucudaZHkceNNqnAp127R9oXTgpxLmS0=;
+        b=69/W2KdBUbTfVSLt7H2R1qqS3DXKFqFlWpbGW7Cg3ECEi8vGGHJaho4vRdFup3fEeV
+         zVcU2qUDoBdNFmSOCqTHHDQHKg2IrdYm39Vt5gS5rz94OnIR7DEtN2lsAVmSb0Tqz0Ht
+         Z5l8peAOiEHZtJ2Gklp82OPAuiBTHojD7Pg5Q7iZZcREV+yEUuxSLNG0n8waPGLDRreo
+         a+NcGUKV8kMK8j8cMqGepg+/OizzIBECrGyezlwSfbYn9niSi09jOGbJhiGnOPkuEtJ8
+         YU/x8cXvc9erPDbri9oiyV6O0REpsuYGmemCP2W4ouJtR3u/tP7DEk/xn+Z9gKF0xqOQ
+         LNpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691788766; x=1692393566;
+        d=1e100.net; s=20221208; t=1691788769; x=1692393569;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vokOFglu6CNVFlD6jFxpsLrBcNE5errPjKaL6LUnglg=;
-        b=KqSzzqVb9kujfOVuJpeo+KaM/sTXCzTXBpZXKIMvv1XJ3oSjz0QIh8tfglBUzJk0gT
-         soVghEK+yTutLiBJgkO6oo0tbv1obe/E3Obrt+CW1KA+wH98YxUcRwndHEJbVv7r0AjF
-         8oXeptuDS7OAu0xbG/CD48HlXiIdQzyBAWH52RPhI4hwc/YafyZkVpFf9te6XpoMIs3/
-         9Y5EcvcruYdZdo7Q7QfJe42ygCqbULnBre7qQUHaB038vt9wdPlpVFmUamS6t0Y8RI58
-         xTa1G3Rd3gTxBMClXTd3w4jpYaKlrfJXKU3QYRYJIYzs6fdXsw/HA0pRIXtlzi18OWaQ
-         YdIg==
-X-Gm-Message-State: AOJu0Yyz/8Re9Gftj48DW0VlVmN4fsczfbhKWvv8cF2MFXHYHl5t8bPs
-        qf2iO8747Sxc0SX1k1DoEwYrhd+QkrlE3J1b8A==
-X-Google-Smtp-Source: AGHT+IH3i5ZHuMThcQNM8zp+I7k8FNd7+Of/quUCUxdMUbD/p45+H7KNRGfsu23iJhRFAio31HZ5RFrQ44ATxZZpGQ==
+        bh=JiHGiTVfdz5CucudaZHkceNNqnAp127R9oXTgpxLmS0=;
+        b=fLuaYT9UM3G9Iznox5ZfK/tTTDtlSbqnVxh0tJZrGbJ1wWetyGRtQ1RGYifTWRl6Mg
+         osxXGeQO2bwedcSx7cGJ/aX4pJJ5RkMm+uxymxh24SplcvXPCnRPE7qq/ph14bYvGIDN
+         clVW1xH+dVH04szZK7B6Aq7e0Cp2XxminLL8o18CmrPPIMuuFt+p6b/hNoo6EP2iDUeX
+         gFMeAiqeuL+VDr+05Nj8DrBjzoOzOEDjzQ3X4OP3MhLgqS/n0dtXATRYvCGwOy3v9z5C
+         P2lAo7fi3iodnYKW5ZE09QpWuE4oJ9Hd0VPF4xYI0If+jJpdF+Cm9BeKQtFSjvvVKsnP
+         Zbcw==
+X-Gm-Message-State: AOJu0Yy1TxGzxD/h18R6Pv2eZ/EbYIWXd+k1TC9H14pgs8h/dUvDkI+8
+        4UzDIPQlbVDa9Tt379uJALDpdbvqiBILQtk8zg==
+X-Google-Smtp-Source: AGHT+IHbwU50kF0vOvJsfl6xiGMeCABLjZMuvF4jlcuA/i0PNQczwluQDWHlLkKRUAyDj0PAcSup4QVhVi2nvA+/Lg==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:dcc2:0:b0:d12:d6e4:a08f with SMTP
- id y185-20020a25dcc2000000b00d12d6e4a08fmr47833ybe.6.1691788766690; Fri, 11
- Aug 2023 14:19:26 -0700 (PDT)
-Date:   Fri, 11 Aug 2023 21:19:19 +0000
+ (user=justinstitt job=sendgmr) by 2002:a81:af49:0:b0:589:a610:aef with SMTP
+ id x9-20020a81af49000000b00589a6100aefmr76862ywj.2.1691788769080; Fri, 11 Aug
+ 2023 14:19:29 -0700 (PDT)
+Date:   Fri, 11 Aug 2023 21:19:21 +0000
 In-Reply-To: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com>
 Mime-Version: 1.0
 References: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com>
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1691788764; l=878;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691788764; l=2360;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=rykhGlCJgq/28Gofw5R06xkjvMhLluFR9H0cPPJUQmM=; b=dqa+uC3ZSEDoM05puhWT3wolaXk7hfvs4+6yIWB8tO66gB9QZCYN9RSLwV2BvBVVbMLw1tvkc
- 4a2Vy7MXx8vCn44O2/F7Pbs8dDN7gJ5VA3oINrtf5Q66VN6jNZDUZnG
+ bh=un5KrhEbUeSG5MIia1JYWEm7kQ5KlO4dof2rfH0SxB0=; b=3nGjJYu+m7uWyObArsWKunAcpSZnHjKe9mn5gkmY/yM21roqfaVuczXVmSVp0u0rKkq9+vbWf
+ LjstrWwCo1OAJQJrgXlXQxNm1g4I4F9O5JB8O/Ope1+HZNTSmJBVJ/g
 X-Mailer: b4 0.12.3
-Message-ID: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-1-301052a5663e@google.com>
-Subject: [PATCH RFC 1/3] powerpc/ps3: refactor strncpy usage attempt 1
+Message-ID: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-3-301052a5663e@google.com>
+Subject: [PATCH RFC 3/3] powerpc/ps3: refactor strncpy usage attempt 2.5
 From:   Justin Stitt <justinstitt@google.com>
 To:     Geoff Levand <geoff@infradead.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
@@ -74,30 +74,72 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This approach simply replicates the implementation of `make_field` which
-means we drop `strncpy` for `memcpy`.
+Forward declare `make_field` for a cleaner diff
 
 Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
- arch/powerpc/platforms/ps3/repository.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/platforms/ps3/repository.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
 diff --git a/arch/powerpc/platforms/ps3/repository.c b/arch/powerpc/platforms/ps3/repository.c
-index 205763061a2d..1abe33fbe529 100644
+index 6b731a5d4adc..6a08bb7704da 100644
 --- a/arch/powerpc/platforms/ps3/repository.c
 +++ b/arch/powerpc/platforms/ps3/repository.c
-@@ -73,9 +73,9 @@ static void _dump_node(unsigned int lpar_id, u64 n1, u64 n2, u64 n3, u64 n4,
+@@ -20,6 +20,8 @@ enum ps3_lpar_id {
+ 	PS3_LPAR_ID_PME = 1,
+ };
  
- static u64 make_first_field(const char *text, u64 index)
++static u64 make_field(const char *text, u64 index);
++
+ #define dump_field(_a, _b) _dump_field(_a, _b, __func__, __LINE__)
+ static void _dump_field(const char *hdr, u64 n, const char *func, int line)
  {
--	u64 n;
-+	u64 n = 0;
- 
--	strncpy((char *)&n, text, 8);
-+	memcpy((char *)&n, text, strnlen(text, sizeof(n)));
- 	return PS3_VENDOR_ID_NONE + (n >> 32) + index;
+@@ -63,33 +65,33 @@ static void _dump_node(unsigned int lpar_id, u64 n1, u64 n2, u64 n3, u64 n4,
  }
  
+ /**
+- * make_field - Make subsequent fields of a repository node name.
+- * @text: Text portion of the field.  Use "" for 'don't care'.
++ * make_first_field - Make the first field of a repository node name.
++ * @text: Text portion of the field.
+  * @index: Numeric index portion of the field.  Use zero for 'don't care'.
+  *
++ * This routine sets the vendor id to zero (non-vendor specific).
+  * Returns field value.
+  */
+ 
+-static u64 make_field(const char *text, u64 index)
++static u64 make_first_field(const char *text, u64 index)
+ {
+-	u64 n = 0;
+-
+-	memcpy((char *)&n, text, strnlen(text, sizeof(n)));
+-	return n + index;
++	return PS3_VENDOR_ID_NONE + ((make_field(text, index) - index) >> 32) + index;
+ }
+ 
+ /**
+- * make_first_field - Make the first field of a repository node name.
+- * @text: Text portion of the field.
++ * make_field - Make subsequent fields of a repository node name.
++ * @text: Text portion of the field.  Use "" for 'don't care'.
+  * @index: Numeric index portion of the field.  Use zero for 'don't care'.
+  *
+- * This routine sets the vendor id to zero (non-vendor specific).
+  * Returns field value.
+  */
+ 
+-static u64 make_first_field(const char *text, u64 index)
++static u64 make_field(const char *text, u64 index)
+ {
+-	return PS3_VENDOR_ID_NONE + ((make_field(text, index) - index) >> 32) + index;
++	u64 n = 0;
++
++	memcpy((char *)&n, text, strnlen(text, sizeof(n)));
++	return n + index;
+ }
+ 
+ /**
 
 -- 
 2.41.0.640.ga95def55d0-goog
