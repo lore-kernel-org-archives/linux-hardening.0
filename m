@@ -2,101 +2,149 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1427C41513
-	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 03:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CFFC001E0
+	for <linux-hardening@archiver.kernel.org>; Fri, 11 Aug 2023 03:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229848AbjHKDe1 (ORCPT
+        id S229757AbjHKDiM (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 10 Aug 2023 23:34:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60380 "EHLO
+        Thu, 10 Aug 2023 23:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231338AbjHKDe0 (ORCPT
+        with ESMTP id S229457AbjHKDiL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 10 Aug 2023 23:34:26 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7578A2D6D
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 20:34:25 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-686be28e1a8so1215916b3a.0
-        for <linux-hardening@vger.kernel.org>; Thu, 10 Aug 2023 20:34:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1691724865; x=1692329665;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ol08JEKu7oqSkPybwCjqbHvzJEYD13kIWrCXt9fqhPA=;
-        b=RM3Hcdg2buvo+7MBfeCcTgRzDJzIFNaSr4GX0g0i2DGfzJpDqxVPwKdK1XxDFje7DZ
-         i69P7k9yZcNPGt7bKp3XbYBudkh0gf59uKKBQfXHJQJqo6n9UA9GU+s0lkTQRcDL6dH7
-         yWbN0rxPPZbBBQ5a52XIqMvGTagTwEZgGxplTC2896VUwStmXu8NJlZIi1ZA6lqHAa20
-         iEy96KnhgeiYrs7BCUJ1DEe8rWR/XljpbvwgoFURVGGDCY2mKX/qjMzQfb+0TkkbR6kE
-         eqOrNchRxnqyV9fB/ILmeiPDrChEEBD+Qu/pf4wj7nTMJgXsVDR0MkcenvkqsYvCRBq0
-         RI4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691724865; x=1692329665;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ol08JEKu7oqSkPybwCjqbHvzJEYD13kIWrCXt9fqhPA=;
-        b=hCWv2KcLPhwerY6QfSe3kDhbFnUEsp/cwiQ7yJaByYPAMeUlLpSp10QY/9rWMHFWh9
-         bJ+A4kclJ5+mre0JY9/WpgBZQt9O0Ant00nQuCT6p1sTuT8Pp5a3Q9sFKBuOoRCmOmek
-         ohf8gO5CS1J62btRhkfvj9IpfWRGRoCaW78Z4EiEkCiPReHkUWrROcN8xvTt/9ZZHH9t
-         HeWFn2wXm5ToMFL4HQVEu1dCMpUIm5kEvNu81T7icSSuf8JBt2Akc/D2AwIyBLHjent7
-         XjSJIOWAyvAAYehEpmMsnJ4lq+XLPNvrk+gozMZ/OYuTxqlw5coAPzZTvSIpSofASEIP
-         cNNA==
-X-Gm-Message-State: AOJu0YycBeZQgPTjjMFQR9JHpWLYe3eQ3+35ACG5pepOiT04QHRxU3b9
-        1h/vzdHJml2uLSXLr6cAP/o+vg==
-X-Google-Smtp-Source: AGHT+IFMa5VFjaKScdXL8YdPq85Bi5eNzrHQcNg3xR10Oi+GyB/N1JnY7GmII2iLlkXP9If0A6y5kQ==
-X-Received: by 2002:a05:6a00:ccd:b0:687:570:5021 with SMTP id b13-20020a056a000ccd00b0068705705021mr805514pfv.15.1691724864885;
-        Thu, 10 Aug 2023 20:34:24 -0700 (PDT)
-Received: from localhost ([50.221.140.188])
-        by smtp.gmail.com with ESMTPSA id f22-20020a637556000000b005655811848asm2097438pgn.43.2023.08.10.20.34.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Aug 2023 20:34:24 -0700 (PDT)
-Date:   Thu, 10 Aug 2023 20:34:24 -0700 (PDT)
-X-Google-Original-Date: Thu, 10 Aug 2023 20:34:23 PDT (-0700)
-Subject:     Re: stable-rc: 6.1: gcc-plugins: Reorganize gimple includes for GCC 13
-In-Reply-To: <202308102030.76B5309D1@keescook>
-CC:     naresh.kamboju@linaro.org, stable@vger.kernel.org,
-        lkft-triage@lists.linaro.org, Greg KH <gregkh@linuxfoundation.org>,
-        sashal@kernel.org, anders.roxell@linaro.org,
-        linux-hardening@vger.kernel.org
-From:   Palmer Dabbelt <palmer@rivosinc.com>
-To:     keescook@chromium.org
-Message-ID: <mhng-3d8b7678-3ebc-4665-8b58-94b44be0fd7c@palmer-ri-x1c9a>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Thu, 10 Aug 2023 23:38:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0CB26A0;
+        Thu, 10 Aug 2023 20:38:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A27264CCF;
+        Fri, 11 Aug 2023 03:38:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7CEFBC433C8;
+        Fri, 11 Aug 2023 03:38:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691725090;
+        bh=whhV6SkWkfSGuUqgawwieXdrPYWPSac+Odl5OgaklPE=;
+        h=From:Date:Subject:To:Cc:Reply-To:From;
+        b=DfDe0sLPiPncLsY2sbT70pZ0lDY1i41wPQVm/fwKmZ0U2fNXlG1fYIH+4AZj0qyln
+         1dEdQED/NP4pGRVef+jrI0UlYHKsadZJp4B+x4CfsOij5dIxYwUyJ7hsVc4jaZiY25
+         PbqaAHcl3uT5ijrOe23XaoQWLNAZ96dKrLtGov+j/5fGVGzTDZnbl2sXmNlUOydmB7
+         y+dwA1ogfv2uWJeP1o1C3UVnKxkaPur7KLMIr/hsssimMSvO5RbVoZsnA4qORKybg5
+         Wi7ItzfogLeAeqR3b+rMvtAusPlURfYicquZZUMfqmpzfbO8S7GgkrzclopjGPtExT
+         6CvvPCun/7zzg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.lore.kernel.org (Postfix) with ESMTP id 603D9C001DE;
+        Fri, 11 Aug 2023 03:38:10 +0000 (UTC)
+From:   Nathan Lynch via B4 Relay 
+        <devnull+nathanl.linux.ibm.com@kernel.org>
+Date:   Thu, 10 Aug 2023 22:37:55 -0500
+Subject: [PATCH v2] powerpc/rtas_flash: allow user copy to flash block
+ cache objects
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230810-rtas-flash-vs-hardened-usercopy-v2-1-dcf63793a938@linux.ibm.com>
+X-B4-Tracking: v=1; b=H4sIABKt1WQC/4XNQQ6DIBCF4asY1h0DmNjSVe/RuEAYyyQKDSjRG
+ O9eag/Q5f8W39tZwkiY2L3aWcRMiYIvIS8VM077FwLZ0kxy2fBrIyDOOsEw6uQgJ3A6WvRoYSm
+ OCe8NuNKtlU3bcyFYUd4RB1rPh2dX2lGaQ9zOwyy+68++8f92FiBAolJmUCh7tI+R/LLW1E+1C
+ RPrjuP4AOBsLJnSAAAA
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Nathan Lynch <nathanl@linux.ibm.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1691725089; l=3245;
+ i=nathanl@linux.ibm.com; s=20230206; h=from:subject:message-id;
+ bh=mnxTyBgPfZp2EwTmjYzNjMI5jJcJ4qTWUk5dzWOmYlA=;
+ b=x0ZNdmr3h+oB6GmQqV4qkH5z0Kn3pjHXJhNWw+wl5tKyWa6HZJ6Ppd1jwAMLXktRgXVkRrfzu
+ MIoMmqKBswLBh9MUxfzfOgjHQJZkouOSveeH8oS+DXgkIHSpwdAynpi
+X-Developer-Key: i=nathanl@linux.ibm.com; a=ed25519;
+ pk=6daubz/ymoaMF+8voz7UHwnhluEsmDZuqygIIMWpQQY=
+X-Endpoint-Received: by B4 Relay for nathanl@linux.ibm.com/20230206 with auth_id=27
+X-Original-From: Nathan Lynch <nathanl@linux.ibm.com>
+Reply-To: <nathanl@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 10 Aug 2023 20:30:52 PDT (-0700), keescook@chromium.org wrote:
-> On Fri, Aug 11, 2023 at 08:47:53AM +0530, Naresh Kamboju wrote:
->> > > # first fixed commit: [e6a71160cc145e18ab45195abf89884112e02dfb]
->> > >    gcc-plugins: Reorganize gimple includes for GCC 13
->> [...]
->>
->> > Commit e6a71160cc14 ("gcc-plugins: Reorganize gimple includes
->> > for GCC 13") was added in v6.2.
->>
->> This commit is needed.
->>
->> >
->> > I think you're saying you need it backported to the v6.1 stable tree?
->> > ("First bad commit" is really the first good commit?)
->>
->> First good commit.
->> We need to backport this patch for linux.6.1.y
->
-> Okay! Thanks. :) Yeah, this could probably go to all the stable kernels,
-> if someone wants to build with GCC 13 on older kernels.
+From: Nathan Lynch <nathanl@linux.ibm.com>
 
-I'm also sligtly lost in the bug report, but IIRC the GCC include 
-changes were really a GCC version issue not a kernel version issue.  In 
-other words, any kernel would be impacted if it's built with the newer 
-GCC so this should be backported aggressively.
+With hardened usercopy enabled (CONFIG_HARDENED_USERCOPY=y), using the
+/proc/powerpc/rtas/firmware_update interface to prepare a system
+firmware update yields a BUG():
 
-So
+kernel BUG at mm/usercopy.c:102!
+Oops: Exception in kernel mode, sig: 5 [#1]
+LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+Modules linked in:
+CPU: 0 PID: 2232 Comm: dd Not tainted 6.5.0-rc3+ #2
+Hardware name: IBM,8408-E8E POWER8E (raw) 0x4b0201 0xf000004 of:IBM,FW860.50 (SV860_146) hv:phyp pSeries
+NIP:  c0000000005991d0 LR: c0000000005991cc CTR: 0000000000000000
+REGS: c0000000148c76a0 TRAP: 0700   Not tainted  (6.5.0-rc3+)
+MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24002242  XER: 0000000c
+CFAR: c0000000001fbd34 IRQMASK: 0
+[ ... GPRs omitted ... ]
+NIP [c0000000005991d0] usercopy_abort+0xa0/0xb0
+LR [c0000000005991cc] usercopy_abort+0x9c/0xb0
+Call Trace:
+[c0000000148c7940] [c0000000005991cc] usercopy_abort+0x9c/0xb0 (unreliable)
+[c0000000148c79b0] [c000000000536814] __check_heap_object+0x1b4/0x1d0
+[c0000000148c79f0] [c000000000599080] __check_object_size+0x2d0/0x380
+[c0000000148c7a30] [c000000000045ed4] rtas_flash_write+0xe4/0x250
+[c0000000148c7a80] [c00000000068a0fc] proc_reg_write+0xfc/0x160
+[c0000000148c7ab0] [c0000000005a381c] vfs_write+0xfc/0x4e0
+[c0000000148c7b70] [c0000000005a3e10] ksys_write+0x90/0x160
+[c0000000148c7bc0] [c00000000002f2c8] system_call_exception+0x178/0x320
+[c0000000148c7e50] [c00000000000d520] system_call_common+0x160/0x2c4
+--- interrupt: c00 at 0x7fff9f17e5e4
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+The blocks of the firmware image are copied directly from user memory
+to objects allocated from flash_block_cache, so flash_block_cache must
+be created using kmem_cache_create_usercopy() to mark it safe for user
+access.
 
-Thanks!
+Fixes: 6d07d1cd300f ("usercopy: Restrict non-usercopy caches to size 0")
+Signed-off-by: Nathan Lynch <nathanl@linux.ibm.com>
+---
+I believe it's much more common to update Power system firmware
+without involving a Linux partition, which may explain why this has
+gone unreported for so long.
+---
+Changes in v2:
+- Drop excessive local const variables. No functional change.
+- Link to v1: https://lore.kernel.org/r/20230801-rtas-flash-vs-hardened-usercopy-v1-1-2e99cf9e2bed@linux.ibm.com
+---
+ arch/powerpc/kernel/rtas_flash.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/kernel/rtas_flash.c b/arch/powerpc/kernel/rtas_flash.c
+index 4caf5e3079eb..359577ec1680 100644
+--- a/arch/powerpc/kernel/rtas_flash.c
++++ b/arch/powerpc/kernel/rtas_flash.c
+@@ -709,9 +709,9 @@ static int __init rtas_flash_init(void)
+ 	if (!rtas_validate_flash_data.buf)
+ 		return -ENOMEM;
+ 
+-	flash_block_cache = kmem_cache_create("rtas_flash_cache",
+-					      RTAS_BLK_SIZE, RTAS_BLK_SIZE, 0,
+-					      NULL);
++	flash_block_cache = kmem_cache_create_usercopy("rtas_flash_cache",
++						       RTAS_BLK_SIZE, RTAS_BLK_SIZE,
++						       0, 0, RTAS_BLK_SIZE, NULL);
+ 	if (!flash_block_cache) {
+ 		printk(KERN_ERR "%s: failed to create block cache\n",
+ 				__func__);
+
+---
+base-commit: c3cad890877f59aeeaf5a638aa7a7c0612c16fa1
+change-id: 20230731-rtas-flash-vs-hardened-usercopy-09a6d236b011
+
+Best regards,
+-- 
+Nathan Lynch <nathanl@linux.ibm.com>
+
