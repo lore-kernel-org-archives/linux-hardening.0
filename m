@@ -2,116 +2,98 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B67C001DE
-	for <linux-hardening@archiver.kernel.org>; Sun, 13 Aug 2023 18:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF54EB64DD
+	for <linux-hardening@archiver.kernel.org>; Sun, 13 Aug 2023 21:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbjHMS7p (ORCPT
+        id S231989AbjHMVdC (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 13 Aug 2023 14:59:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41878 "EHLO
+        Sun, 13 Aug 2023 17:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231438AbjHMS7o (ORCPT
+        with ESMTP id S231995AbjHMVdB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 13 Aug 2023 14:59:44 -0400
-Received: from mail-vk1-xa2e.google.com (mail-vk1-xa2e.google.com [IPv6:2607:f8b0:4864:20::a2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD953BF
-        for <linux-hardening@vger.kernel.org>; Sun, 13 Aug 2023 11:59:45 -0700 (PDT)
-Received: by mail-vk1-xa2e.google.com with SMTP id 71dfb90a1353d-48719854eb9so1520058e0c.0
-        for <linux-hardening@vger.kernel.org>; Sun, 13 Aug 2023 11:59:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20221208.gappssmtp.com; s=20221208; t=1691953185; x=1692557985;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mvSEBb+mluam1nmVpoK29fUncMJsHTGSApagTYFZ+Nw=;
-        b=pFVAQ/sNHiDXrGMz9gVFrGk2RoyqRTEw1A8tOgJUVd9tH/SoMcC4+2/HnhEgNGyqry
-         y5eF3PH4E5Ljq8EAuiT4NILGWvm9UpdMnZN+PPX7q4BfSDcUQdZi08uoijQXZTyvTc1N
-         sQExNrek1/cDxrigvgPUQTrFENNXxGF0C29mUtIV5UayKQEolEHPhIwNqoKkFarvejJE
-         1/qkbE7EyLKltNSugm7eoJtMJUz8wmSUlxm3n8qP/n/OH1ipG9b3P4KBBqt5v+L45imk
-         u17e8fPs0O8H0YPNEKv35qJS4NW6FrC7lgI7FPLc9427hSnejGg2qIvsAOXUJHzI0eOj
-         YR2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691953185; x=1692557985;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mvSEBb+mluam1nmVpoK29fUncMJsHTGSApagTYFZ+Nw=;
-        b=BZof6qCf8NTEmTdXcnTNXh5px0KJgcJwFM+b9fBgsAAw6tB4lE9egBpQx6SyQiPGt7
-         mnBOsUYM1zvtnns3gDcJ6SdpnoRRSPkkQQrDisCnrE/+teWRkF3EbiSrJzH+59hQkAHj
-         Lqx2zus++7keztB4ns8LZpGhQfa474MGWdYdzhIeagdC0G4YMDQa6aj0dA+QiZ6kgQc5
-         Qo0vQw8tcgmTI93UzhlPX4xIRTk1lA+y98Wmyso92P89nvDapBvvoL/BBNkrRryC7dyn
-         ok0FsXFz2wJ09LxB5F0T/G6wZ9NrcA8buNwvxrAzi3Ge+wzdrtgpzWnOwjrJCYYyP1lR
-         WP4w==
-X-Gm-Message-State: AOJu0Ywid520t6gEL1iTV2r+oijZ5yteRkY0UgVAQzugZa95IHAluyRM
-        9eRGP1iuCKt3juZ++WR2gdtnVGHiaMWgT8Oau0k1Eg==
-X-Google-Smtp-Source: AGHT+IGluhxjUnvE0HEw7R1pBnoP9kfF80Uw2gAE8xhlQCTYodKi9s2rNhKVE9dOn2oFx7nOecRGqHm+O1G5Ai9/VuY=
-X-Received: by 2002:a67:f28b:0:b0:447:6965:7284 with SMTP id
- m11-20020a67f28b000000b0044769657284mr7883113vsk.8.1691953185055; Sun, 13 Aug
- 2023 11:59:45 -0700 (PDT)
+        Sun, 13 Aug 2023 17:33:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A9E127;
+        Sun, 13 Aug 2023 14:33:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2566462C0C;
+        Sun, 13 Aug 2023 21:33:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36B93C433C8;
+        Sun, 13 Aug 2023 21:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1691962382;
+        bh=MUmgrlAwWufSWeWUWj0Ex5Q6lW7QL6hPmoGGuN4BYak=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yttRTc28dCzWCfIst/FwGogEQUWwS3Tt/IT2BRalL+/rR0Tc/6BHfPECsyrp2lvZF
+         h6isNJS3iMUqaQwAJaaFYbCFTg7Twt8ngEDZOjAwQNNFWYi4W0DSJ+gx8D40TN+DMs
+         ycM0e19uKTv87etXEIvB0NtH1a3MTtGuuA/TgqqA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        patches@lists.linux.dev, Palmer Dabbelt <palmer@rivosinc.com>,
+        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: [PATCH 6.1 001/149] gcc-plugins: Reorganize gimple includes for GCC 13
+Date:   Sun, 13 Aug 2023 23:17:26 +0200
+Message-ID: <20230813211718.802552390@linuxfoundation.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20230813211718.757428827@linuxfoundation.org>
+References: <20230813211718.757428827@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20230812-pxa1908-lkml-v5-0-a5d51937ee34@skole.hr> <20230812-pxa1908-lkml-v5-1-a5d51937ee34@skole.hr>
-In-Reply-To: <20230812-pxa1908-lkml-v5-1-a5d51937ee34@skole.hr>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sun, 13 Aug 2023 20:59:34 +0200
-Message-ID: <CAMRc=MfS7Ybr0sxCmgh98+7+3pnRmWFVutTgz4+sa1nsTdh3Hg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/8] gpio: pxa: disable pinctrl calls for MMP_GPIO
-To:     =?UTF-8?Q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
-Cc:     Robert Jarzmik <robert.jarzmik@free.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hardening@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        afaerber@suse.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Sat, Aug 12, 2023 at 12:26=E2=80=AFPM Duje Mihanovi=C4=87 <duje.mihanovi=
-c@skole.hr> wrote:
->
-> Similarly to PXA3xx and MMP2, pinctrl-single isn't capable of setting
-> pin direction on MMP either.
->
-> Fixes: a770d946371e ("gpio: pxa: add pin control gpio direction and reque=
-st")
-> Signed-off-by: Duje Mihanovi=C4=87 <duje.mihanovic@skole.hr>
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> ---
->  drivers/gpio/gpio-pxa.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-pxa.c b/drivers/gpio/gpio-pxa.c
-> index a1630ed4b741..d92650aecb06 100644
-> --- a/drivers/gpio/gpio-pxa.c
-> +++ b/drivers/gpio/gpio-pxa.c
-> @@ -238,6 +238,7 @@ static bool pxa_gpio_has_pinctrl(void)
->         switch (gpio_type) {
->         case PXA3XX_GPIO:
->         case MMP2_GPIO:
-> +       case MMP_GPIO:
->                 return false;
->
->         default:
->
-> --
-> 2.41.0
->
->
+From: Kees Cook <keescook@chromium.org>
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+commit e6a71160cc145e18ab45195abf89884112e02dfb upstream.
+
+The gimple-iterator.h header must be included before gimple-fold.h
+starting with GCC 13. Reorganize gimple headers to work for all GCC
+versions.
+
+Reported-by: Palmer Dabbelt <palmer@rivosinc.com>
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+Link: https://lore.kernel.org/all/20230113173033.4380-1-palmer@rivosinc.com/
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ scripts/gcc-plugins/gcc-common.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/scripts/gcc-plugins/gcc-common.h
++++ b/scripts/gcc-plugins/gcc-common.h
+@@ -71,7 +71,9 @@
+ #include "varasm.h"
+ #include "stor-layout.h"
+ #include "internal-fn.h"
++#include "gimple.h"
+ #include "gimple-expr.h"
++#include "gimple-iterator.h"
+ #include "gimple-fold.h"
+ #include "context.h"
+ #include "tree-ssa-alias.h"
+@@ -85,10 +87,8 @@
+ #include "tree-eh.h"
+ #include "stmt.h"
+ #include "gimplify.h"
+-#include "gimple.h"
+ #include "tree-phinodes.h"
+ #include "tree-cfg.h"
+-#include "gimple-iterator.h"
+ #include "gimple-ssa.h"
+ #include "ssa-iterators.h"
+ 
+
+
