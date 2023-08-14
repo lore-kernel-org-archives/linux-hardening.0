@@ -2,98 +2,97 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF54EB64DD
-	for <linux-hardening@archiver.kernel.org>; Sun, 13 Aug 2023 21:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DADC41513
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 05:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231989AbjHMVdC (ORCPT
+        id S233183AbjHNF3F (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sun, 13 Aug 2023 17:33:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57896 "EHLO
+        Mon, 14 Aug 2023 01:29:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231995AbjHMVdB (ORCPT
+        with ESMTP id S233278AbjHNF3C (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sun, 13 Aug 2023 17:33:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A9E127;
-        Sun, 13 Aug 2023 14:33:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2566462C0C;
-        Sun, 13 Aug 2023 21:33:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36B93C433C8;
-        Sun, 13 Aug 2023 21:33:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1691962382;
-        bh=MUmgrlAwWufSWeWUWj0Ex5Q6lW7QL6hPmoGGuN4BYak=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yttRTc28dCzWCfIst/FwGogEQUWwS3Tt/IT2BRalL+/rR0Tc/6BHfPECsyrp2lvZF
-         h6isNJS3iMUqaQwAJaaFYbCFTg7Twt8ngEDZOjAwQNNFWYi4W0DSJ+gx8D40TN+DMs
-         ycM0e19uKTv87etXEIvB0NtH1a3MTtGuuA/TgqqA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        patches@lists.linux.dev, Palmer Dabbelt <palmer@rivosinc.com>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: [PATCH 6.1 001/149] gcc-plugins: Reorganize gimple includes for GCC 13
-Date:   Sun, 13 Aug 2023 23:17:26 +0200
-Message-ID: <20230813211718.802552390@linuxfoundation.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230813211718.757428827@linuxfoundation.org>
-References: <20230813211718.757428827@linuxfoundation.org>
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
+        Mon, 14 Aug 2023 01:29:02 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F01E6A;
+        Sun, 13 Aug 2023 22:29:01 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2b9db1de50cso58613251fa.3;
+        Sun, 13 Aug 2023 22:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1691990940; x=1692595740;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BGZyPbP3dzjwp/wLly5dZJJDO3ZcjmUG+xoEOUDLDuc=;
+        b=e0Gac0Da6KXLEGNtelm3EFOPtEeK91Qj1q2koIajDnLcIdoz2ZGrwZPExkEhh9yN3c
+         t33ZJydXNb3bqU0aPWTkOMrw8O4NmM+30WFc7Vd2aQ05PzujPzogB0y1fvWSQ/1k4AMG
+         vU6899pM8mw/geFRvQzUdlRQiYJ+eHtBHco+yQyJK2pnJ8XNg+ODZKSJX8N+LH/MiLF1
+         XdhZGd0znDXp5h3oUqTVxGdb4WHt2awrj0UkXKyaOaiNrDIMyrrvBAh3M1nue1IEvD6s
+         QcCZYBcCFZIc0viznwHfdX5h5brxzZmmeStKpPx8TlxktdWTJIwtQFl4U5qMY735tEM2
+         PLVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691990940; x=1692595740;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BGZyPbP3dzjwp/wLly5dZJJDO3ZcjmUG+xoEOUDLDuc=;
+        b=ldBNOpYxCbigN/GnqlvbDXY50H6TT6UqAr1zSS7Qv3RUlxLuIbhfgkZ7Ph3jkhbBHw
+         RjdP1gXc/J5NcYL9JTzEMSJNyGUwJU0Ob9rIVBoeEvAsuMVDd8x/C5qU40yqGQHJy64d
+         m9ShOE6RMpPsaVkaz/oVZ48qSTE5D05HbFgwl+OY68G7tG/azmnZB/wDESkS41iqA7J5
+         gheO1oLyMICaBnh8B8dlXhGeYEkWctfhwKCEWSv2pYZcr47OhYh7ocnOqbXquQTFGcAV
+         aDzBnnPn7+m1hYPOOgejRP7gZAjZOzlHYyO5wPIiMn64uuZdFQtYdaDXX0KupDDVuq6N
+         TwSA==
+X-Gm-Message-State: AOJu0Yz1O7y3XHQUXy4XUwSD2jb4B9yZM+BKUH3+MovZn9zbxi8iu6qd
+        eRU0HQeR0DmrJ+akYl+VT1DCG/4j+LKd/mHaC2E=
+X-Google-Smtp-Source: AGHT+IHA+eWMvhISyFBVAeBZGt8uccSi2b3i7SypwBjC9lu/LcdShKA+dMXotAZUkAb6evmv915C0Q26Jc0ucn5hMQM=
+X-Received: by 2002:a2e:8897:0:b0:2b7:117:e54 with SMTP id k23-20020a2e8897000000b002b701170e54mr6247163lji.4.1691990939564;
+ Sun, 13 Aug 2023 22:28:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230806-xiaomi-star-v1-0-0c384e8b5737@gmail.com>
+ <20230806-xiaomi-star-v1-1-0c384e8b5737@gmail.com> <244d165a-1e53-401e-be36-6bb3f4f260ae@linaro.org>
+ <CAA8EJpqiaEamZ6u9D_Sn-bgn8qdpqsQ2EMt7Tb9hKr5kNO2JFg@mail.gmail.com>
+In-Reply-To: <CAA8EJpqiaEamZ6u9D_Sn-bgn8qdpqsQ2EMt7Tb9hKr5kNO2JFg@mail.gmail.com>
+From:   Sophon Wu <wuxilin123@gmail.com>
+Date:   Mon, 14 Aug 2023 13:28:46 +0800
+Message-ID: <CAEPPPKthfyZnD9z9Q5c7YnPMAJhGfyxJdfpzZmhoxK6xxv603g@mail.gmail.com>
+Subject: Re: [PATCH 1/3] soc: qcom: pmic_glink: enable UCSI for SM8350
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =E4=BA=8E2023=E5=B9=B48=E6=
+=9C=8813=E6=97=A5=E5=91=A8=E6=97=A5 18:56=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Sat, 12 Aug 2023 at 14:12, Konrad Dybcio <konrad.dybcio@linaro.org> wr=
+ote:
+> >
+> > On 5.08.2023 19:03, Xilin Wu via B4 Relay wrote:
+> > > From: Xilin Wu <wuxilin123@gmail.com>
+> > >
+> > > UCSI is supported on SM8350. Allow it to enable USB role switch and
+> > > altmode notifications on SM8350.
+> > >
+> > > Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
+> > > ---
+> > I can confirm this is also required for my SM8350 Xperia 1 III.
+>
+> Last time I checked it, UCSI was broken on the SM8350 HDK. Trying to
+> enable it caused pmic_glink to stop working after some port
+> operations.
 
-commit e6a71160cc145e18ab45195abf89884112e02dfb upstream.
-
-The gimple-iterator.h header must be included before gimple-fold.h
-starting with GCC 13. Reorganize gimple headers to work for all GCC
-versions.
-
-Reported-by: Palmer Dabbelt <palmer@rivosinc.com>
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-Link: https://lore.kernel.org/all/20230113173033.4380-1-palmer@rivosinc.com/
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- scripts/gcc-plugins/gcc-common.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/scripts/gcc-plugins/gcc-common.h
-+++ b/scripts/gcc-plugins/gcc-common.h
-@@ -71,7 +71,9 @@
- #include "varasm.h"
- #include "stor-layout.h"
- #include "internal-fn.h"
-+#include "gimple.h"
- #include "gimple-expr.h"
-+#include "gimple-iterator.h"
- #include "gimple-fold.h"
- #include "context.h"
- #include "tree-ssa-alias.h"
-@@ -85,10 +87,8 @@
- #include "tree-eh.h"
- #include "stmt.h"
- #include "gimplify.h"
--#include "gimple.h"
- #include "tree-phinodes.h"
- #include "tree-cfg.h"
--#include "gimple-iterator.h"
- #include "gimple-ssa.h"
- #include "ssa-iterators.h"
- 
-
-
+I guess it could be firmware related issues? It works fine on my
+device with latest firmware.
