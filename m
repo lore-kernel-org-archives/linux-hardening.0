@@ -2,104 +2,88 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0C1C41513
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 10:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC2AC001DB
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 11:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230281AbjHNKnU convert rfc822-to-8bit (ORCPT
+        id S232066AbjHNLlR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Aug 2023 06:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54726 "EHLO
+        Mon, 14 Aug 2023 07:41:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235489AbjHNKmo (ORCPT
+        with ESMTP id S234812AbjHNLlJ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Aug 2023 06:42:44 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D600C1707
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Aug 2023 03:42:40 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-10-bYN0va-pOwmudf1yAI4-aA-1; Mon, 14 Aug 2023 11:42:38 +0100
-X-MC-Unique: bYN0va-pOwmudf1yAI4-aA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 14 Aug
- 2023 11:42:26 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 14 Aug 2023 11:42:26 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>
-CC:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Mon, 14 Aug 2023 07:41:09 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2054510C0;
+        Mon, 14 Aug 2023 04:41:02 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id D643F1F383;
+        Mon, 14 Aug 2023 11:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1692013260; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1EwJnpDzSZ9Tq3Xj5sEIz1mrOXITnbkSLBxYcSSAIHU=;
+        b=VmxuValf5Fwxkz7hUuJ61A9Gvfy9sooXGrvxm9KrVHDWcHELWVvrxuN1vRKAVUxJW7xXkT
+        /gNFDY44YN3fit1KwlOLDEcjb41FA3htMqEqsKoH7aix2AGYE4Ex7det+uM87jI4imO0r1
+        9xNuvisDHI3GauYqLGeLBZTbiHgypxY=
+Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 4E5DF2C143;
+        Mon, 14 Aug 2023 11:40:59 +0000 (UTC)
+Date:   Mon, 14 Aug 2023 13:40:57 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         John Ogness <john.ogness@linutronix.de>,
-        "Vijay Balakrishna" <vijayb@linux.microsoft.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
+        Vijay Balakrishna <vijayb@linux.microsoft.com>,
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t cast
-Thread-Topic: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t
- cast
-Thread-Index: AQHZzBcPYpG1g1kNlkm6DrLi5BIXA6/pnsfQ
-Date:   Mon, 14 Aug 2023 10:42:26 +0000
-Message-ID: <42a1e2099fe141c3a57e808cbf06d8a0@AcuMS.aculab.com>
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t cast
+Message-ID: <ZNoSyX0YtorbLy7V@alley>
 References: <20230811054528.never.165-kees@kernel.org>
-In-Reply-To: <20230811054528.never.165-kees@kernel.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230811054528.never.165-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook
-> Sent: 11 August 2023 06:46
-> 
+On Thu 2023-08-10 22:45:32, Kees Cook wrote:
 > If an output buffer size exceeded U16_MAX, the min_t(u16, ...) cast in
 > copy_data() was causing writes to truncate. This manifested as output
 > bytes being skipped, seen as %NUL bytes in pstore dumps when the available
 > record size was larger than 65536. Fix the cast to no longer truncate
 > the calculation.
 > 
-...
-> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> index 2dc4d5a1f1ff..fde338606ce8 100644
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
-> @@ -1735,7 +1735,7 @@ static bool copy_data(struct prb_data_ring *data_ring,
->  	if (!buf || !buf_size)
->  		return true;
-> 
-> -	data_size = min_t(u16, buf_size, len);
-> +	data_size = min_t(unsigned int, buf_size, len);
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: John Ogness <john.ogness@linutronix.de>
+> Reported-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+> Closes: https://lore.kernel.org/lkml/d8bb1ec7-a4c5-43a2-9de0-9643a70b899f@linux.microsoft.com/
 
-I'd noticed that during one of my test compiles while looking
-at making min() less fussy.
+checkpatch.pl suggested that "Link:" should be used instead of "Closes:".
 
-A better fix would be:
-	data_size = min(buf_size + 0u, len);
+> Fixes: b6cf8b3f3312 ("printk: add lockless ringbuffer")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Or put an ack on my patch 3/5 to minmax.h and then min(buf_size, len)
-will be fine (because both arguments are unsigned).
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-	David
+Thanks a lot for tracking this down.
 
-> 
->  	memcpy(&buf[0], data, data_size); /* LMM(copy_data:A) */
->  	return true;
-> --
-> 2.34.1
+The patch has been comitted into printk/linux.git, branch for-6.6.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+I though about pushing it for 5.5-rc7. But it is pretty old issue.
+It does not break the system. I wanted to give it some spin in
+linux-next. And I leave for vacation on Thursday. I will not
+have internet connection until Aug 28.
 
+Best Regards,
+Petr
