@@ -2,133 +2,339 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD74CC04FE1
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 19:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7944C04A94
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 21:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231828AbjHNTBL (ORCPT
+        id S230501AbjHNVFZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Aug 2023 15:01:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51478 "EHLO
+        Mon, 14 Aug 2023 17:05:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231915AbjHNTAz (ORCPT
+        with ESMTP id S232896AbjHNVFY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Aug 2023 15:00:55 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D78BC
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Aug 2023 12:00:54 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bdcb800594so10963595ad.1
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Aug 2023 12:00:54 -0700 (PDT)
+        Mon, 14 Aug 2023 17:05:24 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA4DDD
+        for <linux-hardening@vger.kernel.org>; Mon, 14 Aug 2023 14:05:23 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1bc83a96067so29404435ad.0
+        for <linux-hardening@vger.kernel.org>; Mon, 14 Aug 2023 14:05:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692039654; x=1692644454;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=gKTJbYyHwGU/Pavfa3Pni61Jgqd+CWSu3/z3hiS2FZk=;
-        b=HLQl75aDvj2mEnVYovaIHU/OOGwgRtjHAT3BetsxMzFRe6RXIWRmCMYKUVj2Mu9Mdl
-         d2IbKwWkNjw3pocpmU1XmO6+RmPLRa68vlKwfk2y/ciQk/k7dfiSIL9qbC/wkf2pj4+W
-         d/ah7C/qdg5kc7tdACd3HKs8HaDGCfk13BTHc=
+        d=chromium.org; s=google; t=1692047123; x=1692651923;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rbAqdxFtoX3bkDfM4kN5C0n/JYAhX0IdvmwRc1W7v3E=;
+        b=aU1riK9M1P7N+89kCy8Te9dMZuoQB8HuURBX7Sr5hfor3VlfCzKzpOFaL4jdvqZaBh
+         GubU/DiG1dcOLQsD9bSYv+UQxc3ROrfo6bvgyb54pURtJzzZeOmKU1/9RAD9yyF6syQC
+         9i1nx3a+96L/srFeZicMFIvxQHoY6GS7oYYgY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692039654; x=1692644454;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gKTJbYyHwGU/Pavfa3Pni61Jgqd+CWSu3/z3hiS2FZk=;
-        b=adb07UYjbGtgCNnSun9PeZ0kFrV4AQToVhyoAq8eQlzK2z+ArrTbNQkUaWbQZF3C7K
-         kmOM10KKwN/Mw1pjnOJbIHTcwuhi9sdccwlzgTQxZFM+CJjKF5slVpeaedwScH63JbrP
-         wk2jkhvvjLKAWdv8Aj/Ypa6tU51n5jKAOKL7e2P6AsCok/hG1O8bQLsecCmuWRTiJVxh
-         GKdBKKtB+UP1cJcE8OOoL7P99iFMbELbTldeQT4XhpvdqSGSap0vSDlujGJis9YoohwC
-         RJ1Q2HQjN7l3eQm0rCIhO1WWrzNGyWSnrMQerPrwsrw/QFfsUGcpXhJujCuCgJl8Skgf
-         Cb/g==
-X-Gm-Message-State: AOJu0YyWsKfLxy0oVvjkyBTWexYAQqdJSYXu8t6oKqk3X7bpGcarNhZI
-        vNtHAnWZvC9NB243LnqJognrzw==
-X-Google-Smtp-Source: AGHT+IFdxlyUb3opfqP0LZm8yaMzbRYT5aUM9s1n5GnCFd9QkjKQiIIeuTRrDisx8zwdDnVwz0WSPw==
-X-Received: by 2002:a17:902:968f:b0:1bc:4f64:e2fc with SMTP id n15-20020a170902968f00b001bc4f64e2fcmr8552937plp.27.1692039654159;
-        Mon, 14 Aug 2023 12:00:54 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692047123; x=1692651923;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rbAqdxFtoX3bkDfM4kN5C0n/JYAhX0IdvmwRc1W7v3E=;
+        b=lDOGuEj5X9HQts4vwcBQLfvk74uBYmOGMOktzWXG4WyA1wS1wq2T7yZzfChWkITIlm
+         Tdd7AUG+gk7AW4fPK8lVD7Yaw3vnF6BBS28Crzu7ISShr1Fuuzno7xSshsnN6XFB9x5f
+         mhATDjWSxdVXwfOGuIQkzIP0tMTG8kAJQilcwNFfkMVyw3MgOMGck3dvqzy2QvLaVBiM
+         yDezxQT8UjsLNgxYveXWO4Ru1YINXjVdSIIeExBUhQVLsDhMsacvdFklzoxqsY1Fmq9P
+         jnAyy0QISyza6MwARwnNIFPyB5RJPfTJmrOXpsV2yUtp8NXeuCq2eL4EgH353eT+0H/V
+         0lcA==
+X-Gm-Message-State: AOJu0Yw8E8YcN9PyCdqNZrbMmW8hml73GNIDa4ldHU+EUrY/1S6nqOVB
+        xTRjIIWVGfQ8mRtwiGSUVnQtYg==
+X-Google-Smtp-Source: AGHT+IHOyv6KjV38QRfIiFQ0899WKF/5k7KLFAQqKabq/9I1n/gQ3lqbSVx4EKttbStm2ZO1+AKozg==
+X-Received: by 2002:a17:902:db05:b0:1bb:c971:ef92 with SMTP id m5-20020a170902db0500b001bbc971ef92mr9928350plx.59.1692047122793;
+        Mon, 14 Aug 2023 14:05:22 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u18-20020a170903125200b001b53953f306sm9813816plh.178.2023.08.14.12.00.52
+        by smtp.gmail.com with ESMTPSA id u18-20020a170903125200b001b53953f306sm9905125plh.178.2023.08.14.14.05.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Aug 2023 12:00:52 -0700 (PDT)
-Date:   Mon, 14 Aug 2023 12:00:51 -0700
+        Mon, 14 Aug 2023 14:05:22 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org
-Subject: Re: Build regressions/improvements in v6.5-rc3
-Message-ID: <202308141159.9E4C2332@keescook>
-References: <CAHk-=wi4Yau-3Bsv2rXYmtXMTLaj3=Wyf4cdM6d89czFvkVsRQ@mail.gmail.com>
- <20230724122626.1701631-1-geert@linux-m68k.org>
- <88f83d73-781d-bdc-126-aa629cb368c@linux-m68k.org>
- <202307281551.D894AA39@keescook>
- <CAMuHMdXRiacSxqDzYmakWAQB99kYvY0Bi9zALP9ZnC9Xs_xO5g@mail.gmail.com>
+To:     Brendan Higgins <brendan.higgins@linux.dev>
+Cc:     Kees Cook <keescook@chromium.org>, David Gow <davidgow@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Petr Skocik <pskocik@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jens Axboe <axboe@kernel.dk>, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Marco Elver <elver@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "haifeng.xu" <haifeng.xu@shopee.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] [RFC] signal: Add KUnit tests
+Date:   Mon, 14 Aug 2023 14:05:12 -0700
+Message-Id: <20230814210508.never.871-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7560; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=PF2MobMOQslBs357nkGARKlzx63FBChyOYfmSJC+BxQ=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk2pcIIK4kP2LoF7unJCvNcio7tUwScsAvQ3EDT
+ GBzEOhmGJuJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZNqXCAAKCRCJcvTf3G3A
+ JtlTD/98HMw5S03yxakwDr6hYsu4qQvVnrvfZ8hdgJPMEQMpRFZgSMej0/hW1+bIraY/Qb1RliA
+ KEY0hxPvy74YgihZOqpokV2KwA3xp9VguHLMYShkUzY8kpag9eeFHvWraqR8hudJivoEYN3CZP7
+ BdGahPBGtGq/dIEvKJ/dScCrODM6B9sJzXIkugQ2zsgnAR9ThR2TFEqM8HdnvSPtZu5BvFngmft
+ 1lh91CSKOA8w9xSefd4HxUqaUItmIen8pIDBvzE5LbfmcY3u2IO0IlZdjAcTSpO3ykqWoBGUKl7
+ vdcdT32v7ihsqmzJFq2lYhndA2aKd0cq9Hl7bOnRpjUXCwki0STfqVBDBUJch2TJBOboroaWv5x
+ 6FLH2TujmMvP6ZmRW0C/JTYdQo8RdWOQvKnQN8cLNW8azXwNcRbvHmLtUFb1b4wXopaP7iazlvz
+ wiL9XAfwJceLR3UgcADT2W+nYDktcU4M3QX3/EMg6K/rGepdky9QNFNEgl+GbUZ9bL/+xw/fMWd
+ GPi24csOyaXK/sydgiIalwwLlqAVw1P2D1IANttv35NhQWqs/XQzOz/PgipcapnHuCPigwchP4j
+ 6cCiitzVyXMt5uqNKfbOI8PvtJhu4LtOFdrpJFCzqxevHLxEprt5Rq49rxWCmNwb51CqL6O4wxe
+ i2Wm1ma TkkHA0Rg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdXRiacSxqDzYmakWAQB99kYvY0Bi9zALP9ZnC9Xs_xO5g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Mon, Aug 14, 2023 at 06:20:59PM +0200, Geert Uytterhoeven wrote:
-> Hi Kees,
-> 
-> On Sat, Jul 29, 2023 at 12:57 AM Kees Cook <keescook@chromium.org> wrote:
-> > On Mon, Jul 24, 2023 at 02:43:02PM +0200, Geert Uytterhoeven wrote:
-> > > On Mon, 24 Jul 2023, Geert Uytterhoeven wrote:
-> > > > JFYI, when comparing v6.5-rc3[1] to v6.5-rc2[3], the summaries are:
-> > > >  - build errors: +5/-0
-> > >
-> > >   + /kisskb/src/include/linux/fortify-string.h: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]:  => 583:25, 493:25
-> > >
-> > > mips-gcc13/mips-allmodconfig
-> > >
-> > > Full context:
-> > >
-> > >     In function 'fortify_memset_chk',
-> > >       inlined from 'memset_io' at /kisskb/src/arch/mips/include/asm/io.h:486:2,
-> > >       inlined from 'build_auth_frame' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:2697:2:
-> > >     /kisskb/src/include/linux/fortify-string.h:493:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
-> > >       493 |                         __write_overflow_field(p_size_field, size);
-> > >         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >     In function 'fortify_memcpy_chk',
-> > >       inlined from 'memcpy_toio' at /kisskb/src/arch/mips/include/asm/io.h:494:2,
-> > >       inlined from 'translate_frame' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:955:3,
-> > >       inlined from 'ray_hw_xmit.constprop' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:912:12:
-> > >     /kisskb/src/include/linux/fortify-string.h:583:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
-> > >       583 |                         __write_overflow_field(p_size_field, size);
-> > >         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >
-> > > Single-element flexible array abuse in drivers/net/wireless/legacy/rayctl.h:tx_msg.var
-> >
-> > ^^^^
-> > is this line from you or is there a tool outputting this? Because, yes,
-> 
-> It is a line from me.
-> 
-> (should I take it as a compliment that I start sounding like a tool? ;-)
+This is a continuation of the proposal[1] for mocking init_task for
+KUnit testing. Changing the behavior of kill_something_info() is moving
+forward[2] and I'd _really_ like to have some unit tests in place to
+actually test the behavioral changes.
 
-Heh. It was so declaratory. :) I think I was hoping there was some
-analyzer that could save us the pain of manually examining these
-warnings.
+I tried to incorporate feedback from Daniel and David, and I think the
+result is fairly workable -- the only tricky part is building valid
+task_struct instances. :)
 
-> 
-> > very true:
-> >
-> > struct tx_msg {
-> >     struct tib_structure tib;
-> >     struct phy_header phy;
-> >     struct mac_header mac;
-> >     UCHAR  var[1];
-> > };
-> >
-> > I'll send a patch.
-> 
-> Thanks, I noticed you took care while I was enjoying summer holidays ;-)
+Notably, I haven't actually gotten as far as testing the actual proposed
+behavioral change since I wanted to make sure this approach wasn't going
+to totally crash and burn.
 
-Awesome! Thanks for the report. :)
+Thoughts?
 
+[1] https://lore.kernel.org/all/202212012008.D6F6109@keescook/
+[2] https://lore.kernel.org/all/87jzu12pjh.fsf_-_@email.froward.int.ebiederm.org
+
+Cc: Brendan Higgins <brendan.higgins@linux.dev>
+Cc: David Gow <davidgow@google.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Petr Skocik <pskocik@gmail.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ include/kunit/resource.h     |  15 ++++
+ include/linux/sched/signal.h |  11 ++-
+ kernel/signal.c              | 135 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 158 insertions(+), 3 deletions(-)
+
+diff --git a/include/kunit/resource.h b/include/kunit/resource.h
+index c7383e90f5c9..dbf84a58f7a6 100644
+--- a/include/kunit/resource.h
++++ b/include/kunit/resource.h
+@@ -479,4 +479,19 @@ void kunit_remove_action(struct kunit *test,
+ void kunit_release_action(struct kunit *test,
+ 			  kunit_action_t *action,
+ 			  void *ctx);
++
++#define kunit_get_mock_pointer(name, actual) ({			\
++	typeof(*(actual)) *ptr = actual;			\
++	struct kunit_resource *resource;			\
++								\
++	if (kunit_get_current_test()) {				\
++		resource = kunit_find_named_resource(current->kunit_test, name); \
++		if (resource) {					\
++			ptr = resource->data;			\
++			kunit_put_resource(resource);		\
++		}						\
++	}							\
++	ptr;							\
++})
++
+ #endif /* _KUNIT_RESOURCE_H */
+diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
+index 669e8cff40c7..700271f43491 100644
+--- a/include/linux/sched/signal.h
++++ b/include/linux/sched/signal.h
+@@ -637,14 +637,19 @@ static inline unsigned long sigsp(unsigned long sp, struct ksignal *ksig)
+ extern void __cleanup_sighand(struct sighand_struct *);
+ extern void flush_itimer_signals(void);
+ 
++/* This is used for KUnit mocking. */
++#ifndef __init_task_ptr
++#define __init_task_ptr	(&init_task)
++#endif
++
+ #define tasklist_empty() \
+-	list_empty(&init_task.tasks)
++	list_empty(&__init_task_ptr->tasks)
+ 
+ #define next_task(p) \
+ 	list_entry_rcu((p)->tasks.next, struct task_struct, tasks)
+ 
+ #define for_each_process(p) \
+-	for (p = &init_task ; (p = next_task(p)) != &init_task ; )
++	for (p = __init_task_ptr ; (p = next_task(p)) != __init_task_ptr ; )
+ 
+ extern bool current_is_single_threaded(void);
+ 
+@@ -653,7 +658,7 @@ extern bool current_is_single_threaded(void);
+  *          'break' will not work as expected - use goto instead.
+  */
+ #define do_each_thread(g, t) \
+-	for (g = t = &init_task ; (g = t = next_task(g)) != &init_task ; ) do
++	for (g = t = __init_task_ptr ; (g = t = next_task(g)) != __init_task_ptr ; ) do
+ 
+ #define while_each_thread(g, t) \
+ 	while ((t = next_thread(t)) != g)
+diff --git a/kernel/signal.c b/kernel/signal.c
+index b5370fe5c198..7607d302ebb9 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -11,6 +11,14 @@
+  *		to allow signals to be sent reliably.
+  */
+ 
++#if IS_ENABLED(CONFIG_KUNIT)
++/* This must be defined before we include include/linux/sched/signal.h */
++#define __init_task_ptr kunit_get_mock_pointer("mock_init_task", &init_task)
++
++#include <kunit/resource.h>
++#include <kunit/test-bug.h>
++#endif
++
+ #include <linux/slab.h>
+ #include <linux/export.h>
+ #include <linux/init.h>
+@@ -4842,3 +4850,130 @@ void kdb_send_sig(struct task_struct *t, int sig)
+ 		kdb_printf("Signal %d is sent to process %d.\n", sig, t->pid);
+ }
+ #endif	/* CONFIG_KGDB_KDB */
++
++#if IS_ENABLED(CONFIG_KUNIT)
++static void test_empty_task_list(struct kunit *test)
++{
++	struct kunit_resource resource;
++	static struct task_struct empty_task_list = {
++			.tasks	= LIST_HEAD_INIT(empty_task_list.tasks),
++		};
++	struct task_struct *p;
++	int count = 0;
++
++	kunit_add_named_resource(test, NULL, NULL, &resource,
++				 "mock_init_task", &empty_task_list);
++
++	KUNIT_EXPECT_TRUE(test, tasklist_empty());
++
++	for_each_process(p)
++		count++;
++
++	/* System hangs without this... */
++	kunit_remove_resource(test, &resource);
++
++	KUNIT_EXPECT_EQ(test, count, 0);
++}
++
++static void test_for_each_process(struct kunit *test)
++{
++	struct kunit_resource resource;
++	static struct task_struct task1 = {
++			.pid = 1,
++			.tasks	= LIST_HEAD_INIT(task1.tasks),
++		};
++	static struct task_struct task2 = {
++			.pid = 2,
++		}, task3 = {
++			.pid = 3,
++		};
++	struct task_struct *p;
++	int count = 0;
++
++	list_add(&task2.tasks, &task1.tasks);
++	list_add(&task3.tasks, &task1.tasks);
++
++	kunit_add_named_resource(test, NULL, NULL, &resource,
++				 "mock_init_task", &task1);
++
++	/* Walk the process list backwards. */
++	for_each_process(p) {
++		KUNIT_EXPECT_EQ(test, 3 - count, p->pid);
++		count++;
++	}
++
++	/* System hangs without this... */
++	kunit_remove_resource(test, &resource);
++
++	/* init_task isn't counted... */
++	KUNIT_EXPECT_EQ(test, count, 2);
++}
++
++static void test_kill_something_info(struct kunit *test)
++{
++	struct kunit_resource resource;
++	static struct task_struct task1 = {
++			.pid = 1,
++			.tasks	= LIST_HEAD_INIT(task1.tasks),
++		};
++	static struct task_struct task2 = {
++			.pid = 2,
++		}, task3 = {
++			.pid = 3,
++		};
++	struct kernel_siginfo siginfo = {
++			.si_code = SI_KERNEL,
++		};
++	struct task_struct *p;
++	int count = 0;
++
++	list_add(&task2.tasks, &task1.tasks);
++	list_add(&task3.tasks, &task1.tasks);
++
++	kunit_add_named_resource(test, NULL, NULL, &resource,
++				 "mock_init_task", &task1);
++
++	/* Make sure we have a process list. */
++	for_each_process(p)
++		count++;
++	KUNIT_EXPECT_EQ(test, count, 2);
++
++	/* INT_MIN pid must return ESRCH */
++	KUNIT_EXPECT_EQ(test, -ESRCH,
++		kill_something_info(SIGHUP, SEND_SIG_NOINFO, INT_MIN));
++
++	/* Invalid signal: EINVAL */
++	KUNIT_EXPECT_EQ(test, -EINVAL,
++		kill_something_info(_NSIG + 1, SEND_SIG_NOINFO, 2));
++
++	/* Missing pid: ESRCH */
++	KUNIT_EXPECT_EQ(test, -ESRCH,
++		kill_something_info(SIGHUP, SEND_SIG_NOINFO, 42));
++
++	/* Bypass permission checks with SEND_SIG_NOINFO. */
++	KUNIT_EXPECT_EQ(test, 0,
++		kill_something_info(SIGHUP, SEND_SIG_NOINFO, 2));
++
++	/* XXX: Hm, I was expecting this to explode in cred deref... */
++	KUNIT_EXPECT_EQ(test, 0,
++		kill_something_info(SIGHUP, &siginfo, 3));
++
++	/* XXX more tests here, perhaps after mocking out group_send_sig_info() ... */
++
++	/* System hangs without this... */
++	kunit_remove_resource(test, &resource);
++}
++
++static struct kunit_case test_cases[] = {
++	KUNIT_CASE(test_empty_task_list),
++	KUNIT_CASE(test_for_each_process),
++	KUNIT_CASE(test_kill_something_info),
++	{}
++};
++
++static struct kunit_suite test_suite = {
++	.name = "signal",
++	.test_cases = test_cases,
++};
++kunit_test_suite(test_suite);
++#endif	/* CONFIG_KUNIT */
 -- 
-Kees Cook
+2.34.1
+
