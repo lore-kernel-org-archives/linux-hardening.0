@@ -2,153 +2,127 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C63C41513
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 13:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABE0C001B0
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 16:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231365AbjHNNdm convert rfc822-to-8bit (ORCPT
+        id S229556AbjHNQVh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Aug 2023 09:33:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47412 "EHLO
+        Mon, 14 Aug 2023 12:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231573AbjHNNdZ (ORCPT
+        with ESMTP id S230396AbjHNQVO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Aug 2023 09:33:25 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E990A18B
-        for <linux-hardening@vger.kernel.org>; Mon, 14 Aug 2023 06:33:23 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-253-nY0m2V98Pem1hrz_0Np7AQ-1; Mon, 14 Aug 2023 14:33:21 +0100
-X-MC-Unique: nY0m2V98Pem1hrz_0Np7AQ-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 14 Aug
- 2023 14:33:09 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 14 Aug 2023 14:33:09 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Petr Mladek' <pmladek@suse.com>
-CC:     'Kees Cook' <keescook@chromium.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Vijay Balakrishna <vijayb@linux.microsoft.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t cast
-Thread-Topic: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t
- cast
-Thread-Index: AQHZzBcPYpG1g1kNlkm6DrLi5BIXA6/pnsfQgAAVrACAABVCEA==
-Date:   Mon, 14 Aug 2023 13:33:09 +0000
-Message-ID: <c9494b6e8aa04543812b93622cbc4ff7@AcuMS.aculab.com>
-References: <20230811054528.never.165-kees@kernel.org>
- <42a1e2099fe141c3a57e808cbf06d8a0@AcuMS.aculab.com> <ZNokaoSFTXeB_LP4@alley>
-In-Reply-To: <ZNokaoSFTXeB_LP4@alley>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 14 Aug 2023 12:21:14 -0400
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8556EF1;
+        Mon, 14 Aug 2023 09:21:13 -0700 (PDT)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5899ed05210so47216097b3.3;
+        Mon, 14 Aug 2023 09:21:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692030072; x=1692634872;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3LQvPgG2h1/fLfnTL/EIPEHhur13Ow7MR7eEqaGIBCU=;
+        b=BcM161IaZP8yd1CaIbtvBSkxW+TPDrPTs46TxOWnWOJ3iE/Tvxaw+AwkI2VUMT1lkt
+         DRnFw82wDxrUz3kmncvnj/4XbqIC7fuM5//L/24fb0Hn6/n/FuBB0ecwYw4ywCAyL50a
+         kfKStLvIFn9vZ08bJUNXLwLC67Vj9wLVwl200czXCP2bYwmH7IQnGlOBIcnm45B45K3g
+         BNPkcEW0cIf6xrtXDnGY0OKE6ClxJaQEiFsvUyU6hjoDBhpmgvjeoH1gvmf4xKS3y7pc
+         DiyjAPgJqLZ+AqXwr26XhNBledxtN+GqB6trdlsDYMHOmottGDczC8Ro6bZ5tgD7sgBm
+         +32g==
+X-Gm-Message-State: AOJu0YwAqLwfo6YFYRytX4pNCN1OabM7WHtnmZICBaooUSkCoTQQez6c
+        j/IUwieJabsL216LvSs21rtssTXc042Ayg==
+X-Google-Smtp-Source: AGHT+IEf6L/iS4ShmH/QjRXmuRIkIRuzWe1qcS9HzdpxBcSEUj2dYpsYjDG4kteu1T+H/RSdVXV5aQ==
+X-Received: by 2002:a0d:d684:0:b0:583:d32f:ed61 with SMTP id y126-20020a0dd684000000b00583d32fed61mr11057131ywd.27.1692030072394;
+        Mon, 14 Aug 2023 09:21:12 -0700 (PDT)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id h125-20020a0df783000000b005869cf151ebsm2831363ywf.144.2023.08.14.09.21.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 14 Aug 2023 09:21:12 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-d62bdd1a97dso4592481276.3;
+        Mon, 14 Aug 2023 09:21:12 -0700 (PDT)
+X-Received: by 2002:a25:ae98:0:b0:d0f:926b:c734 with SMTP id
+ b24-20020a25ae98000000b00d0f926bc734mr10259367ybj.61.1692030071857; Mon, 14
+ Aug 2023 09:21:11 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+References: <CAHk-=wi4Yau-3Bsv2rXYmtXMTLaj3=Wyf4cdM6d89czFvkVsRQ@mail.gmail.com>
+ <20230724122626.1701631-1-geert@linux-m68k.org> <88f83d73-781d-bdc-126-aa629cb368c@linux-m68k.org>
+ <202307281551.D894AA39@keescook>
+In-Reply-To: <202307281551.D894AA39@keescook>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 14 Aug 2023 18:20:59 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXRiacSxqDzYmakWAQB99kYvY0Bi9zALP9ZnC9Xs_xO5g@mail.gmail.com>
+Message-ID: <CAMuHMdXRiacSxqDzYmakWAQB99kYvY0Bi9zALP9ZnC9Xs_xO5g@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v6.5-rc3
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Petr Mladek
-> Sent: 14 August 2023 13:56
-> 
-> On Mon 2023-08-14 10:42:26, David Laight wrote:
-> > From: Kees Cook
-> > > Sent: 11 August 2023 06:46
-> > >
-> > > If an output buffer size exceeded U16_MAX, the min_t(u16, ...) cast in
-> > > copy_data() was causing writes to truncate. This manifested as output
-> > > bytes being skipped, seen as %NUL bytes in pstore dumps when the available
-> > > record size was larger than 65536. Fix the cast to no longer truncate
-> > > the calculation.
-> > >
-> > ...
-> > > diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> > > index 2dc4d5a1f1ff..fde338606ce8 100644
-> > > --- a/kernel/printk/printk_ringbuffer.c
-> > > +++ b/kernel/printk/printk_ringbuffer.c
-> > > @@ -1735,7 +1735,7 @@ static bool copy_data(struct prb_data_ring *data_ring,
-> > >  	if (!buf || !buf_size)
-> > >  		return true;
-> > >
-> > > -	data_size = min_t(u16, buf_size, len);
-> > > +	data_size = min_t(unsigned int, buf_size, len);
+Hi Kees,
+
+On Sat, Jul 29, 2023 at 12:57 AM Kees Cook <keescook@chromium.org> wrote:
+> On Mon, Jul 24, 2023 at 02:43:02PM +0200, Geert Uytterhoeven wrote:
+> > On Mon, 24 Jul 2023, Geert Uytterhoeven wrote:
+> > > JFYI, when comparing v6.5-rc3[1] to v6.5-rc2[3], the summaries are:
+> > >  - build errors: +5/-0
 > >
-> > I'd noticed that during one of my test compiles while looking
-> > at making min() less fussy.
+> >   + /kisskb/src/include/linux/fortify-string.h: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]:  => 583:25, 493:25
 > >
-> > A better fix would be:
-> > 	data_size = min(buf_size + 0u, len);
-> 
-> This looks like a magic to me. The types are:
+> > mips-gcc13/mips-allmodconfig
+> >
+> > Full context:
+> >
+> >     In function 'fortify_memset_chk',
+> >       inlined from 'memset_io' at /kisskb/src/arch/mips/include/asm/io.h:486:2,
+> >       inlined from 'build_auth_frame' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:2697:2:
+> >     /kisskb/src/include/linux/fortify-string.h:493:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+> >       493 |                         __write_overflow_field(p_size_field, size);
+> >         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >     In function 'fortify_memcpy_chk',
+> >       inlined from 'memcpy_toio' at /kisskb/src/arch/mips/include/asm/io.h:494:2,
+> >       inlined from 'translate_frame' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:955:3,
+> >       inlined from 'ray_hw_xmit.constprop' at /kisskb/src/drivers/net/wireless/legacy/ray_cs.c:912:12:
+> >     /kisskb/src/include/linux/fortify-string.h:583:25: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
+> >       583 |                         __write_overflow_field(p_size_field, size);
+> >         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Single-element flexible array abuse in drivers/net/wireless/legacy/rayctl.h:tx_msg.var
+>
+> ^^^^
+> is this line from you or is there a tool outputting this? Because, yes,
 
-Not quite the right magic though, needs to be 'len + 0u'.
+It is a line from me.
 
-> 
-> 	unsigned int data_size;
-> 	unsigned int buf_size;
-> 	u16 len
-> 
-> I would naively expect that
-> 
-> 	data_size = min(buf_size, len);
-> 
-> would do the right job and expand @len to "unsigned int".
-> 
-> I do not remember why "min_t" was used. Was it an optimization?
-> Did we miss the problem with casting "u32" down to "u16"?
+(should I take it as a compliment that I start sounding like a tool? ;-)
 
-The underlying problem is that (presumably) in order to stop
-min(signed_a, unsigned_b) converting a negative value to a large
-unsigned one (very nasty) min() contains (effectively) sizeof(&a == &b)
-so barfs if the types differ at all.
+> very true:
+>
+> struct tx_msg {
+>     struct tib_structure tib;
+>     struct phy_header phy;
+>     struct mac_header mac;
+>     UCHAR  var[1];
+> };
+>
+> I'll send a patch.
 
-I'm sure the intent was that the types would be fixed - in this case
-chasing 'len' back all the way back and using 'unsigned int'.
-(That probably generates better code as well.)
+Thanks, I noticed you took care while I was enjoying summer holidays ;-)
 
-However everyone just uses min_t(type,a,b) if type is 32bit unsigned
-they are mostly ok because the kernel only really deals in 'small'
-unsigned values.
-But, as in the case here, it is easy to pick a type that is too small.
-Pretty much all the min_t() with u8/u16 are likely to be dubious.
-I found an 'unsigned long' case in a filesystem where one value
-was u64 - could be problematic for a large file on 32bit.
-(The u64 definitely contained a 'file size' value.)
+Gr{oetje,eeting}s,
 
-The patch set I proposed (see https://lore.kernel.org/lkml/01e3e09005e9434b8f558a893a47c053@AcuMS.aculab.com/)
-changes the basic test to (is_signed(a) == is_signed(b)) which will
-never generate the 'nasty' conversion of -1 to 0xffffffffull.
+                        Geert
 
-Of course, it is never quite that simple :-)
-Linus seems willing to accept min(unsigned_var, 20) but not
-min(signed_var, 20u) - typically as min(signed_var, sizeof(type)).
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-...
-> PS: I have already pushed the patch because it looked reasonable and
->     got testing. I have to admit that I am probably in a pre-vacation
->     hurry mode.
-
-Don't worry it is now not any worse than the other 4500 min_t().
-Much the same as the number of min().
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
