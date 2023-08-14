@@ -2,97 +2,67 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DADC41513
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 05:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541C2C001DB
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 06:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233183AbjHNF3F (ORCPT
+        id S232318AbjHNGVf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Aug 2023 01:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36160 "EHLO
+        Mon, 14 Aug 2023 02:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233278AbjHNF3C (ORCPT
+        with ESMTP id S233780AbjHNGVR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Aug 2023 01:29:02 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F01E6A;
-        Sun, 13 Aug 2023 22:29:01 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2b9db1de50cso58613251fa.3;
-        Sun, 13 Aug 2023 22:29:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691990940; x=1692595740;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BGZyPbP3dzjwp/wLly5dZJJDO3ZcjmUG+xoEOUDLDuc=;
-        b=e0Gac0Da6KXLEGNtelm3EFOPtEeK91Qj1q2koIajDnLcIdoz2ZGrwZPExkEhh9yN3c
-         t33ZJydXNb3bqU0aPWTkOMrw8O4NmM+30WFc7Vd2aQ05PzujPzogB0y1fvWSQ/1k4AMG
-         vU6899pM8mw/geFRvQzUdlRQiYJ+eHtBHco+yQyJK2pnJ8XNg+ODZKSJX8N+LH/MiLF1
-         XdhZGd0znDXp5h3oUqTVxGdb4WHt2awrj0UkXKyaOaiNrDIMyrrvBAh3M1nue1IEvD6s
-         QcCZYBcCFZIc0viznwHfdX5h5brxzZmmeStKpPx8TlxktdWTJIwtQFl4U5qMY735tEM2
-         PLVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691990940; x=1692595740;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BGZyPbP3dzjwp/wLly5dZJJDO3ZcjmUG+xoEOUDLDuc=;
-        b=ldBNOpYxCbigN/GnqlvbDXY50H6TT6UqAr1zSS7Qv3RUlxLuIbhfgkZ7Ph3jkhbBHw
-         RjdP1gXc/J5NcYL9JTzEMSJNyGUwJU0Ob9rIVBoeEvAsuMVDd8x/C5qU40yqGQHJy64d
-         m9ShOE6RMpPsaVkaz/oVZ48qSTE5D05HbFgwl+OY68G7tG/azmnZB/wDESkS41iqA7J5
-         gheO1oLyMICaBnh8B8dlXhGeYEkWctfhwKCEWSv2pYZcr47OhYh7ocnOqbXquQTFGcAV
-         aDzBnnPn7+m1hYPOOgejRP7gZAjZOzlHYyO5wPIiMn64uuZdFQtYdaDXX0KupDDVuq6N
-         TwSA==
-X-Gm-Message-State: AOJu0Yz1O7y3XHQUXy4XUwSD2jb4B9yZM+BKUH3+MovZn9zbxi8iu6qd
-        eRU0HQeR0DmrJ+akYl+VT1DCG/4j+LKd/mHaC2E=
-X-Google-Smtp-Source: AGHT+IHA+eWMvhISyFBVAeBZGt8uccSi2b3i7SypwBjC9lu/LcdShKA+dMXotAZUkAb6evmv915C0Q26Jc0ucn5hMQM=
-X-Received: by 2002:a2e:8897:0:b0:2b7:117:e54 with SMTP id k23-20020a2e8897000000b002b701170e54mr6247163lji.4.1691990939564;
- Sun, 13 Aug 2023 22:28:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230806-xiaomi-star-v1-0-0c384e8b5737@gmail.com>
- <20230806-xiaomi-star-v1-1-0c384e8b5737@gmail.com> <244d165a-1e53-401e-be36-6bb3f4f260ae@linaro.org>
- <CAA8EJpqiaEamZ6u9D_Sn-bgn8qdpqsQ2EMt7Tb9hKr5kNO2JFg@mail.gmail.com>
-In-Reply-To: <CAA8EJpqiaEamZ6u9D_Sn-bgn8qdpqsQ2EMt7Tb9hKr5kNO2JFg@mail.gmail.com>
-From:   Sophon Wu <wuxilin123@gmail.com>
-Date:   Mon, 14 Aug 2023 13:28:46 +0800
-Message-ID: <CAEPPPKthfyZnD9z9Q5c7YnPMAJhGfyxJdfpzZmhoxK6xxv603g@mail.gmail.com>
-Subject: Re: [PATCH 1/3] soc: qcom: pmic_glink: enable UCSI for SM8350
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
+        Mon, 14 Aug 2023 02:21:17 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48B1F10C2;
+        Sun, 13 Aug 2023 23:20:46 -0700 (PDT)
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1691994040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7Oz708AoYWC0zOYG+tE6hDqHP4W2kJ5mwj7u+JyTgAE=;
+        b=dm/UjTTd/8x22YbB7VS/B7ZT3pTXbi6W/6bHhOLqnQXB2co2TDmv+XkmkO2sEXLL4v3hk+
+        fol0pL+c9/Oov6a18DICfnVwLVTa/6QucbsmEJ/CVb1qN6vlYWd9HaDjMYm26T+g2d8qYD
+        E/Mx4AFaaWRN0G60Xgsdf1xL7dmF3RzOD0YKd9RPeMbePG9GRd7IsRyHvXo+oX0tCjZWC/
+        BeNqSIOTkKsBV+Pr6ZJc18nz/biBLF4wcN3JDtBKajndbC8GTnHB0rwsmvdkuyS43BKN7T
+        NzQCjYkaXX0AfipWEQnZi0WQBnY6Hq4TtkHzqMk7WRVC1HqZXyeNR8mPXpLmkQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1691994040;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7Oz708AoYWC0zOYG+tE6hDqHP4W2kJ5mwj7u+JyTgAE=;
+        b=Lb80vFXQENVRyRX+3SY/NPNoMTTDxzxL7pzj6t1f5OlvHN/ns3wEc1lBrLrhYqtVh1cljj
+        xXwlev3efGPeGpDA==
+To:     Kees Cook <keescook@chromium.org>, Petr Mladek <pmladek@suse.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vijay Balakrishna <vijayb@linux.microsoft.com>,
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t cast
+In-Reply-To: <20230811054528.never.165-kees@kernel.org>
+References: <20230811054528.never.165-kees@kernel.org>
+Date:   Mon, 14 Aug 2023 08:26:28 +0206
+Message-ID: <875y5i16xf.fsf@jogness.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =E4=BA=8E2023=E5=B9=B48=E6=
-=9C=8813=E6=97=A5=E5=91=A8=E6=97=A5 18:56=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Sat, 12 Aug 2023 at 14:12, Konrad Dybcio <konrad.dybcio@linaro.org> wr=
-ote:
-> >
-> > On 5.08.2023 19:03, Xilin Wu via B4 Relay wrote:
-> > > From: Xilin Wu <wuxilin123@gmail.com>
-> > >
-> > > UCSI is supported on SM8350. Allow it to enable USB role switch and
-> > > altmode notifications on SM8350.
-> > >
-> > > Signed-off-by: Xilin Wu <wuxilin123@gmail.com>
-> > > ---
-> > I can confirm this is also required for my SM8350 Xperia 1 III.
->
-> Last time I checked it, UCSI was broken on the SM8350 HDK. Trying to
-> enable it caused pmic_glink to stop working after some port
-> operations.
+On 2023-08-10, Kees Cook <keescook@chromium.org> wrote:
+> If an output buffer size exceeded U16_MAX, the min_t(u16, ...) cast in
+> copy_data() was causing writes to truncate. This manifested as output
+> bytes being skipped, seen as %NUL bytes in pstore dumps when the available
+> record size was larger than 65536. Fix the cast to no longer truncate
+> the calculation.
 
-I guess it could be firmware related issues? It works fine on my
-device with latest firmware.
+Thanks for tracking this down.
+
+Reviewed-by: John Ogness <john.ogness@linutronix.de>
