@@ -2,85 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51403C001DB
-	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 12:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8861C001B0
+	for <linux-hardening@archiver.kernel.org>; Mon, 14 Aug 2023 12:56:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbjHNMbl (ORCPT
+        id S229537AbjHNM40 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 14 Aug 2023 08:31:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39980 "EHLO
+        Mon, 14 Aug 2023 08:56:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230118AbjHNMbO (ORCPT
+        with ESMTP id S230475AbjHNM4Q (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 14 Aug 2023 08:31:14 -0400
-Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FCBFCC;
-        Mon, 14 Aug 2023 05:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1692016271;
-        bh=CfjLGRNDjQ2wfBPrTce9v4Y5ovLDKc2Td8U4k4EEWXw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=sHpaqgkpaP54Siurk4UI0Qr+zOKMeBAJyZQOSG5g0/bC/sMMqK8p7uUjzplFp8AVF
-         LQZxg8SJhhh8nJp2tRP+WIGyphQtpubxRJU9eVBqfao+nC2lHpernYv9A2eKAF3hAc
-         oEhLYUDrbstezKYBk5QD1nfUBS6Ag8bX7DQOMvlLIwO0z2l6V28t9ulOeeLlBc7/08
-         1RBk5gyv+ZHCZsq+hkPi/L1Xv6y4GUcVq+8fyVV+p5YhuXJDMcZDmFbJqcp4Af6ssj
-         2sc3nmRSolh+F85iyN+ao8hgewfoy0NJ4ZM5MMlY4b5uIB3l/uQu7Sii398N/V9g/1
-         wFQkLbj0vNEmQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Mon, 14 Aug 2023 08:56:16 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC6F13E;
+        Mon, 14 Aug 2023 05:56:14 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 4395C1F383;
+        Mon, 14 Aug 2023 12:56:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1692017773; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=tLAW/PphNbg1TEhFiEypZB5q9ika6zqlbWoI7379ZzY=;
+        b=U7WXAit58eY9yDdne/j+gIV85WE5olzqNpHNtsNiLrnkyRXIsMKz4YwZbscic+s6xLPGZp
+        PYs0ZQa2NtEj3p/BZh49xYYe9vbIkCsZfZx2984z45jsHhAwIPIjFbNOlVKQUO0gssfSIi
+        hSKfsWQlGjU8oq2APzyKrXyF1/1n+9E=
+Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4RPYfR2WVPz4wb8;
-        Mon, 14 Aug 2023 22:31:11 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Justin Stitt <justinstitt@google.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/3] powerpc/ps3: refactor strncpy usage
-In-Reply-To: <CAFhGd8oZLTaFNg3pQSi=zX121HPfY9_v-H5e3_+27W3=1fXxmw@mail.gmail.com>
-References: <20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com>
- <CAFhGd8oZLTaFNg3pQSi=zX121HPfY9_v-H5e3_+27W3=1fXxmw@mail.gmail.com>
-Date:   Mon, 14 Aug 2023 22:31:10 +1000
-Message-ID: <87cyzperg1.fsf@mail.lhotse>
+        by relay2.suse.de (Postfix) with ESMTPS id 902692C143;
+        Mon, 14 Aug 2023 12:56:11 +0000 (UTC)
+Date:   Mon, 14 Aug 2023 14:56:10 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     'Kees Cook' <keescook@chromium.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Vijay Balakrishna <vijayb@linux.microsoft.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] printk: ringbuffer: Fix truncating buffer size min_t cast
+Message-ID: <ZNokaoSFTXeB_LP4@alley>
+References: <20230811054528.never.165-kees@kernel.org>
+ <42a1e2099fe141c3a57e808cbf06d8a0@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42a1e2099fe141c3a57e808cbf06d8a0@AcuMS.aculab.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Justin Stitt <justinstitt@google.com> writes:
-> On Fri, Aug 11, 2023 at 2:19=E2=80=AFPM Justin Stitt <justinstitt@google.=
-com> wrote:
->>
->> Within this RFC-series I want to get some comments on two ideas that I
->> have for refactoring the current `strncpy` usage in repository.c.
->>
->> When looking at `make_first_field` we see a u64 is being used to store
->> up to 8 bytes from a literal string. This is slightly suspect to me but
->> it works? In regards to `strncpy` here, it makes the code needlessly
->> complex imo.
->>
->> Please see my two ideas to change this and let me know if any other
->> approaches are more reasonable.
->>
->> Link: https://github.com/KSPP/linux/issues/90
->> Signed-off-by: Justin Stitt <justinstitt@google.com>
->> ---
->> Justin Stitt (3):
->>       [RFC] powerpc/ps3: refactor strncpy usage attempt 1
->>       [RFC] powerpc/ps3: refactor strncpy usage attempt 2
->>       [RFC] powerpc/ps3: refactor strncpy usage attempt 2.5
-> Errhm, It looks like the diffs after attempt 1 came out poorly and
-> probably won't apply cleanly because they were inter-diffed with the
-> first patch. Is there a way to let b4 know I wanted each patch diff'd
-> against the same SHA and not each other sequentially?
+On Mon 2023-08-14 10:42:26, David Laight wrote:
+> From: Kees Cook
+> > Sent: 11 August 2023 06:46
+> > 
+> > If an output buffer size exceeded U16_MAX, the min_t(u16, ...) cast in
+> > copy_data() was causing writes to truncate. This manifested as output
+> > bytes being skipped, seen as %NUL bytes in pstore dumps when the available
+> > record size was larger than 65536. Fix the cast to no longer truncate
+> > the calculation.
+> > 
+> ...
+> > diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> > index 2dc4d5a1f1ff..fde338606ce8 100644
+> > --- a/kernel/printk/printk_ringbuffer.c
+> > +++ b/kernel/printk/printk_ringbuffer.c
+> > @@ -1735,7 +1735,7 @@ static bool copy_data(struct prb_data_ring *data_ring,
+> >  	if (!buf || !buf_size)
+> >  		return true;
+> > 
+> > -	data_size = min_t(u16, buf_size, len);
+> > +	data_size = min_t(unsigned int, buf_size, len);
+> 
+> I'd noticed that during one of my test compiles while looking
+> at making min() less fussy.
+> 
+> A better fix would be:
+> 	data_size = min(buf_size + 0u, len);
 
-I don't think there is. It always assumes they're a series.
+This looks like a magic to me. The types are:
 
-cheers
+	unsigned int data_size;
+	unsigned int buf_size;
+	u16 len
+
+I would naively expect that
+
+	data_size = min(buf_size, len);
+
+would do the right job and expand @len to "unsigned int".
+
+I do not remember why "min_t" was used. Was it an optimization?
+Did we miss the problem with casting "u32" down to "u16"?
+
+I tried to read the discussion at
+https://lore.kernel.org/lkml/b6a49ed73aba427ca8bb433763fa94e9@AcuMS.aculab.com/
+but it is more about "signed" vs. "unsigned" problem. Maybe
+it is more complicated that I expected.
+
+> Or put an ack on my patch 3/5 to minmax.h and then min(buf_size, len)
+> will be fine (because both arguments are unsigned).
+
+Do you mean
+https://lore.kernel.org/lkml/6dc20ac7cb6f4570a0160f076e8362e3@AcuMS.aculab.com/ ?
+It seems to be just indentation cleanup.
+
+Best Regards,
+Petr
+
+PS: I have already pushed the patch because it looked reasonable and
+    got testing. I have to admit that I am probably in a pre-vacation
+    hurry mode.
