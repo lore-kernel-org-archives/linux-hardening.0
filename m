@@ -2,122 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E083C41513
-	for <linux-hardening@archiver.kernel.org>; Tue, 15 Aug 2023 20:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C81C41513
+	for <linux-hardening@archiver.kernel.org>; Tue, 15 Aug 2023 20:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240092AbjHOUBP (ORCPT
+        id S234668AbjHOUk7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Aug 2023 16:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53144 "EHLO
+        Tue, 15 Aug 2023 16:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240157AbjHOUBI (ORCPT
+        with ESMTP id S239356AbjHOUkm (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Aug 2023 16:01:08 -0400
-Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2FA83
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Aug 2023 13:01:05 -0700 (PDT)
-Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
-        by cmsmtp with ESMTP
-        id VhThqjtWGQFHRW0DwqpsgE; Tue, 15 Aug 2023 20:01:04 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id W0DvqCAX9B89gW0DwqVHsW; Tue, 15 Aug 2023 20:01:04 +0000
-X-Authority-Analysis: v=2.4 cv=XIQj9CtE c=1 sm=1 tr=0 ts=64dbd980
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=oJ9PYmwjtwEP0x7K7oIA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kziO47HPQuhKHz+UpmkJYDreIKaiytaoh9bnZL4wAkw=; b=VnwTqfL7dR4usa5rfPauKONeeX
-        Wl5EYbK52+P3bmtKgRKzz7pjXe6oT4A09HnIe2XY78b8NMu76nRsVje/sKG8Tsgh0xwToBbzwhr5g
-        jCd41DCpyIRnDRSI0BgA8Hshd/yTRS/pS7EU7LCN1n7q0HQ13W+Ucy/pfhcUt7c6fdbFfUj4cKf3J
-        Wtwk9ZJ7y0TU4nn6JKAf9+nC0n5sw/3g09omUg5Vp3eN/A44xo9h3rw+n+xlzZ9meaJ4Y63YfqeLd
-        MsM7wQ4T6FACSqPMJSiK+Ql1lClEwwKXBJ8ucxCxIaeGqInvjom7HNDzJYo0TwRY/Te8nOs0XWudL
-        7RZLQDjg==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:56372 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qW0Dv-0020iA-16;
-        Tue, 15 Aug 2023 15:01:03 -0500
-Message-ID: <563e99c0-c9be-5903-c2cd-d2680a8ee6e9@embeddedor.com>
-Date:   Tue, 15 Aug 2023 14:02:05 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] alpha: Replace one-element array with flexible-array
- member
-Content-Language: en-US
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>
-Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tue, 15 Aug 2023 16:40:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BDD92680;
+        Tue, 15 Aug 2023 13:40:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BD43D66198;
+        Tue, 15 Aug 2023 20:38:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68349C433C7;
+        Tue, 15 Aug 2023 20:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692131932;
+        bh=nzA4p2In00F8WGqv2J+xq1zlDnCIJQPQMghB0lPPiwE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nBc+VsxSWlJRhY8XMqEEgzmxYDWgeyO34ygkLKmUG1f7tUvuLqVGWelqX58v3K09r
+         nzPvQBKE4q07GRweF62bfu9+ma80XtDw1Ti6hiJT82GXGqGCi+WCLZqsJ8ZcMqGnaI
+         Gan5J9n8JxAkbPlP8TzL+NHVk/BFrqcGcAeBZvtFpE+9JsXh5uJgpycldKKbE5gwzl
+         0wXKHGLJAkuXJ0QMWBpKZcUltd9NdEctehvDfVCgYZgo1tr9/1AzgwQ6GpkcePjhMk
+         1x9NTYWIiXnOKzhNMbVzp0VzLpDURGSC3VVxJrrzMweSVo+R2XHNYXANBaNLoVONCe
+         nTsxhpPeLztrQ==
+Date:   Tue, 15 Aug 2023 14:39:53 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-References: <ZMpZZBShlLqyD3ax@work>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZMpZZBShlLqyD3ax@work>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qW0Dv-0020iA-16
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:56372
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJtdYULb3GIybhmLC3MhfYenq3CZxqKDU2t9vl9TVb5gPsl/WryGj/kPvkoixJkchQIX9rhdZYjovgrblMOsBa5HxYjdWHkB/loByxc6HAiV/yAqm9gi
- cEjPKXUFwkUFYLsEfVf3S13PC7OrqPN+b9gb6SRec2PIJg8ZUuty7fRtJf/XxXPnBV66bPMCWpQzZsbe306F9YCtnIYI/Rf3raHOxOqqYgC5+C/Hp+8CsADh
+Subject: [PATCH][next] RDMA/mlx4: Copy union directly
+Message-ID: <ZNvimeRAPkJ24zRG@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi all,
+Copy union directly instead of using memcpy().
 
-Friendly ping: who can take this, please?
+Note that in this case, a direct assignment is more readable and
+consistent with the subsequent assignments.
 
-Thanks
---
-Gustavo
+This addresses the following -Wstringop-overflow warning seen in s390
+with defconfig:
+drivers/infiniband/hw/mlx4/main.c:296:33: warning: writing 16 bytes into a region of size 0 [-Wstringop-overflow=]
+  296 |                                 memcpy(&port_gid_table->gids[free].gid,
+      |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  297 |                                        &attr->gid, sizeof(attr->gid));
+      |                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-On 8/2/23 07:25, Gustavo A. R. Silva wrote:
-> One-element and zero-length arrays are deprecated. So, replace
-> one-element array in struct osf_dirent with flexible-array
-> member.
-> 
-> This results in no differences in binary output.
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->   arch/alpha/kernel/osf_sys.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
-> index d98701ee36c6..5db88b627439 100644
-> --- a/arch/alpha/kernel/osf_sys.c
-> +++ b/arch/alpha/kernel/osf_sys.c
-> @@ -97,7 +97,7 @@ struct osf_dirent {
->   	unsigned int d_ino;
->   	unsigned short d_reclen;
->   	unsigned short d_namlen;
-> -	char d_name[1];
-> +	char d_name[];
->   };
->   
->   struct osf_dirent_callback {
+This helps with the ongoing efforts to globally enable
+-Wstringop-overflow.
+
+Link: https://github.com/KSPP/linux/issues/308
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/infiniband/hw/mlx4/main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
+index 216aacd72e4f..2d2cd17e02e6 100644
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -293,8 +293,7 @@ static int mlx4_ib_add_gid(const struct ib_gid_attr *attr, void **context)
+ 				ret = -ENOMEM;
+ 			} else {
+ 				*context = port_gid_table->gids[free].ctx;
+-				memcpy(&port_gid_table->gids[free].gid,
+-				       &attr->gid, sizeof(attr->gid));
++				port_gid_table->gids[free].gid = attr->gid;
+ 				port_gid_table->gids[free].gid_type = attr->gid_type;
+ 				port_gid_table->gids[free].vlan_id = vlan_id;
+ 				port_gid_table->gids[free].ctx->real_index = free;
+-- 
+2.34.1
+
