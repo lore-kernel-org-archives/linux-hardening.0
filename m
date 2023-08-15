@@ -2,65 +2,66 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A95CC0015E
-	for <linux-hardening@archiver.kernel.org>; Tue, 15 Aug 2023 19:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E083C41513
+	for <linux-hardening@archiver.kernel.org>; Tue, 15 Aug 2023 20:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234074AbjHOTKZ (ORCPT
+        id S240092AbjHOUBP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Aug 2023 15:10:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39250 "EHLO
+        Tue, 15 Aug 2023 16:01:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239858AbjHOTJ7 (ORCPT
+        with ESMTP id S240157AbjHOUBI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Aug 2023 15:09:59 -0400
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A542115
-        for <linux-hardening@vger.kernel.org>; Tue, 15 Aug 2023 12:09:31 -0700 (PDT)
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+        Tue, 15 Aug 2023 16:01:08 -0400
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2FA83
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Aug 2023 13:01:05 -0700 (PDT)
+Received: from eig-obgw-6010a.ext.cloudfilter.net ([10.0.30.248])
         by cmsmtp with ESMTP
-        id Vy4KqZPlhez0CVzKEq5uaK; Tue, 15 Aug 2023 19:03:30 +0000
+        id VhThqjtWGQFHRW0DwqpsgE; Tue, 15 Aug 2023 20:01:04 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id VzKRqqv2TMmPRVzKRqGj3B; Tue, 15 Aug 2023 19:03:43 +0000
-X-Authority-Analysis: v=2.4 cv=Zvv+lv3G c=1 sm=1 tr=0 ts=64dbcc0f
+        id W0DvqCAX9B89gW0DwqVHsW; Tue, 15 Aug 2023 20:01:04 +0000
+X-Authority-Analysis: v=2.4 cv=XIQj9CtE c=1 sm=1 tr=0 ts=64dbd980
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=7CQSdrXTAAAA:8 a=4Y44Ad61Qo6RRudwQyUA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=a-qgeE7W1pNrGK8U0ZQC:22
+ a=oJ9PYmwjtwEP0x7K7oIA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oDTpbnZtb5YY58cxQ1+wqrLvX74qH9kX1x/86gt1r6c=; b=GYqk+IEZHDNl4F1KNkrjKQ4GCv
-        A8WuEZWAoPnmMiy5LJ5rLCvLrfBUjja3movkQMpr/X3RBuLXmLXSa2djw6dKXzKucDKJi/n0OzHsC
-        lgCkFhGiIVfQpofwfVRHtXlcHDGmrQXJIlLN2PSiVfQxmdIM0765db6fe82HYihlPM2Wgwn0/D8eP
-        i5nCbb2biNKRb53PVBwCZRjEqtmn5+EFTXARPbPFiG9+6QkFJxpCavWSSp4tRVGiuoVBC2TDajzeg
-        upx233SUSeGEbPUt3NXjHVv7jeWCyXSBmlaN+7ngIYg5E/XAJLYVujq0sfutwtvAhpl2ITu/tH/74
-        MUNzFOSQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60524 helo=[192.168.15.8])
+        bh=kziO47HPQuhKHz+UpmkJYDreIKaiytaoh9bnZL4wAkw=; b=VnwTqfL7dR4usa5rfPauKONeeX
+        Wl5EYbK52+P3bmtKgRKzz7pjXe6oT4A09HnIe2XY78b8NMu76nRsVje/sKG8Tsgh0xwToBbzwhr5g
+        jCd41DCpyIRnDRSI0BgA8Hshd/yTRS/pS7EU7LCN1n7q0HQ13W+Ucy/pfhcUt7c6fdbFfUj4cKf3J
+        Wtwk9ZJ7y0TU4nn6JKAf9+nC0n5sw/3g09omUg5Vp3eN/A44xo9h3rw+n+xlzZ9meaJ4Y63YfqeLd
+        MsM7wQ4T6FACSqPMJSiK+Ql1lClEwwKXBJ8ucxCxIaeGqInvjom7HNDzJYo0TwRY/Te8nOs0XWudL
+        7RZLQDjg==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:56372 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qVzKQ-000zkG-1t;
-        Tue, 15 Aug 2023 14:03:42 -0500
-Message-ID: <e1c07dd0-e6bf-ca9c-107a-97c5043b1bc7@embeddedor.com>
-Date:   Tue, 15 Aug 2023 13:04:32 -0600
+        id 1qW0Dv-0020iA-16;
+        Tue, 15 Aug 2023 15:01:03 -0500
+Message-ID: <563e99c0-c9be-5903-c2cd-d2680a8ee6e9@embeddedor.com>
+Date:   Tue, 15 Aug 2023 14:02:05 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
+Subject: Re: [PATCH] alpha: Replace one-element array with flexible-array
+ member
 Content-Language: en-US
 To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>
+Cc:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-References: <ZIpm3pcs3iCP9UaR@work>
+References: <ZMpZZBShlLqyD3ax@work>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <ZIpm3pcs3iCP9UaR@work>
+In-Reply-To: <ZMpZZBShlLqyD3ax@work>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -71,82 +72,52 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qVzKQ-000zkG-1t
+X-Exim-ID: 1qW0Dv-0020iA-16
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:60524
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:56372
 X-Source-Auth: gustavo@embeddedor.com
 X-Email-Count: 1
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfNKbXO6xRpuZykO+tqtEifFVMpAut2IVOkaqK12Fb/HtUBuaL2NoB+yyLbEThBWre7lHhqF8M6097k6X1I5IYMDaeAc+CGcRBjsXMPVRpnDSRXhMkR54
- bpw6/p/fwcBHAOyyinj54M+moMmAt42a1lkfNgeOx/X1lw+FU8L11jV10YSs1P/w3Tio2hrcTDQjUzXYkZzQ27vL1jGkXc0T5EV+kNA0tLn5ci+bML8BzrKY
+X-CMAE-Envelope: MS4xfJtdYULb3GIybhmLC3MhfYenq3CZxqKDU2t9vl9TVb5gPsl/WryGj/kPvkoixJkchQIX9rhdZYjovgrblMOsBa5HxYjdWHkB/loByxc6HAiV/yAqm9gi
+ cEjPKXUFwkUFYLsEfVf3S13PC7OrqPN+b9gb6SRec2PIJg8ZUuty7fRtJf/XxXPnBV66bPMCWpQzZsbe306F9YCtnIYI/Rf3raHOxOqqYgC5+C/Hp+8CsADh
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 Hi all,
 
-I wonder if you have any suggestions on how to address this issue. As it seems that
-my last attempt caused some boot failures[1][2].
+Friendly ping: who can take this, please?
 
-At first, I thought that the right way to fix this was through a similar fix as this
-one[3]. But it seems I'm missing something else that I cannot determine yet.
-
-These -Wstringop-overflow warnings are mostly the last ones remaining before we can
-finally enable this compiler option, globally.
-
-Any help or advice on how to properly address this is greatly appreciated. :)
-
-Thanks!
+Thanks
 --
 Gustavo
 
-[1] https://lore.kernel.org/linux-hardening/726aae97-755d-9806-11d4-2fb21aa93428@arm.com/
-[2] https://lore.kernel.org/linux-hardening/361c2f87-1424-f452-912f-0e4a339f5c46@kernel.org/
-[3] https://git.kernel.org/linus/d20d30ebb199
-
-
-On 6/14/23 19:18, Gustavo A. R. Silva wrote:
-> Address the following -Wstringop-overflow warnings seen when
-> built with ARM architecture and aspeed_g4_defconfig configuration
-> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
-> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+On 8/2/23 07:25, Gustavo A. R. Silva wrote:
+> One-element and zero-length arrays are deprecated. So, replace
+> one-element array in struct osf_dirent with flexible-array
+> member.
 > 
-> These changes are based on commit d20d30ebb199 ("cgroup: Avoid compiler
-> warnings with no subsystems").
+> This results in no differences in binary output.
 > 
 > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->   kernel/cgroup/cgroup.c | 6 ++++++
->   1 file changed, 6 insertions(+)
+>   arch/alpha/kernel/osf_sys.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-> index cd497b90e11a..1ee76e62eb98 100644
-> --- a/kernel/cgroup/cgroup.c
-> +++ b/kernel/cgroup/cgroup.c
-> @@ -1200,6 +1200,9 @@ static struct css_set *find_css_set(struct css_set *old_cset,
->   	unsigned long key;
->   	int ssid;
+> diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
+> index d98701ee36c6..5db88b627439 100644
+> --- a/arch/alpha/kernel/osf_sys.c
+> +++ b/arch/alpha/kernel/osf_sys.c
+> @@ -97,7 +97,7 @@ struct osf_dirent {
+>   	unsigned int d_ino;
+>   	unsigned short d_reclen;
+>   	unsigned short d_namlen;
+> -	char d_name[1];
+> +	char d_name[];
+>   };
 >   
-> +	if (!CGROUP_HAS_SUBSYS_CONFIG)
-> +		return NULL;
-> +
->   	lockdep_assert_held(&cgroup_mutex);
->   
->   	/* First see if we already have a cgroup group that matches
-> @@ -6045,6 +6048,9 @@ int __init cgroup_init(void)
->   	struct cgroup_subsys *ss;
->   	int ssid;
->   
-> +	if (!CGROUP_HAS_SUBSYS_CONFIG)
-> +		return -EINVAL;
-> +
->   	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16);
->   	BUG_ON(cgroup_init_cftypes(NULL, cgroup_base_files));
->   	BUG_ON(cgroup_init_cftypes(NULL, cgroup_psi_files));
+>   struct osf_dirent_callback {
