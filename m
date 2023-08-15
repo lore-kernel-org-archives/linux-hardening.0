@@ -2,190 +2,151 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B2CC001B0
-	for <linux-hardening@archiver.kernel.org>; Tue, 15 Aug 2023 14:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A95CC0015E
+	for <linux-hardening@archiver.kernel.org>; Tue, 15 Aug 2023 19:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237620AbjHOObX (ORCPT
+        id S234074AbjHOTKZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 15 Aug 2023 10:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38280 "EHLO
+        Tue, 15 Aug 2023 15:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237628AbjHOOa5 (ORCPT
+        with ESMTP id S239858AbjHOTJ7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 15 Aug 2023 10:30:57 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D3D410FF;
-        Tue, 15 Aug 2023 07:30:55 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id EB8AE1F749;
-        Tue, 15 Aug 2023 14:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1692109853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=8eR20bfnSkpngfxYHe2oyVTiztDL+E1wNPtaIaxtg/U=;
-        b=DX2KRmIHLp6bers4GV92gPxrciMDrDy/Sq/LqVJVgVIuBiFdsX7FbpKTDfCKyt/D/t0ncF
-        aEYYA5iCQQwj/htYfzK7k9BxM1PkiE7jq0y8IflI52QRaV2P5XVu0PBTSk5fMQSKW94gSH
-        0cg2YV5p+X7S1+EmugDnMjnsH9H/7eM=
-Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 563BF2C143;
-        Tue, 15 Aug 2023 14:30:53 +0000 (UTC)
-Date:   Tue, 15 Aug 2023 16:30:51 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     thunder.leizhen@huaweicloud.com
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] hexdump: add a new dump prefix DUMP_PREFIX_CUSTOM
-Message-ID: <ZNuMGyJ2x21RpVyR@alley>
-References: <20230811074922.1388-1-thunder.leizhen@huaweicloud.com>
- <20230811074922.1388-3-thunder.leizhen@huaweicloud.com>
+        Tue, 15 Aug 2023 15:09:59 -0400
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65A542115
+        for <linux-hardening@vger.kernel.org>; Tue, 15 Aug 2023 12:09:31 -0700 (PDT)
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+        by cmsmtp with ESMTP
+        id Vy4KqZPlhez0CVzKEq5uaK; Tue, 15 Aug 2023 19:03:30 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id VzKRqqv2TMmPRVzKRqGj3B; Tue, 15 Aug 2023 19:03:43 +0000
+X-Authority-Analysis: v=2.4 cv=Zvv+lv3G c=1 sm=1 tr=0 ts=64dbcc0f
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=7CQSdrXTAAAA:8 a=4Y44Ad61Qo6RRudwQyUA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=a-qgeE7W1pNrGK8U0ZQC:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=oDTpbnZtb5YY58cxQ1+wqrLvX74qH9kX1x/86gt1r6c=; b=GYqk+IEZHDNl4F1KNkrjKQ4GCv
+        A8WuEZWAoPnmMiy5LJ5rLCvLrfBUjja3movkQMpr/X3RBuLXmLXSa2djw6dKXzKucDKJi/n0OzHsC
+        lgCkFhGiIVfQpofwfVRHtXlcHDGmrQXJIlLN2PSiVfQxmdIM0765db6fe82HYihlPM2Wgwn0/D8eP
+        i5nCbb2biNKRb53PVBwCZRjEqtmn5+EFTXARPbPFiG9+6QkFJxpCavWSSp4tRVGiuoVBC2TDajzeg
+        upx233SUSeGEbPUt3NXjHVv7jeWCyXSBmlaN+7ngIYg5E/XAJLYVujq0sfutwtvAhpl2ITu/tH/74
+        MUNzFOSQ==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:60524 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qVzKQ-000zkG-1t;
+        Tue, 15 Aug 2023 14:03:42 -0500
+Message-ID: <e1c07dd0-e6bf-ca9c-107a-97c5043b1bc7@embeddedor.com>
+Date:   Tue, 15 Aug 2023 13:04:32 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230811074922.1388-3-thunder.leizhen@huaweicloud.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
+Content-Language: en-US
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+References: <ZIpm3pcs3iCP9UaR@work>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <ZIpm3pcs3iCP9UaR@work>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qVzKQ-000zkG-1t
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:60524
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNKbXO6xRpuZykO+tqtEifFVMpAut2IVOkaqK12Fb/HtUBuaL2NoB+yyLbEThBWre7lHhqF8M6097k6X1I5IYMDaeAc+CGcRBjsXMPVRpnDSRXhMkR54
+ bpw6/p/fwcBHAOyyinj54M+moMmAt42a1lkfNgeOx/X1lw+FU8L11jV10YSs1P/w3Tio2hrcTDQjUzXYkZzQ27vL1jGkXc0T5EV+kNA0tLn5ci+bML8BzrKY
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Added Kees and hardening mailing list into Cc.
+Hi all,
 
-On Fri 2023-08-11 15:49:21, thunder.leizhen@huaweicloud.com wrote:
-> From: Zhen Lei <thunder.leizhen@huawei.com>
+I wonder if you have any suggestions on how to address this issue. As it seems that
+my last attempt caused some boot failures[1][2].
+
+At first, I thought that the right way to fix this was through a similar fix as this
+one[3]. But it seems I'm missing something else that I cannot determine yet.
+
+These -Wstringop-overflow warnings are mostly the last ones remaining before we can
+finally enable this compiler option, globally.
+
+Any help or advice on how to properly address this is greatly appreciated. :)
+
+Thanks!
+--
+Gustavo
+
+[1] https://lore.kernel.org/linux-hardening/726aae97-755d-9806-11d4-2fb21aa93428@arm.com/
+[2] https://lore.kernel.org/linux-hardening/361c2f87-1424-f452-912f-0e4a339f5c46@kernel.org/
+[3] https://git.kernel.org/linus/d20d30ebb199
+
+
+On 6/14/23 19:18, Gustavo A. R. Silva wrote:
+> Address the following -Wstringop-overflow warnings seen when
+> built with ARM architecture and aspeed_g4_defconfig configuration
+> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
+> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
 > 
-> Currently, function print_hex_dump() supports three dump prefixes:
-> DUMP_PREFIX_NONE, DUMP_PREFIX_ADDRESS and DUMP_PREFIX_OFFSET. But for some
-> usage scenarios, they don't work perfectly. For example, dump the content
-> of one task's stack. In order to quickly identify a stack frame,
-> DUMP_PREFIX_ADDRESS is preferred. But without boot option no_hash_pointers
-> , DUMP_PREFIX_ADDRESS just print the 32-bit hash value.
+> These changes are based on commit d20d30ebb199 ("cgroup: Avoid compiler
+> warnings with no subsystems").
 > 
-> dump memory at sp=ffff800080903aa0:
-> 00000000a00a1d32: 80903ac0 ffff8000 8feeae24 ffffc356
-> 000000007993ef27: 9811c000 ffff0d98 8ad2e500 ffff0d98
-> 00000000b1a0b2de: 80903b30 ffff8000 8ff3a618 ffffc356
-> ... ...
-> 00000000a7a9048b: 9810b3c0 ffff0d98 00000000 00000000
-> 0000000011cda415: 80903cb0 ffff8000 00000000 00000000
-> 000000002dbdf9cd: 981f8400 ffff0d98 00000001 00000000
-> 
-> On the other hand, printing multiple 64-bit addresses is redundant when
-> the 'sp' value is already printed. Generally, we do not dump more than
-> 64 KiB memory. It is sufficient to print only the lower 16 bits of the
-> address.
-> 
-> dump memory at sp=ffff800080883a90:
-> 3a90: 80883ac0 ffff8000 3d8e936c ffffbd5b
-> 3aa0: 5833f000 ffff3580 00000001 00000000
-> 3ab0: 40299840 ffff3580 590dfa00 ffff3580
-> 3ac0: 80883b30 ffff8000 3d938b28 ffffbd5b
-> 3ad0: 40877180 ffff3580 590dfa00 ffff3580
-> 3ae0: 4090f600 ffff3580 80883cb0 ffff8000
-> 3af0: 00000010 00000000 00000000 00000000
-> 3b00: 4090f700 ffff3580 00000001 00000000
-> 
-> Let's add DUMP_PREFIX_CUSTOM, allows users to make some adjustments to
-> their needs.
-> 
-> For example:
-> pr_info("dump memory at sp=%px:\n", sp);
-> print_hex_dump(KERN_INFO, "%s%16hx: %s\n",
->                DUMP_PREFIX_CUSTOM, 16, 1, sp, 16, false);
-> print_hex_dump(KERN_INFO, "%s%16x: %s\n",
->                DUMP_PREFIX_CUSTOM, 16, 1, sp, 16, false);
-> print_hex_dump(KERN_INFO, "%s%px: %s\n",
->                DUMP_PREFIX_CUSTOM, 16, 1, sp, 16, false);
-
-IMHO, this is pretty bad interface.
-
-  + From the user POV:
-
-    It is far from clear what values will be passed for the given
-    printf format. It can be docummented but...
-
-
-  + From the security POV:
-
-    The compiler could not check if the printk() parameters
-    match the format. I mean if the number of types of
-    the parameters are correct.
-
-
-Best Regards,
-Petr
-
-> dump memory at sp=ffff80008091baa0:
->             baa0: c0 ba 91 80 00 80 ff ff d4 38 16 ce fc a7 ff ff
->         8091baa0: c0 ba 91 80 00 80 ff ff d4 38 16 ce fc a7 ff ff
-> ffff80008091baa0: c0 ba 91 80 00 80 ff ff d4 38 16 ce fc a7 ff ff
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
->  include/linux/printk.h |  3 ++-
->  lib/hexdump.c          | 16 ++++++++++++++++
->  2 files changed, 18 insertions(+), 1 deletion(-)
+>   kernel/cgroup/cgroup.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
 > 
-> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> index 8ef499ab3c1ed2e..23779dcc4836414 100644
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -704,7 +704,8 @@ extern const struct file_operations kmsg_fops;
->  enum {
->  	DUMP_PREFIX_NONE,
->  	DUMP_PREFIX_ADDRESS,
-> -	DUMP_PREFIX_OFFSET
-> +	DUMP_PREFIX_OFFSET,
-> +	DUMP_PREFIX_CUSTOM
->  };
->  extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
->  			      int groupsize, char *linebuf, size_t linebuflen,
-> diff --git a/lib/hexdump.c b/lib/hexdump.c
-> index 1064706d57c15ed..fa4a44543a946b8 100644
-> --- a/lib/hexdump.c
-> +++ b/lib/hexdump.c
-> @@ -232,6 +232,11 @@ EXPORT_SYMBOL(hex_dump_to_buffer);
->   * @level: kernel log level (e.g. KERN_DEBUG)
->   * @prefix_str: string to prefix each line with;
->   *  caller supplies trailing spaces for alignment if desired
-> + *  OR
-> + *  the custom format string of DUMP_PREFIX_CUSTOM;
-> + *  Corresponding to three parameters in fixed order:
-> + *  <string: level> <pointer: address> <string: converted data>
-> + *  For example: "%s%04hx: %s\n", "%s%.8x: %s\n", "%s%px: %s\n"
->   * @prefix_type: controls whether prefix of an offset, address, or none
->   *  is printed (%DUMP_PREFIX_OFFSET, %DUMP_PREFIX_ADDRESS, %DUMP_PREFIX_NONE)
->   * @rowsize: number of bytes to print per line; must be 16 or 32
-> @@ -257,6 +262,14 @@ EXPORT_SYMBOL(hex_dump_to_buffer);
->   * 0009ab42: 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f  @ABCDEFGHIJKLMNO
->   * Example output using %DUMP_PREFIX_ADDRESS and 4-byte mode:
->   * ffffffff88089af0: 73727170 77767574 7b7a7978 7f7e7d7c  pqrstuvwxyz{|}~.
-> + *
-> + * E.g.:
-> + *   print_hex_dump(KERN_DEBUG, "%s%04hx: %s\n", DUMP_PREFIX_CUSTOM,
-> + *		    16, 1, frame->data, frame->len, false);
-> + *   %04hx --> Only the lower 16 bits of the address are printed.
-> + *
-> + * Example output using %DUMP_PREFIX_CUSTOM and 1-byte mode:
-> + * 3aa0: c0 3a 8d 80 00 80 ff ff d4 38 16 1d 94 a6 ff ff
->   */
->  void print_hex_dump(const char *level, const char *prefix_str, int prefix_type,
->  		    int rowsize, int groupsize,
-> @@ -292,6 +305,9 @@ void print_hex_dump(const char *level, const char *prefix_str, int prefix_type,
->  			}
->  			printk("%s%s%0*x: %s\n", level, prefix_str, width, i, linebuf);
->  			break;
-> +		case DUMP_PREFIX_CUSTOM:
-> +			printk(prefix_str, level, ptr + i, linebuf);
-> +			break;
->  		default:
->  			printk("%s%s%s\n", level, prefix_str, linebuf);
->  			break;
-> -- 
-> 2.34.1
+> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+> index cd497b90e11a..1ee76e62eb98 100644
+> --- a/kernel/cgroup/cgroup.c
+> +++ b/kernel/cgroup/cgroup.c
+> @@ -1200,6 +1200,9 @@ static struct css_set *find_css_set(struct css_set *old_cset,
+>   	unsigned long key;
+>   	int ssid;
+>   
+> +	if (!CGROUP_HAS_SUBSYS_CONFIG)
+> +		return NULL;
+> +
+>   	lockdep_assert_held(&cgroup_mutex);
+>   
+>   	/* First see if we already have a cgroup group that matches
+> @@ -6045,6 +6048,9 @@ int __init cgroup_init(void)
+>   	struct cgroup_subsys *ss;
+>   	int ssid;
+>   
+> +	if (!CGROUP_HAS_SUBSYS_CONFIG)
+> +		return -EINVAL;
+> +
+>   	BUILD_BUG_ON(CGROUP_SUBSYS_COUNT > 16);
+>   	BUG_ON(cgroup_init_cftypes(NULL, cgroup_base_files));
+>   	BUG_ON(cgroup_init_cftypes(NULL, cgroup_psi_files));
