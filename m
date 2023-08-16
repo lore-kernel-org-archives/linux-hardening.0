@@ -2,95 +2,78 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9041C41513
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 18:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89336C10F19
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 18:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345103AbjHPS2G (ORCPT
+        id S1345049AbjHPSyf (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 14:28:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52108 "EHLO
+        Wed, 16 Aug 2023 14:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345603AbjHPS15 (ORCPT
+        with ESMTP id S1344743AbjHPSyK (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 14:27:57 -0400
+        Wed, 16 Aug 2023 14:54:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 939C92D62;
-        Wed, 16 Aug 2023 11:27:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF2C26BE;
+        Wed, 16 Aug 2023 11:54:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E3C5165251;
-        Wed, 16 Aug 2023 18:27:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E4A6C433C8;
-        Wed, 16 Aug 2023 18:27:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A70FB6599F;
+        Wed, 16 Aug 2023 18:54:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00935C433C7;
+        Wed, 16 Aug 2023 18:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692210449;
-        bh=Fg2XRsx4gyYp75jugZem87t39C7lGAKLhehiSRy0yPE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uBGQJT8EM5FdwmbALcSATSzwZ1asOC8rvnZWoKy5nxj+nC2k1P9eA0JXFmGi6rPbp
-         YvgiImdy/e7sdRF+iSNGW9KiKi7uZIjtPj0XJGf8v7qvGvQ+qxOfVnbe3qxvIuotF6
-         uLj3GnB+Ii1Tf++aO/gI1vo+Azi44l6dvkyzpk7fMxm1e/6ue5dfLsYrEH92e9gYPp
-         En76RXbuPa/Szz65A5vgarSYK/iMGdyKNrZ1cyCzR5xUnsHo7i0pPuXaUXTaH+pnz7
-         fVz/T5KSl8zt6a5gdVP7GqCklvdogVi5dUoV+wBxxkGI65AJDlbbhjp5X4DsmWM4mM
-         niJPe7KmPSjQw==
-Date:   Wed, 16 Aug 2023 12:28:30 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH][next] scsi: bfa: Replace one-element array with
- flexible-array member in struct fc_rscn_pl_s
-Message-ID: <ZN0VTpDBOSVHGayb@work>
+        s=k20201202; t=1692212049;
+        bh=GaVKoFL4ir5wQAKCJTi8wVVUQWo4ByRUiSfnqWSW7wI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=YQmGSkMUHdhjC2FgCoqUheVxMp0mCUP4EF6y48fyRP25egKWkP5QfnptRYr87aMIC
+         d2iVw8hhfl8w0uvC50a+rYwW3Vhz/8KfKHt9uznpfjBYvFBD+Ati3sMkD+UiY1r3oI
+         5pjJpzhZo1NYdp9vIczURWXsy/6JxPsDPVv3pHxGhQt+NnLrgn9G9XR28l6YeT7/V6
+         zCwYpqvIiwrvGsM1tlt1IKqnl5wvGTFgvIyPDnjC9sn+j33bZrZNOh1Eo218yJVR0L
+         42b0egroja+Tndb/s+hi40z3ACf1JcwXHASjP3BZ9hRgZ1Okmm50UU1jGRU4eyKWrk
+         HOXtFYMiJN7gQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id 86F2FCE06FA; Wed, 16 Aug 2023 11:54:08 -0700 (PDT)
+Date:   Wed, 16 Aug 2023 11:54:08 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        x86@kernel.org, peterz@infradead.org, keescook@chromium.org,
+        elver@google.com, dvyukov@google.com, glider@google.com
+Subject: Re: [BUG] missing return thunk: __ret+0x5/0x7e-__ret+0x0/0x7e: e9 f6
+ ff ff ff
+Message-ID: <9ff0f0fa-438a-4019-afa1-4579041405b5@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <4dc3d0ec-b827-4bce-8927-cfa5d837fd03@paulmck-laptop>
+ <20230816181720.GNZN0SsKi/B4eCsZHu@fat_crate.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20230816181720.GNZN0SsKi/B4eCsZHu@fat_crate.local>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-One-element and zero-length arrays are deprecated. So, replace
-one-element array in struct fc_rscn_pl_s with flexible-array member.
+On Wed, Aug 16, 2023 at 08:17:20PM +0200, Borislav Petkov wrote:
+> Hey Paul,
+> 
+> On Wed, Aug 16, 2023 at 10:54:09AM -0700, Paul E. McKenney wrote:
+> > I hit the splat at the end of this message in recent mainline, and has
+> > appeared some time since v6.5-rc1.  Should I be worried?
+> 
+> does it go away if you try the latest tip:x86/urgent branch?
 
-This results in no differences in binary output.
+That is plausible, given that bisection has narrowed things down to
+somewhere between v6.5-rc5 and v6.5-rc6.  And it is quite conveniently
+currently on a bad commit.  Sometimes you get lucky.  ;-)
 
-Link: https://github.com/KSPP/linux/issues/339
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- drivers/scsi/bfa/bfa_fc.h      | 2 +-
- drivers/scsi/bfa/bfa_fcbuild.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+So pulling in those commits from -tip, currently headed by this one:
 
-diff --git a/drivers/scsi/bfa/bfa_fc.h b/drivers/scsi/bfa/bfa_fc.h
-index a12d693065ce..1091aa428533 100644
---- a/drivers/scsi/bfa/bfa_fc.h
-+++ b/drivers/scsi/bfa/bfa_fc.h
-@@ -800,7 +800,7 @@ struct fc_rscn_pl_s {
- 	u8	command;
- 	u8	pagelen;
- 	__be16	payldlen;
--	struct fc_rscn_event_s event[1];
-+	struct fc_rscn_event_s event[];
- };
- 
- /*
-diff --git a/drivers/scsi/bfa/bfa_fcbuild.c b/drivers/scsi/bfa/bfa_fcbuild.c
-index 773c84af784c..52303e8c716d 100644
---- a/drivers/scsi/bfa/bfa_fcbuild.c
-+++ b/drivers/scsi/bfa/bfa_fcbuild.c
-@@ -1051,7 +1051,7 @@ fc_rscn_build(struct fchs_s *fchs, struct fc_rscn_pl_s *rscn,
- 	rscn->event[0].format = FC_RSCN_FORMAT_PORTID;
- 	rscn->event[0].portid = s_id;
- 
--	return sizeof(struct fc_rscn_pl_s);
-+	return struct_size(rscn, event, 1);
- }
- 
- u16
--- 
-2.34.1
+d80c3c9de067 ("x86/srso: Explain the untraining sequences a bit more")
 
+Then merging them with the current bad commit gets me a successful
+run.  Thank you!!!
+
+							Thanx, Paul
