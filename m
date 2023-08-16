@@ -2,78 +2,94 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89336C10F19
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 18:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFE7C19F4F
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 19:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345049AbjHPSyf (ORCPT
+        id S1345785AbjHPTWs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 14:54:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36974 "EHLO
+        Wed, 16 Aug 2023 15:22:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344743AbjHPSyK (ORCPT
+        with ESMTP id S1345806AbjHPTWX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 14:54:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DF2C26BE;
-        Wed, 16 Aug 2023 11:54:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A70FB6599F;
-        Wed, 16 Aug 2023 18:54:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00935C433C7;
-        Wed, 16 Aug 2023 18:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692212049;
-        bh=GaVKoFL4ir5wQAKCJTi8wVVUQWo4ByRUiSfnqWSW7wI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=YQmGSkMUHdhjC2FgCoqUheVxMp0mCUP4EF6y48fyRP25egKWkP5QfnptRYr87aMIC
-         d2iVw8hhfl8w0uvC50a+rYwW3Vhz/8KfKHt9uznpfjBYvFBD+Ati3sMkD+UiY1r3oI
-         5pjJpzhZo1NYdp9vIczURWXsy/6JxPsDPVv3pHxGhQt+NnLrgn9G9XR28l6YeT7/V6
-         zCwYpqvIiwrvGsM1tlt1IKqnl5wvGTFgvIyPDnjC9sn+j33bZrZNOh1Eo218yJVR0L
-         42b0egroja+Tndb/s+hi40z3ACf1JcwXHASjP3BZ9hRgZ1Okmm50UU1jGRU4eyKWrk
-         HOXtFYMiJN7gQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id 86F2FCE06FA; Wed, 16 Aug 2023 11:54:08 -0700 (PDT)
-Date:   Wed, 16 Aug 2023 11:54:08 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        x86@kernel.org, peterz@infradead.org, keescook@chromium.org,
-        elver@google.com, dvyukov@google.com, glider@google.com
-Subject: Re: [BUG] missing return thunk: __ret+0x5/0x7e-__ret+0x0/0x7e: e9 f6
- ff ff ff
-Message-ID: <9ff0f0fa-438a-4019-afa1-4579041405b5@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <4dc3d0ec-b827-4bce-8927-cfa5d837fd03@paulmck-laptop>
- <20230816181720.GNZN0SsKi/B4eCsZHu@fat_crate.local>
+        Wed, 16 Aug 2023 15:22:23 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47404271F;
+        Wed, 16 Aug 2023 12:22:22 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-688142a392eso5573852b3a.3;
+        Wed, 16 Aug 2023 12:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692213742; x=1692818542;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6yZbEgk5hOBil+6p82DAQcLxcHtlq0Gk/Obtt+1CIrw=;
+        b=qKSP52F+/sORslglDOq8VwHya86yPq+jVHh3l/OsdYKeo4vmi0NSnR95HGEjuWXqLJ
+         vr+8+ubITXS7B53tEYaJfBvd88MJ3ox9vuhn7NMOkuEVQBdDyBn9xLXZ1xWX/IsurP0V
+         sz+nsf2GvYQT8vpOSaKmeNmET5kBzjDty1W2qJ75ob3XR94whTAdJyUzFRL1KbsIr2mS
+         zaS+ywl5LBZhindR24QiUrLFEkNzAvUzrI/ezLNYnazWqfs12Q+wSQRHrLikf97SdHp7
+         N1pnzml45IvN6LMVOM44PScABbAiPp+zdHCY6iF4KiGmbSmyTmOuMHGdhY/XIJbg4i+e
+         q57g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692213742; x=1692818542;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6yZbEgk5hOBil+6p82DAQcLxcHtlq0Gk/Obtt+1CIrw=;
+        b=EdwAWJyD32FB9lOTSs00ickU1CnpubleTvogfZcNXvxDmzXWGKDYqIIt783JdfQfhw
+         h1qc7OVkmB26O8VMmxRjbOEx3Q9iZALtIaS69STr1ADJqOUbP1hUW2Os7M46i7k2H0XB
+         KdgMQATeqOFLs0vEPTuifD9TGAPIGiweJQNHOmzHdbgITNjH7fxB0Z/8w6osFMLAtkIC
+         MT63RbXxwQD8uFNUhKWZOaux6xBmjaCdD3TgClM5QRVcNYWuhj1q90BC3tNvsKe25ehY
+         ke1Zi8TeqXL2/5IdKyqxwf21hIBYTHm8nvJh17CMglEL15aMGj0nslE9wdA5QLtnmrKn
+         H8EA==
+X-Gm-Message-State: AOJu0YwB0XKkpLVU12jkJNjxj5q28FZmXIZVk8QZkcOoPvqkZCg3OOpq
+        zTBdgBu45YxaWTF2St+tMTY=
+X-Google-Smtp-Source: AGHT+IGYsKXAf+mXo898/kcV1a692ldkmT7Wsj6wlxzGZYBnwBEB140UGbXomi0XKYNNFiiyf7jBDw==
+X-Received: by 2002:a05:6a00:180d:b0:67e:45ab:b86b with SMTP id y13-20020a056a00180d00b0067e45abb86bmr3618148pfa.28.1692213741578;
+        Wed, 16 Aug 2023 12:22:21 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:93bd])
+        by smtp.gmail.com with ESMTPSA id v11-20020aa7808b000000b0065da94fe917sm11382280pff.36.2023.08.16.12.22.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Aug 2023 12:22:20 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Wed, 16 Aug 2023 09:22:19 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] cgroup: Avoid -Wstringop-overflow warnings
+Message-ID: <ZN0h69grtuh2Iv8e@slm.duckdns.org>
+References: <ZIpm3pcs3iCP9UaR@work>
+ <e1c07dd0-e6bf-ca9c-107a-97c5043b1bc7@embeddedor.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230816181720.GNZN0SsKi/B4eCsZHu@fat_crate.local>
+In-Reply-To: <e1c07dd0-e6bf-ca9c-107a-97c5043b1bc7@embeddedor.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 16, 2023 at 08:17:20PM +0200, Borislav Petkov wrote:
-> Hey Paul,
+On Tue, Aug 15, 2023 at 01:04:32PM -0600, Gustavo A. R. Silva wrote:
+> Hi all,
 > 
-> On Wed, Aug 16, 2023 at 10:54:09AM -0700, Paul E. McKenney wrote:
-> > I hit the splat at the end of this message in recent mainline, and has
-> > appeared some time since v6.5-rc1.  Should I be worried?
+> I wonder if you have any suggestions on how to address this issue. As it seems that
+> my last attempt caused some boot failures[1][2].
 > 
-> does it go away if you try the latest tip:x86/urgent branch?
+> At first, I thought that the right way to fix this was through a similar fix as this
+> one[3]. But it seems I'm missing something else that I cannot determine yet.
+> 
+> These -Wstringop-overflow warnings are mostly the last ones remaining before we can
+> finally enable this compiler option, globally.
+> 
+> Any help or advice on how to properly address this is greatly appreciated. :)
 
-That is plausible, given that bisection has narrowed things down to
-somewhere between v6.5-rc5 and v6.5-rc6.  And it is quite conveniently
-currently on a bad commit.  Sometimes you get lucky.  ;-)
+It looks like there are only two functions which misbehave when there are no
+controllers configured. Maybe just fix them so that they don't access empty
+array?
 
-So pulling in those commits from -tip, currently headed by this one:
+Thanks.
 
-d80c3c9de067 ("x86/srso: Explain the untraining sequences a bit more")
-
-Then merging them with the current bad commit gets me a successful
-run.  Thank you!!!
-
-							Thanx, Paul
+-- 
+tejun
