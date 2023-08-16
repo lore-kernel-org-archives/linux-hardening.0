@@ -2,239 +2,144 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBF8C04FE1
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 14:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F171AC04A6A
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 16:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343505AbjHPOJ6 (ORCPT
+        id S1344794AbjHPQh4 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 10:09:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44732 "EHLO
+        Wed, 16 Aug 2023 12:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343522AbjHPOJ3 (ORCPT
+        with ESMTP id S1344862AbjHPQhz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 10:09:29 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9132A2705;
-        Wed, 16 Aug 2023 07:09:28 -0700 (PDT)
+        Wed, 16 Aug 2023 12:37:55 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473BD30EF;
+        Wed, 16 Aug 2023 09:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692194968; x=1723730968;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TRp69XY4FgD35Ke7p9oOxP9n/vDaawa0zdcnhmIGV1M=;
-  b=hk0ZZmfJyBTyYyZd23Kyh2E15wG6VyWw9JDwv8wR2j8S0KmwHftcmfXN
-   RIyb+xzRfeZ+wCx1odMMkh5NixZifMjpSMZygJ5uB6tMRXYNf04kUpLIy
-   V7N4MaiFVRdagt+mcpcGukvaeB4nvWhYf8DcgASOQiTSpqEKwSbwYospS
-   XyXraLbFwGyfuxMow66q8pdpv6E7X/EK8Tt49kPv/H5XjLKSLNhHWSO37
-   f900ndpzwTwxMX/pSTRnQHhJ7X3G+rVeQG9eCAEOhGo1Uws8UIEbVQpfJ
-   9+oUO08OAU9gcrGgzgJKE7Y1bqHgOsmHUVeZPmBdzUlFUHBxArJARe9/q
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="375312796"
+  t=1692203835; x=1723739835;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9UeH/chb7IQAwSssem/J/NF0SyQa1tgGe+NbjTKigpA=;
+  b=VF7tA2+TiHstkCrMg1n3e+8coMpF2iCcLR5vL3iVsLkFngqn3QPIY3Vb
+   0srclCOenzIjqEsiyxt9pQtS1pobGhe5HsrlMUu8+//TijnQtB6+KFj6s
+   MHJIWpgNUicIjOBnurmH/tqjHuOn69rAqOxwoIxKPxEj/5btEQ+57M3kK
+   0HhrhzRccJcwDcqt6mvkFFBap1jYd8YLVF6NICH1xi1Z+2yi8dIwCMtRY
+   sA86Es3VBPMEDJvMEEeqv0Pmebyv82XiO/7lUPtF6v5dBgoiQEKXjbGIQ
+   yLFlBSCjXAW0gBAncM969XIO8U7EaT40RebmWWry134QD7weyiq89iDeo
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="438931550"
 X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
-   d="scan'208";a="375312796"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 07:09:27 -0700
+   d="scan'208";a="438931550"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 09:36:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="980753078"
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="734289393"
 X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
-   d="scan'208";a="980753078"
-Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Aug 2023 07:09:25 -0700
-Received: from pelor.igk.intel.com (pelor.igk.intel.com [10.123.220.13])
-        by irvmail002.ir.intel.com (Postfix) with ESMTP id 81AFF3542A;
-        Wed, 16 Aug 2023 15:09:24 +0100 (IST)
-From:   Przemek Kitszel <przemyslaw.kitszel@intel.com>
-To:     Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org
-Cc:     Jacob Keller <jacob.e.keller@intel.com>,
+   d="scan'208";a="734289393"
+Received: from lkp-server02.sh.intel.com (HELO a9caf1a0cf30) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 16 Aug 2023 09:36:04 -0700
+Received: from kbuild by a9caf1a0cf30 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qWJV5-0000RR-3B;
+        Wed, 16 Aug 2023 16:36:03 +0000
+Date:   Thu, 17 Aug 2023 00:35:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Jacob Keller <jacob.e.keller@intel.com>,
         intel-wired-lan@lists.osuosl.org,
         Alexander Lobakin <aleksander.lobakin@intel.com>,
         linux-hardening@vger.kernel.org, Steven Zou <steven.zou@intel.com>,
         Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v3 7/7] ice: make use of DEFINE_FLEX() in ice_switch.c
-Date:   Wed, 16 Aug 2023 10:06:23 -0400
-Message-Id: <20230816140623.452869-8-przemyslaw.kitszel@intel.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
-References: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
+Subject: Re: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack
+ allocs
+Message-ID: <202308170000.YqabIR9D-lkp@intel.com>
+References: <20230816140623.452869-2-przemyslaw.kitszel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230816140623.452869-2-przemyslaw.kitszel@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use DEFINE_FLEX() macro for 1-elem flex array members of ice_switch.c
+Hi Przemek,
 
-Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
----
-add/remove: 2/2 grow/shrink: 3/6 up/down: 489/-470 (19)
----
- drivers/net/ethernet/intel/ice/ice_switch.c | 63 +++++----------------
- 1 file changed, 14 insertions(+), 49 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_switch.c b/drivers/net/ethernet/intel/ice/ice_switch.c
-index a7afb612fe32..b5a1445ed256 100644
---- a/drivers/net/ethernet/intel/ice/ice_switch.c
-+++ b/drivers/net/ethernet/intel/ice/ice_switch.c
-@@ -1812,15 +1812,11 @@ ice_aq_alloc_free_vsi_list(struct ice_hw *hw, u16 *vsi_list_id,
- 			   enum ice_sw_lkup_type lkup_type,
- 			   enum ice_adminq_opc opc)
- {
--	struct ice_aqc_alloc_free_res_elem *sw_buf;
-+	DEFINE_FLEX(struct ice_aqc_alloc_free_res_elem, sw_buf, elem, 1);
-+	u16 buf_len = __struct_size(sw_buf);
- 	struct ice_aqc_res_elem *vsi_ele;
--	u16 buf_len;
- 	int status;
- 
--	buf_len = struct_size(sw_buf, elem, 1);
--	sw_buf = devm_kzalloc(ice_hw_to_dev(hw), buf_len, GFP_KERNEL);
--	if (!sw_buf)
--		return -ENOMEM;
- 	sw_buf->num_elems = cpu_to_le16(1);
- 
- 	if (lkup_type == ICE_SW_LKUP_MAC ||
-@@ -1840,25 +1836,22 @@ ice_aq_alloc_free_vsi_list(struct ice_hw *hw, u16 *vsi_list_id,
- 			sw_buf->res_type =
- 				cpu_to_le16(ICE_AQC_RES_TYPE_VSI_LIST_PRUNE);
- 	} else {
--		status = -EINVAL;
--		goto ice_aq_alloc_free_vsi_list_exit;
-+		return -EINVAL;
- 	}
- 
- 	if (opc == ice_aqc_opc_free_res)
- 		sw_buf->elem[0].e.sw_resp = cpu_to_le16(*vsi_list_id);
- 
- 	status = ice_aq_alloc_free_res(hw, 1, sw_buf, buf_len, opc, NULL);
- 	if (status)
--		goto ice_aq_alloc_free_vsi_list_exit;
-+		return status;
- 
- 	if (opc == ice_aqc_opc_alloc_res) {
- 		vsi_ele = &sw_buf->elem[0];
- 		*vsi_list_id = le16_to_cpu(vsi_ele->e.sw_resp);
- 	}
- 
--ice_aq_alloc_free_vsi_list_exit:
--	devm_kfree(ice_hw_to_dev(hw), sw_buf);
--	return status;
-+	return 0;
- }
- 
- /**
-@@ -2088,24 +2081,18 @@ ice_aq_get_recipe_to_profile(struct ice_hw *hw, u32 profile_id, u8 *r_bitmap,
-  */
- int ice_alloc_recipe(struct ice_hw *hw, u16 *rid)
- {
--	struct ice_aqc_alloc_free_res_elem *sw_buf;
--	u16 buf_len;
-+	DEFINE_FLEX(struct ice_aqc_alloc_free_res_elem, sw_buf, elem, 1);
-+	u16 buf_len = __struct_size(sw_buf);
- 	int status;
- 
--	buf_len = struct_size(sw_buf, elem, 1);
--	sw_buf = kzalloc(buf_len, GFP_KERNEL);
--	if (!sw_buf)
--		return -ENOMEM;
--
- 	sw_buf->num_elems = cpu_to_le16(1);
- 	sw_buf->res_type = cpu_to_le16((ICE_AQC_RES_TYPE_RECIPE <<
- 					ICE_AQC_RES_TYPE_S) |
- 					ICE_AQC_RES_TYPE_FLAG_SHARED);
- 	status = ice_aq_alloc_free_res(hw, 1, sw_buf, buf_len,
- 				       ice_aqc_opc_alloc_res, NULL);
- 	if (!status)
- 		*rid = le16_to_cpu(sw_buf->elem[0].e.sw_resp);
--	kfree(sw_buf);
- 
- 	return status;
- }
-@@ -4482,29 +4469,20 @@ int
- ice_alloc_res_cntr(struct ice_hw *hw, u8 type, u8 alloc_shared, u16 num_items,
- 		   u16 *counter_id)
- {
--	struct ice_aqc_alloc_free_res_elem *buf;
--	u16 buf_len;
-+	DEFINE_FLEX(struct ice_aqc_alloc_free_res_elem, buf, elem, 1);
-+	u16 buf_len = __struct_size(buf);
- 	int status;
- 
--	/* Allocate resource */
--	buf_len = struct_size(buf, elem, 1);
--	buf = kzalloc(buf_len, GFP_KERNEL);
--	if (!buf)
--		return -ENOMEM;
--
- 	buf->num_elems = cpu_to_le16(num_items);
- 	buf->res_type = cpu_to_le16(((type << ICE_AQC_RES_TYPE_S) &
- 				      ICE_AQC_RES_TYPE_M) | alloc_shared);
- 
- 	status = ice_aq_alloc_free_res(hw, 1, buf, buf_len,
- 				       ice_aqc_opc_alloc_res, NULL);
- 	if (status)
--		goto exit;
-+		return status;
- 
- 	*counter_id = le16_to_cpu(buf->elem[0].e.sw_resp);
--
--exit:
--	kfree(buf);
- 	return status;
- }
- 
-@@ -4520,16 +4498,10 @@ int
- ice_free_res_cntr(struct ice_hw *hw, u8 type, u8 alloc_shared, u16 num_items,
- 		  u16 counter_id)
- {
--	struct ice_aqc_alloc_free_res_elem *buf;
--	u16 buf_len;
-+	DEFINE_FLEX(struct ice_aqc_alloc_free_res_elem, buf, elem, 1);
-+	u16 buf_len = __struct_size(buf);
- 	int status;
- 
--	/* Free resource */
--	buf_len = struct_size(buf, elem, 1);
--	buf = kzalloc(buf_len, GFP_KERNEL);
--	if (!buf)
--		return -ENOMEM;
--
- 	buf->num_elems = cpu_to_le16(num_items);
- 	buf->res_type = cpu_to_le16(((type << ICE_AQC_RES_TYPE_S) &
- 				      ICE_AQC_RES_TYPE_M) | alloc_shared);
-@@ -4540,7 +4512,6 @@ ice_free_res_cntr(struct ice_hw *hw, u8 type, u8 alloc_shared, u16 num_items,
- 	if (status)
- 		ice_debug(hw, ICE_DBG_SW, "counter resource could not be freed\n");
- 
--	kfree(buf);
- 	return status;
- }
- 
-@@ -4558,15 +4529,10 @@ ice_free_res_cntr(struct ice_hw *hw, u8 type, u8 alloc_shared, u16 num_items,
-  */
- int ice_share_res(struct ice_hw *hw, u16 type, u8 shared, u16 res_id)
- {
--	struct ice_aqc_alloc_free_res_elem *buf;
--	u16 buf_len;
-+	DEFINE_FLEX(struct ice_aqc_alloc_free_res_elem, buf, elem, 1);
-+	u16 buf_len = __struct_size(buf);
- 	int status;
- 
--	buf_len = struct_size(buf, elem, 1);
--	buf = kzalloc(buf_len, GFP_KERNEL);
--	if (!buf)
--		return -ENOMEM;
--
- 	buf->num_elems = cpu_to_le16(1);
- 	if (shared)
- 		buf->res_type = cpu_to_le16(((type << ICE_AQC_RES_TYPE_S) &
-@@ -4584,7 +4550,6 @@ int ice_share_res(struct ice_hw *hw, u16 type, u8 shared, u16 res_id)
- 		ice_debug(hw, ICE_DBG_SW, "Could not set resource type %u id %u to %s\n",
- 			  type, res_id, shared ? "SHARED" : "DEDICATED");
- 
--	kfree(buf);
- 	return status;
- }
- 
+[auto build test ERROR on 479b322ee6feaff612285a0e7f22c022e8cd84eb]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Przemek-Kitszel/overflow-add-DEFINE_FLEX-for-on-stack-allocs/20230816-221402
+base:   479b322ee6feaff612285a0e7f22c022e8cd84eb
+patch link:    https://lore.kernel.org/r/20230816140623.452869-2-przemyslaw.kitszel%40intel.com
+patch subject: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack allocs
+config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20230817/202308170000.YqabIR9D-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce: (https://download.01.org/0day-ci/archive/20230817/202308170000.YqabIR9D-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308170000.YqabIR9D-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> thread 'main' panicked at '"ftrace_branch_data_union_(anonymous_at_include/linux/compiler_types_h_144_2)" is not a valid Ident', /opt/cross/rustc-1.68.2-bindgen-0.56.0/cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.24/src/fallback.rs:693:9
+   stack backtrace:
+      0: rust_begin_unwind
+                at /rustc/9eb3afe9ebe9c7d2b84b71002d44f4a0edac95e0/library/std/src/panicking.rs:575:5
+      1: core::panicking::panic_fmt
+                at /rustc/9eb3afe9ebe9c7d2b84b71002d44f4a0edac95e0/library/core/src/panicking.rs:64:14
+      2: proc_macro2::fallback::Ident::_new
+      3: proc_macro2::Ident::new
+      4: bindgen::ir::context::BindgenContext::rust_ident
+      5: <bindgen::ir::comp::CompInfo as bindgen::codegen::CodeGenerator>::codegen
+      6: <bindgen::ir::ty::Type as bindgen::codegen::CodeGenerator>::codegen
+      7: <bindgen::ir::item::Item as bindgen::codegen::CodeGenerator>::codegen
+      8: <bindgen::ir::comp::CompInfo as bindgen::codegen::CodeGenerator>::codegen
+      9: <bindgen::ir::ty::Type as bindgen::codegen::CodeGenerator>::codegen
+     10: <bindgen::ir::item::Item as bindgen::codegen::CodeGenerator>::codegen
+     11: <bindgen::ir::module::Module as bindgen::codegen::CodeGenerator>::codegen
+     12: <bindgen::ir::item::Item as bindgen::codegen::CodeGenerator>::codegen
+     13: bindgen::ir::context::BindgenContext::gen
+     14: bindgen::Builder::generate
+     15: bindgen::main
+   note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+   make[3]: *** [rust/Makefile:316: rust/uapi/uapi_generated.rs] Error 1
+   make[3]: *** Deleting file 'rust/uapi/uapi_generated.rs'
+>> thread 'main' panicked at '"ftrace_branch_data_union_(anonymous_at_include/linux/compiler_types_h_144_2)" is not a valid Ident', /opt/cross/rustc-1.68.2-bindgen-0.56.0/cargo/registry/src/github.com-1ecc6299db9ec823/proc-macro2-1.0.24/src/fallback.rs:693:9
+   stack backtrace:
+      0: rust_begin_unwind
+                at /rustc/9eb3afe9ebe9c7d2b84b71002d44f4a0edac95e0/library/std/src/panicking.rs:575:5
+      1: core::panicking::panic_fmt
+                at /rustc/9eb3afe9ebe9c7d2b84b71002d44f4a0edac95e0/library/core/src/panicking.rs:64:14
+      2: proc_macro2::fallback::Ident::_new
+      3: proc_macro2::Ident::new
+      4: bindgen::ir::context::BindgenContext::rust_ident
+      5: <bindgen::ir::comp::CompInfo as bindgen::codegen::CodeGenerator>::codegen
+      6: <bindgen::ir::ty::Type as bindgen::codegen::CodeGenerator>::codegen
+      7: <bindgen::ir::item::Item as bindgen::codegen::CodeGenerator>::codegen
+      8: <bindgen::ir::comp::CompInfo as bindgen::codegen::CodeGenerator>::codegen
+      9: <bindgen::ir::ty::Type as bindgen::codegen::CodeGenerator>::codegen
+     10: <bindgen::ir::item::Item as bindgen::codegen::CodeGenerator>::codegen
+     11: <bindgen::ir::module::Module as bindgen::codegen::CodeGenerator>::codegen
+     12: <bindgen::ir::item::Item as bindgen::codegen::CodeGenerator>::codegen
+     13: bindgen::ir::context::BindgenContext::gen
+     14: bindgen::Builder::generate
+     15: bindgen::main
+   note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.
+   make[3]: *** [rust/Makefile:310: rust/bindings/bindings_generated.rs] Error 1
+   make[3]: *** Deleting file 'rust/bindings/bindings_generated.rs'
+   make[3]: Target 'rust/' not remade because of errors.
+   make[2]: *** [Makefile:1293: prepare] Error 2
+   make[1]: *** [Makefile:234: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:234: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
 -- 
-2.40.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
