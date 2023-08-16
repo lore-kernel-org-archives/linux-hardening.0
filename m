@@ -2,47 +2,47 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8AFC04A6A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6B2C04FDF
 	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 14:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241157AbjHPOJz (ORCPT
+        id S245702AbjHPOJ5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 10:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44660 "EHLO
+        Wed, 16 Aug 2023 10:09:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343511AbjHPOJ0 (ORCPT
+        with ESMTP id S1343521AbjHPOJ3 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 10:09:26 -0400
+        Wed, 16 Aug 2023 10:09:29 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200032706;
-        Wed, 16 Aug 2023 07:09:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569232706;
+        Wed, 16 Aug 2023 07:09:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692194965; x=1723730965;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=uIKtvDbe+7VbgaZgQmtc0Up6bjzaTD/DQNKknP+rGoE=;
-  b=YDdZFUZwqKJk3m4YVZYownJoHuPGMiTUjwCONCkQ78m755Z7MINuSLaw
-   QJuHM2xMnVbq4eolZn5OwRDgc13Ec9QDueHtmnAKy/4ThvMv3q+jyTmEO
-   oHrqH35LwIXhgN/EniiM48a1qUn1vra/zHXzQV55nGAcELZ5PPHC2Tmc1
-   +HzvqdxWXZ0SDnfE1rK8Fj284y53zV+VwTFX6RUoP4wzR/ELe4cEPVVoC
-   zcyYMzdmt3ajeYi9l2Lq9ovAGKeRQUbirj3EPC2ddwrK2B9Phm3tq96BD
-   zDJ5msmrbdKtsOz2beYmZVQMc/WOW78f/A14i2q6uwAfufcIrX54unbfV
+  t=1692194968; x=1723730968;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=4GBf2EESOi7onKw3vz0dKPSBTjhZKbd/0pu82xSmftQ=;
+  b=UIQasxtDYFALXcedZmINjWDxK4o+6ewr3ppUcaQAyai6X8be9Ns5xjIY
+   XgIUyiAbE/dW2mcAQrAmW73ixCSt/AAYNOyDnIYw2bHWhE6qk0lWdWm/I
+   iYHCoxTWHYxJ5knGG2IYo3zBAHRI149OPGyVPKXbgaZEZD54D0h67f9p4
+   NdurTbdJYtnuTAqcv5f4nfKF+60KXtO/WpuJJxwNJS6BsMi5gDp+uZS2a
+   01hTONXPy6JQ/u8lEk6oFkBaVmQIu6NtBAc1wLhXoWqZhWGsd7qIDWp9s
+   1phCDiW4XZpcKGazs7jCRXSa9ePU6p315XQDXTvDNbX2TM7xpHBjf8Ut+
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="375312756"
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="375312791"
 X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
-   d="scan'208";a="375312756"
+   d="scan'208";a="375312791"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 07:09:23 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 07:09:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="980753045"
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="980753075"
 X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
-   d="scan'208";a="980753045"
+   d="scan'208";a="980753075"
 Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Aug 2023 07:09:21 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 16 Aug 2023 07:09:24 -0700
 Received: from pelor.igk.intel.com (pelor.igk.intel.com [10.123.220.13])
-        by irvmail002.ir.intel.com (Postfix) with ESMTP id 65ABF3497F;
-        Wed, 16 Aug 2023 15:09:20 +0100 (IST)
+        by irvmail002.ir.intel.com (Postfix) with ESMTP id 71DFD34EF3;
+        Wed, 16 Aug 2023 15:09:23 +0100 (IST)
 From:   Przemek Kitszel <przemyslaw.kitszel@intel.com>
 To:     Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org
 Cc:     Jacob Keller <jacob.e.keller@intel.com>,
@@ -50,58 +50,159 @@ Cc:     Jacob Keller <jacob.e.keller@intel.com>,
         Alexander Lobakin <aleksander.lobakin@intel.com>,
         linux-hardening@vger.kernel.org, Steven Zou <steven.zou@intel.com>,
         Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v3 0/7] introduce DEFINE_FLEX() macro
-Date:   Wed, 16 Aug 2023 10:06:16 -0400
-Message-Id: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
+Subject: [PATCH net-next v3 5/7] ice: make use of DEFINE_FLEX() for struct ice_aqc_add_tx_qgrp
+Date:   Wed, 16 Aug 2023 10:06:21 -0400
+Message-Id: <20230816140623.452869-6-przemyslaw.kitszel@intel.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
+References: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add DEFINE_FLEX() macro, that helps on-stack allocation of structures
-with trailing flex array member.
-Expose __struct_size() macro which reads size of data allocated
-by DEFINE_FLEX().
+Use DEFINE_FLEX() macro for 1-elem flex array use case
+of struct ice_aqc_add_tx_qgrp.
 
-Accompany new macros introduction with actual usage,
-in the ice driver (hence targeting for netdev tree).
+Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+---
+add/remove: 0/2 grow/shrink: 2/2 up/down: 220/-255 (-35)
+---
+ drivers/net/ethernet/intel/ice/ice_lib.c | 23 +++++------------------
+ drivers/net/ethernet/intel/ice/ice_xsk.c | 22 ++++++++--------------
+ 2 files changed, 13 insertions(+), 32 deletions(-)
 
-Obvious benefits include simpler resulting code, less heap usage,
-less error checking. Less obvious is the fact that compiler has
-more room to optimize, and as a whole, even with more stuff on the stack,
-we end up with overall better (smaller) report from bloat-o-meter:
-add/remove: 8/6 grow/shrink: 7/18 up/down: 2211/-2270 (-59)
-(individual results in each patch).
-
-v3: tidy up 1st patch
-v2: Kees: reusing __struct_size() instead of doubling it as a new macro
-
-Przemek Kitszel (7):
-  overflow: add DEFINE_FLEX() for on-stack allocs
-  ice: ice_sched_remove_elems: replace 1 elem array param by u32
-  ice: drop two params of ice_aq_move_sched_elems()
-  ice: make use of DEFINE_FLEX() in ice_ddp.c
-  ice: make use of DEFINE_FLEX() for struct ice_aqc_add_tx_qgrp
-  ice: make use of DEFINE_FLEX() for struct ice_aqc_dis_txq_item
-  ice: make use of DEFINE_FLEX() in ice_switch.c
-
- drivers/net/ethernet/intel/ice/ice_common.c | 20 ++-----
- drivers/net/ethernet/intel/ice/ice_ddp.c    | 39 ++++---------
- drivers/net/ethernet/intel/ice/ice_lag.c    | 48 ++++------------
- drivers/net/ethernet/intel/ice/ice_lib.c    | 23 ++------
- drivers/net/ethernet/intel/ice/ice_sched.c  | 56 ++++++------------
- drivers/net/ethernet/intel/ice/ice_sched.h  |  6 +-
- drivers/net/ethernet/intel/ice/ice_switch.c | 63 +++++----------------
- drivers/net/ethernet/intel/ice/ice_xsk.c    | 22 +++----
- include/linux/compiler_types.h              | 32 +++++++----
- include/linux/fortify-string.h              |  4 --
- include/linux/overflow.h                    | 20 +++++++
- 11 files changed, 115 insertions(+), 218 deletions(-)
-
-
-base-commit: 479b322ee6feaff612285a0e7f22c022e8cd84eb
+diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
+index 927518fcad51..c005ee1006f1 100644
+--- a/drivers/net/ethernet/intel/ice/ice_lib.c
++++ b/drivers/net/ethernet/intel/ice/ice_lib.c
+@@ -1821,21 +1821,14 @@ int ice_vsi_cfg_single_rxq(struct ice_vsi *vsi, u16 q_idx)
+ 
+ int ice_vsi_cfg_single_txq(struct ice_vsi *vsi, struct ice_tx_ring **tx_rings, u16 q_idx)
+ {
+-	struct ice_aqc_add_tx_qgrp *qg_buf;
+-	int err;
++	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
+ 
+ 	if (q_idx >= vsi->alloc_txq || !tx_rings || !tx_rings[q_idx])
+ 		return -EINVAL;
+ 
+-	qg_buf = kzalloc(struct_size(qg_buf, txqs, 1), GFP_KERNEL);
+-	if (!qg_buf)
+-		return -ENOMEM;
+-
+ 	qg_buf->num_txqs = 1;
+ 
+-	err = ice_vsi_cfg_txq(vsi, tx_rings[q_idx], qg_buf);
+-	kfree(qg_buf);
+-	return err;
++	return ice_vsi_cfg_txq(vsi, tx_rings[q_idx], qg_buf);
+ }
+ 
+ /**
+@@ -1877,24 +1870,18 @@ int ice_vsi_cfg_rxqs(struct ice_vsi *vsi)
+ static int
+ ice_vsi_cfg_txqs(struct ice_vsi *vsi, struct ice_tx_ring **rings, u16 count)
+ {
+-	struct ice_aqc_add_tx_qgrp *qg_buf;
+-	u16 q_idx = 0;
++	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
+ 	int err = 0;
+-
+-	qg_buf = kzalloc(struct_size(qg_buf, txqs, 1), GFP_KERNEL);
+-	if (!qg_buf)
+-		return -ENOMEM;
++	u16 q_idx;
+ 
+ 	qg_buf->num_txqs = 1;
+ 
+ 	for (q_idx = 0; q_idx < count; q_idx++) {
+ 		err = ice_vsi_cfg_txq(vsi, rings[q_idx], qg_buf);
+ 		if (err)
+-			goto err_cfg_txqs;
++			break;
+ 	}
+ 
+-err_cfg_txqs:
+-	kfree(qg_buf);
+ 	return err;
+ }
+ 
+diff --git a/drivers/net/ethernet/intel/ice/ice_xsk.c b/drivers/net/ethernet/intel/ice/ice_xsk.c
+index 2a3f0834e139..99954508184f 100644
+--- a/drivers/net/ethernet/intel/ice/ice_xsk.c
++++ b/drivers/net/ethernet/intel/ice/ice_xsk.c
+@@ -217,61 +217,55 @@ static int ice_qp_dis(struct ice_vsi *vsi, u16 q_idx)
+  */
+ static int ice_qp_ena(struct ice_vsi *vsi, u16 q_idx)
+ {
+-	struct ice_aqc_add_tx_qgrp *qg_buf;
++	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
++	u16 size = __struct_size(qg_buf);
+ 	struct ice_q_vector *q_vector;
+ 	struct ice_tx_ring *tx_ring;
+ 	struct ice_rx_ring *rx_ring;
+-	u16 size;
+ 	int err;
+ 
+ 	if (q_idx >= vsi->num_rxq || q_idx >= vsi->num_txq)
+ 		return -EINVAL;
+ 
+-	size = struct_size(qg_buf, txqs, 1);
+-	qg_buf = kzalloc(size, GFP_KERNEL);
+-	if (!qg_buf)
+-		return -ENOMEM;
+-
+ 	qg_buf->num_txqs = 1;
+ 
+ 	tx_ring = vsi->tx_rings[q_idx];
+ 	rx_ring = vsi->rx_rings[q_idx];
+ 	q_vector = rx_ring->q_vector;
+ 
+ 	err = ice_vsi_cfg_txq(vsi, tx_ring, qg_buf);
+ 	if (err)
+-		goto free_buf;
++		return err;
+ 
+ 	if (ice_is_xdp_ena_vsi(vsi)) {
+ 		struct ice_tx_ring *xdp_ring = vsi->xdp_rings[q_idx];
+ 
+ 		memset(qg_buf, 0, size);
+ 		qg_buf->num_txqs = 1;
+ 		err = ice_vsi_cfg_txq(vsi, xdp_ring, qg_buf);
+ 		if (err)
+-			goto free_buf;
++			return err;
+ 		ice_set_ring_xdp(xdp_ring);
+ 		ice_tx_xsk_pool(vsi, q_idx);
+ 	}
+ 
+ 	err = ice_vsi_cfg_rxq(rx_ring);
+ 	if (err)
+-		goto free_buf;
++		return err;
+ 
+ 	ice_qvec_cfg_msix(vsi, q_vector);
+ 
+ 	err = ice_vsi_ctrl_one_rx_ring(vsi, true, q_idx, true);
+ 	if (err)
+-		goto free_buf;
++		return err;
+ 
+ 	clear_bit(ICE_CFG_BUSY, vsi->state);
+ 	ice_qvec_toggle_napi(vsi, q_vector, true);
+ 	ice_qvec_ena_irq(vsi, q_vector);
+ 
+ 	netif_tx_start_queue(netdev_get_tx_queue(vsi->netdev, q_idx));
+-free_buf:
+-	kfree(qg_buf);
+-	return err;
++
++	return 0;
+ }
+ 
+ /**
 -- 
 2.40.1
 
