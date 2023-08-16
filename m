@@ -2,82 +2,106 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 494DFC41513
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 20:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B03C25B7F
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 20:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346190AbjHPUjr (ORCPT
+        id S240915AbjHPUrS (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 16:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
+        Wed, 16 Aug 2023 16:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346194AbjHPUje (ORCPT
+        with ESMTP id S1346280AbjHPUrH (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 16:39:34 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A182701
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:39:32 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-2681223aaacso181114a91.0
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:39:32 -0700 (PDT)
+        Wed, 16 Aug 2023 16:47:07 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA39D2716
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:47:05 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-565f9b2f626so717085a12.0
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:47:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692218372; x=1692823172;
+        d=chromium.org; s=google; t=1692218825; x=1692823625;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M/VlrpLaLonWwvLdMHTbKBLWS+0ZwHTAviVzHTRR32g=;
-        b=b8C7A3fSaauDeX1Uma32OORq+lCiJhxdLrG3qjzQPV4bzX8r9TZ+BlQLwV8DkRl7g8
-         rOwidredzXHeJ/K7i7plM3yCqTPibNGdAO+aWx7ICPfAOm0vx/l2oGhIgC+QWVD9/mzy
-         XPyTkIHMldPIr/2pJWGhBYBVOcf2ZxZCPFUV0=
+        bh=xFQfU8aEhvmJ8mwzz0baeIXueaOetJfmys9es6pphgI=;
+        b=DGE1T9Sbej9zcyzxPncroG5xoKAEuMJ//ezL87vF3Oa3Bd2qLrgbqfpLpjcpD6/6tH
+         8w29PWs65ltgc3x7CDqLhbMrMhNgwssMWZk7+q8ou/SFj3ICsEmLGvZc74CkhkNy5rP/
+         DiBw4qqelMcXE0I9O+Y6RVA57NXXf/gEo17P0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692218372; x=1692823172;
+        d=1e100.net; s=20221208; t=1692218825; x=1692823625;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M/VlrpLaLonWwvLdMHTbKBLWS+0ZwHTAviVzHTRR32g=;
-        b=N56va2ewWnOzxfgJFuGaQsVa2nXFiyr9qdk1oMCedhLIVvE25QdF8U1PKTxBqM0ADs
-         0Vh16+Pq1r0k2pbTUCm0eSFu1hC3saDXaMdTvOMJem+MIGF35jNXXQrvYjMBtc+ygxZW
-         aysjBLh2dD+Qx4kVRxWBG9TQxqH2tBZlKuhKstKl+UJ4JZ6X3R9A4Ar5W+94Ubl09WnD
-         6zMA4LuU0Ns5lf2abImi9BFW7rU0okBUGcHHBaR43gIKSmGL6e1ulAh602JYNxVHvCyX
-         QerivSg0970jRmsss6gpR6Q3FzSB/z0X7KF42QkP7H5WztWHczdrOqd2xE2kev6vQ0ZF
-         G0WA==
-X-Gm-Message-State: AOJu0YyC3ajTN3Q9mjUSoVYc5XnZx2AYj0ji1NcYYvmeaWLxaEw+tXDM
-        4YF8VG+Xs91SFiAYHDQduiheHw==
-X-Google-Smtp-Source: AGHT+IFH3p8cu/k6sO/6dJ0jNC4lS5Gy9QpuuFjew2rQXbw+Jnrz4Trg8GNoh8Zj8AEI5qs6r8bbSg==
-X-Received: by 2002:a17:90a:e7c1:b0:268:808:8e82 with SMTP id kb1-20020a17090ae7c100b0026808088e82mr863439pjb.1.1692218372471;
-        Wed, 16 Aug 2023 13:39:32 -0700 (PDT)
+        bh=xFQfU8aEhvmJ8mwzz0baeIXueaOetJfmys9es6pphgI=;
+        b=FJzLa5IECh4RgzmWHpoCuRZ2UZBlZTvsdJ2UBuJL7NbE2isGP+DuR+KQK4A8QbWR6b
+         TcUIddPIgg9dYN11TEIRkDs2nd7wqcdIrjA4b0g3Ng7Vhv0POsW0ptduZmD65n+GKPgQ
+         gtHuh03XZlgDaN5nCmKnWt14FkGlOnW6QSZ4bCmDDrc+3Vpkdpc3vCao3U98P1oTIJT7
+         ipTYcvlLXC61pfhLRkywc/9Vb56t6rUanrPBak6jj3gbBUgaQz+aq+TCOIJTg+zEg5Ba
+         TZ/zHXVTEmxf1w9zoNvn/ypiZkmCtIcsl8AbIS0u6XvuAF7aKleWDmqWWWWRL73fTFvw
+         zSoA==
+X-Gm-Message-State: AOJu0Yw5GLzKRh2ROwJhqMJp00kA8TYIJq/JwumoIX3Pgc0H8cnGpvVd
+        kLkN0Cl7K/XG0/Mi85yDucamgQ==
+X-Google-Smtp-Source: AGHT+IES1w4tkDFKq5YcFhAKHa+deut5kxN8giMZyI/wU5w9EzUk6JiwbFumYG0twm1YJmzwvUs7mQ==
+X-Received: by 2002:a05:6a20:160b:b0:138:1c5b:24c3 with SMTP id l11-20020a056a20160b00b001381c5b24c3mr3917200pzj.49.1692218825365;
+        Wed, 16 Aug 2023 13:47:05 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a4-20020a17090acb8400b0025bd4db25f0sm142476pju.53.2023.08.16.13.39.32
+        by smtp.gmail.com with ESMTPSA id r17-20020a62e411000000b0068874e1faf2sm2359224pfh.56.2023.08.16.13.47.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Aug 2023 13:39:32 -0700 (PDT)
-Date:   Wed, 16 Aug 2023 13:39:31 -0700
+        Wed, 16 Aug 2023 13:47:04 -0700 (PDT)
+Date:   Wed, 16 Aug 2023 13:47:04 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Kalle Valo <kvalo@kernel.org>
+Cc:     Justin Stitt <justinstitt@google.com>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: bfa: Replace one-element array with
- flexible-array member in struct fc_rscn_pl_s
-Message-ID: <202308161339.C68DC815C@keescook>
-References: <ZN0VTpDBOSVHGayb@work>
+Subject: Re: [PATCH v2] wifi: ipw2x00: refactor to use kstrtoul
+Message-ID: <202308161346.23B40C1569@keescook>
+References: <20230802-wifi-ipw2x00-refactor-v2-1-d33f765e9cd5@google.com>
+ <202308040120.183400A04@keescook>
+ <87wmybjhyh.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZN0VTpDBOSVHGayb@work>
+In-Reply-To: <87wmybjhyh.fsf@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 16, 2023 at 12:28:30PM -0600, Gustavo A. R. Silva wrote:
-> One-element and zero-length arrays are deprecated. So, replace
-> one-element array in struct fc_rscn_pl_s with flexible-array member.
+On Fri, Aug 04, 2023 at 12:05:26PM +0300, Kalle Valo wrote:
+> Kees Cook <keescook@chromium.org> writes:
 > 
-> This results in no differences in binary output.
+> > On Wed, Aug 02, 2023 at 01:23:06AM +0000, Justin Stitt wrote:
+> >> The current implementation seems to reinvent what `kstrtoul` already does
+> >> in terms of functionality and error handling. Remove uses of `simple_strtoul()`
+> >> in favor of `kstrtoul()`.
+> >> 
+> >> There is the following note at `lib/vsprintf.c:simple_strtoull()` which
+> >> further backs this change:
+> >> | * This function has caveats. Please use kstrtoull (or kstrtoul) instead.
+> >> 
+> >> And here, simple_str* are explicitly deprecated [3].
+> >> 
+> >> This patch also removes an instance of the deprecated `strncpy` which helps [2].
+> >> 
+> >> Link: https://lore.kernel.org/all/202308011602.3CC1C0244C@keescook/ [1]
+> >> Link: https://github.com/KSPP/linux/issues/90 [2]
+> >> Link:
+> >> https://docs.kernel.org/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull
+> >> [3]
+> >> Cc: linux-hardening@vger.kernel.org
+> >> Suggested-by: Kees Cook <keescook@chromium.org>
+> >> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> >
+> > This looks correct to me. I would be curious to hear back from the intel
+> > folks if the interface continues to work correctly with real hardware.
+> >
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
 > 
-> Link: https://github.com/KSPP/linux/issues/339
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> This is ancient hardware, not sure if anyone even have a working setup.
+> And even if they would have one I doubt anyone uses this sysfs interface
+> for anything.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Just a quick ping; is this patch ready to land?
 
 -- 
 Kees Cook
