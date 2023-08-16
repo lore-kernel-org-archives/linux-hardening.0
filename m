@@ -2,47 +2,47 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6B2C04FDF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE013C001E0
 	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 14:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245702AbjHPOJ5 (ORCPT
+        id S245551AbjHPOJz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 10:09:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44730 "EHLO
+        Wed, 16 Aug 2023 10:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343521AbjHPOJ3 (ORCPT
+        with ESMTP id S1343517AbjHPOJ1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 10:09:29 -0400
+        Wed, 16 Aug 2023 10:09:27 -0400
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569232706;
-        Wed, 16 Aug 2023 07:09:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E65210D;
+        Wed, 16 Aug 2023 07:09:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692194968; x=1723730968;
+  t=1692194966; x=1723730966;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4GBf2EESOi7onKw3vz0dKPSBTjhZKbd/0pu82xSmftQ=;
-  b=UIQasxtDYFALXcedZmINjWDxK4o+6ewr3ppUcaQAyai6X8be9Ns5xjIY
-   XgIUyiAbE/dW2mcAQrAmW73ixCSt/AAYNOyDnIYw2bHWhE6qk0lWdWm/I
-   iYHCoxTWHYxJ5knGG2IYo3zBAHRI149OPGyVPKXbgaZEZD54D0h67f9p4
-   NdurTbdJYtnuTAqcv5f4nfKF+60KXtO/WpuJJxwNJS6BsMi5gDp+uZS2a
-   01hTONXPy6JQ/u8lEk6oFkBaVmQIu6NtBAc1wLhXoWqZhWGsd7qIDWp9s
-   1phCDiW4XZpcKGazs7jCRXSa9ePU6p315XQDXTvDNbX2TM7xpHBjf8Ut+
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="375312791"
+  bh=YAn+qFaH+cnaD9dMJiaWeGa/bW1pztO7/1R5Eu3mjwI=;
+  b=FGTsxv+0pF1E0WAhLjKLvtUGFbmI0xpoZ52/QdcS49NnENs6sIi01sZT
+   H5aCRKsMREK4dXgNsaokW4QDKWFhl0Vqh+u8CtkrWFO0Mrztq11+PLw1b
+   mNkHEiG7FLnRGXWATuwUdq9ueS6gl0qa1PPacEa9iUiEk6/SPmNdMEmIT
+   ykn/D2Oz9o+aufQH1VRFEEWGYJIHEtn4aO4ZowwAT8tYIP/ViVzR9d0qD
+   K0IQn108sQmWMj15FhItHpc0AyJjJ8bzcdQfaQ6wNCbd3wTQVD6pV/E45
+   wO8hQD9kMUv4k2dYnsgmXqdGbQbxAgM+lcJ5XkZMsl+5cqj9K7qdOUfaV
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="375312759"
 X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
-   d="scan'208";a="375312791"
+   d="scan'208";a="375312759"
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 07:09:27 -0700
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Aug 2023 07:09:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="980753075"
+X-IronPort-AV: E=McAfee;i="6600,9927,10803"; a="980753051"
 X-IronPort-AV: E=Sophos;i="6.01,177,1684825200"; 
-   d="scan'208";a="980753075"
+   d="scan'208";a="980753051"
 Received: from irvmail002.ir.intel.com ([10.43.11.120])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Aug 2023 07:09:24 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 16 Aug 2023 07:09:21 -0700
 Received: from pelor.igk.intel.com (pelor.igk.intel.com [10.123.220.13])
-        by irvmail002.ir.intel.com (Postfix) with ESMTP id 71DFD34EF3;
-        Wed, 16 Aug 2023 15:09:23 +0100 (IST)
+        by irvmail002.ir.intel.com (Postfix) with ESMTP id E171234EE8;
+        Wed, 16 Aug 2023 15:09:20 +0100 (IST)
 From:   Przemek Kitszel <przemyslaw.kitszel@intel.com>
 To:     Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org
 Cc:     Jacob Keller <jacob.e.keller@intel.com>,
@@ -50,9 +50,9 @@ Cc:     Jacob Keller <jacob.e.keller@intel.com>,
         Alexander Lobakin <aleksander.lobakin@intel.com>,
         linux-hardening@vger.kernel.org, Steven Zou <steven.zou@intel.com>,
         Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v3 5/7] ice: make use of DEFINE_FLEX() for struct ice_aqc_add_tx_qgrp
-Date:   Wed, 16 Aug 2023 10:06:21 -0400
-Message-Id: <20230816140623.452869-6-przemyslaw.kitszel@intel.com>
+Subject: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack allocs
+Date:   Wed, 16 Aug 2023 10:06:17 -0400
+Message-Id: <20230816140623.452869-2-przemyslaw.kitszel@intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
 References: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
@@ -62,147 +62,152 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Use DEFINE_FLEX() macro for 1-elem flex array use case
-of struct ice_aqc_add_tx_qgrp.
+Add DEFINE_FLEX() macro for on-stack allocations of structs with
+flexible array member.
 
+Expose __struct_size() macro outside of fortify-string.h, as it could be
+used to read size of structs allocated by DEFINE_FLEX().
+Move __member_size() alongside it.
+-Kees
+
+Using underlying array for on-stack storage lets us to declare
+known-at-compile-time structures without kzalloc().
+
+Actual usage for ice driver is in following patches of the series.
+
+Missing __has_builtin() workaround is moved up to serve also assembly
+compilation with m68k-linux-gcc, see [1].
+Error was (note the .S file extension):
+In file included from ../include/linux/linkage.h:5,
+                 from ../arch/m68k/fpsp040/skeleton.S:40:
+../include/linux/compiler_types.h:331:5: warning: "__has_builtin" is not defined, evaluates to 0 [-Wundef]
+  331 | #if __has_builtin(__builtin_dynamic_object_size)
+      |     ^~~~~~~~~~~~~
+../include/linux/compiler_types.h:331:18: error: missing binary operator before token "("
+  331 | #if __has_builtin(__builtin_dynamic_object_size)
+      |                  ^
+
+[1] https://lore.kernel.org/netdev/202308112122.OuF0YZqL-lkp@intel.com/
+Co-developed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
 ---
-add/remove: 0/2 grow/shrink: 2/2 up/down: 220/-255 (-35)
+v3: remove old macro needlessly kept in v2; fix build warning;
+    reword doc comment;
+v2: Kees: reuse __struct_size() instead of adding new macro
+    (adding Kees as Co-dev here);
+v1: change macro name; add macro for size read;
+    accept struct type instead of ptr to it; change alignment;
 ---
- drivers/net/ethernet/intel/ice/ice_lib.c | 23 +++++------------------
- drivers/net/ethernet/intel/ice/ice_xsk.c | 22 ++++++++--------------
- 2 files changed, 13 insertions(+), 32 deletions(-)
+ include/linux/compiler_types.h | 32 +++++++++++++++++++++-----------
+ include/linux/fortify-string.h |  4 ----
+ include/linux/overflow.h       | 20 ++++++++++++++++++++
+ 3 files changed, 41 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_lib.c b/drivers/net/ethernet/intel/ice/ice_lib.c
-index 927518fcad51..c005ee1006f1 100644
---- a/drivers/net/ethernet/intel/ice/ice_lib.c
-+++ b/drivers/net/ethernet/intel/ice/ice_lib.c
-@@ -1821,21 +1821,14 @@ int ice_vsi_cfg_single_rxq(struct ice_vsi *vsi, u16 q_idx)
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 547ea1ff806e..f706691fc5b9 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -2,6 +2,15 @@
+ #ifndef __LINUX_COMPILER_TYPES_H
+ #define __LINUX_COMPILER_TYPES_H
  
- int ice_vsi_cfg_single_txq(struct ice_vsi *vsi, struct ice_tx_ring **tx_rings, u16 q_idx)
- {
--	struct ice_aqc_add_tx_qgrp *qg_buf;
--	int err;
-+	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
- 
- 	if (q_idx >= vsi->alloc_txq || !tx_rings || !tx_rings[q_idx])
- 		return -EINVAL;
- 
--	qg_buf = kzalloc(struct_size(qg_buf, txqs, 1), GFP_KERNEL);
--	if (!qg_buf)
--		return -ENOMEM;
--
- 	qg_buf->num_txqs = 1;
- 
--	err = ice_vsi_cfg_txq(vsi, tx_rings[q_idx], qg_buf);
--	kfree(qg_buf);
--	return err;
-+	return ice_vsi_cfg_txq(vsi, tx_rings[q_idx], qg_buf);
- }
- 
- /**
-@@ -1877,24 +1870,18 @@ int ice_vsi_cfg_rxqs(struct ice_vsi *vsi)
- static int
- ice_vsi_cfg_txqs(struct ice_vsi *vsi, struct ice_tx_ring **rings, u16 count)
- {
--	struct ice_aqc_add_tx_qgrp *qg_buf;
--	u16 q_idx = 0;
-+	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
- 	int err = 0;
--
--	qg_buf = kzalloc(struct_size(qg_buf, txqs, 1), GFP_KERNEL);
--	if (!qg_buf)
--		return -ENOMEM;
-+	u16 q_idx;
- 
- 	qg_buf->num_txqs = 1;
- 
- 	for (q_idx = 0; q_idx < count; q_idx++) {
- 		err = ice_vsi_cfg_txq(vsi, rings[q_idx], qg_buf);
- 		if (err)
--			goto err_cfg_txqs;
-+			break;
- 	}
- 
--err_cfg_txqs:
--	kfree(qg_buf);
- 	return err;
- }
- 
-diff --git a/drivers/net/ethernet/intel/ice/ice_xsk.c b/drivers/net/ethernet/intel/ice/ice_xsk.c
-index 2a3f0834e139..99954508184f 100644
---- a/drivers/net/ethernet/intel/ice/ice_xsk.c
-+++ b/drivers/net/ethernet/intel/ice/ice_xsk.c
-@@ -217,61 +217,55 @@ static int ice_qp_dis(struct ice_vsi *vsi, u16 q_idx)
-  */
- static int ice_qp_ena(struct ice_vsi *vsi, u16 q_idx)
- {
--	struct ice_aqc_add_tx_qgrp *qg_buf;
-+	DEFINE_FLEX(struct ice_aqc_add_tx_qgrp, qg_buf, txqs, 1);
-+	u16 size = __struct_size(qg_buf);
- 	struct ice_q_vector *q_vector;
- 	struct ice_tx_ring *tx_ring;
- 	struct ice_rx_ring *rx_ring;
--	u16 size;
- 	int err;
- 
- 	if (q_idx >= vsi->num_rxq || q_idx >= vsi->num_txq)
- 		return -EINVAL;
- 
--	size = struct_size(qg_buf, txqs, 1);
--	qg_buf = kzalloc(size, GFP_KERNEL);
--	if (!qg_buf)
--		return -ENOMEM;
--
- 	qg_buf->num_txqs = 1;
- 
- 	tx_ring = vsi->tx_rings[q_idx];
- 	rx_ring = vsi->rx_rings[q_idx];
- 	q_vector = rx_ring->q_vector;
- 
- 	err = ice_vsi_cfg_txq(vsi, tx_ring, qg_buf);
- 	if (err)
--		goto free_buf;
-+		return err;
- 
- 	if (ice_is_xdp_ena_vsi(vsi)) {
- 		struct ice_tx_ring *xdp_ring = vsi->xdp_rings[q_idx];
- 
- 		memset(qg_buf, 0, size);
- 		qg_buf->num_txqs = 1;
- 		err = ice_vsi_cfg_txq(vsi, xdp_ring, qg_buf);
- 		if (err)
--			goto free_buf;
-+			return err;
- 		ice_set_ring_xdp(xdp_ring);
- 		ice_tx_xsk_pool(vsi, q_idx);
- 	}
- 
- 	err = ice_vsi_cfg_rxq(rx_ring);
- 	if (err)
--		goto free_buf;
-+		return err;
- 
- 	ice_qvec_cfg_msix(vsi, q_vector);
- 
- 	err = ice_vsi_ctrl_one_rx_ring(vsi, true, q_idx, true);
- 	if (err)
--		goto free_buf;
-+		return err;
- 
- 	clear_bit(ICE_CFG_BUSY, vsi->state);
- 	ice_qvec_toggle_napi(vsi, q_vector, true);
- 	ice_qvec_ena_irq(vsi, q_vector);
- 
- 	netif_tx_start_queue(netdev_get_tx_queue(vsi->netdev, q_idx));
--free_buf:
--	kfree(qg_buf);
--	return err;
++/*
++ * __has_builtin is supported on gcc >= 10, clang >= 3 and icc >= 21.
++ * In the meantime, to support gcc < 10, we implement __has_builtin
++ * by hand.
++ */
++#ifndef __has_builtin
++#define __has_builtin(x) (0)
++#endif
 +
-+	return 0;
- }
+ #ifndef __ASSEMBLY__
  
- /**
+ /*
+@@ -106,17 +115,6 @@ static inline void __chk_io_ptr(const volatile void __iomem *ptr) { }
+ #define __cold
+ #endif
+ 
+-/* Builtins */
+-
+-/*
+- * __has_builtin is supported on gcc >= 10, clang >= 3 and icc >= 21.
+- * In the meantime, to support gcc < 10, we implement __has_builtin
+- * by hand.
+- */
+-#ifndef __has_builtin
+-#define __has_builtin(x) (0)
+-#endif
+-
+ /* Compiler specific macros. */
+ #ifdef __clang__
+ #include <linux/compiler-clang.h>
+@@ -324,6 +322,18 @@ struct ftrace_likely_data {
+ # define __realloc_size(x, ...)
+ #endif
+ 
++/*
++ * When the size of an allocated object is needed, use the best available
++ * mechanism to find it. (For cases where sizeof() cannot be used.)
++ */
++#if __has_builtin(__builtin_dynamic_object_size)
++#define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
++#define __member_size(p)	__builtin_dynamic_object_size(p, 1)
++#else
++#define __struct_size(p)	__builtin_object_size(p, 0)
++#define __member_size(p)	__builtin_object_size(p, 1)
++#endif
++
+ #ifndef asm_volatile_goto
+ #define asm_volatile_goto(x...) asm goto(x)
+ #endif
+diff --git a/include/linux/fortify-string.h b/include/linux/fortify-string.h
+index da51a83b2829..1e7711185ec6 100644
+--- a/include/linux/fortify-string.h
++++ b/include/linux/fortify-string.h
+@@ -93,13 +93,9 @@ extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size)
+ #if __has_builtin(__builtin_dynamic_object_size)
+ #define POS			__pass_dynamic_object_size(1)
+ #define POS0			__pass_dynamic_object_size(0)
+-#define __struct_size(p)	__builtin_dynamic_object_size(p, 0)
+-#define __member_size(p)	__builtin_dynamic_object_size(p, 1)
+ #else
+ #define POS			__pass_object_size(1)
+ #define POS0			__pass_object_size(0)
+-#define __struct_size(p)	__builtin_object_size(p, 0)
+-#define __member_size(p)	__builtin_object_size(p, 1)
+ #endif
+ 
+ #define __compiletime_lessthan(bounds, length)	(	\
+diff --git a/include/linux/overflow.h b/include/linux/overflow.h
+index f9b60313eaea..34de97ea9e8e 100644
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -309,4 +309,24 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
+ #define struct_size_t(type, member, count)					\
+ 	struct_size((type *)NULL, member, count)
+ 
++/**
++ * DEFINE_FLEX() - Define an on-stack instance of structure with a trailing
++ * flexible array member.
++ *
++ * @type: structure type name, including "struct" keyword.
++ * @name: Name for a variable to define.
++ * @member: Name of the array member.
++ * @count: Number of elements in the array; must be compile-time const.
++ *
++ * Define a zeroed, on-stack, instance of @type structure with a trailing
++ * flexible array member.
++ * Use __struct_size(@name) to get compile-time size of it afterwards.
++ */
++#define DEFINE_FLEX(type, name, member, count)					\
++	union {									\
++		u8 bytes[struct_size_t(type, member, count)];			\
++		type obj;							\
++	} name##_u __aligned(_Alignof(type)) = {};				\
++	type *name = (type *)&name##_u
++
+ #endif /* __LINUX_OVERFLOW_H */
 -- 
 2.40.1
 
