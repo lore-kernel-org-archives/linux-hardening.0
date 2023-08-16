@@ -2,78 +2,95 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73ABAC07E8A
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 18:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9041C41513
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 18:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345490AbjHPSZ6 (ORCPT
+        id S1345103AbjHPS2G (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 14:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55796 "EHLO
+        Wed, 16 Aug 2023 14:28:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345559AbjHPSZs (ORCPT
+        with ESMTP id S1345603AbjHPS15 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 14:25:48 -0400
+        Wed, 16 Aug 2023 14:27:57 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 072DC1FE9;
-        Wed, 16 Aug 2023 11:25:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 939C92D62;
+        Wed, 16 Aug 2023 11:27:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8E20F608CC;
-        Wed, 16 Aug 2023 18:25:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7371FC433C7;
-        Wed, 16 Aug 2023 18:25:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E3C5165251;
+        Wed, 16 Aug 2023 18:27:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E4A6C433C8;
+        Wed, 16 Aug 2023 18:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692210342;
-        bh=PGLvjTPGnQm+GROAgyXYshu3/VEJnLo1CpFsWMm5OQo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i1ePwHAKuvO39X60Ic9NYicW9DGdSAWc3HSsZZPLLLwS/o3NB+keVCGwvhIbSy3yP
-         nonlABvnnxyalZrL0LfyoQ2MnC8kCLKTP6itI4d7FRJGmBpIi6BX/Hir5Suf2OTES5
-         C01ATOtVAOgSWvVfl/BsaA8NhVeB2LvNyR/vFGdkMvUsShbnbNZ3Jt4/QAnjV/6H81
-         XjSgqfKJRaIthMdZG5gwVVEibkYFpYZnw8qNLA39XDA+H0vG+8L0Xg8JSZL1j7D/to
-         zfltabRF5CU7Ufy97t+gLJGnfH256UIY4dW0PrfAJxCNE8xGIBxvH5Ycy7DHhbDJQI
-         JgPlYD5Ql0z3w==
-From:   Will Deacon <will@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Justin Stitt <justinstitt@google.com>
-Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
-        linux-hardening@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] arm64/sysreg: refactor deprecated strncpy
-Date:   Wed, 16 Aug 2023 19:25:26 +0100
-Message-Id: <169219745619.1953789.14665350088563020811.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230811-strncpy-arch-arm64-v2-1-ba84eabffadb@google.com>
-References: <20230811-strncpy-arch-arm64-v2-1-ba84eabffadb@google.com>
+        s=k20201202; t=1692210449;
+        bh=Fg2XRsx4gyYp75jugZem87t39C7lGAKLhehiSRy0yPE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=uBGQJT8EM5FdwmbALcSATSzwZ1asOC8rvnZWoKy5nxj+nC2k1P9eA0JXFmGi6rPbp
+         YvgiImdy/e7sdRF+iSNGW9KiKi7uZIjtPj0XJGf8v7qvGvQ+qxOfVnbe3qxvIuotF6
+         uLj3GnB+Ii1Tf++aO/gI1vo+Azi44l6dvkyzpk7fMxm1e/6ue5dfLsYrEH92e9gYPp
+         En76RXbuPa/Szz65A5vgarSYK/iMGdyKNrZ1cyCzR5xUnsHo7i0pPuXaUXTaH+pnz7
+         fVz/T5KSl8zt6a5gdVP7GqCklvdogVi5dUoV+wBxxkGI65AJDlbbhjp5X4DsmWM4mM
+         niJPe7KmPSjQw==
+Date:   Wed, 16 Aug 2023 12:28:30 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH][next] scsi: bfa: Replace one-element array with
+ flexible-array member in struct fc_rscn_pl_s
+Message-ID: <ZN0VTpDBOSVHGayb@work>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 11 Aug 2023 16:33:51 +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings
-> [1]. Which seems to be the case here due to the forceful setting of `buf`'s
-> tail to 0.
-> 
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on its destination buffer argument which is
-> _not_ the case for `strncpy`!
-> 
-> [...]
+One-element and zero-length arrays are deprecated. So, replace
+one-element array in struct fc_rscn_pl_s with flexible-array member.
 
-Applied to arm64 (for-next/misc), thanks!
+This results in no differences in binary output.
 
-[1/1] arm64/sysreg: refactor deprecated strncpy
-      https://git.kernel.org/arm64/c/d232606773a0
+Link: https://github.com/KSPP/linux/issues/339
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/scsi/bfa/bfa_fc.h      | 2 +-
+ drivers/scsi/bfa/bfa_fcbuild.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Cheers,
+diff --git a/drivers/scsi/bfa/bfa_fc.h b/drivers/scsi/bfa/bfa_fc.h
+index a12d693065ce..1091aa428533 100644
+--- a/drivers/scsi/bfa/bfa_fc.h
++++ b/drivers/scsi/bfa/bfa_fc.h
+@@ -800,7 +800,7 @@ struct fc_rscn_pl_s {
+ 	u8	command;
+ 	u8	pagelen;
+ 	__be16	payldlen;
+-	struct fc_rscn_event_s event[1];
++	struct fc_rscn_event_s event[];
+ };
+ 
+ /*
+diff --git a/drivers/scsi/bfa/bfa_fcbuild.c b/drivers/scsi/bfa/bfa_fcbuild.c
+index 773c84af784c..52303e8c716d 100644
+--- a/drivers/scsi/bfa/bfa_fcbuild.c
++++ b/drivers/scsi/bfa/bfa_fcbuild.c
+@@ -1051,7 +1051,7 @@ fc_rscn_build(struct fchs_s *fchs, struct fc_rscn_pl_s *rscn,
+ 	rscn->event[0].format = FC_RSCN_FORMAT_PORTID;
+ 	rscn->event[0].portid = s_id;
+ 
+-	return sizeof(struct fc_rscn_pl_s);
++	return struct_size(rscn, event, 1);
+ }
+ 
+ u16
 -- 
-Will
+2.34.1
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
