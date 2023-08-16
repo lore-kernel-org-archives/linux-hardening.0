@@ -2,106 +2,105 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B03C25B7F
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 20:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F47C41513
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 20:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240915AbjHPUrS (ORCPT
+        id S236659AbjHPUt2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 16:47:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46318 "EHLO
+        Wed, 16 Aug 2023 16:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346280AbjHPUrH (ORCPT
+        with ESMTP id S1346291AbjHPUtQ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 16:47:07 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA39D2716
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:47:05 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-565f9b2f626so717085a12.0
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:47:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692218825; x=1692823625;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xFQfU8aEhvmJ8mwzz0baeIXueaOetJfmys9es6pphgI=;
-        b=DGE1T9Sbej9zcyzxPncroG5xoKAEuMJ//ezL87vF3Oa3Bd2qLrgbqfpLpjcpD6/6tH
-         8w29PWs65ltgc3x7CDqLhbMrMhNgwssMWZk7+q8ou/SFj3ICsEmLGvZc74CkhkNy5rP/
-         DiBw4qqelMcXE0I9O+Y6RVA57NXXf/gEo17P0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692218825; x=1692823625;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xFQfU8aEhvmJ8mwzz0baeIXueaOetJfmys9es6pphgI=;
-        b=FJzLa5IECh4RgzmWHpoCuRZ2UZBlZTvsdJ2UBuJL7NbE2isGP+DuR+KQK4A8QbWR6b
-         TcUIddPIgg9dYN11TEIRkDs2nd7wqcdIrjA4b0g3Ng7Vhv0POsW0ptduZmD65n+GKPgQ
-         gtHuh03XZlgDaN5nCmKnWt14FkGlOnW6QSZ4bCmDDrc+3Vpkdpc3vCao3U98P1oTIJT7
-         ipTYcvlLXC61pfhLRkywc/9Vb56t6rUanrPBak6jj3gbBUgaQz+aq+TCOIJTg+zEg5Ba
-         TZ/zHXVTEmxf1w9zoNvn/ypiZkmCtIcsl8AbIS0u6XvuAF7aKleWDmqWWWWRL73fTFvw
-         zSoA==
-X-Gm-Message-State: AOJu0Yw5GLzKRh2ROwJhqMJp00kA8TYIJq/JwumoIX3Pgc0H8cnGpvVd
-        kLkN0Cl7K/XG0/Mi85yDucamgQ==
-X-Google-Smtp-Source: AGHT+IES1w4tkDFKq5YcFhAKHa+deut5kxN8giMZyI/wU5w9EzUk6JiwbFumYG0twm1YJmzwvUs7mQ==
-X-Received: by 2002:a05:6a20:160b:b0:138:1c5b:24c3 with SMTP id l11-20020a056a20160b00b001381c5b24c3mr3917200pzj.49.1692218825365;
-        Wed, 16 Aug 2023 13:47:05 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id r17-20020a62e411000000b0068874e1faf2sm2359224pfh.56.2023.08.16.13.47.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Aug 2023 13:47:04 -0700 (PDT)
-Date:   Wed, 16 Aug 2023 13:47:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Kalle Valo <kvalo@kernel.org>
-Cc:     Justin Stitt <justinstitt@google.com>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wed, 16 Aug 2023 16:49:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E80270A;
+        Wed, 16 Aug 2023 13:49:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 87CC866E90;
+        Wed, 16 Aug 2023 20:49:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D3CC433C7;
+        Wed, 16 Aug 2023 20:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692218954;
+        bh=QhCtYfiJ9yBB45D2p9WLrwsVABEKS7Yy1YuV43E9miY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YYXkS7RB8V3DfstWtUpMXDOwDYXeMsme42+Th5r4ciFC0XHeDyeC7yF4yYkYL07/C
+         nh0H0ixa8/E7G4o1KWy6KTS8nleyaYZtjrS7n4zThJPNxlCtWphu0/2DhJ5rvcsUvv
+         En5Lftv7G82VY6EbMAhd5R3/zd4tAM1waeqV6gQoy1tId82G3vhZVS0g7Cykqw0YIo
+         v5E75hT3CuCBL6At1WU8zcw51jtWTKCiDDFTrfok/IQYQeMm5HDb7A3xSXhd1OTJVa
+         Z6LAoF13N3IclI8WX5Srfdpvbivd+9Obz4BV31xaxjM3qLo/VpO7DzI1G88iSfnx6v
+         j/rUi8HQTs2UQ==
+Date:   Wed, 16 Aug 2023 14:50:16 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2] wifi: ipw2x00: refactor to use kstrtoul
-Message-ID: <202308161346.23B40C1569@keescook>
-References: <20230802-wifi-ipw2x00-refactor-v2-1-d33f765e9cd5@google.com>
- <202308040120.183400A04@keescook>
- <87wmybjhyh.fsf@kernel.org>
+Subject: [PATCH v2][next] cgroup: Avoid -Wstringop-overflow warnings
+Message-ID: <ZN02iLcZYgxHFrEN@work>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87wmybjhyh.fsf@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 12:05:26PM +0300, Kalle Valo wrote:
-> Kees Cook <keescook@chromium.org> writes:
-> 
-> > On Wed, Aug 02, 2023 at 01:23:06AM +0000, Justin Stitt wrote:
-> >> The current implementation seems to reinvent what `kstrtoul` already does
-> >> in terms of functionality and error handling. Remove uses of `simple_strtoul()`
-> >> in favor of `kstrtoul()`.
-> >> 
-> >> There is the following note at `lib/vsprintf.c:simple_strtoull()` which
-> >> further backs this change:
-> >> | * This function has caveats. Please use kstrtoull (or kstrtoul) instead.
-> >> 
-> >> And here, simple_str* are explicitly deprecated [3].
-> >> 
-> >> This patch also removes an instance of the deprecated `strncpy` which helps [2].
-> >> 
-> >> Link: https://lore.kernel.org/all/202308011602.3CC1C0244C@keescook/ [1]
-> >> Link: https://github.com/KSPP/linux/issues/90 [2]
-> >> Link:
-> >> https://docs.kernel.org/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull
-> >> [3]
-> >> Cc: linux-hardening@vger.kernel.org
-> >> Suggested-by: Kees Cook <keescook@chromium.org>
-> >> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> >
-> > This looks correct to me. I would be curious to hear back from the intel
-> > folks if the interface continues to work correctly with real hardware.
-> >
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> 
-> This is ancient hardware, not sure if anyone even have a working setup.
-> And even if they would have one I doubt anyone uses this sysfs interface
-> for anything.
+Change the notation from pointer-to-array to pointer-to-pointer.
+With this, we avoid the compiler complaining about trying
+to access a region of size zero as an argument during function
+calls.
 
-Just a quick ping; is this patch ready to land?
+Address the following -Wstringop-overflow warnings seen when
+built with ARM architecture and aspeed_g4_defconfig configuration
+(notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
 
+kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+
+This results in no differences in binary output.
+
+Link: https://github.com/KSPP/linux/issues/316
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+Changes in v2:
+ - Use pointer-to-pointer instead of pointer-to-array.
+ - Update changelog text.
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/ZIpm3pcs3iCP9UaR@work/
+
+ kernel/cgroup/cgroup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index ccbbba06da5b..68e2d9812e3f 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -929,7 +929,7 @@ static void css_set_move_task(struct task_struct *task,
+ #define CSS_SET_HASH_BITS	7
+ static DEFINE_HASHTABLE(css_set_table, CSS_SET_HASH_BITS);
+ 
+-static unsigned long css_set_hash(struct cgroup_subsys_state *css[])
++static unsigned long css_set_hash(struct cgroup_subsys_state **css)
+ {
+ 	unsigned long key = 0UL;
+ 	struct cgroup_subsys *ss;
+@@ -1070,7 +1070,7 @@ static bool compare_css_sets(struct css_set *cset,
+  */
+ static struct css_set *find_existing_css_set(struct css_set *old_cset,
+ 					struct cgroup *cgrp,
+-					struct cgroup_subsys_state *template[])
++					struct cgroup_subsys_state **template)
+ {
+ 	struct cgroup_root *root = cgrp->root;
+ 	struct cgroup_subsys *ss;
 -- 
-Kees Cook
+2.34.1
+
