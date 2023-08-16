@@ -2,103 +2,85 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56F5C27C42
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 20:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9399C25B7D
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 20:58:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229672AbjHPUz5 (ORCPT
+        id S1346289AbjHPU5h (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 16:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46734 "EHLO
+        Wed, 16 Aug 2023 16:57:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346330AbjHPUzo (ORCPT
+        with ESMTP id S1346322AbjHPU5S (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 16:55:44 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D8F2724
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:55:43 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-56546b45f30so5401246a12.3
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:55:43 -0700 (PDT)
+        Wed, 16 Aug 2023 16:57:18 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C852711
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:57:17 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-26b44247123so3092142a91.2
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:57:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692219342; x=1692824142;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=C00XHrqX2JehVx2BBEXfXecV7OVkf6gSj4eigV0sDaQ=;
-        b=Wd+2qwQqJLbcXOZfZxHK7QeYcunXx/JB1n8i5nb0p6eHz8dT9PSiVtuZHXF9om1+hX
-         afleLuXxjUJI+9b6oL+ivcB0pCk60ar2sDz6igfDLeBu8b+zpuhIB3GoyLlDBFfcGP0S
-         eF8L6NfDlEdKuwAYRfjUf1/T0y843DHuXwRPM=
+        d=chromium.org; s=google; t=1692219437; x=1692824237;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PTnRjDgF03Eifi7sf3kpv96X0kZ1CgBBnY922J5YppA=;
+        b=YrnJuLkKAUI9GOoFGUyMxaW0N4JvwWCdrMEG+WXxw28UwGdvMagNkGayO+D+VNRv7W
+         tdSXtKKS34K9MQ4zDTHtW6q2rQmnBOa1Cm/YWl1qMYvmdTxQHD3MejqhxJNse7BFpFZ4
+         taJO9DBM9v9B7HzFifZ/3iQ27MxXyE1MvyhG4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692219342; x=1692824142;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C00XHrqX2JehVx2BBEXfXecV7OVkf6gSj4eigV0sDaQ=;
-        b=RfpxDbijxEx1vPngeO+ET0O+tO6IxMHX5i5CTVow87G+4rraDXNl85GCXsptT6tgTL
-         sTpQFoyUcMA+1cXuhMKGdnZAV2Icc/FPVhjIAyl1JxvKlBegNQ+bHx+IF71TO17W7kds
-         ZEaMRf7ojYDaj7YzrRmElnGbEdwmtLFKejE325SyQZQ0SPDKfuxMRzKe5/RN+vAXoBVs
-         z/0o9048pUmRB2ewIuJzg1e6u0ewot/50tYIQhvMPjjnkJ5JKjiS8ZZWW4GU9dEUUZ3f
-         ITI3sUf5q5sz45Me9RddOsEOdGRaPvLZO7BSH4dsBoZgwI0Zt4d2KiYZy0haSYeAU/x7
-         U6IA==
-X-Gm-Message-State: AOJu0Yy16D01r+KHXLpEl3FDbrlUnHv5c3HjK78bJ+ADF7e0ujCAIv5j
-        b+TS6GuffBGRK20BDYaZl5Ci7w==
-X-Google-Smtp-Source: AGHT+IHJW+AH5vlrIhdUlHgmZMHwz/lc7DRwSMYiYs0PBq1i1vK5obxcxfHOGdznenzbMzBFW6xmFA==
-X-Received: by 2002:a17:90a:d988:b0:262:f0e6:9e09 with SMTP id d8-20020a17090ad98800b00262f0e69e09mr2633351pjv.14.1692219342574;
-        Wed, 16 Aug 2023 13:55:42 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692219437; x=1692824237;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PTnRjDgF03Eifi7sf3kpv96X0kZ1CgBBnY922J5YppA=;
+        b=l0UAmUIyP5vuLyvJ047B3aeyrfShIQFTsDLliDhVbnMh5GOZUlZEAmwWBW41vdY/UK
+         zG31y25jVoYPtNAuLfBQTwb3xr1hLuR7o5s77bhVTkX6mOSJSQKlyWXuWW6YbSzLqVF/
+         8++1KTqjW2BhV3K5WzP97VQR87+3kW7RaaDq7C1bGJ5wUPW5hSXbYShJNegxuySFzQIo
+         GYDqo9Gjlrzz2swaBBdwBhMofLZPQeGZk3W/er5y5rLwf6YZ2BqCN5QYHcAg4AwLR82g
+         JtZfj1bVmOFT9PAkOB1F7d3LvmMVoAsfZYs4uAlYrCxDNoDFE4l3Dl1sHfaioVt9Hbjc
+         ILUA==
+X-Gm-Message-State: AOJu0YyuACY6hKpHOb0MktyOrUN0mXHES3Uy49YmEsQY9/wnRFeq9zy2
+        EP0COQDuQJeTjLLFs2uCnKKKhPE2aAjZYWyPLQ0=
+X-Google-Smtp-Source: AGHT+IG3SG9qeo0oZfUja9go8C9ZZOvux73Nr1ZbS1VQ53Pv2p6wh5BCDdxyWq4rcnvjgBR0dMyodw==
+X-Received: by 2002:a17:90a:e38a:b0:268:e43a:dbfd with SMTP id b10-20020a17090ae38a00b00268e43adbfdmr2746938pjz.1.1692219436996;
+        Wed, 16 Aug 2023 13:57:16 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 5-20020a17090a018500b0026b26181ac9sm178867pjc.14.2023.08.16.13.55.41
+        by smtp.gmail.com with ESMTPSA id rj6-20020a17090b3e8600b002680f0f2886sm158262pjb.12.2023.08.16.13.57.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Aug 2023 13:55:41 -0700 (PDT)
-Date:   Wed, 16 Aug 2023 13:55:41 -0700
+        Wed, 16 Aug 2023 13:57:16 -0700 (PDT)
+Date:   Wed, 16 Aug 2023 13:57:16 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Waqar Hameed <waqar.hameed@axis.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Wang Weiyang <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, gongruiqi1@huawei.com
-Subject: Re: [PATCH v2] iio: irsd200: fix -Warray-bounds bug in
- irsd200_trigger_handler
-Message-ID: <202308161355.9EC0D12C@keescook>
-References: <20230810035910.1334706-1-gongruiqi@huaweicloud.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] cgroup: Avoid -Wstringop-overflow warnings
+Message-ID: <202308161356.4AED47263E@keescook>
+References: <ZN02iLcZYgxHFrEN@work>
+ <ZN02wFqzvwP2JI-K@slm.duckdns.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230810035910.1334706-1-gongruiqi@huaweicloud.com>
+In-Reply-To: <ZN02wFqzvwP2JI-K@slm.duckdns.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 11:59:10AM +0800, GONG, Ruiqi wrote:
-> From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+On Wed, Aug 16, 2023 at 10:51:12AM -1000, Tejun Heo wrote:
+> Hello,
 > 
-> When compiling with gcc 13 with -Warray-bounds enabled:
+> On Wed, Aug 16, 2023 at 02:50:16PM -0600, Gustavo A. R. Silva wrote:
+> > Change the notation from pointer-to-array to pointer-to-pointer.
+> > With this, we avoid the compiler complaining about trying
+> > to access a region of size zero as an argument during function
+> > calls.
 > 
-> In file included from drivers/iio/proximity/irsd200.c:15:
-> In function ‘iio_push_to_buffers_with_timestamp’,
->     inlined from ‘irsd200_trigger_handler’ at drivers/iio/proximity/irsd200.c:770:2:
-> ./include/linux/iio/buffer.h:42:46: error: array subscript ‘int64_t {aka long long int}[0]’
-> is partly outside array bounds of ‘s16[1]’ {aka ‘short int[1]’} [-Werror=array-bounds=]
->    42 |                 ((int64_t *)data)[ts_offset] = timestamp;
->       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-> drivers/iio/proximity/irsd200.c: In function ‘irsd200_trigger_handler’:
-> drivers/iio/proximity/irsd200.c:763:13: note: object ‘buf’ of size 2
->   763 |         s16 buf = 0;
->       |             ^~~
-> 
-> The problem seems to be that irsd200_trigger_handler() is taking a s16
-> variable as an int64_t buffer. As Jonathan suggested [1], fix it by
-> extending the buffer to a two-element array of s64.
-> 
-> Link: https://github.com/KSPP/linux/issues/331
-> Link: https://lore.kernel.org/lkml/20230809181329.46c00a5d@jic23-huawei/ [1]
-> Fixes: 3db3562bc66e ("iio: Add driver for Murata IRS-D200")
-> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
+> Haha, I thought the functions were actually accessing the memory. This can't
+> be an intended behavior on the compiler's side, right?
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+I think it's a result of inlining -- the compiler ends up with a case
+where it looks like it might be possible to index a zero-sized array,
+but it is "accidentally safe".
 
 -- 
 Kees Cook
