@@ -2,105 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F47C41513
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 20:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97384C25B7F
+	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 20:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236659AbjHPUt2 (ORCPT
+        id S233467AbjHPUvG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 16:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59060 "EHLO
+        Wed, 16 Aug 2023 16:51:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346291AbjHPUtQ (ORCPT
+        with ESMTP id S1346346AbjHPUuz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 16:49:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E80270A;
-        Wed, 16 Aug 2023 13:49:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 87CC866E90;
-        Wed, 16 Aug 2023 20:49:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31D3CC433C7;
-        Wed, 16 Aug 2023 20:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692218954;
-        bh=QhCtYfiJ9yBB45D2p9WLrwsVABEKS7Yy1YuV43E9miY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=YYXkS7RB8V3DfstWtUpMXDOwDYXeMsme42+Th5r4ciFC0XHeDyeC7yF4yYkYL07/C
-         nh0H0ixa8/E7G4o1KWy6KTS8nleyaYZtjrS7n4zThJPNxlCtWphu0/2DhJ5rvcsUvv
-         En5Lftv7G82VY6EbMAhd5R3/zd4tAM1waeqV6gQoy1tId82G3vhZVS0g7Cykqw0YIo
-         v5E75hT3CuCBL6At1WU8zcw51jtWTKCiDDFTrfok/IQYQeMm5HDb7A3xSXhd1OTJVa
-         Z6LAoF13N3IclI8WX5Srfdpvbivd+9Obz4BV31xaxjM3qLo/VpO7DzI1G88iSfnx6v
-         j/rUi8HQTs2UQ==
-Date:   Wed, 16 Aug 2023 14:50:16 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] cgroup: Avoid -Wstringop-overflow warnings
-Message-ID: <ZN02iLcZYgxHFrEN@work>
+        Wed, 16 Aug 2023 16:50:55 -0400
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CB0E69
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:50:54 -0700 (PDT)
+Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-53482b44007so4248265a12.2
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 13:50:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1692219054; x=1692823854;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=650OmwVxQhOnYGaICLWTUamQxUV0K9BjBoiNw6Mvi7s=;
+        b=AAhdz9azJ1oAOOf7r6f4aE3P1aLiAOHPnMq4+DxUb4yM5ajY/ucvivDufZJOxlboY7
+         c3viPCAOkJ3YCxz2Vo8bORzF3++etXaHLM3oRt+Iqff9ZdAjX7OomlQdqVXASfnCjCDv
+         suv0aqwPc6Snw44IkYnm91dUUOMnppOT8gbp4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692219054; x=1692823854;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=650OmwVxQhOnYGaICLWTUamQxUV0K9BjBoiNw6Mvi7s=;
+        b=lovxggpql5qeQIJQypLUwerlry6MgAWUAa8Wp+zRz8uZaja0ge4Wt6cbu1a1NamSlF
+         79fuGbreCSd7GANNK0I+sCw0ZMWDH6rWu3wOhXKqNYvrl+ITmp2tATPQxwo7aBsXpIaP
+         Lq1Ds54sEdJDghGfhyM9GhUGQmBhVzEM5RHjsN+vY0GQtKg1hwYaxdXg5MquYKGAVAZu
+         ckRAUZICVMQYa7KlOrbCzkCOCUxpABqtaZrN8bC06WwOH8rMSolA/JSknhSIJcd71mnS
+         cqa6/RmBqA0SVU19GamNDpGucykaHkSSor5rLwI3NQnRl6fNHCzAR6jH8ISa/QpeV+3i
+         oDyw==
+X-Gm-Message-State: AOJu0YySpGE7VJN8bzrmQWySZUZFQjQLCFPo/UR8+JON1Yj09Mkikw0a
+        WmwNAllwXyxQQyxzGU67z8dWbw==
+X-Google-Smtp-Source: AGHT+IEqIC8uFB+T2j6STILQqPVJdg+D16nCj/MBp4iSoxLRvdmCGlOHHpk8KX1MHi22npP0pNJQgg==
+X-Received: by 2002:a05:6a20:a10e:b0:10f:52e2:49ec with SMTP id q14-20020a056a20a10e00b0010f52e249ecmr3698160pzk.53.1692219054128;
+        Wed, 16 Aug 2023 13:50:54 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id x7-20020a63b207000000b0055386b1415dsm12394737pge.51.2023.08.16.13.50.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Aug 2023 13:50:53 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Justin Stitt <justinstitt@google.com>
+Cc:     Kees Cook <keescook@chromium.org>, linux-um@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] um: vector: refactor deprecated strncpy
+Date:   Wed, 16 Aug 2023 13:50:50 -0700
+Message-Id: <169221904769.1235632.10910494392812070923.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230807-arch-um-drivers-v1-1-10d602c5577a@google.com>
+References: <20230807-arch-um-drivers-v1-1-10d602c5577a@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Change the notation from pointer-to-array to pointer-to-pointer.
-With this, we avoid the compiler complaining about trying
-to access a region of size zero as an argument during function
-calls.
+On Mon, 07 Aug 2023 18:22:30 +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on its destination buffer argument which is
+> _not_ the case for `strncpy`!
+> 
+> In this case, we are able to drop the now superfluous `... - 1`
+> instances because `strscpy` will automatically truncate the last byte by
+> setting it to a NUL byte if the source size exceeds the destination size
+> or if the source string is not NUL-terminated.
+> 
+> [...]
 
-Address the following -Wstringop-overflow warnings seen when
-built with ARM architecture and aspeed_g4_defconfig configuration
-(notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
+Applied to for-next/hardening, thanks!
 
-kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+[1/1] um: vector: refactor deprecated strncpy
+      https://git.kernel.org/kees/c/30bed99e0c63
 
-This results in no differences in binary output.
+Take care,
 
-Link: https://github.com/KSPP/linux/issues/316
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use pointer-to-pointer instead of pointer-to-array.
- - Update changelog text.
-
-v1:
- - Link: https://lore.kernel.org/linux-hardening/ZIpm3pcs3iCP9UaR@work/
-
- kernel/cgroup/cgroup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index ccbbba06da5b..68e2d9812e3f 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -929,7 +929,7 @@ static void css_set_move_task(struct task_struct *task,
- #define CSS_SET_HASH_BITS	7
- static DEFINE_HASHTABLE(css_set_table, CSS_SET_HASH_BITS);
- 
--static unsigned long css_set_hash(struct cgroup_subsys_state *css[])
-+static unsigned long css_set_hash(struct cgroup_subsys_state **css)
- {
- 	unsigned long key = 0UL;
- 	struct cgroup_subsys *ss;
-@@ -1070,7 +1070,7 @@ static bool compare_css_sets(struct css_set *cset,
-  */
- static struct css_set *find_existing_css_set(struct css_set *old_cset,
- 					struct cgroup *cgrp,
--					struct cgroup_subsys_state *template[])
-+					struct cgroup_subsys_state **template)
- {
- 	struct cgroup_root *root = cgrp->root;
- 	struct cgroup_subsys *ss;
 -- 
-2.34.1
+Kees Cook
 
