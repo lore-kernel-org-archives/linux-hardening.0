@@ -2,80 +2,103 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A72CC678DF
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 23:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C28C678DF
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 23:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232987AbjHQXkh (ORCPT
+        id S244338AbjHQXri (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 19:40:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35344 "EHLO
+        Thu, 17 Aug 2023 19:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356140AbjHQXk1 (ORCPT
+        with ESMTP id S1356335AbjHQXrX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 19:40:27 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA7730DF
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:40:26 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bf1935f6c2so2570375ad.1
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:40:26 -0700 (PDT)
+        Thu, 17 Aug 2023 19:47:23 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ACCE3A89
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:46:54 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-689f9576babso301793b3a.0
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:46:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692315626; x=1692920426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1VCakgqASg3h9183qTuhRoaN+EGRR2UwJM9N77vDLR8=;
-        b=JImyrb2e/StN5NZPwiXTxfSJ8H055CDGNgN8XmqgLAwHdgHkLjLl8nifuytazbaktR
-         KVHi6Mjmxj4tA1TCxWnCf+IZFMrYPeX7quUzVyy4S0WUMnz967Gnwbu61lexaYJ4BJnm
-         JJQfrx1t/if1DjKRFaShzkrdejZxfqgN7prIk=
+        d=chromium.org; s=google; t=1692315942; x=1692920742;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5uC2JcHE9JS0c402i8ZIWy7dsF1n8BGwS1laDcefLsA=;
+        b=O+1WPWEnTzQpTY+DGfPtB1ZW78qPJcUhAtsz1fyoeSxwO0YBhezQhhZV4OrVMgoXna
+         /8U+/142TfXbfoDOXk7pdGwHMVRtbmkLk5NibSM3+ta3pI4Ip42jHoyuhhc331Pe8Sfa
+         KtkJ2TLRvCcTwfLTi3fSl7+HhNc9onncFRl6c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692315626; x=1692920426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1VCakgqASg3h9183qTuhRoaN+EGRR2UwJM9N77vDLR8=;
-        b=NR3OiFXrpl/9nvN0KHtt5g8yb2xGRYbG+Z7oDUpn575sAoai9CyDw/QxUxWgRUXSEP
-         mN4VIEgTbR2UJ945FBd5qlTfeJeZ3t43kIIS+72RsOmni0sjao+MbZyobtZ0/jA2cdvF
-         O7UjoH75HZmVtnbZf98m5cvP6qvKUrm2zdkbe2sXYIlW4gMB8vxBLU6VSfl012zWPi/U
-         eRgUlbvT4y9k2uMNukqKWVisboWQ3xX7+QndI+LiiGrzsXec9Vw7mubDJ4aCzUgTchRI
-         YTnFp0wBoxtXjAqZK3rLocY8q5LICo2QERHz33o/oxs/AZ4iN53bp6Pbnk0xLJexlbWN
-         1XcA==
-X-Gm-Message-State: AOJu0Yw/mmTfP5Dx7beSukOtyFE7TsitpKUS6jYg3BFp9kOiqzY3WLuj
-        C9vIvdGerTSz5Z3zZyEEyFjrNQ==
-X-Google-Smtp-Source: AGHT+IFPQt+NcgencYztvbHc+KfKgXvjSMi+thjcbfvjb/04TPsE7lu5R6RUGJ6v3UpZfG1jcgsgYQ==
-X-Received: by 2002:a17:902:e807:b0:1ba:fe6a:3845 with SMTP id u7-20020a170902e80700b001bafe6a3845mr966877plg.11.1692315625977;
-        Thu, 17 Aug 2023 16:40:25 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692315942; x=1692920742;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5uC2JcHE9JS0c402i8ZIWy7dsF1n8BGwS1laDcefLsA=;
+        b=R5G02qq9ceuMC3Zgb8DZIrOWvAcPzpNVNfv7F084s6Tt9csiFlbfAyOraq9lm7DtnC
+         gzke31kQqnxJhcwBo+eD75KxBLn8unmJW2BzYvQQ+p7wO+pML0pNs6DYI4UnsoTEHscB
+         rttOehwoB6HcoaSqIxWjzFcZZbNu4kwy2ub1gfg/X8Fgd8VntUIuLJykLBKPw4z9jMLS
+         hWHSS6y7Vw/1kZn4LBXiOCGo1ztuoALkZkESW7rx5LYJ7d+4oOpvV87vJn20dxCa0T9Z
+         ay2LzjwbIZ9BPrIAuaKq69J6x7aPEWXeqm62GfWtLk7zlRtOeHV1VuTOSBvXEgJEtSFq
+         mGMA==
+X-Gm-Message-State: AOJu0Yw5MCwSaqHB51dVeJ7UIQ5wzf3vAEQ+MjkGP1kM+VbP2uXU0gXj
+        t5bcJNA4H2TKwD9iEFv9KIxoAA==
+X-Google-Smtp-Source: AGHT+IHe89dMi3ZUn4C0h1cSLBafpmTmzM1zOOlc+5Q1brzsHi0/qSgClzIWnusxY0Snmv6vLwisjA==
+X-Received: by 2002:a05:6a20:4a28:b0:13d:ea25:9656 with SMTP id fr40-20020a056a204a2800b0013dea259656mr944606pzb.60.1692315941870;
+        Thu, 17 Aug 2023 16:45:41 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 19-20020a170902c11300b001afd821c057sm336599pli.58.2023.08.17.16.40.24
+        by smtp.gmail.com with ESMTPSA id a20-20020aa78654000000b00689f8dc26c2sm299020pfo.133.2023.08.17.16.45.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 16:40:25 -0700 (PDT)
-Date:   Thu, 17 Aug 2023 16:40:24 -0700
+        Thu, 17 Aug 2023 16:45:41 -0700 (PDT)
+Date:   Thu, 17 Aug 2023 16:45:40 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Yuxiao Zhang <yuxiaozhang@google.com>
-Cc:     Tony Luck <tony.luck@intel.com>,
-        "'Guilherme G . Piccoli'" <gpiccoli@igalia.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wak@google.com
-Subject: Re: [PATCH] pstore: ramoops: support pmsg size larger than kmalloc
- limitation
-Message-ID: <202308171639.B97420B5@keescook>
-References: <20230630205358.3601280-1-yuxiaozhang@google.com>
- <20230718202347.3320812-1-yuxiaozhang@google.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] Compiler Attributes: counted_by: Adjust name and
+ identifier expansion
+Message-ID: <202308171644.156176C@keescook>
+References: <20230817200558.never.077-kees@kernel.org>
+ <CANiq72=-DL0NV0zJrrzLmK77e6FALSupH4N-i-vfg8WrZdPDcQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230718202347.3320812-1-yuxiaozhang@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72=-DL0NV0zJrrzLmK77e6FALSupH4N-i-vfg8WrZdPDcQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Jul 18, 2023 at 01:23:47PM -0700, Yuxiao Zhang wrote:
-> Friendly ping, any update on this?
+On Fri, Aug 18, 2023 at 12:06:15AM +0200, Miguel Ojeda wrote:
+> On Thu, Aug 17, 2023 at 10:06 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > GCC and Clang's current RFCs name this attribute "counted_by", and have
+> > moved away from using a string for the member name. Update the kernel's
+> > macros to match. Additionally provide a UAPI no-op macro for UAPI structs
+> > that will gain annotations.
+> >
+> > Cc: Miguel Ojeda <ojeda@kernel.org>
+> > Cc: Nick Desaulniers <ndesaulniers@google.com>
+> > Fixes: dd06e72e68bc ("Compiler Attributes: Add __counted_by macro")
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Looks good to me, thanks. Perhaps we should split the UAPI bit into a
+> second patch.
 
-Hi! I finally got a chance to look this over. I added a few more
-kvzalloc() uses to generalize this for all records (not just pmsg), and
-it's testing well. Here's the resulting commit:
+I'd like to keep the UAPI part -- that was an oversight when I first
+added it.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/pstore&id=104fd0b5e948157f8e8ac88a20b46ba8641d4e95
+> I can take it into my tree; otherwise if you need this elsewhere:
+> 
+>     Acked-by: Miguel Ojeda <ojeda@kernel.org>
+
+Thanks! It'd be slightly easier for me if it was is my tree, so I'll
+grab your Ack. :) Let me know if you'd prefer it otherwise.
+
+-Kees
 
 -- 
 Kees Cook
