@@ -2,166 +2,129 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E7C64EBC
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19005C64EB4
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355025AbjHQVAf (ORCPT
+        id S235476AbjHQVBJ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 17:00:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50622 "EHLO
+        Thu, 17 Aug 2023 17:01:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355191AbjHQVA0 (ORCPT
+        with ESMTP id S1355122AbjHQVBG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 17:00:26 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE1B35A9
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 14:00:24 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-6889078ee66so216161b3a.0
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 14:00:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692306023; x=1692910823;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xhLwc7xQLPESRCxP9cY2dRoWyo/uIWL5/zNyN8Kqxec=;
-        b=EnAKlgW8FYD5e6HhBU+4lBzbTLRh96q9G/sfwmuHxDIy/fPFXW6cK3VzECXmuWV83M
-         Ry2Ca5T0UeXdBnJ4PQk6OAEqPwCNt7a4Czs7zFaEarG0jIUwI+0eQf7qooIlMktdsMao
-         2dA62Aryoy/83VDJ7XVp6jPTap/jRA04DmAmM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692306023; x=1692910823;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xhLwc7xQLPESRCxP9cY2dRoWyo/uIWL5/zNyN8Kqxec=;
-        b=mFE3uX2rkXKiXNjpFfcn2KS24YDTFr3mLk+XMKwci3vdVG+tVdgY7YmvP1DEMqOT4H
-         VHYXermyEP4oBrBSNLjAEpXZie5N0Zf5ARb+NFMplf5KEGnRFs3hcdOhJIkkachIVust
-         svPnPiHuoJcvA/qhrbe6yjfZ+FupBzVIrQzufdKfLgoNiEpkfMybr3BIDb9QhR5ZnjDH
-         8DPGPeo5PzKhOgJtM5n8/M+hWVILeumDQz6ISrVYfyDywhJG5w109ltOuToD2amftvGX
-         eWRWyBhnPq7kuv7uZrsygd5gn5f9erkUZ4d0XJQ+uIDO/YnWOnFSmx3TS8TjPUrQv5N3
-         rUBg==
-X-Gm-Message-State: AOJu0YxdSIxtXtuZ7zfcKkBB+veUJQGfkDYtr8v1jeIFerrtNd62oQZR
-        vsvSAk/CiwFaWM5O6ol/jOy7iA==
-X-Google-Smtp-Source: AGHT+IEBApN15WOV5S+yy1lPD2G37EeX+VsF/wDV48HSCd3SmjrIkyLYMIXgOcLc9eFnr2LOrEbroA==
-X-Received: by 2002:a05:6a00:846:b0:686:290b:91f7 with SMTP id q6-20020a056a00084600b00686290b91f7mr751465pfk.22.1692306023451;
-        Thu, 17 Aug 2023 14:00:23 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j25-20020aa78d19000000b0063b96574b8bsm180644pfe.220.2023.08.17.14.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 14:00:23 -0700 (PDT)
-Date:   Thu, 17 Aug 2023 14:00:22 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] Compiler Attributes: counted_by: Adjust name and
- identifier expansion
-Message-ID: <202308171400.4A37659A2D@keescook>
-References: <20230817200558.never.077-kees@kernel.org>
- <20230817201304.GA2714089@dev-arch.thelio-3990X>
+        Thu, 17 Aug 2023 17:01:06 -0400
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 109CBD3
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 14:01:04 -0700 (PDT)
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+        by cmsmtp with ESMTP
+        id WhOeqFI7jDKaKWk76qC2yC; Thu, 17 Aug 2023 21:01:04 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id Wk75qbIoMD5qiWk76qWOW8; Thu, 17 Aug 2023 21:01:04 +0000
+X-Authority-Analysis: v=2.4 cv=dMe1JcVb c=1 sm=1 tr=0 ts=64de8a90
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=YHBjgijmaD4FytE/JAxc5g4bMOnGx8oPkzLVVzXQwAs=; b=q5lYgpZG+tU76CLdUEYkkiVf+S
+        BIebq3Cjo897BpcjNlsYVrKBbsY5B+eu8hvya6JcvMe8GtUj7t5QQg+e8wD2pAP4ivkuUU3mcmmWU
+        1RNI/4p1FgRvP+oMLP5ELITHCBg0/paYSvsoXNQ2XCa9d3YuQelQyDm+9SBywqPB/lQVbxEarXPmi
+        oRnCVVFl2xvM/YTE4iNf4F7uHDuYROAPxj7wpbrJhXVYUghd5HhZ5PxjjtZ/VxFBM5gWDAXcAEp7a
+        LP5NZipgWQrw+Gx0msH93SAlVYX19wpVoFacSieCxjQO4Gyq7NEKTYkhZJY4DVNLGoWtg+sE5dJ7V
+        UCk/SDPA==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:38296 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qWk74-001RIE-0e;
+        Thu, 17 Aug 2023 16:01:02 -0500
+Message-ID: <75830fc8-82a6-6cf2-059d-4bea0fd4ed45@embeddedor.com>
+Date:   Thu, 17 Aug 2023 15:01:59 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230817201304.GA2714089@dev-arch.thelio-3990X>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] interconnect: Annotate struct icc_path with __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Georgi Djakov <djakov@kernel.org>
+Cc:     linux-pm@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230817204144.never.605-kees@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230817204144.never.605-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qWk74-001RIE-0e
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:38296
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNESjKvsOS3UMGRorzNE4XDO15Ed3vDiU0ZXEdLCz6tPLz1J/B57SldJ6pFus5HiiQfUArgkFbRgKSe2BbSdjpN4mVrp6M4az0ZDw23xr84X3UID/UZX
+ VNY/j9D+qcbyKLGtWGgchtCPFnsmeNLqyWaqU09rFnF8Oeyip0t7NaYnrMW3RnOzfFy7o2axXMo/f19qLAi3D1EytGgZkrsExRKcP1DRKvYxbmPLILsGqa9M
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 01:13:04PM -0700, Nathan Chancellor wrote:
-> On Thu, Aug 17, 2023 at 01:06:03PM -0700, Kees Cook wrote:
-> > GCC and Clang's current RFCs name this attribute "counted_by", and have
-> > moved away from using a string for the member name. Update the kernel's
-> > macros to match. Additionally provide a UAPI no-op macro for UAPI structs
-> > that will gain annotations.
-> > 
-> > Cc: Miguel Ojeda <ojeda@kernel.org>
-> > Cc: Nick Desaulniers <ndesaulniers@google.com>
-> > Fixes: dd06e72e68bc ("Compiler Attributes: Add __counted_by macro")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
-> 
-> One comment below.
-> 
-> > ---
-> >  include/linux/compiler_attributes.h | 26 +++++++++++++-------------
-> >  include/uapi/linux/stddef.h         |  4 ++++
-> >  2 files changed, 17 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
-> > index 00efa35c350f..74716a407aac 100644
-> > --- a/include/linux/compiler_attributes.h
-> > +++ b/include/linux/compiler_attributes.h
-> > @@ -94,6 +94,19 @@
-> >  # define __copy(symbol)
-> >  #endif
-> >  
-> > +/*
-> > + * Optional: only supported since gcc >= 14
-> > + * Optional: only supported since clang >= 17
-> 
-> Since you are in the area, should the supported clang version be
-> optimistically updated to '18'? 17.x has already branched and I suspect
-> it would be too late in the release cycle to cherry-pick that change
-> from main if it were landed today (which seems pretty unlikely, given
-> there do not appear to be many reviews from high profile clang folks
-> yet).
 
-Oops, yes. Excellent point. I'll bump this to 18.
 
--Kees
-
+On 8/17/23 14:41, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> > + *
-> > + *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-> > + * clang: https://reviews.llvm.org/D148381
-> > + */
-> > +#if __has_attribute(__counted_by__)
-> > +# define __counted_by(member)		__attribute__((__counted_by__(member)))
-> > +#else
-> > +# define __counted_by(member)
-> > +#endif
-> > +
-> >  /*
-> >   * Optional: not supported by gcc
-> >   * Optional: only supported since clang >= 14.0
-> > @@ -129,19 +142,6 @@
-> >  # define __designated_init
-> >  #endif
-> >  
-> > -/*
-> > - * Optional: only supported since gcc >= 14
-> > - * Optional: only supported since clang >= 17
-> > - *
-> > - *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
-> > - * clang: https://reviews.llvm.org/D148381
-> > - */
-> > -#if __has_attribute(__element_count__)
-> > -# define __counted_by(member)		__attribute__((__element_count__(#member)))
-> > -#else
-> > -# define __counted_by(member)
-> > -#endif
-> > -
-> >  /*
-> >   * Optional: only supported since clang >= 14.0
-> >   *
-> > diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
-> > index 7837ba4fe728..7c3fc3980881 100644
-> > --- a/include/uapi/linux/stddef.h
-> > +++ b/include/uapi/linux/stddef.h
-> > @@ -45,3 +45,7 @@
-> >  		TYPE NAME[]; \
-> >  	}
-> >  #endif
-> > +
-> > +#ifndef __counted_by
-> > +#define __counted_by(m)
-> > +#endif
-> > -- 
-> > 2.34.1
-> > 
+> As found with Coccinelle[1], add __counted_by for struct icc_path.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Georgi Djakov <djakov@kernel.org>
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
--- 
-Kees Cook
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks
+--
+Gustavo
+
+> ---
+>   drivers/interconnect/internal.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/interconnect/internal.h b/drivers/interconnect/internal.h
+> index f5f82a5c939e..b30856db523d 100644
+> --- a/drivers/interconnect/internal.h
+> +++ b/drivers/interconnect/internal.h
+> @@ -38,7 +38,7 @@ struct icc_req {
+>   struct icc_path {
+>   	const char *name;
+>   	size_t num_nodes;
+> -	struct icc_req reqs[];
+> +	struct icc_req reqs[] __counted_by(num_nodes);
+>   };
+>   
+>   #endif
