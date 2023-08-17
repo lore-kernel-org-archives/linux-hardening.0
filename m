@@ -2,82 +2,77 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03B2C61DB2
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 20:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF99C64E78
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 20:29:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354831AbjHQUWw (ORCPT
+        id S1349839AbjHQU3Z (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 16:22:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54662 "EHLO
+        Thu, 17 Aug 2023 16:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354810AbjHQUWX (ORCPT
+        with ESMTP id S1354880AbjHQU3S (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 16:22:23 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF466359D
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:22:21 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-689f1e81293so171051b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:22:21 -0700 (PDT)
+        Thu, 17 Aug 2023 16:29:18 -0400
+Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5D512C
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:29:17 -0700 (PDT)
+Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-5694a117254so146255a12.0
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692303741; x=1692908541;
+        d=chromium.org; s=google; t=1692304157; x=1692908957;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CQWTQHtC1ITha/tOEZ9DX/iOFJ3wpSlHPk0KGWIN+BE=;
-        b=IAxdc2j2QTjPlPywoE11+AaxM9vPILUqMj103UtiRZvlm2AdOrRBhW08TzXFxh0CSF
-         9VkutAjQVk5ucHl7yCtFEuzSfZGMCxSOn8dIsc6tM5bm1daac88Mc+OTJAs0t2MfOs3h
-         NnGcACX1ls5v6sgq2427aZRJqr2eK92x6n+w0=
+        bh=UBC0kyACp6cZakr+/LVmBs8MHr/PelOvdSb/J30Xonc=;
+        b=D3BLvgRIzTueG23XC0/di+/pbRKmgOg9JH+UkYD5kCvW0hFBHl7MTDaUBOFP1+Hmim
+         Em2szVmnvj7xaNBUHKCmEdkGhdqhcaKTRDwaZlPA9FycY+p9OoI87eKnsS5usZ1T5r8c
+         rw6/n9HNCHlpT+2i2UO2k9c/G/pwFCqGcjN9Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692303741; x=1692908541;
+        d=1e100.net; s=20221208; t=1692304157; x=1692908957;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CQWTQHtC1ITha/tOEZ9DX/iOFJ3wpSlHPk0KGWIN+BE=;
-        b=bYoezUa75Di88P4WTapOLwa9mrz92pcsBpEB/zvD/fXxM0KFH8XfuK03MM51ADEsVd
-         /hRz1/BqZLEsTTo/YvUahQkj1Ck8y6HmAwpH/Hmimyzc7UqJNn61JEQ3NW/dvJotEUfR
-         PNVsnf8c4B3Yl9UJbJixXtS8T4VXnAi1m9Nbh/CKCXR5v134sx4dxfYRKgrwEMjxA9Ch
-         NSLsLtWDyM1IUyCKtA4tozkRqcRo0M6tVlKLOnVVKognxjgI2/vLrvqxSwfejGDuliv/
-         EAf/72KWL8cHAjTJrlXRWzDph18QVCqGMdDKotardWg7nPmqOAvuGBEsJWpnCWrZC80q
-         W5sQ==
-X-Gm-Message-State: AOJu0YwXF/POZG+iQIVZNGzydeNqcZdafUKwRNM5HbJh80NQFD7uyqxW
-        n0Xae2a2mZMrfBQYn5n3Uk71dw==
-X-Google-Smtp-Source: AGHT+IH0a7s6AYYQXpvO0xlNMu3ZvWTFwdxg4ZxRGN+ufbgm5n14hckHsT5PGrY2DP6SM76vFO1geQ==
-X-Received: by 2002:a05:6a00:1952:b0:686:7621:5494 with SMTP id s18-20020a056a00195200b0068676215494mr681891pfk.27.1692303741176;
-        Thu, 17 Aug 2023 13:22:21 -0700 (PDT)
+        bh=UBC0kyACp6cZakr+/LVmBs8MHr/PelOvdSb/J30Xonc=;
+        b=g34UBZyAedI4g55w2Fh9lq7utOZOS+gs0Hecski5uy4SvLz3zwk2LLyCERhZ+1VD28
+         oIF7KWg2legWcG1/B9ld+rWq8M8MUpzdssRro9DeiYGw1N1VBpkyaQe68JepwOhf/ama
+         Hrb31N3w8VnrM3QFO/XtjNNE1WmIJNo+RTUExp7iCzCdR4fyd4qN43y/acGXLwTL4Uax
+         43wej0lptG0xtAOplt9h/Ca5cV9AJCVaDuZewcVV2b+Vtz74CAHuqbQOSXl4YGJBt+rJ
+         PJT3mXIeJnwlS/YjDo8DSO7Jtwis/lc0W4oC5ReaGpK7Z9kjdAn7oCYuCDOm46v8K6Yc
+         xcnw==
+X-Gm-Message-State: AOJu0Yzaa2MqyauUdYsGomwd7cELratleOBNm1MVsr6ytEBhEOF/qFcp
+        8uzxBxcjVez68c/3y/emcxBC62XctPjqpG1bxZw=
+X-Google-Smtp-Source: AGHT+IE7lenirKPXRZ81vsUg+uiz21E6QGGGQWt45oeRx5Z2P4xIkRjz8TrSA5QwtdIXR+cRojXk/Q==
+X-Received: by 2002:a05:6a00:24c6:b0:687:7b0a:fae4 with SMTP id d6-20020a056a0024c600b006877b0afae4mr860075pfv.0.1692304157183;
+        Thu, 17 Aug 2023 13:29:17 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t4-20020a62ea04000000b006884844dfcasm168593pfh.20.2023.08.17.13.22.20
+        by smtp.gmail.com with ESMTPSA id f8-20020a633808000000b0055c02b8688asm104792pga.20.2023.08.17.13.29.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 13:22:20 -0700 (PDT)
+        Thu, 17 Aug 2023 13:29:16 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
+To:     Georgi Djakov <djakov@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        "GONG, Ruiqi" <gongruiqi1@huawei.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] selinux: Annotate struct sidtab_str_cache with __counted_by
-Date:   Thu, 17 Aug 2023 13:22:17 -0700
-Message-Id: <20230817202210.never.014-kees@kernel.org>
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: [PATCH] interconnect: icc-clk: Annotate struct icc_clk_provider with __counted_by
+Date:   Thu, 17 Aug 2023 13:29:15 -0700
+Message-Id: <20230817202914.never.661-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1268; i=keescook@chromium.org;
- h=from:subject:message-id; bh=5Z4+8RXLjnXvukVAkS7m5m0h4iQubudAZnU60GhPgXg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk3oF5KSG7/oZzgaaPj8L+TfV6vQF49o7iTLsqc
- CsYE4XVyXKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN6BeQAKCRCJcvTf3G3A
- JgINEACRVV1slxrlC0ri8tUBcUXOZbMOJUzsOq8h62tcR9gcOtuvpI2j7ncVYE2gzQMF/lfe2EM
- eFkQuRsXwRWYkINbr5swbgpGKslbMiORIP/wAcv/7LDEKBlnYDP87Oko3qg83DdFUCgfrc+9rYX
- 1CPvNfgia4Ch+n1glNONk16VQ18zFnOdzIdmD7XXKVBpMSgz3nhHhmzfEDKwpPJcMryd/4KOglv
- mtxax6VU5t0XHzhLHpbQyzsrkvRGJoDa7kVMqahwhEvAFCnQq7cRi/c4CQulbhmivf/ptML/DtB
- 5bCKzdZQjuTw5dOTvB7Q+2O1Gbfov/jbt5Wxaz9axEH83pcM/BWxpzLU62KolOZ5Mf5N8GvPBMI
- HbU1WtKFmctbKwjRwkZaa5LzGtg50Sc8Y7E087X/3CqERSG8rg1Wb16y+2Jeo344hhpfTW99DY4
- +H4zIrXdT8z/JpFr/jur1LOuspwfoqFP4Cu80UX44Y/7G4PokWHijVukaYR5jRCF0/YAKc5DaWg
- p65cb1RgbhovtG1xRdv1vbk7A/4Goi9Tx5OqyydDqw08ma9/HXD0rzkvVVaRNZJ8fuQt6CmCTrX
- 5QoJhPToUTVGWVeYgfz5yWWL5UUos+kmjpgvPL+xAAyvufz60SoS4NyB6/UwhkS2YdIgiFV3Fpi
- tH6g9Ya 25O81AvQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1168; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=V/JCGKhhIUvYMZwINl/W0cWShIAE6EyAXc3VChYyI48=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk3oMbZWS6f4Gn2UrbPx823jib67w4/eDfzQkNc
+ 8O/6ildBgOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN6DGwAKCRCJcvTf3G3A
+ Jmt3EACiQyI5QLyRqha/vGjQqFJOXqtFjcN9mt/F/ayeNCxUvPbrt8FYFRLgRht8uX0saNCudAk
+ ke+mW9O8NefD1xoVSvt1W08jN/v+63aZ0yIQUnp/CLb3BV6SO33EWj22w77Hx7i7GgxyDIiVLnH
+ f9KLTAfoQnloXyk5vfFecdmKewwa2wAXVirnkGqVvw5GexvknXAdVAdgw+znrGu+Sc481EbV+hF
+ 2OoqpBQ33YctAqJUVTeg4HfoJLyEWBHH918kk1Q12U2oYUcf5aFd0wmJZsLjUefjBV5SvAZFZiZ
+ Cw2/ymHRWHOmJ0YMxp91JuL2x16H+ozABgmMlG88q72KfSg9UH0VSYn1mSPNQ2YhShAnA25/Sxc
+ M61r3jF+BiE9QChOPFriiV050W8RsVNMpX3RBqR19jThspygD4bd3xUqXfxJ8mOHl4AP5ykeURf
+ Fxa/RuWNGUXfy/6hD/v41uXp9+1IKom3zooPuGdoDeEhJ54CvvHrnyWH1pke6NndkibWPDK97MY
+ zo/0iDbdKXMFSdebJDWjWiCwe2Eabu8dkEb0ASCTA+bZaQzGB7jCt9de4wq8tCHEU1xRyxf4Ga/
+ /L9fMyRP9Karpe1y0LXyjLHU728TNd7iLQYn7g2EeFNwNz9Y5pzQW8taQ1Re1R0Vj33476iGUwh
+ 2d9k7+i FKtaJuTQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -90,33 +85,30 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct sidtab_str_cache.
+As found with Coccinelle[1], add __counted_by for struct icc_clk_provider.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc: Eric Paris <eparis@parisplace.org>
-Cc: Ondrej Mosnacek <omosnace@redhat.com>
-Cc: selinux@vger.kernel.org
+Cc: Georgi Djakov <djakov@kernel.org>
+Cc: linux-pm@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- security/selinux/ss/sidtab.c | 2 +-
+ drivers/interconnect/icc-clk.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/selinux/ss/sidtab.c b/security/selinux/ss/sidtab.c
-index d8ead463b8df..732fd8e22a12 100644
---- a/security/selinux/ss/sidtab.c
-+++ b/security/selinux/ss/sidtab.c
-@@ -25,7 +25,7 @@ struct sidtab_str_cache {
- 	struct list_head lru_member;
- 	struct sidtab_entry *parent;
- 	u32 len;
--	char str[];
-+	char str[] __counted_by(len);
+diff --git a/drivers/interconnect/icc-clk.c b/drivers/interconnect/icc-clk.c
+index 4d43ebff4257..d787f2ea36d9 100644
+--- a/drivers/interconnect/icc-clk.c
++++ b/drivers/interconnect/icc-clk.c
+@@ -16,7 +16,7 @@ struct icc_clk_node {
+ struct icc_clk_provider {
+ 	struct icc_provider provider;
+ 	int num_clocks;
+-	struct icc_clk_node clocks[];
++	struct icc_clk_node clocks[] __counted_by(num_clocks);
  };
  
- #define index_to_sid(index) ((index) + SECINITSID_NUM + 1)
+ #define to_icc_clk_provider(_provider) \
 -- 
 2.34.1
 
