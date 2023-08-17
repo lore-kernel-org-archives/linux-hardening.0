@@ -2,118 +2,80 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C621C27C44
-	for <linux-hardening@archiver.kernel.org>; Wed, 16 Aug 2023 21:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1F8C2FC0F
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 00:12:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346563AbjHPVkB (ORCPT
+        id S229481AbjHQAMA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 16 Aug 2023 17:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55502 "EHLO
+        Wed, 16 Aug 2023 20:12:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237039AbjHPVj2 (ORCPT
+        with ESMTP id S1347225AbjHQAMA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 16 Aug 2023 17:39:28 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD411FD0
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 14:39:27 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58d799aa369so7132537b3.0
-        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 14:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692221967; x=1692826767;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=dgfv9XpiXMzsq2kLywbyVX/AZp8i35sYGiNA5Uju+Tg=;
-        b=B3mPwfTrF1Ige4phc1lVSf7W1iqdnDLezfu/Ms6Scp4jsTZmzB8Vfhv4DjxvTlOZcs
-         tk9VlKRIXH/RwiRpno3xlRg+kYX83WMe3fSZqxLsQk8WKCjS3QrUPun6+6rZd3biMiEj
-         ZG5kCeCarobtr+BZHlkQj9h7xwP4ChxqgVGCxRNAks9MBaH2PoN9TO+DMTtcDE8Js0xd
-         33v65vYmTZ13eJmIkbsGN9AMOKxl5rl/FHmo+ofyFjDDjj5uScL02oYID9O494OUmQQa
-         ZMvGjuUfwo8WSY4vIfUiJkdlTULm7UYdPh65MmP5xyig/2Fz+behqtWgnayNAE3uRygV
-         KUJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692221967; x=1692826767;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dgfv9XpiXMzsq2kLywbyVX/AZp8i35sYGiNA5Uju+Tg=;
-        b=DnSeZCMNjESAv/k9JyItUG9WS9Z/50rYgD5DhGKGuFv933S/ecDEUVIq+wa+tcIMya
-         qap7GSiZPCf1V08wXKEvNT4ohMyXi9y81psdTmqECzS4A6njyYp8cJK7sojE6F8eIVuX
-         JwRYO6rX86/gmEhO5shK4D+4xf7KWKyMAdmyA05B8vvYMAHtuHV2fC+DsX8kbdRzqgfC
-         kCHwcR76nuaO8KYxWXm/JbVRNNatbukoJNXRS9bXg6ap/o4uxOSEV25+0oyiFUvw0nfE
-         QiJ5TZM/SP7ScmIa6mONMBDJKlUp6ecpEflwjfx+eZnfnTh2XSVf8xX9nC/vjaeD1y5W
-         PwSw==
-X-Gm-Message-State: AOJu0Yzozbd2PIkmTWZlVgl379fYpBmgHnB32fUl01yLLWIdGgsXVPmI
-        rNWWOVXcspqAwpZU6njadJSpqj8nskxqvVfehg==
-X-Google-Smtp-Source: AGHT+IEVHWg7faDJGpLl8t8qRgynXOF8x/oPuFyxnuV6asqFbVWol9ZvrF92XF57cIBZH1l24F8+JcpNC2abmYHuJg==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a81:ae66:0:b0:589:9ebc:4bfc with SMTP
- id g38-20020a81ae66000000b005899ebc4bfcmr41356ywk.9.1692221967232; Wed, 16
- Aug 2023 14:39:27 -0700 (PDT)
-Date:   Wed, 16 Aug 2023 21:39:24 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAAtC3WQC/x3NwQrCMAyA4VcZORtYW5zFVxEPpctcQNuQFHWMv
- bvF43f5/x2MlMngOuyg9GbjWjrcaYC8pvIg5Lkb/OjDGN2E1rRk2TBpXlHqh1QyyjO1perLUCy gklTjVnXDeE4ux+lCsw/Qm6K08Pf/u92P4wcoxlPwfwAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1692221966; l=1607;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=30eCBoYcInKFNOcnuhFfYjRixFwqc2selXbnOKgw6dI=; b=xDzKLH1yz1jxJwierFXeVLUgiJfBIeQIt+nXl5gaKMxMfmxMDGzOJZDP9cseijM4Ywj0ktUp1
- Q2cOTSB+/0pDQWF0iqwsPv7ZIS9SsHY6BJ5okfK8iTSE6218SV8h728
-X-Mailer: b4 0.12.3
-Message-ID: <20230816-strncpy-arch-powerpc-platforms-ps3-repository-v1-1-88283b02fb09@google.com>
-Subject: [PATCH] powerpc/ps3: refactor strncpy usage
-From:   Justin Stitt <justinstitt@google.com>
-To:     Geoff Levand <geoff@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Wed, 16 Aug 2023 20:12:00 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F36F3119;
+        Wed, 16 Aug 2023 17:11:56 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4RR55z4RDCz4wy3;
+        Thu, 17 Aug 2023 10:11:51 +1000 (AEST)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
+        Nathan Lynch <nathanl@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+In-Reply-To: <20230810-rtas-flash-vs-hardened-usercopy-v2-1-dcf63793a938@linux.ibm.com>
+References: <20230810-rtas-flash-vs-hardened-usercopy-v2-1-dcf63793a938@linux.ibm.com>
+Subject: Re: [PATCH v2] powerpc/rtas_flash: allow user copy to flash block cache objects
+Message-Id: <169223107895.375104.3687617958725578000.b4-ty@ellerman.id.au>
+Date:   Thu, 17 Aug 2023 10:11:18 +1000
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+On Thu, 10 Aug 2023 22:37:55 -0500, Nathan Lynch wrote:
+> With hardened usercopy enabled (CONFIG_HARDENED_USERCOPY=y), using the
+> /proc/powerpc/rtas/firmware_update interface to prepare a system
+> firmware update yields a BUG():
+> 
+> kernel BUG at mm/usercopy.c:102!
+> Oops: Exception in kernel mode, sig: 5 [#1]
+> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> Modules linked in:
+> CPU: 0 PID: 2232 Comm: dd Not tainted 6.5.0-rc3+ #2
+> Hardware name: IBM,8408-E8E POWER8E (raw) 0x4b0201 0xf000004 of:IBM,FW860.50 (SV860_146) hv:phyp pSeries
+> NIP:  c0000000005991d0 LR: c0000000005991cc CTR: 0000000000000000
+> REGS: c0000000148c76a0 TRAP: 0700   Not tainted  (6.5.0-rc3+)
+> MSR:  8000000000029033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24002242  XER: 0000000c
+> CFAR: c0000000001fbd34 IRQMASK: 0
+> [ ... GPRs omitted ... ]
+> NIP [c0000000005991d0] usercopy_abort+0xa0/0xb0
+> LR [c0000000005991cc] usercopy_abort+0x9c/0xb0
+> Call Trace:
+> [c0000000148c7940] [c0000000005991cc] usercopy_abort+0x9c/0xb0 (unreliable)
+> [c0000000148c79b0] [c000000000536814] __check_heap_object+0x1b4/0x1d0
+> [c0000000148c79f0] [c000000000599080] __check_object_size+0x2d0/0x380
+> [c0000000148c7a30] [c000000000045ed4] rtas_flash_write+0xe4/0x250
+> [c0000000148c7a80] [c00000000068a0fc] proc_reg_write+0xfc/0x160
+> [c0000000148c7ab0] [c0000000005a381c] vfs_write+0xfc/0x4e0
+> [c0000000148c7b70] [c0000000005a3e10] ksys_write+0x90/0x160
+> [c0000000148c7bc0] [c00000000002f2c8] system_call_exception+0x178/0x320
+> [c0000000148c7e50] [c00000000000d520] system_call_common+0x160/0x2c4
+> --- interrupt: c00 at 0x7fff9f17e5e4
+> 
+> [...]
 
-`make_first_field()` should use similar implementation to `make_field()`
-due to memcpy having more obvious behavior here. The end result yields
-the same behavior as the previous `strncpy`-based implementation
-including the NUL-padding.
+Applied to powerpc/fixes.
 
-Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
-Note:
-This follows up on a previous RFC which can be found here:
-https://lore.kernel.org/all/20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com/
----
- arch/powerpc/platforms/ps3/repository.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+[1/1] powerpc/rtas_flash: allow user copy to flash block cache objects
+      https://git.kernel.org/powerpc/c/4f3175979e62de3b929bfa54a0db4b87d36257a7
 
-diff --git a/arch/powerpc/platforms/ps3/repository.c b/arch/powerpc/platforms/ps3/repository.c
-index 205763061a2d..1abe33fbe529 100644
---- a/arch/powerpc/platforms/ps3/repository.c
-+++ b/arch/powerpc/platforms/ps3/repository.c
-@@ -73,9 +73,9 @@ static void _dump_node(unsigned int lpar_id, u64 n1, u64 n2, u64 n3, u64 n4,
- 
- static u64 make_first_field(const char *text, u64 index)
- {
--	u64 n;
-+	u64 n = 0;
- 
--	strncpy((char *)&n, text, 8);
-+	memcpy((char *)&n, text, strnlen(text, sizeof(n)));
- 	return PS3_VENDOR_ID_NONE + (n >> 32) + index;
- }
- 
-
----
-base-commit: 2ccdd1b13c591d306f0401d98dedc4bdcd02b421
-change-id: 20230816-strncpy-arch-powerpc-platforms-ps3-repository-85a1c867ed23
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
-
+cheers
