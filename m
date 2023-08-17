@@ -2,72 +2,67 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2076C64EB4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 20:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F07FC64EBC
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 20:59:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355043AbjHQU5T (ORCPT
+        id S1355069AbjHQU67 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 16:57:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51244 "EHLO
+        Thu, 17 Aug 2023 16:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355135AbjHQU5I (ORCPT
+        with ESMTP id S1355144AbjHQU6r (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 16:57:08 -0400
-Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E74F35BE
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:57:02 -0700 (PDT)
-Received: from eig-obgw-5001a.ext.cloudfilter.net ([10.0.29.139])
+        Thu, 17 Aug 2023 16:58:47 -0400
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0E7100
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:58:44 -0700 (PDT)
+Received: from eig-obgw-6001a.ext.cloudfilter.net ([10.0.30.140])
         by cmsmtp with ESMTP
-        id Wh24q1Z3gbK1VWk3BqdNof; Thu, 17 Aug 2023 20:57:02 +0000
+        id WgvwqdNcNEoVsWk4pq9ouF; Thu, 17 Aug 2023 20:58:43 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id Wk3BqPYunZReaWk3BqBapy; Thu, 17 Aug 2023 20:57:01 +0000
-X-Authority-Analysis: v=2.4 cv=WtA4jPTv c=1 sm=1 tr=0 ts=64de899d
+        id Wk4pq4pY0yB3AWk4pqDn7R; Thu, 17 Aug 2023 20:58:43 +0000
+X-Authority-Analysis: v=2.4 cv=UZlC9YeN c=1 sm=1 tr=0 ts=64de8a03
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=IpJZQVW2AAAA:8 a=cm27Pg_UAAAA:8
- a=vO73nbbZ3KiERqEehhIA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=cvBusfyB2V15izCimMoJ:22 a=IawgGOuG5U0WyFbmm1f5:22 a=xmb-EsYY8bH0VWELuYED:22
+ a=xVhDTqbCAAAA:8 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
+ a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10 a=GrmWmAYt4dzCMttCBZOh:22
+ a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=al2JraySz4Y/nPRNsqZbRF4Ul/8ysGw80iLcTMhMqyg=; b=RJc1tSlduq4F3dGL6LlDVnuap6
-        +bqyVurTa2rldyvuEFVel4+FHkb1+mkCzz0yARsiDbBm2lHDqYOOtOuWWiw7sfSE85uqivQazNw07
-        O0mwM1Nuc7gRH/9b8YFTyTA/sTZ5tvEg+1tXf2LvJfadtJn3vPqlKmdWezATiNrbK3T1b3P/kctWo
-        /8e8Ro5q/YWeNdkpKwIk2EDUBceBxMWviQTPavZ+N72YtLLTHhrAJxfJWm5utUr5FtEtkzytt3OsF
-        DQbQREDHTqCl5ca3eQnuLiagvUEtZ+mRcFlzP7sTW1QdsMNKWiLMU9o92CN1NpqijXSbNxfhxBh9D
-        BRzKKKIg==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:33092 helo=[192.168.15.8])
+        bh=QK5+XSk7+Wct2AffyLxNmzx6pirn15+jfPRh1mvX+Mw=; b=dsqPO8ni2pkAlyrwRzGlplPlMP
+        S8p5GFNG1Lun0m+l/taUZ9GySpWTrhPvMpv0uMxJfDqCP/6PiqWu/uWonmRLM6RLcDHlj5xVCAjkm
+        WFIY1ECkAp11DztXLybMs9hq0aXUCpToXgDdrSH0kW6a7/s8sqi2kKTCLxTCDM/jwWdZi19eI4pHg
+        MN58QTgPdq1G31rq1Ne03UZN0Gb+kR+xxVF9ktXp7zB5cpaIxHMQ6mWqbVMAkEDvi8mUNhLm9EYWs
+        /AemahcF1oPMZbOtdV4mF142ySoXZ2E057pVqNfoiOtQpRDm5h/iuQWz4MEfHu/Iv++fDSkn0iCOi
+        ziNRXIQw==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:36284 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qWk39-001NVy-0V;
-        Thu, 17 Aug 2023 15:56:59 -0500
-Message-ID: <7da75c68-9a5c-c8cb-2b52-543968568124@embeddedor.com>
-Date:   Thu, 17 Aug 2023 14:58:01 -0600
+        id 1qWk4o-001OYb-0q;
+        Thu, 17 Aug 2023 15:58:42 -0500
+Message-ID: <429e0417-67c3-0187-a588-ca53a3d6c9ff@embeddedor.com>
+Date:   Thu, 17 Aug 2023 14:59:44 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] clk: qcom: clk-spmi-pmic-div: Annotate struct
- spmi_pmic_div_clk_cc with __counted_by
+Subject: Re: [PATCH] audit: Annotate struct audit_chunk with __counted_by
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Bjorn Andersson <andersson@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+To:     Kees Cook <keescook@chromium.org>, Paul Moore <paul@paul-moore.com>
+Cc:     Eric Paris <eparis@redhat.com>, audit@vger.kernel.org,
+        Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230817202941.never.657-kees@kernel.org>
+References: <20230817203501.never.279-kees@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230817202941.never.657-kees@kernel.org>
+In-Reply-To: <20230817203501.never.279-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -78,42 +73,38 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qWk39-001NVy-0V
+X-Exim-ID: 1qWk4o-001OYb-0q
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:33092
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:36284
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 75
+X-Email-Count: 89
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfCqTOOGk0tGMliESnCEhfD3g5SIaiQkKP5zXHiZYDGTdNyaiiXn3bELwfoktzu58+OmJT46ghyqaqWuvSMNJJoek87Wv2BpVqCn2qOAFsCsYLq+U0arl
- ls86T/V8Ke8OzNfAhtvDcmqov9A11s1XMsgLL+6ZEqu1XYy3wTu8S1iu0PDWaq8lfu9mj8lX/jrf/VXLZMYfUvhj3XLO5n6L7/r3uVlPBoUvi5wsgprhK/c4
+X-CMAE-Envelope: MS4xfD7AA5EUreQOJXGhYh6artBJe0a9mmBCd3iuotPVC//MJpMRwh41bVEPg1epSM2g/nI+M3ACF2DfaQBqFDS4GEUmG6v5kE9ZlVOVEe3cbmbejeZadKcS
+ uKZv1lB7fr3BzCIkUVL1817ytuRz9cHzuF4uRpLhySc/Wxn6IFtxlRA9yhv+OSTSBn2YuVSfbZI5CthrI9heA/jRbgk72MCi9L7vDuAou8+XQ4Sv1g44vcwz
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 8/17/23 14:29, Kees Cook wrote:
+On 8/17/23 14:35, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct spmi_pmic_div_clk_cc.
+> As found with Coccinelle[1], add __counted_by for struct audit_chunk.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Bjorn Andersson <andersson@kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: Eric Paris <eparis@redhat.com>
+> Cc: audit@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
@@ -123,19 +114,19 @@ Thanks
 Gustavo
 
 > ---
->   drivers/clk/qcom/clk-spmi-pmic-div.c | 2 +-
+>   kernel/audit_tree.c | 2 +-
 >   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/clk/qcom/clk-spmi-pmic-div.c b/drivers/clk/qcom/clk-spmi-pmic-div.c
-> index f846be285f51..f394031eb0e5 100644
-> --- a/drivers/clk/qcom/clk-spmi-pmic-div.c
-> +++ b/drivers/clk/qcom/clk-spmi-pmic-div.c
-> @@ -177,7 +177,7 @@ static const struct clk_ops clk_spmi_pmic_div_ops = {
->   
->   struct spmi_pmic_div_clk_cc {
->   	int		nclks;
-> -	struct clkdiv	clks[];
-> +	struct clkdiv	clks[] __counted_by(nclks);
+> diff --git a/kernel/audit_tree.c b/kernel/audit_tree.c
+> index e867c17d3f84..85a5b306733b 100644
+> --- a/kernel/audit_tree.c
+> +++ b/kernel/audit_tree.c
+> @@ -34,7 +34,7 @@ struct audit_chunk {
+>   		struct list_head list;
+>   		struct audit_tree *owner;
+>   		unsigned index;		/* index; upper bit indicates 'will prune' */
+> -	} owners[];
+> +	} owners[] __counted_by(count);
 >   };
 >   
->   static struct clk_hw *
+>   struct audit_tree_mark {
