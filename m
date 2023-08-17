@@ -2,90 +2,130 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8ABC64EC0
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22BC677C4
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:49:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355366AbjHQV3L (ORCPT
+        id S244001AbjHQVst (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 17:29:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32872 "EHLO
+        Thu, 17 Aug 2023 17:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355363AbjHQV3F (ORCPT
+        with ESMTP id S1355495AbjHQVsi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 17:29:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 847ECE4F;
-        Thu, 17 Aug 2023 14:29:04 -0700 (PDT)
+        Thu, 17 Aug 2023 17:48:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741FF1FF3;
+        Thu, 17 Aug 2023 14:48:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 21CA5612C5;
-        Thu, 17 Aug 2023 21:29:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81EDAC433C7;
-        Thu, 17 Aug 2023 21:29:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ECC5B61AC3;
+        Thu, 17 Aug 2023 21:48:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7B3C433C8;
+        Thu, 17 Aug 2023 21:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692307743;
-        bh=pu3waJ+52jLBtjm+Y39NiJUqOKQayZwXXePPEArE9AI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=bICRVqnJyHLg+jeIiGrFkILp8a3EgQ6LR/Dt7tfBr9FnkVOmruqqR20Ik6AyUcYou
-         NN1KjzTugjI9u8cM3jT7vPXXHJEjSGfM/1rI11nxe3AQ4lGK/tChhDTY5doEghswcX
-         uo0b60xX1T3lQZ4cJHO+HYH/O3Uc5L3MRNaOYlRQCICxu7zPnodWxLbE5+thHcDPFz
-         lhrWUH9eyF6ZsOMC3F4kFnkNdk/2RNZIk4973l3R/Mq2+2i1oiyZr/1NOkH+c8i6VA
-         HWIIfyE82aRBMpb7IZAZg6Elx4Pw1+cChvchrgaofzin51r2xt/rRchC/3jJCvfNnv
-         aUZi459mGwywA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id 0ED4BCE0F13; Thu, 17 Aug 2023 14:29:03 -0700 (PDT)
-Date:   Thu, 17 Aug 2023 14:29:03 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Nikolay Borisov <nik.borisov@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        x86@kernel.org, peterz@infradead.org, keescook@chromium.org,
-        elver@google.com, dvyukov@google.com, glider@google.com
-Subject: Re: [BUG] missing return thunk: __ret+0x5/0x7e-__ret+0x0/0x7e: e9 f6
- ff ff ff
-Message-ID: <90910ec0-3e78-4036-980f-1cc114caee2d@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <4dc3d0ec-b827-4bce-8927-cfa5d837fd03@paulmck-laptop>
- <4500f9ad-6ecf-60a6-637d-694619ce4c15@suse.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4500f9ad-6ecf-60a6-637d-694619ce4c15@suse.com>
+        s=k20201202; t=1692308909;
+        bh=bexJ/xREDVWvZmu+lu8XL2wVApfsd/lRowROzQZizoc=;
+        h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+        b=DEBtayWkbf820tXs6npe3l1kydGysurs82ZhdJ046kH4/0n2Tga8dbgPpaWymLVVm
+         wbAh3DD/ZYklGV8PE9XptJijDDarWoCERbZglkf6nHXnzdPvmOTi3dDia1ZIqE1+1b
+         MHLA0S/dBZrzYmfEWqdLvRdZZpVxBKiDa/WqpZbVOtDXdFIctcoUUL6pHv8Xyizee8
+         4FgALKGCCGjpWKoBuOt8/yQUsLkcvL+g+IBo4Sz3ri7uWbsdAhgcEEirVzPGhV0tJ0
+         ddajm0l3zYAFXl2O4WCaJyftSIN9aFdV5pFLwBRaS13Yc9phxiI4wvVUdMZXKKGf4B
+         uCZl4IeEREStw==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 18 Aug 2023 00:48:24 +0300
+Message-Id: <CUV5FU612TVH.3U5BOWZR013CD@suppilovahvero>
+Cc:     "Dmitry Kasatkin" <dmitry.kasatkin@gmail.com>,
+        "Paul Moore" <paul@paul-moore.com>,
+        "James Morris" <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        "Nathan Chancellor" <nathan@kernel.org>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        "Tom Rix" <trix@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <llvm@lists.linux.dev>, <linux-hardening@vger.kernel.org>
+Subject: Re: [PATCH] integrity: Annotate struct ima_rule_opt_list with
+ __counted_by
+From:   "Jarkko Sakkinen" <jarkko@kernel.org>
+To:     "Kees Cook" <keescook@chromium.org>,
+        "Mimi Zohar" <zohar@linux.ibm.com>
+X-Mailer: aerc 0.14.0
+References: <20230817210327.never.598-kees@kernel.org>
+In-Reply-To: <20230817210327.never.598-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 11:49:52PM +0300, Nikolay Borisov wrote:
-> 
-> 
-> On 16.08.23 г. 20:54 ч., Paul E. McKenney wrote:
-> > Hello!
-> > 
-> > I hit the splat at the end of this message in recent mainline, and has
-> > appeared some time since v6.5-rc1.  Should I be worried?
-> > 
-> > Reproducer on a two-socket hyperthreaded 20-core-per-socket x86 system:
-> > 
-> > tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --duration 5m --torture refscale --kcsan --kconfig "CONFIG_NR_CPUS=40" --kmake-args "CC=clang" --bootargs "refscale.scale_type=typesafe_seqlock refscale.nreaders=40 refscale.loops=10000 refscale.holdoff=20 torture.disable_onoff_at_boot refscale.verbose_batched=5 torture.verbose_sleep_frequency=8 torture.verbose_sleep_duration=5"
-> > 
-> > This is from overnight testing that hit this only in the KCSAN runs.
-> > The KASAN and non-debug runs had no trouble.
-> > 
-> > This commit added the warning long ago:
-> > 
-> > 65cdf0d623be ("x86/alternative: Report missing return thunk details")
-> > 
-> > Thoughts?
-> > 
-> > 							Thanx, Paul
-> 
-> Likely fixed by the following commit in tip/urgen :
-> 4ae68b26c3ab5a82aa271e6e9fc9b1a06e1d6b40 [tip: x86/urgent] objtool/x86: Fix
-> SRSO mess
+On Fri Aug 18, 2023 at 12:03 AM EEST, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_b=
+y
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
+S
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+>
+> As found with Coccinelle[1], add __counted_by for struct ima_rule_opt_lis=
+t.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
+>
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
+ounted_by.cocci
+>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: linux-integrity@vger.kernel.org
+> Cc: linux-security-module@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  security/integrity/ima/ima_policy.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima=
+/ima_policy.c
+> index 69452b79686b..f69062617754 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -68,7 +68,7 @@ enum policy_rule_list { IMA_DEFAULT_POLICY =3D 1, IMA_C=
+USTOM_POLICY };
+> =20
+>  struct ima_rule_opt_list {
+>  	size_t count;
+> -	char *items[];
+> +	char *items[] __counted_by(count);
+>  };
+> =20
+>  /*
+> @@ -342,6 +342,7 @@ static struct ima_rule_opt_list *ima_alloc_rule_opt_l=
+ist(const substring_t *src)
+>  		kfree(src_copy);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+> +	opt_list->count =3D count;
+> =20
+>  	/*
+>  	 * strsep() has already replaced all instances of '|' with '\0',
+> @@ -357,7 +358,6 @@ static struct ima_rule_opt_list *ima_alloc_rule_opt_l=
+ist(const substring_t *src)
+>  		opt_list->items[i] =3D cur;
+>  		cur =3D strchr(cur, '\0') + 1;
+>  	}
+> -	opt_list->count =3D count;
+> =20
+>  	return opt_list;
+>  }
+> --=20
+> 2.34.1
 
-Thank you!  Given the "urgent", I am guessing that this is going
-upstream soon?
+Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-							Thanx, Paul
+BR, Jarkko
