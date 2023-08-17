@@ -2,121 +2,113 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0199EC3DA4E
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 16:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55806C41513
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 16:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352255AbjHQQdF (ORCPT
+        id S229560AbjHQQ5i (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 12:33:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38960 "EHLO
+        Thu, 17 Aug 2023 12:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353686AbjHQQco (ORCPT
+        with ESMTP id S1353802AbjHQQ5P (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 12:32:44 -0400
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9334B272B
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 09:32:43 -0700 (PDT)
-Received: by mail-oi1-x236.google.com with SMTP id 5614622812f47-3a800814122so3496976b6e.0
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 09:32:43 -0700 (PDT)
+        Thu, 17 Aug 2023 12:57:15 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F6A02D72
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 09:57:14 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bdaeb0f29aso31495ad.2
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 09:57:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mojatatu-com.20221208.gappssmtp.com; s=20221208; t=1692289963; x=1692894763;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S+vwsIIkApicUDYFNS7p6Sv0nA8tfIRKAQr/UoaAwtQ=;
-        b=0YyixNOhKxpiJUEKfO9Jahp9tCHjQ6Z4lZDOaoQdnQ6jXi66XBq2NQjBi9fKpsNNIu
-         ivs60Nom5cM0KemUBz9E23DmOnhsMFLA7C+SpMz4G5xkvstNeFz4ZAyZAsaVrMD8biPq
-         E1JKNPt6ZuB8IZ21HVzPzN4LvkuKd8jZgQiJJPUWvwHHuYew3eCBq0aHfA2xrxZLOZtI
-         B4uPk3YqT7EDIwVXAh1hyrktWzRLPy5COvpoJEHpV9ClIJ8G44phSUmY5eWjw1/VeCqk
-         cgMMyFbdXXawwRj36j0Fma4lVUP8XOL8/34ENz3ftQOZ05L5RXvmnxrj+VuPi5XU9gZ2
-         mmLw==
+        d=chromium.org; s=google; t=1692291433; x=1692896233;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5jBteD18pe63JA7nhN088a/1muJJtAStcr5mOX/vhfA=;
+        b=inaDJWW8I+mpguLQ2GzQ+qwcaoqTtUbPgrf2yHqs5EK4qwPc8SjXADrCpy+Bdvm4/M
+         g4OC019YJUkkXR6SDD0oQ34YAs9nBXEGo1ruWXaah+cJ4McdhIuZO8E440d7LE4bQyZK
+         K5BcOVdABp1xZcPvK16dsaIVjeI+sWF5uXi24=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692289963; x=1692894763;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S+vwsIIkApicUDYFNS7p6Sv0nA8tfIRKAQr/UoaAwtQ=;
-        b=ls7YEsSOX3XGt0xXTupIhgvX7DOr3LLl3Cac7GO8Z8NRC/+AmC6FF28tR1hnjTBkY6
-         4yTypJ8oIWVKi0AVtG+u8wImIb0aAevKkZjUi5rnsDDgwzbGEnF/dx0fZOPEHcfNhDL2
-         klne1KiVI0OH1UZlR3l5QiEr4eLHEpkc4lNXmGDGE3Tj78YNz4TxXx3OTA1gEWwdM7LN
-         iOXNxytw4ISH8JtPl1mVjK4hcTGyNOxQi1xO00trGVvFrT4oy14mFGgnyjT7Ix3PObj/
-         8yMBwAiCdk0G0jWvfsIW5QJ0olAFAgk0Hgr0YvZ6lSe3+rwLKThPQ5eb8PiO4/CMQhN2
-         Y8YQ==
-X-Gm-Message-State: AOJu0YziZGxFpOhd8T+ZK9QsckgOHm8ndCg58pXzIOdgZnUoMqIrYIm6
-        Yd27eK+Vt/bM8VMNMYr/+mmdw2DG9NU545kx0gpjBA==
-X-Google-Smtp-Source: AGHT+IFPKWksr+unyACwxPrN7wNn2ejufDgCpn6okIOqLFHF2UUxRjKicoGsY0oujrUyX1uKwjOQG70DCbI0QT1/t/U=
-X-Received: by 2002:a05:6358:9916:b0:129:c50d:6a37 with SMTP id
- w22-20020a056358991600b00129c50d6a37mr6032724rwa.16.1692289962822; Thu, 17
- Aug 2023 09:32:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <ZN5DvRyq6JNz20l1@work>
-In-Reply-To: <ZN5DvRyq6JNz20l1@work>
-From:   Jamal Hadi Salim <jhs@mojatatu.com>
-Date:   Thu, 17 Aug 2023 12:32:31 -0400
-Message-ID: <CAM0EoMmK0VK1=5SSHVm28zz2CUCamxJPXNukehqY955uP17VPQ@mail.gmail.com>
-Subject: Re: [PATCH][next] net: sched: cls_u32: Fix allocation in u32_init()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        d=1e100.net; s=20221208; t=1692291433; x=1692896233;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5jBteD18pe63JA7nhN088a/1muJJtAStcr5mOX/vhfA=;
+        b=WfwKBiYhWpx8vUrOSi5gaYwHjxr1RK+ECL30kH7rM1leVTPQWjPqOM+MBhrF5B5gLp
+         2zvJNTnLj8BXqr+HwTWmPYfQBoTgrUM3ovC4d6yrgHvlsxezfr4HusU7ToO8lx3Z7cT0
+         DJdirZl30SPfVopCJ84degbTbVsZ9Qq70YRJAwpt3z/WqnPXWt9ou09X1R2dmC4cL9LG
+         bv1OTmjfSPpJAL2mcffAcVVYFg6RMZJDoQHVrlU+RklVX+dLXjgCX48QE3eZnO1teRlZ
+         5wz3sO1jH8MAY274l4OLDlYD1XD5rG+Bjiws6v6HWiAhg90nW8C1lKul2YeJEmw08T3U
+         Pw5A==
+X-Gm-Message-State: AOJu0YyuezSgkQaCRs3PxD0Zr5jYj6+4KHt2cv7eMEr47VkRtWgVM4Sb
+        IPAZKetARSXhbzxdu5893FErSg==
+X-Google-Smtp-Source: AGHT+IGXiHai907yblQ4LJTd3jAsNR4lqc80bcNlEM4qD1hVRR/CqQRXK5Hyw8IoW/cXSZLVi5WANg==
+X-Received: by 2002:a17:903:2794:b0:1bb:c64f:9a5e with SMTP id jw20-20020a170903279400b001bbc64f9a5emr4769029plb.5.1692291433571;
+        Thu, 17 Aug 2023 09:57:13 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id jd17-20020a170903261100b001bf095dfb79sm2201447plb.235.2023.08.17.09.57.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Aug 2023 09:57:12 -0700 (PDT)
+Date:   Thu, 17 Aug 2023 09:57:12 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Brendan Higgins <brendan.higgins@linux.dev>,
+        David Gow <davidgow@google.com>,
+        Petr Skocik <pskocik@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jens Axboe <axboe@kernel.dk>, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Marco Elver <elver@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "haifeng.xu" <haifeng.xu@shopee.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] [RFC] signal: Add KUnit tests
+Message-ID: <202308170956.B7CA2B8BDB@keescook>
+References: <20230814210508.never.871-kees@kernel.org>
+ <87bkf68g5m.fsf@email.froward.int.ebiederm.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bkf68g5m.fsf@email.froward.int.ebiederm.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 11:57=E2=80=AFAM Gustavo A. R. Silva
-<gustavoars@kernel.org> wrote:
->
-> Replace struct_size() with sizeof(), and avoid allocating 8 too many
-> bytes.
->
-> The following difference in binary output is expected and reflects the
-> desired change:
->
-> | net/sched/cls_u32.o
-> | @@ -6148,7 +6148,7 @@
-> | include/linux/slab.h:599
-> |     2cf5:      mov    0x0(%rip),%rdi        # 2cfc <u32_init+0xfc>
-> |                        2cf8: R_X86_64_PC32     kmalloc_caches+0xc
-> |-    2cfc:      mov    $0x98,%edx
-> |+    2cfc:      mov    $0x90,%edx
->
-> Fixes: d61491a51f7e ("net/sched: cls_u32: Replace one-element array with =
-flexible-array member")
-> Reported-by: Alejandro Colomar <alx@kernel.org>
-> Closes: https://lore.kernel.org/lkml/09b4a2ce-da74-3a19-6961-67883f634d98=
-@kernel.org/
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  net/sched/cls_u32.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/sched/cls_u32.c b/net/sched/cls_u32.c
-> index da4c179a4d41..6663e971a13e 100644
-> --- a/net/sched/cls_u32.c
-> +++ b/net/sched/cls_u32.c
-> @@ -366,7 +366,7 @@ static int u32_init(struct tcf_proto *tp)
->         idr_init(&root_ht->handle_idr);
->
->         if (tp_c =3D=3D NULL) {
-> -               tp_c =3D kzalloc(struct_size(tp_c, hlist->ht, 1), GFP_KER=
-NEL);
-> +               tp_c =3D kzalloc(sizeof(*tp_c), GFP_KERNEL);
->                 if (tp_c =3D=3D NULL) {
->                         kfree(root_ht);
->                         return -ENOBUFS;
+On Wed, Aug 16, 2023 at 11:08:21PM -0500, Eric W. Biederman wrote:
+> Kees Cook <keescook@chromium.org> writes:
+> 
+> > This is a continuation of the proposal[1] for mocking init_task for
+> > KUnit testing. Changing the behavior of kill_something_info() is moving
+> > forward[2] and I'd _really_ like to have some unit tests in place to
+> > actually test the behavioral changes.
+> >
+> > I tried to incorporate feedback from Daniel and David, and I think the
+> > result is fairly workable -- the only tricky part is building valid
+> > task_struct instances. :)
+> >
+> > Notably, I haven't actually gotten as far as testing the actual proposed
+> > behavioral change since I wanted to make sure this approach wasn't going
+> > to totally crash and burn.
+> >
+> > Thoughts?
+> 
+> Overall this looks like a nice start.  More comments below.
+> 
+> I do wonder though.  Would it perhaps be easier to create a pid
+> namespace with just the processes you want in it?
 
+Do you have a short example of how I could do this correctly? It's not
+obvious to me how to actually set all that up (and tear it down).
 
-LGTM.
-Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+> I am wondering because you failed to mock find_vpid and so you
+> are actually testing sending signals to kernel threads.
 
-cheers,
-jamal
+Hah. Eek.
 
-> 2.34.1
->
+-- 
+Kees Cook
