@@ -2,406 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63509C64EAE
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 20:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84149C5320E
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 20:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354965AbjHQUmm (ORCPT
+        id S1355013AbjHQUpy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 16:42:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39828 "EHLO
+        Thu, 17 Aug 2023 16:45:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354942AbjHQUmH (ORCPT
+        with ESMTP id S1354997AbjHQUp2 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 16:42:07 -0400
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38CE2D72
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:42:05 -0700 (PDT)
-Received: from eig-obgw-6002a.ext.cloudfilter.net ([10.0.30.222])
-        by cmsmtp with ESMTP
-        id WYipqepX7yYOwWjoiqsh03; Thu, 17 Aug 2023 20:42:04 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id Wjohqv4a3nVnbWjoiqU5yu; Thu, 17 Aug 2023 20:42:04 +0000
-X-Authority-Analysis: v=2.4 cv=IuUNzZzg c=1 sm=1 tr=0 ts=64de861c
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=IpJZQVW2AAAA:8 a=VwQbUJbxAAAA:8 a=c-n4J4-pAAAA:8 a=XPfOMz_LAAAA:8
- a=P-IC7800AAAA:8 a=pGLkceISAAAA:8 a=KKAkSRfTAAAA:8 a=QX4gbG5DAAAA:8
- a=zu6OG0ZhAAAA:8 a=FlkJ-zHRAAAA:8 a=JfrnYn6hAAAA:8 a=voM4FWlXAAAA:8
- a=e5mUnYsNAAAA:8 a=cm27Pg_UAAAA:8 a=mYo5tDoLIR1weVEbl60A:9 a=QEXdDO2ut3YA:10
- a=IawgGOuG5U0WyFbmm1f5:22 a=AjGcO6oz07-iQ99wixmX:22 a=L0NDqeB7ZLmQzAogN4cw:22
- a=mTuXyI7nMZpd5pdLa428:22 a=d3PnA9EDa4IxuAV0gXij:22 a=cvBusfyB2V15izCimMoJ:22
- a=AbAUZ8qAyYyZVLSsDulk:22 a=pAN39diAhXWuPx0-Vjn3:22 a=rcJ5IfC3ewqtVv14NVGK:22
- a=1CNFftbPRP8L7MoqJWF3:22 a=IC2XNlieTeVoXbcui8wp:22 a=Vxmtnl_E_bksehYqCbjh:22
- a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=9rxpK7oeGH/u4pk+tUlKyS3S2P3FaP+s+fkAyW7pq9A=; b=XOVQVo3BxnVxjOb5JTZPc40fxM
-        kKgmgj9iW/7Y4Slx9vP5PaviKcedkWxT+9RtGsQ4j/GbICmsy+bapQ8DK56v68nIRPMiXKIo1UY8a
-        XUUQS4FPcPkXiP6fkZmGdTOXdDPGD2QKagMI8kmxe6RdaUDJ4q3KxaGW6SoqC6e9APUDICSktVMMr
-        lK/EQ+ga8+iHTkymF1e7yyo+Ma0Qtrql4wrdztg9JavHJpv9+HpmYSs2MdGg52pcAY18Qf7qHI6wd
-        9sN26nXpV8jZCrIT0TNhD3B7B2KpadAofLE1SoMkAiAUZ4U0vigqXuDTyp4BrzNRms7eRvjvdA/Ew
-        yIX9zgpw==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:38244 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qWjoa-001B6O-2R;
-        Thu, 17 Aug 2023 15:41:57 -0500
-Message-ID: <00ce86aa-a5fa-6f89-6e3d-5dd2830d0665@embeddedor.com>
-Date:   Thu, 17 Aug 2023 14:42:41 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] clk: Annotate struct clk_hw_onecell_data with
- __counted_by
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Taichi Sugaya <sugaya.taichi@socionext.com>,
-        Takao Orito <orito.takao@socionext.com>,
-        Qin Jian <qinjian@cqplus1.com>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Samuel Holland <samuel@sholland.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-sunxi@lists.linux.dev,
-        linux-phy@lists.infradead.org,
+        Thu, 17 Aug 2023 16:45:28 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69B43580
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:45:26 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bdc243d62bso1806615ad.3
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:45:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1692305126; x=1692909926;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pMm0/808CNGa3aT1/hWj5cxfbWGv7KS7xsYpPdCv0WE=;
+        b=Hba9RUgUZEtj0CVdjLz7pSKYV71ZGnjTWbN7fT7j8VmDbWCNH7/Kb8mwvIODbEdUjh
+         G4Dez3nqrO2b5mJVfoUjbCWCIbo3JLVEO8py6g+qeU3Q2hpyjq30jFe3SjLvKgYPKQhs
+         kRO8DdhFpW1DHPFaa64Byi9R/aHUlYKD1cxb8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692305126; x=1692909926;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pMm0/808CNGa3aT1/hWj5cxfbWGv7KS7xsYpPdCv0WE=;
+        b=iTS+f7BEj+gq+9GRjj22DFbyDxb4phrpPJe5nNJG+kLISJ43p9rc3NzPV8q5nVBAK6
+         i9KW5bgYrPO6qyb7I9XwW6+zCZ0MQVgjOeToqAvX0rbwm5hdZ+5eLQfs3gTWjG1VXNY8
+         4FqI4UXkEZR4s7cVxf3XCIAPTVBJxnWWyBWMI3GDooWjL4k7gTwb2WjxPTe7EeQD26+k
+         COtdj1mv1bgTLM0zqlL4lgahXptnc4r27wcCekpjdaOGV9Qmy2l5US9byFWpG3R3V6jO
+         DlOhAbzbkRrrNvfcaiKcJReVxbRDzhNPMJ3UVypqCd6ZX1twh3VjhRhoLhcthqGdujpN
+         zYzw==
+X-Gm-Message-State: AOJu0YzmtO8z4tmkuq8NA8HSM84tiDFzz534wvkzI+9U4qX124as/Rdy
+        uNHCpM3hlKRfywYWLf9dtUL+vQ==
+X-Google-Smtp-Source: AGHT+IHk55UnrVjKhLbeoH0FOsI/LvZ/lE2QJL1gJ+D+E8C0Gwzt+7qwXOdkBQv9AkY7J3V6Bv/K9A==
+X-Received: by 2002:a17:902:f7d6:b0:1be:f53b:4335 with SMTP id h22-20020a170902f7d600b001bef53b4335mr494226plw.20.1692305126211;
+        Thu, 17 Aug 2023 13:45:26 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id je9-20020a170903264900b001bee782a1desm189883plb.181.2023.08.17.13.45.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Aug 2023 13:45:25 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Philipp Hortmann <philipp.g.hortmann@gmail.com>,
+        linux-staging@lists.linux.dev,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230817203019.never.795-kees@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230817203019.never.795-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qWjoa-001B6O-2R
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:38244
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKZ534wkL9DtEZ7HdKifMVJodkP4yhlndFOZDjqeyQuKYNRc0I1vXQHxm0RzsvLqET8yHl0coO5NDEEe5eO6Nloqda2m14f7lGOdL2Ch7PxBkeS+fu43
- SaZyaYrL53MzVyPYuOD3oA+gpS9Qimackf5jsonKrnlDNH3o5gEXh1+xkrWkezPbmG+qqLF0gRPXlS0e+KhpZK8c6EO6tbX1V8n2T70TRNxg8Rmq6t8cQmdE
+        Tom Rix <trix@redhat.com>,
+        Yogesh Hegde <yogi.kernel@gmail.com>,
+        Sumitra Sharma <sumitraartsy@gmail.com>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH] staging: rtl8192e: Annotate struct rtllib_txb with __counted_by
+Date:   Thu, 17 Aug 2023 13:45:24 -0700
+Message-Id: <20230817204523.never.034-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1219; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=UUiTzVogaZirmWMGpsPMj7phpen0D5w/qKNcKFWYCRw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk3obkTXsIF42rVOApuK1+6hZwZMndX3d7u3bA8
+ wUVSJ8CkOKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN6G5AAKCRCJcvTf3G3A
+ JjL1D/48cDpSX2Ac20S71nPjuKbgJSg1g+7exjTTXnTvVNl4NVcTcYOOX6XG+Q8Lnb2J6ZF49IB
+ zYwnG+ICNOHrimTy9xnEzL8t/7AlZD9fhSo6JEZZfuqzW2qI1F3dKW13uWuvTMRsHPXUV0i6OWo
+ aJDlbIWjkrLP4tfCBxa9yL10Y0+NXb2kmRpmxqFBbvFaY2RaEepM/ST6csF1yuviXLe6OH7o0zL
+ Phe1f9UmMqa1oHNdo3IUlmmDjPTfNH6ZX0FmjGPiWEV0IrAYgqWEkcHQKzt8P2h4hl36WSq9cpM
+ cgSkbtOdwBQtKKi74PisY5UFmgWtDx7zlWZMa2/legptjd7gbbI69cOYyHn3pw5v0aTNwkXe3yd
+ 2iyApZjS8bGmYne4s8QCkiAl6JKnzvoRsH2uq+B8TTUDuncVwVADZIr9nmhlUnAho5eigZpy2/n
+ 7UM3vKjQjBVJmZdwFij8jHhCMOFNIMkw6t/RNcu+roCj8+Jg8i+LQOiPxMkdoQaCqEg8YiRZctG
+ bLEix0Ky3IWQOFgETdkh6K76+opM5AT7FkbZ7NEzqJcRgGq4e4dOTht2Rh72Et3YvN8S22JilbP
+ fDs2++6vYppmECcd6ksWFXfHYilH1HC+fUTYwW0VyBcMBSYMcIYS3x7r4WobnHxJGpqaTt/aqCK
+ uascUme ok0NojuA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Prepare for the coming implementation by GCC and Clang of the __counted_by
+attribute. Flexible array members annotated with __counted_by can have
+their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+functions).
 
+As found with Coccinelle[1], add __counted_by for struct rtllib_txb.
 
-On 8/17/23 14:30, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct clk_hw_onecell_data.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: Taichi Sugaya <sugaya.taichi@socionext.com>
-> Cc: Takao Orito <orito.takao@socionext.com>
-> Cc: Qin Jian <qinjian@cqplus1.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Gregory Clement <gregory.clement@bootlin.com>
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Bjorn Andersson <andersson@kernel.org>
-> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
-> Cc: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
-> Cc: David Airlie <airlied@gmail.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Samuel Holland <samuel@sholland.org>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Kishon Vijay Abraham I <kishon@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-aspeed@lists.ozlabs.org
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-mediatek@lists.infradead.org
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: linux-sunxi@lists.linux.dev
-> Cc: linux-phy@lists.infradead.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Philipp Hortmann <philipp.g.hortmann@gmail.com>
+Cc: linux-staging@lists.linux.dev
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/staging/rtl8192e/rtllib.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks
---
-Gustavo
+diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
+index c5a692dfcd17..543d8671281d 100644
+--- a/drivers/staging/rtl8192e/rtllib.h
++++ b/drivers/staging/rtl8192e/rtllib.h
+@@ -818,7 +818,7 @@ struct rtllib_txb {
+ 	u16 reserved;
+ 	__le16 frag_size;
+ 	__le16 payload_size;
+-	struct sk_buff *fragments[];
++	struct sk_buff *fragments[] __counted_by(nr_frags);
+ };
+ 
+ #define MAX_SUBFRAME_COUNT		  64
+-- 
+2.34.1
 
-> ---
->   drivers/clk/clk-aspeed.c                    | 3 +--
->   drivers/clk/clk-ast2600.c                   | 2 +-
->   drivers/clk/clk-gemini.c                    | 2 +-
->   drivers/clk/clk-milbeaut.c                  | 3 +--
->   drivers/clk/clk-sp7021.c                    | 3 +--
->   drivers/clk/mvebu/cp110-system-controller.c | 2 +-
->   drivers/clk/qcom/clk-cpu-8996.c             | 2 +-
->   drivers/clk/ralink/clk-mt7621.c             | 3 +--
->   drivers/gpu/drm/sun4i/sun8i_tcon_top.c      | 3 +--
->   drivers/phy/qualcomm/phy-qcom-edp.c         | 2 +-
->   include/linux/clk-provider.h                | 2 +-
->   11 files changed, 11 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/clk/clk-aspeed.c b/drivers/clk/clk-aspeed.c
-> index 284710adaef5..ff84191d0fe8 100644
-> --- a/drivers/clk/clk-aspeed.c
-> +++ b/drivers/clk/clk-aspeed.c
-> @@ -701,6 +701,7 @@ static void __init aspeed_cc_init(struct device_node *np)
->   				  GFP_KERNEL);
->   	if (!aspeed_clk_data)
->   		return;
-> +	aspeed_clk_data->num = ASPEED_NUM_CLKS;
->   
->   	/*
->   	 * This way all clocks fetched before the platform device probes,
-> @@ -732,8 +733,6 @@ static void __init aspeed_cc_init(struct device_node *np)
->   		aspeed_ast2500_cc(map);
->   	else
->   		pr_err("unknown platform, failed to add clocks\n");
-> -
-> -	aspeed_clk_data->num = ASPEED_NUM_CLKS;
->   	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, aspeed_clk_data);
->   	if (ret)
->   		pr_err("failed to add DT provider: %d\n", ret);
-> diff --git a/drivers/clk/clk-ast2600.c b/drivers/clk/clk-ast2600.c
-> index f9e27f95a967..909c3137c428 100644
-> --- a/drivers/clk/clk-ast2600.c
-> +++ b/drivers/clk/clk-ast2600.c
-> @@ -839,6 +839,7 @@ static void __init aspeed_g6_cc_init(struct device_node *np)
->   				      ASPEED_G6_NUM_CLKS), GFP_KERNEL);
->   	if (!aspeed_g6_clk_data)
->   		return;
-> +	aspeed_g6_clk_data->num = ASPEED_G6_NUM_CLKS;
->   
->   	/*
->   	 * This way all clocks fetched before the platform device probes,
-> @@ -860,7 +861,6 @@ static void __init aspeed_g6_cc_init(struct device_node *np)
->   	}
->   
->   	aspeed_g6_cc(map);
-> -	aspeed_g6_clk_data->num = ASPEED_G6_NUM_CLKS;
->   	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, aspeed_g6_clk_data);
->   	if (ret)
->   		pr_err("failed to add DT provider: %d\n", ret);
-> diff --git a/drivers/clk/clk-gemini.c b/drivers/clk/clk-gemini.c
-> index a23fa6d47ef1..2572d15aadd0 100644
-> --- a/drivers/clk/clk-gemini.c
-> +++ b/drivers/clk/clk-gemini.c
-> @@ -404,6 +404,7 @@ static void __init gemini_cc_init(struct device_node *np)
->   				  GFP_KERNEL);
->   	if (!gemini_clk_data)
->   		return;
-> +	gemini_clk_data->num = GEMINI_NUM_CLKS;
->   
->   	/*
->   	 * This way all clock fetched before the platform device probes,
-> @@ -457,7 +458,6 @@ static void __init gemini_cc_init(struct device_node *np)
->   	gemini_clk_data->hws[GEMINI_CLK_APB] = hw;
->   
->   	/* Register the clocks to be accessed by the device tree */
-> -	gemini_clk_data->num = GEMINI_NUM_CLKS;
->   	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, gemini_clk_data);
->   }
->   CLK_OF_DECLARE_DRIVER(gemini_cc, "cortina,gemini-syscon", gemini_cc_init);
-> diff --git a/drivers/clk/clk-milbeaut.c b/drivers/clk/clk-milbeaut.c
-> index 050fd4fb588f..18c20aff45f7 100644
-> --- a/drivers/clk/clk-milbeaut.c
-> +++ b/drivers/clk/clk-milbeaut.c
-> @@ -618,6 +618,7 @@ static void __init m10v_cc_init(struct device_node *np)
->   
->   	if (!m10v_clk_data)
->   		return;
-> +	m10v_clk_data->num = M10V_NUM_CLKS;
->   
->   	base = of_iomap(np, 0);
->   	if (!base) {
-> @@ -654,8 +655,6 @@ static void __init m10v_cc_init(struct device_node *np)
->   					base + CLKSEL(1), 0, 3, 0, rclk_table,
->   					&m10v_crglock, NULL);
->   	m10v_clk_data->hws[M10V_RCLK_ID] = hw;
-> -
-> -	m10v_clk_data->num = M10V_NUM_CLKS;
->   	of_clk_add_hw_provider(np, of_clk_hw_onecell_get, m10v_clk_data);
->   }
->   CLK_OF_DECLARE_DRIVER(m10v_cc, "socionext,milbeaut-m10v-ccu", m10v_cc_init);
-> diff --git a/drivers/clk/clk-sp7021.c b/drivers/clk/clk-sp7021.c
-> index 11d22043ddd7..01d3c4c7b0b2 100644
-> --- a/drivers/clk/clk-sp7021.c
-> +++ b/drivers/clk/clk-sp7021.c
-> @@ -621,6 +621,7 @@ static int sp7021_clk_probe(struct platform_device *pdev)
->   				GFP_KERNEL);
->   	if (!clk_data)
->   		return -ENOMEM;
-> +	clk_data->num = CLK_MAX;
->   
->   	hws = clk_data->hws;
->   	pd_ext.index = 0;
-> @@ -688,8 +689,6 @@ static int sp7021_clk_probe(struct platform_device *pdev)
->   			return PTR_ERR(hws[i]);
->   	}
->   
-> -	clk_data->num = CLK_MAX;
-> -
->   	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_data);
->   }
->   
-> diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-> index 84c8900542e4..03c59bf22106 100644
-> --- a/drivers/clk/mvebu/cp110-system-controller.c
-> +++ b/drivers/clk/mvebu/cp110-system-controller.c
-> @@ -240,9 +240,9 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
->   				      GFP_KERNEL);
->   	if (!cp110_clk_data)
->   		return -ENOMEM;
-> +	cp110_clk_data->num = CP110_CLK_NUM;
->   
->   	cp110_clks = cp110_clk_data->hws;
-> -	cp110_clk_data->num = CP110_CLK_NUM;
->   
->   	/* Register the PLL0 which is the root of the hw tree */
->   	pll0_name = ap_cp_unique_name(dev, syscon_node, "pll0");
-> diff --git a/drivers/clk/qcom/clk-cpu-8996.c b/drivers/clk/qcom/clk-cpu-8996.c
-> index 592c7c3cdeb7..72689448a653 100644
-> --- a/drivers/clk/qcom/clk-cpu-8996.c
-> +++ b/drivers/clk/qcom/clk-cpu-8996.c
-> @@ -590,6 +590,7 @@ static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
->   	data = devm_kzalloc(dev, struct_size(data, hws, 2), GFP_KERNEL);
->   	if (!data)
->   		return -ENOMEM;
-> +	data->num = 2;
->   
->   	base = devm_platform_ioremap_resource(pdev, 0);
->   	if (IS_ERR(base))
-> @@ -605,7 +606,6 @@ static int qcom_cpu_clk_msm8996_driver_probe(struct platform_device *pdev)
->   
->   	data->hws[0] = &pwrcl_pmux.clkr.hw;
->   	data->hws[1] = &perfcl_pmux.clkr.hw;
-> -	data->num = 2;
->   
->   	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, data);
->   }
-> diff --git a/drivers/clk/ralink/clk-mt7621.c b/drivers/clk/ralink/clk-mt7621.c
-> index d95a33293b0a..92d14350c4b3 100644
-> --- a/drivers/clk/ralink/clk-mt7621.c
-> +++ b/drivers/clk/ralink/clk-mt7621.c
-> @@ -521,6 +521,7 @@ static int mt7621_clk_probe(struct platform_device *pdev)
->   				GFP_KERNEL);
->   	if (!clk_data)
->   		return -ENOMEM;
-> +	clk_data->num = count;
->   
->   	for (i = 0; i < ARRAY_SIZE(mt7621_clks_base); i++)
->   		clk_data->hws[i] = mt7621_clk_early[i];
-> @@ -537,8 +538,6 @@ static int mt7621_clk_probe(struct platform_device *pdev)
->   		goto unreg_clk_fixed;
->   	}
->   
-> -	clk_data->num = count;
-> -
->   	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get, clk_data);
->   	if (ret) {
->   		dev_err(dev, "Couldn't add clk hw provider\n");
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> index 6f076cf4b403..a1ca3916f42b 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> @@ -141,6 +141,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
->   				GFP_KERNEL);
->   	if (!clk_data)
->   		return -ENOMEM;
-> +	clk_data->num = CLK_NUM;
->   	tcon_top->clk_data = clk_data;
->   
->   	spin_lock_init(&tcon_top->reg_lock);
-> @@ -213,8 +214,6 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
->   			goto err_unregister_gates;
->   		}
->   
-> -	clk_data->num = CLK_NUM;
-> -
->   	ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
->   				     clk_data);
->   	if (ret)
-> diff --git a/drivers/phy/qualcomm/phy-qcom-edp.c b/drivers/phy/qualcomm/phy-qcom-edp.c
-> index e0e722b9be31..8e5078304646 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-edp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-edp.c
-> @@ -744,6 +744,7 @@ static int qcom_edp_clks_register(struct qcom_edp *edp, struct device_node *np)
->   	data = devm_kzalloc(edp->dev, struct_size(data, hws, 2), GFP_KERNEL);
->   	if (!data)
->   		return -ENOMEM;
-> +	data->num = 2;
->   
->   	snprintf(name, sizeof(name), "%s::link_clk", dev_name(edp->dev));
->   	init.ops = &qcom_edp_dp_link_clk_ops;
-> @@ -763,7 +764,6 @@ static int qcom_edp_clks_register(struct qcom_edp *edp, struct device_node *np)
->   
->   	data->hws[0] = &edp->dp_link_hw;
->   	data->hws[1] = &edp->dp_pixel_hw;
-> -	data->num = 2;
->   
->   	return devm_of_clk_add_hw_provider(edp->dev, of_clk_hw_onecell_get, data);
->   }
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index 0f0cd01906b4..ec32ec58c59f 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -1379,7 +1379,7 @@ struct clk_onecell_data {
->   
->   struct clk_hw_onecell_data {
->   	unsigned int num;
-> -	struct clk_hw *hws[];
-> +	struct clk_hw *hws[] __counted_by(num);
->   };
->   
->   #define CLK_OF_DECLARE(name, compat, fn) \
