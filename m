@@ -2,109 +2,80 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D26DC64EDA
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 22:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A72CC678DF
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 23:41:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355765AbjHQWj5 (ORCPT
+        id S232987AbjHQXkh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 18:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
+        Thu, 17 Aug 2023 19:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355817AbjHQWj0 (ORCPT
+        with ESMTP id S1356140AbjHQXk1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 18:39:26 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5DA5B9;
-        Thu, 17 Aug 2023 15:39:18 -0700 (PDT)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37HM0GHG008965;
-        Thu, 17 Aug 2023 22:03:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=dDbHUAQVLstzKjTzLnR27yiz9xz7bG0tn4s8Wa8jZC4=;
- b=DoFD6ZygVE9A0oxF942Dz+tsdprZ1UGwyIeJrUvRxkj5HSWNCUk2PYEaDl3iasMMgybW
- gPFbr8R8wF0Zk2FAZ5Ysq+bVAk0PVfOBZDWAaCWIWnE3PXA6FgKmN2jQ8/P2b3fNX1yU
- FvSwJDAVrphxhdPQlFFTnSTv15mQ3MiKUQRzaEQ2+sCJ1/61efgLRcYijUQRdy7mhvKd
- 44WYyhGVK/UkuY39Q3HUwY21KrmVBqRJJhUQTEcmGbDsWNp6vhh5KY793JOaqnJeVX6w
- A1cjvsJBVC35MGykHzm3NtAuM6cmc7P1KBD3Ty9Nfjxe0qvtQpVxk0phYYZ1MBTiRdV1 bg== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sh2a3kf0f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Aug 2023 22:03:32 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 37HM3Ube015648
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 17 Aug 2023 22:03:30 GMT
-Received: from [10.48.241.213] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Thu, 17 Aug
- 2023 15:03:30 -0700
-Message-ID: <c07d1893-5994-4a1d-b9a2-9f71c2598d98@quicinc.com>
-Date:   Thu, 17 Aug 2023 15:03:29 -0700
+        Thu, 17 Aug 2023 19:40:27 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FA7730DF
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:40:26 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bf1935f6c2so2570375ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1692315626; x=1692920426;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1VCakgqASg3h9183qTuhRoaN+EGRR2UwJM9N77vDLR8=;
+        b=JImyrb2e/StN5NZPwiXTxfSJ8H055CDGNgN8XmqgLAwHdgHkLjLl8nifuytazbaktR
+         KVHi6Mjmxj4tA1TCxWnCf+IZFMrYPeX7quUzVyy4S0WUMnz967Gnwbu61lexaYJ4BJnm
+         JJQfrx1t/if1DjKRFaShzkrdejZxfqgN7prIk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692315626; x=1692920426;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1VCakgqASg3h9183qTuhRoaN+EGRR2UwJM9N77vDLR8=;
+        b=NR3OiFXrpl/9nvN0KHtt5g8yb2xGRYbG+Z7oDUpn575sAoai9CyDw/QxUxWgRUXSEP
+         mN4VIEgTbR2UJ945FBd5qlTfeJeZ3t43kIIS+72RsOmni0sjao+MbZyobtZ0/jA2cdvF
+         O7UjoH75HZmVtnbZf98m5cvP6qvKUrm2zdkbe2sXYIlW4gMB8vxBLU6VSfl012zWPi/U
+         eRgUlbvT4y9k2uMNukqKWVisboWQ3xX7+QndI+LiiGrzsXec9Vw7mubDJ4aCzUgTchRI
+         YTnFp0wBoxtXjAqZK3rLocY8q5LICo2QERHz33o/oxs/AZ4iN53bp6Pbnk0xLJexlbWN
+         1XcA==
+X-Gm-Message-State: AOJu0Yw/mmTfP5Dx7beSukOtyFE7TsitpKUS6jYg3BFp9kOiqzY3WLuj
+        C9vIvdGerTSz5Z3zZyEEyFjrNQ==
+X-Google-Smtp-Source: AGHT+IFPQt+NcgencYztvbHc+KfKgXvjSMi+thjcbfvjb/04TPsE7lu5R6RUGJ6v3UpZfG1jcgsgYQ==
+X-Received: by 2002:a17:902:e807:b0:1ba:fe6a:3845 with SMTP id u7-20020a170902e80700b001bafe6a3845mr966877plg.11.1692315625977;
+        Thu, 17 Aug 2023 16:40:25 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 19-20020a170902c11300b001afd821c057sm336599pli.58.2023.08.17.16.40.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Aug 2023 16:40:25 -0700 (PDT)
+Date:   Thu, 17 Aug 2023 16:40:24 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Yuxiao Zhang <yuxiaozhang@google.com>
+Cc:     Tony Luck <tony.luck@intel.com>,
+        "'Guilherme G . Piccoli'" <gpiccoli@igalia.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wak@google.com
+Subject: Re: [PATCH] pstore: ramoops: support pmsg size larger than kmalloc
+ limitation
+Message-ID: <202308171639.B97420B5@keescook>
+References: <20230630205358.3601280-1-yuxiaozhang@google.com>
+ <20230718202347.3320812-1-yuxiaozhang@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] wifi: cfg80211: Annotate struct cfg80211_acl_data
- with __counted_by
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Johannes Berg <johannes@sipsolutions.net>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <llvm@lists.linux.dev>, <linux-hardening@vger.kernel.org>
-References: <20230817211114.never.208-kees@kernel.org>
- <20230817211531.4193219-1-keescook@chromium.org>
-From:   Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <20230817211531.4193219-1-keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fEVuMk04dtqHU5g-ubaMjlLfFGSGndlx
-X-Proofpoint-ORIG-GUID: fEVuMk04dtqHU5g-ubaMjlLfFGSGndlx
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-17_18,2023-08-17_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- bulkscore=0 clxscore=1011 impostorscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=825
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308170196
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230718202347.3320812-1-yuxiaozhang@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 8/17/2023 2:15 PM, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct cfg80211_acl_data.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On Tue, Jul 18, 2023 at 01:23:47PM -0700, Yuxiao Zhang wrote:
+> Friendly ping, any update on this?
 
-Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Hi! I finally got a chance to look this over. I added a few more
+kvzalloc() uses to generalize this for all records (not just pmsg), and
+it's testing well. Here's the resulting commit:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/pstore&id=104fd0b5e948157f8e8ac88a20b46ba8641d4e95
 
+-- 
+Kees Cook
