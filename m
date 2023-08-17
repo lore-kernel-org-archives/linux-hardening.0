@@ -2,113 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043EC64EBC
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F305C64EDA
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 22:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355428AbjHQV53 (ORCPT
+        id S1355556AbjHQWGD (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 17:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
+        Thu, 17 Aug 2023 18:06:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355505AbjHQV5G (ORCPT
+        with ESMTP id S1355682AbjHQWGA (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 17:57:06 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098502D44;
-        Thu, 17 Aug 2023 14:57:05 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-689f4fb1c29so222893b3a.0;
-        Thu, 17 Aug 2023 14:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692309424; x=1692914224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z0omXZny2n+CByL2k7ciGeHHMSQ9u/agRJB2cjviSi4=;
-        b=hr056v+KwQCD7KsAAiffnt/3sSt1kTIcf8ne4SKRK1o44FszUJAWCBrFUQsZHgYJDd
-         bTx5INJz3ICUgZz0sm7keyITgp8HsgzZ5fohuetFK5lXFrlPf34LBKJauHkvKMfd+HWR
-         rSkXHrHmvgzDtHH9FbA4JhNetRxt06m8trUlP4HeA8yKYy4R9AoHI/uo/u4JVQy+wmR+
-         NRbSgaY2wzwBttQN0mjQtVyq6GMvxh+wPKKLjiow1eQwe/MqfXp0XZ08TJ0tD85qGHep
-         zaK8DfYd9FSX3Ds78+mMzfluB+IRK6o7PCoOqHPsCa8To8OnwauvRZPsxxGUDk3gt1Bu
-         GyAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692309424; x=1692914224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z0omXZny2n+CByL2k7ciGeHHMSQ9u/agRJB2cjviSi4=;
-        b=ehfewPl48+urRuG5CTpf0R+GLtAAYRp3yqYhjEedLfUR7JSsJ/AyFiGNCpvkqHo+7f
-         ILI4z688slSi+udDavgPofzoIndtgwAkOfbQlkkCMc0QBD/HSxVygZzD6mYh440jzWzm
-         MedpMh6YSgf8H8EpVEpevUpfnmh8F1QZkxut5ORpaNk71xKkDxmahyFFZOzoB4Elcscs
-         Bfptl52NokDimh2x9/KHWyTuYlBqsyY1KYgUD3g6VR1WRgxkSlQ4NLbDLrJunjh/Xdtv
-         C7mBH6CRVyjtp4cLIx448sPaFI3Op71C7qWTlk0mMrsRurAAU+CEtuwB4PPCIDPZFCkS
-         oejQ==
-X-Gm-Message-State: AOJu0YxwNWfTDqFGmsnOait8gJ49SXkUQ84NOXe/bty8JSU4Ef2Qef9l
-        ak76Ap7TpE1aVSalqaLleLU=
-X-Google-Smtp-Source: AGHT+IEP+XwGLfMhFD6DTODFTV5Plu4zVyjwNVkF/Rry609CkvL+6YWELYMGm624RG7P+zNerxL1bw==
-X-Received: by 2002:a05:6a00:3028:b0:686:5f73:4eac with SMTP id ay40-20020a056a00302800b006865f734eacmr5175534pfb.13.1692309424406;
-        Thu, 17 Aug 2023 14:57:04 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:400::5:93bd])
-        by smtp.gmail.com with ESMTPSA id ff20-20020a056a002f5400b0065da94fe917sm235379pfb.36.2023.08.17.14.57.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 14:57:03 -0700 (PDT)
-Sender: Tejun Heo <htejun@gmail.com>
-Date:   Thu, 17 Aug 2023 11:57:02 -1000
-From:   Tejun Heo <tj@kernel.org>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Zefan Li <lizefan.x@bytedance.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v3][next] cgroup: Avoid -Wstringop-overflow warnings
-Message-ID: <ZN6Xrsssr4Pys8YQ@slm.duckdns.org>
-References: <ZN5WkbPelHUSTXOA@work>
+        Thu, 17 Aug 2023 18:06:00 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56EF3A82;
+        Thu, 17 Aug 2023 15:05:20 -0700 (PDT)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37HLkvLD031315;
+        Thu, 17 Aug 2023 22:03:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=LXUNCJSRuS+oBWXfaFGrTjIdZUPkxRCkqX26bEghgOQ=;
+ b=Ws6K7kax2TuhdpDclYFdOn+S5VhxussNCYE0TLjuafuQCRye7Z2Jz/reXyfI3jN0/JHh
+ Xp1ymAmo4qPl1St8Jy5WSbWPHcI2iyh/bjK2ZfYc74yEsk0UpB78PZNbYDHj4MzEvLjl
+ ar7Yx7cSUxSeMEnBP2OcIyJozv2bVLvEuUXfr0JX8lTn1WLFX9MiM/KudtdMKL0cks4D
+ pEdwYYaD6rpsGqyKxmYU2Rni9OhV2/u7q7C4UI9KgbZ34jRWMTkxji4P9Bn2z/mmFRWV
+ FhDdQo9QzxMbtPZlsXnZZl8cEDehHUuUMSkXDFaTu5laBQCqBfwQO5NGg1JK/nSaqUkD UQ== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3sh3xxb44s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Aug 2023 22:03:36 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 37HM3aJM029212
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Aug 2023 22:03:36 GMT
+Received: from [10.48.241.213] (10.49.16.6) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.36; Thu, 17 Aug
+ 2023 15:03:35 -0700
+Message-ID: <183c44d1-6c6d-483b-aca2-f152aa9a65f8@quicinc.com>
+Date:   Thu, 17 Aug 2023 15:03:35 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZN5WkbPelHUSTXOA@work>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] wifi: cfg80211: Annotate struct cfg80211_mbssid_elems
+ with __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        Johannes Berg <johannes@sipsolutions.net>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <llvm@lists.linux.dev>, <linux-hardening@vger.kernel.org>
+References: <20230817211114.never.208-kees@kernel.org>
+ <20230817211531.4193219-3-keescook@chromium.org>
+From:   Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <20230817211531.4193219-3-keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 3X2707wwsr1Q2JReMZktjbz1MsN6ntOu
+X-Proofpoint-ORIG-GUID: 3X2707wwsr1Q2JReMZktjbz1MsN6ntOu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-17_18,2023-08-17_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ bulkscore=0 mlxlogscore=835 clxscore=1015 priorityscore=1501
+ impostorscore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308170196
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 11:19:13AM -0600, Gustavo A. R. Silva wrote:
-> Change the notation from pointer-to-array to pointer-to-pointer.
-> With this, we avoid the compiler complaining about trying
-> to access a region of size zero as an argument during function
-> calls.
+On 8/17/2023 2:15 PM, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
 > 
-> This is a workaround to prevent the compiler complaining about
-> accessing an array of size zero when evaluating the arguments
-> of a couple of function calls. See below:
+> As found with Coccinelle[1], add __counted_by for struct cfg80211_mbssid_elems.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 > 
-> kernel/cgroup/cgroup.c: In function 'find_css_set':
-> kernel/cgroup/cgroup.c:1206:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
->  1206 |         cset = find_existing_css_set(old_cset, cgrp, template);
->       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> kernel/cgroup/cgroup.c:1206:16: note: referencing argument 3 of type 'struct cgroup_subsys_state *[0]'
-> kernel/cgroup/cgroup.c:1071:24: note: in a call to function 'find_existing_css_set'
->  1071 | static struct css_set *find_existing_css_set(struct css_set *old_cset,
->       |                        ^~~~~~~~~~~~~~~~~~~~~
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> With the change to pointer-to-pointer, the functions are not prevented
-> from being executed, and they will do what they have to do when
-> CGROUP_SUBSYS_COUNT == 0.
-> 
-> Address the following -Wstringop-overflow warnings seen when
-> built with ARM architecture and aspeed_g4_defconfig configuration
-> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
-> 
-> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
-> 
-> This results in no differences in binary output.
-> 
-> Link: https://github.com/KSPP/linux/issues/316
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: Johannes Berg <johannes@sipsolutions.net>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Applied to cgroup/for-6.6.
+Reviewed-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Thanks.
-
--- 
-tejun
