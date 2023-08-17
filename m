@@ -2,83 +2,110 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A56FC7112F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 00:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481E1C7112F
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 00:09:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353059AbjHRABK (ORCPT
+        id S1356515AbjHRAJN (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 20:01:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56422 "EHLO
+        Thu, 17 Aug 2023 20:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356509AbjHRAAu (ORCPT
+        with ESMTP id S1356662AbjHRAJL (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 20:00:50 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 474B33C20
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:59:59 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bb84194bf3so2904185ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:59:59 -0700 (PDT)
+        Thu, 17 Aug 2023 20:09:11 -0400
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E324326B6
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 17:08:44 -0700 (PDT)
+Received: by mail-ot1-x32f.google.com with SMTP id 46e09a7af769-6b9a2416b1cso366141a34.2
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 17:08:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692316799; x=1692921599;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FlZwTjULNXL0MSeceST2nTPY5dYfoFRLbfS9U1Zv9es=;
-        b=d+VbPkWufrRXthaDxdNUui/S17G/tmvNX7IqEco+/8o3ee9vxotGH/4g3BD7A2ZJ+H
-         Yid2nGjIrKsaY/+DmSyPDARjLRts3gozDKp0ZRg6HH9Pf6kj0m3TPykIHknZz2GYSjgA
-         Hubx974xUHWMch3i6ki96stvBbLosRgyejyUY=
+        d=chromium.org; s=google; t=1692317317; x=1692922117;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BJAStmqEWJCV11M3alF7g0EvIWbhKJ8cHn0i1bzIQ+w=;
+        b=G9dQNpeCDU6vSJDa21UY/Mw8p61U6Pa3T/VNTD0N6eKEN/xkSyFSPxwZJMlrumbxF2
+         yxFdU1Mqtc9PVDPeUdJTTI/byEwzyL9clggs4DITweNemWAvyD4OqipRB0RiiEHV+Yrn
+         46u3CyfTS3MTL8L9LrHEhkvbP1CddmUGW3Su4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692316799; x=1692921599;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FlZwTjULNXL0MSeceST2nTPY5dYfoFRLbfS9U1Zv9es=;
-        b=NPmszXbYqbkL5U8ht/wWClgdOMNoP3JthuPxtijCbpe0makxHMez/BgPI+b4P/Ed53
-         FKOh9KJEI4OzQK4QcNKkMPr7zxUZ7hSG8CvHRXMJX5rHzq0FIfWc0AL54TdgHAYhw+Bb
-         CdRk4KTbvze2VyGfWQq3elkI5F2lXk31JF6EJb9Orpp6MKIGEVg1mfTSPcc3c09zKszz
-         IWk7vJvbvMrOmUMleEu3+A9WUvbgqEQlWz0/8cPHEclnPouELd6xx4SNsIL4k+cWtix/
-         q/G5n8SQ4spqA10VbGCCmUIJCBqhqE6JZ77gYUPvgDkqC0h10k3INhcyycciUSHe+eJ+
-         SEGw==
-X-Gm-Message-State: AOJu0YxdDPvwj3onZIRu9zZWXmOrZgHfFkXQMU8WvS1Bu6jndz3FyJ96
-        h8WiOXKRNxZn3t9qIDG86W1m6w==
-X-Google-Smtp-Source: AGHT+IEZN0eiMgoFeTiDuL98J12BoFQXzUyH1iR9WfEu30+aZRIx+2aMlLrOvoBZVZz8HJbKs8MMbw==
-X-Received: by 2002:a17:903:247:b0:1bb:1523:b2d7 with SMTP id j7-20020a170903024700b001bb1523b2d7mr1064631plh.14.1692316798858;
-        Thu, 17 Aug 2023 16:59:58 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692317317; x=1692922117;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BJAStmqEWJCV11M3alF7g0EvIWbhKJ8cHn0i1bzIQ+w=;
+        b=Jkh5nphCirb9BdLYDNLF5u3XhorWuveMosHQFs/npPybOTjxvaNHirG77vMmH7jDaF
+         2bmsjARr5Bw057pWNPEpFekn3tCcDIE7aMWjpekdtdn9TI2TbHKnjV16PWl/HkjoaKuo
+         esDDdyKLOGchL9RqHawJN/HaUowRetK7hRdmzO0ibjBc7V+PGcJKHsvc2Rq7gNXvmSnR
+         wuAJsc4SWpn7bMBe+Rym9YBiukzDcj5CbxvdwbYhgCJVbdsD4UegrDKuVEowEAm8S/nc
+         Wrljg4vFt8gwnsyH5i7HYJPWfjpbpM/uGqS3wiSSM+cnuVsAJJfcDqKgGRtiLLOYs5Cp
+         K5nA==
+X-Gm-Message-State: AOJu0YyTgVUWL0NVM3wXOuTAFRC7S4vcywHWsRRfRpd4jkOqBfimU5e4
+        KqClHbgVrksqz4i8QRuCVsewjA==
+X-Google-Smtp-Source: AGHT+IFkVSQqkmXL975Xr4Tk7VbbfLZbWMUu/vztJf9RRnyAzWDuQtXtUyT8v9C9jYYePa2KPNQ1rw==
+X-Received: by 2002:a05:6870:9127:b0:1bc:d479:ed70 with SMTP id o39-20020a056870912700b001bcd479ed70mr1130390oae.25.1692317317112;
+        Thu, 17 Aug 2023 17:08:37 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b10-20020a170902bd4a00b001bba669a7eesm348680plx.52.2023.08.17.16.59.58
+        by smtp.gmail.com with ESMTPSA id n10-20020a17090a670a00b0025c1cfdb93esm349211pjj.13.2023.08.17.17.08.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 16:59:58 -0700 (PDT)
+        Thu, 17 Aug 2023 17:08:35 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     linux-hardening@vger.kernel.org
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@kernel.org>, dm-devel@redhat.com,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        dmaengine@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Green Wan <green.wan@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Yu Kuai <yukuai3@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jordy Zomer <jordy@pwning.systems>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: [PATCH] LoadPin: Annotate struct dm_verity_loadpin_trusted_root_digest with __counted_by
-Date:   Thu, 17 Aug 2023 16:59:56 -0700
-Message-Id: <20230817235955.never.762-kees@kernel.org>
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 18/21] dmaengine: ti: omap-dma: Annotate struct omap_desc with __counted_by
+Date:   Thu, 17 Aug 2023 16:58:55 -0700
+Message-Id: <20230817235859.49846-18-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230817235428.never.111-kees@kernel.org>
+References: <20230817235428.never.111-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2198; i=keescook@chromium.org;
- h=from:subject:message-id; bh=TlZvULm9TYJxvzYvyHtGp79eQ9cs52J2eowJQXxaQlQ=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk3rR8Jpb6jYCE1H2Z7r1VdMRPlT4IoaSG9P+6O
- TraiYv2JDeJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN60fAAKCRCJcvTf3G3A
- JjIHD/44aHrnkkewA1A9a8OG6hGVMYANzESYfUGAA9dl8IaTcUf5hz6awlrlkNt19soLhhGXaxf
- 6zZZK3951OIkAIYfKrjp48XoTFOKI47ha4xWcryisDbf/lBUlQ6K2ALIFp2ZBobJko9KmWFRxEu
- r6rBph5S6FqVIJVZPG2xFFxsd4lYyuD2jXO/1O8xnS6ismHiTUMbYOUcRgg9nwR+iZmHYFYMDNa
- S2MZ/a7mqLSK3+rg8Ffsq0D8hTy0DP/fSQLLiZ73LWFe2Un8IvI78NYawzPNoBV6prHXxLdJphU
- DSjmWKtlrOmsJO7mEk9ipaIDkC0bnBkXv9TzXjvtwSpy0RrHgPmIr9VEou5TwHceriaF/OwIrc3
- aSGyVXXILMWSq7cvXiAiPkJFxpQgVmYN1aHl2rb4O2hlQ34EphuiDLTOJriwowTTCcd81btCfpg
- ue37gNf40o92kdqIkxIeg2BWmyuWCKVsCeH67+FgE3jIOFn8eqq31yhYwA1qy7+ZJz+UDJkWKrx
- r42QK0aS3ebKJ6Kt0oal+a0ZsPp6bhhU2ticTpo0kKWKmpsZZg5v9leTKD1TOciwblKRJCERaYC
- 2YuuoTR0bS+GC/8nQOg9/q76Mny1hU02LM69MiCaJwH1oNPqJGyCm95eW1Sm3G/ONjIa1Cks+BO
- UK26fPZ LQjP69ig==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1732; i=keescook@chromium.org;
+ h=from:subject; bh=KkqTKiy8rqvFYl8aW58GCbimShLAkaRsCHzcvcCWSRw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk3rRBNQrQGSxUXSXTSL+LF23xeHTG1HiHDx+NZ
+ DxNL9D2ClaJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN60QQAKCRCJcvTf3G3A
+ JstED/45VAohOEERN7C2lIV4zZVuC4OumCYP+mNrRtNtNzgTirqKjGCFbY5TkcbFBX9k7DrLDgS
+ O13YhKpbYpdvbWnGSeyb3uF+VGAi5gnoUyIqwH/qwyDHFXcWuO48mXo+cu/8YLZeJxa5E+W/SNR
+ Dg83cQ0lXZmMqd8yYOc4SRNUpXBQGklpsswWwAaTe5TXdvq0b4jFPboIw88TEncJSXUKgmOajZC
+ Bw259+NR+DyoqUms3n4xhOKHZYZcE/pVrnWV0dydmbg9C0arCn5GLThkZD05+PV5iKgN1AJmxTc
+ hCzGYVh8UU74S3XB0OAIRRum0P/QVS65aFVd5ncstN3ivfSpgvS3F5wZh3bfEBY7rlt+meDWGNO
+ kHm+TZ6D/Tru1vy3ISGD5DeUovqDen5gLBUN20wYUyEKCSWKzd5LzRAu1W3uoHXFz6HpdEaa3jn
+ LIxAZTHuCeJ+sKoxAbf5nBMCfqUXZ/KB7jP7yzf/c2SB3hVND2jeQLo3WiaoMLsvBRHb2/D36dp
+ h3JI9oFzJ0Oqo+tpdhBFiAGpUPqnLYk7MVqaIGrgT8DlN7QB/i/hzHQFmk85WOkneZu/WYLZL3w
+ iLBlUGubkbGblD5s2sp0LMWS0T/r9yUD8u8ndim38nSwUlyLw9CObnOXtj+udrDiMzpNOcZW/OL v3VOa7tcLzm25MQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -91,59 +118,50 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct dm_verity_loadpin_trusted_root_digest.
+As found with Coccinelle[1], add __counted_by for struct omap_desc.
 Additionally, since the element count member must be set before accessing
 the annotated flexible array member, move its initialization earlier.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
-Cc: Alasdair Kergon <agk@redhat.com>
-Cc: Mike Snitzer <snitzer@kernel.org>
-Cc: dm-devel@redhat.com
-Cc: Paul Moore <paul@paul-moore.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: linux-security-module@vger.kernel.org
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Peter Ujfalusi <peter.ujfalusi@gmail.com>
+Cc: dmaengine@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- include/linux/dm-verity-loadpin.h | 2 +-
- security/loadpin/loadpin.c        | 3 +--
- 2 files changed, 2 insertions(+), 3 deletions(-)
+ drivers/dma/ti/omap-dma.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/dm-verity-loadpin.h b/include/linux/dm-verity-loadpin.h
-index 552b817ab102..3ac6dbaeaa37 100644
---- a/include/linux/dm-verity-loadpin.h
-+++ b/include/linux/dm-verity-loadpin.h
-@@ -12,7 +12,7 @@ extern struct list_head dm_verity_loadpin_trusted_root_digests;
- struct dm_verity_loadpin_trusted_root_digest {
- 	struct list_head node;
- 	unsigned int len;
--	u8 data[];
-+	u8 data[] __counted_by(len);
+diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
+index cf96cf915c0c..11ac3fc0a52a 100644
+--- a/drivers/dma/ti/omap-dma.c
++++ b/drivers/dma/ti/omap-dma.c
+@@ -124,7 +124,7 @@ struct omap_desc {
+ 	uint32_t csdp;		/* CSDP value */
+ 
+ 	unsigned sglen;
+-	struct omap_sg sg[];
++	struct omap_sg sg[] __counted_by(sglen);
  };
  
- #if IS_ENABLED(CONFIG_SECURITY_LOADPIN_VERITY)
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index ebae964f7cc9..a9d40456a064 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -336,6 +336,7 @@ static int read_trusted_verity_root_digests(unsigned int fd)
- 			rc = -ENOMEM;
- 			goto err;
- 		}
-+		trd->len = len;
+ enum {
+@@ -1005,6 +1005,7 @@ static struct dma_async_tx_descriptor *omap_dma_prep_slave_sg(
+ 	d = kzalloc(struct_size(d, sg, sglen), GFP_ATOMIC);
+ 	if (!d)
+ 		return NULL;
++	d->sglen = sglen;
  
- 		if (hex2bin(trd->data, d, len)) {
- 			kfree(trd);
-@@ -343,8 +344,6 @@ static int read_trusted_verity_root_digests(unsigned int fd)
- 			goto err;
+ 	d->dir = dir;
+ 	d->dev_addr = dev_addr;
+@@ -1120,8 +1121,6 @@ static struct dma_async_tx_descriptor *omap_dma_prep_slave_sg(
  		}
- 
--		trd->len = len;
--
- 		list_add_tail(&trd->node, &dm_verity_loadpin_trusted_root_digests);
  	}
  
+-	d->sglen = sglen;
+-
+ 	/* Release the dma_pool entries if one allocation failed */
+ 	if (ll_failed) {
+ 		for (i = 0; i < d->sglen; i++) {
 -- 
 2.34.1
 
