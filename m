@@ -2,382 +2,172 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D684C41513
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 05:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDDDEB64DD
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 06:09:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347837AbjHQFHT (ORCPT
+        id S1348153AbjHQGJY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 01:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58700 "EHLO
+        Thu, 17 Aug 2023 02:09:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347725AbjHQFGx (ORCPT
+        with ESMTP id S1348142AbjHQGJE (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 01:06:53 -0400
-X-Greylist: delayed 3497 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 16 Aug 2023 22:06:52 PDT
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 131B71BF8;
-        Wed, 16 Aug 2023 22:06:51 -0700 (PDT)
-Received: from in01.mta.xmission.com ([166.70.13.51]:40088)
-        by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1qWUJD-00BV35-MI; Wed, 16 Aug 2023 22:08:31 -0600
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:41098 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1qWUJB-000nJO-ON; Wed, 16 Aug 2023 22:08:31 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Brendan Higgins <brendan.higgins@linux.dev>,
-        David Gow <davidgow@google.com>,
-        Petr Skocik <pskocik@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jens Axboe <axboe@kernel.dk>, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Marco Elver <elver@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "haifeng.xu" <haifeng.xu@shopee.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230814210508.never.871-kees@kernel.org>
-Date:   Wed, 16 Aug 2023 23:08:21 -0500
-In-Reply-To: <20230814210508.never.871-kees@kernel.org> (Kees Cook's message
-        of "Mon, 14 Aug 2023 14:05:12 -0700")
-Message-ID: <87bkf68g5m.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Thu, 17 Aug 2023 02:09:04 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE951987
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 23:09:03 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-26b47df332eso2513304a91.2
+        for <linux-hardening@vger.kernel.org>; Wed, 16 Aug 2023 23:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1692252542; x=1692857342;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dMupaGt3lT1C6kccf/TFi4L2Zf/EmehC3TxUCzjtixY=;
+        b=FFPr75vKB+KpdBAwp2C3sgFtlfEVnChZG2+NKIhPJx2xbiWQe0rm+3eqQSt1ZYcesi
+         YDMGMDtYR0328TGSOOy9F6RBFp4sQTgKJ0o+zGtaB+LO1awcFO7S/v/xpuKr4YSTwbz4
+         VmOhac0ElSZ3hkkkPRHVATGDKuXniBOBMc39U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692252542; x=1692857342;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dMupaGt3lT1C6kccf/TFi4L2Zf/EmehC3TxUCzjtixY=;
+        b=KD9GdHyFBM9EV+VF6erAkkwZAelKeMWSm8KG4KNhPZP1n97YedEQ3vBOI/M8a4seyZ
+         nN0PfxHhVq1qlo/EFLLDgoFN23aZ/94WaPmAxJqNmijPpLk6WbvN1PDpbWrU7SFl4SKX
+         MoFjcdWgahLiO7uYWI8n5A/JlpPskV93bQyZQMR+htR8EyN5rmv2bU1+/qUB9Sm18WfI
+         zuhH3qElwntXdZAn9hqVtq9NgEz0OSbUhhfFr76k4+zXOoosuH721bQmrFIerBtAlH1H
+         +Cxr2ZWPw+mBBAeBDD6H8aKy9/FnyH1hOHiuma7C/gC0nJ3QManrm4bTIv594J7xq5yn
+         +rCA==
+X-Gm-Message-State: AOJu0YykFQUJdukiiM5gEqi2v+wF8AfriPP7rNzewpRcB4tiExYEZroK
+        EQ9X347mAbWQw0N9QtNS8NgdODuY6OIehWsHLjA=
+X-Google-Smtp-Source: AGHT+IG3QbcrpDrZ9Ru2n1cwj5LDSCPZgsOvfI1WKSbQd51Qm63XNFI7JaPbVv68FFkX9s/qIOWYLA==
+X-Received: by 2002:a17:90a:990e:b0:268:6670:46df with SMTP id b14-20020a17090a990e00b00268667046dfmr2987411pjp.27.1692252542365;
+        Wed, 16 Aug 2023 23:09:02 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 27-20020a17090a031b00b0026d034f6badsm815035pje.38.2023.08.16.23.09.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Aug 2023 23:09:01 -0700 (PDT)
+Date:   Wed, 16 Aug 2023 23:09:00 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "GONG, Ruiqi" <gongruiqi1@huawei.com>
+Cc:     kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev, Florian Westphal <fw@strlen.de>,
+        linux-hardening@vger.kernel.org
+Subject: Re: [netfilter-nf-next:testing 2/9]
+ ./usr/include/linux/netfilter_bridge/ebtables.h:163:26: warning: field
+ 'target' with variable sized type 'struct ebt_entry_target' not at the end
+ of a struct or class is a GNU extension
+Message-ID: <202308162257.F7876776C9@keescook>
+References: <202308171249.g1ywxhII-lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1qWUJB-000nJO-ON;;;mid=<87bkf68g5m.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX19bfqe96MqsVOjFxcODXAV3vKGoe2wqSKQ=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH] [RFC] signal: Add KUnit tests
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202308171249.g1ywxhII-lkp@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+On Thu, Aug 17, 2023 at 01:03:20PM +0800, kernel test robot wrote:
+> tree:   git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf-next.git testing
+> head:   015e2d9101d3713c7bee16dccad171df04a3bbd5
+> commit: 61b9e6bd48a6317c0a44ee4f3fecdec9de5baa9e [2/9] netfilter: ebtables: replace zero-length array members
+> config: i386-buildonly-randconfig-r004-20230817 (https://download.01.org/0day-ci/archive/20230817/202308171249.g1ywxhII-lkp@intel.com/config)
+> compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+> reproduce: (https://download.01.org/0day-ci/archive/20230817/202308171249.g1ywxhII-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202308171249.g1ywxhII-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    In file included from <built-in>:1:
+> >> ./usr/include/linux/netfilter_bridge/ebtables.h:163:26: warning: field 'target' with variable sized type 'struct ebt_entry_target' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
+>            struct ebt_entry_target target;
+>                                    ^
+>    1 warning generated.
 
-> This is a continuation of the proposal[1] for mocking init_task for
-> KUnit testing. Changing the behavior of kill_something_info() is moving
-> forward[2] and I'd _really_ like to have some unit tests in place to
-> actually test the behavioral changes.
->
-> I tried to incorporate feedback from Daniel and David, and I think the
-> result is fairly workable -- the only tricky part is building valid
-> task_struct instances. :)
->
-> Notably, I haven't actually gotten as far as testing the actual proposed
-> behavioral change since I wanted to make sure this approach wasn't going
-> to totally crash and burn.
->
-> Thoughts?
+Eww, it looks like "struct ebt_entry_target" is used _within_ another
+struct:
 
-Overall this looks like a nice start.  More comments below.
+struct ebt_standard_target {
+        struct ebt_entry_target target;
+        int verdict;
+};
 
-I do wonder though.  Would it perhaps be easier to create a pid
-namespace with just the processes you want in it?
+So "verdict" overlaps with the "data" FAM:
 
-I am wondering because you failed to mock find_vpid and so you
-are actually testing sending signals to kernel threads.
+struct ebt_entry_target {
+        union { 
+                struct {
+                        char name[EBT_EXTENSION_MAXNAMELEN];
+                        __u8 revision;
+                };
+                struct xt_target *target;
+        } u;
+        /* size of data */
+        unsigned int target_size;
+        unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+};  
 
-Eric
+These have been fixed in the past in a variety of ways -- it all depends
+on how userspace is using them. In looking at Debian Code Search:
+https://codesearch.debian.net/search?q=struct+ebt_standard_target&literal=1
 
-> [1] https://lore.kernel.org/all/202212012008.D6F6109@keescook/
-> [2] https://lore.kernel.org/all/87jzu12pjh.fsf_-_@email.froward.int.ebiederm.org
->
-> Cc: Brendan Higgins <brendan.higgins@linux.dev>
-> Cc: David Gow <davidgow@google.com>
-> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> Cc: Petr Skocik <pskocik@gmail.com>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: linux-kselftest@vger.kernel.org
-> Cc: kunit-dev@googlegroups.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  include/kunit/resource.h     |  15 ++++
->  include/linux/sched/signal.h |  11 ++-
->  kernel/signal.c              | 135 +++++++++++++++++++++++++++++++++++
->  3 files changed, 158 insertions(+), 3 deletions(-)
->
-> diff --git a/include/kunit/resource.h b/include/kunit/resource.h
-> index c7383e90f5c9..dbf84a58f7a6 100644
-> --- a/include/kunit/resource.h
-> +++ b/include/kunit/resource.h
-> @@ -479,4 +479,19 @@ void kunit_remove_action(struct kunit *test,
->  void kunit_release_action(struct kunit *test,
->  			  kunit_action_t *action,
->  			  void *ctx);
-> +
-> +#define kunit_get_mock_pointer(name, actual) ({			\
-> +	typeof(*(actual)) *ptr = actual;			\
-> +	struct kunit_resource *resource;			\
-> +								\
-> +	if (kunit_get_current_test()) {				\
-> +		resource = kunit_find_named_resource(current->kunit_test, name); \
-> +		if (resource) {					\
-> +			ptr = resource->data;			\
-> +			kunit_put_resource(resource);		\
-> +		}						\
-> +	}							\
-> +	ptr;							\
-> +})
-> +
->  #endif /* _KUNIT_RESOURCE_H */
-> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-> index 669e8cff40c7..700271f43491 100644
-> --- a/include/linux/sched/signal.h
-> +++ b/include/linux/sched/signal.h
-> @@ -637,14 +637,19 @@ static inline unsigned long sigsp(unsigned long sp, struct ksignal *ksig)
->  extern void __cleanup_sighand(struct sighand_struct *);
->  extern void flush_itimer_signals(void);
->  
-> +/* This is used for KUnit mocking. */
-> +#ifndef __init_task_ptr
-> +#define __init_task_ptr	(&init_task)
-> +#endif
-> +
->  #define tasklist_empty() \
-> -	list_empty(&init_task.tasks)
-> +	list_empty(&__init_task_ptr->tasks)
+It is exclusively doing casts and looking at the "verdict" member. So
+the easiest conversion might be this:
 
-This exposes an implementation detail that makes my brain hurt.
+ struct ebt_standard_target {
+-       struct ebt_entry_target target;
++       unsigned char hdr[sizeof(struct ebt_entry_target)];
+        int verdict;
+ };
 
-I think somewhere we should just have a global variable
-"struct list_head tasklist;" and use all of the modern list accessors
-on it.  Instead of placing that list in the first idle task for no
-reason.  That would allow decoupling all of the idle threads not
-just the first one from the tasklist.
+Or this might work (not tested):
 
-More importantly this has only a single user and that user is an assert
-that the per_cpu idle tasks come up before we start any other tasks.
-
-So we can just skip instrumenting this.
+diff --git a/include/uapi/linux/netfilter_bridge/ebtables.h b/include/uapi/linux/netfilter_bridge/ebtables.h
+index a494cf43a755..d6f10163b14a 100644
+--- a/include/uapi/linux/netfilter_bridge/ebtables.h
++++ b/include/uapi/linux/netfilter_bridge/ebtables.h
+@@ -146,23 +146,25 @@ struct ebt_entry_watcher {
+ };
+ 
+ struct ebt_entry_target {
+-	union {
+-		struct {
+-			char name[EBT_EXTENSION_MAXNAMELEN];
+-			__u8 revision;
+-		};
+-		struct xt_target *target;
+-	} u;
+-	/* size of data */
+-	unsigned int target_size;
+-	unsigned char data[0] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
++	struct ebt_entry_target_hdr {
++		union {
++			struct {
++				char name[EBT_EXTENSION_MAXNAMELEN];
++				__u8 revision;
++			};
++			struct xt_target *target;
++		} u;
++		/* size of data */
++		unsigned int target_size;
++	};
++	unsigned char data[] __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+ };
+ 
+ #define EBT_STANDARD_TARGET "standard"
+ struct ebt_standard_target {
+-	struct ebt_entry_target target;
+-	int verdict;
++	struct ebt_entry_target_hdr target;
++	int verdict __attribute__ ((aligned (__alignof__(struct ebt_replace))));
+ };
+ 
+ /* one entry */
 
 
-Given what your tests have to do to emulate the init_task without
-it actually being an init_task in the long term it probably makes
-sense to form the cleanup and just get init_task out of the
-picture entirely.
-
-Maybe that is too much right now, but it feels like the clean way
-to handle this situation.
-
->  #define next_task(p) \
->  	list_entry_rcu((p)->tasks.next, struct task_struct, tasks)
->  
->  #define for_each_process(p) \
-> -	for (p = &init_task ; (p = next_task(p)) != &init_task ; )
-> +	for (p = __init_task_ptr ; (p = next_task(p)) != __init_task_ptr ; )
->  
->  extern bool current_is_single_threaded(void);
->  
-> @@ -653,7 +658,7 @@ extern bool current_is_single_threaded(void);
->   *          'break' will not work as expected - use goto instead.
->   */
->  #define do_each_thread(g, t) \
-> -	for (g = t = &init_task ; (g = t = next_task(g)) != &init_task ; ) do
-> +	for (g = t = __init_task_ptr ; (g = t = next_task(g)) != __init_task_ptr ; ) do
->
-
-Arguably we can skip this as well.  There are only 3 uses of
-do_each_thread (pivot_root, SAK, and ia64 backtrace) and they all should
-be changed to be for_each_process_thread.
-
->  #define while_each_thread(g, t) \
->  	while ((t = next_thread(t)) != g)
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index b5370fe5c198..7607d302ebb9 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -11,6 +11,14 @@
->   *		to allow signals to be sent reliably.
->   */
->  
-> +#if IS_ENABLED(CONFIG_KUNIT)
-> +/* This must be defined before we include include/linux/sched/signal.h */
-> +#define __init_task_ptr kunit_get_mock_pointer("mock_init_task", &init_task)
-> +
-> +#include <kunit/resource.h>
-> +#include <kunit/test-bug.h>
-> +#endif
-> +
->  #include <linux/slab.h>
->  #include <linux/export.h>
->  #include <linux/init.h>
-> @@ -4842,3 +4850,130 @@ void kdb_send_sig(struct task_struct *t, int sig)
->  		kdb_printf("Signal %d is sent to process %d.\n", sig, t->pid);
->  }
->  #endif	/* CONFIG_KGDB_KDB */
-> +
-> +#if IS_ENABLED(CONFIG_KUNIT)
-> +static void test_empty_task_list(struct kunit *test)
-> +{
-> +	struct kunit_resource resource;
-> +	static struct task_struct empty_task_list = {
-> +			.tasks	= LIST_HEAD_INIT(empty_task_list.tasks),
-> +		};
-> +	struct task_struct *p;
-> +	int count = 0;
-> +
-> +	kunit_add_named_resource(test, NULL, NULL, &resource,
-> +				 "mock_init_task", &empty_task_list);
-> +
-> +	KUNIT_EXPECT_TRUE(test, tasklist_empty());
-> +
-> +	for_each_process(p)
-> +		count++;
-> +
-> +	/* System hangs without this... */
-> +	kunit_remove_resource(test, &resource);
-> +
-> +	KUNIT_EXPECT_EQ(test, count, 0);
-> +}
-
-We should be able to just skip this test.
-
-> +
-> +static void test_for_each_process(struct kunit *test)
-> +{
-> +	struct kunit_resource resource;
-> +	static struct task_struct task1 = {
-> +			.pid = 1,
-> +			.tasks	= LIST_HEAD_INIT(task1.tasks),
-> +		};
-> +	static struct task_struct task2 = {
-> +			.pid = 2,
-> +		}, task3 = {
-> +			.pid = 3,
-> +		};
-
-Note that these pid values in the tasks are not used by
-signal delivery. 
-
-> +	struct task_struct *p;
-> +	int count = 0;
-> +
-> +	list_add(&task2.tasks, &task1.tasks);
-> +	list_add(&task3.tasks, &task1.tasks);
-        ^^^^^
-To match fork these should be list_add_tail.
-> +
-> +	kunit_add_named_resource(test, NULL, NULL, &resource,
-> +				 "mock_init_task", &task1);
-> +
-> +	/* Walk the process list backwards. */
-
-The comment is wrong. You built your list backwards, the process list is
-not walked backwards.
-
-> +	for_each_process(p) {
-> +		KUNIT_EXPECT_EQ(test, 3 - count, p->pid);
-> +		count++;
-> +	}
-> +
-> +	/* System hangs without this... */
-> +	kunit_remove_resource(test, &resource);
-> +
-> +	/* init_task isn't counted... */
-> +	KUNIT_EXPECT_EQ(test, count, 2);
-> +}
-> +
-> +static void test_kill_something_info(struct kunit *test)
-> +{
-> +	struct kunit_resource resource;
-> +	static struct task_struct task1 = {
-> +			.pid = 1,
-> +			.tasks	= LIST_HEAD_INIT(task1.tasks),
-> +		};
-> +	static struct task_struct task2 = {
-> +			.pid = 2,
-> +		}, task3 = {
-> +			.pid = 3,
-> +		};
-> +	struct kernel_siginfo siginfo = {
-> +			.si_code = SI_KERNEL,
-> +		};
-> +	struct task_struct *p;
-> +	int count = 0;
-> +
-> +	list_add(&task2.tasks, &task1.tasks);
-> +	list_add(&task3.tasks, &task1.tasks);
-
-These should also be list_add_tail.
-
-> +
-> +	kunit_add_named_resource(test, NULL, NULL, &resource,
-> +				 "mock_init_task", &task1);
-> +
-> +	/* Make sure we have a process list. */
-> +	for_each_process(p)
-> +		count++;
-> +	KUNIT_EXPECT_EQ(test, count, 2);
-> +
-> +	/* INT_MIN pid must return ESRCH */
-> +	KUNIT_EXPECT_EQ(test, -ESRCH,
-> +		kill_something_info(SIGHUP, SEND_SIG_NOINFO, INT_MIN));
-> +
-> +	/* Invalid signal: EINVAL */
-> +	KUNIT_EXPECT_EQ(test, -EINVAL,
-> +		kill_something_info(_NSIG + 1, SEND_SIG_NOINFO, 2));
-> +
-> +	/* Missing pid: ESRCH */
-> +	KUNIT_EXPECT_EQ(test, -ESRCH,
-> +		kill_something_info(SIGHUP, SEND_SIG_NOINFO, 42));
-
-This confirms you don't have a process with pid #42 your system when
-the test is run.
-
-> +	/* Bypass permission checks with SEND_SIG_NOINFO. */
-> +	KUNIT_EXPECT_EQ(test, 0,
-> +		kill_something_info(SIGHUP, SEND_SIG_NOINFO, 2));
-
-This confirms you a process with pid #2 aka kthread on your system when
-the test is run.
-
-> +
-> +	/* XXX: Hm, I was expecting this to explode in cred deref... */
-> +	KUNIT_EXPECT_EQ(test, 0,
-> +		kill_something_info(SIGHUP, &siginfo, 3));
-
-This confirms you have a process with pid #3 on your system when the
-test is run.  Pid #3 on my system refers to a kthread.
-
-> +
-> +	/* XXX more tests here, perhaps after mocking out group_send_sig_info() ... */
-> +
-
-You need to mock find_vpid before you test sending to processes.
-
-Right now your tests are not testing sending signals to your mocked
-tasks but instead to real tasks.
-
-> +	/* System hangs without this... */
-> +	kunit_remove_resource(test, &resource);
-> +}
-> +
-> +static struct kunit_case test_cases[] = {
-> +	KUNIT_CASE(test_empty_task_list),
-> +	KUNIT_CASE(test_for_each_process),
-> +	KUNIT_CASE(test_kill_something_info),
-> +	{}
-> +};
-> +
-> +static struct kunit_suite test_suite = {
-> +	.name = "signal",
-> +	.test_cases = test_cases,
-> +};
-> +kunit_test_suite(test_suite);
-> +#endif	/* CONFIG_KUNIT */
+-- 
+Kees Cook
