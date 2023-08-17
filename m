@@ -2,77 +2,126 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB892C27C7A
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 06:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B85EB64DD
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 08:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348201AbjHQGfK (ORCPT
+        id S236369AbjHQIJE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 02:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43074 "EHLO
+        Thu, 17 Aug 2023 04:09:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348256AbjHQGex (ORCPT
+        with ESMTP id S1348855AbjHQIJD (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 02:34:53 -0400
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146302700;
-        Wed, 16 Aug 2023 23:34:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1692254089;
-        bh=QOKoW3wyRNr1RLwRnOsY4BbnnwrSfpgB6x3DEw7vRYI=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=YtX6jgHNQC0nPGKx1/R/ojff9UHbjVywbxalcoJG1mImb7/m3AfOy1YxIRzmpUbXz
-         XMOqb3hmaYHVodauNH9eIpdozm6OBERMmsll7/Pw+Wl0cb9VQ/2acakYaNYNBXADU1
-         O9zbt1mjuLqWzpm2qnJy//jGVuMgsiuvuuFbOULlvWIbaDARBudQxqDQZHZgua4nNq
-         BaBkSHCqV8nZZfoFR5FIXAu/CUfAjssMfrDBv75ftIBAQM65jNufcC778EP8Y6dbTH
-         FIFgeb/6SxFuQcbuJ1QvROfVwJ9x+X54Mv9MVyQf8i0ZvwA422MnIBpZdqsUHF03T9
-         yd7OYR/Nrd/RQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4RRFbs15Tdz4wZn;
-        Thu, 17 Aug 2023 16:34:49 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Justin Stitt <justinstitt@google.com>,
-        Geoff Levand <geoff@infradead.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Thu, 17 Aug 2023 04:09:03 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2564210E;
+        Thu, 17 Aug 2023 01:08:58 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37H86UIP023246;
+        Thu, 17 Aug 2023 08:08:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=0r60og3YEUN8ZqsDcZOEUbw3dIibpQWZ1a10/3/mZS0=;
+ b=ej9Lp+YM+pYhzy9r+N/L94XXRSHqzWEulqzudXgk33Tf7ph8QrOyWNQQGNv8OF552CNV
+ MIm0DDr8zjvzdueV8ypwddceu1kZC9VMONtvzO9brsOWi6SZPh9NsQ2hqjSRput+jxV2
+ nur1wwF/6L7TKyaeokdEKHTdA1COGCtjbqfKlW9UXhey0T045CRFzg1mkrGHUNYzQdBj
+ BcozYXMjudTGpFIGsGUR19dVThIQFVbfULTTNzZzjPLMidhS0OZp+OxswhtmHGM0hmON
+ vEu2JwO8Y2ixoIqlw70rRLE3qxzOWn07NPygWHI1eTXXOpiZJ7oJE0h8BvqPk1zmc6pJ Fg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3shfh6ga0m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Aug 2023 08:08:54 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37H86j9l025129;
+        Thu, 17 Aug 2023 08:08:54 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3shfh6g9yu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Aug 2023 08:08:54 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37H5qDEv018920;
+        Thu, 17 Aug 2023 08:03:52 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3seq41ur46-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 17 Aug 2023 08:03:52 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37H83nP819989180
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Aug 2023 08:03:50 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4D4C20040;
+        Thu, 17 Aug 2023 08:03:49 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 958C12004B;
+        Thu, 17 Aug 2023 08:03:49 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Thu, 17 Aug 2023 08:03:49 +0000 (GMT)
+Date:   Thu, 17 Aug 2023 10:03:48 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         Kees Cook <keescook@chromium.org>,
-        linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH] powerpc/ps3: refactor strncpy usage
-In-Reply-To: <20230816-strncpy-arch-powerpc-platforms-ps3-repository-v1-1-88283b02fb09@google.com>
-References: <20230816-strncpy-arch-powerpc-platforms-ps3-repository-v1-1-88283b02fb09@google.com>
-Date:   Thu, 17 Aug 2023 16:34:47 +1000
-Message-ID: <87350i6ut4.fsf@mail.lhotse>
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] s390/ipl: refactor deprecated strncpy
+Message-ID: <20230817080348.5996-B-hca@linux.ibm.com>
+References: <20230811-arch-s390-kernel-v1-1-7edbeeab3809@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230811-arch-s390-kernel-v1-1-7edbeeab3809@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 5eoW-KfEw0BT4SLN-XEbp6TFr0r3RBRd
+X-Proofpoint-ORIG-GUID: BgyRKex5i_FiOkMbt4IRCFgHzzsakvmw
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-17_03,2023-08-15_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 bulkscore=0
+ mlxscore=0 spamscore=0 impostorscore=0 suspectscore=0 clxscore=1015
+ mlxlogscore=948 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2306200000 definitions=main-2308170071
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Justin Stitt <justinstitt@google.com> writes:
+On Fri, Aug 11, 2023 at 09:56:15PM +0000, Justin Stitt wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
->
-> `make_first_field()` should use similar implementation to `make_field()`
-> due to memcpy having more obvious behavior here. The end result yields
-> the same behavior as the previous `strncpy`-based implementation
-> including the NUL-padding.
->
+> 
+> Use `strscpy_pad` which has the same behavior as `strncpy` here with the
+> extra safeguard of guaranteeing NUL-termination of destination strings.
+> In it's current form, this may result in silent truncation if the src
+> string has the same size as the destination string.
+> 
 > Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
 > Link: https://github.com/KSPP/linux/issues/90
 > Cc: linux-hardening@vger.kernel.org
 > Signed-off-by: Justin Stitt <justinstitt@google.com>
 > ---
-> Note:
-> This follows up on a previous RFC which can be found here:
-> https://lore.kernel.org/all/20230811-strncpy-arch-powerpc-platforms-ps3-v1-0-301052a5663e@google.com/
-> ---
->  arch/powerpc/platforms/ps3/repository.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  arch/s390/kernel/ipl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/kernel/ipl.c b/arch/s390/kernel/ipl.c
+> index 85a00d97a314..a6dcf6f28197 100644
+> --- a/arch/s390/kernel/ipl.c
+> +++ b/arch/s390/kernel/ipl.c
+> @@ -266,7 +266,7 @@ static ssize_t sys_##_prefix##_##_name##_store(struct kobject *kobj,	\
+>  		struct kobj_attribute *attr,				\
+>  		const char *buf, size_t len)				\
+>  {									\
+> -	strncpy(_value, buf, sizeof(_value) - 1);			\
+> +	strscpy_pad(_value, buf, sizeof(_value));			\
+>  	strim(_value);							\
+>  	return len;							\
+>  }									\
 
-This looks good to me. I'll pick this up directly, Geoff let me know if
-this breaks something somehow.
+Patch applied, but replaced strscpy_pad() with strscpy() like it was
+suggested by Kees.
 
-cheers
+Thanks!
