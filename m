@@ -2,33 +2,33 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BF7C64EB4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28705C64EB4
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:20:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236593AbjHQVS7 (ORCPT
+        id S1350401AbjHQVUE (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 17:18:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45980 "EHLO
+        Thu, 17 Aug 2023 17:20:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355217AbjHQVSc (ORCPT
+        with ESMTP id S1355303AbjHQVTx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 17:18:32 -0400
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D735A3AAC
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 14:17:52 -0700 (PDT)
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+        Thu, 17 Aug 2023 17:19:53 -0400
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080D2136
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 14:19:51 -0700 (PDT)
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
         by cmsmtp with ESMTP
-        id WcM7qDcEsDKaKWkMcqCWKm; Thu, 17 Aug 2023 21:17:07 +0000
+        id We1vq0CCiQFHRWkPGqnfB5; Thu, 17 Aug 2023 21:19:50 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id WkMcq0mL6oeMqWkMcqmI4h; Thu, 17 Aug 2023 21:17:06 +0000
-X-Authority-Analysis: v=2.4 cv=F9xEy4tN c=1 sm=1 tr=0 ts=64de8e52
+        id WkPFqY0n2DHerWkPGqlBJZ; Thu, 17 Aug 2023 21:19:50 +0000
+X-Authority-Analysis: v=2.4 cv=MN5zJeVl c=1 sm=1 tr=0 ts=64de8ef6
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=edGIuiaXAAAA:8 a=xVhDTqbCAAAA:8 a=K6HrmWtEAAAA:8 a=hBqU3vQJAAAA:8
- a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10
- a=4kyDAASA-Eebq_PzFVE6:22 a=GrmWmAYt4dzCMttCBZOh:22 a=yV38gEssg_2GhkhKF82i:22
+ a=VnNF1IyMAAAA:8 a=pGLkceISAAAA:8 a=xVhDTqbCAAAA:8 a=K6HrmWtEAAAA:8
+ a=hBqU3vQJAAAA:8 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8 a=YpZVJ9pEJ9zOGENEAE8A:9
+ a=QEXdDO2ut3YA:10 a=GrmWmAYt4dzCMttCBZOh:22 a=yV38gEssg_2GhkhKF82i:22
  a=WLjMIN4s_96MqnBbPenP:22 a=AjGcO6oz07-iQ99wixmX:22 a=xmb-EsYY8bH0VWELuYED:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
@@ -36,39 +36,42 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=XPrmBnGis32Q4Plsd5hHko1y81xn30PHQUauq/WHvYE=; b=j1YUKDz7wraUXWHGPd7VTuEae/
-        Byk8pUT8yXEhDXuwemji864YtuYgeSgS1NcZzfKN4eMUZpiDU83w/kzCUY6sz20kx2UXpnj6WGE8B
-        HMue5dVwt6HvqXAAwVHOWEAfiLzGLaE/G5rNbcgYlx603vNA4JDTDKXPzer3vx96Qns869F2nunBU
-        52XoOlRv8x92H4zTANHgQtrni72bme3zfbjLfpnA9cxVMlzTsUxmqIRd9bkX62lKRnpe6SGyFnN18
-        ye41BDVA7BnW/DmfGzyx2XuAVURRveQoMk3BWLhGK8n9sQZCfCMgZ46IkWWoGkNfNHEEhuYjyTYam
-        G2XvhWBw==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:56616 helo=[192.168.15.8])
+        bh=GdZkbs6d8xnOCEm6lQLRaAIvJNDQE/YytzCwGkCxNlI=; b=J3zzUh7hQsrwgewGUBVp5s9B7O
+        2WuKMk0PipxJ37aPvnI0QpZLkgYPEToEEcBgvnmuz4MU64YYmKrJv4xz/m20hg1H6tBWyG6CBp0Be
+        ozRvkQ26ggT+Y98ox1avR9r7Qlf9z5Sk03Hw31O3uSFefJ7NTLub18S/3Dj6tqfyfTzLKtdxee5Oq
+        z3V877OCMHPJXzMT33PnHURYbWVal9KBMLxqR8zM15Gp7NcqEU34UeHtcmOxAy003nBCZeG2KnKtB
+        mWH1mr5vcPZ3PM6ZHhDYgkra0740zlHg0mDgpgZSdGgR8QChXGOwbG4/Q8hXXICvlfl2CEZX1noic
+        7BCVOu9w==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:45576 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qWkMa-001gal-1N;
-        Thu, 17 Aug 2023 16:17:04 -0500
-Message-ID: <713066f1-1c03-94c4-c9d6-7b145a9ac00b@embeddedor.com>
-Date:   Thu, 17 Aug 2023 15:18:06 -0600
+        id 1qWkPD-001iQy-2Z;
+        Thu, 17 Aug 2023 16:19:47 -0500
+Message-ID: <9d3a054d-ce3d-a971-2635-7fc65f36bfd5@embeddedor.com>
+Date:   Thu, 17 Aug 2023 15:20:49 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH] landlock: Annotate struct landlock_rule with __counted_by
+Subject: Re: [PATCH] integrity: Annotate struct ima_rule_opt_list with
+ __counted_by
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Cc:     Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+To:     Kees Cook <keescook@chromium.org>, Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
         "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230817210257.never.920-kees@kernel.org>
+References: <20230817210327.never.598-kees@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230817210257.never.920-kees@kernel.org>
+In-Reply-To: <20230817210327.never.598-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
 X-AntiAbuse: Original Domain - vger.kernel.org
@@ -77,18 +80,18 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qWkMa-001gal-1N
+X-Exim-ID: 1qWkPD-001iQy-2Z
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:56616
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:45576
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 22
+X-Email-Count: 34
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfHg2UfCh087/ZDy+eNmB+LFPVNHE6g7L1zhotsWfHM4qyEK7QuwMFeR+w3MF1C3UKDSbAeFFoB7DT3qxLg9WcOZZ8NSmaUClD5FE3svQvW0gS4Njww4S
- O++eIWrNCYrH+F6HApGeVpQILLJJjIt1808BflOxTM9R7jT3Y86gu8n4h/30i5Fa+Y0b0X1q3Ac+LyXkdvzkGNVKu83WRFI4c8X5bXqFT9jEdeTkV1jtW2TI
+X-CMAE-Envelope: MS4xfH3Z0RmbTAVhV0VTK+ktkkJqWytuR6Sk982mCY7qxXG4vTIKmBxRL5pyYfUhnLkv672GjyUHLxWGaZVuCZa0feY4ZEm3T8bmk7j/it6S3x2mpCB3IXvY
+ 9RVvTxgZU+bVNQvKorUl2VbKHhOkJ/M9BfG99fv89DeVRrA5KVI7nv/KrQU5Tu4QZjVdV10MyGwQN2nNWkXm/9zvejM+E3ZUP/AFDtv1OkC2KF/EIdvFEmL8
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -102,14 +105,18 @@ On 8/17/23 15:03, Kees Cook wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct landlock_rule.
+> As found with Coccinelle[1], add __counted_by for struct ima_rule_opt_list.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: "Mickaël Salaün" <mic@digikod.net>
+> Cc: Mimi Zohar <zohar@linux.ibm.com>
+> Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
 > Cc: Paul Moore <paul@paul-moore.com>
 > Cc: James Morris <jmorris@namei.org>
 > Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: linux-integrity@vger.kernel.org
 > Cc: linux-security-module@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
@@ -120,19 +127,35 @@ Thanks
 Gustavo
 
 > ---
->   security/landlock/ruleset.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   security/integrity/ima/ima_policy.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
-> index d43231b783e4..55b1df8f66a8 100644
-> --- a/security/landlock/ruleset.h
-> +++ b/security/landlock/ruleset.h
-> @@ -67,7 +67,7 @@ struct landlock_rule {
->   	 * @layers: Stack of layers, from the latest to the newest, implemented
->   	 * as a flexible array member (FAM).
->   	 */
-> -	struct landlock_layer layers[];
-> +	struct landlock_layer layers[] __counted_by(num_layers);
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 69452b79686b..f69062617754 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -68,7 +68,7 @@ enum policy_rule_list { IMA_DEFAULT_POLICY = 1, IMA_CUSTOM_POLICY };
+>   
+>   struct ima_rule_opt_list {
+>   	size_t count;
+> -	char *items[];
+> +	char *items[] __counted_by(count);
 >   };
 >   
->   /**
+>   /*
+> @@ -342,6 +342,7 @@ static struct ima_rule_opt_list *ima_alloc_rule_opt_list(const substring_t *src)
+>   		kfree(src_copy);
+>   		return ERR_PTR(-ENOMEM);
+>   	}
+> +	opt_list->count = count;
+>   
+>   	/*
+>   	 * strsep() has already replaced all instances of '|' with '\0',
+> @@ -357,7 +358,6 @@ static struct ima_rule_opt_list *ima_alloc_rule_opt_list(const substring_t *src)
+>   		opt_list->items[i] = cur;
+>   		cur = strchr(cur, '\0') + 1;
+>   	}
+> -	opt_list->count = count;
+>   
+>   	return opt_list;
+>   }
