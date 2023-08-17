@@ -2,130 +2,113 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E22BC677C4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043EC64EBC
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244001AbjHQVst (ORCPT
+        id S1355428AbjHQV53 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 17:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48156 "EHLO
+        Thu, 17 Aug 2023 17:57:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355495AbjHQVsi (ORCPT
+        with ESMTP id S1355505AbjHQV5G (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 17:48:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741FF1FF3;
-        Thu, 17 Aug 2023 14:48:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ECC5B61AC3;
-        Thu, 17 Aug 2023 21:48:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB7B3C433C8;
-        Thu, 17 Aug 2023 21:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692308909;
-        bh=bexJ/xREDVWvZmu+lu8XL2wVApfsd/lRowROzQZizoc=;
-        h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-        b=DEBtayWkbf820tXs6npe3l1kydGysurs82ZhdJ046kH4/0n2Tga8dbgPpaWymLVVm
-         wbAh3DD/ZYklGV8PE9XptJijDDarWoCERbZglkf6nHXnzdPvmOTi3dDia1ZIqE1+1b
-         MHLA0S/dBZrzYmfEWqdLvRdZZpVxBKiDa/WqpZbVOtDXdFIctcoUUL6pHv8Xyizee8
-         4FgALKGCCGjpWKoBuOt8/yQUsLkcvL+g+IBo4Sz3ri7uWbsdAhgcEEirVzPGhV0tJ0
-         ddajm0l3zYAFXl2O4WCaJyftSIN9aFdV5pFLwBRaS13Yc9phxiI4wvVUdMZXKKGf4B
-         uCZl4IeEREStw==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 18 Aug 2023 00:48:24 +0300
-Message-Id: <CUV5FU612TVH.3U5BOWZR013CD@suppilovahvero>
-Cc:     "Dmitry Kasatkin" <dmitry.kasatkin@gmail.com>,
-        "Paul Moore" <paul@paul-moore.com>,
-        "James Morris" <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        "Nathan Chancellor" <nathan@kernel.org>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        "Tom Rix" <trix@redhat.com>, <linux-kernel@vger.kernel.org>,
-        <llvm@lists.linux.dev>, <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH] integrity: Annotate struct ima_rule_opt_list with
- __counted_by
-From:   "Jarkko Sakkinen" <jarkko@kernel.org>
-To:     "Kees Cook" <keescook@chromium.org>,
-        "Mimi Zohar" <zohar@linux.ibm.com>
-X-Mailer: aerc 0.14.0
-References: <20230817210327.never.598-kees@kernel.org>
-In-Reply-To: <20230817210327.never.598-kees@kernel.org>
+        Thu, 17 Aug 2023 17:57:06 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098502D44;
+        Thu, 17 Aug 2023 14:57:05 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-689f4fb1c29so222893b3a.0;
+        Thu, 17 Aug 2023 14:57:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692309424; x=1692914224;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z0omXZny2n+CByL2k7ciGeHHMSQ9u/agRJB2cjviSi4=;
+        b=hr056v+KwQCD7KsAAiffnt/3sSt1kTIcf8ne4SKRK1o44FszUJAWCBrFUQsZHgYJDd
+         bTx5INJz3ICUgZz0sm7keyITgp8HsgzZ5fohuetFK5lXFrlPf34LBKJauHkvKMfd+HWR
+         rSkXHrHmvgzDtHH9FbA4JhNetRxt06m8trUlP4HeA8yKYy4R9AoHI/uo/u4JVQy+wmR+
+         NRbSgaY2wzwBttQN0mjQtVyq6GMvxh+wPKKLjiow1eQwe/MqfXp0XZ08TJ0tD85qGHep
+         zaK8DfYd9FSX3Ds78+mMzfluB+IRK6o7PCoOqHPsCa8To8OnwauvRZPsxxGUDk3gt1Bu
+         GyAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692309424; x=1692914224;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z0omXZny2n+CByL2k7ciGeHHMSQ9u/agRJB2cjviSi4=;
+        b=ehfewPl48+urRuG5CTpf0R+GLtAAYRp3yqYhjEedLfUR7JSsJ/AyFiGNCpvkqHo+7f
+         ILI4z688slSi+udDavgPofzoIndtgwAkOfbQlkkCMc0QBD/HSxVygZzD6mYh440jzWzm
+         MedpMh6YSgf8H8EpVEpevUpfnmh8F1QZkxut5ORpaNk71xKkDxmahyFFZOzoB4Elcscs
+         Bfptl52NokDimh2x9/KHWyTuYlBqsyY1KYgUD3g6VR1WRgxkSlQ4NLbDLrJunjh/Xdtv
+         C7mBH6CRVyjtp4cLIx448sPaFI3Op71C7qWTlk0mMrsRurAAU+CEtuwB4PPCIDPZFCkS
+         oejQ==
+X-Gm-Message-State: AOJu0YxwNWfTDqFGmsnOait8gJ49SXkUQ84NOXe/bty8JSU4Ef2Qef9l
+        ak76Ap7TpE1aVSalqaLleLU=
+X-Google-Smtp-Source: AGHT+IEP+XwGLfMhFD6DTODFTV5Plu4zVyjwNVkF/Rry609CkvL+6YWELYMGm624RG7P+zNerxL1bw==
+X-Received: by 2002:a05:6a00:3028:b0:686:5f73:4eac with SMTP id ay40-20020a056a00302800b006865f734eacmr5175534pfb.13.1692309424406;
+        Thu, 17 Aug 2023 14:57:04 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:400::5:93bd])
+        by smtp.gmail.com with ESMTPSA id ff20-20020a056a002f5400b0065da94fe917sm235379pfb.36.2023.08.17.14.57.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Aug 2023 14:57:03 -0700 (PDT)
+Sender: Tejun Heo <htejun@gmail.com>
+Date:   Thu, 17 Aug 2023 11:57:02 -1000
+From:   Tejun Heo <tj@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Zefan Li <lizefan.x@bytedance.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3][next] cgroup: Avoid -Wstringop-overflow warnings
+Message-ID: <ZN6Xrsssr4Pys8YQ@slm.duckdns.org>
+References: <ZN5WkbPelHUSTXOA@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZN5WkbPelHUSTXOA@work>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri Aug 18, 2023 at 12:03 AM EEST, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_b=
-y
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
-S
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
->
-> As found with Coccinelle[1], add __counted_by for struct ima_rule_opt_lis=
-t.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
->
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
->
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: linux-integrity@vger.kernel.org
-> Cc: linux-security-module@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  security/integrity/ima/ima_policy.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima=
-/ima_policy.c
-> index 69452b79686b..f69062617754 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -68,7 +68,7 @@ enum policy_rule_list { IMA_DEFAULT_POLICY =3D 1, IMA_C=
-USTOM_POLICY };
-> =20
->  struct ima_rule_opt_list {
->  	size_t count;
-> -	char *items[];
-> +	char *items[] __counted_by(count);
->  };
-> =20
->  /*
-> @@ -342,6 +342,7 @@ static struct ima_rule_opt_list *ima_alloc_rule_opt_l=
-ist(const substring_t *src)
->  		kfree(src_copy);
->  		return ERR_PTR(-ENOMEM);
->  	}
-> +	opt_list->count =3D count;
-> =20
->  	/*
->  	 * strsep() has already replaced all instances of '|' with '\0',
-> @@ -357,7 +358,6 @@ static struct ima_rule_opt_list *ima_alloc_rule_opt_l=
-ist(const substring_t *src)
->  		opt_list->items[i] =3D cur;
->  		cur =3D strchr(cur, '\0') + 1;
->  	}
-> -	opt_list->count =3D count;
-> =20
->  	return opt_list;
->  }
-> --=20
-> 2.34.1
+On Thu, Aug 17, 2023 at 11:19:13AM -0600, Gustavo A. R. Silva wrote:
+> Change the notation from pointer-to-array to pointer-to-pointer.
+> With this, we avoid the compiler complaining about trying
+> to access a region of size zero as an argument during function
+> calls.
+> 
+> This is a workaround to prevent the compiler complaining about
+> accessing an array of size zero when evaluating the arguments
+> of a couple of function calls. See below:
+> 
+> kernel/cgroup/cgroup.c: In function 'find_css_set':
+> kernel/cgroup/cgroup.c:1206:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+>  1206 |         cset = find_existing_css_set(old_cset, cgrp, template);
+>       |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> kernel/cgroup/cgroup.c:1206:16: note: referencing argument 3 of type 'struct cgroup_subsys_state *[0]'
+> kernel/cgroup/cgroup.c:1071:24: note: in a call to function 'find_existing_css_set'
+>  1071 | static struct css_set *find_existing_css_set(struct css_set *old_cset,
+>       |                        ^~~~~~~~~~~~~~~~~~~~~
+> 
+> With the change to pointer-to-pointer, the functions are not prevented
+> from being executed, and they will do what they have to do when
+> CGROUP_SUBSYS_COUNT == 0.
+> 
+> Address the following -Wstringop-overflow warnings seen when
+> built with ARM architecture and aspeed_g4_defconfig configuration
+> (notice that under this configuration CGROUP_SUBSYS_COUNT == 0):
+> 
+> kernel/cgroup/cgroup.c:1208:16: warning: 'find_existing_css_set' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:1258:15: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:6089:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> kernel/cgroup/cgroup.c:6153:18: warning: 'css_set_hash' accessing 4 bytes in a region of size 0 [-Wstringop-overflow=]
+> 
+> This results in no differences in binary output.
+> 
+> Link: https://github.com/KSPP/linux/issues/316
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
+Applied to cgroup/for-6.6.
 
-BR, Jarkko
+Thanks.
+
+-- 
+tejun
