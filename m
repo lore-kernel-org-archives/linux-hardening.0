@@ -2,121 +2,127 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C8CC3DA58
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 17:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F75C3DA58
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 17:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238914AbjHQRAv (ORCPT
+        id S1353237AbjHQRDB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 13:00:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39142 "EHLO
+        Thu, 17 Aug 2023 13:03:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353791AbjHQRAV (ORCPT
+        with ESMTP id S1353805AbjHQRCi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 13:00:21 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A00B2D73
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 10:00:19 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-688731c6331so2215200b3a.3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 10:00:19 -0700 (PDT)
+        Thu, 17 Aug 2023 13:02:38 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1EA2D75
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 10:02:36 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1bf1935f6c2so280155ad.1
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 10:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692291619; x=1692896419;
+        d=chromium.org; s=google; t=1692291756; x=1692896556;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MJhpOKYygfVTwv/muBcWLGwZoRPdxuU8yz2KMU9B00o=;
-        b=BXFnBPkfR3sQEgInQUXxcixS4Rxh5w0uTrfa8bekCw4+fl6YRwyldBR2Cd6t1X9x8z
-         3Uzvb4SGP3p+l/QkarFDWiXW97wF+umwHMIfTdKYKMnIlSevQoPRHpj0/Muw/v4aJDt6
-         HcVyK5RXx+fRlZYdVgRmcyTrUqOulmp6cFuDU=
+        bh=Of6VU25h9o3MQFapeYfF0CWZ6iyOJM3AV0c4Y0pZ9cU=;
+        b=SFYhf7Oz8UygdI5YwpKRoNs+ZXAjO5sfO6ikcV/OhTNMscCt40x0lD0mjI1W9025YN
+         A0bkeVTf0o5KpnbkeZDJOHyk2POgEKEmARdNxasavIOmfnfOz0TyzBm9fo1VCD3JwPiB
+         OS3XEwNdNlmJBQ+pjG1wh8ag9tz/SIwbh4GBo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692291619; x=1692896419;
+        d=1e100.net; s=20221208; t=1692291756; x=1692896556;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MJhpOKYygfVTwv/muBcWLGwZoRPdxuU8yz2KMU9B00o=;
-        b=ejkJhpnkUzPch+JVd45kaVUxBeRpDMgALNpp10VaZ1q+BmhIs8zzCXUic+K9l6RyQw
-         9hjtrgM6+svF9b5KpsyTojuqnyyzNDfr5oOt7/0poqTSJVWYQ0UXiPEGeAiXYtrThTDl
-         0KCjAwfNQVjft+aGxSywEtCgz+SXdE4NurUGY+/KtqNwBALhZfUgBpfDDPQN+uxZTxef
-         IjalyCKNWkO443sij+XneMh/Pfovlv81/z6oSRxcJzd4/bgMfJAV0Ny0SmtMAknZB+wv
-         Yp/ogh97/VZcgWNKFc+KEAmvy5FgiBPt/mCds670mVSxcmUER1tWWu3sHqSI90IUUMff
-         jOXg==
-X-Gm-Message-State: AOJu0YxtVZTtM5QUpl8+8j/O4zD7yZ6U9BXqDTgoKHF0VYvRv+N0qp8Q
-        IR5qb0zODZEU2JAZMUS24dOagA==
-X-Google-Smtp-Source: AGHT+IGfkKsLOQz6+e+EW5vzdI+McSp2GYuMvONN8EpwvhQgT4MGydmr4ZY2beFstZQdjjWOFyBPoQ==
-X-Received: by 2002:a05:6a20:8421:b0:13b:a4fd:3017 with SMTP id c33-20020a056a20842100b0013ba4fd3017mr304951pzd.46.1692291618930;
-        Thu, 17 Aug 2023 10:00:18 -0700 (PDT)
+        bh=Of6VU25h9o3MQFapeYfF0CWZ6iyOJM3AV0c4Y0pZ9cU=;
+        b=Ab3h8Wd9KX7WVep+zJ2JVE5lyAcHiLTIlE0p/bfl4FKRxNGvGibQ99gtQyyeyPKLgv
+         1Mjd98jhJEQuYdnU8LKsbt0kWb19iBw/raji50wD1NcX5bZS0jiV/6MGPaaCfxwtyJCL
+         YDC1x+LBpsPZmHBBDn9eyD3y20up8meyWnCKAcZK+AH5S4ctNbwulf2W1mefXLP0n7mF
+         AtAgxca7epOyDKwAEj6viTmvRqaK4pw4hDc7PMivmEHjcaEfdznPrXIMu3aCDBeqzUoU
+         QTS2nL+ItKI+antwBzbXoU27/904ythR4Nci/GafosSDn3os0mY87l7KEaAhsB/Yaw6j
+         9KZg==
+X-Gm-Message-State: AOJu0YyfQkabYe749FleiQBhdbra3Zl11XTUWn/MB9l2IlZEskK8xSxC
+        77lk8DvdWEF3sN5G0uP3rxAYkg==
+X-Google-Smtp-Source: AGHT+IGI+a/TGyaY9qq/8RhsQ7+ZyIRNHF9G7HFpGWCoFP17tKGyxWmLNtgQ1mqMX5B+KZCAWgxUvA==
+X-Received: by 2002:a17:902:dace:b0:1bc:4b77:c74 with SMTP id q14-20020a170902dace00b001bc4b770c74mr4865416plx.0.1692291756228;
+        Thu, 17 Aug 2023 10:02:36 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t4-20020a62ea04000000b006884844dfcasm7319pfh.20.2023.08.17.10.00.18
+        by smtp.gmail.com with ESMTPSA id ju17-20020a170903429100b001bdb0483e65sm13952918plb.265.2023.08.17.10.02.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 10:00:18 -0700 (PDT)
-Date:   Thu, 17 Aug 2023 10:00:17 -0700
+        Thu, 17 Aug 2023 10:02:35 -0700 (PDT)
+Date:   Thu, 17 Aug 2023 10:02:35 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     David Laight <David.Laight@aculab.com>
-Cc:     'Przemek Kitszel' <przemyslaw.kitszel@intel.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        Steven Zou <steven.zou@intel.com>
-Subject: Re: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack
- allocs
-Message-ID: <202308170957.F511E69@keescook>
-References: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
- <20230816140623.452869-2-przemyslaw.kitszel@intel.com>
- <1f9cb37f21294c31a01af62fd920f070@AcuMS.aculab.com>
+To:     Florian Westphal <fw@strlen.de>
+Cc:     "GONG, Ruiqi" <gongruiqi1@huawei.com>,
+        kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [netfilter-nf-next:testing 2/9]
+ ./usr/include/linux/netfilter_bridge/ebtables.h:163:26: warning: field
+ 'target' with variable sized type 'struct ebt_entry_target' not at the end
+ of a struct or class is a GNU extension
+Message-ID: <202308171000.C97EEC7@keescook>
+References: <202308171249.g1ywxhII-lkp@intel.com>
+ <202308162257.F7876776C9@keescook>
+ <20230817082618.GE4312@breakpoint.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1f9cb37f21294c31a01af62fd920f070@AcuMS.aculab.com>
+In-Reply-To: <20230817082618.GE4312@breakpoint.cc>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 02:35:23PM +0000, David Laight wrote:
-> From: Przemek Kitszel
-> > Sent: Wednesday, August 16, 2023 3:06 PM
+On Thu, Aug 17, 2023 at 10:26:18AM +0200, Florian Westphal wrote:
+> Kees Cook <keescook@chromium.org> wrote:
+> > On Thu, Aug 17, 2023 at 01:03:20PM +0800, kernel test robot wrote:
+> > > tree:   git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf-next.git testing
+> > > head:   015e2d9101d3713c7bee16dccad171df04a3bbd5
+> > > commit: 61b9e6bd48a6317c0a44ee4f3fecdec9de5baa9e [2/9] netfilter: ebtables: replace zero-length array members
+> > > config: i386-buildonly-randconfig-r004-20230817 (https://download.01.org/0day-ci/archive/20230817/202308171249.g1ywxhII-lkp@intel.com/config)
+> > > compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+> > > reproduce: (https://download.01.org/0day-ci/archive/20230817/202308171249.g1ywxhII-lkp@intel.com/reproduce)
+> > > 
+> > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > > the same patch/commit), kindly add following tags
+> > > | Reported-by: kernel test robot <lkp@intel.com>
+> > > | Closes: https://lore.kernel.org/oe-kbuild-all/202308171249.g1ywxhII-lkp@intel.com/
+> > > 
+> > > All warnings (new ones prefixed by >>):
+> > > 
+> > >    In file included from <built-in>:1:
+> > > >> ./usr/include/linux/netfilter_bridge/ebtables.h:163:26: warning: field 'target' with variable sized type 'struct ebt_entry_target' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
+> > >            struct ebt_entry_target target;
+> > >                                    ^
+> > >    1 warning generated.
 > > 
-> > Using underlying array for on-stack storage lets us to declare
-> > known-at-compile-time structures without kzalloc().
+> > Eww, it looks like "struct ebt_entry_target" is used _within_ another
+> > struct:
+> > 
+> > struct ebt_standard_target {
+> >         struct ebt_entry_target target;
+> >         int verdict;
+> > };
 > 
-> Isn't DEFINE_FLEX() a bit misleading?
-> One thing it isn't is 'flexible' since it has a fixed size.
-
-It works only on flex array structs, and defines a specific instance. I
-think naming is okay here.
-
+> Yes, same as xt_standard_target.
 > 
-> > +#define DEFINE_FLEX(type, name, member, count)					\
-> > +	union {									\
-> > +		u8 bytes[struct_size_t(type, member, count)];			\
-> > +		type obj;							\
-> > +	} name##_u __aligned(_Alignof(type)) = {};				\
+> > These have been fixed in the past in a variety of ways -- it all depends
+> > on how userspace is using them. In looking at Debian Code Search:
+> > https://codesearch.debian.net/search?q=struct+ebt_standard_target&literal=1
+> > 
+> > It is exclusively doing casts and looking at the "verdict" member. So
+> > the easiest conversion might be this:
+> > 
+> >  struct ebt_standard_target {
+> > -       struct ebt_entry_target target;
+> > +       unsigned char hdr[sizeof(struct ebt_entry_target)];
+> >         int verdict;
 > 
-> You shouldn't need the _Alignof() it is the default.
-
-In the sense that since "type" is in the union, it's okay?
-
-> I'm not sure you should be forcing the memset() either.
-
-This already got discussed: better to fail safe.
-
+> I don't think its worth doing all of this.
 > 
-> > +	type *name = (type *)&name##_u
-> 
-> How about?
-> 	type *const name = &name_##_u.obj;
+> Can't we just keep it as-is and drop the relevant hunk from the patch?
 
-This is by design (see earlier threads) so that
-__builtin_object_size(name, 1) will get the correct size. Otherwise it
-doesn't include the FAM elements in the size.
-
-> 
-> You might want to add:
-> 	Static_assert(is_constexpr(count), "DEFINE_FLEX: non-constant count " #count);
-
-That would be nice, though can Static_assert()s live in the middle of
-variable definitions?
-
--Kees
+For now, yeah. But we'll need to find a solution as flex-array
+structures overlapping variables is considered deprecated (it can lead
+to ambiguous sizing results). But as long as the kernel itself doesn't
+use struct ebt_standard_target, we can kick the can down the road a bit
+more. :)
 
 -- 
 Kees Cook
