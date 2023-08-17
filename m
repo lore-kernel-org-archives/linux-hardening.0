@@ -2,143 +2,137 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D15C64EB4
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1517BC64ECB
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 21:25:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355309AbjHQVYX (ORCPT
+        id S1355319AbjHQVYz (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 17:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36550 "EHLO
+        Thu, 17 Aug 2023 17:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355398AbjHQVXu (ORCPT
+        with ESMTP id S1355343AbjHQVYe (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 17:23:50 -0400
-Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901C71987
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 14:23:45 -0700 (PDT)
-Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
-        by cmsmtp with ESMTP
-        id WgHVqlaqSez0CWkSpq4zub; Thu, 17 Aug 2023 21:23:31 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id WkT2qEcsc0LVOWkT3qi2P7; Thu, 17 Aug 2023 21:23:45 +0000
-X-Authority-Analysis: v=2.4 cv=BvCOfKb5 c=1 sm=1 tr=0 ts=64de8fe1
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=stkexhm8AAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8 a=VwQbUJbxAAAA:8
- a=20KFwNOVAAAA:8 a=cm27Pg_UAAAA:8 a=YSKGN3ub9cUXa_79IdMA:9 a=QEXdDO2ut3YA:10
- a=pIW3pCRaVxJDc-hWtpF8:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=AjGcO6oz07-iQ99wixmX:22
- a=xmb-EsYY8bH0VWELuYED:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=S6whqa+M23G5ApcMat6ySVUsYfZB0XAvFOmn2QGSBl4=; b=afD8QmYGaFohyrASnjI26m4N4g
-        6k5Uo+rNYwEnWFw2Zh/aJ+MYy9cKtZXIwGPYHQ0GNi6vLPaFhNREXPNN6ZopzJamd0WDz/nnd5qFu
-        WtO0d1CNFBWOuQucAR4Ogna4aWSV4Hbgxb73wYJdPdxJM8B0o86EeryEtAWdXJD59woZLt4iPVCX6
-        0ZrscN73h0jwepWAQtvP1z6VeYJ9d9VQJki/9r/esZB97B4k77zH5oWDOmEMKKvJ0+nalsmp1FBrE
-        rNgKGXG8jUhTaQHU1+hU9p84Dr0dZ97gX8i/Y3q/SlOlNzDbb+WnvBFjAyI/bmgaLTeEvIn2QyS+t
-        01G7tM4A==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:59978 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qWkT0-001ldl-27;
-        Thu, 17 Aug 2023 16:23:42 -0500
-Message-ID: <c691293e-4753-2a64-3a71-9ba3f4ff97e7@embeddedor.com>
-Date:   Thu, 17 Aug 2023 15:24:44 -0600
+        Thu, 17 Aug 2023 17:24:34 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAEC02710
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 14:24:27 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4ff92e369dfso268497e87.3
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 14:24:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692307466; x=1692912266;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tFUOLUXpj1dXg7TLVnO3NtdI64oXAg1azufv8G6+Zj0=;
+        b=P4C2CjcA9VNpVw3Df7IPAStdEG3gkltmqpOtebRM9iZhI96EamgMUOJlG7uE3Vmnt8
+         daePybAkK85mzqiH3aX9OxP1hYKE4N9xxrfvBrLTFMry5JTSjYByv7QZviw/+nFjYnXD
+         6e6mB1ssXK7U+Lpmf/wKTJeaE8p9Ygtg0JAZzCUgvhjxj9ym3xAaZUGxNyCKvchLsMR0
+         rcYtjIUmCW6TmwdqQFe5bXzO1C7KowWZ7wym+PMR+ffIDYh953bew/BTM2ZQFpY/kr/p
+         FU6lAWidC+wn/3sSHGl5HzX8egj7nBImPjN5H+qzVeuO9OgXSpRypgqHUWKYnvnTsdt+
+         IIDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692307466; x=1692912266;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tFUOLUXpj1dXg7TLVnO3NtdI64oXAg1azufv8G6+Zj0=;
+        b=MYzYZZyZfnYM6f67SsQGSOG7X9YcDVtkkrwlCotd5ZiLULmaKW0BmMjOU1TEA0vxxq
+         yqImA6nsOMAy1GUMp9Y1jSgnYUIKyXDQYXBSVJnBjjwbrtbQR7Sj4ojbpAoYDonqsMel
+         TijRDPe97wt90BQMuO+SQwkvLuruKEMif8NpqRVTl70aIoRZEpC6KpJT0HGh4b9Ed2WC
+         gZO4NHdz5WA9PWZu1xpo2kBQvcrEG+moKgbr68J9cJQcx8wlMkUIvfWKHUiR61wjjZEN
+         wVGf6jcmMvN+L3AigU+nNo4UyylXLnZENyF1fz/oEh3r1ZueU7CnqSLk4qk6yE1jERvi
+         Aj+Q==
+X-Gm-Message-State: AOJu0Yzz5lqKUDqEM83xvTEWQ1ZT+h6RkIoeAC9NIwXEb5rlZA8il9IP
+        f1995Q8GWgkacCAMAMAzLXo6VQ==
+X-Google-Smtp-Source: AGHT+IElWD75J4SIIC/MNWL6hF9/PvvD/kZT+7BtDaZ4TU+S9G5p/gNu72OiCqPgfHXNY+6jGjxwRw==
+X-Received: by 2002:a05:6512:477:b0:4f8:49a7:2deb with SMTP id x23-20020a056512047700b004f849a72debmr365449lfd.8.1692307465984;
+        Thu, 17 Aug 2023 14:24:25 -0700 (PDT)
+Received: from [192.168.1.101] (abxh52.neoplus.adsl.tpnet.pl. [83.9.1.52])
+        by smtp.gmail.com with ESMTPSA id c8-20020ac24148000000b004fe3bd81278sm57267lfi.70.2023.08.17.14.24.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Aug 2023 14:24:25 -0700 (PDT)
+Message-ID: <ad30a8ed-87d3-46dd-8b34-83f6cfac0e4a@linaro.org>
+Date:   Thu, 17 Aug 2023 23:24:23 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH 7/7] wifi: cfg80211: Annotate struct cfg80211_tid_config
- with __counted_by
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] interconnect: qcom: Annotate struct icc_onecell_data with
+ __counted_by
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Johannes Berg <johannes@sipsolutions.net>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+To:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Georgi Djakov <djakov@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
         llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <20230817211114.never.208-kees@kernel.org>
- <20230817211531.4193219-7-keescook@chromium.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230817211531.4193219-7-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20230817204215.never.916-kees@kernel.org>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
+ BB/OmIWU6X+LZW6P88ZmHe+KeyABLMP5s1tJNK1j4ntT7mECcWZDzafPWF4F6m4WJOG27kTJ
+ HGWdmtO+RvadOVi6CoUDqALsmfS3MUG5Pj2Ne9+0jRg4hEnB92AyF9rW2G3qisFcwPgvatt7
+ TXD5E38mLyOPOUyXNj9XpDbt1hNwKQfiidmPh5e7VNAWRnW1iCMMoKqzM1Anzq7e5Afyeifz
+ zRcQPLaqrPjnKqZGL2BKQSZDh6NkI5ZLRhhHQf61fkWcUpTp1oDC6jWVfT7hwRVIQLrrNj9G
+ MpPzrlN4YuAqKeIer1FMt8cq64ifgTzxHzXsMcUdclzq2LTk2RXaPl6Jg/IXWqUClJHbamSk
+ t1bfif3SnmhA6TiNvEpDKPiT3IDs42THU6ygslrBxyROQPWLI9IL1y8S6RtEh8H+NZQWZNzm
+ UQ3imZirlPjxZtvz1BtnnBWS06e7x/UEAguj7VHCuymVgpl2Za17d1jj81YN5Rp5L9GXxkV1
+ aUEwONM3eCI3qcYm5JNc5X+JthZOWsbIPSC1Rhxz3JmWIwP1udr5E3oNRe9u2LIEq+wH/toH
+ kpPDhTeMkvt4KfE5m5ercid9+ZXAqoaYLUL4HCEw+HW0DXcKDwARAQABzShLb25yYWQgRHli
+ Y2lvIDxrb25yYWQuZHliY2lvQGxpbmFyby5vcmc+wsGOBBMBCAA4FiEEU24if9oCL2zdAAQV
+ R4cBcg5dfFgFAmQ5bqwCGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQR4cBcg5dfFjO
+ BQ//YQV6fkbqQCceYebGg6TiisWCy8LG77zV7DB0VMIWJv7Km7Sz0QQrHQVzhEr3trNenZrf
+ yy+o2tQOF2biICzbLM8oyQPY8B///KJTWI2khoB8IJSJq3kNG68NjPg2vkP6CMltC/X3ohAo
+ xL2UgwN5vj74QnlNneOjc0vGbtA7zURNhTz5P/YuTudCqcAbxJkbqZM4WymjQhe0XgwHLkiH
+ 5LHSZ31MRKp/+4Kqs4DTXMctc7vFhtUdmatAExDKw8oEz5NbskKbW+qHjW1XUcUIrxRr667V
+ GWH6MkVceT9ZBrtLoSzMLYaQXvi3sSAup0qiJiBYszc/VOu3RbIpNLRcXN3KYuxdQAptacTE
+ mA+5+4Y4DfC3rUSun+hWLDeac9z9jjHm5rE998OqZnOU9aztbd6zQG5VL6EKgsVXAZD4D3RP
+ x1NaAjdA3MD06eyvbOWiA5NSzIcC8UIQvgx09xm7dThCuQYJR4Yxjd+9JPJHI6apzNZpDGvQ
+ BBZzvwxV6L1CojUEpnilmMG1ZOTstktWpNzw3G2Gis0XihDUef0MWVsQYJAl0wfiv/0By+XK
+ mm2zRR+l/dnzxnlbgJ5pO0imC2w0TVxLkAp0eo0LHw619finad2u6UPQAkZ4oj++iIGrJkt5
+ Lkn2XgB+IW8ESflz6nDY3b5KQRF8Z6XLP0+IEdLOOARkOW7yEgorBgEEAZdVAQUBAQdAwmUx
+ xrbSCx2ksDxz7rFFGX1KmTkdRtcgC6F3NfuNYkYDAQgHwsF2BBgBCAAgFiEEU24if9oCL2zd
+ AAQVR4cBcg5dfFgFAmQ5bvICGwwACgkQR4cBcg5dfFju1Q//Xta1ShwL0MLSC1KL1lXGXeRM
+ 8arzfyiB5wJ9tb9U/nZvhhdfilEDLe0jKJY0RJErbdRHsalwQCrtq/1ewQpMpsRxXzAjgfRN
+ jc4tgxRWmI+aVTzSRpywNahzZBT695hMz81cVZJoZzaV0KaMTlSnBkrviPz1nIGHYCHJxF9r
+ cIu0GSIyUjZ/7xslxdvjpLth16H27JCWDzDqIQMtg61063gNyEyWgt1qRSaK14JIH/DoYRfn
+ jfFQSC8bffFjat7BQGFz4ZpRavkMUFuDirn5Tf28oc5ebe2cIHp4/kajTx/7JOxWZ80U70mA
+ cBgEeYSrYYnX+UJsSxpzLc/0sT1eRJDEhI4XIQM4ClIzpsCIN5HnVF76UQXh3a9zpwh3dk8i
+ bhN/URmCOTH+LHNJYN/MxY8wuukq877DWB7k86pBs5IDLAXmW8v3gIDWyIcgYqb2v8QO2Mqx
+ YMqL7UZxVLul4/JbllsQB8F/fNI8AfttmAQL9cwo6C8yDTXKdho920W4WUR9k8NT/OBqWSyk
+ bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
+ nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
+ izWDgYvmBE8=
+In-Reply-To: <20230817204215.never.916-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qWkT0-001ldl-27
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:59978
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 132
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIYd2yRTrzLkukRQGa5hBblVoD5b9tkXbw57AexMcB+f4a5hO1kGGhG7OpmXHLPVupfCgnMiM8VJIelsMB9dRzPPIFxCBGhHIciji1P/gVyrGLlf0VLs
- H/UccBXLO61200b3aMqkezWeIPRknx40S9mPKHpfMI1U8sH102nzD5axrq1syLdK6A9l3pOZB17ggd96G3GKCsPhHdwSesYJRsGQ/tE570h/PtV3X7i8JhvF
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 8/17/23 15:15, Kees Cook wrote:
+On 17.08.2023 22:42, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct cfg80211_tid_config.
+> As found with Coccinelle[1], add __counted_by for struct icc_onecell_data.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Johannes Berg <johannes@sipsolutions.net>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Cc: Georgi Djakov <djakov@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-
-Thanks
---
-Gustavo
-
 > ---
->   include/net/cfg80211.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/net/cfg80211.h b/include/net/cfg80211.h
-> index a2afc94a5408..423fe9b85cb0 100644
-> --- a/include/net/cfg80211.h
-> +++ b/include/net/cfg80211.h
-> @@ -811,7 +811,7 @@ struct cfg80211_tid_cfg {
->   struct cfg80211_tid_config {
->   	const u8 *peer;
->   	u32 n_tid_conf;
-> -	struct cfg80211_tid_cfg tid_conf[];
-> +	struct cfg80211_tid_cfg tid_conf[] __counted_by(n_tid_conf);
->   };
->   
->   /**
+Very nice, thanks
+
+Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+
+Konrad
