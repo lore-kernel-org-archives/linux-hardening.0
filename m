@@ -2,119 +2,204 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84149C5320E
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 20:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE9CC5320E
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 20:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355013AbjHQUpy (ORCPT
+        id S238472AbjHQUrb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 16:45:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52204 "EHLO
+        Thu, 17 Aug 2023 16:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354997AbjHQUp2 (ORCPT
+        with ESMTP id S1355025AbjHQUrG (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 16:45:28 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69B43580
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:45:26 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1bdc243d62bso1806615ad.3
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:45:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692305126; x=1692909926;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pMm0/808CNGa3aT1/hWj5cxfbWGv7KS7xsYpPdCv0WE=;
-        b=Hba9RUgUZEtj0CVdjLz7pSKYV71ZGnjTWbN7fT7j8VmDbWCNH7/Kb8mwvIODbEdUjh
-         G4Dez3nqrO2b5mJVfoUjbCWCIbo3JLVEO8py6g+qeU3Q2hpyjq30jFe3SjLvKgYPKQhs
-         kRO8DdhFpW1DHPFaa64Byi9R/aHUlYKD1cxb8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692305126; x=1692909926;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pMm0/808CNGa3aT1/hWj5cxfbWGv7KS7xsYpPdCv0WE=;
-        b=iTS+f7BEj+gq+9GRjj22DFbyDxb4phrpPJe5nNJG+kLISJ43p9rc3NzPV8q5nVBAK6
-         i9KW5bgYrPO6qyb7I9XwW6+zCZ0MQVgjOeToqAvX0rbwm5hdZ+5eLQfs3gTWjG1VXNY8
-         4FqI4UXkEZR4s7cVxf3XCIAPTVBJxnWWyBWMI3GDooWjL4k7gTwb2WjxPTe7EeQD26+k
-         COtdj1mv1bgTLM0zqlL4lgahXptnc4r27wcCekpjdaOGV9Qmy2l5US9byFWpG3R3V6jO
-         DlOhAbzbkRrrNvfcaiKcJReVxbRDzhNPMJ3UVypqCd6ZX1twh3VjhRhoLhcthqGdujpN
-         zYzw==
-X-Gm-Message-State: AOJu0YzmtO8z4tmkuq8NA8HSM84tiDFzz534wvkzI+9U4qX124as/Rdy
-        uNHCpM3hlKRfywYWLf9dtUL+vQ==
-X-Google-Smtp-Source: AGHT+IHk55UnrVjKhLbeoH0FOsI/LvZ/lE2QJL1gJ+D+E8C0Gwzt+7qwXOdkBQv9AkY7J3V6Bv/K9A==
-X-Received: by 2002:a17:902:f7d6:b0:1be:f53b:4335 with SMTP id h22-20020a170902f7d600b001bef53b4335mr494226plw.20.1692305126211;
-        Thu, 17 Aug 2023 13:45:26 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id je9-20020a170903264900b001bee782a1desm189883plb.181.2023.08.17.13.45.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 13:45:25 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Philipp Hortmann <philipp.g.hortmann@gmail.com>,
-        linux-staging@lists.linux.dev,
+        Thu, 17 Aug 2023 16:47:06 -0400
+Received: from omta034.useast.a.cloudfilter.net (omta034.useast.a.cloudfilter.net [44.202.169.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C7930F5
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 13:46:46 -0700 (PDT)
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+        by cmsmtp with ESMTP
+        id Wjd3qmpA1ez0CWjt1q3w0Y; Thu, 17 Aug 2023 20:46:31 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id WjtFqaqTkD5qiWjtFqVwRs; Thu, 17 Aug 2023 20:46:45 +0000
+X-Authority-Analysis: v=2.4 cv=dMe1JcVb c=1 sm=1 tr=0 ts=64de8735
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=cm27Pg_UAAAA:8 a=-9WsS909tJ0spEJWnesA:9
+ a=+jEqtf1s3R9VXZ0wqowq2kgwd+I=:19 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=cvBusfyB2V15izCimMoJ:22 a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=i5T8ndZFl8vyvsMJH3vQ714dMBof7MQxooIw2wR0TQ4=; b=XRy3wHexQQxKuhb/Rdaqonl2oI
+        jutVrdKLHCgPOyRTv/THziwoQsxLUc0Z9+VDeQrBysFVd5ALmIwkoMLdXb2pRMc4Ah8AzWHfdQ3/K
+        D5P3rtdjqiqJpiEwe7CDqfJ8OnOhpz4OUzygGS7zY2iQvjReZ64yVRrIMwZ8GW+e6y2DoJyCcpRlD
+        T0t5zZ0y1HVn/tEtHjPVcUowpHN+ZYMPmnpKYHqHdtVDPP9PahjW9Qs50HA9GbRIjE/FShXMvRqUy
+        4nTtTgnIu/1ovrgrWpLjPGKcSPIayaec1ieV2THaXdTLhKHhmMLMhLhJN2uQWs11AKxgMlozLQa18
+        QeXq7qfw==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:50972 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qWjtD-001GLK-0h;
+        Thu, 17 Aug 2023 15:46:43 -0500
+Message-ID: <cba15a51-ce0a-4478-4616-8e542867d3ff@embeddedor.com>
+Date:   Thu, 17 Aug 2023 14:47:45 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] interconnect: qcom: Annotate struct icc_onecell_data with
+ __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Georgi Djakov <djakov@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        Yogesh Hegde <yogi.kernel@gmail.com>,
-        Sumitra Sharma <sumitraartsy@gmail.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH] staging: rtl8192e: Annotate struct rtllib_txb with __counted_by
-Date:   Thu, 17 Aug 2023 13:45:24 -0700
-Message-Id: <20230817204523.never.034-kees@kernel.org>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1219; i=keescook@chromium.org;
- h=from:subject:message-id; bh=UUiTzVogaZirmWMGpsPMj7phpen0D5w/qKNcKFWYCRw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk3obkTXsIF42rVOApuK1+6hZwZMndX3d7u3bA8
- wUVSJ8CkOKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN6G5AAKCRCJcvTf3G3A
- JjL1D/48cDpSX2Ac20S71nPjuKbgJSg1g+7exjTTXnTvVNl4NVcTcYOOX6XG+Q8Lnb2J6ZF49IB
- zYwnG+ICNOHrimTy9xnEzL8t/7AlZD9fhSo6JEZZfuqzW2qI1F3dKW13uWuvTMRsHPXUV0i6OWo
- aJDlbIWjkrLP4tfCBxa9yL10Y0+NXb2kmRpmxqFBbvFaY2RaEepM/ST6csF1yuviXLe6OH7o0zL
- Phe1f9UmMqa1oHNdo3IUlmmDjPTfNH6ZX0FmjGPiWEV0IrAYgqWEkcHQKzt8P2h4hl36WSq9cpM
- cgSkbtOdwBQtKKi74PisY5UFmgWtDx7zlWZMa2/legptjd7gbbI69cOYyHn3pw5v0aTNwkXe3yd
- 2iyApZjS8bGmYne4s8QCkiAl6JKnzvoRsH2uq+B8TTUDuncVwVADZIr9nmhlUnAho5eigZpy2/n
- 7UM3vKjQjBVJmZdwFij8jHhCMOFNIMkw6t/RNcu+roCj8+Jg8i+LQOiPxMkdoQaCqEg8YiRZctG
- bLEix0Ky3IWQOFgETdkh6K76+opM5AT7FkbZ7NEzqJcRgGq4e4dOTht2Rh72Et3YvN8S22JilbP
- fDs2++6vYppmECcd6ksWFXfHYilH1HC+fUTYwW0VyBcMBSYMcIYS3x7r4WobnHxJGpqaTt/aqCK
- uascUme ok0NojuA==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+References: <20230817204215.never.916-kees@kernel.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230817204215.never.916-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qWjtD-001GLK-0h
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:50972
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 40
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfK79/gikOpwLG/X87kY8L7okpR7p9srVG7oi4P1DRFLrss9HWikvCN9tE7QwpR4onBbDFsNp/13k6g+XBw/UZ1lEzg7olKeDVdTFnQ/4KLUI+dLlfKus
+ FRe3Z5DwF4bB2rR3iSb8Exu9dbPUMOrYcsCnCPeDXQzCtjhhRV+qjb8Fm6GaZlQjNTKN4sf4csnd+kM/qnSif6zLDmSao2/mMoeQ4BzQlR+hRzNeiB70+Klj
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Prepare for the coming implementation by GCC and Clang of the __counted_by
-attribute. Flexible array members annotated with __counted_by can have
-their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-(for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-functions).
 
-As found with Coccinelle[1], add __counted_by for struct rtllib_txb.
 
-[1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+On 8/17/23 14:42, Kees Cook wrote:
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+> 
+> As found with Coccinelle[1], add __counted_by for struct icc_onecell_data.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
+> 
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Cc: Georgi Djakov <djakov@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Philipp Hortmann <philipp.g.hortmann@gmail.com>
-Cc: linux-staging@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- drivers/staging/rtl8192e/rtllib.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
-index c5a692dfcd17..543d8671281d 100644
---- a/drivers/staging/rtl8192e/rtllib.h
-+++ b/drivers/staging/rtl8192e/rtllib.h
-@@ -818,7 +818,7 @@ struct rtllib_txb {
- 	u16 reserved;
- 	__le16 frag_size;
- 	__le16 payload_size;
--	struct sk_buff *fragments[];
-+	struct sk_buff *fragments[] __counted_by(nr_frags);
- };
- 
- #define MAX_SUBFRAME_COUNT		  64
+Thanks
 -- 
-2.34.1
+Gustavo
 
+> ---
+>   drivers/interconnect/qcom/icc-rpmh.c  | 3 +--
+>   drivers/interconnect/qcom/msm8974.c   | 2 +-
+>   drivers/interconnect/qcom/osm-l3.c    | 2 +-
+>   include/linux/interconnect-provider.h | 2 +-
+>   4 files changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/interconnect/qcom/icc-rpmh.c b/drivers/interconnect/qcom/icc-rpmh.c
+> index 8053ec8ab01b..b9f27ce3b607 100644
+> --- a/drivers/interconnect/qcom/icc-rpmh.c
+> +++ b/drivers/interconnect/qcom/icc-rpmh.c
+> @@ -185,6 +185,7 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
+>   	data = devm_kzalloc(dev, struct_size(data, nodes, num_nodes), GFP_KERNEL);
+>   	if (!data)
+>   		return -ENOMEM;
+> +	data->num_nodes = num_nodes;
+>   
+>   	provider = &qp->provider;
+>   	provider->dev = dev;
+> @@ -228,8 +229,6 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
+>   		data->nodes[i] = node;
+>   	}
+>   
+> -	data->num_nodes = num_nodes;
+> -
+>   	ret = icc_provider_register(provider);
+>   	if (ret)
+>   		goto err_remove_nodes;
+> diff --git a/drivers/interconnect/qcom/msm8974.c b/drivers/interconnect/qcom/msm8974.c
+> index b85cab2f208f..885ca9d6d4ed 100644
+> --- a/drivers/interconnect/qcom/msm8974.c
+> +++ b/drivers/interconnect/qcom/msm8974.c
+> @@ -675,6 +675,7 @@ static int msm8974_icc_probe(struct platform_device *pdev)
+>   			    GFP_KERNEL);
+>   	if (!data)
+>   		return -ENOMEM;
+> +	data->num_nodes = num_nodes;
+>   
+>   	qp->bus_clks = devm_kmemdup(dev, msm8974_icc_bus_clocks,
+>   				    sizeof(msm8974_icc_bus_clocks), GFP_KERNEL);
+> @@ -721,7 +722,6 @@ static int msm8974_icc_probe(struct platform_device *pdev)
+>   
+>   		data->nodes[i] = node;
+>   	}
+> -	data->num_nodes = num_nodes;
+>   
+>   	ret = icc_provider_register(provider);
+>   	if (ret)
+> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+> index 056ac91225c4..dc321bb86d0b 100644
+> --- a/drivers/interconnect/qcom/osm-l3.c
+> +++ b/drivers/interconnect/qcom/osm-l3.c
+> @@ -232,6 +232,7 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>   	data = devm_kzalloc(&pdev->dev, struct_size(data, nodes, num_nodes), GFP_KERNEL);
+>   	if (!data)
+>   		return -ENOMEM;
+> +	data->num_nodes = num_nodes;
+>   
+>   	provider = &qp->provider;
+>   	provider->dev = &pdev->dev;
+> @@ -261,7 +262,6 @@ static int qcom_osm_l3_probe(struct platform_device *pdev)
+>   
+>   		data->nodes[i] = node;
+>   	}
+> -	data->num_nodes = num_nodes;
+>   
+>   	ret = icc_provider_register(provider);
+>   	if (ret)
+> diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
+> index e6d8aca6886d..7ba183f221f1 100644
+> --- a/include/linux/interconnect-provider.h
+> +++ b/include/linux/interconnect-provider.h
+> @@ -33,7 +33,7 @@ struct icc_node_data {
+>    */
+>   struct icc_onecell_data {
+>   	unsigned int num_nodes;
+> -	struct icc_node *nodes[];
+> +	struct icc_node *nodes[] __counted_by(num_nodes);
+>   };
+>   
+>   struct icc_node *of_icc_xlate_onecell(struct of_phandle_args *spec,
