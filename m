@@ -2,100 +2,89 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FA5C3DA4D
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 16:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F58DC3DA4E
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 16:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347318AbjHQQFS (ORCPT
+        id S1353595AbjHQQVw (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 12:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
+        Thu, 17 Aug 2023 12:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353446AbjHQQE5 (ORCPT
+        with ESMTP id S1353606AbjHQQVb (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 12:04:57 -0400
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 308B030F1
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 09:04:56 -0700 (PDT)
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-        by cmsmtp with ESMTP
-        id Wd7kqc6Z7EoVsWfUVq30wd; Thu, 17 Aug 2023 16:04:55 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with ESMTPS
-        id WfUUqoAyG1rJFWfUUq2WmY; Thu, 17 Aug 2023 16:04:54 +0000
-X-Authority-Analysis: v=2.4 cv=PYPsOwtd c=1 sm=1 tr=0 ts=64de4526
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
- a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
- a=OcNJt-qWwfHZ17eyJIQA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ZA1JnYm2sizdw4HAoCpwZQIm3d+6duiDWNO2aTXtz+s=; b=tAIGDQtxZ2k7asM3pp0AyIqJFG
-        ElYb3DfGINfI30f1NWoS43/Q2kA5LnL7npPiggmeAI9cjBcMqlHJKQF5y2/UlfN35IIXRyLXgq5zs
-        L52QaFfnykiBoAi3ztaoC2jII8416FhRhiIzch9vPcQtXk1Wd+v6kq+ULedY3mut9sM3KWwSjV+Jx
-        mVzWg9gcw26/2tK7lbw+cOg+Jk5pyL5xsAhEtjD4hfPL6EYjrHMyQnHxoeAq1n5T3OXck5M487rxO
-        p/MEntWaNpBganNWLSFtpSzELFaOQ27b9rX/9WQ2q+VOp6yxpoepN1Znw/tSZRJrS+gLMjrnsrWjb
-        a66BZ2MQ==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:57282 helo=[192.168.15.8])
-        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.96)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1qWfUU-001S6c-0Q;
-        Thu, 17 Aug 2023 11:04:54 -0500
-Message-ID: <f12c6f14-66c4-6afb-e768-fa7abcfd1bbc@embeddedor.com>
-Date:   Thu, 17 Aug 2023 10:05:52 -0600
+        Thu, 17 Aug 2023 12:21:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 470E4273F
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 09:20:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692289242;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LKsXf14yPomkD3tSZWQknLH0bmhrzoGBJO+LGRQq7Mg=;
+        b=Kz9EzCIQd4zMaqYvD/FC9+ZF4WN6WqQ+PTan4aqJXkhe2PSVDQUkvtEZszvFvQkgB/riEe
+        MICmTY6buvgeIAeR43kRzVjfnNDE4XeJ1weoaS+Oe3Hj4GEYsbZmziNLzhM+GFga9sbVAi
+        5pS0+sP7Of8O6hh81hZzUDcKOMOuogI=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-148-e5jtcWMRP6mhMfLTjIMZVQ-1; Thu, 17 Aug 2023 12:20:35 -0400
+X-MC-Unique: e5jtcWMRP6mhMfLTjIMZVQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B851B3C0D86D;
+        Thu, 17 Aug 2023 16:18:07 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.39])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 38C5EC15BAE;
+        Thu, 17 Aug 2023 16:18:03 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 17 Aug 2023 18:17:23 +0200 (CEST)
+Date:   Thu, 17 Aug 2023 18:17:18 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Brendan Higgins <brendan.higgins@linux.dev>,
+        David Gow <davidgow@google.com>,
+        Petr Skocik <pskocik@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jens Axboe <axboe@kernel.dk>, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Marco Elver <elver@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "haifeng.xu" <haifeng.xu@shopee.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] [RFC] signal: Add KUnit tests
+Message-ID: <20230817161718.GA4121@redhat.com>
+References: <20230814210508.never.871-kees@kernel.org>
+ <87bkf68g5m.fsf@email.froward.int.ebiederm.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: struct_size() using sizeof() vs offsetof()
-Content-Language: en-US
-To:     Alejandro Colomar <alx@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org
-References: <74e8cf91-d095-33e3-c548-34d80b691089@kernel.org>
- <202308161913.91369D4A@keescook>
- <09b4a2ce-da74-3a19-6961-67883f634d98@kernel.org>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <09b4a2ce-da74-3a19-6961-67883f634d98@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.162.21.192
-X-Source-L: No
-X-Exim-ID: 1qWfUU-001S6c-0Q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:57282
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org:  HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfI/2qMzT4xK4kj0d1IrI7JEvhOmA6O+L8xWVrT7/IvAfLRzlbCadRKrF4OzVgFdykTOZSpbFb1UikjacrNJOyR6jmcXQHdgjSPODgizA9kjjbBSLsDSC
- vsYp0qqDUpu47LGqoqVSZhjyGs7ctBZQdCE6Xkka3pDjA9xmvGRQiO3MA2qSpjRJz8JcO3+S4IjOUbBYhjFOwaIX6sfS5Th9mYpYgj2qlIXM5YYBPKDTqIix
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87bkf68g5m.fsf@email.froward.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+On 08/16, Eric W. Biederman wrote:
+>
+> Arguably we can skip this as well.  There are only 3 uses of
+> do_each_thread (pivot_root, SAK, and ia64 backtrace) and they all should
+> be changed to be for_each_process_thread.
 
-> -               tp_c = kzalloc(sizeof(*tp_c), GFP_KERNEL);
-> +               tp_c = kzalloc(struct_size(tp_c, hlist->ht, 1), GFP_KERNEL);
+Hmm. I thought that do_each_thread() was already killed ...
+Let me send the trivial patch.
 
-I just sent a fix[1].
+We also need to kill (or rework) while_each_thread() and next_thread(),
+I'll try to do this tomorrow.
 
-Thanks for reporting this! :)
---
-Gustavo
+Oleg.
 
-[1] https://lore.kernel.org/linux-hardening/ZN5DvRyq6JNz20l1@work/
