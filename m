@@ -2,64 +2,68 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D075C7EE2C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7DC7C7EE31
 	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 00:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356361AbjHQX7h (ORCPT
+        id S1356387AbjHQX7j (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 19:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43890 "EHLO
+        Thu, 17 Aug 2023 19:59:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356367AbjHQX7L (ORCPT
+        with ESMTP id S1356386AbjHQX7O (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 19:59:11 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B27326B6
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:59:06 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so318268a12.1
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:59:06 -0700 (PDT)
+        Thu, 17 Aug 2023 19:59:14 -0400
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8983AAE
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:59:09 -0700 (PDT)
+Received: by mail-oi1-x235.google.com with SMTP id 5614622812f47-3a7f74134e7so233871b6e.1
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 16:59:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692316746; x=1692921546;
+        d=chromium.org; s=google; t=1692316749; x=1692921549;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b5fo4SAlFZblqGlj3AOCCnMbC1x74PqOTDSdnlOgmQc=;
-        b=Bm5yXs/7C7SrMAj5NYLLnKAg8in4eJxveBbF4DO2ZjTd3wvxKBVyaWbMsbIdgjBk1G
-         Hi55+qF7vYuSjUdxaCq3KNt8Tr5loAJ4JV9fNliA5JjgX4O8ToCJfH5hMhlyoJP+XXFu
-         Vjs5RDTopNiXlWJl6j/wjh/5LopbcqoukMzus=
+        bh=aFfpOm3BUPwNUFmD6NhnAMbQ/2S0ir/QqXgwBqevnLk=;
+        b=EqYcViRLy+hIr+dGw8oMOHY5NdZUL3VGgCCB1DCYkyJCtv9U0YnPuWHnP6ypMyMFrr
+         Vk0YDZNsPMj8eHr69pt/3dPEPWWe0DnNmDTipbpAdcFo51ZUD3H+79JZFkylV+sVqmZL
+         fM7pL/eKGfT2nw6+cn3duAt/BNduGqjmY/D3o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692316746; x=1692921546;
+        d=1e100.net; s=20221208; t=1692316749; x=1692921549;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b5fo4SAlFZblqGlj3AOCCnMbC1x74PqOTDSdnlOgmQc=;
-        b=DgM0RvbqvCOI+Kd+a+wKxQDJhDRpTglkDJnvzxzkguNZv41RCSE4BPYGd9Plb6fsLl
-         ZV37WbjDMh76r5r6NUQGlJCTPU40GWEhTBDQFt8dPqOwuqYrAihzGbMlN9NXVoolmC+m
-         KrgyzRBMyFkojunnjj6oXsC9mhN9afK90TeACqF7U8vGBvCuCQGKu7sZJTRwp3V9PM13
-         41kNU4WGuUQ98crB0tZr+NGwgc38ociLkaLdXk1xGH7Ilyl7RSsu6wOI21yVfbSNSM83
-         djsVUX+dUlPyUe8vS24PGM8rQ5gr3AIFp3S88z1meAfyd/Y6EqKWPzqAoLuizbrbgVM1
-         5gqQ==
-X-Gm-Message-State: AOJu0YyoTgrLLsLvgDycgtIHRc80Z04XJU65b0KxeLzUNRCa5ct/GHb0
-        2KM4jjVccF0zCdeSSy94LXM3Og==
-X-Google-Smtp-Source: AGHT+IEdMYKnrjBUAvE0ru71ZoYllBiARB+b9n/0lQdAuapi28gfRsr/R7sjhWjkmiBp/Woqb8QO3A==
-X-Received: by 2002:a05:6a21:78a5:b0:131:a21:9f96 with SMTP id bf37-20020a056a2178a500b001310a219f96mr1649983pzc.6.1692316746157;
-        Thu, 17 Aug 2023 16:59:06 -0700 (PDT)
+        bh=aFfpOm3BUPwNUFmD6NhnAMbQ/2S0ir/QqXgwBqevnLk=;
+        b=Myxd1lVoVu7oY3dReqrzUHUnbOCp/VdCy4jIEvoEq7Yj4aj73yXFqD2TOFb0vpTQWI
+         aEOQgMZKvm6g/HHh+kniAorCzC2jEC5T7YlXqqfy9WihKRxFWhQ5N1S9838r6rXJNYKM
+         hM+BfbZs7i5odcOZioe+KRoDRD/hKXHdoyvtzaA8RhOm59l2+X5d58FvNSfpSfOr6+67
+         /dLOPtrlyirsVP3jGTVojiNIiXy4HTP2Vlqmsi3rvvotarmXgC/Fsnkntopt/yrDLpmo
+         U79v1TPq2g5djRbZFmIkYK21oNObQW+GXyEXkr2TziYOaD0lzYNxDsAv3BhzY+uw0H6/
+         DDZw==
+X-Gm-Message-State: AOJu0Yx/AjekDUGJOmulYuXkKlphYOxnZl2WLrxlrEY4p3IYBlpjb1vK
+        HHbwG+tFt4AA7xlnsz6HNuqacw==
+X-Google-Smtp-Source: AGHT+IHtstSGrCASuEyhbAzUFkHex296TETFK9xFy7uimzuBnpJ+27CsVn7a16vwqiJacwvtpQrDaw==
+X-Received: by 2002:a54:4098:0:b0:3a7:7bd3:7a7d with SMTP id i24-20020a544098000000b003a77bd37a7dmr1133716oii.23.1692316749254;
+        Thu, 17 Aug 2023 16:59:09 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id u16-20020a62ed10000000b00682669dc19bsm296091pfh.201.2023.08.17.16.59.01
+        by smtp.gmail.com with ESMTPSA id n7-20020a6543c7000000b005658d3a46d7sm195752pgp.84.2023.08.17.16.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 17 Aug 2023 16:59:03 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
 To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Jie Hai <haijie1@huawei.com>, dmaengine@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        dmaengine@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
         Hector Martin <marcan@marcan.st>,
         Sven Peter <sven@svenpeter.dev>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         Ludovic Desroches <ludovic.desroches@microchip.com>,
         Tudor Ambarus <tudor.ambarus@linaro.org>,
         Lars-Peter Clausen <lars@metafoo.de>,
-        Andy Gross <agross@kernel.org>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@linaro.org>,
         Green Wan <green.wan@sifive.com>,
@@ -67,8 +71,6 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Baolin Wang <baolin.wang@linux.alibaba.com>,
         Chunyan Zhang <zhang.lyra@gmail.com>,
         Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Laxman Dewangan <ldewangan@nvidia.com>,
         Jon Hunter <jonathanh@nvidia.com>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -82,19 +84,29 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
+        asahi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
         linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 05/21] dmaengine: hisilicon: Annotate struct hisi_dma_dev with __counted_by
-Date:   Thu, 17 Aug 2023 16:58:42 -0700
-Message-Id: <20230817235859.49846-5-keescook@chromium.org>
+Subject: [PATCH 12/21] dmaengine: stm32-dma: Annotate struct stm32_dma_desc with __counted_by
+Date:   Thu, 17 Aug 2023 16:58:49 -0700
+Message-Id: <20230817235859.49846-12-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230817235428.never.111-kees@kernel.org>
 References: <20230817235428.never.111-kees@kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1221; i=keescook@chromium.org; h=from:subject; bh=wAhaXdpkO4UhROqbBEzwnUztv43Z9vPtGenl3m44PI8=; b=owEBbAKT/ZANAwAKAYly9N/cbcAmAcsmYgBk3rRAdafn2BXNub2CVczBzS1nMrcCu/W1l7fmc oQMCeB3hAmJAjIEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN60QAAKCRCJcvTf3G3A JiDKD/jzQjtA/rejP0UfKxnwSb1Bs9ETBWk/rP2eCU65spDyZslCdJJKzJuu7MicgCSEPDfNPg6 xaxgsDv0fnzJthUj1b7GYgIJW4Ev/EFiMgpDPhlkjPeabqKRWZZxyEgFvhJU73k5H4w9d+hkXBe +dTfjZFVsH0hEK2sD9pdYpWoDrGsGfvB969UPwgcSelEYZSrHRb0kyaQWL5oOnurAP5e3KthrFp ll8wy38odnrUKDahwF8NPUamJcVbFBudhg16PZL3IhE3NtZV9tjMQtrMiwy7G2uhHqhd1w6bQXk lXZWrzzAqgpnUayVPMrVptkfVuD0dViVQEwjPjma3woC/B8FZa7ymi5O/geVC/ugDZlVZcu/4XR WddDqRioBq6b2M2HnQDKsyArKe8jj6Lq/WFaQM+xHiUptWNl3rqG2dRzd+ksTdn+fmfPnzhhxr9 cLZFoy8XzDMZ4yU0IBzoZBY0pSrIKPxJjMwsjtTkwmM+fflGR86LOt+ClFW7/FgWk9ZARIt88bj hZgS8SwCeRYEviYdtimOfiDhjAZXaDRYEMzpVonw/x42ays3FO9x405hS5QD/Lfd9z4TB9WJPg/ JBOX/lvE+vJHEnJJFJbpLdY+bOR+uhcTApAmU/ggJr4cRtC8l64Hw5lDostncXilc6oEPpzpmNL OQDT2dm/jOCGN
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3177; i=keescook@chromium.org;
+ h=from:subject; bh=4L1vW+SexsLQ4jAjdxhKOyEQSjWuUKIs12iHtuVmifc=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk3rRAY4GtRmAVHf6Ya9dY+gshf8QSkUD7pnmTh
+ rHHqQiA5g2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN60QAAKCRCJcvTf3G3A
+ JkvpEACe4GyFK86EwP8rAzGWpbQmF4TLiOHpR/Sq37SBWAGhApzKHiufbeypSkbGVsc9zm8k6ox
+ HqRPculRTXgBz6x5KLRagVnv6DvDL7Iz/CpcJo2cWK4ar0q8QnmYHWS6srfDmg7X2FS+zXcbV9b
+ NgSTHPpW+Nm4j438UvFT7/zD5q5vDmD6KhRNDdvoJHlRVEuZHZTntNyzawnhyTbnhLQtndJ8D9B
+ 2XWAvz31M9/B7kXy3mdeWDAHS93cup09V731uJhDp2vl18OV2uu4ADKpwql478KUkL1/YQCXlqu
+ MkwLExvrtT9pHo/FT6Kc4jg20iN0lHgOECgTK+knaJzWdKkTP30N0xQY+/BLEURfiZ3zccqfGJ3
+ UQZSWxAWNhoDuwTvXMKczoJuCdQXuiM3LXEAkmQ7On812q7pqXHbwB4kiy6pWOMgbjmdeb+R//J
+ xfTexss8BN1pf/RxPxWh7Chb4ZJ8NdVrkZBCHYaIRyq5auYyZthjKwR79bj1hXOk7XzTHzpxnx1
+ rGYLSr63iThlFrUS+YwRldwE0xr7Kr7jgLVJkxC1tWSMA6e6tTOT1sOgg1SW0m13ukSAD3EK1FP
+ faU8ba7KBOiO+J/s1i9j8OuxVMhUyNOYgZ8J667chD62Kn6PLWJan8xTbP4Dp3W/LZotOBsL30w oFDolQxdjzT8sBQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -107,32 +119,87 @@ their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 functions).
 
-As found with Coccinelle[1], add __counted_by for struct hisi_dma_dev.
+As found with Coccinelle[1], add __counted_by for struct stm32_dma_desc.
+Additionally, since the element count member must be set before accessing
+the annotated flexible array member, move its initialization earlier.
 
 [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 
 Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Zhou Wang <wangzhou1@hisilicon.com>
-Cc: Jie Hai <haijie1@huawei.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
 Cc: dmaengine@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/dma/hisi_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/stm32-dma.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/dma/hisi_dma.c b/drivers/dma/hisi_dma.c
-index c1350a36fddd..4c47bff81064 100644
---- a/drivers/dma/hisi_dma.c
-+++ b/drivers/dma/hisi_dma.c
-@@ -163,7 +163,7 @@ struct hisi_dma_dev {
- 	u32 chan_depth;
- 	enum hisi_dma_reg_layout reg_layout;
- 	void __iomem *queue_base; /* queue region start of register */
--	struct hisi_dma_chan chan[];
-+	struct hisi_dma_chan chan[] __counted_by(chan_num);
+diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
+index 5c36811aa134..a732b3807b11 100644
+--- a/drivers/dma/stm32-dma.c
++++ b/drivers/dma/stm32-dma.c
+@@ -191,7 +191,7 @@ struct stm32_dma_desc {
+ 	struct virt_dma_desc vdesc;
+ 	bool cyclic;
+ 	u32 num_sgs;
+-	struct stm32_dma_sg_req sg_req[];
++	struct stm32_dma_sg_req sg_req[] __counted_by(num_sgs);
  };
  
- #ifdef CONFIG_DEBUG_FS
+ /**
+@@ -1105,6 +1105,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_slave_sg(
+ 	desc = kzalloc(struct_size(desc, sg_req, sg_len), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
++	desc->num_sgs = sg_len;
+ 
+ 	/* Set peripheral flow controller */
+ 	if (chan->dma_sconfig.device_fc)
+@@ -1141,8 +1142,6 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_slave_sg(
+ 			desc->sg_req[i].chan_reg.dma_sm1ar += sg_dma_len(sg);
+ 		desc->sg_req[i].chan_reg.dma_sndtr = nb_data_items;
+ 	}
+-
+-	desc->num_sgs = sg_len;
+ 	desc->cyclic = false;
+ 
+ 	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+@@ -1216,6 +1215,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_cyclic(
+ 	desc = kzalloc(struct_size(desc, sg_req, num_periods), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
++	desc->num_sgs = num_periods;
+ 
+ 	for (i = 0; i < num_periods; i++) {
+ 		desc->sg_req[i].len = period_len;
+@@ -1232,8 +1232,6 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_cyclic(
+ 		if (!chan->trig_mdma)
+ 			buf_addr += period_len;
+ 	}
+-
+-	desc->num_sgs = num_periods;
+ 	desc->cyclic = true;
+ 
+ 	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
+@@ -1254,6 +1252,7 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
+ 	desc = kzalloc(struct_size(desc, sg_req, num_sgs), GFP_NOWAIT);
+ 	if (!desc)
+ 		return NULL;
++	desc->num_sgs = num_sgs;
+ 
+ 	threshold = chan->threshold;
+ 
+@@ -1283,8 +1282,6 @@ static struct dma_async_tx_descriptor *stm32_dma_prep_dma_memcpy(
+ 		desc->sg_req[i].chan_reg.dma_sndtr = xfer_count;
+ 		desc->sg_req[i].len = xfer_count;
+ 	}
+-
+-	desc->num_sgs = num_sgs;
+ 	desc->cyclic = false;
+ 
+ 	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
 -- 
 2.34.1
 
