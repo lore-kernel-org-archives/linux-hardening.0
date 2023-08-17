@@ -2,90 +2,308 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7AAC27C7A
-	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 08:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC716C2FC15
+	for <linux-hardening@archiver.kernel.org>; Thu, 17 Aug 2023 12:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348849AbjHQI0y (ORCPT
+        id S1350769AbjHQMkP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 04:26:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60728 "EHLO
+        Thu, 17 Aug 2023 08:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348910AbjHQI0n (ORCPT
+        with ESMTP id S1350942AbjHQMkI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 04:26:43 -0400
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [IPv6:2a0a:51c0:0:237:300::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EAE12D78
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 01:26:35 -0700 (PDT)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-        (envelope-from <fw@strlen.de>)
-        id 1qWYKg-00083x-D1; Thu, 17 Aug 2023 10:26:18 +0200
-Date:   Thu, 17 Aug 2023 10:26:18 +0200
-From:   Florian Westphal <fw@strlen.de>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     "GONG, Ruiqi" <gongruiqi1@huawei.com>,
-        kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
-        oe-kbuild-all@lists.linux.dev, Florian Westphal <fw@strlen.de>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [netfilter-nf-next:testing 2/9]
- ./usr/include/linux/netfilter_bridge/ebtables.h:163:26: warning: field
- 'target' with variable sized type 'struct ebt_entry_target' not at the end
- of a struct or class is a GNU extension
-Message-ID: <20230817082618.GE4312@breakpoint.cc>
-References: <202308171249.g1ywxhII-lkp@intel.com>
- <202308162257.F7876776C9@keescook>
+        Thu, 17 Aug 2023 08:40:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2682D78;
+        Thu, 17 Aug 2023 05:40:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CD32B65333;
+        Thu, 17 Aug 2023 12:40:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D78C433C8;
+        Thu, 17 Aug 2023 12:40:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692276006;
+        bh=Ctb460ZjOOcTO7ad0Uh+wY0jeurBU6YyzveRXdTvoeo=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=PAgn19Tqk7HPGUNIiGTm5Rb3MkGu3mNCy4LzMMSBKojyioGJrDm4n8lUxvupfYHRr
+         qJkBx/kni6erq2oX1y5d2Z9qYCk2VdupWR24y8sH41TuLA2slzLFzFwYSyLe0BNHEK
+         6KAy0uhsfcXXZY5cOWE0p9fc0D6cBQoWn4X++j/ca7Xr5z7vjWjhg4dk22k2otnbOk
+         x+e+IZNVawl2cS51nMnGQos7Zy1xd9vgyaMqUQ1Ls6V9LTZIfRoEbCUsc30lQtz5EM
+         0KCPpin7XBF3VkziU8kM/mfA69Uy7S5Zjd60mce99YYTtbXmEm7Pqc0/BniXmcyK8P
+         14I7gOMYBLjjA==
+Message-ID: <09b4a2ce-da74-3a19-6961-67883f634d98@kernel.org>
+Date:   Thu, 17 Aug 2023 14:39:56 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202308162257.F7876776C9@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: struct_size() using sizeof() vs offsetof()
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+References: <74e8cf91-d095-33e3-c548-34d80b691089@kernel.org>
+ <202308161913.91369D4A@keescook>
+From:   Alejandro Colomar <alx@kernel.org>
+Organization: Linux
+In-Reply-To: <202308161913.91369D4A@keescook>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------dOwP5D6f8lsAhQZrmPhEqIdx"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> wrote:
-> On Thu, Aug 17, 2023 at 01:03:20PM +0800, kernel test robot wrote:
-> > tree:   git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf-next.git testing
-> > head:   015e2d9101d3713c7bee16dccad171df04a3bbd5
-> > commit: 61b9e6bd48a6317c0a44ee4f3fecdec9de5baa9e [2/9] netfilter: ebtables: replace zero-length array members
-> > config: i386-buildonly-randconfig-r004-20230817 (https://download.01.org/0day-ci/archive/20230817/202308171249.g1ywxhII-lkp@intel.com/config)
-> > compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
-> > reproduce: (https://download.01.org/0day-ci/archive/20230817/202308171249.g1ywxhII-lkp@intel.com/reproduce)
-> > 
-> > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > the same patch/commit), kindly add following tags
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> > | Closes: https://lore.kernel.org/oe-kbuild-all/202308171249.g1ywxhII-lkp@intel.com/
-> > 
-> > All warnings (new ones prefixed by >>):
-> > 
-> >    In file included from <built-in>:1:
-> > >> ./usr/include/linux/netfilter_bridge/ebtables.h:163:26: warning: field 'target' with variable sized type 'struct ebt_entry_target' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
-> >            struct ebt_entry_target target;
-> >                                    ^
-> >    1 warning generated.
-> 
-> Eww, it looks like "struct ebt_entry_target" is used _within_ another
-> struct:
-> 
-> struct ebt_standard_target {
->         struct ebt_entry_target target;
->         int verdict;
-> };
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------dOwP5D6f8lsAhQZrmPhEqIdx
+Content-Type: multipart/mixed; boundary="------------736sc8nit74FyAlUvH570gdz";
+ protected-headers="v1"
+From: Alejandro Colomar <alx@kernel.org>
+To: Kees Cook <keescook@chromium.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-hardening@vger.kernel.org
+Message-ID: <09b4a2ce-da74-3a19-6961-67883f634d98@kernel.org>
+Subject: Re: struct_size() using sizeof() vs offsetof()
+References: <74e8cf91-d095-33e3-c548-34d80b691089@kernel.org>
+ <202308161913.91369D4A@keescook>
+In-Reply-To: <202308161913.91369D4A@keescook>
 
-Yes, same as xt_standard_target.
+--------------736sc8nit74FyAlUvH570gdz
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> These have been fixed in the past in a variety of ways -- it all depends
-> on how userspace is using them. In looking at Debian Code Search:
-> https://codesearch.debian.net/search?q=struct+ebt_standard_target&literal=1
-> 
-> It is exclusively doing casts and looking at the "verdict" member. So
-> the easiest conversion might be this:
-> 
->  struct ebt_standard_target {
-> -       struct ebt_entry_target target;
-> +       unsigned char hdr[sizeof(struct ebt_entry_target)];
->         int verdict;
+Hi!
 
-I don't think its worth doing all of this.
+On 2023-08-17 05:05, Kees Cook wrote:
+> On Thu, Aug 17, 2023 at 02:23:21AM +0200, Alejandro Colomar wrote:
+[...]
 
-Can't we just keep it as-is and drop the relevant hunk from the patch?
+>=20
+> When struct_size() was originally implemented this topic came up, and w=
+e
+> opted for potential over-estimation rather than using offsetof() which
+> could result in under-allocation, and using max() of two different
+> calculations just seemed like overkill. Additionally, almost all cases =
+of
+> struct_size() was replacing a literal open-coded version of
+>=20
+> 	sizeof(*ptr) + sizeof(*ptr->array) * count
+>=20
+> So avoiding a difference in calculation was nice too.
+
+Yup.
+
+[...]
+
+>>
+>> 	MAX(sizeof(s), offsetof(s, fam) + sizeof_member(s, fam) * count)
+>=20
+> Ironically, this has been under careful examination recently by GCC[1]
+> too. Though that has mainly been looking at it from the perspective
+> of how __builtin_object_size() should behave in the face of the new
+> __counted_by attribute.
+
+Heh, I've found that there are actually a lot of discussions about flex
+arrays going on this summer.  Glibc also has something.
+
+[...]
+
+>=20
+> We opted for simple over complex, with the understanding that
+> over-allocation will be a relatively rare issue that will only waste
+> limited space (as opposed to potential under-allocation and risking
+> writing beyond the end of the region).
+
+Thanks.
+
+[...]
+
+> But, yes, at the end of the day, struct_size() could be defined as
+> max(sizeof, offsetof-based struct-size).
+>=20
+> Note that struct_size() has been designed to have two additional
+> behaviors:
+>  - be usable as a constant expression
+>  - saturate at SIZE_MAX
+>=20
+> So as long as the max() could do the same (which it should be able to),=
+
+> it'd likely be fine.
+
+Yep.  It should be able to do that.
+
+> I'm open to patches as long as we can validate any
+> binary differences found in allmodconfig builds. :)
+
+Thanks!  I'm preparing a patch.  It's being more complex than I thought
+it would be.  There's some thing that's not compiling for me.
+
+
+net/sched/cls_u32.c: In function =E2=80=98u32_init=E2=80=99:
+net/sched/cls_u32.c:369:17: error: cannot apply =E2=80=98offsetof=E2=80=99=
+ to a non constant address
+  369 |                 tp_c =3D kzalloc(struct_size(tp_c, hlist->ht, 1),=
+ GFP_KERNEL);
+      |                 ^~~~
+In file included from ./include/linux/kernel.h:27,
+                 from ./arch/x86/include/asm/percpu.h:27,
+                 from ./arch/x86/include/asm/nospec-branch.h:14,
+                 from ./arch/x86/include/asm/paravirt_types.h:27,
+                 from ./arch/x86/include/asm/ptrace.h:97,
+                 from ./arch/x86/include/asm/math_emu.h:5,
+                 from ./arch/x86/include/asm/processor.h:13,
+                 from ./arch/x86/include/asm/timex.h:5,
+                 from ./include/linux/timex.h:67,
+                 from ./include/linux/time32.h:13,
+                 from ./include/linux/time.h:60,
+                 from ./include/linux/stat.h:19,
+                 from ./include/linux/module.h:13,
+                 from net/sched/cls_u32.c:26:
+
+
+Here's the entire function:
+
+$ grepc u32_init
+=2E/net/sched/cls_u32.c:352:
+static int u32_init(struct tcf_proto *tp)
+{
+	struct tc_u_hnode *root_ht;
+	void *key =3D tc_u_common_ptr(tp);
+	struct tc_u_common *tp_c =3D tc_u_common_find(key);
+
+	root_ht =3D kzalloc(struct_size(root_ht, ht, 1), GFP_KERNEL);
+	if (root_ht =3D=3D NULL)
+		return -ENOBUFS;
+
+	root_ht->refcnt++;
+	root_ht->handle =3D tp_c ? gen_new_htid(tp_c, root_ht) : 0x80000000;
+	root_ht->prio =3D tp->prio;
+	root_ht->is_root =3D true;
+	idr_init(&root_ht->handle_idr);
+
+	if (tp_c =3D=3D NULL) {
+		tp_c =3D kzalloc(struct_size(tp_c, hlist->ht, 1), GFP_KERNEL);
+		if (tp_c =3D=3D NULL) {
+			kfree(root_ht);
+			return -ENOBUFS;
+		}
+		tp_c->ptr =3D key;
+		INIT_HLIST_NODE(&tp_c->hnode);
+		idr_init(&tp_c->handle_idr);
+
+		hlist_add_head(&tp_c->hnode, tc_u_hash(key));
+	}
+
+	tp_c->refcnt++;
+	RCU_INIT_POINTER(root_ht->next, tp_c->hlist);
+	rcu_assign_pointer(tp_c->hlist, root_ht);
+
+	root_ht->refcnt++;
+	rcu_assign_pointer(tp->root, root_ht);
+	tp->data =3D tp_c;
+	return 0;
+}
+
+
+Let's see the structure type:
+
+
+$ grepc -tt tc_u_common
+=2E/net/sched/cls_u32.c:86:
+struct tc_u_common {
+	struct tc_u_hnode __rcu	*hlist;
+	void			*ptr;
+	int			refcnt;
+	struct idr		handle_idr;
+	struct hlist_node	hnode;
+	long			knodes;
+};
+
+
+Huh, hlist is the first field and is a pointer.  I'm not at all
+sure of what was being done here.  Here's the type of the
+pointee:
+
+
+$ grepc -tt tc_u_hnode
+=2E/net/sched/cls_u32.c:70:
+struct tc_u_hnode {
+	struct tc_u_hnode __rcu	*next;
+	u32			handle;
+	u32			prio;
+	int			refcnt;
+	unsigned int		divisor;
+	struct idr		handle_idr;
+	bool			is_root;
+	struct rcu_head		rcu;
+	u32			flags;
+	/* The 'ht' field MUST be the last field in structure to allow for
+	 * more entries allocated at end of structure.
+	 */
+	struct tc_u_knode __rcu	*ht[];
+};
+
+
+So, that struct_size() was, at best, doing black magic.  At worst, a
+bug.  I would need to investigate that code a little bit more, but a
+first guess tells me that struct_size() was returning the size of the
+outer structure plus the size of the flex array in the inner structure,
+but not including the size of the inner structure; i.e.:
+
+	sizeof(outer) + flex_array_size(inner-flex)
+
+which seems a weird calcualtion.
+
+That line of code was written by Gustavo, in d61491a51f7e ("net/sched:
+cls_u32: Replace one-element array with flexible-array member"), so
+can you please confirm that code, and maybe explain why it's that way,
+Gustavo?
+
+-               tp_c =3D kzalloc(sizeof(*tp_c), GFP_KERNEL);
++               tp_c =3D kzalloc(struct_size(tp_c, hlist->ht, 1), GFP_KER=
+NEL);
+
+
+Cheers,
+Alex
+
+
+>=20
+> -Kees
+>=20
+> [1] https://gcc.gnu.org/pipermail/gcc-patches/2023-August/626672.html
+>=20
+
+--=20
+<http://www.alejandro-colomar.es/>
+GPG key fingerprint: A9348594CE31283A826FBDD8D57633D441E25BB5
+
+
+--------------736sc8nit74FyAlUvH570gdz--
+
+--------------dOwP5D6f8lsAhQZrmPhEqIdx
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE6jqH8KTroDDkXfJAnowa+77/2zIFAmTeFRwACgkQnowa+77/
+2zJuRg/8CECOrscSkBJfDRl6z28OCGGZlW8xiw1XMW8erqD8rbLKY8Yqqs7DOzdK
+TXGokPlffwLjdAca2yiLx4aZyuXE+31OdLY75o9gPRwwogjzAjCHUj0lFq4AbR/3
+H5a/s8ydrjY8UR7FkLfjw5z2NjwMnKyhGiDS6mcS9zMSMqlYr3LTemE4xOIVGpXo
+tr/Ja99v5oeaws/8FWy3PZBpmR8ERMvX8c2UjS90lGp/pvIRoRKPuXGX0zaFNCzh
+RmW05InWPll/99gDsUnQhbGXsyBSCsevkWcPSJLMqF3PdK6LhUheDlDqeWq2kQPu
+HGtEBvx6uzkyrMd7s1m86G947zv4GID+Lm1sLFcCw0NkvBWJvntFlomls4QBGX0p
+DA8+Ta5KLSlas0WJaipb+QJQhbhWzgcJZ5YwVGOJBQ+II63+RtbGcu75sRai5EjN
+9NVXpMvTozhwq/Cq//Ui2nUP+YV/0HehFkcyUQsVunsig+tnK1enj1YxTa0gSvoN
+YDrv5WXWqUBoAivlkEJIjODC/GK48i0WbWexDV91VtgodUah6S6ROaPcqwlkNMa+
+y0MIT2qehcEaoxZAOI+qd5u8NofcWE0r5x3PYfDP1JKND3Yn1f8P1bzJiXM+mxKa
+Vj5raN/NQefUa20v8pb43vs7j8G7h6UrkwYbkSaVzWvaZkzkeaQ=
+=U7HT
+-----END PGP SIGNATURE-----
+
+--------------dOwP5D6f8lsAhQZrmPhEqIdx--
