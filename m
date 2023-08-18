@@ -2,99 +2,69 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D040C7113C
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 03:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3CBC71133
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 03:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354279AbjHRDiO (ORCPT
+        id S1349317AbjHRDlb (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 23:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
+        Thu, 17 Aug 2023 23:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357792AbjHRDiE (ORCPT
+        with ESMTP id S1357741AbjHRDlU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 23:38:04 -0400
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58D3B2708;
-        Thu, 17 Aug 2023 20:38:00 -0700 (PDT)
-Received: from eig-obgw-5010a.ext.cloudfilter.net ([10.0.29.199])
+        Thu, 17 Aug 2023 23:41:20 -0400
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64DA6358A
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 20:41:18 -0700 (PDT)
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
         by cmsmtp with ESMTP
-        id WmuKqjqwDyYOwWqJDq2IjB; Fri, 18 Aug 2023 03:37:59 +0000
+        id WmuKqb7rVWU1cWqMPqV2CA; Fri, 18 Aug 2023 03:41:17 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id WqJCqlTvr2eFNWqJCq489j; Fri, 18 Aug 2023 03:37:59 +0000
-X-Authority-Analysis: v=2.4 cv=VvAwvs6n c=1 sm=1 tr=0 ts=64dee797
+        id WqMOqhPfMDHerWqMPquR9y; Fri, 18 Aug 2023 03:41:17 +0000
+X-Authority-Analysis: v=2.4 cv=MN5zJeVl c=1 sm=1 tr=0 ts=64dee85d
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
- a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
- a=VwQbUJbxAAAA:8 a=Ikd4Dj_1AAAA:8 a=pGLkceISAAAA:8 a=cm27Pg_UAAAA:8
- a=HvF037n1xESchLcPDVoA:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=xmb-EsYY8bH0VWELuYED:22
+ a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=1XWaLZrsAAAA:8 a=cm27Pg_UAAAA:8 a=mDV3o1hIAAAA:8 a=Twlkf-z8AAAA:8
+ a=hEGvEmT7ark0PdWysM4A:9 a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=xmb-EsYY8bH0VWELuYED:22 a=_FVE-zBwftR9WsbkzFJk:22 a=-74SuR6ZdpOK_LpdRCUo:22
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=L0n5YvsnOREjDavEqwIfonPDHlgYaxvqnu5lUobWG1I=; b=tHeYKVrHUJemYIG8wkzYXKKQeK
-        LZOQuy5Q2Aff6Q0LjCX7wAbdA0NELdQ2ug9kERJ3nmfLByHcAGYZ0H2urNlpeuYcVRKN+RibDxB2L
-        CpKt9CwfXsU4hSApJ1dxGON3kuCzv/Atk0Kzu6WTS8nb66oEO/YJNsWoLseZQHoWFdNAyKGwgfyuc
-        6HQ4lOh4wHIem2qOg1qaLoRzhbAhQ1ywyJoYdBBe/2ATUMXpz+FHrqdhMffnxRMcUiagT7FChjDLc
-        m6ZcIUlk06BerGP4CPuLEn6BP5kURY0Ljf11xvLMVXxkmGzXUKGVvXBY20R60Fjw/SwRsoM3MQayW
-        2ug8swMA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:48526 helo=[192.168.15.8])
+        bh=XS6ddzMrecuPuYAqVJpaZu6ilnoyG2mS0jCrgvsgBTQ=; b=SrRkOhaP3QKiVP6PPRxlkhwJsc
+        cZTdPs+iOlfJ9w8SKFgQ7nl5pPbKFCAVgNMj0bvhrVFtrgbcA+mhjkRZ6VsFs4Ifh/PS++eMgVkY1
+        70Ci9WmNxrMRFgcecjYFQNRapbVf34l3Qr6uJucThJY4do+LdjxdcPB16dXUXfOsI12jGqT09wRqi
+        4vMMkZ8MtBkM4GWS5j9/8dhgLcIXoLKt+aBEha+MkL7w+tkxPRg2whqC5STS9gCw1ZefbVXbbCmaN
+        Iuy9VjIQTedCmcJ5dKWCVb+oFxsf1Ua1k2ei7wCZFHuqwLmEsxJ6SNQNZWz0wfwj1p3aWk3mhyZ5z
+        Wa7hSFTA==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:56796 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qWp00-001BF6-0L;
-        Thu, 17 Aug 2023 21:14:04 -0500
-Message-ID: <681fd5fa-3a0d-676b-44b0-0aab66f21dd7@embeddedor.com>
-Date:   Thu, 17 Aug 2023 20:15:02 -0600
+        id 1qWqMN-002Jn6-1p;
+        Thu, 17 Aug 2023 22:41:16 -0500
+Message-ID: <338a56b6-1e07-4089-d762-25440c0f9d81@embeddedor.com>
+Date:   Thu, 17 Aug 2023 21:42:05 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 15/21] dmaengine: tegra: Annotate struct tegra_dma_desc
- with __counted_by
+Subject: Re: [PATCH] Compiler Attributes: counted_by: Adjust name and
+ identifier expansion
 Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>, Vinod Koul <vkoul@kernel.org>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Green Wan <green.wan@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Yu Kuai <yukuai3@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jordy Zomer <jordy@pwning.systems>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
+To:     Kees Cook <keescook@chromium.org>, Miguel Ojeda <ojeda@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, llvm@lists.linux.dev,
+        Tom Rix <trix@redhat.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
-References: <20230817235428.never.111-kees@kernel.org>
- <20230817235859.49846-15-keescook@chromium.org>
+References: <20230817200558.never.077-kees@kernel.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230817235859.49846-15-keescook@chromium.org>
+In-Reply-To: <20230817200558.never.077-kees@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -105,65 +75,99 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qWp00-001BF6-0L
+X-Exim-ID: 1qWqMN-002Jn6-1p
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:48526
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:56796
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 0
+X-Email-Count: 1
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJNG9md9klS3TOspPzHh0mLpMoyDUM4wWKM5OCx3HOh+pB0fr7eqAUk2hmZQTd8htZvH6ooUR+/ypeGb1jicbbcP8tx0r0zNYlGCgZPmaHU/OzeKuX2s
- BkQ9KtyohacXA7+qDWoNVYI0YYXG2fqR627/Y3a2CaH3Zu4Qk4okFca5FHdQEYskAmeitGvPU7tVmV31PseqhHFB7VHch3i0Qgz1+W3dQzezdsM1w91uRy6T
- h3ifmNDHi2sA/DCipr1ZKOiaVCsaKlMU0uz9zhuLmoCq+hOVfJ5y83w9AftOXwkYnvvS18woEQA2+GzK1US80C+VdjRMLcq6LNN9va4TUobZC0sEoXtujnqQ
- Vp938fi7tlu6DwZKyualp1B9D64Y3g7OaKc4EPxC4k5jjNCMknM=
+X-CMAE-Envelope: MS4xfG+1e4DNkG6N0HUeV4uDtq1/k6S6u3UCz+sW3d258dj8LGu7BKh3A2AQdjL4Xtzq+mIQTsxasS6XCSIQDy+8uPz1fwF1EaYt3WhN1VIzo1ggVfNJGZNc
+ 6fZfzSHZvbwwBu0z5TozEtCNt6+haIe9kqxwGycAw8A2dE9jhjaygtG25p0Uy1JAQXQIJ/sEBBSdi70mbCb1VFDXaUF8PHJ6FasGsG6zoOQ7l7ZaRRs2tXj1
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
 
-On 8/17/23 17:58, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On 8/17/23 14:06, Kees Cook wrote:
+> GCC and Clang's current RFCs name this attribute "counted_by", and have
+> moved away from using a string for the member name. Update the kernel's
+> macros to match. Additionally provide a UAPI no-op macro for UAPI structs
+> that will gain annotations.
 > 
-> As found with Coccinelle[1], add __counted_by for struct tegra_dma_desc.
-> 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> 
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Laxman Dewangan <ldewangan@nvidia.com>
-> Cc: Jon Hunter <jonathanh@nvidia.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-tegra@vger.kernel.org
+> Cc: Miguel Ojeda <ojeda@kernel.org>
+> Cc: Nick Desaulniers <ndesaulniers@google.com>
+> Fixes: dd06e72e68bc ("Compiler Attributes: Add __counted_by macro")
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 
 Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
 Thanks
---
+-- 
 Gustavo
 
 > ---
->   drivers/dma/tegra186-gpc-dma.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   include/linux/compiler_attributes.h | 26 +++++++++++++-------------
+>   include/uapi/linux/stddef.h         |  4 ++++
+>   2 files changed, 17 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/dma/tegra186-gpc-dma.c b/drivers/dma/tegra186-gpc-dma.c
-> index 33b101001100..5e3d5f5d1e20 100644
-> --- a/drivers/dma/tegra186-gpc-dma.c
-> +++ b/drivers/dma/tegra186-gpc-dma.c
-> @@ -221,7 +221,7 @@ struct tegra_dma_desc {
->   	unsigned int sg_count;
->   	struct virt_dma_desc vd;
->   	struct tegra_dma_channel *tdc;
-> -	struct tegra_dma_sg_req sg_req[];
-> +	struct tegra_dma_sg_req sg_req[] __counted_by(sg_count);
->   };
+> diff --git a/include/linux/compiler_attributes.h b/include/linux/compiler_attributes.h
+> index 00efa35c350f..74716a407aac 100644
+> --- a/include/linux/compiler_attributes.h
+> +++ b/include/linux/compiler_attributes.h
+> @@ -94,6 +94,19 @@
+>   # define __copy(symbol)
+>   #endif
 >   
+> +/*
+> + * Optional: only supported since gcc >= 14
+> + * Optional: only supported since clang >= 17
+> + *
+> + *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> + * clang: https://reviews.llvm.org/D148381
+> + */
+> +#if __has_attribute(__counted_by__)
+> +# define __counted_by(member)		__attribute__((__counted_by__(member)))
+> +#else
+> +# define __counted_by(member)
+> +#endif
+> +
 >   /*
+>    * Optional: not supported by gcc
+>    * Optional: only supported since clang >= 14.0
+> @@ -129,19 +142,6 @@
+>   # define __designated_init
+>   #endif
+>   
+> -/*
+> - * Optional: only supported since gcc >= 14
+> - * Optional: only supported since clang >= 17
+> - *
+> - *   gcc: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=108896
+> - * clang: https://reviews.llvm.org/D148381
+> - */
+> -#if __has_attribute(__element_count__)
+> -# define __counted_by(member)		__attribute__((__element_count__(#member)))
+> -#else
+> -# define __counted_by(member)
+> -#endif
+> -
+>   /*
+>    * Optional: only supported since clang >= 14.0
+>    *
+> diff --git a/include/uapi/linux/stddef.h b/include/uapi/linux/stddef.h
+> index 7837ba4fe728..7c3fc3980881 100644
+> --- a/include/uapi/linux/stddef.h
+> +++ b/include/uapi/linux/stddef.h
+> @@ -45,3 +45,7 @@
+>   		TYPE NAME[]; \
+>   	}
+>   #endif
+> +
+> +#ifndef __counted_by
+> +#define __counted_by(m)
+> +#endif
