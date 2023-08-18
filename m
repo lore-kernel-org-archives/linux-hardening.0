@@ -2,98 +2,195 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18105C001DE
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 11:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AC5C7113D
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 12:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376534AbjHRLKk (ORCPT
+        id S1376739AbjHRMIo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 07:10:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48554 "EHLO
+        Fri, 18 Aug 2023 08:08:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376537AbjHRLKV (ORCPT
+        with ESMTP id S1376799AbjHRMIV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 07:10:21 -0400
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79463592;
-        Fri, 18 Aug 2023 04:10:19 -0700 (PDT)
-Received: by mail-yb1-xb35.google.com with SMTP id 3f1490d57ef6-bc379e4c1cbso780169276.2;
-        Fri, 18 Aug 2023 04:10:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692357019; x=1692961819;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Aqcz6+CxleF/o9TEc80m8NBOqId1CND3CqvR2adeCrk=;
-        b=bcWLE7GmjLzg5FLTfyj2gS7rzmn6BlMZrKEV189s13CdDRHbeZpltWXq5ZwCq3KoJ4
-         RN7Pz6FU5DPcoVurTiZE2ceRXHBZDeMCJBIkH2Snn60xXuYcGTT9H0ud3edgD2HlSeVK
-         t269fS0uUu876g7EqY6jOlIv/kuCJecN5bEuRcW4fWAU5OX4TBDeIw67ci9Q2lQbEzWe
-         mKeBIk2SSJgrjaLKA0z1GtngW11H6hE064EshncH5hpjTRmlkO2WMe4DDZeBPffFm2ut
-         eOjuwYS/8ZsDoG/otYo2huB/FEuTl3Tsyvd7IjstBHwa9DxiVB8ZqeTmCbqQOED6L1LV
-         T2Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692357019; x=1692961819;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Aqcz6+CxleF/o9TEc80m8NBOqId1CND3CqvR2adeCrk=;
-        b=H1EzKm6WVk67FICypJcTDntK9B+TaSraHoz677XlqsZvKFhfrtkcSgax1qRlbVviP8
-         GKypMxm9j192rbYMdqB4MBDVsVCft603xZwAgYaewvXOdisayqc0r+9nPjmDNCs2hPRm
-         +UnNK6rFjBYu93FYPj4eCBSEDjKGFTU2IzBmeDuEDKbAF6ZS9W8CKjG8pozDlBzo2R9a
-         c02km6c05ybVPQ17nvHwtzqDGu3oiGST4UL/6Z3wn9vqNejili2ZHJPhSpB78qi917zO
-         wUGZflIbD9nwyUUPBW7LFOW2p26ByKOVW6wNafTjI6dd8xbUNWkU8V8eP1Fj91QqcQ2z
-         V8Mw==
-X-Gm-Message-State: AOJu0Yy+cJllzjnYGu/s2wJwUK8LQ4Nd1MUsRAv7l14o8svZQRGPmGRN
-        vvoP1rfgi9eem/CnLgKPd85bDiv9emZ5sPRbp5U=
-X-Google-Smtp-Source: AGHT+IFa1lCmf93SIjjWLr4QMBNGshpVNdTOoZk81LOSK8FUfuY3igGAEIXdQX2Sl0YLblLw5xm4pbRe4oUujk7VXSY=
-X-Received: by 2002:a05:6902:1890:b0:d4b:6a0:fe2b with SMTP id
- cj16-20020a056902189000b00d4b06a0fe2bmr3171716ybb.36.1692357019061; Fri, 18
- Aug 2023 04:10:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230816140623.452869-2-przemyslaw.kitszel@intel.com>
- <202308170000.YqabIR9D-lkp@intel.com> <cfc29063-9e20-5101-d70b-62b5423d2d10@intel.com>
-In-Reply-To: <cfc29063-9e20-5101-d70b-62b5423d2d10@intel.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 18 Aug 2023 13:10:07 +0200
-Message-ID: <CANiq72m9ZEVkP76FMFOnPYkA8ih4Mq72HtW9AbrJ-JPy9ku3jw@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack allocs
-To:     Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+        Fri, 18 Aug 2023 08:08:21 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E3035AD;
+        Fri, 18 Aug 2023 05:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1692360499; x=1723896499;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=z3yev7QeNzfKGTN+peWa+yf32WONzEhWgq/tgKqLkXM=;
+  b=WPsOaFFpWQIg26l2S+yFhpWX3GRLdXg1kvPIUEf0Cyl5WQI69YtkYRdU
+   dPA/jkAcIUi5gQFoRsuaarVORyEhQKjxVg/oUpOljrXtXwIMKWeiKsIPh
+   7WwSJaFFC8BdxqO5T4FKSzIEqJv7ktylzBTh7Zrnz8dd2GsjKRilZox5V
+   Gkae86aD3RAJMFLBMp4+DRqLi/rWwzJKs2UeEfgft6plIHrW8Ys8hGgWN
+   V7lbwvIVwN+BLE/4BikytzJbjLlW4ZeLdEpuCEMAcFOelCk6hguipbnPb
+   TJv7i15nCF/5VRIWb0iPov5UY+OpZ8EVaaTMAPh8aFMG9rbHtFuQ12viG
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="373066798"
+X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
+   d="scan'208";a="373066798"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2023 05:08:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10805"; a="764545249"
+X-IronPort-AV: E=Sophos;i="6.01,183,1684825200"; 
+   d="scan'208";a="764545249"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga008.jf.intel.com with ESMTP; 18 Aug 2023 05:08:15 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Fri, 18 Aug 2023 05:08:15 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Fri, 18 Aug 2023 05:08:14 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Fri, 18 Aug 2023 05:08:14 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.106)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Fri, 18 Aug 2023 05:08:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XQ0wietqb7qEEGSLfkcQOn6sSAo1wIPzVweJxJL6VqHvSU+ds5Ms2Koidf1Tw22onwglpZdx7gr5nz75CspVSAqcB6wEQibhuRlaGy3i/cCz858IwAcyPcrqFt+iK33ej8jkXH660pg5y0AOl8VEZKUJ1aRBZK33DwL2pmeDWrShPnxjDFeXxImnQQU3GJr2e0O1NDH+a98vuEkZYh6wvRVtNMH5I2LXM3pyeI0qUWCxJkQRJDduQe9DoDOk3ryX208ueYfIXEvmUMbM/n8ZPzUnVBNJjHxsUH3Qto8jB/E14F/AN62DNvWCjFgItX0IbUE//Q4+Nn7jy/73sWp0+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HP4TlWA7+ZOb2BkE44DRSNThJ3eSovnPvg5EtaFi+vc=;
+ b=BpBru7LGGGSo6gld5zUuLZKczRZ25nZe1qPzPi/0yQSXXUMCYG6ViFewHYmiC7HwrFhcBpXLINBou8kRNvuDiLmwygKhES3AxvXu0RZUW3WDY6Ie7y1/OXuLAkpocX48njpdJ7mxuUogNtRIJF8XFb7xJUzUZi3tBKw0ZHK4e5pLCTcTi9MxXpboutHiJ232G+kFocFd5PmPjHCW5o4gtXhQZB6R9TmAyufCTQeej4V1PyQYQbk7JD4VdosnG68FAdCHIIjngca3B9qDYK8D11wcif5WAIH+ozu0A8VB6nyE3CfVgdSGSnd5obKisCJFMKmrwnGLflif0xrmldwDyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BL0PR11MB2995.namprd11.prod.outlook.com (2603:10b6:208:7a::28)
+ by PH0PR11MB7660.namprd11.prod.outlook.com (2603:10b6:510:26f::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.20; Fri, 18 Aug
+ 2023 12:08:07 +0000
+Received: from BL0PR11MB2995.namprd11.prod.outlook.com
+ ([fe80::589b:22b8:e509:c001]) by BL0PR11MB2995.namprd11.prod.outlook.com
+ ([fe80::589b:22b8:e509:c001%4]) with mapi id 15.20.6678.022; Fri, 18 Aug 2023
+ 12:08:07 +0000
+Date:   Fri, 18 Aug 2023 20:07:55 +0800
+From:   Philip Li <philip.li@intel.com>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+CC:     Przemek Kitszel <przemyslaw.kitszel@intel.com>,
         kernel test robot <lkp@intel.com>,
         Yujie Liu <yujie.liu@intel.com>,
-        Philip Li <philip.li@intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     rust-for-linux@vger.kernel.org, llvm@lists.linux.dev,
-        oe-kbuild-all@lists.linux.dev,
+        Greg KH <gregkh@linuxfoundation.org>,
+        <rust-for-linux@vger.kernel.org>, <llvm@lists.linux.dev>,
+        <oe-kbuild-all@lists.linux.dev>,
         Jacob Keller <jacob.e.keller@intel.com>,
-        intel-wired-lan@lists.osuosl.org,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        linux-hardening@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <intel-wired-lan@lists.osuosl.org>,
+        "Alexander Lobakin" <aleksander.lobakin@intel.com>,
+        <linux-hardening@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, <netdev@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack
+ allocs
+Message-ID: <ZN9fG8rPmdFO0kLK@rli9-mobl>
+References: <20230816140623.452869-2-przemyslaw.kitszel@intel.com>
+ <202308170000.YqabIR9D-lkp@intel.com>
+ <cfc29063-9e20-5101-d70b-62b5423d2d10@intel.com>
+ <CANiq72m9ZEVkP76FMFOnPYkA8ih4Mq72HtW9AbrJ-JPy9ku3jw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72m9ZEVkP76FMFOnPYkA8ih4Mq72HtW9AbrJ-JPy9ku3jw@mail.gmail.com>
+X-ClientProxiedBy: SG2PR04CA0154.apcprd04.prod.outlook.com (2603:1096:4::16)
+ To BL0PR11MB2995.namprd11.prod.outlook.com (2603:10b6:208:7a::28)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL0PR11MB2995:EE_|PH0PR11MB7660:EE_
+X-MS-Office365-Filtering-Correlation-Id: f106fe94-b6ec-4fbb-6c79-08db9fe3c850
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BuuLKPfbge5MixQ3rrFItk37sSuw/t4R/x4Zr/V+nylY+Hx60ftQ5XCwc9JOeyk5J+QcNXoDMaLbLANs/cazBADWUlezMgENFBLvp16OAZVsVH/pl0oBLsWjqONmhZ6DK2bqtg291BZyZ7bdSi+JxTkB3h8cqkj+iPapGgSWoR4THC3LAA21S8YdW4oI4Os9jXGOt8RxLpARDzIZbGdITTTCP50JVbJvHh78WdwwlxN6fS7l+qKlobRqFXXyUMnCpsfAWCS1vqUwUhbCk6JENHZpfclq5z3rGCM6C7EbUiG8oAS08MASbtRKOHxkNpGhULf0F+uyFmCDlxqo0ayh5GDV3L1eN695IKDAk4MVKUj5I0XtsPHIsISqss+n5d3bCacATpfGC8pXZjq/K/60B4IAftKAyMz0zV18LMtDijl2/RVxwVPp5VhT6sSIKArKJcXqi+G3My+mXnDq7qQh8n2a69+TZlEX8Iv24v1yWCy1uOvFNLKEtm70VeTTdbVCxQcTSMR51WKPQ2bGBUxalFMo6R24P1CLrcLz+w3VymJvtwrJkJ7QM6ChyIkU9OvS
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB2995.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(346002)(136003)(39860400002)(366004)(376002)(396003)(186009)(1800799009)(451199024)(6666004)(6486002)(6506007)(38100700002)(9686003)(6512007)(53546011)(82960400001)(86362001)(26005)(83380400001)(33716001)(2906002)(54906003)(66946007)(66476007)(66556008)(316002)(6916009)(41300700001)(44832011)(5660300002)(8676002)(4326008)(8936002)(478600001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZUNqQTgwcHgzcmIyaDAvMFk1Z3JKR1VWeWZrR3ZEbm5abXd3MzZvR0ZBNUw0?=
+ =?utf-8?B?QkJUVHVlZlJESnBHNTdFR1RpeGcwQjY0blFBOTVNbDJ2SlhvNlRTMWlYRUV2?=
+ =?utf-8?B?WHdlTDEzaHZOOVkwd0VibURzSlYzRDA2YVZVSDBSVXR2cDd3ejZMYmQ5T1Vr?=
+ =?utf-8?B?U013NlJhZ0lRb3VzbXoxWjJMUW5FTnVhZnA1UUZQOUxXVGZ4ajhSd2ZpUStl?=
+ =?utf-8?B?Qit5RFdiOUNBbkpDTTMxamdVZDRiV1FmNFBLZWcrNGYzdzRtNnE2SUdkdksr?=
+ =?utf-8?B?UzlydngvekVTTGF6VWxhVy96TGZ1aTkzMEZiMnZnSzM4MXZqWmRDS1c3Z1Bk?=
+ =?utf-8?B?UjRMZDd1NWdWRzNOdCtyM3hXUUhDc2s4eG0xU1lyY3JDMStmSEx5YmFvNGtP?=
+ =?utf-8?B?Tys5dEduUlFJTEtvc3E3MlpHNWtTRlJWNGNrQkZEcGMxeUh0M2FFa1BIalk0?=
+ =?utf-8?B?a29ZakJ6WXFlQkdoWXVDUE01Qlg5ZXRtWm9oSFhydFN5cVlYNHdsUUhxRThL?=
+ =?utf-8?B?b00zd0c0b2xFTk5tMElRcGdacTVhZC8yNm5XdloyNzNvY2lZTmFmZm83Mzk2?=
+ =?utf-8?B?dkF5aDhqbzg0dHRRN2ZCem5JeU9ycUpmMUVyYmpkRTM3d3ZEQmgxTFRLQWNV?=
+ =?utf-8?B?WnMwZkxucXY3L0M2QjhnSUFWaThVOStKaG9WSFpDd29CU1NkQ05Xb0pMd3Ur?=
+ =?utf-8?B?SERrbEpqL01nWXY0TVVhNmYwY04rQkJYV0M0eTRXMjVJWTlQMG5sd3phTGZ1?=
+ =?utf-8?B?T1pLb0JyTDg2V3Z2Z0ZuU2tpWk9mV2Y5MFB2QkJlZzNlVlVTV0VIQk1XQklY?=
+ =?utf-8?B?bFZhZ3JqWmNFSWZlankyUmZRbzJ0LzZRQzhWSEZ4UmIvZHIzRFJqSTZOWE1Y?=
+ =?utf-8?B?dWZzSTJxa1JNSVVLMCt6K2RsenE3eVQzd00zTmFsQ1MwaDl0SXZvNS8wN3hB?=
+ =?utf-8?B?bXZmMEtZWCt4VGhIemtROEJCTUQxTkJQN2xVNTExc3oyN09qZW9rWUNaSXBj?=
+ =?utf-8?B?anJ5ZDNMOHdGcGxROWkwb3B4bzJGSTVOdEg1dk1zYkpKTjRLSnI5NUEwMkRD?=
+ =?utf-8?B?alhSa3pCeU5YSjdjSi90OWd1SGVWOU5tNUc1T2dmbFlLNGxJT2tnUzhWQWRp?=
+ =?utf-8?B?SnpaN2JlYTlUc3lQSFNTWE9uWHNteFVWK2NWeVNUdXMzbnVtK1lWcnN0SGly?=
+ =?utf-8?B?TjM0NzRmeE43VlF5T24xVlVlR0Y1VzNyQmtNNVFtSzM5V3lwTTc3OVo4cFF5?=
+ =?utf-8?B?VTZwcmlaM1Z0NFNTS0JuLzRIZklEaFNXdWFJd3NsazNMbUg2UVl3L0lUeEcz?=
+ =?utf-8?B?OE53TkN6NlcrMUtsWFBlb2RaZEFKcGJNMXFHU0x2TjRCQmFVVFk4M1c2NEJv?=
+ =?utf-8?B?R1k5UVo4Sy9sdVpLMmtldHY1SFk3akZtSU9EYmV1R3J2cjhRVTc4U2ZkZG1n?=
+ =?utf-8?B?Q1J6ZXFseVF6QzgrZlczVUdieEVrZmhDaXZWM2NFMGpjY2tiV2pITUFObHRP?=
+ =?utf-8?B?QUIyMDZFVGJmZEYrMzFmQVhFbHpZUWgzN0ZWZ3Zmc0M3dGVza0FCNUpOcUYv?=
+ =?utf-8?B?QmpwaUZsWklLRHAzMkhJbVJnQTVpS25icTNwYzFjcDZKb2dwMnpNMmR5dzU5?=
+ =?utf-8?B?aTk4UzVsZTU5TXQzTDl2VjJHVW5zZkFwL1BSVSs4aU02eWpmaHJwS0ZBY1VU?=
+ =?utf-8?B?d0FCWmlBM0JxK1Y4VWMzQk9STjB0Mk1vYUZNaXp3MGo3Z1k3WHJnc3ljbk9w?=
+ =?utf-8?B?NnMwdnNtczlxbmdJSDJGWW03ajJEWGxvRmJnajMrYWVydHJKeURoNHErV2s4?=
+ =?utf-8?B?RUxSUThmUnRWYkNyNFpDUkg5Y2E5RnB2Sm1weWlZQ3luay9DQU02ZkdnYzFt?=
+ =?utf-8?B?M21Ld05rNlpJc2xQUWtoMjJlcDd5YkVVdWwvTE9jdGxZV3hla3M0bThZUEdL?=
+ =?utf-8?B?cE9FWmo5UU9xeHg5Slk4WWdwNUtscElqNXdYVVZrOTk1dk9yVjZGelczQUd5?=
+ =?utf-8?B?bzlmSlNUL0tQQk5zQ2l4NGw2NExKTFliNGV0Skl3N0dIYmFzY2Y0U0labVVN?=
+ =?utf-8?B?UzVyeHJvRUp2OFRBSmp2MG9WdCtIejBDMHNtYXdhZUJJcStSQURORS9JYkg5?=
+ =?utf-8?Q?q5DHiDiTQcezFSr0ge1Oiesyv?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f106fe94-b6ec-4fbb-6c79-08db9fe3c850
+X-MS-Exchange-CrossTenant-AuthSource: BL0PR11MB2995.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2023 12:08:07.3694
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PzCO+RxzdWs+LVnSfaDx/Id8J4CqTj+O5/VpBNgNe6RARzrR+mC7+sefnqxaDjRO3biu/TyEUuxyqq1cZLPoYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7660
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 12:38=E2=80=AFPM Przemek Kitszel
-<przemyslaw.kitszel@intel.com> wrote:
->
-> Rust folks, could you please tell me if this is something I should fix,
-> or I just uncovered some existing bug in "unstable" thing?
->
-> Perhaps it is worth to mention, diff of v3 vs v2 is:
-> move dummy implementation of __has_builtin() macro to the top of
-> compiler_types.h, just before `#ifndef ASSEMBLY`
+On Fri, Aug 18, 2023 at 01:10:07PM +0200, Miguel Ojeda wrote:
+> On Fri, Aug 18, 2023 at 12:38 PM Przemek Kitszel
+> <przemyslaw.kitszel@intel.com> wrote:
+> >
+> > Rust folks, could you please tell me if this is something I should fix,
+> > or I just uncovered some existing bug in "unstable" thing?
+> >
+> > Perhaps it is worth to mention, diff of v3 vs v2 is:
+> > move dummy implementation of __has_builtin() macro to the top of
+> > compiler_types.h, just before `#ifndef ASSEMBLY`
+> 
+> Nothing you need to worry about, it is an issue with old `bindgen` and
+> LLVM >= 16, fixed in commit 08ab786556ff ("rust: bindgen: upgrade to
+> 0.65.1") which is in `rust-next` at the moment. Sorry about that, and
+> thanks for pinging us!
+> 
+> LKP / Yujie / Philip: since we got a few reports on this, would it be
+> possible to avoid LLVM >= 16 for Rust-enabled builds for any branch
+> that does not include the new `bindgen` or at least 08ab786556ff? Or,
 
-Nothing you need to worry about, it is an issue with old `bindgen` and
-LLVM >=3D 16, fixed in commit 08ab786556ff ("rust: bindgen: upgrade to
-0.65.1") which is in `rust-next` at the moment. Sorry about that, and
-thanks for pinging us!
+Got it, we will update the bot to handle this to avoid further false
+positive.
 
-LKP / Yujie / Philip: since we got a few reports on this, would it be
-possible to avoid LLVM >=3D 16 for Rust-enabled builds for any branch
-that does not include the new `bindgen` or at least 08ab786556ff? Or,
-if Greg is OK with that, I guess we could also backport the upgrade,
-but perhaps it is a bit too much for stable?
-
-Cheers,
-Miguel
+> if Greg is OK with that, I guess we could also backport the upgrade,
+> but perhaps it is a bit too much for stable?
+> 
+> Cheers,
+> Miguel
