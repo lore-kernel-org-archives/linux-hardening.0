@@ -2,97 +2,119 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9989AEE498F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 18:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4A9EE498B
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 18:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379316AbjHRSCB (ORCPT
+        id S240931AbjHRSSs (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 14:02:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45670 "EHLO
+        Fri, 18 Aug 2023 14:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379318AbjHRSBc (ORCPT
+        with ESMTP id S1379464AbjHRSSi (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 14:01:32 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6072701
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 11:01:31 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-564b326185bso879308a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 11:01:31 -0700 (PDT)
+        Fri, 18 Aug 2023 14:18:38 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23B5BE74
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 11:18:34 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-3fe2d620d17so10525e9.0
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 11:18:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692381690; x=1692986490;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1692382712; x=1692987512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qYBhb547ncMi3wuUeN47Qu32Xgp7Mgncg35363KdjMY=;
-        b=e8Q1lB1q/5WpShrGBZOlVAiH4jHMVpOUuaOqIgAkBvaujIY8uzpya5ESLBaG3ix8nb
-         FHUNTjwbqpghd11R4Q+G2sU0BtL4HRvOe1svnqwdTQzKOSgMk3Jyhq+iNgCDAYct9ETm
-         lToX6VZMeh+e1RqjKH4Tk4VV24davAJq54e9U=
+        bh=h3j4Mqn/PbeNoccarhbs+EdB7Fu2ck9H3LC4u5W/k/o=;
+        b=NHuGuvQVCXo1QS1pE+nZc/9rYhs+1IJwmwoSCY6rdKHSK61HzJrCDuO7aEL5x4uNwL
+         a7A6bHEhYKjE5qjg9dTUsTTrtMBmzrlVo/MTjNdAb/S6l3ovkXRFpb+fTlbV6woR9G5l
+         GSZzg7HdUJTo7VHEkeXUvGIvP+15UKjOILSYNKGaTmWuXI/mQjYVSZ7t8ZJxS2KZIg4z
+         gHu+D091lYezJYa48+Xh+k7boUNygg2PFF0D5rbLQ/wUoUp2jpC0opS3S6ZXMLTqL1uY
+         AQtgF5sL8zAjxdxNO6M93RrFv/vlGa5Kc1I6wyKTJZN+X/nnBGKfv8VtB+ECbiEyrhvA
+         H2rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692381690; x=1692986490;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1692382712; x=1692987512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qYBhb547ncMi3wuUeN47Qu32Xgp7Mgncg35363KdjMY=;
-        b=NTJxeU+JRHbAMZd6r4jp56wF4Nv8Ti+P/ayvyTGyqbDIe2TXAGgOybvHeGhWVwmn7Y
-         PXNAt0DOIKE3avJ75rUk8633oLwQlZB3RvWWSaQ4ARRBpnyYxjv0JIfV5TfunMrvuDPA
-         pdk1nTzWVSOrc4dl5a3eATb48omhgY8NRpOl0u1l0a4g6gSw3jpQH5ugDdNB/2uF+H9Y
-         U2tU8YJsP8HB1Cp1z55fqMnsZ3MZSZrjzlY8j+pSxT/gxJzXQ7JqhVMqXjBdS5cBO1Ww
-         5TboZm6akEO56ejg7eiZMVOLNGGcX8BarMx+JnXBQkzv1ur7NcQ93kMeZkucaWuYI+6V
-         dBhw==
-X-Gm-Message-State: AOJu0Yzqyb0ZUc3pxPtBGvH5czBBZvZKAJI15wnZtk2Tz2k4xNfcPspC
-        S3l+OYPTeVPYtEJS6SF0NnLUrQ==
-X-Google-Smtp-Source: AGHT+IHK7p11ROoF/GBRTRYvtIRFeZ79ofBB2FpFJ+GKVFcVF+S6Zy6V00Y0yvuoDiCNKNnDjwtw1A==
-X-Received: by 2002:a05:6a21:3984:b0:135:10fd:31b0 with SMTP id ad4-20020a056a21398400b0013510fd31b0mr3565014pzc.15.1692381690480;
-        Fri, 18 Aug 2023 11:01:30 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id v21-20020aa78095000000b00687087d8bc3sm1883813pff.141.2023.08.18.11.01.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 11:01:29 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Mimi Zohar <zohar@linux.ibm.com>, Kees Cook <keescook@chromium.org>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] integrity: Annotate struct ima_rule_opt_list with __counted_by
-Date:   Fri, 18 Aug 2023 11:01:15 -0700
-Message-Id: <169238167326.1457886.12849640803727382145.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230817210327.never.598-kees@kernel.org>
-References: <20230817210327.never.598-kees@kernel.org>
+        bh=h3j4Mqn/PbeNoccarhbs+EdB7Fu2ck9H3LC4u5W/k/o=;
+        b=COpNghizx0H2fRAClH/LF8pgtFbbB2ZfOozQ5ca3raNhHyX9WLwsU8JREhea6Us+Qr
+         P7Ay6HXBn4NNdIlTIA4tW6PmjRgd/ZC/TpKJFyhDJO3ZZ+x2jdpQ+5tb2GIXn4IvOHFF
+         ebIBDI9CSGVqSaq/MZxfq6PJXJC8RexVfoRyxd5iVzdfhy33wEQe18cLi85eEtTlNCMB
+         ecisnbva6IGtKiJvzOqEYgxCe0zazek9xh3GVVQK3MWaOphK2KSPz1btKQaFXCiRBj0W
+         82sS4ZLFTXPN85UEQv4ei3pgW+Aprc4+OjWwzy/UwFERL+zIOze911amSh7E9rS2Ow8g
+         MtrA==
+X-Gm-Message-State: AOJu0YydaXsXhpUz7c8kFYHR7+6U/jbvs7V5F0ZPBg4pJgmYXRD/9k10
+        G0XSes2ZIuCCR2oyp6qC46ozuOek8rymCEW6EWm71Q==
+X-Google-Smtp-Source: AGHT+IE2bnr83EpQmRKVuas2woPVovHkWEaZ3QEqDJfRlcyK67dVgTIbS1ftqyNCMU8/OGRnxXNOu738uWH7fudiVGY=
+X-Received: by 2002:a05:600c:1907:b0:3f4:fb7:48d4 with SMTP id
+ j7-20020a05600c190700b003f40fb748d4mr106532wmq.3.1692382712518; Fri, 18 Aug
+ 2023 11:18:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20230818041740.gonna.513-kees@kernel.org> <20230818105542.a6b7c41c47d4c6b9ff2e8839@linux-foundation.org>
+In-Reply-To: <20230818105542.a6b7c41c47d4c6b9ff2e8839@linux-foundation.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 18 Aug 2023 20:17:55 +0200
+Message-ID: <CAG48ez3mNk8yryV3XHdWZBHC_4vFswJPx1yww+uDi68J=Lepdg@mail.gmail.com>
+Subject: Re: [PATCH v2] creds: Convert cred.usage to refcount_t
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Alexey Gladkov <legion@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Yu Zhao <yuzhao@google.com>, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 17 Aug 2023 14:03:28 -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
-> 
-> As found with Coccinelle[1], add __counted_by for struct ima_rule_opt_list.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
-> 
-> [...]
+On Fri, Aug 18, 2023 at 7:56=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+> On Thu, 17 Aug 2023 21:17:41 -0700 Kees Cook <keescook@chromium.org> wrot=
+e:
+>
+> > From: Elena Reshetova <elena.reshetova@intel.com>
+> >
+> > atomic_t variables are currently used to implement reference counters
+> > with the following properties:
+> >  - counter is initialized to 1 using atomic_set()
+> >  - a resource is freed upon counter reaching zero
+> >  - once counter reaches zero, its further
+> >    increments aren't allowed
+> >  - counter schema uses basic atomic operations
+> >    (set, inc, inc_not_zero, dec_and_test, etc.)
+> >
+> > Such atomic variables should be converted to a newly provided
+> > refcount_t type and API that prevents accidental counter overflows and
+> > underflows. This is important since overflows and underflows can lead
+> > to use-after-free situation and be exploitable.
+>
+> ie, if we have bugs which we have no reason to believe presently exist,
+> let's bloat and slow down the kernel just in case we add some in the
+> future?
 
-Applied to for-next/hardening, thanks!
+Yeah. Or in case we currently have some that we missed.
 
-[1/1] integrity: Annotate struct ima_rule_opt_list with __counted_by
-      https://git.kernel.org/kees/c/a4b35d4d05b9
-
-Take care,
-
--- 
-Kees Cook
-
+Though really we don't *just* need refcount_t to catch bugs; on a
+system with enough RAM you can also overflow many 32-bit refcounts by
+simply creating 2^32 actual references to an object. Depending on the
+structure of objects that hold such refcounts, that can start
+happening at around 2^32 * 8 bytes =3D 32 GiB memory usage, and it
+becomes increasingly practical to do this with more objects if you
+have significantly more RAM. I suppose you could avoid such issues by
+putting a hard limit of 32 GiB on the amount of slab memory and
+requiring that kernel object references are stored as pointers in slab
+memory, or by making all the refcounts 64-bit.
