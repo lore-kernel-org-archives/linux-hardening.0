@@ -2,62 +2,62 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F8BC7EE2A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CCBC7EE2E
 	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 15:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1378113AbjHRPX7 (ORCPT
+        id S1378110AbjHRPX6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 11:23:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33154 "EHLO
+        Fri, 18 Aug 2023 11:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378119AbjHRPXz (ORCPT
+        with ESMTP id S1378113AbjHRPXx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 11:23:55 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CB43C31
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 08:23:53 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4ff9121fd29so1502333e87.3
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 08:23:53 -0700 (PDT)
+        Fri, 18 Aug 2023 11:23:53 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CE83C3D
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 08:23:52 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2b9c0391749so16764901fa.0
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 08:23:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692372232; x=1692977032;
+        d=linaro.org; s=google; t=1692372230; x=1692977030;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pKuNDT3ozn5yu4XZDwLRBbbhrL0YjdwUNB++YlEavBU=;
-        b=vaHynN3rl1OCp5jP73OUEMGqdiKZOdTcj5FzUPeYMNX5aMd1794XPQFmgUzRbiZnxl
-         XvLAp+px+aR4h/q6mbrMtXXR92AbOrezTmVN/bzAUy34uM/1Uix3r0+bivnSfefofOnZ
-         7KZ3xX/GNM7RmgaRElVrPHbD/Dfin5zet5DyEjx0lnUHEj1pIMpKwI+zblfaGhjFTvVp
-         djp8Hfdb7qI01QebxHvlMILlwX8BmNxwsyOQXSWcJa0E/0yXii1a1aUjvsC5BMdCIW+c
-         cGzdKYk1JgVoTB2kn03Wbiks6/UCy2EVsTPKz17wSs142VjrviF+sLPdBjyH18rZbetU
-         ag9A==
+        bh=c6CtJZa/AQu9J0Kld480ZWxBu5BwWXbF9kOTOoaJUEo=;
+        b=hNvMKcE9iXe4JChLBzvJ/TaIGp18ypRKvWNxEQsIeQZPzQ8L0Zk4ZbX3MNfYS0zj0e
+         uPAL/8E6VDs6wx8JkK02+KwZRQHXezCWQF+Af1T6NJ1d9VmscZM0tz3oYMEn7ncrwFaz
+         6e4sHu7bhwFyljtEDHJ3kW2M7N3nzjUMm9yVgGDh3MINFBMitLSRnFSRoVMQFgLVZfbi
+         EXYgYP0CfIYPjYp7aiRC41Opp/BPOpGYLO5gNtbdRItuIkZkYF9lV1FqlBsW0cNx3xpW
+         oerwV0RYk9f1buhztqmHeJVgdp/9McPRFYZ7RgNNAbRTWtO4k6AhRCnlQm48v+mkih1d
+         IXSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692372232; x=1692977032;
+        d=1e100.net; s=20221208; t=1692372230; x=1692977030;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pKuNDT3ozn5yu4XZDwLRBbbhrL0YjdwUNB++YlEavBU=;
-        b=S9Q3ANtKp2+JMvVUtWWXQopBTB6RDlILp2T8HZ9Zu+mO39mGYyuU4VHj4qZ08q7ddq
-         lJpXJCZyIak1VchltdK2TGNVTQqNrxKWtKhyKVwE0HQnY7Fp08fdnqWdxoqicBA1Qypi
-         jjW3G5p2XY8Nd2U/SeCuap48iNpPyJ71XMYB0D30Cj9o7i970xKU8QmYvoUl7rVa4XYg
-         gvsuSbtobTCK7RnvZ/OyNvDi5W5Q2XApJNZKBjMcV+IiqS4vkxIPHbTzTQNNBAtNrI9B
-         qDTBvbKOGwgc5gR9nGNk/gIDNsv1+vfW10sPq/d/JQwz4s30wkX4N8/eRqh0VZfYzc3I
-         Nerw==
-X-Gm-Message-State: AOJu0YxcWjY7mglrwsNdpUeGkMmdaj1AKebCy9g8cgOawcVF/5L+a0Sj
-        fS5Yd547DImvxQyDYaHHc+cVAw==
-X-Google-Smtp-Source: AGHT+IHjAGZdIBGvR96SvrKqgepbLo4FofyQopD/9llMZUKYV2cPMfdq+9VMOfu4VD4SleJwXtOacQ==
-X-Received: by 2002:a05:6512:2309:b0:4f8:5635:2cd8 with SMTP id o9-20020a056512230900b004f856352cd8mr2727252lfu.32.1692372231991;
-        Fri, 18 Aug 2023 08:23:51 -0700 (PDT)
+        bh=c6CtJZa/AQu9J0Kld480ZWxBu5BwWXbF9kOTOoaJUEo=;
+        b=lSmcaa7fdR/MNtzSYXH3SL/GBeBRGwscUdBy/1kmMMyMygEgloG9CXM1EYvuPt9yXR
+         z+Mc5qMgN1/0IK8pzSjc3ZIZpMNa72OhaM9S5WI5dNy9elFHgOawuYlAcMxJhKIC/zkN
+         8/DgceRGFMqQNzd2tkV1gOKhyytFMjhWqMaLg8vTm8jL1xU13Hl7j17YwlAGZgJ9qcP8
+         HjrngmqcIKAjc6RsdFjuOLEcsTyfvbS85cpKVKNirlYbpfIdaSnjRjWM+Jk4cloR0uUz
+         TL6E8sFIdqXFZu/vuE1xVZusYGtZafQxAKVf/xEVfHTFU5nA9xMzUrsbxLgOi8BGR+P+
+         +uzw==
+X-Gm-Message-State: AOJu0YySsANXrU0dsstUfSJ5CfW62MjU306ilWpWxn/IowVR98NUG5PB
+        2q3ItYkOv5587vdYtgOAh6S25g==
+X-Google-Smtp-Source: AGHT+IFIgOf5qG7QIjlRFlsPGcVULHL0fPWgMWpi7fEWFqlQiCmr1iT80HFjOPrt1+NQQogpae0Sfg==
+X-Received: by 2002:a05:6512:3b28:b0:4fb:89b3:3374 with SMTP id f40-20020a0565123b2800b004fb89b33374mr2405957lfv.54.1692372230288;
+        Fri, 18 Aug 2023 08:23:50 -0700 (PDT)
 Received: from [192.168.1.101] (abxh52.neoplus.adsl.tpnet.pl. [83.9.1.52])
-        by smtp.gmail.com with ESMTPSA id y2-20020ac24202000000b004fe4d122a66sm383715lfh.187.2023.08.18.08.23.50
+        by smtp.gmail.com with ESMTPSA id y2-20020ac24202000000b004fe4d122a66sm383715lfh.187.2023.08.18.08.23.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 08:23:51 -0700 (PDT)
+        Fri, 18 Aug 2023 08:23:50 -0700 (PDT)
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-Date:   Fri, 18 Aug 2023 17:23:26 +0200
-Subject: [PATCH 3/5] arm64: dts: qcom: sm6375: Hook up I2C7 GPIOs
+Date:   Fri, 18 Aug 2023 17:23:25 +0200
+Subject: [PATCH 2/5] arm64: dts: qcom: sm6375: Fix I2C10 GPIO function
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230818-topic-10v-v1-3-dbb6464223c6@linaro.org>
+Message-Id: <20230818-topic-10v-v1-2-dbb6464223c6@linaro.org>
 References: <20230818-topic-10v-v1-0-dbb6464223c6@linaro.org>
 In-Reply-To: <20230818-topic-10v-v1-0-dbb6464223c6@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
@@ -75,54 +75,42 @@ Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
         linux-hardening@vger.kernel.org,
         Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1692372226; l=1311;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1692372226; l=947;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=7pwAxQ89b609N+91Ei3/CUuL4YiJwIEnELBA4MpGvCI=;
- b=7wn65upp5DABUi+sBI8DHVsh9zu7rABI4hUp+7QKuPdyWzePy3XyRoaheS4lThoxcmmbMRVMe
- VnZDV+pn2f/DeBrx1hMhqUCRmJKPjYrp0uBV5JPx4EiJbqTVziy34xn
+ bh=MIwq+pDyGnrHjet8pcjzzvliK2BSL87L5F0gT3kHAkY=;
+ b=0ZKUlIALmo4upl+QkKnlQDx0/mWzWhG/TFD67I6/V/bIThOq7IphrZaSAkZ00LsxJXOLX/EMt
+ l/HBWSlH0p5Bm0KmdeIO+oHFdGhQbcPWAuFikP+uvDyLJqecOTPnr+3
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-It's required to mux the GPIOs to a correct function to make sure
-the I2C host can communicate with the devices on the other end.
+Unfortunately, as mentioned in a comment under a different node in the
+device tree, the pinctrl driver's naming doesn't really match up with
+actual QUP indices..
 
-Ensure that happens.
+Assign the correct one for I2C10.
 
+Fixes: 704edf03c022 ("arm64: dts: qcom: sm6375: Add pin configs for some QUP configurations")
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sm6375.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/qcom/sm6375.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sm6375.dtsi b/arch/arm64/boot/dts/qcom/sm6375.dtsi
-index 4364b144eb93..b79908d969c7 100644
+index e7ff55443da7..4364b144eb93 100644
 --- a/arch/arm64/boot/dts/qcom/sm6375.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sm6375.dtsi
-@@ -875,6 +875,13 @@ qup_i2c2_default: qup-i2c2-default-state {
+@@ -885,7 +885,7 @@ qup_i2c8_default: qup-i2c8-default-state {
+ 
+ 			qup_i2c10_default: qup-i2c10-default-state {
+ 				pins = "gpio4", "gpio5";
+-				function = "qup10";
++				function = "qup14";
+ 				drive-strength = <2>;
  				bias-pull-up;
  			};
- 
-+			qup_i2c7_default: qup-i2c7-default-state {
-+				pins = "gpio27", "gpio28";
-+				function = "qup11_f1";
-+				drive-strength = <2>;
-+				bias-pull-up;
-+			};
-+
- 			qup_i2c8_default: qup-i2c8-default-state {
- 				pins = "gpio19", "gpio20";
- 				/* TLMM, GCC and vendor DT all have different indices.. */
-@@ -1220,6 +1227,8 @@ i2c7: i2c@4c84000 {
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
- 				interrupts = <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-+				pinctrl-0 = <&qup_i2c7_default>;
-+				pinctrl-names = "default";
- 				dmas = <&gpi_dma1 0 1 QCOM_GPI_I2C>,
- 				       <&gpi_dma1 1 1 QCOM_GPI_I2C>;
- 				dma-names = "tx", "rx";
 
 -- 
 2.41.0
