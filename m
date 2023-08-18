@@ -2,82 +2,136 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141B7EE498F
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 20:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E386CEE4998
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 20:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348310AbjHRU2f (ORCPT
+        id S231149AbjHRUzP (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 16:28:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48278 "EHLO
+        Fri, 18 Aug 2023 16:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379972AbjHRU2Q (ORCPT
+        with ESMTP id S237070AbjHRUy6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 16:28:16 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2656359D
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 13:28:13 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-26b41112708so984320a91.3
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 13:28:13 -0700 (PDT)
+        Fri, 18 Aug 2023 16:54:58 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F823ABC
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 13:54:56 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3fec1a30a1eso24605e9.0
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 13:54:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692390493; x=1692995293;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1692392094; x=1692996894;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=v60FDO20ZAxtFMTdAZj/3F1vLPNsJPXHCNB4+f8djcs=;
-        b=PR1eUDciDw3CPju+jDsnRqMHc8co33Sg0jsxctyLZ41+/b0eAYCcWRvb9xAAoVVY0G
-         fJb67ntMpe8hhLygWL0N4PTB+n+2TnH8jURilUG6yItQLotw8XlaIn7YLyxZqxhrOCpB
-         /K14w5joSKe4RLtLXhmfK6QUNYpvbVkl9+qpM=
+        bh=asY9UEQLpnW5dRfl5uWYd8TqKFlxagtVuYzGFXWsA5k=;
+        b=Alvz4t3oc9qSrZltJGvc+De352k6T4H1wHAQdWbb8o+phuyd6jHX5Uuy3Uu/e/tOXc
+         kEXQAGQ3K6iq0Q7yBM8LPjj9EXY5w1WEMDorksgu1MHcJp0vlFAXGZ4t8T5rv6n4GRwo
+         qNCjhwqfjtxvOMAGcnnwxyY/AwXm+obJb0CkS+5TZTX7WKjEjWj82/OznYTuyqi+Fpdx
+         hbzDvyITUoNBxp7GLdKEjKRna/tGydvPCnOkBO0PEUt5KF/F8Uae1BYhRHA1Z2TEDxRu
+         s5WX/pbhtbBRdOEwuBIbNZy2oKs/hYptPuSxMzk8/D+JSGaOhS3AYBY1S7+HiwJ9i5Pe
+         pNUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692390493; x=1692995293;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1692392094; x=1692996894;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=v60FDO20ZAxtFMTdAZj/3F1vLPNsJPXHCNB4+f8djcs=;
-        b=epf1VTEDJCbltT6YHZU/NszE6xLx7dHPlS5xAiyO9R8MYz5tLPUpeSYJ/v8BklfYip
-         OtbuhrK5hlVdfufuTczjOSStEeklAP/qPGx1Nf8uPrOWiYLpsWV6/4wxPhEaf/eH9I8v
-         nPW6+atJMmxEAx9FwhpjvE9A6ZhuCmYZKbpI+55tdiCpRb9oFLMCK9cgTyJisoqyvtTS
-         pW5TFWVrwgoYtWDKADw4qnX8VU0TCwevGJtfUxka2oCL8qGf7ZBrKgDcYdAKpLrfHX2l
-         fLHnX9ltOMwn3UV/+EQVMnQuuQMq97rcQ7ETabQk/9dXieq/u9ogo1fl+qjCrJKbpSB5
-         8rBA==
-X-Gm-Message-State: AOJu0Yw4yI9YXUp++/yJHHOXr3sK582bLqV6oQjR9PoRODLmyeoc9Q3B
-        2Etlsch/Je3mfFR4qWbKcFm+DfOo1uYZ6XQVYtA=
-X-Google-Smtp-Source: AGHT+IGW27VG0ehBsoRuaeA6ZSy8egeqxLnm1CvFIa/7yUbn/YoeD0meZfjWa3C1CGsJy9/1D2g/wA==
-X-Received: by 2002:a17:90b:1486:b0:268:1dd3:695e with SMTP id js6-20020a17090b148600b002681dd3695emr212937pjb.49.1692390493278;
-        Fri, 18 Aug 2023 13:28:13 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t8-20020a17090aba8800b002681131c36csm3675060pjr.45.2023.08.18.13.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 13:28:12 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
-        linux-docs@vger.kernel.org
-Subject: Re: [PATCH] pstore: Fix kernel-doc warning
-Date:   Fri, 18 Aug 2023 13:28:09 -0700
-Message-Id: <169239048671.1533264.10988269625035078525.b4-ty@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230818201253.2729485-1-willy@infradead.org>
-References: <20230818201253.2729485-1-willy@infradead.org>
+        bh=asY9UEQLpnW5dRfl5uWYd8TqKFlxagtVuYzGFXWsA5k=;
+        b=aZoyxcb+cSvSKFsFTtQCZT4YteygSv1FdaJPyKE2fG1eKpXyhVeU4FtUEf4RgUvADw
+         JlylbQ5xoMclJoen9oI0Xt84oTzQzlLMkC9y76/J48Gojznkb0iDsVBPLDsCJlwB/D+8
+         d/sZ7jmzf7YYGMEMEokQIsfjPHZSTgXE3Y+eCSBTR06YziiVfFeur1LPp4gs+VNsTrW/
+         DXvaimPtukHEIMif8ZY9sgti6yjKD6oSBxDcwKUhlqPSXGRajHnBN8q3zvpwz5xctEGQ
+         Lo3SDwjt4pwLeWml/KL8zvpalKL8kAe2ywHX4dpA/kcTOGpNryf842p9s0Uh7YriBatn
+         BUWA==
+X-Gm-Message-State: AOJu0YxT7DAL63conKp+YjWzNZJ22O0SHdMX3916/yEkbcI5d3bS0SX2
+        MuqZG/wsGP+7om/zk/jigoxPv70BSDuLDaHz/4xwJg==
+X-Google-Smtp-Source: AGHT+IHEAvGOn1QfwCah/cW2MjlDPrJrEjz3trPe6oWYwLtZ0+GtIb+KBWLYUO2lEapHfZpWumuMSSRsLPH0o4oDZF0=
+X-Received: by 2002:a05:600c:3548:b0:3f1:73b8:b5fe with SMTP id
+ i8-20020a05600c354800b003f173b8b5femr124268wmq.3.1692392094419; Fri, 18 Aug
+ 2023 13:54:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20230818041740.gonna.513-kees@kernel.org> <20230818105542.a6b7c41c47d4c6b9ff2e8839@linux-foundation.org>
+ <CAG48ez3mNk8yryV3XHdWZBHC_4vFswJPx1yww+uDi68J=Lepdg@mail.gmail.com>
+ <202308181146.465B4F85@keescook> <20230818123148.801b446cfdbd932787d47612@linux-foundation.org>
+In-Reply-To: <20230818123148.801b446cfdbd932787d47612@linux-foundation.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Fri, 18 Aug 2023 22:54:17 +0200
+Message-ID: <CAG48ez2rQGxNF2ZSMxadAPTx7SQssBn0d2m_7gHETJjgBZH0Xg@mail.gmail.com>
+Subject: Re: [PATCH v2] creds: Convert cred.usage to refcount_t
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Alexey Gladkov <legion@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Yu Zhao <yuzhao@google.com>, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, 18 Aug 2023 21:12:53 +0100, Matthew Wilcox (Oracle) wrote:
-> Fix the warning for the description of struct persistent_ram_buffer and
-> improve the descriptions of the other struct members while I'm here.
-> 
-> 
+On Fri, Aug 18, 2023 at 9:31=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+> On Fri, 18 Aug 2023 11:48:16 -0700 Kees Cook <keescook@chromium.org> wrot=
+e:
+>
+> > On Fri, Aug 18, 2023 at 08:17:55PM +0200, Jann Horn wrote:
+> > > Though really we don't *just* need refcount_t to catch bugs; on a
+> > > system with enough RAM you can also overflow many 32-bit refcounts by
+> > > simply creating 2^32 actual references to an object. Depending on the
+> > > structure of objects that hold such refcounts, that can start
+> > > happening at around 2^32 * 8 bytes =3D 32 GiB memory usage, and it
+> > > becomes increasingly practical to do this with more objects if you
+> > > have significantly more RAM. I suppose you could avoid such issues by
+> > > putting a hard limit of 32 GiB on the amount of slab memory and
+> > > requiring that kernel object references are stored as pointers in sla=
+b
+> > > memory, or by making all the refcounts 64-bit.
+> >
+> > These problems are a different issue, and yes, the path out of it would
+> > be to crank the size of refcount_t, etc.
+>
+> Is it possible for such overflows to occur in the cred code?  If so,
+> that's a bug.  Can we fix that cred bug without all this overhead?
 
-Applied to for-next/pstore, thanks!
+Dunno, probably depends on how much RAM you have and how the system is
+configured? Like, it should get pretty easy to hit if you have around
+44 TB of RAM, since I think the kernel will let you create around 2^32
+instances of "struct file" at that point, and each file holds a
+reference to the creator's "struct cred". If RLIMIT_NOFILE and
+/proc/sys/kernel/pid_max are high enough, you could probably store
+2^32 files in file descriptor table entries, spread out over a few ten
+thousand processes but all pointing to the same struct cred, and
+trigger an overflow of a cred refcount that way. But I haven't tried
+that and there might be some other limit that prevents this somewhere.
 
-[1/1] pstore: Fix kernel-doc warning
-      https://git.kernel.org/kees/c/af58740d8b06
+If you have less RAM, you'd have to try harder to find some data
+structure where the kernel doesn't impose such strict limits on
+allocation as for files. io_uring requests can carry references to
+creds, and I think you can probably make them block infinitely through
+dependencies; I don't know how many io_uring requests you could have
+in flight at a time. Eyeballing the io_uring code, it looks like this
+might work at somewhere around 1 TB of slab memory usage if there
+isn't some limit somewhere?
 
-Take care,
-
--- 
-Kees Cook
-
+My point is that it's really hard to figure out how many references
+you can have to an object that can have references from all over the
+kernel unless there is a hard cap on the amount of memory in which
+such references are stored or you're able to just refuse incrementing
+the refcount when it gets too high. And so in my opinion it makes
+sense to use a refcount type that is able to warn and (depending on
+configuration) continue execution safely (except for leaking a little
+bit of memory) even if it reaches its limit.
