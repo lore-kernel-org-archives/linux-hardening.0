@@ -2,135 +2,108 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BA1C05052
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 05:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836E7C71136
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 07:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357128AbjHRFYo (ORCPT
+        id S1358115AbjHRHOn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 01:24:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53854 "EHLO
+        Fri, 18 Aug 2023 03:14:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357453AbjHRFXr (ORCPT
+        with ESMTP id S1358101AbjHRHOS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 01:23:47 -0400
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB86A44BF
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 22:23:41 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.169])
-        by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4RRqz86Wpxz4f3jMj
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 13:23:32 +0800 (CST)
-Received: from [10.67.110.48] (unknown [10.67.110.48])
-        by APP3 (Coremail) with SMTP id _Ch0CgBXe8NSAN9kaCyzAw--.3431S2;
-        Fri, 18 Aug 2023 13:23:32 +0800 (CST)
-Message-ID: <d3af78d4-9b15-347e-f3e8-5ce83f44faf6@huaweicloud.com>
-Date:   Fri, 18 Aug 2023 13:23:30 +0800
+        Fri, 18 Aug 2023 03:14:18 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD20130DF
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 00:14:16 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-74-ikIsBU2DMkidrrqivs1qkQ-1; Fri, 18 Aug 2023 08:14:14 +0100
+X-MC-Unique: ikIsBU2DMkidrrqivs1qkQ-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 18 Aug
+ 2023 08:14:12 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Fri, 18 Aug 2023 08:14:12 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Kees Cook' <keescook@chromium.org>
+CC:     'Przemek Kitszel' <przemyslaw.kitszel@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Jacob Keller <jacob.e.keller@intel.com>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        Alexander Lobakin <aleksander.lobakin@intel.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "Steven Zou" <steven.zou@intel.com>
+Subject: RE: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack
+ allocs
+Thread-Topic: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack
+ allocs
+Thread-Index: AQHZ0EteSw2XTdntxkSn8fWObNOCVK/uiVWQgAAd6ICAAP4u4A==
+Date:   Fri, 18 Aug 2023 07:14:11 +0000
+Message-ID: <e8e109712a1b42288951c958d2f503a5@AcuMS.aculab.com>
+References: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
+ <20230816140623.452869-2-przemyslaw.kitszel@intel.com>
+ <1f9cb37f21294c31a01af62fd920f070@AcuMS.aculab.com>
+ <202308170957.F511E69@keescook>
+In-Reply-To: <202308170957.F511E69@keescook>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [netfilter-nf-next:testing 2/9]
- ./usr/include/linux/netfilter_bridge/ebtables.h:163:26: warning: field
- 'target' with variable sized type 'struct ebt_entry_target' not at the end of
- a struct or class is a GNU extension
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-From:   "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-To:     Kees Cook <keescook@chromium.org>, Florian Westphal <fw@strlen.de>
-Cc:     kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
-        oe-kbuild-all@lists.linux.dev, linux-hardening@vger.kernel.org
-References: <202308171249.g1ywxhII-lkp@intel.com>
- <202308162257.F7876776C9@keescook> <20230817082618.GE4312@breakpoint.cc>
- <202308171000.C97EEC7@keescook>
- <247c158b-f1d3-1bba-b2fa-1d741a566837@huaweicloud.com>
-In-Reply-To: <247c158b-f1d3-1bba-b2fa-1d741a566837@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: _Ch0CgBXe8NSAN9kaCyzAw--.3431S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCw47GFWDKw1fKr1xKrWUXFb_yoW5Zw17pF
-        y8Aa1jkr48JrZ7Gw4IqF47uF1Yvw47Jry3ur13G348Z3Z0vry2kF4Ikr4a9F90yrsrGr1a
-        yF4jqrWxZrsFqaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-        0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: pjrqw2pxltxq5kxd4v5lfo033gof0z/
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-
-
-On 2023/08/18 11:24, GONG, Ruiqi wrote:
+From: Kees Cook
+> Sent: Thursday, August 17, 2023 6:00 PM
 > 
+> On Thu, Aug 17, 2023 at 02:35:23PM +0000, David Laight wrote:
+> > From: Przemek Kitszel
+> > > Sent: Wednesday, August 16, 2023 3:06 PM
+...
+> > > +#define DEFINE_FLEX(type, name, member, count)					\
+> > > +	union {									\
+> > > +		u8 bytes[struct_size_t(type, member, count)];			\
+> > > +		type obj;							\
+> > > +	} name##_u __aligned(_Alignof(type)) = {};				\
+> >
+> > You shouldn't need the _Alignof() it is the default.
 > 
-> On 2023/08/18 1:02, Kees Cook wrote:
->> On Thu, Aug 17, 2023 at 10:26:18AM +0200, Florian Westphal wrote:
->>> Kees Cook <keescook@chromium.org> wrote:
->>>> On Thu, Aug 17, 2023 at 01:03:20PM +0800, kernel test robot wrote:
->>>>> tree:   git://git.kernel.org/pub/scm/linux/kernel/git/netfilter/nf-next.git testing
->>>>> head:   015e2d9101d3713c7bee16dccad171df04a3bbd5
->>>>> commit: 61b9e6bd48a6317c0a44ee4f3fecdec9de5baa9e [2/9] netfilter: ebtables: replace zero-length array members
->>>>> config: i386-buildonly-randconfig-r004-20230817 (https://download.01.org/0day-ci/archive/20230817/202308171249.g1ywxhII-lkp@intel.com/config)
->>>>> compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
->>>>> reproduce: (https://download.01.org/0day-ci/archive/20230817/202308171249.g1ywxhII-lkp@intel.com/reproduce)
->>>>>
->>>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>>>> the same patch/commit), kindly add following tags
->>>>> | Reported-by: kernel test robot <lkp@intel.com>
->>>>> | Closes: https://lore.kernel.org/oe-kbuild-all/202308171249.g1ywxhII-lkp@intel.com/
->>>>>
->>>>> All warnings (new ones prefixed by >>):
->>>>>
->>>>>    In file included from <built-in>:1:
->>>>>>> ./usr/include/linux/netfilter_bridge/ebtables.h:163:26: warning: field 'target' with variable sized type 'struct ebt_entry_target' not at the end of a struct or class is a GNU extension [-Wgnu-variable-sized-type-not-at-end]
->>>>>            struct ebt_entry_target target;
->>>>>                                    ^
->>>>>    1 warning generated.
->>>>
->>>> Eww, it looks like "struct ebt_entry_target" is used _within_ another
->>>> struct:
->>>>
->>>> struct ebt_standard_target {
->>>>         struct ebt_entry_target target;
->>>>         int verdict;
->>>> };
->>>
->>> Yes, same as xt_standard_target.
->>>
->>>> These have been fixed in the past in a variety of ways -- it all depends
->>>> on how userspace is using them. In looking at Debian Code Search:
->>>> https://codesearch.debian.net/search?q=struct+ebt_standard_target&literal=1
->>>>
->>>> It is exclusively doing casts and looking at the "verdict" member. So
->>>> the easiest conversion might be this:
->>>>
->>>>  struct ebt_standard_target {
->>>> -       struct ebt_entry_target target;
->>>> +       unsigned char hdr[sizeof(struct ebt_entry_target)];
->>>>         int verdict;
->>>
->>> I don't think its worth doing all of this.
->>>
->>> Can't we just keep it as-is and drop the relevant hunk from the patch?
->>
->> For now, yeah. But we'll need to find a solution as flex-array
->> structures overlapping variables is considered deprecated (it can lead
->> to ambiguous sizing results). But as long as the kernel itself doesn't
->> use struct ebt_standard_target, we can kick the can down the road a bit
->> more. :)
->>
-> 
-> I agree that we can complete the whole transformation step-by-step. I
-> will make another patch without the problematic replacement.
+> In the sense that since "type" is in the union, it's okay?
 
-I didn't notice that the patch had been modified and merged into
-nf-next's testing branch. Let's use that and I won't send another one.
-Thanks Florian! XD
+The alignment of the union is the larger of the alignments
+of all its members.
+Which is what you want.
+
+> > I'm not sure you should be forcing the memset() either.
+> 
+> This already got discussed: better to fail safe.
+
+Perhaps call it DEFINE_FLEX_Z() to make this clear and
+give the option for a non-zeroing version later.
+Not everyone wants the expense of zeroing everything.
+
+..
+> > You might want to add:
+> > 	Static_assert(is_constexpr(count), "DEFINE_FLEX: non-constant count " #count);
+> 
+> That would be nice, though can Static_assert()s live in the middle of
+> variable definitions?
+
+I checked and it is fine.
+(I double-checked by adding a statement and getting an error.)
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
