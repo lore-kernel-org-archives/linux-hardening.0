@@ -2,117 +2,114 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0938C71155
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 15:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD71EC7115A
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 15:24:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377882AbjHRPTF (ORCPT
+        id S1378094AbjHRPX6 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 11:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42516 "EHLO
+        Fri, 18 Aug 2023 11:23:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378123AbjHRPTA (ORCPT
+        with ESMTP id S1378090AbjHRPXw (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 11:19:00 -0400
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52E23A94
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 08:18:59 -0700 (PDT)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-58df8cab1f2so10043697b3.3
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 08:18:59 -0700 (PDT)
+        Fri, 18 Aug 2023 11:23:52 -0400
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB45E3C27
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 08:23:49 -0700 (PDT)
+Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b9b50be31aso15610441fa.3
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 08:23:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1692371939; x=1692976739;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hgbLHehGpwVrKSLju1qpBYPuFYa1Zpgs9RdgH+2tDII=;
-        b=FlXZgkz4zWKb7PKsS5rps111kwpFX3lkqmSTro6wQNWST+yPW1EqI+qf8wxAJuL7tS
-         Iwh/XKweMR+vDi65xYrWK0TorlRzT7zUByL6Z3MWTBAnaQNMEfjv8SPs/Z33X0DGA+IQ
-         zVMplgFvd7IdCfj5TjSFEpfu0VxZieWlFnCykEdIxzbqBh8JmZMhJXkxAiUjfq5eDy1A
-         J9OGIJKC5p9rauMoPjLnrb/4b4FQACUyYhTGEbS5lFiQDFmk3nhU3JzGIXB8OOYzzjMJ
-         fJjGfUmu6eY9TjitLgOOb9fm+tsnXVco5Qd4dNuUdqs871ZYj7WQYopZkEY4tn/O9UQm
-         ZvXg==
+        d=linaro.org; s=google; t=1692372228; x=1692977028;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dIIcxuAFlx9aKs7Cl7Yl1eDvCrH/6fa/raCeERHWYVE=;
+        b=CAUxaecAh7++RhSd0uSyMCt9cmkLu6U1lusWQ45opS3vkU6mp1In+zYTdEjApMTNMl
+         1tQ7trWYDNqj3fKPxGTC0VPbpV+D1CxE7p9j0wPnr48kxA3S2FCRxtG1loy0tBxUnljG
+         Jvxp3HajD5Z4enZEproAurNlCbIiYA1rhb2jWzzsViWs4dpt0cs0o1JZdMZHE9nbX3ZB
+         JdkcBq8AMx2tExbz3l6zF+cWtTPhG6oPCZosttxMdsYSb/EnY/XpRYgTYrueDttGWwrO
+         QOMHB7Jq2PLOHN7V6buhsoqG8xtPMPeN4sanx8stUOB2GBwBJ0t7LXBuO+uyq0F7YITM
+         RRLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692371939; x=1692976739;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hgbLHehGpwVrKSLju1qpBYPuFYa1Zpgs9RdgH+2tDII=;
-        b=hkS3YswXyCUGAYZyp6T9KdRqzhEx/yFGJPaYcIyWrx9z8xkOP+XNsr6rkOuFVmOxYS
-         Mk9+NTg8V+ySFnwYJD9J6MZJpJijxHohxqXflyX2ejejXrKTXvkOjtLtSTmQ0B8p9o9s
-         CVrA87JTVvoo0KjUud53BIVgZBXUqBD863Zrli0X6ovlBbfCJ9LlWV4VkuUvq+/UxPML
-         A0YgVCayQp1opg+8VBCuTk7I1gf7ncwl1bVhtqB29YHZ54TZD67itZRAxl5Vfue7MYBh
-         5Pu56GAEUV7w1fUeYELF87EmZetT7X/vp63dTqiJozyEFIVHGcuFSUpmVPu8qemIolow
-         bN/g==
-X-Gm-Message-State: AOJu0YyA0ei2KcMVOaQOf8W3FZUlPIrrYWc/d6424K68WeNj4QeE3/Xu
-        LsQW2JE8shC8Mp3heB7JczgPQhzqiqpKj+NxDlOI
-X-Google-Smtp-Source: AGHT+IH/VrHw4mYIGTcJdOBgtqJqiIVp3ULtA4k5KI3iTcBlMWJ/JvZbsEmH3Cr9BShSwCZI+lDHYCr+dkWLtvSdbXQ=
-X-Received: by 2002:a0d:d6d2:0:b0:573:527b:747b with SMTP id
- y201-20020a0dd6d2000000b00573527b747bmr3094498ywd.36.1692371938879; Fri, 18
- Aug 2023 08:18:58 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692372228; x=1692977028;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dIIcxuAFlx9aKs7Cl7Yl1eDvCrH/6fa/raCeERHWYVE=;
+        b=GQYq5fqtKMEGizZZvdysuqztcPVXH2IVwnZZQUICEwBB3Erf/OTwc5vK1wZIsEkTJU
+         cs8f1y3iklxbo4r3u0olSc6rnIguxfPeobtTu2CYof8rtDb8nVnXYLwHsDbEimlpe3M9
+         dY41AxPmCaw2qx43khJZHL+tL9HUKBULtidWK8sQh6oALoym34Dk+Qi13y+0+E1l3Lv6
+         e2W9laOs4NQuY27WaNgLEYvo5jRJuDl/Z9GWpIyIE9zIqev31kpWRmVUG77wZs5wT7Cp
+         e/sA7fAA9aZRM4u0+LEXHRR2UYe51h/ZZEcbcVnjxiUkSKOB8c4ZwHJrqro6HSySxb9R
+         MNBw==
+X-Gm-Message-State: AOJu0YzLJ9l6yaqmKLhTSvQVnlp6gS4dOSXa6ZvaxVZzav8FNfaNUbeQ
+        ezchmjsOW/2nH5ciQDeNwc5nsA==
+X-Google-Smtp-Source: AGHT+IHcOAgqi0DbvVWG2679OAf/dVwZshTIEbHUxcjcL9zp0fNGpOjrzec/v1MxyQdD1Tj8m2SpRg==
+X-Received: by 2002:a05:6512:2243:b0:4ff:8f45:677a with SMTP id i3-20020a056512224300b004ff8f45677amr2635386lfu.51.1692372227774;
+        Fri, 18 Aug 2023 08:23:47 -0700 (PDT)
+Received: from [192.168.1.101] (abxh52.neoplus.adsl.tpnet.pl. [83.9.1.52])
+        by smtp.gmail.com with ESMTPSA id y2-20020ac24202000000b004fe4d122a66sm383715lfh.187.2023.08.18.08.23.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Aug 2023 08:23:47 -0700 (PDT)
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: [PATCH 0/5] Xperia 10 V support
+Date:   Fri, 18 Aug 2023 17:23:23 +0200
+Message-Id: <20230818-topic-10v-v1-0-dbb6464223c6@linaro.org>
 MIME-Version: 1.0
-References: <20230817203501.never.279-kees@kernel.org>
-In-Reply-To: <20230817203501.never.279-kees@kernel.org>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 18 Aug 2023 11:18:48 -0400
-Message-ID: <CAHC9VhRmy=8iWkKcQQmninxNRYqWrR3tTSj4XDvJhZZO0PsA3w@mail.gmail.com>
-Subject: Re: [PATCH] audit: Annotate struct audit_chunk with __counted_by
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Eric Paris <eparis@redhat.com>, audit@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOuM32QC/x2NSwqAMAwFryJZG2jrB/Eq4qLGqAGp0qoI4t0NL
+ ucxj3kgcRRO0GYPRL4kyRYUbJ4BLT7MjDIqgzOuMI1t8Nh2IbTmQkNU1Tx5HksH6g8+MQ7RB1r
+ 0Ec511XGPPMn9B7r+fT9WeKGCcAAAAA==
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-hardening@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.12.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1692372226; l=1108;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=h39Fv6t1ifFMpAjhSmArTsFTxZXueMRnwkKIjDcqYDs=;
+ b=/mFQLKpXRMGPCWUbSTyxCkB0b6DtLWHPg6Jhycfq6B1w/zr4Su9S8oz6JZsjnm126selNuCkP
+ FiFkBgahbCFBgf53h3Wx24uennBg3FKnfOCHpyUmTK6CYBXvw7BWs2U
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 4:35=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
-rote:
->
-> Prepare for the coming implementation by GCC and Clang of the __counted_b=
-y
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUND=
-S
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
->
-> As found with Coccinelle[1], add __counted_by for struct audit_chunk.
->
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
->
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: Eric Paris <eparis@redhat.com>
-> Cc: audit@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  kernel/audit_tree.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+This series brings support for the new Sony Xperia 10 V and with it a
+couple of improvements to sm6375.
 
-This looks good to me, but considering we are currently at -rc6 I'd
-prefer to hold off until after the upcoming merge window.  I'll send
-another note once it's been merged into audit/next.
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+---
+Konrad Dybcio (5):
+      dt-bindings: qcom: Add Sony Xperia 10 V
+      arm64: dts: qcom: sm6375: Fix I2C10 GPIO function
+      arm64: dts: qcom: sm6375: Hook up I2C7 GPIOs
+      arm64: dts: qcom: sm6375-murray: Separate out common parts
+      arm64: dts: qcom: Add Sony Xperia 10 V (PDX235) support
 
-Thanks.
+ Documentation/devicetree/bindings/arm/qcom.yaml    |   2 +
+ arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+ .../dts/qcom/sm6375-sony-xperia-murray-pdx225.dts  | 421 +-------------------
+ .../dts/qcom/sm6375-sony-xperia-murray-pdx235.dts  |  54 +++
+ .../boot/dts/qcom/sm6375-sony-xperia-murray.dtsi   | 427 +++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm6375.dtsi               |  11 +-
+ 6 files changed, 495 insertions(+), 421 deletions(-)
+---
+base-commit: 7271b2a530428b879443b274c191b34536a4ea11
+change-id: 20230818-topic-10v-0cc56efaed42
 
-> diff --git a/kernel/audit_tree.c b/kernel/audit_tree.c
-> index e867c17d3f84..85a5b306733b 100644
-> --- a/kernel/audit_tree.c
-> +++ b/kernel/audit_tree.c
-> @@ -34,7 +34,7 @@ struct audit_chunk {
->                 struct list_head list;
->                 struct audit_tree *owner;
->                 unsigned index;         /* index; upper bit indicates 'wi=
-ll prune' */
-> -       } owners[];
-> +       } owners[] __counted_by(count);
->  };
->
->  struct audit_tree_mark {
-> --
-> 2.34.1
+Best regards,
+-- 
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
---=20
-paul-moore.com
