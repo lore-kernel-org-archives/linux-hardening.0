@@ -2,106 +2,129 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E909EE4982
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 17:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219A1EE498B
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 17:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379081AbjHRRe0 (ORCPT
+        id S1378003AbjHRRy1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 13:34:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57360 "EHLO
+        Fri, 18 Aug 2023 13:54:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379098AbjHRRd7 (ORCPT
+        with ESMTP id S1379022AbjHRRyZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 13:33:59 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8C34210
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 10:33:58 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-688769faa09so1000174b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 10:33:58 -0700 (PDT)
+        Fri, 18 Aug 2023 13:54:25 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC53B3A99
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 10:54:23 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1bdb7b0c8afso8860375ad.3
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 10:54:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692380038; x=1692984838;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=z8VxOYqY0vk5zLSdtNkelkzBoODifEK09GEUE59Uh/E=;
-        b=kMub35CoX+FGqGlEXa/v7SPizCC+sQH0jMFem1D1JeANqS37tH6/y0XZCXnC/aH+U5
-         kJBVdMWwYkMTpF1pLdKjiX4dO1zZg9PmnllgKhcQ8/j6A+6lsAOGm7snFIH2dL+oBYJF
-         zdkydtJWoioVltE5GW9w6lD0ChboN8PRmcDbA=
+        d=chromium.org; s=google; t=1692381263; x=1692986063;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mgokGqPHO0YlcYJL+eizFkrm2SOg3pGMXQShFqwWIIk=;
+        b=C+i6cLoAuCpUeWkiHluPrxJm503+BYR+kAF82fAHXfZXlci3rmX2SszO8dRCQz2+SD
+         xcwVmYspIP1HJlh4sHlSmUSJlO8mIm0wdyVz9whSt90N1F1IC4DvE93eDs34XyITLObI
+         gnuNutmoMoJSj/uARsbZIUFx0ROCUmLTuDUhA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692380038; x=1692984838;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z8VxOYqY0vk5zLSdtNkelkzBoODifEK09GEUE59Uh/E=;
-        b=Uwxnyf/s7yn2EPzA9OdRJaTSouiK7vDl+n6GVVEQshrgx6aH7riY3Wcx0uXKO4zz9l
-         bmZVqpSv/vH27VmfL6k+dqYewVYnEwLqv1DsaFjkR6hXy1SOh6EGeCiklp/uMWOm/ma5
-         Npb1uYRmf0/aopJr6joJxqOF0H9U6bbN4Ht31bKZYBRnTBa6mxTNzblvHuKDk87Px2CV
-         OGALtWDWqb9jCNrxoHHEZoY3DhrZchpOx8ei4rxvOl07hwCgXK283BF8WD+2zPTl8sWV
-         xesqbGLc4/gTJr/KmbJ7M+Tbsr7tCOg/hOKdVs/V5LLyjmxeCgUJJJEEYs7ZBXzAZ/12
-         ezzg==
-X-Gm-Message-State: AOJu0YwTdmuaTfNxgkWElvZKW9GJp3xT2YFGutTFh9ZA9rdxkMQ/89Th
-        EMcxv4C8ThZC+w8BzMOvWq4pLA==
-X-Google-Smtp-Source: AGHT+IEIW5Yl9r6Sj3v9imMpgLBJxv4XcEqIkrMkv167YzQxcg7Et1cOrpJxjwCXnMm+AR6HQRKkrA==
-X-Received: by 2002:a05:6a00:1249:b0:689:f693:917f with SMTP id u9-20020a056a00124900b00689f693917fmr3136404pfi.28.1692380037809;
-        Fri, 18 Aug 2023 10:33:57 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692381263; x=1692986063;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mgokGqPHO0YlcYJL+eizFkrm2SOg3pGMXQShFqwWIIk=;
+        b=b0GTp0Lk56vWoOgtLHufK2VBI8IioxFhvOxid5YhEYvvCmgbmlq6Si6xyAr9rY8A1E
+         5V7tG1oAlDxngLRkKouLuyaNNIrYb4AoPwFpITyA7Jf2jAp0W1DyBoIFKSWCoSE+Wi0E
+         u1Rc1lPKdpjIk2+sSOKdVrGupN0OyWHq82GnqV6AN9qTX76rQJMyZ6IxP6rBLLweY9sw
+         2XlsiYf0Lyctxg96jcjduTrkVAWdUkDf8Hd9py/Zl7kyv506kfMN35Ya9EugJNH83IiU
+         9MS7v89gFMJOeT7k7zXxhaJxtVyZGYhzJngFKdxwzjCiZtOnL7trRfk7IYzoFcTRr4bp
+         3mtw==
+X-Gm-Message-State: AOJu0YyYAzq6FY/JifkkLT83Xty5hC8y09EQlap3zFYUmRushGakAaLX
+        4nUn8tpubtuVz3iPm9pXOioO9w==
+X-Google-Smtp-Source: AGHT+IH/q+F1S/gkUp0u6TRVT8XSsZwsT26qFi4MEe+aOoh3Ei4MmwwZ8u99Ywrj8yPx5hpUt4+U5w==
+X-Received: by 2002:a17:902:ea11:b0:1bc:3f9b:d96 with SMTP id s17-20020a170902ea1100b001bc3f9b0d96mr3307200plg.49.1692381263105;
+        Fri, 18 Aug 2023 10:54:23 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ff18-20020a056a002f5200b0068703879d3esm1794159pfb.113.2023.08.18.10.33.57
+        by smtp.gmail.com with ESMTPSA id h20-20020a170902f7d400b001b89466a5f4sm2050080plw.105.2023.08.18.10.54.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Aug 2023 10:33:57 -0700 (PDT)
-Date:   Fri, 18 Aug 2023 10:33:56 -0700
+        Fri, 18 Aug 2023 10:54:22 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, selinux@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>,
-        "GONG, Ruiqi" <gongruiqi1@huawei.com>,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] selinux: Annotate struct sidtab_str_cache with
- __counted_by
-Message-ID: <202308181033.03592D6E2D@keescook>
-References: <20230817202210.never.014-kees@kernel.org>
- <CAHC9VhR-vxsaR7deTQ+zzVP9W2uSupz4ucf8p+tt0e730qbZ1g@mail.gmail.com>
+To:     Siva Reddy Kallam <siva.kallam@broadcom.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Fiona Ebner <f.ebner@proxmox.com>,
+        Prashant Sreedharan <prashant@broadcom.com>,
+        Michael Chan <mchan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Bagas Sanjaya <bagasdotme@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] tg3: Use slab_build_skb() when needed
+Date:   Fri, 18 Aug 2023 10:54:21 -0700
+Message-Id: <20230818175417.never.273-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1521; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=l0mmsLVGH+CrHvrZXQxRZRb/0ioszhM7CEHTjrpeYl0=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk37BMmkdtnhTIWsR5ToZvLsbl/zm4J2IMNJinA
+ ZffeIUNlr2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZN+wTAAKCRCJcvTf3G3A
+ JpE1EACicu9H1KwFfA69XLlwc9HkSfTfkXwHjghaPoVAvKEJWF2h2rRJvEa572+ONPIHFFT/YSB
+ x+em9+AYhpXL5et5pIyHkXcoL5+3ohTaBIZT5bi1TV4sLge0Nh56nyidHgNffBDpvujhjHbjpV7
+ 1zXFEh8t0yi1cGvIUl9EH/ztXvXialrRvVWXoqpkJyH7bCrQdt+fZRBHaPQpeO0E1BkeFSfiTlZ
+ xiXYeyQcbEllwrztLqto8snBZAP5nKWq6hUYfU2LIy3PZZcgWqyRVEOXfgHvLIlwhJVJGBv1G/X
+ g8w4OH0MixMoT2Id7O+MrOAusM2pL4SPEn8IO+OnAMTtVaqqYEW2AEYWveoFSUnHOCtQBWyl+YT
+ eXW9mkI0+Ao/remYhq2Ajq6w9xa0V+ofpcGIf6xH/GLLPaFt+mZgcdAKQ5T8QFlCRif1gush+Gi
+ GRXmTtM9M38X7QypRLrCR7T+1V02S2GVUrj/3RFBz0k6G5j3H1SwyfivhW8+sxGYLZFc8mLhGSC
+ CxKVvyqnaNoyHBoNWRrZPt7SIBaSrir41+Edsx/PI4c0QLlDMiimYZQwwWDYITBEtQ+2hM8znJd
+ 9QY9ZHyQwbfqNDLeeZmzZa4tAU+x55VKhSoiMgAVc2glhZoSzLBhV8P3EXRgTiYc7xeH/N+fK4m
+ QcnOhyg 7Kk7cGZg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHC9VhR-vxsaR7deTQ+zzVP9W2uSupz4ucf8p+tt0e730qbZ1g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 18, 2023 at 12:25:12PM -0400, Paul Moore wrote:
-> On Thu, Aug 17, 2023 at 4:22 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > Prepare for the coming implementation by GCC and Clang of the __counted_by
-> > attribute. Flexible array members annotated with __counted_by can have
-> > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> > functions).
-> >
-> > As found with Coccinelle[1], add __counted_by for struct sidtab_str_cache.
-> >
-> > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
-> >
-> > Cc: Paul Moore <paul@paul-moore.com>
-> > Cc: Stephen Smalley <stephen.smalley.work@gmail.com>
-> > Cc: Eric Paris <eparis@parisplace.org>
-> > Cc: Ondrej Mosnacek <omosnace@redhat.com>
-> > Cc: selinux@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  security/selinux/ss/sidtab.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> This also looks good to me, but similarly to the audit patch, since we
-> are at -rc6 I'm going to wait to merge this until after the merge
-> window.  I'll send a follow up email once it's merged.
+The tg3 driver will use kmalloc() under some conditions. Check the
+frag_size and use slab_build_skb() when frag_size is 0. Silences
+the warning introduced by commit ce098da1497c ("skbuff: Introduce
+slab_build_skb()"):
 
-Thanks! Yeah, there's no rush. :)
+	Use slab_build_skb() instead
+	...
+	tg3_poll_work+0x638/0xf90 [tg3]
 
+Reported-by: Fiona Ebner <f.ebner@proxmox.com>
+Closes: https://lore.kernel.org/all/1bd4cb9c-4eb8-3bdb-3e05-8689817242d1@proxmox.com
+Cc: Siva Reddy Kallam <siva.kallam@broadcom.com>
+Cc: Prashant Sreedharan <prashant@broadcom.com>
+Cc: Michael Chan <mchan@broadcom.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/net/ethernet/broadcom/tg3.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index 5ef073a79ce9..cb2810f175cc 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -6881,7 +6881,10 @@ static int tg3_rx(struct tg3_napi *tnapi, int budget)
+ 
+ 			ri->data = NULL;
+ 
+-			skb = build_skb(data, frag_size);
++			if (frag_size)
++				skb = build_skb(data, frag_size);
++			else
++				skb = slab_build_skb(data);
+ 			if (!skb) {
+ 				tg3_frag_free(frag_size != 0, data);
+ 				goto drop_it_no_recycle;
 -- 
-Kees Cook
+2.34.1
+
