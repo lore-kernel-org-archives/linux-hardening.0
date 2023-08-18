@@ -2,27 +2,27 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45956C71130
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8236CC71131
 	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 01:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356909AbjHRBY1 (ORCPT
+        id S1356939AbjHRBY2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 21:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55714 "EHLO
+        Thu, 17 Aug 2023 21:24:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356975AbjHRBYF (ORCPT
+        with ESMTP id S1357008AbjHRBYO (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 21:24:05 -0400
+        Thu, 17 Aug 2023 21:24:14 -0400
 Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9670E421D
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 18:23:24 -0700 (PDT)
-Received: from eig-obgw-6008a.ext.cloudfilter.net ([10.0.30.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 287623AAB
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 18:23:45 -0700 (PDT)
+Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
         by cmsmtp with ESMTP
-        id WccRqDhizDKaKWoBxqIXeU; Fri, 18 Aug 2023 01:22:21 +0000
+        id WmuJqHTk1DKaKWoCWqIYVV; Fri, 18 Aug 2023 01:22:56 +0000
 Received: from gator4166.hostgator.com ([108.167.133.22])
         by cmsmtp with ESMTPS
-        id WoBwqrljwN1yQWoBwqnqRm; Fri, 18 Aug 2023 01:22:20 +0000
-X-Authority-Analysis: v=2.4 cv=fpHP2X0f c=1 sm=1 tr=0 ts=64dec7cc
+        id WoCVqKf0n0LVOWoCVqnz3c; Fri, 18 Aug 2023 01:22:55 +0000
+X-Authority-Analysis: v=2.4 cv=BvCOfKb5 c=1 sm=1 tr=0 ts=64dec7ef
  a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
  a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
  a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
@@ -34,24 +34,24 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=st6W8wFthlxJj8Xs/X7DzBxbKeU4f01Jzh9fAohMtXU=; b=q6EPELf/a4P/OkIeCuCS/FiRLK
-        h9oy+zc6j6J+7Wp6BbI34AGk5+w9rnoMSa0yKSdTo/JWgfylVuHdc9XqGWtaqgSt0DA3mlH2ziDhk
-        aW9G1BHFQwkS9tKZy8y7yQeaPRJz2YPDP82Lq3Y0Xwtx6jycUWq4bK7l+DXnR2VUqRDWQkGASGwX6
-        xknAtnuD28ltggoiT5PQ9t7c+H/jFRmLqfpYaVylJPyF7fOsQFM3rzOxinCQ3ttTiCSrsECGV6wLz
-        5KgJID+UkO4y1lFbf0FKUfcNPTje3+mJsbVjkSU7Ike67X7DR3WEsvDrmVNN0kgjHqQO2UjRtQ8Tm
-        yQ0IxiTA==;
-Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:54890 helo=[192.168.15.8])
+        bh=fF3hnykDlOGFPwkIEyewUVhIxtgTu0SczeFdKMI/qh4=; b=lD1crn4CtDXv3+aMF5M143w4Iq
+        DzjrkR3K1fDAyWjg3iqfgmi0NGyqbmmi395Mj9Pay6ogK9tEIqEp76oXasM0zQdm0FcTM7Zf66G62
+        F5Wp3CcoaYTA3O6tF0j6A56JworWR8vtK+Nb31MGK3oOL3fb6YiY4E0NY4iwoHFozQx6L+jpXsQU9
+        Hcirv9YgaAf/G9oW9OAcqA3MBldiU6I6CkyKFmRy+SAJ3J619A6TctnKbrxtJWi76O4QR9QSPZFOy
+        R+mIdW3eGj6JFE+WAW7Je8tIcA+ITuzG9wpO09d4E/Wt7LNeqKdpyl0fXVLQXrRzYv+2vv8tGLBmA
+        oZj65Hrw==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:57124 helo=[192.168.15.8])
         by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
         (Exim 4.96)
         (envelope-from <gustavo@embeddedor.com>)
-        id 1qWoBq-000TtY-0M;
-        Thu, 17 Aug 2023 20:22:14 -0500
-Message-ID: <ceacfabe-f611-f1d2-2dd3-5fc9155ece83@embeddedor.com>
-Date:   Thu, 17 Aug 2023 19:23:09 -0600
+        id 1qWoCP-000Uj0-00;
+        Thu, 17 Aug 2023 20:22:49 -0500
+Message-ID: <e15140e7-1122-17af-8088-4dcb5043019f@embeddedor.com>
+Date:   Thu, 17 Aug 2023 19:23:47 -0600
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH 04/21] dmaengine: fsl-edma: Annotate struct fsl_edma_desc
+Subject: Re: [PATCH 06/21] dmaengine: moxart-dma: Annotate struct moxart_desc
  with __counted_by
 Content-Language: en-US
 To:     Kees Cook <keescook@chromium.org>, Vinod Koul <vkoul@kernel.org>
@@ -91,9 +91,9 @@ Cc:     dmaengine@vger.kernel.org, Hector Martin <marcan@marcan.st>,
         linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
         linux-hardening@vger.kernel.org
 References: <20230817235428.never.111-kees@kernel.org>
- <20230817235859.49846-4-keescook@chromium.org>
+ <20230817235859.49846-6-keescook@chromium.org>
 From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <20230817235859.49846-4-keescook@chromium.org>
+In-Reply-To: <20230817235859.49846-6-keescook@chromium.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
@@ -104,18 +104,18 @@ X-AntiAbuse: Sender Address Domain - embeddedor.com
 X-BWhitelist: no
 X-Source-IP: 187.162.21.192
 X-Source-L: No
-X-Exim-ID: 1qWoBq-000TtY-0M
+X-Exim-ID: 1qWoCP-000Uj0-00
 X-Source: 
 X-Source-Args: 
 X-Source-Dir: 
-X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:54890
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:57124
 X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 43
+X-Email-Count: 127
 X-Org:  HG=hgshared;ORG=hostgator;
 X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
 X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfOfw86anZWHZs5iUTiNvHpUMajYEGTRiPO/hHKpC6Dybhks+FAeWyXxVCXEcH2uOgegwrD2IHEgUtZ40D/ISKG1eYDGF98wH0Z3/sY/+2D8wu7hxzAqR
- isiixBOv18IUk+j0FMIMUlcyj5X6VSey7NEZ7UwYmwN2xhVN3u/TSmxnqf+gnS9KQb7VkWvSKkITTi+n6vWkcHpjTUJtwYrkPeGJAtp7fPQ74m38ZkpkC6yb
+X-CMAE-Envelope: MS4xfHpUZuNAI8PMLl9RTYYJid9iXoS2lVNY/M0IXyX3f2gTyM5IxkEOFug2ooPnftTfgRn/ZcWPJb6DrF/ChzHdivOXvGYvAs1LmYgnnsxefmT5h5UTT54O
+ Prm0P0poXGOIp+aO4YVRMd3D3cFkb6R+Cd4anPZ6PyiWufTd9eCSqRrYX9hlPie2LIo60Hdpj+dBW3suISI+7L2Cdk4shxjmx4vkpTUJ4bSGl54+YbEm/GSV
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
@@ -129,7 +129,9 @@ On 8/17/23 17:58, Kees Cook wrote:
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct fsl_edma_desc.
+> As found with Coccinelle[1], add __counted_by for struct moxart_desc.
+> Additionally, since the element count member must be set before accessing
+> the annotated flexible array member, move its initialization earlier.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
@@ -144,19 +146,36 @@ Thanks
 Gustavo
 
 > ---
->   drivers/dma/fsl-edma-common.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/dma/moxart-dma.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/dma/fsl-edma-common.h b/drivers/dma/fsl-edma-common.h
-> index 004ec4a6bc86..fdbc79787643 100644
-> --- a/drivers/dma/fsl-edma-common.h
-> +++ b/drivers/dma/fsl-edma-common.h
-> @@ -135,7 +135,7 @@ struct fsl_edma_desc {
->   	bool				iscyclic;
->   	enum dma_transfer_direction	dirn;
->   	unsigned int			n_tcds;
-> -	struct fsl_edma_sw_tcd		tcd[];
-> +	struct fsl_edma_sw_tcd		tcd[] __counted_by(n_tcds);
+> diff --git a/drivers/dma/moxart-dma.c b/drivers/dma/moxart-dma.c
+> index 7565ad98ba66..c1dd5716a46d 100644
+> --- a/drivers/dma/moxart-dma.c
+> +++ b/drivers/dma/moxart-dma.c
+> @@ -124,7 +124,7 @@ struct moxart_desc {
+>   	unsigned int			dma_cycles;
+>   	struct virt_dma_desc		vd;
+>   	uint8_t				es;
+> -	struct moxart_sg		sg[];
+> +	struct moxart_sg		sg[] __counted_by(sglen);
 >   };
 >   
->   enum edma_version {
+>   struct moxart_chan {
+> @@ -309,6 +309,7 @@ static struct dma_async_tx_descriptor *moxart_prep_slave_sg(
+>   	d = kzalloc(struct_size(d, sg, sg_len), GFP_ATOMIC);
+>   	if (!d)
+>   		return NULL;
+> +	d->sglen = sg_len;
+>   
+>   	d->dma_dir = dir;
+>   	d->dev_addr = dev_addr;
+> @@ -319,8 +320,6 @@ static struct dma_async_tx_descriptor *moxart_prep_slave_sg(
+>   		d->sg[i].len = sg_dma_len(sgent);
+>   	}
+>   
+> -	d->sglen = sg_len;
+> -
+>   	ch->error = 0;
+>   
+>   	return vchan_tx_prep(&ch->vc, &d->vd, tx_flags);
