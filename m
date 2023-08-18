@@ -2,96 +2,167 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C808EC3DA66
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 01:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E3AC678DC
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 01:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356815AbjHRBQY (ORCPT
+        id S1356883AbjHRBXy (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 17 Aug 2023 21:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39336 "EHLO
+        Thu, 17 Aug 2023 21:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356867AbjHRBQH (ORCPT
+        with ESMTP id S1356965AbjHRBXt (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 17 Aug 2023 21:16:07 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA05421B
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 18:15:24 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-565f8b23151so84318a12.0
-        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 18:15:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1692321310; x=1692926110;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m0OZI4NJnVebNM6+xyzwnKsD1iMAOA59kDaPSqooa2s=;
-        b=o63LFo902MW3jOMihEhTthkAapz32a8B14io7B4LRVjqDuG13Ue5OxpXnJBUZGVnyG
-         03RA88lMAR6UKQX8vGB8lj0F+tLePgx5ynoUORrZAD4gY//TsVr38UUC9Z3rpPKj8JQ4
-         Lt2gngGzRIE7p0mXq4yTNP2tRoTWKjfs0Ncp8lPvTnaz0WT/ZRucUlCIWeutorLT8uQS
-         YqzndBepB4nOWt85vsREbBi/5VuL0m95ikk1N4tNtynrlrEixZ9SCMAXKFQmAx4trnWQ
-         BH8LNsc/8cHblRZ8LRtHSkm+6meWhuMs/a63NmbNMPyKyf2OWcfJV3u9ElV1sOOWVXqt
-         urfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692321310; x=1692926110;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m0OZI4NJnVebNM6+xyzwnKsD1iMAOA59kDaPSqooa2s=;
-        b=GKx4HHc9ssC6H5oqVwFnfFn1S1xL+h87aBfoeF6q/H7tpr8iBiEPnxuQGDnDwApR+B
-         zwZu3ES/cUoM7bEloO4mySxlQRhB/PEw1hj6DvXmr0Kt3yiLWuhFZ1Kp8P57Z+OwvIBm
-         FCIEUm6Pb+qfaYTOa0/+lyjRWoNASIoOJppB6YNiiWizRVv44mztkV5zNLOxUiyiLEv/
-         LcY7Q0xEgDrYHPXrHyVLo/T43iwbCcyhu5F8HPJaEvL+vgTIfl1117NsPDlJhUGN+BBq
-         JPSokjKqQPdlv2xfHvmX2U+khSnKuzZNmXKuiXwWO9c5wUBge5a8skqzoA9jUapTmbo2
-         WXDw==
-X-Gm-Message-State: AOJu0YwCICj5dlrezmcQeiOTmNyTNuJ4J5DoNucTLsTHTDra5PvQBb62
-        XA7J4v0D3HcYuBo9cHieen7vJw==
-X-Google-Smtp-Source: AGHT+IGQubHAAfLcM9gFxNKvlfXNaq4wEeNmXlj6d+JqwuLxwHoSVzghFX4bWwVbT5cYfcDW4zVlnQ==
-X-Received: by 2002:a05:6a00:1d85:b0:681:9fe0:b543 with SMTP id z5-20020a056a001d8500b006819fe0b543mr1234120pfw.2.1692321310699;
-        Thu, 17 Aug 2023 18:15:10 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id j12-20020aa7800c000000b0068842ebfd10sm358490pfi.160.2023.08.17.18.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 18:15:09 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        Thu, 17 Aug 2023 21:23:49 -0400
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F41D33C32
+        for <linux-hardening@vger.kernel.org>; Thu, 17 Aug 2023 18:22:52 -0700 (PDT)
+Received: from eig-obgw-5008a.ext.cloudfilter.net ([10.0.29.246])
+        by cmsmtp with ESMTP
+        id WlWVqjCqhyYOwWoBaqzimV; Fri, 18 Aug 2023 01:21:58 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with ESMTPS
+        id WoBZqe8XYDHerWoBZqrDb9; Fri, 18 Aug 2023 01:21:57 +0000
+X-Authority-Analysis: v=2.4 cv=MN5zJeVl c=1 sm=1 tr=0 ts=64dec7b5
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=OWjo9vPv0XrRhIrVQ50Ab3nP57M=:19 a=dLZJa+xiwSxG16/P+YVxDGlgEgI=:19
+ a=IkcTkHD0fZMA:10 a=UttIx32zK-AA:10 a=wYkD_t78qR0A:10 a=NEAV23lmAAAA:8
+ a=VwQbUJbxAAAA:8 a=JfrnYn6hAAAA:8 a=cm27Pg_UAAAA:8 a=HvF037n1xESchLcPDVoA:9
+ a=QEXdDO2ut3YA:10 a=AjGcO6oz07-iQ99wixmX:22 a=1CNFftbPRP8L7MoqJWF3:22
+ a=xmb-EsYY8bH0VWELuYED:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=4qj0EaSxUo2+DCTF/hymWHxE6YXJwkpWmEuGBo/Dmbc=; b=n+XJDOIpS3chhDQvGjusg83aqL
+        kotuJV5YiiK7mhcxygIaK8gdEM36MVhuQumYgfktIfM4pIfdSPHgO69oI+LdslniQgvuflhAVhsvz
+        xTXwA4g2mz7+3cP/vlCYfRUJRbeRp/lvUHGyz7Xt/PLQ1/Me2V1ZLKkEyJTiBRdSjL1a8IYIXz+bn
+        4hVFZYiEiosfCDz5DC5dGVY/bVDGQd9vKe5ii60dGxZswHz+UohqjZc4Yxvo3LTSAGMDiEQGGLi+3
+        CD935yKR04s/TRMESuoUI6TgTU7RYtcs6eqnbgLFnUOZzubddNm6hANkkI26WoiVkc9I+mm5N0gEu
+        JaN4KC1Q==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:40700 helo=[192.168.15.8])
+        by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.96)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1qWoBR-000THf-37;
+        Thu, 17 Aug 2023 20:21:50 -0500
+Message-ID: <1e22a311-0cb4-f31c-4439-65421147a50e@embeddedor.com>
+Date:   Thu, 17 Aug 2023 19:22:33 -0600
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH 01/21] dmaengine: apple-admac: Annotate struct admac_data
+ with __counted_by
+Content-Language: en-US
+To:     Kees Cook <keescook@chromium.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     Hector Martin <marcan@marcan.st>, Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        dmaengine@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Green Wan <green.wan@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Yu Kuai <yukuai3@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jordy Zomer <jordy@pwning.systems>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-In-Reply-To: <20230817212146.never.853-kees@kernel.org>
-References: <20230817212146.never.853-kees@kernel.org>
-Subject: Re: [PATCH] io_uring/rsrc: Annotate struct io_mapped_ubuf with
- __counted_by
-Message-Id: <169232130924.700993.10043093294166679219.b4-ty@kernel.dk>
-Date:   Thu, 17 Aug 2023 19:15:09 -0600
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+References: <20230817235428.never.111-kees@kernel.org>
+ <20230817235859.49846-1-keescook@chromium.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20230817235859.49846-1-keescook@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-034f2
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1qWoBR-000THf-37
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.8]) [187.162.21.192]:40700
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 1
+X-Org:  HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPgFUNAeifIP8dVoY2zcBf+ayXktWXbNt5RKEylMgG/zF+SQzMh+2U8AqpBUggGUNboEki21qukuSbt23kSMkfcF0LVPh6s4ZFYVrartgTSLsE47ev0E
+ TiLCbo+wUEbhjEiNGJVevRxWWBtxTRe5rwbOEUob4myX+1UlELwa7ztnEQUT3S9NMEUMdmM3BoiizPHcCXLpJjqDufYFq2P1zh1T88HzyaQ4bVkU0hzduP/8
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
-On Thu, 17 Aug 2023 14:21:47 -0700, Kees Cook wrote:
+
+On 8/17/23 17:58, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct io_mapped_ubuf.
+> As found with Coccinelle[1], add __counted_by for struct admac_data.
 > 
-> [...]
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> 
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Hector Martin <marcan@marcan.st>
+> Cc: Sven Peter <sven@svenpeter.dev>
+> Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> Cc: asahi@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: dmaengine@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Applied, thanks!
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-[1/1] io_uring/rsrc: Annotate struct io_mapped_ubuf with __counted_by
-      commit: 04d9244c9420db33149608a566399176d57690f8
+Thanks
+--
+Gustavo
 
-Best regards,
--- 
-Jens Axboe
-
-
-
+> ---
+>   drivers/dma/apple-admac.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/dma/apple-admac.c b/drivers/dma/apple-admac.c
+> index 3af795635c5c..ff46260b6ebc 100644
+> --- a/drivers/dma/apple-admac.c
+> +++ b/drivers/dma/apple-admac.c
+> @@ -128,7 +128,7 @@ struct admac_data {
+>   	int irq;
+>   	int irq_index;
+>   	int nchannels;
+> -	struct admac_chan channels[];
+> +	struct admac_chan channels[] __counted_by(nchannels);
+>   };
+>   
+>   struct admac_tx {
