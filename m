@@ -2,127 +2,101 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18239C71143
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 12:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8B3C71149
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 13:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376981AbjHRMrp (ORCPT
+        id S1348312AbjHRNaG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 08:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38478 "EHLO
+        Fri, 18 Aug 2023 09:30:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377050AbjHRMrC (ORCPT
+        with ESMTP id S1377183AbjHRNaB (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 08:47:02 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D305423B;
-        Fri, 18 Aug 2023 05:46:42 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37ICdLxv013227;
-        Fri, 18 Aug 2023 12:46:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=XRwtB3eOF7H/ZVixiy/pWVAo66LCiR44s1VydLXQPvc=;
- b=UZVodGMJ2yXs9eRpXjvbXDtTlPYAWWCh/1yf8wgTwyzAfZV+xjiNv2kCvI5BskSXi9nS
- QhpB02JlpU86i4eLWC9GaHPNlrfUMDR1YYoVU7Vp+BrmUeigq9gRJOV5OkHGhOwW5FHa
- mya1LNP89eWDl2c2eioA3AVKq7o2YiscqfryTTAYuPNpv/WzFLWO/b0qVNz85mWEKjku
- Ads4iUtTovIZ61qUu3Em1JD/x0Hs0X5HMpHp121zIcf3xMeW0pPhOWocF39ablEoub2p
- t2QRDkhtXAs99GdKcMPxeNPnorfpJ+dOj0zNYGY8MMIYGt6bGS398ZcjM4ud4MzujIcH Wg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sj8m4ra7k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Aug 2023 12:46:14 +0000
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37ICdRMC014130;
-        Fri, 18 Aug 2023 12:46:14 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sj8m4ra79-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Aug 2023 12:46:13 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-        by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37ICFxOO013413;
-        Fri, 18 Aug 2023 12:46:12 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-        by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sepmkej57-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 18 Aug 2023 12:46:12 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-        by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37ICkBf528902136
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Aug 2023 12:46:12 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB2A45805A;
-        Fri, 18 Aug 2023 12:46:11 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A63D5805E;
-        Fri, 18 Aug 2023 12:46:11 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.81.121])
-        by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 18 Aug 2023 12:46:10 +0000 (GMT)
-Message-ID: <56197f75291ae44fabd1a692f01f09863fbff7e3.camel@linux.ibm.com>
-Subject: Re: [PATCH] integrity: Annotate struct ima_rule_opt_list with
- __counted_by
-From:   Mimi Zohar <zohar@linux.ibm.com>
+        Fri, 18 Aug 2023 09:30:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B231E4F;
+        Fri, 18 Aug 2023 06:30:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 103466419A;
+        Fri, 18 Aug 2023 13:30:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F7BC433C8;
+        Fri, 18 Aug 2023 13:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692365399;
+        bh=cFHYWvuH2yiNK08rOdgi29Mx3L982UHINNVuXMMZlro=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P1ZQARbLlMB3eHw13XHg0a83dM8ZZPx1pSHSSsXE/N+75aVIQCGSdLdxD3A7G+pEH
+         sFrFAcpiKImUJTkPdcibaE2ISnqDIzcuMO6WDGLA5pixEsvmRhURS60LWbNpV0jvlz
+         /1zN2khkm60TrCZkMDWkpvUGL0gDV6jkcXg0UchkAYzuRGi/pBjVWq4jaYrIFzGKDm
+         o/JmhREOOlkhgsyaE2NS+k+SfAJd8DbgCRSSn/2+AF8+7gUdi4Pt/A30j6BY9sbPBp
+         8o02JLDXvV2NVHCBnMM/4vJXc9wLYTLP139QY6qD9/0O6hBSeGdloq3/SOLHuVyY14
+         CTWUTSCLau5+w==
+Date:   Fri, 18 Aug 2023 15:29:54 +0200
+From:   Christian Brauner <brauner@kernel.org>
 To:     Kees Cook <keescook@chromium.org>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Date:   Fri, 18 Aug 2023 08:46:10 -0400
-In-Reply-To: <20230817210327.never.598-kees@kernel.org>
-References: <20230817210327.never.598-kees@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: NAmYlWVzRQ0YohiSinTeU8-Dr5Z-mXL6
-X-Proofpoint-GUID: Hc3SwzQ8TQeVTaLkoy2HdKp6dCaMk4S4
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+Cc:     linux-hardening@vger.kernel.org,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Hui Su <sh_def@163.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] nsproxy: Convert nsproxy.count to refcount_t
+Message-ID: <20230818-parkplatz-wahrzeichen-bff62b8dc55e@brauner>
+References: <20230818041327.gonna.210-kees@kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-18_15,2023-08-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
- spamscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- mlxlogscore=999 malwarescore=0 priorityscore=1501 mlxscore=0 adultscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308180115
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230818041327.gonna.210-kees@kernel.org>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, 2023-08-17 at 14:03 -0700, Kees Cook wrote:
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
+On Thu, Aug 17, 2023 at 09:13:32PM -0700, Kees Cook wrote:
+> From: Elena Reshetova <elena.reshetova@intel.com>
 > 
-> As found with Coccinelle[1], add __counted_by for struct ima_rule_opt_list.
-> Additionally, since the element count member must be set before accessing
-> the annotated flexible array member, move its initialization earlier.
+> atomic_t variables are currently used to implement reference counters
+> with the following properties:
+>  - counter is initialized to 1 using atomic_set()
+>  - a resource is freed upon counter reaching zero
+>  - once counter reaches zero, its further
+>    increments aren't allowed
+>  - counter schema uses basic atomic operations
+>    (set, inc, inc_not_zero, dec_and_test, etc.)
 > 
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+> Such atomic variables should be converted to a newly provided
+> refcount_t type and API that prevents accidental counter overflows and
+> underflows. This is important since overflows and underflows can lead
+> to use-after-free situation and be exploitable.
 > 
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-> Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-> Cc: Paul Moore <paul@paul-moore.com>
-> Cc: James Morris <jmorris@namei.org>
-> Cc: "Serge E. Hallyn" <serge@hallyn.com>
-> Cc: linux-integrity@vger.kernel.org
-> Cc: linux-security-module@vger.kernel.org
+> The variable nsproxy.count is used as pure reference counter. Convert it
+> to refcount_t and fix up the operations.
+> 
+> **Important note for maintainers:
+> 
+> Some functions from refcount_t API defined in refcount.h have different
+> memory ordering guarantees than their atomic counterparts. Please check
+> Documentation/core-api/refcount-vs-atomic.rst for more information.
+> 
+> Normally the differences should not matter since refcount_t provides
+> enough guarantees to satisfy the refcounting use cases, but in some
+> rare cases it might matter. Please double check that you don't have
+> some undocumented memory guarantees for this variable usage.
+> 
+> For the nsproxy.count it might make a difference in following places:
+>  - put_nsproxy() and switch_task_namespaces(): decrement in
+>    refcount_dec_and_test() only provides RELEASE ordering and ACQUIRE
+>    ordering on success vs. fully ordered atomic counterpart
+> 
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+> Reviewed-by: David Windsor <dwindsor@gmail.com>
+> Reviewed-by: Hans Liljestrand <ishkamiel@gmail.com>
 > Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-Acked-by: Mimi Zohar <zohar@linux.ibm.com>
-
--- 
-thanks,
-
-Mimi
-
+Reviewed-by: Christian Brauner <brauner@kernel.org>
