@@ -2,143 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E85C7112B
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 09:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240BDC678DC
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 09:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359093AbjHRJaA (ORCPT
+        id S1359356AbjHRJwG (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 05:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40836 "EHLO
+        Fri, 18 Aug 2023 05:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359084AbjHRJ3c (ORCPT
+        with ESMTP id S1357798AbjHRJvx (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 05:29:32 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02C530E6
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 02:29:30 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-5257e2b5d12so819161a12.2
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 02:29:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692350969; x=1692955769;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jTPWfjzgiS6MREC/CQy9YZ7a0Ba4pXdxJTPBP//ZxkQ=;
-        b=ChP1wEg29yXYxpK7J9uqfILfPe/L9xBS0HNQPXH54y1zGDEvcdwljY5HVw15zrjTzx
-         VpGb3h1ffXsIXv8NTndpsLQEcYlTmf6GA/8cPAvQ5OUfezNHFsG8dA4nQbmzYXZ+EEL/
-         +E2hg2SAdUHITLhvITSusy2v1ZLvoO2kw3JiBht3/qHk2OjQyiKqn5GvDCtklD/qqqOS
-         WHA7JqYdvqZ/Rjg0POkhOL40Q+5AYUtbCVBLV0PI/oamzCz/eMWcPzEw4/GQHHTTUYwt
-         OWzP/mRyk+KkHBFUux84C272URdVjJQPiQUdj9yjv5T/igPb7VaLMxL8ciSwoEZ9ARB8
-         hxvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692350969; x=1692955769;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jTPWfjzgiS6MREC/CQy9YZ7a0Ba4pXdxJTPBP//ZxkQ=;
-        b=JTPd+UluMif2uMhfnCkH2UuTkvyGwFjk8t0ZUeJ/42MqawHm7I4OKFyNstCtXQDWU3
-         7jJICbIb2IURXHb6kvt16vCcZBFQ+GOikCabMabC12bihRhliOBU2P3cLMhECdhW1MR2
-         SfSQ7a2e2pofJBaPG23ISS90pf6zlFZs2tHxNTiEoN5MzgqataOuiB+M4JOd3xYGmlHm
-         VSveOHStqN9s8DX4id3D3KuRBSaRdmb8DFYvUuxlWk6dyyvSEpfQy+QneIl72DoZH32W
-         FlLL6HPpzamDuUCjMUpFdkjXFx+SNwqdCvzMwBYs6OyhKoDsds7WizrWVJT5nAmKebPI
-         4S7g==
-X-Gm-Message-State: AOJu0YyS+GLw8S0fDosA9X9zSbUmALYbKW38R30TEdU23PjjzSK5+lhH
-        7zXuAq/oAaiR3O/B1+j70dFZvQ==
-X-Google-Smtp-Source: AGHT+IHd1/56PSeqitQJGalEGxXcH26drQEeAdG2dzNVUp/FxWHNv/06+iWRebGIeZUvbnvpxSWWDA==
-X-Received: by 2002:a05:6402:5154:b0:525:466c:5fda with SMTP id n20-20020a056402515400b00525466c5fdamr1836205edd.28.1692350969335;
-        Fri, 18 Aug 2023 02:29:29 -0700 (PDT)
-Received: from [192.168.0.107] ([79.115.63.195])
-        by smtp.gmail.com with ESMTPSA id e26-20020a056402149a00b005233deb30aesm857895edv.10.2023.08.18.02.29.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Aug 2023 02:29:28 -0700 (PDT)
-Message-ID: <d1c285ff-5eef-4dae-dde0-8946162f19ac@linaro.org>
-Date:   Fri, 18 Aug 2023 10:29:24 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.1
-Subject: Re: [PATCH 02/21] dmaengine: at_hdmac: Annotate struct at_desc with
- __counted_by
-To:     Kees Cook <keescook@chromium.org>, Vinod Koul <vkoul@kernel.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Green Wan <green.wan@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Yu Kuai <yukuai3@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jordy Zomer <jordy@pwning.systems>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Fri, 18 Aug 2023 05:51:53 -0400
+X-Greylist: delayed 331 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 18 Aug 2023 02:51:51 PDT
+Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [IPv6:2001:1600:3:17::bc09])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E7022722
+        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 02:51:51 -0700 (PDT)
+Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4RRxpJ6GBQzMq6Lp;
+        Fri, 18 Aug 2023 09:46:16 +0000 (UTC)
+Received: from unknown by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4RRxpH1Xz5zMpnPk;
+        Fri, 18 Aug 2023 11:46:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
+        s=20191114; t=1692351976;
+        bh=VX0u3iEdidR+CiLRoGDyOiMFbwAq0F/xGLYbnfjrIes=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OLQpvPkA9tTwXJWH9zWADo/gTYLHQ6/Cb1aCxfxYLw7I+U9flEtIBz2pxwsfSj28C
+         QtIflE5IN6exXf4PE86EaQs8vjD7O6g2T1/Hpl7g/3lZrUGVXOvM6mnput/hedK7O4
+         KmQArjOVk4dr66kc5ucqj+cmTrqFsa1th2Yxsaec=
+Date:   Fri, 18 Aug 2023 11:46:10 +0200
+From:   =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org,
         Nathan Chancellor <nathan@kernel.org>,
         Nick Desaulniers <ndesaulniers@google.com>,
         Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        asahi@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
-        linux-hardening@vger.kernel.org
-References: <20230817235428.never.111-kees@kernel.org>
- <20230817235859.49846-2-keescook@chromium.org>
-Content-Language: en-US
-From:   Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <20230817235859.49846-2-keescook@chromium.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] landlock: Annotate struct landlock_rule with __counted_by
+Message-ID: <20230818.Iuwi4Okaey0A@digikod.net>
+References: <20230817210257.never.920-kees@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230817210257.never.920-kees@kernel.org>
+X-Infomaniak-Routing: alpha
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
+Thanks! Applied to my next tree. Feel free to carry it yourself if you
+prefer.
 
-
-On 8/18/23 00:58, Kees Cook wrote:
+On Thu, Aug 17, 2023 at 02:03:01PM -0700, Kees Cook wrote:
 > Prepare for the coming implementation by GCC and Clang of the __counted_by
 > attribute. Flexible array members annotated with __counted_by can have
 > their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
 > (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
 > functions).
 > 
-> As found with Coccinelle[1], add __counted_by for struct at_desc.
+> As found with Coccinelle[1], add __counted_by for struct landlock_rule.
 > 
 > [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
 > 
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Cc: Tudor Ambarus <tudor.ambarus@linaro.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: dmaengine@vger.kernel.org
+> Cc: "Mickaël Salaün" <mic@digikod.net>
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> Cc: linux-security-module@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 > ---
->  drivers/dma/at_hdmac.c | 2 +-
+>  security/landlock/ruleset.h | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-> index b2876f67471f..b66c7f416881 100644
-> --- a/drivers/dma/at_hdmac.c
-> +++ b/drivers/dma/at_hdmac.c
-> @@ -239,7 +239,7 @@ struct at_desc {
->  	bool				memset_buffer;
->  	dma_addr_t			memset_paddr;
->  	int				*memset_vaddr;
-> -	struct atdma_sg			sg[];
-> +	struct atdma_sg			sg[] __counted_by(sglen);
+> diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
+> index d43231b783e4..55b1df8f66a8 100644
+> --- a/security/landlock/ruleset.h
+> +++ b/security/landlock/ruleset.h
+> @@ -67,7 +67,7 @@ struct landlock_rule {
+>  	 * @layers: Stack of layers, from the latest to the newest, implemented
+>  	 * as a flexible array member (FAM).
+>  	 */
+> -	struct landlock_layer layers[];
+> +	struct landlock_layer layers[] __counted_by(num_layers);
 >  };
 >  
->  /*--  Channels  --------------------------------------------------------*/
+>  /**
+> -- 
+> 2.34.1
+> 
