@@ -2,108 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836E7C71136
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 07:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CB5C05052
+	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 07:20:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358115AbjHRHOn convert rfc822-to-8bit (ORCPT
+        id S1358147AbjHRHTk (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 03:14:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45562 "EHLO
+        Fri, 18 Aug 2023 03:19:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358101AbjHRHOS (ORCPT
+        with ESMTP id S244013AbjHRHTh (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 03:14:18 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD20130DF
-        for <linux-hardening@vger.kernel.org>; Fri, 18 Aug 2023 00:14:16 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-74-ikIsBU2DMkidrrqivs1qkQ-1; Fri, 18 Aug 2023 08:14:14 +0100
-X-MC-Unique: ikIsBU2DMkidrrqivs1qkQ-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 18 Aug
- 2023 08:14:12 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 18 Aug 2023 08:14:12 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>
-CC:     'Przemek Kitszel' <przemyslaw.kitszel@intel.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Jacob Keller <jacob.e.keller@intel.com>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "Steven Zou" <steven.zou@intel.com>
-Subject: RE: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack
- allocs
-Thread-Topic: [PATCH net-next v3 1/7] overflow: add DEFINE_FLEX() for on-stack
- allocs
-Thread-Index: AQHZ0EteSw2XTdntxkSn8fWObNOCVK/uiVWQgAAd6ICAAP4u4A==
-Date:   Fri, 18 Aug 2023 07:14:11 +0000
-Message-ID: <e8e109712a1b42288951c958d2f503a5@AcuMS.aculab.com>
-References: <20230816140623.452869-1-przemyslaw.kitszel@intel.com>
- <20230816140623.452869-2-przemyslaw.kitszel@intel.com>
- <1f9cb37f21294c31a01af62fd920f070@AcuMS.aculab.com>
- <202308170957.F511E69@keescook>
-In-Reply-To: <202308170957.F511E69@keescook>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 18 Aug 2023 03:19:37 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 426621BF9;
+        Fri, 18 Aug 2023 00:19:36 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4ff9121fd29so818675e87.3;
+        Fri, 18 Aug 2023 00:19:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692343174; x=1692947974;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3WLOotOOz6Whg1Mj8YD4tZ6eErSJfZzqhK5ewDoU7mk=;
+        b=IajLjVccbpcsXfF6OU5/ko/nIqNPbKcFd6e2aT5W9pBlW3XQUm0m8EFelVlZe6qRYL
+         hWfKGC6zkHirHD0Vk6UA4I7/2OUev/lpIE9w4wAGxOAcRDp9fy8tvwY3PaRb713hq5Gl
+         Ys5PXLIU5EDvX9oI3MBIkzEaQc7cILrdOSuLwl1tEdn8tlxG3g2fibsJ/q6uhZAu2ku7
+         aE18AjUnFuVL9CSUtFtOHehtPsngPwBUaJYyEiaOqsSEZyqN18nC2K89Z4vNHRSAU4rp
+         RAR3IFqyKlGJRvP7D4qX+wkF2V7I7PY6OmNwO+F3SO9HC6Tuim6u5wHSzb3xNeRTA52I
+         RWEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692343174; x=1692947974;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3WLOotOOz6Whg1Mj8YD4tZ6eErSJfZzqhK5ewDoU7mk=;
+        b=atEptMD3iwNBsrwlSX/EiG38Bz+/iVDYjlCylTkOoeM3OQxgn1tSHsJ/HStdU2gatp
+         7GTyOSpNe7NhiaumNgc29HJ2/6lQmtepNH8O9dzdK2eVZeEwlj0Y/LQqemnpq6gng32t
+         QqOtFjlXSN50qi2HbIJ6gYOUkGSxDfVU+71PrnN211RpGr6KVLH9h+RAICOEtm8gLA9d
+         oaN85U5YFHwjLZkC9XiTIRzzb5y4y7GS6IsAX0KnSeGc3aC+F/WplqbjzFGAKbHH8W29
+         7sH8Ln5GuNcbI9Utm0piWuR2FU81JHKiP5xSAopCeRD/HgRtLPx/bTR/A+3FEApcr1BU
+         R9gA==
+X-Gm-Message-State: AOJu0YxV6lWjoEMFJKKWneMlZmXIloqao0TR3DmzioNYKcDKRNo4z9YH
+        PqClBnowwzdOJsjD4Ys5E04JLokt56a/OgV6Jic=
+X-Google-Smtp-Source: AGHT+IEH6Jq48dkRZ4ezmCDNiEhdIsVUoXZNVTgzFF8vUlSHsXfot+cfT4CogWsvKA/tHn7Z/98bxJ7Qo34oYIi4M4s=
+X-Received: by 2002:a05:6512:2202:b0:4fe:ef9:c8d0 with SMTP id
+ h2-20020a056512220200b004fe0ef9c8d0mr1268562lfu.35.1692343174179; Fri, 18 Aug
+ 2023 00:19:34 -0700 (PDT)
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <20230817235428.never.111-kees@kernel.org> <20230817235859.49846-10-keescook@chromium.org>
+In-Reply-To: <20230817235859.49846-10-keescook@chromium.org>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Fri, 18 Aug 2023 15:18:57 +0800
+Message-ID: <CAAfSe-s_XMzqMLsGpvZoeDBm8+ugJwTYoCDC7g0Yx4dJgsJ6wA@mail.gmail.com>
+Subject: Re: [PATCH 10/21] dmaengine: sprd: Annotate struct sprd_dma_dev with __counted_by
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Vinod Koul <vkoul@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        dmaengine@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Jie Hai <haijie1@huawei.com>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Green Wan <green.wan@sifive.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Ujfalusi <peter.ujfalusi@gmail.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Yu Kuai <yukuai3@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jordy Zomer <jordy@pwning.systems>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, llvm@lists.linux.dev,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook
-> Sent: Thursday, August 17, 2023 6:00 PM
-> 
-> On Thu, Aug 17, 2023 at 02:35:23PM +0000, David Laight wrote:
-> > From: Przemek Kitszel
-> > > Sent: Wednesday, August 16, 2023 3:06 PM
-...
-> > > +#define DEFINE_FLEX(type, name, member, count)					\
-> > > +	union {									\
-> > > +		u8 bytes[struct_size_t(type, member, count)];			\
-> > > +		type obj;							\
-> > > +	} name##_u __aligned(_Alignof(type)) = {};				\
-> >
-> > You shouldn't need the _Alignof() it is the default.
-> 
-> In the sense that since "type" is in the union, it's okay?
+On Fri, 18 Aug 2023 at 07:59, Kees Cook <keescook@chromium.org> wrote:
+>
+> Prepare for the coming implementation by GCC and Clang of the __counted_by
+> attribute. Flexible array members annotated with __counted_by can have
+> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
+> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
+> functions).
+>
+> As found with Coccinelle[1], add __counted_by for struct sprd_dma_dev.
+>
+> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/counted_by.cocci
+>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Cc: dmaengine@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-The alignment of the union is the larger of the alignments
-of all its members.
-Which is what you want.
+Acked-by: Chunyan Zhang <zhang.lyra@gmail.com>
 
-> > I'm not sure you should be forcing the memset() either.
-> 
-> This already got discussed: better to fail safe.
+Thanks,
+Chunyan
 
-Perhaps call it DEFINE_FLEX_Z() to make this clear and
-give the option for a non-zeroing version later.
-Not everyone wants the expense of zeroing everything.
-
-..
-> > You might want to add:
-> > 	Static_assert(is_constexpr(count), "DEFINE_FLEX: non-constant count " #count);
-> 
-> That would be nice, though can Static_assert()s live in the middle of
-> variable definitions?
-
-I checked and it is fine.
-(I double-checked by adding a statement and getting an error.)
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+> ---
+>  drivers/dma/sprd-dma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+> index 168aa0bd73a0..07871dcc4593 100644
+> --- a/drivers/dma/sprd-dma.c
+> +++ b/drivers/dma/sprd-dma.c
+> @@ -212,7 +212,7 @@ struct sprd_dma_dev {
+>         struct clk              *ashb_clk;
+>         int                     irq;
+>         u32                     total_chns;
+> -       struct sprd_dma_chn     channels[];
+> +       struct sprd_dma_chn     channels[] __counted_by(total_chns);
+>  };
+>
+>  static void sprd_dma_free_desc(struct virt_dma_desc *vd);
+> --
+> 2.34.1
+>
