@@ -2,99 +2,90 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6CBEE4992
-	for <linux-hardening@archiver.kernel.org>; Fri, 18 Aug 2023 21:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3033EE49A0
+	for <linux-hardening@archiver.kernel.org>; Sat, 19 Aug 2023 02:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238857AbjHRVIM (ORCPT
+        id S243615AbjHSCi0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 18 Aug 2023 17:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48286 "EHLO
+        Fri, 18 Aug 2023 22:38:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239708AbjHRVIA (ORCPT
+        with ESMTP id S243628AbjHSCiN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 18 Aug 2023 17:08:00 -0400
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F374214;
-        Fri, 18 Aug 2023 14:07:59 -0700 (PDT)
-Received: from in01.mta.xmission.com ([166.70.13.51]:54812)
-        by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1qX6hJ-00Eec7-E9; Fri, 18 Aug 2023 15:07:57 -0600
-Received: from ip68-227-168-167.om.om.cox.net ([68.227.168.167]:41716 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1qX6hI-005584-F4; Fri, 18 Aug 2023 15:07:57 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>, linux-hardening@vger.kernel.org,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        David Windsor <dwindsor@gmail.com>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        Fri, 18 Aug 2023 22:38:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40B31BB;
+        Fri, 18 Aug 2023 19:38:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C074622D9;
+        Sat, 19 Aug 2023 02:38:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 180A0C433C8;
+        Sat, 19 Aug 2023 02:38:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692412691;
+        bh=oSkCuPAKXtvGAJIRmzBOrV+jlKSk2VzCCDit/Nm5mbo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kZle1zR3yL3S8NsbcSOizysqQjSY0B1GiZFlJAH8CoXUvTzjgMN+gralGiVI6//cu
+         IdZoYXRMQPG7Dm/PlqQ9AY8W5QEZNXYtYW55WcGFmUdTobLtiXKRbGxR4S0sDQUXPt
+         xuvBvWiKrHN0Z7dl1VJQOOpU2H9pdJ9fZ/rgWU/ONxebV71FTDiA7pPC1uQeV7ZpfO
+         vNA9miObq54SV4zVNbpP958nhJRXykhp7X4vQCe9X2+2Seo3lqzpIYzY3P52r8SWIz
+         8Pb22Ebjpelc7ZUK6q66VjFQP5hcxmhTRmtjhnPcb89e47VKT79kmF+C5TcNGJlscc
+         W60FWbi8W0Y+g==
+Date:   Fri, 18 Aug 2023 19:38:10 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Alexey Gladkov <legion@kernel.org>,
-        Yu Zhao <yuzhao@google.com>, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org
-References: <20230818041740.gonna.513-kees@kernel.org>
-        <20230818105542.a6b7c41c47d4c6b9ff2e8839@linux-foundation.org>
-        <CAG48ez3mNk8yryV3XHdWZBHC_4vFswJPx1yww+uDi68J=Lepdg@mail.gmail.com>
-        <202308181146.465B4F85@keescook>
-        <20230818123148.801b446cfdbd932787d47612@linux-foundation.org>
-        <e5234e7bd9fbd2531b32d64bc7c23f4753401cee.camel@kernel.org>
-        <202308181317.66E6C9A5@keescook>
-Date:   Fri, 18 Aug 2023 16:07:49 -0500
-In-Reply-To: <202308181317.66E6C9A5@keescook> (Kees Cook's message of "Fri, 18
-        Aug 2023 13:24:58 -0700")
-Message-ID: <87zg2o5aai.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] net: sched: cls_u32: Fix allocation in u32_init()
+Message-ID: <20230818193810.102a2581@kernel.org>
+In-Reply-To: <ZN5DvRyq6JNz20l1@work>
+References: <ZN5DvRyq6JNz20l1@work>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1qX6hI-005584-F4;;;mid=<87zg2o5aai.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.168.167;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1+62MLGNsy+flFj/dTZm7oQeFgbyj85fUg=
-X-SA-Exim-Connect-IP: 68.227.168.167
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2] creds: Convert cred.usage to refcount_t
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
+On Thu, 17 Aug 2023 09:58:53 -0600 Gustavo A. R. Silva wrote:
+> Subject: [PATCH][next] net: sched: cls_u32: Fix allocation in u32_init()
+> Date: Thu, 17 Aug 2023 09:58:53 -0600
+> 
+> Replace struct_size() with sizeof(), and avoid allocating 8 too many
+> bytes.
 
-> On Fri, Aug 18, 2023 at 04:10:49PM -0400, Jeff Layton wrote:
->> [...]
->> extra checks (supposedly) compile down to nothing. It should be possible
->> to build alternate refcount_t handling functions that are just wrappers
->> around atomic_t with no extra checks, for folks who want to really run
->> "fast and loose".
->
-> No -- there's no benefit for this. We already did all this work years
-> ago with the fast vs full break-down. All that got tossed out since it
-> didn't matter. We did all the performance benchmarking and there was no
-> meaningful difference -- refcount _is_ atomic with an added check that
-> is branch-predicted away. Peter Zijlstra and Will Deacon spent a lot of
-> time making it run smoothly. :)
+What are you fixing?
 
-Since you did all of the work should the text size of be growing by a
-kilobyte for this change?
+> The following difference in binary output is expected and reflects the
+> desired change:
+> 
+> | net/sched/cls_u32.o
+> | @@ -6148,7 +6148,7 @@
+> | include/linux/slab.h:599
+> |     2cf5:      mov    0x0(%rip),%rdi        # 2cfc <u32_init+0xfc>
+> |                        2cf8: R_X86_64_PC32     kmalloc_caches+0xc
+> |-    2cfc:      mov    $0x98,%edx
+> |+    2cfc:      mov    $0x90,%edx
 
-Is that expected?
+Sure, but why are you doing this? And how do you know the change is
+correct?
 
-That is a valid concern with this change and it really should be
-justified in the change long as someone brought it up.
+There are 2 other instances where we allocate 1 entry or +1 entry.
+Are they not all wrong?
 
-Eric
+Also some walking code seems to walk <= divisor, divisor IIUC being
+the array bound - 1?
+
+Jamal acked so changes are this is right, but I'd really like to
+understand what's going on, and I shouldn't have to ask you all 
+these questions :S
+-- 
+pw-bot: cr
