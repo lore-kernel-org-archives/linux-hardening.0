@@ -2,88 +2,82 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4DFEE49A6
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Aug 2023 16:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F011EE49A5
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Aug 2023 18:58:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231732AbjHUQKe (ORCPT
+        id S229629AbjHUS6P (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Aug 2023 12:10:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37796 "EHLO
+        Mon, 21 Aug 2023 14:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234661AbjHUQKe (ORCPT
+        with ESMTP id S229613AbjHUS6O (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Aug 2023 12:10:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F9BFA;
-        Mon, 21 Aug 2023 09:10:21 -0700 (PDT)
+        Mon, 21 Aug 2023 14:58:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C96354ED2;
+        Mon, 21 Aug 2023 11:57:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0672763CFA;
-        Mon, 21 Aug 2023 16:10:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5198C433C7;
-        Mon, 21 Aug 2023 16:10:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9870D6423C;
+        Mon, 21 Aug 2023 18:48:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82723C433C9;
+        Mon, 21 Aug 2023 18:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692634220;
-        bh=j1YPIsTdbsf0lmArJKt2cdkeFhMJztdIoqNq9bY/8bo=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=TJNLBFXO8X1hbuC9YV1EFSWfxthl92bm8kScXAZXWWBqkBe5pvZqB9GVuqqEGA2f+
-         QCxeZvUBeWGwMv1zcy/pqfUggEYl6/tnzbmH1uWAURlL9eiqi0UXdTJhICjxVndXnF
-         7cT1tMLU20vuqSZELQTWpT/jUjIBAfEks5EjgcO5CL5OaiSBw5q+cZkmiQmstcWYyS
-         mY6wCzqV3fwzu6BxWi9nYC3FYo76s7BvzVdvyvDkn5SETdacHLZ0a9GIHpP6edps0u
-         KjlLwBLxxMnOkxeRDWClAqlOIvhsWGOmLMNRLbCvStEPfo/JGeDp+l9r75YOAhOzd0
-         VjnX41W4yDgXQ==
-Content-Type: text/plain; charset="utf-8"
+        s=k20201202; t=1692643684;
+        bh=Um5mFwcE5cVNHmWMTL+F+fXrhZmpdU1DH8xAEdxyQ8c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PuldAdNm9nwcH6ymGQckb+V24C/yp1Z5osDjRGqWHtxcUiEdn7t2c1EahQSfzAnCi
+         WPtUkgYrcZzYdhLGM9MgpY6h/jc6VrO2fEvtjBzZeFSRNXUgSuc3WcNjYwr+kHIZFE
+         5mOsmi64Tf0DopK1nRJpSjlEdmPuJdBHdWZL0fkTy/xlQ1opV+Bx4mB+hxkwFqCPh2
+         gyeWuaHxrdBsTo85WINZK7hEe+9QWl8h+aiX/Lif0RsZ+nozoh95VZ5/yAKoYQPvXc
+         cdrOkSkgvvyvCvCBe+9xxNsaDLUCaHLno3V8M3qxl/aIeuwL1VkC7g6qk4lNNyhY/z
+         uUyCY5Y0JK12w==
+Date:   Mon, 21 Aug 2023 11:48:02 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Jamal Hadi Salim <jhs@mojatatu.com>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] net: sched: cls_u32: Fix allocation in u32_init()
+Message-ID: <20230821114802.1d1ce74b@kernel.org>
+In-Reply-To: <CAM0EoM=fZVr4ROKZ+tA9A=yxcx6LnNVFzTb+_brFv9c-CiRfdA@mail.gmail.com>
+References: <ZN5DvRyq6JNz20l1@work>
+        <20230818193810.102a2581@kernel.org>
+        <CAM0EoM=fZVr4ROKZ+tA9A=yxcx6LnNVFzTb+_brFv9c-CiRfdA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Subject: Re: [v2] wifi: ipw2x00: refactor to use kstrtoul
-From:   Kalle Valo <kvalo@kernel.org>
-In-Reply-To: <20230802-wifi-ipw2x00-refactor-v2-1-d33f765e9cd5@google.com>
-References: <20230802-wifi-ipw2x00-refactor-v2-1-d33f765e9cd5@google.com>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
-Message-ID: <169263421674.572263.16005174999269308938.kvalo@kernel.org>
-Date:   Mon, 21 Aug 2023 16:10:18 +0000 (UTC)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Justin Stitt <justinstitt@google.com> wrote:
-
-> The current implementation seems to reinvent what `kstrtoul` already does
-> in terms of functionality and error handling. Remove uses of `simple_strtoul()`
-> in favor of `kstrtoul()`.
+On Mon, 21 Aug 2023 10:35:29 -0400 Jamal Hadi Salim wrote:
+> > Sure, but why are you doing this? And how do you know the change is
+> > correct?
+> >
+> > There are 2 other instances where we allocate 1 entry or +1 entry.
+> > Are they not all wrong?
+> >
+> > Also some walking code seems to walk <= divisor, divisor IIUC being
+> > the array bound - 1?
+> >
+> > Jamal acked so changes are this is right, but I'd really like to
+> > understand what's going on, and I shouldn't have to ask you all
+> > these questions :S  
 > 
-> There is the following note at `lib/vsprintf.c:simple_strtoull()` which
-> further backs this change:
-> | * This function has caveats. Please use kstrtoull (or kstrtoul) instead.
-> 
-> And here, simple_str* are explicitly deprecated [3].
-> 
-> This patch also removes an instance of the deprecated `strncpy` which helps [2].
-> 
-> Compile tested only.
-> 
-> Link: https://lore.kernel.org/all/202308011602.3CC1C0244C@keescook/ [1]
-> Link: https://github.com/KSPP/linux/issues/90 [2]
-> Link: https://docs.kernel.org/process/deprecated.html#simple-strtol-simple-strtoll-simple-strtoul-simple-strtoull [3]
-> Cc: linux-hardening@vger.kernel.org
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+> This is a "bug fix" given that the structure had no zero array
+> construct as was implied by d61491a51f7e . I didnt want to call it out
+> as a bug fix (for -net) because existing code was not harmful but
+> allocated extra memory which this patch gives back.
+> The other instances have a legit need for "flexible array".
 
-Patch applied to wireless-next.git, thanks.
-
-876777494634 wifi: ipw2x00: refactor to use kstrtoul
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20230802-wifi-ipw2x00-refactor-v2-1-d33f765e9cd5@google.com/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+Based on the link provided it seems like the Fixes comes in because
+someone reported compilation issues. But from the thread it seems
+like the problem only appears when sizeof_struct() is modified.
+In which case - you're right, Fixes and Reported-by tags should go.
