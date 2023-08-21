@@ -2,113 +2,151 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108FBEE49A6
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Aug 2023 10:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9480CEE49AA
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Aug 2023 12:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232911AbjHUKSk convert rfc822-to-8bit (ORCPT
+        id S235119AbjHUM4P (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Aug 2023 06:18:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48334 "EHLO
+        Mon, 21 Aug 2023 08:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234597AbjHUKSj (ORCPT
+        with ESMTP id S235102AbjHUM4P (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Aug 2023 06:18:39 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1629BC2
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Aug 2023 03:18:37 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-309-wqiF68MgN6SF-J6xIfBlHw-1; Mon, 21 Aug 2023 11:18:26 +0100
-X-MC-Unique: wqiF68MgN6SF-J6xIfBlHw-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 21 Aug
- 2023 11:18:14 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 21 Aug 2023 11:18:14 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kees Cook' <keescook@chromium.org>,
-        Jeff Layton <jlayton@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "Elena Reshetova" <elena.reshetova@intel.com>,
-        David Windsor <dwindsor@gmail.com>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        "Alexey Gladkov" <legion@kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Yu Zhao" <yuzhao@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v2] creds: Convert cred.usage to refcount_t
-Thread-Topic: [PATCH v2] creds: Convert cred.usage to refcount_t
-Thread-Index: AQHZ0hIjCu0dtWFxxUKez0i3A14O7q/0jIjg
-Date:   Mon, 21 Aug 2023 10:18:13 +0000
-Message-ID: <d2bb7f4a8b214e1f8d50176e6d94b118@AcuMS.aculab.com>
-References: <20230818041740.gonna.513-kees@kernel.org>
- <20230818105542.a6b7c41c47d4c6b9ff2e8839@linux-foundation.org>
- <CAG48ez3mNk8yryV3XHdWZBHC_4vFswJPx1yww+uDi68J=Lepdg@mail.gmail.com>
- <202308181146.465B4F85@keescook>
- <20230818123148.801b446cfdbd932787d47612@linux-foundation.org>
- <e5234e7bd9fbd2531b32d64bc7c23f4753401cee.camel@kernel.org>
- <202308181317.66E6C9A5@keescook>
-In-Reply-To: <202308181317.66E6C9A5@keescook>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 21 Aug 2023 08:56:15 -0400
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA2DCD;
+        Mon, 21 Aug 2023 05:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1692622573;
+  x=1724158573;
+  h=references:from:to:cc:subject:date:in-reply-to:
+   message-id:mime-version:content-transfer-encoding;
+  bh=ehYcc0tlmgSj4nIJYZfVf8DxvlpS6F9Csv171D9Ul4E=;
+  b=hVAtLYVraOffBNu2N1R6xfybxlS2GSeMr06gShnkWDIoNQ5DOxncklD3
+   ICs1wSDas7Lhi1wd/2exWMShfZpT7niI2/TQiuIruBQRFrY5qL0USxQ6U
+   M7rhjIeEqSsuySHXJ3LAZmIk8XSzaT6QZDNB/OTh4H9clmZyl4zIt/2f4
+   oP98Y9pUWwYy8DFtnASd02+HKxLPSEnzayq96JYKQajV3E5lD25org3ku
+   K7kM5Gyk+I362I55by0+S9S333AhIQp7kDKduSXwdYNJIa4E8cOWk//C8
+   9kqhTOgJqgI4AKcpRsE0f3ktGDHoRNKDhSza3ckLIcdGCwpKqgZlCwDu5
+   Q==;
+References: <20230808083719.280777-1-gongruiqi@huaweicloud.com>
+ <ZNIijIoh/famqTDl@work> <20230809093729.00000a1d@Huawei.com>
+User-agent: a.out
+From:   Waqar Hameed <waqar.hameed@axis.com>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+CC:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        "GONG, Ruiqi" <gongruiqi@huaweicloud.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Kees Cook <keescook@chromium.org>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+        Wang Weiyang <wangweiyang2@huawei.com>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>, <gongruiqi1@huawei.com>
+Subject: Re: [PATCH RFC] iio: irsd200: fix -Warray-bounds bug in
+ irsd200_trigger_handler
+Date:   Mon, 21 Aug 2023 14:52:18 +0200
+In-Reply-To: <20230809093729.00000a1d@Huawei.com>
+Message-ID: <pndwmxosgey.fsf@axis.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [10.0.5.60]
+X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail02w.axis.com
+ (10.20.40.8)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-From: Kees Cook
-> Sent: Friday, August 18, 2023 9:25 PM
-> 
-> On Fri, Aug 18, 2023 at 04:10:49PM -0400, Jeff Layton wrote:
-> > [...]
-> > extra checks (supposedly) compile down to nothing. It should be possible
-> > to build alternate refcount_t handling functions that are just wrappers
-> > around atomic_t with no extra checks, for folks who want to really run
-> > "fast and loose".
-> 
-> No -- there's no benefit for this. We already did all this work years
-> ago with the fast vs full break-down. All that got tossed out since it
-> didn't matter. We did all the performance benchmarking and there was no
-> meaningful difference -- refcount _is_ atomic with an added check that
-> is branch-predicted away.
+On Wed, Aug 09, 2023 at 09:37 +0100 Jonathan Cameron <Jonathan.Cameron@Huaw=
+ei.com> wrote:
 
-Hmmm IIRC recent Intel x86 cpu never do static branch prediction.
-So you can't avoid mis-predicted branches in cold code.
+> On Tue, 8 Aug 2023 05:10:04 -0600
+> "Gustavo A. R. Silva" <gustavoars@kernel.org> wrote:
+>
+>> On Tue, Aug 08, 2023 at 04:37:19PM +0800, GONG, Ruiqi wrote:
+>> > From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
+>> >=20
+>> > When compiling with gcc 13 with -Warray-bounds enabled:
+>> >=20
+>> > In file included from drivers/iio/proximity/irsd200.c:15:
+>> > In function =E2=80=98iio_push_to_buffers_with_timestamp=E2=80=99,
+>> >     inlined from =E2=80=98irsd200_trigger_handler=E2=80=99 at drivers/=
+iio/proximity/irsd200.c:770:2:
+>> > ./include/linux/iio/buffer.h:42:46: error: array subscript =E2=80=98in=
+t64_t {aka long long int}[0]=E2=80=99
+>> > is partly outside array bounds of =E2=80=98s16[1]=E2=80=99 {aka =E2=80=
+=98short int[1]=E2=80=99} [-Werror=3Darray-bounds=3D]
+>> >    42 |                 ((int64_t *)data)[ts_offset] =3D timestamp;
+>> >       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+>> > drivers/iio/proximity/irsd200.c: In function =E2=80=98irsd200_trigger_=
+handler=E2=80=99:
+>> > drivers/iio/proximity/irsd200.c:763:13: note: object =E2=80=98buf=E2=
+=80=99 of size 2
+>> >   763 |         s16 buf =3D 0;
+>> >       |             ^~~
+>> >=20
+>> > The problem seems to be that irsd200_trigger_handler() is taking a s16
+>> > variable as an int64_t buffer. Fix it by extending the buffer to 64 bi=
+ts.=20=20
+>>=20
+>> Thanks for working on this!
+>>=20
+>> >=20
+>> > Link: https://github.com/KSPP/linux/issues/331
+>> > Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>=20=20
+>>=20
+>> Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+>
+> Good find on the bug, but the fix is wrong even if it squashes the error.
 
-	David
+Yeah, this one slipped through!
 
-> Peter Zijlstra and Will Deacon spent a lot of
-> time making it run smoothly. :)
-> 
-> -Kees
-> 
-> --
-> Kees Cook
+[...]
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+>> > RFC: It's a preliminary patch since I'm not familiar with this hardwar=
+e.
+>> > Further comments/reviews are needed about whether this fix is correct,
+>> > or we should use iio_push_to_buffers() instead of the *_with_timestamp=
+()
+>> > version.
+>> >=20
+>> >  drivers/iio/proximity/irsd200.c | 4 ++--
+>> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>> >=20
+>> > diff --git a/drivers/iio/proximity/irsd200.c b/drivers/iio/proximity/i=
+rsd200.c
+>> > index 5bd791b46d98..34c479881bdf 100644
+>> > --- a/drivers/iio/proximity/irsd200.c
+>> > +++ b/drivers/iio/proximity/irsd200.c
+>> > @@ -759,10 +759,10 @@ static irqreturn_t irsd200_trigger_handler(int i=
+rq, void *pollf)
+>> >  {
+>> >  	struct iio_dev *indio_dev =3D ((struct iio_poll_func *)pollf)->indio=
+_dev;
+>> >  	struct irsd200_data *data =3D iio_priv(indio_dev);
+>> > -	s16 buf =3D 0;
+>> > +	int64_t buf =3D 0;
+>
+> s64 as internal kernel type.
+> More importantly needs to be at least s64 buf[2]; as the offset
+> https://elixir.bootlin.com/linux/latest/source/include/linux/iio/buffer.h=
+#L41
+> will be 1 due to this filling the timestamp in at first 8 byte aligned lo=
+cation
+> after the data that is already in the buffer.
+>
+> With hindsight was a bad decision a long time ago not to force people to =
+also
+> pass the size into this function so we could detect this at runtime at le=
+ast.
+> Hard to repair now give very large number of drivers using this and the f=
+act
+> that it's not always easy to work out that size.  Unfortunately occasiona=
+lly
+> one of these slips through review :(
+>
+> I suppose we could, in some cases check if the buffer was at least 16 byt=
+es which
+> would get us some of the way.
 
+Yes, that would actually be helpful.
