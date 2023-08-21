@@ -2,48 +2,68 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D0ADEE4996
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Aug 2023 08:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108FBEE49A6
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Aug 2023 10:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234061AbjHUIjQ (ORCPT
+        id S232911AbjHUKSk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Aug 2023 04:39:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48654 "EHLO
+        Mon, 21 Aug 2023 06:18:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232246AbjHUIjQ (ORCPT
+        with ESMTP id S234597AbjHUKSj (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Aug 2023 04:39:16 -0400
+        Mon, 21 Aug 2023 06:18:39 -0400
 Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D675BC9
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Aug 2023 01:39:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1629BC2
+        for <linux-hardening@vger.kernel.org>; Mon, 21 Aug 2023 03:18:37 -0700 (PDT)
 Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
  relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-219-jEAS19mCMs2MDf8c5jt4Eg-1; Mon, 21 Aug 2023 09:38:54 +0100
-X-MC-Unique: jEAS19mCMs2MDf8c5jt4Eg-1
+ uk-mta-309-wqiF68MgN6SF-J6xIfBlHw-1; Mon, 21 Aug 2023 11:18:26 +0100
+X-MC-Unique: wqiF68MgN6SF-J6xIfBlHw-1
 Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
  (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Mon, 21 Aug
- 2023 09:38:43 +0100
+ 2023 11:18:14 +0100
 Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Mon, 21 Aug 2023 09:38:43 +0100
+ id 15.00.1497.048; Mon, 21 Aug 2023 11:18:14 +0100
 From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Alejandro Colomar' <alx@kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: RE: struct_size() using sizeof() vs offsetof()
-Thread-Topic: struct_size() using sizeof() vs offsetof()
-Thread-Index: AQHZ0ToJGRMQ8qLPnk+BhbrlQvigaK/0cK8g
-Date:   Mon, 21 Aug 2023 08:38:43 +0000
-Message-ID: <d3c4c953c9a742ae98ae9b9036561b38@AcuMS.aculab.com>
-References: <74e8cf91-d095-33e3-c548-34d80b691089@kernel.org>
- <202308161913.91369D4A@keescook>
- <09b4a2ce-da74-3a19-6961-67883f634d98@kernel.org>
- <f12c6f14-66c4-6afb-e768-fa7abcfd1bbc@embeddedor.com>
- <df8fdd4a-490f-6b2a-03b6-0333e3302dce@kernel.org>
-In-Reply-To: <df8fdd4a-490f-6b2a-03b6-0333e3302dce@kernel.org>
+To:     'Kees Cook' <keescook@chromium.org>,
+        Jeff Layton <jlayton@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "Elena Reshetova" <elena.reshetova@intel.com>,
+        David Windsor <dwindsor@gmail.com>,
+        Hans Liljestrand <ishkamiel@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        "Chuck Lever" <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        "Alexey Gladkov" <legion@kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Yu Zhao" <yuzhao@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH v2] creds: Convert cred.usage to refcount_t
+Thread-Topic: [PATCH v2] creds: Convert cred.usage to refcount_t
+Thread-Index: AQHZ0hIjCu0dtWFxxUKez0i3A14O7q/0jIjg
+Date:   Mon, 21 Aug 2023 10:18:13 +0000
+Message-ID: <d2bb7f4a8b214e1f8d50176e6d94b118@AcuMS.aculab.com>
+References: <20230818041740.gonna.513-kees@kernel.org>
+ <20230818105542.a6b7c41c47d4c6b9ff2e8839@linux-foundation.org>
+ <CAG48ez3mNk8yryV3XHdWZBHC_4vFswJPx1yww+uDi68J=Lepdg@mail.gmail.com>
+ <202308181146.465B4F85@keescook>
+ <20230818123148.801b446cfdbd932787d47612@linux-foundation.org>
+ <e5234e7bd9fbd2531b32d64bc7c23f4753401cee.camel@kernel.org>
+ <202308181317.66E6C9A5@keescook>
+In-Reply-To: <202308181317.66E6C9A5@keescook>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
@@ -54,25 +74,41 @@ X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: aculab.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-RnJvbTogQWxlamFuZHJvIENvbG9tYXIgPGFseEBrZXJuZWwub3JnPg0KPiBTZW50OiBUaHVyc2Rh
-eSwgQXVndXN0IDE3LCAyMDIzIDc6MzggUE0NCj4gDQo+IEhpIEd1c3Rhdm8sDQo+IA0KPiBPbiAy
-MDIzLTA4LTE3IDE4OjA1LCBHdXN0YXZvIEEuIFIuIFNpbHZhIHdyb3RlOg0KPiA+DQo+ID4+IC0g
-ICAgICAgICAgICAgICB0cF9jID0ga3phbGxvYyhzaXplb2YoKnRwX2MpLCBHRlBfS0VSTkVMKTsN
-Cj4gPj4gKyAgICAgICAgICAgICAgIHRwX2MgPSBremFsbG9jKHN0cnVjdF9zaXplKHRwX2MsIGhs
-aXN0LT5odCwgMSksIEdGUF9LRVJORUwpOw0KPiA+DQo+ID4gSSBqdXN0IHNlbnQgYSBmaXhbMV0u
-DQo+ID4NCj4gPiBUaGFua3MgZm9yIHJlcG9ydGluZyB0aGlzISA6KQ0KDQpQZXJoYXBzIHN0cnVj
-dF9zaXplKCkgc2hvdWxkIGluY2x1ZGUgYW4gYXNzZXJ0aW9uIHRoYXQ6DQoJKG9mZnNldG9mKHR5
-cGUsIGZpZWxkWzhdKSA+IHNpemVvZiAodHlwZSkpDQpUaGF0IHdpbGwgZW5zdXJlIHRoYXQgZmll
-bGQgaXMgYW4gYXJyYXkgbWVtYmVyIGFuZCByZWFzb25hYmx5DQpuZWFyIHRoZSBlbmQgb2YgdGhl
-IHN0cnVjdHVyZS4NCg0KQSBtb3JlIGNvbXBsZXggY2FsY3VsYXRpb24gKHVzaW5nIF9BbGlnbm9m
-KHR5cGUpIGFuZCB0aGUgb2Zmc2V0L3NpemUNCm9mIGZpZWxkKSBjb3VsZCBiZSB1c2VkLg0KQnV0
-IEkgZG9uJ3QgdGhpbmsgeW91IGNhbiBhY3R1YWxseSBkZXRlY3QgaXQgaXMgZmllbGRbXSAob3Ig
-ZXZlbiB0aGUNCmxhc3QgbWVtYmVyKS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVz
-cyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEg
-MVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+From: Kees Cook
+> Sent: Friday, August 18, 2023 9:25 PM
+> 
+> On Fri, Aug 18, 2023 at 04:10:49PM -0400, Jeff Layton wrote:
+> > [...]
+> > extra checks (supposedly) compile down to nothing. It should be possible
+> > to build alternate refcount_t handling functions that are just wrappers
+> > around atomic_t with no extra checks, for folks who want to really run
+> > "fast and loose".
+> 
+> No -- there's no benefit for this. We already did all this work years
+> ago with the fast vs full break-down. All that got tossed out since it
+> didn't matter. We did all the performance benchmarking and there was no
+> meaningful difference -- refcount _is_ atomic with an added check that
+> is branch-predicted away.
+
+Hmmm IIRC recent Intel x86 cpu never do static branch prediction.
+So you can't avoid mis-predicted branches in cold code.
+
+	David
+
+> Peter Zijlstra and Will Deacon spent a lot of
+> time making it run smoothly. :)
+> 
+> -Kees
+> 
+> --
+> Kees Cook
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
