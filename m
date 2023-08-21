@@ -2,93 +2,139 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF9EE49A6
-	for <linux-hardening@archiver.kernel.org>; Mon, 21 Aug 2023 13:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA85EE49AE
+	for <linux-hardening@archiver.kernel.org>; Mon, 21 Aug 2023 13:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232623AbjHUNp6 (ORCPT
+        id S235528AbjHUNv1 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Aug 2023 09:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39606 "EHLO
+        Mon, 21 Aug 2023 09:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231770AbjHUNp6 (ORCPT
+        with ESMTP id S232370AbjHUNv1 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Aug 2023 09:45:58 -0400
-Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D394FB;
-        Mon, 21 Aug 2023 06:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; q=dns/txt; s=axis-central1; t=1692625553;
-  x=1724161553;
-  h=references:from:to:cc:subject:date:in-reply-to:
-   message-id:mime-version:content-transfer-encoding;
-  bh=MQdmWqNQajJmWoXPlqJR+8bjrqdRLEAq+htHeeP1mNc=;
-  b=njzp49B0k+V5Qa+TCq40ndhWjPouGr34TOH6Qv5hWJhetxMkfJYNG+zo
-   TomrLGJYJkV8cG4aaFX5YL8vEF+bhOrwxbUR2DWAw485AROMSjMiN6f/N
-   lai/lxW1qowcxFQSLFS3veuYgetZ8fS58/a0crs/TG36lXOXUUmiRi30z
-   /WmN4uNPbFJZvNqVFw/aR713pFOs3B9Z0xQxqKV7XDTOw4Xv35bF3BCxG
-   IQ9eH42ho5jDpe8+xyQp8GAMFKrO+c/VLr3OJ9CsFUoQbIpvMruWoAI1K
-   LDkOYvR7iIzgyLf40rhpIRwJ9Ds/JF7lO5KIlie4/0a5Usxt6JwXZPRIc
-   g==;
-References: <20230810035910.1334706-1-gongruiqi@huaweicloud.com>
-User-agent: a.out
-From:   Waqar Hameed <waqar.hameed@axis.com>
-To:     "GONG, Ruiqi" <gongruiqi@huaweicloud.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        "Kees Cook" <keescook@chromium.org>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        "Wang Weiyang" <wangweiyang2@huawei.com>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>, <gongruiqi1@huawei.com>
-Subject: Re: [PATCH v2] iio: irsd200: fix -Warray-bounds bug in
- irsd200_trigger_handler
-Date:   Mon, 21 Aug 2023 15:41:18 +0200
-In-Reply-To: <20230810035910.1334706-1-gongruiqi@huaweicloud.com>
-Message-ID: <pndsf8cse40.fsf@axis.com>
+        Mon, 21 Aug 2023 09:51:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7168BC;
+        Mon, 21 Aug 2023 06:51:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6BFE66311E;
+        Mon, 21 Aug 2023 13:51:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D5DFC433C7;
+        Mon, 21 Aug 2023 13:51:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692625884;
+        bh=raW/eJ/IekLFv76LPt/xjV+ChKw/iEEDviThfP0LNIQ=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=K1rO2pp7CuRPqKRyFO0K7tg3mOBJdE+6WL2eCf3huaAoG4ar6+WJxPMk2I/lU4G9B
+         3DvwYrqj5rgYoTyQF8ckDhUw5fX4/t/8RSiavijEwXkQG8YHXravbW5IWmsjoJLErS
+         WguPbdKVTGvvNyzjeTSaG+yGhvIVL47kRRVfVibdZs+vGP4SxU55jaqnR4oXfNhwa0
+         8dfj3B6wh02vC4TyuYEbtwNo6IXGw7zZR1nt6ucIRQkloGoviePhgAlq1IXtcPvDWx
+         jQqP8r0gn5WYWxbtrSLgkJ3AHt2eARZHAeG/+dug92afpPZRy9k2lsL6JPQmGpd+u7
+         rGmgVYz/3AZCA==
+Message-ID: <96e7cc13-1169-12ab-6dad-7624e33346ab@kernel.org>
+Date:   Mon, 21 Aug 2023 15:51:22 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.1
+Subject: Re: struct_size() using sizeof() vs offsetof()
+Content-Language: en-US
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
+References: <74e8cf91-d095-33e3-c548-34d80b691089@kernel.org>
+ <202308161913.91369D4A@keescook>
+ <09b4a2ce-da74-3a19-6961-67883f634d98@kernel.org>
+ <f12c6f14-66c4-6afb-e768-fa7abcfd1bbc@embeddedor.com>
+ <df8fdd4a-490f-6b2a-03b6-0333e3302dce@kernel.org>
+ <d3c4c953c9a742ae98ae9b9036561b38@AcuMS.aculab.com>
+From:   Alejandro Colomar <alx@kernel.org>
+Organization: Linux
+In-Reply-To: <d3c4c953c9a742ae98ae9b9036561b38@AcuMS.aculab.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [10.0.5.60]
-X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail02w.axis.com
- (10.20.40.8)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 10, 2023 at 11:59 +0800 "GONG, Ruiqi" <gongruiqi@huaweicloud.co=
-m> wrote:
+On 2023-08-21 10:38, David Laight wrote:
+> From: Alejandro Colomar <alx@kernel.org>
+>> Sent: Thursday, August 17, 2023 7:38 PM
+>>
+>> Hi Gustavo,
+>>
+>> On 2023-08-17 18:05, Gustavo A. R. Silva wrote:
+>>>
+>>>> -               tp_c =3D kzalloc(sizeof(*tp_c), GFP_KERNEL);
+>>>> +               tp_c =3D kzalloc(struct_size(tp_c, hlist->ht, 1), GF=
+P_KERNEL);
+>>>
+>>> I just sent a fix[1].
+>>>
+>>> Thanks for reporting this! :)
+>=20
+> Perhaps struct_size() should include an assertion that:
+> 	(offsetof(type, field[8]) > sizeof (type))
+> That will ensure that field is an array member
 
-> From: "GONG, Ruiqi" <gongruiqi1@huawei.com>
->
-> When compiling with gcc 13 with -Warray-bounds enabled:
->
-> In file included from drivers/iio/proximity/irsd200.c:15:
-> In function =E2=80=98iio_push_to_buffers_with_timestamp=E2=80=99,
->     inlined from =E2=80=98irsd200_trigger_handler=E2=80=99 at drivers/iio=
-/proximity/irsd200.c:770:2:
-> ./include/linux/iio/buffer.h:42:46: error: array subscript =E2=80=98int64=
-_t {aka long long int}[0]=E2=80=99
-> is partly outside array bounds of =E2=80=98s16[1]=E2=80=99 {aka =E2=80=98=
-short int[1]=E2=80=99} [-Werror=3Darray-bounds=3D]
->    42 |                 ((int64_t *)data)[ts_offset] =3D timestamp;
->       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
-> drivers/iio/proximity/irsd200.c: In function =E2=80=98irsd200_trigger_han=
-dler=E2=80=99:
-> drivers/iio/proximity/irsd200.c:763:13: note: object =E2=80=98buf=E2=80=
-=99 of size 2
->   763 |         s16 buf =3D 0;
->       |             ^~~
->
-> The problem seems to be that irsd200_trigger_handler() is taking a s16
-> variable as an int64_t buffer. As Jonathan suggested [1], fix it by
-> extending the buffer to a two-element array of s64.
->
-> Link: https://github.com/KSPP/linux/issues/331
-> Link: https://lore.kernel.org/lkml/20230809181329.46c00a5d@jic23-huawei/ =
-[1]
-> Fixes: 3db3562bc66e ("iio: Add driver for Murata IRS-D200")
-> Signed-off-by: GONG, Ruiqi <gongruiqi1@huawei.com>
-> Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+There's already an assertion that the field in struct_size() is an
+array:
 
-Reviewed-by: Waqar Hameed <waqar.hameed@axis.com>
-Tested-by: Waqar Hameed <waqar.hameed@axis.com>
+$ grepc struct_size include/
+include/linux/overflow.h:291:
+#define struct_size(p, member, count)					\
+	__builtin_choose_expr(__is_constexpr(count),			\
+		sizeof(*(p)) + flex_array_size(p, member, count),	\
+		size_add(sizeof(*(p)), flex_array_size(p, member, count)))
+$ grepc flex_array_size include/
+include/linux/overflow.h:275:
+#define flex_array_size(p, member, count)				\
+	__builtin_choose_expr(__is_constexpr(count),			\
+		(count) * sizeof(*(p)->member) + __must_be_array((p)->member),	\
+		size_mul(count, sizeof(*(p)->member) + __must_be_array((p)->member)))
+
+
+Notice the must_be_array() there.
+
+
+> and reasonably
+> near the end of the structure.
+
+I did add a must_be_zero_sizeof() assertion to my implementation of
+sizeof_fam0(), so I think that's a reasonable assertion that it's
+really a FAM.  You can still add a zero-length array in the middle
+of a struct and pass those two assertions, but it's unlikely.
+
+>=20
+> A more complex calculation (using _Alignof(type) and the offset/size
+> of field) could be used.
+> But I don't think you can actually detect it is field[] (or even the
+> last member).
+
+I'm thinking now that you can plug an assertion that offsetof_fam()
+is >=3D sizeof(struct) - alignof(struct).  That should make it even
+harder to pass all the assertions without really having the field at
+the end.  A [0] at the end of a structure would still pass all those
+assertions, but linters probably catch those.  So I think it's a
+pretty robust assertion.
+
+Cheers,
+Alex
+
+>=20
+> 	David
+>=20
+> -
+> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, M=
+K1 1PT, UK
+> Registration No: 1397386 (Wales)
+
+--=20
+<http://www.alejandro-colomar.es/>
+GPG key fingerprint: A9348594CE31283A826FBDD8D57633D441E25BB5
+
