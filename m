@@ -2,83 +2,134 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21469EE49B1
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Aug 2023 21:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35964EE49A5
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Aug 2023 22:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230109AbjHVVA0 (ORCPT
+        id S231530AbjHVWFe (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Aug 2023 17:00:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34774 "EHLO
+        Tue, 22 Aug 2023 18:05:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230285AbjHVVAZ (ORCPT
+        with ESMTP id S230490AbjHVWFd (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Aug 2023 17:00:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9693CCF8;
-        Tue, 22 Aug 2023 14:00:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3403B63358;
-        Tue, 22 Aug 2023 21:00:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 872C2C433C8;
-        Tue, 22 Aug 2023 21:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692738021;
-        bh=9s7d2BlKpZfct9MmU2wqCDuBw+XrUhkUrnIos303LfA=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=hvpt+kxzz0ZoaJrECshCxIerc37f8pYNEAIIYQnyWEFxV5w++w+KFfIxVIdGypplB
-         uxMHXMnP6hx8Qon2mpG6S4cIjShfEfgg2ZExDqzpU0ymiBzwsfn6UupEaAWhPeG8as
-         QguGu470K5zYs6+5hDBfrUOR28VOphNHyxiFhErYEdgA4iNz5rcztlKF1T1USPtj/z
-         tryWxDwFuuk/6DDl7EoYHJl0RoA8f2HnmDmD2UaUM1d7c+LdOdpmP7M7qo9GHhNTpx
-         QQfbMimFnzV75VOk/0PkrI+p7/v8tRiLt2/oulMiYEOApzN26XC5/+hBi9OYOPaWlU
-         YT6RdUhJ4e3rw==
-Message-ID: <9c82fe377e9d778d3a5a3de967a3706e.sboyd@kernel.org>
+        Tue, 22 Aug 2023 18:05:33 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C77A11F
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Aug 2023 15:05:32 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58c4d30c349so69567377b3.2
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Aug 2023 15:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1692741931; x=1693346731;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kvfNAmaQkydKuK6ht78gS3RG+WyOgiqVP4AeurXmSVU=;
+        b=YurVokxypIFmdNON8ep9uamAlris/X4zsoEuaaroV7EPJxmx+G1qMnvW9BifErZ7Ys
+         5zE3J5jTO/J3KR3rPHz72d3FPwqGTPE0sQkhx3B4egJALdUC1L3kw063q/eWrB2MupcE
+         sjM7AG3epGtZpNARVuUgXwdsvckKwHy6AY7k8KVvEEPu3kW9sy7Q/nbp/LMc6H8g/w86
+         MbN6EMt/k5t8f5/3545gKucIkhtIjTY96at/vrz1VTNsvVM7X0N5SSTLiDkM+bgIZ64T
+         DEpk/3B4N6QIgGviUFKaWyy8VFwwZYfNwKIz+1lf2gzDkJDbkpk85UPqquCVPlcqYMgC
+         /u5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692741931; x=1693346731;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kvfNAmaQkydKuK6ht78gS3RG+WyOgiqVP4AeurXmSVU=;
+        b=H455QM0CqyPQr7QWLcw5j/EM61l0cZKse4tUSLlzwzDl4v6XQZf82LkTQ6DvAfriRX
+         9rsNaI27LZN+O0/VqgYyEuEDGuetXEK3E7cjdZiAZfY48j8qgPTF0YYbOLnPtZ9D2k75
+         pH6P/0m0xS+zS86U0FNaKwZ7x3gP9yQ9CRbkzn8t+dgB0Es/P7drK5V9dAPgF6gZKaN/
+         5uj3aBd9Ygygk0cgYaFNUhVJ09uRqRwmZvjVZuW6figLVKXCxZPAzmYQ7RfZBI4udlzh
+         UKykob2hPFOeF/tFEc3FCPp51D45U180AMl6BVgctsMNDd77+AzrABkY2R2d0r0Qihvc
+         cnNw==
+X-Gm-Message-State: AOJu0Yx/hHLddmtb4T9vCPov7kd+vl2ALcYTJX2sQFKjqpQt65rKO2Wz
+        IdLJheKbcUkBWwGYeQ48kUA2K5Z7qEXbf9OhOw==
+X-Google-Smtp-Source: AGHT+IE3B57XdbJQeeRxg6tfixLqzX6c6nh6PDYTDTOOozVZuiP29CWKkjiXnDbtOgadRu1V5u5FVV5tcubdZSVRtg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:7647:0:b0:586:4eae:b943 with SMTP
+ id j7-20020a817647000000b005864eaeb943mr140317ywk.8.1692741931359; Tue, 22
+ Aug 2023 15:05:31 -0700 (PDT)
+Date:   Tue, 22 Aug 2023 22:05:30 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIACkx5WQC/x2N0QrCMAwAf2Xk2UAXmRR/RWTULHNBqSWdozL27
+ +t8Ou7lboUsppLh2qxgsmjWT6zSnhrgKcSnoA7VgRydnSfCPFvk9MNgPGHxF3yJRXljSMpY6ED /XfqC0rXifOjGBw9Qc8lk1PJf3e7btgNuSiRLegAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1692741930; l=2119;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=Y1vCgp5GYs4NsHT5r24HqojZFhU1daRE+/NKAA6CphQ=; b=Hi2h478Ff+VDwMs+vUBVNbhWGLJXHmI+lE2ifNg773E08iMLOxweArHLlRRxelq0JWloX12XL
+ tTzo4RTqpLLDlFI7D1ya9b2QD+lAjabmNXKoLbUNeVWHnv22G1AnXl3
+X-Mailer: b4 0.12.3
+Message-ID: <20230822-strncpy-arch-x86-kernel-apic-x2apic_uv_x-v1-1-91d681d0b3f3@google.com>
+Subject: [PATCH] x86/platform/uv: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     Steve Wahl <steve.wahl@hpe.com>, Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Cc:     linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
 Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20230817202941.never.657-kees@kernel.org>
-References: <20230817202941.never.657-kees@kernel.org>
-Subject: Re: [PATCH] clk: qcom: clk-spmi-pmic-div: Annotate struct spmi_pmic_div_clk_cc with __counted_by
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-To:     Bjorn Andersson <andersson@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Date:   Tue, 22 Aug 2023 14:00:19 -0700
-User-Agent: alot/0.10
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Quoting Kees Cook (2023-08-17 13:29:42)
-> Prepare for the coming implementation by GCC and Clang of the __counted_by
-> attribute. Flexible array members annotated with __counted_by can have
-> their accesses bounds-checked at run-time checking via CONFIG_UBSAN_BOUNDS
-> (for array indexing) and CONFIG_FORTIFY_SOURCE (for strcpy/memcpy-family
-> functions).
->=20
-> As found with Coccinelle[1], add __counted_by for struct spmi_pmic_div_cl=
-k_cc.
->=20
-> [1] https://github.com/kees/kernel-tools/blob/trunk/coccinelle/examples/c=
-ounted_by.cocci
->=20
-> Cc: Bjorn Andersson <andersson@kernel.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-arm-msm@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-Applied to clk-next
+A suitable replacement is `strscpy` [2] due to the fact that it
+guarantees NUL-termination on its destination buffer argument which is
+_not_ the case for `strncpy`!
+
+In this case, it means we can drop the `...-1` from:
+|       strncpy(to, from, len-1);
+
+as well as remove the comment mentioning NUL-termination as `strscpy`
+implicitly grants us this behavior.
+
+There should be no functional change as I don't believe the padding from
+`strncpy` is needed here. If it turns out that the padding is necessary
+we should use `strscpy_pad` as a direct replacement.
+
+Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only
+---
+ arch/x86/kernel/apic/x2apic_uv_x.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index d9384d5b4b8e..b524dee1cbbb 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -294,8 +294,7 @@ static void __init early_get_apic_socketid_shift(void)
+ 
+ static void __init uv_stringify(int len, char *to, char *from)
+ {
+-	/* Relies on 'to' being NULL chars so result will be NULL terminated */
+-	strncpy(to, from, len-1);
++	strscpy(to, from, len);
+ 
+ 	/* Trim trailing spaces */
+ 	(void)strim(to);
+@@ -1013,7 +1012,7 @@ static void __init calc_mmioh_map(enum mmioh_arch index,
+ 
+ 	/* One (UV2) mapping */
+ 	if (index == UV2_MMIOH) {
+-		strncpy(id, "MMIOH", sizeof(id));
++		strscpy(id, "MMIOH", sizeof(id));
+ 		max_io = max_pnode;
+ 		mapped = 0;
+ 		goto map_exit;
+
+---
+base-commit: 706a741595047797872e669b3101429ab8d378ef
+change-id: 20230822-strncpy-arch-x86-kernel-apic-x2apic_uv_x-e51e08a5fbcd
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
