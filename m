@@ -2,96 +2,133 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D13EE49AA
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Aug 2023 03:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CADC0EE49A3
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Aug 2023 09:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232470AbjHVDQL (ORCPT
+        id S232327AbjHVJYW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 21 Aug 2023 23:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52178 "EHLO
+        Tue, 22 Aug 2023 05:24:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232083AbjHVDQL (ORCPT
+        with ESMTP id S230404AbjHVJYW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 21 Aug 2023 23:16:11 -0400
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9347189
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Aug 2023 20:16:08 -0700 (PDT)
-Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6bca018afe8so1076553a34.0
-        for <linux-hardening@vger.kernel.org>; Mon, 21 Aug 2023 20:16:08 -0700 (PDT)
+        Tue, 22 Aug 2023 05:24:22 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91426113;
+        Tue, 22 Aug 2023 02:24:20 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4fe61ae020bso6436211e87.2;
+        Tue, 22 Aug 2023 02:24:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1692674168; x=1693278968;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6rnVFDEA1BgBA+mUdzjBw9TA8+0/ZjVyvpi44MeCEbk=;
-        b=D+i+k3YVcHfIwdFKTK6u+UcarnqVXwgBhW3iKfiT2Zwn1ub4l+WbMH1beEW9Mpqi0Y
-         Dtdn/bmO42xhBa7dak0KWbyRJF9QTIc0utQQrOl7sQmHB+ZUoM0OGHssl2GjfXakNqZW
-         tDH0zv4298Nk8X8PbVeidqoc7Clz9/Fc2+4dexHUmatT7pRUuRtkqirGnYgzAIx49/Ao
-         OpRmVcgize74ORrRKgLFPTwRTfWmKwHmcHVYq9GDPfW++IM3bdRWk0cZRsK4HTyKdKS4
-         /gix+jRBJJzXCGW3z5eZGWBUgIFVvFXCZks59GOGGzoKZAHPw0JrS+lzolt4DDoCeNFO
-         Oa6w==
+        d=gmail.com; s=20221208; t=1692696259; x=1693301059;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zI3MgR1LXRyYEK7UHlSxA4reZwr5ug/du2XE/mti7jk=;
+        b=khyvXxUFO523zkQYiAnT5nDsilCeLi/EH+bHe8RZfETTspSimNLq6iWbWx5M/HgIfR
+         WhiNsCK7mRAOXC5B+82L3JLSP+XCLo4NLN2e+QbEhvep3hcn7cUnS1j3c+Q/Q9w20J7o
+         GrBajaauq4sMPZG7y3WRXg5x4d+HwMJXOuaHjQ/2ceGRVJRpj5gHLPif9cfyaGHDgKot
+         ZrqqQ2d3YwPhZsL+4cLmB9hGFvShDPhrGbrw2YD2wiqd1W+jOtzhtWic4ZZ82OuChvxd
+         v7kn+AGL9gNXcvAMuimRiUU1J3DShIAHJBK5KsNv2KQ8ggIE5DK8VNZLRwkyp7734waW
+         8REQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692674168; x=1693278968;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6rnVFDEA1BgBA+mUdzjBw9TA8+0/ZjVyvpi44MeCEbk=;
-        b=mHthM+0MzzLqtISs5teVGhBLVqkkX10guaHsqoxFjgLU02R2iQyJbBarL9Lj9t4LIt
-         SC8Jnq0nFiJZbj3Q6rBREJkci9CTYn2A6I0haqXgllzcMSj2QkUxysG61qyiAbeGC6hE
-         JH1Wr9TLSmlcj7kNIrs1McEPUWThkyJJhjg25Q8cUjCnlyYd1Aed0MJHeZvdGhrS5a0k
-         CGzqxwX/X/BXjEtfLNB6Vmar83A8UpNmToQbuxY/UPymSyIt+x2R2jgKvPhhEijSDgco
-         YIhAK6hO9ZHHFR66AOifXyC6+CmUVfluFnXQOV4wZVWrEgohRx3LUyjDMfFHruLw6GvV
-         V+wQ==
-X-Gm-Message-State: AOJu0Yyih0tn6U2P7S0hHRb6p1uWKs8Np78sPI7nzjG/aPKvym3OnSZ3
-        WmZXcfvr04U2loGSnjPqJsmuqw==
-X-Google-Smtp-Source: AGHT+IHTu5O309+spg7Mkh7rJrIe7RQpXLqzJH7gxYltD1c18fv1QejjDlS2KcrqmRaICnpgUTVxsw==
-X-Received: by 2002:a05:6808:448d:b0:3a7:56a6:bd2b with SMTP id eq13-20020a056808448d00b003a756a6bd2bmr8913866oib.4.1692674168281;
-        Mon, 21 Aug 2023 20:16:08 -0700 (PDT)
-Received: from cork (c-73-158-249-15.hsd1.ca.comcast.net. [73.158.249.15])
-        by smtp.gmail.com with ESMTPSA id p15-20020a637f4f000000b00563590be25esm7050630pgn.29.2023.08.21.20.16.07
+        d=1e100.net; s=20221208; t=1692696259; x=1693301059;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zI3MgR1LXRyYEK7UHlSxA4reZwr5ug/du2XE/mti7jk=;
+        b=cJ41twXJog9sE8X34hOrM56Ym0fvXkrn4L5Op6CTGZi02AnxU4xQQyDZlIUFCKS9M1
+         d22dM1dZ8iOB4AadtlHYkyz+yCvF3fyadzlYx3gifTKlgy4b/YqqW+rWD0qCE08HTOYZ
+         8gTOHRKN7PLIaTBmp6AXbxvzlD+wUFGXahOV8cp9u96oPVJmVNol/8eFfTzWo/Q3Jfsh
+         QzYaWYBtdFp1lFnCSCXFR0A/EnL5HeU1VuSPGZMkK+nLS482SRDUHymzim1qb4E9b6G9
+         zZdbz8efniyOjC5Lxko7ndaoWZlfHw0IbSbOqJvNXQ5WrFyiD4D2uKegK2ldBhQvlMOY
+         +pyQ==
+X-Gm-Message-State: AOJu0Yx1xcD++Lb7XbClKqoAvv7oe2w4lWxyC9wku+WMRG5EjT/qIoG3
+        frIu1EFCbeF32xnn5b4jKTU=
+X-Google-Smtp-Source: AGHT+IFgl1be/hZeWP4yJbdiroqhm01VYXbNSKEn50xeY1C5Tc/vVDIi451lfLVqFug/63K3oboHSA==
+X-Received: by 2002:a05:6512:2029:b0:4fb:740a:81ae with SMTP id s9-20020a056512202900b004fb740a81aemr5613049lfs.16.1692696258484;
+        Tue, 22 Aug 2023 02:24:18 -0700 (PDT)
+Received: from localhost.localdomain ([2a05:3580:f312:6c00:826c:ae47:61a7:8af8])
+        by smtp.gmail.com with ESMTPSA id j5-20020ac253a5000000b005007c6ea158sm1109372lfh.254.2023.08.22.02.24.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 20:16:07 -0700 (PDT)
-Date:   Mon, 21 Aug 2023 20:16:05 -0700
-From:   =?iso-8859-1?Q?J=F6rn?= Engel <joern@purestorage.com>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Uday Shankar <ushankar@purestorage.com>,
+        Tue, 22 Aug 2023 02:24:17 -0700 (PDT)
+From:   Andrey Skvortsov <andrej.skvortzov@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
         Kees Cook <keescook@chromium.org>,
         Tony Luck <tony.luck@intel.com>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>, James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Len Brown <len.brown@intel.com>,
-        linux-hardening@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Subject: Re: [PATCH] Revert "ACPI, APEI, use raw spinlock in ERST"
-Message-ID: <ZOQodU1CNMRtjYZ6@cork>
-References: <20230822010933.2247671-1-ushankar@purestorage.com>
- <87y1i3c015.fsf@yhuang6-desk2.ccr.corp.intel.com>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Jarrah Gosbell <kernel@undef.tools>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Pavel Machek <pavel@ucw.cz>
+Cc:     Andrey Skvortsov <andrej.skvortzov@gmail.com>
+Subject: [PATCH v2] arm64: dts: pinephone: Add pstore support for PinePhone A64
+Date:   Tue, 22 Aug 2023 12:23:58 +0300
+Message-Id: <20230822092358.309835-1-andrej.skvortzov@gmail.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230821160817.GA2227@bug>
+References: <20230821160817.GA2227@bug>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87y1i3c015.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Tue, Aug 22, 2023 at 09:56:38AM +0800, Huang, Ying wrote:
-> 
-> ERST is mainly used to log the hardware error.  While, hardware error
-> may be reported via NMI (e.g., ACPI APEI GHES NMI), so we need to call
-> ERST functions in NMI handlers.  Where normal spinlock cannot be used
-> because they will be converted to sleepable rt_mutex in RT kernel.
+This patch reserves some memory in the DTS and sets up a
+pstore device tree node to enable pstore support.
 
-Non-sleeping spinlocks cannot be used in NMI context either.
-raw_spin_lock_irqsave() will prevent regular interrupts, but not NMI.
-So taking a spinlock inside an NMI can trigger a deadlock.
+In general any DRAM address, that isn't overwritten during a boot is
+suitable for pstore.
 
-Am I missing something here?
+Range from 0x40000000 - 0x50000000 is heavily used by u-boot for
+internal use and to load kernel, fdt, fdto, scripts, pxefile and ramdisk
+later in the boot process. Ramdisk start address is 0x4FF00000,
+initramfs for kernel with some hacking features and debug info enabled
+can take more than 100Mb and final address will be around 0x58000000.
+Address 0x61000000 will most likely not overlap with that.
 
-Jörn
+Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+---
 
---
-All art is but imitation of nature.
--- Lucius Annaeus Seneca
+Changes in v2:
+ - Update commit description with information about why this base address is used.
+
+ .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+index 87847116ab6d..84f9410b0b70 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+@@ -19,6 +19,22 @@ aliases {
+ 		serial0 = &uart0;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		pstore_mem: ramoops@61000000 {
++			compatible = "ramoops";
++			reg = <0x61000000 0x100000>;
++			record-size = <0x20000>;
++			console-size = <0x20000>;
++			ftrace-size = <0x20000>;
++			pmsg-size = <0x20000>;
++			ecc-size = <16>;
++		};
++	};
++
+ 	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
+-- 
+2.40.1
+
