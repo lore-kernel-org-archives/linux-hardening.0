@@ -2,57 +2,59 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADC0EE49A3
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Aug 2023 09:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD74FEE4993
+	for <linux-hardening@archiver.kernel.org>; Tue, 22 Aug 2023 09:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232327AbjHVJYW (ORCPT
+        id S230404AbjHVJ0T (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Aug 2023 05:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45550 "EHLO
+        Tue, 22 Aug 2023 05:26:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230404AbjHVJYW (ORCPT
+        with ESMTP id S234285AbjHVJ0S (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Aug 2023 05:24:22 -0400
+        Tue, 22 Aug 2023 05:26:18 -0400
 Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91426113;
-        Tue, 22 Aug 2023 02:24:20 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4fe61ae020bso6436211e87.2;
-        Tue, 22 Aug 2023 02:24:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E32F1A5;
+        Tue, 22 Aug 2023 02:26:16 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4fe2d152f62so6594143e87.0;
+        Tue, 22 Aug 2023 02:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692696259; x=1693301059;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zI3MgR1LXRyYEK7UHlSxA4reZwr5ug/du2XE/mti7jk=;
-        b=khyvXxUFO523zkQYiAnT5nDsilCeLi/EH+bHe8RZfETTspSimNLq6iWbWx5M/HgIfR
-         WhiNsCK7mRAOXC5B+82L3JLSP+XCLo4NLN2e+QbEhvep3hcn7cUnS1j3c+Q/Q9w20J7o
-         GrBajaauq4sMPZG7y3WRXg5x4d+HwMJXOuaHjQ/2ceGRVJRpj5gHLPif9cfyaGHDgKot
-         ZrqqQ2d3YwPhZsL+4cLmB9hGFvShDPhrGbrw2YD2wiqd1W+jOtzhtWic4ZZ82OuChvxd
-         v7kn+AGL9gNXcvAMuimRiUU1J3DShIAHJBK5KsNv2KQ8ggIE5DK8VNZLRwkyp7734waW
-         8REQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692696259; x=1693301059;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=gmail.com; s=20221208; t=1692696375; x=1693301175;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zI3MgR1LXRyYEK7UHlSxA4reZwr5ug/du2XE/mti7jk=;
-        b=cJ41twXJog9sE8X34hOrM56Ym0fvXkrn4L5Op6CTGZi02AnxU4xQQyDZlIUFCKS9M1
-         d22dM1dZ8iOB4AadtlHYkyz+yCvF3fyadzlYx3gifTKlgy4b/YqqW+rWD0qCE08HTOYZ
-         8gTOHRKN7PLIaTBmp6AXbxvzlD+wUFGXahOV8cp9u96oPVJmVNol/8eFfTzWo/Q3Jfsh
-         QzYaWYBtdFp1lFnCSCXFR0A/EnL5HeU1VuSPGZMkK+nLS482SRDUHymzim1qb4E9b6G9
-         zZdbz8efniyOjC5Lxko7ndaoWZlfHw0IbSbOqJvNXQ5WrFyiD4D2uKegK2ldBhQvlMOY
-         +pyQ==
-X-Gm-Message-State: AOJu0Yx1xcD++Lb7XbClKqoAvv7oe2w4lWxyC9wku+WMRG5EjT/qIoG3
-        frIu1EFCbeF32xnn5b4jKTU=
-X-Google-Smtp-Source: AGHT+IFgl1be/hZeWP4yJbdiroqhm01VYXbNSKEn50xeY1C5Tc/vVDIi451lfLVqFug/63K3oboHSA==
-X-Received: by 2002:a05:6512:2029:b0:4fb:740a:81ae with SMTP id s9-20020a056512202900b004fb740a81aemr5613049lfs.16.1692696258484;
-        Tue, 22 Aug 2023 02:24:18 -0700 (PDT)
-Received: from localhost.localdomain ([2a05:3580:f312:6c00:826c:ae47:61a7:8af8])
-        by smtp.gmail.com with ESMTPSA id j5-20020ac253a5000000b005007c6ea158sm1109372lfh.254.2023.08.22.02.24.17
+        bh=snw1DaEvTLglNmKWe5Qce4LHWKg43CbSW3JkoNbMXJ0=;
+        b=XiXIuii02P5pSjXkR+wQ0pKRVSpsQstyOfKddLRnfUJb5HzDpWU0T9Lx/jHH+Qxkt2
+         oiBKZt4zdbBdH+qfbeMtvOpLZrTexyrebSfx57iVe94e9r2on2aP8OuwY21/rERQzQno
+         TzpqAik5K1Nkx0eiAxq8pkt9a+5Phv5o60UybgQz4bL3+dyFTpqTnXx9drjaCnvoKyVq
+         uNvwWoiJk5Msoi0M+Jz2pdqNV1vO3M3UUmn+SpKoCnh3v3vrtr3AoA/yi451f0c9Cxhl
+         RenI6d7gS3jTyvilxhrFMvR3iKeHkqZbyrA4VfcKENMamsXDepNeQh/cy+avNyR2gUJR
+         8Few==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692696375; x=1693301175;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=snw1DaEvTLglNmKWe5Qce4LHWKg43CbSW3JkoNbMXJ0=;
+        b=Ol1/qY8FjMnPJ/sUo6UQQhVz73zK6Jm+Xuit+rZ9ZVOtNLq0Ik1QMZagwMci8NWoUm
+         d0ZZgPuAlSwZl+XfL1/aAuumrni8OJIizV+UewcqEgY4nr93wBIbWTVmKEgA6fXCedPL
+         Arm39CQQYKWyy/MbJSzWByfcDOh2PlffDJhfCBFfLGNodPwFG5K2xC1JJUhe0bzJPuyn
+         mGopHGoZuluT7vLDrAJARYCyJr0BI/PJ/QCquTRElREk3uAohhixLvLJIQATs5mHkf4d
+         EkHTZX1mO13qUcMQCW2L4Zeat93+HHJV9V4U6Y0kiA6R+eBfkoQ16vUgib53kz/IrX2P
+         9y2A==
+X-Gm-Message-State: AOJu0Yw1Yq/Eyffaa6MwEU0JG8KqxgVy3zJ1OclrKfBpHDwouXTFInQ+
+        L/nAZQeI4CBDKevUWDwE0dc=
+X-Google-Smtp-Source: AGHT+IH0eg8a5KtlFVvbBYLuL38D3pN+Vqfg1Lgf5Kl+i/B3hhTqgj1n3Ui4j6vOyIxo6gIttJrKVg==
+X-Received: by 2002:ac2:5f0a:0:b0:4fa:ad2d:6c58 with SMTP id 10-20020ac25f0a000000b004faad2d6c58mr5033971lfq.61.1692696374699;
+        Tue, 22 Aug 2023 02:26:14 -0700 (PDT)
+Received: from localhost ([2a05:3580:f312:6c00:826c:ae47:61a7:8af8])
+        by smtp.gmail.com with ESMTPSA id l14-20020ac24a8e000000b004ff8a466ed3sm2102918lfp.130.2023.08.22.02.26.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Aug 2023 02:24:17 -0700 (PDT)
+        Tue, 22 Aug 2023 02:26:14 -0700 (PDT)
+Date:   Tue, 22 Aug 2023 12:26:13 +0300
 From:   Andrey Skvortsov <andrej.skvortzov@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
         Chen-Yu Tsai <wens@csie.org>,
@@ -65,70 +67,79 @@ To:     Rob Herring <robh+dt@kernel.org>,
         linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org,
         Jarrah Gosbell <kernel@undef.tools>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Pavel Machek <pavel@ucw.cz>
-Cc:     Andrey Skvortsov <andrej.skvortzov@gmail.com>
-Subject: [PATCH v2] arm64: dts: pinephone: Add pstore support for PinePhone A64
-Date:   Tue, 22 Aug 2023 12:23:58 +0300
-Message-Id: <20230822092358.309835-1-andrej.skvortzov@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230821160817.GA2227@bug>
-References: <20230821160817.GA2227@bug>
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>
+Subject: Re: [PATCH] arm64: dts: pinephone: Add pstore support for PinePhone
+ A64
+Message-ID: <ZOR/NUuaEOpYMzVJ@skv.local>
+Mail-Followup-To: Andrey Skvortsov <andrej.skvortzov@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Kees Cook <keescook@chromium.org>, Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Jarrah Gosbell <kernel@undef.tools>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>
+References: <20230724213457.24593-1-andrej.skvortzov@gmail.com>
+ <20230821160817.GA2227@bug>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230821160817.GA2227@bug>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-This patch reserves some memory in the DTS and sets up a
-pstore device tree node to enable pstore support.
+Hi Pavel,
 
-In general any DRAM address, that isn't overwritten during a boot is
-suitable for pstore.
+On 23-08-21 18:08, Pavel Machek wrote:
+> Hi!
+> 
+> > This patch reserves some memory in the DTS and sets up a
+> > pstore device tree node to enable pstore support.
+> > 
+> > Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
+> > 
+> > Gbp-Pq: Topic pinephone
+> > Gbp-Pq: Name 0161-arm64-dts-pinephone-Add-pstore-support-for-PinePhone.patch
+> > ---
+> >  .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> > index 87847116ab6d..84f9410b0b70 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> > @@ -19,6 +19,22 @@ aliases {
+> >  		serial0 = &uart0;
+> >  	};
+> >  
+> > +	reserved-memory {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <1>;
+> > +		ranges;
+> > +
+> > +		pstore_mem: ramoops@61000000 {
+> > +			compatible = "ramoops";
+> > +			reg = <0x61000000 0x100000>;
+> > +			record-size = <0x20000>;
+> > +			console-size = <0x20000>;
+> > +			ftrace-size = <0x20000>;
+> > +			pmsg-size = <0x20000>;
+> > +			ecc-size = <16>;
+> > +		};
+> > +	};
+> 
+> dts is supposed to be for hardware description, but this is really policy decision.
+> 
+> Should we have something like "any dram is suitable for pstore"....?
+Thanks for the review. I'll add into commit message more details why
+this address was picked.
 
-Range from 0x40000000 - 0x50000000 is heavily used by u-boot for
-internal use and to load kernel, fdt, fdto, scripts, pxefile and ramdisk
-later in the boot process. Ramdisk start address is 0x4FF00000,
-initramfs for kernel with some hacking features and debug info enabled
-can take more than 100Mb and final address will be around 0x58000000.
-Address 0x61000000 will most likely not overlap with that.
-
-Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
----
-
-Changes in v2:
- - Update commit description with information about why this base address is used.
-
- .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-index 87847116ab6d..84f9410b0b70 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
-@@ -19,6 +19,22 @@ aliases {
- 		serial0 = &uart0;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		pstore_mem: ramoops@61000000 {
-+			compatible = "ramoops";
-+			reg = <0x61000000 0x100000>;
-+			record-size = <0x20000>;
-+			console-size = <0x20000>;
-+			ftrace-size = <0x20000>;
-+			pmsg-size = <0x20000>;
-+			ecc-size = <16>;
-+		};
-+	};
-+
- 	backlight: backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
 -- 
-2.40.1
-
+Best regards,
+Andrey Skvortsov
