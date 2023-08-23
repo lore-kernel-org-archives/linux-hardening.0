@@ -2,104 +2,190 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E7ACC7113B
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 22:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A12EC27C40
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 22:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238666AbjHWWcs (ORCPT
+        id S238702AbjHWWhm (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Aug 2023 18:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40774 "EHLO
+        Wed, 23 Aug 2023 18:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238679AbjHWWcX (ORCPT
+        with ESMTP id S238706AbjHWWhV (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Aug 2023 18:32:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED0010F2;
-        Wed, 23 Aug 2023 15:32:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4538A62E8E;
-        Wed, 23 Aug 2023 22:32:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86EEAC433C8;
-        Wed, 23 Aug 2023 22:32:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692829939;
-        bh=/JEr4TiHL6f3C8pK8z0KSpApP+0BeWgNlnpN+Skgn7Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=of+NJVqTH37IuwzRB3hQZIxEBU6zwQHRnlCyo4vyD670RFKtLzpqWBdOnfwrrI1Jb
-         BQejQs9AOsAwUnqd3cGDLhgouANeu61BqiJmS9E0PN893UZ+/pe/gGfRSN7kw8nIHO
-         ce7DiCu6Jf0iy3EBBe93u6vdycW0xhnHhWTqawU8UO+4fUwTlUx2CahpI14KewSn7R
-         U3UDb6nBBkkWio+YolLAj9ob8MaaCG9oOroDVHflJgA+uSrsBGy/WGC6ZYOxojvw4m
-         791gs3XOdI30sDc5bEYu7qvGOiRyoyP7g//LCzjnxuHxL4l5BXeYUlbDICQjLdr7Pn
-         CpqYCP6KTra7Q==
-Date:   Wed, 23 Aug 2023 16:33:19 -0600
-From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To:     Brian Norris <briannorris@chromium.org>,
+        Wed, 23 Aug 2023 18:37:21 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0355710D7
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Aug 2023 15:37:19 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4ff882397ecso9436926e87.3
+        for <linux-hardening@vger.kernel.org>; Wed, 23 Aug 2023 15:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1692830237; x=1693435037;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wzvVwhGN2UQdM4IEB9Nv1bBlM7ZhuUSCM8IhHEioEQc=;
+        b=wCYnm9SIu70jL8k6bK6QkaEohvcXQoe/95buVtbRKZD3rtd8+jVezSOwF2m/MI51gp
+         NC1mdcuosY2VzkuBNW9i9CRasIYPsCunGDMxV96VDRjmeXfrYY6XUf75eA7T0Kjoo/m4
+         2GzVw4cAJITcEqYinGEDBlwRHs90MkymGnMf4rUk86Rhig9HhQcaYqYdJCO/SRGYjFTw
+         EK9euXd6Pkpc7hQZEBgTPbezhzhiW/PFYd6HY6+v089qv3Yk/IPOuAyu07tIikDNhIFM
+         k8Xayi7u7bHYZ77PkFeB+CePuq7y41p3/JPdnWaeL7GHPwiG/OpMB8I9luPLLp+8Gmm2
+         KKDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692830237; x=1693435037;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wzvVwhGN2UQdM4IEB9Nv1bBlM7ZhuUSCM8IhHEioEQc=;
+        b=HTWyyEW9An3Ba83bi82JfmoYaT1+4frZjSZI9g6T3Pxgxelzwx1Xdo4MdrL7DqqZu1
+         ifaE0m66bjgRydKZiPFjd63q1g55JMG4aMEk23sVprk0ponlEwgpSdAq/4no/Z3kZB4q
+         pz/2SlyCXeQBNUx3nlPprUIbbrJ0mKZczVFQM82c42rYe1j7YpyEyfUmekRBVUhoDWf7
+         44i2UvYOusn4AUPnoVYYbg15j6WJv69WEfT3rFCjyEJbzn2QzEvDWF1fhNBId+3203Ht
+         ITm2PH3XfSOtNdkp9ki9DXFwcmA7Bgt66vJmx7Zpmowberp3osRduNZU/gYdisF1rIAj
+         TzXw==
+X-Gm-Message-State: AOJu0YzzMUfC2Y4S7N/+vyoHnm7m/xqTEQneFwe4zl7031+/Zxvv+dpO
+        aoTdISNCLFRPGJ25+k10zY6F50CxGW6QeBaUlxsPuQ==
+X-Google-Smtp-Source: AGHT+IHTYXA5kSHFBqbASjYoubjn9qqIcIl4pXmazIR7gW56HPryHx4IBmcQqteNobcwrMCF38OGXYD9Y2hPt41TwrA=
+X-Received: by 2002:a05:6512:689:b0:4ff:8742:4488 with SMTP id
+ t9-20020a056512068900b004ff87424488mr12975347lfe.52.1692830237033; Wed, 23
+ Aug 2023 15:37:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1692829410.git.gustavoars@kernel.org> <698dc480d939e3ae490140db5c2f36eb84093594.1692829410.git.gustavoars@kernel.org>
+In-Reply-To: <698dc480d939e3ae490140db5c2f36eb84093594.1692829410.git.gustavoars@kernel.org>
+From:   Justin Stitt <justinstitt@google.com>
+Date:   Wed, 23 Aug 2023 15:37:05 -0700
+Message-ID: <CAFhGd8rzy_7+Wu9NusgCjU9n2XM7LEz20dDZS6vv8Nsk-PfYeA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] wifi: mwifiex: Fix tlv_buf_left calculation
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     Brian Norris <briannorris@chromium.org>,
         Kalle Valo <kvalo@kernel.org>,
         Amitkumar Karwar <akarwar@marvell.com>,
-        Xinming Hu <huxm@marvell.com>, Dan Williams <dcbw@redhat.com>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Xinming Hu <huxm@marvell.com>, Dan Williams <dcbw@redhat.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: [PATCH 3/3] wifi: mwifiex: Sanity check tlv_len and tlv_bitmap_len
-Message-ID: <587423b0737108effe82aefed4407daca39e9a51.1692829410.git.gustavoars@kernel.org>
-References: <cover.1692829410.git.gustavoars@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1692829410.git.gustavoars@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Add sanity checks for both `tlv_len` and `tlv_bitmap_len` before
-decoding data from `event_buf`.
+On Wed, Aug 23, 2023 at 3:30=E2=80=AFPM Gustavo A. R. Silva
+<gustavoars@kernel.org> wrote:
+>
+> In a TLV encoding scheme, the Length part represents the length after
+> the header containing the values for type and length. In this case,
+> `tlv_len` should be:
+>
+> tlv_len =3D=3D (sizeof(*tlv_rxba) - 1) - sizeof(tlv_rxba->header) + tlv_b=
+itmap_len
+>
+> Notice that the `- 1` accounts for the one-element array `bitmap`, which
+> 1-byte size is already included in `sizeof(*tlv_rxba)`.
+>
+> So, if the above is correct, there is a double-counting of some members
+> in `struct mwifiex_ie_types_rxba_sync`, when `tlv_buf_left` and `tmp`
+> are calculated:
+>
+> 968                 tlv_buf_left -=3D (sizeof(*tlv_rxba) + tlv_len);
+> 969                 tmp =3D (u8 *)tlv_rxba + tlv_len + sizeof(*tlv_rxba);
+>
+> in specific, members:
+>
+> drivers/net/wireless/marvell/mwifiex/fw.h:777
+>  777         u8 mac[ETH_ALEN];
+>  778         u8 tid;
+>  779         u8 reserved;
+>  780         __le16 seq_num;
+>  781         __le16 bitmap_len;
+>
+> This is clearly wrong, and affects the subsequent decoding of data from
+> `event_buf` through `tlv_rxba`:
+>
+> 970                 tlv_rxba =3D (struct mwifiex_ie_types_rxba_sync *)tmp=
+;
+>
+> Fix this by using `sizeof(tlv_rxba->header)` instead of `sizeof(*tlv_rxba=
+)`
+> in the calculation of `tlv_buf_left` and `tmp`.
+>
+> This results in the following binary differences before/after changes:
+>
+> | drivers/net/wireless/marvell/mwifiex/11n_rxreorder.o
+> | @@ -4698,11 +4698,11 @@
+> |                 tlv_buf_left -=3D (sizeof(tlv_rxba->header) + tlv_len);
+> | -    1da7:      lea    -0x11(%rbx),%edx
+> | +    1da7:      lea    -0x4(%rbx),%edx
+> |      1daa:      movzwl %bp,%eax
+> |  drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:969
+> |                 tmp =3D (u8 *)tlv_rxba  + sizeof(tlv_rxba->header) + tl=
+v_len;
+> | -    1dad:      lea    0x11(%r15,%rbp,1),%r15
+> | +    1dad:      lea    0x4(%r15,%rbp,1),%r15
+> |  drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:968
+> |                 tlv_buf_left -=3D (sizeof(tlv_rxba->header) + tlv_len);
+> |      1db2:      mov    %edx,%ebx
+>
+> The above reflects the desired change: avoid counting 13 too bytes;
+> which is the total size of the double-counted members in
+> `struct mwifiex_ie_types_rxba_sync`:
+>
+> $ pahole -C mwifiex_ie_types_rxba_sync drivers/net/wireless/marvell/mwifi=
+ex/11n_rxreorder.o
+> struct mwifiex_ie_types_rxba_sync {
+>         struct mwifiex_ie_types_header header;           /*     0     4 *=
+/
+>
+>      |-------------------------------------------------------------------=
+----
+>      |  u8                         mac[6];               /*     4     6 *=
+/  |
+>      |  u8                         tid;                  /*    10     1 *=
+/  |
+>      |  u8                         reserved;             /*    11     1 *=
+/  |
+>      |  __le16                     seq_num;              /*    12     2 *=
+/  |
+>      |  __le16                     bitmap_len;           /*    14     2 *=
+/  |
+>      |  u8                         bitmap[1];            /*    16     1 *=
+/  |
+>      |-------------------------------------------------------------------=
+---|
+>                                                                   | 13 by=
+tes|
+>                                                                   -------=
+----
+>
+>         /* size: 17, cachelines: 1, members: 7 */
+>         /* last cacheline: 17 bytes */
+> } __attribute__((__packed__));
+>
+> Fixes: 99ffe72cdae4 ("mwifiex: process rxba_sync event")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+Reviewed-by: Justin Stitt <justinstitt@google.com>
 
-This prevents any malicious or buggy firmware from overflowing
-`event_buf` through large values for `tlv_len` or `tlv_bitmap_len`.
-
-Suggested-by: Dan Williams <dcbw@redhat.com>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- .../net/wireless/marvell/mwifiex/11n_rxreorder.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c b/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
-index 735aac52bdc4..9ee3b9f1e9ce 100644
---- a/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
-+++ b/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
-@@ -921,6 +921,14 @@ void mwifiex_11n_rxba_sync_event(struct mwifiex_private *priv,
- 	while (tlv_buf_left > sizeof(*tlv_rxba)) {
- 		tlv_type = le16_to_cpu(tlv_rxba->header.type);
- 		tlv_len  = le16_to_cpu(tlv_rxba->header.len);
-+		if (size_add(sizeof(tlv_rxba->header), tlv_len) > tlv_buf_left) {
-+			mwifiex_dbg(priv->adapter, WARN,
-+				    "TLV size (%ld) overflows event_buf (%d)\n",
-+				    size_add(sizeof(tlv_rxba->header), tlv_len),
-+				    tlv_buf_left);
-+			return;
-+		}
-+
- 		if (tlv_type != TLV_TYPE_RXBA_SYNC) {
- 			mwifiex_dbg(priv->adapter, ERROR,
- 				    "Wrong TLV id=0x%x\n", tlv_type);
-@@ -929,6 +937,14 @@ void mwifiex_11n_rxba_sync_event(struct mwifiex_private *priv,
- 
- 		tlv_seq_num = le16_to_cpu(tlv_rxba->seq_num);
- 		tlv_bitmap_len = le16_to_cpu(tlv_rxba->bitmap_len);
-+		if (size_add(sizeof(*tlv_rxba), tlv_bitmap_len) > tlv_buf_left) {
-+			mwifiex_dbg(priv->adapter, WARN,
-+				    "TLV size (%ld) overflows event_buf (%d)\n",
-+				    size_add(sizeof(*tlv_rxba), tlv_bitmap_len),
-+				    tlv_buf_left);
-+			return;
-+		}
-+
- 		mwifiex_dbg(priv->adapter, INFO,
- 			    "%pM tid=%d seq_num=%d bitmap_len=%d\n",
- 			    tlv_rxba->mac, tlv_rxba->tid, tlv_seq_num,
--- 
-2.34.1
-
+> ---
+>  drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c b/drive=
+rs/net/wireless/marvell/mwifiex/11n_rxreorder.c
+> index 391793a16adc..d1d3632a3ed7 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
+> @@ -965,8 +965,8 @@ void mwifiex_11n_rxba_sync_event(struct mwifiex_priva=
+te *priv,
+>                         }
+>                 }
+>
+> -               tlv_buf_left -=3D (sizeof(*tlv_rxba) + tlv_len);
+> -               tmp =3D (u8 *)tlv_rxba + tlv_len + sizeof(*tlv_rxba);
+> +               tlv_buf_left -=3D (sizeof(tlv_rxba->header) + tlv_len);
+> +               tmp =3D (u8 *)tlv_rxba  + sizeof(tlv_rxba->header) + tlv_=
+len;
+>                 tlv_rxba =3D (struct mwifiex_ie_types_rxba_sync *)tmp;
+>         }
+>  }
+> --
+> 2.34.1
+>
