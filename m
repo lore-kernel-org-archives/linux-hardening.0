@@ -2,47 +2,59 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6704AEE49AF
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 02:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF1FEE49AF
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 02:57:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231788AbjHWCkg (ORCPT
+        id S232355AbjHWC57 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Aug 2023 22:40:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39432 "EHLO
+        Tue, 22 Aug 2023 22:57:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231203AbjHWCke (ORCPT
+        with ESMTP id S232349AbjHWC55 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Aug 2023 22:40:34 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D77D3E47;
-        Tue, 22 Aug 2023 19:40:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692758432; x=1724294432;
-  h=from:to:cc:subject:references:date:in-reply-to:
-   message-id:mime-version:content-transfer-encoding;
-  bh=Jrs5IR8T2AU/DWG0HVl8d8t4VzZHKEjNOhMu/aCsJC8=;
-  b=a+RgMZhIHh9ESSlhv08JWncsWSee91r2Hz27pvbW39HfuUmpfwyRwrsT
-   7bAvwcKcvOCM/QNBeJAZVrdySJTZHQYxDKi3iZ12y8g0COVC8r2havUWl
-   eQ8gA324k8nuCG/QDgZ6SXMFdK21lmrxtrW+Rusf0wY9hmB+H7RJzAWBX
-   LPnVlbNpTTGnz7W4flhXRTHFd0lp6diOLm01CUsl404gkhVBhRz/TDq2t
-   qRT0g4VGqX4I8r7FUmdhWzpauFHgwPBqoFmbRRjNAFMNPICI8OoUsvEjl
-   ufDmvyD/8OLawYZ6pmvbJRo/FlVP0m3NRqVTDsR00ThiI4t0j4D+WJfdp
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="354376084"
-X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="354376084"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 19:40:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10810"; a="860155343"
-X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="860155343"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 19:40:28 -0700
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Uday Shankar <ushankar@purestorage.com>
-Cc:     =?utf-8?Q?J=C3=B6rn?= Engel <joern@purestorage.com>,
+        Tue, 22 Aug 2023 22:57:57 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08C01B9
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Aug 2023 19:57:55 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1bf1876ef69so6553255ad.1
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Aug 2023 19:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1692759475; x=1693364275;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SME2DvVs9blfVZ8zp0UdPxu1cIq3MKtc4ha5tK0NIgE=;
+        b=Dc43MJfwdq/zHsEqQTPdiV5xt3yUy+e3JQfRi5iw1Vw+aVJTTv7wDZ4vU9Ob58TgvO
+         g0DQCqkPLPbhj7EloC8/TgyjQNchqYGZmNg15sfi97uZBXK5SF/C0kB6GWOTnLNtS5Rd
+         SYlBQW5YUI7Y6PlI7atNU/FrK7x97CT3yYT8K9pf+inhfJDqxMMlR8pQ00k6cBL536UP
+         6A/+QwA/q7Z6LK+4BJq/m88KgWto5WellkAaurFPclmsmSWG+LasupQMQcipdeloYnJF
+         AXgKgoswHqndKxC2nLvKeqxGNLh26cCO5rWDy1NUEw92+TZESe97+D3lZhz7YVZZkY8A
+         smHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692759475; x=1693364275;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SME2DvVs9blfVZ8zp0UdPxu1cIq3MKtc4ha5tK0NIgE=;
+        b=eRvvMuRMOEyuedb96lBA7xW2Huh3r5z29dtO1JY1d/SmV9odl7fdIAzRRl0rwJfjIu
+         0Iw1Um3WmuxvvChDRUPvGaUSjM2wyL1GeUnAN4Xwc0H2AKiC0Yn8qaJ1njQdW/LpoaOU
+         f4dBbL5T4fjCSETPE8TIHQzmuHnf7qddsR379HmW5aF8Tx2MaOwr0BPaBFaGo1X9+nMS
+         oUBUwTshucRn5wuVqoWKcRSnSXAZvfCHj0d/PaTObckl2RjqnWqXmBuofxLS81l7VN6L
+         6O6fQ/X9PeSY3E4HU5MvlN0szkPBM/VD5k9nnLOkHiGaBHPmBZ1UUYnLKhCaMUaFGxhH
+         4mmg==
+X-Gm-Message-State: AOJu0YzHV61T9L3BLy1QQy2WvzUJrgcmaci5V4nI0UavYnPbaOqZatVf
+        XCMbKZKvSUOMM82HQvaWghYhnw==
+X-Google-Smtp-Source: AGHT+IETEsIrTDXLxEiI/YnaIkMEbWdsL7+oyfU8ciOMH2G5fA1n2mxqzx4MukdySCJwnBdfmv8lYQ==
+X-Received: by 2002:a17:90a:2d8b:b0:26d:414d:a98a with SMTP id p11-20020a17090a2d8b00b0026d414da98amr10374180pjd.1.1692759475083;
+        Tue, 22 Aug 2023 19:57:55 -0700 (PDT)
+Received: from cork (c-73-158-249-15.hsd1.ca.comcast.net. [73.158.249.15])
+        by smtp.gmail.com with ESMTPSA id 3-20020a17090a198300b0025023726fc4sm5448007pji.26.2023.08.22.19.57.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Aug 2023 19:57:54 -0700 (PDT)
+Date:   Tue, 22 Aug 2023 19:57:52 -0700
+From:   =?iso-8859-1?Q?J=F6rn?= Engel <joern@purestorage.com>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     Uday Shankar <ushankar@purestorage.com>,
         Kees Cook <keescook@chromium.org>,
         Tony Luck <tony.luck@intel.com>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
@@ -53,65 +65,39 @@ Cc:     =?utf-8?Q?J=C3=B6rn?= Engel <joern@purestorage.com>,
         linux-hardening@vger.kernel.org, linux-acpi@vger.kernel.org,
         Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Subject: Re: [PATCH] Revert "ACPI, APEI, use raw spinlock in ERST"
+Message-ID: <ZOV1sM8xZ6+P48Z1@cork>
 References: <20230822010933.2247671-1-ushankar@purestorage.com>
-        <87y1i3c015.fsf@yhuang6-desk2.ccr.corp.intel.com>
-        <ZOQodU1CNMRtjYZ6@cork>
-        <20230822234522.GA2590891@dev-ushankar.dev.purestorage.com>
-Date:   Wed, 23 Aug 2023 10:38:23 +0800
-In-Reply-To: <20230822234522.GA2590891@dev-ushankar.dev.purestorage.com> (Uday
-        Shankar's message of "Tue, 22 Aug 2023 17:45:22 -0600")
-Message-ID: <87cyzebi00.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+ <87y1i3c015.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <ZOQodU1CNMRtjYZ6@cork>
+ <20230822234522.GA2590891@dev-ushankar.dev.purestorage.com>
+ <87cyzebi00.fsf@yhuang6-desk2.ccr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87cyzebi00.fsf@yhuang6-desk2.ccr.corp.intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Uday Shankar <ushankar@purestorage.com> writes:
+On Wed, Aug 23, 2023 at 10:38:23AM +0800, Huang, Ying wrote:
+> 
+> Thanks for reminding!  That's a good point.
+> 
+> Checked the implementation of rt_mutex version of spin_trylock().  One
+> possible code path is,
+> 
+> spin_trylock()
+>   rt_spin_trylock()
+>     __rt_spin_trylock()
+>       rt_mutex_slowtrylock()
+>         raw_spin_lock_irqsave()
 
-> On Mon, Aug 21, 2023 at 08:16:05PM -0700, J=C3=B6rn Engel wrote:
->> On Tue, Aug 22, 2023 at 09:56:38AM +0800, Huang, Ying wrote:
->> >=20
->> > ERST is mainly used to log the hardware error.  While, hardware error
->> > may be reported via NMI (e.g., ACPI APEI GHES NMI), so we need to call
->> > ERST functions in NMI handlers.  Where normal spinlock cannot be used
->> > because they will be converted to sleepable rt_mutex in RT kernel.
->>=20
->> Non-sleeping spinlocks cannot be used in NMI context either.
->> raw_spin_lock_irqsave() will prevent regular interrupts, but not NMI.
->> So taking a spinlock inside an NMI can trigger a deadlock.
->>=20
->> Am I missing something here?
->>=20
->> J=C3=B6rn
->>=20
->> --
->> All art is but imitation of nature.
->> -- Lucius Annaeus Seneca
->
-> Also want to point out that both before and after this commit, we only
-> use trylock from erst_write, which looks like the only function touched
-> by this patch which can be called from NMI context. Trylock should be
-> safe in NMI context regardless of the type of synchronization used
-> (raw_spinlock, spinlock, or otherwise).
+You are right.  I'm actually quite surprised how we turn a trylock into
+a spinning lock.  Now I know, thank you!
 
-Thanks for reminding!  That's a good point.
-
-Checked the implementation of rt_mutex version of spin_trylock().  One
-possible code path is,
-
-spin_trylock()
-  rt_spin_trylock()
-    __rt_spin_trylock()
-      rt_mutex_slowtrylock()
-        raw_spin_lock_irqsave()
-
-IIUC, the deadlock is still possible for rt_mutex.  While it seems that
-the deadlock isn't possible for raw_spinlock.  If so, it's still better
-to use raw_spinlock.
+Jörn
 
 --
-Best Regards,
-Huang, Ying
+"Security vulnerabilities are here to stay."
+-- Scott Culp, Manager of the Microsoft Security Response Center, 2001
