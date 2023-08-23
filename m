@@ -2,116 +2,93 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B0DEE49A5
-	for <linux-hardening@archiver.kernel.org>; Tue, 22 Aug 2023 23:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F17F7EE49AB
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 00:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231833AbjHVX73 (ORCPT
+        id S231829AbjHWAJZ (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 22 Aug 2023 19:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42214 "EHLO
+        Tue, 22 Aug 2023 20:09:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbjHVX72 (ORCPT
+        with ESMTP id S231520AbjHWAJY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 22 Aug 2023 19:59:28 -0400
-Received: from mail-ot1-x34a.google.com (mail-ot1-x34a.google.com [IPv6:2607:f8b0:4864:20::34a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C6ECF9
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Aug 2023 16:59:27 -0700 (PDT)
-Received: by mail-ot1-x34a.google.com with SMTP id 46e09a7af769-6bc807e99adso5420245a34.2
-        for <linux-hardening@vger.kernel.org>; Tue, 22 Aug 2023 16:59:27 -0700 (PDT)
+        Tue, 22 Aug 2023 20:09:24 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B916E47
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Aug 2023 17:09:11 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1c0a4333e03so952045ad.0
+        for <linux-hardening@vger.kernel.org>; Tue, 22 Aug 2023 17:09:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692748766; x=1693353566;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=cGRueg2eqYbMCY2ShRbCc3/RucSV6L/B/eSOD25AmaY=;
-        b=oE7rm9AjFtO/wJhPR4I/B3C9PzPl0U9GIJtJ8lqhBf1+Myf/+D2iSRfZgrmLr7mR/x
-         nMayejh5oe5AWTapQPCLq5jq9CY0Pyc9ctwVerkEBlIECHUhVK4vkKvWYwR27pziznqm
-         9W/6Luzdj+ygswvRfmFxADqiAuYOViFaMm49y1CXqPV3sBb/+KuycOsoULepp7onHymj
-         YJMqT/JW19FcVl0zqu0VHtUAcLgBtMlKbMHcBgSSsL0o1dCaBKqqRdrNmCLdDIilXVF7
-         j8JurhCuRPmIhc+12Fomrtw8IDBZ0+NlB1WaYQiZQ5AwOcourf0LmrvpQCxGkEeWzW/q
-         LmPg==
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1692749350; x=1693354150;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NdAmFpsgAimnC/MBfbBr1LVAlYOvun6vfII/jkXCFI8=;
+        b=w7VKM9wOfDqjg3owcHgb2C1pnHTB9457TIJF1v5sJBPucicGSUVcJwZhbBMXy0CApW
+         gmc6pzY4ypInuel01Z/6LdlQpZBASjvNe/TpVzvbylk42+d+JWm8fDM1rWD5wmk6DqPm
+         602Fh89hxbzIbZq6T/WoFLAk2obOopGYQ/Kr9awheMUn7sMyWDlAJkuFETmprLdVkHMA
+         2/raoT+DuUgn/r7Qt2FJwbY7g1aoySD/PICaXxcBM5NCOSBbpwpKjGHzNgqc5VbTJmFr
+         st02qp7I32ujhd0pqOjYxqQBerVFJblqrbKn9gE47dsllzXW2nqbgAhuZadpsZl6HF8j
+         DprQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692748766; x=1693353566;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cGRueg2eqYbMCY2ShRbCc3/RucSV6L/B/eSOD25AmaY=;
-        b=GTXD++YOhvld94aynZzdBhOIwJWqkMcNH4JLdgDIQpz0gvV9BoTXFA/9r4k/M9GQ5c
-         y0/6CBqkz0CBrCaTHR7rRs1/aN99KqXx3CZWJ+pcW//b7lUzcRRm1v4Wy7cvo15qQq0V
-         55IjECBPivI6Hpc5C9fA23ImoHUZEvqoNzrcL1rCTslZlzNqdDqi3mmQeOxZaI7L7YUj
-         OGyCNY3wVgZqo66m3FHMFhn9DoTtpgfYM1IGU/ZsK1rutXSz70kEo4+iL5DQQsdbWXD9
-         TP10ejGIs1wI19xdAxVJTd1wPotlDX2X5UnlWoGp6TSiQN3z68qjn5HF4KTHuFIIbbGJ
-         TL7g==
-X-Gm-Message-State: AOJu0YyMnJmE0LAawfMfN7rorDGTpwLkXPeImcU+M1UmQOiEslzRtnmu
-        6A/F4dWx//5ubTq53NuQv8wTbMeuSjVy3h4Z4g==
-X-Google-Smtp-Source: AGHT+IEg7NbVScd59jOYBOeVb3GuBkFoZlJ1jMAeIVZP8P7/g2W+bAHAovNBatxzdjVp9Qhlv5I+h6M7X52P9QgtDQ==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a05:6870:c796:b0:1bb:91fa:7aab with
- SMTP id dy22-20020a056870c79600b001bb91fa7aabmr174453oab.1.1692748766615;
- Tue, 22 Aug 2023 16:59:26 -0700 (PDT)
-Date:   Tue, 22 Aug 2023 23:59:26 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAN1L5WQC/x2N0QrCMAxFf2Xk2UCtjIm/Ij60WabBrStJGcrYv
- xt8PHDPPTsYq7DBrdtBeROTtTicTx3QK5Uno4zOEEO8hGuMaE0L1S/meaU31qRNmjuGtIyzFN/ nBYepz0SpDwMn8KuqPMnnn7k/juMHT0R0HHYAAAA=
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1692748765; l=1601;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=DvMuu8/lxku646YrnJJTNn2dZrYri5zBU+GthJXHRdo=; b=y9qu1DfwgWfym6uoXSaFbpI+RHlMMNIUgnNRgLwXSTUj4rO+8MpulMdSPc9QurH/sB/n7zscE
- V8PMAm229yiAOd/7pdZGUlXbYKP5Dt7IqsFe36jFT6eAtvHiQDn1fkp
-X-Mailer: b4 0.12.3
-Message-ID: <20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com>
-Subject: [PATCH] partitions/ibm: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
+        d=1e100.net; s=20221208; t=1692749350; x=1693354150;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NdAmFpsgAimnC/MBfbBr1LVAlYOvun6vfII/jkXCFI8=;
+        b=WAFR7yEgZ3xdp4Rw7D8H8e5BQaja2Pq9OuoKxQe3P2KHCHgRot8E6XOl3sZz5W75sy
+         aR8lBNGNmMluBv77OFhG34G206r9qUmXKCXUJY1jpxCBnhPJCPcdwln2pYQ4xH/Ln7l0
+         I40emAuXgZdmJm/mCFkWvRtP0V+VzjyPGfZiAWAuJsUbjpmPChrizNx7nrdhnRKf6akb
+         e0k4ztWxHMobxtPAxdEB0YAYzjfAVjKsYkHJGk24ECdxOb2CMFaa+v77L6ry1DCz0mul
+         xq8F/UVYkSe0dhI/B3qBt9WP7WuO/rQnlUtRYq1NtXCn4yBG849q5eCH5fWG89VaXCuz
+         edzw==
+X-Gm-Message-State: AOJu0YxmLPM6DjJog5IEa2zqZxlUzcyPNrJwY4Il38x2qEycjir2c7Yy
+        u969R+QrnOqOE5Qloxe87u+gsQ==
+X-Google-Smtp-Source: AGHT+IEWieYgoZObLvRGZKRu3zCi2GHgsl+XF2ezTYqTa5Gs1LxrTcwz8X3gX21BbOaA5WSk2J65hw==
+X-Received: by 2002:a17:902:dacd:b0:1bc:496c:8eda with SMTP id q13-20020a170902dacd00b001bc496c8edamr12479327plx.4.1692749350550;
+        Tue, 22 Aug 2023 17:09:10 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id j8-20020a170902690800b001bc56c1a384sm9528238plk.277.2023.08.22.17.09.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Aug 2023 17:09:09 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
 To:     Stefan Haberland <sth@linux.ibm.com>,
         Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
         Justin Stitt <justinstitt@google.com>
+Cc:     linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+In-Reply-To: <20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com>
+References: <20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com>
+Subject: Re: [PATCH] partitions/ibm: refactor deprecated strncpy
+Message-Id: <169274934932.113461.1025457818715758046.b4-ty@kernel.dk>
+Date:   Tue, 22 Aug 2023 18:09:09 -0600
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-034f2
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on its destination buffer argument which is
-_not_ the case for `strncpy`!
+On Tue, 22 Aug 2023 23:59:26 +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> 
+> A suitable replacement is `strscpy` [2] due to the fact that it
+> guarantees NUL-termination on its destination buffer argument which is
+> _not_ the case for `strncpy`!
+> 
+> 
+> [...]
 
-Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
----
- block/partitions/ibm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Applied, thanks!
 
-diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
-index 403756dbd50d..e5893cf71b57 100644
---- a/block/partitions/ibm.c
-+++ b/block/partitions/ibm.c
-@@ -111,11 +111,11 @@ static int find_label(struct parsed_partitions *state,
- 		    !strcmp(temp, "LNX1") ||
- 		    !strcmp(temp, "CMS1")) {
- 			if (!strcmp(temp, "VOL1")) {
--				strncpy(type, label->vol.vollbl, 4);
--				strncpy(name, label->vol.volid, 6);
-+				strscpy(type, label->vol.vollbl, 4);
-+				strscpy(name, label->vol.volid, 6);
- 			} else {
--				strncpy(type, label->lnx.vollbl, 4);
--				strncpy(name, label->lnx.volid, 6);
-+				strscpy(type, label->lnx.vollbl, 4);
-+				strscpy(name, label->lnx.volid, 6);
- 			}
- 			EBCASC(type, 4);
- 			EBCASC(name, 6);
-
----
-base-commit: 706a741595047797872e669b3101429ab8d378ef
-change-id: 20230822-strncpy-block-partitions-cmdline-ibm-7f5bcca507ea
+[1/1] partitions/ibm: refactor deprecated strncpy
+      commit: 674576f8af1b34d7babade11082c392bcb6081b7
 
 Best regards,
---
-Justin Stitt <justinstitt@google.com>
+-- 
+Jens Axboe
+
+
 
