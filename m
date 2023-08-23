@@ -2,121 +2,59 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9226BEE4993
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 11:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34BEEE49B2
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 12:04:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234276AbjHWLHq (ORCPT
+        id S234536AbjHWMEo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Aug 2023 07:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60256 "EHLO
+        Wed, 23 Aug 2023 08:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234136AbjHWLHq (ORCPT
+        with ESMTP id S234804AbjHWMEX (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Aug 2023 07:07:46 -0400
-Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68BDECEF;
-        Wed, 23 Aug 2023 04:07:44 -0700 (PDT)
-Received: by mail-oo1-xc2f.google.com with SMTP id 006d021491bc7-56e16e4aba7so3430992eaf.2;
-        Wed, 23 Aug 2023 04:07:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692788863; x=1693393663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EMxwzyr+JBbAW3Ha0AziKYmjDQcl5rwdIyhSrkcogfE=;
-        b=j2dGaa5oTluwAyuPXsN0pt470G1jJbgtRePPO8pOHB8/D+yE4yyEYeavkIkVII0+cy
-         tZOWVA+1MbdwWN5qbY7cRFH5veMjkPzzH6+zbvDXLVsspLHLQZhEOAyLZNN1FvSGFLzg
-         mjK9a9tXQbeIK9hB0jHh/f4bW23EYQouIknvmjWT8Akt6MtjdLEjhYMwNHrAhgh1QXu+
-         ciX4lqGYsRRoESHE8r0+KoAW7e5/J26Ptl93562exiKjDwtTnoMn96Ft9LFY9F7n+1Yg
-         JWPKOAHOoNexz4DGyuLVK8wXc4l6zCNIQMCYHzpxZNyrp9iMAeXfRrUbGkLlYkaCIcK/
-         Ar9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692788863; x=1693393663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EMxwzyr+JBbAW3Ha0AziKYmjDQcl5rwdIyhSrkcogfE=;
-        b=l9SxCizWc8wnxsJZ5xHIOzlwQSalQ1Rr9aFojUTUG2uR1UPJ3wttBNk4/SZ7X6FItq
-         pzkWPl3JvXYLt75onDqYvpzb+86RPpRkQgdWZAiYv2rwEpnnTMZ5+btMTgKJ7o0fLjKj
-         fGCLy8bp01qd2JtLbkpJ7Tg1JDm+2wR/BbkK10oIBCkLgtWYKaDTa+cDnZ5aQbytUdOu
-         p/qz4MRg/V3rrcsT1wEIHhUgShtX7osaAXhV13nDK1rG9xCyMyxpDtDEKDZORMo1FAZM
-         j6JM4eVenq26mroAIGw02QjwRNGaK/6zAogCl2RTUOHmRneOhBQfVG8J9/VQKH1eddgB
-         dAGg==
-X-Gm-Message-State: AOJu0Yxr5eCXcdZNprTEmec+5Q+lp7DNZIaGwSzsanp3kBI0Uo/pzSR0
-        59plMF3TlkG1JbEQPCZmajI2IY5VrX4tzd5wDkQ=
-X-Google-Smtp-Source: AGHT+IGnDX38QXr5qYl567NatdeZoLt8fnKVtgtElmzQJtpjKatXucVFut5nQ1KMFCJJyHP67LN3iaubeB1snwHsg0g=
-X-Received: by 2002:a4a:2a1b:0:b0:571:28d5:2c73 with SMTP id
- k27-20020a4a2a1b000000b0057128d52c73mr124114oof.4.1692788863693; Wed, 23 Aug
- 2023 04:07:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230822-strncpy-arch-x86-platform-uv-uv_nmi-v1-1-931f2943de0d@google.com>
-In-Reply-To: <20230822-strncpy-arch-x86-platform-uv-uv_nmi-v1-1-931f2943de0d@google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 23 Aug 2023 14:07:07 +0300
-Message-ID: <CAHp75VeieNZ3+-2oq2yx36mJ0ERBkuF=f_uhAh8o0sFnHY6Wsg@mail.gmail.com>
-Subject: Re: [PATCH] x86/platform/uv: refactor deprecated strcpy and strncpy
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Steve Wahl <steve.wahl@hpe.com>, Mike Travis <mike.travis@hpe.com>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wed, 23 Aug 2023 08:04:23 -0400
+Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A9C6171A;
+        Wed, 23 Aug 2023 05:04:03 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4RW4cx3wK5z4x3F;
+        Wed, 23 Aug 2023 22:04:01 +1000 (AEST)
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+To:     Geoff Levand <geoff@infradead.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Justin Stitt <justinstitt@google.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
         linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20230816-strncpy-arch-powerpc-platforms-ps3-repository-v1-1-88283b02fb09@google.com>
+References: <20230816-strncpy-arch-powerpc-platforms-ps3-repository-v1-1-88283b02fb09@google.com>
+Subject: Re: [PATCH] powerpc/ps3: refactor strncpy usage
+Message-Id: <169279175569.797584.351106709683075020.b4-ty@ellerman.id.au>
+Date:   Wed, 23 Aug 2023 21:55:55 +1000
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 23, 2023 at 1:32=E2=80=AFAM Justin Stitt <justinstitt@google.co=
-m> wrote:
->
-> Both `strncpy` and `strcpy` are deprecated for use on NUL-terminated
-> destination strings [1].
->
-> A suitable replacement is `strscpy` [2] due to the fact that it
-> guarantees NUL-termination on its destination buffer argument which is
-> _not_ the case for `strncpy` or `strcpy`!
->
-> In this case, we can drop both the forced NUL-termination and the `... -1=
-` from:
-> |       strncpy(arg, val, ACTION_LEN - 1);
-> as `strscpy` implicitly has this behavior.
+On Wed, 16 Aug 2023 21:39:24 +0000, Justin Stitt wrote:
+> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
+> 
+> `make_first_field()` should use similar implementation to `make_field()`
+> due to memcpy having more obvious behavior here. The end result yields
+> the same behavior as the previous `strncpy`-based implementation
+> including the NUL-padding.
+> 
+> [...]
 
-...
+Applied to powerpc/next.
 
->         char arg[ACTION_LEN], *p;
->
->         /* (remove possible '\n') */
-> -       strncpy(arg, val, ACTION_LEN - 1);
-> -       arg[ACTION_LEN - 1] =3D '\0';
-> +       strscpy(arg, val, ACTION_LEN);
->         p =3D strchr(arg, '\n');
->         if (p)
->                 *p =3D '\0';
+[1/1] powerpc/ps3: refactor strncpy usage
+      https://git.kernel.org/powerpc/c/f94a84a0914841d79a38df7cc75512d88b31a0dc
 
-https://lore.kernel.org/all/202212091545310085328@zte.com.cn/
-
-...
-
-> +               strscpy(uv_nmi_action, arg, strlen(uv_nmi_action));
-
-strlen() on the destination?!
-
-...
-
-> -                       strncpy(uv_nmi_action, "dump", strlen(uv_nmi_acti=
-on));
-> +                       strscpy(uv_nmi_action, "dump", strlen(uv_nmi_acti=
-on));
-
-Again, this is weird.
-
---=20
-With Best Regards,
-Andy Shevchenko
+cheers
