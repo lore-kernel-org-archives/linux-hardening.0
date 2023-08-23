@@ -2,183 +2,150 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21B4C27C40
-	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 18:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8927DC27C40
+	for <linux-hardening@archiver.kernel.org>; Wed, 23 Aug 2023 19:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230164AbjHWSLp (ORCPT
+        id S233797AbjHWThY (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Aug 2023 14:11:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54014 "EHLO
+        Wed, 23 Aug 2023 15:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230098AbjHWSLo (ORCPT
+        with ESMTP id S238317AbjHWTg6 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Aug 2023 14:11:44 -0400
-X-Greylist: delayed 472 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 23 Aug 2023 11:11:41 PDT
-Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [IPv6:2001:4b7a:2000:18::165])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4908CE6
-        for <linux-hardening@vger.kernel.org>; Wed, 23 Aug 2023 11:11:41 -0700 (PDT)
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id C29C62049E;
-        Wed, 23 Aug 2023 20:03:46 +0200 (CEST)
-Date:   Wed, 23 Aug 2023 20:03:44 +0200
-From:   Marijn Suijten <marijn.suijten@somainline.org>
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Wed, 23 Aug 2023 15:36:58 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F59E5E;
+        Wed, 23 Aug 2023 12:36:55 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2b9f0b7af65so91678971fa.1;
+        Wed, 23 Aug 2023 12:36:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692819414; x=1693424214;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7XseqOE+hrW2j1mbiFEeFoJsIauOkD7dow7NanYEiT8=;
+        b=Kft/HoItEBfX/gA5eGlgeAkK7GnSL6fuOyiIN1iL/tsUG4Q/3M1VEkLwg4UTHuglGE
+         x3wnrm+/yrsVs0RuFq5y8SsyTt9CduXxGmM2kkq41TC++M2w0mtXmUZ0RlhRLMLdDwyF
+         OcAnRIMTRex0rHE5IKq35VzvjzOD2boCrTenHGv5WO2E1fMZNJcvVIWyQb/H+JCRUN3C
+         jei7nMhB/7+t+5Sn9vvne0uztfOfdHqaqIXFyVV2SVwBNDkigi5qhWZCCTMO1ExetObK
+         KYYTf0w7NITLBszeBLnbsaLwJ8FlxsYUA+bmyMY2UySxaTBBQjMxpercv/15ucIugMUR
+         Ti3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692819414; x=1693424214;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7XseqOE+hrW2j1mbiFEeFoJsIauOkD7dow7NanYEiT8=;
+        b=jJ3OMQUz50Ptrx3LuaPRvEWK592ZpKL5qgBBCHW4QyAJSz0DQaaoSWGl7rbg593gHX
+         OBSiF+LKD6SnemFe7/VQK99QYHF5uJemU/ktA58ZxVYcOAuc/QXzmaqWokMMx5i1DG1M
+         EccIb0A2DHl86uiDYrrustJAX4MAjbjcpncOICYHoFI3dB8qeDP5gvDwTFgwDrmp0rUw
+         bQAgP/oGDIE1px7V3dbu0WMXx749HYLq/s9j3y1QoPSIWfsbW4TvU7FbHcPZYO+H4ipF
+         zUgT/i4XoKgMD+4axpPaDTtMxbDMmJuBvszhBQ53oLb6SZBk88l6PT+2ig9wC5/L/Fhh
+         89aQ==
+X-Gm-Message-State: AOJu0Ywc1LQUIRAAE8psLdGytd72HVuh/FzGCK611O0Xo7RI+a//xDOR
+        a/84mBd9lLGA7ik+7zPaqPo=
+X-Google-Smtp-Source: AGHT+IEag43atiZQRGzFMqHQ4Knh0z6BzGKYlRrJOybchcj/oRn0svYRxmL4xbMLG9fqUNS87csexQ==
+X-Received: by 2002:a2e:a201:0:b0:2b5:9d78:213e with SMTP id h1-20020a2ea201000000b002b59d78213emr9825308ljm.22.1692819413752;
+        Wed, 23 Aug 2023 12:36:53 -0700 (PDT)
+Received: from jernej-laptop.localnet (82-149-12-148.dynamic.telemach.net. [82.149.12.148])
+        by smtp.gmail.com with ESMTPSA id y6-20020a170906070600b0099cadcf13cesm10074851ejb.66.2023.08.23.12.36.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Aug 2023 12:36:53 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Samuel Holland <samuel@sholland.org>,
         Kees Cook <keescook@chromium.org>,
         Tony Luck <tony.luck@intel.com>,
         "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 5/5] arm64: dts: qcom: Add Sony Xperia 10 V (PDX235)
- support
-Message-ID: <kg6c5bkic3zbytfb67ed3honq6fyfl4vwya5blaozpljuyggpt@2pqdwgmnjaj3>
-References: <20230818-topic-10v-v1-0-dbb6464223c6@linaro.org>
- <20230818-topic-10v-v1-5-dbb6464223c6@linaro.org>
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Jarrah Gosbell <kernel@undef.tools>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Andrey Skvortsov <andrej.skvortzov@gmail.com>
+Cc:     Andrey Skvortsov <andrej.skvortzov@gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: pinephone: Add pstore support for PinePhone A64
+Date:   Wed, 23 Aug 2023 21:36:51 +0200
+Message-ID: <2235209.iZASKD2KPV@jernej-laptop>
+In-Reply-To: <20230822092358.309835-1-andrej.skvortzov@gmail.com>
+References: <20230821160817.GA2227@bug>
+ <20230822092358.309835-1-andrej.skvortzov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230818-topic-10v-v1-5-dbb6464223c6@linaro.org>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 2023-08-18 17:23:28, Konrad Dybcio wrote:
-> 10 V is a carbon copy of the 10 IV, sans:
+Hi Andrey,
+
+send new revision as standalone e-mail, not as reply to old discussion.
+
+Dne torek, 22. avgust 2023 ob 11:23:58 CEST je Andrey Skvortsov napisal(a):
+> This patch reserves some memory in the DTS and sets up a
+> pstore device tree node to enable pstore support.
 > 
-> - camera setup (V obviously has a new, better one)
-> - the phone's body and SIM/sdcard tray changed a bit
-> - SM5038 is gone, PMIC QGauge is used for battery monitoring
-> - some wires may be routed differently (e.g. i2c devices are routed to
->   different hosts)
-> - possibly some small other differences that we're about to discover
+> In general any DRAM address, that isn't overwritten during a boot is
+> suitable for pstore.
 > 
-> Introduce support for PDX235, currently requiring zero changes other
-> than adding msm-id and board-id, which seems to be the result of Sony
-> (or their chinese ODM) fusing in a non-zero value in there..
+> Range from 0x40000000 - 0x50000000 is heavily used by u-boot for
+> internal use and to load kernel, fdt, fdto, scripts, pxefile and ramdisk
+> later in the boot process. Ramdisk start address is 0x4FF00000,
+> initramfs for kernel with some hacking features and debug info enabled
+> can take more than 100Mb and final address will be around 0x58000000.
+> Address 0x61000000 will most likely not overlap with that.
+
+There are other bootloaders as U-Boot, especially on PinePhone. Are you sure 
+it works there too? What about U-Boot configuration, will those addresses still 
+be used if configuration is changed?
+
+Best regards,
+Jernej
+
 > 
-> All of the flashing and prepwork shenanigans described in
-> Commit 4420e60416cb ("arm64: dts: qcom: Add device tree for Sony Xperia
-> 10 IV") are also necessary on this device :/
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Signed-off-by: Andrey Skvortsov <andrej.skvortzov@gmail.com>
 > ---
->  arch/arm64/boot/dts/qcom/Makefile                  |  1 +
->  .../dts/qcom/sm6375-sony-xperia-murray-pdx235.dts  | 54 ++++++++++++++++++++++
-
-I just learned that the new device actually has a slightly different
-board, with codename zambezi:
-
-https://github.com/sonyxperiadev/kernel-copyleft-dts/blob/68.0.A.0.xxx/somc/blair-zambezi-pdx235_common.dtsi
-
-How do you want to represent that?  We could have:
-
-    sm6375-sony-xperia(-common?).dtsi
-    sm6375-sony-xperia-murray-pdx225.dts
-    sm6375-sony-xperia-zambezi-pdx235.dts
-
-So that you can still keep 95% of the common configuration in the same
-file, but without pretending that pdx235 uses the murray board.
-
-- Marijn
-
->  .../boot/dts/qcom/sm6375-sony-xperia-murray.dtsi   |  2 +-
->  3 files changed, 56 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 2cca20563a1d..832b4acb20dd 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -196,6 +196,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-laurel-sprout.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx235.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-microsoft-surface-duo.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx235.dts b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx235.dts
-> new file mode 100644
-> index 000000000000..80a61961e5c5
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray-pdx235.dts
-> @@ -0,0 +1,54 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2023, Konrad Dybcio <konrad.dybcio@linaro.org>
-> + */
+> Changes in v2:
+>  - Update commit description with information about why this base address is
+> used.
+> 
+>  .../boot/dts/allwinner/sun50i-a64-pinephone.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi index
+> 87847116ab6d..84f9410b0b70 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi
+> @@ -19,6 +19,22 @@ aliases {
+>  		serial0 = &uart0;
+>  	};
+> 
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 > +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/arm/qcom,ids.h>
-> +
-> +#include "sm6375-sony-xperia-murray.dtsi"
-> +
-> +/ {
-> +	model = "Sony Xperia 10 V";
-> +	compatible = "sony,pdx235", "qcom,sm6375";
-> +	chassis-type = "handset";
-> +	qcom,msm-id = <QCOM_ID_SM6375 0x10000>;
-> +	qcom,board-id = <QCOM_BOARD_ID(QRD, 0x1, 0x0) 0x0>;
-> +
-> +	aliases {
-> +		i2c0 = &i2c0;
-> +		i2c1 = &i2c7;
-> +		i2c2 = &i2c10;
-> +		i2c3 = &i2c8;
+> +		pstore_mem: ramoops@61000000 {
+> +			compatible = "ramoops";
+> +			reg = <0x61000000 0x100000>;
+> +			record-size = <0x20000>;
+> +			console-size = <0x20000>;
+> +			ftrace-size = <0x20000>;
+> +			pmsg-size = <0x20000>;
+> +			ecc-size = <16>;
+> +		};
 > +	};
-> +};
 > +
-> +&i2c0 {
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +
-> +	/* NXP SN2x0 NFC @ 28. (or on &spi2.. TBD!) */
-> +};
-> +
-> +&i2c7 {
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +
-> +	/* Awinic AW882xx audio amplifier ("channel 0") @ 34 */
-> +};
-> +
-> +/* I2C8 inherited from common DTSI */
-> +
-> +&i2c10 {
-> +	clock-frequency = <400000>;
-> +	status = "okay";
-> +
-> +	/* Awinic AW882xx audio amplifier ("channel 1") @ 34 */
-> +	/* PM8008 @ 8, 9 */
-> +};
-> +
-> +/* For reasons yet unknown, it's broken on the mark V.. */
-> +&touchscreen {
-> +	status = "fail";
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray.dtsi b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray.dtsi
-> index 072f7ce2a7f6..243e60d9bbb5 100644
-> --- a/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm6375-sony-xperia-murray.dtsi
-> @@ -123,7 +123,7 @@ &i2c8 {
->  	clock-frequency = <400000>;
->  	status = "okay";
->  
-> -	touchscreen@48 {
-> +	touchscreen: touchscreen@48 {
->  		compatible = "samsung,s6sy761";
->  		reg = <0x48>;
->  		interrupt-parent = <&tlmm>;
-> 
-> -- 
-> 2.41.0
-> 
+>  	backlight: backlight {
+>  		compatible = "pwm-backlight";
+>  		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
+
+
+
+
