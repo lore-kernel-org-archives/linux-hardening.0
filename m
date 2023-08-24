@@ -2,73 +2,122 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D7BC71145
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 21:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993F3C6FA8F
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 21:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242274AbjHXVbj (ORCPT
+        id S243736AbjHXVoh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Aug 2023 17:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
+        Thu, 24 Aug 2023 17:44:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243708AbjHXVbZ (ORCPT
+        with ESMTP id S243756AbjHXVoc (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Aug 2023 17:31:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFC1C1BCD;
-        Thu, 24 Aug 2023 14:31:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KouHBYS69HsNsfO20sspquU82x2AjH40Ly3b9zA3ovw=; b=LzGqlyGDTQE40g1aBOGSHRywpl
-        UIyFf1whA+hLXB0AlcLeI0o+mCaK5ohAdY/C7kA1f+z/MlXGuY247GyDfqwj3puoyHh/SDlL8dLU8
-        tXLep5UAvI8w03pp5mqKRe6AfN7UVVeCdLRE1bRyNPRbif4thCHssinSzkf+5n7qfaVSBB9qT44zi
-        JSN+Ea06ARpEGcblt0Ltk5l9dhd2rd+eL5E2asu+RJ8nlFEczMGOc/FqLyLVKbh0uJnh9HAZyur5u
-        wKkaQf1Oh/c36ocHt9G/2W9iJMQk6D8F3SWwYW9XG3IkX7XpkNIeZAT8sFQAhw1ybxO9Ve2u8Apmt
-        tr3JVA+Q==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qZHv4-003q96-1B;
-        Thu, 24 Aug 2023 21:31:10 +0000
-Date:   Thu, 24 Aug 2023 14:31:10 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Yonghong Song <yhs@meta.com>, "Erhard F." <erhard_f@mailbox.org>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        kernel test robot <oliver.sang@intel.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Yang Li <yang.lee@linux.alibaba.com>,
-        Vincenzo Palazzo <vincenzopalazzodev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kallsyms: Add more debug output for selftest
-Message-ID: <ZOfMHs1FWnzhZdMW@bombadil.infradead.org>
-References: <20230824205757.never.730-kees@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230824205757.never.730-kees@kernel.org>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+        Thu, 24 Aug 2023 17:44:32 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A97E1BD9
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 14:44:30 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-58fb8933e18so3989127b3.3
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 14:44:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1692913469; x=1693518269;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=I2XHhFoIX29d7SjqRkOJs1D4R2XM7B/vfVqVUXWhEhg=;
+        b=rY+DThLCebZPaSUnju22NEfLJ27R1oPVY6zCeRi31RmWbU68qTl1pdHi2BEfbVrayR
+         k0cDrn7I4jrVtdpKs7Kr/3zfTrULZZCLECE4B9TUFsULDhfDM2hH8fRoIseQOcQ2KBMh
+         2dpo+GBtUFLG298z0huIQ9O1YmAd0n4o4XF2ROgkncYzTdIFCG93DagLrGzuLGxO4r0N
+         SvG5dhKPCi+BOWGViTXxgkhpedphNMKX3gFcBfPAj2pmrLsjUcSnWmHyYgpMWIlhr2zC
+         RnQR+J3a3vA0iXCClziMyVIncsPBW6P6ynS7+im8mO9GfcbOe5G8fAx+a8YgTewgU5bR
+         98fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692913469; x=1693518269;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=I2XHhFoIX29d7SjqRkOJs1D4R2XM7B/vfVqVUXWhEhg=;
+        b=bmwu6oaldDUYOz0M7R9q0l/6TmyIEcwrG2EY5cqn4IH4IeXdH/tvI1RsLdB0JWu5te
+         nxdObSbFFw3h9QAKGD03WULxrH+2jbVNaHCOteMxFWuYiCV3Q34JbxHVsrSfgL1qkzCI
+         E8ubovNCli5NyZyaeR1qv9lyoKTrCU8wVBWa3hs+HODYzB4xAK7gnI+9K+EfLT0W1p5G
+         cPVLiPdmWJzvv8YXr41rL6z0rwgiQxdx1lCuRpKWWvSvcu/n4w8tU6uGBiGpSt1D9R20
+         QufNpOnh/NK7yafBKAUMO1aieH6CJmsvg5DaLEBvrbHPgSU8Yr87/uwCFwd6jVAYGrTL
+         y8BQ==
+X-Gm-Message-State: AOJu0YzOlqp/+xmUaDrmFM+K+UiGWbIr3i0yOFfqmuZJQh5gxGnYONKn
+        SFM6NM8h9dZdIKl1uDnkZgf1cgIgmpJDIXZTag==
+X-Google-Smtp-Source: AGHT+IH/Saoly6PdNTUksg1rPj0d+TK46Gv1Tr70tqR0y2uvJtz9y8ZhCe3UiS4eFgllnV5EYUoay6dQGm8NmlypmQ==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:af0e:0:b0:58c:6ddd:d27c with SMTP
+ id n14-20020a81af0e000000b0058c6dddd27cmr287942ywh.6.1692913469696; Thu, 24
+ Aug 2023 14:44:29 -0700 (PDT)
+Date:   Thu, 24 Aug 2023 21:44:29 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIADzP52QC/x3NwQ6CMAyA4VchPdtkDqLiqxgPoytaMWNpJ5EQ3
+ t3F43f5/w2MVdjg2mygvIjJnCqOhwboGdKDUWI1eOdbd/EdWtFEecWosrAaBiI2k0HeUla0zGH 6ZJzm4cVUDAk753o+x9H17QlqNiuP8v0vb/d9/wHgcs+xggAAAA==
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1692913468; l=1729;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=q1hBG/wVyKaqLwdyOtnadSyl5YGFuaU8rnWaY2hrenw=; b=mKN37v4hCvmX1Gwo9UAku1OIHbfcUZw3kVDDrNwrJVWO+/TxQr0FpQjLDuCjpPtXEkNqC2AIR
+ dhMnobjW0piDJqZJ08dL1y8Bke+/fatzOiIggDHGvCn6v1f/HWPTQzK
+X-Mailer: b4 0.12.3
+Message-ID: <20230824-strncpy-drivers-accessibility-speakup-kobjects-c-v1-1-3a1ef1221e90@google.com>
+Subject: [PATCH] accessibility: speakup: refactor deprecated strncpy
+From:   Justin Stitt <justinstitt@google.com>
+To:     William Hubbs <w.d.hubbs@gmail.com>,
+        Chris Brannon <chris@the-brannons.com>,
+        Kirk Reiser <kirk@reisers.ca>,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>
+Cc:     speakup@linux-speakup.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 01:58:00PM -0700, Kees Cook wrote:
-> While debugging a recent kallsyms_selftest failure[1], I needed more
-> details on what specifically was failing. This adds those details for
-> each failure state that is checked.
-> 
-> [1] https://lore.kernel.org/all/202308232200.1c932a90-oliver.sang@intel.com/
-> 
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Yonghong Song <yhs@meta.com>
-> Cc: "Erhard F." <erhard_f@mailbox.org>
-> Cc: Zhen Lei <thunder.leizhen@huawei.com>
-> Cc: kernel test robot <oliver.sang@intel.com>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Yang Li <yang.lee@linux.alibaba.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-Applied and pushed, thanks.
+Use `strscpy` as it guarantees NUL-termination of its destination buffer [2]
+which allows for simpler and less ambiguous code.
 
-  Luis
+Also, change `strlen(buf)` to `strlen(ptr)` to be consistent with
+further usage within the scope of the function. Note that these are
+equivalent:
+|419 	const char *ptr = buf;
+
+Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Note: build-tested only.
+---
+ drivers/accessibility/speakup/kobjects.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/accessibility/speakup/kobjects.c b/drivers/accessibility/speakup/kobjects.c
+index a7522d409802..8aa416c5f3fc 100644
+--- a/drivers/accessibility/speakup/kobjects.c
++++ b/drivers/accessibility/speakup/kobjects.c
+@@ -422,12 +422,11 @@ static ssize_t synth_direct_store(struct kobject *kobj,
+ 	if (!synth)
+ 		return -EPERM;
+ 
+-	len = strlen(buf);
++	len = strlen(ptr);
+ 	spin_lock_irqsave(&speakup_info.spinlock, flags);
+ 	while (len > 0) {
+ 		bytes = min_t(size_t, len, 250);
+-		strncpy(tmp, ptr, bytes);
+-		tmp[bytes] = '\0';
++		strscpy(tmp, ptr, bytes);
+ 		string_unescape_any_inplace(tmp);
+ 		synth_printf("%s", tmp);
+ 		ptr += bytes;
+
+---
+base-commit: f9604036a3fb6149badf346994b46b03f9292db7
+change-id: 20230824-strncpy-drivers-accessibility-speakup-kobjects-c-4009e7df0936
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
