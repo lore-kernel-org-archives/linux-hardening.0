@@ -2,158 +2,143 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFACC27C40
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 01:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD97C71145
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 09:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238953AbjHXBIG (ORCPT
+        id S233736AbjHXJJ7 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 23 Aug 2023 21:08:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54550 "EHLO
+        Thu, 24 Aug 2023 05:09:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238976AbjHXBHu (ORCPT
+        with ESMTP id S240648AbjHXJJz (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 23 Aug 2023 21:07:50 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B6B10DD;
-        Wed, 23 Aug 2023 18:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692839268; x=1724375268;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Lv3S5ouPY4y8kBlrKh8HvQ7grObroP43ydep697gLqI=;
-  b=a5I0tUszl+mpvTLZPg1OibIlsCUR/iZ3eRRtCUDARq9Y+YfgwG9dqqwq
-   GLkRm27YP5I2xDG32ixR997AACIFFe1k9yalLwmS3F3d/QDGGU3zlvxkN
-   LLazE4WRGXYbRnUmyorWzW+2A6QaD2BDHm2t+L82CczzTr/GLKbJIGq1I
-   EpM3l1AJZhxNnQpZWFEMRo5tjK7CBE9zar2vcKtXapf4UZZm55Q5ABQY2
-   IVhoQNKBC15cp/S1CQJfoiU1+OT3DVrL+awu8rMz1oHrszzaCzHb+kYDO
-   JBhUDVNOYf/cWCz2o/oirxqiDyfURcclWfta5EEInvK2ZTreQ+Xqv6UUe
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="438244454"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="438244454"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Aug 2023 18:07:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10811"; a="826935169"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="826935169"
-Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Aug 2023 18:07:44 -0700
-Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qYyp5-0001dw-2S;
-        Thu, 24 Aug 2023 01:07:43 +0000
-Date:   Thu, 24 Aug 2023 09:07:27 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Kalle Valo <kvalo@kernel.org>,
-        Amitkumar Karwar <akarwar@marvell.com>,
-        Xinming Hu <huxm@marvell.com>, Dan Williams <dcbw@redhat.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Thu, 24 Aug 2023 05:09:55 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08DD610FA;
+        Thu, 24 Aug 2023 02:09:51 -0700 (PDT)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37O91AeV012673;
+        Thu, 24 Aug 2023 09:09:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=OLuVdAXB/YRIVa6KwfTKGyM1URZGho5Zn4DvYDDw6uY=;
+ b=m1nyXru5Dh6WSJ15aK8gEXzFu3nKKlYWtATsTHJYh8MxiFoi64gam/z4EVvKigiHqgjz
+ cnvS55OOm/dlfUqsuFI2MOVgOlCB4hMH51YqzHMmgEbI2PxVjEZNeGIRx4I/Zj+ibGMI
+ PTk/IX5yCGhKtMK6j+5uCererL+76KYKvp8D88ZjTEZHQbDqmxWYvZfD/J3ME85mQFr0
+ +hKrfoR0l+kNOPx8s28/LF4O6Yc1HcDL2TrfECxgY2KvMkcqQL5DWzecUOJS/FFZeBaB
+ ggcoFmlkWh5BH+OypYp0dxGvE3txMPHzdbXtunOEElvOWa2gGgF+Vlp8UxCEITefOkSs 1Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sp4750ht7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 24 Aug 2023 09:09:47 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37O91chG013388;
+        Thu, 24 Aug 2023 09:09:25 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3sp4750epv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 24 Aug 2023 09:09:25 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 37O7C4qp010383;
+        Thu, 24 Aug 2023 09:02:27 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3sn21swren-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 24 Aug 2023 09:02:27 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 37O92OZw3998426
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Aug 2023 09:02:24 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7750B2004F;
+        Thu, 24 Aug 2023 09:02:24 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BC8F20067;
+        Thu, 24 Aug 2023 09:02:24 +0000 (GMT)
+Received: from osiris (unknown [9.171.81.161])
+        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+        Thu, 24 Aug 2023 09:02:23 +0000 (GMT)
+Date:   Thu, 24 Aug 2023 11:02:22 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     Justin Stitt <justinstitt@google.com>
+Cc:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Kees Cook <keescook@chromium.org>, linux-s390@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH 3/3] wifi: mwifiex: Sanity check tlv_len and
- tlv_bitmap_len
-Message-ID: <202308240844.leyoOwdG-lkp@intel.com>
-References: <587423b0737108effe82aefed4407daca39e9a51.1692829410.git.gustavoars@kernel.org>
-MIME-Version: 1.0
+Subject: Re: [PATCH v2] partitions/ibm: refactor deprecated strncpy
+Message-ID: <20230824090222.10112-B-hca@linux.ibm.com>
+References: <20230823-strncpy-block-partitions-cmdline-ibm-v2-1-40c77f7182fc@google.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <587423b0737108effe82aefed4407daca39e9a51.1692829410.git.gustavoars@kernel.org>
+In-Reply-To: <20230823-strncpy-block-partitions-cmdline-ibm-v2-1-40c77f7182fc@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: IRdlo-mLY59h8tOrlT9IzrEhNwurc7Ns
+X-Proofpoint-ORIG-GUID: J3I6_x2GjPwypkI5AuWoQ6VdhlLACqUK
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-24_06,2023-08-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ spamscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ phishscore=0 adultscore=0 malwarescore=0 priorityscore=1501 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2308240072
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Gustavo,
+On Wed, Aug 23, 2023 at 09:24:22PM +0000, Justin Stitt wrote:
+> `strncpy` is deprecated [1] and we should favor different interfaces.
+> 
+> A suitable replacement is `strtomem_pad` as it is a more robust and less
+> ambiguous interface. In this case, the destination buffer is not
+> necessarily NUL-terminated as Heiko points out [2]. Using `strtomem_pad`
+> over strncpy means it is now more obvious what is expected of the
+> destination buffer: 1) Not necessarily NUL-terminated and 2) padded with
+> NUL-bytes
+> 
+> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+> Link: https://lore.kernel.org/all/20230823134936.14378-E-hca@linux.ibm.com/ [2]
+> Link: https://github.com/KSPP/linux/issues/90
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Cc: linux-hardening@vger.kernel.org
+> Signed-off-by: Justin Stitt <justinstitt@google.com>
+> ---
+> Changes in v2:
+> - prefer `strtomem_pad` over `strscpy` (thanks Kees)
+> - Link to v1: https://lore.kernel.org/r/20230822-strncpy-block-partitions-cmdline-ibm-v1-1-154dea8f755c@google.com
+> ---
+>  block/partitions/ibm.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
+> index 403756dbd50d..56c076c5523d 100644
+> --- a/block/partitions/ibm.c
+> +++ b/block/partitions/ibm.c
+> @@ -111,11 +111,11 @@ static int find_label(struct parsed_partitions *state,
+>  		    !strcmp(temp, "LNX1") ||
+>  		    !strcmp(temp, "CMS1")) {
+>  			if (!strcmp(temp, "VOL1")) {
+> -				strncpy(type, label->vol.vollbl, 4);
+> -				strncpy(name, label->vol.volid, 6);
+> +				strtomem_pad(type, label->vol.vollbl, 4);
+> +				strtomem_pad(name, label->vol.volid, 6);
+>  			} else {
+> -				strncpy(type, label->lnx.vollbl, 4);
+> -				strncpy(name, label->lnx.volid, 6);
+> +				strtomem_pad(type, label->lnx.vollbl, 4);
+> +				strtomem_pad(name, label->lnx.volid, 6);
+>  			}
+>  			EBCASC(type, 4);
+>  			EBCASC(name, 6);
 
-kernel test robot noticed the following build warnings:
+This won't compile if find_label() is not inlined due the BUILD_BUG_ON()
+within strtomem_pad(). However instead of sending new versions, I think it
+would be better to ask Stefan and Jan to have a look at this. I think there
+is room for improvement with the string handling besides getting rid of
+strncpy().
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.5-rc7 next-20230823]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Gustavo-A-R-Silva/wifi-mwifiex-Fix-tlv_buf_left-calculation/20230824-063517
-base:   linus/master
-patch link:    https://lore.kernel.org/r/587423b0737108effe82aefed4407daca39e9a51.1692829410.git.gustavoars%40kernel.org
-patch subject: [PATCH 3/3] wifi: mwifiex: Sanity check tlv_len and tlv_bitmap_len
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230824/202308240844.leyoOwdG-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20230824/202308240844.leyoOwdG-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202308240844.leyoOwdG-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:12:
-   drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c: In function 'mwifiex_11n_rxba_sync_event':
->> drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:926:37: warning: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
-     926 |                                     "TLV size (%ld) overflows event_buf (%d)\n",
-         |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     927 |                                     size_add(sizeof(tlv_rxba->header), tlv_len),
-         |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                                     |
-         |                                     size_t {aka unsigned int}
-   drivers/net/wireless/marvell/mwifiex/main.h:199:51: note: in definition of macro 'mwifiex_dbg'
-     199 |         _mwifiex_dbg(adapter, MWIFIEX_DBG_##mask, fmt, ##__VA_ARGS__)
-         |                                                   ^~~
-   drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:926:50: note: format string is defined here
-     926 |                                     "TLV size (%ld) overflows event_buf (%d)\n",
-         |                                                ~~^
-         |                                                  |
-         |                                                  long int
-         |                                                %d
-   drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:942:37: warning: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
-     942 |                                     "TLV size (%ld) overflows event_buf (%d)\n",
-         |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     943 |                                     size_add(sizeof(*tlv_rxba), tlv_bitmap_len),
-         |                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-         |                                     |
-         |                                     size_t {aka unsigned int}
-   drivers/net/wireless/marvell/mwifiex/main.h:199:51: note: in definition of macro 'mwifiex_dbg'
-     199 |         _mwifiex_dbg(adapter, MWIFIEX_DBG_##mask, fmt, ##__VA_ARGS__)
-         |                                                   ^~~
-   drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:942:50: note: format string is defined here
-     942 |                                     "TLV size (%ld) overflows event_buf (%d)\n",
-         |                                                ~~^
-         |                                                  |
-         |                                                  long int
-         |                                                %d
-
-
-vim +926 drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c
-
-   904	
-   905	/* This function handles rxba_sync event
-   906	 */
-   907	void mwifiex_11n_rxba_sync_event(struct mwifiex_private *priv,
-   908					 u8 *event_buf, u16 len)
-   909	{
-   910		struct mwifiex_ie_types_rxba_sync *tlv_rxba = (void *)event_buf;
-   911		u16 tlv_type, tlv_len;
-   912		struct mwifiex_rx_reorder_tbl *rx_reor_tbl_ptr;
-   913		u8 i, j;
-   914		u16 seq_num, tlv_seq_num, tlv_bitmap_len;
-   915		int tlv_buf_left = len;
-   916		int ret;
-   917		u8 *tmp;
-   918	
-   919		mwifiex_dbg_dump(priv->adapter, EVT_D, "RXBA_SYNC event:",
-   920				 event_buf, len);
-   921		while (tlv_buf_left > sizeof(*tlv_rxba)) {
-   922			tlv_type = le16_to_cpu(tlv_rxba->header.type);
-   923			tlv_len  = le16_to_cpu(tlv_rxba->header.len);
-   924			if (size_add(sizeof(tlv_rxba->header), tlv_len) > tlv_buf_left) {
-   925				mwifiex_dbg(priv->adapter, WARN,
- > 926					    "TLV size (%ld) overflows event_buf (%d)\n",
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+And they know best the semantics of the (non-)strings.
