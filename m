@@ -2,113 +2,576 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76906C3DA6F
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 21:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3FAC88CB9
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 22:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243702AbjHXV6t (ORCPT
+        id S236827AbjHXWg2 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Aug 2023 17:58:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35050 "EHLO
+        Thu, 24 Aug 2023 18:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238031AbjHXV6S (ORCPT
+        with ESMTP id S240429AbjHXWgS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Aug 2023 17:58:18 -0400
-Received: from sonata.ens-lyon.org (sonata.ens-lyon.org [140.77.166.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C3E172D;
-        Thu, 24 Aug 2023 14:58:15 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by sonata.ens-lyon.org (Postfix) with ESMTP id F1193200F3;
-        Thu, 24 Aug 2023 23:58:07 +0200 (CEST)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-        by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id tJdgRRiDj2Ea; Thu, 24 Aug 2023 23:58:07 +0200 (CEST)
-Received: from begin.home (lfbn-bor-1-1163-184.w92-158.abo.wanadoo.fr [92.158.138.184])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by sonata.ens-lyon.org (Postfix) with ESMTPSA id 50228200F0;
-        Thu, 24 Aug 2023 23:58:07 +0200 (CEST)
-Received: from samy by begin.home with local (Exim 4.96)
-        (envelope-from <samuel.thibault@ens-lyon.org>)
-        id 1qZIL8-001mhZ-2z;
-        Thu, 24 Aug 2023 23:58:06 +0200
-Date:   Thu, 24 Aug 2023 23:58:06 +0200
-From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>, speakup@linux-speakup.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] accessibility: speakup: refactor deprecated strncpy
-Message-ID: <20230824215806.3ulejc2gsapcl2mw@begin>
-Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Justin Stitt <justinstitt@google.com>,
-        William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>, speakup@linux-speakup.org,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230824-strncpy-drivers-accessibility-speakup-kobjects-c-v1-1-3a1ef1221e90@google.com>
+        Thu, 24 Aug 2023 18:36:18 -0400
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8E61BEF
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 15:36:13 -0700 (PDT)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-51b4ef5378bso171491a12.1
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 15:36:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1692916572; x=1693521372;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IQNELjD9r6ncwNErU4xuVmyyowwITagxnHItwiBZGrI=;
+        b=mWNn9xaQh4q3l3U90jKHwZ2ZEd4bGDJnSnaHc7vLVMzLPXQ8/J7+Pl6/YVGxWcZmbF
+         dhpgwBg+v+6EREmJJ5x9+duUuJyt9SAsNlPtLBu7PDN3qZ60pRT8XhqYDqJgLIHUim9U
+         d07O/fy1n+aQq39qB2u01JYtIVhyu6UFqvx8k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692916572; x=1693521372;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IQNELjD9r6ncwNErU4xuVmyyowwITagxnHItwiBZGrI=;
+        b=YoTHrWFwDgRT5wj6v1oczsZzTBIkbgPX97kgyyRZ1A46FdrxoZ/ivnSyn+YShDBFtL
+         YuvdiYRbdqj+M4Wkx7EXmuhfV3WCJhYS4x5Xk0Gy1Bipt0Ml48sSjHzSejawP8/8URB4
+         Y2wQiSN1+NGw836XsfS5DDfqGdKRnuoQ/wvN6c3S6sPIi+YBCalbpxOvx7WHemdHHFuT
+         TIolqDs4Q6zlQSrwnYdrR09CLUjiRUMJCKLQUfwShB0HkW2BDhjcaWuid4Fu+mUBWRM8
+         2PqdQ3tmWmJ+EOohyIM3tfNIibIvrcVmwrUt1kwY35XCaoT7ygIBCb+1QacWqik4xCDg
+         s0aw==
+X-Gm-Message-State: AOJu0Yw4xscAD97V/ao7fFe4aySOzQHUrLMfph4EkqrFkFHzwqzUY1pN
+        IVjblnD/sc+DuOM2CwAHjAAn7g==
+X-Google-Smtp-Source: AGHT+IHJ/TliPENGdo+B7a1Pbup7s10hHNj/3Lp+oQRDTxW2klVd28ofL2vRsevKBfDD315FF/w9pw==
+X-Received: by 2002:a05:6a20:42a5:b0:132:a85f:b20c with SMTP id o37-20020a056a2042a500b00132a85fb20cmr21691642pzj.38.1692916572618;
+        Thu, 24 Aug 2023 15:36:12 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id t25-20020a63a619000000b0056da0ae25cdsm122431pge.80.2023.08.24.15.36.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Aug 2023 15:36:11 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] kbuild: Show Kconfig fragments in "help"
+Date:   Thu, 24 Aug 2023 15:36:10 -0700
+Message-Id: <20230824223606.never.762-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=19925; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=Y0hEgEolJmkc66ZpEOZIuED4Y5POHofSLOrN6lA4xz0=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk59tZi0qXSZLrk9vWztqgJhSrEQowuWl8TDY76
+ td80l1qBp6JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZOfbWQAKCRCJcvTf3G3A
+ JgdrD/9NVHEFfda2z2Q2f4X4pa9Q+6bKNb5CnGkY2TnLQT77D5Gnj4GoSnR5BcEd1KSYKTCuvwZ
+ 0R9I6ZLZ1q2kddp02Hkdl5UeondtQxgu5UljAHozzn4r8ynaPdDRuG/GKcO1Jng8w56XwKCHd4U
+ eDQJBNgu8MvOKXLHYjY9TCCJc7G5XFV8cHPBNVBxUSlMvdQgxL7MTE9B429ujzl0YayB3d/8piQ
+ wyu38mrzZXb7BNN6wYgnXVNlfgtiAXmh3ynonED1LxwZoVnLFaKQBRWMdQCepKhTDriJGnEOWbO
+ tWhHjg/2XCbcUySnuhDTh4dEUHppHvAqIrNm7rRnBRo8ExAtboc5qEpwB4u4yFDia08cSAEpF7H
+ UyASXsW7KXe4INjLMp4QCExnQQgd9lLE29stlIQ0Xpdb+JxZOVHMbXLQ5Cmey2tyqqJ0TOdwT5P
+ NvbDv/UDCjwDUgEqCG/dpQTmmxPzAyG88a9vG9Eilnm8n485Y+r8VRiy1P9NNJ93HxhYWenL6YG
+ TNCK0zSMaQigUi+pwlnrpNYyW+OjvwaERLtqHgQP9sxzH/Qwdur8/1mt7cQwFWZCt5UD0boFV39
+ KHB6UH3MVSROFAIMEIl0DKIVxNkC23aGQ3Yz6ctKZa404/8QdXjB5VFcSrX9UrF5ZhrGTlzzgpG
+ 5GW4wO K+cFT3C+A==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230824-strncpy-drivers-accessibility-speakup-kobjects-c-v1-1-3a1ef1221e90@google.com>
-Organization: I am not organized
-User-Agent: NeoMutt/20170609 (1.8.3)
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Justin Stitt, le jeu. 24 août 2023 21:44:29 +0000, a ecrit:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> 
-> Use `strscpy` as it guarantees NUL-termination of its destination buffer [2]
-> which allows for simpler and less ambiguous code.
-> 
-> Also, change `strlen(buf)` to `strlen(ptr)` to be consistent with
-> further usage within the scope of the function. Note that these are
-> equivalent:
-> |419 	const char *ptr = buf;
-> 
-> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+Doing a "make help" would show only hard-coded Kconfig targets and
+depended on the archhelp target to include ".config" targets. There was
+nothing showing global kernel/configs/ targets. Solve this by walking
+the wildcard list and include them in the output, using the first comment
+line as the help text.
 
-Reviewed-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Update all Kconfig fragments to include help text and adjust archhelp
+targets to avoid redundancy.
 
-> ---
-> Note: build-tested only.
-> ---
->  drivers/accessibility/speakup/kobjects.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/accessibility/speakup/kobjects.c b/drivers/accessibility/speakup/kobjects.c
-> index a7522d409802..8aa416c5f3fc 100644
-> --- a/drivers/accessibility/speakup/kobjects.c
-> +++ b/drivers/accessibility/speakup/kobjects.c
-> @@ -422,12 +422,11 @@ static ssize_t synth_direct_store(struct kobject *kobj,
->  	if (!synth)
->  		return -EPERM;
->  
-> -	len = strlen(buf);
-> +	len = strlen(ptr);
->  	spin_lock_irqsave(&speakup_info.spinlock, flags);
->  	while (len > 0) {
->  		bytes = min_t(size_t, len, 250);
-> -		strncpy(tmp, ptr, bytes);
-> -		tmp[bytes] = '\0';
-> +		strscpy(tmp, ptr, bytes);
->  		string_unescape_any_inplace(tmp);
->  		synth_printf("%s", tmp);
->  		ptr += bytes;
-> 
-> ---
-> base-commit: f9604036a3fb6149badf346994b46b03f9292db7
-> change-id: 20230824-strncpy-drivers-accessibility-speakup-kobjects-c-4009e7df0936
-> 
-> Best regards,
-> --
-> Justin Stitt <justinstitt@google.com>
-> 
+Adds the following section to "help" target output:
+
+Configuration fragment targets (for enabling various Kconfig items):
+  debug.config         - Debugging for CI systems and finding regressions
+  kvm_guest.config     - Bootable as a KVM guest
+  nopm.config          - Disable Power Management
+  rust.config          - Enable Rust
+  tiny-base.config     - Minimal options for tiny systems
+  tiny.config          - Smallest possible kernel image
+  x86_debug.config     - Debugging options for tip tree testing
+  xen.config           - Bootable as a Xen guest
+  tiny.config          - x86-specific options for a small kernel image
+  xen.config           - x86-specific options for a Xen virtualization guest
+
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: x86@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Makefile                                   |  1 -
+ arch/arm/configs/dram_0x00000000.config    |  1 +
+ arch/arm/configs/dram_0xc0000000.config    |  1 +
+ arch/arm/configs/dram_0xd0000000.config    |  1 +
+ arch/arm/configs/lpae.config               |  1 +
+ arch/arm64/configs/virt.config             |  1 +
+ arch/powerpc/configs/32-bit.config         |  1 +
+ arch/powerpc/configs/64-bit.config         |  1 +
+ arch/powerpc/configs/85xx-32bit.config     |  1 +
+ arch/powerpc/configs/85xx-64bit.config     |  1 +
+ arch/powerpc/configs/85xx-hw.config        |  1 +
+ arch/powerpc/configs/85xx-smp.config       |  1 +
+ arch/powerpc/configs/86xx-hw.config        |  1 +
+ arch/powerpc/configs/86xx-smp.config       |  1 +
+ arch/powerpc/configs/altivec.config        |  1 +
+ arch/powerpc/configs/be.config             |  1 +
+ arch/powerpc/configs/book3s_32.config      |  1 +
+ arch/powerpc/configs/corenet_base.config   |  1 +
+ arch/powerpc/configs/debug.config          |  1 +
+ arch/powerpc/configs/disable-werror.config |  1 +
+ arch/powerpc/configs/dpaa.config           |  1 +
+ arch/powerpc/configs/fsl-emb-nonhw.config  |  1 +
+ arch/powerpc/configs/guest.config          |  1 +
+ arch/powerpc/configs/le.config             |  1 +
+ arch/powerpc/configs/mpc85xx_base.config   |  1 +
+ arch/powerpc/configs/mpc86xx_base.config   |  1 +
+ arch/powerpc/configs/ppc64le.config        |  1 +
+ arch/powerpc/configs/security.config       |  4 +++-
+ arch/riscv/configs/32-bit.config           |  1 +
+ arch/riscv/configs/64-bit.config           |  1 +
+ arch/s390/configs/btf.config               |  1 +
+ arch/s390/configs/kasan.config             |  1 +
+ arch/x86/Makefile                          |  4 ----
+ arch/x86/configs/tiny.config               |  2 ++
+ arch/x86/configs/xen.config                |  2 ++
+ kernel/configs/debug.config                |  2 ++
+ kernel/configs/kvm_guest.config            |  1 +
+ kernel/configs/nopm.config                 |  2 ++
+ kernel/configs/rust.config                 |  1 +
+ kernel/configs/tiny-base.config            |  1 +
+ kernel/configs/tiny.config                 |  2 ++
+ kernel/configs/x86_debug.config            |  1 +
+ kernel/configs/xen.config                  |  2 ++
+ scripts/kconfig/Makefile                   | 13 ++++++++++---
+ 44 files changed, 59 insertions(+), 9 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 4739c21a63e2..91c90ce8e0e3 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1674,7 +1674,6 @@ help:
+ 	@echo  '  mrproper	  - Remove all generated files + config + various backup files'
+ 	@echo  '  distclean	  - mrproper + remove editor backup and patch files'
+ 	@echo  ''
+-	@echo  'Configuration targets:'
+ 	@$(MAKE) -f $(srctree)/scripts/kconfig/Makefile help
+ 	@echo  ''
+ 	@echo  'Other generic targets:'
+diff --git a/arch/arm/configs/dram_0x00000000.config b/arch/arm/configs/dram_0x00000000.config
+index db96dcb420ce..4de3fde0de9a 100644
+--- a/arch/arm/configs/dram_0x00000000.config
++++ b/arch/arm/configs/dram_0x00000000.config
+@@ -1 +1,2 @@
++# DRAM base at 0x00000000
+ CONFIG_DRAM_BASE=0x00000000
+diff --git a/arch/arm/configs/dram_0xc0000000.config b/arch/arm/configs/dram_0xc0000000.config
+index 343d5333d973..fdd4c7b1461e 100644
+--- a/arch/arm/configs/dram_0xc0000000.config
++++ b/arch/arm/configs/dram_0xc0000000.config
+@@ -1 +1,2 @@
++# DRAM base at 0xc0000000
+ CONFIG_DRAM_BASE=0xc0000000
+diff --git a/arch/arm/configs/dram_0xd0000000.config b/arch/arm/configs/dram_0xd0000000.config
+index 61ba7045f8a1..54defdc8d24c 100644
+--- a/arch/arm/configs/dram_0xd0000000.config
++++ b/arch/arm/configs/dram_0xd0000000.config
+@@ -1 +1,2 @@
++# DRAM base at 0xd0000000
+ CONFIG_DRAM_BASE=0xd0000000
+diff --git a/arch/arm/configs/lpae.config b/arch/arm/configs/lpae.config
+index a6d6f7ab3c01..e8d3cd8f1e4b 100644
+--- a/arch/arm/configs/lpae.config
++++ b/arch/arm/configs/lpae.config
+@@ -1,2 +1,3 @@
++# Enable Large Physical Address Extension mode
+ CONFIG_ARM_LPAE=y
+ CONFIG_VMSPLIT_2G=y
+diff --git a/arch/arm64/configs/virt.config b/arch/arm64/configs/virt.config
+index 6865d54e68f8..83333a9aa1a5 100644
+--- a/arch/arm64/configs/virt.config
++++ b/arch/arm64/configs/virt.config
+@@ -1,3 +1,4 @@
++# Virtualization guest
+ #
+ # Base options for platforms
+ #
+diff --git a/arch/powerpc/configs/32-bit.config b/arch/powerpc/configs/32-bit.config
+index ad6546850c68..1a4c93a17007 100644
+--- a/arch/powerpc/configs/32-bit.config
++++ b/arch/powerpc/configs/32-bit.config
+@@ -1 +1,2 @@
++# Build a 32-bit image
+ # CONFIG_PPC64 is not set
+diff --git a/arch/powerpc/configs/64-bit.config b/arch/powerpc/configs/64-bit.config
+index 0fe6406929e2..cc371309bb0c 100644
+--- a/arch/powerpc/configs/64-bit.config
++++ b/arch/powerpc/configs/64-bit.config
+@@ -1 +1,2 @@
++# Build a 64-bit image
+ CONFIG_PPC64=y
+diff --git a/arch/powerpc/configs/85xx-32bit.config b/arch/powerpc/configs/85xx-32bit.config
+index 6b8894d727a2..866e77e22762 100644
+--- a/arch/powerpc/configs/85xx-32bit.config
++++ b/arch/powerpc/configs/85xx-32bit.config
+@@ -1,3 +1,4 @@
++# Build a 32-bit 85xx image
+ CONFIG_HIGHMEM=y
+ CONFIG_KEXEC=y
+ CONFIG_PPC_85xx=y
+diff --git a/arch/powerpc/configs/85xx-64bit.config b/arch/powerpc/configs/85xx-64bit.config
+index 4aba81222885..cca4151ee889 100644
+--- a/arch/powerpc/configs/85xx-64bit.config
++++ b/arch/powerpc/configs/85xx-64bit.config
+@@ -1,3 +1,4 @@
++# Build a 64-bit 85xx image
+ CONFIG_MATH_EMULATION=y
+ CONFIG_MATH_EMULATION_HW_UNIMPLEMENTED=y
+ CONFIG_PPC64=y
+diff --git a/arch/powerpc/configs/85xx-hw.config b/arch/powerpc/configs/85xx-hw.config
+index 524db76f47b7..76b22f8a8172 100644
+--- a/arch/powerpc/configs/85xx-hw.config
++++ b/arch/powerpc/configs/85xx-hw.config
+@@ -1,3 +1,4 @@
++# Base hardware support for 86xx
+ CONFIG_AQUANTIA_PHY=y
+ CONFIG_AT803X_PHY=y
+ CONFIG_ATA=y
+diff --git a/arch/powerpc/configs/85xx-smp.config b/arch/powerpc/configs/85xx-smp.config
+index 3b4d1e54636d..d3525e71cb2f 100644
+--- a/arch/powerpc/configs/85xx-smp.config
++++ b/arch/powerpc/configs/85xx-smp.config
+@@ -1,2 +1,3 @@
++# Enable SMP on 85xx
+ CONFIG_NR_CPUS=24
+ CONFIG_SMP=y
+diff --git a/arch/powerpc/configs/86xx-hw.config b/arch/powerpc/configs/86xx-hw.config
+index 0cb24b33c88e..7b8d9f9c3c01 100644
+--- a/arch/powerpc/configs/86xx-hw.config
++++ b/arch/powerpc/configs/86xx-hw.config
+@@ -1,3 +1,4 @@
++# Base hardware support for 86xx
+ CONFIG_ATA=y
+ CONFIG_BLK_DEV_SD=y
+ CONFIG_BLK_DEV_SR=y
+diff --git a/arch/powerpc/configs/86xx-smp.config b/arch/powerpc/configs/86xx-smp.config
+index 40ac38d3038c..e6cd06a35624 100644
+--- a/arch/powerpc/configs/86xx-smp.config
++++ b/arch/powerpc/configs/86xx-smp.config
+@@ -1,2 +1,3 @@
++# Enable SMP on 86xx
+ CONFIG_NR_CPUS=2
+ CONFIG_SMP=y
+diff --git a/arch/powerpc/configs/altivec.config b/arch/powerpc/configs/altivec.config
+index 58a697cb5a62..1c8eb9b23a7f 100644
+--- a/arch/powerpc/configs/altivec.config
++++ b/arch/powerpc/configs/altivec.config
+@@ -1 +1,2 @@
++# Enable Altivec support
+ CONFIG_ALTIVEC=y
+diff --git a/arch/powerpc/configs/be.config b/arch/powerpc/configs/be.config
+index c5cdc99a6530..568bba8ea109 100644
+--- a/arch/powerpc/configs/be.config
++++ b/arch/powerpc/configs/be.config
+@@ -1 +1,2 @@
++# Enable Big Endian mode
+ CONFIG_CPU_BIG_ENDIAN=y
+diff --git a/arch/powerpc/configs/book3s_32.config b/arch/powerpc/configs/book3s_32.config
+index 8721eb7b1294..f33483f077db 100644
+--- a/arch/powerpc/configs/book3s_32.config
++++ b/arch/powerpc/configs/book3s_32.config
+@@ -1,2 +1,3 @@
++# Base support for Book3s
+ CONFIG_PPC64=n
+ CONFIG_PPC_BOOK3S_32=y
+diff --git a/arch/powerpc/configs/corenet_base.config b/arch/powerpc/configs/corenet_base.config
+index 1c40de1e764b..47bb6e25c90b 100644
+--- a/arch/powerpc/configs/corenet_base.config
++++ b/arch/powerpc/configs/corenet_base.config
+@@ -1,2 +1,3 @@
++# Base support for corenet
+ CONFIG_CORENET_GENERIC=y
+ CONFIG_PPC_QEMU_E500=y
+diff --git a/arch/powerpc/configs/debug.config b/arch/powerpc/configs/debug.config
+index a14ae1f20d60..223b8a2ee8ec 100644
+--- a/arch/powerpc/configs/debug.config
++++ b/arch/powerpc/configs/debug.config
+@@ -1 +1,2 @@
++# Enable PowerPC specific debug options
+ CONFIG_SCOM_DEBUGFS=y
+diff --git a/arch/powerpc/configs/disable-werror.config b/arch/powerpc/configs/disable-werror.config
+index 6ea12a12432c..76a7847f39ce 100644
+--- a/arch/powerpc/configs/disable-werror.config
++++ b/arch/powerpc/configs/disable-werror.config
+@@ -1 +1,2 @@
++# Disable -Werror
+ CONFIG_PPC_DISABLE_WERROR=y
+diff --git a/arch/powerpc/configs/dpaa.config b/arch/powerpc/configs/dpaa.config
+index 4ffacafe4036..65a13ba32813 100644
+--- a/arch/powerpc/configs/dpaa.config
++++ b/arch/powerpc/configs/dpaa.config
+@@ -1,3 +1,4 @@
++# Base suppot for DPPA
+ CONFIG_FSL_DPAA=y
+ CONFIG_FSL_PAMU=y
+ CONFIG_FSL_FMAN=y
+diff --git a/arch/powerpc/configs/fsl-emb-nonhw.config b/arch/powerpc/configs/fsl-emb-nonhw.config
+index 3009b0efaf34..d1249996cf45 100644
+--- a/arch/powerpc/configs/fsl-emb-nonhw.config
++++ b/arch/powerpc/configs/fsl-emb-nonhw.config
+@@ -1,3 +1,4 @@
++# Non-hardware options common to 85xx and corenet
+ CONFIG_ADFS_FS=m
+ CONFIG_AFFS_FS=m
+ CONFIG_AUDIT=y
+diff --git a/arch/powerpc/configs/guest.config b/arch/powerpc/configs/guest.config
+index fece83487215..f04ababbb35a 100644
+--- a/arch/powerpc/configs/guest.config
++++ b/arch/powerpc/configs/guest.config
+@@ -1,3 +1,4 @@
++# PowerPC specific virtualization guest options
+ CONFIG_VIRTIO_BLK=y
+ CONFIG_SCSI_VIRTIO=y
+ CONFIG_VIRTIO_NET=y
+diff --git a/arch/powerpc/configs/le.config b/arch/powerpc/configs/le.config
+index ee43fdb3b8f4..bcf657e1d21f 100644
+--- a/arch/powerpc/configs/le.config
++++ b/arch/powerpc/configs/le.config
+@@ -1 +1,2 @@
++# Enable Little Endian mode
+ CONFIG_CPU_LITTLE_ENDIAN=y
+diff --git a/arch/powerpc/configs/mpc85xx_base.config b/arch/powerpc/configs/mpc85xx_base.config
+index a1e4d72ed39d..20ecf6575c5c 100644
+--- a/arch/powerpc/configs/mpc85xx_base.config
++++ b/arch/powerpc/configs/mpc85xx_base.config
+@@ -1,3 +1,4 @@
++# Base mpc85xxx support
+ CONFIG_MATH_EMULATION=y
+ CONFIG_MPC8536_DS=y
+ CONFIG_MPC85xx_DS=y
+diff --git a/arch/powerpc/configs/mpc86xx_base.config b/arch/powerpc/configs/mpc86xx_base.config
+index 632c014b122d..8239d1e7785d 100644
+--- a/arch/powerpc/configs/mpc86xx_base.config
++++ b/arch/powerpc/configs/mpc86xx_base.config
+@@ -1,3 +1,4 @@
++# Base mpc85xxx support
+ CONFIG_PPC_86xx=y
+ CONFIG_GEF_PPC9A=y
+ CONFIG_GEF_SBC310=y
+diff --git a/arch/powerpc/configs/ppc64le.config b/arch/powerpc/configs/ppc64le.config
+index 14dca1062c1b..ac3614cd7926 100644
+--- a/arch/powerpc/configs/ppc64le.config
++++ b/arch/powerpc/configs/ppc64le.config
+@@ -1,2 +1,3 @@
++# Enable ppc64le mode
+ CONFIG_PPC64=y
+ CONFIG_CPU_LITTLE_ENDIAN=y
+diff --git a/arch/powerpc/configs/security.config b/arch/powerpc/configs/security.config
+index 1c91a35c6a73..f47034955d12 100644
+--- a/arch/powerpc/configs/security.config
++++ b/arch/powerpc/configs/security.config
+@@ -1,3 +1,5 @@
++# Common security options for PowerPC builds
++
+ # This is the equivalent of booting with lockdown=integrity
+ CONFIG_SECURITY=y
+ CONFIG_SECURITYFS=y
+@@ -12,4 +14,4 @@ CONFIG_INIT_ON_ALLOC_DEFAULT_ON=y
+ 
+ # UBSAN bounds checking is very cheap and good for hardening
+ CONFIG_UBSAN=y
+-# CONFIG_UBSAN_MISC is not set
+\ No newline at end of file
++# CONFIG_UBSAN_MISC is not set
+diff --git a/arch/riscv/configs/32-bit.config b/arch/riscv/configs/32-bit.config
+index f6af0f708df4..60dfa2809b19 100644
+--- a/arch/riscv/configs/32-bit.config
++++ b/arch/riscv/configs/32-bit.config
+@@ -1,3 +1,4 @@
++# Build a 32-bit image
+ CONFIG_ARCH_RV32I=y
+ CONFIG_32BIT=y
+ # CONFIG_PORTABLE is not set
+diff --git a/arch/riscv/configs/64-bit.config b/arch/riscv/configs/64-bit.config
+index 313edc554d84..31a1ad138944 100644
+--- a/arch/riscv/configs/64-bit.config
++++ b/arch/riscv/configs/64-bit.config
+@@ -1,2 +1,3 @@
++# Build a 64-bit image
+ CONFIG_ARCH_RV64I=y
+ CONFIG_64BIT=y
+diff --git a/arch/s390/configs/btf.config b/arch/s390/configs/btf.config
+index 39227b4511af..c69b1a370990 100644
+--- a/arch/s390/configs/btf.config
++++ b/arch/s390/configs/btf.config
+@@ -1 +1,2 @@
++# Enable BTF debug info
+ CONFIG_DEBUG_INFO_BTF=y
+diff --git a/arch/s390/configs/kasan.config b/arch/s390/configs/kasan.config
+index 700a8b25c3ff..da2e1f28c13c 100644
+--- a/arch/s390/configs/kasan.config
++++ b/arch/s390/configs/kasan.config
+@@ -1,3 +1,4 @@
++# Enable KASan for debugging
+ CONFIG_KASAN=y
+ CONFIG_KASAN_INLINE=y
+ CONFIG_KASAN_VMALLOC=y
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index fdc2e3abd615..c4b2a8a19fc8 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -335,9 +335,5 @@ define archhelp
+   echo  '			  bzdisk/fdimage*/hdimage/isoimage also accept:'
+   echo  '			  FDARGS="..."  arguments for the booted kernel'
+   echo  '			  FDINITRD=file initrd for the booted kernel'
+-  echo  ''
+-  echo  '  kvm_guest.config	- Enable Kconfig items for running this kernel as a KVM guest'
+-  echo  '  xen.config		- Enable Kconfig items for running this kernel as a Xen guest'
+-  echo  '  x86_debug.config	- Enable tip tree debugging options for testing'
+ 
+ endef
+diff --git a/arch/x86/configs/tiny.config b/arch/x86/configs/tiny.config
+index 66c9e2aab16c..4b75a11369e3 100644
+--- a/arch/x86/configs/tiny.config
++++ b/arch/x86/configs/tiny.config
+@@ -1,3 +1,5 @@
++# x86-specific options for a small kernel image
++#
+ CONFIG_NOHIGHMEM=y
+ # CONFIG_HIGHMEM4G is not set
+ # CONFIG_HIGHMEM64G is not set
+diff --git a/arch/x86/configs/xen.config b/arch/x86/configs/xen.config
+index 581296255b39..46653ec602e0 100644
+--- a/arch/x86/configs/xen.config
++++ b/arch/x86/configs/xen.config
+@@ -1,3 +1,5 @@
++# x86-specific options for a Xen virtualization guest
++#
+ # global x86 required specific stuff
+ # On 32-bit HIGHMEM4G is not allowed
+ CONFIG_HIGHMEM64G=y
+diff --git a/kernel/configs/debug.config b/kernel/configs/debug.config
+index e8db8d938661..874afe2cd7c0 100644
+--- a/kernel/configs/debug.config
++++ b/kernel/configs/debug.config
+@@ -1,3 +1,5 @@
++# Debugging for CI systems and finding regressions
++#
+ # The config is based on running daily CI for enterprise Linux distros to
+ # seek regressions on linux-next builds on different bare-metal and virtual
+ # platforms. It can be used for example,
+diff --git a/kernel/configs/kvm_guest.config b/kernel/configs/kvm_guest.config
+index 208481d91090..3cc2810147da 100644
+--- a/kernel/configs/kvm_guest.config
++++ b/kernel/configs/kvm_guest.config
+@@ -1,3 +1,4 @@
++# Bootable as a KVM guest
+ CONFIG_NET=y
+ CONFIG_NET_CORE=y
+ CONFIG_NETDEVICES=y
+diff --git a/kernel/configs/nopm.config b/kernel/configs/nopm.config
+index 81ff07863576..a377c5914218 100644
+--- a/kernel/configs/nopm.config
++++ b/kernel/configs/nopm.config
+@@ -1,3 +1,5 @@
++# Disable Power Management
++
+ CONFIG_PM=n
+ CONFIG_SUSPEND=n
+ CONFIG_HIBERNATION=n
+diff --git a/kernel/configs/rust.config b/kernel/configs/rust.config
+index 38a7c5362c9c..941c69c161ad 100644
+--- a/kernel/configs/rust.config
++++ b/kernel/configs/rust.config
+@@ -1 +1,2 @@
++# Enable Rust
+ CONFIG_RUST=y
+diff --git a/kernel/configs/tiny-base.config b/kernel/configs/tiny-base.config
+index 2f0e6bf6db2c..ac4d254abc3f 100644
+--- a/kernel/configs/tiny-base.config
++++ b/kernel/configs/tiny-base.config
+@@ -1 +1,2 @@
++# Minimal options for tiny systems
+ CONFIG_EMBEDDED=y
+diff --git a/kernel/configs/tiny.config b/kernel/configs/tiny.config
+index 00009f7d0835..ea643e8f7f14 100644
+--- a/kernel/configs/tiny.config
++++ b/kernel/configs/tiny.config
+@@ -1,3 +1,5 @@
++# Smallest possible kernel image
++#
+ # CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
+ # CONFIG_KERNEL_GZIP is not set
+diff --git a/kernel/configs/x86_debug.config b/kernel/configs/x86_debug.config
+index 6fac5b405334..8a1129a1d59a 100644
+--- a/kernel/configs/x86_debug.config
++++ b/kernel/configs/x86_debug.config
+@@ -1,3 +1,4 @@
++# Debugging options for tip tree testing
+ CONFIG_X86_DEBUG_FPU=y
+ CONFIG_LOCK_STAT=y
+ CONFIG_DEBUG_VM=y
+diff --git a/kernel/configs/xen.config b/kernel/configs/xen.config
+index 436f806aa1ed..d14880177fd2 100644
+--- a/kernel/configs/xen.config
++++ b/kernel/configs/xen.config
+@@ -1,3 +1,5 @@
++# Bootable as a Xen guest
++#
+ # global stuff - these enable us to allow some
+ # of the not so generic stuff below for xen
+ CONFIG_PARAVIRT=y
+diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+index af1c96198f49..c523f24b504a 100644
+--- a/scripts/kconfig/Makefile
++++ b/scripts/kconfig/Makefile
+@@ -93,11 +93,11 @@ endif
+ %_defconfig: $(obj)/conf
+ 	$(Q)$< $(silent) --defconfig=arch/$(SRCARCH)/configs/$@ $(Kconfig)
+ 
+-configfiles=$(wildcard $(srctree)/kernel/configs/$@ $(srctree)/arch/$(SRCARCH)/configs/$@)
++configfiles=$(wildcard $(srctree)/kernel/configs/$(1) $(srctree)/arch/$(SRCARCH)/configs/$(1))
+ 
+ %.config: $(obj)/conf
+-	$(if $(call configfiles),, $(error No configuration exists for this target on this architecture))
+-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m .config $(configfiles)
++	$(if $(call configfiles,$@),, $(error No configuration exists for this target on this architecture))
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m .config $(call configfiles,$@)
+ 	$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+ 
+ PHONY += tinyconfig
+@@ -115,6 +115,7 @@ clean-files += tests/.cache
+ 
+ # Help text used by make help
+ help:
++	@echo  'Configuration targets:'
+ 	@echo  '  config	  - Update current config utilising a line-oriented program'
+ 	@echo  '  nconfig         - Update current config utilising a ncurses menu based program'
+ 	@echo  '  menuconfig	  - Update current config utilising a menu based program'
+@@ -141,6 +142,12 @@ help:
+ 	@echo  '                    default value without prompting'
+ 	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
+ 	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and pytest)'
++	@echo  ''
++	@echo  'Configuration fragment targets (for enabling various Kconfig items):'
++	@$(foreach c, $(call configfiles,*.config), \
++		printf "  %-20s - %s\\n" \
++			$(shell basename $(c)) \
++			"$(subst # ,,$(shell grep -m1 '^# ' $(c)))";)
+ 
+ # ===========================================================================
+ # object files used by all kconfig flavours
+-- 
+2.34.1
+
