@@ -2,118 +2,169 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5ECC3DA6F
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 20:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8945C27C40
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 20:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236783AbjHXUtd (ORCPT
+        id S237550AbjHXU6L (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Aug 2023 16:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
+        Thu, 24 Aug 2023 16:58:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243595AbjHXUtN (ORCPT
+        with ESMTP id S243551AbjHXU6F (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Aug 2023 16:49:13 -0400
-Received: from mail-io1-xd4a.google.com (mail-io1-xd4a.google.com [IPv6:2607:f8b0:4864:20::d4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AC4198E
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 13:49:11 -0700 (PDT)
-Received: by mail-io1-xd4a.google.com with SMTP id ca18e2360f4ac-7925611b817so17124939f.2
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 13:49:11 -0700 (PDT)
+        Thu, 24 Aug 2023 16:58:05 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D3E1995
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 13:58:03 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-68a4bcf8a97so247642b3a.1
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 13:58:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692910151; x=1693514951;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BpHJy0xtUCv2a8+NkW5PB2F6J+9bq70l3+n1crasXPg=;
-        b=4LHD+g3Hs93NzyV+bQ21E+6npsJl1j6DyiILpZfa70xOL04NtrcgcxNja0HiixFg41
-         PrTf4UfUdQDU/V8mg2ZFUmRgb2Zuc2OlF7y62wISBC8uCLbBJ4zZqSGeFYa/2SXlIgki
-         ExYfzJAfwP3q2slB97qIUwuNJpv1nNtAZQMa0M+MmshbAJsQABzZGYIDI0y6usSMbPMY
-         i8rfAcFb3FpVcq9qLYzgBsC0A/7+J+Vrti+dWuRWP0moLpOHVrI/LnzkcV08mqagQXVq
-         YoEmujrR1+DBOcTFF+TKf4ZrbsOuHkTinvqyXSDIWx9ImqIm94NhIr5gIvIMDoK5edfs
-         BDBA==
+        d=chromium.org; s=google; t=1692910683; x=1693515483;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wA+7Z5bFBcAE0uOSv6zSzqEkoW1yLNfWTP1h2/4HdN0=;
+        b=Zd1DvXh/KDSeBl0PaEezD2gNroJsMrm1IhcqWwlWO5zavOwN9ybs13YnBFK3cmNvNS
+         x4Cag66EfMowoHmsbWGFAx6eZ904Dd6DYahG9kxfX+eot4lmjfYmDucvbvus4yGCxI+B
+         U6PEPjAuiAgl3SvBAoR+FXYQ1OzOzLQMNhrfw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692910151; x=1693514951;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BpHJy0xtUCv2a8+NkW5PB2F6J+9bq70l3+n1crasXPg=;
-        b=j335Ec+2e7USfjBZZJgky3+XJ7ol4ByVlFvHeu0tMxy7TuJyMYtgLDQzZcL+ObTlXS
-         Oil4LFbrqIRv2z9rM3GQO2FcD+LQNJmA/GqpCkPhcXO+bD1wi0Ab8dcQrTfbv+yksI7U
-         +ww1Rr7SNTlaXdIh4JujWT0w7FyCH1l3GeXoOvb3CXaEFZZuQTGq4vPYCpRB3WF+XLGM
-         KutQ/qejSA1JJSY9zJVtOKAE3yaLmifYO8C1KiVTNptvJZQ0itRKxBPjJHtkybEiHVnH
-         oS0AN7UImA7IYrF48TURWiu0HIfFCNpKlDz+8FdNeFrVXVmdyinmtn2E7dWpRhcGvXGc
-         AZAA==
-X-Gm-Message-State: AOJu0YwOGg4WYpZXXz9HSkUlkrFqptBFRgGMTg4KhxrprEXzzZxLFGSM
-        /aVgESqyWv07M3BP8xapKdOlvb44W+HHiI2gPg==
-X-Google-Smtp-Source: AGHT+IGCzg9T12M4d/3pwncQLdGrc6I6tVfup/nIVd1cLf8n14WecMd5Gd812VnV/4jZSw+Sf0ueKAW2eYw3EjxUhw==
-X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a02:a155:0:b0:42b:a220:a32d with SMTP
- id m21-20020a02a155000000b0042ba220a32dmr202775jah.2.1692910151324; Thu, 24
- Aug 2023 13:49:11 -0700 (PDT)
-Date:   Thu, 24 Aug 2023 20:49:11 +0000
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAEbC52QC/yWNQQqDQAxFryJZNzBNLZVepXQRY6oBGSUpooh37
- 2A3D97i/b9DqJsGPKsdXBcLm3KR66UCGTj3itYVB0p0Sw3VGF/PMm/YuS3qgSyiIw7ccuaR28B +2vgPQeJ0ZyqtPBook7Prx9bz7vU+jh82xQlvfgAAAA==
-X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1692910150; l=1804;
- i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=q9RFqzuzSf+JWcxuWQQn2bXUpH2CiQm1RQ706+wRDyY=; b=JHfQP3Jmi2+KwCdCuR3S3FvUV4fZkP336jFiB4R4SLBE4/A58qQuTS/kDapIjztNdiYDiiYxh
- 3SvAzyQcFyJBJyFXWRGaxHRr7ZkcwaenKRdNvQPuN/mBtNP3AXUA0E9
-X-Mailer: b4 0.12.3
-Message-ID: <20230824-strncpy-drivers-accel-habanalabs-goya-goya-c-v1-1-b81d5639e7a3@google.com>
-Subject: [PATCH] habanalabs/goya: refactor deprecated strncpy
-From:   Justin Stitt <justinstitt@google.com>
-To:     Oded Gabbay <ogabbay@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org,
-        Justin Stitt <justinstitt@google.com>
-Content-Type: text/plain; charset="utf-8"
+        d=1e100.net; s=20221208; t=1692910683; x=1693515483;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wA+7Z5bFBcAE0uOSv6zSzqEkoW1yLNfWTP1h2/4HdN0=;
+        b=UKXumMKoEVC+0zROmuO/qtekRnJFCIPDdH9xOj35Js28EDFyNjqsarG+WiF4Kb20mN
+         /PSGVoFuyaZ5/ReuNsYdO+H62zr0KmfFVZV98kap+n8KPtMKnum6tkyIf3ySvVGSZefg
+         CpTXYY1GzjJmj7xlVyAzrM1cvGdUCMVXoeyBzsprkcPZgW4hHo+RI0xL9MR9c/h+Ox/E
+         AYfkJC4jPFYvCJx+2flH4S/8kkxef63mYPhxq4wLfjjaeEBWwnf8yXbwAKnTkVMAQiZe
+         LEHWGS3hq670RwUMqFXrx6vQ+7asL46cORic5NgID5exbRb0ekRH7EiQKLvXrSg2WCsB
+         xpIA==
+X-Gm-Message-State: AOJu0YxbQVQ3on+MEnPHbfn50rlri99rM4IZyP5cC/yN4BIVe4DPmvus
+        azAdCoDY/iryx+Po/joe2+UdKw==
+X-Google-Smtp-Source: AGHT+IFNp4VxreG3CylyrsmsqpwVJtY3FJ0hgjwSerf8ssFZIhscP48JGgNj9F+JGiCPyQ+4SiADoQ==
+X-Received: by 2002:a05:6a00:234b:b0:68a:613e:a358 with SMTP id j11-20020a056a00234b00b0068a613ea358mr11733220pfj.23.1692910682737;
+        Thu, 24 Aug 2023 13:58:02 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id u24-20020a62ed18000000b0068620bee456sm151850pfh.209.2023.08.24.13.58.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Aug 2023 13:58:02 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>, Yonghong Song <yhs@meta.com>,
+        "Erhard F." <erhard_f@mailbox.org>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        kernel test robot <oliver.sang@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Yang Li <yang.lee@linux.alibaba.com>,
+        Vincenzo Palazzo <vincenzopalazzodev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] kallsyms: Add more debug output for selftest
+Date:   Thu, 24 Aug 2023 13:58:00 -0700
+Message-Id: <20230824205757.never.730-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2670; i=keescook@chromium.org;
+ h=from:subject:message-id; bh=4g2gVO+jHHf6A5BpwCqHCSTJxw4am95B2lIPYwc/fVU=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBk58RYnI/7JqLCcNUkLpkzS5oa4Xz9o0zH+fN6z
+ H/+ZOzVtAqJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZOfEWAAKCRCJcvTf3G3A
+ JkpVEACAMD64wyZ4NMfPswxBHkAbxx7qt+ik9F/8/drT0bMpTLKJzcqj4gPjnDCj9tk3EHT77Ym
+ PTmKXACfxeLjwG70rSyngowWJFeHpB06Pe2/K4MWiLbuXvvQkjGr9ouxcUZ2jr1+8ziF92iuDro
+ O4v1vSWwDYawH2qkQi5z3oyBbytEKb03F1Xs2ajq3Mi92IE1Nbz8b8oEnD7+CXwL9Cmw70Hi+rP
+ W2GJ1au7oTK5xjXcFTsNgcoLOc3L6h1vg8wnJhWynwnwTbnj1d/hDiMPCiWSUSd3TZ410cnx7gq
+ ns3eI9g/u/zQZzFEkNwy3O3jKq9FTKAWE6QLWU9qai/cby5mMAN7hdI9c1jPKxhNwcwOYl+DBch
+ zKDgjVvQPVQ8fAxllJVGxlgMPiOWu3ELIMfrU7Gc7XPiHFRgn4nZpzKZZZVWfIGLcNx+9E7sfvH
+ g0dyM1uhWz+1oE9six/tXNClkddE87DMsVxgnpU9lHSf2qqtw6CiMa5KHadp5OsTUXVMy3FSfZj
+ GVJERMMp78ZsejAz4i/aTa2MKDk2Z9tuiimJ5NJlZyj1+w5j9GokzKeaM/ySPr+N45IlluGn7/M
+ 7lNUYAVqEBfOU6YiOnWQwSVc1nGLRAopARrcsf2RSB/zLmo2rjeomVh5aIJi9f4AwHI3D63jzp4
+ FaZUEV2 tl17Qm4w==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-`strncpy` is deprecated for use on NUL-terminated destination strings [1].
+While debugging a recent kallsyms_selftest failure[1], I needed more
+details on what specifically was failing. This adds those details for
+each failure state that is checked.
 
-A suitable replacement is `strscpy` [2] due to the fact that it
-guarantees NUL-termination on its destination buffer argument which is
-_not_ the case for `strncpy`!
+[1] https://lore.kernel.org/all/202308232200.1c932a90-oliver.sang@intel.com/
 
-Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-Link: https://github.com/KSPP/linux/issues/90
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Justin Stitt <justinstitt@google.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Yonghong Song <yhs@meta.com>
+Cc: "Erhard F." <erhard_f@mailbox.org>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: kernel test robot <oliver.sang@intel.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Yang Li <yang.lee@linux.alibaba.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Note: build-tested only.
----
- drivers/accel/habanalabs/goya/goya.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/kallsyms_selftest.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/goya/goya.c b/drivers/accel/habanalabs/goya/goya.c
-index 7c685e6075f6..d0ac7065f3d7 100644
---- a/drivers/accel/habanalabs/goya/goya.c
-+++ b/drivers/accel/habanalabs/goya/goya.c
-@@ -466,7 +466,7 @@ int goya_set_fixed_properties(struct hl_device *hdev)
- 	prop->pcie_dbi_base_address = mmPCIE_DBI_BASE;
- 	prop->pcie_aux_dbi_reg_addr = CFG_BASE + mmPCIE_AUX_DBI;
+diff --git a/kernel/kallsyms_selftest.c b/kernel/kallsyms_selftest.c
+index a2e3745d15c4..232e8faefb46 100644
+--- a/kernel/kallsyms_selftest.c
++++ b/kernel/kallsyms_selftest.c
+@@ -341,6 +341,7 @@ static int test_kallsyms_basic_function(void)
+ 		ret = lookup_symbol_name(addr, namebuf);
+ 		if (unlikely(ret)) {
+ 			namebuf[0] = 0;
++			pr_info("%d: lookup_symbol_name(%lx) failed\n", i, addr);
+ 			goto failed;
+ 		}
  
--	strncpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
-+	strscpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
- 		CARD_NAME_MAX_LEN);
+@@ -388,8 +389,11 @@ static int test_kallsyms_basic_function(void)
+ 			if (stat->addr != stat2->addr ||
+ 			    stat->real_cnt != stat2->real_cnt ||
+ 			    memcmp(stat->addrs, stat2->addrs,
+-				   stat->save_cnt * sizeof(stat->addrs[0])))
++				   stat->save_cnt * sizeof(stat->addrs[0]))) {
++				pr_info("%s: mismatch between kallsyms_on_each_symbol() and kallsyms_on_each_match_symbol()\n",
++					namebuf);
+ 				goto failed;
++			}
  
- 	prop->max_pending_cs = GOYA_MAX_PENDING_CS;
-@@ -5122,7 +5122,7 @@ int goya_cpucp_info_get(struct hl_device *hdev)
+ 			/*
+ 			 * The average of random increments is 128, that is, one of
+@@ -400,15 +404,23 @@ static int test_kallsyms_basic_function(void)
+ 		}
+ 
+ 		/* Need to be found at least once */
+-		if (!stat->real_cnt)
++		if (!stat->real_cnt) {
++			pr_info("%s: Never found\n", namebuf);
+ 			goto failed;
++		}
+ 
+ 		/*
+ 		 * kallsyms_lookup_name() returns the address of the first
+ 		 * symbol found and cannot be NULL.
+ 		 */
+-		if (!lookup_addr || lookup_addr != stat->addrs[0])
++		if (!lookup_addr) {
++			pr_info("%s: NULL lookup_addr?!\n", namebuf);
++			goto failed;
++		}
++		if (lookup_addr != stat->addrs[0]) {
++			pr_info("%s: lookup_addr != stat->addrs[0]\n", namebuf);
+ 			goto failed;
++		}
+ 
+ 		/*
+ 		 * If the addresses of all matching symbols are recorded, the
+@@ -420,8 +432,10 @@ static int test_kallsyms_basic_function(void)
+ 					break;
+ 			}
+ 
+-			if (j == stat->save_cnt)
++			if (j == stat->save_cnt) {
++				pr_info("%s: j == save_cnt?!\n", namebuf);
+ 				goto failed;
++			}
+ 		}
  	}
  
- 	if (!strlen(prop->cpucp_info.card_name))
--		strncpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
-+		strscpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
- 				CARD_NAME_MAX_LEN);
- 
- 	return 0;
-
----
-base-commit: f9604036a3fb6149badf346994b46b03f9292db7
-change-id: 20230824-strncpy-drivers-accel-habanalabs-goya-goya-c-2a05a2202c78
-
-Best regards,
---
-Justin Stitt <justinstitt@google.com>
+-- 
+2.34.1
 
