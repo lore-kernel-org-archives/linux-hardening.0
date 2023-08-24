@@ -2,63 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D85C3DA6F
-	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 20:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5ECC3DA6F
+	for <linux-hardening@archiver.kernel.org>; Thu, 24 Aug 2023 20:50:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243572AbjHXUpl (ORCPT
+        id S236783AbjHXUtd (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Aug 2023 16:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52462 "EHLO
+        Thu, 24 Aug 2023 16:49:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243553AbjHXUpL (ORCPT
+        with ESMTP id S243595AbjHXUtN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Aug 2023 16:45:11 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44BD11707
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 13:45:09 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-59299db9977so454527b3.2
-        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 13:45:09 -0700 (PDT)
+        Thu, 24 Aug 2023 16:49:13 -0400
+Received: from mail-io1-xd4a.google.com (mail-io1-xd4a.google.com [IPv6:2607:f8b0:4864:20::d4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AC4198E
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 13:49:11 -0700 (PDT)
+Received: by mail-io1-xd4a.google.com with SMTP id ca18e2360f4ac-7925611b817so17124939f.2
+        for <linux-hardening@vger.kernel.org>; Thu, 24 Aug 2023 13:49:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1692909908; x=1693514708;
+        d=google.com; s=20221208; t=1692910151; x=1693514951;
         h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=ZUR68uKdghzn2Y8Ad4w0Ea6gF9hUY3E2tFS5OeMPoWo=;
-        b=WUm5i98pTP7NvgunuzXTkokjDZUgTIFrlN4kIp7ozqkz/QPleN+RIiBkhtGzOb9IBn
-         XsHVw91mX8ry/g42MRuowOm6eJ6GZrtoVv70me8cLRmwLL00hddEpgBlZPtSp70QPdq1
-         Uj0wcbPRCkyZdNX8YiHdkM56E+dPiWmmVuPolOJP+eCIAgwxNTlIF/czwiEGJDOiVEiW
-         2gDxnqLq1qLFVrAIseA5XK2HRXeSLhRTM0lE9rhHkiJ9unE4qco+6wHHZaHbF0S4ZYCt
-         aGhsVltsPfzxtYzhXr2vUEutUWE/Dq5OrX+qkTicJEbr0+UZE1mPDZn3xfRKpPRZhjN9
-         UETw==
+        bh=BpHJy0xtUCv2a8+NkW5PB2F6J+9bq70l3+n1crasXPg=;
+        b=4LHD+g3Hs93NzyV+bQ21E+6npsJl1j6DyiILpZfa70xOL04NtrcgcxNja0HiixFg41
+         PrTf4UfUdQDU/V8mg2ZFUmRgb2Zuc2OlF7y62wISBC8uCLbBJ4zZqSGeFYa/2SXlIgki
+         ExYfzJAfwP3q2slB97qIUwuNJpv1nNtAZQMa0M+MmshbAJsQABzZGYIDI0y6usSMbPMY
+         i8rfAcFb3FpVcq9qLYzgBsC0A/7+J+Vrti+dWuRWP0moLpOHVrI/LnzkcV08mqagQXVq
+         YoEmujrR1+DBOcTFF+TKf4ZrbsOuHkTinvqyXSDIWx9ImqIm94NhIr5gIvIMDoK5edfs
+         BDBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692909908; x=1693514708;
+        d=1e100.net; s=20221208; t=1692910151; x=1693514951;
         h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZUR68uKdghzn2Y8Ad4w0Ea6gF9hUY3E2tFS5OeMPoWo=;
-        b=Hx3CGntJKoc1i9IEcQsIVUtto8WtVu5m1+06KF7m6AZLRiXER49m3rGhlWwhAYz71h
-         q15rM1GK7QDKhEbiXxJchZP4OLtQVwIA4Nr7ecqxuM6jmL5UT2mcrHLgGaWbQ/ZYQYYN
-         cZgPpLkvzMyY6OZUkdnfoRXjHbZCiZercDFcW1y+fLOMFXoYZgQRqAwn27RbDsH+n33Y
-         zxEiGY14jKdFhfjrAuwM3Oo5kSahBqm7Z1NadrCFS+Y7xGyVYR49jjxcSuc/xeOxRZZB
-         DHFDdf4w025G2v1Nn3Y41eesuWloE1VGyKXqUqgulVBfPLSNUgvKgTrbT2C5RgMztNHS
-         gAzg==
-X-Gm-Message-State: AOJu0YzqBPmDNn+4rVTESJXY841Qv+wC9h1qKdMy5PjkDZ8aOLciZbsW
-        sEM0dlU6gAmzvfKZ+1dLEvTAJq2imXQI8NELDg==
-X-Google-Smtp-Source: AGHT+IGPDaZhtt7yTFPzL+iUB8gPlSwsG7LrnFHzE3lb+AAvs/HuF+e1Dp6UupEf3ne4ULA78L3JabmtBg+sOQn8+g==
+        bh=BpHJy0xtUCv2a8+NkW5PB2F6J+9bq70l3+n1crasXPg=;
+        b=j335Ec+2e7USfjBZZJgky3+XJ7ol4ByVlFvHeu0tMxy7TuJyMYtgLDQzZcL+ObTlXS
+         Oil4LFbrqIRv2z9rM3GQO2FcD+LQNJmA/GqpCkPhcXO+bD1wi0Ab8dcQrTfbv+yksI7U
+         +ww1Rr7SNTlaXdIh4JujWT0w7FyCH1l3GeXoOvb3CXaEFZZuQTGq4vPYCpRB3WF+XLGM
+         KutQ/qejSA1JJSY9zJVtOKAE3yaLmifYO8C1KiVTNptvJZQ0itRKxBPjJHtkybEiHVnH
+         oS0AN7UImA7IYrF48TURWiu0HIfFCNpKlDz+8FdNeFrVXVmdyinmtn2E7dWpRhcGvXGc
+         AZAA==
+X-Gm-Message-State: AOJu0YwOGg4WYpZXXz9HSkUlkrFqptBFRgGMTg4KhxrprEXzzZxLFGSM
+        /aVgESqyWv07M3BP8xapKdOlvb44W+HHiI2gPg==
+X-Google-Smtp-Source: AGHT+IGCzg9T12M4d/3pwncQLdGrc6I6tVfup/nIVd1cLf8n14WecMd5Gd812VnV/4jZSw+Sf0ueKAW2eYw3EjxUhw==
 X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
- (user=justinstitt job=sendgmr) by 2002:a25:2442:0:b0:d11:6816:2d31 with SMTP
- id k63-20020a252442000000b00d1168162d31mr248160ybk.7.1692909908546; Thu, 24
- Aug 2023 13:45:08 -0700 (PDT)
-Date:   Thu, 24 Aug 2023 20:45:08 +0000
+ (user=justinstitt job=sendgmr) by 2002:a02:a155:0:b0:42b:a220:a32d with SMTP
+ id m21-20020a02a155000000b0042ba220a32dmr202775jah.2.1692910151324; Thu, 24
+ Aug 2023 13:49:11 -0700 (PDT)
+Date:   Thu, 24 Aug 2023 20:49:11 +0000
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAFPB52QC/zWNQQrCQAwAv1JyNrCbChW/Ih6yu2kbKGtJtCilf
- 3cRPA1zmdnBxVQcrt0OJpu6PmqTeOogz1wnQS3NgQL14UJn9KfVvH6wmG5ijpyzLDhz4soLJ8e JX0Xpj4wh9eMQhyQSCVp2NRn1/Vve7sfxBU6EPOOCAAAA
+X-B4-Tracking: v=1; b=H4sIAEbC52QC/yWNQQqDQAxFryJZNzBNLZVepXQRY6oBGSUpooh37
+ 2A3D97i/b9DqJsGPKsdXBcLm3KR66UCGTj3itYVB0p0Sw3VGF/PMm/YuS3qgSyiIw7ccuaR28B +2vgPQeJ0ZyqtPBook7Prx9bz7vU+jh82xQlvfgAAAA==
 X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1692909907; l=2009;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1692910150; l=1804;
  i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
- bh=6YGJBQmqB85nFtFD66zoKdZ4L+GgP4Vbcd+6oeKMetM=; b=+rLrfvbmfKhGQUmnwCP1/TSULbb1D6F2rtJ/GwVNHlqUPNPwNaUZuVzkoksRXIHvf+ECMV3Od
- iAsOhO9SWEsDzwggz1kemkbqpISqUBHTxxpuL/PkaFKeR7WZw8MhNQ5
+ bh=q9RFqzuzSf+JWcxuWQQn2bXUpH2CiQm1RQ706+wRDyY=; b=JHfQP3Jmi2+KwCdCuR3S3FvUV4fZkP336jFiB4R4SLBE4/A58qQuTS/kDapIjztNdiYDiiYxh
+ 3SvAzyQcFyJBJyFXWRGaxHRr7ZkcwaenKRdNvQPuN/mBtNP3AXUA0E9
 X-Mailer: b4 0.12.3
-Message-ID: <20230824-strncpy-drivers-accel-habanalabs-gaudi2-gaudi2-c-v1-1-1a37b65576b4@google.com>
-Subject: [PATCH] habanalabs/gaudi2: refactor deprecated strncpy
+Message-ID: <20230824-strncpy-drivers-accel-habanalabs-goya-goya-c-v1-1-b81d5639e7a3@google.com>
+Subject: [PATCH] habanalabs/goya: refactor deprecated strncpy
 From:   Justin Stitt <justinstitt@google.com>
 To:     Oded Gabbay <ogabbay@kernel.org>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
@@ -83,35 +83,35 @@ Signed-off-by: Justin Stitt <justinstitt@google.com>
 ---
 Note: build-tested only.
 ---
- drivers/accel/habanalabs/gaudi2/gaudi2.c | 4 ++--
+ drivers/accel/habanalabs/goya/goya.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-index 20c4583f12b0..755b2d92357d 100644
---- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
-+++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
-@@ -2431,7 +2431,7 @@ static int gaudi2_set_fixed_properties(struct hl_device *hdev)
- 	prop->pcie_dbi_base_address = CFG_BASE + mmPCIE_DBI_BASE;
+diff --git a/drivers/accel/habanalabs/goya/goya.c b/drivers/accel/habanalabs/goya/goya.c
+index 7c685e6075f6..d0ac7065f3d7 100644
+--- a/drivers/accel/habanalabs/goya/goya.c
++++ b/drivers/accel/habanalabs/goya/goya.c
+@@ -466,7 +466,7 @@ int goya_set_fixed_properties(struct hl_device *hdev)
+ 	prop->pcie_dbi_base_address = mmPCIE_DBI_BASE;
  	prop->pcie_aux_dbi_reg_addr = CFG_BASE + mmPCIE_AUX_DBI;
  
--	strncpy(prop->cpucp_info.card_name, GAUDI2_DEFAULT_CARD_NAME, CARD_NAME_MAX_LEN);
-+	strscpy(prop->cpucp_info.card_name, GAUDI2_DEFAULT_CARD_NAME, CARD_NAME_MAX_LEN);
+-	strncpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
++	strscpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
+ 		CARD_NAME_MAX_LEN);
  
- 	prop->mme_master_slave_mode = 1;
- 
-@@ -2884,7 +2884,7 @@ static int gaudi2_cpucp_info_get(struct hl_device *hdev)
+ 	prop->max_pending_cs = GOYA_MAX_PENDING_CS;
+@@ -5122,7 +5122,7 @@ int goya_cpucp_info_get(struct hl_device *hdev)
  	}
  
  	if (!strlen(prop->cpucp_info.card_name))
--		strncpy(prop->cpucp_info.card_name, GAUDI2_DEFAULT_CARD_NAME, CARD_NAME_MAX_LEN);
-+		strscpy(prop->cpucp_info.card_name, GAUDI2_DEFAULT_CARD_NAME, CARD_NAME_MAX_LEN);
+-		strncpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
++		strscpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
+ 				CARD_NAME_MAX_LEN);
  
- 	/* Overwrite binning masks with the actual binning values from F/W */
- 	hdev->dram_binning = prop->cpucp_info.dram_binning_mask;
+ 	return 0;
 
 ---
 base-commit: f9604036a3fb6149badf346994b46b03f9292db7
-change-id: 20230824-strncpy-drivers-accel-habanalabs-gaudi2-gaudi2-c-0b3f717bee12
+change-id: 20230824-strncpy-drivers-accel-habanalabs-goya-goya-c-2a05a2202c78
 
 Best regards,
 --
