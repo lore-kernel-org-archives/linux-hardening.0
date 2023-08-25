@@ -2,112 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3EFC71133
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 18:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD65EE49A6
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 18:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229844AbjHYSVE (ORCPT
+        id S229636AbjHYSVh (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Aug 2023 14:21:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43122 "EHLO
+        Fri, 25 Aug 2023 14:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbjHYSUg (ORCPT
+        with ESMTP id S231319AbjHYSVR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Aug 2023 14:20:36 -0400
-Received: from mail-pg1-x530.google.com (mail-pg1-x530.google.com [IPv6:2607:f8b0:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F7110C7
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 11:20:34 -0700 (PDT)
-Received: by mail-pg1-x530.google.com with SMTP id 41be03b00d2f7-565dc391be3so1654520a12.0
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 11:20:34 -0700 (PDT)
+        Fri, 25 Aug 2023 14:21:17 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649512697
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 11:21:12 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1bf3a2f4528so10424755ad.2
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 11:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1692987633; x=1693592433;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GYd1wVFPRI7NiM/Sx4/tad/ZtbY6g9sye8P5AXqu+fc=;
-        b=E4mC5YAXMMgmUHgfRiWFcSZjAFYw1waD0EqZCNwtYhRSRtgJoFZVlCS3JG3wV7FXjd
-         sXVU7RTKIYiV68OaJT+pNyPhtCG1CpcRdXA82AG5ofhhqR/vSGm3tvd1mpbR6M1weagG
-         NwWQJu1Josu1pkUS1L/DPphW0b+C0Nzy+d45c=
+        d=chromium.org; s=google; t=1692987672; x=1693592472;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cd1paIDws1ExLMgJh/WiTiPNEsGUGwcEQ17xiLulNdo=;
+        b=nhk5Ko+OG/2Q2+PvkEDtXdRrk3or+134Updyqdlu1P6XQCscy7egtl8AziCQjtc+Bn
+         zp65RvpL7MR7vfIQJtiyZ3WEwZ2/AOZJxGZQ4mDRGInpxpoBv+UhEk0r9hCNWL5bYNqC
+         5O0xNrQMLaQBipxQ7a78YEG4PHOgm1S3/j8H4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692987633; x=1693592433;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GYd1wVFPRI7NiM/Sx4/tad/ZtbY6g9sye8P5AXqu+fc=;
-        b=cYiEk38fhu4TsJxf6WfEV2CIkmZPJLPlFxYGKshbhK4fiXrc8s2k9JdMR0awzHiJOC
-         HgCfWjS7I+LunGmrkwlvoyxXSTP4bppiF5uYzERNRMuqfM9S3wEfdPcfNVoK49gyxMNW
-         ZMM+AMk3K/Ucy0S4129lqjtDo4Q82ASCpWDhKhsQS4offcnlhf3UzfHMzS2gzTjamT6H
-         nylEwutWY09jckfj3QYpp2HgCMTtEFtG+kG4OmejeervOJeQmjLdpe1jRAkkLVRCYk7R
-         Db0+HMEJ3ctc7M8Nqrw8s1hvCEpaGo7IolmLNcSotr3TibeaHkPZ0cqznr7DR8OCP84u
-         F/XA==
-X-Gm-Message-State: AOJu0Yz6rNpzHZXcZsyGHJYVgly3KSrm/naYi5oOU9M4uZ4L3D41bCLw
-        0sH3hkXmjgBGOl3XeqMCSZV7phlGxd7yvhf3Pyk=
-X-Google-Smtp-Source: AGHT+IF6DSGG+sLTemEr6zFswCsdJsrOmZC3VrMrE6v1fI8J4N4rJsVzak2qfPMHQ2MCnkGlwtuaPA==
-X-Received: by 2002:a17:90a:c08d:b0:267:f8f4:73ab with SMTP id o13-20020a17090ac08d00b00267f8f473abmr28444155pjs.16.1692987633516;
-        Fri, 25 Aug 2023 11:20:33 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1692987672; x=1693592472;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cd1paIDws1ExLMgJh/WiTiPNEsGUGwcEQ17xiLulNdo=;
+        b=RejVoYF0s49Su64crhry4AikwCl4R4g/f7+z0B8nAMEl88b9A1noJPDXG68px1TY6u
+         QbzK2Eeqf+RYPQxjPGcMeuj70oQR3ecq4xe+p2E9AMxTsI/o+/tzugax3QhZMpPG38cx
+         4infhhiX/78/80Z9h7pCYkGIH/XlTP3+TsmxTdAxB4/hKp+bNJyps4CGrwG6/ivCKwoi
+         FGmPQPY3c8QjGdqWfZcYRKLqA3WuhwgXtsVd+QRnb0GsuCwbbI5GmAxnervFXOMcTYEu
+         fe22hTrmYrVVODaewUbMsVo/4XN8iOWMm6HMaztPtD7/y2FgMfzQ4j2hgAXkmn02OmSB
+         h/TA==
+X-Gm-Message-State: AOJu0YzZX/UrT7eRzjGqpF62Gq6V35/gnhA1jxtz7a2wzTWKhGvsz+a9
+        4CwWPNWvT/7T+fsZvYcd1KqOzg==
+X-Google-Smtp-Source: AGHT+IHIDQ9FIJyjliN/xDw65w9ny7WQFMwwk363Mwv+Ejm+xJkfXuvIT+Ox7t86mTNHW1gFw7K36Q==
+X-Received: by 2002:a17:902:ec87:b0:1bb:9f07:5e0 with SMTP id x7-20020a170902ec8700b001bb9f0705e0mr21488860plg.60.1692987671857;
+        Fri, 25 Aug 2023 11:21:11 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d12-20020a17090a628c00b0026b3f76a063sm1910536pjj.44.2023.08.25.11.20.32
+        by smtp.gmail.com with ESMTPSA id 6-20020a170902c10600b001bbb598b8bbsm2056354pli.41.2023.08.25.11.21.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Aug 2023 11:20:32 -0700 (PDT)
-Date:   Fri, 25 Aug 2023 11:20:32 -0700
+        Fri, 25 Aug 2023 11:21:11 -0700 (PDT)
+Date:   Fri, 25 Aug 2023 11:21:10 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
 Subject: Re: [PATCH] kbuild: Show Kconfig fragments in "help"
-Message-ID: <202308251119.B93C95A3A7@keescook>
+Message-ID: <202308251120.159800A@keescook>
 References: <20230824223606.never.762-kees@kernel.org>
- <21193a52-0425-f5ae-90f0-10e4c578ae90@infradead.org>
+ <42174d5e-59f0-4612-d7a1-11e830d0a044@csgroup.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <21193a52-0425-f5ae-90f0-10e4c578ae90@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <42174d5e-59f0-4612-d7a1-11e830d0a044@csgroup.eu>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 05:04:02PM -0700, Randy Dunlap wrote:
-> Hi Kees,
+On Fri, Aug 25, 2023 at 04:56:54AM +0000, Christophe Leroy wrote:
+> Le 25/08/2023 à 00:36, Kees Cook a écrit :
+> > +# Base hardware support for 86xx
 > 
-> On 8/24/23 15:36, Kees Cook wrote:
-> > Doing a "make help" would show only hard-coded Kconfig targets and
-> > depended on the archhelp target to include ".config" targets. There was
-> > nothing showing global kernel/configs/ targets. Solve this by walking
-> > the wildcard list and include them in the output, using the first comment
-> > line as the help text.
-> > 
-> > Update all Kconfig fragments to include help text and adjust archhelp
-> > targets to avoid redundancy.
-> > 
-> > Adds the following section to "help" target output:
-> > 
-> > Configuration fragment targets (for enabling various Kconfig items):
-> >   debug.config         - Debugging for CI systems and finding regressions
-> >   kvm_guest.config     - Bootable as a KVM guest
-> >   nopm.config          - Disable Power Management
-> >   rust.config          - Enable Rust
-> >   tiny-base.config     - Minimal options for tiny systems
-> >   tiny.config          - Smallest possible kernel image
-> >   x86_debug.config     - Debugging options for tip tree testing
-> >   xen.config           - Bootable as a Xen guest
-> >   tiny.config          - x86-specific options for a small kernel image
-> >   xen.config           - x86-specific options for a Xen virtualization guest
-> 
-> ISTM that you are missing the "why" part of this change in the commit
-> description.
+> s/86xx/85xx
+> [...]
 
-I want to see what fragments are available without needing to know the
-source tree layout for their locations. :)
-
-> "make tinyconfig" is the real target here.  The other (tiny.) files are just
-> implementation details.
-> We can't put all implementation details into help messages and it's not
-> difficult to find that the (tiny.) config files are merged to make the
-> final .config file.
-
-Yeah, this seems true for much of the ppc stuff to, as pointed out by
-mpe. I'll go answer there...
+Thanks for the typo fixes! I'll get these all fixed up. :)
 
 -- 
 Kees Cook
