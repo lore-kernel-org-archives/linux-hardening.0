@@ -2,92 +2,92 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6D1C3DA6F
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 00:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1711EE49BD
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 01:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238918AbjHYAEn (ORCPT
+        id S232345AbjHYBOB (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Aug 2023 20:04:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53644 "EHLO
+        Thu, 24 Aug 2023 21:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230167AbjHYAEM (ORCPT
+        with ESMTP id S237177AbjHYBNs (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Aug 2023 20:04:12 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA0019B4;
-        Thu, 24 Aug 2023 17:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=vmLNsvDlbkyIYpEkO8eNcxoQJchqhoHOSemi0JGSdvc=; b=NZRmeKsAfkmgAA6LpunC8rC5Dc
-        6TMSKwMSi9DIBtwAzrZChPIPgpzg2Qu1o7mmwg+gO61ze0Wdv/Yb/RdjCPLaMcWBOS5iX2MvgYBpy
-        AZe8Y7MRVMO2tuVm64QfKEmy2CgUQ1KNk/oxulmE7B9tP+D/TEuDM09pN8zO7x04G0HWkhM50K14O
-        oE++tlkqDVIVJwwqmxqut6MrPcMvArkX49RuaV/dMvFulx+2JQEYazuuTQN0YrMRu7j8aby1dAdj7
-        XbAkwelcoGM6/fSREBI/linqqEd4CVW/VQEAa6il6B3j+vSldg3Aq16jPWpAYkNn4ICmSZmwTIWRd
-        koqOHYpw==;
-Received: from [2601:1c2:980:9ec0::2764]
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qZKJ2-0040rp-0h;
-        Fri, 25 Aug 2023 00:04:04 +0000
-Message-ID: <21193a52-0425-f5ae-90f0-10e4c578ae90@infradead.org>
-Date:   Thu, 24 Aug 2023 17:04:02 -0700
+        Thu, 24 Aug 2023 21:13:48 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFCA19BB;
+        Thu, 24 Aug 2023 18:13:47 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37OJES7G018522;
+        Fri, 25 Aug 2023 01:13:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2023-03-30;
+ bh=PeKpm5uGyPLoWpsbJU0wnUq8VkkkAegsoBMOFUvgTio=;
+ b=PJTvItK/OCmBxtO2DEQq3knBizGrjlRUu2Evfv8mfbk2pxrPMQh+MnmDazrpd61nmPY7
+ QBSarCsLN3AUw2RHviDsUytjM+6Q/lTahEtHf37lJn8iPAmWC1lFEu4fqcyslbW7edoL
+ 4pNOwq2ZWk7qgZJhZlWkQ5CJskCDTTAfZ8caYdNGuRVEWg4dMZiLN4Kr1+Cci5s+tc4j
+ sNU1FJfOS/NDhca1FEo+Ng2cKSrNBPYQptB+jpnVrJwG40wTq+klvw1XY80Nedb7pKGy
+ 3nZ5qxFN4vKGS+9rId64IDH6Y8g079UJlP/JMJpnIPSQTqy8ylZQM41KSs/nCcD22tVX zA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sn20cncv5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Aug 2023 01:13:40 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37OMuKkm036170;
+        Fri, 25 Aug 2023 01:13:39 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3sn1ywqfkj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Aug 2023 01:13:39 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37P1DVE8019787;
+        Fri, 25 Aug 2023 01:13:38 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3sn1ywqf8n-8;
+        Fri, 25 Aug 2023 01:13:38 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: bfa: Replace one-element array with flexible-array member in struct fc_rscn_pl_s
+Date:   Thu, 24 Aug 2023 21:12:54 -0400
+Message-Id: <169292577165.789945.3215059945658236967.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <ZN0VTpDBOSVHGayb@work>
+References: <ZN0VTpDBOSVHGayb@work>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH] kbuild: Show Kconfig fragments in "help"
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20230824223606.never.762-kees@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20230824223606.never.762-kees@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-25_01,2023-08-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ malwarescore=0 spamscore=0 phishscore=0 mlxlogscore=569 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2308250009
+X-Proofpoint-ORIG-GUID: Agt8W35HpKYI4yQ6fQ5yaTeZYuZMWwfR
+X-Proofpoint-GUID: Agt8W35HpKYI4yQ6fQ5yaTeZYuZMWwfR
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi Kees,
+On Wed, 16 Aug 2023 12:28:30 -0600, Gustavo A. R. Silva wrote:
 
-On 8/24/23 15:36, Kees Cook wrote:
-> Doing a "make help" would show only hard-coded Kconfig targets and
-> depended on the archhelp target to include ".config" targets. There was
-> nothing showing global kernel/configs/ targets. Solve this by walking
-> the wildcard list and include them in the output, using the first comment
-> line as the help text.
+> One-element and zero-length arrays are deprecated. So, replace
+> one-element array in struct fc_rscn_pl_s with flexible-array member.
 > 
-> Update all Kconfig fragments to include help text and adjust archhelp
-> targets to avoid redundancy.
+> This results in no differences in binary output.
 > 
-> Adds the following section to "help" target output:
 > 
-> Configuration fragment targets (for enabling various Kconfig items):
->   debug.config         - Debugging for CI systems and finding regressions
->   kvm_guest.config     - Bootable as a KVM guest
->   nopm.config          - Disable Power Management
->   rust.config          - Enable Rust
->   tiny-base.config     - Minimal options for tiny systems
->   tiny.config          - Smallest possible kernel image
->   x86_debug.config     - Debugging options for tip tree testing
->   xen.config           - Bootable as a Xen guest
->   tiny.config          - x86-specific options for a small kernel image
->   xen.config           - x86-specific options for a Xen virtualization guest
 
-ISTM that you are missing the "why" part of this change in the commit
-description.
+Applied to 6.6/scsi-queue, thanks!
 
-"make tinyconfig" is the real target here.  The other (tiny.) files are just
-implementation details.
-We can't put all implementation details into help messages and it's not
-difficult to find that the (tiny.) config files are merged to make the
-final .config file.
-
-So what is it that you are trying to solve?
+[1/1] scsi: bfa: Replace one-element array with flexible-array member in struct fc_rscn_pl_s
+      https://git.kernel.org/mkp/scsi/c/56a4d69a26c9
 
 -- 
-~Randy
+Martin K. Petersen	Oracle Linux Engineering
