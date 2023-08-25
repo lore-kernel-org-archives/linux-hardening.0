@@ -2,266 +2,96 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BABC83F08
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 23:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA3DC83F08
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 23:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230007AbjHYX1J (ORCPT
+        id S229706AbjHYXj5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Aug 2023 19:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34538 "EHLO
+        Fri, 25 Aug 2023 19:39:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbjHYX1D (ORCPT
+        with ESMTP id S231493AbjHYXjk (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Aug 2023 19:27:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99B42109;
-        Fri, 25 Aug 2023 16:27:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 780F260FD3;
-        Fri, 25 Aug 2023 23:27:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F31DC433C7;
-        Fri, 25 Aug 2023 23:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693006019;
-        bh=NRfWPuaD6h1lm/WpIu+J+BVfiSwTpIn3GiMhCp3Y/ok=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A8JvjCUu0qyJwTqpSM+isHKAk291AzsSN2EBizo11a0ZsG5p9M+yAyS7ZyfPsm1LQ
-         Gw7GMlHdtyrrYJdKu/zvfJO0rArih4p6HOPJ9nYe58LCs55sj4dB1TcmzHVb0ZaXIX
-         ANJOjDYbbfIUu5JLi5cnzBiq4cLzcL5k+d202am3NNg16gep31/CIBDFkRiG9TojWO
-         paYtV9GiG+30sMpQ/IldFSnEGGXkdYLUthc4dYpIfTZiWNalIxVEGceIKgqnxC7urt
-         BaD0rztnT2VCavOSusfpljUd0LCK+djXV6SWdsMw4ROwzln3NZqp2hVk5fP9qc9Qsq
-         oE7C1K78bXQ1w==
-Date:   Fri, 25 Aug 2023 16:26:57 -0700
-From:   Josh Poimboeuf <jpoimboe@kernel.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        x86@kernel.org, peterz@infradead.org, keescook@chromium.org,
-        elver@google.com, dvyukov@google.com, glider@google.com
-Subject: Re: [BUG] missing return thunk: __ret+0x5/0x7e-__ret+0x0/0x7e: e9 f6
- ff ff ff
-Message-ID: <20230825232657.psb7c7x2tdgzciqw@treble>
-References: <4dc3d0ec-b827-4bce-8927-cfa5d837fd03@paulmck-laptop>
- <20230816181720.GNZN0SsKi/B4eCsZHu@fat_crate.local>
- <2023082458-vividness-habitable-cbc8@gregkh>
+        Fri, 25 Aug 2023 19:39:40 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6288271D
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 16:39:13 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-31771bb4869so1139571f8f.0
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 16:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1693006749; x=1693611549;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ARAkvhj7ZJCGS7HKCILL6B4n+8Rbnyk4X5Sfz208Kk0=;
+        b=QVGmFqsF4/K5NVoJoJF+dUyFvy7vxGVJw/2VXZ+2uZidyZ4CawnajEyf4nSeJ43ACl
+         zsm3vqdDdSaMDQDB8amtxmHw3u+uXWhKayeIGMmRXZoMlA7C18saeGyS87eVkzoPloL3
+         R7KuHQ7vtbPQRhiN+GormH5u385wcE4qcpoNY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693006749; x=1693611549;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ARAkvhj7ZJCGS7HKCILL6B4n+8Rbnyk4X5Sfz208Kk0=;
+        b=NKRhNoPbCTFtbR8bjZsjxSCjTUhF6lIz1iWgqBfman2wX9TpbCh9GGgRlOXkBwwTli
+         pvrbMkxL+/Mqz7FnQBVGaRIlYpWNzPxiXWqAqfbdOzx/IzTe8V5LuWD2f1w5XDDCIspv
+         V9uM5jpSqh5GO0qCCS5l9BeM487qzKxA249F00SYVenFoX7HznHhfjqiLIazB4554YhI
+         LtBypIAGKyVFUdvVfyjDa1k8kgzkon4ZKuwYx2lCmu1Ou3sfAAGJgYkQKMjcTMkehyTA
+         zCVLBm+9+XlVf14oXoOpbHaqUqI78plVhDModMOkkLX3xO8Pu2CrhL1mfZsqVq0kpLfK
+         snwg==
+X-Gm-Message-State: AOJu0YxzMFTIOHbhjJTggEg8DM1YpiBzlj3W+OZDqhaXkQTeCy1VrMV9
+        wbkTwk0iUwxyXqGQJUrbrrBvFi/LNSKNFs2PsLI=
+X-Google-Smtp-Source: AGHT+IEsR5kPSot7EBTsKvWX61nUvqSEEWvhLz5WV7RxtPd2oQJSaJpp6kMZakl5ST1PWT//n82OWA==
+X-Received: by 2002:a5d:5242:0:b0:319:8261:2087 with SMTP id k2-20020a5d5242000000b0031982612087mr15464022wrc.43.1693006749230;
+        Fri, 25 Aug 2023 16:39:09 -0700 (PDT)
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
+        by smtp.gmail.com with ESMTPSA id k8-20020a05640212c800b0052a3b212157sm1483947edx.63.2023.08.25.16.39.08
+        for <linux-hardening@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 25 Aug 2023 16:39:08 -0700 (PDT)
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5280ef23593so2013656a12.3
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 16:39:08 -0700 (PDT)
+X-Received: by 2002:a17:906:59:b0:9a4:88af:b82 with SMTP id
+ 25-20020a170906005900b009a488af0b82mr2214834ejg.77.1693006747785; Fri, 25 Aug
+ 2023 16:39:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2023082458-vividness-habitable-cbc8@gregkh>
+References: <cover.1692931954.git.gustavoars@kernel.org> <d4f8780527d551552ee96f17a0229e02e1c200d1.1692931954.git.gustavoars@kernel.org>
+ <202308251410.8DAA6AC5E@keescook>
+In-Reply-To: <202308251410.8DAA6AC5E@keescook>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Fri, 25 Aug 2023 16:38:56 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXNxYZsxFcF2iiKidBr4znsS5ejjmQKU_pdNpsrAqyeXEg@mail.gmail.com>
+Message-ID: <CA+ASDXNxYZsxFcF2iiKidBr4znsS5ejjmQKU_pdNpsrAqyeXEg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] wifi: mwifiex: Sanity check tlv_len and tlv_bitmap_len
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Kalle Valo <kvalo@kernel.org>,
+        Amitkumar Karwar <akarwar@marvell.com>,
+        Xinming Hu <huxm@marvell.com>, Dan Williams <dcbw@redhat.com>,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 03:52:56PM +0200, Greg KH wrote:
-> On Wed, Aug 16, 2023 at 08:17:20PM +0200, Borislav Petkov wrote:
-> > Hey Paul,
-> > 
-> > On Wed, Aug 16, 2023 at 10:54:09AM -0700, Paul E. McKenney wrote:
-> > > I hit the splat at the end of this message in recent mainline, and has
-> > > appeared some time since v6.5-rc1.  Should I be worried?
-> > 
-> > does it go away if you try the latest tip:x86/urgent branch?
-> 
-> Note, this problem is showing up in the 6.1.y branch right now, due to
-> one objtool patch not being able to be backported there easily (i.e. I
-> tried and gave up.)
-> 
-> 4ae68b26c3ab ("objtool/x86: Fix SRSO mess") being the commit that I
-> can't seem to get to work properly, my attempt can be seen here:
-> 	https://lore.kernel.org/r/2023082212-pregnant-lizard-80e0@gregkh
+On Fri, Aug 25, 2023 at 2:10=E2=80=AFPM Kees Cook <keescook@chromium.org> w=
+rote:
+> On Thu, Aug 24, 2023 at 09:10:45PM -0600, Gustavo A. R. Silva wrote:
+> > +                     mwifiex_dbg(priv->adapter, WARN,
+> > +                                 "TLV size (%zu) overflows event_buf b=
+uf_left=3D%d\n",
+> > +                                 size_add(sizeof(tlv_rxba->header), tl=
+v_len),
+> > +                                 tlv_buf_left);
+>
+> With the suggested change to make this a warning and not dbg:
 
-> --- a/tools/objtool/arch/x86/decode.c
-> +++ b/tools/objtool/arch/x86/decode.c
-> @@ -796,8 +796,11 @@ bool arch_is_retpoline(struct symbol *sy
->  
->  bool arch_is_rethunk(struct symbol *sym)
->  {
-> -	return !strcmp(sym->name, "__x86_return_thunk") ||
-> -	       !strcmp(sym->name, "srso_untrain_ret") ||
-> -	       !strcmp(sym->name, "srso_safe_ret") ||
-> -	       !strcmp(sym->name, "retbleed_return_thunk");
-> +	return !strcmp(sym->name, "__x86_return_thunk");
-> +}
-> +
-> +bool arch_is_embedded_insn(struct symbol *sym)
-> +{
-> +	return !strcmp(sym->name, "retbleed_return_thunk") ||
-> +	       !strcmp(sym->name, "srso_safe_ret");
+mwifiex_dbg(..., WARN, ...) *is* a warning, not a debug message. Or at
+least, that's how it's used throughout this driver, even though it
+actually yields a dev_info()-level message, regardless of the 'mask'
+arg:
 
-This wouldn't work with the current 6.1.y branch, I assume you had some
-other patches applied before this.  e.g., the patch renaming __ret to
-retbleed_return_thunk.
-
->  }
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -418,7 +418,7 @@ static int decode_instructions(struct ob
->  		}
->  
->  		list_for_each_entry(func, &sec->symbol_list, list) {
-> -			if (func->type != STT_FUNC || func->alias != func)
-> +			if (func->embedded_insn || func->alias != func)
->  				continue;
-
-This hunk looks like a bug.  This might be the source of your problems.
- 
-The below patch seems to work on stock 6.1.47.  Or if you have other
-SRSO patches pending, point me to them and I can look at porting this
-one to fit.
-
----8<---
-
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] objtool/x86: Fix SRSO mess
-
-Objtool --rethunk does two things:
-
- - it collects all (tail) call's of __x86_return_thunk and places them
-   into .return_sites. These are typically compiler generated, but
-   RET also emits this same.
-
- - it fudges the validation of the __x86_return_thunk symbol; because
-   this symbol is inside another instruction, it can't actually find
-   the instruction pointed to by the symbol offset and gets upset.
-
-Because these two things pertained to the same symbol, there was no
-pressing need to separate these two separate things.
-
-However, alas, along comes SRSO and more crazy things to deal with
-appeared.
-
-The SRSO patch itself added the following symbol names to identify as
-rethunk:
-
-  'srso_untrain_ret', 'srso_safe_ret' and '__ret'
-
-Where '__ret' is the old retbleed return thunk, 'srso_safe_ret' is a
-new similarly embedded return thunk, and 'srso_untrain_ret' is
-completely unrelated to anything the above does (and was only included
-because of that INT3 vs UD2 issue fixed previous).
-
-Clear things up by adding a second category for the embedded instruction
-thing.
-
-Fixes: fb3bd914b3ec ("x86/srso: Add a Speculative RAS Overflow mitigation")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/r/20230814121148.704502245@infradead.org
-
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
----
- tools/objtool/arch/x86/decode.c      | 11 +++++++----
- tools/objtool/check.c                | 22 +++++++++++++++++++++-
- tools/objtool/include/objtool/arch.h |  1 +
- tools/objtool/include/objtool/elf.h  |  1 +
- 4 files changed, 30 insertions(+), 5 deletions(-)
-
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index a60c5efe34b3..4cf730e3ac1d 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -796,8 +796,11 @@ bool arch_is_retpoline(struct symbol *sym)
- 
- bool arch_is_rethunk(struct symbol *sym)
- {
--	return !strcmp(sym->name, "__x86_return_thunk") ||
--	       !strcmp(sym->name, "srso_untrain_ret") ||
--	       !strcmp(sym->name, "srso_safe_ret") ||
--	       !strcmp(sym->name, "__ret");
-+	return !strcmp(sym->name, "__x86_return_thunk");
-+}
-+
-+bool arch_is_embedded_insn(struct symbol *sym)
-+{
-+	return !strcmp(sym->name, "__ret") ||
-+	       !strcmp(sym->name, "srso_safe_ret");
- }
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index c2c350933a23..a88ad299fc31 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1164,16 +1164,33 @@ static int add_ignore_alternatives(struct objtool_file *file)
- 	return 0;
- }
- 
-+/*
-+ * Symbols that replace INSN_CALL_DYNAMIC, every (tail) call to such a symbol
-+ * will be added to the .retpoline_sites section.
-+ */
- __weak bool arch_is_retpoline(struct symbol *sym)
- {
- 	return false;
- }
- 
-+/*
-+ * Symbols that replace INSN_RETURN, every (tail) call to such a symbol
-+ * will be added to the .return_sites section.
-+ */
- __weak bool arch_is_rethunk(struct symbol *sym)
- {
- 	return false;
- }
- 
-+/*
-+ * Symbols that are embedded inside other instructions, because sometimes crazy
-+ * code exists. These are mostly ignored for validation purposes.
-+ */
-+__weak bool arch_is_embedded_insn(struct symbol *sym)
-+{
-+	return false;
-+}
-+
- #define NEGATIVE_RELOC	((void *)-1L)
- 
- static struct reloc *insn_reloc(struct objtool_file *file, struct instruction *insn)
-@@ -1437,7 +1454,7 @@ static int add_jump_destinations(struct objtool_file *file)
- 			 * middle of another instruction.  Objtool only
- 			 * knows about the outer instruction.
- 			 */
--			if (sym && sym->return_thunk) {
-+			if (sym && sym->embedded_insn) {
- 				add_return_call(file, insn, false);
- 				continue;
- 			}
-@@ -2327,6 +2344,9 @@ static int classify_symbols(struct objtool_file *file)
- 			if (arch_is_rethunk(func))
- 				func->return_thunk = true;
- 
-+			if (arch_is_embedded_insn(func))
-+				func->embedded_insn = true;
-+
- 			if (!strcmp(func->name, "__fentry__"))
- 				func->fentry = true;
- 
-diff --git a/tools/objtool/include/objtool/arch.h b/tools/objtool/include/objtool/arch.h
-index beb2f3aa94ff..861c0c60ac81 100644
---- a/tools/objtool/include/objtool/arch.h
-+++ b/tools/objtool/include/objtool/arch.h
-@@ -90,6 +90,7 @@ int arch_decode_hint_reg(u8 sp_reg, int *base);
- 
- bool arch_is_retpoline(struct symbol *sym);
- bool arch_is_rethunk(struct symbol *sym);
-+bool arch_is_embedded_insn(struct symbol *sym);
- 
- int arch_rewrite_retpolines(struct objtool_file *file);
- 
-diff --git a/tools/objtool/include/objtool/elf.h b/tools/objtool/include/objtool/elf.h
-index 16f4067b82ae..5d4a841fbd31 100644
---- a/tools/objtool/include/objtool/elf.h
-+++ b/tools/objtool/include/objtool/elf.h
-@@ -60,6 +60,7 @@ struct symbol {
- 	u8 return_thunk      : 1;
- 	u8 fentry            : 1;
- 	u8 profiling_func    : 1;
-+	u8 embedded_insn     : 1;
- 	struct list_head pv_target;
- };
- 
--- 
-2.41.0
-
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dri=
+vers/net/wireless/marvell/mwifiex/main.c?id=3Dv6.4#n1811
