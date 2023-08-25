@@ -2,139 +2,85 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F75C3DA6F
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 06:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCAEC3DA66
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 06:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241361AbjHYGMZ (ORCPT
+        id S230008AbjHYGdO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Aug 2023 02:12:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51628 "EHLO
+        Fri, 25 Aug 2023 02:33:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241612AbjHYGMF (ORCPT
+        with ESMTP id S241759AbjHYGdC (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Aug 2023 02:12:05 -0400
-Received: from gandalf.ozlabs.org (mail.ozlabs.org [IPv6:2404:9400:2221:ea00::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA0291FFB;
-        Thu, 24 Aug 2023 23:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-        s=201909; t=1692943919;
-        bh=Cc2wNrVySgQWB1oZUr5oEwkwqvGvweIc8X/OBtG4+Wg=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=iXSFfKONhaS61Wio3k/V1b70XjLLTQdt8vrEOUswdKDp7oPYD+2VsdrF14uK01p64
-         XXlT9K+fMxudJ8FOKNRLR6XGVcf35t4ZKkoKMI8rzvIHhKUlVXdEuAhvNneqf/3BKB
-         zxIP+l0zO05GipBAPeUhsSs3ZPmmChBaE4wXoIVUixOzyK7TIexFrSpeC7Sl9v0kGz
-         q8BWc/9IsPu+6fJocKU/6khYcBr1rEVzf06tM/e4KaUSImp+IRv5bY+pH9J7IsQG/j
-         dkA4oO/aRIG2l8rjLjajtdwh4qjdqeh8OAtvDnuqzZ5Yrqcq5mhGzx+uYqjvY3iwzJ
-         sDFScRxVAy46g==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 25 Aug 2023 02:33:02 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E922AE6A;
+        Thu, 24 Aug 2023 23:32:56 -0700 (PDT)
+Received: from nazgul.tnic (unknown [78.130.214.203])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4RX8jp5yZWz4wxR;
-        Fri, 25 Aug 2023 16:11:58 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] kbuild: Show Kconfig fragments in "help"
-In-Reply-To: <20230824223606.never.762-kees@kernel.org>
-References: <20230824223606.never.762-kees@kernel.org>
-Date:   Fri, 25 Aug 2023 16:11:58 +1000
-Message-ID: <87a5ufvefl.fsf@mail.lhotse>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 091B91EC0338;
+        Fri, 25 Aug 2023 08:32:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1692945170;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=1ajED1oD5nx23UIrWBju+LJ3AxllDZix/z+nQpHOySo=;
+        b=jBoBW/bxYaFOppDjDyBZRyTM+dZL8mr7BKdoMHDCrK4md/lR8a85xGoNRA2Iszh2LF+Cyh
+        HjJbMBf1i05SQIMrcfKyLWaSPgfFYf+snvvDOgVcmLTL0WLQdHJrgQ7tPqXu4TwkwpwuPC
+        V+3AkVpF42vpeoj53h+QUS6zcdrDx34=
+Date:   Fri, 25 Aug 2023 08:33:02 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        x86@kernel.org, peterz@infradead.org, keescook@chromium.org,
+        elver@google.com, dvyukov@google.com, glider@google.com
+Subject: Re: [BUG] missing return thunk: __ret+0x5/0x7e-__ret+0x0/0x7e: e9 f6
+ ff ff ff
+Message-ID: <20230825063302.GBZOhLHgdvhIw1d6f1@fat_crate.local>
+References: <4dc3d0ec-b827-4bce-8927-cfa5d837fd03@paulmck-laptop>
+ <20230816181720.GNZN0SsKi/B4eCsZHu@fat_crate.local>
+ <2023082458-vividness-habitable-cbc8@gregkh>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2023082458-vividness-habitable-cbc8@gregkh>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Kees Cook <keescook@chromium.org> writes:
-> Doing a "make help" would show only hard-coded Kconfig targets and
-> depended on the archhelp target to include ".config" targets. There was
-> nothing showing global kernel/configs/ targets. Solve this by walking
-> the wildcard list and include them in the output, using the first comment
-> line as the help text.
->
-> Update all Kconfig fragments to include help text and adjust archhelp
-> targets to avoid redundancy.
->
-> Adds the following section to "help" target output:
->
-> Configuration fragment targets (for enabling various Kconfig items):
->   debug.config         - Debugging for CI systems and finding regressions
->   kvm_guest.config     - Bootable as a KVM guest
->   nopm.config          - Disable Power Management
->   rust.config          - Enable Rust
->   tiny-base.config     - Minimal options for tiny systems
->   tiny.config          - Smallest possible kernel image
->   x86_debug.config     - Debugging options for tip tree testing
->   xen.config           - Bootable as a Xen guest
->   tiny.config          - x86-specific options for a small kernel image
->   xen.config           - x86-specific options for a Xen virtualization guest
+On Thu, Aug 24, 2023 at 03:52:56PM +0200, Greg KH wrote:
+> On Wed, Aug 16, 2023 at 08:17:20PM +0200, Borislav Petkov wrote:
+> > Hey Paul,
+> > 
+> > On Wed, Aug 16, 2023 at 10:54:09AM -0700, Paul E. McKenney wrote:
+> > > I hit the splat at the end of this message in recent mainline, and has
+> > > appeared some time since v6.5-rc1.  Should I be worried?
+> > 
+> > does it go away if you try the latest tip:x86/urgent branch?
+> 
+> Note, this problem is showing up in the 6.1.y branch right now, due to
+> one objtool patch not being able to be backported there easily (i.e. I
+> tried and gave up.)
+> 
+> 4ae68b26c3ab ("objtool/x86: Fix SRSO mess") being the commit that I
+> can't seem to get to work properly, my attempt can be seen here:
+> 	https://lore.kernel.org/r/2023082212-pregnant-lizard-80e0@gregkh
+> 
+> Just a heads up as this will start to affect users of the next 6.1.y
+> release, and probably older releases, as they are taking portions of the
+> "fixes for fixes" but not the above mentioned one.
 
-I think we need a way to opt some files out.
+Hmm, Peter and I are away, I guess maybe Josh might have an idea how and
+what to backport to 6.1 to get this sorted out...
 
-It's a bit ugly on powerpc because there are so many fragments:
+CCed.
 
-Configuration fragment targets (for enabling various Kconfig items):
-  debug.config         - Debugging for CI systems and finding regressions
-  kvm_guest.config     - Bootable as a KVM guest
-  nopm.config          - Disable Power Management
-  rust.config          - Enable Rust
-  tiny-base.config     - Minimal options for tiny systems
-  tiny.config          - Smallest possible kernel image
-  x86_debug.config     - Debugging options for tip tree testing
-  xen.config           - Bootable as a Xen guest
-  32-bit.config        - Build a 32-bit image
-  64-bit.config        - Build a 64-bit image
-  85xx-32bit.config    - Build a 32-bit 85xx image
-  85xx-64bit.config    - Build a 64-bit 85xx image
-  85xx-hw.config       - Base hardware support for 86xx
-  85xx-smp.config      - Enable SMP on 85xx
-  86xx-hw.config       - Base hardware support for 86xx
-  86xx-smp.config      - Enable SMP on 86xx
-  altivec.config       - Enable Altivec support
-  be.config            - Enable Big Endian mode
-  book3s_32.config     - Base support for Book3s
-  corenet_base.config  - Base support for corenet
-  debug.config         - Enable PowerPC specific debug options
-  disable-werror.config - Disable -Werror
-  dpaa.config          - Base suppot for DPPA
-  fsl-emb-nonhw.config - Non-hardware options common to 85xx and corenet
-  guest.config         - PowerPC specific virtualization guest options
-  kvm_guest.config     - Bootable as a KVM guest
-  le.config            - Enable Little Endian mode
-  mpc85xx_base.config  - Base mpc85xxx support
-  mpc86xx_base.config  - Base mpc85xxx support
-  ppc64le.config       - Enable ppc64le mode
-  security.config      - Common security options for PowerPC builds
+-- 
+Regards/Gruss,
+    Boris.
 
-And some of those are not intended for use with "make foo.config",
-they're used internally for generating our "normal" defconfigs and they
-don't necessarily work on their own.
-
-Also I'd like to add more fragments in future, to the point where nearly
-all our configs are generated by them.
-
-Can we have some way to differentiate fragments that are intended to be
-used with "make foo.config" vs just being used internally to generate
-other configs.
-
-The obvious thing would be to use a different suffix, eg. "foo.fragment"
-for internal use fragments. That would require changing
-merge_into_defconfig and merge_into_defconfig_override to not assume the
-.config suffix, and update the users in arm, arm64 and powerpc.
-
-The other option would be to ignore .config files starting with eg. "_".
-
-+       @$(foreach c, $(filter-out $(call configfiles,_*.config),$(call configfiles,*.config)), \
-+               printf "  %-20s - %s\\n" \
-+                       $(shell basename $(c)) \
-+                       "$(subst # ,,$(shell grep -m1 '^# ' $(c)))";)
-
-Not sure which is preferable.
-
-cheers
+https://people.kernel.org/tglx/notes-about-netiquette
