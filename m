@@ -2,156 +2,184 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FCB6C7EE2C
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 21:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D5EEE49B4
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 22:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230025AbjHYVuG (ORCPT
+        id S229746AbjHYWKR (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Fri, 25 Aug 2023 17:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43278 "EHLO
+        Fri, 25 Aug 2023 18:10:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbjHYVtn (ORCPT
+        with ESMTP id S230152AbjHYWJ5 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Aug 2023 17:49:43 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902ED26AD
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 14:49:41 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-68c3b9f85b7so327133b3a.2
-        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 14:49:41 -0700 (PDT)
+        Fri, 25 Aug 2023 18:09:57 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9493B26AF
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 15:09:54 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-59204757627so20860467b3.1
+        for <linux-hardening@vger.kernel.org>; Fri, 25 Aug 2023 15:09:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693000181; x=1693604981;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0uXX3yWMumHoz9Ne0brtDEr7hVyliwSsmYAIn+H5H/I=;
-        b=hvYCQ4ck9OTuXOrSASd6reczZDZbRFWik8y5PbNupSaE5FuhFpFik+7pBpNPwHvAXJ
-         J5e1fHtsPxC9WiZt9x4xoWNlEiuJp7QMKHgVO0z2VHaE8FYpq/a7/F6p0DkduKU9vwuE
-         2YSP02cD/U3CDGnoTjHNp7qsrx8qcemieW6hw=
+        d=google.com; s=20221208; t=1693001394; x=1693606194;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IdHKEBf6LNa2SDLafbTePlchXJqRhBXEEMD76f6TFqQ=;
+        b=Q81oK/zkDH876XIfN0sPNVNN5z8b6L18X4x/1+1qY92QqqQw7RJRN82Vwabqzz8jrz
+         yHCgVzhl9GVIhGnnLQxocTR0yqRL9v3b5FA/IwncCsNRSrd/ESpv2nYwsG1l/hZ1Y2J4
+         uAyCLHE/pmVmYzGGkJ/Q7H8MW0nyoHLw8eYch6DINFcG0D/1UDyS0q72RiLzlfOFcJjN
+         OW6JujW6FHIXebrZScvsrviTCqEUJM/XiL0dfIQC2KEGrZgt8q6eM6oS8v0a0eSnq5vn
+         VPEFVNM9NG39LxSIl2Fk+Vlv+A7ZelyFFuFC1HzNShnlt7pZVtaN0Sm07XZ1Uiv1FDCA
+         YpjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693000181; x=1693604981;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0uXX3yWMumHoz9Ne0brtDEr7hVyliwSsmYAIn+H5H/I=;
-        b=T+B8l1t6zT4jEZ9qlyqcApKEOqJ+VfQrIRgTuNxuAoorsbiHvm336zTGGsZXCSvPJ3
-         omItLNu7yDhF49OVGZxhe6i2v0HpKv2Ji1r6YH5kZNRpj/obU1y8HaXeVAzvfcqGqu/P
-         YAopQbiEFfwizV8TmmzfaOvyxslX3W+qnWnB1rPu6fCvAb6ps/lPLMkmzFZhFsTTf+V9
-         LTbCf+2s0wP5LU06mw1jJpNe/N9gEWwAQO0Gbf9kwun5BXwWWXcKm3Fc9sSUwTQVENaH
-         FmZMUBMf1050U+mbAW3uPc9TPDpMKbbIvlZ4/ZgUNZ/U3bAOknzRWZkCFYZBQqgV4h5d
-         3p1A==
-X-Gm-Message-State: AOJu0Yxql2IJ69/ZPjlLnqsRmgzSNTp+Q5ZFrLNaWse+16/MUBRVdJ+Y
-        Cf4LuXNDAdInf1HoZVDhtXwDZw==
-X-Google-Smtp-Source: AGHT+IFiDJhuRdMmJIDMmTKeu70VLVj2TRKI6mZc1WbmzXoLqFaEbFFsyDL3seS95GCNOAQgR/80iA==
-X-Received: by 2002:a05:6a00:b8e:b0:68a:45a1:c0f3 with SMTP id g14-20020a056a000b8e00b0068a45a1c0f3mr17743593pfj.18.1693000181021;
-        Fri, 25 Aug 2023 14:49:41 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d21-20020aa78695000000b0068a6972ca0esm2030543pfo.106.2023.08.25.14.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Aug 2023 14:49:40 -0700 (PDT)
-Date:   Fri, 25 Aug 2023 14:49:39 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     William Hubbs <w.d.hubbs@gmail.com>,
-        Chris Brannon <chris@the-brannons.com>,
-        Kirk Reiser <kirk@reisers.ca>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        speakup@linux-speakup.org, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] accessibility: speakup: refactor deprecated strncpy
-Message-ID: <202308251439.36BC33ADB2@keescook>
-References: <20230824-strncpy-drivers-accessibility-speakup-kobjects-c-v1-1-3a1ef1221e90@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230824-strncpy-drivers-accessibility-speakup-kobjects-c-v1-1-3a1ef1221e90@google.com>
+        d=1e100.net; s=20221208; t=1693001394; x=1693606194;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IdHKEBf6LNa2SDLafbTePlchXJqRhBXEEMD76f6TFqQ=;
+        b=PD36haSqAiHEAcS+IEbsvvyU8sUFelr5SUZRQG/5ILqFNOPF7tBlxxN6PIVMya410x
+         w0KjFL5ak+bxpRHH0NMTGYOHxeHkhMMubolEQ4OxbEIGZvdG5KzX9+zbbJJEPBdVPCG7
+         VQYFX9aPnc+J0wClmMSzMELtRlzp1o5RTBWcIJa/FHmqdUcBwEjSp6cGr8FJlTJFbAqO
+         9Ztc81d440abHlleb5rZq1NJsGtXwVgRwviAf6AKQ1FdyktGDLqS+l/IgkquTYOPy7Cq
+         tk5ST5Ocx7jIjXkBm8wxhp2R3YKrZEznAuAc1ttuk1ajTJ+XgK8rM153GR7oWa2biJIO
+         LvoA==
+X-Gm-Message-State: AOJu0YxPgmtRj1nOHu+DbxC+idwuI8OArX8As3PqpSkv+CFBpcjoWp3g
+        Lj8BrSVpaA7azlLcLEBn+xi7H0fFWnGjx0cSJw==
+X-Google-Smtp-Source: AGHT+IHtHRJ7fRcrma2Kt5JyL7K7aUmRWz+4dgMzIzO4z3FEZfOjTLnf+nN/dtoeAPuD6wy6OK9GjuCLAJHjuYGHxg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a81:ae06:0:b0:569:e04a:238f with SMTP
+ id m6-20020a81ae06000000b00569e04a238fmr475035ywh.4.1693001393869; Fri, 25
+ Aug 2023 15:09:53 -0700 (PDT)
+Date:   Fri, 25 Aug 2023 22:09:51 +0000
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAK4m6WQC/x3MwQqDMAwA0F+RnBdoqxO3Xxk7pG3UwBalkbEh/
+ rtlx3d5OxgXYYN7s0Phj5gsWuEvDaSZdGKUXA3BhdYN4Yq2FU3rD2eKpPSiaJiWdxTljKlro8/ e33rHUIe18Cjf//54HscJfImEpm0AAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1693001392; l=5014;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=F1dg9ALegRSZFeyfAqDYuZEhvE32uhDXNyNHIraocuA=; b=3yMl0CQziwtRieL23Jknw+VaM6GOX8JUpBH9l1dlLv9vmV7gcjOFiB3EcfL6Q7IDaNoZziNU+
+ AYzlvo2lvZlCy8qmFlE1zcPe8wLsY2EG7W3nj6zGmEYx2OgYbFLym4q
+X-Mailer: b4 0.12.3
+Message-ID: <20230825-strncpy-habanalabs-combined-v1-1-daa05a89b7e3@google.com>
+Subject: [PATCH] accel/habanalabs: refactor deprecated strncpy to strscpy_pad
+From:   Justin Stitt <justinstitt@google.com>
+To:     Oded Gabbay <ogabbay@kernel.org>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        linux-hardening@vger.kernel.org,
+        Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 09:44:29PM +0000, Justin Stitt wrote:
-> `strncpy` is deprecated for use on NUL-terminated destination strings [1].
-> 
-> Use `strscpy` as it guarantees NUL-termination of its destination buffer [2]
-> which allows for simpler and less ambiguous code.
-> 
-> Also, change `strlen(buf)` to `strlen(ptr)` to be consistent with
-> further usage within the scope of the function. Note that these are
-> equivalent:
-> |419 	const char *ptr = buf;
-> 
-> Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
-> Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
-> Link: https://github.com/KSPP/linux/issues/90
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: build-tested only.
-> ---
->  drivers/accessibility/speakup/kobjects.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/accessibility/speakup/kobjects.c b/drivers/accessibility/speakup/kobjects.c
-> index a7522d409802..8aa416c5f3fc 100644
-> --- a/drivers/accessibility/speakup/kobjects.c
-> +++ b/drivers/accessibility/speakup/kobjects.c
-> @@ -422,12 +422,11 @@ static ssize_t synth_direct_store(struct kobject *kobj,
->  	if (!synth)
->  		return -EPERM;
->  
-> -	len = strlen(buf);
-> +	len = strlen(ptr);
->  	spin_lock_irqsave(&speakup_info.spinlock, flags);
->  	while (len > 0) {
->  		bytes = min_t(size_t, len, 250);
-> -		strncpy(tmp, ptr, bytes);
-> -		tmp[bytes] = '\0';
-> +		strscpy(tmp, ptr, bytes);
->  		string_unescape_any_inplace(tmp);
->  		synth_printf("%s", tmp);
->  		ptr += bytes;
+`strncpy` is deprecated for use on NUL-terminated destination strings [1].
 
-Technically, yes, this is fine...
+We see that `prop->cpucp_info.card_name` is supposed to be
+NUL-terminated based on its usage within `__hwmon_device_register()`
+(wherein it's called "name"):
+|	if (name && (!strlen(name) || strpbrk(name, "-* \t\n")))
+|		dev_warn(dev,
+|			 "hwmon: '%s' is not a valid name attribute, please fix\n",
+|			 name);
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+A suitable replacement is `strscpy_pad` [2] due to the fact that it
+guarantees both NUL-termination and NUL-padding on its destination
+buffer.
 
-But wow do you find the most amazing code. :)
+NUL-padding on `prop->cpucp_info.card_name` is not strictly necessary as
+`hdev->prop` is explicitly zero-initialized but should be used
+regardless as it gets copied out to userspace directly -- as per Kees' suggestion.
 
-This thing is taking a buffer and chopping it up into at-most 250 byte
-chunks (smaller than buf, I might add), and then sending it to
-synth_printf() ... which uses a 160 byte buffer and silently
-truncates...  and uses "%s" which is just a string copy...
-why doesn't this just use synth_write() directly on an unescaped
-buf??
+Link: www.kernel.org/doc/html/latest/process/deprecated.html#strncpy-on-nul-terminated-strings[1]
+Link: https://manpages.debian.org/testing/linux-manual-4.8/strscpy.9.en.html [2]
+Link: https://github.com/KSPP/linux/issues/90
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+Suggested-by: Kees Cook <keescook@chromium.org>
+---
+Note: build-tested only
 
-I think this entire function should just be:
+This patch combines three previous strncpy refactor patches into one.
+1) https://lore.kernel.org/all/20230824-strncpy-drivers-accel-habanalabs-gaudi-gaudi-c-v1-1-a7fb9054734c@google.com/
+2) https://lore.kernel.org/all/20230824-strncpy-drivers-accel-habanalabs-gaudi2-gaudi2-c-v1-1-1a37b65576b4@google.com/
+3) https://lore.kernel.org/all/20230824-strncpy-drivers-accel-habanalabs-goya-goya-c-v1-1-b81d5639e7a3@google.com/
+---
+ drivers/accel/habanalabs/gaudi/gaudi.c   | 4 ++--
+ drivers/accel/habanalabs/gaudi2/gaudi2.c | 4 ++--
+ drivers/accel/habanalabs/goya/goya.c     | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-static ssize_t synth_direct_store(struct kobject *kobj,
-                                  struct kobj_attribute *attr,
-                                  const char *buf, size_t count)
-{
-        char *unescaped;
-	char *p;
+diff --git a/drivers/accel/habanalabs/gaudi/gaudi.c b/drivers/accel/habanalabs/gaudi/gaudi.c
+index 056e2ef44afb..1b5fe4d0cf5d 100644
+--- a/drivers/accel/habanalabs/gaudi/gaudi.c
++++ b/drivers/accel/habanalabs/gaudi/gaudi.c
+@@ -660,7 +660,7 @@ static int gaudi_set_fixed_properties(struct hl_device *hdev)
+ 	prop->pcie_dbi_base_address = mmPCIE_DBI_BASE;
+ 	prop->pcie_aux_dbi_reg_addr = CFG_BASE + mmPCIE_AUX_DBI;
+ 
+-	strncpy(prop->cpucp_info.card_name, GAUDI_DEFAULT_CARD_NAME,
++	strscpy_pad(prop->cpucp_info.card_name, GAUDI_DEFAULT_CARD_NAME,
+ 					CARD_NAME_MAX_LEN);
+ 
+ 	prop->max_pending_cs = GAUDI_MAX_PENDING_CS;
+@@ -8000,7 +8000,7 @@ static int gaudi_cpucp_info_get(struct hl_device *hdev)
+ 		return rc;
+ 
+ 	if (!strlen(prop->cpucp_info.card_name))
+-		strncpy(prop->cpucp_info.card_name, GAUDI_DEFAULT_CARD_NAME,
++		strscpy_pad(prop->cpucp_info.card_name, GAUDI_DEFAULT_CARD_NAME,
+ 				CARD_NAME_MAX_LEN);
+ 
+ 	hdev->card_type = le32_to_cpu(hdev->asic_prop.cpucp_info.card_type);
+diff --git a/drivers/accel/habanalabs/gaudi2/gaudi2.c b/drivers/accel/habanalabs/gaudi2/gaudi2.c
+index 20c4583f12b0..2ba7a50103bc 100644
+--- a/drivers/accel/habanalabs/gaudi2/gaudi2.c
++++ b/drivers/accel/habanalabs/gaudi2/gaudi2.c
+@@ -2431,7 +2431,7 @@ static int gaudi2_set_fixed_properties(struct hl_device *hdev)
+ 	prop->pcie_dbi_base_address = CFG_BASE + mmPCIE_DBI_BASE;
+ 	prop->pcie_aux_dbi_reg_addr = CFG_BASE + mmPCIE_AUX_DBI;
+ 
+-	strncpy(prop->cpucp_info.card_name, GAUDI2_DEFAULT_CARD_NAME, CARD_NAME_MAX_LEN);
++	strscpy_pad(prop->cpucp_info.card_name, GAUDI2_DEFAULT_CARD_NAME, CARD_NAME_MAX_LEN);
+ 
+ 	prop->mme_master_slave_mode = 1;
+ 
+@@ -2884,7 +2884,7 @@ static int gaudi2_cpucp_info_get(struct hl_device *hdev)
+ 	}
+ 
+ 	if (!strlen(prop->cpucp_info.card_name))
+-		strncpy(prop->cpucp_info.card_name, GAUDI2_DEFAULT_CARD_NAME, CARD_NAME_MAX_LEN);
++		strscpy_pad(prop->cpucp_info.card_name, GAUDI2_DEFAULT_CARD_NAME, CARD_NAME_MAX_LEN);
+ 
+ 	/* Overwrite binning masks with the actual binning values from F/W */
+ 	hdev->dram_binning = prop->cpucp_info.dram_binning_mask;
+diff --git a/drivers/accel/habanalabs/goya/goya.c b/drivers/accel/habanalabs/goya/goya.c
+index 7c685e6075f6..024ccf2e159b 100644
+--- a/drivers/accel/habanalabs/goya/goya.c
++++ b/drivers/accel/habanalabs/goya/goya.c
+@@ -466,7 +466,7 @@ int goya_set_fixed_properties(struct hl_device *hdev)
+ 	prop->pcie_dbi_base_address = mmPCIE_DBI_BASE;
+ 	prop->pcie_aux_dbi_reg_addr = CFG_BASE + mmPCIE_AUX_DBI;
+ 
+-	strncpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
++	strscpy_pad(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
+ 		CARD_NAME_MAX_LEN);
+ 
+ 	prop->max_pending_cs = GOYA_MAX_PENDING_CS;
+@@ -5122,7 +5122,7 @@ int goya_cpucp_info_get(struct hl_device *hdev)
+ 	}
+ 
+ 	if (!strlen(prop->cpucp_info.card_name))
+-		strncpy(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
++		strscpy_pad(prop->cpucp_info.card_name, GOYA_DEFAULT_CARD_NAME,
+ 				CARD_NAME_MAX_LEN);
+ 
+ 	return 0;
 
-        if (!synth)
-                return -EPERM;
+---
+base-commit: 706a741595047797872e669b3101429ab8d378ef
+change-id: 20230825-strncpy-habanalabs-combined-c43b1d11960e
 
-	unescaped = kstrdup(buf, GFP_KERNEL);
-	if (!unescaped)
-		return -ENOMEM;
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
 
-	string_unescape_any_inplace(unescaped);
-
-        spin_lock_irqsave(&speakup_info.spinlock, flags);
-	synth_write(unescaped, strlen(unescaped));
-        spin_unlock_irqrestore(&speakup_info.spinlock, flags);
-
-	kfree(unescaped);
-
-        return count;
-}
-
-(Though honestly, why does this need unescaping anyway?)
-
--Kees
-
--- 
-Kees Cook
