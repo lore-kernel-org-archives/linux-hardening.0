@@ -2,92 +2,83 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1711EE49BD
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 01:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761FFC6FA8F
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 03:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232345AbjHYBOB (ORCPT
+        id S229661AbjHYDCr (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Thu, 24 Aug 2023 21:14:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
+        Thu, 24 Aug 2023 23:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237177AbjHYBNs (ORCPT
+        with ESMTP id S231543AbjHYDC0 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Thu, 24 Aug 2023 21:13:48 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FFCA19BB;
-        Thu, 24 Aug 2023 18:13:47 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37OJES7G018522;
-        Fri, 25 Aug 2023 01:13:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2023-03-30;
- bh=PeKpm5uGyPLoWpsbJU0wnUq8VkkkAegsoBMOFUvgTio=;
- b=PJTvItK/OCmBxtO2DEQq3knBizGrjlRUu2Evfv8mfbk2pxrPMQh+MnmDazrpd61nmPY7
- QBSarCsLN3AUw2RHviDsUytjM+6Q/lTahEtHf37lJn8iPAmWC1lFEu4fqcyslbW7edoL
- 4pNOwq2ZWk7qgZJhZlWkQ5CJskCDTTAfZ8caYdNGuRVEWg4dMZiLN4Kr1+Cci5s+tc4j
- sNU1FJfOS/NDhca1FEo+Ng2cKSrNBPYQptB+jpnVrJwG40wTq+klvw1XY80Nedb7pKGy
- 3nZ5qxFN4vKGS+9rId64IDH6Y8g079UJlP/JMJpnIPSQTqy8ylZQM41KSs/nCcD22tVX zA== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sn20cncv5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 01:13:40 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37OMuKkm036170;
-        Fri, 25 Aug 2023 01:13:39 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3sn1ywqfkj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Aug 2023 01:13:39 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37P1DVE8019787;
-        Fri, 25 Aug 2023 01:13:38 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3sn1ywqf8n-8;
-        Fri, 25 Aug 2023 01:13:38 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     Anil Gurumurthy <anil.gurumurthy@qlogic.com>,
-        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thu, 24 Aug 2023 23:02:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9317C10F;
+        Thu, 24 Aug 2023 20:02:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2964061229;
+        Fri, 25 Aug 2023 03:02:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B2DC433C7;
+        Fri, 25 Aug 2023 03:02:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1692932543;
+        bh=HW5dSZhX9VZiRlRSRJ7BXfW7fZFYK1O4sOa9OoGG01w=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Laa3jipZpRB7Xvuhy4QMYH04BQex5B6UDBjxrInGnE8S4AZks7bpf9aXUfO5OA4GV
+         d2pSJQtTkwwn1nPJJ1KNgj8bv8c25CoII1Z+SyT9/ZRZj9IzPZYG0MVgRYR3EDkNv8
+         Sq5WtL3fwLIxcfKS9U5Pju8kkrBzyqPt/K1q6khyo0lU6kseqeTqlHxn+1D4l7jBE7
+         myIzheh/wPw7hkb9VvidhU7DKEucM95fKcBfEsEWGwWX74MHH+25X3RilygNFGyZAp
+         gXTnZPrSEi0ifdMLbmWni1DozHvJqhyzI8dLtisjTvqsNSt5TgWaRCm26gsTCGLEHv
+         bcYkDwUR2iuzw==
+Date:   Thu, 24 Aug 2023 21:03:22 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@kernel.org>,
+        Amitkumar Karwar <akarwar@marvell.com>,
+        Xinming Hu <huxm@marvell.com>, Dan Williams <dcbw@redhat.com>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
         linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: bfa: Replace one-element array with flexible-array member in struct fc_rscn_pl_s
-Date:   Thu, 24 Aug 2023 21:12:54 -0400
-Message-Id: <169292577165.789945.3215059945658236967.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <ZN0VTpDBOSVHGayb@work>
-References: <ZN0VTpDBOSVHGayb@work>
+Subject: [PATCH v2 0/3] wifi: mwifiex: Fix tlv_buf_left calculation and
+ replace one-element array
+Message-ID: <cover.1692931954.git.gustavoars@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-25_01,2023-08-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 phishscore=0 mlxlogscore=569 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2308100000 definitions=main-2308250009
-X-Proofpoint-ORIG-GUID: Agt8W35HpKYI4yQ6fQ5yaTeZYuZMWwfR
-X-Proofpoint-GUID: Agt8W35HpKYI4yQ6fQ5yaTeZYuZMWwfR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 16 Aug 2023 12:28:30 -0600, Gustavo A. R. Silva wrote:
+Hi all!
 
-> One-element and zero-length arrays are deprecated. So, replace
-> one-element array in struct fc_rscn_pl_s with flexible-array member.
-> 
-> This results in no differences in binary output.
-> 
-> 
+This small series is aimed at fixing a bug in the tlv_buf_left
+calculation, doing a flexible-array transformation, and adding
+a couple of sanity checks.
 
-Applied to 6.6/scsi-queue, thanks!
+Thanks
 
-[1/1] scsi: bfa: Replace one-element array with flexible-array member in struct fc_rscn_pl_s
-      https://git.kernel.org/mkp/scsi/c/56a4d69a26c9
+Changes in v2:
+ - Fix format specifier in patch 3/3: %ld -> %zu
+ - Update warning messages to explicitly mention that TLV size is
+   greater than tlv_buf_len in patch 3/3.
+
+v1:
+ - Link: https://lore.kernel.org/linux-hardening/cover.1692829410.git.gustavoars@kernel.org/
+
+Gustavo A. R. Silva (3):
+  wifi: mwifiex: Fix tlv_buf_left calculation
+  wifi: mwifiex: Replace one-element array with flexible-array member in
+    struct mwifiex_ie_types_rxba_sync
+  wifi: mwifiex: Sanity check tlv_len and tlv_bitmap_len
+
+ .../wireless/marvell/mwifiex/11n_rxreorder.c  | 22 ++++++++++++++++---
+ drivers/net/wireless/marvell/mwifiex/fw.h     |  2 +-
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.34.1
+
