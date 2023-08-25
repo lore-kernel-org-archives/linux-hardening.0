@@ -2,61 +2,61 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0119AC3DA66
-	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 09:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 610A0C7EE2C
+	for <linux-hardening@archiver.kernel.org>; Fri, 25 Aug 2023 09:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236364AbjHYJU0 (ORCPT
+        id S244127AbjHYJU0 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Fri, 25 Aug 2023 05:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37966 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244266AbjHYJUG (ORCPT
+        with ESMTP id S244290AbjHYJUS (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Fri, 25 Aug 2023 05:20:06 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CD811FC4;
-        Fri, 25 Aug 2023 02:20:03 -0700 (PDT)
+        Fri, 25 Aug 2023 05:20:18 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04BBF1FC4;
+        Fri, 25 Aug 2023 02:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1692955203; x=1724491203;
+  t=1692955217; x=1724491217;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=arD+8plaFcQa1QmO7uQcY+oZeKgXilhGtFgiWUGy3U4=;
-  b=eUQwGB/9QGiji+w69K80gg8ZE3XZTmcpv3ZB89vrFGdmc4dExrNVhKh3
-   /XIhao+mc5s+ILdZWEp9xojKA1ez7x31vZtJaj+CfBbtsuUbKUw3njf1+
-   QSDKmT0e4yl9/IbaZda4AHj3owH9/IabkytV0l1Ot7otuHEn/N1PK2RWd
-   uOKweWd4Dl7X5IbViTD32z0nYnfC0t1stBKeM0ExZ1CtDiGiuIg1f49uP
-   3RdDjsGwhssxvdcXU+0D9BDm3Z0j0eivfSLFwtSKIzLtMpfAjAzGuUFON
-   UlfHR3MLFsmqwpjOlo9poaF7mLdEcMQLn1Hkv+kk2fBBqjU5r0iUudNSb
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="438613019"
+  bh=FDMl+onuToDyEOluRAGKzyB6iREgmusYLPjxALDtjeU=;
+  b=gOylUTwJeMv53CVutmmdrBENHVMQFh5Pvve6G77uMFdRcSholTbj9mKJ
+   pFswJ6OmUGfygtxVDirzxku1OCAuuF2IMEoC5zX2EkyAPucP/caaWrV4e
+   TGht/MNqBBcvQH4eZ25Jy3lWCD+WwRkbTz55zoI5XiiBzjqbMf8IPyzND
+   Mn81SBQIusq/vIt6b08cgwnwc6Vjh3r/EzZ2Xo76U60c6yr2/Vp1jdCZP
+   bWdOuGaajGsQ0ClYen//nW/OxDnepuY2PDBaCRCMNh8ikgJcry+eX5JPC
+   HWpkhMPnWwQXqvAv7i6AiWUcLcoobA/SDo1uaJQ/pO8I+hBwzU9aRG5x4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="377412579"
 X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="438613019"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 02:19:37 -0700
+   d="scan'208";a="377412579"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 02:20:16 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="737417108"
+X-IronPort-AV: E=McAfee;i="6600,9927,10812"; a="911228524"
 X-IronPort-AV: E=Sophos;i="6.02,195,1688454000"; 
-   d="scan'208";a="737417108"
+   d="scan'208";a="911228524"
 Received: from joe-255.igk.intel.com (HELO localhost) ([10.91.220.57])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 02:19:36 -0700
-Date:   Fri, 25 Aug 2023 11:19:34 +0200
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 02:20:13 -0700
+Date:   Fri, 25 Aug 2023 11:20:11 +0200
 From:   Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
 To:     Justin Stitt <justinstitt@google.com>
 Cc:     Oded Gabbay <ogabbay@kernel.org>, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] habanalabs/gaudi: refactor deprecated strncpy
-Message-ID: <20230825091934.GC3748525@linux.intel.com>
-References: <20230824-strncpy-drivers-accel-habanalabs-gaudi-gaudi-c-v1-1-a7fb9054734c@google.com>
+Subject: Re: [PATCH] habanalabs/gaudi2: refactor deprecated strncpy
+Message-ID: <20230825092011.GD3748525@linux.intel.com>
+References: <20230824-strncpy-drivers-accel-habanalabs-gaudi2-gaudi2-c-v1-1-1a37b65576b4@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230824-strncpy-drivers-accel-habanalabs-gaudi-gaudi-c-v1-1-a7fb9054734c@google.com>
+In-Reply-To: <20230824-strncpy-drivers-accel-habanalabs-gaudi2-gaudi2-c-v1-1-1a37b65576b4@google.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 08:41:26PM +0000, Justin Stitt wrote:
+On Thu, Aug 24, 2023 at 08:45:08PM +0000, Justin Stitt wrote:
 > `strncpy` is deprecated for use on NUL-terminated destination strings [1].
 > 
 > A suitable replacement is `strscpy` [2] due to the fact that it
