@@ -2,125 +2,174 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACA7C83F01
-	for <linux-hardening@archiver.kernel.org>; Sat, 26 Aug 2023 11:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33117C71153
+	for <linux-hardening@archiver.kernel.org>; Sun, 27 Aug 2023 01:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232561AbjHZLYx (ORCPT
+        id S229703AbjH0BT5 (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 26 Aug 2023 07:24:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51206 "EHLO
+        Sat, 26 Aug 2023 21:19:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232549AbjHZLYk (ORCPT
+        with ESMTP id S229649AbjH0BTY (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 26 Aug 2023 07:24:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DFFE19A0;
-        Sat, 26 Aug 2023 04:24:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DDDB861881;
-        Sat, 26 Aug 2023 11:24:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE4D2C433C8;
-        Sat, 26 Aug 2023 11:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1693049077;
-        bh=4xY2yHBfvVm2yFqr0cbJeko4G4N9NujIbsiZ5iVIA8A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FdnT6nQ5e9blAjttL1iEm2EJFXxQNLkgNeqmOdGQ81kXjnoTTuqODc38tkDI8GRL0
-         qn2FGzMRg7UCWnjAiQexrgKE2CoebJNZDB7USDd39s01vqLX/PSY4I65EBZvaOXfZV
-         WbLVDvSg8sY8Sv8fp9f8E1lRxNYEF1NLS/6gdLfo=
-Date:   Sat, 26 Aug 2023 13:24:33 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Josh Poimboeuf <jpoimboe@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-        x86@kernel.org, peterz@infradead.org, keescook@chromium.org,
-        elver@google.com, dvyukov@google.com, glider@google.com
-Subject: Re: [BUG] missing return thunk: __ret+0x5/0x7e-__ret+0x0/0x7e: e9 f6
- ff ff ff
-Message-ID: <2023082618-pulse-wildcat-6746@gregkh>
-References: <4dc3d0ec-b827-4bce-8927-cfa5d837fd03@paulmck-laptop>
- <20230816181720.GNZN0SsKi/B4eCsZHu@fat_crate.local>
- <2023082458-vividness-habitable-cbc8@gregkh>
- <20230825232657.psb7c7x2tdgzciqw@treble>
+        Sat, 26 Aug 2023 21:19:24 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2A61A6
+        for <linux-hardening@vger.kernel.org>; Sat, 26 Aug 2023 18:19:22 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-76d7b5e374fso136418785a.2
+        for <linux-hardening@vger.kernel.org>; Sat, 26 Aug 2023 18:19:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1693099161; x=1693703961;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cp+ESFaO17ciDGEN+mq+mjRmACNHCs76UkVT2MyTkeQ=;
+        b=Yx/gyxfFaySdVJJ6ImT3+NSyeedlFeg5Gywyq40X1qi7V972U5vh/P6dkFA+prS7/k
+         WBk0HZc4MBSnOVFRXex4R+FQ81ITiHyojpSd9dQa79r8ZzcwPvhCvWghJG76Q1gxlR9n
+         /cEBssTnwrDbuA+v8c60IpZsko8GA643f/KNc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693099161; x=1693703961;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cp+ESFaO17ciDGEN+mq+mjRmACNHCs76UkVT2MyTkeQ=;
+        b=RZohVZtDCRm9WrYx+zdpWMzK5k/FFX4/XoshMOzMwXSLBIgHXqwYSHt0TnD8ez568l
+         oN9B9qy5EZ54m3QeEz9fK/ta4kAOSrt9pOk0OFTUm4ahoVWjyNyXt77Ui5vP6ev3kcjO
+         Im6YkeDvNRaZdSV/kfpiPENN0d32AaI2mvLJ1K2UUL8jzMZOFUJYcs2dLgO9Tkb3BxKg
+         s7L6+iNf2FaGJnOo+/8O26CagCX/6qNOCZovwrABiAtWwtonmANfDvkhWODWucA8f2eO
+         zbfEh74TgWHgGo1NcKOfE3tzMIyy/qeiLzElDWhMLztRZOr+E+hFeBQTjKrqhU8dC2BS
+         EwHg==
+X-Gm-Message-State: AOJu0YyUa/IJMx1y0fmY5fJTdv5DaHy+pendG82MJWx3HCGQnZaJ83dp
+        GKqn6sFk4sZr20lXn5jA7Z1b4Q==
+X-Google-Smtp-Source: AGHT+IGbNVaEGFHRDonmgZdHdFDXfcKGTNamCD81jGxxf5LVOS4XlFlr83FXnP3Hid0rWBM929H/Rw==
+X-Received: by 2002:a05:620a:2996:b0:76e:f3a3:4ad0 with SMTP id r22-20020a05620a299600b0076ef3a34ad0mr9920159qkp.18.1693099161085;
+        Sat, 26 Aug 2023 18:19:21 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id n19-20020a638f13000000b005572d796b9esm4355340pgd.88.2023.08.26.18.19.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Aug 2023 18:19:19 -0700 (PDT)
+Date:   Sat, 26 Aug 2023 18:19:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jacob Keller <jacob.e.keller@intel.com>
+Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] coccinelle: semantic patch to check for potential
+ struct_size calls
+Message-ID: <202308261813.A26FA1A@keescook>
+References: <20230227202428.3657443-1-jacob.e.keller@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230825232657.psb7c7x2tdgzciqw@treble>
+In-Reply-To: <20230227202428.3657443-1-jacob.e.keller@intel.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 04:26:57PM -0700, Josh Poimboeuf wrote:
-> On Thu, Aug 24, 2023 at 03:52:56PM +0200, Greg KH wrote:
-> > On Wed, Aug 16, 2023 at 08:17:20PM +0200, Borislav Petkov wrote:
-> > > Hey Paul,
-> > > 
-> > > On Wed, Aug 16, 2023 at 10:54:09AM -0700, Paul E. McKenney wrote:
-> > > > I hit the splat at the end of this message in recent mainline, and has
-> > > > appeared some time since v6.5-rc1.  Should I be worried?
-> > > 
-> > > does it go away if you try the latest tip:x86/urgent branch?
-> > 
-> > Note, this problem is showing up in the 6.1.y branch right now, due to
-> > one objtool patch not being able to be backported there easily (i.e. I
-> > tried and gave up.)
-> > 
-> > 4ae68b26c3ab ("objtool/x86: Fix SRSO mess") being the commit that I
-> > can't seem to get to work properly, my attempt can be seen here:
-> > 	https://lore.kernel.org/r/2023082212-pregnant-lizard-80e0@gregkh
+Hi!
+
+I'm sorry I lost this email! I just found it while trying to clean up
+my inbox.
+
+On Mon, Feb 27, 2023 at 12:24:28PM -0800, Jacob Keller wrote:
+> include/linux/overflow.h includes helper macros intended for calculating
+> sizes of allocations. These macros prevent accidental overflow by
+> saturating at SIZE_MAX.
 > 
-> > --- a/tools/objtool/arch/x86/decode.c
-> > +++ b/tools/objtool/arch/x86/decode.c
-> > @@ -796,8 +796,11 @@ bool arch_is_retpoline(struct symbol *sy
-> >  
-> >  bool arch_is_rethunk(struct symbol *sym)
-> >  {
-> > -	return !strcmp(sym->name, "__x86_return_thunk") ||
-> > -	       !strcmp(sym->name, "srso_untrain_ret") ||
-> > -	       !strcmp(sym->name, "srso_safe_ret") ||
-> > -	       !strcmp(sym->name, "retbleed_return_thunk");
-> > +	return !strcmp(sym->name, "__x86_return_thunk");
-> > +}
-> > +
-> > +bool arch_is_embedded_insn(struct symbol *sym)
-> > +{
-> > +	return !strcmp(sym->name, "retbleed_return_thunk") ||
-> > +	       !strcmp(sym->name, "srso_safe_ret");
+> In general when calculating such sizes use of the macros is preferred. Add
+> a semantic patch which can detect code patterns which can be replaced by
+> struct_size.
 > 
-> This wouldn't work with the current 6.1.y branch, I assume you had some
-> other patches applied before this.  e.g., the patch renaming __ret to
-> retbleed_return_thunk.
-
-Yes, I did.
-
-> >  }
-> > --- a/tools/objtool/check.c
-> > +++ b/tools/objtool/check.c
-> > @@ -418,7 +418,7 @@ static int decode_instructions(struct ob
-> >  		}
-> >  
-> >  		list_for_each_entry(func, &sec->symbol_list, list) {
-> > -			if (func->type != STT_FUNC || func->alias != func)
-> > +			if (func->embedded_insn || func->alias != func)
-> >  				continue;
+> Note that I set the confidence to medium because this patch doesn't make an
+> attempt to ensure that the relevant array is actually a flexible array. The
+> struct_size macro does specifically require a flexible array. In many cases
+> the detected code could be refactored to a flexible array, but this is not
+> always possible (such as if there are multiple over-allocations).
 > 
-> This hunk looks like a bug.  This might be the source of your problems.
+> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Cc: cocci@systeme.lip6.fr
+> Cc: linux-kernel@vger.kernel.org
+> 
+>  scripts/coccinelle/misc/struct_size.cocci | 74 +++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 scripts/coccinelle/misc/struct_size.cocci
 
-Ah, I guessed wrong on that change, my fault :(
+Yes! I'd really like to get something like this into the Coccinelle
+scripts.
 
-> The below patch seems to work on stock 6.1.47.  Or if you have other
-> SRSO patches pending, point me to them and I can look at porting this
-> one to fit.
+> diff --git a/scripts/coccinelle/misc/struct_size.cocci b/scripts/coccinelle/misc/struct_size.cocci
+> new file mode 100644
+> index 000000000000..4ede9586e3c6
+> --- /dev/null
+> +++ b/scripts/coccinelle/misc/struct_size.cocci
+> @@ -0,0 +1,74 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+> +/// Check for code that could use struct_size().
+> +///
+> +// Confidence: Medium
+> +// Author: Jacob Keller <jacob.e.keller@intel.com>
+> +// Copyright: (C) 2023 Intel Corporation
+> +// Options: --no-includes --include-headers
+> +
+> +virtual patch
+> +virtual context
+> +virtual org
+> +virtual report
+> +
+> +// the overflow Kunit tests have some code which intentionally does not use
+> +// the macros, so we want to ignore this code when reporting potential
+> +// issues.
+> +@overflow_tests@
+> +identifier f = overflow_size_helpers_test;
+> +@@
+> +
+> +f
+> +
+> +//----------------------------------------------------------
+> +//  For context mode
+> +//----------------------------------------------------------
+> +
+> +@depends on !overflow_tests && context@
+> +expression E1, E2;
+> +identifier m;
+> +@@
+> +(
+> +* (sizeof(*E1) + (E2 * sizeof(*E1->m)))
+> +)
+> +
+> +//----------------------------------------------------------
+> +//  For patch mode
+> +//----------------------------------------------------------
+> +
+> +@depends on !overflow_tests && patch@
+> +expression E1, E2;
+> +identifier m;
+> +@@
+> +(
+> +- (sizeof(*E1) + (E2 * sizeof(*E1->m)))
+> ++ struct_size(E1, m, E2)
+> +)
 
-I got this to apply on top of the latest series (-rc) and it passes
-test-builds here.  I'll do a release now without it and then queue this
-up, along with some other fixes for reported problems in previous
-releases, and release it so that the CI systems can go at it.
+Two notes:
 
-Many thanks for this!
+This can lead to false positives (like for struct mux_chip) which
+doesn't use a flexible array member, which means struct_size() will
+actually fail to build (it requires the 2nd arg to be an array).
 
-greg k-h
+This can miss cases that have more than a single struct depth (which is
+uncommon but happens). I don't know how to match only "substruct.member"
+from "ptr->substruct.member". (I know how to match the whole thing[1],
+though.)
+
+That isn't reason not to take this patch, though. It's a good start!
+
+Thanks for writing this up!
+
+-Kees
+
+-- 
+Kees Cook
