@@ -2,93 +2,86 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA30C83F11
-	for <linux-hardening@archiver.kernel.org>; Mon, 28 Aug 2023 20:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19616C71153
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Aug 2023 20:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231269AbjH1UPX (ORCPT
+        id S230194AbjH1Ufa (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Mon, 28 Aug 2023 16:15:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35562 "EHLO
+        Mon, 28 Aug 2023 16:35:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233543AbjH1UOz (ORCPT
+        with ESMTP id S233728AbjH1UfZ (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Mon, 28 Aug 2023 16:14:55 -0400
+        Mon, 28 Aug 2023 16:35:25 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F21EC;
-        Mon, 28 Aug 2023 13:14:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C733109;
+        Mon, 28 Aug 2023 13:35:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 203ED6513F;
-        Mon, 28 Aug 2023 20:14:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E5DFC433CB;
-        Mon, 28 Aug 2023 20:14:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 19FFC64381;
+        Mon, 28 Aug 2023 20:35:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D698BC433C8;
+        Mon, 28 Aug 2023 20:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693253691;
-        bh=wGhF7EuXJqNVSTB3Dp3kmq11CJkRkdQN0/EBu35wj7c=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Uv29Ja8kUrvS0TQSDoPqnDl5x1DXCs4Lq75n0JAjGcalKA84ddkFHsaxYmWot0Gti
-         1NLQL52re6BU98YY2w70hDPPdJqMKS4gXpkGJxX/mkn90Quo8mIDI3r39bUkeT39HB
-         k/s7WtH2j2IHIzuYoBqSFlIXC3YIMt5yvJI3ttocO8AbGSduUMdjc8W+5mFTHXoO08
-         4H0MwxtoaGcDqsvxTJHk8NCdNgwk3ZEnLQX8yAxIGG1OuTmEqWrAMDHtH3uZH9JIEf
-         eubve9nW1PQ9e9sLF8XR2jkkDEE58ilzd2e0r4HS1Iyg+8vhTDWuKef6L29GJUGgTc
-         MSFrYtkLI0Rag==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 69DA6C3959E;
-        Mon, 28 Aug 2023 20:14:51 +0000 (UTC)
-Subject: Re: [GIT PULL] hardening updates for v6.6-rc1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <202308281138.5E9835A@keescook>
-References: <202308281138.5E9835A@keescook>
-X-PR-Tracked-List-Id: <linux-hardening.vger.kernel.org>
-X-PR-Tracked-Message-Id: <202308281138.5E9835A@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.6-rc1
-X-PR-Tracked-Commit-Id: 5f536ac6a5a7b67351e4e5ae4f9e1e57d31268e6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 727dbda16b83600379061c4ca8270ef3e2f51922
-Message-Id: <169325369142.5740.5192469254334945438.pr-tracker-bot@kernel.org>
-Date:   Mon, 28 Aug 2023 20:14:51 +0000
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        s=k20201202; t=1693254921;
+        bh=/Gs5ZWC7H03fXDUJaYco03zxScAlXy7nbxTBCfiJ1Pc=;
+        h=Date:From:To:Cc:Subject:From;
+        b=oNxB5/ICw5qhqu5/YM3OvPxta4Z2Iw5YHr6HWunhv16KOSx+z8g+JjYs5QMcSs+p0
+         s8b1MXapyg6lzCAF0zi8tPQ/371rKALImWKsTSwFZU6RiS3Cr1wUj6pSw5hs82qMNm
+         yCf7xmby9W6qCIarc8nIm8EX9hw5S9nKye1fJIsallT6NovrOa6MuOPbYEDhwdHEvd
+         5NQt0a9NyHipLIbpJ4GVug8GbrpsFZ6L+Lw7pkN3GNsngIdu9F0xsEbszOrgCkH8C/
+         Rn69Kl+SdQunupHm5K3uE66+DpeczxHA3S4p63nTxSqFL/jocelX98LnsUHr/q17zD
+         ZbP+Xkr4qS49Q==
+Date:   Mon, 28 Aug 2023 14:36:20 -0600
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Christian Brauner <brauner@kernel.org>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Hans Liljestrand <ishkamiel@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Justin Stitt <justinstitt@google.com>,
-        Marco Elver <elver@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Song Liu <song@kernel.org>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-hardening@vger.kernel.org
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [GIT PULL] flexible-array transformations for 6.6-rc1
+Message-ID: <ZO0FRCAhO5vdQFPA@work>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-The pull request you sent on Mon, 28 Aug 2023 11:42:58 -0700:
+The following changes since commit 06c2afb862f9da8dc5efa4b6076a0e48c3fbaaa5:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/hardening-v6.6-rc1
+  Linux 6.5-rc1 (2023-07-09 13:53:13 -0700)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/727dbda16b83600379061c4ca8270ef3e2f51922
+are available in the Git repository at:
 
-Thank you!
+  git://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git tags/flex-array-transformations-6.6-rc1
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+for you to fetch changes up to 4d8cbf6dbcdaebe949461b0a933ae4c71cb53edc:
+
+  fs: omfs: Use flexible-array member in struct omfs_extent (2023-07-31 14:55:48 -0600)
+
+----------------------------------------------------------------
+flexible-array transformations for 6.6-rc1
+
+Hi Linus,
+
+Please, pull the following flexible-array transformations. These patches
+have been baking in linux-next for a while.
+
+Thanks
+--
+Gustavo
+
+----------------------------------------------------------------
+Gustavo A. R. Silva (3):
+      reiserfs: Replace one-element array with flexible-array member
+      sparc: openpromio: Address -Warray-bounds warning
+      fs: omfs: Use flexible-array member in struct omfs_extent
+
+ arch/sparc/include/uapi/asm/openpromio.h |  5 ++---
+ fs/omfs/file.c                           | 12 ++++++------
+ fs/omfs/omfs_fs.h                        |  2 +-
+ fs/reiserfs/fix_node.c                   |  5 +++--
+ fs/reiserfs/reiserfs.h                   |  2 +-
+ 5 files changed, 13 insertions(+), 13 deletions(-)
