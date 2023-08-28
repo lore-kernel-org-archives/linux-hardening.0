@@ -2,174 +2,205 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33117C71153
-	for <linux-hardening@archiver.kernel.org>; Sun, 27 Aug 2023 01:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A336AC83F10
+	for <linux-hardening@archiver.kernel.org>; Mon, 28 Aug 2023 01:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229703AbjH0BT5 (ORCPT
+        id S229518AbjH1BEo (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Sat, 26 Aug 2023 21:19:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        Sun, 27 Aug 2023 21:04:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbjH0BTY (ORCPT
+        with ESMTP id S229460AbjH1BEN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Sat, 26 Aug 2023 21:19:24 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2A61A6
-        for <linux-hardening@vger.kernel.org>; Sat, 26 Aug 2023 18:19:22 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-76d7b5e374fso136418785a.2
-        for <linux-hardening@vger.kernel.org>; Sat, 26 Aug 2023 18:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693099161; x=1693703961;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cp+ESFaO17ciDGEN+mq+mjRmACNHCs76UkVT2MyTkeQ=;
-        b=Yx/gyxfFaySdVJJ6ImT3+NSyeedlFeg5Gywyq40X1qi7V972U5vh/P6dkFA+prS7/k
-         WBk0HZc4MBSnOVFRXex4R+FQ81ITiHyojpSd9dQa79r8ZzcwPvhCvWghJG76Q1gxlR9n
-         /cEBssTnwrDbuA+v8c60IpZsko8GA643f/KNc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693099161; x=1693703961;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cp+ESFaO17ciDGEN+mq+mjRmACNHCs76UkVT2MyTkeQ=;
-        b=RZohVZtDCRm9WrYx+zdpWMzK5k/FFX4/XoshMOzMwXSLBIgHXqwYSHt0TnD8ez568l
-         oN9B9qy5EZ54m3QeEz9fK/ta4kAOSrt9pOk0OFTUm4ahoVWjyNyXt77Ui5vP6ev3kcjO
-         Im6YkeDvNRaZdSV/kfpiPENN0d32AaI2mvLJ1K2UUL8jzMZOFUJYcs2dLgO9Tkb3BxKg
-         s7L6+iNf2FaGJnOo+/8O26CagCX/6qNOCZovwrABiAtWwtonmANfDvkhWODWucA8f2eO
-         zbfEh74TgWHgGo1NcKOfE3tzMIyy/qeiLzElDWhMLztRZOr+E+hFeBQTjKrqhU8dC2BS
-         EwHg==
-X-Gm-Message-State: AOJu0YyUa/IJMx1y0fmY5fJTdv5DaHy+pendG82MJWx3HCGQnZaJ83dp
-        GKqn6sFk4sZr20lXn5jA7Z1b4Q==
-X-Google-Smtp-Source: AGHT+IGbNVaEGFHRDonmgZdHdFDXfcKGTNamCD81jGxxf5LVOS4XlFlr83FXnP3Hid0rWBM929H/Rw==
-X-Received: by 2002:a05:620a:2996:b0:76e:f3a3:4ad0 with SMTP id r22-20020a05620a299600b0076ef3a34ad0mr9920159qkp.18.1693099161085;
-        Sat, 26 Aug 2023 18:19:21 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n19-20020a638f13000000b005572d796b9esm4355340pgd.88.2023.08.26.18.19.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Aug 2023 18:19:19 -0700 (PDT)
-Date:   Sat, 26 Aug 2023 18:19:19 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Jacob Keller <jacob.e.keller@intel.com>
-Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] coccinelle: semantic patch to check for potential
- struct_size calls
-Message-ID: <202308261813.A26FA1A@keescook>
-References: <20230227202428.3657443-1-jacob.e.keller@intel.com>
+        Sun, 27 Aug 2023 21:04:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FDFCF4;
+        Sun, 27 Aug 2023 18:04:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A8D8A61A98;
+        Mon, 28 Aug 2023 01:04:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E1A1C433D9;
+        Mon, 28 Aug 2023 01:04:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693184650;
+        bh=7d6QsySf2gd+L+AO0DGE52ifXzUav4vvh3Pzbz+MguI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h9r8Xs18EEJZy6xGdnpurwAcC4dI8Zo0XkCbPLZsQfEZ8h+twtCBqTaZN+iKLUk/F
+         ZOv1YpC6wlvRCCWCXaGzPtMX/B//7KpYhatc4+ErFMHjQMEznee9wzgYHonoMV0A8b
+         hV7Cih9zxqMGSVPWJf92hQOnVHToGZzWH5KjTLGRDclwMuFLPS7gJYd3voFEElpxhY
+         wQkve6zevEN4Cit56v6svNMujPuQ/xxnYkjcqgKt0CAwBy2ENQf/6YXKuk5h6nOrTU
+         Suvfx/Byjw5Z/LbQFR5+DPpXbv8KS32TrAD8jVFsmU4EOFvxtZnQEIRyCgB6ACgOv/
+         Ri/nBxhUeeqew==
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-1ccb58b0099so1868910fac.0;
+        Sun, 27 Aug 2023 18:04:10 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yz7azUPfiruzySZqwFYH5soEkq50mkGLwamGlVHBUfkr3nQl9PE
+        bb2Pkjw6dg0q163DOtYnNV8Kfj2jFgPRJpAIIs4=
+X-Google-Smtp-Source: AGHT+IEak5zcXFSIFNfF8EdO9/s3v9inAZbyIexqYgsn9SCfLTxxBE6ChlOh4wUhzQSAPtM3t40DM0c5ZfD6PzA7Hog=
+X-Received: by 2002:a05:6870:b523:b0:1c8:b870:4e55 with SMTP id
+ v35-20020a056870b52300b001c8b8704e55mr10551563oap.49.1693184649240; Sun, 27
+ Aug 2023 18:04:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230227202428.3657443-1-jacob.e.keller@intel.com>
+References: <20230825194329.gonna.911-kees@kernel.org>
+In-Reply-To: <20230825194329.gonna.911-kees@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 28 Aug 2023 10:03:32 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATcTw+btQVri7SBA8gFbDNMYz7D2gMQaoZp9sQGFjCw8Q@mail.gmail.com>
+Message-ID: <CAK7LNATcTw+btQVri7SBA8gFbDNMYz7D2gMQaoZp9sQGFjCw8Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] kbuild: Show Kconfig fragments in "help"
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi!
+On Sat, Aug 26, 2023 at 4:55=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
+>
+> Hi,
+>
+> This is my series to show *.config targets in the "help" target so these
+> various topics can be more easily discoverd.
+>
+> v2:
+>  - split .fragment from .config to hide "internal" fragments
 
-I'm sorry I lost this email! I just found it while trying to clean up
-my inbox.
+Please do not do this churn.
 
-On Mon, Feb 27, 2023 at 12:24:28PM -0800, Jacob Keller wrote:
-> include/linux/overflow.h includes helper macros intended for calculating
-> sizes of allocations. These macros prevent accidental overflow by
-> saturating at SIZE_MAX.
-> 
-> In general when calculating such sizes use of the macros is preferred. Add
-> a semantic patch which can detect code patterns which can be replaced by
-> struct_size.
-> 
-> Note that I set the confidence to medium because this patch doesn't make an
-> attempt to ensure that the relevant array is actually a flexible array. The
-> struct_size macro does specifically require a flexible array. In many cases
-> the detected code could be refactored to a flexible array, but this is not
-> always possible (such as if there are multiple over-allocations).
-> 
-> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Cc: cocci@systeme.lip6.fr
-> Cc: linux-kernel@vger.kernel.org
-> 
->  scripts/coccinelle/misc/struct_size.cocci | 74 +++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644 scripts/coccinelle/misc/struct_size.cocci
 
-Yes! I'd really like to get something like this into the Coccinelle
-scripts.
+Like Randy, I did not get "why" part quiet well,
+but if you are eager about this,
+you can show help message only when the following
+("# Help:" prefix for example) is found in the first line.
 
-> diff --git a/scripts/coccinelle/misc/struct_size.cocci b/scripts/coccinelle/misc/struct_size.cocci
-> new file mode 100644
-> index 000000000000..4ede9586e3c6
-> --- /dev/null
-> +++ b/scripts/coccinelle/misc/struct_size.cocci
-> @@ -0,0 +1,74 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
-> +/// Check for code that could use struct_size().
-> +///
-> +// Confidence: Medium
-> +// Author: Jacob Keller <jacob.e.keller@intel.com>
-> +// Copyright: (C) 2023 Intel Corporation
-> +// Options: --no-includes --include-headers
-> +
-> +virtual patch
-> +virtual context
-> +virtual org
-> +virtual report
-> +
-> +// the overflow Kunit tests have some code which intentionally does not use
-> +// the macros, so we want to ignore this code when reporting potential
-> +// issues.
-> +@overflow_tests@
-> +identifier f = overflow_size_helpers_test;
-> +@@
-> +
-> +f
-> +
-> +//----------------------------------------------------------
-> +//  For context mode
-> +//----------------------------------------------------------
-> +
-> +@depends on !overflow_tests && context@
-> +expression E1, E2;
-> +identifier m;
-> +@@
-> +(
-> +* (sizeof(*E1) + (E2 * sizeof(*E1->m)))
-> +)
-> +
-> +//----------------------------------------------------------
-> +//  For patch mode
-> +//----------------------------------------------------------
-> +
-> +@depends on !overflow_tests && patch@
-> +expression E1, E2;
-> +identifier m;
-> +@@
-> +(
-> +- (sizeof(*E1) + (E2 * sizeof(*E1->m)))
-> ++ struct_size(E1, m, E2)
-> +)
 
-Two notes:
+# Help: blah blah
+# other comment
 
-This can lead to false positives (like for struct mux_chip) which
-doesn't use a flexible array member, which means struct_size() will
-actually fail to build (it requires the 2nd arg to be an array).
 
-This can miss cases that have more than a single struct depth (which is
-uncommon but happens). I don't know how to match only "substruct.member"
-from "ptr->substruct.member". (I know how to match the whole thing[1],
-though.)
 
-That isn't reason not to take this patch, though. It's a good start!
 
-Thanks for writing this up!
 
--Kees
 
--- 
-Kees Cook
+
+
+>  - fix various typos
+>  - avoid duplicate entries
+> v1: https://lore.kernel.org/all/20230824223606.never.762-kees@kernel.org
+>
+> Thanks!
+>
+> -Kees
+>
+> Kees Cook (2):
+>   kbuild: Show Kconfig fragments in "help"
+>   kbuild: Split internal config targets from .config into .fragment
+>
+>  Makefile                                      |  1 -
+>  arch/arm/configs/dram_0x00000000.config       |  1 +
+>  arch/arm/configs/dram_0xc0000000.config       |  1 +
+>  arch/arm/configs/dram_0xd0000000.config       |  1 +
+>  arch/arm/configs/lpae.config                  |  1 +
+>  arch/arm64/configs/virt.config                |  1 +
+>  arch/powerpc/Makefile                         | 26 +++++++++----------
+>  .../{32-bit.config =3D> 32-bit.fragment}        |  1 +
+>  arch/powerpc/configs/64-bit.config            |  1 -
+>  arch/powerpc/configs/64-bit.fragment          |  2 ++
+>  ...{85xx-32bit.config =3D> 85xx-32bit.fragment} |  1 +
+>  ...{85xx-64bit.config =3D> 85xx-64bit.fragment} |  1 +
+>  .../{85xx-hw.config =3D> 85xx-hw.fragment}      |  1 +
+>  .../{85xx-smp.config =3D> 85xx-smp.fragment}    |  1 +
+>  .../{86xx-hw.config =3D> 86xx-hw.fragment}      |  1 +
+>  .../{86xx-smp.config =3D> 86xx-smp.fragment}    |  1 +
+>  arch/powerpc/configs/altivec.config           |  1 -
+>  arch/powerpc/configs/altivec.fragment         |  2 ++
+>  arch/powerpc/configs/be.config                |  1 -
+>  arch/powerpc/configs/be.fragment              |  2 ++
+>  .../{book3s_32.config =3D> book3s_32.fragment}  |  1 +
+>  ...enet_base.config =3D> corenet_base.fragment} |  1 +
+>  arch/powerpc/configs/debug.config             |  1 +
+>  arch/powerpc/configs/disable-werror.config    |  1 +
+>  .../configs/{dpaa.config =3D> dpaa.fragment}    |  1 +
+>  ...mb-nonhw.config =3D> fsl-emb-nonhw.fragment} |  1 +
+>  .../configs/{guest.config =3D> guest.fragment}  |  1 +
+>  arch/powerpc/configs/le.config                |  1 -
+>  arch/powerpc/configs/le.fragment              |  2 ++
+>  ...85xx_base.config =3D> mpc85xx_base.fragment} |  1 +
+>  ...86xx_base.config =3D> mpc86xx_base.fragment} |  1 +
+>  .../{ppc64le.config =3D> ppc64le.fragment}      |  1 +
+>  arch/powerpc/configs/security.config          |  4 ++-
+>  arch/riscv/configs/32-bit.config              |  1 +
+>  arch/riscv/configs/64-bit.config              |  1 +
+>  arch/s390/configs/btf.config                  |  1 +
+>  arch/s390/configs/kasan.config                |  1 +
+>  arch/x86/Makefile                             |  4 ---
+>  arch/x86/configs/tiny.config                  |  2 ++
+>  {kernel =3D> arch/x86}/configs/x86_debug.config |  1 +
+>  arch/x86/configs/xen.config                   |  2 ++
+>  kernel/configs/debug.config                   |  2 ++
+>  kernel/configs/kvm_guest.config               |  1 +
+>  kernel/configs/nopm.config                    |  2 ++
+>  kernel/configs/rust.config                    |  1 +
+>  kernel/configs/tiny-base.config               |  1 -
+>  kernel/configs/tiny-base.fragment             |  2 ++
+>  kernel/configs/tiny.config                    |  2 ++
+>  kernel/configs/xen.config                     |  2 ++
+>  scripts/Makefile.defconf                      | 12 ++++++---
+>  scripts/kconfig/Makefile                      | 16 +++++++++---
+>  51 files changed, 87 insertions(+), 32 deletions(-)
+>  rename arch/powerpc/configs/{32-bit.config =3D> 32-bit.fragment} (53%)
+>  delete mode 100644 arch/powerpc/configs/64-bit.config
+>  create mode 100644 arch/powerpc/configs/64-bit.fragment
+>  rename arch/powerpc/configs/{85xx-32bit.config =3D> 85xx-32bit.fragment}=
+ (76%)
+>  rename arch/powerpc/configs/{85xx-64bit.config =3D> 85xx-64bit.fragment}=
+ (78%)
+>  rename arch/powerpc/configs/{85xx-hw.config =3D> 85xx-hw.fragment} (98%)
+>  rename arch/powerpc/configs/{85xx-smp.config =3D> 85xx-smp.fragment} (59=
+%)
+>  rename arch/powerpc/configs/{86xx-hw.config =3D> 86xx-hw.fragment} (98%)
+>  rename arch/powerpc/configs/{86xx-smp.config =3D> 86xx-smp.fragment} (58=
+%)
+>  delete mode 100644 arch/powerpc/configs/altivec.config
+>  create mode 100644 arch/powerpc/configs/altivec.fragment
+>  delete mode 100644 arch/powerpc/configs/be.config
+>  create mode 100644 arch/powerpc/configs/be.fragment
+>  rename arch/powerpc/configs/{book3s_32.config =3D> book3s_32.fragment} (=
+52%)
+>  rename arch/powerpc/configs/{corenet_base.config =3D> corenet_base.fragm=
+ent} (64%)
+>  rename arch/powerpc/configs/{dpaa.config =3D> dpaa.fragment} (80%)
+>  rename arch/powerpc/configs/{fsl-emb-nonhw.config =3D> fsl-emb-nonhw.fra=
+gment} (98%)
+>  rename arch/powerpc/configs/{guest.config =3D> guest.fragment} (85%)
+>  delete mode 100644 arch/powerpc/configs/le.config
+>  create mode 100644 arch/powerpc/configs/le.fragment
+>  rename arch/powerpc/configs/{mpc85xx_base.config =3D> mpc85xx_base.fragm=
+ent} (94%)
+>  rename arch/powerpc/configs/{mpc86xx_base.config =3D> mpc86xx_base.fragm=
+ent} (86%)
+>  rename arch/powerpc/configs/{ppc64le.config =3D> ppc64le.fragment} (65%)
+>  rename {kernel =3D> arch/x86}/configs/x86_debug.config (90%)
+>  delete mode 100644 kernel/configs/tiny-base.config
+>  create mode 100644 kernel/configs/tiny-base.fragment
+>
+> --
+> 2.34.1
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
