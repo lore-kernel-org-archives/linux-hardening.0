@@ -2,213 +2,290 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C589DC71153
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Aug 2023 14:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FEAC6FA8F
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Aug 2023 19:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237118AbjH2O61 (ORCPT
+        id S230233AbjH2TZn (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 29 Aug 2023 10:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59918 "EHLO
+        Tue, 29 Aug 2023 15:25:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237117AbjH2O6B (ORCPT
+        with ESMTP id S231992AbjH2TZW (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 29 Aug 2023 10:58:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394A9194;
-        Tue, 29 Aug 2023 07:57:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B5F136221F;
-        Tue, 29 Aug 2023 14:57:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2171AC433CD;
-        Tue, 29 Aug 2023 14:57:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693321077;
-        bh=Fl9B4teR2ctVm3KXwQCLY9l2XFGbxNokiCUT2ou36Zk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aFjNT1UTPwxm8wnpEI+PTouxjzprgXOpFSUIyE7vIDQ9GSQsiPGONY81Tv24jTR/b
-         J3bJlxre2uWHKFWbl6F2N4soUPR+59I/hN8scGYNR1irVznrpV+KC0V7yDg6Mx2+VI
-         h9nV7NSR9/r2mA1PXmL5uNRA5l0yEtlNsgMmt9ZXN/krPDI9tI7cciu+fI+C+pFwHF
-         At0qN1bnV/iA8CmbIsIxSem+JVnpyWDTza2Utk+9+BW9WbJ59E5gz+htCkSEQV/PC5
-         rLOCMD6fjfUmF7B++Hdh5e+8JMEYA6MJivWrnZac4tEOR3hmt/+yMFIYrO/sRy9DNf
-         bg6h+w576NLzg==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5711f6dff8cso2643016eaf.3;
-        Tue, 29 Aug 2023 07:57:57 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxhdjxFdOt4d39BJCH8draWQ6Z3QtH7GU35bG3TNSYA+7hLCEQz
-        p84txSkA/Zixc2b1R5TcH0cVFoxKA8AR1hXYn4I=
-X-Google-Smtp-Source: AGHT+IEJcR/BSetNysrjC4m4cHhkpx9BbJUamjgdYuA7pG5fReFd96gQ5I/Q/OGxshuh2PEuYoeeODSQf7lSN/i0ON4=
-X-Received: by 2002:a4a:dfc9:0:b0:56c:820e:7f02 with SMTP id
- p9-20020a4adfc9000000b0056c820e7f02mr14929879ood.0.1693321076338; Tue, 29 Aug
- 2023 07:57:56 -0700 (PDT)
+        Tue, 29 Aug 2023 15:25:22 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A4EEA;
+        Tue, 29 Aug 2023 12:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693337119; x=1724873119;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=MN/BgKaH/yR9Iaa2sBLZZJUAI0KbG379Thfda3VIN4s=;
+  b=gfP03Kl7rIUaJ+YY1+4ys2rYxnckEIjmJh1nqOE+MMSPA1TPG05jZmZp
+   V8wRa4DnxopEcglOqldPwO17/3AzRS0CXcNVOOsa0UNkhoxBMjpeAMfbj
+   wn4cr2t8hHjuzJWgjLkEefkInGFp4OlGlNkwvod74n0eB5y5xgCPO3I64
+   pqrXfdfqDSUejOmEsS0AHzsrNhO7aVj8cJzmadaMvcQJ6qJ/5fBbbBjfU
+   8CtIAQdVa+JO7nMlVgzq6YUSHJdT5kHZYNl+rccIKjva2dqHZr5wIXVjl
+   BwktYHNxSynk/zIo8WND8EyvUG9E/XexJLiHoCO5O+4vc1wdRVswODGpS
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="365663347"
+X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
+   d="scan'208";a="365663347"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 12:25:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="853412375"
+X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
+   d="scan'208";a="853412375"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga002.fm.intel.com with ESMTP; 29 Aug 2023 12:25:18 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 29 Aug 2023 12:25:17 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27 via Frontend Transport; Tue, 29 Aug 2023 12:25:17 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.108)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.27; Tue, 29 Aug 2023 12:25:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TQVj24IeZuXcpn6Ex3jXXUd4lHIii5UoPZDWZBT3hDlIGtO1+Re3fsRmDf+xtzRTBZUbE8UJaOkQC9fOaTMb1BKjcY2BQ1pzutAcGpQ6hHBRLhxmliNHcHlW3HbD06xzS0dvhwuMNn6vYXhSongfVdOD7Mg6d2DUjXHzEYWxS7baUb+z1kz/hk/Wap3YoIZz6ucYQZLI3ezGFiB2rHq11r5si90EOsaPg9HCYKBkY/zO0VNFHOUtGyx7Cdq7wzReC6dqUFHYEUnadd3vb+ICcEgsxEiTGgTyZjJauFo9BQISoup2GSHzc01Lyq/he/XRgZd27KDnPt5PgdmNqZbldQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PRGrm3Qh4osShWKw4anglvdxIsF+HNw62jDT1zm+1Qs=;
+ b=HAJ1JDliZKogIQJHMPg4dvAYrw12m+2f6807FYXji/Fr2Nmh7olBwI6etNi7DtGsjJzVu3OLhRG4KoZ/9fBFBd0O5ZWv3xUwTXBYriktDC9O1hOEsWptAzsSjYOjZRUzBFez+3r5dFqnU3nvWj3GGxTkzR3NZ9noA8Mc6B3ZC/2wV3azBa9975w3TLCQ/4wVRRaief/EU3SUqnbMN4skjWfMXe5spfVw+/zny5aRiG8A1Bv7hradU84wR49kdyp6Cm1/W36gaPMlCUy7vXR7I56R3hVcpqzUsLBFuhCl7eaxY4JYEIizNfN/kTJ8N1ZTX4DSDfLpA38bwO34bU5v8Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
+ by CH0PR11MB5491.namprd11.prod.outlook.com (2603:10b6:610:d6::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Tue, 29 Aug
+ 2023 19:25:06 +0000
+Received: from CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::6a23:786d:65f7:ef0b]) by CO1PR11MB5089.namprd11.prod.outlook.com
+ ([fe80::6a23:786d:65f7:ef0b%6]) with mapi id 15.20.6699.035; Tue, 29 Aug 2023
+ 19:25:06 +0000
+Message-ID: <a61b7923-fc3f-c96d-ea84-0ae4fa176eac@intel.com>
+Date:   Tue, 29 Aug 2023 12:25:04 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] coccinelle: semantic patch to check for potential
+ struct_size calls
+To:     Kees Cook <keescook@chromium.org>
+CC:     Julia Lawall <Julia.Lawall@lip6.fr>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        <cocci@systeme.lip6.fr>, <linux-kernel@vger.kernel.org>,
+        <linux-hardening@vger.kernel.org>
+References: <20230227202428.3657443-1-jacob.e.keller@intel.com>
+ <202308261813.A26FA1A@keescook>
+Content-Language: en-US
+From:   Jacob Keller <jacob.e.keller@intel.com>
+In-Reply-To: <202308261813.A26FA1A@keescook>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR04CA0330.namprd04.prod.outlook.com
+ (2603:10b6:303:82::35) To CO1PR11MB5089.namprd11.prod.outlook.com
+ (2603:10b6:303:9b::16)
 MIME-Version: 1.0
-References: <20230825194329.gonna.911-kees@kernel.org> <CAK7LNATcTw+btQVri7SBA8gFbDNMYz7D2gMQaoZp9sQGFjCw8Q@mail.gmail.com>
- <87ttsjlmho.fsf@mail.lhotse> <ZO2NVLipjlzIh0YS@bergen.fjasle.eu>
-In-Reply-To: <ZO2NVLipjlzIh0YS@bergen.fjasle.eu>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 29 Aug 2023 23:57:19 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARjsB+LTBGRfWX68Ld7oehhuBv9SY8scoC=Xk8EJc-OHw@mail.gmail.com>
-Message-ID: <CAK7LNARjsB+LTBGRfWX68Ld7oehhuBv9SY8scoC=Xk8EJc-OHw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] kbuild: Show Kconfig fragments in "help"
-To:     Nicolas Schier <nicolas@fjasle.eu>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Kees Cook <keescook@chromium.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-hardening@vger.kernel.org
-Content-Type: multipart/mixed; boundary="0000000000003f125a06041109f2"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB5089:EE_|CH0PR11MB5491:EE_
+X-MS-Office365-Filtering-Correlation-Id: 48da7248-8697-406e-9b1d-08dba8c5a684
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IMHPdkt1C+pryjGY7RtgsuwGkc03vlIgruCSlUCL2/iG6VzddfPuCcZAfttm2roxHh5GGJS7yQu3BQv05IPQiZXsaGKgivixq4fqHyXzogxo3/pY6fhIa+7OScXG8i1Zx25VIWx18VT7EMk3za/HDphJAE9nNOOnCd1AdQhX/n4txPhxG0QG0HYjdoIsi+gvCLaVcwBI0xFa3yOBRzCef6QfaWqatN9nN6IxOgh8fLXPrlfiUr18sWCZ3qE2tm5yz8QBYy+9EW8OZvGMoLGWoCITbPc57z8VwdesmWHw/CiNTrPuFDQUZGaJg/5bBiEzvuqeEo7tSnN9L7Kg1JPksP7/SSg40vp+xvKj0FVzHjJOopeStfxa3VaHYwP/2hNlN1por51RNECFxPcj+Mecx/72LVC1PAcEYA0bDiBfZkI3dBoKWa7ehF6gs7skmaxnujZ9J1ha9Op6qPP4zww/Fg/iv5KpQDHOvCdAEy+NUBbIgV2VWxIaVRiYiL87IvI2nxsQZWNyLrDLbxbIu63gIAwsLnPzRiXCJdNRPVbQdJG8f/A6PWP9P5tZO3SzrTKA+wyqOk2vutZr3ab/OWJLqFMGDhhUEfKGXmRczCxnJBVEBs6TJJPo//mycuQFUTTnOqkOnfdSMN83ZY/+QRNHoazX17Fa1LWEcOau2bfDHdLA7LAQhlcEY0wYukhP0OIx
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5089.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(136003)(366004)(39860400002)(1800799009)(186009)(451199024)(8936002)(66946007)(478600001)(53546011)(31686004)(966005)(6506007)(66556008)(54906003)(6486002)(66476007)(6916009)(38100700002)(316002)(82960400001)(41300700001)(6512007)(26005)(8676002)(36756003)(5660300002)(31696002)(2906002)(86362001)(2616005)(83380400001)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VG1MU0ViQ2w2cjV1WjlEeFN1RVQyQXIzNlcrcTVQWnZDWWdOOWdrbFF2OWpC?=
+ =?utf-8?B?Z0FuZHVBOUxJQVNoa0I2VlRiN1dsRi9YMmlpS3dVNkxkRXcvdjAxWmN5T1FZ?=
+ =?utf-8?B?OEEvVkxIREtsN2hNYjhWbTJKVURvcU9UTmR1eFg5cmhmZVRSZzl0QTFDK0VT?=
+ =?utf-8?B?RVZEb3RkQjNCdTdpaWlSMStpRDRKZzdsOHRFcGpiMFBOYjJYZDRKWHpDV0w3?=
+ =?utf-8?B?RklzdG9paFpoZEZFeEN2eEluOGNyM3R5dVYyTytkYmNFVVhSbXdCbmZQZmdp?=
+ =?utf-8?B?OXBhT0EzcTI4RGVqWFJEWUJvRy9OcStxaXM3aXF1aTZ0WTBha2p6V2VLaFVK?=
+ =?utf-8?B?UW9ad25qb1Z5Y3dHdFBZVi9SNFVvOUM5WWk4YkdtSkRiK0hzaUJjMmhweGhV?=
+ =?utf-8?B?Y1A0ZG8rM2N3dmdiVnRpYUI2M1BrVkVQWVpzSlNIMHR4RDgrd3Jld2tmbHN4?=
+ =?utf-8?B?RG1FeXgxcnBDamRSUVBEbnRXVGpPWXRHK1k1RWZXUW1GTGJhWFJhRDlnQlZv?=
+ =?utf-8?B?K3UrdDdZcjhEN1J2TjNRZjdxd2RqV0dxdnRqNTNSR0ZkV1FFUnFMVTVLYStO?=
+ =?utf-8?B?QXNOV2UzSmtFdjd2VS9Pby9zdU1rN3V1aHNBWlNJcGdTMkZPZjFoV3M5aStu?=
+ =?utf-8?B?RU83MHdtUzZkVDU0YlJtRlROTEgwRzhxeUlKeHovVUxoS0xwanMrMWlER0xY?=
+ =?utf-8?B?VjEvYllSTE13Rkk3V3VZZ2dJWnlObFBiTldKT2VXVTBHU2VCZDIyZlV1QVgx?=
+ =?utf-8?B?RklqS20yU3V2WnE5VjVhR0NDZlBiWmhFMGFISFl5SFV4QXZNNHJVZEpaenhN?=
+ =?utf-8?B?Vm9CRkc5UXhiNFNZQUZTZ3lTenZQMUtXYjl1VzFwZjh6ZHB6V0prQkJPcElU?=
+ =?utf-8?B?NFR3T2tZOEZ1YUVOU2tQajF2ekV0OW9Vdlh3Rjg4MGFaRHo3N3BsUmJtdHpw?=
+ =?utf-8?B?TWZzRUhNcjQrSGxROWtQKzBTRGpSU1pIL2R3TkcxWm5VOVhPZVFnK0NDQTFI?=
+ =?utf-8?B?aWVHVGU2VzdteXdsVzRyOWtydFFyc2dXU1NZTURabDJ5c0JTZG9FNTZkNlpW?=
+ =?utf-8?B?ODRIWUNKdzNidGRhSGd4OUJEcDBLbzJ3UUtSY280dVBERVRrMkZ0WHNmTDBL?=
+ =?utf-8?B?S1ZRZ0hPd05Ua3U5Tk5uNnBLWGlsV0RHeGFkU2xVbnc0ajM1WCs0L1lIcjVh?=
+ =?utf-8?B?S29ScHY5YjZ6QndESzRxcmhheDM2R1JoN0NXK0ErWXBVdUxnUUhMR2JUL3U3?=
+ =?utf-8?B?V1RpVmswUXhTNjl3b1JBWGZ5bytXWUQ4TmtmTWR5cjJWRUR5QU1JOHk4QjlY?=
+ =?utf-8?B?SUlDUmd5cVZ6T1l0b0dYbHRraEVOZko0Nm41aVlLQkRxNStaTTQ2UHFrNXNq?=
+ =?utf-8?B?Zyt1N3lRbU0xdEc4Y0pNRFA4aFNkY0xEMW0vMnRvRlRKSjBPY3Y4ZVZhTjVJ?=
+ =?utf-8?B?UXptQjhEOU5nOHM4VU5oUWwxSHkvTjh5Z2dVbTBjbE9EajJjVXpBOStUeUsx?=
+ =?utf-8?B?V0pVTUtkOG5uNWxwV2ZSa1kzUGtBMlR5eG15ZFZBdlRhYTl5eU5FOUtvNjFV?=
+ =?utf-8?B?eUlieVVEeTY3WWN3UjFrU1k3REh2cDg4clBGNEJuUVNBM3dqNG5HNlI5bFR0?=
+ =?utf-8?B?dG1xanhjeWNYRmNCalZGSDg3dndnY0dobjA5Y25nTG4yOHpjVzBFQ3F3Q2JX?=
+ =?utf-8?B?a2g2K1prZ1BkSWpUbW9rdDNsQjhVWE02SVMvWDdjWlN1bnFORWVXQkJRV1VG?=
+ =?utf-8?B?S29BR1pxVi81VElMUXZNaCtNU2JYdndBMm13cmlDZi8zTSsxVnZkWS9pQWdW?=
+ =?utf-8?B?V3I5VmtqZjVJTW9iMExieExxOHEzblB2Y3V0ZzY3a1RPUjdoOHUrVnNuOTcx?=
+ =?utf-8?B?Y0tndzNvbndaSDU1WFZ0S1RCaFBXbXJvV2kvUkxacWE2dkhSczBCcmZNdG1G?=
+ =?utf-8?B?UUE1TTFwbWhFRFNVYzhyd0MvUktoc1hqbXRDK3BwV1RSd1B5dCtILytTQnI3?=
+ =?utf-8?B?ekdQNHlKUlErNXVGNk9OVGRTT0FsVXVtaDFIVE1pWlNpaXozd1QyR2pxQXM2?=
+ =?utf-8?B?MXhGcWNVSTVLU3lPUjhVZHdqRGt5a29FdUhsQ0UvS3hKWkhVZXBVdU5qMHA1?=
+ =?utf-8?B?RzloWFJGbmoyOXJiOTlzNHVmNFFpcXl4K3B4R2ZMR0U3NHZBWnRiTktaZUcv?=
+ =?utf-8?B?ZHc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 48da7248-8697-406e-9b1d-08dba8c5a684
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5089.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2023 19:25:06.0687
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: N+7PVpA/H8ZTESLFm/PsatEXgHtoq4i7eVEvA4V4ocTM4UzuhFhDDbFChucy9oBsSTU8yyJG9mdqo3kuoyNvcSwf1P1GgyDqteaa/cJimMM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5491
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
---0000000000003f125a06041109f2
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Aug 29, 2023 at 3:55=E2=80=AFPM Nicolas Schier <nicolas@fjasle.eu> =
-wrote:
->
-> On Mon 28 Aug 2023 16:17:07 GMT, Michael Ellerman wrote:
-> > Masahiro Yamada <masahiroy@kernel.org> writes:
-> > > On Sat, Aug 26, 2023 at 4:55=E2=80=AFAM Kees Cook <keescook@chromium.=
-org> wrote:
-> > >>
-> > >> Hi,
-> > >>
-> > >> This is my series to show *.config targets in the "help" target so t=
-hese
-> > >> various topics can be more easily discoverd.
-> > >>
-> > >> v2:
-> > >>  - split .fragment from .config to hide "internal" fragments
-> > >
-> > > Please do not do this churn.
-> >
-> > That was my idea :}
-> >
-> > > Like Randy, I did not get "why" part quiet well,
-> > > but if you are eager about this,
-> > > you can show help message only when the following
-> > > ("# Help:" prefix for example) is found in the first line.
-> > >
-> > > # Help: blah blah
-> > > # other comment
-> >
-> > I did think of that, but wasn't sure how to do it in make.
->
-> Something like this should do it:
->
->         @grep -Hnm1 -e '^# Help:' $(foreach f, $(sort $(notdir $(call con=
-figfiles,*.config))), $(firstword $(call configfiles,$(f)))) | \
->          while read loc dummy helptext; do \
->                 tmp=3D"$${loc%:#}"; file=3D"$${tmp%:*}"; line=3D"$${tmp##=
-*:}"; \
->                 [ "$${line}" =3D "1" ] && \
->                   printf "  %-25s - %s\\n" "$${file##*/}" "$${helptext}";=
- \
->          done
->
-> but this neither beautiful nor elegant it likes to be improved.
->
-> Kind regards,
-> Nicolas
 
 
+On 8/26/2023 6:19 PM, Kees Cook wrote:
+> Hi!
+> 
+> I'm sorry I lost this email! I just found it while trying to clean up
+> my inbox.
+> 
+> On Mon, Feb 27, 2023 at 12:24:28PM -0800, Jacob Keller wrote:
+>> include/linux/overflow.h includes helper macros intended for calculating
+>> sizes of allocations. These macros prevent accidental overflow by
+>> saturating at SIZE_MAX.
+>>
+>> In general when calculating such sizes use of the macros is preferred. Add
+>> a semantic patch which can detect code patterns which can be replaced by
+>> struct_size.
+>>
+>> Note that I set the confidence to medium because this patch doesn't make an
+>> attempt to ensure that the relevant array is actually a flexible array. The
+>> struct_size macro does specifically require a flexible array. In many cases
+>> the detected code could be refactored to a flexible array, but this is not
+>> always possible (such as if there are multiple over-allocations).
+>>
+>> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
+>> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+>> Cc: Kees Cook <keescook@chromium.org>
+>> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+>> Cc: cocci@systeme.lip6.fr
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>>  scripts/coccinelle/misc/struct_size.cocci | 74 +++++++++++++++++++++++
+>>  1 file changed, 74 insertions(+)
+>>  create mode 100644 scripts/coccinelle/misc/struct_size.cocci
+> 
+> Yes! I'd really like to get something like this into the Coccinelle
+> scripts.
+> 
+>> diff --git a/scripts/coccinelle/misc/struct_size.cocci b/scripts/coccinelle/misc/struct_size.cocci
+>> new file mode 100644
+>> index 000000000000..4ede9586e3c6
+>> --- /dev/null
+>> +++ b/scripts/coccinelle/misc/struct_size.cocci
+>> @@ -0,0 +1,74 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +///
+>> +/// Check for code that could use struct_size().
+>> +///
+>> +// Confidence: Medium
+>> +// Author: Jacob Keller <jacob.e.keller@intel.com>
+>> +// Copyright: (C) 2023 Intel Corporation
+>> +// Options: --no-includes --include-headers
+>> +
+>> +virtual patch
+>> +virtual context
+>> +virtual org
+>> +virtual report
+>> +
+>> +// the overflow Kunit tests have some code which intentionally does not use
+>> +// the macros, so we want to ignore this code when reporting potential
+>> +// issues.
+>> +@overflow_tests@
+>> +identifier f = overflow_size_helpers_test;
+>> +@@
+>> +
+>> +f
+>> +
+>> +//----------------------------------------------------------
+>> +//  For context mode
+>> +//----------------------------------------------------------
+>> +
+>> +@depends on !overflow_tests && context@
+>> +expression E1, E2;
+>> +identifier m;
+>> +@@
+>> +(
+>> +* (sizeof(*E1) + (E2 * sizeof(*E1->m)))
+>> +)
+>> +
+>> +//----------------------------------------------------------
+>> +//  For patch mode
+>> +//----------------------------------------------------------
+>> +
+>> +@depends on !overflow_tests && patch@
+>> +expression E1, E2;
+>> +identifier m;
+>> +@@
+>> +(
+>> +- (sizeof(*E1) + (E2 * sizeof(*E1->m)))
+>> ++ struct_size(E1, m, E2)
+>> +)
+> 
+> Two notes:
+> 
+> This can lead to false positives (like for struct mux_chip) which
+> doesn't use a flexible array member, which means struct_size() will
+> actually fail to build (it requires the 2nd arg to be an array).
+> 
+
+I actually sent a fix for mux chip to refactor it to struct_size too :)
+
+https://lore.kernel.org/all/20230223014221.1710307-1-jacob.e.keller@intel.com/
+
+> This can miss cases that have more than a single struct depth (which is
+> uncommon but happens). I don't know how to match only "substruct.member"
+> from "ptr->substruct.member". (I know how to match the whole thing[1],
+> though.)
+> 
+Yea I couldn't figure out how to get it to handle both cases here but I
+actually prefer reporting cases like mux_chip, since they can usually be
+refactored to use struct size properly.
+
+> That isn't reason not to take this patch, though. It's a good start!
+> 
+
+Right. Both cases like this are why I set the confidence to only medium,
+and mentioned it in the commit :D
 
 
-The attached patch will work too.
+> Thanks for writing this up!
+> 
+> -Kees
+> 
 
-I dropped the "in the first line" restriction
-because SPDX might be placed in the first line
-of config fragments.
+Thanks for reviewing. I also sent some struct_size cleanups that look to
+have stalled and could use some review or a re-send if necessary at this
+point.
+
+I think the full list can be found with this lore.kernel.org search:
+
+https://lore.kernel.org/all/?q=f%3Ajacob.e.keller+AND+%28+s%3Astruct_size+OR+s%3A%22flexible+array%22+%29
 
 
 
---=20
-Best Regards
-Masahiro Yamada
-
---0000000000003f125a06041109f2
-Content-Type: text/x-patch; charset="US-ASCII"; name="config-help.diff"
-Content-Disposition: attachment; filename="config-help.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_llwflp5x0>
-X-Attachment-Id: f_llwflp5x0
-
-ZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUKaW5kZXggZTIxYmY2NmFmNmZkLi4yM2Nk
-NjJhNWZmMDUgMTAwNjQ0Ci0tLSBhL01ha2VmaWxlCisrKyBiL01ha2VmaWxlCkBAIC0xNTUyLDcg
-KzE1NTIsNiBAQCBoZWxwOgogCUBlY2hvICAnICBtcnByb3BlcgkgIC0gUmVtb3ZlIGFsbCBnZW5l
-cmF0ZWQgZmlsZXMgKyBjb25maWcgKyB2YXJpb3VzIGJhY2t1cCBmaWxlcycKIAlAZWNobyAgJyAg
-ZGlzdGNsZWFuCSAgLSBtcnByb3BlciArIHJlbW92ZSBlZGl0b3IgYmFja3VwIGFuZCBwYXRjaCBm
-aWxlcycKIAlAZWNobyAgJycKLQlAZWNobyAgJ0NvbmZpZ3VyYXRpb24gdGFyZ2V0czonCiAJQCQo
-TUFLRSkgLWYgJChzcmN0cmVlKS9zY3JpcHRzL2tjb25maWcvTWFrZWZpbGUgaGVscAogCUBlY2hv
-ICAnJwogCUBlY2hvICAnT3RoZXIgZ2VuZXJpYyB0YXJnZXRzOicKZGlmZiAtLWdpdCBhL2FyY2gv
-eDg2L01ha2VmaWxlIGIvYXJjaC94ODYvTWFrZWZpbGUKaW5kZXggZmRjMmUzYWJkNjE1Li5jNGIy
-YThhMTlmYzggMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L01ha2VmaWxlCisrKyBiL2FyY2gveDg2L01h
-a2VmaWxlCkBAIC0zMzUsOSArMzM1LDUgQEAgZGVmaW5lIGFyY2hoZWxwCiAgIGVjaG8gICcJCQkg
-IGJ6ZGlzay9mZGltYWdlKi9oZGltYWdlL2lzb2ltYWdlIGFsc28gYWNjZXB0OicKICAgZWNobyAg
-JwkJCSAgRkRBUkdTPSIuLi4iICBhcmd1bWVudHMgZm9yIHRoZSBib290ZWQga2VybmVsJwogICBl
-Y2hvICAnCQkJICBGRElOSVRSRD1maWxlIGluaXRyZCBmb3IgdGhlIGJvb3RlZCBrZXJuZWwnCi0g
-IGVjaG8gICcnCi0gIGVjaG8gICcgIGt2bV9ndWVzdC5jb25maWcJLSBFbmFibGUgS2NvbmZpZyBp
-dGVtcyBmb3IgcnVubmluZyB0aGlzIGtlcm5lbCBhcyBhIEtWTSBndWVzdCcKLSAgZWNobyAgJyAg
-eGVuLmNvbmZpZwkJLSBFbmFibGUgS2NvbmZpZyBpdGVtcyBmb3IgcnVubmluZyB0aGlzIGtlcm5l
-bCBhcyBhIFhlbiBndWVzdCcKLSAgZWNobyAgJyAgeDg2X2RlYnVnLmNvbmZpZwktIEVuYWJsZSB0
-aXAgdHJlZSBkZWJ1Z2dpbmcgb3B0aW9ucyBmb3IgdGVzdGluZycKIAogZW5kZWYKZGlmZiAtLWdp
-dCBhL2tlcm5lbC9jb25maWdzL2t2bV9ndWVzdC5jb25maWcgYi9rZXJuZWwvY29uZmlncy9rdm1f
-Z3Vlc3QuY29uZmlnCmluZGV4IDIwODQ4MWQ5MTA5MC4uZDA4NzcwNjNkOTI1IDEwMDY0NAotLS0g
-YS9rZXJuZWwvY29uZmlncy9rdm1fZ3Vlc3QuY29uZmlnCisrKyBiL2tlcm5lbC9jb25maWdzL2t2
-bV9ndWVzdC5jb25maWcKQEAgLTEsMyArMSw0IEBACisjIEhlbHA6IEJvb3RhYmxlIGFzIGEgS1ZN
-IGd1ZXN0CiBDT05GSUdfTkVUPXkKIENPTkZJR19ORVRfQ09SRT15CiBDT05GSUdfTkVUREVWSUNF
-Uz15CmRpZmYgLS1naXQgYS9rZXJuZWwvY29uZmlncy94ODZfZGVidWcuY29uZmlnIGIva2VybmVs
-L2NvbmZpZ3MveDg2X2RlYnVnLmNvbmZpZwppbmRleCA2ZmFjNWI0MDUzMzQuLjM1ZjQ4NjcxYjhk
-NSAxMDA2NDQKLS0tIGEva2VybmVsL2NvbmZpZ3MveDg2X2RlYnVnLmNvbmZpZworKysgYi9rZXJu
-ZWwvY29uZmlncy94ODZfZGVidWcuY29uZmlnCkBAIC0xLDMgKzEsNCBAQAorIyBIZWxwOiBEZWJ1
-Z2dpbmcgb3B0aW9ucyBmb3IgdGlwIHRyZWUgdGVzdGluZwogQ09ORklHX1g4Nl9ERUJVR19GUFU9
-eQogQ09ORklHX0xPQ0tfU1RBVD15CiBDT05GSUdfREVCVUdfVk09eQpkaWZmIC0tZ2l0IGEva2Vy
-bmVsL2NvbmZpZ3MveGVuLmNvbmZpZyBiL2tlcm5lbC9jb25maWdzL3hlbi5jb25maWcKaW5kZXgg
-NDM2ZjgwNmFhMWVkLi42ODc4YjlhNDliZTggMTAwNjQ0Ci0tLSBhL2tlcm5lbC9jb25maWdzL3hl
-bi5jb25maWcKKysrIGIva2VybmVsL2NvbmZpZ3MveGVuLmNvbmZpZwpAQCAtMSwzICsxLDUgQEAK
-KyMgSGVscDogQm9vdGFibGUgYXMgYSBYZW4gZ3Vlc3QKKyMKICMgZ2xvYmFsIHN0dWZmIC0gdGhl
-c2UgZW5hYmxlIHVzIHRvIGFsbG93IHNvbWUKICMgb2YgdGhlIG5vdCBzbyBnZW5lcmljIHN0dWZm
-IGJlbG93IGZvciB4ZW4KIENPTkZJR19QQVJBVklSVD15CmRpZmYgLS1naXQgYS9zY3JpcHRzL2tj
-b25maWcvTWFrZWZpbGUgYi9zY3JpcHRzL2tjb25maWcvTWFrZWZpbGUKaW5kZXggYWYxYzk2MTk4
-ZjQ5Li5lNzJjNWVlNjU5YTkgMTAwNjQ0Ci0tLSBhL3NjcmlwdHMva2NvbmZpZy9NYWtlZmlsZQor
-KysgYi9zY3JpcHRzL2tjb25maWcvTWFrZWZpbGUKQEAgLTkzLDExICs5MywxMyBAQCBlbmRpZgog
-JV9kZWZjb25maWc6ICQob2JqKS9jb25mCiAJJChRKSQ8ICQoc2lsZW50KSAtLWRlZmNvbmZpZz1h
-cmNoLyQoU1JDQVJDSCkvY29uZmlncy8kQCAkKEtjb25maWcpCiAKLWNvbmZpZ2ZpbGVzPSQod2ls
-ZGNhcmQgJChzcmN0cmVlKS9rZXJuZWwvY29uZmlncy8kQCAkKHNyY3RyZWUpL2FyY2gvJChTUkNB
-UkNIKS9jb25maWdzLyRAKQorY29uZmlnZmlsZXMgPSAkKHdpbGRjYXJkICQoc3JjdHJlZSkva2Vy
-bmVsL2NvbmZpZ3MvJCgxKSAkKHNyY3RyZWUpL2FyY2gvJChTUkNBUkNIKS9jb25maWdzLyQoMSkp
-CithbGwtY29uZmlnLWZyYWdtZW50cyA9ICQoY2FsbCBjb25maWdmaWxlcywqKQorY29uZmlnLWZy
-YWdtZW50cyA9ICQoY2FsbCBjb25maWdmaWxlcywkQCkKIAogJS5jb25maWc6ICQob2JqKS9jb25m
-Ci0JJChpZiAkKGNhbGwgY29uZmlnZmlsZXMpLCwgJChlcnJvciBObyBjb25maWd1cmF0aW9uIGV4
-aXN0cyBmb3IgdGhpcyB0YXJnZXQgb24gdGhpcyBhcmNoaXRlY3R1cmUpKQotCSQoUSkkKENPTkZJ
-R19TSEVMTCkgJChzcmN0cmVlKS9zY3JpcHRzL2tjb25maWcvbWVyZ2VfY29uZmlnLnNoIC1tIC5j
-b25maWcgJChjb25maWdmaWxlcykKKwkkKGlmICQoY29uZmlnLWZyYWdtZW50cyksLCAkKGVycm9y
-ICRAIGZyYWdtZW50IGRvZXMgbm90IGV4aXN0cyBvbiB0aGlzIGFyY2hpdGVjdHVyZSkpCisJJChR
-KSQoQ09ORklHX1NIRUxMKSAkKHNyY3RyZWUpL3NjcmlwdHMva2NvbmZpZy9tZXJnZV9jb25maWcu
-c2ggLW0gLmNvbmZpZyAkKGNvbmZpZy1mcmFnbWVudHMpCiAJJChRKSQoTUFLRSkgLWYgJChzcmN0
-cmVlKS9NYWtlZmlsZSBvbGRkZWZjb25maWcKIAogUEhPTlkgKz0gdGlueWNvbmZpZwpAQCAtMTE1
-LDYgKzExNyw3IEBAIGNsZWFuLWZpbGVzICs9IHRlc3RzLy5jYWNoZQogCiAjIEhlbHAgdGV4dCB1
-c2VkIGJ5IG1ha2UgaGVscAogaGVscDoKKwlAZWNobyAgJ0NvbmZpZ3VyYXRpb24gdGFyZ2V0czon
-CiAJQGVjaG8gICcgIGNvbmZpZwkgIC0gVXBkYXRlIGN1cnJlbnQgY29uZmlnIHV0aWxpc2luZyBh
-IGxpbmUtb3JpZW50ZWQgcHJvZ3JhbScKIAlAZWNobyAgJyAgbmNvbmZpZyAgICAgICAgIC0gVXBk
-YXRlIGN1cnJlbnQgY29uZmlnIHV0aWxpc2luZyBhIG5jdXJzZXMgbWVudSBiYXNlZCBwcm9ncmFt
-JwogCUBlY2hvICAnICBtZW51Y29uZmlnCSAgLSBVcGRhdGUgY3VycmVudCBjb25maWcgdXRpbGlz
-aW5nIGEgbWVudSBiYXNlZCBwcm9ncmFtJwpAQCAtMTQxLDYgKzE0NCwxMiBAQCBoZWxwOgogCUBl
-Y2hvICAnICAgICAgICAgICAgICAgICAgICBkZWZhdWx0IHZhbHVlIHdpdGhvdXQgcHJvbXB0aW5n
-JwogCUBlY2hvICAnICB0aW55Y29uZmlnCSAgLSBDb25maWd1cmUgdGhlIHRpbmllc3QgcG9zc2li
-bGUga2VybmVsJwogCUBlY2hvICAnICB0ZXN0Y29uZmlnCSAgLSBSdW4gS2NvbmZpZyB1bml0IHRl
-c3RzIChyZXF1aXJlcyBweXRob24zIGFuZCBweXRlc3QpJworCUBlY2hvICAnJworCUBlY2hvICAn
-Q29uZmlndXJhdGlvbiB0b3BpYyB0YXJnZXRzOicKKwlAJChmb3JlYWNoIGYsICQoYWxsLWNvbmZp
-Zy1mcmFnbWVudHMpLCBcCisJCWlmIGhlbHA9JCQoZ3JlcCAtbTEgJ14jIEhlbHA6ICcgJChmKSk7
-IHRoZW4gXAorCQkJcHJpbnRmICcgICUtMjVzIC0gJXNcbicgJyQobm90ZGlyICQoZikpJyAiJCR7
-aGVscCMqOiB9IjsgXAorCQlmaTspCiAKICMgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CiAjIG9iamVjdCBm
-aWxlcyB1c2VkIGJ5IGFsbCBrY29uZmlnIGZsYXZvdXJzCg==
---0000000000003f125a06041109f2--
