@@ -2,290 +2,280 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FEAC6FA8F
-	for <linux-hardening@archiver.kernel.org>; Tue, 29 Aug 2023 19:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D79C71153
+	for <linux-hardening@archiver.kernel.org>; Tue, 29 Aug 2023 20:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230233AbjH2TZn (ORCPT
+        id S240495AbjH2UPO (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 29 Aug 2023 15:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34326 "EHLO
+        Tue, 29 Aug 2023 16:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231992AbjH2TZW (ORCPT
+        with ESMTP id S240493AbjH2UPI (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 29 Aug 2023 15:25:22 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A4EEA;
-        Tue, 29 Aug 2023 12:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1693337119; x=1724873119;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=MN/BgKaH/yR9Iaa2sBLZZJUAI0KbG379Thfda3VIN4s=;
-  b=gfP03Kl7rIUaJ+YY1+4ys2rYxnckEIjmJh1nqOE+MMSPA1TPG05jZmZp
-   V8wRa4DnxopEcglOqldPwO17/3AzRS0CXcNVOOsa0UNkhoxBMjpeAMfbj
-   wn4cr2t8hHjuzJWgjLkEefkInGFp4OlGlNkwvod74n0eB5y5xgCPO3I64
-   pqrXfdfqDSUejOmEsS0AHzsrNhO7aVj8cJzmadaMvcQJ6qJ/5fBbbBjfU
-   8CtIAQdVa+JO7nMlVgzq6YUSHJdT5kHZYNl+rccIKjva2dqHZr5wIXVjl
-   BwktYHNxSynk/zIo8WND8EyvUG9E/XexJLiHoCO5O+4vc1wdRVswODGpS
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="365663347"
-X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
-   d="scan'208";a="365663347"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Aug 2023 12:25:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10817"; a="853412375"
-X-IronPort-AV: E=Sophos;i="6.02,211,1688454000"; 
-   d="scan'208";a="853412375"
-Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
-  by fmsmga002.fm.intel.com with ESMTP; 29 Aug 2023 12:25:18 -0700
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 29 Aug 2023 12:25:17 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Tue, 29 Aug 2023 12:25:17 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.108)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Tue, 29 Aug 2023 12:25:13 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TQVj24IeZuXcpn6Ex3jXXUd4lHIii5UoPZDWZBT3hDlIGtO1+Re3fsRmDf+xtzRTBZUbE8UJaOkQC9fOaTMb1BKjcY2BQ1pzutAcGpQ6hHBRLhxmliNHcHlW3HbD06xzS0dvhwuMNn6vYXhSongfVdOD7Mg6d2DUjXHzEYWxS7baUb+z1kz/hk/Wap3YoIZz6ucYQZLI3ezGFiB2rHq11r5si90EOsaPg9HCYKBkY/zO0VNFHOUtGyx7Cdq7wzReC6dqUFHYEUnadd3vb+ICcEgsxEiTGgTyZjJauFo9BQISoup2GSHzc01Lyq/he/XRgZd27KDnPt5PgdmNqZbldQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PRGrm3Qh4osShWKw4anglvdxIsF+HNw62jDT1zm+1Qs=;
- b=HAJ1JDliZKogIQJHMPg4dvAYrw12m+2f6807FYXji/Fr2Nmh7olBwI6etNi7DtGsjJzVu3OLhRG4KoZ/9fBFBd0O5ZWv3xUwTXBYriktDC9O1hOEsWptAzsSjYOjZRUzBFez+3r5dFqnU3nvWj3GGxTkzR3NZ9noA8Mc6B3ZC/2wV3azBa9975w3TLCQ/4wVRRaief/EU3SUqnbMN4skjWfMXe5spfVw+/zny5aRiG8A1Bv7hradU84wR49kdyp6Cm1/W36gaPMlCUy7vXR7I56R3hVcpqzUsLBFuhCl7eaxY4JYEIizNfN/kTJ8N1ZTX4DSDfLpA38bwO34bU5v8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CO1PR11MB5089.namprd11.prod.outlook.com (2603:10b6:303:9b::16)
- by CH0PR11MB5491.namprd11.prod.outlook.com (2603:10b6:610:d6::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Tue, 29 Aug
- 2023 19:25:06 +0000
-Received: from CO1PR11MB5089.namprd11.prod.outlook.com
- ([fe80::6a23:786d:65f7:ef0b]) by CO1PR11MB5089.namprd11.prod.outlook.com
- ([fe80::6a23:786d:65f7:ef0b%6]) with mapi id 15.20.6699.035; Tue, 29 Aug 2023
- 19:25:06 +0000
-Message-ID: <a61b7923-fc3f-c96d-ea84-0ae4fa176eac@intel.com>
-Date:   Tue, 29 Aug 2023 12:25:04 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH] coccinelle: semantic patch to check for potential
- struct_size calls
-To:     Kees Cook <keescook@chromium.org>
-CC:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        <cocci@systeme.lip6.fr>, <linux-kernel@vger.kernel.org>,
-        <linux-hardening@vger.kernel.org>
-References: <20230227202428.3657443-1-jacob.e.keller@intel.com>
- <202308261813.A26FA1A@keescook>
-Content-Language: en-US
-From:   Jacob Keller <jacob.e.keller@intel.com>
-In-Reply-To: <202308261813.A26FA1A@keescook>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0330.namprd04.prod.outlook.com
- (2603:10b6:303:82::35) To CO1PR11MB5089.namprd11.prod.outlook.com
- (2603:10b6:303:9b::16)
+        Tue, 29 Aug 2023 16:15:08 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BDF199;
+        Tue, 29 Aug 2023 13:15:01 -0700 (PDT)
+Received: from leknes.fjasle.eu ([46.142.49.30]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1My2lr-1plB1Y2Khr-00zZZb; Tue, 29 Aug 2023 22:07:23 +0200
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+        id 1A2013E768; Tue, 29 Aug 2023 22:07:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+        t=1693339640; bh=l+HLj7y9TY6hnwNLh5Tvgor5q1S2kg+NBhBTFWf7BDE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TZjNabJFSEjakaf8YUJrtigZNKhmAm/vXSk/OlmIWUMQpA+H/yNDSs0zMiyYamtp7
+         tbZpqHv09gSqIzJk39c3HaMBGk+KKsV6TrkHj/EVF4TvbbXnVepzgpINm7goS0E79Q
+         MD4EH+3oEaVdp1z7tYdc9/aj5vf+42HKlJWQmjBU=
+Date:   Tue, 29 Aug 2023 22:07:19 +0200
+From:   Nicolas Schier <nicolas@fjasle.eu>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Kees Cook <keescook@chromium.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] kbuild: Show Kconfig fragments in "help"
+Message-ID: <ZO5P9597qqm3P+li@fjasle.eu>
+References: <20230825194329.gonna.911-kees@kernel.org>
+ <CAK7LNATcTw+btQVri7SBA8gFbDNMYz7D2gMQaoZp9sQGFjCw8Q@mail.gmail.com>
+ <87ttsjlmho.fsf@mail.lhotse>
+ <ZO2NVLipjlzIh0YS@bergen.fjasle.eu>
+ <CAK7LNARjsB+LTBGRfWX68Ld7oehhuBv9SY8scoC=Xk8EJc-OHw@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR11MB5089:EE_|CH0PR11MB5491:EE_
-X-MS-Office365-Filtering-Correlation-Id: 48da7248-8697-406e-9b1d-08dba8c5a684
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IMHPdkt1C+pryjGY7RtgsuwGkc03vlIgruCSlUCL2/iG6VzddfPuCcZAfttm2roxHh5GGJS7yQu3BQv05IPQiZXsaGKgivixq4fqHyXzogxo3/pY6fhIa+7OScXG8i1Zx25VIWx18VT7EMk3za/HDphJAE9nNOOnCd1AdQhX/n4txPhxG0QG0HYjdoIsi+gvCLaVcwBI0xFa3yOBRzCef6QfaWqatN9nN6IxOgh8fLXPrlfiUr18sWCZ3qE2tm5yz8QBYy+9EW8OZvGMoLGWoCITbPc57z8VwdesmWHw/CiNTrPuFDQUZGaJg/5bBiEzvuqeEo7tSnN9L7Kg1JPksP7/SSg40vp+xvKj0FVzHjJOopeStfxa3VaHYwP/2hNlN1por51RNECFxPcj+Mecx/72LVC1PAcEYA0bDiBfZkI3dBoKWa7ehF6gs7skmaxnujZ9J1ha9Op6qPP4zww/Fg/iv5KpQDHOvCdAEy+NUBbIgV2VWxIaVRiYiL87IvI2nxsQZWNyLrDLbxbIu63gIAwsLnPzRiXCJdNRPVbQdJG8f/A6PWP9P5tZO3SzrTKA+wyqOk2vutZr3ab/OWJLqFMGDhhUEfKGXmRczCxnJBVEBs6TJJPo//mycuQFUTTnOqkOnfdSMN83ZY/+QRNHoazX17Fa1LWEcOau2bfDHdLA7LAQhlcEY0wYukhP0OIx
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB5089.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(136003)(366004)(39860400002)(1800799009)(186009)(451199024)(8936002)(66946007)(478600001)(53546011)(31686004)(966005)(6506007)(66556008)(54906003)(6486002)(66476007)(6916009)(38100700002)(316002)(82960400001)(41300700001)(6512007)(26005)(8676002)(36756003)(5660300002)(31696002)(2906002)(86362001)(2616005)(83380400001)(4326008)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VG1MU0ViQ2w2cjV1WjlEeFN1RVQyQXIzNlcrcTVQWnZDWWdOOWdrbFF2OWpC?=
- =?utf-8?B?Z0FuZHVBOUxJQVNoa0I2VlRiN1dsRi9YMmlpS3dVNkxkRXcvdjAxWmN5T1FZ?=
- =?utf-8?B?OEEvVkxIREtsN2hNYjhWbTJKVURvcU9UTmR1eFg5cmhmZVRSZzl0QTFDK0VT?=
- =?utf-8?B?RVZEb3RkQjNCdTdpaWlSMStpRDRKZzdsOHRFcGpiMFBOYjJYZDRKWHpDV0w3?=
- =?utf-8?B?RklzdG9paFpoZEZFeEN2eEluOGNyM3R5dVYyTytkYmNFVVhSbXdCbmZQZmdp?=
- =?utf-8?B?OXBhT0EzcTI4RGVqWFJEWUJvRy9OcStxaXM3aXF1aTZ0WTBha2p6V2VLaFVK?=
- =?utf-8?B?UW9ad25qb1Z5Y3dHdFBZVi9SNFVvOUM5WWk4YkdtSkRiK0hzaUJjMmhweGhV?=
- =?utf-8?B?Y1A0ZG8rM2N3dmdiVnRpYUI2M1BrVkVQWVpzSlNIMHR4RDgrd3Jld2tmbHN4?=
- =?utf-8?B?RG1FeXgxcnBDamRSUVBEbnRXVGpPWXRHK1k1RWZXUW1GTGJhWFJhRDlnQlZv?=
- =?utf-8?B?K3UrdDdZcjhEN1J2TjNRZjdxd2RqV0dxdnRqNTNSR0ZkV1FFUnFMVTVLYStO?=
- =?utf-8?B?QXNOV2UzSmtFdjd2VS9Pby9zdU1rN3V1aHNBWlNJcGdTMkZPZjFoV3M5aStu?=
- =?utf-8?B?RU83MHdtUzZkVDU0YlJtRlROTEgwRzhxeUlKeHovVUxoS0xwanMrMWlER0xY?=
- =?utf-8?B?VjEvYllSTE13Rkk3V3VZZ2dJWnlObFBiTldKT2VXVTBHU2VCZDIyZlV1QVgx?=
- =?utf-8?B?RklqS20yU3V2WnE5VjVhR0NDZlBiWmhFMGFISFl5SFV4QXZNNHJVZEpaenhN?=
- =?utf-8?B?Vm9CRkc5UXhiNFNZQUZTZ3lTenZQMUtXYjl1VzFwZjh6ZHB6V0prQkJPcElU?=
- =?utf-8?B?NFR3T2tZOEZ1YUVOU2tQajF2ekV0OW9Vdlh3Rjg4MGFaRHo3N3BsUmJtdHpw?=
- =?utf-8?B?TWZzRUhNcjQrSGxROWtQKzBTRGpSU1pIL2R3TkcxWm5VOVhPZVFnK0NDQTFI?=
- =?utf-8?B?aWVHVGU2VzdteXdsVzRyOWtydFFyc2dXU1NZTURabDJ5c0JTZG9FNTZkNlpW?=
- =?utf-8?B?ODRIWUNKdzNidGRhSGd4OUJEcDBLbzJ3UUtSY280dVBERVRrMkZ0WHNmTDBL?=
- =?utf-8?B?S1ZRZ0hPd05Ua3U5Tk5uNnBLWGlsV0RHeGFkU2xVbnc0ajM1WCs0L1lIcjVh?=
- =?utf-8?B?S29ScHY5YjZ6QndESzRxcmhheDM2R1JoN0NXK0ErWXBVdUxnUUhMR2JUL3U3?=
- =?utf-8?B?V1RpVmswUXhTNjl3b1JBWGZ5bytXWUQ4TmtmTWR5cjJWRUR5QU1JOHk4QjlY?=
- =?utf-8?B?SUlDUmd5cVZ6T1l0b0dYbHRraEVOZko0Nm41aVlLQkRxNStaTTQ2UHFrNXNq?=
- =?utf-8?B?Zyt1N3lRbU0xdEc4Y0pNRFA4aFNkY0xEMW0vMnRvRlRKSjBPY3Y4ZVZhTjVJ?=
- =?utf-8?B?UXptQjhEOU5nOHM4VU5oUWwxSHkvTjh5Z2dVbTBjbE9EajJjVXpBOStUeUsx?=
- =?utf-8?B?V0pVTUtkOG5uNWxwV2ZSa1kzUGtBMlR5eG15ZFZBdlRhYTl5eU5FOUtvNjFV?=
- =?utf-8?B?eUlieVVEeTY3WWN3UjFrU1k3REh2cDg4clBGNEJuUVNBM3dqNG5HNlI5bFR0?=
- =?utf-8?B?dG1xanhjeWNYRmNCalZGSDg3dndnY0dobjA5Y25nTG4yOHpjVzBFQ3F3Q2JX?=
- =?utf-8?B?a2g2K1prZ1BkSWpUbW9rdDNsQjhVWE02SVMvWDdjWlN1bnFORWVXQkJRV1VG?=
- =?utf-8?B?S29BR1pxVi81VElMUXZNaCtNU2JYdndBMm13cmlDZi8zTSsxVnZkWS9pQWdW?=
- =?utf-8?B?V3I5VmtqZjVJTW9iMExieExxOHEzblB2Y3V0ZzY3a1RPUjdoOHUrVnNuOTcx?=
- =?utf-8?B?Y0tndzNvbndaSDU1WFZ0S1RCaFBXbXJvV2kvUkxacWE2dkhSczBCcmZNdG1G?=
- =?utf-8?B?UUE1TTFwbWhFRFNVYzhyd0MvUktoc1hqbXRDK3BwV1RSd1B5dCtILytTQnI3?=
- =?utf-8?B?ekdQNHlKUlErNXVGNk9OVGRTT0FsVXVtaDFIVE1pWlNpaXozd1QyR2pxQXM2?=
- =?utf-8?B?MXhGcWNVSTVLU3lPUjhVZHdqRGt5a29FdUhsQ0UvS3hKWkhVZXBVdU5qMHA1?=
- =?utf-8?B?RzloWFJGbmoyOXJiOTlzNHVmNFFpcXl4K3B4R2ZMR0U3NHZBWnRiTktaZUcv?=
- =?utf-8?B?ZHc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48da7248-8697-406e-9b1d-08dba8c5a684
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB5089.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Aug 2023 19:25:06.0687
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: N+7PVpA/H8ZTESLFm/PsatEXgHtoq4i7eVEvA4V4ocTM4UzuhFhDDbFChucy9oBsSTU8yyJG9mdqo3kuoyNvcSwf1P1GgyDqteaa/cJimMM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR11MB5491
-X-OriginatorOrg: intel.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jAIN7/hQsTcrQJVA"
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARjsB+LTBGRfWX68Ld7oehhuBv9SY8scoC=Xk8EJc-OHw@mail.gmail.com>
+X-Provags-ID: V03:K1:H6j0VbafbOwtymffj5vqJ5spHUNhWSXsYRHmYahDmlcdTnCoTSZ
+ Y5deAqJtEaYxv+Zf/xYkwayr4y4RNjk3w2RNVWySOnUPB/x0mu0L/JGvGPQfzXd3wHiwRcN
+ YOMrA0qs7TWDwkPnZ+kORWHa27x5NXqsgFcQ2DBLwt4XYH7sv7LWUW+BfDZKHog98GfWyCc
+ M1HtNk4/feeh4gsXKAj9g==
+UI-OutboundReport: notjunk:1;M01:P0:+tijSOgLLm4=;nQFaSgJLuvbuIG0FHHwE2Kx1Cgx
+ LtnRBkqC/ZiYeaehMhdBRHwLt2v0rz3Xt4ho4DEpd1+SUjT4500/3HEPTVjO0mezatKA83e00
+ 5kqFNpm1WoI7RGqSz00Z5IsvQMt3+J4v1NNaq44EU6m6+clUtEVDktK7SDBIwiWULEWiFSHMf
+ O+kw8NtwNHt2Ig52ML1iwfPJkaRnbxb6Q/woXVo5oelW/WB2nNZ0MTO9Fx8KwkKBNI+3zuIGv
+ pP9AYc9LwDpjsWZrvNS0UtdZuUW6zBVgZbaxRz2z0jxMpTKQAbqHszcM+ohBFG89T4J5Y6nT7
+ euJuuneeHW7gP+xI31sZmMgRVknwhX0vZlSN1AYmiMAL02xugDss8f5FJP3v6UhkQoyCwT9SI
+ 5FxUR+w2llXs7SYRiq7YmJUvtScjjKSn7CcjENH8Dmgi95VoGl3ibAsFBHIVXh5UkoLvaMLoA
+ pf6DvEY2JGKJM+RjQGyzd/ZmeX+H3zepeoeqToTzpojyn+bGbyr0FDMCG5Lt3oL3xnsCBxBQW
+ cp/uRuqe9Yk1w8xMTlR1EiXPYnz/0AEoBT+YluGsb0awndUPcvd3Kh0n1Of6wt0FSkdph/ch3
+ jrEX51co3TH4PoidqKMaYwOcNoEslJ3+r6tuaJTfqnUvw/Ni9tENEXzlsnbuJ7ftP17TM/e0P
+ EWRJQEkPuf+RIDm6UCvXyu34rs1WGAIfrfbMefBQ7MJ7fTST4J7VV88nHUFM+0XRWyK+HT19v
+ 7WThijSPzr0/40fhVhcpuaPW8X1Ryt+fQFQmyKErUJMviMvPmOaeV8duixrz4SeljiKHFSqOC
+ /KTtXUAYFaqFCP2klrn5nzJgkfbcjLuCQ1iIuuJLt6shzn9bHymMJxcMhj5wpFOP3ITDEfq1G
+ jeiWv7/88SRk2ng==
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
 
+--jAIN7/hQsTcrQJVA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 8/26/2023 6:19 PM, Kees Cook wrote:
-> Hi!
-> 
-> I'm sorry I lost this email! I just found it while trying to clean up
-> my inbox.
-> 
-> On Mon, Feb 27, 2023 at 12:24:28PM -0800, Jacob Keller wrote:
->> include/linux/overflow.h includes helper macros intended for calculating
->> sizes of allocations. These macros prevent accidental overflow by
->> saturating at SIZE_MAX.
->>
->> In general when calculating such sizes use of the macros is preferred. Add
->> a semantic patch which can detect code patterns which can be replaced by
->> struct_size.
->>
->> Note that I set the confidence to medium because this patch doesn't make an
->> attempt to ensure that the relevant array is actually a flexible array. The
->> struct_size macro does specifically require a flexible array. In many cases
->> the detected code could be refactored to a flexible array, but this is not
->> always possible (such as if there are multiple over-allocations).
->>
->> Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
->> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
->> Cc: Kees Cook <keescook@chromium.org>
->> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
->> Cc: cocci@systeme.lip6.fr
->> Cc: linux-kernel@vger.kernel.org
->>
->>  scripts/coccinelle/misc/struct_size.cocci | 74 +++++++++++++++++++++++
->>  1 file changed, 74 insertions(+)
->>  create mode 100644 scripts/coccinelle/misc/struct_size.cocci
-> 
-> Yes! I'd really like to get something like this into the Coccinelle
-> scripts.
-> 
->> diff --git a/scripts/coccinelle/misc/struct_size.cocci b/scripts/coccinelle/misc/struct_size.cocci
->> new file mode 100644
->> index 000000000000..4ede9586e3c6
->> --- /dev/null
->> +++ b/scripts/coccinelle/misc/struct_size.cocci
->> @@ -0,0 +1,74 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +///
->> +/// Check for code that could use struct_size().
->> +///
->> +// Confidence: Medium
->> +// Author: Jacob Keller <jacob.e.keller@intel.com>
->> +// Copyright: (C) 2023 Intel Corporation
->> +// Options: --no-includes --include-headers
->> +
->> +virtual patch
->> +virtual context
->> +virtual org
->> +virtual report
->> +
->> +// the overflow Kunit tests have some code which intentionally does not use
->> +// the macros, so we want to ignore this code when reporting potential
->> +// issues.
->> +@overflow_tests@
->> +identifier f = overflow_size_helpers_test;
->> +@@
->> +
->> +f
->> +
->> +//----------------------------------------------------------
->> +//  For context mode
->> +//----------------------------------------------------------
->> +
->> +@depends on !overflow_tests && context@
->> +expression E1, E2;
->> +identifier m;
->> +@@
->> +(
->> +* (sizeof(*E1) + (E2 * sizeof(*E1->m)))
->> +)
->> +
->> +//----------------------------------------------------------
->> +//  For patch mode
->> +//----------------------------------------------------------
->> +
->> +@depends on !overflow_tests && patch@
->> +expression E1, E2;
->> +identifier m;
->> +@@
->> +(
->> +- (sizeof(*E1) + (E2 * sizeof(*E1->m)))
->> ++ struct_size(E1, m, E2)
->> +)
-> 
-> Two notes:
-> 
-> This can lead to false positives (like for struct mux_chip) which
-> doesn't use a flexible array member, which means struct_size() will
-> actually fail to build (it requires the 2nd arg to be an array).
-> 
+On Tue, Aug 29, 2023 at 11:57:19PM +0900 Masahiro Yamada wrote:
+> On Tue, Aug 29, 2023 at 3:55=E2=80=AFPM Nicolas Schier <nicolas@fjasle.eu=
+> wrote:
+> >
+> > On Mon 28 Aug 2023 16:17:07 GMT, Michael Ellerman wrote:
+> > > Masahiro Yamada <masahiroy@kernel.org> writes:
+> > > > On Sat, Aug 26, 2023 at 4:55=E2=80=AFAM Kees Cook <keescook@chromiu=
+m.org> wrote:
+> > > >>
+> > > >> Hi,
+> > > >>
+> > > >> This is my series to show *.config targets in the "help" target so=
+ these
+> > > >> various topics can be more easily discoverd.
+> > > >>
+> > > >> v2:
+> > > >>  - split .fragment from .config to hide "internal" fragments
+> > > >
+> > > > Please do not do this churn.
+> > >
+> > > That was my idea :}
+> > >
+> > > > Like Randy, I did not get "why" part quiet well,
+> > > > but if you are eager about this,
+> > > > you can show help message only when the following
+> > > > ("# Help:" prefix for example) is found in the first line.
+> > > >
+> > > > # Help: blah blah
+> > > > # other comment
+> > >
+> > > I did think of that, but wasn't sure how to do it in make.
+> >
+> > Something like this should do it:
+> >
+> >         @grep -Hnm1 -e '^# Help:' $(foreach f, $(sort $(notdir $(call c=
+onfigfiles,*.config))), $(firstword $(call configfiles,$(f)))) | \
+> >          while read loc dummy helptext; do \
+> >                 tmp=3D"$${loc%:#}"; file=3D"$${tmp%:*}"; line=3D"$${tmp=
+##*:}"; \
+> >                 [ "$${line}" =3D "1" ] && \
+> >                   printf "  %-25s - %s\\n" "$${file##*/}" "$${helptext}=
+"; \
+> >          done
+> >
+> > but this neither beautiful nor elegant it likes to be improved.
+> >
+> > Kind regards,
+> > Nicolas
+>=20
+>=20
+>=20
+>=20
+> The attached patch will work too.
+>=20
+> I dropped the "in the first line" restriction
+> because SPDX might be placed in the first line
+> of config fragments.
+>=20
+>=20
+>=20
+> --=20
+> Best Regards
+> Masahiro Yamada
 
-I actually sent a fix for mux chip to refactor it to struct_size too :)
+> diff --git a/Makefile b/Makefile
+> index e21bf66af6fd..23cd62a5ff05 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1552,7 +1552,6 @@ help:
+>  	@echo  '  mrproper	  - Remove all generated files + config + various ba=
+ckup files'
+>  	@echo  '  distclean	  - mrproper + remove editor backup and patch files'
+>  	@echo  ''
+> -	@echo  'Configuration targets:'
+>  	@$(MAKE) -f $(srctree)/scripts/kconfig/Makefile help
+>  	@echo  ''
+>  	@echo  'Other generic targets:'
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index fdc2e3abd615..c4b2a8a19fc8 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -335,9 +335,5 @@ define archhelp
+>    echo  '			  bzdisk/fdimage*/hdimage/isoimage also accept:'
+>    echo  '			  FDARGS=3D"..."  arguments for the booted kernel'
+>    echo  '			  FDINITRD=3Dfile initrd for the booted kernel'
+> -  echo  ''
+> -  echo  '  kvm_guest.config	- Enable Kconfig items for running this kern=
+el as a KVM guest'
+> -  echo  '  xen.config		- Enable Kconfig items for running this kernel as=
+ a Xen guest'
+> -  echo  '  x86_debug.config	- Enable tip tree debugging options for test=
+ing'
+> =20
+>  endef
+> diff --git a/kernel/configs/kvm_guest.config b/kernel/configs/kvm_guest.c=
+onfig
+> index 208481d91090..d0877063d925 100644
+> --- a/kernel/configs/kvm_guest.config
+> +++ b/kernel/configs/kvm_guest.config
+> @@ -1,3 +1,4 @@
+> +# Help: Bootable as a KVM guest
+>  CONFIG_NET=3Dy
+>  CONFIG_NET_CORE=3Dy
+>  CONFIG_NETDEVICES=3Dy
+> diff --git a/kernel/configs/x86_debug.config b/kernel/configs/x86_debug.c=
+onfig
+> index 6fac5b405334..35f48671b8d5 100644
+> --- a/kernel/configs/x86_debug.config
+> +++ b/kernel/configs/x86_debug.config
+> @@ -1,3 +1,4 @@
+> +# Help: Debugging options for tip tree testing
+>  CONFIG_X86_DEBUG_FPU=3Dy
+>  CONFIG_LOCK_STAT=3Dy
+>  CONFIG_DEBUG_VM=3Dy
+> diff --git a/kernel/configs/xen.config b/kernel/configs/xen.config
+> index 436f806aa1ed..6878b9a49be8 100644
+> --- a/kernel/configs/xen.config
+> +++ b/kernel/configs/xen.config
+> @@ -1,3 +1,5 @@
+> +# Help: Bootable as a Xen guest
+> +#
+>  # global stuff - these enable us to allow some
+>  # of the not so generic stuff below for xen
+>  CONFIG_PARAVIRT=3Dy
+> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
+> index af1c96198f49..e72c5ee659a9 100644
+> --- a/scripts/kconfig/Makefile
+> +++ b/scripts/kconfig/Makefile
+> @@ -93,11 +93,13 @@ endif
+>  %_defconfig: $(obj)/conf
+>  	$(Q)$< $(silent) --defconfig=3Darch/$(SRCARCH)/configs/$@ $(Kconfig)
+> =20
+> -configfiles=3D$(wildcard $(srctree)/kernel/configs/$@ $(srctree)/arch/$(=
+SRCARCH)/configs/$@)
+> +configfiles =3D $(wildcard $(srctree)/kernel/configs/$(1) $(srctree)/arc=
+h/$(SRCARCH)/configs/$(1))
+> +all-config-fragments =3D $(call configfiles,*)
+> +config-fragments =3D $(call configfiles,$@)
+> =20
+>  %.config: $(obj)/conf
+> -	$(if $(call configfiles),, $(error No configuration exists for this tar=
+get on this architecture))
+> -	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m .conf=
+ig $(configfiles)
+> +	$(if $(config-fragments),, $(error $@ fragment does not exists on this =
+architecture))
+> +	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh -m .conf=
+ig $(config-fragments)
+>  	$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+> =20
+>  PHONY +=3D tinyconfig
+> @@ -115,6 +117,7 @@ clean-files +=3D tests/.cache
+> =20
+>  # Help text used by make help
+>  help:
+> +	@echo  'Configuration targets:'
+>  	@echo  '  config	  - Update current config utilising a line-oriented pr=
+ogram'
+>  	@echo  '  nconfig         - Update current config utilising a ncurses m=
+enu based program'
+>  	@echo  '  menuconfig	  - Update current config utilising a menu based p=
+rogram'
+> @@ -141,6 +144,12 @@ help:
+>  	@echo  '                    default value without prompting'
+>  	@echo  '  tinyconfig	  - Configure the tiniest possible kernel'
+>  	@echo  '  testconfig	  - Run Kconfig unit tests (requires python3 and p=
+ytest)'
+> +	@echo  ''
+> +	@echo  'Configuration topic targets:'
+> +	@$(foreach f, $(all-config-fragments), \
+> +		if help=3D$$(grep -m1 '^# Help: ' $(f)); then \
+> +			printf '  %-25s - %s\n' '$(notdir $(f))' "$${help#*: }"; \
+> +		fi;)
 
-https://lore.kernel.org/all/20230223014221.1710307-1-jacob.e.keller@intel.com/
+thanks, this looks much better, and SPDX is a good point.
 
-> This can miss cases that have more than a single struct depth (which is
-> uncommon but happens). I don't know how to match only "substruct.member"
-> from "ptr->substruct.member". (I know how to match the whole thing[1],
-> though.)
-> 
-Yea I couldn't figure out how to get it to handle both cases here but I
-actually prefer reporting cases like mux_chip, since they can usually be
-refactored to use struct size properly.
+Kind regards,
+Nicolas
 
-> That isn't reason not to take this patch, though. It's a good start!
-> 
+--jAIN7/hQsTcrQJVA
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Right. Both cases like this are why I set the confidence to only medium,
-and mentioned it in the commit :D
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEh0E3p4c3JKeBvsLGB1IKcBYmEmkFAmTuT/cACgkQB1IKcBYm
+EmlEpBAA7EkWGNiEhiWIxoOzhdqdsKaNQxgOjYbqO/5twfQCF8a28YvjT5rz5+4c
+zPaZ2m/zhowV0qsT8Ic7f6+g1ScrV4kyFmwDnsPy4nq/Kv+idjqKxp9fvrznAO9A
+4y3NL0GVRWYkfk50CSIU9QfxpArZdpfTmFI/C8hO4mxUnDWTkApYhaMo1arXxPaU
+eegk3YDPFW4C7jkOeZm+RNrx8WVCbFEshzKPUt1av0RcSwieZcSL3DiHMqYMapWj
+ydkoxuaC6R6L4nlZv0oLwLbSmIDqy4qVMscsEkREwROezN2+f0pJUnjELIFVpTbQ
+JSE9vEYdKdM362Fk1ehON8QZF4tY6Z9gz5tQ+61zutDCa3/ZZxSAzBdz16vYjPtn
+LzX4D+g1vbJUhQSmtsmnTVwnIf9X/TMGLVrKte+iB+wso642TqIdJCpI7Yn6th7h
+9ni2QcqIyCgkvoSX4T/2WYdCeipITjBRaMtP9pRo6ORQZN9D0WYakVoSXCgv2P0e
+WEWpp88brXiio9h66oXrxKexHqNuCnLB43eKBWIvNVN+5JoJJk8PBD66X66i53/u
+7MHJb/vaStGawuOLeic+YJ0qM4mKtHqwd7rdU+HE8BedURnxdQdKCtiSu7n6Kc+g
+gA7K076mUUemwOYxKPSTsu2NHn+iUKuziiqc47dT/pOS+cql8TY=
+=Fe5h
+-----END PGP SIGNATURE-----
 
-> Thanks for writing this up!
-> 
-> -Kees
-> 
-
-Thanks for reviewing. I also sent some struct_size cleanups that look to
-have stalled and could use some review or a re-send if necessary at this
-point.
-
-I think the full list can be found with this lore.kernel.org search:
-
-https://lore.kernel.org/all/?q=f%3Ajacob.e.keller+AND+%28+s%3Astruct_size+OR+s%3A%22flexible+array%22+%29
-
-
-
+--jAIN7/hQsTcrQJVA--
