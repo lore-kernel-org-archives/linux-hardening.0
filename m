@@ -2,104 +2,123 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADFAC83F01
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586BCC83F18
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344053AbjH3S4k (ORCPT
+        id S242002AbjH3S4o (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:56:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51312 "EHLO
+        Wed, 30 Aug 2023 14:56:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344010AbjH3R5t (ORCPT
+        with ESMTP id S244705AbjH3NrN (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 13:57:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE50BE;
-        Wed, 30 Aug 2023 10:57:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 58FA4620A3;
-        Wed, 30 Aug 2023 17:57:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A395C433C7;
-        Wed, 30 Aug 2023 17:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1693418264;
-        bh=7W67d4uHZx8ajrE+AREOx4IigFIIZor8rqkBDeQvMJ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OLHkY9OhI80JbtlD7N/Cxgq0zP3p6QW4HGRHg1+n9m0NGjIkyVEk+1mPYO+GNqX7i
-         g/BeVBWxc1FLg/sYMIaRJEau45F73DyIVz0hkHp25+O/zWAJYkRJNXQKvU8wC/f+nZ
-         MkuPE8G86R+nVwdE1Piox6loaLtKj+V83SwrsifQ=
-Date:   Wed, 30 Aug 2023 19:57:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Jiri Slaby <jirislaby@kernel.org>, linux-hardening@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] vt: Fix potential read overflow of kernel memory
-Message-ID: <2023083035-unpadded-amulet-8c7e@gregkh>
-References: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
+        Wed, 30 Aug 2023 09:47:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6456BA3
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693403184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PzqfQ88022ZJBnlN9XJGH4Rch2pPLUTbjECBn8E9VEk=;
+        b=DN1Tqt3clHoxo73R7PnSFAqo34lXpu9aMaVFTHaXY+k8j/7veF9a9AoZ7DRb76NbhZ6lMe
+        3qJ8eetD6X5J52uXnz2OtdzJLmi3D7Qc8aQ7W8+ykB3RN5zkrHyA8aYY4Z1HGTvF7iw5D7
+        /2lMY1nmDC4Z0S9lnxE60m1ksFaBv6s=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-275-QQgWt3W7MTSoVfeBQbbUzA-1; Wed, 30 Aug 2023 09:46:23 -0400
+X-MC-Unique: QQgWt3W7MTSoVfeBQbbUzA-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2b6fdb8d0acso19451841fa.0
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693403181; x=1694007981;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PzqfQ88022ZJBnlN9XJGH4Rch2pPLUTbjECBn8E9VEk=;
+        b=ClfjOIyqpGRYD7gQEKdbLAStVgwPIGQdJHgr8sSDSHNK//u9+6E5B6ZJQBgdre9zPI
+         mDAJBAwtKFxUSPlxoS+jiN6yi+MjYhmYj1beo2X3UFwyw9XGQb29zIcte8wm5DzL5Lyw
+         RO7gjkRGDtCtcOCQe8zpFqk7mpJ3C8VfG2VtRfLjhfj2BKEXceQWE2NBtwmOsrxEzrrV
+         rS93OwmON36PuIZjWtkuGdmHID9rXUN1tQr07xvG9ayZIocIPKGByLfNCQBB75ECiOuk
+         0YVe5T/NFQKVCpj+KFwSv4DE6Y+2n2d9KBZeQ2FGPD66+tFhFJ+TZCtgwGqh6JqQFoyP
+         ciKw==
+X-Gm-Message-State: AOJu0YzLBaXZxZ0T5LRfMgdJS6YtfAaH2yRxG6XjaRTRYrJdox1osOeA
+        kp7d1+mkpeH8pLTXnpFsmwex6ncD6L20LKdeDCESEGtP2uCaQPUkwxoo60Y4t7fsIsBLT2GXuF/
+        gZqXmCXwdsrsZ7Sb+BOpn2e3tBFoV
+X-Received: by 2002:a05:651c:201b:b0:2bb:8d47:9d95 with SMTP id s27-20020a05651c201b00b002bb8d479d95mr1564045ljo.2.1693403181696;
+        Wed, 30 Aug 2023 06:46:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFj7gH1IKBMS0NWbE4Xd4vUNDX4WI+F2xE2mn0UylTciMqkBXPKro8KLHlIW5rak33HRcstNQ==
+X-Received: by 2002:a05:651c:201b:b0:2bb:8d47:9d95 with SMTP id s27-20020a05651c201b00b002bb8d479d95mr1564026ljo.2.1693403181300;
+        Wed, 30 Aug 2023 06:46:21 -0700 (PDT)
+Received: from fedorinator.fritz.box ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
+        by smtp.gmail.com with ESMTPSA id t26-20020a1709063e5a00b009829dc0f2a0sm7174346eji.111.2023.08.30.06.46.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 06:46:20 -0700 (PDT)
+From:   Philipp Stanner <pstanner@redhat.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <brauner@kernel.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Siddh Raman Pant <code@siddh.me>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>
+Cc:     VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
+        Philipp Stanner <pstanner@redhat.com>
+Subject: [PATCH 0/5] Introduce new wrappers to copy user-arrays
+Date:   Wed, 30 Aug 2023 15:45:51 +0200
+Message-ID: <cover.1693386602.git.pstanner@redhat.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 04:04:10PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit if
-> a source string is not NUL-terminated [1].
+Hi!
 
-But that's not the case here, right?  So your "potential read overflow"
-isn't relevant here.
+David Airlie suggested that we could implement new wrappers around
+(v)memdup_user() for duplicating user arrays.
 
-> The copy_to_user() call uses @len returned from strlcpy() directly
-> without checking its value. This could potentially lead to read
-> overflow.
+This small patch series first implements the two new wrapper functions
+memdup_array_user() and vmemdup_array_user(). They calculate the
+array-sizes safely, i.e., they return an error in case of an overflow.
 
-But can it?  How?
+It then implements the new wrappers in two components in kernel/ and two
+in the drm-subsystem.
 
-Those are all hard-coded strings, in the kernel source, there is no
-potential overflow here.
+In total, there are 18 files in the kernel that use (v)memdup_user() to
+duplicate arrays. My plan is to provide patches for the other 14
+successively once this series has been merged.
 
-And you know the buffer size is correct as well.
+P.
 
-So why even check?
+Philipp Stanner (5):
+  string.h: add array-wrappers for (v)memdup_user()
+  kernel: kexec: copy user-array safely
+  kernel: watch_queue: copy user-array safely
+  drm_lease.c: copy user-array safely
+  drm: vmgfx_surface.c: copy user-array safely
 
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> ---
->  drivers/tty/vt/keyboard.c |    7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-> index 358f216c6cd6..15359c328a23 100644
-> --- a/drivers/tty/vt/keyboard.c
-> +++ b/drivers/tty/vt/keyboard.c
-> @@ -2079,12 +2079,15 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
->  			return -ENOMEM;
-> 
->  		spin_lock_irqsave(&func_buf_lock, flags);
-> -		len = strlcpy(kbs, func_table[kb_func] ? : "", len);
-> +		len = strscpy(kbs, func_table[kb_func] ? : "", len);
->  		spin_unlock_irqrestore(&func_buf_lock, flags);
-> 
-> +		if (len < 0) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
+ drivers/gpu/drm/drm_lease.c             |  4 +--
+ drivers/gpu/drm/vmwgfx/vmwgfx_surface.c |  4 +--
+ include/linux/string.h                  | 42 +++++++++++++++++++++++++
+ kernel/kexec.c                          |  2 +-
+ kernel/watch_queue.c                    |  2 +-
+ 5 files changed, 48 insertions(+), 6 deletions(-)
 
-Don't check for impossible things please.
+-- 
+2.41.0
 
-thanks,
-
-greg k-h
