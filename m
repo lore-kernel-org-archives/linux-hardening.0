@@ -2,125 +2,230 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD35DC83F14
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 22:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C62CC83F01
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 22:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245012AbjH3WfV (ORCPT
+        id S1343894AbjH3WfV (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
         Wed, 30 Aug 2023 18:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343894AbjH3WfR (ORCPT
+        with ESMTP id S237283AbjH3WfR (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
         Wed, 30 Aug 2023 18:35:17 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47AB8E40
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 15:34:56 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-56f84dd2079so234747a12.1
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 15:34:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693434893; x=1694039693; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H349t5BLDzZGdOT/qIW4Y0MnkdkIeEkiYwVrHohy3Oo=;
-        b=YGlkBxBmQrBjgH5SWS80zq2M8Bn2Nit6eKDvy9Ps4gw8HIxKHFiio1ezxn+ZleZD2L
-         cGIaGblazYlvbFOd5z5kELgBT5sBggZ4ulo5XbqWUh6ncamQWeN4106vvbym4ygsklCm
-         jg4mLvghoixQmHxEdXKiF5ZYUDQbIOhkajqog=
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D62FD
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 15:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693434843;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yTsZyqKXCjKhOJ70mLm50QiCTy9IG31Ajtx/kBK1zM0=;
+        b=Tv2Y/Q6Tgh5t1dM6xm5p26QNTh4s70xbGo4ekKhLlHbhA+mgXK82GmBvr1pcJJMcok6tb2
+        vXEP3Pw4pv+mKx6yz9GgVoUuCyPOMn5ikYkSlOiBjDIgFnrxUdFh23GW9QhJuNgWemC5/C
+        MTf1kb7EGDrK+VkpndWlUBVyf/HYNDU=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-639-miDgt0wGMRa2CE3wbzrgQA-1; Wed, 30 Aug 2023 15:15:31 -0400
+X-MC-Unique: miDgt0wGMRa2CE3wbzrgQA-1
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-9a1c4506e1eso98158466b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 12:15:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693434893; x=1694039693;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H349t5BLDzZGdOT/qIW4Y0MnkdkIeEkiYwVrHohy3Oo=;
-        b=hL2Dr+jZLFZybgc4azxmFzj9HxpxgoWn0COFpLZ7zwcyJVMxbO7VacBXQf3QOYAN2V
-         O0ozZPBInV3kBKNAaCOCFuuYLFH93/XiCsF0zymuuIsS3ZyeZis0h4GwMHS7HjbhLEmu
-         3YiB8w/zmjbm6EQFhg4W4XgDT4EyQ+SVDdzkOr9jDTkr7M4SGIpEBL9Wl5k7DPXoolI2
-         Xjf2RVjzSiRsOZfrYICn51uO2Q+mF/p4kOW+OnjDncJPV2Y2ulvyeO2jlQjfZ3ywb5tF
-         jg7fKJ4m/6K/NUeGlAeZzma5CtnjvPJdsTYgHKLlEU6driOJI40OpSJyTpe/1sWJ7bAO
-         mlHA==
-X-Gm-Message-State: AOJu0YzWsBdippHyo8mN5GAfDxyU+3G8Y+SO8rFwNlKtqkp+hymkbULf
-        WU7m2m5VDnMzNDaojaXooKgNtf5aEXBkCn3C71s=
-X-Google-Smtp-Source: AGHT+IHFl7iM6EXsgM8MgKuI4oOXAeizDRCFkDsV4FulHrVc0r/znpAO1pO4mZiU4kBmEFzxgLRLow==
-X-Received: by 2002:a05:6a20:12d2:b0:14c:5dc2:659c with SMTP id v18-20020a056a2012d200b0014c5dc2659cmr4170802pzg.22.1693434893130;
-        Wed, 30 Aug 2023 15:34:53 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id q19-20020a62ae13000000b006871fdde2c7sm74459pff.110.2023.08.30.15.34.52
+        d=1e100.net; s=20221208; t=1693422930; x=1694027730;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iBV0HnyI31Hv2AWMsxadgPSfaYJpOZDq2RNuu2t2Z+8=;
+        b=VoKC8rc624iMKfjmeBaBh+nj3ZWz3vMWPKTrsdMjQHTANHN5SJU0H6Mt/3RBUe+uJ3
+         ALwh4rA5+wPvzmsVk/kLHeyvuj8Xn9NP9vpbEpvC0bYXVidjrkLFdvI+lecHV7Y17bcG
+         wK39F/EbOKNjD3u5HBB2aVusIJGAww6/IgxLURcUzA0XFluF6Yer8VqOY5cJU8IHOnNr
+         R8fZ6Qk5LDYAnJhRYiPg2Rx6qmU7MynxD4XVcrEHynxqXPSzdf8ex5/oI/7Rzeqa/DBj
+         NMvE2qGqO9Y+hDN2uAoxhLKutHWxz9AZrnl31v7Tcpwic5lP3kHjKBbbyefxe0B8ttS4
+         d+DA==
+X-Gm-Message-State: AOJu0YxiETpCk7rhVd6dsHHV08nPzIw3rjhoDwFZrXLi4N+F7gDayxHP
+        Ii5w7sS3g8/BmB6kBmxJlHfNWty5q2aRrX1uFwAFnBMtk/oxXU3S0VtLrK9EMlDNJh92mVO+FQa
+        VmaljVhHN3+x5893mtGUjHxU0MtWN
+X-Received: by 2002:a05:6402:51c8:b0:523:37cf:6f37 with SMTP id r8-20020a05640251c800b0052337cf6f37mr2290530edd.4.1693422930288;
+        Wed, 30 Aug 2023 12:15:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHjUvAuvkykbuXvqA8bQi1z8q8Gj4+iVBJgsW7l3Dh0c5JlqxFhMaKRno+cvmE8+cDwXXn9mg==
+X-Received: by 2002:a05:6402:51c8:b0:523:37cf:6f37 with SMTP id r8-20020a05640251c800b0052337cf6f37mr2290516edd.4.1693422929985;
+        Wed, 30 Aug 2023 12:15:29 -0700 (PDT)
+Received: from ?IPv6:2001:9e8:32e4:1500:aa40:e745:b6c9:7081? ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
+        by smtp.gmail.com with ESMTPSA id i9-20020aa7c709000000b0052a198d8a4dsm7116533edq.52.2023.08.30.12.15.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 15:34:52 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 15:34:52 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Laight <David.Laight@aculab.com>,
-        linux-hardening@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] kobject: Replace strlcpy with strscpy
-Message-ID: <202308301533.D6E65EF5C@keescook>
-References: <20230830202021.4134348-1-azeemshaikh38@gmail.com>
+        Wed, 30 Aug 2023 12:15:29 -0700 (PDT)
+Message-ID: <a4ba0493965ad32fcf95cd6e2439096668a9ed46.camel@redhat.com>
+Subject: Re: [PATCH 1/5] string.h: add array-wrappers for (v)memdup_user()
+From:   pstanner@redhat.com
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <brauner@kernel.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Siddh Raman Pant <code@siddh.me>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>,
+        VMware Graphics Reviewers 
+        <linux-graphics-maintainer@vmware.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
+        David Airlie <airlied@redhat.com>
+Date:   Wed, 30 Aug 2023 21:15:28 +0200
+In-Reply-To: <CAHp75VdS=kSWnz8FzHcdrZPaeZKsQNbzjE9mNN7BDvZA_nQpaA@mail.gmail.com>
+References: <cover.1693386602.git.pstanner@redhat.com>
+         <46f667e154393a930a97d2218d8e90286d93a062.1693386602.git.pstanner@redhat.com>
+         <CAHp75VfkzV-=XuEZwipYzfHNu4EXuwzbu6vfEKh1Uueseo2=wA@mail.gmail.com>
+         <721a70c347d82931d12e5b75b19d132f82ee5ed2.camel@redhat.com>
+         <CAHp75VdS=kSWnz8FzHcdrZPaeZKsQNbzjE9mNN7BDvZA_nQpaA@mail.gmail.com>
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230830202021.4134348-1-azeemshaikh38@gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 08:20:21PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> 
-> Direct replacement is safe here since return value of -errno
-> is used to check for truncation instead of sizeof(dest).
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> ---
-> v3:
->  * Fixed weird indentation.
-> 
-> v2:
->  * Updated error message to remove @len which is errno now.
->  * https://lore.kernel.org/all/20230830150136.3798414-1-azeemshaikh38@gmail.com/
-> 
-> v1:
->  * https://lore.kernel.org/all/20230703180528.3709258-1-azeemshaikh38@gmail.com/
-> 
->  lib/kobject_uevent.c |    8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
-> index 7c44b7ae4c5c..032d81b959f0 100644
-> --- a/lib/kobject_uevent.c
-> +++ b/lib/kobject_uevent.c
-> @@ -254,10 +254,10 @@ static int init_uevent_argv(struct kobj_uevent_env *env, const char *subsystem)
->  	int buffer_size = sizeof(env->buf) - env->buflen;
->  	int len;
-> 
-> -	len = strlcpy(&env->buf[env->buflen], subsystem, buffer_size);
-> -	if (len >= buffer_size) {
-> -		pr_warn("init_uevent_argv: buffer size of %d too small, needed %d\n",
-> -			buffer_size, len);
-> +	len = strscpy(&env->buf[env->buflen], subsystem, buffer_size);
-> +	if (len < 0) {
-> +		pr_warn("init_uevent_argv: insufficient buffer space "
-> +			"(%u left) for %s\n", buffer_size, subsystem);
->  		return -ENOMEM;
->  	}
+On Wed, 2023-08-30 at 17:29 +0300, Andy Shevchenko wrote:
+> On Wed, Aug 30, 2023 at 5:19=E2=80=AFPM <pstanner@redhat.com> wrote:
+> > On Wed, 2023-08-30 at 17:11 +0300, Andy Shevchenko wrote:
+> > > On Wed, Aug 30, 2023 at 4:46=E2=80=AFPM Philipp Stanner
+> > > <pstanner@redhat.com>
+> > > wrote:
+>=20
+> > > > --- a/include/linux/string.h
+> > > > +++ b/include/linux/string.h
+> > >=20
+> > > I'm wondering if this has no side-effects as string.h/string.c
+> > > IIRC
+> > > is
+> > > used also for early stages where some of the APIs are not
+> > > available.
+> > >=20
+> > > > @@ -6,6 +6,8 @@
+> > > > =C2=A0#include <linux/types.h>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+/* for size_t */
+> > > > =C2=A0#include <linux/stddef.h>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* fo=
+r NULL */
+> > > > =C2=A0#include <linux/errno.h>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+/* for E2BIG */
+> > > > +#include <linux/overflow.h>=C2=A0=C2=A0=C2=A0 /* for check_mul_ove=
+rflow() */
+> > > > +#include <linux/err.h>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 /* for ERR_PTR() */
+> > >=20
+> > > Can we preserve order (to some extent)?
+> >=20
+> > Sure. I just put it there so the comments build a congruent block.
+> > Which order would you prefer?
+>=20
+> Alphabetical.
+>=20
+> compiler.h
+> err.h
+> overflow.h
+> ...the rest that is a bit unordered...
+>=20
+> > > > =C2=A0#include <linux/stdarg.h>
+> > > > =C2=A0#include <uapi/linux/string.h>
+>=20
+> ...
 
-I thought scripts/checkpatch.pl would warn about this, but kernel
-coding-style (as it is) says to not split strings. I'd expect this to
-be:
+I mean I could include my own in a sorted manner =E2=80=93 but the existing
+ones are not sorted:
 
-+		pr_warn("init_uevent_argv: insufficient buffer space (%u left) for %s\n",
-+			buffer_size, subsystem);
+/* SPDX-License-Identifier: GPL-2.0 */
+#ifndef _LINUX_STRING_H_
+#define _LINUX_STRING_H_
+
+#include <linux/compiler.h>=09/* for inline */
+#include <linux/types.h>=09/* for size_t */
+#include <linux/stddef.h>=09/* for NULL */
+#include <linux/errno.h>=09/* for E2BIG */
+#include <linux/stdarg.h>
+#include <uapi/linux/string.h>
+
+extern char *strndup_user(const char __user *, long);
+
+We could sort them all, but I'd prefer to do that in a separate patch
+so that this commit does not make the impression of doing anything else
+than including the two new headers
+
+Such a separate patch could also unify the docstring style, see below
+
+>=20
+> > > > +/**
+> > > > + * memdup_array_user - duplicate array from user space
+> > >=20
+> > > > + *
+> > >=20
+> > > Do we need this blank line?
+> >=20
+> > I more or less directly copied the docstring format from the
+> > original
+> > functions (v)memdup_user() in mm/util.c
+> > I guess this is common style?
+>=20
+> I think it's not. But you may grep kernel source tree and tell which
+> one occurs more often with or without this (unneeded) blank line.
 
 
--- 
-Kees Cook
+It seems to be very much mixed. string.h itself is mixed.
+When you look at the bottom of string.h, you'll find functions such as
+kbasename() that have the extra line.
+
+That's not really a super decisive point for me, though. We can remove
+the line I guess
+
+
+P.
+
+
+>=20
+> > > > + * @src: source address in user space
+> > > > + * @n: number of array members to copy
+> > > > + * @size: size of one array member
+> > > > + *
+> > > > + * Return: an ERR_PTR() on failure.=C2=A0 Result is physically
+> > > > + * contiguous, to be freed by kfree().
+> > > > + */
+>=20
+> ...
+>=20
+> > > > +/**
+> > > > + * vmemdup_array_user - duplicate array from user space
+> > >=20
+> > > > + *
+> > >=20
+> > > Redundant?
+> >=20
+> > No, there are two functions:
+> > =C2=A0* memdup_array_user()
+> > =C2=A0* vmemdup_array_user()
+> >=20
+> > On the deeper layers they utilize kmalloc() or kvmalloc(),
+> > respectively.
+>=20
+> I guess you misunderstood my comment. I was talking about kernel doc
+> (as in the previous function).
+>=20
+> > > > + * @src: source address in user space
+> > > > + * @n: number of array members to copy
+> > > > + * @size: size of one array member
+> > > > + *
+> > > > + * Return: an ERR_PTR() on failure.=C2=A0 Result may be not
+> > > > + * physically contiguous.=C2=A0 Use kvfree() to free.
+> > > > + */
+>=20
+>=20
+
