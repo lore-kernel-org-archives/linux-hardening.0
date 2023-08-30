@@ -2,148 +2,122 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BE6C83F16
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 01:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5211C83F01
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241621AbjH3Bsd (ORCPT
+        id S243487AbjH3S4R (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Tue, 29 Aug 2023 21:48:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52116 "EHLO
+        Wed, 30 Aug 2023 14:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241620AbjH3BsG (ORCPT
+        with ESMTP id S244712AbjH3Nr7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Tue, 29 Aug 2023 21:48:06 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4070122;
-        Tue, 29 Aug 2023 18:48:03 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id ca18e2360f4ac-7924a3eb5afso171795139f.0;
-        Tue, 29 Aug 2023 18:48:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693360083; x=1693964883; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=lrXl+IkL773Hdi+O0O6b0ok2HlU+lC6ZL5UEZGArd/k=;
-        b=Ff4SkYcG/4EREJFqdu2OYB5pKAaaV8GCEyEMT/9W2lnyKjDudAO6lDgMItypGWV3Ly
-         WgkDbPlfAYfBwTNAjgpL1TPqJ27+K96U5OMzcQzDDLUV85+7o/D2NODi/Hxruhk3ApXc
-         v3mSWRB7WQqWNa13Cr35FE8WyDg/3sR5tuKgGKWjxdsQbBu+xH+2aoiJlF1ghaQj6PCR
-         q05rsp0Kh22tXafwSw72m0tbwJTnOvqVf8OPAEDGVRSLCCV/6G+XzyT4Cify3TvvDBHv
-         SNgHqYXGvCYI9bCqh7wXFM1X8G2ANrKdNDuuILnFfA8a+9ZNCXwndiGGXwAFzba3VNaM
-         6vDg==
+        Wed, 30 Aug 2023 09:47:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF9C7CC9
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1693403202;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=w7XXAxDLUmZdx81fESQwCFLbPlVQDp3wBmzbmeWO24M=;
+        b=OE5ECJrGM24DknbMl8BDqzUVlOCcJaJBNR/KILwZGxOcYr01HdpI6VJdrifdL6V86Y5v18
+        Mp4Glq8+2pTE0ZpPoaFo5OQMLEuISOr7yTwc1oZxuMTuFrosIR1lkcHq6zE/nI64MertCD
+        GNl8vZ3RMPx3aotlnrVz95m5v2yKuWw=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-wbcwD7G-MOWfGeDCaFk8jA-1; Wed, 30 Aug 2023 09:46:41 -0400
+X-MC-Unique: wbcwD7G-MOWfGeDCaFk8jA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9a1aaaf6460so87012266b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693360083; x=1693964883;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lrXl+IkL773Hdi+O0O6b0ok2HlU+lC6ZL5UEZGArd/k=;
-        b=XWpKpCpilZqKOigoXOYf8Vm504dK5jBl1fHJYfK3UX0rqhUJThVVPzqscOiwlkZCzj
-         XKbQ/dt+d+hPcOM1aUjCXRfVDvk6olKxg6ub38MQOoHK7Fsk0cvUCUzGFTdGoOFh7o1d
-         9XHxYBfDnPBy4uINd2qrjDpQaBVon5OourHgIbhNdwZeDzp6LBF/1zM5oOUaEJr2LX8c
-         DqkJQxUGNhtIKa+hMUCX7lmbqE/XJtjSb+nBtAIbvLZ9uDlwA46rx1iUFaVUpyD42vaV
-         i2jXuThvsbGlMF+HdREFrNLgZSYPPzaoP/ozgZQ6brJ6EZM+8SDUY9kmhl9gXFyHWEMd
-         faxA==
-X-Gm-Message-State: AOJu0YyBtmYy+595ayD4sHFGjlwlbcBPjmyew5CZ3j91gUjjhL7h/sxu
-        Ey852JKjhbxuLQ+/K+tHf4njquxjB18=
-X-Google-Smtp-Source: AGHT+IEFITAE1+1v/asfaRh9oIzYuRGNr5xkyjuLwh+OXXP/+fO/uHERs/WApYuDqbNRhHu0iqj5mQ==
-X-Received: by 2002:a5e:df0d:0:b0:787:1557:3834 with SMTP id f13-20020a5edf0d000000b0078715573834mr1013281ioq.20.1693360083087;
-        Tue, 29 Aug 2023 18:48:03 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id s21-20020a02cf35000000b0042b394eb984sm3519450jar.105.2023.08.29.18.48.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Aug 2023 18:48:02 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <a6f8cde5-a5d4-93ae-d6a8-c8ab4cba3c77@roeck-us.net>
-Date:   Tue, 29 Aug 2023 18:48:00 -0700
+        d=1e100.net; s=20221208; t=1693403200; x=1694008000;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w7XXAxDLUmZdx81fESQwCFLbPlVQDp3wBmzbmeWO24M=;
+        b=UDauObjjtOLS/yevK4qTt3M6NwdpZqNa+XcKj5CQ2UApWCwhBL+3LmlSP9YUjOqb+1
+         q9lYV6fnSCe7wNQr6JBG1SOeX6feNDn/gCcTgDRCNGmByp8sSYcYjL/eNBVd3Sm23oEr
+         aYfJW07AghPkj+7yYhNPiw6jfgWKKRWqPZ+nJ1wqynSh7Bm6uyJH8oBQA0HvVdgVZG70
+         9nzGJ7Vlin7rm2Yz0bPsm/L+oE3Jh75bfZSv7c2OJSM7sepG2j2l536zdQhnPaxyIJR0
+         SfVZhcijgutxio/ZGtmuO+lLaapIplVqptRDI3q3NkUYAqD0ivMfOc4/dqz3DCraP4dF
+         OpbA==
+X-Gm-Message-State: AOJu0YzHHhSO8Mh9TJLviRwd1QcZebxg5AlsdxzrYnzjxL3V4PHFltJF
+        +p3BmVi8E4WnDQqxbV/9Tem3eDN3EmBxWgW+vTn3CvYdM2bxirs7Qt/Fzxsv+W6KBxwj76Ux//e
+        2ykTOnyZSrHq+FJeEhYrE96xuw3Y2
+X-Received: by 2002:a17:906:1011:b0:9a1:aea8:cb5a with SMTP id 17-20020a170906101100b009a1aea8cb5amr1574506ejm.1.1693403200684;
+        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEFovveJ1gRkNa/hbpuOdO660EpmuFNfSfZvj7MduSJ07LTCEG5M6k7oeDfsA0MPBedrGa9vw==
+X-Received: by 2002:a17:906:1011:b0:9a1:aea8:cb5a with SMTP id 17-20020a170906101100b009a1aea8cb5amr1574480ejm.1.1693403200487;
+        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
+Received: from fedorinator.fritz.box ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
+        by smtp.gmail.com with ESMTPSA id gy25-20020a170906f25900b0098951bb4dc3sm7218566ejb.184.2023.08.30.06.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
+From:   Philipp Stanner <pstanner@redhat.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Christian Brauner <brauner@kernel.org>,
+        David Disseldorp <ddiss@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Siddh Raman Pant <code@siddh.me>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>
+Cc:     VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
+        Philipp Stanner <pstanner@redhat.com>,
+        David Airlie <airlied@redhat.com>
+Subject: [PATCH 5/5] drm: vmgfx_surface.c: copy user-array safely
+Date:   Wed, 30 Aug 2023 15:45:56 +0200
+Message-ID: <6f9397d6af919b7e8325c2945385c13aaa3dc5f1.1693386602.git.pstanner@redhat.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <cover.1693386602.git.pstanner@redhat.com>
+References: <cover.1693386602.git.pstanner@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 4/9] kunit: Add ability to filter attributes
-Content-Language: en-US
-To:     David Gow <davidgow@google.com>
-Cc:     Rae Moar <rmoar@google.com>, shuah@kernel.org, dlatypov@google.com,
-        brendan.higgins@linux.dev, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
-        keescook@chromium.org, linux-hardening@vger.kernel.org,
-        jstultz@google.com, tglx@linutronix.de, sboyd@kernel.org
-References: <20230725212522.1622716-1-rmoar@google.com>
- <20230725212522.1622716-5-rmoar@google.com>
- <55950256-c00a-4d21-a2c0-cf9f0e5b8a9a@roeck-us.net>
- <CABVgOS=7vtnJ09SRptaW6Gpv2nKVvc1hssL+6K29u5VeL8hYdw@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <CABVgOS=7vtnJ09SRptaW6Gpv2nKVvc1hssL+6K29u5VeL8hYdw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On 8/29/23 17:24, David Gow wrote:
-> On Wed, 30 Aug 2023 at 06:46, Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> Hi,
->>
->> On Tue, Jul 25, 2023 at 09:25:15PM +0000, Rae Moar wrote:
->>> Add filtering of test attributes. Users can filter tests using the
->>> module_param called "filter".
->>>
->>> Filters are imputed in the format: <attribute_name><operation><value>
->>>
->>> Example: kunit.filter="speed>slow"
->>>
->>> Operations include: >, <, >=, <=, !=, and =. These operations will act the
->>> same for attributes of the same type but may not between types.
->>>
->>> Note multiple filters can be inputted by separating them with a comma.
->>> Example: kunit.filter="speed=slow, module!=example"
->>>
->>> Since both suites and test cases can have attributes, there may be
->>> conflicts. The process of filtering follows these rules:
->>> - Filtering always operates at a per-test level.
->>> - If a test has an attribute set, then the test's value is filtered on.
->>> - Otherwise, the value falls back to the suite's value.
->>> - If neither are set, the attribute has a global "default" value, which
->>>    is used.
->>>
->>> Filtered tests will not be run or show in output. The tests can instead be
->>> skipped using the configurable option "kunit.filter_action=skip".
->>>
->>> Note the default settings for running tests remains unfiltered.
->>>
->>> Finally, add "filter" methods for the speed and module attributes to parse
->>> and compare attribute values.
->>>
->>> Note this filtering functionality will be added to kunit.py in the next
->>> patch.
->>>
->>> Reviewed-by: David Gow <davidgow@google.com>
->>> Signed-off-by: Rae Moar <rmoar@google.com>
->>
->> This patch causes all my s390 boot tests to crash.
->>
-> 
-> Thanks: I can reproduce this here.
-> 
-> Looks like this is an issue with string constants in the tests not
-> being writable. (I'd've thought my testing with KASAN would pick up on
-> this, but I guess string literals are in a writable segment on
-> x86_64?)
-> 
-> Regardless, using char[] for the filters seems to work here. I've sent
-> out a patch to do so:
-> https://lore.kernel.org/linux-kselftest/20230830002116.3768675-1-davidgow@google.com/
-> 
-> That fixes the issue with the stacktrack below, but if you bisected it
-> to this patch, maybe there's another issue. The tests weren't
-> introduced until 76066f93f1df ("kunit: add tests for filtering
-> attributes"). I don't get any crashes with this patch applied, though,
-> so let me know if something's still broken.
-> 
+Currently, there is no overflow-check with memdup_user().
 
-Your patch works just fine. Maybe bisect acted up ? I don't recall seeing
-this happen, but who knows.
+Use the new function memdup_array_user() instead of memdup_user() for
+duplicating the user-space array safely.
 
-Thanks a lot for the quick fix!
+Suggested-by: David Airlie <airlied@redhat.com>
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_surface.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Guenter
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
+index 5db403ee8261..9be185b094cb 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
+@@ -777,9 +777,9 @@ int vmw_surface_define_ioctl(struct drm_device *dev, void *data,
+ 	       sizeof(metadata->mip_levels));
+ 	metadata->num_sizes = num_sizes;
+ 	metadata->sizes =
+-		memdup_user((struct drm_vmw_size __user *)(unsigned long)
++		memdup_array_user((struct drm_vmw_size __user *)(unsigned long)
+ 			    req->size_addr,
+-			    sizeof(*metadata->sizes) * metadata->num_sizes);
++			    metadata->num_sizes, sizeof(*metadata->sizes));
+ 	if (IS_ERR(metadata->sizes)) {
+ 		ret = PTR_ERR(metadata->sizes);
+ 		goto out_no_sizes;
+-- 
+2.41.0
 
