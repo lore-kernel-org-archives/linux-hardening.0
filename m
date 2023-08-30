@@ -2,142 +2,102 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE5CC83F16
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 23:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1421DC6FA8F
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 23:34:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239837AbjH3XGM (ORCPT
+        id S1344497AbjH3XeW (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 19:06:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55330 "EHLO
+        Wed, 30 Aug 2023 19:34:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344394AbjH3XGL (ORCPT
+        with ESMTP id S232069AbjH3XeU (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 19:06:11 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F1DDCF4
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 16:06:02 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1bdc19b782aso1451235ad.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 16:06:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693436761; x=1694041561; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9JYKIPS2a/Iw0xLgRaWe30NqFEvhVB2/VIw8SYtFzVk=;
-        b=D+hjtrkTRWseAG60mGPALZ4IIorEBJ2o0krbkPxCb6UlzTr7y8SnOmQSanjeWCG5x4
-         HZFORxb+guZWshHiM2yEPaA+hzTdm4gjk4qn2lUsDYKPWRDI5jfC0kupC8pq5qN14ooL
-         tKZ2mgle4yNJYDuYPqJqtcwhjKifbCMWa0BVo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693436761; x=1694041561;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9JYKIPS2a/Iw0xLgRaWe30NqFEvhVB2/VIw8SYtFzVk=;
-        b=TebxvB3Kzgg769Xb/Q84Rlu/Z/sxTXwJhitZg5D8sv3ATqGdRBTvUaIIcsE5wFv2VR
-         sDDBqFBlC6wx3c6GmOMlQXLEeA3p3osaNJGwkDFsz9AVMSk6J24UaaHnvebaNu4JTyuK
-         5Fs8m0Q38bS5vFSKnJL4PTasWCyDwYKaIrN9kAy3Akjh3gSGYekZ9ShjY046OZVw97Kt
-         7pOyWph2jMC5CdAjzVuezXghhm9aTanG9qB+XqMNelhy9+mgWUPz+jMyT5UU8afULxa5
-         +XXnQOHuBIBoneHKQ2oY8ODFGWS2+oUvzTBdxETH/nIPToYnrbPTmKfYRPRPodtUbkhO
-         o5KQ==
-X-Gm-Message-State: AOJu0Yy7T825a3cdfR1uE0fLHbvg3pknVuQ5jOAHCLjfIWzxenQCZf1O
-        vNlsgUdIW+PusoGKG0xH4plCQw==
-X-Google-Smtp-Source: AGHT+IHvcjsgESxgjsBsANNslu2fblYGTWQZibmYJFtloK+JU+1ZiyL/2CGqueDw+/3m2eLV8JFmhg==
-X-Received: by 2002:a17:902:a40a:b0:1c0:cb31:d76 with SMTP id p10-20020a170902a40a00b001c0cb310d76mr2761512plq.58.1693436761703;
-        Wed, 30 Aug 2023 16:06:01 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id a5-20020a170902ee8500b001bd62419744sm26037pld.147.2023.08.30.16.06.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 16:06:01 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 16:06:00 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        linux-hardening@vger.kernel.org, ocfs2-devel@lists.linux.dev,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH 2/2] ocfs2: Replace strlcpy with strscpy
-Message-ID: <202308301601.8A8EE6B653@keescook>
-References: <20230830215426.4181755-1-azeemshaikh38@gmail.com>
- <20230830215426.4181755-3-azeemshaikh38@gmail.com>
+        Wed, 30 Aug 2023 19:34:20 -0400
+X-Greylist: delayed 601 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 30 Aug 2023 16:34:08 PDT
+Received: from zproxy1.foxvalley.net (zimbra.foxvalley.net [212.78.26.134])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 002D1BC;
+        Wed, 30 Aug 2023 16:34:07 -0700 (PDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zproxy1.foxvalley.net (Postfix) with ESMTP id 485BE40042;
+        Wed, 30 Aug 2023 18:17:15 -0500 (CDT)
+Received: from zproxy1.foxvalley.net ([127.0.0.1])
+ by localhost (zproxy1.foxvalley.net [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id yCER6PakFvS6; Wed, 30 Aug 2023 18:17:15 -0500 (CDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zproxy1.foxvalley.net (Postfix) with ESMTP id E0AE840ED1;
+        Wed, 30 Aug 2023 18:17:14 -0500 (CDT)
+X-Virus-Scanned: amavis at zproxy1.foxvalley.net
+Received: from zproxy1.foxvalley.net ([127.0.0.1])
+ by localhost (zproxy1.foxvalley.net [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id TgOiTnypPo9S; Wed, 30 Aug 2023 18:17:14 -0500 (CDT)
+Received: from [192.168.1.3] (unknown [161.97.241.227])
+        by zproxy1.foxvalley.net (Postfix) with ESMTPSA id 73E6C40042;
+        Wed, 30 Aug 2023 18:17:14 -0500 (CDT)
+Message-ID: <aa488b1d-51b2-7b55-7a8d-552306ca16dd@foxvalley.net>
+Date:   Wed, 30 Aug 2023 17:17:12 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230830215426.4181755-3-azeemshaikh38@gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH] vt: Fix potential read overflow of kernel memory
+To:     Kees Cook <keescook@chromium.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
+ <2023083035-unpadded-amulet-8c7e@gregkh>
+ <CADmuW3Wbgb7s+jRm8F0hcjzreWysVdzNvv778yUbGCOxAJHwjQ@mail.gmail.com>
+ <202308301421.997C4034B5@keescook>
+Content-Language: en-US
+From:   Dan Raymond <draymond@foxvalley.net>
+In-Reply-To: <202308301421.997C4034B5@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 09:54:26PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
+>>>> The copy_to_user() call uses @len returned from strlcpy() directly
+>>>> without checking its value. This could potentially lead to read
+>>>> overflow.
+>>>
+>>> But can it?  How?
+>>>
+>>
+>> The case I was considering is when the null-terminated hardcoded
+>> string @func_table[kb_func] has length @new_len > @len. In this case,
+>> strlcpy() will assign @len = @new_len and copy_to_user() would read
+>> @new_len from the kmalloc-ed memory of @len. This is the potential
+>> read overflow I was referring to. Let me know if I'm mistaken.
 > 
-> Direct replacement is assumed to be safe here since
-> it's ok for `kernel_param_ops.get()` to return -errno [3].
-> This changes the behavior such that instead of silently ignoring the
-> case when sizeof(@buffer) < DLMFS_CAPABILITIES, we now return error.
+> ..it's what I'd call "accidentally correct". i.e. it's using a fragile> anti-pattern, but in this case everything is hard-coded and less than
+> 512.
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> [3] https://elixir.bootlin.com/linux/v6.5/source/include/linux/moduleparam.h#L52
+> Regardless, we need to swap for a sane pattern, which you've done. But
+> the commit log is misleading, so it needs some more detail. :)
 > 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> ---
->  fs/ocfs2/dlmfs/dlmfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
-> index 33e529de93b2..b001eccdd2f3 100644
-> --- a/fs/ocfs2/dlmfs/dlmfs.c
-> +++ b/fs/ocfs2/dlmfs/dlmfs.c
-> @@ -80,7 +80,7 @@ static int param_set_dlmfs_capabilities(const char *val,
->  static int param_get_dlmfs_capabilities(char *buffer,
->  					const struct kernel_param *kp)
->  {
-> -	return strlcpy(buffer, DLMFS_CAPABILITIES,
-> +	return strscpy(buffer, DLMFS_CAPABILITIES,
->  		       strlen(DLMFS_CAPABILITIES) + 1);
->  }
+> -Kees
 
-This is another case of "accidentally correct".
+In my opinion strlcpy() is being used correctly here as a defensive
+precaution.  If the source string is larger than the destination buffer
+it will truncate rather than corrupt kernel memory.  However the
+return value of strlcpy() is being misused.  If truncation occurred
+the copy_to_user() call will corrupt user memory instead.
 
+I also agree that this is not currently a bug.  It is fragile and it
+could break if someone added a very large string to the table.
 
-param->get() is hooked here, in the sysfs "show" callback:
+Why not fix this by avoiding the redundant string copy?  How about
+something like this:
 
-static ssize_t param_attr_show(struct module_attribute *mattr,
-                               struct module_kobject *mk, char *buf)
-{
-        int count;
-        struct param_attribute *attribute = to_param_attr(mattr);
+ptr = func_table[kb_func] ? : "";
+len = strlen(ptr);
 
-        if (!attribute->param->ops->get)
-                return -EPERM;
+if (len >= sizeof(user_kdgkb->kb_string))
+	return -ENOSPC;
 
-        kernel_param_lock(mk->mod);
-        count = attribute->param->ops->get(buf, attribute->param);
-        kernel_param_unlock(mk->mod);
-        return count;
-}
-
-Meaning ultimately this will show up here, if I'm reading names right:
-/sys/module/ocfs/parameters/dlmfs_capabilities
-
-Anyway, the "count" being returned would be quite bad if
-DLMFS_CAPABILITIES were dynamic and larger than PAGE_SIZE (the size of
-the sysfs buffer).
-
-For this case, I would say replace strlcpy with sysfs_emit:
-
-	return sysfs_emit(buffer, DLMFS_CAPABILITIES);
-
-(Also, ew, existing code doesn't include a trailing "\n". Oh well.)
-
--Kees
-
--- 
-Kees Cook
+if (copy_to_user(user_kdgkb->kb_string, ptr, len + 1))
+	return -EFAULT;
