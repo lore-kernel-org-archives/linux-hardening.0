@@ -2,128 +2,137 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BDEC83F14
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 22:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF8DC83F14
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 23:00:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243136AbjH3WkU (ORCPT
+        id S1344305AbjH3XBA (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 18:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50832 "EHLO
+        Wed, 30 Aug 2023 19:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343965AbjH3WkT (ORCPT
+        with ESMTP id S245347AbjH3XA7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 18:40:19 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1241E198
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 15:40:05 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-68a520dba33so164157b3a.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 15:40:05 -0700 (PDT)
+        Wed, 30 Aug 2023 19:00:59 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F791A3
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 16:00:38 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1bc63ef9959so1393975ad.2
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 16:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693435204; x=1694040004; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1693436438; x=1694041238; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rGoN+7ftyg9+iA8OLms4ykMa+abn+xpZnImA1JV+0nM=;
-        b=TQdRhcxFF3Dphj1sDkK7sniQ99R7uXXL/XpoHnhuUokJ62pemsF+bDmiRlhtDGCDkX
-         G4VUv4uWdLUId/UVC37BzV5X79EDM9aGwtAb1MUvjMVjM65e1Vx8h5y8FdFZx56pcqoF
-         AL9DUdAMDQz+8ASOWq3PthdZu7PwRADRF1uDY=
+        bh=Mqxu+tFGh9Jqwxve6bfR96NTIDgvY/0bBwoU0szPzAI=;
+        b=UdW4HQmCkXD9J3Sr2vSlTVqKsGeeJsj9XQSiEToN/QNMLvqP8DV89WxPP3xCvN8czM
+         Ww2FXm5+fizzaVk8QINMPMlqmsgbDMweYY7rJM+AmLaFKVRS95w3osim3e8RbV8mHSYq
+         0ZI2Hk2Sal5e/6V1AnmehvOs5ccK6+ZEGc/rA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693435204; x=1694040004;
+        d=1e100.net; s=20221208; t=1693436438; x=1694041238;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rGoN+7ftyg9+iA8OLms4ykMa+abn+xpZnImA1JV+0nM=;
-        b=HqJsbi5RE2Bk9p8G0boU2D0gk5BzA0QpwZZbTRsfIkj7HTB/Ia35xWPJG51eZTNPuh
-         iW1ZKqM97m07W7gFmdIatc1TZnwXuIWUACe6EbZRt8d8dG1A/e0VrFXofB9IXy//8j2O
-         9zK6WYUyLgwkqsam1NcRbX6MaDy4rsG1yMQFlcYrr08UlPPRirQGhnr5cy21EhxJsr9n
-         ZOaypPN4mFi/T9AOSzhljTGRc7ZWgOGxE/hiBJEMN93QQlf81XUhBod/XNUhjHmOJ9qi
-         oiAPMXYl09TTlzgrJSFItdc9IHIs3e3zgKIZcliIxT/8+20OdZTxR7hXMRpTemoiNEVv
-         2pfg==
-X-Gm-Message-State: AOJu0Yz3a82WTqjwqyT2KmwmD0oKjXyjTnqQF0G9dMknw99Vyv/aRb6d
-        gI/c4Fk7QQ7d2sImZexadH3WoA==
-X-Google-Smtp-Source: AGHT+IGRKWyzdhU3vc5FYi1/P9ug7Q9xN1iOv2w05gAbb5nV2uv60V6ITd/C5QgGFEa+QRTb8kRA1Q==
-X-Received: by 2002:a05:6a00:1355:b0:68a:4312:e0d6 with SMTP id k21-20020a056a00135500b0068a4312e0d6mr4657813pfu.10.1693435204510;
-        Wed, 30 Aug 2023 15:40:04 -0700 (PDT)
+        bh=Mqxu+tFGh9Jqwxve6bfR96NTIDgvY/0bBwoU0szPzAI=;
+        b=GF7CD1YAmLHvl91KzMrNpL7Kfc6VGBlx3iUJf04GbrBN/UQ8WIjd4c+DCQad60CrAI
+         uSr7PuoX2wYQMkTn3Y4CCVglUQQlHxSYtXAJPKupnbBfhYIwnRMQ5/y3ViMUmFk90wRh
+         aOqzqvcyyO8iWyT27IH5fri4ykqmlrMe8k4CpMjarUxqkABnTO+LaY1m40sROaHHFvef
+         +ERAmBnLucqkYT93qInC19PWS3ULUoB5F8KP+kUodfZrhDgdFnv5YcYm352+ZiHY7Rwe
+         bIzALanAZpjm3oHOf0lz9lqb9R8nzEG7GDMDQnxYlmPGTrpXVbYJHwN6gSVGX1oGTJBI
+         RPbA==
+X-Gm-Message-State: AOJu0YxcMB/rzk5Cz8U6NDL9H+VNq4CoudxTVC++7VuiIBTk9rHcJNi9
+        HeIgmKv6tvRHmYNw5qB9AiJxKg==
+X-Google-Smtp-Source: AGHT+IH5AprVacmHqYm3RuV5CCezVz/DJRyjbaoRrsUaqcqdsLDSojkrt58gIYwBMHkpfshuHjj+oA==
+X-Received: by 2002:a17:903:2349:b0:1b8:90bd:d157 with SMTP id c9-20020a170903234900b001b890bdd157mr4044458plh.26.1693436438271;
+        Wed, 30 Aug 2023 16:00:38 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id j17-20020a62b611000000b0066a2e8431a0sm75593pff.183.2023.08.30.15.40.03
+        by smtp.gmail.com with ESMTPSA id b14-20020a170903228e00b001b81a97860asm28420plh.27.2023.08.30.16.00.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 15:40:03 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 15:40:03 -0700
+        Wed, 30 Aug 2023 16:00:37 -0700 (PDT)
+Date:   Wed, 30 Aug 2023 16:00:37 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Justin Stitt <justinstitt@google.com>
-Cc:     Azeem Shaikh <azeemshaikh38@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hardening@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] scsi: target: Replace strlcpy with strscpy
-Message-ID: <202308301538.F89E1E5E23@keescook>
-References: <20230830210724.4156575-1-azeemshaikh38@gmail.com>
- <20230830215330.6gyhpq3ohkbbtsam@google.com>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        linux-hardening@vger.kernel.org, ocfs2-devel@lists.linux.dev,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <brauner@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH 1/2] ocfs2: Replace module_param_call with module_param_cb
+Message-ID: <202308301546.5C789E5EC@keescook>
+References: <20230830215426.4181755-1-azeemshaikh38@gmail.com>
+ <20230830215426.4181755-2-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230830215330.6gyhpq3ohkbbtsam@google.com>
+In-Reply-To: <20230830215426.4181755-2-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 09:53:30PM +0000, Justin Stitt wrote:
-> On Wed, Aug 30, 2023 at 09:07:24PM +0000, Azeem Shaikh wrote:
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read
-> > overflows if a source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> >
-> > Direct replacement is safe here since return value of -errno
-> > is used to check for truncation instead of sizeof(dest).
-> >
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> >
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> > ---
-> > v2:
-> >  * Replace all instances of strlcpy in this file instead of just 1.
-> >
-> > v1:
-> >  * https://lore.kernel.org/all/20230830200717.4129442-1-azeemshaikh38@gmail.com/
-> >
-> >  drivers/target/target_core_configfs.c |   27 ++++++++++++---------------
-> >  1 file changed, 12 insertions(+), 15 deletions(-)
-> >
-> > diff --git a/drivers/target/target_core_configfs.c b/drivers/target/target_core_configfs.c
-> > index 936e5ff1b209..10a22a428267 100644
-> > --- a/drivers/target/target_core_configfs.c
-> > +++ b/drivers/target/target_core_configfs.c
-> > @@ -1392,16 +1392,15 @@ static ssize_t target_wwn_vendor_id_store(struct config_item *item,
-> >  	/* +2 to allow for a trailing (stripped) '\n' and null-terminator */
-> >  	unsigned char buf[INQUIRY_VENDOR_LEN + 2];
-> >  	char *stripped = NULL;
-> > -	size_t len;
-> > +	ssize_t len;
-> >  	ssize_t ret;
-> >
-> > -	len = strlcpy(buf, page, sizeof(buf));
-> > -	if (len < sizeof(buf)) {
-> > +	len = strscpy(buf, page, sizeof(buf));
-> > +	if (len > 0) {
-> >  		/* Strip any newline added from userspace. */
-> >  		stripped = strstrip(buf);
-> > -		len = strlen(stripped);
-> >  	}
-> > -	if (len > INQUIRY_VENDOR_LEN) {
-> > +	if (len < 0 || strlen(stripped) > INQUIRY_VENDOR_LEN) {
-> >  		pr_err("Emulated T10 Vendor Identification exceeds"
-> >  			" INQUIRY_VENDOR_LEN: " __stringify(INQUIRY_VENDOR_LEN)
-> >  			"\n");
+On Wed, Aug 30, 2023 at 09:54:25PM +0000, Azeem Shaikh wrote:
+> module_param_call has been marked obsolete [1], so replacing its usage with
+> module_param_cb instead.
 > 
-> Should we be explicitly checking for `len == -E2BIG` instead of the more
-> generic `len < 0`? Perhaps this is a nitpick but I prefer the former.
+> [1] https://elixir.bootlin.com/linux/v6.5/source/include/linux/moduleparam.h#L296
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> ---
+>  fs/ocfs2/dlmfs/dlmfs.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ocfs2/dlmfs/dlmfs.c b/fs/ocfs2/dlmfs/dlmfs.c
+> index 81265123ce6c..33e529de93b2 100644
+> --- a/fs/ocfs2/dlmfs/dlmfs.c
+> +++ b/fs/ocfs2/dlmfs/dlmfs.c
+> @@ -83,8 +83,11 @@ static int param_get_dlmfs_capabilities(char *buffer,
+>  	return strlcpy(buffer, DLMFS_CAPABILITIES,
+>  		       strlen(DLMFS_CAPABILITIES) + 1);
+>  }
+> -module_param_call(capabilities, param_set_dlmfs_capabilities,
+> -		  param_get_dlmfs_capabilities, NULL, 0444);
+> +static const struct kernel_param_ops dlmfs_capabilities_ops = {
+> +	.set = param_set_dlmfs_capabilities,
+> +	.get = param_get_dlmfs_capabilities,
+> +};
+> +module_param_cb(capabilities, &dlmfs_capabilities_ops, NULL, 0444);
+>  MODULE_PARM_DESC(capabilities, DLMFS_CAPABILITIES);
 
-For robustness, we want to just do the "< 0" test -- that way if
-strscpy() gains a new errno (for some unimaginable reason) then all the
-code testing for "< 0" will continue to work sanely.
+Oh, hm. Yeah, that's not good documentation. It was originally added in
+9bbb9e5a33109b2832e2e63dcc7a132924ab374b, but that was doing some
+casting and other things during the conversion to an ops structure.
+
+I cleaned up all the last of those back in 2017, and I should have
+dropped the "Obsolete" comment:
+ece1996a21eeb344b49200e627c6660111009c10
+b2f270e8747387335d80428c576118e7d87f69cc
+
+The resulting patch you sent ends up literally open coding what it
+already does...
+
+#define module_param_call(name, _set, _get, arg, perm)                  \
+        static const struct kernel_param_ops __param_ops_##name =       \
+                { .flags = 0, .set = _set, .get = _get };               \
+        __module_param_call(MODULE_PARAM_PREFIX,                        \
+                            name, &__param_ops_##name, arg, perm, -1, 0)
+
+#define module_param_cb(name, ops, arg, perm)                                 \
+        __module_param_call(MODULE_PARAM_PREFIX, name, ops, arg, perm, -1, 0)
+
+Looking at usage, it's still common:
+
+$ git grep '^module_param_call(' | wc -l
+54
+$ git grep '^module_param_cb(' | wc -l
+93
+
+And the users of module_param_cb() appear to be almost universally
+open-coding the result. Only a few initialize struct members that aren't
+.get and .set:
+
+$ git grep -B6 ^module_param_cb
+
+I'd say drop this patch and instead patch moduleparam.h to not say it's
+deprecated. :P
 
 -Kees
 
