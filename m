@@ -2,66 +2,63 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7315AC83F1B
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96239C83F01
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344041AbjH3S4f (ORCPT
+        id S1344049AbjH3S4g (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47056 "EHLO
+        Wed, 30 Aug 2023 14:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245041AbjH3OYE (ORCPT
+        with ESMTP id S244714AbjH3Nr7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 10:24:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7AF124
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 07:23:15 -0700 (PDT)
+        Wed, 30 Aug 2023 09:47:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A93E1BF
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693405394;
+        s=mimecast20190719; t=1693403201;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LDWeZz8lwtK2Vw963Pp4K5umQAhzGapmgVnLNgStcjo=;
-        b=Akvmh1yAb35F5xpAl/Lm+uXDZo+cFqsKdiy2StQEZmcccAC70cJXdAnVjUuk5LeaplByHJ
-        wa4DSAAzvLYUHpkYfInM0lyNXTbGFPeecYT72loaFmLKFg7VJtXv6dr8F2FUfqVoaMhUkn
-        Rzs/QTBGrzfX6EKAxmZe4w8CMYjOx+4=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=UOJpuwbwTVfs+j95sEE93OpkqtbclA96WzipEC/nM14=;
+        b=P8qE/f2vYW1lb4HizM9j2XDFEQhHMfh1bUAhZtX/FCeny04h26NSrWWJJUiUMFeYX5OKKB
+        zl4Tya8w0P62TRpiaxhJRrwCC9Z6WkJTH5IzzT5eJCmtOpWs4JapFSid9p9rZjxqejFQKn
+        2Wnu0Tx8baGjYRcLKLO4zxqQueGglcA=
+Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
+ [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-hLRyqpIjMEypOzvUicuvEQ-1; Wed, 30 Aug 2023 10:23:13 -0400
-X-MC-Unique: hLRyqpIjMEypOzvUicuvEQ-1
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5256c3803b4so365284a12.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 07:23:13 -0700 (PDT)
+ us-mta-299-csP4xd6FMIKdJykTjt4RcA-1; Wed, 30 Aug 2023 09:46:38 -0400
+X-MC-Unique: csP4xd6FMIKdJykTjt4RcA-1
+Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-2b9cca3c395so19428601fa.1
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693405392; x=1694010192;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LDWeZz8lwtK2Vw963Pp4K5umQAhzGapmgVnLNgStcjo=;
-        b=SKO8yrQifhFNbmFXleU06hzCuAyPzkmY6yTZ/DOXdckvsxmiqy4kDtgu6pn2R8SX9i
-         99NWd7eFx4M2rOMTHE5fOXDe3nGsaooSK0j+U94dEW3egfV1dgkTlUNUpMAQgW97BOgI
-         aYgTyXHuFuaurpRL7x5E8EqJfJCsr1F0q3iI6MiIUeZ5IdQQAtpMLG4onxiCjdFcV24A
-         o9d6jkomsyvHIb6IYOcOaRHOArQ+Lx8UpyWquaXE43rYW5bbRIw086QLZtt7H39L1/v8
-         Wa6BMxlQaIvC3e7Wp2IAUp7zNiXJWNIuwcJMrenMPn2AHGxdzySusCb4j95IYVpQsssL
-         Kk8w==
-X-Gm-Message-State: AOJu0Yy0mqQOb4uBumLzaRgC6n5ViqDPhBdhyq179ROia1ugQJQ8ono8
-        P03gEFD/1WziDjxM6fk8cHgvzBJrUf7T4dHul+fKc0qHWa5c+ym8LSEVwIPh9vXw1I9ZpDhZ6wf
-        UEDXaraRPgM4R8dE9pb9+LD9M1nMs
-X-Received: by 2002:a05:6402:4404:b0:51e:34d8:f4c7 with SMTP id y4-20020a056402440400b0051e34d8f4c7mr2019163eda.2.1693405392370;
-        Wed, 30 Aug 2023 07:23:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEETjNW9wp/fQvTrgjMQpXcwVHdHwUrjVBdjXk8jizCaYvhqq5Q/jtzkYzdJEKBqJ9axaU5/A==
-X-Received: by 2002:a05:6402:4404:b0:51e:34d8:f4c7 with SMTP id y4-20020a056402440400b0051e34d8f4c7mr2019152eda.2.1693405392119;
-        Wed, 30 Aug 2023 07:23:12 -0700 (PDT)
-Received: from ?IPv6:2001:9e8:32e4:1500:aa40:e745:b6c9:7081? ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
-        by smtp.gmail.com with ESMTPSA id j4-20020aa7ca44000000b0052574ef0da1sm6830091edt.28.2023.08.30.07.23.11
+        d=1e100.net; s=20221208; t=1693403196; x=1694007996;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UOJpuwbwTVfs+j95sEE93OpkqtbclA96WzipEC/nM14=;
+        b=QpND67xlXdt81r95rL9Zi5YwrG5ZJw5mdBaLbCQCNygqH3gANFXL0SKyRzMYfbxxS/
+         25AS4SE3ApL9FP/vyhKIRXHrA02x13Iqrk1SCBn+STDCl+PYmgVrR+GPDeYRIKEjWhHs
+         Vr1wQOZSmMgD1WWd7S2zaRFlRbcoKR8hlcNwLlpzYT1pjgDkXWdDM6ty1lNBQMbtzbIQ
+         MHweXRtKxz8XObd+ZizklarF1JIWf+l/JFrPsVs+iNy0mkqX3u8Qpm+1e6xm/lR6faZ9
+         iu9Z1cmVKe3g8V/rrw2w3A02sDaklk8D8cF8ITDqx4u+mKnJ69jd0p0jxE4T36X7Zcww
+         oLMQ==
+X-Gm-Message-State: AOJu0Yw+sxDDcRunLFk5J6nSWGsmdpESF1zl52fc6psu/T1U+BHaYyv2
+        ycLusJm7Iq8L3fER+QNcpGM9HIQW+0f4nhHB9uIRd/F6oZjgswixDe7lo8RLHco+B8Q59Y94kI8
+        O10Eu1dhi3fjL1BjLglCARM6iRRbJ
+X-Received: by 2002:a05:651c:1182:b0:2bc:fc2e:766c with SMTP id w2-20020a05651c118200b002bcfc2e766cmr1857347ljo.3.1693403196830;
+        Wed, 30 Aug 2023 06:46:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHNBSsy/iFndvURQgQS9ZCnlQ9lW+9HBjOb1QIZNMn1l3Gt7cB24Ma8x0ITyx+CEVBlGHtj+A==
+X-Received: by 2002:a05:651c:1182:b0:2bc:fc2e:766c with SMTP id w2-20020a05651c118200b002bcfc2e766cmr1857319ljo.3.1693403196642;
+        Wed, 30 Aug 2023 06:46:36 -0700 (PDT)
+Received: from fedorinator.fritz.box ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
+        by smtp.gmail.com with ESMTPSA id li22-20020a170906f99600b009a198078c53sm7167678ejb.214.2023.08.30.06.46.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 07:23:11 -0700 (PDT)
-Message-ID: <a79b3c34a12abc51bc5e840ae3a87ab9a47f7742.camel@redhat.com>
-Subject: Re: [PATCH 1/5] string.h: add array-wrappers for (v)memdup_user()
-From:   pstanner@redhat.com
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+        Wed, 30 Aug 2023 06:46:36 -0700 (PDT)
+From:   Philipp Stanner <pstanner@redhat.com>
+To:     Kees Cook <keescook@chromium.org>,
         Andy Shevchenko <andy@kernel.org>,
         Eric Biederman <ebiederm@xmission.com>,
         Christian Brauner <brauner@kernel.org>,
@@ -73,52 +70,53 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Maxime Ripard <mripard@kernel.org>,
         Thomas Zimmermann <tzimmermann@suse.de>,
         David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>,
-        VMware Graphics Reviewers 
-        <linux-graphics-maintainer@vmware.com>,
+        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>
+Cc:     VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
+        Philipp Stanner <pstanner@redhat.com>,
         David Airlie <airlied@redhat.com>
-Date:   Wed, 30 Aug 2023 16:23:10 +0200
-In-Reply-To: <CAHp75Vc72uuNvFxq4TGO=nXoGhbqVxyqvQ67ioL8ajtZwMUBgA@mail.gmail.com>
+Subject: [PATCH 4/5] drm_lease.c: copy user-array safely
+Date:   Wed, 30 Aug 2023 15:45:55 +0200
+Message-ID: <34e14523c9cea13e2f63afabf2938c89d2e84776.1693386602.git.pstanner@redhat.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <cover.1693386602.git.pstanner@redhat.com>
 References: <cover.1693386602.git.pstanner@redhat.com>
-         <46f667e154393a930a97d2218d8e90286d93a062.1693386602.git.pstanner@redhat.com>
-         <CAHp75Vc72uuNvFxq4TGO=nXoGhbqVxyqvQ67ioL8ajtZwMUBgA@mail.gmail.com>
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38)
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, 2023-08-30 at 17:15 +0300, Andy Shevchenko wrote:
-> On Wed, Aug 30, 2023 at 4:46=E2=80=AFPM Philipp Stanner <pstanner@redhat.=
-com>
-> wrote:
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (unlikely(check_mul_overflow(n=
-, size, &nbytes)))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return ERR_PTR(-EINVAL);
->=20
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (unlikely(check_mul_overflow(n=
-, size, &nbytes)))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return ERR_PTR(-EINVAL);
->=20
-> Btw, why not -EOVERFLOW ?
->=20
+Currently, there is no overflow-check with memdup_user().
 
-Good question, actually.
-To be honest I wasn't quite sure which code to pick (-E2BIG was also
-once I candidate).
+Use the new function memdup_array_user() instead of memdup_user() for
+duplicating the user-space array safely.
 
--EINVAL was picked because the idea was that a request overflowing a
-size_t could surely be expected to contain an invalid parameter,
-because no one would ever request an array _that_ large
+Suggested-by: David Airlie <airlied@redhat.com>
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+---
+ drivers/gpu/drm/drm_lease.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-?
+diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
+index 150fe1555068..94375c6a5425 100644
+--- a/drivers/gpu/drm/drm_lease.c
++++ b/drivers/gpu/drm/drm_lease.c
+@@ -510,8 +510,8 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
+ 	/* Handle leased objects, if any */
+ 	idr_init(&leases);
+ 	if (object_count != 0) {
+-		object_ids = memdup_user(u64_to_user_ptr(cl->object_ids),
+-					 array_size(object_count, sizeof(__u32)));
++		object_ids = memdup_array_user(u64_to_user_ptr(cl->object_ids),
++					       object_count, sizeof(__u32));
+ 		if (IS_ERR(object_ids)) {
+ 			ret = PTR_ERR(object_ids);
+ 			idr_destroy(&leases);
+-- 
+2.41.0
 
