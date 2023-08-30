@@ -2,137 +2,120 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF08C6FA8F
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 20:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B90EBC6FA8F
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 20:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232634AbjH3UCQ (ORCPT
+        id S229732AbjH3UWH (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 16:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56772 "EHLO
+        Wed, 30 Aug 2023 16:22:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjH3UBz (ORCPT
+        with ESMTP id S232851AbjH3UWF (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 16:01:55 -0400
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8773A83EA
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 12:39:27 -0700 (PDT)
-Received: by mail-ot1-x332.google.com with SMTP id 46e09a7af769-6bca66e6c44so150009a34.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 12:39:27 -0700 (PDT)
+        Wed, 30 Aug 2023 16:22:05 -0400
+Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C6681BD5;
+        Wed, 30 Aug 2023 13:21:31 -0700 (PDT)
+Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-792707f78b5so6957039f.1;
+        Wed, 30 Aug 2023 13:21:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1693424308; x=1694029108; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YZMBO3cq35PjwKKIG6m42W7fw7Uuq0v6gb0qcGM7SrQ=;
-        b=kis29l2Was+G6178u/jq1kWxzBrTaifsgvANFvXAu4W4VB2k+iH66qnwpNhVr/xhCv
-         eHlcIXiQIr5p+xJIe4O5inQj1f9rxbr+7GhBhOZ+wAckjyycvKF0MgheY59BZExfJVka
-         4Qvr8MzJdSZQNpJ3fjVxEkvY4JI1KW0mN+wvw=
+        d=gmail.com; s=20221208; t=1693426832; x=1694031632; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Z4JICYPyprUjqWySgKr+yoLytnJucks9de9gSK2KLo=;
+        b=PUU9HrJqYUlxQTmzf2qVn4aAhIn95YNF5zHwCfY522VAhJ5iv1RCNmtLSliuqfIX8Q
+         avEU1CEdMKKjjY4sA+2rVnkj4mdNpwj6T2EICwr+mDsvtJaH50mcWSfVaojp3b6Hmtn2
+         rmoBWYtYmHXrbKEf84oKWOn381+9RP9uHNj89woudnZxv3rpjJjxGK7uMT6p0w4FymcR
+         DtTg4WsQKABLtb0IW37oJO0tVu6Tz3Rk315yzKWfm7Tbl1jr8Kq9Isqmsu3SsSsJLNHR
+         gECFO04Kyb2/HyNzXUMeCp7D7GLUs+wK1I3D1vubskQ0tpbYiV8G4yn/geSsAw2klu+7
+         I06g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693424308; x=1694029108;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YZMBO3cq35PjwKKIG6m42W7fw7Uuq0v6gb0qcGM7SrQ=;
-        b=GTMWqYtXPcyE2FClLbdSIVXsuBS2QOc7s8/sy5f4Yy4njPwXspprPtNRNboAPAAoky
-         onvnkImYmo4QeffaJWYgJZ9KUak4yfja5iYPiqBZXsOoh/fQvo7+uRdOK9uEIDa2HN4I
-         SBB5D5AWB7Ey3ezl5Zzl/1E/omawsIl+ASjoaQ389A2YhDPnBPlojdXjzdtQhBrCJB3Q
-         BNwd/VQSjAjLwRXPfSYAbdkEQCqXK5otflffc6Ejl+S2ob1MIycvpQXsqMLHkN49/P5I
-         2DCr+mM7Hcyo5EZShF40uW61pXTTWIsiDOsEvsqf7EAiBMLKdF3h8PxzRRS6nP4x2apf
-         vazQ==
-X-Gm-Message-State: AOJu0YwIW6/+2rN0j4bxzYSz7xY0Q9RduR8vBicAERreo/Dte9LoFkQZ
-        uIiYwPqXl8vKz7cFtm8jmwnAbkdMvfHpQH2zCUw=
-X-Google-Smtp-Source: AGHT+IGykiElXISO5VTbxBJsqAwOC0C4+ZKKK6xBNTjZEalBwc53bWlt/bicp+NzrhLj4nYHS0HvIg==
-X-Received: by 2002:a05:6a00:1ace:b0:68b:dfef:de8f with SMTP id f14-20020a056a001ace00b0068bdfefde8fmr3255663pfv.12.1693423625426;
-        Wed, 30 Aug 2023 12:27:05 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g10-20020a62e30a000000b00688965c5227sm10324255pfh.120.2023.08.30.12.27.04
+        d=1e100.net; s=20221208; t=1693426832; x=1694031632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Z4JICYPyprUjqWySgKr+yoLytnJucks9de9gSK2KLo=;
+        b=Eh3YneOKg/vl6QS1VvQ+Wh9VM3VgWaIR4ZnXpZEKmK3zGTISnRERbhVCMMzmVoO/Hj
+         loG2KkoJ7lmi/I/eXHvlYs9ym5qp4wmTPEE731ornN/ZH86KsYCVkkz/gV7kuGFn2Bp+
+         HS73NfdExaNYyIi4apeeEAd8JievMfoRRhaKtJNoxdh7K/1S0Y6uo5kg7KSwOUD9lLWX
+         TU7aEWss4p5IS2S5q2ZEo2R3239FcH0KTIja6OWTTjRGCYjP4Qm+WMzI4A7gHSG9CHuk
+         PK8HrTLic4q1vz+RPLiPKWE7TN6nEH01GNmqY4k0Jj5XU2W04fEVE1bDGWp+C/Xkp25O
+         MxzA==
+X-Gm-Message-State: AOJu0Yzhglj52ilvRUFsXQDoT5upPUEhdvonsFgSKCTsbjo2pSIhBD8o
+        slbfbgYriPR4XdoCLZDn/nw=
+X-Google-Smtp-Source: AGHT+IHsYjwRoqRZqSkKyQkvwQXLT7GJggloVjV7k0+2ZWPVrbeNlqVTvlgZFgXjWH22AHWbNVCFJQ==
+X-Received: by 2002:a6b:e801:0:b0:783:6272:afbb with SMTP id f1-20020a6be801000000b007836272afbbmr3846961ioh.9.1693426832173;
+        Wed, 30 Aug 2023 13:20:32 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
+        by smtp.gmail.com with ESMTPSA id s24-20020a02cc98000000b0042b4f1c08desm4132304jap.27.2023.08.30.13.20.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 12:27:04 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 12:27:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] vt: Fix potential read overflow of kernel memory
-Message-ID: <202308301222.3BD87A6@keescook>
-References: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
+        Wed, 30 Aug 2023 13:20:31 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] kobject: Replace strlcpy with strscpy
+Date:   Wed, 30 Aug 2023 20:20:21 +0000
+Message-ID: <20230830202021.4134348-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.42.0.283.g2d96d420d3-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230830160410.3820390-1-azeemshaikh38@gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 04:04:10PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
 
-Perhaps add:
-"... and returns the size of the source string, not the destination
-string, which can be accidentally misused."
+Direct replacement is safe here since return value of -errno
+is used to check for truncation instead of sizeof(dest).
 
-> This read may exceed the destination size limit if
-> a source string is not NUL-terminated [1].
-> 
-> The copy_to_user() call uses @len returned from strlcpy() directly
-> without checking its value. This could potentially lead to read
-> overflow.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-Since the code as written today is "accidentally correct", it's worth
-clarifying this: there is no existing bug, but as written it is very
-fragile and specifically uses a strlcpy() result without sanity checking
-and using it to copy to userspace. (This is the exact anti-pattern for
-strlcpy(), and only because the source strings are known good is this
-safe.)
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+v3:
+ * Fixed weird indentation.
 
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> ---
->  drivers/tty/vt/keyboard.c |    7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/vt/keyboard.c b/drivers/tty/vt/keyboard.c
-> index 358f216c6cd6..15359c328a23 100644
-> --- a/drivers/tty/vt/keyboard.c
-> +++ b/drivers/tty/vt/keyboard.c
-> @@ -2079,12 +2079,15 @@ int vt_do_kdgkb_ioctl(int cmd, struct kbsentry __user *user_kdgkb, int perm)
->  			return -ENOMEM;
-> 
->  		spin_lock_irqsave(&func_buf_lock, flags);
-> -		len = strlcpy(kbs, func_table[kb_func] ? : "", len);
-> +		len = strscpy(kbs, func_table[kb_func] ? : "", len);
->  		spin_unlock_irqrestore(&func_buf_lock, flags);
-> 
-> +		if (len < 0) {
-> +			ret = -EFAULT;
+v2:
+ * Updated error message to remove @len which is errno now.
+ * https://lore.kernel.org/all/20230830150136.3798414-1-azeemshaikh38@gmail.com/
 
-I think this should be -ENOSPC as EFAULT implies an actual memory fault.
+v1:
+ * https://lore.kernel.org/all/20230703180528.3709258-1-azeemshaikh38@gmail.com/
 
-> +			break;
-> +		}
->  		ret = copy_to_user(user_kdgkb->kb_string, kbs, len + 1) ?
->  			-EFAULT : 0;
-> -
->  		break;
->  	}
->  	case KDSKBSENT:
-> --
-> 2.42.0.rc2.253.gd59a3bf2b4-goog
-> 
-> 
+ lib/kobject_uevent.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Thanks for sticking with these refactorings; we're almost free from
-strlcpy. :)
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index 7c44b7ae4c5c..032d81b959f0 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -254,10 +254,10 @@ static int init_uevent_argv(struct kobj_uevent_env *env, const char *subsystem)
+ 	int buffer_size = sizeof(env->buf) - env->buflen;
+ 	int len;
 
--Kees
+-	len = strlcpy(&env->buf[env->buflen], subsystem, buffer_size);
+-	if (len >= buffer_size) {
+-		pr_warn("init_uevent_argv: buffer size of %d too small, needed %d\n",
+-			buffer_size, len);
++	len = strscpy(&env->buf[env->buflen], subsystem, buffer_size);
++	if (len < 0) {
++		pr_warn("init_uevent_argv: insufficient buffer space "
++			"(%u left) for %s\n", buffer_size, subsystem);
+ 		return -ENOMEM;
+ 	}
 
--- 
-Kees Cook
+--
+2.42.0.rc2.253.gd59a3bf2b4-goog
+
+
