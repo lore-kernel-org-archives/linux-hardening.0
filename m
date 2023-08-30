@@ -2,60 +2,61 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586BCC83F18
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67B7C6FA8F
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242002AbjH3S4o (ORCPT
+        id S1344056AbjH3S4q (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:56:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57184 "EHLO
+        Wed, 30 Aug 2023 14:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244705AbjH3NrN (ORCPT
+        with ESMTP id S244716AbjH3Nr7 (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 09:47:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6456BA3
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:25 -0700 (PDT)
+        Wed, 30 Aug 2023 09:47:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC7A31B1
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693403184;
+        s=mimecast20190719; t=1693403196;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=PzqfQ88022ZJBnlN9XJGH4Rch2pPLUTbjECBn8E9VEk=;
-        b=DN1Tqt3clHoxo73R7PnSFAqo34lXpu9aMaVFTHaXY+k8j/7veF9a9AoZ7DRb76NbhZ6lMe
-        3qJ8eetD6X5J52uXnz2OtdzJLmi3D7Qc8aQ7W8+ykB3RN5zkrHyA8aYY4Z1HGTvF7iw5D7
-        /2lMY1nmDC4Z0S9lnxE60m1ksFaBv6s=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=R2kuY7QrN77OjYcmiIgmsp8RgTy5tijHIGRui0VqTUY=;
+        b=VBafd5+o1BPasgg3fepmn+pHFg9tfaRqiRoKKiE9l9T2E7RMw1qv4xHyTPt0ekn0jCi9/N
+        7XWEFXW7pjfnYufLxmnG7EKyeEZC9KJy7i36g9LajCQJMNCMuW0EPiDU1AXC9uaLhL6vd7
+        97T94ul4akjY5DV4rSGaDoc7zb+Kt/A=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-275-QQgWt3W7MTSoVfeBQbbUzA-1; Wed, 30 Aug 2023 09:46:23 -0400
-X-MC-Unique: QQgWt3W7MTSoVfeBQbbUzA-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2b6fdb8d0acso19451841fa.0
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:22 -0700 (PDT)
+ us-mta-558-Ht-Q-VHXOCmwHccSBfWjeg-1; Wed, 30 Aug 2023 09:46:35 -0400
+X-MC-Unique: Ht-Q-VHXOCmwHccSBfWjeg-1
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-9a1c758ef63so61292566b.1
+        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693403181; x=1694007981;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PzqfQ88022ZJBnlN9XJGH4Rch2pPLUTbjECBn8E9VEk=;
-        b=ClfjOIyqpGRYD7gQEKdbLAStVgwPIGQdJHgr8sSDSHNK//u9+6E5B6ZJQBgdre9zPI
-         mDAJBAwtKFxUSPlxoS+jiN6yi+MjYhmYj1beo2X3UFwyw9XGQb29zIcte8wm5DzL5Lyw
-         RO7gjkRGDtCtcOCQe8zpFqk7mpJ3C8VfG2VtRfLjhfj2BKEXceQWE2NBtwmOsrxEzrrV
-         rS93OwmON36PuIZjWtkuGdmHID9rXUN1tQr07xvG9ayZIocIPKGByLfNCQBB75ECiOuk
-         0YVe5T/NFQKVCpj+KFwSv4DE6Y+2n2d9KBZeQ2FGPD66+tFhFJ+TZCtgwGqh6JqQFoyP
-         ciKw==
-X-Gm-Message-State: AOJu0YzLBaXZxZ0T5LRfMgdJS6YtfAaH2yRxG6XjaRTRYrJdox1osOeA
-        kp7d1+mkpeH8pLTXnpFsmwex6ncD6L20LKdeDCESEGtP2uCaQPUkwxoo60Y4t7fsIsBLT2GXuF/
-        gZqXmCXwdsrsZ7Sb+BOpn2e3tBFoV
-X-Received: by 2002:a05:651c:201b:b0:2bb:8d47:9d95 with SMTP id s27-20020a05651c201b00b002bb8d479d95mr1564045ljo.2.1693403181696;
-        Wed, 30 Aug 2023 06:46:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFj7gH1IKBMS0NWbE4Xd4vUNDX4WI+F2xE2mn0UylTciMqkBXPKro8KLHlIW5rak33HRcstNQ==
-X-Received: by 2002:a05:651c:201b:b0:2bb:8d47:9d95 with SMTP id s27-20020a05651c201b00b002bb8d479d95mr1564026ljo.2.1693403181300;
-        Wed, 30 Aug 2023 06:46:21 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1693403193; x=1694007993;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R2kuY7QrN77OjYcmiIgmsp8RgTy5tijHIGRui0VqTUY=;
+        b=Z258LUH5jyuX4jc8Lf8rysCHR4CjAQUtrcHFdXLSBorL9yyLnIUY2yufjaaK6uuv0t
+         3tC4JvfXn3aKf/LS9Yc5xsKf1JcNLf2uz2Y6mz/Hu++NN0we00GpLmgHFNhZX8zY4/hN
+         CPNDX+OGO3o640AQceGZl8vAq2mYeREGQSZeWClsBzFk7rgS5fI1VDXzwXzfoDU/6glj
+         8H1jXPvNNHS6FjAytqGrmmvehaGbWeVhdmyljBsg7BWOvoFz6ZOvDnfFA/ciDjAr64yI
+         ZZWL39nwuO3R3dTrg93tbAbHNFjrx0cZjGYalMQB0L6wyMjCamSFguDRqv0nnqTcaQl1
+         nL0Q==
+X-Gm-Message-State: AOJu0YwrAnLb2JLzdCGrg+4Q59Jzh9TQaIBrwTn0QzcSPZWlMMeGAJhi
+        qXFvVb907VIYkneBJ1sip84SxQ8ukbOdVlQ9aQMfGMftb7bn0S9dlAbEJeXUJkCdPYL8SsN/yOk
+        25iSLmOLIx7G7AYfISu8wULxSpnCh
+X-Received: by 2002:a05:6402:51c8:b0:522:3f32:52f1 with SMTP id r8-20020a05640251c800b005223f3252f1mr1737282edd.3.1693403193056;
+        Wed, 30 Aug 2023 06:46:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGf9jsdBfXtDK6B3l1XAhb6uC/SE7H2eq+xyXHHwbpGSepkZ7/eGDvrY6bR1kwu2ebD+wsHwg==
+X-Received: by 2002:a05:6402:51c8:b0:522:3f32:52f1 with SMTP id r8-20020a05640251c800b005223f3252f1mr1737265edd.3.1693403192770;
+        Wed, 30 Aug 2023 06:46:32 -0700 (PDT)
 Received: from fedorinator.fritz.box ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
-        by smtp.gmail.com with ESMTPSA id t26-20020a1709063e5a00b009829dc0f2a0sm7174346eji.111.2023.08.30.06.46.20
+        by smtp.gmail.com with ESMTPSA id t7-20020aa7d4c7000000b00529fa63ef6fsm6811782edr.57.2023.08.30.06.46.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 06:46:20 -0700 (PDT)
+        Wed, 30 Aug 2023 06:46:32 -0700 (PDT)
 From:   Philipp Stanner <pstanner@redhat.com>
 To:     Kees Cook <keescook@chromium.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -73,11 +74,14 @@ To:     Kees Cook <keescook@chromium.org>,
 Cc:     VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-        Philipp Stanner <pstanner@redhat.com>
-Subject: [PATCH 0/5] Introduce new wrappers to copy user-arrays
-Date:   Wed, 30 Aug 2023 15:45:51 +0200
-Message-ID: <cover.1693386602.git.pstanner@redhat.com>
+        Philipp Stanner <pstanner@redhat.com>,
+        David Airlie <airlied@redhat.com>
+Subject: [PATCH 3/5] kernel: watch_queue: copy user-array safely
+Date:   Wed, 30 Aug 2023 15:45:54 +0200
+Message-ID: <4168bc2d9313d5d1a1a2b9ca0b9fc2990d499506.1693386602.git.pstanner@redhat.com>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <cover.1693386602.git.pstanner@redhat.com>
+References: <cover.1693386602.git.pstanner@redhat.com>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
@@ -87,38 +91,30 @@ Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Hi!
+Currently, there is no overflow-check with memdup_user().
 
-David Airlie suggested that we could implement new wrappers around
-(v)memdup_user() for duplicating user arrays.
+Use the new function memdup_array_user() instead of memdup_user() for
+duplicating the user-space array safely.
 
-This small patch series first implements the two new wrapper functions
-memdup_array_user() and vmemdup_array_user(). They calculate the
-array-sizes safely, i.e., they return an error in case of an overflow.
+Suggested-by: David Airlie <airlied@redhat.com>
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+---
+ kernel/watch_queue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It then implements the new wrappers in two components in kernel/ and two
-in the drm-subsystem.
-
-In total, there are 18 files in the kernel that use (v)memdup_user() to
-duplicate arrays. My plan is to provide patches for the other 14
-successively once this series has been merged.
-
-P.
-
-Philipp Stanner (5):
-  string.h: add array-wrappers for (v)memdup_user()
-  kernel: kexec: copy user-array safely
-  kernel: watch_queue: copy user-array safely
-  drm_lease.c: copy user-array safely
-  drm: vmgfx_surface.c: copy user-array safely
-
- drivers/gpu/drm/drm_lease.c             |  4 +--
- drivers/gpu/drm/vmwgfx/vmwgfx_surface.c |  4 +--
- include/linux/string.h                  | 42 +++++++++++++++++++++++++
- kernel/kexec.c                          |  2 +-
- kernel/watch_queue.c                    |  2 +-
- 5 files changed, 48 insertions(+), 6 deletions(-)
-
+diff --git a/kernel/watch_queue.c b/kernel/watch_queue.c
+index d0b6b390ee42..778b4056700f 100644
+--- a/kernel/watch_queue.c
++++ b/kernel/watch_queue.c
+@@ -331,7 +331,7 @@ long watch_queue_set_filter(struct pipe_inode_info *pipe,
+ 	    filter.__reserved != 0)
+ 		return -EINVAL;
+ 
+-	tf = memdup_user(_filter->filters, filter.nr_filters * sizeof(*tf));
++	tf = memdup_array_user(_filter->filters, filter.nr_filters, sizeof(*tf));
+ 	if (IS_ERR(tf))
+ 		return PTR_ERR(tf);
+ 
 -- 
 2.41.0
 
