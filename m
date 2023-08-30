@@ -2,122 +2,116 @@ Return-Path: <linux-hardening-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5211C83F01
-	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66D2C83F1C
+	for <linux-hardening@archiver.kernel.org>; Wed, 30 Aug 2023 18:56:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243487AbjH3S4R (ORCPT
+        id S1343969AbjH3S4T (ORCPT
         <rfc822;linux-hardening@archiver.kernel.org>);
-        Wed, 30 Aug 2023 14:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51488 "EHLO
+        Wed, 30 Aug 2023 14:56:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244712AbjH3Nr7 (ORCPT
+        with ESMTP id S245275AbjH3PBv (ORCPT
         <rfc822;linux-hardening@vger.kernel.org>);
-        Wed, 30 Aug 2023 09:47:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF9C7CC9
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693403202;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=w7XXAxDLUmZdx81fESQwCFLbPlVQDp3wBmzbmeWO24M=;
-        b=OE5ECJrGM24DknbMl8BDqzUVlOCcJaJBNR/KILwZGxOcYr01HdpI6VJdrifdL6V86Y5v18
-        Mp4Glq8+2pTE0ZpPoaFo5OQMLEuISOr7yTwc1oZxuMTuFrosIR1lkcHq6zE/nI64MertCD
-        GNl8vZ3RMPx3aotlnrVz95m5v2yKuWw=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-wbcwD7G-MOWfGeDCaFk8jA-1; Wed, 30 Aug 2023 09:46:41 -0400
-X-MC-Unique: wbcwD7G-MOWfGeDCaFk8jA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-9a1aaaf6460so87012266b.1
-        for <linux-hardening@vger.kernel.org>; Wed, 30 Aug 2023 06:46:41 -0700 (PDT)
+        Wed, 30 Aug 2023 11:01:51 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5721A2;
+        Wed, 30 Aug 2023 08:01:49 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-34961362f67so2510245ab.0;
+        Wed, 30 Aug 2023 08:01:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693407709; x=1694012509; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KO0ZQFicCSdSCysZFTM2H7s5pykSU7LfpCSZ9Y7Djcc=;
+        b=A0vLxtFtqvN3LPu6ZMvHaPBEAKXRxLWY0n88+d2JTjwfCwVqr5NkasaBNjr7WpucIJ
+         5TGjBo++LmvrrHFuOB27h3FykfjBCLKHwCviqHKtOEYkopZUPkjXn6rqCu2iw23VhXjd
+         0XCyHYzTI2Qm8OyFkwcAM96W89+7YoDGN29yxv6ZKB2NKFJzSrWaz55HPZi6c/sc9S+C
+         gJPc+SAuaVkv8S1X8zfP0toFKqZYyP8g+1UFZcYCtd1Z5R+E3kYlcX3mQB3BObct57ws
+         mm+r9y+5d4vNEWRQKsyZARaR1D4mE1plpV4Iejcf1+uh0EHaNfP6z9Vj7ZjU06m+9zLf
+         /K1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693403200; x=1694008000;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w7XXAxDLUmZdx81fESQwCFLbPlVQDp3wBmzbmeWO24M=;
-        b=UDauObjjtOLS/yevK4qTt3M6NwdpZqNa+XcKj5CQ2UApWCwhBL+3LmlSP9YUjOqb+1
-         q9lYV6fnSCe7wNQr6JBG1SOeX6feNDn/gCcTgDRCNGmByp8sSYcYjL/eNBVd3Sm23oEr
-         aYfJW07AghPkj+7yYhNPiw6jfgWKKRWqPZ+nJ1wqynSh7Bm6uyJH8oBQA0HvVdgVZG70
-         9nzGJ7Vlin7rm2Yz0bPsm/L+oE3Jh75bfZSv7c2OJSM7sepG2j2l536zdQhnPaxyIJR0
-         SfVZhcijgutxio/ZGtmuO+lLaapIplVqptRDI3q3NkUYAqD0ivMfOc4/dqz3DCraP4dF
-         OpbA==
-X-Gm-Message-State: AOJu0YzHHhSO8Mh9TJLviRwd1QcZebxg5AlsdxzrYnzjxL3V4PHFltJF
-        +p3BmVi8E4WnDQqxbV/9Tem3eDN3EmBxWgW+vTn3CvYdM2bxirs7Qt/Fzxsv+W6KBxwj76Ux//e
-        2ykTOnyZSrHq+FJeEhYrE96xuw3Y2
-X-Received: by 2002:a17:906:1011:b0:9a1:aea8:cb5a with SMTP id 17-20020a170906101100b009a1aea8cb5amr1574506ejm.1.1693403200684;
-        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFovveJ1gRkNa/hbpuOdO660EpmuFNfSfZvj7MduSJ07LTCEG5M6k7oeDfsA0MPBedrGa9vw==
-X-Received: by 2002:a17:906:1011:b0:9a1:aea8:cb5a with SMTP id 17-20020a170906101100b009a1aea8cb5amr1574480ejm.1.1693403200487;
-        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
-Received: from fedorinator.fritz.box ([2001:9e8:32e4:1500:aa40:e745:b6c9:7081])
-        by smtp.gmail.com with ESMTPSA id gy25-20020a170906f25900b0098951bb4dc3sm7218566ejb.184.2023.08.30.06.46.39
+        d=1e100.net; s=20221208; t=1693407709; x=1694012509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KO0ZQFicCSdSCysZFTM2H7s5pykSU7LfpCSZ9Y7Djcc=;
+        b=IlgeNtyv2+d5NU5r/3+0gy0lRXpf3TlUDZXEk/Jdd99rpyZ2pmJJfb/S3MkqEY1ZjV
+         wkzX92slZDIoJ65uU2M5ujEpp3l3saz1RrVpWiLaVo+zOp3e7tmvkIx9FCBnpceEOJoP
+         ugOz8/muRvJpbNLzoNWJgg+aRcXdexmfnAIME3KbUZ0NdKeERe5ep8fqWXIcJeU/ws8q
+         R4jz9f6e1oHbxpqNmzR26xiu7YV+QvuiMD7tmD8mAC7uSUHfBCAS7qPPa5CYz/SwYSKe
+         xtFUeQMQx3b7KpnBwKSJZnaZ5ij1nEg4fQbu3Xhcz8yOd0Ux7rUJVcAKN7kGTBfukwHp
+         ys7g==
+X-Gm-Message-State: AOJu0Yx42w+kazZU2KNgmj/cwl8NSRmuILGcOmrC5d5NzjQedBKeUFpM
+        khn3TrCAffkQewdSe+gQqus=
+X-Google-Smtp-Source: AGHT+IHmmRVoSTfRy3w+RS8z6j8/ShkNBcmlbcnp9tBSwybUgQ74s/Dg3bLzQ9xX6EuCH4X8Z72efg==
+X-Received: by 2002:a05:6e02:12b3:b0:348:b07e:fdac with SMTP id f19-20020a056e0212b300b00348b07efdacmr2164954ilr.3.1693407708633;
+        Wed, 30 Aug 2023 08:01:48 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (161.74.123.34.bc.googleusercontent.com. [34.123.74.161])
+        by smtp.gmail.com with ESMTPSA id i10-20020a056e02054a00b0034cb37f0636sm3838801ils.40.2023.08.30.08.01.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 06:46:40 -0700 (PDT)
-From:   Philipp Stanner <pstanner@redhat.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Christian Brauner <brauner@kernel.org>,
-        David Disseldorp <ddiss@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Siddh Raman Pant <code@siddh.me>,
-        Nick Alcock <nick.alcock@oracle.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Zack Rusin <zackr@vmware.com>
-Cc:     VMware Graphics Reviewers <linux-graphics-maintainer@vmware.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kexec@lists.infradead.org, linux-hardening@vger.kernel.org,
-        Philipp Stanner <pstanner@redhat.com>,
-        David Airlie <airlied@redhat.com>
-Subject: [PATCH 5/5] drm: vmgfx_surface.c: copy user-array safely
-Date:   Wed, 30 Aug 2023 15:45:56 +0200
-Message-ID: <6f9397d6af919b7e8325c2945385c13aaa3dc5f1.1693386602.git.pstanner@redhat.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <cover.1693386602.git.pstanner@redhat.com>
-References: <cover.1693386602.git.pstanner@redhat.com>
+        Wed, 30 Aug 2023 08:01:48 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Laight <David.Laight@aculab.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] kobject: Replace strlcpy with strscpy
+Date:   Wed, 30 Aug 2023 15:01:36 +0000
+Message-ID: <20230830150136.3798414-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.42.0.rc2.253.gd59a3bf2b4-goog
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 Precedence: bulk
 List-ID: <linux-hardening.vger.kernel.org>
 X-Mailing-List: linux-hardening@vger.kernel.org
 
-Currently, there is no overflow-check with memdup_user().
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
 
-Use the new function memdup_array_user() instead of memdup_user() for
-duplicating the user-space array safely.
+Direct replacement is safe here since return value of -errno
+is used to check for truncation instead of sizeof(dest).
 
-Suggested-by: David Airlie <airlied@redhat.com>
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
+
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_surface.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2:
+ * Updated error message to remove @len which is errno now.
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-index 5db403ee8261..9be185b094cb 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_surface.c
-@@ -777,9 +777,9 @@ int vmw_surface_define_ioctl(struct drm_device *dev, void *data,
- 	       sizeof(metadata->mip_levels));
- 	metadata->num_sizes = num_sizes;
- 	metadata->sizes =
--		memdup_user((struct drm_vmw_size __user *)(unsigned long)
-+		memdup_array_user((struct drm_vmw_size __user *)(unsigned long)
- 			    req->size_addr,
--			    sizeof(*metadata->sizes) * metadata->num_sizes);
-+			    metadata->num_sizes, sizeof(*metadata->sizes));
- 	if (IS_ERR(metadata->sizes)) {
- 		ret = PTR_ERR(metadata->sizes);
- 		goto out_no_sizes;
+v1:
+ * https://lore.kernel.org/all/20230703180528.3709258-1-azeemshaikh38@gmail.com/
+
+ lib/kobject_uevent.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/lib/kobject_uevent.c b/lib/kobject_uevent.c
+index 7c44b7ae4c5c..323127e444d4 100644
+--- a/lib/kobject_uevent.c
++++ b/lib/kobject_uevent.c
+@@ -254,10 +254,10 @@ static int init_uevent_argv(struct kobj_uevent_env *env, const char *subsystem)
+ 	int buffer_size = sizeof(env->buf) - env->buflen;
+ 	int len;
+ 
+-	len = strlcpy(&env->buf[env->buflen], subsystem, buffer_size);
+-	if (len >= buffer_size) {
+-		pr_warn("init_uevent_argv: buffer size of %d too small, needed %d\n",
+-			buffer_size, len);
++	len = strscpy(&env->buf[env->buflen], subsystem, buffer_size);
++	if (len < 0) {
++		pr_warn("init_uevent_argv: insufficient buffer space "
++                        "(%u left) for %s\n", buffer_size, subsystem);
+ 		return -ENOMEM;
+ 	}
+ 
 -- 
-2.41.0
+2.42.0.rc2.253.gd59a3bf2b4-goog
+
 
